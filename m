@@ -2,162 +2,218 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071E3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B57C1C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D39262184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD862184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:41:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hsLB4gq0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfC1Vkh (ORCPT
+        id S1727907AbfC1VlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 17:40:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33554 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbfC1Vkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 17:40:36 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D51813082135;
-        Thu, 28 Mar 2019 21:40:35 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EFEA319C77;
-        Thu, 28 Mar 2019 21:40:25 +0000 (UTC)
-Date:   Thu, 28 Mar 2019 17:40:23 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Ondrej Mosnacek <omosnace@redhat.com>, nhorman@tuxdriver.com,
-        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Simo Sorce <simo@redhat.com>, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V5 09/10] audit: add support for containerid to
- network namespaces
-Message-ID: <20190328214023.qpszfvxbrjlldmmt@madcap2.tricolour.ca>
-References: <cover.1552665316.git.rgb@redhat.com>
- <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
- <CAFqZXNskwTub5Bm_HZqr02VPB4s79CcgAVX8VE2vQYP07-qssg@mail.gmail.com>
- <20190328011202.6raixwzdimn5b4zk@madcap2.tricolour.ca>
- <CAHC9VhQYVSrX1Ng7hZejkGSq6ZXtqi+SKmpARASJ4P2_2i3-4w@mail.gmail.com>
+        Thu, 28 Mar 2019 17:41:05 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:6712 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726611AbfC1VlE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 17:41:04 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9d3f680002>; Thu, 28 Mar 2019 14:40:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 28 Mar 2019 14:41:02 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 28 Mar 2019 14:41:02 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Mar
+ 2019 21:41:02 +0000
+Subject: Re: [PATCH v2 10/11] mm/hmm: add helpers for driver to safely take
+ the mmap_sem v2
+To:     Jerome Glisse <jglisse@redhat.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20190325144011.10560-1-jglisse@redhat.com>
+ <20190325144011.10560-11-jglisse@redhat.com>
+ <9df742eb-61ca-3629-a5f4-8ad1244ff840@nvidia.com>
+ <20190328213047.GB13560@redhat.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <a16efd42-3e2b-1b72-c205-0c2659de2750@nvidia.com>
+Date:   Thu, 28 Mar 2019 14:41:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhQYVSrX1Ng7hZejkGSq6ZXtqi+SKmpARASJ4P2_2i3-4w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 28 Mar 2019 21:40:36 +0000 (UTC)
+In-Reply-To: <20190328213047.GB13560@redhat.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US-large
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553809256; bh=i0yznMUZ3/E1QrRkk2+BDp44MTpSzcLV2/NZJ7ipR8Y=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=hsLB4gq0cl32Xmjnr15hA+tqHT/Wm6mRjsQHjiYXOxb3EDWzhHb2doD30UpNQybfY
+         mB4tQoX1AXWvQ5HPFUJRIchUWzThGP7EGYyFQMfgbFXZEsMPPzHYNNUuAEruEYAATZ
+         Lx1tSjutTd930HwXjaKfkA6+RaQCjKkoNR/W+VNmHKa9OZN7vjgBCelyu04RN+TuE2
+         CH/WaP2gqDl6BJg18YbrQZDC/VCdKl64fJ+TEtVyDmK9eMd40yueJ92m8BK46Mtm7i
+         1bvhyC5cS2dd7jFW5U7miBWcM+ZuAHGV2IIHcxw8nAdImfwI3AWyKyVWMdGYKUhyf9
+         rKvF/tjoIl6NA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-28 11:46, Paul Moore wrote:
-> On Wed, Mar 27, 2019 at 9:12 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >
-> > On 2019-03-27 23:42, Ondrej Mosnacek wrote:
-> > > On Fri, Mar 15, 2019 at 7:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > Audit events could happen in a network namespace outside of a task
-> > > > context due to packets received from the net that trigger an auditing
-> > > > rule prior to being associated with a running task.  The network
-> > > > namespace could be in use by multiple containers by association to the
-> > > > tasks in that network namespace.  We still want a way to attribute
-> > > > these events to any potential containers.  Keep a list per network
-> > > > namespace to track these audit container identifiiers.
-> > > >
-> > > > Add/increment the audit container identifier on:
-> > > > - initial setting of the audit container identifier via /proc
-> > > > - clone/fork call that inherits an audit container identifier
-> > > > - unshare call that inherits an audit container identifier
-> > > > - setns call that inherits an audit container identifier
-> > > > Delete/decrement the audit container identifier on:
-> > > > - an inherited audit container identifier dropped when child set
-> > > > - process exit
-> > > > - unshare call that drops a net namespace
-> > > > - setns call that drops a net namespace
-> > > >
-> > > > See: https://github.com/linux-audit/audit-kernel/issues/92
-> > > > See: https://github.com/linux-audit/audit-testsuite/issues/64
-> > > > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > ---
-> > > >  include/linux/audit.h | 19 ++++++++++++
-> > > >  kernel/audit.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++++++--
-> > > >  kernel/nsproxy.c      |  4 +++
-> > > >  3 files changed, 106 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > > > index fa19fa408931..70255c2dfb9f 100644
-> > > > --- a/include/linux/audit.h
-> > > > +++ b/include/linux/audit.h
-> > > > @@ -27,6 +27,7 @@
-> > > >  #include <linux/ptrace.h>
-> > > >  #include <linux/namei.h>  /* LOOKUP_* */
-> > > >  #include <uapi/linux/audit.h>
-> > > > +#include <linux/refcount.h>
-> > > >
-> > > >  #define AUDIT_INO_UNSET ((unsigned long)-1)
-> > > >  #define AUDIT_DEV_UNSET ((dev_t)-1)
-> > > > @@ -99,6 +100,13 @@ struct audit_task_info {
-> > > >
-> > > >  extern struct audit_task_info init_struct_audit;
-> > > >
-> > > > +struct audit_contid {
-> > > > +       struct list_head        list;
-> > > > +       u64                     id;
-> > > > +       refcount_t              refcount;
-> > >
-> > > Hm, since we only ever touch the refcount under a spinlock, I wonder
-> > > if we could just make it a regular unsigned int (we don't need the
-> > > atomicity guarantees). OTOH, refcount_t comes with some extra overflow
-> > > checking, so it's probably better to leave it as is...
-> >
-> > Since the update is done using rcu-safe methods, do we even need the
-> > spin_lock?  Neil?  Paul?
-> 
-> As discussed, the refcount field is protected against simultaneous
-> writes by the spinlock that protects additions/removals from the list
-> as a whole so I don't believe the refcount_t atomicity is critical in
-> this regard.
-> 
-> Where it gets tricky, and I can't say I'm 100% confident on my answer
-> here, is if refcount was a regular int and we wanted to access it
-> outside of a spinlock (to be clear, it doesn't look like this patch
-> currently does this).  With RCU, if refcount was a regular int
-> (unsigned or otherwise), I believe it would be possible for different
-> threads of execution to potentially see different values of refcount
-> (assuming one thread was adding/removing from the list).  Using a
-> refcount_t would protect against this, alternatively, taking the
-> spinlock should also protect against this.
+On 3/28/19 2:30 PM, Jerome Glisse wrote:
+> On Thu, Mar 28, 2019 at 01:54:01PM -0700, John Hubbard wrote:
+>> On 3/25/19 7:40 AM, jglisse@redhat.com wrote:
+>>> From: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+>>>
+>>> The device driver context which holds reference to mirror and thus to
+>>> core hmm struct might outlive the mm against which it was created. To
+>>> avoid every driver to check for that case provide an helper that check
+>>> if mm is still alive and take the mmap_sem in read mode if so. If the
+>>> mm have been destroy (mmu_notifier release call back did happen) then
+>>> we return -EINVAL so that calling code knows that it is trying to do
+>>> something against a mm that is no longer valid.
+>>>
+>>> Changes since v1:
+>>>     - removed bunch of useless check (if API is use with bogus argument
+>>>       better to fail loudly so user fix their code)
+>>>
+>>> Signed-off-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+>>> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>> Cc: John Hubbard <jhubbard@nvidia.com>
+>>> Cc: Dan Williams <dan.j.williams@intel.com>
+>>> ---
+>>>  include/linux/hmm.h | 50 ++++++++++++++++++++++++++++++++++++++++++---
+>>>  1 file changed, 47 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+>>> index f3b919b04eda..5f9deaeb9d77 100644
+>>> --- a/include/linux/hmm.h
+>>> +++ b/include/linux/hmm.h
+>>> @@ -438,6 +438,50 @@ struct hmm_mirror {
+>>>  int hmm_mirror_register(struct hmm_mirror *mirror, struct mm_struct *m=
+m);
+>>>  void hmm_mirror_unregister(struct hmm_mirror *mirror);
+>>> =20
+>>> +/*
+>>> + * hmm_mirror_mm_down_read() - lock the mmap_sem in read mode
+>>> + * @mirror: the HMM mm mirror for which we want to lock the mmap_sem
+>>> + * Returns: -EINVAL if the mm is dead, 0 otherwise (lock taken).
+>>> + *
+>>> + * The device driver context which holds reference to mirror and thus =
+to core
+>>> + * hmm struct might outlive the mm against which it was created. To av=
+oid every
+>>> + * driver to check for that case provide an helper that check if mm is=
+ still
+>>> + * alive and take the mmap_sem in read mode if so. If the mm have been=
+ destroy
+>>> + * (mmu_notifier release call back did happen) then we return -EINVAL =
+so that
+>>> + * calling code knows that it is trying to do something against a mm t=
+hat is
+>>> + * no longer valid.
+>>> + */
+>>> +static inline int hmm_mirror_mm_down_read(struct hmm_mirror *mirror)
+>>
+>> Hi Jerome,
+>>
+>> Let's please not do this. There are at least two problems here:
+>>
+>> 1. The hmm_mirror_mm_down_read() wrapper around down_read() requires a=20
+>> return value. This is counter to how locking is normally done: callers d=
+o
+>> not normally have to check the return value of most locks (other than
+>> trylocks). And sure enough, your own code below doesn't check the return=
+ value.
+>> That is a pretty good illustration of why not to do this.
+>=20
+> Please read the function description this is not about checking lock
+> return value it is about checking wether we are racing with process
+> destruction and avoid trying to take lock in such cases so that driver
+> do abort as quickly as possible when a process is being kill.
+>=20
+>>
+>> 2. This is a weird place to randomly check for semi-unrelated state, suc=
+h=20
+>> as "is HMM still alive". By that I mean, if you have to detect a problem
+>> at down_read() time, then the problem could have existed both before and
+>> after the call to this wrapper. So it is providing a false sense of secu=
+rity,
+>> and it is therefore actually undesirable to add the code.
+>=20
+> It is not, this function is use in device page fault handler which will
+> happens asynchronously from CPU event or process lifetime when a process
+> is killed or is dying we do want to avoid useless page fault work and
+> we do want to avoid blocking the page fault queue of the device. This
+> function reports to the caller that the process is dying and that it
+> should just abort the page fault and do whatever other device specific
+> thing that needs to happen.
+>=20
 
-Ok, from the above it isn't clear to me if you are happy with the
-current code or would prefer any changes, or from below that you still
-need to work it through to make a pronouncement.  It sounds to me you
-would be ok with *either* spinlock *or* refcount_t, but don't see the
-need for both.
+But it's inherently racy, to check for a condition outside of any lock, so =
+again,
+it's a false sense of security.
 
-> As we all know, RCU can be tricky at times, so I may be off on the
-> above; if I am, please provide an explanation so I (and likely others
-> as well) can learn a little bit more. :)
-> 
-> -- 
-> paul moore
-> www.paul-moore.com
+>>
+>> If you insist on having this wrapper, I think it should have approximate=
+ly=20
+>> this form:
+>>
+>> void hmm_mirror_mm_down_read(...)
+>> {
+>> 	WARN_ON(...)
+>> 	down_read(...)
+>> }=20
+>=20
+> I do insist as it is useful and use by both RDMA and nouveau and the
+> above would kill the intent. The intent is do not try to take the lock
+> if the process is dying.
 
-- RGB
+Could you provide me a link to those examples so I can take a peek? I
+am still convinced that this whole thing is a race condition at best.
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+>=20
+>=20
+>>
+>>> +{
+>>> +	struct mm_struct *mm;
+>>> +
+>>> +	/* Sanity check ... */
+>>> +	if (!mirror || !mirror->hmm)
+>>> +		return -EINVAL;
+>>> +	/*
+>>> +	 * Before trying to take the mmap_sem make sure the mm is still
+>>> +	 * alive as device driver context might outlive the mm lifetime.
+>>
+>> Let's find another way, and a better place, to solve this problem.
+>> Ref counting?
+>=20
+> This has nothing to do with refcount or use after free or anthing
+> like that. It is just about checking wether we are about to do
+> something pointless. If the process is dying then it is pointless
+> to try to take the lock and it is pointless for the device driver
+> to trigger handle_mm_fault().
+
+Well, what happens if you let such pointless code run anyway?=20
+Does everything still work? If yes, then we don't need this change.
+If no, then we need a race-free version of this change.
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
