@@ -2,64 +2,167 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E17EC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CA0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D67206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29972206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lw6xQPDf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oYS2q/11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfC1RJ3 (ORCPT
+        id S1727446AbfC1RKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:09:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43146 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfC1RJ3 (ORCPT
+        Thu, 28 Mar 2019 13:10:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36180 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfC1RKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:09:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=lw6xQPDfFHwfGWFfjwauUtewu
-        FM5fLeSl8n4rlUm4Cd7eFZ2jQzv+0RNuJHjL32CFuNpk7wx9mk0Krt9qhdXuRx9Vhhhhg0AZej9+i
-        4xchcer29iOhzJjMsrbSOUmxLzFxTE9wBLT0gKad+MKU24IgHMArdgGxArCiNUHkCpio4f2TBAwOS
-        ZaNQPzYz5hlL1BD2LZfObt0s5sg6DgGnyvprjg0d3R3n2LPC2TiUbBT+cW6cT4eM0gB0qeZXrLzRz
-        m3xgkYaf2y9MYc5wPfLbrYv4u9qreS+eD6rgezSrfd33pW97amfDXQJNAZ3Hs5MR6ZjELRvrMw0FD
-        JmL0NnhOA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h9YWs-0003Uq-0i; Thu, 28 Mar 2019 17:09:26 +0000
-Date:   Thu, 28 Mar 2019 10:09:25 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     David Kozub <zub@linux.fjfi.cvut.cz>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Scott Bauer <sbauer@plzdonthack.me>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: Re: [PATCH 15/16] block: sed-opal: don't repeat opal_discovery0 in
- each steps array
-Message-ID: <20190328170925.GG27845@infradead.org>
-References: <1550103368-4605-1-git-send-email-zub@linux.fjfi.cvut.cz>
- <1550103368-4605-16-git-send-email-zub@linux.fjfi.cvut.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1550103368-4605-16-git-send-email-zub@linux.fjfi.cvut.cz>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Thu, 28 Mar 2019 13:10:05 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y13so6166827wrd.3;
+        Thu, 28 Mar 2019 10:10:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:subject:date:message-id;
+        bh=nPCFzUJnrLwfTHXgaehhT7OlM6k66qhIj2xZuLJSMts=;
+        b=oYS2q/11oi1zXmxooJ/F7NrroxcvAKk5OWoSFNApar9dlhdBiowZCyqedGhYll5+BL
+         qtP3+7bKCqMhq+0l3KZ7UmBfcuQmcvoSlVbSTYqNpw3mvKh1WT7keCyqo7RMddvVQXk2
+         /UyTaiHbE1s+T/Szhwyoxja8DVvqzJmCwbmrAe7rbRbjil142r5uNUYjEmX1VDlY6s+s
+         PnhmYbpW+P35uqHefbR64GdN6zWeILnV+vw+fnq/7YTW3VzeSeLJdNH1v2uacIrFaxdM
+         6N7oh1eCO64Ncx6uRUh99tc1qPWsYukUjZDuXMFRMziN8LpUgfNKRwdt/Rq1faWszqRS
+         pFZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:subject:date:message-id;
+        bh=nPCFzUJnrLwfTHXgaehhT7OlM6k66qhIj2xZuLJSMts=;
+        b=VooN9CbnKjh3ANOWSejAVnoHYxxF3HP0L+RfJgWpSfn1Ay/HtBVXak7g6PmlATemnV
+         IE/O/Fjj/cTlz4PxDLGVAXJasiy7j+kLsXgulQ2OmDzVyCSFmF48vZE6ZS+N9wcRrEKR
+         N7tqWb9Q3CKeF0NkkJ2ncKWcqUNyPtrHb/1RSLyjpY5lMmkl2mr2DGt/3nzqvd1TbQTn
+         eDQ4pW9gw8KfJGvfdHRNpHynIfMRTZxZ8Psd+THforzQlkjN4aqVFFaub82NI2VohE7X
+         7y7kY0n25Le19oE/RBxz5kyC4GUXEmMDMOegKOqJtIapdKoEe+sOdxRkxsiPLVfpyUxJ
+         1Pog==
+X-Gm-Message-State: APjAAAVGgcDpibA5wp46yP8CUQpcIHTAOAy/visvT4FKZyl0YvahmkGr
+        8fLReqOWcz4JUI8QGix3CkvVejjw
+X-Google-Smtp-Source: APXvYqwyjkrRNK9VDO9y9amfAdPu744a+CjdPpkV2a5xwhli1XPIIStcDFBOP0mYukGFsdF3EMaalg==
+X-Received: by 2002:adf:eb02:: with SMTP id s2mr9189981wrn.29.1553793002606;
+        Thu, 28 Mar 2019 10:10:02 -0700 (PDT)
+Received: from 640k.localdomain ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id a82sm4803048wmf.11.2019.03.28.10.10.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 10:10:01 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH] kvm: move KVM_CAP_NR_MEMSLOTS to common code
+Date:   Thu, 28 Mar 2019 18:10:00 +0100
+Message-Id: <1553793000-53968-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,
+All architectures except MIPS were defining it in the same way,
+and memory slots are handled entirely by common code so there
+is no point in keeping the definition per-architecture.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ Documentation/virtual/kvm/api.txt | 5 ++---
+ arch/powerpc/kvm/powerpc.c        | 3 ---
+ arch/s390/kvm/kvm-s390.c          | 3 ---
+ arch/x86/kvm/x86.c                | 3 ---
+ virt/kvm/arm/arm.c                | 3 ---
+ virt/kvm/kvm_main.c               | 2 ++
+ 6 files changed, 4 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
+index 67068c47c591..b62ad0d94234 100644
+--- a/Documentation/virtual/kvm/api.txt
++++ b/Documentation/virtual/kvm/api.txt
+@@ -1117,9 +1117,8 @@ struct kvm_userspace_memory_region {
+ This ioctl allows the user to create, modify or delete a guest physical
+ memory slot.  Bits 0-15 of "slot" specify the slot id and this value
+ should be less than the maximum number of user memory slots supported per
+-VM.  The maximum allowed slots can be queried using KVM_CAP_NR_MEMSLOTS,
+-if this capability is supported by the architecture.  Slots may not
+-overlap in guest physical address space.
++VM.  The maximum allowed slots can be queried using KVM_CAP_NR_MEMSLOTS.
++Slots may not overlap in guest physical address space.
+ 
+ If KVM_CAP_MULTI_ADDRESS_SPACE is available, bits 16-31 of "slot"
+ specifies the address space which is being modified.  They must be
+diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+index 8885377ec3e0..92910b7c5bcc 100644
+--- a/arch/powerpc/kvm/powerpc.c
++++ b/arch/powerpc/kvm/powerpc.c
+@@ -644,9 +644,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 		else
+ 			r = num_online_cpus();
+ 		break;
+-	case KVM_CAP_NR_MEMSLOTS:
+-		r = KVM_USER_MEM_SLOTS;
+-		break;
+ 	case KVM_CAP_MAX_VCPUS:
+ 		r = KVM_MAX_VCPUS;
+ 		break;
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 4638303ba6a8..28f35d2b06cb 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -513,9 +513,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 		else if (sclp.has_esca && sclp.has_64bscao)
+ 			r = KVM_S390_ESCA_CPU_SLOTS;
+ 		break;
+-	case KVM_CAP_NR_MEMSLOTS:
+-		r = KVM_USER_MEM_SLOTS;
+-		break;
+ 	case KVM_CAP_S390_COW:
+ 		r = MACHINE_HAS_ESOP;
+ 		break;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 099b851dabaf..9b64d3359c93 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3073,9 +3073,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_MAX_VCPUS:
+ 		r = KVM_MAX_VCPUS;
+ 		break;
+-	case KVM_CAP_NR_MEMSLOTS:
+-		r = KVM_USER_MEM_SLOTS;
+-		break;
+ 	case KVM_CAP_PV_MMU:	/* obsolete */
+ 		r = 0;
+ 		break;
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index 99c37384ba7b..be4ec5f3ba5f 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -224,9 +224,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_MAX_VCPUS:
+ 		r = KVM_MAX_VCPUS;
+ 		break;
+-	case KVM_CAP_NR_MEMSLOTS:
+-		r = KVM_USER_MEM_SLOTS;
+-		break;
+ 	case KVM_CAP_MSI_DEVID:
+ 		if (!kvm)
+ 			r = -EINVAL;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 55fe8e20d8fd..31c28e0b067c 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3061,6 +3061,8 @@ static long kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+ #endif
+ 	case KVM_CAP_MAX_VCPU_ID:
+ 		return KVM_MAX_VCPU_ID;
++	case KVM_CAP_NR_MEMSLOTS:
++		return KVM_USER_MEM_SLOTS;
+ 	default:
+ 		break;
+ 	}
+-- 
+1.8.3.1
+
