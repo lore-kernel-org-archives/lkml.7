@@ -2,222 +2,159 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BADEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 03:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D17AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 03:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124502075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 03:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A672075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 03:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbfC1DCN (ORCPT
+        id S1728238AbfC1DDY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 23:02:13 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:62523 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726108AbfC1DCM (ORCPT
+        Wed, 27 Mar 2019 23:03:24 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43269 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfC1DDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 23:02:12 -0400
-X-UUID: 83d7e8a1f6d1409488d79412e91c5c3f-20190328
-X-UUID: 83d7e8a1f6d1409488d79412e91c5c3f-20190328
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1031486163; Thu, 28 Mar 2019 11:02:02 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 28 Mar 2019 11:02:00 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 28 Mar 2019 11:02:00 +0800
-Message-ID: <1553742120.14682.3.camel@mtksdaap41>
-Subject: Re: [PATCH v2 04/25] drm/mediatek: add mutex sof into ddp private
- data
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>, <airlied@linux.ie>,
-        <mark.rutland@arm.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
-        <yt.shen@mediatek.com>
-Date:   Thu, 28 Mar 2019 11:02:00 +0800
-In-Reply-To: <1553667561-25447-5-git-send-email-yongqiang.niu@mediatek.com>
-References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1553667561-25447-5-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 27 Mar 2019 23:03:23 -0400
+Received: by mail-qt1-f193.google.com with SMTP id v32so21442162qtc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 20:03:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=SPg5alf8D1Gdnse1F44M2MIHCSpOrYTxXm5N/Jj2u3I=;
+        b=GgKN4RdbOcFmVGVzDCD0MNladNh7b/R07K3oe5HDOZgP8EU1D2knCM1sWjX102gr68
+         6PbCrCnWu3JxEQsBfanNxW3PSTqpJLBqo9zB6uH0jy2qVn8lgxDvFrUnCpy7scMH9IRA
+         fp5MK0N7ypZMhiLk2GBGya9VsIO8ctt8WN2NjrpajkYIn+AZ29diaagUkAeTQzFGIJ0F
+         rRhbUi0zBJ1DYffjwtcSjZojMVlKO5jQ10DgGhyky6C1eFjowanQR0KyEShNwZb5TNnG
+         UBiWOfVLJqE8zWbboiOkVa3CiLZyVng4cdcV/YxZKWLezkoVjjXTWT2s89R2magUDdb4
+         j44Q==
+X-Gm-Message-State: APjAAAWDjFHc/X0rzr/8x41CWFawUNxQDyEeVlwoMfN16qF+DQyEr/Hv
+        DVidAQPwv/xXmo/Jt5VAVLa8gJiyxJV1XnQWmke+vXjF
+X-Google-Smtp-Source: APXvYqwkDJVVigTvUP+6F+NDXg9uIBwQICbrxYPSbeNPTguzWN6+09VhrcZfHq2K6utFHnISKo98imOVaidbG9Qn/EU=
+X-Received: by 2002:ac8:276b:: with SMTP id h40mr33883974qth.319.1553742201401;
+ Wed, 27 Mar 2019 20:03:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 4E81A3F3A8CD4F7ED1DED19A6623192235DAC338F85C570E3E1EA5F03183FBFD2000:8
-X-MTK:  N
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 28 Mar 2019 11:03:04 +0800
+Message-ID: <CAK8P3a1veuKq=3QNY-UrvpsK3RPCVNjf-uS+bwpyJzQfeXs-rA@mail.gmail.com>
+Subject: [GIT PULL] ARM: SoC fixes for v5.1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     arm-soc <arm@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+The following changes since commit 8c2ffd9174779014c3fe1f96d9dc3641d9175f00:
 
-On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> mutex0 SOF register offset not always 0x30.
-> for mt8183, that offset will be 0x2C,
-> add this regsiter offset into private data
+  Linux 5.1-rc2 (2019-03-24 14:02:26 -0700)
 
-I think you do two things in this patch. One is mutex0 SOF register
-offset, and another is making sof value variable. So please split this
-into two patches.
+are available in the Git repository at:
 
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 51 ++++++++++++++++++++++++++++------
->  1 file changed, 42 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index 7f0d46e..495ebc5 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -42,12 +42,13 @@
->  #define DISP_REG_CONFIG_DPI_SEL			0x064
->  
->  #define MT2701_DISP_MUTEX0_MOD0 0x2C
-> +#define MT2701_DISP_MUTEX0_SOF0  0x30
->  
->  #define DISP_REG_MUTEX_EN(n)	(0x20 + 0x20 * (n))
->  #define DISP_REG_MUTEX(n)	(0x24 + 0x20 * (n))
->  #define DISP_REG_MUTEX_RST(n)	(0x28 + 0x20 * (n))
->  #define DISP_REG_MUTEX_MOD(data, n)	((data)->mutex_mod_reg + 0x20 * (n))
-> -#define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
-> +#define DISP_REG_MUTEX_SOF(data, n)	((data)->mutex_sof_reg + 0x20 * (n))
+  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
 
-Even though previous patch's indent is not aligned, I would like you to
-align this indent.
+for you to fetch changes up to 93958742192e7956d05989836ada9071f9ffe42e:
 
-Regards,
-CK
+  arm64: tegra: Disable CQE Support for SDMMC4 on Tegra186 (2019-03-25
+17:12:20 +0100)
 
->  #define DISP_REG_MUTEX_MOD2(n)	(0x34 + 0x20 * (n))
->  
->  #define INT_MUTEX				BIT(1)
-> @@ -149,9 +150,22 @@ struct mtk_disp_mutex {
->  	bool claimed;
->  };
->  
-> +enum mtk_ddp_mutex_sof_id {
-> +	DDP_MUTEX_SOF_SINGLE_MODE,
-> +	DDP_MUTEX_SOF_DSI0,
-> +	DDP_MUTEX_SOF_DSI1,
-> +	DDP_MUTEX_SOF_DPI0,
-> +	DDP_MUTEX_SOF_DPI1,
-> +	DDP_MUTEX_SOF_DSI2,
-> +	DDP_MUTEX_SOF_DSI3,
-> +	DDP_MUTEX_SOF_MAX,
-> +};
-> +
->  struct mtk_ddp_data {
->  	const unsigned int *mutex_mod;
-> +	const unsigned int *mutex_sof;
->  	unsigned int mutex_mod_reg;
-> +	unsigned int mutex_sof_reg;
->  };
->  
->  struct mtk_ddp {
-> @@ -209,19 +223,35 @@ struct mtk_ddp {
->  	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
->  };
->  
-> +static const unsigned int mt2712_mutex_sof[DDP_MUTEX_SOF_MAX] = {
-> +	[DDP_MUTEX_SOF_SINGLE_MODE] = MUTEX_SOF_SINGLE_MODE,
-> +	[DDP_MUTEX_SOF_DSI0] = MUTEX_SOF_DSI0,
-> +	[DDP_MUTEX_SOF_DSI1] = MUTEX_SOF_DSI1,
-> +	[DDP_MUTEX_SOF_DPI0] = MUTEX_SOF_DPI0,
-> +	[DDP_MUTEX_SOF_DPI1] = MUTEX_SOF_DPI1,
-> +	[DDP_MUTEX_SOF_DSI2] = MUTEX_SOF_DSI2,
-> +	[DDP_MUTEX_SOF_DSI3] = MUTEX_SOF_DSI3,
-> +};
-> +
->  static const struct mtk_ddp_data mt2701_ddp_driver_data = {
->  	.mutex_mod = mt2701_mutex_mod,
-> +	.mutex_sof = mt2712_mutex_sof,
->  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
->  };
->  
->  static const struct mtk_ddp_data mt2712_ddp_driver_data = {
->  	.mutex_mod = mt2712_mutex_mod,
-> +	.mutex_sof = mt2712_mutex_sof,
->  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
->  };
->  
->  static const struct mtk_ddp_data mt8173_ddp_driver_data = {
->  	.mutex_mod = mt8173_mutex_mod,
-> +	.mutex_sof = mt2712_mutex_sof,
->  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
->  };
->  
->  static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
-> @@ -462,28 +492,29 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
->  	struct mtk_ddp *ddp = container_of(mutex, struct mtk_ddp,
->  					   mutex[mutex->id]);
->  	unsigned int reg;
-> +	unsigned int sof_id;
->  	unsigned int offset;
->  
->  	WARN_ON(&ddp->mutex[mutex->id] != mutex);
->  
->  	switch (id) {
->  	case DDP_COMPONENT_DSI0:
-> -		reg = MUTEX_SOF_DSI0;
-> +		sof_id = DDP_MUTEX_SOF_DSI0;
->  		break;
->  	case DDP_COMPONENT_DSI1:
-> -		reg = MUTEX_SOF_DSI0;
-> +		sof_id = DDP_MUTEX_SOF_DSI0;
->  		break;
->  	case DDP_COMPONENT_DSI2:
-> -		reg = MUTEX_SOF_DSI2;
-> +		sof_id = DDP_MUTEX_SOF_DSI2;
->  		break;
->  	case DDP_COMPONENT_DSI3:
-> -		reg = MUTEX_SOF_DSI3;
-> +		sof_id = DDP_MUTEX_SOF_DSI3;
->  		break;
->  	case DDP_COMPONENT_DPI0:
-> -		reg = MUTEX_SOF_DPI0;
-> +		sof_id = DDP_MUTEX_SOF_DPI0;
->  		break;
->  	case DDP_COMPONENT_DPI1:
-> -		reg = MUTEX_SOF_DPI1;
-> +		sof_id = DDP_MUTEX_SOF_DPI1;
->  		break;
->  	default:
->  		if (ddp->data->mutex_mod[id] < 32) {
-> @@ -500,7 +531,8 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
->  		return;
->  	}
->  
-> -	writel_relaxed(reg, ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
-> +	writel_relaxed(ddp->data->mutex_sof[sof_id],
-> +		       ddp->regs + DISP_REG_MUTEX_SOF(ddp->data, mutex->id));
->  }
->  
->  void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
-> @@ -521,7 +553,8 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
->  	case DDP_COMPONENT_DPI0:
->  	case DDP_COMPONENT_DPI1:
->  		writel_relaxed(MUTEX_SOF_SINGLE_MODE,
-> -			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
-> +			       ddp->regs +
-> +			       DISP_REG_MUTEX_SOF(ddp->data, mutex->id));
->  		break;
->  	default:
->  		if (ddp->data->mutex_mod[id] < 32) {
+----------------------------------------------------------------
+ARM: SoC fixes for v5.1
 
+A couple of minor fixes only for now
 
+- Incorrect DMA channels on Renesas R-Car
+- Broadcom bcm2835 error handling fixes
+- Kconfig dependency fixes for bcm2835 and davinci
+- CPU idle wakeup fix for i.MX6
+- MMC regression on Tegra186
+- Incorrect phy settings on one imx board
+
+----------------------------------------------------------------
+Arnd Bergmann (4):
+      Merge tag 'renesas-fixes-for-v5.1' of
+git://git.kernel.org/.../horms/renesas into arm/fixes
+      Merge tag 'arm-soc/for-5.1/devicetree-fixes' of
+https://github.com/Broadcom/stblinux into arm/fixes
+      Merge tag 'arm-soc/for-5.1/soc-fixes' of
+https://github.com/Broadcom/stblinux into arm/fixes
+      Merge tag 'imx-fixes-5.1' of
+git://git.kernel.org/.../shawnguo/linux into arm/fixes
+
+Eric Anholt (3):
+      soc: bcm: bcm2835-pm: Fix PM_IMAGE_PERI power domain support.
+      soc: bcm: bcm2835-pm: Fix error paths of initialization.
+      arm64: bcm2835: Add missing dependency on MFD_CORE.
+
+Florian Fainelli (2):
+      Merge tag 'tags/bcm2835-drivers-next-2019-03-12' into soc/fixes
+      Merge tag 'tags/bcm2835-dt-next-2019-03-04' into devicetree/fixes
+
+Geert Uytterhoeven (1):
+      arm64: dts: renesas: r8a774c0: Fix SCIF5 DMA channels
+
+Helen Koike (1):
+      ARM: dts: bcm283x: Fix hdmi hpd gpio pull
+
+Jonathan Hunter (1):
+      arm64: tegra: Disable CQE Support for SDMMC4 on Tegra186
+
+Kohji Okuno (1):
+      ARM: imx6q: cpuidle: fix bug that CPU might not wake up at expected time
+
+Linus Walleij (1):
+      ARM: dts: nomadik: Fix polarity of SPI CS
+
+Marco Felsch (1):
+      ARM: dts: pfla02: increase phy reset duration
+
+Masanari Iida (1):
+      ARM: dts: imx6qdl: Fix typo in imx6qdl-icore-rqs.dtsi
+
+Michal Vokáč (2):
+      ARM: dts: imx6dl-yapp4: Use rgmii-id phy mode on the cpu port
+      ARM: dts: imx6dl-yapp4: Use correct pseudo PHY address for the switch
+
+Nishad Kamdar (1):
+      ARM: dts: imx6ull: Use the correct style for SPDX License Identifier
+
+Sekhar Nori (1):
+      ARM: davinci: fix build failure with allnoconfig
+
+Takeshi Kihara (1):
+      arm64: dts: renesas: r8a77990: Fix SCIF5 DMA channels
+
+Uwe Kleine-König (2):
+      ARM: imx_v6_v7_defconfig: continue compiling the pwm driver
+      ARM: imx_v4_v5_defconfig: enable PWM driver
+
+Wen Yang (1):
+      ARM: imx51: fix a leaked reference by adding missing of_node_put
+
+ arch/arm/Kconfig                             |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts     |  2 +-
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi   |  6 +++---
+ arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi     |  4 ++--
+ arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi |  1 +
+ arch/arm/boot/dts/imx6ull-pinfunc-snvs.h     |  2 +-
+ arch/arm/boot/dts/ste-nomadik-nhk15.dts      |  9 +++++----
+ arch/arm/configs/imx_v4_v5_defconfig         |  3 +++
+ arch/arm/configs/imx_v6_v7_defconfig         |  2 +-
+ arch/arm/mach-imx/cpuidle-imx6q.c            | 27 ++++++++++-----------------
+ arch/arm/mach-imx/mach-imx51.c               |  1 +
+ arch/arm64/Kconfig.platforms                 |  1 +
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi     |  1 -
+ arch/arm64/boot/dts/renesas/r8a774c0.dtsi    |  7 +++----
+ arch/arm64/boot/dts/renesas/r8a77990.dtsi    |  7 +++----
+ drivers/soc/bcm/bcm2835-power.c              | 49
+++++++++++++++++++++++++++++++++++++++++++-------
+ 16 files changed, 78 insertions(+), 45 deletions(-)
