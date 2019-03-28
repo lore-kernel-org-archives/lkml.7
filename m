@@ -3,144 +3,184 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFCCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C390FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCAB217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C29B20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfC1U1C (ORCPT
+        id S1726259AbfC1UbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:27:02 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54628 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfC1U1C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:27:02 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 554332820F7
-Message-ID: <f2f82f439f2b7586cb4c83f15122d8d19952d596.camel@collabora.com>
-Subject: Re: [PATCH v4 1/7] dt-bindings: Add panel-timing subnode to
- simple-panel
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Douglas Anderson <dianders@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sean Paul <seanpaul@chromium.org>
-Cc:     linux-rockchip@lists.infradead.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Enric =?ISO-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>,
-        Rob Herring <robh+dt@kernel.org>, mka@chromium.org,
-        Eric Anholt <eric@anholt.net>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 28 Mar 2019 17:26:49 -0300
-In-Reply-To: <20190328171710.31949-2-dianders@chromium.org>
-References: <20190328171710.31949-1-dianders@chromium.org>
-         <20190328171710.31949-2-dianders@chromium.org>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1 
+        Thu, 28 Mar 2019 16:31:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56318 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbfC1UbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 16:31:16 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 26C7C3086272;
+        Thu, 28 Mar 2019 20:31:16 +0000 (UTC)
+Received: from vitty.brq.redhat.com (ovpn-204-50.brq.redhat.com [10.40.204.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0521D600C0;
+        Thu, 28 Mar 2019 20:31:13 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RFC] KVM: x86: vmx: throttle immediate exit through preemtion timer to assist buggy guests
+Date:   Thu, 28 Mar 2019 21:31:10 +0100
+Message-Id: <20190328203110.20655-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 28 Mar 2019 20:31:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-03-28 at 10:17 -0700, Douglas Anderson wrote:
-> From: Sean Paul <seanpaul@chromium.org>
-> 
-> This patch adds a new subnode to simple-panel allowing us to override
-> the typical timing expressed in the panel's display_timing.
-> 
-> Changes in v2:
->  - Split out the binding into a new patch (Rob)
->  - display-timings is a new section (Rob)
->  - Use the full display-timings subnode instead of picking the timing
->    out (Rob/Thierry)
-> Changes in v3:
->  - Go back to using the timing subnode directly, but rename to
->    panel-timing (Rob)
-> Changes in v4:
->  - Simplify desc. for when override should be used (Thierry/Laurent)
->  - Removed Rob H review since it's been a year and wording changed
-> 
-> Cc: Doug Anderson <dianders@chromium.org>
-> Cc: Eric Anholt <eric@anholt.net>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Stéphane Marchesin <marcheu@chromium.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-rockchip@lists.infradead.org
-> Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  .../bindings/display/panel/simple-panel.txt   | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> index b2b872c710f2..6157f86ddce4 100644
-> --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> @@ -15,6 +15,18 @@ Optional properties:
->    (hot plug detect) signal, but the signal isn't hooked up so we should
->    hardcode the max delay from the panel spec when powering up the panel.
->  
-> +panel-timing subnode
-> +--------------------
-> +
-> +This optional subnode is for devices which require a mode differing
-> +from the panel's "typical" display timing.  The panel timings provided
-> +here will be ignored if they are found to be outside of allowable
-> +ranges for the given panel.
-> +
+This is embarassing but we have another Windows/Hyper-V issue to workaround
+in KVM (or QEMU). Hope "RFC" makes it less offensive.
 
-Is it OK to put this comment about how the implementation
-will behave when values are out of range, given this is just a binding
-spec?
+It was noticed that Hyper-V guest on q35 KVM/QEMU VM hangs on boot if e.g.
+'piix4-usb-uhci' device is attached. The problem with this device is that
+it uses level-triggered interrupts.
 
-Perhaps -if needed- this sentence can be rephrased to state that,
-e.g. the OS may not be able to apply these values, if the controller
-or device is unable to?
+The 'hang' scenario develops like this:
+1) Hyper-V boots and QEMU is trying to inject two irq simultaneously. One
+ of them is level-triggered. KVM injects the edge-triggered one and
+ requests immediate exit to inject the level-triggered:
 
-> +Format information on the panel-timing subnode can be found in
-> +display-timing.txt.
-> +
-> +
->  Example:
->  
->  	panel: panel {
-> @@ -25,4 +37,16 @@ Example:
->  		enable-gpios = <&gpio 90 0>;
->  
->  		backlight = <&backlight>;
-> +
-> +		panel-timing {
-> +			clock-frequency = <266604720>;
-> +			hactive = <2400>;
-> +			hfront-porch = <48>;
-> +			hback-porch = <84>;
-> +			hsync-len = <32>;
-> +			vactive = <1600>;
-> +			vfront-porch = <3>;
-> +			vback-porch = <120>;
-> +			vsync-len = <10>;
-> +		};
->  	};
+ kvm_set_irq:          gsi 23 level 1 source 0
+ kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
+ kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
+ kvm_msi_set_irq:      dst 0 vec 96 (Fixed|physical|edge)
+ kvm_apic_accept_irq:  apicid 0 vec 96 (Fixed|edge)
+ kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000060 int_info_err 0
 
+2) Hyper-V requires one of its VMs to run to handle the situation but
+ immediate exit happens:
+
+ kvm_entry:            vcpu 0
+ kvm_exit:             reason VMRESUME rip 0xfffff80006a40115 info 0 0
+ kvm_entry:            vcpu 0
+ kvm_exit:             reason PREEMPTION_TIMER rip 0xfffff8022f3d8350 info 0 0
+ kvm_nested_vmexit:    rip fffff8022f3d8350 reason PREEMPTION_TIMER info1 0 info2 0 int_info 0 int_info_err 0
+ kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000050 int_info_err 0
+
+3) Hyper-V doesn't want to deal with the second irq (as its VM still didn't
+ process the first one) so it just does 'EOI' for level-triggered interrupt
+ and this causes re-injection:
+
+ kvm_exit:             reason EOI_INDUCED rip 0xfffff80006a17e1a info 50 0
+ kvm_eoi:              apicid 0 vector 80
+ kvm_userspace_exit:   reason KVM_EXIT_IOAPIC_EOI (26)
+ kvm_set_irq:          gsi 23 level 1 source 0
+ kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
+ kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
+ kvm_entry:            vcpu 0
+
+4) As we arm preemtion timer again we get stuck in the infinite loop:
+
+ kvm_exit:             reason VMRESUME rip 0xfffff80006a40115 info 0 0
+ kvm_entry:            vcpu 0
+ kvm_exit:             reason PREEMPTION_TIMER rip 0xfffff8022f3d8350 info 0 0
+ kvm_nested_vmexit:    rip fffff8022f3d8350 reason PREEMPTION_TIMER info1 0 info2 0 int_info 0 int_info_err 0
+ kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000050 int_info_err 0
+ kvm_entry:            vcpu 0
+ kvm_exit:             reason EOI_INDUCED rip 0xfffff80006a17e1a info 50 0
+ kvm_eoi:              apicid 0 vector 80
+ kvm_userspace_exit:   reason KVM_EXIT_IOAPIC_EOI (26)
+ kvm_set_irq:          gsi 23 level 1 source 0
+ kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
+ kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
+ kvm_entry:            vcpu 0
+ kvm_exit:             reason VMRESUME rip 0xfffff80006a40115 info 0 0
+ ...
+
+How does this work on hardware? I don't really know but it seems that we
+were dealing with similar issues before, see commit 184564efae4d7 ("kvm:
+ioapic: conditionally delay irq delivery duringeoi broadcast"). In case EOI
+doesn't always cause an *immediate* interrupt re-injection some progress
+can be made.
+
+An alternative approach would be to port the above mentioned commit to
+QEMU's ioapic implementation. I'm, however, not sure that level-triggered
+interrupts is a must to trigger the issue.
+
+HV_TIMER_THROTTLE/HV_TIMER_DELAY are more or less arbitrary. I haven't
+looked at SVM yet but their immediate exit implementation does
+smp_send_reschedule(), I'm not sure this can cause the above described
+lockup.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/kvm/vmx/vmcs.h |  2 ++
+ arch/x86/kvm/vmx/vmx.c  | 24 +++++++++++++++++++++++-
+ 2 files changed, 25 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/vmx/vmcs.h b/arch/x86/kvm/vmx/vmcs.h
+index cb6079f8a227..983dfc60c30c 100644
+--- a/arch/x86/kvm/vmx/vmcs.h
++++ b/arch/x86/kvm/vmx/vmcs.h
+@@ -54,6 +54,8 @@ struct loaded_vmcs {
+ 	bool launched;
+ 	bool nmi_known_unmasked;
+ 	bool hv_timer_armed;
++	unsigned long hv_timer_lastrip;
++	int hv_timer_lastrip_cnt;
+ 	/* Support for vnmi-less CPUs */
+ 	int soft_vnmi_blocked;
+ 	ktime_t entry_time;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 617443c1c6d7..8a49ec14dd3a 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6321,14 +6321,36 @@ static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
+ 	vmx->loaded_vmcs->hv_timer_armed = true;
+ }
+ 
++#define HV_TIMER_THROTTLE 100
++#define HV_TIMER_DELAY 1000
++
+ static void vmx_update_hv_timer(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	u64 tscl;
+ 	u32 delta_tsc;
+ 
++	/*
++	 * Some guests are buggy and may behave in a way that causes KVM to
++	 * always request immediate exit (e.g. of a nested guest). At the same
++	 * time guest progress may be required to resolve the condition.
++	 * Throttling below makes sure we never get stuck completely.
++	 */
+ 	if (vmx->req_immediate_exit) {
+-		vmx_arm_hv_timer(vmx, 0);
++		unsigned long rip = kvm_rip_read(vcpu);
++
++		if (vmx->loaded_vmcs->hv_timer_lastrip == rip) {
++			++vmx->loaded_vmcs->hv_timer_lastrip_cnt;
++		} else {
++			vmx->loaded_vmcs->hv_timer_lastrip_cnt = 0;
++			vmx->loaded_vmcs->hv_timer_lastrip = rip;
++		}
++
++		if (vmx->loaded_vmcs->hv_timer_lastrip_cnt > HV_TIMER_THROTTLE)
++			vmx_arm_hv_timer(vmx, HV_TIMER_DELAY);
++		else
++			vmx_arm_hv_timer(vmx, 0);
++
+ 		return;
+ 	}
+ 
+-- 
+2.20.1
 
