@@ -2,84 +2,151 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC04C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138D0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5AB206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:07:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DpF3NbO5"
+	by mail.kernel.org (Postfix) with ESMTP id D28D1206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbfC1CHo (ORCPT
+        id S1727970AbfC1CJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 22:07:44 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:58134 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfC1CHo (ORCPT
+        Wed, 27 Mar 2019 22:09:20 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:24484 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725948AbfC1CJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 22:07:44 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2S1xTRO046009;
-        Thu, 28 Mar 2019 02:07:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=q2xPT9aYNv3n8ZfbCyQkPK3lG0v/KfOw17OG2y43ouA=;
- b=DpF3NbO5A2nx3SxeLhTtppsbjc3d5tY0OL68fvo+YlwyxmJQ0hOZ5tpn7d72wgyzyZ+6
- U7iy2EREcMYvG3B1EWzo8fAsmrHI38sEVW1gNtxQR16eCaws9sqwptXeqX3lY0IhcSkD
- wEkUn5FBj97pAnu2GwEkvWdJ5Pj1uBgvOOf0dTQp66S87UFGcYFMFc+hUmayzmLaZTvi
- nnQj0U7HyLPZbdpsKKZLkb+M4YjF1Xa9MetTdZ2h9QBpxetsl3G6U0OFkE7CKfkJSGp1
- OrbSx+cK5ZmfXsmIPMA2/ifOOTN5DIB3m87xnaduzd4RA4lK9WA5taTHJ6+QfdgAK5i/ /g== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by aserp2130.oracle.com with ESMTP id 2re6g13wke-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 02:07:28 +0000
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2S27QcZ016528
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 02:07:26 GMT
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2S27NBM010391;
-        Thu, 28 Mar 2019 02:07:23 GMT
-Received: from kadam (/197.157.34.194)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 27 Mar 2019 19:07:22 -0700
-Date:   Thu, 28 Mar 2019 05:07:14 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Anirudh Rayabharam <anirudh.rayabharam@gmail.com>
-Cc:     gregkh@linuxfoundation.org, hadess@hadess.net, hdegoede@redhat.com,
-        Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: rtl8723bs: core: fix line over 80 characters
- warning
-Message-ID: <20190328020714.GF32590@kadam>
-References: <20190326182309.GA33380@auvm>
- <20190327181836.GA37876@auvm>
+        Wed, 27 Mar 2019 22:09:19 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TNol2eC_1553738950;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TNol2eC_1553738950)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 28 Mar 2019 10:09:17 +0800
+Subject: Re: [RFC PATCH 0/10] Another Approach to Use PMEM as NUMA Node
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190326135837.GP28406@dhcp22.suse.cz>
+ <43a1a59d-dc4a-6159-2c78-e1faeb6e0e46@linux.alibaba.com>
+ <20190326183731.GV28406@dhcp22.suse.cz>
+ <f08fb981-d129-3357-e93a-a6b233aa9891@linux.alibaba.com>
+ <20190327090100.GD11927@dhcp22.suse.cz>
+ <CAPcyv4heiUbZvP7Ewoy-Hy=-mPrdjCjEuSw+0rwdOUHdjwetxg@mail.gmail.com>
+ <c3690a19-e2a6-7db7-b146-b08aa9b22854@linux.alibaba.com>
+ <20190327193918.GP11927@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <6f8b4c51-3f3c-16f9-ca2f-dbcd08ea23e6@linux.alibaba.com>
+Date:   Wed, 27 Mar 2019 19:09:10 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190327181836.GA37876@auvm>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9208 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903280014
+In-Reply-To: <20190327193918.GP11927@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks!
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-regards,
-dan carpenter
+On 3/27/19 1:09 PM, Michal Hocko wrote:
+> On Wed 27-03-19 11:59:28, Yang Shi wrote:
+>>
+>> On 3/27/19 10:34 AM, Dan Williams wrote:
+>>> On Wed, Mar 27, 2019 at 2:01 AM Michal Hocko <mhocko@kernel.org> wrote:
+>>>> On Tue 26-03-19 19:58:56, Yang Shi wrote:
+> [...]
+>>>>> It is still NUMA, users still can see all the NUMA nodes.
+>>>> No, Linux NUMA implementation makes all numa nodes available by default
+>>>> and provides an API to opt-in for more fine tuning. What you are
+>>>> suggesting goes against that semantic and I am asking why. How is pmem
+>>>> NUMA node any different from any any other distant node in principle?
+>>> Agree. It's just another NUMA node and shouldn't be special cased.
+>>> Userspace policy can choose to avoid it, but typical node distance
+>>> preference should otherwise let the kernel fall back to it as
+>>> additional memory pressure relief for "near" memory.
+>> In ideal case, yes, I agree. However, in real life world the performance is
+>> a concern. It is well-known that PMEM (not considering NVDIMM-F or HBM) has
+>> higher latency and lower bandwidth. We observed much higher latency on PMEM
+>> than DRAM with multi threads.
+> One rule of thumb is: Do not design user visible interfaces based on the
+> contemporary technology and its up/down sides. This will almost always
+> fire back.
+
+Thanks. It does make sense to me.
+
+>
+> Btw. if you keep arguing about performance without any numbers. Can you
+> present something specific?
+
+Yes, I did have some numbers. We did simple memory sequential rw latency 
+test with a designed-in-house test program on PMEM (bind to PMEM) and 
+DRAM (bind to DRAM). When running with 20 threads the result is as below:
+
+              Threads          w/lat            r/lat
+PMEM      20                537.15         68.06
+DRAM      20                14.19           6.47
+
+And, sysbench test with command: sysbench --time=600 memory 
+--memory-block-size=8G --memory-total-size=1024T --memory-scope=global 
+--memory-oper=read --memory-access-mode=rnd --rand-type=gaussian 
+--rand-pareto-h=0.1 --threads=1 run
+
+The result is:
+                    lat/ms
+PMEM      103766.09
+DRAM      31946.30
+
+>
+>> In real production environment we don't know what kind of applications would
+>> end up on PMEM (DRAM may be full, allocation fall back to PMEM) then have
+>> unexpected performance degradation. I understand to have mempolicy to choose
+>> to avoid it. But, there might be hundreds or thousands of applications
+>> running on the machine, it sounds not that feasible to me to have each
+>> single application set mempolicy to avoid it.
+> we have cpuset cgroup controller to help here.
+>
+>> So, I think we still need a default allocation node mask. The default value
+>> may include all nodes or just DRAM nodes. But, they should be able to be
+>> override by user globally, not only per process basis.
+>>
+>> Due to the performance disparity, currently our usecases treat PMEM as
+>> second tier memory for demoting cold page or binding to not memory access
+>> sensitive applications (this is the reason for inventing a new mempolicy)
+>> although it is a NUMA node.
+> If the performance sucks that badly then do not use the pmem as NUMA,
+> really. There are certainly other ways to export the pmem storage. Use
+> it as a fast swap storage. Or try to work on a swap caching mechanism
+> that still allows much faster access than a slow swap storage. But do
+> not try to pretend to abuse the NUMA interface while you are breaking
+> some of its long term established semantics.
+
+Yes, we are looking into using it as a fast swap storage too and perhaps 
+other usecases.
+
+Anyway, though nobody thought it makes sense to restrict default 
+allocation nodes, it sounds over-engineered. I'm going to drop it.
+
+One question, when doing demote and promote we need define a path, for 
+example, DRAM <-> PMEM (assume two tier memory). When determining what 
+nodes are "DRAM" nodes, does it make sense to assume the nodes with both 
+cpu and memory are DRAM nodes since PMEM nodes are typically cpuless nodes?
+
+Thanks,
+Yang
+
 
