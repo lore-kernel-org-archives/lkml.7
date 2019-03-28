@@ -2,81 +2,160 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8E6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 22:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F3CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 22:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3289E2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 22:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553810934;
-	bh=Z3Bh15fiiyoRB9b/MgXof0a9yfpW1533uFz1TGPzN1s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wG1WiDR139G1Yq4U0/7OPvoi9uF2gWmY/PU2BOuOWQuIgoRq9pphHQ2Z0q02cdwii
-	 ygqw7aVn1DUQpXfwqadUjRHVyMJos5ReL3D8wPjMV23X4SZUeWs8YAbkYlVCt7Pe7b
-	 ZqDonRl2W1ku9voPhgCCLhjPDWjDQKb2AwWPDWcI=
+	by mail.kernel.org (Postfix) with ESMTP id 1D65D2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 22:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbfC1WIx (ORCPT
+        id S1728029AbfC1WMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 18:08:53 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:35086 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727238AbfC1WIw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 18:08:52 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 30169D89;
-        Thu, 28 Mar 2019 22:08:52 +0000 (UTC)
-Date:   Thu, 28 Mar 2019 15:08:51 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     George Spelvin <lkml@sdf.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Andrey Abramov <st5pub@yandex.ru>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Daniel Wagner <daniel.wagner@siemens.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Don Mullis <don.mullis@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [RESEND PATCH v2 4/5] lib/list_sort: Simplify and remove
- MAX_LIST_LENGTH_BITS
-Message-Id: <20190328150851.5d261d1a72e2ca86a1c141c0@linux-foundation.org>
-In-Reply-To: <f63c410e0ff76009c9b58e01027e751ff7fdb749.1552704200.git.lkml@sdf.org>
-References: <cover.1552704200.git.lkml@sdf.org>
-        <f63c410e0ff76009c9b58e01027e751ff7fdb749.1552704200.git.lkml@sdf.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 28 Mar 2019 18:12:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54960 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727476AbfC1WMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 18:12:07 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C942388306;
+        Thu, 28 Mar 2019 22:12:06 +0000 (UTC)
+Received: from redhat.com (ovpn-121-118.rdu2.redhat.com [10.10.121.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0ECCC1001DDA;
+        Thu, 28 Mar 2019 22:12:05 +0000 (UTC)
+Date:   Thu, 28 Mar 2019 18:12:04 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2 07/11] mm/hmm: add default fault flags to avoid the
+ need to pre-fill pfns arrays.
+Message-ID: <20190328221203.GF13560@redhat.com>
+References: <20190325144011.10560-1-jglisse@redhat.com>
+ <20190325144011.10560-8-jglisse@redhat.com>
+ <2f790427-ea87-b41e-b386-820ccdb7dd38@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2f790427-ea87-b41e-b386-820ccdb7dd38@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 28 Mar 2019 22:12:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019 08:16:00 +0000 George Spelvin <lkml@sdf.org> wrote:
-
-> Rather than a fixed-size array of pending sorted runs, use the ->prev
-> links to keep track of things.  This reduces stack usage, eliminates
-> some ugly overflow handling, and reduces the code size.
+On Thu, Mar 28, 2019 at 02:59:50PM -0700, John Hubbard wrote:
+> On 3/25/19 7:40 AM, jglisse@redhat.com wrote:
+> > From: Jérôme Glisse <jglisse@redhat.com>
+> > 
+> > The HMM mirror API can be use in two fashions. The first one where the HMM
+> > user coalesce multiple page faults into one request and set flags per pfns
+> > for of those faults. The second one where the HMM user want to pre-fault a
+> > range with specific flags. For the latter one it is a waste to have the user
+> > pre-fill the pfn arrays with a default flags value.
+> > 
+> > This patch adds a default flags value allowing user to set them for a range
+> > without having to pre-fill the pfn array.
+> > 
+> > Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+> > Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  include/linux/hmm.h |  7 +++++++
+> >  mm/hmm.c            | 12 ++++++++++++
+> >  2 files changed, 19 insertions(+)
+> > 
+> > diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+> > index 79671036cb5f..13bc2c72f791 100644
+> > --- a/include/linux/hmm.h
+> > +++ b/include/linux/hmm.h
+> > @@ -165,6 +165,8 @@ enum hmm_pfn_value_e {
+> >   * @pfns: array of pfns (big enough for the range)
+> >   * @flags: pfn flags to match device driver page table
+> >   * @values: pfn value for some special case (none, special, error, ...)
+> > + * @default_flags: default flags for the range (write, read, ...)
+> > + * @pfn_flags_mask: allows to mask pfn flags so that only default_flags matter
+> >   * @pfn_shifts: pfn shift value (should be <= PAGE_SHIFT)
+> >   * @valid: pfns array did not change since it has been fill by an HMM function
+> >   */
+> > @@ -177,6 +179,8 @@ struct hmm_range {
+> >  	uint64_t		*pfns;
+> >  	const uint64_t		*flags;
+> >  	const uint64_t		*values;
+> > +	uint64_t		default_flags;
+> > +	uint64_t		pfn_flags_mask;
+> >  	uint8_t			pfn_shift;
+> >  	bool			valid;
+> >  };
+> > @@ -521,6 +525,9 @@ static inline int hmm_vma_fault(struct hmm_range *range, bool block)
+> >  {
+> >  	long ret;
+> >  
+> > +	range->default_flags = 0;
+> > +	range->pfn_flags_mask = -1UL;
 > 
-> Also:
-> * merge() no longer needs to handle NULL inputs, so simplify.
-> * The same applies to merge_and_restore_back_links(), which is renamed
->   to the less ponderous merge_final().  (It's a static helper function,
->   so we don't need a super-descriptive name; comments will do.)
-> * Document the actual return value requirements on the (*cmp)()
->   function; some callers are already using this feature.
+> Hi Jerome,
 > 
-> x86-64 code size 1086 -> 739 bytes (-347)
+> This is nice to have. Let's constrain it a little bit more, though: the pfn_flags_mask
+> definitely does not need to be a run time value. And we want some assurance that
+> the mask is 
+> 	a) large enough for the flags, and
+> 	b) small enough to avoid overrunning the pfns field.
 > 
-> (Yes, I see checkpatch complaining about no space after comma in
-> "__attribute__((nonnull(2,3,4,5)))".  Checkpatch is wrong.)
+> Those are less certain with a run-time struct field, and more obviously correct with
+> something like, approximately:
+> 
+>  	#define PFN_FLAGS_MASK 0xFFFF
+> 
+> or something.
+> 
+> In other words, this is more flexibility than we need--just a touch too much,
+> IMHO.
 
-x86_64 allnoconfig with gcc-7.3.0:
+This mirror the fact that flags are provided as an array and some devices use
+the top bits for flags (read, write, ...). So here it is the safe default to
+set it to -1. If the caller want to leverage this optimization it can override
+the default_flags value.
 
-lib/list_sort.c:17:36: warning: __pure__ attribute ignored [-Wattributes]
-   struct list_head const *, struct list_head const *);
+> 
+> > +
+> >  	ret = hmm_range_register(range, range->vma->vm_mm,
+> >  				 range->start, range->end);
+> >  	if (ret)
+> > diff --git a/mm/hmm.c b/mm/hmm.c
+> > index fa9498eeb9b6..4fe88a196d17 100644
+> > --- a/mm/hmm.c
+> > +++ b/mm/hmm.c
+> > @@ -415,6 +415,18 @@ static inline void hmm_pte_need_fault(const struct hmm_vma_walk *hmm_vma_walk,
+> >  	if (!hmm_vma_walk->fault)
+> >  		return;
+> >  
+> > +	/*
+> > +	 * So we not only consider the individual per page request we also
+> > +	 * consider the default flags requested for the range. The API can
+> > +	 * be use in 2 fashions. The first one where the HMM user coalesce
+> > +	 * multiple page fault into one request and set flags per pfns for
+> > +	 * of those faults. The second one where the HMM user want to pre-
+> > +	 * fault a range with specific flags. For the latter one it is a
+> > +	 * waste to have the user pre-fill the pfn arrays with a default
+> > +	 * flags value.
+> > +	 */
+> > +	pfns = (pfns & range->pfn_flags_mask) | range->default_flags;
+> 
+> Need to verify that the mask isn't too large or too small.
 
+I need to check agin but default flag is anded somewhere to limit
+the bit to the one we expect.
+
+Cheers,
+Jérôme
