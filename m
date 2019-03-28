@@ -2,111 +2,120 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AA8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86653C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2BB20685
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF812173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LwC6HNS+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SnRWy6bE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZLlV01Ur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbfC1TeR (ORCPT
+        id S1726407AbfC1Tej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 15:34:17 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49736 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfC1TeR (ORCPT
+        Thu, 28 Mar 2019 15:34:39 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36785 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbfC1Tei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 15:34:17 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 103E860790; Thu, 28 Mar 2019 19:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553801656;
-        bh=aa5y1wanFPJFPrSX/rtLYSSyhLC+I69Lm2O8WNFDsSI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LwC6HNS+tbVuIZ352HsMXdvY9y6CACJwy0pB/mSD4xN7PrwyRKux0pY3mCpDJHk40
-         vcTZMwWTodpAbklfb/HQvQDPzeqPXrrP2InAR86zrsvnAaUYpVBIwnWHtigytqoAMc
-         rIkTNTf/Wj7B6Mv8C153QGO6bUhKKhpAZNOrfR70=
-Received: from [10.79.174.182] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86CC760159;
-        Thu, 28 Mar 2019 19:34:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553801653;
-        bh=aa5y1wanFPJFPrSX/rtLYSSyhLC+I69Lm2O8WNFDsSI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SnRWy6bEPhWI6sqaLlpweSRXM4xr9khQ3J36ou8d19jNgjSKeVRqYuVJDEhjBsrgd
-         ik0KGUeuvEOG3gOiwiN+4kIWJOWTLi+9/c7hfmZkTQznM9EKNHhUngYO7ZxJxDnMZB
-         BoA4tw6BmNA54KOwccEoxt+w1oSE3feId+ld4AVw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86CC760159
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] n_tty: check for negative and zero space return from
- tty_write_room
-To:     Colin King <colin.king@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190328171005.5822-1-colin.king@canonical.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <e5f8282c-60e0-cefe-8ee6-2690a24e3b60@codeaurora.org>
-Date:   Fri, 29 Mar 2019 01:04:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 28 Mar 2019 15:34:38 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h18so76410wml.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:34:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e7lRspCxlFPLzK4hldvCX5JS4V+Z7U4Plbci4Lx3QQ4=;
+        b=ZLlV01Ur26ogbvrBH/87grdXS8KLxjs1Kyovb4Ndh48hz+mEGjwmQXM8CWbTNpRHE8
+         49N2WhtgbUihwTkLJPm3M6zr/yXAgzQG4KblKnolAgZk9WsuzXkujcpuVyL7RbVvrQlp
+         XnMnSCfjf1GeYzbb6TbaektqtsbB7PNJXEI8oGIVT9V/HbmLf1FdT4OG7rX6YBlUqOUc
+         49mOHep26+1FW8DIdCzAM+BmdiOhmZPEVJdrlqEzNVevitqbE+H4N00a/FqJnENAuOeF
+         1eL5c6x5iQ+hF0kFLwqWoc+xY6AVoIr1tvXd0XdpDX5o2a+89EuQviTMTxmDGbMdUx5s
+         PdDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e7lRspCxlFPLzK4hldvCX5JS4V+Z7U4Plbci4Lx3QQ4=;
+        b=nt2zABoGG3ZRkMJRLAa8dZtU25MSAvlOcA65Bh3qdrOalHHqiW4Vf7GCAxKpUijPiV
+         q+pTSrri+DCL0KEANbAY77pbNVm2ZW/t0CU85Zs98MnsFUzyVYLY2mBRIcvzhl6AxFS3
+         Fu6IkDIyWaPN4/R50S2Xskc71p9iebEK59YIsbgUoxNMr+bM5C/bKjc0PxWHqhX6AcwK
+         QMdHU+E5zaGHAbvKkWnpHVfrmSO1HK9ONmAO29qvKTwBpaSQY7MPrruycjWCq1MLa1rJ
+         G7S+JVbnYE+jv24ZARrmg53d+SFpZ4sN5CMm3ytM2QQLvmNMJ0cCfYWa1pDvnz4/s04q
+         MO1w==
+X-Gm-Message-State: APjAAAX1sNw/oNCw2azs19KZx0BZbMAgAWtSWl+2t3XG2XRLsq0ykDup
+        hHuXbDs5Kdn9o5mQh2+/hjhcgg==
+X-Google-Smtp-Source: APXvYqzl5i4UzY/SfFF5Kpb0L2mUvBbeaSR+3K7Cce2/611KOjQz6jEHHR28U4YVGneW+dv1tmuulA==
+X-Received: by 2002:a1c:4e19:: with SMTP id g25mr1135900wmh.9.1553801676904;
+        Thu, 28 Mar 2019 12:34:36 -0700 (PDT)
+Received: from sudo.home ([2a01:cb1d:112:6f00:dd62:8a50:1468:989d])
+        by smtp.gmail.com with ESMTPSA id d6sm27739186wrx.62.2019.03.28.12.34.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 12:34:35 -0700 (PDT)
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
+        Marcin Benka <mbenka@marvell.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Peter Jones <pjones@redhat.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [GIT PULL 0/5] EFI changes for v5.2
+Date:   Thu, 28 Mar 2019 20:34:24 +0100
+Message-Id: <20190328193429.21373-1-ard.biesheuvel@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190328171005.5822-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following changes since commit 8c2ffd9174779014c3fe1f96d9dc3641d9175f00:
 
-On 3/28/2019 10:40 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The return from tty_write_room could potentially be negative if
-> a tty write_room driver returns an error number (not that any seem
-> to do). Rather than just check for a zero return, also check for
-> a -ve return. This avoids the unsigned nr being set to a large unsigned
-> value on the assignment from variable space and can lead to overflowing
-> the buffer buf.  Better to be safe than assume all write_room
-> implementations in tty drivers are going to do the right thing.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+  Linux 5.1-rc2 (2019-03-24 14:02:26 -0700)
 
+are available in the Git repository at:
 
-Looks reasonable to me.
+  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-next
 
+for you to fetch changes up to a72f65180feb446cc59616aab400475679b6ffce:
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+  efi/libstub/arm: omit unneeded stripping of ksymtab/kcrctab sections (2019-03-28 09:22:32 +0100)
 
--Mukesh.
+----------------------------------------------------------------
+EFI updates for v5.2:
+- Squash a spurious warning when using the EFI framebuffer on a non-EFI boot.
+- Use DMI data to annotate RAS memory errors on ARM just like we do on Intel.
+- Some followup cleanups for DMI.
+- Some libstub Makefile cleanups.
 
+----------------------------------------------------------------
+Ard Biesheuvel (2):
+      efifb: omit memory map check on legacy boot
+      efi/libstub/arm: omit unneeded stripping of ksymtab/kcrctab sections
 
-> ---
->   drivers/tty/n_tty.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
-> index 9cdb0fa3c4bf..66630787fbf9 100644
-> --- a/drivers/tty/n_tty.c
-> +++ b/drivers/tty/n_tty.c
-> @@ -550,7 +550,7 @@ static ssize_t process_output_block(struct tty_struct *tty,
->   	mutex_lock(&ldata->output_lock);
->   
->   	space = tty_write_room(tty);
-> -	if (!space) {
-> +	if (space <= 0) {
->   		mutex_unlock(&ldata->output_lock);
->   		return 0;
->   	}
+Marcin Benka (1):
+      efi/arm: Show SMBIOS bank/device location in cper and ghes error logs
+
+Masahiro Yamada (1):
+      efi/libstub: refactor cmd_stubcopy
+
+Robert Richter (1):
+      efi: Unify dmi setup code over architectures arm/arm64, ia64 and x86
+
+ arch/ia64/kernel/setup.c              |  4 +---
+ arch/x86/kernel/setup.c               |  6 ++----
+ drivers/firmware/dmi_scan.c           | 28 +++++++++++++++-------------
+ drivers/firmware/efi/arm-runtime.c    |  6 ++----
+ drivers/firmware/efi/libstub/Makefile | 14 +++++++-------
+ drivers/video/fbdev/efifb.c           |  3 ++-
+ include/linux/dmi.h                   |  8 ++------
+ 7 files changed, 31 insertions(+), 38 deletions(-)
