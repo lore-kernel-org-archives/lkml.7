@@ -2,149 +2,331 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C57C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCD3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3C82173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D303E2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:30:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="L7TZMfi9"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dPrGKYld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfC1R2g (ORCPT
+        id S1727192AbfC1RaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:28:36 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52662 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbfC1R2e (ORCPT
+        Thu, 28 Mar 2019 13:30:02 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54340 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfC1RaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:28:34 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a184so4443204wma.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 10:28:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lP46VF+YGJi1QUXrMBZ3MRpL9mA7umkG2KC872VEL6o=;
-        b=L7TZMfi96yYcVJWXzXnhR81CyUjQRQGizCMN12qs7994FovE7udjsU6lQmhHs1v5e9
-         Z7Xf5FJUTQwxUwReggRYDfAJBmwXFenjJ9/TnwTONl25KucBW6BYmEC/F4hLHIDra7CC
-         K00pbKchqwRbyPP3+NwBJfh5AS/hgVgTmnZYiyedl42/4O+fsmwkCGflzfIGHdRAo8Qe
-         aBcMw7oUHIRFX3CnVR0JQ7ysVO+s7jqh9dd3bNhxQf2sOJ6p1L3qKw/9wwUP6aOxpAIk
-         GOU03luTlyk8muQdw70Xnw0uiigOpW+c2ZYY3k8vNO/IF2tWupG872ScfSUghiH25jtp
-         ZoOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lP46VF+YGJi1QUXrMBZ3MRpL9mA7umkG2KC872VEL6o=;
-        b=IuN1Bz9L3aZhQ7ktOVIyNmXFT1rI5tlcrYkXBM71vWNUH0/lTC+yhGB8iF6/CwWq02
-         shLotLWXGatK74BqRD8kPaSP0rDl0vcabIevTGcQq4AtAAC6J9BC6tQ7L8r7pIxclV99
-         Wt5dgT+Zzn/qn8DfacZ/eUQ6uODsGAuoRj5XKkrkAuv0r6giIMtpPeHKKnaoFfMJ2FBg
-         fH2Lx2tSm2ai3R1AFeaQYfL1bnbpVTBhhPYAbvaal8DdpriULD36uGfAVfo5layBg+Sf
-         tJ8pYjMwol8lIjb+TjvjXKtG/mM/xa1iTSBMhLD3MDZy3J5cOapNdHwwaTCXbJdEaK2l
-         QCAQ==
-X-Gm-Message-State: APjAAAXJdMTwz/IqIB3ICe04MRiaTipyCHGTCyc1370zs0wFK08f4M4S
-        Ysh82YG2x0//5BG5W7voXCI/hw==
-X-Google-Smtp-Source: APXvYqzq5+LrSciVn8Ia7uAZ6y2+J6qB5Db00CGMAyGLPPXyEYL7eGIUkcvxYmAYaFo80KfQmVfeDw==
-X-Received: by 2002:a7b:cf18:: with SMTP id l24mr700046wmg.132.1553794112114;
-        Thu, 28 Mar 2019 10:28:32 -0700 (PDT)
-Received: from localhost (ip-94-113-223-73.net.upcbroadband.cz. [94.113.223.73])
-        by smtp.gmail.com with ESMTPSA id h9sm3042298wmb.5.2019.03.28.10.28.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 10:28:31 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 18:28:30 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Michal Kubecek <mkubecek@suse.cz>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 05/22] ethtool: introduce ethtool netlink
- interface
-Message-ID: <20190328172830.GQ14297@nanopsycho>
-References: <20190326120909.GF2230@nanopsycho>
- <20190326132427.GK26076@unicorn.suse.cz>
- <20190326134251.GA5181@nanopsycho.orion>
- <20190327092604.GP26076@unicorn.suse.cz>
- <20190327095023.GC6979@nanopsycho>
- <7e883a7c-7f1a-b1a0-4735-0ad368998c65@gmail.com>
- <20190328081010.GJ14297@nanopsycho>
- <20190328093746.GA26076@unicorn.suse.cz>
- <20190328132316.GM14297@nanopsycho>
- <5edb07f0-427f-8a06-97f5-d904b4a50cc1@gmail.com>
+        Thu, 28 Mar 2019 13:30:01 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2SHTueR121381;
+        Thu, 28 Mar 2019 12:29:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553794196;
+        bh=DPLwyDSPpWsFJUrW++DNtp7p7ya1q+p9JYFeEkkOGuQ=;
+        h=From:To:CC:Subject:Date;
+        b=dPrGKYldmhfSL/nKrrdMGHH+QL43nRwHzaqjYJqi4FxIjHR+eIUyC+Iip2+DrVMAj
+         gxF6uSh+6IhstPD6cKZXulf5CxnJqqh3+WLO8d2IMLvmQM7NmeQe+dyB5MI5aUUK+T
+         iuB8ihJyMKIU46BTB0bSwuJUh43CAdQ45RxliUiI=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2SHTuhD014445
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 Mar 2019 12:29:56 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 28
+ Mar 2019 12:29:56 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 28 Mar 2019 12:29:56 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2SHTt7J034032;
+        Thu, 28 Mar 2019 12:29:55 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        <linux-omap@vger.kernel.org>
+CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [RFC PATCH net-next] net: ethernet: ti: cpsw: drop TI_DAVINCI_CPDMA config option
+Date:   Thu, 28 Mar 2019 19:29:53 +0200
+Message-ID: <1553794193-8098-1-git-send-email-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5edb07f0-427f-8a06-97f5-d904b4a50cc1@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thu, Mar 28, 2019 at 06:00:20PM CET, f.fainelli@gmail.com wrote:
->On 3/28/19 6:23 AM, Jiri Pirko wrote:
->> Thu, Mar 28, 2019 at 10:37:46AM CET, mkubecek@suse.cz wrote:
->>> On Thu, Mar 28, 2019 at 09:10:10AM +0100, Jiri Pirko wrote:
->>>> Thu, Mar 28, 2019 at 03:05:14AM CET, f.fainelli@gmail.com wrote:
->>>>>
->>>>>
->>>>> On 3/27/2019 2:50 AM, Jiri Pirko wrote:
->>>>>>
->>>>>> Why don't you have ETHTOOL_MSG_SET_FOO for set? I think that for
->>>>>> kerne->userspace the ETHTOOL_MSG_FOO if fine. I would change the
->>>>>> ordering of words thought, but it is cosmetics:
->>>>>> ETHTOOL_MSG_FOO /* kernel->userspace messages - replies, notifications */
->>>>>> ETHTOOL_MSG_FOO_GET
->>>>>> ETHTOOL_MSG_FOO_SET
->>>>>> ETHTOOL_MSG_FOO_ACT
->>>>>>
->>>>>> What do you think?
->>>>>
->>>>> We could even name the notification explicitly with: ETHTOOL_MSG_NOTIF
->>>>> or ETHTOOL_MSG_NTF just so we spell out exactly what those messages are.
->>>>
->>>> Sound good. Something like:
->>>>
->>>> ETHTOOL_MSG_FOO_GET
->>>> ETHTOOL_MSG_FOO_GET_RPLY /* kernel->userspace replies to get */
->>>> ETHTOOL_MSG_FOO_SET
->>>> ETHTOOL_MSG_FOO_ACT
->>>> ETHTOOL_MSG_FOO_NTF /* kernel->userspace async messages - notifications */
->>>
->>> The names sound fine to me and having different message ids would still
->>> allow processing messages by the same handler easily.
->>>
->>> But there is one potential issue I would like to point out: this way we
->>> spend 4 message ids for a get/set pair rather than 2. These message ids
->>> (genlmsghdr::cmd) are u8, i.e. the resource is not as infinite as one
->>> would wish. There are 80 ioctl commands (43 "get" and 29 "set") at the
->>> moment.
->>>
->>> Netlink API should be less greedy in general. I already combined some
->>> ioctl commands into one netlink request type and with an easy way to add
->>> new attributes to existing commands, we won't need to add new commands
->>> as often (certainly not in a way which left us with 9 "get" and 9 "set"
->>> ioctl commands for netdev features). So even with 4 ids per get/set
->>> pair, we might be safe for reasonably long time. But it's still
->>> something to keep in mind.
->> 
->> There are still 16 bits reserve in genl msg header:
->> struct genlmsghdr {
->>         __u8    cmd;
->>         __u8    version;
->>         __u16   reserved;
->> };
->> 
->
->And you know not all message IDs will be making sense depending on the
->direction, so aliasing specific message IDs to an existing value should
->be fine?
+Both drivers CPSW and EMAC can't work without CPDMA, hence simplify build
+of those drivers by always linking davinci_cpdma and drop TI_DAVINCI_CPDMA
+config option.
+Note. the davinci_emac driver module was changed to "ti_davinci_emac" to
+make build work.
 
-You are right, good idea. There can be 2 enums one for in, one for out.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+
+It's been marked as RFC as I've had to change davinci_emac.c module name
+ to "ti_davinci_emac".  if no objection - I'd like to do the same for ALE module also
+ and then resend.
+
+ drivers/net/ethernet/ti/Kconfig         |  2 ++
+ drivers/net/ethernet/ti/Makefile        |  6 +++---
+ drivers/net/ethernet/ti/davinci_cpdma.c | 26 -------------------------
+ 3 files changed, 5 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 8b21b40a9fe5..bf5bead0d465 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -22,6 +22,7 @@ config TI_DAVINCI_EMAC
+ 	select TI_DAVINCI_MDIO
+ 	select TI_DAVINCI_CPDMA
+ 	select PHYLIB
++	default m
+ 	---help---
+ 	  This driver supports TI's DaVinci Ethernet .
+ 
+@@ -68,6 +69,7 @@ config TI_CPSW
+ 	select TI_CPSW_ALE
+ 	select MFD_SYSCON
+ 	select REGMAP
++	default m
+ 	---help---
+ 	  This driver supports TI's CPSW Ethernet Switch.
+ 
+diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
+index 0be551de821c..a763e1b27304 100644
+--- a/drivers/net/ethernet/ti/Makefile
++++ b/drivers/net/ethernet/ti/Makefile
+@@ -8,14 +8,14 @@ obj-$(CONFIG_TI_DAVINCI_EMAC) += cpsw-common.o
+ 
+ obj-$(CONFIG_TLAN) += tlan.o
+ obj-$(CONFIG_CPMAC) += cpmac.o
+-obj-$(CONFIG_TI_DAVINCI_EMAC) += davinci_emac.o
++obj-$(CONFIG_TI_DAVINCI_EMAC) += ti_davinci_emac.o
++ti_davinci_emac-y := davinci_emac.o davinci_cpdma.o
+ obj-$(CONFIG_TI_DAVINCI_MDIO) += davinci_mdio.o
+-obj-$(CONFIG_TI_DAVINCI_CPDMA) += davinci_cpdma.o
+ obj-$(CONFIG_TI_CPSW_PHY_SEL) += cpsw-phy-sel.o
+ obj-$(CONFIG_TI_CPSW_ALE) += cpsw_ale.o
+ obj-$(CONFIG_TI_CPTS_MOD) += cpts.o
+ obj-$(CONFIG_TI_CPSW) += ti_cpsw.o
+-ti_cpsw-y := cpsw.o
++ti_cpsw-y := cpsw.o davinci_cpdma.o
+ 
+ obj-$(CONFIG_TI_KEYSTONE_NETCP) += keystone_netcp.o
+ keystone_netcp-y := netcp_core.o
+diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
+index 4236dcdd5634..b8df342ba217 100644
+--- a/drivers/net/ethernet/ti/davinci_cpdma.c
++++ b/drivers/net/ethernet/ti/davinci_cpdma.c
+@@ -527,7 +527,6 @@ struct cpdma_ctlr *cpdma_ctlr_create(struct cpdma_params *params)
+ 		ctlr->num_chan = CPDMA_MAX_CHANNELS;
+ 	return ctlr;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctlr_create);
+ 
+ int cpdma_ctlr_start(struct cpdma_ctlr *ctlr)
+ {
+@@ -588,7 +587,6 @@ int cpdma_ctlr_start(struct cpdma_ctlr *ctlr)
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctlr_start);
+ 
+ int cpdma_ctlr_stop(struct cpdma_ctlr *ctlr)
+ {
+@@ -621,7 +619,6 @@ int cpdma_ctlr_stop(struct cpdma_ctlr *ctlr)
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctlr_stop);
+ 
+ int cpdma_ctlr_destroy(struct cpdma_ctlr *ctlr)
+ {
+@@ -639,7 +636,6 @@ int cpdma_ctlr_destroy(struct cpdma_ctlr *ctlr)
+ 	cpdma_desc_pool_destroy(ctlr);
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctlr_destroy);
+ 
+ int cpdma_ctlr_int_ctrl(struct cpdma_ctlr *ctlr, bool enable)
+ {
+@@ -660,25 +656,21 @@ int cpdma_ctlr_int_ctrl(struct cpdma_ctlr *ctlr, bool enable)
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctlr_int_ctrl);
+ 
+ void cpdma_ctlr_eoi(struct cpdma_ctlr *ctlr, u32 value)
+ {
+ 	dma_reg_write(ctlr, CPDMA_MACEOIVECTOR, value);
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctlr_eoi);
+ 
+ u32 cpdma_ctrl_rxchs_state(struct cpdma_ctlr *ctlr)
+ {
+ 	return dma_reg_read(ctlr, CPDMA_RXINTSTATMASKED);
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctrl_rxchs_state);
+ 
+ u32 cpdma_ctrl_txchs_state(struct cpdma_ctlr *ctlr)
+ {
+ 	return dma_reg_read(ctlr, CPDMA_TXINTSTATMASKED);
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctrl_txchs_state);
+ 
+ static void cpdma_chan_set_descs(struct cpdma_ctlr *ctlr,
+ 				 int rx, int desc_num,
+@@ -774,7 +766,6 @@ int cpdma_chan_split_pool(struct cpdma_ctlr *ctlr)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_split_pool);
+ 
+ 
+ /* cpdma_chan_set_weight - set weight of a channel in percentage.
+@@ -807,7 +798,6 @@ int cpdma_chan_set_weight(struct cpdma_chan *ch, int weight)
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_set_weight);
+ 
+ /* cpdma_chan_get_min_rate - get minimum allowed rate for channel
+  * Should be called before cpdma_chan_set_rate.
+@@ -822,7 +812,6 @@ u32 cpdma_chan_get_min_rate(struct cpdma_ctlr *ctlr)
+ 
+ 	return DIV_ROUND_UP(divident, divisor);
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_get_min_rate);
+ 
+ /* cpdma_chan_set_rate - limits bandwidth for transmit channel.
+  * The bandwidth * limited channels have to be in order beginning from lowest.
+@@ -867,7 +856,6 @@ int cpdma_chan_set_rate(struct cpdma_chan *ch, u32 rate)
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_set_rate);
+ 
+ u32 cpdma_chan_get_rate(struct cpdma_chan *ch)
+ {
+@@ -880,7 +868,6 @@ u32 cpdma_chan_get_rate(struct cpdma_chan *ch)
+ 
+ 	return rate;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_get_rate);
+ 
+ struct cpdma_chan *cpdma_chan_create(struct cpdma_ctlr *ctlr, int chan_num,
+ 				     cpdma_handler_fn handler, int rx_type)
+@@ -940,7 +927,6 @@ struct cpdma_chan *cpdma_chan_create(struct cpdma_ctlr *ctlr, int chan_num,
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return chan;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_create);
+ 
+ int cpdma_chan_get_rx_buf_num(struct cpdma_chan *chan)
+ {
+@@ -953,7 +939,6 @@ int cpdma_chan_get_rx_buf_num(struct cpdma_chan *chan)
+ 
+ 	return desc_num;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_get_rx_buf_num);
+ 
+ int cpdma_chan_destroy(struct cpdma_chan *chan)
+ {
+@@ -975,7 +960,6 @@ int cpdma_chan_destroy(struct cpdma_chan *chan)
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_destroy);
+ 
+ int cpdma_chan_get_stats(struct cpdma_chan *chan,
+ 			 struct cpdma_chan_stats *stats)
+@@ -988,7 +972,6 @@ int cpdma_chan_get_stats(struct cpdma_chan *chan,
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_get_stats);
+ 
+ static void __cpdma_chan_submit(struct cpdma_chan *chan,
+ 				struct cpdma_desc __iomem *desc)
+@@ -1095,7 +1078,6 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_submit);
+ 
+ bool cpdma_check_free_tx_desc(struct cpdma_chan *chan)
+ {
+@@ -1110,7 +1092,6 @@ bool cpdma_check_free_tx_desc(struct cpdma_chan *chan)
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 	return free_tx_desc;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_check_free_tx_desc);
+ 
+ static void __cpdma_chan_free(struct cpdma_chan *chan,
+ 			      struct cpdma_desc __iomem *desc,
+@@ -1204,7 +1185,6 @@ int cpdma_chan_process(struct cpdma_chan *chan, int quota)
+ 	}
+ 	return used;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_process);
+ 
+ int cpdma_chan_start(struct cpdma_chan *chan)
+ {
+@@ -1224,7 +1204,6 @@ int cpdma_chan_start(struct cpdma_chan *chan)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_start);
+ 
+ int cpdma_chan_stop(struct cpdma_chan *chan)
+ {
+@@ -1287,7 +1266,6 @@ int cpdma_chan_stop(struct cpdma_chan *chan)
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_stop);
+ 
+ int cpdma_chan_int_ctrl(struct cpdma_chan *chan, bool enable)
+ {
+@@ -1329,25 +1307,21 @@ int cpdma_control_set(struct cpdma_ctlr *ctlr, int control, int value)
+ 
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_control_set);
+ 
+ int cpdma_get_num_rx_descs(struct cpdma_ctlr *ctlr)
+ {
+ 	return ctlr->num_rx_desc;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_get_num_rx_descs);
+ 
+ int cpdma_get_num_tx_descs(struct cpdma_ctlr *ctlr)
+ {
+ 	return ctlr->num_tx_desc;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_get_num_tx_descs);
+ 
+ void cpdma_set_num_rx_descs(struct cpdma_ctlr *ctlr, int num_rx_desc)
+ {
+ 	ctlr->num_rx_desc = num_rx_desc;
+ 	ctlr->num_tx_desc = ctlr->pool->num_desc - ctlr->num_rx_desc;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_set_num_rx_descs);
+ 
+ MODULE_LICENSE("GPL");
+-- 
+2.17.1
+
