@@ -2,74 +2,106 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2987C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1F9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 971B9206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB46C21773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:03:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="GhwVO3GD"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="cO0bmT8R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfC1NDR (ORCPT
+        id S1727211AbfC1NDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 09:03:17 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:53096 "EHLO mail.skyhub.de"
+        Thu, 28 Mar 2019 09:03:48 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:43892 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbfC1NDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 09:03:17 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0F7131EC0943;
-        Thu, 28 Mar 2019 14:03:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553778196;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=qbv9AHGYcfJ1x+KFg0pur/Cu2rhy6nYViDKJcMNfbsM=;
-        b=GhwVO3GD3MudLAFRqZjV6jbSH5J+2yap4aT8Ft1/+J7y3BdmcugyIV2yNQfY93ib3hsP0w
-        3oZ4szXZMx2XMWYiezGeMzYm8ltD4BuBQ7WgPDVDCiVLOZNt11ljGXmVYfWE//hLic7dEt
-        UR3YUJsm1avAjCsfe6+bykM4A9UvqSk=
-Date:   Thu, 28 Mar 2019 14:03:17 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] x86/boot: Support nocfg parameter for earlyprintk
-Message-ID: <20190328130317.GG22720@zn.tnic>
-References: <20190319184325.72807-1-andriy.shevchenko@linux.intel.com>
- <20190319184325.72807-8-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190319184325.72807-8-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1725779AbfC1NDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 09:03:48 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44VQ6T3VDvz9v2Hk;
+        Thu, 28 Mar 2019 14:03:45 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=cO0bmT8R; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id TO4ir2j_GK_q; Thu, 28 Mar 2019 14:03:45 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44VQ6T2PVRz9v2Hh;
+        Thu, 28 Mar 2019 14:03:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1553778225; bh=00mcQBSgYO78zRbK1rxCu3YRaTtOXke+6rL37WP4sfQ=;
+        h=From:Subject:To:Cc:Date:From;
+        b=cO0bmT8R9gNu3H0ngv5FyHtJVZSCuSKi3egXxjfdOVGSjBTBlz4WsqnpNw/CjFEG2
+         u2B4b7FESvoP56Y4DzYRh7ktlp2iSEPlXSw6XY3Htukey+FR1nlGq9Fyks86e0tDMI
+         Sguy7WJU6PIlXq65+SLc4Ck2C5Ihs4oXc5axe+wU=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A57C38B91B;
+        Thu, 28 Mar 2019 14:03:46 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id yWcfnxQcHxZd; Thu, 28 Mar 2019 14:03:46 +0100 (CET)
+Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 79FA78B90A;
+        Thu, 28 Mar 2019 14:03:46 +0100 (CET)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id DF2A06FC7A; Thu, 28 Mar 2019 13:03:45 +0000 (UTC)
+Message-Id: <92e8f0bcec682e878796758e1efb88c172c7ffe4.1553778054.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/book3e: drop BUG_ON() in map_kernel_page()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 28 Mar 2019 13:03:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 09:43:25PM +0300, Andy Shevchenko wrote:
-> If by BIOS or by other means the serial port is configured
-> user might want to skip reconfiguration in the boot code.
+early_alloc_pgtable() never returns NULL as it panics on failure.
 
-That needs more explanation: how can that happen? How is the user
-supposed to know whether the serial port is configured in order to use
-this cmdline param?
+This patch drops the three BUG_ON() which check the non nullity
+of early_alloc_pgtable() returned value.
 
-Why can't the kernel detect whether the serial port is configured and
-not touch that configuration?
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/mm/pgtable-book3e.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-A lot of why's and head scratching...
-
+diff --git a/arch/powerpc/mm/pgtable-book3e.c b/arch/powerpc/mm/pgtable-book3e.c
+index 1032ef7aaf62..390a6d0b216d 100644
+--- a/arch/powerpc/mm/pgtable-book3e.c
++++ b/arch/powerpc/mm/pgtable-book3e.c
+@@ -98,20 +98,17 @@ int map_kernel_page(unsigned long ea, unsigned long pa, pgprot_t prot)
+ #ifndef __PAGETABLE_PUD_FOLDED
+ 		if (pgd_none(*pgdp)) {
+ 			pudp = early_alloc_pgtable(PUD_TABLE_SIZE);
+-			BUG_ON(pudp == NULL);
+ 			pgd_populate(&init_mm, pgdp, pudp);
+ 		}
+ #endif /* !__PAGETABLE_PUD_FOLDED */
+ 		pudp = pud_offset(pgdp, ea);
+ 		if (pud_none(*pudp)) {
+ 			pmdp = early_alloc_pgtable(PMD_TABLE_SIZE);
+-			BUG_ON(pmdp == NULL);
+ 			pud_populate(&init_mm, pudp, pmdp);
+ 		}
+ 		pmdp = pmd_offset(pudp, ea);
+ 		if (!pmd_present(*pmdp)) {
+ 			ptep = early_alloc_pgtable(PAGE_SIZE);
+-			BUG_ON(ptep == NULL);
+ 			pmd_populate_kernel(&init_mm, pmdp, ptep);
+ 		}
+ 		ptep = pte_offset_kernel(pmdp, ea);
 -- 
-Regards/Gruss,
-    Boris.
+2.13.3
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
