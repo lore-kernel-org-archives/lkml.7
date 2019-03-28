@@ -2,84 +2,206 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A525C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A83C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6734820823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:40:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553802059;
-	bh=mGtVIpiPpXWSkH9224tKdkCk5t11v5GfpnqrdoBVCuQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uYHyProamIBLmMwsfBWQJZD0f/1N9fD5UzJfBJIksok7yrg3JfpfFoOQFD8t0bT9X
-	 BJytiqL9BdzMycABnA0WqIMKtZSImMoFuR+Tl+fjhmVBnT0gP9g0mDOpqHUoGNZctp
-	 Vq9/sqCyCcionMYOUiESYdi9IpSuxBIwKOoM/7BA=
+	by mail.kernel.org (Postfix) with ESMTP id A13B62173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfC1Tk5 (ORCPT
+        id S1726543AbfC1TmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 15:40:57 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43691 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbfC1Tk5 (ORCPT
+        Thu, 28 Mar 2019 15:42:02 -0400
+Received: from a2nlsmtp01-03.prod.iad2.secureserver.net ([198.71.225.37]:39588
+        "EHLO a2nlsmtp01-03.prod.iad2.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725885AbfC1TmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 15:40:57 -0400
-Received: by mail-ot1-f67.google.com with SMTP id u15so19467195otq.10;
-        Thu, 28 Mar 2019 12:40:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UQaAA6AzrLefSCaq5tdDTasje0E6ZYjhkJmQgQtllxA=;
-        b=mGhPeTiMdoetVE7/4EIuWeFSJRROxBien+IedP4M+jGgGNjhlaInzwQf9YI0rbz+wg
-         M69Y5PmiaZKj6AZfGxEW2mpMTuqr0IJmyAUElxz9HHLv6zhelNmJEjuzio599tvo9IpL
-         rgwEZmYFcdV35uJ9xQ4hMWUCNEOyKzM/Bbg8Ml/dMMYjk97eUwKCeN1dmM2yuNrOBZSg
-         uE3GcWnUR2Gcqg1CWio2AvEPGndqNOxKepucV5WW4jgGC3PINEpXijhJggklB50Qvd1y
-         z/4lX3G1Z9BoL5jvulYntM+6Edx5DAtwatvJ7BJl5ekeFwIecwUxxDCwq/LkjBoSWMFP
-         UiWg==
-X-Gm-Message-State: APjAAAUD84n/DWH3lH2B09Si7Pe9omPZIJ4q90DcG6oeNhU3O/O3mCol
-        9KGUE0xMZad39RjSD6ECqg==
-X-Google-Smtp-Source: APXvYqz/HY1elLxQ+3SRMiYSLKLkSGMB5sF5qg6TXjwmaT6aBowEwmJZPE3CYA7k38kodckEflcXwg==
-X-Received: by 2002:a05:6830:1248:: with SMTP id s8mr31122499otp.234.1553802056621;
-        Thu, 28 Mar 2019 12:40:56 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v19sm10226146otk.63.2019.03.28.12.40.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 12:40:55 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 14:40:55 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] of: property: Document that
- of_graph_get_endpoint_by_regs needs of_node_put
-Message-ID: <20190328194055.GA13068@bogus>
-References: <20190315092247.7286-1-maxime.ripard@bootlin.com>
+        Thu, 28 Mar 2019 15:42:01 -0400
+Received: from linuxonhyperv2.linuxonhyperv.com ([107.180.71.197])
+        by : HOSTING RELAY : with ESMTP
+        id 9atYhx8qEiCMn9atYhXhYx; Thu, 28 Mar 2019 12:41:00 -0700
+x-originating-ip: 107.180.71.197
+Received: from haiyangz by linuxonhyperv2.linuxonhyperv.com with local (Exim 4.91)
+        (envelope-from <haiyangz@linuxonhyperv2.linuxonhyperv.com>)
+        id 1h9atY-0001uA-BI; Thu, 28 Mar 2019 12:41:00 -0700
+From:   Haiyang Zhang <haiyangz@linuxonhyperv.com>
+To:     sashal@kernel.org, linux-hyperv@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH hyperv-fixes,v3] hv_netvsc: Fix unwanted wakeup after tx_disable
+Date:   Thu, 28 Mar 2019 19:40:36 +0000
+Message-Id: <20190328194036.7279-1-haiyangz@linuxonhyperv.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190315092247.7286-1-maxime.ripard@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfBOp1j2z4ArOwV8Un/m56/ERQosGUiIGZI7HvErqR1JxOVzz9NlVyq6HLBkLwgwZSIWgOkR5SpbUbG5X6zgCGcdWIgDHKQhHxgc4MCf/zbYsklWUo/Sw
+ Pc0YYVdEoyxXJenHe4gFdmvLsztDo8khxP8ZD4XjFuDNpJO7bE11fQpJZVJ6mrRZZtWeWmyR0RKurvxRVKulVrOz6kkBcimMk5s+ZeRmCGXttUPiASmrQSOC
+ EjCYgTmfenc930lCwjqWTbzMgxksRt/YEvVyXqayY2zf1XUeYHvhD7rLVVr92tFaCh5utGFrfjK0ygZ+/H8bQGmreLVf1+A2aqbzRJ87ZvheKUbRfNPiqPvI
+ Hw1UAvkXEzlvkVjx7il/bzt0d44gt+YbUIMiTMyU0ZUKx02R+C08Sx2qSwBjt6WkpYLKNdk8JaZrO6ganmCUwxsAvbwgeMHIPvsL9PWVp5H18eInQv+38YCA
+ AXfQTdzaIxvrPjL/8kYs+njRwO6H1EpUg5E2RGDZnwnbtgq16itjFN+MW4I=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 10:22:47AM +0100, Maxime Ripard wrote:
-> The node returned by of_graph_get_endpoint_by_regs has a reference taken,
-> and we need to put that reference back when done with the node.
-> 
-> However, the documentation for that node doesn't mention it, so let's make
-> sure it does.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  drivers/of/property.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-Applied.
+After queue stopped, the wakeup mechanism may wake it up again
+when ring buffer usage is lower than a threshold. This may cause
+send path panic on NULL pointer when we stopped all tx queues in
+netvsc_detach and start removing the netvsc device.
 
-Rob
+This patch fix it by adding a tx_disable flag to prevent unwanted
+queue wakeup.
+
+Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
+Reported-by: Mohammed Gamal <mgamal@redhat.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+ drivers/net/hyperv/hyperv_net.h |  1 +
+ drivers/net/hyperv/netvsc.c     |  6 ++++--
+ drivers/net/hyperv/netvsc_drv.c | 32 ++++++++++++++++++++++++++------
+ 3 files changed, 31 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index e859ae2..49f41b6 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -987,6 +987,7 @@ struct netvsc_device {
+ 
+ 	wait_queue_head_t wait_drain;
+ 	bool destroy;
++	bool tx_disable; /* if true, do not wake up queue again */
+ 
+ 	/* Receive buffer allocated by us but manages by NetVSP */
+ 	void *recv_buf;
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 813d195..e0dce37 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -110,6 +110,7 @@ static struct netvsc_device *alloc_net_device(void)
+ 
+ 	init_waitqueue_head(&net_device->wait_drain);
+ 	net_device->destroy = false;
++	net_device->tx_disable = false;
+ 
+ 	net_device->max_pkt = RNDIS_MAX_PKT_DEFAULT;
+ 	net_device->pkt_align = RNDIS_PKT_ALIGN_DEFAULT;
+@@ -719,7 +720,7 @@ static void netvsc_send_tx_complete(struct net_device *ndev,
+ 	} else {
+ 		struct netdev_queue *txq = netdev_get_tx_queue(ndev, q_idx);
+ 
+-		if (netif_tx_queue_stopped(txq) &&
++		if (netif_tx_queue_stopped(txq) && !net_device->tx_disable &&
+ 		    (hv_get_avail_to_write_percent(&channel->outbound) >
+ 		     RING_AVAIL_PERCENT_HIWATER || queue_sends < 1)) {
+ 			netif_tx_wake_queue(txq);
+@@ -874,7 +875,8 @@ static inline int netvsc_send_pkt(
+ 	} else if (ret == -EAGAIN) {
+ 		netif_tx_stop_queue(txq);
+ 		ndev_ctx->eth_stats.stop_queue++;
+-		if (atomic_read(&nvchan->queue_sends) < 1) {
++		if (atomic_read(&nvchan->queue_sends) < 1 &&
++		    !net_device->tx_disable) {
+ 			netif_tx_wake_queue(txq);
+ 			ndev_ctx->eth_stats.wake_queue++;
+ 			ret = -ENOSPC;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 1a08679..06393b2 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -109,6 +109,15 @@ static void netvsc_set_rx_mode(struct net_device *net)
+ 	rcu_read_unlock();
+ }
+ 
++static void netvsc_tx_enable(struct netvsc_device *nvscdev,
++			     struct net_device *ndev)
++{
++	nvscdev->tx_disable = false;
++	virt_wmb(); /* ensure queue wake up mechanism is on */
++
++	netif_tx_wake_all_queues(ndev);
++}
++
+ static int netvsc_open(struct net_device *net)
+ {
+ 	struct net_device_context *ndev_ctx = netdev_priv(net);
+@@ -129,7 +138,7 @@ static int netvsc_open(struct net_device *net)
+ 	rdev = nvdev->extension;
+ 	if (!rdev->link_state) {
+ 		netif_carrier_on(net);
+-		netif_tx_wake_all_queues(net);
++		netvsc_tx_enable(nvdev, net);
+ 	}
+ 
+ 	if (vf_netdev) {
+@@ -184,6 +193,17 @@ static int netvsc_wait_until_empty(struct netvsc_device *nvdev)
+ 	}
+ }
+ 
++static void netvsc_tx_disable(struct netvsc_device *nvscdev,
++			      struct net_device *ndev)
++{
++	if (nvscdev) {
++		nvscdev->tx_disable = true;
++		virt_wmb(); /* ensure txq will not wake up after stop */
++	}
++
++	netif_tx_disable(ndev);
++}
++
+ static int netvsc_close(struct net_device *net)
+ {
+ 	struct net_device_context *net_device_ctx = netdev_priv(net);
+@@ -192,7 +212,7 @@ static int netvsc_close(struct net_device *net)
+ 	struct netvsc_device *nvdev = rtnl_dereference(net_device_ctx->nvdev);
+ 	int ret;
+ 
+-	netif_tx_disable(net);
++	netvsc_tx_disable(nvdev, net);
+ 
+ 	/* No need to close rndis filter if it is removed already */
+ 	if (!nvdev)
+@@ -918,7 +938,7 @@ static int netvsc_detach(struct net_device *ndev,
+ 
+ 	/* If device was up (receiving) then shutdown */
+ 	if (netif_running(ndev)) {
+-		netif_tx_disable(ndev);
++		netvsc_tx_disable(nvdev, ndev);
+ 
+ 		ret = rndis_filter_close(nvdev);
+ 		if (ret) {
+@@ -1906,7 +1926,7 @@ static void netvsc_link_change(struct work_struct *w)
+ 		if (rdev->link_state) {
+ 			rdev->link_state = false;
+ 			netif_carrier_on(net);
+-			netif_tx_wake_all_queues(net);
++			netvsc_tx_enable(net_device, net);
+ 		} else {
+ 			notify = true;
+ 		}
+@@ -1916,7 +1936,7 @@ static void netvsc_link_change(struct work_struct *w)
+ 		if (!rdev->link_state) {
+ 			rdev->link_state = true;
+ 			netif_carrier_off(net);
+-			netif_tx_stop_all_queues(net);
++			netvsc_tx_disable(net_device, net);
+ 		}
+ 		kfree(event);
+ 		break;
+@@ -1925,7 +1945,7 @@ static void netvsc_link_change(struct work_struct *w)
+ 		if (!rdev->link_state) {
+ 			rdev->link_state = true;
+ 			netif_carrier_off(net);
+-			netif_tx_stop_all_queues(net);
++			netvsc_tx_disable(net_device, net);
+ 			event->event = RNDIS_STATUS_MEDIA_CONNECT;
+ 			spin_lock_irqsave(&ndev_ctx->lock, flags);
+ 			list_add(&event->list, &ndev_ctx->reconfig_events);
+-- 
+1.8.3.1
+
