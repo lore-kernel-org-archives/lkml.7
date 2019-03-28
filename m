@@ -2,166 +2,151 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71045C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B8DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B8C21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:21:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553790065;
-	bh=zbEw58eVJsnkbsdL4RSRNIBC76bieC36Ixbjdk4+0ko=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=BsstOE3F8MRhFogcmRB0WgWyMIkD9eoMo1RTqYw/slXY+WM2HVt4beBjWB7QJyxws
-	 ye4q18ExtuwGoMTRzzGHhdxGHRi6YncACeupMF4mb2P76bqU+o6/YsJdBhWYPKHGem
-	 LjU2DhcY3Ews0CtlP/SjX6qViiejB/Wjv7//q1x0=
+	by mail.kernel.org (Postfix) with ESMTP id 2F95A2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfC1QVD (ORCPT
+        id S1726375AbfC1QW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:21:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfC1QVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:21:03 -0400
-Received: from [192.168.1.3] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D2FA20823;
-        Thu, 28 Mar 2019 16:21:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553790062;
-        bh=zbEw58eVJsnkbsdL4RSRNIBC76bieC36Ixbjdk4+0ko=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=YSMKa6FCkZ1DwMrfHn66tFlbwgJ/jrKNYrnnSphAMhYwJHijlP8wNDj/r7gp772A2
-         0glpyY6MfJVrhBeQbbgwIYxsiZ13G9IuKj4NTy3f7Izkgh8wsocKjmqw7HrcjtXn6A
-         WpaZq+BnNFB84DuYs+6+neqsj6DewyZmjmAf5IsY=
-Subject: Re: [RESEND PATCHv2] arm64: defconfig: enable fpga and service layer
-To:     richard.gong@linux.intel.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, arnd@arndb.de, olof@lixom.net,
-        atull@kernel.org, mdf@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        todd.riffel@intel.com, Richard Gong <richard.gong@intel.com>
-References: <1550589857-10359-1-git-send-email-richard.gong@linux.intel.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <79ad98a4-0945-7716-8929-4db9f9f4fb69@kernel.org>
-Date:   Thu, 28 Mar 2019 11:21:00 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Mar 2019 12:22:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56398 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725948AbfC1QW3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 12:22:29 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2SGK2bE054103
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:22:27 -0400
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rh1ndr7kj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:22:27 -0400
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 28 Mar 2019 16:22:26 -0000
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Mar 2019 16:22:22 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2SGML6B22347934
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 16:22:21 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4C1FCB206A;
+        Thu, 28 Mar 2019 16:22:21 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2FAB8B2067;
+        Thu, 28 Mar 2019 16:22:21 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Mar 2019 16:22:21 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 3445C16C3799; Thu, 28 Mar 2019 09:22:22 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 09:22:22 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Alexander Potapenko <glider@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        James Y Knight <jyknight@google.com>
+Subject: Re: Potentially missing "memory" clobbers in bitops.h for x86
+Reply-To: paulmck@linux.ibm.com
+References: <CAG_fn=X9tpSW6jvJd_COk_RU8zvcr-cxSWuJ05qcV0LotTxEEQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1550589857-10359-1-git-send-email-richard.gong@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG_fn=X9tpSW6jvJd_COk_RU8zvcr-cxSWuJ05qcV0LotTxEEQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19032816-0068-0000-0000-000003AC737E
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010829; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000283; SDB=6.01180951; UDB=6.00618066; IPR=6.00961669;
+ MB=3.00026196; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-28 16:22:24
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032816-0069-0000-0000-000047F700C3
+Message-Id: <20190328162222.GO4102@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903280110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+On Thu, Mar 28, 2019 at 03:14:12PM +0100, Alexander Potapenko wrote:
+> Hello,
+> 
+> arch/x86/include/asm/bitops.h defines clear_bit(nr, addr) for
+> non-constant |nr| values as follows:
+> 
+> void clear_bit(long nr, volatile unsigned long *addr) {
+>   asm volatile("lock; btr %1,%0"
+>     : "+m"(*(volatile long *)addr)
+>     : "Ir" (nr));
+>   }
+> (https://elixir.bootlin.com/linux/latest/source/arch/x86/include/asm/bitops.h#L111)
+> 
+> According to the comments in the file, |nr| may be arbitrarily large.
+> However the assembly constraints only imply that the first unsigned
+> long value at |addr| is written to.
+> This may result in the compiler ignoring the effect of the asm directive.
+> 
+> Consider the following example (https://godbolt.org/z/naTmjn):
+> 
+>   #include <stdio.h>
+>   void clear_bit(long nr, volatile unsigned long *addr) {
+>     asm volatile("lock; btr %1,%0"
+>       : "+m"(*(volatile long *)addr)
+>       : "Ir" (nr));
+>   }
+> 
+>   unsigned long foo() {
+>     unsigned long addr[2] = {1, 2};
+>     clear_bit(65, addr);
+>     return addr[0] + addr[1];
+>   }
+> 
+>   int main() {
+>     printf("foo: %lu\n", foo());
+>   }
+> 
+> Depending on the optimization level, the program may print either 1
+> (for -O0 and -O1) or 3 (for -O2 and -O3).
+> This is because on higher optimization levels GCC assumes that addr[1]
+> is unchanged and directly propagates the constant to the result.
+> 
+> I suspect the definitions of clear_bit() and similar functions are
+> lacking the "memory" clobber.
+> But the whole file tends to be very picky about whether this clobber
+> needs to be applied in each case, so in the case of a performance
+> penalty we may need to consider alternative approaches to fixing this
+> code.
 
-On 2/19/19 9:24 AM, richard.gong@linux.intel.com wrote:
-> From: Richard Gong <richard.gong@intel.com>
-> 
-> Enable FPGA framework, Intel Stratix10 SoC FPGA manager, Stratix10
-> service layer, and Altera Freeze Bridge drivers.
-> 
-> Intel Stratix10 service layer driver was added with commit 7ca5ce896524
-> ("firmware: add Intel Stratix10 service layer driver").
-> 
-> Intel Stratix10 service layer provides kernel APIs for drivers to request
-> access to the secure features. Such features include FPGA programming,
-> remote status update, and read and write secure registers.
-> 
-> While clients of the service layer can be built as modules, the service
-> layer itself has to be configured as built-in.  The service layer is
-> dependent on ARCH_STRATIX10.
-> 
-> Enabling Altera Freeze Bridge depends on commit 38cd7ad5bd25
-> ("fpga: altera_freeze_bridge: remove restriction to socfpga").
-> 
-> Signed-off-by: Richard Gong <richard.gong@intel.com>
-> ---
-> v2: add to enable FPGA framework, Intel Stratix10 SoC FPGA manager and
->     Altera freeze bridge drivers.
-> ---
->  arch/arm64/configs/defconfig | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
+Is there a way of indicating a clobber only on the specific location
+affected?  I suppose that one approach would be to calculate in C code
+a pointer to the specific element of the addr[] array, which would
+put the specific clobbered memory location onto the outputs list.
+Or keep the current calculation, but also add "addr[nr / sizeof(long)]"
+to the output list, thus telling the compiler exactly what is being
+clobbered.  Assuming that actually works...
 
-I've made a change to this patch and applied it.
+Of course, this would force the compiler to actually compute the
+offset, which would slow things down.  I have no idea whether this
+would be better or worse than just using the "memory" clobber.
 
-Thanks,
-Dinh
----
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2b8c479d88bb..74b6cadde31c 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -84,6 +84,7 @@ CONFIG_ARM_SCPI_CPUFREQ=y
- CONFIG_ARM_TEGRA186_CPUFREQ=y
- CONFIG_ARM_SCPI_PROTOCOL=y
- CONFIG_RASPBERRYPI_FIRMWARE=y
-+CONFIG_INTEL_STRATIX10_SERVICE=y
- CONFIG_TI_SCI_PROTOCOL=y
- CONFIG_EFI_CAPSULE_LOADER=y
- CONFIG_IMX_SCU=y
-@@ -736,6 +737,12 @@ CONFIG_QCOM_QFPROM=y
- CONFIG_ROCKCHIP_EFUSE=y
- CONFIG_UNIPHIER_EFUSE=y
- CONFIG_MESON_EFUSE=m
-+CONFIG_FPGA=y
-+CONFIG_FPGA_MGR_STRATIX10_SOC=m
-+CONFIG_FPGA_BRIDGE=m
-+CONFIG_ALTERA_FREEZE_BRIDGE=m
-+CONFIG_FPGA_REGION=m
-+CONFIG_OF_FPGA_REGION=m
- CONFIG_TEE=y
- CONFIG_OPTEE=y
- CONFIG_EXT2_FS=y
+							Thanx, Paul
 
