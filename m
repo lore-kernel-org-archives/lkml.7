@@ -2,96 +2,81 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EECC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 03:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCE0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 04:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70532206DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 03:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02EB6206DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 04:02:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iszv+5bg"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Ae28Bbbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbfC1DwI (ORCPT
+        id S1725849AbfC1ECc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 23:52:08 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44497 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726904AbfC1DwH (ORCPT
+        Thu, 28 Mar 2019 00:02:32 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:45057 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfC1ECb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 23:52:07 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g12so4318361pll.11;
-        Wed, 27 Mar 2019 20:52:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zKeJHF8Fm5rNYOXMS2nDgi4nCJuDVCjRQW1/Gpyx6GY=;
-        b=Iszv+5bgnHVDuhWH/4VN/KPdYtKE3yBmSFvCLpQSlXkHHwOBBTAtPRcfEGkKETwjpe
-         uiljfCXPMPDHFceV6fHyvfpQUa5vEsGGllaYHQDsIeUgG/vHPHYP0mxojj1eIot8k91u
-         hD34A6J+aXCccbRzdhB0wrGfmJkT6/Ru/bIf/MDwZjfVyy62O8uxe0qR509GZ2mSM3Ns
-         of474B0yeEO4xf8rAQb9ZmL5Ya5im0YeP08/4tA23nILd7ATaM9/cm5JDu9h3h2DQYsq
-         0LjkKHR5TEH8POVtx2NYQZLehWBfe6h8hi4KvM6fbWfOuyyroe2usTFIYv499HlTw1zd
-         j93Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zKeJHF8Fm5rNYOXMS2nDgi4nCJuDVCjRQW1/Gpyx6GY=;
-        b=lm5Sc82JagGH2cWdvAgYmd2ZJyFDcW3RLIVqE+Ng6oeWVETSjG9BYGw2IuLQQ3SNrQ
-         +FqU2vMLzF/E0V81xEMh/CEVO3QCoKbj3gUNHGRUFYLOZ3nS3RF8g6MZxVhLzvvtKJhG
-         Ae6ZT6iQ9kcV8I2yj6wSUqmAbW7tpl9r/+dz6SvLxOdbredyfIly5y0SXTWEaL0Airz/
-         gwTcqnqacOTIRNn97HPOZoYkw475LnQpMR93fARN8XkclyCZ6o8Crf9a5vcM5Y+R7V+o
-         BM1F5ziB/hT/Z3aBf4qAgTE/n/MDPt7oUs/PjN6/L+aCAj0+9hSMZjLS7+ljrbBlmufH
-         eTDQ==
-X-Gm-Message-State: APjAAAVYvS0FDkOOpPOpzcU1iq/SHgwboaDsgpxpBpb68TJL8cXpyFLk
-        ZW8fFsiUEz8Trn/YCSj4z0ktBI84
-X-Google-Smtp-Source: APXvYqwl7bP9rzZekm6Sqpn+nzafZVGWaU6ldavBGBpQbiXBK3ma5ebBHwUftCnKphUKvrYgUlOoJQ==
-X-Received: by 2002:a17:902:1e6:: with SMTP id b93mr40548565plb.325.1553745126599;
-        Wed, 27 Mar 2019 20:52:06 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id p3sm17049796pfn.167.2019.03.27.20.52.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 20:52:05 -0700 (PDT)
-Subject: Re: [PATCH net-next v5 15/22] ethtool: provide link mode names as a
- string set
-To:     Michal Kubecek <mkubecek@suse.cz>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <823fb9fb5d2055836719962d30befbc5da8e9310.1553532199.git.mkubecek@suse.cz>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <cd7e73fe-977f-2257-2d2b-4b87cdcbf84f@gmail.com>
-Date:   Wed, 27 Mar 2019 20:52:03 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 28 Mar 2019 00:02:31 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id BB28F806CB;
+        Thu, 28 Mar 2019 17:02:29 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1553745749;
+        bh=7NBDjca8CqFcBIzIKTpm1tSjsqP/Let6MA2LwzfnQeE=;
+        h=From:To:Cc:Subject:Date;
+        b=Ae28BbbuNTaxgA8nBhTM7fizpTYIqcS3Izm9jZmEzKtIfM3lNS/Og+6/v/pZtxAQs
+         ZlC/AhYciReoGFw21y/eIcapPGZQjAGdiLm+42btNcWaByR9rOyEfSXnwewQaO2z7L
+         z5Y+W2ocCOxudnOJU3hWfqMxEULlChKz8Xx8TGr7rpTCppBjT4CiY8Zs78pb+hwV0e
+         N/PFYvht2+ijusNOzhzNfbliabVt0DzG/IgsVcwNaNA+fNbTFLYboj62CuLTqOwBoN
+         Pu4g8YlX9gGJvCzrbOW6DOpRNe0c9d4D9rUjQO37byqHDy4GHU0hr+aypzmvJk3UCT
+         JBab1Gc6CO4xQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5c9c47510000>; Thu, 28 Mar 2019 17:02:30 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by smtp (Postfix) with ESMTP id 9BBBB13EEF7;
+        Thu, 28 Mar 2019 17:02:24 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 77BD81E1124; Thu, 28 Mar 2019 17:02:24 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, marek.vasut@gmail.com, richard@nod.at,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 0/2] mtd: physmap: Using gpio-addrs
+Date:   Thu, 28 Mar 2019 17:02:14 +1300
+Message-Id: <20190328040217.1895-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <823fb9fb5d2055836719962d30befbc5da8e9310.1553532199.git.mkubecek@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I have a system with ADDR24 of the flash chip connected to a gpio pin. Th=
+is
+series fixes a bug in physmap-core.c and adds an example for using gpio-a=
+ddrs
+to the dt-binding based on the system I'm using.
 
+Chris Packham (2):
+  mtd: maps: physmap: Store gpio_values correctly
+  dt-binding: mtd: physmap: Add example using addr-gpios property
 
-On 3/25/2019 10:08 AM, Michal Kubecek wrote:
-> Add table of ethernet link mode names and make it available as a string set
-> to userspace GET_STRSET requests.
-> 
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+ .../devicetree/bindings/mtd/mtd-physmap.txt      | 16 ++++++++++++++++
+ drivers/mtd/maps/physmap-core.c                  |  2 ++
+ 2 files changed, 18 insertions(+)
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+--=20
+2.21.0
+
