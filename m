@@ -4,82 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86E5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754ACC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9240720823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 359BB20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553786254;
-	bh=V6ORkVWd11slwxFJpCCAYlNhctpkIDErOnLqqL/4ZSg=;
+	s=default; t=1553786274;
+	bh=h7Y32MSkQe8PHcc100BPXSjLpxuFO0QnljThxy95IZA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Psa/dqv44I3d7tEiADO7BbQ/igwW2OiiXuMg1H1fwYjqXTn18YeBj36TzTyIZ2mqJ
-	 cRN3qejN5ZbIctOeFS6cBBe5PkdLfpQjNL3t8Gb6C/yXxaarpyKiiE+W4bCPaZWWgb
-	 lHqcpRT29pFsqtfxp7V6I2LVduPPigyy15Db5UDE=
+	b=C17aqC8JoNK8wiUjXwLqr8WDWZhUkkOx456GvacP3WlPAn4MywvnxbHv55vHmihOZ
+	 PhffBh4LLamX4LCHNTz4lvj8wNN6oKDkcYCjubSFlpnfXLKCO/ILnHFDb+fccK2h/u
+	 7wKVNyPO00Qgdn2r3+FaMuiHXyU6KFBVGWZcJWpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfC1PRd (ORCPT
+        id S1727175AbfC1PRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:17:33 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36559 "EHLO
+        Thu, 28 Mar 2019 11:17:53 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41286 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfC1PRc (ORCPT
+        with ESMTP id S1726224AbfC1PRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:17:32 -0400
-Received: by mail-ot1-f67.google.com with SMTP id o74so18676698ota.3;
-        Thu, 28 Mar 2019 08:17:32 -0700 (PDT)
+        Thu, 28 Mar 2019 11:17:52 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 64so18645949otb.8;
+        Thu, 28 Mar 2019 08:17:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OS6pHgTLBklX9XKfAD0SUoPMglmUTPXYkJTZZLPv0Rg=;
-        b=mN1HteP9exlxmwLd65xzjI59VBkBtnh+wm+BRkBmeY6ueJQTRtjEpa0CET5ZChWAdv
-         jE98Bzcp4jqTJDxs4QbwMQFlzooIy6FP75KewwP6Q6q5HZP/6Yr/8IZbGjmYLOkcqZ66
-         GAnv2uyjHv5vJgdrhZ3vPP2iv4FxSLyWFhg8msReZK3UBqRNact2V0y3EUSyUePasJKZ
-         ASYcPjw3oRw3rUioUXWGEBQuw3USEhTJ4w7DQuWK1+bD6ilJJ2Erh/ChFr0ffX7vxmOo
-         MKEi5lA5gywMpmsxhPwRMuN7H1q+PyYdzhGx/yQB7F8gMXensJGe8pH63C+JDaaBFmi6
-         SkpQ==
-X-Gm-Message-State: APjAAAVLoFrsw/RM8Ia59zEiEtlcOt8xbwKpEzsPoXtAzYsbZHJAfO9U
-        oS+JD3unUC6Vg/Tn+wf18w==
-X-Google-Smtp-Source: APXvYqz6CO9Z49GS6bebLHKeOspUAbs9CyLMtEZ4rG9Z0A12FunJginBtlTCujm5v4lz1c0E8GHLww==
-X-Received: by 2002:a9d:5c0f:: with SMTP id o15mr29381833otk.329.1553786252045;
-        Thu, 28 Mar 2019 08:17:32 -0700 (PDT)
+        bh=XKFOM54+2ObR8/c8w6Od7RwzgBu/+7D27/71aliV5p4=;
+        b=a9KH1Ky6+rWYG7VvV5pF/rbIHV7Qn9R7wXNLn7hbyU6ZctdsJrW98iyAqY2LhFXBs3
+         FdMRbKMZafiCXK/uKYuZo7oG4X2imT5K+yPXvTODhI1L7Pg2RxKIKnv/DdAJVR0scqwl
+         ySVV7/+jdJ8hQTs2h/OsQtE1vo963RKlbpXrIsMj61pCG2nRw8fy19QzcbORYathprJU
+         2wG8A27ewj5jUQh7dBPdBGSUqVudsK0u+VeGZDBOnJz4cuA0ZLKveQe+xLb/BLI4fHJd
+         tm6VXYgV/7P+iu9xUBJseQnsCtreLxbpq7nyAC5487PoHNDp8nXRm9MIktA0/YXYvnZz
+         mpsQ==
+X-Gm-Message-State: APjAAAUJ1wt9hyQ24DIFJqFlalrlmMBqmIofMUratJ3VYqUc1X0ZnR+a
+        /grrsdbR9nqDQbyUd+2XZA==
+X-Google-Smtp-Source: APXvYqyZVOfpGivqBJFrF/WwRAJa1eBMhSkz6MphVqYtlW2MeS2UwGq7L9c9uFOOQ6wgCU+onKuicg==
+X-Received: by 2002:a05:6830:2090:: with SMTP id y16mr21668080otq.97.1553786272041;
+        Thu, 28 Mar 2019 08:17:52 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z2sm10840270ota.56.2019.03.28.08.17.31
+        by smtp.gmail.com with ESMTPSA id 92sm9846886oti.60.2019.03.28.08.17.51
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 08:17:31 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 10:17:30 -0500
+        Thu, 28 Mar 2019 08:17:51 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 10:17:50 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/3] dt-bindings: display: amlogic,  meson-vpu: Add G12A
- compatible and ports
-Message-ID: <20190328151730.GA20801@bogus>
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: display: amlogic,meson-dw-hdmi: Add
+ G12A compatible and ports
+Message-ID: <20190328151750.GA21381@bogus>
 References: <20190313141030.5958-1-narmstrong@baylibre.com>
- <20190313141030.5958-2-narmstrong@baylibre.com>
+ <20190313141030.5958-3-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190313141030.5958-2-narmstrong@baylibre.com>
+In-Reply-To: <20190313141030.5958-3-narmstrong@baylibre.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Mar 2019 15:10:28 +0100, Neil Armstrong wrote:
-> The Amlogic G12A VPU is very similar to the Amlogic GXM VPU but with :
-> - an enhanced plane blender, with up to 3 OSD planes
-> - support for AFBC 1.2 decoder (for Bifrost GPU)
-> - support display mode up to 4k60@75Hz
+On Wed, 13 Mar 2019 15:10:29 +0100, Neil Armstrong wrote:
+> The Amlogic G12A SoC has a slighly modified DW-HDMI Glue with
+> support for HDMI 2.1 and a different DW-HDMI register access.
 > 
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  .../devicetree/bindings/display/amlogic,meson-vpu.txt         | 4 ++++
+>  .../devicetree/bindings/display/amlogic,meson-dw-hdmi.txt     | 4 ++++
 >  1 file changed, 4 insertions(+)
 > 
 
