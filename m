@@ -2,186 +2,208 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A72C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AC7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB5E2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4EF2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:32:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="KrtV0wbJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfC1Nb4 (ORCPT
+        id S1727327AbfC1NcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 09:31:56 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39542 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfC1Nby (ORCPT
+        Thu, 28 Mar 2019 09:32:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52771 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbfC1NcV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 09:31:54 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p20so16735499eds.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 06:31:52 -0700 (PDT)
+        Thu, 28 Mar 2019 09:32:21 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a184so3606442wma.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 06:32:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0q2r53aKYUmVjk/D6UV35xslK67AC14YCtryKCiafY8=;
+        b=KrtV0wbJF+CkFfmzL+RW7loSH/zJkKhUExhmCVQPZ84KB/JwDIo3z0tfy+mjUQJ4we
+         YXhI55Pau7urEg3Axv2l0IklLQFAmxmiryAaQRM4gYItXanUKUVGoiay8IHD25bKRD/T
+         EZyUCbRlBPE9+UkHLIjgyiHgPGhheEz5MnKuWhIEm7hIQdt7aExBH043J9tqwxEoab/S
+         aRN3VElj9QaXBWR7Iop2smfCTanQJFsgNorCbr7CtxpOAaAfBcD186WW5pKm47kvSrbR
+         ISHOqI0O/quah006gnoiqglV1ulTU/XFsYY4Upef/yT4knugquSzlgIxBxuHLzRGKmPw
+         NdnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=l6Vi8M4ajulsz02axgUDKeUfX8n+UOgrRKvsQmmLB60=;
-        b=MLF5grDzJNukbpYZYadIFjiKAUegfYKevoTA3X3ALtvUm38zrS57HqxJYLRWi88utf
-         pMoEQQic/kAKrmak4+TY31Y/D7ELsadwUZRU978Qcq6IM5v9thENoK39TQk8tvqoU89J
-         3b31fmrXRvPtARsYGnYmVdeADAqWc+h6d+5FJLYbbINpEmI1yYrd5O+4p3/RfwongqZT
-         aK2JCOD0uWGEE3HCctFYHJLiWPtHbbMvVL3dncQ6Isq3uZhJRwNrywZE7CIqneLXOGyp
-         4NLOlQ2h1bq+Xm/wjftSQwzZsWvKM+JW/jV1Cs6PuVLRwb8cA26/aDwe4qEDW7Rvm2+o
-         0P6A==
-X-Gm-Message-State: APjAAAU7SAvZJM8ZdOMBSFXqnSNj+4VxVqHM/30vt4d221zdMObMVUR0
-        yDuKG76umgUhh6wsobaiBQOeEg==
-X-Google-Smtp-Source: APXvYqx/j5UR646Fhx+l0sWn/xsh5PB29P7IXMYGniPMVKugpo8K6Kmnz4y+TRYzCKMWzxqnZZcSlg==
-X-Received: by 2002:a50:c40f:: with SMTP id v15mr7549109edf.236.1553779911867;
-        Thu, 28 Mar 2019 06:31:51 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id t8sm5209991ejk.6.2019.03.28.06.31.49
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 06:31:50 -0700 (PDT)
-Subject: Re: [PATCH v2] ACPI / PM: Propagate KEY_POWER to user space when
- resume
-To:     "Chen, Hu" <hu1.chen@intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-References: <CAJZ5v0g3+S0vkW0XTzMKA8rYCtgy7yJ+UDc5xG4rRcdTbcJ=Lg@mail.gmail.com>
- <20190328103448.20335-1-hu1.chen@intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1ad154aa-4d92-395d-890c-fe81b0bf21b5@redhat.com>
-Date:   Thu, 28 Mar 2019 14:31:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0q2r53aKYUmVjk/D6UV35xslK67AC14YCtryKCiafY8=;
+        b=bn3TLfvJqgodYr++d4RbWsRNDbt2hmcpMxvPvsgFFDBHj8B1he/+G0ibBBSrIvwvIZ
+         X1+o5CIJw/NA04RWkQUlR2XeD/59+w6DHV5Gh125CaL2rmp4+zb/YCjUBvnGHWSrr1SQ
+         lRfssirThud5ODT1LeXM/y6c4WKK+LvNzpsca5A5v6I65ep5PlQh/JBsKyj2rbCpvUc3
+         OJGYhV8t9feqfBSYLoY+1lo862l2QDD+XPqC2CzCJqR+nxV6pz4VhgzUehUkmUQdo74b
+         juZyxPYYZbJOth/jWRQKkMcVVLM7sYp6aGtbqJ5dkfq+bJEmFz9tZ+Gm1jjcV55+g55Z
+         33OA==
+X-Gm-Message-State: APjAAAVIU8jqgyfHrfN5tphz/sqGCmBPHoA34jFDMWwRxGTQ8wP9XE+t
+        7iwUVWQfP12l7tLI1T+VGuiB3A==
+X-Google-Smtp-Source: APXvYqxkSlh269JF0ezXugm6sKk9Rt2fh6o+j4ixkHTNXQ58iFy9+rHZpKDSoVx0dw/scroi0GK+1A==
+X-Received: by 2002:a7b:c04c:: with SMTP id u12mr23075652wmc.71.1553779940349;
+        Thu, 28 Mar 2019 06:32:20 -0700 (PDT)
+Received: from localhost (ip-94-113-223-73.net.upcbroadband.cz. [94.113.223.73])
+        by smtp.gmail.com with ESMTPSA id h2sm45795944wro.11.2019.03.28.06.32.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 06:32:19 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 14:32:18 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 10/22] ethtool: generic handlers for GET
+ requests
+Message-ID: <20190328133218.GN14297@nanopsycho>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+ <bda9c044a590ed61caa43c37d32b3b7f2b6326c5.1553532199.git.mkubecek@suse.cz>
+ <20190327163507.GE14297@nanopsycho>
+ <20190327215342.GU26076@unicorn.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190328103448.20335-1-hu1.chen@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327215342.GU26076@unicorn.suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Wed, Mar 27, 2019 at 10:53:42PM CET, mkubecek@suse.cz wrote:
+>On Wed, Mar 27, 2019 at 05:35:07PM +0100, Jiri Pirko wrote:
+>> Mon, Mar 25, 2019 at 06:08:24PM CET, mkubecek@suse.cz wrote:
+>> >Some parts of processing GET type requests and related notifications are
+>> >independent of a command. Provide universal functions so that only four
+>> >callbacks need to be defined for each command type:
+>> >
+>> >  parse_request() - parse incoming message
+>> >  prepare_data()  - retrieve data from driver or NIC
+>> >  reply_size()    - estimate reply message size
+>> >  fill_reply()    - compose reply message
+>> >
+>> >These callback are defined in an instance of struct get_request_ops.
+>> >
+>> >Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+>> 
+>> [...]
+>> 
+>> >+/**
+>> >+ * struct get_request_ops - unified handling of GET requests
+>> >+ * @request_cmd:    command id for request (GET)
+>> >+ * @reply_cmd:      command id for reply (SET)
+>> >+ * @dev_attr:       attribute type for device specification
+>> >+ * @data_size:      total length of data structure
+>> >+ * @repdata_offset: offset of "reply data" part (struct common_reply_data)
+>> >+ * @allow_nodev_do: do not fail if device is not specified for non-dump request
+>> >+ * @parse_request:
+>> >+ *	parse request message and fill request info; request info is zero
+>> >+ *	initialized on entry except reply_data pointer (which is initialized)
+>> >+ * @prepare_data:
+>> >+ *	retrieve data needed to compose a reply message; reply data are zero
+>> >+ *	initialized on entry except for @dev
+>> >+ * @reply_size:
+>> >+ *	return size of reply message payload without device specification;
+>> >+ *	returned size may be bigger than actual reply size but it must suffice
+>> >+ *	to hold the reply
+>> >+ * @fill_reply:
+>> >+ *	fill reply message payload using the data prepared by @prepare_data()
+>> >+ * @cleanup
+>> >+ *	(optional) called when data are no longer needed; use e.g. to free
+>> >+ *	any additional data structures allocated in prepare_data() which are
+>> >+ *	not part of the main structure
+>> >+ *
+>> >+ * Description of variable parts of GET request handling when using the unified
+>> >+ * infrastructure. When used, a pointer to an instance of this structure is to
+>> >+ * be added to &get_requests array, generic handlers ethnl_get_doit(),
+>> >+ * ethnl_get_dumpit(), ethnl_get_start() and ethnl_get_done() used in
+>> >+ * @ethnl_genl_ops and (optionally) ethnl_std_notify() as notification handler
+>> >+ * in &ethnl_notify_handlers.
+>> >+ */
+>> >+struct get_request_ops {
+>> 
+>> First of all, please maintain the ethnl prefix. Not only here, but also
+>> for other structs and functions (common_req_info, parse_*, etc).
+>> 
+>> But I must ask, why do we need this wrappers of ops around ops?
+>> I believe it would be much nicer to use genl ops directly and do the
+>> common work in pre_doit and and post_doit. Please see devlink.c for
+>> examples.
+>> 
+>> Wrappers are unfortunately quite common in this patchset. Most of the
+>> time, they do things much harder to follow and understand :(
+>
+>I'm a bit surprised by this position because so far my experience with
+>linux networking code seemed to suggest that using simple wrappers and
+>helpers is how things are supposed to be done. And while following a
+>chain of such wrappers (often each in a different file) in a code I was
+>reading for the first time could be frustrating at times, mostly I had
+>to admit that this style has its merits. After all, genetlink itself is
+>full of simple wrappers around netlink functions.
+>
+>Let me point out one thing: most of these helpers and wrappers are not
+>artificial, they haven't been written in advance with an idea that they
+>might be useful (the patch series does not, of course, reflect the
+>development history); most of them were written when I realized I'm
+>writing the same or almost the same code again and again.
+>
+>So when I caught myself writing
+>
+>  ... = nla_nest_start(skb, ... | NLA_F_NESTED);
+>
+>for the third or fourth time and I realized that every nla_nest_start()
+>call in the code will have this bitwise or, I felt it would deserve
+>a helper. (If I expected some objection, it was rather the optical
+>asymmetry of ethnl_nest_start() being closed with nla_nest_end().)
+>It would be much nicer to have it in nla_nest_start() but unfortunately
+>it's too late for that.
 
-On 28-03-19 11:34, Chen, Hu wrote:
-> I run Android on x86 PC (it's a NUC). Everytime I press the power button
-> to wake the system, it suspends right away. After some debug, I find
-> that Android wants to see KEY_POWER at resume. Otherwise, its
-> opportunistic suspend will kick in shortly.
-> 
-> However, other OS such as Ubuntu doesn't like KEY_POWER at resume. So
-> add a knob "/sys/module/button/parameters/key_power_at_resume" for users
-> to select.
-
-We've had a similar discussion about the power-button on Bay Trail tablets,
-which often is connected to a GPIO driver.
-
-There we had the opposite problem, that regular desktop environments
-like GNOME (and the related daemons) will immediately re-suspend again
-on resume because of a KEY_POWER press event at resume. I submitted patches
-to make the gpio-keys code not send a keypress on resume (configurable
-per button) but that got nacked by Dmitry, the input subsystem maintainer.
-
-It seems that this mostly is an evdev/input policy decision so that
-this patch is going to need an ack from Dmitry, I've added Dmitry
-to the Cc.
-
-Note that after my kernel level fix for the Bay Trail devices got
-nacked, I worked-around this in userspace:
-
-https://gitlab.gnome.org/GNOME/gnome-settings-daemon/commit/f2ae8a3b9905cde7a9c12f78cb84689e97203380
-
-But for GNOME only, e.g. KDE will likely still have a problem with
-a KEY_POWER event being reported after suspend.
-
-It seems the problem is that we have 2 different userspaces here
-which have exact opposite expectations wrt KEY_POWER reporting
-after a wakeup from suspend with the power-button. Android expects
-it to be reported, which is why gpio-keys is reporting it since it
-is mostly used with Android, where as classic Linux desktop-environments
-expect it to NOT be reported, which is why the acpi-button.c code
-so far has not reported it :|
-
-I believe that unconditionally sending KEY_POWER after resume
-will indeed causes issues for standard Linux distros, so I believe
-that your solution with a parameter for people who want to run
-android on plain x86 hardware is the best we can do now, but
-I really wish we would remedy this situation one way or the other.
-
-I wanted to give everyone involved the whole story, hence the
-long mail :)
-
-Regards,
-
-Hans
+Okay, this wrapper I can understand, but it certainly isn't ethnl
+specific wrapper. It is generic, many others might use it:
+$ git grep NLA_F_NESTED |grep nla_nest_start
 
 
+>
+>And it's exactly the same case with get_request_ops. For quite long
+>(until after RFC v2), this framework didn't exist and code for get
+>request processing (both doit and dumpit) and notifications was written
+>separately for each message type. Realizing that big part of each new
+>file is in fact an exact copy of the previous one with some string
+>replacements and that it's going to be like that for most of the future
+>files, that led me to identifying which parts are specific to message
+>type and which are generic.
+>
+>If I have to get rid of get_request_ops, it will only result in having
+>multiple copies of functions which would replace ethnl_get_doit(),
+>ethnl_get_dumpit() and ethnl_std_notify(). They would be slightly
+>simpler but would look the same except for "info" in one being replaced
+>by "strset" in second, "settings" in third etc. Later, there would be
+>one more copy for stats, one for tunables etc.
+>
+>I don't think the generic code can be handled just by pre_doit and
+>post_doit as the generic and message specific part are interleaved and
+>the generic parts are also different for do requests, dump requests and
+>notifications.
 
+What do you mean by "interleaved"? I guess you can make the attrs to be
+formatted in the way it is not interleaved. Like what I suggested, to
+have top-level generic attr enum and one of the generic attrs would nest
+the cmd-specific attrs. That way, pre_doit can work with the generic
+attrs, doit op can work with cmd-specific attrs. Similar to devlink
+code.
 
-
-
-> 
-> Signed-off-by: Chen, Hu <hu1.chen@intel.com>
-> ---
-> 
->   drivers/acpi/button.c | 6 +++++-
->   drivers/acpi/sleep.c  | 8 ++++++++
->   2 files changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-> index a19ff3977ac4..f98e6d85dd2b 100644
-> --- a/drivers/acpi/button.c
-> +++ b/drivers/acpi/button.c
-> @@ -129,6 +129,10 @@ struct acpi_button {
->   	bool suspended;
->   };
->   
-> +/* does userspace want to see KEY_POWER at resume? */
-> +static bool key_power_at_resume __read_mostly;
-> +module_param(key_power_at_resume, bool, 0644);
-> +
->   static BLOCKING_NOTIFIER_HEAD(acpi_lid_notifier);
->   static struct acpi_device *lid_device;
->   static u8 lid_init_state = ACPI_BUTTON_LID_INIT_METHOD;
-> @@ -417,7 +421,7 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
->   			int keycode;
->   
->   			acpi_pm_wakeup_event(&device->dev);
-> -			if (button->suspended)
-> +			if (button->suspended && !key_power_at_resume)
->   				break;
->   
->   			keycode = test_bit(KEY_SLEEP, input->keybit) ?
-> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
-> index 403c4ff15349..c5dcee9f5872 100644
-> --- a/drivers/acpi/sleep.c
-> +++ b/drivers/acpi/sleep.c
-> @@ -462,6 +462,13 @@ static int find_powerf_dev(struct device *dev, void *data)
->   	return !strcmp(hid, ACPI_BUTTON_HID_POWERF);
->   }
->   
-> +static void pwr_btn_notify(struct device *dev)
-> +{
-> +	struct acpi_device *device = to_acpi_device(dev);
-> +
-> +	device->driver->ops.notify(device, ACPI_FIXED_HARDWARE_EVENT);
-> +}
-> +
->   /**
->    *	acpi_pm_finish - Instruct the platform to leave a sleep state.
->    *
-> @@ -505,6 +512,7 @@ static void acpi_pm_finish(void)
->   				      find_powerf_dev);
->   	if (pwr_btn_dev) {
->   		pm_wakeup_event(pwr_btn_dev, 0);
-> +		pwr_btn_notify(pwr_btn_dev);
->   		put_device(pwr_btn_dev);
->   	}
->   }
-> 
+>
+>Michal
