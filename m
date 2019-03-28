@@ -2,157 +2,114 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5C0C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B83FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCA620811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4C920811
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:48:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553788135;
+	bh=PSGYSOTFtZTq5rFyHmTQ179YhVGXpRo3uSmx26LapDM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DB2SjeNr0ozn9M70+onMm5os7oqy8AWuw54enMwVnloJINFYN4mGDxoZkTyuCAwdX
+	 ZsFfkBksmHzkn0Gzth1E3OhRygECuRMmrOXOoANhDXH/lRdO9tfizRlE+NE1QbarS9
+	 +miI/MovmzUOf7U55HYG1c9KwRc2Or4v2ae8jbuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfC1Prk (ORCPT
+        id S1727093AbfC1Psy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:47:40 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47504 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfC1Prk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:47:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00A0A80D;
-        Thu, 28 Mar 2019 08:47:40 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48C7D3F557;
-        Thu, 28 Mar 2019 08:47:38 -0700 (PDT)
-Subject: Re: [PATCH v3 0/3] PCIe Host request to reserve IOVA
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1548411231-27549-1-git-send-email-srinath.mannam@broadcom.com>
- <c92e07d7-78b2-d4ec-bf1a-29070a9d4145@arm.com>
- <CABe79T7BC9AO3EF23=JjYwXCHDKX5mDYSPzHfpD_tLzX6gukHg@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <741a4210-251c-9c00-d4a7-bc7ebf8cd57b@arm.com>
-Date:   Thu, 28 Mar 2019 15:47:36 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Mar 2019 11:48:54 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33973 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfC1Psx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 11:48:53 -0400
+Received: by mail-lj1-f196.google.com with SMTP id j89so18128695ljb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:48:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vo++b97MtjKW6Z2ai3nHuw6ipPYXtam+djLDtD4oqbs=;
+        b=CwCFxbkSM/vTcw8s9X4OQEk4bUDgHzdCzk9zUTTFGu5l+1y2uvKsLOUfOE18QOkKH3
+         wblMOBuhkzua26OvZxWU/7bRTbidTstDyKOeFD1X1lyu8HWJA1zrGBNQhCdBvaGxu0CG
+         Ian+hlP3NM/TWmnoejTNM0pf5KoRNseIgUbmM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vo++b97MtjKW6Z2ai3nHuw6ipPYXtam+djLDtD4oqbs=;
+        b=W4JPqGLCLuJ/1eNFs0DMEMvFejVGeNPyCUUwJ4u14BY3lYZHubvwSa/RBgsRFOprwd
+         sL6tNXSIZ9i5hWrueyyoODgwPEcMw8yA5miDUwG2Glg4CfgrWmbS9eJ2g+8LRwi1pBvT
+         YbkSjlGoJqd0lkLKhmC22zM9Lq+hSzUr/3zRuGHD/3vAY60YCIXQQIvnVfBE9EB1N8oU
+         +zF+wgD9gjD0QtfjZ9VW5zQ4FOFSN9DTUQr3C2ZHpej4RgCNQff5qfyYvsTXd8d0Z/Ke
+         wd4cpBqnkdJm4NPxm1fNDK5B5I3IAel5fWJ2DYjvcXq9+lFkR/m26LonX5Iss5H2s8ni
+         3JZw==
+X-Gm-Message-State: APjAAAVj2OGaTqQxA1Au3FMi9536vwWGsN7OeJU/6VWM69Iho/AqGtmL
+        3IuKzZ1Hb883tvjsBAdJf4OFFD8CdgI=
+X-Google-Smtp-Source: APXvYqxkBYZfPC7x3lGAzFs1bi2wpXJwOk94pphLLhOAIxK6n5AHo6I1O9kT7X3H1h7pRa01e8IxwQ==
+X-Received: by 2002:a2e:8156:: with SMTP id t22mr14187646ljg.77.1553788130703;
+        Thu, 28 Mar 2019 08:48:50 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id l21sm5056556lfh.30.2019.03.28.08.48.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 08:48:49 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id h16so13621458ljg.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:48:49 -0700 (PDT)
+X-Received: by 2002:a2e:8149:: with SMTP id t9mr23507278ljg.2.1553788128992;
+ Thu, 28 Mar 2019 08:48:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CABe79T7BC9AO3EF23=JjYwXCHDKX5mDYSPzHfpD_tLzX6gukHg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190228185027.2480-1-ben.dooks@codethink.co.uk> <20190328072421.GA22720@zn.tnic>
+In-Reply-To: <20190328072421.GA22720@zn.tnic>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 28 Mar 2019 08:48:33 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whjmxbtceHNbFycT5t=C56B+huPBewWbV5waaY7i09RBQ@mail.gmail.com>
+Message-ID: <CAHk-=whjmxbtceHNbFycT5t=C56B+huPBewWbV5waaY7i09RBQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/asm: add __user on copy_user_handle_tail() pointers
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.co>, Peter Anvin <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-kernel@lists.codethink.co.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/03/2019 10:34, Srinath Mannam wrote:
-> Hi Robin,
-> 
-> Thanks for your feedback. Please see my reply in line.
-> 
-> On Wed, Mar 27, 2019 at 8:32 PM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> On 25/01/2019 10:13, Srinath Mannam wrote:
->>> Few SOCs have limitation that their PCIe host can't allow few inbound
->>> address ranges. Allowed inbound address ranges are listed in dma-ranges
->>> DT property and this address ranges are required to do IOVA mapping.
->>> Remaining address ranges have to be reserved in IOVA mapping.
->>>
->>> PCIe Host driver of those SOCs has to list all address ranges which have
->>> to reserve their IOVA address into PCIe host bridge resource entry list.
->>> IOMMU framework will reserve these IOVAs while initializing IOMMU domain.
->>
->> FWIW I'm still only interested in solving this problem generically,
->> because in principle it's not specific to PCI, for PCI it's certainly
->> not specific to iproc, and either way it's not specific to DT. That
->> said, I don't care strongly enough to keep pushing back on this
->> implementation outright, since it's not something which couldn't be
->> cleaned up 'properly' in future.
-> Iproc PCIe host controller supports inbound address translation
-> feature to restrict access
-> to allowed address ranges. so that allowed memory ranges need to
-> program to controller.
+On Thu, Mar 28, 2019 at 12:24 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> Well, but copy_user_generic() (which ends up calling the
+> copy_user_handle_tail() eventually) casts those __user pointers to
+> (__force void *). Converting them back to __user looks strange to me.
+>
+> Linus?
 
-Other PCIe host controllers work that way too - I know, because I've got 
-one here. In this particular case, it's not explicit "restriction" so 
-much as just that the window configuration controls what AXI attributes 
-are generated on the master side of the PCIe-AXI bridge, and there is no 
-default attribute. Thus if a PCIe transaction doesn't hit one of the 
-windows it simply cannot propagate across to the AXI side because the RC 
-won't know what attributes to emit. It may be conceptually a very 
-slightly different problem statement, but it still wants the exact same 
-solution.
+Well, it does that because the x86 version of copy_user_generic() can
+work in either direction, so it works when either the source or
+destination (or both) are user pointers, but they don't _have_ to be.
 
-> allowed address ranges information is passed to controller driver
-> through dma-ranges DT property.
+So the "userness" of a pointer in that context is a bit ambiguous, and
+so we've picked the pointers to be just plain "void *".
 
-And ACPI has a direct equivalent of dma-ranges in the form of the _DMA 
-method - compare of_dma_get_range() and acpi_dma_get_range(). Again, 
-platforms already exist which have this kind of hardware limitation and 
-boot with both DT and ACPI.
+That said, arguably we should have gone the other way and just made
+them both "__user" pointers, and do the cast the other way around.
 
-> This feature is specific to iproc PCIe controller, so that I think
-> this change has to specific to iproc
-> PCIe driver and DT.
+But there's no absolutely right answer here, and nobody should ever
+use copy_user_generic() directly (ie it is very much meant to be only
+used as a internal helper for the cases that get the pointer
+annotations right).
 
-The general concept of devices having inaccessible holes within their 
-nominal DMA mask ultimately boils down to how creative SoC designers can 
-be with interconnect topologies, so in principle it could end up being 
-relevant just about anywhere. But as I implied before, since the 
-examples we know about today all seem to be PCIe IPs, it's not all that 
-unreasonable to start with this PCI-specific workaround now, and 
-generalise it later as necessary.
+I do think Ben's patch is probably the right thing to do.
 
-> Here I followed the same way how PCI IO regions are reserved
-> "iova_reserve_pci_windows". so that this
-> change also specific to PCI.
->>
->> One general comment I'd make, though, is that AFAIK PCI has a concept of
->> inbound windows much more than it has a concept of gaps-between-windows,
->> so if the PCI layer is going to track anything it should probably be the
->> actual windows, and leave the DMA layer to invert them into the
->> reservations it cares about as it consumes the list. That way you can
->> also avoid the undocumented requirement for the firmware to keep the
->> ranges property sorted in the first place.
-> This implementation has three parts.
-> 1. parsing dma-ranges and extract allowed and reserved address ranges.
-> 2. program allowed ranges to iproc PCIe controller.
-> 3. reserve list of reserved address ranges in IOMMU layer.
-> #1 and #2 are done using "of_pci_dma_range_parser_init" in present
-> iproc PCIe driver.
-> so that, I listed reserve windows at the same place.
-> #3 requires list of reserve windows so that I add new
-> variable(dma_resv) to carry these
-> reserve windows list to iommu layer from iproc driver layer.
-> The reasons to not use DMA layer for parsing dma-ranges are,
-> 1. This feature is not generic for all SOCs.
-> 2. To avoid dam-ranges parsing in multiple places, already done in
-> iproc pcie driver.
-> 3. Need to do modify standard DMA layer source code "of_dma_configure"
-> 4. required a carrier to pass reserved windows list from DMA layer to
-> IOMMU layer.
-> 5. I followed existing PCIe IO regions reserve procedure done in IOMMU layer.
+And we could do the same thing to copy_user_generic(), but that would
+require switching the casts around in the callers, so may not be worth
+the noise.
 
-Sure, I get that - sorry if it was unclear, but all I meant was simply 
-taking the flow you currently have, i.e.:
-
-pcie-iproc: parse dma-ranges and make list of gaps between regions
-dma-iommu: process list and reserve entries
-
-and tweaking it into this:
-
-pcie-iproc: parse dma-ranges and make list of regions
-dma-iommu: process list and reserve gaps between entries
-
-which has the nice benefit of being more robust since the first step can 
-easily construct the list in correctly-sorted order regardless of the 
-order in which the DT ranges appear.
-
-Robin.
+                      Linus
