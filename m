@@ -2,129 +2,181 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7312C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3F8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E62D2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:57:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553763452;
-	bh=EROZdJfd6EE6W9XxTLeEb7P+1vhW3cEkXb4ZBDypzdY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WiZpeamuNIZg5jQy0ZlF21Q1W1QUpaP0VayOWBaebqKg1OfgOiS1KRMwVQyvIF77i
-	 ncLE/2Ss8OsJRq5WwLgq7Ztu5oxeIBXYKVVZol/fnh4NwWF/FAVmxgXfpkcMc0rrlr
-	 v/Y0slXXt4eg6J7B2unhYnsHYaVkemgi+sHKC8P0=
+	by mail.kernel.org (Postfix) with ESMTP id 943F32082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfC1I5b (ORCPT
+        id S1726659AbfC1I7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 04:57:31 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42702 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfC1I5b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 04:57:31 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 103so17576860otd.9;
-        Thu, 28 Mar 2019 01:57:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EROZdJfd6EE6W9XxTLeEb7P+1vhW3cEkXb4ZBDypzdY=;
-        b=N/U4PtzzK2++sDcyLgaRGEyYfJdR2jxcTmrHMSeUera4VkVEgvNq5StoBxfTEapEqZ
-         e9tAfrfpLVLIs+mPROhfBFxPfNt/E42tBCsdpUbw+HB0DwK3Zrl7Vhjifjwnux9IEmVF
-         U0YvfX7f9xD00HsqAqd/x/Oqi0/04m8hSAdTHC3CQ2o7vnCmJdF6e6njQSxhjWhbS7KZ
-         tkvy98ki0IR0+YKSgIfwUQLrZjTsQfVhQakRnTLfTtErbbY2FXJMzmBrJzQbi04JO9tv
-         8VJAQeQsJTGNJ/Um/qA/o4o/UQaCuORslR9XDstbccsuhlMjGRPpGxNUGVpeyXm48ixu
-         HQ5Q==
-X-Gm-Message-State: APjAAAXqhVJ9Ve8eP5ywzJzihgw4In1cPAdZw/vSfa+4feVnuFjSEoT5
-        oloxeUGRHV6Eml+UFUg78i1x7k4agTec8Y5xSbE=
-X-Google-Smtp-Source: APXvYqyoefmmqWRgCK/1PUIUgOAIENnkD1IB672+QeDNWHD7w7aFsZ4pLeWc8nsF1natR3vfXJDzoBRFznMCE2ZwnOo=
-X-Received: by 2002:a9d:6498:: with SMTP id g24mr30755915otl.343.1553763450279;
- Thu, 28 Mar 2019 01:57:30 -0700 (PDT)
+        Thu, 28 Mar 2019 04:59:22 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5197 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725779AbfC1I7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 04:59:21 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6A0F8F03DB7572A3359C;
+        Thu, 28 Mar 2019 16:59:18 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.408.0; Thu, 28 Mar 2019 16:59:14 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <santosh.shilimkar@oracle.com>, <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <rds-devel@oss.oracle.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net] net: rds: force to destroy connection if t_sock is NULL in rds_tcp_kill_sock().
+Date:   Thu, 28 Mar 2019 17:10:56 +0800
+Message-ID: <20190328091056.186547-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190320222844.134765-1-furquan@google.com> <CAJZ5v0h7dYEFHSOHengJ3OFyXBW+XZVbjCAegpzqg1VxeeaXog@mail.gmail.com>
- <CAEGmHFEqhh_xYaTXsVHqSgNW-1Ao6-mtk0BPhgu3-8ua6cCZ-Q@mail.gmail.com>
- <CAJZ5v0hxNA_KHjcqSL4XPpQpB1M4UuWJcYOknex=NOGavoooHA@mail.gmail.com> <CAEGmHFHaFk6v=vcciU3QNaQfLriWSJtQ5QUjciY+O8dLh3DhJA@mail.gmail.com>
-In-Reply-To: <CAEGmHFHaFk6v=vcciU3QNaQfLriWSJtQ5QUjciY+O8dLh3DhJA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 28 Mar 2019 09:57:18 +0100
-Message-ID: <CAJZ5v0jPJYM6n0OWBM17d3MF5h5B+an+LSRiXTHqboXZuXkcvw@mail.gmail.com>
-Subject: Re: [PATCH] drivers/acpi: Clear status of an event before enabling it
-To:     Furquan Shaikh <furquan@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        devel@acpica.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Evan Green <evgreen@google.com>,
-        Duncan Laurie <dlaurie@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 1:46 AM Furquan Shaikh <furquan@google.com> wrote:
->
-> On Wed, Mar 27, 2019 at 5:24 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Thu, Mar 21, 2019 at 3:16 AM Furquan Shaikh <furquan@google.com> wrote:
-> > >
-> > > On Wed, Mar 20, 2019 at 5:11 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > >
-> > > > On Wed, Mar 20, 2019 at 11:34 PM Furquan Shaikh <furquan@google.com> wrote:
-> > > > >
-> > > > > Commit 18996f2db918 ("ACPICA: Events: Stop unconditionally
-> > > > > clearing ACPI IRQs during suspend/resume") was added to stop clearing
-> > > > > of event status bits unconditionally on suspend and resume paths. This
-> > > > > was done because of an issue
-> > > > > reported (https://bugzilla.kernel.org/show_bug.cgi?id=196249) where
-> > > > > lid status stays closed even on resume (which happens because event
-> > > > > status bits are cleared unconditionally on resume). Though this change
-> > > > > fixed the issue on suspend path, it introduced regressions on several
-> > > > > resume paths.
-> > > > >
-> > > > > First regression was reported and fixed on S5 path by the following
-> > > > > change: commit fa85015c0d95 ("ACPICA: Clear status of all events when
-> > > > > entering S5"). Next regression was reported and fixed on all legacy
-> > > > > sleep paths by the commit f317c7dc12b7 ("ACPICA: Clear status of all
-> > > > > events when entering sleep states"). However, regression still exists
-> > > > > on S0ix sleep path since it does not follow the legacy sleep path.
-> > > >
-> > > > What exactly is failing?
-> > >
-> > > Here is the failure scenario:
-> > >
-> > > 1. Consider the case of trackpad which acts as a wake source.
-> > > 2. Since the pad is configured for SCI, GPE_STS gets set for that pad
-> > > during normal interrupts as well (i.e. during probe at boot or when
-> > > using the trackpad)
-> >
-> > I don't quite understand this.
-> >
-> > Is the same GPE used for signaling trackpad events in the system
-> > working state and for wakeup?
->
-> Yes. The same pad is being configured for interrupts (i.e. routed to
-> APIC) during S0 as well as configured for GPE (i.e. routed for SCI) to
-> cause wakes when in S0ix/S3. This pad is externally connected to
-> trackpad interrupt line.
+When it is to cleanup net namespace, rds_tcp_exit_net() will call
+rds_tcp_kill_sock(), if t_sock is NULL, it will not call
+rds_conn_destroy(), rds_conn_path_destroy() and rds_tcp_conn_free() to free
+connection, and the worker cp_conn_w is not stopped, afterwards the net is freed in
+net_drop_ns(); While cp_conn_w rds_connect_worker() will call rds_tcp_conn_path_connect()
+and reference 'net' which has already been freed.
 
-And the way the system is wired up causes the GPE status to be set
-when it is enabled, I suppose?
+In rds_tcp_conn_path_connect(), rds_tcp_set_callbacks() will set t_sock = sock before
+sock->ops->connect, but if connect() is failed, it will call
+rds_tcp_restore_callbacks() and set t_sock = NULL, if connect is always
+failed, rds_connect_worker() will try to reconnect all the time, so
+rds_tcp_kill_sock() will never to cancel worker cp_conn_w and free the
+connections.
 
-So effectively, you need to disable the active-state IRQ, then clear
-the GPE status and enable it for wakeup.
+Therefore, the condition !tc->t_sock is not needed if it is going to do
+cleanup_net->rds_tcp_exit_net->rds_tcp_kill_sock, because tc->t_sock is always
+NULL, and there is on other path to cancel cp_conn_w and free
+connection. So this patch is to fix this.
 
-OK, I'll queue up the patch (and talk to the upstream ACPICA people
-about taking it in there).
+rds_tcp_kill_sock():
+...
+if (net != c_net || !tc->t_sock)
+...
+==================================================================
+BUG: KASAN: use-after-free in inet_create+0xbcc/0xd28
+net/ipv4/af_inet.c:340
+Read of size 4 at addr ffff8003496a4684 by task kworker/u8:4/3721
 
-Thanks!
+CPU: 3 PID: 3721 Comm: kworker/u8:4 Not tainted 5.1.0 #11
+Hardware name: linux,dummy-virt (DT)
+Workqueue: krdsd rds_connect_worker
+Call trace:
+ dump_backtrace+0x0/0x3c0 arch/arm64/kernel/time.c:53
+ show_stack+0x28/0x38 arch/arm64/kernel/traps.c:152
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x120/0x188 lib/dump_stack.c:113
+ print_address_description+0x68/0x278 mm/kasan/report.c:253
+ kasan_report_error mm/kasan/report.c:351 [inline]
+ kasan_report+0x21c/0x348 mm/kasan/report.c:409
+ __asan_report_load4_noabort+0x30/0x40 mm/kasan/report.c:429
+ inet_create+0xbcc/0xd28 net/ipv4/af_inet.c:340
+ __sock_create+0x4f8/0x770 net/socket.c:1276
+ sock_create_kern+0x50/0x68 net/socket.c:1322
+ rds_tcp_conn_path_connect+0x2b4/0x690 net/rds/tcp_connect.c:114
+ rds_connect_worker+0x108/0x1d0 net/rds/threads.c:175
+ process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
+ worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
+ kthread+0x2f0/0x378 kernel/kthread.c:255
+ ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
+
+Allocated by task 687:
+ save_stack mm/kasan/kasan.c:448 [inline]
+ set_track mm/kasan/kasan.c:460 [inline]
+ kasan_kmalloc+0xd4/0x180 mm/kasan/kasan.c:553
+ kasan_slab_alloc+0x14/0x20 mm/kasan/kasan.c:490
+ slab_post_alloc_hook mm/slab.h:444 [inline]
+ slab_alloc_node mm/slub.c:2705 [inline]
+ slab_alloc mm/slub.c:2713 [inline]
+ kmem_cache_alloc+0x14c/0x388 mm/slub.c:2718
+ kmem_cache_zalloc include/linux/slab.h:697 [inline]
+ net_alloc net/core/net_namespace.c:384 [inline]
+ copy_net_ns+0xc4/0x2d0 net/core/net_namespace.c:424
+ create_new_namespaces+0x300/0x658 kernel/nsproxy.c:107
+ unshare_nsproxy_namespaces+0xa0/0x198 kernel/nsproxy.c:206
+ ksys_unshare+0x340/0x628 kernel/fork.c:2577
+ __do_sys_unshare kernel/fork.c:2645 [inline]
+ __se_sys_unshare kernel/fork.c:2643 [inline]
+ __arm64_sys_unshare+0x38/0x58 kernel/fork.c:2643
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall arch/arm64/kernel/syscall.c:47 [inline]
+ el0_svc_common+0x168/0x390 arch/arm64/kernel/syscall.c:83
+ el0_svc_handler+0x60/0xd0 arch/arm64/kernel/syscall.c:129
+ el0_svc+0x8/0xc arch/arm64/kernel/entry.S:960
+
+Freed by task 264:
+ save_stack mm/kasan/kasan.c:448 [inline]
+ set_track mm/kasan/kasan.c:460 [inline]
+ __kasan_slab_free+0x114/0x220 mm/kasan/kasan.c:521
+ kasan_slab_free+0x10/0x18 mm/kasan/kasan.c:528
+ slab_free_hook mm/slub.c:1370 [inline]
+ slab_free_freelist_hook mm/slub.c:1397 [inline]
+ slab_free mm/slub.c:2952 [inline]
+ kmem_cache_free+0xb8/0x3a8 mm/slub.c:2968
+ net_free net/core/net_namespace.c:400 [inline]
+ net_drop_ns.part.6+0x78/0x90 net/core/net_namespace.c:407
+ net_drop_ns net/core/net_namespace.c:406 [inline]
+ cleanup_net+0x53c/0x6d8 net/core/net_namespace.c:569
+ process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
+ worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
+ kthread+0x2f0/0x378 kernel/kthread.c:255
+ ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
+
+The buggy address belongs to the object at ffff8003496a3f80
+ which belongs to the cache net_namespace of size 7872
+The buggy address is located 1796 bytes inside of
+ 7872-byte region [ffff8003496a3f80, ffff8003496a5e40)
+The buggy address belongs to the page:
+page:ffff7e000d25a800 count:1 mapcount:0 mapping:ffff80036ce4b000
+index:0x0 compound_mapcount: 0
+flags: 0xffffe0000008100(slab|head)
+raw: 0ffffe0000008100 dead000000000100 dead000000000200 ffff80036ce4b000
+raw: 0000000000000000 0000000080040004 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8003496a4580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8003496a4600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8003496a4680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff8003496a4700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8003496a4780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+Fixes: 467fa15356ac("RDS-TCP: Support multiple RDS-TCP listen endpoints, one per netns.")
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ net/rds/tcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/rds/tcp.c b/net/rds/tcp.c
+index fd2694174607..faf726e00e27 100644
+--- a/net/rds/tcp.c
++++ b/net/rds/tcp.c
+@@ -608,7 +608,7 @@ static void rds_tcp_kill_sock(struct net *net)
+ 	list_for_each_entry_safe(tc, _tc, &rds_tcp_conn_list, t_tcp_node) {
+ 		struct net *c_net = read_pnet(&tc->t_cpath->cp_conn->c_net);
+ 
+-		if (net != c_net || !tc->t_sock)
++		if (net != c_net)
+ 			continue;
+ 		if (!list_has_conn(&tmp_list, tc->t_cpath->cp_conn)) {
+ 			list_move_tail(&tc->t_tcp_node, &tmp_list);
+-- 
+2.20.1
+
