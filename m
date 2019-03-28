@@ -2,136 +2,126 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC95C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E98DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 761E821850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E082521850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:06:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="OnAD3sQB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfC1VDc (ORCPT
+        id S1727120AbfC1VGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 17:03:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60236 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbfC1VDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 17:03:32 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 68F3FC05001D;
-        Thu, 28 Mar 2019 21:03:31 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6ADA68958B;
-        Thu, 28 Mar 2019 21:03:30 +0000 (UTC)
-Subject: Re: [PATCH 12/12] locking/rwsem: Make MSbit of count as guard bit to
- fail readlock
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>
-References: <20190328181106.22887-1-longman@redhat.com>
- <20190328181106.22887-13-longman@redhat.com>
- <CAHk-=wh7eanC+W7DpSpAsAAYeRTp3EB5qUxMnDFW3HqNQC0GFQ@mail.gmail.com>
- <CAHk-=wi67qBi9d7zKfECs7ZnVJqbMoMx-ez-ohO39POqD9YR3Q@mail.gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <e597a6c6-49de-302c-b09d-9a9085ebb394@redhat.com>
-Date:   Thu, 28 Mar 2019 17:03:30 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 28 Mar 2019 17:06:13 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37817 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbfC1VGN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 17:06:13 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z16so232915qtn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 14:06:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=C/99GerV3GeiTHEZ0KDUbh9xh10S+/GOIQtL20fq40E=;
+        b=OnAD3sQBXFDgFGuGjBEVNloLLNSNGLN74N/cv2j1V4BLOA/srNurPuy8sTPBqq1zBp
+         1NjDSrqjh3vBn0vAU6ZXx6GeBk/UHRi4VKi/DygagDPad2vnE+DS1CkD51lKXudm5R+L
+         MFnS114Fafn7m/fD6tche7Z6sAO3jRw51VnccglVU9/e48434dNRtTWikcXeK/dIw04k
+         X+Ctk+Z/a+IiXU0yyi9Juf/wKHL5F3mJPoeU6ecsF+gPii2OQLHZjRW9xX3ooUJukDBh
+         3uuhy154b1hwH2hQTsOAxAGM2Vhb0tZ68z/KaEDtI21mkUhlLN9ALigtpqyAwh6lLfJV
+         5aCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=C/99GerV3GeiTHEZ0KDUbh9xh10S+/GOIQtL20fq40E=;
+        b=YyYRrcRUsSWPearIcz02SFwHY5DHFEsEDQ+0lzAvmc+vUKpIwAcKcwtq2vsxdlwY5c
+         dpbuVKHt7ZIxEkGfOsYz+n42TZPeIAQM6/9zQ43l+8zDLYQfJlp99UK4ajo1Z8/hSeBX
+         4BOIodZWwj8VUJy9eEUw7K1kzDnPBqQfys1GCRMJNORS80oMqYKqz11LYhpZv0I+EUSN
+         aKNP7/XbVBncDsL+hC8w/d0BLHR7T6W5yz4uN8bvzmKyd4JpNK8Rg8rKAwhItOXt1L4Z
+         FXtNJQkBzL00TDeCQZXDOotWzNOresSMpdfZtc8Yx77R40t5XnKYobr6Gg4gFt9z4qVw
+         pc4w==
+X-Gm-Message-State: APjAAAXUfFI01n8sGTLOd0FPa4m9I30cA+OLdsfM9/MQlCKooW3I30KK
+        vsA+8OZR5hyc1apYJtYcX2j5zw==
+X-Google-Smtp-Source: APXvYqxmV6yT58FGv467G+DGoSYHb5PTxFCx1Op/Pj5Y3NDgvkJDTSYZINaFJAxJpS0WQRyYbiHueg==
+X-Received: by 2002:aed:3b14:: with SMTP id p20mr38268219qte.240.1553807172449;
+        Thu, 28 Mar 2019 14:06:12 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id i11sm71499qkg.33.2019.03.28.14.06.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 14:06:12 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 14:06:07 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 12/22] ethtool: provide string sets with
+ GET_STRSET request
+Message-ID: <20190328140607.285dbfc6@cakuba.netronome.com>
+In-Reply-To: <20190328204329.GH26076@unicorn.suse.cz>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+        <f5af581e33b4976b84eae7c7788e3fde9adfa83c.1553532199.git.mkubecek@suse.cz>
+        <2c29310b-a2a0-3867-a09f-51f2dc47ecd3@gmail.com>
+        <20190328071853.GY26076@unicorn.suse.cz>
+        <20190328134313.GO14297@nanopsycho>
+        <20190328140428.GG26076@unicorn.suse.cz>
+        <20190328173524.GR14297@nanopsycho>
+        <20190328115256.2a7cb952@cakuba.netronome.com>
+        <20190328204329.GH26076@unicorn.suse.cz>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wi67qBi9d7zKfECs7ZnVJqbMoMx-ez-ohO39POqD9YR3Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 28 Mar 2019 21:03:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/28/2019 04:56 PM, Linus Torvalds wrote:
-> On Thu, Mar 28, 2019 at 1:47 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->> On Thu, Mar 28, 2019 at 11:12 AM Waiman Long <longman@redhat.com> wrote:
->>> With the merging of owner into count for x86-64, there is only 16 bits
->>> left for reader count. It is theoretically possible for an application to
->>> cause more than 64k readers to acquire a rwsem leading to count overflow.
->> Ahh, and here's the thing that makes 16 bits work for readers.
-> Hmm. Does it?
->
-> Isn't there a race here? We're adding the READ bias, and then noticing
-> that it his the guard bit, and then the down_read_failed will make it
-> all good again.
->
-> But this isn't actually done with preemption disabled, so things
-> *could* get preempted in between, and if we have a huge run of bad
-> luck, it can still overflow.
->
-> Ok, so you need to have a 32k series run of bad luck (and hit
-> *exactly* the right small preemption point window every time), and I'm
-> certainly willing to say "yeah, not an issue", but maybe it's still
-> worth at least documenting?
->
->                   Linus
+On Thu, 28 Mar 2019 21:43:29 +0100, Michal Kubecek wrote:
+> On Thu, Mar 28, 2019 at 11:52:56AM -0700, Jakub Kicinski wrote:
+> > On Thu, 28 Mar 2019 18:35:24 +0100, Jiri Pirko wrote:  
+> > > Thu, Mar 28, 2019 at 03:04:28PM CET, mkubecek@suse.cz wrote:  
+> > > >On Thu, Mar 28, 2019 at 02:43:13PM +0100, Jiri Pirko wrote:    
+> > > >> 
+> > > >> I don't like this. This should not be bitfield/set. This should be
+> > > >> simply nested array of enum values:
+> > > >> 
+> > > >> enum ethtool_link_mode {
+> > > >> 	ETHTOOL_LINK_MODE_10baseT_Half,
+> > > >> 	ETHTOOL_LINK_MODE_10baseT_Full,
+> > > >> 	ETHTOOL_LINK_MODE_100baseT_Half,
+> > > >> 	ETHTOOL_LINK_MODE_100baseT_Full,
+> > > >> 	ETHTOOL_LINK_MODE_1000baseT_Full,
+> > > >> };    
+> > > >
+> > > >We already have such enum. The problem with your "no string" approach is
+> > > >that it requires all userspace applications to (1) keep this enum in    
+> > > 
+> > > That is how it is usually done. UAPI defines ATTRS and values, userspace
+> > > assigns appropriate strings.  
+> > 
+> > +1 FWIW, I'm with Jiri on the string situation.  
+> 
+> And I'm still waiting for any of you to tell me how would you handle
+> private flags, stats, tests etc. without the string sets.
+> 
+> Ditching the verbose form of bit sets would be a nuisance for userspace
+> using the interface but compared to e.g. having to mix three different
+> kernel interfaces, it's just a minor problem. Ditching the static string
+> sets would mean giving up the opportunity to get rid of having to sync
+> all kinds of tables with every userspace consumer whenever a new flag is
+> introduced. Pity... but still doable. But how do you want to do without
+> the string sets which are provided by drivers?
 
-I think it is theoretically possible that this can happen, but I doubt
-we will ever see that. Will document that possibility in the comment.
-
-Thanks,
-Longman
-
+I don't think there is a disagreement about stuff which is private to
+the driver.  The strings have to be exposed there.
