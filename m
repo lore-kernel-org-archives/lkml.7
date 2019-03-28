@@ -2,100 +2,132 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5F4C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22804C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D5D20823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553795016;
-	bh=DrioiL/NfOqrAhR6e80dQlLhHcizU97EXGw2xBpbXJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FpQbCrJoS49ow3nFDz++vfCicfYv95H9bD8wyWJ+p8SilS7KT6YOV8JHOlW55nG44
-	 srEt9lX1Sd6u0GoVls6UgLOgU1YzzGPMD6Z1M8S51+lENs2iaSfgE42PpaqKBpCi1I
-	 TnR9r0rInXO6K5sH3y1RinmYdQGcRLfzyHMkijKw=
+	by mail.kernel.org (Postfix) with ESMTP id E97E220823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfC1Rnf (ORCPT
+        id S1726769AbfC1RqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:43:35 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34191 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbfC1Rne (ORCPT
+        Thu, 28 Mar 2019 13:46:16 -0400
+Received: from smtprelay0212.hostedemail.com ([216.40.44.212]:59108 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725849AbfC1RqQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:43:34 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v10so12115951oib.1;
-        Thu, 28 Mar 2019 10:43:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w4+jBZt7o1i+BXiFGlj5UO5y5/Jdo0fIZ4a8M49K9iU=;
-        b=BUxtKcZMw/KmUoELdx1IM5CpEN0B82Z/WwT+5l8PPhagX682h0Y1Ic/awZV481dyjq
-         DbyJLhh47g11qJJ3tpOP1CHqWJa9Bd5ilfrn+0qlSDUa3VZKtosjdjPoHZEQMLiPuwg4
-         vb5Ucw76xgY4CO+vVKMY2BcsIucBG40tI/5ROBf8r7Gg4NEqur+X2L1MZhiGxq2bvGJD
-         DhBrW8WegHlEdhfANAIhmAAh3xjTHRrcDpV416VYypmfbZohgGHmilhVQUUZ9ujNgS+W
-         o/fmf28HDBNHjzDMD+bJ2Ie6fMZzPgbqEhfz4dG4+6mBiscvkRZ475waOiRyzmzKmbO3
-         SuWg==
-X-Gm-Message-State: APjAAAVo0KGlq4b888XFbKBHjQDNYR89hZMIPmpcrsuSJsGnfnqvS6hO
-        XsZ81MEh+MbpiVfoHjPfjg==
-X-Google-Smtp-Source: APXvYqzIqPBrm/eLCUsulqZbE6h9iD2WITqW648w6PGNZdZVn2xj2xxu/wqf6vkBM6oREqCcsSWuWQ==
-X-Received: by 2002:aca:5757:: with SMTP id l84mr898126oib.155.1553795013342;
-        Thu, 28 Mar 2019 10:43:33 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j14sm10841205oih.28.2019.03.28.10.43.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 10:43:32 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 12:43:31 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Mickael Guene <mickael.guene@st.com>
-Cc:     linux-media@vger.kernel.org, hugues.fruchet@st.com,
-        Mickael Guene <mickael.guene@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: Document MIPID02 bindings
-Message-ID: <20190328174331.GA5863@bogus>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
- <1553680545-73278-1-git-send-email-mickael.guene@st.com>
- <1553680545-73278-2-git-send-email-mickael.guene@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553680545-73278-2-git-send-email-mickael.guene@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 28 Mar 2019 13:46:16 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 8DB77182CF69A;
+        Thu, 28 Mar 2019 17:46:14 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: teeth78_193452788fd15
+X-Filterd-Recvd-Size: 3816
+Received: from XPS-9350.home (unknown [47.151.153.53])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 28 Mar 2019 17:46:13 +0000 (UTC)
+Message-ID: <70abd913d4bfc6a514a99288373632f8d1ea5d87.camel@perches.com>
+Subject: Re: [PATCH][next] Bluetooth: Use struct_size() helper
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 28 Mar 2019 10:46:11 -0700
+In-Reply-To: <20190328173029.GA13869@embeddedor>
+References: <20190328173029.GA13869@embeddedor>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Mar 2019 10:55:43 +0100, Mickael Guene wrote:
-> This adds documentation of device tree for MIPID02 CSI-2 to PARALLEL
-> bridge.
+On Thu, 2019-03-28 at 12:30 -0500, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
 > 
-> Signed-off-by: Mickael Guene <mickael.guene@st.com>
-> ---
+> struct foo {
+>     int stuff;
+>     struct boo entry[];
+> };
 > 
-> Changes in v4:
-> - Fix and clarify endpoints properties documentation
+> size = sizeof(struct foo) + count * sizeof(struct boo);
 > 
-> Changes in v3: None
-> Changes in v2:
-> - Add precision about first CSI-2 port data rate
-> - Document endpoints supported properties
-> - Rename 'mipid02@14' into generic 'csi2rx@14' in example
+> Instead of leaving these open-coded and prone to type mistakes, we can
+> now use the new struct_size() helper:
 > 
->  .../bindings/media/i2c/st,st-mipid02.txt           | 82 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 ++
->  2 files changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
-> 
+> size = struct_size(instance, entry, count);
+[]
+> diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+[]
+> @@ -2301,8 +2301,7 @@ static int load_link_keys(struct sock *sk, struct hci_dev *hdev, void *data,
+>  				       MGMT_STATUS_INVALID_PARAMS);
+>  	}
+>  
+> -	expected_len = sizeof(*cp) + key_count *
+> -					sizeof(struct mgmt_link_key_info);
+> +	expected_len = struct_size(cp, keys, key_count);
+>  	if (expected_len != len) {
+>  		bt_dev_err(hdev, "load_link_keys: expected %u bytes, got %u bytes",
+>  			   expected_len, len);
+> @@ -5030,7 +5029,7 @@ static int load_irks(struct sock *sk, struct hci_dev *hdev, void *cp_data,
+>  				       MGMT_STATUS_INVALID_PARAMS);
+>  	}
+>  
+> -	expected_len = sizeof(*cp) + irk_count * sizeof(struct mgmt_irk_info);
+> +	expected_len = struct_size(cp, irks, irk_count);
+>  	if (expected_len != len) {
+>  		bt_dev_err(hdev, "load_irks: expected %u bytes, got %u bytes",
+>  			   expected_len, len);
+> @@ -5112,8 +5111,7 @@ static int load_long_term_keys(struct sock *sk, struct hci_dev *hdev,
+>  				       MGMT_STATUS_INVALID_PARAMS);
+>  	}
+>  
+> -	expected_len = sizeof(*cp) + key_count *
+> -					sizeof(struct mgmt_ltk_info); 
+> +	expected_len = struct_size(cp, keys, key_count);
+>  	if (expected_len != len) {
+>  		bt_dev_err(hdev, "load_keys: expected %u bytes, got %u bytes",
+>  			   expected_len, len);
+> @@ -5847,8 +5845,7 @@ static int load_conn_param(struct sock *sk, struct hci_dev *hdev, void *data,
+>  				       MGMT_STATUS_INVALID_PARAMS);
+>  	}
+>  
+> -	expected_len = sizeof(*cp) + param_count *
+> -					sizeof(struct mgmt_conn_param);
+> +	expected_len = struct_size(cp, params, param_count);
+>  	if (expected_len != len) {
+>  		bt_dev_err(hdev, "load_conn_param: expected %u bytes, got %u bytes",
+>  			   expected_len, len);
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Maybe add a helper function for all of these.
+Perhaps something like:
+
+static bool verify_len(size_t actual, size_t expected)
+{
+	if (actual == expected)
+		return true;
+	bt_dev_err("%ps: expected %zu bytes, got %zu bytes",
+		   __builtin_return_address(1), expected, actual);
+	return false;
+}
+
+So the last block above might be
+
+	if (!verify_len(len, struct_size(cp, params, param_count),))
+		return mgmt_cmd_status(sk, hdev->id,  MGMT_OP_LOAD_CONN_PARAM,
+				       MGMT_STATUS_INVALID_PARAMS);
+
+etc...
+
+
