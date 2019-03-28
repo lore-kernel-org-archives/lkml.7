@@ -2,242 +2,377 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FEAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC719C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2735120823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:16:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553786167;
-	bh=I+7+OpOnHZhgUqsV/YG9f1fRPTqcnfV9fHXcPwvjtdA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mWohC0O0AL27LP/F1H6D5PEPaa5TlpuD/b6RORdLj/VsPuL1DXQH2Ip25GG97bfe4
-	 4FkULbgtqlLvO7dpO5pU/kYZR9UpPYPpzKPjOKYn7RPVBHBh7+zrR+ZFitbkFoQkU4
-	 nrVlMpoIblyqIaWwO1uZBCFCJJqWotEapyhLc0+M=
+	by mail.kernel.org (Postfix) with ESMTP id 97F1620823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:17:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bzlHlTc/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfC1PQG (ORCPT
+        id S1726679AbfC1PRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:16:06 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46744 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfC1PQF (ORCPT
+        Thu, 28 Mar 2019 11:17:04 -0400
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:46134 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbfC1PRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:16:05 -0400
-Received: by mail-ot1-f65.google.com with SMTP id s24so9180737otk.13;
-        Thu, 28 Mar 2019 08:16:05 -0700 (PDT)
+        Thu, 28 Mar 2019 11:17:03 -0400
+Received: by mail-wr1-f41.google.com with SMTP id t17so2636249wrw.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:17:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=aycm97Plm6qVrne/2MmodSPEzVygGxEgmJGgQsC6tWo=;
+        b=bzlHlTc/OWdk4Gtch8116Un4H6phB4eWSXxRgdAAOl0R+KiZj6/XUPS26NrIBL1nml
+         9v5Mt9S77mDP0Ul4j6ieUiy23LZ0TaDppVxm13pLUsmy7ROnGIbxQ+RgVBYuVc7hv0WC
+         9YbUNgWpgxTnesDA1suyoxiZbzTtDpvHQzmSLlC0bgSVEirF7nzjfknMmS9AAkhADXwl
+         /hcwdMUdRu4Mjmn6G1A4RzLjDbTZ6B0J++HvwGQHhmPcPNHZlFLGG5gR/tN/BojlUSfh
+         tf4RryMvSwaeRbbFvAimR9XI2Wv5DCm5UC1uWs+HLee5s43MBiVEf0eEtgvJWr4REVZ2
+         Drzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vg2nnOWclGBSUxeqiGO409j0Hxo80ujZxFyKGzOki+c=;
-        b=TaQFMYbY64VMLHm8x+1QKWMng3cjgo2mVdxF+c/8h+18rhhvOz22nJqrVQbFv+uInY
-         93h2f++It8Kll/znevHqBZLjFokcQ3ojEqL1huwdwOzYcv+hLPPGcHK1V7zvq84d8zx3
-         opolbO/SZSBO3VVL5u2iFw4xGENBmS01a/7Ljd5SQwlMo2I0yb+XUbjFNYJDFIt6FbNO
-         97qMgxlxNi24ta6hmtq+heIY8mvtdWgFdWHRMYwobomdSRNFdQ4FB1tQxqWR0zO7zEZr
-         pELEXnhfb5FPpRSVIEEKbNhhjrNQXZPWLh7An3zCSOcV+nS5BSDy2S5y/Zgnl3Q/MVKd
-         L3gA==
-X-Gm-Message-State: APjAAAWF/iak2UoDYGpAaJtnrXTAFMC3neh033oOLpvH5saDK2eVN7ou
-        IsTMJDcAWUclRcBGMNj3ow==
-X-Google-Smtp-Source: APXvYqxSm/hD3UH8F7OGttEuDxbVt7P3mC8jKlKRQOeNs2/s53dKnneiUlzhjm6zrwJhqzfkmbC+hA==
-X-Received: by 2002:a9d:3444:: with SMTP id v62mr33085867otb.165.1553786164411;
-        Thu, 28 Mar 2019 08:16:04 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e186sm9969768oia.44.2019.03.28.08.16.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 08:16:03 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 10:16:02 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org,
-        sboyd@kernel.org, nm@ti.com, mark.rutland@arm.com,
-        rjw@rjwysocki.net, jcrouse@codeaurora.org,
-        vincent.guittot@linaro.org, bjorn.andersson@linaro.org,
-        amit.kucheria@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, evgreen@chromium.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        myungjoo.ham@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>
-Subject: Re: [PATCH 0/4] Introduce OPP bandwidth bindings
-Message-ID: <20190328151602.GB5262@bogus>
-References: <20190313090010.20534-1-georgi.djakov@linaro.org>
- <460be20a-0baa-cf9c-2d5c-ea825aa34bc4@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <460be20a-0baa-cf9c-2d5c-ea825aa34bc4@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aycm97Plm6qVrne/2MmodSPEzVygGxEgmJGgQsC6tWo=;
+        b=YnfPbug94upVNlSF/hqLLYjbY/LPgzF25ZtGLvY1m72QvYNuJ8m2bychiz1GQ+zRvs
+         K0+c3PmzoAJSKicLsG0XNsH/oWAxZ18bkZ3dOk39pFVPK6yMkCYOkqFKhRpeb/X/Znmc
+         cKZplIVLtnPP7R6DhwKGiK4N/boF56B9MzBdm2uiWetVhvcd8d3BAQbgGBfkBzQ+ynzK
+         RSlt4BzhSHtFMSRIf0KGUUer2/fYwvRs6jmyrylMUnCqrGUf335WYV/q/VR6aBkl9FUo
+         p1GCsPN473O8+34Rw6ebp+izFaWHNP/iQFfVOtNii9+aFsW3iEA5ndfR5gA4Obh+nb3p
+         3umQ==
+X-Gm-Message-State: APjAAAWcEtlnwFPKCTra9ZcFrTISxlOTj3UjSmjiPqAs5t3uxwRaF4BQ
+        BcFczUlb8OTZ270VrPT7wpwUWw==
+X-Google-Smtp-Source: APXvYqxDSpTe/uUMsafKh89fkTDgF35JSDMeUnFJLKeik0mO6DzIbJKpKPx9ObDOE2J4hl+MBC5IpA==
+X-Received: by 2002:a5d:68cf:: with SMTP id p15mr24060739wrw.301.1553786220051;
+        Thu, 28 Mar 2019 08:17:00 -0700 (PDT)
+Received: from clegane.local (148.127.130.77.rev.sfr.net. [77.130.127.148])
+        by smtp.gmail.com with ESMTPSA id c10sm30070094wru.83.2019.03.28.08.16.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 08:16:59 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     tglx@linutronix.de
+Cc:     rjw@rjwysocki.net, ulf.hansson@linaro.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2 1/2] genirq/timings: Remove variance computation code
+Date:   Thu, 28 Mar 2019 16:13:35 +0100
+Message-Id: <20190328151336.5316-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 16, 2019 at 12:32:49AM +0530, Sibi Sankar wrote:
-> 
-> 
-> On 3/13/19 2:30 PM, Georgi Djakov wrote:
-> > Here is a proposal to extend the OPP bindings with bandwidth based on
-> > a previous discussion [1].
-> > 
-> > Every functional block on a SoC can contribute to the system power
-> > efficiency by expressing its own bandwidth needs (to memory or other SoC
-> > modules). This will allow the system to save power when high throughput
-> > is not required (and also provide maximum throughput when needed).
-> > 
-> > There are at least three ways for a device to determine its bandwidth
-> > needs:
-> > 	1. The device can dynamically calculate the needed bandwidth
-> > based on some known variable. For example: UART (baud rate), I2C (fast
-> > mode, high-speed mode, etc), USB (specification version, data transfer
-> > type), SDHC (SD standard, clock rate, bus-width), Video Encoder/Decoder
-> > (video format, resolution, frame-rate)
-> > 
-> > 	2. There is a hardware specific value. For example: hardware
-> > specific constant value (e.g. for PRNG) or use-case specific value that
-> > is hard-coded.
-> > 
-> > 	3. Predefined SoC/board specific bandwidth values. For example:
-> > CPU or GPU bandwidth is related to the current core frequency and both
-> > bandwidth and frequency are scaled together.
-> > 
-> > This patchset is trying to address point 3 above by extending the OPP
-> > bindings to support predefined SoC/board bandwidth values and adds
-> > support in cpufreq-dt to scale the interconnect between the CPU and the
-> > DDR together with frequency and voltage.
-> 
-> Hey Georgi,
-> Having opp-bw-MBps as a part of cpu opp does greatly simplify the
-> problem of scaling multiple interconnect devices with change in cpu
-> frequency. But there is still a need to scale other devices (non
-> interconnect based) according to cpu frequency. Having a devfreq
-> governor for the same would help to have the same generic solution
-> across SoCs (msm8916/8996/qcs405/sdm845). The devfreq maintainer did
-> like the idea but wanted it incorporated into the passive governor.
-> 
-> * https://lore.kernel.org/lkml/20180528060014epcms1p87ec68a4d44f9447b06f979a87e545b7d@epcms1p8/
-> 
-> * https://lore.kernel.org/lkml/20180802095608epcms1p33fb061543efc9ceb3ec12d5567ceffbc@epcms1p3/
-> 
-> I have a RFC series implementing ddr scaling with passive governor for
-> sdm845 with the following bindings, will post it early next week.
-> 
-> cpus {
-> 	...
-> 
-> 	CPU0: cpu@0 {
-> 		...
-> 		operating-points-v2 = <&cpu0_opp_table>;
-> 		...
-> 	};
->         ....
-> 
-> 	CPU4: cpu@400 {
-> 		...
-> 		operating-points-v2 = <&cpu4_opp_table>;
-> 		...
-> 	};
->         ...
-> };
-> 
-> cpu0_opp_table: cpu0_opp_table {
-> 	compatible = "operating-points-v2";
-> 	opp-shared;
-> 
-> 	cpu0_opp1: opp-300000000 {
-> 		opp-hz = /bits/ 64 <300000000>;
-> 	};
-> 
-> 	...
-> 
-> 	cpu0_opp16: opp-1612800000 {
-> 		opp-hz = /bits/ 64 <1612800000>;
-> 	};
-> 
-> 	...
-> };
-> 
-> cpu4_opp_table: cpu4_opp_table {
-> 	compatible = "operating-points-v2";
-> 	opp-shared;
-> 
-> 	...
-> 
-> 	cpu4_opp4: opp-1056000000 {
-> 		opp-hz = /bits/ 64 <1056000000>;
-> 	};
-> 
-> 	cpu4_opp5: opp-1209600000 {
-> 		opp-hz = /bits/ 64 <1209600000>;
-> 	};
-> 
-> 	...
-> };
-> 
-> bw_opp_table: bw-opp-table {
-> 	compatible = "operating-points-v2";
-> 
-> 	opp-200  {
-> 		opp-hz = /bits/ 64 < 200000000 >; /* 200 MHz */
-> 		required-opps = <&cpu0_opp1>;
-> 		/* 0 MB/s average and 762 MB/s peak bandwidth */
-> 		opp-bw-MBs = <0 762>;
-> 	};
-> 
-> 	opp-300 {
-> 		opp-hz = /bits/ 64 < 300000000 >; /* 300 MHz */
-> 		/* 0 MB/s average and 1144 MB/s peak bandwidth */
-> 		opp-bw-MBs = <0 1144>;
-> 	};
-> 
-> 	...
-> 
-> 	opp-768 {
-> 		opp-hz = /bits/ 64 < 768000000 >; /* 768 MHz */
-> 		/* 0 MB/s average and 2929 MB/s peak bandwidth */
-> 		opp-bw-MBs = <0 2929>;
-> 		required-opps = <&cpu4_opp4>;
-> 	};
-> 
-> 	opp-1017 {
-> 		opp-hz = /bits/ 64 < 1017000000 >; /* 1017 MHz */
-> 		/* 0 MB/s average and 3879 MB/s peak bandwidth */
-> 		opp-bw-MBs = <0 3879>;
-> 		required-opps = <&cpu0_opp16>, <&cpu4_opp5>;
-> 	};
-> };
-> 
-> cpubw {
-> 	compatible = "devfreq-icbw";
+The next patch will introduce another approach to compute the next
+interrupt based on the array suffixes derived algorithm. This one
+will replace the variance computation code.
 
-Most certainly not a h/w device, so it doesn't go in DT.
+The patch review will be too complex if we change the code little by
+little, it is much simpler to remove the variance code and add in the
+next patch the suffix array code.
 
-> 	interconnects = <&snoc MASTER_APSS_1 &bimc SLAVE_EBI_CH0>;
-> 	operating-points-v2 = <&bw_opp_table>;
-> };
-> 
-> 
-> > > [1] https://patchwork.kernel.org/patch/10577315/
-> > 
-> > Georgi Djakov (4):
-> >    dt-bindings: opp: Introduce opp-bw-MBs bindings
-> >    OPP: Add support for parsing the interconnect bandwidth
-> >    OPP: Update the bandwidth on OPP frequency changes
-> >    cpufreq: dt: Add support for interconnect bandwidth scaling
-> > 
-> >   Documentation/devicetree/bindings/opp/opp.txt | 45 ++++++++++++
-> >   drivers/cpufreq/cpufreq-dt.c                  | 27 ++++++-
-> >   drivers/opp/core.c                            | 71 +++++++++++++++++++
-> >   drivers/opp/of.c                              | 44 ++++++++++++
-> >   drivers/opp/opp.h                             |  6 ++
-> >   include/linux/pm_opp.h                        | 14 ++++
-> >   6 files changed, 206 insertions(+), 1 deletion(-)
-> > 
-> 
-> -- 
-> Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Remove the variance code in timings.c
+
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ kernel/irq/timings.c | 252 +------------------------------------------
+ 1 file changed, 2 insertions(+), 250 deletions(-)
+
+diff --git a/kernel/irq/timings.c b/kernel/irq/timings.c
+index 1e4cb63a5c82..3cde046a2bc8 100644
+--- a/kernel/irq/timings.c
++++ b/kernel/irq/timings.c
+@@ -8,7 +8,6 @@
+ #include <linux/interrupt.h>
+ #include <linux/idr.h>
+ #include <linux/irq.h>
+-#include <linux/math64.h>
+ 
+ #include <trace/events/irq.h>
+ 
+@@ -19,13 +18,7 @@ DEFINE_STATIC_KEY_FALSE(irq_timing_enabled);
+ DEFINE_PER_CPU(struct irq_timings, irq_timings);
+ 
+ struct irqt_stat {
+-	u64	next_evt;
+-	u64	last_ts;
+-	u64	variance;
+-	u32	avg;
+-	u32	nr_samples;
+-	int	anomalies;
+-	int	valid;
++	u64     next_evt;
+ };
+ 
+ static DEFINE_IDR(irqt_stats);
+@@ -40,184 +33,6 @@ void irq_timings_disable(void)
+ 	static_branch_disable(&irq_timing_enabled);
+ }
+ 
+-/**
+- * irqs_update - update the irq timing statistics with a new timestamp
+- *
+- * @irqs: an irqt_stat struct pointer
+- * @ts: the new timestamp
+- *
+- * The statistics are computed online, in other words, the code is
+- * designed to compute the statistics on a stream of values rather
+- * than doing multiple passes on the values to compute the average,
+- * then the variance. The integer division introduces a loss of
+- * precision but with an acceptable error margin regarding the results
+- * we would have with the double floating precision: we are dealing
+- * with nanosec, so big numbers, consequently the mantisse is
+- * negligeable, especially when converting the time in usec
+- * afterwards.
+- *
+- * The computation happens at idle time. When the CPU is not idle, the
+- * interrupts' timestamps are stored in the circular buffer, when the
+- * CPU goes idle and this routine is called, all the buffer's values
+- * are injected in the statistical model continuying to extend the
+- * statistics from the previous busy-idle cycle.
+- *
+- * The observations showed a device will trigger a burst of periodic
+- * interrupts followed by one or two peaks of longer time, for
+- * instance when a SD card device flushes its cache, then the periodic
+- * intervals occur again. A one second inactivity period resets the
+- * stats, that gives us the certitude the statistical values won't
+- * exceed 1x10^9, thus the computation won't overflow.
+- *
+- * Basically, the purpose of the algorithm is to watch the periodic
+- * interrupts and eliminate the peaks.
+- *
+- * An interrupt is considered periodically stable if the interval of
+- * its occurences follow the normal distribution, thus the values
+- * comply with:
+- *
+- *      avg - 3 x stddev < value < avg + 3 x stddev
+- *
+- * Which can be simplified to:
+- *
+- *      -3 x stddev < value - avg < 3 x stddev
+- *
+- *      abs(value - avg) < 3 x stddev
+- *
+- * In order to save a costly square root computation, we use the
+- * variance. For the record, stddev = sqrt(variance). The equation
+- * above becomes:
+- *
+- *      abs(value - avg) < 3 x sqrt(variance)
+- *
+- * And finally we square it:
+- *
+- *      (value - avg) ^ 2 < (3 x sqrt(variance)) ^ 2
+- *
+- *      (value - avg) x (value - avg) < 9 x variance
+- *
+- * Statistically speaking, any values out of this interval is
+- * considered as an anomaly and is discarded. However, a normal
+- * distribution appears when the number of samples is 30 (it is the
+- * rule of thumb in statistics, cf. "30 samples" on Internet). When
+- * there are three consecutive anomalies, the statistics are resetted.
+- *
+- */
+-static void irqs_update(struct irqt_stat *irqs, u64 ts)
+-{
+-	u64 old_ts = irqs->last_ts;
+-	u64 variance = 0;
+-	u64 interval;
+-	s64 diff;
+-
+-	/*
+-	 * The timestamps are absolute time values, we need to compute
+-	 * the timing interval between two interrupts.
+-	 */
+-	irqs->last_ts = ts;
+-
+-	/*
+-	 * The interval type is u64 in order to deal with the same
+-	 * type in our computation, that prevent mindfuck issues with
+-	 * overflow, sign and division.
+-	 */
+-	interval = ts - old_ts;
+-
+-	/*
+-	 * The interrupt triggered more than one second apart, that
+-	 * ends the sequence as predictible for our purpose. In this
+-	 * case, assume we have the beginning of a sequence and the
+-	 * timestamp is the first value. As it is impossible to
+-	 * predict anything at this point, return.
+-	 *
+-	 * Note the first timestamp of the sequence will always fall
+-	 * in this test because the old_ts is zero. That is what we
+-	 * want as we need another timestamp to compute an interval.
+-	 */
+-	if (interval >= NSEC_PER_SEC) {
+-		memset(irqs, 0, sizeof(*irqs));
+-		irqs->last_ts = ts;
+-		return;
+-	}
+-
+-	/*
+-	 * Pre-compute the delta with the average as the result is
+-	 * used several times in this function.
+-	 */
+-	diff = interval - irqs->avg;
+-
+-	/*
+-	 * Increment the number of samples.
+-	 */
+-	irqs->nr_samples++;
+-
+-	/*
+-	 * Online variance divided by the number of elements if there
+-	 * is more than one sample.  Normally the formula is division
+-	 * by nr_samples - 1 but we assume the number of element will be
+-	 * more than 32 and dividing by 32 instead of 31 is enough
+-	 * precise.
+-	 */
+-	if (likely(irqs->nr_samples > 1))
+-		variance = irqs->variance >> IRQ_TIMINGS_SHIFT;
+-
+-	/*
+-	 * The rule of thumb in statistics for the normal distribution
+-	 * is having at least 30 samples in order to have the model to
+-	 * apply. Values outside the interval are considered as an
+-	 * anomaly.
+-	 */
+-	if ((irqs->nr_samples >= 30) && ((diff * diff) > (9 * variance))) {
+-		/*
+-		 * After three consecutive anomalies, we reset the
+-		 * stats as it is no longer stable enough.
+-		 */
+-		if (irqs->anomalies++ >= 3) {
+-			memset(irqs, 0, sizeof(*irqs));
+-			irqs->last_ts = ts;
+-			return;
+-		}
+-	} else {
+-		/*
+-		 * The anomalies must be consecutives, so at this
+-		 * point, we reset the anomalies counter.
+-		 */
+-		irqs->anomalies = 0;
+-	}
+-
+-	/*
+-	 * The interrupt is considered stable enough to try to predict
+-	 * the next event on it.
+-	 */
+-	irqs->valid = 1;
+-
+-	/*
+-	 * Online average algorithm:
+-	 *
+-	 *  new_average = average + ((value - average) / count)
+-	 *
+-	 * The variance computation depends on the new average
+-	 * to be computed here first.
+-	 *
+-	 */
+-	irqs->avg = irqs->avg + (diff >> IRQ_TIMINGS_SHIFT);
+-
+-	/*
+-	 * Online variance algorithm:
+-	 *
+-	 *  new_variance = variance + (value - average) x (value - new_average)
+-	 *
+-	 * Warning: irqs->avg is updated with the line above, hence
+-	 * 'interval - irqs->avg' is no longer equal to 'diff'
+-	 */
+-	irqs->variance = irqs->variance + (diff * (interval - irqs->avg));
+-
+-	/*
+-	 * Update the next event
+-	 */
+-	irqs->next_evt = ts + irqs->avg;
+-}
+-
+ /**
+  * irq_timings_next_event - Return when the next event is supposed to arrive
+  *
+@@ -246,12 +61,6 @@ static void irqs_update(struct irqt_stat *irqs, u64 ts)
+  */
+ u64 irq_timings_next_event(u64 now)
+ {
+-	struct irq_timings *irqts = this_cpu_ptr(&irq_timings);
+-	struct irqt_stat *irqs;
+-	struct irqt_stat __percpu *s;
+-	u64 ts, next_evt = U64_MAX;
+-	int i, irq = 0;
+-
+ 	/*
+ 	 * This function must be called with the local irq disabled in
+ 	 * order to prevent the timings circular buffer to be updated
+@@ -259,64 +68,7 @@ u64 irq_timings_next_event(u64 now)
+ 	 */
+ 	lockdep_assert_irqs_disabled();
+ 
+-	/*
+-	 * Number of elements in the circular buffer: If it happens it
+-	 * was flushed before, then the number of elements could be
+-	 * smaller than IRQ_TIMINGS_SIZE, so the count is used,
+-	 * otherwise the array size is used as we wrapped. The index
+-	 * begins from zero when we did not wrap. That could be done
+-	 * in a nicer way with the proper circular array structure
+-	 * type but with the cost of extra computation in the
+-	 * interrupt handler hot path. We choose efficiency.
+-	 *
+-	 * Inject measured irq/timestamp to the statistical model
+-	 * while decrementing the counter because we consume the data
+-	 * from our circular buffer.
+-	 */
+-	for (i = irqts->count & IRQ_TIMINGS_MASK,
+-		     irqts->count = min(IRQ_TIMINGS_SIZE, irqts->count);
+-	     irqts->count > 0; irqts->count--, i = (i + 1) & IRQ_TIMINGS_MASK) {
+-
+-		irq = irq_timing_decode(irqts->values[i], &ts);
+-
+-		s = idr_find(&irqt_stats, irq);
+-		if (s) {
+-			irqs = this_cpu_ptr(s);
+-			irqs_update(irqs, ts);
+-		}
+-	}
+-
+-	/*
+-	 * Look in the list of interrupts' statistics, the earliest
+-	 * next event.
+-	 */
+-	idr_for_each_entry(&irqt_stats, s, i) {
+-
+-		irqs = this_cpu_ptr(s);
+-
+-		if (!irqs->valid)
+-			continue;
+-
+-		if (irqs->next_evt <= now) {
+-			irq = i;
+-			next_evt = now;
+-
+-			/*
+-			 * This interrupt mustn't use in the future
+-			 * until new events occur and update the
+-			 * statistics.
+-			 */
+-			irqs->valid = 0;
+-			break;
+-		}
+-
+-		if (irqs->next_evt < next_evt) {
+-			irq = i;
+-			next_evt = irqs->next_evt;
+-		}
+-	}
+-
+-	return next_evt;
++	return 0;
+ }
+ 
+ void irq_timings_free(int irq)
+-- 
+2.17.1
+
