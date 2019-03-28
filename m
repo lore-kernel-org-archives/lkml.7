@@ -2,97 +2,153 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C5EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42DAC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C66217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:45:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uuaZgE8q"
+	by mail.kernel.org (Postfix) with ESMTP id BB125217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:47:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbfC1Opl (ORCPT
+        id S1726340AbfC1Or3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:45:41 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39110 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfC1Opl (ORCPT
+        Thu, 28 Mar 2019 10:47:29 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:59439 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726227AbfC1Or0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:45:41 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2SEcUvS062047;
-        Thu, 28 Mar 2019 14:45:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=f8nKABZEWRaEjHIFUMeN+b36gTly03R/PHIMpY8MInA=;
- b=uuaZgE8q/aWtQJOP54IW71CMDC/BlM73dkDzIw679k8+zPpBcGWC2p1k5DRTLJsHdsBG
- qXix9HQ9my8XkYjzWgp5BlzrAPuG5888hpE2w/bgzJbySXTu5PsxxqjpX1Mlpz++OfOv
- OXIm26R0a/zZgCdf1KwOOuJGgjymOphrN2dxRKfYigyGoz7yKfHq2zdamivFvNZdSEqi
- GHljtmuzsp6j9LussaI4T+XFU+Mcj+4MYRi9IYnqkx7hMOByANHxMy3NhbXSp8m4HTK6
- G7vvXi9nse0R7yN/ogTm0Z0H7MSoY/f8JP8NhRyoZyXnEi90wbONo7kWOAEXS54pOIVM /g== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2130.oracle.com with ESMTP id 2re6g1f1hn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 14:45:23 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2SEjMbh023641
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 14:45:22 GMT
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2SEjM8u015597;
-        Thu, 28 Mar 2019 14:45:22 GMT
-Received: from kadam (/41.202.241.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 Mar 2019 07:45:21 -0700
-Date:   Thu, 28 Mar 2019 17:45:07 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, devel@driverdev.osuosl.org,
-        Todd Kjos <tkjos@android.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [RFC PATCH 22/68] vfs: Convert binderfs to use the new mount API
-Message-ID: <20190328144507.GV32590@kadam>
-References: <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk>
- <155373020049.7602.8355937001441630312.stgit@warthog.procyon.org.uk>
+        Thu, 28 Mar 2019 10:47:26 -0400
+Received: from [IPv6:2001:420:44c1:2579:7126:11db:5076:31b1] ([IPv6:2001:420:44c1:2579:7126:11db:5076:31b1])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 9WJLh74SbNG8z9WJOhpa4p; Thu, 28 Mar 2019 15:47:24 +0100
+Subject: Re: [PATCH v3] media: rga: fix NULL pointer dereferences,
+ use-after-free, memory leak
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Jacob chen <jacob2.chen@rock-chips.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <ff11d704-489f-836e-6c9d-1b2fb5e963b6@arm.com>
+ <20190314050344.29790-1-kjlu@umn.edu>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <47c6d19c-96bd-49e1-7a3e-702fc50df670@xs4all.nl>
+Date:   Thu, 28 Mar 2019 15:47:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155373020049.7602.8355937001441630312.stgit@warthog.procyon.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9208 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903280100
+In-Reply-To: <20190314050344.29790-1-kjlu@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfNKB8mX0zNKOSmLuh2wPAFBgG9qwwTJvESUFS/oo7j6OPXgIwIXJZSIOmmtiOxXrugEJQZeEpgHiA/HT/5PtgcnD5YKXY32Xhte+mpjZdFTGrVvFGEle
+ V0SXHmuaq1nEMMWZlcmjQUe/6Ka/AiFnJqwctplvQoE/vqdnmCgHcRWCtGRlanOoO4BdUo8rd8oKvv7SS5dnsALgSTxMGh3z/YudiZMO6mDFQx+nZpY23jSJ
+ hlqg88wriaUFUDpc6uL4dcKL2+d2a5c1N8obrnDgZCcs7qB/rSJe6hlFPOHuJDfL8l0CQ4EIpNaNej4xfrdneKOs7g/H3KBVUy+ZNB6HCgJzlu9xJ0WNPaJa
+ +lxhTsTCrG+4iGJSgsKSGv3/nDzJ4CMNba93JZKS0dRd7Uolb3NNCPqS9BUMiIO5ZHXtYsqHVcvKR89FM1gWqqSW1HTUoaZgqPDwvCveUcaU/CmQQRWJvJ1X
+ +wdGB0DQARI66KwbOXKZGk5GHXlILq4BrhM0+xI+z9aMNguwh6RHA4jx33EGuDm47sRsk/AIKoCxf79qLz3satpiidl/IHTX96Ewgw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 11:43:20PM +0000, David Howells wrote:
-> +static void binderfs_free_fc(struct fs_context *fc)
-> +{
-> +	struct binderfs_info *info = fc->s_fs_info;
-> +
-> +	if (info) {
-> +		struct ipc_namespace *ipc_ns = fc->s_fs_info;
-> +		put_ipc_ns(ipc_ns);
+Hi Kangjie,
 
-I feel like put_ipc_ns(info->ipc_ns) would be more readable.
+Unfortunately there are more issues with the cleanup sequence in
+this probe function:
 
-> +		kfree(info);
+On 3/14/19 6:03 AM, Kangjie Lu wrote:
+> 1. dma_alloc_attrs, __get_free_pages can fail and return NULL.
+> Further uses of their return values lead to NULL pointer
+> dereferences
+> 
+> 2. In the error-handling path, video_unregister_device uses
+> "rga->vfd" which has been freed by video_device_release
+> 
+> 3. The error handling for v4l2_m2m_init and video_register_device
+> has memory-leak issues
+> 
+> The patch fixes the above issues.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>  drivers/media/platform/rockchip/rga/rga.c | 26 ++++++++++++++++++++---
+>  1 file changed, 23 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/platform/rockchip/rga/rga.c b/drivers/media/platform/rockchip/rga/rga.c
+> index 5c653287185f..468365ceb99d 100644
+> --- a/drivers/media/platform/rockchip/rga/rga.c
+> +++ b/drivers/media/platform/rockchip/rga/rga.c
+> @@ -889,11 +889,24 @@ static int rga_probe(struct platform_device *pdev)
+>  	rga->cmdbuf_virt = dma_alloc_attrs(rga->dev, RGA_CMDBUF_SIZE,
+>  					   &rga->cmdbuf_phy, GFP_KERNEL,
+>  					   DMA_ATTR_WRITE_COMBINE);
+> +	if (!rga->cmdbuf_virt) {
+> +		ret = -ENOMEM;
+> +		goto unreg_video_dev;
+
+Actually, the unreg_video_dev label makes no sense: if the video device
+is successfully registered, then probe() returns 0. So you never need to
+unregister the video device again. You *do* need to release it with
+video_device_release().
+
+So this should be a goto rel_vdev.
+
+And the cleanup sequence at the end also fails to call v4l2_m2m_release().
+
+Can you make v4?
+
+Thanks!
+
+	Hans
+
 > +	}
-> +}
+>  
+>  	rga->src_mmu_pages =
+>  		(unsigned int *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, 3);
+> +	if (!rga->src_mmu_pages) {
+> +		ret = -ENOMEM;
+> +		goto free_dma_attrs;
+> +	}
 > +
+>  	rga->dst_mmu_pages =
+>  		(unsigned int *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, 3);
+> +	if (!rga->dst_mmu_pages) {
+> +		ret = -ENOMEM;
+> +		goto free_dst_pages;
+> +	}
+>  
+>  	def_frame.stride = (def_frame.width * def_frame.fmt->depth) >> 3;
+>  	def_frame.size = def_frame.stride * def_frame.height;
+> @@ -901,7 +914,7 @@ static int rga_probe(struct platform_device *pdev)
+>  	ret = video_register_device(vfd, VFL_TYPE_GRABBER, -1);
+>  	if (ret) {
+>  		v4l2_err(&rga->v4l2_dev, "Failed to register video device\n");
+> -		goto rel_vdev;
+> +		goto free_pages;
+>  	}
+>  
+>  	v4l2_info(&rga->v4l2_dev, "Registered %s as /dev/%s\n",
+> @@ -909,10 +922,17 @@ static int rga_probe(struct platform_device *pdev)
+>  
+>  	return 0;
+>  
+> -rel_vdev:
+> -	video_device_release(vfd);
+> +free_pages:
+> +	free_pages((unsigned long)rga->src_mmu_pages, 3);
+> +free_dst_pages:
+> +	free_pages((unsigned long)rga->dst_mmu_pages, 3);
+> +free_dma_attrs:
+> +	dma_free_attrs(rga->dev, RGA_CMDBUF_SIZE, rga->cmdbuf_virt,
+> +		       rga->cmdbuf_phy,
+> +		       DMA_ATTR_WRITE_COMBINE);
+>  unreg_video_dev:
+>  	video_unregister_device(rga->vfd);
+> +	video_device_release(vfd);
+>  unreg_v4l2_dev:
+>  	v4l2_device_unregister(&rga->v4l2_dev);
+>  err_put_clk:
+> 
 
