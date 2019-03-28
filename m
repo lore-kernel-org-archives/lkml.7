@@ -2,81 +2,103 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 566BDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22533C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22E862075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54032075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfC1LgC (ORCPT
+        id S1727149AbfC1LhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 07:36:02 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:35706 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbfC1LgB (ORCPT
+        Thu, 28 Mar 2019 07:37:09 -0400
+Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:42716 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725846AbfC1LhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 07:36:01 -0400
-Received: by mail-it1-f198.google.com with SMTP id s3so2962537itl.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 04:36:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=IeQZN5DzFCOw9ygnpDu52QTqLny3txcxZoSYPkvsPAc=;
-        b=T7ulaKtyW7TjX3Gune+ujPzLRSvR1FuOBnoCC2srK331NOl+ptf4S3uej3p98lRtH1
-         f1rxs8OWHk6VZF4JiAL7TqqPG/6CVgZv1Sam9Mi10edhDaky6Gn6GFVeQieN0VR3XZfU
-         dIA5Y21bVGJz/jbD2g2R0icY6y4sHgkF1PkTmnKvykimdeuhvNfpSh/GBOMH0VmflMQQ
-         GS1WKuJg3XsFoeG1Iuv7khWgX2+ZPShT1AuIGdgXgL/NW69UZ/BGlT4LWagPrzgR1wZK
-         KHbMWPn0W+XhITH9g3y8wyS0yXwm/yRigiITLqP3loV6cJu0qAzObL3ORTwicwRkcR+A
-         3hxg==
-X-Gm-Message-State: APjAAAXmQw/X4f1j78lVJF8fe2SpYV4RbtzdikRlgSkBpY75/odk1EG5
-        mHLdooazBu2IzHtxraZW1dm+aB/frFm77I9ZTP6iUggn8BOX
-X-Google-Smtp-Source: APXvYqyZPXOFB5iijfyr3vhC7APuaXAAGVZyB+81evChjYCtfAUvlq5aOG5TST+YM4QbqCf7Jcfe79860ETHF4Mwusd3fqLMH5/r
+        Thu, 28 Mar 2019 07:37:08 -0400
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from webmail.solarflare.com (webmail.solarflare.com [12.187.104.26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us4.ppe-hosted.com (Proofpoint Essentials ESMTP Server) with ESMTPS id 9EC4514005D;
+        Thu, 28 Mar 2019 11:37:06 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ocex03.SolarFlarecom.com
+ (10.20.40.36) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 28 Mar
+ 2019 04:37:02 -0700
+Subject: Re: [BUG] net: core: netif_receive_skb_list() crash on non-standard
+ ptypes forwarding
+To:     Alexander Lobakin <alobakin@dlink.ru>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Li RongQing <lirongqing@baidu.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1553767399.1271.1@dlink.ru>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <61211987-2c8b-12b2-54cc-5ee23e2d0da9@solarflare.com>
+Date:   Thu, 28 Mar 2019 11:37:00 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:288:: with SMTP id s8mr1952223itl.25.1553772960580;
- Thu, 28 Mar 2019 04:36:00 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 04:36:00 -0700
-In-Reply-To: <0000000000007f82d805783fe8ce@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006088db058525f51f@google.com>
-Subject: Re: INFO: task hung in genl_rcv_msg
-From:   syzbot <syzbot+c3b90a95b2d6bd4f29b1@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, gregkh@linuxfoundation.org,
-        jon.maloy@ericsson.com, keescook@chromium.org,
-        kstewart@linuxfoundation.org, ktkhai@virtuozzo.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        nicolas.dichtel@6wind.com, pombredanne@nexb.com,
-        syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <1553767399.1271.1@dlink.ru>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-Originating-IP: [10.17.20.203]
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-24516.005
+X-TM-AS-Result: No-4.642800-4.000000-10
+X-TMASE-MatchedRID: O/y65JfDwwuHYS4ybQtcOomfV7NNMGm+jLOy13Cgb4+qvcIF1TcLYJRd
+        g7qd4xaLUxPAM3J2QaqUTQ2JYQzY25Coy9iDotiwyeVujmXuYYUDA8I31/g84Czt4/lw8JZDmwL
+        9o7cpIiY6yk8NZVXu3QdQESungOx5hbj+PXOvhgqeAiCmPx4NwFkMvWAuahr8+gD2vYtOFhgqtq
+        5d3cxkNffvWahKfRU427/NFe37cxnDZQko9hy/+yE22IdsthQJ18Nf8rMGFqCCXjRSiQE7xc4t4
+        m7TuVnkIPIPLbin6PIHKnq4/yFwyhFXYkCadnGOooBB8uyeEuspZK3gOa9uGmJwouYrZN4qaw+f
+        kLqdalOeqD9WtJkSIw==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--4.642800-4.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-24516.005
+X-MDID: 1553773027-ge7VrjwHTgCl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 28/03/2019 10:03, Alexander Lobakin wrote:
+> Here's a working possible fix for that, not sure if it can break anything
+> though.
+>
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index 2b67f2aa59dd..fdcff29df915 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -5014,8 +5014,10 @@ static inline void __netif_receive_skb_list_ptype(struct list_head *head,
+>     if (pt_prev->list_func != NULL)
+>         pt_prev->list_func(head, pt_prev, orig_dev);
+>     else
+> -        list_for_each_entry_safe(skb, next, head, list)
+> +        list_for_each_entry_safe(skb, next, head, list) {
+> +            skb_list_del_init(skb);
+>             pt_prev->func(skb, skb->dev, pt_prev, orig_dev);
+> +        }
+> }
+>
+> static void __netif_receive_skb_list_core(struct list_head *head, bool pfmemalloc)
+>
+> Maybe you could look into this and find another/better solution (or I could
+> submit this one if that's pretty enough).
+That looks like the correct fix to me, go ahead and have a
+Reviewed-by: Edward Cree <ecree@solarflare.com>
 
-commit 928df1880e24bcd47d6359ff86df24db3dfba3c3
-Author: Jon Maloy <jon.maloy@ericsson.com>
-Date:   Thu Mar 15 15:48:51 2018 +0000
+>
+> BTW, great work with netif_receive_skb_list() -- I've got 70 Mbps gain (~15%)
+> on my setup in comparsion to napi_gro_receive().
+Nice!
 
-     tipc: obsolete TIPC_ZONE_SCOPE
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1487ea0f200000
-start commit:   a5ed1e96 Merge tag 'powerpc-5.1-3' of git://git.kernel.org..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1687ea0f200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1287ea0f200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31fb246de2a622
-dashboard link: https://syzkaller.appspot.com/bug?extid=c3b90a95b2d6bd4f29b1
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=176657ef200000
-
-Reported-by: syzbot+c3b90a95b2d6bd4f29b1@syzkaller.appspotmail.com
-Fixes: 928df1880e24 ("tipc: obsolete TIPC_ZONE_SCOPE")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-Ed
