@@ -4,89 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA4FC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064ECC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0EC2173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5FCA2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553750912;
-	bh=OivgbXJG+68tUwFH4XkMsfkEqPCFZVgWEvFNJtZgBMQ=;
+	s=default; t=1553750962;
+	bh=WwD3FZpLpENsdUAVLdfIEmwYDcs5P1X4BUDIANr2viQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1HbICfOuIRkRPEJNGdMd7NsIxv9dOF70/pJdlFuuAaYGKhYWB7ofzTvu5jBYmuSV+
-	 wXasq0Gy6zBgrOWr3a6OQIkTQKA7YX44GR+oCkknK61jyDwDEdr1ip3+uZjevXDrGw
-	 Vu1B4tPzYTI11inrnD/GZraa4sr/9QWKn/fuX1yA=
+	b=AUPLpI8pAaIwfcTM+dUunQddWrSSQPIiWYAAHzNvUupSqfc9MNnRdvKeVNzrF0/Ac
+	 xVOeym7kuyZ/PdJVFAevjgc8jdlml/Hfex6zUlxjVP3kkUlBvPi5IRAsW9CgSS0LpJ
+	 i8nJrL1bOrHqJsD7zdkAhc5kcih15GB9bpwFAAns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbfC1F2b (ORCPT
+        id S1726164AbfC1F3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 01:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42412 "EHLO mail.kernel.org"
+        Thu, 28 Mar 2019 01:29:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbfC1F2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 01:28:31 -0400
+        id S1725794AbfC1F3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 01:29:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA07820811;
-        Thu, 28 Mar 2019 05:28:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7583C20811;
+        Thu, 28 Mar 2019 05:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553750910;
-        bh=OivgbXJG+68tUwFH4XkMsfkEqPCFZVgWEvFNJtZgBMQ=;
+        s=default; t=1553750960;
+        bh=WwD3FZpLpENsdUAVLdfIEmwYDcs5P1X4BUDIANr2viQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QwHdwHGHW1zx4+VpcB/p1BmeKvDiOt4KRx4GyJDysK6fxCuoj9qc0HyvyB4NYGPVY
-         JuHyIcC7KN1V5CWZcWitXv07T0pi2qjFvLZvg2pV3zoNHEs0SZeHCiyuIiBH8mFZpG
-         UyxuWKoE3QIxCQ1nbNmSh9gDtJA9yEBuuvEMOLIU=
-Date:   Thu, 28 Mar 2019 06:28:26 +0100
+        b=yE25EW4aFL57MusACL2gL2GG6X39XHGGiNrHuIdT0mYySSdoSL6SAp08m5rRWR27z
+         976sEtbuB2bEGoal9TWSKRFRdN0Ov28RLOhA3DIjFdJcxtP7nuRzMpFt3YNBb4LZyW
+         9HFkS19oH+LOwl+qoZmsxF6SaudcGpECHJtBCqDc=
+Date:   Thu, 28 Mar 2019 06:29:17 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Zhang, Jun" <jun.zhang@intel.com>
-Cc:     "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "He, Bo" <bo.he@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "Xiao, Jin" <jin.xiao@intel.com>,
-        "Bai, Jie A" <jie.a.bai@intel.com>
-Subject: Re: [PATCH 3.18 132/134] rcu: Do RCU GP kthread self-wakeup from
- softirq and interrupt
-Message-ID: <20190328052826.GA18668@kroah.com>
-References: <20190322111210.465931067@linuxfoundation.org>
- <20190322111220.102008032@linuxfoundation.org>
- <CD6925E8781EFD4D8E11882D20FC406D52A646D1@SHSMSX104.ccr.corp.intel.com>
- <20190323063315.GB31361@kroah.com>
- <20190325160017.GD4102@linux.ibm.com>
- <CD6925E8781EFD4D8E11882D20FC406D52A6526B@SHSMSX104.ccr.corp.intel.com>
- <20190326155537.GO4102@linux.ibm.com>
- <88DC34334CA3444C85D647DBFA962C2735B04EB8@SHSMSX104.ccr.corp.intel.com>
- <20190327151012.GY4102@linux.ibm.com>
- <88DC34334CA3444C85D647DBFA962C2735B0510F@SHSMSX104.ccr.corp.intel.com>
+To:     "Life is hard, and then you die" <ronald@innovation.ch>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] driver core: add dev_print_hex_dump() logging
+ function.
+Message-ID: <20190328052917.GB18668@kroah.com>
+References: <20190327014807.7472-1-ronald@innovation.ch>
+ <20190327014807.7472-4-ronald@innovation.ch>
+ <20190327023757.GB20766@kroah.com>
+ <20190328002817.GF24753@innovation.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <88DC34334CA3444C85D647DBFA962C2735B0510F@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <20190328002817.GF24753@innovation.ch>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 01:36:12AM +0000, Zhang, Jun wrote:
-> Hello, Paul
+On Wed, Mar 27, 2019 at 05:28:17PM -0700, Life is hard, and then you die wrote:
 > 
-> Yes, I only use original V3.18.136 to test. Because system run very slowly, I give up.
+> On Wed, Mar 27, 2019 at 11:37:57AM +0900, Greg Kroah-Hartman wrote:
+> > On Tue, Mar 26, 2019 at 06:48:06PM -0700, Ronald Tschalär wrote:
+> > > This is the dev_xxx() analog to print_hex_dump(), using dev_printk()
+> > > instead of straight printk() to match other dev_xxx() logging functions.
+> > > ---
+> > >  drivers/base/core.c    | 43 ++++++++++++++++++++++++++++++++++++++++++
+> > >  include/linux/device.h | 15 +++++++++++++++
+> > >  2 files changed, 58 insertions(+)
+> > 
+> > No signed-off-by?
 > 
-> Device: NUC (made in 2017)
-> OS:        ubuntu 16.04
-> Kernel: V3.18.136 (come from https://kernel.ubuntu.com/~kernel-ppa/mainline/v3.18.136/) 
-> System can boot, but run very slowly, and couldn't connect the network.
-> This make me not to work with terminal, because system very slowly. 
-> So I donâ€™t use V3.18.136+patch to test.
+> Aargh! Apologies, fixed for the future.
+> 
+> > Anyway, no, please do not do this.  Please do not dump large hex values
+> > like this to the kernel log, it does not help anyone.
+> > 
+> > You can do this while debugging, sure, but not for "real" kernel code.
+> 
+> As used by this driver, it is definitely called for debugging only and
+> must be explicitly enabled via a module param. But having the ability
+> for folks to easily generate and print out debugging info has proven
+> quite valuable.
 
-Please do not worry about 3.18.y if it is any problem, I only keep it
-alive for a few users and if they have not reported issues yet, it is
-fine.  Please do not do any extra work for this kernel tree at all, it
-is just too old :)
+We have dynamic debugging, no need for module parameters at all.  This
+isn't the 1990's anymore :)
 
 thanks,
 
