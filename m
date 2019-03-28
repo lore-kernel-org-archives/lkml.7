@@ -2,156 +2,159 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE17C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53343C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B9121773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:34:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="f1QJreBt"
+	by mail.kernel.org (Postfix) with ESMTP id 27C8D206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbfC1KeS (ORCPT
+        id S1726381AbfC1KfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 06:34:18 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36067 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbfC1KeR (ORCPT
+        Thu, 28 Mar 2019 06:35:23 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:46106 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbfC1KfX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 06:34:17 -0400
-Received: by mail-wm1-f67.google.com with SMTP id h18so3381548wml.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 03:34:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4ZvJonE4G6rOM+u7Zr0b+pEWFruI2N0IqyQevceWziI=;
-        b=f1QJreBt80Jq4qYa4bYGXHfbJwJPBqLHccZ+hL1vgPAjE1WPA11P9PYd9qHhbnLtYa
-         ZGLU3D2a3kPJlpYy1yRTmpH/MlBtMSH0vWhUkZHZPhX1LU+a3uVGUWVobnL2mzd9gXHQ
-         L39da5XQvfrVVVEOJWfPzCPSAJS3rkaK14fOc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4ZvJonE4G6rOM+u7Zr0b+pEWFruI2N0IqyQevceWziI=;
-        b=HgDB1n0etrEBoXFGwKkGvDfDavalYnaPfvIuNbAxEl/41Zgu6hANnrd45SztgADNQ1
-         A1+oZBhFJqqyry2FHknbgRsQJr0aSVUFC+Z5RVdM58BdYoJ4RUwkztQis1JorRYpaL+u
-         AF/v7T2kibeRfwTWEM9XLTK2kFHc34WfZ9xFFVU1DX61FHk360w19o/Wkd5xebDswn+p
-         JXpYv4eUCzoUi6J7M89gSCUljnqwNrNHQ61GqJCXQTF6zaJLdwWIT2uwME9AmAxsewoh
-         68AlICi+Vj9zXiJZcGGv69vPP3/szrVZYwAo/beBJyv9SApF9oLDv5w80+yJn3UGJrgV
-         U5cA==
-X-Gm-Message-State: APjAAAX/UDGEMJ0m94j7MDbyTp9uo5gz99C5aH4/igXuTs4wR+AHORSZ
-        B3IxW++VUCAAS5byROPm/DZVIq4jGyFtXaBtMG88pQ==
-X-Google-Smtp-Source: APXvYqzpdc2UuNpd9Fafzm05LLWrlLCIU/A6KipYCdS95jCIY5ElM8bwZNsEfK/n4CSXYvdKXdSO9/hb9ulFUHy5OBk=
-X-Received: by 2002:a7b:cf2c:: with SMTP id m12mr11146421wmg.21.1553769255691;
- Thu, 28 Mar 2019 03:34:15 -0700 (PDT)
+        Thu, 28 Mar 2019 06:35:23 -0400
+Received: from 79.184.253.239.ipv4.supernova.orange.pl (79.184.253.239) (HELO aspire.rjw.lan)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id d18ff131ccb8c4c5; Thu, 28 Mar 2019 11:35:20 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>,
+        Quentin Perret <quentin.perret@arm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [Update][PATCH v3 3/4] cpufreq: schedutil: Simplify iowait boosting
+Date:   Thu, 28 Mar 2019 11:33:21 +0100
+Message-ID: <3714586.Xfz7sSM4fi@aspire.rjw.lan>
+In-Reply-To: <2864116.v8IU97Resm@aspire.rjw.lan>
+References: <11953735.uMqeHy63Iu@aspire.rjw.lan> <2864116.v8IU97Resm@aspire.rjw.lan>
 MIME-Version: 1.0
-References: <1548411231-27549-1-git-send-email-srinath.mannam@broadcom.com> <c92e07d7-78b2-d4ec-bf1a-29070a9d4145@arm.com>
-In-Reply-To: <c92e07d7-78b2-d4ec-bf1a-29070a9d4145@arm.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Thu, 28 Mar 2019 16:04:04 +0530
-Message-ID: <CABe79T7BC9AO3EF23=JjYwXCHDKX5mDYSPzHfpD_tLzX6gukHg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] PCIe Host request to reserve IOVA
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Thanks for your feedback. Please see my reply in line.
+There is not reason for the minimum iowait boost value in the
+schedutil cpufreq governor to depend on the available range of CPU
+frequencies.  In fact, that dependency is generally confusing,
+because it causes the iowait boost to behave somewhat differently
+on CPUs with the same maximum frequency and different minimum
+frequencies, for example.
 
-On Wed, Mar 27, 2019 at 8:32 PM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 25/01/2019 10:13, Srinath Mannam wrote:
-> > Few SOCs have limitation that their PCIe host can't allow few inbound
-> > address ranges. Allowed inbound address ranges are listed in dma-ranges
-> > DT property and this address ranges are required to do IOVA mapping.
-> > Remaining address ranges have to be reserved in IOVA mapping.
-> >
-> > PCIe Host driver of those SOCs has to list all address ranges which have
-> > to reserve their IOVA address into PCIe host bridge resource entry list.
-> > IOMMU framework will reserve these IOVAs while initializing IOMMU domain.
->
-> FWIW I'm still only interested in solving this problem generically,
-> because in principle it's not specific to PCI, for PCI it's certainly
-> not specific to iproc, and either way it's not specific to DT. That
-> said, I don't care strongly enough to keep pushing back on this
-> implementation outright, since it's not something which couldn't be
-> cleaned up 'properly' in future.
-Iproc PCIe host controller supports inbound address translation
-feature to restrict access
-to allowed address ranges. so that allowed memory ranges need to
-program to controller.
-allowed address ranges information is passed to controller driver
-through dma-ranges DT property.
-This feature is specific to iproc PCIe controller, so that I think
-this change has to specific to iproc
-PCIe driver and DT.
-Here I followed the same way how PCI IO regions are reserved
-"iova_reserve_pci_windows". so that this
-change also specific to PCI.
->
-> One general comment I'd make, though, is that AFAIK PCI has a concept of
-> inbound windows much more than it has a concept of gaps-between-windows,
-> so if the PCI layer is going to track anything it should probably be the
-> actual windows, and leave the DMA layer to invert them into the
-> reservations it cares about as it consumes the list. That way you can
-> also avoid the undocumented requirement for the firmware to keep the
-> ranges property sorted in the first place.
-This implementation has three parts.
-1. parsing dma-ranges and extract allowed and reserved address ranges.
-2. program allowed ranges to iproc PCIe controller.
-3. reserve list of reserved address ranges in IOMMU layer.
-#1 and #2 are done using "of_pci_dma_range_parser_init" in present
-iproc PCIe driver.
-so that, I listed reserve windows at the same place.
-#3 requires list of reserve windows so that I add new
-variable(dma_resv) to carry these
-reserve windows list to iommu layer from iproc driver layer.
-The reasons to not use DMA layer for parsing dma-ranges are,
-1. This feature is not generic for all SOCs.
-2. To avoid dam-ranges parsing in multiple places, already done in
-iproc pcie driver.
-3. Need to do modify standard DMA layer source code "of_dma_configure"
-4. required a carrier to pass reserved windows list from DMA layer to
-IOMMU layer.
-5. I followed existing PCIe IO regions reserve procedure done in IOMMU layer.
+For this reason, replace the min field in struct sugov_cpu
+with a constant and choose its values to be 1/8 of
+SCHED_CAPACITY_SCALE (for consistency with the intel_pstate
+driver's internal governor).
 
-Regards,
-Srinath.
->
-> Robin.
->
-> >
-> > This patch set is based on Linux-5.0-rc2.
-> >
-> > Changes from v2:
-> >    - Patch set rebased to Linux-5.0-rc2
-> >
-> > Changes from v1:
-> >    - Addressed Oza review comments.
-> >
-> > Srinath Mannam (3):
-> >    PCI: Add dma-resv window list
-> >    iommu/dma: Reserve IOVA for PCI host reserve address list
-> >    PCI: iproc: Add dma reserve resources to host
-> >
-> >   drivers/iommu/dma-iommu.c           |  8 ++++++
-> >   drivers/pci/controller/pcie-iproc.c | 51 ++++++++++++++++++++++++++++++++++++-
-> >   drivers/pci/probe.c                 |  3 +++
-> >   include/linux/pci.h                 |  1 +
-> >   4 files changed, 62 insertions(+), 1 deletion(-)
-> >
+[Note that policy->cpuinfo.max_freq will not be a constant any more
+ after a subsequent change, so this change is depended on by it.]
+
+Link: https://lore.kernel.org/lkml/20190305083202.GU32494@hirez.programming.kicks-ass.net/T/#ee20bdc98b7d89f6110c0d00e5c3ee8c2ced93c3d
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+As pointed out by Quentin, the original patch overlooked two kerneldoc
+comments that needed to be updated along with the code, so do that here.
+
+No other changes with respect to the original.
+
+---
+ kernel/sched/cpufreq_schedutil.c |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
+Index: linux-pm/kernel/sched/cpufreq_schedutil.c
+===================================================================
+--- linux-pm.orig/kernel/sched/cpufreq_schedutil.c
++++ linux-pm/kernel/sched/cpufreq_schedutil.c
+@@ -13,6 +13,8 @@
+ #include <linux/sched/cpufreq.h>
+ #include <trace/events/power.h>
+ 
++#define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
++
+ struct sugov_tunables {
+ 	struct gov_attr_set	attr_set;
+ 	unsigned int		rate_limit_us;
+@@ -51,7 +53,6 @@ struct sugov_cpu {
+ 	u64			last_update;
+ 
+ 	unsigned long		bw_dl;
+-	unsigned long		min;
+ 	unsigned long		max;
+ 
+ 	/* The field below is for single-CPU policies only: */
+@@ -291,8 +292,8 @@ static unsigned long sugov_get_util(stru
+  *
+  * The IO wait boost of a task is disabled after a tick since the last update
+  * of a CPU. If a new IO wait boost is requested after more then a tick, then
+- * we enable the boost starting from the minimum frequency, which improves
+- * energy efficiency by ignoring sporadic wakeups from IO.
++ * we enable the boost starting from IOWAIT_BOOST_MIN, which improves energy
++ * efficiency by ignoring sporadic wakeups from IO.
+  */
+ static bool sugov_iowait_reset(struct sugov_cpu *sg_cpu, u64 time,
+ 			       bool set_iowait_boost)
+@@ -303,7 +304,7 @@ static bool sugov_iowait_reset(struct su
+ 	if (delta_ns <= TICK_NSEC)
+ 		return false;
+ 
+-	sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
++	sg_cpu->iowait_boost = set_iowait_boost ? IOWAIT_BOOST_MIN : 0;
+ 	sg_cpu->iowait_boost_pending = set_iowait_boost;
+ 
+ 	return true;
+@@ -317,8 +318,9 @@ static bool sugov_iowait_reset(struct su
+  *
+  * Each time a task wakes up after an IO operation, the CPU utilization can be
+  * boosted to a certain utilization which doubles at each "frequent and
+- * successive" wakeup from IO, ranging from the utilization of the minimum
+- * OPP to the utilization of the maximum OPP.
++ * successive" wakeup from IO, ranging from IOWAIT_BOOST_MIN to the utilization
++ * of the maximum OPP.
++ *
+  * To keep doubling, an IO boost has to be requested at least once per tick,
+  * otherwise we restart from the utilization of the minimum OPP.
+  */
+@@ -349,7 +351,7 @@ static void sugov_iowait_boost(struct su
+ 	}
+ 
+ 	/* First wakeup after IO: start with minimum boost */
+-	sg_cpu->iowait_boost = sg_cpu->min;
++	sg_cpu->iowait_boost = IOWAIT_BOOST_MIN;
+ }
+ 
+ /**
+@@ -389,7 +391,7 @@ static unsigned long sugov_iowait_apply(
+ 		 * No boost pending; reduce the boost value.
+ 		 */
+ 		sg_cpu->iowait_boost >>= 1;
+-		if (sg_cpu->iowait_boost < sg_cpu->min) {
++		if (sg_cpu->iowait_boost < IOWAIT_BOOST_MIN) {
+ 			sg_cpu->iowait_boost = 0;
+ 			return util;
+ 		}
+@@ -826,9 +828,6 @@ static int sugov_start(struct cpufreq_po
+ 		memset(sg_cpu, 0, sizeof(*sg_cpu));
+ 		sg_cpu->cpu			= cpu;
+ 		sg_cpu->sg_policy		= sg_policy;
+-		sg_cpu->min			=
+-			(SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
+-			policy->cpuinfo.max_freq;
+ 	}
+ 
+ 	for_each_cpu(cpu, policy->cpus) {
+
