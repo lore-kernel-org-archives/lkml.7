@@ -2,100 +2,98 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12284C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 03:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C3AC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 03:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36DC2146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 03:04:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AUGCurHJ"
+	by mail.kernel.org (Postfix) with ESMTP id 7F8CF206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 03:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfC1DEI (ORCPT
+        id S1727806AbfC1DPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 23:04:08 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35130 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbfC1DEI (ORCPT
+        Wed, 27 Mar 2019 23:15:24 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:25559 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725948AbfC1DPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 23:04:08 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y197so2235179wmd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 20:04:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Lu2TuEmX6l4BGzvPtIoKd1uf+A28sCgJXOn0l5A7nIE=;
-        b=AUGCurHJLQhw3PbHQ+o3/a8gAJ6j3oDyXlff8qPCRyYZEJhVmTe2RbxxfsHbsTjx5M
-         vzobymoMvBVUaEzWV2ZZhjzpfXRvaTK7Ja5c9h15fuBGw4y5H0vxab1o2wscRFxrObY6
-         ba/CLtD7CJ9zS9ML7o+i1EJHZgQ3DiJ1hSlW0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lu2TuEmX6l4BGzvPtIoKd1uf+A28sCgJXOn0l5A7nIE=;
-        b=p2NCh9A9hYa2b1ptWzEmxqJc1EgXNoYoAXBmzssu+J3iuemh4mCkeheysehsAYSfOf
-         voi2Ou9AtIasXmSfk+/UEvhWXzfqwWtNqF6xZRIhERa8THmrkHMCgixpn1I1f2wR1URU
-         13V6Ff5+iifhEXnxpqwtDHCJ4ZBx+VNwYuplFVsgf8PWGXbjLHIzuU2uiV2937GNRPaS
-         G/V7t5Bcqi3NuSFi0xqo8yygQTD2bDhMVZYpkR3DchT5iV/7BRhHvjOaTQBlUwGpg0F8
-         O9YgLBnR+78rnWF/on1ZOIB3UOSyob3LSEigy00nDqB7PLj26T7JRDUOS10iM1Pw7duY
-         s/sA==
-X-Gm-Message-State: APjAAAVocRrXrunw1ZQcubzLVsAxoV12AEvmks5CkYZm19+8SAUQYy5U
-        YwV2xH+Nr7XY1rRb24SnmC75j7g4OmqgjqoslHg9Cg==
-X-Google-Smtp-Source: APXvYqw87CZ+CW0413yEInCAk3bPvdcDElOFlnIjrOhoHs1q3STBxShxh6y/KRAx4LakchWKPsLIh5pqoKHjLTK5B7Q=
-X-Received: by 2002:a7b:cf2c:: with SMTP id m12mr10020507wmg.21.1553742246268;
- Wed, 27 Mar 2019 20:04:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190328112925.0fbe34e2@canb.auug.org.au>
-In-Reply-To: <20190328112925.0fbe34e2@canb.auug.org.au>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Thu, 28 Mar 2019 08:33:54 +0530
-Message-ID: <CABe79T5uhZj6Ybo_7xCZ190qRikdJq9i4OBNEb6YQ0sJ7ukp+A@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the phy-next tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Wed, 27 Mar 2019 23:15:23 -0400
+X-UUID: b4c0625b9b994ffab9735c852d1169a5-20190328
+X-UUID: b4c0625b9b994ffab9735c852d1169a5-20190328
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 912598281; Thu, 28 Mar 2019 11:15:16 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 28 Mar 2019 11:15:09 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 28 Mar 2019 11:15:09 +0800
+Message-ID: <1553742909.10649.1.camel@mtkswgap22>
+Subject: Re: [PATCH V7 0/6] make mt7623 clock of hdmi stable
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     wangyan wang <wangyan.wang@mediatek.com>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, CK Hu <ck.hu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "Sean Wang" <sean.wang@mediatek.com>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>, <srv_heupstream@mediatek.com>
+Date:   Thu, 28 Mar 2019 11:15:09 +0800
+In-Reply-To: <20190327091929.73162-1-wangyan.wang@mediatek.com>
+References: <20190327091929.73162-1-wangyan.wang@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 6527065A0EFD741AAEDA97DE63AEF371E2CED00C2E09EC8E80D97158B30C61312000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Wed, 2019-03-27 at 17:19 +0800, wangyan wang wrote:
+> From: Wangyan Wang <wangyan.wang@mediatek.com>
+> 
+> V7 adopt maintainer's suggestion.
+> Here is the change list between V6 & V7
+> 
+> 1. use readl directly & delete hdmi_phy->pll_rate in
+> mtk_hdmi_pll_recalc_rate(). 
+> in "drm/mediatek: recalculate hdmi ..."
+> 
+> 2. detele mtk_hdmi_phy_read() in mtk_hdmi_phy.c.
+> in "fix the rate of parent for hdmi phy in MT2701"
+> 
+> 3. optimize mtk_hdmi_pll_round_rate().
+> in "fix the rate of parent for hdmi phy in MT2701"
+> 
+> chunhui dai (6):
+>   drm/mediatek: recalculate hdmi phy clock of MT2701 by querying
+>     hardware
+>   drm/mediatek: move the setting of fixed divider
+>   drm/mediatek: using different flags of clk for HDMI phy
+>   drm/mediatek: fix the rate and divder of hdmi phy for MT2701
+>   drm/mediatek: using new factor for tvdpll in MT2701
+>   drm/mediatek: fix the rate of parent for hdmi phy in MT2701
+> 
+>  drivers/gpu/drm/mediatek/mtk_dpi.c             |  8 ++---
+>  drivers/gpu/drm/mediatek/mtk_hdmi_phy.c        | 35 +++---------------
+>  drivers/gpu/drm/mediatek/mtk_hdmi_phy.h        |  6 +---
+>  drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c | 50 ++++++++++++++++++++++----
+>  drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c | 23 ++++++++++++
+>  5 files changed, 76 insertions(+), 46 deletions(-)
+> 
 
-Thanks for the notice.
+The series could not work on v5.1. Please check it out.
 
-I sent patch to fix this warning.
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1964942.html
-
-Regards,
-Srinath.
-
-On Thu, Mar 28, 2019 at 5:59 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Kishon,
->
-> After merging the phy-next tree, today's linux-next build (arm
-> multi_v7_defconfig) produced this warning:
->
-> In file included from include/linux/phy/phy.h:19,
->                  from drivers/phy/broadcom/phy-bcm-sr-usb.c:10:
-> drivers/phy/broadcom/phy-bcm-sr-usb.c: In function 'bcm_usb_phy_probe':
-> include/linux/device.h:1138:19: warning: 'phy_cfg' may be used uninitialized in this function [-Wmaybe-uninitialized]
->   dev->driver_data = data;
->   ~~~~~~~~~~~~~~~~~^~~~~~
-> drivers/phy/broadcom/phy-bcm-sr-usb.c:289:26: note: 'phy_cfg' was declared here
->   struct bcm_usb_phy_cfg *phy_cfg;
->                           ^~~~~~~
->
-> Introduced by commit
->
->   a3b96057577c ("phy: sr-usb: Add Stingray USB PHY driver")
->
-> --
-> Cheers,
-> Stephen Rothwell
