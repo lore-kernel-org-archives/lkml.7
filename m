@@ -2,271 +2,201 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04F8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F36C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858FB206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74906206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TuGBn7iq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3SFpH4kd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727694AbfC1RLi (ORCPT
+        id S1727149AbfC1RNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:11:38 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45632 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727182AbfC1RLh (ORCPT
+        Thu, 28 Mar 2019 13:13:41 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:50868 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfC1RNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:11:37 -0400
-Received: by mail-pf1-f195.google.com with SMTP id e24so10786128pfi.12
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 10:11:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+luZLveOgW0ezcsj4kzoCAaYqh/zxiLbPom43ySTdYE=;
-        b=TuGBn7iqwM5v0B4Bm40K5s7yE4HVHgUiAGzeNUmTNkQX2u0Pac6aMuoldukAlxjlf0
-         C+MG9KzehokpacpUTzp1R9wt5XVszcEjV9gj9ch0CtYN717yHeg+68wvH6qo5bLetrh4
-         ELDKDq/OT+P6lgOQQKHV+q+h+9JdACVWYQnIhVg7aJn9WibEp70dyMZb5WA9kDC9rQ7w
-         IAjtcrvS/GjZ4eautGSBOSW+NDy19qBtJMA/d4x1oEdTy/GPz1uCuSssus3mhV6SSSed
-         1xNfA3y1WKGGO8DA8svueZGnozmXBqMGoqnG3sGF283Z8HdcFqUQjq8TiI2XeeapkGW5
-         g/og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+luZLveOgW0ezcsj4kzoCAaYqh/zxiLbPom43ySTdYE=;
-        b=JDWs+SMgvs/LLHQb0eRthw7QgA+3I/drBKTwWfWuhpKlpEWu8Hw7deGuibaSUONgRp
-         klJves3t3gmz2cLmVn1El9a78K+yZO7YMStJaP+uldrAakcXcOX9NKupLq6dcXQVIPob
-         tm8NR6dfNMrGLcZyGzXjv5DIs8FuYp8x4kmL/GC8S5sac+3buNvNZvFLsJyuy/0RIMXT
-         Ov5mJ1pcJV3kE+XOZyNGCC1MkDfX+4GCFg1o6yR5Hznu/tIlCLA7B0acKBXp4u0NPRm7
-         v854GeiYrmsIB8IkRKbKyiuzv1QKGLVBAzUZPlsNJvxRFX/wWaPR3gnoXg18d3d6qLPo
-         ZW2Q==
-X-Gm-Message-State: APjAAAXlhvVBuyKoVs5CaBsrowmUNVVltXTWmX0W/H9DKEgKSTtf/klG
-        /4VDJ3OCLlWcWIcYZl+YaFA=
-X-Google-Smtp-Source: APXvYqwoVGBdqOQrZ211qCAOLuoK3EBPGHId4CjdJALXQEp8Op4SFemamW5WUJRJXJcgL804P6WXtw==
-X-Received: by 2002:aa7:8694:: with SMTP id d20mr41695287pfo.81.1553793096585;
-        Thu, 28 Mar 2019 10:11:36 -0700 (PDT)
-Received: from CentOS76.localdomain ([49.205.222.128])
-        by smtp.gmail.com with ESMTPSA id n65sm89286677pfb.160.2019.03.28.10.11.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 10:11:35 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 00:32:03 +0530
-From:   Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        a.hajda@samsung.com, airlied@linux.ie, daniel@ffwll.ch,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v2] gpu:drm: Remove duplicate headers
-Message-ID: <20190328190203.GA27353@CentOS76.localdomain>
-References: <1553721116-37832-1-git-send-email-jagdsh.linux@gmail.com>
- <20190328065124.GB4846@pendragon.ideasonboard.com>
- <20190328160206.GA94653@CentOS76.localdomain>
- <20190328141210.GA4813@pendragon.ideasonboard.com>
+        Thu, 28 Mar 2019 13:13:40 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2SH97g6014008;
+        Thu, 28 Mar 2019 17:13:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=Cd6tPSqmcPy/gFLKcl+pwJ2+zHZkJoQpThAnx1E6OXg=;
+ b=3SFpH4kdGqmG9ACWL2lBwmSIUHC6RUiz9sxqySzlFKzAswzmGDIi9jx6zA6W4g+nUafU
+ dWz54BjKYYX0gxbORmFnyCWZywCmYSbGnc7BNpfiw5JywDyv6/UL+dhaYK/PtuKGXmsv
+ wLVCKzbXbdrfx9YGOiLM3FIy3YAwmds2nXHP8EKTPpWdhikNghAtxrUlpa5G7zauXlpf
+ AGSrIKrJ3R/4kYqVnQmTiOOwmEw+vtDWe+HYIDClCA5D4dPXyRjilpXLvqV9BX9Sesd0
+ Lx1T29zVoRBV4jfIo64ZCrjBewFWcwCqDEZebcMm6duYthxU4WptmLL/haKpXYqKE1Yj rA== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by aserp2130.oracle.com with ESMTP id 2re6g181b6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 17:13:06 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2SHCsph017943
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 17:12:54 GMT
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2SHCsc5020545;
+        Thu, 28 Mar 2019 17:12:54 GMT
+Received: from [10.209.243.127] (/10.209.243.127)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 28 Mar 2019 10:12:53 -0700
+Subject: Re: [PATCH net] net: rds: force to destroy connection if t_sock is
+ NULL in rds_tcp_kill_sock().
+To:     Mao Wenan <maowenan@huawei.com>, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+References: <20190328091056.186547-1-maowenan@huawei.com>
+From:   Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <8cd0e24f-9609-1126-50b1-71ef35ae6c66@oracle.com>
+Date:   Thu, 28 Mar 2019 10:14:35 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="1yeeQ81UyVL57Vl7"
-Content-Disposition: inline
-In-Reply-To: <20190328141210.GA4813@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190328091056.186547-1-maowenan@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9209 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903280114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---1yeeQ81UyVL57Vl7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Mar 28, 2019 at 04:12:10PM +0200, Laurent Pinchart wrote:
-> Hi Jagadeesh,
+On 3/28/2019 2:10 AM, Mao Wenan wrote:
+> When it is to cleanup net namespace, rds_tcp_exit_net() will call
+> rds_tcp_kill_sock(), if t_sock is NULL, it will not call
+> rds_conn_destroy(), rds_conn_path_destroy() and rds_tcp_conn_free() to free
+> connection, and the worker cp_conn_w is not stopped, afterwards the net is freed in
+> net_drop_ns(); While cp_conn_w rds_connect_worker() will call rds_tcp_conn_path_connect()
+> and reference 'net' which has already been freed.
 > 
-> On Thu, Mar 28, 2019 at 09:32:06PM +0530, Jagadeesh Pagadala wrote:
-> > On Thu, Mar 28, 2019 at 08:51:24AM +0200, Laurent Pinchart wrote:
-> > > On Thu, Mar 28, 2019 at 02:41:56AM +0530, jagdsh.linux@gmail.com wrote:
-> > > > From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-> > > > 
-> > > > Remove duplicate headers which are included twice.
-> > > 
-> > > Could you, while at it, also sort the existing #include statements
-> > > alphabetically ? This should help avoiding similar issues in the future.
-> > > 
-> > > > Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-> > > > ---
-> > > >  drivers/gpu/drm/bridge/panel.c       | 1 -
-> > > >  drivers/gpu/drm/i915/intel_display.c | 7 -------
-> > > >  2 files changed, 8 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
-> > > > index 38eeaf8..eb9567d 100644
-> > > > --- a/drivers/gpu/drm/bridge/panel.c
-> > > > +++ b/drivers/gpu/drm/bridge/panel.c
-> > > > @@ -15,7 +15,6 @@
-> > > >  #include <drm/drm_encoder.h>
-> > > >  #include <drm/drm_modeset_helper_vtables.h>
-> > > >  #include <drm/drm_probe_helper.h>
-> > > > -#include <drm/drm_panel.h>
-> > > >  
-> > > >  struct panel_bridge {
-> > > >  	struct drm_bridge bridge;
-> > > > diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
-> > > > index ccb6163..1166342 100644
-> > > > --- a/drivers/gpu/drm/i915/intel_display.c
-> > > > +++ b/drivers/gpu/drm/i915/intel_display.c
-> > > > @@ -51,14 +51,7 @@
-> > > >  #include "intel_dsi.h"
-> > > >  #include "intel_frontbuffer.h"
-> > > >  
-> > > > -#include "intel_drv.h"
-> > > > -#include "intel_dsi.h"
-> > > > -#include "intel_frontbuffer.h"
-> > > > -
-> > > > -#include "i915_drv.h"
-> > > > -#include "i915_gem_clflush.h"
-> > > >  #include "i915_reset.h"
-> > > > -#include "i915_trace.h"
-> > > >  
-> > > >  /* Primary plane formats for gen <= 3 */
-> > > >  static const u32 i8xx_primary_formats[] = {
+> In rds_tcp_conn_path_connect(), rds_tcp_set_callbacks() will set t_sock = sock before
+> sock->ops->connect, but if connect() is failed, it will call
+> rds_tcp_restore_callbacks() and set t_sock = NULL, if connect is always
+> failed, rds_connect_worker() will try to reconnect all the time, so
+> rds_tcp_kill_sock() will never to cancel worker cp_conn_w and free the
+> connections.
 > 
-> > From c9a68b204fe4bb013c2b8481ca8239c957dd69cc Mon Sep 17 00:00:00 2001
-> > From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-> > Date: Thu, 28 Mar 2019 21:20:12 +0530
-> > Subject: [PATCH] gpu:drm: sort the existing #includes alphabetically
-> > 
-> > Hi Laurent,
-> > 
-> > Hopefully this helps.
+> Therefore, the condition !tc->t_sock is not needed if it is going to do
+> cleanup_net->rds_tcp_exit_net->rds_tcp_kill_sock, because tc->t_sock is always
+> NULL, and there is on other path to cancel cp_conn_w and free
+> connection. So this patch is to fix this.
 > 
-> It does, thanks. If you squash it with your original patch and send a
-> v2, you can add my
+> rds_tcp_kill_sock():
+> ...
+> if (net != c_net || !tc->t_sock)
+> ...
+> ==================================================================
+> BUG: KASAN: use-after-free in inet_create+0xbcc/0xd28
+> net/ipv4/af_inet.c:340
+> Read of size 4 at addr ffff8003496a4684 by task kworker/u8:4/3721
 > 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> CPU: 3 PID: 3721 Comm: kworker/u8:4 Not tainted 5.1.0 #11
+> Hardware name: linux,dummy-virt (DT)
+> Workqueue: krdsd rds_connect_worker
+> Call trace:
+>   dump_backtrace+0x0/0x3c0 arch/arm64/kernel/time.c:53
+>   show_stack+0x28/0x38 arch/arm64/kernel/traps.c:152
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x120/0x188 lib/dump_stack.c:113
+>   print_address_description+0x68/0x278 mm/kasan/report.c:253
+>   kasan_report_error mm/kasan/report.c:351 [inline]
+>   kasan_report+0x21c/0x348 mm/kasan/report.c:409
+>   __asan_report_load4_noabort+0x30/0x40 mm/kasan/report.c:429
+>   inet_create+0xbcc/0xd28 net/ipv4/af_inet.c:340
+>   __sock_create+0x4f8/0x770 net/socket.c:1276
+>   sock_create_kern+0x50/0x68 net/socket.c:1322
+>   rds_tcp_conn_path_connect+0x2b4/0x690 net/rds/tcp_connect.c:114
+>   rds_connect_worker+0x108/0x1d0 net/rds/threads.c:175
+>   process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
+>   worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
+>   kthread+0x2f0/0x378 kernel/kthread.c:255
+>   ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
 > 
-> > Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-> > ---
-> >  drivers/gpu/drm/bridge/panel.c       | 2 +-
-> >  drivers/gpu/drm/i915/intel_display.c | 4 ++--
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
-> > index eb9567d..000ba7c 100644
-> > --- a/drivers/gpu/drm/bridge/panel.c
-> > +++ b/drivers/gpu/drm/bridge/panel.c
-> > @@ -9,11 +9,11 @@
-> >   */
-> >  
-> >  #include <drm/drmP.h>
-> > -#include <drm/drm_panel.h>
-> >  #include <drm/drm_atomic_helper.h>
-> >  #include <drm/drm_connector.h>
-> >  #include <drm/drm_encoder.h>
-> >  #include <drm/drm_modeset_helper_vtables.h>
-> > +#include <drm/drm_panel.h>
-> >  #include <drm/drm_probe_helper.h>
-> >  
-> >  struct panel_bridge {
-> > diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
-> > index 1166342..7956e89 100644
-> > --- a/drivers/gpu/drm/i915/intel_display.c
-> > +++ b/drivers/gpu/drm/i915/intel_display.c
-> > @@ -46,13 +46,13 @@
-> >  
-> >  #include "i915_drv.h"
-> >  #include "i915_gem_clflush.h"
-> > +#include "i915_reset.h"
-> >  #include "i915_trace.h"
-> > +
-> >  #include "intel_drv.h"
-> >  #include "intel_dsi.h"
-> >  #include "intel_frontbuffer.h"
-> >  
-> > -#include "i915_reset.h"
-> > -
-> >  /* Primary plane formats for gen <= 3 */
-> >  static const u32 i8xx_primary_formats[] = {
-> >  	DRM_FORMAT_C8,
+> Allocated by task 687:
+>   save_stack mm/kasan/kasan.c:448 [inline]
+>   set_track mm/kasan/kasan.c:460 [inline]
+>   kasan_kmalloc+0xd4/0x180 mm/kasan/kasan.c:553
+>   kasan_slab_alloc+0x14/0x20 mm/kasan/kasan.c:490
+>   slab_post_alloc_hook mm/slab.h:444 [inline]
+>   slab_alloc_node mm/slub.c:2705 [inline]
+>   slab_alloc mm/slub.c:2713 [inline]
+>   kmem_cache_alloc+0x14c/0x388 mm/slub.c:2718
+>   kmem_cache_zalloc include/linux/slab.h:697 [inline]
+>   net_alloc net/core/net_namespace.c:384 [inline]
+>   copy_net_ns+0xc4/0x2d0 net/core/net_namespace.c:424
+>   create_new_namespaces+0x300/0x658 kernel/nsproxy.c:107
+>   unshare_nsproxy_namespaces+0xa0/0x198 kernel/nsproxy.c:206
+>   ksys_unshare+0x340/0x628 kernel/fork.c:2577
+>   __do_sys_unshare kernel/fork.c:2645 [inline]
+>   __se_sys_unshare kernel/fork.c:2643 [inline]
+>   __arm64_sys_unshare+0x38/0x58 kernel/fork.c:2643
+>   __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+>   invoke_syscall arch/arm64/kernel/syscall.c:47 [inline]
+>   el0_svc_common+0x168/0x390 arch/arm64/kernel/syscall.c:83
+>   el0_svc_handler+0x60/0xd0 arch/arm64/kernel/syscall.c:129
+>   el0_svc+0x8/0xc arch/arm64/kernel/entry.S:960
 > 
-> -- 
-> Regards,
+> Freed by task 264:
+>   save_stack mm/kasan/kasan.c:448 [inline]
+>   set_track mm/kasan/kasan.c:460 [inline]
+>   __kasan_slab_free+0x114/0x220 mm/kasan/kasan.c:521
+>   kasan_slab_free+0x10/0x18 mm/kasan/kasan.c:528
+>   slab_free_hook mm/slub.c:1370 [inline]
+>   slab_free_freelist_hook mm/slub.c:1397 [inline]
+>   slab_free mm/slub.c:2952 [inline]
+>   kmem_cache_free+0xb8/0x3a8 mm/slub.c:2968
+>   net_free net/core/net_namespace.c:400 [inline]
+>   net_drop_ns.part.6+0x78/0x90 net/core/net_namespace.c:407
+>   net_drop_ns net/core/net_namespace.c:406 [inline]
+>   cleanup_net+0x53c/0x6d8 net/core/net_namespace.c:569
+>   process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
+>   worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
+>   kthread+0x2f0/0x378 kernel/kthread.c:255
+>   ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
 > 
-> Laurent Pinchart
+> The buggy address belongs to the object at ffff8003496a3f80
+>   which belongs to the cache net_namespace of size 7872
+> The buggy address is located 1796 bytes inside of
+>   7872-byte region [ffff8003496a3f80, ffff8003496a5e40)
+> The buggy address belongs to the page:
+> page:ffff7e000d25a800 count:1 mapcount:0 mapping:ffff80036ce4b000
+> index:0x0 compound_mapcount: 0
+> flags: 0xffffe0000008100(slab|head)
+> raw: 0ffffe0000008100 dead000000000100 dead000000000200 ffff80036ce4b000
+> raw: 0000000000000000 0000000080040004 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+> 
+> Memory state around the buggy address:
+>   ffff8003496a4580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8003496a4600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>> ffff8003496a4680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                     ^
+>   ffff8003496a4700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8003496a4780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+> 
+> Fixes: 467fa15356ac("RDS-TCP: Support multiple RDS-TCP listen endpoints, one per netns.")
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+Looks reasonable fix to me. Thanks !!
 
---1yeeQ81UyVL57Vl7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="0001-gpu-drm-Remove-duplicate-headers.patch"
-
-From 25776c74d289f8c2e6c89d8838f3110981ce2515 Mon Sep 17 00:00:00 2001
-From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-Date: Fri, 29 Mar 2019 00:04:29 +0530
-Subject: [PATCH v2] gpu:drm: Remove duplicate headers
-
-1. Remove duplicate headers which are included twice.
-2. Sort the existing #includes alphabetically
-
-Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- drivers/gpu/drm/bridge/panel.c       | 3 +--
- drivers/gpu/drm/i915/intel_display.c | 9 +--------
- 2 files changed, 2 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
-index 38eeaf8..000ba7c 100644
---- a/drivers/gpu/drm/bridge/panel.c
-+++ b/drivers/gpu/drm/bridge/panel.c
-@@ -9,13 +9,12 @@
-  */
- 
- #include <drm/drmP.h>
--#include <drm/drm_panel.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_connector.h>
- #include <drm/drm_encoder.h>
- #include <drm/drm_modeset_helper_vtables.h>
--#include <drm/drm_probe_helper.h>
- #include <drm/drm_panel.h>
-+#include <drm/drm_probe_helper.h>
- 
- struct panel_bridge {
- 	struct drm_bridge bridge;
-diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
-index ccb6163..7956e89 100644
---- a/drivers/gpu/drm/i915/intel_display.c
-+++ b/drivers/gpu/drm/i915/intel_display.c
-@@ -46,20 +46,13 @@
- 
- #include "i915_drv.h"
- #include "i915_gem_clflush.h"
-+#include "i915_reset.h"
- #include "i915_trace.h"
--#include "intel_drv.h"
--#include "intel_dsi.h"
--#include "intel_frontbuffer.h"
- 
- #include "intel_drv.h"
- #include "intel_dsi.h"
- #include "intel_frontbuffer.h"
- 
--#include "i915_drv.h"
--#include "i915_gem_clflush.h"
--#include "i915_reset.h"
--#include "i915_trace.h"
--
- /* Primary plane formats for gen <= 3 */
- static const u32 i8xx_primary_formats[] = {
- 	DRM_FORMAT_C8,
--- 
-1.8.3.1
-
-
---1yeeQ81UyVL57Vl7--
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
