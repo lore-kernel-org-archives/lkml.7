@@ -2,257 +2,189 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 898EFC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767BAC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 537F7206DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399C8206DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:31:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ah3mYQbd";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IvRyCtlv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfC1Pbs (ORCPT
+        id S1727210AbfC1Pbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:31:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:64795 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbfC1Pbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:31:47 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 28 Mar 2019 11:31:52 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55192 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfC1Pbv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 11:31:51 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3A97E615E6; Thu, 28 Mar 2019 15:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553787110;
+        bh=ekY/aAthvQkAaPSnvEmgypuBryjqNG/WtGqPPo2knLA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Ah3mYQbdcYlOaACZmXWiF/teORv+t45Dm4fVUU4mC44ARmCv8/YC+hrmXDvoAgXDh
+         L7BGLw2dQ8MZ8RQLeFC9EZ5Kl+9ltYFZdiC8vli6wdqZjyCmUrDmIZ2SpYHSXP83Ip
+         SdmvJCPukjfw6MK3q9WmCjrlUaLn2+R8ZyHn7ZQE=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E8AB4C05FF7E;
-        Thu, 28 Mar 2019 15:31:46 +0000 (UTC)
-Received: from [10.36.117.191] (ovpn-117-191.ams2.redhat.com [10.36.117.191])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F0C72437F;
-        Thu, 28 Mar 2019 15:31:44 +0000 (UTC)
-Subject: Re: [PATCH 0/4] mm,memory_hotplug: allocate memmap from hotadded
- memory
-From:   David Hildenbrand <david@redhat.com>
-To:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, dan.j.williams@intel.com,
-        Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20190328134320.13232-1-osalvador@suse.de>
- <cc68ec6d-3ad2-a998-73dc-cb90f3563899@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <efb08377-ca5d-4110-d7ae-04a0d61ac294@redhat.com>
-Date:   Thu, 28 Mar 2019 16:31:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E5027609CD;
+        Thu, 28 Mar 2019 15:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553787105;
+        bh=ekY/aAthvQkAaPSnvEmgypuBryjqNG/WtGqPPo2knLA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=IvRyCtlv1wQ2IXH1TrHbC6kWVEn9u4EunCsg6CQONLTaCkRsV/03KV/v3GrX9rLvi
+         pgeSExm5WsK+vvGLy3VIngHbdWZvTxFap4kibNk0wbegXV6rCH3urTgbNYCszuLvHR
+         D+ORcanRp/Q/znOyScb/V/4pYUiDhUW0Ni+44rzo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E5027609CD
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH 2/3] gpio: Fix gpiochip_add_data_with_key() error path
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Benoit Parrot <bparrot@ti.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190328131349.18838-1-geert+renesas@glider.be>
+ <20190328131349.18838-3-geert+renesas@glider.be>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <c7b93076-4016-5413-dc03-0be1965bf498@codeaurora.org>
+Date:   Thu, 28 Mar 2019 21:01:37 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <cc68ec6d-3ad2-a998-73dc-cb90f3563899@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190328131349.18838-3-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 28 Mar 2019 15:31:47 +0000 (UTC)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.03.19 16:09, David Hildenbrand wrote:
-> On 28.03.19 14:43, Oscar Salvador wrote:
->> Hi,
->>
->> since last two RFCs were almost unnoticed (thanks David for the feedback),
->> I decided to re-work some parts to make it more simple and give it a more
->> testing, and drop the RFC, to see if it gets more attention.
->> I also added David's feedback, so now all users of add_memory/__add_memory/
->> add_memory_resource can specify whether they want to use this feature or not.
-> 
-> Terrific, I will also definetly try to make use of that in the next
-> virito-mem prototype (looks like I'll finally have time to look into it
-> again).
-> 
->> I also fixed some compilation issues when CONFIG_SPARSEMEM_VMEMMAP is not set.
->>
->> [Testing]
->>
->> Testing has been carried out on the following platforms:
->>
->>  - x86_64 (small and big memblocks)
->>  - powerpc
->>  - arm64 (Huawei's fellows)
->>
->> I plan to test it on Xen and Hyper-V, but for now those two will not be
->> using this feature, and neither DAX/pmem.
-> 
-> I think doing it step by step is the right approach. Less likely to
-> break stuff.
-> 
->>
->> Of course, if this does not find any strong objection, my next step is to
->> work on enabling this on Xen/Hyper-V.
->>
->> [Coverletter]
->>
->> This is another step to make the memory hotplug more usable. The primary
->> goal of this patchset is to reduce memory overhead of the hot added
->> memory (at least for SPARSE_VMEMMAP memory model). The current way we use
->> to populate memmap (struct page array) has two main drawbacks:
->>
->> a) it consumes an additional memory until the hotadded memory itself is
->>    onlined and
->> b) memmap might end up on a different numa node which is especially true
->>    for movable_node configuration.
->>
->> a) is problem especially for memory hotplug based memory "ballooning"
->>    solutions when the delay between physical memory hotplug and the
->>    onlining can lead to OOM and that led to introduction of hacks like auto
->>    onlining (see 31bc3858ea3e ("memory-hotplug: add automatic onlining
->>    policy for the newly added memory")).
->>
->> b) can have performance drawbacks.
->>
->> I have also seen hot-add operations failing on archs because they
->> were running out of order-x pages.
->> E.g On powerpc, in certain configurations, we use order-8 pages,
->> and given 64KB base pagesize, that is 16MB.
->> If we run out of those, we just fail the operation and we cannot add
->> more memory.
->> We could fallback to base pages as x86_64 does, but we can do better.
->>
->> One way to mitigate all these issues is to simply allocate memmap array
->> (which is the largest memory footprint of the physical memory hotplug)
->> from the hotadded memory itself. VMEMMAP memory model allows us to map
->> any pfn range so the memory doesn't need to be online to be usable
->> for the array. See patch 3 for more details. In short I am reusing an
->> existing vmem_altmap which wants to achieve the same thing for nvdim
->> device memory.
->>
->> There is also one potential drawback, though. If somebody uses memory
->> hotplug for 1G (gigantic) hugetlb pages then this scheme will not work
->> for them obviously because each memory block will contain reserved
->> area. Large x86 machines will use 2G memblocks so at least one 1G page
->> will be available but this is still not 2G...
->>
->> If that is a problem, we can always configure a fallback strategy to
->> use the current scheme.
->>
->> Since this only works when CONFIG_VMEMMAP_ENABLED is set,
->> we do check for it before setting the flag that allows use
->> to use the feature, no matter if the user wanted it.
->>
->> [Overall design]:
->>
->> Let us say we hot-add 2GB of memory on a x86_64 (memblock size = 128M).
->> That is:
->>
->>  - 16 sections
->>  - 524288 pages
->>  - 8192 vmemmap pages (out of those 524288. We spend 512 pages for each section)
->>
->>  The range of pages is: 0xffffea0004000000 - 0xffffea0006000000
->>  The vmemmap range is:  0xffffea0004000000 - 0xffffea0004080000
->>
->>  0xffffea0004000000 is the head vmemmap page (first page), while all the others
->>  are "tails".
->>
->>  We keep the following information in it:
->>
->>  - Head page:
->>    - head->_refcount: number of sections
->>    - head->private :  number of vmemmap pages
->>  - Tail page:
->>    - tail->freelist : pointer to the head
->>
->> This is done because it eases the work in cases where we have to compute the
->> number of vmemmap pages to know how much do we have to skip etc, and to keep
->> the right accounting to present_pages.
->>
->> When we want to hot-remove the range, we need to be careful because the first
->> pages of that range, are used for the memmap maping, so if we remove those
->> first, we would blow up while accessing the others later on.
->> For that reason we keep the number of sections in head->_refcount, to know how
->> much do we have to defer the free up.
->>
->> Since in a hot-remove operation, sections are being removed sequentially, the
->> approach taken here is that every time we hit free_section_memmap(), we decrease
->> the refcount of the head.
->> When it reaches 0, we know that we hit the last section, so we call
->> vmemmap_free() for the whole memory-range in backwards, so we make sure that
->> the pages used for the mapping will be latest to be freed up.
->>
->> Vmemmap pages are charged to spanned/present_paged, but not to manages_pages.
->>
-> 
-> I guess one important thing to mention is that it is no longer possible
-> to remove memory in a different granularity it was added. I slightly
-> remember that ACPI code sometimes "reuses" parts of already added
-> memory. We would have to validate that this can indeed not be an issue.
-> 
-> drivers/acpi/acpi_memhotplug.c:
-> 
-> result = __add_memory(node, info->start_addr, info->length);
-> if (result && result != -EEXIST)
-> 	continue;
-> 
-> What would happen when removing this dimm (->remove_memory())
-> 
-> 
-> Also have a look at
-> 
-> arch/powerpc/platforms/powernv/memtrace.c
-> 
-> I consider it evil code. It will simply try to offline+unplug *some*
-> memory it finds in *some granularity*. Not sure if this might be
-> problematic-
-> 
-> Would there be any "safety net" for adding/removing memory in different
-> granularities?
-> 
 
-Correct me if I am wrong. I think I was confused - vmemmap data is still
-allocated *per memory block*, not for the whole added memory, correct?
+On 3/28/2019 6:43 PM, Geert Uytterhoeven wrote:
+> The err_remove_chip block is too coarse, and may perform cleanup that
+> must not be done.  E.g. if of_gpiochip_add() fails, of_gpiochip_remove()
+> is still called, causing:
+>
+>      OF: ERROR: Bad of_node_put() on /soc/gpio@e6050000
+>      CPU: 1 PID: 20 Comm: kworker/1:1 Not tainted 5.1.0-rc2-koelsch+ #407
+>      Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+>      Workqueue: events deferred_probe_work_func
+>      [<c020ec74>] (unwind_backtrace) from [<c020ae58>] (show_stack+0x10/0x14)
+>      [<c020ae58>] (show_stack) from [<c07c1224>] (dump_stack+0x7c/0x9c)
+>      [<c07c1224>] (dump_stack) from [<c07c5a80>] (kobject_put+0x94/0xbc)
+>      [<c07c5a80>] (kobject_put) from [<c0470420>] (gpiochip_add_data_with_key+0x8d8/0xa3c)
+>      [<c0470420>] (gpiochip_add_data_with_key) from [<c0473738>] (gpio_rcar_probe+0x1d4/0x314)
+>      [<c0473738>] (gpio_rcar_probe) from [<c052fca8>] (platform_drv_probe+0x48/0x94)
+>
+> and later, if a GPIO consumer tries to use a GPIO from a failed
+> controller:
+>
+>      WARNING: CPU: 0 PID: 1 at lib/refcount.c:156 kobject_get+0x38/0x4c
+>      refcount_t: increment on 0; use-after-free.
+>      Modules linked in:
+>      CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-rc2-koelsch+ #407
+>      Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+>      [<c020ec74>] (unwind_backtrace) from [<c020ae58>] (show_stack+0x10/0x14)
+>      [<c020ae58>] (show_stack) from [<c07c1224>] (dump_stack+0x7c/0x9c)
+>      [<c07c1224>] (dump_stack) from [<c0221580>] (__warn+0xd0/0xec)
+>      [<c0221580>] (__warn) from [<c02215e0>] (warn_slowpath_fmt+0x44/0x6c)
+>      [<c02215e0>] (warn_slowpath_fmt) from [<c07c58fc>] (kobject_get+0x38/0x4c)
+>      [<c07c58fc>] (kobject_get) from [<c068b3ec>] (of_node_get+0x14/0x1c)
+>      [<c068b3ec>] (of_node_get) from [<c0686f24>] (of_find_node_by_phandle+0xc0/0xf0)
+>      [<c0686f24>] (of_find_node_by_phandle) from [<c0686fbc>] (of_phandle_iterator_next+0x68/0x154)
+>      [<c0686fbc>] (of_phandle_iterator_next) from [<c0687fe4>] (__of_parse_phandle_with_args+0x40/0xd0)
+>      [<c0687fe4>] (__of_parse_phandle_with_args) from [<c0688204>] (of_parse_phandle_with_args_map+0x100/0x3ac)
+>      [<c0688204>] (of_parse_phandle_with_args_map) from [<c0471240>] (of_get_named_gpiod_flags+0x38/0x380)
+>      [<c0471240>] (of_get_named_gpiod_flags) from [<c046f864>] (gpiod_get_from_of_node+0x24/0xd8)
+>      [<c046f864>] (gpiod_get_from_of_node) from [<c0470aa4>] (devm_fwnode_get_index_gpiod_from_child+0xa0/0x144)
+>      [<c0470aa4>] (devm_fwnode_get_index_gpiod_from_child) from [<c05f425c>] (gpio_keys_probe+0x418/0x7bc)
+>      [<c05f425c>] (gpio_keys_probe) from [<c052fca8>] (platform_drv_probe+0x48/0x94)
+>
+> Fix this by splitting the cleanup block, and adding a missing call to
+> gpiochip_irqchip_remove().
+>
+> Fixes: 28355f81969962cf ("gpio: defer probe if pinctrl cannot be found")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> I'm not so sure about the need for the call to
+> gpiochip_irqchip_remove(), as add/remove are not really symmetrical.
+> Any comments?
+> ---
+>   drivers/gpio/gpiolib.c | 12 ++++++++----
+>   1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 144af07335815998..ed4da07effe0ac40 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1379,7 +1379,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
+>   
+>   	status = gpiochip_add_irqchip(chip, lock_key, request_key);
+>   	if (status)
+> -		goto err_remove_chip;
+> +		goto err_free_irqchip_mask;
 
--- 
+Name is quite confusing
+this should be
 
-Thanks,
+s/err_free_irqchip_mask/err_free_gpiochip_mask
 
-David / dhildenb
+
+>   
+>   	status = of_gpiochip_add(chip);
+>   	if (status)
+> @@ -1387,7 +1387,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
+>   
+>   	status = gpiochip_init_valid_mask(chip);
+>   	if (status)
+> -		goto err_remove_chip;
+> +		goto err_remove_of_chip;
+>   
+>   	for (i = 0; i < chip->ngpio; i++) {
+>   		struct gpio_desc *desc = &gdev->descs[i];
+> @@ -1415,14 +1415,18 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
+>   	if (gpiolib_initialized) {
+>   		status = gpiochip_setup_dev(gdev);
+>   		if (status)
+> -			goto err_remove_chip;
+> +			goto err_remove_acpi_chip;
+>   	}
+>   	return 0;
+>   
+> -err_remove_chip:
+> +err_remove_acpi_chip:
+>   	acpi_gpiochip_remove(chip);
+> +err_remove_of_chip:
+>   	gpiochip_free_hogs(chip);
+>   	of_gpiochip_remove(chip);
+> +err_remove_chip:
+> +	gpiochip_irqchip_remove(chip);
+> +err_free_irqchip_mask:
+
+
+same here.
+
+After reviewing back and forth it looks good, apart from the naming.
+Please fix.
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+-Mukesh
+
+
+>   	gpiochip_free_valid_mask(chip);
+>   err_remove_irqchip_mask:
+>   	gpiochip_irqchip_free_valid_mask(chip);
