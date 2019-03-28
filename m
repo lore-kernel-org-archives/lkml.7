@@ -2,114 +2,95 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B83FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DB4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A4C920811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553788135;
-	bh=PSGYSOTFtZTq5rFyHmTQ179YhVGXpRo3uSmx26LapDM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DB2SjeNr0ozn9M70+onMm5os7oqy8AWuw54enMwVnloJINFYN4mGDxoZkTyuCAwdX
-	 ZsFfkBksmHzkn0Gzth1E3OhRygECuRMmrOXOoANhDXH/lRdO9tfizRlE+NE1QbarS9
-	 +miI/MovmzUOf7U55HYG1c9KwRc2Or4v2ae8jbuk=
+	by mail.kernel.org (Postfix) with ESMTP id 9C6F02183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:49:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ns6buI0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfC1Psy (ORCPT
+        id S1726949AbfC1Ptz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:48:54 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33973 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfC1Psx (ORCPT
+        Thu, 28 Mar 2019 11:49:55 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:43833 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbfC1Pty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:48:53 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j89so18128695ljb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:48:52 -0700 (PDT)
+        Thu, 28 Mar 2019 11:49:54 -0400
+Received: by mail-qk1-f201.google.com with SMTP id m8so17900153qka.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:49:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vo++b97MtjKW6Z2ai3nHuw6ipPYXtam+djLDtD4oqbs=;
-        b=CwCFxbkSM/vTcw8s9X4OQEk4bUDgHzdCzk9zUTTFGu5l+1y2uvKsLOUfOE18QOkKH3
-         wblMOBuhkzua26OvZxWU/7bRTbidTstDyKOeFD1X1lyu8HWJA1zrGBNQhCdBvaGxu0CG
-         Ian+hlP3NM/TWmnoejTNM0pf5KoRNseIgUbmM=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=2/8IdQUIVWJWCZfeigS/jK57K0sOUt/kPhjIPk0zH2o=;
+        b=ns6buI0qbB8Dmf6A1cF8CTSKJIGq2prXu1Z2GauCuulb4+fa7azuapUC4ohZX1qu35
+         5ggBj8h7Rnahth/tWN5UrOWSmWDXsBpgNV/BgqNkttlUC0GhY8iUQmQXDARslq6vheYH
+         8SNkiejHoQzHvOZbackJgNrRtc2/QKi5BeD5sHR8nel7b9+MKaUxEliDtsSiSZ4ClbA8
+         yKquXXWF/ssitdNkP2cavMHxDVC3tZqn6Jvat1KKuj25UMIylSGFoE7BIfKwVayTSKd8
+         5A3285E2xTZNAruTgy/BthVgaRNo7IcfcHteoG0qwbWpIvyD5d7Ek0Qp9XTYHJfjJAu7
+         94Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vo++b97MtjKW6Z2ai3nHuw6ipPYXtam+djLDtD4oqbs=;
-        b=W4JPqGLCLuJ/1eNFs0DMEMvFejVGeNPyCUUwJ4u14BY3lYZHubvwSa/RBgsRFOprwd
-         sL6tNXSIZ9i5hWrueyyoODgwPEcMw8yA5miDUwG2Glg4CfgrWmbS9eJ2g+8LRwi1pBvT
-         YbkSjlGoJqd0lkLKhmC22zM9Lq+hSzUr/3zRuGHD/3vAY60YCIXQQIvnVfBE9EB1N8oU
-         +zF+wgD9gjD0QtfjZ9VW5zQ4FOFSN9DTUQr3C2ZHpej4RgCNQff5qfyYvsTXd8d0Z/Ke
-         wd4cpBqnkdJm4NPxm1fNDK5B5I3IAel5fWJ2DYjvcXq9+lFkR/m26LonX5Iss5H2s8ni
-         3JZw==
-X-Gm-Message-State: APjAAAVj2OGaTqQxA1Au3FMi9536vwWGsN7OeJU/6VWM69Iho/AqGtmL
-        3IuKzZ1Hb883tvjsBAdJf4OFFD8CdgI=
-X-Google-Smtp-Source: APXvYqxkBYZfPC7x3lGAzFs1bi2wpXJwOk94pphLLhOAIxK6n5AHo6I1O9kT7X3H1h7pRa01e8IxwQ==
-X-Received: by 2002:a2e:8156:: with SMTP id t22mr14187646ljg.77.1553788130703;
-        Thu, 28 Mar 2019 08:48:50 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id l21sm5056556lfh.30.2019.03.28.08.48.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 08:48:49 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id h16so13621458ljg.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:48:49 -0700 (PDT)
-X-Received: by 2002:a2e:8149:: with SMTP id t9mr23507278ljg.2.1553788128992;
- Thu, 28 Mar 2019 08:48:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190228185027.2480-1-ben.dooks@codethink.co.uk> <20190328072421.GA22720@zn.tnic>
-In-Reply-To: <20190328072421.GA22720@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 Mar 2019 08:48:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whjmxbtceHNbFycT5t=C56B+huPBewWbV5waaY7i09RBQ@mail.gmail.com>
-Message-ID: <CAHk-=whjmxbtceHNbFycT5t=C56B+huPBewWbV5waaY7i09RBQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/asm: add __user on copy_user_handle_tail() pointers
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.co>, Peter Anvin <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-kernel@lists.codethink.co.uk
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=2/8IdQUIVWJWCZfeigS/jK57K0sOUt/kPhjIPk0zH2o=;
+        b=AhWwMOthuU3KhGFzI/uuIFJP0RFokywFBMno6SeD5D5ptzvDXHUDCTLY7U4RqA5zcd
+         VV6vWTb2TZhiV3A+RsuxX651GXptzxVZNThMpQD8860nvxcbK1ARJAofKrOiZ/pZfNNK
+         cWZPCMScfspXHsbMQfMfcTnj3b+zrm0YifwTCAGRZhuPCB1/zGd4ZktKc4hypzqr7Hwv
+         zE4Jn1Nk1dIy7G3EDApLJoQ+QORufRJsXz4kFYGEvO0Io7mhQE+wiK+SNb/n7wTNR5mZ
+         10Gl/xuJr9EWYQ6FTBVblXqW9ULoEoxQqgu8Lg51DHng9b6zdjBBBtJR199KVelH5/96
+         ZFJQ==
+X-Gm-Message-State: APjAAAVL9Aa7dNScLszM5loG09rrJHidLVywsPEwRFR5aEbD2MgR9MQi
+        cONI32wkfYgiZ05ZseRVC5x4CWjqWA==
+X-Google-Smtp-Source: APXvYqxAQI3nFUvMgh8j7DZYfHWHvsxdncl9P4lQ6wzbUbNFEw2sX03Lxc+3G3iuDccNSefPCsq1gH69yw==
+X-Received: by 2002:ac8:341a:: with SMTP id u26mr835519qtb.36.1553788193786;
+ Thu, 28 Mar 2019 08:49:53 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 16:49:48 +0100
+Message-Id: <20190328154948.152273-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+Subject: [PATCH] x86/cpufeature: fix __percpu annotation in this_cpu_has()
+From:   Jann Horn <jannh@google.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, jannh@google.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 12:24 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> Well, but copy_user_generic() (which ends up calling the
-> copy_user_handle_tail() eventually) casts those __user pointers to
-> (__force void *). Converting them back to __user looks strange to me.
->
-> Linus?
+&cpu_info.x86_capability is __percpu, and the second argument of
+x86_this_cpu_test_bit() is expected to be __percpu. Don't cast the __percpu
+away and then implicitly add it again.
+This gets rid of 106 lines of sparse warnings with the kernel config I'm
+using.
 
-Well, it does that because the x86 version of copy_user_generic() can
-work in either direction, so it works when either the source or
-destination (or both) are user pointers, but they don't _have_ to be.
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+ arch/x86/include/asm/cpufeature.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-So the "userness" of a pointer in that context is a bit ambiguous, and
-so we've picked the pointers to be just plain "void *".
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index ce95b8cbd229..0df88893e767 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -113,7 +113,8 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+ 
+ #define this_cpu_has(bit)						\
+ 	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 : 	\
+-	 x86_this_cpu_test_bit(bit, (unsigned long *)&cpu_info.x86_capability))
++	 x86_this_cpu_test_bit(bit,					\
++		(unsigned long __percpu *)&cpu_info.x86_capability))
+ 
+ /*
+  * This macro is for detection of features which need kernel
+-- 
+2.21.0.392.gf8f6787159e-goog
 
-That said, arguably we should have gone the other way and just made
-them both "__user" pointers, and do the cast the other way around.
-
-But there's no absolutely right answer here, and nobody should ever
-use copy_user_generic() directly (ie it is very much meant to be only
-used as a internal helper for the cases that get the pointer
-annotations right).
-
-I do think Ben's patch is probably the right thing to do.
-
-And we could do the same thing to copy_user_generic(), but that would
-require switching the casts around in the callers, so may not be worth
-the noise.
-
-                      Linus
