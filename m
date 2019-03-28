@@ -2,112 +2,106 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D46DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7108C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09F9321773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:10:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="z8Anbw9N"
+	by mail.kernel.org (Postfix) with ESMTP id B04B220700
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:10:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfC1IKN (ORCPT
+        id S1726700AbfC1IKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 04:10:13 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39858 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfC1IKN (ORCPT
+        Thu, 28 Mar 2019 04:10:18 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:38251 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbfC1IKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 04:10:13 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j9so21619114wrn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 01:10:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vihdnHLOI0zKt0tbN4BcO/WirxMvxXyBvEp2oO+WLAU=;
-        b=z8Anbw9NIMm74zK0b6SdvrHMuapVRpAMKaFj9UsEoRu+HHPckgNN62QGJ9w+il1nK9
-         xf6FLSUjwcaIN7qFby6F3fSUH09OTJclk6A33wRNWcdrXfVKTpHSjSkbZHa17odjO+PR
-         s5eH09b6ROpy4ms/kQRbtRIpB1GGbIch3yBGbJIMjxrG+bslMH+2N7cPf06UaO6nt0Uh
-         TY+4w1AvCJtBWpJ4iO2Io5LnXMqvK7fPOn1FIoCuJ8I5dJT3jm/MfAeizLH+rg0/72YK
-         7VkFvC8LPsvZkBQZzSuyuIPJIMIM1bRlr8ZpoN1CHWQSiSsfL/8vbZg0/OXXEOwAsRSI
-         YyxA==
+        Thu, 28 Mar 2019 04:10:17 -0400
+Received: by mail-ua1-f68.google.com with SMTP id d4so6546446uap.5;
+        Thu, 28 Mar 2019 01:10:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vihdnHLOI0zKt0tbN4BcO/WirxMvxXyBvEp2oO+WLAU=;
-        b=iLvJEj6dSRscNgENct/8ylX0CZkmOKXHJi6XxJl81LNhYUf2D1Yypmcbdzxsa8wGj4
-         k0m1/1rd5Xap/TqOhKEVGGSzTdXRBg4XSH4fZ7xKpJtTIQEbphjeXVCW98r/B6bGl61x
-         wtIwIlKKIoxqbR6Ti9YtTbpgLyVJ4oVjCqcO8t7fCJwwqHzl89AKLgCsrUSMCIQNhmV6
-         AW2sDqyAS2OLnDOJetLz8xFH0f/ElDdwl7tyFF2J5Uu9sk7Ab2fnleXbYy/nWOC5ZS/4
-         oy+61oHL0NEBKWM6OXAMPv/d7UJOmlGnCuRhNocuerw/AG/5au7ZPg0zh4TP5UkjaijN
-         +iYg==
-X-Gm-Message-State: APjAAAW1S+YMzmICKd22GOM4KbNUjFWZcf9WGPGWlCkENoWQKbdc20hV
-        9WJRTfkyT0zjMyjVdIe4eoc4/w==
-X-Google-Smtp-Source: APXvYqyNayXfny+tuVu+10xqfPtahs/uhqNvJwxdlSUpazSNE+mtjk3N1JPPFd8W1I+il74d7SZcIw==
-X-Received: by 2002:adf:ed8a:: with SMTP id c10mr9407323wro.40.1553760611741;
-        Thu, 28 Mar 2019 01:10:11 -0700 (PDT)
-Received: from localhost (ip-94-113-223-73.net.upcbroadband.cz. [94.113.223.73])
-        by smtp.gmail.com with ESMTPSA id 13sm2429226wmf.23.2019.03.28.01.10.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 01:10:11 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 09:10:10 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Michal Kubecek <mkubecek@suse.cz>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 05/22] ethtool: introduce ethtool netlink
- interface
-Message-ID: <20190328081010.GJ14297@nanopsycho>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <8795d07d3315b232b4e7ebc7d109c9aa3185e555.1553532199.git.mkubecek@suse.cz>
- <20190326120909.GF2230@nanopsycho>
- <20190326132427.GK26076@unicorn.suse.cz>
- <20190326134251.GA5181@nanopsycho.orion>
- <20190327092604.GP26076@unicorn.suse.cz>
- <20190327095023.GC6979@nanopsycho>
- <7e883a7c-7f1a-b1a0-4735-0ad368998c65@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jRUgvZGmNWliE3jaTuWfhB/x9qfmX7QfxZz8gk2Gg5I=;
+        b=OHSXR37qkJRRvoK1cd+hVvS9+6whNa+BDckwevJ3F940ceo0HK4zJiLa/obl/Knuz4
+         h2cVw/7qP3N82ZRa/DbSM4433Qzm/SBSBX/AW3mHAJmE5DSOXQSTv+otbnfBODabMIrw
+         qjsSfuhQ87wObrrvq++FnpIb1eBcBDuKVr/aKDCWZNMHJ6xi8i+P1UDWEOYYo6E0xB2X
+         sigMJnII25eE8BNDbIZFdarDWd8gJin15gw9fV4bc7JamzIda+hFlIu8N//ln1PDprSF
+         OaD9H8vVi6bZs6S+74TTW2v6YpCzp1/Gxv0n60FEdzwzwPqicVBvoXTVABy370kNO9tP
+         A9Wg==
+X-Gm-Message-State: APjAAAX2Z+TgTrggsCPiS9dh6l7dq6DQ5Q8RosXkGhdBfzTc7RnALbT0
+        QRxBFvgsr4Tz5ZgTVmF4BM7DBNICHS+wk7FDq3lRdVoH
+X-Google-Smtp-Source: APXvYqz9r3Gh7bqhhyIqSeKx56Zfi3q4bPl3CeVHfVgMQZ6Vvv4NssofolIX1PK2Zc+CffLJa89q5Snt+H7vqdnTQ7M=
+X-Received: by 2002:a9f:3fce:: with SMTP id m14mr24440126uaj.96.1553760615463;
+ Thu, 28 Mar 2019 01:10:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e883a7c-7f1a-b1a0-4735-0ad368998c65@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190327211256.17232-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190327211256.17232-1-wsa+renesas@sang-engineering.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 28 Mar 2019 09:10:02 +0100
+Message-ID: <CAMuHMdVHWNcrjXGSPaK9XTTuGEaPPpwp6gzy8XD10_TYNF1PJQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] i2c: remove use of in_atomic()
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thu, Mar 28, 2019 at 03:05:14AM CET, f.fainelli@gmail.com wrote:
->
->
->On 3/27/2019 2:50 AM, Jiri Pirko wrote:
->> 
->> Why don't you have ETHTOOL_MSG_SET_FOO for set? I think that for
->> kerne->userspace the ETHTOOL_MSG_FOO if fine. I would change the
->> ordering of words thought, but it is cosmetics:
->> ETHTOOL_MSG_FOO /* kernel->userspace messages - replies, notifications */
->> ETHTOOL_MSG_FOO_GET
->> ETHTOOL_MSG_FOO_SET
->> ETHTOOL_MSG_FOO_ACT
->> 
->> What do you think?
->
->We could even name the notification explicitly with: ETHTOOL_MSG_NOTIF
->or ETHTOOL_MSG_NTF just so we spell out exactly what those messages are.
+Hi Wolfram,
 
-Sound good. Something like:
+On Wed, Mar 27, 2019 at 10:13 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> Commit cea443a81c9c ("i2c: Support i2c_transfer in atomic contexts")
+> added in_atomic() to the I2C core. However, the use of in_atomic()
+> outside of core kernel code is discouraged and was already[1] when this
+> code was added in early 2008. The above commit was a preparation for
+> b7a3670131c7 ("i2c-pxa: Add polling transfer"). Its commit message says
+> explicitly it was added "for cases where I2C transactions have to occur
+> at times interrups are disabled". So, the intention was 'disabled
+> interrupts'. This matches the use cases for atomic I2C transfers I have
+> seen so far: very late communication (mostly to a PMIC) to powerdown or
+> reboot the system. For those cases, interrupts are disabled then. It
+> doesn't seem that in_atomic() adds value.
+>
+> Note that only ~10 out of ~120 bus master drivers support atomic
+> transfers, mostly by polling always when no irq is supplied. A generic
+> I2C client driver cannot assume support for atomic transfers. This is
+> currently a platform-dependent corner case.
+>
+> The I2C core will soon gain an extra callback into bus drivers
+> especially for atomic transfers to make them more generic. The code
+> deciding which transfer to use (atomic/non-atomic) should mimic the
+> behaviour which locking to use (trylock/lock). Because I don't want to
+> add more in_atomic() to the I2C core, this patch simply removes it.
+>
+> [1] https://lwn.net/Articles/274695/
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-ETHTOOL_MSG_FOO_GET
-ETHTOOL_MSG_FOO_GET_RPLY /* kernel->userspace replies to get */
-ETHTOOL_MSG_FOO_SET
-ETHTOOL_MSG_FOO_ACT
-ETHTOOL_MSG_FOO_NTF /* kernel->userspace async messages - notifications */
+LGTM, so:
+Ackeded-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+But please wait for Peter and/or Frederic to give their fiat, too.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
