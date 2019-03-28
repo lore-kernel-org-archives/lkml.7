@@ -2,143 +2,169 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCABC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED35C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE25F218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 323F020823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kGyLsJRe"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ga86VdDd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbfC1Xsi (ORCPT
+        id S1728627AbfC1X50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 19:48:38 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:37215 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbfC1Xsh (ORCPT
+        Thu, 28 Mar 2019 19:57:26 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:36172 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbfC1X50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 19:48:37 -0400
-Received: by mail-it1-f195.google.com with SMTP id u65so1098959itc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 16:48:37 -0700 (PDT)
+        Thu, 28 Mar 2019 19:57:26 -0400
+Received: by mail-vs1-f65.google.com with SMTP id n4so285250vsm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 16:57:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vrG0xVXFW6lpwZPzipOxZqZ/XiI7RlykZHu1woLN+7c=;
-        b=kGyLsJReFwopGKFWbTKr1bVsq/gGxA0wF323f1/btuYXdqKZ1cCxszrv3onUCdRIPz
-         0P5DKM4Dw7GoXdGN+OYw7UsuoyJiMQriZ2+DhbVRYDi83z3JuyVvnfLZbfLY8EH40sBs
-         v0L8lUX131ZckJ06TuCrtJQE0ff84XJWDeihzx7VzQxPA4/CZ5w+EpFMk7oB+NR2sbds
-         n89/PW7Y/O8fto6UUzWqFs/FiEyzvRvZJZiokIgL/d7wQLWXCWLT/uhHRvXUEtOLf+Yu
-         TNWlA5Pp0m5VGS3nbpC/taEKBF8eVk8V5KOnFcrNxoO/oj0vLASOPvW67bgjRjSElcSq
-         00oA==
+         :cc:content-transfer-encoding;
+        bh=J6I/v/YVpxo56EJoyi5w98mpxEiiogVWXHjkzoeLl1I=;
+        b=Ga86VdDd6kWzK/FBE88ab6bo/fdaiYvHnzzqI+HiDCwHXSGdezxpJA41swbu2aV1bW
+         1/eOnp90VIezOOORIq/ox96YKRX6oANi0368wQOuV+RLtwAD884Q7YGxzNpVfyyEZ+61
+         nt9pER/XqQzqA6el/XQXTR7K1zyuJ+so/ySjE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vrG0xVXFW6lpwZPzipOxZqZ/XiI7RlykZHu1woLN+7c=;
-        b=SWpREFCbHxDDJaCxYoe95eJ6SEksms3hTurymWJgFPCcQFad8VGhUDbvm9ZTEF6H3Z
-         KF9UTUtdDlhYc+SddBs5B3HSS6AIk+ZSdx9Xcui4cO90DoJran7ymxTrHGkTUhz6JN24
-         XKgREgDWpMjzwocGpA1IMJY7+jX7/6QlwRWSjY5azm6tOZfUfmhIR4yy22v9LdZVrul+
-         84DOOtfPAyTEcVqDD/N6wVbnwtDy8+s+aI8988bXgUiF4CD3Bmme8z0Z1Bz7dhyL/OUD
-         FihCeVnEDomujnlIF3vrTYUKXAbpT3e37tg0aVLPSwDrF4mpTfuxUBNZUjQC7VSg5X7B
-         5j3w==
-X-Gm-Message-State: APjAAAV9xUs15zqfGWeniTKiahE5b0uB/+/exsRMUjr50ws1jmHKULbo
-        dTkpN6vKFt+LlLZUcfSXzUUZBWE6zN4YgwYomeMqmw==
-X-Google-Smtp-Source: APXvYqwNSAgl28Rjo0R/g8YaJI1KTruScuJ9Zrk59I8E9SNXHszjThPbCf7bvw8nqNEM5oC3KjUCRs+Gfdl2CiVP1Yo=
-X-Received: by 2002:a24:c106:: with SMTP id e6mr2302037itg.21.1553816916536;
- Thu, 28 Mar 2019 16:48:36 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=J6I/v/YVpxo56EJoyi5w98mpxEiiogVWXHjkzoeLl1I=;
+        b=EMozaaZF6oevcWzOzRSg56RJc2bJCAXs/ptosIsYyqqaV84IqFBFxa9XProf2tK1iA
+         8c1THWtodQIPF3Z17qLyL4tf1eSJJvcKPqANg4e8Qio1Bn9Q148MS7El+tg/pZFCMDXJ
+         K2sJJ/N5ycHjTB1bWlNlxWCGjNUG9CAxeqUlzqJnPfdwMkKNWrwZpnVvH9/IdFamc++l
+         aklJQ4itbvLDcJc0r+CrBaPan7XA4/DdVJQXml9FLCdVLx7bxBnvAclVJ9Cbr7w9IMRr
+         iJpHZQW8u+GTLc16NdZAAfur/lxChpbfqd0V8GCVXILzzI4qzkPe6j9KHgEPwCllnoBT
+         CQwA==
+X-Gm-Message-State: APjAAAVqZF/zr1PoxRT4/OMb4BK5QKGSbCXY5M8ygK8hJQccb+iIOToi
+        bx7liPxajsdSyxOdQEik29Tv9qd2ZUc=
+X-Google-Smtp-Source: APXvYqwJmYaJS9EZXWP06TItlKxRB2VlL6oJs/zeUsBynAODYcf4nPLrrnRKY1MBQeFl0su5FD71Lw==
+X-Received: by 2002:a67:f10e:: with SMTP id n14mr27179672vsk.110.1553817444749;
+        Thu, 28 Mar 2019 16:57:24 -0700 (PDT)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id j186sm77506vsd.21.2019.03.28.16.57.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 16:57:24 -0700 (PDT)
+Received: by mail-ua1-f54.google.com with SMTP id d4so97439uap.5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 16:57:24 -0700 (PDT)
+X-Received: by 2002:ab0:2692:: with SMTP id t18mr3058917uao.106.1553817025313;
+ Thu, 28 Mar 2019 16:50:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190320222844.134765-1-furquan@google.com> <CAJZ5v0h7dYEFHSOHengJ3OFyXBW+XZVbjCAegpzqg1VxeeaXog@mail.gmail.com>
- <CAEGmHFEqhh_xYaTXsVHqSgNW-1Ao6-mtk0BPhgu3-8ua6cCZ-Q@mail.gmail.com>
- <CAJZ5v0hxNA_KHjcqSL4XPpQpB1M4UuWJcYOknex=NOGavoooHA@mail.gmail.com>
- <CAEGmHFHaFk6v=vcciU3QNaQfLriWSJtQ5QUjciY+O8dLh3DhJA@mail.gmail.com> <CAJZ5v0jPJYM6n0OWBM17d3MF5h5B+an+LSRiXTHqboXZuXkcvw@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jPJYM6n0OWBM17d3MF5h5B+an+LSRiXTHqboXZuXkcvw@mail.gmail.com>
-From:   Furquan Shaikh <furquan@google.com>
-Date:   Thu, 28 Mar 2019 16:48:24 -0700
-Message-ID: <CAEGmHFHvOJWOjgEz3mYBKGeb4+r_QfuLaWb=NW8mq7GTXdefVA@mail.gmail.com>
-Subject: Re: [PATCH] drivers/acpi: Clear status of an event before enabling it
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Robert Moore <robert.moore@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        devel@acpica.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Evan Green <evgreen@google.com>,
-        Duncan Laurie <dlaurie@google.com>
+References: <20190328171710.31949-1-dianders@chromium.org> <20190328171710.31949-2-dianders@chromium.org>
+ <f2f82f439f2b7586cb4c83f15122d8d19952d596.camel@collabora.com>
+In-Reply-To: <f2f82f439f2b7586cb4c83f15122d8d19952d596.camel@collabora.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 28 Mar 2019 16:50:13 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WOKSHWCHPv9kQT7np6v_ZYBmAsnTpAHJv7zRS_3b46JQ@mail.gmail.com>
+Message-ID: <CAD=FV=WOKSHWCHPv9kQT7np6v_ZYBmAsnTpAHJv7zRS_3b46JQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] dt-bindings: Add panel-timing subnode to simple-panel
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Eric Anholt <eric@anholt.net>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 1:57 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+Hi,
+
+
+On Thu, Mar 28, 2019 at 1:27 PM Ezequiel Garcia <ezequiel@collabora.com> wr=
+ote:
 >
-> On Thu, Mar 28, 2019 at 1:46 AM Furquan Shaikh <furquan@google.com> wrote:
+> On Thu, 2019-03-28 at 10:17 -0700, Douglas Anderson wrote:
+> > From: Sean Paul <seanpaul@chromium.org>
 > >
-> > On Wed, Mar 27, 2019 at 5:24 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Thu, Mar 21, 2019 at 3:16 AM Furquan Shaikh <furquan@google.com> wrote:
-> > > >
-> > > > On Wed, Mar 20, 2019 at 5:11 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > >
-> > > > > On Wed, Mar 20, 2019 at 11:34 PM Furquan Shaikh <furquan@google.com> wrote:
-> > > > > >
-> > > > > > Commit 18996f2db918 ("ACPICA: Events: Stop unconditionally
-> > > > > > clearing ACPI IRQs during suspend/resume") was added to stop clearing
-> > > > > > of event status bits unconditionally on suspend and resume paths. This
-> > > > > > was done because of an issue
-> > > > > > reported (https://bugzilla.kernel.org/show_bug.cgi?id=196249) where
-> > > > > > lid status stays closed even on resume (which happens because event
-> > > > > > status bits are cleared unconditionally on resume). Though this change
-> > > > > > fixed the issue on suspend path, it introduced regressions on several
-> > > > > > resume paths.
-> > > > > >
-> > > > > > First regression was reported and fixed on S5 path by the following
-> > > > > > change: commit fa85015c0d95 ("ACPICA: Clear status of all events when
-> > > > > > entering S5"). Next regression was reported and fixed on all legacy
-> > > > > > sleep paths by the commit f317c7dc12b7 ("ACPICA: Clear status of all
-> > > > > > events when entering sleep states"). However, regression still exists
-> > > > > > on S0ix sleep path since it does not follow the legacy sleep path.
-> > > > >
-> > > > > What exactly is failing?
-> > > >
-> > > > Here is the failure scenario:
-> > > >
-> > > > 1. Consider the case of trackpad which acts as a wake source.
-> > > > 2. Since the pad is configured for SCI, GPE_STS gets set for that pad
-> > > > during normal interrupts as well (i.e. during probe at boot or when
-> > > > using the trackpad)
-> > >
-> > > I don't quite understand this.
-> > >
-> > > Is the same GPE used for signaling trackpad events in the system
-> > > working state and for wakeup?
+> > This patch adds a new subnode to simple-panel allowing us to override
+> > the typical timing expressed in the panel's display_timing.
 > >
-> > Yes. The same pad is being configured for interrupts (i.e. routed to
-> > APIC) during S0 as well as configured for GPE (i.e. routed for SCI) to
-> > cause wakes when in S0ix/S3. This pad is externally connected to
-> > trackpad interrupt line.
+> > Changes in v2:
+> >  - Split out the binding into a new patch (Rob)
+> >  - display-timings is a new section (Rob)
+> >  - Use the full display-timings subnode instead of picking the timing
+> >    out (Rob/Thierry)
+> > Changes in v3:
+> >  - Go back to using the timing subnode directly, but rename to
+> >    panel-timing (Rob)
+> > Changes in v4:
+> >  - Simplify desc. for when override should be used (Thierry/Laurent)
+> >  - Removed Rob H review since it's been a year and wording changed
+> >
+> > Cc: Doug Anderson <dianders@chromium.org>
+> > Cc: Eric Anholt <eric@anholt.net>
+> > Cc: Heiko Stuebner <heiko@sntech.de>
+> > Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: St=C3=A9phane Marchesin <marcheu@chromium.org>
+> > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: linux-rockchip@lists.infradead.org
+> > Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> >  .../bindings/display/panel/simple-panel.txt   | 24 +++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/panel/simple-pan=
+el.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> > index b2b872c710f2..6157f86ddce4 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> > +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> > @@ -15,6 +15,18 @@ Optional properties:
+> >    (hot plug detect) signal, but the signal isn't hooked up so we shoul=
+d
+> >    hardcode the max delay from the panel spec when powering up the pane=
+l.
+> >
+> > +panel-timing subnode
+> > +--------------------
+> > +
+> > +This optional subnode is for devices which require a mode differing
+> > +from the panel's "typical" display timing.  The panel timings provided
+> > +here will be ignored if they are found to be outside of allowable
+> > +ranges for the given panel.
+> > +
 >
-> And the way the system is wired up causes the GPE status to be set
-> when it is enabled, I suppose?
-
-That is correct.
-
+> Is it OK to put this comment about how the implementation
+> will behave when values are out of range, given this is just a binding
+> spec?
 >
-> So effectively, you need to disable the active-state IRQ, then clear
-> the GPE status and enable it for wakeup.
->
-> OK, I'll queue up the patch (and talk to the upstream ACPICA people
-> about taking it in there).
+> Perhaps -if needed- this sentence can be rephrased to state that,
+> e.g. the OS may not be able to apply these values, if the controller
+> or device is unable to?
 
-Thank you!
+I will defer to Rob H. on this one, but I'm happy to simply remove the
+last sentence.  I was trying to add a more OS-agnostic version of the
+bullet points from V3 but agree that we could just remove this from
+the bindings completely.
 
->
-> Thanks!
+
+-Doug
