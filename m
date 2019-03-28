@@ -2,95 +2,75 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2166C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B916C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5BCD217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553800194;
-	bh=SprQsEdRnbpNMH9Z51mIFuD7A0vDVpdtNwoNemDpD5c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rwDy7LnOVBivTyWc2veCm2crM6KE2LBjpcTAZKe9PIXXaUS+sZ7yZkfWwpLV8mS+4
-	 WiA1L2d8Huf4q+vxzrZIHBDZqgKMerAcU8YfOf1XRJ+O9ETswkJQfnc4OWbNsQTf+t
-	 7hOTSy9a4jjTgdDGoyA9vZeP6CjcP9TYdS3xQSVg=
+	by mail.kernel.org (Postfix) with ESMTP id 3090A20811
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfC1TJx (ORCPT
+        id S1726506AbfC1TKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 15:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48450 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbfC1TJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 15:09:51 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 994112184E;
-        Thu, 28 Mar 2019 19:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553800190;
-        bh=SprQsEdRnbpNMH9Z51mIFuD7A0vDVpdtNwoNemDpD5c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ldtFI4OXhHJe7st9mhVOtyH5YnPmqc76bxdxPvOFecyqA+vN0DFfLI7T/ICl2bf0B
-         kiCaH73+5a5r9WlD5Kr2QWsCHcFlVjQaqWvz2U/sRzQQI1HpBiIzt09Bx/kgVCEhhK
-         KJgjgk7yaomEA67K0ZWZYe0076JDFsWMp2FS5+zA=
-Received: by mail-qt1-f178.google.com with SMTP id k2so24482880qtm.1;
-        Thu, 28 Mar 2019 12:09:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAU2/ZloPFNP0PFbR4DlT8k6qXTYTrxBkP8Tm8ldeyoPYv+2QyaZ
-        NKpVZgqLvnoaMGStXyPZ5FMa/mHO9hyc2LmJJA==
-X-Google-Smtp-Source: APXvYqx5fUpR7gu+fayjaeAP2rETOBgF5evOFtfCbK33QT0vsqfLRfoUFlfmsZHhpFfmBn2HaYq0lEJzna81DRFkyvM=
-X-Received: by 2002:a0c:b018:: with SMTP id k24mr37635042qvc.218.1553800189858;
- Thu, 28 Mar 2019 12:09:49 -0700 (PDT)
+        Thu, 28 Mar 2019 15:10:08 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55887 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbfC1TKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 15:10:07 -0400
+Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8680:2bb1:1b64:2c6c:6ec3:aa41])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x2SIFwYJ3433405
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Thu, 28 Mar 2019 11:15:59 -0700
+Subject: Re: [PATCH 0/1] [RFC] Secure Launch boot protocol
+To:     Ross Philipson <ross.philipson@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        corbet@lwn.net, konrad.wilk@oracle.com, kanth.ghatraju@oracle.com,
+        daniel.kiper@oracle.com, boris.ostrovsky@oracle.com,
+        dpsmith@apertussolutions.com
+References: <20190311150423.15979-1-ross.philipson@oracle.com>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <54a6bc26-584f-322a-2089-be96472e2d4f@zytor.com>
+Date:   Thu, 28 Mar 2019 11:15:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-12-fparent@baylibre.com>
-In-Reply-To: <20190323211612.860-12-fparent@baylibre.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 28 Mar 2019 14:09:38 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKdWjtzNVtAm1aO6Dv+bDmurJ2q709Uakf6xP4Co+HgWg@mail.gmail.com>
-Message-ID: <CAL_JsqKdWjtzNVtAm1aO6Dv+bDmurJ2q709Uakf6xP4Co+HgWg@mail.gmail.com>
-Subject: Re: [PATCH 11/24] dt-bindings: mediatek: topckgen: add support for MT8516
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Wenzhen Yu <wenzhen.yu@mediatek.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Yong Mao <yong.mao@mediatek.com>, jjian.zhou@mediatek.com,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        stephane.leprovost@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190311150423.15979-1-ross.philipson@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 4:17 PM Fabien Parent <fparent@baylibre.com> wrote:
->
-> Add binding documentation of topckgen for MT8516 SoC.
->
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> ---
->  .../arm/mediatek/mediatek,topckgen.txt        |   1 +
->  include/dt-bindings/clock/mt8516-clk.h        | 192 ++++++++++++++++++
->  2 files changed, 193 insertions(+)
->  create mode 100644 include/dt-bindings/clock/mt8516-clk.h
+So, per our conversation today, lets create a new, readonly, data structure
+pointed to by a single field in setup_header, in order to preserve what little
+space we have left in that structure (a whopping 24 bytes...)
 
-Acked-by: Rob Herring <robh@kernel.org>
+The new data structure will have a header consisting of a magic number and a
+length field; if we want to be really paranoid we could add a checksum/crc.
+
+The existence of this new readonly structure will be announced by bumping the
+boot protocol to 2.15.
+
+The presence of your new boot launch capability (trenchboot) will be indicated
+by a new bit in xloadflags.
+
+I thought hard about this, and I have come to the conclusion that the new
+structure is better off in the .rodata section of the compressed kernel rather
+than in the setup area, for the following reasons, some of which are
+theoretical and unlikely to apply anywhere in the near future, but don't
+actually hurt to address right off the bat:
+
+a. The future size of the structure would not be artificially constrained by
+   the 32K hard limit on the setup area;
+b. It is one less level of indirection in the build tools;
+c. It adds a possibly unnecessary dependency on the setup area, which could
+   possibly be awkward for some boot loaders (unlikely, but...);
+d. It would allow this new structure to also carry information that might be
+   useful to the decompressor for whatever reason.
+
+	-hpa
