@@ -2,77 +2,84 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D51C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E54C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7F920823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD95B20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfC1Nsu (ORCPT
+        id S1726338AbfC1NuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 09:48:50 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42662 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfC1Nsu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 09:48:50 -0400
-Received: by mail-qt1-f195.google.com with SMTP id p20so23073494qtc.9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 06:48:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IxJN7KZwjVhlD5YYrY2vpnOhFwirNWBN0KoRPfbv1oA=;
-        b=CR4k/2kjcp6C1Q3w+pt7h7hkkMlDUSZI+mzkZlJkyU6wO+nDQrzJDZwmxriIpl26D/
-         qTo6Dr10PcAKomkJK8a3qzt+qQHPV4W0bsHfgj7nGlRVBFDcQ2FiOAZBY4kR+Is6Qc6D
-         NA534Q8eTanOf2otMJSixTS+OFz9tmaV6Qkvph2RiYVn01ciznFSYkM7Y0E0wOxGAzVz
-         cGLtW1WaedqZyOYJuKu4G9tmx7ugyTZAn+xUZstED1y3yIouNMBzTtngyDhT12uy8mVj
-         5/wkJTSyz3+QY8SD2HCoIN9SO4By1elYMpbE9O4fQKrVcfUVWwNDVzTfa/0vn5KBBzKO
-         aW2w==
-X-Gm-Message-State: APjAAAWRfEdlo1Utq1BLcvT8W9xo+XzSsY3VjCAwcHM/1BHrJotS2IeW
-        3ijp2WKyraPvohNmtBmySjhmbXMBCgTZCHM7gV1C9Q==
-X-Google-Smtp-Source: APXvYqxxtUUeggX+Rr+Kux/XWonBUhWao+tAmjSQfuelhZfIIcR8635TCSKKd7xtBknqW1v24NJ02vRNuOpPC1+dR3E=
-X-Received: by 2002:ac8:925:: with SMTP id t34mr20208494qth.30.1553780929640;
- Thu, 28 Mar 2019 06:48:49 -0700 (PDT)
+        Thu, 28 Mar 2019 09:50:20 -0400
+Received: from mga02.intel.com ([134.134.136.20]:27167 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbfC1NuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 09:50:19 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 06:50:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
+   d="scan'208";a="135555022"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga008.fm.intel.com with ESMTP; 28 Mar 2019 06:50:16 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h9VQ7-00033b-5Q; Thu, 28 Mar 2019 15:50:15 +0200
+Date:   Thu, 28 Mar 2019 15:50:15 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Joe Perches <joe@perches.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] x86/boot: Split out parse_serial_port() helper
+ for earlyprintk
+Message-ID: <20190328135015.GA9224@smile.fi.intel.com>
+References: <20190319184325.72807-1-andriy.shevchenko@linux.intel.com>
+ <20190319184325.72807-4-andriy.shevchenko@linux.intel.com>
+ <20190328123504.GF22720@zn.tnic>
+ <20190328131557.GY9224@smile.fi.intel.com>
+ <20190328133907.GI22720@zn.tnic>
 MIME-Version: 1.0
-References: <20190327101848.25477-1-nsaenzjulienne@suse.de> <BYAPR02MB5607E9396127F67A9A2BEC948A590@BYAPR02MB5607.namprd02.prod.outlook.com>
-In-Reply-To: <BYAPR02MB5607E9396127F67A9A2BEC948A590@BYAPR02MB5607.namprd02.prod.outlook.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Thu, 28 Mar 2019 14:48:38 +0100
-Message-ID: <CAO-hwJLatVKwgevfdFk1Lqqpg3H7Oc28_VEkiyxPXne3fhSrqw@mail.gmail.com>
-Subject: Re: [PATCH v4] HID: core: move Usage Page concatenation to Main item
-To:     "Junge, Terry" <terry.junge@poly.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Jiri Kosina <jikos@kernel.org>,
-        "oneukum@suse.de" <oneukum@suse.de>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328133907.GI22720@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 1:27 AM Junge, Terry <terry.junge@poly.com> wrote:
->
-> Hi Nicolas,
->
-> V4 looks good to me.
+On Thu, Mar 28, 2019 at 02:39:07PM +0100, Borislav Petkov wrote:
+> On Thu, Mar 28, 2019 at 03:15:57PM +0200, Andy Shevchenko wrote:
+> > kstrtox() simple can't cover _all_ simple_strtox() cases.
+> 
+> I see only one case here. Are you saying kstrtoull() cannot work
+> here?
 
-Looks good to me too.
+Can, but with code uglifying to workaround kstrtox() restrictions.
+simple_strtox() _just works_ as expected.
 
-Terry, can I consider this as a formal Rev-by you?
+> > I don't feel like uglifying code to satisfy a tool producing a silly
+> warning.
+> 
+> Uglifying how?
 
-Cheers,
-Benjamin
+Requires buffer copying, finding digits there, making a proper termination. And
+basically dropping the error check, because we don't care at this stage about
+wrong input.
 
->
-> Thanks,
-> Terry
->
-> >-----Original Message-----
-> >Subject: [PATCH v4] HID: core: move Usage Page concatenation to Main item
-> >
+And we didn't start to talk about possible user expectation breakage and
+basically breakage weird user cases.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
