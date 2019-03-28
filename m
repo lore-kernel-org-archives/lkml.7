@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056B5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE49C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB72520811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3523220811
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553800337;
-	bh=jOTLQQ6EwdXW+PfUfDh/bZwMQK6wjAY5FhHAKfdkoOs=;
+	s=default; t=1553800364;
+	bh=AjtXW1qFyIWtNsZQn9MisAT+W4qGa/onDY41TQMhoo8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AfgvqnNRYoKfnx73tQXVlXWN469r3GKj4Pu10ozcXTizNpqoNKlkDtzeByAjrE2IQ
-	 8LMVROKqY+tBBav/joW/s67JvgqE3zxgg248A5A2xDAfkpaRmCoTLccZo1a67mgLHx
-	 0u1ixAnBAb+W7UlqvmxQbgO1136/JyvqdKlSX5M4=
+	b=2GpqbqxbGQ51lYAVNAylDrxPm8Daa3btmTnz7sF3aJWrYRnt88eNhQCI7BUG2dsTa
+	 58qQBw7yZdU2WwgX2CmMqFrTwnyutDJsJGVhAHhkNuFU8CQ7MIDTZ9Qj6V9yWEV4mr
+	 AibEBSTE9m7HaIup0FMs5NKCBvMJT/vSPqRsgjwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbfC1TMQ (ORCPT
+        id S1726522AbfC1TMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 15:12:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49486 "EHLO mail.kernel.org"
+        Thu, 28 Mar 2019 15:12:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726156AbfC1TMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 15:12:14 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        id S1726076AbfC1TMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 15:12:42 -0400
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C49C3217F5;
-        Thu, 28 Mar 2019 19:12:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C2482183F;
+        Thu, 28 Mar 2019 19:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553800333;
-        bh=jOTLQQ6EwdXW+PfUfDh/bZwMQK6wjAY5FhHAKfdkoOs=;
+        s=default; t=1553800361;
+        bh=AjtXW1qFyIWtNsZQn9MisAT+W4qGa/onDY41TQMhoo8=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FtuElAkoIVF9by7VDOIvaGE0rs4gW1eJQTOGCh8rM0Sf/Wiqjx2LlzG1Do3MODJ7e
-         ey6aymLN4j9F3iwS99uPpet1laCzP2tN39203/opqZN6qn5xpfcyepWY/MKJ/bFo9T
-         LrnpuTTdraxWgmtdL9Jtf+C3u6NTPuGbLabwmpGE=
-Received: by mail-qt1-f179.google.com with SMTP id z16so24473439qtn.4;
-        Thu, 28 Mar 2019 12:12:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAUObxwOtt3CpoH8Usvs+nimdCAvv8m128roJgcjvHwgNLcGMx/z
-        8QrLkHbKQAmNlGXnlI58jZlHVwQoAjDwTS/8Dw==
-X-Google-Smtp-Source: APXvYqydYDY+QiAF73ZPDqqjubHmDJfafmWF+1pIprh6UJrQwH8gqzXarMmkoVrJPzjCTgpOPo3gbuLafF0yVaufy5Y=
-X-Received: by 2002:a0c:b018:: with SMTP id k24mr37646318qvc.218.1553800333090;
- Thu, 28 Mar 2019 12:12:13 -0700 (PDT)
+        b=TjYYKE4PIuXpiQPr13NBoJK8omqwPoFwuOXnKDPSvuFf7yI6dHcG2LxMHFvVY1o0M
+         rT1pKY+JKjs2UWedLFr3dv+3gqINY03wBXUCUa4houvysJ8ji/ypd0CHBDSLm6m28+
+         BfDZjzNzswnnBf0QxKXrB0mnTMAywwO9krvvIN/8=
+Received: by mail-qk1-f171.google.com with SMTP id a71so6585184qkg.2;
+        Thu, 28 Mar 2019 12:12:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAUZQ/BhkMXUeqcWiJJCljbG99TD+QR/Ju6cLR1WdwrTQJNxhp/k
+        kgylM1szE53kq3p8jond6X7pNH+Vz1IfQPWUHA==
+X-Google-Smtp-Source: APXvYqzKkT6oM1n9B7ums3ALQfVo0PgfUF1GKglpP/069QHAsRUWGejZuGF4pJboP2nTMoW5tX7gcfLGVF52bu82t74=
+X-Received: by 2002:a37:9186:: with SMTP id t128mr7373301qkd.326.1553800360930;
+ Thu, 28 Mar 2019 12:12:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-19-fparent@baylibre.com>
-In-Reply-To: <20190323211612.860-19-fparent@baylibre.com>
+References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-20-fparent@baylibre.com>
+In-Reply-To: <20190323211612.860-20-fparent@baylibre.com>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 28 Mar 2019 14:12:01 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+Uv+dL9qX=6hBbKn7GbZaj1crvGY_uh4tppD8b5dRqcw@mail.gmail.com>
-Message-ID: <CAL_Jsq+Uv+dL9qX=6hBbKn7GbZaj1crvGY_uh4tppD8b5dRqcw@mail.gmail.com>
-Subject: Re: [PATCH 18/24] dt-bindings: timer: mtk-timer: add support for MT8516
+Date:   Thu, 28 Mar 2019 14:12:29 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKJgxERJOcETr638vbdC-HzVs9=nFcQ1eDjgKrJjPRn1w@mail.gmail.com>
+Message-ID: <CAL_JsqKJgxERJOcETr638vbdC-HzVs9=nFcQ1eDjgKrJjPRn1w@mail.gmail.com>
+Subject: Re: [PATCH 19/24] dt-bindings: spi: spi-mt65xx: add support for MT8516
 To:     Fabien Parent <fparent@baylibre.com>
 Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -84,11 +84,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sat, Mar 23, 2019 at 4:17 PM Fabien Parent <fparent@baylibre.com> wrote:
 >
-> Add binding documentation of mtk-timer for MT8516 SoC.
+> Add binding documentation of spi-mt65xx for MT8516 SoC.
 >
 > Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt | 1 +
+>  Documentation/devicetree/bindings/spi/spi-mt65xx.txt | 1 +
 >  1 file changed, 1 insertion(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
