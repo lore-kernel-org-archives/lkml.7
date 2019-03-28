@@ -2,87 +2,174 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0BEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB628C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 686AE2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8EB2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:27:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJjCI+QR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfC1Q0r (ORCPT
+        id S1727379AbfC1Q1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:26:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34964 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbfC1Q0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:26:47 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 33A7EC0B6179
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 16:26:47 +0000 (UTC)
-Received: from localhost (ovpn-116-113.ams2.redhat.com [10.36.116.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8DED751F26;
-        Thu, 28 Mar 2019 16:26:38 +0000 (UTC)
-Date:   Thu, 28 Mar 2019 16:26:37 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v2] MAiNTAINERS: add Paolo, Stefan for virtio blk/scsi
-Message-ID: <20190328162637.GD18536@stefanha-x1.localdomain>
-References: <20190327153753.29827-1-mst@redhat.com>
+        Thu, 28 Mar 2019 12:27:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34106 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfC1Q1l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 12:27:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b3so10220864pfd.1;
+        Thu, 28 Mar 2019 09:27:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hys5XWK16NK0DvPqdVaviTNRazNN4qav5JwIyqF0Kvc=;
+        b=QJjCI+QRN7+XUegfOLzBjfTOd1zorDKsdVwhEbv89vMSjVGEHXPVbbyPjxrmbjvz+s
+         AhdSGNE5pU6FjsSc816cxLd3iQDZUN8fl2TOnNk0SL5T90obAHWoYgC5DV3Rar59z9UN
+         5ULOtMf9wEsvKA90p+54rxdf/PeofZPYoITLPWwbo93DSjwZZ4AS2IJnOI87slYVIyJd
+         Ibd8yxznMGNw0a7oKwn3Uv7FD+L7054X1/+38tw1Cc9JL/TGJa7b2mpArh0C7sKDHuNN
+         oaQT8IP7P4q+20yxryA31YiEtZfb30OSDF/ezuEuAWCPmBa2I60znVHH/WSXBXXz6ZvW
+         ad+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hys5XWK16NK0DvPqdVaviTNRazNN4qav5JwIyqF0Kvc=;
+        b=KRvBlyHnyI174Vgrl7vaBLM9kGUCYpCpJ5AOR0Srhh3AGaHZ08eWivOcfl7qfjrLZv
+         iPMMzVbLEb9f6aAR4samHnm+WrRlxEgjB5PLk+dxp7rpOepiktsoeHVGWxn6VQ+sNq3J
+         0H/JCbeB3wNEJKmv53oOwwcPH63mwyuq3lsvfYfdZ7k3nJxGHheIetCrSWIBC3vO6pjT
+         lNWTsC9gAHm7KZdHOZ1d5+zuUTFM0Q2X5xAYpHTqJzfL7LFzqngNQm0au/seIbnnjhys
+         kurg7W3J04v3aKWXlZvKKJDxSnovtHFOWN6031JLlUhBs5uMEyEHJA4XwtfTCoJiFKCw
+         IpEg==
+X-Gm-Message-State: APjAAAUnLNs7A5JCSCSryUx3YOqpCKMr0s6Iet//V7xA4CNlzfjbtxVv
+        6eSxO4MahozgslHL/x4wz8U=
+X-Google-Smtp-Source: APXvYqxVyHLK27bv9iE6QyX/8oHHQx7cQiZJlHllIx6DQqQaK7EUorqGB6nWkvPhsYIpVougLMExYw==
+X-Received: by 2002:a63:6883:: with SMTP id d125mr41160905pgc.324.1553790460136;
+        Thu, 28 Mar 2019 09:27:40 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id y12sm42748885pgq.64.2019.03.28.09.27.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 09:27:39 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH 00/23] Include linux ACPI docs into Sphinx TOC tree
+Date:   Fri, 29 Mar 2019 00:26:58 +0800
+Message-Id: <20190328162721.26138-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jCrbxBqMcLqd4mOl"
-Content-Disposition: inline
-In-Reply-To: <20190327153753.29827-1-mst@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 28 Mar 2019 16:26:47 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Corbet and All,
+The kernel now uses Sphinx to generate intelligent and beautiful documentation
+from reStructuredText files. I converted most of the Linux ACPI docs to rst
+format in this serias.
 
---jCrbxBqMcLqd4mOl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For you to preview, please visit below url:
+http://104.238.181.70:8080/kernel-doc/acpi/index.html
 
-On Wed, Mar 27, 2019 at 11:38:53AM -0400, Michael S. Tsirkin wrote:
-> Jason doesn't really have the time to review blk/scsi
-> patches. Paolo and Setfan agreed to help out.
->=20
-> Thanks guys!
->=20
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->=20
-> changes from v1:
-> - use R tag for new reviewers
-> - readd Jason as M
->=20
->  MAINTAINERS | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
+Thank you!
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Changbin Du (23):
+  Documentation: add Linux ACPI to Sphinx TOC tree
+  acpi doc: convert acpi/namespace.txt to rst format
+  acpi doc: convert acpi/enumeration.txt to rst format
+  acpi doc: convert acpi/osi.txt to rst format
+  acpi doc: convert acpi/linuxized-acpica.txt to rst format
+  acpi doc: convert acpi/scan_handlers.txt to rst format
+  acpi doc: convert acpi/DSD-properties-rules.txt to rst format
+  acpi doc: convert acpi/gpio-properties.txt to rst format
+  acpi doc: convert acpi/method-customizing.txt to rst format
+  acpi doc: convert acpi/initrd_table_override.txt to rst format
+  acpi doc: convert acpi/dsdt-override.txt to rst format
+  acpi doc: convert acpi/i2c-muxes.txt to rst format
+  acpi doc: convert acpi/acpi-lid.txt to rst format
+  acpi doc: convert acpi/dsd/graph.txt to rst format
+  acpi doc: convert acpi/debug.txt to rst format
+  acpi doc: convert acpi/method-tracing.txt to rst format
+  acpi doc: convert acpi/aml-debugger.txt to rst format
+  acpi doc: convert acpi/apei/output_format.txt to rst format
+  acpi doc: convert acpi/apei/einj.txt to rst format
+  acpi doc: convert acpi/cppc_sysfs.txt to rst format
+  acpi doc: convert acpi/lpit.txt to rst format
+  acpi doc: convert acpi/ssdt-overlays.txt to rst format
+  acpi doc: convert acpi/video_extension.txt to rst format
 
---jCrbxBqMcLqd4mOl
-Content-Type: application/pgp-signature; name="signature.asc"
+ ...ies-rules.txt => DSD-properties-rules.rst} |  19 +-
+ .../acpi/{acpi-lid.txt => acpi-lid.rst}       |  47 ++-
+ Documentation/acpi/aml-debugger.rst           |  74 +++++
+ Documentation/acpi/aml-debugger.txt           |  66 ----
+ .../acpi/apei/{einj.txt => einj.rst}          |  96 +++---
+ Documentation/acpi/apei/output_format.rst     | 148 +++++++++
+ Documentation/acpi/apei/output_format.txt     | 147 ---------
+ .../acpi/{cppc_sysfs.txt => cppc_sysfs.rst}   |  69 ++--
+ Documentation/acpi/{debug.txt => debug.rst}   |  31 +-
+ ...eferences.txt => data-node-references.rst} |  27 +-
+ .../acpi/dsd/{graph.txt => graph.rst}         | 155 ++++-----
+ .../{dsdt-override.txt => dsdt-override.rst}  |   6 +-
+ .../acpi/{enumeration.txt => enumeration.rst} | 133 ++++----
+ ...pio-properties.txt => gpio-properties.rst} |  76 +++--
+ Documentation/acpi/i2c-muxes.rst              |  59 ++++
+ Documentation/acpi/i2c-muxes.txt              |  58 ----
+ Documentation/acpi/index.rst                  |  30 ++
+ Documentation/acpi/initrd_table_override.rst  | 118 +++++++
+ Documentation/acpi/initrd_table_override.txt  | 111 -------
+ ...uxized-acpica.txt => linuxized-acpica.rst} | 114 ++++---
+ Documentation/acpi/{lpit.txt => lpit.rst}     |  16 +-
+ Documentation/acpi/method-customizing.rst     |  80 +++++
+ Documentation/acpi/method-customizing.txt     |  73 -----
+ Documentation/acpi/method-tracing.rst         | 224 +++++++++++++
+ Documentation/acpi/method-tracing.txt         | 192 -----------
+ .../acpi/{namespace.txt => namespace.rst}     | 309 +++++++++---------
+ Documentation/acpi/{osi.txt => osi.rst}       |  13 +-
+ .../{scan_handlers.txt => scan_handlers.rst}  |  23 +-
+ .../{ssdt-overlays.txt => ssdt-overlays.rst}  | 166 +++++-----
+ ...ideo_extension.txt => video_extension.rst} |  61 ++--
+ Documentation/index.rst                       |   1 +
+ 31 files changed, 1463 insertions(+), 1279 deletions(-)
+ rename Documentation/acpi/{DSD-properties-rules.txt => DSD-properties-rules.rst} (89%)
+ rename Documentation/acpi/{acpi-lid.txt => acpi-lid.rst} (78%)
+ create mode 100644 Documentation/acpi/aml-debugger.rst
+ delete mode 100644 Documentation/acpi/aml-debugger.txt
+ rename Documentation/acpi/apei/{einj.txt => einj.rst} (68%)
+ create mode 100644 Documentation/acpi/apei/output_format.rst
+ delete mode 100644 Documentation/acpi/apei/output_format.txt
+ rename Documentation/acpi/{cppc_sysfs.txt => cppc_sysfs.rst} (51%)
+ rename Documentation/acpi/{debug.txt => debug.rst} (91%)
+ rename Documentation/acpi/dsd/{data-node-references.txt => data-node-references.rst} (80%)
+ rename Documentation/acpi/dsd/{graph.txt => graph.rst} (56%)
+ rename Documentation/acpi/{dsdt-override.txt => dsdt-override.rst} (63%)
+ rename Documentation/acpi/{enumeration.txt => enumeration.rst} (87%)
+ rename Documentation/acpi/{gpio-properties.txt => gpio-properties.rst} (82%)
+ create mode 100644 Documentation/acpi/i2c-muxes.rst
+ delete mode 100644 Documentation/acpi/i2c-muxes.txt
+ create mode 100644 Documentation/acpi/index.rst
+ create mode 100644 Documentation/acpi/initrd_table_override.rst
+ delete mode 100644 Documentation/acpi/initrd_table_override.txt
+ rename Documentation/acpi/{linuxized-acpica.txt => linuxized-acpica.rst} (78%)
+ rename Documentation/acpi/{lpit.txt => lpit.rst} (70%)
+ create mode 100644 Documentation/acpi/method-customizing.rst
+ delete mode 100644 Documentation/acpi/method-customizing.txt
+ create mode 100644 Documentation/acpi/method-tracing.rst
+ delete mode 100644 Documentation/acpi/method-tracing.txt
+ rename Documentation/acpi/{namespace.txt => namespace.rst} (54%)
+ rename Documentation/acpi/{osi.txt => osi.rst} (97%)
+ rename Documentation/acpi/{scan_handlers.txt => scan_handlers.rst} (91%)
+ rename Documentation/acpi/{ssdt-overlays.txt => ssdt-overlays.rst} (50%)
+ rename Documentation/acpi/{video_extension.txt => video_extension.rst} (80%)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.20.1
 
-iQEcBAEBAgAGBQJcnPW9AAoJEJykq7OBq3PIsKEH/0x6AAm5ay+SLiH9tnDPTGTb
-NJ3y/b+NNxRIMDmNEo9TNOa1DX4q2z3xB4MMOHtrPuw4g6Ahq7DHpVCm74Nvax+c
-mtNyyoUdNzG4tMwBkRfeuma+XtPocD7tkcpGhP/uFTDZkFE++1r5jyKotjUltFqa
-d3cBe0QjdMDS7zSWQ6p2ilUue8PCSbN40f2LD9HKK2JrszW07aco+C4NDcG0fI2Q
-o4Pj/nsivOvx1sKZLUyx+HxR30UxcELqbhoJWlIYxgm1ZeeEiWH43+BCUAT/t4jW
-5/qi0ExqbKTKOfFNBM73jUZPVLzcWnpO95zY8F0T+dbNtgAkDNTr9Tnq5TUVP50=
-=QusT
------END PGP SIGNATURE-----
-
---jCrbxBqMcLqd4mOl--
