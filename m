@@ -2,175 +2,97 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D82C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 04:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670DAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E41E5206DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 04:47:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="buNzBGJP";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GmkKPNbB"
+	by mail.kernel.org (Postfix) with ESMTP id 3DE7720700
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:18:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbfC1ErV (ORCPT
+        id S1725994AbfC1FSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 00:47:21 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33156 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfC1ErU (ORCPT
+        Thu, 28 Mar 2019 01:18:37 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:13758 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725765AbfC1FSh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 00:47:20 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4883460779; Thu, 28 Mar 2019 04:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553748439;
-        bh=E/Kj+m5Iz2fY4+uTj+tjvg8EY5eik+6c4Lu0MYkKzU4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=buNzBGJPGK9g3f5TY2QiGmLbwiQopmH0vQ3F1nFh0thXPJAwNTI6nkCZcqzmqW5Zg
-         5+Qa7aurjxYJsy0eB/BjAwFSFG+pLNH3FxJt0+qhchBLGNsCcMF+DjPJCBGDLJSCs2
-         OM9BXVgInemkdhODXIv82MjbS7VbmYHaVbWLxg2o=
-Received: from lingutla-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: clingutla@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 31E88602FC;
-        Thu, 28 Mar 2019 04:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553748438;
-        bh=E/Kj+m5Iz2fY4+uTj+tjvg8EY5eik+6c4Lu0MYkKzU4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GmkKPNbBofhsMeokyue3kRToxttyxM/X4zd0yNCL/RF3IjeJoyesvTIBg57zvOuPQ
-         nbyxf4MvBOycIp8lT8capG7AUMYCb0xi1yQZhb33c01Hctvoa4fC+rODyD4DOZwmCu
-         yntxYIuEpvE+JtcF3I2SLuPQw9/+amsJOw727oaE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 31E88602FC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=clingutla@codeaurora.org
-From:   Lingutla Chandrasekhar <clingutla@codeaurora.org>
-To:     gregkh@linuxfoundation.org, quentin.perret@arm.com,
-        sudeep.holla@arm.com, dietmar.eggemann@arm.com
-Cc:     juri.lelli@gmail.com, catalin.marinas@arm.com,
-        jeremy.linton@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Lingutla Chandrasekhar <clingutla@codeaurora.org>
-Subject: [PATCH v2] arch_topology: Make cpu_capacity sysfs node as ready-only
-Date:   Thu, 28 Mar 2019 10:17:05 +0530
-Message-Id: <20190328044705.16838-1-clingutla@codeaurora.org>
-X-Mailer: git-send-email 2.21.0
+        Thu, 28 Mar 2019 01:18:37 -0400
+X-UUID: e960acfd394541fe96aad7131fd252d5-20190328
+X-UUID: e960acfd394541fe96aad7131fd252d5-20190328
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 62728532; Thu, 28 Mar 2019 13:18:27 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 28 Mar 2019 13:18:25 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 28 Mar 2019 13:18:20 +0800
+Message-ID: <1553750300.20204.2.camel@mtksdaap41>
+Subject: Re: [PATCH v5 0/9] Mediatek MT8183 clock support
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Stephen Boyd <sboyd@codeaurora.org>
+CC:     Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>, <stable@vger.kernel.org>
+Date:   Thu, 28 Mar 2019 13:18:20 +0800
+In-Reply-To: <20190305050546.23431-1-weiyi.lu@mediatek.com>
+References: <20190305050546.23431-1-weiyi.lu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If user updates any cpu's cpu_capacity, then the new value is going to
-be applied to all its online sibling cpus. But this need not to be correct
-always, as sibling cpus (in ARM, same micro architecture cpus) would have
-different cpu_capacity with different performance characteristics.
-So, updating the user supplied cpu_capacity to all cpu siblings
-is not correct.
+On Tue, 2019-03-05 at 13:05 +0800, Weiyi Lu wrote:
 
-And another problem is, current code assumes that 'all cpus in a cluster
-or with same package_id (core_siblings), would have same cpu_capacity'.
-But with commit '5bdd2b3f0f8 ("arm64: topology: add support to remove
-cpu topology sibling masks")', when a cpu hotplugged out, the cpu
-information gets cleared in its sibling cpus. So, user supplied
-cpu_capacity would be applied to only online sibling cpus at the time.
-After that, if any cpu hotplugged in, it would have different cpu_capacity
-than its siblings, which breaks the above assumption.
+Hi Stephen,
+Just gentle ping. Many thanks.
 
-So, instead of mucking around the core sibling mask for user supplied
-value, use device-tree to set cpu capacity. And make the cpu_capacity
-node as read-only to know the asymmetry between cpus in the system.
-While at it, remove cpu_scale_mutex usage, which used for sysfs write
-protection.
+> Resend clock patches from v4 based on v5.0-rc1.
+> 
+> The whole series now is composed of
+> a fix for PLL tuner (PATCH 1),
+> clock common changes for both MT8183 & MT6765 (PATCH 2-3),
+> clock support of MT8183 (PATCH 4-8) and
+> resend a clock patch long time ago(PTACH 9).
+> 
+> changes since v4:
+> - refine for the fix of PLL tuner(PATCH 1).
+> - add configurable pcw_chg_reg for MT8183 and the following IC(PATCH 7).
+> 
+> changes sinve v3:
+> - add fix tag.
+> - small change of mtk_clk_mux data structure.
+> - use of_property_for_each_string to iterate dependent subsys clock of power domain.
+> - document critical clocks.
+> - reduce some clock register error log.
+> - few coding style fix.
+> 
+> changes sinve v2:
+> - refine for implementation consistency of mtk clk mux.
+> - separate the onoff API into enable/disable API for mtk scpsys.
+> - resend a patch about PLL rate changing.
+> 
+> changes since v1:
+> - refine for better code quality.
+> - some minor bug fix of clock part, like incorrect control address
+>   and missing clocks.
+> 
+> 
 
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Quentin Perret <quentin.perret@arm.com>
-Reviewed-by: Quentin Perret <quentin.perret@arm.com>
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Lingutla Chandrasekhar <clingutla@codeaurora.org>
-
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index edfcf8d982e4..1739d7e1952a 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -7,7 +7,6 @@
-  */
- 
- #include <linux/acpi.h>
--#include <linux/arch_topology.h>
- #include <linux/cpu.h>
- #include <linux/cpufreq.h>
- #include <linux/device.h>
-@@ -31,7 +30,6 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
- 		per_cpu(freq_scale, i) = scale;
- }
- 
--static DEFINE_MUTEX(cpu_scale_mutex);
- DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
- 
- void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
-@@ -51,37 +49,7 @@ static ssize_t cpu_capacity_show(struct device *dev,
- static void update_topology_flags_workfn(struct work_struct *work);
- static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
- 
--static ssize_t cpu_capacity_store(struct device *dev,
--				  struct device_attribute *attr,
--				  const char *buf,
--				  size_t count)
--{
--	struct cpu *cpu = container_of(dev, struct cpu, dev);
--	int this_cpu = cpu->dev.id;
--	int i;
--	unsigned long new_capacity;
--	ssize_t ret;
--
--	if (!count)
--		return 0;
--
--	ret = kstrtoul(buf, 0, &new_capacity);
--	if (ret)
--		return ret;
--	if (new_capacity > SCHED_CAPACITY_SCALE)
--		return -EINVAL;
--
--	mutex_lock(&cpu_scale_mutex);
--	for_each_cpu(i, &cpu_topology[this_cpu].core_sibling)
--		topology_set_cpu_scale(i, new_capacity);
--	mutex_unlock(&cpu_scale_mutex);
--
--	schedule_work(&update_topology_flags_work);
--
--	return count;
--}
--
--static DEVICE_ATTR_RW(cpu_capacity);
-+static DEVICE_ATTR_RO(cpu_capacity);
- 
- static int register_cpu_capacity_sysctl(void)
- {
-@@ -141,7 +109,6 @@ void topology_normalize_cpu_scale(void)
- 		return;
- 
- 	pr_debug("cpu_capacity: capacity_scale=%u\n", capacity_scale);
--	mutex_lock(&cpu_scale_mutex);
- 	for_each_possible_cpu(cpu) {
- 		pr_debug("cpu_capacity: cpu=%d raw_capacity=%u\n",
- 			 cpu, raw_capacity[cpu]);
-@@ -151,7 +118,6 @@ void topology_normalize_cpu_scale(void)
- 		pr_debug("cpu_capacity: CPU%d cpu_capacity=%lu\n",
- 			cpu, topology_get_cpu_scale(NULL, cpu));
- 	}
--	mutex_unlock(&cpu_scale_mutex);
- }
- 
- bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
- a Linux Foundation Collaborative Project.
 
