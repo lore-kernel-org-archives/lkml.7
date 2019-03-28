@@ -2,174 +2,181 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0F3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 00:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFEBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 00:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1200204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 00:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B439B206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 00:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ed5nrXFZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lDx7PjXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfC1AnV (ORCPT
+        id S1727781AbfC1Aqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 20:43:21 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54042 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbfC1AnV (ORCPT
+        Wed, 27 Mar 2019 20:46:36 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41261 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfC1Aqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 20:43:21 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2S0cZdD184006;
-        Thu, 28 Mar 2019 00:43:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=K4KGrj9DTxQpE3Z97Uz8xJr0r3YGRKAUWzS0FAdlioQ=;
- b=ed5nrXFZHxzE1fXagZdyHM+Ke3X9D7+699m9Qme7f1urHtbto12Tn47gtnIR5ZGolnKQ
- JPlNzKuEgTCRVZzWioahmvjhxBJZHXJ+z3A/hjDRdkGkjmpXNtvxc1mDmMNT7HNF5atq
- KBqG25Qs5tertcbB69b/GGMa/BjiDQleIJWBAkAAgqA21CvZFgD9455WgYUGijCaADLq
- cJx8QgBM34M93GYq25CJuAY5dABKR4/1OQwByxP/+z3hAKhM1sR+lc56XloSl3OwdUWi
- iua3lDfFwgi/UAEZMl38+ffOSPOVcnwb1VNW3We/9mp5M2coVGSTOe6wyryxMlnHMSkm jg== 
-Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
-        by userp2130.oracle.com with ESMTP id 2re6g1bpfh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 00:43:13 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2S0h8Ht008592
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 00:43:08 GMT
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2S0h6RH025834;
-        Thu, 28 Mar 2019 00:43:07 GMT
-Received: from [10.182.69.106] (/10.182.69.106)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 27 Mar 2019 17:43:06 -0700
-Subject: Re: [Qemu-devel] megasas: Unexpected response from lun 1 while
- scanning, scan aborted
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     qemu-block@nongnu.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, linux-kernel@vger.kernel.org,
-        qemu-devel@nongnu.org
-References: <9c3849cf-86c6-4568-bff5-1050b445322d@default>
- <c3a8f877-82bc-44ab-72e8-51f62c0a65ed@suse.de>
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-Message-ID: <442316ee-8800-275c-85e9-a5d054a28e63@oracle.com>
-Date:   Thu, 28 Mar 2019 08:47:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 27 Mar 2019 20:46:35 -0400
+Received: by mail-io1-f66.google.com with SMTP id v10so5102149iom.8
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 17:46:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l7apfFfokeZYVdIdRB9jlOBKYHSNg5753GpwFHi1Hb0=;
+        b=lDx7PjXPgsFZipAu/NjljzVNVAXZM6mmq6XjVhWG0Blxbou6khob3BrkNFREjIKiL0
+         wCh1nqkGeapPn3mGbJdoLlofRojJFiJXtOhO3jooY2MytWWNGPYJIgwKMNwBBjdK8TNq
+         RI64d/MsJCJC4AcNlFII0oXh7OL4WyDQbfRhZJZdMjDbDgYYO0L/rz+rGorOAXZozzxW
+         JWuvX1aS+Yt8px29INNdMC90DpVmyqyG8/9hvVCshU9sMKBkUj++voUiQ48xgyovPYwg
+         xABCRWQykTySOVFE6IhToWW0oOpDjsExdrEaofmyH2pXZ0Jx1UfpjlJmeK/eoCZPgTr+
+         GBiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l7apfFfokeZYVdIdRB9jlOBKYHSNg5753GpwFHi1Hb0=;
+        b=JlTTbpstf8nj1TzASmxDS8n8v8UXItAbDuRoBobRDP7UKBZawllwz9jZWI+94bBEiH
+         1whmRScRHjbw1e6UCkCuYQ1ld17IMbtiJEutqQx4pKka9i3hjEPcTRake4SfIR+SePjF
+         VYjPn3xjEmM8VKNBPO6Xb0KWlsw9t/Qo+ZrxsXhlMB3VeFYzU87f+S6r1WwXwShy6fjT
+         Vfn3YoJvnH7b1OT3QZUu+nT4Jw32uiEXy4sDPu3+VqSzCx2ap9Mcs1cf76xOGbaiiq1d
+         M7fL8F1gXty6Z0BidrU/EpN9wrHmon0RF6tce0WZilZ7FaAGq4t0/QboOCFbvhFc68JS
+         igxA==
+X-Gm-Message-State: APjAAAU255wI/VuBnKnjRvGWJRkUXw6mnLpxD/GRCJNapDuZ4TpYWEyZ
+        4aS/8hj2y8qG3faMv3T5D7oXKrlbk25suVESGUSX7A==
+X-Google-Smtp-Source: APXvYqwFzmNrtM6m+BnUYb/6SRU2fGA/vPeAuFrUC1/ork2HmjOWKBYNC/HiY3ytIaG1siZlbjY0s3zR9R9Hrc3yr9U=
+X-Received: by 2002:a6b:d119:: with SMTP id l25mr108512iob.278.1553733993895;
+ Wed, 27 Mar 2019 17:46:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c3a8f877-82bc-44ab-72e8-51f62c0a65ed@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9208 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903280003
+References: <20190320222844.134765-1-furquan@google.com> <CAJZ5v0h7dYEFHSOHengJ3OFyXBW+XZVbjCAegpzqg1VxeeaXog@mail.gmail.com>
+ <CAEGmHFEqhh_xYaTXsVHqSgNW-1Ao6-mtk0BPhgu3-8ua6cCZ-Q@mail.gmail.com> <CAJZ5v0hxNA_KHjcqSL4XPpQpB1M4UuWJcYOknex=NOGavoooHA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hxNA_KHjcqSL4XPpQpB1M4UuWJcYOknex=NOGavoooHA@mail.gmail.com>
+From:   Furquan Shaikh <furquan@google.com>
+Date:   Wed, 27 Mar 2019 17:46:21 -0700
+Message-ID: <CAEGmHFHaFk6v=vcciU3QNaQfLriWSJtQ5QUjciY+O8dLh3DhJA@mail.gmail.com>
+Subject: Re: [PATCH] drivers/acpi: Clear status of an event before enabling it
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Robert Moore <robert.moore@intel.com>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        devel@acpica.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Evan Green <evgreen@google.com>,
+        Duncan Laurie <dlaurie@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 27, 2019 at 5:24 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Mar 21, 2019 at 3:16 AM Furquan Shaikh <furquan@google.com> wrote:
+> >
+> > On Wed, Mar 20, 2019 at 5:11 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > On Wed, Mar 20, 2019 at 11:34 PM Furquan Shaikh <furquan@google.com> wrote:
+> > > >
+> > > > Commit 18996f2db918 ("ACPICA: Events: Stop unconditionally
+> > > > clearing ACPI IRQs during suspend/resume") was added to stop clearing
+> > > > of event status bits unconditionally on suspend and resume paths. This
+> > > > was done because of an issue
+> > > > reported (https://bugzilla.kernel.org/show_bug.cgi?id=196249) where
+> > > > lid status stays closed even on resume (which happens because event
+> > > > status bits are cleared unconditionally on resume). Though this change
+> > > > fixed the issue on suspend path, it introduced regressions on several
+> > > > resume paths.
+> > > >
+> > > > First regression was reported and fixed on S5 path by the following
+> > > > change: commit fa85015c0d95 ("ACPICA: Clear status of all events when
+> > > > entering S5"). Next regression was reported and fixed on all legacy
+> > > > sleep paths by the commit f317c7dc12b7 ("ACPICA: Clear status of all
+> > > > events when entering sleep states"). However, regression still exists
+> > > > on S0ix sleep path since it does not follow the legacy sleep path.
+> > >
+> > > What exactly is failing?
+> >
+> > Here is the failure scenario:
+> >
+> > 1. Consider the case of trackpad which acts as a wake source.
+> > 2. Since the pad is configured for SCI, GPE_STS gets set for that pad
+> > during normal interrupts as well (i.e. during probe at boot or when
+> > using the trackpad)
+>
+> I don't quite understand this.
+>
+> Is the same GPE used for signaling trackpad events in the system
+> working state and for wakeup?
 
+Yes. The same pad is being configured for interrupts (i.e. routed to
+APIC) during S0 as well as configured for GPE (i.e. routed for SCI) to
+cause wakes when in S0ix/S3. This pad is externally connected to
+trackpad interrupt line.
 
-On 3/27/19 7:31 PM, Hannes Reinecke wrote:
-> On 3/26/19 5:47 PM, Dongli Zhang wrote:
->> I am reporting an error that the scsi lun cannot initialize successfully when I
->> am emulating megasas scsi controller with qemu.
->>
->> I am not sure if this is issue in qemu or linux kernel.
->>
->> When 'lun=1' is specified, there is "Unexpected response from lun 1 while
->> scanning, scan aborted".
->>
->> Everything works well if 'lun=0' is specified.
->>
->>
->> Below is the qemu cmdline involved:
->>
->> -device megasas,id=scsi0 \
->> -device scsi-hd,drive=drive0,bus=scsi0.0,lun=1 \
->> -drive file=/home/zhang/img/test.img,if=none,id=drive0,format=raw
->>
->>
->> Below is the syslog related to 'scsi|SCSI'
->>
->> # dmesg | grep SCSI
->> [    0.392494] SCSI subsystem initialized
->> [    0.460666] Block layer SCSI generic (bsg) driver version 0.4 loaded (major
->> 251)
->> [    0.706788] sd 1:0:0:0: [sda] Attached SCSI disk
->> # dmesg | grep scsi
->> [    0.511643] scsi host0: Avago SAS based MegaRAID driver
->> [    0.523302] scsi 0:2:0:0: Unexpected response from lun 1 while scanning,
->> scan aborted
->> [    0.540364] scsi host1: ata_piix
->> [    0.540780] scsi host2: ata_piix
->> [    0.702396] scsi 1:0:0:0: Direct-Access     ATA      QEMU HARDDISK    2.5+
->> PQ: 0 ANSI: 5
->>
->> When 'lun=1' is changed to 'lun=0', there is no issue.
->>
->> Thank you very much!
->>
-> That's an artifact from the megasas emulation in quemu.
-> Megasas (internally) can't handle LUN numbers (the RAID part only knows about
-> 'disks'), so I took the decision to not expose devices with LUN != 0.
-> Please use a different SCSI target number, not a non-zero LUN number.
-
-The guest kernel is able to detect the disk if lun is always 0, while target
-number is changed:
-
--device scsi-hd,drive=drive0,bus=scsi0.0,channel=0,scsi-id=0,lun=0
--device scsi-hd,drive=drive1,bus=scsi0.0,channel=0,scsi-id=1,lun=0
-
-# dmesg | grep scsi
-[    0.935999] scsi host0: ata_piix
-[    0.936401] scsi host1: ata_piix
-[    1.100945] scsi 0:0:0:0: Direct-Access     ATA      QEMU HARDDISK    2.5+
-PQ: 0 ANSI: 5
-[    1.102409] sd 0:0:0:0: Attached scsi generic sg0 type 0
-[    1.672952] scsi host2: Avago SAS based MegaRAID driver
-[    1.683886] scsi 2:2:0:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+
-PQ: 0 ANSI: 5
-[    1.684915] scsi 2:2:1:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+
-PQ: 0 ANSI: 5
-[    1.701529] sd 2:2:0:0: Attached scsi generic sg1 type 0
-[    1.704795] sd 2:2:1:0: Attached scsi generic sg2 type 0
-# dmesg | grep SCSI
-[    0.111015] SCSI subsystem initialized
-[    0.904712] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 246)
-[    1.121174] sd 0:0:0:0: [sda] Attached SCSI disk
-[    1.703739] sd 2:2:0:0: [sdb] Attached SCSI disk
-[    1.706964] sd 2:2:1:0: [sdc] Attached SCSI disk
-
-
-
-If device with LUN != 0 will not be exposed, why not set max_lun = 0 as what
-qemu lsi is doing?
-
-diff --git a/hw/scsi/megasas.c b/hw/scsi/megasas.c
-index a56317e..c966ee0 100644
---- a/hw/scsi/megasas.c
-+++ b/hw/scsi/megasas.c
-@@ -2298,7 +2298,7 @@ static void megasas_scsi_uninit(PCIDevice *d)
- static const struct SCSIBusInfo megasas_scsi_info = {
-     .tcq = true,
-     .max_target = MFI_MAX_LD,
--    .max_lun = 255,
-+    .max_lun = 0,
-
-     .transfer_data = megasas_xfer_complete,
-     .get_sg_list = megasas_get_sg_list,
-
-
-Thank you very much!
-
-Dongli Zhang
+>
+> > 3. Now, when the platform decides to enter S0ix, it enables the wake
+> > on trackpad by enabling appropriate GPE_EN bit.
+> > 4. So, at this point, we are in a situation where GPE_EN as well as
+> > GPE_STS are set.
+> > 5. Now, if the platform enters S0ix, having GPE_STS set will result in
+> > unwanted wakes because of stale events.
+> >
+> > This is similar to what was fixed on the legacy sleep path:
+> > https://lkml.org/lkml/2018/8/12/42. However, as S0ix does not follow
+> > the legacy sleep path, clearing of GPE status does not happen. Thus,
+> > it is causing failures to go into S0ix on our platforms because of the
+> > stale wake events as described above.
+> >
+> > >
+> > > > In case of S0ix, events are enabled as part of device suspend path. If
+> > > > status bits for the events are set when they are enabled, it could
+> > > > result in premature wake from S0ix. This change ensures that status is
+> > > > cleared for any event that is being enabled so that any stale events
+> > > > are cleared out.
+> > > >
+> > > > Signed-off-by: Furquan Shaikh <furquan@google.com>
+> > > > ---
+> > > >  drivers/acpi/acpica/evgpe.c | 6 +++++-
+> > > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/acpi/acpica/evgpe.c b/drivers/acpi/acpica/evgpe.c
+> > > > index 62d3aa74277b4..61455ab42fc87 100644
+> > > > --- a/drivers/acpi/acpica/evgpe.c
+> > > > +++ b/drivers/acpi/acpica/evgpe.c
+> > > > @@ -81,8 +81,12 @@ acpi_status acpi_ev_enable_gpe(struct acpi_gpe_event_info *gpe_event_info)
+> > > >
+> > > >         ACPI_FUNCTION_TRACE(ev_enable_gpe);
+> > > >
+> > > > -       /* Enable the requested GPE */
+> > > > +       /* Clear the GPE (of stale events) */
+> > > > +       status = acpi_hw_clear_gpe(gpe_event_info);
+> > > > +       if (ACPI_FAILURE(status))
+> > > > +               return_ACPI_STATUS(status);
+> > >
+> > > Well, this may cause events to be missed.
+> >
+> > Won't those be stale events?
+>
+> They need not be stale, the device may have already detected some
+> activity before the GPE is enabled.
+>
+> > i.e. any event that has occurred before GPE is enabled should be ignored.
+>
+> But this is a good point.
+>
+> >
+> > >
+> > > >
+> > > > +       /* Enable the requested GPE */
+> > > >         status = acpi_hw_low_set_gpe(gpe_event_info, ACPI_GPE_ENABLE);
+> > > >         return_ACPI_STATUS(status);
+> > > >  }
+> > > > --
