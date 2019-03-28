@@ -2,104 +2,98 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBD5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D05C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 490DC2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72062082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:48:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qB+JNVLb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OEGEvVoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfC1Qry (ORCPT
+        id S1727248AbfC1QsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:47:54 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43640 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfC1Qry (ORCPT
+        Thu, 28 Mar 2019 12:48:13 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:42636 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfC1QsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:47:54 -0400
-Received: by mail-lf1-f67.google.com with SMTP id g7so14490113lfh.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 09:47:53 -0700 (PDT)
+        Thu, 28 Mar 2019 12:48:13 -0400
+Received: by mail-vk1-f193.google.com with SMTP id 195so223190vkx.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 09:48:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KnSk1RAVrjD3u+Wg1UFj1SvQu3NzuuXIrTD/Ljzv/pQ=;
-        b=qB+JNVLb4WubV6HONxWEjmhvheE5dnl55H5KXeafFoWuLlj4+LEoqaEMT0+e3USL6F
-         A1yqynFudkA+gYEm3oPKXajT6v9t5Dq822LYojx2p2VuFXVh8td+xNNr7CoCoQK5O1yU
-         t7PLFYPphL7BPUijEBnldKZ75EDRFToipezzPAibBCmTPmtTRlb2sYmbeakdQbMDOWVY
-         YYKqFnXf+jeCyJgCYBuBSINXDk/SSyFrob6aSbe4jJvGjaTfqHiXfm2uzBRU2Nc3KeMn
-         C3EPdt8+vMXlCSoYSHFwvRiRo3pffEp9/RbSGiFd6vF4Pz9nw8Q+2imYxNIqorDGl6Yb
-         5xqg==
+         :cc:content-transfer-encoding;
+        bh=WSfQ5OmEiKGqOCo/4yLiYapctHnWzr5rZnujV5KL38A=;
+        b=OEGEvVoX61AVG3rM40VKvHD3TYzBBLfWdY1+6HqXLePG8nOr4liT0RDO16iUgMxwyA
+         G+BesGmIebsIjBPWPrIKxwnT2FvHHtHWUkn5MSpI2Juy4g/cL/lFhnZinqL3IuBTj2e8
+         p7z4jPqepn7oNMkoUzwfXzog4gV1+kUR8F+Zs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KnSk1RAVrjD3u+Wg1UFj1SvQu3NzuuXIrTD/Ljzv/pQ=;
-        b=PZVf4ppAtVIi6MJRwTdLNyjz050CDEjif5TI93iSGRXiUv1bq0fRAtLRqxEjAFp8Lp
-         4hh/IOxLU2GNpMyauTRdp1gRwJ+8eIMBdPJFOD3Z2Q7xvXWgbCBpm4JsdFRTunOL0qpx
-         UQuEXbgLNjy1qqeyiUe930iq7PvbCtsuPAh2S5Wt548U+aQOQH8oBTyjTiXLCwn0tF1r
-         ALx+Jq/MSzw5mi8SRc+o6Lde4IowMa0v6pHcjCjeQWlNDWpSr2/fISJYOgb41Ql/qT/a
-         Lqi4vB7iwLdiQw/+4XAEjRraC5wpI1653nSei1g5RzW6Wo7/4UP8KZyVUa2oX1slj8UM
-         zojQ==
-X-Gm-Message-State: APjAAAVeN87ehVu6OjkGVs0KtlUqP9Aa7SJHbv8kxlufSUzzL/x2fayM
-        9rblwQGvw2dfiIVSh2lUKmzdJ3PylwaDtHCNsELUXA==
-X-Google-Smtp-Source: APXvYqxZEx3vvBKxGIO5Y0wLEThZPRz4tfAqeJvh763Gymi2U8kEoxjkxfhjIXfsnvtltKVtiWuX+5d/oteaHJ7b44w=
-X-Received: by 2002:ac2:5961:: with SMTP id h1mr17586131lfp.167.1553791672415;
- Thu, 28 Mar 2019 09:47:52 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WSfQ5OmEiKGqOCo/4yLiYapctHnWzr5rZnujV5KL38A=;
+        b=LUJ1SgryuR12gAhvtixpYCAnWKyc2YDm7YSTy6LRVEqyzbfITgx1W+Pu/ClVis6SiE
+         jBKAgObXC3oAo6GCtl8LozxhHvP/CerUXyuw8vJcNwYyH6Yiw8U8LC+D+91KGur7e66+
+         eXjHWXEZUhh21JR6/CRn5Tm8ztlldnnrz2ZZ8+h1polzVvTQ9bLqNRQy0ezAwtvWI4YY
+         nMD3HsygqF4i31k7+xp09fdCK9SQZ6TBRRviagbMizeSPL7sWtFpwZfec1DTHpbbYdMw
+         VVEa6VQxZpKGH9P/B+P5PoRKADEcfhi7AzaaCi8QGkIVBDY+fudJodl56jUxmSitv/vm
+         VXZA==
+X-Gm-Message-State: APjAAAW0vOZXgC/nkz95VzvCbuwEGXgNdbVyVVoeCIHwcsgLwrDNXynI
+        C2NhSAD7I/nEDemwzSoct92vAfyYYkU=
+X-Google-Smtp-Source: APXvYqy2djjuS0h5/WLJoAROVN2gG8DGFxuqcgZXRsYJKFrG2dWdN+D5atxaIJIvUj7gASVn/NNiSg==
+X-Received: by 2002:a1f:9991:: with SMTP id b139mr21941933vke.73.1553791691791;
+        Thu, 28 Mar 2019 09:48:11 -0700 (PDT)
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
+        by smtp.gmail.com with ESMTPSA id m23sm20779002vsl.24.2019.03.28.09.48.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 09:48:09 -0700 (PDT)
+Received: by mail-vk1-f178.google.com with SMTP id e131so4647357vkf.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 09:48:08 -0700 (PDT)
+X-Received: by 2002:a1f:3458:: with SMTP id b85mr15309047vka.4.1553791688459;
+ Thu, 28 Mar 2019 09:48:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <00000000000086d87305801011c4@google.com> <0000000000001d3a060583d187dd@google.com>
- <CAHp75VcBAxcB8G1Dr2-nPF6N9W27O=BY4buORs_nqTM=md1=oQ@mail.gmail.com>
-In-Reply-To: <CAHp75VcBAxcB8G1Dr2-nPF6N9W27O=BY4buORs_nqTM=md1=oQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 28 Mar 2019 17:47:40 +0100
-Message-ID: <CACRpkdZ0H-zmaeM02=OhFCwW914_qYoxNMJReERFcZPtgz3FwA@mail.gmail.com>
-Subject: Re: general protection fault in __bfs (2)
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     syzbot <syzbot+c58fa3b1231d2ea0c4d3@syzkaller.appspotmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dou Liyang <douly.fnst@cn.fujitsu.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, jon.maloy@ericsson.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "Brown, Len" <len.brown@intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        netdev <netdev@vger.kernel.org>, puwen@hygon.cn,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        syzkaller-bugs@googlegroups.com,
+References: <20190318094128.1488-1-elena.reshetova@intel.com>
+ <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
+ <CAGXu5jLQaa2FYMOpQPLdRPmUPNY8jq7whM6Wa_YGjfH7oHwx4Q@mail.gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C19A55@IRSMSX102.ger.corp.intel.com>
+ <CALCETrXnfk5zYWmpdLvYbcJ7hhFM13+LPq14MF7s99iqtS4-jg@mail.gmail.com>
+ <CAGXu5j+r-NH5+QY=siE+6RTkUKoRF0Rso6KHM4NOMsCvpcjW5g@mail.gmail.com> <3F1480E2-3D58-4A79-8609-2A9F7991804F@amacapital.net>
+In-Reply-To: <3F1480E2-3D58-4A79-8609-2A9F7991804F@amacapital.net>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Thu, 28 Mar 2019 09:47:56 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jLBP-95aEF2refYimAJ=ea42C_3Ywb+1dZAaVR1rbmP9Q@mail.gmail.com>
+Message-ID: <CAGXu5jLBP-95aEF2refYimAJ=ea42C_3Ywb+1dZAaVR1rbmP9Q@mail.gmail.com>
+Subject: Re: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        tipc-discussion@lists.sourceforge.net,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        ying.xue@windriver.com
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 2:50 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Mon, Mar 11, 2019 at 3:27 PM syzbot
-> <syzbot+c58fa3b1231d2ea0c4d3@syzkaller.appspotmail.com> wrote:
-> >
-> > syzbot has bisected this bug to:
-> >
-> > commit 2646b90de5c3492db2ead71337fd4c7d7f549ebe
-> > Author: Linus Walleij <linus.walleij@linaro.org>
-> > Date:   Fri Oct 26 08:41:22 2018 +0000
-> >
-> >      gpio: Add global TODO file for GPIO
->
-> AI is not ready to conqueror the world!
+On Thu, Mar 28, 2019 at 9:29 AM Andy Lutomirski <luto@amacapital.net> wrote=
+:
+> Doesn=E2=80=99t this just leak some of the canary to user code through si=
+de channels?
 
-Haha yeah it feels good that syzbot seems wrong... this time :D
+Erf, yes, good point. Let's just use prandom and be done with it.
 
-Yours,
-Linus Walleij
+--=20
+Kees Cook
