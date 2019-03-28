@@ -2,80 +2,94 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE807C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 00:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A6EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 00:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB7E204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 00:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553732795;
-	bh=agVnFgF9Onm3Ok0Nn3g+wYUJ3o9O5pbqaiK8bjgBcfs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X6CzKQmszMxKWSywcFrnLsN899qEPRWQiCFFqNf6oG0AWRrvtl2oRO68ibF0llplz
-	 pvXCa2EMIPmNRm29krRuDvmslbnIKdXkMI/w4gOvTwUFECZkD46J7CBX2Nq+pYbERc
-	 4iI7iU/Kmx+Jm4OxmuoNQ3M1ineFVcLH0hVmdQSM=
+	by mail.kernel.org (Postfix) with ESMTP id F3BB1204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 00:27:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=plantronics.onmicrosoft.com header.i=@plantronics.onmicrosoft.com header.b="eCT7orgg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfC1A0e (ORCPT
+        id S1727723AbfC1A13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 20:26:34 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42844 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfC1A0d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 20:26:33 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w139so14418468oie.9;
-        Wed, 27 Mar 2019 17:26:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TF3HFvwKC8aL/dCaP0HHEfVBOObJ4nU2L9E9sa58LEI=;
-        b=QokyL9TGAAJO/+wpF2qEwZbRpwLkCMKPayV9rhpoxrUHO+eW+fVGCe4FKB2/x1Q+3i
-         bYhTg4uAcQR7p1tOYTCFWXT8YzDKZWvyEENpEzgvGqIUZWzxMRD8W0xoLCy0C7GrfdE/
-         IAOcT7OnPAnLngOZnh03QLBwJFETRjVyISqAlvtlg7rfBXi/A+SK9SJrGuAZhpqYsQ93
-         l3ywLMP5+RpfelZU8Lc4fmpckRKmZLyHgIxtFAuLThbtfER2OH+C2s6p/b0Wq0zHT6wW
-         V89/iui93vd+bDhRUoRsaPheFLKAx6l9NsOgQFuykOkJsvdWPLOehzHsQoZo5nxatpMs
-         IV3Q==
-X-Gm-Message-State: APjAAAU93wwzmG+UqZ5FkvpQVqN7BYSdCb7LQ4j8KHeXjiiYMflPIxpU
-        //OMbB2uQ8f54VLFjB9Khg==
-X-Google-Smtp-Source: APXvYqyiFV8K/Xnp1iZx3XtVoNxqnzTvOVp4ztdzg+9wOkx9D+RYznPnb3NIBtbEP0xOSYXrG2IdIg==
-X-Received: by 2002:aca:3fd7:: with SMTP id m206mr3287530oia.112.1553732793120;
-        Wed, 27 Mar 2019 17:26:33 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q10sm9260728otk.76.2019.03.27.17.26.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 17:26:32 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 19:26:31 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     David Engraf <david.engraf@sysgo.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Engraf <david.engraf@sysgo.com>
-Subject: Re: [PATCH] ARM: dts: at91: Fix typo in ISC_D0 on PC9
-Message-ID: <20190328002631.GA16555@bogus>
-References: <20190311075742.23320-1-david.engraf@sysgo.com>
+        Wed, 27 Mar 2019 20:27:29 -0400
+Received: from mail-eopbgr760121.outbound.protection.outlook.com ([40.107.76.121]:21390
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726100AbfC1A13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 20:27:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=plantronics.onmicrosoft.com; s=selector1-plantronics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HBGHUc1ceKrcLu9Q/zqnx8NXn4Z6HPqw4NDULb3dH90=;
+ b=eCT7orgg6bySoMQvbaR00IauuVaqCqhOUJqpnuS9YO48Cng8YyY/Z3TLFiM9Nwvmo2lkdHA5Q3+2Qyx9qNiaRf9xCSUHBFyHty6eNBMfqFqRCKZyVMNTM5CiPHHUySt8u+9LHZe45MmVbyHI2p+RqLJtgr3N2PqKyLlmmlmVQPc=
+Received: from BYAPR02MB5607.namprd02.prod.outlook.com (20.177.230.93) by
+ BYAPR02MB4408.namprd02.prod.outlook.com (52.135.237.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.19; Thu, 28 Mar 2019 00:27:18 +0000
+Received: from BYAPR02MB5607.namprd02.prod.outlook.com
+ ([fe80::25a1:583a:a978:21fd]) by BYAPR02MB5607.namprd02.prod.outlook.com
+ ([fe80::25a1:583a:a978:21fd%4]) with mapi id 15.20.1750.014; Thu, 28 Mar 2019
+ 00:27:18 +0000
+From:   "Junge, Terry" <terry.junge@poly.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+CC:     "oneukum@suse.de" <oneukum@suse.de>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4] HID: core: move Usage Page concatenation to Main item
+Thread-Topic: [PATCH v4] HID: core: move Usage Page concatenation to Main item
+Thread-Index: AQHU5IZ+r6lyKkwtx02WiLHUpmG6x6YgME3g
+Date:   Thu, 28 Mar 2019 00:27:18 +0000
+Message-ID: <BYAPR02MB5607E9396127F67A9A2BEC948A590@BYAPR02MB5607.namprd02.prod.outlook.com>
+References: <20190327101848.25477-1-nsaenzjulienne@suse.de>
+In-Reply-To: <20190327101848.25477-1-nsaenzjulienne@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=terry.junge@poly.com; 
+x-originating-ip: [198.231.9.145]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ae522c19-a230-4507-e7a4-08d6b314231e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR02MB4408;
+x-ms-traffictypediagnostic: BYAPR02MB4408:
+x-microsoft-antispam-prvs: <BYAPR02MB440892414C71A60AAE5729C78A590@BYAPR02MB4408.namprd02.prod.outlook.com>
+x-forefront-prvs: 0990C54589
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(376002)(39860400002)(396003)(366004)(199004)(189003)(13464003)(256004)(486006)(186003)(25786009)(446003)(8936002)(99286004)(305945005)(6116002)(53936002)(11346002)(54906003)(110136005)(102836004)(316002)(66066001)(74316002)(6246003)(478600001)(3846002)(476003)(68736007)(6506007)(55016002)(14454004)(33656002)(9686003)(7736002)(4326008)(2906002)(558084003)(105586002)(106356001)(6436002)(5660300002)(81166006)(71200400001)(229853002)(86362001)(81156014)(71190400001)(52536014)(76176011)(97736004)(8676002)(26005)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR02MB4408;H:BYAPR02MB5607.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: poly.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: i9+LSLXiTnmvGE42fRTtI6e4/iWOYNC9VonzzXHUjgSOp3MX3PrqU2pRXIv+0zjAiRADOSib/YJTVaIgpO3YfkAI75AdJnYG9mh7NiO0edC4mRnKihwRzOtuIG8rPNsCTW0wE377apWTYP3qOx+qmmXwsMqHNp2NZqgOT83eNI4zuFvOg8OnOzZcqqJ+Am0QDUpZMOC8fbvrbfajXZdIDArXlZGA97bMXopdAYNpEqANu7i3DgFv3a/m8o14KgcO0m6TwMlXbJopD2SoyVRtFxB4jKXLCmLaARjZnqhA7I6b6x+cLpuNTf+fStIgMQd3M5dzDmPOZrDjA/FDCEv35+JyyAW+CHppdpNr/u99dhG4lex8mux1Tl2h1V/s1rxSFYyAXkS54P1+TApAuyt6edbqtGFGYSVRHrElLQAUVXk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311075742.23320-1-david.engraf@sysgo.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: poly.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae522c19-a230-4507-e7a4-08d6b314231e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2019 00:27:18.7998
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bc7c5f16-c55e-417d-aac0-ff6bbfc27f76
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4408
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Mar 2019 08:57:42 +0100, David Engraf wrote:
-> The function argument for the ISC_D0 on PC9 was incorrect. According to
-> the documentation it should be 'C' aka 3.
-> 
-> Signed-off-by: David Engraf <david.engraf@sysgo.com>
-> ---
->  arch/arm/boot/dts/sama5d2-pinfunc.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Hi Nicolas,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+V4 looks good to me.
+
+Thanks,
+Terry
+
+>-----Original Message-----
+>Subject: [PATCH v4] HID: core: move Usage Page concatenation to Main item
+>
