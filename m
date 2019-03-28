@@ -2,329 +2,106 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C258C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC911C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039A021773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB7520811
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:21:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OBB1/ppr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EC80iElT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfC1RUx (ORCPT
+        id S1727102AbfC1RVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:20:53 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:12692 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfC1RUx (ORCPT
+        Thu, 28 Mar 2019 13:21:48 -0400
+Received: from mail-yw1-f51.google.com ([209.85.161.51]:45805 "EHLO
+        mail-yw1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726117AbfC1RVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:20:53 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9d026c0000>; Thu, 28 Mar 2019 10:20:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 28 Mar 2019 10:20:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 28 Mar 2019 10:20:50 -0700
-Received: from [10.24.70.61] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Mar
- 2019 17:20:47 +0000
-Subject: Re: [PATCH 8/8] vfio/mdev: Improve the create/remove sequence
-To:     Parav Pandit <parav@mellanox.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
-CC:     Neo Jia <cjia@nvidia.com>
-References: <1553296835-37522-1-git-send-email-parav@mellanox.com>
- <1553296835-37522-9-git-send-email-parav@mellanox.com>
- <244348f7-4d72-b7c5-9d82-34db296ff885@nvidia.com>
- <VI1PR0501MB2271EB7C5A92CEA195A2FA59D15F0@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-X-Nvconfidentiality: public
-From:   Kirti Wankhede <kwankhede@nvidia.com>
-Message-ID: <69027775-7ca9-ff69-f1cc-1dc9b2001136@nvidia.com>
-Date:   Thu, 28 Mar 2019 22:50:38 +0530
+        Thu, 28 Mar 2019 13:21:47 -0400
+Received: by mail-yw1-f51.google.com with SMTP id j128so15358253ywg.12;
+        Thu, 28 Mar 2019 10:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=+1cenhDZ6abSXQjebrfaSwfIe9wjJQAhX5YTtCWEdcY=;
+        b=EC80iElTSyEXU7xII0LntGFXjOioHj7UmSaw1xL6kPzVd+FUtA04oxwhU/eUXj/X3G
+         pAgLJ8bcERwtV6obYPI+vMtlCtOBQzE/EQ55xGTfZeNTA1wpcB9mUqcuhZ+PrevuCihH
+         J/AYViZTNicD8EabxvQo3qzyvBJPm3uwr7rRZPuJEqOHCWZmsqa9jMU99hZEqgmnzGUz
+         sV2Oexb/eCny6OeFLySHd1vm6KsTX21JtYBJiPE4Dwbq0OwoYdNQ4CaUScLVX3EMSSfj
+         OqGvwyufY3+arjXhR4S12fvlaahbbXn7mCwoa8cT90sGMDbgn3+P6zjjvfTiwP/gWEPd
+         /tjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=+1cenhDZ6abSXQjebrfaSwfIe9wjJQAhX5YTtCWEdcY=;
+        b=FfkuazJbAZxtt0o4hynJwNsnBgSufEkTd9dZGOBrzYDJdgu6CwE7AApRoSf+R1XR9t
+         YnEtY16yIeI9NFJaUwhFCjo7KJEYQICkFnPnr16ocUl/dgv7u70whb1UQNS2Iv7ac48u
+         0vSzbX0r8cZ4uAOPupO6GZ1r0qcu9cHgbntd3T5nUbgKvZ323aFuZc0H5Pv7g2wpnPqZ
+         Ar+SWRmZlefeUl/G5ytSGRcxdxLRS6RBftGt9CQx3uqqnKltwDTQRFC/xMVB9Pv84btP
+         JLnJFD6YiwACIoaeSviQFb9ArBk4k8vpKaWeckkDBNbxG0GXm7MZ43LEnwDLRcE9ibCd
+         bNWw==
+X-Gm-Message-State: APjAAAXBj5AL8y28PK4Wb0XFsCh8tG7y6ks5PDwINeI336cNDgoyVt4/
+        bKqoOdGe5GRBTK6oo7DTRSk=
+X-Google-Smtp-Source: APXvYqwFaXWgnKszFS8ZBjpQiEm36YWytI+fdo1jjCW8yrJea/RizGedge1pZLNgdOtvPLlNhI28Jw==
+X-Received: by 2002:a81:b64f:: with SMTP id h15mr2826265ywk.136.1553793706876;
+        Thu, 28 Mar 2019 10:21:46 -0700 (PDT)
+Received: from dumbo ([83.137.6.243])
+        by smtp.gmail.com with ESMTPSA id v77sm15347553ywv.79.2019.03.28.10.21.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 10:21:46 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 18:21:41 +0100
+From:   Domenico Andreoli <domenico.andreoli@linux.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] 5.1-rc1: tpm_try_transmit: send(): error -5
+Message-ID: <20190328172141.sog6prtldmxulpw7@dumbo>
+References: <20190327082115.k35fhxfkk25ekdzw@dumbo>
+ <20190328122333.GA7094@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <VI1PR0501MB2271EB7C5A92CEA195A2FA59D15F0@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553793644; bh=S8yy+6osxlEafLeMEQqTKpBrHc+Y252Uzs9GGkM2l6c=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OBB1/ppr5XDhOJsGY/Wqhi+3HV91fISaWJtocY7cR0NXiVk9TQA5OxPd+X3et9RSb
-         dYa3AyE/9QHQTgnSkxIAi5yRe43xAJg9hYNwZ1GoB6j394uHhRPr29qV9WFwCkpqzM
-         +VnL2pS/hfAbAtIf1/45I+yclbkjpnlYPHJFLgXffc99wTMSSctvBRQYLwSC9O61TD
-         A+VDKvfDeAGRLlE7fSeTEB3BWsIesUIHhU0svrtuu832oWGXb+wnC4RzpNr9b2oNB8
-         q3aCr3K0ZU46KSNymOi9aUUkFBQFdYZF0MhQ5DQhZVlrlKsYR1qHuRK3LIIyn3+JDe
-         jlD3hNkKnBVaw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190328122333.GA7094@linux.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 28, 2019 at 02:23:33PM +0200, Jarkko Sakkinen wrote:
+> On Wed, Mar 27, 2019 at 09:21:15AM +0100, Domenico Andreoli wrote:
+> > Hi Jarkko,
+> >=20
+> >   my laptop fails to suspend/hibernate since v5.1-rc1, it worked fine
+> > with v4.20 and previous.
+> >=20
+> > My suspect is on tpm_tis driver, is there anything I can do to understa=
+nd
+> > what goes wrong here?
+> >=20
+> > Best regards,
+> > Domenico
+>=20
+> Thank you for reporting this.
+>=20
+> Can you try if this helps:
+>=20
+> https://patchwork.kernel.org/patch/10865495/
 
+Yes, it helps. Everything works fine now. Thanks.
 
-On 3/26/2019 9:00 PM, Parav Pandit wrote:
-> 
-> 
->> -----Original Message-----
->> From: Kirti Wankhede <kwankhede@nvidia.com>
->> Sent: Tuesday, March 26, 2019 2:06 AM
->> To: Parav Pandit <parav@mellanox.com>; kvm@vger.kernel.org; linux-
->> kernel@vger.kernel.org; alex.williamson@redhat.com
->> Cc: Neo Jia <cjia@nvidia.com>
->> Subject: Re: [PATCH 8/8] vfio/mdev: Improve the create/remove sequence
->>
->>
->>
->> On 3/23/2019 4:50 AM, Parav Pandit wrote:
->>> There are five problems with current code structure.
->>> 1. mdev device is placed on the mdev bus before it is created in the
->>> vendor driver. Once a device is placed on the mdev bus without
->>> creating its supporting underlying vendor device, an open() can get
->>> triggered by userspace on partially initialized device.
->>> Below ladder diagram highlight it.
->>>
->>>       cpu-0                                       cpu-1
->>>       -----                                       -----
->>>    create_store()
->>>      mdev_create_device()
->>>        device_register()
->>>           ...
->>>          vfio_mdev_probe()
->>>          ...creates char device
->>>                                         vfio_mdev_open()
->>>                                           parent->ops->open(mdev)
->>>                                             vfio_ap_mdev_open()
->>>                                               matrix_mdev = NULL
->>>         [...]
->>>         parent->ops->create()
->>>           vfio_ap_mdev_create()
->>>             mdev_set_drvdata(mdev, matrix_mdev);
->>>             /* Valid pointer set above */
->>>
->>
->> VFIO interface uses sysfs path of device or PCI device's BDF where it checks
->> sysfs file for that device exist.
->> In case of VFIO mdev device, above situation will never happen as open will
->> only get called if sysfs entry for that device exist.
->>
->> If you don't use VFIO interface then this situation can arise. In that case
->> probe() can be used for very basic initialization then create actual char
->> device from create().
->>
-> I explained you that create() cannot do the heavy lifting work of creating netdev and rdma dev because at that stage driver doesn't know whether its getting used for VM or host.
-> create() needs to create the device that probe() can work on in stable manner.
-> 
+>=20
+> /Jarkko
 
-You can identify if its getting used by VM or host from create(). Since
-probe() happens first, from create() you can check
-mdev_dev(mdev)->driver->name, if its 'vfio_mdev' then its getting used
-by VM, otherwise used by host.
+Domenico
 
->>
->>> 2. Current creation sequence is,
->>>    parent->ops_create()
->>>    groups_register()
->>>
->>> Remove sequence is,
->>>    parent->ops->remove()
->>>    groups_unregister()
->>> However, remove sequence should be exact mirror of creation sequence.
->>> Once this is achieved, all users of the mdev will be terminated first
->>> before removing underlying vendor device.
->>> (Follow standard linux driver model).
->>> At that point vendor's remove() ops shouldn't failed because device is
->>> taken off the bus that should terminate the users.
->>>
->>
->> If VMM or user space application is using mdev device,
->> parent->ops->remove() can return failure. In that case sysfs files
->> shouldn't be removed. Hence above sequence is followed for remove.
->>
->> Standard linux driver model doesn't allow remove() to fail, but in of mdev
->> framework, interface is defined to handle such error case.
->>
-> But the sequence is incorrect for wider use case.
->>
->>> 3. Additionally any new mdev driver that wants to work on mdev device
->>> during probe() routine registered using mdev_register_driver() needs
->>> to get stable mdev structure.
->>>
->>
->> Things that you are trying to handle with mdev structure from probe(),
->> couldn't that be moved to create()?
->>
-> No, as explained before and above.
-> That approach just doesn't look right.
->
-
-As I mentioned abouve, you can do that.
-
-
->>
->>> 4. In following sequence, child devices created while removing mdev
->>> parent device can be left out, or it may lead to race of removing half
->>> initialized child mdev devices.
->>>
->>> issue-1:
->>> --------
->>>        cpu-0                         cpu-1
->>>        -----                         -----
->>>                                   mdev_unregister_device()
->>>                                      device_for_each_child()
->>>                                         mdev_device_remove_cb()
->>>                                             mdev_device_remove()
->>> create_store()
->>>   mdev_device_create()                   [...]
->>>        device_register()
->>>                                   parent_remove_sysfs_files()
->>>                                   /* BUG: device added by cpu-0
->>>                                    * whose parent is getting removed.
->>>                                    */
->>>
->>> issue-2:
->>> --------
->>>        cpu-0                         cpu-1
->>>        -----                         -----
->>> create_store()
->>>   mdev_device_create()                   [...]
->>>        device_register()
->>>
->>>        [...]                      mdev_unregister_device()
->>>                                      device_for_each_child()
->>>                                         mdev_device_remove_cb()
->>>                                             mdev_device_remove()
->>>
->>>        mdev_create_sysfs_files()
->>>        /* BUG: create is adding
->>>         * sysfs files for a device
->>>         * which is undergoing removal.
->>>         */
->>>                                  parent_remove_sysfs_files()
->>>
->>> 5. Below crash is observed when user initiated remove is in progress
->>> and mdev_unregister_driver() completes parent unregistration.
->>>
->>>        cpu-0                         cpu-1
->>>        -----                         -----
->>> remove_store()
->>>    mdev_device_remove()
->>>    active = false;
->>>                                   mdev_unregister_device()
->>>                                     remove type
->>>    [...]
->>>    mdev_remove_ops() crashes.
->>>
->>> This is similar race like create() racing with mdev_unregister_device().
->>>
->>> mtty mtty: MDEV: Registered
->>> iommu: Adding device 83b8f4f2-509f-382f-3c1e-e6bfe0fa1001 to group 57
->>> vfio_mdev 83b8f4f2-509f-382f-3c1e-e6bfe0fa1001: MDEV: group_id = 57
->>> mdev_device_remove sleep started mtty mtty: MDEV: Unregistering
->>> mtty_dev: Unloaded!
->>> BUG: unable to handle kernel paging request at ffffffffc027d668 PGD
->>> af9818067 P4D af9818067 PUD af981a067 PMD 8583c3067 PTE 0
->>> Oops: 0000 [#1] SMP PTI
->>> CPU: 15 PID: 3517 Comm: bash Kdump: loaded Not tainted
->>> 5.0.0-rc7-vdevbus+ #2 Hardware name: Supermicro
->>> SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
->>> RIP: 0010:mdev_device_remove_ops+0x1a/0x50 [mdev] Call Trace:
->>>  mdev_device_remove+0xef/0x130 [mdev]
->>>  remove_store+0x77/0xa0 [mdev]
->>>  kernfs_fop_write+0x113/0x1a0
->>>  __vfs_write+0x33/0x1b0
->>>  ? rcu_read_lock_sched_held+0x64/0x70
->>>  ? rcu_sync_lockdep_assert+0x2a/0x50
->>>  ? __sb_start_write+0x121/0x1b0
->>>  ? vfs_write+0x17c/0x1b0
->>>  vfs_write+0xad/0x1b0
->>>  ? trace_hardirqs_on_thunk+0x1a/0x1c
->>>  ksys_write+0x55/0xc0
->>>  do_syscall_64+0x5a/0x210
->>>
->>> Therefore, mdev core is improved in following ways to overcome above
->>> issues.
->>>
->>> 1. Before placing mdev devices on the bus, perform vendor drivers
->>> creation which supports the mdev creation.
->>> This ensures that mdev specific all necessary fields are initialized
->>> before a given mdev can be accessed by bus driver.
->>>
->>> 2. During remove flow, first remove the device from the bus. This
->>> ensures that any bus specific devices and data is cleared.
->>> Once device is taken of the mdev bus, perform remove() of mdev from
->>> the vendor driver.
->>>
->>
->> If user space application is using the device and someone underneath
->> remove the device from bus, how would use space application know that
->> device is being removed?
-> vfio_mdev guards and wait for device to get closed.
-> 
-> One sample trace is below.
-> [<0>] vfio_del_group_dev+0x34a/0x3c0 [vfio]
-> [<0>] mdev_remove+0x21/0x40 [mdev]
-> [<0>] device_release_driver_internal+0xe8/0x1b0
-> [<0>] bus_remove_device+0xf9/0x170
-> [<0>] device_del+0x168/0x350
-> [<0>] mdev_device_remove_common+0x1e/0x60 [mdev]
-> [<0>] mdev_device_remove_cb+0x1a/0x30 [mdev]
-> [<0>] device_for_each_child+0x47/0x90
-> [<0>] mdev_unregister_device+0xdb/0x100 [mdev]
-> [<0>] mtty_dev_exit+0x17/0x843 [mtty]
-> [<0>] __x64_sys_delete_module+0x16b/0x240
-> [<0>] do_syscall_64+0x5a/0x210
-> [<0>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [<0>] 0xffffffffffffffff
-> 
->> If DMA is setup, user space application is accessing that memory and device
->> is removed from bus - how will you restrict to not to remove that device? If
->> remove() is not restricted then host might crash.
->> I know Linux kernel device core model doesn't allow remove() to fail, but we
->> had tackled that problem for mdev devices in this framework. I prefer not to
->> change this behavior. This will regress existing working drivers.
->>
-> vfio layer ensures that open device cannot be removed from above trace.
-> 
-> Other drivers will follow similar method. In case of mlx5 driver which binds
-> to mdev follows standard driver model to terminate for this mdev device,
-> similar way for pci device.
-> 
-
-But then remove() or write on 'remove' sysfs would block, which could be
-indefinite. For example in case of VM, it will block until VM is not
-shutdown.
-With current approach, write on 'remove' sysfs doesn't block.
-
-Thanks,
-Kirti
-
->>
->>> 3. Linux core device model provides way to register and auto
->>> unregister the device sysfs attribute groups at dev->groups.
->>> Make use of this groups to let core create the groups and simplify
->>> code to avoid explicit groups creation and removal.
->>>
->>> 4. Wait for any ongoing mdev create() and remove() to finish before
->>> unregistering parent device using srcu. This continues to allow
->>> multiple create and remove to progress in parallel. At the same time
->>> guard parent removal while parent is being access by create() and remove
->> callbacks.
->>>
->>
->> Agreed with this.
->> Alex already mentioned, it would be better to have separate patch for this
->> fix.
->>
-> Patches are ready, I am waiting for above discussion to close before posting v1.
-> 
+--=20
+3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
