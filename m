@@ -2,85 +2,108 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DACAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BB7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559A020823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E7220823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:31:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMUPz6JN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbfC1SYm (ORCPT
+        id S1726143AbfC1SbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 14:24:42 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:39754 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfC1SYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 14:24:42 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1h9Zha-0006cz-4x; Thu, 28 Mar 2019 12:24:35 -0600
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Stephen Bates <sbates@raithlin.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>, Zong Li <zongbox@gmail.com>
-References: <20190327213643.23789-1-logang@deltatee.com>
- <20190327213643.23789-5-logang@deltatee.com>
- <CAAhSdy0rZCNG4582gCd2wJ9zWwRZJ8uohPLs91=Ww=+=JnG4=w@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <f6a31d1b-d122-12d7-767a-e5ec767b1929@deltatee.com>
-Date:   Thu, 28 Mar 2019 12:24:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Mar 2019 14:31:05 -0400
+Received: from mail-io1-f52.google.com ([209.85.166.52]:46008 "EHLO
+        mail-io1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbfC1SbF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 14:31:05 -0400
+Received: by mail-io1-f52.google.com with SMTP id s7so18054510iom.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:31:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EuoDoE27aCvvgTv07QgoMgpiETbkC3kgRDZDoyuN6DI=;
+        b=MMUPz6JNT1zX2O65vTd9Nwq2h4OBuGV0tiLxJc4Gpyk4/jCxkq5Chf4GRpUqt9GTQh
+         kaWtL5Xf37vT2rB1ItaokV37O6PdCF4qjF3+8cvLmLKun4UG/GkwS5tygrWY72joqc+S
+         C0dZi1rKK18gwWP2GblrF1Yh0cbal8FnrQn2yHc5lMYo7zvxeWw0OWN+9/m0jRgGdBan
+         k/HA9XJ6UCCQj4ZTB95kxJv8eC9Mj/yMg8AIAggHlqf3G1tOuBDTUMs5c9iMc3hP1f54
+         f+uZ0TgwuUhlrqLb/gpd5GVmJOgTspAg4+zOAZ7SA7mDaHqIbtTwFS5dLGmJYHI06KGM
+         K+DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EuoDoE27aCvvgTv07QgoMgpiETbkC3kgRDZDoyuN6DI=;
+        b=KFgPtHbi8UZFfsIAssazrK410LQOyM+/a2/KIZWBGpgDriOVBRTopFVrSpw9s1PR3z
+         7umQcOUUOhaI9iEjdQf2ENwQ23EySQXiv522QLXQZNITwVr3A7trNJfOYbP6N+EFKZvR
+         caZZFTbwdtHvNZL9kktZlJV3OTjitceW+Hl76eWlG6/mq+Plb7hq715W4fRqVejCy7Wm
+         csMmIzZdHo+rZfsxb/DjMPXbSp02HCFBQ+Q3g7Gj3NcuUT9jy5YSG6dlLSDnmuDxwBbc
+         IO5HWnyhNrhqaCrRrI7EhR9qeLS8OMZb4uyfnx34kVETUJwugR6aW1FwX7asZ3oWemYZ
+         c0xg==
+X-Gm-Message-State: APjAAAU0TTYtIed4dJ+QWEG2E7xkNlxJ+9KkliuPBitl6Gx2h6YYUFNV
+        tLwwu/u+hFwvWbiyxB6Ltn5zjjzqHu1W4XrAJQJe4w==
+X-Google-Smtp-Source: APXvYqzhcdDEgeM653Ixvtf+OXCdpts2w5Vq2OR+j4O/He4Ftd1d6d+A5FS/6HShkrFS3KDYWfWzIPROgGYsRF7T3gg=
+X-Received: by 2002:a6b:3f86:: with SMTP id m128mr13534331ioa.275.1553797864243;
+ Thu, 28 Mar 2019 11:31:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAAhSdy0rZCNG4582gCd2wJ9zWwRZJ8uohPLs91=Ww=+=JnG4=w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: zongbox@gmail.com, hch@lst.de, rppt@linux.ibm.com, linux-riscv@lists.infradead.org, paul.walmsley@sifive.com, anup.patel@wdc.com, atish.patra@wdc.com, sbates@raithlin.com, linux-kernel@vger.kernel.org, palmer@sifive.com, aou@eecs.berkeley.edu, anup@brainfault.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 4/7] RISC-V: Update page tables to cover the whole linear
- mapping
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <CAKdAkRQj=bSSL2Cw3gAqi5f12yP3+KsvtrMvU4Lcfta_JYxMYQ@mail.gmail.com>
+ <20190328180503.GA16249@mail.hallyn.com>
+In-Reply-To: <20190328180503.GA16249@mail.hallyn.com>
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Thu, 28 Mar 2019 11:30:52 -0700
+Message-ID: <CAKdAkRRf+7UkmwbWNEnR3cNhc2t-kspRQNy4uOYRdcwBofXwtA@mail.gmail.com>
+Subject: Re: Allowing mapping supplemental groups in user namespace?
+To:     "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Serge,
+
+On Thu, Mar 28, 2019 at 11:05 AM Serge E. Hallyn <serge@hallyn.com> wrote:
+>
+> On Thu, Feb 28, 2019 at 11:27:38AM -0800, Dmitry Torokhov wrote:
+> > Hi Eric,
+> >
+> > Currently, unless caller has CAP_SETGID in parent namespace, we can
+> > only map effective group id in the new user namespace. Would it be
+> > possible to relax this rule to also allow mapping of supplemental
+> > groups (1:1) of the caller?
+> >
+> > Thanks.
+> >
+> > --
+> > Dmitry
+>
+> Hi,
+>
+> Is there a use case where adding those to /etc/subgid is onerous?
+> (There probably is, just would like to see yours)
+
+We on Chrome OS limit number of suid binaries installed on the system,
+so newgidmap does not have necessary privileges to carry out this
+operation. Also we are looking for a solution that we can use with our
+minijail package where spawning additional binary is challenging even
+if it was suid.
+
+Thanks.
+
+-- 
+Dmitry
 
 
-On 2019-03-28 4:03 a.m., Anup Patel wrote:
-> I understand that this patch is inline with your virtual memory layout cleanup
-> but the way we map virtual memory in swapper_pg_dir is bound to change.
-> 
-> We should not be mapping complete virtual memory in swapper_pd_dir()
-> rather we should only map based on amount of RAM available.
-> 
-> Refer, https://www.lkml.org/lkml/2019/3/24/3
-> 
-> The setup_vm() should only map vmlinux_start to vmlinux_end plus the
-> FDT. Complete virtual memory mapping should be done after we have
-> done early parsing of FDT when we know available memory banks in
-> setup_vm_final() (called from paging_init())
 
-That makes sense, but I think a lot of it sounds a out of the scope of
-what I'm doing in this patch set.
 
-I could attempt to update my patchset so instead of expanding the linear
-region on boot, we add the page tables in arch_add_memory. That would
-make more sense when considering the direction you want to head with
-setup_vm.
-
-Logan
+-- 
+Dmitry
