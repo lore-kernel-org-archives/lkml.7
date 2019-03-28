@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3CCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC07C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC012183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0D421773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfC1QOI (ORCPT
+        id S1727606AbfC1QOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:14:08 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:55305 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfC1QOH (ORCPT
+        Thu, 28 Mar 2019 12:14:09 -0400
+Received: from mail-it1-f198.google.com ([209.85.166.198]:35032 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfC1QOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Mar 2019 12:14:07 -0400
-Received: by mail-it1-f197.google.com with SMTP id g184so3645602ita.5
+Received: by mail-it1-f198.google.com with SMTP id n19so709502itb.0
         for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 09:14:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=oJqSZLXafLq5BV00CQW4oXNTARNayhkg1/SbbH10nMI=;
-        b=F87PdXMgfCzmoLfX6n4vInI2z60df8A5OTAlncjeUEBGDCoy9h1BpkrxhH4HBJOpSg
-         5U5LNo9O6jacGaB0V7lr9+DBFrYZ01yMIKzVSZmiXv/9amIxYQTP6aNzBt3y1x0oeFuP
-         9FBODLv4HvFXr64oPsiO+kkhIUPgU8pElMPU+Ti8B4S0Ab3k0p+iK+qCavgYgTeJM+4D
-         U7h38STX4A/yyQd0J7Uqoyuw7hNPGGC4cpmUnHd+PXjdmYQF1gimMQo94R4Wz8tRUdnK
-         J+vIkYJ7S1ayVcUjnboQEbRUapwXRNifE3b4vnqGlWZtpq8y70PH/6rOtzBQ/jl9xxUK
-         YhFw==
-X-Gm-Message-State: APjAAAWj+vGmBxM7Pc3X/9rnHZDd2dC8gWxb6m+yMPkMvVHa/BMuFdPr
-        RMY/3ObHuKXnpWW+u45o9lnhmEs2jKhvYCp5hVb9hBGmR2HI
-X-Google-Smtp-Source: APXvYqzV8NLrDLC2VJda5WaSRpG7OxVvrCxJ2g4TxVTa+BdnOvJE/tyk4iC0rB7EV/1wkcAxKsF420slEom+/wVc9KpRiLNYtRDz
+        bh=B09Z/iqd+WXO0+yxuBZ/s9h8/2B6z/0VrC0szfGcazw=;
+        b=Xf0ZM1STCmcGXA9W/X7ovceI31wQwofVx6jqe6mHW19nrS7b4V823VpX/yXA+V9zxw
+         W6PxbsiyLowsDHvzV/Wr+ttxvw5bQ/NGvQJ5I29nm8R2/AqsBQLR92x+ErcggMGpZjVW
+         /h+I81ZfufgEBA6y7uY6if5CpKLwzgmDA4Q/syU60tNHyn50I3RzseO7b69lvbIVmX9F
+         wJEPnzjPfwQk2iPDtNhlDOI41yZDQxCDIyBSIR4elOV8V+85a6DHjQllOaTJWmtz1Wxw
+         ZmdYE0VfS++wlM8+4nGdZmtJzL0FvjxhkOWJi9AwgYfOG4myIsAIwv2URNy9lomRAJE7
+         k/Lg==
+X-Gm-Message-State: APjAAAW0teeGIrStNkNrqkhesogCJ1SWqsGiUu+7hBN7dKcDxdUNJimc
+        3ralRcXDhl0lFL8xk1MNFL/EqIvLh2Rcxgsmlchc0pmeQRAt
+X-Google-Smtp-Source: APXvYqzcPahElXOJlxvvvWTgoXVSiEQjcVr2FCoR3T19M3vS3CtQYbjXKgaKsk3dlgj8qqU8iDG8toTBWXtymv32kJ7YfAOlAiNi
 MIME-Version: 1.0
-X-Received: by 2002:a24:78c:: with SMTP id f134mr222911itf.30.1553789646166;
+X-Received: by 2002:a02:8243:: with SMTP id q3mr2565648jag.6.1553789646402;
  Thu, 28 Mar 2019 09:14:06 -0700 (PDT)
 Date:   Thu, 28 Mar 2019 09:14:06 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ea60e6058529d77b@google.com>
-Subject: kernel BUG at drivers/android/binder_alloc.c:LINE! (3)
-From:   syzbot <syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com>
-To:     arve@android.com, christian@brauner.io, devel@driverdev.osuosl.org,
-        gregkh@linuxfoundation.org, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, maco@android.com,
-        syzkaller-bugs@googlegroups.com, tkjos@android.com
+Message-ID: <000000000000ee01ef058529d74c@google.com>
+Subject: possible deadlock in __dev_queue_xmit (2)
+From:   syzbot <syzbot+f8c40b4da41f3e8049c4@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,81 +57,151 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    1a9df9e2 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11fed11f200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
-dashboard link: https://syzkaller.appspot.com/bug?extid=f9f3f388440283da2965
+HEAD commit:    356d71e0 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=178772cd200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3116859fdc14be5c
+dashboard link: https://syzkaller.appspot.com/bug?extid=f8c40b4da41f3e8049c4
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17d05637200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1677e62f200000
+
+Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com
+Reported-by: syzbot+f8c40b4da41f3e8049c4@syzkaller.appspotmail.com
 
-binder: 7824:7824 DecRefs 0 refcount change on invalid ref 1 ret -22
-------------[ cut here ]------------
-kernel BUG at drivers/android/binder_alloc.c:1141!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 7824 Comm: syz-executor570 Not tainted 5.1.0-rc2+ #40
+============================================
+WARNING: possible recursive locking detected
+5.1.0-rc2+ #112 Not tainted
+--------------------------------------------
+syz-executor.0/13941 is trying to acquire lock:
+000000009c1e85f2 (_xmit_ETHER#2){+.-.}, at: spin_lock  
+include/linux/spinlock.h:329 [inline]
+000000009c1e85f2 (_xmit_ETHER#2){+.-.}, at: __netif_tx_lock  
+include/linux/netdevice.h:3893 [inline]
+000000009c1e85f2 (_xmit_ETHER#2){+.-.}, at: __dev_queue_xmit+0x2b65/0x36b0  
+net/core/dev.c:3867
+
+but task is already holding lock:
+000000000ad63340 (_xmit_ETHER#2){+.-.}, at: spin_lock  
+include/linux/spinlock.h:329 [inline]
+000000000ad63340 (_xmit_ETHER#2){+.-.}, at: __netif_tx_lock  
+include/linux/netdevice.h:3893 [inline]
+000000000ad63340 (_xmit_ETHER#2){+.-.}, at: sch_direct_xmit+0x2de/0xf70  
+net/sched/sch_generic.c:325
+
+other info that might help us debug this:
+  Possible unsafe locking scenario:
+
+        CPU0
+        ----
+   lock(_xmit_ETHER#2);
+   lock(_xmit_ETHER#2);
+
+  *** DEADLOCK ***
+
+  May be due to missing lock nesting notation
+
+7 locks held by syz-executor.0/13941:
+  #0: 000000007091b59b (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect  
+include/net/lwtunnel.h:92 [inline]
+  #0: 000000007091b59b (rcu_read_lock_bh){....}, at:  
+ip_finish_output2+0x2af/0x1740 net/ipv4/ip_output.c:213
+  #1: 000000007091b59b (rcu_read_lock_bh){....}, at:  
+__dev_queue_xmit+0x20a/0x36b0 net/core/dev.c:3805
+  #2: 00000000aa7d63d7 (&(&sch->seqlock)->rlock){+...}, at: spin_trylock  
+include/linux/spinlock.h:339 [inline]
+  #2: 00000000aa7d63d7 (&(&sch->seqlock)->rlock){+...}, at: qdisc_run_begin  
+include/net/sch_generic.h:159 [inline]
+  #2: 00000000aa7d63d7 (&(&sch->seqlock)->rlock){+...}, at: __dev_xmit_skb  
+net/core/dev.c:3472 [inline]
+  #2: 00000000aa7d63d7 (&(&sch->seqlock)->rlock){+...}, at:  
+__dev_queue_xmit+0x251d/0x36b0 net/core/dev.c:3839
+  #3: 00000000a23aaf2c (dev->qdisc_running_key ?: &qdisc_running_key){+...},  
+at: dev_queue_xmit+0x18/0x20 net/core/dev.c:3904
+  #4: 000000000ad63340 (_xmit_ETHER#2){+.-.}, at: spin_lock  
+include/linux/spinlock.h:329 [inline]
+  #4: 000000000ad63340 (_xmit_ETHER#2){+.-.}, at: __netif_tx_lock  
+include/linux/netdevice.h:3893 [inline]
+  #4: 000000000ad63340 (_xmit_ETHER#2){+.-.}, at:  
+sch_direct_xmit+0x2de/0xf70 net/sched/sch_generic.c:325
+  #5: 000000007091b59b (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect  
+include/net/lwtunnel.h:92 [inline]
+  #5: 000000007091b59b (rcu_read_lock_bh){....}, at:  
+ip_finish_output2+0x2af/0x1740 net/ipv4/ip_output.c:213
+  #6: 000000007091b59b (rcu_read_lock_bh){....}, at:  
+__dev_queue_xmit+0x20a/0x36b0 net/core/dev.c:3805
+
+stack backtrace:
+CPU: 1 PID: 13941 Comm: syz-executor.0 Not tainted 5.1.0-rc2+ #112
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-RIP: 0010:binder_alloc_do_buffer_copy+0xd6/0x510  
-drivers/android/binder_alloc.c:1141
-Code: 02 00 0f 85 20 04 00 00 4d 8b 64 24 58 49 29 dc e8 4f f4 23 fc 4c 89  
-e6 4c 89 ef e8 64 f5 23 fc 4d 39 e5 76 07 e8 3a f4 23 fc <0f> 0b e8 33 f4  
-23 fc 4c 8b 75 d0 4d 29 ec 4c 89 e6 4c 89 f7 e8 41
-RSP: 0018:ffff88808b497550 EFLAGS: 00010293
-RAX: ffff88808620e540 RBX: 0000000020001000 RCX: ffffffff854c7d3c
-RDX: 0000000000000000 RSI: ffffffff854c7d46 RDI: 0000000000000006
-RBP: ffff88808b4975d0 R08: ffff88808620e540 R09: 0000000000000028
-R10: ffffed1011692f01 R11: ffff88808b49780f R12: 0000000000000008
-R13: 0000000000000028 R14: ffff888088a0cb10 R15: 0000000000000000
-FS:  00000000006de940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004c4d28 CR3: 0000000090d8e000 CR4: 00000000001406e0
 Call Trace:
-  binder_alloc_copy_from_buffer+0x37/0x42 drivers/android/binder_alloc.c:1187
-  binder_get_object+0xc3/0x200 drivers/android/binder.c:2062
-  binder_transaction+0x2b4a/0x6690 drivers/android/binder.c:3231
-  binder_thread_write+0x87e/0x2820 drivers/android/binder.c:3781
-  binder_ioctl_write_read drivers/android/binder.c:4825 [inline]
-  binder_ioctl+0x1033/0x183b drivers/android/binder.c:5002
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_deadlock_bug kernel/locking/lockdep.c:2100 [inline]
+  check_deadlock kernel/locking/lockdep.c:2144 [inline]
+  validate_chain kernel/locking/lockdep.c:2698 [inline]
+  __lock_acquire.cold+0x233/0x50d kernel/locking/lockdep.c:3701
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:144
+  spin_lock include/linux/spinlock.h:329 [inline]
+  __netif_tx_lock include/linux/netdevice.h:3893 [inline]
+  __dev_queue_xmit+0x2b65/0x36b0 net/core/dev.c:3867
+  dev_queue_xmit+0x18/0x20 net/core/dev.c:3904
+  neigh_resolve_output net/core/neighbour.c:1487 [inline]
+  neigh_resolve_output+0x5a7/0x970 net/core/neighbour.c:1467
+  neigh_output include/net/neighbour.h:508 [inline]
+  ip_finish_output2+0x949/0x1740 net/ipv4/ip_output.c:229
+  ip_finish_output+0x73c/0xd50 net/ipv4/ip_output.c:317
+  NF_HOOK_COND include/linux/netfilter.h:278 [inline]
+  ip_mc_output+0x292/0xf70 net/ipv4/ip_output.c:390
+  dst_output include/net/dst.h:433 [inline]
+  ip_local_out+0xc4/0x1b0 net/ipv4/ip_output.c:124
+  iptunnel_xmit+0x58e/0x980 net/ipv4/ip_tunnel_core.c:91
+  ip_tunnel_xmit+0x1038/0x2bfa net/ipv4/ip_tunnel.c:831
+  __gre_xmit+0x5e9/0x9a0 net/ipv4/ip_gre.c:444
+  erspan_xmit+0x912/0x28b0 net/ipv4/ip_gre.c:679
+  __netdev_start_xmit include/linux/netdevice.h:4409 [inline]
+  netdev_start_xmit include/linux/netdevice.h:4418 [inline]
+  xmit_one net/core/dev.c:3278 [inline]
+  dev_hard_start_xmit+0x1b2/0x980 net/core/dev.c:3294
+  sch_direct_xmit+0x370/0xf70 net/sched/sch_generic.c:327
+  __dev_xmit_skb net/core/dev.c:3475 [inline]
+  __dev_queue_xmit+0x282d/0x36b0 net/core/dev.c:3839
+  dev_queue_xmit+0x18/0x20 net/core/dev.c:3904
+  neigh_resolve_output net/core/neighbour.c:1487 [inline]
+  neigh_resolve_output+0x5a7/0x970 net/core/neighbour.c:1467
+  neigh_output include/net/neighbour.h:508 [inline]
+  ip_finish_output2+0x949/0x1740 net/ipv4/ip_output.c:229
+  ip_finish_output+0x73c/0xd50 net/ipv4/ip_output.c:317
+  NF_HOOK_COND include/linux/netfilter.h:278 [inline]
+  ip_mc_output+0x292/0xf70 net/ipv4/ip_output.c:390
+  dst_output include/net/dst.h:433 [inline]
+  ip_local_out+0xc4/0x1b0 net/ipv4/ip_output.c:124
+  ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1465
+  udp_send_skb.isra.0+0x6b2/0x1180 net/ipv4/udp.c:901
+  udp_sendmsg+0x1dfd/0x2820 net/ipv4/udp.c:1188
+  inet_sendmsg+0x147/0x5e0 net/ipv4/af_inet.c:802
+  sock_sendmsg_nosec net/socket.c:651 [inline]
+  sock_sendmsg+0xdd/0x130 net/socket.c:661
+  ___sys_sendmsg+0x3e2/0x930 net/socket.c:2260
+  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2355
+  __do_sys_sendmmsg net/socket.c:2384 [inline]
+  __se_sys_sendmmsg net/socket.c:2381 [inline]
+  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2381
   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x445f19
-Code: e8 7c e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+RIP: 0033:0x458209
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 db cb fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffeaa7b578 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000445f19
-RDX: 0000000020000240 RSI: 00000000c0306201 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000403010
-R10: 00007fffeaa7b0d0 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000403010 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 0f3d90ce4ca56ff6 ]---
-RIP: 0010:binder_alloc_do_buffer_copy+0xd6/0x510  
-drivers/android/binder_alloc.c:1141
-Code: 02 00 0f 85 20 04 00 00 4d 8b 64 24 58 49 29 dc e8 4f f4 23 fc 4c 89  
-e6 4c 89 ef e8 64 f5 23 fc 4d 39 e5 76 07 e8 3a f4 23 fc <0f> 0b e8 33 f4  
-23 fc 4c 8b 75 d0 4d 29 ec 4c 89 e6 4c 89 f7 e8 41
-RSP: 0018:ffff88808b497550 EFLAGS: 00010293
-RAX: ffff88808620e540 RBX: 0000000020001000 RCX: ffffffff854c7d3c
-RDX: 0000000000000000 RSI: ffffffff854c7d46 RDI: 0000000000000006
-RBP: ffff88808b4975d0 R08: ffff88808620e540 R09: 0000000000000028
-R10: ffffed1011692f01 R11: ffff88808b49780f R12: 0000000000000008
-R13: 0000000000000028 R14: ffff888088a0cb10 R15: 0000000000000000
-FS:  00000000006de940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004c4d28 CR3: 0000000090d8e000 CR4: 00000000001406f0
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f1154031c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000458209
+RDX: 04000000000001a8 RSI: 0000000020007fc0 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f11540326d4
+R13: 00000000004c5190 R14: 00000000004d92e0 R15: 00000000ffffffff
 
 
 ---
@@ -142,5 +211,3 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
