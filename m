@@ -6,170 +6,105 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CB5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD3CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E4520657
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A5420657
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfC1HS6 (ORCPT
+        id S1726311AbfC1HUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 03:18:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44590 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725779AbfC1HS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 03:18:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4A4CCAF25;
-        Thu, 28 Mar 2019 07:18:56 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 2EFDBE1404; Thu, 28 Mar 2019 08:18:53 +0100 (CET)
-Date:   Thu, 28 Mar 2019 08:18:53 +0100
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 12/22] ethtool: provide string sets with
- GET_STRSET request
-Message-ID: <20190328071853.GY26076@unicorn.suse.cz>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <f5af581e33b4976b84eae7c7788e3fde9adfa83c.1553532199.git.mkubecek@suse.cz>
- <2c29310b-a2a0-3867-a09f-51f2dc47ecd3@gmail.com>
+        Thu, 28 Mar 2019 03:20:48 -0400
+Received: from mga03.intel.com ([134.134.136.65]:43665 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725779AbfC1HUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 03:20:48 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 00:20:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,278,1549958400"; 
+   d="scan'208";a="135473853"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga008.fm.intel.com with ESMTP; 28 Mar 2019 00:20:45 -0700
+Date:   Thu, 28 Mar 2019 15:20:27 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.or
+Subject: Re: [PATCH 4/6] x86, mm: make split_mem_range() more easy to read
+Message-ID: <20190328072027.GA6531@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20190212021215.13247-1-richardw.yang@linux.intel.com>
+ <20190212021215.13247-5-richardw.yang@linux.intel.com>
+ <alpine.DEB.2.21.1903232345500.1798@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2c29310b-a2a0-3867-a09f-51f2dc47ecd3@gmail.com>
+In-Reply-To: <alpine.DEB.2.21.1903232345500.1798@nanos.tec.linutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 07:25:47PM -0700, Florian Fainelli wrote:
-> > +GET_STRSET
-> > +----------
-> > +
-> > +Requests contents of a string set as provided by ioctl commands
-> > +ETHTOOL_GSSET_INFO and ETHTOOL_GSTRINGS. String sets are not user writeable so
-> > +that the corresponding SET_STRSET message is only used in kernel replies.
-> > +There are two types of string sets: global (independent of a device, e.g.
-> > +device feature names) and device specific (e.g. device private flags).
-> > +
-> > +Request contents:
-> > +
-> > +    ETHA_STRSET_DEV		(nested)	device identification
-> > +    ETHA_STRSET_COUNTS		(flag)		request only string counts
+On Sun, Mar 24, 2019 at 03:29:04PM +0100, Thomas Gleixner wrote:
 > 
-> Should not that be part of the nested attribute under
-> ETHA_STRSET_STRINGSET. We should probably think about adding another
-> flag which indicates that we want to get the stringset associated data,
-> see below why.
+>+static int __meminit split_mem_range(struct map_range *mr, unsigned long start,
+>+				     unsigned long end)
+>+{
+>+	static const struct mapinfo mapinfos[] = {
+> #ifdef CONFIG_X86_64
+>+		{ .mask = 1U << PG_LEVEL_1G, .size = PUD_SIZE },
+> #endif
+>+		{ .mask = 1U << PG_LEVEL_2M, .size = PMD_SIZE },
+>+		{ .mask = 0, .size = PAGE_SIZE },
+>+	};
+>+	const struct mapinfo *mi;
+>+	struct map_range *curmr;
+>+	unsigned long addr;
+>+	int idx;
+>+
+>+	for (idx = 0, addr = start, curmr = mr; addr < end; idx++, curmr++) {
+>+		BUG_ON(idx == NR_RANGE_MR);
+>+		mr_setup(curmr, addr, end);
 > 
-> > +    ETHA_STRSET_STRINGSET	(nested)	string set to request
-> > +        ETHA_STRINGSET_ID		(u32)		set id
-> > +
-> > +Kernel response contents:
-> > +
-> > +    ETHA_STRSET_DEV		(nested)	device identification
-> > +    ETHA_STRSET_STRINGSET	(nested)	string set to request
-> 
-> string set requested?
-> 
-> > +        ETHA_STRINGSET_ID		(u32)		set id
-> > +        ETHA_STRINGSET_COUNT		(u32)		number of strings
-> > +        ETHA_STRINGSET_STRINGS		(nested)	array of strings
-> > +            ETHA_STRING_INDEX			(u32)		string index
-> > +            ETHA_STRING_VALUE			(string)	string value
-> 
-> This is one of the areas where the legacy ethtool ioctl() is painful
-> because we need to request a string set to know how many of those exist
-> to allocate space for those in both kernel and user space.
-> 
-> If we could find a way to have a single command that allows us to dump
-> stringset (count, values) and associated data, then we save ourselves a
-> context switch and having to pre-allocate memory accordingly.
+>+		/* Try map sizes top down. PAGE_SIZE will always succeed. */
+>+		for (mi = mapinfos; !mr_try_map(curmr, mi); mi++);
+>
+>+		/* Get the start address for the next range */
+>+		addr = curmr->end;
+> 	}
 
-The way the proposed interface is designed, we can get both without an
-extra roundtrip but it's done the other way around, i.e. passing the
-strings with the request for data. The API allows two modes of
-operation:
+I re-arrange the code to make split_mem_range() here easy to read.
 
-1. One shot requests, e.g. typical ethtool use. We use "verbose" mode
-(no ETHA_*_COMPACT flag in the request) and data is provided together
-with the names. E.g. "ethtool eth2" request would look like
+My question is to the for loop.
 
-  ETHA_SETTINGS_DEV
-      ETHA_DEV_NAME = "eth2"
-  ETHA_SETTINGS_INFO_MASK = ... | ETH_SETTINGS_IM_LINKMODES | ...
+For example, we have a range
 
-and the reply would be
+       +--+---------+-----------------------+
+       ^ 128M       1G                      2G
+   128M - 4K
 
-  ETHA_SETTINGS_DEV = {
-      ETHA_DEV_INDEX = 4
-      ETHA_DEV_NAME = "eth2"
-  }
-  ETHA_SETTINGS_LINK_INFO = {
-      ...
-  }
-  ETHA_SETTRINGS_LINK_MODES = {
-      ETHA_LINKMODES_AUTONEG = 1 (AUTONEG_ENABLE)
-      ETHA_LINKMODES_OURS = {
-          ETHA_BITSET_SIZE = 67
-          ETHA_BITSET_BITS = {
-              ETHA_BITS_BIT = {
-                  ETHA_BIT_INDEX = 0 (ETHTOOL_LINK_MODE_10baseT_Half_BIT)
-                  ETHA_BIT_NAME = "10baseT/Half"
-              }
-              ETHA_BITS_BIT = {
-                  ETHA_BIT_INDEX = 1 (ETHTOOL_LINK_MODE_10baseT_Full_BIT)
-                  ETHA_BIT_NAME = "10baseT/Full"
-              }
-              ETHA_BITS_BIT = {
-                  ETHA_BIT_INDEX = 2 (ETHTOOL_LINK_MODE_100baseT_Half_BIT)
-                  ETHA_BIT_NAME = "100baseT/Half"
-                  ETHA_BIT_VALUE
-              }
-              ETHA_BITS_BIT = {
-                  ETHA_BIT_INDEX = 3 (ETHTOOL_LINK_MODE_100baseT_Full_BIT)
-                  ETHA_BIT_NAME = "100baseT/Full"
-                  ETHA_BIT_VALUE
-              }
-              ETHA_BITS_BIT = {
-                  ETHA_BIT_INDEX = 5 (ETHTOOL_LINK_MODE_1000baseT_Full_BIT)
-                  ETHA_BIT_NAME = "1000baseT/Full"
-                  ETHA_BIT_VALUE
-              }
-          }
-      }
-      ETHA_LINKMODES_PEER = {
-          ...
-      }
-      ETHA_LINKMODES_SPEED = 1000 (SPEED_1000)
-      ETHA_LINKMODES_DUPLEX = 1 (DUPLEX_FULL)
-  }
-  ...
+If my understanding is correct, the original behavior will split this into
+three ranges:
 
-2. Long time running applications, e.g. "ethtool --monitor", wicked,
-systemd-networkd, ... For these, it would make sense to cache the
-strings and either retrieve them in advance (on start and when new
-device appears) or when they are needed for the first time. The request
-would then include the ETHA_SETTINGS_COMPACT flag and reply would be
+   4K size: [128M - 4K, 128M]
+   2M size: [128M, 1G]
+   1G size: [1G, 2G]
 
-  ...
-  ETHA_LINKMODES_OURS = {
-      ETHA_BITSET_SIZE = 67
-      ETHA_BITSET_VALUE = 0x0000002c 0x00000000 0x00000000
-      ETHA_BITSET_MASK = 0x0000002f 0x00000000 0x00000000
-  }
+While after your change, it will split this into two ranges:
 
-For "set" type requests, it's up to the application if it uses verbose
-or compact form. The verbose form is most useful when we want e.g. to
-set the values of one or two bits which may be identified by their names
-(on command line or in config file).
+   ?? size: [128M - 4K, 1G]
+   2M size: [1G, 2G]
 
-Michal
+The question mark here is because you leave the page_size_mask unchanged in
+this case.
+
+Is my understanding correct? Or I missed something?
+
+-- 
+Wei Yang
+Help you, Help me
