@@ -5,130 +5,112 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AFFC10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 04:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8A2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 04:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8310D21741
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 04:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980F6206DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 04:39:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="omDPTgo0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAN5zy/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfC1EbC (ORCPT
+        id S1726519AbfC1EjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 00:31:02 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36354 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfC1EbB (ORCPT
+        Thu, 28 Mar 2019 00:39:07 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34930 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfC1EjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 00:31:01 -0400
-Received: by mail-io1-f67.google.com with SMTP id f6so16080740iop.3;
-        Wed, 27 Mar 2019 21:31:01 -0700 (PDT)
+        Thu, 28 Mar 2019 00:39:07 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p19so4366718plo.2;
+        Wed, 27 Mar 2019 21:39:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=D+/belK3ejYzZvvz9x7FiTI3PQoVx/Ow2x/QOwiUhUk=;
-        b=omDPTgo0Bk1VdYEtxiVyT0fGl3cTpcw+pFHUoXeuC3deY4aw65tO8CKlwcoHU2rVUL
-         Sme/FH6oTQHzT4nKU5bvEQa3JG5vT/kM3kZx6/CW1U7ZcyohFJWsRuQ8JZJfL11D2G8C
-         Lf45Sd5IRMllo+rcE6vnusYCjwsmYTqYKYgHQ1562VPx8fbR7beJDusyQFkYQtHjtzEH
-         RXnGQYvJGRiBkPFVqtXnT/lfPcat2unIL8POgB5Cz0jcrj2HCMWEIBD3PQ1H8RWsJmYb
-         DE0uyZxoDNsEYrYhPr5a6CG75OJa+z8qgNYc4LJE17ib9caekbNSke4XLV8UcTNHrQRA
-         Al5A==
+        bh=H8r/rPDIdp1bYLW9wSNX+D8mlHRpDf4FGN+0AbSvEfE=;
+        b=RAN5zy/f+G552WpqxoPnHecVTkvPuGC+b15Dnkn2RfGy+vGXdf/vxJrgCf1Xpu5d+1
+         o5yzxCkTOk2C/dyvyioPdb72xfzNkOBwT2o+oLpNCElU4+Be+CZNOyvZrQ2xwa4NHXzF
+         BTcwsyRRz1OJ7OabkOhVsxARsrNgijsy83/7hP9UQjR8ClNLp04RtfKUepxmBuu7neyC
+         ecIfLSjnVPmmwy7oo6EBskUhReSiu95d5wRZDNeYgOggBxp7P99TXh41Yc9+vu0iZ2pg
+         svrIGDxBGGWrZvaYSIt+0wevscM5R5iGrdLKD+XHLNff8LBe6asbG1AMGmViSWlslk59
+         Aexw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D+/belK3ejYzZvvz9x7FiTI3PQoVx/Ow2x/QOwiUhUk=;
-        b=E8vd6q5+EvADwVEeBdH1hGLWHPDHRdToElGdbEAKGpIA5YZC6OZfGHXQ5GqQJoUsQt
-         EndaHcU4q07ZugQBuBfRzuvmBOdHA5YPrYeNw465GN1KEUCcqIfhE/JjXF7fPvYGn6En
-         ak68GJ5H3cDcSuz+p/ig1/RuzT6E+wKjSoYG1dBAT5wNfHb4qJVg0uf7g0xzYOGKkran
-         rlCHMN9sKH7gkfWpyy3bCb3dJLg7BhZ9+lTVPZp1PnSZgo/oGoCpjj01Wo3G1UWddlCf
-         uWU41aKIZTTXlZOwEPGRdKRQT/FwwMTOOduwYB49VHlr0qJ4u15cINK8St+1kKwoWM46
-         jqIw==
-X-Gm-Message-State: APjAAAXQsx8WoyyO4SNqkfq0CPiSpXtZTLFUC3Ky+EfF8ALCOoBIF3Yc
-        ESLemS7XpCwpoVWrJ3+izw89sK2I
-X-Google-Smtp-Source: APXvYqyns6Vff7kUH+rUID8tZln8mRJVj8o+3pPaCd4oFy0P3i40MDaw4ppYbnTc2ER0O6dZ4KZmgw==
-X-Received: by 2002:a5d:87d3:: with SMTP id q19mr27223875ios.29.1553747460974;
-        Wed, 27 Mar 2019 21:31:00 -0700 (PDT)
-Received: from ubu-Virtual-Machine (66-188-57-61.dhcp.bycy.mi.charter.com. [66.188.57.61])
-        by smtp.gmail.com with ESMTPSA id u204sm1237526ita.33.2019.03.27.21.30.59
+        bh=H8r/rPDIdp1bYLW9wSNX+D8mlHRpDf4FGN+0AbSvEfE=;
+        b=NWSctY5ZxYzvIx+JEj0va6bYdUiO/y7pOm2QQ59pwjRgAYwtd6dtHyOttwzT9cC4k9
+         3k+5wiAPVglK9qtQX9+G21B1FLXR4KFYSe2LutTBmL3MGgSTxalC/Tyklm7io3zrxyyX
+         d3ZhHDH8a5tN6TkDK8BRxMWfFeldwJVQRhBwC2ilFFWTOSz+H02P4QHVp9FbPp7hIbyY
+         bOS2ZRweCqalQD11Tpq7KifOTpyp/yllouhrXdd7QizprxyycmMa9wOe1/KbGQRNlytp
+         dV4bMiAn//qn9KUVxOCAFEwPNGR9ZxbxwN0yLQOpaW72QBoA04jP9PGVE5b/+oNlNyCq
+         B9Fw==
+X-Gm-Message-State: APjAAAUSnnAdrFrXe77qYnaYcW07RmbQ55FPc2Y7k13knCYSm99FTyDy
+        0RSn1GynoKIq0By5sNHugwg=
+X-Google-Smtp-Source: APXvYqw4+w4/HVQXdw9bX68V9rDSUG5OrUi5kuPGYvGmmtQmQyp4oqkB4ZR9X8HLZ9xgRfOJtlw8Mg==
+X-Received: by 2002:a17:902:b58f:: with SMTP id a15mr26648596pls.36.1553747946345;
+        Wed, 27 Mar 2019 21:39:06 -0700 (PDT)
+Received: from icarus ([2001:268:c0a2:ad41:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id e21sm20915179pfd.177.2019.03.27.21.38.58
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 21:31:00 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 00:30:57 -0400
-From:   Kimberly Brown <kimbrownkd@gmail.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/3] Drivers: hv: vmbus: Fix race condition with new
- ring_buffer_info mutex
-Message-ID: <20190328043057.GA2258@ubu-Virtual-Machine>
-References: <cover.1550806305.git.kimbrownkd@gmail.com>
- <cover.1552592620.git.kimbrownkd@gmail.com>
- <262046fa9e89d5f483ecd5972d86f4f9608dbcc3.1552592620.git.kimbrownkd@gmail.com>
- <20190314154533.17c8a362@shemminger-XPS-13-9360>
- <20190317014927.GA60356@ubu-Virtual-Machine>
- <20190320130619.07e49c97@shemminger-XPS-13-9360>
- <20190321034752.GA6828@ubu-Virtual-Machine>
- <DM5PR2101MB091851BC7C55093D388514D9D7420@DM5PR2101MB0918.namprd21.prod.outlook.com>
+        Wed, 27 Mar 2019 21:39:05 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 13:40:04 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH v13 10/11] gpio: 74x164: Utilize the for_each_set_clump8
+ macro
+Message-ID: <20190328044004.GB3251@icarus>
+References: <cover.1553661964.git.vilhelm.gray@gmail.com>
+ <645f16f1d1ad3f215e34a82f457e06725fcf8f56.1553661964.git.vilhelm.gray@gmail.com>
+ <20190327123314.GJ9224@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <DM5PR2101MB091851BC7C55093D388514D9D7420@DM5PR2101MB0918.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190327123314.GJ9224@smile.fi.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 04:04:20PM +0000, Michael Kelley wrote:
-> From: Kimberly Brown <kimbrownkd@gmail.com>  Sent: Wednesday, March 20, 2019 8:48 PM
-> > > > > Adding more locks will solve the problem but it seems like overkill.
-> > > > > Why not either use a reference count or an RCU style access for the
-> > > > > ring buffer?
-> > > >
-> > > > I agree that a reference count or RCU could also solve this problem.
-> > > > Using mutex locks seemed like the most straightforward solution, but
-> > > > I'll certainly switch to a different approach if it's better!
-> > > >
-> > > > Are you concerned about the extra memory required for the mutex locks,
-> > > > read performance, or something else?
-> > >
-> > > Locks in control path are ok, but my concern is performance of the
-> > > data path which puts packets in/out of rings. To keep reasonable performance,
-> > > no additional locking should be added in those paths.
-> > >
-> > > So if data path is using RCU, can/should the control operations also
-> > > use it?
-> > 
-
-
-Hi Stephen,
-
-Do you have any additional questions or suggestions for this race
-condition and the mutex locks? I think that your initial questions were
-addressed in the responses below. If there's anything else, please let
-me know!
-
-Thanks,
-Kim
-
-
-> > The data path doesn't use RCU to protect the ring buffers.
+On Wed, Mar 27, 2019 at 02:33:14PM +0200, Andy Shevchenko wrote:
+> On Wed, Mar 27, 2019 at 02:02:39PM +0900, William Breathitt Gray wrote:
+> > Replace verbose implementation in set_multiple callback with
+> > for_each_set_clump8 macro to simplify code and improve clarity.
 > 
-> My $.02:  The mutex is obtained only in the sysfs path and the "delete
-> ringbuffers" path, neither of which is performance or concurrency sensitive. 
-> There's no change to any path that reads or writes data from/to the ring
-> buffers.  It seems like the mutex is the most straightforward solution to
-> preventing sysfs from accessing the ring buffer info while the memory is
-> being freed as part of "delete ringbuffers".
+> > +	for_each_set_clump8(offset, bankmask, mask, chip->registers * 8) {
 > 
-> Michael
+> > +		bank = (chip->registers - 1) - (offset / 8);
+> 
+> Excessive parens, but it's minor.
+
+Fair point, this could do without parens around (chip->registers - 1).
+
+Since this and renaming 'idx' to 'index' in find_bit.c are such a minor
+changes, I'll wait first to see if something else comes up to be fixed
+in this review. If so, I'll add these changes to the next version of
+this patchset.
+
+William Breathitt Gray
+
+> 
+> > +		bitmask = bitmap_get_value8(bits, offset) & bankmask;
+> >  
+> >  		chip->buffer[bank] &= ~bankmask;
+> > +		chip->buffer[bank] |= bitmask;
+> >  	}
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
