@@ -2,169 +2,180 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21E5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9441C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95EFD20811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADEB20811
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:43:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tXOVtHwD"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="T/vcYOjj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727246AbfC1Ul5 (ORCPT
+        id S1727247AbfC1UnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:41:57 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44451 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727188AbfC1Ulz (ORCPT
+        Thu, 28 Mar 2019 16:43:16 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3270 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfC1UnQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:41:55 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y13so5768332pfm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 13:41:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8By5OSotSuT4GJqP67uaJWemZ0EgShCc8LjQId4k3Rc=;
-        b=tXOVtHwDPUUtgapGGO9kXhC64m6Muf9WfJvydhPhC4nkOGrxKkEx41Daatgf0ejBle
-         IFImpN15g33BQTTAoDlV3ihA4wXCtldSyT3dy5jiluo8H+Jt2nn0OAQsEWvtIfgJHfme
-         reHuIo62eIM9eldUVz3y5MY1L5zzXta5mIRbIg4cS5kr/u+5u8J6Cb9VOhhB162AexHW
-         kWwt4YGW+8D1GgWEt0bUODXbzU9pYedUXKtJPvZ0quEkw1x3fY54r7Ygdu7KTkJmx6eT
-         rL7sIgrLMkqs2sTJqFwzpRvUW+J3SVrnR7r9sleviRUy0NWp/JvA0F33aRoOa9w3lwDb
-         UFzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8By5OSotSuT4GJqP67uaJWemZ0EgShCc8LjQId4k3Rc=;
-        b=hLlw/P2mlUSWLi/ddaOKOR/Jknm/epvi20CtLE1SJNYbFThrLcg5JamZ7x1Z5uG5+q
-         gwfexfKxVH/Lg69S4POLGwTHSZwWV0Q3nLvhhmTeO1dzyC2kDHsczawaGfVWwBYeVKYa
-         XRv/pMi0qSXPjLEXpcWrSq2I47CMTvzWl4U3ocJpgj8AV3vmMUa1H8NiklQb4KfPEhDX
-         Czp4XBYes8WvvviYGF8bP3sHNWI6SN+6z5x9Seu5neFtmXZko6TixpNy8VS43MXmMiBy
-         NJDyr3ws7PonhNGWMiqWqs+uaKmNGmhw9WIn3FRB6pQQXCptgy2jz9VH8krQqQ7S+wE/
-         CWSw==
-X-Gm-Message-State: APjAAAX1tlEc2ipdERS/rzQGr7DlrDVA+b6Xaqc5zAR1A4lFS1oie2wX
-        FXHy15EupeIOMtizACBP+bJhCg==
-X-Google-Smtp-Source: APXvYqzuvOHSRpY6JBeyHb6ix0zBYaSPOK/RbkLGW9cxfwyk2KtngBHMB1hIV4IOfdJP6y+ZaUujKQ==
-X-Received: by 2002:a63:2c4a:: with SMTP id s71mr2995307pgs.373.1553805714899;
-        Thu, 28 Mar 2019 13:41:54 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id q11sm63621pgs.94.2019.03.28.13.41.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 13:41:54 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 14:41:51 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, coresight@lists.linaro.org,
-        mike.leach@linaro.org, robert.walker@arm.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 23/25] coresight: stm: ACPI support for parsing stimulus
- base
-Message-ID: <20190328204151.GA7163@xps15>
-References: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
- <1553107783-3340-24-git-send-email-suzuki.poulose@arm.com>
+        Thu, 28 Mar 2019 16:43:16 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9d31db0000>; Thu, 28 Mar 2019 13:43:07 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 28 Mar 2019 13:43:13 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 28 Mar 2019 13:43:13 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Mar
+ 2019 20:43:13 +0000
+Subject: Re: [PATCH v2 02/11] mm/hmm: use reference counting for HMM struct v2
+To:     Jerome Glisse <jglisse@redhat.com>, Ira Weiny <ira.weiny@intel.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20190325144011.10560-1-jglisse@redhat.com>
+ <20190325144011.10560-3-jglisse@redhat.com>
+ <20190328110719.GA31324@iweiny-DESK2.sc.intel.com>
+ <20190328191122.GA5740@redhat.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <c8fd897f-b9d3-a77b-9898-78e20221ba44@nvidia.com>
+Date:   Thu, 28 Mar 2019 13:43:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553107783-3340-24-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190328191122.GA5740@redhat.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US-large
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553805787; bh=BWTZDuw9Jf4+5EuJDB2gXJbAkQHyJFX7dIq0NX94hfY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=T/vcYOjjkqOeh+Fz56ku6rzMa1BCA3/mqrpXbOWH6QkV+b9Hqfr7h16DzJL+azPDg
+         J3OaHYyKzqZHXwRfbMo9R2hSAn/ZAeB848Qy//zRHMQXXg2ut7CKZWcpFZZaaF/xte
+         xGnbgwiGbCruOLTpz2cpP4iQD7MxFFlwlSEKB0ZOpHQirFl1LlP7UCPrx23PJ5bZoX
+         szbDTkVIbjcUReAiZBPgQnxBu0jUpAsIailolyBlmAG9qVe0OxoTX2wNiTy0I85yuU
+         vvC0MNnxePtyy+vOq5l9TVRIUEE7K5wYH1B5L6bhhccRpB6wSKlQLZWkNAx2giKgRJ
+         ohhus6ZW7lFfQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 06:49:40PM +0000, Suzuki K Poulose wrote:
-> The stimulus base for STM device must be listed as the second memory
-> resource, followed by the programming base address. Add support for
-> parsing the information for ACPI.
-> 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-stm.c | 43 +++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-> index d94ae22..995443a 100644
-> --- a/drivers/hwtracing/coresight/coresight-stm.c
-> +++ b/drivers/hwtracing/coresight/coresight-stm.c
-> @@ -16,6 +16,7 @@
->   * (C) 2015-2016 Chunyan Zhang <zhang.chunyan@linaro.org>
->   */
->  #include <asm/local.h>
-> +#include <linux/acpi.h>
->  #include <linux/amba/bus.h>
->  #include <linux/bitmap.h>
->  #include <linux/clk.h>
-> @@ -717,10 +718,52 @@ static inline int of_stm_get_stimulus_area(struct device *dev,
->  }
->  #endif
->  
-> +#ifdef CONFIG_ACPI
-> +static int acpi_stm_get_stimulus_area(struct device *dev, struct resource *res)
-> +{
-> +	int rc;
-> +	bool found_base = false;
-> +	struct resource_entry *rent;
-> +	LIST_HEAD(res_list);
-> +
-> +	struct acpi_device *adev = ACPI_COMPANION(dev);
-> +
-> +	if (!adev)
-> +		return -ENODEV;
-> +	rc = acpi_dev_get_resources(adev, &res_list, NULL, NULL);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc = -ENOENT;
-> +	list_for_each_entry(rent, &res_list, node) {
-> +		if (resource_type(rent->res) != IORESOURCE_MEM)
-> +			continue;
-> +		if (found_base) {
-> +			*res = *rent->res;
-> +			rc = 0;
-> +			break;
-> +		}
-> +
-> +		found_base = true;
+On 3/28/19 12:11 PM, Jerome Glisse wrote:
+> On Thu, Mar 28, 2019 at 04:07:20AM -0700, Ira Weiny wrote:
+>> On Mon, Mar 25, 2019 at 10:40:02AM -0400, Jerome Glisse wrote:
+>>> From: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+>>>
+>>> Every time i read the code to check that the HMM structure does not
+>>> vanish before it should thanks to the many lock protecting its removal
+>>> i get a headache. Switch to reference counting instead it is much
+>>> easier to follow and harder to break. This also remove some code that
+>>> is no longer needed with refcounting.
+>>>
+>>> Changes since v1:
+>>>     - removed bunch of useless check (if API is use with bogus argument
+>>>       better to fail loudly so user fix their code)
+>>>     - s/hmm_get/mm_get_hmm/
+>>>
+>>> Signed-off-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+>>> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+>>> Cc: John Hubbard <jhubbard@nvidia.com>
+>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>> Cc: Dan Williams <dan.j.williams@intel.com>
+>>> ---
+>>>  include/linux/hmm.h |   2 +
+>>>  mm/hmm.c            | 170 ++++++++++++++++++++++++++++----------------
+>>>  2 files changed, 112 insertions(+), 60 deletions(-)
+>>>
+>>> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+>>> index ad50b7b4f141..716fc61fa6d4 100644
+>>> --- a/include/linux/hmm.h
+>>> +++ b/include/linux/hmm.h
+>>> @@ -131,6 +131,7 @@ enum hmm_pfn_value_e {
+>>>  /*
+>>>   * struct hmm_range - track invalidation lock on virtual address range
+>>>   *
+>>> + * @hmm: the core HMM structure this range is active against
+>>>   * @vma: the vm area struct for the range
+>>>   * @list: all range lock are on a list
+>>>   * @start: range virtual start address (inclusive)
+>>> @@ -142,6 +143,7 @@ enum hmm_pfn_value_e {
+>>>   * @valid: pfns array did not change since it has been fill by an HMM =
+function
+>>>   */
+>>>  struct hmm_range {
+>>> +	struct hmm		*hmm;
+>>>  	struct vm_area_struct	*vma;
+>>>  	struct list_head	list;
+>>>  	unsigned long		start;
+>>> diff --git a/mm/hmm.c b/mm/hmm.c
+>>> index fe1cd87e49ac..306e57f7cded 100644
+>>> --- a/mm/hmm.c
+>>> +++ b/mm/hmm.c
+>>> @@ -50,6 +50,7 @@ static const struct mmu_notifier_ops hmm_mmu_notifier=
+_ops;
+>>>   */
+>>>  struct hmm {
+>>>  	struct mm_struct	*mm;
+>>> +	struct kref		kref;
+>>>  	spinlock_t		lock;
+>>>  	struct list_head	ranges;
+>>>  	struct list_head	mirrors;
+>>> @@ -57,6 +58,16 @@ struct hmm {
+>>>  	struct rw_semaphore	mirrors_sem;
+>>>  };
+>>> =20
+>>> +static inline struct hmm *mm_get_hmm(struct mm_struct *mm)
+>>> +{
+>>> +	struct hmm *hmm =3D READ_ONCE(mm->hmm);
+>>> +
+>>> +	if (hmm && kref_get_unless_zero(&hmm->kref))
+>>> +		return hmm;
+>>> +
+>>> +	return NULL;
+>>> +}
+>>> +
+>>>  /*
+>>>   * hmm_register - register HMM against an mm (HMM internal)
+>>>   *
+>>> @@ -67,14 +78,9 @@ struct hmm {
+>>>   */
+>>>  static struct hmm *hmm_register(struct mm_struct *mm)
+>>>  {
+>>> -	struct hmm *hmm =3D READ_ONCE(mm->hmm);
+>>> +	struct hmm *hmm =3D mm_get_hmm(mm);
+>>
+>> FWIW: having hmm_register =3D=3D "hmm get" is a bit confusing...
+>=20
+> The thing is that you want only one hmm struct per process and thus
+> if there is already one and it is not being destroy then you want to
+> reuse it.
+>=20
+> Also this is all internal to HMM code and so it should not confuse
+> anyone.
+>=20
 
-Is the ACPI binding crystal clear on the fact that the second resource region
-has to be for stimulus ports?
+Well, it has repeatedly come up, and I'd claim that it is quite=20
+counter-intuitive. So if there is an easy way to make this internal=20
+HMM code clearer or better named, I would really love that to happen.
 
-> +	}
-> +
-> +	acpi_dev_free_resource_list(&res_list);
-> +	return rc;
-> +}
-> +#else
-> +static inline int acpi_stm_get_stimulus_area(struct device *dev,
-> +					     struct resource *res)
-> +{
-> +	return -ENOENT;
-> +}
-> +#endif
-> +
->  static int stm_get_stimulus_area(struct device *dev, struct resource *res)
->  {
->  	if (dev->of_node)
+And we shouldn't ever dismiss feedback based on "this is just internal
+xxx subsystem code, no need for it to be as clear as other parts of the
+kernel", right?
 
-Wouldn't it be better to use is_of_node()?
-
->  		return of_stm_get_stimulus_area(dev, res);
-> +	else if (is_acpi_node(dev->fwnode)
-
-is_acpi_device_node()?
-
-> +		return acpi_stm_get_stimulus_area(dev, res);
->  	return -ENOENT;
->  }
->  
-> -- 
-> 2.7.4
-> 
+thanks,
+--=20
+John Hubbard
+NVIDIA
