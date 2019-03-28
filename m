@@ -2,157 +2,129 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82F2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C3AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAD621773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A3621773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:26:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="eyIdRhVd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfC1OYr (ORCPT
+        id S1726681AbfC1O0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:24:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57632 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725875AbfC1OYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:24:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CFD2DAEF2;
-        Thu, 28 Mar 2019 14:24:44 +0000 (UTC)
-Subject: Re: [Qemu-devel] megasas: Unexpected response from lun 1 while
- scanning, scan aborted
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-Cc:     qemu-block@nongnu.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, linux-kernel@vger.kernel.org,
-        qemu-devel@nongnu.org
-References: <9c3849cf-86c6-4568-bff5-1050b445322d@default>
- <c3a8f877-82bc-44ab-72e8-51f62c0a65ed@suse.de>
- <442316ee-8800-275c-85e9-a5d054a28e63@oracle.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <78e04dbb-de4f-3d1b-973d-6cb906a13e42@suse.de>
-Date:   Thu, 28 Mar 2019 15:24:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Mar 2019 10:26:10 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35393 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726172AbfC1O0K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 10:26:10 -0400
+Received: by mail-qk1-f193.google.com with SMTP id a71so5956866qkg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 07:26:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fSSJl5k+JHXJbUBMkVEY30j0tn+xj0+/g+GAmzVURx8=;
+        b=eyIdRhVddDzLcAltkAXSsIe0M5Zz6R7DiWNOaWJAgakFtDUlAxSZcpPKUlCZXXXolJ
+         86klGvD5SPsL+ZEc6dT0c4Rgjbom432Q3GPXWHUqbDQZ+lG+58EIIIzqiM6L3Z9ptxCK
+         twxpXQCRK9neDt8H1FnrC1HguYTp6S+UHIwD/LsB1xvvn+nCunWwZc4lpttzNwkT/6bj
+         C+ChfeunFary1JptX6hhG06MSKzyBlq2wQ1JseEcGYt6Ti7uQUtUnTSzfzOk/wLKGWyQ
+         zkAeS8cuNaloiYYGgFUL96eikAB3R+7RYdLcgWnQcmGUvRsr2Z5Itjt5b/LySy5BGFq+
+         i1sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fSSJl5k+JHXJbUBMkVEY30j0tn+xj0+/g+GAmzVURx8=;
+        b=JPJCr1k6knI1OVIjmbneIE58GcgkVVyfNGFNPx3dMGJH+qB8kKY40I6LzMfcxqxMYF
+         XQbsanquhjtToYZuB8mHAx+misexpz9ZIkRo7cWzmNdx0ft2L9XpMFjaejUckiCyeKFN
+         Ty6R4kxvTnPIg4mzMlDRMtFBBXYqNYXJuHrkYBCMVuzP+kO06H9vms+gyeOZr1d1Pbsf
+         rok+TvJYEblHVC/XxVtfiehJa9Ez48P1Uk3uGcDmLfxgZc8DSmetLRRIN1jhupNX64wW
+         MdS5sS4Fjse6PjHGFwD9CEcnIgK3uQfd785LCkN1lgHRHTa3otjjgYF/by4UVxrLGR6S
+         mYNQ==
+X-Gm-Message-State: APjAAAU7pXrNJrU9oKFprd76e+HD8RP25QSihottH6LCQBOD6K48FFTx
+        iiRjEduiJUnOYumJrQqjUklDng==
+X-Google-Smtp-Source: APXvYqwgBQP7hG/fkiLQVL2rV9JAA0eLEwthlmWE9GOVIl/d/5+iv13/9Q2rP0C49uTjXpwiMIAmWA==
+X-Received: by 2002:ae9:dec2:: with SMTP id s185mr32793504qkf.107.1553783169526;
+        Thu, 28 Mar 2019 07:26:09 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id m93sm945409qte.74.2019.03.28.07.26.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 07:26:08 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1h9Vyp-0002OO-Mp; Thu, 28 Mar 2019 11:26:07 -0300
+Date:   Thu, 28 Mar 2019 11:26:07 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Potnuri Bharat Teja <bharat@chelsio.com>
+Cc:     Kangjie Lu <kjlu@umn.edu>, "pakki001@umn.edu" <pakki001@umn.edu>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] infiniband: cxgb4: fix a potential NULL pointer
+ dereference
+Message-ID: <20190328142607.GM21008@ziepe.ca>
+References: <20190309051921.15212-1-kjlu@umn.edu>
+ <CC1E06D8-7817-4314-AAD4-434FEB8C4157@umn.edu>
+ <20190327133728.GA26660@chelsio.com>
+ <20190328124037.GJ21008@ziepe.ca>
+ <20190328142022.GA13931@chelsio.com>
 MIME-Version: 1.0
-In-Reply-To: <442316ee-8800-275c-85e9-a5d054a28e63@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328142022.GA13931@chelsio.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/28/19 1:47 AM, Dongli Zhang wrote:
+On Thu, Mar 28, 2019 at 07:50:23PM +0530, Potnuri Bharat Teja wrote:
+> On Thursday, March 03/28/19, 2019 at 18:10:37 +0530, Jason Gunthorpe wrote:
+> > On Wed, Mar 27, 2019 at 07:08:54PM +0530, Potnuri Bharat Teja wrote:
+> > > On Saturday, March 03/23/19, 2019 at 08:07:46 +0530, Kangjie Lu wrote:
+> > > > 
+> > > > 
+> > > > > On Mar 8, 2019, at 11:19 PM, Kangjie Lu <kjlu@umn.edu> wrote:
+> > > > > 
+> > > > > get_skb may fail and return NULL. The fix returns "ENOMEM"
+> > > > > when it fails to avoid NULL dereference.
+> > > > > 
+> > > > > Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> > > > > drivers/infiniband/hw/cxgb4/cm.c | 3 +++
+> > > > > 1 file changed, 3 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+> > > > > index 8221813219e5..502a54d57e2c 100644
+> > > > > +++ b/drivers/infiniband/hw/cxgb4/cm.c
+> > > > > @@ -1919,6 +1919,9 @@ static int send_fw_act_open_req(struct c4iw_ep *ep, unsigned int atid)
+> > > > > 	int win;
+> > > > > 
+> > > > > 	skb = get_skb(NULL, sizeof(*req), GFP_KERNEL);
+> > > > > +	if (!skb)
+> > > > > +		return -ENOMEM;
+> > > > > +
+> > > > 
+> > > > Can someone review this patch? Thanks.
+> > > 
+> > > Sorry for the late response.
+> > > I recommend an error print before the return.
+> > > if (!skb) {
+> > > 	pr_err("%s - failed to alloc skb\n", __func__);
+> > > 	return -ENOMEM;
+> > > }
+> > 
+> > no error prints on memory allocation failure, the kernel already
+> > prints enough on this
+> Ok.
 > 
-> 
-> On 3/27/19 7:31 PM, Hannes Reinecke wrote:
->> On 3/26/19 5:47 PM, Dongli Zhang wrote:
->>> I am reporting an error that the scsi lun cannot initialize successfully when I
->>> am emulating megasas scsi controller with qemu.
->>>
->>> I am not sure if this is issue in qemu or linux kernel.
->>>
->>> When 'lun=1' is specified, there is "Unexpected response from lun 1 while
->>> scanning, scan aborted".
->>>
->>> Everything works well if 'lun=0' is specified.
->>>
->>>
->>> Below is the qemu cmdline involved:
->>>
->>> -device megasas,id=scsi0 \
->>> -device scsi-hd,drive=drive0,bus=scsi0.0,lun=1 \
->>> -drive file=/home/zhang/img/test.img,if=none,id=drive0,format=raw
->>>
->>>
->>> Below is the syslog related to 'scsi|SCSI'
->>>
->>> # dmesg | grep SCSI
->>> [    0.392494] SCSI subsystem initialized
->>> [    0.460666] Block layer SCSI generic (bsg) driver version 0.4 loaded (major
->>> 251)
->>> [    0.706788] sd 1:0:0:0: [sda] Attached SCSI disk
->>> # dmesg | grep scsi
->>> [    0.511643] scsi host0: Avago SAS based MegaRAID driver
->>> [    0.523302] scsi 0:2:0:0: Unexpected response from lun 1 while scanning,
->>> scan aborted
->>> [    0.540364] scsi host1: ata_piix
->>> [    0.540780] scsi host2: ata_piix
->>> [    0.702396] scsi 1:0:0:0: Direct-Access     ATA      QEMU HARDDISK    2.5+
->>> PQ: 0 ANSI: 5
->>>
->>> When 'lun=1' is changed to 'lun=0', there is no issue.
->>>
->>> Thank you very much!
->>>
->> That's an artifact from the megasas emulation in quemu.
->> Megasas (internally) can't handle LUN numbers (the RAID part only knows about
->> 'disks'), so I took the decision to not expose devices with LUN != 0.
->> Please use a different SCSI target number, not a non-zero LUN number.
-> 
-> The guest kernel is able to detect the disk if lun is always 0, while target
-> number is changed:
-> 
-> -device scsi-hd,drive=drive0,bus=scsi0.0,channel=0,scsi-id=0,lun=0
-> -device scsi-hd,drive=drive1,bus=scsi0.0,channel=0,scsi-id=1,lun=0
-> 
-> # dmesg | grep scsi
-> [    0.935999] scsi host0: ata_piix
-> [    0.936401] scsi host1: ata_piix
-> [    1.100945] scsi 0:0:0:0: Direct-Access     ATA      QEMU HARDDISK    2.5+
-> PQ: 0 ANSI: 5
-> [    1.102409] sd 0:0:0:0: Attached scsi generic sg0 type 0
-> [    1.672952] scsi host2: Avago SAS based MegaRAID driver
-> [    1.683886] scsi 2:2:0:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+
-> PQ: 0 ANSI: 5
-> [    1.684915] scsi 2:2:1:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+
-> PQ: 0 ANSI: 5
-> [    1.701529] sd 2:2:0:0: Attached scsi generic sg1 type 0
-> [    1.704795] sd 2:2:1:0: Attached scsi generic sg2 type 0
-> # dmesg | grep SCSI
-> [    0.111015] SCSI subsystem initialized
-> [    0.904712] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 246)
-> [    1.121174] sd 0:0:0:0: [sda] Attached SCSI disk
-> [    1.703739] sd 2:2:0:0: [sdb] Attached SCSI disk
-> [    1.706964] sd 2:2:1:0: [sdc] Attached SCSI disk
-> 
-> 
-> 
-> If device with LUN != 0 will not be exposed, why not set max_lun = 0 as what
-> qemu lsi is doing?
-> 
-> diff --git a/hw/scsi/megasas.c b/hw/scsi/megasas.c
-> index a56317e..c966ee0 100644
-> --- a/hw/scsi/megasas.c
-> +++ b/hw/scsi/megasas.c
-> @@ -2298,7 +2298,7 @@ static void megasas_scsi_uninit(PCIDevice *d)
->   static const struct SCSIBusInfo megasas_scsi_info = {
->       .tcq = true,
->       .max_target = MFI_MAX_LD,
-> -    .max_lun = 255,
-> +    .max_lun = 0,
-> 
->       .transfer_data = megasas_xfer_complete,
->       .get_sg_list = megasas_get_sg_list,
-> 
-Hmm. Good point.
+> Acked-by: Potnuri Bharat Teja <bharat@chelsio.com>
 
-In _theory_ one could just jbod mode, in which case _all_ LUNs are 
-exposed. But then we could probably adjust it, based on which mode is 
-selected.
-I'll check.
+It needs to be resent with Bart's comment addressed, and all the tags collected.
 
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke		   Teamlead Storage & Networking
-hare@suse.de			               +49 911 74053 688
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+Jason
