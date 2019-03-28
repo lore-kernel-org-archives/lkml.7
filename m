@@ -2,213 +2,225 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 565ECC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F77C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 192C520811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5889E21773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:01:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMLxTlCt"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="QXyiaEen"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfC1UBf (ORCPT
+        id S1727072AbfC1UBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:01:35 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39149 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfC1UBf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:01:35 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n25so141993wmk.4;
-        Thu, 28 Mar 2019 13:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QbG0n7qd4CrOU2u1jLyR3Yv5vGuKKfhuZSxNp/RnuyY=;
-        b=XMLxTlCtrT4uENUptZ94GzDdzkhhtrafdqmaDd8QBUu3TY2+FDhsAALGd196XnDSLQ
-         /gGUgv6nbVumKXxAVf0v3BiiyOy/3vrU6sf0x+GxdbxLv6cqBw98z6WXRQOPW0fV0ups
-         46UIoU3bSX1RiuXunyyFl9NgLXtag8z9ISpCMf6G0h419voyXomXtIF0Q37IyllBXqOv
-         V4x+oyk61jkm322kYxCE2tWxWKIyIKldvpC3yOrrtWTEoNdNFWWUmb/JGD1TAHsw9kE7
-         vMPsqXaSLIXUpCv7sH5DI2HTxBoUlXvbieTFoFsK6TnaZtKiv5Lez+DtnvwvH7MNjPnW
-         9tYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QbG0n7qd4CrOU2u1jLyR3Yv5vGuKKfhuZSxNp/RnuyY=;
-        b=MqcoKhz5uMXobydU9arMqX9whTYTkY22Kttv+gD0vtzS+keRso5miNkhUjxXLto69l
-         NRdp7rGHLZYU/hOgTfluZd6A+7stgPi+VnXCUI+eTd/Rz8Etdf8i/QDwkIf/Q77hUbeS
-         Lx6xudxuOEKSVmmXZx61hiNJ5QpJxZcjT7QUhvU9TzDdAccrEdsxToRYVL8ZHzlYiwm8
-         KMCn/6o13Qg7RKssRahGUkt2mQY8Vsl9gqX1gv/ICnJGSRqwsuUK6eEOLHtFENoZrx7n
-         foysghqkugjO+4eo8pHYJWLZQufektDi3tXcjfcW/svoMBd4m6KKGseK3ZbGnzsPAsUe
-         MoCg==
-X-Gm-Message-State: APjAAAV3BCIRWQIQXOCkbquy995dHJQAe1+B/IJHSNAdhucDUPuRtKxe
-        ZX6AXB7dZ8OYJPVBRIY9Uw7zXUiE
-X-Google-Smtp-Source: APXvYqwcaAjBhvCCwisfKysJ0+UqhPEC/aHIcovz7fPMAD+01ssTs3airGDMFetHIMkp2acHWYIv4g==
-X-Received: by 2002:a1c:ce:: with SMTP id 197mr1093912wma.105.1553803292180;
-        Thu, 28 Mar 2019 13:01:32 -0700 (PDT)
-Received: from [192.168.1.19] (blb244.neoplus.adsl.tpnet.pl. [83.28.195.244])
-        by smtp.gmail.com with ESMTPSA id u8sm13589wrt.69.2019.03.28.13.01.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 13:01:31 -0700 (PDT)
-Subject: Re: [PATCH 03/25] dt-bindings: leds: Add LED_FUNCTION definitions
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pavel@ucw.cz,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Oleh Kravchenko <oleg@kaa.org.ua>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Simon Shields <simon@lineageos.org>
-References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
- <20190310182836.20841-4-jacek.anaszewski@gmail.com>
- <20190328000357.GA3399@bogus>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <f916ae77-1807-1e06-7dc3-8b956e1c4c39@gmail.com>
-Date:   Thu, 28 Mar 2019 21:01:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190328000357.GA3399@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 28 Mar 2019 16:01:39 -0400
+Received: from mout.gmx.net ([212.227.15.15]:41261 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbfC1UBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 16:01:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1553803280;
+        bh=8MV4QEQyumeAPThgLt4Ov47M7GijIT8QbX87vM4i5uE=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=QXyiaEenuVkW3M7ENnArUzTGqK2JusZPCO+LxO89qNaTP58FF6wZJUJX1swJnz2gS
+         YQyBVQQA00wGkT6e4I2aui+nxgg7pv5McEOw59LD4mMKvFJqHyAOEZO1HglMIO8OaX
+         8txPA5jS74tdEeBxETEpd8cayBwYUMgI8rsahqfc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from Juliuss-Air-2.fritz.box ([92.195.129.110]) by mail.gmx.com
+ (mrgmx001 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 0MhQxO-1hNR8E0CXa-00MZa6; Thu, 28 Mar 2019 21:01:20 +0100
+From:   Julius Niedworok <julius.n@gmx.net>
+To:     linux-wireless@vger.kernel.org
+Cc:     julius.n@gmx.net, ga58taw@mytum.de, david@redhat.com,
+        nc@net.in.tum.de, Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] mac80211: debugfs option to force TX status frames
+Date:   Thu, 28 Mar 2019 21:01:06 +0100
+Message-Id: <20190328200108.98981-1-julius.n@gmx.net>
+X-Mailer: git-send-email 2.10.1 (Apple Git-78)
+In-Reply-To: <e20962001ee10a0f90f8e2f1f8baafcf3b70e9dd.camel@sipsolutions.net>
+References: <e20962001ee10a0f90f8e2f1f8baafcf3b70e9dd.camel@sipsolutions.net>
+X-Provags-ID: V03:K1:DeGiNNCRwiCItmKzCKHlW92Lcyo5uzx1nW6z68uGMhfnuN5q3a4
+ uc0qAtjEyFN8fFUXRaO85iVTFEMumVDAky+Gmla8VfNioUKsREHT8h0uFx/q6IQE+OyP3Aj
+ bEyinCUihdEmcd5NzpAIkGy8+lIp0e3s2ONw0ZVv2P7BtuY0sJPR4C9BnRkUt520Z7DCZ9R
+ dfNHXuhlaX29GYs7i6r3g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y49Ny4mZGhs=:WF8sqz1gWOmarDbbg/p/C+
+ 0CjAmjMzgAnm5TU6kJ488gqo+fLqdZMejkHL2M3MHjAqqBqJhy+xuj4nQtJQkaf9YQyEIZoNM
+ QMCI4nb2EGsOToGoHiH7Ds+1TqeZi2B7Kyo3/ix2VHjZuUIH7WxNqXhx8z+uCxXZd+29W09M9
+ kky32rkiwzs/TCxahWwXtXY7g4ZGvKryCaimknWWzI7bt9ZqBziz71P2TOSRTHxQ5bGNKydul
+ /ijtLVqmyyWEDUoLCIoY09Jz/rfPrjYqXPsLulVYUJNL9fr5HSgeIqvO+CRk2Ma48amLUW4wf
+ TRdCMyyuDgAVxKHQky8gdt+cxff4EkUOckkfeLmWlPh0Oaa0QekSW7RJqLJ8DJ+ibu+IoYEv/
+ oa24Q+dqufEsIRzIWIMdDZcxwJxPIMxEYmRHfvAaPhqEnvdb3m4NgE8HeSiGd7NoUgnaMzNMh
+ fU9MdPI9jP4sqG55aytBkV1R7DsGlNJqYG8KnafVXVRhh1F+TsJEaQ4Sd6lOec9/lpAhFPpdo
+ /xtf9pa7F8Waq7xYhkuKy2WK/0BNlgRv6LMenkMn59YI/zMeRmwgXYFyB+CDHygpym9Nc5I+F
+ gtAj1H4dLGPm66s9RCMJC7a6Stuu8D7f7sn16LhVmgVudys9vFccPaR89mSjklFLqlTfMsFxn
+ ULBoTSPvS1N0J8m5w63mM0W3wfzk+VkjZ11tTEC1K93FcTCUbbkByAEkN4wCvkqIxu30Be/UM
+ Boe/KpOgwhHn7MK28MWVnt1PnbD98UhFW/a/QN86tbH6KFzx7sbe5nHo+gMtmTjPr1giZNOOc
+ SO9wbLbKHiwk8XHIrht0hTb7tuliVFlMkZ/9kEmVcxoXcwjmytdYQ/O0KHw6mh6nb+bayLhFh
+ vnDPerBWMPe5saYocV+Sxtaa8Uly1eecexOesYhzI4bYbZ9dU4wEUnZr9B594P
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+At Technical University of Munich we use MAC 802.11 TX status frames to
+perform several measurements in MAC 802.11 setups.
 
-Thanks for the review.
+With ath based drivers this was possible until commit d94a461d7a7df6
+("ath9k: use ieee80211_tx_status_noskb where possible") as the driver
+ignored the IEEE80211_TX_CTL_REQ_TX_STATUS flag and always delivered
+tx_status frames. Since that commit, this behavior was changed and the
+driver now adheres to IEEE80211_TX_CTL_REQ_TX_STATUS.
 
-On 3/28/19 1:03 AM, Rob Herring wrote:
-> On Sun, Mar 10, 2019 at 07:28:14PM +0100, Jacek Anaszewski wrote:
->> Add common LED function definitions for use in Device Tree.
->> The function names were extracted from existing dts files
->> after eliminating oddities.
-> 
-> I'd like this to be suggestions of what to use rather than what's
-> already out there. So my comments are in that context.
-> 
->>
->> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> Cc: Baolin Wang <baolin.wang@linaro.org>
->> Cc: Daniel Mack <daniel@zonque.org>
->> Cc: Dan Murphy <dmurphy@ti.com>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
->> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
->> Cc: Simon Shields <simon@lineageos.org>
->> ---
->>   include/dt-bindings/leds/common.h | 38 ++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 38 insertions(+)
->>
->> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
->> index e171d0a6beb2..ffcd46317307 100644
->> --- a/include/dt-bindings/leds/common.h
->> +++ b/include/dt-bindings/leds/common.h
->> @@ -19,4 +19,42 @@
->>   #define LEDS_BOOST_ADAPTIVE	1
->>   #define LEDS_BOOST_FIXED	2
->>   
->> +/* Standard LED functions */
->> +#define LED_FUNCTION_ACTIVITY "activity"
-> 
-> of what?
+Due to performance reasons, IEEE80211_TX_CTL_REQ_TX_STATUS is not set for
+data frames from interfaces in managed mode. Hence, frames that are sent
+from a managed mode interface do never deliver tx_status frames. This
+remains true even if a monitor mode interface (the measurement interface)
+is added to the same ieee80211 physical device. Thus, there is no
+possibility for receiving tx_status frames for frames sent on an interface
+in managed mode, if the driver adheres to IEEE80211_TX_CTL_REQ_TX_STATUS.
 
-We have activity trigger, which provides instant feedback
-on the cpu activity.
+In order to force delivery of tx_status frames for research and debugging
+purposes, implement a debugfs option force_tx_status for ieee80211 physica=
+l
+devices. When this option is set for a physical device,
+IEEE80211_TX_CTL_REQ_TX_STATUS is enabled in all packets sent from that
+device. This option can be set via
+/sys/kernel/debug/ieee80211/<dev>/force_tx_status. The default is disabled=
+.
 
-This would nicely map to that.
+Co-developed-by: Charlie Groh <ga58taw@mytum.de>
+Signed-off-by: Charlie Groh <ga58taw@mytum.de>
+Signed-off-by: Julius Niedworok <julius.n@gmx.net>
+=2D--
+ net/mac80211/debugfs.c     | 53 +++++++++++++++++++++++++++++++++++++++++=
++++++
+ net/mac80211/ieee80211_i.h |  1 +
+ net/mac80211/tx.c          | 10 +++++++++
+ 3 files changed, 64 insertions(+)
 
->> +#define LED_FUNCTION_ADSL "adsl"
-> 
-> wan?
+diff --git a/net/mac80211/debugfs.c b/net/mac80211/debugfs.c
+index 2d43bc1..da8f27c 100644
+=2D-- a/net/mac80211/debugfs.c
++++ b/net/mac80211/debugfs.c
+@@ -150,6 +150,58 @@ static const struct file_operations aqm_ops =3D {
+ 	.llseek =3D default_llseek,
+ };
 
-Good point.
++static ssize_t force_tx_status_read(struct file *file,
++				    char __user *user_buf,
++				    size_t count,
++				    loff_t *ppos)
++{
++	struct ieee80211_local *local =3D file->private_data;
++	char buf[3];
++	int len =3D 0;
++
++	len =3D scnprintf(buf, sizeof(buf), "%d\n", (int)local->force_tx_status)=
+;
++
++	return simple_read_from_buffer(user_buf, count, ppos,
++				       buf, len);
++}
++
++static ssize_t force_tx_status_write(struct file *file,
++				     const char __user *user_buf,
++				     size_t count,
++				     loff_t *ppos)
++{
++	struct ieee80211_local *local =3D file->private_data;
++	char buf[3];
++	size_t len;
++
++	if (count > sizeof(buf))
++		return -EINVAL;
++
++	if (copy_from_user(buf, user_buf, count))
++		return -EFAULT;
++
++	buf[sizeof(buf) - 1] =3D '\0';
++	len =3D strlen(buf);
++	if (len > 0 && buf[len - 1] =3D=3D '\n')
++		buf[len - 1] =3D 0;
++
++	if (buf[0] =3D=3D '0' && buf[1] =3D=3D '\0')
++		local->force_tx_status =3D 0;
++	else if (buf[0] =3D=3D '1' && buf[1] =3D=3D '\0')
++		local->force_tx_status =3D 1;
++	else
++		return -EINVAL;
++
++	return count;
++}
++
++static const struct file_operations force_tx_status_ops =3D {
++	.write =3D force_tx_status_write,
++	.read =3D force_tx_status_read,
++	.open =3D simple_open,
++	.llseek =3D default_llseek,
++};
++
+ #ifdef CONFIG_PM
+ static ssize_t reset_write(struct file *file, const char __user *user_buf=
+,
+ 			   size_t count, loff_t *ppos)
+@@ -382,6 +434,7 @@ void debugfs_hw_add(struct ieee80211_local *local)
+ 	DEBUGFS_ADD(hwflags);
+ 	DEBUGFS_ADD(user_power);
+ 	DEBUGFS_ADD(power);
++	DEBUGFS_ADD_MODE(force_tx_status, 0600);
 
->> +#define LED_FUNCTION_ALARM "alarm"
->> +#define LED_FUNCTION_BACKLIGHT "backlight"
->> +#define LED_FUNCTION_BLUETOOTH "bluetooth"
->> +#define LED_FUNCTION_BOOT "boot"
-> 
-> What about boot?
+ 	if (local->ops->wake_tx_queue)
+ 		DEBUGFS_ADD_MODE(aqm, 0600);
+diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
+index e170f98..28ac87c 100644
+=2D-- a/net/mac80211/ieee80211_i.h
++++ b/net/mac80211/ieee80211_i.h
+@@ -1384,6 +1384,7 @@ struct ieee80211_local {
+ 		struct dentry *rcdir;
+ 		struct dentry *keys;
+ 	} debugfs;
++	bool force_tx_status;
+ #endif
 
-Is lit when bootloader code is executed?
-Turned off just before starting the kernel.
+ 	/*
+diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+index 8a49a74..a39ce49 100644
+=2D-- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -2470,6 +2470,11 @@ static struct sk_buff *ieee80211_build_hdr(struct i=
+eee80211_sub_if_data *sdata,
+ 	if (IS_ERR(sta))
+ 		sta =3D NULL;
 
->> +#define LED_FUNCTION_CHRG "chrg"
->> +#define LED_FUNCTION_DEBUG "debug"
->> +#define LED_FUNCTION_DISK "disk"
->> +#define LED_FUNCTION_DISK_READ "disk-read"
->> +#define LED_FUNCTION_DISK_WRITE "disk-write"
->> +#define LED_FUNCTION_FAULT "fault"
->> +#define LED_FUNCTION_FLASH "flash"
->> +#define LED_FUNCTION_HDDERR "hdderr"
-> 
-> disk-err for consistency?
++#ifdef CONFIG_MAC80211_DEBUGFS
++	if (local->force_tx_status)
++		info_flags |=3D IEEE80211_TX_CTL_REQ_TX_STATUS;
++#endif
++
+ 	/* convert Ethernet header to proper 802.11 header (based on
+ 	 * operation mode) */
+ 	ethertype =3D (skb->data[12] << 8) | skb->data[13];
+@@ -3475,6 +3480,11 @@ static bool ieee80211_xmit_fast(struct ieee80211_su=
+b_if_data *sdata,
+ 		      (tid_tx ? IEEE80211_TX_CTL_AMPDU : 0);
+ 	info->control.flags =3D IEEE80211_TX_CTRL_FAST_XMIT;
 
-Ack.
++#ifdef CONFIG_MAC80211_DEBUGFS
++	if (local->force_tx_status)
++		info->flags |=3D IEEE80211_TX_CTL_REQ_TX_STATUS;
++#endif
++
+ 	if (hdr->frame_control & cpu_to_le16(IEEE80211_STYPE_QOS_DATA)) {
+ 		tid =3D skb->priority & IEEE80211_QOS_CTL_TAG1D_MASK;
+ 		*ieee80211_get_qos_ctl(hdr) =3D tid;
+=2D-
+2.10.1 (Apple Git-78)
 
->> +#define LED_FUNCTION_HEARTBEAT "heartbeat"
->> +#define LED_FUNCTION_INDICATOR "indicator"
->> +#define LED_FUNCTION_INFO "info"
-> 
-> of what?
-
-Right, doesn't make sense alone.
-
->> +#define LED_FUNCTION_INTERNET "internet"
-> 
-> Same as wan?
-
-OK, to be removed.
-
->> +#define LED_FUNCTION_LAN "lan"
->> +#define LED_FUNCTION_MMC "mmc"
-> 
-> Same as disk?
-
-Not sure. The possibility to have separate LEDs for different types of
-mass storage devices could be useful.
-
->> +#define LED_FUNCTION_NAND "nand"
->> +#define LED_FUNCTION_ON "on"
->> +#define LED_FUNCTION_PROGRAMMING "programming"
->> +#define LED_FUNCTION_PWR "pwr"
->> +#define LED_FUNCTION_RX "rx"
->> +#define LED_FUNCTION_SD "sd"
-> 
->> +#define LED_FUNCTION_SLEEP "sleep"
->> +#define LED_FUNCTION_STANDBY "standby"
-> 
-> Same things?
-
-Ack. Standby feels more technical so I'd remove "sleep".
-
->> +#define LED_FUNCTION_STATUS "status"
->> +#define LED_FUNCTION_TORCH "torch"
->> +#define LED_FUNCTION_TV "tv"
->> +#define LED_FUNCTION_TX "tx"
->> +#define LED_FUNCTION_USB "usb"
->> +#define LED_FUNCTION_WAN "wan"
->> +#define LED_FUNCTION_WLAN "wlan"
->> +#define LED_FUNCTION_WPS "wps"
->> +
->>   #endif /* __DT_BINDINGS_LEDS_H */
->> -- 
->> 2.11.0
->>
-> 
-
--- 
-Best regards,
-Jacek Anaszewski
