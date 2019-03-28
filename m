@@ -2,132 +2,94 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C17C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A66C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8F821773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308C42173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:03:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zxlDHLil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfC1KBL (ORCPT
+        id S1726318AbfC1KDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 06:01:11 -0400
-Received: from twhmllg3.macronix.com ([122.147.135.201]:50857 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfC1KAs (ORCPT
+        Thu, 28 Mar 2019 06:03:17 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43557 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfC1KDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 06:00:48 -0400
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG3.macronix.com with ESMTP id x2S9wlJN052359;
-        Thu, 28 Mar 2019 17:58:52 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-From:   Mason Yang <masonccyang@mxic.com.tw>
-To:     broonie@kernel.org, marek.vasut@gmail.com,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        bbrezillon@kernel.org, dwmw2@infradead.org, lee.jones@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        computersforpeace@gmal.com, paul.burton@mips.com, stefan@agner.ch,
-        christophe.kerello@st.com, liang.yang@amlogic.com,
-        geert@linux-m68k.org, devicetree@vger.kernel.org,
-        marcel.ziswiler@toradex.com, linux-mtd@lists.infradead.org,
-        richard@nod.at, miquel.raynal@bootlin.com
-Cc:     juliensu@mxic.com.tw, zhengxunli@mxic.com.tw,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH 4/7] dt-bindings: mfd: Document Macronix MX25F0A controller bindings
-Date:   Thu, 28 Mar 2019 18:18:35 +0800
-Message-Id: <1553768318-23149-5-git-send-email-masonccyang@mxic.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1553768318-23149-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1553768318-23149-1-git-send-email-masonccyang@mxic.com.tw>
-X-MAIL: TWHMLLG3.macronix.com x2S9wlJN052359
+        Thu, 28 Mar 2019 06:03:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k17so14110662wrx.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 03:03:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=9gJSVONBxLIZb3KhJ3D+2GYvPMFJcj7xfXWOLFiI6Uk=;
+        b=zxlDHLilTbuIYbU26AeGTVV/M7lcLD3piIwWEn+kfoI5PeUr1EH659o+mN2QoKQCYN
+         IGFce3yqQ1SemDjVbBWXRieNM3eNf21odTEXhLWJj9Fg8DYNCIjKFQ/x5PBvBaL923kD
+         iIjU6C2/nDuTeW2uIP49utyuhxbUifue7kA6wR7a2AZ9cqQ/SbMoujGX0+1OUhB3oH9l
+         Ww9Lmft8psz+7LlVxcdgqrME81kqp8FUYw6+u6i7zsQad/ASPcb4ZqjSVkw3vHQLFx9X
+         O4k522kusVOmJmlr6Ws1K32E2EKufYuH39EFGQ4n9UVFGYS6Kkagl0X9ZAQeNpMAX2B5
+         kIrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9gJSVONBxLIZb3KhJ3D+2GYvPMFJcj7xfXWOLFiI6Uk=;
+        b=HdK3V3EaXaud9oWLY4vhxXpJ8N1KUoNKZEGOkIF2LtoKDir27yOef5WHJaZa6KElTk
+         WKnshDtF7kRVHa1ca9uheZGqPIiShaPSIf3FxGJC4xv0WUrtlb77o6mEkKRHVpgPxNAR
+         w1J253kWCcb0e6llMa0mSbQFffu3Ib0SVWWW3JHyatJCR8LhGjIe+Uz6LGuVYl9X22rr
+         WE7pJN7n2eBlRSiJSRx92aS/Gf3IKIzKt+DhwxIRJMoNqlI0EzbkevFqRdKIDAq3mUEX
+         nlfZRFHNfAPBT2JtMsjgFVB8SkUebWenoX1MZZRqfAcuD7vN3fso64xzpx6aZqf5QgX5
+         laNQ==
+X-Gm-Message-State: APjAAAULzPIJJdBqonJBJ2vvbqjvGEa6s4qune2pjD6uZBelrEGFmqm7
+        9b/yNsulDESPUQovWFIhLN80RA==
+X-Google-Smtp-Source: APXvYqw2yqQKQj1kI2ejA42NFiNPUKiW5WbXfqc+JuhFpMjuqGNxZ9Jz6fojhMdlFduIHlKWrA9fAg==
+X-Received: by 2002:a5d:474d:: with SMTP id o13mr26822461wrs.278.1553767395366;
+        Thu, 28 Mar 2019 03:03:15 -0700 (PDT)
+Received: from loys-ubuntu-BY1835A49200471.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id q8sm1230315wmq.35.2019.03.28.03.03.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 28 Mar 2019 03:03:14 -0700 (PDT)
+From:   Loys Ollivier <lollivier@baylibre.com>
+To:     Johan Hovold <johan@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Loys Ollivier <lollivier@baylibre.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RFC 0/1] gnss: get serial speed from subdrivers
+Date:   Thu, 28 Mar 2019 11:03:08 +0100
+Message-Id: <1553767389-22857-1-git-send-email-lollivier@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the bindings used by the Macronix MX25F0A MFD controller.
+Hello,
 
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- .../devicetree/bindings/mfd/mxic-mx25f0a.txt       | 66 ++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
+Here's a patch that moves the currently hardcoded, default serial speed
+to the subdrivers.
+If the default speed is not specified by the subdriver then it is read
+from the device tree.
 
-diff --git a/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
-new file mode 100644
-index 0000000..53b4839
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
-@@ -0,0 +1,66 @@
-+Macronix MX25F0A Multi-Function Device Tree Bindings
-+----------------------------------------------------
-+
-+MX25F0A is a MultiFunction Device with SPI and raw NAND, which
-+supports either spi host controller or raw nand controller.
-+
-+Required properties:
-+- compatible: should be "mxic,mx25f0a-mfd"
-+- #address-cells: should be 1
-+- #size-cells: should be 0
-+- reg: should contain 2 entries, one for the registers and one for the direct
-+       mapping area in SPI mode.
-+- reg-names: should contain "regs" and "dirmap"
-+- interrupts: interrupt line connected to this MFD controller
-+
-+Required nodes:
-+ - spi :
-+	Node for configuring the SPI controller driver.
-+	Required properties:
-+		- compatible = "mxicy,mx25f0a-spi";
-+		- clock-names: should contain "ps_clk", "send_clk" and
-+			       "send_dly_clk"
-+		- clocks: should contain 3 entries for the "ps_clk", "send_clk"
-+			  and "send_dly_clk" clocks
-+
-+- nand :
-+	Node for configuring the raw nand controller driver.
-+	Required properties:
-+		- compatible = "mxicy,mx25f0a-nand-ctlr";
-+		- nand-ecc-mode = "soft";
-+		- nand-ecc-algo = "bch";
-+
-+Example:
-+
-+	mxic: mx25f0a-mfd@43c30000 {
-+		compatible = "mxic,mx25f0a-mfd";
-+		reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
-+		reg-names = "regs", "dirmap";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* either spi or nand */
-+		spi {
-+			compatible = "mxicy,mx25f0a-spi";
-+			clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-+			clock-names = "send_clk", "send_dly_clk", "ps_clk";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			flash@0 {
-+				compatible = "jedec,spi-nor";
-+				reg = <0>;
-+				spi-max-frequency = <25000000>;
-+				spi-tx-bus-width = <4>;
-+				spi-rx-bus-width = <4>;
-+			};
-+		};
-+
-+		nand {
-+			compatible = "mxicy,mx25f0a-nand-ctlr";
-+			nand-ecc-mode = "soft";
-+			nand-ecc-algo = "bch";
-+			nand-ecc-step-size = <512>;
-+			nand-ecc-strength = <8>;
-+		};
-+	};
+Please let me know what you think !
+
+Cheers,
+Loys
+
+Loys Ollivier (1):
+  gnss: get serial speed from subdrivers
+
+ drivers/gnss/mtk.c    |  6 +++++-
+ drivers/gnss/serial.c | 21 +++++++++++++--------
+ drivers/gnss/serial.h |  3 ++-
+ drivers/gnss/ubx.c    |  3 ++-
+ 4 files changed, 22 insertions(+), 11 deletions(-)
+
 -- 
-1.9.1
+2.7.4
 
