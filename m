@@ -5,80 +5,127 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91730C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88D8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC332183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 820A120823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:06:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfC1QEU (ORCPT
+        id S1726817AbfC1QGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:04:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbfC1QEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:04:20 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D07C20823;
-        Thu, 28 Mar 2019 16:04:18 +0000 (UTC)
-Date:   Thu, 28 Mar 2019 12:04:17 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Slavomir Kaslev <kaslevs@vmware.com>
-Cc:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 4.9 20/87] fs: Make splice() and tee() take into
- account O_NONBLOCK flag on pipes
-Message-ID: <20190328120417.36bae781@gandalf.local.home>
-In-Reply-To: <3c4595fec941c10beaf4bad8df30170b4e950226.camel@vmware.com>
-References: <20190327182040.17444-1-sashal@kernel.org>
-        <20190327182040.17444-20-sashal@kernel.org>
-        <3c4595fec941c10beaf4bad8df30170b4e950226.camel@vmware.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 28 Mar 2019 12:06:17 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35012 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726029AbfC1QGQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 12:06:16 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2SG47vx068022
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:06:15 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rh14wscua-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:06:15 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Thu, 28 Mar 2019 16:06:12 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Mar 2019 16:06:09 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2SG67mm61014184
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 16:06:07 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 506574C04A;
+        Thu, 28 Mar 2019 16:06:07 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AFF494C046;
+        Thu, 28 Mar 2019 16:06:06 +0000 (GMT)
+Received: from [9.152.222.62] (unknown [9.152.222.62])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Mar 2019 16:06:06 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v6 2/7] s390: ap: new vfio_ap_queue structure
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
+        david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1553265828-27823-1-git-send-email-pmorel@linux.ibm.com>
+ <1553265828-27823-3-git-send-email-pmorel@linux.ibm.com>
+ <169eec34-6397-3150-27df-9985c9e711b8@linux.ibm.com>
+ <1b64ad7b-2a7c-b604-1adb-af400e7be516@linux.ibm.com>
+ <0477b20a-c882-c23d-5373-d461ef721f2c@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Thu, 28 Mar 2019 17:06:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <0477b20a-c882-c23d-5373-d461ef721f2c@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032816-0008-0000-0000-000002D2E8A4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032816-0009-0000-0000-0000223F1EFC
+Message-Id: <d7154477-8b87-71f8-1e15-ada53c765f61@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903280108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Mar 2019 15:37:49 +0000
-Slavomir Kaslev <kaslevs@vmware.com> wrote:
+On 28/03/2019 16:32, Tony Krowiak wrote:
+> On 3/28/19 9:06 AM, Pierre Morel wrote:
+>> On 26/03/2019 21:45, Tony Krowiak wrote:
+>>> On 3/22/19 10:43 AM, Pierre Morel wrote:
+>>>> The AP interruptions are assigned on a queue basis and
 
-> On Wed, 2019-03-27 at 14:19 -0400, Sasha Levin wrote:
-> > From: Slavomir Kaslev <kaslevs@vmware.com>
-> > 
-> > [ Upstream commit ee5e001196d1345b8fee25925ff5f1d67936081e ]
-> > 
-> > The current implementation of splice() and tee() ignores O_NONBLOCK
-> > set
-> > on pipe file descriptors and checks only the SPLICE_F_NONBLOCK flag
-> > for
-> > blocking on pipe arguments.  This is inconsistent since splice()-ing
-> > from/to non-pipe file descriptors does take O_NONBLOCK into
-> > consideration.
-> > 
-> > Fix this by promoting O_NONBLOCK, when set on a pipe, to
-> > SPLICE_F_NONBLOCK.  
+...
+>>>> +static void vfio_ap_free_queue(int apqn, struct ap_matrix_mdev 
+>>>> *matrix_mdev)
+>>>> +{
+>>>> +    struct vfio_ap_queue *q;
+>>>> +
+>>>> +    q = vfio_ap_get_queue(apqn, &matrix_mdev->qlist);
+>>>> +    if (!q)
+>>>> +        return;
+>>>> +    q->matrix_mdev = NULL;
+>>>> +    vfio_ap_mdev_reset_queue(q);
+>>>
+>>> I'm wondering if it's necessary to reset the queue here. The only time
+>>> a queue is used is when a guest using the mdev device is started. When
+>>> that guest is terminated, the fd for the mdev device is /* Bits 41-47 
+>>> must all be zeros */closed and the
+>>> mdev device's release callback is invoked. The release callback resets
+>>> the queues assigned to the mdev device. Is it really necessary to
+>>> reset the queue again when it is unassigned even if there would have
+>>> been no subsequent activity?
+>>
+>> Yes, it is necessary, the queue can be re-assigned to another guest 
+>> later.
+>> Release will only be called when unbinding the queue from the driver.
 > 
-> Hey Sasha,
-> 
-> I don't think that this patch should be merged to stable kernels. It's
-> more of a feature rather than a bug/regression fix and it changes how
-> splice() has been working from day one.
-> 
-> Can you please drop it from the stable queues?
-> 
+> That is true, but if the queue is never used, there is nothing to reset.
 
-On the other hand, it keeps stable more in sync with what mainline has.
-If someone writes new code against a stable release, and depends on
-this behavior, it's less likely to break when they run it on a newer
-kernel. Which means its less likely that Linus will revert your
-change ;-)
+:) OK
 
--- Steve
+
+Regards,
+Pierre
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
