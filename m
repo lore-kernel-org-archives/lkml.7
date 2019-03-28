@@ -2,188 +2,100 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 590C0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2979C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0BC2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:56:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hAyt+v/G";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PJP5CayG"
+	by mail.kernel.org (Postfix) with ESMTP id 819452173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553756288;
+	bh=IY2b8v4jncTm4HanpgMnfdzbl9Pt99kGPfiTLuR4y9s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yj9jo82GSz+r8sKFRz8eKvzH/m+2i0F0N0wXs9VfWBllV9xLTxA7qAkX0WY09i78r
+	 wMacU6OEnDr1/IJWrVG8BNK9Uq9W7D/8S47t6DTxnvdIyUQxL4j9WfNOx9ogkbcNmC
+	 wN3OvvwSfOSfj/UEG0SM/Y4HPFNUTKQHXq6w6EQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfC1G4k (ORCPT
+        id S1726341AbfC1G6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 02:56:40 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:40282 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfC1G4k (ORCPT
+        Thu, 28 Mar 2019 02:58:07 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36775 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfC1G6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 02:56:40 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C6622607C6; Thu, 28 Mar 2019 06:56:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553756198;
-        bh=pBMbbbvhiAwnjjwsEW9m0EDi0dDvM9XDa0w9M7jJN54=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hAyt+v/GoB2KoAF/SZiVHwPKu+dsYj+5b7K8ufmsGN7jsI6i4UDe8k0Fyraq1Xzj8
-         QuPqeRj+it6YRV7aQ4MBykjnTnwA4NH1ocoFrFuOPdLoYLSpe3k1JYgqZM3RdLUdUm
-         H5RXtdIde5pqaWaIe/66xkbeEiSgB7kz7RQ1m5XQ=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 801FD60237;
-        Thu, 28 Mar 2019 06:56:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553756197;
-        bh=pBMbbbvhiAwnjjwsEW9m0EDi0dDvM9XDa0w9M7jJN54=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PJP5CayGbzC4na4enJHmV8jP7M7ampwm6mc/IkcR2YMq2Hf+xxu8zlzghHTCVZdq+
-         Dl4+kDkY0NazVxGxY7ql83P5J/y7AsyetupriAKbhM5HFrmz7HJyjRvzQXJSMQhmHE
-         xGykofXI/YGEcJQQs+XH/HXGtxtC1BkO3jWWQxdA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 801FD60237
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH v2] arch_topology: Make cpu_capacity sysfs node as
- ready-only
-To:     Lingutla Chandrasekhar <clingutla@codeaurora.org>,
-        gregkh@linuxfoundation.org, quentin.perret@arm.com,
-        sudeep.holla@arm.com, dietmar.eggemann@arm.com
-Cc:     juri.lelli@gmail.com, catalin.marinas@arm.com,
-        jeremy.linton@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190328044705.16838-1-clingutla@codeaurora.org>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <c2f0b869-826e-3d95-159f-5867ccb75a08@codeaurora.org>
-Date:   Thu, 28 Mar 2019 12:26:30 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 28 Mar 2019 02:58:07 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h18so2629384wml.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 23:58:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q1PezP2XQg+mDviVgWM5i24dvdC/8vaYo2tkDH927Eo=;
+        b=bYD0hu7CTkOEC/UfWVNjLpQswfLDyWnZjO+yG9SsnejA8EdLJW/kg3GeYaawt1Y9cW
+         dy44DhTS0R4Cx/7Emjl4MCBwVCyfV292Fp0tlAvel97ms+qOJ49oQhLicjhTTKG5R2wc
+         PYCuugbP1qIY+is3hfzJt3iVbADcFFqUcZ8me2LaFLFGBe/ebChN1wa/YjqCnW6aYV3J
+         WHhzypsHvExXzetdI6+VXuKMUthGLwRiardenEkpjXNm2P0QVbqbz6qR3BjcIEOetQ/K
+         O/OrwIuJZ59/v2Ri2sRdm2wDUu2K7TLZ1qpQe8EWY1zXJ1UI2CZVy/uiB9rXmfOxFff1
+         Mgrw==
+X-Gm-Message-State: APjAAAVD9kDZfR5mpryevu3h4REr0MrC5nsdhf+ohtyjLvIY3FH26JFa
+        wLEIGfNhH4VmimHZwwY1EX8=
+X-Google-Smtp-Source: APXvYqxEEg6bIrtRVpuuN9OeVJ+wS5PBnn6jxssxAGzZjgcAgnCUtNx+osvmbWfOn0eBECcFZXWlNQ==
+X-Received: by 2002:a7b:c00e:: with SMTP id c14mr14313558wmb.110.1553756285332;
+        Wed, 27 Mar 2019 23:58:05 -0700 (PDT)
+Received: from localhost (ip-37-188-147-215.eurotel.cz. [37.188.147.215])
+        by smtp.gmail.com with ESMTPSA id t69sm3211038wmt.16.2019.03.27.23.58.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Mar 2019 23:58:03 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 07:58:02 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/10] Another Approach to Use PMEM as NUMA Node
+Message-ID: <20190328065802.GQ11927@dhcp22.suse.cz>
+References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190326135837.GP28406@dhcp22.suse.cz>
+ <43a1a59d-dc4a-6159-2c78-e1faeb6e0e46@linux.alibaba.com>
+ <20190326183731.GV28406@dhcp22.suse.cz>
+ <f08fb981-d129-3357-e93a-a6b233aa9891@linux.alibaba.com>
+ <20190327090100.GD11927@dhcp22.suse.cz>
+ <CAPcyv4heiUbZvP7Ewoy-Hy=-mPrdjCjEuSw+0rwdOUHdjwetxg@mail.gmail.com>
+ <c3690a19-e2a6-7db7-b146-b08aa9b22854@linux.alibaba.com>
+ <20190327193918.GP11927@dhcp22.suse.cz>
+ <6f8b4c51-3f3c-16f9-ca2f-dbcd08ea23e6@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20190328044705.16838-1-clingutla@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f8b4c51-3f3c-16f9-ca2f-dbcd08ea23e6@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for making the change suggested.
+On Wed 27-03-19 19:09:10, Yang Shi wrote:
+> One question, when doing demote and promote we need define a path, for
+> example, DRAM <-> PMEM (assume two tier memory). When determining what nodes
+> are "DRAM" nodes, does it make sense to assume the nodes with both cpu and
+> memory are DRAM nodes since PMEM nodes are typically cpuless nodes?
 
-Should not this be v3.
-
-Please add version detail properly including what changes you made in 
-which version after ---,  that makes the patch easy to review.
-
-Thanks.
-Mukesh
-
-
-On 3/28/2019 10:17 AM, Lingutla Chandrasekhar wrote:
-> If user updates any cpu's cpu_capacity, then the new value is going to
-> be applied to all its online sibling cpus. But this need not to be correct
-> always, as sibling cpus (in ARM, same micro architecture cpus) would have
-> different cpu_capacity with different performance characteristics.
-> So, updating the user supplied cpu_capacity to all cpu siblings
-> is not correct.
->
-> And another problem is, current code assumes that 'all cpus in a cluster
-> or with same package_id (core_siblings), would have same cpu_capacity'.
-> But with commit '5bdd2b3f0f8 ("arm64: topology: add support to remove
-> cpu topology sibling masks")', when a cpu hotplugged out, the cpu
-> information gets cleared in its sibling cpus. So, user supplied
-> cpu_capacity would be applied to only online sibling cpus at the time.
-> After that, if any cpu hotplugged in, it would have different cpu_capacity
-> than its siblings, which breaks the above assumption.
->
-> So, instead of mucking around the core sibling mask for user supplied
-> value, use device-tree to set cpu capacity. And make the cpu_capacity
-> node as read-only to know the asymmetry between cpus in the system.
-> While at it, remove cpu_scale_mutex usage, which used for sysfs write
-> protection.
->
-> Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Tested-by: Quentin Perret <quentin.perret@arm.com>
-> Reviewed-by: Quentin Perret <quentin.perret@arm.com>
-> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-> Signed-off-by: Lingutla Chandrasekhar <clingutla@codeaurora.org>
->
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index edfcf8d982e4..1739d7e1952a 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-> @@ -7,7 +7,6 @@
->    */
->   
->   #include <linux/acpi.h>
-> -#include <linux/arch_topology.h>
->   #include <linux/cpu.h>
->   #include <linux/cpufreq.h>
->   #include <linux/device.h>
-> @@ -31,7 +30,6 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
->   		per_cpu(freq_scale, i) = scale;
->   }
->   
-> -static DEFINE_MUTEX(cpu_scale_mutex);
->   DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
->   
->   void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
-> @@ -51,37 +49,7 @@ static ssize_t cpu_capacity_show(struct device *dev,
->   static void update_topology_flags_workfn(struct work_struct *work);
->   static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
->   
-> -static ssize_t cpu_capacity_store(struct device *dev,
-> -				  struct device_attribute *attr,
-> -				  const char *buf,
-> -				  size_t count)
-> -{
-> -	struct cpu *cpu = container_of(dev, struct cpu, dev);
-> -	int this_cpu = cpu->dev.id;
-> -	int i;
-> -	unsigned long new_capacity;
-> -	ssize_t ret;
-> -
-> -	if (!count)
-> -		return 0;
-> -
-> -	ret = kstrtoul(buf, 0, &new_capacity);
-> -	if (ret)
-> -		return ret;
-> -	if (new_capacity > SCHED_CAPACITY_SCALE)
-> -		return -EINVAL;
-> -
-> -	mutex_lock(&cpu_scale_mutex);
-> -	for_each_cpu(i, &cpu_topology[this_cpu].core_sibling)
-> -		topology_set_cpu_scale(i, new_capacity);
-> -	mutex_unlock(&cpu_scale_mutex);
-> -
-> -	schedule_work(&update_topology_flags_work);
-> -
-> -	return count;
-> -}
-> -
-> -static DEVICE_ATTR_RW(cpu_capacity);
-> +static DEVICE_ATTR_RO(cpu_capacity);
->   
->   static int register_cpu_capacity_sysctl(void)
->   {
-> @@ -141,7 +109,6 @@ void topology_normalize_cpu_scale(void)
->   		return;
->   
->   	pr_debug("cpu_capacity: capacity_scale=%u\n", capacity_scale);
-> -	mutex_lock(&cpu_scale_mutex);
->   	for_each_possible_cpu(cpu) {
->   		pr_debug("cpu_capacity: cpu=%d raw_capacity=%u\n",
->   			 cpu, raw_capacity[cpu]);
-> @@ -151,7 +118,6 @@ void topology_normalize_cpu_scale(void)
->   		pr_debug("cpu_capacity: CPU%d cpu_capacity=%lu\n",
->   			cpu, topology_get_cpu_scale(NULL, cpu));
->   	}
-> -	mutex_unlock(&cpu_scale_mutex);
->   }
->   
->   bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
+Do we really have to special case this for PMEM? Why cannot we simply go
+in the zonelist order? In other words why cannot we use the same logic
+for a larger NUMA machine and instead of swapping simply fallback to a
+less contended NUMA node? It can be a regular DRAM, PMEM or whatever
+other type of memory node.
+-- 
+Michal Hocko
+SUSE Labs
