@@ -2,85 +2,114 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CA2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2BAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E14462075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:16:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553782597;
-	bh=PkqeEq4WwmfERWDYJBk7vTulq+B0vgd/JOOSLAP/RP8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UqhsdRZ/2hSMoFnBap9Mpw+1GR5tedWv+s1YWe5VHiQarVXd8Wi+TxXXmYwfsjfjh
-	 Pazp0nIQcwpKYJQCcF0CYzBk1PTAZ/bycpDWu7MiCZqHW3jE1ta1+YNS28cJfZ7ciD
-	 JDTtGkO/TH9LKLLcoU/gon9QF5nSLCPoT/VieYVQ=
+	by mail.kernel.org (Postfix) with ESMTP id 788EB2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:16:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rE0qnyPf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfC1OQf (ORCPT
+        id S1727003AbfC1OQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:16:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49126 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725849AbfC1OQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:16:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C140EB780;
-        Thu, 28 Mar 2019 14:16:32 +0000 (UTC)
-Date:   Thu, 28 Mar 2019 15:16:31 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        stable <stable@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 00/10] mm: Sub-section memory hotplug support
-Message-ID: <20190328141631.GB7155@dhcp22.suse.cz>
-References: <155327387405.225273.9325594075351253804.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190322180532.GM32418@dhcp22.suse.cz>
- <CAPcyv4gBGNP95APYaBcsocEa50tQj9b5h__83vgngjq3ouGX_Q@mail.gmail.com>
- <20190325101945.GD9924@dhcp22.suse.cz>
- <CAPcyv4iJCgu-akJM_O8ZtscqWQt=CU-fvx-ViGYeau-NJufmSQ@mail.gmail.com>
- <20190326080408.GC28406@dhcp22.suse.cz>
- <CAPcyv4jUeUPwbfToWQtWX1AxfgFLNpBUhm8BvgJ2Hv1RbNPiog@mail.gmail.com>
- <20190327161306.GM11927@dhcp22.suse.cz>
- <9e769f3d-00f2-a8bb-2d8d-097735cb2a6d@redhat.com>
+        Thu, 28 Mar 2019 10:16:58 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:41214 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbfC1OQ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 10:16:57 -0400
+Received: by mail-yw1-f68.google.com with SMTP id l15so14695269ywe.8;
+        Thu, 28 Mar 2019 07:16:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=s1PNxO9w6P66F4KHKA/rF9ZUedXG3vp7Y93p0h/JBlc=;
+        b=rE0qnyPfdPMVZByGli6s9HNBo6aiVYZIrpytKGVE6xoNYpcT8B5/Usu9hYw03obMR1
+         L14UXrAHXmiL5tAXahfaEedmOTv+Qx3rCw1ppAnbVAl6TGBAZxdjO2BIhRejFovXFoEq
+         BqXnIIG7Q2WHvyQxUoft0FZLJWG9WqfoZFWRpkkQjVhH5QLtlvVJ05AJxGEThmw5PB1W
+         vsn9NzyahA79Uf+jN+b7HiVA36zIGULyFWkVgC2HGfBqhKZRwqvitxqjlxI3PiN1hNj5
+         fI9ShKLgBrJfcbtHyXs98ZZymm3m2oz9HsQXK2NIhM4m3ZzIwXUtLBXZBAi/Y4+Je5J7
+         j3zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=s1PNxO9w6P66F4KHKA/rF9ZUedXG3vp7Y93p0h/JBlc=;
+        b=RDJ2O3rmuFOPIGDMtrhoeIJqMvEIMfj/UQ8RSYsCgcjRzpiqon51r/DH1WpG+Z0hbA
+         RXNhFG07VAX3cfYebAvhQNfM58SgxvltrjLJ+C7sbKPrgeghbvQz7hgWonpkGxshVBFl
+         2cNU1p9FJiHveHYE4NoJY+fcnQbK9DpiNWQsr/EAMv0wy7LuklaofarcFtkVOQKz+utw
+         vkEZ9UsafF9VjW/gjKPWOrfBYRD6GQp9AGFctdNlwr+KdXd6V5zGM4f7ydybk0vC0UQF
+         quomuP+c6npE9zQHEl0U+xSzPLCDFlcguztqZtMupoaff6ZzRUpdHtGdBmFSwNKs8XSf
+         Nd0Q==
+X-Gm-Message-State: APjAAAW9hbAFQ7JgrHJPGgRsLLav/vvkzJ1jUoopTIsvx5tY0IR2ZnlX
+        snC/uk+5ya11TycJ32Y5vX8=
+X-Google-Smtp-Source: APXvYqyVsAz2EwP0CmOJ0F2nvDGNEFWLFg4ADLXr8vRnUaqxBVjIOnqYWKK9stEcsCZh3ENoMJPR4g==
+X-Received: by 2002:a81:178c:: with SMTP id 134mr37022676ywx.480.1553782616680;
+        Thu, 28 Mar 2019 07:16:56 -0700 (PDT)
+Received: from yubo-2 ([191.101.9.198])
+        by smtp.gmail.com with ESMTPSA id t71sm17023324ywc.4.2019.03.28.07.16.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 07:16:56 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 10:16:54 -0400
+From:   Bo YU <tsu.yubo@gmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, jakub.kicinski@netronome.com,
+        df@google.com
+Cc:     tsu.yubo@gmail.com, quentin.monnet@netronome.com,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] bpf: bpftool: convert =?utf-8?B?4oCYY29uc3QgY2hhciAq?=
+ =?utf-8?B?4oCZ?= type into 'char *' in assignment
+Message-ID: <20190328141652.wssqboyekxmp6tkw@yubo-2>
+Mail-Followup-To: ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, jakub.kicinski@netronome.com,
+        df@google.com, quentin.monnet@netronome.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <9e769f3d-00f2-a8bb-2d8d-097735cb2a6d@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+User-Agent: NeoMutt/20180512-62-03f98a
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28-03-19 14:38:15, David Hildenbrand wrote:
-> On 27.03.19 17:13, Michal Hocko wrote:
-[...]
-> > People are asking for a smaller memory hotplug granularity for other
-> > usecases (e.g. memory ballooning into VMs) which are quite dubious to
-> > be honest and not really worth all the code rework. If we are talking
-> > about something that can be worked around elsewhere then it is preferred
-> > because the code base is not in an excellent shape and putting more on
-> > top is just going to cause more headaches.
-> 
-> At least for virtio-mem, it will be handled similar to xen-balloon and
-> hyper-v balloon, where whole actions are added and some parts are kept
-> "soft-offline". But there, one device "owns" the complete section, it
-> does not overlap with other devices. One section only has one owner.
+When compiling with check flag: make -C tools/bpf/bpftool/
+gcc will warning:
 
-This is exactly what I meant by handing at a higher level.
+jit_disasm.c:119:29: warning: assignment discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+   info.disassembler_options = disassembler_options;
 
+So convert 'const char *' type into 'char *' to fix the warning.
+
+Fixes:3ddeac6705aba(tools: bpftool: use 4 context mode for the NFP disasm)
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+---
+ tools/bpf/bpftool/jit_disasm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/bpf/bpftool/jit_disasm.c b/tools/bpf/bpftool/jit_disasm.c
+index 3ef3093560ba..40b46e46454a 100644
+--- a/tools/bpf/bpftool/jit_disasm.c
++++ b/tools/bpf/bpftool/jit_disasm.c
+@@ -116,7 +116,7 @@ void disasm_print_insn(unsigned char *image, ssize_t len, int opcodes,
+ 	info.arch = bfd_get_arch(bfdf);
+ 	info.mach = bfd_get_mach(bfdf);
+ 	if (disassembler_options)
+-		info.disassembler_options = disassembler_options;
++		info.disassembler_options = (char *)disassembler_options;
+ 	info.buffer = image;
+ 	info.buffer_length = len;
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.11.0
+
