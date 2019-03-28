@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EE4C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62963C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752D421872
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33DFC20685
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rM0vdUjU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I0c5OEuY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbfC1Ten (ORCPT
+        id S1726904AbfC1Ter (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 15:34:43 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37374 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfC1Tek (ORCPT
+        Thu, 28 Mar 2019 15:34:47 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53671 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfC1Teq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 15:34:40 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w10so24390134wrm.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:34:39 -0700 (PDT)
+        Thu, 28 Mar 2019 15:34:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q16so56618wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:34:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=veeM4ZlKnlch+gefwAyRK7UAExOJ9TXLKyPKjPAv7yU=;
-        b=rM0vdUjUx1GHCMeG94p6laganR+8CegPEC1lTi+rY3QdBX3L38Ol187aSgEGgi9C1k
-         AvjdjfknFY3Q71YzsQdxtKakLvKwdtKRSaU3oqQF+O4nyC8Nn6n0npZz52JPsYc9+TtQ
-         bL2hhgTvg3CoUA6pSfMlAVWDMCF4WedoTLTzTcoPM2M9cOUu0EJntaRp3BxBD6U5x2hI
-         pzZsySwqN6BiqFgoPa/L/a3K9LvJv8vaxUhpBjvSiB5OnfWOc5gMhauHq0bVUowfo2vy
-         qgGa3cLZRz75W4t9XmThKajjXsZ4MdVsXo9e3rTDTHwhTYSALYG6O1tqyttOXxJ13Uo6
-         ah+A==
+        bh=JaJrMwXMbqfybcRUS11Ps0vcG+jaWoUIDyHOkmGA5GE=;
+        b=I0c5OEuY68J+FznI02PCWUijbJH/VbFB/z3m2fTABTNS2oQskKrdva/5gnBM3A0oNL
+         +PtdEVTUFg3M1q+z3R9KlOjdxdDcRacl23THG2lEfBaCb9sP/0/JnL87zBuDPmZW3Qtz
+         jflNBy6/qGsUAhT6bEw/3v/2dH4PNAgy11dRtns6eVc60Zsmb82z+/8WMETVM2evPO3e
+         VJxJmDOyKbp4YarHuvK240Uu8bcj/peJRLG2av9nKjrSE/g2db0+ogr3/9C4BU84TlEM
+         sbAzYzqBwa4SqAymGeLdmbf3Nmk26tUhN2T0ophTiKheTQZYXVqHFWulYynlIyfYXV9U
+         VlmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=veeM4ZlKnlch+gefwAyRK7UAExOJ9TXLKyPKjPAv7yU=;
-        b=CYBW5B4XeE9tlPCdHpJYo3+NE/CpSqrQsVkbl0UvFj8enbih9pvos/XhUeSWKR+8El
-         7GU7jpkkR/fQ7BM1iQePVQEmQ6/c8LjjajQ/lT2z5P8eje+2jP5WLHzNL2tU40+sGRQp
-         H/6fT0PT6umc7GChBHEwvNkPevk3Djlpb1qVgZCkUx64CrdakgBplcVPGcI1eROOKWaZ
-         tcb/ouMYUs/fTZMbZj79XAoh4mK1Mtd5VtLCYAaMlaAPI0BY6OWTu0iD3LA+JEnZuTWi
-         KMDIJ21aJiSm6L/5DBILDfs1doLoAsj4SPtVkHHuRv9UNgxgjCYgAvn5WO+tJ6C318tl
-         9Eug==
-X-Gm-Message-State: APjAAAV29GvqX8oxI8UnvgdqmqZb9R4xBuDKuNuqgw6t6nfBKA2v4drr
-        IxchLqzw9idWCaG9/cUZXpWaAA==
-X-Google-Smtp-Source: APXvYqz6lI3v60ZKAk42ha/hvVNQgTMD5lAC7GoDSVtbw17WJGjW1gMNeE7A3FilZpKnS9UCEJRzqg==
-X-Received: by 2002:adf:afd0:: with SMTP id y16mr27436030wrd.328.1553801678526;
-        Thu, 28 Mar 2019 12:34:38 -0700 (PDT)
+        bh=JaJrMwXMbqfybcRUS11Ps0vcG+jaWoUIDyHOkmGA5GE=;
+        b=DJXUXjGIlISH0xnHy9c8Wn+qmaVUYCkdaxef7E26BWbgApPn/b+jSg5iHMP8B7N/dF
+         0CLJc9HXzTOvlVUDVRUcoEkHvY2/xbq6IolSHOEjB4/Oeg5YuZUAD2anY858jlhOP3ri
+         sYCY9vTJNOxUesNHlxYHjg2ierwYlmdEMNkmoZa9MgZYhW+BiHxMJEgthiLS+aNQr3UC
+         nC6atrpoM+DiIEkVAHMF6FVRNBqrd7K+3P/TB2Bqd36wuH5DeuTrNA0dcoobb2jhS0qy
+         bhuxDeTCD8X9C1kcShwkVklgBtGfPLywnaBRn1abXifYsJzx18YXkqYS605JS+6gYSOu
+         NCNQ==
+X-Gm-Message-State: APjAAAUexYcorbtZQ6aTaSTNtyPV7CQMbfvg2Q1UYn2xJ7CEAj+KuTBZ
+        Iq7Nzcvea6IsmCOIwk4r4sZ9BA==
+X-Google-Smtp-Source: APXvYqzrNK0gghjFgPO/2GJeu4qQsMm/g2+ECfXkIQLcodE1iNtl1Rf1vRf4rmLjC5wCyy3IHPYEMw==
+X-Received: by 2002:a1c:7f10:: with SMTP id a16mr1069150wmd.30.1553801684490;
+        Thu, 28 Mar 2019 12:34:44 -0700 (PDT)
 Received: from sudo.home ([2a01:cb1d:112:6f00:dd62:8a50:1468:989d])
-        by smtp.gmail.com with ESMTPSA id d6sm27739186wrx.62.2019.03.28.12.34.36
+        by smtp.gmail.com with ESMTPSA id d6sm27739186wrx.62.2019.03.28.12.34.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 12:34:37 -0700 (PDT)
+        Thu, 28 Mar 2019 12:34:43 -0700 (PDT)
 From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] efi/libstub: refactor cmd_stubcopy
-Date:   Thu, 28 Mar 2019 20:34:25 +0100
-Message-Id: <20190328193429.21373-2-ard.biesheuvel@linaro.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH 5/5] efi/libstub/arm: omit unneeded stripping of ksymtab/kcrctab sections
+Date:   Thu, 28 Mar 2019 20:34:29 +0100
+Message-Id: <20190328193429.21373-6-ard.biesheuvel@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190328193429.21373-1-ard.biesheuvel@linaro.org>
 References: <20190328193429.21373-1-ard.biesheuvel@linaro.org>
@@ -75,54 +75,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Commit f922c4abdf764 ("module: allow symbol exports to be disabled")
+introduced a way to inhibit generation of kcrctab/ksymtab sections
+when building ordinary kernel code to be used in a different execution
+context (decompressor, EFI stub, etc)
 
-It took me a while to understand what is going on in the nested
-if-blocks.
+That means we no longer have to strip those sections explicitly when
+building the EFI libstub objects, so drop this from the Makefile.
 
-Simplify it by removing unneeded code.
-
-  - if_changed automatically adds 'set -e', so any failure in the
-    series of commands makes it immediately fail as a whole.
-    So, the outer if block is entirely redundant.
-
-  - Since commit 9c2af1c7377a ("kbuild: add .DELETE_ON_ERROR special
-    target"), GNU Make automatically deletes the target on any failure
-    in its recipe. The explicit 'rm -f $@' is redundant.
-
-  - surrounding commands with ( ) will spawn a subshell to execute them
-    in it, but it is rarely useful to do so.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- drivers/firmware/efi/libstub/Makefile | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/firmware/efi/libstub/Makefile | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index b0103e16fc1b..ae9081988c88 100644
+index ae9081988c88..b1f7b64652db 100644
 --- a/drivers/firmware/efi/libstub/Makefile
 +++ b/drivers/firmware/efi/libstub/Makefile
-@@ -86,12 +86,13 @@ $(obj)/%.stub.o: $(obj)/%.o FORCE
- # this time, use objcopy and leave all sections in place.
+@@ -71,7 +71,6 @@ CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
+ extra-$(CONFIG_EFI_ARMSTUB)	:= $(lib-y)
+ lib-$(CONFIG_EFI_ARMSTUB)	:= $(patsubst %.o,%.stub.o,$(lib-y))
+ 
+-STUBCOPY_RM-y			:= -R *ksymtab* -R *kcrctab*
+ STUBCOPY_FLAGS-$(CONFIG_ARM64)	+= --prefix-alloc-sections=.init \
+ 				   --prefix-symbols=__efistub_
+ STUBCOPY_RELOC-$(CONFIG_ARM64)	:= R_AARCH64_ABS
+@@ -87,7 +86,7 @@ $(obj)/%.stub.o: $(obj)/%.o FORCE
  #
  quiet_cmd_stubcopy = STUBCPY $@
--      cmd_stubcopy = if $(STRIP) --strip-debug $(STUBCOPY_RM-y) -o $@ $<; \
--		     then if $(OBJDUMP) -r $@ | grep $(STUBCOPY_RELOC-y); \
--		     then (echo >&2 "$@: absolute symbol references not allowed in the EFI stub"; \
--			   rm -f $@; /bin/false);			  \
--		     else $(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@; fi	  \
--		     else /bin/false; fi
-+      cmd_stubcopy =							\
-+	$(STRIP) --strip-debug $(STUBCOPY_RM-y) -o $@ $<;		\
-+	if $(OBJDUMP) -r $@ | grep $(STUBCOPY_RELOC-y); then		\
-+		echo "$@: absolute symbol references not allowed in the EFI stub" >&2; \
-+		/bin/false;						\
-+	fi;								\
-+	$(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@
- 
- #
- # ARM discards the .data section because it disallows r/w data in the
+       cmd_stubcopy =							\
+-	$(STRIP) --strip-debug $(STUBCOPY_RM-y) -o $@ $<;		\
++	$(STRIP) --strip-debug -o $@ $<;				\
+ 	if $(OBJDUMP) -r $@ | grep $(STUBCOPY_RELOC-y); then		\
+ 		echo "$@: absolute symbol references not allowed in the EFI stub" >&2; \
+ 		/bin/false;						\
 -- 
 2.20.1
 
