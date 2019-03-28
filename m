@@ -2,106 +2,118 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC911C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBECC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB7520811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:21:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EC80iElT"
+	by mail.kernel.org (Postfix) with ESMTP id A4BF02173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfC1RVs (ORCPT
+        id S1726266AbfC1RZ0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:21:48 -0400
-Received: from mail-yw1-f51.google.com ([209.85.161.51]:45805 "EHLO
-        mail-yw1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbfC1RVr (ORCPT
+        Thu, 28 Mar 2019 13:25:26 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34473 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfC1RZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:21:47 -0400
-Received: by mail-yw1-f51.google.com with SMTP id j128so15358253ywg.12;
-        Thu, 28 Mar 2019 10:21:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=+1cenhDZ6abSXQjebrfaSwfIe9wjJQAhX5YTtCWEdcY=;
-        b=EC80iElTSyEXU7xII0LntGFXjOioHj7UmSaw1xL6kPzVd+FUtA04oxwhU/eUXj/X3G
-         pAgLJ8bcERwtV6obYPI+vMtlCtOBQzE/EQ55xGTfZeNTA1wpcB9mUqcuhZ+PrevuCihH
-         J/AYViZTNicD8EabxvQo3qzyvBJPm3uwr7rRZPuJEqOHCWZmsqa9jMU99hZEqgmnzGUz
-         sV2Oexb/eCny6OeFLySHd1vm6KsTX21JtYBJiPE4Dwbq0OwoYdNQ4CaUScLVX3EMSSfj
-         OqGvwyufY3+arjXhR4S12fvlaahbbXn7mCwoa8cT90sGMDbgn3+P6zjjvfTiwP/gWEPd
-         /tjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=+1cenhDZ6abSXQjebrfaSwfIe9wjJQAhX5YTtCWEdcY=;
-        b=FfkuazJbAZxtt0o4hynJwNsnBgSufEkTd9dZGOBrzYDJdgu6CwE7AApRoSf+R1XR9t
-         YnEtY16yIeI9NFJaUwhFCjo7KJEYQICkFnPnr16ocUl/dgv7u70whb1UQNS2Iv7ac48u
-         0vSzbX0r8cZ4uAOPupO6GZ1r0qcu9cHgbntd3T5nUbgKvZ323aFuZc0H5Pv7g2wpnPqZ
-         Ar+SWRmZlefeUl/G5ytSGRcxdxLRS6RBftGt9CQx3uqqnKltwDTQRFC/xMVB9Pv84btP
-         JLnJFD6YiwACIoaeSviQFb9ArBk4k8vpKaWeckkDBNbxG0GXm7MZ43LEnwDLRcE9ibCd
-         bNWw==
-X-Gm-Message-State: APjAAAXBj5AL8y28PK4Wb0XFsCh8tG7y6ks5PDwINeI336cNDgoyVt4/
-        bKqoOdGe5GRBTK6oo7DTRSk=
-X-Google-Smtp-Source: APXvYqwFaXWgnKszFS8ZBjpQiEm36YWytI+fdo1jjCW8yrJea/RizGedge1pZLNgdOtvPLlNhI28Jw==
-X-Received: by 2002:a81:b64f:: with SMTP id h15mr2826265ywk.136.1553793706876;
-        Thu, 28 Mar 2019 10:21:46 -0700 (PDT)
-Received: from dumbo ([83.137.6.243])
-        by smtp.gmail.com with ESMTPSA id v77sm15347553ywv.79.2019.03.28.10.21.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 10:21:46 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 18:21:41 +0100
-From:   Domenico Andreoli <domenico.andreoli@linux.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] 5.1-rc1: tpm_try_transmit: send(): error -5
-Message-ID: <20190328172141.sog6prtldmxulpw7@dumbo>
-References: <20190327082115.k35fhxfkk25ekdzw@dumbo>
- <20190328122333.GA7094@linux.intel.com>
+        Thu, 28 Mar 2019 13:25:26 -0400
+X-Originating-IP: 109.213.38.144
+Received: from localhost (alyon-652-1-47-144.w109-213.abo.wanadoo.fr [109.213.38.144])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 0AF74FF80E;
+        Thu, 28 Mar 2019 17:25:14 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Stephen Boyd <sboyd@codeaurora.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH v4 1/6] dt-bindings: ap806: add the cluster clock node in the syscon file
+In-Reply-To: <20190328171350.GA26680@bogus>
+References: <20190325124803.28904-1-gregory.clement@bootlin.com> <20190325124803.28904-2-gregory.clement@bootlin.com> <20190328171350.GA26680@bogus>
+Date:   Thu, 28 Mar 2019 18:25:14 +0100
+Message-ID: <87k1gioqrp.fsf@FE-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190328122333.GA7094@linux.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 02:23:33PM +0200, Jarkko Sakkinen wrote:
-> On Wed, Mar 27, 2019 at 09:21:15AM +0100, Domenico Andreoli wrote:
-> > Hi Jarkko,
-> >=20
-> >   my laptop fails to suspend/hibernate since v5.1-rc1, it worked fine
-> > with v4.20 and previous.
-> >=20
-> > My suspect is on tpm_tis driver, is there anything I can do to understa=
-nd
-> > what goes wrong here?
-> >=20
-> > Best regards,
-> > Domenico
->=20
-> Thank you for reporting this.
->=20
-> Can you try if this helps:
->=20
-> https://patchwork.kernel.org/patch/10865495/
+Hi Rob,
+ 
+ On jeu., mars 28 2019, Rob Herring <robh@kernel.org> wrote:
 
-Yes, it helps. Everything works fine now. Thanks.
+> On Mon, Mar 25, 2019 at 01:47:58PM +0100, Gregory CLEMENT wrote:
+>> Document the device tree binding for the cluster clock controllers found
+>> in the Armada 7K/8K SoCs.
+>> 
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+>> ---
+>>  .../arm/marvell/ap806-system-controller.txt   | 25 +++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+>> index 7b8b8eb0191f..ceeba18b4ac3 100644
+>> --- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+>> +++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+>> @@ -143,3 +143,28 @@ ap_syscon1: system-controller@6f8000 {
+>>  		#thermal-sensor-cells = <1>;
+>>  	};
+>>  };
+>> +
+>> +Cluster clocks:
+>> +---------------
+>> +
+>> +Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
+>> +cluster contain up to 2 CPUs running at the same frequency.
+>> +
+>> +Required properties:
+>> +- compatible: must be  "marvell,ap806-cpu-clock";
+>> +- #clock-cells : should be set to 1.
+>> +- clocks : shall be the input parents clock phandle for the clock.
+>> +
+>> +Optional property:
+>> + - reg: register range associated the cluser clocks
+>
+> reg can be optional to use, but should either be there or not.
 
->=20
-> /Jarkko
+OK so let's remove it!
 
-Domenico
+Thanks,
 
---=20
-3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
+Grégory
+
+>
+> And there's a typo.
+>
+>> +
+>> +ap_syscon1: system-controller@6f8000 {
+>> +	compatible = "syscon", "simple-mfd";
+>> +	reg = <0x6f8000 0x1000>;
+>> +
+>> +	cpu_clk: clock-cpu {
+>> +		compatible = "marvell,ap806-cpu-clock";
+>> +		clocks = <&ap_clk 0>, <&ap_clk 1>;
+>> +		#clock-cells = <1>;
+>> +	};
+>> +};
+>> -- 
+>> 2.20.1
+>> 
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
