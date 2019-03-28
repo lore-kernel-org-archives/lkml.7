@@ -2,208 +2,152 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D48C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022C9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0413C20811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:57:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uTHQ47zZ"
+	by mail.kernel.org (Postfix) with ESMTP id CAE3520811
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:58:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfC1R5L (ORCPT
+        id S1727598AbfC1R65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:57:11 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42488 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbfC1R5L (ORCPT
+        Thu, 28 Mar 2019 13:58:57 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.119]:45476 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726235AbfC1R65 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:57:11 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g3so20557400wrx.9;
-        Thu, 28 Mar 2019 10:57:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8apiQeGA3kTurrt37zzzVcwTnb6VCI+k72IHTFshpmg=;
-        b=uTHQ47zZDeS+Q1g3CEK4DoyQpBCyT9vZLe2nCuxaOuJ6b6xsHzm2tCfijAOlyCxc/2
-         aR0rhXPGiJF1Jrd4+HIes5KouUzyqoDWip/8a/jB8B7sfgalGXsFHS1UQkX6Mre+0tDv
-         ixsu67gNn8GBQ8KZqd3g9VKU5HrhCHMNAvS89N/z3bg6y4BSLWcRGK59TOPIz3h3VuwQ
-         2d6nOGqGTIcEQhGexNaswQyD6kOeSiJvPoeoPBCrfwAYWzxBkwBziKNv1vTC088LOTTc
-         8HsqApAle4arSBVjX42rPeW47sZCQC5T71qc7SCNx282wVeqg3hXv+ImiuG4UCQueda9
-         khxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8apiQeGA3kTurrt37zzzVcwTnb6VCI+k72IHTFshpmg=;
-        b=thVdpKnU8SbF3jpTU9QPfJty0qvtcOUNs0dNoPhvzSNS3102UYcVlzkqZptoUxs5sB
-         2UvdEZa7PwUu9srEfkJ8hYGwPDBUH87+rmsEiWhrdjRRUpel0xJeDrVL1CS18jOM98WH
-         wLQtysDxj72NhDc1H8CxAxD/qxwlJlTUBa2JpPzTQcqVYEZdFi64+0w+uXZHVrNgms3U
-         6HEIo0I4yvuHFjwv/bQXyAC+yB/cjI/KA1fiTR4KyFyX4gAtcuSbk1LPUJuncouAwVHu
-         s22z1TkoIUZ5kzSlZL2RqnXV1xU+P+/uplNq+ETARrkKnPY0Vhzm22FWUnsszoo60f22
-         LIyA==
-X-Gm-Message-State: APjAAAWrNdQ/s8r9tClnNOgilzq8cV3evV8i1rPcaeBP/JveH1NEie8i
-        ZTr0AUkYAhuZxP6VNVRowkgrpq4QzOKzjOAZ9HA=
-X-Google-Smtp-Source: APXvYqzWfeCVqBgqL7GmAecli8Zjvxb41pIH9TwlBWTHLb2gLl231SIcOcktXNnP8mR4WgDsOY4R2mrgeeDTfZN0nzo=
-X-Received: by 2002:adf:e487:: with SMTP id i7mr28733940wrm.264.1553795828507;
- Thu, 28 Mar 2019 10:57:08 -0700 (PDT)
+        Thu, 28 Mar 2019 13:58:57 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 648D827B932
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:58:55 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 9ZIlhUA0r4FKp9ZIlh128V; Thu, 28 Mar 2019 12:58:55 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.117.246] (port=34834 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h9ZIk-003J00-Sm; Thu, 28 Mar 2019 12:58:55 -0500
+Subject: Re: [PATCH net-next] can: kvaser_usb: Use struct_size() in
+ alloc_candev()
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190208031035.GA2665@embeddedor>
+ <b736a7b3-819a-a471-c767-2997354e70e4@pengutronix.de>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <5760e0a4-101d-9ff4-b5e8-046b7dd38d1b@embeddedor.com>
+Date:   Thu, 28 Mar 2019 12:58:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190315101013.GN8455@Legion-PC.fortress> <CAK7LNATsm23e_CuyfFw7_CR8xZQ3HnwNHCXhEm_zQZU2PUGK5A@mail.gmail.com>
- <20190326172411.GA15936@Legion-PC.fortress> <20190327154025.GB23293@linux-8ccs>
- <20190327160440.GE15936@Legion-PC.fortress>
-In-Reply-To: <20190327160440.GE15936@Legion-PC.fortress>
-From:   Lucas De Marchi <lucas.de.marchi@gmail.com>
-Date:   Thu, 28 Mar 2019 10:56:57 -0700
-Message-ID: <CAKi4VAKA-kRv2MyfiL4zRV-zaz9kUDZ+QrBpbqSgAZhzOKgSKQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v1] moduleparam: Save information about built-in
- modules in separate file
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     Jessica Yu <jeyu@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rusty Russell <rusty@rustcorp.com.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <b736a7b3-819a-a471-c767-2997354e70e4@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.117.246
+X-Source-L: No
+X-Exim-ID: 1h9ZIk-003J00-Sm
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.117.246]:34834
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 22
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 9:04 AM Alexey Gladkov <gladkov.alexey@gmail.com> w=
-rote:
->
-> On Wed, Mar 27, 2019 at 04:40:25PM +0100, Jessica Yu wrote:
-> > +++ Alexey Gladkov [26/03/19 18:24 +0100]:
-> > >On Fri, Mar 22, 2019 at 02:34:12PM +0900, Masahiro Yamada wrote:
-> > >> Hi.
-> > >>
-> > >> (added some people to CC)
-> >
-> > (Thanks Masahiro for the CC!)
-> >
-> > >>
-> > >> On Fri, Mar 15, 2019 at 7:10 PM Alexey Gladkov <gladkov.alexey@gmail=
-.com> wrote:
-> > >> >
-> > >> > Problem:
-> > >> >
-> > >> > When a kernel module is compiled as a separate module, some import=
-ant
-> > >> > information about the kernel module is available via .modinfo sect=
-ion of
-> > >> > the module.  In contrast, when the kernel module is compiled into =
-the
-> > >> > kernel, that information is not available.
-> > >>
-> > >>
-> > >> I might be missing something, but
-> > >> vmlinux provides info of builtin modules
-> > >> in /sys/module/.
-> > >
-> > >No. There are definitely not all modules. I have a builtin sha256_gene=
-ric,
-> > >but I can't find him in the /sys/module.
-> >
-> > Yeah, you'll only find builtin modules under /sys/module/ if it has any=
- module
-> > parameters, otherwise you won't find it there. As Masahiro already ment=
-ioned,
-> > if a builtin module has any parameters, they would be accessible under =
-/sys/module/.
-> >
-> > >> (Looks like currently only module_param and MODULE_VERSION)
-> > >>
-> > >> This patch is not exactly the same, but I see a kind of overwrap.
-> > >> I'd like to be sure if we want this new scheme.
-> > >
-> > >The /sys/module is only for running kernel. One of my use cases is
-> > >to create an initrd for a new kernel.
-> > >
-> > >>
-> > >> > Information about built-in modules is necessary in the following c=
-ases:
-> > >> >
-> > >> > 1. When it is necessary to find out what additional parameters can=
- be
-> > >> > passed to the kernel at boot time.
-> > >>
-> > >>
-> > >> Actually, /sys/module/<module>/parameters/
-> > >> exposes this information.
-> > >>
-> > >> Doesn't it work for your purpose?
-> > >
-> > >No, since creating an initrd needs to know all the modalias before
-> > >I get the sysfs for new kernel. Also there are no modalias at all.
-> > >
-> > >> > 2. When you need to know which module names and their aliases are =
-in
-> > >> > the kernel. This is very useful for creating an initrd image.
-> > >> >
-> >
-> > Hm, I do see one possible additional use-case for preserving module ali=
-as
-> > information for built-in modules - modprobe will currently error (I thi=
-nk,
-> > correct me if I'm wrong) if we try invoking modprobe with an alias of a
-> > built-in module, simply because this information is not in modules.buil=
-tin or
-> > modules.alias.
->
-> Yes. Patch for modprobe in my todo list. The reason I didn=E2=80=99t do i=
-t was
-> because I wasn=E2=80=99t sure that the file format was final.
->
-> > Since kbuild already outputs modules.builtin, I would suggest outputtin=
-g
-> > something like a modules.builtin.alias file (and I guess maybe a module=
-s.builtin.param
-> > file too if that's deemed useful), in a format that is consumable by km=
-od/modprobe,
-> > so that modprobing an alias of a built-in module doesn't produce an err=
-or. I
-> > think this should be easy to do if we keep and parse the resulting .mod=
-info for
-> > builtin modules. This is just an idea, opinions welcome. I've added Luc=
-as to CC
-> > in case he has any thoughts.
->
-> You don't like kernel.builtin.modinfo ?
->
-> It is much easier to create and it has almost the same format as the
-> modules. So I think it will be easier to parse in kmod.
+Hi Marc,
 
-adding a modules.builtin.alias with the same format of modules.alias
-means during modprobe we would only need to load one more file to
-lookup aliases. That doesn't mean the kernel built system should do it
-though. The same way it's depmod job to create the
-modules.alias{,.bin}, we could leave this to depmod if it's in fact
-useful to split the information.
+On 2/26/19 1:52 AM, Marc Kleine-Budde wrote:
+> On 2/8/19 4:10 AM, Gustavo A. R. Silva wrote:
+>> One of the more common cases of allocation size calculations is finding
+>> the size of a structure that has a zero-sized array at the end, along
+>> with memory for some number of elements for that array. For example:
+>>
+>> struct foo {
+>>     int stuff;
+>>     void *entry[];
+>> };
+>>
+>> instance = alloc(sizeof(struct foo) + count * sizeof(void *));
+>>
+>> Instead of leaving these open-coded and prone to type mistakes, we can
+>> now use the new struct_size() helper:
+>>
+>> instance = alloc(struct_size(instance, entry, count));
+>>
+>> This code was detected with the help of Coccinelle.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> Applied to linux-can-next.
+> 
 
-I think your version is simple enough and we would get more
-information that would be useful for modinfo.
-It would indeed be nice to output something useful in  "modinfo ext4".
+I noticed this patch is not in linux-next.
 
-In kmod, I think we would create modules.builtin.modinfo{,.bin} and
-just add the aliases to modules.alias{,.bin},
-This would keep the names consistent with what is already there.
+I wonder if you actually applied it to your tree.
 
-thanks
-Lucas De Marchi
-
->
-> --
-> Rgrds, legion
->
+Thanks
+--
+Gustavo
