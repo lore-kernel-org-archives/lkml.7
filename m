@@ -2,937 +2,278 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9520C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFA7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E7821773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE20B2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="uv8MHAzx"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="d0cWERMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfC1LRF (ORCPT
+        id S1726553AbfC1LTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 07:17:05 -0400
-Received: from mail-eopbgr730045.outbound.protection.outlook.com ([40.107.73.45]:11136
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        Thu, 28 Mar 2019 07:19:49 -0400
+Received: from mail-eopbgr10120.outbound.protection.outlook.com ([40.107.1.120]:50429
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725987AbfC1LRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 07:17:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+        id S1725779AbfC1LTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 07:19:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bXrXaSjxgZkuB+tIeKNI7c9Zbnf6HYW3Nz7Uk3yqD+E=;
- b=uv8MHAzxCNFiKbdOUrwiC7t4PH54mIu+2h+DdiPLOBtNq7LJOsySGPRqDvLR5ZxSEoMCearkgRlnshfSYaObp+Gxl45DSgbcNBqCRRR45jIDMJ6Ym3d4yCjBec7jA3XxmoNi9IsXF2Cy2fbjN/EGmhFI3VxMJlR1wHtF1GURfuw=
-Received: from SN4PR0201CA0072.namprd02.prod.outlook.com
- (2603:10b6:803:20::34) by BN7PR02MB5233.namprd02.prod.outlook.com
- (2603:10b6:408:2a::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1750.15; Thu, 28 Mar
- 2019 11:16:56 +0000
-Received: from SN1NAM02FT064.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::201) by SN4PR0201CA0072.outlook.office365.com
- (2603:10b6:803:20::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1750.16 via Frontend
- Transport; Thu, 28 Mar 2019 11:16:56 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT064.mail.protection.outlook.com (10.152.72.143) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1750.16
- via Frontend Transport; Thu, 28 Mar 2019 11:16:55 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <naga.sureshkumar.relli@xilinx.com>)
-        id 1h9T1j-00026H-0l; Thu, 28 Mar 2019 04:16:55 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <naga.sureshkumar.relli@xilinx.com>)
-        id 1h9T1d-0000lo-Tw; Thu, 28 Mar 2019 04:16:49 -0700
-Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x2SBGd8a000716;
-        Thu, 28 Mar 2019 04:16:40 -0700
-Received: from [172.23.37.108] (helo=xhdnagasure40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <naga.sureshkumar.relli@xilinx.com>)
-        id 1h9T1T-0000jA-8G; Thu, 28 Mar 2019 04:16:39 -0700
-From:   Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-To:     <broonie@kernel.org>, <bbrezillon@kernel.org>
-CC:     <vigneshr@ti.com>, <linux-spi@vger.kernel.org>,
-        <dwmw2@infradead.org>, <marek.vasut@gmail.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <michal.simek@xilinx.com>, <nagasuresh12@gmail.com>,
-        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-Subject: [LINUX PATCH 3/3] spi: spi-mem: Add support for Zynq QSPI controller
-Date:   Thu, 28 Mar 2019 16:46:34 +0530
-Message-ID: <1553771794-4215-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(346002)(136003)(376002)(396003)(2980300002)(199004)(189003)(8936002)(4326008)(54906003)(2616005)(426003)(486006)(63266004)(81156014)(81166006)(51416003)(2906002)(7696005)(36756003)(30864003)(316002)(106466001)(50226002)(356004)(6666004)(9786002)(106002)(16586007)(50466002)(48376002)(5660300002)(110136005)(186003)(47776003)(107886003)(26005)(77096007)(305945005)(8676002)(14444005)(36386004)(478600001)(336012)(126002)(7416002)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB5233;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+ bh=/Te6jmVC9nXVJiHTUVQHLK6IYUPBIDnb4aGXcE86/zw=;
+ b=d0cWERMfJvkEHQzuWyZWB6AzhC1BZbxL94+AbkSjsPywocH+/NmDkJCMGfvn95bD/0ipJhJtFSBy/QAkKSGzat0kxDxPEId42qmkYeixjl/3DvzON/hDD0EpFO6gupo1paltnfntbp0+z6bj/aBj6tjfW0o4uKW+p6AZ6QjT9e0=
+Received: from HE1PR07MB3337.eurprd07.prod.outlook.com (10.170.247.12) by
+ HE1PR07MB3179.eurprd07.prod.outlook.com (10.170.245.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.15; Thu, 28 Mar 2019 11:19:45 +0000
+Received: from HE1PR07MB3337.eurprd07.prod.outlook.com
+ ([fe80::cd23:d96f:5d94:cee6]) by HE1PR07MB3337.eurprd07.prod.outlook.com
+ ([fe80::cd23:d96f:5d94:cee6%6]) with mapi id 15.20.1771.006; Thu, 28 Mar 2019
+ 11:19:45 +0000
+From:   "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
+Subject: [PATCH] axxia-i2c: use auto cmd for last message
+Thread-Topic: [PATCH] axxia-i2c: use auto cmd for last message
+Thread-Index: AQHU5VgluQk1IDQL20CnwTnxqmnvdw==
+Date:   Thu, 28 Mar 2019 11:19:45 +0000
+Message-ID: <20190328111858.GA17086@localhost.localdomain>
+Accept-Language: pl-PL, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0502CA0003.eurprd05.prod.outlook.com
+ (2603:10a6:3:e3::13) To HE1PR07MB3337.eurprd07.prod.outlook.com
+ (2603:10a6:7:2d::12)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [131.228.32.167]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 615dd99f-58e5-4304-7ac7-08d6b36f47ec
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:HE1PR07MB3179;
+x-ms-traffictypediagnostic: HE1PR07MB3179:
+x-microsoft-antispam-prvs: <HE1PR07MB3179BE36C87EFF0ECF55D871EF590@HE1PR07MB3179.eurprd07.prod.outlook.com>
+x-forefront-prvs: 0990C54589
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(396003)(136003)(346002)(376002)(189003)(199004)(316002)(71190400001)(4326008)(53936002)(52116002)(106356001)(107886003)(86362001)(8936002)(6916009)(66066001)(1076003)(81156014)(486006)(6486002)(61506002)(105586002)(6512007)(476003)(6506007)(6436002)(186003)(71200400001)(81166006)(386003)(8676002)(102836004)(26005)(9686003)(6346003)(7736002)(6116002)(15650500001)(3846002)(478600001)(14454004)(256004)(25786009)(5660300002)(68736007)(2906002)(14444005)(33656002)(97736004)(305945005)(54906003)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR07MB3179;H:HE1PR07MB3337.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=krzysztof.adamski@nokia.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /NL67O+C+vTjucg61zRESbdVfIwDdF5vVYDB9lOScDKOh94YhtxUhzjVmLR4I/oxqlHtIjnCbEzmzY+tP0uznbne0am781ibKts5Liim+lskad7QcHCFyPsPF5FN5AUwjYvPFHX3G0tjz/uDWslI0Ju11e95UOGMBM/sau7yApEw16Fyx/7UZv8tXv6XMX6fUnec07GN2Wr0bMiIkgd5lDe06jHJMJDjFIuEbFsNbJhti7axzyQk/7vY5aSAHf6q5LQzrhT03qsrxOJZ0ljCopnTg22f4znqzpv1QL1G3u5n3V+4kq75PVfkbEXDh6ulyoPa9l674mwaKZizcLg0mnz3qiZf9JD+F9GTuajvdBPpHG5C3TR37IYkdET55CUAYXGkSjmxrehC2oexlMfuauBh4DekIcKToZ6T9xWdCf0=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <51E43BBE31C5E44EA30B74CEA2E66618@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: dac442fb-e325-4858-38eb-08d6b36ee345
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4709054)(2017052603328)(7153060);SRVR:BN7PR02MB5233;
-X-MS-TrafficTypeDiagnostic: BN7PR02MB5233:
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <BN7PR02MB5233BF22B4D5A92944FCBDA0AF590@BN7PR02MB5233.namprd02.prod.outlook.com>
-X-Forefront-PRVS: 0990C54589
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: QZEWUCujrWdSX9iUFUt4QI64g27EUKDFFEqwtgYvaNxfwuZbAUDQRjAQNpmd+yJbiiLvcQ2rT2Sew5n8XfM7RNnVfiy6pCNm8FHr32CrDQFwVHmUgzECuooktyEQ6QFi45OpNo+hzrrRUjr0smKvYv45FmsBK46WfgGxyMGsYgdVwn3m10OWWpGYgQv5ZT2O87fX95X2yFBOSmF00X67KcQKDEdFbTksIfUgP3qdzkFZJUx+3hq3+eIQhOADmZGHX46JG0CBYtjUObq1M++iMHBGHVhokaIWklMYmtmuR+u5HggPs63Xm+ymr7MZHSXibZVvzum1D23p7kvdvggFiaP4hvNH7MvZMz5BQO/96KwyAUtHhxJnG8hPDuOzYLDVnEV8Htv5Kh2L2OzJuS9jw8e+jqK4IDr+yD3Rud48egA=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2019 11:16:55.5409
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 615dd99f-58e5-4304-7ac7-08d6b36f47ec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2019 11:19:45.1777
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dac442fb-e325-4858-38eb-08d6b36ee345
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB5233
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR07MB3179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for QSPI controller driver used by Xilinx Zynq SOC.
+Some recent commits to this driver were trying to make sure the TSS
+interrupt is not generated on busy system due to 25ms timer expiring
+between commands. It can still happen, however if STOP command is not
+issued on time at the end of the transmission. If wait_for_completion in
+axxia_i2c_xfer_msg() would not return after 25ms of getting an
+interrupt, TSS will be generated and idev->err_msg will be set to
+-ETIMEDOUT which will be returned from the axxia_i2c_xfer_msg(), even
+though the transfer did actually succeed (STOP is automatically issued
+when TSS triggers).
 
-Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
----
-Changes
- - Added COMPILE_TEST macro
- - converted MASKs to GENMASK() and BIT() macros
- - Renamed MODEBITS to ZYNQ_QSPI_MODEBITS
- - Removed checking buswidth() code, as it is already handled by framework
- - Updated in comments regarding baud rate calculation
----
- drivers/spi/Kconfig         |  10 +-
- drivers/spi/Makefile        |   1 +
- drivers/spi/spi-zynq-qspi.c | 770 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 780 insertions(+), 1 deletion(-)
- create mode 100644 drivers/spi/spi-zynq-qspi.c
+Fortunately, apart from already used manual and sequence commands, the
+controller also has so called auto command. It works just like manual
+mode but it but an automatic STOP is issued when either transfer length
+is met or NAK is received from slave device.
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 9f89cb1..7bf7d38 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -816,9 +816,17 @@ config SPI_XTENSA_XTFPGA
- 	  16 bit words in SPI mode 0, automatically asserting CS on transfer
- 	  start and deasserting on end.
- 
-+config SPI_ZYNQ_QSPI
-+	tristate "Xilinx Zynq QSPI controller"
-+	depends on ARCH_ZYNQ || COMPILE_TEST
-+	help
-+	  This enables support for the Zynq Quad SPI controller
-+	  in master mode.
-+	  This controller only supports SPI memory interface.
+This patch changes the axxia_i2c_xfer_msg() function so that auto
+command is used for last message in transaction letting hardware manage
+issuing STOP. TSS is disabled just after command transferring last
+message finishes. Auto command, just like sequence, ends with SS
+interrupt instead of SNS so handling of both had to be unified.
+
+The axxia_i2c_stop() is no longer needed as the transfer can only end
+with following conditions:
+- fully successful - then last message was send by AUTO command and STOP
+  was issued automatically
+- NAK received - STOP is issued automatically by controller
+- arbitration lost - STOP should not be issued as we don't control the
+  bus
+- IP interrupt received - this is sent when transfer length is set to 0
+  for auto/sequence command. The check for that is done before START is
+  send so no STOP is required
+- TSS received between commands - STOP is issued by the controller
+
+Signed-off-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
+Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+---
+ drivers/i2c/busses/i2c-axxia.c | 57 ++++++++++++----------------------
+ 1 file changed, 19 insertions(+), 38 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-axxia.c b/drivers/i2c/busses/i2c-axxia.=
+c
+index bf564391091f..1c7b41f45c83 100644
+--- a/drivers/i2c/busses/i2c-axxia.c
++++ b/drivers/i2c/busses/i2c-axxia.c
+@@ -99,6 +99,7 @@
+  * @adapter: core i2c abstraction
+  * @i2c_clk: clock reference for i2c input clock
+  * @bus_clk_rate: current i2c bus clock rate
++ * @last: a flag indicating is this is last message in transfer
+  */
+ struct axxia_i2c_dev {
+ 	void __iomem *base;
+@@ -112,6 +113,7 @@ struct axxia_i2c_dev {
+ 	struct i2c_adapter adapter;
+ 	struct clk *i2c_clk;
+ 	u32 bus_clk_rate;
++	bool last;
+ };
+=20
+ static void i2c_int_disable(struct axxia_i2c_dev *idev, u32 mask)
+@@ -324,15 +326,14 @@ static irqreturn_t axxia_i2c_isr(int irq, void *_dev)
+ 		/* Stop completed */
+ 		i2c_int_disable(idev, ~MST_STATUS_TSS);
+ 		complete(&idev->msg_complete);
+-	} else if (status & MST_STATUS_SNS) {
++	} else if (status & (MST_STATUS_SNS | MST_STATUS_SS)) {
+ 		/* Transfer done */
+-		i2c_int_disable(idev, ~MST_STATUS_TSS);
++		int mask =3D idev->last ? ~0 : ~MST_STATUS_TSS;
 +
- config SPI_ZYNQMP_GQSPI
- 	tristate "Xilinx ZynqMP GQSPI controller"
--	depends on SPI_MASTER && HAS_DMA
-+	depends on (SPI_MASTER && HAS_DMA) || COMPILE_TEST
- 	help
- 	  Enables Xilinx GQSPI controller driver for Zynq UltraScale+ MPSoC.
- 
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index f296270..565db4d 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -115,6 +115,7 @@ obj-$(CONFIG_SPI_XCOMM)		+= spi-xcomm.o
- obj-$(CONFIG_SPI_XILINX)		+= spi-xilinx.o
- obj-$(CONFIG_SPI_XLP)			+= spi-xlp.o
- obj-$(CONFIG_SPI_XTENSA_XTFPGA)		+= spi-xtensa-xtfpga.o
-+obj-$(CONFIG_SPI_ZYNQ_QSPI)		+= spi-zynq-qspi.o
- obj-$(CONFIG_SPI_ZYNQMP_GQSPI)		+= spi-zynqmp-gqspi.o
- 
- # SPI slave protocol handlers
-diff --git a/drivers/spi/spi-zynq-qspi.c b/drivers/spi/spi-zynq-qspi.c
-new file mode 100644
-index 0000000..97496ef
---- /dev/null
-+++ b/drivers/spi/spi-zynq-qspi.c
-@@ -0,0 +1,770 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2019 Xilinx, Inc.
-+ *
-+ * Author: Naga Sureshkumar Relli <nagasure@xilinx.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/gpio.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/spi/spi.h>
-+#include <linux/workqueue.h>
-+#include <linux/spi/spi-mem.h>
-+
-+/* Register offset definitions */
-+#define ZYNQ_QSPI_CONFIG_OFFSET		0x00 /* Configuration  Register, RW */
-+#define ZYNQ_QSPI_STATUS_OFFSET		0x04 /* Interrupt Status Register, RO */
-+#define ZYNQ_QSPI_IEN_OFFSET		0x08 /* Interrupt Enable Register, WO */
-+#define ZYNQ_QSPI_IDIS_OFFSET		0x0C /* Interrupt Disable Reg, WO */
-+#define ZYNQ_QSPI_IMASK_OFFSET		0x10 /* Interrupt Enabled Mask Reg,RO */
-+#define ZYNQ_QSPI_ENABLE_OFFSET		0x14 /* Enable/Disable Register, RW */
-+#define ZYNQ_QSPI_DELAY_OFFSET		0x18 /* Delay Register, RW */
-+#define ZYNQ_QSPI_TXD_00_00_OFFSET	0x1C /* Transmit 4-byte inst, WO */
-+#define ZYNQ_QSPI_TXD_00_01_OFFSET	0x80 /* Transmit 1-byte inst, WO */
-+#define ZYNQ_QSPI_TXD_00_10_OFFSET	0x84 /* Transmit 2-byte inst, WO */
-+#define ZYNQ_QSPI_TXD_00_11_OFFSET	0x88 /* Transmit 3-byte inst, WO */
-+#define ZYNQ_QSPI_RXD_OFFSET		0x20 /* Data Receive Register, RO */
-+#define ZYNQ_QSPI_SIC_OFFSET		0x24 /* Slave Idle Count Register, RW */
-+#define ZYNQ_QSPI_TX_THRESH_OFFSET	0x28 /* TX FIFO Watermark Reg, RW */
-+#define ZYNQ_QSPI_RX_THRESH_OFFSET	0x2C /* RX FIFO Watermark Reg, RW */
-+#define ZYNQ_QSPI_GPIO_OFFSET		0x30 /* GPIO Register, RW */
-+#define ZYNQ_QSPI_LINEAR_CFG_OFFSET	0xA0 /* Linear Adapter Config Ref, RW */
-+#define ZYNQ_QSPI_MOD_ID_OFFSET		0xFC /* Module ID Register, RO */
-+
-+/*
-+ * QSPI Configuration Register bit Masks
-+ *
-+ * This register contains various control bits that effect the operation
-+ * of the QSPI controller
-+ */
-+#define ZYNQ_QSPI_CONFIG_IFMODE_MASK	BIT(31) /* Flash Memory Interface */
-+#define ZYNQ_QSPI_CONFIG_MANSRT_MASK	BIT(16) /* Manual TX Start */
-+#define ZYNQ_QSPI_CONFIG_MANSRTEN_MASK	BIT(15) /* Enable Manual TX Mode */
-+#define ZYNQ_QSPI_CONFIG_SSFORCE_MASK	BIT(14) /* Manual Chip Select */
-+#define ZYNQ_QSPI_CONFIG_BDRATE_MASK	GENMASK(5, 3) /* Baud Rate Mask */
-+#define ZYNQ_QSPI_CONFIG_CPHA_MASK	BIT(2) /* Clock Phase Control */
-+#define ZYNQ_QSPI_CONFIG_CPOL_MASK	BIT(1) /* Clock Polarity Control */
-+#define ZYNQ_QSPI_CONFIG_SSCTRL_MASK	BIT(10) /* Slave Select Mask */
-+#define ZYNQ_QSPI_CONFIG_FWIDTH_MASK	GENMASK(7, 6) /* FIFO width */
-+#define ZYNQ_QSPI_CONFIG_MSTREN_MASK	BIT(0) /* Master Mode */
-+
-+/*
-+ * QSPI Configuration Register - Baud rate and slave select
-+ *
-+ * These are the values used in the calculation of baud rate divisor and
-+ * setting the slave select.
-+ */
-+#define ZYNQ_QSPI_BAUD_DIV_MAX		GENMASK(2, 0) /* Baud rate maximum */
-+#define ZYNQ_QSPI_BAUD_DIV_SHIFT	3 /* Baud rate divisor shift in CR */
-+#define ZYNQ_QSPI_SS_SHIFT		10 /* Slave Select field shift in CR */
-+
-+/*
-+ * QSPI Interrupt Registers bit Masks
-+ *
-+ * All the four interrupt registers (Status/Mask/Enable/Disable) have the same
-+ * bit definitions.
-+ */
-+#define ZYNQ_QSPI_IXR_RX_OVERFLOW_MASK	BIT(0) /* QSPI RX FIFO Overflow */
-+#define ZYNQ_QSPI_IXR_TXNFULL_MASK	BIT(2) /* QSPI TX FIFO Overflow */
-+#define ZYNQ_QSPI_IXR_TXFULL_MASK	BIT(3) /* QSPI TX FIFO is full */
-+#define ZYNQ_QSPI_IXR_RXNEMTY_MASK	BIT(4) /* QSPI RX FIFO Not Empty */
-+#define ZYNQ_QSPI_IXR_RXF_FULL_MASK	BIT(5) /* QSPI RX FIFO is full */
-+#define ZYNQ_QSPI_IXR_TXF_UNDRFLOW_MASK	BIT(6) /* QSPI TX FIFO Underflow */
-+#define ZYNQ_QSPI_IXR_ALL_MASK		(ZYNQ_QSPI_IXR_RX_OVERFLOW_MASK | \
-+					ZYNQ_QSPI_IXR_TXNFULL_MASK | \
-+					ZYNQ_QSPI_IXR_TXFULL_MASK | \
-+					ZYNQ_QSPI_IXR_RXNEMTY_MASK | \
-+					ZYNQ_QSPI_IXR_RXF_FULL_MASK | \
-+					ZYNQ_QSPI_IXR_TXF_UNDRFLOW_MASK)
-+#define ZYNQ_QSPI_IXR_RXTX_MASK		(ZYNQ_QSPI_IXR_TXNFULL_MASK | \
-+					ZYNQ_QSPI_IXR_RXNEMTY_MASK)
-+
-+/*
-+ * QSPI Enable Register bit Masks
-+ *
-+ * This register is used to enable or disable the QSPI controller
-+ */
-+#define ZYNQ_QSPI_ENABLE_ENABLE_MASK	BIT(0) /* QSPI Enable Bit Mask */
-+
-+/*
-+ * QSPI Linear Configuration Register
-+ *
-+ * It is named Linear Configuration but it controls other modes when not in
-+ * linear mode also.
-+ */
-+#define ZYNQ_QSPI_LCFG_TWO_MEM_MASK	BIT(30) /* LQSPI Two memories Mask */
-+#define ZYNQ_QSPI_LCFG_SEP_BUS_MASK	BIT(29) /* LQSPI Separate bus Mask */
-+#define ZYNQ_QSPI_LCFG_U_PAGE_MASK	BIT(28) /* LQSPI Upper Page Mask */
-+
-+#define ZYNQ_QSPI_LCFG_DUMMY_SHIFT	8
-+
-+#define ZYNQ_QSPI_FAST_READ_QOUT_CODE	0x6B /* read instruction code */
-+#define ZYNQ_QSPI_FIFO_DEPTH		63 /* FIFO depth in words */
-+#define ZYNQ_QSPI_RX_THRESHOLD		32 /* Rx FIFO threshold level */
-+#define ZYNQ_QSPI_TX_THRESHOLD		1 /* Tx FIFO threshold level */
-+
-+/*
-+ * The modebits configurable by the driver to make the SPI support different
-+ * data formats
-+ */
-+#define ZYNQ_QSPI_MODEBITS			(SPI_CPOL | SPI_CPHA)
-+
-+/* Default number of chip selects */
-+#define ZYNQ_QSPI_DEFAULT_NUM_CS	1
-+
-+/**
-+ * struct zynq_qspi - Defines qspi driver instance
-+ * @regs:		Virtual address of the QSPI controller registers
-+ * @refclk:		Pointer to the peripheral clock
-+ * @pclk:		Pointer to the APB clock
-+ * @irq:		IRQ number
-+ * @txbuf:		Pointer to the TX buffer
-+ * @rxbuf:		Pointer to the RX buffer
-+ * @tx_bytes:		Number of bytes left to transfer
-+ * @rx_bytes:		Number of bytes left to receive
-+ * @data_completion:	completion structure
-+ */
-+struct zynq_qspi {
-+	struct device *dev;
-+	void __iomem *regs;
-+	struct clk *refclk;
-+	struct clk *pclk;
-+	int irq;
-+	u8 *txbuf;
-+	u8 *rxbuf;
-+	int tx_bytes;
-+	int rx_bytes;
-+	struct completion data_completion;
-+};
-+
-+/*
-+ * Inline functions for the QSPI controller read/write
-+ */
-+static inline u32 zynq_qspi_read(struct zynq_qspi *xqspi, u32 offset)
-+{
-+	return readl_relaxed(xqspi->regs + offset);
-+}
-+
-+static inline void zynq_qspi_write(struct zynq_qspi *xqspi, u32 offset,
-+				   u32 val)
-+{
-+	writel_relaxed(val, xqspi->regs + offset);
-+}
-+
-+/**
-+ * zynq_qspi_init_hw - Initialize the hardware
-+ * @xqspi:	Pointer to the zynq_qspi structure
-+ *
-+ * The default settings of the QSPI controller's configurable parameters on
-+ * reset are
-+ *	- Master mode
-+ *	- Baud rate divisor is set to 2
-+ *	- Tx threshold set to 1l Rx threshold set to 32
-+ *	- Flash memory interface mode enabled
-+ *	- Size of the word to be transferred as 8 bit
-+ * This function performs the following actions
-+ *	- Disable and clear all the interrupts
-+ *	- Enable manual slave select
-+ *	- Enable manual start
-+ *	- Deselect all the chip select lines
-+ *	- Set the size of the word to be transferred as 32 bit
-+ *	- Set the little endian mode of TX FIFO and
-+ *	- Enable the QSPI controller
-+ */
-+static void zynq_qspi_init_hw(struct zynq_qspi *xqspi)
-+{
-+	u32 config_reg;
-+
-+	zynq_qspi_write(xqspi, ZYNQ_QSPI_ENABLE_OFFSET, 0);
-+	zynq_qspi_write(xqspi, ZYNQ_QSPI_IDIS_OFFSET, ZYNQ_QSPI_IXR_ALL_MASK);
-+
-+	/* Disable linear mode as the boot loader may have used it */
-+	zynq_qspi_write(xqspi, ZYNQ_QSPI_LINEAR_CFG_OFFSET, 0);
-+
-+	/* Clear the RX FIFO */
-+	while (zynq_qspi_read(xqspi, ZYNQ_QSPI_STATUS_OFFSET) &
-+			      ZYNQ_QSPI_IXR_RXNEMTY_MASK)
-+		zynq_qspi_read(xqspi, ZYNQ_QSPI_RXD_OFFSET);
-+
-+	zynq_qspi_write(xqspi, ZYNQ_QSPI_STATUS_OFFSET, ZYNQ_QSPI_IXR_ALL_MASK);
-+	config_reg = zynq_qspi_read(xqspi, ZYNQ_QSPI_CONFIG_OFFSET);
-+	config_reg &= ~(ZYNQ_QSPI_CONFIG_MSTREN_MASK |
-+			ZYNQ_QSPI_CONFIG_CPOL_MASK |
-+			ZYNQ_QSPI_CONFIG_CPHA_MASK |
-+			ZYNQ_QSPI_CONFIG_BDRATE_MASK |
-+			ZYNQ_QSPI_CONFIG_SSFORCE_MASK |
-+			ZYNQ_QSPI_CONFIG_MANSRTEN_MASK |
-+			ZYNQ_QSPI_CONFIG_MANSRT_MASK);
-+	config_reg |= (ZYNQ_QSPI_CONFIG_MSTREN_MASK |
-+		       ZYNQ_QSPI_CONFIG_SSFORCE_MASK |
-+		       ZYNQ_QSPI_CONFIG_FWIDTH_MASK |
-+		       ZYNQ_QSPI_CONFIG_IFMODE_MASK);
-+	zynq_qspi_write(xqspi, ZYNQ_QSPI_CONFIG_OFFSET, config_reg);
-+
-+	zynq_qspi_write(xqspi, ZYNQ_QSPI_RX_THRESH_OFFSET,
-+			ZYNQ_QSPI_RX_THRESHOLD);
-+	zynq_qspi_write(xqspi, ZYNQ_QSPI_TX_THRESH_OFFSET,
-+			ZYNQ_QSPI_TX_THRESHOLD);
-+
-+	zynq_qspi_write(xqspi, ZYNQ_QSPI_ENABLE_OFFSET,
-+			ZYNQ_QSPI_ENABLE_ENABLE_MASK);
-+}
-+
-+static int zynq_qspi_check_buswidth(u8 width)
-+{
-+	switch (width) {
-+	case 1:
-+	case 2:
-+	case 4:
-+		return 0;
-+	}
-+
-+	return -ENOTSUPP;
-+}
-+
-+static bool zynq_qspi_supports_op(struct spi_mem *mem,
-+				  const struct spi_mem_op *op)
-+{
-+	/*
-+	 * The number of address bytes should be equal to or less than 3 bytes.
-+	 */
-+	if (op->addr.nbytes > 3)
-+		return false;
-+
-+	return true;
-+}
-+
-+/**
-+ * zynq_qspi_rxfifo_op - Read 1..4 bytes from RxFIFO to RX buffer
-+ * @xqspi:	Pointer to the zynq_qspi structure
-+ * @size:	Number of bytes to be read (1..4)
-+ */
-+static void zynq_qspi_rxfifo_op(struct zynq_qspi *xqspi, unsigned int size)
-+{
-+	u32 data;
-+
-+	data = zynq_qspi_read(xqspi, ZYNQ_QSPI_RXD_OFFSET);
-+
-+	if (xqspi->rxbuf) {
-+		memcpy(xqspi->rxbuf, ((u8 *)&data) + 4 - size, size);
-+		xqspi->rxbuf += size;
-+	}
-+
-+	xqspi->rx_bytes -= size;
-+	if (xqspi->rx_bytes < 0)
-+		xqspi->rx_bytes = 0;
-+}
-+
-+/**
-+ * zynq_qspi_txfifo_op - Write 1..4 bytes from TX buffer to TxFIFO
-+ * @xqspi:	Pointer to the zynq_qspi structure
-+ * @size:	Number of bytes to be written (1..4)
-+ */
-+static void zynq_qspi_txfifo_op(struct zynq_qspi *xqspi, unsigned int size)
-+{
-+	static const unsigned int offset[4] = {
-+		ZYNQ_QSPI_TXD_00_01_OFFSET, ZYNQ_QSPI_TXD_00_10_OFFSET,
-+		ZYNQ_QSPI_TXD_00_11_OFFSET, ZYNQ_QSPI_TXD_00_00_OFFSET };
-+	u32 data;
-+
-+	if (xqspi->txbuf) {
-+		data = 0xffffffff;
-+		memcpy(&data, xqspi->txbuf, size);
-+		xqspi->txbuf += size;
++		i2c_int_disable(idev, mask);
+ 		if (i2c_m_rd(idev->msg_r) && idev->msg_xfrd_r < idev->msg_r->len)
+ 			axxia_i2c_empty_rx_fifo(idev);
+ 		complete(&idev->msg_complete);
+-	} else if (status & MST_STATUS_SS) {
+-		/* Auto/Sequence transfer done */
+-		complete(&idev->msg_complete);
+ 	} else if (status & MST_STATUS_TSS) {
+ 		/* Transfer timeout */
+ 		idev->msg_err =3D -ETIMEDOUT;
+@@ -405,6 +406,7 @@ static int axxia_i2c_xfer_seq(struct axxia_i2c_dev *ide=
+v, struct i2c_msg msgs[])
+ 	idev->msg_r =3D &msgs[1];
+ 	idev->msg_xfrd =3D 0;
+ 	idev->msg_xfrd_r =3D 0;
++	idev->last =3D true;
+ 	axxia_i2c_fill_tx_fifo(idev);
+=20
+ 	writel(CMD_SEQUENCE, idev->base + MST_COMMAND);
+@@ -415,10 +417,6 @@ static int axxia_i2c_xfer_seq(struct axxia_i2c_dev *id=
+ev, struct i2c_msg msgs[])
+ 	time_left =3D wait_for_completion_timeout(&idev->msg_complete,
+ 						I2C_XFER_TIMEOUT);
+=20
+-	i2c_int_disable(idev, int_mask);
+-
+-	axxia_i2c_empty_rx_fifo(idev);
+-
+ 	if (idev->msg_err =3D=3D -ENXIO) {
+ 		if (axxia_i2c_handle_seq_nak(idev))
+ 			axxia_i2c_init(idev);
+@@ -438,9 +436,10 @@ static int axxia_i2c_xfer_seq(struct axxia_i2c_dev *id=
+ev, struct i2c_msg msgs[])
+ 	return idev->msg_err;
+ }
+=20
+-static int axxia_i2c_xfer_msg(struct axxia_i2c_dev *idev, struct i2c_msg *=
+msg)
++static int axxia_i2c_xfer_msg(struct axxia_i2c_dev *idev, struct i2c_msg *=
+msg,
++			      bool last)
+ {
+-	u32 int_mask =3D MST_STATUS_ERR | MST_STATUS_SNS;
++	u32 int_mask =3D MST_STATUS_ERR;
+ 	u32 rx_xfer, tx_xfer;
+ 	unsigned long time_left;
+ 	unsigned int wt_value;
+@@ -449,6 +448,7 @@ static int axxia_i2c_xfer_msg(struct axxia_i2c_dev *ide=
+v, struct i2c_msg *msg)
+ 	idev->msg_r =3D msg;
+ 	idev->msg_xfrd =3D 0;
+ 	idev->msg_xfrd_r =3D 0;
++	idev->last =3D last;
+ 	reinit_completion(&idev->msg_complete);
+=20
+ 	axxia_i2c_set_addr(idev, msg);
+@@ -478,8 +478,13 @@ static int axxia_i2c_xfer_msg(struct axxia_i2c_dev *id=
+ev, struct i2c_msg *msg)
+ 	if (idev->msg_err)
+ 		goto out;
+=20
+-	/* Start manual mode */
+-	writel(CMD_MANUAL, idev->base + MST_COMMAND);
++	if (!last) {
++		writel(CMD_MANUAL, idev->base + MST_COMMAND);
++		int_mask |=3D MST_STATUS_SNS;
 +	} else {
-+		data = 0;
++		writel(CMD_AUTO, idev->base + MST_COMMAND);
++		int_mask |=3D MST_STATUS_SS;
 +	}
-+
-+	xqspi->tx_bytes -= size;
-+	zynq_qspi_write(xqspi, offset[size - 1], data);
-+}
-+
-+/**
-+ * zynq_qspi_chipselect - Select or deselect the chip select line
-+ * @spi:	Pointer to the spi_device structure
-+ * @assert:	1 for select or 0 for deselect the chip select line
-+ */
-+static void zynq_qspi_chipselect(struct spi_device *spi, bool assert)
-+{
-+	struct spi_controller *ctrl = spi->master;
-+	struct zynq_qspi *xqspi = spi_controller_get_devdata(ctrl);
-+	u32 config_reg;
-+
-+	config_reg = zynq_qspi_read(xqspi, ZYNQ_QSPI_CONFIG_OFFSET);
-+	if (assert) {
-+		/* Select the slave */
-+		config_reg &= ~ZYNQ_QSPI_CONFIG_SSCTRL_MASK;
-+		config_reg |= (((~(BIT(spi->chip_select))) <<
-+				ZYNQ_QSPI_SS_SHIFT) &
-+				ZYNQ_QSPI_CONFIG_SSCTRL_MASK);
-+	} else {
-+		config_reg |= ZYNQ_QSPI_CONFIG_SSCTRL_MASK;
-+	}
-+
-+	zynq_qspi_write(xqspi, ZYNQ_QSPI_CONFIG_OFFSET, config_reg);
-+}
-+
-+/**
-+ * zynq_qspi_config_op - Configure QSPI controller for specified transfer
-+ * @xqspi:	Pointer to the zynq_qspi structure
-+ * @qspi:	Pointer to the spi_device structure
-+ *
-+ * Sets the operational mode of QSPI controller for the next QSPI transfer and
-+ * sets the requested clock frequency.
-+ *
-+ * Return:	0 on success and -EINVAL on invalid input parameter
-+ *
-+ * Note: If the requested frequency is not an exact match with what can be
-+ * obtained using the prescalar value, the driver sets the clock frequency which
-+ * is lower than the requested frequency (maximum lower) for the transfer. If
-+ * the requested frequency is higher or lower than that is supported by the QSPI
-+ * controller the driver will set the highest or lowest frequency supported by
-+ * controller.
-+ */
-+static int zynq_qspi_config_op(struct zynq_qspi *xqspi, struct spi_device *spi)
-+{
-+	u32 config_reg, baud_rate_val = 0;
-+
-+	/*
-+	 * Set the clock frequency
-+	 * The baud rate divisor is not a direct mapping to the value written
-+	 * into the configuration register (config_reg[5:3])
-+	 * i.e. 000 - divide by 2
-+	 *      001 - divide by 4
-+	 *      ----------------
-+	 *      111 - divide by 256
-+	 */
-+	while ((baud_rate_val < ZYNQ_QSPI_BAUD_DIV_MAX)  &&
-+	       (clk_get_rate(xqspi->refclk) / (2 << baud_rate_val)) >
-+		spi->max_speed_hz)
-+		baud_rate_val++;
-+
-+	config_reg = zynq_qspi_read(xqspi, ZYNQ_QSPI_CONFIG_OFFSET);
-+
-+	/* Set the QSPI clock phase and clock polarity */
-+	config_reg &= (~ZYNQ_QSPI_CONFIG_CPHA_MASK) &
-+		      (~ZYNQ_QSPI_CONFIG_CPOL_MASK);
-+	if (spi->mode & SPI_CPHA)
-+		config_reg |= ZYNQ_QSPI_CONFIG_CPHA_MASK;
-+	if (spi->mode & SPI_CPOL)
-+		config_reg |= ZYNQ_QSPI_CONFIG_CPOL_MASK;
-+
-+	config_reg &= ~ZYNQ_QSPI_CONFIG_BDRATE_MASK;
-+	config_reg |= (baud_rate_val << ZYNQ_QSPI_BAUD_DIV_SHIFT);
-+	zynq_qspi_write(xqspi, ZYNQ_QSPI_CONFIG_OFFSET, config_reg);
-+
-+	return 0;
-+}
-+
-+/**
-+ * zynq_qspi_setup - Configure the QSPI controller
-+ * @spi:	Pointer to the spi_device structure
-+ *
-+ * Sets the operational mode of QSPI controller for the next QSPI transfer, baud
-+ * rate and divisor value to setup the requested qspi clock.
-+ *
-+ * Return:	0 on success and error value on failure
-+ */
-+static int zynq_qspi_setup_op(struct spi_device *spi)
-+{
-+	struct spi_controller *ctrl = spi->master;
-+	struct zynq_qspi *qspi = spi_controller_get_devdata(ctrl);
-+
-+	if (ctrl->busy)
-+		return -EBUSY;
-+
-+	clk_enable(qspi->refclk);
-+	clk_enable(qspi->pclk);
-+	zynq_qspi_write(qspi, ZYNQ_QSPI_ENABLE_OFFSET,
-+			ZYNQ_QSPI_ENABLE_ENABLE_MASK);
-+
-+	return 0;
-+}
-+
-+/**
-+ * zynq_qspi_write_op - Fills the TX FIFO with as many bytes as possible
-+ * @xqspi:	Pointer to the zynq_qspi structure
-+ * @txcount:	Maximum number of words to write
-+ * @txempty:	Indicates that TxFIFO is empty
-+ */
-+static void zynq_qspi_write_op(struct zynq_qspi *xqspi, int txcount,
-+			       bool txempty)
-+{
-+	int count, len, k;
-+
-+	len = xqspi->tx_bytes;
-+	if (len && len < 4) {
-+		/*
-+		 * We must empty the TxFIFO between accesses to TXD0,
-+		 * TXD1, TXD2, TXD3.
-+		 */
-+		if (txempty)
-+			zynq_qspi_txfifo_op(xqspi, len);
-+
-+		return;
-+	}
-+
-+	count = len / 4;
-+	if (count > txcount)
-+		count = txcount;
-+
-+	if (xqspi->txbuf) {
-+		writesl(xqspi->regs + ZYNQ_QSPI_TXD_00_00_OFFSET,
-+			xqspi->txbuf, count);
-+		xqspi->txbuf += count * 4;
-+	} else {
-+		for (k = 0; k < count; k++)
-+			writel_relaxed(0, xqspi->regs +
-+					  ZYNQ_QSPI_TXD_00_00_OFFSET);
-+	}
-+
-+	xqspi->tx_bytes -= count * 4;
-+}
-+
-+/**
-+ * zynq_qspi_read_op - Drains the RX FIFO by as many bytes as possible
-+ * @xqspi:	Pointer to the zynq_qspi structure
-+ * @rxcount:	Maximum number of words to read
-+ */
-+static void zynq_qspi_read_op(struct zynq_qspi *xqspi, int rxcount)
-+{
-+	int count, len, k;
-+
-+	len = xqspi->rx_bytes - xqspi->tx_bytes;
-+	count = len / 4;
-+	if (count > rxcount)
-+		count = rxcount;
-+	if (xqspi->rxbuf) {
-+		readsl(xqspi->regs + ZYNQ_QSPI_RXD_OFFSET,
-+		       xqspi->rxbuf, count);
-+		xqspi->rxbuf += count * 4;
-+	} else {
-+		for (k = 0; k < count; k++)
-+			readl_relaxed(xqspi->regs + ZYNQ_QSPI_RXD_OFFSET);
-+	}
-+	xqspi->rx_bytes -= count * 4;
-+	len -= count * 4;
-+
-+	if (len && len < 4 && count < rxcount)
-+		zynq_qspi_rxfifo_op(xqspi, len);
-+}
-+
-+/**
-+ * zynq_qspi_irq - Interrupt service routine of the QSPI controller
-+ * @irq:	IRQ number
-+ * @dev_id:	Pointer to the xqspi structure
-+ *
-+ * This function handles TX empty only.
-+ * On TX empty interrupt this function reads the received data from RX FIFO and
-+ * fills the TX FIFO if there is any data remaining to be transferred.
-+ *
-+ * Return:	IRQ_HANDLED when interrupt is handled; IRQ_NONE otherwise.
-+ */
-+static irqreturn_t zynq_qspi_irq(int irq, void *dev_id)
-+{
-+	u32 intr_status;
-+	bool txempty;
-+	struct zynq_qspi *xqspi = (struct zynq_qspi *)dev_id;
-+
-+	intr_status = zynq_qspi_read(xqspi, ZYNQ_QSPI_STATUS_OFFSET);
-+	zynq_qspi_write(xqspi, ZYNQ_QSPI_STATUS_OFFSET, intr_status);
-+
-+	if ((intr_status & ZYNQ_QSPI_IXR_TXNFULL_MASK) ||
-+	    (intr_status & ZYNQ_QSPI_IXR_RXNEMTY_MASK)) {
-+		/*
-+		 * This bit is set when Tx FIFO has < THRESHOLD entries.
-+		 * We have the THRESHOLD value set to 1,
-+		 * so this bit indicates Tx FIFO is empty.
-+		 */
-+		txempty = !!(intr_status & ZYNQ_QSPI_IXR_TXNFULL_MASK);
-+		/* Read out the data from the RX FIFO */
-+		zynq_qspi_read_op(xqspi, ZYNQ_QSPI_RX_THRESHOLD);
-+		if (xqspi->tx_bytes) {
-+			/* There is more data to send */
-+			zynq_qspi_write_op(xqspi, ZYNQ_QSPI_RX_THRESHOLD,
-+					   txempty);
-+		} else {
-+			/*
-+			 * If transfer and receive is completed then only send
-+			 * complete signal.
-+			 */
-+			if (!xqspi->rx_bytes) {
-+				zynq_qspi_write(xqspi,
-+						ZYNQ_QSPI_IDIS_OFFSET,
-+						ZYNQ_QSPI_IXR_RXTX_MASK);
-+				complete(&xqspi->data_completion);
-+			}
-+		}
-+		return IRQ_HANDLED;
-+	}
-+
-+	return IRQ_NONE;
-+}
-+
-+/**
-+ * zynq_qspi_exec_mem_op() - Initiates the QSPI transfer
-+ * @mem: the SPI memory
-+ * @op: the memory operation to execute
-+ *
-+ * Executes a memory operation.
-+ *
-+ * This function first selects the chip and starts the memory operation.
-+ *
-+ * Return: 0 in case of success, a negative error code otherwise.
-+ */
-+static int zynq_qspi_exec_mem_op(struct spi_mem *mem,
-+				 const struct spi_mem_op *op)
-+{
-+	struct zynq_qspi *xqspi = spi_controller_get_devdata(mem->spi->master);
-+	int err = 0, i;
-+	u8 *tmpbuf;
-+
-+	dev_dbg(xqspi->dev, "cmd:%#x mode:%d.%d.%d.%d\n",
-+		op->cmd.opcode, op->cmd.buswidth, op->addr.buswidth,
-+		op->dummy.buswidth, op->data.buswidth);
-+
-+	zynq_qspi_chipselect(mem->spi, true);
-+	zynq_qspi_config_op(xqspi, mem->spi);
-+
-+	if (op->cmd.opcode) {
-+		reinit_completion(&xqspi->data_completion);
-+		xqspi->txbuf = (u8 *)&op->cmd.opcode;
-+		xqspi->rxbuf = NULL;
-+		xqspi->tx_bytes = sizeof(op->cmd.opcode);
-+		xqspi->rx_bytes = sizeof(op->cmd.opcode);
-+		zynq_qspi_write_op(xqspi, ZYNQ_QSPI_FIFO_DEPTH, true);
-+		zynq_qspi_write(xqspi, ZYNQ_QSPI_IEN_OFFSET,
-+				ZYNQ_QSPI_IXR_RXTX_MASK);
-+		if (!wait_for_completion_interruptible_timeout(&xqspi->data_completion,
-+							       msecs_to_jiffies(1000)))
-+			err = -ETIMEDOUT;
-+	}
-+
-+	if (op->addr.nbytes) {
-+		for (i = 0; i < op->addr.nbytes; i++) {
-+			xqspi->txbuf[i] = op->addr.val >>
-+					(8 * (op->addr.nbytes - i - 1));
-+		}
-+
-+		reinit_completion(&xqspi->data_completion);
-+		xqspi->rxbuf = NULL;
-+		xqspi->tx_bytes = op->addr.nbytes;
-+		xqspi->rx_bytes = op->addr.nbytes;
-+		zynq_qspi_write_op(xqspi, ZYNQ_QSPI_FIFO_DEPTH, true);
-+		zynq_qspi_write(xqspi, ZYNQ_QSPI_IEN_OFFSET,
-+				ZYNQ_QSPI_IXR_RXTX_MASK);
-+		if (!wait_for_completion_interruptible_timeout(&xqspi->data_completion,
-+							       msecs_to_jiffies(1000)))
-+			err = -ETIMEDOUT;
-+	}
-+
-+	if (op->dummy.nbytes) {
-+		tmpbuf = kzalloc(op->dummy.nbytes, GFP_KERNEL);
-+		memset(tmpbuf, 0xff, op->dummy.nbytes);
-+		reinit_completion(&xqspi->data_completion);
-+		xqspi->txbuf = tmpbuf;
-+		xqspi->rxbuf = NULL;
-+		xqspi->tx_bytes = op->dummy.nbytes;
-+		xqspi->rx_bytes = op->dummy.nbytes;
-+		zynq_qspi_write_op(xqspi, ZYNQ_QSPI_FIFO_DEPTH, true);
-+		zynq_qspi_write(xqspi, ZYNQ_QSPI_IEN_OFFSET,
-+				ZYNQ_QSPI_IXR_RXTX_MASK);
-+		if (!wait_for_completion_interruptible_timeout(&xqspi->data_completion,
-+							       msecs_to_jiffies(1000)))
-+			err = -ETIMEDOUT;
-+
-+		kfree(tmpbuf);
-+	}
-+
-+	if (op->data.nbytes) {
-+		reinit_completion(&xqspi->data_completion);
-+		if (op->data.dir == SPI_MEM_DATA_OUT) {
-+			xqspi->txbuf = (u8 *)op->data.buf.out;
-+			xqspi->tx_bytes = op->data.nbytes;
-+			xqspi->rxbuf = NULL;
-+			xqspi->rx_bytes = op->data.nbytes;
-+		} else {
-+			xqspi->txbuf = NULL;
-+			xqspi->rxbuf = (u8 *)op->data.buf.in;
-+			xqspi->rx_bytes = op->data.nbytes;
-+			xqspi->tx_bytes = op->data.nbytes;
-+		}
-+
-+		zynq_qspi_write_op(xqspi, ZYNQ_QSPI_FIFO_DEPTH, true);
-+		zynq_qspi_write(xqspi, ZYNQ_QSPI_IEN_OFFSET,
-+				ZYNQ_QSPI_IXR_RXTX_MASK);
-+		if (!wait_for_completion_interruptible_timeout(&xqspi->data_completion,
-+							       msecs_to_jiffies(1000)))
-+			err = -ETIMEDOUT;
-+	}
-+	zynq_qspi_chipselect(mem->spi, false);
-+
-+	return err;
-+}
-+
-+static const struct spi_controller_mem_ops zynq_qspi_mem_ops = {
-+	.supports_op = zynq_qspi_supports_op,
-+	.exec_op = zynq_qspi_exec_mem_op,
-+};
-+
-+/**
-+ * zynq_qspi_probe - Probe method for the QSPI driver
-+ * @pdev:	Pointer to the platform_device structure
-+ *
-+ * This function initializes the driver data structures and the hardware.
-+ *
-+ * Return:	0 on success and error value on failure
-+ */
-+static int zynq_qspi_probe(struct platform_device *pdev)
-+{
-+	int ret = 0;
-+	struct spi_controller *ctlr;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct zynq_qspi *xqspi;
-+	struct resource *res;
-+	u32 num_cs, max_freq;
-+
-+	ctlr = spi_alloc_master(&pdev->dev, sizeof(*xqspi));
-+	if (!ctlr)
-+		return -ENOMEM;
-+
-+	xqspi = spi_controller_get_devdata(ctlr);
-+	xqspi->dev = dev;
-+	platform_set_drvdata(pdev, xqspi);
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	xqspi->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(xqspi->regs)) {
-+		ret = PTR_ERR(xqspi->regs);
-+		goto remove_master;
-+	}
-+
-+	xqspi->pclk = devm_clk_get(&pdev->dev, "pclk");
-+	if (IS_ERR(xqspi->pclk)) {
-+		dev_err(&pdev->dev, "pclk clock not found.\n");
-+		ret = PTR_ERR(xqspi->pclk);
-+		goto remove_master;
-+	}
-+
-+	init_completion(&xqspi->data_completion);
-+
-+	xqspi->refclk = devm_clk_get(&pdev->dev, "ref_clk");
-+	if (IS_ERR(xqspi->refclk)) {
-+		dev_err(&pdev->dev, "ref_clk clock not found.\n");
-+		ret = PTR_ERR(xqspi->refclk);
-+		goto remove_master;
-+	}
-+
-+	ret = clk_prepare_enable(xqspi->pclk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to enable APB clock.\n");
-+		goto remove_master;
-+	}
-+
-+	ret = clk_prepare_enable(xqspi->refclk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to enable device clock.\n");
-+		goto clk_dis_pclk;
-+	}
-+
-+	/* QSPI controller initializations */
-+	zynq_qspi_init_hw(xqspi);
-+
-+	xqspi->irq = platform_get_irq(pdev, 0);
-+	if (xqspi->irq <= 0) {
-+		ret = -ENXIO;
-+		dev_err(&pdev->dev, "irq resource not found\n");
-+		goto remove_master;
-+	}
-+	ret = devm_request_irq(&pdev->dev, xqspi->irq, zynq_qspi_irq,
-+			       0, pdev->name, xqspi);
-+	if (ret != 0) {
-+		ret = -ENXIO;
-+		dev_err(&pdev->dev, "request_irq failed\n");
-+		goto remove_master;
-+	}
-+
-+	ret = of_property_read_u32(np, "num-cs",
-+				   &num_cs);
-+	if (ret < 0)
-+		ctlr->num_chipselect = ZYNQ_QSPI_DEFAULT_NUM_CS;
-+	else
-+		ctlr->num_chipselect = num_cs;
-+
-+	ctlr->mode_bits =  SPI_RX_DUAL | SPI_RX_QUAD |
-+			    SPI_TX_DUAL | SPI_TX_QUAD;
-+	ctlr->mem_ops = &zynq_qspi_mem_ops;
-+	ctlr->setup = zynq_qspi_setup_op;
-+	ctlr->max_speed_hz = clk_get_rate(xqspi->refclk) / 2;
-+	ctlr->dev.of_node = np;
-+	ret = spi_register_controller(ctlr);
-+	if (ret) {
-+		dev_err(&pdev->dev, "spi_register_master failed\n");
-+		goto clk_dis_all;
-+	}
-+
-+	return ret;
-+
-+clk_dis_all:
-+	clk_disable_unprepare(xqspi->refclk);
-+clk_dis_pclk:
-+	clk_disable_unprepare(xqspi->pclk);
-+remove_master:
-+	spi_controller_put(ctlr);
-+
-+	return ret;
-+}
-+
-+/**
-+ * zynq_qspi_remove - Remove method for the QSPI driver
-+ * @pdev:	Pointer to the platform_device structure
-+ *
-+ * This function is called if a device is physically removed from the system or
-+ * if the driver module is being unloaded. It frees all resources allocated to
-+ * the device.
-+ *
-+ * Return:	0 on success and error value on failure
-+ */
-+static int zynq_qspi_remove(struct platform_device *pdev)
-+{
-+	struct zynq_qspi *xqspi = platform_get_drvdata(pdev);
-+
-+	zynq_qspi_write(xqspi, ZYNQ_QSPI_ENABLE_OFFSET, 0);
-+
-+	clk_disable_unprepare(xqspi->refclk);
-+	clk_disable_unprepare(xqspi->pclk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id zynq_qspi_of_match[] = {
-+	{ .compatible = "xlnx,zynq-qspi-1.0", },
-+	{ /* end of table */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, zynq_qspi_of_match);
-+
-+/*
-+ * zynq_qspi_driver - This structure defines the QSPI platform driver
-+ */
-+static struct platform_driver zynq_qspi_driver = {
-+	.probe = zynq_qspi_probe,
-+	.remove = zynq_qspi_remove,
-+	.driver = {
-+		.name = "zynq-qspi",
-+		.of_match_table = zynq_qspi_of_match,
-+	},
-+};
-+
-+module_platform_driver(zynq_qspi_driver);
-+
-+MODULE_AUTHOR("Xilinx, Inc.");
-+MODULE_DESCRIPTION("Xilinx Zynq QSPI driver");
-+MODULE_LICENSE("GPL");
--- 
-2.7.4
+=20
+ 	writel(WT_EN | wt_value, idev->base + WAIT_TIMER_CONTROL);
+=20
+@@ -507,28 +512,6 @@ static int axxia_i2c_xfer_msg(struct axxia_i2c_dev *id=
+ev, struct i2c_msg *msg)
+ 	return idev->msg_err;
+ }
+=20
+-static int axxia_i2c_stop(struct axxia_i2c_dev *idev)
+-{
+-	u32 int_mask =3D MST_STATUS_ERR | MST_STATUS_SCC | MST_STATUS_TSS;
+-	unsigned long time_left;
+-
+-	reinit_completion(&idev->msg_complete);
+-
+-	/* Issue stop */
+-	writel(0xb, idev->base + MST_COMMAND);
+-	i2c_int_enable(idev, int_mask);
+-	time_left =3D wait_for_completion_timeout(&idev->msg_complete,
+-					      I2C_STOP_TIMEOUT);
+-	i2c_int_disable(idev, int_mask);
+-	if (time_left =3D=3D 0)
+-		return -ETIMEDOUT;
+-
+-	if (readl(idev->base + MST_COMMAND) & CMD_BUSY)
+-		dev_warn(idev->dev, "busy after stop\n");
+-
+-	return 0;
+-}
+-
+ /* This function checks if the msgs[] array contains messages compatible w=
+ith
+  * Sequence mode of operation. This mode assumes there will be exactly one
+  * write of non-zero length followed by exactly one read of non-zero lengt=
+h,
+@@ -558,9 +541,7 @@ axxia_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg=
+ msgs[], int num)
+ 	i2c_int_enable(idev, MST_STATUS_TSS);
+=20
+ 	for (i =3D 0; ret =3D=3D 0 && i < num; ++i)
+-		ret =3D axxia_i2c_xfer_msg(idev, &msgs[i]);
+-
+-	axxia_i2c_stop(idev);
++		ret =3D axxia_i2c_xfer_msg(idev, &msgs[i], i =3D=3D (num - 1));
+=20
+ 	return ret ? : i;
+ }
+--=20
+2.20.1
 
