@@ -2,100 +2,114 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2979C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB061C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819452173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:58:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553756288;
-	bh=IY2b8v4jncTm4HanpgMnfdzbl9Pt99kGPfiTLuR4y9s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yj9jo82GSz+r8sKFRz8eKvzH/m+2i0F0N0wXs9VfWBllV9xLTxA7qAkX0WY09i78r
-	 wMacU6OEnDr1/IJWrVG8BNK9Uq9W7D/8S47t6DTxnvdIyUQxL4j9WfNOx9ogkbcNmC
-	 wN3OvvwSfOSfj/UEG0SM/Y4HPFNUTKQHXq6w6EQg=
+	by mail.kernel.org (Postfix) with ESMTP id 882BF2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:58:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UIrJtXqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbfC1G6H (ORCPT
+        id S1726410AbfC1G66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 02:58:07 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36775 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfC1G6H (ORCPT
+        Thu, 28 Mar 2019 02:58:58 -0400
+Received: from mail-lf1-f45.google.com ([209.85.167.45]:46452 "EHLO
+        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfC1G65 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 02:58:07 -0400
-Received: by mail-wm1-f65.google.com with SMTP id h18so2629384wml.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 23:58:05 -0700 (PDT)
+        Thu, 28 Mar 2019 02:58:57 -0400
+Received: by mail-lf1-f45.google.com with SMTP id r25so13155483lfn.13;
+        Wed, 27 Mar 2019 23:58:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=bG9nur6wczXHYH79nzV+JTWbgH4BaqrOp760u6uBeeU=;
+        b=UIrJtXqmUZtXrc/A5rksh6cvrQ0aerTQrJp8H+scTBVUkUPzQw+/CHdXR8P+QhKW5K
+         EPk3Zqp/haV0QPtJ49BU8ZqXI2EOx1XUEvDjc4aJ9cWw1kbTddWdNOiOW16ko5MhBV3f
+         M6zrLxFtHZV/qnK8MhOwxm4t7FRBLxhZVHY/7CVep3+SLi/964b94nwgMypKlWr81Eqa
+         zaQMaQZM/Cjtng1AoRzadwTW3R/MNrthTHP/P9YhEsIypJuSs/CKvp9kKS9gNRlBo+pz
+         fIgU1nSesTx33e+56yt/9oiWPNKpRuEQBWjUHR1fTiftWTwTdPknDWK63ct436AIDA80
+         7g9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q1PezP2XQg+mDviVgWM5i24dvdC/8vaYo2tkDH927Eo=;
-        b=bYD0hu7CTkOEC/UfWVNjLpQswfLDyWnZjO+yG9SsnejA8EdLJW/kg3GeYaawt1Y9cW
-         dy44DhTS0R4Cx/7Emjl4MCBwVCyfV292Fp0tlAvel97ms+qOJ49oQhLicjhTTKG5R2wc
-         PYCuugbP1qIY+is3hfzJt3iVbADcFFqUcZ8me2LaFLFGBe/ebChN1wa/YjqCnW6aYV3J
-         WHhzypsHvExXzetdI6+VXuKMUthGLwRiardenEkpjXNm2P0QVbqbz6qR3BjcIEOetQ/K
-         O/OrwIuJZ59/v2Ri2sRdm2wDUu2K7TLZ1qpQe8EWY1zXJ1UI2CZVy/uiB9rXmfOxFff1
-         Mgrw==
-X-Gm-Message-State: APjAAAVD9kDZfR5mpryevu3h4REr0MrC5nsdhf+ohtyjLvIY3FH26JFa
-        wLEIGfNhH4VmimHZwwY1EX8=
-X-Google-Smtp-Source: APXvYqxEEg6bIrtRVpuuN9OeVJ+wS5PBnn6jxssxAGzZjgcAgnCUtNx+osvmbWfOn0eBECcFZXWlNQ==
-X-Received: by 2002:a7b:c00e:: with SMTP id c14mr14313558wmb.110.1553756285332;
-        Wed, 27 Mar 2019 23:58:05 -0700 (PDT)
-Received: from localhost (ip-37-188-147-215.eurotel.cz. [37.188.147.215])
-        by smtp.gmail.com with ESMTPSA id t69sm3211038wmt.16.2019.03.27.23.58.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 23:58:03 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 07:58:02 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/10] Another Approach to Use PMEM as NUMA Node
-Message-ID: <20190328065802.GQ11927@dhcp22.suse.cz>
-References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190326135837.GP28406@dhcp22.suse.cz>
- <43a1a59d-dc4a-6159-2c78-e1faeb6e0e46@linux.alibaba.com>
- <20190326183731.GV28406@dhcp22.suse.cz>
- <f08fb981-d129-3357-e93a-a6b233aa9891@linux.alibaba.com>
- <20190327090100.GD11927@dhcp22.suse.cz>
- <CAPcyv4heiUbZvP7Ewoy-Hy=-mPrdjCjEuSw+0rwdOUHdjwetxg@mail.gmail.com>
- <c3690a19-e2a6-7db7-b146-b08aa9b22854@linux.alibaba.com>
- <20190327193918.GP11927@dhcp22.suse.cz>
- <6f8b4c51-3f3c-16f9-ca2f-dbcd08ea23e6@linux.alibaba.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=bG9nur6wczXHYH79nzV+JTWbgH4BaqrOp760u6uBeeU=;
+        b=uWSfWy9GJ6LLB4PVjaFrNk9iLadVZVTtN4WDfZjO+0PTKCqvGNUoaxHhtigM4C5a2h
+         S4xPb+IsAevG4g7TQuPa5dztJ6Xx12okPUNk2gnteCYMWcqchBejllrS8mS+tZRmJ0EU
+         U2skLyM/7hyDcZ6XUIU1IgM93R6mGg8b5qPI3w8SHEUdjCbTew1/dM3FDR81wg02SZvB
+         xbw/WXAwgrAUIkvY4LTswIJUzKQPy369NGyfTqka6BytCe6UU9KcIUgWFIrqLpz4WBhT
+         X7PATRY+kC3A61wE81QbzJGQN8KrokblNqBqa/Qbp8m0VO5ehD3/PMgrMwNYZT5CbL4C
+         Ry+Q==
+X-Gm-Message-State: APjAAAV5c46tEKVR4xr0dBkuXFCgn5w9BCXcUzhgPU3nYYQCqTWZbNV7
+        Jnr1Qul9kERTswIOcrqbsOU=
+X-Google-Smtp-Source: APXvYqwetZeNxPzGKjIIUbExfO0aurDL81vsiPY3bZKKtqUaaalM6OyMhQiPTzaP5rtEwp1SHVQ4Iw==
+X-Received: by 2002:a19:ec17:: with SMTP id b23mr19909696lfa.76.1553756335258;
+        Wed, 27 Mar 2019 23:58:55 -0700 (PDT)
+Received: from [192.168.1.10] ([95.174.107.249])
+        by smtp.gmail.com with ESMTPSA id l15sm1618241ljh.62.2019.03.27.23.58.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Mar 2019 23:58:54 -0700 (PDT)
+Subject: Re: Issues with i.MX SPI DMA transfers
+To:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Duan <fugang.duan@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Clark Wang <xiaoning.wang@nxp.com>
+References: <08fcbd65-510f-84f8-d6d6-ff56aa9ca9ad@gmail.com>
+ <AM0PR04MB4211375B0647DE67D8C7406280590@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From:   Igor Plyatov <plyatov@gmail.com>
+Message-ID: <ec3fdef9-8f74-1a5a-e34a-d66b9e28dc5d@gmail.com>
+Date:   Thu, 28 Mar 2019 09:58:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6f8b4c51-3f3c-16f9-ca2f-dbcd08ea23e6@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <AM0PR04MB4211375B0647DE67D8C7406280590@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 27-03-19 19:09:10, Yang Shi wrote:
-> One question, when doing demote and promote we need define a path, for
-> example, DRAM <-> PMEM (assume two tier memory). When determining what nodes
-> are "DRAM" nodes, does it make sense to assume the nodes with both cpu and
-> memory are DRAM nodes since PMEM nodes are typically cpuless nodes?
+Dear developers,
 
-Do we really have to special case this for PMEM? Why cannot we simply go
-in the zonelist order? In other words why cannot we use the same logic
-for a larger NUMA machine and instead of swapping simply fallback to a
-less contended NUMA node? It can be a regular DRAM, PMEM or whatever
-other type of memory node.
--- 
-Michal Hocko
-SUSE Labs
+I have update about these issues.
+
+12 hours testing show very fast (some seconds) appearance of byte 
+duplication at interface spi4 (alias for ecspi5), while interfaces spi0 
+(alias for ecspi1) and spi1 (alias for ecspi2) work flawless (at least 
+without any other OS load).
+
+Looks like, ecspi5 has some different configuration in SPI or SDMA 
+drivers or bug in SDMA script.
+
+Any ideas?
+
+Best wishes.
+
+--
+
+Igor Plyatov
+
+
