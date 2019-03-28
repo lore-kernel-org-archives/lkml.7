@@ -2,151 +2,154 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C40C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50004C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E322075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9A82173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:46:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="iO4/009I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbfC1Fqb (ORCPT
+        id S1726210AbfC1Fqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 01:46:31 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53596 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbfC1Fq3 (ORCPT
+        Thu, 28 Mar 2019 01:46:48 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:4845 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfC1Fqs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 01:46:29 -0400
-Received: from mail-wr1-f71.google.com ([209.85.221.71])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1h9Nru-00035F-NH
-        for linux-kernel@vger.kernel.org; Thu, 28 Mar 2019 05:46:26 +0000
-Received: by mail-wr1-f71.google.com with SMTP id u18so8464646wrp.19
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 22:46:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lnWusSuUPplv3PCMitfxLczSv9S6cRhR/+Mv7BdgHE4=;
-        b=ub/s8w1ypO0r0hSmzQlCR/yCxW3lXDPihQi0IbkkouNpzvPCUifRdSfdSfJeAsf0Qi
-         Yomx5J4cNHlcyyXRboMNBjOF79cWvQW04pyzo1PPXrhWAOPvYcARbEczlMt28Pq+1CuU
-         08YXDhHz5e+ordRG2Qt9QPCn8vtibwwbVlAfL8z6jpH77KEHtpWK79/zibRrND9DEW1x
-         7+PxNwnP4U2/c598MOynLQejZtPtum5judZea8MaUcGwFikMqhC8/U+xBNGqsKERdRBQ
-         a+ued/SGww7OcrXUFAbz5wO7jMYB1HnjjMMU0jcIhdZIrWF9BBvNdwFiEkaSK5MiBiRY
-         eUGQ==
-X-Gm-Message-State: APjAAAXmDQcXOOLg6Rh3gISx7fU+tUhr72j6t0nDAG7+w2UrT3FuUACr
-        aOo/RyHmIZqPnAVeMW//lDs1LmdAVprSTuEM1I7mRzEFRHm8/yMa2ClzIVvz/pK8B87CSJ+vFp+
-        EOriz4OFQ12EnLtkfs/tbC8chmCPMJBpdJkiDT/JRdA==
-X-Received: by 2002:a7b:c769:: with SMTP id x9mr15218913wmk.103.1553751986399;
-        Wed, 27 Mar 2019 22:46:26 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyU09qtbF6VO8UVn9i+LpxrE45YSmhlFUZf1xUvilvOHt0AWFkgJenjtabgspE3r3QKsirF+w==
-X-Received: by 2002:a7b:c769:: with SMTP id x9mr15218904wmk.103.1553751986164;
-        Wed, 27 Mar 2019 22:46:26 -0700 (PDT)
-Received: from localhost (host141-127-dynamic.17-87-r.retail.telecomitalia.it. [87.17.127.141])
-        by smtp.gmail.com with ESMTPSA id w16sm29974146wrt.84.2019.03.27.22.46.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 22:46:25 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 06:46:24 +0100
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Pravin Shelar <pshelar@ovn.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        ovs dev <dev@openvswitch.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] openvswitch: fix flow actions reallocation
-Message-ID: <20190328054623.GB16096@xps-13>
-References: <20190327221148.GA16096@xps-13>
- <CAOrHB_Bnd3bEZhqOUaBQB3TeO0sRCK++O6Q40TQ0UQO8u9Y-6g@mail.gmail.com>
+        Thu, 28 Mar 2019 01:46:48 -0400
+X-IronPort-AV: E=Sophos;i="5.60,278,1549954800"; 
+   d="scan'208";a="26278047"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 27 Mar 2019 22:46:47 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.106) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Wed, 27 Mar 2019 22:46:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vhris+UJGYPwtlyDfA7qh3x0eHql/kegR8dd8hVSSJs=;
+ b=iO4/009IknoGSFtciplp27KqyOFVKwo469DMzRfMaC4irrvtHBE09w+xQTbnxDevuT3d9yusW9FtQEn0Nm1HOLhbXnQAV5r/xC1IbZNZgDm0ieRbFuhmunn5bzRL/deV9PqZfEfYDM3i6px8ayTbbFEM7itYKyqPo1kX2y8oMJc=
+Received: from BY5PR11MB4119.namprd11.prod.outlook.com (10.255.162.219) by
+ BY5PR11MB3974.namprd11.prod.outlook.com (10.255.160.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.16; Thu, 28 Mar 2019 05:46:44 +0000
+Received: from BY5PR11MB4119.namprd11.prod.outlook.com
+ ([fe80::4454:7962:5f5a:72e9]) by BY5PR11MB4119.namprd11.prod.outlook.com
+ ([fe80::4454:7962:5f5a:72e9%2]) with mapi id 15.20.1730.019; Thu, 28 Mar 2019
+ 05:46:44 +0000
+From:   <Kavyasree.Kotagiri@microchip.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Kavyasree.Kotagiri@microchip.com>
+Subject: [PATCH v2 2/2] net: phy: vitesse: Remove support for VSC8514
+Thread-Topic: [PATCH v2 2/2] net: phy: vitesse: Remove support for VSC8514
+Thread-Index: AQHU5SmfOxXNIr/uPE6DxxsgVZSo6A==
+Date:   Thu, 28 Mar 2019 05:46:43 +0000
+Message-ID: <20190328054616.10207-1-kavyasree.kotagiri@microchip.com>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR03CA0029.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::42) To BY5PR11MB4119.namprd11.prod.outlook.com
+ (2603:10b6:a03:18f::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Kavyasree.Kotagiri@microchip.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [182.72.246.220]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9064f3c1-6982-4ea8-5c4e-08d6b340c211
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:BY5PR11MB3974;
+x-ms-traffictypediagnostic: BY5PR11MB3974:
+x-microsoft-antispam-prvs: <BY5PR11MB397457891047203DD0B2469492590@BY5PR11MB3974.namprd11.prod.outlook.com>
+x-forefront-prvs: 0990C54589
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(39860400002)(346002)(366004)(396003)(199004)(189003)(5660300002)(78486014)(66066001)(6436002)(7736002)(71190400001)(25786009)(107886003)(6116002)(97736004)(86362001)(106356001)(186003)(71200400001)(8676002)(4326008)(6486002)(1076003)(99286004)(2616005)(8936002)(486006)(3846002)(26005)(2501003)(386003)(6506007)(55236004)(305945005)(102836004)(476003)(50226002)(52116002)(36756003)(72206003)(68736007)(81156014)(478600001)(14454004)(110136005)(54906003)(6512007)(2906002)(81166006)(256004)(105586002)(316002)(2201001)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB3974;H:BY5PR11MB4119.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: MCwJg9Y+Jl+u8NHTlqiF2IOqe2gvkvHAEVP0xuCnpfaZ8/jo8/j26YmBQxPD6ZfXlU5JJyaVrWURFAJ25MeNH+fXTj1rN8a58t5IDDiwe6Z+Da7hlSxnK9CexdJ01CBH5uPYOqcJ420A7+80KcUAweS0QqpzUWHItuzdnhZlzyFbE8vd+o5dLvavuBaSHQ6xZv+OZ4Vr13swmBhyVvgMQaAAf3c/m7EPtQeUGHXg0Zn6XiuDs+embWnoFCGSD2CtD1Pixyl+ZZ7AA434v0JEoHcKhbVUggT40Y/3m6MTCavW9HWsBvLOc+nQ6YPDSfEUoLnIxUjVfR96JE+F2c/Dy45i3WwBZNLeMtZ5AYXbtJbY+lcdvrQIcfpgj2ju4KUEeFipfPjvDFFtMcHYU4YBRwWdMO0TDviVEc95zGIydXU=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOrHB_Bnd3bEZhqOUaBQB3TeO0sRCK++O6Q40TQ0UQO8u9Y-6g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9064f3c1-6982-4ea8-5c4e-08d6b340c211
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2019 05:46:44.0014
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3974
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 08:43:54PM -0700, Pravin Shelar wrote:
-> On Wed, Mar 27, 2019 at 3:11 PM Andrea Righi <andrea.righi@canonical.com> wrote:
-> >
-> > The flow action buffer can be resized if it's not big enough to contain
-> > all the requested flow actions. However, this resize doesn't take into
-> > account the new requested size, the buffer is only increased by a factor
-> > of 2x. This might be not enough to contain the new data, causing a
-> > buffer overflow, for example:
-> >
-> > [   42.044472] =============================================================================
-> > [   42.045608] BUG kmalloc-96 (Not tainted): Redzone overwritten
-> > [   42.046415] -----------------------------------------------------------------------------
-> >
-> > [   42.047715] Disabling lock debugging due to kernel taint
-> > [   42.047716] INFO: 0x8bf2c4a5-0x720c0928. First byte 0x0 instead of 0xcc
-> > [   42.048677] INFO: Slab 0xbc6d2040 objects=29 used=18 fp=0xdc07dec4 flags=0x2808101
-> > [   42.049743] INFO: Object 0xd53a3464 @offset=2528 fp=0xccdcdebb
-> >
-> > [   42.050747] Redzone 76f1b237: cc cc cc cc cc cc cc cc                          ........
-> > [   42.051839] Object d53a3464: 6b 6b 6b 6b 6b 6b 6b 6b 0c 00 00 00 6c 00 00 00  kkkkkkkk....l...
-> > [   42.053015] Object f49a30cc: 6c 00 0c 00 00 00 00 00 00 00 00 03 78 a3 15 f6  l...........x...
-> > [   42.054203] Object acfe4220: 20 00 02 00 ff ff ff ff 00 00 00 00 00 00 00 00   ...............
-> > [   42.055370] Object 21024e91: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > [   42.056541] Object 070e04c3: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > [   42.057797] Object 948a777a: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > [   42.059061] Redzone 8bf2c4a5: 00 00 00 00                                      ....
-> > [   42.060189] Padding a681b46e: 5a 5a 5a 5a 5a 5a 5a 5a                          ZZZZZZZZ
-> >
-> > Fix by making sure the new buffer is properly resized to contain all the
-> > requested data.
-> >
-> > BugLink: https://bugs.launchpad.net/bugs/1813244
-> > Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-> 
-> This must be rare combination of action that trigger this case.
+From: Kavya Sree <kavyasree.kotagiri@microchip.com>
 
-It is pretty rare indeed, but the test case reported in the BugLink can
-trigger it 100% of the times.
+Add support for VSC8514 in Microsemi driver (mscc.c)
+with more features.
 
-> 
-> > ---
-> >  net/openvswitch/flow_netlink.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
-> > index 691da853bef5..e6f789badaa3 100644
-> > --- a/net/openvswitch/flow_netlink.c
-> > +++ b/net/openvswitch/flow_netlink.c
-> > @@ -2306,14 +2306,14 @@ static struct nlattr *reserve_sfa_size(struct sw_flow_actions **sfa,
-> >
-> >         struct sw_flow_actions *acts;
-> >         int new_acts_size;
-> > -       int req_size = NLA_ALIGN(attr_len);
-> > +       size_t req_size = NLA_ALIGN(attr_len);
-> >         int next_offset = offsetof(struct sw_flow_actions, actions) +
-> >                                         (*sfa)->actions_len;
-> >
-> >         if (req_size <= (ksize(*sfa) - next_offset))
-> >                 goto out;
-> >
-> > -       new_acts_size = ksize(*sfa) * 2;
-> > +       new_acts_size = max(req_size, ksize(*sfa) * 2);
-> >
-> Don't we need to compare current_action_size+req_size and
-> current_action_size*2 here ?
+Signed-off-by: Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>
+---
 
-You are right! We should compare next_offset+req_size and
-ksize(*sfa)*2.
+Changes in v2: None
 
-Will send a new patch soon, thanks!
+ drivers/net/phy/vitesse.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
--Andrea
+diff --git a/drivers/net/phy/vitesse.c b/drivers/net/phy/vitesse.c
+index dc0dd87a6694..e5eb98e94b02 100644
+--- a/drivers/net/phy/vitesse.c
++++ b/drivers/net/phy/vitesse.c
+@@ -61,7 +61,6 @@
+=20
+ #define PHY_ID_VSC8234			0x000fc620
+ #define PHY_ID_VSC8244			0x000fc6c0
+-#define PHY_ID_VSC8514			0x00070670
+ #define PHY_ID_VSC8572			0x000704d0
+ #define PHY_ID_VSC8601			0x00070420
+ #define PHY_ID_VSC7385			0x00070450
+@@ -293,7 +292,6 @@ static int vsc82xx_config_intr(struct phy_device *phyde=
+v)
+ 		err =3D phy_write(phydev, MII_VSC8244_IMASK,
+ 			(phydev->drv->phy_id =3D=3D PHY_ID_VSC8234 ||
+ 			 phydev->drv->phy_id =3D=3D PHY_ID_VSC8244 ||
+-			 phydev->drv->phy_id =3D=3D PHY_ID_VSC8514 ||
+ 			 phydev->drv->phy_id =3D=3D PHY_ID_VSC8572 ||
+ 			 phydev->drv->phy_id =3D=3D PHY_ID_VSC8601) ?
+ 				MII_VSC8244_IMASK_MASK :
+@@ -403,15 +401,6 @@ static struct phy_driver vsc82xx_driver[] =3D {
+ 	.config_aneg	=3D &vsc82x4_config_aneg,
+ 	.ack_interrupt	=3D &vsc824x_ack_interrupt,
+ 	.config_intr	=3D &vsc82xx_config_intr,
+-}, {
+-	.phy_id		=3D PHY_ID_VSC8514,
+-	.name		=3D "Vitesse VSC8514",
+-	.phy_id_mask	=3D 0x000ffff0,
+-	.features	=3D PHY_GBIT_FEATURES,
+-	.config_init	=3D &vsc824x_config_init,
+-	.config_aneg	=3D &vsc82x4_config_aneg,
+-	.ack_interrupt	=3D &vsc824x_ack_interrupt,
+-	.config_intr	=3D &vsc82xx_config_intr,
+ }, {
+ 	.phy_id         =3D PHY_ID_VSC8572,
+ 	.name           =3D "Vitesse VSC8572",
+@@ -499,7 +488,6 @@ module_phy_driver(vsc82xx_driver);
+ static struct mdio_device_id __maybe_unused vitesse_tbl[] =3D {
+ 	{ PHY_ID_VSC8234, 0x000ffff0 },
+ 	{ PHY_ID_VSC8244, 0x000fffc0 },
+-	{ PHY_ID_VSC8514, 0x000ffff0 },
+ 	{ PHY_ID_VSC8572, 0x000ffff0 },
+ 	{ PHY_ID_VSC7385, 0x000ffff0 },
+ 	{ PHY_ID_VSC7388, 0x000ffff0 },
+--=20
+2.17.1
 
-> 
-> >         if (new_acts_size > MAX_ACTIONS_BUFSIZE) {
-> >                 if ((MAX_ACTIONS_BUFSIZE - next_offset) < req_size) {
-> > --
-> > 2.19.1
-> >
