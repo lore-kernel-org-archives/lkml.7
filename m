@@ -2,170 +2,168 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD98C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D12C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5193C206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:18:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gQTAHz+S"
+	by mail.kernel.org (Postfix) with ESMTP id 766842183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:18:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbfC1RSZ (ORCPT
+        id S1727780AbfC1RSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:18:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41066 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727570AbfC1RSA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:18:00 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f6so7788012pgs.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 10:18:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nsRpfsdyMTkMnFUNu1Wp8cUGd1lKidfD+mYO4oqqgyQ=;
-        b=gQTAHz+SMdXUUM060+YKchvBNQp42HjJxGxbWacDzG9NBvJ2UK19OaYEySWAkzMhK/
-         xapUYIalwcpv93qzwrs0HifL0mXjIq7pqADKLvGgOdqGqKMUmRzVTbs61Zz+igcPuUy9
-         wjY4L52bMSa9pCwUyVmsxUIohmN9VexNycJ3s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nsRpfsdyMTkMnFUNu1Wp8cUGd1lKidfD+mYO4oqqgyQ=;
-        b=CpItaxnV/iSIe43vwMwCuYS7dcAMC0J6j1xn7AXj0Tk2PoRlWab4+G1CoqVFjm5Z20
-         tQ26zMZsuB7htkJeCWoZb7sfuemLwqJeAYys8xW2obo0TgG0zcRwcjCkayQgIzmV0KaE
-         oubGeSJPTdPDlF5O7zcX4Db6aGMQF70UEuTKm5dKIIAStvvXJ1XFELKGkL/VtrIoBdkk
-         FaNE5xvlYuvk54wbnG0SNWjbmMuIxbawpQNrhEpYBx+8fsDeJK4XXSDsLC3P8LIkxNN/
-         5A9906fSUz/qOe0ka4N03KcLM6Y03ZpeZdu295DNTjwcvAGpVZaMZxWRKXR3G/aoHvFj
-         wsUA==
-X-Gm-Message-State: APjAAAWr17Uk9ziKV7K6UO5YGzXlWJ1+CwGtCMXQTEzNErzD0w4zdgld
-        Mo60Nwdzrz5xhTZASSjwrZnisA==
-X-Google-Smtp-Source: APXvYqwrs35yhWJPH4h/TmTr4EHdltzyfib+v4BdQLi4vulH6ML05v+urVuN/FQFV7ec9W/ryiy/9Q==
-X-Received: by 2002:a62:19c3:: with SMTP id 186mr41029603pfz.172.1553793479936;
-        Thu, 28 Mar 2019 10:17:59 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id r10sm31699414pfn.188.2019.03.28.10.17.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 10:17:59 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sean Paul <seanpaul@chromium.org>
-Cc:     linux-rockchip@lists.infradead.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>,
-        Rob Herring <robh+dt@kernel.org>, mka@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v4 4/7] drm/panel: simple: Use display_timing for Innolux n116bge
-Date:   Thu, 28 Mar 2019 10:17:07 -0700
-Message-Id: <20190328171710.31949-5-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-In-Reply-To: <20190328171710.31949-1-dianders@chromium.org>
-References: <20190328171710.31949-1-dianders@chromium.org>
+        Thu, 28 Mar 2019 13:18:38 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48908 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727236AbfC1RSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 13:18:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86B5380D;
+        Thu, 28 Mar 2019 10:18:36 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79C4C3F557;
+        Thu, 28 Mar 2019 10:18:33 -0700 (PDT)
+Subject: Re: Unexpected interrupt received in Guest OS when booting after
+ "system_reset"
+To:     Heyi Guo <guoheyi@huawei.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org,
+        wanghaibin 00208455 <wanghaibin.wang@huawei.com>
+References: <e8ffbc4e-f7b7-14a1-7614-a3db85c9152f@huawei.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <9a6ece7e-9984-dc9e-8fa2-df9736393dd2@arm.com>
+Date:   Thu, 28 Mar 2019 17:18:32 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <e8ffbc4e-f7b7-14a1-7614-a3db85c9152f@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Innolux n116bge from using a fixed mode to specifying a
-display timing with min/typ/max values.
+[Please do not send HTML emails]
 
-Note that the n116bge's datasheet doesn't fit too well into DRM's way
-of specifying things.  Specifically the panel's datasheet just
-specifies the vertical blanking period and horizontal blanking period
-and doesn't break things out.  For now we'll leave everything as a
-fixed value but just allow adjusting the pixel clock.  I've added a
-comment on what the datasheet claims so someone could later expand
-things to fit their needs if they wanted to test other blanking
-periods.
+On 28/03/2019 15:44, Heyi Guo wrote:
+> Hi Marc and Christoffer,
+> 
+> When we issue "system_reset" from qemu monitor to a running VM, guest
+> Linux will occasionally get "Unexpected interrupt" after rebooting, with
+> kernel message at the bottom.
+> 
+> After some investigation, we found it might be caused by the
+> preservation of virtual LPI during system reset: it seems the virtual
+> LPI remains in the ap_list during VM reset, as well as its "enabled" and
+> "pending_latch" status, and this causes the virtual LPI to be injected
+> wrongly after VCPU reboots and enables interrupt.
+> 
+> We propose to clear "enabled" flag of virtual LPI when PROPBASER (or
+> GICR_CTRL) of virtual GICR is written to 0, and update virtual LPI
+> properties when GICR_CTRL.enableLPIs is set to 1 again.
+> 
+> Any advice? Or did we miss something?
 
-The goal here is to be able to specify the panel timings in the device
-tree for several rk3288 Chromebooks (like rk3288-veryon-jerry).  These
-Chromebooks have all been running in the downstream kernel with the
-standard porches and sync lengths but just with a slightly slower
-pixel clock because the 76.42 MHz clock is not achievable from the
-fixed PLL that was available.  These Chromebooks only achieve a
-refresh rate of ~58 Hz.  While it's probable that we could adjust the
-timings to achieve 60 Hz it's probably wisest to match what's been
-running on these devices all these years.
+We're clearly missing a trick here, but I'm not convinced of your 
+approach. What should happend is that the redistributors should be reset 
+as well, and that this should recall any LPI that has been made pending. 
+Unfortunately, we don't seem to have such code in place, which is 
+embarrassing.
 
-I'll note that though the upstream kernel has always tried to achieve
-76.42 MHz, it has actually been running at 74.25 MHz also since the
-video processor is parented off the same fixed PLL.
+Can you give the following, untested patch a go? It isn't right either, 
+but it should have the right effect. If you confirm that it solves your 
+problem, we can look at adding the right hooks...
 
-Changes in v4:
- - display_timing for Innolux n116bge new for v4.
+Thanks,
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+	M.
 
- drivers/gpu/drm/panel/panel-simple.c | 37 +++++++++++++++++-----------
- 1 file changed, 23 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index ad4f4aac2d44..7d407fab3628 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1550,23 +1550,32 @@ static const struct panel_desc innolux_g121x1_l03 = {
- 	},
- };
+diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
+index ab3f47745d9c..bd9a9250f323 100644
+--- a/virt/kvm/arm/vgic/vgic-its.c
++++ b/virt/kvm/arm/vgic/vgic-its.c
+@@ -2403,8 +2403,32 @@ static int vgic_its_commit_v0(struct vgic_its *its)
+ 	return 0;
+ }
  
--static const struct drm_display_mode innolux_n116bge_mode = {
--	.clock = 76420,
--	.hdisplay = 1366,
--	.hsync_start = 1366 + 136,
--	.hsync_end = 1366 + 136 + 30,
--	.htotal = 1366 + 136 + 30 + 60,
--	.vdisplay = 768,
--	.vsync_start = 768 + 8,
--	.vsync_end = 768 + 8 + 12,
--	.vtotal = 768 + 8 + 12 + 12,
--	.vrefresh = 60,
--	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+/*
-+ * Datasheet specifies that at 60 Hz refresh rate:
-+ * - total horizontal time: { 1506, 1592, 1716 }
-+ * - total vertical time: { 788, 800, 868 }
-+ *
-+ * ...but doesn't go into exactly how that should be split into a front
-+ * porch, back porch, or sync length.  For now we'll leave a single setting
-+ * here which allows a bit of tweaking of the pixel clock at the expense of
-+ * refresh rate.
-+ */
-+static const struct display_timing innolux_n116bge_timing = {
-+	.pixelclock = { 72600000, 76420000, 80240000 },
-+	.hactive = { 1366, 1366, 1366 },
-+	.hfront_porch = { 136, 136, 136 },
-+	.hback_porch = { 60, 60, 60 },
-+	.hsync_len = { 30, 30, 30 },
-+	.vactive = { 768, 768, 768 },
-+	.vfront_porch = { 8, 8, 8 },
-+	.vback_porch = { 12, 12, 12 },
-+	.vsync_len = { 12, 12, 12 },
-+	.flags = DISPLAY_FLAGS_VSYNC_LOW | DISPLAY_FLAGS_HSYNC_LOW,
- };
- 
- static const struct panel_desc innolux_n116bge = {
--	.modes = &innolux_n116bge_mode,
--	.num_modes = 1,
-+	.timings = &innolux_n116bge_timing,
-+	.num_timings = 1,
- 	.bpc = 6,
- 	.size = {
- 		.width = 256,
++static void vgic_nuke_pending_lpis(struct kvm_vcpu *vcpu)
++{
++	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
++	struct vgic_irq *irq, *tmp;
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&vcpu->arch.vgic_cpu.ap_list_lock, flags);
++
++	list_for_each_entry_safe(irq, tmp, &vgic_cpu->ap_list_head, ap_list) {
++		if (irq->intid >= VGIC_MIN_LPI) {
++			list_del(&irq->ap_list);
++			vgic_put_irq(vcpu->kvm, irq);
++		}
++	}
++
++	raw_spin_unlock_irqrestore(&vcpu->arch.vgic_cpu.ap_list_lock, flags);
++}
++
+ static void vgic_its_reset(struct kvm *kvm, struct vgic_its *its)
+ {
++	struct kvm_vcpu *vcpu;
++	int c;
++
++	kvm_for_each_vcpu(c, vcpu, kvm)
++		vgic_nuke_pending_lpis(vcpu);
++
+ 	/* We need to keep the ABI specific field values */
+ 	its->baser_coll_table &= ~GITS_BASER_VALID;
+ 	its->baser_device_table &= ~GITS_BASER_VALID;
+
 -- 
-2.21.0.392.gf8f6787159e-goog
-
+Jazz is not dead. It just smells funny...
