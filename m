@@ -2,99 +2,87 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19EAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F73CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88DCA21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA342173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfC1OA3 (ORCPT
+        id S1726455AbfC1OAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:00:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50976 "EHLO mx1.redhat.com"
+        Thu, 28 Mar 2019 10:00:51 -0400
+Received: from mga11.intel.com ([192.55.52.93]:44289 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbfC1OA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:00:29 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 63CD480E44;
-        Thu, 28 Mar 2019 14:00:24 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-53.pek2.redhat.com [10.72.12.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA8BA1001E6B;
-        Thu, 28 Mar 2019 14:00:06 +0000 (UTC)
-Subject: Re: [PATCH 2/3 v9] resource: add the new I/O resource descriptor
- 'IORES_DESC_RESERVED'
+        id S1725948AbfC1OAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 10:00:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 07:00:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
+   d="scan'208";a="126639493"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga007.jf.intel.com with ESMTP; 28 Mar 2019 07:00:40 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h9VaB-00038X-6R; Thu, 28 Mar 2019 16:00:39 +0200
+Date:   Thu, 28 Mar 2019 16:00:39 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, akpm@linux-foundation.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
-        Thomas.Lendacky@amd.com
-References: <20190321103309.27883-1-lijiang@redhat.com>
- <20190321103309.27883-3-lijiang@redhat.com> <20190322192800.GM12472@zn.tnic>
- <47bfcbe2-1631-9733-74c2-fb3e56540052@redhat.com>
- <20190325122426.GK12016@zn.tnic>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <86919dfe-ab72-efef-8304-b2608078d320@redhat.com>
-Date:   Thu, 28 Mar 2019 22:00:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 7/7] x86/boot: Support nocfg parameter for earlyprintk
+Message-ID: <20190328140039.GC9224@smile.fi.intel.com>
+References: <20190319184325.72807-1-andriy.shevchenko@linux.intel.com>
+ <20190319184325.72807-8-andriy.shevchenko@linux.intel.com>
+ <20190328130317.GG22720@zn.tnic>
+ <20190328132153.GZ9224@smile.fi.intel.com>
+ <20190328134213.GJ22720@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20190325122426.GK12016@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 28 Mar 2019 14:00:28 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328134213.GJ22720@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2019年03月25日 20:24, Borislav Petkov 写道:
-> On Mon, Mar 25, 2019 at 02:53:02PM +0800, lijiang wrote:
->> In this function, i printed its values, and only got the value of reserved
->> type, so i changed the IORES_DESC_NONE to the IORES_DESC_RESERVED.
->>
->> In addition, after the new descriptor 'IORES_DESC_RESERVED' is introduced,
->> the IORES_DESC_NONE does not include the IORES_DESC_RESERVED any more, it
->> could miss to handle the value of the reserved type.
+On Thu, Mar 28, 2019 at 02:42:13PM +0100, Borislav Petkov wrote:
+> On Thu, Mar 28, 2019 at 03:21:53PM +0200, Andy Shevchenko wrote:
+> > If the connection to the target is done via serial interface and
+> > firmware and / or bootloader already did necessary configuration.
 > 
-> Yes, IORES_DESC_RESERVED is supposed to denote the e820 reserved type.
-> Why should IORES_DESC_NONE include it ?!?!
-> 
-> IORES_DESC_NONE is, well, an invalid, i.e., "none" type:
+> Again: how is the user supposed to know that?
 
-Yes, i see. That indicates an empty area, or "void" type.
+How one knows that she is typing on keyboard right now and not on touch screen?
+I really don't get this. User either knows this beforehand or doesn't care.
+Maybe she needs to read documentation on hardware at some point?
 
-> 
-> /*
->  * I/O Resource Descriptors
->  *
->  * Descriptors are used by walk_iomem_res_desc() and region_intersects()
->  * for searching a specific resource range in the iomem table.  Assign
->  * a new descriptor when a resource range supports the search interfaces.
->  * Otherwise, resource.desc must be set to IORES_DESC_NONE (0).
->  */
-> 
->> Do you mean i should never touch the three chunks? If i made a mistake, i
->> will remove this changes next post.
-> 
-> I'm looking at the hunks below and you're changing ->desc assignments in
-> some random function which doesn't look like you know what you're doing.
-> Maybe it gets you what you want but it sure as hell doesn't look right
-> to me.
-> 
-I have realized that there could be a problem with this changes. Indeed, here
-it denotes an empty area instead of a reserved area.
+> When a user sees "nocfg"'s
+> documentation, how is the user supposed to decide whether she needs
+> to supply nocfg or not?
 
-BTW: Looks like the name of this function(__reserve_region_with_split) is a bit
-misleading.
+The problem nocfg tries to solve is a hard coded default baud rate and
+impossibility to know at this stage all parameters of the serial interface.
 
-Thank you for pointing out this problem, i will correct them next post.
+> Which exact setups will need to supply nocfg on the cmdline?
 
-Lianbo
+If it's _non-standard_ serial interface (by meaning of I/O accessors and port
+addresses), user may consider to use this options in case the interface to
+communicate with kernel is serial one and its configuration is done by other
+means (firmware / bootloader / EFI / etc).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
