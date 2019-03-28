@@ -2,95 +2,95 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0777BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870B1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBF01217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="F5MdQU3v"
+	by mail.kernel.org (Postfix) with ESMTP id 541A72173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:36:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfC1MfA (ORCPT
+        id S1726516AbfC1Mgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 08:35:00 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:48366 "EHLO mail.skyhub.de"
+        Thu, 28 Mar 2019 08:36:38 -0400
+Received: from mga14.intel.com ([192.55.52.115]:13995 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfC1Me7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 08:34:59 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0A4281EC038F;
-        Thu, 28 Mar 2019 13:34:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553776498;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Ux1PDQnCC6U5nigYAmGda/APJ12GEh1SpOdVNh3+KZo=;
-        b=F5MdQU3vX0cTRct4BPzGrM7MGDgCMb5SMsr2wOWiEt8hq3virvcdlZBdHzUSFyArGpYRc6
-        S6L2KWdxmown7C84ur4J8IsGHQ8AhcdHjGGq6sYCQi1Wfx8UR0+B1KoDxiQS/O/sfCwnUm
-        TB1DN8USh0GXfarFSrY+w7KcvQEqFDc=
-Date:   Thu, 28 Mar 2019 13:35:04 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] x86/boot: Split out parse_serial_port() helper
- for earlyprintk
-Message-ID: <20190328123504.GF22720@zn.tnic>
-References: <20190319184325.72807-1-andriy.shevchenko@linux.intel.com>
- <20190319184325.72807-4-andriy.shevchenko@linux.intel.com>
+        id S1726029AbfC1Mgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 08:36:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 05:36:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
+   d="scan'208";a="332831858"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 28 Mar 2019 05:36:34 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id BDA6412C; Thu, 28 Mar 2019 14:36:33 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Mario.Limonciello@dell.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        netdev@vger.kernel.org
+Subject: [PATCH v3 01/36] net: thunderbolt: Unregister ThunderboltIP protocol handler when suspending
+Date:   Thu, 28 Mar 2019 15:35:58 +0300
+Message-Id: <20190328123633.42882-2-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
+References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190319184325.72807-4-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 09:43:21PM +0300, Andy Shevchenko wrote:
-> The newly introduced helper will be used later on to parse serial port
-> in different type of earlyprintk command line arguments.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  arch/x86/boot/early_serial_console.c | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/boot/early_serial_console.c b/arch/x86/boot/early_serial_console.c
-> index 05d02cd4de99..85a227a21f95 100644
-> --- a/arch/x86/boot/early_serial_console.c
-> +++ b/arch/x86/boot/early_serial_console.c
-> @@ -66,6 +66,20 @@ static void early_serial_init(unsigned long port, int baud)
->  	early_serial_base = port;
->  }
->  
-> +static unsigned long parse_serial_port(const char *arg, int off, int *pos)
-> +{
-> +	unsigned long port;
-> +	char *e;
-> +
-> +	port = simple_strtoull(arg + off, &e, 16);
+The XDomain protocol messages may start as soon as Thunderbolt control
+channel is started. This means that if the other host starts sending
+ThunderboltIP packets early enough they will be passed to the network
+driver which then gets confused because its resume hook is not called
+yet.
 
-WARNING: simple_strtoull is obsolete, use kstrtoull instead
-#41: FILE: arch/x86/boot/early_serial_console.c:74:
-+       port = simple_strtoull(arg + off, &e, 16);
+Fix this by unregistering the ThunderboltIP protocol handler when
+suspending and registering it back on resume.
 
-Please do a conversion patch ontop.
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: David S. Miller <davem@davemloft.net>
+---
+ drivers/net/thunderbolt.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/drivers/net/thunderbolt.c b/drivers/net/thunderbolt.c
+index c48c3a1eb1f8..fcf31335a8b6 100644
+--- a/drivers/net/thunderbolt.c
++++ b/drivers/net/thunderbolt.c
+@@ -1282,6 +1282,7 @@ static int __maybe_unused tbnet_suspend(struct device *dev)
+ 		tbnet_tear_down(net, true);
+ 	}
+ 
++	tb_unregister_protocol_handler(&net->handler);
+ 	return 0;
+ }
+ 
+@@ -1290,6 +1291,8 @@ static int __maybe_unused tbnet_resume(struct device *dev)
+ 	struct tb_service *svc = tb_to_service(dev);
+ 	struct tbnet *net = tb_service_get_drvdata(svc);
+ 
++	tb_register_protocol_handler(&net->handler);
++
+ 	netif_carrier_off(net->dev);
+ 	if (netif_running(net->dev)) {
+ 		netif_device_attach(net->dev);
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
