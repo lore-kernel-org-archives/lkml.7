@@ -7,369 +7,606 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC719C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C53C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F1620823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2EC82173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:17:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bzlHlTc/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ynmrPx9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfC1PRE (ORCPT
+        id S1727018AbfC1PRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:17:04 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:46134 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfC1PRD (ORCPT
+        Thu, 28 Mar 2019 11:17:15 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39140 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfC1PRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:17:03 -0400
-Received: by mail-wr1-f41.google.com with SMTP id t17so2636249wrw.13
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:17:02 -0700 (PDT)
+        Thu, 28 Mar 2019 11:17:14 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j9so23372324wrn.6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:17:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=aycm97Plm6qVrne/2MmodSPEzVygGxEgmJGgQsC6tWo=;
-        b=bzlHlTc/OWdk4Gtch8116Un4H6phB4eWSXxRgdAAOl0R+KiZj6/XUPS26NrIBL1nml
-         9v5Mt9S77mDP0Ul4j6ieUiy23LZ0TaDppVxm13pLUsmy7ROnGIbxQ+RgVBYuVc7hv0WC
-         9YbUNgWpgxTnesDA1suyoxiZbzTtDpvHQzmSLlC0bgSVEirF7nzjfknMmS9AAkhADXwl
-         /hcwdMUdRu4Mjmn6G1A4RzLjDbTZ6B0J++HvwGQHhmPcPNHZlFLGG5gR/tN/BojlUSfh
-         tf4RryMvSwaeRbbFvAimR9XI2Wv5DCm5UC1uWs+HLee5s43MBiVEf0eEtgvJWr4REVZ2
-         Drzw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=IKywR5n0EPqsHLprUno1REpg57X5217ypdGeVT8s9+4=;
+        b=ynmrPx9+W06OIJGGIe3BS3R9lJmDjGcDRlX9hEtB+JWxFgrCmdw2johisBAlhgdmuS
+         VLlasaOSJJmx2z9rh5bu0f+SpSFHN89XZeTXKVlsubz0C0g3ZdHtRSYZMoEU43P4zipC
+         ZMQscbQBffdp1kYtwkrU4rk8pOPylOHMNo6I1AVw76OnLe37HBHGJQNN03ObbUmft3se
+         eb9ZLGzbvMHI87UifOFKFZAamq9jd67RXrUrwvxfyuTgthRUBMRbEjPTYy7YvBGzvkvn
+         xKxakoGA8ERwH8Tf1PM0ayLge8zMeVtJ2UkUAhvkRS8j0PmxXmMP5Z+1nLZM5OrpQ0Tb
+         LB2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=aycm97Plm6qVrne/2MmodSPEzVygGxEgmJGgQsC6tWo=;
-        b=YnfPbug94upVNlSF/hqLLYjbY/LPgzF25ZtGLvY1m72QvYNuJ8m2bychiz1GQ+zRvs
-         K0+c3PmzoAJSKicLsG0XNsH/oWAxZ18bkZ3dOk39pFVPK6yMkCYOkqFKhRpeb/X/Znmc
-         cKZplIVLtnPP7R6DhwKGiK4N/boF56B9MzBdm2uiWetVhvcd8d3BAQbgGBfkBzQ+ynzK
-         RSlt4BzhSHtFMSRIf0KGUUer2/fYwvRs6jmyrylMUnCqrGUf335WYV/q/VR6aBkl9FUo
-         p1GCsPN473O8+34Rw6ebp+izFaWHNP/iQFfVOtNii9+aFsW3iEA5ndfR5gA4Obh+nb3p
-         3umQ==
-X-Gm-Message-State: APjAAAWcEtlnwFPKCTra9ZcFrTISxlOTj3UjSmjiPqAs5t3uxwRaF4BQ
-        BcFczUlb8OTZ270VrPT7wpwUWw==
-X-Google-Smtp-Source: APXvYqxDSpTe/uUMsafKh89fkTDgF35JSDMeUnFJLKeik0mO6DzIbJKpKPx9ObDOE2J4hl+MBC5IpA==
-X-Received: by 2002:a5d:68cf:: with SMTP id p15mr24060739wrw.301.1553786220051;
-        Thu, 28 Mar 2019 08:17:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=IKywR5n0EPqsHLprUno1REpg57X5217ypdGeVT8s9+4=;
+        b=rcrj4l+L5oBDnPp2e5oMialeg6gT6gQ5DSSY/sJt9kozeGcQCKLIR3i8SGCcvKY6dX
+         8nIuW9ci3aTuyitEUhoyvgeLNj2ve/B5komvdgbI3BNmHLceBuByhwCpvGLr0qnmWOjH
+         p+Em/NNgl3OrKd+sbWgYIDLgCyhJjzreMrv2yGV6aXLVe4/WpIXP2rRlzNkS+OigxSA5
+         KdD3k0EEB9e5u4tEWYjHZ2Z60f2BgK3PptGO/feVaNlqcrvscBPjX1/fGsBnRWIyu6tR
+         8QHnUA9cnKTYj/tZsNETMYIg3Mv44okhL1Ba/xrC5rY7m/9KqzaeKnUaU6LMVd5ks/rQ
+         K7ww==
+X-Gm-Message-State: APjAAAWcBbyLxpe7ePduyO7l3uRkjt3OjB6oWdQElyC8JSpZBVqHJdfx
+        mgL8VnBJ6EX/3kIW9RqaI/mpjA==
+X-Google-Smtp-Source: APXvYqyY/oceBsjOU+71cfN7U8iqZNnTnL8evUBeNyIaWBlW3ekfve8nC9DMAoJ/uDvBacofmqYnkw==
+X-Received: by 2002:adf:e547:: with SMTP id z7mr26412808wrm.295.1553786230219;
+        Thu, 28 Mar 2019 08:17:10 -0700 (PDT)
 Received: from clegane.local (148.127.130.77.rev.sfr.net. [77.130.127.148])
-        by smtp.gmail.com with ESMTPSA id c10sm30070094wru.83.2019.03.28.08.16.58
+        by smtp.gmail.com with ESMTPSA id c10sm30070094wru.83.2019.03.28.08.17.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 08:16:59 -0700 (PDT)
+        Thu, 28 Mar 2019 08:17:09 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     rjw@rjwysocki.net, ulf.hansson@linaro.org,
         linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 1/2] genirq/timings: Remove variance computation code
-Date:   Thu, 28 Mar 2019 16:13:35 +0100
-Message-Id: <20190328151336.5316-1-daniel.lezcano@linaro.org>
+Subject: [PATCH V2 2/2] genirq/timings: Add array suffix computation code
+Date:   Thu, 28 Mar 2019 16:13:36 +0100
+Message-Id: <20190328151336.5316-2-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190328151336.5316-1-daniel.lezcano@linaro.org>
+References: <20190328151336.5316-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The next patch will introduce another approach to compute the next
-interrupt based on the array suffixes derived algorithm. This one
-will replace the variance computation code.
+The previous approach based on the variance was discarding values from
+the timings when they were considered as anomalies as stated by the
+normal law statistical model.
 
-The patch review will be too complex if we change the code little by
-little, it is much simpler to remove the variance code and add in the
-next patch the suffix array code.
+However in the interrupt life, there can be multiple anomalies due to
+the nature of the device generating the interrupts, and most of the
+time we can observe a repeating pattern, that is particulary true for
+network, console, MMC or SSD devices.
 
-Remove the variance code in timings.c
+With the variance approach, we miss the patterns and we can only deal
+with the interrupt coming in regular intervals, thus reducing
+considerably the scope of what is predictable.
+
+In order to find out the repeating pattern, the interrupt intervals
+are grouped in a ilog2 basis to create suite of numbers with small
+amplitude. Every group contains a exponential moving average of the
+values belonging to the group. The array suffix, a data structure used
+for string searching, data compression, etc ..., is build from the
+suite of numbers and the suffixes are then searched in this suite.
+
+The tests showed the algorithm is able to find all repeating patterns,
+as well as regular interval in less than 1us on x86-i7.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- kernel/irq/timings.c | 252 +------------------------------------------
- 1 file changed, 2 insertions(+), 250 deletions(-)
+
+Changelog:
+  - V2
+    - Fixed the changelog to be more aligned with the submitting-patch howto
+    - Fixed u64/s64/int mixes to u64
+    - Changed the ema function format to be more readable
+    - Added some more comments to clarify the code
+    - Folded all same type variable into the same line
+    - Used helper variables increases readability
+    - Moved initialization out of the loop for the sake of clarity
+---
+ kernel/irq/timings.c | 462 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 457 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/irq/timings.c b/kernel/irq/timings.c
-index 1e4cb63a5c82..3cde046a2bc8 100644
+index 3cde046a2bc8..9e6adec074ae 100644
 --- a/kernel/irq/timings.c
 +++ b/kernel/irq/timings.c
-@@ -8,7 +8,6 @@
+@@ -8,6 +8,8 @@
  #include <linux/interrupt.h>
  #include <linux/idr.h>
  #include <linux/irq.h>
--#include <linux/math64.h>
++#include <linux/math64.h>
++#include <linux/log2.h>
  
  #include <trace/events/irq.h>
  
-@@ -19,13 +18,7 @@ DEFINE_STATIC_KEY_FALSE(irq_timing_enabled);
+@@ -17,10 +19,6 @@ DEFINE_STATIC_KEY_FALSE(irq_timing_enabled);
+ 
  DEFINE_PER_CPU(struct irq_timings, irq_timings);
  
- struct irqt_stat {
--	u64	next_evt;
--	u64	last_ts;
--	u64	variance;
--	u32	avg;
--	u32	nr_samples;
--	int	anomalies;
--	int	valid;
-+	u64     next_evt;
- };
- 
+-struct irqt_stat {
+-	u64     next_evt;
+-};
+-
  static DEFINE_IDR(irqt_stats);
-@@ -40,184 +33,6 @@ void irq_timings_disable(void)
+ 
+ void irq_timings_enable(void)
+@@ -33,6 +31,410 @@ void irq_timings_disable(void)
  	static_branch_disable(&irq_timing_enabled);
  }
  
--/**
-- * irqs_update - update the irq timing statistics with a new timestamp
-- *
-- * @irqs: an irqt_stat struct pointer
-- * @ts: the new timestamp
-- *
-- * The statistics are computed online, in other words, the code is
-- * designed to compute the statistics on a stream of values rather
-- * than doing multiple passes on the values to compute the average,
-- * then the variance. The integer division introduces a loss of
-- * precision but with an acceptable error margin regarding the results
-- * we would have with the double floating precision: we are dealing
-- * with nanosec, so big numbers, consequently the mantisse is
-- * negligeable, especially when converting the time in usec
-- * afterwards.
-- *
-- * The computation happens at idle time. When the CPU is not idle, the
-- * interrupts' timestamps are stored in the circular buffer, when the
-- * CPU goes idle and this routine is called, all the buffer's values
-- * are injected in the statistical model continuying to extend the
-- * statistics from the previous busy-idle cycle.
-- *
-- * The observations showed a device will trigger a burst of periodic
-- * interrupts followed by one or two peaks of longer time, for
-- * instance when a SD card device flushes its cache, then the periodic
-- * intervals occur again. A one second inactivity period resets the
-- * stats, that gives us the certitude the statistical values won't
-- * exceed 1x10^9, thus the computation won't overflow.
-- *
-- * Basically, the purpose of the algorithm is to watch the periodic
-- * interrupts and eliminate the peaks.
-- *
-- * An interrupt is considered periodically stable if the interval of
-- * its occurences follow the normal distribution, thus the values
-- * comply with:
-- *
-- *      avg - 3 x stddev < value < avg + 3 x stddev
-- *
-- * Which can be simplified to:
-- *
-- *      -3 x stddev < value - avg < 3 x stddev
-- *
-- *      abs(value - avg) < 3 x stddev
-- *
-- * In order to save a costly square root computation, we use the
-- * variance. For the record, stddev = sqrt(variance). The equation
-- * above becomes:
-- *
-- *      abs(value - avg) < 3 x sqrt(variance)
-- *
-- * And finally we square it:
-- *
-- *      (value - avg) ^ 2 < (3 x sqrt(variance)) ^ 2
-- *
-- *      (value - avg) x (value - avg) < 9 x variance
-- *
-- * Statistically speaking, any values out of this interval is
-- * considered as an anomaly and is discarded. However, a normal
-- * distribution appears when the number of samples is 30 (it is the
-- * rule of thumb in statistics, cf. "30 samples" on Internet). When
-- * there are three consecutive anomalies, the statistics are resetted.
-- *
-- */
--static void irqs_update(struct irqt_stat *irqs, u64 ts)
--{
--	u64 old_ts = irqs->last_ts;
--	u64 variance = 0;
--	u64 interval;
--	s64 diff;
--
--	/*
--	 * The timestamps are absolute time values, we need to compute
--	 * the timing interval between two interrupts.
--	 */
--	irqs->last_ts = ts;
--
--	/*
--	 * The interval type is u64 in order to deal with the same
--	 * type in our computation, that prevent mindfuck issues with
--	 * overflow, sign and division.
--	 */
--	interval = ts - old_ts;
--
--	/*
--	 * The interrupt triggered more than one second apart, that
--	 * ends the sequence as predictible for our purpose. In this
--	 * case, assume we have the beginning of a sequence and the
--	 * timestamp is the first value. As it is impossible to
--	 * predict anything at this point, return.
--	 *
--	 * Note the first timestamp of the sequence will always fall
--	 * in this test because the old_ts is zero. That is what we
--	 * want as we need another timestamp to compute an interval.
--	 */
--	if (interval >= NSEC_PER_SEC) {
--		memset(irqs, 0, sizeof(*irqs));
--		irqs->last_ts = ts;
--		return;
--	}
--
--	/*
--	 * Pre-compute the delta with the average as the result is
--	 * used several times in this function.
--	 */
--	diff = interval - irqs->avg;
--
--	/*
--	 * Increment the number of samples.
--	 */
--	irqs->nr_samples++;
--
--	/*
--	 * Online variance divided by the number of elements if there
--	 * is more than one sample.  Normally the formula is division
--	 * by nr_samples - 1 but we assume the number of element will be
--	 * more than 32 and dividing by 32 instead of 31 is enough
--	 * precise.
--	 */
--	if (likely(irqs->nr_samples > 1))
--		variance = irqs->variance >> IRQ_TIMINGS_SHIFT;
--
--	/*
--	 * The rule of thumb in statistics for the normal distribution
--	 * is having at least 30 samples in order to have the model to
--	 * apply. Values outside the interval are considered as an
--	 * anomaly.
--	 */
--	if ((irqs->nr_samples >= 30) && ((diff * diff) > (9 * variance))) {
--		/*
--		 * After three consecutive anomalies, we reset the
--		 * stats as it is no longer stable enough.
--		 */
--		if (irqs->anomalies++ >= 3) {
--			memset(irqs, 0, sizeof(*irqs));
--			irqs->last_ts = ts;
--			return;
--		}
--	} else {
--		/*
--		 * The anomalies must be consecutives, so at this
--		 * point, we reset the anomalies counter.
--		 */
--		irqs->anomalies = 0;
--	}
--
--	/*
--	 * The interrupt is considered stable enough to try to predict
--	 * the next event on it.
--	 */
--	irqs->valid = 1;
--
--	/*
--	 * Online average algorithm:
--	 *
--	 *  new_average = average + ((value - average) / count)
--	 *
--	 * The variance computation depends on the new average
--	 * to be computed here first.
--	 *
--	 */
--	irqs->avg = irqs->avg + (diff >> IRQ_TIMINGS_SHIFT);
--
--	/*
--	 * Online variance algorithm:
--	 *
--	 *  new_variance = variance + (value - average) x (value - new_average)
--	 *
--	 * Warning: irqs->avg is updated with the line above, hence
--	 * 'interval - irqs->avg' is no longer equal to 'diff'
--	 */
--	irqs->variance = irqs->variance + (diff * (interval - irqs->avg));
--
--	/*
--	 * Update the next event
--	 */
--	irqs->next_evt = ts + irqs->avg;
--}
--
++/*
++ * The main goal of this algorithm is to predict the next interrupt
++ * occurrence on the current CPU.
++ *
++ * Currently, the interrupt timings are stored in a circular array
++ * buffer every time there is an interrupt, as a tuple: the interrupt
++ * number and the associated timestamp when the event occurred <irq,
++ * timestamp>.
++ *
++ * For every interrupt occurring in a short period of time, we can
++ * measure the elapsed time between the occurrences for the same
++ * interrupt and we end up with a suite of intervals. The experience
++ * showed the interrupts are often coming following a periodic
++ * pattern.
++ *
++ * The objective of the algorithm is to find out this periodic pattern
++ * in a fastest way and use its period to predict the next irq event.
++ *
++ * When the next interrupt event is requested, we are in the situation
++ * where the interrupts are disabled and the circular buffer
++ * containing the timings is filled with the events which happened
++ * after the previous next-interrupt-event request.
++ *
++ * At this point, we read the circular buffer and we fill the irq
++ * related statistics structure. After this step, the circular array
++ * containing the timings is empty because all the values are
++ * dispatched in their corresponding buffers.
++ *
++ * Now for each interrupt, we can predict the next event by using the
++ * suffix array, log interval and exponential moving average
++ *
++ * 1. Suffix array
++ *
++ * Suffix array is an array of all the suffixes of a string. It is
++ * widely used as a data structure for compression, text search, ...
++ * For instance for the word 'banana', the suffixes will be: 'banana'
++ * 'anana' 'nana' 'ana' 'na' 'a'
++ *
++ * Usually, the suffix array is sorted but for our purpose it is
++ * not necessary and won't provide any improvement in the context of
++ * the solved problem where we clearly define the boundaries of the
++ * search by a max period and min period.
++ *
++ * The suffix array will build a suite of intervals of different
++ * length and will look for the repetition of each suite. If the suite
++ * is repeating then we have the period because it is the length of
++ * the suite whatever its position in the buffer.
++ *
++ * 2. Log interval
++ *
++ * We saw the irq timings allow to compute the interval of the
++ * occurrences for a specific interrupt. We can reasonibly assume the
++ * longer is the interval, the higher is the error for the next event
++ * and we can consider storing those interval values into an array
++ * where each slot in the array correspond to an interval at the power
++ * of 2 of the index. For example, index 12 will contain values
++ * between 2^11 and 2^12.
++ *
++ * At the end we have an array of values where at each index defines a
++ * [2^index - 1, 2 ^ index] interval values allowing to store a large
++ * number of values inside a small array.
++ *
++ * For example, if we have the value 1123, then we store it at
++ * ilog2(1123) = 10 index value.
++ *
++ * Storing those value at the specific index is done by computing an
++ * exponential moving average for this specific slot. For instance,
++ * for values 1800, 1123, 1453, ... fall under the same slot (10) and
++ * the exponential moving average is computed every time a new value
++ * is stored at this slot.
++ *
++ * 3. Exponential Moving Average
++ *
++ * The EMA is largely used to track a signal for stocks or as a low
++ * pass filter. The magic of the formula, is it is very simple and the
++ * reactivity of the average can be tuned with the factors called
++ * alpha.
++ *
++ * The higher the alphas are, the faster the average respond to the
++ * signal change. In our case, if a slot in the array is a big
++ * interval, we can have numbers with a big difference between
++ * them. The impact of those differences in the average computation
++ * can be tuned by changing the alpha value.
++ *
++ *
++ *  -- The algorithm --
++ *
++ * We saw the different processing above, now let's see how they are
++ * used together.
++ *
++ * For each interrupt:
++ *	For each interval:
++ *		Compute the index = ilog2(interval)
++ *		Compute a new_ema(buffer[index], interval)
++ *		Store the index in a circular buffer
++ *
++ *	Compute the suffix array of the indexes
++ *
++ *	For each suffix:
++ *		If the suffix is reverse-found 3 times
++ *			Return suffix
++ *
++ *	Return Not found
++ *
++ * However we can not have endless suffix array to be build, it won't
++ * make sense and it will add an extra overhead, so we can restrict
++ * this to a maximum suffix length of 5 and a minimum suffix length of
++ * 2. The experience showed 5 is the majority of the maximum pattern
++ * period found for different devices.
++ *
++ * The result is a pattern finding less than 1us for an interrupt.
++ *
++ * Example based on real values:
++ *
++ * Example 1 : MMC write/read interrupt interval:
++ *
++ *	223947, 1240, 1384, 1386, 1386,
++ *	217416, 1236, 1384, 1386, 1387,
++ *	214719, 1241, 1386, 1387, 1384,
++ *	213696, 1234, 1384, 1386, 1388,
++ *	219904, 1240, 1385, 1389, 1385,
++ *	212240, 1240, 1386, 1386, 1386,
++ *	214415, 1236, 1384, 1386, 1387,
++ *	214276, 1234, 1384, 1388, ?
++ *
++ * For each element, apply ilog2(value)
++ *
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, ?
++ *
++ * Max period of 5, we take the last (max_period * 3) 15 elements as
++ * we can be confident if the pattern repeats itself three times it is
++ * a repeating pattern.
++ *
++ *	             8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, 8,
++ *	15, 8, 8, 8, ?
++ *
++ * Suffixes are:
++ *
++ *  1) 8, 15, 8, 8, 8  <- max period
++ *  2) 8, 15, 8, 8
++ *  3) 8, 15, 8
++ *  4) 8, 15           <- min period
++ *
++ * From there we search the repeating pattern for each suffix.
++ *
++ * buffer: 8, 15, 8, 8, 8, 8, 15, 8, 8, 8, 8, 15, 8, 8, 8
++ *         |   |  |  |  |  |   |  |  |  |  |   |  |  |  |
++ *         8, 15, 8, 8, 8  |   |  |  |  |  |   |  |  |  |
++ *                         8, 15, 8, 8, 8  |   |  |  |  |
++ *                                         8, 15, 8, 8, 8
++ *
++ * When moving the suffix, we found exactly 3 matches.
++ *
++ * The first suffix with period 5 is repeating.
++ *
++ * The next event is (3 * max_period) % suffix_period
++ *
++ * In this example, the result 0, so the next event is suffix[0] => 8
++ *
++ * However, 8 is the index in the array of exponential moving average
++ * which was calculated on the fly when storing the values, so the
++ * interval is ema[8] = 1366
++ *
++ *
++ * Example 2:
++ *
++ *	4, 3, 5, 100,
++ *	3, 3, 5, 117,
++ *	4, 4, 5, 112,
++ *	4, 3, 4, 110,
++ *	3, 5, 3, 117,
++ *	4, 4, 5, 112,
++ *	4, 3, 4, 110,
++ *	3, 4, 5, 112,
++ *	4, 3, 4, 110
++ *
++ * ilog2
++ *
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4
++ *
++ * Max period 5:
++ *	   0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4,
++ *	0, 0, 0, 4
++ *
++ * Suffixes:
++ *
++ *  1) 0, 0, 4, 0, 0
++ *  2) 0, 0, 4, 0
++ *  3) 0, 0, 4
++ *  4) 0, 0
++ *
++ * buffer: 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4
++ *         |  |  |  |  |  |  X
++ *         0, 0, 4, 0, 0, |  X
++ *                        0, 0
++ *
++ * buffer: 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4
++ *         |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
++ *         0, 0, 4, 0, |  |  |  |  |  |  |  |  |  |  |
++ *                     0, 0, 4, 0, |  |  |  |  |  |  |
++ *                                 0, 0, 4, 0, |  |  |
++ *                                             0  0  4
++ *
++ * Pattern is found 3 times, the remaining is 1 which results from
++ * (max_period * 3) % suffix_period. This value is the index in the
++ * suffix arrays. The suffix array for a period 4 has the value 4
++ * at index 1.
++ */
++#define EMA_ALPHA_VAL		64
++#define EMA_ALPHA_SHIFT		7
++
++#define PREDICTION_PERIOD_MIN	2
++#define PREDICTION_PERIOD_MAX	5
++#define PREDICTION_FACTOR	4
++#define PREDICTION_MAX		10 /* 2 ^ PREDICTION_MAX useconds */
++#define PREDICTION_BUFFER_SIZE	16 /* slots for EMAs, hardly more than 16 */
++
++struct irqt_stat {
++	u64	last_ts;
++	u64	ema_time[PREDICTION_BUFFER_SIZE];
++	int	timings[IRQ_TIMINGS_SIZE];
++	int	circ_timings[IRQ_TIMINGS_SIZE];
++	int	count;
++};
++
++/*
++ * Exponential moving average computation
++ */
++static u64 irq_timings_ema_new(u64 value, u64 ema_old)
++{
++	s64 diff;
++
++	if (unlikely(!ema_old))
++		return value;
++
++	diff = (value - ema_old) * EMA_ALPHA_VAL;
++	/*
++	 * We can use a s64 type variable to be added with the u64
++	 * ema_old variable as this one will never have its topmost
++	 * bit set, it will be always smaller than 2^63 nanosec
++	 * interrupt interval (292 years).
++	 */
++	return ema_old + (diff >> EMA_ALPHA_SHIFT);
++}
++
++static int irq_timings_next_event_index(int *buffer, size_t len, int period_max)
++{
++	int i;
++
++	/*
++	 * The buffer contains the suite of intervals, in a ilog2
++	 * basis, we are looking for a repetition. We point the
++	 * beginning of the search three times the length of the
++	 * period beginning at the end of the buffer. We do that for
++	 * each suffix.
++	 */
++	for (i = period_max; i >= PREDICTION_PERIOD_MIN ; i--) {
++
++		int *begin = &buffer[len - (i * 3)];
++		int *ptr = begin;
++
++		/*
++		 * We look if the suite with period 'i' repeat
++		 * itself. If it is truncated at the end, as it
++		 * repeats we can use the period to find out the next
++		 * element.
++		 */
++		while (!memcmp(ptr, begin, i * sizeof(*ptr))) {
++			ptr += i;
++			if (ptr >= &buffer[len])
++				return begin[((i * 3) % i)];
++		}
++	}
++
++	return -1;
++}
++
++static u64 __irq_timings_next_event(struct irqt_stat *irqs, int irq, u64 now)
++{
++	int index, i, period_max, count, start, min = INT_MAX;
++
++	if ((now - irqs->last_ts) >= NSEC_PER_SEC) {
++		irqs->count = irqs->last_ts = 0;
++		return U64_MAX;
++	}
++
++	/*
++	 * As we want to find three times the repetition, we need a
++	 * number of intervals greater or equal to three times the
++	 * maximum period, otherwise we truncate the max period.
++	 */
++	period_max = irqs->count > (3 * PREDICTION_PERIOD_MAX) ?
++		PREDICTION_PERIOD_MAX : irqs->count / 3;
++
++	/*
++	 * If we don't have enough irq timings for this prediction,
++	 * just bail out.
++	 */
++	if (period_max <= PREDICTION_PERIOD_MIN)
++		return U64_MAX;
++
++	/*
++	 * 'count' will depends if the circular buffer wrapped or not
++	 */
++	count = irqs->count < IRQ_TIMINGS_SIZE ?
++		irqs->count : IRQ_TIMINGS_SIZE;
++
++	start = irqs->count < IRQ_TIMINGS_SIZE ?
++		0 : (irqs->count & IRQ_TIMINGS_MASK);
++
++	/*
++	 * Copy the content of the circular buffer into another buffer
++	 * in order to linearize the buffer instead of dealing with
++	 * wrapping indexes and shifted array which will be prone to
++	 * error and extremelly difficult to debug.
++	 */
++	for (i = 0; i < count; i++) {
++		int index = (start + i) & IRQ_TIMINGS_MASK;
++
++		irqs->timings[i] = irqs->circ_timings[index];
++		min = min_t(int, irqs->timings[i], min);
++	}
++
++	index = irq_timings_next_event_index(irqs->timings, count, period_max);
++	if (index < 0)
++		return irqs->last_ts + irqs->ema_time[min];
++
++	return irqs->last_ts + irqs->ema_time[index];
++}
++
++static inline void irq_timings_store(int irq, struct irqt_stat *irqs, u64 ts)
++{
++	u64 old_ts = irqs->last_ts;
++	u64 interval;
++	int index;
++
++	/*
++	 * The timestamps are absolute time values, we need to compute
++	 * the timing interval between two interrupts.
++	 */
++	irqs->last_ts = ts;
++
++	/*
++	 * The interval type is u64 in order to deal with the same
++	 * type in our computation, that prevent mindfuck issues with
++	 * overflow, sign and division.
++	 */
++	interval = ts - old_ts;
++
++	/*
++	 * The interrupt triggered more than one second apart, that
++	 * ends the sequence as predictible for our purpose. In this
++	 * case, assume we have the beginning of a sequence and the
++	 * timestamp is the first value. As it is impossible to
++	 * predict anything at this point, return.
++	 *
++	 * Note the first timestamp of the sequence will always fall
++	 * in this test because the old_ts is zero. That is what we
++	 * want as we need another timestamp to compute an interval.
++	 */
++	if (interval >= NSEC_PER_SEC) {
++		irqs->count = 0;
++		return;
++	}
++
++	/*
++	 * Get the index in the ema table for this interrupt. The
++	 * PREDICTION_FACTOR increase the interval size for the array
++	 * of exponential average.
++	 */
++	index = likely(interval) ?
++		ilog2((interval >> 10) / PREDICTION_FACTOR) : 0;
++
++	/*
++	 * Store the index as an element of the pattern in another
++	 * circular array.
++	 */
++	irqs->circ_timings[irqs->count & IRQ_TIMINGS_MASK] = index;
++
++	irqs->ema_time[index] = irq_timings_ema_new(interval,
++						    irqs->ema_time[index]);
++
++	irqs->count++;
++}
++
  /**
   * irq_timings_next_event - Return when the next event is supposed to arrive
   *
-@@ -246,12 +61,6 @@ static void irqs_update(struct irqt_stat *irqs, u64 ts)
+@@ -61,6 +463,12 @@ void irq_timings_disable(void)
   */
  u64 irq_timings_next_event(u64 now)
  {
--	struct irq_timings *irqts = this_cpu_ptr(&irq_timings);
--	struct irqt_stat *irqs;
--	struct irqt_stat __percpu *s;
--	u64 ts, next_evt = U64_MAX;
--	int i, irq = 0;
--
++	struct irq_timings *irqts = this_cpu_ptr(&irq_timings);
++	struct irqt_stat *irqs;
++	struct irqt_stat __percpu *s;
++	u64 ts, next_evt = U64_MAX;
++	int i, irq = 0;
++
  	/*
  	 * This function must be called with the local irq disabled in
  	 * order to prevent the timings circular buffer to be updated
-@@ -259,64 +68,7 @@ u64 irq_timings_next_event(u64 now)
+@@ -68,7 +476,51 @@ u64 irq_timings_next_event(u64 now)
  	 */
  	lockdep_assert_irqs_disabled();
  
--	/*
--	 * Number of elements in the circular buffer: If it happens it
--	 * was flushed before, then the number of elements could be
--	 * smaller than IRQ_TIMINGS_SIZE, so the count is used,
--	 * otherwise the array size is used as we wrapped. The index
--	 * begins from zero when we did not wrap. That could be done
--	 * in a nicer way with the proper circular array structure
--	 * type but with the cost of extra computation in the
--	 * interrupt handler hot path. We choose efficiency.
--	 *
--	 * Inject measured irq/timestamp to the statistical model
--	 * while decrementing the counter because we consume the data
--	 * from our circular buffer.
--	 */
--	for (i = irqts->count & IRQ_TIMINGS_MASK,
--		     irqts->count = min(IRQ_TIMINGS_SIZE, irqts->count);
--	     irqts->count > 0; irqts->count--, i = (i + 1) & IRQ_TIMINGS_MASK) {
--
--		irq = irq_timing_decode(irqts->values[i], &ts);
--
--		s = idr_find(&irqt_stats, irq);
--		if (s) {
--			irqs = this_cpu_ptr(s);
--			irqs_update(irqs, ts);
--		}
--	}
--
--	/*
--	 * Look in the list of interrupts' statistics, the earliest
--	 * next event.
--	 */
--	idr_for_each_entry(&irqt_stats, s, i) {
--
--		irqs = this_cpu_ptr(s);
--
--		if (!irqs->valid)
--			continue;
--
--		if (irqs->next_evt <= now) {
--			irq = i;
--			next_evt = now;
--
--			/*
--			 * This interrupt mustn't use in the future
--			 * until new events occur and update the
--			 * statistics.
--			 */
--			irqs->valid = 0;
--			break;
--		}
--
--		if (irqs->next_evt < next_evt) {
--			irq = i;
--			next_evt = irqs->next_evt;
--		}
--	}
--
--	return next_evt;
-+	return 0;
+-	return 0;
++	if (!irqts->count)
++		return next_evt;
++
++	/*
++	 * Number of elements in the circular buffer: If it happens it
++	 * was flushed before, then the number of elements could be
++	 * smaller than IRQ_TIMINGS_SIZE, so the count is used,
++	 * otherwise the array size is used as we wrapped. The index
++	 * begins from zero when we did not wrap. That could be done
++	 * in a nicer way with the proper circular array structure
++	 * type but with the cost of extra computation in the
++	 * interrupt handler hot path. We choose efficiency.
++	 *
++	 * Inject measured irq/timestamp to the pattern prediction
++	 * model while decrementing the counter because we consume the
++	 * data from our circular buffer.
++	 */
++
++	i = (irqts->count & IRQ_TIMINGS_MASK) - 1;
++	irqts->count = min(IRQ_TIMINGS_SIZE, irqts->count);
++		
++	for (; irqts->count > 0; irqts->count--, i = (i + 1) & IRQ_TIMINGS_MASK) {
++		irq = irq_timing_decode(irqts->values[i], &ts);
++		s = idr_find(&irqt_stats, irq);
++		if (s)
++			irq_timings_store(irq, this_cpu_ptr(s), ts);
++	}
++
++	/*
++	 * Look in the list of interrupts' statistics, the earliest
++	 * next event.
++	 */
++	idr_for_each_entry(&irqt_stats, s, i) {
++
++		irqs = this_cpu_ptr(s);
++
++		ts = __irq_timings_next_event(irqs, i, now);
++		if (ts <= now)
++			return now;
++
++		if (ts < next_evt)
++			next_evt = ts;
++	}
++
++	return next_evt;
  }
  
  void irq_timings_free(int irq)
