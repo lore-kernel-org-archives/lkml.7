@@ -2,122 +2,146 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D89EAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53067C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF9892173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB0B21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:20:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kNMJMs9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbfC1XTc (ORCPT
+        id S1728557AbfC1XUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 19:19:32 -0400
-Received: from mga11.intel.com ([192.55.52.93]:45640 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbfC1XTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 19:19:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 16:19:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,282,1549958400"; 
-   d="scan'208";a="286842287"
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by orsmga004.jf.intel.com with ESMTP; 28 Mar 2019 16:19:30 -0700
-Received: from orsmsx156.amr.corp.intel.com (10.22.240.22) by
- ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Thu, 28 Mar 2019 16:19:30 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.78]) by
- ORSMSX156.amr.corp.intel.com ([169.254.8.82]) with mapi id 14.03.0415.000;
- Thu, 28 Mar 2019 16:19:28 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-CC:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Dr . Greg Wettstein" <greg@enjellic.com>
-Subject: RE: [PATCH v19,RESEND 24/27] x86/vdso: Add
- __vdso_sgx_enter_enclave() to wrap SGX enclave transitions
-Thread-Topic: [PATCH v19,RESEND 24/27] x86/vdso: Add
- __vdso_sgx_enter_enclave() to wrap SGX enclave transitions
-Thread-Index: AQHU3zmquZHDGSY4XUWmggeyxtSmi6YU12fwgACBcQD//5sEUIADt/WAgADIIJCAAMRtgP//souwgAM2LoCAAGNgAP//0r3AACmYkYAANjyeQAAy5DgAAAcQZfA=
-Date:   Thu, 28 Mar 2019 23:19:25 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F4E8617BF@ORSMSX116.amr.corp.intel.com>
-References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
- <20190320162119.4469-25-jarkko.sakkinen@linux.intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E85C484@ORSMSX116.amr.corp.intel.com>
- <20190320191318.GF30469@linux.intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E85C5AB@ORSMSX116.amr.corp.intel.com>
- <20190322215903.GE12666@linux.intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E85E481@ORSMSX116.amr.corp.intel.com>
- <CALCETrV589POrG3RaPHBWOFuytkWjeJgJgLHk4OKbizOgJVKZQ@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E85E989@ORSMSX116.amr.corp.intel.com>
- <20190325180349.GF31069@linux.intel.com>
- <CALCETrXqb3CHefN-RLudC61jwdbLFS8cXuS4V5OJ6HTuf_arYw@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E85FABF@ORSMSX116.amr.corp.intel.com>
- <CALCETrVcR_etAHSVZxvCz7CcPnF4ajpcWiRCtFrOckVWVJByHA@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E860C69@ORSMSX116.amr.corp.intel.com>
- <CALCETrUUv3WSX7uL22DnWg8FOJqVyB=tknxbGDWb9wpx7zY2CQ@mail.gmail.com>
-In-Reply-To: <CALCETrUUv3WSX7uL22DnWg8FOJqVyB=tknxbGDWb9wpx7zY2CQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZmY5MTU2MGUtYzAzYi00OGI2LWJhYTItODM1YTIxMjIxMmQwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRkJmZGdZdHg2eUdWSjVcL0FMZWpQYkg1dlhzOE1VZGpYSVRrZytWUzRMaGRIVnJNTnNneFUzUW9DRjJsRWxTbGMifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 28 Mar 2019 19:20:39 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:6479 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbfC1XUj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 19:20:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9d56c90000>; Thu, 28 Mar 2019 16:20:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 28 Mar 2019 16:20:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 28 Mar 2019 16:20:38 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Mar
+ 2019 23:20:38 +0000
+Subject: Re: [PATCH v2 10/11] mm/hmm: add helpers for driver to safely take
+ the mmap_sem v2
+To:     Jerome Glisse <jglisse@redhat.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20190325144011.10560-1-jglisse@redhat.com>
+ <20190325144011.10560-11-jglisse@redhat.com>
+ <9df742eb-61ca-3629-a5f4-8ad1244ff840@nvidia.com>
+ <20190328213047.GB13560@redhat.com>
+ <a16efd42-3e2b-1b72-c205-0c2659de2750@nvidia.com>
+ <20190328220824.GE13560@redhat.com>
+ <068db0a8-fade-8ed1-3b9d-c29c27797301@nvidia.com>
+ <20190328224032.GH13560@redhat.com>
+ <0b698b36-da17-434b-b8e7-4a91ac6c9d82@nvidia.com>
+ <20190328230543.GI13560@redhat.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <9e414b8c-0f98-a2f7-4f46-d335c015fc1b@nvidia.com>
+Date:   Thu, 28 Mar 2019 16:20:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
+In-Reply-To: <20190328230543.GI13560@redhat.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US-large
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553815241; bh=cwvfXAmYS2xpbe/FjvzNojKYMDG/S4Ny/qLUa3K9/HA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=kNMJMs9C+TM1nNFTqcCV7IrVAkqxMYU++6lQG9ATbs5dJW3bohUET58V2LGYBJ3AS
+         BJOR3Wxcqu+O47jZVuo4jxeNgexPD12CKcgQqGkcjnMg7a14DNYwvxMfNWRsSBQLEg
+         PmVuCr8J6jmZ9N9JV6HxPfnhkC4PZ0lRQyjpXcUJ94q9EVm/ibBxc6wIgOfAefZI5U
+         ALdxLZSvIEDDguQNaUCnjr01WMaGnRhvhwa+gudD1FXzyCnmBQ83NvG4D7CG5Blw03
+         fRfwFvygK2kgIdrvJZK3kRGV9HlIEiUvIRIqJV8go1+5AoYHs0j3fwtpwlXsSukM1Z
+         wd9dFJcLPiWiA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBJdCdzIGNlcnRhaW5seSBtYWtpbmcgcHJvZ3Jlc3MuICBJIGxpa2UgdGhlIGZhY3QgdGhhdCB0
-aGUgY2FsbGJhY2sgaXMNCj4gbm93IHVuY29uZGl0aW9uYWwgKGlmIG5vbi1OVUxMKSByYXRoZXIg
-dGhhbiBiZWluZyB1c2VkIGp1c3QgaW4gY2FzZSBvZg0KPiBjZXJ0YWluIGV4aXQgdHlwZXMuICBC
-dXQsIGlmIHdlIGdvIGRvd24gdGhpcyByb3V0ZSwgbGV0J3MgbmFtZSBhbmQNCj4gZG9jdW1lbnQg
-aXQgYXBwcm9wcmlhdGVseSAtLSBqdXN0IGNhbGwgdGhlIGZ1bmN0aW9uICJjYWxsYmFjayIgYW5k
-DQo+IGRvY3VtZW50IGl0IGFzIGEgZnVuY3Rpb24gdGhhdCBpcyBjYWxsZWQganVzdCBiZWZvcmUN
-Cj4gX192ZHNvX3NneF9lbnRlcl9lbmNsYXZlIHJldHVybnMsIHRvIGJlIHVzZWQgaWYgc3VwcG9y
-dCBmb3IgbGVnYWN5DQo+IGVuY2xhdmVzIHRoYXQgcHVzaCBkYXRhIG9udG8gdGhlIHVudHJ1c3Rl
-ZCBzdGFjayBpcyBuZWVkZWQuICBXZSBzaG91bGQNCj4gZnVydGhlciBkb2N1bWVudCB0aGF0IGl0
-J3Mgc2FmZSB0byBsb25nam1wIG91dCBvZiBpdC4NCj4gDQo+IEFsc28sIHRoZSB0ZXN0cyBpbiB0
-b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy94ODYvdW53aW5kX3Zkc28uYyBzaG91bGQgYmUNCj4gYXVn
-bWVudGVkIHRvIHRlc3QgdGhpcyBjb2RlLg0KPiANCj4gRmluYWxseSwgd2h5IGRvZXMgdGhlIHZE
-U08gY29kZSBib3RoZXIgY2hlY2tpbmcgd2hldGhlciB0aGUgbGVhZiBpcw0KPiB2YWxpZD8NCg0K
-SSBjYW4gZG9jdW1lbnQgaXQuIEknbGwgbG9vayBpbnRvIHVud2luZF92ZHNvLmMgdG8gc2VlIHdo
-YXQga2luZCBvZiBzZWxmdGVzdHMgd2lsbCBtYWtlIHNlbnNlIGhlcmUuIEFuZCBJJ2xsIHNlbmQg
-b3V0IGEgUkZDIHBhdGNoIHdpdGggZXZlcnl0aGluZyBpbmNsdWRlZC4gT3Igd291bGQgeW91IHBy
-ZWZlciB0byBoYXZlIG15IGNoYW5nZXMgaW50ZWdyYXRlZCBpbnRvIEphcmtrbydzIHBhdGNoIHYy
-MD8NCg0KRGlmZmVyZW50IEVOQ0xVIGxlYWYgaGFzIGRpZmZlcmVudCBwYXJhbWV0ZXJzLiBUaGlz
-IHZEU08gQVBJIGtub3dzIGhvdyB0byBsb2FkIHVwIHBhcmFtZXRlcnMgb25seSBmb3IgRUVOVEVS
-IGFuZCBFUkVTVU1FIHNvIGl0IGVycnMgb24gYWxsIG90aGVyIHBvc2l0aXZlIHZhbHVlcy4gMCBh
-bmQgbmVnYXRpdmUgdmFsdWVzIGFyZSBpbnRlcnByZXRlZCBhcyByZXR1cm4gY29kZXMuIA0K
+On 3/28/19 4:05 PM, Jerome Glisse wrote:
+> On Thu, Mar 28, 2019 at 03:43:33PM -0700, John Hubbard wrote:
+>> On 3/28/19 3:40 PM, Jerome Glisse wrote:
+>>> On Thu, Mar 28, 2019 at 03:25:39PM -0700, John Hubbard wrote:
+>>>> On 3/28/19 3:08 PM, Jerome Glisse wrote:
+>>>>> On Thu, Mar 28, 2019 at 02:41:02PM -0700, John Hubbard wrote:
+>>>>>> On 3/28/19 2:30 PM, Jerome Glisse wrote:
+>>>>>>> On Thu, Mar 28, 2019 at 01:54:01PM -0700, John Hubbard wrote:
+>>>>>>>> On 3/25/19 7:40 AM, jglisse@redhat.com wrote:
+>>>>>>>>> From: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+>>>> [...]
+>>>> OK, so let's either drop this patch, or if merge windows won't allow t=
+hat,
+>>>> then *eventually* drop this patch. And instead, put in a hmm_sanity_ch=
+eck()
+>>>> that does the same checks.
+>>>
+>>> RDMA depends on this, so does the nouveau patchset that convert to new =
+API.
+>>> So i do not see reason to drop this. They are user for this they are po=
+sted
+>>> and i hope i explained properly the benefit.
+>>>
+>>> It is a common pattern. Yes it only save couple lines of code but down =
+the
+>>> road i will also help for people working on the mmap_sem patchset.
+>>>
+>>
+>> It *adds* a couple of lines that are misleading, because they look like =
+they
+>> make things safer, but they don't actually do so.
+>=20
+> It is not about safety, sorry if it confused you but there is nothing abo=
+ut
+> safety here, i can add a big fat comment that explains that there is no s=
+afety
+> here. The intention is to allow the page fault handler that potential hav=
+e
+> hundred of page fault queue up to abort as soon as it sees that it is poi=
+ntless
+> to keep faulting on a dying process.
+>=20
+> Again if we race it is _fine_ nothing bad will happen, we are just doing =
+use-
+> less work that gonna be thrown on the floor and we are just slowing down =
+the
+> process tear down.
+>=20
+
+In addition to a comment, how about naming this thing to indicate the above=
+=20
+intention?  I have a really hard time with this odd down_read() wrapper, wh=
+ich
+allows code to proceed without really getting a lock. It's just too wrong-l=
+ooking.
+If it were instead named:
+
+	hmm_is_exiting()
+
+and had a comment about why racy is OK, then I'd be a lot happier. :)
+
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
