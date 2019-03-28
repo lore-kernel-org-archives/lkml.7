@@ -2,156 +2,163 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0A8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BE0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0611820811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6AF121773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:46:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O4waJeIf"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="IXm0uTio"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfC1PqQ (ORCPT
+        id S1727426AbfC1Pqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:46:16 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:44212 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbfC1PqQ (ORCPT
+        Thu, 28 Mar 2019 11:46:32 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42262 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727265AbfC1Pqb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:46:16 -0400
-Received: by mail-ua1-f65.google.com with SMTP id p13so532637uaa.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:46:15 -0700 (PDT)
+        Thu, 28 Mar 2019 11:46:31 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b7so9809443lfg.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:46:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=x6GzVSdXwcNSNCg9EEYQa+SsIfpHQ6Oq/KbUmOCLIdw=;
-        b=O4waJeIfvIIVxBS61Xt6UjiEiYIcswHjKWeZ/nwi5WanyTLFeGbiElz5aIvIZygWYV
-         JolZT9tCdLwcdRQ3mPP51oQzOUFTBrEDDruKCAX25Mb+Jda22yC9ATgZia/mYBzqi5qW
-         ++ofRGxwCc+2lRglf/MllKq/m8F4//J3sPUDg=
+        bh=J1rFfeVPNUL+mQFkDcYvOnRRpb0BJX1LnqaH9dlaLrA=;
+        b=IXm0uTioHR+okF+fTsHaYrYYAekPBiBJMebQE4H7r1z1k5dw+25gNWdvrlgw8xWECT
+         ukz7+d49nkLkiKYy91EhGK0XChliJF8I7WM80SM1ozdhrHg2EqzMfmb9WRHIb2ORyegh
+         JUYealFUD5PD5TUpL/sJEYJl96SgWUShs7ARIL+M5UVshzTyPsyOoCvlnjSrN6WKRp0w
+         H1FWRSpKveXpmv9abc0MHBQsvK2dIhMUZCcW8F5GKuo2U/bwo9jzwQQspVkRvukK0I3k
+         jEEhcXTmTpNEEiqYzEmrMp4nrCS60AKGRZ4631QYF6OfxyuyJWpRFIDBxakb5oML78t0
+         aUJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=x6GzVSdXwcNSNCg9EEYQa+SsIfpHQ6Oq/KbUmOCLIdw=;
-        b=ksPzl90TV6NrVsdCBt4gutCVWiZX0ULFR/+Fe9esSmVgEQfKWblc3fhKNEGLr+X5KE
-         5177JAHyZHdslNkE1P4yhsiqiiM3aHExgpJp3EtGh5rbUV/bDbtOnnkqtUU9i4AnBQNc
-         N9dg34WJpIt6RTaR/UCKi+/S/h1zIcitMBQ11Wn0Knqbm3SDnp5nXYfvcg6ZTlDKx1UM
-         rzvE1NRinuHzbclop/ugjG/5RRLWmeV+F30B2NGOT+g2m/CBydIusMGu9BSW+OI0gXM+
-         STC6xvwAqFpaXjEHnUVUUXWiaHhq8k+L8tldVwpJrpOja/WF6XVe+gKadggp7/IGpktO
-         XF1w==
-X-Gm-Message-State: APjAAAW6kVqC6AENu3ygrbYoAhYn1Tw7Xp4p5pUGNCsGTKFoFTA0PmZ0
-        ndDMNZOlhwd+vUbUqFZklYbWpRZeHAw=
-X-Google-Smtp-Source: APXvYqwF2ORiVOkDh2yq7uMiuh9b0OXxJJkhMiKDmMVawIo3RK/C8VRCccq/khdJcTh7dyC6r1eYpw==
-X-Received: by 2002:ab0:a97:: with SMTP id d23mr22922268uak.99.1553787974117;
-        Thu, 28 Mar 2019 08:46:14 -0700 (PDT)
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
-        by smtp.gmail.com with ESMTPSA id z79sm7956656vkd.18.2019.03.28.08.46.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 08:46:11 -0700 (PDT)
-Received: by mail-vk1-f175.google.com with SMTP id x2so4602904vkx.13
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:46:10 -0700 (PDT)
-X-Received: by 2002:a1f:2e07:: with SMTP id u7mr12513305vku.44.1553787970183;
- Thu, 28 Mar 2019 08:46:10 -0700 (PDT)
+        bh=J1rFfeVPNUL+mQFkDcYvOnRRpb0BJX1LnqaH9dlaLrA=;
+        b=oHqnQIPFdzuI8gFzysRdYWB7KKgVT8v1cznlmLozUU2zL5myt+dAFh8DjUMGRZgMX6
+         GBlLoCAdJxg2cuxw6sKoz7mDd2MhxLkBpF1jhba6BUL3cxYrzSQ2Wm0KAs77Bk/SChD1
+         aiC77mxXEazI0o3+6sasmqq99mhyLwNuZSMVJZUXjZZSZinW/UAfZ4HEAlzKP/YZ5Sdh
+         jt4AG8l/cJ9yG730Lh+461NQm6j9URO+zbM2sT/hXVNGBWO3eH6jpvr/5+V8pYlYYvq8
+         0kw68IJlLOLlm6F613etzdz+9PeFYpk20v/x6bsBAq1b2QH+kKOI5pxaKnCAsvqO9aiP
+         YYQQ==
+X-Gm-Message-State: APjAAAWP2ZeEnfVTQLHTNwNj9wYrEQKFlfbtUjBmaw3BlCFkkDAWA7Mm
+        oW2niAfRUdhhuUhFQNa88SIRREBXsu0JFtf5bEEl
+X-Google-Smtp-Source: APXvYqwfamkxPb14Cc1V2TuMg4flLBeLIGPcDXA/dCCnkaDofWxUeAigJP0pgRGG5dXe3x8C2hdvRTi9ESq6CBnrvP0=
+X-Received: by 2002:a19:ee11:: with SMTP id g17mr21733682lfb.117.1553787989146;
+ Thu, 28 Mar 2019 08:46:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190318094128.1488-1-elena.reshetova@intel.com>
- <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
- <CAGXu5jLQaa2FYMOpQPLdRPmUPNY8jq7whM6Wa_YGjfH7oHwx4Q@mail.gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C19A55@IRSMSX102.ger.corp.intel.com> <CALCETrXnfk5zYWmpdLvYbcJ7hhFM13+LPq14MF7s99iqtS4-jg@mail.gmail.com>
-In-Reply-To: <CALCETrXnfk5zYWmpdLvYbcJ7hhFM13+LPq14MF7s99iqtS4-jg@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 28 Mar 2019 08:45:57 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+r-NH5+QY=siE+6RTkUKoRF0Rso6KHM4NOMsCvpcjW5g@mail.gmail.com>
-Message-ID: <CAGXu5j+r-NH5+QY=siE+6RTkUKoRF0Rso6KHM4NOMsCvpcjW5g@mail.gmail.com>
-Subject: Re: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
+References: <cover.1552665316.git.rgb@redhat.com> <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
+ <CAFqZXNskwTub5Bm_HZqr02VPB4s79CcgAVX8VE2vQYP07-qssg@mail.gmail.com> <20190328011202.6raixwzdimn5b4zk@madcap2.tricolour.ca>
+In-Reply-To: <20190328011202.6raixwzdimn5b4zk@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 28 Mar 2019 11:46:17 -0400
+Message-ID: <CAHC9VhQYVSrX1Ng7hZejkGSq6ZXtqi+SKmpARASJ4P2_2i3-4w@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V5 09/10] audit: add support for containerid to
+ network namespaces
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>, nhorman@tuxdriver.com,
+        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
         LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>
+        David Howells <dhowells@redhat.com>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Simo Sorce <simo@redhat.com>, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 9:31 PM Andy Lutomirski <luto@kernel.org> wrote:
+On Wed, Mar 27, 2019 at 9:12 PM Richard Guy Briggs <rgb@redhat.com> wrote:
 >
-> On Tue, Mar 26, 2019 at 3:35 AM Reshetova, Elena
-> <elena.reshetova@intel.com> wrote:
-> >
-> > > On Mon, Mar 18, 2019 at 1:16 PM Andy Lutomirski <luto@kernel.org> wrote:
-> > > > On Mon, Mar 18, 2019 at 2:41 AM Elena Reshetova
-> > > > <elena.reshetova@intel.com> wrote:
-> > > > > Performance:
-> > > > >
-> > > > > 1) lmbench: ./lat_syscall -N 1000000 null
-> > > > >     base:                     Simple syscall: 0.1774 microseconds
-> > > > >     random_offset (rdtsc):     Simple syscall: 0.1803 microseconds
-> > > > >     random_offset (rdrand): Simple syscall: 0.3702 microseconds
-> > > > >
-> > > > > 2)  Andy's tests, misc-tests: ./timing_test_64 10M sys_enosys
-> > > > >     base:                     10000000 loops in 1.62224s = 162.22 nsec / loop
-> > > > >     random_offset (rdtsc):     10000000 loops in 1.64660s = 164.66 nsec / loop
-> > > > >     random_offset (rdrand): 10000000 loops in 3.51315s = 351.32 nsec / loop
-> > > > >
-> > > >
-> > > > Egads!  RDTSC is nice and fast but probably fairly easy to defeat.
-> > > > RDRAND is awful.  I had hoped for better.
+> On 2019-03-27 23:42, Ondrej Mosnacek wrote:
+> > On Fri, Mar 15, 2019 at 7:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > Audit events could happen in a network namespace outside of a task
+> > > context due to packets received from the net that trigger an auditing
+> > > rule prior to being associated with a running task.  The network
+> > > namespace could be in use by multiple containers by association to the
+> > > tasks in that network namespace.  We still want a way to attribute
+> > > these events to any potential containers.  Keep a list per network
+> > > namespace to track these audit container identifiiers.
 > > >
-> > > RDRAND can also fail.
+> > > Add/increment the audit container identifier on:
+> > > - initial setting of the audit container identifier via /proc
+> > > - clone/fork call that inherits an audit container identifier
+> > > - unshare call that inherits an audit container identifier
+> > > - setns call that inherits an audit container identifier
+> > > Delete/decrement the audit container identifier on:
+> > > - an inherited audit container identifier dropped when child set
+> > > - process exit
+> > > - unshare call that drops a net namespace
+> > > - setns call that drops a net namespace
 > > >
-> > > > So perhaps we need a little percpu buffer that collects 64 bits of
-> > > > randomness at a time, shifts out the needed bits, and refills the
-> > > > buffer when we run out.
+> > > See: https://github.com/linux-audit/audit-kernel/issues/92
+> > > See: https://github.com/linux-audit/audit-testsuite/issues/64
+> > > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > ---
+> > >  include/linux/audit.h | 19 ++++++++++++
+> > >  kernel/audit.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++++++--
+> > >  kernel/nsproxy.c      |  4 +++
+> > >  3 files changed, 106 insertions(+), 3 deletions(-)
 > > >
-> > > I'd like to avoid saving the _exact_ details of where the next offset
-> > > will be, but if nothing else works, this should be okay. We can use 8
-> > > bits at a time and call prandom_u32() every 4th call. Something like
-> > > prandom_bytes(), but where it doesn't throw away the unused bytes.
+> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > > index fa19fa408931..70255c2dfb9f 100644
+> > > --- a/include/linux/audit.h
+> > > +++ b/include/linux/audit.h
+> > > @@ -27,6 +27,7 @@
+> > >  #include <linux/ptrace.h>
+> > >  #include <linux/namei.h>  /* LOOKUP_* */
+> > >  #include <uapi/linux/audit.h>
+> > > +#include <linux/refcount.h>
+> > >
+> > >  #define AUDIT_INO_UNSET ((unsigned long)-1)
+> > >  #define AUDIT_DEV_UNSET ((dev_t)-1)
+> > > @@ -99,6 +100,13 @@ struct audit_task_info {
+> > >
+> > >  extern struct audit_task_info init_struct_audit;
+> > >
+> > > +struct audit_contid {
+> > > +       struct list_head        list;
+> > > +       u64                     id;
+> > > +       refcount_t              refcount;
 > >
-> > Actually I think this would make the end result even worse security-wise
-> > than simply using rdtsc() on every syscall. Saving the randomness in percpu
-> > buffer, which is probably easily accessible and can be probed if needed,
-> > would supply attacker with much more knowledge about the next 3-4
-> > random offsets that what he would get if we use "weak" rdtsc. Given
-> > that for a successful exploit, an attacker would need to have stack aligned
-> > once only, having a knowledge of 3-4 next offsets sounds like a present to an
-> > exploit writer...  Additionally it creates complexity around the code that I
-> > have issues justifying with "security" argument because of above...
-
-That certainly solidifies my concern against saving randomness. :)
-
-> > I have the patch now with alloca() and rdtsc() working, I can post it
-> > (albeit it is very simple), but I am really hesitating on adding the percpu
-> > buffer randomness storage to it...
-> >
+> > Hm, since we only ever touch the refcount under a spinlock, I wonder
+> > if we could just make it a regular unsigned int (we don't need the
+> > atomicity guarantees). OTOH, refcount_t comes with some extra overflow
+> > checking, so it's probably better to leave it as is...
 >
-> Hmm.  I guess it depends on what types of attack you care about.  I
-> bet that, if you do a bunch of iterations of mfence;rdtsc;syscall,
-> you'll discover that the offset between the user rdtsc and the
-> syscall's rdtsc has several values that occur with high probability.
+> Since the update is done using rcu-safe methods, do we even need the
+> spin_lock?  Neil?  Paul?
 
-How about rdtsc xor with the middle word of the stack canary? (to
-avoid the 0-byte) Something like:
+As discussed, the refcount field is protected against simultaneous
+writes by the spinlock that protects additions/removals from the list
+as a whole so I don't believe the refcount_t atomicity is critical in
+this regard.
 
-    rdtsc
-    xorl [%gs:...canary....], %rax
-    andq  $__MAX_STACK_RANDOM_OFFSET, %rax
+Where it gets tricky, and I can't say I'm 100% confident on my answer
+here, is if refcount was a regular int and we wanted to access it
+outside of a spinlock (to be clear, it doesn't look like this patch
+currently does this).  With RCU, if refcount was a regular int
+(unsigned or otherwise), I believe it would be possible for different
+threads of execution to potentially see different values of refcount
+(assuming one thread was adding/removing from the list).  Using a
+refcount_t would protect against this, alternatively, taking the
+spinlock should also protect against this.
 
-I need to look at the right way to reference the canary during that
-code. Andy might know off the top of his head. :)
-
--Kees
+As we all know, RCU can be tricky at times, so I may be off on the
+above; if I am, please provide an explanation so I (and likely others
+as well) can learn a little bit more. :)
 
 -- 
-Kees Cook
+paul moore
+www.paul-moore.com
