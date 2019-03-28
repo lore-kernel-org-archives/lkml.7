@@ -2,88 +2,94 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F774C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B8EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4359520700
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82AF52177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:02:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="abs2/kSw"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="lO/InjvZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbfC1MA7 (ORCPT
+        id S1726381AbfC1MCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 08:00:59 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:56047 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbfC1MA6 (ORCPT
+        Thu, 28 Mar 2019 08:02:37 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39408 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbfC1MCg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 08:00:58 -0400
-Received: by mail-it1-f193.google.com with SMTP id z126so5509159itd.5;
-        Thu, 28 Mar 2019 05:00:58 -0700 (PDT)
+        Thu, 28 Mar 2019 08:02:36 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i17so11252615pfo.6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 05:02:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TVDBjPr9OBXs3KNt4gc5phUNmqDjJOjI10/upymc2XU=;
-        b=abs2/kSwOeR1FNNROATaRlKzqZpjU3/L7KsmdhhapFx1i9QZKgIhZB43op9EoAjPYD
-         /I9/B0rvRZiPVe5YsD5Z6E9yWwyDSS+e/+CTlSTqf001IIgp7ySOOZIknSfeSYXtL9uS
-         GWZgGICVpurEc9gFnA7T32npbArKv81izmCicZvuceH10f4TmoKJt3tVLMzjieRs/REs
-         5w3iqUsdZIIOWkjkULnhFdQwWKWERney4/a0qTjrQPs5u7obVvkLTaXak/zHlX2Qlw5s
-         mqZFZFSQHqplfhUuSYIkRyF5P5G/8I4Vzbjp6Xv4tC8Sn30YGMf8F6o+twaf7U8UKpeM
-         6GoA==
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=5gNYYA09oyHB/2ANf77nCikAFBWILRyo7E8wbgyK/Tw=;
+        b=lO/InjvZDWVAwhHz/rr53388vx82TUPQqDgQR1q8qzHq+ickPVLlDyg5MDK0pyAkFe
+         Oj38tJBQApP/KkZO8uLRYWoonbt0vR1t6i5ZlV5QxcZK6f8f1pIJw+U11jYoGp2QnWsd
+         mPeZc5Ran+nHTbqmTfng9jtUQsbAHDpfySADq1nm0o/ZdY0f2c+h2hb28LFxvshLLdd4
+         a4Urp9biJNrjNQ57bSw/AsKmC+BbBXxS2hSro3VbBHPM+dq2VoFpnpbKDSCd8QSmCmKQ
+         4ip7pYwMVfVVF9VtjcOO9wMeSBQuowMKV3zZSZX7rnWBTPMtEWGVsHtgDgRR6BYh58Aw
+         /6AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TVDBjPr9OBXs3KNt4gc5phUNmqDjJOjI10/upymc2XU=;
-        b=aX730QTeCfq2gLmBDlw6xXlUznJOwcVLtS3QUjZ8wOwkNCA2Fid0VmcTaofWjnc1YW
-         PFooyst+SL84Jl3c2pW7wOSWv4d3lRHPAdj5cMfwJ/cJiIlNhgjDHAPnU9dDNz/qtg4d
-         KtfAc5tLI3Vu4HsuGTenYzV6CXd3z1Q2hAfP3YIu7k7ZhLcNGgrHjCLySPn8kXPp9wYt
-         DgCyqsvsbdO4mLf1EEHy/a1dulGp0fNHUPXPRRWMp7wX5RKuQxyYhu88dO5jFOtcA2yu
-         HGfXPtww0mhXQUB5HOipLex7i8rhXTNHgqqpR8U5YiqWt5aynuHJDygpcbP7HoQdV6TL
-         Mxkg==
-X-Gm-Message-State: APjAAAX3HtgKEihpR4xcxzYhqurKyXlI/VUqc57dhN3Kj9L7n0KlgY0B
-        7v5THPHEe0Uhyh4STXha6gRl7t7rehHCH6zHHoTYsQ==
-X-Google-Smtp-Source: APXvYqxUe7ZvISPjGkn8NjfU6J1+lpR6NynA/s/mdsS5RbPT5qw7XDww2of8lE1JuUrONCx+uG/Kb421y0AZ0e1dAw8=
-X-Received: by 2002:a05:660c:94a:: with SMTP id h10mr7957359itl.54.1553774457645;
- Thu, 28 Mar 2019 05:00:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHG4imOAn7rcQWj--XMV2maBLgp4DynKGxwcbSzrcxk0a8n=8Q@mail.gmail.com>
- <742c1607-1e28-3674-65ca-8e5f111e243e@kernel.dk>
-In-Reply-To: <742c1607-1e28-3674-65ca-8e5f111e243e@kernel.dk>
-From:   raymond pang <raymondpangxd@gmail.com>
-Date:   Thu, 28 Mar 2019 12:00:15 +0000
-Message-ID: <CAHG4imPE3pNXAd5WvF-7hLyyZfpgAcT7KkVoCa+0iTGbHxxbvA@mail.gmail.com>
-Subject: Re: [PATCH] libata: fix using DMA buffers on stack
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5gNYYA09oyHB/2ANf77nCikAFBWILRyo7E8wbgyK/Tw=;
+        b=EFUYCVuWpSEKq7mcDGjPOgSe3qpZakCJtss6IGyrpWZvUCMXBXOyfQBTOaPUTnT6l4
+         rQ9UFIq7+oGRax+aZAYvqBRmsWGmE3RKO8LfXsPH1qkrlDRP65Y3xEwpY/SC3Q36bVJA
+         ZiRFJT0eLs5G/68LaXNcYzRfSPLHR6tzF0y0JdhxDo3xMWhcZgSTdSZZmO2qAfG0HUoX
+         rHa+G2y8AFv2AKs/xKYfbY60vM1W0I+4y68mGv4ByGSxLPW8zYZjPvHKFz7zIo46d37L
+         6S4g1/qC+rYD7hUW4jj/vF5IWcmgUlu5qJFP0iYX6HwdkaAG2nI7pna8EIwt+1HHPD+e
+         ia/A==
+X-Gm-Message-State: APjAAAU8SvpXQWvCoYdk8FwD0R3O5vkSakhaxBwSdz9qAlmmOP6YwQHT
+        fzWtRsDHrT8s/xenzLtmL3rNPw==
+X-Google-Smtp-Source: APXvYqwDWtFc1QyECeDfrISHK0BP7FGlphcp8XTjUb3WFSnlsQieNzgM+GCErRcz+jt0LCMxqc2d2w==
+X-Received: by 2002:a62:292:: with SMTP id 140mr7856454pfc.206.1553774556002;
+        Thu, 28 Mar 2019 05:02:36 -0700 (PDT)
+Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
+        by smtp.gmail.com with ESMTPSA id l63sm36859856pfc.89.2019.03.28.05.02.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 05:02:34 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Anuj Aggarwal <anuj.aggarwal@ti.com>,
+        Todd Fischer <todd.fischer@ridgerun.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH 1/3] regulator: tps6507x: Constify tps6507x_pmic_ops
+Date:   Thu, 28 Mar 2019 20:02:23 +0800
+Message-Id: <20190328120225.32556-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Jens,
+The tps6507x_pmic_ops never need to be modified, make it const so compiler
+can put it to .rodata.
 
-Thanks for review. I'll fix them up.
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/tps6507x-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
-Raymond
+diff --git a/drivers/regulator/tps6507x-regulator.c b/drivers/regulator/tps6507x-regulator.c
+index c179a3a221af..2b3064faaaf3 100644
+--- a/drivers/regulator/tps6507x-regulator.c
++++ b/drivers/regulator/tps6507x-regulator.c
+@@ -349,7 +349,7 @@ static int tps6507x_pmic_set_voltage_sel(struct regulator_dev *dev,
+ 	return tps6507x_pmic_reg_write(tps, reg, data);
+ }
+ 
+-static struct regulator_ops tps6507x_pmic_ops = {
++static const struct regulator_ops tps6507x_pmic_ops = {
+ 	.is_enabled = tps6507x_pmic_is_enabled,
+ 	.enable = tps6507x_pmic_enable,
+ 	.disable = tps6507x_pmic_disable,
+-- 
+2.17.1
 
-On Tue, Mar 26, 2019 at 2:09 PM Jens Axboe <axboe@kernel.dk> wrote:
->
-> On 3/25/19 9:07 PM, raymond pang wrote:
-> > When CONFIG_VMAP_STACK=y, __pa() returns incorrect physical address for
-> > a stack virtual address. Stack DMA buffers must be avoided.
->
-> The patch looks fine, but it's white space mangled so it won't apply.
-> Additionally, you don't need to use kzfree, just use kfree.
->
-> --
-> Jens Axboe
->
