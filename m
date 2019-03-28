@@ -2,122 +2,151 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE72DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEC9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9006921773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C5F2183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553787762;
+	bh=7W1yljRBvSIndmqSMX0YUQpbdeqZmA4x9L/HJMuag/0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bS2CO7psv/DwyEzayFeycySFHd4RMxMQ9AfnDQbB7GkKE06ZAPYHspr5GU3Q6qARq
+	 pE/Fjz/qtiAOpAiqLBu+NX5Tah843099bX+pGe0D3PUTjNtPwfG0TEyvUBEpmEdcMF
+	 9BS7JbD9Y6ke2qgmdfaVGD/4+3/pIoCdcgTvMgFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfC1PmN (ORCPT
+        id S1727551AbfC1Pml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:42:13 -0400
-Received: from raines.redjes.us ([45.32.221.159]:30549 "EHLO raines.redjes.us"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727551AbfC1PmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:42:11 -0400
-X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 Mar 2019 11:42:11 EDT
-Received: from localhost (raines.redjes.us [local])
-        by raines.redjes.us (OpenSMTPD) with ESMTPA id bd91b4d9;
-        Thu, 28 Mar 2019 11:35:29 -0400 (EDT)
-Date:   Thu, 28 Mar 2019 11:35:29 -0400 (EDT)
-From:   Anthony Coulter <riscv@anthonycoulter.name>
-To:     anup@brainfault.org, rppt@linux.ibm.com
-Subject: Re: [PATCH v3 4/4] RISC-V: Allow booting kernel from any 4KB aligned address
-Cc:     Anup.Patel@wdc.com, aou@eecs.berkeley.edu, Atish.Patra@wdc.com,
-        hch@infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, me@anthonycoulter.name,
-        palmer@sifive.com, paul.walmsley@sifive.com
-Message-ID: <eb83e42f53cec3f1@raines.redjes.us>
+        Thu, 28 Mar 2019 11:42:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44290 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfC1Pml (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 11:42:41 -0400
+Received: by mail-ot1-f66.google.com with SMTP id d24so4228605otl.11;
+        Thu, 28 Mar 2019 08:42:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4az+46DIMfUB/SNTIsMCQFGc8Fnlowh1OrOWXEomb4w=;
+        b=VrXm1/64sjT25/Gg8RUJUD8av7Y8kN1OL6dNMfo/j4X9R7Y3aQo/NXFnitB1UncBAC
+         p73EVG7OpvzBJ5+hNeH0BZVTMcluvJk8pjpwu3B0A8w9h/eC660Rk0ZvwLpMdft2AxPD
+         eBhnPnu001DXRZ3D3MxzwA9NxKYB1gNVPkgL+8HV3lBmNjcKxYYM2yOMz7F551AmZIAB
+         WFIRae2e0uXz5IW+hXvaElvfewhSzsrAcymlNodqcpg2PrlfGZsSBzdKFYhTW8VYb+e8
+         ChlsxBh/F2mojeII0hNoSuYTlDtMYCBIl1QbIarz00AP/jIxZJkX1bkIkjJXqfMBbG0R
+         5h6Q==
+X-Gm-Message-State: APjAAAWl8nOxGg1nS9zQ/MjlibrJuWl+hT7rQwqBfVvJmiayDTwmET/S
+        ojcjrXxk+RJHfKNz40HNFA==
+X-Google-Smtp-Source: APXvYqxWekuyLQ5qCLs1b3xTvC3fEzjlccVvX52gn2dE+rZh0h2hIDf+mvkrEYzX+Y/EukoEhf+F9A==
+X-Received: by 2002:a05:6830:1092:: with SMTP id y18mr4973717oto.130.1553787760337;
+        Thu, 28 Mar 2019 08:42:40 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k3sm9298397oic.11.2019.03.28.08.42.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 08:42:39 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 10:42:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
+        driverdev-devel@linuxdriverproject.org, devicetree@vger.kernel.org,
+        john@phrozen.org, linux-mips@vger.kernel.org, neil@brown.name
+Subject: Re: [PATCH 2/2] dt-bindings: phy: Add binding for Mediatek MT7621
+ PCIe PHY
+Message-ID: <20190328154238.GA20934@bogus>
+References: <20190314132210.654-1-sergio.paracuellos@gmail.com>
+ <20190314132210.654-3-sergio.paracuellos@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190314132210.654-3-sergio.paracuellos@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If your goal is to be able to boot from any 4k-aligned address, then
-disallowing boots between PAGE_OFFSET and PAGE_OFSSET + vmlinux_size
-seems counterproductive, since there are a lot of 4k-aligned addresses
-in that range that are now disallowed. (And worse, the specific range
-of disallowed addresses now depends on how large the kernel is, which
-makes things awkward. What happens if someone downloads a kernel update
-that increases the size of vmlinux to a point where their boot loader
-configuration is no longer valid? That would be crazy.)
+On Thu, Mar 14, 2019 at 02:22:10PM +0100, Sergio Paracuellos wrote:
+> Add bindings to describe Mediatek MT7621 PCIe PHY.
 
-Note that in order to boot from any 4k-aligned address, you will need
-set up trampoline_pg_dir to map a single 4k page. The rule is that the
-trampoline page tables can map a single page of whatever size you're
-working with, and that page needs to be mapped to the same virtual
-address that it will have in the final swapper_pg_dir table. Since
-swapper_pg_dir cannot use hugepages, trampoline_pg_dir cannot use a
-hugepage either.
+Binding should come before the driver.
 
-But that also means you can't do very much work between enabling the
-trampoline page tables and switching over to swapper_pg_dir, because
-during that period of time only 4k of memory is mapped. You can't call
-any functions that live outside those four kilobytes, nor can you
-modify any page tables (because the single page you have must cover the
-code in _start, so it can't point to any memory that includes page
-tables). So you need to set up both the trampoline and swapper page
-tables before enabling either of them. The only complexity you can
-postpone by splitting up setup_vm is the initialization of the fixmap
-tables.
+> 
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> ---
+>  .../bindings/phy/mediatek,mt7621-pci-phy.txt  | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt b/Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
+> new file mode 100644
+> index 000000000000..8addedbe815e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
+> @@ -0,0 +1,54 @@
+> +Mediatek Mt7621 PCIe PHY
+> +
+> +Required properties:
+> +- compatible: must be "mediatek,mt7621-pci-phy"
+> +- reg: base address and length of the PCIe PHY block
+> +- #address-cells: must be 1
+> +- #size-cells: must be 0
+> +
+> +Each PCIe PHY should be represented by a child node
+> +
+> +Required properties For the child node:
+> +- reg: the PHY ID
+> +0 - PCIe RC 0
+> +1 - PCIe RC 1
+> +- #phy-cells: must be 0
+> +
+> +Example:
+> +	pcie0_phy: pcie-phy@1e149000 {
+> +		compatible = "mediatek,mt7621-pci-phy";
+> +		reg = <0x1e149000 0x0700>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pcie0_port: pcie-phy@0 {
+> +			reg = <0>;
+> +			#phy-cells = <0>;
+> +		};
+> +
+> +		pcie1_port: pcie-phy@1 {
+> +			reg = <1>;
+> +			#phy-cells = <0>;
+> +		};
 
-That said: I think that booting from 4k-aligned addresses is probably
-still a pretty simple change, though I *also* have doubts about whether
-it is worthwhile.
+If each phy port doesn't have its own resources, then you don't need 
+child nodes. Just set #phy-cells to 1.
 
-Why is it simple? Because all you have to do is add one extra level to
-each of the trampoline and swapper page tables, and both of these
-tables have simple structures. The code proposed in the latest draft
-is complicated because the function calls have so many layers of
-indirection and not enough attention is paid to using the contiguity
-of the page tables to reduce work. But that's accidental complexity;
-a more careful implementation would be a lot shorter.
-
-Why is it irrelevant? Because a memory-constrained kernel will want to
-drop its .init segment after booting, but the memory that this frees up
-will all be at the beginning of the kernel image (and not at the end).
-
-Let's be concrete and talk about the HiFive Unleashed board, on which
-RAM starts at address 0x80000000. But the problem is that the Berkeley
-Boot Loader gets loaded to 0x80000000, so it has to load the Linux
-kernel to the next hugepage, at 0x80200000. Now, if you're short on RAM
-you will want your kernel to drop its .init segment, which occupies the
-first megabyte (?) of kernel space. (I don't know how large the .init
-segment is, but I *do* know from the linker script that it's at the
-beginning of memory. Let's call it a megabyte.) So Linux releases its
-first megabyte of memory to applications, and now the kernel itself
-starts somewhere around 0x8030000.
-
-How is the kernel going to make use of the freed-up space between
-0x80200000 and 0x8030000? That's a vm-system problem: somewhere in the
-virtual memory code there will be data structures and algorithms that
-are smart enough to make use of both the space *before* the kernel
-image (i.e. before 0x80300000) and the space *after* the kernel (i.e.
-all the space from 0x80200000 to 0x8020000 + vmlinux_size). Surely this
-code already exists, because some architectures *do* drop their .init
-sections after boot.
-
-But, now, if the virtual memory system is already smart enough to make
-use of physical memory that is located before the kernel image, then
-there's no harm in booting at 0x80200000 because the virtual memory
-system can figure out how to use the gap between the end of the boot
-loader and the start of the kernel image. This is true whether the
-kernel chooses to drop its .init segment or not, because the point is
-that the Linux kernel virtual memory data management system is already
-designed to make use of free space from before the kernel image.
-
-So the best way to reclaim wasted space before 0x80200000 is probably
-going to be to make your boot loader tell the kernel (via the device
-tree) how much space is available between boot_loader_end and
-vmlinux_start, and to make sure that this space gets used by the
-virtual memory framework.
-
-I'm sorry my email is so long, but I've found that long emails lead to
-less confusion than short ones.
-
-Regards,
-Anthony Coulter
+> +	};
+> +
+> +	pcie1_phy: pcie-phy@1e14a000 {
+> +		compatible = "mediatek,mt7621-pci-phy";
+> +		reg = <0x1e14a000 0x0700>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pcie2_port: pcie-phy@0 {
+> +			reg = <0>;
+> +			#phy-cells = <0>;
+> +		};
+> +	};
+> +
+> +	/* users of the PCIe phy */
+> +
+> +	pcie: pcie@1e140000 {
+> +		...
+> +		...
+> +		phys = <&pcie0_port>, <&pcie1_port>, <&pcie2_port>;
+> +		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
+> +	};
+> -- 
+> 2.19.1
+> 
