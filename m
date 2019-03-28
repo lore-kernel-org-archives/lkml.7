@@ -2,184 +2,123 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE80C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B58C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F5C2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D9552183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:26:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="n5L/VcJl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfC1QZH (ORCPT
+        id S1727188AbfC1QZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:25:07 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:42270 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbfC1QZH (ORCPT
+        Thu, 28 Mar 2019 12:25:59 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:8273 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbfC1QZ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:25:07 -0400
-Received: by mail-it1-f198.google.com with SMTP id r186so3707445ita.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 09:25:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=o4kkm8roeaRNYaszKT75RthftAfT4kLKyk2DdbXepLU=;
-        b=iWTJEcZnnJvootfqFInLkyU1v5GQEmUzKx965G2IcTDbITNKjXDUf8cnKb/MK5SCGQ
-         ZkTrOGFYgnxIAFfiav0Mn7n6LlvWPled2FLwUWl3OD+igDxGQYOnIbxz6gukUzJuItn3
-         QZ1Nj1JEq+rQLnqWeDfewnxqMYLPalA8W9dge9V2MEgkvIW3jfpEfzWa2yRdlrADqqDw
-         gNQLCZD7quOV8mXXMroZm7cbRXdx5O0dk24hvRYZtz65TSV8FW5i/pk8HbKi7EX62HUU
-         iUkPlDdMIAYCr/CfjhBhG4/cWuxQU1VHbMcWSQKTftaNAL3ROHhfCCkdpi78jgR1i51R
-         ROoA==
-X-Gm-Message-State: APjAAAW0ypVLeNs9zTVGIekSr5CtOICpk+4nMR2WpGFS1FnZdhTVnbT5
-        BOO2BjOReU1Gp4N+UIt+58OwvQFdKZpZ/lVj3WY6Bve629T3
-X-Google-Smtp-Source: APXvYqwA/E/c4B7dljtt6+HoubRlOA6hjLCzDb0VfFAJx9ZBpDlO3E9IfPzFOdbui/NFCib0IYLMlRlFuW8mgpTBjwyCyp3E2NER
-MIME-Version: 1.0
-X-Received: by 2002:a02:f52:: with SMTP id h79mr3567764jad.3.1553790306117;
- Thu, 28 Mar 2019 09:25:06 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 09:25:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000407080058529ff40@google.com>
-Subject: KMSAN: kernel-infoleak in sctp_getsockopt (3)
-From:   syzbot <syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com,
-        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
-        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
-        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
-        vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Thu, 28 Mar 2019 12:25:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1553790354;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=aRUGz+nFBnOtZ00ha2qxt7NybBlw40MfowOm/cBxW0Q=;
+        b=n5L/VcJlhES7jLhdxfKCcww1tipwWQNoy0xnk8hRPlecZQ8G2ZsfFEFXhPCwYd/VDh
+        mTBcoihx2x+STFTiVi9+i7LVfiVdl2eAkH+M+lMhOZGriH99V9hidyiHvOtyJMx/dPFH
+        27hS0zxpTE4sl47GI0YWE+mWAxu97PtqSrdmEuLcCsW8tAP+uwZPj9ImMFfsmGPf9VH8
+        wbYlNVEhwPaBMkLGS/ZXyNvjd0GMSJXtH+u2AbeytVrdD2ueJreLfx492OA9FN/kza2z
+        wN1zyZTzI8eppPfnzhx8/v7MzrybufHnP3gOI8leIOFIW9ZQwkduXfSDJcG6c4kY9gPy
+        t/AQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlWdXA0IgQ=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
+        with ESMTPSA id K07648v2SGPiMHx
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 28 Mar 2019 17:25:44 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH 1/2] iio: gyro: bmg160: add device tree compatibility table
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20190324180503.6dc1e36e@archlinux>
+Date:   Thu, 28 Mar 2019 17:25:43 +0100
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Content-Transfer-Encoding: 7bit
+Message-Id: <E093DD9D-C9DF-4725-8BAC-0451766E0A0C@goldelico.com>
+References: <cover.1552922054.git.hns@goldelico.com> <090c92487ada60e81fca341ef24e5de33a11ec4b.1552922054.git.hns@goldelico.com> <20190324180503.6dc1e36e@archlinux>
+To:     Jonathan Cameron <jic23@kernel.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Jonathan,
+> Am 24.03.2019 um 19:05 schrieb Jonathan Cameron <jic23@kernel.org>:
+> 
+> On Mon, 18 Mar 2019 16:14:14 +0100
+> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+> 
+>> Add of_match_table.
+>> 
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> I'm not against doing this, but do note that there is still a back up
+> path in which the i2c_device_id table is used to match but without
+> the vendor part of the string.
+> 
+> I theory the plan is to eventually remove that, but it's not the
+> case that this driver could not be probed from devicetree previously.
+> 
+> Applied to the togreg branch of iio.git and pushed out as testing
+> for the autobuilders to play with it.
 
-syzbot found the following crash on:
+Thanks,
+Nikolaus
 
-HEAD commit:    c10a026b kmsan: use __free_pages() in kmsan_iounmap_page_r..
-git tree:       kmsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=107d3c7d200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a5675814e8eae69e
-dashboard link: https://syzkaller.appspot.com/bug?extid=86b5c7c236a22616a72f
-compiler:       clang version 8.0.0 (trunk 350509)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1252834d200000
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+>> ---
+>> drivers/iio/gyro/bmg160_i2c.c | 9 +++++++++
+>> 1 file changed, 9 insertions(+)
+>> 
+>> diff --git a/drivers/iio/gyro/bmg160_i2c.c b/drivers/iio/gyro/bmg160_i2c.c
+>> index 90126a5a7663..934a092134f0 100644
+>> --- a/drivers/iio/gyro/bmg160_i2c.c
+>> +++ b/drivers/iio/gyro/bmg160_i2c.c
+>> @@ -54,10 +54,19 @@ static const struct i2c_device_id bmg160_i2c_id[] = {
+>> 
+>> MODULE_DEVICE_TABLE(i2c, bmg160_i2c_id);
+>> 
+>> +static const struct of_device_id bmg160_of_match[] = {
+>> +	{ .compatible = "bosch,bmg160" },
+>> +	{ .compatible = "bosch,bmi055_gyro" },
+>> +	{ }
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, bmg160_of_match);
+>> +
+>> static struct i2c_driver bmg160_i2c_driver = {
+>> 	.driver = {
+>> 		.name	= "bmg160_i2c",
+>> 		.acpi_match_table = ACPI_PTR(bmg160_acpi_match),
+>> +		.of_match_table = bmg160_of_match,
+>> 		.pm	= &bmg160_pm_ops,
+>> 	},
+>> 	.probe		= bmg160_i2c_probe,
+> 
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com
-
-IPv6: ADDRCONF(NETDEV_CHANGE): veth1_to_hsr: link becomes ready
-IPv6: ADDRCONF(NETDEV_CHANGE): hsr_slave_1: link becomes ready
-8021q: adding VLAN 0 to HW filter on device batadv0
-8021q: adding VLAN 0 to HW filter on device batadv0
-==================================================================
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-CPU: 0 PID: 10131 Comm: syz-executor.4 Not tainted 5.0.0+ #16
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x173/0x1d0 lib/dump_stack.c:113
-  kmsan_report+0x131/0x2a0 mm/kmsan/kmsan.c:636
-  kmsan_internal_check_memory+0xaa1/0xbb0 mm/kmsan/kmsan.c:730
-  kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:485
-  _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-  copy_to_user include/linux/uaccess.h:174 [inline]
-  sctp_getsockopt_peer_addrs net/sctp/socket.c:5911 [inline]
-  sctp_getsockopt+0x1668e/0x17f70 net/sctp/socket.c:7562
-  sock_common_getsockopt+0x13f/0x180 net/core/sock.c:2950
-  __sys_getsockopt+0x489/0x550 net/socket.c:1938
-  __do_sys_getsockopt net/socket.c:1949 [inline]
-  __se_sys_getsockopt+0xe1/0x100 net/socket.c:1946
-  __x64_sys_getsockopt+0x62/0x80 net/socket.c:1946
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x458209
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fdbef191c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
-RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000458209
-RDX: 000000000000006c RSI: 0000000000000084 RDI: 0000000000000004
-RBP: 000000000073bf00 R08: 0000000020000300 R09: 0000000000000000
-R10: 0000000020000280 R11: 0000000000000246 R12: 00007fdbef1926d4
-R13: 00000000004c96c8 R14: 00000000004d0310 R15: 00000000ffffffff
-
-Uninit was stored to memory at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
-  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
-  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
-  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
-  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
-  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
-  sctp_getsockopt_peer_addrs net/sctp/socket.c:5906 [inline]
-  sctp_getsockopt+0x16556/0x17f70 net/sctp/socket.c:7562
-  sock_common_getsockopt+0x13f/0x180 net/core/sock.c:2950
-  __sys_getsockopt+0x489/0x550 net/socket.c:1938
-  __do_sys_getsockopt net/socket.c:1949 [inline]
-  __se_sys_getsockopt+0xe1/0x100 net/socket.c:1946
-  __x64_sys_getsockopt+0x62/0x80 net/socket.c:1946
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-
-Uninit was stored to memory at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
-  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
-  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
-  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
-  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
-  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
-  sctp_transport_init net/sctp/transport.c:61 [inline]
-  sctp_transport_new+0x16d/0x9a0 net/sctp/transport.c:115
-  sctp_assoc_add_peer+0x532/0x1f70 net/sctp/associola.c:637
-  sctp_process_param net/sctp/sm_make_chunk.c:2548 [inline]
-  sctp_process_init+0x1a1b/0x3ed0 net/sctp/sm_make_chunk.c:2361
-  sctp_cmd_process_init net/sctp/sm_sideeffect.c:682 [inline]
-  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1410 [inline]
-  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
-  sctp_do_sm+0x3cfc/0x9af0 net/sctp/sm_sideeffect.c:1191
-  sctp_assoc_bh_rcv+0x65a/0xd80 net/sctp/associola.c:1074
-  sctp_inq_push+0x300/0x420 net/sctp/inqueue.c:95
-  sctp_backlog_rcv+0x20a/0xaf0 net/sctp/input.c:354
-  sk_backlog_rcv include/net/sock.h:936 [inline]
-  __release_sock+0x281/0x5f0 net/core/sock.c:2284
-  release_sock+0x99/0x2a0 net/core/sock.c:2800
-  sctp_wait_for_connect+0x3ee/0x860 net/sctp/socket.c:8751
-  sctp_sendmsg_to_asoc+0x2167/0x21a0 net/sctp/socket.c:1967
-  sctp_sendmsg+0x3fd7/0x6700 net/sctp/socket.c:2113
-  inet_sendmsg+0x54a/0x720 net/ipv4/af_inet.c:798
-  sock_sendmsg_nosec net/socket.c:622 [inline]
-  sock_sendmsg net/socket.c:632 [inline]
-  ___sys_sendmsg+0xdb9/0x11b0 net/socket.c:2115
-  __sys_sendmsg net/socket.c:2153 [inline]
-  __do_sys_sendmsg net/socket.c:2162 [inline]
-  __se_sys_sendmsg+0x305/0x460 net/socket.c:2160
-  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2160
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-
-Local variable description: ----addr.i@sctp_process_init
-Variable was created at:
-  sctp_process_init+0xb5/0x3ed0 net/sctp/sm_make_chunk.c:2324
-  sctp_cmd_process_init net/sctp/sm_sideeffect.c:682 [inline]
-  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1410 [inline]
-  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
-  sctp_do_sm+0x3cfc/0x9af0 net/sctp/sm_sideeffect.c:1191
-
-Bytes 8-15 of 16 are uninitialized
-Memory access of size 16 starts at ffff88809511fc28
-Data copied to user address 0000000020000298
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
