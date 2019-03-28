@@ -2,88 +2,114 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C0EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60A6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B5A20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701FF2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:31:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rblwavdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfC1QbH (ORCPT
+        id S1727648AbfC1QbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:31:07 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:32977 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726322AbfC1QbH (ORCPT
+        Thu, 28 Mar 2019 12:31:10 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53916 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbfC1QbH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Mar 2019 12:31:07 -0400
-Received: from [192.168.2.10] ([212.251.195.8])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id 9XvchJGCFUjKf9XvfhtWH8; Thu, 28 Mar 2019 17:31:04 +0100
-Subject: Re: [PATCH v3 1/2] media: atmel: atmel-isc: reworked driver and
- formats
-To:     Eugen.Hristev@microchip.com, linux-media@vger.kernel.org,
-        Nicolas.Ferre@microchip.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, mchehab@kernel.org
-Cc:     ksloat@aampglobal.com
-References: <1553786825-16942-1-git-send-email-eugen.hristev@microchip.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <da4dce14-b100-90a6-2d3e-86072a5119f0@xs4all.nl>
-Date:   Thu, 28 Mar 2019 17:30:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <1553786825-16942-1-git-send-email-eugen.hristev@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCBYL4dumaM0XN6AwgS1+hUWELhSCXx/+haLvJmh8HKtbxPFfj4OWSKspkF1wlu/Q0G9FBPCAU4ejfDKVG+YCG64vl9zTbXV88MaApV/xfoJlCTZGtlU
- WXBlx284/Bv7EghxJGUFAgrEZ7f7MwrczM3gCeYqfdWFlZfxaR27rtAkJb1tnWn+ysUzNoN2dDlXnqiKqpQTR6Rc1zTBT2SbAFDHGqK19eZYpMeTj3t0Ff6M
- hsrWLbNCuXGem2OGSfeTn6BtnvTf8HjtTC/LDh9giEeUNB+76CrVj86wN8dBTCNjZf6ov7GIn6epetVY+j7vfu66RarlwrO47AgILbaU7Z8iVWBkPpm8II7v
- NcPbti5pDQ2WzfLY6wWoPmx+RepRPJ/F/WIkTCof+K87LeKCrvOc7BT+h4GpUEjn0R8k0YWK
+Received: by mail-wm1-f68.google.com with SMTP id q16so4252775wmj.3;
+        Thu, 28 Mar 2019 09:31:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=iiCevEMImsZgRqC+/6iVwE8y+Po1ZvYFlUVr8KtDGxs=;
+        b=rblwavdd+smcxhNbM72fPuiwNqoZedqcVfC7Og2a88aHsT9PYGCmy00fG5Hmgwz+1/
+         B6FBXJCabhxSV7K8dl9a+kuOulz9n0Svm1sJjK3Fbm5uOT1xb4OoHRUSR4mxLhbUv0vz
+         4yyGSnwpDdKDFn/12jGFLosYTVyU/ZdAbK/grb76cQGvZGRVQfwVUhRRx00BULAaxzUW
+         s6iF03ANAbdz/z7/A6SUBzGdZkOby54IkqmD5vcD/pw/LTtAshug8Qfp1Ol3zUJoo/Nf
+         Effk04MA4tS8dkmNDjr9jkyrfDbqIv4TLgqc9Ij+RtnKjmp5Cx4DEiKEC79mYqaDZrZ0
+         FEAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=iiCevEMImsZgRqC+/6iVwE8y+Po1ZvYFlUVr8KtDGxs=;
+        b=jLI29c9iRrgh4nnEB/HOxLJNbZFbxCITjULcs2jilJAI/NAXGWbvVVTGCYRXyhwmg9
+         zbAT6n8JIarvgrHJzPN++2avzzX8f+iHm6soo0dfh+7hdV5dZ+KA7yJj1ezUGNcuR40b
+         OKgYY06NOBbgW1iDoa3XAbfmZK0/fK5DQFyBFHyzpC6VIPHsQ6qF9foaz5JZ+TT8Q4sN
+         BQMwX/C8bA4hX4dXlrV3YgsbOomWlVgJ6Sf9oOhEy/rdBHOGscjnPoVFvt4XzGHBKKY8
+         1Amw0X4WgmA5fhMUGxKxmMVK8BNxfUI3r2ztztx+/fR/Mi9CM1cjbKYnyU69eHD6f3gS
+         +fLQ==
+X-Gm-Message-State: APjAAAUWw2Vw9Ah80jVKBX5t3hoW9AT7hDiqGC6gOuugZOUSDpGDFhrB
+        j7Qb86ZJjLQug/ZbLWmwrHCqaLWr
+X-Google-Smtp-Source: APXvYqzVha+tuscNauT562UaYczH8rZOZw5Q9wllC0hxqjUfg9A9S99LuRr/bchNcpbFH8LChDLAtg==
+X-Received: by 2002:a7b:cf18:: with SMTP id l24mr539788wmg.132.1553790665672;
+        Thu, 28 Mar 2019 09:31:05 -0700 (PDT)
+Received: from 640k.localdomain ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id a11sm2967165wrx.5.2019.03.28.09.31.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 09:31:05 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     npmccalum@redhat.com
+Subject: [PATCH] Documentation: kvm: clarify KVM_SET_USER_MEMORY_REGION
+Date:   Thu, 28 Mar 2019 17:31:02 +0100
+Message-Id: <1553790662-35327-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugen,
+The documentation does not mention how to delete a slot, add the
+information.
 
-On 3/28/19 4:32 PM, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> This change is a redesign in the formats and the way the ISC is
-> configured w.r.t. sensor format and the output format from the ISC.
-> I have changed the splitting between sensor output (which is also ISC input)
-> and ISC output.
-> The sensor format represents the way the sensor is configured, and what ISC
-> is receiving.
-> The format configuration represents the way ISC is interpreting the data and
-> formatting the output to the subsystem.
-> Now it's much easier to figure out what is the ISC configuration for input, and
-> what is the configuration for output.
-> The non-raw format can be obtained directly from sensor or it can be done
-> inside the ISC. The controller format list will include a configuration for
-> each format.
-> The old supported formats are still in place, if we want to dump the sensor
-> format directly to the output, the try format routine will detect and
-> configure the pipeline accordingly.
-> This also fixes the previous issues when the raw format was NULL which
-> resulted in many crashes for sensors which did not have the expected/tested
-> formats.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Reported-by: Nathaniel McCallum <npmccallum@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ Documentation/virtual/kvm/api.txt | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-I'm getting a few smatch warnings/errors:
+diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
+index f39969d0121e..67068c47c591 100644
+--- a/Documentation/virtual/kvm/api.txt
++++ b/Documentation/virtual/kvm/api.txt
+@@ -1114,14 +1114,12 @@ struct kvm_userspace_memory_region {
+ #define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
+ #define KVM_MEM_READONLY	(1UL << 1)
+ 
+-This ioctl allows the user to create or modify a guest physical memory
+-slot.  When changing an existing slot, it may be moved in the guest
+-physical memory space, or its flags may be modified.  It may not be
+-resized.  Slots may not overlap in guest physical address space.
+-Bits 0-15 of "slot" specifies the slot id and this value should be
+-less than the maximum number of user memory slots supported per VM.
+-The maximum allowed slots can be queried using KVM_CAP_NR_MEMSLOTS,
+-if this capability is supported by the architecture.
++This ioctl allows the user to create, modify or delete a guest physical
++memory slot.  Bits 0-15 of "slot" specify the slot id and this value
++should be less than the maximum number of user memory slots supported per
++VM.  The maximum allowed slots can be queried using KVM_CAP_NR_MEMSLOTS,
++if this capability is supported by the architecture.  Slots may not
++overlap in guest physical address space.
+ 
+ If KVM_CAP_MULTI_ADDRESS_SPACE is available, bits 16-31 of "slot"
+ specifies the address space which is being modified.  They must be
+@@ -1130,6 +1128,10 @@ KVM_CAP_MULTI_ADDRESS_SPACE capability.  Slots in separate address spaces
+ are unrelated; the restriction on overlapping slots only applies within
+ each address space.
+ 
++Deleting a slot is done by passing zero for memory_size.  When changing
++an existing slot, it may be moved in the guest physical memory space,
++or its flags may be modified, but it may not be resized.
++
+ Memory for the region is taken starting at the address denoted by the
+ field userspace_addr, which must point at user addressable memory for
+ the entire memory slot size.  Any object may back this memory, including
+-- 
+1.8.3.1
 
-drivers/media/platform/atmel/atmel-isc.c:1368 isc_try_fmt() error: we previously assumed 'sd_fmt' could be null (see line 1343)
-drivers/media/platform/atmel/atmel-isc.c:1078:35: warning: variable 'rgb' set but not used [-Wunused-but-set-variable]
-drivers/media/platform/atmel/atmel-isc.c:1078:22: warning: variable 'yuv' set but not used [-Wunused-but-set-variable]
-
-Can you take a look?
-
-Thanks!
-
-	Hans
