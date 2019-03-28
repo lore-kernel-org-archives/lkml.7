@@ -2,149 +2,239 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75988C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20F8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E83204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8976E204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:20:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZvV6KozN"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="usr4vJrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfC1MTa (ORCPT
+        id S1727008AbfC1MUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 08:19:30 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40309 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbfC1MTa (ORCPT
+        Thu, 28 Mar 2019 08:20:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37265 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfC1MUN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 08:19:30 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c207so11271815pfc.7;
-        Thu, 28 Mar 2019 05:19:29 -0700 (PDT)
+        Thu, 28 Mar 2019 08:20:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w10so22623447wrm.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 05:20:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ccKjxaYI4BX4AIG+J6k9XiYkdy20yjoZxzYLD96dIhI=;
-        b=ZvV6KozNlSGD/m9jUR92c7w1UpZKkhH9tOFv51+eoDA3gM1Q9GRf3GVRmkic/sE36h
-         3isUtfUVaNN3W0p8+5vjypGAOJsP71+k54+nndzT+BZQuGO5UGoUJJXFFscpvdRaRRt8
-         6aJfKO2MWfMWwuUnsBbMtWXZ0L8Ufco0ffxXdob7zxSarskjcLiRgbRbquU7Rb31F8t7
-         UdXzVmomrWPMqrT80rhkCIgkg1QBu3YhRJJoWQbJ6fq32f6P7fLwS3YCxFus6gQE+0ZD
-         OrohZrXTdLnARg8EW4WMKMB20gYUx3Xg+65NxTr2/e11Xk3jUHoyzk8rP9/gehpIwXuZ
-         dbvg==
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w729XfcWa280YbjvvtMLFS8tEwV4jIbYSPvQEm+Pk7k=;
+        b=usr4vJrQenZYPTPV0ujBlAzQf9E5A+6cwO8FYgiKnadirjg8lsWFEMGEv4m6Tvvr8f
+         rmo3Iv+KWV6SaihBAor+8i5jd0CXfhygzV0RdZeM8nRtr3qBeavop5ErxZ2qMpjbpe3m
+         0vp99EfpPbIXLNz2wTq4I3ZyVu6bpcrYbLLZSdYatqsi/5laOfdLyEv3uQ2ttCC0/4J0
+         w5zOUE/p+VyMxVWRWs5fxs0mf0rkqhgoQAaarEWY8UCoIQgQmkbQf3f6JkkJhT82Lxmr
+         vtcrPWWETH3cftrcpCXnWpGx4G4ypQfOgeNySGQk7m409MugYJL/iStFTKuCWTOi9JnY
+         WmQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ccKjxaYI4BX4AIG+J6k9XiYkdy20yjoZxzYLD96dIhI=;
-        b=ochwcM/plpJdBMtEDvvCdi4iAqPxlxNjNelA88eeFNQ3QrFqi3yIa7RWPmohEprnsV
-         9zdAl9QiGq3IQWGlbUTLFhKyXn+grE9kr5MmarqLXgcQ3PJvDrAQ6+20fnzspLoyTJJJ
-         nfDLIPv613uFla6BoKgF5XQUitg3tNWujI+Vie+YZBTpaQ478IxhLy23jUEfcxetiWY3
-         G6FLwNMCmZV+zVvkROVGsMVHDYICzS8xj7cvJWCMzF3DqUxRQH4cmMYXdp8wFci0L/Kq
-         /Gu0F2mZMXCWp2q8O4yxWFbr9EVXNVh7WFeN4sEaOyTc0d+s+IZbbtmwnHFY46y+e7Ei
-         AKeA==
-X-Gm-Message-State: APjAAAUnJuAG0J4watsHLGOsh5MelViMey9kKOp78dMdjkdjpBMlShWl
-        YE67PcKIn7TEqF21DtPZjg/Axv4K
-X-Google-Smtp-Source: APXvYqwfF/6F1eysAJQt4Vlo3EZSl4PUS2cKiWKhjwNSaf8Y3Y0FyVWWIf3dvPRarAlzY1TW6lhNZQ==
-X-Received: by 2002:a63:145b:: with SMTP id 27mr39056385pgu.74.1553775569596;
-        Thu, 28 Mar 2019 05:19:29 -0700 (PDT)
-Received: from vultr.guest ([45.32.62.99])
-        by smtp.gmail.com with ESMTPSA id h10sm5125480pfj.79.2019.03.28.05.19.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 05:19:28 -0700 (PDT)
-From:   raymond pang <raymondpangxd@gmail.com>
-To:     axboe@kernel.dk
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] libata: fix using DMA buffers on stack
-Date:   Thu, 28 Mar 2019 12:19:25 +0000
-Message-Id: <20190328121925.15488-1-raymondpangxd@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w729XfcWa280YbjvvtMLFS8tEwV4jIbYSPvQEm+Pk7k=;
+        b=EX6fTt2OGkeGEVYI8ZZVu64Ezx/bDPcIIUhy2Izy8K7MMu/7b2pCSeBSrZpYQ0kEM7
+         L1GKbdQMZSdnS/sBGpGBSsXN7uQmV3k/1bma4Q8NPL7zrYh663ZdVfEL8yo2AsRycI24
+         TaQpJR+WJZZp0P0nxV4Sq+a9kP07DeSDgDwwqrscCB8oT1c/oyGcNHGLIomWvPxrQOGS
+         rKwMOIw9Hf/15MS11tO9/ZY30kuiLBY3iELmcWgUM8zf4BU4UWhOcJ1o+SJ0O2mLmQSu
+         PqHIOq6fKwd/f5CbEdTnesOiEXxWSad6KxHcJobppK+ZXvYb5gLjcHoBUGxMB5opYuF8
+         TU/g==
+X-Gm-Message-State: APjAAAUA6pCLjz8I1I5UwOvxELLMY1P5xOP+y/JKVDNkTgIL9kqEY1Pn
+        edbpwqEEJvwzM2JgrhAvP1G3EkOD+wWUdLZ+w5Au+A==
+X-Google-Smtp-Source: APXvYqzVa7hJ90MP5OhuidVebrznMsJioEu6sY9jf9V5Ktvsnsq1PHqd8NdnV8ACl0QAIqwjKBS/PRVpUEkrgB4veNs=
+X-Received: by 2002:a5d:4a43:: with SMTP id v3mr28782485wrs.126.1553775610847;
+ Thu, 28 Mar 2019 05:20:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAB4CAwc-SFtw4+74Qe-vX57JRGDjJMt9xM2+ev3OiipzwxBPBw@mail.gmail.com>
+ <20171116124431.GS17200@lahna.fi.intel.com> <CAB4CAwfHx8DgCYk0piVnrTa7YP2=6A8Le4ekoENFPyNVF9g1rw@mail.gmail.com>
+ <20171117064904.GZ17200@lahna.fi.intel.com> <CAB4CAwdGQjXc6gsswyCgLTfFRN9CgcC=OJ6pz4rX-HCn8AT-TQ@mail.gmail.com>
+ <20171121105205.GP22431@lahna.fi.intel.com> <CAB4CAwcjXi=YX+0PEC6wBdfAZ=am+BceB4HCFzTXzdts_FE2vQ@mail.gmail.com>
+ <20171121120422.GR22431@lahna.fi.intel.com> <CAD8Lp444FNHZh6fLUfhfp1i_UBpMbS5QuvJ4FuZn7PKH1Ucy=A@mail.gmail.com>
+ <20190327172940.GR3622@lahna.fi.intel.com> <20190328091729.GV9224@smile.fi.intel.com>
+ <CAD8Lp44xuzHj4uu3a-Y9wscSyEmuG6=nbww6T9-9FaYZT_qYsw@mail.gmail.com>
+In-Reply-To: <CAD8Lp44xuzHj4uu3a-Y9wscSyEmuG6=nbww6T9-9FaYZT_qYsw@mail.gmail.com>
+From:   Chris Chiu <chiu@endlessm.com>
+Date:   Thu, 28 Mar 2019 20:19:59 +0800
+Message-ID: <CAB4CAwfH237-EUgfyR8-KWKo0HJOf=QkxiNjkBRg+gBpbKiM7g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: intel: save HOSTSW_OWN register over suspend/resume
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_VMAP_STACK=y, __pa() returns incorrect physical address for
-a stack virtual address. Stack DMA buffers must be avoided.
+On Thu, Mar 28, 2019 at 5:38 PM Daniel Drake <drake@endlessm.com> wrote:
+>
+> On Thu, Mar 28, 2019 at 5:17 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > Hmm... Can you confirm that laptop you declared as a fixed case and the
+> > mentioned here is the same one?
+>
+> They are definitely not the same exact unit - originally we had a
+> pre-production sample, and now we briefly diagnosed a real production
+> unit that was sold to a customer. There could be subtle motherboard
+> variations as you mention.
+>
+> > If it's the case, I recommend to ping Asus again and make them check and fix.
+>
+> We'll keep an eye open for any opportunities to go deeper here.
+> However further investigation on both our side and theirs is blocked
+> by not having any of the affected hardware (since the models are now
+> so old), so I'm not very optimistic that we'll be able to make
+> progress there.
+>
+> > Meanwhile, Mika's proposal sounds feasible and not so intrusive. We may
+> > implement this later on.
+>
+> Chris will work on implementing this for your consideration.
+>
+> Thanks for the quick feedback!
+> Daniel
 
-Signed-off-by: raymond pang <raymondpangxd@gmail.com>
+What if I modify the patch as follows? It doesn't save HOSTSW_OWN register.
+It just toggles the bit specifically for the IRQ GPIO pin after resume when DMI
+matches.
+
 ---
- drivers/ata/libata-zpodd.c | 34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+ drivers/pinctrl/intel/pinctrl-intel.c | 67 +++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
-index b3ed8f995..173e6f2dd 100644
---- a/drivers/ata/libata-zpodd.c
-+++ b/drivers/ata/libata-zpodd.c
-@@ -52,38 +52,52 @@ static int eject_tray(struct ata_device *dev)
- /* Per the spec, only slot type and drawer type ODD can be supported */
- static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
- {
--	char buf[16];
-+	char *buf;
- 	unsigned int ret;
--	struct rm_feature_desc *desc = (void *)(buf + 8);
-+	struct rm_feature_desc *desc;
- 	struct ata_taskfile tf;
- 	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
- 			2,      /* only 1 feature descriptor requested */
- 			0, 3,   /* 3, removable medium feature */
- 			0, 0, 0,/* reserved */
--			0, sizeof(buf),
-+			0, 16,
- 			0, 0, 0,
- 	};
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c
+b/drivers/pinctrl/intel/pinctrl-intel.c
+index 8cda7b535b02..994abc5ecd32 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -19,6 +19,7 @@
+ #include <linux/pinctrl/pinmux.h>
+ #include <linux/pinctrl/pinconf.h>
+ #include <linux/pinctrl/pinconf-generic.h>
++#include <linux/dmi.h>
 
-+	buf = kzalloc(16, GFP_KERNEL);
-+	if (!buf)
-+		return ODD_MECH_TYPE_UNSUPPORTED;
-+	desc = (void *)(buf + 8);
+ #include "../core.h"
+ #include "pinctrl-intel.h"
+@@ -73,6 +74,8 @@
+
+ #define DEBOUNCE_PERIOD                        31250 /* ns */
+
++#define PINCTRL_QUIRK_KEEP_HOSTOWN     BIT(0)
 +
- 	ata_tf_init(dev, &tf);
- 	tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_DEVICE;
- 	tf.command = ATA_CMD_PACKET;
- 	tf.protocol = ATAPI_PROT_PIO;
--	tf.lbam = sizeof(buf);
-+	tf.lbam = 16;
+ struct intel_pad_context {
+        u32 padcfg0;
+        u32 padcfg1;
+@@ -112,11 +115,37 @@ struct intel_pinctrl {
+        size_t ncommunities;
+        struct intel_pinctrl_context context;
+        int irq;
++       u32 quirks;
+ };
 
- 	ret = ata_exec_internal(dev, &tf, cdb, DMA_FROM_DEVICE,
--				buf, sizeof(buf), 0);
--	if (ret)
-+				buf, 16, 0);
-+	if (ret) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
+ #define pin_to_padno(c, p)     ((p) - (c)->pin_base)
+ #define padgroup_offset(g, p)  ((p) - (g)->base)
 
--	if (be16_to_cpu(desc->feature_code) != 3)
-+	if (be16_to_cpu(desc->feature_code) != 3) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
-
--	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1)
-+	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_SLOT;
--	else if (desc->mech_type == 1 && desc->load == 0 && desc->eject == 1)
-+	} else if (desc->mech_type == 1 && desc->load == 0 &&
-+		   desc->eject == 1) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_DRAWER;
--	else
-+	} else {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
++static const struct dmi_system_id dmi_retain_hostown_table[] = {
++       {
++               .ident = "ASUSTeK COMPUTER INC. ASUS E403NA",
++               .matches = {
++                       DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
++                       DMI_MATCH(DMI_BOARD_NAME, "E403NA"),
++               },
++       },
++       {
++               .ident = "ASUSTeK COMPUTER INC. ASUS X540NA",
++               .matches = {
++                       DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
++                       DMI_MATCH(DMI_BOARD_NAME, "X540NA"),
++               },
++       },
++       {
++               .ident = "ASUSTeK COMPUTER INC. ASUS X541NA",
++               .matches = {
++                       DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
++                       DMI_MATCH(DMI_BOARD_NAME, "X541NA"),
++               },
++       },
++       { }
++};
++
+ static struct intel_community *intel_get_community(struct intel_pinctrl *pctrl,
+                                                   unsigned int pin)
+ {
+@@ -219,6 +248,32 @@ static bool intel_pad_acpi_mode(struct
+intel_pinctrl *pctrl, unsigned int pin)
+        return !(readl(hostown) & BIT(gpp_offset));
  }
 
- /* Test if ODD is zero power ready by sense code */
---
-2.19.1
++static void intel_pad_force_hostown(struct intel_pinctrl *pctrl,
+unsigned int pin)
++{
++       const struct intel_community *community;
++       const struct intel_padgroup *padgrp;
++       unsigned int offset, gpp_offset;
++       void __iomem *hostown;
++
++       community = intel_get_community(pctrl, pin);
++       if (!community)
++               return;
++       if (!community->hostown_offset)
++               return;
++
++       padgrp = intel_community_get_padgroup(community, pin);
++       if (!padgrp)
++               return;
++
++       gpp_offset = padgroup_offset(padgrp, pin);
++       offset = community->hostown_offset + padgrp->reg_num * 4;
++       hostown = community->regs + offset;
++
++       writel(readl(hostown) | BIT(gpp_offset), hostown);
++
++       return;
++}
++
+ static bool intel_pad_locked(struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+        struct intel_community *community;
+@@ -1318,6 +1373,11 @@ int intel_pinctrl_probe(struct platform_device *pdev,
+        pctrl->soc = soc_data;
+        raw_spin_lock_init(&pctrl->lock);
 
++       if (dmi_first_match(dmi_retain_hostown_table)) {
++               pctrl->quirks |= PINCTRL_QUIRK_KEEP_HOSTOWN;
++               dev_info(&pdev->dev, "enabling KEEP_HOSTOWN quirk on
+this hw\n");
++       }
++
+        /*
+         * Make a copy of the communities which we can use to hold pointers
+         * to the registers.
+@@ -1549,6 +1609,13 @@ int intel_pinctrl_resume(struct device *dev)
+                if (!intel_pinctrl_should_save(pctrl, desc->number))
+                        continue;
+
++               if ((pctrl->quirks & PINCTRL_QUIRK_KEEP_HOSTOWN) &&
++                   intel_pad_acpi_mode(pctrl, desc->number)) {
++                       intel_pad_force_hostown(pctrl, desc->number);
++                       dev_dbg(dev, "restored hostown for pin %d\n",
++                               desc->number);
++               }
++
+                padcfg = intel_get_padcfg(pctrl, desc->number, PADCFG0);
+                val = readl(padcfg) & ~PADCFG0_GPIORXSTATE;
+                if (val != pads[i].padcfg0) {
+--
+2.21.0
