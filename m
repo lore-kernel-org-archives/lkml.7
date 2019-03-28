@@ -2,100 +2,109 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B99C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F555C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808552173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:52:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aIhxUVfl"
+	by mail.kernel.org (Postfix) with ESMTP id 76D512183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727251AbfC1QwX (ORCPT
+        id S1727417AbfC1Qwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:52:23 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:40618 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfC1QwW (ORCPT
+        Thu, 28 Mar 2019 12:52:39 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53252 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725816AbfC1Qwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:52:22 -0400
-Received: by mail-vs1-f65.google.com with SMTP id f22so8840620vso.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 09:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bbl1SNk4PvheKZz5qsYVEhUXNVYtimdQQWOJdLLlLKw=;
-        b=aIhxUVflmYcjVu2DzlplI3rw08mttvj8M2RWWI/spxGMr5ohzAQySOfMZ1Z9IkV8DN
-         o4ryUCaRNgcCEIvMevrEh93osE0GAptpa6eZxxVaNUvw4VB/CpMOzMIMMK7eFga4NMmn
-         ct4JR6xkp408qHR6LTyuutF38SnuiARMENAs0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bbl1SNk4PvheKZz5qsYVEhUXNVYtimdQQWOJdLLlLKw=;
-        b=Uqn1exZQ64AZeFUDQmmBuaMGPPjHp7liojQnNisqBY5HlCT9gBuYhPE8CF1O6dFAEj
-         6+PCptVHeAShki/ZylTLDXSPjIg5jsuMmPq43srOjMWjZTxI7vJdT0UBqpfqB1+YobzZ
-         kEFB8NMfnQ0ogBw3r9oOe5fWKndHTvJw0oKM+xwgHXolMWcV5Hbi6mO7T5hUZ0zMX5y7
-         1RUUU2w0YH6FVxkB5du1/wsR8K4DWdVULieurf3va7Da0kuhvQDrrjIiVFFh01Stc3lT
-         B4z4z0v++phW4wUM+d53CPARAYUS4X+Fx2mCWpEkjf8Jw7+VPKvUpHmnMzMP3rVRVPUN
-         6FEA==
-X-Gm-Message-State: APjAAAW2qW3JfN4BZDMiHhim1d6ucHZ8T4WRcuUtBIwHRADMopSuqsSP
-        ecuPE9oluJubpAnVd32s3yWvbP9/Gdo=
-X-Google-Smtp-Source: APXvYqz/pc7kFay1esV2p+0GceC+075tFmn0M3BTHmB5v0S6/9ejSk+hziRGsbC+pV6PfFKOGh927g==
-X-Received: by 2002:a67:dd0f:: with SMTP id y15mr14297382vsj.195.1553791941726;
-        Thu, 28 Mar 2019 09:52:21 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id 64sm7454116vkx.47.2019.03.28.09.52.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 09:52:20 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id t78so12562551vsc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 09:52:20 -0700 (PDT)
-X-Received: by 2002:a67:6983:: with SMTP id e125mr25586428vsc.222.1553791940412;
- Thu, 28 Mar 2019 09:52:20 -0700 (PDT)
+        Thu, 28 Mar 2019 12:52:39 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2SGmljU050990
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:52:37 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rh233r8b2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:52:37 -0400
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <arbab@linux.ibm.com>;
+        Thu, 28 Mar 2019 16:52:36 -0000
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Mar 2019 16:52:33 -0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2SGqW2Q15663306
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 16:52:32 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 908C5BE056;
+        Thu, 28 Mar 2019 16:52:32 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 697ABBE05D;
+        Thu, 28 Mar 2019 16:52:32 +0000 (GMT)
+Received: from arbab-laptop.localdomain (unknown [9.53.179.210])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Mar 2019 16:52:32 +0000 (GMT)
+Received: from arbab-laptop.localdomain (arbab-laptop.localdomain [IPv6:::1])
+        by arbab-laptop.localdomain (Postfix) with ESMTP id BB2534606B5;
+        Thu, 28 Mar 2019 11:52:30 -0500 (CDT)
+Date:   Thu, 28 Mar 2019 11:52:30 -0500
+From:   Reza Arbab <arbab@linux.ibm.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Dave Airlie <airlied@redhat.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Robert Tarasov <tutankhamen@chromium.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        wzabolot@elektron.elka.pw.edu.pl, Pavel Machek <pavel@ucw.cz>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Subject: Re: [PATCH 2/2] drm/fb-helper: Do not scale depth down to 0
+References: <1553288173-10845-1-git-send-email-arbab@linux.ibm.com>
+ <1553288173-10845-3-git-send-email-arbab@linux.ibm.com>
+ <CACRpkdb0i1foVhKcNiKJzrA8DYjheb8yQ1RQ3_VGniZrMiUvqQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190327145331.215360-1-joel@joelfernandes.org>
- <CAGXu5j+nhsL_s36R0k5APUfP6cNiH-BGEJu6mV6UcsP0i3gtyA@mail.gmail.com>
- <CAG48ez1vZ5cngEKVtWTL9rz_K8K25b1sMKYrNs+jn4Va3KYucw@mail.gmail.com>
- <20190328023432.GA93275@google.com> <CAG48ez2bbSYpNHcC4oucx_AG=5y4K5pZfSOfN3mxGadJGpHuQQ@mail.gmail.com>
- <20190328143738.GA261521@google.com>
-In-Reply-To: <20190328143738.GA261521@google.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 28 Mar 2019 09:52:09 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+CFmdPQd_u6=C6ew0Y-j6ihUN7yN1GpJO6V=x2_Q6kRA@mail.gmail.com>
-Message-ID: <CAGXu5j+CFmdPQd_u6=C6ew0Y-j6ihUN7yN1GpJO6V=x2_Q6kRA@mail.gmail.com>
-Subject: Re: [PATCH] Convert struct pid count to refcount_t
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Jann Horn <jannh@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CACRpkdb0i1foVhKcNiKJzrA8DYjheb8yQ1RQ3_VGniZrMiUvqQ@mail.gmail.com>
+Organization: IBM Linux Technology Center
+User-Agent: NeoMutt/20180716
+X-TM-AS-GCONF: 00
+x-cbid: 19032816-0016-0000-0000-000009985C4F
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010829; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000283; SDB=6.01180961; UDB=6.00618072; IPR=6.00961679;
+ MB=3.00026196; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-28 16:52:36
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032816-0017-0000-0000-0000429D24FB
+Message-Id: <20190328165230.dez2op5vijx6ildl@arbab-laptop.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903280112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 7:37 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> Kees can you describe more the race you had in mind?
+On Thu, Mar 28, 2019 at 05:33:31PM +0100, Linus Walleij wrote:
+>This makes perfect sense, but Dave Airlie already sent a similar
+>patch some two weeks ago, I wonder what happened with it?
+>Subject "avoid setting 0 depth".
 
-I just didn't see any barriers, so it seemed racey to me.
+Argh, that he did! I'm not subscribed to dri-devel so I didn't see that.
 
-> Also note to the on looker, the original patch I sent is not wrong, that
-> still applies and is correct. We are just discussing here any possible issues
-> with the *existing* code.
-
-Correct. And akpm has (correctly) taken this for -mm.
+Did this get lost? The other patch from that series has been applied; 
+8f3b487685b2 ("drm/udl: use drm_gem_object_put_unlocked.")
 
 -- 
-Kees Cook
+Reza Arbab
+
