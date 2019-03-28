@@ -2,154 +2,183 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03375C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6F3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F99206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:24:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553768692;
-	bh=36p/FkvvjEka8WK2i8cv1YDrl+xJsNptGsQUv7U7jHQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FNaf2lTt8iFp+2p/Bf7BtHZvMNXsFlVpYkxsMvnojD2gqEoBlnjrusmLEvWmjH3uK
-	 vQ5UqNfLVT2Dcnn/kLQpur/fJP4laH75b3funian8NKtCaoFgjHIAfZ7hxAcN6cZ1C
-	 wqMEPHm+cs7wezeLOWwvYN2UxD0Kfh3gomLIYync=
+	by mail.kernel.org (Postfix) with ESMTP id B2421206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:26:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EN1HPB+O";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DDm/evlm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfC1KYv (ORCPT
+        id S1727086AbfC1K0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 06:24:51 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42606 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfC1KYv (ORCPT
+        Thu, 28 Mar 2019 06:26:16 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47274 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbfC1K0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 06:24:51 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w139so15333484oie.9;
-        Thu, 28 Mar 2019 03:24:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cOoLOfscdDb4F8YP4gTl7EOMuBexDNHvnwwrxdjpBPA=;
-        b=Ewj4V3kpHV9HmWIAzJMZ09Ck9QEtoJ0HoSzyehkLGvcPhSIYqNC/o9nn8mOvUN7n51
-         BqrveN1M0JmZ87HPYpymYm3HuCRTUzX7TD4ioVIg4zLIKQmPCzrk0CuW6E+0oF5vLRxY
-         N4K4USvlX5e1nQubcnuEM5lWTYv9SbBXU02V1tuRQFT5Z65yKnVIDUY+FmmcnFhs50lx
-         pcx/hKeot8SEeM1VOrZakmq+8M+Ue8tORyH1Db7DzbLntnvVqx2JHKX+XY2oPH1CdFBe
-         arMO9f+nXJxodnyvE2HY1j8cqd8gJ5YTg/HfyVya57ESID/B3cec7md+PN+Oq8ELOtr3
-         Vd8Q==
-X-Gm-Message-State: APjAAAU7ion+BxdLUlclFofpMAf0/GoGQyDsEKTF6kj+J8f0d7RoC1Cj
-        sAf9a37mYN4QdXzgxnehAsalirrAaPHHNjl8nGQ=
-X-Google-Smtp-Source: APXvYqyxt0KObdeEdMPX0SrjjcEsEPGTf/SiTwWbTOy2LzdMAqufKUhdvrewmqxldZefswwMHhRdCotxW6x3jbopnH0=
-X-Received: by 2002:aca:5c55:: with SMTP id q82mr22611472oib.95.1553768690692;
- Thu, 28 Mar 2019 03:24:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <11953735.uMqeHy63Iu@aspire.rjw.lan> <2864116.v8IU97Resm@aspire.rjw.lan>
- <20190328094823.y6gyfb6ldq43gojw@queper01-lin>
-In-Reply-To: <20190328094823.y6gyfb6ldq43gojw@queper01-lin>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 28 Mar 2019 11:24:39 +0100
-Message-ID: <CAJZ5v0jx6ZsYaq=YtYfGFDACkT4Gg=mf+hSBOT_RQeMo7AaM3w@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] cpufreq: schedutil: Simplify iowait boosting
-To:     Quentin Perret <quentin.perret@arm.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 28 Mar 2019 06:26:16 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 895A86119F; Thu, 28 Mar 2019 10:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553768774;
+        bh=tgJEMTs5G3AAfrHvrS+Zav4Si18pB424m7KKW0Dvv98=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EN1HPB+OXuMM9HgISuiMFYwwwCebZraee8io+rbUoixKRVjrP2gk9vPIaXstYvIqN
+         uv1g2wOBHOt77dtnxDuHhmhO9KCVWVigmigQSmibYiyI5RThE1uHgWs9eor77HXLkN
+         rOWPtQC0d6L66RxjHOHwOm853qgJE/rRRvADTN8o=
+Received: from mojha-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 65CA56118D;
+        Thu, 28 Mar 2019 10:26:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553768765;
+        bh=tgJEMTs5G3AAfrHvrS+Zav4Si18pB424m7KKW0Dvv98=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DDm/evlmhYuXbyw8craMJbggHFfDM9vVeThRB7pSsounW9RYpDIaeYXVMebsR+YZU
+         MHN87kYLdxp2go6Z3Fotx3eEdpEtZ2+E/cwBdJjIUpE3GyJzgw9Jz46p9VHWI1I/RG
+         DdJRsfwU4s0zycKjmwkpBeBA+GPFf4InWb5yFNvs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 65CA56118D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+From:   Mukesh Ojha <mojha@codeaurora.org>
+To:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mukesh Ojha <mojha@codeaurora.org>,
+        Gaurav Kohli <gkohli@codeaurora.org>,
+        Peter Hutterer <peter.hutterer@who-t.net>,
+        Martin Kepplinger <martink@posteo.de>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH RESEND -next] Input: uinput - Avoid Use-After-Free with udev lock
+Date:   Thu, 28 Mar 2019 15:55:52 +0530
+Message-Id: <1553768752-21739-1-git-send-email-mojha@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 10:48 AM Quentin Perret <quentin.perret@arm.com> wrote:
->
-> Hi Rafael,
->
-> On Tuesday 26 Mar 2019 at 12:18:00 (+0100), Rafael J. Wysocki wrote:
-> > @@ -13,6 +13,8 @@
-> >  #include <linux/sched/cpufreq.h>
-> >  #include <trace/events/power.h>
-> >
-> > +#define IOWAIT_BOOST_MIN     (SCHED_CAPACITY_SCALE / 8)
-> > +
-> >  struct sugov_tunables {
-> >       struct gov_attr_set     attr_set;
-> >       unsigned int            rate_limit_us;
-> > @@ -51,7 +53,6 @@ struct sugov_cpu {
-> >       u64                     last_update;
-> >
-> >       unsigned long           bw_dl;
-> > -     unsigned long           min;
-> >       unsigned long           max;
-> >
-> >       /* The field below is for single-CPU policies only: */
-> > @@ -303,7 +304,7 @@ static bool sugov_iowait_reset(struct sua
->
-> The comment above this function needs updating I think.
->
-> >       if (delta_ns <= TICK_NSEC)
-> >               return false;
-> >
-> > -     sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
-> > +     sg_cpu->iowait_boost = set_iowait_boost ? IOWAIT_BOOST_MIN : 0;
-> >       sg_cpu->iowait_boost_pending = set_iowait_boost;
-> >
-> >       return true;
-> > @@ -349,7 +350,7 @@ static void sugov_iowait_boost(struct su
->
-> Ditto.
+uinput_destroy_device() gets called from two places. In one place,
+uinput_ioctl_handler() it is protected under a lock udev->mutex
+but same is not true for other place inside uinput_release().
 
-I overlooked these two, thanks for pointing that out!
+This can result in a race where udev device gets freed while it
+is in use.
 
-Will send an update momentarily.
+[  160.093398] Call trace:
+[  160.093417]  kernfs_get+0x64/0x88
+[  160.093438]  kernfs_new_node+0x94/0xc8
+[  160.093450]  kernfs_create_dir_ns+0x44/0xfc
+[  160.093463]  sysfs_create_dir_ns+0xa8/0x130
+[  160.093479]  kobject_add_internal+0x278/0x650
+[  160.093491]  kobject_add_varg+0xe0/0x130
+[  160.093502]  kobject_add+0x15c/0x1d0
+[  160.093518]  device_add+0x2bc/0xde0
+[  160.093533]  input_register_device+0x5f4/0xa0c
+[  160.093547]  uinput_ioctl_handler+0x1184/0x2198
+[  160.093560]  uinput_ioctl+0x38/0x48
+[  160.093573]  vfs_ioctl+0x7c/0xb4
+[  160.093585]  do_vfs_ioctl+0x9ec/0x2350
+[  160.093597]  SyS_ioctl+0x6c/0xa4
+[  160.093610]  el0_svc_naked+0x34/0x38
+[  160.093621] ---[ end trace bccf0093cda2c538 ]---
+[  160.099041] =============================================================================
+[  160.107459] BUG kernfs_node_cache (Tainted: G S      W  O   ): Object already free
+[  160.115235] -----------------------------------------------------------------------------
+[  160.115235]
+[  160.125151] Disabling lock debugging due to kernel taint
+[  160.130626] INFO: Allocated in __kernfs_new_node+0x8c/0x3c0 age=11 cpu=2 pid=7098
+[  160.138314] 	kmem_cache_alloc+0x358/0x388
+[  160.142445] 	__kernfs_new_node+0x8c/0x3c0
+[  160.146590] 	kernfs_new_node+0x80/0xc8
+[  160.150462] 	kernfs_create_dir_ns+0x44/0xfc
+[  160.154777] 	sysfs_create_dir_ns+0xa8/0x130
+[  160.158416] CPU5: update max cpu_capacity 1024
+[  160.159085] 	kobject_add_internal+0x278/0x650
+[  160.163567] 	kobject_add_varg+0xe0/0x130
+[  160.167606] 	kobject_add+0x15c/0x1d0
+[  160.168452] CPU5: update max cpu_capacity 780
+[  160.171287] 	get_device_parent+0x2d0/0x34c
+[  160.175510] 	device_add+0x240/0xde0
+[  160.178371] CPU6: update max cpu_capacity 916
+[  160.179108] 	input_register_device+0x5f4/0xa0c
+[  160.183686] 	uinput_ioctl_handler+0x1184/0x2198
+[  160.188346] 	uinput_ioctl+0x38/0x48
+[  160.191941] 	vfs_ioctl+0x7c/0xb4
+[  160.195261] 	do_vfs_ioctl+0x9ec/0x2350
+[  160.199111] 	SyS_ioctl+0x6c/0xa4
+[  160.202436] INFO: Freed in kernfs_put+0x2c8/0x434 age=14 cpu=0 pid=7096
+[  160.209230] 	kernfs_put+0x2c8/0x434
+[  160.212825] 	kobject_del+0x50/0xcc
+[  160.216332] 	cleanup_glue_dir+0x124/0x16c
+[  160.220456] 	device_del+0x55c/0x5c8
+[  160.224047] 	__input_unregister_device+0x274/0x2a8
+[  160.228974] 	input_unregister_device+0x90/0xd0
+[  160.233553] 	uinput_destroy_device+0x15c/0x1dc
+[  160.238131] 	uinput_release+0x44/0x5c
+[  160.241898] 	__fput+0x1f4/0x4e4
+[  160.245127] 	____fput+0x20/0x2c
+[  160.248358] 	task_work_run+0x9c/0x174
+[  160.252127] 	do_notify_resume+0x104/0x6bc
+[  160.256253] 	work_pending+0x8/0x14
+[  160.259751] INFO: Slab 0xffffffbf0215ff00 objects=33 used=11 fp=0xffffffc0857ffd08 flags=0x8101
+[  160.268693] INFO: Object 0xffffffc0857ffd08 @offset=15624 fp=0xffffffc0857fefb0
+[  160.268693]
+[  160.277721] Redzone ffffffc0857ffd00: bb bb bb bb bb bb bb bb                          ........
+[  160.286656] Object ffffffc0857ffd08: 00 00 00 00 01 00 00 80 58 a2 37 45 c1 ff ff ff  ........X.7E....
+[  160.296207] Object ffffffc0857ffd18: ae 21 10 0b 90 ff ff ff 20 fd 7f 85 c0 ff ff ff  .!...... .......
+[  160.305780] Object ffffffc0857ffd28: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[  160.315342] Object ffffffc0857ffd38: 00 00 00 00 00 00 00 00 7d a3 25 69 00 00 00 00  ........}.%i....
+[  160.324896] Object ffffffc0857ffd48: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[  160.334446] Object ffffffc0857ffd58: 80 c0 28 47 c1 ff ff ff 00 00 00 00 00 00 00 00  ..(G............
+[  160.344000] Object ffffffc0857ffd68: 80 4a ce d1 c0 ff ff ff dc 32 01 00 01 00 00 00  .J.......2......
+[  160.353554] Object ffffffc0857ffd78: 11 00 ed 41 00 00 00 00 00 00 00 00 00 00 00 00  ...A............
+[  160.363099] Redzone ffffffc0857ffd88: bb bb bb bb bb bb bb bb                          ........
+[  160.372032] Padding ffffffc0857ffee0: 5a 5a 5a 5a 5a 5a 5a 5a                          ZZZZZZZZ
+[  160.378299] CPU6: update max cpu_capacity 780
+[  160.380971] CPU: 4 PID: 7098 Comm: syz-executor Tainted: G S  B   W  O    4.14.98+ #1
 
-> >       }
-> >
-> >       /* First wakeup after IO: start with minimum boost */
-> > -     sg_cpu->iowait_boost = sg_cpu->min;
-> > +     sg_cpu->iowait_boost = IOWAIT_BOOST_MIN;
-> >  }
-> >
-> >  /**
-> > @@ -389,7 +390,7 @@ static unsigned long sugov_iowait_apply(
-> >                * No boost pending; reduce the boost value.
-> >                */
-> >               sg_cpu->iowait_boost >>= 1;
-> > -             if (sg_cpu->iowait_boost < sg_cpu->min) {
-> > +             if (sg_cpu->iowait_boost < IOWAIT_BOOST_MIN) {
-> >                       sg_cpu->iowait_boost = 0;
-> >                       return util;
-> >               }
-> > @@ -826,9 +827,6 @@ static int sugov_start(struct cpufreq_po
-> >               memset(sg_cpu, 0, sizeof(*sg_cpu));
-> >               sg_cpu->cpu                     = cpu;
-> >               sg_cpu->sg_policy               = sg_policy;
-> > -             sg_cpu->min                     =
-> > -                     (SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
-> > -                     policy->cpuinfo.max_freq;
-> >       }
-> >
-> >       for_each_cpu(cpu, policy->cpus) {
-> >
->
-> Other than that, I tried a backport of this on a Pixel 3 with Snapdragon
-> 845 (which is relevant because it has tons of OPPs, so starting at 128
-> makes it ramp up faster) to check the impact on power, but the only
-> differences appeared to be in the noise margin, so it's all good :)
+So, avoid the race by taking a udev lock inside `uinput_release()`.
 
-Cool. :-)
+Change-Id: I3bbb07589b7b6e0e1b3bea572b5eb4f6b09774d6
+Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Gaurav Kohli <gkohli@codeaurora.org>
+Cc: Peter Hutterer <peter.hutterer@who-t.net>
+Cc: Martin Kepplinger <martink@posteo.de>
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
 
-> Full test results available at [1]. Note that I did enable the iowait
-> boost feature for these tests -- it is disabled by default on P3 ...
+---
+ drivers/input/misc/uinput.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thanks!
+diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
+index 26ec603f..a3fb3b1 100644
+--- a/drivers/input/misc/uinput.c
++++ b/drivers/input/misc/uinput.c
+@@ -714,9 +714,15 @@ static __poll_t uinput_poll(struct file *file, poll_table *wait)
+ static int uinput_release(struct inode *inode, struct file *file)
+ {
+ 	struct uinput_device *udev = file->private_data;
++	ssize_t retval;
++
++	retval = mutex_lock_interruptible(&udev->mutex);
++	if (retval)
++		return retval;
+ 
+ 	uinput_destroy_device(udev);
+ 	kfree(udev);
++	mutex_unlock(&udev->mutex);
+ 
+ 	return 0;
+ }
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
-> ---
-> [1] https://nbviewer.jupyter.org/gist/qperret/69c9bde13aad2d783689e78c9ba2d9bc
