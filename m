@@ -2,112 +2,88 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AECC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D633C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1551020811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:18:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="l4A1bFsV";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Drhn/Uxh"
+	by mail.kernel.org (Postfix) with ESMTP id 45DF2206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:22:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfC1KSl (ORCPT
+        id S1726266AbfC1KWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 06:18:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36814 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfC1KSl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 06:18:41 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2D509619F6; Thu, 28 Mar 2019 10:18:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553768320;
-        bh=bK6Sf2HApUV7EdOwGFUFkVAHdGlzyq0/CUNAgsIAxBs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=l4A1bFsVv1h+H93CcWioTwxuFCza7NMeU0GdkC+Rb8juhm06zjr65kh+Q8QRIdf09
-         XOFczmQCSn/q0hvvit+Qcdm1OlT+cPmZ2CjA0Ar2mlw6AmDZ7YNcBf1eFuaef1STTZ
-         0VwaSU6egd7ST5Ug0cZTiTpHqHU29uJ7vEiSMnL4=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5D7DF6194E;
-        Thu, 28 Mar 2019 10:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553768317;
-        bh=bK6Sf2HApUV7EdOwGFUFkVAHdGlzyq0/CUNAgsIAxBs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Drhn/UxhQ+kyjSSlDhgpz8sdFSVcbineJBgoqtoyGk6HhFk/P37sU9VdOr3LqEHvp
-         vsBvf4uuVooemiyGc2NChK79kYSvGDzfr7cY5zwAH3oSCPsHKF+qig4ym0M/LQALz8
-         dXNq9DD0Hn17wK5hQhNlMHULEs8Seta/8dlSV/3w=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5D7DF6194E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH][next] ASoC: fsl: fix spelling mistake: "missign" ->
- "missing"
-To:     Colin King <colin.king@canonical.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190328092816.12883-1-colin.king@canonical.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <acedd6b3-9234-390d-1626-ac02223c93cd@codeaurora.org>
-Date:   Thu, 28 Mar 2019 15:48:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 28 Mar 2019 06:22:13 -0400
+Received: from foss.arm.com ([217.140.101.70]:42024 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbfC1KWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 06:22:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4513D15AB;
+        Thu, 28 Mar 2019 03:22:12 -0700 (PDT)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE3443F59C;
+        Thu, 28 Mar 2019 03:22:09 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 10:22:08 +0000
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        will.deacon@arm.com, catalin.marinas@arm.com
+Cc:     daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
+        ionela.voinescu@arm.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] arm64: defconfig: Enable CONFIG_ENERGY_MODEL
+Message-ID: <20190328102206.doqj5fykqlld7jkd@queper01-lin>
+References: <20190328101352.25657-1-quentin.perret@arm.com>
+ <20190328101352.25657-2-quentin.perret@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190328092816.12883-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328101352.25657-2-quentin.perret@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/28/2019 2:58 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There is a spelling mistake in a dev_err message. Fix this.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-
-
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
--Mukesh
-
+On Thursday 28 Mar 2019 at 10:13:50 (+0000), Quentin Perret wrote:
+> The recently introduced Energy Model (EM) framework manages power cost
+> tables for the CPUs of the system. Its only user right now is the
+> scheduler, in the context of Energy Aware Scheduling (EAS).
+> 
+> However, the EM framework also offers a generic infrastructure that
+> could replace subsystem-specific implementations of the same concepts,
+> as this is the case in the thermal framework.
+> 
+> So, in order to prepare the migration of the thermal subsystem to use
+> the EM framework, enable it in the default arm64 defconfig, which is the
+> most commonly used architecture for IPA. This will also compile-in all
+> of the EAS code, although it won't be enabled by default -- EAS requires
+> to use the 'schedutil' CPUFreq governor while arm64 defaults to
+> 'performance'.
+> 
+> Signed-off-by: Quentin Perret <quentin.perret@arm.com>
 > ---
->   sound/soc/fsl/imx-audmix.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/sound/soc/fsl/imx-audmix.c b/sound/soc/fsl/imx-audmix.c
-> index 72e37ca6cfbb..7983bd339c01 100644
-> --- a/sound/soc/fsl/imx-audmix.c
-> +++ b/sound/soc/fsl/imx-audmix.c
-> @@ -161,7 +161,7 @@ static int imx_audmix_probe(struct platform_device *pdev)
->   	}
->   
->   	if (!audmix_np) {
-> -		dev_err(&pdev->dev, "Missign DT node for parent device.\n");
-> +		dev_err(&pdev->dev, "Missing DT node for parent device.\n");
->   		return -EINVAL;
->   	}
->   
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 2d9c39033c1a..3c09bdaaefd3 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -97,6 +97,7 @@ CONFIG_XEN=y
+>  CONFIG_COMPAT=y
+>  CONFIG_HIBERNATION=y
+>  CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
+> +CONFIG_ENERGY_MODEL=n
+
+Hmm, sorry I turned this to '=n' for testing and forgot to update the
+patch. This obviously should be '=y' ...
+
+>  CONFIG_ARM_CPUIDLE=y
+>  CONFIG_CPU_FREQ=y
+>  CONFIG_CPU_FREQ_STAT=y
+> -- 
+> 2.21.0
+> 
