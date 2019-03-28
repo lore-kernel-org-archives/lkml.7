@@ -2,163 +2,157 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BE0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5C0C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6AF121773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:46:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="IXm0uTio"
+	by mail.kernel.org (Postfix) with ESMTP id 6CCA620811
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:47:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfC1Pqc (ORCPT
+        id S1726622AbfC1Prk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:46:32 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42262 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727265AbfC1Pqb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:46:31 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b7so9809443lfg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J1rFfeVPNUL+mQFkDcYvOnRRpb0BJX1LnqaH9dlaLrA=;
-        b=IXm0uTioHR+okF+fTsHaYrYYAekPBiBJMebQE4H7r1z1k5dw+25gNWdvrlgw8xWECT
-         ukz7+d49nkLkiKYy91EhGK0XChliJF8I7WM80SM1ozdhrHg2EqzMfmb9WRHIb2ORyegh
-         JUYealFUD5PD5TUpL/sJEYJl96SgWUShs7ARIL+M5UVshzTyPsyOoCvlnjSrN6WKRp0w
-         H1FWRSpKveXpmv9abc0MHBQsvK2dIhMUZCcW8F5GKuo2U/bwo9jzwQQspVkRvukK0I3k
-         jEEhcXTmTpNEEiqYzEmrMp4nrCS60AKGRZ4631QYF6OfxyuyJWpRFIDBxakb5oML78t0
-         aUJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J1rFfeVPNUL+mQFkDcYvOnRRpb0BJX1LnqaH9dlaLrA=;
-        b=oHqnQIPFdzuI8gFzysRdYWB7KKgVT8v1cznlmLozUU2zL5myt+dAFh8DjUMGRZgMX6
-         GBlLoCAdJxg2cuxw6sKoz7mDd2MhxLkBpF1jhba6BUL3cxYrzSQ2Wm0KAs77Bk/SChD1
-         aiC77mxXEazI0o3+6sasmqq99mhyLwNuZSMVJZUXjZZSZinW/UAfZ4HEAlzKP/YZ5Sdh
-         jt4AG8l/cJ9yG730Lh+461NQm6j9URO+zbM2sT/hXVNGBWO3eH6jpvr/5+V8pYlYYvq8
-         0kw68IJlLOLlm6F613etzdz+9PeFYpk20v/x6bsBAq1b2QH+kKOI5pxaKnCAsvqO9aiP
-         YYQQ==
-X-Gm-Message-State: APjAAAWP2ZeEnfVTQLHTNwNj9wYrEQKFlfbtUjBmaw3BlCFkkDAWA7Mm
-        oW2niAfRUdhhuUhFQNa88SIRREBXsu0JFtf5bEEl
-X-Google-Smtp-Source: APXvYqwfamkxPb14Cc1V2TuMg4flLBeLIGPcDXA/dCCnkaDofWxUeAigJP0pgRGG5dXe3x8C2hdvRTi9ESq6CBnrvP0=
-X-Received: by 2002:a19:ee11:: with SMTP id g17mr21733682lfb.117.1553787989146;
- Thu, 28 Mar 2019 08:46:29 -0700 (PDT)
+        Thu, 28 Mar 2019 11:47:40 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47504 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbfC1Prk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 11:47:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00A0A80D;
+        Thu, 28 Mar 2019 08:47:40 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48C7D3F557;
+        Thu, 28 Mar 2019 08:47:38 -0700 (PDT)
+Subject: Re: [PATCH v3 0/3] PCIe Host request to reserve IOVA
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1548411231-27549-1-git-send-email-srinath.mannam@broadcom.com>
+ <c92e07d7-78b2-d4ec-bf1a-29070a9d4145@arm.com>
+ <CABe79T7BC9AO3EF23=JjYwXCHDKX5mDYSPzHfpD_tLzX6gukHg@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <741a4210-251c-9c00-d4a7-bc7ebf8cd57b@arm.com>
+Date:   Thu, 28 Mar 2019 15:47:36 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <cover.1552665316.git.rgb@redhat.com> <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
- <CAFqZXNskwTub5Bm_HZqr02VPB4s79CcgAVX8VE2vQYP07-qssg@mail.gmail.com> <20190328011202.6raixwzdimn5b4zk@madcap2.tricolour.ca>
-In-Reply-To: <20190328011202.6raixwzdimn5b4zk@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 28 Mar 2019 11:46:17 -0400
-Message-ID: <CAHC9VhQYVSrX1Ng7hZejkGSq6ZXtqi+SKmpARASJ4P2_2i3-4w@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V5 09/10] audit: add support for containerid to
- network namespaces
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Ondrej Mosnacek <omosnace@redhat.com>, nhorman@tuxdriver.com,
-        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Simo Sorce <simo@redhat.com>, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CABe79T7BC9AO3EF23=JjYwXCHDKX5mDYSPzHfpD_tLzX6gukHg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 9:12 PM Richard Guy Briggs <rgb@redhat.com> wrote:
->
-> On 2019-03-27 23:42, Ondrej Mosnacek wrote:
-> > On Fri, Mar 15, 2019 at 7:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > Audit events could happen in a network namespace outside of a task
-> > > context due to packets received from the net that trigger an auditing
-> > > rule prior to being associated with a running task.  The network
-> > > namespace could be in use by multiple containers by association to the
-> > > tasks in that network namespace.  We still want a way to attribute
-> > > these events to any potential containers.  Keep a list per network
-> > > namespace to track these audit container identifiiers.
-> > >
-> > > Add/increment the audit container identifier on:
-> > > - initial setting of the audit container identifier via /proc
-> > > - clone/fork call that inherits an audit container identifier
-> > > - unshare call that inherits an audit container identifier
-> > > - setns call that inherits an audit container identifier
-> > > Delete/decrement the audit container identifier on:
-> > > - an inherited audit container identifier dropped when child set
-> > > - process exit
-> > > - unshare call that drops a net namespace
-> > > - setns call that drops a net namespace
-> > >
-> > > See: https://github.com/linux-audit/audit-kernel/issues/92
-> > > See: https://github.com/linux-audit/audit-testsuite/issues/64
-> > > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > ---
-> > >  include/linux/audit.h | 19 ++++++++++++
-> > >  kernel/audit.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++++++--
-> > >  kernel/nsproxy.c      |  4 +++
-> > >  3 files changed, 106 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > > index fa19fa408931..70255c2dfb9f 100644
-> > > --- a/include/linux/audit.h
-> > > +++ b/include/linux/audit.h
-> > > @@ -27,6 +27,7 @@
-> > >  #include <linux/ptrace.h>
-> > >  #include <linux/namei.h>  /* LOOKUP_* */
-> > >  #include <uapi/linux/audit.h>
-> > > +#include <linux/refcount.h>
-> > >
-> > >  #define AUDIT_INO_UNSET ((unsigned long)-1)
-> > >  #define AUDIT_DEV_UNSET ((dev_t)-1)
-> > > @@ -99,6 +100,13 @@ struct audit_task_info {
-> > >
-> > >  extern struct audit_task_info init_struct_audit;
-> > >
-> > > +struct audit_contid {
-> > > +       struct list_head        list;
-> > > +       u64                     id;
-> > > +       refcount_t              refcount;
-> >
-> > Hm, since we only ever touch the refcount under a spinlock, I wonder
-> > if we could just make it a regular unsigned int (we don't need the
-> > atomicity guarantees). OTOH, refcount_t comes with some extra overflow
-> > checking, so it's probably better to leave it as is...
->
-> Since the update is done using rcu-safe methods, do we even need the
-> spin_lock?  Neil?  Paul?
+On 28/03/2019 10:34, Srinath Mannam wrote:
+> Hi Robin,
+> 
+> Thanks for your feedback. Please see my reply in line.
+> 
+> On Wed, Mar 27, 2019 at 8:32 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> On 25/01/2019 10:13, Srinath Mannam wrote:
+>>> Few SOCs have limitation that their PCIe host can't allow few inbound
+>>> address ranges. Allowed inbound address ranges are listed in dma-ranges
+>>> DT property and this address ranges are required to do IOVA mapping.
+>>> Remaining address ranges have to be reserved in IOVA mapping.
+>>>
+>>> PCIe Host driver of those SOCs has to list all address ranges which have
+>>> to reserve their IOVA address into PCIe host bridge resource entry list.
+>>> IOMMU framework will reserve these IOVAs while initializing IOMMU domain.
+>>
+>> FWIW I'm still only interested in solving this problem generically,
+>> because in principle it's not specific to PCI, for PCI it's certainly
+>> not specific to iproc, and either way it's not specific to DT. That
+>> said, I don't care strongly enough to keep pushing back on this
+>> implementation outright, since it's not something which couldn't be
+>> cleaned up 'properly' in future.
+> Iproc PCIe host controller supports inbound address translation
+> feature to restrict access
+> to allowed address ranges. so that allowed memory ranges need to
+> program to controller.
 
-As discussed, the refcount field is protected against simultaneous
-writes by the spinlock that protects additions/removals from the list
-as a whole so I don't believe the refcount_t atomicity is critical in
-this regard.
+Other PCIe host controllers work that way too - I know, because I've got 
+one here. In this particular case, it's not explicit "restriction" so 
+much as just that the window configuration controls what AXI attributes 
+are generated on the master side of the PCIe-AXI bridge, and there is no 
+default attribute. Thus if a PCIe transaction doesn't hit one of the 
+windows it simply cannot propagate across to the AXI side because the RC 
+won't know what attributes to emit. It may be conceptually a very 
+slightly different problem statement, but it still wants the exact same 
+solution.
 
-Where it gets tricky, and I can't say I'm 100% confident on my answer
-here, is if refcount was a regular int and we wanted to access it
-outside of a spinlock (to be clear, it doesn't look like this patch
-currently does this).  With RCU, if refcount was a regular int
-(unsigned or otherwise), I believe it would be possible for different
-threads of execution to potentially see different values of refcount
-(assuming one thread was adding/removing from the list).  Using a
-refcount_t would protect against this, alternatively, taking the
-spinlock should also protect against this.
+> allowed address ranges information is passed to controller driver
+> through dma-ranges DT property.
 
-As we all know, RCU can be tricky at times, so I may be off on the
-above; if I am, please provide an explanation so I (and likely others
-as well) can learn a little bit more. :)
+And ACPI has a direct equivalent of dma-ranges in the form of the _DMA 
+method - compare of_dma_get_range() and acpi_dma_get_range(). Again, 
+platforms already exist which have this kind of hardware limitation and 
+boot with both DT and ACPI.
 
--- 
-paul moore
-www.paul-moore.com
+> This feature is specific to iproc PCIe controller, so that I think
+> this change has to specific to iproc
+> PCIe driver and DT.
+
+The general concept of devices having inaccessible holes within their 
+nominal DMA mask ultimately boils down to how creative SoC designers can 
+be with interconnect topologies, so in principle it could end up being 
+relevant just about anywhere. But as I implied before, since the 
+examples we know about today all seem to be PCIe IPs, it's not all that 
+unreasonable to start with this PCI-specific workaround now, and 
+generalise it later as necessary.
+
+> Here I followed the same way how PCI IO regions are reserved
+> "iova_reserve_pci_windows". so that this
+> change also specific to PCI.
+>>
+>> One general comment I'd make, though, is that AFAIK PCI has a concept of
+>> inbound windows much more than it has a concept of gaps-between-windows,
+>> so if the PCI layer is going to track anything it should probably be the
+>> actual windows, and leave the DMA layer to invert them into the
+>> reservations it cares about as it consumes the list. That way you can
+>> also avoid the undocumented requirement for the firmware to keep the
+>> ranges property sorted in the first place.
+> This implementation has three parts.
+> 1. parsing dma-ranges and extract allowed and reserved address ranges.
+> 2. program allowed ranges to iproc PCIe controller.
+> 3. reserve list of reserved address ranges in IOMMU layer.
+> #1 and #2 are done using "of_pci_dma_range_parser_init" in present
+> iproc PCIe driver.
+> so that, I listed reserve windows at the same place.
+> #3 requires list of reserve windows so that I add new
+> variable(dma_resv) to carry these
+> reserve windows list to iommu layer from iproc driver layer.
+> The reasons to not use DMA layer for parsing dma-ranges are,
+> 1. This feature is not generic for all SOCs.
+> 2. To avoid dam-ranges parsing in multiple places, already done in
+> iproc pcie driver.
+> 3. Need to do modify standard DMA layer source code "of_dma_configure"
+> 4. required a carrier to pass reserved windows list from DMA layer to
+> IOMMU layer.
+> 5. I followed existing PCIe IO regions reserve procedure done in IOMMU layer.
+
+Sure, I get that - sorry if it was unclear, but all I meant was simply 
+taking the flow you currently have, i.e.:
+
+pcie-iproc: parse dma-ranges and make list of gaps between regions
+dma-iommu: process list and reserve entries
+
+and tweaking it into this:
+
+pcie-iproc: parse dma-ranges and make list of regions
+dma-iommu: process list and reserve gaps between entries
+
+which has the nice benefit of being more robust since the first step can 
+easily construct the list in correctly-sorted order regardless of the 
+order in which the DT ranges appear.
+
+Robin.
