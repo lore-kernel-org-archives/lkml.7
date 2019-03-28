@@ -2,237 +2,133 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E69BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36DCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CAF120823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:50:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mnl52pVw"
+	by mail.kernel.org (Postfix) with ESMTP id 9819C20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553795499;
+	bh=NHUtwjRIFTvBhyozLmJJJws+hL5MUUljHuFRyyHy30E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=elJJRt6ZlAOHMhhTeICP1fS6PR0D0PSvqlDb/idjzF6rweO4+9jkvTh//5+qVPRHZ
+	 UyYjcD2kU8QR7Zza64woAQglj7QoLwG1De2q91n829GhfLfLq9SIDfA7uPqATWz33T
+	 o3NJLesnDqN8fVLH8VW7xsdsfD8oG7TFoi398lI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfC1Ruo (ORCPT
+        id S1727682AbfC1Rvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:50:44 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35198 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbfC1Rum (ORCPT
+        Thu, 28 Mar 2019 13:51:37 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37503 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfC1Rvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:50:42 -0400
-Received: by mail-ed1-f67.google.com with SMTP id s39so12498163edb.2;
-        Thu, 28 Mar 2019 10:50:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uHElz/AtLG9+rpBu/qnPFZensihjHWt8GZ1QqUPYG2U=;
-        b=mnl52pVwpCgjQMjH1YsV2H3Vs+Ra7F55nYIawP6A76IS71tV5Qczt6dDOalx52fbsJ
-         8nK7VXAoLAwYnSQZxTAWrNi/mxcjxIka7yPa/AMTkrP9875CC2+SXTPOcoj5xs94jddj
-         p/ZM3sjwxk552auUlGE9DMNykP4rTrMSiyxUyne2GUba6EqJzcI/I0mHvEtuQ6LW7yy4
-         nMVsTmUZ5Rr1esd3SBalR/Owo/VSU1+qc3gOaGevJlPRgJyQu9DHUygIVBaWdA+nO3QR
-         0nommB4VUHeoJwPO663yMH1cn1VQ3YE6yjQSnChx0ldtGIyTX4CUpn3jwDxKaOm0z4Hm
-         RISQ==
+        Thu, 28 Mar 2019 13:51:37 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c16so19176427otn.4;
+        Thu, 28 Mar 2019 10:51:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uHElz/AtLG9+rpBu/qnPFZensihjHWt8GZ1QqUPYG2U=;
-        b=Q6HqhLHf89gZJltOM1JH1cp1Ma2NXUvezXn5h2EZlrO2ucIKtvncYoHbanxNWWlW9o
-         S32bze5iDs5f2Ws5bk4QGw9rRgiWG44jdjKu0IEjnGg1Z6zBXiuqlSwTya2f3kgmtUqR
-         tyM/sn9CVrZoqsPECqpC25DMg+jMlhGRlobECOSWWNXvLY2diq1tCljstJKvIOFeQLvj
-         AtZVCwK1GGr/BCPMimzc+W2BYi1KdIY1sBX4w5l+eKSOj6H5Bg9UwIXDt5/TuSGIfwKV
-         N4Yoj60f7uTGHaNuiLVt2yLmjpZ6LY0KoR0e/IcSLhb5QtWGu0XbeHxXjT1AdzlHATWt
-         nO0g==
-X-Gm-Message-State: APjAAAXXG7X8H+ScoFh49acmbAtK7tjjF4xn8TEmdFHB7j+59VXNGD9o
-        X8dWXq2HIAj4n+c59AmGrwkYS0id
-X-Google-Smtp-Source: APXvYqwIGm5Zz03HYQHIVB0g2CuG2FbslQB7WU/e3N5HyW1LQY9VqHsDhUFjmjEPbxx6Rq1nMc2mhw==
-X-Received: by 2002:a17:906:3c5:: with SMTP id c5mr24731270eja.24.1553795438992;
-        Thu, 28 Mar 2019 10:50:38 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id r13sm4712459edl.12.2019.03.28.10.50.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 10:50:37 -0700 (PDT)
-Subject: Re: [PATCH v4 1/4] drm: rockchip: introduce rk3066 hdmi
-To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190306224113.24853-1-jbx6244@gmail.com>
- <20190306224113.24853-2-jbx6244@gmail.com> <4125149.ebfS1HlHkS@diego>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <3f6267ba-82a6-0c58-8a2b-ebce2cb5c650@gmail.com>
-Date:   Thu, 28 Mar 2019 18:50:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6nr15hFnrNU7DCIEqf1JuRuMjrJ40wiGfDteWVuhoY4=;
+        b=i97DyXYoNVgmhc2Hrxz7beYTpigz8e9ZCJABnXxT9YBQlZH8XaH44QiuipeOO47avo
+         HrdZ/JzKwTqSA0VXWe1dxBVTSEsKWKN67taUrC9xSPcG3kRnTHbSFVnSFdh9Shd784e9
+         aVTZz3jNGbraQ8w41rTRlk+aB65uAGyy0dlAIihLtUbtXKq+PG0pXXz8pjDT7BcpXjbO
+         sZEvE4KiJBln7Hj4LU/h3lUpH4zu8I9vqttJ6mN1yV1tyQsSPp8wUK2STrcSTdEKkHtX
+         ZjMWKvRQ+Eqwlxp40a/TfQApnlcduQhCMXO/MzGogG6+aY+T3qvACMmzNOM7q4z96uRX
+         81RA==
+X-Gm-Message-State: APjAAAXuXOXPLN2dxPSA7vVdS1K1r/esC0hRaBLRvb4LCNwN/zFaRuPx
+        1P0cbsMc/Ry0h/Umu2+5+w==
+X-Google-Smtp-Source: APXvYqzlwaeVmj5o9+QiNXlXr2/9CvnmCdP/yNsjqZrjyhvCmOzwbxSN0qtb1bZM0iyyKgKfFyhFtQ==
+X-Received: by 2002:a05:6830:2009:: with SMTP id e9mr6518039otp.142.1553795496390;
+        Thu, 28 Mar 2019 10:51:36 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o83sm8838149oif.33.2019.03.28.10.51.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 10:51:35 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 12:51:35 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        jic23@kernel.org, mark.rutland@arm.com, afaerber@suse.de,
+        arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org,
+        johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de,
+        lars@metafoo.de, linux-kernel@vger.kernel.org,
+        martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org,
+        m.othacehe@gmail.com, nicolas.ferre@microchip.com,
+        pmeerw@pmeerw.net, songqiang1304521@gmail.com, treding@nvidia.com,
+        techsupport@maxbotix.com
+Subject: Re: [PATCH v3 2/4] dt-bindings: maxbotix,mb1232: Add MaxBotix i2c
+ ultrasonic rangers
+Message-ID: <20190328175134.GA15033@bogus>
+References: <20190317203526.4pcwo4gdrrng44v7@arbad>
 MIME-Version: 1.0
-In-Reply-To: <4125149.ebfS1HlHkS@diego>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190317203526.4pcwo4gdrrng44v7@arbad>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Question for Heiko cs. See below.
-Let me know if there's a need for V6?
-
-On 3/19/19 12:44 PM, Heiko Stübner wrote:
-
-> Am Mittwoch, 6. März 2019, 23:41:10 CET schrieb Johan Jonker:
-
->> +static int rk3066_hdmi_connector_get_modes(struct drm_connector *connector)
->> +{
->> +	struct rk3066_hdmi *hdmi = to_rk3066_hdmi(connector);
->> +	struct edid *edid;
->> +	int ret = 0;
->> +
-
-Is this OK or drop it?
-	hdmi->hdmi_data.sink_is_hdmi = false;
-
->> +	if (!hdmi->ddc)
->> +		return 0;
->> +
->> +	edid = drm_get_edid(connector, hdmi->ddc);
->> +	if (edid) {
->> +		hdmi->hdmi_data.sink_is_hdmi = drm_detect_hdmi_monitor(edid);
->> +		drm_connector_update_edid_property(connector, edid);
->> +		ret = drm_add_edid_modes(connector, edid);
->> +		kfree(edid);
->> +	}
->> +
-
->> +
->> +	return ret;
->> +}
-
-
-
->> +static int rk3066_hdmi_bind(struct device *dev, struct device *master,
->> +			    void *data)
->> +{
->> +	struct platform_device *pdev = to_platform_device(dev);
->> +	struct drm_device *drm = data;
->> +	struct rk3066_hdmi *hdmi;
->> +	struct resource *iores;
->> +	int irq;
->> +	int ret;
->> +
->> +	hdmi = devm_kzalloc(dev, sizeof(*hdmi), GFP_KERNEL);
->> +	if (!hdmi)
->> +		return -ENOMEM;
->> +
->> +	hdmi->dev = dev;
->> +	hdmi->drm_dev = drm;
->> +
->> +	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	if (!iores)
->> +		return -ENXIO;
->> +
->> +	hdmi->regs = devm_ioremap_resource(dev, iores);
->> +	if (IS_ERR(hdmi->regs))
->> +		return PTR_ERR(hdmi->regs);
->> +
->> +	irq = platform_get_irq(pdev, 0);
->> +	if (irq < 0)
->> +		return irq;
->> +
->> +	hdmi->hclk = devm_clk_get(dev, "hclk");
->> +	if (IS_ERR(hdmi->hclk)) {
->> +		dev_err(dev, "unable to get HDMI hclk clock\n");
->> +		return PTR_ERR(hdmi->hclk);
->> +	}
->> +
->> +	ret = clk_prepare_enable(hdmi->hclk);
->> +	if (ret) {
->> +		dev_err(dev, "cannot enable HDMI hclk clock: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	hdmi->grf = syscon_regmap_lookup_by_phandle(dev->of_node,
->> +						    "rockchip,grf");
->> +	if (IS_ERR(hdmi->grf)) {
->> +		dev_err(dev, "unable to get rockchip,grf\n");
->> +		ret = PTR_ERR(hdmi->grf);
->> +		goto err_disable_hclk;
->> +	}
->> +
->> +	/* internal hclk = hdmi_hclk / 25 */
->> +	hdmi_writeb(hdmi, HDMI_INTERNAL_CLK_DIVIDER, 25);
->> +
->> +	hdmi->ddc = rk3066_hdmi_i2c_adapter(hdmi);
->> +	if (IS_ERR(hdmi->ddc)) {
->> +		ret = PTR_ERR(hdmi->ddc);
->> +		hdmi->ddc = NULL;
->> +		goto err_disable_hclk;
->> +	}
->> +
->> +	rk3066_hdmi_set_power_mode(hdmi, HDMI_SYS_POWER_MODE_B);
->> +	usleep_range(999, 1000);
->> +	hdmi_writeb(hdmi, HDMI_INTR_MASK1, HDMI_INTR_HOTPLUG);
->> +	hdmi_writeb(hdmi, HDMI_INTR_MASK2, 0);
->> +	hdmi_writeb(hdmi, HDMI_INTR_MASK3, 0);
->> +	hdmi_writeb(hdmi, HDMI_INTR_MASK4, 0);
->> +	rk3066_hdmi_set_power_mode(hdmi, HDMI_SYS_POWER_MODE_A);
->> +
-
-The function rk3066_hdmi_register() inits an encoder and connector.
-
->> +	ret = rk3066_hdmi_register(drm, hdmi);
->> +	if (ret)
->> +		goto err_disable_hclk;
+On Sun, Mar 17, 2019 at 09:35:27PM +0100, Andreas Klinger wrote:
+> Add doc for dt binding maxbotix,mb1232. This binding is for MaxBotix
+> I2CXL-MaxSonar ultrasonic rangers which share a common i2c interface.
 > 
-> goto err_disable_i2c;
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> ---
+>  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
 > 
-> So that the i2c-adapter also gets disabled on error.
-> 
->> +	dev_set_drvdata(dev, hdmi);
->> +
->> +	ret = devm_request_threaded_irq(dev, irq, rk3066_hdmi_hardirq,
->> +					rk3066_hdmi_irq, IRQF_SHARED,
->> +					dev_name(dev), hdmi);
->> +	if (ret) {
->> +		dev_err(dev, "failed to request hdmi irq: %d\n", ret);
->> +		goto err_disable_hclk;
-> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> new file mode 100644
+> index 000000000000..0e9df87eca1d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> @@ -0,0 +1,31 @@
+> +* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
+> +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
+> +  for ranging
+> +
+> +Required properties:
+> + - compatible:		"maxbotix,mb1202",
+> +			"maxbotix,mb1212",
+> +			"maxbotix,mb1222",
+> +			"maxbotix,mb1232",
+> +			"maxbotix,mb1242",
+> +			"maxbotix,mb7040" or
+> +			"maxbotix,mb7137"
+> +
+> + - reg:			i2c address of the device, see also i2c/i2c.txt
+> +
+> +Optional properties:
+> + - interrupt-parent:	Interrupt controller to use
 
-If an error happens here the encoder and connector also have to be
-removed like in the inno driver. Is that correct?
-Change this to:
+Don't need this as it is implied and could be in the parent.
 
-goto err_cleanup_hdmi;
+Otherwise,
 
-> goto err_disable_i2c;
-> 
->> +	}
->> +
->> +	return 0;
->> +
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-What goto name would you like to have here?
-
-err_cleanup_hdmi:
-	hdmi->connector.funcs->destroy(&hdmi->connector);
-	hdmi->encoder.funcs->destroy(&hdmi->encoder);
-
-> err_disable_i2c:
-> 	i2c_put_adapter(hdmi->ddc);
-> 
->> +err_disable_hclk:
->> +	clk_disable_unprepare(hdmi->hclk);
->> +
->> +	return ret;
->> +}
->> +
-
+> +
+> + - interrupts:		Interrupt used to announce the preceding reading
+> +			request has finished and that data is available.
+> +			If no interrupt is specified the device driver
+> +			falls back to wait a fixed amount of time until
+> +			data can be retrieved.
+> +
+> +Example:
+> +proximity@70 {
+> +	compatible = "maxbotix,mb1232";
+> +	reg = <0x70>;
+> +	interrupt-parent = <&gpio2>;
+> +	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> +};
+> -- 
+> 2.11.0
