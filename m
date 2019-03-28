@@ -2,214 +2,222 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2D0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BADEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 03:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A31FA2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:58:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L0bG+1pa"
+	by mail.kernel.org (Postfix) with ESMTP id 124502075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 03:02:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbfC1C6M (ORCPT
+        id S1728102AbfC1DCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 22:58:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39173 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbfC1C6L (ORCPT
+        Wed, 27 Mar 2019 23:02:13 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:62523 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726108AbfC1DCM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 22:58:11 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f10so16963838otb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 19:58:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wpSI6OnXZCLLIwuy8Gv3SdtzWB6luYdaoCxKHcyBJ+4=;
-        b=L0bG+1paRaGP/BVlNEM3nuwmkU8vhoyjfFGsdW+6q5DWbQdWZF6Z4IzvasAhhD+S6A
-         sJNb47UNmPnkWuuDieiPrJzcZW0WMlzEbC2pvysVKU2kcKTd52ZveBUm2JHrqofkSs/c
-         5+b95P6VKsvjJyNslovfZoXCLeNrtfdJK1+FUbTtBpxGlYG03TsPGGtH4A9Q5ij3mObK
-         sD/FAt6lEzNG9y2thzucYdKytMdQSBQLHhKr9uVwlCCGeNY7rCxbVMQLdbvhXQtDwgfw
-         sbxNO374v7Vdf9ALFusAWU03YyZjO5INYWS3owUzihpZz829gpyefIMIHdXMmOAbph8g
-         PFDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wpSI6OnXZCLLIwuy8Gv3SdtzWB6luYdaoCxKHcyBJ+4=;
-        b=mMpM8Cq8l9xtHTth8ll39FOPb9GeiYpSaRzwsxzDLbk4z+gsiqT9DJGmqHH7yBujLR
-         4/O3ZnprjqjVC+890ePyUoqHyW3ZIZ6CqRzKD4eb2p2QHdNtWu3LjOlFOjPClKou+bis
-         F0ZXfy4S8K9rr2f2b0HZMNp1mj8g2BWkkdskfc2XxfurlUjFizNTGDCzSny38ERN9nVV
-         ZhnUHULkNItqi7DFiKQyL6aCCnUamIUE03tFFLbL1LlHb1HTHEf7ehE8k4fcwvOxZYqO
-         L1d3y7OnMoA4aOHVK/s989mNLovAMZxj+JFtW1DM4CD46BvZqaGWnr0pY7/KAkTc7cCM
-         KAKg==
-X-Gm-Message-State: APjAAAWBvmdeU9IJZFdXIq3DDAUnl61gGPnJ4Qk4L+jC7h5VMrd8S51y
-        0lD18AdHt9AH89hPp/ue+iOL3UkfmpIXdo5YVq89BQ==
-X-Google-Smtp-Source: APXvYqxHYl6cFVHVGgFuoMnNy2NX/G19wXrLUuixWrxQoVrV5Kv/iDPZxm0/4s2FlwL0GkOPDpudya1HyW4qtF/ebUs=
-X-Received: by 2002:a05:6830:1216:: with SMTP id r22mr3125227otp.198.1553741890809;
- Wed, 27 Mar 2019 19:58:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190327145331.215360-1-joel@joelfernandes.org>
- <CAGXu5j+nhsL_s36R0k5APUfP6cNiH-BGEJu6mV6UcsP0i3gtyA@mail.gmail.com>
- <CAG48ez1vZ5cngEKVtWTL9rz_K8K25b1sMKYrNs+jn4Va3KYucw@mail.gmail.com> <20190328023432.GA93275@google.com>
-In-Reply-To: <20190328023432.GA93275@google.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 28 Mar 2019 03:57:44 +0100
-Message-ID: <CAG48ez2bbSYpNHcC4oucx_AG=5y4K5pZfSOfN3mxGadJGpHuQQ@mail.gmail.com>
-Subject: Re: [PATCH] Convert struct pid count to refcount_t
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
+        Wed, 27 Mar 2019 23:02:12 -0400
+X-UUID: 83d7e8a1f6d1409488d79412e91c5c3f-20190328
+X-UUID: 83d7e8a1f6d1409488d79412e91c5c3f-20190328
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1031486163; Thu, 28 Mar 2019 11:02:02 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 28 Mar 2019 11:02:00 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 28 Mar 2019 11:02:00 +0800
+Message-ID: <1553742120.14682.3.camel@mtksdaap41>
+Subject: Re: [PATCH v2 04/25] drm/mediatek: add mutex sof into ddp private
+ data
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>, <airlied@linux.ie>,
+        <mark.rutland@arm.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
+        <yt.shen@mediatek.com>
+Date:   Thu, 28 Mar 2019 11:02:00 +0800
+In-Reply-To: <1553667561-25447-5-git-send-email-yongqiang.niu@mediatek.com>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1553667561-25447-5-git-send-email-yongqiang.niu@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 4E81A3F3A8CD4F7ED1DED19A6623192235DAC338F85C570E3E1EA5F03183FBFD2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 3:34 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> On Thu, Mar 28, 2019 at 01:59:45AM +0100, Jann Horn wrote:
-> > On Thu, Mar 28, 2019 at 1:06 AM Kees Cook <keescook@chromium.org> wrote:
-> > > On Wed, Mar 27, 2019 at 7:53 AM Joel Fernandes (Google)
-> > > <joel@joelfernandes.org> wrote:
-> > > >
-> > > > struct pid's count is an atomic_t field used as a refcount. Use
-> > > > refcount_t for it which is basically atomic_t but does additional
-> > > > checking to prevent use-after-free bugs. No change in behavior if
-> > > > CONFIG_REFCOUNT_FULL=n.
-> > > >
-> > > > Cc: keescook@chromium.org
-> > > > Cc: kernel-team@android.com
-> > > > Cc: kernel-hardening@lists.openwall.com
-> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > [...]
-> > > > diff --git a/kernel/pid.c b/kernel/pid.c
-> > > > index 20881598bdfa..2095c7da644d 100644
-> > > > --- a/kernel/pid.c
-> > > > +++ b/kernel/pid.c
-> > > > @@ -37,7 +37,7 @@
-> > > >  #include <linux/init_task.h>
-> > > >  #include <linux/syscalls.h>
-> > > >  #include <linux/proc_ns.h>
-> > > > -#include <linux/proc_fs.h>
-> > > > +#include <linux/refcount.h>
-> > > >  #include <linux/sched/task.h>
-> > > >  #include <linux/idr.h>
-> > > >
-> > > > @@ -106,8 +106,8 @@ void put_pid(struct pid *pid)
-> > > >                 return;
-> > > >
-> > > >         ns = pid->numbers[pid->level].ns;
-> > > > -       if ((atomic_read(&pid->count) == 1) ||
-> > > > -            atomic_dec_and_test(&pid->count)) {
-> > > > +       if ((refcount_read(&pid->count) == 1) ||
-> > > > +            refcount_dec_and_test(&pid->count)) {
-> > >
-> > > Why is this (and the original code) safe in the face of a race against
-> > > get_pid()? i.e. shouldn't this only use refcount_dec_and_test()? I
-> > > don't see this code pattern anywhere else in the kernel.
-> >
-> > Semantically, it doesn't make a difference whether you do this or
-> > leave out the "refcount_read(&pid->count) == 1". If you read a 1 from
-> > refcount_read(), then you have the only reference to "struct pid", and
-> > therefore you want to free it. If you don't get a 1, you have to
-> > atomically drop a reference, which, if someone else is concurrently
-> > also dropping a reference, may leave you with the last reference (in
-> > the case where refcount_dec_and_test() returns true), in which case
-> > you still have to take care of freeing it.
->
-> Also, based on Kees comment, I think it appears to me that get_pid and
-> put_pid can race in this way in the original code right?
->
-> get_pid                 put_pid
->
->                         atomic_dec_and_test returns 1
+Hi, Yongqiang:
 
-This can't happen. get_pid() can only be called on an existing
-reference. If you are calling get_pid() on an existing reference, and
-someone else is dropping another reference with put_pid(), then when
-both functions start running, the refcount must be at least 2.
+On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> mutex0 SOF register offset not always 0x30.
+> for mt8183, that offset will be 0x2C,
+> add this regsiter offset into private data
 
-> atomic_inc
->                         kfree
->
-> deref pid /* boom */
-> -------------------------------------------------
->
-> I think get_pid needs to call atomic_inc_not_zero() and put_pid should
-> not test for pid->count == 1 as condition for freeing, but rather just do
-> atomic_dec_and_test. So something like the following diff. (And I see a
-> similar pattern used in drivers/net/mac.c)
+I think you do two things in this patch. One is mutex0 SOF register
+offset, and another is making sof value variable. So please split this
+into two patches.
 
-get_pid() can only be called when you already have a refcounted
-reference; in other words, when the reference count is at least one.
-The lifetime management of struct pid differs from the lifetime
-management of most other objects in the kernel; the usual patterns
-don't quite apply here.
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 51 ++++++++++++++++++++++++++++------
+>  1 file changed, 42 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index 7f0d46e..495ebc5 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -42,12 +42,13 @@
+>  #define DISP_REG_CONFIG_DPI_SEL			0x064
+>  
+>  #define MT2701_DISP_MUTEX0_MOD0 0x2C
+> +#define MT2701_DISP_MUTEX0_SOF0  0x30
+>  
+>  #define DISP_REG_MUTEX_EN(n)	(0x20 + 0x20 * (n))
+>  #define DISP_REG_MUTEX(n)	(0x24 + 0x20 * (n))
+>  #define DISP_REG_MUTEX_RST(n)	(0x28 + 0x20 * (n))
+>  #define DISP_REG_MUTEX_MOD(data, n)	((data)->mutex_mod_reg + 0x20 * (n))
+> -#define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
+> +#define DISP_REG_MUTEX_SOF(data, n)	((data)->mutex_sof_reg + 0x20 * (n))
 
-Look at put_pid(): When the refcount has reached zero, there is no RCU
-grace period (unlike most other objects with RCU-managed lifetimes).
-Instead, free_pid() has an RCU grace period *before* it invokes
-delayed_put_pid() to drop a reference; and free_pid() is also the
-function that removes a PID from the namespace's IDR, and it is used
-by __change_pid() when a task loses its reference on a PID.
+Even though previous patch's indent is not aligned, I would like you to
+align this indent.
 
-In other words: Most refcounted objects with RCU guarantee that the
-object waits for a grace period after its refcount has reached zero;
-and during the grace period, the refcount is zero and you're not
-allowed to increment it again. But for struct pid, the guarantee is
-instead that there is an RCU grace period after it has been removed
-from the IDRs and the task, and during the grace period, refcounting
-is guaranteed to still work normally.
+Regards,
+CK
 
-> Is the above scenario valid? I didn't see any locking around get_pid or
-> pud_pid to avoid such a race.
->
-> ---8<-----------------------
->
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index 8cb86d377ff5..3d79834e3180 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -69,8 +69,8 @@ extern struct pid init_struct_pid;
->
->  static inline struct pid *get_pid(struct pid *pid)
->  {
-> -       if (pid)
-> -               refcount_inc(&pid->count);
-> +       if (!pid || !refcount_inc_not_zero(&pid->count))
-> +               return NULL;
->         return pid;
+>  #define DISP_REG_MUTEX_MOD2(n)	(0x34 + 0x20 * (n))
+>  
+>  #define INT_MUTEX				BIT(1)
+> @@ -149,9 +150,22 @@ struct mtk_disp_mutex {
+>  	bool claimed;
+>  };
+>  
+> +enum mtk_ddp_mutex_sof_id {
+> +	DDP_MUTEX_SOF_SINGLE_MODE,
+> +	DDP_MUTEX_SOF_DSI0,
+> +	DDP_MUTEX_SOF_DSI1,
+> +	DDP_MUTEX_SOF_DPI0,
+> +	DDP_MUTEX_SOF_DPI1,
+> +	DDP_MUTEX_SOF_DSI2,
+> +	DDP_MUTEX_SOF_DSI3,
+> +	DDP_MUTEX_SOF_MAX,
+> +};
+> +
+>  struct mtk_ddp_data {
+>  	const unsigned int *mutex_mod;
+> +	const unsigned int *mutex_sof;
+>  	unsigned int mutex_mod_reg;
+> +	unsigned int mutex_sof_reg;
+>  };
+>  
+>  struct mtk_ddp {
+> @@ -209,19 +223,35 @@ struct mtk_ddp {
+>  	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
+>  };
+>  
+> +static const unsigned int mt2712_mutex_sof[DDP_MUTEX_SOF_MAX] = {
+> +	[DDP_MUTEX_SOF_SINGLE_MODE] = MUTEX_SOF_SINGLE_MODE,
+> +	[DDP_MUTEX_SOF_DSI0] = MUTEX_SOF_DSI0,
+> +	[DDP_MUTEX_SOF_DSI1] = MUTEX_SOF_DSI1,
+> +	[DDP_MUTEX_SOF_DPI0] = MUTEX_SOF_DPI0,
+> +	[DDP_MUTEX_SOF_DPI1] = MUTEX_SOF_DPI1,
+> +	[DDP_MUTEX_SOF_DSI2] = MUTEX_SOF_DSI2,
+> +	[DDP_MUTEX_SOF_DSI3] = MUTEX_SOF_DSI3,
+> +};
+> +
+>  static const struct mtk_ddp_data mt2701_ddp_driver_data = {
+>  	.mutex_mod = mt2701_mutex_mod,
+> +	.mutex_sof = mt2712_mutex_sof,
+>  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
+>  };
+>  
+>  static const struct mtk_ddp_data mt2712_ddp_driver_data = {
+>  	.mutex_mod = mt2712_mutex_mod,
+> +	.mutex_sof = mt2712_mutex_sof,
+>  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
+>  };
+>  
+>  static const struct mtk_ddp_data mt8173_ddp_driver_data = {
+>  	.mutex_mod = mt8173_mutex_mod,
+> +	.mutex_sof = mt2712_mutex_sof,
+>  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
+>  };
+>  
+>  static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+> @@ -462,28 +492,29 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+>  	struct mtk_ddp *ddp = container_of(mutex, struct mtk_ddp,
+>  					   mutex[mutex->id]);
+>  	unsigned int reg;
+> +	unsigned int sof_id;
+>  	unsigned int offset;
+>  
+>  	WARN_ON(&ddp->mutex[mutex->id] != mutex);
+>  
+>  	switch (id) {
+>  	case DDP_COMPONENT_DSI0:
+> -		reg = MUTEX_SOF_DSI0;
+> +		sof_id = DDP_MUTEX_SOF_DSI0;
+>  		break;
+>  	case DDP_COMPONENT_DSI1:
+> -		reg = MUTEX_SOF_DSI0;
+> +		sof_id = DDP_MUTEX_SOF_DSI0;
+>  		break;
+>  	case DDP_COMPONENT_DSI2:
+> -		reg = MUTEX_SOF_DSI2;
+> +		sof_id = DDP_MUTEX_SOF_DSI2;
+>  		break;
+>  	case DDP_COMPONENT_DSI3:
+> -		reg = MUTEX_SOF_DSI3;
+> +		sof_id = DDP_MUTEX_SOF_DSI3;
+>  		break;
+>  	case DDP_COMPONENT_DPI0:
+> -		reg = MUTEX_SOF_DPI0;
+> +		sof_id = DDP_MUTEX_SOF_DPI0;
+>  		break;
+>  	case DDP_COMPONENT_DPI1:
+> -		reg = MUTEX_SOF_DPI1;
+> +		sof_id = DDP_MUTEX_SOF_DPI1;
+>  		break;
+>  	default:
+>  		if (ddp->data->mutex_mod[id] < 32) {
+> @@ -500,7 +531,8 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+>  		return;
+>  	}
+>  
+> -	writel_relaxed(reg, ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
+> +	writel_relaxed(ddp->data->mutex_sof[sof_id],
+> +		       ddp->regs + DISP_REG_MUTEX_SOF(ddp->data, mutex->id));
 >  }
+>  
+>  void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+> @@ -521,7 +553,8 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+>  	case DDP_COMPONENT_DPI0:
+>  	case DDP_COMPONENT_DPI1:
+>  		writel_relaxed(MUTEX_SOF_SINGLE_MODE,
+> -			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
+> +			       ddp->regs +
+> +			       DISP_REG_MUTEX_SOF(ddp->data, mutex->id));
+>  		break;
+>  	default:
+>  		if (ddp->data->mutex_mod[id] < 32) {
 
-Nope, this is wrong. Once the refcount is zero, the object goes away,
-refcount_inc_not_zero() makes no sense here.
 
->
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index 2095c7da644d..89c4849fab5d 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -106,8 +106,7 @@ void put_pid(struct pid *pid)
->                 return;
->
->         ns = pid->numbers[pid->level].ns;
-> -       if ((refcount_read(&pid->count) == 1) ||
-> -            refcount_dec_and_test(&pid->count)) {
-> +       if (refcount_dec_and_test(&pid->count)) {
->                 kmem_cache_free(ns->pid_cachep, pid);
->                 put_pid_ns(ns);
->         }
->
->
