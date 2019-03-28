@@ -2,125 +2,122 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE40C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A295C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AACAD2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:54:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xw3yv7uo"
+	by mail.kernel.org (Postfix) with ESMTP id 3EBB42173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfC1Uyz (ORCPT
+        id S1727589AbfC1Uzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:54:55 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44851 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfC1Uyy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:54:54 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h16so48875ljg.11;
-        Thu, 28 Mar 2019 13:54:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jr4NPlCQ0dB7/OxX6a3n/TlV+U+V8P/4RfcjP08szW8=;
-        b=Xw3yv7uoqE2kfIpS42NQRb9iPhzTgx9LF26YLrsJvbkT+nykqNqkHJfLrvK4qhGu/r
-         W1xgbsIE8VR476/L4wrngMkBFPiD7VQqdZHpzKhR6PxTwxhlJ9hvktdXNx1q9P/dh89u
-         5tWY9vja2O6WYj11Nvq24ArDg1PZZ9owfeSbE0+r6BrzcQFG3gP6XCRNMhfIRfJGvy50
-         MBdyBfNEFYOLSF4wPPk93+YMe6z2RWhzcbM0y7QRtR8wK6xisx4SA+t2Y1t1gZGbwWXc
-         cHb52telouoPS1FMerYT949HzukbHYn/fghUoumQoqI8p2WG26aXCrhWoLtp5F6bIW+J
-         Uyiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jr4NPlCQ0dB7/OxX6a3n/TlV+U+V8P/4RfcjP08szW8=;
-        b=r6rLKU2BY4kAc7XrQSs/dIfgrU0Tq0xp2oevwYMXVwRvWyslUCDukBijBqsf0KPGld
-         5t51pW/jeqH2iEiRu8J5XMbrgLsFd5fbSVPx1fZS+XBdsp//E/0f5qZOlmymeWHe6I1a
-         z+juFKCzT5qm6qnYE5I7rmFrwBFknAHTyqVEV5zs65oRusieW7qNvxjaz10fn77tfi16
-         M+akmaFM1JDZEIqTMVL7ftva0vhTYMWkQnpjAXR+Gso4zC5JDVDU9vStW0g5hgL2o2tY
-         bwvqGbqSlj9bXOIFWf77hFBWeDh7ViGCU5c8IjH9Uca/5V9xXQDs0LLQqtAMk00WmtG0
-         S98A==
-X-Gm-Message-State: APjAAAWBt7n9KTTc4juPj7W4ZTHMArfKPlUXpuspBKevR8kjcGw5WK3c
-        sJaFx3Ftqv8yUPX5BJ3+H08=
-X-Google-Smtp-Source: APXvYqzneoANKsExD2adTNfZet6/BYCaryiaJ6NqNMhWRBhaS5DyihN5qNJ/3cSQX9jss2vCrRXicg==
-X-Received: by 2002:a2e:9a49:: with SMTP id k9mr24909058ljj.84.1553806492050;
-        Thu, 28 Mar 2019 13:54:52 -0700 (PDT)
-Received: from [192.168.1.19] (blb244.neoplus.adsl.tpnet.pl. [83.28.195.244])
-        by smtp.gmail.com with ESMTPSA id 77sm27532ljc.69.2019.03.28.13.54.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 13:54:51 -0700 (PDT)
-Subject: Re: [PATCH v2 00/25] Add generic support for composing LED class
- device name
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pavel@ucw.cz
-References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
- <20190328001930.GA22901@bogus>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <46cf838b-ae41-4c0e-ba73-9a55b0ca03c0@gmail.com>
-Date:   Thu, 28 Mar 2019 21:54:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Mar 2019 16:55:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42288 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727524AbfC1Uzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 16:55:39 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C46A372665;
+        Thu, 28 Mar 2019 20:55:38 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 05C328958D;
+        Thu, 28 Mar 2019 20:55:34 +0000 (UTC)
+Subject: Re: [PATCH 12/12] locking/rwsem: Make MSbit of count as guard bit to
+ fail readlock
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+References: <20190328181106.22887-1-longman@redhat.com>
+ <20190328181106.22887-13-longman@redhat.com>
+ <CAHk-=wh7eanC+W7DpSpAsAAYeRTp3EB5qUxMnDFW3HqNQC0GFQ@mail.gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <4e923bea-0e3b-ba50-c45c-f7b281a29176@redhat.com>
+Date:   Thu, 28 Mar 2019 16:55:34 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190328001930.GA22901@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <CAHk-=wh7eanC+W7DpSpAsAAYeRTp3EB5qUxMnDFW3HqNQC0GFQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 28 Mar 2019 20:55:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/28/19 1:19 AM, Rob Herring wrote:
-> On Sun, Mar 10, 2019 at 07:28:11PM +0100, Jacek Anaszewski wrote:
->> Changes from v1:
->>
->> - improved led_parse_properties() to parse label property at first
->>    and return immediately after parsing succeeds
->> - added tool get_led_device_info.sh for retrieving LED class device's
->>    parent device related information
->> - extended LED naming section of Documentation/leds/leds-class.txt
->> - adjusted the list of LED_FUNCTION definitions according to the v1 review
->>    remarks
->> - added standard LED_COLOR_NAME definitions
->> - removed functions.h and moved both LED_FUNCTION and LED_COLOR_NAME
->>    definitions to include/dt-bindings/common.h
->> - rebased leds-as3645a changes on top of the patch switching to fwnode
->>    property API
->> - updated DT bindings to use new LED_COLOR_NAME definitions
->> - improved common LED bindings to not use address unit for sub-nodes
->>    without reg property
->>
->> Generally I still insist on deprecating label property and devicename
->> section of LED name. The tool I added for obtaining LED device name
->> proves availability of the related information in other places in
->> the sysfs. Other discussed use cases are covered in the updated
->> Documentation/leds/leds-class.txt.
->>
->> Beside that, I tried also to create macros for automatic composition
->> of "-N" suffixed LED functions, so that it would not be necessary
->> to pollute common.h with plenty repetitions of the same function,
->> differing only with the postfix. Unfortunately, the preprocessor
->> of the dtc compiler seems not to accept string concatenetation.
->> I.e. it is not possible to to the following assighment:
->>
->> function = "hdd""-1"
->>
->> If anyone knows how to obviate this shortocoming please let me know.
-> 
-> Raise the question on devicetree-compiler list. I've done my share of
-> dtc patches, but the parsing side is generally not an area I touch.
+On 03/28/2019 04:47 PM, Linus Torvalds wrote:
+> On Thu, Mar 28, 2019 at 11:12 AM Waiman Long <longman@redhat.com> wrote:
+>> With the merging of owner into count for x86-64, there is only 16 bits
+>> left for reader count. It is theoretically possible for an application to
+>> cause more than 64k readers to acquire a rwsem leading to count overflow.
+> Ahh, and here's the thing that makes 16 bits work for readers.
+>
+> I think this at a minimum needs to be made very clear in the patch
+> that actually lowered the reader count bits, but preferably this just
+> needs to be done *before* that patch, so that you don't have a point
+> in history where rwlocks are simply not reliable.
+>
+>                Linus
 
-I'll probably come up with additional property function-enumerator.
+Thanks for the suggestion. I will move this patch up in the next version.
 
--- 
-Best regards,
-Jacek Anaszewski
+Cheers,
+Longman
+
