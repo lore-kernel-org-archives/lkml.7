@@ -2,144 +2,146 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BCDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA1EC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F7DA20823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DEF420823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553792253;
+	bh=1+s1tfN1whTtmny1BbazMiPixkkQ250pXgXRihudVrU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SuGU607MoVDSIfIxLXmo13FscRtPGAOtSmRyNDNl4fpRsWh5jtTsNGrByafC3tymD
+	 ffjQng4szVT/YGZgHTS1FFK1TPEbsEl/aken7kdBEGxHsmGhJZQ+2tqnWR/MDYmdqN
+	 Rz0IJunPVM07MOl/zAEMwfNlFrrW4FmSx54IWaQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfC1Q41 (ORCPT
+        id S1727368AbfC1Q5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:56:27 -0400
-Received: from mga01.intel.com ([192.55.52.88]:54040 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfC1Q40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:56:26 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 09:56:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,281,1549958400"; 
-   d="scan'208";a="129497815"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by orsmga008.jf.intel.com with SMTP; 28 Mar 2019 09:56:22 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 28 Mar 2019 18:56:21 +0200
-Date:   Thu, 28 Mar 2019 18:56:21 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mario.Limonciello@dell.com
-Cc:     linux-kernel@vger.kernel.org, michael.jamet@intel.com,
-        YehezkelShB@gmail.com, andreas.noever@gmail.com, lukas@wunner.de,
-        davem@davemloft.net, andriy.shevchenko@linux.intel.com,
-        ckellner@redhat.com, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 00/36] thunderbolt: Software connection manager
- improvements
-Message-ID: <20190328165621.GB3622@lahna.fi.intel.com>
-References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
- <1aaab9baea4f46b481b5601dfb060104@ausx13mpc120.AMER.DELL.COM>
+        Thu, 28 Mar 2019 12:57:31 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35192 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfC1Q5b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 12:57:31 -0400
+Received: by mail-oi1-f195.google.com with SMTP id j132so16353652oib.2;
+        Thu, 28 Mar 2019 09:57:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=/QDI3NqvgJSGSPXIW7IvDe6RNu/CWYhoLpiKdFl7jMw=;
+        b=IuWnpZ9dHLr8Xk1OCZa16JKEsYvMzjG7Yk1sQxTk0RtlCb3P/T+RzLCCWyCoEZOsuy
+         wOgYrb7h/d+66TIp1SDg1ytSmo5h4TBEb5XK0rTmo2iLLLW3NRC7FQDBxe7DPJVfL6J4
+         1fsFmzKZRgIs6FiLT4MOhEpRQ6+oV0GIMxLmUtWs+X8b/lCTd5pm0pV+QYe8Yqx2FcLU
+         aTs19aGfpldHBTSj7PTY7VU8XtW8TaJQT2L9nzTw6gro3sVtzsfnshvXs1EDTicJC7T/
+         yFIjdGXLi7iJBk+uApxo2gGYJfkfy2gN6UY7H1eWtRvjMEGze+cU4ztT/0TI5Q1x5DKZ
+         d3TQ==
+X-Gm-Message-State: APjAAAVp7VHcyfLJIPmnyU3lC+BikCNIIe3jBw6j0va57zSdxOFLZWF/
+        CV26SDAGBY4hBSddsAWSXQ==
+X-Google-Smtp-Source: APXvYqwRFPpqSnT92bXhr3oZKdWHBuBfApT/maRl1Jktm0Btxgl6j2Jl8rGqv74JCHjdzKzxi81vZw==
+X-Received: by 2002:aca:f581:: with SMTP id t123mr760201oih.0.1553792250318;
+        Thu, 28 Mar 2019 09:57:30 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e186sm10058475oia.44.2019.03.28.09.57.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 09:57:29 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 11:57:29 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Johan Hovold <johan@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH RESEND v7 2/3] dt-bindings: phy: Add documentation for
+ mixel dphy
+Message-ID: <20190328165729.GA32345@bogus>
+References: <cover.1553674604.git.agx@sigxcpu.org>
+ <3319783f60fedd7f0029dd60a51c76a75003fe05.1553674604.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1aaab9baea4f46b481b5601dfb060104@ausx13mpc120.AMER.DELL.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3319783f60fedd7f0029dd60a51c76a75003fe05.1553674604.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 03:17:57PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Sent: Thursday, March 28, 2019 7:36 AM
-> > To: linux-kernel@vger.kernel.org
-> > Cc: Michael Jamet; Yehezkel Bernat; Andreas Noever; Lukas Wunner; David S .
-> > Miller; Andy Shevchenko; Christian Kellner; Limonciello, Mario; Mika Westerberg;
-> > netdev@vger.kernel.org
-> > Subject: [PATCH v3 00/36] thunderbolt: Software connection manager
-> > improvements
-> > 
-> > 
-> > [EXTERNAL EMAIL]
-> > 
-> > Hi,
-> > 
-> > This is third iteration of the patch series intending to bring same kind of
-> > functionality for older Apple systems than we have in PCs. Software
-> > connection manager is used on Apple hardware with Light Ridge, Cactus Ridge
-> > or Falcon Ridge controllers to create PCIe tunnels when a Thunderbolt
-> > device is connected. Currently only one PCIe tunnel is supported. On newer
-> > Alpine Ridge based Apple systems the driver starts the firmware which then
-> > takes care creating tunnels.
-> > 
-> > This series improves the software connection manager so that it will
-> > support:
-> > 
-> >   - Full PCIe daisy chains (up to 6 devices)
-> >   - Display Port tunneling
-> >   - P2P networking
-> > 
-> > We also add support for Titan Ridge based Apple systems where we can use
-> > the same flows than with Alpine Ridge to start the firmware.
+On Wed, Mar 27, 2019 at 09:20:00AM +0100, Guido Günther wrote:
+> Add support for the MIXEL DPHY IP as found in the NXP's i.MX8MQ.
 > 
-> It seems to me that there would be an expectation that PC system firmware and TBT controller
-> firmware is configured to behave like Apple systems to use this SW connection manager
-> instead of the ICM in AR/TR FW.
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  .../bindings/phy/mixel,mipi-dsi-phy.txt       | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
 > 
-> Is there an intent to eventually offer a way to "side-step" the TBT ICM and try to use this instead
-> without firmware support?
+> diff --git a/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+> new file mode 100644
+> index 000000000000..d3646580412a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+> @@ -0,0 +1,29 @@
+> +Mixel DSI PHY for i.MX8
+> +
+> +The Mixel MIPI-DSI PHY IP block is e.g. found on i.MX8 platforms (along the
+> +MIPI-DSI IP from Northwest Logic). It represents the physical layer for the
+> +electrical signals for DSI.
+> +
+> +Required properties:
+> +- compatible: Must be:
+> +  - "mixel,imx8mq-mipi-dphy"
 
-Yes, that's the intention.
+If you had a fallback for mixel, then it would make sense, but as this 
+is imx8mq specifc 'fsl' should be the vendor prefix.
 
-> > 
-> > This applies on top of thunderbolt.git/next.
-> > 
-> > Christian, Mario do you see any issues with patch [05/36] regarding bolt
-> > and fwupd? The kernel is supposed to restart the syscall automatically so
-> > userspace should not be affected but wanted to check with you.
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +- clock-names: Must contain the following entries:
+> +  - "phy_ref": phandle and specifier referring to the DPHY ref clock
+> +- reg: the register range of the PHY controller
+> +- #phy-cells: number of cells in PHY, as defined in
+> +  Documentation/devicetree/bindings/phy/phy-bindings.txt
+> +  this must be <0>
+> +
+> +Optional properties:
+> +- power-domains: phandle to power domain
+> +
+> +Example:
+> +	mipi_dphy: mipi_dphy@30A0030 {
+
+mipi-dphy@... or just dphy@...
+
+> +		compatible = "mixel,imx8mq-mipi-dphy";
+> +		clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
+> +		clock-names = "phy_ref";
+> +		reg = <0x30A00300 0x100>;
+> +		power-domains = <&pd_mipi0>;
+> +		#phy-cells = <0>;
+> +        };
+> -- 
+> 2.20.1
 > 
-> I don't see a problem for fwupd in this area.
-
-OK, thanks for checking.
-
-> > Previous version of the patch series can be viewed here:
-> > 
-> >   v2: https://lkml.org/lkml/2019/2/6/347
-> >   v1: https://lkml.org/lkml/2019/1/29/924
-> > 
-> > Making v3 took longer than I anticipated mostly due to some issues I run
-> > during testing the new changes. There are quite many changes so I dropped
-> > the reviewed-by tags I got for v2. Below is the list of major changes from
-> > the previous version:
-> > 
-> >   * Always set port->remote even in case of dual link connection.
-> > 
-> >   * Leave (DP, PCIe) tunnels up when the driver is unloaded. When loaded
-> >     back, it discovers the existing tunnels and updated data structures
-> >     accordingly. I noticed that the code in v2 did not support cases
-> >     properly when you unplug something before the driver gets loaded back.
-> >     This version tears down partial paths during discovery.
-> > 
-> >   * Do not automatically create PCIe tunnels. Instead we implement "user"
-> >     security level in the software connection manager as well taking
-> >     advantage of the existing sysfs interfaces. This allows user to disable
-> >     PCIe tunneling completely or implement different white listing
-> >     policies. Major distros include bolt system daemon that takes care of
-> >     this.
-> 
-> This is a bit unfortunate.  Is this because of IOMMU limitations in working
-> with devices down the chain?
-
-No, it just makes it possible to do things such as "disable all PCIe
-tunneling", like the master switch we have in GNOME UI. Even if you have
-full IOMMU support it still does not prevent misbehaving devices.
-
-This also allows other kind of whitelisting like supporting devices from
-certain "known" vendor only.
-
-IOMMU is still the primary protection against DMA attacks.
