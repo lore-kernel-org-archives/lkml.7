@@ -2,114 +2,117 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60A6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68248C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 701FF2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34FA220693
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:32:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rblwavdd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YAtJ12dy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfC1QbK (ORCPT
+        id S1727102AbfC1QcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:31:10 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53916 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfC1QbH (ORCPT
+        Thu, 28 Mar 2019 12:32:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37453 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbfC1QcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:31:07 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q16so4252775wmj.3;
-        Thu, 28 Mar 2019 09:31:06 -0700 (PDT)
+        Thu, 28 Mar 2019 12:32:19 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w10so23716803wrm.4;
+        Thu, 28 Mar 2019 09:32:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=iiCevEMImsZgRqC+/6iVwE8y+Po1ZvYFlUVr8KtDGxs=;
-        b=rblwavdd+smcxhNbM72fPuiwNqoZedqcVfC7Og2a88aHsT9PYGCmy00fG5Hmgwz+1/
-         B6FBXJCabhxSV7K8dl9a+kuOulz9n0Svm1sJjK3Fbm5uOT1xb4OoHRUSR4mxLhbUv0vz
-         4yyGSnwpDdKDFn/12jGFLosYTVyU/ZdAbK/grb76cQGvZGRVQfwVUhRRx00BULAaxzUW
-         s6iF03ANAbdz/z7/A6SUBzGdZkOby54IkqmD5vcD/pw/LTtAshug8Qfp1Ol3zUJoo/Nf
-         Effk04MA4tS8dkmNDjr9jkyrfDbqIv4TLgqc9Ij+RtnKjmp5Cx4DEiKEC79mYqaDZrZ0
-         FEAQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PovC3EuLhFga0BC5lv/9r5AZfIsaQTiIHB/zyRgwpD4=;
+        b=YAtJ12dy79W4EyseaTuaijmRj7FxvJzZr0ERNefbEC5k+c6FXlm/WOR+sfUQvgfsoy
+         fFZxP2w7YlQX9Fv9IduMi9Lme13uWf6EEo2TLs0PIqgTcMj0K/vTZy1bvuPl/Fgkn9ro
+         uB4/igdjr8CcaL/fTc7QMpokwsfwTwm3S1b9O3GOYMxfGb5vBKZH6KxZ72PN+LnixO0t
+         w5pdruGK0M8pzTEVHeosiUvJJ2nbhiHjJ4YyUE6iImgmg1rWOwIybDkHTUi1Ffor4NSd
+         i9hk9wZyuTc9tgmh1tqIqbFzxpzM6tjYe6F2LnE2s8z1HwO0wUZ3QAsebLqkICRqtMaN
+         ltyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=iiCevEMImsZgRqC+/6iVwE8y+Po1ZvYFlUVr8KtDGxs=;
-        b=jLI29c9iRrgh4nnEB/HOxLJNbZFbxCITjULcs2jilJAI/NAXGWbvVVTGCYRXyhwmg9
-         zbAT6n8JIarvgrHJzPN++2avzzX8f+iHm6soo0dfh+7hdV5dZ+KA7yJj1ezUGNcuR40b
-         OKgYY06NOBbgW1iDoa3XAbfmZK0/fK5DQFyBFHyzpC6VIPHsQ6qF9foaz5JZ+TT8Q4sN
-         BQMwX/C8bA4hX4dXlrV3YgsbOomWlVgJ6Sf9oOhEy/rdBHOGscjnPoVFvt4XzGHBKKY8
-         1Amw0X4WgmA5fhMUGxKxmMVK8BNxfUI3r2ztztx+/fR/Mi9CM1cjbKYnyU69eHD6f3gS
-         +fLQ==
-X-Gm-Message-State: APjAAAUWw2Vw9Ah80jVKBX5t3hoW9AT7hDiqGC6gOuugZOUSDpGDFhrB
-        j7Qb86ZJjLQug/ZbLWmwrHCqaLWr
-X-Google-Smtp-Source: APXvYqzVha+tuscNauT562UaYczH8rZOZw5Q9wllC0hxqjUfg9A9S99LuRr/bchNcpbFH8LChDLAtg==
-X-Received: by 2002:a7b:cf18:: with SMTP id l24mr539788wmg.132.1553790665672;
-        Thu, 28 Mar 2019 09:31:05 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a11sm2967165wrx.5.2019.03.28.09.31.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 09:31:05 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     npmccalum@redhat.com
-Subject: [PATCH] Documentation: kvm: clarify KVM_SET_USER_MEMORY_REGION
-Date:   Thu, 28 Mar 2019 17:31:02 +0100
-Message-Id: <1553790662-35327-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PovC3EuLhFga0BC5lv/9r5AZfIsaQTiIHB/zyRgwpD4=;
+        b=QTi08oRt8qDXwJGZttt+dMfCV4wJad/UrHj/+zPvQIk3ZOIK/1OvJJH+Hg2idhyq8B
+         +gQ2TK6cwx/Kuwt+KZf/hCVDYIEs4UhfgBHQCklwnoMS5tGqmaVsAvQCj68d/hOzdd07
+         77w+nWu2bWkZjrlc/47lKm1O+VmMqQ5uwJgxZDGEtjsoXIiPjBZEl31wfEBo5wALWWCr
+         5E1wzGGBS1MZTlvMWoSs9c9NO0bu0+5DscyVwtme/O5RlkuiaF0t5HXk658fzZFusOhr
+         ZvJ3NuC2A/KJkoUM96XZiN7lNHcu5zLb9En1SSKVzinRH8HFM92smvJsv4px8LH/LvsC
+         gPKA==
+X-Gm-Message-State: APjAAAUpduGZr7JZpsh/KxCsRsJp9AOsDNMzwD3ODZS02HQU7uy10ull
+        Z2RWFnxcwvOT+DLJVw28Kvs=
+X-Google-Smtp-Source: APXvYqxmP3mW/xlO0iSLBP5o0YzOH2QVpNgr980+TCqoyvv7fzVGZO8n9QfRWbQ5sIUYO92GizGCQg==
+X-Received: by 2002:a5d:63c4:: with SMTP id c4mr27055846wrw.307.1553790737481;
+        Thu, 28 Mar 2019 09:32:17 -0700 (PDT)
+Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
+        by smtp.gmail.com with ESMTPSA id 7sm85610282wrc.81.2019.03.28.09.32.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 09:32:16 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 17:32:15 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, treding@nvidia.com,
+        jonathanh@nvidia.com, josephl@nvidia.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: tegra: dts: enable aconnect, adma and agic
+Message-ID: <20190328163215.GA31367@ulmo>
+References: <1552400705-1179-1-git-send-email-spujar@nvidia.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Content-Disposition: inline
+In-Reply-To: <1552400705-1179-1-git-send-email-spujar@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The documentation does not mention how to delete a slot, add the
-information.
 
-Reported-by: Nathaniel McCallum <npmccallum@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- Documentation/virtual/kvm/api.txt | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
-index f39969d0121e..67068c47c591 100644
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -1114,14 +1114,12 @@ struct kvm_userspace_memory_region {
- #define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
- #define KVM_MEM_READONLY	(1UL << 1)
- 
--This ioctl allows the user to create or modify a guest physical memory
--slot.  When changing an existing slot, it may be moved in the guest
--physical memory space, or its flags may be modified.  It may not be
--resized.  Slots may not overlap in guest physical address space.
--Bits 0-15 of "slot" specifies the slot id and this value should be
--less than the maximum number of user memory slots supported per VM.
--The maximum allowed slots can be queried using KVM_CAP_NR_MEMSLOTS,
--if this capability is supported by the architecture.
-+This ioctl allows the user to create, modify or delete a guest physical
-+memory slot.  Bits 0-15 of "slot" specify the slot id and this value
-+should be less than the maximum number of user memory slots supported per
-+VM.  The maximum allowed slots can be queried using KVM_CAP_NR_MEMSLOTS,
-+if this capability is supported by the architecture.  Slots may not
-+overlap in guest physical address space.
- 
- If KVM_CAP_MULTI_ADDRESS_SPACE is available, bits 16-31 of "slot"
- specifies the address space which is being modified.  They must be
-@@ -1130,6 +1128,10 @@ KVM_CAP_MULTI_ADDRESS_SPACE capability.  Slots in separate address spaces
- are unrelated; the restriction on overlapping slots only applies within
- each address space.
- 
-+Deleting a slot is done by passing zero for memory_size.  When changing
-+an existing slot, it may be moved in the guest physical memory space,
-+or its flags may be modified, but it may not be resized.
-+
- Memory for the region is taken starting at the address denoted by the
- field userspace_addr, which must point at user addressable memory for
- the entire memory slot size.  Any object may back this memory, including
--- 
-1.8.3.1
+On Tue, Mar 12, 2019 at 07:55:04PM +0530, Sameer Pujar wrote:
+> Enable aconnect, adma and agic for Tegra Jetson TX1.
+>=20
+> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 
+Applied to for-5.2/arm64/dt, thanks.
+
+Thierry
+
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyc9w0ACgkQ3SOs138+
+s6GPkRAAsHTq0EGmjGMqcTVmJfdXUIIJeDv6vk1RBhXVgg9si8SlLtTm7JDM55DR
+XASpL4NBzMPwZ6iKAmfWcaCbA9CXlNaIjjKyHZVVdy5g4wjXtphsKPgtXXMT5QTl
+Z10XZvN8/QsSsV6l4Br4ZBmJCy0Hqti7IvymNN5CU3uBnf6Nk+OE+4vb0+eKR4SU
+6GOZ1Cf4WgnZzLWMceQhSALvpGewgeHKNQIgAAKuJj7bncsl5XcYxijO5fMwun5w
+1P0hcWbcXk5KBuGrIN6z1nFZPq5w04MMMGDTsk23DGxF2G5a2VBPGbH8ja/NrfU8
+6DOF93JFwFY8M+pMbdvbgfbDMQLQCg49ctU4IT68smDjXpt30sgg0Ru3W7Bxark7
+2lcHF+Iohib5MFxLs+xbSQ+SEFMpRXX/iaJ55Pr+ObL0yBGWDTsgQdzDJf6BXRKd
+RIngYTLsdge+NOYyz8c2QZaWppbFz/VUWGHFauTzMeEu3o4YG4VFyg2u9PFiHWK9
+XNS4pe8HOa2dB5dKs2XoRk3kp4EosMfJf+e/7RFupoDiZUvleiUAx0uSoYl3sLPU
+51sFKfaOV7y+vpsG2yE/hXlHxKfQkhrBuqop/3FWb0iKlnGXUS4R+uYcRjOyd0E6
+UKThMNtY1nyM9YcQtqSkOY7Igg8oRrGJoLcdtIlKud8Wwvp8YzY=
+=vQrx
+-----END PGP SIGNATURE-----
+
+--Q68bSM7Ycu6FN28Q--
