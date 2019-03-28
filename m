@@ -2,106 +2,146 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459E1C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9476AC10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C77220700
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:38:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="Hrfx+TVX"
+	by mail.kernel.org (Postfix) with ESMTP id 678192184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:38:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553798326;
+	bh=eR32QZ2WtNp93/AOs/PXLYuM8TVJxmH6h+0GLECIZWY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E43WL8YovcRtlvXGnGO6iLut9Pq3hvRmfzGmPhLV6VBc1nbqSlrBxNEuT/yB24LwJ
+	 aiF8EfqRKnvqUK9L7KzuqVB1j2RTE/8RyCC5cl8yRwG9eghBaiuMNOapLUTSg68Z4U
+	 PyOPjPgw7gA/vtEXqUmSlfnD4yEBygqrLBwNmExU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfC1Sib (ORCPT
+        id S1726443AbfC1Sip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 14:38:31 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36649 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfC1Sia (ORCPT
+        Thu, 28 Mar 2019 14:38:45 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44082 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbfC1Sio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 14:38:30 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 85so978559pgc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:38:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4HgwLPeP0qqBX11bWu5yNsHrwRKeRYbfEdwOA4/zC80=;
-        b=Hrfx+TVXtP1YJ63SWkJ55zSFAxpNSAyIYL7yJbEKf92yCTm4GH3qbX5ggWeF0nizrx
-         /nJnrvlJ8323hu9UyTRjbDjHHn/OVzkMqBEYXjzi5vxAavRr+SwImmfsxLe0JZnF68Rq
-         I6kQhT1ReaQriWi+gvBO09pPpaFoWfiifIrqOOLNyirzPMlzYdf1JiKwzS1T/vnn/umM
-         yHKYCEEVjiRNDCwG+zXIRGYb1iZnl6e60uXYH1C0DNS4l+E5sg3qbGzdnonFjr6tMZu9
-         OK8ZYNPrlTkB8o+lNWmxiKcsa5nyVcLsc8Wn2OR9f98Ike9A2ZDDDC/iu58hCBMAz3eM
-         idMw==
+        Thu, 28 Mar 2019 14:38:44 -0400
+Received: by mail-oi1-f196.google.com with SMTP id i21so16584379oib.11;
+        Thu, 28 Mar 2019 11:38:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4HgwLPeP0qqBX11bWu5yNsHrwRKeRYbfEdwOA4/zC80=;
-        b=DssvetBRer0nb6eDDU1oIw4Ro+rhwOW/09z901tjd+fMRXekXkF2u+qk1erbhY7sGL
-         kwc9ufC+ncP6V6r0efjZw3vf4BJHk3vxhTdB0DGOSwjQKZLZpy6fxOZk+FrsZh5EiBDp
-         eZL6iJMk4j9fr5QdmED+Pt+hl0aPLKBZF3RvM0bgDtI00zm4y/EsMjIIGUnvBfq5QIH8
-         RvykwT3Gjk2v2YJ8Z/BLmcPd4Z/AMEn3bmXs55Wu83FtKcYGCCPUfqk8Q4O9cO6oypdv
-         MH6z6nwyNQVe5uac2Tm7ePSdosU4t6YwtbzwbXIBkf6fvr98I/soBeRqm5SSR2I9HVQH
-         DgiA==
-X-Gm-Message-State: APjAAAVpQzG9NS11AYbnwi7CxaXDWzEkVM3Df1jsb7oo3NRxtL4w8VbO
-        AaP2qimNnD8lkRGr+CziNmL4jw==
-X-Google-Smtp-Source: APXvYqx6nRklFUwe7sou9TUHY57Ksq3AeQythrMrdXdTXNrlId1MD02ctcp3Jrz6RJHVkP3mR52G/A==
-X-Received: by 2002:a63:4b14:: with SMTP id y20mr1366619pga.15.1553798309455;
-        Thu, 28 Mar 2019 11:38:29 -0700 (PDT)
-Received: from shemminger-XPS-13-9360 (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id g67sm39468578pfg.94.2019.03.28.11.38.28
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CqbjMfLF5yty5z0sWtkYupJ+LsMShcu40O3GKLLil0k=;
+        b=fyERlPFGOFZqU82B2z5B7e4aIARt5V6A19DERNmXbqlCSvDRdKIySSyChUq4pzA/zQ
+         AkhtQj1R0UtsjoAsjWy6bTAOC233RH4HWYDnUpnutjzczuM1418IF7WS7P+YGG65lK01
+         E+zPswg35JISoJ/YrACrtL2evmpZvnTrAC0RVk1Y9vOGtCl/LlV/RMsqEoZcR+ZuNgFX
+         fzbM6WAPtwOdwY6ab+RrGwbR1EBsPcGhQwNCrFDm+y3jyRNC/tIFKefJpze2ZG09Eh5l
+         cj/DpvvfxZ1hqQmTC3Id/RDqOTYOsEZyt+7R4uIuhsXAxq/Akd1fTXCWGFiGDkapFao6
+         zPWA==
+X-Gm-Message-State: APjAAAUjlbW9QYHSAveB6BiCNSaKx0oh1J7GrHdFUof19qAM/A+yrjNm
+        +q0u57s+tiyuwGVsq8/VCQ==
+X-Google-Smtp-Source: APXvYqw8OQeTIDAN8XvE7tbypYPit/cLN8EQv3uIhGjZUFSbW5W8gAvZDtLpbiVX1PrKNGpdrPUN2Q==
+X-Received: by 2002:aca:eb93:: with SMTP id j141mr1006726oih.178.1553798323660;
+        Thu, 28 Mar 2019 11:38:43 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s185sm9938851oif.30.2019.03.28.11.38.42
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 11:38:29 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 11:38:23 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Haiyang Zhang <haiyangz@linuxonhyperv.com>
-Cc:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH hyperv-fixes] hv_netvsc: Fix unwanted wakeup after
- tx_disable
-Message-ID: <20190328113823.3c9b3599@shemminger-XPS-13-9360>
-In-Reply-To: <20190328174845.4799-1-haiyangz@linuxonhyperv.com>
-References: <20190328174845.4799-1-haiyangz@linuxonhyperv.com>
+        Thu, 28 Mar 2019 11:38:42 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 13:38:42 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Ibtsam Ul-Haq <ibtsam.haq.0x01@gmail.com>
+Cc:     jic23@kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] dt-bindings: iio: Add bindings for TI TLA202x ADCs
+Message-ID: <20190328183842.GA9079@bogus>
+References: <1553608583-29006-1-git-send-email-ibtsam.haq.0x01@gmail.com>
+ <1553608583-29006-2-git-send-email-ibtsam.haq.0x01@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553608583-29006-2-git-send-email-ibtsam.haq.0x01@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Mar 2019 17:48:45 +0000
-Haiyang Zhang <haiyangz@linuxonhyperv.com> wrote:
-
-> +static inline void netvsc_tx_enable(struct netvsc_device *nvscdev,
-> +				    struct net_device *ndev)
-> +{
-> +	nvscdev->tx_disable = false;
-> +	mb(); /* ensure queue wake up mechanism is on */
+On Tue, Mar 26, 2019 at 02:56:20PM +0100, Ibtsam Ul-Haq wrote:
+> This adds devicetree bindings for TI TLA202x ADCs.
+> 
+> Signed-off-by: Ibtsam Ul-Haq <ibtsam.haq.0x01@gmail.com>
+> ---
+>  .../devicetree/bindings/iio/adc/ti-tla2024.txt     | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-tla2024.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-tla2024.txt b/Documentation/devicetree/bindings/iio/adc/ti-tla2024.txt
+> new file mode 100644
+> index 0000000..a4934df
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/ti-tla2024.txt
+> @@ -0,0 +1,45 @@
+> +Texas Instruments' TLA2021/TLA2022/TLA2024 12-bit ADC driver
 > +
-> +	netif_tx_wake_all_queues(ndev);
-> +}
+> +Required properties:
+> +
+> +- compatible: should be one of:
+> +  "ti,tla2024"
+> +  "ti,tla2022"
+> +  "ti,tla2021"
+> +
+> +- reg: should contain the I2C Address of the device
+> +
+> +Required subnodes:
+> +
+> +The ADC channels are configured as subnodes of the ADC.
+> +The channels can be single-ended or differential, the input pins are
+> +also set in the subnode.
+> +
+> +Possible channels in TLA2024:
+> +  single: <0>, <1>, <2>, <3>
+> +  differential: <0 1>, <0 3>, <1 3>, <2 3>
+> +
+> +In TLA2021/TLA2022 only the differential channel <0 1> is allowed.
+> +
+> +Example:
+> +
+> +tla2024_0: adc0@49 {
 
-You don't need a full mb(). virt_wmb() should be sufficient.
+adc@49
 
-Could I suggest an alternative approach.
-You don't need to introduce a local tx_disable flag, the only place where a wakeup
-could cause problems is after a send_completion was processed during detach state.
+> +	compatible = "ti,tla2024";
+> +	reg = <0x49>;
+> +
+> +	v0@0 {
 
-Instead, just avoid wakeup in that place.
+Unit-address without 'reg' is not valid.
 
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -720,6 +720,7 @@ static void netvsc_send_tx_complete(struct net_device *ndev,
-                struct netdev_queue *txq = netdev_get_tx_queue(ndev, q_idx);
- 
-                if (netif_tx_queue_stopped(txq) &&
-+                   netif_device_present(ndev) &&
-                    (hv_get_avail_to_write_percent(&channel->outbound) >
-                     RING_AVAIL_PERCENT_HIWATER || queue_sends < 1)) {
-                        netif_tx_wake_queue(txq);
+> +		single-channel = <0>;
+
+Look at the common adc binding or adi,ad7124.txt for how to do 
+multi-channel with differential channels.
+
+> +	};
+> +
+> +	v1@1 {
+> +		single-channel = <1>;
+> +	};
+> +
+> +	v23@2 {
+> +		diff-channels = <2 3>;
+> +	};
+> +
+> +	v01@3 {
+> +		diff-channels = <0 1>;
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
