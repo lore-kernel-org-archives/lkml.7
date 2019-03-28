@@ -2,185 +2,142 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C390FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF27AC10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C29B20823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2B620823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:33:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rVH+m+xL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfC1UbR (ORCPT
+        id S1726290AbfC1Udo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:31:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56318 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbfC1UbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:31:16 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 26C7C3086272;
-        Thu, 28 Mar 2019 20:31:16 +0000 (UTC)
-Received: from vitty.brq.redhat.com (ovpn-204-50.brq.redhat.com [10.40.204.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0521D600C0;
-        Thu, 28 Mar 2019 20:31:13 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RFC] KVM: x86: vmx: throttle immediate exit through preemtion timer to assist buggy guests
-Date:   Thu, 28 Mar 2019 21:31:10 +0100
-Message-Id: <20190328203110.20655-1-vkuznets@redhat.com>
+        Thu, 28 Mar 2019 16:33:44 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9382 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfC1Udo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 16:33:44 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9d2fa50002>; Thu, 28 Mar 2019 13:33:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 28 Mar 2019 13:33:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 28 Mar 2019 13:33:43 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Mar
+ 2019 20:33:43 +0000
+Subject: Re: [PATCH v2 01/11] mm/hmm: select mmu notifier when selecting HMM
+To:     <jglisse@redhat.com>, <linux-mm@kvack.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20190325144011.10560-1-jglisse@redhat.com>
+ <20190325144011.10560-2-jglisse@redhat.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <d4889f44-0cc5-3ef6-deeb-7302c93c1f90@nvidia.com>
+Date:   Thu, 28 Mar 2019 13:33:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 28 Mar 2019 20:31:16 +0000 (UTC)
+In-Reply-To: <20190325144011.10560-2-jglisse@redhat.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US-large
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553805221; bh=o+a/SAiZ8f2SWEWLbL14a/AHxKB3R3uRQE9ibApvFzo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=rVH+m+xL2BxNvS6qdiawWzdzngrp29z3aMootYghbquzyuTBuiD0uULk7EcEdiSxC
+         AgPVAWB3MSZxyWqYw/gZuFZrraF7vPcNztWTNwyqRm2NC1H8XVs+OYVhlgIj1sLUO0
+         pAbOqrC0xQOMtYZ0srtx3N1GYtooxq6lsFekMrXYmh/rcBNNJgVTG8W5qhnQtZ+DSE
+         q+9//0amEirw0w69sh2gmn1qMlahnuCScS28MQNd1DSfAeM0GDe4asvNuU3lzzs5Mq
+         PZWb5QgvI6PgWgrQVvBA3AF0dxhscVxvV5r0svpUA5+xM8ElkZjty0CNabpUUOSXL+
+         IsSeRPIxnErHg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is embarassing but we have another Windows/Hyper-V issue to workaround
-in KVM (or QEMU). Hope "RFC" makes it less offensive.
+On 3/25/19 7:40 AM, jglisse@redhat.com wrote:
+> From: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+>=20
+> To avoid random config build issue, select mmu notifier when HMM is
+> selected. In any cases when HMM get selected it will be by users that
+> will also wants the mmu notifier.
+>=20
+> Signed-off-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> Acked-by: Balbir Singh <bsingharora@gmail.com>
+> Cc: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  mm/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index 25c71eb8a7db..0d2944278d80 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -694,6 +694,7 @@ config DEV_PAGEMAP_OPS
+> =20
+>  config HMM
+>  	bool
+> +	select MMU_NOTIFIER
+>  	select MIGRATE_VMA_HELPER
+> =20
+>  config HMM_MIRROR
+>=20
 
-It was noticed that Hyper-V guest on q35 KVM/QEMU VM hangs on boot if e.g.
-'piix4-usb-uhci' device is attached. The problem with this device is that
-it uses level-triggered interrupts.
+Yes, this is a good move, given that MMU notifiers are completely,
+indispensably part of the HMM design and implementation.
 
-The 'hang' scenario develops like this:
-1) Hyper-V boots and QEMU is trying to inject two irq simultaneously. One
- of them is level-triggered. KVM injects the edge-triggered one and
- requests immediate exit to inject the level-triggered:
+The alternative would also work, but it's not quite as good. I'm
+listing it in order to forestall any debate:=20
 
- kvm_set_irq:          gsi 23 level 1 source 0
- kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
- kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
- kvm_msi_set_irq:      dst 0 vec 96 (Fixed|physical|edge)
- kvm_apic_accept_irq:  apicid 0 vec 96 (Fixed|edge)
- kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000060 int_info_err 0
+  config HMM
+  	bool
+ +	depends on MMU_NOTIFIER
+  	select MIGRATE_VMA_HELPER
 
-2) Hyper-V requires one of its VMs to run to handle the situation but
- immediate exit happens:
+...and "depends on" versus "select" is always a subtle question. But in
+this case, I'd say that if someone wants HMM, there's no advantage in
+making them know that they must first ensure MMU_NOTIFIER is enabled.
+After poking around a bit I don't see any obvious downsides either.
 
- kvm_entry:            vcpu 0
- kvm_exit:             reason VMRESUME rip 0xfffff80006a40115 info 0 0
- kvm_entry:            vcpu 0
- kvm_exit:             reason PREEMPTION_TIMER rip 0xfffff8022f3d8350 info 0 0
- kvm_nested_vmexit:    rip fffff8022f3d8350 reason PREEMPTION_TIMER info1 0 info2 0 int_info 0 int_info_err 0
- kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000050 int_info_err 0
+However, given that you're making this change, in order to avoid odd
+redundancy, you should also do this:
 
-3) Hyper-V doesn't want to deal with the second irq (as its VM still didn't
- process the first one) so it just does 'EOI' for level-triggered interrupt
- and this causes re-injection:
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 0d2944278d80..2e6d24d783f7 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -700,7 +700,6 @@ config HMM
+ config HMM_MIRROR
+        bool "HMM mirror CPU page table into a device page table"
+        depends on ARCH_HAS_HMM
+-       select MMU_NOTIFIER
+        select HMM
+        help
+          Select HMM_MIRROR if you want to mirror range of the CPU page tab=
+le of a
 
- kvm_exit:             reason EOI_INDUCED rip 0xfffff80006a17e1a info 50 0
- kvm_eoi:              apicid 0 vector 80
- kvm_userspace_exit:   reason KVM_EXIT_IOAPIC_EOI (26)
- kvm_set_irq:          gsi 23 level 1 source 0
- kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
- kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
- kvm_entry:            vcpu 0
 
-4) As we arm preemtion timer again we get stuck in the infinite loop:
-
- kvm_exit:             reason VMRESUME rip 0xfffff80006a40115 info 0 0
- kvm_entry:            vcpu 0
- kvm_exit:             reason PREEMPTION_TIMER rip 0xfffff8022f3d8350 info 0 0
- kvm_nested_vmexit:    rip fffff8022f3d8350 reason PREEMPTION_TIMER info1 0 info2 0 int_info 0 int_info_err 0
- kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000050 int_info_err 0
- kvm_entry:            vcpu 0
- kvm_exit:             reason EOI_INDUCED rip 0xfffff80006a17e1a info 50 0
- kvm_eoi:              apicid 0 vector 80
- kvm_userspace_exit:   reason KVM_EXIT_IOAPIC_EOI (26)
- kvm_set_irq:          gsi 23 level 1 source 0
- kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
- kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
- kvm_entry:            vcpu 0
- kvm_exit:             reason VMRESUME rip 0xfffff80006a40115 info 0 0
- ...
-
-How does this work on hardware? I don't really know but it seems that we
-were dealing with similar issues before, see commit 184564efae4d7 ("kvm:
-ioapic: conditionally delay irq delivery duringeoi broadcast"). In case EOI
-doesn't always cause an *immediate* interrupt re-injection some progress
-can be made.
-
-An alternative approach would be to port the above mentioned commit to
-QEMU's ioapic implementation. I'm, however, not sure that level-triggered
-interrupts is a must to trigger the issue.
-
-HV_TIMER_THROTTLE/HV_TIMER_DELAY are more or less arbitrary. I haven't
-looked at SVM yet but their immediate exit implementation does
-smp_send_reschedule(), I'm not sure this can cause the above described
-lockup.
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/vmx/vmcs.h |  2 ++
- arch/x86/kvm/vmx/vmx.c  | 24 +++++++++++++++++++++++-
- 2 files changed, 25 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/vmx/vmcs.h b/arch/x86/kvm/vmx/vmcs.h
-index cb6079f8a227..983dfc60c30c 100644
---- a/arch/x86/kvm/vmx/vmcs.h
-+++ b/arch/x86/kvm/vmx/vmcs.h
-@@ -54,6 +54,8 @@ struct loaded_vmcs {
- 	bool launched;
- 	bool nmi_known_unmasked;
- 	bool hv_timer_armed;
-+	unsigned long hv_timer_lastrip;
-+	int hv_timer_lastrip_cnt;
- 	/* Support for vnmi-less CPUs */
- 	int soft_vnmi_blocked;
- 	ktime_t entry_time;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 617443c1c6d7..8a49ec14dd3a 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6321,14 +6321,36 @@ static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
- 	vmx->loaded_vmcs->hv_timer_armed = true;
- }
- 
-+#define HV_TIMER_THROTTLE 100
-+#define HV_TIMER_DELAY 1000
-+
- static void vmx_update_hv_timer(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	u64 tscl;
- 	u32 delta_tsc;
- 
-+	/*
-+	 * Some guests are buggy and may behave in a way that causes KVM to
-+	 * always request immediate exit (e.g. of a nested guest). At the same
-+	 * time guest progress may be required to resolve the condition.
-+	 * Throttling below makes sure we never get stuck completely.
-+	 */
- 	if (vmx->req_immediate_exit) {
--		vmx_arm_hv_timer(vmx, 0);
-+		unsigned long rip = kvm_rip_read(vcpu);
-+
-+		if (vmx->loaded_vmcs->hv_timer_lastrip == rip) {
-+			++vmx->loaded_vmcs->hv_timer_lastrip_cnt;
-+		} else {
-+			vmx->loaded_vmcs->hv_timer_lastrip_cnt = 0;
-+			vmx->loaded_vmcs->hv_timer_lastrip = rip;
-+		}
-+
-+		if (vmx->loaded_vmcs->hv_timer_lastrip_cnt > HV_TIMER_THROTTLE)
-+			vmx_arm_hv_timer(vmx, HV_TIMER_DELAY);
-+		else
-+			vmx_arm_hv_timer(vmx, 0);
-+
- 		return;
- 	}
- 
--- 
-2.20.1
-
+thanks,
+--=20
+John Hubbard
+NVIDIA
