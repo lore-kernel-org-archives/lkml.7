@@ -2,118 +2,98 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6622C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE48C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8229C20823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA576217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xd6hDHZA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfC1UgT (ORCPT
+        id S1727200AbfC1Uhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:36:19 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.5]:35088 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726200AbfC1UgS (ORCPT
+        Thu, 28 Mar 2019 16:37:40 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41551 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfC1Uhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:36:18 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 9653114CEF
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 15:36:17 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 9bl3hr1tJ2qH79bl3hGUh3; Thu, 28 Mar 2019 15:36:17 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.117.246] (port=41134 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h9bl0-000NxI-7j; Thu, 28 Mar 2019 15:36:16 -0500
-Date:   Thu, 28 Mar 2019 15:36:13 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] iavf: iavf_client: use struct_size() helper
-Message-ID: <20190328203613.GA23692@embeddedor>
+        Thu, 28 Mar 2019 16:37:40 -0400
+Received: by mail-io1-f68.google.com with SMTP id v10so7742541iom.8;
+        Thu, 28 Mar 2019 13:37:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d+vYEnBKMLIXqpko9A7PloU03l+PO+bBCG9nvGVEgpw=;
+        b=Xd6hDHZACaAt3vQ7SbrO+1jWqOPIcxAAI3nR9rcALBTl9DZz2qz4+SDhC0aiwK9bfW
+         5atTpHeSPpqvsq4aSC9r46xtRmW/md9/IyV34emGILzIXaDNebfUkCCS5visFoxHUjxQ
+         QLul5AUqDzD1VqzHx+XtQCyqPJC8AFui5ggbV5c9IqpO2JWtGpHUSVmgHggcfzq9yF63
+         OEDMOfw6Kj1e8efNqaf55JZdCVOuHKRikoXO/3qoOyaWhslooB3/i4bC6d3v/7xecNvH
+         OFsAYeZJzcCX2eWc+vefAM4zWknVev3VQqJRJL06G7ZTGaqrGwT8Q5vNiXYRYNDharpc
+         Zg0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d+vYEnBKMLIXqpko9A7PloU03l+PO+bBCG9nvGVEgpw=;
+        b=mNbPyjpJj9wBcTxy7IhUfvVSX72coMh3Jidx4+g2NuFLSTx9uRaYAkk56NNdUWdtFL
+         +0NPQXQux2UtpOLKLBsaq0wLJQwc4kafSQ4RjxfY2COo5uwOMYAVf2thRSwW8/yqihO8
+         qjIGjoWc+PXyWAjQ21QHudqnW/2/p0/9wUAAW7hsECSS/vyNP4CLJph1hcfxMtW09bKI
+         Xn8gZkmrZGehRNy1EW0ILjM3ZEB18cdufZ5bTtjDZltqjvIPhUvt/QCo3r6DzuGeCD2a
+         XItBd63/RYW2wlObCFh76NcdbXuvsHywhqdrBa9oD04Omw/o09/g34F/toMRU+IDYifE
+         NNIg==
+X-Gm-Message-State: APjAAAXaoCorLUQtF9BSXC6+rzw99KC0pqxk9eknzpc2VtwgRAyTknlT
+        XWntO9xmwFsVRqMY6MMVTXc=
+X-Google-Smtp-Source: APXvYqxBQlG2P4VCMuZwZ79qRml5Hk2HGqXljnfwRnlpYnT5K+INq0qUvVS38a2MZWfFXQteytuW+Q==
+X-Received: by 2002:a6b:7b08:: with SMTP id l8mr34194910iop.33.1553805459293;
+        Thu, 28 Mar 2019 13:37:39 -0700 (PDT)
+Received: from localhost ([67.218.223.154])
+        by smtp.gmail.com with ESMTPSA id v10sm11394993iob.30.2019.03.28.13.37.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 13:37:38 -0700 (PDT)
+From:   Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     trivial@kernel.org,
+        Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+Subject: [PATCH 1/1] dt-bindings: power: supply: add missing semi-colon in example
+Date:   Thu, 28 Mar 2019 16:35:18 -0400
+Message-Id: <20190328203518.12100-1-sebastien.bourdelin@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.117.246
-X-Source-L: No
-X-Exim-ID: 1h9bl0-000NxI-7j
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.117.246]:41134
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+Fix the example documentation which is missing a semi-colon.
 
-struct foo {
-    int stuff;
-    struct boo entry[];
-};
-
-size = sizeof(struct foo) + count * sizeof(struct boo);
-
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
-
-size = struct_size(instance, entry, count);
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
 ---
- drivers/net/ethernet/intel/iavf/iavf_client.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/power/supply/gpio-charger.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_client.c b/drivers/net/ethernet/intel/iavf/iavf_client.c
-index aea45364fd1c..ab9db7e9f09d 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_client.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_client.c
-@@ -451,7 +451,7 @@ static int iavf_client_setup_qvlist(struct i40e_info *ldev,
- 	struct i40e_qv_info *qv_info;
- 	iavf_status err;
- 	u32 v_idx, i;
--	u32 msg_size;
-+	size_t msg_size;
+diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+index adbb5dc5b6e9..ddf7b7b971e1 100644
+--- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
++++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+@@ -20,7 +20,7 @@ Example:
+ 		compatible = "gpio-charger";
+ 		charger-type = "usb-sdp";
+ 		gpios = <&gpf0 2 0 0 0>;
+-	}
++	};
  
- 	if (adapter->aq_required)
- 		return -EAGAIN;
-@@ -469,9 +469,8 @@ static int iavf_client_setup_qvlist(struct i40e_info *ldev,
- 	}
- 
- 	v_qvlist_info = (struct virtchnl_iwarp_qvlist_info *)qvlist_info;
--	msg_size = sizeof(struct virtchnl_iwarp_qvlist_info) +
--			(sizeof(struct virtchnl_iwarp_qv_info) *
--			(v_qvlist_info->num_vectors - 1));
-+	msg_size = struct_size(v_qvlist_info, qv_info,
-+			       v_qvlist_info->num_vectors - 1);
- 
- 	adapter->client_pending |= BIT(VIRTCHNL_OP_CONFIG_IWARP_IRQ_MAP);
- 	err = iavf_aq_send_msg_to_pf(&adapter->hw,
+ 	battery {
+ 		power-supplies = <&usb_charger>;
 -- 
-2.21.0
+2.20.1
 
