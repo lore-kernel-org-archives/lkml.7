@@ -2,127 +2,103 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15690C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 09:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F08C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 09:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65622075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 09:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE90621773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 09:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CcB1cx9a";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CcB1cx9a"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="w+ewEVCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfC1Jh4 (ORCPT
+        id S1727090AbfC1JiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 05:37:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56676 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfC1Jhz (ORCPT
+        Thu, 28 Mar 2019 05:38:14 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42478 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfC1JiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 05:37:55 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E766260850; Thu, 28 Mar 2019 09:37:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553765873;
-        bh=Hpyq0MGeL3bAx3/4liyavv3KHqs9aoVVAXW0LVF6/wE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CcB1cx9auxn7XxRQ7Aj1zfT3xFrwJ0Spd3vnrZgLRVLflywkGiIhsyXmYSv3KSqoR
-         yuyUsd6m64224aUi04nfMhAqOBHJuVHnHtvygh2oM9iFGoctBH9YsDlaQuJcE1FLko
-         EgOV9hSWbqvkYPi/6x9YUHnKJBrMVPyNg4qQZ964=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 043E260364;
-        Thu, 28 Mar 2019 09:37:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553765873;
-        bh=Hpyq0MGeL3bAx3/4liyavv3KHqs9aoVVAXW0LVF6/wE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CcB1cx9auxn7XxRQ7Aj1zfT3xFrwJ0Spd3vnrZgLRVLflywkGiIhsyXmYSv3KSqoR
-         yuyUsd6m64224aUi04nfMhAqOBHJuVHnHtvygh2oM9iFGoctBH9YsDlaQuJcE1FLko
-         EgOV9hSWbqvkYPi/6x9YUHnKJBrMVPyNg4qQZ964=
+        Thu, 28 Mar 2019 05:38:13 -0400
+Received: by mail-qt1-f193.google.com with SMTP id p20so22228798qtc.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 02:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SLcpAB3+41mrCKhdOLJCaZrMND605YNaO019G/DhRww=;
+        b=w+ewEVCxvkEKA1wLxheOErNIe5pqzOsB2BfAxDl7k5UeSdp36p1jjmpLOKVQ/2MD93
+         WsvYmwxX9at+OlpyWTec8lVl/t1o/Xhu1IlPA6Bdx1FO3+6p/uNYj1kZbE73HPsNRc/a
+         22Gm5e0Du3AUJkPPQf2p5wGvnL4rqhOCm356BAROjKduLtLjnE/GLkxTuiiLIL8uKnp8
+         ZyEQtHpa9Ifm4ESCVH3tFEx/Rn3Uv6BqnS1JjHepJ2mIdznydhInUJKcpkfK0i+vLu8O
+         Npsy+9HLcrzLyDFzz3NZJuWqyKTTB0LXNQJeboOGYZVylCBtQamYCxpMATnARA8oUJ0s
+         Qg4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SLcpAB3+41mrCKhdOLJCaZrMND605YNaO019G/DhRww=;
+        b=B5SjzINGynpV5xJI4Hy2ORG9fYwFhOlLaWBympiaU4HDJkt8CML0ak2xsradFxe4Le
+         b62kbwnHZOo2aGXsvXJe6oAIZW0lm6WjOtpKeg6q9iCcIpUUnwZEXU68OYo0kUfvbrF7
+         WKrepFHeq2fUuK6cO9gYmz3egPZznejdh5jfXLFXeRoaIbsup6u912fgLn24NJm0BfPu
+         a2US4wOYIXWJZuZEzOF7nE04n+ZCloNzPyljeRRpxu5E8Z9GA6y29YA5AjzQzuhReO3L
+         /iHev5md++Yb2tmXp3zmcRnT8Aq0WsgCv+l6gS4imVvHIee0yhMzzMPHk7MLPLGZGPtE
+         Bn+w==
+X-Gm-Message-State: APjAAAXEOuXHq/BDlUlXD/tcpJ136OHv/vvBhe+r8Soh2zKVSjB46/J/
+        u46xFQwFYeAsMv6lLxv1c4zgEJAlPAGwmi8NISopZg==
+X-Google-Smtp-Source: APXvYqw17hsCZrT39BWL+90VPfVAM7zCrnXuBPgtWRI6rEwMNQv4LWemSktO4cwD/UoqHzyVY/JDTz7ik2Nu3riMRz0=
+X-Received: by 2002:ac8:6b98:: with SMTP id z24mr11323185qts.248.1553765892674;
+ Thu, 28 Mar 2019 02:38:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 28 Mar 2019 15:07:52 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        SCSI <linux-scsi@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v5 0/3] UFS on APQ8098/MSM8998
-In-Reply-To: <43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr>
-References: <43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr>
-Message-ID: <4a01550bb22799aa803be2cd674f3a74@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+References: <CAB4CAwc-SFtw4+74Qe-vX57JRGDjJMt9xM2+ev3OiipzwxBPBw@mail.gmail.com>
+ <20171116124431.GS17200@lahna.fi.intel.com> <CAB4CAwfHx8DgCYk0piVnrTa7YP2=6A8Le4ekoENFPyNVF9g1rw@mail.gmail.com>
+ <20171117064904.GZ17200@lahna.fi.intel.com> <CAB4CAwdGQjXc6gsswyCgLTfFRN9CgcC=OJ6pz4rX-HCn8AT-TQ@mail.gmail.com>
+ <20171121105205.GP22431@lahna.fi.intel.com> <CAB4CAwcjXi=YX+0PEC6wBdfAZ=am+BceB4HCFzTXzdts_FE2vQ@mail.gmail.com>
+ <20171121120422.GR22431@lahna.fi.intel.com> <CAD8Lp444FNHZh6fLUfhfp1i_UBpMbS5QuvJ4FuZn7PKH1Ucy=A@mail.gmail.com>
+ <20190327172940.GR3622@lahna.fi.intel.com> <20190328091729.GV9224@smile.fi.intel.com>
+In-Reply-To: <20190328091729.GV9224@smile.fi.intel.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Thu, 28 Mar 2019 17:38:01 +0800
+Message-ID: <CAD8Lp44xuzHj4uu3a-Y9wscSyEmuG6=nbww6T9-9FaYZT_qYsw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: intel: save HOSTSW_OWN register over suspend/resume
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Chris Chiu <chiu@endlessm.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-02-25 17:46, Marc Gonzalez wrote:
-> Hello,
-> 
-> This series adds support for the UFS host controller on
-> APQ8098/MSM8998-based boards.
-> 
-> This should be the final rev ;-)
+On Thu, Mar 28, 2019 at 5:17 PM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+> Hmm... Can you confirm that laptop you declared as a fixed case and the
+> mentioned here is the same one?
 
-Tested-by: Sibi Sankar <sibis@codeaurora.org>
+They are definitely not the same exact unit - originally we had a
+pre-production sample, and now we briefly diagnosed a real production
+unit that was sold to a customer. There could be subtle motherboard
+variations as you mention.
 
-> 
-> Differences between v4 and v5:
-> - Drop patches that have already been accepted or spun off
-> 
-> Differences between v3 and v4:
-> - Rebase on top of -next
-> - Pick up Douglas Anderson's UFSHC doc fix
-> - Document 8998 UFSHC binding
-> - Improve UFS PHY binding doc
-> - Put the UFS DT patch at the end of the series
-> 
-> Difference between v2 and v3:
-> - Add qcom,msm8998-qmp-ufs-phy compat string and match it in the PHY 
-> driver
-> - Drop vdd-hba-fixed-regulator
-> - Write the reg addresses with full 32-bit width
-> - Set regulator-allow-set-load only on the 3 rails used by UFS.
-> - Revert the patch introducing ufshcd_set_vccq_rail_unused
-> 
-> Difference between v1 and v2:
-> - New patch to add 'regulator-allow-set-load' prop to all vreg nodes
-> - Rename rpmcc node to 'clock-controller' + Add Review tags
-> - Drop UFS pinctrl gymnastics (not required, probably left enabled in
-> bootloader)
-> - Delete GCC_UFS_ICE_CORE_CLK (ICE not used upstream, I think)
-> - Fix sizes of ufsphy register areas based on Jeffrey's feedback
-> - Hack ufshcd_set_vccq_rail_unused into a NOP to work around lock up + 
-> reboot
-> 
-> 
-> Marc Gonzalez (3):
->   dt-bindings: ufs: Add msm8998 compatible string
->   arm64: dts: qcom: msm8998: Allow UFSHC driver to set-load
->   arm64: dts: qcom: msm8998: Add UFS nodes
-> 
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |  1 +
->  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi     | 22 +++++++
->  arch/arm64/boot/dts/qcom/msm8998.dtsi         | 65 +++++++++++++++++++
->  3 files changed, 88 insertions(+)
+> If it's the case, I recommend to ping Asus again and make them check and fix.
 
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+We'll keep an eye open for any opportunities to go deeper here.
+However further investigation on both our side and theirs is blocked
+by not having any of the affected hardware (since the models are now
+so old), so I'm not very optimistic that we'll be able to make
+progress there.
+
+> Meanwhile, Mika's proposal sounds feasible and not so intrusive. We may
+> implement this later on.
+
+Chris will work on implementing this for your consideration.
+
+Thanks for the quick feedback!
+Daniel
