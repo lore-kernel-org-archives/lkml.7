@@ -2,59 +2,78 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF9AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6251BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7FD32173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AFEF20700
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:44:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="W20NgDaY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfC1Ifx (ORCPT
+        id S1726334AbfC1Ioj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 04:35:53 -0400
-Received: from mga04.intel.com ([192.55.52.120]:47814 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbfC1Ifx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 04:35:53 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 01:35:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
-   d="scan'208";a="144557852"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by FMSMGA003.fm.intel.com with SMTP; 28 Mar 2019 01:35:50 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 28 Mar 2019 10:35:49 +0200
-Date:   Thu, 28 Mar 2019 10:35:49 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] thunderbolt: Fix to check the return value of kmemdup
-Message-ID: <20190328083549.GW3622@lahna.fi.intel.com>
-References: <20190325212523.11799-1-pakki001@umn.edu>
+        Thu, 28 Mar 2019 04:44:39 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:14040 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbfC1Ioj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 04:44:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9c89790000>; Thu, 28 Mar 2019 01:44:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 28 Mar 2019 01:44:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 28 Mar 2019 01:44:38 -0700
+Received: from [10.19.64.157] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Mar
+ 2019 08:44:36 +0000
+Subject: Re: [PATCH] regulator: rc5t583: Get rid of struct rc5t583_regulator
+To:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>
+References: <20190327115413.11155-1-axel.lin@ingics.com>
+CC:     Liam Girdwood <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>
+From:   Laxman Dewangan <ldewangan@nvidia.com>
+Message-ID: <e205a6df-36d5-110c-bced-dfb2d1f13744@nvidia.com>
+Date:   Thu, 28 Mar 2019 14:14:33 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325212523.11799-1-pakki001@umn.edu>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190327115413.11155-1-axel.lin@ingics.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553762682; bh=M0wlhYkj7Z5+AkKrIkjyD2syLjqNlz5nLW8K0KfqX5o=;
+        h=X-PGP-Universal:Subject:To:References:CC:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding;
+        b=W20NgDaY5zuaLWdiLknmL5UDXXwyUlhdWDJOoXj0I0xsz7BAbVXlZFT7zGDj49Jry
+         1PB6mtjmMS/JJsubPpT6SXljXbLA+woJUas/1ZiZrCuoreKikZxEd0Fp2D/ePDKRMT
+         sNAvGP4NCNO63k3eAkuR5X4PLItszsvwejcsX0W+9P4kMbfErPgarkU/tLW8wYiUHC
+         nmjIiZCpR0ZW72K0IReCljwyGGCkx3sQuiPkjyo6UwPYSyEizMfOo0/xK9dhBF2o81
+         N6asLNSuY9oDqQTf4oBUWCBR38vo4qY96GusuXGl6f7NCrNcjvsPOSYkcAISiPX906
+         MhyQTKDDXV53Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 04:25:22PM -0500, Aditya Pakki wrote:
-> uuid in add_switch is allocted via kmemdup which can fail. The patch
-> logs the error and cleans up the allocated memory for switch.
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-Applied, thanks!
+
+On Wednesday 27 March 2019 05:24 PM, Axel Lin wrote:
+> The struct rc5t583_regulator only has 2 members, the *rdev is no longer
+> used because this driver is using devm_regulator_register now. After remove
+> *rdev, only *reg_info left. We can use struct rc5t583_regulator_info
+> directly, so remove struct rc5t583_regulator.
+>
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+>
+
+Acked-by: Laxman Dewangan <ldewangan@nvidia.com>
