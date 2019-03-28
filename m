@@ -2,1577 +2,232 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA23C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE46C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9089A217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:32:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="EDkMvZEC"
+	by mail.kernel.org (Postfix) with ESMTP id 753B1206DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbfC1PcW (ORCPT
+        id S1727473AbfC1Pcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:32:22 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:51247 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfC1PcV (ORCPT
+        Thu, 28 Mar 2019 11:32:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39824 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726210AbfC1Pcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:32:21 -0400
-X-IronPort-AV: E=Sophos;i="5.60,280,1549954800"; 
-   d="scan'208";a="27198222"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES128-SHA; 28 Mar 2019 08:32:20 -0700
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.37) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Thu, 28 Mar 2019 08:32:18 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1c2be37h9ySVkKCIPljhQmEnuFciwSAEox71NIn1uKY=;
- b=EDkMvZEC2/r1RyPekFRQHbCpNbhY04vxk9miGsHwpQ/Q7OVrANlv8N8NM7N6kkw45PDITNxZjcIXd6tRHLCg9q/8mhLvBh68Equng4DECgEglpLIR7U2rYJf6Eqhpjd8dNgnJujxJG3QnjH6u6PmpTxOL/MxHNstMWjmdSbMk7w=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB0076.namprd11.prod.outlook.com (10.164.155.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.17; Thu, 28 Mar 2019 15:32:12 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::e8b6:2ae9:9b9c:2ca8]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::e8b6:2ae9:9b9c:2ca8%3]) with mapi id 15.20.1750.014; Thu, 28 Mar 2019
- 15:32:12 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <linux-media@vger.kernel.org>, <hverkuil@xs4all.nl>,
-        <Nicolas.Ferre@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mchehab@kernel.org>
-CC:     <ksloat@aampglobal.com>, <Eugen.Hristev@microchip.com>
-Subject: [PATCH v3 1/2] media: atmel: atmel-isc: reworked driver and formats
-Thread-Topic: [PATCH v3 1/2] media: atmel: atmel-isc: reworked driver and
- formats
-Thread-Index: AQHU5XtqY3VZPWv2vEejdrWaOB9TWA==
-Date:   Thu, 28 Mar 2019 15:32:12 +0000
-Message-ID: <1553786825-16942-1-git-send-email-eugen.hristev@microchip.com>
-Accept-Language: ro-RO, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR08CA0238.eurprd08.prod.outlook.com
- (2603:10a6:802:15::47) To DM5PR11MB1242.namprd11.prod.outlook.com
- (2603:10b6:3:14::8)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Eugen.Hristev@microchip.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dc89fc05-4d37-4058-38ed-08d6b3928c4c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:DM5PR11MB0076;
-x-ms-traffictypediagnostic: DM5PR11MB0076:
-x-microsoft-antispam-prvs: <DM5PR11MB0076AB7C9DA07DEFE9D75B52E8590@DM5PR11MB0076.namprd11.prod.outlook.com>
-x-forefront-prvs: 0990C54589
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(39860400002)(366004)(136003)(199004)(189003)(2501003)(53936002)(2201001)(26005)(6506007)(386003)(5660300002)(86362001)(102836004)(71190400001)(71200400001)(6512007)(53946003)(52116002)(186003)(2616005)(486006)(476003)(99286004)(25786009)(110136005)(68736007)(316002)(7736002)(54906003)(305945005)(50226002)(8936002)(72206003)(30864003)(81156014)(81166006)(2906002)(8676002)(14454004)(3846002)(478600001)(6116002)(256004)(5024004)(14444005)(4326008)(66066001)(6486002)(97736004)(6436002)(107886003)(106356001)(36756003)(105586002)(461764006)(559001)(569006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB0076;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XLmWPiG84Fpo0d8z9WjNFCmNxTXjHb/m5Xje/BceTKuRCXnLcZFvmpfNeJ+7rDpP3m7G930OLAHbRLyxvHX6djP6Dqm+brbvl5K3/sFONQfH1gaclf3z1homIwl+0oCC7fVIcE3c/tx6xQkmvgTGgTwV65IeU6t/vcfWbd5rY6c2IvueoNMlTjFH/PLxGY40H5u4qPzTM+huWhUjQ27pzeeIlI7jtSmIbFUuy0/Ti08wSosAvJaUFlaSzwTYiuKM6hdpDsPoKUdA0C/N+CfDSLdr6K1L4w5c0f15Z9QQf7v0B9xM+Hugrr3soOoo1CFW7TZ9kzaPpGIQeEm0Hblsh47K8aPYqvoA6B+S7XLxjPyhXFcGUlm9sOtv5qc4eyfrOgpd87QW/cHzH+CCkN7CnGTWhfPIdAXvQzG15KvyGAE=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 28 Mar 2019 11:32:46 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2SFVEFb070262
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:32:44 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rgy3h6pb9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:32:42 -0400
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Thu, 28 Mar 2019 15:32:14 -0000
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Mar 2019 15:32:11 -0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2SFW5Wj22609922
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 15:32:06 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5B01278060;
+        Thu, 28 Mar 2019 15:32:05 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B3357805C;
+        Thu, 28 Mar 2019 15:32:04 +0000 (GMT)
+Received: from [9.60.75.235] (unknown [9.60.75.235])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Mar 2019 15:32:03 +0000 (GMT)
+Subject: Re: [PATCH v6 2/7] s390: ap: new vfio_ap_queue structure
+To:     pmorel@linux.ibm.com, borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
+        david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1553265828-27823-1-git-send-email-pmorel@linux.ibm.com>
+ <1553265828-27823-3-git-send-email-pmorel@linux.ibm.com>
+ <169eec34-6397-3150-27df-9985c9e711b8@linux.ibm.com>
+ <1b64ad7b-2a7c-b604-1adb-af400e7be516@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Thu, 28 Mar 2019 11:32:03 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc89fc05-4d37-4058-38ed-08d6b3928c4c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2019 15:32:12.4910
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0076
-X-OriginatorOrg: microchip.com
+In-Reply-To: <1b64ad7b-2a7c-b604-1adb-af400e7be516@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032815-0016-0000-0000-000009985453
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010829; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000283; SDB=6.01180934; UDB=6.00618056; IPR=6.00961652;
+ MB=3.00026195; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-28 15:32:13
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032815-0017-0000-0000-0000429CF909
+Message-Id: <0477b20a-c882-c23d-5373-d461ef721f2c@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903280104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+On 3/28/19 9:06 AM, Pierre Morel wrote:
+> On 26/03/2019 21:45, Tony Krowiak wrote:
+>> On 3/22/19 10:43 AM, Pierre Morel wrote:
+>>> The AP interruptions are assigned on a queue basis and
+>>> the GISA structure is handled on a VM basis, so that
+>>> we need to add a structure we can retrieve from both side
+>>
+>> s/side/sides/
+> OK
+> 
+>>
+>>> holding the information we need to handle PQAP/AQIC interception
+>>> and setup the GISA.
+>>
+>> s/setup/set up/
+> 
+> OK
+> 
+> ...snip...
+> 
+>>> +
+>>> +static int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
+>>> +{
+>>> +    struct ap_queue_status status;
+>>> +    int retry = 1;
+>>> +
+>>> +    do {
+>>> +        status = ap_zapq(q->apqn);
+>>> +        switch (status.response_code) {
+>>> +        case AP_RESPONSE_NORMAL:
+>>> +            return 0;
+>>> +        case AP_RESPONSE_RESET_IN_PROGRESS:
+>>> +        case AP_RESPONSE_BUSY:
+>>> +            msleep(20);
+>>> +            break;
+>>> +        default:
+>>> +            /* things are really broken, give up */
+>>
+>> I'm not sure things are necessarily broken. We could end up here if
+>> the AP is removed from the configuration via the SE or SCLP Deconfigure
+>> Adjunct Processor command.
+> 
+> OK, but note that it is your original comment I just moved the function 
+> here ;)
 
-This change is a redesign in the formats and the way the ISC is
-configured w.r.t. sensor format and the output format from the ISC.
-I have changed the splitting between sensor output (which is also ISC input=
-)
-and ISC output.
-The sensor format represents the way the sensor is configured, and what ISC
-is receiving.
-The format configuration represents the way ISC is interpreting the data an=
-d
-formatting the output to the subsystem.
-Now it's much easier to figure out what is the ISC configuration for input,=
- and
-what is the configuration for output.
-The non-raw format can be obtained directly from sensor or it can be done
-inside the ISC. The controller format list will include a configuration for
-each format.
-The old supported formats are still in place, if we want to dump the sensor
-format directly to the output, the try format routine will detect and
-configure the pipeline accordingly.
-This also fixes the previous issues when the raw format was NULL which
-resulted in many crashes for sensors which did not have the expected/tested
-formats.
+Yes, it is. I'm smarter now;)
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
-Hello Hans,
+> 
+>>
+>>> +            return -EIO;
+>>> +        }
+>>> +    } while (retry--);
+>>> +
+>>> +    return -EBUSY;
+>>> +}
+>>> +
+>>>   static void vfio_ap_matrix_init(struct ap_config_info *info,
+>>>                   struct ap_matrix *matrix)
+>>>   {
+>>> @@ -45,6 +107,7 @@ static int vfio_ap_mdev_create(struct kobject 
+>>> *kobj, struct mdev_device *mdev)
+>>>           return -ENOMEM;
+>>>       }
+>>> +    INIT_LIST_HEAD(&matrix_mdev->qlist);
+>>>       vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->matrix);
+>>>       mdev_set_drvdata(mdev, matrix_mdev);
+>>>       mutex_lock(&matrix_dev->lock);
+>>> @@ -113,162 +176,189 @@ static struct attribute_group 
+>>> *vfio_ap_mdev_type_groups[] = {
+>>>       NULL,
+>>>   };
+>>> -struct vfio_ap_queue_reserved {
+>>> -    unsigned long *apid;
+>>> -    unsigned long *apqi;
+>>> -    bool reserved;
+>>> -};
+>>> +static void vfio_ap_free_queue(int apqn, struct ap_matrix_mdev 
+>>> *matrix_mdev)
+>>> +{
+>>> +    struct vfio_ap_queue *q;
+>>> +
+>>> +    q = vfio_ap_get_queue(apqn, &matrix_mdev->qlist);
+>>> +    if (!q)
+>>> +        return;
+>>> +    q->matrix_mdev = NULL;
+>>> +    vfio_ap_mdev_reset_queue(q);
+>>
+>> I'm wondering if it's necessary to reset the queue here. The only time
+>> a queue is used is when a guest using the mdev device is started. When
+>> that guest is terminated, the fd for the mdev device is /* Bits 41-47 must all be zeros */closed and the
+>> mdev device's release callback is invoked. The release callback resets
+>> the queues assigned to the mdev device. Is it really necessary to
+>> reset the queue again when it is unassigned even if there would have
+>> been no subsequent activity?
+> 
+> Yes, it is necessary, the queue can be re-assigned to another guest later.
+> Release will only be called when unbinding the queue from the driver.
 
-Thanks for review.
-I also attached another run of v4l2-compliance.
+That is true, but if the queue is never used, there is nothing to reset.
 
-Changes in v3:
- - changed comment on failed try validate format in try_format
- - changed memcpy to assignment in set_fmt
+> 
+>>
+>>> +    list_move(&q->list, &matrix_dev->free_list);
+>>> +}
+> 
+> ...snip...
+> 
+>>> +    for_each_set_bit_inv(apid, matrix_mdev->matrix.apm, AP_DEVICES) {
+>>> +        apqn = AP_MKQID(apid, apqi);
+>>> +        q = vfio_ap_find_queue(apqn);
+>>> +        if (!q) {
+>>> +            ret = -EADDRNOTAVAIL;
+>>> +            goto rewind;
+>>> +        }
+>>> +        if (q->matrix_mdev) {
+>>
+>> If somebody assigns the same domain a second time, the assignment will
+>> fail because the matrix_mdev will already have been associated with the
+>> queue. I don't think it is appropriate to fail the assignment if the
+> 
+> It is usual to report a failure in the case the operation requested has 
+> already be done.
+> But we can do as you want. Any other opinion?
+> 
+>> q->matrix_mdev is the same as the input matrix_mdev. This should be
+>> changed to:
+>>
+>>      if (q->matrix_mdev != matrix_mdev)
+> 
+> You surely want to say: add this, not change to this. ;)
 
-Changes in v2:
- - now have try_config and also config, all configuration setting will be d=
-one
-initially on try_config, and then if everything is OK, in set_fmt, it will =
-be
-copied to the actual config.
- - changed macro IS_RAW to apply on mbus code and not isc structure, it's n=
-ow
-called ISC_IS_FORMAT_RAW and it's called everywhere it's needed.
- - renamed all functions for configure modules (dma, rlp, pipeline, formats=
-)
-with 'try' prefix
+Yes
 
-
- # v4l2-compliance
-v4l2-compliance SHA: 32cf495ff5da24df54936fae3bf0eb91fba77f3a, 32 bits
-
-Compliance test for atmel_isc device /dev/video0:
-
-Driver Info:
-        Driver name      : atmel_isc
-        Card type        : Atmel Image Sensor Controller
-        Bus info         : platform:atmel_isc f0008000.isc
-        Driver version   : 5.0.0
-        Capabilities     : 0x84200001
-                Video Capture
-                Streaming
-                Extended PatmFormat
-                Device Capabilities
-        Device Caps      : 0x04200001
-                Video Capture
-                Streaming
-                Extended Pix Format
-
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-        test second /dev/video0 open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-el_isc f0008000.isc: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  S=
-TART STATUS  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-atmel_isc f0008000.isc: Brightness: 0
-atmel_isc f0008000.isc: Contrast: 256
-atmel_isc f0008000.isc: Gamma: 2
-        teatmeor unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-l_isc f0008000.isc: White Balance, Automatic: true
-atmel_isc f0008000.isc: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D  END STATUS  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-        test VIDIOC_LOG_STATUS: OK
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 1 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls (Input 0):
-        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-        test VIDIOC_QUERYCTRL: OK
-        test VIDIOC_G/S_CTRL: OK
-        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-        Standard Controls: 5 Private Controls: 0
-
-Format ioctls (Input 0):
-        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-        test VIDIOC_G/S_PARM: OK
-        test VIDIOC_G_FBUF: OK (Not Supported)
-        test VIDIOC_G_FMT: OK
-        test VIDIOC_TRY_FMT: OK
-        test VIDIOC_S_FMT: OK
-        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-        test Cropping: OK (Not Supported)
-        test Composing: OK (Not Supported)
-        test Scaling: OK (Not Supported)
-
-Codec ioctls (Input 0):
-        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls (Input 0):
-        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-        test VIDIOC_EXPBUF: OK
-        test Requests: OK (Not Supported)
-
-Total for atmel_isc device /dev/video0: 44, Succeeded: 44, Failed: 0, Warni=
-ngs: 0
-
-
- drivers/media/platform/atmel/atmel-isc.c | 888 ++++++++++++++++-----------=
-----
- 1 file changed, 471 insertions(+), 417 deletions(-)
-
-diff --git a/drivers/media/platform/atmel/atmel-isc.c b/drivers/media/platf=
-orm/atmel/atmel-isc.c
-index 5017896..8c4b6f1 100644
---- a/drivers/media/platform/atmel/atmel-isc.c
-+++ b/drivers/media/platform/atmel/atmel-isc.c
-@@ -89,35 +89,25 @@ struct isc_subdev_entity {
- 	struct list_head list;
- };
-=20
--/* Indicate the format is generated by the sensor */
--#define FMT_FLAG_FROM_SENSOR		BIT(0)
--/* Indicate the format is produced by ISC itself */
--#define FMT_FLAG_FROM_CONTROLLER	BIT(1)
--/* Indicate a Raw Bayer format */
--#define FMT_FLAG_RAW_FORMAT		BIT(2)
--
--#define FMT_FLAG_RAW_FROM_SENSOR	(FMT_FLAG_FROM_SENSOR | \
--					 FMT_FLAG_RAW_FORMAT)
--
- /*
-  * struct isc_format - ISC media bus format information
-+			This structure represents the interface between the ISC
-+			and the sensor. It's the input format received by
-+			the ISC.
-  * @fourcc:		Fourcc code for this format
-  * @mbus_code:		V4L2 media bus format code.
-- * flags:		Indicate format from sensor or converted by controller
-- * @bpp:		Bits per pixel (when stored in memory)
-- *			(when transferred over a bus)
-- * @sd_support:		Subdev supports this format
-- * @isc_support:	ISC can convert raw format to this format
-+ * @cfa_baycfg:		If this format is RAW BAYER, indicate the type of bayer.
-+			this is either BGBG, RGRG, etc.
-+ * @pfe_cfg0_bps:	Number of hardware data lines connected to the ISC
-  */
-=20
- struct isc_format {
- 	u32	fourcc;
- 	u32	mbus_code;
--	u32	flags;
--	u8	bpp;
-+	u32	cfa_baycfg;
-=20
- 	bool	sd_support;
--	bool	isc_support;
-+	u32	pfe_cfg0_bps;
- };
-=20
- /* Pipeline bitmap */
-@@ -135,16 +125,31 @@ struct isc_format {
-=20
- #define GAM_ENABLES	(GAM_RENABLE | GAM_GENABLE | GAM_BENABLE | GAM_ENABLE)
-=20
-+/*
-+ * struct fmt_config - ISC format configuration and internal pipeline
-+			This structure represents the internal configuration
-+			of the ISC.
-+			It also holds the format that ISC will present to v4l2.
-+ * @sd_format:		Pointer to an isc_format struct that holds the sensor
-+			configuration.
-+ * @fourcc:		Fourcc code for this format.
-+ * @bpp:		Bytes per pixel in the current format.
-+ * @rlp_cfg_mode:	Configuration of the RLP (rounding, limiting packaging)
-+ * @dcfg_imode:		Configuration of the input of the DMA module
-+ * @dctrl_dview:	Configuration of the output of the DMA module
-+ * @bits_pipeline:	Configuration of the pipeline, which modules are enable=
-d
-+ */
- struct fmt_config {
--	u32	fourcc;
-+	struct isc_format	*sd_format;
-=20
--	u32	pfe_cfg0_bps;
--	u32	cfa_baycfg;
--	u32	rlp_cfg_mode;
--	u32	dcfg_imode;
--	u32	dctrl_dview;
-+	u32			fourcc;
-+	u8			bpp;
-=20
--	u32	bits_pipeline;
-+	u32			rlp_cfg_mode;
-+	u32			dcfg_imode;
-+	u32			dctrl_dview;
-+
-+	u32			bits_pipeline;
- };
-=20
- #define HIST_ENTRIES		512
-@@ -196,8 +201,9 @@ struct isc_device {
- 	struct v4l2_format	fmt;
- 	struct isc_format	**user_formats;
- 	unsigned int		num_user_formats;
--	const struct isc_format	*current_fmt;
--	const struct isc_format	*raw_fmt;
-+
-+	struct fmt_config	config;
-+	struct fmt_config	try_config;
-=20
- 	struct isc_ctrls	ctrls;
- 	struct work_struct	awb_work;
-@@ -210,319 +216,122 @@ struct isc_device {
- 	struct list_head		subdev_entities;
- };
-=20
--static struct isc_format formats_list[] =3D {
--	{
--		.fourcc		=3D V4L2_PIX_FMT_SBGGR8,
--		.mbus_code	=3D MEDIA_BUS_FMT_SBGGR8_1X8,
--		.flags		=3D FMT_FLAG_RAW_FROM_SENSOR,
--		.bpp		=3D 8,
--	},
-+/* This is a list of the formats that the ISC can *output* */
-+static struct isc_format controller_formats[] =3D {
- 	{
--		.fourcc		=3D V4L2_PIX_FMT_SGBRG8,
--		.mbus_code	=3D MEDIA_BUS_FMT_SGBRG8_1X8,
--		.flags		=3D FMT_FLAG_RAW_FROM_SENSOR,
--		.bpp		=3D 8,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_SGRBG8,
--		.mbus_code	=3D MEDIA_BUS_FMT_SGRBG8_1X8,
--		.flags		=3D FMT_FLAG_RAW_FROM_SENSOR,
--		.bpp		=3D 8,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_SRGGB8,
--		.mbus_code	=3D MEDIA_BUS_FMT_SRGGB8_1X8,
--		.flags		=3D FMT_FLAG_RAW_FROM_SENSOR,
--		.bpp		=3D 8,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_SBGGR10,
--		.mbus_code	=3D MEDIA_BUS_FMT_SBGGR10_1X10,
--		.flags		=3D FMT_FLAG_RAW_FROM_SENSOR,
--		.bpp		=3D 16,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_SGBRG10,
--		.mbus_code	=3D MEDIA_BUS_FMT_SGBRG10_1X10,
--		.flags		=3D FMT_FLAG_RAW_FROM_SENSOR,
--		.bpp		=3D 16,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_SGRBG10,
--		.mbus_code	=3D MEDIA_BUS_FMT_SGRBG10_1X10,
--		.flags		=3D FMT_FLAG_RAW_FROM_SENSOR,
--		.bpp		=3D 16,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_SRGGB10,
--		.mbus_code	=3D MEDIA_BUS_FMT_SRGGB10_1X10,
--		.flags		=3D FMT_FLAG_RAW_FROM_SENSOR,
--		.bpp		=3D 16,
-+		.fourcc		=3D V4L2_PIX_FMT_ARGB444,
- 	},
- 	{
--		.fourcc		=3D V4L2_PIX_FMT_SBGGR12,
--		.mbus_code	=3D MEDIA_BUS_FMT_SBGGR12_1X12,
--		.flags		=3D FMT_FLAG_RAW_FROM_SENSOR,
--		.bpp		=3D 16,
-+		.fourcc		=3D V4L2_PIX_FMT_ARGB555,
- 	},
- 	{
--		.fourcc		=3D V4L2_PIX_FMT_SGBRG12,
--		.mbus_code	=3D MEDIA_BUS_FMT_SGBRG12_1X12,
--		.flags		=3D FMT_FLAG_RAW_FROM_SENSOR,
--		.bpp		=3D 16,
-+		.fourcc		=3D V4L2_PIX_FMT_RGB565,
- 	},
- 	{
--		.fourcc		=3D V4L2_PIX_FMT_SGRBG12,
--		.mbus_code	=3D MEDIA_BUS_FMT_SGRBG12_1X12,
--		.flags		=3D FMT_FLAG_RAW_FROM_SENSOR,
--		.bpp		=3D 16,
-+		.fourcc		=3D V4L2_PIX_FMT_ARGB32,
- 	},
- 	{
--		.fourcc		=3D V4L2_PIX_FMT_SRGGB12,
--		.mbus_code	=3D MEDIA_BUS_FMT_SRGGB12_1X12,
--		.flags		=3D FMT_FLAG_RAW_FROM_SENSOR,
--		.bpp		=3D 16,
-+		.fourcc		=3D V4L2_PIX_FMT_YUV420,
- 	},
- 	{
--		.fourcc		=3D V4L2_PIX_FMT_YUV420,
--		.mbus_code	=3D 0x0,
--		.flags		=3D FMT_FLAG_FROM_CONTROLLER,
--		.bpp		=3D 12,
-+		.fourcc		=3D V4L2_PIX_FMT_YUYV,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_YUV422P,
--		.mbus_code	=3D 0x0,
--		.flags		=3D FMT_FLAG_FROM_CONTROLLER,
--		.bpp		=3D 16,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_GREY,
--		.mbus_code	=3D MEDIA_BUS_FMT_Y8_1X8,
--		.flags		=3D FMT_FLAG_FROM_CONTROLLER |
--				  FMT_FLAG_FROM_SENSOR,
--		.bpp		=3D 8,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_ARGB444,
--		.mbus_code	=3D MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE,
--		.flags		=3D FMT_FLAG_FROM_CONTROLLER,
--		.bpp		=3D 16,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_ARGB555,
--		.mbus_code	=3D MEDIA_BUS_FMT_RGB555_2X8_PADHI_LE,
--		.flags		=3D FMT_FLAG_FROM_CONTROLLER,
--		.bpp		=3D 16,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_RGB565,
--		.mbus_code	=3D MEDIA_BUS_FMT_RGB565_2X8_LE,
--		.flags		=3D FMT_FLAG_FROM_CONTROLLER,
--		.bpp		=3D 16,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_ARGB32,
--		.mbus_code	=3D MEDIA_BUS_FMT_ARGB8888_1X32,
--		.flags		=3D FMT_FLAG_FROM_CONTROLLER,
--		.bpp		=3D 32,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_YUYV,
--		.mbus_code	=3D MEDIA_BUS_FMT_YUYV8_2X8,
--		.flags		=3D FMT_FLAG_FROM_CONTROLLER |
--				  FMT_FLAG_FROM_SENSOR,
--		.bpp		=3D 16,
- 	},
- };
-=20
--static struct fmt_config fmt_configs_list[] =3D {
-+/* This is a list of formats that the ISC can receive as *input* */
-+static struct isc_format formats_list[] =3D {
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_SBGGR8,
-+		.mbus_code	=3D MEDIA_BUS_FMT_SBGGR8_1X8,
- 		.pfe_cfg0_bps	=3D ISC_PFE_CFG0_BPS_EIGHT,
- 		.cfa_baycfg	=3D ISC_BAY_CFG_BGBG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT8,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED8,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_SGBRG8,
-+		.mbus_code	=3D MEDIA_BUS_FMT_SGBRG8_1X8,
- 		.pfe_cfg0_bps	=3D ISC_PFE_CFG0_BPS_EIGHT,
- 		.cfa_baycfg	=3D ISC_BAY_CFG_GBGB,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT8,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED8,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_SGRBG8,
-+		.mbus_code	=3D MEDIA_BUS_FMT_SGRBG8_1X8,
- 		.pfe_cfg0_bps	=3D ISC_PFE_CFG0_BPS_EIGHT,
- 		.cfa_baycfg	=3D ISC_BAY_CFG_GRGR,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT8,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED8,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_SRGGB8,
-+		.mbus_code	=3D MEDIA_BUS_FMT_SRGGB8_1X8,
- 		.pfe_cfg0_bps	=3D ISC_PFE_CFG0_BPS_EIGHT,
- 		.cfa_baycfg	=3D ISC_BAY_CFG_RGRG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT8,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED8,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_SBGGR10,
-+		.mbus_code	=3D MEDIA_BUS_FMT_SBGGR10_1X10,
- 		.pfe_cfg0_bps	=3D ISC_PFG_CFG0_BPS_TEN,
--		.cfa_baycfg	=3D ISC_BAY_CFG_BGBG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT10,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED16,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0,
-+		.cfa_baycfg	=3D ISC_BAY_CFG_RGRG,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_SGBRG10,
-+		.mbus_code	=3D MEDIA_BUS_FMT_SGBRG10_1X10,
- 		.pfe_cfg0_bps	=3D ISC_PFG_CFG0_BPS_TEN,
- 		.cfa_baycfg	=3D ISC_BAY_CFG_GBGB,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT10,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED16,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_SGRBG10,
-+		.mbus_code	=3D MEDIA_BUS_FMT_SGRBG10_1X10,
- 		.pfe_cfg0_bps	=3D ISC_PFG_CFG0_BPS_TEN,
- 		.cfa_baycfg	=3D ISC_BAY_CFG_GRGR,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT10,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED16,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_SRGGB10,
-+		.mbus_code	=3D MEDIA_BUS_FMT_SRGGB10_1X10,
- 		.pfe_cfg0_bps	=3D ISC_PFG_CFG0_BPS_TEN,
- 		.cfa_baycfg	=3D ISC_BAY_CFG_RGRG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT10,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED16,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_SBGGR12,
-+		.mbus_code	=3D MEDIA_BUS_FMT_SBGGR12_1X12,
- 		.pfe_cfg0_bps	=3D ISC_PFG_CFG0_BPS_TWELVE,
- 		.cfa_baycfg	=3D ISC_BAY_CFG_BGBG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT12,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED16,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_SGBRG12,
-+		.mbus_code	=3D MEDIA_BUS_FMT_SGBRG12_1X12,
- 		.pfe_cfg0_bps	=3D ISC_PFG_CFG0_BPS_TWELVE,
- 		.cfa_baycfg	=3D ISC_BAY_CFG_GBGB,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT12,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED16,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_SGRBG12,
-+		.mbus_code	=3D MEDIA_BUS_FMT_SGRBG12_1X12,
- 		.pfe_cfg0_bps	=3D ISC_PFG_CFG0_BPS_TWELVE,
- 		.cfa_baycfg	=3D ISC_BAY_CFG_GRGR,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT12,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED16,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_SRGGB12,
-+		.mbus_code	=3D MEDIA_BUS_FMT_SRGGB12_1X12,
- 		.pfe_cfg0_bps	=3D ISC_PFG_CFG0_BPS_TWELVE,
- 		.cfa_baycfg	=3D ISC_BAY_CFG_RGRG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT12,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED16,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0,
--	},
--	{
--		.fourcc =3D V4L2_PIX_FMT_YUV420,
--		.pfe_cfg0_bps	=3D ISC_PFE_CFG0_BPS_EIGHT,
--		.cfa_baycfg	=3D ISC_BAY_CFG_BGBG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_YYCC,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_YC420P,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PLANAR,
--		.bits_pipeline	=3D SUB420_ENABLE | SUB422_ENABLE |
--				  CBC_ENABLE | CSC_ENABLE |
--				  GAM_ENABLES |
--				  CFA_ENABLE | WB_ENABLE,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_YUV422P,
--		.pfe_cfg0_bps	=3D ISC_PFE_CFG0_BPS_EIGHT,
--		.cfa_baycfg	=3D ISC_BAY_CFG_BGBG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_YYCC,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_YC422P,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PLANAR,
--		.bits_pipeline	=3D SUB422_ENABLE |
--				  CBC_ENABLE | CSC_ENABLE |
--				  GAM_ENABLES |
--				  CFA_ENABLE | WB_ENABLE,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_GREY,
-+		.mbus_code	=3D MEDIA_BUS_FMT_Y8_1X8,
- 		.pfe_cfg0_bps	=3D ISC_PFE_CFG0_BPS_EIGHT,
--		.cfa_baycfg	=3D ISC_BAY_CFG_BGBG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DATY8,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED8,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D CBC_ENABLE | CSC_ENABLE |
--				  GAM_ENABLES |
--				  CFA_ENABLE | WB_ENABLE,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_ARGB444,
--		.pfe_cfg0_bps	=3D ISC_PFE_CFG0_BPS_EIGHT,
--		.cfa_baycfg	=3D ISC_BAY_CFG_BGBG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_ARGB444,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED16,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D GAM_ENABLES | CFA_ENABLE | WB_ENABLE,
- 	},
- 	{
--		.fourcc		=3D V4L2_PIX_FMT_ARGB555,
-+		.fourcc		=3D V4L2_PIX_FMT_YUYV,
-+		.mbus_code	=3D MEDIA_BUS_FMT_YUYV8_2X8,
- 		.pfe_cfg0_bps	=3D ISC_PFE_CFG0_BPS_EIGHT,
--		.cfa_baycfg	=3D ISC_BAY_CFG_BGBG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_ARGB555,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED16,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D GAM_ENABLES | CFA_ENABLE | WB_ENABLE,
- 	},
- 	{
- 		.fourcc		=3D V4L2_PIX_FMT_RGB565,
-+		.mbus_code	=3D MEDIA_BUS_FMT_RGB565_2X8_LE,
- 		.pfe_cfg0_bps	=3D ISC_PFE_CFG0_BPS_EIGHT,
--		.cfa_baycfg	=3D ISC_BAY_CFG_BGBG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_RGB565,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED16,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D GAM_ENABLES | CFA_ENABLE | WB_ENABLE,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_ARGB32,
--		.pfe_cfg0_bps	=3D ISC_PFE_CFG0_BPS_EIGHT,
--		.cfa_baycfg	=3D ISC_BAY_CFG_BGBG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_ARGB32,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED32,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D GAM_ENABLES | CFA_ENABLE | WB_ENABLE,
--	},
--	{
--		.fourcc		=3D V4L2_PIX_FMT_YUYV,
--		.pfe_cfg0_bps	=3D ISC_PFE_CFG0_BPS_EIGHT,
--		.cfa_baycfg	=3D ISC_BAY_CFG_BGBG,
--		.rlp_cfg_mode	=3D ISC_RLP_CFG_MODE_DAT8,
--		.dcfg_imode	=3D ISC_DCFG_IMODE_PACKED8,
--		.dctrl_dview	=3D ISC_DCTRL_DVIEW_PACKED,
--		.bits_pipeline	=3D 0x0
- 	},
- };
-=20
-@@ -571,6 +380,13 @@ static const u32 isc_gamma_table[GAMMA_MAX + 1][GAMMA_=
-ENTRIES] =3D {
- 	  0x3E20007, 0x3E90007, 0x3F00008, 0x3F80007 },
- };
-=20
-+#define ISC_IS_FORMAT_RAW(mbus_code) \
-+	(((mbus_code) & 0xf000) =3D=3D 0x3000)
-+
-+static unsigned int debug;
-+module_param(debug, int, 0644);
-+MODULE_PARM_DESC(debug, "debug level (0-2)");
-+
- static unsigned int sensor_preferred =3D 1;
- module_param(sensor_preferred, uint, 0644);
- MODULE_PARM_DESC(sensor_preferred,
-@@ -896,40 +712,17 @@ static int isc_buffer_prepare(struct vb2_buffer *vb)
- 	return 0;
- }
-=20
--static inline bool sensor_is_preferred(const struct isc_format *isc_fmt)
--{
--	return (sensor_preferred && isc_fmt->sd_support) ||
--		!isc_fmt->isc_support;
--}
--
--static struct fmt_config *get_fmt_config(u32 fourcc)
--{
--	struct fmt_config *config;
--	int i;
--
--	config =3D &fmt_configs_list[0];
--	for (i =3D 0; i < ARRAY_SIZE(fmt_configs_list); i++) {
--		if (config->fourcc =3D=3D fourcc)
--			return config;
--
--		config++;
--	}
--	return NULL;
--}
--
- static void isc_start_dma(struct isc_device *isc)
- {
- 	struct regmap *regmap =3D isc->regmap;
--	struct v4l2_pix_format *pixfmt =3D &isc->fmt.fmt.pix;
--	u32 sizeimage =3D pixfmt->sizeimage;
--	struct fmt_config *config =3D get_fmt_config(isc->current_fmt->fourcc);
-+	u32 sizeimage =3D isc->fmt.fmt.pix.sizeimage;
- 	u32 dctrl_dview;
- 	dma_addr_t addr0;
-=20
- 	addr0 =3D vb2_dma_contig_plane_dma_addr(&isc->cur_frm->vb.vb2_buf, 0);
- 	regmap_write(regmap, ISC_DAD0, addr0);
-=20
--	switch (pixfmt->pixelformat) {
-+	switch (isc->config.fourcc) {
- 	case V4L2_PIX_FMT_YUV420:
- 		regmap_write(regmap, ISC_DAD1, addr0 + (sizeimage * 2) / 3);
- 		regmap_write(regmap, ISC_DAD2, addr0 + (sizeimage * 5) / 6);
-@@ -942,10 +735,7 @@ static void isc_start_dma(struct isc_device *isc)
- 		break;
- 	}
-=20
--	if (sensor_is_preferred(isc->current_fmt))
--		dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
--	else
--		dctrl_dview =3D config->dctrl_dview;
-+	dctrl_dview =3D isc->config.dctrl_dview;
-=20
- 	regmap_write(regmap, ISC_DCTRL, dctrl_dview | ISC_DCTRL_IE_IS);
- 	regmap_write(regmap, ISC_CTRLEN, ISC_CTRL_CAPTURE);
-@@ -955,7 +745,6 @@ static void isc_set_pipeline(struct isc_device *isc, u3=
-2 pipeline)
- {
- 	struct regmap *regmap =3D isc->regmap;
- 	struct isc_ctrls *ctrls =3D &isc->ctrls;
--	struct fmt_config *config =3D get_fmt_config(isc->raw_fmt->fourcc);
- 	u32 val, bay_cfg;
- 	const u32 *gamma;
- 	unsigned int i;
-@@ -969,7 +758,7 @@ static void isc_set_pipeline(struct isc_device *isc, u3=
-2 pipeline)
- 	if (!pipeline)
- 		return;
-=20
--	bay_cfg =3D config->cfa_baycfg;
-+	bay_cfg =3D isc->config.sd_format->cfa_baycfg;
-=20
- 	regmap_write(regmap, ISC_WB_CFG, bay_cfg);
- 	regmap_write(regmap, ISC_WB_O_RGR, 0x0);
-@@ -1011,24 +800,24 @@ static int isc_update_profile(struct isc_device *isc=
-)
- 	}
-=20
- 	if (counter < 0) {
--		v4l2_warn(&isc->v4l2_dev, "Time out to update profie\n");
-+		v4l2_warn(&isc->v4l2_dev, "Time out to update profile\n");
- 		return -ETIMEDOUT;
- 	}
-=20
- 	return 0;
- }
-=20
--static void isc_set_histogram(struct isc_device *isc)
-+static void isc_set_histogram(struct isc_device *isc, bool enable)
- {
- 	struct regmap *regmap =3D isc->regmap;
- 	struct isc_ctrls *ctrls =3D &isc->ctrls;
--	struct fmt_config *config =3D get_fmt_config(isc->raw_fmt->fourcc);
-=20
--	if (ctrls->awb && (ctrls->hist_stat !=3D HIST_ENABLED)) {
-+	if (enable) {
- 		regmap_write(regmap, ISC_HIS_CFG,
- 			     ISC_HIS_CFG_MODE_R |
--			     (config->cfa_baycfg << ISC_HIS_CFG_BAYSEL_SHIFT) |
--			     ISC_HIS_CFG_RAR);
-+			     (isc->config.sd_format->cfa_baycfg
-+					<< ISC_HIS_CFG_BAYSEL_SHIFT) |
-+					ISC_HIS_CFG_RAR);
- 		regmap_write(regmap, ISC_HIS_CTRL, ISC_HIS_CTRL_EN);
- 		regmap_write(regmap, ISC_INTEN, ISC_INT_HISDONE);
- 		ctrls->hist_id =3D ISC_HIS_CFG_MODE_R;
-@@ -1036,7 +825,7 @@ static void isc_set_histogram(struct isc_device *isc)
- 		regmap_write(regmap, ISC_CTRLEN, ISC_CTRL_HISREQ);
-=20
- 		ctrls->hist_stat =3D HIST_ENABLED;
--	} else if (!ctrls->awb && (ctrls->hist_stat !=3D HIST_DISABLED)) {
-+	} else {
- 		regmap_write(regmap, ISC_INTDIS, ISC_INT_HISDONE);
- 		regmap_write(regmap, ISC_HIS_CTRL, ISC_HIS_CTRL_DIS);
-=20
-@@ -1044,53 +833,18 @@ static void isc_set_histogram(struct isc_device *isc=
-)
- 	}
- }
-=20
--static inline void isc_get_param(const struct isc_format *fmt,
--				 u32 *rlp_mode, u32 *dcfg)
--{
--	struct fmt_config *config =3D get_fmt_config(fmt->fourcc);
--
--	*dcfg =3D ISC_DCFG_YMBSIZE_BEATS8;
--
--	switch (fmt->fourcc) {
--	case V4L2_PIX_FMT_SBGGR10:
--	case V4L2_PIX_FMT_SGBRG10:
--	case V4L2_PIX_FMT_SGRBG10:
--	case V4L2_PIX_FMT_SRGGB10:
--	case V4L2_PIX_FMT_SBGGR12:
--	case V4L2_PIX_FMT_SGBRG12:
--	case V4L2_PIX_FMT_SGRBG12:
--	case V4L2_PIX_FMT_SRGGB12:
--		*rlp_mode =3D config->rlp_cfg_mode;
--		*dcfg |=3D config->dcfg_imode;
--		break;
--	default:
--		*rlp_mode =3D ISC_RLP_CFG_MODE_DAT8;
--		*dcfg |=3D ISC_DCFG_IMODE_PACKED8;
--		break;
--	}
--}
--
- static int isc_configure(struct isc_device *isc)
- {
- 	struct regmap *regmap =3D isc->regmap;
--	const struct isc_format *current_fmt =3D isc->current_fmt;
--	struct fmt_config *curfmt_config =3D get_fmt_config(current_fmt->fourcc);
--	struct fmt_config *rawfmt_config =3D get_fmt_config(isc->raw_fmt->fourcc)=
-;
--	struct isc_subdev_entity *subdev =3D isc->current_subdev;
- 	u32 pfe_cfg0, rlp_mode, dcfg, mask, pipeline;
-+	struct isc_subdev_entity *subdev =3D isc->current_subdev;
-=20
--	if (sensor_is_preferred(current_fmt)) {
--		pfe_cfg0 =3D curfmt_config->pfe_cfg0_bps;
--		pipeline =3D 0x0;
--		isc_get_param(current_fmt, &rlp_mode, &dcfg);
--		isc->ctrls.hist_stat =3D HIST_INIT;
--	} else {
--		pfe_cfg0 =3D rawfmt_config->pfe_cfg0_bps;
--		pipeline =3D curfmt_config->bits_pipeline;
--		rlp_mode =3D curfmt_config->rlp_cfg_mode;
--		dcfg =3D curfmt_config->dcfg_imode |
-+	pfe_cfg0 =3D isc->config.sd_format->pfe_cfg0_bps;
-+	rlp_mode =3D isc->config.rlp_cfg_mode;
-+	pipeline =3D isc->config.bits_pipeline;
-+
-+	dcfg =3D isc->config.dcfg_imode |
- 		       ISC_DCFG_YMBSIZE_BEATS8 | ISC_DCFG_CMBSIZE_BEATS8;
--	}
-=20
- 	pfe_cfg0  |=3D subdev->pfe_cfg0 | ISC_PFE_CFG0_MODE_PROGRESSIVE;
- 	mask =3D ISC_PFE_CFG0_BPS_MASK | ISC_PFE_CFG0_HPOL_LOW |
-@@ -1107,8 +861,15 @@ static int isc_configure(struct isc_device *isc)
- 	/* Set the pipeline */
- 	isc_set_pipeline(isc, pipeline);
-=20
--	if (pipeline)
--		isc_set_histogram(isc);
-+	/*
-+	 * The current implemented histogram is available for RAW R, B, GB
-+	 * channels. We need to check if sensor is outputting RAW BAYER
-+	 */
-+	if (isc->ctrls.awb &&
-+	    ISC_IS_FORMAT_RAW(isc->config.sd_format->mbus_code))
-+		isc_set_histogram(isc, true);
-+	else
-+		isc_set_histogram(isc, false);
-=20
- 	/* Update profile */
- 	return isc_update_profile(isc);
-@@ -1125,7 +886,8 @@ static int isc_start_streaming(struct vb2_queue *vq, u=
-nsigned int count)
- 	/* Enable stream on the sub device */
- 	ret =3D v4l2_subdev_call(isc->current_subdev->sd, video, s_stream, 1);
- 	if (ret && ret !=3D -ENOIOCTLCMD) {
--		v4l2_err(&isc->v4l2_dev, "stream on failed in subdev\n");
-+		v4l2_err(&isc->v4l2_dev, "stream on failed in subdev %d\n",
-+			 ret);
- 		goto err_start_stream;
- 	}
-=20
-@@ -1223,6 +985,22 @@ static void isc_buffer_queue(struct vb2_buffer *vb)
- 	spin_unlock_irqrestore(&isc->dma_queue_lock, flags);
- }
-=20
-+static struct isc_format *find_format_by_fourcc(struct isc_device *isc,
-+						 unsigned int fourcc)
-+{
-+	unsigned int num_formats =3D isc->num_user_formats;
-+	struct isc_format *fmt;
-+	unsigned int i;
-+
-+	for (i =3D 0; i < num_formats; i++) {
-+		fmt =3D isc->user_formats[i];
-+		if (fmt->fourcc =3D=3D fourcc)
-+			return fmt;
-+	}
-+
-+	return NULL;
-+}
-+
- static const struct vb2_ops isc_vb2_ops =3D {
- 	.queue_setup		=3D isc_queue_setup,
- 	.wait_prepare		=3D vb2_ops_wait_prepare,
-@@ -1249,15 +1027,31 @@ static int isc_querycap(struct file *file, void *pr=
-iv,
- static int isc_enum_fmt_vid_cap(struct file *file, void *priv,
- 				 struct v4l2_fmtdesc *f)
- {
--	struct isc_device *isc =3D video_drvdata(file);
- 	u32 index =3D f->index;
-+	u32 i, supported_index;
-=20
--	if (index >=3D isc->num_user_formats)
--		return -EINVAL;
-+	if (index < ARRAY_SIZE(controller_formats)) {
-+		f->pixelformat =3D controller_formats[index].fourcc;
-+		return 0;
-+	}
-=20
--	f->pixelformat =3D isc->user_formats[index]->fourcc;
-+	index -=3D ARRAY_SIZE(controller_formats);
-=20
--	return 0;
-+	i =3D 0;
-+	supported_index =3D 0;
-+
-+	for (i =3D 0; i < ARRAY_SIZE(formats_list); i++) {
-+		if (!ISC_IS_FORMAT_RAW(formats_list[i].mbus_code) ||
-+		    !formats_list[i].sd_support)
-+			continue;
-+		if (supported_index =3D=3D index) {
-+			f->pixelformat =3D formats_list[i].fourcc;
-+			return 0;
-+		}
-+		supported_index++;
-+	}
-+
-+	return -EINVAL;
- }
-=20
- static int isc_g_fmt_vid_cap(struct file *file, void *priv,
-@@ -1270,26 +1064,231 @@ static int isc_g_fmt_vid_cap(struct file *file, vo=
-id *priv,
- 	return 0;
- }
-=20
--static struct isc_format *find_format_by_fourcc(struct isc_device *isc,
--						 unsigned int fourcc)
-+/*
-+ * Checks the current configured format, if ISC can output it,
-+ * considering which type of format the ISC receives from the sensor
-+ */
-+static int isc_try_validate_formats(struct isc_device *isc)
- {
--	unsigned int num_formats =3D isc->num_user_formats;
--	struct isc_format *fmt;
--	unsigned int i;
-+	int ret;
-+	bool bayer =3D false, yuv =3D false, rgb =3D false, grey =3D false;
-+
-+	/* all formats supported by the RLP module are OK */
-+	switch (isc->try_config.fourcc) {
-+	case V4L2_PIX_FMT_SBGGR8:
-+	case V4L2_PIX_FMT_SGBRG8:
-+	case V4L2_PIX_FMT_SGRBG8:
-+	case V4L2_PIX_FMT_SRGGB8:
-+	case V4L2_PIX_FMT_SBGGR10:
-+	case V4L2_PIX_FMT_SGBRG10:
-+	case V4L2_PIX_FMT_SGRBG10:
-+	case V4L2_PIX_FMT_SRGGB10:
-+	case V4L2_PIX_FMT_SBGGR12:
-+	case V4L2_PIX_FMT_SGBRG12:
-+	case V4L2_PIX_FMT_SGRBG12:
-+	case V4L2_PIX_FMT_SRGGB12:
-+		ret =3D 0;
-+		bayer =3D true;
-+		break;
-=20
--	for (i =3D 0; i < num_formats; i++) {
--		fmt =3D isc->user_formats[i];
--		if (fmt->fourcc =3D=3D fourcc)
--			return fmt;
-+	case V4L2_PIX_FMT_YUV420:
-+	case V4L2_PIX_FMT_YUV422P:
-+	case V4L2_PIX_FMT_YUYV:
-+		ret =3D 0;
-+		yuv =3D true;
-+		break;
-+
-+	case V4L2_PIX_FMT_RGB565:
-+	case V4L2_PIX_FMT_ARGB32:
-+	case V4L2_PIX_FMT_ARGB444:
-+	case V4L2_PIX_FMT_ARGB555:
-+		ret =3D 0;
-+		rgb =3D true;
-+		break;
-+	case V4L2_PIX_FMT_GREY:
-+		ret =3D 0;
-+		grey =3D true;
-+		break;
-+	default:
-+	/* any other different formats are not supported */
-+		ret =3D -EINVAL;
- 	}
-=20
--	return NULL;
-+	/* we cannot output RAW/Grey if we do not receive RAW */
-+	if ((bayer || grey) &&
-+	    !ISC_IS_FORMAT_RAW(isc->try_config.sd_format->mbus_code))
-+		return -EINVAL;
-+
-+	return ret;
-+}
-+
-+/*
-+ * Configures the RLP and DMA modules, depending on the output format
-+ * configured for the ISC.
-+ * If direct_dump =3D=3D true, just dump raw data 8 bits.
-+ */
-+static int isc_try_configure_rlp_dma(struct isc_device *isc, bool direct_d=
-ump)
-+{
-+	if (direct_dump) {
-+		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_DAT8;
-+		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_PACKED8;
-+		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
-+		isc->try_config.bpp =3D 16;
-+		return 0;
-+	}
-+
-+	switch (isc->try_config.fourcc) {
-+	case V4L2_PIX_FMT_SBGGR8:
-+	case V4L2_PIX_FMT_SGBRG8:
-+	case V4L2_PIX_FMT_SGRBG8:
-+	case V4L2_PIX_FMT_SRGGB8:
-+		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_DAT8;
-+		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_PACKED8;
-+		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
-+		isc->try_config.bpp =3D 8;
-+		break;
-+	case V4L2_PIX_FMT_SBGGR10:
-+	case V4L2_PIX_FMT_SGBRG10:
-+	case V4L2_PIX_FMT_SGRBG10:
-+	case V4L2_PIX_FMT_SRGGB10:
-+		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_DAT10;
-+		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_PACKED16;
-+		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
-+		isc->try_config.bpp =3D 16;
-+		break;
-+	case V4L2_PIX_FMT_SBGGR12:
-+	case V4L2_PIX_FMT_SGBRG12:
-+	case V4L2_PIX_FMT_SGRBG12:
-+	case V4L2_PIX_FMT_SRGGB12:
-+		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_DAT12;
-+		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_PACKED16;
-+		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
-+		isc->try_config.bpp =3D 16;
-+		break;
-+	case V4L2_PIX_FMT_RGB565:
-+		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_RGB565;
-+		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_PACKED16;
-+		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
-+		isc->try_config.bpp =3D 16;
-+		break;
-+	case V4L2_PIX_FMT_ARGB444:
-+		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_ARGB444;
-+		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_PACKED16;
-+		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
-+		isc->try_config.bpp =3D 16;
-+		break;
-+	case V4L2_PIX_FMT_ARGB555:
-+		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_ARGB555;
-+		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_PACKED16;
-+		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
-+		isc->try_config.bpp =3D 16;
-+		break;
-+	case V4L2_PIX_FMT_ARGB32:
-+		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_ARGB32;
-+		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_PACKED32;
-+		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
-+		isc->try_config.bpp =3D 32;
-+		break;
-+	case V4L2_PIX_FMT_YUV420:
-+		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_YYCC;
-+		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_YC420P;
-+		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PLANAR;
-+		isc->try_config.bpp =3D 12;
-+		break;
-+	case V4L2_PIX_FMT_YUV422P:
-+		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_YYCC;
-+		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_YC422P;
-+		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PLANAR;
-+		isc->try_config.bpp =3D 16;
-+		break;
-+	case V4L2_PIX_FMT_YUYV:
-+		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_YYCC;
-+		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_PACKED32;
-+		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
-+		isc->try_config.bpp =3D 16;
-+		break;
-+	case V4L2_PIX_FMT_GREY:
-+		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_DATY8;
-+		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_PACKED8;
-+		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
-+		isc->try_config.bpp =3D 8;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * Configuring pipeline modules, depending on which format the ISC outputs
-+ * and considering which format it has as input from the sensor.
-+ */
-+static int isc_try_configure_pipeline(struct isc_device *isc)
-+{
-+	switch (isc->try_config.fourcc) {
-+	case V4L2_PIX_FMT_RGB565:
-+	case V4L2_PIX_FMT_ARGB555:
-+	case V4L2_PIX_FMT_ARGB444:
-+	case V4L2_PIX_FMT_ARGB32:
-+		/* if sensor format is RAW, we convert inside ISC */
-+		if (ISC_IS_FORMAT_RAW(isc->try_config.sd_format->mbus_code)) {
-+			isc->try_config.bits_pipeline =3D CFA_ENABLE |
-+				WB_ENABLE | GAM_ENABLES;
-+		} else {
-+			isc->try_config.bits_pipeline =3D 0x0;
-+		}
-+		break;
-+	case V4L2_PIX_FMT_YUV420:
-+		/* if sensor format is RAW, we convert inside ISC */
-+		if (ISC_IS_FORMAT_RAW(isc->try_config.sd_format->mbus_code)) {
-+			isc->try_config.bits_pipeline =3D CFA_ENABLE |
-+				CSC_ENABLE | WB_ENABLE | GAM_ENABLES |
-+				SUB420_ENABLE | SUB422_ENABLE | CBC_ENABLE;
-+		} else {
-+			isc->try_config.bits_pipeline =3D 0x0;
-+		}
-+		break;
-+	case V4L2_PIX_FMT_YUV422P:
-+		/* if sensor format is RAW, we convert inside ISC */
-+		if (ISC_IS_FORMAT_RAW(isc->try_config.sd_format->mbus_code)) {
-+			isc->try_config.bits_pipeline =3D CFA_ENABLE |
-+				CSC_ENABLE | WB_ENABLE | GAM_ENABLES |
-+				SUB422_ENABLE | CBC_ENABLE;
-+		} else {
-+			isc->try_config.bits_pipeline =3D 0x0;
-+		}
-+		break;
-+	case V4L2_PIX_FMT_YUYV:
-+		/* if sensor format is RAW, we convert inside ISC */
-+		if (ISC_IS_FORMAT_RAW(isc->try_config.sd_format->mbus_code)) {
-+			isc->try_config.bits_pipeline =3D CFA_ENABLE |
-+				CSC_ENABLE | WB_ENABLE | GAM_ENABLES |
-+				SUB422_ENABLE | CBC_ENABLE;
-+		} else {
-+			isc->try_config.bits_pipeline =3D 0x0;
-+		}
-+		break;
-+	case V4L2_PIX_FMT_GREY:
-+		if (ISC_IS_FORMAT_RAW(isc->try_config.sd_format->mbus_code)) {
-+		/* if sensor format is RAW, we convert inside ISC */
-+			isc->try_config.bits_pipeline =3D CFA_ENABLE |
-+				CSC_ENABLE | WB_ENABLE | GAM_ENABLES |
-+				CBC_ENABLE;
-+		} else {
-+			isc->try_config.bits_pipeline =3D 0x0;
-+		}
-+		break;
-+	default:
-+		isc->try_config.bits_pipeline =3D 0x0;
-+	}
-+	return 0;
- }
-=20
- static int isc_try_fmt(struct isc_device *isc, struct v4l2_format *f,
--			struct isc_format **current_fmt, u32 *code)
-+			u32 *code)
- {
--	struct isc_format *isc_fmt;
-+	int i;
-+	struct isc_format *sd_fmt =3D NULL, *direct_fmt =3D NULL;
- 	struct v4l2_pix_format *pixfmt =3D &f->fmt.pix;
- 	struct v4l2_subdev_pad_config pad_cfg;
- 	struct v4l2_subdev_format format =3D {
-@@ -1297,48 +1296,114 @@ static int isc_try_fmt(struct isc_device *isc, str=
-uct v4l2_format *f,
- 	};
- 	u32 mbus_code;
- 	int ret;
-+	bool rlp_dma_direct_dump =3D false;
-=20
- 	if (f->type !=3D V4L2_BUF_TYPE_VIDEO_CAPTURE)
- 		return -EINVAL;
-=20
--	isc_fmt =3D find_format_by_fourcc(isc, pixfmt->pixelformat);
--	if (!isc_fmt) {
--		v4l2_warn(&isc->v4l2_dev, "Format 0x%x not found\n",
--			  pixfmt->pixelformat);
--		isc_fmt =3D isc->user_formats[isc->num_user_formats - 1];
--		pixfmt->pixelformat =3D isc_fmt->fourcc;
-+	/* Step 1: find a RAW format that is supported */
-+	for (i =3D 0; i < isc->num_user_formats; i++) {
-+		if (ISC_IS_FORMAT_RAW(isc->user_formats[i]->mbus_code)) {
-+			sd_fmt =3D isc->user_formats[i];
-+			break;
-+		}
-+	}
-+	/* Step 2: We can continue with this RAW format, or we can look
-+	 * for better: maybe sensor supports directly what we need.
-+	 */
-+	direct_fmt =3D find_format_by_fourcc(isc, pixfmt->pixelformat);
-+
-+	/* Step 3: We have both. We decide given the module parameter which
-+	 * one to use.
-+	 */
-+	if (direct_fmt && sd_fmt && sensor_preferred)
-+		sd_fmt =3D direct_fmt;
-+
-+	/* Step 4: we do not have RAW but we have a direct format. Use it. */
-+	if (direct_fmt && !sd_fmt)
-+		sd_fmt =3D direct_fmt;
-+
-+	/* Step 5: if we are using a direct format, we need to package
-+	 * everything as 8 bit data and just dump it
-+	 */
-+	if (sd_fmt =3D=3D direct_fmt)
-+		rlp_dma_direct_dump =3D true;
-+
-+	/* Step 6: We have no format. This can happen if the userspace
-+	 * requests some weird/invalid format.
-+	 * In this case, default to whatever we have
-+	 */
-+	if (!sd_fmt && !direct_fmt) {
-+		sd_fmt =3D isc->user_formats[isc->num_user_formats - 1];
-+		v4l2_dbg(1, debug, &isc->v4l2_dev,
-+			 "Sensor not supporting %.4s, using %.4s\n",
-+			 (char *)&pixfmt->pixelformat, (char *)&sd_fmt->fourcc);
- 	}
-=20
-+	/* Step 7: Print out what we decided for debugging */
-+	v4l2_dbg(1, debug, &isc->v4l2_dev,
-+		 "Preferring to have sensor using format %.4s\n",
-+		 (char *)&sd_fmt->fourcc);
-+
-+	/* Step 8: at this moment we decided which format the subdev will use */
-+	isc->try_config.sd_format =3D sd_fmt;
-+
- 	/* Limit to Atmel ISC hardware capabilities */
- 	if (pixfmt->width > ISC_MAX_SUPPORT_WIDTH)
- 		pixfmt->width =3D ISC_MAX_SUPPORT_WIDTH;
- 	if (pixfmt->height > ISC_MAX_SUPPORT_HEIGHT)
- 		pixfmt->height =3D ISC_MAX_SUPPORT_HEIGHT;
-=20
--	if (sensor_is_preferred(isc_fmt))
--		mbus_code =3D isc_fmt->mbus_code;
--	else
--		mbus_code =3D isc->raw_fmt->mbus_code;
-+	/*
-+	 * The mbus format is the one the subdev outputs.
-+	 * The pixels will be transferred in this format Sensor -> ISC
-+	 */
-+	mbus_code =3D sd_fmt->mbus_code;
-+
-+	/*
-+	 * Validate formats. If the required format is not OK, default to raw.
-+	 */
-+
-+	isc->try_config.fourcc =3D pixfmt->pixelformat;
-+
-+	if (isc_try_validate_formats(isc)) {
-+		pixfmt->pixelformat =3D isc->try_config.fourcc =3D sd_fmt->fourcc;
-+		/* Re-try to validate the new format */
-+		ret =3D isc_try_validate_formats(isc);
-+		if (ret)
-+			goto isc_try_fmt_err;
-+	}
-+
-+	ret =3D isc_try_configure_rlp_dma(isc, rlp_dma_direct_dump);
-+	if (ret)
-+		goto isc_try_fmt_err;
-+
-+	ret =3D isc_try_configure_pipeline(isc);
-+	if (ret)
-+		goto isc_try_fmt_err;
-=20
- 	v4l2_fill_mbus_format(&format.format, pixfmt, mbus_code);
- 	ret =3D v4l2_subdev_call(isc->current_subdev->sd, pad, set_fmt,
- 			       &pad_cfg, &format);
- 	if (ret < 0)
--		return ret;
-+		goto isc_try_fmt_err;
-=20
- 	v4l2_fill_pix_format(pixfmt, &format.format);
-=20
- 	pixfmt->field =3D V4L2_FIELD_NONE;
--	pixfmt->bytesperline =3D (pixfmt->width * isc_fmt->bpp) >> 3;
-+	pixfmt->bytesperline =3D (pixfmt->width * isc->try_config.bpp) >> 3;
- 	pixfmt->sizeimage =3D pixfmt->bytesperline * pixfmt->height;
-=20
--	if (current_fmt)
--		*current_fmt =3D isc_fmt;
--
- 	if (code)
- 		*code =3D mbus_code;
-=20
- 	return 0;
-+
-+isc_try_fmt_err:
-+	v4l2_err(&isc->v4l2_dev, "Could not find any possible format for a workin=
-g pipeline\n");
-+	memset(&isc->try_config, 0, sizeof(isc->try_config));
-+
-+	return ret;
- }
-=20
- static int isc_set_fmt(struct isc_device *isc, struct v4l2_format *f)
-@@ -1346,11 +1411,10 @@ static int isc_set_fmt(struct isc_device *isc, stru=
-ct v4l2_format *f)
- 	struct v4l2_subdev_format format =3D {
- 		.which =3D V4L2_SUBDEV_FORMAT_ACTIVE,
- 	};
--	struct isc_format *current_fmt;
--	u32 mbus_code;
-+	u32 mbus_code =3D 0;
- 	int ret;
-=20
--	ret =3D isc_try_fmt(isc, f, &current_fmt, &mbus_code);
-+	ret =3D isc_try_fmt(isc, f, &mbus_code);
- 	if (ret)
- 		return ret;
-=20
-@@ -1361,7 +1425,10 @@ static int isc_set_fmt(struct isc_device *isc, struc=
-t v4l2_format *f)
- 		return ret;
-=20
- 	isc->fmt =3D *f;
--	isc->current_fmt =3D current_fmt;
-+	/* make the try configuration active */
-+	isc->config =3D isc->try_config;
-+
-+	v4l2_dbg(1, debug, &isc->v4l2_dev, "New ISC configuration in place\n");
-=20
- 	return 0;
- }
-@@ -1382,7 +1449,7 @@ static int isc_try_fmt_vid_cap(struct file *file, voi=
-d *priv,
- {
- 	struct isc_device *isc =3D video_drvdata(file);
-=20
--	return isc_try_fmt(isc, f, NULL, NULL);
-+	return isc_try_fmt(isc, f, NULL);
- }
-=20
- static int isc_enum_input(struct file *file, void *priv,
-@@ -1431,27 +1498,31 @@ static int isc_enum_framesizes(struct file *file, v=
-oid *fh,
- 			       struct v4l2_frmsizeenum *fsize)
- {
- 	struct isc_device *isc =3D video_drvdata(file);
--	const struct isc_format *isc_fmt;
- 	struct v4l2_subdev_frame_size_enum fse =3D {
- 		.index =3D fsize->index,
- 		.which =3D V4L2_SUBDEV_FORMAT_ACTIVE,
- 	};
--	int ret;
-+	int ret =3D -EINVAL;
-+	int i;
-=20
--	isc_fmt =3D find_format_by_fourcc(isc, fsize->pixel_format);
--	if (!isc_fmt)
--		return -EINVAL;
-+	for (i =3D 0; i < isc->num_user_formats; i++)
-+		if (isc->user_formats[i]->fourcc =3D=3D fsize->pixel_format)
-+			ret =3D 0;
-=20
--	if (sensor_is_preferred(isc_fmt))
--		fse.code =3D isc_fmt->mbus_code;
--	else
--		fse.code =3D isc->raw_fmt->mbus_code;
-+	for (i =3D 0; i < ARRAY_SIZE(controller_formats); i++)
-+		if (controller_formats[i].fourcc =3D=3D fsize->pixel_format)
-+			ret =3D 0;
-+
-+	if (ret)
-+		return ret;
-=20
- 	ret =3D v4l2_subdev_call(isc->current_subdev->sd, pad, enum_frame_size,
- 			       NULL, &fse);
- 	if (ret)
- 		return ret;
-=20
-+	fse.code =3D isc->config.sd_format->mbus_code;
-+
- 	fsize->type =3D V4L2_FRMSIZE_TYPE_DISCRETE;
- 	fsize->discrete.width =3D fse.max_width;
- 	fsize->discrete.height =3D fse.max_height;
-@@ -1463,29 +1534,32 @@ static int isc_enum_frameintervals(struct file *fil=
-e, void *fh,
- 				    struct v4l2_frmivalenum *fival)
- {
- 	struct isc_device *isc =3D video_drvdata(file);
--	const struct isc_format *isc_fmt;
- 	struct v4l2_subdev_frame_interval_enum fie =3D {
- 		.index =3D fival->index,
- 		.width =3D fival->width,
- 		.height =3D fival->height,
- 		.which =3D V4L2_SUBDEV_FORMAT_ACTIVE,
- 	};
--	int ret;
-+	int ret =3D -EINVAL;
-+	int i;
-=20
--	isc_fmt =3D find_format_by_fourcc(isc, fival->pixel_format);
--	if (!isc_fmt)
--		return -EINVAL;
-+	for (i =3D 0; i < isc->num_user_formats; i++)
-+		if (isc->user_formats[i]->fourcc =3D=3D fival->pixel_format)
-+			ret =3D 0;
-=20
--	if (sensor_is_preferred(isc_fmt))
--		fie.code =3D isc_fmt->mbus_code;
--	else
--		fie.code =3D isc->raw_fmt->mbus_code;
-+	for (i =3D 0; i < ARRAY_SIZE(controller_formats); i++)
-+		if (controller_formats[i].fourcc =3D=3D fival->pixel_format)
-+			ret =3D 0;
-+
-+	if (ret)
-+		return ret;
-=20
- 	ret =3D v4l2_subdev_call(isc->current_subdev->sd, pad,
- 			       enum_frame_interval, NULL, &fie);
- 	if (ret)
- 		return ret;
-=20
-+	fie.code =3D isc->config.sd_format->mbus_code;
- 	fival->type =3D V4L2_FRMIVAL_TYPE_DISCRETE;
- 	fival->discrete =3D fie.interval;
-=20
-@@ -1668,7 +1742,6 @@ static void isc_awb_work(struct work_struct *w)
- 	struct isc_device *isc =3D
- 		container_of(w, struct isc_device, awb_work);
- 	struct regmap *regmap =3D isc->regmap;
--	struct fmt_config *config =3D get_fmt_config(isc->raw_fmt->fourcc);
- 	struct isc_ctrls *ctrls =3D &isc->ctrls;
- 	u32 hist_id =3D ctrls->hist_id;
- 	u32 baysel;
-@@ -1686,7 +1759,7 @@ static void isc_awb_work(struct work_struct *w)
- 	}
-=20
- 	ctrls->hist_id =3D hist_id;
--	baysel =3D config->cfa_baycfg << ISC_HIS_CFG_BAYSEL_SHIFT;
-+	baysel =3D isc->config.sd_format->cfa_baycfg << ISC_HIS_CFG_BAYSEL_SHIFT;
-=20
- 	pm_runtime_get_sync(isc->dev);
-=20
-@@ -1754,7 +1827,6 @@ static int isc_ctrl_init(struct isc_device *isc)
- 	return 0;
- }
-=20
--
- static int isc_async_bound(struct v4l2_async_notifier *notifier,
- 			    struct v4l2_subdev *subdev,
- 			    struct v4l2_async_subdev *asd)
-@@ -1812,35 +1884,20 @@ static int isc_formats_init(struct isc_device *isc)
- 		.which =3D V4L2_SUBDEV_FORMAT_ACTIVE,
- 	};
-=20
-+	num_fmts =3D 0;
- 	while (!v4l2_subdev_call(subdev, pad, enum_mbus_code,
- 	       NULL, &mbus_code)) {
- 		mbus_code.index++;
-=20
- 		fmt =3D find_format_by_code(mbus_code.code, &i);
--		if ((!fmt) || (!(fmt->flags & FMT_FLAG_FROM_SENSOR)))
-+		if (!fmt) {
-+			v4l2_warn(&isc->v4l2_dev, "Mbus code %x not supported\n",
-+				  mbus_code.code);
- 			continue;
-+		}
-=20
- 		fmt->sd_support =3D true;
--
--		if (fmt->flags & FMT_FLAG_RAW_FORMAT)
--			isc->raw_fmt =3D fmt;
--	}
--
--	fmt =3D &formats_list[0];
--	for (i =3D 0; i < list_size; i++) {
--		if (fmt->flags & FMT_FLAG_FROM_CONTROLLER)
--			fmt->isc_support =3D true;
--
--		fmt++;
--	}
--
--	fmt =3D &formats_list[0];
--	num_fmts =3D 0;
--	for (i =3D 0; i < list_size; i++) {
--		if (fmt->isc_support || fmt->sd_support)
--			num_fmts++;
--
--		fmt++;
-+		num_fmts++;
- 	}
-=20
- 	if (!num_fmts)
-@@ -1855,9 +1912,8 @@ static int isc_formats_init(struct isc_device *isc)
-=20
- 	fmt =3D &formats_list[0];
- 	for (i =3D 0, j =3D 0; i < list_size; i++) {
--		if (fmt->isc_support || fmt->sd_support)
-+		if (fmt->sd_support)
- 			isc->user_formats[j++] =3D fmt;
--
- 		fmt++;
- 	}
-=20
-@@ -1877,13 +1933,11 @@ static int isc_set_default_fmt(struct isc_device *i=
-sc)
- 	};
- 	int ret;
-=20
--	ret =3D isc_try_fmt(isc, &f, NULL, NULL);
-+	ret =3D isc_try_fmt(isc, &f, NULL);
- 	if (ret)
- 		return ret;
-=20
--	isc->current_fmt =3D isc->user_formats[0];
- 	isc->fmt =3D f;
--
- 	return 0;
- }
-=20
---=20
-2.7.4
+> 
+>>
+> 
+> Thanks for commenting,
+> 
+> Regards,
+> Pierre
+> 
+> 
 
