@@ -6,48 +6,49 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B36EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE80C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77862082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F5C2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfC1QZH (ORCPT
+        id S1726540AbfC1QZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 28 Mar 2019 12:25:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:34355 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbfC1QZH (ORCPT
+Received: from mail-it1-f198.google.com ([209.85.166.198]:42270 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbfC1QZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Mar 2019 12:25:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id y13so16200897iol.1
+Received: by mail-it1-f198.google.com with SMTP id r186so3707445ita.7
         for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 09:25:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Yf4H6VlySuXfZGixloSBAIzofGWW3QZDm4eHyshp3o4=;
-        b=lkxbDO4/V8ylzqJVvUvrOPiv6wT+Z8393Qg/68C73xn0dJp5438LZSJrOGsPaWMVJO
-         Eeuj58Ff9Uj1fvRgjB+W3UNcq7G3r3kCHiVyRkGx6i70Bv41llWn84kuRptIIsLnjBXO
-         fMgB2G5Vq6Omv/1m5nOvZOjMdTAFUPOWclLpJClVFnUXBoDLuyifPcYyuPVOgt+Nl3/I
-         8wjI/bijj01MUNwP7gdgQY1X2oK7XdMbrIGYx7SyUizypZTX0WfdeB1ivOM/Sia9dQ/G
-         H3DCFaJnGTaK+8ljbnKKQtwOCUNiSWlD/t+iz1ZBLJ3oX8kIRazwQzWrW3iqWByR7Rdu
-         8Mdw==
-X-Gm-Message-State: APjAAAWpuXnjfXy1wtEpJi7qLYTYGRf8qcblk5doYtWPStJ5qkBoTvSx
-        vNIalrgkF2Hw0zlsy5IykGzFOfzFmbUjiYgDpoTIa9H9SWsF
-X-Google-Smtp-Source: APXvYqzeJMtQUIuiaX34di5C/02mqcV8MCivvGNJtL37j+mzdE86bExEER+gNfu226FfeB016jIbtFnlw+s1bO3DstCx0wOb7/N8
+        bh=o4kkm8roeaRNYaszKT75RthftAfT4kLKyk2DdbXepLU=;
+        b=iWTJEcZnnJvootfqFInLkyU1v5GQEmUzKx965G2IcTDbITNKjXDUf8cnKb/MK5SCGQ
+         ZkTrOGFYgnxIAFfiav0Mn7n6LlvWPled2FLwUWl3OD+igDxGQYOnIbxz6gukUzJuItn3
+         QZ1Nj1JEq+rQLnqWeDfewnxqMYLPalA8W9dge9V2MEgkvIW3jfpEfzWa2yRdlrADqqDw
+         gNQLCZD7quOV8mXXMroZm7cbRXdx5O0dk24hvRYZtz65TSV8FW5i/pk8HbKi7EX62HUU
+         iUkPlDdMIAYCr/CfjhBhG4/cWuxQU1VHbMcWSQKTftaNAL3ROHhfCCkdpi78jgR1i51R
+         ROoA==
+X-Gm-Message-State: APjAAAW0ypVLeNs9zTVGIekSr5CtOICpk+4nMR2WpGFS1FnZdhTVnbT5
+        BOO2BjOReU1Gp4N+UIt+58OwvQFdKZpZ/lVj3WY6Bve629T3
+X-Google-Smtp-Source: APXvYqwA/E/c4B7dljtt6+HoubRlOA6hjLCzDb0VfFAJx9ZBpDlO3E9IfPzFOdbui/NFCib0IYLMlRlFuW8mgpTBjwyCyp3E2NER
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:34a:: with SMTP id b10mr253327itl.13.1553790305877;
- Thu, 28 Mar 2019 09:25:05 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 09:25:05 -0700
+X-Received: by 2002:a02:f52:: with SMTP id h79mr3567764jad.3.1553790306117;
+ Thu, 28 Mar 2019 09:25:06 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 09:25:06 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003cca5a058529ffe6@google.com>
-Subject: KMSAN: uninit-value in tipc_nl_compat_name_table_dump (2)
-From:   syzbot <syzbot+3ce8520484b0d4e260a5@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com, jon.maloy@ericsson.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
+Message-ID: <000000000000407080058529ff40@google.com>
+Subject: KMSAN: kernel-infoleak in sctp_getsockopt (3)
+From:   syzbot <syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com,
+        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
+        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,80 +59,97 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    a695dc5e kmsan: fixup mm/sl[au]b.[ch] after rebase
+HEAD commit:    c10a026b kmsan: use __free_pages() in kmsan_iounmap_page_r..
 git tree:       kmsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=1683e04d200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=107d3c7d200000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=a5675814e8eae69e
-dashboard link: https://syzkaller.appspot.com/bug?extid=3ce8520484b0d4e260a5
+dashboard link: https://syzkaller.appspot.com/bug?extid=86b5c7c236a22616a72f
 compiler:       clang version 8.0.0 (trunk 350509)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15bdf95f200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11b5a4cf200000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1252834d200000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3ce8520484b0d4e260a5@syzkaller.appspotmail.com
+Reported-by: syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com
 
-sshd (11234) used greatest stack depth: 54160 bytes left
+IPv6: ADDRCONF(NETDEV_CHANGE): veth1_to_hsr: link becomes ready
+IPv6: ADDRCONF(NETDEV_CHANGE): hsr_slave_1: link becomes ready
+8021q: adding VLAN 0 to HW filter on device batadv0
+8021q: adding VLAN 0 to HW filter on device batadv0
 ==================================================================
-BUG: KMSAN: uninit-value in __arch_swab32  
-arch/x86/include/uapi/asm/swab.h:10 [inline]
-BUG: KMSAN: uninit-value in __fswab32 include/uapi/linux/swab.h:59 [inline]
-BUG: KMSAN: uninit-value in tipc_nl_compat_name_table_dump+0x54f/0xcd0  
-net/tipc/netlink_compat.c:872
-CPU: 1 PID: 11248 Comm: syz-executor646 Not tainted 5.0.0+ #11
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+CPU: 0 PID: 10131 Comm: syz-executor.4 Not tainted 5.0.0+ #16
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0x173/0x1d0 lib/dump_stack.c:113
-  kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:600
-  __msan_warning+0x82/0xf0 mm/kmsan/kmsan_instr.c:313
-  __arch_swab32 arch/x86/include/uapi/asm/swab.h:10 [inline]
-  __fswab32 include/uapi/linux/swab.h:59 [inline]
-  tipc_nl_compat_name_table_dump+0x54f/0xcd0 net/tipc/netlink_compat.c:872
-  __tipc_nl_compat_dumpit+0x59e/0xda0 net/tipc/netlink_compat.c:215
-  tipc_nl_compat_dumpit+0x63a/0x820 net/tipc/netlink_compat.c:280
-  tipc_nl_compat_handle net/tipc/netlink_compat.c:1226 [inline]
-  tipc_nl_compat_recv+0x1b5f/0x2750 net/tipc/netlink_compat.c:1265
-  genl_family_rcv_msg net/netlink/genetlink.c:601 [inline]
-  genl_rcv_msg+0x185f/0x1a60 net/netlink/genetlink.c:626
-  netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
-  genl_rcv+0x63/0x80 net/netlink/genetlink.c:637
-  netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
-  netlink_unicast+0xf3e/0x1020 net/netlink/af_netlink.c:1336
-  netlink_sendmsg+0x127f/0x1300 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:622 [inline]
-  sock_sendmsg net/socket.c:632 [inline]
-  ___sys_sendmsg+0xdb9/0x11b0 net/socket.c:2115
-  __sys_sendmsg net/socket.c:2153 [inline]
-  __do_sys_sendmsg net/socket.c:2162 [inline]
-  __se_sys_sendmsg+0x305/0x460 net/socket.c:2160
-  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2160
+  kmsan_report+0x131/0x2a0 mm/kmsan/kmsan.c:636
+  kmsan_internal_check_memory+0xaa1/0xbb0 mm/kmsan/kmsan.c:730
+  kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:485
+  _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+  copy_to_user include/linux/uaccess.h:174 [inline]
+  sctp_getsockopt_peer_addrs net/sctp/socket.c:5911 [inline]
+  sctp_getsockopt+0x1668e/0x17f70 net/sctp/socket.c:7562
+  sock_common_getsockopt+0x13f/0x180 net/core/sock.c:2950
+  __sys_getsockopt+0x489/0x550 net/socket.c:1938
+  __do_sys_getsockopt net/socket.c:1949 [inline]
+  __se_sys_getsockopt+0xe1/0x100 net/socket.c:1946
+  __x64_sys_getsockopt+0x62/0x80 net/socket.c:1946
   do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
   entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x444069
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+RIP: 0033:0x458209
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 1b d8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffda17b3718 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000444069
-RDX: 0000000000000000 RSI: 00000000200001c0 RDI: 0000000000000003
-RBP: 00000000006ce018 R08: 0000000000000000 R09: 00000000004002e0
-R10: 0000000000001900 R11: 0000000000000246 R12: 0000000000401d10
-R13: 0000000000401da0 R14: 0000000000000000 R15: 0000000000000000
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fdbef191c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000458209
+RDX: 000000000000006c RSI: 0000000000000084 RDI: 0000000000000004
+RBP: 000000000073bf00 R08: 0000000020000300 R09: 0000000000000000
+R10: 0000000020000280 R11: 0000000000000246 R12: 00007fdbef1926d4
+R13: 00000000004c96c8 R14: 00000000004d0310 R15: 00000000ffffffff
 
-Uninit was created at:
+Uninit was stored to memory at:
   kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
-  kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:159
-  kmsan_kmalloc+0xa6/0x130 mm/kmsan/kmsan_hooks.c:176
-  kmsan_slab_alloc+0xe/0x10 mm/kmsan/kmsan_hooks.c:185
-  slab_post_alloc_hook mm/slab.h:445 [inline]
-  slab_alloc_node mm/slub.c:2773 [inline]
-  __kmalloc_node_track_caller+0xe9e/0xff0 mm/slub.c:4398
-  __kmalloc_reserve net/core/skbuff.c:140 [inline]
-  __alloc_skb+0x309/0xa20 net/core/skbuff.c:208
-  alloc_skb include/linux/skbuff.h:1012 [inline]
-  netlink_alloc_large_skb net/netlink/af_netlink.c:1182 [inline]
-  netlink_sendmsg+0xb82/0x1300 net/netlink/af_netlink.c:1892
+  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
+  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
+  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
+  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
+  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
+  sctp_getsockopt_peer_addrs net/sctp/socket.c:5906 [inline]
+  sctp_getsockopt+0x16556/0x17f70 net/sctp/socket.c:7562
+  sock_common_getsockopt+0x13f/0x180 net/core/sock.c:2950
+  __sys_getsockopt+0x489/0x550 net/socket.c:1938
+  __do_sys_getsockopt net/socket.c:1949 [inline]
+  __se_sys_getsockopt+0xe1/0x100 net/socket.c:1946
+  __x64_sys_getsockopt+0x62/0x80 net/socket.c:1946
+  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+
+Uninit was stored to memory at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
+  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
+  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
+  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
+  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
+  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
+  sctp_transport_init net/sctp/transport.c:61 [inline]
+  sctp_transport_new+0x16d/0x9a0 net/sctp/transport.c:115
+  sctp_assoc_add_peer+0x532/0x1f70 net/sctp/associola.c:637
+  sctp_process_param net/sctp/sm_make_chunk.c:2548 [inline]
+  sctp_process_init+0x1a1b/0x3ed0 net/sctp/sm_make_chunk.c:2361
+  sctp_cmd_process_init net/sctp/sm_sideeffect.c:682 [inline]
+  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1410 [inline]
+  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
+  sctp_do_sm+0x3cfc/0x9af0 net/sctp/sm_sideeffect.c:1191
+  sctp_assoc_bh_rcv+0x65a/0xd80 net/sctp/associola.c:1074
+  sctp_inq_push+0x300/0x420 net/sctp/inqueue.c:95
+  sctp_backlog_rcv+0x20a/0xaf0 net/sctp/input.c:354
+  sk_backlog_rcv include/net/sock.h:936 [inline]
+  __release_sock+0x281/0x5f0 net/core/sock.c:2284
+  release_sock+0x99/0x2a0 net/core/sock.c:2800
+  sctp_wait_for_connect+0x3ee/0x860 net/sctp/socket.c:8751
+  sctp_sendmsg_to_asoc+0x2167/0x21a0 net/sctp/socket.c:1967
+  sctp_sendmsg+0x3fd7/0x6700 net/sctp/socket.c:2113
+  inet_sendmsg+0x54a/0x720 net/ipv4/af_inet.c:798
   sock_sendmsg_nosec net/socket.c:622 [inline]
   sock_sendmsg net/socket.c:632 [inline]
   ___sys_sendmsg+0xdb9/0x11b0 net/socket.c:2115
@@ -141,6 +159,18 @@ Uninit was created at:
   __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2160
   do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
   entry_SYSCALL_64_after_hwframe+0x63/0xe7
+
+Local variable description: ----addr.i@sctp_process_init
+Variable was created at:
+  sctp_process_init+0xb5/0x3ed0 net/sctp/sm_make_chunk.c:2324
+  sctp_cmd_process_init net/sctp/sm_sideeffect.c:682 [inline]
+  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1410 [inline]
+  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
+  sctp_do_sm+0x3cfc/0x9af0 net/sctp/sm_sideeffect.c:1191
+
+Bytes 8-15 of 16 are uninitialized
+Memory access of size 16 starts at ffff88809511fc28
+Data copied to user address 0000000020000298
 ==================================================================
 
 
