@@ -2,115 +2,136 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE697C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC95C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE77C2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553806613;
-	bh=W/Wxmp0XycESAD7gJuwLziX+ntp6DLCkTd81eY+Tf1Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=amYlPpJC/9JEJQjX9EWwzS+gGkimjZzMxT40m+hR5NLJusW8YYZa/XJxKC154EgNV
-	 NAoxmPQ9AdVAcGyU3cPAjr4dVH3CtdFjGnnNKAeDh+CWFNInxJM8uuFgK6vB78mZ7a
-	 /937l4I+OLK0gYOQ9EvI+8ydJ4wN3hM8jL9l7Wkw=
+	by mail.kernel.org (Postfix) with ESMTP id 761E821850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfC1U4w (ORCPT
+        id S1726506AbfC1VDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:56:52 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42441 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727567AbfC1U4w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:56:52 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v22so60991lje.9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 13:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lIaJ5zGl40TvmZP8WPoGlGdOuZUcsgvjcrKL1kd5VzA=;
-        b=WxTImTR+QbeSEDanVx7BSBg44DPaa07/TW7qJCZttsSwUGNfm8Dykr6OIWqFA58GT5
-         5mLOnZelYL5c5BrRgckClUbT1aC/umRo9KxJddlf7sXkJCkQlB3vXFjbD1WmDD9Ptkns
-         iJTGfxKI5jHv8UK0bNKYAh4nMcRFX7o4UQXf4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lIaJ5zGl40TvmZP8WPoGlGdOuZUcsgvjcrKL1kd5VzA=;
-        b=MARsHDYFx4+gqoJR+2lBf+nscBOQRGaHvlSZRJ0F80msfd2wJ9iBNTBUc6d9i2uRxp
-         XfJdiLW2ZSWbZ/ySw5NYTWbJCNA7+2aYD0PUZ1Wc0O6IJKNsTLfl1IX6nbSL0fbV24kJ
-         1j3n3MAzJy0BCEYbwGc2j/iMka5twHQ/mekLNaC01+gnoLGBbBPSujons726kEYs9YB4
-         Eajph229I2I7D94aUZuGR2992kjnBOLxXx8JO7Ny6qfQ7dDvnIEmwfrh5xapccLThUPE
-         pzVuXHt6gQAUh63Y2NykRz0XT8fUrwjDWFqhqAIdBIMAMhD8LPo3dS2KfGeW+cQ9CBH5
-         E7Hg==
-X-Gm-Message-State: APjAAAU7sc43ntQEE5CZL/T6PSj+hDUvkyYv5VSzuJTbxaGMAfHyhSE6
-        syDOxY/+6m0EDhKRH/7eLkIKocPhnHE=
-X-Google-Smtp-Source: APXvYqxMffVG4ZT7SezCfIk0wEef68nVrELMWU6bFWPqPEKehKrdxFFsQz0KTtjEaK0oo+7iJty6qw==
-X-Received: by 2002:a2e:8658:: with SMTP id i24mr23826699ljj.194.1553806609297;
-        Thu, 28 Mar 2019 13:56:49 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id r1sm5129939lfm.7.2019.03.28.13.56.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 13:56:48 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id u2so14926330lfd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 13:56:48 -0700 (PDT)
-X-Received: by 2002:a05:6512:1ca:: with SMTP id f10mr16624139lfp.136.1553806607767;
- Thu, 28 Mar 2019 13:56:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190328181106.22887-1-longman@redhat.com> <20190328181106.22887-13-longman@redhat.com>
- <CAHk-=wh7eanC+W7DpSpAsAAYeRTp3EB5qUxMnDFW3HqNQC0GFQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wh7eanC+W7DpSpAsAAYeRTp3EB5qUxMnDFW3HqNQC0GFQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 Mar 2019 13:56:31 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi67qBi9d7zKfECs7ZnVJqbMoMx-ez-ohO39POqD9YR3Q@mail.gmail.com>
-Message-ID: <CAHk-=wi67qBi9d7zKfECs7ZnVJqbMoMx-ez-ohO39POqD9YR3Q@mail.gmail.com>
+        Thu, 28 Mar 2019 17:03:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60236 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbfC1VDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 17:03:32 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 68F3FC05001D;
+        Thu, 28 Mar 2019 21:03:31 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6ADA68958B;
+        Thu, 28 Mar 2019 21:03:30 +0000 (UTC)
 Subject: Re: [PATCH 12/12] locking/rwsem: Make MSbit of count as guard bit to
  fail readlock
-To:     Waiman Long <longman@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Will Deacon <will.deacon@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
         Tim Chen <tim.c.chen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <20190328181106.22887-1-longman@redhat.com>
+ <20190328181106.22887-13-longman@redhat.com>
+ <CAHk-=wh7eanC+W7DpSpAsAAYeRTp3EB5qUxMnDFW3HqNQC0GFQ@mail.gmail.com>
+ <CAHk-=wi67qBi9d7zKfECs7ZnVJqbMoMx-ez-ohO39POqD9YR3Q@mail.gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <e597a6c6-49de-302c-b09d-9a9085ebb394@redhat.com>
+Date:   Thu, 28 Mar 2019 17:03:30 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <CAHk-=wi67qBi9d7zKfECs7ZnVJqbMoMx-ez-ohO39POqD9YR3Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 28 Mar 2019 21:03:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 1:47 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On 03/28/2019 04:56 PM, Linus Torvalds wrote:
+> On Thu, Mar 28, 2019 at 1:47 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>> On Thu, Mar 28, 2019 at 11:12 AM Waiman Long <longman@redhat.com> wrote:
+>>> With the merging of owner into count for x86-64, there is only 16 bits
+>>> left for reader count. It is theoretically possible for an application to
+>>> cause more than 64k readers to acquire a rwsem leading to count overflow.
+>> Ahh, and here's the thing that makes 16 bits work for readers.
+> Hmm. Does it?
 >
-> On Thu, Mar 28, 2019 at 11:12 AM Waiman Long <longman@redhat.com> wrote:
-> >
-> > With the merging of owner into count for x86-64, there is only 16 bits
-> > left for reader count. It is theoretically possible for an application to
-> > cause more than 64k readers to acquire a rwsem leading to count overflow.
+> Isn't there a race here? We're adding the READ bias, and then noticing
+> that it his the guard bit, and then the down_read_failed will make it
+> all good again.
 >
-> Ahh, and here's the thing that makes 16 bits work for readers.
+> But this isn't actually done with preemption disabled, so things
+> *could* get preempted in between, and if we have a huge run of bad
+> luck, it can still overflow.
+>
+> Ok, so you need to have a 32k series run of bad luck (and hit
+> *exactly* the right small preemption point window every time), and I'm
+> certainly willing to say "yeah, not an issue", but maybe it's still
+> worth at least documenting?
+>
+>                   Linus
 
-Hmm. Does it?
+I think it is theoretically possible that this can happen, but I doubt
+we will ever see that. Will document that possibility in the comment.
 
-Isn't there a race here? We're adding the READ bias, and then noticing
-that it his the guard bit, and then the down_read_failed will make it
-all good again.
+Thanks,
+Longman
 
-But this isn't actually done with preemption disabled, so things
-*could* get preempted in between, and if we have a huge run of bad
-luck, it can still overflow.
-
-Ok, so you need to have a 32k series run of bad luck (and hit
-*exactly* the right small preemption point window every time), and I'm
-certainly willing to say "yeah, not an issue", but maybe it's still
-worth at least documenting?
-
-                  Linus
