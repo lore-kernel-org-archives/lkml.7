@@ -2,185 +2,331 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7248DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C05C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36044206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:49:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WEHQ9p9X"
+	by mail.kernel.org (Postfix) with ESMTP id B2F722173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfC1Vs7 (ORCPT
+        id S1727940AbfC1VvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 17:48:59 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:38434 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbfC1Vs7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 17:48:59 -0400
-Received: by mail-it1-f195.google.com with SMTP id f22so697437ita.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 14:48:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=POFNTFkXnfglYcZVW5azcTDp6qvbT4UFwDSyy+XrSIQ=;
-        b=WEHQ9p9XUGbas9YfuVZrHmf+RAaplfu/Z346Gt9/4TNFEiWvPbwk4wSWstif5ADQYC
-         oWA+e11bVGEUehX9T21xyHWEmzsGcOwocO+rScnipZzdFW9zjY1JoSbGNxO1MQVfhTrl
-         PVLLF9F0gL+r4GM8UrguwsqBSxSDRq4wZJex8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=POFNTFkXnfglYcZVW5azcTDp6qvbT4UFwDSyy+XrSIQ=;
-        b=kBlnSPqUzIJS9uX/7QC9WbY3j3ulq9cunn7HXv4/O9qbc0Yl6UX1fT9XHukLxBcTEH
-         BUHFrG/YqhGC3FnlZEtsLvBfWJKloiPucATEQfiaKHYLavkWvdmnBgdokxJXE6Qa48TT
-         XjfIZa6htowEnFQZssteiIpjMMEwTEt0X3RhdlvwKodbg5d1nYXGIKhcOkHm2qiKWXwt
-         waxqaS1bTNCmTENpVEpKhGnJ1w1BjPQ1QFAFHTxUb4iJm59kGqqrkdcWXJpPfGKidPp3
-         8Qt9v47DV7Nr5+7I/kqmu2vCk2y7ku4RGq0+ek5awRxC5CMP/C+qJ54ZhNe/iWetXS6V
-         qNAg==
-X-Gm-Message-State: APjAAAWiD4fLCLH36XUFivFtHAguja0P5xhmhF4yCpFaFAFy7CudQo/5
-        4BkIn+StQy5ZZavETe7U58E+TNGL335mZU3CqPXMUw==
-X-Google-Smtp-Source: APXvYqz2iJsQ/m8HtAd9iDlc39ZYxg3WLSSDMahu7y/zZY/E+ayxmjVOdGEdHEu2vSQ4jJ9Cg+PSy/GSZTd+ye3tkEM=
-X-Received: by 2002:a24:2705:: with SMTP id g5mr1934919ita.120.1553809738113;
- Thu, 28 Mar 2019 14:48:58 -0700 (PDT)
+        Thu, 28 Mar 2019 17:51:02 -0400
+Received: from mga03.intel.com ([134.134.136.65]:10391 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727928AbfC1VvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 17:51:01 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 14:44:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,282,1549958400"; 
+   d="scan'208";a="138155203"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga003.jf.intel.com with ESMTP; 28 Mar 2019 14:44:58 -0700
+Date:   Thu, 28 Mar 2019 06:43:51 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     jglisse@redhat.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2 05/11] mm/hmm: improve and rename hmm_vma_fault() to
+ hmm_range_fault() v2
+Message-ID: <20190328134351.GD31324@iweiny-DESK2.sc.intel.com>
+References: <20190325144011.10560-1-jglisse@redhat.com>
+ <20190325144011.10560-6-jglisse@redhat.com>
 MIME-Version: 1.0
-References: <CAPUE2usTh3Th8FySCUsbgp_WGEL2k94pxDfwp4GT1uUkksok8w@mail.gmail.com>
- <CAPUE2usMGzQVnL-rSrRoeWm=BHYD6pKkWXGNkaMpDOvFOy0HAQ@mail.gmail.com> <f7e7b21c-60e4-fd38-d836-49550eb55e50@collabora.com>
-In-Reply-To: <f7e7b21c-60e4-fd38-d836-49550eb55e50@collabora.com>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Thu, 28 Mar 2019 14:48:47 -0700
-Message-ID: <CAPUE2ut9MjVuvOxZuVNBnZiFvz9Y2XBgCPSQRrdM=6w+p4Rv1Q@mail.gmail.com>
-Subject: Re: [PATCH v2] mfd: cros: Update EC protocol to match current EC code
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190325144011.10560-6-jglisse@redhat.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 2:31 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Gwendal,
->
-> Unless my pwclient or patchwork is doing something weird I have some issues
-> trying to apply this patch. Could you check that is correctly formatted?
-In lore.kernel.org, the first 100 lines of the patch are missing.
-Resending.
+On Mon, Mar 25, 2019 at 10:40:05AM -0400, Jerome Glisse wrote:
+> From: Jérôme Glisse <jglisse@redhat.com>
+> 
+> Rename for consistency between code, comments and documentation. Also
+> improves the comments on all the possible returns values. Improve the
+> function by returning the number of populated entries in pfns array.
+> 
+> Changes since v1:
+>     - updated documentation
+>     - reformated some comments
+> 
+> Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  Documentation/vm/hmm.rst |  8 +---
+>  include/linux/hmm.h      | 13 +++++-
+>  mm/hmm.c                 | 91 +++++++++++++++++-----------------------
+>  3 files changed, 52 insertions(+), 60 deletions(-)
+> 
+> diff --git a/Documentation/vm/hmm.rst b/Documentation/vm/hmm.rst
+> index d9b27bdadd1b..61f073215a8d 100644
+> --- a/Documentation/vm/hmm.rst
+> +++ b/Documentation/vm/hmm.rst
+> @@ -190,13 +190,7 @@ When the device driver wants to populate a range of virtual addresses, it can
+>  use either::
+>  
+>    long hmm_range_snapshot(struct hmm_range *range);
+> -  int hmm_vma_fault(struct vm_area_struct *vma,
+> -                    struct hmm_range *range,
+> -                    unsigned long start,
+> -                    unsigned long end,
+> -                    hmm_pfn_t *pfns,
+> -                    bool write,
+> -                    bool block);
+> +  long hmm_range_fault(struct hmm_range *range, bool block);
+>  
+>  The first one (hmm_range_snapshot()) will only fetch present CPU page table
+>  entries and will not trigger a page fault on missing or non-present entries.
+> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+> index 32206b0b1bfd..e9afd23c2eac 100644
+> --- a/include/linux/hmm.h
+> +++ b/include/linux/hmm.h
+> @@ -391,7 +391,18 @@ bool hmm_vma_range_done(struct hmm_range *range);
+>   *
+>   * See the function description in mm/hmm.c for further documentation.
+>   */
+> -int hmm_vma_fault(struct hmm_range *range, bool block);
+> +long hmm_range_fault(struct hmm_range *range, bool block);
+> +
+> +/* This is a temporary helper to avoid merge conflict between trees. */
+> +static inline int hmm_vma_fault(struct hmm_range *range, bool block)
+> +{
+> +	long ret = hmm_range_fault(range, block);
+> +	if (ret == -EBUSY)
+> +		ret = -EAGAIN;
+> +	else if (ret == -EAGAIN)
+> +		ret = -EBUSY;
+> +	return ret < 0 ? ret : 0;
+> +}
+>  
+>  /* Below are for HMM internal use only! Not to be used by device driver! */
+>  void hmm_mm_destroy(struct mm_struct *mm);
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index 91361aa74b8b..7860e63c3ba7 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -336,13 +336,13 @@ static int hmm_vma_do_fault(struct mm_walk *walk, unsigned long addr,
+>  	flags |= write_fault ? FAULT_FLAG_WRITE : 0;
+>  	ret = handle_mm_fault(vma, addr, flags);
+>  	if (ret & VM_FAULT_RETRY)
+> -		return -EBUSY;
+> +		return -EAGAIN;
+>  	if (ret & VM_FAULT_ERROR) {
+>  		*pfn = range->values[HMM_PFN_ERROR];
+>  		return -EFAULT;
+>  	}
+>  
+> -	return -EAGAIN;
+> +	return -EBUSY;
+>  }
+>  
+>  static int hmm_pfns_bad(unsigned long addr,
+> @@ -368,7 +368,7 @@ static int hmm_pfns_bad(unsigned long addr,
+>   * @fault: should we fault or not ?
+>   * @write_fault: write fault ?
+>   * @walk: mm_walk structure
+> - * Returns: 0 on success, -EAGAIN after page fault, or page fault error
+> + * Returns: 0 on success, -EBUSY after page fault, or page fault error
+>   *
+>   * This function will be called whenever pmd_none() or pte_none() returns true,
+>   * or whenever there is no page directory covering the virtual address range.
+> @@ -391,12 +391,12 @@ static int hmm_vma_walk_hole_(unsigned long addr, unsigned long end,
+>  
+>  			ret = hmm_vma_do_fault(walk, addr, write_fault,
+>  					       &pfns[i]);
+> -			if (ret != -EAGAIN)
+> +			if (ret != -EBUSY)
+>  				return ret;
+>  		}
+>  	}
+>  
+> -	return (fault || write_fault) ? -EAGAIN : 0;
+> +	return (fault || write_fault) ? -EBUSY : 0;
+>  }
+>  
+>  static inline void hmm_pte_need_fault(const struct hmm_vma_walk *hmm_vma_walk,
+> @@ -527,11 +527,11 @@ static int hmm_vma_handle_pte(struct mm_walk *walk, unsigned long addr,
+>  	uint64_t orig_pfn = *pfn;
+>  
+>  	*pfn = range->values[HMM_PFN_NONE];
+> -	cpu_flags = pte_to_hmm_pfn_flags(range, pte);
+> -	hmm_pte_need_fault(hmm_vma_walk, orig_pfn, cpu_flags,
+> -			   &fault, &write_fault);
+> +	fault = write_fault = false;
+>  
+>  	if (pte_none(pte)) {
+> +		hmm_pte_need_fault(hmm_vma_walk, orig_pfn, 0,
+> +				   &fault, &write_fault);
 
-Gwendal.
->
-> $ pwclient git-am 1055029
->
-> Applying patch #1055029 using u'git am'
-> Description: [v2] mfd: cros: Update EC protocol to match current EC code
-> Applying: mfd: cros: Update EC protocol to match current EC code
-> error: patch fragment without header at line 11: @@ -105,15 +120,24 @@
-> Patch failed at 0001 mfd: cros: Update EC protocol to match current EC code
-> hint: Use 'git am --show-current-patch' to see the failed patch
-> When you have resolved this problem, run "git am --continue".
-> If you prefer to skip this patch, run "git am --skip" instead.
-> To restore the original branch and stop patching, run "git am --abort".
-> 'git am' failed with exit status 128
->
-> Also if I try to apply the patch directly I got:
->
-> $ git am --show-current-patch | patch -p1
-> patching file include/linux/mfd/cros_ec_commands.h
-> patch: **** malformed patch at line 5615: (8-bit) */
->
-> On 26/3/19 18:21, Gwendal Grignou wrote:
-> > Chromebook Embedded Controller protocol is defined in the kernel at
-> > cros_ec_commands.h.
-> > The source of trust for the EC protocol is at
-> > https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h
-> >
-> > Only needed changes have been picked up from this file to the kernel
-> > include file leading to gaps between the upstream version and what the
-> > latest ECs can do.
-> >
-> > Fill the gaps to ease future integrations. Changes from the original
-> > files is header/footer for license and include files for alignment.
-> >
-> > Check this include file works on ChomeOS kernel 4.14 and 4.19 on eve.
-> >
-> > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> > ---
-> > Changes in v2:
-> > - Replace 1 << with BIT()
-> > - Check checkpatch warning/errors are outside kernel scope.
-> > - Update .h with latest changes.
-> >
-> >  include/linux/mfd/cros_ec_commands.h | 3723 +++++++++++++++++++++-----
-> >  1 file changed, 2992 insertions(+), 731 deletions(-)
-> >
-> > diff --git a/include/linux/mfd/cros_ec_commands.h
-> > b/include/linux/mfd/cros_ec_commands.h
-> > index fc91082d4c35..5c4764e3db6f 100644
-> > --- a/include/linux/mfd/cros_ec_commands.h
-> > +++ b/include/linux/mfd/cros_ec_commands.h
->
-> [snip]
->
-> > @@ -33,7 +46,7 @@
-> >  #define EC_PROTO_VERSION          0x00000002
-> >
-> >  /* Command version mask */
-> > -#define EC_VER_MASK(version) (1UL << (version))
-> > +#define EC_VER_MASK(version) BIT(version)
-> >
-> >  /* I/O addresses for ACPI commands */
-> >  #define EC_LPC_ADDR_ACPI_DATA  0x62
-> > @@ -59,13 +72,13 @@
-> >  #define EC_HOST_CMD_REGION_SIZE 0x80
-> >
-> >  /* EC command register bit functions */
-> > -#define EC_LPC_CMDR_DATA     (1 << 0)  /* Data ready for host to read */
-> > -#define EC_LPC_CMDR_PENDING  (1 << 1)  /* Write pending to EC */
-> > -#define EC_LPC_CMDR_BUSY     (1 << 2)  /* EC is busy processing a command */
-> > -#define EC_LPC_CMDR_CMD              (1 << 3)  /* Last host write was a command */
-> > -#define EC_LPC_CMDR_ACPI_BRST        (1 << 4)  /* Burst mode (not used) */
-> > -#define EC_LPC_CMDR_SCI              (1 << 5)  /* SCI event is pending */
-> > -#define EC_LPC_CMDR_SMI              (1 << 6)  /* SMI event is pending */
-> > +#define EC_LPC_CMDR_DATA     BIT(0)  /* Data ready for host to read */
-> > +#define EC_LPC_CMDR_PENDING  BIT(1)  /* Write pending to EC */
-> > +#define EC_LPC_CMDR_BUSY     BIT(2)  /* EC is busy processing a command */
-> > +#define EC_LPC_CMDR_CMD              BIT(3)  /* Last host write was a command */
-> > +#define EC_LPC_CMDR_ACPI_BRST        BIT(4)  /* Burst mode (not used) */
-> > +#define EC_LPC_CMDR_SCI              BIT(5)  /* SCI event is pending */
-> > +#define EC_LPC_CMDR_SMI              BIT(6)  /* SMI event is pending */
-> >
-> >  #define EC_LPC_ADDR_MEMMAP       0x900
-> >  #define EC_MEMMAP_SIZE         255 /* ACPI IO buffer max is 255 bytes */
-> > @@ -85,13 +98,15 @@
-> >  /* Unused 0x28 - 0x2f */
-> >  #define EC_MEMMAP_SWITCHES         0x30      /* 8 bits */
-> >  /* Unused 0x31 - 0x33 */
-> > -#define EC_MEMMAP_HOST_EVENTS      0x34 /* 32 bits */
-> > -/* Reserve 0x38 - 0x3f for additional host event-related stuff */
-> > -/* Battery values are all 32 bits */
-> > +#define EC_MEMMAP_HOST_EVENTS      0x34 /* 64 bits */
-> > +/* Battery values are all 32 bits, unless otherwise noted. */
-> >  #define EC_MEMMAP_BATT_VOLT        0x40 /* Battery Present Voltage */
-> >  #define EC_MEMMAP_BATT_RATE        0x44 /* Battery Present Rate */
-> >  #define EC_MEMMAP_BATT_CAP         0x48 /* Battery Remaining Capacity */
-> > -#define EC_MEMMAP_BATT_FLAG        0x4c /* Battery State, defined below */
-> > +#define EC_MEMMAP_BATT_FLAG        0x4c /* Battery State, see below (8-bit) */
-> > +#define EC_MEMMAP_BATT_COUNT       0x4d /* Battery Count (8-bit) */
-> > +#define EC_MEMMAP_BATT_INDEX       0x4e /* Current Battery Data Index
-> > (8-bit) */
->
-> Complains about this malformed line, but even after fix this I got other issues.
->
-> Thanks,
->  Enric
+This really threw me until I applied the patches to a tree.  It looks like this
+is just optimizing away a pte_none() check.  The only functional change which
+was mentioned was returning the number of populated pfns.  So I spent a bit of
+time trying to figure out why hmm_pte_need_fault() needed to move _here_ to do
+that...  :-(
+
+It would have been nice to have said something about optimizing in the commit
+message.
+
+>  		if (fault || write_fault)
+>  			goto fault;
+>  		return 0;
+> @@ -570,7 +570,7 @@ static int hmm_vma_handle_pte(struct mm_walk *walk, unsigned long addr,
+>  				hmm_vma_walk->last = addr;
+>  				migration_entry_wait(vma->vm_mm,
+>  						     pmdp, addr);
+> -				return -EAGAIN;
+> +				return -EBUSY;
+>  			}
+>  			return 0;
+>  		}
+> @@ -578,6 +578,10 @@ static int hmm_vma_handle_pte(struct mm_walk *walk, unsigned long addr,
+>  		/* Report error for everything else */
+>  		*pfn = range->values[HMM_PFN_ERROR];
+>  		return -EFAULT;
+> +	} else {
+> +		cpu_flags = pte_to_hmm_pfn_flags(range, pte);
+> +		hmm_pte_need_fault(hmm_vma_walk, orig_pfn, cpu_flags,
+> +				   &fault, &write_fault);
+
+Looks like the same situation as above.
+
+>  	}
+>  
+>  	if (fault || write_fault)
+> @@ -628,7 +632,7 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
+>  		if (fault || write_fault) {
+>  			hmm_vma_walk->last = addr;
+>  			pmd_migration_entry_wait(vma->vm_mm, pmdp);
+> -			return -EAGAIN;
+> +			return -EBUSY;
+
+While I am at it.  Why are we swapping EAGAIN and EBUSY everywhere?
+
+Ira
+
+>  		}
+>  		return 0;
+>  	} else if (!pmd_present(pmd))
+> @@ -856,53 +860,34 @@ bool hmm_vma_range_done(struct hmm_range *range)
+>  EXPORT_SYMBOL(hmm_vma_range_done);
+>  
+>  /*
+> - * hmm_vma_fault() - try to fault some address in a virtual address range
+> + * hmm_range_fault() - try to fault some address in a virtual address range
+>   * @range: range being faulted
+>   * @block: allow blocking on fault (if true it sleeps and do not drop mmap_sem)
+> - * Returns: 0 success, error otherwise (-EAGAIN means mmap_sem have been drop)
+> + * Returns: number of valid pages in range->pfns[] (from range start
+> + *          address). This may be zero. If the return value is negative,
+> + *          then one of the following values may be returned:
+> + *
+> + *           -EINVAL  invalid arguments or mm or virtual address are in an
+> + *                    invalid vma (ie either hugetlbfs or device file vma).
+> + *           -ENOMEM: Out of memory.
+> + *           -EPERM:  Invalid permission (for instance asking for write and
+> + *                    range is read only).
+> + *           -EAGAIN: If you need to retry and mmap_sem was drop. This can only
+> + *                    happens if block argument is false.
+> + *           -EBUSY:  If the the range is being invalidated and you should wait
+> + *                    for invalidation to finish.
+> + *           -EFAULT: Invalid (ie either no valid vma or it is illegal to access
+> + *                    that range), number of valid pages in range->pfns[] (from
+> + *                    range start address).
+>   *
+>   * This is similar to a regular CPU page fault except that it will not trigger
+> - * any memory migration if the memory being faulted is not accessible by CPUs.
+> + * any memory migration if the memory being faulted is not accessible by CPUs
+> + * and caller does not ask for migration.
+>   *
+>   * On error, for one virtual address in the range, the function will mark the
+>   * corresponding HMM pfn entry with an error flag.
+> - *
+> - * Expected use pattern:
+> - * retry:
+> - *   down_read(&mm->mmap_sem);
+> - *   // Find vma and address device wants to fault, initialize hmm_pfn_t
+> - *   // array accordingly
+> - *   ret = hmm_vma_fault(range, write, block);
+> - *   switch (ret) {
+> - *   case -EAGAIN:
+> - *     hmm_vma_range_done(range);
+> - *     // You might want to rate limit or yield to play nicely, you may
+> - *     // also commit any valid pfn in the array assuming that you are
+> - *     // getting true from hmm_vma_range_monitor_end()
+> - *     goto retry;
+> - *   case 0:
+> - *     break;
+> - *   case -ENOMEM:
+> - *   case -EINVAL:
+> - *   case -EPERM:
+> - *   default:
+> - *     // Handle error !
+> - *     up_read(&mm->mmap_sem)
+> - *     return;
+> - *   }
+> - *   // Take device driver lock that serialize device page table update
+> - *   driver_lock_device_page_table_update();
+> - *   hmm_vma_range_done(range);
+> - *   // Commit pfns we got from hmm_vma_fault()
+> - *   driver_unlock_device_page_table_update();
+> - *   up_read(&mm->mmap_sem)
+> - *
+> - * YOU MUST CALL hmm_vma_range_done() AFTER THIS FUNCTION RETURN SUCCESS (0)
+> - * BEFORE FREEING THE range struct OR YOU WILL HAVE SERIOUS MEMORY CORRUPTION !
+> - *
+> - * YOU HAVE BEEN WARNED !
+>   */
+> -int hmm_vma_fault(struct hmm_range *range, bool block)
+> +long hmm_range_fault(struct hmm_range *range, bool block)
+>  {
+>  	struct vm_area_struct *vma = range->vma;
+>  	unsigned long start = range->start;
+> @@ -974,7 +959,8 @@ int hmm_vma_fault(struct hmm_range *range, bool block)
+>  	do {
+>  		ret = walk_page_range(start, range->end, &mm_walk);
+>  		start = hmm_vma_walk.last;
+> -	} while (ret == -EAGAIN);
+> +		/* Keep trying while the range is valid. */
+> +	} while (ret == -EBUSY && range->valid);
+>  
+>  	if (ret) {
+>  		unsigned long i;
+> @@ -984,6 +970,7 @@ int hmm_vma_fault(struct hmm_range *range, bool block)
+>  			       range->end);
+>  		hmm_vma_range_done(range);
+>  		hmm_put(hmm);
+> +		return ret;
+>  	} else {
+>  		/*
+>  		 * Transfer hmm reference to the range struct it will be drop
+> @@ -993,9 +980,9 @@ int hmm_vma_fault(struct hmm_range *range, bool block)
+>  		range->hmm = hmm;
+>  	}
+>  
+> -	return ret;
+> +	return (hmm_vma_walk.last - range->start) >> PAGE_SHIFT;
+>  }
+> -EXPORT_SYMBOL(hmm_vma_fault);
+> +EXPORT_SYMBOL(hmm_range_fault);
+>  #endif /* IS_ENABLED(CONFIG_HMM_MIRROR) */
+>  
+>  
+> -- 
+> 2.17.2
+> 
