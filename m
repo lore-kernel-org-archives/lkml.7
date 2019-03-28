@@ -2,130 +2,193 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88D8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33322C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 820A120823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0335A20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:06:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Srj0h6GV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfC1QGR (ORCPT
+        id S1727143AbfC1QGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:06:17 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35012 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726029AbfC1QGQ (ORCPT
+        Thu, 28 Mar 2019 12:06:21 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44756 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbfC1QGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:06:16 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2SG47vx068022
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:06:15 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rh14wscua-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:06:15 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 28 Mar 2019 16:06:12 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Mar 2019 16:06:09 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2SG67mm61014184
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 16:06:07 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 506574C04A;
-        Thu, 28 Mar 2019 16:06:07 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AFF494C046;
-        Thu, 28 Mar 2019 16:06:06 +0000 (GMT)
-Received: from [9.152.222.62] (unknown [9.152.222.62])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Mar 2019 16:06:06 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v6 2/7] s390: ap: new vfio_ap_queue structure
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1553265828-27823-1-git-send-email-pmorel@linux.ibm.com>
- <1553265828-27823-3-git-send-email-pmorel@linux.ibm.com>
- <169eec34-6397-3150-27df-9985c9e711b8@linux.ibm.com>
- <1b64ad7b-2a7c-b604-1adb-af400e7be516@linux.ibm.com>
- <0477b20a-c882-c23d-5373-d461ef721f2c@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Thu, 28 Mar 2019 17:06:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Mar 2019 12:06:19 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i21so16177855oib.11;
+        Thu, 28 Mar 2019 09:06:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J2YnF4j3XKMHvgYMrtOtaTfN5SnS3wNUPDSLACqrJC8=;
+        b=Srj0h6GVrZLToj12j8htEi2KLXrdj2pQhRHLDPOoF0TJUkA5ilRx3W3E4CK58n+soJ
+         Hsz4gQ1LIWwjEvZWRqbIhY8anPAKX7aOF6BGYSdPpYgGsuOsjrkZHfYfDiatPFuf3Fv1
+         pBLg7auZG3c9UNxF9FZC/ahPFPiiLbeTMg7H7VjoH1k2id43NDG04PM9eHdOGmwy8p9h
+         Ya6UBP6XtwbLLhA9PHlyMo+ztRb2xoGbnOpeF9tHJ2TKZzMIfesMPU6MJre6Hc81v0UN
+         wtD5z/EUXOuHSfbtbYNQxGx4+JckDKuB6XXWM3wygaxA8Xqk/XyYwygUUQrriggYb2gl
+         Yfsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J2YnF4j3XKMHvgYMrtOtaTfN5SnS3wNUPDSLACqrJC8=;
+        b=f8tqRdAvF42TcZ9crvuumLOlf8PemVVV4WwYeKW+IpCymxraXNwffiYmN/wdShgvJU
+         +zK97nMSGQqVVyZTm5chw6E7IcDT1+tDQc5Lw2MclfyVIkM4TNuLxxeuyzFyxQcxJ55z
+         5DgdKuUuIPs+ZmnPILfMifvFKBNObOwWAiL+aMwz6qIEvuCtiTZfFYnYjEGQnknwylmR
+         HI9Vu+s/jCv5tfgq9b0+HBJu4KOb2ivng9hCU/onIIjJRokZpfhppU4MbICH2r41iljW
+         pYQ3Yw+zx/0vD2chDBzUf9wThD22J5rWt/lAQM80B1H8SYYmRPxxK4Cz6BTRMCyWm5gp
+         9a9Q==
+X-Gm-Message-State: APjAAAU0JoiYqngwvO4Z2en6rffZB/t3dghu4+gek8eA2ceLL3elktaf
+        t1ILq+VXeUVqG1eu2btz5byV1COYyYevKTgP20s=
+X-Google-Smtp-Source: APXvYqycU1o1ldnqB15PgpXFB9zdTWPJNGcTklAAHTLIu/9LPEUTaUsKN3pjLs35oM3l4Cg894pzUPc8R2UsiORNqm4=
+X-Received: by 2002:aca:d4d8:: with SMTP id l207mr531154oig.29.1553789177972;
+ Thu, 28 Mar 2019 09:06:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0477b20a-c882-c23d-5373-d461ef721f2c@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032816-0008-0000-0000-000002D2E8A4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032816-0009-0000-0000-0000223F1EFC
-Message-Id: <d7154477-8b87-71f8-1e15-ada53c765f61@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903280108
+References: <20190314132210.654-1-sergio.paracuellos@gmail.com>
+ <20190314132210.654-3-sergio.paracuellos@gmail.com> <20190328154238.GA20934@bogus>
+In-Reply-To: <20190328154238.GA20934@bogus>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Thu, 28 Mar 2019 17:06:05 +0100
+Message-ID: <CAMhs-H8akrBVWf5G2unAYmEAv852jvGdieZVk=o59LWW8FnxSw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: phy: Add binding for Mediatek MT7621
+ PCIe PHY
+To:     Rob Herring <robh@kernel.org>
+Cc:     kishon@ti.com, linux-kernel <linux-kernel@vger.kernel.org>,
+        driverdev-devel@linuxdriverproject.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, John Crispin <john@phrozen.org>,
+        linux-mips@vger.kernel.org, NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/03/2019 16:32, Tony Krowiak wrote:
-> On 3/28/19 9:06 AM, Pierre Morel wrote:
->> On 26/03/2019 21:45, Tony Krowiak wrote:
->>> On 3/22/19 10:43 AM, Pierre Morel wrote:
->>>> The AP interruptions are assigned on a queue basis and
+Hi Rob,
 
-...
->>>> +static void vfio_ap_free_queue(int apqn, struct ap_matrix_mdev 
->>>> *matrix_mdev)
->>>> +{
->>>> +    struct vfio_ap_queue *q;
->>>> +
->>>> +    q = vfio_ap_get_queue(apqn, &matrix_mdev->qlist);
->>>> +    if (!q)
->>>> +        return;
->>>> +    q->matrix_mdev = NULL;
->>>> +    vfio_ap_mdev_reset_queue(q);
->>>
->>> I'm wondering if it's necessary to reset the queue here. The only time
->>> a queue is used is when a guest using the mdev device is started. When
->>> that guest is terminated, the fd for the mdev device is /* Bits 41-47 
->>> must all be zeros */closed and the
->>> mdev device's release callback is invoked. The release callback resets
->>> the queues assigned to the mdev device. Is it really necessary to
->>> reset the queue again when it is unassigned even if there would have
->>> been no subsequent activity?
->>
->> Yes, it is necessary, the queue can be re-assigned to another guest 
->> later.
->> Release will only be called when unbinding the queue from the driver.
-> 
-> That is true, but if the queue is never used, there is nothing to reset.
+Thanks for the review.
 
-:) OK
+On Thu, Mar 28, 2019 at 4:42 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Mar 14, 2019 at 02:22:10PM +0100, Sergio Paracuellos wrote:
+> > Add bindings to describe Mediatek MT7621 PCIe PHY.
+>
+> Binding should come before the driver.
 
+Do you mean this should be PATCH 1 of the series?
 
-Regards,
-Pierre
+>
+> >
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > ---
+> >  .../bindings/phy/mediatek,mt7621-pci-phy.txt  | 54 +++++++++++++++++++
+> >  1 file changed, 54 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt b/Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
+> > new file mode 100644
+> > index 000000000000..8addedbe815e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
+> > @@ -0,0 +1,54 @@
+> > +Mediatek Mt7621 PCIe PHY
+> > +
+> > +Required properties:
+> > +- compatible: must be "mediatek,mt7621-pci-phy"
+> > +- reg: base address and length of the PCIe PHY block
+> > +- #address-cells: must be 1
+> > +- #size-cells: must be 0
+> > +
+> > +Each PCIe PHY should be represented by a child node
+> > +
+> > +Required properties For the child node:
+> > +- reg: the PHY ID
+> > +0 - PCIe RC 0
+> > +1 - PCIe RC 1
+> > +- #phy-cells: must be 0
+> > +
+> > +Example:
+> > +     pcie0_phy: pcie-phy@1e149000 {
+> > +             compatible = "mediatek,mt7621-pci-phy";
+> > +             reg = <0x1e149000 0x0700>;
+> > +             #address-cells = <1>;
+> > +             #size-cells = <0>;
+> > +
+> > +             pcie0_port: pcie-phy@0 {
+> > +                     reg = <0>;
+> > +                     #phy-cells = <0>;
+> > +             };
+> > +
+> > +             pcie1_port: pcie-phy@1 {
+> > +                     reg = <1>;
+> > +                     #phy-cells = <0>;
+> > +             };
+>
+> If each phy port doesn't have its own resources, then you don't need
+> child nodes. Just set #phy-cells to 1.
 
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+I see. I will change those two into:
 
+pcie0_phy: pcie-phy@1e149000 {
+     compatible = "mediatek,mt7621-pci-phy";
+     reg = <0x1e149000 0x0700>;
+     #phy-cells = <1>;
+};
+
+pcie1_phy: pcie-phy@1e14a000 {
+     compatible = "mediatek,mt7621-pci-phy";
+     reg = <0x1e14a000 0x0700>;
+     #phy-cells = <0>;
+};
+
+>
+> > +     };
+> > +
+> > +     pcie1_phy: pcie-phy@1e14a000 {
+> > +             compatible = "mediatek,mt7621-pci-phy";
+> > +             reg = <0x1e14a000 0x0700>;
+> > +             #address-cells = <1>;
+> > +             #size-cells = <0>;
+> > +
+> > +             pcie2_port: pcie-phy@0 {
+> > +                     reg = <0>;
+> > +                     #phy-cells = <0>;
+> > +             };
+> > +     };
+> > +
+> > +     /* users of the PCIe phy */
+> > +
+> > +     pcie: pcie@1e140000 {
+> > +             ...
+> > +             ...
+> > +             phys = <&pcie0_port>, <&pcie1_port>, <&pcie2_port>;
+> > +             phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
+> > +     };
+
+I think changing the previous one as you suggested make clients to do now:
+
+pcie: pcie@1e140000 {
+      phys = <&pcie0_phy 0>, <&pcie0_phy 1>, <&pcie1_phy>;
+      phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
+};
+
+Am I right?
+
+I have to figure out how to change the driver to achieve this changes
+also to properly get the phy.
+
+Thanks, I will make the changes in staging to be tested by Neil a send
+v2 PATCHEs for this with your suggested changes.
+
+Best regards and thanks again for your time.
+
+Sergio Paracuellos
