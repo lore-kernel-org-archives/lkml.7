@@ -2,97 +2,103 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670DAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FB0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE7720700
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C23E42173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:27:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553750867;
+	bh=sTepjNv+lCttaCr4VU9DFErARrxIXKIrE1XAT2yCnT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TIngBnV4j1sRjiJKoR+4pmN8vQnLhhAVa/QojQ4wU8FE2+cTQp6297clO2PpFi4Zt
+	 9qLFRE27UOdcpaaNG0Vc+Vpapis8XJ0scNkedyy2EdrIVKeFskM8J1r1MFn429MVEe
+	 XDbSRxwdGWz9HqnFpjmMTSK5FLzy4zFF/c/qA4A4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbfC1FSh (ORCPT
+        id S1726080AbfC1F1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 01:18:37 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:13758 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725765AbfC1FSh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 01:18:37 -0400
-X-UUID: e960acfd394541fe96aad7131fd252d5-20190328
-X-UUID: e960acfd394541fe96aad7131fd252d5-20190328
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 62728532; Thu, 28 Mar 2019 13:18:27 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 28 Mar 2019 13:18:25 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 28 Mar 2019 13:18:20 +0800
-Message-ID: <1553750300.20204.2.camel@mtksdaap41>
-Subject: Re: [PATCH v5 0/9] Mediatek MT8183 clock support
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Stephen Boyd <sboyd@codeaurora.org>
-CC:     Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>, <stable@vger.kernel.org>
-Date:   Thu, 28 Mar 2019 13:18:20 +0800
-In-Reply-To: <20190305050546.23431-1-weiyi.lu@mediatek.com>
-References: <20190305050546.23431-1-weiyi.lu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 28 Mar 2019 01:27:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbfC1F1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 01:27:46 -0400
+Received: from localhost (lfbn-1-18527-45.w90-101.abo.wanadoo.fr [90.101.69.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF92E20811;
+        Thu, 28 Mar 2019 05:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553750865;
+        bh=sTepjNv+lCttaCr4VU9DFErARrxIXKIrE1XAT2yCnT4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ghQSSAHd696QGn+wXbUqndwaG1Dif8y9b+peZpRV5cVeKwvi4YBB1vQJsf1UgZi41
+         r7OYZYMqs7xwGxxyGhxp04tZw+7ZwLura3Ol9unj7rbFtODnaWiorTJYnLxq41wSoB
+         Tc8QfhCugiPR1FP5ITLNenpuTAdcDCTiTEaGx60s=
+Date:   Thu, 28 Mar 2019 06:27:42 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: WARNING in arch_install_hw_breakpoint
+Message-ID: <20190328052741.GA29635@lenoir>
+References: <000000000000639f6a0584d11b82@google.com>
+ <20190327132805.GG32571@zn.tnic>
+ <CACT4Y+bHd938t-w++LBO-yHMWP1cXpn+U=AVL+8mMfTBYk86=g@mail.gmail.com>
+ <20190327151725.GH32571@zn.tnic>
+ <20190327174841.GI32571@zn.tnic>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327174841.GI32571@zn.tnic>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-05 at 13:05 +0800, Weiyi Lu wrote:
+On Wed, Mar 27, 2019 at 06:48:41PM +0100, Borislav Petkov wrote:
+> On Wed, Mar 27, 2019 at 04:17:25PM +0100, Borislav Petkov wrote:
+> Ok, after adding some debug output, it looks like this (newlines mine):
+> 
+> [  200.921625][ T8029]    repro-8029    0d..4 200923254us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
+> 
+> [  200.922507][ T8029]    repro-8029    0d..4 200923257us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
+> [  200.923397][ T8029]    repro-8029    0d..4 200923259us : arch_install_hw_breakpoint: i: 1, slot: ffff888060200d40
+> 
+> [  200.924294][ T8029]    repro-8029    0d..4 200923262us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
+> [  200.925175][ T8029]    repro-8029    0d..4 200923264us : arch_install_hw_breakpoint: i: 1, slot: ffff888060200d40
+> [  200.926054][ T8029]    repro-8029    0d..4 200923266us : arch_install_hw_breakpoint: i: 2, slot: ffff8880602004c0
+> 
+> [  200.926933][ T8029]    repro-8029    0d..4 200923270us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
+> [  200.927816][ T8029]    repro-8029    0d..4 200923271us : arch_install_hw_breakpoint: i: 1, slot: ffff888060200d40
+> [  200.928695][ T8029]    repro-8029    0d..4 200923273us : arch_install_hw_breakpoint: i: 2, slot: ffff8880602004c0
+> [  200.929573][ T8029]    repro-8029    0d..4 200923275us : arch_install_hw_breakpoint: i: 3, slot: ffff88806991ed00
+> 
+> which basically shows how this thread adds 4 breakpoints and hits the
+> warn on on the 5th.
+> 
+> Now, that code I've seen only once or twice so I don't have a very smart
+> guess but it looks to me like arch_install_hw_breakpoint() or something
+> scheduling the events above that, should check HBP_NUM and not schedule
+> more than 4 hw breakpoints. Or..?
+> 
+> Frederic, I know you know this code... :-)
 
-Hi Stephen,
-Just gentle ping. Many thanks.
+Ok, I finally managed to reproduce. The issue is unlikely to come from the
+architecture. Perf shouldn't commit more breakpoints than possible so it's
+probably perf events scheduling or hw breakpoint core constraints that are
+broken. I'm investigating...
 
-> Resend clock patches from v4 based on v5.0-rc1.
-> 
-> The whole series now is composed of
-> a fix for PLL tuner (PATCH 1),
-> clock common changes for both MT8183 & MT6765 (PATCH 2-3),
-> clock support of MT8183 (PATCH 4-8) and
-> resend a clock patch long time ago(PTACH 9).
-> 
-> changes since v4:
-> - refine for the fix of PLL tuner(PATCH 1).
-> - add configurable pcw_chg_reg for MT8183 and the following IC(PATCH 7).
-> 
-> changes sinve v3:
-> - add fix tag.
-> - small change of mtk_clk_mux data structure.
-> - use of_property_for_each_string to iterate dependent subsys clock of power domain.
-> - document critical clocks.
-> - reduce some clock register error log.
-> - few coding style fix.
-> 
-> changes sinve v2:
-> - refine for implementation consistency of mtk clk mux.
-> - separate the onoff API into enable/disable API for mtk scpsys.
-> - resend a patch about PLL rate changing.
-> 
-> changes since v1:
-> - refine for better code quality.
-> - some minor bug fix of clock part, like incorrect control address
->   and missing clocks.
-> 
-> 
-
-
+Thanks.
