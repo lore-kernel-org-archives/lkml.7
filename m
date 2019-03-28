@@ -2,130 +2,156 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67767C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68A8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33046206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:13:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553793235;
-	bh=VosJJsvAijZFo4pN9YC/8nciusGgK9mvdANx4wy9OCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SCW1zpPi3XmfYSpMrDt48X3sVvMhtulqh/x3q9j6N0IrO68Y/23/MLXLN07tHhL4n
-	 SPdumMTTYUu8dUPYZLNFosCIvtqtB0BytmWpa3idWhIil806N6JxaBUjf7pEcpuMul
-	 BZajHJdW2dqvqzQvLQs+YYjBX2K9mlGfrWNy3Xn4=
+	by mail.kernel.org (Postfix) with ESMTP id A7A5C206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:17:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D1+ItBRf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfC1RNy (ORCPT
+        id S1727225AbfC1RR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:13:54 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44569 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfC1RNw (ORCPT
+        Thu, 28 Mar 2019 13:17:56 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34564 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfC1RRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:13:52 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d24so4530224otl.11;
-        Thu, 28 Mar 2019 10:13:52 -0700 (PDT)
+        Thu, 28 Mar 2019 13:17:55 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y6so5270094plt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 10:17:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2bAOEoSwsgTtaogopy8ZMUfxYizv7aL/kVUJt6MbgFE=;
+        b=D1+ItBRfhkwjmY//AzpG4ko7/1mIo1GQ/3Whaf3y0UqKRqP5DYMnS70Gb5QPqqiRui
+         CkgfMiErgGTA93cq3t6SxA3DVaYNM5gJUowzt3Mw9MgCEt0HWHn6zrrwe9qWrlRxI0gP
+         PL6JACpoHOlB8PRjURTt4spQ/2C/KQqy1MOO8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oG5jHi4YxWkaT7WEpBMD91KRCE92RCx2jKSw1WWZNG0=;
-        b=jWWH8XCPZuMWWTH2zOylmOginJ8wUfsbzLFvu10rHzz4vZU+CPO+2YR/v5ITyV2GBy
-         QvcCX7bo3x4flC9a5ScU6HJCnyAEM8dXrhRmwKTsU3rq82LjAM09iHcytrbJlEOCBKYC
-         QgerOqVj4RaWTL3GfygKijCzO13Lh0MfP01hK24smGTe6lR3ZGuxww/IlJ2jZaF/02Ua
-         fjv+k/Oi3KyuR02aayQWer2A7TJT+9Hx2fZh+smw/leqdrRi9A5QM2s+M8wBAPybGiGS
-         ml4v7Kk8q1FagtLo6TM+H65cibdi7o/dhT9cqd17tWAGsxJzSgcT4AwWTlq+gXO72pNs
-         ERLA==
-X-Gm-Message-State: APjAAAUAUwW53JYvLRd2uDWB7GkkeUzsfCtD+x6EhENk2bPKOGDSy43A
-        qw7LD7kIq4OnTFGsDVOI1g==
-X-Google-Smtp-Source: APXvYqyXV81/UQTnLuXAhp8zNPRE08uBnV6G8EQHClGRx2t2aUDgygsF2BXGJTeRKO6nRqx53mXxaA==
-X-Received: by 2002:a9d:6e88:: with SMTP id a8mr14351125otr.117.1553793231742;
-        Thu, 28 Mar 2019 10:13:51 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v24sm2860323oic.32.2019.03.28.10.13.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 10:13:50 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 12:13:50 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Stephen Boyd <sboyd@codeaurora.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2bAOEoSwsgTtaogopy8ZMUfxYizv7aL/kVUJt6MbgFE=;
+        b=e2rggdaqlIZMzi/wi29xN8hbn3BpzG/SUkgl1o7NfjExXy0YkQONrhuAtBsQnndYNW
+         9O6+uNCzhHUgKcrVTpw82nJ7T+/n8qK6Zo1+SLODlR/vtbJ3zcb5Az8aUuPFpputNDDb
+         CDyYJURCtrlUlTcYD8OBNdTtOKKM9NeoQs9lly+2ycYyvbtQVGOVHZTxgsiHbyJMfQe4
+         bHlRHmYqbbWlZERQ0Io7vqNuqJrXpA8PUDA3/iXLIDFnmg6RZeUzJgFzaIcZkGS4iPJ7
+         uGbQA/+09r2Nzmtmoq6Mo4/6uC3eRfGs06wT3SH3jIKXtCuMvCbxA2F/mNKCdBF/jZQC
+         4bZA==
+X-Gm-Message-State: APjAAAXU2KghlR+6XW4xFt0Lul8x3sFWQSGJ8RUSgkfkwudP+CCnYK2l
+        tyicWREOcwtAg2OAsQcPJ/4WcQ==
+X-Google-Smtp-Source: APXvYqwDlu2rwdjW3HZKyXtwVyJanNnE8vfhkBMS+C6fEZXqoGetZFaGYWHjaCAKBfI7k1PDhglyyQ==
+X-Received: by 2002:a17:902:bd82:: with SMTP id q2mr14206516pls.201.1553793474736;
+        Thu, 28 Mar 2019 10:17:54 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id r10sm31699414pfn.188.2019.03.28.10.17.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 10:17:53 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>
+Cc:     linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>,
+        Rob Herring <robh+dt@kernel.org>, mka@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org,
+        Brian Norris <briannorris@chromium.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH v4 1/6] dt-bindings: ap806: add the cluster clock node in
- the syscon file
-Message-ID: <20190328171350.GA26680@bogus>
-References: <20190325124803.28904-1-gregory.clement@bootlin.com>
- <20190325124803.28904-2-gregory.clement@bootlin.com>
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v4 0/7] drm/panel: simple: Add mode support to devicetree
+Date:   Thu, 28 Mar 2019 10:17:03 -0700
+Message-Id: <20190328171710.31949-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325124803.28904-2-gregory.clement@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 01:47:58PM +0100, Gregory CLEMENT wrote:
-> Document the device tree binding for the cluster clock controllers found
-> in the Armada 7K/8K SoCs.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> ---
->  .../arm/marvell/ap806-system-controller.txt   | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-> index 7b8b8eb0191f..ceeba18b4ac3 100644
-> --- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-> +++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-> @@ -143,3 +143,28 @@ ap_syscon1: system-controller@6f8000 {
->  		#thermal-sensor-cells = <1>;
->  	};
->  };
-> +
-> +Cluster clocks:
-> +---------------
-> +
-> +Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
-> +cluster contain up to 2 CPUs running at the same frequency.
-> +
-> +Required properties:
-> +- compatible: must be  "marvell,ap806-cpu-clock";
-> +- #clock-cells : should be set to 1.
-> +- clocks : shall be the input parents clock phandle for the clock.
-> +
-> +Optional property:
-> + - reg: register range associated the cluser clocks
+I'm reviving Sean Paul's old patchset to get mode support in device
+tree.  The cover letter for his v3 is at:
+https://lists.freedesktop.org/archives/dri-devel/2018-February/165162.html
 
-reg can be optional to use, but should either be there or not.
+I've pulled together the patches that didn't land in v3, addressed
+outstanding feedback, and reposted.  Atop them I've added patches for
+rk3288-veyron-jerry and rk3288-veryon-minnie.
 
-And there's a typo.
+Please let me know how they look.
 
-> +
-> +ap_syscon1: system-controller@6f8000 {
-> +	compatible = "syscon", "simple-mfd";
-> +	reg = <0x6f8000 0x1000>;
-> +
-> +	cpu_clk: clock-cpu {
-> +		compatible = "marvell,ap806-cpu-clock";
-> +		clocks = <&ap_clk 0>, <&ap_clk 1>;
-> +		#clock-cells = <1>;
-> +	};
-> +};
-> -- 
-> 2.20.1
-> 
+In general I have added people to the whole series who I think would
+like the whole series and then let get_maintainer pick extra people it
+thinks are relevant to each individual patch.  If I see you respond to
+any of the patches in the series, though, I'll add you to the whole
+series Cc list next time.
+
+Changes in v4:
+- Simplify desc. for when override should be used (Thierry/Laurent)
+- Removed Rob H review since it's been a year and wording changed
+- Don't add mode from timing if override was specified (Thierry)
+- Add warning if timing and fixed mode was specified (Thierry)
+- Don't add fixed mode if timing was specified (Thierry)
+- Refactor/rename a bit to avoid extra indentation from "if" tests
+- i should be unsigned (Thierry)
+- Add annoying WARN_ONs for some cases (Thierry)
+- Simplify 'No display_timing found' handling (Thierry)
+- Rename to panel_simple_parse_override_mode() (Thierry)
+- Rebase to top of Heiko's tree
+- Converted changelog to after-the-cut for non-DRM change.
+- display_timing for Innolux n116bge new for v4.
+- display_timing for AUO b101ean01 new for v4.
+- rk3288-veyron-jerry patch new for v4.
+- rk3288-veyron-minnie patch new for v4.
+
+Changes in v3:
+- Go back to using the timing subnode directly, but rename to
+  panel-timing (Rob)
+- No longer parse display-timings subnode, use panel-timing (Rob)
+- Unwrap the timing from display-timings and rename panel-timing (Rob)
+
+Changes in v2:
+- Split out the binding into a new patch (Rob)
+- display-timings is a new section (Rob)
+- Use the full display-timings subnode instead of picking the timing
+  out (Rob/Thierry)
+- Parse the full display-timings node (using the native-mode) (Rob)
+- Wrap the timing in display-timings node to match binding (Rob/Thierry)
+
+Douglas Anderson (4):
+  drm/panel: simple: Use display_timing for Innolux n116bge
+  drm/panel: simple: Use display_timing for AUO b101ean01
+  ARM: dts: rockchip: Specify rk3288-veyron-jerry's display timings
+  ARM: dts: rockchip: Specify rk3288-veyron-minnie's display timings
+
+Sean Paul (3):
+  dt-bindings: Add panel-timing subnode to simple-panel
+  drm/panel: simple: Add ability to override typical timing
+  arm64: dts: rockchip: Specify override mode for kevin panel
+
+ .../bindings/display/panel/simple-panel.txt   |  24 +++
+ .../boot/dts/rk3288-veyron-chromebook.dtsi    |  14 ++
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts    |  14 ++
+ .../boot/dts/rockchip/rk3399-gru-kevin.dts    |  14 ++
+ drivers/gpu/drm/panel/panel-simple.c          | 171 ++++++++++++++----
+ 5 files changed, 205 insertions(+), 32 deletions(-)
+
+-- 
+2.21.0.392.gf8f6787159e-goog
+
