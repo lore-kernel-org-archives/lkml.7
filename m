@@ -2,55 +2,54 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64547C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D015C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30245206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0394206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553786777;
-	bh=O+KosxD9ickuFAmLYcREYpF+msPn5ku/m5t5u+cGbrc=;
+	s=default; t=1553786784;
+	bh=oOwfSlxQcppO25DWRk5u3q+aHSqnaHmxWprpO3RwIE4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x9iahqhZpsAQkBlUQJ8Y0+mfYobgTrBOBE18HlGC/W6fhgiJ5qL6eUXZbtnkdLjA2
-	 EwvITUZuRxzFsbd9/100y7MPy5CAm5uW5N8WDkzybSbuy7kdX6RL/WsenI43C7w31Y
-	 4wZpxCpP6NF/eIFCpUAI+fzBYaSVO53WaHaacgHg=
+	b=u15ZvMThtMNPJy5t/Y3wHJmCpmZEnA0XipNOr3XQKi4oaciaFxito5dyvw47CxYB5
+	 HkrQe+ob7r1048xZza9O6O1cc+XPS/0oPx4PcMotMhWOTBS3Xxsv8VDPz/8uY1EQNI
+	 jbbu4qtjGsbFYsP5jK2sAkT1o7s7GaPQyJpstL+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfC1P0Q (ORCPT
+        id S1727500AbfC1P0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:26:16 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41077 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfC1P0O (ORCPT
+        Thu, 28 Mar 2019 11:26:23 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33376 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfC1P0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:26:14 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 64so18674136otb.8;
-        Thu, 28 Mar 2019 08:26:14 -0700 (PDT)
+        Thu, 28 Mar 2019 11:26:23 -0400
+Received: by mail-oi1-f195.google.com with SMTP id e5so4491276oii.0;
+        Thu, 28 Mar 2019 08:26:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eoa9rk2+5Eom845SpcSwTOojF0mqyj+sqPnptts2DbU=;
-        b=nzqFN/LhYFhUtDkYEUw1JTvS8+1TX/8DvrptKx/jZ9ae3aEoqUAB5Agv6MRreLiV3P
-         gOiyirzfzlXkIIQMdLLyIO+ztsL4dvWdJKXJ2nrRy8Vvs8VVcyw7bLouTB1SB3N3Hry0
-         OBe4tEiCKaib4oKWW0vcKsdhrVRGk/3kFb9grZbcVo5HWAOwSaxcOrUU1O9kF8yZHXaE
-         xERNVSq9obZp0cAx9j6ibDczHpg+RsPXDbzYOEGmAjCmM7qbBECZPpd7vH7nhUUhfsED
-         bu+nbp5P+fsAg+bpbGwc9SaSOAfbGRfQZh9A3E2XBkQE9Fr+P7LiapJQxmGPNQ5N16ph
-         RA4w==
-X-Gm-Message-State: APjAAAVy0ON2dXgI/mUTjGMJnX974+1V7L3yjwq+FrRCtpZAi7+0GXzl
-        UUuTzI2CMIOttiV4KNEqHw==
-X-Google-Smtp-Source: APXvYqwgZ359wDtVagDy1HX1traJ1VhAmpotzI4REfWC+Xblr7ISqN9wcqPEZNp59kOvtYr3DPBBuw==
-X-Received: by 2002:a9d:6347:: with SMTP id y7mr6507283otk.34.1553786773543;
-        Thu, 28 Mar 2019 08:26:13 -0700 (PDT)
+        bh=P4iI5WXlMDM3+XrE7fOsF1r063RsIWJpQtQhD554+gM=;
+        b=U3DJuRyWMPHhXblOJIk+DsZOmHveGGr3m6XWed5e7os6jD9XIBYU1+3leyqXtUVqyN
+         u/eUy3RtHXIGmCOe94SP8UTPgVNzxUnJMqyNAVYkEi/IQKR/VGejl+9AeZhHPtA6uBB3
+         9+OZ5ygPm7Worc66U7bl12ijIoqPsW+HA2eKeNVH9yliNreiYBQq0GT8GoGKeq6M7dXc
+         quuP2yWk4k92WQR+v6R3m0lx3a0VyBBBhJQwvOL6oJwn51xchu8BrObw15mgVdYTwyCL
+         eKfdeABQmmFwRpCsNed+9CStBu98uHeYmJQ1G8f42YcLeKvy23ciXNORs4FM91+NiM6C
+         FGOg==
+X-Gm-Message-State: APjAAAUsmcOqJYbcwhXEWsJKj8DrXPaoOpzOoL7SkuVYx43PHW7Ob9LH
+        4+xxFDLa9dqClNHNCxeoLDJPiUw=
+X-Google-Smtp-Source: APXvYqxunEFyZV0gb6pIjteYxv6fDPQ22Yi0ku6pjidTNyXNR9wQdgx9hKliEz5jHJ1vNQnWnxVgxQ==
+X-Received: by 2002:aca:5904:: with SMTP id n4mr398279oib.122.1553786782371;
+        Thu, 28 Mar 2019 08:26:22 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q19sm10148341ota.28.2019.03.28.08.26.12
+        by smtp.gmail.com with ESMTPSA id a34sm2978767otc.46.2019.03.28.08.26.21
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 08:26:12 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 10:26:12 -0500
+        Thu, 28 Mar 2019 08:26:21 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 10:26:21 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Fabien Dessenne <fabien.dessenne@st.com>
 Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
@@ -63,53 +62,29 @@ Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
         linux-kernel@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        Fabien Dessenne <fabien.dessenne@st.com>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH 4/6] ARM: dts: stm32: Add hwspinlock node for stm32mp157
- SoC
-Message-ID: <20190328152612.GA464@bogus>
+Subject: Re: [PATCH 3/6] dt-bindings: hwlock: update STM32 #hwlock-cells value
+Message-ID: <20190328152621.GA1398@bogus>
 References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
- <1552492237-28810-5-git-send-email-fabien.dessenne@st.com>
+ <1552492237-28810-4-git-send-email-fabien.dessenne@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1552492237-28810-5-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <1552492237-28810-4-git-send-email-fabien.dessenne@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 04:50:35PM +0100, Fabien Dessenne wrote:
-> Declare hwspinlock device for stm32mp157 SoC
+On Wed, 13 Mar 2019 16:50:34 +0100, Fabien Dessenne wrote:
+> Use a value of 2, so users can share hwlocks.
 > 
 > Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 > ---
->  arch/arm/boot/dts/stm32mp157c.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-> index 105e21f..18baaea 100644
-> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-> @@ -886,6 +886,15 @@
->  			status = "disabled";
->  		};
->  
-> +		hsem: hwspinlock@4c000000 {
-> +			compatible = "st,stm32-hwspinlock";
-> +			#hwlock-cells = <2>;
-> +			reg = <0x4c000000 0x400>;
-> +			clocks = <&rcc HSEM>;
-> +			clock-names = "hsem";
-> +			status = "okay";
 
-okay is the default, so you can remove it.
-
-> +		};
-> +
->  		ipcc: mailbox@4c001000 {
->  			compatible = "st,stm32mp1-ipcc";
->  			#mbox-cells = <1>;
-> -- 
-> 2.7.4
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
