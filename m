@@ -2,788 +2,304 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA733C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55452C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B902173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:06:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553785576;
-	bh=9oPoi86js/tCFeiyvTkHlf7tSF/D7jXwpeLRQPKGJzc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VNpk5RlVBj04uf7lWBXIDU3CVZ0lAXp68US/TPYA3lDKKE63Asyp08UvYWoXz+Z7z
-	 ESGwiWWc3d3n0NwWNJfQ1fwETBShRUsRLUImyNfqUCx6c7fh2/OKQsKtfwVJE6/ZyR
-	 DQkzTdt9ySstt0NOBTAqk9E14ByEthnqt0mt7nZU=
+	by mail.kernel.org (Postfix) with ESMTP id 19B5F20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:06:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfC1PGP (ORCPT
+        id S1726622AbfC1PGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:06:15 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34032 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfC1PGO (ORCPT
+        Thu, 28 Mar 2019 11:06:42 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:50609 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725816AbfC1PGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:06:14 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v10so11672869oib.1;
-        Thu, 28 Mar 2019 08:06:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HnjcWmSnJlHhg0297q37LF+i5F0C1QCJQsL7twNvlNE=;
-        b=fCH6DKrdS3i5qAK7bV1IiT4m6RgQrNyLUPQh6AhMmlDBvFocacbfS/PYi8gqHm5Y4k
-         Jt6wkMN7gB73zHLmeHaBudnLNkLPL5SESpev2eUZaU6Ia0LNHgXxi8brUBp6Go0gplr/
-         C5ww/6CeLDOCJYO/A00+Rh8+UO2LX97UQ9B2sMIlR6McSLq0opGjD2mEODeobemQMos+
-         fyNnx21Pz5XUJtIkcQyJiBpOzc6J7G/WxMybxAAvBGgOCMP9f5SL3HgNzs1tUbWUDudR
-         tdYQf8oVCvZKQnMibMo/3KCLYNovMsykvE+eTpbgnlRnbiuZ+AVmBsRHF8pAxR5WzWch
-         4+lw==
-X-Gm-Message-State: APjAAAVH3yhcYsEaYAk9cZxkfC8tb1cLnM+YkZm5vV0J3krEdcGBsw/H
-        S37MlI6kk4zwjeU1Ejd/wg==
-X-Google-Smtp-Source: APXvYqx/GeFRZdOuImZ5Jk5v2QKJp8be7XkF6J8U+lhCtYzb6EYSpe+D453INJI8o0hNn0Nd2Ge/kg==
-X-Received: by 2002:aca:3542:: with SMTP id c63mr338018oia.1.1553785573199;
-        Thu, 28 Mar 2019 08:06:13 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s23sm3411325otk.0.2019.03.28.08.06.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 08:06:12 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 10:06:11 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     ryder.lee@kernel.org
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Weijie Gao <weijie.gao@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org,
+        Thu, 28 Mar 2019 11:06:42 -0400
+Received: from [IPv6:2001:420:44c1:2579:7126:11db:5076:31b1] ([IPv6:2001:420:44c1:2579:7126:11db:5076:31b1])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 9Wbzh7DAYNG8z9Wc2hpjFZ; Thu, 28 Mar 2019 16:06:39 +0100
+Subject: Re: [PATCH,v1] media: mtk-vcodec: enlarge struct vdec_pic_info fields
+To:     Yunfei Dong <yunfei.dong@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v1] arm: dts: mediatek: add basic support for MT7629 SoC
-Message-ID: <20190328150611.GA6087@bogus>
-References: <a8ca0018ac8a4c5f61a7a1efc9dc5dccd768628b.1552449524.git.ryder.lee@mediatek.com>
+References: <1553307820-19681-1-git-send-email-yunfei.dong@mediatek.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f870a6fa-b9af-9064-f677-a9f52226e60b@xs4all.nl>
+Date:   Thu, 28 Mar 2019 16:06:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a8ca0018ac8a4c5f61a7a1efc9dc5dccd768628b.1552449524.git.ryder.lee@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1553307820-19681-1-git-send-email-yunfei.dong@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfAlBvQFxENi2wbSTvYUwPuVhU13KPP5+jQp1/avfsGT6zlXmFxuzks/v3WSzoWxkHZyUPT7DN+k57aJvUva+CVMoDCzwTjB8FP8xeZeqt2qnNmjmS+pR
+ S6FKkJ9brXI0cq3bbzbZcn3QFefcsDIPcrpN5L79jZJRX7DiVneamLY7CgcCfwNkdobiDUsEe/WhaOgw40hFJPmD37jfUKpiuFBQzRjY9KtIiawUvmdr8zhK
+ IR/RWliND3PnbInv1zhBle+BJepc6qBtP+UJUGH//xwC5/SEj3ajsVq8MCngTw8MoEpqOOfod2Zpz3zsy8JR8qaTjr5rDfZ/NQJmPHafPWKcRN0scwrq4P4C
+ APrDI9nHi6vALpQOp1KUfF32tw8guDuIl6168BZDuf2SKI0ShtWTzNvRUQVDZFNkHLygnD3vu2iDu2SA5+1H7ZYc2J4Mc9vBNKUl3csKYRJCEL/GLrlgP8FD
+ Vb41ZOb1tM+H+/K2RugZoAQZ3JuSAcM4yeLi1Sdw3XCOC9pGpKig6g2jAnZsFQK+987+20ZflWY/14NBaJfVJO8zJisEYD5DdJNOabIw2cHM8gMH0ZPVVDoy
+ Cjiyg3P5U/U8R6dSj28xJIwN
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 04:42:15PM +0800, ryder.lee@kernel.org wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
+On 3/23/19 3:23 AM, Yunfei Dong wrote:
+> Enlarge the plane number to support more complex case
+> and add the support for fmt change case.
 > 
-> This adds basic support for MT7629 reference board.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
 > ---
-> Changes since v1:
-> -Fix unit-address warnings.
-> -Put all the mmio peripherals under a simple-bus node.
-> -Drop all the 'partitions' nodes in flash node.
-> ---
->  arch/arm/boot/dts/Makefile                |   1 +
->  arch/arm/boot/dts/mt7629-rfb.dts          | 203 ++++++++++++++++
->  arch/arm/boot/dts/mt7629.dtsi             | 370 ++++++++++++++++++++++++++++++
->  include/dt-bindings/reset/mt7629-resets.h |  71 ++++++
->  4 files changed, 645 insertions(+)
->  create mode 100644 arch/arm/boot/dts/mt7629-rfb.dts
->  create mode 100644 arch/arm/boot/dts/mt7629.dtsi
->  create mode 100644 include/dt-bindings/reset/mt7629-resets.h
+>  .../platform/mtk-vcodec/mtk_vcodec_dec.c      | 62 +++++++++++++------
+>  .../platform/mtk-vcodec/mtk_vcodec_drv.h      | 16 ++---
+>  .../platform/mtk-vcodec/vdec/vdec_h264_if.c   |  4 +-
+>  .../platform/mtk-vcodec/vdec/vdec_vp8_if.c    |  4 +-
+>  .../platform/mtk-vcodec/vdec/vdec_vp9_if.c    | 11 ++--
+>  5 files changed, 57 insertions(+), 40 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index bd40148..a5a6d9f 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1231,6 +1231,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
->  	mt7623a-rfb-nand.dtb \
->  	mt7623n-rfb-emmc.dtb \
->  	mt7623n-bananapi-bpi-r2.dtb \
-> +	mt7629-rfb.dtb \
->  	mt8127-moose.dtb \
->  	mt8135-evbp1.dtb
->  dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
-> diff --git a/arch/arm/boot/dts/mt7629-rfb.dts b/arch/arm/boot/dts/mt7629-rfb.dts
-> new file mode 100644
-> index 0000000..a47dd7e
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mt7629-rfb.dts
-> @@ -0,0 +1,203 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Author: Ryder Lee <ryder.lee@mediatek.com>
-> + */
+> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+> index d022c65bb34c..43587c0cb022 100644
+> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+> @@ -129,9 +129,9 @@ static struct vb2_buffer *get_display_buffer(struct mtk_vcodec_ctx *ctx)
+>  	mutex_lock(&ctx->lock);
+>  	if (dstbuf->used) {
+>  		vb2_set_plane_payload(&dstbuf->vb.vb2_buf, 0,
+> -					ctx->picinfo.y_bs_sz);
+> +					ctx->picinfo.fb_sz[0]);
+>  		vb2_set_plane_payload(&dstbuf->vb.vb2_buf, 1,
+> -					ctx->picinfo.c_bs_sz);
+> +					ctx->picinfo.fb_sz[1]);
+>  
+>  		dstbuf->ready_to_display = true;
+>  
+> @@ -278,6 +278,27 @@ static void mtk_vdec_flush_decoder(struct mtk_vcodec_ctx *ctx)
+>  	clean_free_buffer(ctx);
+>  }
+>  
+> +static void mtk_vdec_update_fmt(struct mtk_vcodec_ctx *ctx,
+> +				unsigned int pixelformat)
+> +{
+> +	struct mtk_video_fmt *fmt;
+> +	struct mtk_q_data *dst_q_data;
+> +	unsigned int k;
 > +
-> +/dts-v1/;
-> +#include <dt-bindings/input/input.h>
-> +#include "mt7629.dtsi"
+> +	dst_q_data = &ctx->q_data[MTK_Q_DATA_DST];
+> +	for (k = 0; k < NUM_FORMATS; k++) {
+> +		fmt = &mtk_video_formats[k];
+> +		if (fmt->fourcc == pixelformat) {
+> +			mtk_v4l2_debug(1, "Update cap fourcc(%d -> %d)",
+> +				dst_q_data->fmt.fourcc, pixelformat);
+> +			dst_q_data->fmt = fmt;
+> +			return;
+> +		}
+> +	}
 > +
-> +/ {
-> +	model = "MediaTek MT7629 reference board";
-> +	compatible = "mediatek,mt7629-rfb", "mediatek,mt7629";
+> +	mtk_v4l2_err("Cannot get fourcc(%d), using init value", pixelformat);
+> +}
 > +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
+>  static int mtk_vdec_pic_info_update(struct mtk_vcodec_ctx *ctx)
+>  {
+>  	unsigned int dpbsize = 0;
+> @@ -299,6 +320,10 @@ static int mtk_vdec_pic_info_update(struct mtk_vcodec_ctx *ctx)
+>  		return -EINVAL;
+>  	}
+>  
+> +	if (ctx->last_decoded_picinfo.cap_fourcc != ctx->picinfo.cap_fourcc &&
+> +		ctx->picinfo.cap_fourcc != 0)
+> +		mtk_vdec_update_fmt(ctx, ctx->picinfo.cap_fourcc);
 > +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+>  	if ((ctx->last_decoded_picinfo.pic_w == ctx->picinfo.pic_w) ||
+>  	    (ctx->last_decoded_picinfo.pic_h == ctx->picinfo.pic_h))
+>  		return 0;
+> @@ -352,11 +377,11 @@ static void mtk_vdec_worker(struct work_struct *work)
+>  	pfb = &dst_buf_info->frame_buffer;
+>  	pfb->base_y.va = vb2_plane_vaddr(&dst_buf->vb2_buf, 0);
+>  	pfb->base_y.dma_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
+> -	pfb->base_y.size = ctx->picinfo.y_bs_sz + ctx->picinfo.y_len_sz;
+> +	pfb->base_y.size = ctx->picinfo.fb_sz[0];
+>  
+>  	pfb->base_c.va = vb2_plane_vaddr(&dst_buf->vb2_buf, 1);
+>  	pfb->base_c.dma_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 1);
+> -	pfb->base_c.size = ctx->picinfo.c_bs_sz + ctx->picinfo.c_len_sz;
+> +	pfb->base_c.size = ctx->picinfo.fb_sz[1];
+>  	pfb->status = 0;
+>  	mtk_v4l2_debug(3, "===>[%d] vdec_if_decode() ===>", ctx->id);
+>  
+> @@ -976,14 +1001,13 @@ static int vidioc_vdec_g_fmt(struct file *file, void *priv,
+>  		 * So we just return picinfo yet, and update picinfo in
+>  		 * stop_streaming hook function
+>  		 */
+> -		q_data->sizeimage[0] = ctx->picinfo.y_bs_sz +
+> -					ctx->picinfo.y_len_sz;
+> -		q_data->sizeimage[1] = ctx->picinfo.c_bs_sz +
+> -					ctx->picinfo.c_len_sz;
+> +		q_data->sizeimage[0] = ctx->picinfo.fb_sz[0];
+> +		q_data->sizeimage[1] = ctx->picinfo.fb_sz[1];
+>  		q_data->bytesperline[0] = ctx->last_decoded_picinfo.buf_w;
+>  		q_data->bytesperline[1] = ctx->last_decoded_picinfo.buf_w;
+>  		q_data->coded_width = ctx->picinfo.buf_w;
+>  		q_data->coded_height = ctx->picinfo.buf_h;
+> +		ctx->last_decoded_picinfo.cap_fourcc = q_data->fmt->fourcc;
+>  
+>  		/*
+>  		 * Width and height are set to the dimensions
+> @@ -1103,10 +1127,11 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
+>  	struct mtk_vcodec_mem src_mem;
+>  	bool res_chg = false;
+>  	int ret = 0;
+> -	unsigned int dpbsize = 1;
+> +	unsigned int dpbsize = 1, i = 0;
+>  	struct mtk_vcodec_ctx *ctx = vb2_get_drv_priv(vb->vb2_queue);
+>  	struct vb2_v4l2_buffer *vb2_v4l2 = NULL;
+>  	struct mtk_video_dec_buf *buf = NULL;
+> +	struct mtk_q_data *dst_q_data;
+>  
+>  	mtk_v4l2_debug(3, "[%d] (%d) id=%d, vb=%p",
+>  			ctx->id, vb->vb2_queue->type,
+> @@ -1194,21 +1219,18 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
+>  	}
+>  
+>  	ctx->last_decoded_picinfo = ctx->picinfo;
+> -	ctx->q_data[MTK_Q_DATA_DST].sizeimage[0] =
+> -						ctx->picinfo.y_bs_sz +
+> -						ctx->picinfo.y_len_sz;
+> -	ctx->q_data[MTK_Q_DATA_DST].bytesperline[0] =
+> -						ctx->picinfo.buf_w;
+> -	ctx->q_data[MTK_Q_DATA_DST].sizeimage[1] =
+> -						ctx->picinfo.c_bs_sz +
+> -						ctx->picinfo.c_len_sz;
+> -	ctx->q_data[MTK_Q_DATA_DST].bytesperline[1] = ctx->picinfo.buf_w;
+> +	dst_q_data = &ctx->q_data[MTK_Q_DATA_DST];
+> +	for (i = 0; i < dst_q_data->fmt->num_planes; i++) {
+> +		dst_q_data->sizeimage[i] = ctx->picinfo.fb_sz[i];
+> +		dst_q_data->bytesperline[i] = ctx->picinfo.buf_w;
+> +	}
 > +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +
-> +		reset {
-> +			label = "factory";
-> +			linux,code = <KEY_RESTART>;
-> +			gpios = <&pio 60 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		wps {
-> +			label = "wps";
-> +			linux,code = <KEY_WPS_BUTTON>;
-> +			gpios = <&pio 58 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg = <0 0x40000000 0 0x10000000>;
-> +	};
-> +
-> +	reg_3p3v: regulator-3p3v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "fixed-3.3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +
-> +	reg_5v: regulator-5v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "fixed-5V";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&i2c {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&qspi {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&qspi_pins>;
-> +	status = "okay";
-> +
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +	};
-> +};
-> +
-> +&pio {
-> +	eth_pins: eth-pins {
-> +		mux {
-> +			function = "eth";
-> +			groups = "mdc_mdio";
-> +		};
-> +	};
-> +
-> +	ephy_leds_pins: ephy-leds-pins {
-> +		mux {
-> +			function = "led";
-> +			groups = "gphy_leds_0", "ephy_leds";
-> +		};
-> +	};
-> +
-> +	i2c_pins: i2c-pins {
-> +		mux {
-> +			function = "i2c";
-> +			groups =  "i2c_0";
-> +		};
-> +
-> +		conf {
-> +			pins = "I2C_SDA", "I2C_SCL";
-> +			drive-strength = <4>;
-> +			bias-disable;
-> +		};
-> +	};
-> +
-> +	pcie_pins: pcie-pins {
-> +		mux {
-> +			function = "pcie";
-> +			groups = "pcie_clkreq",
-> +				 "pcie_pereset",
-> +				 "pcie_wake";
-> +		};
-> +	};
-> +
-> +	pwm_pins: pwm-pins {
-> +		mux {
-> +			function = "pwm";
-> +			groups = "pwm_0";
-> +		};
-> +	};
-> +
-> +	/* Serial NAND is shared pin with SPI-NOR */
-> +	serial_nand_pins: serial-nand-pins {
-> +		mux {
-> +			function = "flash";
-> +			groups = "snfi";
-> +		};
-> +	};
-> +
-> +	spi_pins: spi-pins {
-> +		mux {
-> +			function = "spi";
-> +			groups = "spi_0";
-> +		};
-> +	};
-> +
-> +	/* SPI-NOR is shared pin with serial NAND */
-> +	qspi_pins: qspi-pins {
-> +		mux {
-> +			function = "flash";
-> +			groups = "spi_nor";
-> +		};
-> +	};
-> +
-> +	uart0_pins: uart0-pins {
-> +		mux {
-> +			function = "uart";
-> +			groups = "uart0_txd_rxd" ;
-> +		};
-> +	};
-> +
-> +	uart1_pins: uart1-pins {
-> +		mux {
-> +			function = "uart";
-> +			groups = "uart1_0_tx_rx" ;
-> +		};
-> +	};
-> +
-> +	uart2_pins: uart2-pins {
-> +		mux {
-> +			function = "uart";
-> +			groups = "uart2_0_txd_rxd" ;
-> +		};
-> +	};
-> +
-> +	watchdog_pins: watchdog-pins {
-> +		mux {
-> +			function = "watchdog";
-> +			groups = "watchdog";
-> +		};
-> +	};
-> +};
-> +
-> +&spi {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spi_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&ssusb {
-> +	vusb33-supply = <&reg_3p3v>;
-> +	vbus-supply = <&reg_5v>;
-> +	status = "okay";
-> +};
-> +
-> +&u3phy1 {
-> +	status = "okay";
-> +};
-> +
-> +&watchdog {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&watchdog_pins>;
-> +	status = "okay";
-> +};
-> \ No newline at end of file
+>  	mtk_v4l2_debug(2, "[%d] vdec_if_init() OK wxh=%dx%d pic wxh=%dx%d sz[0]=0x%x sz[1]=0x%x",
+>  			ctx->id,
+>  			ctx->picinfo.buf_w, ctx->picinfo.buf_h,
+>  			ctx->picinfo.pic_w, ctx->picinfo.pic_h,
+> -			ctx->q_data[MTK_Q_DATA_DST].sizeimage[0],
+> -			ctx->q_data[MTK_Q_DATA_DST].sizeimage[1]);
+> +			dst_q_data->sizeimage[0],
+> +			dst_q_data->sizeimage[1]);
+>  
+>  	ret = vdec_if_get_param(ctx, GET_PARAM_DPB_SIZE, &dpbsize);
+>  	if (dpbsize == 0)
+> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+> index e7e2a108def9..2899028b53a1 100644
+> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+> @@ -211,12 +211,9 @@ struct mtk_vcodec_pm {
+>   * @pic_h: picture height
+>   * @buf_w: picture buffer width (64 aligned up from pic_w)
+>   * @buf_h: picture buffer heiht (64 aligned up from pic_h)
+> - * @y_bs_sz: Y bitstream size
+> - * @c_bs_sz: CbCr bitstream size
+> - * @y_len_sz: additional size required to store decompress information for y
+> - *		plane
+> - * @c_len_sz: additional size required to store decompress information for cbcr
+> - *		plane
+> + * @fb_sz: bitstream size of each plane
+> + * @cap_fourcc: fourcc number(may changed when resolutin change)
 
-Fix this.
+resolutin -> resolution
 
-> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-> new file mode 100644
-> index 0000000..0197660
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mt7629.dtsi
-> @@ -0,0 +1,370 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + *
-> + * Author: Ryder Lee <ryder.lee@mediatek.com>
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/mt7629-clk.h>
-> +#include <dt-bindings/power/mt7622-power.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/phy/phy.h>
-> +#include <dt-bindings/reset/mt7629-resets.h>
-> +
-> +/ {
-> +	compatible = "mediatek,mt7629";
-> +	interrupt-parent = <&sysirq>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		enable-method = "mediatek,mt6589-smp";
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x0>;
-> +			clock-frequency = <1250000000>;
-> +			cci-control-port = <&cci_control2>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x1>;
-> +			clock-frequency = <1250000000>;
-> +			cci-control-port = <&cci_control2>;
-> +		};
-> +	};
-> +
-> +	pmu {
-> +		compatible = "arm,cortex-a7-pmu";
-> +		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 9 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-affinity = <&cpu0>, <&cpu1>;
-> +	};
-> +
-> +	clk20m: oscillator-0 {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <20000000>;
-> +		clock-output-names = "clk20m";
-> +	};
-> +
-> +	clk40m: oscillator-1 {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <40000000>;
-> +		clock-output-names = "clkxtal";
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv7-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +		clock-frequency = <20000000>;
-> +		arm,cpu-registers-not-fw-configured;
+> + * @reserved: reserved for future use.
+>   * E.g. suppose picture size is 176x144,
+>   *      buffer size will be aligned to 176x160.
 
-New systems should not have this. Fix the firmware.
+I think this last comment belongs after field fb_sz, right?
 
-> +	};
-> +
-> +	soc {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
+>   */
+> @@ -225,10 +222,9 @@ struct vdec_pic_info {
+>  	unsigned int pic_h;
+>  	unsigned int buf_w;
+>  	unsigned int buf_h;
+> -	unsigned int y_bs_sz;
+> -	unsigned int c_bs_sz;
+> -	unsigned int y_len_sz;
+> -	unsigned int c_len_sz;
+> +	unsigned int fb_sz[VIDEO_MAX_PLANES];
+> +	unsigned int cap_fourcc;
+> +	unsigned int reserved;
 
-Do you really have any addresses and/or sizes greater than 4GB within 
-this node?
+Why add a reserved field? Isn't this an internal structure?
 
-> +		compatible = "simple-bus";
-> +		ranges;
-> +
-> +		infracfg: syscon@10000000 {
-> +			compatible = "mediatek,mt7629-infracfg", "syscon";
-> +			reg = <0 0x10000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		pericfg: syscon@10002000 {
-> +			compatible = "mediatek,mt7629-pericfg", "syscon";
-> +			reg = <0 0x10002000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		scpsys: scpsys@10006000 {
-> +			compatible = "mediatek,mt7629-scpsys",
-> +				     "mediatek,mt7622-scpsys";
-> +			#power-domain-cells = <1>;
-> +			reg = <0 0x10006000 0 0x1000>;
-> +			clocks = <&topckgen CLK_TOP_HIF_SEL>;
-> +			clock-names = "hif_sel";
-> +			assigned-clocks = <&topckgen CLK_TOP_HIF_SEL>;
-> +			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL1_D2>;
-> +			infracfg = <&infracfg>;
-> +		};
-> +
-> +		timer: timer@10009000 {
-> +			compatible = "mediatek,mt7629-timer",
-> +				     "mediatek,mt6765-timer";
-> +			reg = <0 0x10009000 0 0x60>;
-> +			interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clk20m>;
-> +			clock-names = "clk20m";
-> +		};
-> +
-> +		sysirq: interrupt-controller@10200a80 {
-> +			compatible = "mediatek,mt7629-sysirq",
-> +				     "mediatek,mt6577-sysirq";
-> +			reg = <0 0x10200a80 0 0x20>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupt-parent = <&gic>;
-> +		};
-> +
-> +		apmixedsys: syscon@10209000 {
-> +			compatible = "mediatek,mt7629-apmixedsys", "syscon";
-> +			reg = <0 0x10209000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		rng: rng@1020f000 {
-> +			compatible = "mediatek,mt7629-rng",
-> +				     "mediatek,mt7623-rng";
-> +			reg = <0 0x1020f000 0 0x100>;
-> +			clocks = <&infracfg CLK_INFRA_TRNG_PD>;
-> +			clock-names = "rng";
-> +		};
-> +
-> +		topckgen: syscon@10210000 {
-> +			compatible = "mediatek,mt7629-topckgen", "syscon";
-> +			reg = <0 0x10210000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		watchdog: watchdog@10212000 {
-> +			compatible = "mediatek,mt7629-wdt",
-> +				     "mediatek,mt6589-wdt";
-> +			reg = <0 0x10212000 0 0x100>;
-> +		};
-> +
-> +		pio: pinctrl@10217000 {
-> +			compatible = "mediatek,mt7629-pinctrl";
-> +			reg = <0 0x10217000 0 0x8000>,
-> +			      <0 0x10005000 0 0x1000>;
-> +			reg-names = "base", "eint";
-> +			gpio-controller;
-> +			gpio-ranges = <&pio 0 0 79>;
-> +			#gpio-cells = <2>;
-> +			#interrupt-cells = <2>;
-> +			interrupt-controller;
-> +			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-parent = <&gic>;
-> +		};
-> +
-> +		gic: interrupt-controller@10300000 {
-> +			compatible = "arm,gic-400";
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupt-parent = <&gic>;
-> +			reg = <0 0x10310000 0 0x1000>,
-> +			      <0 0x10320000 0 0x1000>,
-> +			      <0 0x10340000 0 0x2000>,
-> +			      <0 0x10360000 0 0x2000>;
-> +		};
-> +
-> +		cci: cci@10390000 {
-> +			compatible = "arm,cci-400";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			reg = <0 0x10390000 0 0x1000>;
-> +			ranges = <0 0 0x10390000 0x10000>;
-> +
-> +			cci_control0: slave-if@1000 {
-> +				compatible = "arm,cci-400-ctrl-if";
-> +				interface-type = "ace-lite";
-> +				reg = <0x1000 0x1000>;
-> +			};
-> +
-> +			cci_control1: slave-if@4000 {
-> +				compatible = "arm,cci-400-ctrl-if";
-> +				interface-type = "ace";
-> +				reg = <0x4000 0x1000>;
-> +			};
-> +
-> +			cci_control2: slave-if@5000 {
-> +				compatible = "arm,cci-400-ctrl-if";
-> +				interface-type = "ace";
-> +				reg = <0x5000 0x1000>;
-> +			};
-> +
-> +			pmu@9000 {
-> +				compatible = "arm,cci-400-pmu,r1";
-> +				reg = <0x9000 0x5000>;
-> +				interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-> +			};
-> +		};
-> +
-> +		uart0: serial@11002000 {
-> +			compatible = "mediatek,mt7629-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11002000 0 0x400>;
-> +			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_UART_SEL>,
-> +				 <&pericfg CLK_PERI_UART0_PD>;
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial@11003000 {
-> +			compatible = "mediatek,mt7629-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11003000 0 0x400>;
-> +			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_UART_SEL>,
-> +				 <&pericfg CLK_PERI_UART1_PD>;
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart2: serial@11004000 {
-> +			compatible = "mediatek,mt7629-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11004000 0 0x400>;
-> +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_UART_SEL>,
-> +				 <&pericfg CLK_PERI_UART2_PD>;
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c: i2c@11007000 {
-> +			compatible = "mediatek,mt7629-i2c",
-> +				     "mediatek,mt2712-i2c";
-> +			reg = <0 0x11007000 0 0x90>,
-> +				  <0 0x11000100 0 0x80>;
-> +			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>;
-> +			clock-div = <4>;
-> +			clocks = <&pericfg CLK_PERI_I2C0_PD>,
-> +				 <&pericfg CLK_PERI_AP_DMA_PD>;
-> +			clock-names = "main", "dma";
-> +			assigned-clocks = <&topckgen CLK_TOP_AXI_SEL>;
-> +			assigned-clock-parents = <&topckgen CLK_TOP_SYSPLL1_D2>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		spi: spi@1100a000 {
-> +			compatible = "mediatek,mt7629-spi",
-> +				     "mediatek,mt7622-spi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0 0x1100a000 0 0x100>;
-> +			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_SYSPLL3_D2>,
-> +				 <&topckgen CLK_TOP_SPI0_SEL>,
-> +				 <&pericfg CLK_PERI_SPI0_PD>;
-> +			clock-names = "parent-clk", "sel-clk", "spi-clk";
-> +			status = "disabled";
-> +		};
-> +
-> +		qspi: spi@11014000 {
-> +			compatible = "mediatek,mt7629-nor",
-> +				     "mediatek,mt8173-nor";
-> +			reg = <0 0x11014000 0 0xe0>;
-> +			clocks = <&pericfg CLK_PERI_FLASH_PD>,
-> +				 <&topckgen CLK_TOP_FLASH_SEL>;
-> +			clock-names = "spi", "sf";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		ssusbsys: syscon@1a000000 {
-> +			compatible = "mediatek,mt7629-ssusbsys", "syscon";
-> +			reg = <0 0x1a000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
-> +		ssusb: usb@1a0c0000 {
-> +			compatible = "mediatek,mt7629-xhci",
-> +				     "mediatek,mtk-xhci";
-> +			reg = <0 0x1a0c0000 0 0x01000>,
-> +			      <0 0x1a0c3e00 0 0x0100>;
-> +			reg-names = "mac", "ippc";
-> +			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&ssusbsys CLK_SSUSB_SYS_EN>,
-> +				 <&ssusbsys CLK_SSUSB_REF_EN>,
-> +				 <&ssusbsys CLK_SSUSB_MCU_EN>,
-> +				 <&ssusbsys CLK_SSUSB_DMA_EN>;
-> +			clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck";
-> +			assigned-clocks = <&topckgen CLK_TOP_AXI_SEL>,
-> +					  <&topckgen CLK_TOP_SATA_SEL>,
-> +					  <&topckgen CLK_TOP_HIF_SEL>;
-> +			assigned-clock-parents = <&topckgen CLK_TOP_SYSPLL1_D2>,
-> +						 <&topckgen CLK_TOP_UNIVPLL2_D4>,
-> +						 <&topckgen CLK_TOP_UNIVPLL1_D2>;
-> +			power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF1>;
-> +			phys = <&u2port0 PHY_TYPE_USB2>,
-> +			       <&u3port0 PHY_TYPE_USB3>;
-> +			status = "disabled";
-> +		};
-> +
-> +		u3phy1: usb-phy@1a0c4000 {
-> +			compatible = "mediatek,generic-tphy-v1";
-> +			reg = <0 0x1a0c4000 0 0x300>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-
-Only need 1 cell for these.
-
-> +			ranges;
-> +			status = "disabled";
-> +
-> +			u2port0: usb-phy@1a0c4300 {
-> +				reg = <0 0x1a0c4300 0 0x100>;
-
-Use a non-empty ranges and just provide the offset.
-
-> +				clocks = <&ssusbsys CLK_SSUSB_U2_PHY_EN>;
-> +				clock-names = "ref";
-> +				#phy-cells = <1>;
-> +				status = "okay";
-> +			};
-> +
-> +			u3port0: usb-phy@1a1c4900 {
-> +				reg = <0 0x1a1c4900 0 0x700>;
-> +				clocks = <&clk20m>;
-> +				clock-names = "ref";
-> +				#phy-cells = <1>;
-> +				status = "okay";
-> +			};
-> +		};
-> +
-> +		pciesys: syscon@1a100800 {
-> +			compatible = "mediatek,mt7629-pciesys", "syscon";
-> +			reg = <0 0x1a100800 0 0x1000>;
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
-> +		ethsys: syscon@1b000000 {
-> +			compatible = "mediatek,mt7629-ethsys", "syscon";
-> +			reg = <0 0x1b000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
-> +		sgmiisys0: syscon@1b128000 {
-> +			compatible = "mediatek,mt7629-sgmiisys", "syscon";
-> +			reg = <0 0x1b128000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		sgmiisys1: syscon@1b130000 {
-> +			compatible = "mediatek,mt7629-sgmiisys", "syscon";
-> +			reg = <0 0x1b130000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +	};
-> +};
-> diff --git a/include/dt-bindings/reset/mt7629-resets.h b/include/dt-bindings/reset/mt7629-resets.h
-> new file mode 100644
-> index 0000000..6bb8573
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/mt7629-resets.h
-> @@ -0,0 +1,71 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 MediaTek Inc.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT7629
-> +#define _DT_BINDINGS_RESET_CONTROLLER_MT7629
-> +
-> +/* INFRACFG resets */
-> +#define MT7629_INFRA_EMI_MPU_RST		0
-> +#define MT7629_INFRA_UART5_RST			2
-> +#define MT7629_INFRA_CIRQ_EINT_RST		3
-> +#define MT7629_INFRA_APXGPT_RST			4
-> +#define MT7629_INFRA_SCPSYS_RST			5
-> +#define MT7629_INFRA_KP_RST			6
-> +#define MT7629_INFRA_SPI1_RST			7
-> +#define MT7629_INFRA_SPI4_RST			8
-> +#define MT7629_INFRA_SYSTIMER_RST		9
-> +#define MT7629_INFRA_IRRX_RST			10
-> +#define MT7629_INFRA_AO_BUS_RST			16
-> +#define MT7629_INFRA_EMI_RST			32
-> +#define MT7629_INFRA_APMIXED_RST		35
-> +#define MT7629_INFRA_MIPI_RST			36
-> +#define MT7629_INFRA_TRNG_RST			37
-> +#define MT7629_INFRA_SYSCIRQ_RST		38
-> +#define MT7629_INFRA_MIPI_CSI_RST		39
-> +#define MT7629_INFRA_GCE_FAXI_RST		40
-> +#define MT7629_INFRA_I2C_SRAM_RST		41
-> +#define MT7629_INFRA_IOMMU_RST			47
-> +
-> +/* PERICFG resets */
-> +#define MT7629_PERI_UART0_SW_RST		0
-> +#define MT7629_PERI_UART1_SW_RST		1
-> +#define MT7629_PERI_UART2_SW_RST		2
-> +#define MT7629_PERI_BTIF_SW_RST			6
-> +#define MT7629_PERI_PWN_SW_RST			8
-> +#define MT7629_PERI_DMA_SW_RST			11
-> +#define MT7629_PERI_NFI_SW_RST			14
-> +#define MT7629_PERI_I2C0_SW_RST			22
-> +#define MT7629_PERI_SPI0_SW_RST			33
-> +#define MT7629_PERI_SPI1_SW_RST			34
-> +#define MT7629_PERI_FLASHIF_SW_RST		36
-> +
-> +/* PCIe Subsystem resets */
-> +#define MT7629_PCIE1_CORE_RST			19
-> +#define MT7629_PCIE1_MMIO_RST			20
-> +#define MT7629_PCIE1_HRST			21
-> +#define MT7629_PCIE1_USER_RST			22
-> +#define MT7629_PCIE1_PIPE_RST			23
-> +#define MT7629_PCIE0_CORE_RST			27
-> +#define MT7629_PCIE0_MMIO_RST			28
-> +#define MT7629_PCIE0_HRST			29
-> +#define MT7629_PCIE0_USER_RST			30
-> +#define MT7629_PCIE0_PIPE_RST			31
-> +
-> +/* SSUSB Subsystem resets */
-> +#define MT7629_SSUSB_PHY_PWR_RST		3
-> +#define MT7629_SSUSB_MAC_PWR_RST		4
-> +
-> +/* ETH Subsystem resets */
-> +#define MT7629_ETHSYS_SYS_RST			0
-> +#define MT7629_ETHSYS_MCM_RST			2
-> +#define MT7629_ETHSYS_HSDMA_RST			5
-> +#define MT7629_ETHSYS_FE_RST			6
-> +#define MT7629_ETHSYS_ESW_RST			16
-> +#define MT7629_ETHSYS_GMAC_RST			23
-> +#define MT7629_ETHSYS_EPHY_RST			24
-> +#define MT7629_ETHSYS_CRYPTO_RST		29
-> +#define MT7629_ETHSYS_PPE_RST			31
-> +
-> +#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT7629 */
-> -- 
-> 1.9.1
+>  };
+>  
+>  /**
+> diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+> index 02c960c63ac0..cdbcd6909728 100644
+> --- a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+> +++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+> @@ -253,8 +253,8 @@ static void get_pic_info(struct vdec_h264_inst *inst,
+>  	*pic = inst->vsi->pic;
+>  	mtk_vcodec_debug(inst, "pic(%d, %d), buf(%d, %d)",
+>  			 pic->pic_w, pic->pic_h, pic->buf_w, pic->buf_h);
+> -	mtk_vcodec_debug(inst, "Y(%d, %d), C(%d, %d)", pic->y_bs_sz,
+> -			 pic->y_len_sz, pic->c_bs_sz, pic->c_len_sz);
+> +	mtk_vcodec_debug(inst, "fb size: Y(%d), C(%d)",
+> +			 pic->fb_sz[0], pic->fb_sz[1]);
+>  }
+>  
+>  static void get_crop_info(struct vdec_h264_inst *inst, struct v4l2_rect *cr)
+> diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+> index bac3723038de..ba79136421ef 100644
+> --- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+> +++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+> @@ -294,8 +294,8 @@ static void get_pic_info(struct vdec_vp8_inst *inst, struct vdec_pic_info *pic)
+>  
+>  	mtk_vcodec_debug(inst, "pic(%d, %d), buf(%d, %d)",
+>  			 pic->pic_w, pic->pic_h, pic->buf_w, pic->buf_h);
+> -	mtk_vcodec_debug(inst, "Y(%d, %d), C(%d, %d)", pic->y_bs_sz,
+> -			 pic->y_len_sz, pic->c_bs_sz, pic->c_len_sz);
+> +	mtk_vcodec_debug(inst, "fb size: Y(%d), C(%d)",
+> +			 pic->fb_sz[0], pic->fb_sz[1]);
+>  }
+>  
+>  static void vp8_dec_finish(struct vdec_vp8_inst *inst)
+> diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+> index bc8349bc2e80..6fe83207bbc4 100644
+> --- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+> +++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+> @@ -702,10 +702,8 @@ static void init_all_fb_lists(struct vdec_vp9_inst *inst)
+>  
+>  static void get_pic_info(struct vdec_vp9_inst *inst, struct vdec_pic_info *pic)
+>  {
+> -	pic->y_bs_sz = inst->vsi->buf_sz_y_bs;
+> -	pic->c_bs_sz = inst->vsi->buf_sz_c_bs;
+> -	pic->y_len_sz = inst->vsi->buf_len_sz_y;
+> -	pic->c_len_sz = inst->vsi->buf_len_sz_c;
+> +	pic->fb_sz[0] = inst->vsi->buf_sz_y_bs + inst->vsi->buf_len_sz_y;
+> +	pic->fb_sz[1] = inst->vsi->buf_sz_c_bs + inst->vsi->buf_len_sz_c;
+>  
+>  	pic->pic_w = inst->vsi->pic_w;
+>  	pic->pic_h = inst->vsi->pic_h;
+> @@ -714,8 +712,9 @@ static void get_pic_info(struct vdec_vp9_inst *inst, struct vdec_pic_info *pic)
+>  
+>  	mtk_vcodec_debug(inst, "pic(%d, %d), buf(%d, %d)",
+>  		 pic->pic_w, pic->pic_h, pic->buf_w, pic->buf_h);
+> -	mtk_vcodec_debug(inst, "Y(%d, %d), C(%d, %d)", pic->y_bs_sz,
+> -		 pic->y_len_sz, pic->c_bs_sz, pic->c_len_sz);
+> +	mtk_vcodec_debug(inst, "fb size: Y(%d), C(%d)",
+> +		pic->fb_sz[0],
+> +		pic->fb_sz[1]);
+>  }
+>  
+>  static void get_disp_fb(struct vdec_vp9_inst *inst, struct vdec_fb **out_fb)
 > 
+
+Regards,
+
+	Hans
