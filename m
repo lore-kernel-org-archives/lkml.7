@@ -2,498 +2,224 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FBBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2E9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C47520700
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4C620700
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:48:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PhTi4Cnx"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jSL2WTLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfC1LrP (ORCPT
+        id S1726949AbfC1Lsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 07:47:15 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46502 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfC1LrO (ORCPT
+        Thu, 28 Mar 2019 07:48:47 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:44271 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbfC1Lsr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 07:47:14 -0400
-Received: by mail-pg1-f193.google.com with SMTP id q1so3311421pgv.13;
-        Thu, 28 Mar 2019 04:47:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nUJASy/H6zQ5X+ktLX4jGuPga5mi17bLqm5mu93AxRE=;
-        b=PhTi4Cnx/1ZP9M3zXWiNYkNjEohhfq3vDy3RQ8p1G0Rc1aLmwBYMtF8WFunM//Utk5
-         fhFUgXzbtptU+5pSOQupw4iVVaKuS6OUOB33MxJ5S1L0HZ6ZtxcfFfZjR/LzZus2PFNV
-         oAsILJ9j7MMXDBttkUcXOT6nCkqnjt8Ogbg2zJ2F6zRxl3ffeC4j9ira7hT9LXTlVm7A
-         3ROp6ITJtrV/f1RFVrBUEdlZteQWb7oiyXSd4SIv7vpm/l1M6rNW3H/VMgnne08BMfIg
-         GzrWrali8hd7toWphUFQX6ZfJ7jXdCbONqUKWn+JBy3F6CiX/fYVu0E80xTEtB2EiH8o
-         XspQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nUJASy/H6zQ5X+ktLX4jGuPga5mi17bLqm5mu93AxRE=;
-        b=MqJoCVEBbCazAfZgMkP1/C7eyjkC3ODt4tt9EdLylQzgGx4MJjfVqltJw9GMQ7wF9J
-         B+UETjBv9HVIrsAygAxrITAPLN9EH4fcCQZE8mRqMAYOs3Ux6+ozYIhFKoexRDRv4DXt
-         Zt+GI1hDv0JnFomuhw/P5MzkAPxXQCo2jkw+5Np2E1+wQJDOcgC60n7mz43sWux4ITtK
-         xI7buf3CCmIZULbjm48OmicuamnxoWNWbOL/QrH8VLr+YRd3SDntxhRmxxPTCapOyt2g
-         w1f6nvnw/6PIA/aKLZk8we9v5crX/NbuRG8YR1WXrwLjsfGglYNkeUahrDXRpaiIuR1Y
-         4Lwg==
-X-Gm-Message-State: APjAAAXMjfkk6c9HMcfMcWl9HiDahu8u55J97np1ApCXSEFIZJnYyrEI
-        ndo6yBcg+3dVno8dL58hTg==
-X-Google-Smtp-Source: APXvYqyxet+AXCfc/IiC4KtU1/aBpyQLaBNXjEqkX7LSe+wfn46BKAz4/FRDGR0B3PosVokpRCoR+g==
-X-Received: by 2002:a63:5452:: with SMTP id e18mr40107687pgm.386.1553773633804;
-        Thu, 28 Mar 2019 04:47:13 -0700 (PDT)
-Received: from localhost ([2001:19f0:7001:54c5:5400:1ff:fec8:7fc2])
-        by smtp.gmail.com with ESMTPSA id z124sm62753007pfb.150.2019.03.28.04.47.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 04:47:12 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 19:47:08 +0800
-From:   Jacky Hu <hengqing.hu@gmail.com>
-To:     Simon Horman <horms@verge.net.au>
-Cc:     jacky.hu@walmart.com, jason.niesz@walmart.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Julian Anastasov <ja@ssi.bg>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH v7] ipvs: allow tunneling with gue encapsulation
-Message-ID: <20190328114708.GA10198@i716>
-References: <20190326103121.31083-1-hengqing.hu@gmail.com>
- <20190328095950.66xhna76xndokdp6@verge.net.au>
+        Thu, 28 Mar 2019 07:48:47 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190328114844euoutp02e7f54045bb4ea4b07c7eca25c3e969c1~QHPhlAgx03046030460euoutp02B
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:48:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190328114844euoutp02e7f54045bb4ea4b07c7eca25c3e969c1~QHPhlAgx03046030460euoutp02B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1553773724;
+        bh=tp3m+q1epNtYfS/t5nFXhIWhJzSj5o8anq2dCYU5gYQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=jSL2WTLtTvn5RoD5BfzM2NomeudeWapuIxJqiXWA17mVzEcIHUVztQPl5I1LNF3S0
+         2YTqfZg0G33KuPPu+0wrYsQYvHY5vIVXIQEZMqjYVaxqq7i7eD4Dwpb1swK/CdZRmM
+         Ln2eksHW8+K58xJ/klfl6n8i8qX3QmLBPkyQgecs=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190328114843eucas1p1b5cc766859f6650ba2ee86b466baff8a~QHPg3DZ3L1961319613eucas1p1p;
+        Thu, 28 Mar 2019 11:48:43 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 4B.8C.04325.B94BC9C5; Thu, 28
+        Mar 2019 11:48:43 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190328114843eucas1p20c9d870a68006ae9fc0f0699b867f896~QHPgLjH-z1606316063eucas1p2H;
+        Thu, 28 Mar 2019 11:48:43 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190328114842eusmtrp168cb47d2f7020deefd091fbcb3b1d192~QHPf9c0EI1968119681eusmtrp1c;
+        Thu, 28 Mar 2019 11:48:42 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-c8-5c9cb49bbdd5
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 83.3A.04140.A94BC9C5; Thu, 28
+        Mar 2019 11:48:42 +0000 (GMT)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190328114842eusmtip2ef2abb7c43b589931d2b6dbbabc5c10c~QHPfX4ppd3139731397eusmtip2F;
+        Thu, 28 Mar 2019 11:48:42 +0000 (GMT)
+Subject: Re: Re: [PATCH v3 1/4] drm/bridge: sil_sii8620: depend on INPUT
+ instead of selecting it.
+To:     "Life is hard, and then you die" <ronald@innovation.ch>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Inki Dae <inki.dae@samsung.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <35bf8a61-b84c-3aae-00de-14637d37547b@samsung.com>
+Date:   Thu, 28 Mar 2019 12:48:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190328095950.66xhna76xndokdp6@verge.net.au>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190328000743.GB24753@innovation.ch>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe89tR9nkOI09rDCdFGSklYUHu6BRcaA+WJ+6GHXSg0o6ZUcr
+        LcxKcrObWl6atsos5zAM22ZqGqh4yS5afshRTcjUhGE1JwUVbZ4ufvs9z/N//u/zh5fGlS5S
+        TadpswWdlk/XUP6Evff7y9XV1prENS214eyls5UY2107hdgRzwzFPvX8pNhzd5ootsxZQrCj
+        X+dI9nVbDcVOTS5hb8yW4+zUexfGdurHMLZ/rgJj77s/yOICOLdlmuRaje9kXGGnQ8ZdMwDX
+        bDFQnGlgN/fkRqOMc17ow7jLVgviOt5bCc7dHMJVFdnJBPl+/03JQnraMUEXteWwf2rpRAuW
+        VRly4kK/RVaAeqAY+dHArIfHd59ixcifVjJmBN1Vn5BUzCLo+TZNSIUbQaHZhP1bGXb9UdUj
+        aC6toKTCheB7kwH3qYKYJNDXOeY5mNnoFY2QPsaZNgKKxjb7mGJWws+Ho5SPFcwWmDAa5jUE
+        sxxeFduRjxcze2HmYzshaQJh4Pr4PPsx0XD5eQEmeS6Dc7ZqXGIVOMZvzgcCppwG85fPXiPa
+        W2yDFuMOKUEQTPdZZRIvhcGrFwmJT4PTXIhLu3oEtgetuDTYCN19w6TPB/ce3dQWJbXjwVTX
+        QEj2AfDGFSidEABl9kpcaitAf14pqcPA+dz2x1AFd4c8VAnSGBcEMy4IY1wQxvj/3VuIsCCV
+        kCNmpAhitFY4HinyGWKONiUyKTOjGXk/4eCvPs8j1PnjSBdiaKSRK0IzqxOVJH9MzM3oQkDj
+        mmCFo6EmUalI5nPzBF3mIV1OuiB2oSU0oVEpTi4aO6BkUvhs4aggZAm6v1OM9lMXoIgDjSgm
+        9kqe8GLctoyNTR60800HR+s6do2F7un9rDbVz9lMI+3x34SR7a7dRH7Eu69Wh5pueHGEca/T
+        5r1pT4iZdLzcHBay6nYFyQ/lX4zTyE9t0KcuwmNWhBelqbDls/LYZ9FnlPtUQ1uzo2ruMzsD
+        tTasylPruIe/jfQc0hBiKr82AteJ/G+S3XzGgAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42I5/e/4Pd1ZW+bEGHz9YWjR2zSdyeLwoheM
+        Fle+vmezOPX1L5tF8+L1bBaT7k9gsbj56RurxeVdc9gsXjyXtpj7ZSqzxYt7b5ks9nU8YLI4
+        8W0ak8Xaz4/ZHfg8Pq96xeqxc9Zddo+WfbfYPaZ0SnhsWtXJ5jHvZKDH/rlr2D3udx9n8ujb
+        sorRY++9LSwenzfJecxo38YawBOlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2Vk
+        qqRvZ5OSmpNZllqkb5eglzHx2XamgulyFd0nVrE3MB6R6GLk5JAQMJHYc/EtYxcjF4eQwFJG
+        iRt3e5ghEuISu+e/hbKFJf5c62KDKHrNKHH35CJWkISwQLJEx5JbYEUiAtYSmyZeYQUpYhbY
+        xyLR92ApC0THTCaJ2T8ng1WxCWhK/N18kw3E5hWwk3g2qxNsEouAqsSlrm2MILaoQITE3Ysv
+        WCBqBCVOznwCZnMKGEv0nW1gArGZBdQl/sy7xAxhy0s0b50NZYtL3Hoyn2kCo9AsJO2zkLTM
+        QtIyC0nLAkaWVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIHxv+3Yzy07GLveBR9iFOBgVOLh
+        VcifHSPEmlhWXJl7iFGCg1lJhPfWyjkxQrwpiZVVqUX58UWlOanFhxhNgZ6byCwlmpwPTE15
+        JfGGpobmFpaG5sbmxmYWSuK85w0qo4QE0hNLUrNTUwtSi2D6mDg4pRoY+1dKb5VrvlB0yk/3
+        2ZsWmSc2Gik1ek+Wctlq3dl1pF2Z2T1ksa1B99LY279M91b+uP+qwifZQ23Wp7t+e+ctal6d
+        WnTp38flG790V2/6eWXbf7a0znx/M/ffDVyHwo8dZijr9W2MUkmbyjjj4uPjt3vrWT99+u90
+        4q+EJ4/Q5+7nOmHTlvhpKbEUZyQaajEXFScCAJxqpUMVAwAA
+X-CMS-MailID: 20190328114843eucas1p20c9d870a68006ae9fc0f0699b867f896
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190327014824epcas2p1f79a41c58f76150f7324169805f506f0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190327014824epcas2p1f79a41c58f76150f7324169805f506f0
+References: <20190327014807.7472-1-ronald@innovation.ch>
+        <CGME20190327014824epcas2p1f79a41c58f76150f7324169805f506f0@epcas2p1.samsung.com>
+        <20190327014807.7472-2-ronald@innovation.ch>
+        <9fd8af5b-20ed-5dca-7d5c-98f2926b9b0c@samsung.com>
+        <20190328000743.GB24753@innovation.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Simon,
-On Thu, Mar 28, 2019 at 10:59:50AM +0100, Simon Horman wrote:
-> Hi Jacky,
-> 
-> On Tue, Mar 26, 2019 at 06:31:21PM +0800, Jacky Hu wrote:
-> > ipip packets are blocked in some public cloud environments, this patch
-> > allows gue encapsulation with the tunneling method, which would make
-> > tunneling working in those environments.
-> > 
-> > Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
-> 
-> It would help a lot if you provided a short summary
-> of what changed between versions of this patch.
-> 
+On 28.03.2019 01:07, Life is hard, and then you die wrote:
+>   Hi Andrzej,
+>
+> On Wed, Mar 27, 2019 at 03:13:37PM +0100, Andrzej Hajda wrote:
+>> +cc: dri-devel
+>>
+>> On 27.03.2019 02:48, Ronald Tschalär wrote:
+>>> commit d6abe6df706c66d803e6dd4fe98c1b6b7f125a56 (drm/bridge:
+>>> sil_sii8620: do not have a dependency of RC_CORE) added a dependency on
+>>> INPUT. However, this causes problems with other drivers, in particular
+>>> an input driver that depends on MFD_INTEL_LPSS_PCI (to be added in a
+>>> future commit):
+>>>
+>>>   drivers/clk/Kconfig:9:error: recursive dependency detected!
+>>>   drivers/clk/Kconfig:9:        symbol COMMON_CLK is selected by MFD_INTEL_LPSS
+>>>   drivers/mfd/Kconfig:566:      symbol MFD_INTEL_LPSS is selected by MFD_INTEL_LPSS_PCI
+>>>   drivers/mfd/Kconfig:580:      symbol MFD_INTEL_LPSS_PCI is implied by KEYBOARD_APPLESPI
+>>>   drivers/input/keyboard/Kconfig:73:    symbol KEYBOARD_APPLESPI depends on INPUT
+>>>   drivers/input/Kconfig:8:      symbol INPUT is selected by DRM_SIL_SII8620
+>>>   drivers/gpu/drm/bridge/Kconfig:83:    symbol DRM_SIL_SII8620 depends on DRM_BRIDGE
+>>>   drivers/gpu/drm/bridge/Kconfig:1:     symbol DRM_BRIDGE is selected by DRM_PL111
+>>>   drivers/gpu/drm/pl111/Kconfig:1:      symbol DRM_PL111 depends on COMMON_CLK
+>>>
+>>> According to the docs, select should only be used for non-visible
+>>> symbols. Furthermore almost all other references to INPUT throughout the
+>>> kernel config are depends, not selects. Hence this change.
+>>>
+>>> CC: Inki Dae <inki.dae@samsung.com>
+>>> CC: Andrzej Hajda <a.hajda@samsung.com>
+>>> Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
+>> This is drm bridge driver, next time please cc it to dri-devel ML also.
+> Ok. Though as noted in the cover letter, the patch here is meant as a
+> placeholder till the real thing being discussed on dri-devel is
+> finalized. I was trying to avoid cross-posting too much, hence the
+> separate submission on dri-devel.
+>
+>> Anyway this is not the solution we have agreed to.
+>>
+>> Why have you abandoned the patch [1]? It needed just some minor
+>> polishing, as I wrote in response to this mail.
+>>
+>> [1]:
+>> https://lore.kernel.org/lkml/20190124082423.23139-1-ronald@innovation.ch/T/#mf620df0b1583096a214d8e2e690387078583472f
+> It seems your mail client doesn't like me :-) I got neither of your
+> responses. Sorry, I should've checked the archives when I didn't hear
+> anything. In any case thank you for your review, and I will update
+> that patch and send out a new version shortly.
 
-Here is the summary:
 
-    v7->v6:
-      1) pass proper gso type mask to gso_inner_segment for gue tunnel
+I see where is the problem: Your mail client (mutt I suppose) sets
+Mail-Followup-To header to all recipients (To and Cc) without the
+sender. And my client (thunderbird) after pressing "Reply-All" checks
+for Mail-Followup-To field, if present it uses only it to set
+recipients, so in your case it does not response to the original author.
 
-    v6->v5:
-      1) simply using an if statement for tun_type discrimination
+I do not know which mail client works incorrectly in this case, but for
+sure it is not what we want :)
 
-    v5->v4:
-      1) use __be16 for tun_port and __u16 for tun_type and avoid any
-         atomic_t usage
-      2) fixed sparse warnings
+I do not know how to solve the issue in thunderbird, maybe mutt is more
+configurable?
 
-    v4->v3:
-      1) removed changes to setsockopt interface
-      2) use correct nla_get/put function for tun_port
-      3) moved cp->dest null check to __ip_vs_get_out_rt() and
-         __ip_vs_get_out_rt_v6()
-      4) account the added header when calculating mtu
-      5) use net instead of dev_net(tdev)
-      6) set udest->tun_type to IP_VS_CONN_F_TUNNEL_TYPE_IPIP in
-         ip_vs_copy_udest_compat()
-      7) renamed __build_gue_header to ipvs_gue_encap
-      8) make ip_vs_add_dest() and ip_vs_edit_dest() return EINVAL when
-         GUE comes with port 0.
-      9) feed AF_INET6 to __tun_gso_type_mask in ip_vs_tunnel_xmit_v6
 
-    v3->v2:
-      1) added missing break statements to a few switch cases
+Regards
 
-    v2->v1:
-      1) pass tun_type and tun_port as new optional parameters
-         instead of a few bits in existing conn_flags parameters
+Andrzej
 
-> > ---
-> >  include/net/ip_vs.h             |  5 ++
-> >  include/uapi/linux/ip_vs.h      | 11 +++++
-> >  net/netfilter/ipvs/ip_vs_ctl.c  | 35 +++++++++++++-
-> >  net/netfilter/ipvs/ip_vs_xmit.c | 84 +++++++++++++++++++++++++++++++--
-> >  4 files changed, 130 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-> > index 047f9a5ccaad..2ac40135b576 100644
-> > --- a/include/net/ip_vs.h
-> > +++ b/include/net/ip_vs.h
-> > @@ -600,6 +600,9 @@ struct ip_vs_dest_user_kern {
-> >  
-> >  	/* Address family of addr */
-> >  	u16			af;
-> > +
-> > +	u16			tun_type;	/* tunnel type */
-> > +	__be16			tun_port;	/* tunnel port */
-> >  };
-> >  
-> >  
-> > @@ -660,6 +663,8 @@ struct ip_vs_dest {
-> >  	atomic_t		conn_flags;	/* flags to copy to conn */
-> >  	atomic_t		weight;		/* server weight */
-> >  	atomic_t		last_weight;	/* server latest weight */
-> > +	__u16			tun_type;	/* tunnel type */
-> > +	__be16			tun_port;	/* tunnel port */
-> >  
-> >  	refcount_t		refcnt;		/* reference counter */
-> >  	struct ip_vs_stats      stats;          /* statistics */
-> > diff --git a/include/uapi/linux/ip_vs.h b/include/uapi/linux/ip_vs.h
-> > index 1c916b2f89dc..e34f436fc79d 100644
-> > --- a/include/uapi/linux/ip_vs.h
-> > +++ b/include/uapi/linux/ip_vs.h
-> > @@ -124,6 +124,13 @@
-> >  
-> >  #define IP_VS_PEDATA_MAXLEN     255
-> >  
-> > +/* Tunnel types */
-> > +enum {
-> > +	IP_VS_CONN_F_TUNNEL_TYPE_IPIP = 0,	/* IPIP */
-> > +	IP_VS_CONN_F_TUNNEL_TYPE_GUE,		/* GUE */
-> > +	IP_VS_CONN_F_TUNNEL_TYPE_MAX,
-> > +};
-> > +
-> >  /*
-> >   *	The struct ip_vs_service_user and struct ip_vs_dest_user are
-> >   *	used to set IPVS rules through setsockopt.
-> > @@ -392,6 +399,10 @@ enum {
-> >  
-> >  	IPVS_DEST_ATTR_STATS64,		/* nested attribute for dest stats */
-> >  
-> > +	IPVS_DEST_ATTR_TUN_TYPE,	/* tunnel type */
-> > +
-> > +	IPVS_DEST_ATTR_TUN_PORT,	/* tunnel port */
-> > +
-> >  	__IPVS_DEST_ATTR_MAX,
-> >  };
-> >  
-> > diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-> > index 053cd96b9c76..328683452229 100644
-> > --- a/net/netfilter/ipvs/ip_vs_ctl.c
-> > +++ b/net/netfilter/ipvs/ip_vs_ctl.c
-> > @@ -831,6 +831,10 @@ __ip_vs_update_dest(struct ip_vs_service *svc, struct ip_vs_dest *dest,
-> >  	conn_flags = udest->conn_flags & IP_VS_CONN_F_DEST_MASK;
-> >  	conn_flags |= IP_VS_CONN_F_INACTIVE;
-> >  
-> > +	/* set the tunnel info */
-> > +	dest->tun_type = udest->tun_type;
-> > +	dest->tun_port = udest->tun_port;
-> > +
-> >  	/* set the IP_VS_CONN_F_NOOUTPUT flag if not masquerading/NAT */
-> >  	if ((conn_flags & IP_VS_CONN_F_FWD_MASK) != IP_VS_CONN_F_MASQ) {
-> >  		conn_flags |= IP_VS_CONN_F_NOOUTPUT;
-> > @@ -987,6 +991,13 @@ ip_vs_add_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
-> >  		return -ERANGE;
-> >  	}
-> >  
-> > +	if (udest->tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE) {
-> > +		if (udest->tun_port == 0) {
-> > +			pr_err("%s(): tunnel port is zero\n", __func__);
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> > +
-> >  	ip_vs_addr_copy(udest->af, &daddr, &udest->addr);
-> >  
-> >  	/* We use function that requires RCU lock */
-> > @@ -1051,6 +1062,13 @@ ip_vs_edit_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
-> >  		return -ERANGE;
-> >  	}
-> >  
-> > +	if (udest->tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE) {
-> > +		if (udest->tun_port == 0) {
-> > +			pr_err("%s(): tunnel port is zero\n", __func__);
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> > +
-> >  	ip_vs_addr_copy(udest->af, &daddr, &udest->addr);
-> >  
-> >  	/* We use function that requires RCU lock */
-> > @@ -2333,6 +2351,7 @@ static void ip_vs_copy_udest_compat(struct ip_vs_dest_user_kern *udest,
-> >  	udest->u_threshold	= udest_compat->u_threshold;
-> >  	udest->l_threshold	= udest_compat->l_threshold;
-> >  	udest->af		= AF_INET;
-> > +	udest->tun_type		= IP_VS_CONN_F_TUNNEL_TYPE_IPIP;
-> >  }
-> >  
-> >  static int
-> > @@ -2890,6 +2909,8 @@ static const struct nla_policy ip_vs_dest_policy[IPVS_DEST_ATTR_MAX + 1] = {
-> >  	[IPVS_DEST_ATTR_PERSIST_CONNS]	= { .type = NLA_U32 },
-> >  	[IPVS_DEST_ATTR_STATS]		= { .type = NLA_NESTED },
-> >  	[IPVS_DEST_ATTR_ADDR_FAMILY]	= { .type = NLA_U16 },
-> > +	[IPVS_DEST_ATTR_TUN_TYPE]	= { .type = NLA_U8 },
-> > +	[IPVS_DEST_ATTR_TUN_PORT]	= { .type = NLA_U16 },
-> >  };
-> >  
-> >  static int ip_vs_genl_fill_stats(struct sk_buff *skb, int container_type,
-> > @@ -3193,6 +3214,10 @@ static int ip_vs_genl_fill_dest(struct sk_buff *skb, struct ip_vs_dest *dest)
-> >  			 IP_VS_CONN_F_FWD_MASK)) ||
-> >  	    nla_put_u32(skb, IPVS_DEST_ATTR_WEIGHT,
-> >  			atomic_read(&dest->weight)) ||
-> > +	    nla_put_u8(skb, IPVS_DEST_ATTR_TUN_TYPE,
-> > +		       dest->tun_type) ||
-> > +	    nla_put_be16(skb, IPVS_DEST_ATTR_TUN_PORT,
-> > +			 dest->tun_port) ||
-> >  	    nla_put_u32(skb, IPVS_DEST_ATTR_U_THRESH, dest->u_threshold) ||
-> >  	    nla_put_u32(skb, IPVS_DEST_ATTR_L_THRESH, dest->l_threshold) ||
-> >  	    nla_put_u32(skb, IPVS_DEST_ATTR_ACTIVE_CONNS,
-> > @@ -3315,12 +3340,14 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
-> >  	/* If a full entry was requested, check for the additional fields */
-> >  	if (full_entry) {
-> >  		struct nlattr *nla_fwd, *nla_weight, *nla_u_thresh,
-> > -			      *nla_l_thresh;
-> > +			      *nla_l_thresh, *nla_tun_type, *nla_tun_port;
-> >  
-> >  		nla_fwd		= attrs[IPVS_DEST_ATTR_FWD_METHOD];
-> >  		nla_weight	= attrs[IPVS_DEST_ATTR_WEIGHT];
-> >  		nla_u_thresh	= attrs[IPVS_DEST_ATTR_U_THRESH];
-> >  		nla_l_thresh	= attrs[IPVS_DEST_ATTR_L_THRESH];
-> > +		nla_tun_type	= attrs[IPVS_DEST_ATTR_TUN_TYPE];
-> > +		nla_tun_port	= attrs[IPVS_DEST_ATTR_TUN_PORT];
-> >  
-> >  		if (!(nla_fwd && nla_weight && nla_u_thresh && nla_l_thresh))
-> >  			return -EINVAL;
-> > @@ -3330,6 +3357,12 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
-> >  		udest->weight = nla_get_u32(nla_weight);
-> >  		udest->u_threshold = nla_get_u32(nla_u_thresh);
-> >  		udest->l_threshold = nla_get_u32(nla_l_thresh);
-> > +
-> > +		if (nla_tun_type)
-> > +			udest->tun_type = nla_get_u8(nla_tun_type);
-> > +
-> > +		if (nla_tun_port)
-> > +			udest->tun_port = nla_get_be16(nla_tun_port);
-> >  	}
-> >  
-> >  	return 0;
-> > diff --git a/net/netfilter/ipvs/ip_vs_xmit.c b/net/netfilter/ipvs/ip_vs_xmit.c
-> > index 175349fcf91f..8d6f94b67772 100644
-> > --- a/net/netfilter/ipvs/ip_vs_xmit.c
-> > +++ b/net/netfilter/ipvs/ip_vs_xmit.c
-> > @@ -32,6 +32,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/tcp.h>                  /* for tcphdr */
-> >  #include <net/ip.h>
-> > +#include <net/gue.h>
-> >  #include <net/tcp.h>                    /* for csum_tcpudp_magic */
-> >  #include <net/udp.h>
-> >  #include <net/icmp.h>                   /* for icmp_send */
-> > @@ -382,6 +383,10 @@ __ip_vs_get_out_rt(struct netns_ipvs *ipvs, int skb_af, struct sk_buff *skb,
-> >  		mtu = dst_mtu(&rt->dst);
-> >  	} else {
-> >  		mtu = dst_mtu(&rt->dst) - sizeof(struct iphdr);
-> > +		if (!dest)
-> > +			goto err_put;
-> > +		if (dest->tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > +			mtu -= sizeof(struct udphdr) + sizeof(struct guehdr);
-> >  		if (mtu < 68) {
-> >  			IP_VS_DBG_RL("%s(): mtu less than 68\n", __func__);
-> >  			goto err_put;
-> > @@ -533,6 +538,10 @@ __ip_vs_get_out_rt_v6(struct netns_ipvs *ipvs, int skb_af, struct sk_buff *skb,
-> >  		mtu = dst_mtu(&rt->dst);
-> >  	else {
-> >  		mtu = dst_mtu(&rt->dst) - sizeof(struct ipv6hdr);
-> > +		if (!dest)
-> > +			goto err_put;
-> > +		if (dest->tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > +			mtu -= sizeof(struct udphdr) + sizeof(struct guehdr);
-> >  		if (mtu < IPV6_MIN_MTU) {
-> >  			IP_VS_DBG_RL("%s(): mtu less than %d\n", __func__,
-> >  				     IPV6_MIN_MTU);
-> > @@ -989,6 +998,41 @@ static inline int __tun_gso_type_mask(int encaps_af, int orig_af)
-> >  	}
-> >  }
-> >  
-> > +static int
-> > +ipvs_gue_encap(struct net *net, struct sk_buff *skb,
-> > +	       struct ip_vs_conn *cp, __u8 *next_protocol)
-> > +{
-> > +	__be16 dport;
-> > +	__be16 sport = udp_flow_src_port(net, skb, 0, 0, false);
-> > +	struct udphdr  *udph;	/* Our new UDP header */
-> > +	struct guehdr  *gueh;	/* Our new GUE header */
-> > +
-> > +	skb_push(skb, sizeof(struct guehdr));
-> > +
-> > +	gueh = (struct guehdr *)skb->data;
-> > +
-> > +	gueh->control = 0;
-> > +	gueh->version = 0;
-> > +	gueh->hlen = 0;
-> > +	gueh->flags = 0;
-> > +	gueh->proto_ctype = *next_protocol;
-> > +
-> > +	skb_push(skb, sizeof(struct udphdr));
-> > +	skb_reset_transport_header(skb);
-> > +
-> > +	udph = udp_hdr(skb);
-> > +
-> > +	dport = cp->dest->tun_port;
-> > +	udph->dest = dport;
-> > +	udph->source = sport;
-> > +	udph->len = htons(skb->len);
-> > +	udph->check = 0;
-> > +
-> > +	*next_protocol = IPPROTO_UDP;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  /*
-> >   *   IP Tunneling transmitter
-> >   *
-> > @@ -1025,6 +1069,7 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  	struct iphdr  *iph;			/* Our new IP header */
-> >  	unsigned int max_headroom;		/* The extra header space needed */
-> >  	int ret, local;
-> > +	int tun_type, gso_type;
-> >  
-> >  	EnterFunction(10);
-> >  
-> > @@ -1046,6 +1091,11 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  	 */
-> >  	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct iphdr);
-> >  
-> > +	tun_type = cp->dest->tun_type;
-> > +
-> > +	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > +		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
-> > +
-> >  	/* We only care about the df field if sysctl_pmtu_disc(ipvs) is set */
-> >  	dfp = sysctl_pmtu_disc(ipvs) ? &df : NULL;
-> >  	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
-> > @@ -1054,11 +1104,20 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  	if (IS_ERR(skb))
-> >  		goto tx_error;
-> >  
-> > -	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET, cp->af)))
-> > +	gso_type = __tun_gso_type_mask(AF_INET, cp->af);
-> > +	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > +		gso_type |= SKB_GSO_UDP_TUNNEL;
-> 
-> Should the gso_type really be __tun_gso_type_mask() | SKB_GSO_UDP_TUNNEL.
-> It seems tome that SKB_GSO_UDP_TUNNEL would be more appropriate.
-> 
-Do you mean you want me to change the code above to:
-	gso_type = __tun_gso_type_mask(AF_INET, cp->af);
-	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-		gso_type = __tun_gso_type_mask(AF_INET, cp->af) | SKB_GSO_UDP_TUNNEL;
-> Also, should there be a mechanism to enable cums in the outer header,
-> and thus use SKB_GSO_UDP_TUNNEL_CSUM?
-> 
-Yep, that we can definitely do it in a follow up patch later, by adding
-some new parameters for check sum control.
-> > +
-> > +	if (iptunnel_handle_offloads(skb, gso_type))
-> >  		goto tx_error;
-> >  
-> >  	skb->transport_header = skb->network_header;
-> >  
-> > +	skb_set_inner_ipproto(skb, next_protocol);
-> > +
-> > +	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > +		ipvs_gue_encap(net, skb, cp, &next_protocol);
-> > +
-> >  	skb_push(skb, sizeof(struct iphdr));
-> >  	skb_reset_network_header(skb);
-> >  	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
-> > @@ -1102,6 +1161,8 @@ int
-> >  ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  		     struct ip_vs_protocol *pp, struct ip_vs_iphdr *ipvsh)
-> >  {
-> > +	struct netns_ipvs *ipvs = cp->ipvs;
-> > +	struct net *net = ipvs->net;
-> >  	struct rt6_info *rt;		/* Route to the other host */
-> >  	struct in6_addr saddr;		/* Source for tunnel */
-> >  	struct net_device *tdev;	/* Device to other host */
-> > @@ -1112,10 +1173,11 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  	struct ipv6hdr  *iph;		/* Our new IP header */
-> >  	unsigned int max_headroom;	/* The extra header space needed */
-> >  	int ret, local;
-> > +	int tun_type, gso_type;
-> >  
-> >  	EnterFunction(10);
-> >  
-> > -	local = __ip_vs_get_out_rt_v6(cp->ipvs, cp->af, skb, cp->dest,
-> > +	local = __ip_vs_get_out_rt_v6(ipvs, cp->af, skb, cp->dest,
-> >  				      &cp->daddr.in6,
-> >  				      &saddr, ipvsh, 1,
-> >  				      IP_VS_RT_MODE_LOCAL |
-> > @@ -1134,17 +1196,31 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  	 */
-> >  	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct ipv6hdr);
-> >  
-> > +	tun_type = cp->dest->tun_type;
-> > +
-> > +	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > +		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
-> > +
-> >  	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
-> >  					 &next_protocol, &payload_len,
-> >  					 &dsfield, &ttl, NULL);
-> >  	if (IS_ERR(skb))
-> >  		goto tx_error;
-> >  
-> > -	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET6, cp->af)))
-> > +	gso_type = __tun_gso_type_mask(AF_INET6, cp->af);
-> > +	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > +		gso_type |= SKB_GSO_UDP_TUNNEL;
-> > +
-> > +	if (iptunnel_handle_offloads(skb, gso_type))
-> >  		goto tx_error;
-> >  
-> >  	skb->transport_header = skb->network_header;
-> >  
-> > +	skb_set_inner_ipproto(skb, next_protocol);
-> 
-> Is the above needed in the non-GUE case?
-Looking at implementation of ipip6_tunnel_xmit and ipip_tunnel_xmit,
-this seems to be needed also.
-> 
-> > +
-> > +	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > +		ipvs_gue_encap(net, skb, cp, &next_protocol);
-> > +
-> >  	skb_push(skb, sizeof(struct ipv6hdr));
-> >  	skb_reset_network_header(skb);
-> >  	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
-> > @@ -1167,7 +1243,7 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
-> >  
-> >  	ret = ip_vs_tunnel_xmit_prepare(skb, cp);
-> >  	if (ret == NF_ACCEPT)
-> > -		ip6_local_out(cp->ipvs->net, skb->sk, skb);
-> > +		ip6_local_out(net, skb->sk, skb);
-> >  	else if (ret == NF_DROP)
-> >  		kfree_skb(skb);
-> >  
-> > -- 
-> > 2.21.0
-> > 
-Thanks and Best Regards,
-Jacky
+
+>
+>
+>   Cheers,
+>
+>   Ronald
+>
+>
+>>> ---
+>>>  drivers/gpu/drm/bridge/Kconfig | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+>>> index 2fee47b0d50b..eabedc83f25c 100644
+>>> --- a/drivers/gpu/drm/bridge/Kconfig
+>>> +++ b/drivers/gpu/drm/bridge/Kconfig
+>>> @@ -83,9 +83,9 @@ config DRM_PARADE_PS8622
+>>>  config DRM_SIL_SII8620
+>>>  	tristate "Silicon Image SII8620 HDMI/MHL bridge"
+>>>  	depends on OF
+>>> +	depends on INPUT
+>>>  	select DRM_KMS_HELPER
+>>>  	imply EXTCON
+>>> -	select INPUT
+>>>  	select RC_CORE
+>>>  	help
+>>>  	  Silicon Image SII8620 HDMI/MHL bridge chip driver.
+>>
+>
+
