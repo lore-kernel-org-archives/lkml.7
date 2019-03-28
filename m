@@ -2,86 +2,79 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892E1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041D8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BABF21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:39:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553787574;
-	bh=W2OK6Z9fDyiUoNoQBEVaOhBlPYOw822K5P+W6sDdzh8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pyPOFIkwuQaNp1XsQ8AK/YYgSIEFaexWKdah/Tl0kFxrmKnBC9oyxDTqvBa4Q9Uuu
-	 cCWeaXCUCYNm53/RHJpFCzIReKE4dnjU3Z5OPKwNOJ5d8fu6gbW20ZlB8yeWUgh9+I
-	 y/4zyxHjD9tdix4IwXjFKzT1roX9TLRBlMKhuYqM=
+	by mail.kernel.org (Postfix) with ESMTP id C137521773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfC1Pjd (ORCPT
+        id S1726557AbfC1PkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:39:33 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40342 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfC1Pjd (ORCPT
+        Thu, 28 Mar 2019 11:40:00 -0400
+Received: from smtprelay0177.hostedemail.com ([216.40.44.177]:45331 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727379AbfC1Pjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:39:33 -0400
-Received: by mail-ot1-f68.google.com with SMTP id t8so13454653otp.7;
-        Thu, 28 Mar 2019 08:39:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4kUjWeKG2Qe/X9DGA6Nn149eABC3mnQfdt7tGT6CEU0=;
-        b=RaeYa7zu33/rBYv9pQsWu72naqZpz+WNyKCTMrPKvBfWFWT0XbHpKpDVlMwJakqM9R
-         qCu4lZIlXaJ6qJxajinOzkC6ROC8Ih/aBlwdLmxqWgoGVUEF4azXUBWcKW8swcZracsJ
-         rh+L7SP6MrkwBSQyVQNh9bjc9tc+JV1trnNcx3wdDgZo646OHCwlLXc8sF80jj1dt7aT
-         7XD5AXu0phZGFRERzGcKAWk0u3jem4M/onddEgEG7l5kpPYAN5UqUn+sYLpv3fFhCKgP
-         FmPmeJG/XWGE5RvklfpHTkYofRTk1ONrAfIErqtYa/Txc0i7qPCzIouY8DCYpfMJYsA6
-         Oczw==
-X-Gm-Message-State: APjAAAWz5N2Q66NqsjnoMbqFzDSwXf9M9pv4Kef464/BXgah9lLt/Bnl
-        IOqiUFx/YRYHKZ1kJcilLQ==
-X-Google-Smtp-Source: APXvYqx+v12cjW4TOO/iwP2m6MCzlcTjzxh79MknTQoQAmNztyfaa4ZdIKaB7WYVh6l8OpeW2kH5Rg==
-X-Received: by 2002:a9d:6b94:: with SMTP id b20mr32780582otq.289.1553787572285;
-        Thu, 28 Mar 2019 08:39:32 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q67sm9756730oif.40.2019.03.28.08.39.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 08:39:31 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 10:39:31 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/5] dt-bindings: display: Add Sharp LS020B1DD01D
- panel documentation
-Message-ID: <20190328153931.GA20107@bogus>
-References: <20190314122622.7597-1-paul@crapouillou.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190314122622.7597-1-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 28 Mar 2019 11:39:54 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id D4D2E83777F0;
+        Thu, 28 Mar 2019 15:39:52 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: lace26_55fdeea50dc56
+X-Filterd-Recvd-Size: 1926
+Received: from XPS-9350.home (unknown [47.151.153.53])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 28 Mar 2019 15:39:50 +0000 (UTC)
+Message-ID: <393f3fa45b3ddeb3f2394e0d1091021b00d9b829.camel@perches.com>
+Subject: Re: [PATCH v3 34/36] thunderbolt: Make rest of the logging to
+ happen at debug level
+From:   Joe Perches <joe@perches.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Mario.Limonciello@dell.com, netdev@vger.kernel.org
+Date:   Thu, 28 Mar 2019 08:39:49 -0700
+In-Reply-To: <20190328123633.42882-35-mika.westerberg@linux.intel.com>
+References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
+         <20190328123633.42882-35-mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Mar 2019 13:26:18 +0100, Paul Cercueil wrote:
-> The LS020B1DD01D is a 2.0" 240x160 16-bit TFT LCD panel.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: New patch
-> 
->  .../devicetree/bindings/display/panel/sharp,ls020b1dd01d.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ls020b1dd01d.txt
-> 
+On Thu, 2019-03-28 at 15:36 +0300, Mika Westerberg wrote:
+> Now that the driver can handle every possible tunnel types there is no
+> point to log everything as info level so turn these to happen at debug
+> level instead.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+trivia:
+
+> diff --git a/drivers/thunderbolt/path.c b/drivers/thunderbolt/path.c
+[]
+> @@ -503,8 +503,8 @@ int tb_path_activate(struct tb_path *path)
+>  					    & out_mask;
+>  		hop.unknown3 = 0;
+>  
+> -		tb_port_info(path->hops[i].in_port, "Writing hop %d, index %d",
+> -			     i, path->hops[i].in_hop_index);
+> +		tb_port_dbg(path->hops[i].in_port, "Writing hop %d, index %d",
+> +			    i, path->hops[i].in_hop_index);
+
+Appears to miss a '\n' termination
+
+
