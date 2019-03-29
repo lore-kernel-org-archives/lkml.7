@@ -2,183 +2,103 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D12FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9026DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74C3218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E879206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:55:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AxT8PF6T"
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="Oj5wsHsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfC2PzH (ORCPT
+        id S1729816AbfC2PzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:55:07 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:41152 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729658AbfC2PzG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:55:06 -0400
-Received: by mail-vs1-f68.google.com with SMTP id g187so1570934vsc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 08:55:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tjkcfhc0Ep9NbQLojkG4D6Rr/nOzsyp4ydQaHH2U3DU=;
-        b=AxT8PF6TSmbJrui3ZUYKiCa5lh7j+ALt73j4h4c3hxg8++RgtqBv7M3lPxLcSQGNqa
-         AWdx7bkTCP1H8hBLv3k2VzlHH7pasmL1Us478tQtENDYVXfWYKsdhBlq6LJmedAZA0kj
-         YP/HK+oRnMIknrQmxDTVx3iIwouygxcSbZjRyw4neqsg03RRNNJE4Y2sVYK13w/f8bOX
-         OB5F6KZrqWBQiQb9yXQWU/QCGZa+w57AQELD2QlD8WsQ6+7YV23bQiB1pVKfdLL1FuDr
-         0zDcuDoQJadtvnjj8cH8LMTGZUC0y2DhfqW2BzEWrJgWSO8tHx3yjzCJsbsuMka7itep
-         MZUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tjkcfhc0Ep9NbQLojkG4D6Rr/nOzsyp4ydQaHH2U3DU=;
-        b=eFtre40zNa6xmCTvqOeBpIZEb+jVu51H2HL4eIi25lYpBHoukH90KG/mdsA+ZE91Ji
-         fPvh2ExTKval/08eGPtj5Pb3ZrfRwMwoZU7GcL8HVxeMZWWEF94cyh4OwHS4l+HqigGL
-         KbzAgWnhhLmsoQD5gEi2L881NI45xV2PDlcwbfXmwO2/NMeeyJh9/lZiX75sN3LsqKNP
-         PoFAfjpqykkctO5EwykxGqIUVfkW0Q+SV9cexqXNP8SJJxrV9jQ7tHb1TJt7Bz8HJEI1
-         7E2Nk5qOkMFNAJsUnfXHHsjETWTsptK4uFyW65oK0j4fnf784x73lz1fTOv3rDVQq2S1
-         P0dg==
-X-Gm-Message-State: APjAAAVBZMKZZYhjZAEvWCQ7dpQ98HWkyNRtW6dntnfZhinHuQZzZoo7
-        W+bPam/hadBJdMkeNrcZqORR+32HtF3ePeuwg5BjPw==
-X-Google-Smtp-Source: APXvYqzELWOpgAuoqakTuV5C0tYv6ymmdEQyIEzbiidLl1sFRxIWMxQLggaldTdiMajvSO44OBZwx2s744HEZObORtg=
-X-Received: by 2002:a67:eb57:: with SMTP id x23mr10794031vso.39.1553874904397;
- Fri, 29 Mar 2019 08:55:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAG_fn=X9tpSW6jvJd_COk_RU8zvcr-cxSWuJ05qcV0LotTxEEQ@mail.gmail.com>
- <20190328162222.GO4102@linux.ibm.com>
-In-Reply-To: <20190328162222.GO4102@linux.ibm.com>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Fri, 29 Mar 2019 16:54:52 +0100
-Message-ID: <CAG_fn=WKA_4Vzsh6yH+=5TFv-EMrX87pr+2c_ANoH_MOVpbe1w@mail.gmail.com>
-Subject: Re: Potentially missing "memory" clobbers in bitops.h for x86
-To:     Paul McKenney <paulmck@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        Fri, 29 Mar 2019 11:55:12 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:33671 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729658AbfC2PzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 11:55:10 -0400
+Received: from [192.168.27.209] (unknown [37.157.136.206])
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id A92FECE35;
+        Fri, 29 Mar 2019 17:55:07 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1553874907; bh=0OQcb1L9DuMNbj7v2/mLG6m0U/ZzVluwkG8H+Nb+Dqk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Oj5wsHsVdjjO6a0JrVbyfXY4X4WMEs0TH03rB+YA25OWeipDgFzYh+LHWMzf3sKBG
+         v/KR0lxYE3a4rwZTqFwWJU9nv04IkFHHQyypG6Ewz247dg/nMVmPuU/uuhncf7gCLA
+         ZdyA0Ezyx9gvXNoPj8tsmrjQe5CVaJ/x2CgHkWeQpglv9BqzM8fZBl8R0fHNnC/2VO
+         iwNY9a0LX/Sdng8yZPcz78DEe6ZeDMHOun9oepeCpEfoqOtTNWZSTC0VcksUWJHWbK
+         fWhj7lpeCai8rtbSsrOwAAt3bEkgPMC4BtxhGnWO3TAxO4avfqPzAW846meAj9kaJa
+         64ceuktmnoV0g==
+Subject: Re: [PATCH v5] PCI: qcom: Use default config space read function
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Dmitriy Vyukov <dvyukov@google.com>,
-        James Y Knight <jyknight@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Jeffrey Hugo <jhugo@codeaurora.org>
+References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
+ <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
+ <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
+ <38ad143b-3b07-4d19-8ccd-ca39fb51e53d@free.fr>
+ <7d3d788a-d6a3-a70b-adab-6c65771cacc4@free.fr>
+ <3c76613e-e60d-94b8-dd6f-b8f4e1928263@linaro.org>
+ <2f901228-52db-7661-8257-ca8fd2ff2a46@free.fr>
+ <29664b43-535c-c4b1-a93d-18f49687f929@linaro.org>
+ <b0e0dc68-4be9-1b0f-7528-fb7d143fea2b@free.fr>
+ <9c5a7620-e9ed-82d6-0708-34fe33e39030@linaro.org>
+ <29d33e81-fe8d-7fd9-843d-cc53ea6c9586@free.fr>
+ <a53911a5-198a-5073-59cf-a61ba067bfd8@free.fr>
+ <eb1d808e-00aa-5411-be03-2a1a8c8d655a@mm-sol.com>
+ <8cd24928-54d0-c320-b53f-08332d434477@free.fr>
+ <f142da4d-303a-89f3-ba5a-b6800d613e15@free.fr>
+ <df27f753-9464-02c0-b621-d5d7b54a3403@mm-sol.com>
+ <66ae38dc-1c0c-5a76-be23-fb87db90b327@free.fr>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <9017c41a-a66c-0652-b2aa-6eb6af38c5c9@mm-sol.com>
+Date:   Fri, 29 Mar 2019 17:55:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <66ae38dc-1c0c-5a76-be23-fb87db90b327@free.fr>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 5:22 PM Paul E. McKenney <paulmck@linux.ibm.com> wr=
-ote:
->
-> On Thu, Mar 28, 2019 at 03:14:12PM +0100, Alexander Potapenko wrote:
-> > Hello,
-> >
-> > arch/x86/include/asm/bitops.h defines clear_bit(nr, addr) for
-> > non-constant |nr| values as follows:
-> >
-> > void clear_bit(long nr, volatile unsigned long *addr) {
-> >   asm volatile("lock; btr %1,%0"
-> >     : "+m"(*(volatile long *)addr)
-> >     : "Ir" (nr));
-> >   }
-> > (https://elixir.bootlin.com/linux/latest/source/arch/x86/include/asm/bi=
-tops.h#L111)
-> >
-> > According to the comments in the file, |nr| may be arbitrarily large.
-> > However the assembly constraints only imply that the first unsigned
-> > long value at |addr| is written to.
-> > This may result in the compiler ignoring the effect of the asm directiv=
-e.
-> >
-> > Consider the following example (https://godbolt.org/z/naTmjn):
-> >
-> >   #include <stdio.h>
-> >   void clear_bit(long nr, volatile unsigned long *addr) {
-> >     asm volatile("lock; btr %1,%0"
-> >       : "+m"(*(volatile long *)addr)
-> >       : "Ir" (nr));
-> >   }
-> >
-> >   unsigned long foo() {
-> >     unsigned long addr[2] =3D {1, 2};
-> >     clear_bit(65, addr);
-> >     return addr[0] + addr[1];
-> >   }
-> >
-> >   int main() {
-> >     printf("foo: %lu\n", foo());
-> >   }
-> >
-> > Depending on the optimization level, the program may print either 1
-> > (for -O0 and -O1) or 3 (for -O2 and -O3).
-> > This is because on higher optimization levels GCC assumes that addr[1]
-> > is unchanged and directly propagates the constant to the result.
-> >
-> > I suspect the definitions of clear_bit() and similar functions are
-> > lacking the "memory" clobber.
-> > But the whole file tends to be very picky about whether this clobber
-> > needs to be applied in each case, so in the case of a performance
-> > penalty we may need to consider alternative approaches to fixing this
-> > code.
->
-> Is there a way of indicating a clobber only on the specific location
-> affected?
-We're unaware of such a way.
-> I suppose that one approach would be to calculate in C code
-> a pointer to the specific element of the addr[] array, which would
-> put the specific clobbered memory location onto the outputs list.
-> Or keep the current calculation, but also add "addr[nr / sizeof(long)]"
-> to the output list, thus telling the compiler exactly what is being
-> clobbered.  Assuming that actually works...
-That works, but sometimes GCC emits the code calculating addr[nr/64]
-before the BTR instruction for no reason.
-Adding this output for clear_bit() makes around 120 kernel functions
-change their sizes. I only checked a handful, but some contained code
-like:
-  cmovns %rdi, %rax
-  sarq $6, %rax
-  leaq (%rsi,%rax,8), %rax
+Hi Marc,
 
-Another idea we've come up with is to cast the pointer in BITOP_ADDR()
-to a very big array: https://godbolt.org/z/apHvDc
-Making so prevents the compiler from caching the assembly inputs, but
-has its own drawbacks.
-First, it may potentially yield incorrect assumptions about the size
-of an object passed into the assembly (which may lead to e.g. dropping
-some size checks)
-Second, for smaller arrays these casts may result in excessive
-clobbers (this happens in misc_register(), where GCC decides that the
-input parameter |misc| may alias with the global |misc_minors|
-bitmap).
-Applying the cast to clear_bit() only changes the size of 3 kernel
-functions: hub_port_reset(), misc_register(),
-tick_broadcast_setup_oneshot().
-None of them have visible semantic changes.
+Thanks for the patch!
 
-> Of course, this would force the compiler to actually compute the
-> offset, which would slow things down.  I have no idea whether this
-> would be better or worse than just using the "memory" clobber.
-Just adding the "memory" clobber to clear_bit() changes sizes of 5
-kernel functions (the three mentioned above, plus hub_activate() and
-native_send_call_func_ipi()) by a small margin.
-This probably means the performance impact of this clobber is
-negligible in this case.
->                                                         Thanx, Paul
->
---
-Alexander Potapenko
-Software Engineer
+On 3/25/19 5:42 PM, Marc Gonzalez wrote:
+> Move the device class fudge to a proper fixup function, and remove
+> qcom_pcie_rd_own_conf() which has become useless.
+> 
+> NB: dw_pcie_setup_rc() already did the right thing, but it's broken
+> on older qcom chips, such as 8064.
+> 
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> ---
+> Changes from v4 to v5: Apply fixup to all qcom chips, the same way it was before
+> (thus the code remains functionally equivalent)
+> Drop Srinivas' Tested-by tag because of the change
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 23 ++++++-----------------
+>  1 file changed, 6 insertions(+), 17 deletions(-)
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+
+-- 
+regards,
+Stan
