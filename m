@@ -2,32 +2,32 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B43C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5AAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B801C20651
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5835420651
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbfC2Nyu (ORCPT
+        id S1729758AbfC2Nyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 09:54:50 -0400
+        Fri, 29 Mar 2019 09:54:54 -0400
 Received: from mga03.intel.com ([134.134.136.65]:44836 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729666AbfC2Nyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 09:54:50 -0400
+        id S1729688AbfC2Nyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 09:54:53 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 06:54:49 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 06:54:52 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,284,1549958400"; 
-   d="scan'208";a="138342085"
+   d="scan'208";a="138342096"
 Received: from lxy-server.sh.intel.com ([10.239.48.11])
-  by orsmga003.jf.intel.com with ESMTP; 29 Mar 2019 06:54:47 -0700
+  by orsmga003.jf.intel.com with ESMTP; 29 Mar 2019 06:54:50 -0700
 From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
@@ -38,10 +38,12 @@ Cc:     Xiaoyao Li <xiaoyao.li@linux.intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
         chao.gao@intel.com,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH v4 0/2] Switch MSR_MISC_FEATURES_ENABLES and one optimization
-Date:   Fri, 29 Mar 2019 21:54:20 +0800
-Message-Id: <20190329135422.15046-1-xiaoyao.li@linux.intel.com>
+Subject: [PATCH v4 1/2] kvm/vmx: Switch MSR_MISC_FEATURES_ENABLES between host and guest
+Date:   Fri, 29 Mar 2019 21:54:21 +0800
+Message-Id: <20190329135422.15046-2-xiaoyao.li@linux.intel.com>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190329135422.15046-1-xiaoyao.li@linux.intel.com>
+References: <20190329135422.15046-1-xiaoyao.li@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,40 +51,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch 1 switches MSR_MISC_FEATURES_ENABLE between host and guest during
-vcpu_{load,put} to avoid cpuid faulting and ring3mwait of host leaking
-to guest. Because cpuid faulting eanbled in host may potentially cause guest
-boot failure, and kvm doesn't expose ring3mwait to guest yet. 
-Both two features shouldn't be leaked to guest.
+There are two defined bits in MSR_MISC_FEATURES_ENABLES, bit 0 for cpuid
+faulting and bit 1 for ring3mwait.
 
-Patch 2 optimizes the switch of MSR_MISC_FEATURES_ENABLES by avoiding WRMSR
-whenever possible to save cycles.
+== cpuid Faulting ==
+cpuid faulting is a feature about CPUID instruction. When cpuid faulting
+is enabled, all execution of the CPUID instruction outside system-management
+mode (SMM) cause a general-protection (#GP) if the CPL > 0.
 
-==changelog==
-v3->v4:
-remove the helper function, and some code refine. per Sean Christopherson's
-comments.
+About this feature, detailed information can be found at
+https://www.intel.com/content/dam/www/public/us/en/documents/application-notes/virtualization-technology-flexmigration-application-note.pdf
 
-v2->v3:
-- use msr_misc_features_shadow instead of reading hardware msr, from Sean
-Christopherson
-- avoid WRMSR whenever possible, from Sean Christopherson.
+Current KVM provides software emulation of this feature for guest.
+However, because cpuid faulting takes higher priority over CPUID vm exit (Intel
+SDM vol3.25.1.1), there is a risk of leaking cpuid faulting to guest when host
+enables it. If host enables cpuid faulting by setting the bit 0 of
+MSR_MISC_FEATURES_ENABLES, it will pass to guest since there is no switch of
+MSR_MISC_FEATURES_ENABLES yet. As a result, when guest calls CPUID instruction
+in CPL > 0, it will generate a #GP instead of CPUID vm eixt.
 
-v1->v2: 
-- move the save/restore of cpuid faulting bit to
-vmx_prepare_swich_to_guest/vmx_prepare_swich_to_host to avoid every
-vmentry RDMSR, based on Paolo's comment.
+This issue will cause guest boot failure when guest uses *modprobe*
+to load modules. *modprobe* calls CPUID instruction, thus causing #GP in
+guest. Since there is no handling of cpuid faulting in #GP handler, guest
+fails boot.
 
-Xiaoyao Li (2):
-  kvm/vmx: Switch MSR_MISC_FEATURES_ENABLES between host and guest
-  x86/vmx: optimize MSR_MISC_FEATURES_ENABLES switch
+== ring3mwait ==
+Ring3mwait is a Xeon-Phi Product Family x200 series specific feature,
+which allows the MONITOR and MWAIT instructions to be executed in rings
+other than ring 0. The feature can be enabled by setting bit 1 in
+MSR_MISC_FEATURES_ENABLES. The register can also be read to determine
+whether the instructions are enabled at other than ring 0.
 
- arch/x86/include/asm/kvm_host.h |  2 ++
- arch/x86/kernel/process.c       |  1 +
- arch/x86/kvm/vmx/vmx.c          | 17 +++++++++++++++++
- arch/x86/kvm/x86.c              | 11 ++++++++---
- 4 files changed, 28 insertions(+), 3 deletions(-)
+About this feature, description can be found at
+https://software.intel.com/en-us/blogs/2016/10/06/intel-xeon-phi-product-family-x200-knl-user-mode-ring-3-monitor-and-mwait
 
+Current kvm doesn't expose feature ring3mwait to guest. However, there is also
+a risk of leaking ring3mwait to guest if host enables it since there is no
+switch of MSR_MISC_FEATURES_ENABLES.
+
+== solution ==
+From above analysis, both cpuid faulting and ring3mwait can be leaked to guest.
+To fix this issue, MSR_MISC_FEATURES_ENABLES should be switched between host
+and guest. Since MSR_MISC_FEATURES_ENABLES is intel-specific, this patch
+implement the switching only in vmx.
+
+For the reason that kvm provides the software emulation of cpuid faulting and
+kvm doesn't expose ring3mwait to guest. MSR_MISC_FEATURES_ENABLES can be just
+cleared to zero for guest when any of the features is enabled in host.
+
+Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+---
+ arch/x86/kernel/process.c | 1 +
+ arch/x86/kvm/vmx/vmx.c    | 8 ++++++++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 1bba1a3c0b01..94a566e79b6c 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -191,6 +191,7 @@ int set_tsc_mode(unsigned int val)
+ }
+ 
+ DEFINE_PER_CPU(u64, msr_misc_features_shadow);
++EXPORT_PER_CPU_SYMBOL_GPL(msr_misc_features_shadow);
+ 
+ static void set_cpuid_faulting(bool on)
+ {
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 270c6566fd5a..cb0f63879a25 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1064,6 +1064,9 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+ 	vmx->loaded_cpu_state = vmx->loaded_vmcs;
+ 	host_state = &vmx->loaded_cpu_state->host_state;
+ 
++	if (this_cpu_read(msr_misc_features_shadow))
++		wrmsrl(MSR_MISC_FEATURES_ENABLES, 0ULL);
++
+ 	/*
+ 	 * Set host fs and gs selectors.  Unfortunately, 22.2.3 does not
+ 	 * allow segment selectors with cpl > 0 or ti == 1.
+@@ -1123,6 +1126,7 @@ void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+ static void vmx_prepare_switch_to_host(struct vcpu_vmx *vmx)
+ {
+ 	struct vmcs_host_state *host_state;
++	u64 msrval;
+ 
+ 	if (!vmx->loaded_cpu_state)
+ 		return;
+@@ -1133,6 +1137,10 @@ static void vmx_prepare_switch_to_host(struct vcpu_vmx *vmx)
+ 	++vmx->vcpu.stat.host_state_reload;
+ 	vmx->loaded_cpu_state = NULL;
+ 
++	msrval = this_cpu_read(msr_misc_features_shadow);
++	if (msrval)
++		wrmsrl(MSR_MISC_FEATURES_ENABLES, msrval);
++
+ #ifdef CONFIG_X86_64
+ 	rdmsrl(MSR_KERNEL_GS_BASE, vmx->msr_guest_kernel_gs_base);
+ #endif
 -- 
 2.19.1
 
