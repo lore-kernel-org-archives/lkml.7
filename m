@@ -2,175 +2,239 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57457C10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F370C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A4F2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE302183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbfC2I4l (ORCPT
+        id S1729236AbfC2I6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:56:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45420 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729129AbfC2I4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 04:56:40 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F330E30BC65D;
-        Fri, 29 Mar 2019 08:56:39 +0000 (UTC)
-Received: from [10.36.117.0] (unknown [10.36.117.0])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D0A760852;
-        Fri, 29 Mar 2019 08:56:38 +0000 (UTC)
-Subject: Re: [PATCH 0/4] mm,memory_hotplug: allocate memmap from hotadded
- memory
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     akpm@linux-foundation.org, mhocko@suse.com,
-        dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20190328134320.13232-1-osalvador@suse.de>
- <cc68ec6d-3ad2-a998-73dc-cb90f3563899@redhat.com>
- <efb08377-ca5d-4110-d7ae-04a0d61ac294@redhat.com>
- <20190329084547.5k37xjwvkgffwajo@d104.suse.de>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <23dcfb4a-339b-dcaf-c037-331f82fdef5a@redhat.com>
-Date:   Fri, 29 Mar 2019 09:56:37 +0100
+        Fri, 29 Mar 2019 04:58:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51692 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729168AbfC2I6v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 04:58:51 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2T8rvne091129
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 04:58:50 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rhfysh58h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 04:58:50 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Fri, 29 Mar 2019 08:58:48 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 29 Mar 2019 08:58:44 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2T8whYe41484398
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 08:58:43 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0CE8152050;
+        Fri, 29 Mar 2019 08:58:43 +0000 (GMT)
+Received: from [9.152.222.62] (unknown [9.152.222.62])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6D42F52051;
+        Fri, 29 Mar 2019 08:58:42 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v6 3/7] s390: ap: setup relation betwen KVM and mediated
+ device
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
+        david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1553265828-27823-1-git-send-email-pmorel@linux.ibm.com>
+ <1553265828-27823-4-git-send-email-pmorel@linux.ibm.com>
+ <1ea236d1-ca0b-03c0-3699-0c0deb435785@linux.ibm.com>
+ <3cd496d0-3eec-78e8-9ea5-4d62fe0cff1c@linux.ibm.com>
+ <eaac369f-132b-b83f-fa14-8749819388ba@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Fri, 29 Mar 2019 09:58:42 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190329084547.5k37xjwvkgffwajo@d104.suse.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <eaac369f-132b-b83f-fa14-8749819388ba@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 29 Mar 2019 08:56:40 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032908-0028-0000-0000-00000359E94D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032908-0029-0000-0000-00002418AD37
+Message-Id: <cce25d53-9076-d54f-10d7-46526b5f7e54@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-29_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903290066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.03.19 09:45, Oscar Salvador wrote:
-> On Thu, Mar 28, 2019 at 04:31:44PM +0100, David Hildenbrand wrote:
->> Correct me if I am wrong. I think I was confused - vmemmap data is still
->> allocated *per memory block*, not for the whole added memory, correct?
+On 28/03/2019 18:25, Tony Krowiak wrote:
+> On 3/28/19 12:27 PM, Pierre Morel wrote:
+>> On 28/03/2019 17:12, Tony Krowiak wrote:
+>>> On 3/22/19 10:43 AM, Pierre Morel wrote:
+>>>> When the mediated device is open we setup the relation with KVM 
+>>>> unset it
+>>>> when the mediated device is released.
+>>>
+>>> s/open we setup/open, we set up/
+>>> s/with KVM unset/with KVM and unset/
+>>>
+>>>>
+>>>> We lock the matrix mediated device to avoid any change until the
+>>>> open is done.
+>>>> We make sure that KVM is present when opening the mediated device
+>>>> otherwise we return an error.
+>>>
+>>> s/mediated device/mediated device,/
+>>>
+>>>>
+>>>> Increase kvm's refcount to ensure the KVM structures are still 
+>>>> available
+>>>> during the use of the mediated device by the guest.
+>>>>
+>>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>>>> ---
+>>>>   drivers/s390/crypto/vfio_ap_ops.c | 143 
+>>>> +++++++++++++++++++++-----------------
+>>>>   1 file changed, 79 insertions(+), 64 deletions(-)
+>>>>
+>>>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
+>>>> b/drivers/s390/crypto/vfio_ap_ops.c
+>>>> index 77f7bac..bdb36e0 100644
+>>>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>>>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>>>> @@ -787,74 +787,24 @@ static const struct attribute_group 
+>>>> *vfio_ap_mdev_attr_groups[] = {
+>>>>       NULL
+>>>>   };
+>>>> -/**
+>>>> - * vfio_ap_mdev_set_kvm
+>>>> - *
+>>>> - * @matrix_mdev: a mediated matrix device
+>>>> - * @kvm: reference to KVM instance
+>>>> - *
+>>>> - * Verifies no other mediated matrix device has @kvm and sets a 
+>>>> reference to
+>>>> - * it in @matrix_mdev->kvm.
+>>>> - *
+>>>> - * Return 0 if no other mediated matrix device has a reference to 
+>>>> @kvm;
+>>>> - * otherwise, returns an -EPERM.
+>>>> - */
+>>>> -static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
+>>>> -                struct kvm *kvm)
+>>>> -{
+>>>> -    struct ap_matrix_mdev *m;
+>>>> -
+>>>> -    mutex_lock(&matrix_dev->lock);
+>>>> -
+>>>> -    list_for_each_entry(m, &matrix_dev->mdev_list, node) {
+>>>> -        if ((m != matrix_mdev) && (m->kvm == kvm)) {
+>>>> -            mutex_unlock(&matrix_dev->lock);
+>>>> -            return -EPERM;
+>>>> -        }
+>>>> -    }
+>>>> -
+>>>> -    matrix_mdev->kvm = kvm;
+>>>> -    mutex_unlock(&matrix_dev->lock);
+>>>> -
+>>>> -    return 0;
+>>>> -}
+>>>> -
+>>>>   static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>>>>                          unsigned long action, void *data)
+>>>>   {
+>>>> -    int ret;
+>>>>       struct ap_matrix_mdev *matrix_mdev;
+>>>>       if (action != VFIO_GROUP_NOTIFY_SET_KVM)
+>>>>           return NOTIFY_OK;
+>>>>       matrix_mdev = container_of(nb, struct ap_matrix_mdev, 
+>>>> group_notifier);
+>>>> -
+>>>> -    if (!data) {
+>>>> -        matrix_mdev->kvm = NULL;
+>>>> -        return NOTIFY_OK;
+>>>> -    }
+>>>> -
+>>>> -    ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
+>>>> -    if (ret)
+>>>> -        return NOTIFY_DONE;
+>>>> -
+>>>> -    /* If there is no CRYCB pointer, then we can't copy the masks */
+>>>> -    if (!matrix_mdev->kvm->arch.crypto.crycbd)
+>>>> -        return NOTIFY_DONE;
+>>>> -
+>>>> -    kvm_arch_crypto_set_masks(matrix_mdev->kvm, 
+>>>> matrix_mdev->matrix.apm,
+>>>> -                  matrix_mdev->matrix.aqm,
+>>>> -                  matrix_mdev->matrix.adm);
+>>>> +    matrix_mdev->kvm = data;
+>>>>       return NOTIFY_OK;
+>>>>   }
+>>>> -static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>>>> +static int vfio_ap_mdev_reset_queues(struct ap_matrix_mdev 
+>>>> *matrix_mdev)
+>>>>   {
+>>>>       int ret;
+>>>>       int rc = 0;
+>>>> -    struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>>>>       struct vfio_ap_queue *q;
+>>>>       list_for_each_entry(q, &matrix_mdev->qlist, list) {
+>>>> @@ -871,41 +821,106 @@ static int vfio_ap_mdev_reset_queues(struct 
+>>>> mdev_device *mdev)
+>>>>       return rc;
+>>>>   }
+>>>> +/**
+>>>> + * vfio_ap_mdev_set_kvm
+>>>> + *
+>>>> + * @matrix_mdev: a mediated matrix device
+>>>> + *
+>>>> + * - Verifies that the hook is free and install the PQAP hook
+>>>> + * - Copy the matrix masks inside the CRYCB
+>>>> + * - Increment the KVM rerference count
+>>>> + *
+>>>> + * Return 0 if no other mediated matrix device has a reference to 
+>>>> @kvm;
+>>>> + * otherwise, returns an -EPERM.
+>>>> + */
+>>>> +static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev)
+>>>> +{
+>>>> +    if (matrix_mdev->kvm->arch.crypto.pqap_hook)
+>>>> +        return -EPERM;
+>>>
+>>> How would this happen; in other words, why are we checking this?
+>>
+>> I check this to verify that no other AP mediated device is already in 
+>> use by this VM.
 > 
-> No, vmemap data is allocated per memory-resource added.
-> In case a DIMM, would be a DIMM, in case a qemu memory-device, would be that
-> memory-device.
-> That is counting that ACPI does not split the DIMM/memory-device in several memory
-> resources.
-> If that happens, then acpi_memory_enable_device() calls __add_memory for every
-> memory-resource, which means that the vmemmap data will be allocated per
-> memory-resource.
-> I did not see this happening though, and I am not sure under which circumstances
-> can happen (I have to study the ACPI code a bit more).
-> 
-> The problem with allocating vmemmap data per memblock, is the fragmentation.
-> Let us say you do the following:
-> 
-> * memblock granularity 128M
-> 
-> (qemu) object_add memory-backend-ram,id=ram0,size=256M
-> (qemu) device_add pc-dimm,id=dimm0,memdev=ram0,node=1
-> 
-> This will create two memblocks (2 sections), and if we allocate the vmemmap
-> data for each corresponding section within it section(memblock), you only get
-> 126M contiguous memory.
+> Maybe you should insert a comment to that effect.
 
-Oh okay, so actually the way I guessed it would be now.
+Please notice that there is already a comment on this in the description 
+of the function.
 
-While this makes totally sense, I'll have to look how it is currently
-handled, meaning if there is a change. I somewhat remembering that
-delayed struct pages initialization would initialize vmmap per section,
-not per memory resource.
+Regards,
+Pierre
 
-But as I work on 10 things differently, my mind sometimes seems to
-forget stuff in order to replace it with random nonsense. Will look into
-the details to not have to ask too many dumb questions.
 
-> 
-> So, the taken approach is to allocate the vmemmap data corresponging to the
-> whole DIMM/memory-device/memory-resource from the beginning of its memory.
-> 
-> In the example from above, the vmemmap data for both sections is allocated from
-> the beginning of the first section:
-> 
-> memmap array takes 2MB per section, so 512 pfns.
-> If we add 2 sections:
-> 
-> [  pfn#0  ]  \
-> [  ...    ]  |  vmemmap used for memmap array
-> [pfn#1023 ]  /  
-> 
-> [pfn#1024 ]  \
-> [  ...    ]  |  used as normal memory
-> [pfn#65536]  /
-> 
-> So, out of 256M, we get 252M to use as a real memory, as 4M will be used for
-> building the memmap array.
-> 
-> Actually, it can happen that depending on how big a DIMM/memory-device is,
-> the first/s memblock is fully used for the memmap array (of course, this
-> can only be seen when adding a huge DIMM/memory-device).
-> 
-
-Just stating here, that with your code, add_memory() and remove_memory()
-always have to be called in the same granularity. Will have to see if
-that implies a change.
 
 -- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
-Thanks,
-
-David / dhildenb
