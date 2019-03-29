@@ -2,319 +2,134 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7412C10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27919C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 569FF20657
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4DCC218CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dO8sO8qb"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="oL+vego7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbfC2URs (ORCPT
+        id S1730131AbfC2USI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 16:17:48 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:34072 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729974AbfC2URs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 16:17:48 -0400
-Received: by mail-yw1-f68.google.com with SMTP id x129so1141626ywc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 13:17:47 -0700 (PDT)
+        Fri, 29 Mar 2019 16:18:08 -0400
+Received: from mail-eopbgr760044.outbound.protection.outlook.com ([40.107.76.44]:8069
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730092AbfC2USI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 16:18:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iWPqL8uetVZR7k+ms2TfuXqlJ8oTUCmNOxynZEMvMwM=;
-        b=dO8sO8qbuszBiLxLjWvJSO6iyWMeDnTxtE6le/A2fY3JivJ4lcv/dqKRzVS8/zFUJG
-         xzvI08H5ES0g4/49KSldIv8x07boo+W8IgFMaQAS1Ux1Gr2RDbt5/c5h3Oj1A+MQduCG
-         A92asOHiF9+dsd7AruaYqvxzbUowxj12KgrQt8qqWsBzBWrisJFNpKYJ7MKvWKcXXHrt
-         t39BrCBaOPr1rku3uRAFK0KIjpyW+u/3bfAwKjnqqsqHyBaLGs7UhhIbahUIvItfrHdZ
-         4OgEwuVQvn/sv6oF31QY+9vHft+Y10kWAwi2Y8jKVcUgYmCisUuxqsvhM0Z8GhDkNNbq
-         rUFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iWPqL8uetVZR7k+ms2TfuXqlJ8oTUCmNOxynZEMvMwM=;
-        b=NnVAkWxeQy2Imn9GOfHWk2+5QMMRoYn12FRMGKqobNG2NOvEBzNZKbeW1K4eaF/3mC
-         UZS3VzRq51ZSpJQomqNug6DuCHCMrJDoi8LNNucSVbL51szBIEMZnKkqPLrnWnVWXkZg
-         zJiCM42ZxxhVJB7ftNDtU99JwVZ72AZku3szsJqKYBc3YSL1T2VYtUxHQXPSOaun5C0N
-         Uj30lFC20Hfs6eby6kAWbSFsXxKDfWWVA98CpH1FuY9jfVzbFK3nbx8hwyId6rR+PF+K
-         pPliUcZ2FAmdE71TjmnO6AIFBH/GQimHf71y1y7z6A0FzjAi8XbsTJjYT5SzA23r2Pt6
-         K4GA==
-X-Gm-Message-State: APjAAAV7vStB8kPjc/9i/QFTr0FYwxOuN5S5iMTUima75h9FQ+VhA17o
-        Z0Ln75/DBp4Z3oUGRiQxrwMaHmT8pxQYv5hjsW7jLA==
-X-Google-Smtp-Source: APXvYqwzhdoPgYwIC4tV9o2V8UR+zQvH9vYcPFgVOfpEytkHs6onvk7lBZmYTI1EoDjhkAff3WCXXnsxQ7/zLiyqGRQ=
-X-Received: by 2002:a0d:e2d4:: with SMTP id l203mr40129748ywe.444.1553890666810;
- Fri, 29 Mar 2019 13:17:46 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Owcq/3w/jznydyfqwBrasq7yBcBFAVKqPuyfWdqhqrk=;
+ b=oL+vego7ysR2S4tg5ML8OTpuBBprZT30/P0Vm1pHh97RnCl4/SxYbLm5QDt8ihVkwXII4IFsQBqsITOFpr9W/XglbfmWY1eTfcxssHjQlHoYzKXC+lnzCsUsu3uyjCd+pzYJdpBbl8CuXFNTO8go/cy/qYtRfTtIDOTHMHKAGuU=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2815.namprd12.prod.outlook.com (52.135.107.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.15; Fri, 29 Mar 2019 20:18:04 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::9c51:41bf:f88e:f3e8]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::9c51:41bf:f88e:f3e8%2]) with mapi id 15.20.1750.017; Fri, 29 Mar 2019
+ 20:18:04 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+CC:     "lenb@kernel.org" <lenb@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>
+Subject: RE: [PATCH 5/6] acpi/cppc: Add support for optional CPPC registers
+Thread-Topic: [PATCH 5/6] acpi/cppc: Add support for optional CPPC registers
+Thread-Index: AQHU4O2BoYVHUSyDFUS3Ma8HXurpGqYfpwyAgANurKA=
+Date:   Fri, 29 Mar 2019 20:18:04 +0000
+Message-ID: <SN6PR12MB26399489011DD026910B6049F85A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <cover.1553285718.git.Janakarajan.Natarajan@amd.com>
+         <d16e973c3fa4343134f6d246cc424f29ff5d7dc9.1553285718.git.Janakarajan.Natarajan@amd.com>
+ <f3a749646c66a84e17383204385d8c73750d4813.camel@intel.com>
+In-Reply-To: <f3a749646c66a84e17383204385d8c73750d4813.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [165.204.84.17]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e71ac305-b5c8-4dd9-27ea-08d6b483a67a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR12MB2815;
+x-ms-traffictypediagnostic: SN6PR12MB2815:
+x-microsoft-antispam-prvs: <SN6PR12MB2815E2C141CEA03AFB2D4048F85A0@SN6PR12MB2815.namprd12.prod.outlook.com>
+x-forefront-prvs: 0991CAB7B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(346002)(396003)(376002)(136003)(189003)(199004)(13464003)(4326008)(305945005)(86362001)(99286004)(7736002)(102836004)(25786009)(256004)(74316002)(97736004)(14444005)(106356001)(68736007)(3846002)(26005)(66066001)(72206003)(81166006)(81156014)(2906002)(8676002)(53546011)(316002)(478600001)(8936002)(71200400001)(71190400001)(7696005)(486006)(6436002)(6506007)(7416002)(9686003)(76176011)(6116002)(2201001)(14454004)(33656002)(446003)(11346002)(186003)(52536014)(476003)(5660300002)(53936002)(6246003)(105586002)(2501003)(229853002)(54906003)(55016002)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2815;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: r7dT3OJkGdAL5US0SCI4RaZbpnqgwWObT88MnftARaY099OvT2c7YtZnz1JI7+UoC7uo/QrtFgJdWNx3LgN0/Jh6IvlJkG3e4gB8yd9xgC/d4wGiGaGj6q1xg0D9Xz/QGtLK/bUQrG6jHYaxfVh3zrmMpFsRrdZ8GsHQZjCV2Zp3kW61KYvT85cmUu/PFnCSTxvEhic5PU17oxa5NkXsyeW9qWQCD5Y165tjsk3KK84DAo7WSZ0yEz2UXbaQ2jrpC2iqvt3zA2OcyYtNqk10J6qQWKgIPGbnNclM9+NXdLLLKCHZFzTxgd55L0Hl3z4WW95jYi3EN1Qv9eSjts+0zFr4VyZH3p7fBqsI+Z+UtgW4regBQhKc7jzKkNIdFDVHM7pzE2+KMYQZHa9/DY9DYwwjCsbYMqjh/fTlIOX1Ee4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CAPUE2uskDvefZbt5Ydz8Eu3+Aavu+AzPY5WuAYj0ziYP373oRA@mail.gmail.com>
- <CAPUE2uu5SyVevcWbxc7B6Tf1jTOCmYBgfWsgZJBDLC4xf=rQ_A@mail.gmail.com>
-In-Reply-To: <CAPUE2uu5SyVevcWbxc7B6Tf1jTOCmYBgfWsgZJBDLC4xf=rQ_A@mail.gmail.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Fri, 29 Mar 2019 13:17:35 -0700
-Message-ID: <CABXOdTfZNKEEC6a5-L9-cajvavXSk9jSMPU1-YdSYDgFYSjyiw@mail.gmail.com>
-Subject: Re: [PATCH v5] iio: cros_ec: Add lid angle driver
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e71ac305-b5c8-4dd9-27ea-08d6b483a67a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2019 20:18:04.5312
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2815
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 1:08 PM Gwendal Grignou <gwendal@chromium.org> wrote:
->
-> Add a IIO driver that reports the angle between the lid and the base for
-> ChromeOS convertible device.
->
-> Tested on eve with ToT EC firmware.
-> Check driver is loaded and lid angle is correct.
->
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> ---
-> Changes in v5:
-> - Remove unnecessary define.
-> - v4 was the wrong patch file
->
-> Changes in v3:
-> - Use static channel array, simplify code because index is always 0.
->
-> Changes in v2:
-> - Fix license, remove driver_module field.
->
->  drivers/iio/common/cros_ec_sensors/Kconfig    |   9 ++
->  drivers/iio/common/cros_ec_sensors/Makefile   |   1 +
->  .../cros_ec_sensors/cros_ec_lid_angle.c       | 138 ++++++++++++++++++
->  drivers/mfd/cros_ec_dev.c                     |  13 +-
->  4 files changed, 158 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
->
-> diff --git a/drivers/iio/common/cros_ec_sensors/Kconfig
-> b/drivers/iio/common/cros_ec_sensors/Kconfig
-> index 135f6825903f..aacc2ab9c34f 100644
-> --- a/drivers/iio/common/cros_ec_sensors/Kconfig
-> +++ b/drivers/iio/common/cros_ec_sensors/Kconfig
-> @@ -20,3 +20,12 @@ config IIO_CROS_EC_SENSORS
->           Accelerometers, Gyroscope and Magnetometer that are
->           presented by the ChromeOS EC Sensor hub.
->           Creates an IIO device for each functions.
-> +
-> +config IIO_CROS_EC_SENSORS_LID_ANGLE
-> +       tristate "ChromeOS EC Sensor for lid angle"
-> +       depends on IIO_CROS_EC_SENSORS_CORE
-> +       help
-> +         Module to report the angle between lid and base for some
-> +         convertible devices.
-> +         This module is loaded when the EC can calculate the angle between the base
-> +         and the lid.
-> diff --git a/drivers/iio/common/cros_ec_sensors/Makefile
-> b/drivers/iio/common/cros_ec_sensors/Makefile
-> index ec716ff2a775..a35ee232ac07 100644
-> --- a/drivers/iio/common/cros_ec_sensors/Makefile
-> +++ b/drivers/iio/common/cros_ec_sensors/Makefile
-> @@ -4,3 +4,4 @@
->
->  obj-$(CONFIG_IIO_CROS_EC_SENSORS_CORE) += cros_ec_sensors_core.o
->  obj-$(CONFIG_IIO_CROS_EC_SENSORS) += cros_ec_sensors.o
-> +obj-$(CONFIG_IIO_CROS_EC_SENSORS_LID_ANGLE) += cros_ec_lid_angle.o
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
-> b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
-> new file mode 100644
-> index 000000000000..92be07d7fa36
-> --- /dev/null
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
-> @@ -0,0 +1,138 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * cros_ec_lid_angle - Driver for CrOS EC lid angle sensor.
-> + *
-> + * Copyright 2018 Google, Inc
-> + *
-> + * This driver uses the cros-ec interface to communicate with the Chrome OS
-> + * EC about counter sensors. Counters are presented through
-> + * iio sysfs.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/common/cros_ec_sensors_core.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/kfifo_buf.h>
-> +#include <linux/iio/trigger.h>
-> +#include <linux/iio/triggered_buffer.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/cros_ec.h>
-> +#include <linux/mfd/cros_ec_commands.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#define DRV_NAME "cros-ec-lid-angle"
-> +
-> +/*
-> + * One channel for the lid angle, the other for timestamp.
-> + */
-> +static const struct iio_chan_spec cros_ec_lid_angle_channels[] = {
-> +       {
-> +               .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +               .scan_type.realbits = CROS_EC_SENSOR_BITS,
-> +               .scan_type.storagebits = CROS_EC_SENSOR_BITS,
-> +               .scan_type.sign = 'u',
-> +               .type = IIO_ANGL
-> +       },
-> +       IIO_CHAN_SOFT_TIMESTAMP(1)
-> +};
-> +
-> +/* State data for ec_sensors iio driver. */
-> +struct cros_ec_lid_angle_state {
-> +       /* Shared by all sensors */
-> +       struct cros_ec_sensors_core_state core;
-> +};
-> +
-> +static int cros_ec_sensors_read_lid_angle(struct iio_dev *indio_dev,
-> +                                         unsigned long scan_mask, s16 *data)
-> +{
-> +       struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
-> +       int ret;
-> +
-> +       st->param.cmd = MOTIONSENSE_CMD_LID_ANGLE;
-> +       ret = cros_ec_motion_send_host_cmd(st, sizeof(st->resp->lid_angle));
-> +       if (ret) {
-> +               dev_warn(&indio_dev->dev, "Unable to read lid angle\n");
-> +               return ret;
-> +       }
-> +
-> +       *data = st->resp->lid_angle.value;
-> +       return 0;
-> +}
-> +
-> +static int cros_ec_lid_angle_read(struct iio_dev *indio_dev,
-> +                                   struct iio_chan_spec const *chan,
-> +                                   int *val, int *val2, long mask)
-> +{
-> +       struct cros_ec_lid_angle_state *st = iio_priv(indio_dev);
-> +       s16 data;
-> +       int ret;
-> +
-> +       mutex_lock(&st->core.cmd_lock);
-> +       ret = cros_ec_sensors_read_lid_angle(indio_dev, 1, &data);
-> +       if (ret)
-> +               return ret;
-> +       *val = data;
-> +       mutex_unlock(&st->core.cmd_lock);
-> +       return IIO_VAL_INT;
-> +}
-> +
-> +static const struct iio_info cros_ec_lid_angle_info = {
-> +       .read_raw = &cros_ec_lid_angle_read,
-> +};
-> +
-> +static int cros_ec_lid_angle_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct iio_dev *indio_dev;
-> +       struct cros_ec_lid_angle_state *state;
-> +       int ret;
-> +
-> +       indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
-> +       if (!indio_dev)
-> +               return -ENOMEM;
-> +
-> +       ret = cros_ec_sensors_core_init(pdev, indio_dev, false);
-> +       if (ret)
-> +               return ret;
-> +
-> +       indio_dev->info = &cros_ec_lid_angle_info;
-> +       state = iio_priv(indio_dev);
-> +       indio_dev->channels = cros_ec_lid_angle_channels;
-> +       indio_dev->num_channels = ARRAY_SIZE(cros_ec_lid_angle_channels);
-> +
-> +       state->core.read_ec_sensors_data = cros_ec_sensors_read_lid_angle;
-> +
-> +       ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
-> +                       cros_ec_sensors_capture, NULL);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return devm_iio_device_register(dev, indio_dev);
-> +}
-> +
-> +static const struct platform_device_id cros_ec_lid_angle_ids[] = {
-> +       {
-> +               .name = DRV_NAME,
-> +       },
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(platform, cros_ec_lid_angle_ids);
-> +
-> +static struct platform_driver cros_ec_lid_angle_platform_driver = {
-> +       .driver = {
-> +               .name   = DRV_NAME,
-> +               .pm     = &cros_ec_sensors_pm_ops,
-> +       },
-> +       .probe          = cros_ec_lid_angle_probe,
-> +       .id_table       = cros_ec_lid_angle_ids,
-> +};
-> +module_platform_driver(cros_ec_lid_angle_platform_driver);
-> +
-> +MODULE_DESCRIPTION("ChromeOS EC driver for reporting convertible lid angle.");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index d275deaecb12..52ea2f1c87a1 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -297,13 +297,15 @@ static void cros_ec_sensors_register(struct
-> cros_ec_dev *ec)
->
->         resp = (struct ec_response_motion_sense *)msg->data;
->         sensor_num = resp->dump.sensor_count;
-> -       /* Allocate 1 extra sensors in FIFO are needed */
-> -       sensor_cells = kcalloc(sensor_num + 1, sizeof(struct mfd_cell),
-> +       /*
-> +        * Allocate 2 extra sensors if lid angle sensor and/or FIFO are needed.
-> +        */
-> +       sensor_cells = kcalloc(sensor_num + 2, sizeof(struct mfd_cell),
->                                GFP_KERNEL);
->         if (sensor_cells == NULL)
->                 goto error;
->
-> -       sensor_platforms = kcalloc(sensor_num + 1,
-> +       sensor_platforms = kcalloc(sensor_num,
-
-I still don't understand why the "+ 1" is no longer needed. It seems
-to me that it would have to change to "+ 2".
-
-Guenter
-
->                                    sizeof(struct cros_ec_sensor_platform),
->                                    GFP_KERNEL);
->         if (sensor_platforms == NULL)
-> @@ -363,6 +365,11 @@ static void cros_ec_sensors_register(struct
-> cros_ec_dev *ec)
->                 sensor_cells[id].name = "cros-ec-ring";
->                 id++;
->         }
-> +       if (cros_ec_check_features(ec,
-> +                               EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS)) {
-> +               sensor_cells[id].name = "cros-ec-lid-angle";
-> +               id++;
-> +       }
->
->         ret = mfd_add_devices(ec->dev, 0, sensor_cells, id,
->                               NULL, 0, NULL);
-> --
-> 2.21.0.360.g471c308f928-goog
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1hY3BpLW93bmVyQHZn
+ZXIua2VybmVsLm9yZyA8bGludXgtYWNwaS1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
+ZiBPZiBQYW5kcnV2YWRhLCBTcmluaXZhcw0KPiBTZW50OiBXZWRuZXNkYXksIE1hcmNoIDI3LCAy
+MDE5IDEwOjQ4IEFNDQo+IFRvOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkZXZlbEBh
+Y3BpY2Eub3JnOyBOYXRhcmFqYW4sIEphbmFrYXJhamFuIDxKYW5ha2FyYWphbi5OYXRhcmFqYW5A
+YW1kLmNvbT47IGxpbnV4LQ0KPiBhY3BpQHZnZXIua2VybmVsLm9yZzsgbGludXgtcG1Admdlci5r
+ZXJuZWwub3JnDQo+IENjOiBHaGFubmFtLCBZYXplbiA8WWF6ZW4uR2hhbm5hbUBhbWQuY29tPjsg
+bGVuYkBrZXJuZWwub3JnOyB2aXJlc2gua3VtYXJAbGluYXJvLm9yZzsgTW9vcmUsIFJvYmVydA0K
+PiA8cm9iZXJ0Lm1vb3JlQGludGVsLmNvbT47IFNjaG1hdXNzLCBFcmlrIDxlcmlrLnNjaG1hdXNz
+QGludGVsLmNvbT47IHJqd0Byand5c29ja2kubmV0DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggNS82
+XSBhY3BpL2NwcGM6IEFkZCBzdXBwb3J0IGZvciBvcHRpb25hbCBDUFBDIHJlZ2lzdGVycw0KPiAN
+Cj4gT24gRnJpLCAyMDE5LTAzLTIyIGF0IDIwOjI2ICswMDAwLCBOYXRhcmFqYW4sIEphbmFrYXJh
+amFuIHdyb3RlOg0KPiA+IEZyb206IFlhemVuIEdoYW5uYW0gPFlhemVuLkdoYW5uYW1AYW1kLmNv
+bT4NCj4gPg0KPiA+IE5ld2VyIEFNRCBwcm9jZXNzb3JzIHN1cHBvcnQgYSBzdWJzZXQgb2YgdGhl
+IG9wdGlvbmFsIENQUEMgcmVnaXN0ZXJzLg0KPiA+IENyZWF0ZSBzaG93LCBzdG9yZSBhbmQgaGVs
+cGVyIHJvdXRpbmVzIGZvciBzdXBwb3J0ZWQgQ1BQQyByZWdpc3RlcnMuDQo+ID4NCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBZYXplbiBHaGFubmFtIDxZYXplbi5HaGFubmFtQGFtZC5jb20+DQo+ID4gWyBj
+YXJ2ZWQgb3V0IGludG8gYSBwYXRjaCwgY2xlYW5lZCB1cCwgcHJvZHVjdGl6ZWQgXQ0KPiA+IFNp
+Z25lZC1vZmYtYnk6IEphbmFrYXJhamFuIE5hdGFyYWphbiA8SmFuYWthcmFqYW4uTmF0YXJhamFu
+QGFtZC5jb20+DQo+ID4NCj4gDQo+IFsuLl0NCj4gDQo+ID4gKwkvKiBkZXNpcmVkX3BlcmYgaXMg
+dGhlIG9ubHkgbWFuZGF0b3J5IHZhbHVlIGluIHBlcmZfY3RybHMgKi8NCj4gPiArCWlmIChjcGNf
+cmVhZChjcHUsIGRlc2lyZWRfcmVnLCAmZGVzaXJlZCkpDQo+ID4gKwkJcmV0ID0gLUVGQVVMVDsN
+Cj4gPiArDQo+ID4gKwlpZiAoQ1BDX1NVUFBPUlRFRChtYXhfcmVnKSAmJiBjcGNfcmVhZChjcHUs
+IG1heF9yZWcsICZtYXgpKQ0KPiA+ICsJCXJldCA9IC1FRkFVTFQ7DQo+ID4gKw0KPiBXZSBzaG91
+bGQgY3JlYXRlIGFuZCB1c2UgZGlmZmVyZW50IG1hY3JvIG90aGVyIHRoYW4gQ1BQQ19TVVBQT1JU
+RUQuDQo+IENQQ19TVVBQT1JURUQgZG9lc24ndCB2YWxpZGF0ZSB0aGUgY29ycmVjdG5lc3Mgb2Yg
+b2JqZWN0IHR5cGUgZm9yIGENCj4gZmllbGQuIEZvciBleGFtcGxlICJNYXhpbXVtIFBlcmZvcm1h
+bmNlIFJlZ2lzdGVyIiBjYW4gb25seSBiZSBidWZmZXINCj4gbm90IGludGVnZXIuIEluIHRoaXMg
+d2F5IGludmFsaWQgZmllbGQgZGVmaW5pdGlvbnMgY2FuIGJlIGlnbm9yZWQuDQo+IA0KDQpTbyBj
+cmVhdGUgc29tZXRoaW5nIGxpa2UgIkNQUENfU1VQUE9SVEVEX0JVRkZFUiIgZm9yIGJ1ZmZlci1v
+bmx5IHJlZ2lzdGVycz8NCg0KQW5kIHRoZW4gYnVmZmVyL2ludGVnZXIgcmVnaXN0ZXJzIHdpbGwg
+Y29udGludWUgdG8gdXNlICJDUFBDX1NVUFBPUlRFRCIuDQoNClRoZXNlIHNlZW0gdG8gYmUgdGhl
+IG9ubHkgdHdvIGNhc2VzIGF0IHRoaXMgdGltZS4gSXMgdGhpcyBva2F5Pw0KDQpUaGFua3MsDQpZ
+YXplbg0KDQo+IA0KPiA+ICsJaWYgKENQQ19TVVBQT1JURUQobWluX3JlZykgJiYgY3BjX3JlYWQo
+Y3B1LCBtaW5fcmVnLCAmbWluKSkNCj4gPiArCQlyZXQgPSAtRUZBVUxUOw0KPiA+ICsNCj4gPiAr
+CWlmIChDUENfU1VQUE9SVEVEKGVuZXJneV9yZWcpICYmIGNwY19yZWFkKGNwdSwgZW5lcmd5X3Jl
+ZywNCj4gPiAmZW5lcmd5KSkNCj4gPiArCQlyZXQgPSAtRUZBVUxUOw0KPiA+ICsNCj4gPiArCWlm
+IChDUENfU1VQUE9SVEVEKGF1dG9fc2VsX2VuYWJsZV9yZWcpICYmDQo+ID4gKwkgICAgY3BjX3Jl
+YWQoY3B1LCBhdXRvX3NlbF9lbmFibGVfcmVnLCAmYXV0b19zZWxfZW5hYmxlKSkNCj4gPiArCQly
+ZXQgPSAtRUZBVUxUOw0KPiA+ICsNCj4gSGVyZSBpdCBpcyBmaW5lIHRvIHVzZSBDUENfU1VQUE9S
+VEVEIGFzIHRoZSAiQXV0b25vbW91cyBTZWxlY3Rpb24NCj4gRW5hYmxlIiBjYW4gYmUgYm90aCBp
+bnRlZ2VyIGFuZCBidWZmZXIuDQo+IA0KPiBUaGFua3MsDQo+IFNyaW5pdmFzDQoNCg==
