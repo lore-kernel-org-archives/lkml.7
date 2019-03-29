@@ -2,113 +2,119 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A808C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C53EC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07095218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:09:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iHXxaJID"
+	by mail.kernel.org (Postfix) with ESMTP id 70AB720811
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbfC2SJk (ORCPT
+        id S1729975AbfC2SKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 14:09:40 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33041 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729652AbfC2SJk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 14:09:40 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i19so1428164pfd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 11:09:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s4ZCUKfRLPJnIxAUuStXAE+wg+9f7Meg4+UY3x4a0tc=;
-        b=iHXxaJID1cfcFFuS4BGDnRyg9Mxplx4UhQoViLW3/gt5s5HuCZPp0EWOtuBz1X7fKt
-         WAuEATJBmWOLWZxbPAQSevDxuA3jUitzRs+m1m/Hr2gELSKiEmq7P+I1SbTROFV40kDM
-         P28z3Q6P+VRj7IiWG1u1n7IxIXi9y63/9R8wqZNUOcoNQv3EYcDm00vASADxRdLOwR6p
-         D5Xi/zzjhTfjkUmnVjEuExzjV6MyNdw7NlyqZqivoz8kRQ9mUbtuqFDHK8F+UtUTGqeM
-         j16u9bxOtDrqjxnrxrPWdup2xEJqZfP4PHseCUHfolSHGPreR+NMcnuyZPVyEB5OitUQ
-         U83Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s4ZCUKfRLPJnIxAUuStXAE+wg+9f7Meg4+UY3x4a0tc=;
-        b=FHYdOrlogtnlMUuKGm/Ey4i9e8wqn92yLnkIFLXrImzOgGYZptV6/2n88ffFg5Kod3
-         S4tiTvIrB3ocGEUgOmkQsLcuJAVq3wR/I3hda2KOTGTd0D0iAU1MQCKb3wyalU9/TjN5
-         Yknlc67hLEE07LoDGi18zX43EALgwEmqqhHVhVXwU5Nga1aooDmbQsm+fyOmIbrui+HW
-         mX2FM8eV5Cz3sOxt7/+myDjEwL3V3eMDGM1VS+DlxrWrgvLI4ZeqtKa/4slBkNMvSXBZ
-         7wiqbapDhVWfzaWIwLXtnL3qkFbbTRj0gDAUDFPyDlCuNZAUTUjGYb7kvqfpgcRktLGM
-         n0Qg==
-X-Gm-Message-State: APjAAAU9JzozjpchZgdcnqNTbBByckNmsxe7VzN82JyNYQKrWun5a8/b
-        41lbKoinc6cSakb5o8HfVwB8O8eTZJvI3BEAEg+6Iw==
-X-Google-Smtp-Source: APXvYqyAiLFvFmAzP17NJ+HtjCZy23KROjG8Dcmjfu2QSFVMdm7SITNkMr0Jg5U4JI3OnJm1c4zZxj/jiGjXg1dLHR8=
-X-Received: by 2002:a62:7603:: with SMTP id r3mr48744017pfc.32.1553882979336;
- Fri, 29 Mar 2019 11:09:39 -0700 (PDT)
+        Fri, 29 Mar 2019 14:10:49 -0400
+Received: from namei.org ([65.99.196.166]:59226 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729652AbfC2SKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 14:10:49 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x2TIAmPw001059;
+        Fri, 29 Mar 2019 18:10:48 GMT
+Date:   Sat, 30 Mar 2019 05:10:48 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] security: yama fix for v5.1
+Message-ID: <alpine.LRH.2.21.1903300509370.689@namei.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-References: <201903291603.7podsjD7%lkp@intel.com> <20190329174541.79972-1-ndesaulniers@google.com>
- <9f1ad3e1-fad7-2fb4-31c0-d31832468143@infradead.org>
-In-Reply-To: <9f1ad3e1-fad7-2fb4-31c0-d31832468143@infradead.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 29 Mar 2019 11:09:28 -0700
-Message-ID: <CAKwvOdmv4_8pN5r8EO8c59WN+EE7ZPST8qHKMg7SzPH1rzaqag@mail.gmail.com>
-Subject: Re: [PATCH] gcov: include linux/module.h for within_module
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Hackmann <ghackmann@android.com>,
-        Tri Vo <trong@android.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        kbuild-all@01.org, kbuild test robot <lkp@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 11:01 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 3/29/19 10:45 AM, Nick Desaulniers wrote:
-> > Fixes commit 8c3d220cb6b5 ("gcov: clang support")
-> >
-> > Cc: Greg Hackmann <ghackmann@android.com>
-> > Cc: Tri Vo <trong@android.com>
-> > Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-> > Cc: linux-mm@kvack.org
-> > Cc: kbuild-all@01.org
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
->
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> see https://lore.kernel.org/linux-mm/20190328225107.ULwYw%25akpm@linux-foundation.org/T/#mee26c00158574326e807480fc39dfcbd7bebd5fd
->
-> Did you test this?
+Please pull this fix for the Yama LSM by Jann Horn.
 
-Yes, built with gcc 7.3 and
-defconfig
-+
-CONFIG_GCOV_KERNEL=y
-CONFIG_ARCH_HAS_GCOV_PROFILE_ALL=y
-CONFIG_GCOV_FORMAT_4_7=y
 
-> kernel/gcov/gcc_4_7.c includes local "gcov.h",
-> which includes <linux/module.h>, so why didn't that work or why
-> does this patch work?
+The following changes since commit 8c7ae38d1ce12a0eaeba655df8562552b3596c7f:
 
-Good point. May be something in the configs from 0-day bot.  Boarding
-a plane for Bangkok, but can dig further once landed.
+  afs: Fix StoreData op marshalling (2019-03-28 08:54:20 -0700)
 
-Maybe module support was disabled?
+are available in the Git repository at:
 
---
-Thanks,
-~Nick Desaulniers
+  git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git fixes-v5.1
+
+for you to fetch changes up to 1aa176ef5a451adc0546d5aaa3fb107975c786b7:
+
+  Yama: mark local symbols as static (2019-03-28 10:02:29 -0700)
+
+----------------------------------------------------------------
+Jann Horn (1):
+      Yama: mark local symbols as static
+
+ security/yama/yama_lsm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+---
+commit 1aa176ef5a451adc0546d5aaa3fb107975c786b7
+Author: Jann Horn <jannh@google.com>
+Date:   Wed Mar 27 17:21:42 2019 -0700
+
+    Yama: mark local symbols as static
+    
+    sparse complains that Yama defines functions and a variable as non-static
+    even though they don't exist in any header. Fix it by making them static.
+    
+    Co-developed-by: Mukesh Ojha <mojha@codeaurora.org>
+    Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+    Signed-off-by: Jann Horn <jannh@google.com>
+    [kees: merged similar static-ness fixes into a single patch]
+    Link: https://lkml.kernel.org/r/20190326230841.87834-1-jannh@google.com
+    Link: https://lkml.kernel.org/r/1553673018-19234-1-git-send-email-mojha@codeaurora.org
+    Signed-off-by: Kees Cook <keescook@chromium.org>
+    Signed-off-by: James Morris <james.morris@microsoft.com>
+
+diff --git a/security/yama/yama_lsm.c b/security/yama/yama_lsm.c
+index 57cc60722dd3..efac68556b45 100644
+--- a/security/yama/yama_lsm.c
++++ b/security/yama/yama_lsm.c
+@@ -206,7 +206,7 @@ static void yama_ptracer_del(struct task_struct *tracer,
+  * yama_task_free - check for task_pid to remove from exception list
+  * @task: task being removed
+  */
+-void yama_task_free(struct task_struct *task)
++static void yama_task_free(struct task_struct *task)
+ {
+ 	yama_ptracer_del(task, task);
+ }
+@@ -222,7 +222,7 @@ void yama_task_free(struct task_struct *task)
+  * Return 0 on success, -ve on error.  -ENOSYS is returned when Yama
+  * does not handle the given option.
+  */
+-int yama_task_prctl(int option, unsigned long arg2, unsigned long arg3,
++static int yama_task_prctl(int option, unsigned long arg2, unsigned long arg3,
+ 			   unsigned long arg4, unsigned long arg5)
+ {
+ 	int rc = -ENOSYS;
+@@ -401,7 +401,7 @@ static int yama_ptrace_access_check(struct task_struct *child,
+  *
+  * Returns 0 if following the ptrace is allowed, -ve on error.
+  */
+-int yama_ptrace_traceme(struct task_struct *parent)
++static int yama_ptrace_traceme(struct task_struct *parent)
+ {
+ 	int rc = 0;
+ 
+@@ -452,7 +452,7 @@ static int yama_dointvec_minmax(struct ctl_table *table, int write,
+ static int zero;
+ static int max_scope = YAMA_SCOPE_NO_ATTACH;
+ 
+-struct ctl_path yama_sysctl_path[] = {
++static struct ctl_path yama_sysctl_path[] = {
+ 	{ .procname = "kernel", },
+ 	{ .procname = "yama", },
+ 	{ }
