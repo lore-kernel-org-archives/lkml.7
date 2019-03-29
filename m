@@ -3,106 +3,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B53C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B4AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B292184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE702184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbfC2IxN (ORCPT
+        id S1729204AbfC2Iyn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:53:13 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:56712 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729109AbfC2IxM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 04:53:12 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 25C6C27D87F;
-        Fri, 29 Mar 2019 08:53:11 +0000 (GMT)
-Date:   Fri, 29 Mar 2019 09:53:07 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
-        "nagasuresh12@gmail.com" <nagasuresh12@gmail.com>
-Subject: Re: [LINUX PATCH 2/3] spi: spi-mem: call
- spi_mem_default_supports_op() first
-Message-ID: <20190329095307.02d970fd@collabora.com>
-In-Reply-To: <d21f7363-eeea-830e-b9b8-ef5bb9e1261b@ti.com>
-References: <1553771784-3364-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
-        <20190328205522.272e1da6@collabora.com>
-        <d21f7363-eeea-830e-b9b8-ef5bb9e1261b@ti.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
+        Fri, 29 Mar 2019 04:54:43 -0400
+Received: from prv1-mh.provo.novell.com ([137.65.248.33]:54604 "EHLO
+        prv1-mh.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729102AbfC2Iyn (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:5:1>);
+        Fri, 29 Mar 2019 04:54:43 -0400
+Received: from INET-PRV1-MTA by prv1-mh.provo.novell.com
+        with Novell_GroupWise; Fri, 29 Mar 2019 02:54:42 -0600
+Message-Id: <5C9DDD530200007800222B22@prv1-mh.provo.novell.com>
+X-Mailer: Novell GroupWise Internet Agent 18.1.0 
+Date:   Fri, 29 Mar 2019 02:54:43 -0600
+From:   "Jan Beulich" <JBeulich@suse.com>
+To:     "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
+Cc:     "Stefano Stabellini" <sstabellini@kernel.org>,
+        "xen-devel" <xen-devel@lists.xenproject.org>,
+        "Juergen Gross" <jgross@suse.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/Xen: streamline (and fix) PV CPU enumeration
+References: <5C9B92EA020000780022227B@prv1-mh.provo.novell.com>
+ <2f027b4b-dce2-3e90-dc1b-c824bc8eb355@oracle.com>
+ <5C9C8DDC0200007800222606@prv1-mh.provo.novell.com>
+ <eda3938f-02a5-e5a2-4718-d75bc488f296@oracle.com>
+In-Reply-To: <eda3938f-02a5-e5a2-4718-d75bc488f296@oracle.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 Mar 2019 13:50:26 +0530
-Vignesh Raghavendra <vigneshr@ti.com> wrote:
-
-> Hi Boris,
+>>> On 28.03.19 at 17:50, <boris.ostrovsky@oracle.com> wrote:
+> On 3/28/19 5:03 AM, Jan Beulich wrote:
+>>>>> On 27.03.19 at 18:07, <boris.ostrovsky@oracle.com> wrote:
+>>> On 3/27/19 11:12 AM, Jan Beulich wrote:
+>>>> -
+>>>> -static void __init xen_filter_cpu_maps(void)
+>>>> +static void __init _get_smp_config(unsigned int early)
+>>>>  {
+>>>>  	int i, rc;
+>>>>  	unsigned int subtract = 0;
+>>>>  
+>>>> -	if (!xen_initial_domain())
+>>>> +	if (early)
+>>>>  		return;
+>>>>  
+>>>>  	num_processors = 0;
+>>>
+>>> Is there a reason to set_cpu_possible() here (not in the diff, but in
+>>> this routine)? This will be called from setup_arch() before
+>>> prefill_possible_map(), which will clear and then re-initialize
+>>> __cpu_possible_mask.
+>> I don't think it's needed before my change either, so I'd call
+>> removing this an orthogonal change. As said in the commit
+>> message, the goal was to leave this function alone as far as
+>> possible.
+>>
+>> Before my patch, xen_filter_cpu_maps() gets called long after
+>> prefill_possible_map(), and by the purpose of the latter function
+>> the possible map shouldn't be altered anymore once that has
+>> run. Adding bits to it is surely not going to have the intended
+>> effect (setup_per_cpu_areas() has already run), while removing
+>> bits may have some effect, but comes too late at least for
+>> setup_per_cpu_areas().
 > 
-> On 29/03/19 1:25 AM, Boris Brezillon wrote:
-> > On Thu, 28 Mar 2019 16:46:24 +0530
-> > Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com> wrote:
-> >   
-> >> Call spi_mem_default_supports_op() first, before calling controller
-> >> specific ctlr->supports_op().
-> >> With this, controller drivers can drop checking the buswidths again.  
-> > 
-> > No, this was done on purpose, in case the controller does not want the
-> > default check to be applied (say it does not need bus-width props to
-> > be defined and has another way to check if a device can be accessed in
-> > dual, quad or octal mode).  
+> OK. Then it looks like even though your patch changes behavior slightly
+> (so technically I guess it's not purely a cleanup) this shouldn't makes
+> any difference at least as far as possible cpu mask is concerned: if we
+> don't have percpu areas set up we can't do much for that vcpu since it
+> seems to me xen_vcpu_setup(), for example, won't do well.
 > 
-> Sorry, I don't understand here.
-> Based on capabilities declared in spi_device->mode, m25p80 driver will
-> claim appropriate  SNOR_HWCAPS_*.  SPI NOR layer chooses opcodes based
-> on that for which m25p80 layer populates buswidths.
-
-Well, that test in m25p80 should go away and be replaced by a proper
-spi_mem_supports_op() iteration on all modes reported as supported by
-the *chip* (I think that's what I did in my series merging m25p80 code
-into the spi-nor core). But that's not really related to the problem
-we're discussing here.
-
+>> And if we were to remove this, I think the CONFIG_HOTPLUG_CPU
+>> section should go away as well. After all prefill_possible_map()
+>> also sets nr_cpu_ids. To be honest, it was largely this code
+>> fragment which made me want not touch the function more than
+>> necessary: The comment there makes not clear to me at all why
+>> all of this needs to be in an #ifdef in the first place.
 > 
-> So, I don't really expect any mismatch in spi_mem_default_supports_op()
-> in the case you mentioned. Or did I miss something? Maybe something SPI
-> NAND specific?
+> This was introduced by cf405ae612b0 ("xen/smp: Fix crash when booting
+> with ACPI hotplug CPUs.").
+> 
+> I am not sure this is still relevant. The ACPI hotplug code had changed,
+> not significantly but sufficiently enough to alter behavior.
+> acpi_processor_hotadd_init() now fails before it gets a chance to call
+> arch_register_cpu() for vcpu>dom0_max_vcpus.
+> 
+>> Let me know whether you really want me to fold this extra
+>> cleanup into this patch. If so, I'd then wonder whether the
+>> set_cpu_present() from xen_pv_smp_prepare_cpus() shouldn't
+>> be moved here, too. And the fiddling with the possible map
+>> there looks bogus as well: Bring-up of CPUs past the command
+>> line option should be avoided at boot time, but they shouldn't
+>> be excluded from getting brought up later on. Note how
+>> native_smp_prepare_cpus() ignores its parameter altogether.
+> 
+> Yes, that does look strange.
+> 
+> Given especially xen_pv_smp_prepare_cpus(), I think re-working proper
+> setting of present/possible masks is well beyond the scope of your
+> original patch.
 
-Nothing NAND specific, just something controller specific and how we
-want to deal with buswidth detection. Most memory devices expose their
-caps in some way (be it ID-based detection or using some kind of
-caps/parameters table), so they know what they're capable of. SPI
-controllers know what they're capable of, of course. The only part that
-remains unknown for buswidth negotiation is how things are wired on the
-board. I keep thinking that defining buswidth in the DT (using
-spi-{tx,rx}-bus-width) should only be done if there are board-related
-limiting factors (some IO pins not routed).
-If you look at the code, SPI_{TX,RX}_{DUAL,QUAD,OCTAL} flags are only
-set if the spi-{tx,rx}-bus-width props are defined.
+Well, then the question is, what (if any) changes are you
+expecting me to make for this change to be acceptable? Or do
+you perhaps want me to add a 2nd patch on top addressing
+the other outlined anomalies?
 
-The idea behind making spi_mem_default_supports_op() optional is to let
-new drivers implement a new scheme where missing
-spi-{tx,rx}-bus-width does not necessarily mean "use regular SPI mode".
+Jan
+
+
