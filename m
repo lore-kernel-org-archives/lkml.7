@@ -6,133 +6,132 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F343C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D95EC10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7E812082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1052183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:40:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="TsRRUTjI"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="PzUEVscq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbfC2Ik2 (ORCPT
+        id S1729310AbfC2Ik3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:40:28 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:57258 "EHLO pegase1.c-s.fr"
+        Fri, 29 Mar 2019 04:40:29 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:10161 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729114AbfC2IkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729151AbfC2IkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Mar 2019 04:40:24 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44VwD501Wdz9v0nB;
+        by localhost (Postfix) with ESMTP id 44VwD5470Sz9v0nG;
         Fri, 29 Mar 2019 09:40:21 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=TsRRUTjI; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=PzUEVscq; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id gDxM64uhAlSn; Fri, 29 Mar 2019 09:40:20 +0100 (CET)
+        with ESMTP id 2xioH74lIaeB; Fri, 29 Mar 2019 09:40:21 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44VwD45KQrz9v0n9;
-        Fri, 29 Mar 2019 09:40:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553848820; bh=koHETluniav0+RASqkAnJs+Qi2Jh0mqL4hpr+62Nz60=;
-        h=From:Subject:To:Cc:Date:From;
-        b=TsRRUTjI/XEK8aWcyej7Qw4Pj/3qfpsUWMAHftoOQzOvrEXJJ1bTSugnEbfH+68oX
-         Y0XN32xOoEDM6/meSlOdxzfM9nYJWhC9kHARA6nxYotZ2LvLxu9qvlcxisl0RRP4PN
-         96+kinLFgTsGqMFw2uMt801MPr0Yt4m18+VDddhY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9DDC38B82D;
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44VwD52wVKz9v0n9;
         Fri, 29 Mar 2019 09:40:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1553848821; bh=eIMm8LzKHV4kGBIhPY9vz0+T+2xzpEd+mp7zWVxb9pI=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=PzUEVscqxbB3zhngCRHl361bX+m3VtcuDx4/fp7hAJp0oi3xZtrambMyhDhS+NIt6
+         whvJpCJUURmXkBV8atP6GJn8uqFMFQ/qgFePSjEnxjQQnUM6wiC4fsHrJkh2OZ8E5G
+         zE5WXI37vmTGV/z7Rt1zpaTYJx5sCY4AIIMxCSzI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 67F8C8B825;
+        Fri, 29 Mar 2019 09:40:22 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 0ZCAG_Ac1OeI; Fri, 29 Mar 2019 09:40:21 +0100 (CET)
+        with ESMTP id eIxsriYjUT3m; Fri, 29 Mar 2019 09:40:22 +0100 (CET)
 Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 606B18B779;
-        Fri, 29 Mar 2019 09:40:21 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 416438B779;
+        Fri, 29 Mar 2019 09:40:22 +0100 (CET)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 2786B6FC95; Fri, 29 Mar 2019 08:40:21 +0000 (UTC)
-Message-Id: <3632dd9c8115965b37fd0b8fc50b3352395933fa.1553848759.git.christophe.leroy@c-s.fr>
+        id 33F2D6FC95; Fri, 29 Mar 2019 08:40:22 +0000 (UTC)
+Message-Id: <bb97f6ad785d582d26ed2843af3f448ff03916ef.1553848759.git.christophe.leroy@c-s.fr>
+In-Reply-To: <3632dd9c8115965b37fd0b8fc50b3352395933fa.1553848759.git.christophe.leroy@c-s.fr>
+References: <3632dd9c8115965b37fd0b8fc50b3352395933fa.1553848759.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 1/4] powerpc/boot: don't force gzipped uImage
+Subject: [PATCH v1 2/4] powerpc/boot: Add lzma support for uImage
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 29 Mar 2019 08:40:21 +0000 (UTC)
+Date:   Fri, 29 Mar 2019 08:40:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch modifies the generation of uImage by handing over
-the selected compression type instead of forcing gzip
+This patch allows to generate lzma compressed uImage
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/boot/wrapper | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/powerpc/Kconfig       | 1 +
+ arch/powerpc/boot/Makefile | 2 ++
+ arch/powerpc/boot/wrapper  | 5 ++++-
+ 3 files changed, 7 insertions(+), 1 deletion(-)
 
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 2d0be82c3061..69ff2476490c 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -201,6 +201,7 @@ config PPC
+ 	select HAVE_IRQ_EXIT_ON_IRQ_STACK
+ 	select HAVE_KERNEL_GZIP
+ 	select HAVE_KERNEL_XZ			if PPC_BOOK3S || 44x
++	select HAVE_KERNEL_LZMA			if DEFAULT_UIMAGE
+ 	select HAVE_KPROBES
+ 	select HAVE_KPROBES_ON_FTRACE
+ 	select HAVE_KRETPROBES
+diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+index 73d1f3562978..9b7b11a22925 100644
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -22,6 +22,7 @@ all: $(obj)/zImage
+ 
+ compress-$(CONFIG_KERNEL_GZIP) := CONFIG_KERNEL_GZIP
+ compress-$(CONFIG_KERNEL_XZ)   := CONFIG_KERNEL_XZ
++compress-$(CONFIG_KERNEL_LZMA) := CONFIG_KERNEL_LZMA
+ 
+ ifdef CROSS32_COMPILE
+     BOOTCC := $(CROSS32_COMPILE)gcc
+@@ -257,6 +258,7 @@ endif
+ 
+ compressor-$(CONFIG_KERNEL_GZIP) := gz
+ compressor-$(CONFIG_KERNEL_XZ)   := xz
++compressor-$(CONFIG_KERNEL_LZMA)   := lzma
+ 
+ # args (to if_changed): 1 = (this rule), 2 = platform, 3 = dts 4=dtb 5=initrd
+ quiet_cmd_wrap	= WRAP    $@
 diff --git a/arch/powerpc/boot/wrapper b/arch/powerpc/boot/wrapper
-index f9141eaec6ff..4e9beecf2502 100755
+index 4e9beecf2502..51dc42f5acbc 100755
 --- a/arch/powerpc/boot/wrapper
 +++ b/arch/powerpc/boot/wrapper
-@@ -41,6 +41,7 @@ dts=
- cacheit=
- binary=
- compression=.gz
-+uboot_comp=gzip
- pie=
- format=
- 
-@@ -131,6 +132,7 @@ while [ "$#" -gt 0 ]; do
- 	;;
-     -z)
- 	compression=.gz
-+	uboot_comp=gzip
- 	;;
+@@ -137,7 +137,7 @@ while [ "$#" -gt 0 ]; do
      -Z)
  	shift
-@@ -138,15 +140,21 @@ while [ "$#" -gt 0 ]; do
-         [ "$1" != "gz" -o "$1" != "xz" -o "$1" != "none" ] || usage
+ 	[ "$#" -gt 0 ] || usage
+-        [ "$1" != "gz" -o "$1" != "xz" -o "$1" != "none" ] || usage
++        [ "$1" != "gz" -o "$1" != "xz" -o "$1" != "lzma" -o "$1" != "none" ] || usage
  
  	compression=".$1"
-+	uboot_comp=$1
- 
-         if [ $compression = ".none" ]; then
-                 compression=
-+		uboot_comp=none
-         fi
-+	if [ $uboot_comp = "gz" ]; then
-+		uboot_comp=gzip
-+	fi
- 	;;
-     --no-gzip)
-         # a "feature" of the the wrapper script is that it can be used outside
-         # the kernel tree. So keeping this around for backwards compatibility.
-         compression=
-+	uboot_comp=none
+ 	uboot_comp=$1
+@@ -374,6 +374,9 @@ if [ -z "$cacheit" -o ! -f "$vmz$compression" -o "$vmz$compression" -ot "$kernel
+     .gz)
+         gzip -n -f -9 "$vmz.$$"
          ;;
-     -?)
- 	usage
-@@ -369,6 +377,7 @@ if [ -z "$cacheit" -o ! -f "$vmz$compression" -o "$vmz$compression" -ot "$kernel
++    .lzma)
++        xz --format=lzma -f -6 "$vmz.$$"
++	;;
      *)
          # drop the compression suffix so the stripped vmlinux is used
          compression=
-+	uboot_comp=none
- 	;;
-     esac
- 
-@@ -412,7 +421,7 @@ membase=`${CROSS}objdump -p "$kernel" | grep -m 1 LOAD | awk '{print $7}'`
- case "$platform" in
- uboot)
-     rm -f "$ofile"
--    ${MKIMAGE} -A ppc -O linux -T kernel -C gzip -a $membase -e $membase \
-+    ${MKIMAGE} -A ppc -O linux -T kernel -C $uboot_comp -a $membase -e $membase \
- 	$uboot_version -d "$vmz" "$ofile"
-     if [ -z "$cacheit" ]; then
- 	rm -f "$vmz"
 -- 
 2.13.3
 
