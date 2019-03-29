@@ -2,109 +2,113 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DD1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384EBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121D621773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090B321773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:03:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DK5NTXZp"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="EC8sc3aE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729790AbfC2RD0 (ORCPT
+        id S1729844AbfC2RDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 13:03:26 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38129 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729480AbfC2RD0 (ORCPT
+        Fri, 29 Mar 2019 13:03:44 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:34002 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729809AbfC2RDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 13:03:26 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w15so3623779wmc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 10:03:25 -0700 (PDT)
+        Fri, 29 Mar 2019 13:03:43 -0400
+Received: by mail-yw1-f65.google.com with SMTP id x129so927733ywc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 10:03:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4h7VtKuChw0e0QSGqGDCThC9qDFXbr94ocjisp/vP48=;
-        b=DK5NTXZpVNhSYwXY6uVXLvL2a9EGSCpHjj2zbXUZ62yDuMlBg9mflXQZg0kAG2MrZs
-         9nmAmxFEmymZEgawOa5rWnJuOllBVJuuWZ7l9zLN2LV+2jx+/HABsGInQ3bAxHZcJZzh
-         t4zMoNXo+xKuLihVE+WQSdDOP0jqcgNvrSsFu/lIE1ZuV2UNFtp76AWFqoTIlsRXmoyO
-         GKkZ+PkS40YHjaG/9+BFvy31XwL7kY92eaY3xkBAPDgFciM6lmMz84fPCItFoHEc89J7
-         PYLHijgNub+HRTAKqz94pLzJM27mDR9DJdN7h2PFTuwomANJrn/96QgUD0XHIgfXE3AP
-         wBGg==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=W7lLylrMLPHCAGUksv7phTRR5l4lL+wrbNb4nVTTI3U=;
+        b=EC8sc3aEu+o42Lz7ZTNOiKzzHjK/Cc1qEFQ3QLL+kviu9j/p4EcYSruPF3mg9PYqy/
+         UBhsl4c+ufriWbWNHUwWO0GLUoUw2rgMRFoGU49Km7HR2R6JO3yCCUDCvvY1rcPZZw8v
+         4J2Livfcgm024FE7wgwrq/VAQkbMqQovzl1Iw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4h7VtKuChw0e0QSGqGDCThC9qDFXbr94ocjisp/vP48=;
-        b=oNX+8OLu/UJD5Y6rvpOINg1oTnjd5bvIRKmAOQkyRmeVlcG8hLsfXKXOMsf4heJIoM
-         tgYmxKP+Gejb6cMDDdaECf+dC8UoRChmIKDindBY8cUVvGzGxIyG3S5OMsCQnnNZyp5z
-         cZ/JoAuUMF+SMOpgoe88zEAc+qfGUM+lvP2b8MVn7hTMIFh11c8Bbm9PVlfUJBFZU8Z+
-         nX+V+Dhi5k5lM1tHY2Z41KEquCJi6ZhIFMzrza7JmMldnFeoTViWSsGwP8Pn6ruclU1K
-         Fcp7RUwGnDo3aLG58uacdQda48x3gjMby/RN6p2y8eiZVlQDltF+wLZikNzJAU/50ADi
-         brZA==
-X-Gm-Message-State: APjAAAVwtyr0vOjBkZdsgqjcdsm3Pu9q3DfqGJ2sCK/QSKQZ9Fnbw6yc
-        Kv16agCIODHAMkGPNxZN9f4rpiPz2txXH1rh3M7L
-X-Google-Smtp-Source: APXvYqwhptPso1F/rhg8GsB+eunOKCtPDDa2WtV6+AwxGkIBfBS16VSbxziC16Ge8bCY0GmXhyWmWl6TtpmMz9YuZKM=
-X-Received: by 2002:a7b:c3d7:: with SMTP id t23mr4151441wmj.62.1553879004012;
- Fri, 29 Mar 2019 10:03:24 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=W7lLylrMLPHCAGUksv7phTRR5l4lL+wrbNb4nVTTI3U=;
+        b=m9R9LfzRwvhszbLUqOfA3VmQBF78l2bcSwk8WbsNAEIxBEpP/xYMtqlyADS+HTgBUU
+         DuSO3IFqG9NC7GYPGpYa8AdQhpH3AMga0JY10AhmzvqAEnVldt3O0YddAbyw6OG7n22k
+         bpByvstBv5YmugwpPPbJSZ52dPTSILExKcwfniMeo4kuYlErmeJBYQ2/lYYcR6YYasC0
+         7ruLI2QCe372hBqc65zsDqR3QTOcZTxgw7exp9GqggWGMuCQfM0nwSiKiWw2ZWdo+HjB
+         0/IWprbbkB6CTQCGelFYKa8L0MleqxoqElbsE+pMR3wbIhzRYpusMyOgODGYY6lswQSn
+         5vcA==
+X-Gm-Message-State: APjAAAXUO2RkWT6iunPtoA/vf276KIfJqWfoPZ626U0RIe40eX/QyjtY
+        Mf2fPbfdRU3GwR3U+nqL4S4Sox+9Wec0qffH1SYdv8jyuTzBTsjS0PzobhIoSY94FUpea0cwMxh
+        uZYEBZdRULeIClHt7ld2ZITLI8diB0lanszUSA0BovS1ZN+Kc1pP4Qh3xBoVM/jiys3faKVi2IP
+        eCZMo3EEje
+X-Google-Smtp-Source: APXvYqyeYDSQexnr3FGr8Gh2a+0J0RUTkckT7E54wveUyaGPapJFfeTzUlNBN9krRvmaeRINQUO9Vw==
+X-Received: by 2002:a0d:e707:: with SMTP id q7mr19402037ywe.148.1553879022151;
+        Fri, 29 Mar 2019 10:03:42 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id 79sm1461582ywr.110.2019.03.29.10.03.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Mar 2019 10:03:40 -0700 (PDT)
+Subject: Re: [PATCH v4 0/2] Add IPROC PCIe new features
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1551415936-30174-1-git-send-email-srinath.mannam@broadcom.com>
+ <20190329165145.GC8768@e107981-ln.cambridge.arm.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <f154e036-c3c3-ad31-d7b1-09a81f11c23e@broadcom.com>
+Date:   Fri, 29 Mar 2019 10:03:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190325194220.5873-1-helgaas@kernel.org> <4faf234df19c1b54b70cbe82c0dacacc58568b87.camel@perches.com>
-In-Reply-To: <4faf234df19c1b54b70cbe82c0dacacc58568b87.camel@perches.com>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Fri, 29 Mar 2019 12:03:11 -0500
-Message-ID: <CAErSpo7bGn8JP9n6UaPUdTJ1ZFonnZX+C+bCFgfN4HH2Hu6OpA@mail.gmail.com>
-Subject: Re: [PATCH] vfio: Use dev_printk() when possible
-To:     Joe Perches <joe@perches.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        kvm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190329165145.GC8768@e107981-ln.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 3:49 PM Joe Perches <joe@perches.com> wrote:
->
-> On Mon, 2019-03-25 at 14:42 -0500, Bjorn Helgaas wrote:
-> > Use dev_printk() when possible to make messages consistent with other
-> > device-related messages.
->
-> trivial note:
->
-> > diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> []
-> > @@ -89,7 +89,8 @@ static int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
-> >       } while ((pcs_value & MDIO_CTRL1_RESET) && --count);
-> >
-> >       if (pcs_value & MDIO_CTRL1_RESET)
-> > -             pr_warn("%s XGBE PHY reset timeout\n", __func__);
-> > +             dev_warn(&vdev->device, "%s XGBE PHY reset timeout\n",
-> > +                      __func__);
->
-> Many of these could use a colon after the %s used with __func__
-> to make the output more consistent with other modules.
 
-Thanks, Joe.  I added a colon to the two in
-vfio_platform_amdxgbe_reset().  Those were the only ones I saw, except
-for a couple "%s failed" messages in
-drivers/vfio/vfio_iommu_spapr_tce.c, which I didn't change because (1)
-they can't use dev_err() so slightly out of scope for this patch, and
-(2) it arguably reads more naturally without the colon.
+On 2019-03-29 9:51 a.m., Lorenzo Pieralisi wrote:
+> On Fri, Mar 01, 2019 at 10:22:14AM +0530, Srinath Mannam wrote:
+>> This patch set extends support of new IPROC PCIe host controller features
+>>   - Add CRS check using controller register status flags
+>>   - Add outbound window mapping configuration for 32-bit I/O region
+>>
+>> This patch set is based on Linux-5.0-rc2.
+>>
+>> Changes from v3:
+>>    - Addressed Lorenzo Pieralisi comments.
+>>
+>> Changes from v2:
+>>    - Based on Lorenzo Pieralisi comments, commit logs are expanded.
+>>
+>> Changes from v1:
+>>    - Addressed Bjorn Helgaas comments.
+>>    - Removed set order mode patch from patchset.
+>>
+>> Srinath Mannam (2):
+>>    PCI: iproc: Add CRS check in config read
+>>    PCI: iproc: Add outbound configuration for 32-bit I/O region
+>>
+>>   drivers/pci/controller/pcie-iproc.c | 44 +++++++++++++++++++++++++++++++++----
+> I need Ray a/o Scott ACK to merge this series, thanks.
 
-In vfio_pci.c, I converted some pr_info() to dev_info() without adding
-a dev_fmt definition, so that removed the KBUILD_MODNAME prefix, which
-I didn't intend.  I'll add "#define dev_fmt pr_fmt" to restore the
-prefix.
+Unfortunately we need this due to hardware design (which we continue to 
+inform the silicon team to provide a proper design).
 
-Messages from drivers/vfio use a variety of prefixes (none, "VFIO: ",
-KBUILD_MODNAME, __func__).  That could potentially be rationalized but
-I would want Alex's guidance first.
 
-Bjorn
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+>
+> Lorenzo
