@@ -2,92 +2,112 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0947EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21C5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD0662183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:40:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553870447;
-	bh=bsu/DwuniISwjehFV3/XIe2kf9xEiuVna1l+ar1MfLI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AplI/bnyD3qYGdO3BrdbNwMZkhE5+3M7KIGuFxF1EiBoOwN0P5JCY4nBjTo51XbIP
-	 qH9bex/07ccvNjsSwcqo8TEeQ2BMb6NjyIqLLt9Cc9mtiiyXBIjztco0SPqx6rfNrV
-	 +VQ8n4kG2KwnB7S5GFffMEwM1VjBw85ygECF0Te8=
+	by mail.kernel.org (Postfix) with ESMTP id 8BE612183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbfC2Okq (ORCPT
+        id S1729382AbfC2Okt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:40:46 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46226 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728711AbfC2Okq (ORCPT
+        Fri, 29 Mar 2019 10:40:49 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40067 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729021AbfC2Okq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Mar 2019 10:40:46 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h21so2152720ljk.13;
-        Fri, 29 Mar 2019 07:40:44 -0700 (PDT)
+Received: by mail-wm1-f67.google.com with SMTP id z24so3114947wmi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 07:40:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1m4WkVpmFHhVXK/F9iVemn6CgoVQb/s1ZYilF+ONsG8=;
-        b=OramSq6HLTkhP1jNtCXO+ep7drMOjWIk6S2gTfSL/56nEDftlUecGrEY0eqEbiIzfI
-         QR070LiUUNRiQVcQEd/+9y3RhAuW4LQPsxyqjxL6rs/wvRgTEY23wlnZ9x+F1GSvArHY
-         vp7Xt1rifmz3Fr4KiA/LsK9dcs9PvLUIa5ZyEUDlPanexAS1/fBBffG8xVR4vlt4pcCa
-         p49lgzYJVyBaKfcjGlm6Zg7O+RPF8y96QeROqdzCRDu5Zm4XLZFtH9B5UYiAHQ3d993w
-         3wBPlfay5znmwGDNMAvw3LnnVRMTsi1btEqD1nvUcM7b2j88nmpeeWbhqC3ZGtbg250W
-         zENQ==
-X-Gm-Message-State: APjAAAWSj/wq55/9q7UpwILFk/ciBf0PfEfISKl23C9+SUr/cPaVK2RR
-        txzw/43TJ9VxK5M++Y6R/Yw=
-X-Google-Smtp-Source: APXvYqznOhAHGkfCteJ/wy6mJcBpnZ7qTAZCxkDL6bxpllKJciqvWUDIto9qoX87N6N8a/srkYmBIA==
-X-Received: by 2002:a2e:9f05:: with SMTP id u5mr24703316ljk.183.1553870443958;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=m1U/9No1om/xpwk+9c7FZnuMILDfo7dttqFsNyKRglk=;
+        b=uHYznqsNI9LkTImzhS1LE4WDmDQ571IvSFjVsNE9TPLiprAw+JmkTgsXZbk3VIFRoM
+         TgjKQN6Tndr8DDKzTuZvb/Do4FrA0AJepdhMiX0Y0aDM3DS/QD1PwfGXJZA58PkXHwFr
+         coxVSQ+6R69YtUj7DJY/stt6nqxrB0hDZ7+lIuUOVHOYsAe3JvmuUconTihtfgukXYO0
+         p/S+1EHXAX7f+/rErdgiCZ0o+dTJuZwSDQGsucLI1G/B/mjX5VAyHXf31AYBTXmwfmDY
+         2hg+0NKfV2FrUIn9YPSICSfGg7HKTAPYYFRUmmRAffLtVtpeL/asGfskC3sz1a3oHuBG
+         g7RQ==
+X-Gm-Message-State: APjAAAUy0HLesVmf7yqTPosnmTMl+U2beJSWQvkRvy2weDe9BC8Nvezb
+        nmaPTUlbiUE6FZgd8nTWerJkDiYh2pk=
+X-Google-Smtp-Source: APXvYqxMKtln2NpOYAyiATnKBycJsavwKdUsU1Rx+/W5dqsqJmVZQHeCNC2mJ3TS6J4OcsDJqV5FWw==
+X-Received: by 2002:a7b:cd08:: with SMTP id f8mr3803304wmj.86.1553870444620;
+        Fri, 29 Mar 2019 07:40:44 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id z13sm2998735wrw.36.2019.03.29.07.40.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
         Fri, 29 Mar 2019 07:40:43 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id v21sm326558lfg.26.2019.03.29.07.40.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 07:40:42 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1h9sgd-0003I4-C1; Fri, 29 Mar 2019 15:40:51 +0100
-Date:   Fri, 29 Mar 2019 15:40:51 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Cc:     peter_hong@fintek.com.tw, johan@kernel.org,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
-        Oliver Neukum <oneukum@suse.com>
-Subject: Re: [PATCH V3 1/3] USB: serial: f81232: clear overrun flag
-Message-ID: <20190329144051.GA12562@localhost>
-References: <1553848122-1227-1-git-send-email-hpeter+linux_kernel@gmail.com>
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] KVM: x86: vmx: throttle immediate exit through preemtion timer to assist buggy guests
+In-Reply-To: <f64742ef-c67d-db0f-d812-2b6f5048d7ee@redhat.com>
+References: <20190328203110.20655-1-vkuznets@redhat.com> <f64742ef-c67d-db0f-d812-2b6f5048d7ee@redhat.com>
+Date:   Fri, 29 Mar 2019 15:40:42 +0100
+Message-ID: <87d0m93frp.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553848122-1227-1-git-send-email-hpeter+linux_kernel@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 04:28:40PM +0800, Ji-Ze Hong (Peter Hong) wrote:
-> The F81232 will report data and LSR with bulk like following format:
-> bulk-in data: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
-> 
-> LSR will auto clear frame/parity/break error flag when reading by H/W,
-> but overrrun will only cleared when reading LSR. So this patch add a
-> worker to read LSR when overrun and flush the worker on close() &
-> suspend().
-> 
-> Cc: Oliver Neukum <oneukum@suse.com>
-> Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
-> ---
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-What changed since v2? Please always make sure to include a changelog
-here below the cut-off line.
+> On 28/03/19 21:31, Vitaly Kuznetsov wrote:
+>> 
+>> The 'hang' scenario develops like this:
+>> 1) Hyper-V boots and QEMU is trying to inject two irq simultaneously. One
+>>  of them is level-triggered. KVM injects the edge-triggered one and
+>>  requests immediate exit to inject the level-triggered:
+>> 
+>>  kvm_set_irq:          gsi 23 level 1 source 0
+>>  kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
+>>  kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
+>>  kvm_msi_set_irq:      dst 0 vec 96 (Fixed|physical|edge)
+>>  kvm_apic_accept_irq:  apicid 0 vec 96 (Fixed|edge)
+>>  kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000060 int_info_err 0
+>> 
+>> 2) Hyper-V requires one of its VMs to run to handle the situation but
+>>  immediate exit happens:
+>> 
+>>  kvm_entry:            vcpu 0
+>>  kvm_exit:             reason VMRESUME rip 0xfffff80006a40115 info 0 0
+>>  kvm_entry:            vcpu 0
+>>  kvm_exit:             reason PREEMPTION_TIMER rip 0xfffff8022f3d8350 info 0 0
+>>  kvm_nested_vmexit:    rip fffff8022f3d8350 reason PREEMPTION_TIMER info1 0 info2 0 int_info 0 int_info_err 0
+>>  kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000050 int_info_err 0
+>
+> I supposed before this there was an eoi for vector 96?
 
-Thanks,
-Johan
+AFAIR: no, it seems that it is actually the VM it is trying to resume
+(Windows partition?) which needs to do some work and with the preemtion
+timer of 0 we don't allow it to.
+
+>
+> The main issue with your patch is that the preemption timer is buggy on
+> some processors (it runs too fast) and on those processors we shouldn't
+> use it with nonzero deadline.  In particular because it runs too fast it
+> may not hide the bug.
+>
+> I think level-triggered interrupts are required for the bug to show.
+> Edge-triggered interrupts usually have to be acknowledged with a device
+> register before the host device will trigger another interrupt; or at
+> least the interrupt event, for example an incoming network packet, must
+> happen again.  This way, when the guest hangs it puts some back pressure
+> on the host.
+>
+> I think we should do in QEMU the same fix that was done in the in-kernel
+> IOAPIC.
+
+Yes, I have this in my plan. Stay tuned!
+
+-- 
+Vitaly
