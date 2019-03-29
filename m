@@ -2,225 +2,130 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BC2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429F0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B93620693
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18392218A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbfC2Ph6 (ORCPT
+        id S1729612AbfC2Pil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:37:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59320 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728815AbfC2Ph6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:37:58 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2577F81F01;
-        Fri, 29 Mar 2019 15:37:57 +0000 (UTC)
-Received: from [10.36.117.0] (unknown [10.36.117.0])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9FBD683E82;
-        Fri, 29 Mar 2019 15:37:47 +0000 (UTC)
-Subject: Re: On guest free page hinting and OOM
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
-        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
-        dodgen@google.com, konrad.wilk@oracle.com, dhildenb@redhat.com,
-        aarcange@redhat.com, alexander.duyck@gmail.com
-References: <20190329084058-mutt-send-email-mst@kernel.org>
- <f6332928-d6a4-7a75-245d-2c534cf6e710@redhat.com>
- <20190329104311-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <7a3baa90-5963-e6e2-c862-9cd9cc1b5f60@redhat.com>
-Date:   Fri, 29 Mar 2019 16:37:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 29 Mar 2019 11:38:41 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28146 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728815AbfC2Pil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 11:38:41 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2TFao5K004311;
+        Fri, 29 Mar 2019 16:37:41 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2rhg9w22ex-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 29 Mar 2019 16:37:41 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3A51631;
+        Fri, 29 Mar 2019 15:37:40 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0697D4E8C;
+        Fri, 29 Mar 2019 15:37:40 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 29 Mar
+ 2019 16:37:39 +0100
+Received: from localhost (10.201.23.16) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Fri, 29 Mar 2019 16:37:39
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>,
+        <arnaud.pouliquen@st.com>
+CC:     <benjamin.gaignard@st.com>, <kuninori.morimoto.gx@renesas.com>
+Subject: [PATCH] ASoC: cs42l51: add multi endpoint support
+Date:   Fri, 29 Mar 2019 16:37:37 +0100
+Message-ID: <1553873857-7423-1-git-send-email-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20190329104311-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 29 Mar 2019 15:37:57 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.16]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-29_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.03.19 16:08, Michael S. Tsirkin wrote:
-> On Fri, Mar 29, 2019 at 03:24:24PM +0100, David Hildenbrand wrote:
->>
->> We had a very simple idea in mind: As long as a hinting request is
->> pending, don't actually trigger any OOM activity, but wait for it to be
->> processed. Can be done using simple atomic variable.
->>
->> This is a scenario that will only pop up when already pretty low on
->> memory. And the main difference to ballooning is that we *know* we will
->> get more memory soon.
-> 
-> No we don't.  If we keep polling we are quite possibly keeping the CPU
-> busy so delaying the hint request processing.  Again the issue it's a
+Support multiple endpoints on cs42L51 codec port
+when used in of_graph context.
 
-You can always yield. But that's a different topic.
+This patch allows to share the codec port between two CPU DAIs.
 
-> tradeoff. One performance for the other. Very hard to know which path do
-> you hit in advance, and in the real world no one has the time to profile
-> and tune things. By comparison trading memory for performance is well
-> understood.
-> 
-> 
->> "appended to guest memory", "global list of memory", malicious guests
->> always using that memory like what about NUMA?
-> 
-> This can be up to the guest. A good approach would be to take
-> a chunk out of each node and add to the hints buffer.
+Example:
 
-This might lead to you not using the buffer efficiently. But also,
-different topic.
+STM32MP157C-DK2 board uses CS42L51 audio codec.
+This codec is connected to two serial audio interfaces,
+which are configured either as rx or tx.
 
-> 
->> What about different page
->> granularity?
-> 
-> Seems like an orthogonal issue to me.
+From AsoC point of view the topolgy is the following:
+// 2 CPU DAIs (SAI2A/B), 1 Codec (CS42L51)
+Playback: CPU-A-DAI(slave) -> (master)CODEC-DAI/port0
+Record:   CPU-B-DAI(slave) <- (master)CODEC-DAI/port0
 
-It is similar, yes. But if you support multiple granularities (e.g.
-MAX_ORDER - 1, MAX_ORDER - 2 ...) you might have to implement some sort
-of buddy for the buffer. This is different than just a list for each node.
+In the DT two endpoints have to be associated to the codec port:
+cs42l51_port: port {
+	cs42l51_tx_endpoint: endpoint@0 {
+		remote-endpoint = <&sai2a_endpoint>;
+	};
+	cs42l51_rx_endpoint: endpoint@1 {
+		remote-endpoint = <&sai2b_endpoint>;
+	};
+};
 
-> 
->> What about malicious guests?
-> 
-> That's an interesting question.  Host can actually enforce that # of
-> hinted free pages at least matches the hint buffer size.
+However, when the audio graph card parses the codec nodes, it expects
+to find DAI interface indexes matching the endpoints indexes.
 
-Well, you will have to assume that the hinting buffer might be
-completely used by any guest. Just like ballooning, there are no
-guarantees. If the buffer memory is part of initial boot memory, any
-guest without proper modifications will simply make use of it. See more
-on that below. At first, my impression was that you would actually
-somehow want to expose new memory ("buffer") to the guest, which is why
-I shivered.
+The current patch forces the use of DAI id 0 for both endpoints,
+which allows to share the codec DAI between the two CPU DAIs
+for playback and capture streams respectively.
 
-> 
-> 
->> What about more hitning
->> requests than the buffer is capable to handle?
-> 
-> The idea is that we don't send more hints than in the buffer.
-> In this way host can actually control the overhead which
-> is probably a good thing - host knows how much benefit
-> can be derived from hinting. Guest doesn't.
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+ sound/soc/codecs/cs42l51.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-So the buffer will require a global lock, just so we are on the same
-page. "this way host can actually control the overhead" - you can
-implement that easier by specifying a desired limit via virtio and
-tracking it in the guest. Which is what your buffer would implicitly do.
-
-> 
->> Honestly, requiring page hinting to make use of actual ballooning or
->> additional memory makes me shiver. I hope I don't get nightmares ;) In
->> the long term we might want to get rid of the inflation/deflation side
->> of virtio-balloon, not require it.
->>
->> Please don't over-engineer an issue we haven't even see yet.
-> 
-> All hinting patches are very lightly tested as it is. OOM especially is
-> very hard to test properly.  So *I* will sleep better at night if we
-> don't have corner cases.  Balloon is already involved in MM for
-> isolation and somehow we live with that.  So wait until you see actual
-> code before worrying about nightmares.
-
-Yes, but I want to see attempts with simple solutions first.
-
-> 
->> Especially
->> not using a mechanism that sounds more involved than actual hinting.
-> 
-> That would depend on the implementation.
-> It's just moving a page between two lists.
-
-Except NUMA and different granularities.
-
-> 
-> 
->>
->> As always, I might be very wrong, but this sounds way too complicated to
->> me, both on the guest and the hypervisor side.
-> 
-> On the hypervisor side it can be literally nothing if we don't
-> want to enforce buffer size.
-
-
-Just so we understand each other. What you mean with "appended to guest
-memory" is "append to the guest memory size", not actually "append
-memory via virtio-balloon", like adding memory regions and stuff.
-
-Instead of "-m 4G" you would do "-m 5G -device virtio-balloon,hint_size=1G".
-
-
-So to summarize my opinion, this looks like a *possible* improvement for
-the future *if* we realize that a simple approach does not work. If we
-simply add more memory for the hinting buffer to the VM memory size, we
-will have to assume it will be used by guests, even if they are not
-malicious (e.g. guest without virtio-balloon driver or without the
-enhancement). NUMA and different page granularities in the guest are
-tricky parts.
-
+diff --git a/sound/soc/codecs/cs42l51.c b/sound/soc/codecs/cs42l51.c
+index fd2bd74024c1..80da3cd73e04 100644
+--- a/sound/soc/codecs/cs42l51.c
++++ b/sound/soc/codecs/cs42l51.c
+@@ -464,6 +464,13 @@ static int cs42l51_dai_mute(struct snd_soc_dai *dai, int mute)
+ 	return snd_soc_component_write(component, CS42L51_DAC_OUT_CTL, reg);
+ }
+ 
++static int cs42l51_of_xlate_dai_id(struct snd_soc_component *component,
++				   struct device_node *endpoint)
++{
++	/* return dai id 0, whatever the endpoint index */
++	return 0;
++}
++
+ static const struct snd_soc_dai_ops cs42l51_dai_ops = {
+ 	.hw_params      = cs42l51_hw_params,
+ 	.set_sysclk     = cs42l51_set_dai_sysclk,
+@@ -526,6 +533,7 @@ static const struct snd_soc_component_driver soc_component_device_cs42l51 = {
+ 	.num_dapm_widgets	= ARRAY_SIZE(cs42l51_dapm_widgets),
+ 	.dapm_routes		= cs42l51_routes,
+ 	.num_dapm_routes	= ARRAY_SIZE(cs42l51_routes),
++	.of_xlate_dai_id	= cs42l51_of_xlate_dai_id,
+ 	.idle_bias_on		= 1,
+ 	.use_pmdown_time	= 1,
+ 	.endianness		= 1,
 -- 
+2.7.4
 
-Thanks,
-
-David / dhildenb
