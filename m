@@ -2,112 +2,139 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE47C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01D2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 23:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54325218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:58:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="O1+9x8z1"
+	by mail.kernel.org (Postfix) with ESMTP id 72F4E218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 23:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730595AbfC2W6p (ORCPT
+        id S1730593AbfC2XC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 18:58:45 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52712 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730554AbfC2W6o (ORCPT
+        Fri, 29 Mar 2019 19:02:26 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:52674 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729849AbfC2XC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 18:58:44 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a184so4084496wma.2
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 15:58:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=AbYcJ8DH6nLuqJUtYFNn6epLSrCdfxCkTbk1Rsz2IkE=;
-        b=O1+9x8z15LbHJIhGHnrXuH0mgSS7u6SUXyhCAJZS/5qsn/1pT31WszOjeLHbvPL0HQ
-         fc3H95FB08kndVgvCKi8f5v4RFVV5vHtmk6Q+WDCd0Ukkxm1rmriXP8xKrTvdlrm6yIw
-         eCdp3h+p9hfsrbAb/rb4kIo40gZjSOkj/TqwSN+RyCFiB6plL0l7m97e4VFiIEakchLI
-         1RVH44NJDVZd2YxbjgsxzCx9J63fYYLgxm0pg1btYRx7pdY4VR1D+Ow1/9Q0TgxwK/4e
-         FlNkGW+a46r2SlvrL/SDIgEuUMsjJ7XMZa5RKTLSLqysY0I3q0RY55QUja7kqNtaMV/l
-         T6LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=AbYcJ8DH6nLuqJUtYFNn6epLSrCdfxCkTbk1Rsz2IkE=;
-        b=l4kr6ZDgakheEq6Gqs6RukKKPGmEGhLfhdZzUZQvVTlP86CuINBhRHPglO7pklqLE0
-         ZcuGEuy8ZoQg9CET5HUesHXXLnquCzzBlriGTnVpzk/ro7G6XzyNmiqiUZhh69FoAxS7
-         /TcnYyM0K6c5JvbfNXJzin6vuQVTvVVwpV73q1/lSfKe67rmcMjxmW88Mz4DwXBKcze2
-         l5OAxA4LJkFLOexz8+wuiAsYlASHGsFFmjc7rw0sbiyws8ljQeSsxDF4IpJJyH/0i2UF
-         XKDCU6lG99vCwJ5CwtFDN9vUno/Iz6O2vxPRrMbDeXODXgG+ZGe9eeHaiqzEJmE4oyrS
-         T8aQ==
-X-Gm-Message-State: APjAAAU0EHd9TAm01Xcu7EftAh+Jo2YEeOXIMq4j1n4l5Hob45ydcK/A
-        dt92ZkgbYameeyYr/Bo0lix1qw==
-X-Google-Smtp-Source: APXvYqxh/CnUJ0IzIgJQ8XJFuV7DZQQxrck6TbKAen/kt4PLyG41r3KGuHKaKheF1cFEPxcaqbKGVg==
-X-Received: by 2002:a1c:a186:: with SMTP id k128mr5023420wme.54.1553900322601;
-        Fri, 29 Mar 2019 15:58:42 -0700 (PDT)
-Received: from boomer.baylibre.com (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id r196sm3355854wmf.22.2019.03.29.15.58.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 29 Mar 2019 15:58:41 -0700 (PDT)
-Message-ID: <6ef984dabf626760ae606567facdc5245fbba984.camel@baylibre.com>
-Subject: Re: [PATCH 1/4] clk: meson: mpll: add init callback and regs
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 29 Mar 2019 23:58:39 +0100
-In-Reply-To: <155389767798.20095.10570017301900287354@swboyd.mtv.corp.google.com>
-References: <20190325111200.15940-1-jbrunet@baylibre.com>
-         <20190325111200.15940-2-jbrunet@baylibre.com>
-         <155353381842.20095.17915880223118004926@swboyd.mtv.corp.google.com>
-         <8b6f0bc6210834af2aff2de7dc95692dd87db539.camel@baylibre.com>
-         <155389767798.20095.10570017301900287354@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 29 Mar 2019 19:02:26 -0400
+Received: from 79.184.253.239.ipv4.supernova.orange.pl (79.184.253.239) (HELO aspire.rjw.lan)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 6c13e98e850288f5; Sat, 30 Mar 2019 00:02:22 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing node's parents
+Date:   Sat, 30 Mar 2019 00:00:21 +0100
+Message-ID: <4059126.EBkttauCCI@aspire.rjw.lan>
+In-Reply-To: <20190329131507.cc4qt5oyd74nvmzt@kekkonen.localdomain>
+References: <20190326124106.27694-1-sakari.ailus@linux.intel.com> <CAJZ5v0gAM_jn-gkmyu7Av+X0W_8g9NGjBEeXC-3-q_Ncb2PEGw@mail.gmail.com> <20190329131507.cc4qt5oyd74nvmzt@kekkonen.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-29 at 15:14 -0700, Stephen Boyd wrote:
-> > > We actively discourage using init callbacks. Can you do this some other
-> > > way?
+On Friday, March 29, 2019 2:15:07 PM CET Sakari Ailus wrote:
+> On Thu, Mar 28, 2019 at 03:52:35PM +0100, Rafael J. Wysocki wrote:
+> > On Thu, Mar 28, 2019 at 12:13 PM Sakari Ailus
+> > <sakari.ailus@linux.intel.com> wrote:
+> > >
+> > > Hi Rafael,
+> > >
+> > > On Thu, Mar 28, 2019 at 10:38:01AM +0100, Rafael J. Wysocki wrote:
+> > > > On Wed, Mar 27, 2019 at 3:20 PM Sakari Ailus
+> > > > <sakari.ailus@linux.intel.com> wrote:
+> > > > >
+> > > > > Hi Petr,
+> > > > >
+> > > > > On Wed, Mar 27, 2019 at 01:26:25PM +0100, Petr Mladek wrote:
+> > > > > > On Tue 2019-03-26 14:41:01, Sakari Ailus wrote:
+> > > > > > > Add two convenience functions for accessing node's parents:
+> > > > > > >
+> > > > > > > fwnode_count_parents() returns the number of parent nodes a given node
+> > > > > > > has. fwnode_get_nth_parent() returns node's parent at a given distance
+> > > > > > > from the node itself.
+> > > > > > >
+> > > > > > > Also reorder fwnode_get_parent() in property.c according to the same order
+> > > > > > > as in property.h.
+> > > > > > >
+> > > > > > > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > > > > > > index 8b91ab380d14..61eb6ceacc3f 100644
+> > > > > > > --- a/drivers/base/property.c
+> > > > > > > +++ b/drivers/base/property.c
+> > > > > > > @@ -554,17 +567,49 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
+> > > > > > >  EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+> > > > > > >
+> > > > > > >  /**
+> > > > > > > - * fwnode_get_parent - Return parent firwmare node
+> > > > > > > - * @fwnode: Firmware whose parent is retrieved
+> > > > > > > + * fwnode_count_parents - Return the number of parents a node has
+> > > > > > > + * @fwnode: The node the parents of which are to be counted
+> > > > > > >   *
+> > > > > > > - * Return parent firmware node of the given node if possible or %NULL if no
+> > > > > > > - * parent was available.
+> > > > > > > + * Returns the number of parents a node has.
+> > > > > > >   */
+> > > > > > > -struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
+> > > > > > > +unsigned int fwnode_count_parents(struct fwnode_handle *fwnode)
+> > > > > > >  {
+> > > > > > > -   return fwnode_call_ptr_op(fwnode, get_parent);
+> > > > > > > +   unsigned int count;
+> > > > > > > +
+> > > > > > > +   fwnode_handle_get(fwnode);
+> > > > > > > +
+> > > > > > > +   for (count = 0; fwnode; count++)
+> > > > > > > +           fwnode = fwnode_get_next_parent(fwnode);
+> > > > > >
+> > > > > > Is it guaranteed that all parents stay when
+> > > > > > fwnode_get_next_parent() releases the reference count
+> > > > > > for each counted member?
+> > > > >
+> > > > > fwnode_get_next_parent() only releases the child node after it has acquired
+> > > > > the parent. The only implementation with refcounting for single nodes is
+> > > > > actually OF.
+> > > > >
+> > > > > >
+> > > > > > > +
+> > > > > > > +   return count - 1;
+> > > > > >
+> > > > > > We could start counting from count = -1;
+> > > > >
+> > > > > We could, but then count would need to be made signed (unless overflowing
+> > > > > is preferred instead).
+> > > >
+> > > > What if there are no parents?
+> > > >
+> > > > Or is it guaranteed that there always will be at least one?
+> > >
+> > > If there are no parents, the function will return 0 --- the node itself is
+> > > counted in the loop, too, hence the need to decrement by one.
 > > 
-> > Yes I'm aware of that but init it the right place to do this.
-> > To be clear, this is not initializing the clock to some particular rate, the
-> > rate is preserved.
+> > Right, sorry.
 > > 
-> > It just applies the necessary settings that needs to be done only once to make
-> > sure the clock is in working order and that the rate calculated is actually
-> > accurate. 
+> > Then I don't see why count cannot be int.  Or call it "iter" to avoid
+> > confusion with negative "counts". :-)
 > 
-> Ok, but can you do that in your driver's probe routine instead of
-> attaching to the init callback? We want to get rid of "init" at some
-> point so throwing the init sequence stuff into the driver probe around
-> registration is a solution. Or we should think about not discouraging
-> the init callback
+> Another option would be changing where the counting starts --- the first
+> parent. I.e.
+> 
+> fwnode = fwnode_get_parent(fwnode);
+> 
+> for (count = 0; fwnode; count++)
+> 	fwnode = fwnode_get_next_parent(fwnode);
+> 
+> return count;
 
-Is is callback really a problem after all ?
-I think we should actively prevent using it to set a particular rate.
-
-Here, the goal is put the clock in working order. The bootloader does not
-always do that for us. I could put this in controller driver, but I would have
-to repeat the init pattern for each instance of the clock...not nice 
-Using the callback clearly shows the relationship between the init and the
-clock. I think it is a lot better.
-
-In the same series, I have added some init for the controller. In this case
-the init target a group of clocks, so having the init in the controller makes
-sense for that
-
-
+LGTM, thanks!
 
