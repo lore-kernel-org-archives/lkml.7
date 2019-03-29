@@ -2,369 +2,121 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CE2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8158AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1BD0218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4F5218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:26:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Al+5/qU5"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MZh9cOqw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbfC2W03 (ORCPT
+        id S1730493AbfC2W0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 18:26:29 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33116 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730267AbfC2W03 (ORCPT
+        Fri, 29 Mar 2019 18:26:51 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:46696 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730452AbfC2W0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 18:26:29 -0400
-Received: by mail-io1-f66.google.com with SMTP id b6so3066572iog.0;
-        Fri, 29 Mar 2019 15:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JSKB6b4lALE5xRY01mqw6k2hov6UuVelf9UTXL0fav8=;
-        b=Al+5/qU5bbpuGf424Vi3urCuy4FNUabObxuGUDpIV8R9DvMQUUrZ/T6p69EALU+wwL
-         y5gDJbHXPOfC41dafqUet4Ji5+Oi+HL2gcA4rwGY2QFF6olbTi2ItpMn9Qp4mZGUI2Xx
-         T1YOyJG0QLEnCsFGlsxTGVEOKvg+ckW4AYMrFps+i36uyORtkFUAvYfBIxBdIT6PEEY/
-         zksd9iqrgXz71KgJa0cxwztdeV4SBBGZaYk2tYmv+IZM3HSvdDUlStDrv86LrdaU5VZ/
-         DIm+SsR9NJZQk6WYE9LlLSwvjG8pAuN96NbEdztKX4mPVixWovjX4oWfWcurdO609b2N
-         5/sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JSKB6b4lALE5xRY01mqw6k2hov6UuVelf9UTXL0fav8=;
-        b=NIQ8b8wDyXmPSB7in/Vju6UW0SWCTy2rKytS2yIa9wMXNpYDXKOPzZKGmNdSPouqaM
-         q6lMH8MqbdWbpaOCOOujHog026+dIQwrr915t8CEu1nNFcxZcKGxT3KPga18iCmkDNmD
-         nlSOVXzfeFZ2YVDZWg/MYA8gmaikLmDQJ0Be5dVMHVneIzF9H1kH6dcPRgfDs8lzKoPW
-         AmxnjHLpoz/DtYwTKgYf79UvGSVfChkWj10WGAa12S2TuGixHfy3LMrcbDz2Vb652kCo
-         i1BtFNDEKssmy5CiPcrFbbv+EJYaRXmu84dRXPAFWRxF7vG0NfOuhIXohZxXP3JQ49aH
-         SFXQ==
-X-Gm-Message-State: APjAAAXvIHNBSCdTTH3ih/pwpYz6auhs+W1zQ3R4cWX4PSvDQa2KCkA/
-        0gfeGXTdBlSKuLOuqQbsDChMYm0pEc4+F3ttuqhaPuKC
-X-Google-Smtp-Source: APXvYqyMSMLI83z36CFE8yH0RtiEncvUBBVflJtjxz6ShNmGCkHL1bPRH1isIBHfQozuoZVcEi45XgqVK2kDsTboRgI=
-X-Received: by 2002:a6b:3f86:: with SMTP id m128mr18083178ioa.275.1553898387457;
- Fri, 29 Mar 2019 15:26:27 -0700 (PDT)
+        Fri, 29 Mar 2019 18:26:50 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2TMO2vB025382;
+        Fri, 29 Mar 2019 22:26:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=PtEGgfckPDq0wGGpZfAcvK0+M+jCFNuLT7mnbB1esj8=;
+ b=MZh9cOqw3volpOs2bh/3blGSvsdQ6fageEiK8M/ds9mRa4BjcBI2Bxs/TxLTuOP42zB9
+ 9kCDQB/4jLwNc5uA+yz6JFwL1h0eC0C5dJO3eikmcltB7aA+1qVZdvwiSuBdUj4MPg/Y
+ XjWMMAkOLFCQ4NWNHESYaPxEL0yms0qhrj0vWs03GJ1EfpQHSqBo3rzpmGewb4p93sCb
+ BfBGQkVZ2BRrvfAFQOcSrNL2g8Uo4AeIvgFM4PxBHRfZcOaZeQPj+yvRdNXcHguvrzrS
+ vpyQ1/OFnwS59f2FvSIiGe0a3PJCOESDextxZC9D/6P4fT8EeYZUGQKLXrHsyBkNCXIE 4g== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by aserp2130.oracle.com with ESMTP id 2re6g1eykx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 22:26:21 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2TMQFv0012477
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 22:26:15 GMT
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2TMQDEn009533;
+        Fri, 29 Mar 2019 22:26:13 GMT
+Received: from [10.132.91.175] (/10.132.91.175)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 Mar 2019 15:26:13 -0700
+Subject: Re: [RFC][PATCH 03/16] sched: Wrap rq::lock access
+To:     Julien Desfossez <jdesfossez@digitalocean.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, tim.c.chen@linux.intel.com,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Vineeth Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>
+References: <fcad329b-e421-624a-0d1a-a98466eaf2ed@oracle.com>
+ <1553866527-18879-1-git-send-email-jdesfossez@digitalocean.com>
+From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Message-ID: <6e8e6fa0-8976-5e97-d90c-af0b4a6fc8b2@oracle.com>
+Date:   Fri, 29 Mar 2019 15:23:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190328155151.577687-1-benjamin.tissoires@redhat.com>
-In-Reply-To: <20190328155151.577687-1-benjamin.tissoires@redhat.com>
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Fri, 29 Mar 2019 15:26:16 -0700
-Message-ID: <CAKdAkRRwKS+wzXjh=gyOQtSEiMwWhArZVc_cwecJsEZ=MGRa8w@mail.gmail.com>
-Subject: Re: [PATCH] HID: force setting drvdata to NULL when removing the driver
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jason Gerecke <killertofu@gmail.com>,
-        Ping Cheng <pinglinux@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1553866527-18879-1-git-send-email-jdesfossez@digitalocean.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9211 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903290152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin,
 
-On Thu, Mar 28, 2019 at 8:52 AM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
+On 3/29/19 6:35 AM, Julien Desfossez wrote:
+> On Fri, Mar 22, 2019 at 8:09 PM Subhra Mazumdar <subhra.mazumdar@oracle.com>
+> wrote:
+>> Is the core wide lock primarily responsible for the regression? I ran
+>> upto patch
+>> 12 which also has the core wide lock for tagged cgroups and also calls
+>> newidle_balance() from pick_next_task(). I don't see any regression.  Of
+>> course
+>> the core sched version of pick_next_task() may be doing more but
+>> comparing with
+>> the __pick_next_task() it doesn't look too horrible.
+> On further testing and investigation, we also agree that spinlock contention
+> is not the major cause for the regression, but we feel that it should be one
+> of the major contributing factors to this performance loss.
 >
-> Or when the probe failed.
 >
-> This is a common pattern in the HID drivers to reset the drvdata. Some
-> do it properly, some do it only in case of failure.
-> Anyway, it's never a good thing to have breadcrumbs, so force a clean
-> state when removing or when probe is failing.
+I finally did some code bisection and found the following lines are
+basically responsible for the regression. Commenting them out I don't see
+the regressions. Can you confirm? I am yet to figure if this is needed for
+the correctness of core scheduling and if so can we do this better?
 
-Just a data point: driver core already clears drvdata, so as long as
-dev_get/set_drvdata() is the same as hid_get/set_drvdata() no special
-handling is needed in HID core.
+-------->8-------------
 
-Thanks.
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index fe3918c..3b3388a 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3741,8 +3741,8 @@ pick_next_task(struct rq *rq, struct task_struct 
+*prev, struct rq_flags *rf)
+                                  * If there weren't no cookies; we 
+don't need
+                                  * to bother with the other siblings.
+*/
+-                               if (i == cpu && !rq->core->core_cookie)
+-                                       goto next_class;
++                               //if (i == cpu && !rq->core->core_cookie)
++                                       //goto next_class;
 
--- 
-Dmitry
-
-On Thu, Mar 28, 2019 at 8:52 AM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> Or when the probe failed.
->
-> This is a common pattern in the HID drivers to reset the drvdata. Some
-> do it properly, some do it only in case of failure.
-> Anyway, it's never a good thing to have breadcrumbs, so force a clean
-> state when removing or when probe is failing.
->
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> ---
->  drivers/hid/hid-core.c           |  2 ++
->  drivers/hid/hid-cougar.c         |  6 ++----
->  drivers/hid/hid-gfrm.c           |  7 -------
->  drivers/hid/hid-lenovo.c         |  2 --
->  drivers/hid/hid-logitech-dj.c    |  2 --
->  drivers/hid/hid-logitech-hidpp.c |  8 +++-----
->  drivers/hid/hid-picolcd_core.c   |  7 +------
->  drivers/hid/hid-sensor-hub.c     |  1 -
->  drivers/hid/wacom_sys.c          | 18 +++++-------------
->  9 files changed, 13 insertions(+), 40 deletions(-)
->
-> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> index b5a8af8daa74..011e49da4d63 100644
-> --- a/drivers/hid/hid-core.c
-> +++ b/drivers/hid/hid-core.c
-> @@ -2203,6 +2203,7 @@ static int hid_device_probe(struct device *dev)
->                 if (ret) {
->                         hid_close_report(hdev);
->                         hdev->driver = NULL;
-> +                       hid_set_drvdata(hdev, NULL);
->                 }
->         }
->  unlock:
-> @@ -2231,6 +2232,7 @@ static int hid_device_remove(struct device *dev)
->                 else /* default remove */
->                         hid_hw_stop(hdev);
->                 hid_close_report(hdev);
-> +               hid_set_drvdata(hdev, NULL);
->                 hdev->driver = NULL;
->         }
->
-> diff --git a/drivers/hid/hid-cougar.c b/drivers/hid/hid-cougar.c
-> index e0bb7b34f3a4..4ff3bc1d25e2 100644
-> --- a/drivers/hid/hid-cougar.c
-> +++ b/drivers/hid/hid-cougar.c
-> @@ -207,7 +207,7 @@ static int cougar_probe(struct hid_device *hdev,
->         error = hid_parse(hdev);
->         if (error) {
->                 hid_err(hdev, "parse failed\n");
-> -               goto fail;
-> +               return error;
->         }
->
->         if (hdev->collection->usage == COUGAR_VENDOR_USAGE) {
-> @@ -219,7 +219,7 @@ static int cougar_probe(struct hid_device *hdev,
->         error = hid_hw_start(hdev, connect_mask);
->         if (error) {
->                 hid_err(hdev, "hw start failed\n");
-> -               goto fail;
-> +               return error;
->         }
->
->         error = cougar_bind_shared_data(hdev, cougar);
-> @@ -249,8 +249,6 @@ static int cougar_probe(struct hid_device *hdev,
->
->  fail_stop_and_cleanup:
->         hid_hw_stop(hdev);
-> -fail:
-> -       hid_set_drvdata(hdev, NULL);
->         return error;
->  }
->
-> diff --git a/drivers/hid/hid-gfrm.c b/drivers/hid/hid-gfrm.c
-> index cf477f8c8f4c..1a20997e7750 100644
-> --- a/drivers/hid/hid-gfrm.c
-> +++ b/drivers/hid/hid-gfrm.c
-> @@ -127,12 +127,6 @@ static int gfrm_probe(struct hid_device *hdev, const struct hid_device_id *id)
->         return ret;
->  }
->
-> -static void gfrm_remove(struct hid_device *hdev)
-> -{
-> -       hid_hw_stop(hdev);
-> -       hid_set_drvdata(hdev, NULL);
-> -}
-> -
->  static const struct hid_device_id gfrm_devices[] = {
->         { HID_BLUETOOTH_DEVICE(0x58, 0x2000),
->                 .driver_data = GFRM100 },
-> @@ -146,7 +140,6 @@ static struct hid_driver gfrm_driver = {
->         .name = "gfrm",
->         .id_table = gfrm_devices,
->         .probe = gfrm_probe,
-> -       .remove = gfrm_remove,
->         .input_mapping = gfrm_input_mapping,
->         .raw_event = gfrm_raw_event,
->         .input_configured = gfrm_input_configured,
-> diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
-> index eacc76d2ab96..cde9d22bb3ec 100644
-> --- a/drivers/hid/hid-lenovo.c
-> +++ b/drivers/hid/hid-lenovo.c
-> @@ -869,8 +869,6 @@ static void lenovo_remove_tpkbd(struct hid_device *hdev)
->
->         led_classdev_unregister(&data_pointer->led_micmute);
->         led_classdev_unregister(&data_pointer->led_mute);
-> -
-> -       hid_set_drvdata(hdev, NULL);
->  }
->
->  static void lenovo_remove_cptkbd(struct hid_device *hdev)
-> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
-> index 826fa1e1c8d9..a75101293755 100644
-> --- a/drivers/hid/hid-logitech-dj.c
-> +++ b/drivers/hid/hid-logitech-dj.c
-> @@ -1094,7 +1094,6 @@ static int logi_dj_probe(struct hid_device *hdev,
->  hid_parse_fail:
->         kfifo_free(&djrcv_dev->notif_fifo);
->         kfree(djrcv_dev);
-> -       hid_set_drvdata(hdev, NULL);
->         return retval;
->
->  }
-> @@ -1145,7 +1144,6 @@ static void logi_dj_remove(struct hid_device *hdev)
->
->         kfifo_free(&djrcv_dev->notif_fifo);
->         kfree(djrcv_dev);
-> -       hid_set_drvdata(hdev, NULL);
->  }
->
->  static const struct hid_device_id logi_dj_receivers[] = {
-> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-> index 199cc256e9d9..b950a44157a2 100644
-> --- a/drivers/hid/hid-logitech-hidpp.c
-> +++ b/drivers/hid/hid-logitech-hidpp.c
-> @@ -3237,15 +3237,15 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
->         if (hidpp->quirks & HIDPP_QUIRK_CLASS_WTP) {
->                 ret = wtp_allocate(hdev, id);
->                 if (ret)
-> -                       goto allocate_fail;
-> +                       return ret;
->         } else if (hidpp->quirks & HIDPP_QUIRK_CLASS_M560) {
->                 ret = m560_allocate(hdev);
->                 if (ret)
-> -                       goto allocate_fail;
-> +                       return ret;
->         } else if (hidpp->quirks & HIDPP_QUIRK_CLASS_K400) {
->                 ret = k400_allocate(hdev);
->                 if (ret)
-> -                       goto allocate_fail;
-> +                       return ret;
->         }
->
->         INIT_WORK(&hidpp->work, delayed_work_cb);
-> @@ -3343,8 +3343,6 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
->         sysfs_remove_group(&hdev->dev.kobj, &ps_attribute_group);
->         cancel_work_sync(&hidpp->work);
->         mutex_destroy(&hidpp->send_mutex);
-> -allocate_fail:
-> -       hid_set_drvdata(hdev, NULL);
->         return ret;
->  }
->
-> diff --git a/drivers/hid/hid-picolcd_core.c b/drivers/hid/hid-picolcd_core.c
-> index c1b29a9eb41a..a5d30f267a7b 100644
-> --- a/drivers/hid/hid-picolcd_core.c
-> +++ b/drivers/hid/hid-picolcd_core.c
-> @@ -550,8 +550,7 @@ static int picolcd_probe(struct hid_device *hdev,
->         data = kzalloc(sizeof(struct picolcd_data), GFP_KERNEL);
->         if (data == NULL) {
->                 hid_err(hdev, "can't allocate space for Minibox PicoLCD device data\n");
-> -               error = -ENOMEM;
-> -               goto err_no_cleanup;
-> +               return -ENOMEM;
->         }
->
->         spin_lock_init(&data->lock);
-> @@ -613,9 +612,6 @@ static int picolcd_probe(struct hid_device *hdev,
->         hid_hw_stop(hdev);
->  err_cleanup_data:
->         kfree(data);
-> -err_no_cleanup:
-> -       hid_set_drvdata(hdev, NULL);
-> -
->         return error;
->  }
->
-> @@ -651,7 +647,6 @@ static void picolcd_remove(struct hid_device *hdev)
->         picolcd_exit_cir(data);
->         picolcd_exit_keys(data);
->
-> -       hid_set_drvdata(hdev, NULL);
->         mutex_destroy(&data->mutex);
->         /* Finally, clean up the picolcd data itself */
->         kfree(data);
-> diff --git a/drivers/hid/hid-sensor-hub.c b/drivers/hid/hid-sensor-hub.c
-> index 4256fdc5cd6d..a3db5d8b382d 100644
-> --- a/drivers/hid/hid-sensor-hub.c
-> +++ b/drivers/hid/hid-sensor-hub.c
-> @@ -755,7 +755,6 @@ static void sensor_hub_remove(struct hid_device *hdev)
->         }
->         spin_unlock_irqrestore(&data->lock, flags);
->         mfd_remove_devices(&hdev->dev);
-> -       hid_set_drvdata(hdev, NULL);
->         mutex_destroy(&data->mutex);
->  }
->
-> diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
-> index a8633b1437b2..c2fb614bff44 100644
-> --- a/drivers/hid/wacom_sys.c
-> +++ b/drivers/hid/wacom_sys.c
-> @@ -2716,14 +2716,12 @@ static int wacom_probe(struct hid_device *hdev,
->         wacom_wac->features = *((struct wacom_features *)id->driver_data);
->         features = &wacom_wac->features;
->
-> -       if (features->check_for_hid_type && features->hid_type != hdev->type) {
-> -               error = -ENODEV;
-> -               goto fail;
-> -       }
-> +       if (features->check_for_hid_type && features->hid_type != hdev->type)
-> +               return -ENODEV;
->
->         error = kfifo_alloc(&wacom_wac->pen_fifo, WACOM_PKGLEN_MAX, GFP_KERNEL);
->         if (error)
-> -               goto fail;
-> +               return error;
->
->         wacom_wac->hid_data.inputmode = -1;
->         wacom_wac->mode_report = -1;
-> @@ -2741,12 +2739,12 @@ static int wacom_probe(struct hid_device *hdev,
->         error = hid_parse(hdev);
->         if (error) {
->                 hid_err(hdev, "parse failed\n");
-> -               goto fail;
-> +               return error;
->         }
->
->         error = wacom_parse_and_register(wacom, false);
->         if (error)
-> -               goto fail;
-> +               return error;
->
->         if (hdev->bus == BUS_BLUETOOTH) {
->                 error = device_create_file(&hdev->dev, &dev_attr_speed);
-> @@ -2757,10 +2755,6 @@ static int wacom_probe(struct hid_device *hdev,
->         }
->
->         return 0;
-> -
-> -fail:
-> -       hid_set_drvdata(hdev, NULL);
-> -       return error;
->  }
->
->  static void wacom_remove(struct hid_device *hdev)
-> @@ -2789,8 +2783,6 @@ static void wacom_remove(struct hid_device *hdev)
->                 wacom_release_resources(wacom);
->
->         kfifo_free(&wacom_wac->pen_fifo);
-> -
-> -       hid_set_drvdata(hdev, NULL);
->  }
->
->  #ifdef CONFIG_PM
-> --
-> 2.19.2
->
-
-
--- 
-Dmitry
+continue;
+                         }
