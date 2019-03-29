@@ -2,221 +2,122 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B704FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7998EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFEA2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F2B2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfC2CZY (ORCPT
+        id S1728635AbfC2CaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 22:25:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50182 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728553AbfC2CZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 22:25:23 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ECE5E88306;
-        Fri, 29 Mar 2019 02:25:22 +0000 (UTC)
-Received: from redhat.com (ovpn-121-118.rdu2.redhat.com [10.10.121.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00C1C60851;
-        Fri, 29 Mar 2019 02:25:21 +0000 (UTC)
-Date:   Thu, 28 Mar 2019 22:25:19 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     John Hubbard <jhubbard@nvidia.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2 02/11] mm/hmm: use reference counting for HMM struct v2
-Message-ID: <20190329022519.GJ16680@redhat.com>
-References: <20190328110719.GA31324@iweiny-DESK2.sc.intel.com>
- <20190328191122.GA5740@redhat.com>
- <c8fd897f-b9d3-a77b-9898-78e20221ba44@nvidia.com>
- <20190328212145.GA13560@redhat.com>
- <fcb7be01-38c1-ed1f-70a0-d03dc9260473@nvidia.com>
- <20190328165708.GH31324@iweiny-DESK2.sc.intel.com>
- <20190329010059.GB16680@redhat.com>
- <55dd8607-c91b-12ab-e6d7-adfe6d9cb5e2@nvidia.com>
- <20190329015003.GE16680@redhat.com>
- <20190328182100.GJ31324@iweiny-DESK2.sc.intel.com>
+        Thu, 28 Mar 2019 22:30:18 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:54705 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726879AbfC2CaR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 22:30:17 -0400
+X-UUID: b0eaba4bce974598ac5530a2e94f5601-20190329
+X-UUID: b0eaba4bce974598ac5530a2e94f5601-20190329
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <chang-an.chen@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 783713787; Fri, 29 Mar 2019 10:30:11 +0800
+Received: from MTKMBS01DR.mediatek.inc (172.21.101.111) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 29 Mar 2019 10:30:09 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01dr.mediatek.inc (172.21.101.111) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 29 Mar 2019 10:30:09 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 29 Mar 2019 10:30:08 +0800
+Message-ID: <1553826609.8188.0.camel@mtkswgap22>
+Subject: Re: [PATCH 1/1] sched/clock: Prevent generic sched_clock wrap
+ caused by tick_freeze()
+From:   Chang-An Chen <chang-an.chen@mediatek.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     Corey Minyard <cminyard@mvista.com>,
+        Kees Cook <keescook@chromium.org>,
+        "wsd_upstream@mediatek.com" <wsd_upstream@mediatek.com>,
+        "Frederic Weisbecker" <fweisbec@gmail.com>,
+        Kuohong Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=8B=E9=B4=BB=29?= 
+        <kuohong.wang@mediatek.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Stanley Chu =?UTF-8?Q?=28=E6=9C=B1=E5=8E=9F=E9=99=9E=29?= 
+        <stanley.chu@mediatek.com>, Ingo Molnar <mingo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 29 Mar 2019 10:30:09 +0800
+In-Reply-To: <alpine.DEB.2.21.1903251449580.1656@nanos.tec.linutronix.de>
+References: <1553497460-24166-1-git-send-email-chang-an.chen@mediatek.com>
+         <alpine.DEB.2.21.1903251449580.1656@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190328182100.GJ31324@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 29 Mar 2019 02:25:23 +0000 (UTC)
+X-MTK:  N
+X-TM-SNTS-SMTP: 14987561F91BA70A792CD74CDF9F73529BF268650DE7932F6F6B79783E41734A2000:8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 11:21:00AM -0700, Ira Weiny wrote:
-> On Thu, Mar 28, 2019 at 09:50:03PM -0400, Jerome Glisse wrote:
-> > On Thu, Mar 28, 2019 at 06:18:35PM -0700, John Hubbard wrote:
-> > > On 3/28/19 6:00 PM, Jerome Glisse wrote:
-> > > > On Thu, Mar 28, 2019 at 09:57:09AM -0700, Ira Weiny wrote:
-> > > >> On Thu, Mar 28, 2019 at 05:39:26PM -0700, John Hubbard wrote:
-> > > >>> On 3/28/19 2:21 PM, Jerome Glisse wrote:
-> > > >>>> On Thu, Mar 28, 2019 at 01:43:13PM -0700, John Hubbard wrote:
-> > > >>>>> On 3/28/19 12:11 PM, Jerome Glisse wrote:
-> > > >>>>>> On Thu, Mar 28, 2019 at 04:07:20AM -0700, Ira Weiny wrote:
-> > > >>>>>>> On Mon, Mar 25, 2019 at 10:40:02AM -0400, Jerome Glisse wrote:
-> > > >>>>>>>> From: Jérôme Glisse <jglisse@redhat.com>
-> > > >>> [...]
-> > > >>>>>>>> @@ -67,14 +78,9 @@ struct hmm {
-> > > >>>>>>>>   */
-> > > >>>>>>>>  static struct hmm *hmm_register(struct mm_struct *mm)
-> > > >>>>>>>>  {
-> > > >>>>>>>> -	struct hmm *hmm = READ_ONCE(mm->hmm);
-> > > >>>>>>>> +	struct hmm *hmm = mm_get_hmm(mm);
-> > > >>>>>>>
-> > > >>>>>>> FWIW: having hmm_register == "hmm get" is a bit confusing...
-> > > >>>>>>
-> > > >>>>>> The thing is that you want only one hmm struct per process and thus
-> > > >>>>>> if there is already one and it is not being destroy then you want to
-> > > >>>>>> reuse it.
-> > > >>>>>>
-> > > >>>>>> Also this is all internal to HMM code and so it should not confuse
-> > > >>>>>> anyone.
-> > > >>>>>>
-> > > >>>>>
-> > > >>>>> Well, it has repeatedly come up, and I'd claim that it is quite 
-> > > >>>>> counter-intuitive. So if there is an easy way to make this internal 
-> > > >>>>> HMM code clearer or better named, I would really love that to happen.
-> > > >>>>>
-> > > >>>>> And we shouldn't ever dismiss feedback based on "this is just internal
-> > > >>>>> xxx subsystem code, no need for it to be as clear as other parts of the
-> > > >>>>> kernel", right?
-> > > >>>>
-> > > >>>> Yes but i have not seen any better alternative that present code. If
-> > > >>>> there is please submit patch.
-> > > >>>>
-> > > >>>
-> > > >>> Ira, do you have any patch you're working on, or a more detailed suggestion there?
-> > > >>> If not, then I might (later, as it's not urgent) propose a small cleanup patch 
-> > > >>> I had in mind for the hmm_register code. But I don't want to duplicate effort 
-> > > >>> if you're already thinking about it.
-> > > >>
-> > > >> No I don't have anything.
-> > > >>
-> > > >> I was just really digging into these this time around and I was about to
-> > > >> comment on the lack of "get's" for some "puts" when I realized that
-> > > >> "hmm_register" _was_ the get...
-> > > >>
-> > > >> :-(
-> > > >>
-> > > > 
-> > > > The get is mm_get_hmm() were you get a reference on HMM from a mm struct.
-> > > > John in previous posting complained about me naming that function hmm_get()
-> > > > and thus in this version i renamed it to mm_get_hmm() as we are getting
-> > > > a reference on hmm from a mm struct.
-> > > 
-> > > Well, that's not what I recommended, though. The actual conversation went like
-> > > this [1]:
-> > > 
-> > > ---------------------------------------------------------------
-> > > >> So for this, hmm_get() really ought to be symmetric with
-> > > >> hmm_put(), by taking a struct hmm*. And the null check is
-> > > >> not helping here, so let's just go with this smaller version:
-> > > >>
-> > > >> static inline struct hmm *hmm_get(struct hmm *hmm)
-> > > >> {
-> > > >>     if (kref_get_unless_zero(&hmm->kref))
-> > > >>         return hmm;
-> > > >>
-> > > >>     return NULL;
-> > > >> }
-> > > >>
-> > > >> ...and change the few callers accordingly.
-> > > >>
-> > > >
-> > > > What about renaning hmm_get() to mm_get_hmm() instead ?
-> > > >
-> > > 
-> > > For a get/put pair of functions, it would be ideal to pass
-> > > the same argument type to each. It looks like we are passing
-> > > around hmm*, and hmm retains a reference count on hmm->mm,
-> > > so I think you have a choice of using either mm* or hmm* as
-> > > the argument. I'm not sure that one is better than the other
-> > > here, as the lifetimes appear to be linked pretty tightly.
-> > > 
-> > > Whichever one is used, I think it would be best to use it
-> > > in both the _get() and _put() calls. 
-> > > ---------------------------------------------------------------
-> > > 
-> > > Your response was to change the name to mm_get_hmm(), but that's not
-> > > what I recommended.
-> > 
-> > Because i can not do that, hmm_put() can _only_ take hmm struct as
-> > input while hmm_get() can _only_ get mm struct as input.
-> > 
-> > hmm_put() can only take hmm because the hmm we are un-referencing
-> > might no longer be associated with any mm struct and thus i do not
-> > have a mm struct to use.
-> > 
-> > hmm_get() can only get mm as input as we need to be careful when
-> > accessing the hmm field within the mm struct and thus it is better
-> > to have that code within a function than open coded and duplicated
-> > all over the place.
+On Mon, 2019-03-25 at 21:54 +0800, Thomas Gleixner wrote:
+> On Mon, 25 Mar 2019, Chang-An Chen wrote:
+> > --- a/include/linux/sched_clock.h
+> > +++ b/include/linux/sched_clock.h
+> > @@ -13,6 +13,10 @@
+> >  
+> >  extern void sched_clock_register(u64 (*read)(void), int bits,
+> >  				 unsigned long rate);
+> > +
+> > +extern int sched_clock_suspend(void);
+> > +
+> > +extern void sched_clock_resume(void);
+> >  #else
+> >  static inline void generic_sched_clock_init(void) { }
+> >  
+> > @@ -20,6 +24,10 @@ static inline void sched_clock_register(u64 (*read)(void), int bits,
+> >  					unsigned long rate)
+> >  {
+> >  }
+> > +
+> > +static int sched_clock_suspend(void) { }
 > 
-> The input value is not the problem.  The problem is in the naming.
+> static inline ...
 > 
-> obj = get_obj( various parameters );
-> put_obj(obj);
+> > +
+> > +static void sched_clock_resume(void) { }
 > 
+> Ditto
 > 
-> The problem is that the function is named hmm_register() either "gets" a
-> reference to _or_ creates and gets a reference to the hmm object.
+> >  #endif
 > 
-> What John is probably ready to submit is something like.
-> 
-> struct hmm *get_create_hmm(struct mm *mm);
-> void put_hmm(struct hmm *hmm);
-> 
-> 
-> So when you are reading the code you see...
-> 
-> foo(...) {
-> 	struct hmm *hmm = get_create_hmm(mm);
-> 
-> 	if (!hmm)
-> 		error...
-> 
-> 	do stuff...
-> 
-> 	put_hmm(hmm);
-> }
-> 
-> Here I can see a very clear get/put pair.  The name also shows that the hmm is
-> created if need be as well as getting a reference.
-> 
+> Please do not expose this in the global header. All of this is local to
+> kernel/time/. So adding this to kernel/time/timekeeping.h is sufficient.
+Thanks so much for review and the suggestion, I'll fix it in next
+version.
 
-You only need to create HMM when you either register a mirror or
-register a range. So they two pattern:
+Thanks,
+Chang-An
+> 
+> Thanks,
+> 
+> 	tglx
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
 
-    average_foo() {
-        struct hmm *hmm = mm_get_hmm(mm);
-        ...
-        hmm_put(hmm);
-    }
 
-    register_foo() {
-        struct hmm *hmm = hmm_register(mm);
-        ...
-        return 0;
-    error:
-        ...
-        hmm_put(hmm);
-    }
 
-Cheers,
-Jérôme
