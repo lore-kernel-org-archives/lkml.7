@@ -5,70 +5,118 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18879C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA70C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7154206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367CD2184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:14:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbfC2PMx convert rfc822-to-8bit (ORCPT
+        id S1729049AbfC2POi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:12:53 -0400
-Received: from prv1-mh.provo.novell.com ([137.65.248.33]:59014 "EHLO
-        prv1-mh.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728903AbfC2PMw (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:5:1>);
-        Fri, 29 Mar 2019 11:12:52 -0400
-Received: from INET-PRV1-MTA by prv1-mh.provo.novell.com
-        with Novell_GroupWise; Fri, 29 Mar 2019 09:12:51 -0600
-Message-Id: <5C9E35EF0200007800222E0B@prv1-mh.provo.novell.com>
-X-Mailer: Novell GroupWise Internet Agent 18.1.0 
-Date:   Fri, 29 Mar 2019 09:12:47 -0600
-From:   "Jan Beulich" <JBeulich@suse.com>
-To:     "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
-Cc:     "Stefano Stabellini" <sstabellini@kernel.org>,
-        "xen-devel" <xen-devel@lists.xenproject.org>,
-        "Juergen Gross" <jgross@suse.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/Xen: streamline (and fix) PV CPU enumeration
-References: <5C9B92EA020000780022227B@prv1-mh.provo.novell.com>
- <2f027b4b-dce2-3e90-dc1b-c824bc8eb355@oracle.com>
- <5C9C8DDC0200007800222606@prv1-mh.provo.novell.com>
- <eda3938f-02a5-e5a2-4718-d75bc488f296@oracle.com>
- <5C9DDD530200007800222B22@prv1-mh.provo.novell.com>
- <24df98be-21e7-617e-7651-ae34e2a2e512@oracle.com>
-In-Reply-To: <24df98be-21e7-617e-7651-ae34e2a2e512@oracle.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Content-Disposition: inline
+        Fri, 29 Mar 2019 11:14:38 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43145 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728839AbfC2POh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 11:14:37 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k17so3014702wrx.10
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 08:14:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ad3FU1K6R0fG6gBLiNPRbbseS3w6abTKqPSmwInCleY=;
+        b=PYT8p5KZGhFwEzDf1P5V6uzzNd+4MKaDVXl02Mo7SzbWZptnQnfszhLMUIc/haMEov
+         GJYI8xjLipN/prQZsJ5L3/HvkGR/fRAzVUyWXa7mooyRSAr4KnAqK75iK1en3E+ZoDPn
+         jIb4l9Sz6b+ZKzzojF8LcYeHLL4HSZSK/Vn0VlkITugpxv8eMURdAAGD57hb1O0hfe6z
+         LWOPzmPjBZrqDu31KS8jByHzr+I+KahOoZqSKvF9OoTemWBuloZ/lBUJIoiWszr2FGUp
+         S3SNJ5Re6M+xD5sfC5l8eO442mHh3VeBiImSsxB6QT2foBEV0oROtHpa2Qyd8ax3FTFe
+         vTHg==
+X-Gm-Message-State: APjAAAV0qFOTFHyCGON8BtaPh8mtE8NtJMbSuqphvV8OoV5AqVWqxdoL
+        6DmJ1IbdX+irGkTJsQGzgFtGJFhm5Go=
+X-Google-Smtp-Source: APXvYqwp9cqqNQGeeiFe1sv4z5Ex+WVaYGyWQRD7HDk9kOYqxBgGdYV7P9uF8WFlG24+vqmq0/hTIg==
+X-Received: by 2002:adf:f8c1:: with SMTP id f1mr33102513wrq.151.1553872475819;
+        Fri, 29 Mar 2019 08:14:35 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id f9sm2924957wmb.36.2019.03.29.08.14.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 Mar 2019 08:14:35 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] KVM: x86: vmx: throttle immediate exit through preemtion timer to assist buggy guests
+In-Reply-To: <89d4189b-de6a-7634-de8b-29a044a86e12@redhat.com>
+References: <20190328203110.20655-1-vkuznets@redhat.com> <f64742ef-c67d-db0f-d812-2b6f5048d7ee@redhat.com> <87d0m93frp.fsf@vitty.brq.redhat.com> <89d4189b-de6a-7634-de8b-29a044a86e12@redhat.com>
+Date:   Fri, 29 Mar 2019 16:14:34 +0100
+Message-ID: <877ech3e79.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>> On 29.03.19 at 14:42, <boris.ostrovsky@oracle.com> wrote:
-> On 3/29/19 4:54 AM, Jan Beulich wrote:
->>>>> On 28.03.19 at 17:50, <boris.ostrovsky@oracle.com> wrote:
+Paolo Bonzini <pbonzini@redhat.com> writes:
+
+> On 29/03/19 15:40, Vitaly Kuznetsov wrote:
+>> Paolo Bonzini <pbonzini@redhat.com> writes:
+>> 
+>>> On 28/03/19 21:31, Vitaly Kuznetsov wrote:
+>>>>
+>>>> The 'hang' scenario develops like this:
+>>>> 1) Hyper-V boots and QEMU is trying to inject two irq simultaneously. One
+>>>>  of them is level-triggered. KVM injects the edge-triggered one and
+>>>>  requests immediate exit to inject the level-triggered:
+>>>>
+>>>>  kvm_set_irq:          gsi 23 level 1 source 0
+>>>>  kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
+>>>>  kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
+>>>>  kvm_msi_set_irq:      dst 0 vec 96 (Fixed|physical|edge)
+>>>>  kvm_apic_accept_irq:  apicid 0 vec 96 (Fixed|edge)
+>>>>  kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000060 int_info_err 0
+>>>>
+>>>> 2) Hyper-V requires one of its VMs to run to handle the situation but
+>>>>  immediate exit happens:
+>>>>
+>>>>  kvm_entry:            vcpu 0
+>>>>  kvm_exit:             reason VMRESUME rip 0xfffff80006a40115 info 0 0
+>>>>  kvm_entry:            vcpu 0
+>>>>  kvm_exit:             reason PREEMPTION_TIMER rip 0xfffff8022f3d8350 info 0 0
+>>>>  kvm_nested_vmexit:    rip fffff8022f3d8350 reason PREEMPTION_TIMER info1 0 info2 0 int_info 0 int_info_err 0
+>>>>  kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000050 int_info_err 0
 >>>
->>> Given especially xen_pv_smp_prepare_cpus(), I think re-working proper
->>> setting of present/possible masks is well beyond the scope of your
->>> original patch.
->> Well, then the question is, what (if any) changes are you
->> expecting me to make for this change to be acceptable? Or do
->> you perhaps want me to add a 2nd patch on top addressing
->> the other outlined anomalies?
-> 
-> If your goal is just to fix the dom0_max_vcpus issue then this patch is
-> sufficient (but the commit message should say that this is what the
-> patch is for).
-> 
-> But if you are trying to make cpu masks management done properly then I
-> think this patch alone does not address this fully.
+>>> I supposed before this there was an eoi for vector 96?
+>> 
+>> AFAIR: no, it seems that it is actually the VM it is trying to resume
+>> (Windows partition?) which needs to do some work and with the preemtion
+>> timer of 0 we don't allow it to.
+>
+> kvm_apic_accept_irq placed IRQ 96 in IRR, and Hyper-V should be running
+> with "acknowledge interrupt on exit" since int_info is nonzero in
+> kvm_nested_vmexit_inject.
+>
+> Therefore, at the kvm_nested_vmexit_inject tracepoint KVM should have
+> set bit 96 in ISR; and because PPR is now 96, interrupt 80 should have
+> never been delivered.  Unless 96 is an auto-EOI interrupt, in which case
+> this comment would apply
+>
+>           /*
+>            * For auto-EOI interrupts, there might be another pending
+>            * interrupt above PPR, so check whether to raise another
+>            * KVM_REQ_EVENT.
+>            */
+>
+> IIRC there was an enlightenment to tell Windows "I support auto-EOI but
+> please don't use it".  If this is what's happening, that would also fix it.
+>
 
-I.e. folding the further items discussed into this patch would be
-fine by you? (I'm just trying to avoid having to go through
-several more rounds of patch submissions.)
+Oh, that's actually an interesting thought, thanks!
 
-Jan
+Indeed, there is CPUID 0x40000004.EAX Bit 9: Recommend deprecating
+AutoEOI which we don't currently set. I'll try and report back.
 
-
+-- 
+Vitaly
