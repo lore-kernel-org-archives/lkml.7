@@ -2,134 +2,254 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6652DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 01:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C06C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 01:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0E12183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 01:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4850621773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 01:28:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MCNu8JKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbfC2BTe (ORCPT
+        id S1728500AbfC2B2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 21:19:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5198 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727668AbfC2BTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 21:19:34 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 20DFAD095CD29989F7E6;
-        Fri, 29 Mar 2019 09:19:32 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.55) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Fri, 29 Mar 2019
- 09:19:23 +0800
-Subject: Re: Unexpected interrupt received in Guest OS when booting after
- "system_reset"
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-References: <e8ffbc4e-f7b7-14a1-7614-a3db85c9152f@huawei.com>
- <9a6ece7e-9984-dc9e-8fa2-df9736393dd2@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        wanghaibin 00208455 <wanghaibin.wang@huawei.com>
-From:   Heyi Guo <guoheyi@huawei.com>
-Message-ID: <9694b5f2-80bd-b85c-8fc5-bd1d917e1b33@huawei.com>
-Date:   Fri, 29 Mar 2019 09:19:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
-MIME-Version: 1.0
-In-Reply-To: <9a6ece7e-9984-dc9e-8fa2-df9736393dd2@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.55]
-X-CFilter-Loop: Reflected
+        Thu, 28 Mar 2019 21:28:51 -0400
+Received: from mail-io1-f73.google.com ([209.85.166.73]:40220 "EHLO
+        mail-io1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727675AbfC2B2v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 21:28:51 -0400
+Received: by mail-io1-f73.google.com with SMTP id e72so550194iof.7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 18:28:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=4T5MUEH2ZwoDYdu9ANRKZqoThspT7kSM7OLP02B0X0U=;
+        b=MCNu8JKS44wPWIpPESaw89q4D2UcNs/MhIuoQmsdXKySRXIQldKv70crIqexGYEGdG
+         DqvNejtNzC3Euo8Y/Y3E6xkLNC1XPJvK2eC/eOgolWclv2eFd5YN0OV4AufeqO4b6o76
+         GMzb4pZSO6M2U/RH7vNxuuexqDgNPUNXjGlNxLbUsrN0uP02xbs51KEtn7HXtw9CFi2T
+         XAStb8JepS5oASqG4EWul/lHaJmmrlrvgMzj1s162xTBqmnTlLdP1hNXTllD7umlIDSi
+         qAdGJxIdbbPKbsAa4BSXrzRMnQZH+RYoXxDLRLCbWrzCHn1WwE9o26sQ/wD67LrzQp7j
+         Jonw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=4T5MUEH2ZwoDYdu9ANRKZqoThspT7kSM7OLP02B0X0U=;
+        b=ggV1ItNFoJ+hcBVyti5J8KmKT43/1gupYFuLjavr+XVa3A5GFpFzUNBMdYnWdX9gTa
+         6Knc3myjV+Ee3LuQu/z7P1UY/Y0EGkQrGbSU6zbG4KCqxxUfj0yd9F7hu4z/1vVsibY4
+         Ldj+Sv6ekocN9dMElaBTo1gUs1eqpvt3/yV3PnijjCaQMy35W3Lcua+3PP8Cm+XKlpb7
+         i4RzIabALQOiaiFr0EOH75vbaes4gJunXEmqaIk4Qhl1jvtkQhKs7nme68MUGBxHDhoA
+         xqR54qremYR4V3phnIaIZfYi2oLAq+cp76uRX55CCM+PGB7uexnKYoS1mLxMWDT7HcuQ
+         P0TA==
+X-Gm-Message-State: APjAAAX3YqPfwj+r+LJIM/sF1IcIg0XEt1TgKtj9eoKbJkqNYqI5kebS
+        uGGumKNN7IPfZXB3GNPppJDLLc5N8xcOOg==
+X-Google-Smtp-Source: APXvYqxshljcgDf+76yaBeCOGOqEHIcR2cmMVQaSy+GKHPZqSDplxZVVcxbGXfITPe0CQPnD+E7csBwgvBb3sA==
+X-Received: by 2002:a24:9884:: with SMTP id n126mr919316itd.30.1553822930204;
+ Thu, 28 Mar 2019 18:28:50 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 18:28:36 -0700
+Message-Id: <20190329012836.47013-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+Subject: [RFC PATCH] mm, kvm: account kvm_vcpu_mmap to kmemcg
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Gardon <bgardon@google.com>,
+        "=?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?=" <rkrcmar@redhat.com>
+Cc:     linux-mm@kvack.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A VCPU of a VM can allocate upto three pages which can be mmap'ed by the
+user space application. At the moment this memory is not charged. On a
+large machine running large number of VMs (or small number of VMs having
+large number of VCPUs), this unaccounted memory can be very significant.
+So, this memory should be charged to a kmemcg. However that is not
+possible as these pages are mmapped to the userspace and PageKmemcg()
+was designed with the assumption that such pages will never be mmapped
+to the userspace.
 
+One way to solve this problem is by introducing an additional memcg
+charging API similar to mem_cgroup_[un]charge_skmem(). However skmem
+charging API usage is contained and shared and no new users are
+expected but the pages which can be mmapped and should be charged to
+kmemcg can and will increase. So, requiring the usage for such API will
+increase the maintenance burden. The simplest solution is to remove the
+assumption of no mmapping PageKmemcg() pages to user space.
 
-On 2019/3/29 1:18, Marc Zyngier wrote:
-> [Please do not send HTML emails]
-Sorry; will keep in mind next time :)
->
-> On 28/03/2019 15:44, Heyi Guo wrote:
->> Hi Marc and Christoffer,
->>
->> When we issue "system_reset" from qemu monitor to a running VM, guest
->> Linux will occasionally get "Unexpected interrupt" after rebooting, with
->> kernel message at the bottom.
->>
->> After some investigation, we found it might be caused by the
->> preservation of virtual LPI during system reset: it seems the virtual
->> LPI remains in the ap_list during VM reset, as well as its "enabled" and
->> "pending_latch" status, and this causes the virtual LPI to be injected
->> wrongly after VCPU reboots and enables interrupt.
->>
->> We propose to clear "enabled" flag of virtual LPI when PROPBASER (or
->> GICR_CTRL) of virtual GICR is written to 0, and update virtual LPI
->> properties when GICR_CTRL.enableLPIs is set to 1 again.
->>
->> Any advice? Or did we miss something?
-> We're clearly missing a trick here, but I'm not convinced of your
-> approach.
-To be honest, we were not fully convinced by ourselves either. I was worrying about guest switching GICR_CTRL or GICR_PROPBASER at runtime which probably causes issue for our rough approach.
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+---
+ arch/s390/kvm/kvm-s390.c       |  2 +-
+ arch/x86/kvm/x86.c             |  2 +-
+ include/linux/page-flags.h     | 26 ++++++++++++++++++--------
+ include/trace/events/mmflags.h |  9 ++++++++-
+ virt/kvm/coalesced_mmio.c      |  2 +-
+ virt/kvm/kvm_main.c            |  2 +-
+ 6 files changed, 30 insertions(+), 13 deletions(-)
 
-> What should happend is that the redistributors should be reset
-> as well, and that this should recall any LPI that has been made pending.
-> Unfortunately, we don't seem to have such code in place, which is
-> embarrassing.
->
-> Can you give the following, untested patch a go? It isn't right either,
-> but it should have the right effect. If you confirm that it solves your
-> problem, we can look at adding the right hooks...
-Thanks, I'll test this and get back to you.
-Heyi
-
-> Thanks,
->
-> 	M.
->
-> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
-> index ab3f47745d9c..bd9a9250f323 100644
-> --- a/virt/kvm/arm/vgic/vgic-its.c
-> +++ b/virt/kvm/arm/vgic/vgic-its.c
-> @@ -2403,8 +2403,32 @@ static int vgic_its_commit_v0(struct vgic_its *its)
->   	return 0;
->   }
->   
-> +static void vgic_nuke_pending_lpis(struct kvm_vcpu *vcpu)
-> +{
-> +	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
-> +	struct vgic_irq *irq, *tmp;
-> +	unsigned long flags;
-> +
-> +	raw_spin_lock_irqsave(&vcpu->arch.vgic_cpu.ap_list_lock, flags);
-> +
-> +	list_for_each_entry_safe(irq, tmp, &vgic_cpu->ap_list_head, ap_list) {
-> +		if (irq->intid >= VGIC_MIN_LPI) {
-> +			list_del(&irq->ap_list);
-> +			vgic_put_irq(vcpu->kvm, irq);
-> +		}
-> +	}
-> +
-> +	raw_spin_unlock_irqrestore(&vcpu->arch.vgic_cpu.ap_list_lock, flags);
-> +}
-> +
->   static void vgic_its_reset(struct kvm *kvm, struct vgic_its *its)
->   {
-> +	struct kvm_vcpu *vcpu;
-> +	int c;
-> +
-> +	kvm_for_each_vcpu(c, vcpu, kvm)
-> +		vgic_nuke_pending_lpis(vcpu);
-> +
->   	/* We need to keep the ABI specific field values */
->   	its->baser_coll_table &= ~GITS_BASER_VALID;
->   	its->baser_device_table &= ~GITS_BASER_VALID;
->
-
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 4638303ba6a8..1a9e337ed5da 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -2953,7 +2953,7 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
+ 		goto out;
+ 
+ 	BUILD_BUG_ON(sizeof(struct sie_page) != 4096);
+-	sie_page = (struct sie_page *) get_zeroed_page(GFP_KERNEL);
++	sie_page = (struct sie_page *) get_zeroed_page(GFP_KERNEL_ACCOUNT);
+ 	if (!sie_page)
+ 		goto out_free_cpu;
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 65e4559eef2f..05c0c7eaa5c6 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9019,7 +9019,7 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
+ 	else
+ 		vcpu->arch.mp_state = KVM_MP_STATE_UNINITIALIZED;
+ 
+-	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
++	page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
+ 	if (!page) {
+ 		r = -ENOMEM;
+ 		goto fail;
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 9f8712a4b1a5..b47a6a327d6a 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -78,6 +78,10 @@
+  * PG_hwpoison indicates that a page got corrupted in hardware and contains
+  * data with incorrect ECC bits that triggered a machine check. Accessing is
+  * not safe since it may cause another machine check. Don't touch!
++ *
++ * PG_kmemcg indicates that a kmem page is charged to a memcg. If kmemcg is
++ * enabled, the page allocator will set PageKmemcg() on  pages allocated with
++ * __GFP_ACCOUNT. It gets cleared on page free.
+  */
+ 
+ /*
+@@ -130,6 +134,9 @@ enum pageflags {
+ #if defined(CONFIG_IDLE_PAGE_TRACKING) && defined(CONFIG_64BIT)
+ 	PG_young,
+ 	PG_idle,
++#endif
++#ifdef CONFIG_MEMCG_KMEM
++	PG_kmemcg,
+ #endif
+ 	__NR_PAGEFLAGS,
+ 
+@@ -289,6 +296,9 @@ static inline int Page##uname(const struct page *page) { return 0; }
+ #define SETPAGEFLAG_NOOP(uname)						\
+ static inline void SetPage##uname(struct page *page) {  }
+ 
++#define __SETPAGEFLAG_NOOP(uname)					\
++static inline void __SetPage##uname(struct page *page) {  }
++
+ #define CLEARPAGEFLAG_NOOP(uname)					\
+ static inline void ClearPage##uname(struct page *page) {  }
+ 
+@@ -427,6 +437,13 @@ TESTCLEARFLAG(Young, young, PF_ANY)
+ PAGEFLAG(Idle, idle, PF_ANY)
+ #endif
+ 
++#ifdef CONFIG_MEMCG_KMEM
++__PAGEFLAG(Kmemcg, kmemcg, PF_NO_TAIL)
++#else
++TESTPAGEFLAG_FALSE(kmemcg)
++__SETPAGEFLAG_NOOP(kmemcg)
++__CLEARPAGEFLAG_NOOP(kmemcg)
++#endif
+ /*
+  * On an anonymous page mapped into a user virtual memory area,
+  * page->mapping points to its anon_vma, not to a struct address_space;
+@@ -701,8 +718,7 @@ PAGEFLAG_FALSE(DoubleMap)
+ #define PAGE_MAPCOUNT_RESERVE	-128
+ #define PG_buddy	0x00000080
+ #define PG_offline	0x00000100
+-#define PG_kmemcg	0x00000200
+-#define PG_table	0x00000400
++#define PG_table	0x00000200
+ 
+ #define PageType(page, flag)						\
+ 	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
+@@ -743,12 +759,6 @@ PAGE_TYPE_OPS(Buddy, buddy)
+  */
+ PAGE_TYPE_OPS(Offline, offline)
+ 
+-/*
+- * If kmemcg is enabled, the buddy allocator will set PageKmemcg() on
+- * pages allocated with __GFP_ACCOUNT. It gets cleared on page free.
+- */
+-PAGE_TYPE_OPS(Kmemcg, kmemcg)
+-
+ /*
+  * Marks pages in use as page tables.
+  */
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index a1675d43777e..d93b78eac5b9 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -79,6 +79,12 @@
+ #define IF_HAVE_PG_IDLE(flag,string)
+ #endif
+ 
++#ifdef CONFIG_MEMCG_KMEM
++#define IF_HAVE_PG_KMEMCG(flag,string) ,{1UL << flag, string}
++#else
++#define IF_HAVE_PG_KMEMCG(flag,string)
++#endif
++
+ #define __def_pageflag_names						\
+ 	{1UL << PG_locked,		"locked"	},		\
+ 	{1UL << PG_waiters,		"waiters"	},		\
+@@ -105,7 +111,8 @@ IF_HAVE_PG_MLOCK(PG_mlocked,		"mlocked"	)		\
+ IF_HAVE_PG_UNCACHED(PG_uncached,	"uncached"	)		\
+ IF_HAVE_PG_HWPOISON(PG_hwpoison,	"hwpoison"	)		\
+ IF_HAVE_PG_IDLE(PG_young,		"young"		)		\
+-IF_HAVE_PG_IDLE(PG_idle,		"idle"		)
++IF_HAVE_PG_IDLE(PG_idle,		"idle"		)		\
++IF_HAVE_PG_KMEMCG(PG_kmemcg,		"kmemcg"	)
+ 
+ #define show_page_flags(flags)						\
+ 	(flags) ? __print_flags(flags, "|",				\
+diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
+index 5294abb3f178..ebf1601de2a5 100644
+--- a/virt/kvm/coalesced_mmio.c
++++ b/virt/kvm/coalesced_mmio.c
+@@ -110,7 +110,7 @@ int kvm_coalesced_mmio_init(struct kvm *kvm)
+ 	int ret;
+ 
+ 	ret = -ENOMEM;
+-	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
++	page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
+ 	if (!page)
+ 		goto out_err;
+ 
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index f25aa98a94df..de6328dff251 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -306,7 +306,7 @@ int kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
+ 	vcpu->pre_pcpu = -1;
+ 	INIT_LIST_HEAD(&vcpu->blocked_vcpu_list);
+ 
+-	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
++	page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
+ 	if (!page) {
+ 		r = -ENOMEM;
+ 		goto fail;
+-- 
+2.21.0.392.gf8f6787159e-goog
 
