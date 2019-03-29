@@ -2,196 +2,147 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868BEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 305EAC10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46C27218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00902218A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:15:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SKLlOV6l"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="zWOUKifR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbfC2QPK (ORCPT
+        id S1729812AbfC2QPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 12:15:10 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:38283 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729584AbfC2QPJ (ORCPT
+        Fri, 29 Mar 2019 12:15:37 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:35635 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729621AbfC2QPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 12:15:09 -0400
-Received: by mail-ua1-f67.google.com with SMTP id t15so294728uao.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 09:15:08 -0700 (PDT)
+        Fri, 29 Mar 2019 12:15:37 -0400
+Received: by mail-it1-f196.google.com with SMTP id w15so4780751itc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 09:15:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MrAbuYWy43paV91ci3MFGSB8/cjRY/sbms3mUt6brqs=;
-        b=SKLlOV6lwZD4eUCyG3t4OFqC5KDBNM3Lpyz5bVMmEnQUC0PJUW4mXJQAEWqT4nCfuk
-         CeUa0LPaMr62Xr8c93O0YEbUysUvEyOdJXagzIjYhNxzu76kjvdbNvmnRq1urbBA0orD
-         jLxJBpOwdPeXPeCtTY6TxC0P17lsFhj4LZ1l4=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=33CxlXQHXC0S6M1Uolu/19/3Ah7FDE+HyfACUH2HypU=;
+        b=zWOUKifRuq6P8xB/UQHw4IcqIBl8TGZWNSQspjG7UXFAorSLBj9U4yP0173xjK64UT
+         otIq83PhZlKOv2iFAckaiMTdrUgjkEIlX9xwNYl+ACeamXDGfMGX3uxtwSRblX9iXkXu
+         lnTahK2C3uQg6g19WtfMWKCQAG0YA/cx0QiiJSRxW3Ejglk+wZTCf14XyB4BnG8CswAM
+         paZwvgzOYjmaiEHIK01VcUcvBuKls5S8XAIergYBfAtcTKHJpSgeoZNU2TGM5ImFVi0v
+         w94ZPf12WihqoFennzhsGivEgrYXfbHfVZa95K6r8nYPE2NUsCbFwOiGqzuxALHZp5u4
+         nY2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MrAbuYWy43paV91ci3MFGSB8/cjRY/sbms3mUt6brqs=;
-        b=A81TaSGvShk/puqbMab6faYQ6rWLf5X1mKf0zE0u/HxqsFmZjabZkjVSPy+mNG1Aq/
-         ccyZgi6aTyt4KwZUexsxg4yB74/PS9qta99ECe/nBmBgnqBDsDHU1+CyPKwWKL66ASkB
-         znKgNOklnXNHl45SA16gAzMVvuutFj5dKxt9KrSPKWuN5+JhcEeC/ypceiMy1foRJpY+
-         czg/wNkCg3KYgpcxBN8MDUJWKji62203e7UjDxqJViv/k7Gnch1gEUFpbxS0zXFA0gCL
-         RALfvVutgQFFwrHDfgctBtEmhnmelAZn4cg+FeRZXlJF0Hzps7Wmph9kX2ASJJZJaEzw
-         aqkg==
-X-Gm-Message-State: APjAAAXyXjfiTMMuaq/WYscvD92Lmpo1zjRZNxMsuGqsgtD6pHmFC6YB
-        lOmkIcJqmF3zIYJfOQypCtt6ndZ6oXo=
-X-Google-Smtp-Source: APXvYqw9eJwn9nQQK5oCNSpGgh5gP44WqwfqTtXfn7mRWfjtZiu0Wh53Vey+PtA+kU9hDOpS8RQsCg==
-X-Received: by 2002:ab0:20d9:: with SMTP id z25mr19874750ual.141.1553876107213;
-        Fri, 29 Mar 2019 09:15:07 -0700 (PDT)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id l193sm1497732vka.19.2019.03.29.09.15.05
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=33CxlXQHXC0S6M1Uolu/19/3Ah7FDE+HyfACUH2HypU=;
+        b=qoetNnm8CQF9PM0Icc+pIEsV2eP1x2mlxnR6sUQdYji9Zeo7yMGdwmktZWqTLi0VQW
+         xbISfNhxzC8BYeGPPl35Iku3er/puLCOGDsnwWL4kjNsALBYp25Wb8/K2qtyGC3AhTjk
+         YbI7eviddMk/pK1vRnk+L8gylePK+V4AaCcCyP3aDbPCvKnTdNaQnnkfLN/7BaB2mSTD
+         /mrQn6+Wsqx8EBwPuO0aLPcl8/pBYDIXIATu+0+zj6y5I5ucPi2Vx5dlVIEx7GpYbU1q
+         fN9cr373tQfVJr0nyyVVblAaFUwzLwIGczXhWtSIrADQcr1JmVurdnTJvcQ8PZAjL6wo
+         k7MQ==
+X-Gm-Message-State: APjAAAWxZHcyGWylh3S/mQgVNTWJuyVWhid6wbdKKiVIszyZGm0zI/al
+        VJcFN9WPoE4+f/73DQ5uSR70+l1iepT+fQ==
+X-Google-Smtp-Source: APXvYqy131RiI5afWzKJi0E6wSTIfRafb7CgdWXhPzy5IcWahZwUpe/hYUQ2ASYpUrMCZq+lzRateg==
+X-Received: by 2002:a02:b008:: with SMTP id p8mr35973604jah.90.1553876135956;
+        Fri, 29 Mar 2019 09:15:35 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id p18sm1224758itp.10.2019.03.29.09.15.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 09:15:06 -0700 (PDT)
-Received: by mail-ua1-f52.google.com with SMTP id d5so859024uan.6
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 09:15:05 -0700 (PDT)
-X-Received: by 2002:ab0:604a:: with SMTP id o10mr1347444ual.21.1553876104903;
- Fri, 29 Mar 2019 09:15:04 -0700 (PDT)
+        Fri, 29 Mar 2019 09:15:34 -0700 (PDT)
+Subject: Re: [PATCH] block/bfq: fix ifdef for CONFIG_BFQ_GROUP_IOSCHED=y
+To:     =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-block@vger.kernel.org,
+        Paolo Valente <paolo.valente@linaro.org>,
+        linux-kernel@vger.kernel.org
+References: <155386807826.3190.16175453392005064129.stgit@buzz>
+ <c40b8d4a-c504-fdf4-0b96-64aaeb167435@applied-asynchrony.com>
+ <5234a971-2b6a-47b1-0071-8f3bd07d9fc3@kernel.dk>
+ <cf0dc6b2-6ecf-c895-6c21-8746700bdae4@applied-asynchrony.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6be15f08-dbb4-6b43-3d95-44044f1acdbc@kernel.dk>
+Date:   Fri, 29 Mar 2019 10:15:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190328171710.31949-1-dianders@chromium.org> <20190328171710.31949-2-dianders@chromium.org>
- <f2f82f439f2b7586cb4c83f15122d8d19952d596.camel@collabora.com>
- <CAD=FV=WOKSHWCHPv9kQT7np6v_ZYBmAsnTpAHJv7zRS_3b46JQ@mail.gmail.com> <CAL_JsqJNPMnVLyPGeK5Jd=QVSO1zWvPEiPcgas03yP_P66M-uw@mail.gmail.com>
-In-Reply-To: <CAL_JsqJNPMnVLyPGeK5Jd=QVSO1zWvPEiPcgas03yP_P66M-uw@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 29 Mar 2019 09:14:43 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UeGChy6iJH1r9tDLmBHP1UR3f3N+7ofJ-pqWC5jYgo5A@mail.gmail.com>
-Message-ID: <CAD=FV=UeGChy6iJH1r9tDLmBHP1UR3f3N+7ofJ-pqWC5jYgo5A@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] dt-bindings: Add panel-timing subnode to simple-panel
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sean Paul <seanpaul@chromium.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Eric Anholt <eric@anholt.net>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <cf0dc6b2-6ecf-c895-6c21-8746700bdae4@applied-asynchrony.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 3/29/19 10:12 AM, Holger Hoffstätte wrote:
+> On 3/29/19 4:58 PM, Jens Axboe wrote:
+>> On 3/29/19 9:56 AM, Holger Hoffstätte wrote:
+>>> On 3/29/19 3:01 PM, Konstantin Khlebnikov wrote:
+>>>> Replace BFQ_GROUP_IOSCHED_ENABLED with CONFIG_BFQ_GROUP_IOSCHED.
+>>>> Code under these ifdefs never worked, something might be broken.
+>>>>
+>>>> Fixes: 0471559c2fbd ("block, bfq: add/remove entity weights correctly")
+>>>> Fixes: 73d58118498b ("block, bfq: consider also ioprio classes in symmetry detection")
+>>>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>>>> ---
+>>>>    block/bfq-iosched.c |    2 +-
+>>>>    block/bfq-wf2q.c    |    2 +-
+>>>>    2 files changed, 2 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+>>>> index 4c592496a16a..fac188dd78fa 100644
+>>>> --- a/block/bfq-iosched.c
+>>>> +++ b/block/bfq-iosched.c
+>>>> @@ -674,7 +674,7 @@ static bool bfq_symmetric_scenario(struct bfq_data *bfqd)
+>>>>    	 * at least two nodes.
+>>>>    	 */
+>>>>    	return !(varied_queue_weights || multiple_classes_busy
+>>>> -#ifdef BFQ_GROUP_IOSCHED_ENABLED
+>>>> +#ifdef CONFIG_BFQ_GROUP_IOSCHED
+>>>>    	       || bfqd->num_groups_with_pending_reqs > 0
+>>>>    #endif
+>>>>    		);
+>>>> diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+>>>> index 63311d1ff1ed..a11bef75483d 100644
+>>>> --- a/block/bfq-wf2q.c
+>>>> +++ b/block/bfq-wf2q.c
+>>>> @@ -1012,7 +1012,7 @@ static void __bfq_activate_entity(struct bfq_entity *entity,
+>>>>    		entity->on_st = true;
+>>>>    	}
+>>>>    
+>>>> -#ifdef BFQ_GROUP_IOSCHED_ENABLED
+>>>> +#ifdef CONFIG_BFQ_GROUP_IOSCHED
+>>>>    	if (!bfq_entity_to_bfqq(entity)) { /* bfq_group */
+>>>>    		struct bfq_group *bfqg =
+>>>>    			container_of(entity, struct bfq_group, entity);
+>>>>
+>>>>
+>>>
+>>> Good catch! I run without group scheduling and therefore didn't notice these
+>>> stray defines earlier. For 5.1 it should merge cleanly; adding this on top of
+>>> the pending 5.2 BFQ patches required a small context fixup in hunk #1 due to
+>>> "block, bfq: do not idle for lowest-weight queues".
+>>
+>> I'm hesitant to apply this, since the group scheduling stuff has obviously never
+>> been tested.
+> 
+> This is simply a regression in 5.1 caused by 73d58118498b - nothing else,
+> and as such this fix needs to go into 5.1 as well. I'm sure Paolo will agree.
+> What you so ominously  call "the group scheduling stuff" has been there and
+> shipping in mainline since day 1 of the BFQ merge, and it works fine in 5.0.
 
-On Fri, Mar 29, 2019 at 9:13 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Thu, Mar 28, 2019 at 6:50 PM Doug Anderson <dianders@chromium.org> wro=
-te:
-> >
-> > Hi,
-> >
-> >
-> > On Thu, Mar 28, 2019 at 1:27 PM Ezequiel Garcia <ezequiel@collabora.com=
-> wrote:
-> > >
-> > > On Thu, 2019-03-28 at 10:17 -0700, Douglas Anderson wrote:
-> > > > From: Sean Paul <seanpaul@chromium.org>
-> > > >
-> > > > This patch adds a new subnode to simple-panel allowing us to overri=
-de
-> > > > the typical timing expressed in the panel's display_timing.
-> > > >
-> > > > Changes in v2:
-> > > >  - Split out the binding into a new patch (Rob)
-> > > >  - display-timings is a new section (Rob)
-> > > >  - Use the full display-timings subnode instead of picking the timi=
-ng
-> > > >    out (Rob/Thierry)
-> > > > Changes in v3:
-> > > >  - Go back to using the timing subnode directly, but rename to
-> > > >    panel-timing (Rob)
-> > > > Changes in v4:
-> > > >  - Simplify desc. for when override should be used (Thierry/Laurent=
-)
-> > > >  - Removed Rob H review since it's been a year and wording changed
-> > > >
-> > > > Cc: Doug Anderson <dianders@chromium.org>
-> > > > Cc: Eric Anholt <eric@anholt.net>
-> > > > Cc: Heiko Stuebner <heiko@sntech.de>
-> > > > Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: St=C3=A9phane Marchesin <marcheu@chromium.org>
-> > > > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Cc: dri-devel@lists.freedesktop.org
-> > > > Cc: linux-rockchip@lists.infradead.org
-> > > > Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > > ---
-> > > >
-> > > >  .../bindings/display/panel/simple-panel.txt   | 24 +++++++++++++++=
-++++
-> > > >  1 file changed, 24 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/display/panel/simple=
--panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.t=
-xt
-> > > > index b2b872c710f2..6157f86ddce4 100644
-> > > > --- a/Documentation/devicetree/bindings/display/panel/simple-panel.=
-txt
-> > > > +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.=
-txt
-> > > > @@ -15,6 +15,18 @@ Optional properties:
-> > > >    (hot plug detect) signal, but the signal isn't hooked up so we s=
-hould
-> > > >    hardcode the max delay from the panel spec when powering up the =
-panel.
-> > > >
-> > > > +panel-timing subnode
-> > > > +--------------------
-> > > > +
-> > > > +This optional subnode is for devices which require a mode differin=
-g
-> > > > +from the panel's "typical" display timing.  The panel timings prov=
-ided
-> > > > +here will be ignored if they are found to be outside of allowable
-> > > > +ranges for the given panel.
-> > > > +
-> > >
-> > > Is it OK to put this comment about how the implementation
-> > > will behave when values are out of range, given this is just a bindin=
-g
-> > > spec?
-> > >
-> > > Perhaps -if needed- this sentence can be rephrased to state that,
-> > > e.g. the OS may not be able to apply these values, if the controller
-> > > or device is unable to?
-> >
-> > I will defer to Rob H. on this one, but I'm happy to simply remove the
-> > last sentence.  I was trying to add a more OS-agnostic version of the
-> > bullet points from V3 but agree that we could just remove this from
-> > the bindings completely.
->
-> Following my opinion that it's not the kernel's job to validate
-> bindings, I would say it's fine for the OS to blindly apply them if it
-> chooses.
->
-> Plus with schema, you can provide the ranges of values and validate
-> DTs up front (unless you want to validate some result of math
-> operations).
+If that's the case (I didn't check how far back it went), then yes, it should
+of course go into 5.1.
 
-OK, I'll remove the sentence and repost sometime early next week.  Thanks!
+The ominous nature of my reply I'll chalk up to your interpretation
 
--Doug
+-- 
+Jens Axboe
+
