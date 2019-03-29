@@ -2,120 +2,91 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB4CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B34C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B761920811
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:02:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PPCOu9ty";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CXhLaJ2g"
+	by mail.kernel.org (Postfix) with ESMTP id B01342082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:02:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbfC2KCe (ORCPT
+        id S1729044AbfC2KCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:02:34 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45266 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728771AbfC2KCe (ORCPT
+        Fri, 29 Mar 2019 06:02:39 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:40783 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfC2KCj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:02:34 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D1B816085C; Fri, 29 Mar 2019 10:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553853752;
-        bh=X0S5ejWDiWFMFvTQgkHKCnWwfvJnYMIgv+PHTBdppIM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PPCOu9ty46SnX3j+uhhlAWRT+DtED90AZiy5FvKTeM3E5ZbeWahjwU/S1/LzfvJJ+
-         ExYvwFgBGRWxvw6CRjMmFuoq4r1Hsep6xnYaTL03Lf7PBTzJjMKg030Kr+c0Aq8sZn
-         zASSC1INf5NKmXTulA4mZHw8iFVVB7k57287N5Y0=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2659460779;
-        Fri, 29 Mar 2019 10:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553853747;
-        bh=X0S5ejWDiWFMFvTQgkHKCnWwfvJnYMIgv+PHTBdppIM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=CXhLaJ2g1dFAFmwTLJMTmVoXoKEmL/3ACt7xZ1fsaq6OJUuQZN/Sp96QTx9wWTB7j
-         dO5PottGdJchz7ReYCwZ91qSxHJSmhVBDGS+fgxf4HigfhLLtx7EqUXrx0W4dCLzpD
-         5IQa+yeU8sw4dkeCztnHGZxnM4jBWZoNAql47ku8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2659460779
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] gpio: of: Optimize quirk checks
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190329084229.17018-1-geert+renesas@glider.be>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <2aa29620-13c9-e618-93e9-dedc464cfa74@codeaurora.org>
-Date:   Fri, 29 Mar 2019 15:32:20 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 06:02:39 -0400
+X-IronPort-AV: E=Sophos;i="5.60,284,1549954800"; 
+   d="scan'208";a="28855835"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES128-SHA; 29 Mar 2019 03:02:38 -0700
+Received: from localhost (10.10.76.4) by CHN-SV-EXCH01.mchp-main.com
+ (10.10.76.37) with Microsoft SMTP Server id 14.3.352.0; Fri, 29 Mar 2019
+ 03:02:37 -0700
+Date:   Fri, 29 Mar 2019 11:02:02 +0100
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Peng Hao <peng.hao2@zte.com.cn>
+CC:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH]  arm/mach-at91/pm : fix possible object reference leak
+Message-ID: <20190329100202.rupu5xo2prxlcafa@M43218.corp.atmel.com>
+Mail-Followup-To: Peng Hao <peng.hao2@zte.com.cn>,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <1550069746-85671-1-git-send-email-peng.hao2@zte.com.cn>
 MIME-Version: 1.0
-In-Reply-To: <20190329084229.17018-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1550069746-85671-1-git-send-email-peng.hao2@zte.com.cn>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 3/29/2019 2:12 PM, Geert Uytterhoeven wrote:
-> Simple string comparisons are cheaper than DT lookups, as the latter
-> involve taking a spinlock and traversing properties.
-> Hence optimize quirk checks by postponing DT lookups after string
-> comparisons.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-
-Looks good to me.
-
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
-Cheers,
--Mukesh
-
+On Wed, Feb 13, 2019 at 10:55:46PM +0800, Peng Hao wrote:
+> of_find_device_by_node() takes a reference to the struct device
+> when it finds a match via get_device. When returning error we should
+> call put_device.
+> 
+> Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 > ---
->   drivers/gpio/gpiolib-of.c | 11 +++++------
->   1 file changed, 5 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index 6a3ec575a404ed9f..3a6bb53d89dfed32 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -86,9 +86,9 @@ static void of_gpio_flags_quirks(struct device_node *np,
->   	if (IS_ENABLED(CONFIG_REGULATOR) &&
->   	    (of_device_is_compatible(np, "regulator-fixed") ||
->   	     of_device_is_compatible(np, "reg-fixed-voltage") ||
-> -	     (of_device_is_compatible(np, "regulator-gpio") &&
-> -	      !(strcmp(propname, "enable-gpio") &&
-> -	        strcmp(propname, "enable-gpios"))))) {
-> +	     (!(strcmp(propname, "enable-gpio") &&
-> +		strcmp(propname, "enable-gpios")) &&
-> +	      of_device_is_compatible(np, "regulator-gpio")))) {
->   		/*
->   		 * The regulator GPIO handles are specified such that the
->   		 * presence or absence of "enable-active-high" solely controls
-> @@ -119,9 +119,8 @@ static void of_gpio_flags_quirks(struct device_node *np,
->   	 * property named "cs-gpios" we need to inspect the child node
->   	 * to determine if the flags should have inverted semantics.
->   	 */
-> -	if (IS_ENABLED(CONFIG_SPI_MASTER) &&
-> -	    of_property_read_bool(np, "cs-gpios") &&
-> -	    !strcmp(propname, "cs-gpios")) {
-> +	if (IS_ENABLED(CONFIG_SPI_MASTER) && !strcmp(propname, "cs-gpios") &&
-> +	    of_property_read_bool(np, "cs-gpios")) {
->   		struct device_node *child;
->   		u32 cs;
->   		int ret;
+>  arch/arm/mach-at91/pm.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+> index 51e808a..70fadb7 100644
+> --- a/arch/arm/mach-at91/pm.c
+> +++ b/arch/arm/mach-at91/pm.c
+> @@ -621,6 +621,7 @@ static int __init at91_pm_backup_init(void)
+>  
+>  securam_fail:
+>  	iounmap(pm_data.sfrbu);
+> +	put_device(&pdev->dev);
+
+Fixed in this way, in some cases (as there are goto securam_fail before calling
+of_find_device_by_node), we may decrement a reference which has not been
+incremented. Is it safe?
+
+Regards
+
+Ludovic
+
+>  	pm_data.sfrbu = NULL;
+>  	return ret;
+>  }
+> -- 
+> 1.8.3.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
