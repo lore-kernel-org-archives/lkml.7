@@ -3,96 +3,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01ECBC10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AA9C10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D3C218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FDB7218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbfC2Ru0 (ORCPT
+        id S1729916AbfC2RxZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 13:50:26 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:49678 "EHLO ale.deltatee.com"
+        Fri, 29 Mar 2019 13:53:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45936 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbfC2Ru0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 13:50:26 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1h9ve4-0000x0-Cd; Fri, 29 Mar 2019 11:50:25 -0600
-To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
-        linux-pci@vger.kernel.org, linux-nvdimm@lists.01.org,
+        id S1729650AbfC2RxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 13:53:24 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F1D55307D914;
+        Fri, 29 Mar 2019 17:53:23 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1190C17AD8;
+        Fri, 29 Mar 2019 17:53:22 +0000 (UTC)
+Subject: Re: fs/coda oops bisected to (925b9cd1b8) "locking/rwsem: Make owner
+ store task pointer of last owning reader"
+To:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Pedro Cuadra Chamorro <pcuadrac@cs.cmu.edu>,
         linux-kernel@vger.kernel.org
-References: <155387324370.2443841.574715745262628837.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155387327020.2443841.6446837127378298192.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <cfda881b-d99c-7c53-64cb-745ff4b257b0@deltatee.com>
-Date:   Fri, 29 Mar 2019 11:50:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+References: <20190329161014.ri4hzemg3ibvjw46@cs.cmu.edu>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <03bdbcb2-2ed7-1c0a-3c70-89c5c2e582f3@redhat.com>
+Date:   Fri, 29 Mar 2019 13:53:22 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <155387327020.2443841.6446837127378298192.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <20190329161014.ri4hzemg3ibvjw46@cs.cmu.edu>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, hch@lst.de, bhelgaas@google.com, akpm@linux-foundation.org, dan.j.williams@intel.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 5/6] pci/p2pdma: Track pgmap references per resource, not
- globally
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 29 Mar 2019 17:53:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Dan, this is great. I think the changes in this series are
-cleaner and more understandable than the patch set I had sent earlier.
+On 03/29/2019 12:10 PM, Jan Harkes wrote:
+> I was testing Coda on the 5.1-rc2 kernel and noticed that when I run a
+> binary out of /coda, the binary would never exit and the system would
+> detect a soft lockup. I narrowed it down to a very simple reproducible
+> case of running a statically linked executable (busybox) from /coda with
+> the cwd outside of Coda, so the only Coda file reference is from the
+> executable itself.
+>
+> I knew I definitely had never seen this problem with the stable kernel
+> on Ubuntu xenial (4.4) so I bisected between v4.4 and v5.1-rc2 and ended
+> up at
+>
+>     # first bad commit: [925b9cd1b89a94b7124d128c80dfc48f78a63098]
+>     # locking/rwsem: Make owner store task pointer of last owning reader
+>
+> When I revert this particular commit on 5.1-rc2, I am not able to
+> reproduce the problem anymore.
+>
+> The puzzling thing to me is that a lot of that particular patch touches
+> codepaths that are not even enabled in the kernels that I run, because I
+> do not have CONFIG_RWSEM_DEBUG enabled.
+>
+>     $ grep RWSEM .config
+>     CONFIG_RWSEM_XCHGADD_ALGORITHM=y
+>     CONFIG_RWSEM_SPIN_ON_OWNER=y
+>     # CONFIG_DEBUG_RWSEMS is not set
+>
+> And this patch is for rwsem, while my soft lockup is on a spinlock.
+> So either I have a race in fs/coda that got somehow uncovered by this
+> patch, or something else is going on here but I have not been able to
+> figure it out.
+>
+> Jan
 
-However, I found a couple minor issues with this patch:
+Without CONFIG_DEBUG_RWSEMS, the only behavioral change of this patch is
+to do an unconditional write of task_structure pointer into sem->owner
+after acquiring the read lock in down_read(). Before this patch, it does
+conditional write of 0x1 into sem->owner if it was not 0x1. The only
+possible scenario that I can think of that can cause the soft lockup you
+see is use-after-free of memory objects.
 
-On 2019-03-29 9:27 a.m., Dan Williams wrote:
->  static void pci_p2pdma_release(void *data)
->  {
->  	struct pci_dev *pdev = data;
-> @@ -103,12 +110,12 @@ static void pci_p2pdma_release(void *data)
->  	if (!pdev->p2pdma)
->  		return;
->  
-> -	wait_for_completion(&pdev->p2pdma->devmap_ref_done);
-> -	percpu_ref_exit(&pdev->p2pdma->devmap_ref);
-> +	/* Flush and disable pci_alloc_p2p_mem() */
-> +	pdev->p2pdma = NULL;
-> +	synchronize_rcu();
->  
->  	gen_pool_destroy(pdev->p2pdma->pool);
+Cheers,
+Longman
 
-I missed this on my initial review, but it became obvious when I tried
-to test the series: this is a NULL dereference seeing pdev->p2pdma was
-set to NULL a few lines up.
-
-When I fix this by storing p2pdma in a local variable, the patch set
-works and never seems to crash when I hot remove p2pdma memory.
-
->  void *pci_alloc_p2pmem(struct pci_dev *pdev, size_t size)
->  {
-> -	void *ret;
-> +	void *ret = NULL;
-> +	struct percpu_ref *ref;
->  
-> +	rcu_read_lock();
->  	if (unlikely(!pdev->p2pdma))
-> -		return NULL;
-
-Using RCU here makes sense to me, however I expect we should be using
-the proper rcu_assign_pointer(), rcu_dereference() and __rcu tag with
-pdev->p2pdma. If only to better document what's being protected with the
-new RCU calls.
-
-Logan
