@@ -2,75 +2,120 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBB4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37892C10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0689218D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A8A21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbfC2QxA (ORCPT
+        id S1729799AbfC2Q62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 12:53:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51086 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 12:58:28 -0400
+Received: from mga03.intel.com ([134.134.136.65]:1393 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728936AbfC2QxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 12:53:00 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88EB5218D0;
-        Fri, 29 Mar 2019 16:52:59 +0000 (UTC)
-Date:   Fri, 29 Mar 2019 12:52:58 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jason Behmer <jbehmer@google.com>
-Cc:     tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
-Subject: Re: Nested events with zero deltas, can use absolute timestamps
- instead?
-Message-ID: <20190329125258.2c6fe0cb@gandalf.local.home>
-In-Reply-To: <CAMmhGqKc27W03roONYXhmwB0dtz5Z8nGoS2MLSsKJ3Zotv5-JA@mail.gmail.com>
-References: <CAMmhGqKc27W03roONYXhmwB0dtz5Z8nGoS2MLSsKJ3Zotv5-JA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1729480AbfC2Q61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 12:58:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 09:58:27 -0700
+X-IronPort-AV: E=Sophos;i="5.60,285,1549958400"; 
+   d="scan'208";a="129815367"
+Received: from unknown (HELO [10.232.112.178]) ([10.232.112.178])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 29 Mar 2019 09:58:26 -0700
+Subject: Re: [PATCH v3 4/7] nvme: register stream info with block layer
+To:     Kanchan Joshi <joshi.k@samsung.com>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org
+Cc:     axboe@fb.com, joshiiitr@gmail.com, prakash.v@samsung.com,
+        anshul@samsung.com
+References: <1553846032-4451-1-git-send-email-joshi.k@samsung.com>
+ <CGME20190329075753epcas1p16ce37362f83ccb8520a782b845dcb905@epcas1p1.samsung.com>
+ <1553846032-4451-5-git-send-email-joshi.k@samsung.com>
+From:   "Heitke, Kenneth" <kenneth.heitke@intel.com>
+Message-ID: <87e172d4-dcc2-d0db-9bd1-b76afc7a9d01@intel.com>
+Date:   Fri, 29 Mar 2019 10:58:25 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1553846032-4451-5-git-send-email-joshi.k@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 Mar 2019 09:30:36 -0700
-Jason Behmer <jbehmer@google.com> wrote:
 
-> Hi Steven and Tom,
-> I recently ran into a problem with correlating timestamps across CPUs and
-> finally was able to track it down to the fact that nested events are given
-> zero deltas, and so are placed earlier in time than they actually occurred.
-> 
-> I'm on an older version and wanted to check if this problem still exists on
-> head and it appears that it does, but I also ran into Tom's commits adding
-> the ability to use absolute timestamps instead of deltas.  It seems like
-> this option could fix the problem.
-> 
-> It seems like ideally nested events could just always use these absolute
-> timestamps instead of zero deltas, as it appears the implementation of
-> absolute timestamps is flexible enough to have a mix of deltas and
-> absolutes in the stream of events.  A fix that would require less work
-> would be for me to just turn on absolute timestamps for my entire trace,
-> but I see that the file to do that isn't yet writable to support that.
-> 
-> Before trying to do either of these things I wanted to run it by both of
-> you to see if there's something I'm missing here.  What do you think?
-> 
+On 3/29/2019 1:53 AM, Kanchan Joshi wrote:
+> nvme registes number of streams with block layer, which will use that
 
-Yes this is an issue I need to fix. I have some ideas on how to handle
-this. I may need to go about looking into them again.
+s/registes/registers/ ??
 
-It may be possible to add an option to have all nested events use the
-full timestamp as well.
-
-I'll have to think about this a bit more.
-
--- Steve
+> for write-hint to streamid conversion. Registration is done for each
+> namespace. Since NVMe spec allow all available streams (within subsystem)
+> to be used by all namespaces, no attempt has been made to add reservation
+> at namespace level.
+>
+> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+> ---
+>   drivers/nvme/host/core.c | 19 ++++++-------------
+>   1 file changed, 6 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> index 150e497..e34386b 100644
+> --- a/drivers/nvme/host/core.c
+> +++ b/drivers/nvme/host/core.c
+> @@ -513,14 +513,7 @@ static int nvme_configure_directives(struct nvme_ctrl *ctrl)
+>   		return ret;
+>   
+>   	ctrl->nssa = le16_to_cpu(s.nssa);
+> -	if (ctrl->nssa < BLK_MAX_WRITE_HINTS - 1) {
+> -		dev_info(ctrl->device, "too few streams (%u) available\n",
+> -					ctrl->nssa);
+> -		nvme_disable_streams(ctrl);
+> -		return 0;
+> -	}
+> -
+> -	ctrl->nr_streams = min_t(unsigned, ctrl->nssa, BLK_MAX_WRITE_HINTS - 1);
+> +	ctrl->nr_streams = ctrl->nssa;
+>   	dev_info(ctrl->device, "Using %u streams\n", ctrl->nr_streams);
+>   	return 0;
+>   }
+> @@ -533,12 +526,9 @@ static void nvme_assign_write_stream(struct nvme_ctrl *ctrl,
+>   				     struct request *req, u16 *control,
+>   				     u32 *dsmgmt)
+>   {
+> -	enum rw_hint streamid = req->write_hint;
+> +	enum rw_hint streamid = req->streamid;
+>   
+> -	if (streamid == WRITE_LIFE_NOT_SET || streamid == WRITE_LIFE_NONE)
+> -		streamid = 0;
+> -	else {
+> -		streamid--;
+> +	if (streamid != 0) {
+>   		if (WARN_ON_ONCE(streamid > ctrl->nr_streams))
+>   			return;
+>   
+> @@ -3138,6 +3128,7 @@ static int nvme_setup_streams_ns(struct nvme_ctrl *ctrl, struct nvme_ns *ns)
+>   {
+>   	struct streams_directive_params s;
+>   	int ret;
+> +	u16 nr_streams;
+>   
+>   	if (!ctrl->nr_streams)
+>   		return 0;
+> @@ -3149,6 +3140,8 @@ static int nvme_setup_streams_ns(struct nvme_ctrl *ctrl, struct nvme_ns *ns)
+>   	ns->sws = le32_to_cpu(s.sws);
+>   	ns->sgs = le16_to_cpu(s.sgs);
+>   
+> +	nr_streams = min_t(unsigned, ctrl->nr_streams, BLK_MAX_WRITE_HINTS - 1);
+> +	blk_queue_stream_limits(ns->queue, nr_streams);
+>   	if (ns->sws) {
+>   		unsigned int bs = 1 << ns->lba_shift;
+>   
