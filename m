@@ -2,119 +2,171 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACB5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D00AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 153D42054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAAB72054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:21:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="swY5goSu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hZfDTYCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbfC2PUt (ORCPT
+        id S1729585AbfC2PVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:20:49 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43822 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728954AbfC2PUt (ORCPT
+        Fri, 29 Mar 2019 11:21:23 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43818 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729486AbfC2PVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:20:49 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k17so3038925wrx.10
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 08:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3sg4MTnbdL1BrXYtTzR9636LH/iHJOQmHyWH4t3rTv0=;
-        b=swY5goSuRF0KkZgd7N9noglbSp3PTs627UjtfHmAAEN7ql6JIoukIIepfxhYqR3H34
-         bfMNjZ7/ipMg32iPBow/fyl6tCIF9dN5ijliJfmn1N17FOAeoHOiH8IpKnkntcuYVnJu
-         PFaDf0dh9kDVi7tlHr5+n22p6i+B6I0cNDCWVbQMIn26OG6X7CKamAhBoRBUNCGeLHRD
-         slkF9xtSM7axu7QeJFN7PxmzRM2y9VrNKmAPyFIjMmhqjNZ5v/cEyxB6aMPje2cKYZuu
-         S80P9BIw2gRUuT8qvjtJx32568oX4H1wymQ1iVNYh4r61ACXwUPKqUWsaNpr/CFJurI0
-         1Y+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3sg4MTnbdL1BrXYtTzR9636LH/iHJOQmHyWH4t3rTv0=;
-        b=k6ZEQosJmrrQOdtc3qxWpYFyYyc5tN6QK3/AJLhMvx2newhS99BC1h4tW5kBs26GsG
-         SICg56kiRC7naRLCjZZOYqPWJ5MYto3xDcyiqAGe9JOJhOl7XH6WSKfCYr1tflvY3cbl
-         yArn43o8cpmYqwGu620hcSn0tP2R3C56Y+0gEwV/66/sgxkoLopAL28jSLRwNztu905X
-         P7ahE65nvz0xZ1EpHu/ldd4vHGot01C4YqXJcxB/c7CGrYqYeDYSfSIheaWQ4Bg3+eHP
-         bGnzEULUTTI7rkCwUw9vEw27v5mMgm/Hy6h4bXTlGRmXbXnawSu3eullLv+L9QgLrfs2
-         KcNw==
-X-Gm-Message-State: APjAAAVEx7SojKiA4+gCC0csm9heWUgUueOgDxAL3EjJol1myMYe5E3z
-        MTwud2D823ufKKIU3nrPS2U=
-X-Google-Smtp-Source: APXvYqxms/eC+WjXzGHuLLatSRGfDjERBdHPNA7eLZsf2luN3rU+Q4e7/zZJqAEER1bRtk47zgZiFw==
-X-Received: by 2002:a5d:6988:: with SMTP id g8mr33112608wru.117.1553872847498;
-        Fri, 29 Mar 2019 08:20:47 -0700 (PDT)
-Received: from debian.office.codethink.co.uk ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id o1sm2737128wmh.47.2019.03.29.08.20.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 08:20:46 -0700 (PDT)
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH] parport: ieee1284: mark expected switch fall-through
-Date:   Fri, 29 Mar 2019 15:20:44 +0000
-Message-Id: <20190329152044.27992-1-sudipm.mukherjee@gmail.com>
-X-Mailer: git-send-email 2.11.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 29 Mar 2019 11:21:23 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2TFJ43L063193;
+        Fri, 29 Mar 2019 15:20:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
+ bh=w+evLWsMFvjPXIBz6Od7CHW+kfY4wZu8WvnaS4DHA/M=;
+ b=hZfDTYClpsOkMfQAvshN+SrkQcURLKQz+yzSCwT7OXdK28xBLXed/kcnhvyst5n1FPZl
+ Fbgz+iWhzhTCCELUIVfMUQOGIwqJ8qWoZ+uV5WFKmUDbrq13IbVhakovv8mAunfsq78J
+ qO0tSHvWbxttyvHW9bQcVEA0HeHdCuXVq1VogU1sd4pLze8sLI8O65xP5SQ1ODCt+5/T
+ RwKVCnNCq6gBV9fDWPtaKNa98Nv5mho5gbTztMt3/xNDFV3Uz9Ovs7ceaGd8r/kPO8pz
+ LxjO6aV4QTnGYaM6eM8eIG4jpmcb3NVz6hQ00qgwVIA4xINjVHkJ9HbT4KN80x2ke3hn aw== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by userp2130.oracle.com with ESMTP id 2re6g1n24q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 15:20:27 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2TFKMaU017337
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 15:20:22 GMT
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2TFKIVA017743;
+        Fri, 29 Mar 2019 15:20:18 GMT
+Received: from ol-bur-x5-4.us.oracle.com (/10.152.128.37)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 Mar 2019 08:20:17 -0700
+From:   Alex Kogan <alex.kogan@oracle.com>
+To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
+        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org
+Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        alex.kogan@oracle.com, dave.dice@oracle.com,
+        rahul.x.yadav@oracle.com
+Subject: [PATCH v2 2/5] locking/qspinlock: Refactor the qspinlock slow path
+Date:   Fri, 29 Mar 2019 11:20:03 -0400
+Message-Id: <20190329152006.110370-3-alex.kogan@oracle.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190329152006.110370-1-alex.kogan@oracle.com>
+References: <20190329152006.110370-1-alex.kogan@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9211 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903290109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Move some of the code manipulating MCS nodes into separate functions.
+This would allow easier integration of alternative ways to manipulate
+those nodes.
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch
-cases where we are expecting to fall through.
-
-This patch fixes the following warning:
-
-drivers/parport/ieee1284.c: In function ‘parport_read’:
-drivers/parport/ieee1284.c:722:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (parport_negotiate (port, IEEE1284_MODE_NIBBLE)) {
-      ^
-drivers/parport/ieee1284.c:726:2: note: here
-  case IEEE1284_MODE_NIBBLE:
-  ^~~~
-
-Warning level 3 was used: -Wimplicit-fallthrough=3
-
-Notice that, in this particular case, the code comment is modified
-in accordance with what GCC is expecting to find.
-
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
+Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
 ---
- drivers/parport/ieee1284.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/qspinlock.c | 48 +++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 41 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/parport/ieee1284.c b/drivers/parport/ieee1284.c
-index f12b9da69255..90fb73575495 100644
---- a/drivers/parport/ieee1284.c
-+++ b/drivers/parport/ieee1284.c
-@@ -722,7 +722,7 @@ ssize_t parport_read (struct parport *port, void *buffer, size_t len)
- 		if (parport_negotiate (port, IEEE1284_MODE_NIBBLE)) {
- 			return -EIO;
- 		}
--		/* fall through to NIBBLE */
-+		/* fall through - to NIBBLE */
- 	case IEEE1284_MODE_NIBBLE:
- 		DPRINTK (KERN_DEBUG "%s: Using nibble mode\n", port->name);
- 		fn = port->ops->nibble_read_data;
+diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+index 5941ce3527ce..074f65b9bedc 100644
+--- a/kernel/locking/qspinlock.c
++++ b/kernel/locking/qspinlock.c
+@@ -297,6 +297,43 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
+ #define queued_spin_lock_slowpath	native_queued_spin_lock_slowpath
+ #endif
+ 
++static __always_inline int get_node_index(struct mcs_spinlock *node)
++{
++	return node->count++;
++}
++
++static __always_inline void release_mcs_node(struct mcs_spinlock *node)
++{
++	__this_cpu_dec(node->count);
++}
++
++/*
++ * set_locked_empty_mcs - Try to set the spinlock value to _Q_LOCKED_VAL,
++ * and by doing that unlock the MCS lock when its waiting queue is empty
++ * @lock: Pointer to queued spinlock structure
++ * @val: Current value of the lock
++ * @node: Pointer to the MCS node of the lock holder
++ *
++ *  *,*,* -> 0,0,1
++ */
++static __always_inline bool set_locked_empty_mcs(struct qspinlock *lock,
++						 u32 val,
++						 struct mcs_spinlock *node)
++{
++	return atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL);
++}
++
++/*
++ * pass_mcs_lock - pass the MCS lock to the next waiter
++ * @node: Pointer to the MCS node of the lock holder
++ * @next: Pointer to the MCS node of the first waiter in the MCS queue
++ */
++static __always_inline void pass_mcs_lock(struct mcs_spinlock *node,
++					  struct mcs_spinlock *next)
++{
++	arch_mcs_spin_unlock_contended(&next->locked, 1);
++}
++
+ #endif /* _GEN_PV_LOCK_SLOWPATH */
+ 
+ /**
+@@ -406,7 +443,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+ 	qstat_inc(qstat_lock_slowpath, true);
+ pv_queue:
+ 	node = this_cpu_ptr(&qnodes[0].mcs);
+-	idx = node->count++;
++	idx = get_node_index(node);
+ 	tail = encode_tail(smp_processor_id(), idx);
+ 
+ 	/*
+@@ -541,7 +578,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+ 	 *       PENDING will make the uncontended transition fail.
+ 	 */
+ 	if ((val & _Q_TAIL_MASK) == tail) {
+-		if (atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL))
++		if (set_locked_empty_mcs(lock, val, node))
+ 			goto release; /* No contention */
+ 	}
+ 
+@@ -558,14 +595,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+ 	if (!next)
+ 		next = smp_cond_load_relaxed(&node->next, (VAL));
+ 
+-	arch_mcs_spin_unlock_contended(&next->locked, 1);
++	pass_mcs_lock(node, next);
+ 	pv_kick_node(lock, next);
+ 
+ release:
+-	/*
+-	 * release the node
+-	 */
+-	__this_cpu_dec(qnodes[0].mcs.count);
++	release_mcs_node(&qnodes[0].mcs);
+ }
+ EXPORT_SYMBOL(queued_spin_lock_slowpath);
+ 
 -- 
-2.11.0
+2.11.0 (Apple Git-81)
 
