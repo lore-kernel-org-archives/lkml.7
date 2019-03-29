@@ -2,143 +2,145 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03F6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCDAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE94B217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A72217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:00:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="Suyx7ZAA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b+WgoKnT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbfC2LAn (ORCPT
+        id S1729414AbfC2LAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 07:00:43 -0400
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.68]:6546 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727675AbfC2LAm (ORCPT
+        Fri, 29 Mar 2019 07:00:50 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42234 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727675AbfC2LAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 07:00:42 -0400
-Received: from [46.226.52.200] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-b.eu-west-1.aws.symcld.net id 35/FE-07686-7DAFD9C5; Fri, 29 Mar 2019 11:00:39 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WTWUwTURSGuZ2F0VAdC8qxLDFNNC5MpbgwqDH
-  GRG2iIuHBRK3iYEfa2BbSKVL0wWJMFIgiiBqrIC6pWk0wJC6IC4LGqIALgrgi2hjANQIKGKkz
-  nar49t/zf3P+c2/OUJiqhVRTvNPB222cRUOOxE3TFXOZ1sEyQ3xf7Tx2f4ePZNv7biP2+5NdC
-  rb5yhGSvdD1WcHuaVqygNRXu1+F6qu8+aT+ZetVUv/+WCWu76mKTSFWE2ZbeqZzPWEq8t0js7
-  4Tzvd1paEuVEoUoJEUTldiUNJYHjio6L0KqG66Q8qHdgSv39SIzgiKpHVQ/vELknQEnQODPW0
-  KCcLoBgT1J9oxyQin10JXwekgtA4G639gsk6A4u5isU6JeROhstwglZUivsdbFQxzIXCV3FZI
-  xgh6MQz1XMMljegY6M07G+iD0ZHw3Hc0wABNw8mrDzBZj4Wud0OEzKfBzhufQuV6HDQ+9SFZa
-  8DT5iZkHQOPjxYG68vh1/lCTBoC6OcImi8eDBpTodnTEgyzQGd9NS7raPj5Yjshf9BMwAF/a6
-  Crit4AX8sag8mx4N3dgcvQQwxKG84h+QpxUFHzjZT1NPAc+4DtRZPdw27nHoa5h2HuwJONgbu
-  HfHgFwr2ITbebM0wOK2e2MLr4eEanS2B0SUlMQgKr5bYw6Vo+m8nhBQej03I5glbItW6wGLU2
-  3lGFxOUyZt3xXUb+gow6NJ5SaMYq3/aXGVSj0jONuSZOMKXZsy28UIeiKUoDSsOA6I2x8xm8c
-  6PZIm7oHxuoME2EMlmylUIWZxXMGbJ1D82gao93lGFUxbPBckyF2zJtvDpSuVtCaQk1Zdv+Nv
-  qz7Y9RjDpciUJCQlRhWbzdanb873ejSAppwpVzxZ9CFWa2Of7mdYujKMRRurcdlkZxcP8stQs
-  lTjC6Er/UuGrP7IvIvzVvcd6pGbMeRV1PSylOtRpvDTnmOHvZpbFq07aVoZ0e/zLuyfyUIufo
-  7M0LayOiCtd43ZtWLVo9yTPNljol7nLJo3F9S+KGtP7ktk9CdGOxfceKm0XGxK33R11qN+hQf
-  Of8ptkNTF7LlYHC1uv9fu3Mc/2XNLhg4nRTMbvA/QZw+A886AMAAA==
-X-Env-Sender: stwiss.opensource@diasemi.com
-X-Msg-Ref: server-2.tower-288.messagelabs.com!1553857238!5703158!1
-X-Originating-IP: [104.47.2.59]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 1307 invoked from network); 29 Mar 2019 11:00:38 -0000
-Received: from mail-db5eur01lp2059.outbound.protection.outlook.com (HELO EUR01-DB5-obe.outbound.protection.outlook.com) (104.47.2.59)
-  by server-2.tower-288.messagelabs.com with AES256-GCM-SHA384 encrypted SMTP; 29 Mar 2019 11:00:38 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mcsOwnY0yQ4HS1D5SCz3TSQcDSnxCzmz7j/tifRiFqU=;
- b=Suyx7ZAA1PEFif40j3qNkBmzkWnl53H5Hhyl28l+R12K3Je1LlAniCwCk6cNN3Ng7wEyyUgVlYrfAd+mJmV3E8hQ0wzAldvHLP9cIzqJ6W0tHeEe/jfUB4b56qKrfoyaUN5dJTQkzEcPIukBHKLwE9ipC+4H/bBcTjrlH+wY0B4=
-Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM (20.177.62.92) by
- VI1PR10MB0512.EURPRD10.PROD.OUTLOOK.COM (10.167.201.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.16; Fri, 29 Mar 2019 11:00:37 +0000
-Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::e426:c8bc:d222:5cd7]) by VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::e426:c8bc:d222:5cd7%4]) with mapi id 15.20.1730.019; Fri, 29 Mar 2019
- 11:00:37 +0000
-From:   Steve Twiss <stwiss.opensource@diasemi.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: RE: [PATCH 4/6] regulator: da9063: move definitions out of a header
- into the driver
-Thread-Topic: [PATCH 4/6] regulator: da9063: move definitions out of a header
- into the driver
-Thread-Index: AQHU3aIdHTncDZU+0kC17NefMlzMF6Yifj0g
-Date:   Fri, 29 Mar 2019 11:00:37 +0000
-Message-ID: <VI1PR10MB23522792917A3C3C3C766CD2FE5A0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
-References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
- <20190318154759.21978-5-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20190318154759.21978-5-wsa+renesas@sang-engineering.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.240.73.196]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c2c90eaa-41cc-4ee9-e640-08d6b435c67b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:VI1PR10MB0512;
-x-ms-traffictypediagnostic: VI1PR10MB0512:
-x-microsoft-antispam-prvs: <VI1PR10MB051215EC1CDBD33E9C789E01F55A0@VI1PR10MB0512.EURPRD10.PROD.OUTLOOK.COM>
-x-forefront-prvs: 0991CAB7B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(136003)(376002)(396003)(199004)(189003)(8936002)(186003)(256004)(86362001)(68736007)(71190400001)(52536014)(305945005)(3846002)(6116002)(71200400001)(66066001)(7736002)(53546011)(6506007)(55016002)(11346002)(229853002)(316002)(478600001)(486006)(476003)(14454004)(33656002)(76176011)(446003)(106356001)(7696005)(54906003)(53936002)(2906002)(110136005)(105586002)(8676002)(6436002)(4326008)(81166006)(97736004)(81156014)(26005)(5660300002)(99286004)(25786009)(6246003)(4744005)(102836004)(9686003)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB0512;H:VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6q9EOM2KpKJ8ttjvEwVU905BX2cu2d59+K/0B7hnBVdzeDvCeeLuBB5lUGMAFo0B15khY5Z20NcynYxP03rOYVXwsGfPWFXIEC90iqTlWz6pBRGCMi03lKzm5HnoE9WbzH/HIUdBh1Sk5gJwruvLOGw8K5Qc21ALb4baAWh8i5x3LAIbGClK8sfNz7W+Yc22O/4YBOkSgixOSktGa/Twm0iSvvA4mX+1ZMSX0MAYjbmNwm0iPgThtVFf8TjtuSCbrbCJgekxbpsNffLNvJVZ+qy65eJdeVe84vp6Z8WfL5xaX4w1fA1EViQ5O51UAy+8QgncrWSbt/HFFmkwaF8Cb6Dss5CmUE2FpwUlOcd/h6JVUoDzPAw/ihC3Ef2FSI68PIx0XleXEkmiDP9CEcs4UomOYvB0J/eFa+1/nvsq8Cs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 29 Mar 2019 07:00:50 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2TB0amX029831;
+        Fri, 29 Mar 2019 06:00:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553857236;
+        bh=3caNsEAYEqVE2i4jhAHj+wbfqzGZ3ZOweWv6j32fAWU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=b+WgoKnTe3+OkAPgZRmPTihI/DzSC1u9UVoLHTF/yOIWO198xZWpeRAy/yqFd7YLW
+         pU4KPiTSc81xY4vwClPSvPhUrlzb5QwNs1wme5nARlcOtlzJa7x/lXUAHCX6wbHKQ3
+         /XR2JEdrt4nV6GgrZMt0JDNjDWrtJQvZRniHJnt8=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2TB0aa1122100
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 Mar 2019 06:00:36 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
+ Mar 2019 06:00:35 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 29 Mar 2019 06:00:35 -0500
+Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2TB0Viw075423;
+        Fri, 29 Mar 2019 06:00:31 -0500
+Subject: Re: [LINUX PATCH 2/3] spi: spi-mem: call
+ spi_mem_default_supports_op() first
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
+        "nagasuresh12@gmail.com" <nagasuresh12@gmail.com>
+References: <1553771784-3364-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+ <20190328205522.272e1da6@collabora.com>
+ <d21f7363-eeea-830e-b9b8-ef5bb9e1261b@ti.com>
+ <20190329095307.02d970fd@collabora.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <850e1c59-8d00-31e5-e25a-72f36a52b86d@ti.com>
+Date:   Fri, 29 Mar 2019 16:31:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2c90eaa-41cc-4ee9-e640-08d6b435c67b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2019 11:00:37.4057
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB0512
+In-Reply-To: <20190329095307.02d970fd@collabora.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 18 March 2019 15:48, Wolfram Sang wrote:
 
-> Subject: [PATCH 4/6] regulator: da9063: move definitions out of a header =
-into the driver
->=20
-> Those definitions are only used within the driver meanwhile, so put them
-> there.
->=20
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  drivers/regulator/da9063-regulator.c | 44
-> +++++++++++++++++++++++++++++++-
->  include/linux/mfd/da9063/pdata.h     | 49 ------------------------------=
-------
->  2 files changed, 43 insertions(+), 50 deletions(-)
->=20
-> diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9=
-063-regulator.c
+On 29/03/19 2:23 PM, Boris Brezillon wrote:
+> On Fri, 29 Mar 2019 13:50:26 +0530
+> Vignesh Raghavendra <vigneshr@ti.com> wrote:
+> 
+>> Hi Boris,
+>>
+>> On 29/03/19 1:25 AM, Boris Brezillon wrote:
+>>> On Thu, 28 Mar 2019 16:46:24 +0530
+>>> Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com> wrote:
+>>>   
+>>>> Call spi_mem_default_supports_op() first, before calling controller
+>>>> specific ctlr->supports_op().
+>>>> With this, controller drivers can drop checking the buswidths again.  
+>>>
+>>> No, this was done on purpose, in case the controller does not want the
+>>> default check to be applied (say it does not need bus-width props to
+>>> be defined and has another way to check if a device can be accessed in
+>>> dual, quad or octal mode).  
+>>
+>> Sorry, I don't understand here.
+>> Based on capabilities declared in spi_device->mode, m25p80 driver will
+>> claim appropriate  SNOR_HWCAPS_*.  SPI NOR layer chooses opcodes based
+>> on that for which m25p80 layer populates buswidths.
+> 
+> Well, that test in m25p80 should go away and be replaced by a proper
+> spi_mem_supports_op() iteration on all modes reported as supported by
+> the *chip* (I think that's what I did in my series merging m25p80 code
+> into the spi-nor core). But that's not really related to the problem
+> we're discussing here.
+> 
 
-Thanks!
-Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
+I see that now.
 
-Regards,
-Steve
+>>
+>> So, I don't really expect any mismatch in spi_mem_default_supports_op()
+>> in the case you mentioned. Or did I miss something? Maybe something SPI
+>> NAND specific?
+> 
+> Nothing NAND specific, just something controller specific and how we
+> want to deal with buswidth detection. Most memory devices expose their
+> caps in some way (be it ID-based detection or using some kind of
+> caps/parameters table), so they know what they're capable of. SPI
+> controllers know what they're capable of, of course. The only part that
+> remains unknown for buswidth negotiation is how things are wired on the
+> board. I keep thinking that defining buswidth in the DT (using
+> spi-{tx,rx}-bus-width) should only be done if there are board-related
+> limiting factors (some IO pins not routed).
+> If you look at the code, SPI_{TX,RX}_{DUAL,QUAD,OCTAL} flags are only
+> set if the spi-{tx,rx}-bus-width props are defined.
+> 
+> The idea behind making spi_mem_default_supports_op() optional is to let
+> new drivers implement a new scheme where missing
+> spi-{tx,rx}-bus-width does not necessarily mean "use regular SPI mode".
+> 
+
+Ok, thanks for explanation.
+
+
+-- 
+Regards
+Vignesh
