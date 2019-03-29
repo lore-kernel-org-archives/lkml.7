@@ -2,84 +2,78 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765EBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27312C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3681D2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB18C20811
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728700AbfC2ASm (ORCPT
+        id S1728709AbfC2AUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 20:18:42 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:59328 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727929AbfC2ASm (ORCPT
+        Thu, 28 Mar 2019 20:20:01 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:33440 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728012AbfC2AUB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 20:18:42 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5789614D68888;
-        Thu, 28 Mar 2019 17:18:41 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 17:18:40 -0700 (PDT)
-Message-Id: <20190328.171840.536122682640768471.davem@davemloft.net>
-To:     maowenan@huawei.com
-Cc:     santosh.shilimkar@oracle.com, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: rds: force to destroy connection if t_sock is
- NULL in rds_tcp_kill_sock().
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190328091056.186547-1-maowenan@huawei.com>
-References: <20190328091056.186547-1-maowenan@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 28 Mar 2019 17:18:41 -0700 (PDT)
+        Thu, 28 Mar 2019 20:20:01 -0400
+Received: by mail-io1-f69.google.com with SMTP id n15so447400ioc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 17:20:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=WljGOgr6+V0So5MSNDm2U/a9k/KnU7qagWjQqFfr+r4=;
+        b=bYWArz4Gbl5s9ojHfzZE0W5E/y5HgcSpXEeHYELKGBRL/x9pYFcsG95LwASyV9oPZq
+         irJ7oVgYmN+qbq3NhJLRxGNJW81GL9jHhywlHIvQWEMVIv6bYF6cYIFI+FSVKRg1+aMC
+         Dxa8b7z/HdSPxPzCoV6VX6ZMVKj91RkSa1JXV6L/Hb86SPXi0ZPXAogI+bQOXQZjl1eO
+         sMIZVTl5xpvPVIzGOukQ6VhU7JqeqJAWqfm6QCVGduqAolQHJjsz03f1VK+WHxny0ZjD
+         TtXvqCK3PuwSg7DDVy4QoXwPHvtYValvtaCKFYbry0lRV+0837mHlqWSHgINM/87VQxx
+         N1Gw==
+X-Gm-Message-State: APjAAAXmBNhWkxfKhR5bnZUbVco3WM7Lc7anhNzK/S1guejMdu9qh8gS
+        PMFn1++tuAx2oX0KnYNZ+408sE844WWWo11RHnV3GsH4O+og
+X-Google-Smtp-Source: APXvYqwznfpHktjc7pzobmaq2euNxjjFSlfghV3aG+rNsx1BzCwHfD8bKWX/D7H8wcfU33ED7uZsMSvWK/OMDLOxRSYcqfTv6RAz
+MIME-Version: 1.0
+X-Received: by 2002:a05:660c:885:: with SMTP id o5mr888604itk.27.1553818800665;
+ Thu, 28 Mar 2019 17:20:00 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 17:20:00 -0700
+In-Reply-To: <CAHRSSEzGaZw4y4gKzyJzxmrkL20NpTAtB8mDeDs+JzsTWeDZKA@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a8bbbb058530a12a@google.com>
+Subject: Re: kernel BUG at drivers/android/binder_alloc.c:LINE! (3)
+From:   syzbot <syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com>
+To:     arve@android.com, christian@brauner.io, devel@driverdev.osuosl.org,
+        gregkh@linuxfoundation.org, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, maco@android.com,
+        syzkaller-bugs@googlegroups.com, tkjos@android.com,
+        tkjos@google.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
-Date: Thu, 28 Mar 2019 17:10:56 +0800
+Hello,
 
-> When it is to cleanup net namespace, rds_tcp_exit_net() will call
-> rds_tcp_kill_sock(), if t_sock is NULL, it will not call
-> rds_conn_destroy(), rds_conn_path_destroy() and rds_tcp_conn_free() to free
-> connection, and the worker cp_conn_w is not stopped, afterwards the net is freed in
-> net_drop_ns(); While cp_conn_w rds_connect_worker() will call rds_tcp_conn_path_connect()
-> and reference 'net' which has already been freed.
-> 
-> In rds_tcp_conn_path_connect(), rds_tcp_set_callbacks() will set t_sock = sock before
-> sock->ops->connect, but if connect() is failed, it will call
-> rds_tcp_restore_callbacks() and set t_sock = NULL, if connect is always
-> failed, rds_connect_worker() will try to reconnect all the time, so
-> rds_tcp_kill_sock() will never to cancel worker cp_conn_w and free the
-> connections.
-> 
-> Therefore, the condition !tc->t_sock is not needed if it is going to do
-> cleanup_net->rds_tcp_exit_net->rds_tcp_kill_sock, because tc->t_sock is always
-> NULL, and there is on other path to cancel cp_conn_w and free
-> connection. So this patch is to fix this.
-> 
-> rds_tcp_kill_sock():
-> ...
-> if (net != c_net || !tc->t_sock)
-> ...
-> ==================================================================
-> BUG: KASAN: use-after-free in inet_create+0xbcc/0xd28
- ...
-> ==================================================================
-> 
-> Fixes: 467fa15356ac("RDS-TCP: Support multiple RDS-TCP listen endpoints, one per netns.")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+syzbot tried to test the proposed patch but build/boot failed:
 
-Applied and queued up for -stable.
+timed out
+
+
+
+
+
+
+Tested on:
+
+commit:         0532a1b0 virt: vbox: Implement passing requestor info to t..
+git tree:        
+git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git  
+char-misc-linus
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
