@@ -2,538 +2,153 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A39C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 23:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B864CC10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 23:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA440217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 23:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 873A8217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 23:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q3le+cpE"
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="0SVwoqOY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730195AbfC2X1F (ORCPT
+        id S1730495AbfC2X2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 19:27:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38212 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729919AbfC2X1E (ORCPT
+        Fri, 29 Mar 2019 19:28:17 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:38535 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729976AbfC2X2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 19:27:04 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w137so3008797oiw.5
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 16:27:04 -0700 (PDT)
+        Fri, 29 Mar 2019 19:28:16 -0400
+Received: by mail-vs1-f67.google.com with SMTP id s2so1222144vsi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 16:28:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O9Z7bNQCNO3kAb02yBYPDHJJvwuOE3LzMX2t8ejPiRA=;
-        b=Q3le+cpEsUZq8uZoAf9CRshOiHbh/NYRIhzbTClhC6vX0N9AdtdWEuvLSYsi/vEuWK
-         jSiHfZVy88aPmQziekKKZ0XW9tyUTqV3VVvh6PnHabD0IWl1kue+XjMd/gb5pfkfg9rG
-         k61KBP5FLekU3BclySgZRi/S67Drbw/0fekic=
+         :cc:content-transfer-encoding;
+        bh=+JtnuU29EdY9D4FrIJN6PNOqz5gfVF3nZGn0l9m1fUc=;
+        b=0SVwoqOY8HAf1EO+n+FhSeIgPTLwZgG88y07dzUT/PSGEUmlXLoSPAI9BoYjVlTLEN
+         LXXQ1noQFUySvCG0QoOJpeNg7t3+2F36MgeqeIlg+3xuQOV1wE2mbjea7/IjbdTJTXl0
+         m+Dw7Gcik1UsrbXNt06jtHxDhtLypP76ornC/j8FOHyvbzDp7NvE809mWlnN2USNRmvc
+         SABj7MOsHqx29GNOOGFlTFJHQxooMGuSfurpYqOSi7cEou9iWbB8FuTsNu5tCeac94+3
+         r5zxZ+9r1RRJxj/BrkuLJcSOs7A/J5tbwJnEBUg+c8GPEVIdnatxJiTo8T5fiR0N9U8V
+         XqiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O9Z7bNQCNO3kAb02yBYPDHJJvwuOE3LzMX2t8ejPiRA=;
-        b=WUrmaVPriA+cEoQMXtSGZ/xMf17vb7FAhpye2fIOACD8ff8MNS6VfQfay5/gxrenzr
-         RYsjoq6xq9vkmMVvhKl+YOO5UoUyUBCNfzilcvSXmvQ9o59lisLEJR5sKjqCRKNYkvsv
-         WWRgyQdYGktv+C1KsOGZ//6lgTNO2UMNKIKxpmIrhpmzJebUB3cKOwl4LZutnJVr8g9v
-         bAbQLfygCHmxvnF1h6LvH33OkxCk1GK4a/Ly6SVD9xh68MVCFsJIxUIQQQJ+jF7S2Fp3
-         GMAeygYW7xQ0YcUZyQUPtmd+44aSnvVKzRAmxLCwYPIrXt4dY3937OuS//GmCJPjitYH
-         aR8g==
-X-Gm-Message-State: APjAAAVJivmvWjfbGrtjR9ulUT0JHVvvaxbjJvjRlyqJ+VEabjU9WNEJ
-        SSr3tWfRUpM/tnYEsoVCat0D5J+R1iY=
-X-Google-Smtp-Source: APXvYqy7VUbWU9e8ZoGND9I7ShljOSw/wsxlZmhQIHN4gCWsgU95jrPialTOn3u9QEHsDURrMCXzOA==
-X-Received: by 2002:aca:d8d5:: with SMTP id p204mr5560391oig.26.1553902023529;
-        Fri, 29 Mar 2019 16:27:03 -0700 (PDT)
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com. [209.85.210.54])
-        by smtp.gmail.com with ESMTPSA id u22sm1306318otk.49.2019.03.29.16.27.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 16:27:02 -0700 (PDT)
-Received: by mail-ot1-f54.google.com with SMTP id e5so3527787otk.12
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 16:27:02 -0700 (PDT)
-X-Received: by 2002:a05:6830:154e:: with SMTP id l14mr34625437otp.269.1553902021851;
- Fri, 29 Mar 2019 16:27:01 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+JtnuU29EdY9D4FrIJN6PNOqz5gfVF3nZGn0l9m1fUc=;
+        b=cWhKcK4t04L4Md1dJ9ZS7wKp1luRt3EaTtDnlzgYPsDTILUrCsuS0pHnj2Z8a442XU
+         L9t/E3gXiXGSVZ0auXj+Lidq9JLt0rpmdqtrxJLHEbhXSGvP5cnQUXel+d23h9/VSRbR
+         6wbfqEfi7OwKe6no+mWFmutoRiZ4puGeYfIHuETPQ1r9NojnyoFE3XwlSwwMqilp8q/B
+         78DbkZKfv2pQEzxjS1n1eU1E+8zWbqIpkZvgEa84+9aiD5O5OIRg+4Ml9UflopwFo9xC
+         RpNtBWPsBmW1QMbOd0TpjXedLMda3VMCwQ264NRrzTvuzW3246No9n1uVDmcaUsqWL7Z
+         iNww==
+X-Gm-Message-State: APjAAAVv1H7zdOqZPI0YeiHGjfcK1wpGXJ4uFGp1HF3Yb0s2pMZp8Mei
+        vfT8Ec5ejxB+gNAe3csjFOiCgmhELcAJuua4kwQrsA==
+X-Google-Smtp-Source: APXvYqyi0lTZgMz8oW1UdC2H57E/xYz7jsBaRc9Yr1bQDqABm3+bG07HdtxhvhLlnv/5SkSpGykalNOXYPRvpBYtl+E=
+X-Received: by 2002:a67:6991:: with SMTP id e139mr30379607vsc.80.1553902095669;
+ Fri, 29 Mar 2019 16:28:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <1553804456-5329-1-git-send-email-rushikesh.s.kadam@intel.com>
- <CAHX4x876zC0BjQnAC0e3+b00QzfvSOgFnW-TfGLf6-u55q9Ftw@mail.gmail.com> <20190329195936.GA6971@intel.com>
-In-Reply-To: <20190329195936.GA6971@intel.com>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Fri, 29 Mar 2019 16:26:50 -0700
-X-Gmail-Original-Message-ID: <CAHX4x85ibvr2ua40X1T8gd-y54mahTj1H0MRZF7HPsPPECC=-Q@mail.gmail.com>
-Message-ID: <CAHX4x85ibvr2ua40X1T8gd-y54mahTj1H0MRZF7HPsPPECC=-Q@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: intel-ish-hid: ISH firmware loader client driver
-To:     Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        benjamin.tissoires@redhat.com, jikos@kernel.org,
-        jettrink@chromium.org, Gwendal Grignou <gwendal@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-input@vger.kernel.org
+References: <20190329215455.159717-1-dianders@chromium.org>
+In-Reply-To: <20190329215455.159717-1-dianders@chromium.org>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Fri, 29 Mar 2019 20:28:04 -0300
+Message-ID: <CAAEAJfCvZ_y-No6vQbf_3kUSyuPYujTjW8XhZHiB=-GU2_NWHQ@mail.gmail.com>
+Subject: Re: [PATCH] clk: rockchip: Fix video codec clocks on rk3288
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Tomasz Figa <tfiga@chromium.org>,
+        Ziyuan Xu <xzy.xu@rock-chips.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        ryandcase@chromium.org, Elaine Zhang <zhangqing@rock-chips.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-clk@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Your reasonings sound good. One or two responses in line, otherwise
-the version you just sent looks good.
+On Fri, 29 Mar 2019 at 18:55, Douglas Anderson <dianders@chromium.org> wrot=
+e:
+>
+> It appears that there is a typo in the rk3288 TRM.  For
+> GRF_SOC_CON0[7] it says that 0 means "vepu" and 1 means "vdpu".  It's
+> the other way around.
+>
+> How do I know?  Here's my evidence:
+>
+> 1. Prior to commit 4d3e84f99628 ("clk: rockchip: describe aclk_vcodec
+>    using the new muxgrf type on rk3288") we always pretended that we
+>    were using "aclk_vdpu" and the comment in the code said that this
+>    matched the default setting in the system.  In fact the default
+>    setting is 0 according to the TRM and according to reading memory
+>    at bootup.  In addition rk3288-based Chromebooks ran like this and
+>    the video codecs worked.
+> 2. With the existing clock code if you boot up and try to enable the
+>    new VIDEO_ROCKCHIP_VPU as a module (and without "clk_ignore_unused"
+>    on the command line), you get errors like "failed to get ack on
+>    domain 'pd_video', val=3D0x80208".  After flipping vepu/vdpu things
+>    init OK.
+> 3. If I export and add both the vepu and vdpu to the list of clocks
+>    for RK3288_PD_VIDEO I can get past the power domain errors, but now
+>    I freeze when the vpu_mmu gets initted.
+> 4. If I just mark the "vdpu" as IGNORE_UNUSED then everything boots up
+>    and probes OK showing that somehow the "vdpu" was important to keep
+>    enabled.  This is because we were actually using it as a parent.
+> 5. After this change I can hack "aclk_vcodec_pre" to parent from
+>    "aclk_vepu" using assigned-clocks and the video codec still probes
+>    OK.
+>
+> Fixes: 4d3e84f99628 ("clk: rockchip: describe aclk_vcodec using the new m=
+uxgrf type on rk3288")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> I currently have no way to test the JPEG mem2mem driver, so hopefully
+> others can test this and make sure it's happy for them.  I'm just
+> happy not to get strange errors at boot anymore.
+>
 
-On Fri, Mar 29, 2019 at 12:59 PM Rushikesh S Kadam
-<rushikesh.s.kadam@intel.com> wrote:
->
-> Hi Nick
-> Please see my comments inline below,
->
-> On Thu, Mar 28, 2019 at 11:02:52PM -0700, Nick Crews wrote:
-> > This is so close! There are just one or two tiny things.
-> >
-> > On Thu, Mar 28, 2019 at 1:20 PM Rushikesh S Kadam
-> > <rushikesh.s.kadam@intel.com> wrote:
->
-> > > +/**
-> > > + * loader_cl_send()    Send message from host to firmware
-> > > + * @client_data:       Client data instance
-> > > + * @out_msg            Message buffer to be sent to firmware
-> > > + * @out_size           Size of out going message
-> > > + * @in_msg             Message buffer where the incoming data copied.
-> > > + *                     This buffer is allocated by calling
-> > > + * @in_size            Max size of incoming message
-> > > + *
-> > > + * Return: Received buffer size on success, negative error code on failure.
-> >
-> > Number of bytes copied to in_msg? Maybe a bit different than number of
-> > bytes received?
->
-> Will change to say number of bytes copied.
->
-> >
-> > > + */
-> > > +static int loader_cl_send(struct ishtp_cl_data *client_data,
-> > > +                         u8 *out_msg, size_t out_size,
-> > > +                         u8 *in_msg, size_t in_size)
-> > > +{
-> > > +       int rv;
-> > > +       struct loader_msg_hdr *in_hdr;
-> > > +       struct loader_msg_hdr *out_hdr = (struct loader_msg_hdr *)out_msg;
-> > > +       struct ishtp_cl *loader_ishtp_cl = client_data->loader_ishtp_cl;
-> > > +
-> > > +       dev_dbg(cl_data_to_dev(client_data),
-> > > +               "%s: command=%02lx is_response=%u status=%02x\n",
-> > > +               __func__,
-> > > +               out_hdr->command & CMD_MASK,
-> > > +               out_hdr->command & IS_RESPONSE ? 1 : 0,
-> > > +               out_hdr->status);
-> > > +
-> > > +       /* Setup in coming buffer & size */
-> > > +       client_data->response.data = in_msg;
-> > > +       client_data->response.max_size = in_size;
-> > > +       client_data->response.error = 0;
-> > > +       client_data->response.flag_response = false;
-> >
-> > nit:
-> > Consider renaming to something a bit more descriptive
-> > such as "response.received"?
-> >
->
-> Will do.
->
-> > > +
-> > > +       rv = ishtp_cl_send(loader_ishtp_cl, out_msg, out_size);
-> > > +       if (rv < 0) {
-> > > +               dev_err(cl_data_to_dev(client_data),
-> > > +                       "ishtp_cl_send error %d\n", rv);
-> > > +               return rv;
-> > > +       }
-> > > +
-> > > +       wait_event_interruptible_timeout(client_data->response.wait_queue,
-> > > +                                        client_data->response.flag_response,
-> > > +                                        ISHTP_SEND_TIMEOUT);
-> > > +       if (!client_data->response.flag_response) {
-> > > +               dev_err(cl_data_to_dev(client_data),
-> > > +                       "Timed out for response to command=%02lx",
-> > > +                       out_hdr->command & CMD_MASK);
-> > > +               return -ETIMEDOUT;
-> > > +       }
-> > > +
-> > > +       if (client_data->response.error < 0)
-> > > +               return client_data->response.error;
-> > > +
-> > > +       /* All response messages will contain a header */
-> > > +       in_hdr = (struct loader_msg_hdr *)in_msg;
-> > > +
-> > > +       /* Sanity checks */
-> > > +       if (!(in_hdr->command & IS_RESPONSE)) {
-> > > +               dev_err(cl_data_to_dev(client_data),
-> > > +                       "Invalid response to command\n");
-> > > +               return -EIO;
-> > > +       }
-> > > +
-> > > +       if (in_hdr->status) {
-> > > +               dev_err(cl_data_to_dev(client_data),
-> > > +                       "Loader returned status %d\n",
-> > > +                       in_hdr->status);
-> > > +               return -EIO;
-> > > +       }
-> >
-> > There are two places these sanity checks happen: Here and in
-> > process_recv(). I think they should all be in the same place. Before,
-> > I said move them into here (since then we could return error codes),
-> > but now that you added client_data->response.error, it seems
-> > equivalent to move these down there. So I would put these two
-> > checks down there, then you don't have to cast in_msg at all.
-> > There is new context, but sorry to flip flop!
->
-> No problem. Will move the check to process_recv().
->
-> > > +       case LOADER_CMD_START:
-> > > +               /* Sanity check */
-> > > +               if (client_data->response.flag_response) {
-> > > +                       dev_err(cl_data_to_dev(client_data),
-> > > +                               "Previous firmware message not yet processed\n");
-> > > +                       client_data->response.error = -EINVAL;
-> > > +                       break;
-> > > +               }
+I won't have access to this hardware for a few days, but I am happy
+to provide a simple test tool.
 
-This check should probably happen first within process_recv(), otherwise in
-earlier errors you are writing over someone else's client_data->response.error.
-I would also move the following check on client_data->response.data upwards too.
-That is effectively making the error checking for the arguments
-happening first, before
-the checking of the incoming message. The caller should deal with
-invalid arguments
-first before IO errors. And maybe change order of following checks
-too, I think it
-makes more sense to check for the message status before it's size, etc.
+Still haven't reviewed this, but thanks for chasing it down!
 
-> > > +               if (!client_data->response.data) {
-> > > +                       dev_err(cl_data_to_dev(client_data),
-> > > +                               "Receiving buffer is null. Should be allocated by calling function\n");
-> > > +                       client_data->response.error = -EINVAL;
-> > > +                       break;
-> > > +               }
-> >
-> > Here you are forcing the callers of loader_cl_send() to allocate some data,
-> > but in multiple cases this isn't necessary. Maybe you considered this,
-> > but perhaps
-> > you could make it so if this is NULL then just don't copy any data,
-> > but still succeed?
-> > Then callers of loader_cl_send() can just use NULL as in_msg if they don't want
-> > the returned data. Update docstring of loader_cl_send() if so.
->
-> All loader firmware messages have a header, so a null is
-> treated as an error case. Just a sanity check.
->
-> >
-> > > +
-> > > +               if (data_len > client_data->response.max_size) {
-> > > +                       dev_err(cl_data_to_dev(client_data),
-> > > +                               "Received buffer size %zu is larger than allocated buffer %zu\n",
-> > > +                               data_len, client_data->response.max_size);
-> > > +                       client_data->response.error = -EMSGSIZE;
-> > > +                       break;
-> > > +               }
-> >
-> > Here you need to decide the meaning of the in_size arg for
-> > loader_cl_send(): Does it mean
-> > "The required size of incoming data" or "max size to copy to in_data"?
-> > One is more strict, which
-> > could be good for error checking, but the second is more in line to
-> > the read() syscall and some
-> > other read() functions. At the least fix the docstring of
-> > loader_cl_send(). I think I'm fine with either,
-> > maybe someone else has an opinion?
->
-> >
-> > This could be the alternative algorithm:
-> >
-> > bytes_to_copy = min(data_len, client_data->response.max_size);
-> > client_data->response.size = bytes_to_copy;
-> > if (bytes_to_copy && !client_data->response.data)
-> >          error()
-> > memcpy(client_data->response.data, b_in_proc->buffer.data, bytes_to_copy);
->
-> I would say in_size is the "max size of incoming data".
->
-> If the data exceeds the max size, I want to treat it as an
-> error.
->
-> The read() functions copy partial data, leaving remaining
-> data behind, to be copied on next iteration. We don't expect
-> or do that here, so should log an error.
+EZe
 
-Sounds good!
-
+>  drivers/clk/rockchip/clk-rk3288.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> >
-> > > +
-> > > +               /* Update the actual received buffer size */
-> > > +               client_data->response.size = data_len;
-> > > +
-> > > +               /*
-> > > +                * Copy the buffer received in firmware response for the
-> > > +                * calling thread.
-> > > +                */
-> > > +               memcpy(client_data->response.data,
-> > > +                      rb_in_proc->buffer.data, data_len);
-> > > +
-> > > +               /* Free the buffer */
-> > > +               ishtp_cl_io_rb_recycle(rb_in_proc);
-> > > +               rb_in_proc = NULL;
-> > > +
-> > > +               /* Wake the calling thread */
-> > > +               client_data->response.flag_response = true;
-> > > +               wake_up_interruptible(&client_data->response.wait_queue);
-> > > +               break;
-
-I think the caller should be woken in the error case too. Otherwise in
-loader_cl_send()
-we'll go through the timeout path, even though we didn't actually time out. That
-makes the tail of this function simpler too!
-
-> > > +
-> > > +       default:
-> > > +               dev_err(cl_data_to_dev(client_data),
-> > > +                       "Invalid command=%02lx\n",
-> > > +                       hdr->command & CMD_MASK);
-> > > +               client_data->response.error = -EPROTO;
-> > > +       }
-> >
-> > Instead of placing the "normal" code inside the successful cases of the switch
-> > statement, move the "normal" code out here:
-> > https://refactoring.com/catalog/replaceNestedConditionalWithGuardClauses.html
-> >
-> > Using these guard clauses has two benefits:
-> > -reduces indenting and visual complexity
-> > -separates main logic from error checking
+> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk=
+-rk3288.c
+> index 5a67b7869960..4d767f9c3a80 100644
+> --- a/drivers/clk/rockchip/clk-rk3288.c
+> +++ b/drivers/clk/rockchip/clk-rk3288.c
+> @@ -219,7 +219,7 @@ PNAME(mux_hsadcout_p)       =3D { "hsadc_src", "ext_h=
+sadc" };
+>  PNAME(mux_edp_24m_p)   =3D { "ext_edp_24m", "xin24m" };
+>  PNAME(mux_tspout_p)    =3D { "cpll", "gpll", "npll", "xin27m" };
 >
-> I think the switch-case isn't a good choice anymore. I do
-> not do any case specific processing here. I'll drop the
-> switch, instead add a "if" check at the start for valid
-> commands. Ok?
-
-Looks great!
-
->
-> >
-> > > +
-> > > +end_error:
-> > > +       /* Free the buffer if we did not do above */
-> > > +       if (rb_in_proc)
-> > > +               ishtp_cl_io_rb_recycle(rb_in_proc);
-> > > +}
-> > > +
-> > > +/**
-> > > + * loader_cl_event_cb() - bus driver callback for incoming message
-> > > + * @device:            Pointer to the ishtp client device for which this
-> > > + *                     message is targeted
-> > > + *
-> > > + * Remove the packet from the list and process the message by calling
-> > > + * process_recv
-> > > + */
-> > > +static void loader_cl_event_cb(struct ishtp_cl_device *cl_device)
-> > > +{
-> > > +       struct ishtp_cl_rb *rb_in_proc;
-> > > +       struct ishtp_cl_data *client_data;
-> > > +       struct ishtp_cl *loader_ishtp_cl = ishtp_get_drvdata(cl_device);
-> > > +
-> > > +       client_data = ishtp_get_client_data(loader_ishtp_cl);
-> >
-> > You never use client_data, remove it?
->
-> Will remove client_data.
->
-> >
-> > Or you could change process_recv() to use client_data as argument, since that is
-> > sufficient for it.
-> >
->
-> > > +/**
-> > > + * ish_fw_xfer_direct_dma() - Loads ISH firmware using direct dma
-> > > + * @client_data:       Client data instance
-> > > + * @fw:                        Poiner to firmware data struct in host memory
-> >
-> > add @fw_info. And there's still a typo above. and make fw_info const below?
->
-> Will correct both.
->
-> >
->
-> > > +static int ish_fw_start(struct ishtp_cl_data *client_data)
-> > > +{
-> > > +       int rv;
-> > > +       struct loader_start ldr_start;
-> > > +       struct loader_msg_hdr ldr_start_ack;
-> > > +
-> > > +       memset(&ldr_start, 0, sizeof(ldr_start));
-> > > +       ldr_start.hdr.command = LOADER_CMD_START;
-> > > +       rv = loader_cl_send(client_data,
-> > > +                           (u8 *)&ldr_start,
-> > > +                           sizeof(ldr_start),
-> > > +                           (u8 *)&ldr_start_ack,
-> > > +                           sizeof(ldr_start_ack));
-> > > +
-> > > +       return rv;
-> >
-> > Remove rv and just return loader_cl_send()
->
-> yes, will do.
->
-> >
-> > > +}
-> > > +
-> > > +/**
-> > > + * load_fw_from_host() Loads ISH firmware from host
-> > > + * @client_data:       Client data instance
-> > > + *
-> > > + * This function loads the ISH firmware to ISH SRAM and starts execution
-> > > + *
-> > > + * Return: 0 for success, negative error code for failure.
-> > > + */
-> > > +static int load_fw_from_host(struct ishtp_cl_data *client_data)
-> > > +{
-> > > +       int rv;
-> > > +       u32 xfer_mode;
-> > > +       char *filename;
-> > > +       const struct firmware *fw;
-> > > +       struct shim_fw_info fw_info;
-> > > +       struct ishtp_cl *loader_ishtp_cl = client_data->loader_ishtp_cl;
-> > > +
-> > > +       client_data->flag_retry = false;
-> > > +
-> > > +       filename = kzalloc(FILENAME_SIZE, GFP_KERNEL);
-> > > +       if (!filename) {
-> > > +               rv = -ENOMEM;
-> > > +               goto end_error;
-> >
-> > flag_retry is false here, so a re-attempt will not happen, is that OK?
->
-> Should retry this case as well. Will add the flag.
->
-> >
-> > > +       }
-> > > +
-> > > +       /* Get filename of the ISH firmware to be loaded */
-> > > +       rv = get_firmware_variant(client_data, filename);
-> > > +       if (rv < 0)
-> > > +               goto end_err_filename_buf_release;
-> > > +
-> > > +       rv = request_firmware(&fw, filename, cl_data_to_dev(client_data));
-> > > +       if (rv < 0)
-> > > +               goto end_err_filename_buf_release;
-> > > +
-> > > +       /* Step 1: Query Shim firmware loader properties */
-> > > +
-> > > +       rv = ish_query_loader_prop(client_data, fw, &fw_info);
-> > > +       if (rv < 0)
-> > > +               goto end_err_fw_release;
-> > > +
-> > > +       /* Step 2: Send the main firmware image to be loaded, to ISH SRAM */
-> > > +
-> > > +       xfer_mode = fw_info.ldr_capability.xfer_mode;
-> > > +       if (xfer_mode & LOADER_XFER_MODE_DIRECT_DMA) {
-> > > +               rv = ish_fw_xfer_direct_dma(client_data, fw, fw_info);
-> > > +       } else if (xfer_mode & LOADER_XFER_MODE_ISHTP) {
-> > > +               rv = ish_fw_xfer_ishtp(client_data, fw);
-> > > +       } else {
-> > > +               dev_err(cl_data_to_dev(client_data),
-> > > +                       "No transfer mode selected in firmware\n");
-> > > +               rv = -EINVAL;
-> > > +       }
-> > > +       if (rv < 0)
-> > > +               goto end_err_fw_release;
-> > > +
-> > > +       /* Step 3: Start ISH main firmware exeuction */
-> > > +
-> > > +       rv = ish_fw_start(client_data);
-> > > +       if (rv < 0)
-> > > +               goto end_err_fw_release;
-> > > +
-> > > +       release_firmware(fw);
-> > > +       kfree(filename);
-> > > +       dev_info(cl_data_to_dev(client_data), "ISH firmware %s loaded\n",
-> > > +                filename);
-> > > +       return 0;
-> > > +
-> > > +end_err_fw_release:
-> > > +       release_firmware(fw);
-> > > +end_err_filename_buf_release:
-> > > +       kfree(filename);
-> > > +end_error:
-> > > +       /* Keep a count of retries, and give up after 3 attempts */
-> > > +       if (client_data->flag_retry && client_data->retry_count++ < 3) {
-> >
-> > #define MAX_LOAD_ATTEMPTS  at the top of the file?
-> > Also consider explicitly initializing retry count to 0?
->
-> Will do.
->
-> >
-> > > +               dev_warn(cl_data_to_dev(client_data),
-> > > +                        "ISH host firmware load failed %d. Reset ISH & try again..\n",
-> > > +                        rv);
-> >
-> > Maybe change Reset to Resetting? Reset sounds like it is requesting the
-> > user to perform an action.
->
-> Will change.
->
-> >
-> > > +               ish_hw_reset(ishtp_get_ishtp_device(loader_ishtp_cl));
-> > > +       } else {
-> > > +               dev_err(cl_data_to_dev(client_data),
-> > > +                       "ISH host firmware load failed %d\n", rv);
-> > > +       }
-> > > +       return rv;
-> > > +}
-> > > +
-> > > +static void load_fw_from_host_handler(struct work_struct *work)
-> > > +{
-> > > +       struct ishtp_cl_data *client_data;
-> > > +
-> > > +       client_data = container_of(work, struct ishtp_cl_data,
-> > > +                                  work_fw_load);
-> > > +       load_fw_from_host(client_data);
-> >
-> > If load_fw_from_host() fails then maybe just log the error code?
->
-> We log the error code inside load_fw_from_host(). Are you
-> suggesting to log again here?
-
-I said this because there were a few cases where this could return
-an error code but nothing was logged, such as when alloc() failed.
-It's either log everything in the sub-functions and nothing here,
-or log nothing in sub functions and everything here. You already
-have the first, which I think is better since it has better specificity.
-So what you have here is good.
-That means that you should make sure EVERY error is logged though,
-so track down those few cases. I think it's everywhere you return -ENOMEM.
-I replied inline in your v3 patch below.
-
->
-> >
-> > > +
-> > > +late_initcall(ish_loader_init);
-> > > +module_exit(ish_loader_exit);
-> > > +
-> > > +module_param(dma_buf_size_limit, int, 0644);
-> > > +MODULE_PARM_DESC(dma_buf_size_limit, "Limit the DMA buf size to this value in bytes");
-> > > +
-> > > +MODULE_DESCRIPTION("ISH ISH-TP Host firmware Loader Client Driver");
-> > > +MODULE_AUTHOR("Rushikesh S Kadam <rushikesh.s.kadam@intel.com>");
-> > > +
-> > > +MODULE_LICENSE("GPL v2");
-> > > +MODULE_ALIAS("ishtp:*");
-> > > --
-> > > 1.9.1
-> > >
-> >
-> > After those final tweaks, then oh my goodness,
-> > Acked-by: Nick Crews <ncrews@chromium.org>
->
-> Thanks
-> Rushikesh
->
+> -PNAME(mux_aclk_vcodec_pre_p)   =3D { "aclk_vepu", "aclk_vdpu" };
+> +PNAME(mux_aclk_vcodec_pre_p)   =3D { "aclk_vdpu", "aclk_vepu" };
+>  PNAME(mux_usbphy480m_p)                =3D { "sclk_otgphy1_480m", "sclk_=
+otgphy2_480m",
+>                                     "sclk_otgphy0_480m" };
+>  PNAME(mux_hsicphy480m_p)       =3D { "cpll", "gpll", "usbphy480m_src" };
 > --
+> 2.21.0.392.gf8f6787159e-goog
+>
+
+
+--=20
+Ezequiel Garc=C3=ADa, VanguardiaSur
+www.vanguardiasur.com.ar
