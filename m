@@ -2,116 +2,88 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB64C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BC7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31F72184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D4C2184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KkTtldlW";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jErErcb3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dnt8fWuN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbfC2U1X (ORCPT
+        id S1730139AbfC2U3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 16:27:23 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54580 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729906AbfC2U1X (ORCPT
+        Fri, 29 Mar 2019 16:29:45 -0400
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:42036 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729996AbfC2U3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 16:27:23 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6F2376087F; Fri, 29 Mar 2019 20:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553891242;
-        bh=H+AqADjiFgVNVwUfC56fZtiDkhNO3BWn2kahfXt+VJo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KkTtldlWnuUxl7e2ndqqyNVZL5q1/1oX9cT7KcXRdOemO3+YICdviQJ/YpiqJ4oo0
-         x1VWqHWhWPrGM/Y29r8m8lZzVqU83VHwM7y0BS/+V8+lVDUADevoVgiUcJUjHlUawi
-         OFZN0rOLVS/m9lC9iN8whlRv5B/M53nV4tU3tbaQ=
-Received: from [10.79.168.116] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2396A60735;
-        Fri, 29 Mar 2019 20:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553891241;
-        bh=H+AqADjiFgVNVwUfC56fZtiDkhNO3BWn2kahfXt+VJo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=jErErcb3zyLQpQ0gSv4Wqa/yAy2Nx4ILsCORlv/LpqPOPnONt2zPobwgxzPtZ4dlI
-         nNqlkZVAsur84AIskwScDyfOTidCbiF2AmYdjTGDBV1KjSy7FqcBVAWYoYRuwRKdPC
-         olCccnbIww+68A+69mH66gw1IdN7aJHqIeflUsCE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2396A60735
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH v2 4/4] x86/uaccess: Fix implicit cast of __user pointer
-To:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Qiaowei Ren <qiaowei.ren@intel.com>
-References: <20190329163047.223508-1-jannh@google.com>
- <20190329163047.223508-4-jannh@google.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <dd654d81-7c04-91a9-7e78-f0e83e41f5f9@codeaurora.org>
-Date:   Sat, 30 Mar 2019 01:57:12 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 16:29:45 -0400
+Received: by mail-lj1-f182.google.com with SMTP id v22so3088847lje.9;
+        Fri, 29 Mar 2019 13:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tzkZkrb10rJl1on/WCEES/BRYAEi/aY2ZNRHHwlByHk=;
+        b=Dnt8fWuNqegYca7InB6h6WmQWI7Ri+Q9EZI7nCAYpSePFY20slSBIFVDMX5glqeT1g
+         YCubaZ/Geg4sDRKVGKXJwMmeVbQz2Rd2eWmuIkIrvtdNt/ZaIkm2vIlfWTdrBGjmkFBr
+         9M/Ze4wXXWPpvWLEuu7uVSApdo1LjSKtBfn1Fb7tDvtqRH4NcctRvUdbIc+fQduBl/V7
+         s1K8IQPgq26SJXXmPbnoacHum+x1UXaRKMoULSZfE+TqOFmSQoIDGY51+CUoEESxLTXF
+         XATq66lZGdyWMc19cNpAdSIn6WjXsV4twneQoJzc4NS9MKqpk5LXOAw3tXPmyvcIUYRX
+         TKdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tzkZkrb10rJl1on/WCEES/BRYAEi/aY2ZNRHHwlByHk=;
+        b=KmSCTX/z5EOsb1O2hnuzWrcVAHH4UiMcn4wAR+0PLW+3SYjvyCDIdWYeqbTvJijHsM
+         H5P/etYpBo6uZu58oyYuPQ2FhTcLPpigA2nquouyIdxolA90UgPBXDAEl1s3sBzXEydA
+         yY6j9bA2ppg6H+rppJbuU7o1azo3Y0cdjaCcfVb0kicUjQPdPuTgPK/oNnkdkC9nRFP3
+         uXPKTCpcKTuvkYhar40+PNJUGnih6u1IKUbPu3fUB4JDLQyxfdtWgTwqkn8tPM6rA1Yw
+         ns3aMfOJBW2wKqJbEpcKHO3lAqPECSmHTvVXKGCnMMUXTPuIa2biJNAjLq/KpU9V6Kim
+         K8vA==
+X-Gm-Message-State: APjAAAWvLYKal8GXrdB5h/4lou0K0/7aEEv2Uy7pmc2b3JnKN8HHpbVH
+        AcyENVRU3sbKiSV1WRQELOM=
+X-Google-Smtp-Source: APXvYqyuGH6xABgM6tl7IdhDTlankBwSK0wEBbkJWlsxccjJ/UVTyxa4oN5buZ04JfVqucTeySGdIw==
+X-Received: by 2002:a2e:4209:: with SMTP id p9mr20934461lja.175.1553891383056;
+        Fri, 29 Mar 2019 13:29:43 -0700 (PDT)
+Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id l16sm542645ljb.24.2019.03.29.13.29.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Mar 2019 13:29:42 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: [PATCH v2 0/2] media: ov6650: Add V4L2 asynchronous subdevice support
+Date:   Fri, 29 Mar 2019 21:29:01 +0100
+Message-Id: <20190329202903.5622-1-jmkrzyszt@gmail.com>
+X-Mailer: git-send-email 2.19.2
+In-Reply-To: <20190325003501.14687-1-jmkrzyszt@gmail.com>
+References: <20190325003501.14687-1-jmkrzyszt@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190329163047.223508-4-jannh@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Janusz Krzysztofik (2):
+      media: ov6650: Move v4l2_clk_get() to ov6650_video_probe() helper
+      media: ov6650: Register with asynchronous subdevice framework
 
-On 3/29/2019 10:00 PM, Jann Horn wrote:
-> The first two arguments of __user_atomic_cmpxchg_inatomic() are:
->
->   - `uval` is a kernel pointer into which the old value should be stored
->   - `ptr` is the user pointer on which the cmpxchg should operate
->
-> This means that casting `uval` to `__typeof__(ptr)` is wrong. Since `uval`
-> is only used once inside the macro, just get rid of __uval and use `(uval)`
-> directly.
->
-> Signed-off-by: Jann Horn <jannh@google.com>
+ ov6650.c |   45 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 29 insertions(+), 16 deletions(-)
 
-Looks good to me.
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Changelog:
+v1->v2:
+- labels should be outside conditionals - thanks Sakari
+- rebased on my former fix so it applied cleanly
 
-Cheers,
--Mukesh
-
-> ---
->   arch/x86/include/asm/uaccess.h | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-> index 1954dd5552a2..a21f2a2f17bf 100644
-> --- a/arch/x86/include/asm/uaccess.h
-> +++ b/arch/x86/include/asm/uaccess.h
-> @@ -585,7 +585,6 @@ extern void __cmpxchg_wrong_size(void)
->   #define __user_atomic_cmpxchg_inatomic(uval, ptr, old, new, size)	\
->   ({									\
->   	int __ret = 0;							\
-> -	__typeof__(ptr) __uval = (uval);				\
->   	__typeof__(*(ptr)) __old = (old);				\
->   	__typeof__(*(ptr)) __new = (new);				\
->   	__uaccess_begin_nospec();					\
-> @@ -661,7 +660,7 @@ extern void __cmpxchg_wrong_size(void)
->   		__cmpxchg_wrong_size();					\
->   	}								\
->   	__uaccess_end();						\
-> -	*__uval = __old;						\
-> +	*(uval) = __old;						\
->   	__ret;								\
->   })
->   
