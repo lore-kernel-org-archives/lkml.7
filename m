@@ -2,114 +2,119 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2052C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA5DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0736217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A665217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SS5GrAAY";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Q2TECxcn"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="07C0KlvA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbfC2N2d (ORCPT
+        id S1729663AbfC2NdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 09:28:33 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:50428 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729477AbfC2N2d (ORCPT
+        Fri, 29 Mar 2019 09:33:24 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:52638 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729626AbfC2NdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 09:28:33 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 18EDC60D0C; Fri, 29 Mar 2019 13:28:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553866112;
-        bh=ttxK1vHfpw0tY4gLSA2pokyf+ylJ1NAHeCZYUAoEuZE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SS5GrAAYzNEHl6CAVvee+dk6QjK3RffWx2BBZEc4e4lDDfb9l9gh6c63haghPDHto
-         QPhzlcxqcM7XKFR00Ul433Z9WcjQuLIIsjj2ztmlD8TEe2CqcATrJf0NnUTKMtrSGe
-         QD/pleYj3xZJ0tC2yiDABGxwSSOOjou5GJxfDiZA=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6B82260ACE;
-        Fri, 29 Mar 2019 13:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553866109;
-        bh=ttxK1vHfpw0tY4gLSA2pokyf+ylJ1NAHeCZYUAoEuZE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Q2TECxcnYHKAoM9/IfA96QNSBeVLL5e/Kz2Cx/3UysVNdB4MkLWqnOJAkaK8E0dEQ
-         ik80ymul+CccVh8itc44MfiQYIvWI2/t6wyQMl5CMa2/SRwIKYeW0QO6bQ0ayeaRmJ
-         hy7tuZYwUzNZuWjQd8AnTuN7z6olRV8UIw6tRvKo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6B82260ACE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] rcu: tree_stall: Correctly unlock root node in
- rcu_check_gp_start_stall
-To:     Neeraj Upadhyay <neeraju@codeaurora.org>,
-        paulmck@linux.vnet.ibm.com, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, joel@joelfernandes.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1553858828-23097-1-git-send-email-neeraju@codeaurora.org>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <7a9eed5a-9bcf-460c-abb9-1e9bd6eae102@codeaurora.org>
-Date:   Fri, 29 Mar 2019 18:58:22 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 09:33:24 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2TDSsh7157834;
+        Fri, 29 Mar 2019 13:33:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=sR8mQpUZaz1+m3eNC1JjQIsU/05s3hzQ2Df/4Dqrd6Y=;
+ b=07C0KlvAQH0Uu/dkS/6885TokVb4oyrTiYU7zibzdtBQEjTL+qxhFGy5MOjtzM78tuDZ
+ g7YZN7zptZW8wtE0qfSUKzxtDXxy2BJvnoi261BMpL72QPG+DhU/d3MPioYPSgKS8l4a
+ jGHGL2zXv0KPL84/jxzyM9lYIo82UXjbGEuyT8/4ur0GrbdvGyQKpVCk0dY5lEhxnnwf
+ QFJ17dazBAXJNqfiaRMotm82+fHHkceJkb5h1Y+WsQhpyvHewvEjd42YCfgf3A63qdO/
+ d+dAu4zBuH1LhXXRfVI6E6CmpoU0MqeIJvLLnkhWl617dpBAW/lzQkHbortb+dGQFpLG /g== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by aserp2130.oracle.com with ESMTP id 2re6g1cdpe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 13:33:15 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2TDXEEC015332
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 13:33:14 GMT
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2TDXDfn005763;
+        Fri, 29 Mar 2019 13:33:13 GMT
+Received: from localhost (/67.161.8.12)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 Mar 2019 06:33:13 -0700
+Date:   Fri, 29 Mar 2019 06:33:11 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     torvalds@linux-foundation.org
+Cc:     Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: bug fixes for 5.1-rc3
+Message-ID: <20190329133311.GD18833@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <1553858828-23097-1-git-send-email-neeraju@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9210 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903290098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
-On 3/29/2019 4:57 PM, Neeraj Upadhyay wrote:
-> Only unlock the root node, if current node (rnp) is not
-> root node.
->
-> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+Here are a few fixes for some corruption bugs and uninitialized variable
+problems.  The few patches here have gone through a few days worth of
+fstest runs with no new problems observed; and they merge cleanly with
+master as of a few hours ago.  Please let me know if you encounter any
+problems merging them.
 
+--D
 
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
-> ---
->   kernel/rcu/tree_stall.h | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-> index f65a73a..0651833 100644
-> --- a/kernel/rcu/tree_stall.h
-> +++ b/kernel/rcu/tree_stall.h
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
 
+are available in the Git repository at:
 
-why this is showing as under tree_stall.h while it is under 
-"kernel/rcu/tree.c"
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.1-fixes-1
 
-> @@ -630,7 +630,9 @@ static void rcu_check_gp_start_stall(struct rcu_node *rnp, struct rcu_data *rdp,
->   	    time_before(j, rcu_state.gp_req_activity + gpssdelay) ||
->   	    time_before(j, rcu_state.gp_activity + gpssdelay) ||
->   	    atomic_xchg(&warned, 1)) {
-> -		raw_spin_unlock_rcu_node(rnp_root); /* irqs remain disabled. */
-> +		if (rnp_root != rnp)
-> +			/* irqs remain disabled. */
-> +			raw_spin_unlock_rcu_node(rnp_root);
+for you to fetch changes up to 2032a8a27b5cc0f578d37fa16fa2494b80a0d00a:
 
-Looks good as it will balance the lock .if it is the root_node, which 
-was not there earlier, and unlock was happening without any lock on root.
+  xfs: serialize unaligned dio writes against all other dio writes (2019-03-26 08:37:55 -0700)
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+----------------------------------------------------------------
+Changes since last update:
+- Fix a bunch of static checker complaints about uninitialized variables
+  and insufficient range checks.
+- Avoid a crash when incore extent map data are corrupt.
+- Disallow FITRIM when we haven't recovered the log and know the
+  metadata are stale.
+- Fix a data corruption when doing unaligned overlapping dio writes.
 
-Cheers,
--Mukesh
+----------------------------------------------------------------
+Brian Foster (2):
+      xfs: don't trip over uninitialized buffer on extent read of corrupted inode
+      xfs: serialize unaligned dio writes against all other dio writes
 
->   		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
->   		return;
->   	}
+Darrick J. Wong (4):
+      xfs: dabtree scrub needs to range-check level
+      xfs: fix btree scrub checking with regards to root-in-inode
+      xfs: always init bma in xfs_bmapi_write
+      xfs: prohibit fstrim in norecovery mode
+
+ fs/xfs/libxfs/xfs_bmap.c | 15 +++++++++------
+ fs/xfs/scrub/btree.c     | 11 ++++++++++-
+ fs/xfs/scrub/dabtree.c   |  5 +++++
+ fs/xfs/xfs_discard.c     |  8 ++++++++
+ fs/xfs/xfs_file.c        | 27 +++++++++++++++++----------
+ 5 files changed, 49 insertions(+), 17 deletions(-)
