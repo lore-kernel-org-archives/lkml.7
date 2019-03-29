@@ -2,163 +2,115 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 528A3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 894E9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FCF1218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39B7E218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:29:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ewsK2G44";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jgo2nrPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbfC2V2A (ORCPT
+        id S1730160AbfC2V3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 17:28:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46988 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730001AbfC2V2A (ORCPT
+        Fri, 29 Mar 2019 17:29:50 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55030 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729998AbfC2V3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 17:28:00 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2TLOffE076873
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 17:27:59 -0400
-Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rhq2xbm6b-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 17:27:58 -0400
-Received: from localhost
-        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 29 Mar 2019 21:27:57 -0000
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 29 Mar 2019 21:27:54 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2TLRrXG8585388
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 21:27:53 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7AC52B2065;
-        Fri, 29 Mar 2019 21:27:53 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5D0E5B205F;
-        Fri, 29 Mar 2019 21:27:53 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 29 Mar 2019 21:27:53 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id BF63216C170A; Fri, 29 Mar 2019 14:27:55 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 14:27:55 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Neeraj Upadhyay <neeraju@codeaurora.org>
-Cc:     Mukesh Ojha <mojha@codeaurora.org>, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, joel@joelfernandes.org,
-        rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu: tree_stall: Correctly unlock root node in
- rcu_check_gp_start_stall
-Reply-To: paulmck@linux.ibm.com
-References: <1553858828-23097-1-git-send-email-neeraju@codeaurora.org>
- <7a9eed5a-9bcf-460c-abb9-1e9bd6eae102@codeaurora.org>
- <2a8057f7-0704-5e8f-423e-e56a91a9b448@codeaurora.org>
+        Fri, 29 Mar 2019 17:29:50 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 282B0609CD; Fri, 29 Mar 2019 21:29:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553894989;
+        bh=J0wz0I+Iwv9SmSNn3kJ+vHfOj5hN3rY1UZMX4khmb2M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ewsK2G44sa5xNhsuzwc6MdXbxJWuUVnMpIozLJdw2QIkfV/ltXtQY50GWplGDhcFn
+         8LytQNy4KtuLFskJkoXwtwniTHm8eHShyJW5xfICvcTwq73ekvKj+z31gaHGCSJMgJ
+         szJ1AnFmkemrvMnvlbbhz2wGk2wW7fK48cHOL7Tc=
+Received: from [10.79.168.116] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5D25E6087D;
+        Fri, 29 Mar 2019 21:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553894987;
+        bh=J0wz0I+Iwv9SmSNn3kJ+vHfOj5hN3rY1UZMX4khmb2M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jgo2nrPxNy2z5n/R157FwpwImkF4CXzELhQmMMnVWgGUEOB2Y5avzr3l/xzhP/OTR
+         OvJhsuzqGNcKJlAxloc6hschIXP+QgwcTX97N31xHoreRR2Sbnv1uuQdWfd79FLbAP
+         rWEY5k38vpLUkCRYgmDKeYvFQNfQyxENiI+AaSbk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5D25E6087D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH -next] ocxl: remove set but not used variables 'tid' and
+ 'lpid'
+To:     Yue Haibing <yuehaibing@huawei.com>, fbarrat@linux.ibm.com,
+        andrew.donnellan@au1.ibm.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20190329154456.27152-1-yuehaibing@huawei.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <b30655eb-dcd1-16b2-78a0-6886ceb9ef3d@codeaurora.org>
+Date:   Sat, 30 Mar 2019 02:59:38 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2a8057f7-0704-5e8f-423e-e56a91a9b448@codeaurora.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19032921-0068-0000-0000-000003AD2589
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010836; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000283; SDB=6.01181531; UDB=6.00618415; IPR=6.00962251;
- MB=3.00026214; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-29 21:27:57
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032921-0069-0000-0000-000047FA7E59
-Message-Id: <20190329212755.GB4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-29_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903290146
+In-Reply-To: <20190329154456.27152-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 07:52:15PM +0530, Neeraj Upadhyay wrote:
-> 
-> 
-> On 3/29/19 6:58 PM, Mukesh Ojha wrote:
-> >
-> >On 3/29/2019 4:57 PM, Neeraj Upadhyay wrote:
-> >>Only unlock the root node, if current node (rnp) is not
-> >>root node.
-> >>
-> >>Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-> >
-> >
-> >
-> >>---
-> >>  kernel/rcu/tree_stall.h | 4 +++-
-> >>  1 file changed, 3 insertions(+), 1 deletion(-)
-> >>
-> >>diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-> >>index f65a73a..0651833 100644
-> >>--- a/kernel/rcu/tree_stall.h
-> >>+++ b/kernel/rcu/tree_stall.h
-> >
-> >
-> >why this is showing as under tree_stall.h while it is under
-> >"kernel/rcu/tree.c"
-> 
-> It's moved in https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=10462d6f58fb6dbde7563e9343505d98d5bfba3d
-> 
-> Please see linux-rcu dev tree for other changes, which moves code to
-> this file.
-> 
-> 
-> Thanks
-> Neeraj
-> 
-> >
-> >>@@ -630,7 +630,9 @@ static void rcu_check_gp_start_stall(struct
-> >>rcu_node *rnp, struct rcu_data *rdp,
-> >>          time_before(j, rcu_state.gp_req_activity + gpssdelay) ||
-> >>          time_before(j, rcu_state.gp_activity + gpssdelay) ||
-> >>          atomic_xchg(&warned, 1)) {
-> >>-        raw_spin_unlock_rcu_node(rnp_root); /* irqs remain disabled. */
-> >>+        if (rnp_root != rnp)
-> >>+            /* irqs remain disabled. */
-> >>+            raw_spin_unlock_rcu_node(rnp_root);
-> >
-> >Looks good as it will balance the lock .if it is the root_node,
-> >which was not there earlier, and unlock was happening without any
-> >lock on root.
-> >
-> >Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-Applied, again thank you both!
+On 3/29/2019 9:14 PM, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+>
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/misc/ocxl/link.c: In function 'xsl_fault_handler':
+> drivers/misc/ocxl/link.c:187:17: warning: variable 'tid' set but not used [-Wunused-but-set-variable]
+> drivers/misc/ocxl/link.c:187:6: warning: variable 'lpid' set but not used [-Wunused-but-set-variable]
+>
+> They are never used and can be removed.
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-In both cases, I updated the commit log, so please check to make sure
-that I didn't mess anything up.
-
-							Thanx, Paul
-
-> >Cheers,
-> >-Mukesh
-> >
-> >>          raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> >>          return;
-> >>      }
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> member of the Code Aurora Forum, hosted by The Linux Foundation
-> 
-
+Cheers,
+-Mukesh
+> ---
+>   drivers/misc/ocxl/link.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+> index d50b861..3be07e9 100644
+> --- a/drivers/misc/ocxl/link.c
+> +++ b/drivers/misc/ocxl/link.c
+> @@ -184,7 +184,7 @@ static irqreturn_t xsl_fault_handler(int irq, void *data)
+>   	u64 dsisr, dar, pe_handle;
+>   	struct pe_data *pe_data;
+>   	struct ocxl_process_element *pe;
+> -	int lpid, pid, tid;
+> +	int pid;
+>   	bool schedule = false;
+>   
+>   	read_irq(spa, &dsisr, &dar, &pe_handle);
+> @@ -192,9 +192,7 @@ static irqreturn_t xsl_fault_handler(int irq, void *data)
+>   
+>   	WARN_ON(pe_handle > SPA_PE_MASK);
+>   	pe = spa->spa_mem + pe_handle;
+> -	lpid = be32_to_cpu(pe->lpid);
+>   	pid = be32_to_cpu(pe->pid);
+> -	tid = be32_to_cpu(pe->tid);
+>   	/* We could be reading all null values here if the PE is being
+>   	 * removed while an interrupt kicks in. It's not supposed to
+>   	 * happen if the driver notified the AFU to terminate the
