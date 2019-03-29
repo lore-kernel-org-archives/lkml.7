@@ -2,1350 +2,1215 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3DAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46994C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA13720811
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F0B20811
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:07:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YZKjXdxV"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SINw0bIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbfC2GDI (ORCPT
+        id S1728706AbfC2GHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 02:03:08 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46260 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbfC2GDI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 02:03:08 -0400
-Received: by mail-ot1-f67.google.com with SMTP id s24so970130otk.13
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 23:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EYx0I9gqICyytaXCnRMJJiH30dx1Du5tgm71gW0E8Ww=;
-        b=YZKjXdxVrIAEFIKa/gM/4388m/+tplom0YOe7zNdFhe+V5zv+j+o8rqmSNjxk9Cfhc
-         c/VPuRC2w0H6a9oRZSYiPh3kNs2P2GnAMoxXdiv20zSzVWkkwLUN3Xr0LmKjhablqETV
-         22kvGSGrahtOqdoa2K8e2Kaq/EUBJbNYCTzbA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EYx0I9gqICyytaXCnRMJJiH30dx1Du5tgm71gW0E8Ww=;
-        b=V3kEPzw9kcBplwy6vlLy/gEJdN/O2EccGtBZOJ8C0W2vJuR3RTPHLKCuwnax+5zECB
-         EGAIXNkEGl+4MzQVNn9cUlBQ6xFlm4Yt/sMklQS0ij/7jprGVa0I+tp59QOGQGrkWKj0
-         6/EC62X8V4Urgix9n3++A4vQForCwZKSWqPd+IG9pwDor7eLkWfmyIDi3SrWeUeYEOYW
-         3SDRPrf/6Qm8UKUOpdfgDULzEuSM5LBftL3vqtV058KOP+7KkDVtkYlWOssuTskMO2Yl
-         4fL22rxSNHPMLypI+u4bKcZaYNjcMpDliuEoqAaz5PKir/jyXXDV5wMDf0v9/AOA5R72
-         sc8A==
-X-Gm-Message-State: APjAAAU9oLWB8LuFpBRaoMYfFVTUSMyLG5E1uaBKckrR5TndA5fmKnPO
-        fCJCe4N0RgFHDuUllcbe57qNBJtTkas=
-X-Google-Smtp-Source: APXvYqzvOZ9RMeeIiAssI3Rf9KQU30l8fQvuhRfvoMlecSLXqwdhdqaSvU1Zo7si8SoMNKIigx5AGA==
-X-Received: by 2002:a9d:3f24:: with SMTP id m33mr32235095otc.147.1553839385828;
-        Thu, 28 Mar 2019 23:03:05 -0700 (PDT)
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com. [209.85.210.52])
-        by smtp.gmail.com with ESMTPSA id r25sm472199otk.37.2019.03.28.23.03.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 23:03:04 -0700 (PDT)
-Received: by mail-ot1-f52.google.com with SMTP id f10so1005203otb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 23:03:04 -0700 (PDT)
-X-Received: by 2002:a05:6830:1497:: with SMTP id s23mr32862856otq.236.1553839383844;
- Thu, 28 Mar 2019 23:03:03 -0700 (PDT)
+        Fri, 29 Mar 2019 02:07:33 -0400
+Received: from mail-eopbgr70054.outbound.protection.outlook.com ([40.107.7.54]:34218
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726986AbfC2GHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 02:07:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mjZIeiObeNxcWsoCu3qx4f69Uw5lAH358JRmiszYAeQ=;
+ b=SINw0bIV24SftROU7731cuBTnRdiESJu+vm21dCxuylbAAk96wkoUVOmamVvJLLVF7RT9NxlBVuiASoncQ7NvvmON37vFvwDVIF/aClIyAMaP6rH9eu0yHr30/AEy5rxUUg4NCDcamKl7FSY8KvaqIBgQpi/B8DM/keTbXsE/ik=
+Received: from AM6PR04MB5781.eurprd04.prod.outlook.com (20.179.3.19) by
+ AM6PR04MB4822.eurprd04.prod.outlook.com (20.177.34.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.15; Fri, 29 Mar 2019 06:07:14 +0000
+Received: from AM6PR04MB5781.eurprd04.prod.outlook.com
+ ([fe80::30cc:e034:1f7a:2cc7]) by AM6PR04MB5781.eurprd04.prod.outlook.com
+ ([fe80::30cc:e034:1f7a:2cc7%2]) with mapi id 15.20.1750.014; Fri, 29 Mar 2019
+ 06:07:14 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv4 16/28] PCI: mobiveil: refactor Mobiveil PCIe Host Bridge
+ IP driver
+Thread-Topic: [PATCHv4 16/28] PCI: mobiveil: refactor Mobiveil PCIe Host
+ Bridge IP driver
+Thread-Index: AQHU1+1JKH7BRWLFLk+IghztSVt2gqYeRHCAgACM1qCAAQbRgIAAh4pggADxoACAAOmosA==
+Date:   Fri, 29 Mar 2019 06:07:14 +0000
+Message-ID: <AM6PR04MB57818FA46670CFACD98E6E28845A0@AM6PR04MB5781.eurprd04.prod.outlook.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+ <20190311093130.7209-17-Zhiqiang.Hou@nxp.com>
+ <20190326173421.GB10666@e107981-ln.cambridge.arm.com>
+ <AM6PR04MB5781E5447F3F433702C5765084580@AM6PR04MB5781.eurprd04.prod.outlook.com>
+ <20190327173905.GA19093@red-moon>
+ <AM6PR04MB5781579144DFA4F37E4F9E7784590@AM6PR04MB5781.eurprd04.prod.outlook.com>
+ <20190328160900.GA19825@red-moon>
+In-Reply-To: <20190328160900.GA19825@red-moon>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 017d78ab-d4fe-4007-35d1-08d6b40cca23
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:AM6PR04MB4822;
+x-ms-traffictypediagnostic: AM6PR04MB4822:
+x-microsoft-antispam-prvs: <AM6PR04MB482235DEE014A544DA4A3B78845A0@AM6PR04MB4822.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0991CAB7B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(39860400002)(366004)(376002)(13464003)(189003)(52314003)(199004)(7736002)(55016002)(74316002)(316002)(7696005)(81166006)(8676002)(86362001)(99286004)(54906003)(6916009)(53936002)(102836004)(6436002)(9686003)(52536014)(71190400001)(81156014)(305945005)(71200400001)(6246003)(5660300002)(229853002)(106356001)(11346002)(2906002)(486006)(53946003)(256004)(76176011)(446003)(53546011)(93886005)(6116002)(68736007)(14454004)(8936002)(66066001)(5024004)(6506007)(3846002)(97736004)(476003)(14444005)(4326008)(7416002)(186003)(105586002)(25786009)(478600001)(33656002)(26005)(30864003)(579004)(559001)(569006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4822;H:AM6PR04MB5781.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yhO34cG7numsLBxyl8c/7V7zb/Kkt4ezgyNTnecTXbZIHzgoPV2iHvcce+qntlPw7gVOmkAHGuCKoonf+74/vdoLgTByseka8tj37YaFXcVAztu/KnOMtVc91kF+yjhikriZyfO18TscOvyZ0bJfXBOa11MEFFS7fE7zmf0O41zC1JEQ2kSe4/2jifJvThdiljKyY5NBDILxC5i7p81yVV79U3OnkqCFKtj0Mrw4UV3j4bPv6OPLZC530tM4qWNDQhcIfa1rSvYtYGyO4sTxQ6IEWEGRwBMcOxJArPpEx72gtsKmv574ykaxXaGIar7/IBAvCun5XLe8Sk1akYEpjPcgsiBF8sWgLDQnj73Emf9XGV4UWIV5/5lBD/DaSl04Y7diLypAliJ5BaxS5xXX+sWJa/Aga2WPlGTc8gmvLfU=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1553804456-5329-1-git-send-email-rushikesh.s.kadam@intel.com>
-In-Reply-To: <1553804456-5329-1-git-send-email-rushikesh.s.kadam@intel.com>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Thu, 28 Mar 2019 23:02:52 -0700
-X-Gmail-Original-Message-ID: <CAHX4x876zC0BjQnAC0e3+b00QzfvSOgFnW-TfGLf6-u55q9Ftw@mail.gmail.com>
-Message-ID: <CAHX4x876zC0BjQnAC0e3+b00QzfvSOgFnW-TfGLf6-u55q9Ftw@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: intel-ish-hid: ISH firmware loader client driver
-To:     Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        benjamin.tissoires@redhat.com, jikos@kernel.org,
-        jettrink@chromium.org, Gwendal Grignou <gwendal@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 017d78ab-d4fe-4007-35d1-08d6b40cca23
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2019 06:07:14.1985
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4822
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is so close! There are just one or two tiny things.
-
-On Thu, Mar 28, 2019 at 1:20 PM Rushikesh S Kadam
-<rushikesh.s.kadam@intel.com> wrote:
->
-> This driver adds support for loading Intel Integrated
-> Sensor Hub (ISH) firmware from host file system to ISH
-> SRAM and start execution.
->
-> At power-on, the ISH subsystem shall boot to an interim
-> Shim loader-firmware, which shall expose an ISHTP loader
-> device.
->
-> The driver implements an ISHTP client that communicates
-> with the Shim ISHTP loader device over the intel-ish-hid
-> stack, to download the main ISH firmware.
->
-> Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-> ---
-> The patches are baselined to hid git tree, branch for-5.2/ish
-> https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/log/?h=for-5.2/ish
->
-> The v2 revision primarily address review comments received on
-> the v1 patch.
->
-> v2
->  - Change loader_cl_send() so that the calling function
->    shall allocate and pass the buffer to be used for
->    receiving firwmare response data. Corresponding changes
->    in calling function and process_recv().
->  - Introduced struct response_info to encapsulate and pass
->    data between from the process_recv() callback to
->    calling function loader_cl_send().
->  - Keep count of host firmware load retries, and fail after
->    3 unsuccessful attempts.
->  - Dropped report_bad_packets() function previously used for
->    keeping count of bad packets.
->  - Inlined loader_ish_hw_reset()'s functionality
->
-> v1
->  - Initial version.
->
->  drivers/hid/Makefile                        |    1 +
->  drivers/hid/intel-ish-hid/Kconfig           |   15 +
->  drivers/hid/intel-ish-hid/Makefile          |    3 +
->  drivers/hid/intel-ish-hid/ishtp-fw-loader.c | 1084 +++++++++++++++++++++++++++
->  4 files changed, 1103 insertions(+)
->  create mode 100644 drivers/hid/intel-ish-hid/ishtp-fw-loader.c
->
-> diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
-> index 170163b..d8d393e 100644
-> --- a/drivers/hid/Makefile
-> +++ b/drivers/hid/Makefile
-> @@ -134,3 +134,4 @@ obj-$(CONFIG_USB_KBD)               += usbhid/
->  obj-$(CONFIG_I2C_HID)          += i2c-hid/
->
->  obj-$(CONFIG_INTEL_ISH_HID)    += intel-ish-hid/
-> +obj-$(INTEL_ISH_FIRMWARE_DOWNLOADER)   += intel-ish-hid/
-> diff --git a/drivers/hid/intel-ish-hid/Kconfig b/drivers/hid/intel-ish-hid/Kconfig
-> index 519e4c8..786adbc 100644
-> --- a/drivers/hid/intel-ish-hid/Kconfig
-> +++ b/drivers/hid/intel-ish-hid/Kconfig
-> @@ -14,4 +14,19 @@ config INTEL_ISH_HID
->           Broxton and Kaby Lake.
->
->           Say Y here if you want to support Intel ISH. If unsure, say N.
-> +
-> +config INTEL_ISH_FIRMWARE_DOWNLOADER
-> +       tristate "Host Firmware Load feature for Intel ISH"
-> +       depends on INTEL_ISH_HID
-> +       depends on X86
-> +       help
-> +         The Integrated Sensor Hub (ISH) enables the kernel to offload
-> +         sensor polling and algorithm processing to a dedicated low power
-> +         processor in the chipset.
-> +
-> +         The Host Firmware Load feature adds support to load the ISH
-> +         firmware from host file system at boot.
-> +
-> +         Say M here if you want to support Host Firmware Loading feature
-> +         for Intel ISH. If unsure, say N.
->  endmenu
-> diff --git a/drivers/hid/intel-ish-hid/Makefile b/drivers/hid/intel-ish-hid/Makefile
-> index 825b70a..2de97e4 100644
-> --- a/drivers/hid/intel-ish-hid/Makefile
-> +++ b/drivers/hid/intel-ish-hid/Makefile
-> @@ -20,4 +20,7 @@ obj-$(CONFIG_INTEL_ISH_HID) += intel-ishtp-hid.o
->  intel-ishtp-hid-objs := ishtp-hid.o
->  intel-ishtp-hid-objs += ishtp-hid-client.o
->
-> +obj-$(CONFIG_INTEL_ISH_FIRMWARE_DOWNLOADER) += intel-ishtp-loader.o
-> +intel-ishtp-loader-objs += ishtp-fw-loader.o
-> +
->  ccflags-y += -Idrivers/hid/intel-ish-hid/ishtp
-> diff --git a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-> new file mode 100644
-> index 0000000..8685fa6
-> --- /dev/null
-> +++ b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-> @@ -0,0 +1,1084 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * ISH-TP client driver for ISH firmware loading
-> + *
-> + * Copyright (c) 2019, Intel Corporation.
-> + */
-> +
-> +#include <linux/firmware.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/intel-ish-client-if.h>
-> +#include <linux/property.h>
-> +#include <asm/cacheflush.h>
-> +
-> +/* ISH TX/RX ring buffer pool size */
-> +#define LOADER_CL_RX_RING_SIZE                 1
-> +#define LOADER_CL_TX_RING_SIZE                 1
-> +
-> +/*
-> + * ISH Shim firmware loader reserves 4 Kb buffer in SRAM. The buffer is
-> + * used to temporarily hold the data transferred from host to Shim
-> + * firmware loader. Reason for the odd size of 3968 bytes? Each IPC
-> + * transfer is 128 bytes (= 4 bytes header + 124 bytes payload). So the
-> + * 4 Kb buffer can hold maximum of 32 IPC transfers, which means we can
-> + * have a max payload of 3968 bytes (= 32 x 124 payload).
-> + */
-> +#define LOADER_SHIM_IPC_BUF_SIZE               3968
-> +
-> +/**
-> + * enum ish_loader_commands -  ISH loader host commands.
-> + * LOADER_CMD_XFER_QUERY       Query the Shim firmware loader for
-> + *                             capabilities
-> + * LOADER_CMD_XFER_FRAGMENT    Transfer one firmware image fragment at a
-> + *                             time. The command may be executed
-> + *                             multiple times until the entire firmware
-> + *                             image is downloaded to SRAM.
-> + * LOADER_CMD_START            Start executing the main firmware.
-> + */
-> +enum ish_loader_commands {
-> +       LOADER_CMD_XFER_QUERY = 0,
-> +       LOADER_CMD_XFER_FRAGMENT,
-> +       LOADER_CMD_START,
-> +};
-> +
-> +/* Command bit mask */
-> +#define        CMD_MASK                                GENMASK(6, 0)
-> +#define        IS_RESPONSE                             BIT(7)
-> +
-> +/*
-> + * ISH firmware max delay for one transmit failure is 1 Hz,
-> + * and firmware will retry 2 times, so 3 Hz is used for timeout.
-> + */
-> +#define ISHTP_SEND_TIMEOUT                     (3 * HZ)
-> +
-> +/*
-> + * Loader transfer modes:
-> + *
-> + * LOADER_XFER_MODE_ISHTP mode uses the existing ISH-TP mechanism to
-> + * transfer data. This may use IPC or DMA if supported in firmware.
-> + * The buffer size is limited to 4 Kb by the IPC/ISH-TP protocol for
-> + * both IPC & DMA (legacy).
-> + *
-> + * LOADER_XFER_MODE_DIRECT_DMA - firmware loading is a bit different
-> + * from the sensor data streaming. Here we download a large (300+ Kb)
-> + * image directly to ISH SRAM memory. There is limited benefit of
-> + * DMA'ing 300 Kb image in 4 Kb chucks limit. Hence, we introduce
-> + * this "direct dma" mode, where we do not use ISH-TP for DMA, but
-> + * instead manage the DMA directly in kernel driver and Shim firmware
-> + * loader (allocate buffer, break in chucks and transfer). This allows
-> + * to overcome 4 Kb limit, and optimize the data flow path in firmware.
-> + */
-> +#define LOADER_XFER_MODE_DIRECT_DMA            BIT(0)
-> +#define LOADER_XFER_MODE_ISHTP                 BIT(1)
-> +
-> +/* ISH Transport Loader client unique GUID */
-> +static const guid_t loader_ishtp_guid =
-> +       GUID_INIT(0xc804d06a, 0x55bd, 0x4ea7,
-> +                 0xad, 0xed, 0x1e, 0x31, 0x22, 0x8c, 0x76, 0xdc);
-> +
-> +#define FILENAME_SIZE                          256
-> +
-> +/*
-> + * The firmware loading latency will be minimum if we can DMA the
-> + * entire ISH firmware image in one go. This requires that we allocate
-> + * a large DMA buffer in kernel, which could be problematic on some
-> + * platforms. So here we limit the DMA buffer size via a module_param.
-> + * We default to 4 pages, but a customer can set it to higher limit if
-> + * deemed appropriate for his platform.
-> + */
-> +static int dma_buf_size_limit = 4 * PAGE_SIZE;
-> +
-> +/**
-> + * struct loader_msg_hdr - Header for ISH Loader commands.
-> + * @command:           LOADER_CMD* commands. Bit 7 is the response.
-> + * @status:            Command response status. Non 0, is error
-> + *                     condition.
-> + *
-> + * This structure is used as header for every command/data sent/received
-> + * between Host driver and ISH Shim firmware loader.
-> + */
-> +struct loader_msg_hdr {
-> +       u8 command;
-> +       u8 reserved[2];
-> +       u8 status;
-> +} __packed;
-> +
-> +struct loader_xfer_query {
-> +       struct loader_msg_hdr hdr;
-> +       u32 image_size;
-> +} __packed;
-> +
-> +struct ish_fw_version {
-> +       u16 major;
-> +       u16 minor;
-> +       u16 hotfix;
-> +       u16 build;
-> +} __packed;
-> +
-> +union loader_version {
-> +       u32 value;
-> +       struct {
-> +               u8 major;
-> +               u8 minor;
-> +               u8 hotfix;
-> +               u8 build;
-> +       };
-> +} __packed;
-> +
-> +struct loader_capability {
-> +       u32 max_fw_image_size;
-> +       u32 xfer_mode;
-> +       u32 max_dma_buf_size; /* only for dma mode, multiples of cacheline */
-> +} __packed;
-> +
-> +struct shim_fw_info {
-> +       struct ish_fw_version ish_fw_version;
-> +       u32 protocol_version;
-> +       union loader_version ldr_version;
-> +       struct loader_capability ldr_capability;
-> +} __packed;
-> +
-> +struct loader_xfer_query_response {
-> +       struct loader_msg_hdr hdr;
-> +       struct shim_fw_info fw_info;
-> +} __packed;
-> +
-> +struct loader_xfer_fragment {
-> +       struct loader_msg_hdr hdr;
-> +       u32 xfer_mode;
-> +       u32 offset;
-> +       u32 size;
-> +       u32 is_last;
-> +} __packed;
-> +
-> +struct loader_xfer_ipc_fragment {
-> +       struct loader_xfer_fragment fragment;
-> +       u8 data[] ____cacheline_aligned; /* variable length payload here */
-> +} __packed;
-> +
-> +struct loader_xfer_dma_fragment {
-> +       struct loader_xfer_fragment fragment;
-> +       u64 ddr_phys_addr;
-> +} __packed;
-> +
-> +struct loader_start {
-> +       struct loader_msg_hdr hdr;
-> +} __packed;
-> +
-> +/**
-> + * struct response_info - Encapsulate firmware response related
-> + *                     information for passing between function
-> + *                     loader_cl_send() and process_recv() callback.
-> + * @data               Copy the data received from firmware here.
-> + * @max_size           Max size allocated for the receive buffer
-> + * @size               Size of data received from firmware.
-> + * @error              Returns 0 for success, negative error code for a
-> + *                     failure in function process_recv().
-> + * flag_response       Set to true on receiving a valid firmware
-> + *                     response to host command
-> + * wait_queue          Wait queue for Host firmware loading where the
-> + *                     client sends message to ISH firmware and waits
-> + *                     for response
-> + */
-> +struct response_info {
-> +       void *data;
-> +       size_t max_size;
-> +       size_t size;
-> +       int error;
-> +       bool flag_response;
-> +       wait_queue_head_t wait_queue;
-> +};
-> +
-> +/**
-> + * struct ishtp_cl_data - Encapsulate per ISH-TP Client Data.
-> + * @work_ishtp_reset:  Work queue for reset handling.
-> + * @work_fw_load:      Work queue for host firmware loading.
-> + * @flag_retry         Flag for indicating host firmware loading should
-> + *                     be retried.
-> + * @retry_count                Count the number of retries.
-> + *
-> + * This structure is used to store data per client.
-> + */
-> +struct ishtp_cl_data {
-> +       struct ishtp_cl *loader_ishtp_cl;
-> +       struct ishtp_cl_device *cl_device;
-> +
-> +       /*
-> +        * Used for passing firmware response information between
-> +        * loader_cl_send() and process_recv() callback.
-> +        */
-> +       struct response_info response;
-> +
-> +       struct work_struct work_ishtp_reset;
-> +       struct work_struct work_fw_load;
-> +
-> +       /*
-> +        * In certain failure scenrios, it makes sense to reset the ISH
-> +        * subsystem and retry Host firmware loading (e.g. bad message
-> +        * packet, ENOMEM, etc.). On the other hand, failures due to
-> +        * protocol mismatch, etc., are not recoverable. We do not
-> +        * retry them.
-> +        *
-> +        * If set, the flag indicates that we should re-try the
-> +        * particular failure.
-> +        */
-> +       bool flag_retry;
-> +       int retry_count;
-> +};
-> +
-> +#define IPC_FRAGMENT_DATA_PREAMBLE                             \
-> +       offsetof(struct loader_xfer_ipc_fragment, data)
-> +
-> +#define cl_data_to_dev(client_data) ishtp_device((client_data)->cl_device)
-> +
-> +/**
-> + * get_firmware_variant() - Gets the filename of firmware image to be
-> + *                     loaded based on platform variant.
-> + * @client_data                Client data instance.
-> + * @filename           Returns firmware filename.
-> + *
-> + * Queries the firmware-name device property string.
-> + *
-> + * Return: 0 for success, negative error code for failure.
-> + */
-> +static int get_firmware_variant(struct ishtp_cl_data *client_data,
-> +                               char *filename)
-> +{
-> +       int rv;
-> +       const char *val;
-> +       struct device *devc = ishtp_get_pci_device(client_data->cl_device);
-> +
-> +       rv = device_property_read_string(devc, "firmware-name", &val);
-> +       if (rv < 0) {
-> +               dev_err(devc,
-> +                       "Error: ISH firmware-name device property required\n");
-> +               return rv;
-> +       }
-> +       return snprintf(filename, FILENAME_SIZE, "intel/%s", val);
-> +}
-> +
-> +/**
-> + * loader_cl_send()    Send message from host to firmware
-> + * @client_data:       Client data instance
-> + * @out_msg            Message buffer to be sent to firmware
-> + * @out_size           Size of out going message
-> + * @in_msg             Message buffer where the incoming data copied.
-> + *                     This buffer is allocated by calling
-> + * @in_size            Max size of incoming message
-> + *
-> + * Return: Received buffer size on success, negative error code on failure.
-
-Number of bytes copied to in_msg? Maybe a bit different than number of
-bytes received?
-
-> + */
-> +static int loader_cl_send(struct ishtp_cl_data *client_data,
-> +                         u8 *out_msg, size_t out_size,
-> +                         u8 *in_msg, size_t in_size)
-> +{
-> +       int rv;
-> +       struct loader_msg_hdr *in_hdr;
-> +       struct loader_msg_hdr *out_hdr = (struct loader_msg_hdr *)out_msg;
-> +       struct ishtp_cl *loader_ishtp_cl = client_data->loader_ishtp_cl;
-> +
-> +       dev_dbg(cl_data_to_dev(client_data),
-> +               "%s: command=%02lx is_response=%u status=%02x\n",
-> +               __func__,
-> +               out_hdr->command & CMD_MASK,
-> +               out_hdr->command & IS_RESPONSE ? 1 : 0,
-> +               out_hdr->status);
-> +
-> +       /* Setup in coming buffer & size */
-> +       client_data->response.data = in_msg;
-> +       client_data->response.max_size = in_size;
-> +       client_data->response.error = 0;
-> +       client_data->response.flag_response = false;
-
-nit:
-Consider renaming to something a bit more descriptive
-such as "response.received"?
-
-> +
-> +       rv = ishtp_cl_send(loader_ishtp_cl, out_msg, out_size);
-> +       if (rv < 0) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "ishtp_cl_send error %d\n", rv);
-> +               return rv;
-> +       }
-> +
-> +       wait_event_interruptible_timeout(client_data->response.wait_queue,
-> +                                        client_data->response.flag_response,
-> +                                        ISHTP_SEND_TIMEOUT);
-> +       if (!client_data->response.flag_response) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "Timed out for response to command=%02lx",
-> +                       out_hdr->command & CMD_MASK);
-> +               return -ETIMEDOUT;
-> +       }
-> +
-> +       if (client_data->response.error < 0)
-> +               return client_data->response.error;
-> +
-> +       /* All response messages will contain a header */
-> +       in_hdr = (struct loader_msg_hdr *)in_msg;
-> +
-> +       /* Sanity checks */
-> +       if (!(in_hdr->command & IS_RESPONSE)) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "Invalid response to command\n");
-> +               return -EIO;
-> +       }
-> +
-> +       if (in_hdr->status) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "Loader returned status %d\n",
-> +                       in_hdr->status);
-> +               return -EIO;
-> +       }
-
-There are two places these sanity checks happen: Here and in
-process_recv(). I think they should all be in the same place. Before,
-I said move them into here (since then we could return error codes),
-but now that you added client_data->response.error, it seems
-equivalent to move these down there. So I would put these two
-checks down there, then you don't have to cast in_msg at all.
-There is new context, but sorry to flip flop!
-
-> +
-> +       return client_data->response.size;
-> +}
-> +
-> +/**
-> + * process_recv() -    Receive and parse incoming packet
-> + * @loader_ishtp_cl:   Client instance to get stats
-> + * @rb_in_proc:                ISH received message buffer
-> + *
-> + * Parse the incoming packet. If it is a response packet then it will
-> + * update flag_response and wake up the caller waiting to for the response.
-> + */
-> +static void process_recv(struct ishtp_cl *loader_ishtp_cl,
-> +                        struct ishtp_cl_rb *rb_in_proc)
-> +{
-> +       struct loader_msg_hdr *hdr;
-> +       size_t data_len = rb_in_proc->buf_idx;
-> +       struct ishtp_cl_data *client_data =
-> +               ishtp_get_client_data(loader_ishtp_cl);
-> +
-> +       /*
-> +        * All firmware messages have a header. Check buffer size
-> +        * before accessing elements inside.
-> +        */
-> +       if (!rb_in_proc->buffer.data) {
-> +               dev_warn(cl_data_to_dev(client_data),
-> +                        "rb_in_proc->buffer.data returned null");
-> +               client_data->response.error = -EBADMSG;
-> +               goto end_error;
-> +       }
-> +       if (data_len < sizeof(struct loader_msg_hdr)) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "data size %zu is less than header %zu\n",
-> +                       data_len, sizeof(struct loader_msg_hdr));
-> +               client_data->response.error = -EMSGSIZE;
-> +               goto end_error;
-> +       }
-> +
-> +       hdr = (struct loader_msg_hdr *)rb_in_proc->buffer.data;
-> +
-> +       dev_dbg(cl_data_to_dev(client_data),
-> +               "%s: command=%02lx is_response=%u status=%02x\n",
-> +               __func__,
-> +               hdr->command & CMD_MASK,
-> +               hdr->command & IS_RESPONSE ? 1 : 0,
-> +               hdr->status);
-> +
-> +       switch (hdr->command & CMD_MASK) {
-> +       case LOADER_CMD_XFER_QUERY:
-> +       case LOADER_CMD_XFER_FRAGMENT:
-> +       case LOADER_CMD_START:
-> +               /* Sanity check */
-> +               if (client_data->response.flag_response) {
-> +                       dev_err(cl_data_to_dev(client_data),
-> +                               "Previous firmware message not yet processed\n");
-> +                       client_data->response.error = -EINVAL;
-> +                       break;
-> +               }
-> +               if (!client_data->response.data) {
-> +                       dev_err(cl_data_to_dev(client_data),
-> +                               "Receiving buffer is null. Should be allocated by calling function\n");
-> +                       client_data->response.error = -EINVAL;
-> +                       break;
-> +               }
-
-Here you are forcing the callers of loader_cl_send() to allocate some data,
-but in multiple cases this isn't necessary. Maybe you considered this,
-but perhaps
-you could make it so if this is NULL then just don't copy any data,
-but still succeed?
-Then callers of loader_cl_send() can just use NULL as in_msg if they don't want
-the returned data. Update docstring of loader_cl_send() if so.
-
-> +
-> +               if (data_len > client_data->response.max_size) {
-> +                       dev_err(cl_data_to_dev(client_data),
-> +                               "Received buffer size %zu is larger than allocated buffer %zu\n",
-> +                               data_len, client_data->response.max_size);
-> +                       client_data->response.error = -EMSGSIZE;
-> +                       break;
-> +               }
-
-Here you need to decide the meaning of the in_size arg for
-loader_cl_send(): Does it mean
-"The required size of incoming data" or "max size to copy to in_data"?
-One is more strict, which
-could be good for error checking, but the second is more in line to
-the read() syscall and some
-other read() functions. At the least fix the docstring of
-loader_cl_send(). I think I'm fine with either,
-maybe someone else has an opinion?
-
-This could be the alternative algorithm:
-
-bytes_to_copy = min(data_len, client_data->response.max_size);
-client_data->response.size = bytes_to_copy;
-if (bytes_to_copy && !client_data->response.data)
-         error()
-memcpy(client_data->response.data, b_in_proc->buffer.data, bytes_to_copy);
-
-> +
-> +               /* Update the actual received buffer size */
-> +               client_data->response.size = data_len;
-> +
-> +               /*
-> +                * Copy the buffer received in firmware response for the
-> +                * calling thread.
-> +                */
-> +               memcpy(client_data->response.data,
-> +                      rb_in_proc->buffer.data, data_len);
-> +
-> +               /* Free the buffer */
-> +               ishtp_cl_io_rb_recycle(rb_in_proc);
-> +               rb_in_proc = NULL;
-> +
-> +               /* Wake the calling thread */
-> +               client_data->response.flag_response = true;
-> +               wake_up_interruptible(&client_data->response.wait_queue);
-> +               break;
-> +
-> +       default:
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "Invalid command=%02lx\n",
-> +                       hdr->command & CMD_MASK);
-> +               client_data->response.error = -EPROTO;
-> +       }
-
-Instead of placing the "normal" code inside the successful cases of the switch
-statement, move the "normal" code out here:
-https://refactoring.com/catalog/replaceNestedConditionalWithGuardClauses.html
-
-Using these guard clauses has two benefits:
--reduces indenting and visual complexity
--separates main logic from error checking
-
-> +
-> +end_error:
-> +       /* Free the buffer if we did not do above */
-> +       if (rb_in_proc)
-> +               ishtp_cl_io_rb_recycle(rb_in_proc);
-> +}
-> +
-> +/**
-> + * loader_cl_event_cb() - bus driver callback for incoming message
-> + * @device:            Pointer to the ishtp client device for which this
-> + *                     message is targeted
-> + *
-> + * Remove the packet from the list and process the message by calling
-> + * process_recv
-> + */
-> +static void loader_cl_event_cb(struct ishtp_cl_device *cl_device)
-> +{
-> +       struct ishtp_cl_rb *rb_in_proc;
-> +       struct ishtp_cl_data *client_data;
-> +       struct ishtp_cl *loader_ishtp_cl = ishtp_get_drvdata(cl_device);
-> +
-> +       client_data = ishtp_get_client_data(loader_ishtp_cl);
-
-You never use client_data, remove it?
-
-Or you could change process_recv() to use client_data as argument, since that is
-sufficient for it.
-
-> +
-> +       while ((rb_in_proc = ishtp_cl_rx_get_rb(loader_ishtp_cl)) != NULL) {
-> +               /* Process the data packet from firmware */
-> +               process_recv(loader_ishtp_cl, rb_in_proc);
-> +       }
-> +}
-> +
-> +/**
-> + * ish_query_loader_prop() -  Query ISH Shim firmware loader
-> + * @client_data:       Client data instance
-> + * @fw:                        Poiner to firmware data struct in host memory
-> + *
-> + * This function queries the ISH Shim firmware loader for capabilities.
-> + *
-> + * Return: 0 for success, negative error code for failure.
-> + */
-> +static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
-> +                                const struct firmware *fw,
-> +                                struct shim_fw_info *fw_info)
-> +{
-> +       int rv;
-> +       struct loader_xfer_query ldr_xfer_query;
-> +       struct loader_xfer_query_response ldr_xfer_query_resp;
-> +
-> +       memset(&ldr_xfer_query, 0, sizeof(ldr_xfer_query));
-> +       ldr_xfer_query.hdr.command = LOADER_CMD_XFER_QUERY;
-> +       ldr_xfer_query.image_size = fw->size;
-> +       rv = loader_cl_send(client_data,
-> +                           (u8 *)&ldr_xfer_query,
-> +                           sizeof(ldr_xfer_query),
-> +                           (u8 *)&ldr_xfer_query_resp,
-> +                           sizeof(ldr_xfer_query_resp));
-> +       if (rv < 0) {
-> +               client_data->flag_retry = true;
-> +               return rv;
-> +       }
-> +
-> +       /* On success, the return value is the received buffer size */
-> +       if (rv != sizeof(struct loader_xfer_query_response)) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "data size %d is not equal to size of loader_xfer_query_response %zu\n",
-> +                       rv, sizeof(struct loader_xfer_query_response));
-> +               client_data->flag_retry = true;
-> +               return -EMSGSIZE;
-> +       }
-> +
-> +       /* Save fw_info for use outside this function */
-> +       *fw_info = ldr_xfer_query_resp.fw_info;
-> +
-> +       /* Loader firmware properties */
-> +       dev_dbg(cl_data_to_dev(client_data),
-> +               "ish_fw_version: major=%d minor=%d hotfix=%d build=%d protocol_version=0x%x loader_version=%d\n",
-> +               fw_info->ish_fw_version.major,
-> +               fw_info->ish_fw_version.minor,
-> +               fw_info->ish_fw_version.hotfix,
-> +               fw_info->ish_fw_version.build,
-> +               fw_info->protocol_version,
-> +               fw_info->ldr_version.value);
-> +
-> +       dev_dbg(cl_data_to_dev(client_data),
-> +               "loader_capability: max_fw_image_size=0x%x xfer_mode=%d max_dma_buf_size=0x%x dma_buf_size_limit=0x%x\n",
-> +               fw_info->ldr_capability.max_fw_image_size,
-> +               fw_info->ldr_capability.xfer_mode,
-> +               fw_info->ldr_capability.max_dma_buf_size,
-> +               dma_buf_size_limit);
-> +
-> +       /* Sanity checks */
-> +       if (fw_info->ldr_capability.max_fw_image_size < fw->size) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "ISH firmware size %zu is greater than Shim firmware loader max supported %d\n",
-> +                       fw->size,
-> +                       fw_info->ldr_capability.max_fw_image_size);
-> +               return -ENOSPC;
-> +       }
-> +
-> +       /* For DMA the buffer size should be multiple of cacheline size */
-> +       if ((fw_info->ldr_capability.xfer_mode & LOADER_XFER_MODE_DIRECT_DMA) &&
-> +           (fw_info->ldr_capability.max_dma_buf_size % L1_CACHE_BYTES)) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "Shim firmware loader buffer size %d should be multipe of cacheline\n",
-> +                       fw_info->ldr_capability.max_dma_buf_size);
-> +               return -EINVAL;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +/**
-> + * ish_fw_xfer_ishtp() Loads ISH firmware using ishtp interface
-> + * @client_data:       Client data instance
-> + * @fw:                        Pointer to firmware data struct in host memory
-> + *
-> + * This function uses ISH-TP to transfer ISH firmware from host to
-> + * ISH SRAM. Lower layers may use IPC or DMA depending on firmware
-> + * support.
-> + *
-> + * Return: 0 for success, negative error code for failure.
-> + */
-> +static int ish_fw_xfer_ishtp(struct ishtp_cl_data *client_data,
-> +                            const struct firmware *fw)
-> +{
-> +       int rv;
-> +       u32 fragment_offset, fragment_size, payload_max_size;
-> +       struct loader_xfer_ipc_fragment *ldr_xfer_ipc_frag;
-> +       struct loader_msg_hdr ldr_xfer_ipc_ack;
-> +
-> +       payload_max_size =
-> +               LOADER_SHIM_IPC_BUF_SIZE - IPC_FRAGMENT_DATA_PREAMBLE;
-> +
-> +       ldr_xfer_ipc_frag = kzalloc(LOADER_SHIM_IPC_BUF_SIZE, GFP_KERNEL);
-> +       if (!ldr_xfer_ipc_frag) {
-> +               client_data->flag_retry = true;
-> +               return -ENOMEM;
-> +       }
-> +
-> +       ldr_xfer_ipc_frag->fragment.hdr.command = LOADER_CMD_XFER_FRAGMENT;
-> +       ldr_xfer_ipc_frag->fragment.xfer_mode = LOADER_XFER_MODE_ISHTP;
-> +
-> +       /* Break the firmware image into fragments and send as ISH-TP payload */
-> +       fragment_offset = 0;
-> +       while (fragment_offset < fw->size) {
-> +               if (fragment_offset + payload_max_size < fw->size) {
-> +                       fragment_size = payload_max_size;
-> +                       ldr_xfer_ipc_frag->fragment.is_last = 0;
-> +               } else {
-> +                       fragment_size = fw->size - fragment_offset;
-> +                       ldr_xfer_ipc_frag->fragment.is_last = 1;
-> +               }
-> +
-> +               ldr_xfer_ipc_frag->fragment.offset = fragment_offset;
-> +               ldr_xfer_ipc_frag->fragment.size = fragment_size;
-> +               memcpy(ldr_xfer_ipc_frag->data,
-> +                      &fw->data[fragment_offset],
-> +                      fragment_size);
-> +
-> +               dev_dbg(cl_data_to_dev(client_data),
-> +                       "xfer_mode=ipc offset=0x%08x size=0x%08x is_last=%d\n",
-> +                       ldr_xfer_ipc_frag->fragment.offset,
-> +                       ldr_xfer_ipc_frag->fragment.size,
-> +                       ldr_xfer_ipc_frag->fragment.is_last);
-> +
-> +               rv = loader_cl_send(client_data,
-> +                                   (u8 *)ldr_xfer_ipc_frag,
-> +                                   IPC_FRAGMENT_DATA_PREAMBLE + fragment_size,
-> +                                   (u8 *)&ldr_xfer_ipc_ack,
-> +                                   sizeof(ldr_xfer_ipc_ack));
-> +               if (rv < 0) {
-> +                       client_data->flag_retry = true;
-> +                       goto end_err_resp_buf_release;
-> +               }
-> +
-> +               fragment_offset += fragment_size;
-> +       }
-> +
-> +       kfree(ldr_xfer_ipc_frag);
-> +       return 0;
-> +
-> +end_err_resp_buf_release:
-> +       /* Free ISH buffer if not done already, in error case */
-> +       kfree(ldr_xfer_ipc_frag);
-> +       return rv;
-> +}
-> +
-> +/**
-> + * ish_fw_xfer_direct_dma() - Loads ISH firmware using direct dma
-> + * @client_data:       Client data instance
-> + * @fw:                        Poiner to firmware data struct in host memory
-
-add @fw_info. And there's still a typo above. and make fw_info const below?
-
-> + *
-> + * Host firmware load is a unique case where we need to download
-> + * a large firmware image (200+ Kb). This function implements
-> + * direct DMA transfer in kernel and ISH firmware. This allows
-> + * us to overcome the ISH-TP 4 Kb limit, and allows us to DMA
-> + * directly to ISH UMA at location of choice.
-> + * Function depends on corresponding support in ISH firmware.
-> + *
-> + * Return: 0 for success, negative error code for failure.
-> + */
-> +static int ish_fw_xfer_direct_dma(struct ishtp_cl_data *client_data,
-> +                                 const struct firmware *fw,
-> +                                 struct shim_fw_info fw_info)
-> +{
-> +       int rv;
-> +       void *dma_buf;
-> +       dma_addr_t dma_buf_phy;
-> +       u32 fragment_offset, fragment_size, payload_max_size;
-> +       struct loader_msg_hdr ldr_xfer_dma_frag_ack;
-> +       struct loader_xfer_dma_fragment ldr_xfer_dma_frag;
-> +       struct device *devc = ishtp_get_pci_device(client_data->cl_device);
-> +       u32 shim_fw_buf_size =
-> +               fw_info.ldr_capability.max_dma_buf_size;
-> +
-> +       /*
-> +        * payload_max_size should be set to minimum of
-> +        *  (1) Size of firmware to be loaded,
-> +        *  (2) Max DMA buffer size supported by Shim firmware,
-> +        *  (3) DMA buffer size limit set by boot_param dma_buf_size_limit.
-> +        */
-> +       payload_max_size = min3(fw->size,
-> +                               (size_t)shim_fw_buf_size,
-> +                               (size_t)dma_buf_size_limit);
-> +
-> +       /*
-> +        * Buffer size should be multiple of cacheline size
-> +        * if it's not, select the previous cacheline boundary.
-> +        */
-> +       payload_max_size &= ~(L1_CACHE_BYTES - 1);
-> +
-> +       dma_buf = kmalloc(payload_max_size, GFP_KERNEL | GFP_DMA32);
-> +       if (!dma_buf) {
-> +               client_data->flag_retry = true;
-> +               return -ENOMEM;
-> +       }
-> +
-> +       dma_buf_phy = dma_map_single(devc, dma_buf, payload_max_size,
-> +                                    DMA_TO_DEVICE);
-> +       if (dma_mapping_error(devc, dma_buf_phy)) {
-> +               dev_err(cl_data_to_dev(client_data), "DMA map failed\n");
-> +               client_data->flag_retry = true;
-> +               rv = -ENOMEM;
-> +               goto end_err_dma_buf_release;
-> +       }
-> +
-> +       ldr_xfer_dma_frag.fragment.hdr.command = LOADER_CMD_XFER_FRAGMENT;
-> +       ldr_xfer_dma_frag.fragment.xfer_mode = LOADER_XFER_MODE_DIRECT_DMA;
-> +       ldr_xfer_dma_frag.ddr_phys_addr = (u64)dma_buf_phy;
-> +
-> +       /* Send the firmware image in chucks of payload_max_size */
-> +       fragment_offset = 0;
-> +       while (fragment_offset < fw->size) {
-> +               if (fragment_offset + payload_max_size < fw->size) {
-> +                       fragment_size = payload_max_size;
-> +                       ldr_xfer_dma_frag.fragment.is_last = 0;
-> +               } else {
-> +                       fragment_size = fw->size - fragment_offset;
-> +                       ldr_xfer_dma_frag.fragment.is_last = 1;
-> +               }
-> +
-> +               ldr_xfer_dma_frag.fragment.offset = fragment_offset;
-> +               ldr_xfer_dma_frag.fragment.size = fragment_size;
-> +               memcpy(dma_buf, &fw->data[fragment_offset], fragment_size);
-> +
-> +               dma_sync_single_for_device(devc, dma_buf_phy,
-> +                                          payload_max_size,
-> +                                          DMA_TO_DEVICE);
-> +
-> +               /*
-> +                * Flush cache here because the dma_sync_single_for_device()
-> +                * does not do for x86.
-> +                */
-> +               clflush_cache_range(dma_buf, payload_max_size);
-> +
-> +               dev_dbg(cl_data_to_dev(client_data),
-> +                       "xfer_mode=dma offset=0x%08x size=0x%x is_last=%d ddr_phys_addr=0x%016llx\n",
-> +                       ldr_xfer_dma_frag.fragment.offset,
-> +                       ldr_xfer_dma_frag.fragment.size,
-> +                       ldr_xfer_dma_frag.fragment.is_last,
-> +                       ldr_xfer_dma_frag.ddr_phys_addr);
-> +
-> +               rv = loader_cl_send(client_data,
-> +                                   (u8 *)&ldr_xfer_dma_frag,
-> +                                   sizeof(ldr_xfer_dma_frag),
-> +                                   (u8 *)&ldr_xfer_dma_frag_ack,
-> +                                   sizeof(ldr_xfer_dma_frag_ack));
-> +               if (rv < 0) {
-> +                       client_data->flag_retry = true;
-> +                       goto end_err_resp_buf_release;
-> +               }
-> +
-> +               fragment_offset += fragment_size;
-> +       }
-> +
-> +       dma_unmap_single(devc, dma_buf_phy, payload_max_size, DMA_TO_DEVICE);
-> +       kfree(dma_buf);
-> +       return 0;
-> +
-> +end_err_resp_buf_release:
-> +       /* Free ISH buffer if not done already, in error case */
-> +       dma_unmap_single(devc, dma_buf_phy, payload_max_size, DMA_TO_DEVICE);
-> +end_err_dma_buf_release:
-> +       kfree(dma_buf);
-> +       return rv;
-> +}
-> +
-> +/**
-> + * ish_fw_start()      Start executing ISH main firmware
-> + * @client_data:       client data instance
-> + *
-> + * This function sends message to Shim firmware loader to start
-> + * the execution of ISH main firmware.
-> + *
-> + * Return: 0 for success, negative error code for failure.
-> + */
-> +static int ish_fw_start(struct ishtp_cl_data *client_data)
-> +{
-> +       int rv;
-> +       struct loader_start ldr_start;
-> +       struct loader_msg_hdr ldr_start_ack;
-> +
-> +       memset(&ldr_start, 0, sizeof(ldr_start));
-> +       ldr_start.hdr.command = LOADER_CMD_START;
-> +       rv = loader_cl_send(client_data,
-> +                           (u8 *)&ldr_start,
-> +                           sizeof(ldr_start),
-> +                           (u8 *)&ldr_start_ack,
-> +                           sizeof(ldr_start_ack));
-> +
-> +       return rv;
-
-Remove rv and just return loader_cl_send()
-
-> +}
-> +
-> +/**
-> + * load_fw_from_host() Loads ISH firmware from host
-> + * @client_data:       Client data instance
-> + *
-> + * This function loads the ISH firmware to ISH SRAM and starts execution
-> + *
-> + * Return: 0 for success, negative error code for failure.
-> + */
-> +static int load_fw_from_host(struct ishtp_cl_data *client_data)
-> +{
-> +       int rv;
-> +       u32 xfer_mode;
-> +       char *filename;
-> +       const struct firmware *fw;
-> +       struct shim_fw_info fw_info;
-> +       struct ishtp_cl *loader_ishtp_cl = client_data->loader_ishtp_cl;
-> +
-> +       client_data->flag_retry = false;
-> +
-> +       filename = kzalloc(FILENAME_SIZE, GFP_KERNEL);
-> +       if (!filename) {
-> +               rv = -ENOMEM;
-> +               goto end_error;
-
-flag_retry is false here, so a re-attempt will not happen, is that OK?
-
-> +       }
-> +
-> +       /* Get filename of the ISH firmware to be loaded */
-> +       rv = get_firmware_variant(client_data, filename);
-> +       if (rv < 0)
-> +               goto end_err_filename_buf_release;
-> +
-> +       rv = request_firmware(&fw, filename, cl_data_to_dev(client_data));
-> +       if (rv < 0)
-> +               goto end_err_filename_buf_release;
-> +
-> +       /* Step 1: Query Shim firmware loader properties */
-> +
-> +       rv = ish_query_loader_prop(client_data, fw, &fw_info);
-> +       if (rv < 0)
-> +               goto end_err_fw_release;
-> +
-> +       /* Step 2: Send the main firmware image to be loaded, to ISH SRAM */
-> +
-> +       xfer_mode = fw_info.ldr_capability.xfer_mode;
-> +       if (xfer_mode & LOADER_XFER_MODE_DIRECT_DMA) {
-> +               rv = ish_fw_xfer_direct_dma(client_data, fw, fw_info);
-> +       } else if (xfer_mode & LOADER_XFER_MODE_ISHTP) {
-> +               rv = ish_fw_xfer_ishtp(client_data, fw);
-> +       } else {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "No transfer mode selected in firmware\n");
-> +               rv = -EINVAL;
-> +       }
-> +       if (rv < 0)
-> +               goto end_err_fw_release;
-> +
-> +       /* Step 3: Start ISH main firmware exeuction */
-> +
-> +       rv = ish_fw_start(client_data);
-> +       if (rv < 0)
-> +               goto end_err_fw_release;
-> +
-> +       release_firmware(fw);
-> +       kfree(filename);
-> +       dev_info(cl_data_to_dev(client_data), "ISH firmware %s loaded\n",
-> +                filename);
-> +       return 0;
-> +
-> +end_err_fw_release:
-> +       release_firmware(fw);
-> +end_err_filename_buf_release:
-> +       kfree(filename);
-> +end_error:
-> +       /* Keep a count of retries, and give up after 3 attempts */
-> +       if (client_data->flag_retry && client_data->retry_count++ < 3) {
-
-#define MAX_LOAD_ATTEMPTS  at the top of the file?
-Also consider explicitly initializing retry count to 0?
-
-> +               dev_warn(cl_data_to_dev(client_data),
-> +                        "ISH host firmware load failed %d. Reset ISH & try again..\n",
-> +                        rv);
-
-Maybe change Reset to Resetting? Reset sounds like it is requesting the
-user to perform an action.
-
-> +               ish_hw_reset(ishtp_get_ishtp_device(loader_ishtp_cl));
-> +       } else {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "ISH host firmware load failed %d\n", rv);
-> +       }
-> +       return rv;
-> +}
-> +
-> +static void load_fw_from_host_handler(struct work_struct *work)
-> +{
-> +       struct ishtp_cl_data *client_data;
-> +
-> +       client_data = container_of(work, struct ishtp_cl_data,
-> +                                  work_fw_load);
-> +       load_fw_from_host(client_data);
-
-If load_fw_from_host() fails then maybe just log the error code?
-
-> +}
-> +
-> +/**
-> + * loader_init() -     Init function for ISH-TP client
-> + * @loader_ishtp_cl:   ISH-TP client instance
-> + * @reset:             true if called for init after reset
-> + *
-> + * Return: 0 for success, negative error code for failure
-> + */
-> +static int loader_init(struct ishtp_cl *loader_ishtp_cl, int reset)
-> +{
-> +       int rv;
-> +       struct ishtp_fw_client *fw_client;
-> +       struct ishtp_cl_data *client_data =
-> +               ishtp_get_client_data(loader_ishtp_cl);
-> +
-> +       dev_dbg(cl_data_to_dev(client_data), "reset flag: %d\n", reset);
-> +
-> +       rv = ishtp_cl_link(loader_ishtp_cl);
-> +       if (rv < 0) {
-> +               dev_err(cl_data_to_dev(client_data), "ishtp_cl_link failed\n");
-> +               return rv;
-> +       }
-> +
-> +       /* Connect to firmware client */
-> +       ishtp_set_tx_ring_size(loader_ishtp_cl, LOADER_CL_TX_RING_SIZE);
-> +       ishtp_set_rx_ring_size(loader_ishtp_cl, LOADER_CL_RX_RING_SIZE);
-> +
-> +       fw_client =
-> +               ishtp_fw_cl_get_client(ishtp_get_ishtp_device(loader_ishtp_cl),
-> +                                      &loader_ishtp_guid);
-> +       if (!fw_client) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "ISH client uuid not found\n");
-> +               rv = -ENOENT;
-> +               goto err_cl_unlink;
-> +       }
-> +
-> +       ishtp_cl_set_fw_client_id(loader_ishtp_cl,
-> +                                 ishtp_get_fw_client_id(fw_client));
-> +       ishtp_set_connection_state(loader_ishtp_cl, ISHTP_CL_CONNECTING);
-> +
-> +       rv = ishtp_cl_connect(loader_ishtp_cl);
-> +       if (rv < 0) {
-> +               dev_err(cl_data_to_dev(client_data), "Client connect fail\n");
-> +               goto err_cl_unlink;
-> +       }
-> +
-> +       dev_dbg(cl_data_to_dev(client_data), "Client connected\n");
-> +
-> +       ishtp_register_event_cb(client_data->cl_device, loader_cl_event_cb);
-> +
-> +       return 0;
-> +
-> +err_cl_unlink:
-> +       ishtp_cl_unlink(loader_ishtp_cl);
-> +       return rv;
-> +}
-> +
-> +static void loader_deinit(struct ishtp_cl *loader_ishtp_cl)
-> +{
-> +       ishtp_set_connection_state(loader_ishtp_cl, ISHTP_CL_DISCONNECTING);
-> +       ishtp_cl_disconnect(loader_ishtp_cl);
-> +       ishtp_cl_unlink(loader_ishtp_cl);
-> +       ishtp_cl_flush_queues(loader_ishtp_cl);
-> +
-> +       /* Disband and free all Tx and Rx client-level rings */
-> +       ishtp_cl_free(loader_ishtp_cl);
-> +}
-> +
-> +static void reset_handler(struct work_struct *work)
-> +{
-> +       int rv;
-> +       struct ishtp_cl_data *client_data;
-> +       struct ishtp_cl *loader_ishtp_cl;
-> +       struct ishtp_cl_device *cl_device;
-> +
-> +       client_data = container_of(work, struct ishtp_cl_data,
-> +                                  work_ishtp_reset);
-> +
-> +       loader_ishtp_cl = client_data->loader_ishtp_cl;
-> +       cl_device = client_data->cl_device;
-> +
-> +       /* Unlink, flush queues & start again */
-> +       ishtp_cl_unlink(loader_ishtp_cl);
-> +       ishtp_cl_flush_queues(loader_ishtp_cl);
-> +       ishtp_cl_free(loader_ishtp_cl);
-> +
-> +       loader_ishtp_cl = ishtp_cl_allocate(cl_device);
-> +       if (!loader_ishtp_cl)
-> +               return;
-> +
-> +       ishtp_set_drvdata(cl_device, loader_ishtp_cl);
-> +       ishtp_set_client_data(loader_ishtp_cl, client_data);
-> +       client_data->loader_ishtp_cl = loader_ishtp_cl;
-> +       client_data->cl_device = cl_device;
-> +
-> +       rv = loader_init(loader_ishtp_cl, 1);
-> +       if (rv < 0) {
-> +               dev_err(ishtp_device(cl_device), "Reset Failed\n");
-> +               return;
-> +       }
-> +
-> +       /* ISH firmware loading from host */
-> +       load_fw_from_host(client_data);
-> +}
-> +
-> +/**
-> + * loader_ishtp_cl_probe() - ISH-TP client driver probe
-> + * @cl_device:         ISH-TP client device instance
-> + *
-> + * This function gets called on device create on ISH-TP bus
-> + *
-> + * Return: 0 for success, negative error code for failure
-> + */
-> +static int loader_ishtp_cl_probe(struct ishtp_cl_device *cl_device)
-> +{
-> +       struct ishtp_cl *loader_ishtp_cl;
-> +       struct ishtp_cl_data *client_data;
-> +       int rv;
-> +
-> +       client_data = devm_kzalloc(ishtp_device(cl_device),
-> +                                  sizeof(*client_data),
-> +                                  GFP_KERNEL);
-> +       if (!client_data)
-> +               return -ENOMEM;
-> +
-> +       loader_ishtp_cl = ishtp_cl_allocate(cl_device);
-> +       if (!loader_ishtp_cl)
-> +               return -ENOMEM;
-> +
-> +       ishtp_set_drvdata(cl_device, loader_ishtp_cl);
-> +       ishtp_set_client_data(loader_ishtp_cl, client_data);
-> +       client_data->loader_ishtp_cl = loader_ishtp_cl;
-> +       client_data->cl_device = cl_device;
-> +
-> +       init_waitqueue_head(&client_data->response.wait_queue);
-> +
-> +       INIT_WORK(&client_data->work_ishtp_reset,
-> +                 reset_handler);
-> +       INIT_WORK(&client_data->work_fw_load,
-> +                 load_fw_from_host_handler);
-> +
-> +       rv = loader_init(loader_ishtp_cl, 0);
-> +       if (rv < 0) {
-> +               ishtp_cl_free(loader_ishtp_cl);
-> +               return rv;
-> +       }
-> +       ishtp_get_device(cl_device);
-> +
-> +       /* ISH firmware loading from host */
-> +       schedule_work(&client_data->work_fw_load);
-> +
-> +       return 0;
-> +}
-> +
-> +/**
-> + * loader_ishtp_cl_remove() - ISH-TP client driver remove
-> + * @cl_device:         ISH-TP client device instance
-> + *
-> + * This function gets called on device remove on ISH-TP bus
-> + *
-> + * Return: 0
-> + */
-> +static int loader_ishtp_cl_remove(struct ishtp_cl_device *cl_device)
-> +{
-> +       struct ishtp_cl_data *client_data;
-> +       struct ishtp_cl *loader_ishtp_cl = ishtp_get_drvdata(cl_device);
-> +
-> +       client_data = ishtp_get_client_data(loader_ishtp_cl);
-> +
-> +       /*
-> +        * The sequence of the following two cancel_work_sync() is
-> +        * important. The work_fw_load can in turn schedue
-> +        * work_ishtp_reset, so first cancel work_fw_load then
-> +        * cancel work_ishtp_reset.
-> +        */
-> +       cancel_work_sync(&client_data->work_fw_load);
-> +       cancel_work_sync(&client_data->work_ishtp_reset);
-> +       loader_deinit(loader_ishtp_cl);
-> +       ishtp_put_device(cl_device);
-> +
-> +       return 0;
-> +}
-> +
-> +/**
-> + * loader_ishtp_cl_reset() - ISH-TP client driver reset
-> + * @cl_device:         ISH-TP client device instance
-> + *
-> + * This function gets called on device reset on ISH-TP bus
-> + *
-> + * Return: 0
-> + */
-> +static int loader_ishtp_cl_reset(struct ishtp_cl_device *cl_device)
-> +{
-> +       struct ishtp_cl_data *client_data;
-> +       struct ishtp_cl *loader_ishtp_cl = ishtp_get_drvdata(cl_device);
-> +
-> +       client_data = ishtp_get_client_data(loader_ishtp_cl);
-> +
-> +       schedule_work(&client_data->work_ishtp_reset);
-> +
-> +       return 0;
-> +}
-> +
-> +static struct ishtp_cl_driver  loader_ishtp_cl_driver = {
-> +       .name = "ish-loader",
-> +       .guid = &loader_ishtp_guid,
-> +       .probe = loader_ishtp_cl_probe,
-> +       .remove = loader_ishtp_cl_remove,
-> +       .reset = loader_ishtp_cl_reset,
-> +};
-> +
-> +static int __init ish_loader_init(void)
-> +{
-> +       return ishtp_cl_driver_register(&loader_ishtp_cl_driver, THIS_MODULE);
-> +}
-> +
-> +static void __exit ish_loader_exit(void)
-> +{
-> +       ishtp_cl_driver_unregister(&loader_ishtp_cl_driver);
-> +}
-> +
-> +late_initcall(ish_loader_init);
-> +module_exit(ish_loader_exit);
-> +
-> +module_param(dma_buf_size_limit, int, 0644);
-> +MODULE_PARM_DESC(dma_buf_size_limit, "Limit the DMA buf size to this value in bytes");
-> +
-> +MODULE_DESCRIPTION("ISH ISH-TP Host firmware Loader Client Driver");
-> +MODULE_AUTHOR("Rushikesh S Kadam <rushikesh.s.kadam@intel.com>");
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("ishtp:*");
-> --
-> 1.9.1
->
-
-After those final tweaks, then oh my goodness,
-Acked-by: Nick Crews <ncrews@chromium.org>
+SGkgTG9yZW56bywNCg0KVGhhbmtzIGEgbG90IGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3Jlbnpv
+LnBpZXJhbGlzaUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOoz1MIyOcjVIDA6MDkNCj4gVG86IFou
+cS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxn
+YWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207
+DQo+IGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExl
+byBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPjsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdp
+bGwuZGVhY29uQGFybS5jb207DQo+IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0u
+aC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsNCj4gWGlhb3dlaSBCYW8gPHhpYW93ZWku
+YmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NCAxNi8yOF0gUENJOiBtb2JpdmVp
+bDogcmVmYWN0b3IgTW9iaXZlaWwgUENJZSBIb3N0DQo+IEJyaWRnZSBJUCBkcml2ZXINCj4gDQo+
+IE9uIFRodSwgTWFyIDI4LCAyMDE5IGF0IDAyOjA5OjU1QU0gKzAwMDAsIFoucS4gSG91IHdyb3Rl
+Og0KPiANCj4gWy4uLl0NCj4gDQo+ID4gPiA+ID4gT24gTW9uLCBNYXIgMTEsIDIwMTkgYXQgMDk6
+MzI6MDRBTSArMDAwMCwgWi5xLiBIb3Ugd3JvdGU6DQo+ID4gPiA+ID4gPiBGcm9tOiBIb3UgWmhp
+cWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IEFz
+IHRoZSBNb2JpdmVpbCBQQ0llIGNvbnRyb2xsZXIgc3VwcG9ydCBSQyZFUCBEQVVMIG1vZGUsIGFu
+ZCB0bw0KPiBtYWtlDQo+ID4gPiA+ID4gPiBwbGF0Zm9ybXMgd2hpY2ggaW50ZWdyYXRlZCB0aGUg
+TW9iaXZlaWwgUENJZSBJUCBtb3JlIGVhc3kgdG8gYWRkDQo+IHRoZWlyDQo+ID4gPiA+ID4gPiBk
+cml2ZXJzLCB0aGlzIHBhdGNoIG1vdmVkIHRoZSBNb2JpdmVpbCBkcml2ZXIgdG8gYSBuZXcgZGly
+ZWN0b3J5DQo+ID4gPiA+ID4gPiAnZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbCcgYW5k
+IHJlZmFjdG9yZWQgaXQgYWNjb3JkaW5nIHRvIHRoZQ0KPiA+ID4gPiA+ID4gYWJzdHJhY3Rpb24g
+b2YgUkMmRVAgKEVQIGRyaXZlciB3aWxsIGJlIGFkZGVkIGxhdGVyKS4NCj4gPiA+ID4gPg0KPiA+
+ID4gPiA+IEkgZG8gbm90IHdhbnQgdG8gY3JlYXRlIGEgc3ViZGlyZWN0b3J5IGZvciBldmVyeSBj
+b250cm9sbGVyIHRoYXQgY2FuDQo+IHdvcmsgaW4NCj4gPiA+ID4gPiBSQyZFUCBzbyBkcm9wIHRo
+aXMgcGF0Y2gsIG1vcmUgc28gZ2l2ZW4gdGhhdCBpdCB3aWxsIGJlIHJlcXVpcmVkICJsYXRlciIs
+DQo+IHdlDQo+ID4gPiA+ID4gd2lsbCBjcmVhdGUgYSBkaXJlY3Rvcnkgd2hlbiBhbmQgaWYgd2Ug
+YWN0dWFsbHkgaGF2ZSB0by4NCj4gPiA+ID4NCj4gPiA+ID4gUGxlYXNlIGRvbid0IGRyb3AgdGhp
+cyBwYXRjaCwgWGlhb3dlaSBCYW8gaGFzIHNlbnQgdjEgb2YgdGhlIEVQIG1vZGUNCj4gPiA+ID4g
+ZHJpdmVyLCB3aGljaCBpcyBkZXBlbmRzIG9uIHRoaXMgcGF0Y2guDQo+ID4gPg0KPiA+ID4gSSB1
+bmRlcnN0YW5kIGJ1dCBoZSB3aWxsIGhhdmUgdG8gcmViYXNlIHRoYXQgY29kZSBhbnl3YXksIEkg
+ZG8NCj4gPiA+IG5vdCB3YW50IHRvIGNyZWF0ZSBhIGRpcmVjdG9yeSBmb3IgbW9iaXZlaWwgYmVm
+b3JlIEkgc2VlIG90aGVyDQo+ID4gPiBJUHMgYnVpbHQgb24gaXQsIHdlIGRpZCBub3QgZG8gaXQg
+Zm9yIHRoZSBjYWRlbmNlIGFuZCByb2NrY2hpcA0KPiA+ID4gY29udHJvbGxlcnMgZWl0aGVyLiBT
+byB5b3Ugd2lsbCBoYXZlIHRvIGRyb3AgdGhpcyBwYXRjaCBhbmQNCj4gPiA+IHJld29yayBpdC4N
+Cj4gPg0KPiA+IEl0J3MgZGlmZmVyZW50IGZyb20gY2FkZW5jZSBhbmQgcm9ja2NoaXAgY2FzZXMs
+IHRoZXkgb25seSBoYXZlIDENCj4gPiBkcml2ZXIsIHNvIGRvIG5vdCBuZWVkIHRvIGNyZWF0ZSBh
+IGRpcmVjdG9yeSwgd2hpbGUgd2UgaGF2ZSBOWFAncw0KPiA+IExYMjE2MCBwbGF0Zm9ybSBhbmQg
+TW9iaXZlaWwncyBGUEdBIHBsYXRmb3JtIGJvdGggdXNlIE1vYml2ZWlsJ3MgR1BFWA0KPiA+IElQ
+LCBzbyB3ZSBhbHJlYWR5IGhhdmUgMiBkcml2ZXJzLCBzbyBJIHRoaW5rIGl0IGlzIHJlYXNvbmFi
+bGUgdG8NCj4gPiBjb2xsZWN0IGludG8gYW4gbmV3IGRpcmVjdG9yeS4NCj4gDQo+IFdyYXAgeW91
+ciBtZXNzYWdlcyB0byA4MCBjaGFyYWN0ZXJzIHBlciBsaW5lLiBPSywgcGxlYXNlIGZvbGxvdw0K
+PiBCam9ybidzIGd1aWRlbGluZXMgd2hlbiByZXBvc3RpbmcgYW5kIHNwbGl0IHRoZSBzZXJpZXMg
+YXMNCj4gZGlzY3Vzc2VkLg0KDQpPSywgSSB3aWxsLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+
+IFRoYW5rcywNCj4gTG9yZW56bw0KPiANCj4gPiBUaGFua3MsDQo+ID4gWmhpcWlhbmcNCj4gPg0K
+PiA+ID4gVGhhbmtzLA0KPiA+ID4gTG9yZW56bw0KPiA+ID4NCj4gPiA+ID4gPiBUaGFua3MsDQo+
+ID4gPiA+ID4gTG9yZW56bw0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBI
+b3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+ID4gPiA+ID4gUmV2aWV3ZWQt
+Ynk6IE1pbmdodWFuIExpYW4gPE1pbmdodWFuLkxpYW5AbnhwLmNvbT4NCj4gPiA+ID4gPiA+IFJl
+dmlld2VkLWJ5OiBTdWJyYWhtYW55YSBMaW5nYXBwYQ0KPiA8bC5zdWJyYWhtYW55YUBtb2JpdmVp
+bC5jby5pbj4NCj4gPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ID4gVjQ6DQo+ID4gPiA+ID4gPiAg
+LSBubyBjaGFuZ2UNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAgTUFJTlRBSU5FUlMgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICstDQo+ID4gPiA+ID4gPiAgZHJpdmVy
+cy9wY2kvY29udHJvbGxlci9LY29uZmlnICAgICAgICAgICAgICAgIHwgIDExICstDQo+ID4gPiA+
+ID4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9NYWtlZmlsZSAgICAgICAgICAgICAgIHwgICAy
+ICstDQo+ID4gPiA+ID4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9LY29uZmln
+ICAgICAgIHwgIDI0ICsNCj4gPiA+ID4gPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2
+ZWlsL01ha2VmaWxlICAgICAgfCAgIDQgKw0KPiA+ID4gPiA+ID4gIC4uLi9wY2llLW1vYml2ZWls
+LWhvc3QuY30gICAgICAgICAgICAgICAgICAgICB8IDUyOA0KPiA+ID4gKysrLS0tLS0tLS0tLS0t
+LS0tDQo+ID4gPiA+ID4gPiAgLi4uL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC1w
+bGF0LmMgIHwgIDU0ICsrDQo+ID4gPiA+ID4gPiAgLi4uL3BjaS9jb250cm9sbGVyL21vYml2ZWls
+L3BjaWUtbW9iaXZlaWwuYyAgIHwgMjI4ICsrKysrKysrDQo+ID4gPiA+ID4gPiAgLi4uL3BjaS9j
+b250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuaCAgIHwgMTg3ICsrKysrKysNCj4gPiA+
+ID4gPiA+ICA5IGZpbGVzIGNoYW5nZWQsIDU4NyBpbnNlcnRpb25zKCspLCA0NTMgZGVsZXRpb25z
+KC0pICBjcmVhdGUgbW9kZQ0KPiA+ID4gPiA+ID4gMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xs
+ZXIvbW9iaXZlaWwvS2NvbmZpZw0KPiA+ID4gPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL01ha2VmaWxlDQo+ID4gPiA+ID4gPiAgcmVuYW1l
+IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIve3BjaWUtbW9iaXZlaWwuYyA9Pg0KPiA+ID4gPiA+ID4g
+bW9iaXZlaWwvcGNpZS1tb2JpdmVpbC1ob3N0LmN9ICg1NSUpICBjcmVhdGUgbW9kZSAxMDA2NDQN
+Cj4gPiA+ID4gPiA+IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVp
+bC1wbGF0LmMNCj4gPiA+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gZHJpdmVycy9wY2kv
+Y29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLmMNCj4gPiA+ID4gPiA+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQNCj4gZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2
+ZWlsLmgNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMg
+Yi9NQUlOVEFJTkVSUyBpbmRleA0KPiA+ID4gPiA+ID4gMWU2NDI3OWYzMzhhLi4xMDEzZTc0YjE0
+ZjIgMTAwNjQ0DQo+ID4gPiA+ID4gPiAtLS0gYS9NQUlOVEFJTkVSUw0KPiA+ID4gPiA+ID4gKysr
+IGIvTUFJTlRBSU5FUlMNCj4gPiA+ID4gPiA+IEBAIC0xMTg3Nyw3ICsxMTg3Nyw3IEBAIE06CVN1
+YnJhaG1hbnlhIExpbmdhcHBhDQo+ID4gPiA+ID4gPGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28u
+aW4+DQo+ID4gPiA+ID4gPiAgTDoJbGludXgtcGNpQHZnZXIua2VybmVsLm9yZw0KPiA+ID4gPiA+
+ID4gIFM6CVN1cHBvcnRlZA0KPiA+ID4gPiA+ID4gIEY6CURvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9wY2kvbW9iaXZlaWwtcGNpZS50eHQNCj4gPiA+ID4gPiA+IC1GOglkcml2ZXJz
+L3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+ID4gPiA+ID4gK0Y6CWRyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbCoNCj4gPiA+ID4gPiA+DQo+ID4g
+PiA+ID4gPiAgUENJIERSSVZFUiBGT1IgTVZFQlUgKE1hcnZlbGwgQXJtYWRhIDM3MCBhbmQgQXJt
+YWRhIFhQIFNPQw0KPiA+ID4gPiA+IHN1cHBvcnQpDQo+ID4gPiA+ID4gPiAgTToJVGhvbWFzIFBl
+dGF6em9uaSA8dGhvbWFzLnBldGF6em9uaUBib290bGluLmNvbT4NCj4gPiA+ID4gPiA+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL0tjb25maWcNCj4gPiA+ID4gPiA+IGIvZHJp
+dmVycy9wY2kvY29udHJvbGxlci9LY29uZmlnIGluZGV4IDY2NzE5NDZkYmY2Ni4uMGU5ODFlZDAw
+YTc1DQo+ID4gPiA+ID4gPiAxMDA2NDQNCj4gPiA+ID4gPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2Nv
+bnRyb2xsZXIvS2NvbmZpZw0KPiA+ID4gPiA+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxl
+ci9LY29uZmlnDQo+ID4gPiA+ID4gPiBAQCAtMjQxLDE2ICsyNDEsNiBAQCBjb25maWcgUENJRV9N
+RURJQVRFSw0KPiA+ID4gPiA+ID4gIAkgIFNheSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gZW5hYmxl
+IFBDSWUgY29udHJvbGxlciBzdXBwb3J0IG9uDQo+ID4gPiA+ID4gPiAgCSAgTWVkaWFUZWsgU29D
+cy4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAtY29uZmlnIFBDSUVfTU9CSVZFSUwNCj4gPiA+
+ID4gPiA+IC0JYm9vbCAiTW9iaXZlaWwgQVhJIFBDSWUgY29udHJvbGxlciINCj4gPiA+ID4gPiA+
+IC0JZGVwZW5kcyBvbiBBUkNIX1pZTlFNUCB8fCBDT01QSUxFX1RFU1QNCj4gPiA+ID4gPiA+IC0J
+ZGVwZW5kcyBvbiBPRg0KPiA+ID4gPiA+ID4gLQlkZXBlbmRzIG9uIFBDSV9NU0lfSVJRX0RPTUFJ
+Tg0KPiA+ID4gPiA+ID4gLQloZWxwDQo+ID4gPiA+ID4gPiAtCSAgU2F5IFkgaGVyZSBpZiB5b3Ug
+d2FudCB0byBlbmFibGUgc3VwcG9ydCBmb3IgdGhlIE1vYml2ZWlsIEFYSQ0KPiBQQ0llDQo+ID4g
+PiA+ID4gPiAtCSAgU29mdCBJUC4gSXQgaGFzIHVwIHRvIDggb3V0Ym91bmQgYW5kIGluYm91bmQg
+d2luZG93cw0KPiA+ID4gPiA+ID4gLQkgIGZvciBhZGRyZXNzIHRyYW5zbGF0aW9uIGFuZCBpdCBp
+cyBhIFBDSWUgR2VuNCBJUC4NCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+ICBjb25maWcgUENJ
+RV9UQU5HT19TTVA4NzU5DQo+ID4gPiA+ID4gPiAgCWJvb2wgIlRhbmdvIFNNUDg3NTkgUENJZSBj
+b250cm9sbGVyIChEQU5HRVJPVVMpIg0KPiA+ID4gPiA+ID4gIAlkZXBlbmRzIG9uIEFSQ0hfVEFO
+R08gJiYgUENJX01TSSAmJiBPRiBAQCAtMjgxLDQNCj4gKzI3MSw1DQo+ID4gPiBAQA0KPiA+ID4g
+PiA+IGNvbmZpZw0KPiA+ID4gPiA+ID4gVk1EDQo+ID4gPiA+ID4gPiAgCSAgbW9kdWxlIHdpbGwg
+YmUgY2FsbGVkIHZtZC4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAgc291cmNlICJkcml2ZXJz
+L3BjaS9jb250cm9sbGVyL2R3Yy9LY29uZmlnIg0KPiA+ID4gPiA+ID4gK3NvdXJjZSAiZHJpdmVy
+cy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9LY29uZmlnIg0KPiA+ID4gPiA+ID4gIGVuZG1lbnUN
+Cj4gPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL01ha2VmaWxl
+DQo+ID4gPiA+ID4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvTWFrZWZpbGUgaW5kZXgNCj4g
+ZDU2YTUwNzQ5NWM1Li5iNzlhNjE1MDQxYTANCj4gPiA+ID4gPiA+IDEwMDY0NA0KPiA+ID4gPiA+
+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9NYWtlZmlsZQ0KPiA+ID4gPiA+ID4gKysr
+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9NYWtlZmlsZQ0KPiA+ID4gPiA+ID4gQEAgLTI2LDEx
+ICsyNiwxMSBAQCBvYmotJChDT05GSUdfUENJRV9ST0NLQ0hJUCkgKz0NCj4gPiA+IHBjaWUtcm9j
+a2NoaXAubw0KPiA+ID4gPiA+ID4gIG9iai0kKENPTkZJR19QQ0lFX1JPQ0tDSElQX0VQKSArPSBw
+Y2llLXJvY2tjaGlwLWVwLm8NCj4gPiA+ID4gPiA+ICBvYmotJChDT05GSUdfUENJRV9ST0NLQ0hJ
+UF9IT1NUKSArPSBwY2llLXJvY2tjaGlwLWhvc3Qubw0KPiA+ID4gPiA+ID4gIG9iai0kKENPTkZJ
+R19QQ0lFX01FRElBVEVLKSArPSBwY2llLW1lZGlhdGVrLm8NCj4gPiA+ID4gPiA+IC1vYmotJChD
+T05GSUdfUENJRV9NT0JJVkVJTCkgKz0gcGNpZS1tb2JpdmVpbC5vDQo+ID4gPiA+ID4gPiAgb2Jq
+LSQoQ09ORklHX1BDSUVfVEFOR09fU01QODc1OSkgKz0gcGNpZS10YW5nby5vDQo+ID4gPiA+ID4g
+PiAgb2JqLSQoQ09ORklHX1ZNRCkgKz0gdm1kLm8NCj4gPiA+ID4gPiA+ICAjIHBjaWUtaGlzaS5v
+IHF1aXJrcyBhcmUgbmVlZGVkIGV2ZW4gd2l0aG91dCBDT05GSUdfUENJRV9EVw0KPiA+ID4gPiA+
+ID4gIG9iai15CQkJCSs9IGR3Yy8NCj4gPiA+ID4gPiA+ICtvYmoteQkJCQkrPSBtb2JpdmVpbC8N
+Cj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gICMgVGhlIGZvbGxvd2luZyBk
+cml2ZXJzIGFyZSBmb3IgZGV2aWNlcyB0aGF0IHVzZSB0aGUgZ2VuZXJpYyBBQ1BJDQo+ID4gPiA+
+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9LY29uZmln
+DQo+ID4gPiA+ID4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZlaWwvS2NvbmZpZw0K
+PiA+ID4gPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gPiA+IGluZGV4IDAwMDAw
+MDAwMDAwMC4uNjQzNDNjMDdiZmVkDQo+ID4gPiA+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiA+
+ID4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL0tjb25maWcNCj4gPiA+
+ID4gPiA+IEBAIC0wLDAgKzEsMjQgQEANCj4gPiA+ID4gPiA+ICsjIFNQRFgtTGljZW5zZS1JZGVu
+dGlmaWVyOiBHUEwtMi4wDQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArbWVudSAiTW9iaXZl
+aWwgUENJZSBDb3JlIFN1cHBvcnQiDQo+ID4gPiA+ID4gPiArCWRlcGVuZHMgb24gUENJDQo+ID4g
+PiA+ID4gPiArDQo+ID4gPiA+ID4gPiArY29uZmlnIFBDSUVfTU9CSVZFSUwNCj4gPiA+ID4gPiA+
+ICsJYm9vbA0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gK2NvbmZpZyBQQ0lFX01PQklWRUlM
+X0hPU1QNCj4gPiA+ID4gPiA+ICsgICAgICAgIGJvb2wNCj4gPiA+ID4gPiA+ICsJZGVwZW5kcyBv
+biBQQ0lfTVNJX0lSUV9ET01BSU4NCj4gPiA+ID4gPiA+ICsgICAgICAgIHNlbGVjdCBQQ0lFX01P
+QklWRUlMDQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArY29uZmlnIFBDSUVfTU9CSVZFSUxf
+UExBVA0KPiA+ID4gPiA+ID4gKwlib29sICJNb2JpdmVpbCBBWEkgUENJZSBjb250cm9sbGVyIg0K
+PiA+ID4gPiA+ID4gKwlkZXBlbmRzIG9uIEFSQ0hfWllOUU1QIHx8IENPTVBJTEVfVEVTVA0KPiA+
+ID4gPiA+ID4gKwlkZXBlbmRzIG9uIE9GDQo+ID4gPiA+ID4gPiArCXNlbGVjdCBQQ0lFX01PQklW
+RUlMX0hPU1QNCj4gPiA+ID4gPiA+ICsJaGVscA0KPiA+ID4gPiA+ID4gKwkgIFNheSBZIGhlcmUg
+aWYgeW91IHdhbnQgdG8gZW5hYmxlIHN1cHBvcnQgZm9yIHRoZSBNb2JpdmVpbCBBWEkNCj4gUENJ
+ZQ0KPiA+ID4gPiA+ID4gKwkgIFNvZnQgSVAuIEl0IGhhcyB1cCB0byA4IG91dGJvdW5kIGFuZCBp
+bmJvdW5kIHdpbmRvd3MNCj4gPiA+ID4gPiA+ICsJICBmb3IgYWRkcmVzcyB0cmFuc2xhdGlvbiBh
+bmQgaXQgaXMgYSBQQ0llIEdlbjQgSVAuDQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArZW5k
+bWVudQ0KPiA+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9i
+aXZlaWwvTWFrZWZpbGUNCj4gPiA+ID4gPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2Jp
+dmVpbC9NYWtlZmlsZQ0KPiA+ID4gPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4g
+PiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uOWZiNmQxYzY1MDRkDQo+ID4gPiA+ID4gPiAtLS0gL2Rl
+di9udWxsDQo+ID4gPiA+ID4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWls
+L01ha2VmaWxlDQo+ID4gPiA+ID4gPiBAQCAtMCwwICsxLDQgQEANCj4gPiA+ID4gPiA+ICsjIFNQ
+RFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ID4gPiA+ID4gPiArb2JqLSQoQ09ORklH
+X1BDSUVfTU9CSVZFSUwpICs9IHBjaWUtbW9iaXZlaWwubw0KPiA+ID4gPiA+ID4gK29iai0kKENP
+TkZJR19QQ0lFX01PQklWRUlMX0hPU1QpICs9IHBjaWUtbW9iaXZlaWwtaG9zdC5vDQo+ID4gPiA+
+ID4gPiArb2JqLSQoQ09ORklHX1BDSUVfTU9CSVZFSUxfUExBVCkgKz0gcGNpZS1tb2JpdmVpbC1w
+bGF0Lm8NCj4gPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3Bj
+aWUtbW9iaXZlaWwuYw0KPiA+ID4gPiA+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2
+ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jDQo+ID4gPiA+ID4gPiBzaW1pbGFyaXR5IGluZGV4IDU1
+JQ0KPiA+ID4gPiA+ID4gcmVuYW1lIGZyb20gZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1v
+Yml2ZWlsLmMNCj4gPiA+ID4gPiA+IHJlbmFtZSB0byBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21v
+Yml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jDQo+ID4gPiA+ID4gPiBpbmRleCA5MjEwMTY1ZmU4
+YzAuLmRjNTMyNGQ5NDQ2NiAxMDA2NDQNCj4gPiA+ID4gPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2Nv
+bnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gPiA+ID4gPiArKysgYi9kcml2ZXJzL3BjaS9j
+b250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtaG9zdC5jDQo+ID4gPiA+ID4gPiBAQCAt
+NCw5ICs0LDkgQEANCj4gPiA+ID4gPiA+ICAgKg0KPiA+ID4gPiA+ID4gICAqIENvcHlyaWdodCAo
+YykgMjAxOCBNb2JpdmVpbCBJbmMuDQo+ID4gPiA+ID4gPiAgICogQXV0aG9yOiBTdWJyYWhtYW55
+YSBMaW5nYXBwYQ0KPiA8bC5zdWJyYWhtYW55YUBtb2JpdmVpbC5jby5pbj4NCj4gPiA+ID4gPiA+
+ICsgKiBSZWZhY3RvcjogWmhpcWlhbmcgSG91IDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiA+
+ID4gPiA+ICAgKi8NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAtI2luY2x1ZGUgPGxpbnV4L2Rl
+bGF5Lmg+DQo+ID4gPiA+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4NCj4gPiA+ID4gPiA+
+ICAjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+DQo+ID4gPiA+ID4gPiAgI2luY2x1ZGUgPGxp
+bnV4L2lycS5oPg0KPiA+ID4gPiA+ID4gQEAgLTIzLDI3NSArMjMsMjEgQEANCj4gPiA+ID4gPiA+
+ICAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+ID4gPiA+ID4gPiAgI2luY2x1
+ZGUgPGxpbnV4L3NsYWIuaD4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAtI2luY2x1ZGUgIi4u
+L3BjaS5oIg0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLS8qIHJlZ2lzdGVyIG9mZnNldHMg
+YW5kIGJpdCBwb3NpdGlvbnMgKi8NCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0vKg0KPiA+
+ID4gPiA+ID4gLSAqIHRyYW5zbGF0aW9uIHRhYmxlcyBhcmUgZ3JvdXBlZCBpbnRvIHdpbmRvd3Ms
+IGVhY2ggd2luZG93DQo+IHJlZ2lzdGVycw0KPiA+ID4gPiA+ID4gYXJlDQo+ID4gPiA+ID4gPiAt
+ICogZ3JvdXBlZCBpbnRvIGJsb2NrcyBvZiA0IG9yIDE2IHJlZ2lzdGVycyBlYWNoDQo+ID4gPiA+
+ID4gPiAtICovDQo+ID4gPiA+ID4gPiAtI2RlZmluZSBQQUJfUkVHX0JMT0NLX1NJWkUJCTE2DQo+
+ID4gPiA+ID4gPiAtI2RlZmluZSBQQUJfRVhUX1JFR19CTE9DS19TSVpFCQk0DQo+ID4gPiA+ID4g
+PiAtDQo+ID4gPiA+ID4gPiAtI2RlZmluZSBQQUJfUkVHX0FERFIob2Zmc2V0LCB3aW4pCVwNCj4g
+PiA+ID4gPiA+IC0JKG9mZnNldCArICh3aW4gKiBQQUJfUkVHX0JMT0NLX1NJWkUpKQ0KPiA+ID4g
+PiA+ID4gLSNkZWZpbmUgUEFCX0VYVF9SRUdfQUREUihvZmZzZXQsIHdpbikJXA0KPiA+ID4gPiA+
+ID4gLQkob2Zmc2V0ICsgKHdpbiAqIFBBQl9FWFRfUkVHX0JMT0NLX1NJWkUpKQ0KPiA+ID4gPiA+
+ID4gLQ0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgTFRTU01fU1RBVFVTCQkJMHgwNDA0DQo+ID4gPiA+
+ID4gPiAtI2RlZmluZSAgTFRTU01fU1RBVFVTX0wwX01BU0sJCTB4M2YNCj4gPiA+ID4gPiA+IC0j
+ZGVmaW5lICBMVFNTTV9TVEFUVVNfTDAJCTB4MmQNCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+
+IC0jZGVmaW5lIFBBQl9DVFJMCQkJMHgwODA4DQo+ID4gPiA+ID4gPiAtI2RlZmluZSAgQU1CQV9Q
+SU9fRU5BQkxFX1NISUZUCQkwDQo+ID4gPiA+ID4gPiAtI2RlZmluZSAgUEVYX1BJT19FTkFCTEVf
+U0hJRlQJCTENCj4gPiA+ID4gPiA+IC0jZGVmaW5lICBQQUdFX1NFTF9TSElGVAkJCTEzDQo+ID4g
+PiA+ID4gPiAtI2RlZmluZSAgUEFHRV9TRUxfTUFTSwkJCTB4M2YNCj4gPiA+ID4gPiA+IC0jZGVm
+aW5lICBQQUdFX0xPX01BU0sJCQkweDNmZg0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgIFBBR0VfU0VM
+X09GRlNFVF9TSElGVAkJMTANCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0jZGVmaW5lIFBB
+Ql9BWElfUElPX0NUUkwJCTB4MDg0MA0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgIEFQSU9fRU5fTUFT
+SwkJCTB4Zg0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgUEFCX1BFWF9QSU9f
+Q1RSTAkJMHgwOGMwDQo+ID4gPiA+ID4gPiAtI2RlZmluZSAgUElPX0VOQUJMRV9TSElGVAkJMA0K
+PiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgUEFCX0lOVFBfQU1CQV9NSVNDX0VO
+QgkJMHgwYjBjDQo+ID4gPiA+ID4gPiAtI2RlZmluZSBQQUJfSU5UUF9BTUJBX01JU0NfU1RBVAkJ
+MHgwYjFjDQo+ID4gPiA+ID4gPiAtI2RlZmluZSAgUEFCX0lOVFBfSU5UWF9NQVNLCQkweDAxZTAN
+Cj4gPiA+ID4gPiA+IC0jZGVmaW5lICBQQUJfSU5UUF9NU0lfTUFTSwkJMHg4DQo+ID4gPiA+ID4g
+PiAtDQo+ID4gPiA+ID4gPiAtI2RlZmluZSBQQUJfQVhJX0FNQVBfQ1RSTCh3aW4pDQo+IAlQQUJf
+UkVHX0FERFIoMHgwYmEwLA0KPiA+ID4gd2luKQ0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgIFdJTl9F
+TkFCTEVfU0hJRlQJCTANCj4gPiA+ID4gPiA+IC0jZGVmaW5lICBXSU5fVFlQRV9TSElGVAkJCTEN
+Cj4gPiA+ID4gPiA+IC0jZGVmaW5lICBXSU5fVFlQRV9NQVNLCQkJMHgzDQo+ID4gPiA+ID4gPiAt
+I2RlZmluZSAgV0lOX1NJWkVfU0hJRlQJCQkxMA0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgIFdJTl9T
+SVpFX01BU0sJCQkweDNmZmZmZg0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLSNkZWZpbmUg
+UEFCX0VYVF9BWElfQU1BUF9TSVpFKHdpbikNCj4gPiA+IAlQQUJfRVhUX1JFR19BRERSKDB4YmFm
+MCwNCj4gPiA+ID4gPiB3aW4pDQo+ID4gPiA+ID4gPiAtDQo+ID4gPiA+ID4gPiAtI2RlZmluZSBQ
+QUJfRVhUX0FYSV9BTUFQX0FYSV9XSU4od2luKQ0KPiA+ID4gPiA+IAlQQUJfRVhUX1JFR19BRERS
+KDB4ODBhMCwgd2luKQ0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgUEFCX0FYSV9BTUFQX0FYSV9XSU4o
+d2luKQ0KPiAJUEFCX1JFR19BRERSKDB4MGJhNCwNCj4gPiA+IHdpbikNCj4gPiA+ID4gPiA+IC0j
+ZGVmaW5lICBBWElfV0lORE9XX0FMSUdOX01BU0sJCTMNCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4g
+PiA+IC0jZGVmaW5lIFBBQl9BWElfQU1BUF9QRVhfV0lOX0wod2luKQ0KPiAJUEFCX1JFR19BRERS
+KDB4MGJhOCwNCj4gPiA+ID4gPiB3aW4pDQo+ID4gPiA+ID4gPiAtI2RlZmluZSAgUEFCX0JVU19T
+SElGVAkJCTI0DQo+ID4gPiA+ID4gPiAtI2RlZmluZSAgUEFCX0RFVklDRV9TSElGVAkJMTkNCj4g
+PiA+ID4gPiA+IC0jZGVmaW5lICBQQUJfRlVOQ1RJT05fU0hJRlQJCTE2DQo+ID4gPiA+ID4gPiAt
+DQo+ID4gPiA+ID4gPiAtI2RlZmluZSBQQUJfQVhJX0FNQVBfUEVYX1dJTl9IKHdpbikNCj4gPiA+
+IAlQQUJfUkVHX0FERFIoMHgwYmFjLA0KPiA+ID4gPiA+IHdpbikNCj4gPiA+ID4gPiA+IC0jZGVm
+aW5lIFBBQl9JTlRQX0FYSV9QSU9fQ0xBU1MJCTB4NDc0DQo+ID4gPiA+ID4gPiAtDQo+ID4gPiA+
+ID4gPiAtI2RlZmluZSBQQUJfUEVYX0FNQVBfQ1RSTCh3aW4pDQo+IAlQQUJfUkVHX0FERFIoMHg0
+YmEwLA0KPiA+ID4gd2luKQ0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgIEFNQVBfQ1RSTF9FTl9TSElG
+VAkJMA0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgIEFNQVBfQ1RSTF9UWVBFX1NISUZUCQkxDQo+ID4g
+PiA+ID4gPiAtI2RlZmluZSAgQU1BUF9DVFJMX1RZUEVfTUFTSwkJMw0KPiA+ID4gPiA+ID4gLQ0K
+PiA+ID4gPiA+ID4gLSNkZWZpbmUgUEFCX0VYVF9QRVhfQU1BUF9TSVpFTih3aW4pDQo+ID4gPiAJ
+UEFCX0VYVF9SRUdfQUREUigweGJlZjAsDQo+ID4gPiA+ID4gd2luKQ0KPiA+ID4gPiA+ID4gLSNk
+ZWZpbmUgUEFCX0VYVF9QRVhfQU1BUF9BWElfV0lOKHdpbikNCj4gPiA+ID4gPiAJUEFCX0VYVF9S
+RUdfQUREUigweGI0YTAsIHdpbikNCj4gPiA+ID4gPiA+IC0jZGVmaW5lIFBBQl9QRVhfQU1BUF9B
+WElfV0lOKHdpbikNCj4gCVBBQl9SRUdfQUREUigweDRiYTQsDQo+ID4gPiB3aW4pDQo+ID4gPiA+
+ID4gPiAtI2RlZmluZSBQQUJfUEVYX0FNQVBfUEVYX1dJTl9MKHdpbikNCj4gPiA+IAlQQUJfUkVH
+X0FERFIoMHg0YmE4LA0KPiA+ID4gPiA+IHdpbikNCj4gPiA+ID4gPiA+IC0jZGVmaW5lIFBBQl9Q
+RVhfQU1BUF9QRVhfV0lOX0god2luKQ0KPiA+ID4gCVBBQl9SRUdfQUREUigweDRiYWMsDQo+ID4g
+PiA+ID4gd2luKQ0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLS8qIHN0YXJ0aW5nIG9mZnNl
+dCBvZiBJTlRYIGJpdHMgaW4gc3RhdHVzIHJlZ2lzdGVyICovDQo+ID4gPiA+ID4gPiAtI2RlZmlu
+ZSBQQUJfSU5UWF9TVEFSVAkJCTUNCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0vKiBzdXBw
+b3J0ZWQgbnVtYmVyIG9mIE1TSSBpbnRlcnJ1cHRzICovDQo+ID4gPiA+ID4gPiAtI2RlZmluZSBQ
+Q0lfTlVNX01TSQkJCTE2DQo+ID4gPiA+ID4gPiAtDQo+ID4gPiA+ID4gPiAtLyogTVNJIHJlZ2lz
+dGVycyAqLw0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgTVNJX0JBU0VfTE9fT0ZGU0VUCQkweDA0DQo+
+ID4gPiA+ID4gPiAtI2RlZmluZSBNU0lfQkFTRV9ISV9PRkZTRVQJCTB4MDgNCj4gPiA+ID4gPiA+
+IC0jZGVmaW5lIE1TSV9TSVpFX09GRlNFVAkJCTB4MGMNCj4gPiA+ID4gPiA+IC0jZGVmaW5lIE1T
+SV9FTkFCTEVfT0ZGU0VUCQkweDE0DQo+ID4gPiA+ID4gPiAtI2RlZmluZSBNU0lfU1RBVFVTX09G
+RlNFVAkJMHgxOA0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgTVNJX0RBVEFfT0ZGU0VUCQkJMHgyMA0K
+PiA+ID4gPiA+ID4gLSNkZWZpbmUgTVNJX0FERFJfTF9PRkZTRVQJCTB4MjQNCj4gPiA+ID4gPiA+
+IC0jZGVmaW5lIE1TSV9BRERSX0hfT0ZGU0VUCQkweDI4DQo+ID4gPiA+ID4gPiAtDQo+ID4gPiA+
+ID4gPiAtLyogb3V0Ym91bmQgYW5kIGluYm91bmQgd2luZG93IGRlZmluaXRpb25zICovDQo+ID4g
+PiA+ID4gPiAtI2RlZmluZSBXSU5fTlVNXzAJCQkwDQo+ID4gPiA+ID4gPiAtI2RlZmluZSBXSU5f
+TlVNXzEJCQkxDQo+ID4gPiA+ID4gPiAtI2RlZmluZSBDRkdfV0lORE9XX1RZUEUJCQkwDQo+ID4g
+PiA+ID4gPiAtI2RlZmluZSBJT19XSU5ET1dfVFlQRQkJCTENCj4gPiA+ID4gPiA+IC0jZGVmaW5l
+IE1FTV9XSU5ET1dfVFlQRQkJCTINCj4gPiA+ID4gPiA+IC0jZGVmaW5lIElCX1dJTl9TSVpFCQkJ
+KCh1NjQpMjU2ICogMTAyNCAqIDEwMjQgKiAxMDI0KQ0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgTUFY
+X1BJT19XSU5ET1dTCQkJOA0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLS8qIFBhcmFtZXRl
+cnMgZm9yIHRoZSB3YWl0aW5nIGZvciBsaW5rIHVwIHJvdXRpbmUgKi8NCj4gPiA+ID4gPiA+IC0j
+ZGVmaW5lIExJTktfV0FJVF9NQVhfUkVUUklFUwkJMTANCj4gPiA+ID4gPiA+IC0jZGVmaW5lIExJ
+TktfV0FJVF9NSU4JCQk5MDAwMA0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgTElOS19XQUlUX01BWAkJ
+CTEwMDAwMA0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLSNkZWZpbmUgUEFHRURfQUREUl9C
+TkRSWQkJMHhjMDANCj4gPiA+ID4gPiA+IC0jZGVmaW5lIE9GRlNFVF9UT19QQUdFX0FERFIob2Zm
+KQlcDQo+ID4gPiA+ID4gPiAtCSgob2ZmICYgUEFHRV9MT19NQVNLKSB8IFBBR0VEX0FERFJfQk5E
+UlkpDQo+ID4gPiA+ID4gPiAtI2RlZmluZSBPRkZTRVRfVE9fUEFHRV9JRFgob2ZmKQkJXA0KPiA+
+ID4gPiA+ID4gLQkoKG9mZiA+PiBQQUdFX1NFTF9PRkZTRVRfU0hJRlQpICYgUEFHRV9TRUxfTUFT
+SykNCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC1zdHJ1Y3QgbW9iaXZlaWxfbXNpIHsJCQkv
+KiBNU0kgaW5mb3JtYXRpb24gKi8NCj4gPiA+ID4gPiA+IC0Jc3RydWN0IG11dGV4IGxvY2s7CQkv
+KiBwcm90ZWN0IGJpdG1hcCB2YXJpYWJsZSAqLw0KPiA+ID4gPiA+ID4gLQlzdHJ1Y3QgaXJxX2Rv
+bWFpbiAqbXNpX2RvbWFpbjsNCj4gPiA+ID4gPiA+IC0Jc3RydWN0IGlycV9kb21haW4gKmRldl9k
+b21haW47DQo+ID4gPiA+ID4gPiAtCXBoeXNfYWRkcl90IG1zaV9wYWdlc19waHlzOw0KPiA+ID4g
+PiA+ID4gLQlpbnQgbnVtX29mX3ZlY3RvcnM7DQo+ID4gPiA+ID4gPiAtCURFQ0xBUkVfQklUTUFQ
+KG1zaV9pcnFfaW5fdXNlLCBQQ0lfTlVNX01TSSk7DQo+ID4gPiA+ID4gPiAtfTsNCj4gPiA+ID4g
+PiA+IC0NCj4gPiA+ID4gPiA+IC1zdHJ1Y3QgbW9iaXZlaWxfcGNpZSB7DQo+ID4gPiA+ID4gPiAt
+CXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXY7DQo+ID4gPiA+ID4gPiAtCXN0cnVjdCBsaXN0
+X2hlYWQgcmVzb3VyY2VzOw0KPiA+ID4gPiA+ID4gLQl2b2lkIF9faW9tZW0gKmNvbmZpZ19heGlf
+c2xhdmVfYmFzZTsJLyogZW5kcG9pbnQgY29uZmlnDQo+IGJhc2UNCj4gPiA+ICovDQo+ID4gPiA+
+ID4gPiAtCXZvaWQgX19pb21lbSAqY3NyX2F4aV9zbGF2ZV9iYXNlOwkvKiByb290IHBvcnQgY29u
+ZmlnIGJhc2UNCj4gKi8NCj4gPiA+ID4gPiA+IC0Jdm9pZCBfX2lvbWVtICphcGJfY3NyX2Jhc2U7
+CS8qIE1TSSByZWdpc3RlciBiYXNlICovDQo+ID4gPiA+ID4gPiAtCXBoeXNfYWRkcl90IHBjaWVf
+cmVnX2Jhc2U7CS8qIFBoeXNpY2FsIFBDSWUgQ29udHJvbGxlciBCYXNlDQo+ICovDQo+ID4gPiA+
+ID4gPiAtCXN0cnVjdCBpcnFfZG9tYWluICppbnR4X2RvbWFpbjsNCj4gPiA+ID4gPiA+IC0JcmF3
+X3NwaW5sb2NrX3QgaW50eF9tYXNrX2xvY2s7DQo+ID4gPiA+ID4gPiAtCWludCBpcnE7DQo+ID4g
+PiA+ID4gPiAtCWludCBhcGlvX3dpbnM7DQo+ID4gPiA+ID4gPiAtCWludCBwcGlvX3dpbnM7DQo+
+ID4gPiA+ID4gPiAtCWludCBvYl93aW5zX2NvbmZpZ3VyZWQ7CQkvKiBjb25maWd1cmVkIG91dGJv
+dW5kIHdpbmRvd3MNCj4gKi8NCj4gPiA+ID4gPiA+IC0JaW50IGliX3dpbnNfY29uZmlndXJlZDsJ
+CS8qIGNvbmZpZ3VyZWQgaW5ib3VuZCB3aW5kb3dzICovDQo+ID4gPiA+ID4gPiAtCXN0cnVjdCBy
+ZXNvdXJjZSAqb2JfaW9fcmVzOw0KPiA+ID4gPiA+ID4gLQljaGFyIHJvb3RfYnVzX25yOw0KPiA+
+ID4gPiA+ID4gLQlzdHJ1Y3QgbW9iaXZlaWxfbXNpIG1zaTsNCj4gPiA+ID4gPiA+IC19Ow0KPiA+
+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLS8qDQo+ID4gPiA+ID4gPiAtICogbW9iaXZlaWxfcGNp
+ZV9zZWxfcGFnZSAtIHJvdXRpbmUgdG8gYWNjZXNzIHBhZ2VkIHJlZ2lzdGVyDQo+ID4gPiA+ID4g
+PiAtICoNCj4gPiA+ID4gPiA+IC0gKiBSZWdpc3RlcnMgd2hvc2UgYWRkcmVzcyBncmVhdGVyIHRo
+YW4gUEFHRURfQUREUl9CTkRSWQ0KPiAoMHhjMDApDQo+ID4gPiBhcmUNCj4gPiA+ID4gPiA+IHBh
+Z2VkLA0KPiA+ID4gPiA+ID4gLSAqIGZvciB0aGlzIHNjaGVtZSB0byB3b3JrIGV4dHJhY3RlZCBo
+aWdoZXIgNiBiaXRzIG9mIHRoZSBvZmZzZXQgd2lsbA0KPiA+ID4gPiA+ID4gYmUNCj4gPiA+ID4g
+PiA+IC0gKiB3cml0dGVuIHRvIHBnX3NlbCBmaWVsZCBvZiBQQUJfQ1RSTCByZWdpc3RlciBhbmQg
+cmVzdCBvZiB0aGUgbG93ZXINCj4gPiA+ID4gPiA+IDEwDQo+ID4gPiA+ID4gPiAtICogYml0cyBl
+bmFibGVkIHdpdGggUEFHRURfQUREUl9CTkRSWSBhcmUgdXNlZCBhcyBvZmZzZXQgb2YgdGhlDQo+
+ID4gPiA+ID4gcmVnaXN0ZXIuDQo+ID4gPiA+ID4gPiAtICovDQo+ID4gPiA+ID4gPiAtc3RhdGlj
+IHZvaWQgbW9iaXZlaWxfcGNpZV9zZWxfcGFnZShzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSwg
+dTgNCj4gPiA+ID4gPiA+IHBnX2lkeCkgLXsNCj4gPiA+ID4gPiA+IC0JdTMyIHZhbDsNCj4gPiA+
+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0JdmFsID0gcmVhZGwocGNpZS0+Y3NyX2F4aV9zbGF2ZV9i
+YXNlICsgUEFCX0NUUkwpOw0KPiA+ID4gPiA+ID4gLQl2YWwgJj0gfihQQUdFX1NFTF9NQVNLIDw8
+IFBBR0VfU0VMX1NISUZUKTsNCj4gPiA+ID4gPiA+IC0JdmFsIHw9IChwZ19pZHggJiBQQUdFX1NF
+TF9NQVNLKSA8PCBQQUdFX1NFTF9TSElGVDsNCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0J
+d3JpdGVsKHZhbCwgcGNpZS0+Y3NyX2F4aV9zbGF2ZV9iYXNlICsgUEFCX0NUUkwpOw0KPiA+ID4g
+PiA+ID4gLX0NCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC1zdGF0aWMgdm9pZCAqbW9iaXZl
+aWxfcGNpZV9jb21wX2FkZHIoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUsDQo+IHUzMg0KPiA+
+ID4gPiA+ID4gb2ZmKSAtew0KPiA+ID4gPiA+ID4gLQlpZiAob2ZmIDwgUEFHRURfQUREUl9CTkRS
+WSkgew0KPiA+ID4gPiA+ID4gLQkJLyogRm9yIGRpcmVjdGx5IGFjY2Vzc2VkIHJlZ2lzdGVycywg
+Y2xlYXIgdGhlIHBnX3NlbCBmaWVsZCAqLw0KPiA+ID4gPiA+ID4gLQkJbW9iaXZlaWxfcGNpZV9z
+ZWxfcGFnZShwY2llLCAwKTsNCj4gPiA+ID4gPiA+IC0JCXJldHVybiBwY2llLT5jc3JfYXhpX3Ns
+YXZlX2Jhc2UgKyBvZmY7DQo+ID4gPiA+ID4gPiAtCX0NCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4g
+PiA+IC0JbW9iaXZlaWxfcGNpZV9zZWxfcGFnZShwY2llLCBPRkZTRVRfVE9fUEFHRV9JRFgob2Zm
+KSk7DQo+ID4gPiA+ID4gPiAtCXJldHVybiBwY2llLT5jc3JfYXhpX3NsYXZlX2Jhc2UgKw0KPiBP
+RkZTRVRfVE9fUEFHRV9BRERSKG9mZik7DQo+ID4gPiA+ID4gPiAtfQ0KPiA+ID4gPiA+ID4gLQ0K
+PiA+ID4gPiA+ID4gLXN0YXRpYyBpbnQgbW9iaXZlaWxfcGNpZV9yZWFkKHZvaWQgX19pb21lbSAq
+YWRkciwgaW50IHNpemUsIHUzMg0KPiAqdmFsKQ0KPiA+ID4gPiA+ID4gLXsNCj4gPiA+ID4gPiA+
+IC0JaWYgKCh1aW50cHRyX3QpYWRkciAmIChzaXplIC0gMSkpIHsNCj4gPiA+ID4gPiA+IC0JCSp2
+YWwgPSAwOw0KPiA+ID4gPiA+ID4gLQkJcmV0dXJuIFBDSUJJT1NfQkFEX1JFR0lTVEVSX05VTUJF
+UjsNCj4gPiA+ID4gPiA+IC0JfQ0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLQlzd2l0Y2gg
+KHNpemUpIHsNCj4gPiA+ID4gPiA+IC0JY2FzZSA0Og0KPiA+ID4gPiA+ID4gLQkJKnZhbCA9IHJl
+YWRsKGFkZHIpOw0KPiA+ID4gPiA+ID4gLQkJYnJlYWs7DQo+ID4gPiA+ID4gPiAtCWNhc2UgMjoN
+Cj4gPiA+ID4gPiA+IC0JCSp2YWwgPSByZWFkdyhhZGRyKTsNCj4gPiA+ID4gPiA+IC0JCWJyZWFr
+Ow0KPiA+ID4gPiA+ID4gLQljYXNlIDE6DQo+ID4gPiA+ID4gPiAtCQkqdmFsID0gcmVhZGIoYWRk
+cik7DQo+ID4gPiA+ID4gPiAtCQlicmVhazsNCj4gPiA+ID4gPiA+IC0JZGVmYXVsdDoNCj4gPiA+
+ID4gPiA+IC0JCSp2YWwgPSAwOw0KPiA+ID4gPiA+ID4gLQkJcmV0dXJuIFBDSUJJT1NfQkFEX1JF
+R0lTVEVSX05VTUJFUjsNCj4gPiA+ID4gPiA+IC0JfQ0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+
+ID4gLQlyZXR1cm4gUENJQklPU19TVUNDRVNTRlVMOw0KPiA+ID4gPiA+ID4gLX0NCj4gPiA+ID4g
+PiA+IC0NCj4gPiA+ID4gPiA+IC1zdGF0aWMgaW50IG1vYml2ZWlsX3BjaWVfd3JpdGUodm9pZCBf
+X2lvbWVtICphZGRyLCBpbnQgc2l6ZSwgdTMyIHZhbCkNCj4gPiA+ID4gPiA+IC17DQo+ID4gPiA+
+ID4gPiAtCWlmICgodWludHB0cl90KWFkZHIgJiAoc2l6ZSAtIDEpKQ0KPiA+ID4gPiA+ID4gLQkJ
+cmV0dXJuIFBDSUJJT1NfQkFEX1JFR0lTVEVSX05VTUJFUjsNCj4gPiA+ID4gPiA+IC0NCj4gPiA+
+ID4gPiA+IC0Jc3dpdGNoIChzaXplKSB7DQo+ID4gPiA+ID4gPiAtCWNhc2UgNDoNCj4gPiA+ID4g
+PiA+IC0JCXdyaXRlbCh2YWwsIGFkZHIpOw0KPiA+ID4gPiA+ID4gLQkJYnJlYWs7DQo+ID4gPiA+
+ID4gPiAtCWNhc2UgMjoNCj4gPiA+ID4gPiA+IC0JCXdyaXRldyh2YWwsIGFkZHIpOw0KPiA+ID4g
+PiA+ID4gLQkJYnJlYWs7DQo+ID4gPiA+ID4gPiAtCWNhc2UgMToNCj4gPiA+ID4gPiA+IC0JCXdy
+aXRlYih2YWwsIGFkZHIpOw0KPiA+ID4gPiA+ID4gLQkJYnJlYWs7DQo+ID4gPiA+ID4gPiAtCWRl
+ZmF1bHQ6DQo+ID4gPiA+ID4gPiAtCQlyZXR1cm4gUENJQklPU19CQURfUkVHSVNURVJfTlVNQkVS
+Ow0KPiA+ID4gPiA+ID4gLQl9DQo+ID4gPiA+ID4gPiAtDQo+ID4gPiA+ID4gPiAtCXJldHVybiBQ
+Q0lCSU9TX1NVQ0NFU1NGVUw7DQo+ID4gPiA+ID4gPiAtfQ0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4g
+PiA+ID4gLXN0YXRpYyB1MzIgY3NyX3JlYWQoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUsIHUz
+MiBvZmYsIHNpemVfdCBzaXplKQ0KPiA+ID4gPiA+ID4gLXsNCj4gPiA+ID4gPiA+IC0Jdm9pZCAq
+YWRkcjsNCj4gPiA+ID4gPiA+IC0JdTMyIHZhbDsNCj4gPiA+ID4gPiA+IC0JaW50IHJldDsNCj4g
+PiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0JYWRkciA9IG1vYml2ZWlsX3BjaWVfY29tcF9hZGRy
+KHBjaWUsIG9mZik7DQo+ID4gPiA+ID4gPiAtDQo+ID4gPiA+ID4gPiAtCXJldCA9IG1vYml2ZWls
+X3BjaWVfcmVhZChhZGRyLCBzaXplLCAmdmFsKTsNCj4gPiA+ID4gPiA+IC0JaWYgKHJldCkNCj4g
+PiA+ID4gPiA+IC0JCWRldl9lcnIoJnBjaWUtPnBkZXYtPmRldiwgInJlYWQgQ1NSIGFkZHJlc3Mg
+ZmFpbGVkXG4iKTsNCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0JcmV0dXJuIHZhbDsNCj4g
+PiA+ID4gPiA+IC19DQo+ID4gPiA+ID4gPiAtDQo+ID4gPiA+ID4gPiAtc3RhdGljIHZvaWQgY3Ny
+X3dyaXRlKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llLCB1MzIgdmFsLCB1MzIgb2ZmLA0KPiA+
+ID4gPiA+ID4gc2l6ZV90IHNpemUpIC17DQo+ID4gPiA+ID4gPiAtCXZvaWQgKmFkZHI7DQo+ID4g
+PiA+ID4gPiAtCWludCByZXQ7DQo+ID4gPiA+ID4gPiAtDQo+ID4gPiA+ID4gPiAtCWFkZHIgPSBt
+b2JpdmVpbF9wY2llX2NvbXBfYWRkcihwY2llLCBvZmYpOw0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4g
+PiA+ID4gLQlyZXQgPSBtb2JpdmVpbF9wY2llX3dyaXRlKGFkZHIsIHNpemUsIHZhbCk7DQo+ID4g
+PiA+ID4gPiAtCWlmIChyZXQpDQo+ID4gPiA+ID4gPiAtCQlkZXZfZXJyKCZwY2llLT5wZGV2LT5k
+ZXYsICJ3cml0ZSBDU1IgYWRkcmVzcyBmYWlsZWRcbiIpOw0KPiA+ID4gPiA+ID4gLX0NCj4gPiA+
+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC1zdGF0aWMgdTMyIGNzcl9yZWFkbChzdHJ1Y3QgbW9iaXZl
+aWxfcGNpZSAqcGNpZSwgdTMyIG9mZikgLXsNCj4gPiA+ID4gPiA+IC0JcmV0dXJuIGNzcl9yZWFk
+KHBjaWUsIG9mZiwgMHg0KTsNCj4gPiA+ID4gPiA+IC19DQo+ID4gPiA+ID4gPiAtDQo+ID4gPiA+
+ID4gPiAtc3RhdGljIHZvaWQgY3NyX3dyaXRlbChzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSwg
+dTMyIHZhbCwgdTMyIG9mZikNCj4gPiA+ID4gPiA+IC17DQo+ID4gPiA+ID4gPiAtCWNzcl93cml0
+ZShwY2llLCB2YWwsIG9mZiwgMHg0KTsNCj4gPiA+ID4gPiA+IC19DQo+ID4gPiA+ID4gPiAtDQo+
+ID4gPiA+ID4gPiAtc3RhdGljIGJvb2wgbW9iaXZlaWxfcGNpZV9saW5rX3VwKHN0cnVjdCBtb2Jp
+dmVpbF9wY2llICpwY2llKSAtew0KPiA+ID4gPiA+ID4gLQlyZXR1cm4gKGNzcl9yZWFkbChwY2ll
+LCBMVFNTTV9TVEFUVVMpICYNCj4gPiA+ID4gPiA+IC0JCUxUU1NNX1NUQVRVU19MMF9NQVNLKSA9
+PSBMVFNTTV9TVEFUVVNfTDA7DQo+ID4gPiA+ID4gPiAtfQ0KPiA+ID4gPiA+ID4gKyNpbmNsdWRl
+ICJwY2llLW1vYml2ZWlsLmgiDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gIHN0YXRpYyBib29s
+IG1vYml2ZWlsX3BjaWVfdmFsaWRfZGV2aWNlKHN0cnVjdCBwY2lfYnVzICpidXMsDQo+IHVuc2ln
+bmVkDQo+ID4gPiA+ID4gPiBpbnQgZGV2Zm4pICB7DQo+ID4gPiA+ID4gPiAgCXN0cnVjdCBtb2Jp
+dmVpbF9wY2llICpwY2llID0gYnVzLT5zeXNkYXRhOw0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+
+ICAJLyogT25seSBvbmUgZGV2aWNlIGRvd24gb24gZWFjaCByb290IHBvcnQgKi8NCj4gPiA+ID4g
+PiA+IC0JaWYgKChidXMtPm51bWJlciA9PSBwY2llLT5yb290X2J1c19ucikgJiYgKGRldmZuID4g
+MCkpDQo+ID4gPiA+ID4gPiArCWlmICgoYnVzLT5udW1iZXIgPT0gcGNpZS0+cnAucm9vdF9idXNf
+bnIpICYmIChkZXZmbiA+IDApKQ0KPiA+ID4gPiA+ID4gIAkJcmV0dXJuIGZhbHNlOw0KPiA+ID4g
+PiA+ID4NCj4gPiA+ID4gPiA+ICAJLyoNCj4gPiA+ID4gPiA+ICAJICogRG8gbm90IHJlYWQgbW9y
+ZSB0aGFuIG9uZSBkZXZpY2Ugb24gdGhlIGJ1cyBkaXJlY3RseQ0KPiA+ID4gPiA+ID4gIAkgKiBh
+dHRhY2hlZCB0byBSQw0KPiA+ID4gPiA+ID4gIAkgKi8NCj4gPiA+ID4gPiA+IC0JaWYgKChidXMt
+PnByaW1hcnkgPT0gcGNpZS0+cm9vdF9idXNfbnIpICYmIChkZXZmbiA+IDApKQ0KPiA+ID4gPiA+
+ID4gKwlpZiAoKGJ1cy0+cHJpbWFyeSA9PSBwY2llLT5ycC5yb290X2J1c19ucikgJiYgKGRldmZu
+ID4gMCkpDQo+ID4gPiA+ID4gPiAgCQlyZXR1cm4gZmFsc2U7DQo+ID4gPiA+ID4gPg0KPiA+ID4g
+PiA+ID4gIAlyZXR1cm4gdHJ1ZTsNCj4gPiA+ID4gPiA+IEBAIC0zMTEsNyArNTcsNyBAQCBzdGF0
+aWMgdm9pZCBfX2lvbWVtDQo+ID4gPiAqbW9iaXZlaWxfcGNpZV9tYXBfYnVzKHN0cnVjdA0KPiA+
+ID4gPiA+IHBjaV9idXMgKmJ1cywNCj4gPiA+ID4gPiA+ICAJCXJldHVybiBOVUxMOw0KPiA+ID4g
+PiA+ID4NCj4gPiA+ID4gPiA+ICAJLyogUkMgY29uZmlnIGFjY2VzcyAqLw0KPiA+ID4gPiA+ID4g
+LQlpZiAoYnVzLT5udW1iZXIgPT0gcGNpZS0+cm9vdF9idXNfbnIpDQo+ID4gPiA+ID4gPiArCWlm
+IChidXMtPm51bWJlciA9PSBwY2llLT5ycC5yb290X2J1c19ucikNCj4gPiA+ID4gPiA+ICAJCXJl
+dHVybiBwY2llLT5jc3JfYXhpX3NsYXZlX2Jhc2UgKyB3aGVyZTsNCj4gPiA+ID4gPiA+DQo+ID4g
+PiA+ID4gPiAgCS8qDQo+ID4gPiA+ID4gPiBAQCAtMzI2LDcgKzcyLDcgQEAgc3RhdGljIHZvaWQg
+X19pb21lbQ0KPiA+ID4gKm1vYml2ZWlsX3BjaWVfbWFwX2J1cyhzdHJ1Y3QNCj4gPiA+ID4gPiA+
+IHBjaV9idXMgKmJ1cywNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAgCWNzcl93cml0ZWwocGNp
+ZSwgdmFsdWUsDQo+IFBBQl9BWElfQU1BUF9QRVhfV0lOX0woV0lOX05VTV8wKSk7DQo+ID4gPiA+
+ID4gPg0KPiA+ID4gPiA+ID4gLQlyZXR1cm4gcGNpZS0+Y29uZmlnX2F4aV9zbGF2ZV9iYXNlICsg
+d2hlcmU7DQo+ID4gPiA+ID4gPiArCXJldHVybiBwY2llLT5ycC5jb25maWdfYXhpX3NsYXZlX2Jh
+c2UgKyB3aGVyZTsNCj4gPiA+ID4gPiA+ICB9DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gIHN0
+YXRpYyBzdHJ1Y3QgcGNpX29wcyBtb2JpdmVpbF9wY2llX29wcyA9IHsgQEAgLTM0MCw3ICs4Niw3
+IEBADQo+ID4gPiBzdGF0aWMNCj4gPiA+ID4gPiA+IHZvaWQgbW9iaXZlaWxfcGNpZV9pc3Ioc3Ry
+dWN0IGlycV9kZXNjICpkZXNjKQ0KPiA+ID4gPiA+ID4gIAlzdHJ1Y3QgaXJxX2NoaXAgKmNoaXAg
+PSBpcnFfZGVzY19nZXRfY2hpcChkZXNjKTsNCj4gPiA+ID4gPiA+ICAJc3RydWN0IG1vYml2ZWls
+X3BjaWUgKnBjaWUgPSBpcnFfZGVzY19nZXRfaGFuZGxlcl9kYXRhKGRlc2MpOw0KPiA+ID4gPiA+
+ID4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGNpZS0+cGRldi0+ZGV2Ow0KPiA+ID4gPiA+ID4g
+LQlzdHJ1Y3QgbW9iaXZlaWxfbXNpICptc2kgPSAmcGNpZS0+bXNpOw0KPiA+ID4gPiA+ID4gKwlz
+dHJ1Y3QgbW9iaXZlaWxfbXNpICptc2kgPSAmcGNpZS0+cnAubXNpOw0KPiA+ID4gPiA+ID4gIAl1
+MzIgbXNpX2RhdGEsIG1zaV9hZGRyX2xvLCBtc2lfYWRkcl9oaTsNCj4gPiA+ID4gPiA+ICAJdTMy
+IGludHJfc3RhdHVzLCBtc2lfc3RhdHVzOw0KPiA+ID4gPiA+ID4gIAl1bnNpZ25lZCBsb25nIHNo
+aWZ0ZWRfc3RhdHVzOw0KPiA+ID4gPiA+ID4gQEAgLTM2NSw3ICsxMTEsNyBAQCBzdGF0aWMgdm9p
+ZCBtb2JpdmVpbF9wY2llX2lzcihzdHJ1Y3QgaXJxX2Rlc2MNCj4gPiA+ICpkZXNjKQ0KPiA+ID4g
+PiA+ID4gIAkJc2hpZnRlZF9zdGF0dXMgPj49IFBBQl9JTlRYX1NUQVJUOw0KPiA+ID4gPiA+ID4g
+IAkJZG8gew0KPiA+ID4gPiA+ID4gIAkJCWZvcl9lYWNoX3NldF9iaXQoYml0LCAmc2hpZnRlZF9z
+dGF0dXMsDQo+IFBDSV9OVU1fSU5UWCkgew0KPiA+ID4gPiA+ID4gLQkJCQl2aXJxID0gaXJxX2Zp
+bmRfbWFwcGluZyhwY2llLT5pbnR4X2RvbWFpbiwNCj4gPiA+ID4gPiA+ICsJCQkJdmlycSA9IGly
+cV9maW5kX21hcHBpbmcocGNpZS0+cnAuaW50eF9kb21haW4sDQo+ID4gPiA+ID4gPiAgCQkJCQkJ
+CWJpdCArIDEpOw0KPiA+ID4gPiA+ID4gIAkJCQlpZiAodmlycSkNCj4gPiA+ID4gPiA+ICAJCQkJ
+CWdlbmVyaWNfaGFuZGxlX2lycSh2aXJxKTsNCj4gPiA+ID4gPiA+IEBAIC00MjgsMTAgKzE3NCwx
+MCBAQCBzdGF0aWMgaW50IG1vYml2ZWlsX3BjaWVfcGFyc2VfZHQoc3RydWN0DQo+ID4gPiA+ID4g
+bW9iaXZlaWxfcGNpZSAqcGNpZSkNCj4gPiA+ID4gPiA+ICAJLyogbWFwIGNvbmZpZyByZXNvdXJj
+ZSAqLw0KPiA+ID4gPiA+ID4gIAlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1lKHBk
+ZXYsDQo+IElPUkVTT1VSQ0VfTUVNLA0KPiA+ID4gPiA+ID4gIAkJCQkJICAgImNvbmZpZ19heGlf
+c2xhdmUiKTsNCj4gPiA+ID4gPiA+IC0JcGNpZS0+Y29uZmlnX2F4aV9zbGF2ZV9iYXNlID0NCj4g
+ZGV2bV9wY2lfcmVtYXBfY2ZnX3Jlc291cmNlKGRldiwNCj4gPiA+IHJlcyk7DQo+ID4gPiA+ID4g
+PiAtCWlmIChJU19FUlIocGNpZS0+Y29uZmlnX2F4aV9zbGF2ZV9iYXNlKSkNCj4gPiA+ID4gPiA+
+IC0JCXJldHVybiBQVFJfRVJSKHBjaWUtPmNvbmZpZ19heGlfc2xhdmVfYmFzZSk7DQo+ID4gPiA+
+ID4gPiAtCXBjaWUtPm9iX2lvX3JlcyA9IHJlczsNCj4gPiA+ID4gPiA+ICsJcGNpZS0+cnAuY29u
+ZmlnX2F4aV9zbGF2ZV9iYXNlID0NCj4gPiA+IGRldm1fcGNpX3JlbWFwX2NmZ19yZXNvdXJjZShk
+ZXYsDQo+ID4gPiA+ID4gcmVzKTsNCj4gPiA+ID4gPiA+ICsJaWYgKElTX0VSUihwY2llLT5ycC5j
+b25maWdfYXhpX3NsYXZlX2Jhc2UpKQ0KPiA+ID4gPiA+ID4gKwkJcmV0dXJuIFBUUl9FUlIocGNp
+ZS0+cnAuY29uZmlnX2F4aV9zbGF2ZV9iYXNlKTsNCj4gPiA+ID4gPiA+ICsJcGNpZS0+cnAub2Jf
+aW9fcmVzID0gcmVzOw0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICAJLyogbWFwIGNzciByZXNv
+dXJjZSAqLw0KPiA+ID4gPiA+ID4gIAlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1l
+KHBkZXYsDQo+IElPUkVTT1VSQ0VfTUVNLA0KPiA+ID4gQEANCj4gPiA+ID4gPiAtNDQxLDEyDQo+
+ID4gPiA+ID4gPiArMTg3LDYgQEAgc3RhdGljIGludCBtb2JpdmVpbF9wY2llX3BhcnNlX2R0KHN0
+cnVjdCBtb2JpdmVpbF9wY2llDQo+ID4gPiAqcGNpZSkNCj4gPiA+ID4gPiA+ICAJCXJldHVybiBQ
+VFJfRVJSKHBjaWUtPmNzcl9heGlfc2xhdmVfYmFzZSk7DQo+ID4gPiA+ID4gPiAgCXBjaWUtPnBj
+aWVfcmVnX2Jhc2UgPSByZXMtPnN0YXJ0Ow0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IC0JLyog
+bWFwIE1TSSBjb25maWcgcmVzb3VyY2UgKi8NCj4gPiA+ID4gPiA+IC0JcmVzID0gcGxhdGZvcm1f
+Z2V0X3Jlc291cmNlX2J5bmFtZShwZGV2LA0KPiBJT1JFU09VUkNFX01FTSwNCj4gPiA+ID4gPiAi
+YXBiX2NzciIpOw0KPiA+ID4gPiA+ID4gLQlwY2llLT5hcGJfY3NyX2Jhc2UgPSBkZXZtX3BjaV9y
+ZW1hcF9jZmdfcmVzb3VyY2UoZGV2LA0KPiByZXMpOw0KPiA+ID4gPiA+ID4gLQlpZiAoSVNfRVJS
+KHBjaWUtPmFwYl9jc3JfYmFzZSkpDQo+ID4gPiA+ID4gPiAtCQlyZXR1cm4gUFRSX0VSUihwY2ll
+LT5hcGJfY3NyX2Jhc2UpOw0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gIAkvKiByZWFkIHRo
+ZSBudW1iZXIgb2Ygd2luZG93cyByZXF1ZXN0ZWQgKi8NCj4gPiA+ID4gPiA+ICAJaWYgKG9mX3By
+b3BlcnR5X3JlYWRfdTMyKG5vZGUsICJhcGlvLXdpbnMiLA0KPiAmcGNpZS0+YXBpb193aW5zKSkN
+Cj4gPiA+ID4gPiA+ICAJCXBjaWUtPmFwaW9fd2lucyA9IE1BWF9QSU9fV0lORE9XUzsNCj4gPiA+
+ID4gPiA+IEBAIC00NTQsMTE5ICsxOTQsMTUgQEAgc3RhdGljIGludCBtb2JpdmVpbF9wY2llX3Bh
+cnNlX2R0KHN0cnVjdA0KPiA+ID4gPiA+IG1vYml2ZWlsX3BjaWUgKnBjaWUpDQo+ID4gPiA+ID4g
+PiAgCWlmIChvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAicHBpby13aW5zIiwNCj4gJnBjaWUt
+PnBwaW9fd2lucykpDQo+ID4gPiA+ID4gPiAgCQlwY2llLT5wcGlvX3dpbnMgPSBNQVhfUElPX1dJ
+TkRPV1M7DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gLQlwY2llLT5pcnEgPSBwbGF0Zm9ybV9n
+ZXRfaXJxKHBkZXYsIDApOw0KPiA+ID4gPiA+ID4gLQlpZiAocGNpZS0+aXJxIDw9IDApIHsNCj4g
+PiA+ID4gPiA+IC0JCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIG1hcCBJUlE6ICVkXG4iLCBwY2ll
+LT5pcnEpOw0KPiA+ID4gPiA+ID4gLQkJcmV0dXJuIC1FTk9ERVY7DQo+ID4gPiA+ID4gPiAtCX0N
+Cj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+ICAJcmV0dXJuIDA7DQo+ID4gPiA+ID4gPiAgfQ0K
+PiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IC1zdGF0aWMgdm9pZCBwcm9ncmFtX2liX3dpbmRvd3Mo
+c3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUsIGludA0KPiA+ID4gd2luX251bSwNCj4gPiA+ID4g
+PiA+IC0JCQkgICAgICAgdTY0IGNwdV9hZGRyLCB1NjQgcGNpX2FkZHIsIHUzMiB0eXBlLCB1NjQN
+Cj4gc2l6ZSkNCj4gPiA+ID4gPiA+IC17DQo+ID4gPiA+ID4gPiAtCXUzMiB2YWx1ZTsNCj4gPiA+
+ID4gPiA+IC0JdTY0IHNpemU2NCA9IH4oc2l6ZSAtIDEpOw0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4g
+PiA+ID4gLQlpZiAod2luX251bSA+PSBwY2llLT5wcGlvX3dpbnMpIHsNCj4gPiA+ID4gPiA+IC0J
+CWRldl9lcnIoJnBjaWUtPnBkZXYtPmRldiwNCj4gPiA+ID4gPiA+IC0JCQkiRVJST1I6IG1heCBp
+bmJvdW5kIHdpbmRvd3MgcmVhY2hlZCAhXG4iKTsNCj4gPiA+ID4gPiA+IC0JCXJldHVybjsNCj4g
+PiA+ID4gPiA+IC0JfQ0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLQl2YWx1ZSA9IGNzcl9y
+ZWFkbChwY2llLCBQQUJfUEVYX0FNQVBfQ1RSTCh3aW5fbnVtKSk7DQo+ID4gPiA+ID4gPiAtCXZh
+bHVlICY9IH4oQU1BUF9DVFJMX1RZUEVfTUFTSyA8PA0KPiBBTUFQX0NUUkxfVFlQRV9TSElGVCB8
+DQo+ID4gPiA+ID4gPiAtCQkgV0lOX1NJWkVfTUFTSyA8PCBXSU5fU0laRV9TSElGVCk7DQo+ID4g
+PiA+ID4gPiAtCXZhbHVlIHw9ICh0eXBlIDw8IEFNQVBfQ1RSTF9UWVBFX1NISUZUKSB8ICgxIDw8
+DQo+ID4gPiA+ID4gQU1BUF9DVFJMX0VOX1NISUZUKSB8DQo+ID4gPiA+ID4gPiAtCQkgKGxvd2Vy
+XzMyX2JpdHMoc2l6ZTY0KSAmIFdJTl9TSVpFX01BU0sgPDwNCj4gPiA+IFdJTl9TSVpFX1NISUZU
+KTsNCj4gPiA+ID4gPiA+IC0JY3NyX3dyaXRlbChwY2llLCB2YWx1ZSwgUEFCX1BFWF9BTUFQX0NU
+Ukwod2luX251bSkpOw0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLQljc3Jfd3JpdGVsKHBj
+aWUsIHVwcGVyXzMyX2JpdHMoc2l6ZTY0KSwNCj4gPiA+ID4gPiA+IC0JCSAgIFBBQl9FWFRfUEVY
+X0FNQVBfU0laRU4od2luX251bSkpOw0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLQljc3Jf
+d3JpdGVsKHBjaWUsIGxvd2VyXzMyX2JpdHMoY3B1X2FkZHIpLA0KPiA+ID4gPiA+ID4gLQkJICAg
+UEFCX1BFWF9BTUFQX0FYSV9XSU4od2luX251bSkpOw0KPiA+ID4gPiA+ID4gLQljc3Jfd3JpdGVs
+KHBjaWUsIHVwcGVyXzMyX2JpdHMoY3B1X2FkZHIpLA0KPiA+ID4gPiA+ID4gLQkJICAgUEFCX0VY
+VF9QRVhfQU1BUF9BWElfV0lOKHdpbl9udW0pKTsNCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+
+IC0JY3NyX3dyaXRlbChwY2llLCBsb3dlcl8zMl9iaXRzKHBjaV9hZGRyKSwNCj4gPiA+ID4gPiA+
+IC0JCSAgIFBBQl9QRVhfQU1BUF9QRVhfV0lOX0wod2luX251bSkpOw0KPiA+ID4gPiA+ID4gLQlj
+c3Jfd3JpdGVsKHBjaWUsIHVwcGVyXzMyX2JpdHMocGNpX2FkZHIpLA0KPiA+ID4gPiA+ID4gLQkJ
+ICAgUEFCX1BFWF9BTUFQX1BFWF9XSU5fSCh3aW5fbnVtKSk7DQo+ID4gPiA+ID4gPiAtDQo+ID4g
+PiA+ID4gPiAtCXBjaWUtPmliX3dpbnNfY29uZmlndXJlZCsrOw0KPiA+ID4gPiA+ID4gLX0NCj4g
+PiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0vKg0KPiA+ID4gPiA+ID4gLSAqIHJvdXRpbmUgdG8g
+cHJvZ3JhbSB0aGUgb3V0Ym91bmQgd2luZG93cw0KPiA+ID4gPiA+ID4gLSAqLw0KPiA+ID4gPiA+
+ID4gLXN0YXRpYyB2b2lkIHByb2dyYW1fb2Jfd2luZG93cyhzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAq
+cGNpZSwgaW50DQo+ID4gPiB3aW5fbnVtLA0KPiA+ID4gPiA+ID4gLQkJCSAgICAgICB1NjQgY3B1
+X2FkZHIsIHU2NCBwY2lfYWRkciwgdTMyIHR5cGUsIHU2NA0KPiBzaXplKQ0KPiA+ID4gPiA+ID4g
+LXsNCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0JdTMyIHZhbHVlOw0KPiA+ID4gPiA+ID4g
+LQl1NjQgc2l6ZTY0ID0gfihzaXplIC0gMSk7DQo+ID4gPiA+ID4gPiAtDQo+ID4gPiA+ID4gPiAt
+CWlmICh3aW5fbnVtID49IHBjaWUtPmFwaW9fd2lucykgew0KPiA+ID4gPiA+ID4gLQkJZGV2X2Vy
+cigmcGNpZS0+cGRldi0+ZGV2LA0KPiA+ID4gPiA+ID4gLQkJCSJFUlJPUjogbWF4IG91dGJvdW5k
+IHdpbmRvd3MgcmVhY2hlZCAhXG4iKTsNCj4gPiA+ID4gPiA+IC0JCXJldHVybjsNCj4gPiA+ID4g
+PiA+IC0JfQ0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLQkvKg0KPiA+ID4gPiA+ID4gLQkg
+KiBwcm9ncmFtIEVuYWJsZSBCaXQgdG8gMSwgVHlwZSBCaXQgdG8gKDAwKSBiYXNlIDIsIEFYSSBX
+aW5kb3cNCj4gU2l6ZQ0KPiA+ID4gQml0DQo+ID4gPiA+ID4gPiAtCSAqIHRvIDQgS0IgaW4gUEFC
+X0FYSV9BTUFQX0NUUkwgcmVnaXN0ZXINCj4gPiA+ID4gPiA+IC0JICovDQo+ID4gPiA+ID4gPiAt
+CXZhbHVlID0gY3NyX3JlYWRsKHBjaWUsIFBBQl9BWElfQU1BUF9DVFJMKHdpbl9udW0pKTsNCj4g
+PiA+ID4gPiA+IC0JdmFsdWUgJj0gfihXSU5fVFlQRV9NQVNLIDw8IFdJTl9UWVBFX1NISUZUIHwN
+Cj4gPiA+ID4gPiA+IC0JCSBXSU5fU0laRV9NQVNLIDw8IFdJTl9TSVpFX1NISUZUKTsNCj4gPiA+
+ID4gPiA+IC0JdmFsdWUgfD0gMSA8PCBXSU5fRU5BQkxFX1NISUZUIHwgdHlwZSA8PCBXSU5fVFlQ
+RV9TSElGVA0KPiB8DQo+ID4gPiA+ID4gPiAtCQkgKGxvd2VyXzMyX2JpdHMoc2l6ZTY0KSAmIFdJ
+Tl9TSVpFX01BU0sgPDwNCj4gPiA+IFdJTl9TSVpFX1NISUZUKTsNCj4gPiA+ID4gPiA+IC0JY3Ny
+X3dyaXRlbChwY2llLCB2YWx1ZSwgUEFCX0FYSV9BTUFQX0NUUkwod2luX251bSkpOw0KPiA+ID4g
+PiA+ID4gLQ0KPiA+ID4gPiA+ID4gLQljc3Jfd3JpdGVsKHBjaWUsIHVwcGVyXzMyX2JpdHMoc2l6
+ZTY0KSwNCj4gPiA+ID4gPiBQQUJfRVhUX0FYSV9BTUFQX1NJWkUod2luX251bSkpOw0KPiA+ID4g
+PiA+ID4gLQ0KPiA+ID4gPiA+ID4gLQkvKg0KPiA+ID4gPiA+ID4gLQkgKiBwcm9ncmFtIEFYSSB3
+aW5kb3cgYmFzZSB3aXRoIGFwcHJvcHJpYXRlIHZhbHVlIGluDQo+ID4gPiA+ID4gPiAtCSAqIFBB
+Ql9BWElfQU1BUF9BWElfV0lOMCByZWdpc3Rlcg0KPiA+ID4gPiA+ID4gLQkgKi8NCj4gPiA+ID4g
+PiA+IC0JY3NyX3dyaXRlbChwY2llLCBsb3dlcl8zMl9iaXRzKGNwdV9hZGRyKSAmDQo+ID4gPiA+
+ID4gKH5BWElfV0lORE9XX0FMSUdOX01BU0spLA0KPiA+ID4gPiA+ID4gLQkJICAgUEFCX0FYSV9B
+TUFQX0FYSV9XSU4od2luX251bSkpOw0KPiA+ID4gPiA+ID4gLQljc3Jfd3JpdGVsKHBjaWUsIHVw
+cGVyXzMyX2JpdHMoY3B1X2FkZHIpLA0KPiA+ID4gPiA+ID4gLQkJICAgUEFCX0VYVF9BWElfQU1B
+UF9BWElfV0lOKHdpbl9udW0pKTsNCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0JY3NyX3dy
+aXRlbChwY2llLCBsb3dlcl8zMl9iaXRzKHBjaV9hZGRyKSwNCj4gPiA+ID4gPiA+IC0JCSAgIFBB
+Ql9BWElfQU1BUF9QRVhfV0lOX0wod2luX251bSkpOw0KPiA+ID4gPiA+ID4gLQljc3Jfd3JpdGVs
+KHBjaWUsIHVwcGVyXzMyX2JpdHMocGNpX2FkZHIpLA0KPiA+ID4gPiA+ID4gLQkJICAgUEFCX0FY
+SV9BTUFQX1BFWF9XSU5fSCh3aW5fbnVtKSk7DQo+ID4gPiA+ID4gPiAtDQo+ID4gPiA+ID4gPiAt
+CXBjaWUtPm9iX3dpbnNfY29uZmlndXJlZCsrOw0KPiA+ID4gPiA+ID4gLX0NCj4gPiA+ID4gPiA+
+IC0NCj4gPiA+ID4gPiA+IC1zdGF0aWMgaW50IG1vYml2ZWlsX2JyaW5ndXBfbGluayhzdHJ1Y3Qg
+bW9iaXZlaWxfcGNpZSAqcGNpZSkgLXsNCj4gPiA+ID4gPiA+IC0JaW50IHJldHJpZXM7DQo+ID4g
+PiA+ID4gPiAtDQo+ID4gPiA+ID4gPiAtCS8qIGNoZWNrIGlmIHRoZSBsaW5rIGlzIHVwIG9yIG5v
+dCAqLw0KPiA+ID4gPiA+ID4gLQlmb3IgKHJldHJpZXMgPSAwOyByZXRyaWVzIDwgTElOS19XQUlU
+X01BWF9SRVRSSUVTOyByZXRyaWVzKyspDQo+IHsNCj4gPiA+ID4gPiA+IC0JCWlmIChtb2JpdmVp
+bF9wY2llX2xpbmtfdXAocGNpZSkpDQo+ID4gPiA+ID4gPiAtCQkJcmV0dXJuIDA7DQo+ID4gPiA+
+ID4gPiAtDQo+ID4gPiA+ID4gPiAtCQl1c2xlZXBfcmFuZ2UoTElOS19XQUlUX01JTiwgTElOS19X
+QUlUX01BWCk7DQo+ID4gPiA+ID4gPiAtCX0NCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0J
+ZGV2X2VycigmcGNpZS0+cGRldi0+ZGV2LCAibGluayBuZXZlciBjYW1lIHVwXG4iKTsNCj4gPiA+
+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0JcmV0dXJuIC1FVElNRURPVVQ7DQo+ID4gPiA+ID4gPiAt
+fQ0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gIHN0YXRpYyB2b2lkIG1vYml2ZWlsX3BjaWVf
+ZW5hYmxlX21zaShzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSkNCj4gew0KPiA+ID4gPiA+ID4g
+IAlwaHlzX2FkZHJfdCBtc2dfYWRkciA9IHBjaWUtPnBjaWVfcmVnX2Jhc2U7DQo+ID4gPiA+ID4g
+PiAtCXN0cnVjdCBtb2JpdmVpbF9tc2kgKm1zaSA9ICZwY2llLT5tc2k7DQo+ID4gPiA+ID4gPiAr
+CXN0cnVjdCBtb2JpdmVpbF9tc2kgKm1zaSA9ICZwY2llLT5ycC5tc2k7DQo+ID4gPiA+ID4gPg0K
+PiA+ID4gPiA+ID4gLQlwY2llLT5tc2kubnVtX29mX3ZlY3RvcnMgPSBQQ0lfTlVNX01TSTsNCj4g
+PiA+ID4gPiA+ICsJbXNpLT5udW1fb2ZfdmVjdG9ycyA9IFBDSV9OVU1fTVNJOw0KPiA+ID4gPiA+
+ID4gIAltc2ktPm1zaV9wYWdlc19waHlzID0gKHBoeXNfYWRkcl90KW1zZ19hZGRyOw0KPiA+ID4g
+PiA+ID4NCj4gPiA+ID4gPiA+ICAJd3JpdGVsX3JlbGF4ZWQobG93ZXJfMzJfYml0cyhtc2dfYWRk
+ciksDQo+ID4gPiA+ID4gPiBAQCAtNjA0LDkgKzI0MCw2IEBAIHN0YXRpYyBpbnQgbW9iaXZlaWxf
+aG9zdF9pbml0KHN0cnVjdA0KPiA+ID4gbW9iaXZlaWxfcGNpZQ0KPiA+ID4gPiA+ICpwY2llKQ0K
+PiA+ID4gPiA+ID4gIAlwYWJfY3RybCB8PSAoMSA8PCBBTUJBX1BJT19FTkFCTEVfU0hJRlQpIHwg
+KDEgPDwNCj4gPiA+ID4gPiBQRVhfUElPX0VOQUJMRV9TSElGVCk7DQo+ID4gPiA+ID4gPiAgCWNz
+cl93cml0ZWwocGNpZSwgcGFiX2N0cmwsIFBBQl9DVFJMKTsNCj4gPiA+ID4gPiA+DQo+ID4gPiA+
+ID4gPiAtCWNzcl93cml0ZWwocGNpZSwgKFBBQl9JTlRQX0lOVFhfTUFTSyB8DQo+IFBBQl9JTlRQ
+X01TSV9NQVNLKSwNCj4gPiA+ID4gPiA+IC0JCSAgIFBBQl9JTlRQX0FNQkFfTUlTQ19FTkIpOw0K
+PiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gIAkvKg0KPiA+ID4gPiA+ID4gIAkgKiBwcm9ncmFt
+IFBJTyBFbmFibGUgQml0IHRvIDEgYW5kIENvbmZpZyBXaW5kb3cgRW5hYmxlIEJpdA0KPiB0byAx
+DQo+ID4gPiBpbg0KPiA+ID4gPiA+ID4gIAkgKiBQQUJfQVhJX1BJT19DVFJMIFJlZ2lzdGVyDQo+
+ID4gPiA+ID4gPiBAQCAtNjI4LDIwICsyNjEsMjQgQEAgc3RhdGljIGludCBtb2JpdmVpbF9ob3N0
+X2luaXQoc3RydWN0DQo+ID4gPiBtb2JpdmVpbF9wY2llDQo+ID4gPiA+ID4gKnBjaWUpDQo+ID4g
+PiA+ID4gPiAgCSAqLw0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICAJLyogY29uZmlnIG91dGJv
+dW5kIHRyYW5zbGF0aW9uIHdpbmRvdyAqLw0KPiA+ID4gPiA+ID4gLQlwcm9ncmFtX29iX3dpbmRv
+d3MocGNpZSwgV0lOX05VTV8wLA0KPiBwY2llLT5vYl9pb19yZXMtPnN0YXJ0LA0KPiA+ID4gMCwN
+Cj4gPiA+ID4gPiA+IC0JCQkgICBDRkdfV0lORE9XX1RZUEUsDQo+ID4gPiByZXNvdXJjZV9zaXpl
+KHBjaWUtPm9iX2lvX3JlcykpOw0KPiA+ID4gPiA+ID4gKwlwcm9ncmFtX29iX3dpbmRvd3MocGNp
+ZSwgV0lOX05VTV8wLA0KPiA+ID4gcGNpZS0+cnAub2JfaW9fcmVzLT5zdGFydCwgMCwNCj4gPiA+
+ID4gPiA+ICsJCQkgICBDRkdfV0lORE9XX1RZUEUsDQo+ID4gPiByZXNvdXJjZV9zaXplKHBjaWUt
+PnJwLm9iX2lvX3JlcykpOw0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICAJLyogbWVtb3J5IGlu
+Ym91bmQgdHJhbnNsYXRpb24gd2luZG93ICovDQo+ID4gPiA+ID4gPiAgCXByb2dyYW1faWJfd2lu
+ZG93cyhwY2llLCBXSU5fTlVNXzAsIDAsIDAsDQo+ID4gPiBNRU1fV0lORE9XX1RZUEUsDQo+ID4g
+PiA+ID4gSUJfV0lOX1NJWkUpOw0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICAJLyogR2V0IHRo
+ZSBJL08gYW5kIG1lbW9yeSByYW5nZXMgZnJvbSBEVCAqLw0KPiA+ID4gPiA+ID4gIAlyZXNvdXJj
+ZV9saXN0X2Zvcl9lYWNoX2VudHJ5KHdpbiwgJnBjaWUtPnJlc291cmNlcykgew0KPiA+ID4gPiA+
+ID4gLQkJaWYgKHJlc291cmNlX3R5cGUod2luLT5yZXMpID09IElPUkVTT1VSQ0VfTUVNKQ0KPiA+
+ID4gPiA+ID4gKwkJaWYgKHJlc291cmNlX3R5cGUod2luLT5yZXMpID09IElPUkVTT1VSQ0VfTUVN
+KSB7DQo+ID4gPiA+ID4gPiAgCQkJdHlwZSA9IE1FTV9XSU5ET1dfVFlQRTsNCj4gPiA+ID4gPiA+
+IC0JCWVsc2UgaWYgKHJlc291cmNlX3R5cGUod2luLT5yZXMpID09IElPUkVTT1VSQ0VfSU8pDQo+
+ID4gPiA+ID4gPiArCQl9IGVsc2UgaWYgKHJlc291cmNlX3R5cGUod2luLT5yZXMpID09IElPUkVT
+T1VSQ0VfSU8pIHsNCj4gPiA+ID4gPiA+ICAJCQl0eXBlID0gSU9fV0lORE9XX1RZUEU7DQo+ID4g
+PiA+ID4gPiAtCQllbHNlDQo+ID4gPiA+ID4gPiArCQl9IGVsc2UgaWYgKHJlc291cmNlX3R5cGUo
+d2luLT5yZXMpID09IElPUkVTT1VSQ0VfQlVTKSB7DQo+ID4gPiA+ID4gPiArCQkJcGNpZS0+cnAu
+cm9vdF9idXNfbnIgPSB3aW4tPnJlcy0+c3RhcnQ7DQo+ID4gPiA+ID4gPiArCQkJY29udGludWU7
+DQo+ID4gPiA+ID4gPiArCQl9IGVsc2Ugew0KPiA+ID4gPiA+ID4gIAkJCWNvbnRpbnVlOw0KPiA+
+ID4gPiA+ID4gKwkJfQ0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICAJCS8qIGNvbmZpZ3VyZSBv
+dXRib3VuZCB0cmFuc2xhdGlvbiB3aW5kb3cgKi8NCj4gPiA+ID4gPiA+ICAJCXByb2dyYW1fb2Jf
+d2luZG93cyhwY2llLCBwY2llLT5vYl93aW5zX2NvbmZpZ3VyZWQsDQo+ID4gPiA+ID4gPiBAQCAt
+NjU2LDkgKzI5Myw2IEBAIHN0YXRpYyBpbnQgbW9iaXZlaWxfaG9zdF9pbml0KHN0cnVjdA0KPiA+
+ID4gbW9iaXZlaWxfcGNpZQ0KPiA+ID4gPiA+ICpwY2llKQ0KPiA+ID4gPiA+ID4gIAl2YWx1ZSB8
+PSAoUENJX0NMQVNTX0JSSURHRV9QQ0kgPDwgMTYpOw0KPiA+ID4gPiA+ID4gIAljc3Jfd3JpdGVs
+KHBjaWUsIHZhbHVlLCBQQUJfSU5UUF9BWElfUElPX0NMQVNTKTsNCj4gPiA+ID4gPiA+DQo+ID4g
+PiA+ID4gPiAtCS8qIHNldHVwIE1TSSBoYXJkd2FyZSByZWdpc3RlcnMgKi8NCj4gPiA+ID4gPiA+
+IC0JbW9iaXZlaWxfcGNpZV9lbmFibGVfbXNpKHBjaWUpOw0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4g
+PiA+ID4gIAlyZXR1cm4gMDsNCj4gPiA+ID4gPiA+ICB9DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+
+ID4gQEAgLTY3MSwxMSArMzA1LDExIEBAIHN0YXRpYyB2b2lkIG1vYml2ZWlsX21hc2tfaW50eF9p
+cnEoc3RydWN0DQo+ID4gPiA+ID4gaXJxX2RhdGEgKmRhdGEpDQo+ID4gPiA+ID4gPg0KPiA+ID4g
+PiA+ID4gIAlwY2llID0gaXJxX2Rlc2NfZ2V0X2NoaXBfZGF0YShkZXNjKTsNCj4gPiA+ID4gPiA+
+ICAJbWFzayA9IDEgPDwgKChkYXRhLT5od2lycSArIFBBQl9JTlRYX1NUQVJUKSAtIDEpOw0KPiA+
+ID4gPiA+ID4gLQlyYXdfc3Bpbl9sb2NrX2lycXNhdmUoJnBjaWUtPmludHhfbWFza19sb2NrLCBm
+bGFncyk7DQo+ID4gPiA+ID4gPiArCXJhd19zcGluX2xvY2tfaXJxc2F2ZSgmcGNpZS0+cnAuaW50
+eF9tYXNrX2xvY2ssIGZsYWdzKTsNCj4gPiA+ID4gPiA+ICAJc2hpZnRlZF92YWwgPSBjc3JfcmVh
+ZGwocGNpZSwgUEFCX0lOVFBfQU1CQV9NSVNDX0VOQik7DQo+ID4gPiA+ID4gPiAgCXNoaWZ0ZWRf
+dmFsICY9IH5tYXNrOw0KPiA+ID4gPiA+ID4gIAljc3Jfd3JpdGVsKHBjaWUsIHNoaWZ0ZWRfdmFs
+LCBQQUJfSU5UUF9BTUJBX01JU0NfRU5CKTsNCj4gPiA+ID4gPiA+IC0JcmF3X3NwaW5fdW5sb2Nr
+X2lycXJlc3RvcmUoJnBjaWUtPmludHhfbWFza19sb2NrLCBmbGFncyk7DQo+ID4gPiA+ID4gPiAr
+CXJhd19zcGluX3VubG9ja19pcnFyZXN0b3JlKCZwY2llLT5ycC5pbnR4X21hc2tfbG9jaywgZmxh
+Z3MpOw0KPiA+ID4gPiA+ID4gIH0NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAgc3RhdGljIHZv
+aWQgbW9iaXZlaWxfdW5tYXNrX2ludHhfaXJxKHN0cnVjdCBpcnFfZGF0YSAqZGF0YSkNCj4gPiA+
+ID4gPiA+IEBAIC02ODcsMTEgKzMyMSwxMSBAQCBzdGF0aWMgdm9pZA0KPiBtb2JpdmVpbF91bm1h
+c2tfaW50eF9pcnEoc3RydWN0DQo+ID4gPiA+ID4gaXJxX2RhdGEgKmRhdGEpDQo+ID4gPiA+ID4g
+Pg0KPiA+ID4gPiA+ID4gIAlwY2llID0gaXJxX2Rlc2NfZ2V0X2NoaXBfZGF0YShkZXNjKTsNCj4g
+PiA+ID4gPiA+ICAJbWFzayA9IDEgPDwgKChkYXRhLT5od2lycSArIFBBQl9JTlRYX1NUQVJUKSAt
+IDEpOw0KPiA+ID4gPiA+ID4gLQlyYXdfc3Bpbl9sb2NrX2lycXNhdmUoJnBjaWUtPmludHhfbWFz
+a19sb2NrLCBmbGFncyk7DQo+ID4gPiA+ID4gPiArCXJhd19zcGluX2xvY2tfaXJxc2F2ZSgmcGNp
+ZS0+cnAuaW50eF9tYXNrX2xvY2ssIGZsYWdzKTsNCj4gPiA+ID4gPiA+ICAJc2hpZnRlZF92YWwg
+PSBjc3JfcmVhZGwocGNpZSwgUEFCX0lOVFBfQU1CQV9NSVNDX0VOQik7DQo+ID4gPiA+ID4gPiAg
+CXNoaWZ0ZWRfdmFsIHw9IG1hc2s7DQo+ID4gPiA+ID4gPiAgCWNzcl93cml0ZWwocGNpZSwgc2hp
+ZnRlZF92YWwsIFBBQl9JTlRQX0FNQkFfTUlTQ19FTkIpOw0KPiA+ID4gPiA+ID4gLQlyYXdfc3Bp
+bl91bmxvY2tfaXJxcmVzdG9yZSgmcGNpZS0+aW50eF9tYXNrX2xvY2ssIGZsYWdzKTsNCj4gPiA+
+ID4gPiA+ICsJcmF3X3NwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnBjaWUtPnJwLmludHhfbWFza19s
+b2NrLCBmbGFncyk7DQo+ID4gPiA+ID4gPiAgfQ0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICBz
+dGF0aWMgc3RydWN0IGlycV9jaGlwIGludHhfaXJxX2NoaXAgPSB7DQo+ID4gPiA+ID4gPiBAQCAt
+NzU5LDcgKzM5Myw3IEBAIHN0YXRpYyBpbnQNCj4gbW9iaXZlaWxfaXJxX21zaV9kb21haW5fYWxs
+b2Moc3RydWN0DQo+ID4gPiA+ID4gaXJxX2RvbWFpbiAqZG9tYWluLA0KPiA+ID4gPiA+ID4gIAkJ
+CQkJIHVuc2lnbmVkIGludCBucl9pcnFzLCB2b2lkICphcmdzKQ0KPiA+ID4gPiA+ID4gIHsNCj4g
+PiA+ID4gPiA+ICAJc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUgPSBkb21haW4tPmhvc3RfZGF0
+YTsNCj4gPiA+ID4gPiA+IC0Jc3RydWN0IG1vYml2ZWlsX21zaSAqbXNpID0gJnBjaWUtPm1zaTsN
+Cj4gPiA+ID4gPiA+ICsJc3RydWN0IG1vYml2ZWlsX21zaSAqbXNpID0gJnBjaWUtPnJwLm1zaTsN
+Cj4gPiA+ID4gPiA+ICAJdW5zaWduZWQgbG9uZyBiaXQ7DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+
+ID4gIAlXQVJOX09OKG5yX2lycXMgIT0gMSk7DQo+ID4gPiA+ID4gPiBAQCAtNzg2LDcgKzQyMCw3
+IEBAIHN0YXRpYyB2b2lkDQo+ID4gPiBtb2JpdmVpbF9pcnFfbXNpX2RvbWFpbl9mcmVlKHN0cnVj
+dA0KPiA+ID4gPiA+IGlycV9kb21haW4gKmRvbWFpbiwNCj4gPiA+ID4gPiA+ICB7DQo+ID4gPiA+
+ID4gPiAgCXN0cnVjdCBpcnFfZGF0YSAqZCA9IGlycV9kb21haW5fZ2V0X2lycV9kYXRhKGRvbWFp
+biwgdmlycSk7DQo+ID4gPiA+ID4gPiAgCXN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llID0gaXJx
+X2RhdGFfZ2V0X2lycV9jaGlwX2RhdGEoZCk7DQo+ID4gPiA+ID4gPiAtCXN0cnVjdCBtb2JpdmVp
+bF9tc2kgKm1zaSA9ICZwY2llLT5tc2k7DQo+ID4gPiA+ID4gPiArCXN0cnVjdCBtb2JpdmVpbF9t
+c2kgKm1zaSA9ICZwY2llLT5ycC5tc2k7DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gIAltdXRl
+eF9sb2NrKCZtc2ktPmxvY2spOw0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IEBAIC04MDcsOSAr
+NDQxLDkgQEAgc3RhdGljIGludA0KPiBtb2JpdmVpbF9hbGxvY2F0ZV9tc2lfZG9tYWlucyhzdHJ1
+Y3QNCj4gPiA+ID4gPiBtb2JpdmVpbF9wY2llICpwY2llKQ0KPiA+ID4gPiA+ID4gIHsNCj4gPiA+
+ID4gPiA+ICAJc3RydWN0IGRldmljZSAqZGV2ID0gJnBjaWUtPnBkZXYtPmRldjsNCj4gPiA+ID4g
+PiA+ICAJc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZ3bm9kZSA9DQo+ID4gPiBvZl9ub2RlX3RvX2Z3
+bm9kZShkZXYtPm9mX25vZGUpOw0KPiA+ID4gPiA+ID4gLQlzdHJ1Y3QgbW9iaXZlaWxfbXNpICpt
+c2kgPSAmcGNpZS0+bXNpOw0KPiA+ID4gPiA+ID4gKwlzdHJ1Y3QgbW9iaXZlaWxfbXNpICptc2kg
+PSAmcGNpZS0+cnAubXNpOw0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IC0JbXV0ZXhfaW5pdCgm
+cGNpZS0+bXNpLmxvY2spOw0KPiA+ID4gPiA+ID4gKwltdXRleF9pbml0KCZtc2ktPmxvY2spOw0K
+PiA+ID4gPiA+ID4gIAltc2ktPmRldl9kb21haW4gPSBpcnFfZG9tYWluX2FkZF9saW5lYXIoTlVM
+TCwNCj4gPiA+ID4gPiBtc2ktPm51bV9vZl92ZWN0b3JzLA0KPiA+ID4gPiA+ID4gIAkJCQkJCSZt
+c2lfZG9tYWluX29wcywgcGNpZSk7DQo+ID4gPiA+ID4gPiAgCWlmICghbXNpLT5kZXZfZG9tYWlu
+KSB7DQo+ID4gPiA+ID4gPiBAQCAtODM2LDE1ICs0NzAsMTUgQEAgc3RhdGljIGludA0KPiA+ID4g
+bW9iaXZlaWxfcGNpZV9pbml0X2lycV9kb21haW4oc3RydWN0DQo+ID4gPiA+ID4gbW9iaXZlaWxf
+cGNpZSAqcGNpZSkNCj4gPiA+ID4gPiA+ICAJaW50IHJldDsNCj4gPiA+ID4gPiA+DQo+ID4gPiA+
+ID4gPiAgCS8qIHNldHVwIElOVHggKi8NCj4gPiA+ID4gPiA+IC0JcGNpZS0+aW50eF9kb21haW4g
+PSBpcnFfZG9tYWluX2FkZF9saW5lYXIobm9kZSwNCj4gUENJX05VTV9JTlRYLA0KPiA+ID4gPiA+
+ID4gLQkJCQkJCSAgJmludHhfZG9tYWluX29wcywgcGNpZSk7DQo+ID4gPiA+ID4gPiArCXBjaWUt
+PnJwLmludHhfZG9tYWluID0gaXJxX2RvbWFpbl9hZGRfbGluZWFyKG5vZGUsDQo+ID4gPiBQQ0lf
+TlVNX0lOVFgsDQo+ID4gPiA+ID4gPiArCQkJCQkJICAgICAmaW50eF9kb21haW5fb3BzLCBwY2ll
+KTsNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAtCWlmICghcGNpZS0+aW50eF9kb21haW4pIHsN
+Cj4gPiA+ID4gPiA+ICsJaWYgKCFwY2llLT5ycC5pbnR4X2RvbWFpbikgew0KPiA+ID4gPiA+ID4g
+IAkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0IGEgSU5UeCBJUlEgZG9tYWluXG4iKTsNCj4g
+PiA+ID4gPiA+ICAJCXJldHVybiAtRU5PTUVNOw0KPiA+ID4gPiA+ID4gIAl9DQo+ID4gPiA+ID4g
+Pg0KPiA+ID4gPiA+ID4gLQlyYXdfc3Bpbl9sb2NrX2luaXQoJnBjaWUtPmludHhfbWFza19sb2Nr
+KTsNCj4gPiA+ID4gPiA+ICsJcmF3X3NwaW5fbG9ja19pbml0KCZwY2llLT5ycC5pbnR4X21hc2tf
+bG9jayk7DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gIAkvKiBzZXR1cCBNU0kgKi8NCj4gPiA+
+ID4gPiA+ICAJcmV0ID0gbW9iaXZlaWxfYWxsb2NhdGVfbXNpX2RvbWFpbnMocGNpZSk7DQo+ID4g
+PiA+ID4gPiBAQCAtODU0LDI0ICs0ODgsNTggQEAgc3RhdGljIGludA0KPiA+ID4gbW9iaXZlaWxf
+cGNpZV9pbml0X2lycV9kb21haW4oc3RydWN0DQo+ID4gPiA+ID4gbW9iaXZlaWxfcGNpZSAqcGNp
+ZSkNCj4gPiA+ID4gPiA+ICAJcmV0dXJuIDA7DQo+ID4gPiA+ID4gPiAgfQ0KPiA+ID4gPiA+ID4N
+Cj4gPiA+ID4gPiA+IC1zdGF0aWMgaW50IG1vYml2ZWlsX3BjaWVfcHJvYmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikNCj4gPiA+ID4gPiA+ICtzdGF0aWMgaW50IG1vYml2ZWlsX3BjaWVf
+aW50ZXJydXB0X2luaXQoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUpDQo+ID4gPiA+ID4gPiAr
+ew0KPiA+ID4gPiA+ID4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGNpZS0+cGRldi0+ZGV2Ow0K
+PiA+ID4gPiA+ID4gKwlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCj4gPiA+ID4gPiA+ICsJaW50IHJl
+dDsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJaWYgKHBjaWUtPnJwLm9wcy0+aW50ZXJy
+dXB0X2luaXQpDQo+ID4gPiA+ID4gPiArCQlyZXR1cm4gcGNpZS0+cnAub3BzLT5pbnRlcnJ1cHRf
+aW5pdChwY2llKTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJLyogbWFwIE1TSSBjb25m
+aWcgcmVzb3VyY2UgKi8NCj4gPiA+ID4gPiA+ICsJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNl
+X2J5bmFtZShwY2llLT5wZGV2LA0KPiA+ID4gSU9SRVNPVVJDRV9NRU0sDQo+ID4gPiA+ID4gPiAr
+CQkJCQkgICAiYXBiX2NzciIpOw0KPiA+ID4gPiA+ID4gKwlwY2llLT5hcGJfY3NyX2Jhc2UgPSBk
+ZXZtX3BjaV9yZW1hcF9jZmdfcmVzb3VyY2UoZGV2LA0KPiByZXMpOw0KPiA+ID4gPiA+ID4gKwlp
+ZiAoSVNfRVJSKHBjaWUtPmFwYl9jc3JfYmFzZSkpDQo+ID4gPiA+ID4gPiArCQlyZXR1cm4gUFRS
+X0VSUihwY2llLT5hcGJfY3NyX2Jhc2UpOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKwkv
+KiBzZXR1cCBNU0kgaGFyZHdhcmUgcmVnaXN0ZXJzICovDQo+ID4gPiA+ID4gPiArCW1vYml2ZWls
+X3BjaWVfZW5hYmxlX21zaShwY2llKTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJcGNp
+ZS0+cnAuaXJxID0gcGxhdGZvcm1fZ2V0X2lycShwY2llLT5wZGV2LCAwKTsNCj4gPiA+ID4gPiA+
+ICsJaWYgKHBjaWUtPnJwLmlycSA8PSAwKSB7DQo+ID4gPiA+ID4gPiArCQlkZXZfZXJyKGRldiwg
+ImZhaWxlZCB0byBtYXAgSVJROiAlZFxuIiwgcGNpZS0+cnAuaXJxKTsNCj4gPiA+ID4gPiA+ICsJ
+CXJldHVybiAtRU5PREVWOw0KPiA+ID4gPiA+ID4gKwl9DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+
+ID4gPiArCS8qIGluaXRpYWxpemUgdGhlIElSUSBkb21haW5zICovDQo+ID4gPiA+ID4gPiArCXJl
+dCA9IG1vYml2ZWlsX3BjaWVfaW5pdF9pcnFfZG9tYWluKHBjaWUpOw0KPiA+ID4gPiA+ID4gKwlp
+ZiAocmV0KSB7DQo+ID4gPiA+ID4gPiArCQlkZXZfZXJyKGRldiwgIkZhaWxlZCBjcmVhdGluZyBJ
+UlEgRG9tYWluXG4iKTsNCj4gPiA+ID4gPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gPiA+ID4gPiAr
+CX0NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJaXJxX3NldF9jaGFpbmVkX2hhbmRsZXJf
+YW5kX2RhdGEocGNpZS0+cnAuaXJxLA0KPiA+ID4gPiA+ID4gKwkJCQkJIG1vYml2ZWlsX3BjaWVf
+aXNyLCBwY2llKTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJLyogRW5hYmxlIGludGVy
+cnVwdHMgKi8NCj4gPiA+ID4gPiA+ICsJY3NyX3dyaXRlbChwY2llLCAoUEFCX0lOVFBfSU5UWF9N
+QVNLIHwNCj4gUEFCX0lOVFBfTVNJX01BU0spLA0KPiA+ID4gPiA+ID4gKwkJICAgUEFCX0lOVFBf
+QU1CQV9NSVNDX0VOQik7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArCXJldHVybiAwOw0K
+PiA+ID4gPiA+ID4gK30NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICtpbnQgbW9iaXZlaWxf
+cGNpZV9ob3N0X3Byb2JlKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llKQ0KPiA+ID4gPiA+ID4g
+IHsNCj4gPiA+ID4gPiA+IC0Jc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWU7DQo+ID4gPiA+ID4g
+PiAgCXN0cnVjdCBwY2lfYnVzICpidXM7DQo+ID4gPiA+ID4gPiAgCXN0cnVjdCBwY2lfYnVzICpj
+aGlsZDsNCj4gPiA+ID4gPiA+ICAJc3RydWN0IHBjaV9ob3N0X2JyaWRnZSAqYnJpZGdlOw0KPiA+
+ID4gPiA+ID4gLQlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiA+ID4gPiA+ID4g
+KwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGNpZS0+cGRldi0+ZGV2Ow0KPiA+ID4gPiA+ID4gIAly
+ZXNvdXJjZV9zaXplX3QgaW9iYXNlOw0KPiA+ID4gPiA+ID4gIAlpbnQgcmV0Ow0KPiA+ID4gPiA+
+ID4NCj4gPiA+ID4gPiA+IC0JLyogYWxsb2NhdGUgdGhlIFBDSWUgcG9ydCAqLw0KPiA+ID4gPiA+
+ID4gLQlicmlkZ2UgPSBkZXZtX3BjaV9hbGxvY19ob3N0X2JyaWRnZShkZXYsIHNpemVvZigqcGNp
+ZSkpOw0KPiA+ID4gPiA+ID4gLQlpZiAoIWJyaWRnZSkNCj4gPiA+ID4gPiA+IC0JCXJldHVybiAt
+RU5PTUVNOw0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLQlwY2llID0gcGNpX2hvc3RfYnJp
+ZGdlX3ByaXYoYnJpZGdlKTsNCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiA+IC0JcGNpZS0+cGRl
+diA9IHBkZXY7DQo+ID4gPiA+ID4gPiArCUlOSVRfTElTVF9IRUFEKCZwY2llLT5yZXNvdXJjZXMp
+Ow0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICAJcmV0ID0gbW9iaXZlaWxfcGNpZV9wYXJzZV9k
+dChwY2llKTsNCj4gPiA+ID4gPiA+ICAJaWYgKHJldCkgew0KPiA+ID4gPiA+ID4gQEAgLTg3OSw3
+ICs1NDcsMTAgQEAgc3RhdGljIGludCBtb2JpdmVpbF9wY2llX3Byb2JlKHN0cnVjdA0KPiA+ID4g
+PiA+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiA+ID4gPiA+ICAJCXJldHVybiByZXQ7DQo+
+ID4gPiA+ID4gPiAgCX0NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAtCUlOSVRfTElTVF9IRUFE
+KCZwY2llLT5yZXNvdXJjZXMpOw0KPiA+ID4gPiA+ID4gKwkvKiBhbGxvY2F0ZSB0aGUgUENJZSBw
+b3J0ICovDQo+ID4gPiA+ID4gPiArCWJyaWRnZSA9IGRldm1fcGNpX2FsbG9jX2hvc3RfYnJpZGdl
+KGRldiwgMCk7DQo+ID4gPiA+ID4gPiArCWlmICghYnJpZGdlKQ0KPiA+ID4gPiA+ID4gKwkJcmV0
+dXJuIC1FTk9NRU07DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gIAkvKiBwYXJzZSB0aGUgaG9z
+dCBicmlkZ2UgYmFzZSBhZGRyZXNzZXMgZnJvbSB0aGUgZGV2aWNlIHRyZWUNCj4gZmlsZSAqLw0K
+PiA+ID4gPiA+ID4gIAlyZXQgPSBkZXZtX29mX3BjaV9nZXRfaG9zdF9icmlkZ2VfcmVzb3VyY2Vz
+KGRldiwgMCwgMHhmZiwNCj4gPiA+ID4gPiA+IEBAIC04OTksMTUgKzU3MCwxMiBAQCBzdGF0aWMg
+aW50IG1vYml2ZWlsX3BjaWVfcHJvYmUoc3RydWN0DQo+ID4gPiA+ID4gcGxhdGZvcm1fZGV2aWNl
+ICpwZGV2KQ0KPiA+ID4gPiA+ID4gIAkJZ290byBlcnJvcjsNCj4gPiA+ID4gPiA+ICAJfQ0KPiA+
+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IC0JLyogaW5pdGlhbGl6ZSB0aGUgSVJRIGRvbWFpbnMgKi8N
+Cj4gPiA+ID4gPiA+IC0JcmV0ID0gbW9iaXZlaWxfcGNpZV9pbml0X2lycV9kb21haW4ocGNpZSk7
+DQo+ID4gPiA+ID4gPiArCXJldCA9IG1vYml2ZWlsX3BjaWVfaW50ZXJydXB0X2luaXQocGNpZSk7
+DQo+ID4gPiA+ID4gPiAgCWlmIChyZXQpIHsNCj4gPiA+ID4gPiA+IC0JCWRldl9lcnIoZGV2LCAi
+RmFpbGVkIGNyZWF0aW5nIElSUSBEb21haW5cbiIpOw0KPiA+ID4gPiA+ID4gKwkJZGV2X2Vycihk
+ZXYsICJJbnRlcnJ1cHQgaW5pdCBmYWlsZWRcbiIpOw0KPiA+ID4gPiA+ID4gIAkJZ290byBlcnJv
+cjsNCj4gPiA+ID4gPiA+ICAJfQ0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IC0JaXJxX3NldF9j
+aGFpbmVkX2hhbmRsZXJfYW5kX2RhdGEocGNpZS0+aXJxLA0KPiBtb2JpdmVpbF9wY2llX2lzciwN
+Cj4gPiA+IHBjaWUpOw0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gIAlyZXQgPSBkZXZtX3Jl
+cXVlc3RfcGNpX2J1c19yZXNvdXJjZXMoZGV2LA0KPiAmcGNpZS0+cmVzb3VyY2VzKTsNCj4gPiA+
+ID4gPiA+ICAJaWYgKHJldCkNCj4gPiA+ID4gPiA+ICAJCWdvdG8gZXJyb3I7DQo+ID4gPiA+ID4g
+PiBAQCAtOTE2LDcgKzU4NCw3IEBAIHN0YXRpYyBpbnQgbW9iaXZlaWxfcGNpZV9wcm9iZShzdHJ1
+Y3QNCj4gPiA+ID4gPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gPiA+ID4gPiAgCWxpc3Rf
+c3BsaWNlX2luaXQoJnBjaWUtPnJlc291cmNlcywgJmJyaWRnZS0+d2luZG93cyk7DQo+ID4gPiA+
+ID4gPiAgCWJyaWRnZS0+ZGV2LnBhcmVudCA9IGRldjsNCj4gPiA+ID4gPiA+ICAJYnJpZGdlLT5z
+eXNkYXRhID0gcGNpZTsNCj4gPiA+ID4gPiA+IC0JYnJpZGdlLT5idXNuciA9IHBjaWUtPnJvb3Rf
+YnVzX25yOw0KPiA+ID4gPiA+ID4gKwlicmlkZ2UtPmJ1c25yID0gcGNpZS0+cnAucm9vdF9idXNf
+bnI7DQo+ID4gPiA+ID4gPiAgCWJyaWRnZS0+b3BzID0gJm1vYml2ZWlsX3BjaWVfb3BzOw0KPiA+
+ID4gPiA+ID4gIAlicmlkZ2UtPm1hcF9pcnEgPSBvZl9pcnFfcGFyc2VfYW5kX21hcF9wY2k7DQo+
+ID4gPiA+ID4gPiAgCWJyaWRnZS0+c3dpenpsZV9pcnEgPSBwY2lfY29tbW9uX3N3aXp6bGU7DQo+
+ID4gPiA+ID4gPiBAQCAtOTQ0LDI1ICs2MTIsMyBAQCBzdGF0aWMgaW50IG1vYml2ZWlsX3BjaWVf
+cHJvYmUoc3RydWN0DQo+ID4gPiA+ID4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ID4gPiA+
+ID4gIAlwY2lfZnJlZV9yZXNvdXJjZV9saXN0KCZwY2llLT5yZXNvdXJjZXMpOw0KPiA+ID4gPiA+
+ID4gIAlyZXR1cm4gcmV0Ow0KPiA+ID4gPiA+ID4gIH0NCj4gPiA+ID4gPiA+IC0NCj4gPiA+ID4g
+PiA+IC1zdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtb2JpdmVpbF9wY2llX29mX21h
+dGNoW10gPSB7DQo+ID4gPiA+ID4gPiAtCXsuY29tcGF0aWJsZSA9ICJtYnZsLGdwZXg0MC1wY2ll
+Iix9LA0KPiA+ID4gPiA+ID4gLQl7fSwNCj4gPiA+ID4gPiA+IC19Ow0KPiA+ID4gPiA+ID4gLQ0K
+PiA+ID4gPiA+ID4gLU1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIG1vYml2ZWlsX3BjaWVfb2ZfbWF0
+Y2gpOw0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLXN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1f
+ZHJpdmVyIG1vYml2ZWlsX3BjaWVfZHJpdmVyID0gew0KPiA+ID4gPiA+ID4gLQkucHJvYmUgPSBt
+b2JpdmVpbF9wY2llX3Byb2JlLA0KPiA+ID4gPiA+ID4gLQkuZHJpdmVyID0gew0KPiA+ID4gPiA+
+ID4gLQkJLm5hbWUgPSAibW9iaXZlaWwtcGNpZSIsDQo+ID4gPiA+ID4gPiAtCQkub2ZfbWF0Y2hf
+dGFibGUgPSBtb2JpdmVpbF9wY2llX29mX21hdGNoLA0KPiA+ID4gPiA+ID4gLQkJLnN1cHByZXNz
+X2JpbmRfYXR0cnMgPSB0cnVlLA0KPiA+ID4gPiA+ID4gLQl9LA0KPiA+ID4gPiA+ID4gLX07DQo+
+ID4gPiA+ID4gPiAtDQo+ID4gPiA+ID4gPiAtYnVpbHRpbl9wbGF0Zm9ybV9kcml2ZXIobW9iaXZl
+aWxfcGNpZV9kcml2ZXIpOw0KPiA+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+ID4gLU1PRFVMRV9MSUNF
+TlNFKCJHUEwgdjIiKTsNCj4gPiA+ID4gPiA+IC1NT0RVTEVfREVTQ1JJUFRJT04oIk1vYml2ZWls
+IFBDSWUgaG9zdCBjb250cm9sbGVyIGRyaXZlciIpOw0KPiA+ID4gPiA+ID4gLU1PRFVMRV9BVVRI
+T1IoIlN1YnJhaG1hbnlhIExpbmdhcHBhDQo+ID4gPiA+ID4gPGwuc3VicmFobWFueWFAbW9iaXZl
+aWwuY28uaW4+Iik7DQo+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJv
+bGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLXBsYXQuYw0KPiA+ID4gPiA+IGIvZHJpdmVycy9w
+Y2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWlsLXBsYXQuYw0KPiA+ID4gPiA+ID4g
+bmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMjE2
+YzYyZjM1NTY4DQo+ID4gPiA+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiA+ID4gPiArKysgYi9k
+cml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtcGxhdC5jDQo+ID4g
+PiA+ID4gPiBAQCAtMCwwICsxLDU0IEBADQo+ID4gPiA+ID4gPiArLy8gU1BEWC1MaWNlbnNlLUlk
+ZW50aWZpZXI6IEdQTC0yLjANCj4gPiA+ID4gPiA+ICsvKg0KPiA+ID4gPiA+ID4gKyAqIFBDSWUg
+aG9zdCBjb250cm9sbGVyIGRyaXZlciBmb3IgTW9iaXZlaWwgUENJZSBIb3N0IGNvbnRyb2xsZXIN
+Cj4gPiA+ID4gPiA+ICsgKg0KPiA+ID4gPiA+ID4gKyAqIENvcHlyaWdodCAoYykgMjAxOCBNb2Jp
+dmVpbCBJbmMuDQo+ID4gPiA+ID4gPiArICogQXV0aG9yOiBTdWJyYWhtYW55YSBMaW5nYXBwYQ0K
+PiA8bC5zdWJyYWhtYW55YUBtb2JpdmVpbC5jby5pbj4NCj4gPiA+ID4gPiA+ICsgKiBSZWZhY3Rv
+cjogWmhpcWlhbmcgSG91IDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiA+ID4gPiA+ICsgKi8N
+Cj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsjaW5jbHVkZSA8bGludXgvaW5pdC5oPg0KPiA+
+ID4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4NCj4gPiA+ID4gPiA+ICsjaW5jbHVk
+ZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gPiA+ID4gPiArI2luY2x1ZGUgPGxpbnV4L29mX3BjaS5o
+Pg0KPiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9wY2kuaD4NCj4gPiA+ID4gPiA+ICsjaW5j
+bHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+ID4gPiA+ID4gPiArI2luY2x1ZGUgPGxp
+bnV4L3NsYWIuaD4NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsjaW5jbHVkZSAicGNpZS1t
+b2JpdmVpbC5oIg0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gK3N0YXRpYyBpbnQgbW9iaXZl
+aWxfcGNpZV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ID4gPiA+ID4g
+K3sNCj4gPiA+ID4gPiA+ICsJc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWU7DQo+ID4gPiA+ID4g
+PiArCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ID4gPiA+ID4gPiArDQo+ID4g
+PiA+ID4gPiArCXBjaWUgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKnBjaWUpLCBHRlBfS0VS
+TkVMKTsNCj4gPiA+ID4gPiA+ICsJaWYgKCFwY2llKQ0KPiA+ID4gPiA+ID4gKwkJcmV0dXJuIC1F
+Tk9NRU07DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArCXBjaWUtPnBkZXYgPSBwZGV2Ow0K
+PiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKwlyZXR1cm4gbW9iaXZlaWxfcGNpZV9ob3N0X3By
+b2JlKHBjaWUpOw0KPiA+ID4gPiA+ID4gK30NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICtz
+dGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtb2JpdmVpbF9wY2llX29mX21hdGNoW10g
+PSB7DQo+ID4gPiA+ID4gPiArCXsuY29tcGF0aWJsZSA9ICJtYnZsLGdwZXg0MC1wY2llIix9LA0K
+PiA+ID4gPiA+ID4gKwl7fSwNCj4gPiA+ID4gPiA+ICt9Ow0KPiA+ID4gPiA+ID4gKw0KPiA+ID4g
+PiA+ID4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIG1vYml2ZWlsX3BjaWVfb2ZfbWF0Y2gpOw0K
+PiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVy
+IG1vYml2ZWlsX3BjaWVfZHJpdmVyID0gew0KPiA+ID4gPiA+ID4gKwkucHJvYmUgPSBtb2JpdmVp
+bF9wY2llX3Byb2JlLA0KPiA+ID4gPiA+ID4gKwkuZHJpdmVyID0gew0KPiA+ID4gPiA+ID4gKwkJ
+Lm5hbWUgPSAibW9iaXZlaWwtcGNpZSIsDQo+ID4gPiA+ID4gPiArCQkub2ZfbWF0Y2hfdGFibGUg
+PSBtb2JpdmVpbF9wY2llX29mX21hdGNoLA0KPiA+ID4gPiA+ID4gKwkJLnN1cHByZXNzX2JpbmRf
+YXR0cnMgPSB0cnVlLA0KPiA+ID4gPiA+ID4gKwl9LA0KPiA+ID4gPiA+ID4gK307DQo+ID4gPiA+
+ID4gPiArDQo+ID4gPiA+ID4gPiArYnVpbHRpbl9wbGF0Zm9ybV9kcml2ZXIobW9iaXZlaWxfcGNp
+ZV9kcml2ZXIpOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gK01PRFVMRV9MSUNFTlNFKCJH
+UEwgdjIiKTsNCj4gPiA+ID4gPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIk1vYml2ZWlsIFBDSWUg
+aG9zdCBjb250cm9sbGVyIGRyaXZlciIpOw0KPiA+ID4gPiA+ID4gK01PRFVMRV9BVVRIT1IoIlN1
+YnJhaG1hbnlhIExpbmdhcHBhDQo+ID4gPiA+ID4gPGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28u
+aW4+Iik7DQo+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9t
+b2JpdmVpbC9wY2llLW1vYml2ZWlsLmMNCj4gPiA+ID4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xs
+ZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5jDQo+ID4gPiA+ID4gPiBuZXcgZmlsZSBtb2RlIDEw
+MDY0NA0KPiA+ID4gPiA+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5lZTY3OGE2MDgyNWQNCj4gPiA+
+ID4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ID4gPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRy
+b2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5jDQo+ID4gPiA+ID4gPiBAQCAtMCwwICsxLDIy
+OCBAQA0KPiA+ID4gPiA+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+
+ID4gPiA+ID4gPiArLyoNCj4gPiA+ID4gPiA+ICsgKiBQQ0llIGhvc3QgY29udHJvbGxlciBkcml2
+ZXIgZm9yIE1vYml2ZWlsIFBDSWUgSG9zdCBjb250cm9sbGVyDQo+ID4gPiA+ID4gPiArICoNCj4g
+PiA+ID4gPiA+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTggTW9iaXZlaWwgSW5jLg0KPiA+ID4gPiA+
+ID4gKyAqIEF1dGhvcjogU3VicmFobWFueWEgTGluZ2FwcGENCj4gPGwuc3VicmFobWFueWFAbW9i
+aXZlaWwuY28uaW4+DQo+ID4gPiA+ID4gPiArICogUmVmYWN0b3I6IFpoaXFpYW5nIEhvdSA8Wmhp
+cWlhbmcuSG91QG54cC5jb20+DQo+ID4gPiA+ID4gPiArICovDQo+ID4gPiA+ID4gPiArDQo+ID4g
+PiA+ID4gPiArI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+DQo+ID4gPiA+ID4gPiArI2luY2x1ZGUg
+PGxpbnV4L2luaXQuaD4NCj4gPiA+ID4gPiA+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQo+
+ID4gPiA+ID4gPiArI2luY2x1ZGUgPGxpbnV4L3BjaS5oPg0KPiA+ID4gPiA+ID4gKyNpbmNsdWRl
+IDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsj
+aW5jbHVkZSAicGNpZS1tb2JpdmVpbC5oIg0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKy8q
+DQo+ID4gPiA+ID4gPiArICogbW9iaXZlaWxfcGNpZV9zZWxfcGFnZSAtIHJvdXRpbmUgdG8gYWNj
+ZXNzIHBhZ2VkIHJlZ2lzdGVyDQo+ID4gPiA+ID4gPiArICoNCj4gPiA+ID4gPiA+ICsgKiBSZWdp
+c3RlcnMgd2hvc2UgYWRkcmVzcyBncmVhdGVyIHRoYW4gUEFHRURfQUREUl9CTkRSWQ0KPiAoMHhj
+MDApDQo+ID4gPiBhcmUNCj4gPiA+ID4gPiBwYWdlZCwNCj4gPiA+ID4gPiA+ICsgKiBmb3IgdGhp
+cyBzY2hlbWUgdG8gd29yayBleHRyYWN0ZWQgaGlnaGVyIDYgYml0cyBvZiB0aGUgb2Zmc2V0IHdp
+bGwNCj4gYmUNCj4gPiA+ID4gPiA+ICsgKiB3cml0dGVuIHRvIHBnX3NlbCBmaWVsZCBvZiBQQUJf
+Q1RSTCByZWdpc3RlciBhbmQgcmVzdCBvZiB0aGUgbG93ZXINCj4gMTANCj4gPiA+ID4gPiA+ICsg
+KiBiaXRzIGVuYWJsZWQgd2l0aCBQQUdFRF9BRERSX0JORFJZIGFyZSB1c2VkIGFzIG9mZnNldCBv
+ZiB0aGUNCj4gPiA+ID4gPiByZWdpc3Rlci4NCj4gPiA+ID4gPiA+ICsgKi8NCj4gPiA+ID4gPiA+
+ICtzdGF0aWMgdm9pZCBtb2JpdmVpbF9wY2llX3NlbF9wYWdlKHN0cnVjdCBtb2JpdmVpbF9wY2ll
+ICpwY2llLCB1OA0KPiA+ID4gcGdfaWR4KQ0KPiA+ID4gPiA+ID4gK3sNCj4gPiA+ID4gPiA+ICsJ
+dTMyIHZhbDsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJdmFsID0gcmVhZGwocGNpZS0+
+Y3NyX2F4aV9zbGF2ZV9iYXNlICsgUEFCX0NUUkwpOw0KPiA+ID4gPiA+ID4gKwl2YWwgJj0gfihQ
+QUdFX1NFTF9NQVNLIDw8IFBBR0VfU0VMX1NISUZUKTsNCj4gPiA+ID4gPiA+ICsJdmFsIHw9IChw
+Z19pZHggJiBQQUdFX1NFTF9NQVNLKSA8PCBQQUdFX1NFTF9TSElGVDsNCj4gPiA+ID4gPiA+ICsN
+Cj4gPiA+ID4gPiA+ICsJd3JpdGVsKHZhbCwgcGNpZS0+Y3NyX2F4aV9zbGF2ZV9iYXNlICsgUEFC
+X0NUUkwpOw0KPiA+ID4gPiA+ID4gK30NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICtzdGF0
+aWMgdm9pZCAqbW9iaXZlaWxfcGNpZV9jb21wX2FkZHIoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBj
+aWUsDQo+IHUzMg0KPiA+ID4gb2ZmKQ0KPiA+ID4gPiA+ID4gK3sNCj4gPiA+ID4gPiA+ICsJaWYg
+KG9mZiA8IFBBR0VEX0FERFJfQk5EUlkpIHsNCj4gPiA+ID4gPiA+ICsJCS8qIEZvciBkaXJlY3Rs
+eSBhY2Nlc3NlZCByZWdpc3RlcnMsIGNsZWFyIHRoZSBwZ19zZWwgZmllbGQgKi8NCj4gPiA+ID4g
+PiA+ICsJCW1vYml2ZWlsX3BjaWVfc2VsX3BhZ2UocGNpZSwgMCk7DQo+ID4gPiA+ID4gPiArCQly
+ZXR1cm4gcGNpZS0+Y3NyX2F4aV9zbGF2ZV9iYXNlICsgb2ZmOw0KPiA+ID4gPiA+ID4gKwl9DQo+
+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArCW1vYml2ZWlsX3BjaWVfc2VsX3BhZ2UocGNpZSwg
+T0ZGU0VUX1RPX1BBR0VfSURYKG9mZikpOw0KPiA+ID4gPiA+ID4gKwlyZXR1cm4gcGNpZS0+Y3Ny
+X2F4aV9zbGF2ZV9iYXNlICsNCj4gT0ZGU0VUX1RPX1BBR0VfQUREUihvZmYpOw0KPiA+ID4gPiA+
+ID4gK30NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICtzdGF0aWMgaW50IG1vYml2ZWlsX3Bj
+aWVfcmVhZCh2b2lkIF9faW9tZW0gKmFkZHIsIGludCBzaXplLCB1MzINCj4gKnZhbCkNCj4gPiA+
+ID4gPiA+ICt7DQo+ID4gPiA+ID4gPiArCWlmICgodWludHB0cl90KWFkZHIgJiAoc2l6ZSAtIDEp
+KSB7DQo+ID4gPiA+ID4gPiArCQkqdmFsID0gMDsNCj4gPiA+ID4gPiA+ICsJCXJldHVybiBQQ0lC
+SU9TX0JBRF9SRUdJU1RFUl9OVU1CRVI7DQo+ID4gPiA+ID4gPiArCX0NCj4gPiA+ID4gPiA+ICsN
+Cj4gPiA+ID4gPiA+ICsJc3dpdGNoIChzaXplKSB7DQo+ID4gPiA+ID4gPiArCWNhc2UgNDoNCj4g
+PiA+ID4gPiA+ICsJCSp2YWwgPSByZWFkbChhZGRyKTsNCj4gPiA+ID4gPiA+ICsJCWJyZWFrOw0K
+PiA+ID4gPiA+ID4gKwljYXNlIDI6DQo+ID4gPiA+ID4gPiArCQkqdmFsID0gcmVhZHcoYWRkcik7
+DQo+ID4gPiA+ID4gPiArCQlicmVhazsNCj4gPiA+ID4gPiA+ICsJY2FzZSAxOg0KPiA+ID4gPiA+
+ID4gKwkJKnZhbCA9IHJlYWRiKGFkZHIpOw0KPiA+ID4gPiA+ID4gKwkJYnJlYWs7DQo+ID4gPiA+
+ID4gPiArCWRlZmF1bHQ6DQo+ID4gPiA+ID4gPiArCQkqdmFsID0gMDsNCj4gPiA+ID4gPiA+ICsJ
+CXJldHVybiBQQ0lCSU9TX0JBRF9SRUdJU1RFUl9OVU1CRVI7DQo+ID4gPiA+ID4gPiArCX0NCj4g
+PiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJcmV0dXJuIFBDSUJJT1NfU1VDQ0VTU0ZVTDsNCj4g
+PiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArc3RhdGljIGludCBtb2Jp
+dmVpbF9wY2llX3dyaXRlKHZvaWQgX19pb21lbSAqYWRkciwgaW50IHNpemUsIHUzMg0KPiB2YWwp
+DQo+ID4gPiA+ID4gPiArew0KPiA+ID4gPiA+ID4gKwlpZiAoKHVpbnRwdHJfdClhZGRyICYgKHNp
+emUgLSAxKSkNCj4gPiA+ID4gPiA+ICsJCXJldHVybiBQQ0lCSU9TX0JBRF9SRUdJU1RFUl9OVU1C
+RVI7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArCXN3aXRjaCAoc2l6ZSkgew0KPiA+ID4g
+PiA+ID4gKwljYXNlIDQ6DQo+ID4gPiA+ID4gPiArCQl3cml0ZWwodmFsLCBhZGRyKTsNCj4gPiA+
+ID4gPiA+ICsJCWJyZWFrOw0KPiA+ID4gPiA+ID4gKwljYXNlIDI6DQo+ID4gPiA+ID4gPiArCQl3
+cml0ZXcodmFsLCBhZGRyKTsNCj4gPiA+ID4gPiA+ICsJCWJyZWFrOw0KPiA+ID4gPiA+ID4gKwlj
+YXNlIDE6DQo+ID4gPiA+ID4gPiArCQl3cml0ZWIodmFsLCBhZGRyKTsNCj4gPiA+ID4gPiA+ICsJ
+CWJyZWFrOw0KPiA+ID4gPiA+ID4gKwlkZWZhdWx0Og0KPiA+ID4gPiA+ID4gKwkJcmV0dXJuIFBD
+SUJJT1NfQkFEX1JFR0lTVEVSX05VTUJFUjsNCj4gPiA+ID4gPiA+ICsJfQ0KPiA+ID4gPiA+ID4g
+Kw0KPiA+ID4gPiA+ID4gKwlyZXR1cm4gUENJQklPU19TVUNDRVNTRlVMOw0KPiA+ID4gPiA+ID4g
+K30NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICt1MzIgY3NyX3JlYWQoc3RydWN0IG1vYml2
+ZWlsX3BjaWUgKnBjaWUsIHUzMiBvZmYsIHNpemVfdCBzaXplKQ0KPiA+ID4gPiA+ID4gK3sNCj4g
+PiA+ID4gPiA+ICsJdm9pZCAqYWRkcjsNCj4gPiA+ID4gPiA+ICsJdTMyIHZhbDsNCj4gPiA+ID4g
+PiA+ICsJaW50IHJldDsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJYWRkciA9IG1vYml2
+ZWlsX3BjaWVfY29tcF9hZGRyKHBjaWUsIG9mZik7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4g
+PiArCXJldCA9IG1vYml2ZWlsX3BjaWVfcmVhZChhZGRyLCBzaXplLCAmdmFsKTsNCj4gPiA+ID4g
+PiA+ICsJaWYgKHJldCkNCj4gPiA+ID4gPiA+ICsJCWRldl9lcnIoJnBjaWUtPnBkZXYtPmRldiwg
+InJlYWQgQ1NSIGFkZHJlc3MgZmFpbGVkXG4iKTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+
+ICsJcmV0dXJuIHZhbDsNCj4gPiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4g
+PiArdm9pZCBjc3Jfd3JpdGUoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUsIHUzMiB2YWwsIHUz
+MiBvZmYsIHNpemVfdA0KPiBzaXplKQ0KPiA+ID4gPiA+ID4gK3sNCj4gPiA+ID4gPiA+ICsJdm9p
+ZCAqYWRkcjsNCj4gPiA+ID4gPiA+ICsJaW50IHJldDsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4g
+PiA+ICsJYWRkciA9IG1vYml2ZWlsX3BjaWVfY29tcF9hZGRyKHBjaWUsIG9mZik7DQo+ID4gPiA+
+ID4gPiArDQo+ID4gPiA+ID4gPiArCXJldCA9IG1vYml2ZWlsX3BjaWVfd3JpdGUoYWRkciwgc2l6
+ZSwgdmFsKTsNCj4gPiA+ID4gPiA+ICsJaWYgKHJldCkNCj4gPiA+ID4gPiA+ICsJCWRldl9lcnIo
+JnBjaWUtPnBkZXYtPmRldiwgIndyaXRlIENTUiBhZGRyZXNzIGZhaWxlZFxuIik7DQo+ID4gPiA+
+ID4gPiArfQ0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gK2Jvb2wgbW9iaXZlaWxfcGNpZV9s
+aW5rX3VwKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llKQ0KPiA+ID4gPiA+ID4gK3sNCj4gPiA+
+ID4gPiA+ICsJaWYgKHBjaWUtPm9wcy0+bGlua191cCkNCj4gPiA+ID4gPiA+ICsJCXJldHVybiBw
+Y2llLT5vcHMtPmxpbmtfdXAocGNpZSk7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArCXJl
+dHVybiAoY3NyX3JlYWRsKHBjaWUsIExUU1NNX1NUQVRVUykgJg0KPiA+ID4gPiA+ID4gKwkJTFRT
+U01fU1RBVFVTX0wwX01BU0spID09IExUU1NNX1NUQVRVU19MMDsNCj4gPiA+ID4gPiA+ICt9DQo+
+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArdm9pZCBwcm9ncmFtX2liX3dpbmRvd3Moc3RydWN0
+IG1vYml2ZWlsX3BjaWUgKnBjaWUsIGludCB3aW5fbnVtLA0KPiA+ID4gdTY0DQo+ID4gPiA+ID4g
+Y3B1X2FkZHIsDQo+ID4gPiA+ID4gPiArCQkJdTY0IHBjaV9hZGRyLCB1MzIgdHlwZSwgdTY0IHNp
+emUpDQo+ID4gPiA+ID4gPiArew0KPiA+ID4gPiA+ID4gKwl1MzIgdmFsdWU7DQo+ID4gPiA+ID4g
+PiArCXU2NCBzaXplNjQgPSB+KHNpemUgLSAxKTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+
+ICsJaWYgKHdpbl9udW0gPj0gcGNpZS0+cHBpb193aW5zKSB7DQo+ID4gPiA+ID4gPiArCQlkZXZf
+ZXJyKCZwY2llLT5wZGV2LT5kZXYsDQo+ID4gPiA+ID4gPiArCQkJIkVSUk9SOiBtYXggaW5ib3Vu
+ZCB3aW5kb3dzIHJlYWNoZWQgIVxuIik7DQo+ID4gPiA+ID4gPiArCQlyZXR1cm47DQo+ID4gPiA+
+ID4gPiArCX0NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJdmFsdWUgPSBjc3JfcmVhZGwo
+cGNpZSwgUEFCX1BFWF9BTUFQX0NUUkwod2luX251bSkpOw0KPiA+ID4gPiA+ID4gKwl2YWx1ZSAm
+PSB+KEFNQVBfQ1RSTF9UWVBFX01BU0sgPDwNCj4gQU1BUF9DVFJMX1RZUEVfU0hJRlQgfA0KPiA+
+ID4gPiA+ID4gKwkJIFdJTl9TSVpFX01BU0sgPDwgV0lOX1NJWkVfU0hJRlQpOw0KPiA+ID4gPiA+
+ID4gKwl2YWx1ZSB8PSAodHlwZSA8PCBBTUFQX0NUUkxfVFlQRV9TSElGVCkgfCAoMSA8PA0KPiA+
+ID4gPiA+IEFNQVBfQ1RSTF9FTl9TSElGVCkgfA0KPiA+ID4gPiA+ID4gKwkJIChsb3dlcl8zMl9i
+aXRzKHNpemU2NCkgJiBXSU5fU0laRV9NQVNLIDw8DQo+ID4gPiBXSU5fU0laRV9TSElGVCk7DQo+
+ID4gPiA+ID4gPiArCWNzcl93cml0ZWwocGNpZSwgdmFsdWUsIFBBQl9QRVhfQU1BUF9DVFJMKHdp
+bl9udW0pKTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJY3NyX3dyaXRlbChwY2llLCB1
+cHBlcl8zMl9iaXRzKHNpemU2NCksDQo+ID4gPiA+ID4gPiArCQkgICBQQUJfRVhUX1BFWF9BTUFQ
+X1NJWkVOKHdpbl9udW0pKTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJY3NyX3dyaXRl
+bChwY2llLCBsb3dlcl8zMl9iaXRzKGNwdV9hZGRyKSwNCj4gPiA+ID4gPiA+ICsJCSAgIFBBQl9Q
+RVhfQU1BUF9BWElfV0lOKHdpbl9udW0pKTsNCj4gPiA+ID4gPiA+ICsJY3NyX3dyaXRlbChwY2ll
+LCB1cHBlcl8zMl9iaXRzKGNwdV9hZGRyKSwNCj4gPiA+ID4gPiA+ICsJCSAgIFBBQl9FWFRfUEVY
+X0FNQVBfQVhJX1dJTih3aW5fbnVtKSk7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArCWNz
+cl93cml0ZWwocGNpZSwgbG93ZXJfMzJfYml0cyhwY2lfYWRkciksDQo+ID4gPiA+ID4gPiArCQkg
+ICBQQUJfUEVYX0FNQVBfUEVYX1dJTl9MKHdpbl9udW0pKTsNCj4gPiA+ID4gPiA+ICsJY3NyX3dy
+aXRlbChwY2llLCB1cHBlcl8zMl9iaXRzKHBjaV9hZGRyKSwNCj4gPiA+ID4gPiA+ICsJCSAgIFBB
+Ql9QRVhfQU1BUF9QRVhfV0lOX0god2luX251bSkpOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+
+ID4gKwlwY2llLT5pYl93aW5zX2NvbmZpZ3VyZWQrKzsNCj4gPiA+ID4gPiA+ICt9DQo+ID4gPiA+
+ID4gPiArDQo+ID4gPiA+ID4gPiArLyoNCj4gPiA+ID4gPiA+ICsgKiByb3V0aW5lIHRvIHByb2dy
+YW0gdGhlIG91dGJvdW5kIHdpbmRvd3MNCj4gPiA+ID4gPiA+ICsgKi8NCj4gPiA+ID4gPiA+ICt2
+b2lkIHByb2dyYW1fb2Jfd2luZG93cyhzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSwgaW50DQo+
+IHdpbl9udW0sDQo+ID4gPiB1NjQNCj4gPiA+ID4gPiBjcHVfYWRkciwNCj4gPiA+ID4gPiA+ICsJ
+CQl1NjQgcGNpX2FkZHIsIHUzMiB0eXBlLCB1NjQgc2l6ZSkNCj4gPiA+ID4gPiA+ICt7DQo+ID4g
+PiA+ID4gPiArDQo+ID4gPiA+ID4gPiArCXUzMiB2YWx1ZTsNCj4gPiA+ID4gPiA+ICsJdTY0IHNp
+emU2NCA9IH4oc2l6ZSAtIDEpOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKwlpZiAod2lu
+X251bSA+PSBwY2llLT5hcGlvX3dpbnMpIHsNCj4gPiA+ID4gPiA+ICsJCWRldl9lcnIoJnBjaWUt
+PnBkZXYtPmRldiwNCj4gPiA+ID4gPiA+ICsJCQkiRVJST1I6IG1heCBvdXRib3VuZCB3aW5kb3dz
+IHJlYWNoZWQgIVxuIik7DQo+ID4gPiA+ID4gPiArCQlyZXR1cm47DQo+ID4gPiA+ID4gPiArCX0N
+Cj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJLyoNCj4gPiA+ID4gPiA+ICsJICogcHJvZ3Jh
+bSBFbmFibGUgQml0IHRvIDEsIFR5cGUgQml0IHRvICgwMCkgYmFzZSAyLCBBWEkgV2luZG93DQo+
+IFNpemUNCj4gPiA+IEJpdA0KPiA+ID4gPiA+ID4gKwkgKiB0byA0IEtCIGluIFBBQl9BWElfQU1B
+UF9DVFJMIHJlZ2lzdGVyDQo+ID4gPiA+ID4gPiArCSAqLw0KPiA+ID4gPiA+ID4gKwl2YWx1ZSA9
+IGNzcl9yZWFkbChwY2llLCBQQUJfQVhJX0FNQVBfQ1RSTCh3aW5fbnVtKSk7DQo+ID4gPiA+ID4g
+PiArCXZhbHVlICY9IH4oV0lOX1RZUEVfTUFTSyA8PCBXSU5fVFlQRV9TSElGVCB8DQo+ID4gPiA+
+ID4gPiArCQkgV0lOX1NJWkVfTUFTSyA8PCBXSU5fU0laRV9TSElGVCk7DQo+ID4gPiA+ID4gPiAr
+CXZhbHVlIHw9IDEgPDwgV0lOX0VOQUJMRV9TSElGVCB8IHR5cGUgPDwgV0lOX1RZUEVfU0hJRlQN
+Cj4gfA0KPiA+ID4gPiA+ID4gKwkJIChsb3dlcl8zMl9iaXRzKHNpemU2NCkgJiBXSU5fU0laRV9N
+QVNLIDw8DQo+ID4gPiBXSU5fU0laRV9TSElGVCk7DQo+ID4gPiA+ID4gPiArCWNzcl93cml0ZWwo
+cGNpZSwgdmFsdWUsIFBBQl9BWElfQU1BUF9DVFJMKHdpbl9udW0pKTsNCj4gPiA+ID4gPiA+ICsN
+Cj4gPiA+ID4gPiA+ICsJY3NyX3dyaXRlbChwY2llLCB1cHBlcl8zMl9iaXRzKHNpemU2NCksDQo+
+ID4gPiA+ID4gUEFCX0VYVF9BWElfQU1BUF9TSVpFKHdpbl9udW0pKTsNCj4gPiA+ID4gPiA+ICsN
+Cj4gPiA+ID4gPiA+ICsJLyoNCj4gPiA+ID4gPiA+ICsJICogcHJvZ3JhbSBBWEkgd2luZG93IGJh
+c2Ugd2l0aCBhcHByb3ByaWF0ZSB2YWx1ZSBpbg0KPiA+ID4gPiA+ID4gKwkgKiBQQUJfQVhJX0FN
+QVBfQVhJX1dJTjAgcmVnaXN0ZXINCj4gPiA+ID4gPiA+ICsJICovDQo+ID4gPiA+ID4gPiArCWNz
+cl93cml0ZWwocGNpZSwgbG93ZXJfMzJfYml0cyhjcHVfYWRkcikgJg0KPiA+ID4gPiA+ICh+QVhJ
+X1dJTkRPV19BTElHTl9NQVNLKSwNCj4gPiA+ID4gPiA+ICsJCSAgIFBBQl9BWElfQU1BUF9BWElf
+V0lOKHdpbl9udW0pKTsNCj4gPiA+ID4gPiA+ICsJY3NyX3dyaXRlbChwY2llLCB1cHBlcl8zMl9i
+aXRzKGNwdV9hZGRyKSwNCj4gPiA+ID4gPiA+ICsJCSAgIFBBQl9FWFRfQVhJX0FNQVBfQVhJX1dJ
+Tih3aW5fbnVtKSk7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArCWNzcl93cml0ZWwocGNp
+ZSwgbG93ZXJfMzJfYml0cyhwY2lfYWRkciksDQo+ID4gPiA+ID4gPiArCQkgICBQQUJfQVhJX0FN
+QVBfUEVYX1dJTl9MKHdpbl9udW0pKTsNCj4gPiA+ID4gPiA+ICsJY3NyX3dyaXRlbChwY2llLCB1
+cHBlcl8zMl9iaXRzKHBjaV9hZGRyKSwNCj4gPiA+ID4gPiA+ICsJCSAgIFBBQl9BWElfQU1BUF9Q
+RVhfV0lOX0god2luX251bSkpOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKwlwY2llLT5v
+Yl93aW5zX2NvbmZpZ3VyZWQrKzsNCj4gPiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiArDQo+ID4g
+PiA+ID4gPiAraW50IG1vYml2ZWlsX2JyaW5ndXBfbGluayhzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAq
+cGNpZSkNCj4gPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4gPiArCWludCByZXRyaWVzOw0KPiA+ID4g
+PiA+ID4gKw0KPiA+ID4gPiA+ID4gKwkvKiBjaGVjayBpZiB0aGUgbGluayBpcyB1cCBvciBub3Qg
+Ki8NCj4gPiA+ID4gPiA+ICsJZm9yIChyZXRyaWVzID0gMDsgcmV0cmllcyA8IExJTktfV0FJVF9N
+QVhfUkVUUklFUzsgcmV0cmllcysrKQ0KPiB7DQo+ID4gPiA+ID4gPiArCQlpZiAobW9iaXZlaWxf
+cGNpZV9saW5rX3VwKHBjaWUpKQ0KPiA+ID4gPiA+ID4gKwkJCXJldHVybiAwOw0KPiA+ID4gPiA+
+ID4gKw0KPiA+ID4gPiA+ID4gKwkJdXNsZWVwX3JhbmdlKExJTktfV0FJVF9NSU4sIExJTktfV0FJ
+VF9NQVgpOw0KPiA+ID4gPiA+ID4gKwl9DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArCWRl
+dl9lcnIoJnBjaWUtPnBkZXYtPmRldiwgImxpbmsgbmV2ZXIgY2FtZSB1cFxuIik7DQo+ID4gPiA+
+ID4gPiArDQo+ID4gPiA+ID4gPiArCXJldHVybiAtRVRJTUVET1VUOw0KPiA+ID4gPiA+ID4gK30N
+Cj4gPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWls
+L3BjaWUtbW9iaXZlaWwuaA0KPiA+ID4gPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2Jp
+dmVpbC9wY2llLW1vYml2ZWlsLmgNCj4gPiA+ID4gPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+
+ID4gPiA+ID4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLmViNGNiNjEyOTFhOA0KPiA+ID4gPiA+ID4g
+LS0tIC9kZXYvbnVsbA0KPiA+ID4gPiA+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9t
+b2JpdmVpbC9wY2llLW1vYml2ZWlsLmgNCj4gPiA+ID4gPiA+IEBAIC0wLDAgKzEsMTg3IEBADQo+
+ID4gPiA+ID4gPiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgKi8NCj4gPiA+
+ID4gPiA+ICsvKg0KPiA+ID4gPiA+ID4gKyAqIFBDSWUgaG9zdCBjb250cm9sbGVyIGRyaXZlciBm
+b3IgTW9iaXZlaWwgUENJZSBIb3N0IGNvbnRyb2xsZXINCj4gPiA+ID4gPiA+ICsgKg0KPiA+ID4g
+PiA+ID4gKyAqIENvcHlyaWdodCAoYykgMjAxOCBNb2JpdmVpbCBJbmMuDQo+ID4gPiA+ID4gPiAr
+ICogQXV0aG9yOiBTdWJyYWhtYW55YSBMaW5nYXBwYQ0KPiA8bC5zdWJyYWhtYW55YUBtb2JpdmVp
+bC5jby5pbj4NCj4gPiA+ID4gPiA+ICsgKiBSZWZhY3RvcjogWmhpcWlhbmcgSG91IDxaaGlxaWFu
+Zy5Ib3VAbnhwLmNvbT4NCj4gPiA+ID4gPiA+ICsgKi8NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4g
+PiA+ICsjaWZuZGVmIF9QQ0lFX01PQklWRUlMX0gNCj4gPiA+ID4gPiA+ICsjZGVmaW5lIF9QQ0lF
+X01PQklWRUlMX0gNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsjaW5jbHVkZSA8bGludXgv
+cGNpLmg+DQo+ID4gPiA+ID4gPiArI2luY2x1ZGUgPGxpbnV4L2lycS5oPg0KPiA+ID4gPiA+ID4g
+KyNpbmNsdWRlIDxsaW51eC9tc2kuaD4NCj4gPiA+ID4gPiA+ICsjaW5jbHVkZSAiLi4vLi4vcGNp
+LmgiDQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArLyogcmVnaXN0ZXIgb2Zmc2V0cyBhbmQg
+Yml0IHBvc2l0aW9ucyAqLw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKy8qDQo+ID4gPiA+
+ID4gPiArICogdHJhbnNsYXRpb24gdGFibGVzIGFyZSBncm91cGVkIGludG8gd2luZG93cywgZWFj
+aCB3aW5kb3cNCj4gcmVnaXN0ZXJzDQo+ID4gPiBhcmUNCj4gPiA+ID4gPiA+ICsgKiBncm91cGVk
+IGludG8gYmxvY2tzIG9mIDQgb3IgMTYgcmVnaXN0ZXJzIGVhY2gNCj4gPiA+ID4gPiA+ICsgKi8N
+Cj4gPiA+ID4gPiA+ICsjZGVmaW5lIFBBQl9SRUdfQkxPQ0tfU0laRQkJMTYNCj4gPiA+ID4gPiA+
+ICsjZGVmaW5lIFBBQl9FWFRfUkVHX0JMT0NLX1NJWkUJCTQNCj4gPiA+ID4gPiA+ICsNCj4gPiA+
+ID4gPiA+ICsjZGVmaW5lIFBBQl9SRUdfQUREUihvZmZzZXQsIHdpbikJXA0KPiA+ID4gPiA+ID4g
+Kwkob2Zmc2V0ICsgKHdpbiAqIFBBQl9SRUdfQkxPQ0tfU0laRSkpDQo+ID4gPiA+ID4gPiArI2Rl
+ZmluZSBQQUJfRVhUX1JFR19BRERSKG9mZnNldCwgd2luKQlcDQo+ID4gPiA+ID4gPiArCShvZmZz
+ZXQgKyAod2luICogUEFCX0VYVF9SRUdfQkxPQ0tfU0laRSkpDQo+ID4gPiA+ID4gPiArDQo+ID4g
+PiA+ID4gPiArI2RlZmluZSBMVFNTTV9TVEFUVVMJCQkweDA0MDQNCj4gPiA+ID4gPiA+ICsjZGVm
+aW5lICBMVFNTTV9TVEFUVVNfTDBfTUFTSwkJMHgzZg0KPiA+ID4gPiA+ID4gKyNkZWZpbmUgIExU
+U1NNX1NUQVRVU19MMAkJMHgyZA0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyNkZWZpbmUg
+UEFCX0NUUkwJCQkweDA4MDgNCj4gPiA+ID4gPiA+ICsjZGVmaW5lICBBTUJBX1BJT19FTkFCTEVf
+U0hJRlQJCTANCj4gPiA+ID4gPiA+ICsjZGVmaW5lICBQRVhfUElPX0VOQUJMRV9TSElGVAkJMQ0K
+PiA+ID4gPiA+ID4gKyNkZWZpbmUgIFBBR0VfU0VMX1NISUZUCQkJMTMNCj4gPiA+ID4gPiA+ICsj
+ZGVmaW5lICBQQUdFX1NFTF9NQVNLCQkJMHgzZg0KPiA+ID4gPiA+ID4gKyNkZWZpbmUgIFBBR0Vf
+TE9fTUFTSwkJCTB4M2ZmDQo+ID4gPiA+ID4gPiArI2RlZmluZSAgUEFHRV9TRUxfT0ZGU0VUX1NI
+SUZUCQkxMA0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyNkZWZpbmUgUEFCX0FYSV9QSU9f
+Q1RSTAkJMHgwODQwDQo+ID4gPiA+ID4gPiArI2RlZmluZSAgQVBJT19FTl9NQVNLCQkJMHhmDQo+
+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArI2RlZmluZSBQQUJfUEVYX1BJT19DVFJMCQkweDA4
+YzANCj4gPiA+ID4gPiA+ICsjZGVmaW5lICBQSU9fRU5BQkxFX1NISUZUCQkwDQo+ID4gPiA+ID4g
+PiArDQo+ID4gPiA+ID4gPiArI2RlZmluZSBQQUJfSU5UUF9BTUJBX01JU0NfRU5CCQkweDBiMGMN
+Cj4gPiA+ID4gPiA+ICsjZGVmaW5lIFBBQl9JTlRQX0FNQkFfTUlTQ19TVEFUCQkweDBiMWMNCj4g
+PiA+ID4gPiA+ICsjZGVmaW5lICBQQUJfSU5UUF9JTlRYX01BU0sJCTB4MDFlMA0KPiA+ID4gPiA+
+ID4gKyNkZWZpbmUgIFBBQl9JTlRQX01TSV9NQVNLCQkweDgNCj4gPiA+ID4gPiA+ICsNCj4gPiA+
+ID4gPiA+ICsjZGVmaW5lIFBBQl9BWElfQU1BUF9DVFJMKHdpbikNCj4gCVBBQl9SRUdfQUREUigw
+eDBiYTAsDQo+ID4gPiB3aW4pDQo+ID4gPiA+ID4gPiArI2RlZmluZSAgV0lOX0VOQUJMRV9TSElG
+VAkJMA0KPiA+ID4gPiA+ID4gKyNkZWZpbmUgIFdJTl9UWVBFX1NISUZUCQkJMQ0KPiA+ID4gPiA+
+ID4gKyNkZWZpbmUgIFdJTl9UWVBFX01BU0sJCQkweDMNCj4gPiA+ID4gPiA+ICsjZGVmaW5lICBX
+SU5fU0laRV9TSElGVAkJCTEwDQo+ID4gPiA+ID4gPiArI2RlZmluZSAgV0lOX1NJWkVfTUFTSwkJ
+CTB4M2ZmZmZmDQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArI2RlZmluZSBQQUJfRVhUX0FY
+SV9BTUFQX1NJWkUod2luKQ0KPiA+ID4gCVBBQl9FWFRfUkVHX0FERFIoMHhiYWYwLA0KPiA+ID4g
+PiA+IHdpbikNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsjZGVmaW5lIFBBQl9FWFRfQVhJ
+X0FNQVBfQVhJX1dJTih3aW4pDQo+ID4gPiA+ID4gCVBBQl9FWFRfUkVHX0FERFIoMHg4MGEwLCB3
+aW4pDQo+ID4gPiA+ID4gPiArI2RlZmluZSBQQUJfQVhJX0FNQVBfQVhJX1dJTih3aW4pDQo+IAlQ
+QUJfUkVHX0FERFIoMHgwYmE0LA0KPiA+ID4gd2luKQ0KPiA+ID4gPiA+ID4gKyNkZWZpbmUgIEFY
+SV9XSU5ET1dfQUxJR05fTUFTSwkJMw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyNkZWZp
+bmUgUEFCX0FYSV9BTUFQX1BFWF9XSU5fTCh3aW4pDQo+ID4gPiAJUEFCX1JFR19BRERSKDB4MGJh
+OCwNCj4gPiA+ID4gPiB3aW4pDQo+ID4gPiA+ID4gPiArI2RlZmluZSAgUEFCX0JVU19TSElGVAkJ
+CTI0DQo+ID4gPiA+ID4gPiArI2RlZmluZSAgUEFCX0RFVklDRV9TSElGVAkJMTkNCj4gPiA+ID4g
+PiA+ICsjZGVmaW5lICBQQUJfRlVOQ1RJT05fU0hJRlQJCTE2DQo+ID4gPiA+ID4gPiArDQo+ID4g
+PiA+ID4gPiArI2RlZmluZSBQQUJfQVhJX0FNQVBfUEVYX1dJTl9IKHdpbikNCj4gPiA+IAlQQUJf
+UkVHX0FERFIoMHgwYmFjLA0KPiA+ID4gPiA+IHdpbikNCj4gPiA+ID4gPiA+ICsjZGVmaW5lIFBB
+Ql9JTlRQX0FYSV9QSU9fQ0xBU1MJCTB4NDc0DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiAr
+I2RlZmluZSBQQUJfUEVYX0FNQVBfQ1RSTCh3aW4pDQo+IAlQQUJfUkVHX0FERFIoMHg0YmEwLA0K
+PiA+ID4gPiA+IHdpbikNCj4gPiA+ID4gPiA+ICsjZGVmaW5lICBBTUFQX0NUUkxfRU5fU0hJRlQJ
+CTANCj4gPiA+ID4gPiA+ICsjZGVmaW5lICBBTUFQX0NUUkxfVFlQRV9TSElGVAkJMQ0KPiA+ID4g
+PiA+ID4gKyNkZWZpbmUgIEFNQVBfQ1RSTF9UWVBFX01BU0sJCTMNCj4gPiA+ID4gPiA+ICsNCj4g
+PiA+ID4gPiA+ICsjZGVmaW5lIFBBQl9FWFRfUEVYX0FNQVBfU0laRU4od2luKQ0KPiA+ID4gCVBB
+Ql9FWFRfUkVHX0FERFIoMHhiZWYwLA0KPiA+ID4gPiA+IHdpbikNCj4gPiA+ID4gPiA+ICsjZGVm
+aW5lIFBBQl9FWFRfUEVYX0FNQVBfQVhJX1dJTih3aW4pDQo+ID4gPiA+ID4gCVBBQl9FWFRfUkVH
+X0FERFIoMHhiNGEwLCB3aW4pDQo+ID4gPiA+ID4gPiArI2RlZmluZSBQQUJfUEVYX0FNQVBfQVhJ
+X1dJTih3aW4pDQo+IAlQQUJfUkVHX0FERFIoMHg0YmE0LA0KPiA+ID4gd2luKQ0KPiA+ID4gPiA+
+ID4gKyNkZWZpbmUgUEFCX1BFWF9BTUFQX1BFWF9XSU5fTCh3aW4pDQo+ID4gPiAJUEFCX1JFR19B
+RERSKDB4NGJhOCwNCj4gPiA+ID4gPiB3aW4pDQo+ID4gPiA+ID4gPiArI2RlZmluZSBQQUJfUEVY
+X0FNQVBfUEVYX1dJTl9IKHdpbikNCj4gPiA+IAlQQUJfUkVHX0FERFIoMHg0YmFjLA0KPiA+ID4g
+PiA+IHdpbikNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsvKiBzdGFydGluZyBvZmZzZXQg
+b2YgSU5UWCBiaXRzIGluIHN0YXR1cyByZWdpc3RlciAqLw0KPiA+ID4gPiA+ID4gKyNkZWZpbmUg
+UEFCX0lOVFhfU1RBUlQJCQk1DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArLyogc3VwcG9y
+dGVkIG51bWJlciBvZiBNU0kgaW50ZXJydXB0cyAqLw0KPiA+ID4gPiA+ID4gKyNkZWZpbmUgUENJ
+X05VTV9NU0kJCQkxNg0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKy8qIE1TSSByZWdpc3Rl
+cnMgKi8NCj4gPiA+ID4gPiA+ICsjZGVmaW5lIE1TSV9CQVNFX0xPX09GRlNFVAkJMHgwNA0KPiA+
+ID4gPiA+ID4gKyNkZWZpbmUgTVNJX0JBU0VfSElfT0ZGU0VUCQkweDA4DQo+ID4gPiA+ID4gPiAr
+I2RlZmluZSBNU0lfU0laRV9PRkZTRVQJCQkweDBjDQo+ID4gPiA+ID4gPiArI2RlZmluZSBNU0lf
+RU5BQkxFX09GRlNFVAkJMHgxNA0KPiA+ID4gPiA+ID4gKyNkZWZpbmUgTVNJX1NUQVRVU19PRkZT
+RVQJCTB4MTgNCj4gPiA+ID4gPiA+ICsjZGVmaW5lIE1TSV9EQVRBX09GRlNFVAkJCTB4MjANCj4g
+PiA+ID4gPiA+ICsjZGVmaW5lIE1TSV9BRERSX0xfT0ZGU0VUCQkweDI0DQo+ID4gPiA+ID4gPiAr
+I2RlZmluZSBNU0lfQUREUl9IX09GRlNFVAkJMHgyOA0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+
+ID4gKy8qIG91dGJvdW5kIGFuZCBpbmJvdW5kIHdpbmRvdyBkZWZpbml0aW9ucyAqLw0KPiA+ID4g
+PiA+ID4gKyNkZWZpbmUgV0lOX05VTV8wCQkJMA0KPiA+ID4gPiA+ID4gKyNkZWZpbmUgV0lOX05V
+TV8xCQkJMQ0KPiA+ID4gPiA+ID4gKyNkZWZpbmUgQ0ZHX1dJTkRPV19UWVBFCQkJMA0KPiA+ID4g
+PiA+ID4gKyNkZWZpbmUgSU9fV0lORE9XX1RZUEUJCQkxDQo+ID4gPiA+ID4gPiArI2RlZmluZSBN
+RU1fV0lORE9XX1RZUEUJCQkyDQo+ID4gPiA+ID4gPiArI2RlZmluZSBJQl9XSU5fU0laRQkJCSgo
+dTY0KTI1NiAqIDEwMjQgKiAxMDI0ICogMTAyNCkNCj4gPiA+ID4gPiA+ICsjZGVmaW5lIE1BWF9Q
+SU9fV0lORE9XUwkJCTgNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsvKiBQYXJhbWV0ZXJz
+IGZvciB0aGUgd2FpdGluZyBmb3IgbGluayB1cCByb3V0aW5lICovDQo+ID4gPiA+ID4gPiArI2Rl
+ZmluZSBMSU5LX1dBSVRfTUFYX1JFVFJJRVMJCTEwDQo+ID4gPiA+ID4gPiArI2RlZmluZSBMSU5L
+X1dBSVRfTUlOCQkJOTAwMDANCj4gPiA+ID4gPiA+ICsjZGVmaW5lIExJTktfV0FJVF9NQVgJCQkx
+MDAwMDANCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsjZGVmaW5lIFBBR0VEX0FERFJfQk5E
+UlkJCTB4YzAwDQo+ID4gPiA+ID4gPiArI2RlZmluZSBPRkZTRVRfVE9fUEFHRV9BRERSKG9mZikJ
+XA0KPiA+ID4gPiA+ID4gKwkoKG9mZiAmIFBBR0VfTE9fTUFTSykgfCBQQUdFRF9BRERSX0JORFJZ
+KQ0KPiA+ID4gPiA+ID4gKyNkZWZpbmUgT0ZGU0VUX1RPX1BBR0VfSURYKG9mZikJCVwNCj4gPiA+
+ID4gPiA+ICsJKChvZmYgPj4gUEFHRV9TRUxfT0ZGU0VUX1NISUZUKSAmIFBBR0VfU0VMX01BU0sp
+DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArc3RydWN0IG1vYml2ZWlsX3BjaWU7DQo+ID4g
+PiA+ID4gPiArDQo+ID4gPiA+ID4gPiArc3RydWN0IG1vYml2ZWlsX21zaSB7CQkJLyogTVNJIGlu
+Zm9ybWF0aW9uICovDQo+ID4gPiA+ID4gPiArCXN0cnVjdCBtdXRleCBsb2NrOwkJLyogcHJvdGVj
+dCBiaXRtYXAgdmFyaWFibGUgKi8NCj4gPiA+ID4gPiA+ICsJc3RydWN0IGlycV9kb21haW4gKm1z
+aV9kb21haW47DQo+ID4gPiA+ID4gPiArCXN0cnVjdCBpcnFfZG9tYWluICpkZXZfZG9tYWluOw0K
+PiA+ID4gPiA+ID4gKwlwaHlzX2FkZHJfdCBtc2lfcGFnZXNfcGh5czsNCj4gPiA+ID4gPiA+ICsJ
+aW50IG51bV9vZl92ZWN0b3JzOw0KPiA+ID4gPiA+ID4gKwlERUNMQVJFX0JJVE1BUChtc2lfaXJx
+X2luX3VzZSwgUENJX05VTV9NU0kpOw0KPiA+ID4gPiA+ID4gK307DQo+ID4gPiA+ID4gPiArDQo+
+ID4gPiA+ID4gPiArc3RydWN0IG1vYml2ZWlsX3JwX29wcyB7DQo+ID4gPiA+ID4gPiArCWludCAo
+KmludGVycnVwdF9pbml0KShzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSk7DQo+ID4gPiA+ID4g
+PiArfTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICtzdHJ1Y3Qgcm9vdF9wb3J0IHsNCj4g
+PiA+ID4gPiA+ICsJdTggcm9vdF9idXNfbnI7DQo+ID4gPiA+ID4gPiArCXZvaWQgX19pb21lbSAq
+Y29uZmlnX2F4aV9zbGF2ZV9iYXNlOwkvKiBlbmRwb2ludCBjb25maWcNCj4gYmFzZQ0KPiA+ID4g
+Ki8NCj4gPiA+ID4gPiA+ICsJc3RydWN0IHJlc291cmNlICpvYl9pb19yZXM7DQo+ID4gPiA+ID4g
+PiArCXN0cnVjdCBtb2JpdmVpbF9ycF9vcHMgKm9wczsNCj4gPiA+ID4gPiA+ICsJaW50IGlycTsN
+Cj4gPiA+ID4gPiA+ICsJcmF3X3NwaW5sb2NrX3QgaW50eF9tYXNrX2xvY2s7DQo+ID4gPiA+ID4g
+PiArCXN0cnVjdCBpcnFfZG9tYWluICppbnR4X2RvbWFpbjsNCj4gPiA+ID4gPiA+ICsJc3RydWN0
+IG1vYml2ZWlsX21zaSBtc2k7DQo+ID4gPiA+ID4gPiArfTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+
+ID4gPiA+ICtzdHJ1Y3QgbW9iaXZlaWxfcGFiX29wcyB7DQo+ID4gPiA+ID4gPiArCWludCAoKmxp
+bmtfdXApKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llKTsNCj4gPiA+ID4gPiA+ICt9Ow0KPiA+
+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gK3N0cnVjdCBtb2JpdmVpbF9wY2llIHsNCj4gPiA+ID4g
+PiA+ICsJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldjsNCj4gPiA+ID4gPiA+ICsJc3RydWN0
+IGxpc3RfaGVhZCByZXNvdXJjZXM7DQo+ID4gPiA+ID4gPiArCXZvaWQgX19pb21lbSAqY3NyX2F4
+aV9zbGF2ZV9iYXNlOwkvKiBQQUIgcmVnaXN0ZXJzIGJhc2UgKi8NCj4gPiA+ID4gPiA+ICsJcGh5
+c19hZGRyX3QgcGNpZV9yZWdfYmFzZTsJLyogUGh5c2ljYWwgUENJZSBDb250cm9sbGVyIEJhc2UN
+Cj4gKi8NCj4gPiA+ID4gPiA+ICsJdm9pZCBfX2lvbWVtICphcGJfY3NyX2Jhc2U7CS8qIE1TSSBy
+ZWdpc3RlciBiYXNlICovDQo+ID4gPiA+ID4gPiArCXUzMiBhcGlvX3dpbnM7DQo+ID4gPiA+ID4g
+PiArCXUzMiBwcGlvX3dpbnM7DQo+ID4gPiA+ID4gPiArCXUzMiBvYl93aW5zX2NvbmZpZ3VyZWQ7
+CQkvKiBjb25maWd1cmVkIG91dGJvdW5kDQo+IHdpbmRvd3MNCj4gPiA+ICovDQo+ID4gPiA+ID4g
+PiArCXUzMiBpYl93aW5zX2NvbmZpZ3VyZWQ7CQkvKiBjb25maWd1cmVkIGluYm91bmQNCj4gd2lu
+ZG93cyAqLw0KPiA+ID4gPiA+ID4gKwljb25zdCBzdHJ1Y3QgbW9iaXZlaWxfcGFiX29wcyAqb3Bz
+Ow0KPiA+ID4gPiA+ID4gKwlzdHJ1Y3Qgcm9vdF9wb3J0IHJwOw0KPiA+ID4gPiA+ID4gK307DQo+
+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiAraW50IG1vYml2ZWlsX3BjaWVfaG9zdF9wcm9iZShz
+dHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSk7DQo+ID4gPiA+ID4gPiArYm9vbCBtb2JpdmVpbF9w
+Y2llX2xpbmtfdXAoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUpOw0KPiA+ID4gPiA+ID4gK2lu
+dCBtb2JpdmVpbF9icmluZ3VwX2xpbmsoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBjaWUpOw0KPiA+
+ID4gPiA+ID4gK3ZvaWQgcHJvZ3JhbV9vYl93aW5kb3dzKHN0cnVjdCBtb2JpdmVpbF9wY2llICpw
+Y2llLCBpbnQNCj4gd2luX251bSwNCj4gPiA+IHU2NA0KPiA+ID4gPiA+IGNwdV9hZGRyLA0KPiA+
+ID4gPiA+ID4gKwkJCXU2NCBwY2lfYWRkciwgdTMyIHR5cGUsIHU2NCBzaXplKTsNCj4gPiA+ID4g
+PiA+ICt2b2lkIHByb2dyYW1faWJfd2luZG93cyhzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAqcGNpZSwg
+aW50IHdpbl9udW0sDQo+ID4gPiB1NjQNCj4gPiA+ID4gPiBjcHVfYWRkciwNCj4gPiA+ID4gPiA+
+ICsJCQl1NjQgcGNpX2FkZHIsIHUzMiB0eXBlLCB1NjQgc2l6ZSk7DQo+ID4gPiA+ID4gPiArdTMy
+IGNzcl9yZWFkKHN0cnVjdCBtb2JpdmVpbF9wY2llICpwY2llLCB1MzIgb2ZmLCBzaXplX3Qgc2l6
+ZSk7DQo+ID4gPiA+ID4gPiArdm9pZCBjc3Jfd3JpdGUoc3RydWN0IG1vYml2ZWlsX3BjaWUgKnBj
+aWUsIHUzMiB2YWwsIHUzMiBvZmYsIHNpemVfdA0KPiBzaXplKTsNCj4gPiA+ID4gPiA+ICsNCj4g
+PiA+ID4gPiA+ICtzdGF0aWMgaW5saW5lIHUzMiBjc3JfcmVhZGwoc3RydWN0IG1vYml2ZWlsX3Bj
+aWUgKnBjaWUsIHUzMiBvZmYpDQo+ID4gPiA+ID4gPiArew0KPiA+ID4gPiA+ID4gKwlyZXR1cm4g
+Y3NyX3JlYWQocGNpZSwgb2ZmLCAweDQpOw0KPiA+ID4gPiA+ID4gK30NCj4gPiA+ID4gPiA+ICsN
+Cj4gPiA+ID4gPiA+ICtzdGF0aWMgaW5saW5lIHZvaWQgY3NyX3dyaXRlbChzdHJ1Y3QgbW9iaXZl
+aWxfcGNpZSAqcGNpZSwgdTMyIHZhbCwgdTMyDQo+IG9mZikNCj4gPiA+ID4gPiA+ICt7DQo+ID4g
+PiA+ID4gPiArCWNzcl93cml0ZShwY2llLCB2YWwsIG9mZiwgMHg0KTsNCj4gPiA+ID4gPiA+ICt9
+DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArI2VuZGlmIC8qIF9QQ0lFX01PQklWRUlMX0gg
+Ki8NCj4gPiA+ID4gPiA+IC0tDQo+ID4gPiA+ID4gPiAyLjE3LjENCj4gPiA+ID4gPiA+DQo+ID4g
+PiA+DQo+ID4gPiA+IFRoYW5rcywNCj4gPiA+ID4gWmhpcWlhbmcNCg==
