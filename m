@@ -2,232 +2,94 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4BDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D63C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6B820657
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FF820657
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:03:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="L/RpgE9l";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IIeXQT3L"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vAxkn0Pu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbfC2VA5 (ORCPT
+        id S1730296AbfC2VDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 17:00:57 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58316 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730190AbfC2VA4 (ORCPT
+        Fri, 29 Mar 2019 17:03:07 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40439 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730190AbfC2VDH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 17:00:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 855EC6087D; Fri, 29 Mar 2019 21:00:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553893255;
-        bh=5+1ErKi4wAE6QPgFBx4XkwHCaffirQ3Em7+ThcJ/ky8=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=L/RpgE9l3lIFNavk8Rc5QOVr2BLARD9L2Av8he7pNTj9bTywYNQF8FSscRg94k/fX
-         RAyqSZPyyJ/8YOG21enJgU3KwWtFFeCID/gO7C4NzHuG9064FoWtVhtE2BnVvqthjp
-         6b1emOp+Gov9hERQkzM5JpmoIHyZuwmzOBQkFOX8=
-Received: from [10.79.168.116] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DE6F3602FC;
-        Fri, 29 Mar 2019 21:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553893254;
-        bh=5+1ErKi4wAE6QPgFBx4XkwHCaffirQ3Em7+ThcJ/ky8=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=IIeXQT3L4y13gBjApsY4RBROfMcB/OJNflPYTKKaEUet9zWHNwQWMHlrXmr8ty5FK
-         H0OJDlGhCOYgz5+b/d9oFMX2j/UUa7b4Be68QM2nPyBHI0T7D7s8U31bpHjZW4alx2
-         AfAkdXNnWIc6SaV/w1TNJdKnJp13+jiOm2MPZF7Q=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DE6F3602FC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] scsi: pm8001: clean up structurally dead code when
- PM8001_USE_MSIX is defined (part2)
-From:   Mukesh Ojha <mojha@codeaurora.org>
-To:     Colin King <colin.king@canonical.com>,
-        Jack Wang <jinpu.wang@profitbricks.com>, lindar_liu@usish.com,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190329153221.29238-1-colin.king@canonical.com>
- <0c08b258-e61d-60ee-7702-728fa96c435d@codeaurora.org>
-Message-ID: <2b2ad873-2303-62de-55cd-f63cc31a78b9@codeaurora.org>
-Date:   Sat, 30 Mar 2019 02:30:44 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 17:03:07 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b11so1566398plr.7
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 14:03:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=Vt85FaSQvqSIgKmDkeu3cTPdbJWz0R1Jr3LXR2DaZMQ=;
+        b=vAxkn0PutHy75vymlaYCr9b6cXJFoQ5sN7eMLjCm6t6xKUjJK52dgImDwhTiPFaFcF
+         Y3QzWSJx21qR4zu44IcoJaWpkLmTiYG4DrN1UcfUeSnqtb4SQypbrdqCsH5uh+oPRtIx
+         i2hvC5oydY9vyyhyQc1HbPgS2+7DuiZ+pNZZs9qoCLEiq7YuiMyfib+bpuZHJmEerlTB
+         T0IavAV9MH0or2fli4yUfSFqKtmtB4SxHC6kzfJoNe2Iwgx+6ennrsbBtcQMHWuH3omI
+         yyvgMt5+1QgzX5XXoSjBxT4Qi9CecSpcV+0sZVNupQxFpoqisNtFRze+F5Bs9YoJSRXm
+         HyAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Vt85FaSQvqSIgKmDkeu3cTPdbJWz0R1Jr3LXR2DaZMQ=;
+        b=J5KkWeg1XTiRqTF6dHiWlqYax/E2fhN9Vyj3tL8FTKeE2w+02VXyk4PUjlE+5f/1tR
+         V6wYclzltZ4E1w2mnfbkVVb3FVQ7oQU2YHhqz0NU0sYgBdzh+5kbOCy9+sSBIAgDe47u
+         EAv8w3hpf7aeQ6a6AsbZU55abpVOdgcjgWeeH9fpOChhvT7+YWOmJoj3K85ThScNJUVG
+         I5lSKVqrT17f/Z6C3jPsiGCDh23UbCRz01dvp4m/6qfnNWa3WMefjymSwPLfmXl+GNZ3
+         m0NbXwVnv1/5v/ZUE0B8HH0aM3jP1GH0TdN4HEhBQ+jApZjuWjoMc3ullYkViU+qQu9G
+         V/Dg==
+X-Gm-Message-State: APjAAAU7bl4LZc9OkyRkif9bBu3jxO1Q3KBEWuY8A/sm6a5uYwIsWD3x
+        3WF5UCkITgFywfAgopE5Um6WNw==
+X-Google-Smtp-Source: APXvYqzOT9qF0rIQW7Sax/XLVqPEkN0JDYAgoPre6kteLlO417SK5GBon+3AATWMw2qP3k3H2MoEjw==
+X-Received: by 2002:a17:902:bb90:: with SMTP id m16mr52733859pls.49.1553893386859;
+        Fri, 29 Mar 2019 14:03:06 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id y37sm4086752pgk.78.2019.03.29.14.03.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 Mar 2019 14:03:06 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     arm@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/1] ARM: multi_v7_defconfig: enable the Amlogic Meson ADC and eFuse drivers
+In-Reply-To: <20190328205122.27092-2-martin.blumenstingl@googlemail.com>
+References: <20190328205122.27092-1-martin.blumenstingl@googlemail.com> <20190328205122.27092-2-martin.blumenstingl@googlemail.com>
+Date:   Fri, 29 Mar 2019 14:03:05 -0700
+Message-ID: <7hftr5wfzq.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <0c08b258-e61d-60ee-7702-728fa96c435d@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-On 3/30/2019 1:38 AM, Mukesh Ojha wrote:
+> With the SAR ADC driver ADC measurements can be taken though the IIO
+> framework. Additionally the SAR ADC has a channel which is connected to
+> an internal temperature sensor. The calibration data for this internal
+> temperature sensor is stored in the eFuse.
 >
-> On 3/29/2019 9:02 PM, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> When macro PM8001_USE_MSIX is defined there is redundant dead code
->> call to pm8001_cr32.  Clean this up for the defined PM8001_USE_MSIX and
->> undefined PM8001_USE_MSIX cases.
->>
->> Also rename the functions pm8001_chip_is_our_interupt,
->> pm80xx_chip_is_our_interupt and function pointer is_our_interrupt
->> to fix spelling mistakes.
->>
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Enable the SAR ADC driver and the eFuse driver for the 32-bit Amlogic
+> Meson SoCs so we can expose the chip temperature to userspace through
+> the IIO hwmon driver (whose config option is already enabled:
+> CONFIG_SENSORS_IIO_HWMON=y).
 >
-> It would be better if you could split this into two patch, one for 
-> dead code and other for renaming.
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Also, What is that part2 in the subject ? please remove that too.
+Queued for v5.2,
 
+Thanks,
 
->
->
-> Otherwise change looks good.
->
-> Once you fix above you could include .
-> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
->
-> Cheers,
-> -Mukesh
->
->
->> ---
->>   drivers/scsi/pm8001/pm8001_hwi.c  | 11 ++++++-----
->>   drivers/scsi/pm8001/pm8001_init.c |  4 ++--
->>   drivers/scsi/pm8001/pm8001_sas.h  |  2 +-
->>   drivers/scsi/pm8001/pm80xx_hwi.c  | 11 ++++++-----
->>   4 files changed, 15 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/scsi/pm8001/pm8001_hwi.c 
->> b/drivers/scsi/pm8001/pm8001_hwi.c
->> index e4209091c1da..627075d00918 100644
->> --- a/drivers/scsi/pm8001/pm8001_hwi.c
->> +++ b/drivers/scsi/pm8001/pm8001_hwi.c
->> @@ -4623,17 +4623,18 @@ static int pm8001_chip_phy_ctl_req(struct 
->> pm8001_hba_info *pm8001_ha,
->>       return ret;
->>   }
->>   -static u32 pm8001_chip_is_our_interupt(struct pm8001_hba_info 
->> *pm8001_ha)
->> +static u32 pm8001_chip_is_our_interrupt(struct pm8001_hba_info 
->> *pm8001_ha)
->>   {
->> -    u32 value;
->>   #ifdef PM8001_USE_MSIX
->>       return 1;
->> -#endif
->> +#else
->> +    u32 value;
->> +
->>       value = pm8001_cr32(pm8001_ha, 0, MSGU_ODR);
->>       if (value)
->>           return 1;
->>       return 0;
->> -
->> +#endif
->>   }
->>     /**
->> @@ -5119,7 +5120,7 @@ const struct pm8001_dispatch 
->> pm8001_8001_dispatch = {
->>       .chip_rst        = pm8001_hw_chip_rst,
->>       .chip_iounmap        = pm8001_chip_iounmap,
->>       .isr            = pm8001_chip_isr,
->> -    .is_our_interupt    = pm8001_chip_is_our_interupt,
->> +    .is_our_interrupt    = pm8001_chip_is_our_interrupt,
->>       .isr_process_oq        = process_oq,
->>       .interrupt_enable     = pm8001_chip_interrupt_enable,
->>       .interrupt_disable    = pm8001_chip_interrupt_disable,
->> diff --git a/drivers/scsi/pm8001/pm8001_init.c 
->> b/drivers/scsi/pm8001/pm8001_init.c
->> index a36060c23b37..3374f553c617 100644
->> --- a/drivers/scsi/pm8001/pm8001_init.c
->> +++ b/drivers/scsi/pm8001/pm8001_init.c
->> @@ -201,7 +201,7 @@ static irqreturn_t 
->> pm8001_interrupt_handler_msix(int irq, void *opaque)
->>         if (unlikely(!pm8001_ha))
->>           return IRQ_NONE;
->> -    if (!PM8001_CHIP_DISP->is_our_interupt(pm8001_ha))
->> +    if (!PM8001_CHIP_DISP->is_our_interrupt(pm8001_ha))
->>           return IRQ_NONE;
->>   #ifdef PM8001_USE_TASKLET
->> tasklet_schedule(&pm8001_ha->tasklet[irq_vector->irq_id]);
->> @@ -224,7 +224,7 @@ static irqreturn_t 
->> pm8001_interrupt_handler_intx(int irq, void *dev_id)
->>       pm8001_ha = sha->lldd_ha;
->>       if (unlikely(!pm8001_ha))
->>           return IRQ_NONE;
->> -    if (!PM8001_CHIP_DISP->is_our_interupt(pm8001_ha))
->> +    if (!PM8001_CHIP_DISP->is_our_interrupt(pm8001_ha))
->>           return IRQ_NONE;
->>     #ifdef PM8001_USE_TASKLET
->> diff --git a/drivers/scsi/pm8001/pm8001_sas.h 
->> b/drivers/scsi/pm8001/pm8001_sas.h
->> index f88b0d33c385..ac6d8e3f22de 100644
->> --- a/drivers/scsi/pm8001/pm8001_sas.h
->> +++ b/drivers/scsi/pm8001/pm8001_sas.h
->> @@ -197,7 +197,7 @@ struct pm8001_dispatch {
->>       int (*chip_ioremap)(struct pm8001_hba_info *pm8001_ha);
->>       void (*chip_iounmap)(struct pm8001_hba_info *pm8001_ha);
->>       irqreturn_t (*isr)(struct pm8001_hba_info *pm8001_ha, u8 vec);
->> -    u32 (*is_our_interupt)(struct pm8001_hba_info *pm8001_ha);
->> +    u32 (*is_our_interrupt)(struct pm8001_hba_info *pm8001_ha);
->>       int (*isr_process_oq)(struct pm8001_hba_info *pm8001_ha, u8 vec);
->>       void (*interrupt_enable)(struct pm8001_hba_info *pm8001_ha, u8 
->> vec);
->>       void (*interrupt_disable)(struct pm8001_hba_info *pm8001_ha, u8 
->> vec);
->> diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c 
->> b/drivers/scsi/pm8001/pm80xx_hwi.c
->> index 536d2b4384f8..301de40eb708 100644
->> --- a/drivers/scsi/pm8001/pm80xx_hwi.c
->> +++ b/drivers/scsi/pm8001/pm80xx_hwi.c
->> @@ -4617,17 +4617,18 @@ static int pm80xx_chip_phy_ctl_req(struct 
->> pm8001_hba_info *pm8001_ha,
->>       return pm8001_mpi_build_cmd(pm8001_ha, circularQ, opc, 
->> &payload, 0);
->>   }
->>   -static u32 pm80xx_chip_is_our_interupt(struct pm8001_hba_info 
->> *pm8001_ha)
->> +static u32 pm80xx_chip_is_our_interrupt(struct pm8001_hba_info 
->> *pm8001_ha)
->>   {
->> -    u32 value;
->>   #ifdef PM8001_USE_MSIX
->>       return 1;
->> -#endif
->> +#else
->> +    u32 value;
->> +
->>       value = pm8001_cr32(pm8001_ha, 0, MSGU_ODR);
->>       if (value)
->>           return 1;
->>       return 0;
->> -
->> +#endif
->>   }
->>     /**
->> @@ -4724,7 +4725,7 @@ const struct pm8001_dispatch 
->> pm8001_80xx_dispatch = {
->>       .chip_rst        = pm80xx_hw_chip_rst,
->>       .chip_iounmap        = pm8001_chip_iounmap,
->>       .isr            = pm80xx_chip_isr,
->> -    .is_our_interupt    = pm80xx_chip_is_our_interupt,
->> +    .is_our_interrupt    = pm80xx_chip_is_our_interrupt,
->>       .isr_process_oq        = process_oq,
->>       .interrupt_enable    = pm80xx_chip_interrupt_enable,
->>       .interrupt_disable    = pm80xx_chip_interrupt_disable,
+Kevin
