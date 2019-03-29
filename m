@@ -3,163 +3,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC21C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4C4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0685B2184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42601206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbfC2PBS (ORCPT
+        id S1729381AbfC2PC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:01:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45070 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728717AbfC2PBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:01:18 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 985E183F45;
-        Fri, 29 Mar 2019 15:01:17 +0000 (UTC)
-Received: from [10.36.112.74] (ovpn-112-74.ams2.redhat.com [10.36.112.74])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8AC601001E95;
-        Fri, 29 Mar 2019 15:01:15 +0000 (UTC)
-Subject: Re: [PATCH RFC] KVM: x86: vmx: throttle immediate exit through
- preemtion timer to assist buggy guests
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org
-References: <20190328203110.20655-1-vkuznets@redhat.com>
- <f64742ef-c67d-db0f-d812-2b6f5048d7ee@redhat.com>
- <87d0m93frp.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <89d4189b-de6a-7634-de8b-29a044a86e12@redhat.com>
-Date:   Fri, 29 Mar 2019 16:01:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 29 Mar 2019 11:02:29 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:33729 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728717AbfC2PC3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 11:02:29 -0400
+X-Originating-IP: 90.88.32.136
+Received: from aptenodytes (aaubervilliers-681-1-91-136.w90-88.abo.wanadoo.fr [90.88.32.136])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id F17CD240017;
+        Fri, 29 Mar 2019 15:02:23 +0000 (UTC)
+Message-ID: <5ed7c5f361bca47d3f9771f9ed27e28e2fccb179.camel@bootlin.com>
+Subject: Re: [PATCH v2 1/2] drm/file: Rehabilitate the firstopen hook for
+ non-legacy drivers
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Daniel Stone <daniel@fooishbar.org>, Eric Anholt <eric@anholt.net>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Eben Upton <eben@raspberrypi.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Date:   Fri, 29 Mar 2019 16:02:23 +0100
+In-Reply-To: <CAPj87rMmW_7Kiy==ZxvvmHXhQLWC+F=uxed442HpMMZr=MwjRA@mail.gmail.com>
+References: <20190320154809.14823-1-paul.kocialkowski@bootlin.com>
+         <20190320154809.14823-2-paul.kocialkowski@bootlin.com>
+         <87zhpph4c2.fsf@anholt.net>
+         <82618ee8c2a2380a62b1fb894e5c35c602e20f3d.camel@bootlin.com>
+         <20190328185307.GZ2665@phenom.ffwll.local>
+         <CAPj87rMmW_7Kiy==ZxvvmHXhQLWC+F=uxed442HpMMZr=MwjRA@mail.gmail.com>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
 MIME-Version: 1.0
-In-Reply-To: <87d0m93frp.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 29 Mar 2019 15:01:17 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/03/19 15:40, Vitaly Kuznetsov wrote:
-> Paolo Bonzini <pbonzini@redhat.com> writes:
+Hi,
+
+On Fri, 2019-03-29 at 09:09 +0000, Daniel Stone wrote:
+> Hi,
 > 
->> On 28/03/19 21:31, Vitaly Kuznetsov wrote:
->>>
->>> The 'hang' scenario develops like this:
->>> 1) Hyper-V boots and QEMU is trying to inject two irq simultaneously. One
->>>  of them is level-triggered. KVM injects the edge-triggered one and
->>>  requests immediate exit to inject the level-triggered:
->>>
->>>  kvm_set_irq:          gsi 23 level 1 source 0
->>>  kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
->>>  kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
->>>  kvm_msi_set_irq:      dst 0 vec 96 (Fixed|physical|edge)
->>>  kvm_apic_accept_irq:  apicid 0 vec 96 (Fixed|edge)
->>>  kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000060 int_info_err 0
->>>
->>> 2) Hyper-V requires one of its VMs to run to handle the situation but
->>>  immediate exit happens:
->>>
->>>  kvm_entry:            vcpu 0
->>>  kvm_exit:             reason VMRESUME rip 0xfffff80006a40115 info 0 0
->>>  kvm_entry:            vcpu 0
->>>  kvm_exit:             reason PREEMPTION_TIMER rip 0xfffff8022f3d8350 info 0 0
->>>  kvm_nested_vmexit:    rip fffff8022f3d8350 reason PREEMPTION_TIMER info1 0 info2 0 int_info 0 int_info_err 0
->>>  kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000050 int_info_err 0
->>
->> I supposed before this there was an eoi for vector 96?
+> On Thu, 28 Mar 2019 at 18:53, Daniel Vetter <daniel@ffwll.ch> wrote:
+> > On Thu, Mar 21, 2019 at 04:27:06PM +0100, Paul Kocialkowski wrote:
+> > > I don't see other options either, and using firstclose/lastopen feels
+> > > overall more readable in the driver code.
+> > > 
+> > > I'm not sure there is such a big overhead associated with allocating
+> > > the binner BO (it seems that the current implementation tries to alloc
+> > > until the specific memory constraints for the buffer are met, so
+> > > perhaps that can take time). But if there is, I suppose it's best to
+> > > have that when starting up rather than delaying the first render
+> > > operation.
+> > 
+> > I'm not entirely buying the "we don't need this for fbcon only" argument -
+> > there's plenty of dumb kms clients too (boot splash and whatever else
+> > there might be). If you don't want to keep this around I think allocating
+> > on first non-dumb bo allocation and dropping it when the last such fd
+> > closes sounds like a much better idea. Needs a bit more state, you need to
+> > track per drm_file whether you've already allocated a non-dumb bo, and a
+> > drm_device refcount, but that's not much. Firstopen feels like the wrong
+> > thing.
+> > 
+> > Another option would be first_renderopen or something like that, except
+> > you can also render on the legacy node and I'm not sure how much there's a
+> > demand for this in other drivers. In the end you have open/close
+> > callbacks, you can do all the driver specific things you want to do in
+> > there.
 > 
-> AFAIR: no, it seems that it is actually the VM it is trying to resume
-> (Windows partition?) which needs to do some work and with the preemtion
-> timer of 0 we don't allow it to.
+> I'd like to avoid doing it in open where possible, since that hurts
+> device enumeration from userspace.
 
-kvm_apic_accept_irq placed IRQ 96 in IRR, and Hyper-V should be running
-with "acknowledge interrupt on exit" since int_info is nonzero in
-kvm_nested_vmexit_inject.
+I've noticed the same issue with firstopen, where our buffer is
+allocated/liberated a couple of times during enumeration, before the
+final open that stays alive during use.
 
-Therefore, at the kvm_nested_vmexit_inject tracepoint KVM should have
-set bit 96 in ISR; and because PPR is now 96, interrupt 80 should have
-never been delivered.  Unless 96 is an auto-EOI interrupt, in which case
-this comment would apply
+I'm not sure what is preferable between that and allocating when the
+GPU is first used. Slowing down the first GPU operation with the
+allocation does not sound too great either and it feels like the buffer
+should have been allocated earlier.
 
-          /*
-           * For auto-EOI interrupts, there might be another pending
-           * interrupt above PPR, so check whether to raise another
-           * KVM_REQ_EVENT.
-           */
+To me, it feels I think it's better to have delays due to allocation at
+enumeration / startup rather than later on, but I might be missing some
+elements to have a clear idea.
 
-IIRC there was an enlightenment to tell Windows "I support auto-EOI but
-please don't use it".  If this is what's happening, that would also fix it.
+What do you think?
 
-Thanks,
+Cheers,
 
-Paolo
+Paul
+
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
