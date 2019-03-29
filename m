@@ -2,92 +2,176 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCE0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203BBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECA32075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:39:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bJ0cJV8U"
+	by mail.kernel.org (Postfix) with ESMTP id EE8622075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfC2CjT (ORCPT
+        id S1728677AbfC2Cj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 22:39:19 -0400
-Received: from ozlabs.org ([203.11.71.1]:35923 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727675AbfC2CjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 22:39:18 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44VmCR72tJz9sPv;
-        Fri, 29 Mar 2019 13:39:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1553827156;
-        bh=H1AaXsMpn0dAS8oFuJxO8XQunSfed2XWz16NkDpb1aU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=bJ0cJV8Uf60F4El5D3xdaY9kt9VcS+s9L0JbG6In/KnuUVPA616+kZdkZGo3Zq6ZR
-         s2Fhby7f4/ceV+7fBTOj6TTVtyplPmmZ4GfMVEchsuQ9Hvyq4tyehgQEidZxVTHTH+
-         tvEL9GdSxqrWcbjOyeq+/MZR+gS8e0iAvS6TXYz85ylkawTWtlmfEitEZSFJwG6HDl
-         Igk61aLF1JUwUNNNzrSa71kwgYjblMukE9I3/LlJcPpZNUeNq9aI+XL0W3eL4F7/wb
-         WRH/0q7WiCDTLX1LB1deXP7+JQNHU7wAY2+eU4iadJSP8V9NZUSJvQkCjWYhR/64E2
-         D/gtUFvOpeDMw==
-Date:   Fri, 29 Mar 2019 13:39:14 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        George Spelvin <lkml@sdf.org>
-Subject: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20190329133914.45a4a255@canb.auug.org.au>
+        Thu, 28 Mar 2019 22:39:27 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:23019 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727675AbfC2Cj1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 22:39:27 -0400
+X-UUID: 13ed2f3e1299475eb2e9f34f7db4a591-20190329
+X-UUID: 13ed2f3e1299475eb2e9f34f7db4a591-20190329
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 704832312; Fri, 29 Mar 2019 10:38:53 +0800
+Received: from MTKMBS01DR.mediatek.inc (172.21.101.111) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 29 Mar 2019 10:38:51 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01dr.mediatek.inc (172.21.101.111) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 29 Mar 2019 10:38:51 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 29 Mar 2019 10:38:51 +0800
+Message-ID: <1553827131.12091.8.camel@mtksdaap41>
+Subject: Re: [PATCH v3 03/12] dt-binding: gce: add binding for gce event
+ property
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        CK HU <ck.hu@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Date:   Fri, 29 Mar 2019 10:38:51 +0800
+In-Reply-To: <20190328184425.GA21602@bogus>
+References: <1553739573-19708-1-git-send-email-bibby.hsieh@mediatek.com>
+         <1553739573-19708-4-git-send-email-bibby.hsieh@mediatek.com>
+         <20190328184425.GA21602@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/bz/5X2ivF34+g6UO7vy52Fz"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
+X-TM-SNTS-SMTP: 7B6A94C4E5F9024DA14AD73D52EF93B57D22F1FB552FC9DB9658264761A902CD2000:8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bz/5X2ivF34+g6UO7vy52Fz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi, Rob,
 
-Hi all,
+Thanks for your review and comments.
 
-After merging the akpm-current tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+On Thu, 2019-03-28 at 13:44 -0500, Rob Herring wrote:
+> On Thu, Mar 28, 2019 at 10:19:24AM +0800, Bibby Hsieh wrote:
+> > Client hardware would send event to GCE hardware,
+> > so #event-cells, mediatek,gce-event-names, mediatek,gce-events.
+> > present the event.
+> > 
+> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > ---
+> >  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 17 ++++++++++++++---
+> >  1 file changed, 14 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > index 1f7f8f2..2f175d6 100644
+> > --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > @@ -21,12 +21,21 @@ Required properties:
+> >  	priority: Priority of GCE thread.
+> >  	atomic_exec: GCE processing continuous packets of commands in atomic
+> >  		way.
+> > +- #event-cells: Should be 1.
+> > +	<&phandle event_number>
+> > +	phandle: Label name of a gce node.
+> > +	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
+> > +		      or 'dt-binding/gce/mt8183-gce.h'.
+> 
+> You only need to have a #*-cells if the number is variable.
+> 
+I think #event-cells can be removed here.The cmdq_dev_get_event can be
+modified as:
 
-lib/list_sort.c:17:36: warning: 'pure' attribute ignored [-Wattributes]
-   struct list_head const *, struct list_head const *);
-                                    ^~~~~~~~~
++u32 cmdq_dev_get_event(struct device *dev, const char *name)
++{
++	<... snip ...>
 
-Introduced by commit
++	index = of_property_match_string(dev->of_node,
++					 "mediatek,gce-event-names", 
++	<... snip ...>
 
-  820c81be5237 ("lib/list_sort: simplify and remove MAX_LIST_LENGTH_BITS")
++
++	if (of_property_read_u32_index(dev->of_node, "mediatek,gce-events",
+index, &result)) {
++		dev_err(dev, "can't parse gce-events property");
++
++		return -ENODEV;
++	}
++
++	return result;
++}
++EXPORT_SYMBOL(cmdq_dev_get_event);
 
---=20
-Cheers,
-Stephen Rothwell
+> What are 'events' here? Sounds like interrupts or MSI?
+Yes, events is a kind of communicating method from the other hardware
+with GCE. It's likes interrupts.
 
---Sig_/bz/5X2ivF34+g6UO7vy52Fz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> 
+> >  
+> >  Required properties for a client device:
+> >  - mboxes: Client use mailbox to communicate with GCE, it should have this
+> >    property and list of phandle, mailbox specifiers.
+> >  - mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
+> >    to the register address.
+> > +Optional propertier for a client device:
+> > +- mediatek,gce-event-names: the event name can be defined by user.
+> > +- mediatek,gce-events: u32, the event number defined in
+> > +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
+> >  
+> >  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+> >  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
+> > @@ -40,6 +49,7 @@ Example:
+> >  		clocks = <&infracfg CLK_INFRA_GCE>;
+> >  		clock-names = "gce";
+> >  		#mbox-cells = <3>;
+> > +		#event-cells = <1>;
+> >  	};
+> >  
+> >  Example for a client device:
+> > @@ -49,8 +59,9 @@ Example for a client device:
+> >  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+> >  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+> >  		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+> > -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+> > -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> > -
+> > +		mediatek,gce-event-names = "rdma0_sof",
+> > +					   "rsz0_sof";
+> > +		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
+> > +				      <&gce CMDQ_EVENT_MDP_RSZ0_SOF>;
+> >  		...
+> >  	};
+> > -- 
+> > 1.9.1
+> > 
 
------BEGIN PGP SIGNATURE-----
+-- 
+Bibby
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlydhVIACgkQAVBC80lX
-0Gwfcwf/a08aToYMZc7G6FsZ5WGZIELQG6jO+w/bgXuIo+Oq68NVJm1mCrH0oiM9
-pTlM/1BXDvLqyRsIBkDCeTjC02oZrPBMB7MrzYQKzRFkgpRTZWkKDG3qz5S8SgHQ
-Q4/A577fqDglq+zdnKfMz05CpioFd8r4vsA1UpfcqNZljirmWa9MZOA7FYhPYV64
-q5y1yk71YtERywotcCRQw/RYQ9DkVq0Mkgk9fgxQsLkIyVKdJxqVFVvjyW1eZZ3k
-PVv9chwoluBaMwLuxlaA9hkBwqCecLeZMMayZ8Nu/UwRsQhviGy1FKK+tn4KU1Vx
-AIt8EqYqDHW7iT90MnvGH7OqSo4cyQ==
-=6CYq
------END PGP SIGNATURE-----
-
---Sig_/bz/5X2ivF34+g6UO7vy52Fz--
