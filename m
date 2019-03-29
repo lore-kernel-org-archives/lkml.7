@@ -2,121 +2,332 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147AAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4C1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77A4206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D97020811
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:25:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bf6nMCdi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPmi+zoZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbfC2LUO (ORCPT
+        id S1729003AbfC2LZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 07:20:14 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43621 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728689AbfC2LUO (ORCPT
+        Fri, 29 Mar 2019 07:25:29 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39357 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728694AbfC2LZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 07:20:14 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d26so1673855ede.10;
-        Fri, 29 Mar 2019 04:20:13 -0700 (PDT)
+        Fri, 29 Mar 2019 07:25:29 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i17so928168pfo.6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 04:25:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rZNxiNe/9OvgDUZwBzWW1bjx24BWsVYokMBMaOI4hMM=;
-        b=Bf6nMCdiOWwlEsapP9pvE+F5T/yysxaRa9Lr1TpwuN+LqVHZxy361SJCtmp+mtY540
-         LYEbndCPKnaqJRP4idRETOktS2uFNGX+Vsiossi22uocxQHkQctdi7vdbGScQvmENPQc
-         xVpoVi+xyi6QaXC5bLe1ztqzhT4pN6ANMQBGT01NSG0VIQS3gb1jku0LpmRceySdaYZe
-         +Rx1BqV1gNb04+kW6H7WmBa6b2E1yg/CzcZXXLIp5CNbtvumR4kZh7DTnL1WMet+osPV
-         fV3Vcj4YvCk0FZZZIHr4gqHXhIDdFz6BTnnSesEL0vaObxvSHYwf6F9SXIQBsSU7XWh7
-         nF7A==
+        h=from:to:cc:subject:date:message-id;
+        bh=C397LE4ffkkF2GxhhMQFarDLA/4MqWjlP/oic7VbTIc=;
+        b=XPmi+zoZhgrIxP1aNQn/WCHdj2wUZJvTa7aPNFaByVjv6PRFlaGD3rGvkuay4kTC2P
+         5SwzYFbNve4EiscRzWgxdnLy/5hTuwpC02aJzRQ7h1q8aRi5eOufdm4NGNbO47QdZpWh
+         ToMSWPvTgkxzHQT1tcDRpJrGN3cVHnzrofvP7rzGYwjKWzMOJRWEMtUcndR9+MRQ34mo
+         s00wx/ScSlAeeo3XK4XHuVrjj7upZcN8mxoMUo3VESmsdWh7vlxLHONwJR67+08avSas
+         Lao2TcOR6T7BCtFd26PvXDYcHVKRT+zlpvNGIg4sLTnQhy0Ozt03WtzQd3N6F9abmPDR
+         z84w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rZNxiNe/9OvgDUZwBzWW1bjx24BWsVYokMBMaOI4hMM=;
-        b=U22VnmPECnDhR10EMLbu5T1ibovlDi5WsjjVfgc4nUB88diJNP3T3kN2VwPLOoKHLp
-         JmAudDpRI96uijvLvy59ADtjNVcHUUje4jOkUVX1zT014tRUsLtUky85vUV4ZmWMVRbv
-         hoCB/VVmI30rMoERDX71KwBA+OW50xPZbHu4S62Yy5tr6W+PpnXhk8RszloHA2tnJScN
-         K4j6mpQ5WBGen48unRW897SnmtQj6wfh+U4mNniC+QsZNrQEdTwVfVLTSCFBz2dBwmMK
-         j73ZSLF1WatqIpTF+ukenITa7yKnWaSSctZ94So49RL9Eh5beYgfgTvnYSY5VZBNH9Z/
-         PmoQ==
-X-Gm-Message-State: APjAAAXwaYaGKwuBtODjDAyiej4LVG49HR7yvEv1SanHwycn52er4rL9
-        U39X8PPMOF1Ua7K1dwHBqEz/Hk0iI6a4wPktMmw=
-X-Google-Smtp-Source: APXvYqwc/A+osu0nfPQEWyActGgLrwzVXHz7qlyvcN2NHkdYyATaef5piS29qvYnnCXKamoO/0k1ojNd28vU0esTVJ0=
-X-Received: by 2002:a50:90e4:: with SMTP id d33mr31389213eda.265.1553858412442;
- Fri, 29 Mar 2019 04:20:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190328133828.20999-1-angus@akkea.ca> <20190328133828.20999-2-angus@akkea.ca>
- <AM0PR04MB421112C3EE79B279953A9252805A0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB421112C3EE79B279953A9252805A0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Fri, 29 Mar 2019 13:20:00 +0200
-Message-ID: <CAEnQRZCjCAhi2OqpSGN8rmGYCqyOmLP=+=L0djcq2C6ksk29LQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] arm64: dts: imx8mq: Fix the fsl,imx8mq-sdma
- compatible string
-To:     Aisheng Dong <aisheng.dong@nxp.com>
-Cc:     "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=C397LE4ffkkF2GxhhMQFarDLA/4MqWjlP/oic7VbTIc=;
+        b=m99lAQCLgTTmkuvLNgZNZ3vGzZNjwEmSTeMzxzDdLBhkg8NLSFr2cICg9jlKUeluf1
+         xorT5EItsuvShWS6QnG4oKVoaxjXO7D4ZJBggpMOJJRDCkREDN0oo2pN4uX8zh9CxuA+
+         4l7enNbx5TloD/Sqf285VUuWhODikXERoi4ZGHzX8VF+8VOmOYVPpMVt41rXk04jYho/
+         OjISreBX7YIhxxzr7WZK2d4c26y58ZLo3p6/z4jurmaCN8K0WZH1N3fiiobCdbQPnoi5
+         myYcyBD8TAON7SPyR/ig6TMSk3M9a4kSNZMrix7++VA7qCqbq8ztFv1yK6uylrvTsuEd
+         NWag==
+X-Gm-Message-State: APjAAAX9l0VlYR7NavEqG55pPUZqpW0SnVO7/S7FhSKwMnQ9BAuIHTRu
+        1YeK5lY1RJ6tse/q4hfokPztWrTR
+X-Google-Smtp-Source: APXvYqyqmBQshchskGDNfI4qHRFyZ/Ck/UaTsSUZpPgGyONi1SQnMp2zKikX/RI23jXi03INDDpRtA==
+X-Received: by 2002:a63:1a42:: with SMTP id a2mr12708795pgm.358.1553858728450;
+        Fri, 29 Mar 2019 04:25:28 -0700 (PDT)
+Received: from test-System-Product-Name.sunix.com.tw (114-36-234-92.dynamic-ip.hinet.net. [114.36.234.92])
+        by smtp.gmail.com with ESMTPSA id 4sm2550023pfn.159.2019.03.29.04.25.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Mar 2019 04:25:27 -0700 (PDT)
+From:   Morris Ku <saumah@gmail.com>
+To:     lee.jones@linaro.org
+Cc:     linux-kernel@vger.kernel.org, morris_ku@sunix.com, lkml@metux.net,
+        Morris Ku <saumah@gmail.com>
+Subject: [PATCH] Respond:Patch 0004-Add-support-for-SUNIX-parallel-card
+Date:   Fri, 29 Mar 2019 19:25:11 +0800
+Message-Id: <20190329112511.9087-1-saumah@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 11:11 AM Aisheng Dong <aisheng.dong@nxp.com> wrote:
->
-> > From: Angus Ainslie (Purism) [mailto:angus@akkea.ca]
-> > Sent: Thursday, March 28, 2019 9:38 PM
-> >
-> > Fix a typo in the compatible string
-> >
-> > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > index 81d5ce1b1ec1..07099f82965e 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > @@ -720,7 +720,7 @@
-> >                       };
-> >
-> >                       sdma1: sdma@30bd0000 {
-> > -                             compatible = "fsl, imx8mq-sdma","fsl,imx7d-sdma";
-> > +                             compatible = "fsl,mx8mq-sdma","fsl,imx7d-sdma";
->
-> This is a bit strange.
-> If binding doc says like that, probably we'd better fix the typo in binding doc
-> to use the same style.
+Hi,
+Thanks for review, my replies are inline:
 
-Oh, indeed.
+Signed-off-by: Morris Ku <saumah@gmail.com>
+---
+@@ -0,0 +1,255 @@
++
++On 19.03.19 13:08, Morris Ku wrote:
++
++> diff --git a/mfd/sunix/snx_ieee1284_ops.c b/mfd/sunix/snx_ieee1284_ops.c
++> new file mode 100644
++> index 00000000..2dac03fd
++> --- /dev/null
++
++<snip>
++
++> +size_t sunix_parport_ieee1284_read_nibble(struct snx_parport *port,
++> +void *buffer, size_t len, int flags)
++> +{
++> +     return 0;
++> +}
++> +
++> +size_t sunix_parport_ieee1284_read_byte(struct snx_parport *port,
++> +void *buffer, size_t len, int flags)
++> +{
++> +     return 0;
++> +}
++> +
++> +size_t sunix_parport_ieee1284_ecp_write_data(struct snx_parport *port,
++> +const void *buffer, size_t len, int flags)
++> +{
++> +     return 0;
++> +}
++> +
++> +size_t sunix_parport_ieee1284_ecp_read_data(struct snx_parport *port,
++> +void *buffer, size_t len, int flags)
++> +{
++> +     return 0;
++> +}
++> +
++> +size_t sunix_parport_ieee1284_ecp_write_addr(struct snx_parport *port,
++> +const void *buffer, size_t len, int flags)
++> +{
++> +     return 0;
++> +}
++
++Why are these all no-ops ?
++
++i will fix it.
++
++> diff --git a/mfd/sunix/snx_lp.c b/mfd/sunix/snx_lp.c
++> new file mode 100644
++> index 00000000..f2478447
++> --- /dev/null
++> +++ b/mfd/sunix/snx_lp.c
++
++<snip>
++
++> +#undef SNX_LP_STATS
++
++what is this ?
++
++i will fix it.
++
++> +static int SNX_PAL_MAJOR;
++> +
++> +#define SNX_LP_NO SNX_PAR_TOTAL_MAX
++> +#undef SNX_CONFIG_LP_CONSOLE
++
++and this ?
++
++i will fix it.
++
++> +#ifdef SNX_CONFIG_PARPORT_1284
++
++dont do #define in the middle of the code.
++
++i will fix it.
++
++> +static const struct file_operations snx_lp_fops = {
++> +     .owner          = THIS_MODULE,
++> +     .write          = snx_lp_write,
++> +     .open           = snx_lp_open,
++> +     .release        = snx_lp_release,
++> +#ifdef SNX_CONFIG_PARPORT_1284
++> +     .read           = snx_lp_read,
++> +#endif
++> +};
++
++dont reimplement existing standard functionality your own weird way.
++use the partport subsystem. see: Documentation/parport-lowlevel.txt
++
++i will fix it.
++
++> +static struct snx_parport_driver snx_lp_driver = {
++> +     .name = "lx",
++> +     .attach = snx_lp_attach,
++> +     .detach = snx_lp_detach,
++> +};
++
++yet another case of duplication of some standard struct and hard-
++typecasting ? use struct parport_driver here.
++
++i will use standard struct(struct lp_driver) , about struct snx_parport driver,
++i will keep current format , because add a list for store device informations.    
++
++> +     SNX_PAL_MAJOR = register_chrdev(0, "lx", &snx_lp_fops);
++
++dont register your own chardev - use the parport subsystem.
++
++i will fix it.
++
++> diff --git a/mfd/sunix/snx_parallel.c b/mfd/sunix/snx_parallel.c
++> new file mode 100644
++> index 00000000..461ea4cc
++> --- /dev/null
++
++<snip>
++
++> +struct snx_parport *sunix_parport_pc_probe_port(struct sunix_par_port *priv)
++> +{
++> +     struct snx_parport_ops *ops = NULL;
++> +     struct snx_parport *p = NULL;
++> +     struct resource *base_res;
++> +     struct resource *ecr_res = NULL;
++> +
++> +     if (!priv)
++> +             goto out1;
++> +
++> +     ops = kmalloc(sizeof(struct snx_parport_ops), GFP_KERNEL);
++
++why not kzmalloc ?
++
++i will fix it.
++
++> diff --git a/mfd/sunix/snx_ppdev.c b/mfd/sunix/snx_ppdev.c
++> new file mode 100644
++> index 00000000..9482ed9f
++> --- /dev/null
++> +++ b/mfd/sunix/snx_ppdev.c
++
++<snip>
++
++> +static const struct file_operations snx_pp_fops = {
++> +     .owner          = THIS_MODULE,
++> +     .llseek         = no_llseek,
++> +     .read           = snx_pp_read,
++> +     .write          = snx_pp_write,
++> +     .poll           = snx_pp_poll,
++> +     .unlocked_ioctl = snx_dump_par_ioctl,
++> +
++> +     .open           = snx_pp_open,
++> +     .release        = snx_pp_release,
++> +};
++
++don't reimplement existing standard functionality - use the parport
++subsystem.
++
++i will fix it. 
++
++> diff --git a/mfd/sunix/snx_ppdev.h b/mfd/sunix/snx_ppdev.h
++> new file mode 100644
++> index 00000000..0dfec064
++> --- /dev/null
++> +++ b/mfd/sunix/snx_ppdev.h
++> @@ -0,0 +1,15 @@
++> +/* SPDX-License-Identifier: GPL-2.0 */
++> +#include "snx_common.h"
++> +
++> +#define SNX_PP_IOCTL 'p'
++> +
++> +#define SNX_PP_FASTWRITE     (1<<2)
++> +#define SNX_PP_FASTREAD              (1<<3)
++> +#define SNX_PP_W91284PIC     (1<<4)
++
++use the BIT() macro
++
++i will use BIT() macro for bits definition. (DONE)
++
++> diff --git a/mfd/sunix/snx_share.c b/mfd/sunix/snx_share.c
++> new file mode 100644
++> index 00000000..ba6f86a2
++> --- /dev/null
++> +++ b/mfd/sunix/snx_share.c
++> @@ -0,0 +1,629 @@
++> +// SPDX-License-Identifier: GPL-2.0
++> +#include "snx_common.h"
++> +#define SNX_PARPORT_DEFAULT_TIMESLICE        (HZ/5)
++> +
++> +unsigned long sunix_parport_default_timeslice = SNX_PARPORT_DEFAULT_TIMESLICE;
++> +int sunix_parport_default_spintime = DEFAULT_SPIN_TIME;
++> +
++> +static LIST_HEAD(snx_portlist);
++> +static DEFINE_SPINLOCK(snx_full_list_lock);
++> +
++> +static DEFINE_SPINLOCK(snx_parportlist_lock);
++> +
++> +static LIST_HEAD(snx_all_ports);
++> +static LIST_HEAD(snx_drivers);
++> +
++> +static DEFINE_SEMAPHORE(snx_registration_lock);
++> +
++> +static void sunix_dead_write_lines(
++> +struct snx_parport *p, unsigned char b)
++> +{}
++> +static unsigned char sunix_dead_read_lines(
++> +struct snx_parport *p)
++> +{ return 0; }
++> +static unsigned char sunix_dead_frob_lines(
++> +struct snx_parport *p, unsigned char b, unsigned char c)
++> +{ return 0; }
++> +static void sunix_dead_onearg(struct snx_parport *p)
++> +{}
++> +static void sunix_dead_initstate(
++> +struct snx_pardevice *d, struct snx_parport_state *s)
++> +{}
++> +static void sunix_dead_state(
++> +struct snx_parport *p, struct snx_parport_state *s)
++> +{}
++> +static size_t sunix_dead_write(
++> +struct snx_parport *p, const void *b, size_t l, int f)
++> +{ return 0; }
++> +static size_t sunix_dead_read(
++> +struct snx_parport *p, void *b, size_t l, int f)
++> +{ return 0; }
++> +
++> +
++> +static struct snx_parport_ops        sunix_dead_ops = {
++> +     .write_data                     = sunix_dead_write_lines,
++> +     .read_data                      = sunix_dead_read_lines,
++> +     .write_control          = sunix_dead_write_lines,
++> +     .read_control           = sunix_dead_read_lines,
++> +     .frob_control           = sunix_dead_frob_lines,
++> +     .read_status            = sunix_dead_read_lines,
++> +     .enable_irq                     = sunix_dead_onearg,
++> +     .disable_irq            = sunix_dead_onearg,
++> +     .data_forward           = sunix_dead_onearg,
++> +     .data_reverse           = sunix_dead_onearg,
++> +     .init_state                     = sunix_dead_initstate,
++> +     .save_state                     = sunix_dead_state,
++> +     .restore_state          = sunix_dead_state,
++> +     .epp_write_data         = sunix_dead_write,
++> +     .epp_read_data          = sunix_dead_read,
++> +     .epp_write_addr         = sunix_dead_write,
++> +     .epp_read_addr          = sunix_dead_read,
++> +     .ecp_write_data         = sunix_dead_write,
++> +     .ecp_read_data          = sunix_dead_read,
++> +     .ecp_write_addr         = sunix_dead_write,
++> +     .compat_write_data      = sunix_dead_write,
++> +     .nibble_read_data       = sunix_dead_read,
++> +     .byte_read_data         = sunix_dead_read,
++> +     .owner                          = NULL,
++> +};
++
++
++don't reimplement existing standard functionality. use the parport
++subsystem.
++
++can i drop it ? it seems that it has no effect when port gone away.
++
++--mtx
+-- 
+2.17.1
 
-Angus, shouldn't this be fsl,imx8mq-sdma instead of fsl,mx8mq-sdma. I
-was just paying
-attention to the extra space in my patch.
