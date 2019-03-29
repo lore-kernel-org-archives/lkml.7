@@ -2,181 +2,95 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4132CC10F0A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22019C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197BE21871
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D902321850
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=plantronics.onmicrosoft.com header.i=@plantronics.onmicrosoft.com header.b="BJ4Yrv9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbfC2Ank (ORCPT
+        id S1728634AbfC2AsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 20:43:40 -0400
-Received: from mga02.intel.com ([134.134.136.20]:11022 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727948AbfC2Ank (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 20:43:40 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 17:43:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,282,1549958400"; 
-   d="scan'208";a="331710051"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Mar 2019 17:43:38 -0700
-Date:   Thu, 28 Mar 2019 09:42:31 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Jerome Glisse <jglisse@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2 07/11] mm/hmm: add default fault flags to avoid the
- need to pre-fill pfns arrays.
-Message-ID: <20190328164231.GF31324@iweiny-DESK2.sc.intel.com>
-References: <20190325144011.10560-1-jglisse@redhat.com>
- <20190325144011.10560-8-jglisse@redhat.com>
- <2f790427-ea87-b41e-b386-820ccdb7dd38@nvidia.com>
- <20190328221203.GF13560@redhat.com>
- <555ad864-d1f9-f513-9666-0d3d05dbb85d@nvidia.com>
- <20190328223153.GG13560@redhat.com>
- <768f56f5-8019-06df-2c5a-b4187deaac59@nvidia.com>
- <20190328232125.GJ13560@redhat.com>
- <d2008b88-962f-b7b4-8351-9e1df95ea2cc@nvidia.com>
+        Thu, 28 Mar 2019 20:48:07 -0400
+Received: from mail-eopbgr780124.outbound.protection.outlook.com ([40.107.78.124]:6221
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727654AbfC2AsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 20:48:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=plantronics.onmicrosoft.com; s=selector1-plantronics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KnZUdk1gr141ePtc6ZGVvPotFBKd52xZJ8U7wWAc2/M=;
+ b=BJ4Yrv9Txhm2YwbgY6DehakPKAZYatnRclB2Bi0PMXIx4pAIAXxwNdcpaVAjpS5QXEIgDdV7q0CVdhTQmTopc6Ej+TNBIUU/BPRhzNqu962I8rROzH4jlLwp2lJPF8kLWtNKknm4//b9+LXvRUsrQos7hLhRfb/uvqjui6QxpjM=
+Received: from BYAPR02MB5607.namprd02.prod.outlook.com (20.177.230.93) by
+ BYAPR02MB4294.namprd02.prod.outlook.com (52.135.237.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.18; Fri, 29 Mar 2019 00:48:02 +0000
+Received: from BYAPR02MB5607.namprd02.prod.outlook.com
+ ([fe80::25a1:583a:a978:21fd]) by BYAPR02MB5607.namprd02.prod.outlook.com
+ ([fe80::25a1:583a:a978:21fd%4]) with mapi id 15.20.1750.014; Fri, 29 Mar 2019
+ 00:48:02 +0000
+From:   "Junge, Terry" <terry.junge@poly.com>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+CC:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jiri Kosina <jikos@kernel.org>,
+        "oneukum@suse.de" <oneukum@suse.de>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4] HID: core: move Usage Page concatenation to Main item
+Thread-Topic: [PATCH v4] HID: core: move Usage Page concatenation to Main item
+Thread-Index: AQHU5IZ+r6lyKkwtx02WiLHUpmG6x6YgME3ggADgigCAALUhcA==
+Date:   Fri, 29 Mar 2019 00:48:02 +0000
+Message-ID: <BYAPR02MB560797BC61D1AE47761139B48A5A0@BYAPR02MB5607.namprd02.prod.outlook.com>
+References: <20190327101848.25477-1-nsaenzjulienne@suse.de>
+ <BYAPR02MB5607E9396127F67A9A2BEC948A590@BYAPR02MB5607.namprd02.prod.outlook.com>
+ <CAO-hwJLatVKwgevfdFk1Lqqpg3H7Oc28_VEkiyxPXne3fhSrqw@mail.gmail.com>
+In-Reply-To: <CAO-hwJLatVKwgevfdFk1Lqqpg3H7Oc28_VEkiyxPXne3fhSrqw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=terry.junge@poly.com; 
+x-originating-ip: [198.231.9.145]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: acdd7205-2e37-452f-a297-08d6b3e032dd
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:BYAPR02MB4294;
+x-ms-traffictypediagnostic: BYAPR02MB4294:
+x-microsoft-antispam-prvs: <BYAPR02MB4294CA7644DAB1DBD20C70658A5A0@BYAPR02MB4294.namprd02.prod.outlook.com>
+x-forefront-prvs: 0991CAB7B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(366004)(396003)(39860400002)(376002)(13464003)(189003)(199004)(74316002)(7736002)(305945005)(6436002)(6246003)(476003)(102836004)(478600001)(33656002)(81166006)(229853002)(9686003)(81156014)(86362001)(486006)(106356001)(68736007)(25786009)(55016002)(66066001)(53546011)(186003)(4326008)(53936002)(8676002)(4744005)(11346002)(6116002)(8936002)(76176011)(5660300002)(52536014)(446003)(26005)(14454004)(316002)(2906002)(54906003)(6916009)(71200400001)(6506007)(71190400001)(97736004)(99286004)(7696005)(105586002)(3846002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR02MB4294;H:BYAPR02MB5607.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: poly.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gK+j5xCQiIWQPCEthEccHKVCm+9XaXG9XKc7fI0ar0jQBa/HwwFbjyWihzJnI5ZkVC0iIiul3fmHdJryXzyChZu8l8AKg84nSYvMsNGB3cppzlStfReOwI6/I/ruez2HeujGQz/44uv+PWJYVizAixNb/zx/CnbZWKMr7IQEHaCLZlYiQPoLdMUdV6fgk5n3hN3JJYpV72GGuk+AK+gq+LymQo35/D+jM/HFc4XwNtT4XFmoks3NL9e5VTcV/5buHlEvLtavbvuVviW3rOMkIea7MiL0QfSuQKq8NZW8WxC2xOWhtO++koveXcAV9OXm2UQ+4w/TWVkjQhTVtmD6mLYagpUW7+v0J00DleMpvxwN1NRrhDuHpVcYwpFhMjWHAtsdTL3PZxC2kRQ4JLhw1H1PXq9w1kbKkIRXEsGAE9A=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d2008b88-962f-b7b4-8351-9e1df95ea2cc@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+X-OriginatorOrg: poly.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: acdd7205-2e37-452f-a297-08d6b3e032dd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2019 00:48:02.5364
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bc7c5f16-c55e-417d-aac0-ff6bbfc27f76
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4294
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 04:28:47PM -0700, John Hubbard wrote:
-> On 3/28/19 4:21 PM, Jerome Glisse wrote:
-> > On Thu, Mar 28, 2019 at 03:40:42PM -0700, John Hubbard wrote:
-> >> On 3/28/19 3:31 PM, Jerome Glisse wrote:
-> >>> On Thu, Mar 28, 2019 at 03:19:06PM -0700, John Hubbard wrote:
-> >>>> On 3/28/19 3:12 PM, Jerome Glisse wrote:
-> >>>>> On Thu, Mar 28, 2019 at 02:59:50PM -0700, John Hubbard wrote:
-> >>>>>> On 3/25/19 7:40 AM, jglisse@redhat.com wrote:
-> >>>>>>> From: Jérôme Glisse <jglisse@redhat.com>
-> [...]
-> >> Hi Jerome,
-> >>
-> >> I think you're talking about flags, but I'm talking about the mask. The 
-> >> above link doesn't appear to use the pfn_flags_mask, and the default_flags 
-> >> that it uses are still in the same lower 3 bits:
-> >>
-> >> +static uint64_t odp_hmm_flags[HMM_PFN_FLAG_MAX] = {
-> >> +	ODP_READ_BIT,	/* HMM_PFN_VALID */
-> >> +	ODP_WRITE_BIT,	/* HMM_PFN_WRITE */
-> >> +	ODP_DEVICE_BIT,	/* HMM_PFN_DEVICE_PRIVATE */
-> >> +};
-> >>
-> >> So I still don't see why we need the flexibility of a full 0xFFFFFFFFFFFFFFFF
-> >> mask, that is *also* runtime changeable. 
-> > 
-> > So the pfn array is using a device driver specific format and we have
-> > no idea nor do we need to know where the valid, write, ... bit are in
-> > that format. Those bits can be in the top 60 bits like 63, 62, 61, ...
-> > we do not care. They are device with bit at the top and for those you
-> > need a mask that allows you to mask out those bits or not depending on
-> > what the user want to do.
-> > 
-> > The mask here is against an _unknown_ (from HMM POV) format. So we can
-> > not presume where the bits will be and thus we can not presume what a
-> > proper mask is.
-> > 
-> > So that's why a full unsigned long mask is use here.
-> > 
-> > Maybe an example will help let say the device flag are:
-> >     VALID (1 << 63)
-> >     WRITE (1 << 62)
-> > 
-> > Now let say that device wants to fault with at least read a range
-> > it does set:
-> >     range->default_flags = (1 << 63)
-> >     range->pfn_flags_mask = 0;
-> > 
-> > This will fill fault all page in the range with at least read
-> > permission.
-> > 
-> > Now let say it wants to do the same except for one page in the range
-> > for which its want to have write. Now driver set:
-> >     range->default_flags = (1 << 63);
-> >     range->pfn_flags_mask = (1 << 62);
-> >     range->pfns[index_of_write] = (1 << 62);
-> > 
-> > With this HMM will fault in all page with at least read (ie valid)
-> > and for the address: range->start + index_of_write << PAGE_SHIFT it
-> > will fault with write permission ie if the CPU pte does not have
-> > write permission set then handle_mm_fault() will be call asking for
-> > write permission.
-> > 
-> > 
-> > Note that in the above HMM will populate the pfns array with write
-> > permission for any entry that have write permission within the CPU
-> > pte ie the default_flags and pfn_flags_mask is only the minimun
-> > requirement but HMM always returns all the flag that are set in the
-> > CPU pte.
-> > 
-> > 
-> > Now let say you are an "old" driver like nouveau upstream, then it
-> > means that you are setting each individual entry within range->pfns
-> > with the exact flags you want for each address hence here what you
-> > want is:
-> >     range->default_flags = 0;
-> >     range->pfn_flags_mask = -1UL;
-> > 
-> > So that what we do is (for each entry):
-> >     (range->pfns[index] & range->pfn_flags_mask) | range->default_flags
-> > and we end up with the flags that were set by the driver for each of
-> > the individual range->pfns entries.
-> > 
-> > 
-> > Does this help ?
-> > 
-> 
-> Yes, the key point for me was that this is an entirely device driver specific
-> format. OK. But then we have HMM setting it. So a comment to the effect that
-> this is device-specific might be nice, but I'll leave that up to you whether
-> it is useful.
-
-Indeed I did not realize there is an hmm "pfn" until I saw this function:
-
-/*
- * hmm_pfn_from_pfn() - create a valid HMM pfn value from pfn
- * @range: range use to encode HMM pfn value
- * @pfn: pfn value for which to create the HMM pfn
- * Returns: valid HMM pfn for the pfn
- */
-static inline uint64_t hmm_pfn_from_pfn(const struct hmm_range *range,
-                                        unsigned long pfn)
-
-So should this patch contain some sort of helper like this... maybe?
-
-I'm assuming the "hmm_pfn" being returned above is the device pfn being
-discussed here?
-
-I'm also thinking calling it pfn is confusing.  I'm not advocating a new type
-but calling the "device pfn's" "hmm_pfn" or "device_pfn" seems like it would
-have shortened the discussion here.
-
-Ira
-
-> 
-> Either way, you can add:
-> 
-> 	Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> 
-> thanks,
-> -- 
-> John Hubbard
-> NVIDIA
+T24gVGh1cnNkYXksIE1hcmNoIDI4LCAyMDE5IDY6NDkgQU0gQmVuamFtaW4gVGlzc29pcmVzIDxi
+ZW5qYW1pbi50aXNzb2lyZXNAcmVkaGF0LmNvbT4gd3JvdGU6DQo+Pg0KPj4gSGkgTmljb2xhcywN
+Cj4+DQo+PiBWNCBsb29rcyBnb29kIHRvIG1lLg0KPg0KPkxvb2tzIGdvb2QgdG8gbWUgdG9vLg0K
+Pg0KPlRlcnJ5LCBjYW4gSSBjb25zaWRlciB0aGlzIGFzIGEgZm9ybWFsIFJldi1ieSB5b3U/DQoN
+CkJlbmphbWluLA0KDQpZZXMsIHRoYW5rIHlvdS4gV2hhdCBpcyB0aGUgbm9ybWFsIHdheSBvZiBm
+b3JtYWxseSBpbmRpY2F0aW5nIFJldi1ieT8NCg0KUmVnYXJkcywNClRlcnJ5DQoNCj4NCj5DaGVl
+cnMsDQo+QmVuamFtaW4NCj4NCj4+DQo+PiBUaGFua3MsDQo+PiBUZXJyeQ0KPj4NCj4+ID4tLS0t
+LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPj4gPlN1YmplY3Q6IFtQQVRDSCB2NF0gSElEOiBjb3Jl
+OiBtb3ZlIFVzYWdlIFBhZ2UgY29uY2F0ZW5hdGlvbiB0byBNYWluDQo+aXRlbQ0KPj4gPg0K
