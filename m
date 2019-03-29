@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC1FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC51C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6B2218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6119521773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:51:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="nsduvsR2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="kj1oNjD2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730482AbfC2VvE (ORCPT
+        id S1730492AbfC2VvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 17:51:04 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:36294 "EHLO
+        Fri, 29 Mar 2019 17:51:08 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:36344 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730330AbfC2VvC (ORCPT
+        with ESMTP id S1730235AbfC2VvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Mar 2019 17:51:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1553896259; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1553896260; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=TtEmpZMZnbpdUHF6uM8vaeS8qnRXYao2ZAuXyJwcNZc=;
-        b=nsduvsR2E6JDtcSPkRV4gIlYkXjJGNTbWClPHWRHbPnUqk1gDXc+/a1+bKHJCb1XSZgArG
-        OzCKYzXv88UTtbByxAiYtE/3EjvoEU/kPDEjsWK6G/DeTuq26XNV71N/3piESCVnNkKm0A
-        TaoCWfT+zWatUjoU93T/wlYeV4/gHZ0=
+        bh=tlbkIOQ5hS1fjnjXAqiNDsugpMlSUzjW1M2TjH/MOSI=;
+        b=kj1oNjD2w3xqoQvxCAAo452fiWEUHw+vZB5Fx8yvppGUDsbC7m1xc3092W63IMKADuhNf3
+        PuuRd76jOswWeUODTJBUOQH+SaZYBZRlIHqDYvaU6pypjLc1CA6qVn2Jl7ufSu+vYrNub+
+        zllEpEoEKi5lLcUJey+Vvx20VOi+EKA=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
@@ -38,9 +38,9 @@ To:     Liam Girdwood <lgirdwood@gmail.com>,
         Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
 Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/3] ASoC: Intel: bytcht_es8316: Add quirk for inverted jack detect
-Date:   Fri, 29 Mar 2019 22:50:44 +0100
-Message-Id: <20190329215045.6254-2-paul@crapouillou.net>
+Subject: [PATCH 3/3] ASoC: Intel: bytcht_es8316: Add quirk for the Teclast X98+ II
+Date:   Fri, 29 Mar 2019 22:50:45 +0100
+Message-Id: <20190329215045.6254-3-paul@crapouillou.net>
 In-Reply-To: <20190329215045.6254-1-paul@crapouillou.net>
 References: <20190329215045.6254-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,79 +48,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a quirk to support boards whose jack detection mechanism is
-inverted.
-
-It will set the 'everest,jack-detect-inverted' boolean device property
-for the es8316 codec driver.
+The Teclast X98+ II is a Cherrytrail tablet, which require two quirks:
+- it has stereo speakers,
+- its jack detection mechanism is inverted.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- sound/soc/intel/boards/bytcht_es8316.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ sound/soc/intel/boards/bytcht_es8316.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
 diff --git a/sound/soc/intel/boards/bytcht_es8316.c b/sound/soc/intel/boards/bytcht_es8316.c
-index d2a7e6ba11ae..e59ef61e1fd0 100644
+index e59ef61e1fd0..4d0f8eb560d0 100644
 --- a/sound/soc/intel/boards/bytcht_es8316.c
 +++ b/sound/soc/intel/boards/bytcht_es8316.c
-@@ -40,6 +40,9 @@
- #include "../atom/sst-atom-controls.h"
- #include "../common/sst-dsp.h"
+@@ -22,6 +22,7 @@
+ #include <linux/acpi.h>
+ #include <linux/clk.h>
+ #include <linux/device.h>
++#include <linux/dmi.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/init.h>
+@@ -441,11 +442,25 @@ static const struct acpi_gpio_mapping byt_cht_es8316_gpios[] = {
+ 	{ },
+ };
  
-+/* jd-inv + terminating entry */
-+#define MAX_NO_PROPS 2
++/* Please keep this list alphabetically sorted */
++static const struct dmi_system_id byt_cht_es8316_quirk_table[] = {
++	{	/* Teclast X98 Plus II */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "TECLAST"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X98 Plus II"),
++		},
++		.driver_data = (void *)(BYT_CHT_ES8316_INTMIC_IN1_MAP
++					| BYT_CHT_ES8316_JD_INVERTED),
++	},
++	{}
++};
 +
- struct byt_cht_es8316_private {
- 	struct clk *mclk;
- 	struct snd_soc_jack jack;
-@@ -55,6 +58,7 @@ enum {
- #define BYT_CHT_ES8316_MAP(quirk)		((quirk) & GENMASK(3, 0))
- #define BYT_CHT_ES8316_SSP0			BIT(16)
- #define BYT_CHT_ES8316_MONO_SPEAKER		BIT(17)
-+#define BYT_CHT_ES8316_JD_INVERTED		BIT(18)
- 
- static int quirk;
- 
-@@ -72,6 +76,8 @@ static void log_quirks(struct device *dev)
- 		dev_info(dev, "quirk SSP0 enabled");
- 	if (quirk & BYT_CHT_ES8316_MONO_SPEAKER)
- 		dev_info(dev, "quirk MONO_SPEAKER enabled\n");
-+	if (quirk & BYT_CHT_ES8316_JD_INVERTED)
-+		dev_info(dev, "quirk JD_INVERTED enabled\n");
- }
- 
- static int byt_cht_es8316_speaker_power_event(struct snd_soc_dapm_widget *w,
-@@ -438,12 +444,14 @@ static const struct acpi_gpio_mapping byt_cht_es8316_gpios[] = {
  static int snd_byt_cht_es8316_mc_probe(struct platform_device *pdev)
  {
  	static const char * const mic_name[] = { "in1", "in2" };
-+	struct property_entry props[MAX_NO_PROPS] = {};
+ 	struct property_entry props[MAX_NO_PROPS] = {};
  	struct byt_cht_es8316_private *priv;
++	const struct dmi_system_id *dmi_id;
  	struct device *dev = &pdev->dev;
  	struct snd_soc_acpi_mach *mach;
  	const char *platform_name;
- 	const char *i2c_name = NULL;
- 	struct device *codec_dev;
-+	unsigned int cnt = 0;
- 	int dai_index = 0;
- 	int i;
- 	int ret = 0;
-@@ -512,6 +520,15 @@ static int snd_byt_cht_es8316_mc_probe(struct platform_device *pdev)
- 	if (!codec_dev)
- 		return -EPROBE_DEFER;
+@@ -487,7 +502,10 @@ static int snd_byt_cht_es8316_mc_probe(struct platform_device *pdev)
+ 		return ret;
  
-+	if (quirk & BYT_CHT_ES8316_JD_INVERTED)
-+		props[cnt++] = PROPERTY_ENTRY_BOOL("everest,jack-detect-inverted");
-+
-+	if (cnt) {
-+		ret = device_add_properties(codec_dev, props);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	devm_acpi_dev_add_driver_gpios(codec_dev, byt_cht_es8316_gpios);
- 	priv->speaker_en_gpio =
- 		gpiod_get_index(codec_dev, "speaker-enable", 0,
+ 	/* Check for BYTCR or other platform and setup quirks */
+-	if (x86_match_cpu(baytrail_cpu_ids) &&
++	dmi_id = dmi_first_match(byt_cht_es8316_quirk_table);
++	if (dmi_id) {
++		quirk = (int)dmi_id->driver_data;
++	} else if (x86_match_cpu(baytrail_cpu_ids) &&
+ 	    mach->mach_params.acpi_ipc_irq_index == 0) {
+ 		/* On BYTCR default to SSP0, internal-mic-in2-map, mono-spk */
+ 		quirk = BYT_CHT_ES8316_SSP0 | BYT_CHT_ES8316_INTMIC_IN2_MAP |
 -- 
 2.11.0
 
