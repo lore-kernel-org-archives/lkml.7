@@ -2,99 +2,147 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95316C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B07C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B190218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:45:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Fxx72nOl"
+	by mail.kernel.org (Postfix) with ESMTP id D7763218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:45:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553888745;
+	bh=sWA86loddRSuajse0cjrWSSEew/adi/EOQlSakyH00I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Rx7Vu0IKlPKQcOPZnwszgsnYciANjpoMnm/O/t/6VKmRcujNgxSP425iwYj3yo36p
+	 p5wHlvRbf44DWR7J5F6Pk5uqmBIuKzL97HCrMHSeQc9NelWnOxAojTI2ioFEvx/Ng4
+	 p2KjhbwQnAtEtBfC1MDmQdOom+15DuCZ1nbHiC+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbfC2Tpf (ORCPT
+        id S1730068AbfC2Tpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 15:45:35 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40499 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729953AbfC2Tpf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 15:45:35 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b11so1485452plr.7
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 12:45:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Rt/XZbu6kOM9x2vXlY6ECOlA0Nw9mNr4Yr37/Rjkef8=;
-        b=Fxx72nOlnCAIug1xADInmbAg4WzR+IlSYnQj++SbTxe7bP9V6FsgoKAHGOjjHjoHKU
-         v8Nj3VW9QoQTj4GF52Y1hy6PoICg4SskuDdHoCxxQjka+vA7au8T6nxja3l/l6HNcJdB
-         mj6K7Y26kHMfik5cE8XmBaRiDrG1eMYC5Ndi95sF3AyyEIIocA8LSeM5SQOH5FVlntaP
-         SMB8SDFywmDHYlWF5edtU27zZ2iqBSSkhm51HSGzUWCFzOhGBSwpf6tVE0hoqndEbBvS
-         /T/kWNFVsyfAkSmaQy3E0b0ABiEolW+vC/9cF5HIt+Yt0GZlXBOJB1USD9lkYa1x9DHQ
-         lMZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Rt/XZbu6kOM9x2vXlY6ECOlA0Nw9mNr4Yr37/Rjkef8=;
-        b=fH7T/ElZbiKG9MXtUZc7bYFJD9qXUdO2FmIDL+uMOQJWmQQYnWAgkYDiz3f+i/dwXj
-         m7IXPAFE3GSrww9FzOY/Y/2nfVXSNmm35ce6tJsx1rDDBkx6cB/AClccr6PbJrISy7gm
-         B49pNgQjkOiXMYewmGsBohfwmsrUp0J1cVmj+FTCEs8Dht3plpcwllh5n7mWK6DAdU3K
-         DZzNms2lNdDhDKiajAAoclZriGlGGBkPOQph5vc69Fdhxy4hGk7ZC7pfjSXc0o8kAep5
-         2gc1zUK5T/wqosCBu1VgImweMchrp7aq6EF1BvQrNYOjOpKPupvl/7xN2k5kh0BAp55G
-         Dy0w==
-X-Gm-Message-State: APjAAAVhXl62quuxg1QoMZ957Sqgnf3L0lr1J1zn7yJA67nM4Hc2zOg3
-        trkB+R9FX38LU+6igtGks4rjRQ==
-X-Google-Smtp-Source: APXvYqzES+9scXQSzH0kx6SYjNeXxv8Dp6tjcPCTNsdRGukpMT77edqnvIumCu6NUJtWNLXl86tZzw==
-X-Received: by 2002:a17:902:20eb:: with SMTP id v40mr50560241plg.20.1553888734728;
-        Fri, 29 Mar 2019 12:45:34 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id s5sm3781713pfm.184.2019.03.29.12.45.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 12:45:33 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 12:45:33 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     linux-edac@vger.kernel.org
-cc:     linux-riscv@lists.infradead.org, Yash Shah <yash.shah@sifive.com>,
-        james.morse@arm.com, palmer@sifive.com, paul.walmsley@sifive.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, aou@eecs.berkeley.edu, bp@alien8.de,
-        mchehab@kernel.org, devicetree@vger.kernel.org,
-        sachin.ghadi@sifive.com
-Subject: Re: [PATCH 2/2] edac: sifive: Add EDAC driver for SiFive FU540-C000
- chip
-In-Reply-To: <1553082728-9232-3-git-send-email-yash.shah@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1903291236060.6637@viisi.sifive.com>
-References: <1553082728-9232-1-git-send-email-yash.shah@sifive.com> <1553082728-9232-3-git-send-email-yash.shah@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 29 Mar 2019 15:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729953AbfC2Tpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 15:45:43 -0400
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDAA1218D3;
+        Fri, 29 Mar 2019 19:45:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553888742;
+        bh=sWA86loddRSuajse0cjrWSSEew/adi/EOQlSakyH00I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GSSv1RjCEngxuipqa4q+6PsUrqM1euyoaINJbSj/+HHmxAjnPhIXv6/fEbLF+xGkV
+         ABFfclCP+mlYLrG9NVaNXr/OYROoOhNAQaOAst/ZWTo75gCLOGxqg6rInQaQI84ngr
+         j36z7Qi0d3RHzPrYQj2LI67oZGPJgm2f18SZTCzo=
+Received: by mail-qt1-f177.google.com with SMTP id d13so4002370qth.5;
+        Fri, 29 Mar 2019 12:45:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAUKbzov3mJnG0HEAGnUZM5BIfDaW3wCsLQWROkY0PBwH7/2BXOo
+        94STYDVoculI42/ohRH9pXxqDEm3zhkcaQsHZw==
+X-Google-Smtp-Source: APXvYqwK36q1zVcabD1Sr31n/V95Z3MU7gbWFkzN8WB1x5GN7FFxHYel8fXiV0A3+SXI2fYZMpsx1V1mnhep6L6Nnu4=
+X-Received: by 2002:ac8:267c:: with SMTP id v57mr41998238qtv.76.1553888741097;
+ Fri, 29 Mar 2019 12:45:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190327212155.80730-1-venture@google.com> <20190328165009.GA25705@bogus>
+ <CAO=notxxYF4noXbR1BeVrwqCBHaVCaXy+jPV4OVbex=w=fV+Rg@mail.gmail.com>
+ <CAL_JsqJSvzOQbJSgz7z2wZj9-z=bfhzF_C+662Gnf68TgAPFaA@mail.gmail.com>
+ <CAO=notx6K7xTW1VG6BGJFBM5k8EQsWXn3WoWSPSrZRsxkwueSA@mail.gmail.com>
+ <CAO=notxD=5pa5sT15a+VrA7qVNPBoJoTo=5sLxibBxc+HWcG4g@mail.gmail.com> <CAO=notynUJGUn3tuJZ_jFPdz23_T1FPyzS46mm5msphLnLW_JA@mail.gmail.com>
+In-Reply-To: <CAO=notynUJGUn3tuJZ_jFPdz23_T1FPyzS46mm5msphLnLW_JA@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 29 Mar 2019 14:45:29 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+0udKJ1ZyfJCvS8GDGXdNiFmGN+mOGNBvf5mqLr31wew@mail.gmail.com>
+Message-ID: <CAL_Jsq+0udKJ1ZyfJCvS8GDGXdNiFmGN+mOGNBvf5mqLr31wew@mail.gmail.com>
+Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+To:     Patrick Venture <venture@google.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Mar 2019, Yash Shah wrote:
+On Fri, Mar 29, 2019 at 10:11 AM Patrick Venture <venture@google.com> wrote:
+>
+> On Fri, Mar 29, 2019 at 7:59 AM Patrick Venture <venture@google.com> wrote:
+> >
+> > On Fri, Mar 29, 2019 at 7:56 AM Patrick Venture <venture@google.com> wrote:
+> > >
+> > > On Fri, Mar 29, 2019 at 6:38 AM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Thu, Mar 28, 2019 at 12:03 PM Patrick Venture <venture@google.com> wrote:
+> > > > >
+> > > > > On Thu, Mar 28, 2019 at 9:50 AM Rob Herring <robh@kernel.org> wrote:
+> > > > > >
+> > > > > > On Wed, 27 Mar 2019 14:21:55 -0700, Patrick Venture wrote:
+> > > > > > > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+> > > > > > >
+> > > > > > > Signed-off-by: Patrick Venture <venture@google.com>
+> > > > > > > ---
+> > > > > > > Changes for v8:
+> > > > > > > - None
+> > > > > > > Changes for v7:
+> > > > > > > - Moved node under the syscon node it requires
+> > > > > > > Changes for v6:
+> > > > > > > - None
+> > > > > > > Changes for v5:
+> > > > > > > - None
+> > > > > > > Changes for v4:
+> > > > > > > - None
+> > > > > > > Changes for v3:
+> > > > > > > - None
+> > > > > > > Changes for v2:
+> > > > > > > - Added comment about syscon required parameter.
+> > > > > > > ---
+> > > > > > >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
+> > > > > > >  1 file changed, 48 insertions(+)
+> > > > > > >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > > > > > >
+> > > > > >
+> > > > > > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> > > > > > there's no need to repost patches *only* to add the tags. The upstream
+> > > > > > maintainer will do that for acks received on the version they apply.
+> > > > > >
+> > > > > > If a tag was not added on purpose, please state why and what changed.
+> > > > >
+> > > > > Adding tags in this case is adding a change version?  I was doing this
+> > > > > to keep the two patches version-synced.  I thought that was required.
+> > > > > There was a version change in the other patch in this set.
+> > > >
+> > > > Adding tags is not considered a change. I gave a Reviewed-by in v7.
+> > > > Subsequent versions should carry that tag if there's no change (or
+> > > > only minor changes) in this patch. What happens in the other patches
+> > > > is not really important. Maintainers are not going to go searching
+> > > > thru the versions to find all the ack/review tags. And if I've already
+> > > > reviewed this, I don't want to look at it again.
+> > >
+> > > Thank you, I didn't realize that had happened.
+> >
+> > I went back through my email and found the line of your email that
+> > included it.  I apologize.
+> >
+> > So, before I send the updated patch with your ack -- do I need to send
+> > a v9? or is this just me sending v8 again?
+>
+> Sorry.  I see you already answered that when you said that adding a
+> tag isn't considered a change.  I have therefore re-sent v8 of this
+> patch with your tag added.
 
-> This EDAC driver supports:
-> - Initial configuration reporting on bootup via debug logs
-> - ECC event monitoring and reporting through the EDAC framework
-> - ECC event injection
-> 
-> This driver is partially based on pnd2_edac.c and altera_edac.c
-> 
-> Initially L2 Cache controller is added as a subcomponent to
-> this EDAC driver.
-> 
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+To repeat my form letter again, you don't need to send a series again
+just to add tags. IOW, if you send a v9, then add the tags. If v8 is
+what a maintainer applies, the maintain will take care of adding them
+(or patchwork does it for us):
 
-Based on the discussion with Borislav, we're going to move the L2 driver 
-elsewhere in the tree.  We'll look into creating a platform-specific EDAC 
-driver on top of that.
-
-
-- Paul
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
