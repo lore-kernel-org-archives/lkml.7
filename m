@@ -3,85 +3,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C8EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7939EC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEC2218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D5C2173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbfC2Pug (ORCPT
+        id S1729727AbfC2Pun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:50:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33330 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728815AbfC2Pug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:50:36 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EC91632957A6DA0A6FA9;
-        Fri, 29 Mar 2019 23:50:30 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.408.0; Fri, 29 Mar 2019
- 23:50:23 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <fbarrat@linux.ibm.com>, <andrew.donnellan@au1.ibm.com>,
-        <arnd@arndb.de>, <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] ocxl: remove set but not used variables 'tid' and 'lpid'
-Date:   Fri, 29 Mar 2019 23:44:56 +0800
-Message-ID: <20190329154456.27152-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 29 Mar 2019 11:50:43 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:32770 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729334AbfC2Pul (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 11:50:41 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2TFfrZW015967;
+        Fri, 29 Mar 2019 16:50:33 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2rddhc5vb7-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 29 Mar 2019 16:50:33 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9CC1C31;
+        Fri, 29 Mar 2019 15:50:32 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 816474EDC;
+        Fri, 29 Mar 2019 15:50:32 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 29 Mar
+ 2019 16:50:32 +0100
+Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Fri, 29 Mar 2019 16:50:32
+ +0100
+From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/stm: ltdc: fix data enable polarity
+Date:   Fri, 29 Mar 2019 16:50:20 +0100
+Message-ID: <1553874620-31468-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.23.97]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-29_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+Wrong DISPLAY_FLAGS used to set the data enable polarity.
 
-Fixes gcc '-Wunused-but-set-variable' warning:
-
-drivers/misc/ocxl/link.c: In function 'xsl_fault_handler':
-drivers/misc/ocxl/link.c:187:17: warning: variable 'tid' set but not used [-Wunused-but-set-variable]
-drivers/misc/ocxl/link.c:187:6: warning: variable 'lpid' set but not used [-Wunused-but-set-variable]
-
-They are never used and can be removed.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
 ---
- drivers/misc/ocxl/link.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpu/drm/stm/ltdc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-index d50b861..3be07e9 100644
---- a/drivers/misc/ocxl/link.c
-+++ b/drivers/misc/ocxl/link.c
-@@ -184,7 +184,7 @@ static irqreturn_t xsl_fault_handler(int irq, void *data)
- 	u64 dsisr, dar, pe_handle;
- 	struct pe_data *pe_data;
- 	struct ocxl_process_element *pe;
--	int lpid, pid, tid;
-+	int pid;
- 	bool schedule = false;
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index b1741a9..6ba326a 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -555,7 +555,7 @@ static void ltdc_crtc_mode_set_nofb(struct drm_crtc *crtc)
+ 	if (vm.flags & DISPLAY_FLAGS_VSYNC_HIGH)
+ 		val |= GCR_VSPOL;
  
- 	read_irq(spa, &dsisr, &dar, &pe_handle);
-@@ -192,9 +192,7 @@ static irqreturn_t xsl_fault_handler(int irq, void *data)
+-	if (vm.flags & DISPLAY_FLAGS_DE_HIGH)
++	if (vm.flags & DISPLAY_FLAGS_DE_LOW)
+ 		val |= GCR_DEPOL;
  
- 	WARN_ON(pe_handle > SPA_PE_MASK);
- 	pe = spa->spa_mem + pe_handle;
--	lpid = be32_to_cpu(pe->lpid);
- 	pid = be32_to_cpu(pe->pid);
--	tid = be32_to_cpu(pe->tid);
- 	/* We could be reading all null values here if the PE is being
- 	 * removed while an interrupt kicks in. It's not supposed to
- 	 * happen if the driver notified the AFU to terminate the
+ 	if (vm.flags & DISPLAY_FLAGS_PIXDATA_NEGEDGE)
 -- 
-2.7.0
-
+2.7.4
 
