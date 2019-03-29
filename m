@@ -2,89 +2,172 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789C1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E818C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB78218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F4E218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729539AbfC2PcL (ORCPT
+        id S1729608AbfC2Pca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:32:11 -0400
-Received: from mga07.intel.com ([134.134.136.100]:7855 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728720AbfC2PcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:32:10 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 08:32:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,284,1549958400"; 
-   d="scan'208";a="126975716"
-Received: from bublath-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.42.182])
-  by orsmga007.jf.intel.com with ESMTP; 29 Mar 2019 08:32:07 -0700
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id 068F421E50; Fri, 29 Mar 2019 17:31:57 +0200 (EET)
-Date:   Fri, 29 Mar 2019 17:31:57 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing
- node's parents
-Message-ID: <20190329153157.hj2b4mjgfh5q5e2q@kekkonen.localdomain>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-2-sakari.ailus@linux.intel.com>
- <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
- <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
- <20190328141036.mbns3ei4agnginsg@pathway.suse.cz>
- <20190329130436.4fxzki5kljprhyai@kekkonen.localdomain>
- <20190329141419.GY9224@smile.fi.intel.com>
+        Fri, 29 Mar 2019 11:32:30 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35916 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728720AbfC2Pc3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 11:32:29 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1h9tUT-0003oe-Vn; Fri, 29 Mar 2019 15:32:22 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jack Wang <jinpu.wang@profitbricks.com>, lindar_liu@usish.com,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: pm8001: clean up structurally dead code when PM8001_USE_MSIX is defined (part2)
+Date:   Fri, 29 Mar 2019 15:32:21 +0000
+Message-Id: <20190329153221.29238-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190329141419.GY9224@smile.fi.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+From: Colin Ian King <colin.king@canonical.com>
 
-On Fri, Mar 29, 2019 at 04:14:19PM +0200, Andy Shevchenko wrote:
-> On Fri, Mar 29, 2019 at 03:04:36PM +0200, Sakari Ailus wrote:
-> > On Thu, Mar 28, 2019 at 03:10:36PM +0100, Petr Mladek wrote:
-> 
-> > You basically have to have a reference to a node until you're done
-> > accessing it. The refcounting in the fwnode framework is based on the OF
-> > API --- otherwise you couldn't access OF nodes using the framework.
-> 
-> > ACPI
-> > does not have those (as you can't dynamically remove nodes).
-> 
-> What about configfs where we can load / unload tables at run time?
+When macro PM8001_USE_MSIX is defined there is redundant dead code
+call to pm8001_cr32.  Clean this up for the defined PM8001_USE_MSIX and
+undefined PM8001_USE_MSIX cases.
 
-Hmm. I have to admit I missed this one.
+Also rename the functions pm8001_chip_is_our_interupt,
+pm80xx_chip_is_our_interupt and function pointer is_our_interrupt
+to fix spelling mistakes.
 
-Well, I guess that this feature depends on the user making sure there are
-no references to the tables that are to be removed, as there is no
-refcounting. Let me know if I'm missing something, but nothing appears to
-prevent releasing nodes that are in use.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/scsi/pm8001/pm8001_hwi.c  | 11 ++++++-----
+ drivers/scsi/pm8001/pm8001_init.c |  4 ++--
+ drivers/scsi/pm8001/pm8001_sas.h  |  2 +-
+ drivers/scsi/pm8001/pm80xx_hwi.c  | 11 ++++++-----
+ 4 files changed, 15 insertions(+), 13 deletions(-)
 
-If that is really so, then refcounting or another mechanism to achieve
-something similar should be added to make removal safe, but this isn't
-related to printing the node names anymore nor such fixes belong to this
-patchset.
-
+diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
+index e4209091c1da..627075d00918 100644
+--- a/drivers/scsi/pm8001/pm8001_hwi.c
++++ b/drivers/scsi/pm8001/pm8001_hwi.c
+@@ -4623,17 +4623,18 @@ static int pm8001_chip_phy_ctl_req(struct pm8001_hba_info *pm8001_ha,
+ 	return ret;
+ }
+ 
+-static u32 pm8001_chip_is_our_interupt(struct pm8001_hba_info *pm8001_ha)
++static u32 pm8001_chip_is_our_interrupt(struct pm8001_hba_info *pm8001_ha)
+ {
+-	u32 value;
+ #ifdef PM8001_USE_MSIX
+ 	return 1;
+-#endif
++#else
++	u32 value;
++
+ 	value = pm8001_cr32(pm8001_ha, 0, MSGU_ODR);
+ 	if (value)
+ 		return 1;
+ 	return 0;
+-
++#endif
+ }
+ 
+ /**
+@@ -5119,7 +5120,7 @@ const struct pm8001_dispatch pm8001_8001_dispatch = {
+ 	.chip_rst		= pm8001_hw_chip_rst,
+ 	.chip_iounmap		= pm8001_chip_iounmap,
+ 	.isr			= pm8001_chip_isr,
+-	.is_our_interupt	= pm8001_chip_is_our_interupt,
++	.is_our_interrupt	= pm8001_chip_is_our_interrupt,
+ 	.isr_process_oq		= process_oq,
+ 	.interrupt_enable 	= pm8001_chip_interrupt_enable,
+ 	.interrupt_disable	= pm8001_chip_interrupt_disable,
+diff --git a/drivers/scsi/pm8001/pm8001_init.c b/drivers/scsi/pm8001/pm8001_init.c
+index a36060c23b37..3374f553c617 100644
+--- a/drivers/scsi/pm8001/pm8001_init.c
++++ b/drivers/scsi/pm8001/pm8001_init.c
+@@ -201,7 +201,7 @@ static irqreturn_t pm8001_interrupt_handler_msix(int irq, void *opaque)
+ 
+ 	if (unlikely(!pm8001_ha))
+ 		return IRQ_NONE;
+-	if (!PM8001_CHIP_DISP->is_our_interupt(pm8001_ha))
++	if (!PM8001_CHIP_DISP->is_our_interrupt(pm8001_ha))
+ 		return IRQ_NONE;
+ #ifdef PM8001_USE_TASKLET
+ 	tasklet_schedule(&pm8001_ha->tasklet[irq_vector->irq_id]);
+@@ -224,7 +224,7 @@ static irqreturn_t pm8001_interrupt_handler_intx(int irq, void *dev_id)
+ 	pm8001_ha = sha->lldd_ha;
+ 	if (unlikely(!pm8001_ha))
+ 		return IRQ_NONE;
+-	if (!PM8001_CHIP_DISP->is_our_interupt(pm8001_ha))
++	if (!PM8001_CHIP_DISP->is_our_interrupt(pm8001_ha))
+ 		return IRQ_NONE;
+ 
+ #ifdef PM8001_USE_TASKLET
+diff --git a/drivers/scsi/pm8001/pm8001_sas.h b/drivers/scsi/pm8001/pm8001_sas.h
+index f88b0d33c385..ac6d8e3f22de 100644
+--- a/drivers/scsi/pm8001/pm8001_sas.h
++++ b/drivers/scsi/pm8001/pm8001_sas.h
+@@ -197,7 +197,7 @@ struct pm8001_dispatch {
+ 	int (*chip_ioremap)(struct pm8001_hba_info *pm8001_ha);
+ 	void (*chip_iounmap)(struct pm8001_hba_info *pm8001_ha);
+ 	irqreturn_t (*isr)(struct pm8001_hba_info *pm8001_ha, u8 vec);
+-	u32 (*is_our_interupt)(struct pm8001_hba_info *pm8001_ha);
++	u32 (*is_our_interrupt)(struct pm8001_hba_info *pm8001_ha);
+ 	int (*isr_process_oq)(struct pm8001_hba_info *pm8001_ha, u8 vec);
+ 	void (*interrupt_enable)(struct pm8001_hba_info *pm8001_ha, u8 vec);
+ 	void (*interrupt_disable)(struct pm8001_hba_info *pm8001_ha, u8 vec);
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+index 536d2b4384f8..301de40eb708 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -4617,17 +4617,18 @@ static int pm80xx_chip_phy_ctl_req(struct pm8001_hba_info *pm8001_ha,
+ 	return pm8001_mpi_build_cmd(pm8001_ha, circularQ, opc, &payload, 0);
+ }
+ 
+-static u32 pm80xx_chip_is_our_interupt(struct pm8001_hba_info *pm8001_ha)
++static u32 pm80xx_chip_is_our_interrupt(struct pm8001_hba_info *pm8001_ha)
+ {
+-	u32 value;
+ #ifdef PM8001_USE_MSIX
+ 	return 1;
+-#endif
++#else
++	u32 value;
++
+ 	value = pm8001_cr32(pm8001_ha, 0, MSGU_ODR);
+ 	if (value)
+ 		return 1;
+ 	return 0;
+-
++#endif
+ }
+ 
+ /**
+@@ -4724,7 +4725,7 @@ const struct pm8001_dispatch pm8001_80xx_dispatch = {
+ 	.chip_rst		= pm80xx_hw_chip_rst,
+ 	.chip_iounmap		= pm8001_chip_iounmap,
+ 	.isr			= pm80xx_chip_isr,
+-	.is_our_interupt	= pm80xx_chip_is_our_interupt,
++	.is_our_interrupt	= pm80xx_chip_is_our_interrupt,
+ 	.isr_process_oq		= process_oq,
+ 	.interrupt_enable	= pm80xx_chip_interrupt_enable,
+ 	.interrupt_disable	= pm80xx_chip_interrupt_disable,
 -- 
-Regards,
+2.20.1
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
