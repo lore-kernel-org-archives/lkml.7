@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UPPERCASE_50_75,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FF9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 12:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D4BC10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 12:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EDBC2183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 12:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54DE3206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 12:28:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbfC2M23 (ORCPT
+        id S1729533AbfC2M2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 08:28:29 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56160 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729411AbfC2M22 (ORCPT
+        Fri, 29 Mar 2019 08:28:53 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51510 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729411AbfC2M2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 08:28:28 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2TCSEkH018895;
-        Fri, 29 Mar 2019 13:28:14 +0100
+        Fri, 29 Mar 2019 08:28:53 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2TCPbMB031755;
+        Fri, 29 Mar 2019 13:28:41 +0100
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rf4ycg19d-1
+        by mx07-00178001.pphosted.com with ESMTP id 2rddhc4vyd-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 29 Mar 2019 13:28:14 +0100
+        Fri, 29 Mar 2019 13:28:41 +0100
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CE0B931;
-        Fri, 29 Mar 2019 12:28:12 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A728C2A0A;
-        Fri, 29 Mar 2019 12:28:12 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 29 Mar
- 2019 13:28:12 +0100
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F043D31;
+        Fri, 29 Mar 2019 12:28:40 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C99BD2A0A;
+        Fri, 29 Mar 2019 12:28:40 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.435.0; Fri, 29 Mar
+ 2019 13:28:40 +0100
 Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.435.0; Fri, 29 Mar 2019 13:28:12
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Fri, 29 Mar 2019 13:28:40
  +0100
 From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
 To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
@@ -49,11 +49,10 @@ To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>,
         Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
+        Philippe Cornu <philippe.cornu@st.com>
 Subject: [PATCH] ARM: dts: stm32: add ltdc pins muxing on stm32mp157
-Date:   Fri, 29 Mar 2019 13:27:55 +0100
-Message-ID: <1553862475-5956-1-git-send-email-yannick.fertre@st.com>
+Date:   Fri, 29 Mar 2019 13:28:35 +0100
+Message-ID: <1553862515-6005-1-git-send-email-yannick.fertre@st.com>
 X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
