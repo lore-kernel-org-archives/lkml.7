@@ -2,40 +2,41 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8380AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2691BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528552183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A642183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="th8r1i2+"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LQmIpF40"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbfC2H3j (ORCPT
+        id S1728999AbfC2HaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 03:29:39 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:64916 "EHLO
+        Fri, 29 Mar 2019 03:30:17 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:64945 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728848AbfC2H3j (ORCPT
+        with ESMTP id S1728865AbfC2H3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Mar 2019 03:29:39 -0400
 Received: from grover.tkatk1.zaq.ne.jp (zaqdadce369.zaq.ne.jp [218.220.227.105]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x2T7SQaF002537;
-        Fri, 29 Mar 2019 16:28:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x2T7SQaF002537
+        by conuserg-10.nifty.com with ESMTP id x2T7SQaA002537;
+        Fri, 29 Mar 2019 16:28:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x2T7SQaA002537
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553844516;
-        bh=P6nAEpSTptxVwF6npdz1nlZ/dvqEunlZJ0obGeCKvZA=;
+        s=dec2015msa; t=1553844509;
+        bh=A+tZ7XYQykbIjw5JmlgD8POyw4cnR+gEsgER2RW0Jms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=th8r1i2+a2zln0j9kTQYqaeuf4y0Z1EB5HdND9w8CxVyYXnX/MRnjLuukzhQhyVaJ
-         Tywo013QZOiJjFaokK7B8U/dFcWE0TqO90yJmcw1qSTsYRtK4MWcPGratgKJL5Cc5T
-         sO6cxmLNWL5vXTPKsE+mnXGiy63XHtv7HWwmo2HPY1xGwLcFt7BFg1Lr9TO7TDz/fR
-         Th9PEMpzum3noSK2q3A/zIcYfb01138vdRNJ46zMl2YPzzyI62iP8U4lihkOp9RO+n
-         g76iALn9B8ReI1QbCw8jey5BlW/h6v7Wt6hXwZADS02grSJ4bVrX4UJd0GeccDWgHt
-         1chK/wGUKn6kQ==
+        b=LQmIpF40uifpUy/TRK/8ysQgKQf6z59bbQFLTOrV7UgH7HYydBuxRUcEBn1B/DeVE
+         MVBdOuGrWMk92VCyE4xIi7BreFiL1QDz00JSdHeDnsAUEdMuHvXPG9hdCBKeXVgFbB
+         ae2XF2GBSVNiDAiVFLzUKn+krK2MUc47iFHedF3JuQBVBMwEZV/ybuhiTjPMR/2Yco
+         DALfaTtk9rSiO2cZ1Qfp44wcgY0+jUOL+o/5QnjZKEta4k1p5RHwnXRi5kqlHc/uOt
+         gPTyWo1Jfl07cDH6HKvAYv6ISqDY/N20v/hTKu+GhyDfmFtXFwQ3tfMxji1Xo2WVxu
+         R5CfPoPoVLq3g==
 X-Nifty-SrcIP: [218.220.227.105]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-mtd@lists.infradead.org,
@@ -46,9 +47,9 @@ Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         Richard Weinberger <richard@nod.at>,
         David Woodhouse <dwmw2@infradead.org>,
         Boris Brezillon <bbrezillon@kernel.org>
-Subject: [PATCH v4 8/9] mtd: rawnand: denali: remove DENALI_NR_BANKS macro
-Date:   Fri, 29 Mar 2019 16:28:20 +0900
-Message-Id: <1553844501-7119-9-git-send-email-yamada.masahiro@socionext.com>
+Subject: [PATCH v4 3/9] mtd: rawnand: denali: remove unneeded casts in denali_{read,write}_pio
+Date:   Fri, 29 Mar 2019 16:28:15 +0900
+Message-Id: <1553844501-7119-4-git-send-email-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1553844501-7119-1-git-send-email-yamada.masahiro@socionext.com>
 References: <1553844501-7119-1-git-send-email-yamada.masahiro@socionext.com>
@@ -57,12 +58,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the runtime-detected denali->nbanks instead of hard-coded
-DENALI_NR_BANKS (=4).
-
-The actual number of banks depends on the IP configuration, and
-can be less than DENALI_NR_BANKS. It is pointless to touch
-registers of unsupported banks.
+Since (u32 *) can accept an opaque pointer, the explicit casting
+from (void *) to (u32 *) is redundant. Change the function argument type
+to remove the casts.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
@@ -71,57 +69,57 @@ Changes in v4: None
 Changes in v3: None
 Changes in v2: None
 
- drivers/mtd/nand/raw/denali.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/mtd/nand/raw/denali.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/mtd/nand/raw/denali.c b/drivers/mtd/nand/raw/denali.c
-index 687feab..6d0ee5e 100644
+index 9b27338..bf968cc 100644
 --- a/drivers/mtd/nand/raw/denali.c
 +++ b/drivers/mtd/nand/raw/denali.c
-@@ -40,7 +40,6 @@
- #define DENALI_BANK(denali)	((denali)->active_bank << 24)
- 
- #define DENALI_INVALID_BANK	-1
--#define DENALI_NR_BANKS		4
- 
- static struct denali_chip *to_denali_chip(struct nand_chip *chip)
- {
-@@ -92,7 +91,7 @@ static void denali_enable_irq(struct denali_controller *denali)
- {
- 	int i;
- 
--	for (i = 0; i < DENALI_NR_BANKS; i++)
-+	for (i = 0; i < denali->nbanks; i++)
- 		iowrite32(U32_MAX, denali->reg + INTR_EN(i));
- 	iowrite32(GLOBAL_INT_EN_FLAG, denali->reg + GLOBAL_INT_ENABLE);
- }
-@@ -101,7 +100,7 @@ static void denali_disable_irq(struct denali_controller *denali)
- {
- 	int i;
- 
--	for (i = 0; i < DENALI_NR_BANKS; i++)
-+	for (i = 0; i < denali->nbanks; i++)
- 		iowrite32(0, denali->reg + INTR_EN(i));
- 	iowrite32(0, denali->reg + GLOBAL_INT_ENABLE);
- }
-@@ -117,7 +116,7 @@ static void denali_clear_irq_all(struct denali_controller *denali)
- {
- 	int i;
- 
--	for (i = 0; i < DENALI_NR_BANKS; i++)
-+	for (i = 0; i < denali->nbanks; i++)
- 		denali_clear_irq(denali, i, U32_MAX);
+@@ -654,11 +654,10 @@ static void denali_setup_dma32(struct denali_nand_info *denali,
+ 	denali->host_write(denali, mode | 0x14000, 0x2400);
  }
  
-@@ -130,7 +129,7 @@ static irqreturn_t denali_isr(int irq, void *dev_id)
+-static int denali_pio_read(struct denali_nand_info *denali, void *buf,
++static int denali_pio_read(struct denali_nand_info *denali, u32 *buf,
+ 			   size_t size, int page)
+ {
+ 	u32 addr = DENALI_MAP01 | DENALI_BANK(denali) | page;
+-	uint32_t *buf32 = (uint32_t *)buf;
+ 	uint32_t irq_status, ecc_err_mask;
+ 	int i;
  
- 	spin_lock(&denali->irq_lock);
+@@ -670,7 +669,7 @@ static int denali_pio_read(struct denali_nand_info *denali, void *buf,
+ 	denali_reset_irq(denali);
  
--	for (i = 0; i < DENALI_NR_BANKS; i++) {
-+	for (i = 0; i < denali->nbanks; i++) {
- 		irq_status = ioread32(denali->reg + INTR_STATUS(i));
- 		if (irq_status)
- 			ret = IRQ_HANDLED;
+ 	for (i = 0; i < size / 4; i++)
+-		*buf32++ = denali->host_read(denali, addr);
++		buf[i] = denali->host_read(denali, addr);
+ 
+ 	irq_status = denali_wait_for_irq(denali, INTR__PAGE_XFER_INC);
+ 	if (!(irq_status & INTR__PAGE_XFER_INC))
+@@ -682,18 +681,17 @@ static int denali_pio_read(struct denali_nand_info *denali, void *buf,
+ 	return irq_status & ecc_err_mask ? -EBADMSG : 0;
+ }
+ 
+-static int denali_pio_write(struct denali_nand_info *denali,
+-			    const void *buf, size_t size, int page)
++static int denali_pio_write(struct denali_nand_info *denali, const u32 *buf,
++			    size_t size, int page)
+ {
+ 	u32 addr = DENALI_MAP01 | DENALI_BANK(denali) | page;
+-	const uint32_t *buf32 = (uint32_t *)buf;
+ 	uint32_t irq_status;
+ 	int i;
+ 
+ 	denali_reset_irq(denali);
+ 
+ 	for (i = 0; i < size / 4; i++)
+-		denali->host_write(denali, addr, *buf32++);
++		denali->host_write(denali, addr, buf[i]);
+ 
+ 	irq_status = denali_wait_for_irq(denali,
+ 				INTR__PROGRAM_COMP | INTR__PROGRAM_FAIL);
 -- 
 2.7.4
 
