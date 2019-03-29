@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F15C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4519CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE512070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111502070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:13:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q4nMLi7W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ptIWrNy3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbfC2KM6 (ORCPT
+        id S1729103AbfC2KND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:12:58 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36090 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbfC2KM4 (ORCPT
+        Fri, 29 Mar 2019 06:13:03 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46734 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729082AbfC2KNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:12:56 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y13so1882029wrd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 03:12:54 -0700 (PDT)
+        Fri, 29 Mar 2019 06:13:01 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t17so1823584wrw.13
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 03:13:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=F45uud4f8fCAV227MMD1FiQHOuaHoLclmOUA48d6Dsg=;
-        b=Q4nMLi7WinqfW+e3zNC6pCmXvHOvzW+FEuU/N51o2fP/bgvyBuzOmHuzsRp18JDLmr
-         QFCpV16GYJWzpgFiETFix0SblZeoqll96Ix0itKTWDxx4AUxVBLglY7Z1vHbPmrZfKH7
-         20cljgIWJlH5FzAKLw3tRe4wsd+3yAklz99DOyfsCqMUJP/A3gKqW4edb6C5g00Wdg3D
-         ArGslNenT+9Dl3ogBDeqC82fVI68fPbTAuEZADMfFUlevcOtYXZ0aCyGpjLZcq3dSASs
-         cwG7mGp3qzY3IxhJqyUX9eWLPJa1b2iAXtyAIXksHaTld8LMcofp10mFsz4UTtTdVWGy
-         1Xkw==
+        bh=Et6sor8PU+KdoioSjuhpGkTFWSasdTtvhbgyNeM0Xbk=;
+        b=ptIWrNy39lKQlHnJMU7bkY1sU969gX4anhjptaOirIAR61aZCNrI+D7JwpwmRiRG8O
+         3/3fgxy7+vxkHgJu3F/GniVGK1yMDUg7IkC1M1rp4H9+PmHkhEsjw2YnWWY3QscPL/e9
+         Wr4yuJ24hHs6uFwJn6PQp1pAw90JmzH8b8bcUnNYgVhkng0jJM1FNROjCwpwAdtHK/Ij
+         r3CW03FuFNxXbNxF3XatX7LNg3RiJIVsMI6i69hx/MFvKsOPrqg7+TEaAITVSR/G1dw9
+         RE+iHvKbbmZ5EPenlCWpeBa8SWrAf6ozpng17mIAX0MvfLw+QvQfrLcvdOi8MehR8DIV
+         4ciA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=F45uud4f8fCAV227MMD1FiQHOuaHoLclmOUA48d6Dsg=;
-        b=ZjIVL9N0/X/fa8q7LlKahUzmE1HM6YXnruz6683H+StFdYYhKq+b7+buqQ9zC9a5nx
-         cvOfvzBQKvCnYMeNrpxpGMA26oWhYIMsJAn4Y4pcHUR5Wop73ymYGP00zn935WOiAVJY
-         hwbWgPYZx+ugOxir7SBY5odcesCLflTCSPnNqFziuo5y1XHDMx4j97UGJ3fYW9iA+rY4
-         HrKWfBwcqfQhE/7mGu6kbydGLt0aix9zeBpgsC18GoVtDFrcRcxkidQH7KixRI+lvwvZ
-         FRmR1ufuD50PgDdob6QwJF+RZBO93gkOvFL92oYvW1akP6tRhclfDPpQAq1ovIqFtkd5
-         lNmg==
-X-Gm-Message-State: APjAAAUBj8L3K1TBIJud589Ud7eL7yT+8XMeQkvCP2giQrj+3YwjIhZ/
-        /0B58IpZirC6eKzOL6+Sj6lQQyHucgA=
-X-Google-Smtp-Source: APXvYqwUTz97GlzEWljX6BocTLRDnfNXr4iJ49cczQVQxpV82tFKqQuFG6QJxfIyKj68wB5pjo80Qg==
-X-Received: by 2002:a5d:4710:: with SMTP id y16mr29314802wrq.176.1553854373296;
-        Fri, 29 Mar 2019 03:12:53 -0700 (PDT)
+        bh=Et6sor8PU+KdoioSjuhpGkTFWSasdTtvhbgyNeM0Xbk=;
+        b=NVB36M6ZWibUJs+UEp/kaoEQpV6lA/by6LIyRLJplEdHJTBpj3/Mb4dzVXPyHAT65x
+         LDjLhUFJHtRhS4iMTf3s8egQm/PcIoUX7U+CiExHkzt0eIyxFLrMGyue9JJVH5aP2bLt
+         Iio8I7mrqJt5Wj61sudZRZrlAHLdpMpXOqTdDHsfPifKHd/A7VpIEOqcEt+UGzJk4X+3
+         Qh+kdHhwqSjyDkpBsiYPdSM/NmFu20nAFBI/cBjMLO0O4w43aU0EvNPYbduRVM4hsXMM
+         R6S69VRl+YE3TjUYi1/ERnpQGIN5no2667Eh458ViFckcA2vQ8TLKgar8Nb0J8YG2CRe
+         Fpjw==
+X-Gm-Message-State: APjAAAVuXxN8UAdVduOEb0eMEaDvHZNfY3QLymQRfzEyIYMJT2ZVK0kd
+        Nx+nKwWYtqjpWAb24iXVjnkqvBvKuIo=
+X-Google-Smtp-Source: APXvYqw9AC7+hArUB5RKgMUsCFlHXz+NydnJRAK3NgwBhWLxXy37epiMbxKuPNQoVcjnS/Gyshbrog==
+X-Received: by 2002:adf:ba81:: with SMTP id p1mr29163589wrg.192.1553854379291;
+        Fri, 29 Mar 2019 03:12:59 -0700 (PDT)
 Received: from localhost ([49.248.196.175])
-        by smtp.gmail.com with ESMTPSA id y8sm1720955wrm.8.2019.03.29.03.12.51
+        by smtp.gmail.com with ESMTPSA id g8sm3005774wro.77.2019.03.29.03.12.57
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 03:12:52 -0700 (PDT)
+        Fri, 29 Mar 2019 03:12:58 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com,
         andy.gross@linaro.org, David Brown <david.brown@linaro.org>
 Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v2 04/13] arm64: dts: msm8996: thermal: Add temperature sensors near major peripherals
-Date:   Fri, 29 Mar 2019 15:42:10 +0530
-Message-Id: <ad459ca0cd9b2e68787a4bd76ec3e0a677ce3b31.1553853990.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 05/13] arm64: dts: msm8998: thermal: Fix the cpu sensor numbers
+Date:   Fri, 29 Mar 2019 15:42:11 +0530
+Message-Id: <50441c28c22290ed9df7ab394d773a77603caed5.1553853990.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1553853990.git.amit.kucheria@linaro.org>
 References: <cover.1553853990.git.amit.kucheria@linaro.org>
@@ -74,184 +74,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-msm8996 has a total of 21 temperature sensors. Populate DT with
-information about them.
+The silver cluster (typically cpu0-3) are monitored by sensor IDs 1-3 on
+tsens controller 0. The gold cluster (typically cpu4-7) are monitored by
+sensor IDs 7-10 on tsens controller 0.
 
-There are 2 sensors on each of the cpus - one on the top, the other
-below (we only expose one on the top in DT for now). For the GPU, we
-expose both, the one on the top and the one below.
-
-Depending on the version of the silicon, sensor 2 is either placed near
-the L3 cache or the venus video decoder. It would've been nice to be
-able to be version-specific but we don't have DTs that differentiate the
-two versions of silicon yet.
-
+Fixes: 4449b6f248d9a1 ("arm64: dts: qcom: msm8998: Add tsens and thermal-zones")
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 150 ++++++++++++++++++++++++++
- 1 file changed, 150 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index c761269caf80..e2408ee91184 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -237,6 +237,156 @@
- 				};
- 			};
- 		};
-+
-+		gpu-thermal-top {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 6>;
-+
-+			trips {
-+				gpu1_alert0: trip-point@0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		gpu-thermal-bottom {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 7>;
-+
-+			trips {
-+				gpu2_alert0: trip-point@0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		m4m-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 1>;
-+
-+			trips {
-+				m4m_alert0: trip-point@0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		l3-or-venus-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 2>;
-+
-+			trips {
-+				l3_or_venus_alert0: trip-point@0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		cluster0-l2-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 7>;
-+
-+			trips {
-+				cluster0_l2_alert0: trip-point@0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		cluster1-l2-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 12>;
-+
-+			trips {
-+				cluster1_l2_alert0: trip-point@0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		camera-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 1>;
-+
-+			trips {
-+				camera_alert0: trip-point@0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		q6-dsp-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 2>;
-+
-+			trips {
-+				q6_dsp_alert0: trip-point@0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		mem-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 3>;
-+
-+			trips {
-+				mem_alert0: trip-point@0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
-+
-+		modemtx-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 4>;
-+
-+			trips {
-+				modemtx_alert0: trip-point@0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+			};
-+		};
- 	};
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 0b6de0c29ee8..108a5aa146a2 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -342,7 +342,7 @@
+ 			polling-delay-passive = <250>;
+ 			polling-delay = <1000>;
  
- 	timer {
+-			thermal-sensors = <&tsens0 6>;
++			thermal-sensors = <&tsens0 1>;
+ 
+ 			trips {
+ 				cpu_alert0: trip0 {
+@@ -363,7 +363,7 @@
+ 			polling-delay-passive = <250>;
+ 			polling-delay = <1000>;
+ 
+-			thermal-sensors = <&tsens0 7>;
++			thermal-sensors = <&tsens0 2>;
+ 
+ 			trips {
+ 				cpu_alert1: trip0 {
+@@ -384,7 +384,7 @@
+ 			polling-delay-passive = <250>;
+ 			polling-delay = <1000>;
+ 
+-			thermal-sensors = <&tsens0 8>;
++			thermal-sensors = <&tsens0 3>;
+ 
+ 			trips {
+ 				cpu_alert2: trip0 {
+@@ -405,7 +405,7 @@
+ 			polling-delay-passive = <250>;
+ 			polling-delay = <1000>;
+ 
+-			thermal-sensors = <&tsens0 9>;
++			thermal-sensors = <&tsens0 4>;
+ 
+ 			trips {
+ 				cpu_alert3: trip0 {
+@@ -426,7 +426,7 @@
+ 			polling-delay-passive = <250>;
+ 			polling-delay = <1000>;
+ 
+-			thermal-sensors = <&tsens0 10>;
++			thermal-sensors = <&tsens0 7>;
+ 
+ 			trips {
+ 				cpu_alert4: trip0 {
+@@ -447,7 +447,7 @@
+ 			polling-delay-passive = <250>;
+ 			polling-delay = <1000>;
+ 
+-			thermal-sensors = <&tsens0 11>;
++			thermal-sensors = <&tsens0 8>;
+ 
+ 			trips {
+ 				cpu_alert5: trip0 {
+@@ -468,7 +468,7 @@
+ 			polling-delay-passive = <250>;
+ 			polling-delay = <1000>;
+ 
+-			thermal-sensors = <&tsens1 0>;
++			thermal-sensors = <&tsens0 9>;
+ 
+ 			trips {
+ 				cpu_alert6: trip0 {
+@@ -489,7 +489,7 @@
+ 			polling-delay-passive = <250>;
+ 			polling-delay = <1000>;
+ 
+-			thermal-sensors = <&tsens1 1>;
++			thermal-sensors = <&tsens0 10>;
+ 
+ 			trips {
+ 				cpu_alert7: trip0 {
 -- 
 2.17.1
 
