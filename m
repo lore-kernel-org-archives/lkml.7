@@ -2,122 +2,141 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7998EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE737C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F2B2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A492184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:35:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="GCsnbASr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbfC2CaS (ORCPT
+        id S1728638AbfC2CfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 22:30:18 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:54705 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726879AbfC2CaR (ORCPT
+        Thu, 28 Mar 2019 22:35:00 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43760 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbfC2Ce7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 22:30:17 -0400
-X-UUID: b0eaba4bce974598ac5530a2e94f5601-20190329
-X-UUID: b0eaba4bce974598ac5530a2e94f5601-20190329
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <chang-an.chen@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 783713787; Fri, 29 Mar 2019 10:30:11 +0800
-Received: from MTKMBS01DR.mediatek.inc (172.21.101.111) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 29 Mar 2019 10:30:09 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01dr.mediatek.inc (172.21.101.111) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 29 Mar 2019 10:30:09 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 29 Mar 2019 10:30:08 +0800
-Message-ID: <1553826609.8188.0.camel@mtkswgap22>
-Subject: Re: [PATCH 1/1] sched/clock: Prevent generic sched_clock wrap
- caused by tick_freeze()
-From:   Chang-An Chen <chang-an.chen@mediatek.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Corey Minyard <cminyard@mvista.com>,
-        Kees Cook <keescook@chromium.org>,
-        "wsd_upstream@mediatek.com" <wsd_upstream@mediatek.com>,
-        "Frederic Weisbecker" <fweisbec@gmail.com>,
-        Kuohong Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=8B=E9=B4=BB=29?= 
-        <kuohong.wang@mediatek.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Stanley Chu =?UTF-8?Q?=28=E6=9C=B1=E5=8E=9F=E9=99=9E=29?= 
-        <stanley.chu@mediatek.com>, Ingo Molnar <mingo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 29 Mar 2019 10:30:09 +0800
-In-Reply-To: <alpine.DEB.2.21.1903251449580.1656@nanos.tec.linutronix.de>
-References: <1553497460-24166-1-git-send-email-chang-an.chen@mediatek.com>
-         <alpine.DEB.2.21.1903251449580.1656@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Thu, 28 Mar 2019 22:34:59 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z9so438264pgu.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 19:34:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2ad/kiIdPGWWMeEmCjMG6KosZyGtuE1TQZqZZmfMDVo=;
+        b=GCsnbASrq/WKxKMm7HPkawag56fcHwAQkxBiWXrBH+f5NnrowlUfd5NrE86iUs5Mv9
+         YQRelAf4dhomQOMm3Atvb88m3vDgY+d9xutyfBTyjeD4ktdUhQ3Qs54K/ioMsoiC8aH9
+         LaOilKLnea4RICrqOoQiZ926CpFjapEL7qOOU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2ad/kiIdPGWWMeEmCjMG6KosZyGtuE1TQZqZZmfMDVo=;
+        b=f6x3QmEs19kNckINPUy/RgngjHQMRKe/TwthCkYB74qA2ErfXrpofpH8ekyKgF5xRj
+         7oT/kEltXg9S7rdxb8WhAne3DuqsJakvmHs5x8+jg8t002TKzs/rq9YXiz1GBhjPQZZe
+         ZW63CKZNi/uAFJ740iz5R2namECJYXTZbVvAw09Iu0S0ydHFUkm6YN02RyvzEFENLuSa
+         Awt03pmyCp/vkgpk9+e4AiwmbbgTv/CtSQ4c/lbHiuWUUYp6ojreDtKefYLrkEKLeAJj
+         hTfqEMxXxmMv6cPKh1gK+UkVJuzWh9peDjErM0F+AVNrWndWHhPZHvYD9mCyGDnbXe5f
+         LHCg==
+X-Gm-Message-State: APjAAAXsfQuJK7YoBkBWHCptDM8YK8rZ8vHg9eymB4kWtY3F8cXSckrd
+        UclaNGaidkWEULj8VQ6RE0cR5g==
+X-Google-Smtp-Source: APXvYqxXkgoEYutgt7QftOoF5JWQNw8/LC0q+L812dmEt7yJAM3Oly0ZkdebXGDMAjtuJMCpZT0mQw==
+X-Received: by 2002:a63:4b14:: with SMTP id y20mr3192535pga.15.1553826898810;
+        Thu, 28 Mar 2019 19:34:58 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id g67sm674749pfg.94.2019.03.28.19.34.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 19:34:57 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 22:34:56 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>
+Subject: Re: [PATCH] Convert struct pid count to refcount_t
+Message-ID: <20190329023456.GB194158@google.com>
+References: <20190327145331.215360-1-joel@joelfernandes.org>
+ <CAGXu5j+nhsL_s36R0k5APUfP6cNiH-BGEJu6mV6UcsP0i3gtyA@mail.gmail.com>
+ <CAG48ez1vZ5cngEKVtWTL9rz_K8K25b1sMKYrNs+jn4Va3KYucw@mail.gmail.com>
+ <20190328023432.GA93275@google.com>
+ <20190328142619.GA19441@redhat.com>
+ <20190328143958.GB261521@google.com>
 MIME-Version: 1.0
-X-MTK:  N
-X-TM-SNTS-SMTP: 14987561F91BA70A792CD74CDF9F73529BF268650DE7932F6F6B79783E41734A2000:8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328143958.GB261521@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-25 at 21:54 +0800, Thomas Gleixner wrote:
-> On Mon, 25 Mar 2019, Chang-An Chen wrote:
-> > --- a/include/linux/sched_clock.h
-> > +++ b/include/linux/sched_clock.h
-> > @@ -13,6 +13,10 @@
-> >  
-> >  extern void sched_clock_register(u64 (*read)(void), int bits,
-> >  				 unsigned long rate);
-> > +
-> > +extern int sched_clock_suspend(void);
-> > +
-> > +extern void sched_clock_resume(void);
-> >  #else
-> >  static inline void generic_sched_clock_init(void) { }
-> >  
-> > @@ -20,6 +24,10 @@ static inline void sched_clock_register(u64 (*read)(void), int bits,
-> >  					unsigned long rate)
-> >  {
-> >  }
-> > +
-> > +static int sched_clock_suspend(void) { }
+On Thu, Mar 28, 2019 at 10:39:58AM -0400, Joel Fernandes wrote:
+> On Thu, Mar 28, 2019 at 03:26:19PM +0100, Oleg Nesterov wrote:
+> > On 03/27, Joel Fernandes wrote:
+> > >
+> > > Also, based on Kees comment, I think it appears to me that get_pid and
+> > > put_pid can race in this way in the original code right?
+> > >
+> > > get_pid			put_pid
+> > >
+> > > 			atomic_dec_and_test returns 1
+> > > atomic_inc
+> > > 			kfree
+> > >
+> > > deref pid /* boom */
+> > > -------------------------------------------------
+> > >
+> > > I think get_pid needs to call atomic_inc_not_zero()
+> > 
+> > No.
+> > 
+> > get_pid() should only be used if you already have a reference or you do
+> > something like
+> > 
+> > 	rcu_read_lock();
+> > 	pid = find_vpid();
+> > 	get_pid();
+> > 	rcu_read_lock();
+> > 
+> > in this case we rely on call_rcu(delayed_put_pid) which drops the initial
+> > reference.
+> > 
+> > If put_pid() sees pid->count == 1, then a) nobody else has a reference and
+> > b) nobody else can find this pid on rcu-protected lists, so it is safe to
+> > free it.
 > 
-> static inline ...
+> I agree. Check my reply to Jann, I already replied to him about this. thanks!
 > 
-> > +
-> > +static void sched_clock_resume(void) { }
-> 
-> Ditto
-> 
-> >  #endif
-> 
-> Please do not expose this in the global header. All of this is local to
-> kernel/time/. So adding this to kernel/time/timekeeping.h is sufficient.
-Thanks so much for review and the suggestion, I'll fix it in next
-version.
 
-Thanks,
-Chang-An
-> 
-> Thanks,
-> 
-> 	tglx
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Also Oleg, why not just call refcount_dec_and_test like below? If count is 1,
+then it will decrement to 0 and return true anyway. Is this because we want
+to avoid writes at the cost of more reads? Did I miss something? Thank you.
 
+I don't remember very clearly, but I think Kees also asked about the same thing.
 
-
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 2095c7da644d..89c4849fab5d 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -106,8 +106,7 @@ void put_pid(struct pid *pid)
+ 		return;
+ 
+ 	ns = pid->numbers[pid->level].ns;
+-	if ((refcount_read(&pid->count) == 1) ||
+-	     refcount_dec_and_test(&pid->count)) {
++	if (refcount_dec_and_test(&pid->count)) {
+ 		kmem_cache_free(ns->pid_cachep, pid);
+ 		put_pid_ns(ns);
+ 	}
