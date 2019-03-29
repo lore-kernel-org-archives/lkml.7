@@ -2,147 +2,107 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B07C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8DCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7763218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:45:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553888745;
-	bh=sWA86loddRSuajse0cjrWSSEew/adi/EOQlSakyH00I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Rx7Vu0IKlPKQcOPZnwszgsnYciANjpoMnm/O/t/6VKmRcujNgxSP425iwYj3yo36p
-	 p5wHlvRbf44DWR7J5F6Pk5uqmBIuKzL97HCrMHSeQc9NelWnOxAojTI2ioFEvx/Ng4
-	 p2KjhbwQnAtEtBfC1MDmQdOom+15DuCZ1nbHiC+Q=
+	by mail.kernel.org (Postfix) with ESMTP id 3E06C2184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:47:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Q5W3TctA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="4f8i0dd8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbfC2Tpn (ORCPT
+        id S1730032AbfC2TrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 15:45:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729953AbfC2Tpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 15:45:43 -0400
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDAA1218D3;
-        Fri, 29 Mar 2019 19:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553888742;
-        bh=sWA86loddRSuajse0cjrWSSEew/adi/EOQlSakyH00I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GSSv1RjCEngxuipqa4q+6PsUrqM1euyoaINJbSj/+HHmxAjnPhIXv6/fEbLF+xGkV
-         ABFfclCP+mlYLrG9NVaNXr/OYROoOhNAQaOAst/ZWTo75gCLOGxqg6rInQaQI84ngr
-         j36z7Qi0d3RHzPrYQj2LI67oZGPJgm2f18SZTCzo=
-Received: by mail-qt1-f177.google.com with SMTP id d13so4002370qth.5;
-        Fri, 29 Mar 2019 12:45:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAUKbzov3mJnG0HEAGnUZM5BIfDaW3wCsLQWROkY0PBwH7/2BXOo
-        94STYDVoculI42/ohRH9pXxqDEm3zhkcaQsHZw==
-X-Google-Smtp-Source: APXvYqwK36q1zVcabD1Sr31n/V95Z3MU7gbWFkzN8WB1x5GN7FFxHYel8fXiV0A3+SXI2fYZMpsx1V1mnhep6L6Nnu4=
-X-Received: by 2002:ac8:267c:: with SMTP id v57mr41998238qtv.76.1553888741097;
- Fri, 29 Mar 2019 12:45:41 -0700 (PDT)
+        Fri, 29 Mar 2019 15:47:24 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:52009 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729766AbfC2TrX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 15:47:23 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 4D6DC21EF6;
+        Fri, 29 Mar 2019 15:47:22 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Fri, 29 Mar 2019 15:47:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=KUZkqbMOavjGSFogsh72ZmNCQhi
+        URfUGj/YR6ZogTxM=; b=Q5W3TctAMMGxmIipAwlo6hK19I7O01PakOMZtS4f3JG
+        qUG1Ts06hRbK7sW71AHEHQTRXd3gcxb0xLp59ElnmhxPac/fHjWH9ITizxWp8OSB
+        /4Iyb41UH+yaH3+qdg/1NmWcofj3kkw5zNUB/C0+tQn8B5KegpAmG4Gqd8HYfoIh
+        mLfrclLl/c3MOBvJycqFHrnhPZ/7/3MPdLqi2KQpbroXB07jMnYjAzA9Tvgqtrzh
+        DVDU5j7LzDsd0xjPfgmLPTsaZgNabzkyamHYHIqDoziXSXdMH1CkQCWsei0KFA6v
+        FwbS5387i9Ltyf4PVvfhhA9v55Ot0AgkT8DJQ/t8VBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=KUZkqb
+        MOavjGSFogsh72ZmNCQhiURfUGj/YR6ZogTxM=; b=4f8i0dd873WIA3FgKaoBE8
+        N2cD20b97cD8t8rGcmJwjkUTlk8LbQGJvFvgecMqB0s2nv68QsDVHYFF5J1tCALK
+        5I6xpEmGgUbuUYpZvzD5xHhP63CCEe8im7JEQ1YFqc8vbOQTZkUQIe254y7/3Cb3
+        J+UNDR4NnT+LFNdJllqrTQUphO5YThgMgVrPBFEgSJPW7opcrjxIYIz1+8WjGZJf
+        TlhEsVjHbqN2Rtabnbqv4LXL0Bm+yMaj44XBAkXQf/4Bjg1qshVOViAaudB/UoSb
+        PjofYNA1P11Y+wjT9jP1vY+fBkvZV6npxMQtFce2MgBZWvsmrnQMIHVJDt+YYH8g
+        ==
+X-ME-Sender: <xms:SXaeXMQ8uq8ARRIhsuYu9X6VlmojZ4xbyt-e6iV35qyGguetUfePww>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrkeejgddutdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:SXaeXOaYwpZ5IlGvuzDdM_41DgU87e6hOvE1W7Ud1cHAUys1Y_MUAQ>
+    <xmx:SXaeXB9V0ilb6toVwmj6lJ01srTQpwRardh1sJqOwzSXtyot8dh8uw>
+    <xmx:SXaeXKImeXXyeVkFrZ-vt986_LvNTyICqrdxwEAmKCoFUmsV7cyYLA>
+    <xmx:SnaeXAtKAej87KgsJhrOIB9qUa8hpuoQgFE_r45dP9we0gGtFs6u4g>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 60C7110390;
+        Fri, 29 Mar 2019 15:47:20 -0400 (EDT)
+Date:   Fri, 29 Mar 2019 20:47:18 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Subject: Re: linux-next: Fixes tag needs some work in the tty.current tree
+Message-ID: <20190329194718.GE12004@kroah.com>
+References: <20190328072734.2093d03c@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190327212155.80730-1-venture@google.com> <20190328165009.GA25705@bogus>
- <CAO=notxxYF4noXbR1BeVrwqCBHaVCaXy+jPV4OVbex=w=fV+Rg@mail.gmail.com>
- <CAL_JsqJSvzOQbJSgz7z2wZj9-z=bfhzF_C+662Gnf68TgAPFaA@mail.gmail.com>
- <CAO=notx6K7xTW1VG6BGJFBM5k8EQsWXn3WoWSPSrZRsxkwueSA@mail.gmail.com>
- <CAO=notxD=5pa5sT15a+VrA7qVNPBoJoTo=5sLxibBxc+HWcG4g@mail.gmail.com> <CAO=notynUJGUn3tuJZ_jFPdz23_T1FPyzS46mm5msphLnLW_JA@mail.gmail.com>
-In-Reply-To: <CAO=notynUJGUn3tuJZ_jFPdz23_T1FPyzS46mm5msphLnLW_JA@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 29 Mar 2019 14:45:29 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+0udKJ1ZyfJCvS8GDGXdNiFmGN+mOGNBvf5mqLr31wew@mail.gmail.com>
-Message-ID: <CAL_Jsq+0udKJ1ZyfJCvS8GDGXdNiFmGN+mOGNBvf5mqLr31wew@mail.gmail.com>
-Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-To:     Patrick Venture <venture@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328072734.2093d03c@canb.auug.org.au>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 10:11 AM Patrick Venture <venture@google.com> wrote:
->
-> On Fri, Mar 29, 2019 at 7:59 AM Patrick Venture <venture@google.com> wrote:
-> >
-> > On Fri, Mar 29, 2019 at 7:56 AM Patrick Venture <venture@google.com> wrote:
-> > >
-> > > On Fri, Mar 29, 2019 at 6:38 AM Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > On Thu, Mar 28, 2019 at 12:03 PM Patrick Venture <venture@google.com> wrote:
-> > > > >
-> > > > > On Thu, Mar 28, 2019 at 9:50 AM Rob Herring <robh@kernel.org> wrote:
-> > > > > >
-> > > > > > On Wed, 27 Mar 2019 14:21:55 -0700, Patrick Venture wrote:
-> > > > > > > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
-> > > > > > >
-> > > > > > > Signed-off-by: Patrick Venture <venture@google.com>
-> > > > > > > ---
-> > > > > > > Changes for v8:
-> > > > > > > - None
-> > > > > > > Changes for v7:
-> > > > > > > - Moved node under the syscon node it requires
-> > > > > > > Changes for v6:
-> > > > > > > - None
-> > > > > > > Changes for v5:
-> > > > > > > - None
-> > > > > > > Changes for v4:
-> > > > > > > - None
-> > > > > > > Changes for v3:
-> > > > > > > - None
-> > > > > > > Changes for v2:
-> > > > > > > - Added comment about syscon required parameter.
-> > > > > > > ---
-> > > > > > >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
-> > > > > > >  1 file changed, 48 insertions(+)
-> > > > > > >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > > > > > >
-> > > > > >
-> > > > > > Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> > > > > > there's no need to repost patches *only* to add the tags. The upstream
-> > > > > > maintainer will do that for acks received on the version they apply.
-> > > > > >
-> > > > > > If a tag was not added on purpose, please state why and what changed.
-> > > > >
-> > > > > Adding tags in this case is adding a change version?  I was doing this
-> > > > > to keep the two patches version-synced.  I thought that was required.
-> > > > > There was a version change in the other patch in this set.
-> > > >
-> > > > Adding tags is not considered a change. I gave a Reviewed-by in v7.
-> > > > Subsequent versions should carry that tag if there's no change (or
-> > > > only minor changes) in this patch. What happens in the other patches
-> > > > is not really important. Maintainers are not going to go searching
-> > > > thru the versions to find all the ack/review tags. And if I've already
-> > > > reviewed this, I don't want to look at it again.
-> > >
-> > > Thank you, I didn't realize that had happened.
-> >
-> > I went back through my email and found the line of your email that
-> > included it.  I apologize.
-> >
-> > So, before I send the updated patch with your ack -- do I need to send
-> > a v9? or is this just me sending v8 again?
->
-> Sorry.  I see you already answered that when you said that adding a
-> tag isn't considered a change.  I have therefore re-sent v8 of this
-> patch with your tag added.
+On Thu, Mar 28, 2019 at 07:27:34AM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> In commit
+> 
+>   69646d7a3689 ("tty/serial: atmel: RS485 HD w/DMA: enable RX after TX is stopped")
+> 
+> Fixes tag
+> 
+>   Fixes: b389f173aaa1 ("tty/serial: atmel: RS485 half duplex w/DMA: enable
+> 
+> has these problem(s):
+> 
+>   - Subject has leading but no trailing parentheses
+>   - Subject has leading but no trailing quotes
+> 
+> Please do not split Fixes tags across more than 1 line.
 
-To repeat my form letter again, you don't need to send a series again
-just to add tags. IOW, if you send a v9, then add the tags. If v8 is
-what a maintainer applies, the maintain will take care of adding them
-(or patchwork does it for us):
+Is there a script somewhere that I can use to run on my tree before I
+push it out, much like I do now for the signed-off-by checks?
 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
+thanks,
+
+greg k-h
