@@ -2,86 +2,120 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9493C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE72AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C1221871
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4EB42184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:26:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbfC2NYn (ORCPT
+        id S1729674AbfC2N0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 09:24:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50414 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729626AbfC2NYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 09:24:42 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 45325F1F2600378F1DE8;
-        Fri, 29 Mar 2019 21:24:39 +0800 (CST)
-Received: from HGHY2Y004646261.china.huawei.com (10.184.12.158) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 29 Mar 2019 21:24:31 +0800
-From:   Zenghui Yu <yuzenghui@huawei.com>
-To:     <marc.zyngier@arm.com>, <julien.thierry@arm.com>,
-        <rostedt@goodmis.org>
-CC:     <mingo@redhat.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <mark.rutland@arm.com>,
-        <linux@armlinux.org.uk>, <james.morse@arm.com>,
-        <suzuki.poulose@arm.com>, <wanghaibin.wang@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Zenghui Yu <yuzenghui@huawei.com>
-Subject: [RFC PATCH] irqchip/gic-v3: Make gic_handle_irq() notrace
-Date:   Fri, 29 Mar 2019 13:23:28 +0000
-Message-ID: <1553865808-30604-1-git-send-email-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.6.4.windows.1
+        Fri, 29 Mar 2019 09:26:25 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37517 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729615AbfC2N0Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 09:26:24 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z16so2513742qtn.4
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 06:26:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=6tZ3FsToy/uGhRDMKBuu0T5a7ZQTYi3c4gG8cjj/IR4=;
+        b=VULhe8lUlULccBqjLI11Hn8lYzvMLBMKQG20ML66qjqgVpETIIebf6zht+q4bSnTMR
+         EpNKlKDhB0D++/EGxCplYbuIVYRyTW3N0WYBP5KYMV8yFvSsEK+dPsY5STC4eRPcvzlV
+         u8GvMuzGzXcE+4DTn8uRPSGMfpj4KbAe49x/AodGIbK3PGMWLCdXsgVn1JgV4Iol3zfm
+         yxOHJBUd+kOoMoDpYFeFARJVSO5vIHGiUR3C3scNht0ZA1WNygvF0jUxuxqRyxK9Eb7p
+         IyZrZpQD+ccb5UMLudX9a1YZAvIoyr0TEK7O3J0uiiOYjHK40LoMUGLcfBjGUBM8qD1d
+         AfGw==
+X-Gm-Message-State: APjAAAUJ8Mzgmbvc1Y6/YpGBj+nOyvXSqKzOf4dGS2qgmVM9F2eGk041
+        gl4wEYZX7IelpRYSB7r0TIfEog==
+X-Google-Smtp-Source: APXvYqz9t/fOoWybrlhU5qTUKqQb8Vg0MsizWKV62BSCAnVK0lqtO0/FYFYgcKbqvUoCo7B+Vt0rPg==
+X-Received: by 2002:aed:3c0f:: with SMTP id t15mr21216042qte.282.1553865983383;
+        Fri, 29 Mar 2019 06:26:23 -0700 (PDT)
+Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
+        by smtp.gmail.com with ESMTPSA id y6sm1102459qka.69.2019.03.29.06.26.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 Mar 2019 06:26:22 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 09:26:19 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, pbonzini@redhat.com, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com, yang.zhang.wz@gmail.com,
+        riel@surriel.com, david@redhat.com, dodgen@google.com,
+        konrad.wilk@oracle.com, dhildenb@redhat.com, aarcange@redhat.com,
+        alexander.duyck@gmail.com
+Subject: On guest free page hinting and OOM
+Message-ID: <20190329084058-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable pseudo NMI together with function_graph tracer, will lead
-the system to a hang. This is easy to reproduce,
+On Wed, Mar 06, 2019 at 10:50:42AM -0500, Nitesh Narayan Lal wrote:
+> The following patch-set proposes an efficient mechanism for handing freed memory between the guest and the host. It enables the guests with no page cache to rapidly free and reclaims memory to and from the host respectively.
 
-  1) Set "irqchip.gicv3_pseudo_nmi=1" on the kernel command line
-  2) echo function_graph > /sys/kernel/debug/tracing/current_tracer
+Sorry about breaking the thread: the original subject was
+	KVM: Guest Free Page Hinting
+but the following isn't in a response to a specific patch
+so I thought it's reasonable to start a new one.
 
-This patch (RFC) set gic_handle_irq() as notrace and it seems works
-fine now. But I have no idea about what the issue is exactly, and
-you can regard this patch as a report then :)
+What bothers both me (and others) with both Nitesh's asynchronous approach
+to hinting and the hinting that is already supported in the balloon
+driver right now is that it seems to have the potential to create a fake OOM situation:
+the page that is in the process of being hinted can not be used.  How
+likely that is would depend on the workload so is hard to predict.
 
-Can someone give a look at it and provide some explanations ?
+Alex's patches do not have this problem as they block the
+VCPUs from attempting to get new pages during hinting. Solves the fake OOM
+issue but adds blocking which most of the time is not necessary.
 
-Thanks!
+With both approaches there's a tradeoff: hinting is more efficient if it
+hints about large sized chunks of memory at a time, but as that size
+increases, chances of being able to hold on to that much memory at a
+time decrease. One can claim that this is a regular performance/memory
+tradeoff however there is a difference here: normally
+guest performance is traded off for host memory (which host
+knows how much there is of), this trades guest performance
+for guest memory, but the benefit is on the host, not on
+the guest. Thus this is harder to manage.
 
-Cc: Julien Thierry <julien.thierry@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
----
- drivers/irqchip/irq-gic-v3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I have an idea: how about allocating extra guest memory on the host?  An
+extra hinting buffer would be appended to guest memory, with the
+understanding that it is destined specifically to improve page hinting.
+Balloon device would get an extra parameter specifying the
+hinting buffer size - e.g. in the config space of the driver.
+At driver startup, it would get hold of the amount of
+memory specified by host as the hinting buffer size, and keep it around in a
+buffer list - if no action is taken - forever.  Whenever balloon would
+want to get hold of a page of memory and send it to host for hinting, it
+would release a page of the same size from the buffer into the free
+list: a new page swaps places with a page in the buffer.
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 15e55d3..8d0c25f 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -487,7 +487,7 @@ static inline void gic_handle_nmi(u32 irqnr, struct pt_regs *regs)
- 		gic_deactivate_unhandled(irqnr);
- }
- 
--static asmlinkage void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
-+static asmlinkage notrace void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
- {
- 	u32 irqnr;
- 
+In this way the amount of useful free memory stays constant.
+
+Once hinting is done page can be swapped back - or just stay
+in the hinting buffer until the next hint.
+
+Clearly this is a memory/performance tradeoff: the more memory host can
+allocate for the hinting buffer, the more batching we'll get so hints
+become cheaper. One notes that:
+- if guest memory isn't pinned, this memory is virtual and can
+  be reclaimed by host. In partucular guest can hint about the
+  memory within the hinting buffer at startup.
+- guest performance/host memory tradeoffs are reasonably well understood, and
+  so it's easier to manage: host knows how much memory it can
+  sacrifice to gain the benefit of hinting.
+
+Thoughts?
+
 -- 
-1.8.3.1
-
-
+MST
