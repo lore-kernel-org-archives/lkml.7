@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C61C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C985AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE638218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980372184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553817912;
-	bh=ArcGIucQXiy8vIZ0oY6G2rrKIztzKnNxJNPq6tvzvKA=;
+	s=default; t=1553817918;
+	bh=+GgmGLkNsdprW4rF0hFiALKl6fYtolzZ4n4A+aJIhjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=agisj4ScazImDE7YRiLbfcsYCpkLbh6HlAvGoSSEUcuEgwn71A2WD+a89Z0WWJx9c
-	 x9cESVhtnxd8QcmIH0rPAOiEZcvbzuh9M9JCkTxIxVAPvn7bcJF8NAAMZ8jkVzjq6O
-	 mm4z9sRQbLEd5T8M/iEiRXvptV4FHP15nE1NJkIo=
+	b=k1YHgZvpGx9a4fw0jkeDBsc9yXOl1LKiDa7HGOH4Z02EK9RemT72wUOCR7xhTPuyB
+	 KRO5eCL3rQxB9HJa8nwbuxiEAP4kzv8A44fYwhJXDlmZ/1Lb6WDnm2/zb4OH+V4WPq
+	 7raFGyktJIoXm3jkq1DJKxxYKHEfgzK4J78rNa80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbfC2AFK (ORCPT
+        id S1728736AbfC2AFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 20:05:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43444 "EHLO mail.kernel.org"
+        Thu, 28 Mar 2019 20:05:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728676AbfC2AFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 20:05:08 -0400
+        id S1728639AbfC2AFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 20:05:12 -0400
 Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91F9F218AE;
-        Fri, 29 Mar 2019 00:05:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB459218A6;
+        Fri, 29 Mar 2019 00:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553817908;
-        bh=ArcGIucQXiy8vIZ0oY6G2rrKIztzKnNxJNPq6tvzvKA=;
+        s=default; t=1553817911;
+        bh=+GgmGLkNsdprW4rF0hFiALKl6fYtolzZ4n4A+aJIhjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IMfB4MN+636MOFX3cDJC3oJTLlPbLgugUq8CoWv9N35l6Ng4w0cSJ4spQn8VoVpXX
-         vbFQLQkCeRXnPeGFoxOAWoiDS4H/tvl3EG/K+ceI6nw22HYr3TOL7hN3X9M+k5vkxe
-         vFSd3D7uj+IrUj2q+TWj6K1Vdqm/m+YVDOfjZIpQ=
+        b=b30JqMYU7vZSVagw5ImtDAC5+mudjKuLtkQMSmuN7YRyGmEgsI7gptpWLeYO15PsF
+         3eiiM51pq7ywnQxIGsjI1YxWoyoH2HLE5WkzIeLpU6a81ZLyoAyW/LQRwNXgV7abHw
+         Fj8VPJe245Kcf/QdI2CfM4bP9FvkHwB1KVPZpXU0=
 From:   Shuah Khan <shuah@kernel.org>
 To:     mchehab@kernel.org, perex@perex.cz, tiwai@suse.com,
         hverkuil@xs4all.nl
 Cc:     Shuah Khan <shuah@kernel.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: [PATCH v13 3/6] media: media.h: Enable ALSA MEDIA_INTF_T* interface types
-Date:   Thu, 28 Mar 2019 18:04:58 -0600
-Message-Id: <4324ac217b1f2e2b99fe91760b5d50f612671f5c.1553814518.git.shuah@kernel.org>
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: [PATCH v13 6/6] selftests: media_dev_allocator api test
+Date:   Thu, 28 Mar 2019 18:05:01 -0600
+Message-Id: <84b5f758b67f1fe8fe7fa9e78e06f8fd4d1c28c0.1553814518.git.shuah@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1553814518.git.shuah@kernel.org>
 References: <cover.1553814518.git.shuah@kernel.org>
@@ -56,61 +58,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move PCM_CAPTURE, PCM_PLAYBACK, and CONTROL ALSA MEDIA_INTF_T* interface
-types back into __KERNEL__ scope to get ready for adding ALSA support for
-these to the media controller.
+Add a new test for Media Device Allocator API.
+
+Media Device Allocator API to allows multiple drivers share a media device.
+This API solves a very common use-case for media devices where one physical
+device (an USB stick) provides both audio and video. When such media device
+exposes a standard USB Audio class, a proprietary Video class, two or more
+independent drivers will share a single physical USB bridge. In such cases,
+it is necessary to coordinate access to the shared resource.
+
+Using this API, drivers can allocate a media device with the shared struct
+device as the key. Once the media device is allocated by a driver, other
+drivers can get a reference to it. The media device is released when all
+the references are released.
+
+This test does a series of unbind/bind tests to make sure media device
+is released correctly when it is no longer is use and when the last
+driver releases the reference.
 
 Signed-off-by: Shuah Khan <shuah@kernel.org>
 ---
- include/uapi/linux/media.h | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+ .../media_tests/media_dev_allocator.sh        | 81 +++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+ create mode 100755 tools/testing/selftests/media_tests/media_dev_allocator.sh
 
-diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
-index e5d0c5c611b5..9aedb187bc48 100644
---- a/include/uapi/linux/media.h
-+++ b/include/uapi/linux/media.h
-@@ -262,6 +262,11 @@ struct media_links_enum {
- #define MEDIA_INTF_T_V4L_SWRADIO		(MEDIA_INTF_T_V4L_BASE + 4)
- #define MEDIA_INTF_T_V4L_TOUCH			(MEDIA_INTF_T_V4L_BASE + 5)
- 
-+#define MEDIA_INTF_T_ALSA_BASE			0x00000300
-+#define MEDIA_INTF_T_ALSA_PCM_CAPTURE		(MEDIA_INTF_T_ALSA_BASE)
-+#define MEDIA_INTF_T_ALSA_PCM_PLAYBACK		(MEDIA_INTF_T_ALSA_BASE + 1)
-+#define MEDIA_INTF_T_ALSA_CONTROL		(MEDIA_INTF_T_ALSA_BASE + 2)
+diff --git a/tools/testing/selftests/media_tests/media_dev_allocator.sh b/tools/testing/selftests/media_tests/media_dev_allocator.sh
+new file mode 100755
+index 000000000000..d58e39c1b66c
+--- /dev/null
++++ b/tools/testing/selftests/media_tests/media_dev_allocator.sh
+@@ -0,0 +1,81 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Media Device Allocator API test script
++# Copyright (c) 2018 Shuah Khan <shuah@kernel.org>
 +
- #if defined(__KERNEL__)
- 
- /*
-@@ -413,19 +418,19 @@ struct media_v2_topology {
- #define MEDIA_ENT_F_DTV_DECODER			MEDIA_ENT_F_DV_DECODER
- 
- /*
-- * There is still no ALSA support in the media controller. These
-+ * There is still no full ALSA support in the media controller. These
-  * defines should not have been added and we leave them here only
-  * in case some application tries to use these defines.
-+ *
-+ * The ALSA defines that are in use have been moved into __KERNEL__
-+ * scope. As support gets added to these interface types, they should
-+ * be moved into __KERNEL__ scope with the code that uses them.
-  */
--#define MEDIA_INTF_T_ALSA_BASE			0x00000300
--#define MEDIA_INTF_T_ALSA_PCM_CAPTURE		(MEDIA_INTF_T_ALSA_BASE)
--#define MEDIA_INTF_T_ALSA_PCM_PLAYBACK		(MEDIA_INTF_T_ALSA_BASE + 1)
--#define MEDIA_INTF_T_ALSA_CONTROL		(MEDIA_INTF_T_ALSA_BASE + 2)
--#define MEDIA_INTF_T_ALSA_COMPRESS		(MEDIA_INTF_T_ALSA_BASE + 3)
--#define MEDIA_INTF_T_ALSA_RAWMIDI		(MEDIA_INTF_T_ALSA_BASE + 4)
--#define MEDIA_INTF_T_ALSA_HWDEP			(MEDIA_INTF_T_ALSA_BASE + 5)
--#define MEDIA_INTF_T_ALSA_SEQUENCER		(MEDIA_INTF_T_ALSA_BASE + 6)
--#define MEDIA_INTF_T_ALSA_TIMER			(MEDIA_INTF_T_ALSA_BASE + 7)
-+#define MEDIA_INTF_T_ALSA_COMPRESS             (MEDIA_INTF_T_ALSA_BASE + 3)
-+#define MEDIA_INTF_T_ALSA_RAWMIDI              (MEDIA_INTF_T_ALSA_BASE + 4)
-+#define MEDIA_INTF_T_ALSA_HWDEP                (MEDIA_INTF_T_ALSA_BASE + 5)
-+#define MEDIA_INTF_T_ALSA_SEQUENCER            (MEDIA_INTF_T_ALSA_BASE + 6)
-+#define MEDIA_INTF_T_ALSA_TIMER                (MEDIA_INTF_T_ALSA_BASE + 7)
- 
- /* Obsolete symbol for media_version, no longer used in the kernel */
- #define MEDIA_API_VERSION			((0 << 16) | (1 << 8) | 0)
++echo "Media Device Allocator testing: unbind and bind"
++echo "media driver $1 audio driver $2"
++
++MDRIVER=/sys/bus/usb/drivers/$1
++cd $MDRIVER
++MDEV=$(ls -d *\-*)
++
++ADRIVER=/sys/bus/usb/drivers/$2
++cd $ADRIVER
++ADEV=$(ls -d *\-*.1)
++
++echo "=================================="
++echo "Test unbind both devices - start"
++echo "Running unbind of $MDEV from $MDRIVER"
++echo $MDEV > $MDRIVER/unbind;
++
++echo "Media device should still be present!"
++ls -l /dev/media*
++
++echo "sound driver is at: $ADRIVER"
++echo "Device is: $ADEV"
++
++echo "Running unbind of $ADEV from $ADRIVER"
++echo $ADEV > $ADRIVER/unbind;
++
++echo "Media device should have been deleted!"
++ls -l /dev/media*
++echo "Test unbind both devices - end"
++
++echo "=================================="
++
++echo "Test bind both devices - start"
++echo "Running bind of $MDEV from $MDRIVER"
++echo $MDEV > $MDRIVER/bind;
++
++echo "Media device should be present!"
++ls -l /dev/media*
++
++echo "Running bind of $ADEV from $ADRIVER"
++echo $ADEV > $ADRIVER/bind;
++
++echo "Media device should be there!"
++ls -l /dev/media*
++
++echo "Test bind both devices - end"
++
++echo "=================================="
++
++echo "Test unbind $MDEV - bind $MDEV - unbind $ADEV - bind $ADEV start"
++
++echo "Running unbind of $MDEV from $MDRIVER"
++echo $MDEV > $MDRIVER/unbind;
++
++echo "Media device should be there!"
++ls -l /dev/media*
++
++echo "Running bind of $MDEV from $MDRIVER"
++echo $MDEV > $MDRIVER/bind;
++
++echo "Media device should be there!"
++ls -l /dev/media*
++
++echo "Running unbind of $ADEV from $ADRIVER"
++echo $ADEV > $ADRIVER/unbind;
++
++echo "Media device should be there!"
++ls -l /dev/media*
++
++echo "Running bind of $ADEV from $ADRIVER"
++echo $ADEV > $ADRIVER/bind;
++
++echo "Media device should be there!"
++ls -l /dev/media*
++
++echo "Test unbind $MDEV - bind $MDEV - unbind $ADEV - bind $ADEV end"
++echo "=================================="
 -- 
 2.17.1
 
