@@ -2,152 +2,108 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67861C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90200C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 318A7206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A36E206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:07:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="tF7VCVvc"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QXb1LBZw";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mm5D6fIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbfC2OGE (ORCPT
+        id S1729099AbfC2OHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:06:04 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42935 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728713AbfC2OGE (ORCPT
+        Fri, 29 Mar 2019 10:07:33 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42816 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728713AbfC2OHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:06:04 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p6so1272301pgh.9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 07:06:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FapvRZyYiTZFWw/6Cc7PifpPyHkEerUXRp6Ch6YJf0A=;
-        b=tF7VCVvcWTY29ojQUUysyh/P0Pgj4R/Zotjh4Q1WjuimdiGBtpx1TJ3gVaBeoLEYCY
-         snyfunBcuZcYbOakoS02/9E/VpDV3bLqlW0lnWCacW76Q2auhlX534a2JAG9JQZf1Jt4
-         mDwdLGhp8cOC5ln3kKwubQUUDNtDecD8LByd8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FapvRZyYiTZFWw/6Cc7PifpPyHkEerUXRp6Ch6YJf0A=;
-        b=Vh2EFJ8bNnp9zqhub4FKsGS/ZYROirw6bVZmlTeAYXSOd2vgPP+mxt6uxnSy0EpTb5
-         M5TkAc8LRct+HHA1n1SiT8fRsuBED/MudunZz5SOmz+XF/++X2qMh8AFqWwslp+zdTKU
-         qiNQddKmfydkfyXhAj57sJH3UXgABr14h37RlMKWWRr6fe2+7YTLeTHoYOsYC66NAdR3
-         p/8THHN2NV00jo0/hr4Oxfkw5X+1V+5PbrLjfoXeWAoHGlIE0JAuloCUhYAm/zWHjAG7
-         bU088T5iiMdYFmHfikXHRwqvOnHStRD0nL7Vl7P0DlqeMP8a5NMOlZgBJT4iPjT1rWqX
-         cPqw==
-X-Gm-Message-State: APjAAAWCAHELgMdT/maSxVH17cO2lVmDSJ9V/knLo2EGzR0yHc/Fh2G6
-        3GrPY6JFjQrw4O+LM2j9uit/lxE+tNU=
-X-Google-Smtp-Source: APXvYqzfoifDNvO+AAJ31IC+65JGwHTduv8nIYZJs+T39N4diMjz3GScgCgQIpc49zYbNE0Vq9aQmQ==
-X-Received: by 2002:a63:5405:: with SMTP id i5mr41461290pgb.212.1553868362899;
-        Fri, 29 Mar 2019 07:06:02 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id i64sm3178896pfb.112.2019.03.29.07.06.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 07:06:01 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        oleg@redhat.com, jannh@google.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH v2] doc/rcuref: Document real world examples in kernel
-Date:   Fri, 29 Mar 2019 10:05:55 -0400
-Message-Id: <20190329140555.118463-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+        Fri, 29 Mar 2019 10:07:32 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BFF9A61570; Fri, 29 Mar 2019 14:07:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553868451;
+        bh=lr8gVn+JEAPnNvkty/sTPLFZxa/laEWN12wveQ3lIyY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QXb1LBZwDWsYxNu2d89xloowNCdullJNaeGndjTTN+qGN+fAkq6cPsFtay21k8wJd
+         iSEh6Sh5W8wXsXkIoF+QfJbg/bO1SZS5mn/l8TiYUMMHGnQTR5kQ1ei6ow2s9AxpHV
+         5MHoyZc+9MXduXZDo4X1OGHOtgfJicmDC0NcQs3w=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D78B860DB4;
+        Fri, 29 Mar 2019 14:07:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553868450;
+        bh=lr8gVn+JEAPnNvkty/sTPLFZxa/laEWN12wveQ3lIyY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mm5D6fIhCDYeQLprGZNxpR6jA3B7dsOY3jvdCQMRh4zyArnMKefcfPA6dWF5HadtS
+         2zx9ZVv3f4FEtZOoEz6rDGp8oWUgylhEIosGi2BWeABra+UMN/ut9WyxW5MyTxHzKY
+         BIl1yNao1cEeG/5IJqddJPOoI7NlpUJnP0nlfuDg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D78B860DB4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH v2 1/2] MAINTAINERS: fix bad pattern in ARM/NUVOTON NPCM
+To:     Tomer Maimon <tmaimon77@gmail.com>, joe@perches.com,
+        avifishman70@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, brendanhiggins@google.com,
+        tali.perry1@gmail.com, akpm@linux-foundation.org,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+References: <20190328235752.334462-1-tmaimon77@gmail.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <367707d3-9f3f-e15b-1db3-eedb2e23981d@codeaurora.org>
+Date:   Fri, 29 Mar 2019 19:37:21 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190328235752.334462-1-tmaimon77@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document similar real world examples in the kernel corresponding to the
-second and third code snippets. Also correct an issue in
-release_referenced() in the code snippet example.
 
-Cc: oleg@redhat.com
-Cc: jannh@google.com
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On 3/29/2019 5:27 AM, Tomer Maimon wrote:
+> In the process of upstreaming architecture support for ARM/NUVOTON NPCM
+> include/dt-bindings/clock/nuvoton,npcm7xx-clks.h was renamed
+> include/dt-bindings/clock/nuvoton,npcm7xx-clock.h without updating
+> MAINTAINERS. This updates the MAINTAINERS pattern to match the new name
+> of this file.
+>
+> Fixes: 6a498e06ba22 ("MAINTAINERS: Add entry for the Nuvoton NPCM architecture")
+> Reported-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 
-v1->v2:
- - minor fixups, label code listings.
 
- Documentation/RCU/rcuref.txt | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-diff --git a/Documentation/RCU/rcuref.txt b/Documentation/RCU/rcuref.txt
-index 613033ff2b9b..a49d525ce975 100644
---- a/Documentation/RCU/rcuref.txt
-+++ b/Documentation/RCU/rcuref.txt
-@@ -12,6 +12,7 @@ please read on.
- Reference counting on elements of lists which are protected by traditional
- reader/writer spinlocks or semaphores are straightforward:
- 
-+CODE LISTING A:
- 1.				2.
- add()				search_and_reference()
- {				{
-@@ -28,7 +29,8 @@ add()				search_and_reference()
- release_referenced()			delete()
- {					{
-     ...					    write_lock(&list_lock);
--    atomic_dec(&el->rc, relfunc)	    ...
-+    if(atomic_dec_and_test(&el->rc))	    ...
-+	kfree(el);
-     ...					    remove_element
- }					    write_unlock(&list_lock);
-  					    ...
-@@ -44,6 +46,7 @@ search_and_reference() could potentially hold reference to an element which
- has already been deleted from the list/array.  Use atomic_inc_not_zero()
- in this scenario as follows:
- 
-+CODE LISTING B:
- 1.					2.
- add()					search_and_reference()
- {					{
-@@ -79,6 +82,7 @@ search_and_reference() code path.  In such cases, the
- atomic_dec_and_test() may be moved from delete() to el_free()
- as follows:
- 
-+CODE LISTING C:
- 1.					2.
- add()					search_and_reference()
- {					{
-@@ -114,6 +118,13 @@ element can therefore safely be freed.  This in turn guarantees that if
- any reader finds the element, that reader may safely acquire a reference
- without checking the value of the reference counter.
- 
-+As can be seen, a clear advantage of the pattern in listing C is, if there are
-+several calls to search_and_reference() in parallel to the delete(), then all
-+of those will succeed in obtaining a reference to the object if the object
-+could be found in the list before it was deleted in delete(), unlike the
-+pattern in listing B which would fail to acquire references in such a situation
-+even though the object is still in memory.
-+
- In cases where delete() can sleep, synchronize_rcu() can be called from
- delete(), so that el_free() can be subsumed into delete as follows:
- 
-@@ -130,3 +141,7 @@ delete()
-     	kfree(el);
-     ...
- }
-+
-+As additional examples in the kernel, the pattern in listing C is used by
-+reference counting of struct pid, while the pattern in listing B is used by
-+struct posix_acl.
--- 
-2.21.0.392.gf8f6787159e-goog
+Cheers,
+-Mukesh
+
+> ---
+>   MAINTAINERS | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3e5a5d263f29..8b305d2f2a8a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1900,7 +1900,7 @@ L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
+>   S:	Supported
+>   F:	arch/arm/mach-npcm/
+>   F:	arch/arm/boot/dts/nuvoton-npcm*
+> -F:	include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
+> +F:	include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
+>   F:	drivers/*/*npcm*
+>   F:	Documentation/devicetree/bindings/*/*npcm*
+>   F:	Documentation/devicetree/bindings/*/*/*npcm*
