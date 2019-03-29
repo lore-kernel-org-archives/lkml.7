@@ -2,153 +2,121 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1184C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EDEC10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98D920811
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66EB520811
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:40:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WhcgmAeA";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FUxNFofr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbfC2KkC (ORCPT
+        id S1729173AbfC2Kkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:40:02 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5205 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729050AbfC2KkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:40:01 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5A82454DC83587D6ECD0;
-        Fri, 29 Mar 2019 18:39:58 +0800 (CST)
-Received: from dessert.huawei.com (10.69.192.158) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 29 Mar 2019 18:39:49 +0800
-From:   Zeng Tao <prime.zeng@hisilicon.com>
-To:     <labbott@redhat.com>, <sumit.semwal@linaro.org>
-CC:     <prime.zeng@hisilicon.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Christian Brauner" <christian@brauner.io>,
-        <devel@driverdev.osuosl.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] staging: android: ion: refactory ion_alloc for kernel driver use
-Date:   Sat, 30 Mar 2019 02:40:16 +0800
-Message-ID: <1553884816-37850-1-git-send-email-prime.zeng@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 29 Mar 2019 06:40:53 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:50736 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729142AbfC2Kkw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 06:40:52 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7FBEB608FC; Fri, 29 Mar 2019 10:40:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553856051;
+        bh=6UJq9H0yEsYd4R3+jgGK+moeeQ9mNyIzO2VgN16P4jY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WhcgmAeAnZz3C7CB+VmrjQ8m3NAZiyNsaIcraLxp6ILqvOkOMv25Fb4E/M+CkLMGu
+         FqRgMMUYAcC94cxAzLeOuW76OwSW5+7Eh7tzFPqHC0MUDOl6laC00uc90P4/4/MSlN
+         dTr0BbzHbKZkd9K8JFUH4jwHC4MIuhxkj3rGeI3Y=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 12D8060237;
+        Fri, 29 Mar 2019 10:40:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553856050;
+        bh=6UJq9H0yEsYd4R3+jgGK+moeeQ9mNyIzO2VgN16P4jY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FUxNFofrBoBRI4jRCz0ejj8mWMH2UTW9p9rtjXXMxXRH5HaXvujViOhIguMQ34U5S
+         jchS215FqJt+hNpohVdWo//mQqHdfEhIvObgIaFcnPRnP87pbjFnWIi5PIOgwwgSlb
+         9oX43OCtJ4BlCvXicGVeKQUNy0g7ptMlHY8ry7fw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 12D8060237
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH v3 1/2] mm/sparse: Clean up the obsolete code comment
+To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, rafael@kernel.org, akpm@linux-foundation.org,
+        mhocko@suse.com, osalvador@suse.de, rppt@linux.ibm.com,
+        willy@infradead.org, fanc.fnst@cn.fujitsu.com
+References: <20190329082915.19763-1-bhe@redhat.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <1a1ff1d0-3bfa-4f06-1534-c49c63a8b58d@codeaurora.org>
+Date:   Fri, 29 Mar 2019 16:10:44 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.158]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190329082915.19763-1-bhe@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two reasons for this patch:
-1. There are some potential requirements for ion_alloc in kernel space,
-some media drivers need to allocate media buffers from ion instead of
-buddy or dma framework, this is more convient and clean very for media
-drivers. And In that case, ion is the only media buffer provider, it's
-more easier to maintain.
-2. Fd is only needed by user processes, not the kernel space, so dma_buf
-should be returned instead of fd for kernel space, and dma_buf_fd should
-be called only for userspace api.
 
-Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
----
- drivers/staging/android/ion/ion.c | 32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+On 3/29/2019 1:59 PM, Baoquan He wrote:
+> The code comment above sparse_add_one_section() is obsolete and
+> incorrect, clean it up and write new one.
+>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-diff --git a/drivers/staging/android/ion/ion.c b/drivers/staging/android/ion/ion.c
-index 92c2914..e93fb49 100644
---- a/drivers/staging/android/ion/ion.c
-+++ b/drivers/staging/android/ion/ion.c
-@@ -387,13 +387,13 @@ static const struct dma_buf_ops dma_buf_ops = {
- 	.unmap = ion_dma_buf_kunmap,
- };
- 
--static int ion_alloc(size_t len, unsigned int heap_id_mask, unsigned int flags)
-+struct dma_buf *ion_alloc(size_t len, unsigned int heap_id_mask,
-+			  unsigned int flags)
- {
- 	struct ion_device *dev = internal_dev;
- 	struct ion_buffer *buffer = NULL;
- 	struct ion_heap *heap;
- 	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
--	int fd;
- 	struct dma_buf *dmabuf;
- 
- 	pr_debug("%s: len %zu heap_id_mask %u flags %x\n", __func__,
-@@ -407,7 +407,7 @@ static int ion_alloc(size_t len, unsigned int heap_id_mask, unsigned int flags)
- 	len = PAGE_ALIGN(len);
- 
- 	if (!len)
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
- 
- 	down_read(&dev->lock);
- 	plist_for_each_entry(heap, &dev->heaps, node) {
-@@ -421,10 +421,10 @@ static int ion_alloc(size_t len, unsigned int heap_id_mask, unsigned int flags)
- 	up_read(&dev->lock);
- 
- 	if (!buffer)
--		return -ENODEV;
-+		return ERR_PTR(-ENODEV);
- 
- 	if (IS_ERR(buffer))
--		return PTR_ERR(buffer);
-+		return ERR_PTR(PTR_ERR(buffer));
- 
- 	exp_info.ops = &dma_buf_ops;
- 	exp_info.size = buffer->size;
-@@ -432,17 +432,12 @@ static int ion_alloc(size_t len, unsigned int heap_id_mask, unsigned int flags)
- 	exp_info.priv = buffer;
- 
- 	dmabuf = dma_buf_export(&exp_info);
--	if (IS_ERR(dmabuf)) {
-+	if (IS_ERR(dmabuf))
- 		_ion_buffer_destroy(buffer);
--		return PTR_ERR(dmabuf);
--	}
- 
--	fd = dma_buf_fd(dmabuf, O_CLOEXEC);
--	if (fd < 0)
--		dma_buf_put(dmabuf);
--
--	return fd;
-+	return dmabuf;
- }
-+EXPORT_SYMBOL(ion_alloc);
- 
- static int ion_query_heaps(struct ion_heap_query *query)
- {
-@@ -539,12 +534,19 @@ static long ion_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 	case ION_IOC_ALLOC:
- 	{
- 		int fd;
-+		struct dma_buf *dmabuf;
- 
--		fd = ion_alloc(data.allocation.len,
-+		dmabuf = ion_alloc(data.allocation.len,
- 			       data.allocation.heap_id_mask,
- 			       data.allocation.flags);
--		if (fd < 0)
-+		if (IS_ERR(dmabuf))
-+			return PTR_ERR(dmabuf);
-+
-+		fd = dma_buf_fd(dmabuf, O_CLOEXEC);
-+		if (fd < 0) {
-+			dma_buf_put(dmabuf);
- 			return fd;
-+		}
- 
- 		data.allocation.fd = fd;
- 
--- 
-2.7.4
 
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+Cheers,
+-Mukesh
+
+> ---
+> v2->v3:
+>    Normalize the code comment to use '/**' at 1st line of doc
+>    above function.
+> v1-v2:
+>    Add comments to explain what the returned value means for
+>    each error code.
+>   mm/sparse.c | 17 +++++++++++++----
+>   1 file changed, 13 insertions(+), 4 deletions(-)
+>
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 69904aa6165b..363f9d31b511 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -684,10 +684,19 @@ static void free_map_bootmem(struct page *memmap)
+>   #endif /* CONFIG_MEMORY_HOTREMOVE */
+>   #endif /* CONFIG_SPARSEMEM_VMEMMAP */
+>   
+> -/*
+> - * returns the number of sections whose mem_maps were properly
+> - * set.  If this is <=0, then that means that the passed-in
+> - * map was not consumed and must be freed.
+> +/**
+> + * sparse_add_one_section - add a memory section
+> + * @nid: The node to add section on
+> + * @start_pfn: start pfn of the memory range
+> + * @altmap: device page map
+> + *
+> + * This is only intended for hotplug.
+> + *
+> + * Returns:
+> + *   0 on success.
+> + *   Other error code on failure:
+> + *     - -EEXIST - section has been present.
+> + *     - -ENOMEM - out of memory.
+>    */
+>   int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
+>   				     struct vmem_altmap *altmap)
