@@ -7,68 +7,67 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB84FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4026FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A2F2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6232075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:12:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJfntTxO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r7z5aQhs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbfC2AMt (ORCPT
+        id S1728835AbfC2AMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 20:12:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40702 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728684AbfC2AMr (ORCPT
+        Thu, 28 Mar 2019 20:12:53 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38668 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728684AbfC2AMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 20:12:47 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c207so146824pfc.7;
-        Thu, 28 Mar 2019 17:12:46 -0700 (PDT)
+        Thu, 28 Mar 2019 20:12:51 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g37so130622plb.5;
+        Thu, 28 Mar 2019 17:12:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9UpI7O5lQwSfUmmY+yeBJ3QKa1u/yRDi0jCHPskrx3o=;
-        b=NJfntTxOCdeBHU8NGBtBiikIJ+97XCZlI71cbPKdrb2auAtErjwSrwVosYuCEatY4O
-         7cZGL8fEV4Kvur126FcT2Qb8KNORIPHMUTt6odEmxysesy9JoLOoi3wnjs/kBjbZwKyU
-         2+H7tFvIvNMMDZOMHOq8YkoxDa50E31nbWFfj8CRXHzARt5BEStK5IU+7qbjgKa90Dey
-         YImTzp4bcEqWtH5wZhl463/c0ecLwVPtcOwJB7mHqc+EZetaXj8jON7s0nwCy4JcAHWI
-         icGcXo9GRFUCddBgq1JvJoM5R02QajMvEoqjS/d9zjVot/oyxaXZvokHcLjo7iUMl6D7
-         xyhg==
+        bh=dA0pfVy9Llp9FksORyMVq9pfw5s+gke+P4BgXYNJeeo=;
+        b=r7z5aQhsWEhbn7kCS76LPZ4ilzzXTDIrZ3jJCXuA2rWTsVR5ug9fwe7AMQgsrfuGQ/
+         uzUBR0SLq0PNY7Hzdl3Py6KroyBUg4uOWnTrCh5CrydS7m3gvuljGk627y3lCnVoCbaO
+         2v6GL+juDflEW/QPPsUb4vmYdKv+EY73Hzf/UiAkG258f+gEloId2sxgDdxYAqAEebs9
+         AKsfFj5OrdfZfIK/9/6vp3PX7OvP8WrX1UGsQqw9VbT1fOEoI3MZl5DOwX6+/fZdYBhK
+         Q2AJpb9A/Xi/F01pDz/jjl7eGv0M3hrprb3Rci/IvgNdLi8w88jidFtD+0ySb6D1heAD
+         O9hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9UpI7O5lQwSfUmmY+yeBJ3QKa1u/yRDi0jCHPskrx3o=;
-        b=s4hvqPk50oCDhlOIvdpxD6ylZ18YrdbY3Aff5pOzagMGD66KU6xTKBZWn+Z6A1NcXc
-         tvvfvvG3q2VGJkQuSFYdqLEo3H7Qt7Gn60aqvc7S6sHJRwJSju+tAcemPXVru243sTen
-         M8e0wa/ZuzCbCNcziN8YKsLOdUwgWR97XvQUfEuYtTBTgbjxHbdhgI9/yXLJtIiw0i9/
-         n6ENAq0g8shGj+ar9ridQK1V1kdN/9ptlk4j/WMmFUYIemM97m0LNBZZPry1kE7nJunF
-         upDfVi2DsJ3G9VWgEhfl8kZ1S5eZq6T2KV0OBHMAAVf3YquBRjfEdA3L2RqYydiNzpOf
-         tsbA==
-X-Gm-Message-State: APjAAAX+eDjBnxwiqACvxeUcaLlc3nOvGfUAhqveeR/eYurE4I3Hp6oQ
-        6r+8GG9TzPeDctUH2Uu5fHc=
-X-Google-Smtp-Source: APXvYqwnQS2Eg9fTwvfqCPsys3GRnHqqqi9Z/WVcpl3mi4YerBKWIVRY048SX+ltG+p9LTP/JitMxQ==
-X-Received: by 2002:a65:5941:: with SMTP id g1mr13390379pgu.51.1553818366177;
-        Thu, 28 Mar 2019 17:12:46 -0700 (PDT)
+        bh=dA0pfVy9Llp9FksORyMVq9pfw5s+gke+P4BgXYNJeeo=;
+        b=noSNfxmymlqBbdKnXm35v8DgSkL713Oq1EqNyRI/18kKqeoz5fhv1lDnESXYD0FgOh
+         A1lI4JuAEabOuuxlKZ9fde7pD/ZcFX1LuJzXK7JsV36364O8rDRDHCflEfw0LSQUBcMT
+         dF5AB/EUPrzzJozGkz7axEeUkY82dgHRg+exM7EG/DTJZQ70RmJnKRcREr4NP88nCZ2p
+         rvKPhB4cxrF6FcJngmFGT3zPyqJeej5BbqhZE04bTCBNEjUg7qhByccVRJdVKcWaM4LM
+         oc7CtXCH3kv2ZiPdL41EBYlUcUI8fWjSXipp1SiWxDj0WKWqydXSX/k51SicjcDefENc
+         fUsA==
+X-Gm-Message-State: APjAAAXC8KlPF9MU5L9TJpljIv8uA75C6SUcWNUR04AgTVYpdB8Jbs28
+        wzto0xSIhXVp9SdziMuVsDE=
+X-Google-Smtp-Source: APXvYqy45uaxYLth+Oi1BXGfYGI+C9L/2A0z8jA0vfyOnVeftBbw3ron1+afhnoLBXBaDYfeaYfWAw==
+X-Received: by 2002:a17:902:a511:: with SMTP id s17mr45195710plq.262.1553818370648;
+        Thu, 28 Mar 2019 17:12:50 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id f125sm432488pfc.91.2019.03.28.17.12.41
+        by smtp.gmail.com with ESMTPSA id f125sm432488pfc.91.2019.03.28.17.12.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 17:12:44 -0700 (PDT)
+        Thu, 28 Mar 2019 17:12:49 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v2 08/24] acpi doc: convert acpi/gpio-properties.txt to rst format
-Date:   Fri, 29 Mar 2019 08:11:19 +0800
-Message-Id: <20190329001135.15847-9-changbin.du@gmail.com>
+Subject: [PATCH v2 09/24] acpi doc: convert acpi/method-customizing.txt to rst format
+Date:   Fri, 29 Mar 2019 08:11:20 +0800
+Message-Id: <20190329001135.15847-10-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190329001135.15847-1-changbin.du@gmail.com>
 References: <20190329001135.15847-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -80,217 +79,189 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- ...pio-properties.txt => gpio-properties.rst} | 78 +++++++++++--------
- Documentation/acpi/index.rst                  |  1 +
- MAINTAINERS                                   |  2 +-
- 3 files changed, 46 insertions(+), 35 deletions(-)
- rename Documentation/acpi/{gpio-properties.txt => gpio-properties.rst} (81%)
+ Documentation/acpi/index.rst              |  1 +
+ Documentation/acpi/method-customizing.rst | 82 +++++++++++++++++++++++
+ Documentation/acpi/method-customizing.txt | 73 --------------------
+ 3 files changed, 83 insertions(+), 73 deletions(-)
+ create mode 100644 Documentation/acpi/method-customizing.rst
+ delete mode 100644 Documentation/acpi/method-customizing.txt
 
-diff --git a/Documentation/acpi/gpio-properties.txt b/Documentation/acpi/gpio-properties.rst
-similarity index 81%
-rename from Documentation/acpi/gpio-properties.txt
-rename to Documentation/acpi/gpio-properties.rst
-index 88c65cb5bf0a..89c636963544 100644
---- a/Documentation/acpi/gpio-properties.txt
-+++ b/Documentation/acpi/gpio-properties.rst
-@@ -1,5 +1,8 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================================
- _DSD Device Properties Related to GPIO
----------------------------------------
-+======================================
- 
- With the release of ACPI 5.1, the _DSD configuration object finally
- allows names to be given to GPIOs (and other things as well) returned
-@@ -8,7 +11,7 @@ the corresponding GPIO, which is pretty error prone (it depends on
- the _CRS output ordering, for example).
- 
- With _DSD we can now query GPIOs using a name instead of an integer
--index, like the ASL example below shows:
-+index, like the ASL example below shows::
- 
-   // Bluetooth device with reset and shutdown GPIOs
-   Device (BTH)
-@@ -34,15 +37,19 @@ index, like the ASL example below shows:
-       })
-   }
- 
--The format of the supported GPIO property is:
-+The format of the supported GPIO property is::
- 
-   Package () { "name", Package () { ref, index, pin, active_low }}
- 
--  ref - The device that has _CRS containing GpioIo()/GpioInt() resources,
--        typically this is the device itself (BTH in our case).
--  index - Index of the GpioIo()/GpioInt() resource in _CRS starting from zero.
--  pin - Pin in the GpioIo()/GpioInt() resource. Typically this is zero.
--  active_low - If 1 the GPIO is marked as active_low.
-+ref
-+  The device that has _CRS containing GpioIo()/GpioInt() resources,
-+  typically this is the device itself (BTH in our case).
-+index
-+  Index of the GpioIo()/GpioInt() resource in _CRS starting from zero.
-+pin
-+  Pin in the GpioIo()/GpioInt() resource. Typically this is zero.
-+active_low
-+  If 1 the GPIO is marked as active_low.
- 
- Since ACPI GpioIo() resource does not have a field saying whether it is
- active low or high, the "active_low" argument can be used here.  Setting
-@@ -55,7 +62,7 @@ It is possible to leave holes in the array of GPIOs. This is useful in
- cases like with SPI host controllers where some chip selects may be
- implemented as GPIOs and some as native signals. For example a SPI host
- controller can have chip selects 0 and 2 implemented as GPIOs and 1 as
--native:
-+native::
- 
-   Package () {
-       "cs-gpios",
-@@ -67,7 +74,7 @@ native:
-   }
- 
- Other supported properties
----------------------------
-+==========================
- 
- Following Device Tree compatible device properties are also supported by
- _DSD device properties for GPIO controllers:
-@@ -78,7 +85,7 @@ _DSD device properties for GPIO controllers:
- - input
- - line-name
- 
--Example:
-+Example::
- 
-   Name (_DSD, Package () {
-       // _DSD Hierarchical Properties Extension UUID
-@@ -100,7 +107,7 @@ Example:
- 
- - gpio-line-names
- 
--Example:
-+Example::
- 
-   Package () {
-       "gpio-line-names",
-@@ -114,7 +121,7 @@ See Documentation/devicetree/bindings/gpio/gpio.txt for more information
- about these properties.
- 
- ACPI GPIO Mappings Provided by Drivers
----------------------------------------
-+======================================
- 
- There are systems in which the ACPI tables do not contain _DSD but provide _CRS
- with GpioIo()/GpioInt() resources and device drivers still need to work with
-@@ -139,16 +146,16 @@ line in that resource starting from zero, and the active-low flag for that line,
- respectively, in analogy with the _DSD GPIO property format specified above.
- 
- For the example Bluetooth device discussed previously the data structures in
--question would look like this:
-+question would look like this::
- 
--static const struct acpi_gpio_params reset_gpio = { 1, 1, false };
--static const struct acpi_gpio_params shutdown_gpio = { 0, 0, false };
-+  static const struct acpi_gpio_params reset_gpio = { 1, 1, false };
-+  static const struct acpi_gpio_params shutdown_gpio = { 0, 0, false };
- 
--static const struct acpi_gpio_mapping bluetooth_acpi_gpios[] = {
--  { "reset-gpios", &reset_gpio, 1 },
--  { "shutdown-gpios", &shutdown_gpio, 1 },
--  { },
--};
-+  static const struct acpi_gpio_mapping bluetooth_acpi_gpios[] = {
-+    { "reset-gpios", &reset_gpio, 1 },
-+    { "shutdown-gpios", &shutdown_gpio, 1 },
-+    { },
-+  };
- 
- Next, the mapping table needs to be passed as the second argument to
- acpi_dev_add_driver_gpios() that will register it with the ACPI device object
-@@ -158,12 +165,12 @@ calling acpi_dev_remove_driver_gpios() on the ACPI device object where that
- table was previously registered.
- 
- Using the _CRS fallback
-------------------------
-+=======================
- 
- If a device does not have _DSD or the driver does not create ACPI GPIO
- mapping, the Linux GPIO framework refuses to return any GPIOs. This is
- because the driver does not know what it actually gets. For example if we
--have a device like below:
-+have a device like below::
- 
-   Device (BTH)
-   {
-@@ -177,7 +184,7 @@ have a device like below:
-       })
-   }
- 
--The driver might expect to get the right GPIO when it does:
-+The driver might expect to get the right GPIO when it does:：
- 
-   desc = gpiod_get(dev, "reset", GPIOD_OUT_LOW);
- 
-@@ -193,22 +200,25 @@ the ACPI GPIO mapping tables are hardly linked to ACPI ID and certain
- objects, as listed in the above chapter, of the device in question.
- 
- Getting GPIO descriptor
-------------------------
-+=======================
-+
-+There are two main approaches to get GPIO resource from ACPI::
- 
--There are two main approaches to get GPIO resource from ACPI:
--	desc = gpiod_get(dev, connection_id, flags);
--	desc = gpiod_get_index(dev, connection_id, index, flags);
-+  desc = gpiod_get(dev, connection_id, flags);
-+  desc = gpiod_get_index(dev, connection_id, index, flags);
- 
- We may consider two different cases here, i.e. when connection ID is
- provided and otherwise.
- 
--Case 1:
--	desc = gpiod_get(dev, "non-null-connection-id", flags);
--	desc = gpiod_get_index(dev, "non-null-connection-id", index, flags);
-+Case 1::
-+
-+  desc = gpiod_get(dev, "non-null-connection-id", flags);
-+  desc = gpiod_get_index(dev, "non-null-connection-id", index, flags);
-+
-+Case 2::
- 
--Case 2:
--	desc = gpiod_get(dev, NULL, flags);
--	desc = gpiod_get_index(dev, NULL, index, flags);
-+  desc = gpiod_get(dev, NULL, flags);
-+  desc = gpiod_get_index(dev, NULL, index, flags);
- 
- Case 1 assumes that corresponding ACPI device description must have
- defined device properties and will prevent to getting any GPIO resources
 diff --git a/Documentation/acpi/index.rst b/Documentation/acpi/index.rst
-index d10170942e13..0fae18cc1eea 100644
+index 0fae18cc1eea..409e98f19748 100644
 --- a/Documentation/acpi/index.rst
 +++ b/Documentation/acpi/index.rst
-@@ -12,4 +12,5 @@ Linux ACPI (Advanced Configuration and Power Interface)
-    enumeration
-    osi
+@@ -14,3 +14,4 @@ Linux ACPI (Advanced Configuration and Power Interface)
     DSD-properties-rules
-+   gpio-properties
+    gpio-properties
     scan_handlers
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3e5a5d263f29..718890f348d4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6593,7 +6593,7 @@ M:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
- L:	linux-gpio@vger.kernel.org
- L:	linux-acpi@vger.kernel.org
- S:	Maintained
--F:	Documentation/acpi/gpio-properties.txt
-+F:	Documentation/acpi/gpio-properties.rst
- F:	drivers/gpio/gpiolib-acpi.c
- 
- GPIO IR Transmitter
++   method-customizing
+diff --git a/Documentation/acpi/method-customizing.rst b/Documentation/acpi/method-customizing.rst
+new file mode 100644
+index 000000000000..32eb1cdc1549
+--- /dev/null
++++ b/Documentation/acpi/method-customizing.rst
+@@ -0,0 +1,82 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=======================================
++Linux ACPI Custom Control Method How To
++=======================================
++
++:Author: Zhang Rui <rui.zhang@intel.com>
++
++
++Linux supports customizing ACPI control methods at runtime.
++
++Users can use this to:
++
++1. override an existing method which may not work correctly,
++   or just for debugging purposes.
++2. insert a completely new method in order to create a missing
++   method such as _OFF, _ON, _STA, _INI, etc.
++
++For these cases, it is far simpler to dynamically install a single
++control method rather than override the entire DSDT, because kernel
++rebuild/reboot is not needed and test result can be got in minutes.
++
++.. note:: Only ACPI METHOD can be overridden, any other object types like
++   "Device", "OperationRegion", are not recognized. Methods
++   declared inside scope operators are also not supported.
++.. note:: The same ACPI control method can be overridden for many times,
++   and it's always the latest one that used by Linux/kernel.
++.. note:: To get the ACPI debug object output (Store (AAAA, Debug)),
++   please run "echo 1 > /sys/module/acpi/parameters/aml_debug_output".
++
++1. override an existing method
++==============================
++a) get the ACPI table via ACPI sysfs I/F. e.g. to get the DSDT,
++   just run "cat /sys/firmware/acpi/tables/DSDT > /tmp/dsdt.dat"
++b) disassemble the table by running "iasl -d dsdt.dat".
++c) rewrite the ASL code of the method and save it in a new file,
++d) package the new file (psr.asl) to an ACPI table format.
++   Here is an example of a customized \_SB._AC._PSR method::
++
++      DefinitionBlock ("", "SSDT", 1, "", "", 0x20080715)
++      {
++         Method (\_SB_.AC._PSR, 0, NotSerialized)
++         {
++            Store ("In AC _PSR", Debug)
++            Return (ACON)
++         }
++      }
++
++   Note that the full pathname of the method in ACPI namespace
++   should be used.
++e) assemble the file to generate the AML code of the method.
++   e.g. "iasl -vw 6084 psr.asl" (psr.aml is generated as a result)
++   If parameter "-vw 6084" is not supported by your iASL compiler,
++   please try a newer version.
++f) mount debugfs by "mount -t debugfs none /sys/kernel/debug"
++g) override the old method via the debugfs by running
++   "cat /tmp/psr.aml > /sys/kernel/debug/acpi/custom_method"
++
++2. insert a new method
++======================
++This is easier than overriding an existing method.
++We just need to create the ASL code of the method we want to
++insert and then follow the step c) ~ g) in section 1.
++
++3. undo your changes
++====================
++The "undo" operation is not supported for a new inserted method
++right now, i.e. we can not remove a method currently.
++For an overridden method, in order to undo your changes, please
++save a copy of the method original ASL code in step c) section 1,
++and redo step c) ~ g) to override the method with the original one.
++
++
++.. note:: We can use a kernel with multiple custom ACPI method running,
++   But each individual write to debugfs can implement a SINGLE
++   method override. i.e. if we want to insert/override multiple
++   ACPI methods, we need to redo step c) ~ g) for multiple times.
++
++.. note:: Be aware that root can mis-use this driver to modify arbitrary
++   memory and gain additional rights, if root's privileges got
++   restricted (for example if root is not allowed to load additional
++   modules after boot).
+diff --git a/Documentation/acpi/method-customizing.txt b/Documentation/acpi/method-customizing.txt
+deleted file mode 100644
+index 7235da975f23..000000000000
+--- a/Documentation/acpi/method-customizing.txt
++++ /dev/null
+@@ -1,73 +0,0 @@
+-Linux ACPI Custom Control Method How To
+-=======================================
+-
+-Written by Zhang Rui <rui.zhang@intel.com>
+-
+-
+-Linux supports customizing ACPI control methods at runtime.
+-
+-Users can use this to
+-1. override an existing method which may not work correctly,
+-   or just for debugging purposes.
+-2. insert a completely new method in order to create a missing
+-   method such as _OFF, _ON, _STA, _INI, etc.
+-For these cases, it is far simpler to dynamically install a single
+-control method rather than override the entire DSDT, because kernel
+-rebuild/reboot is not needed and test result can be got in minutes.
+-
+-Note: Only ACPI METHOD can be overridden, any other object types like
+-      "Device", "OperationRegion", are not recognized. Methods
+-      declared inside scope operators are also not supported.
+-Note: The same ACPI control method can be overridden for many times,
+-      and it's always the latest one that used by Linux/kernel.
+-Note: To get the ACPI debug object output (Store (AAAA, Debug)),
+-      please run "echo 1 > /sys/module/acpi/parameters/aml_debug_output".
+-
+-1. override an existing method
+-   a) get the ACPI table via ACPI sysfs I/F. e.g. to get the DSDT,
+-      just run "cat /sys/firmware/acpi/tables/DSDT > /tmp/dsdt.dat"
+-   b) disassemble the table by running "iasl -d dsdt.dat".
+-   c) rewrite the ASL code of the method and save it in a new file,
+-   d) package the new file (psr.asl) to an ACPI table format.
+-      Here is an example of a customized \_SB._AC._PSR method,
+-
+-      DefinitionBlock ("", "SSDT", 1, "", "", 0x20080715)
+-      {
+-	Method (\_SB_.AC._PSR, 0, NotSerialized)
+-	{
+-		Store ("In AC _PSR", Debug)
+-		Return (ACON)
+-	}
+-      }
+-      Note that the full pathname of the method in ACPI namespace
+-      should be used.
+-   e) assemble the file to generate the AML code of the method.
+-      e.g. "iasl -vw 6084 psr.asl" (psr.aml is generated as a result)
+-      If parameter "-vw 6084" is not supported by your iASL compiler,
+-      please try a newer version.
+-   f) mount debugfs by "mount -t debugfs none /sys/kernel/debug"
+-   g) override the old method via the debugfs by running
+-      "cat /tmp/psr.aml > /sys/kernel/debug/acpi/custom_method"
+-
+-2. insert a new method
+-   This is easier than overriding an existing method.
+-   We just need to create the ASL code of the method we want to
+-   insert and then follow the step c) ~ g) in section 1.
+-
+-3. undo your changes
+-   The "undo" operation is not supported for a new inserted method
+-   right now, i.e. we can not remove a method currently.
+-   For an overridden method, in order to undo your changes, please
+-   save a copy of the method original ASL code in step c) section 1,
+-   and redo step c) ~ g) to override the method with the original one.
+-
+-
+-Note: We can use a kernel with multiple custom ACPI method running,
+-      But each individual write to debugfs can implement a SINGLE
+-      method override. i.e. if we want to insert/override multiple
+-      ACPI methods, we need to redo step c) ~ g) for multiple times.
+-
+-Note: Be aware that root can mis-use this driver to modify arbitrary
+-      memory and gain additional rights, if root's privileges got
+-      restricted (for example if root is not allowed to load additional
+-      modules after boot).
 -- 
 2.20.1
 
