@@ -2,94 +2,84 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D63C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAB2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7FF820657
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93DB218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vAxkn0Pu"
+	dkim=pass (1024-bit key) header.d=microway.com header.i=@microway.com header.b="HzF+lC2V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbfC2VDH (ORCPT
+        id S1730320AbfC2VDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 17:03:07 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40439 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730190AbfC2VDH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 17:03:07 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b11so1566398plr.7
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 14:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=Vt85FaSQvqSIgKmDkeu3cTPdbJWz0R1Jr3LXR2DaZMQ=;
-        b=vAxkn0PutHy75vymlaYCr9b6cXJFoQ5sN7eMLjCm6t6xKUjJK52dgImDwhTiPFaFcF
-         Y3QzWSJx21qR4zu44IcoJaWpkLmTiYG4DrN1UcfUeSnqtb4SQypbrdqCsH5uh+oPRtIx
-         i2hvC5oydY9vyyhyQc1HbPgS2+7DuiZ+pNZZs9qoCLEiq7YuiMyfib+bpuZHJmEerlTB
-         T0IavAV9MH0or2fli4yUfSFqKtmtB4SxHC6kzfJoNe2Iwgx+6ennrsbBtcQMHWuH3omI
-         yyvgMt5+1QgzX5XXoSjBxT4Qi9CecSpcV+0sZVNupQxFpoqisNtFRze+F5Bs9YoJSRXm
-         HyAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Vt85FaSQvqSIgKmDkeu3cTPdbJWz0R1Jr3LXR2DaZMQ=;
-        b=J5KkWeg1XTiRqTF6dHiWlqYax/E2fhN9Vyj3tL8FTKeE2w+02VXyk4PUjlE+5f/1tR
-         V6wYclzltZ4E1w2mnfbkVVb3FVQ7oQU2YHhqz0NU0sYgBdzh+5kbOCy9+sSBIAgDe47u
-         EAv8w3hpf7aeQ6a6AsbZU55abpVOdgcjgWeeH9fpOChhvT7+YWOmJoj3K85ThScNJUVG
-         I5lSKVqrT17f/Z6C3jPsiGCDh23UbCRz01dvp4m/6qfnNWa3WMefjymSwPLfmXl+GNZ3
-         m0NbXwVnv1/5v/ZUE0B8HH0aM3jP1GH0TdN4HEhBQ+jApZjuWjoMc3ullYkViU+qQu9G
-         V/Dg==
-X-Gm-Message-State: APjAAAU7bl4LZc9OkyRkif9bBu3jxO1Q3KBEWuY8A/sm6a5uYwIsWD3x
-        3WF5UCkITgFywfAgopE5Um6WNw==
-X-Google-Smtp-Source: APXvYqzOT9qF0rIQW7Sax/XLVqPEkN0JDYAgoPre6kteLlO417SK5GBon+3AATWMw2qP3k3H2MoEjw==
-X-Received: by 2002:a17:902:bb90:: with SMTP id m16mr52733859pls.49.1553893386859;
-        Fri, 29 Mar 2019 14:03:06 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id y37sm4086752pgk.78.2019.03.29.14.03.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 14:03:06 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     arm@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/1] ARM: multi_v7_defconfig: enable the Amlogic Meson ADC and eFuse drivers
-In-Reply-To: <20190328205122.27092-2-martin.blumenstingl@googlemail.com>
-References: <20190328205122.27092-1-martin.blumenstingl@googlemail.com> <20190328205122.27092-2-martin.blumenstingl@googlemail.com>
-Date:   Fri, 29 Mar 2019 14:03:05 -0700
-Message-ID: <7hftr5wfzq.fsf@baylibre.com>
+        Fri, 29 Mar 2019 17:03:13 -0400
+Received: from mail1.microway.com ([50.245.10.177]:44094 "EHLO microway.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730190AbfC2VDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 17:03:13 -0400
+X-Greylist: delayed 442 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 Mar 2019 17:03:12 EDT
+Received: from [10.200.120.6] (openvpn.microway.com [192.168.200.4])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by microway.com (Postfix) with ESMTPSA id 026CA9F9F6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 16:55:46 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=microway.com;
+        s=verified; t=1553892946;
+        bh=QCQzVG2sUntXA8MXNP3KqZ89g49LV/B5QQI/rW0v9T4=;
+        h=To:From:Subject:Date;
+        b=HzF+lC2VRVv1aqeohpnunofkZBsu0+Y40Lyyn8To8oBmt/4VsNh0CrLAG6BYO6MJQ
+         PPd4Deg7Kai4UPYXJ6CjsrHjHnxvHUiWLlQvkvspuzzUEnNtnz8R/piJiBeRg248zq
+         jANbdu0/Lxoi30yDZup3h4KjmAcFaFnCzNSfYU9c=
+To:     linux-kernel@vger.kernel.org
+From:   Rick Warner <rick@microway.com>
+Subject: slow write performance with software RAID on nvme storage
+Message-ID: <0a6373c6-817f-6ead-2a71-7c83c03406be@microway.com>
+Date:   Fri, 29 Mar 2019 16:55:44 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+Hi All,
 
-> With the SAR ADC driver ADC measurements can be taken though the IIO
-> framework. Additionally the SAR ADC has a channel which is connected to
-> an internal temperature sensor. The calibration data for this internal
-> temperature sensor is stored in the eFuse.
->
-> Enable the SAR ADC driver and the eFuse driver for the 32-bit Amlogic
-> Meson SoCs so we can expose the chip temperature to userspace through
-> the IIO hwmon driver (whose config option is already enabled:
-> CONFIG_SENSORS_IIO_HWMON=y).
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+We've been testing a 24 drive NVME software RAID and getting far lower
+write speeds than expected.  The drives are connected with PLX chips
+such that 12 drives are on 1 x16 connection and the other 12 drives use
+another x16 link  The system is a Supermicro 2029U-TN24R4T.  The drives
+are Intel DC P4500 1TB.
 
-Queued for v5.2,
+We're testing with fio using 8 jobs.
+
+Using all defaults with RAID0 I can only get 4 or 5 GB/s write speeds
+but can hit ~24GB/s read speeds.  The drives have over 1GB/s write speed
+each, so we should be able to hit at least 20GB/s write speed.
+
+Testing with RAID6 and defaults got significantly lower (down around
+1.5GB/s).  Using a 64k chunk and increasing the group_thread_cnt
+increased the results to ~4GB/s.
+
+dmesg shows the RAID parity calc speed being ~40GB/s:
+[    4.215386] raid6: using algorithm avx512x2 gen() 41397 MB/s
+
+
+I've played around with filesystem queue choices and tuning but haven't
+seen any significant improvements.
+
+What is the bottleneck here? If it's not known, what should I do to
+determine it?
+
+I've done a variety of other tests with this system and am happy to
+elaborate further if any other information is needed.
 
 Thanks,
-
-Kevin
+Rick Warner
