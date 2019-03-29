@@ -2,116 +2,99 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B252AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCB4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C4F2184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 450A62173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:06:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=eatwithus.eu header.i=@eatwithus.eu header.b="DUqEDB+7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbfC2JDa (ORCPT
+        id S1729194AbfC2JGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 05:03:30 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56436 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbfC2JD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 05:03:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E660A78;
-        Fri, 29 Mar 2019 02:03:29 -0700 (PDT)
-Received: from queper01-ThinkPad-T460s (unknown [10.37.9.161])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2CF63F557;
-        Fri, 29 Mar 2019 02:03:25 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 09:03:23 +0000
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     edubezval@gmail.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        will.deacon@arm.com, catalin.marinas@arm.com,
-        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH 1/3] arm64: defconfig: Enable CONFIG_ENERGY_MODEL
-Message-ID: <20190329090320.qzsgaytwfyxx4oq3@queper01-ThinkPad-T460s>
-References: <20190328101352.25657-1-quentin.perret@arm.com>
- <20190328101352.25657-2-quentin.perret@arm.com>
- <20190328102206.doqj5fykqlld7jkd@queper01-lin>
- <f5c699d6-f8f8-ab53-2835-329ae2bd8202@linaro.org>
- <20190328174233.jthsdzxrzmzpjnqd@queper01-lin>
- <1f99acdf-3f9a-5419-b1b5-1bcb9b36dbb6@linaro.org>
+        Fri, 29 Mar 2019 05:06:38 -0400
+Received: from mail.eatwithus.eu ([176.107.131.6]:37819 "EHLO eatwithus.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727387AbfC2JGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 05:06:37 -0400
+Received: by eatwithus.eu (Postfix, from userid 1001)
+        id 64C6688CB5; Fri, 29 Mar 2019 10:04:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=eatwithus.eu; s=mail;
+        t=1553850324; bh=cd5EgeQdknypVv/toasjvJr+1fSRH55Ph4rD02X3yd0=;
+        h=Date:From:To:Subject:From;
+        b=DUqEDB+72VU/1I4QSwcfVC38QgJ6zyIozbIDIyHUaxoDhFs/WcbPaJi9hyaKubTEe
+         k/FTL3QuT1stOpMxoEwV1cdnIAvnhnDPFXlLnrni+eEHeoaNiFHwiJVbd1c+YEeRg4
+         pVJB+NN9L5iQOHwcqKE7wOgCzrEeFKeC/OKX+I3k=
+Received: by mail.eatwithus.eu for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 09:03:53 GMT
+Message-ID: <20190329100230-0.1.q.yak.0.erdhdtoddk@eatwithus.eu>
+Date:   Fri, 29 Mar 2019 09:03:53 GMT
+From:   "Radoslav Dobrev" <radoslav.dobrev@eatwithus.eu>
+To:     <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?=D0=9C=D0=BE=D1=82=D0=B8=D0=B2=D0=B8=D1=80=D0=B0=D0=BD_=D0=BF=D0=B5=D1=80=D1=81=D0=BE=D0=BD=D0=B0=D0=BB?=
+X-Mailer: mail.eatwithus.eu
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1f99acdf-3f9a-5419-b1b5-1bcb9b36dbb6@linaro.org>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 28 Mar 2019 at 20:51:12 (+0100), Daniel Lezcano wrote:
-> On 28/03/2019 18:42, Quentin Perret wrote:
-> > Hi Daniel,
-> > 
-> > On Thursday 28 Mar 2019 at 18:27:49 (+0100), Daniel Lezcano wrote:
-> >> On 28/03/2019 11:22, Quentin Perret wrote:
-> >>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> >>>> index 2d9c39033c1a..3c09bdaaefd3 100644
-> >>>> --- a/arch/arm64/configs/defconfig
-> >>>> +++ b/arch/arm64/configs/defconfig
-> >>>> @@ -97,6 +97,7 @@ CONFIG_XEN=y
-> >>>>  CONFIG_COMPAT=y
-> >>>>  CONFIG_HIBERNATION=y
-> >>>>  CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
-> >>>> +CONFIG_ENERGY_MODEL=n
-> >>>
-> >>> Hmm, sorry I turned this to '=n' for testing and forgot to update the
-> >>> patch. This obviously should be '=y' ...
-> >>
-> >> I did a test without the ENERGY_MODEL config option set, dhrystone and
-> >> the power_allocator policy on the hikey. The board did not mitigate well
-> >> and ended up rebooting.
-> > 
-> > OK ... And is the same thing happening if you just run mainline w/o the
-> > dynamic-power-coefficient binding set for example ? The result _should_
-> > be the same. 
-> 
-> Right, it is the same.
+=D0=97=D0=B4=D1=80=D0=B0=D0=B2=D0=B5=D0=B9=D1=82=D0=B5!
 
-OK.
+=D0=92=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8=D1=82=D0=B5 =D0=B7=D0=B0 =D1=85=
+=D1=80=D0=B0=D0=BD=D0=B0 =D1=81=D0=B5 =D0=BD=D0=B0=D1=80=D0=B5=D0=B6=D0=B4=
+=D0=B0=D1=82 =D1=81=D1=80=D0=B5=D0=B4 =D0=BB=D1=8E=D0=B1=D0=B8=D0=BC=D0=B8=
+=D1=82=D0=B5 =D1=81=D0=BE=D1=86=D0=B8=D0=B0=D0=BB=D0=BD=D0=B8 =D0=BF=D1=80=
+=D0=B8=D0=B4=D0=BE=D0=B1=D0=B8=D0=B2=D0=BA=D0=B8 =D0=BD=D0=B0 =D1=80=D0=B0=
+=D0=B1=D0=BE=D1=82=D0=B5=D1=89=D0=B8=D1=82=D0=B5 =D1=85=D0=BE=D1=80=D0=B0=
+ =D0=B8 =D1=81=D1=80=D0=B5=D0=B4 =D0=BD=D0=B0=D0=B9-=D0=BF=D1=80=D0=B5=D0=
+=B4=D0=BF=D0=BE=D1=87=D0=B8=D1=82=D0=B0=D0=BD=D0=B8=D1=82=D0=B5 =D0=BD=D0=
+=B0=D1=87=D0=B8=D0=BD=D0=B8 =D0=B7=D0=B0 =D1=81=D1=82=D0=B8=D0=BC=D1=83=D0=
+=BB=D0=B8=D1=80=D0=B0=D0=BD=D0=B5 =D0=BE=D1=82 =D1=80=D0=B0=D0=B1=D0=BE=D1=
+=82=D0=BE=D0=B4=D0=B0=D1=82=D0=B5=D0=BB=D0=B8=D1=82=D0=B5. =D0=A2=D0=B5 =D0=
+=BF=D0=BE=D0=B4=D0=BE=D0=B1=D1=80=D1=8F=D0=B2=D0=B0=D1=82 =D0=B5=D1=84=D0=
+=B5=D0=BA=D1=82=D0=B8=D0=B2=D0=BD=D0=BE=D1=81=D1=82=D1=82=D0=B0 =D0=B8 =D0=
+=BF=D1=80=D0=BE=D0=B8=D0=B7=D0=B2=D0=BE=D0=B4=D0=B8=D1=82=D0=B5=D0=BB=D0=BD=
+=D0=BE=D1=81=D1=82=D1=82=D0=B0 =D0=BD=D0=B0 =D0=92=D0=B0=D1=88=D0=B8=D1=82=
+=D0=B5 =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=D0=B8.
 
-> 
-> > If not, then perhaps I missed something. I'll try to
-> > reproduce on my end. Just to be sure, when you say hikey, you mean
-> > hikey960 ? Or 620 ? In any case, thanks for testing :-)
-> 
-> hikey620
-> 
-> >> May be the cpu cooling Kconfig option should add
-> >> a SELECT or a DEPENDS on ENERGY_MODEL ?
-> > 
-> > Right, I've been wondering the same thing. I'm not a big fan of 'select'
-> > because enabling ENERGY_MODEL automatically for the thermal stuff will
-> > also happen to enable other things (EAS) without the user knowing. So
-> > I'd rather keep the ENERGY_MODEL option explicit.
-> > 
-> > But perhaps having THERMAL_GOV_POWER_ALLOCATOR 'depend on ENERGY_MODEL'
-> > could work. It's just that there is no _strong_ dependency, the IPA code
-> > isn't supposed to crash even if there is no EM ...
-> 
-> Given if the ENERGY_MODEL is not set there is a regression we should add
-> the dependency IMO.
+=D0=91=D0=BB=D0=B0=D0=B3=D0=BE=D0=B4=D0=B0=D1=80=D0=B5=D0=BD=D0=B8=D0=B5 =
+=D0=BD=D0=B0 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8=D1=82=D0=B5 =D0=B7=
+=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0 =D1=80=D0=B5=D0=B0=D0=BB=D0=B8=D0=B7=
+=D0=B8=D1=80=D0=B0=D1=82=D0=B5 =D1=81=D0=BF=D0=B5=D1=81=D1=82=D1=8F=D0=B2=
+=D0=B0=D0=BD=D0=B8=D1=8F =E2=80=93 =D1=81=D1=82=D0=BE=D0=B9=D0=BD=D0=BE=D1=
+=81=D1=82=D1=82=D0=B0 =D0=BD=D0=B0 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=
+=B8=D1=82=D0=B5 =D0=BD=D0=B5 =D1=81=D0=B5 =D0=BE=D0=B1=D0=BB=D0=B0=D0=B3=D0=
+=B0 =D1=81 =D0=B4=D0=B0=D0=BD=D1=8A=D1=86=D0=B8 =D0=B8 =D0=BE=D1=81=D0=B8=
+=D0=B3=D1=83=D1=80=D0=BE=D0=B2=D0=BA=D0=B8 =D0=B4=D0=BE 60=D0=BB=D0=B2 =D0=
+=BC=D0=B5=D1=81=D0=B5=D1=87=D0=BD=D0=BE =D0=B7=D0=B0 =D0=B2=D1=81=D0=B5=D0=
+=BA=D0=B8 =D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BD=D0=B8=D0=BA, =D0=B0 =D0=B2=
+ =D1=81=D1=8A=D1=89=D0=BE=D1=82=D0=BE =D0=B2=D1=80=D0=B5=D0=BC=D0=B5 =D0=BC=
+=D0=BE=D1=82=D0=B8=D0=B2=D0=B0=D1=86=D0=B8=D1=8F=D1=82=D0=B0 =D0=B8 =D0=BF=
+=D0=BE=D0=BA=D1=83=D0=BF=D0=B0=D1=82=D0=B5=D0=BB=D0=BD=D0=B0=D1=82=D0=B0 =
+=D1=81=D0=BF=D0=BE=D1=81=D0=BE=D0=B1=D0=BD=D0=BE=D1=81=D1=82 =D0=BD=D0=B0=
+ =D1=81=D0=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=D0=B8=D1=82=D0=B5 =D0=BD=
+=D0=B0=D1=80=D0=B0=D1=81=D1=82=D0=B2=D0=B0.
 
-Right, that is true. And there are folks who don't use the arm64
-defconfig downstream, so I guess we need to make it clear for them they
-need to enable ENERGY_MODEL from now on.
+=D0=90=D0=BA=D0=BE =D0=BF=D1=80=D0=BE=D1=8F=D0=B2=D1=8F=D0=B2=D0=B0=D1=82=
+=D0=B5 =D0=B8=D0=BD=D1=82=D0=B5=D1=80=D0=B5=D1=81 =D0=BA=D1=8A=D0=BC =D0=B2=
+=D1=8A=D0=B7=D0=BC=D0=BE=D0=B6=D0=BD=D0=BE=D1=81=D1=82=D0=B8=D1=82=D0=B5 =
+=D0=B7=D0=B0 =D0=B2=D1=8A=D0=B2=D0=B5=D0=B6=D0=B4=D0=B0=D0=BD=D0=B5 =D0=BD=
+=D0=B0 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8 =D0=B7=D0=B0 =D1=85=D1=80=
+=D0=B0=D0=BD=D0=B0 =D0=B2=D1=8A=D0=B2 =D0=92=D0=B0=D1=88=D0=B0=D1=82=D0=B0=
+ =D1=84=D0=B8=D1=80=D0=BC=D0=B0 =D0=B8 =D0=B6=D0=B5=D0=BB=D0=B0=D0=B5=D1=82=
+=D0=B5 =D0=BF=D0=BE-=D0=BF=D0=BE=D0=B4=D1=80=D0=BE=D0=B1=D0=BD=D0=B0 =D0=B8=
+=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D1=8F, =D0=B8=D0=B7=D0=BF=
+=D1=80=D0=B0=D1=82=D0=B5=D1=82=D0=B5 =D0=BC=D0=B8 =D1=81=D1=8A=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5.
 
-I'll add a 'depends on ENERGY_MODEL' to 'THERMAL_GOV_POWER_ALLOCATOR' in
-patch 3 for v2.
 
-Thanks,
-Quentin
+=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
+=D0=B5=D0=B2
+Head of HR Benefit Team
+www.eatwithus.eu  
