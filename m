@@ -2,140 +2,109 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E50D1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5EEC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5B22183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:18:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bZVwdikU"
+	by mail.kernel.org (Postfix) with ESMTP id E9B06218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553880250;
+	bh=VC4PyqRuLdoo3kJeLqcTkeedPqD2aigIHEsXG/WvdXc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xVEEo6hHBPDECBYX12vBR8QC5/xijksDwYlKhLHARc8K+gfOJJhL5FSfUh0ubT9po
+	 S1VFMJ7hw+NlTx0ZZFeoXE0eEeoVoQ4XTduqI02UkwAwF1qwd004QqBRaK7YGPzh1F
+	 /eat7QXv/Ah37zzrbvBBI3aY4OZdMU7J19ts1SCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbfC2RSD (ORCPT
+        id S1729814AbfC2RYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 13:18:03 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36055 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729584AbfC2RSD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 13:18:03 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y13so3521859wrd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 10:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=o+Bpicailm3HZZPFA5yHSg98EopL6m0dWMK+6JfYPEs=;
-        b=bZVwdikUZLBgzFpBPcdLCA3MIRpxVa2NskQbZNFH94xv29hwgKreVtxM03GZbc+iD8
-         jkP5OBGLdKX4FcG6iF1VlUlc9vYkHl20qSuLCZ2l3VnG9UtolrUi2kAdEMBl0jC9JbYx
-         SojXjW/phfOYI5Mat1wlkwyq6OGgFD3U9gXiTLSr675jmfn/RuxPADZSb0e1cp72NTVt
-         /0A9Q4ZGyTPf7u6bXKIw7LIHdfH9Vwvwsqnv3MKMok4J4eLFfQVK3XNdu/uvCsWal1wS
-         riTp0H1wImaBruvWTzOwv4p+f6fwlZjj0xePIXNqBgMdt4fIiUsKY6550gopYMTIIJLB
-         ixlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o+Bpicailm3HZZPFA5yHSg98EopL6m0dWMK+6JfYPEs=;
-        b=SXGlqaJKIaOx+ufIXTXSjOeININOtJtqxXVRfReTD9jEs8X9y54RW0T1pzNaT4WgmD
-         YS3qdncXOi8ZH2VmgJucloos86TzmBGqBBBhU5amyprUfVc0EbUO/Sp84MIIaqQ43J35
-         BERsWA0TCGiGMjdehO5s9PnDDIaXjJoxA65gUwKBbXp2W1LgPbhpv9SjLLxrCttEpfc3
-         L3yspl/B2pyymnhLTLks8T/biAv9H+GGw2iIR04YfFi74+2CB8NhBgwNZ0kCY8wJWFA5
-         9E2/E+61TSnthSAW+SPjU7FdzTnSoDIsS/lqogaY5zJ2VIRefMq+qzX0iU+wos2dr/c+
-         FOrg==
-X-Gm-Message-State: APjAAAU/TBk+zqphMApAH7M1TJTDGtL7Wv+bvuj/Mo6vsQNW+JOF2aAM
-        d1lxxrK48SaKuTum2iMn1KXPRw==
-X-Google-Smtp-Source: APXvYqyrTcoCG6gkulGPrL9QkpUypNzvD35OoXqMQmtFT3+XG+jqFWd9SvxADEK5bwu8nC8q65sxow==
-X-Received: by 2002:a5d:6384:: with SMTP id p4mr30983139wru.208.1553879881047;
-        Fri, 29 Mar 2019 10:18:01 -0700 (PDT)
-Received: from [192.168.0.41] (197.255.95.92.rev.sfr.net. [92.95.255.197])
-        by smtp.googlemail.com with ESMTPSA id b11sm3259187wru.61.2019.03.29.10.17.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 10:18:00 -0700 (PDT)
-Subject: Re: [PATCH 3/3] thermal: cpu_cooling: Migrate to using the EM
- framework
-To:     Quentin Perret <quentin.perret@arm.com>
-Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        will.deacon@arm.com, catalin.marinas@arm.com,
-        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190328101352.25657-1-quentin.perret@arm.com>
- <20190328101352.25657-4-quentin.perret@arm.com>
- <30926b3d-0074-8c84-a081-d3dbc9258525@linaro.org>
- <20190329091636.gbmh5hzw46ucangr@queper01-ThinkPad-T460s>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <eeaf6156-c591-cc21-d097-b6c5cdb62a5a@linaro.org>
-Date:   Fri, 29 Mar 2019 18:17:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 29 Mar 2019 13:24:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729662AbfC2RYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 13:24:08 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8605E206B7;
+        Fri, 29 Mar 2019 17:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553880247;
+        bh=VC4PyqRuLdoo3kJeLqcTkeedPqD2aigIHEsXG/WvdXc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XaeoYxfB4xX1jfhvGuFD1WI4kG+oFo3r1S3pW+ox5/B43OnMZuqtpT8oFsiV+9Cw+
+         u9BRIA7PCBsYOE/vk5/YvaWN+1vM0bvRT4dcEZjmNHRArK6U+zE5OxFght0BcU+gif
+         xoZeW5pdZYT2VFr0N++31z8hdFteGOty//947LTo=
+Date:   Fri, 29 Mar 2019 12:24:06 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
+        linux-pci@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] pci/p2pdma: Fix the gen_pool_add_virt() failure path
+Message-ID: <20190329172406.GE24180@google.com>
+References: <155387324370.2443841.574715745262628837.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155387325926.2443841.6674640070856872301.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190329091636.gbmh5hzw46ucangr@queper01-ThinkPad-T460s>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155387325926.2443841.6674640070856872301.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/03/2019 10:16, Quentin Perret wrote:
-> Hi Daniel,
+On Fri, Mar 29, 2019 at 08:27:39AM -0700, Dan Williams wrote:
+> The pci_p2pdma_add_resource() implementation immediately frees the pgmap
+> if gen_pool_add_virt() fails. However, that means that when @dev
+> triggers a devres release devm_memremap_pages_release() will crash
+> trying to access the freed @pgmap.
 > 
-> On Thursday 28 Mar 2019 at 21:23:35 (+0100), Daniel Lezcano wrote:
->>>  /**
->>>   * struct time_in_idle - Idle time stats
->>>   * @time: previous reading of the absolute time that this cpu was idle
->>> @@ -82,7 +70,7 @@ struct time_in_idle {
->>>   *	frequency.
->>>   * @max_level: maximum cooling level. One less than total number of valid
->>>   *	cpufreq frequencies.
->>> - * @freq_table: Freq table in descending order of frequencies
->>> + * @em: Reference on the Energy Model of the device
->>>   * @cdev: thermal_cooling_device pointer to keep track of the
->>>   *	registered cooling device.
->>>   * @policy: cpufreq policy.
->>> @@ -98,7 +86,7 @@ struct cpufreq_cooling_device {
->>>  	unsigned int cpufreq_state;
->>>  	unsigned int clipped_freq;
->>>  	unsigned int max_level;
->>> -	struct freq_table *freq_table;	/* In descending order */
->>> +	struct em_perf_domain *em;
->>
->> Why do you need to add this field? it will be accessible via policy->em, no?
+> Use the new devm_memunmap_pages() to manually free the mapping in the
+> error path.
 > 
-> You mean via the CPUFreq policy ? Then no, the EM isn't attached to the
-> CPUFreq policy. And we can't attach it directly to the CPUFreq policy
-> since in *theory* it is not required to map 1:1 to CPUFreq policies
-> (even though that _is_ true for all existing platforms). That's one of
-> the things this patch checks in that em_is_sane() function below.
+> Fixes: 52916982af48 ("PCI/P2PDMA: Support peer-to-peer memory")
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Especially if you run "git log --oneline drivers/pci/p2pdma.c" and make
+yours match :),
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> ---
+>  drivers/pci/p2pdma.c |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> FWIW, the idea of the design is, the EM framework is 'independent' and
-> it's up to the client subsystems (scheduler, IPA) to check if it actually
-> works for them. In the case of the scheduler, for example, we can't use
-> an EM that's too complex because that would cause too much overhead, so
-> we don't start EAS if that's not the case. See:
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index c52298d76e64..595a534bd749 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -208,13 +208,15 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  			pci_bus_address(pdev, bar) + offset,
+>  			resource_size(&pgmap->res), dev_to_node(&pdev->dev));
+>  	if (error)
+> -		goto pgmap_free;
+> +		goto pages_free;
+>  
+>  	pci_info(pdev, "added peer-to-peer DMA memory %pR\n",
+>  		 &pgmap->res);
+>  
+>  	return 0;
+>  
+> +pages_free:
+> +	devm_memunmap_pages(&pdev->dev, pgmap);
+>  pgmap_free:
+>  	devm_kfree(&pdev->dev, pgmap);
+>  	return error;
 > 
->   https://elixir.bootlin.com/linux/latest/source/kernel/sched/topology.c#L367
-> 
-> In the case of IPA, we need to do something similar. We can't use an EM
-> that doesn't map 1:1 to CPUFreq policies, so we bail out if that's not
-> true, etc, ... This isn't supposed to trigger any time soon, but it's
-> good to have a check just to be on the safe side I think.
-
-Ok, makes sense. Thanks for the clarification.
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
