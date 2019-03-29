@@ -2,93 +2,90 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D16C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB7BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4CB220811
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:56:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nIyDBqpy";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Au4jeGKs"
+	by mail.kernel.org (Postfix) with ESMTP id 3F54D20811
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbfC2J4E (ORCPT
+        id S1728918AbfC2J5p convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 05:56:04 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41862 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbfC2J4E (ORCPT
+        Fri, 29 Mar 2019 05:57:45 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:52356 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728808AbfC2J5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 05:56:04 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5D1F2602BA; Fri, 29 Mar 2019 09:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553853363;
-        bh=yqgT1ELylBVMMOQv2UYI/M+F+ZT/PTzEkVX3jgXVsnw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nIyDBqpy7d79GXKFFCrS4daGWVPOOO1MUUHt1vYEONkKZucCU4J0z2ONUKQCrsYgN
-         tBECxMNJncvTly6sqsdhjY1GjcaXtTUCQ6XTLoeFINGUstNwol5usjt9RdYI4W/TN/
-         T8fPV5Om4TdwiftOagTkWyJ2hlFQIDhbe6a+t5mA=
-Received: from neeraju-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CD0DE602BA;
-        Fri, 29 Mar 2019 09:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553853362;
-        bh=yqgT1ELylBVMMOQv2UYI/M+F+ZT/PTzEkVX3jgXVsnw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Au4jeGKsj4/Nc1kN0KPcwmortZPJP8jdlSTRwNzDy+39Yffmr6IyaU35SfnszILTH
-         HwKiZOcBLobSX7zBkwPaJzHOLiutNXt0ipQZSd7Qq+pQiUZedqlhSBQpLMGbAniWjF
-         J/yLnKUS1Nr5h4UgKUL+TOxViOOV3kXwuqR3Z8fE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CD0DE602BA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-To:     paulmck@linux.vnet.ibm.com, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, joel@joelfernandes.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Neeraj Upadhyay <neeraju@codeaurora.org>
-Subject: [PATCH] rcu: tree_plugin: Dump specified number of blocked tasks
-Date:   Fri, 29 Mar 2019 15:25:52 +0530
-Message-Id: <1553853352-14253-1-git-send-email-neeraju@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 29 Mar 2019 05:57:45 -0400
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x2T9vQEE017524
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 29 Mar 2019 18:57:26 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2T9vQf0023958;
+        Fri, 29 Mar 2019 18:57:26 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2T9teEO007998;
+        Fri, 29 Mar 2019 18:57:26 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.137] [10.38.151.137]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-3819778; Fri, 29 Mar 2019 18:56:54 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC09GP.gisp.nec.co.jp ([10.38.151.137]) with mapi id 14.03.0319.002; Fri,
+ 29 Mar 2019 18:56:53 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Chao Fan <fanc.fnst@cn.fujitsu.com>
+CC:     Borislav Petkov <bp@alien8.de>, "bhe@redhat.com" <bhe@redhat.com>,
+        "Dave Young" <dyoung@redhat.com>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
+Thread-Topic: [PATCH v2] x86/boot: Use EFI setup data if provided
+Thread-Index: AQHU5R0gSF49+PGwf02T2oxnk4CVXaYgAhGAgAAQvICAAIi3AIAAvAQAgABdKwCAAAdoAIAAAt2AgAAF2ACAAAH/gIAAA4+A
+Date:   Fri, 29 Mar 2019 09:56:53 +0000
+Message-ID: <71880195-70ae-13e9-08c6-364c157c9ab1@ce.jp.nec.com>
+References: <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <0263068e-f2d0-1101-0438-0f570f0b38e7@ce.jp.nec.com>
+ <20190329083920.GA21152@zn.tnic>
+ <20190329090550.GI4234@localhost.localdomain>
+ <20190329091605.GB21152@zn.tnic>
+ <ee8045cf-5100-6bd6-1ccc-e9654da922b6@ce.jp.nec.com>
+ <20190329094409.GM4234@localhost.localdomain>
+In-Reply-To: <20190329094409.GM4234@localhost.localdomain>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <CCAF4965E588C945B9AC8079FF63597F@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dump_blkd_tasks() uses 10 as the max number of blocked
-tasks, which are printed. However, it has an argument
-which provides that number. So, use the argument value
-instead. As all callers currently pass 10 as the number,
-there isn't any impact.
+On 3/29/19 6:44 PM, Chao Fan wrote:
+> But in my qemu guest, they are different and the address of ACPI20 is
+> higher than ACPI 1.0:
+> [root@localhost ~]# cat /sys/firmware/efi/systab
+> ACPI20=0xbfbfa014
+> ACPI=0xbfbfa000
+> SMBIOS=0xbfbcc000
+> 
+> In this condition, ACPI 1.0 comes before ACPI 2.0. So I suggested you
+> to keep this logical.
 
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
----
- kernel/rcu/tree_plugin.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you for the information. The proposed patch keeps the logic
+and should work fine on that case as well.
 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 3960294..08bcd87 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -740,7 +740,7 @@ void exit_rcu(void)
- 	i = 0;
- 	list_for_each(lhp, &rnp->blkd_tasks) {
- 		pr_cont(" %p", lhp);
--		if (++i >= 10)
-+		if (++i >= ncheck)
- 			break;
- 	}
- 	pr_cont("\n");
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
-
+Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
