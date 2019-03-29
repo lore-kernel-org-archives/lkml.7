@@ -2,117 +2,105 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C9DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E13C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2FB21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5C321773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:47:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ln8pCRJD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TljUoFUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730219AbfC2Vpt (ORCPT
+        id S1730309AbfC2VrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 17:45:49 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37659 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729939AbfC2Vps (ORCPT
+        Fri, 29 Mar 2019 17:47:07 -0400
+Received: from mail-it1-f202.google.com ([209.85.166.202]:36022 "EHLO
+        mail-it1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730220AbfC2VrH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 17:45:48 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c16so3480836otn.4
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 14:45:48 -0700 (PDT)
+        Fri, 29 Mar 2019 17:47:07 -0400
+Received: by mail-it1-f202.google.com with SMTP id l202so3499936ita.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 14:47:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O0OFsvlxEQNd0+haHfsVo0YdMyMm7iz+X8iwm5qqJGw=;
-        b=ln8pCRJDI582zd9uMCAAliHnXOsO+68A2KPuCuwp8QrWe4kUAhw/qVOqpm4u2p/Ajr
-         jix8y1jGwT7MSqswVuWFG+Uc2oILC2RifyiSgvKImoSitxjcY22GIZGpcXwrKa7ww/Md
-         cslQCGlxb7c4jOaHJe2YvELdzt3LcI7R3ViEj2jvlUMEaz9I3x9s0Z68X+MOsx5oOBvw
-         bYwnCI1kRqRTHMqlbXwiY+5e8sneFjZZi1TI9jyxhboWJJSZgkmzuKbkFFYbYUcSzxfk
-         6xtuAXfWNWb6xXRZQna0P2IbP4nk3hKanttBhMoEH24Y3fsRJjkYZ82Kl4jcxdEqY+mZ
-         fHgQ==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Lju3Sh2kmpmmLQeEIQ2kymRMSnNvrQCfL6/ZPFgSoEI=;
+        b=TljUoFUDkPFUmXkzJOJw61Own5HUus9rZgycUxURNEbrdYp95r8+f9pkGC/lLC9ZPs
+         jEloLEiAocsNFr0DXxqX80YLzav3gWJsNUw5Kgz6dgb2mvV7qxZm64MWRMjvwLQ7Ry7W
+         ycmjbmrNlAnL9pD26Zw9wx1/yZxvvZgnEn9Tz3AuF7dV/jOUtV1cSBSDIoRTr7PTz1ox
+         dSaNT5E1o87aRWojcr9J5kDLZ+ONbjqmDWxKmOf4MGPEiAM6+VWPouh85bWd1nOl1+Xu
+         MYEKFY1khKQOFftF2ZlsKiawCLB/jpYNXcvWaZ9PI1vG7xpXKlCsqy83ssMsWOBY94cH
+         /T6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O0OFsvlxEQNd0+haHfsVo0YdMyMm7iz+X8iwm5qqJGw=;
-        b=Df7B3ARgYiwR0GsGJU6IXVFG3oaMrhXY3keh2rvRXnplKuteRNN5qO96Rbg8LGU7Gr
-         OShGOiQyK78rmYSPjfu26LtCgm1F2mw8E0ZcM5lZAg0ZFRwV027wtaao8l3kVzvrL5kM
-         hGI4PMWHRvgaMRaodWCUDqJbQqRgMApeihg5xL3errDasOeTIV7WdEap3FrHtRn3TOA6
-         rIgYNGFkU9JTL8hr61ezkacRScqcR6dGnXyu72qoROoYqCG5sALleK9IF2x8dYF4JEZe
-         60XQHGGwgYoam32z3IpV1HQlnSxIJNiCxzrDGmmS5FzyTcw/LPHo30OrSB0pryPN0+Lk
-         Rrow==
-X-Gm-Message-State: APjAAAUhjhOKxeGE/QNUvgVy4cZnmRwnSRyagr+sPYeBwStmfecgyqnj
-        qzDgAD9h/KMd+CN+Los98m3EXvxsCoINTsyt1IDyBg==
-X-Google-Smtp-Source: APXvYqy7qiyEoOGfaBqNCv3CZ9h6mKRBUjCwoysY6ysi4M3b765oEIVK3Vr+MBXBiq/xMiJ1iOHPBTZgwMPNmdN2nuM=
-X-Received: by 2002:a9d:309:: with SMTP id 9mr35244289otv.230.1553895947677;
- Fri, 29 Mar 2019 14:45:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190328225925.241998-1-jannh@google.com> <530a0823-5dcd-9006-2057-ae5b9da2389a@codeaurora.org>
-In-Reply-To: <530a0823-5dcd-9006-2057-ae5b9da2389a@codeaurora.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Lju3Sh2kmpmmLQeEIQ2kymRMSnNvrQCfL6/ZPFgSoEI=;
+        b=J7lJ+jhK7sqNdTo1dbDhDhRAM9d1MBLkfofp2+S38kGKU79KiiW6R0wkJINHhJ1UwO
+         HQPJZrhIM9MshxCjl3EoP/7lr5I40gGhBOp4qMmMoK1xL4lcZKMkdwl0fajGB2BKykGc
+         ti7gDWjm/3X93M2cwQT7BkSMsG7II9RKhwO20ApyP9XsnzMvOM0taO/yH0DSFsjMsdru
+         +plrU9D3nA1T6JNbWjRSfO+hnFrNoGiAQY8P5stB8pVN+9FSAQ0n0574SlK2EzOOSeoF
+         uRvCBJFEZmAVWKIfwW4yV9VXp9O+MQ2vH5maeu1p4JYxNw3dJ3O1Vc7EulHm8zsvgu03
+         FJ8w==
+X-Gm-Message-State: APjAAAW9JXjkLedj1FVaR+hTKTZUIhik0thQyl7Q5wdLPQeifZ3QgraO
+        i9/9nPmqYqj+H0V8Ivogmd1PoGOprA==
+X-Google-Smtp-Source: APXvYqxkwuw2CQt0Z9Y7/gxlyvhqE8zePmv+jFBrwT9zhInUGeltF4rgFXn71lIir7ufXlWDbjY+81W5bQ==
+X-Received: by 2002:a24:3608:: with SMTP id l8mr2148429itl.35.1553896026529;
+ Fri, 29 Mar 2019 14:47:06 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 22:46:49 +0100
+Message-Id: <20190329214652.258477-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+Subject: [PATCH v3 1/4] kernel.h: use parentheses around argument in u64_to_user_ptr()
 From:   Jann Horn <jannh@google.com>
-Date:   Fri, 29 Mar 2019 22:45:21 +0100
-Message-ID: <CAG48ez01TR7xBRgdAyvoHBjttn-ffr-8KBS8sJ904TDm4FLH+Q@mail.gmail.com>
-Subject: Re: [PATCH] x86/calgary: fix bitcast type warnings
-To:     Mukesh Ojha <mojha@codeaurora.org>
-Cc:     Muli Ben-Yehuda <mulix@mulix.org>, Jon Mason <jdmason@kudzu.us>,
-        Thomas Gleixner <tglx@linutronix.de>,
+To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
+        "H. Peter Anvin" <hpa@zytor.com>, jannh@google.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Qiaowei Ren <qiaowei.ren@intel.com>,
+        Mukesh Ojha <mojha@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 9:19 AM Mukesh Ojha <mojha@codeaurora.org> wrote:
-> On 3/29/2019 4:29 AM, Jann Horn wrote:
-> > The sparse checker attempts to ensure that all conversions between
-> > fixed-endianness numbers and numbers with native endianness are explicit.
-> > However, the calgary code reads and writes big-endian numbers from/to IO
-> > memory using {read,write}{l,q}(), which return native-endian numbers.
-> >
-> > This could be addressed by putting __force casts all over the place, but
-> > that would kind of defeat the point of the warning. Instead, create new
-> > helpers {read,write}{l,q}_be() for big-endian IO that convert from/to
-> > native endianness.
-> >
-> > Most of this patch is a straightforward conversion; the following parts
-> > aren't just mechanical replacement:
-> >
-> >   - ->tar_val is now a native-endian number instead of big-endian
-> >   - calioc2_handle_quirks() did `cpu_to_be32(readl(target))` when it
-> >     intended to do `be32_to_cpu(readl(target))` (but that has no actual
-> >     effects outside of type warnings)
-> >
-> > This gets rid of 108 lines of sparse warnings.
-> >
-> > Signed-off-by: Jann Horn <jannh@google.com>
-> > ---
-> > compile-tested only
-> >
-> >   arch/x86/kernel/pci-calgary_64.c | 108 ++++++++++++++++++-------------
-> >   1 file changed, 64 insertions(+), 44 deletions(-)
-> >
-> > diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci-calgary_64.c
-> > index c70720f61a34..36cd66d940fb 100644
-> > --- a/arch/x86/kernel/pci-calgary_64.c
-> > +++ b/arch/x86/kernel/pci-calgary_64.c
-> > @@ -534,6 +534,26 @@ static inline int is_cal_pci_dev(unsigned short device)
-> >       return (is_calgary(device) || is_calioc2(device));
-> >   }
->
->
-> Can the existing api's not be used here like iowrite64be/ioread64be/ or
-> similar variant in "include/asm-generic/io.h"
+Use parentheses around uses of the argument in u64_to_user_ptr() to ensure
+that the cast doesn't apply to part of the argument.
 
-Given what Logan said, I think it probably makes sense to keep the patch as-is?
+There are existing uses of the macro of the form `u64_to_user_ptr(A + B)`,
+which expands to `(void __user *)(uintptr_t)A + B` (the cast applies to the
+first operand of the addition, the addition is a pointer addition). This
+happens to still work as intended, the semantic difference doesn't cause a
+difference in behavior.
+But I want to use u64_to_user_ptr() with a ternary operator in the
+argument, like so: `u64_to_user_ptr(A ? B : C)`. This currently doesn't
+work as intended.
+
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+ include/linux/kernel.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 34a5036debd3..2d14e21c16c0 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -47,8 +47,8 @@
+ 
+ #define u64_to_user_ptr(x) (		\
+ {					\
+-	typecheck(u64, x);		\
+-	(void __user *)(uintptr_t)x;	\
++	typecheck(u64, (x));		\
++	(void __user *)(uintptr_t)(x);	\
+ }					\
+ )
+ 
+-- 
+2.21.0.392.gf8f6787159e-goog
+
