@@ -6,540 +6,286 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107E1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517A1C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF29B217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13155217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="bdpa061D"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pNsn2/Er"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbfC2Qik (ORCPT
+        id S1729922AbfC2Qin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 12:38:40 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:22494 "EHLO pegase1.c-s.fr"
+        Fri, 29 Mar 2019 12:38:43 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:57777 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729852AbfC2Qif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 12:38:35 -0400
+        id S1729871AbfC2Qij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 12:38:39 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44W6qq2fbRz9tyQc;
-        Fri, 29 Mar 2019 17:38:31 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 44W6qv3pRRz9tyQP;
+        Fri, 29 Mar 2019 17:38:35 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=bdpa061D; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=pNsn2/Er; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ccc43i4GGWaD; Fri, 29 Mar 2019 17:38:31 +0100 (CET)
+        with ESMTP id hYB81AQxeEDZ; Fri, 29 Mar 2019 17:38:35 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44W6qq1Y50z9tyQP;
-        Fri, 29 Mar 2019 17:38:31 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44W6qv2gbgz9tyQj;
+        Fri, 29 Mar 2019 17:38:35 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553877511; bh=uuKjeniTu4HapMSUJtsSGBAKCQKJLuG++qigahc1fp0=;
+        t=1553877515; bh=+ZQXST6DXIV8Tl51sB/rpKMO4T/8+yTR7rxoJ/n5OQ4=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=bdpa061DrmrLZfty8SQAi5uvKhfO7OOnpSz1Hyl3Pimr7g7vlBCzR/5todhqcKKsr
-         Nd5/yu5B4lh1w2z07j0Ic7kpY7W6tROgPFyphF+OA4+rJ+V2JZMfZO4nOdhBAeiTFM
-         1Cvv28pkP9ulgoKDlnGgX3DajVXNDg/ALZgLR6UU=
+        b=pNsn2/ErAWNRzUcTrBZzvisn4BR2X5RgIaIUCkFyd/1XQkoyZ1bHCnA8ApDrHKW5T
+         x2VPg7Cx481KbVIVlCnXS7/Fh0w3hzyr5Fi8QmPrGD0X7tRu5RW/MLOSDU3mAMbHWo
+         x3V6bE601+fndhYM0j1FFkb3wSgjYLM0VQlFtkiE=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C9D258B93D;
-        Fri, 29 Mar 2019 17:38:32 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id ECA388B93D;
+        Fri, 29 Mar 2019 17:38:36 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 8aZ-P008KlqL; Fri, 29 Mar 2019 17:38:32 +0100 (CET)
+        with ESMTP id CpWYtwLei3_Y; Fri, 29 Mar 2019 17:38:36 +0100 (CET)
 Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AB9088B938;
-        Fri, 29 Mar 2019 17:38:32 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C8BA28B938;
+        Fri, 29 Mar 2019 17:38:36 +0100 (CET)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 948BD6FC56; Fri, 29 Mar 2019 16:38:32 +0000 (UTC)
-Message-Id: <ea285e7de00312f62a487308cd878bab74a5b660.1553877076.git.christophe.leroy@c-s.fr>
+        id AC1526FC56; Fri, 29 Mar 2019 16:38:36 +0000 (UTC)
+Message-Id: <2e060691a4762bb0615a1c7606dbce22d13ab111.1553877076.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1553877076.git.christophe.leroy@c-s.fr>
 References: <cover.1553877076.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 10/17] powerpc/32: Enter exceptions with MSR_EE unset
+Subject: [PATCH v2 14/17] powerpc/32: implement fast entry for syscalls on
+ BOOKE
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 29 Mar 2019 16:38:32 +0000 (UTC)
+Date:   Fri, 29 Mar 2019 16:38:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All exceptions handlers know when to reenable interrupts, so
-it is safer to enter all of them with MSR_EE unset, except
-for syscalls.
+This patch implements a fast entry for syscalls.
 
-Suggested-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-[splited out from benh RFC patch]
+Syscalls don't have to preserve non volatile registers except LR.
+
+This patch then implement a fast entry for syscalls, where
+volatile registers get clobbered.
+
+As this entry is dedicated to syscall it always sets MSR_EE
+and warns in case MSR_EE was previously off
+
+It also assumes that the call is always from user, system calls are
+unexpected from kernel.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/head_32.S        | 68 ++++++++++++++++++------------------
- arch/powerpc/kernel/head_32.h        |  8 -----
- arch/powerpc/kernel/head_40x.S       | 44 +++++++++++------------
- arch/powerpc/kernel/head_44x.S       |  6 ++--
- arch/powerpc/kernel/head_8xx.S       | 32 ++++++++---------
- arch/powerpc/kernel/head_booke.h     | 12 ++-----
- arch/powerpc/kernel/head_fsl_booke.S | 26 +++++++-------
- 7 files changed, 90 insertions(+), 106 deletions(-)
+ arch/powerpc/kernel/entry_32.S       |   7 ---
+ arch/powerpc/kernel/head_44x.S       |   3 +-
+ arch/powerpc/kernel/head_booke.h     | 103 +++++++++++++++++++++++++++++++++--
+ arch/powerpc/kernel/head_fsl_booke.S |   3 +-
+ 4 files changed, 100 insertions(+), 16 deletions(-)
 
-diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
-index 6e1b0897f5da..983480f9547b 100644
---- a/arch/powerpc/kernel/head_32.S
-+++ b/arch/powerpc/kernel/head_32.S
-@@ -333,7 +333,7 @@ Alignment:
- 	mfspr	r5,SPRN_DSISR
- 	stw	r5,_DSISR(r11)
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
--	EXC_XFER_EE(0x600, alignment_exception)
-+	EXC_XFER_STD(0x600, alignment_exception)
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index 71a101600428..5f52a71c2838 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -335,7 +335,6 @@ stack_ovf:
+ 	SYNC
+ 	RFI
  
- /* Program check exception */
- 	EXCEPTION(0x700, ProgramCheck, program_check_exception, EXC_XFER_STD)
-@@ -354,13 +354,13 @@ END_FTR_SECTION_IFSET(CPU_FTR_FPU_UNAVAILABLE)
- 	bl	load_up_fpu		/* if from user, just load it up */
- 	b	fast_exception_return
- 1:	addi	r3,r1,STACK_FRAME_OVERHEAD
--	EXC_XFER_EE_LITE(0x800, kernel_fp_unavailable_exception)
-+	EXC_XFER_LITE(0x800, kernel_fp_unavailable_exception)
- 
- /* Decrementer */
- 	EXCEPTION(0x900, Decrementer, timer_interrupt, EXC_XFER_LITE)
- 
--	EXCEPTION(0xa00, Trap_0a, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0xb00, Trap_0b, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0xa00, Trap_0a, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0xb00, Trap_0b, unknown_exception, EXC_XFER_STD)
- 
- /* System call */
- 	. = 0xc00
-@@ -371,7 +371,7 @@ SystemCall:
- 
- /* Single step - not used on 601 */
- 	EXCEPTION(0xd00, SingleStep, single_step_exception, EXC_XFER_STD)
--	EXCEPTION(0xe00, Trap_0e, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0xe00, Trap_0e, unknown_exception, EXC_XFER_STD)
+-#ifndef CONFIG_BOOKE	/* to be removed once BOOKE uses fast syscall entry */
+ #ifdef CONFIG_TRACE_IRQFLAGS
+ trace_syscall_entry_irq_off:
+ 	/*
+@@ -362,7 +361,6 @@ transfer_to_syscall:
+ 	andi.	r12,r9,MSR_EE
+ 	beq-	trace_syscall_entry_irq_off
+ #endif /* CONFIG_TRACE_IRQFLAGS */
+-#endif /* !CONFIG_BOOKE */
  
  /*
-  * The Altivec unavailable trap is at 0x0f20.  Foo.
-@@ -603,35 +603,35 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_NEED_DTLB_SW_LRU)
- #define altivec_assist_exception	unknown_exception
- #endif
- 
--	EXCEPTION(0x1300, Trap_13, instruction_breakpoint_exception, EXC_XFER_EE)
--	EXCEPTION(0x1400, SMI, SMIException, EXC_XFER_EE)
--	EXCEPTION(0x1500, Trap_15, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1600, Trap_16, altivec_assist_exception, EXC_XFER_EE)
-+	EXCEPTION(0x1300, Trap_13, instruction_breakpoint_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1400, SMI, SMIException, EXC_XFER_STD)
-+	EXCEPTION(0x1500, Trap_15, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1600, Trap_16, altivec_assist_exception, EXC_XFER_STD)
- 	EXCEPTION(0x1700, Trap_17, TAUException, EXC_XFER_STD)
--	EXCEPTION(0x1800, Trap_18, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1900, Trap_19, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1a00, Trap_1a, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1b00, Trap_1b, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1c00, Trap_1c, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1d00, Trap_1d, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1e00, Trap_1e, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1f00, Trap_1f, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2000, RunMode, RunModeException, EXC_XFER_EE)
--	EXCEPTION(0x2100, Trap_21, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2200, Trap_22, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2300, Trap_23, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2400, Trap_24, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2500, Trap_25, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2600, Trap_26, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2700, Trap_27, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2800, Trap_28, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2900, Trap_29, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2a00, Trap_2a, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2b00, Trap_2b, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2c00, Trap_2c, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2d00, Trap_2d, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2e00, Trap_2e, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x2f00, Trap_2f, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0x1800, Trap_18, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1900, Trap_19, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1a00, Trap_1a, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1b00, Trap_1b, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1c00, Trap_1c, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1d00, Trap_1d, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1e00, Trap_1e, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1f00, Trap_1f, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2000, RunMode, RunModeException, EXC_XFER_STD)
-+	EXCEPTION(0x2100, Trap_21, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2200, Trap_22, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2300, Trap_23, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2400, Trap_24, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2500, Trap_25, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2600, Trap_26, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2700, Trap_27, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2800, Trap_28, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2900, Trap_29, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2a00, Trap_2a, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2b00, Trap_2b, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2c00, Trap_2c, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2d00, Trap_2d, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2e00, Trap_2e, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x2f00, Trap_2f, unknown_exception, EXC_XFER_STD)
- 
- 	. = 0x3000
- 
-@@ -643,7 +643,7 @@ AltiVecUnavailable:
- 	b	fast_exception_return
- #endif /* CONFIG_ALTIVEC */
- 1:	addi	r3,r1,STACK_FRAME_OVERHEAD
--	EXC_XFER_EE_LITE(0xf20, altivec_unavailable_exception)
-+	EXC_XFER_LITE(0xf20, altivec_unavailable_exception)
- 
- PerformanceMonitor:
- 	EXCEPTION_PROLOG
-diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
-index 7221418a883f..8881b6887841 100644
---- a/arch/powerpc/kernel/head_32.h
-+++ b/arch/powerpc/kernel/head_32.h
-@@ -127,12 +127,4 @@
- 	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL | MSR_EE, NOCOPY, transfer_to_handler, \
- 			  ret_from_except)
- 
--#define EXC_XFER_EE(n, hdlr)		\
--	EXC_XFER_TEMPLATE(hdlr, n, MSR_KERNEL, COPY_EE, transfer_to_handler_full, \
--			  ret_from_except_full)
--
--#define EXC_XFER_EE_LITE(n, hdlr)	\
--	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL, COPY_EE, transfer_to_handler, \
--			  ret_from_except)
--
- #endif /* __HEAD_32_H__ */
-diff --git a/arch/powerpc/kernel/head_40x.S b/arch/powerpc/kernel/head_40x.S
-index 1a80a3e45e44..71597fb7cd89 100644
---- a/arch/powerpc/kernel/head_40x.S
-+++ b/arch/powerpc/kernel/head_40x.S
-@@ -332,7 +332,7 @@ _ENTRY(saved_ksp_limit)
- 	mfspr	r4,SPRN_DEAR		/* Grab the DEAR and save it */
- 	stw	r4,_DEAR(r11)
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
--	EXC_XFER_EE(0x600, alignment_exception)
-+	EXC_XFER_STD(0x600, alignment_exception)
- 
- /* 0x0700 - Program Exception */
- 	START_EXCEPTION(0x0700, ProgramCheck)
-@@ -342,19 +342,19 @@ _ENTRY(saved_ksp_limit)
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	EXC_XFER_STD(0x700, program_check_exception)
- 
--	EXCEPTION(0x0800, Trap_08, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x0900, Trap_09, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x0A00, Trap_0A, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x0B00, Trap_0B, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0x0800, Trap_08, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x0900, Trap_09, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x0A00, Trap_0A, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x0B00, Trap_0B, unknown_exception, EXC_XFER_STD)
- 
- /* 0x0C00 - System Call Exception */
- 	START_EXCEPTION(0x0C00,	SystemCall)
- 	EXCEPTION_PROLOG
- 	EXC_XFER_SYS(0xc00, DoSyscall)
- 
--	EXCEPTION(0x0D00, Trap_0D, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x0E00, Trap_0E, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x0F00, Trap_0F, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0x0D00, Trap_0D, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x0E00, Trap_0E, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x0F00, Trap_0F, unknown_exception, EXC_XFER_STD)
- 
- /* 0x1000 - Programmable Interval Timer (PIT) Exception */
- 	. = 0x1000
-@@ -571,25 +571,25 @@ _ENTRY(saved_ksp_limit)
- 	mfspr	r10, SPRN_SPRG_SCRATCH0
- 	b	InstructionAccess
- 
--	EXCEPTION(0x1300, Trap_13, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1400, Trap_14, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1500, Trap_15, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1600, Trap_16, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0x1300, Trap_13, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1400, Trap_14, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1500, Trap_15, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1600, Trap_16, unknown_exception, EXC_XFER_STD)
- #ifdef CONFIG_IBM405_ERR51
- 	/* 405GP errata 51 */
- 	START_EXCEPTION(0x1700, Trap_17)
- 	b DTLBMiss
- #else
--	EXCEPTION(0x1700, Trap_17, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0x1700, Trap_17, unknown_exception, EXC_XFER_STD)
- #endif
--	EXCEPTION(0x1800, Trap_18, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1900, Trap_19, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1A00, Trap_1A, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1B00, Trap_1B, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1C00, Trap_1C, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1D00, Trap_1D, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1E00, Trap_1E, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1F00, Trap_1F, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0x1800, Trap_18, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1900, Trap_19, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1A00, Trap_1A, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1B00, Trap_1B, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1C00, Trap_1C, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1D00, Trap_1D, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1E00, Trap_1E, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1F00, Trap_1F, unknown_exception, EXC_XFER_STD)
- 
- /* Check for a single step debug exception while in an exception
-  * handler before state has been saved.  This is to catch the case
-@@ -665,7 +665,7 @@ Decrementer:
- FITException:
- 	EXCEPTION_PROLOG
- 	addi	r3,r1,STACK_FRAME_OVERHEAD;
--	EXC_XFER_EE(0x1010, unknown_exception)
-+	EXC_XFER_STD(0x1010, unknown_exception)
- 
- 	/* Watchdog Timer (WDT) Exception. (from 0x1020) */
- WDTException:
+  * Handle a system call.
+@@ -375,11 +373,6 @@ _GLOBAL(DoSyscall)
+ 	stw	r3,ORIG_GPR3(r1)
+ 	li	r12,0
+ 	stw	r12,RESULT(r1)
+-#ifdef CONFIG_BOOKE	/* to be removed once BOOKE uses fast syscall entry */
+-	lwz	r11,_CCR(r1)	/* Clear SO bit in CR */
+-	rlwinm	r11,r11,0,4,2
+-	stw	r11,_CCR(r1)
+-#endif
+ #ifdef CONFIG_TRACE_IRQFLAGS
+ 	/* Make sure interrupts are enabled */
+ 	mfmsr	r11
 diff --git a/arch/powerpc/kernel/head_44x.S b/arch/powerpc/kernel/head_44x.S
-index 9cc01948651f..e06cb1c84951 100644
+index e06cb1c84951..7d73c7e39afe 100644
 --- a/arch/powerpc/kernel/head_44x.S
 +++ b/arch/powerpc/kernel/head_44x.S
-@@ -278,7 +278,7 @@ interrupt_base:
- 	FP_UNAVAILABLE_EXCEPTION
- #else
- 	EXCEPTION(0x2010, BOOKE_INTERRUPT_FP_UNAVAIL, \
--		  FloatingPointUnavailable, unknown_exception, EXC_XFER_EE)
-+		  FloatingPointUnavailable, unknown_exception, EXC_XFER_STD)
+@@ -282,8 +282,7 @@ interrupt_base:
  #endif
  	/* System Call Interrupt */
  	START_EXCEPTION(SystemCall)
-@@ -287,7 +287,7 @@ interrupt_base:
+-	NORMAL_EXCEPTION_PROLOG(BOOKE_INTERRUPT_SYSCALL)
+-	EXC_XFER_SYS(0x0c00, DoSyscall)
++	SYSCALL_ENTRY   0xc00 BOOKE_INTERRUPT_SYSCALL
  
  	/* Auxiliary Processor Unavailable Interrupt */
  	EXCEPTION(0x2020, BOOKE_INTERRUPT_AP_UNAVAIL, \
--		  AuxillaryProcessorUnavailable, unknown_exception, EXC_XFER_EE)
-+		  AuxillaryProcessorUnavailable, unknown_exception, EXC_XFER_STD)
- 
- 	/* Decrementer Interrupt */
- 	DECREMENTER_EXCEPTION
-@@ -295,7 +295,7 @@ interrupt_base:
- 	/* Fixed Internal Timer Interrupt */
- 	/* TODO: Add FIT support */
- 	EXCEPTION(0x1010, BOOKE_INTERRUPT_FIT, FixedIntervalTimer, \
--		  unknown_exception, EXC_XFER_EE)
-+		  unknown_exception, EXC_XFER_STD)
- 
- 	/* Watchdog Timer Interrupt */
- 	/* TODO: Add watchdog support */
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 19ad6484f198..4ebcdfdae920 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -167,7 +167,7 @@ Alignment:
- 	mfspr	r5,SPRN_DSISR
- 	stw	r5,_DSISR(r11)
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
--	EXC_XFER_EE(0x600, alignment_exception)
-+	EXC_XFER_STD(0x600, alignment_exception)
- 
- /* Program check exception */
- 	EXCEPTION(0x700, ProgramCheck, program_check_exception, EXC_XFER_STD)
-@@ -179,8 +179,8 @@ Alignment:
- /* Decrementer */
- 	EXCEPTION(0x900, Decrementer, timer_interrupt, EXC_XFER_LITE)
- 
--	EXCEPTION(0xa00, Trap_0a, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0xb00, Trap_0b, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0xa00, Trap_0a, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0xb00, Trap_0b, unknown_exception, EXC_XFER_STD)
- 
- /* System call */
- 	. = 0xc00
-@@ -190,8 +190,8 @@ SystemCall:
- 
- /* Single step - not used on 601 */
- 	EXCEPTION(0xd00, SingleStep, single_step_exception, EXC_XFER_STD)
--	EXCEPTION(0xe00, Trap_0e, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0xf00, Trap_0f, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0xe00, Trap_0e, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0xf00, Trap_0f, unknown_exception, EXC_XFER_STD)
- 
- /* On the MPC8xx, this is a software emulation interrupt.  It occurs
-  * for all unimplemented and illegal instructions.
-@@ -521,13 +521,13 @@ DARFixed:/* Return from dcbx instruction bug workaround */
- 	/* 0x300 is DataAccess exception, needed by bad_page_fault() */
- 	EXC_XFER_LITE(0x300, handle_page_fault)
- 
--	EXCEPTION(0x1500, Trap_15, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1600, Trap_16, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1700, Trap_17, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1800, Trap_18, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1900, Trap_19, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1a00, Trap_1a, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1b00, Trap_1b, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0x1500, Trap_15, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1600, Trap_16, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1700, Trap_17, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1800, Trap_18, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1900, Trap_19, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1a00, Trap_1a, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1b00, Trap_1b, unknown_exception, EXC_XFER_STD)
- 
- /* On the MPC8xx, these next four traps are used for development
-  * support of breakpoints and such.  Someday I will get around to
-@@ -549,7 +549,7 @@ DataBreakpoint:
- 	mfspr	r4,SPRN_BAR
- 	stw	r4,_DAR(r11)
- 	mfspr	r5,SPRN_DSISR
--	EXC_XFER_EE(0x1c00, do_break)
-+	EXC_XFER_STD(0x1c00, do_break)
- 11:
- 	mtcr	r10
- 	mfspr	r10, SPRN_SPRG_SCRATCH0
-@@ -569,10 +569,10 @@ InstructionBreakpoint:
- 	mfspr	r10, SPRN_SPRG_SCRATCH0
- 	rfi
- #else
--	EXCEPTION(0x1d00, Trap_1d, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0x1d00, Trap_1d, unknown_exception, EXC_XFER_STD)
- #endif
--	EXCEPTION(0x1e00, Trap_1e, unknown_exception, EXC_XFER_EE)
--	EXCEPTION(0x1f00, Trap_1f, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0x1e00, Trap_1e, unknown_exception, EXC_XFER_STD)
-+	EXCEPTION(0x1f00, Trap_1f, unknown_exception, EXC_XFER_STD)
- 
- 	. = 0x2000
- 
 diff --git a/arch/powerpc/kernel/head_booke.h b/arch/powerpc/kernel/head_booke.h
-index 612f54ba1125..264976c43f34 100644
+index 56dd1341eb3d..bfeb469e8106 100644
 --- a/arch/powerpc/kernel/head_booke.h
 +++ b/arch/powerpc/kernel/head_booke.h
-@@ -255,14 +255,6 @@ END_BTB_FLUSH_SECTION
- 	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL | MSR_EE, NOCOPY, transfer_to_handler, \
+@@ -6,6 +6,8 @@
+ #include <asm/kvm_asm.h>
+ #include <asm/kvm_booke_hv_asm.h>
+ 
++#ifdef __ASSEMBLY__
++
+ /*
+  * Macros used for common Book-e exception handling
+  */
+@@ -81,6 +83,101 @@ END_BTB_FLUSH_SECTION
+ 	SAVE_4GPRS(3, r11);						     \
+ 	SAVE_2GPRS(7, r11)
+ 
++.macro SYSCALL_ENTRY trapno intno
++	mfspr	r10, SPRN_SPRG_THREAD
++#ifdef CONFIG_KVM_BOOKE_HV
++BEGIN_FTR_SECTION
++	mtspr	SPRN_SPRG_WSCRATCH0, r10
++	stw	r11, THREAD_NORMSAVE(0)(r10)
++	stw	r13, THREAD_NORMSAVE(2)(r10)
++	mfcr	r13			/* save CR in r13 for now	   */
++	mfspr	r11, SPRN_SRR1
++	mtocrf	0x80, r11	/* check MSR[GS] without clobbering reg */
++	bf	3, 1975f
++	b	kvmppc_handler_BOOKE_INTERRUPT_\intno\()_SPRN_SRR1
++1975:
++	mr	r12, r13
++	lwz	r13, THREAD_NORMSAVE(2)(r10)
++FTR_SECTION_ELSE
++#endif
++	mfcr	r12
++#ifdef CONFIG_KVM_BOOKE_HV
++ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
++#endif
++	BOOKE_CLEAR_BTB(r11)
++	lwz	r11, TASK_STACK - THREAD(r10)
++	rlwinm	r12,r12,0,4,2	/* Clear SO bit in CR */
++	ALLOC_STACK_FRAME(r11, THREAD_SIZE - INT_FRAME_SIZE)
++	stw	r12, _CCR(r11)		/* save various registers */
++	mflr	r12
++	stw	r12,_LINK(r11)
++	mfspr	r12,SPRN_SRR0
++	stw	r1, GPR1(r11)
++	mfspr	r9,SPRN_SRR1
++	stw	r1, 0(r11)
++	mr	r1, r11
++	stw	r12,_NIP(r11)
++	rlwinm	r9,r9,0,14,12		/* clear MSR_WE (necessary?)	   */
++	lis	r12, STACK_FRAME_REGS_MARKER@ha /* exception frame marker */
++	stw	r2,GPR2(r11)
++	addi	r12, r12, STACK_FRAME_REGS_MARKER@l
++	stw	r9,_MSR(r11)
++	li	r2, \trapno + 1
++	stw	r12, 8(r11)
++	stw	r2,_TRAP(r11)
++	SAVE_GPR(0, r11)
++	SAVE_4GPRS(3, r11)
++	SAVE_2GPRS(7, r11)
++
++	addi	r11,r1,STACK_FRAME_OVERHEAD
++	addi	r2,r10,-THREAD
++	stw	r11,PT_REGS(r10)
++	/* Check to see if the dbcr0 register is set up to debug.  Use the
++	   internal debug mode bit to do this. */
++	lwz	r12,THREAD_DBCR0(r10)
++	andis.	r12,r12,DBCR0_IDM@h
++	ACCOUNT_CPU_USER_ENTRY(r2, r11, r12)
++	beq+	3f
++	/* From user and task is ptraced - load up global dbcr0 */
++	li	r12,-1			/* clear all pending debug events */
++	mtspr	SPRN_DBSR,r12
++	lis	r11,global_dbcr0@ha
++	tophys(r11,r11)
++	addi	r11,r11,global_dbcr0@l
++#ifdef CONFIG_SMP
++	lwz	r9,TASK_CPU(r2)
++	slwi	r9,r9,3
++	add	r11,r11,r9
++#endif
++	lwz	r12,0(r11)
++	mtspr	SPRN_DBCR0,r12
++	lwz	r12,4(r11)
++	addi	r12,r12,-1
++	stw	r12,4(r11)
++
++3:
++	tovirt(r2, r2)			/* set r2 to current */
++	lis	r11, transfer_to_syscall@h
++	ori	r11, r11, transfer_to_syscall@l
++#ifdef CONFIG_TRACE_IRQFLAGS
++	/*
++	 * If MSR is changing we need to keep interrupts disabled at this point
++	 * otherwise we might risk taking an interrupt before we tell lockdep
++	 * they are enabled.
++	 */
++	lis	r10, MSR_KERNEL@h
++	ori	r10, r10, MSR_KERNEL@l
++	rlwimi	r10, r9, 0, MSR_EE
++#else
++	lis	r10, (MSR_KERNEL | MSR_EE)@h
++	ori	r10, r10, (MSR_KERNEL | MSR_EE)@l
++#endif
++	mtspr	SPRN_SRR1,r10
++	mtspr	SPRN_SRR0,r11
++	SYNC
++	RFI				/* jump to handler, enable MMU */
++.endm
++
+ /* To handle the additional exception priority levels on 40x and Book-E
+  * processors we allocate a stack per additional priority level.
+  *
+@@ -245,10 +342,6 @@ END_BTB_FLUSH_SECTION
+ 	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL, transfer_to_handler, \
  			  ret_from_except)
  
--#define EXC_XFER_EE(n, hdlr)		\
--	EXC_XFER_TEMPLATE(hdlr, n, MSR_KERNEL, COPY_EE, transfer_to_handler_full, \
--			  ret_from_except_full)
--
--#define EXC_XFER_EE_LITE(n, hdlr)	\
--	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL, COPY_EE, transfer_to_handler, \
+-#define EXC_XFER_SYS(n, hdlr)						\
+-	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL | MSR_EE, transfer_to_handler, \
 -			  ret_from_except)
 -
  /* Check for a single step debug exception while in an exception
   * handler before state has been saved.  This is to catch the case
   * where an instruction that we are trying to single step causes
-@@ -405,7 +397,7 @@ END_BTB_FLUSH_SECTION
- 	mfspr   r4,SPRN_DEAR;           /* Grab the DEAR and save it */	      \
- 	stw     r4,_DEAR(r11);						      \
- 	addi    r3,r1,STACK_FRAME_OVERHEAD;				      \
--	EXC_XFER_EE(0x0600, alignment_exception)
-+	EXC_XFER_STD(0x0600, alignment_exception)
- 
- #define PROGRAM_EXCEPTION						      \
- 	START_EXCEPTION(Program)					      \
-@@ -430,7 +422,7 @@ END_BTB_FLUSH_SECTION
- 	bl	load_up_fpu;		/* if from user, just load it up */   \
- 	b	fast_exception_return;					      \
+@@ -418,7 +511,7 @@ END_BTB_FLUSH_SECTION
  1:	addi	r3,r1,STACK_FRAME_OVERHEAD;				      \
--	EXC_XFER_EE_LITE(0x800, kernel_fp_unavailable_exception)
-+	EXC_XFER_STD(0x800, kernel_fp_unavailable_exception)
+ 	EXC_XFER_STD(0x800, kernel_fp_unavailable_exception)
  
- #ifndef __ASSEMBLY__
+-#ifndef __ASSEMBLY__
++#else /* __ASSEMBLY__ */
  struct exception_regs {
+ 	unsigned long mas0;
+ 	unsigned long mas1;
 diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
-index e77a2ed94642..b351851dc73d 100644
+index b351851dc73d..a757be4f1cb5 100644
 --- a/arch/powerpc/kernel/head_fsl_booke.S
 +++ b/arch/powerpc/kernel/head_fsl_booke.S
-@@ -380,7 +380,7 @@ interrupt_base:
- 	EXC_XFER_LITE(0x0300, handle_page_fault)
- 1:
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
--	EXC_XFER_EE_LITE(0x0300, CacheLockingException)
-+	EXC_XFER_LITE(0x0300, CacheLockingException)
+@@ -410,8 +410,7 @@ interrupt_base:
  
- 	/* Instruction Storage Interrupt */
- 	INSTRUCTION_STORAGE_EXCEPTION
-@@ -401,10 +401,10 @@ interrupt_base:
- #ifdef CONFIG_E200
- 	/* E200 treats 'normal' floating point instructions as FP Unavail exception */
- 	EXCEPTION(0x0800, FP_UNAVAIL, FloatingPointUnavailable, \
--		  program_check_exception, EXC_XFER_EE)
-+		  program_check_exception, EXC_XFER_STD)
- #else
- 	EXCEPTION(0x0800, FP_UNAVAIL, FloatingPointUnavailable, \
--		  unknown_exception, EXC_XFER_EE)
-+		  unknown_exception, EXC_XFER_STD)
- #endif
- #endif
- 
-@@ -415,7 +415,7 @@ interrupt_base:
+ 	/* System Call Interrupt */
+ 	START_EXCEPTION(SystemCall)
+-	NORMAL_EXCEPTION_PROLOG(SYSCALL)
+-	EXC_XFER_SYS(0x0c00, DoSyscall)
++	SYSCALL_ENTRY   0xc00 SYSCALL
  
  	/* Auxiliary Processor Unavailable Interrupt */
  	EXCEPTION(0x2900, AP_UNAVAIL, AuxillaryProcessorUnavailable, \
--		  unknown_exception, EXC_XFER_EE)
-+		  unknown_exception, EXC_XFER_STD)
- 
- 	/* Decrementer Interrupt */
- 	DECREMENTER_EXCEPTION
-@@ -423,7 +423,7 @@ interrupt_base:
- 	/* Fixed Internal Timer Interrupt */
- 	/* TODO: Add FIT support */
- 	EXCEPTION(0x3100, FIT, FixedIntervalTimer, \
--		  unknown_exception, EXC_XFER_EE)
-+		  unknown_exception, EXC_XFER_STD)
- 
- 	/* Watchdog Timer Interrupt */
- #ifdef CONFIG_BOOKE_WDT
-@@ -633,25 +633,25 @@ END_BTB_FLUSH_SECTION
- 	bl	load_up_spe
- 	b	fast_exception_return
- 1:	addi	r3,r1,STACK_FRAME_OVERHEAD
--	EXC_XFER_EE_LITE(0x2010, KernelSPE)
-+	EXC_XFER_LITE(0x2010, KernelSPE)
- #elif defined(CONFIG_SPE_POSSIBLE)
- 	EXCEPTION(0x2020, SPE_UNAVAIL, SPEUnavailable, \
--		  unknown_exception, EXC_XFER_EE)
-+		  unknown_exception, EXC_XFER_STD)
- #endif /* CONFIG_SPE_POSSIBLE */
- 
- 	/* SPE Floating Point Data */
- #ifdef CONFIG_SPE
- 	EXCEPTION(0x2030, SPE_FP_DATA, SPEFloatingPointData,
--		  SPEFloatingPointException, EXC_XFER_EE)
-+		  SPEFloatingPointException, EXC_XFER_STD)
- 
- 	/* SPE Floating Point Round */
- 	EXCEPTION(0x2050, SPE_FP_ROUND, SPEFloatingPointRound, \
--		  SPEFloatingPointRoundException, EXC_XFER_EE)
-+		  SPEFloatingPointRoundException, EXC_XFER_STD)
- #elif defined(CONFIG_SPE_POSSIBLE)
- 	EXCEPTION(0x2040, SPE_FP_DATA, SPEFloatingPointData,
--		  unknown_exception, EXC_XFER_EE)
-+		  unknown_exception, EXC_XFER_STD)
- 	EXCEPTION(0x2050, SPE_FP_ROUND, SPEFloatingPointRound, \
--		  unknown_exception, EXC_XFER_EE)
-+		  unknown_exception, EXC_XFER_STD)
- #endif /* CONFIG_SPE_POSSIBLE */
- 
- 
-@@ -674,10 +674,10 @@ END_BTB_FLUSH_SECTION
- 			   unknown_exception)
- 
- 	/* Hypercall */
--	EXCEPTION(0, HV_SYSCALL, Hypercall, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0, HV_SYSCALL, Hypercall, unknown_exception, EXC_XFER_STD)
- 
- 	/* Embedded Hypervisor Privilege */
--	EXCEPTION(0, HV_PRIV, Ehvpriv, unknown_exception, EXC_XFER_EE)
-+	EXCEPTION(0, HV_PRIV, Ehvpriv, unknown_exception, EXC_XFER_STD)
- 
- interrupt_end:
- 
 -- 
 2.13.3
 
