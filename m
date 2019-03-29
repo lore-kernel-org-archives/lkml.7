@@ -2,113 +2,76 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DA3C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D79C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F07C2183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69A620651
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:57:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iJkMOYRB";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iJkMOYRB"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Qx3jZnMS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfC2N4F (ORCPT
+        id S1728879AbfC2N5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 09:56:05 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45012 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728683AbfC2N4E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 09:56:04 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D954D60790; Fri, 29 Mar 2019 13:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553867763;
-        bh=cnNB3qaJHM8BWoA+KLPu416FHg8Km0nQ8IFlokqnLFQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=iJkMOYRB+0mbTBjFI1QThShFIy5Zyc53/U11ovPbnbc7xOB/8wVpQL/8G8nAkx4ZL
-         J2DMcFvaHC6YsDCQ6Kzaw9oq+YFEMfkYaCOAiDcZKjb9vH/Iy8FbEbtkwOxCdzSxIq
-         dKaG/t+NZ+rOMwb7dITbbBL7HSN6+B85ESzThgQc=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 29 Mar 2019 09:57:08 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:41144 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728683AbfC2N5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 09:57:07 -0400
+Received: from zn.tnic (p200300EC2F148A00C1243160B4274091.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:c124:3160:b427:4091])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B01A760735;
-        Fri, 29 Mar 2019 13:55:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553867763;
-        bh=cnNB3qaJHM8BWoA+KLPu416FHg8Km0nQ8IFlokqnLFQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=iJkMOYRB+0mbTBjFI1QThShFIy5Zyc53/U11ovPbnbc7xOB/8wVpQL/8G8nAkx4ZL
-         J2DMcFvaHC6YsDCQ6Kzaw9oq+YFEMfkYaCOAiDcZKjb9vH/Iy8FbEbtkwOxCdzSxIq
-         dKaG/t+NZ+rOMwb7dITbbBL7HSN6+B85ESzThgQc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B01A760735
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH v1] mm: balloon: drop unused function stubs
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Konstantin Khlebnikov <koct9i@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>, linux-mm@kvack.org
-References: <20190329122649.28404-1-david@redhat.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <931b7a25-94c9-5a13-423e-27ef41655603@codeaurora.org>
-Date:   Fri, 29 Mar 2019 19:25:54 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B70261EC05A6;
+        Fri, 29 Mar 2019 14:57:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553867826;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=U0WZGyd/5IklJVe3sv4mhTo8yGw9sEIuMYXwOUK3BUw=;
+        b=Qx3jZnMS3giW9STxziJJ6b7dfywYLqBl9dIvlE8ARNN03TcIgzvs99bHEeVHPR1ba+1d7F
+        iZnVXWqKOcP5t55VoHaiI0Ul+IUk8t6KVEDAT1u5gN84ov6Wwe6P7MH+7irMFVYpfK+ibH
+        hta0x9DhmZVmTeK+u8h0DB+BNbnXJsA=
+Date:   Fri, 29 Mar 2019 14:57:09 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH] x86: define LOADED_MM_SWITCHING with pointer-sized number
+Message-ID: <20190329135708.GF21152@zn.tnic>
+References: <20190328230939.15711-1-jannh@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190329122649.28404-1-david@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190328230939.15711-1-jannh@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Subject: Re: [PATCH] x86: define LOADED_MM_SWITCHING with pointer-sized number
 
-On 3/29/2019 5:56 PM, David Hildenbrand wrote:
-> These are leftovers from the pre-"general non-lru movable page" era.
->
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->   include/linux/balloon_compaction.h | 15 ---------------
->   1 file changed, 15 deletions(-)
+For the future:
 
+The tip tree preferred format for patch subject prefixes is
+'subsys/component:', e.g. 'x86/apic:', 'x86/mm/fault:', 'sched/fair:',
+'genirq/core:'. Please do not use file names or complete file paths as
+prefix. 'git log path/to/file' should give you a reasonable hint in most
+cases.
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+The condensed patch description in the subject line should start with a
+uppercase letter and should be written in imperative tone.
 
-Cheers,
--Mukesh
+I've fixed it up now.
 
->
-> diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
-> index f111c780ef1d..f31521dcb09a 100644
-> --- a/include/linux/balloon_compaction.h
-> +++ b/include/linux/balloon_compaction.h
-> @@ -151,21 +151,6 @@ static inline void balloon_page_delete(struct page *page)
->   	list_del(&page->lru);
->   }
->   
-> -static inline bool __is_movable_balloon_page(struct page *page)
-> -{
-> -	return false;
-> -}
-> -
-> -static inline bool balloon_page_movable(struct page *page)
-> -{
-> -	return false;
-> -}
-> -
-> -static inline bool isolated_balloon_page(struct page *page)
-> -{
-> -	return false;
-> -}
-> -
->   static inline bool balloon_page_isolate(struct page *page)
->   {
->   	return false;
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
