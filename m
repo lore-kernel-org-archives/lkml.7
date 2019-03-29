@@ -2,85 +2,232 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB29C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4BDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4D120657
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6B820657
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dXR44ej9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="L/RpgE9l";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IIeXQT3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbfC2U5f (ORCPT
+        id S1730294AbfC2VA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 16:57:35 -0400
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:34631 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730219AbfC2U5e (ORCPT
+        Fri, 29 Mar 2019 17:00:57 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58316 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730190AbfC2VA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 16:57:34 -0400
-Received: by mail-pg1-f173.google.com with SMTP id v12so1774682pgq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 13:57:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=yOQHIHqs6rJaZH1VdOTite7NVnkSWVgMNqjDuwcXG8U=;
-        b=dXR44ej9qLc+ja0JxocAvzju9L4iOyYI9TEZIQBjBCVO9+QvNhKapqjpDaY3MZ2Dsu
-         iGnLcjYE7gv6o154g85DmtbiRybRxlrHhzFH1gw2zdUFtvSuK47WNx2X476jkfxAl1LO
-         3j26FE2ggjFGptIouKrRFd4d+ycgGSaRIvXfKpxJy6mbnXN0clHHmdzhd01YqY/oFSIF
-         i+6NKoh5d27EwnTDIRZHPdo6tRIJuXfRdUl0OkoIpSUAgluE/T+RrzhXuq1w/VaH/yjU
-         P+2NraFKe1+8/8LQ3tuAUBvC4fcyfYjGyXo/5in8s5tQD4qQx6QvF7XbZlu72v/dHnEV
-         xG7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=yOQHIHqs6rJaZH1VdOTite7NVnkSWVgMNqjDuwcXG8U=;
-        b=asnRhBvh4nKOLRNolnesidKGlbwqbCmupVqGWdimY1w0BAQKjaONwQilthhXLfHsrA
-         80kkuurEmgqB0E0Bj3tlip63CnRJx4YmwhBWqPoZT9aLe605KteGCSL1y6BeQce/yFcV
-         ix3Wnhs3Q8L9pQd1wfoBco6zeHyKUtPEm9RaPPMMARBZK2SDzxV3tIMQcwOSVOd9Ylvz
-         ioyJyhNKuTYq9qFg8VCexQB6joHu0OtSSTfg5s7LdpIU4SiqDdpZlD6M8bb6je0EJlHP
-         9W9l6I04VhdVzC5t1jHpNEsvrnPd70GN8v0rnUvDaXCR6iqHx0pYiwe1Zf9wBTr5afIE
-         lyKQ==
-X-Gm-Message-State: APjAAAWurhDx908EyRssKjX7iXmrEgeQZ2410PiFaLUrPzfvn9sQipcb
-        r1RnPyNWiXgelqQgAV2XCTax4w==
-X-Google-Smtp-Source: APXvYqwUHTIyRfhErGvZU8IE6qbbE/vosE+F//qOmRab0/qjFkzRqKqLU5PDrKQcBqjhuGwjAvGgsQ==
-X-Received: by 2002:a62:4649:: with SMTP id t70mr50738429pfa.100.1553893054191;
-        Fri, 29 Mar 2019 13:57:34 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id z6sm7366443pfz.65.2019.03.29.13.57.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 13:57:33 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: meson-g12a: Add CMA reserved memory
-In-Reply-To: <20190327102157.15908-1-narmstrong@baylibre.com>
-References: <20190327102157.15908-1-narmstrong@baylibre.com>
-Date:   Fri, 29 Mar 2019 13:57:33 -0700
-Message-ID: <7hk1ghwg8y.fsf@baylibre.com>
+        Fri, 29 Mar 2019 17:00:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 855EC6087D; Fri, 29 Mar 2019 21:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553893255;
+        bh=5+1ErKi4wAE6QPgFBx4XkwHCaffirQ3Em7+ThcJ/ky8=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=L/RpgE9l3lIFNavk8Rc5QOVr2BLARD9L2Av8he7pNTj9bTywYNQF8FSscRg94k/fX
+         RAyqSZPyyJ/8YOG21enJgU3KwWtFFeCID/gO7C4NzHuG9064FoWtVhtE2BnVvqthjp
+         6b1emOp+Gov9hERQkzM5JpmoIHyZuwmzOBQkFOX8=
+Received: from [10.79.168.116] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DE6F3602FC;
+        Fri, 29 Mar 2019 21:00:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553893254;
+        bh=5+1ErKi4wAE6QPgFBx4XkwHCaffirQ3Em7+ThcJ/ky8=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=IIeXQT3L4y13gBjApsY4RBROfMcB/OJNflPYTKKaEUet9zWHNwQWMHlrXmr8ty5FK
+         H0OJDlGhCOYgz5+b/d9oFMX2j/UUa7b4Be68QM2nPyBHI0T7D7s8U31bpHjZW4alx2
+         AfAkdXNnWIc6SaV/w1TNJdKnJp13+jiOm2MPZF7Q=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DE6F3602FC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] scsi: pm8001: clean up structurally dead code when
+ PM8001_USE_MSIX is defined (part2)
+From:   Mukesh Ojha <mojha@codeaurora.org>
+To:     Colin King <colin.king@canonical.com>,
+        Jack Wang <jinpu.wang@profitbricks.com>, lindar_liu@usish.com,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190329153221.29238-1-colin.king@canonical.com>
+ <0c08b258-e61d-60ee-7702-728fa96c435d@codeaurora.org>
+Message-ID: <2b2ad873-2303-62de-55cd-f63cc31a78b9@codeaurora.org>
+Date:   Sat, 30 Mar 2019 02:30:44 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <0c08b258-e61d-60ee-7702-728fa96c435d@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
 
-> In order to handle Video Output and later on Video decoding,
-> add a reserved CMA pool with a similar 256MiB size as other SoCs.
+On 3/30/2019 1:38 AM, Mukesh Ojha wrote:
 >
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> On 3/29/2019 9:02 PM, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> When macro PM8001_USE_MSIX is defined there is redundant dead code
+>> call to pm8001_cr32.  Clean this up for the defined PM8001_USE_MSIX and
+>> undefined PM8001_USE_MSIX cases.
+>>
+>> Also rename the functions pm8001_chip_is_our_interupt,
+>> pm80xx_chip_is_our_interupt and function pointer is_our_interrupt
+>> to fix spelling mistakes.
+>>
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>
+> It would be better if you could split this into two patch, one for 
+> dead code and other for renaming.
 
-Queued for v5.2,
+Also, What is that part2 in the subject ? please remove that too.
 
-Thanks,
 
-Kevin
+>
+>
+> Otherwise change looks good.
+>
+> Once you fix above you could include .
+> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+>
+> Cheers,
+> -Mukesh
+>
+>
+>> ---
+>>   drivers/scsi/pm8001/pm8001_hwi.c  | 11 ++++++-----
+>>   drivers/scsi/pm8001/pm8001_init.c |  4 ++--
+>>   drivers/scsi/pm8001/pm8001_sas.h  |  2 +-
+>>   drivers/scsi/pm8001/pm80xx_hwi.c  | 11 ++++++-----
+>>   4 files changed, 15 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/scsi/pm8001/pm8001_hwi.c 
+>> b/drivers/scsi/pm8001/pm8001_hwi.c
+>> index e4209091c1da..627075d00918 100644
+>> --- a/drivers/scsi/pm8001/pm8001_hwi.c
+>> +++ b/drivers/scsi/pm8001/pm8001_hwi.c
+>> @@ -4623,17 +4623,18 @@ static int pm8001_chip_phy_ctl_req(struct 
+>> pm8001_hba_info *pm8001_ha,
+>>       return ret;
+>>   }
+>>   -static u32 pm8001_chip_is_our_interupt(struct pm8001_hba_info 
+>> *pm8001_ha)
+>> +static u32 pm8001_chip_is_our_interrupt(struct pm8001_hba_info 
+>> *pm8001_ha)
+>>   {
+>> -    u32 value;
+>>   #ifdef PM8001_USE_MSIX
+>>       return 1;
+>> -#endif
+>> +#else
+>> +    u32 value;
+>> +
+>>       value = pm8001_cr32(pm8001_ha, 0, MSGU_ODR);
+>>       if (value)
+>>           return 1;
+>>       return 0;
+>> -
+>> +#endif
+>>   }
+>>     /**
+>> @@ -5119,7 +5120,7 @@ const struct pm8001_dispatch 
+>> pm8001_8001_dispatch = {
+>>       .chip_rst        = pm8001_hw_chip_rst,
+>>       .chip_iounmap        = pm8001_chip_iounmap,
+>>       .isr            = pm8001_chip_isr,
+>> -    .is_our_interupt    = pm8001_chip_is_our_interupt,
+>> +    .is_our_interrupt    = pm8001_chip_is_our_interrupt,
+>>       .isr_process_oq        = process_oq,
+>>       .interrupt_enable     = pm8001_chip_interrupt_enable,
+>>       .interrupt_disable    = pm8001_chip_interrupt_disable,
+>> diff --git a/drivers/scsi/pm8001/pm8001_init.c 
+>> b/drivers/scsi/pm8001/pm8001_init.c
+>> index a36060c23b37..3374f553c617 100644
+>> --- a/drivers/scsi/pm8001/pm8001_init.c
+>> +++ b/drivers/scsi/pm8001/pm8001_init.c
+>> @@ -201,7 +201,7 @@ static irqreturn_t 
+>> pm8001_interrupt_handler_msix(int irq, void *opaque)
+>>         if (unlikely(!pm8001_ha))
+>>           return IRQ_NONE;
+>> -    if (!PM8001_CHIP_DISP->is_our_interupt(pm8001_ha))
+>> +    if (!PM8001_CHIP_DISP->is_our_interrupt(pm8001_ha))
+>>           return IRQ_NONE;
+>>   #ifdef PM8001_USE_TASKLET
+>> tasklet_schedule(&pm8001_ha->tasklet[irq_vector->irq_id]);
+>> @@ -224,7 +224,7 @@ static irqreturn_t 
+>> pm8001_interrupt_handler_intx(int irq, void *dev_id)
+>>       pm8001_ha = sha->lldd_ha;
+>>       if (unlikely(!pm8001_ha))
+>>           return IRQ_NONE;
+>> -    if (!PM8001_CHIP_DISP->is_our_interupt(pm8001_ha))
+>> +    if (!PM8001_CHIP_DISP->is_our_interrupt(pm8001_ha))
+>>           return IRQ_NONE;
+>>     #ifdef PM8001_USE_TASKLET
+>> diff --git a/drivers/scsi/pm8001/pm8001_sas.h 
+>> b/drivers/scsi/pm8001/pm8001_sas.h
+>> index f88b0d33c385..ac6d8e3f22de 100644
+>> --- a/drivers/scsi/pm8001/pm8001_sas.h
+>> +++ b/drivers/scsi/pm8001/pm8001_sas.h
+>> @@ -197,7 +197,7 @@ struct pm8001_dispatch {
+>>       int (*chip_ioremap)(struct pm8001_hba_info *pm8001_ha);
+>>       void (*chip_iounmap)(struct pm8001_hba_info *pm8001_ha);
+>>       irqreturn_t (*isr)(struct pm8001_hba_info *pm8001_ha, u8 vec);
+>> -    u32 (*is_our_interupt)(struct pm8001_hba_info *pm8001_ha);
+>> +    u32 (*is_our_interrupt)(struct pm8001_hba_info *pm8001_ha);
+>>       int (*isr_process_oq)(struct pm8001_hba_info *pm8001_ha, u8 vec);
+>>       void (*interrupt_enable)(struct pm8001_hba_info *pm8001_ha, u8 
+>> vec);
+>>       void (*interrupt_disable)(struct pm8001_hba_info *pm8001_ha, u8 
+>> vec);
+>> diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c 
+>> b/drivers/scsi/pm8001/pm80xx_hwi.c
+>> index 536d2b4384f8..301de40eb708 100644
+>> --- a/drivers/scsi/pm8001/pm80xx_hwi.c
+>> +++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+>> @@ -4617,17 +4617,18 @@ static int pm80xx_chip_phy_ctl_req(struct 
+>> pm8001_hba_info *pm8001_ha,
+>>       return pm8001_mpi_build_cmd(pm8001_ha, circularQ, opc, 
+>> &payload, 0);
+>>   }
+>>   -static u32 pm80xx_chip_is_our_interupt(struct pm8001_hba_info 
+>> *pm8001_ha)
+>> +static u32 pm80xx_chip_is_our_interrupt(struct pm8001_hba_info 
+>> *pm8001_ha)
+>>   {
+>> -    u32 value;
+>>   #ifdef PM8001_USE_MSIX
+>>       return 1;
+>> -#endif
+>> +#else
+>> +    u32 value;
+>> +
+>>       value = pm8001_cr32(pm8001_ha, 0, MSGU_ODR);
+>>       if (value)
+>>           return 1;
+>>       return 0;
+>> -
+>> +#endif
+>>   }
+>>     /**
+>> @@ -4724,7 +4725,7 @@ const struct pm8001_dispatch 
+>> pm8001_80xx_dispatch = {
+>>       .chip_rst        = pm80xx_hw_chip_rst,
+>>       .chip_iounmap        = pm8001_chip_iounmap,
+>>       .isr            = pm80xx_chip_isr,
+>> -    .is_our_interupt    = pm80xx_chip_is_our_interupt,
+>> +    .is_our_interrupt    = pm80xx_chip_is_our_interrupt,
+>>       .isr_process_oq        = process_oq,
+>>       .interrupt_enable    = pm80xx_chip_interrupt_enable,
+>>       .interrupt_disable    = pm80xx_chip_interrupt_disable,
