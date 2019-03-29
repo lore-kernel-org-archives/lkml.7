@@ -2,136 +2,139 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29874C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A2CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB202217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C82217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:01:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QeRKX8L2"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="uxcJKavz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbfC2LBQ (ORCPT
+        id S1729441AbfC2LB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 07:01:16 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34824 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727675AbfC2LBP (ORCPT
+        Fri, 29 Mar 2019 07:01:26 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.4]:56094 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727675AbfC2LBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 07:01:15 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2TB0qeU027878;
-        Fri, 29 Mar 2019 06:00:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553857252;
-        bh=2AkFXzQTC8Jq8dwmKEW+lcJdOPiO6BSO3NKklfNCNts=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QeRKX8L2NtbBHNSFQfp8UDPvxNiHTLkFR4/15reOhsfSju/EoAHKBuU4tvQAeTtjK
-         D4KK7UQdy0LG1UeFcQ2ww/gmbQwy0TJLrIqLJBhgs0z5z4SZt2zvEB4LUJXm0Pvek+
-         J9n2T9wQ9LMulRMbZm/OugUpR1oAGXHT93xzpLGQ=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2TB0qfs087710
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 Mar 2019 06:00:52 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
- Mar 2019 06:00:52 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 29 Mar 2019 06:00:51 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2TB0l7Q076024;
-        Fri, 29 Mar 2019 06:00:48 -0500
-Subject: Re: [LINUX PATCH 2/3] spi: spi-mem: call
- spi_mem_default_supports_op() first
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-CC:     "broonie@kernel.org" <broonie@kernel.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
-        "nagasuresh12@gmail.com" <nagasuresh12@gmail.com>
-References: <1553771784-3364-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
- <20190328205522.272e1da6@collabora.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <cf7c971c-4b58-e965-3ca7-b72239772737@ti.com>
-Date:   Fri, 29 Mar 2019 16:31:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190328205522.272e1da6@collabora.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 29 Mar 2019 07:01:25 -0400
+Received: from [85.158.142.98] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-a.eu-central-1.aws.symcld.net id AB/4F-13147-20BFD9C5; Fri, 29 Mar 2019 11:01:22 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKJsWRWlGSWpSXmKPExsWSoc9npcv0e26
+  Mwf+zXBZTHz5hs7j/9SijxeVdc9gstr58x2TRd87dgdVj06pONo871/aweTxbuJ7F4/MmuQCW
+  KNbMvKT8igTWjJ9TVrEUPGCpaNsm3sA4haWLkYuDRWA9s8Sas1/YQRwhgQlMEhtXL2eDcO4zS
+  kyZtZqpi5GTg03AUGLem/eMILaIQJjEiqOdYEXMAicYJdYd/QrUzsEhLBAgMf2BPkRNoMTE+S
+  0sELaRxI1Hh8F6WQRUJd5f+8YKYvMKxErMP/8CalkDo8Tv3s1gDZwCbhJzrn4Ga2AUkJX40ri
+  aGcRmFhCXuPVkPthBEgICEkv2nGeGsEUlXj7+xwpRHy/Rvv8tO0RcR+Ls9SeMELaSxLIbs1gh
+  bFmJS/O7oeK+Ek1vN7KCHCEhcItR4vK26VAJLYnLy65CLcuR2LtqH5QtI/H7dhNUwwtWiUeXr
+  oAlhASSJT7MPQu1WU5iVe9DFoiiC8wS55dC/MwMdNKC3Z/YIGxtiWULXzNPYNSYheS7WUjKZi
+  EpmwUOMkGJkzOfsCxgZFnFaJlUlJmeUZKbmJmja2hgoGtoaKwLJC1N9BKrdBP1Ukt1k1PzSoo
+  SgbJ6ieXFesWVuck5KXp5qSWbGIFJKqWQ4dAOxi9L0w8xSnIwKYnyPvoxN0aILyk/pTIjsTgj
+  vqg0J7X4EKMMB4eSBG/MT6CcYFFqempFWmYOMF3CpCU4eJREeP1A0rzFBYm5xZnpEKlTjLocB
+  xY9nMssxJKXn5cqJc7bC1IkAFKUUZoHNwKWui8xykoJ8zIyMDAI8RSkFuVmlqDKv2IU52BUEu
+  b9DnIlT2ZeCdymV0BHMAEd8ap+NsgRJYkIKakGRp9bF0KeXOZSV37LP/enIEdc+2uXKe/l7+9
+  1/Ty1w/b5iZ+VW3xva7y4zVclZ203R/fin7hA8d99meGMXyyVrv4rnJnd/5r//ze7y3u5Ds6N
+  0pIJ44mX3TV/ntSGc9Gh1neXzjge6iZrljZZ9tL/n4G1jJszDtiaLgy+HfGj3YZHd99mExOP7
+  0osxRmJhlrMRcWJAE9caqvYAwAA
+X-Env-Sender: stwiss.opensource@diasemi.com
+X-Msg-Ref: server-24.tower-223.messagelabs.com!1553857281!3326106!1
+X-Originating-IP: [104.47.14.58]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 27982 invoked from network); 29 Mar 2019 11:01:22 -0000
+Received: from mail-vi1eur04lp2058.outbound.protection.outlook.com (HELO EUR04-VI1-obe.outbound.protection.outlook.com) (104.47.14.58)
+  by server-24.tower-223.messagelabs.com with AES256-SHA256 encrypted SMTP; 29 Mar 2019 11:01:22 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ULYCrCQfJz3F2LJdHRHYrycvCei2RgW2P+zgHBaq5Qo=;
+ b=uxcJKavz33iLoDT3k/7/6pi+9+/904sHV+G8zX6SFNeUxzCsYemJbD8RwobWAOGWchLxo+mTcgpzLvWQDFr0dS7WyO3hUHhvk54w1fbwGGmzXHIhYdFhLdlpKvQhgkmW6dfb3vnxHbS6Q7IizbPol6ObXo9Y/2titIlaAK82Hew=
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM (20.177.62.92) by
+ VI1PR10MB0512.EURPRD10.PROD.OUTLOOK.COM (10.167.201.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.16; Fri, 29 Mar 2019 11:00:53 +0000
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::e426:c8bc:d222:5cd7]) by VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::e426:c8bc:d222:5cd7%4]) with mapi id 15.20.1730.019; Fri, 29 Mar 2019
+ 11:00:53 +0000
+From:   Steve Twiss <stwiss.opensource@diasemi.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Lee Jones <lee.jones@linaro.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>
+Subject: RE: [PATCH 5/6] mfd: da9063: remove leftover platform_data
+ definitions
+Thread-Topic: [PATCH 5/6] mfd: da9063: remove leftover platform_data
+ definitions
+Thread-Index: AQHU3aIiUQO9QaSztEa+kVgNsipmi6YifqsQ
+Date:   Fri, 29 Mar 2019 11:00:53 +0000
+Message-ID: <VI1PR10MB2352E6A2FBAE49E3EFD3EFD0FE5A0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
+ <20190318154759.21978-6-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190318154759.21978-6-wsa+renesas@sang-engineering.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3cf3a470-cc3f-4c94-01c9-08d6b435d03c
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:VI1PR10MB0512;
+x-ms-traffictypediagnostic: VI1PR10MB0512:
+x-microsoft-antispam-prvs: <VI1PR10MB0512774A8DBECF8F4BFF2E65F55A0@VI1PR10MB0512.EURPRD10.PROD.OUTLOOK.COM>
+x-forefront-prvs: 0991CAB7B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(136003)(376002)(396003)(199004)(189003)(8936002)(186003)(107886003)(256004)(86362001)(68736007)(71190400001)(14444005)(52536014)(305945005)(3846002)(6116002)(71200400001)(66066001)(7736002)(53546011)(6506007)(55016002)(11346002)(229853002)(316002)(478600001)(486006)(476003)(14454004)(33656002)(76176011)(446003)(106356001)(7696005)(54906003)(53936002)(2906002)(110136005)(105586002)(8676002)(6436002)(4326008)(81166006)(97736004)(81156014)(26005)(5660300002)(99286004)(25786009)(6246003)(4744005)(102836004)(9686003)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB0512;H:VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RLzn1XkxPtSNzsVo9A4+ItHYX0ZPlBEnZGpdEFdzYFVOHdsHdb2UrsMPVRMFNTlhXQUHkwhbAKBF9Ut+cYvquFG2ptekaihgnE2I1+PM3kvvPWRNRqcEmg1pBua6umq5/MthjtVWa62yXxpY49iteZc9v4DcWvFkR2w59tbF/08triLXu10GM04Z7W+yWLR5lF9QCGSy5PL+O0n1wdXfWoLorwzNibZOKat/2Wx0faXkbiLUqurp3CZPv2x9Dj60zlN4sJ/B+pdCa+8RJ1cKnYqnpj3E56gN/M0Q5ega2FI57sVyE1C8E3tUv7xfAmsPm2tq3/CGAlgszpZJW53Hxb+I8ejZrpxj7A2Vhooy74Bah9qgqEYIm6EZOwtO9ZHb2J1r0pWkw6m5+/7nt9jtSqFD+ha9UBFbyzKPvbq+K50=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cf3a470-cc3f-4c94-01c9-08d6b435d03c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2019 11:00:53.8052
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB0512
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Naga Sureshkumar
+Hi,
 
-On 29/03/19 1:25 AM, Boris Brezillon wrote:
-> On Thu, 28 Mar 2019 16:46:24 +0530
-> Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com> wrote:
-> 
->> Call spi_mem_default_supports_op() first, before calling controller
->> specific ctlr->supports_op().
->> With this, controller drivers can drop checking the buswidths again.
-> 
-> No, this was done on purpose, in case the controller does not want the
-> default check to be applied (say it does not need bus-width props to
-> be defined and has another way to check if a device can be accessed in
-> dual, quad or octal mode).
-> Just call spi_mem_default_supports_op() from your driver
-> ->supports_op() hook if needed.
-> 
+On 18 March 2019 15:48 Wolfram Sang wrote:
 
-Could you rework to follow Boris's suggestion here?
+> Subject: [PATCH 5/6] mfd: da9063: remove leftover platform_data definitio=
+ns
+>=20
+> Not used, not needed, remove them.
+>=20
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  include/linux/mfd/da9063/pdata.h | 65 ----------------------------------=
+------
+>  1 file changed, 65 deletions(-)
+>  delete mode 100644 include/linux/mfd/da9063/pdata.h
+>=20
+> diff --git a/include/linux/mfd/da9063/pdata.h
 
->>
->> Suggested-by: Vignesh Raghavendra <vigneshr@ti.com>
->> Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
->> ---
->> Details can be found at https://lkml.org/lkml/2019/3/1/183
->> ---
->>  drivers/spi/spi-mem.c | 7 +++++--
->>  1 file changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
->> index 5217a56..56aa158 100644
->> --- a/drivers/spi/spi-mem.c
->> +++ b/drivers/spi/spi-mem.c
->> @@ -189,11 +189,14 @@ static bool spi_mem_internal_supports_op(struct spi_mem *mem,
->>  					 const struct spi_mem_op *op)
->>  {
->>  	struct spi_controller *ctlr = mem->spi->controller;
->> +	bool ret;
->> +
->> +	ret = spi_mem_default_supports_op(mem, op);
->>  
->>  	if (ctlr->mem_ops && ctlr->mem_ops->supports_op)
->> -		return ctlr->mem_ops->supports_op(mem, op);
->> +		ret =  ctlr->mem_ops->supports_op(mem, op);
->>  
->> -	return spi_mem_default_supports_op(mem, op);
->> +	return ret;
->>  }
->>  
->>  /**
-> 
+Thanks!
+Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
 
--- 
-Regards
-Vignesh
+Regards,
+Steve
