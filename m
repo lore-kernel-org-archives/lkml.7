@@ -2,126 +2,146 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5851AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D10C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32DA92184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D3B206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:11:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AhDuVScI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbfC2PKl (ORCPT
+        id S1729544AbfC2PLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:10:41 -0400
-Received: from 8bytes.org ([81.169.241.247]:59770 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728848AbfC2PKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:10:41 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 2C68A303; Fri, 29 Mar 2019 16:10:40 +0100 (CET)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     iommu@lists.linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, Gary R Hook <ghook@amd.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v2] iommu/amd: Reserve exclusion range in iova-domain
-Date:   Fri, 29 Mar 2019 16:10:37 +0100
-Message-Id: <20190329151037.19112-1-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 29 Mar 2019 11:11:13 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38282 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728848AbfC2PLN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 11:11:13 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g37so1179198plb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 08:11:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OTBdFezmv2EnFZkdo0Cxts8DR9hCzZN2BLstPO3yMA8=;
+        b=AhDuVScI5Wyq3g1xfQPrsVqophJqTB/Jo97YFWBtzEr03Dtu4yfs884jgSYCn0BjSc
+         ww32efvbNXDvT1ctGfBw4hmb5VuP0ZhC8QBVD8Si8miPiJmszczvoh+8DT89Pw6wNkvx
+         jtMCfyS3AzOt5ZwnmEiTQ+7LR+OfL+UGj1eF1ETHK5rjAr9LUKMrVoSUqaVQpeNVsLh5
+         MjzCc/FeX7nUTYSOs9U89vi+C5of+IIbgX3szxvLbh99kAUf/GAoMo91mnrf60/VO/w+
+         BeIGOlIIuPqLJEerUF/o6eckI0JZBmX3/m7kRn5tDj87JxbMiD/SnE4tzLuyaTMheROh
+         Qo6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OTBdFezmv2EnFZkdo0Cxts8DR9hCzZN2BLstPO3yMA8=;
+        b=ED6JbEulEoID+faERETsdjufOIdihmSl8A55YEjevOBYL3X+Yc6Gss+kJHm6WQ3Toa
+         zgQff5kMMPZWfZaSQl+JmSUKgPX8tatRm7Tw0fnusLRVNh9nTPrCfLTBQx1pqlEmDvUn
+         QkzGv5qiJ6ivrZjvVtZZ/QwpLUUJbIrexgWo2UyJK+sQck8bq4ATXGyJTRJ1sgbigoP9
+         BTsg2vVOtTj2FdxDZYJjNBKbR2MpaQhvyyU7BnI3+MN76kvprtYNqmRvKFzMic341JfZ
+         0j+1/WqiIPPJqXvR5mtxUhCOqMjG0s0iIfxBgn866GFzEHk3ve0jCkc08qVnqJAwWPlk
+         uqRg==
+X-Gm-Message-State: APjAAAVEwUfPCcbJBwLN2As9fmyy88kZ4QF8++7ZapY4CiYX10ELN492
+        I2oWew5eEX2JguLvO40seS7xpNcrJ6UoMNr/TPn5Ww==
+X-Google-Smtp-Source: APXvYqyGx9mJobb/u1uesxxmDZimOGD+c5LVCBx9n7RoCGi700Mmx53cFRZOlOzMFRWQZpL5q7J/d9jLVyGH5I2gHq4=
+X-Received: by 2002:a17:902:e701:: with SMTP id co1mr49682842plb.61.1553872272230;
+ Fri, 29 Mar 2019 08:11:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190327212155.80730-1-venture@google.com> <20190328165009.GA25705@bogus>
+ <CAO=notxxYF4noXbR1BeVrwqCBHaVCaXy+jPV4OVbex=w=fV+Rg@mail.gmail.com>
+ <CAL_JsqJSvzOQbJSgz7z2wZj9-z=bfhzF_C+662Gnf68TgAPFaA@mail.gmail.com>
+ <CAO=notx6K7xTW1VG6BGJFBM5k8EQsWXn3WoWSPSrZRsxkwueSA@mail.gmail.com> <CAO=notxD=5pa5sT15a+VrA7qVNPBoJoTo=5sLxibBxc+HWcG4g@mail.gmail.com>
+In-Reply-To: <CAO=notxD=5pa5sT15a+VrA7qVNPBoJoTo=5sLxibBxc+HWcG4g@mail.gmail.com>
+From:   Patrick Venture <venture@google.com>
+Date:   Fri, 29 Mar 2019 08:11:00 -0700
+Message-ID: <CAO=notynUJGUn3tuJZ_jFPdz23_T1FPyzS46mm5msphLnLW_JA@mail.gmail.com>
+Subject: Re: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Fri, Mar 29, 2019 at 7:59 AM Patrick Venture <venture@google.com> wrote:
+>
+> On Fri, Mar 29, 2019 at 7:56 AM Patrick Venture <venture@google.com> wrote:
+> >
+> > On Fri, Mar 29, 2019 at 6:38 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Thu, Mar 28, 2019 at 12:03 PM Patrick Venture <venture@google.com> wrote:
+> > > >
+> > > > On Thu, Mar 28, 2019 at 9:50 AM Rob Herring <robh@kernel.org> wrote:
+> > > > >
+> > > > > On Wed, 27 Mar 2019 14:21:55 -0700, Patrick Venture wrote:
+> > > > > > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
+> > > > > >
+> > > > > > Signed-off-by: Patrick Venture <venture@google.com>
+> > > > > > ---
+> > > > > > Changes for v8:
+> > > > > > - None
+> > > > > > Changes for v7:
+> > > > > > - Moved node under the syscon node it requires
+> > > > > > Changes for v6:
+> > > > > > - None
+> > > > > > Changes for v5:
+> > > > > > - None
+> > > > > > Changes for v4:
+> > > > > > - None
+> > > > > > Changes for v3:
+> > > > > > - None
+> > > > > > Changes for v2:
+> > > > > > - Added comment about syscon required parameter.
+> > > > > > ---
+> > > > > >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
+> > > > > >  1 file changed, 48 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+> > > > > >
+> > > > >
+> > > > > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> > > > > there's no need to repost patches *only* to add the tags. The upstream
+> > > > > maintainer will do that for acks received on the version they apply.
+> > > > >
+> > > > > If a tag was not added on purpose, please state why and what changed.
+> > > >
+> > > > Adding tags in this case is adding a change version?  I was doing this
+> > > > to keep the two patches version-synced.  I thought that was required.
+> > > > There was a version change in the other patch in this set.
+> > >
+> > > Adding tags is not considered a change. I gave a Reviewed-by in v7.
+> > > Subsequent versions should carry that tag if there's no change (or
+> > > only minor changes) in this patch. What happens in the other patches
+> > > is not really important. Maintainers are not going to go searching
+> > > thru the versions to find all the ack/review tags. And if I've already
+> > > reviewed this, I don't want to look at it again.
+> >
+> > Thank you, I didn't realize that had happened.
+>
+> I went back through my email and found the line of your email that
+> included it.  I apologize.
+>
+> So, before I send the updated patch with your ack -- do I need to send
+> a v9? or is this just me sending v8 again?
 
-If a device has an exclusion range specified in the IVRS
-table, this region needs to be reserved in the iova-domain
-of that device. This hasn't happened until now and can cause
-data corruption on data transfered with these devices.
+Sorry.  I see you already answered that when you said that adding a
+tag isn't considered a change.  I have therefore re-sent v8 of this
+patch with your tag added.
 
-Treat exclusion ranges as reserved regions in the iommu-core
-to fix the problem.
-
-Fixes: be2a022c0dd0 ('x86, AMD IOMMU: add functions to parse IOMMU memory mapping requirements for devices')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/amd_iommu.c       | 9 ++++++---
- drivers/iommu/amd_iommu_init.c  | 7 ++++---
- drivers/iommu/amd_iommu_types.h | 2 ++
- 3 files changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 21cb088d6687..f7cdd2ab7f11 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -3169,21 +3169,24 @@ static void amd_iommu_get_resv_regions(struct device *dev,
- 		return;
- 
- 	list_for_each_entry(entry, &amd_iommu_unity_map, list) {
-+		int type, prot = 0;
- 		size_t length;
--		int prot = 0;
- 
- 		if (devid < entry->devid_start || devid > entry->devid_end)
- 			continue;
- 
-+		type   = IOMMU_RESV_DIRECT;
- 		length = entry->address_end - entry->address_start;
- 		if (entry->prot & IOMMU_PROT_IR)
- 			prot |= IOMMU_READ;
- 		if (entry->prot & IOMMU_PROT_IW)
- 			prot |= IOMMU_WRITE;
-+		if (entry->prot & IOMMU_UNITY_MAP_FLAG_EXCL_RANGE)
-+			/* Exclusion range */
-+			type = IOMMU_RESV_RESERVED;
- 
- 		region = iommu_alloc_resv_region(entry->address_start,
--						 length, prot,
--						 IOMMU_RESV_DIRECT);
-+						 length, prot, type);
- 		if (!region) {
- 			dev_err(dev, "Out of memory allocating dm-regions\n");
- 			return;
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index f773792d77fd..1b1378619fc9 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -2013,6 +2013,9 @@ static int __init init_unity_map_range(struct ivmd_header *m)
- 	if (e == NULL)
- 		return -ENOMEM;
- 
-+	if (m->flags & IVMD_FLAG_EXCL_RANGE)
-+		init_exclusion_range(m);
-+
- 	switch (m->type) {
- 	default:
- 		kfree(e);
-@@ -2059,9 +2062,7 @@ static int __init init_memory_definitions(struct acpi_table_header *table)
- 
- 	while (p < end) {
- 		m = (struct ivmd_header *)p;
--		if (m->flags & IVMD_FLAG_EXCL_RANGE)
--			init_exclusion_range(m);
--		else if (m->flags & IVMD_FLAG_UNITY_MAP)
-+		if (m->flags & (IVMD_FLAG_UNITY_MAP | IVMD_FLAG_EXCL_RANGE))
- 			init_unity_map_range(m);
- 
- 		p += m->length;
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index eae0741f72dc..87965e4d9647 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -374,6 +374,8 @@
- #define IOMMU_PROT_IR 0x01
- #define IOMMU_PROT_IW 0x02
- 
-+#define IOMMU_UNITY_MAP_FLAG_EXCL_RANGE	(1 << 2)
-+
- /* IOMMU capabilities */
- #define IOMMU_CAP_IOTLB   24
- #define IOMMU_CAP_NPCACHE 26
--- 
-2.16.4
-
+>
+> >
+> > >
+> > > Rob
