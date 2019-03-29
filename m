@@ -2,109 +2,110 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923ACC10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E93C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FFC921773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553850809;
-	bh=aPC2d2BG8JKbxfmQM3ZzVRWNCQOcYyw7to59r1ya5Dk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XfT3IixCmv/3vitScI0XsR0PjJRBnE0ktV/7hZIHsdXoeTBWl0h98ncDlzp46ECEB
-	 qDQE9ZW4x8AxNJQqFmhIqL3C+vx6UlZlYGXwFiLHYmLfaailruUtaanuxcUOZM+lKm
-	 S7+TncwxGDxlZZzmW25AaJiQwVtyuGjTN0uwE+6A=
+	by mail.kernel.org (Postfix) with ESMTP id 1CD2B2173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbfC2JN2 (ORCPT
+        id S1729277AbfC2JNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 05:13:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38610 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728703AbfC2JN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 05:13:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 89C11AE52;
-        Fri, 29 Mar 2019 09:13:26 +0000 (UTC)
-Date:   Fri, 29 Mar 2019 10:13:25 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rafael@kernel.org, akpm@linux-foundation.org, osalvador@suse.de,
-        rppt@linux.ibm.com, willy@infradead.org, fanc.fnst@cn.fujitsu.com
-Subject: Re: [PATCH v3 2/2] drivers/base/memory.c: Rename the misleading
- parameter
-Message-ID: <20190329091325.GD28616@dhcp22.suse.cz>
-References: <20190329082915.19763-1-bhe@redhat.com>
- <20190329082915.19763-2-bhe@redhat.com>
+        Fri, 29 Mar 2019 05:13:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:21775 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728046AbfC2JNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 05:13:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 02:13:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,284,1549958400"; 
+   d="scan'208";a="156901087"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Mar 2019 02:13:45 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        jolsa@redhat.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ben Gainey <Ben.Gainey@arm.com>, stable@vger.kernel.org
+Subject: [PATCH] perf: Fix AUX record suppression
+Date:   Fri, 29 Mar 2019 11:13:38 +0200
+Message-Id: <20190329091338.29999-1-alexander.shishkin@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190329082915.19763-2-bhe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 29-03-19 16:29:15, Baoquan He wrote:
-> The input parameter 'phys_index' of memory_block_action() is actually
-> the section number, but not the phys_index of memory_block. Fix it.
+Commit 1627314fb54a33e ("perf: Suppress AUX/OVERWRITE records") has an
+unintended side-effect of also suppressing all AUX records with no flags
+and non-zero size, so all the regular records in the full trace mode.
+This breaks some use cases for people.
 
-I have tried to explain that the naming is mostly a relict from the past
-than really a misleading name http://lkml.kernel.org/r/20190326093315.GL28406@dhcp22.suse.cz
-Maybe it would be good to reflect that in the changelog
+Fix this by restoring "regular" AUX records.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: 1627314fb54a33e ("perf: Suppress AUX/OVERWRITE records")
+Reported-by: Ben Gainey <Ben.Gainey@arm.com>
+Tested-by: Ben Gainey <Ben.Gainey@arm.com>
+CC: stable@vger.kernel.org # v4.20+
+---
+ kernel/events/ring_buffer.c | 33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
+
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 678ccec60d8f..626256dc26c1 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -455,24 +455,21 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
+ 		rb->aux_head += size;
+ 	}
  
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-
-btw. I've acked the previous version as well.
-
-> ---
-> v2->v3:
->   Rename the parameter to 'start_section_nr' from 'sec'.
-> 
->  drivers/base/memory.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index cb8347500ce2..9ea972b2ae79 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -231,13 +231,14 @@ static bool pages_correctly_probed(unsigned long start_pfn)
->   * OK to have direct references to sparsemem variables in here.
->   */
->  static int
-> -memory_block_action(unsigned long phys_index, unsigned long action, int online_type)
-> +memory_block_action(unsigned long start_section_nr, unsigned long action,
-> +		    int online_type)
->  {
->  	unsigned long start_pfn;
->  	unsigned long nr_pages = PAGES_PER_SECTION * sections_per_block;
->  	int ret;
->  
-> -	start_pfn = section_nr_to_pfn(phys_index);
-> +	start_pfn = section_nr_to_pfn(start_section_nr);
->  
->  	switch (action) {
->  	case MEM_ONLINE:
-> @@ -251,7 +252,7 @@ memory_block_action(unsigned long phys_index, unsigned long action, int online_t
->  		break;
->  	default:
->  		WARN(1, KERN_WARNING "%s(%ld, %ld) unknown action: "
-> -		     "%ld\n", __func__, phys_index, action, action);
-> +		     "%ld\n", __func__, start_section_nr, action, action);
->  		ret = -EINVAL;
->  	}
->  
-> -- 
-> 2.17.2
-> 
-
+-	if (size || handle->aux_flags) {
+-		/*
+-		 * Only send RECORD_AUX if we have something useful to communicate
+-		 *
+-		 * Note: the OVERWRITE records by themselves are not considered
+-		 * useful, as they don't communicate any *new* information,
+-		 * aside from the short-lived offset, that becomes history at
+-		 * the next event sched-in and therefore isn't useful.
+-		 * The userspace that needs to copy out AUX data in overwrite
+-		 * mode should know to use user_page::aux_head for the actual
+-		 * offset. So, from now on we don't output AUX records that
+-		 * have *only* OVERWRITE flag set.
+-		 */
+-
+-		if (handle->aux_flags & ~(u64)PERF_AUX_FLAG_OVERWRITE)
+-			perf_event_aux_event(handle->event, aux_head, size,
+-			                     handle->aux_flags);
+-	}
++	/*
++	 * Only send RECORD_AUX if we have something useful to communicate
++	 *
++	 * Note: the OVERWRITE records by themselves are not considered
++	 * useful, as they don't communicate any *new* information,
++	 * aside from the short-lived offset, that becomes history at
++	 * the next event sched-in and therefore isn't useful.
++	 * The userspace that needs to copy out AUX data in overwrite
++	 * mode should know to use user_page::aux_head for the actual
++	 * offset. So, from now on we don't output AUX records that
++	 * have *only* OVERWRITE flag set.
++	 */
++	if (size || (handle->aux_flags & ~(u64)PERF_AUX_FLAG_OVERWRITE))
++		perf_event_aux_event(handle->event, aux_head, size,
++				     handle->aux_flags);
+ 
+ 	rb->user_page->aux_head = rb->aux_head;
+ 	if (rb_need_aux_wakeup(rb))
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
