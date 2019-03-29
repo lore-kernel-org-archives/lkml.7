@@ -2,109 +2,273 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5C1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4A1C10F0A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564CF2173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:10:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AOPLZ71J";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RBVVf9TN"
+	by mail.kernel.org (Postfix) with ESMTP id 451F021773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbfC2HKS (ORCPT
+        id S1728883AbfC2HXv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 03:10:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34362 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728781AbfC2HKR (ORCPT
+        Fri, 29 Mar 2019 03:23:51 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:56221 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728790AbfC2HXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 03:10:17 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 079CA6087D; Fri, 29 Mar 2019 07:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553843417;
-        bh=fTmRJ0Ikgi+Z+X2xIKdBVKDGhs0L7AcQwgQVjfgpKa0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AOPLZ71J5A25IMWyC7C9iiLNnnzdKgx1VJ8Uu3Yp4+3Lwh7oz8V+/4oKCqphfElub
-         26VjWUSKEMZIVOibQcBw9S9nXKmhPchByCQ9Ok70W2kg7VpFaSJmnTwu+95U+qRqC5
-         glWOHyefq5M8D2GocXiE7/pVC5Ld2wbtesEnJbh8=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id ECB3B606AC;
-        Fri, 29 Mar 2019 07:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553843415;
-        bh=fTmRJ0Ikgi+Z+X2xIKdBVKDGhs0L7AcQwgQVjfgpKa0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=RBVVf9TN7B5S8z4+2cdWi38s6EfM2/6+FK6XNNtVW9N29q1Dd8VUzGyleeSy0ADU7
-         SgP9Xj5v7jQpe63sSoS4xQnBDSddD5Uo3hE6mQaGVfILdQyCdAQ7TO6+BSLayB2njw
-         qBHNlQ1zQBeyMXmyQDRDsscSoaXllIxzm8ueDiqw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ECB3B606AC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] scsi: bnx2fc: remove unneeded variable
-To:     Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        QLogic-Storage-Upstream@qlogic.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1553829852-16525-1-git-send-email-dingxiang@cmss.chinamobile.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <bde8b876-eda6-b23b-5401-cd07015fd767@codeaurora.org>
-Date:   Fri, 29 Mar 2019 12:40:08 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 03:23:51 -0400
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x2T7NHxv029256
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 29 Mar 2019 16:23:17 +0900
+Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2T7NGZT030738;
+        Fri, 29 Mar 2019 16:23:16 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2T7LU9u026766;
+        Fri, 29 Mar 2019 16:23:16 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.140] [10.38.151.140]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-3805520; Fri, 29 Mar 2019 16:20:40 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC12GP.gisp.nec.co.jp ([10.38.151.140]) with mapi id 14.03.0319.002; Fri,
+ 29 Mar 2019 16:20:39 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Borislav Petkov <bp@alien8.de>, "bhe@redhat.com" <bhe@redhat.com>,
+        "Dave Young" <dyoung@redhat.com>,
+        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>
+CC:     "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on kexec-ed
+ kernel
+Thread-Topic: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Index: AQHU5f/oFwt4tfwJ5EeDzlajOHAcUA==
+Date:   Fri, 29 Mar 2019 07:20:38 +0000
+Message-ID: <20190329072037.GA5840@jeru.linux.bs1.fc.nec.co.jp>
+References: <20190325120149.GI12016@zn.tnic>
+ <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
+ <20190325123229.GL12016@zn.tnic>
+ <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+ <20190326135714.GG1867@zn.tnic> <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+In-Reply-To: <20190328155256.GP22720@zn.tnic>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <717D56458AFA0548A857AD1D618F5F85@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <1553829852-16525-1-git-send-email-dingxiang@cmss.chinamobile.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+in the early parsing code tries to search RSDP from EFI table but
+that will crash because the table address is virtual when the kernel
+was booted by kexec.
 
-On 3/29/2019 8:54 AM, Ding Xiang wrote:
-> "rc" is unneeded,just return SUCCESS
+In the case of kexec, physical address of EFI tables is provided
+via efi_setup_data in boot_params, which is set up by kexec(1).
 
-"rc variable is  not needed in `bnx2fc_abts_cleanup`. Fix this by 
-removing it ."
+Factor out the table parsing code and use different pointers depending
+on whether the kernel is booted by kexec or not.
 
+Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
--Mukesh
-
->
-> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-> ---
->   drivers/scsi/bnx2fc/bnx2fc_io.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/scsi/bnx2fc/bnx2fc_io.c b/drivers/scsi/bnx2fc/bnx2fc_io.c
-> index bc9f2a2..8def63c 100644
-> --- a/drivers/scsi/bnx2fc/bnx2fc_io.c
-> +++ b/drivers/scsi/bnx2fc/bnx2fc_io.c
-> @@ -1083,7 +1083,6 @@ int bnx2fc_eh_device_reset(struct scsi_cmnd *sc_cmd)
->   static int bnx2fc_abts_cleanup(struct bnx2fc_cmd *io_req)
->   {
->   	struct bnx2fc_rport *tgt = io_req->tgt;
-> -	int rc = SUCCESS;
->   	unsigned int time_left;
->   
->   	io_req->wait_for_comp = 1;
-> @@ -1110,7 +1109,7 @@ static int bnx2fc_abts_cleanup(struct bnx2fc_cmd *io_req)
->   	kref_put(&io_req->refcount, bnx2fc_cmd_release);
->   
->   	spin_lock_bh(&tgt->tgt_lock);
-> -	return rc;
-> +	return SUCCESS;
->   }
->   
->   /**
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -44,17 +44,109 @@ static acpi_physical_address get_acpi_rsdp(void)
+ 	return addr;
+ }
+ 
++#ifdef CONFIG_EFI
++static unsigned long efi_get_kexec_setup_data_addr(void)
++{
++	struct setup_data *data;
++	u64 pa_data;
++
++	pa_data = boot_params->hdr.setup_data;
++	while (pa_data) {
++		data = (struct setup_data *) pa_data;
++		if (data->type == SETUP_EFI)
++			return pa_data + sizeof(struct setup_data);
++		pa_data = data->next;
++	}
++	return 0;
++}
++
+ /* Search EFI system tables for RSDP. */
+-static acpi_physical_address efi_get_rsdp_addr(void)
++static acpi_physical_address
++__efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
++		    bool efi_64)
+ {
+ 	acpi_physical_address rsdp_addr = 0;
++	int i;
++
++	/* Get EFI tables from systab. */
++	for (i = 0; i < nr_tables; i++) {
++		acpi_physical_address table;
++		efi_guid_t guid;
++
++		if (efi_64) {
++			efi_config_table_64_t *tbl = (efi_config_table_64_t *) config_tables + i;
++
++			guid  = tbl->guid;
++			table = tbl->table;
++
++			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
++				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
++				return 0;
++			}
++		} else {
++			efi_config_table_32_t *tbl = (efi_config_table_32_t *) config_tables + i;
++
++			guid  = tbl->guid;
++			table = tbl->table;
++		}
++
++		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
++			rsdp_addr = table;
++		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
++			return table;
++	}
++
++	return rsdp_addr;
++}
++#endif
+ 
++static acpi_physical_address kexec_get_rsdp_addr(void)
++{
+ #ifdef CONFIG_EFI
+-	unsigned long systab, systab_tables, config_tables;
++	efi_system_table_64_t *systab;
++	struct efi_setup_data *esd;
++	struct efi_info *ei;
++	char *sig;
++
++	esd = (struct efi_setup_data *) efi_get_kexec_setup_data_addr();
++	if (!esd)
++		return 0;
++
++	if (!esd->tables) {
++		debug_putstr("Wrong kexec SETUP_EFI data.\n");
++		return 0;
++	}
++
++	ei = &boot_params->efi_info;
++	sig = (char *)&ei->efi_loader_signature;
++	/*
++	 * EFI/kexec support is only added for 64bit. So we don't have to
++	 * care 32bit case.
++	 */
++	if (strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
++		debug_putstr("Wrong kexec EFI loader signature.\n");
++		return 0;
++	}
++
++	/* Get systab from boot params. */
++	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
++	if (!systab)
++		error("EFI system table not found in kexec boot_params.");
++
++	return __efi_get_rsdp_addr((unsigned long) esd->tables,
++				   systab->nr_tables, true);
++#else
++	return 0;
++#endif
++}
++
++static acpi_physical_address efi_get_rsdp_addr(void)
++{
++#ifdef CONFIG_EFI
++	unsigned long systab, config_tables;
+ 	unsigned int nr_tables;
+ 	struct efi_info *ei;
+ 	bool efi_64;
+-	int size, i;
+ 	char *sig;
+ 
+ 	ei = &boot_params->efi_info;
+@@ -88,49 +180,20 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+ 
+ 		config_tables	= stbl->tables;
+ 		nr_tables	= stbl->nr_tables;
+-		size		= sizeof(efi_config_table_64_t);
+ 	} else {
+ 		efi_system_table_32_t *stbl = (efi_system_table_32_t *)systab;
+ 
+ 		config_tables	= stbl->tables;
+ 		nr_tables	= stbl->nr_tables;
+-		size		= sizeof(efi_config_table_32_t);
+ 	}
+ 
+ 	if (!config_tables)
+ 		error("EFI config tables not found.");
+ 
+-	/* Get EFI tables from systab. */
+-	for (i = 0; i < nr_tables; i++) {
+-		acpi_physical_address table;
+-		efi_guid_t guid;
+-
+-		config_tables += size;
+-
+-		if (efi_64) {
+-			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables;
+-
+-			guid  = tbl->guid;
+-			table = tbl->table;
+-
+-			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
+-				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
+-				return 0;
+-			}
+-		} else {
+-			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables;
+-
+-			guid  = tbl->guid;
+-			table = tbl->table;
+-		}
+-
+-		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
+-			rsdp_addr = table;
+-		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+-			return table;
+-	}
++	return __efi_get_rsdp_addr(config_tables, nr_tables, efi_64);
++#else
++	return 0;
+ #endif
+-	return rsdp_addr;
+ }
+ 
+ static u8 compute_checksum(u8 *buffer, u32 length)
+@@ -221,6 +284,9 @@ acpi_physical_address get_rsdp_addr(void)
+ 		pa = boot_params->acpi_rsdp_addr;
+ 
+ 	if (!pa)
++		pa = kexec_get_rsdp_addr();
++
++	if (!pa)
+ 		pa = efi_get_rsdp_addr();
+ 
+ 	if (!pa)
