@@ -2,178 +2,386 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59410C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE27C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B83B2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1B82173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="St8oea1N"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="eWWDI9tS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfC2HAw (ORCPT
+        id S1728825AbfC2HCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 03:00:52 -0400
-Received: from mail-eopbgr20081.outbound.protection.outlook.com ([40.107.2.81]:32131
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728719AbfC2HAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 03:00:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X0p3nav0h+E5m1b7JOSH5tauxn0XW6KkmEXUy4n5WYE=;
- b=St8oea1Na88aCkuKvSDCjpyb7qV8svDFsx+6XidZsJxLfzBcru6n2+80wfXShsOz7jFoJT54zn/ohPr0cP8iVHAybnPgbOG8SmdK2sYvMhIY849OP5F+F5l9gqKXrJK1cMJSJUTyWpe+mHgBmXRh9TC85ujNWnqIDwWRiadQMnk=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3708.eurprd04.prod.outlook.com (52.134.70.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.15; Fri, 29 Mar 2019 07:00:47 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1750.017; Fri, 29 Mar 2019
- 07:00:47 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH 2/2] input: keyboard: imx: make sure keyboard can always wake
- up system
-Thread-Topic: [PATCH 2/2] input: keyboard: imx: make sure keyboard can always
- wake up system
-Thread-Index: AQHU5f0iWX9TLLtu/k286fhNdOUt7A==
-Date:   Fri, 29 Mar 2019 07:00:46 +0000
-Message-ID: <1553842562-8481-2-git-send-email-Anson.Huang@nxp.com>
-References: <1553842562-8481-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1553842562-8481-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0PR04CA0013.apcprd04.prod.outlook.com
- (2603:1096:203:36::25) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fdfab784-3275-4f62-0657-08d6b41444b4
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3708;
-x-ms-traffictypediagnostic: DB3PR0402MB3708:
-x-microsoft-antispam-prvs: <DB3PR0402MB37083EEEE272989F3F0925C1F55A0@DB3PR0402MB3708.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0991CAB7B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(136003)(39860400002)(396003)(189003)(199004)(8936002)(50226002)(5660300002)(26005)(186003)(110136005)(4326008)(102836004)(256004)(14444005)(6512007)(99286004)(25786009)(305945005)(316002)(36756003)(11346002)(66066001)(486006)(2906002)(476003)(7736002)(2616005)(52116002)(446003)(68736007)(53936002)(6486002)(71200400001)(71190400001)(81156014)(14454004)(8676002)(81166006)(478600001)(3846002)(105586002)(6116002)(106356001)(76176011)(2501003)(2201001)(6506007)(6436002)(97736004)(386003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3708;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: zOYn6PfMebZZ1sbRMhJNVnlX4ooWlR0z1U07WzRlZ/iutu/9LfmMPvIs44hucg57hsziBbPwN6wj56RXxg6pkdsacw+3M5HmZmoxlAAgnIwjzPxKa+0sEg78jUQf0sr9XYcXtha22lPVMnNyjy4CF7qhxVtRxZ0s8sV5pc/mCExBR2bfE9yeAzScI01CDRO9ITZO1h0An87JcvP2k54y8nQziop4euZ5YPGSH6vecYURHbw9If2DOPi1ipn7IUi2tSWjgmtEbNN94Y6jXOnCsfHKGIQ/2h+pOaWormDCvvuVbami3HY7AdbkC2kExM8Kwqr1i8X4ymCZOapzVYV1doB1rWyzQIB/2nh5G7Q3NgJfEZ+NpFwqneOOeizxrN6CUr0NsuC0Dh56KUs9hMnL840p9ixWWd4+ikXZmJPdMrk=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 29 Mar 2019 03:02:53 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:28218 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728719AbfC2HCx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 03:02:53 -0400
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x2T72aB3010461
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 16:02:37 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x2T72aB3010461
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1553842957;
+        bh=Ruq2JIDk5dGxA9NJovtSIj+mgyV4C+T1XepbEFuu4z4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eWWDI9tSVm7NLtfnt4SxEesW8mBp28eGszdf5sFwa0baskaynZgl5gUZwV0Xbmu6P
+         XC7tTK8FnE9K3LK87sQ73a9zEA8EaVy5He9s0X5hh2uG+yGSAU8XwClwHtSFEyN5Gt
+         08opxjas5gdYnYPgeTdQlOabxWWowUMZufKKO539Tz86x815ChbMIvVynuvuvFxVxa
+         VgsBz+N+4bamwlPmNeCr7Rl/VYrT2XkU4RMnirelX5qcQfhu9zDnozOWCLaiPjpkRv
+         eImqcaLuZgKiFXZK5J6otkZFz9Wy+yP+CwW9ocDm12kzpJKZT8CCqq8l0PJ3ndRbzq
+         5ZYZ1z9jTc9HQ==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id s2so707998vsi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 00:02:37 -0700 (PDT)
+X-Gm-Message-State: APjAAAVlMRIgFANTIcNS7ncSmvkWIp1U26cKBNLNALWutoeQnv4ZQcXu
+        u/pKnkreztZ80kVwPqe4ejqYWIAJOz0z6aYDPAc=
+X-Google-Smtp-Source: APXvYqzfUKI/WMYrkEEPnhaevPwvGhKTSTCm/EJIWVjLC6VaiP/KYjZ+Kydg/okhrnLn6fe/+8eFD4mE2YqOfYQB4wA=
+X-Received: by 2002:a67:7a43:: with SMTP id v64mr28921483vsc.54.1553842956015;
+ Fri, 29 Mar 2019 00:02:36 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fdfab784-3275-4f62-0657-08d6b41444b4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2019 07:00:46.9601
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3708
+References: <1552380290-19951-1-git-send-email-yamada.masahiro@socionext.com>
+ <1552380290-19951-3-git-send-email-yamada.masahiro@socionext.com>
+ <20190312112811.1af0bb00@xps13> <CAK7LNATud=QTQ4FGxt1FtSZ06-Boa-jiROp7-wOj192FgXTNLw@mail.gmail.com>
+ <20190312115425.612bcdf2@xps13> <CAK7LNAT_h7o4Rbzsgmd8Z6G3Pq3Uhvdqyhp2-ArCb8hfnreEpA@mail.gmail.com>
+ <20190312141327.31c6af3f@xps13> <CAK7LNASegGwny8T+3-daaTJZoBNAar_26SSoNPqgd=Ns-t2_dA@mail.gmail.com>
+ <20190315093429.35137adb@xps13>
+In-Reply-To: <20190315093429.35137adb@xps13>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 29 Mar 2019 16:02:00 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ08gL3ABaRwmbVZGgYwr54ahqLpvDGDP+0aRaUpZzcdQ@mail.gmail.com>
+Message-ID: <CAK7LNAQ08gL3ABaRwmbVZGgYwr54ahqLpvDGDP+0aRaUpZzcdQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/9] mtd: rawnand: denali: refactor syndrome layout
+ handling for raw access
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are several scenarios that keyboard can NOT wake up system
-from suspend, e.g., if a keyboard is depressed between system
-device suspend phase and device noirq suspend phase, the keyboard
-ISR will be called and both keyboard depress and release interrupts
-will be disabled, then keyboard will no longer be able to wake up
-system. Another scenario would be, if a keyboard is kept depressed,
-and then system goes into suspend, the expected behavior would be
-when keyboard is released, system will be waked up, but current
-implementation can NOT achieve that, because both depress and release
-interrupts are disabled in ISR, and the event check is still in
-progress.
+Hi Miquel,
 
-To fix these issues, need to make sure keyboard's depress or release
-interrupt is enabled after noirq device suspend phase, this patch
-moves the suspend/resume callback to noirq suspend/resume phase, and
-enable the corresponding interrupt according to current keyboard status.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/input/keyboard/imx_keypad.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+On Fri, Mar 15, 2019 at 5:34 PM Miquel Raynal <miquel.raynal@bootlin.com> w=
+rote:
+>
+> Hi Masahiro,
+>
+> Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Thu, 14 Mar
+> 2019 17:24:41 +0900:
+>
+> > Hi Miquel,
+> >
+> > On Tue, Mar 12, 2019 at 10:13 PM Miquel Raynal
+> > <miquel.raynal@bootlin.com> wrote:
+> > >
+> > > Hi Masahiro,
+> > >
+> > > Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue, 12 Mar
+> > > 2019 20:07:27 +0900:
+> > >
+> > > > Hi Miquel,
+> > > >
+> > > >
+> > > > On Tue, Mar 12, 2019 at 7:54 PM Miquel Raynal <miquel.raynal@bootli=
+n.com> wrote:
+> > > > >
+> > > > > Hi Masahiro,
+> > > > >
+> > > > > Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue, 12 =
+Mar
+> > > > > 2019 19:51:21 +0900:
+> > > > >
+> > > > > > On Tue, Mar 12, 2019 at 7:28 PM Miquel Raynal <miquel.raynal@bo=
+otlin.com> wrote:
+> > > > > > >
+> > > > > > > Hi Masahiro,
+> > > > > > >
+> > > > > > > Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue,=
+ 12 Mar
+> > > > > > > 2019 17:44:43 +0900:
+> > > > > > >
+> > > > > > > > The Denali IP adopts the syndrome page layout (payload and =
+ECC are
+> > > > > > > > interleaved). The *_page_raw() and *_oob() callbacks are co=
+mplicated
+> > > > > > > > because they must hide the underlying layout used by the ha=
+rdware,
+> > > > > > > > and always return contiguous in-band and out-of-band data.
+> > > > > > > >
+> > > > > > > > Currently, similar code is duplicated to reorganize the dat=
+a layout.
+> > > > > > > > For example, denali_read_page_raw() and denali_write_page_r=
+aw() look
+> > > > > > > > almost the same.
+> > > > > > > >
+> > > > > > > > The idea for refactoring is to split the code into two part=
+s:
+> > > > > > > >   [1] conversion of page layout
+> > > > > > > >   [2] what to do at every ECC chunk boundary
+> > > > > > > >
+> > > > > > > > For [1], I wrote denali_raw_payload_op() and denali_raw_oob=
+_op().
+> > > > > > > > They manipulate data for the Denali controller's specific p=
+age layout
+> > > > > > > > of in-band, out-of-band, respectively.
+> > > > > > > >
+> > > > > > > > The difference between write and read is just the operation=
+ at
+> > > > > > > > ECC chunk boundaries. For example, denali_read_oob() calls
+> > > > > > > > nand_change_read_column_op(), whereas denali_write_oob() ca=
+lls
+> > > > > > > > nand_change_write_column_op(). So, I implemented [2] as a c=
+allback
+> > > > > > > > passed into [1].
+> > > > > > > >
+> > > > > > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.c=
+om>
+> > > > > > > > ---
+> > > > > > > >
+> > > > > > >
+> > > > > > > [...]
+> > > > > > >
+> > > > > > > >  static int denali_read_page_raw(struct nand_chip *chip, ui=
+nt8_t *buf,
+> > > > > > > >                               int oob_required, int page)
+> > > > > > > >  {
+> > > > > > > > +     struct denali_nand_info *denali =3D to_denali(chip);
+> > > > > > > >       struct mtd_info *mtd =3D nand_to_mtd(chip);
+> > > > > > > > -     struct denali_nand_info *denali =3D mtd_to_denali(mtd=
+);
+> > > > > > > > -     int writesize =3D mtd->writesize;
+> > > > > > > > -     int oobsize =3D mtd->oobsize;
+> > > > > > > > -     int ecc_steps =3D chip->ecc.steps;
+> > > > > > > > -     int ecc_size =3D chip->ecc.size;
+> > > > > > > > -     int ecc_bytes =3D chip->ecc.bytes;
+> > > > > > > >       void *tmp_buf =3D denali->buf;
+> > > > > > > > -     int oob_skip =3D denali->oob_skip_bytes;
+> > > > > > > > -     size_t size =3D writesize + oobsize;
+> > > > > > > > -     int ret, i, pos, len;
+> > > > > > > > +     size_t size =3D mtd->writesize + mtd->oobsize;
+> > > > > > > > +     int ret;
+> > > > > > > > +
+> > > > > > > > +     if (!buf)
+> > > > > > > > +             return -EINVAL;
+> > > > > > > >
+> > > > > > > >       ret =3D denali_data_xfer(chip, tmp_buf, size, page, 1=
+, 0);
+> > > > > > > >       if (ret)
+> > > > > > > >               return ret;
+> > > > > > > >
+> > > > > > > > -     /* Arrange the buffer for syndrome payload/ecc layout=
+ */
+> > > > > > > > -     if (buf) {
+> > > > > > > > -             for (i =3D 0; i < ecc_steps; i++) {
+> > > > > > > > -                     pos =3D i * (ecc_size + ecc_bytes);
+> > > > > > > > -                     len =3D ecc_size;
+> > > > > > > > -
+> > > > > > > > -                     if (pos >=3D writesize)
+> > > > > > > > -                             pos +=3D oob_skip;
+> > > > > > > > -                     else if (pos + len > writesize)
+> > > > > > > > -                             len =3D writesize - pos;
+> > > > > > > > -
+> > > > > > > > -                     memcpy(buf, tmp_buf + pos, len);
+> > > > > > > > -                     buf +=3D len;
+> > > > > > > > -                     if (len < ecc_size) {
+> > > > > > > > -                             len =3D ecc_size - len;
+> > > > > > > > -                             memcpy(buf, tmp_buf + writesi=
+ze + oob_skip,
+> > > > > > > > -                                    len);
+> > > > > > > > -                             buf +=3D len;
+> > > > > > > > -                     }
+> > > > > > > > -             }
+> > > > > > > > -     }
+> > > > > > > > +     ret =3D denali_raw_payload_op(chip, buf, denali_memcp=
+y_in, tmp_buf);
+> > > > > > >
+> > > > > > > Honestly, I still don't like passing denali_memcpy_in/out as =
+parameter.
+> > > > > > >
+> > > > > > > Besides that, once you'll have added helpers to avoid abusing=
+ the
+> > > > > > > ternary operator in 4/9, the rest looks fine by me.
+> > > > > > >
+> > > > > >
+> > > > > >
+> > > > > > Do you have any suggestion?
+> > > > >
+> > > > > Maybe register these two helpers at probe as controller specific =
+hooks,
+> > > > > then just pass an in/out boolean to the function?
+> > > > >
+> > > >
+> > > > Sorry, I do not understand.
+> > > >
+> > > > Are you suggesting to do like follows in probe ?
+> > > >
+> > > > denali->change_column_read_raw =3D denali_memcpy_in;
+> > > > denali->change_column_write_raw =3D denali_memcpy_out;
+> > > > denali->change_column_read_oob =3D denali_change_read_column_op;
+> > > > denali->change_column_write_oob =3D denali_change_write_column_op;
+> > > >
+> > > >
+> > > > All the 4 hooks are always needed
+> > > > regardless of any probed features.
+> > > >
+> > > >
+> > > > The result is just textual replacement
+> > > > denali_* with denali->*.
+> > > >
+> > > > What's the point of copying fixed function addresses
+> > > > to denali structure?
+> > > >
+> > > >
+> > >
+> > > What I don't like is the function pointer as a function parameter.
+> >
+> > This is a usual way to handle callback.
+> >
+> > > You
+> > > can use the functions defined statically if you prefer as long as the
+> > > parameter is just a boolean for instance?
+> >
+> >
+> >
+> > I still do not understand your concern,
+> > but if you ban the use of function pointer,
+> > the following is the best I can do
+> > since there are 4 hooks depending on the
+> > combination of oob/raw, write/read.
+> >
+> >
+> >
+> > if (oob) {
+> >         if (write)
+> >                 return nand_change_write_column_op(chip, offset, buf,
+> >                                                    len, false);
+> >         else
+> >                 return nand_change_read_column_op(chip, offset, buf,
+> >                                                   len, false);
+> > }
+> >
+> > if (write)
+> >         memcpy(denali->buf + offset, buf, len);
+> > else
+> >         memcpy(buf, denali->buf + offset, len);
+> >
+> > return 0;
+>
+> No, I meant passing a boolean to denali_raw_payload_op() instead of a
+> function pointer. Then from denali_raw_payload_op(), intead of doing
+>
+> ret =3D cb();
+> if (ret)
+>         ...
+>
+> doing:
+>
+> if (read)
+>         ret =3D denali_memcpy_in()
+> else
+>         ret =3D denali_memcpy_out()
+>
+> if (ret)
+>         ...
 
-diff --git a/drivers/input/keyboard/imx_keypad.c b/drivers/input/keyboard/i=
-mx_keypad.c
-index 7e32c36..9ae2090 100644
---- a/drivers/input/keyboard/imx_keypad.c
-+++ b/drivers/input/keyboard/imx_keypad.c
-@@ -521,11 +521,12 @@ static int imx_keypad_probe(struct platform_device *p=
-dev)
- 	return 0;
- }
-=20
--static int __maybe_unused imx_kbd_suspend(struct device *dev)
-+static int __maybe_unused imx_kbd_noirq_suspend(struct device *dev)
- {
- 	struct platform_device *pdev =3D to_platform_device(dev);
- 	struct imx_keypad *kbd =3D platform_get_drvdata(pdev);
- 	struct input_dev *input_dev =3D kbd->input_dev;
-+	unsigned short reg_val =3D readw(kbd->mmio_base + KPSR);
-=20
- 	/* imx kbd can wake up system even clock is disabled */
- 	mutex_lock(&input_dev->mutex);
-@@ -535,13 +536,20 @@ static int __maybe_unused imx_kbd_suspend(struct devi=
-ce *dev)
-=20
- 	mutex_unlock(&input_dev->mutex);
-=20
--	if (device_may_wakeup(&pdev->dev))
-+	if (device_may_wakeup(&pdev->dev)) {
-+		if (reg_val & KBD_STAT_KPKD)
-+			reg_val |=3D KBD_STAT_KRIE;
-+		if (reg_val & KBD_STAT_KPKR)
-+			reg_val |=3D KBD_STAT_KDIE;
-+		writew(reg_val, kbd->mmio_base + KPSR);
-+
- 		enable_irq_wake(kbd->irq);
-+	}
-=20
- 	return 0;
- }
-=20
--static int __maybe_unused imx_kbd_resume(struct device *dev)
-+static int __maybe_unused imx_kbd_noirq_resume(struct device *dev)
- {
- 	struct platform_device *pdev =3D to_platform_device(dev);
- 	struct imx_keypad *kbd =3D platform_get_drvdata(pdev);
-@@ -565,7 +573,9 @@ static int __maybe_unused imx_kbd_resume(struct device =
-*dev)
- 	return ret;
- }
-=20
--static SIMPLE_DEV_PM_OPS(imx_kbd_pm_ops, imx_kbd_suspend, imx_kbd_resume);
-+static const struct dev_pm_ops imx_kbd_pm_ops =3D {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_kbd_noirq_suspend, imx_kbd_noirq_resume=
-)
-+};
-=20
- static struct platform_driver imx_keypad_driver =3D {
- 	.driver		=3D {
+
+If you look at my code closely,
+you will notice 4 callbacks passed in
+denali_raw_payload_op().
+
+So, if-conditional would end up like follows:
+
+
+    if (oob) {
+            if (write)
+                    ret =3D nand_change_write_column_op(chip, offset, buf,
+                                                   len, false);
+            else
+                    ret =3D nand_change_read_column_op(chip, offset, buf,
+                                                  len, false);
+            if (ret)
+                    return ret;
+     } else {
+            if (write)
+                  memcpy(denali->buf + offset, buf, len);
+            else
+                  memcpy(buf, denali->buf + offset, len);
+     }
+
+
+This is extremely ugly.
+That's why I passed a function pointer
+instead of two boolean parameters 'oob', 'write'.
+
+
+
+
+> But nevermind, if this is bothering you too much let's keep the current
+> form, it's fine.
+>
+> >
+> >
+> > BTW, when are .read_page_raw / .write_page_raw used?
+>
+> I'm not sure what is the question here but these hooks are important
+> and allow to test the driver. nandbiterrs use them (although we do
+> not care about the performance in these hooks).
+
+
+Currently, I use DMA transfer + memcpy()
+in order to get better performance for
+.read_page_raw() and .write_page_raw()
+
+
+nand_change_write_column_op() and
+nand_change_read_column_op() are slow
+since they are low-level hardware accesses.
+
+
+If we do not have to care about the performance,
+I will only use nand_change_{write,read}_column_op().
+
+
+
+
+> >
+> > Currently, I use "whole page access && memcpy" for better performance.
+> >
+> > If those hooks are rarely used, I use
+> > nand_change_write_column_op / nand_change_read_column_op,
+> > which will reduce the if-conditional.
+>
+> Yes you can. We do not care about performance in raw accessors.
+
+OK, I will do this in v4.
+
+
+
+
+> Thanks,
+> Miqu=C3=A8l
+>
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+
+
 --=20
-2.7.4
-
+Best Regards
+Masahiro Yamada
