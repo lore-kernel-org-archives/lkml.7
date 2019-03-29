@@ -3,91 +3,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB5AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4134AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4BC3218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC9D218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553897665;
-	bh=3jx+6JEPP3W1oSTYbBx7j7/GDfX7eyxt3f59bKlH9h8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1BnNYbT2cHdiR6W/KUAifaebDXguxmD2kDtJ8KTTz3gyLEGZdPGt1/HzvLabzeBbZ
-	 PYoi7ySh7wfn5iIq5x52PMi9li1JCl/bKm7x7JC9zxgjLnXdpbGpH9qtp1A2RvVimj
-	 OcOWLqQjOQiYxMfeZvs9Sx6gl5ETCDeVtf7yF27E=
+	s=default; t=1553897681;
+	bh=OTehbauQ08ahn/ZeqU6byAs8bHQqgTQZkfksTL07/k8=;
+	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
+	b=ed5NbpbPbVS1+2VMQio5tPkibkhbsQxJrCkEaK3oiP+MTQeOatI2bs3n6iv5kKPXy
+	 yPRwBQ0xdS1vZKHF3gx26gjNXMAZM6Jqlfc3gcd15B52CfKDlKZgs5geqv08WkYbE2
+	 jdGyWVXvINTHZ2LC4yNh/TT36Srymv+FX7XeJKs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730487AbfC2WOY (ORCPT
+        id S1730503AbfC2WOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 18:14:24 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37627 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730240AbfC2WOX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 18:14:23 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u2so2451575lfd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 15:14:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oEmX8ZCRvQFJipsIScwR8NdKGvI1KivSe6xM2zeqmVE=;
-        b=B+RgZnfNDy4RrWItp6jNJSX4I16v6Gwnw9db53AGFybRNXUvc8zvVDC2VyRBl3zNN8
-         NZ98ifa6hSOxwPqygC9oVIi/zMOx4iDQubf2J+uM17cjesR6T9aTejOOsE9SVJoHTJpu
-         e9WrI/CJHDqKVSkIYPHg1DTz+/Km+akPE2MiY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oEmX8ZCRvQFJipsIScwR8NdKGvI1KivSe6xM2zeqmVE=;
-        b=AziA5Sd5qWKf37d4PBfRdMcwDMJ8VYU38ajmNMb79Z6+d09rnSCImLy1F2/iQw2b1w
-         Vm6tkjK8koAl5m5igeKZH2s8N8uFavKbvvSacpyoxhVFOn4DZtUQP3kATLRjauj7WpfB
-         CKxILe5QWgGaUrH20cu++EuXw7RNQeJJxEMjUtGlJkFz/WG+tvfKmiS22F8dPlEPOkKy
-         qlDPbPxHarXC2Ylprjj4SIj83I5l/HeoeoYu+QEwVPQtUDw1Fsu61XuK98zh4ZVKOhqf
-         F/UZZlNGQ6h6Awv6iCNu3xO3mITwVEgTvYoaaMnR6tJKa54S2bLWv5Mh1rjjjSUA9zvY
-         clXA==
-X-Gm-Message-State: APjAAAVG07z7PBDZStKw18whAC2CHtT/MBjKGe4CF+ixRV6vPotEF2VM
-        J27SkxokOKCIa7ItUguSSdhyD3BTBsU=
-X-Google-Smtp-Source: APXvYqzt1mrtNtMVdfcC8CtFCUjXEZbV46N1SIXfVeDWJO+YZu4/RlqNkPc8CRiBBACQj3NMknIsvQ==
-X-Received: by 2002:ac2:50cb:: with SMTP id h11mr1086787lfm.159.1553897661264;
-        Fri, 29 Mar 2019 15:14:21 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id h14sm581088ljg.10.2019.03.29.15.14.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 15:14:20 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id h16so3248815ljg.11
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 15:14:20 -0700 (PDT)
-X-Received: by 2002:a2e:8149:: with SMTP id t9mr27810082ljg.2.1553897659982;
- Fri, 29 Mar 2019 15:14:19 -0700 (PDT)
+        Fri, 29 Mar 2019 18:14:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730240AbfC2WOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 18:14:39 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC5B5218A2;
+        Fri, 29 Mar 2019 22:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553897678;
+        bh=OTehbauQ08ahn/ZeqU6byAs8bHQqgTQZkfksTL07/k8=;
+        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
+        b=HQuQ68VReNeDXM9JzyFwxJ2G4qiblnGkk3Ay3WGAOBxGzwvYKdsDJOkxcvILJv/dT
+         1UfdPf7nmXFmBIyyndHqKZrYizTJKsIOKroL/hmlPEXzX/2VQmJ8+CPfqBb/cU0Nq+
+         EH6yoU8NCbeXfi8XZa1lRFwgq2+6znBQr/gvolUk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190329193944.GA11609@kroah.com>
-In-Reply-To: <20190329193944.GA11609@kroah.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 29 Mar 2019 15:14:03 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wggq+RYy1F1Ym0W3juRNsFAOgAun25uLxziwUpQAmNVPA@mail.gmail.com>
-Message-ID: <CAHk-=wggq+RYy1F1Ym0W3juRNsFAOgAun25uLxziwUpQAmNVPA@mail.gmail.com>
-Subject: Re: [GIT PULL] Driver core fixes for 5.1-rc3
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8b6f0bc6210834af2aff2de7dc95692dd87db539.camel@baylibre.com>
+References: <20190325111200.15940-1-jbrunet@baylibre.com> <20190325111200.15940-2-jbrunet@baylibre.com> <155353381842.20095.17915880223118004926@swboyd.mtv.corp.google.com> <8b6f0bc6210834af2aff2de7dc95692dd87db539.camel@baylibre.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/4] clk: meson: mpll: add init callback and regs
+Cc:     linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Message-ID: <155389767798.20095.10570017301900287354@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Fri, 29 Mar 2019 15:14:37 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 12:39 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> After 5.1-rc1, all of the users of BUS_ATTR() are finally removed, so we
-> can now drop this macro from include/linux/device.h so that no more new
-> users will be created.
+Quoting Jerome Brunet (2019-03-26 00:53:15)
+> On Mon, 2019-03-25 at 10:10 -0700, Stephen Boyd wrote:
+> > Quoting Jerome Brunet (2019-03-25 04:11:57)
+> > > @@ -138,6 +129,27 @@ static int mpll_set_rate(struct clk_hw *hw,
+> > >         return 0;
+> > >  }
+> > > =20
+> > > +static void mpll_init(struct clk_hw *hw)
+> > > +{
+> > > +       struct clk_regmap *clk =3D to_clk_regmap(hw);
+> > > +       struct meson_clk_mpll_data *mpll =3D meson_clk_mpll_data(clk);
+> > > +
+> > > +       if (mpll->init_count)
+> > > +               regmap_multi_reg_write(clk->map, mpll->init_regs,
+> > > +                                      mpll->init_count);
+> > > +
+> > > +       /* Enable the fractional part */
+> > > +       meson_parm_write(clk->map, &mpll->sdm_en, 1);
+> > > +
+> > > +       /* Set additional fractional part enable if required */
+> > > +       if (MESON_PARM_APPLICABLE(&mpll->ssen))
+> > > +               meson_parm_write(clk->map, &mpll->ssen, 1);
+> > > +
+> > > +       /* Set the magic misc bit if required */
+> > > +       if (MESON_PARM_APPLICABLE(&mpll->misc))
+> > > +               meson_parm_write(clk->map, &mpll->misc, 1);
+> > > +}
+> > > +
+> > >  const struct clk_ops meson_clk_mpll_ro_ops =3D {
+> > >         .recalc_rate    =3D mpll_recalc_rate,
+> > >         .round_rate     =3D mpll_round_rate,
+> > > @@ -148,6 +160,7 @@ const struct clk_ops meson_clk_mpll_ops =3D {
+> > >         .recalc_rate    =3D mpll_recalc_rate,
+> > >         .round_rate     =3D mpll_round_rate,
+> > >         .set_rate       =3D mpll_set_rate,
+> > > +       .init           =3D mpll_init,
+> >=20
+> > We actively discourage using init callbacks. Can you do this some other
+> > way?
+>=20
+> Yes I'm aware of that but init it the right place to do this.
+> To be clear, this is not initializing the clock to some particular rate, =
+the
+> rate is preserved.
+>=20
+> It just applies the necessary settings that needs to be done only once to=
+ make
+> sure the clock is in working order and that the rate calculated is actual=
+ly
+> accurate.=20
 
-Note that a quick grep shows that it still exists in the Chinese
-translation of filesystems/sysfs.txt..
+Ok, but can you do that in your driver's probe routine instead of
+attaching to the init callback? We want to get rid of "init" at some
+point so throwing the init sequence stuff into the driver probe around
+registration is a solution. Or we should think about not discouraging
+the init callback.
 
-Also mentioned in a comment, but at least there it talks about the "old macro".
-
-              Linus
