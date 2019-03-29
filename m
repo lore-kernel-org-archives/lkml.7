@@ -2,244 +2,182 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B41C10F06
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E26C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B5042184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2769621850
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:11:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="YvhWEUf0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QA6y2IaT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfC2ALW (ORCPT
+        id S1728688AbfC2ALy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 20:11:22 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:53564 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728483AbfC2ALV (ORCPT
+        Thu, 28 Mar 2019 20:11:54 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:47052 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728483AbfC2ALy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 20:11:21 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x2T02oDO015859
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 17:11:20 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=hrmkK86CLcUqI7FOsA7WTDumNlH5nTqSdid1LV/cbvQ=;
- b=YvhWEUf0/GA5wb6JjOr5B5m4wJHYk/4ed4HLXXebfGqJEeHMz/KVzVkg1/UVptAKhRdV
- /m2jb2Rmpw5NUkXX1W0PwTOQYOspnhd2KiB2SOgHO5FyPgCdPGiB8AFuUvdBCOXg45d8
- 3NRMCqVnYRpObKAyAp222Du6t/kQkNtUswA= 
-Received: from mail.thefacebook.com ([199.201.64.23])
-        by m0001303.ppops.net with ESMTP id 2rgp1h5v9u-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 17:11:20 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 28 Mar 2019 17:11:18 -0700
-Received: by dev003.prn2.facebook.com (Postfix, from userid 572441)
-        id 43B133645773; Thu, 28 Mar 2019 17:08:58 -0700 (PDT)
-Smtp-Origin-Hostprefix: dev
-From:   Matt Mullins <mmullins@fb.com>
-Smtp-Origin-Hostname: dev003.prn2.facebook.com
-To:     <hall@fb.com>, <mmullins@fb.com>, <ast@kernel.org>,
-        <bpf@vger.kernel.org>, <netdev@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        <linux-block@vger.kernel.org>, <nbd@other.debian.org>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH bpf-next 3/3] nbd: add tracepoints for send/receive timing
-Date:   Thu, 28 Mar 2019 17:07:58 -0700
-Message-ID: <20190329000758.494762-4-mmullins@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190329000758.494762-1-mmullins@fb.com>
-References: <20190329000758.494762-1-mmullins@fb.com>
-X-FB-Internal: Safe
+        Thu, 28 Mar 2019 20:11:54 -0400
+Received: by mail-pg1-f194.google.com with SMTP id q1so279007pgv.13;
+        Thu, 28 Mar 2019 17:11:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VzXGDK1c00He5FH1H3fHSIHRMUkNlWro80SC65ZmM0k=;
+        b=QA6y2IaTmpb10yxXTjvjrdicwG5v5A8WSEixxkNPfj4ypTXZpTooWX9NjlICNdz/VR
+         AN422vHlyaPqYtmeB09vDj2Z24uUMzjDYbzVopRnjIIwpZtJOPPU59VehvW20WNlASgl
+         33TKLxSmB4wdSxL4EJA8AquXJKjf8ESwuSdk5oGFNr9gdoBTmsVESk9rqQhswwNHPPnh
+         FZM0voGZ2gH04u8OtIYDLtuITkGFiJl3BOVOZZ+HEk5gXxZnjXglskJY8MalACVI1nF6
+         kBcVq5E0uHvrDOFaUN3QFHMQnM8JzZMAlOqF2h6RjWJhe20SNdVPer04pzBnUeuEObl8
+         fPiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VzXGDK1c00He5FH1H3fHSIHRMUkNlWro80SC65ZmM0k=;
+        b=fBoy1yLnuY+zmKIccipPqODTtmgPaF7dYkZzlvhWblvpTHmLN3LgGICxa1ajhy1iQA
+         rnZB5MqAUzupciSgJVXmtl9MamVslHpKx/Vy1xmy69cl+roQ0GEga01lEdSIrn3NMQk0
+         hq94iTcfv4zBJ2ED1T2W6KfSqixndZfJOlCInuOlpP9phpOavwd0S+6B51joiMm6QZ8G
+         hOC5TKsr6Zf49hBsCFNyf8QG5pnQaxRO0xPjyFdFBgzwuC79xDX7c61e6QwyxJszkJCb
+         rjuSm4bo5XNoEMdDLBQPgZxvXpLxXGtswIuDNNkgDNotRhvkDfOHr413sOz24bSsvgRD
+         wcHg==
+X-Gm-Message-State: APjAAAXdB2nxtTEqrDvUmkFF7FHF1tU9RGCYWgoqgaIxVirbSIVg1I8B
+        aV8qrIHnGMfo9vtNxW0Rpib3HlOfoDk=
+X-Google-Smtp-Source: APXvYqySzJnDhucsClJuKxiq4AXy9wl0Z86y5nhWSzNP6E8ssz/SCVlYgjkDzul06mYTvSc/2FJViQ==
+X-Received: by 2002:a62:565c:: with SMTP id k89mr44094785pfb.175.1553818313166;
+        Thu, 28 Mar 2019 17:11:53 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id f125sm432488pfc.91.2019.03.28.17.11.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 17:11:52 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v2 00/24] Include linux ACPI docs into Sphinx TOC tree
+Date:   Fri, 29 Mar 2019 08:11:11 +0800
+Message-Id: <20190329001135.15847-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_15:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Hall <hall@fb.com>
+Hi Corbet and All,
+The kernel now uses Sphinx to generate intelligent and beautiful documentation
+from reStructuredText files. I converted most of the Linux ACPI docs to rst
+format in this serias.
 
-This adds four tracepoints to nbd, enabling separate tracing of payload
-and header sending/receipt.
+For you to preview, please visit below url:
+http://104.238.181.70:8080/kernel-doc/acpi/index.html
 
-In the send path for headers that have already been sent, we also
-explicitly initialize the handle so it can be referenced by the later
-tracepoint.
+Thank you!
 
-Signed-off-by: Andrew Hall <hall@fb.com>
-Signed-off-by: Matt Mullins <mmullins@fb.com>
----
- drivers/block/nbd.c        |  8 ++++
- include/trace/events/nbd.h | 92 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 100 insertions(+)
+v2:
+  o Update MAINTAINERS.
+  o Add SPDX tags for all docs.
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 7393d04d255c..d3d914620f66 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -513,6 +513,10 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
- 	if (sent) {
- 		if (sent >= sizeof(request)) {
- 			skip = sent - sizeof(request);
-+
-+			// initialize handle for tracing purposes
-+			handle = nbd_cmd_handle(cmd);
-+
- 			goto send_pages;
- 		}
- 		iov_iter_advance(&from, sent);
-@@ -536,6 +540,7 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
- 		(unsigned long long)blk_rq_pos(req) << 9, blk_rq_bytes(req));
- 	result = sock_xmit(nbd, index, 1, &from,
- 			(type == NBD_CMD_WRITE) ? MSG_MORE : 0, &sent);
-+	trace_nbd_header_sent(req, handle);
- 	if (result <= 0) {
- 		if (was_interrupted(result)) {
- 			/* If we havne't sent anything we can just return BUSY,
-@@ -608,6 +613,7 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
- 		bio = next;
- 	}
- out:
-+	trace_nbd_payload_sent(req, handle);
- 	nsock->pending = NULL;
- 	nsock->sent = 0;
- 	return 0;
-@@ -655,6 +661,7 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
- 			tag, req);
- 		return ERR_PTR(-ENOENT);
- 	}
-+	trace_nbd_header_received(req, handle);
- 	cmd = blk_mq_rq_to_pdu(req);
- 
- 	mutex_lock(&cmd->lock);
-@@ -708,6 +715,7 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
- 		}
- 	}
- out:
-+	trace_nbd_payload_received(req, handle);
- 	mutex_unlock(&cmd->lock);
- 	return ret ? ERR_PTR(ret) : cmd;
- }
-diff --git a/include/trace/events/nbd.h b/include/trace/events/nbd.h
-index 5928255ed02e..eef476fef95a 100644
---- a/include/trace/events/nbd.h
-+++ b/include/trace/events/nbd.h
-@@ -7,6 +7,98 @@
- 
- #include <linux/tracepoint.h>
- 
-+TRACE_EVENT(nbd_header_sent,
-+
-+	TP_PROTO(struct request *req, u64 handle),
-+
-+	TP_ARGS(req, handle),
-+
-+	TP_STRUCT__entry(
-+		__field(struct request *, req)
-+		__field(u64, handle)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->req = req;
-+		__entry->handle = handle;
-+	),
-+
-+	TP_printk(
-+		"nbd header sent: request %p, handle 0x%016llx",
-+		__entry->req,
-+		__entry->handle
-+	)
-+);
-+
-+TRACE_EVENT(nbd_payload_sent,
-+
-+	TP_PROTO(struct request *req, u64 handle),
-+
-+	TP_ARGS(req, handle),
-+
-+	TP_STRUCT__entry(
-+		__field(struct request *, req)
-+		__field(u64, handle)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->req = req;
-+		__entry->handle = handle;
-+	),
-+
-+	TP_printk(
-+		"nbd payload sent: request %p, handle 0x%016llx",
-+		__entry->req,
-+		__entry->handle
-+	)
-+);
-+
-+TRACE_EVENT(nbd_header_received,
-+
-+	TP_PROTO(struct request *req, u64 handle),
-+
-+	TP_ARGS(req, handle),
-+
-+	TP_STRUCT__entry(
-+		__field(struct request *, req)
-+		__field(u64, handle)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->req = req;
-+		__entry->handle = handle;
-+	),
-+
-+	TP_printk(
-+		"nbd header received: request %p, handle 0x%016llx",
-+		__entry->req,
-+		__entry->handle
-+	)
-+);
-+
-+TRACE_EVENT(nbd_payload_received,
-+
-+	TP_PROTO(struct request *req, u64 handle),
-+
-+	TP_ARGS(req, handle),
-+
-+	TP_STRUCT__entry(
-+		__field(struct request *, req)
-+		__field(u64, handle)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->req = req;
-+		__entry->handle = handle;
-+	),
-+
-+	TP_printk(
-+		"nbd payload received: request %p, handle 0x%016llx",
-+		__entry->req,
-+		__entry->handle
-+	)
-+);
-+
- DECLARE_EVENT_CLASS(nbd_send_request,
- 
- 	TP_PROTO(struct nbd_request *nbd_request, int index,
+Changbin Du (24):
+  Documentation: add Linux ACPI to Sphinx TOC tree
+  acpi doc: convert acpi/namespace.txt to rst format
+  acpi doc: convert acpi/enumeration.txt to rst format
+  acpi doc: convert acpi/osi.txt to rst format
+  acpi doc: convert acpi/linuxized-acpica.txt to rst format
+  acpi doc: convert acpi/scan_handlers.txt to rst format
+  acpi doc: convert acpi/DSD-properties-rules.txt to rst format
+  acpi doc: convert acpi/gpio-properties.txt to rst format
+  acpi doc: convert acpi/method-customizing.txt to rst format
+  acpi doc: convert acpi/initrd_table_override.txt to rst format
+  acpi doc: convert acpi/dsdt-override.txt to rst format
+  acpi doc: convert acpi/i2c-muxes.txt to rst format
+  acpi doc: convert acpi/acpi-lid.txt to rst format
+  acpi doc: convert acpi/dsd/graph.txt to rst format
+  acpi doc: convert acpi/dsd/data-node-references.txt to rst format
+  acpi doc: convert acpi/debug.txt to rst format
+  acpi doc: convert acpi/method-tracing.txt to rst format
+  acpi doc: convert acpi/aml-debugger.txt to rst format
+  acpi doc: convert acpi/apei/output_format.txt to rst format
+  acpi doc: convert acpi/apei/einj.txt to rst format
+  acpi doc: convert acpi/cppc_sysfs.txt to rst format
+  acpi doc: convert acpi/lpit.txt to rst format
+  acpi doc: convert acpi/ssdt-overlays.txt to rst format
+  acpi doc: convert acpi/video_extension.txt to rst format
+
+ ...ies-rules.txt => DSD-properties-rules.rst} |  21 +-
+ .../acpi/{acpi-lid.txt => acpi-lid.rst}       |  48 ++-
+ Documentation/acpi/aml-debugger.rst           |  75 +++++
+ Documentation/acpi/aml-debugger.txt           |  66 ----
+ .../acpi/apei/{einj.txt => einj.rst}          |  98 +++---
+ Documentation/acpi/apei/output_format.rst     | 150 +++++++++
+ Documentation/acpi/apei/output_format.txt     | 147 ---------
+ .../acpi/{cppc_sysfs.txt => cppc_sysfs.rst}   |  71 ++--
+ Documentation/acpi/{debug.txt => debug.rst}   |  31 +-
+ ...eferences.txt => data-node-references.rst} |  28 +-
+ .../acpi/dsd/{graph.txt => graph.rst}         | 157 ++++-----
+ .../{dsdt-override.txt => dsdt-override.rst}  |   8 +-
+ .../acpi/{enumeration.txt => enumeration.rst} | 135 ++++----
+ ...pio-properties.txt => gpio-properties.rst} |  78 +++--
+ Documentation/acpi/i2c-muxes.rst              |  61 ++++
+ Documentation/acpi/i2c-muxes.txt              |  58 ----
+ Documentation/acpi/index.rst                  |  32 ++
+ Documentation/acpi/initrd_table_override.rst  | 120 +++++++
+ Documentation/acpi/initrd_table_override.txt  | 111 -------
+ ...uxized-acpica.txt => linuxized-acpica.rst} | 115 ++++---
+ Documentation/acpi/{lpit.txt => lpit.rst}     |  18 +-
+ Documentation/acpi/method-customizing.rst     |  82 +++++
+ Documentation/acpi/method-customizing.txt     |  73 -----
+ Documentation/acpi/method-tracing.rst         | 225 +++++++++++++
+ Documentation/acpi/method-tracing.txt         | 192 -----------
+ .../acpi/{namespace.txt => namespace.rst}     | 310 +++++++++---------
+ Documentation/acpi/{osi.txt => osi.rst}       |  15 +-
+ .../{scan_handlers.txt => scan_handlers.rst}  |  24 +-
+ Documentation/acpi/ssdt-overlays.rst          | 180 ++++++++++
+ Documentation/acpi/ssdt-overlays.txt          | 172 ----------
+ ...ideo_extension.txt => video_extension.rst} |  63 ++--
+ Documentation/index.rst                       |   1 +
+ MAINTAINERS                                   |   2 +-
+ 33 files changed, 1596 insertions(+), 1371 deletions(-)
+ rename Documentation/acpi/{DSD-properties-rules.txt => DSD-properties-rules.rst} (88%)
+ rename Documentation/acpi/{acpi-lid.txt => acpi-lid.rst} (77%)
+ create mode 100644 Documentation/acpi/aml-debugger.rst
+ delete mode 100644 Documentation/acpi/aml-debugger.txt
+ rename Documentation/acpi/apei/{einj.txt => einj.rst} (67%)
+ create mode 100644 Documentation/acpi/apei/output_format.rst
+ delete mode 100644 Documentation/acpi/apei/output_format.txt
+ rename Documentation/acpi/{cppc_sysfs.txt => cppc_sysfs.rst} (51%)
+ rename Documentation/acpi/{debug.txt => debug.rst} (91%)
+ rename Documentation/acpi/dsd/{data-node-references.txt => data-node-references.rst} (79%)
+ rename Documentation/acpi/dsd/{graph.txt => graph.rst} (56%)
+ rename Documentation/acpi/{dsdt-override.txt => dsdt-override.rst} (56%)
+ rename Documentation/acpi/{enumeration.txt => enumeration.rst} (87%)
+ rename Documentation/acpi/{gpio-properties.txt => gpio-properties.rst} (81%)
+ create mode 100644 Documentation/acpi/i2c-muxes.rst
+ delete mode 100644 Documentation/acpi/i2c-muxes.txt
+ create mode 100644 Documentation/acpi/index.rst
+ create mode 100644 Documentation/acpi/initrd_table_override.rst
+ delete mode 100644 Documentation/acpi/initrd_table_override.txt
+ rename Documentation/acpi/{linuxized-acpica.txt => linuxized-acpica.rst} (78%)
+ rename Documentation/acpi/{lpit.txt => lpit.rst} (68%)
+ create mode 100644 Documentation/acpi/method-customizing.rst
+ delete mode 100644 Documentation/acpi/method-customizing.txt
+ create mode 100644 Documentation/acpi/method-tracing.rst
+ delete mode 100644 Documentation/acpi/method-tracing.txt
+ rename Documentation/acpi/{namespace.txt => namespace.rst} (54%)
+ rename Documentation/acpi/{osi.txt => osi.rst} (97%)
+ rename Documentation/acpi/{scan_handlers.txt => scan_handlers.rst} (90%)
+ create mode 100644 Documentation/acpi/ssdt-overlays.rst
+ delete mode 100644 Documentation/acpi/ssdt-overlays.txt
+ rename Documentation/acpi/{video_extension.txt => video_extension.rst} (79%)
+
 -- 
-2.17.1
+2.20.1
 
