@@ -2,142 +2,116 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B82C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64117C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7525A206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 288A72173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:24:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vrFJYxNj"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YxOV91lY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfC2IUG (ORCPT
+        id S1729047AbfC2IYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:20:06 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49966 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfC2IUG (ORCPT
+        Fri, 29 Mar 2019 04:24:40 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:43350 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728972AbfC2IYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 04:20:06 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2T8JXpa110125;
-        Fri, 29 Mar 2019 03:19:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553847573;
-        bh=/MH7yt7+ZJzTGC8zCG3comkdbxPSsTYA+/hH0Zib2/8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=vrFJYxNjd4Lq1SKaV30f7NGLwPB1vP0xTVFn1AuIaojPZAomRuZsKusu7YjrgS6H1
-         Z6PeaXbg1Qqg6jU5f7QFqnJD6J9t6p1cPJViGGi8pqF/CqX7aBVFtOmj3TdehrNf9Y
-         /i1d4ILUPuJ7z5tMkB3D3nURsRPGGMGAcz3cWscU=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2T8JXFI074522
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 Mar 2019 03:19:33 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
- Mar 2019 03:19:33 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 29 Mar 2019 03:19:33 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2T8JRVr117628;
-        Fri, 29 Mar 2019 03:19:28 -0500
-Subject: Re: [LINUX PATCH 2/3] spi: spi-mem: call
- spi_mem_default_supports_op() first
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-CC:     "broonie@kernel.org" <broonie@kernel.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
-        "nagasuresh12@gmail.com" <nagasuresh12@gmail.com>
-References: <1553771784-3364-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
- <20190328205522.272e1da6@collabora.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <d21f7363-eeea-830e-b9b8-ef5bb9e1261b@ti.com>
-Date:   Fri, 29 Mar 2019 13:50:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 29 Mar 2019 04:24:40 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2T8J0kj098088;
+        Fri, 29 Mar 2019 08:24:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=jfRRj1ZUXYnl96/1ovUaMovzR/1JQasnDeyvQcTRGS0=;
+ b=YxOV91lYOY7gEQ7lRM7FXZ7MtcFnAdrPJMWqWi26eWPnZjQV99jxtGegFEmPAESXOx2l
+ gtjPpduHvzva86HLyPlB0a47catkdyNkLYqov6o3qE4um66cZ0+l+X1yaRvQtZhBaDk1
+ 1Nr8R4kvJKBNXjqB5LVviUHlccjptDzens984o4I2wcKt414dCZbJEcrdUW624eoDqCX
+ W5BFRE1M4uY3phq4tdfO8qp5ZTzZwDuBrmpWNIOqM6l4Pwq/RNYNfEfW4AkiI/a7wZRE
+ DFyf6QLLLHNOzUG7hShTHLyRB+8YgctrkAmKkeOcB5uAYsLRSD2J2nTQcQAzMitcW0Q2 mQ== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by aserp2130.oracle.com with ESMTP id 2re6g1b0bx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 08:24:30 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2T8OSaW029354
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 08:24:29 GMT
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2T8ORlH018564;
+        Fri, 29 Mar 2019 08:24:28 GMT
+Received: from kadam (/41.202.241.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 Mar 2019 01:24:26 -0700
+Date:   Fri, 29 Mar 2019 11:24:18 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Whitmore <johnfwhitmore@gmail.com>,
+        devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8192u: fix incorrect mask for
+ EEPROMTxPowerLevelCCK setting
+Message-ID: <20190329082417.GY32590@kadam>
+References: <20190329000244.16528-1-colin.king@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20190328205522.272e1da6@collabora.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329000244.16528-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9210 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903290062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
-
-On 29/03/19 1:25 AM, Boris Brezillon wrote:
-> On Thu, 28 Mar 2019 16:46:24 +0530
-> Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com> wrote:
+On Fri, Mar 29, 2019 at 12:02:44AM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
->> Call spi_mem_default_supports_op() first, before calling controller
->> specific ctlr->supports_op().
->> With this, controller drivers can drop checking the buswidths again.
+> Currently the lower 8 bits of ret are being masked and left
+> shifted by 8 bits always leaving a result of zero. The mask
+> appears to be incorrect and should probably be 0xff00 instead
+> of 0xff.  Fix this.  (Note: not tested).
 > 
-> No, this was done on purpose, in case the controller does not want the
-> default check to be applied (say it does not need bus-width props to
-> be defined and has another way to check if a device can be accessed in
-> dual, quad or octal mode).
-
-Sorry, I don't understand here.
-Based on capabilities declared in spi_device->mode, m25p80 driver will
-claim appropriate  SNOR_HWCAPS_*.  SPI NOR layer chooses opcodes based
-on that for which m25p80 layer populates buswidths.
-
-So, I don't really expect any mismatch in spi_mem_default_supports_op()
-in the case you mentioned. Or did I miss something? Maybe something SPI
-NAND specific?
-
-Regards
-Vignesh
-
-> Just call spi_mem_default_supports_op() from your driver
-> ->supports_op() hook if needed.
+> Fixes: 16feab644fd1 ("staging: rtl8192u: check return value eprom_read")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/staging/rtl8192u/r8192U_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->>
->> Suggested-by: Vignesh Raghavendra <vigneshr@ti.com>
->> Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
->> ---
->> Details can be found at https://lkml.org/lkml/2019/3/1/183
->> ---
->>  drivers/spi/spi-mem.c | 7 +++++--
->>  1 file changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
->> index 5217a56..56aa158 100644
->> --- a/drivers/spi/spi-mem.c
->> +++ b/drivers/spi/spi-mem.c
->> @@ -189,11 +189,14 @@ static bool spi_mem_internal_supports_op(struct spi_mem *mem,
->>  					 const struct spi_mem_op *op)
->>  {
->>  	struct spi_controller *ctlr = mem->spi->controller;
->> +	bool ret;
->> +
->> +	ret = spi_mem_default_supports_op(mem, op);
->>  
->>  	if (ctlr->mem_ops && ctlr->mem_ops->supports_op)
->> -		return ctlr->mem_ops->supports_op(mem, op);
->> +		ret =  ctlr->mem_ops->supports_op(mem, op);
->>  
->> -	return spi_mem_default_supports_op(mem, op);
->> +	return ret;
->>  }
->>  
->>  /**
-> 
+> diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
+> index f1eaab337dca..a173884d31c8 100644
+> --- a/drivers/staging/rtl8192u/r8192U_core.c
+> +++ b/drivers/staging/rtl8192u/r8192U_core.c
+> @@ -2454,7 +2454,7 @@ static int rtl8192_read_eeprom_info(struct net_device *dev)
+>  				ret = eprom_read(dev, (EEPROM_TX_PW_INDEX_CCK >> 1));
+>  				if (ret < 0)
+>  					return ret;
+> -				priv->EEPROMTxPowerLevelCCK = ((u16)ret & 0xff) >> 8;
+> +				priv->EEPROMTxPowerLevelCCK = ((u16)ret & 0xff00) >> 8;
+
+I'd say there is a 80-90% chance your fix is correct...
+
+This only affects an older rev of the eeprom I think.  I believe what
+happens in the current code is that we set EEPROMTxPowerLevelCCK to
+zero.  Then we subtract:
+
+	priv->TxPowerLevelCCK[i] = priv->EEPROMTxPowerLevelOFDM24G[0] + (priv->EEPROMTxPowerLevelCCK - priv->EEPROMTxPowerLevelOFDM24G[1]);
+
+Possibly leading to a high u8 value, then in phy_set_rf8256_cck_tx_power()
+it gets capped at 0x24...
+
+regards,
+dan carpenter
+
