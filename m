@@ -2,306 +2,183 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7BEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D12FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2754206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74C3218A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:55:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="J17iip5+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AxT8PF6T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbfC2PzD (ORCPT
+        id S1729803AbfC2PzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:55:03 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36898 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729658AbfC2Pyv (ORCPT
+        Fri, 29 Mar 2019 11:55:07 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:41152 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729658AbfC2PzG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:54:51 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v14so3389753wmf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 08:54:49 -0700 (PDT)
+        Fri, 29 Mar 2019 11:55:06 -0400
+Received: by mail-vs1-f68.google.com with SMTP id g187so1570934vsc.8
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 08:55:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KbGs6cXysQS/1wimRaZF4lv67CXXZOSGEKKdeAccz9k=;
-        b=J17iip5+1whmGxqox3jotNQjRRLRTtq4T6CIWNXJqX1qPo4dNfcaLZeHYd3/aJEzv+
-         oi0kMpjGKHpjRI9wSUks22e7H96rpjSTISLnjczYwMlvklYe1XbouG5V5LNQCupas2Fk
-         G477QvVluhn7CWRMR0pLuACr0Wa8sg96nMqeZw4DaB8hAsDR95WgycgngD5xi9NOE2xR
-         VkBlsBsSfB0c87LRLu4qqGVl4CN6V0kvYQ119KLAA0IkjBfaM8IhZZJEozTlLQwVn368
-         zd3kYwbi+z+fKsJEwlsgB326F5mAM+xDzdPYAzOjjvwYu0pNlaFXHEX7lMNmRXZXYmH5
-         HCdQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tjkcfhc0Ep9NbQLojkG4D6Rr/nOzsyp4ydQaHH2U3DU=;
+        b=AxT8PF6TSmbJrui3ZUYKiCa5lh7j+ALt73j4h4c3hxg8++RgtqBv7M3lPxLcSQGNqa
+         AWdx7bkTCP1H8hBLv3k2VzlHH7pasmL1Us478tQtENDYVXfWYKsdhBlq6LJmedAZA0kj
+         YP/HK+oRnMIknrQmxDTVx3iIwouygxcSbZjRyw4neqsg03RRNNJE4Y2sVYK13w/f8bOX
+         OB5F6KZrqWBQiQb9yXQWU/QCGZa+w57AQELD2QlD8WsQ6+7YV23bQiB1pVKfdLL1FuDr
+         0zDcuDoQJadtvnjj8cH8LMTGZUC0y2DhfqW2BzEWrJgWSO8tHx3yjzCJsbsuMka7itep
+         MZUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KbGs6cXysQS/1wimRaZF4lv67CXXZOSGEKKdeAccz9k=;
-        b=JETUDOzwETf6Er0T0IE5kKwPjPIOxioAlJbqFD5TRcDa1MlNAz0/AJb8oRIZD7PHTC
-         pb/xB7k5B9HcKOkigjyB7MO0/F3m2dfOX9OkFnMXFy+fClKstWXZDbinXNcDkA5tAtTc
-         hN5SKx4o6VGckcye+z1edVuDftOtvIKl7WsSLSsH1VgVYhX8VlO6JvNFfvRpQ8wsxdEB
-         EgVhNuJxZEhMUd0rbYfF3itraHGUf0ViFxy02Wxb0eDbyCuZ8wOhvfBb0iIS1oZ97SKf
-         XVx/Lg9tIgvY5FcIwfOn4TcCZ723/CWTLzYU6AnjY0epyErT2rFB0sxIrCVQIjlpenbn
-         lwCg==
-X-Gm-Message-State: APjAAAWGE8Matm75W52C4ILskc5Trv8ym4iCX52FYTi9sbPQzvT3S6ny
-        vZj1WTWdjmINlXGzjBTYI+46mQ==
-X-Google-Smtp-Source: APXvYqzwksvIrvNoiAXcEpNRw4BP5tJad6M1aGZEpovD6PcY7lkijIbqEOR27shIx3mSjNa5bFIvKg==
-X-Received: by 2002:a1c:a8d3:: with SMTP id r202mr4333551wme.106.1553874888767;
-        Fri, 29 Mar 2019 08:54:48 -0700 (PDT)
-Received: from localhost.localdomain (p2E5A5955.dip0.t-ipconnect.de. [46.90.89.85])
-        by smtp.gmail.com with ESMTPSA id e1sm4177959wrw.66.2019.03.29.08.54.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 08:54:48 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     jannh@google.com, luto@kernel.org, dhowells@redhat.com,
-        serge@hallyn.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     arnd@arndb.de, ebiederm@xmission.com, khlebnikov@yandex-team.ru,
-        keescook@chromium.org, adobriyan@gmail.com, tglx@linutronix.de,
-        mtk.manpages@gmail.com, bl0pbl33p@gmail.com, ldv@altlinux.org,
-        akpm@linux-foundation.org, oleg@redhat.com,
-        nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
-        viro@zeniv.linux.org.uk, joel@joelfernandes.org, dancol@google.com,
-        Christian Brauner <christian@brauner.io>,
-        Florian Weimer <fweimer@redhat.com>
-Subject: [PATCH v2 4/5] signal: PIDFD_SIGNAL_TID threads via pidfds
-Date:   Fri, 29 Mar 2019 16:54:24 +0100
-Message-Id: <20190329155425.26059-5-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190329155425.26059-1-christian@brauner.io>
-References: <20190329155425.26059-1-christian@brauner.io>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tjkcfhc0Ep9NbQLojkG4D6Rr/nOzsyp4ydQaHH2U3DU=;
+        b=eFtre40zNa6xmCTvqOeBpIZEb+jVu51H2HL4eIi25lYpBHoukH90KG/mdsA+ZE91Ji
+         fPvh2ExTKval/08eGPtj5Pb3ZrfRwMwoZU7GcL8HVxeMZWWEF94cyh4OwHS4l+HqigGL
+         KbzAgWnhhLmsoQD5gEi2L881NI45xV2PDlcwbfXmwO2/NMeeyJh9/lZiX75sN3LsqKNP
+         PoFAfjpqykkctO5EwykxGqIUVfkW0Q+SV9cexqXNP8SJJxrV9jQ7tHb1TJt7Bz8HJEI1
+         7E2Nk5qOkMFNAJsUnfXHHsjETWTsptK4uFyW65oK0j4fnf784x73lz1fTOv3rDVQq2S1
+         P0dg==
+X-Gm-Message-State: APjAAAVBZMKZZYhjZAEvWCQ7dpQ98HWkyNRtW6dntnfZhinHuQZzZoo7
+        W+bPam/hadBJdMkeNrcZqORR+32HtF3ePeuwg5BjPw==
+X-Google-Smtp-Source: APXvYqzELWOpgAuoqakTuV5C0tYv6ymmdEQyIEzbiidLl1sFRxIWMxQLggaldTdiMajvSO44OBZwx2s744HEZObORtg=
+X-Received: by 2002:a67:eb57:: with SMTP id x23mr10794031vso.39.1553874904397;
+ Fri, 29 Mar 2019 08:55:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAG_fn=X9tpSW6jvJd_COk_RU8zvcr-cxSWuJ05qcV0LotTxEEQ@mail.gmail.com>
+ <20190328162222.GO4102@linux.ibm.com>
+In-Reply-To: <20190328162222.GO4102@linux.ibm.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Fri, 29 Mar 2019 16:54:52 +0100
+Message-ID: <CAG_fn=WKA_4Vzsh6yH+=5TFv-EMrX87pr+2c_ANoH_MOVpbe1w@mail.gmail.com>
+Subject: Re: Potentially missing "memory" clobbers in bitops.h for x86
+To:     Paul McKenney <paulmck@linux.ibm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        James Y Knight <jyknight@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the addition of pidfd_open() it is possible for users to reference a
-specific thread by doing:
+On Thu, Mar 28, 2019 at 5:22 PM Paul E. McKenney <paulmck@linux.ibm.com> wr=
+ote:
+>
+> On Thu, Mar 28, 2019 at 03:14:12PM +0100, Alexander Potapenko wrote:
+> > Hello,
+> >
+> > arch/x86/include/asm/bitops.h defines clear_bit(nr, addr) for
+> > non-constant |nr| values as follows:
+> >
+> > void clear_bit(long nr, volatile unsigned long *addr) {
+> >   asm volatile("lock; btr %1,%0"
+> >     : "+m"(*(volatile long *)addr)
+> >     : "Ir" (nr));
+> >   }
+> > (https://elixir.bootlin.com/linux/latest/source/arch/x86/include/asm/bi=
+tops.h#L111)
+> >
+> > According to the comments in the file, |nr| may be arbitrarily large.
+> > However the assembly constraints only imply that the first unsigned
+> > long value at |addr| is written to.
+> > This may result in the compiler ignoring the effect of the asm directiv=
+e.
+> >
+> > Consider the following example (https://godbolt.org/z/naTmjn):
+> >
+> >   #include <stdio.h>
+> >   void clear_bit(long nr, volatile unsigned long *addr) {
+> >     asm volatile("lock; btr %1,%0"
+> >       : "+m"(*(volatile long *)addr)
+> >       : "Ir" (nr));
+> >   }
+> >
+> >   unsigned long foo() {
+> >     unsigned long addr[2] =3D {1, 2};
+> >     clear_bit(65, addr);
+> >     return addr[0] + addr[1];
+> >   }
+> >
+> >   int main() {
+> >     printf("foo: %lu\n", foo());
+> >   }
+> >
+> > Depending on the optimization level, the program may print either 1
+> > (for -O0 and -O1) or 3 (for -O2 and -O3).
+> > This is because on higher optimization levels GCC assumes that addr[1]
+> > is unchanged and directly propagates the constant to the result.
+> >
+> > I suspect the definitions of clear_bit() and similar functions are
+> > lacking the "memory" clobber.
+> > But the whole file tends to be very picky about whether this clobber
+> > needs to be applied in each case, so in the case of a performance
+> > penalty we may need to consider alternative approaches to fixing this
+> > code.
+>
+> Is there a way of indicating a clobber only on the specific location
+> affected?
+We're unaware of such a way.
+> I suppose that one approach would be to calculate in C code
+> a pointer to the specific element of the addr[] array, which would
+> put the specific clobbered memory location onto the outputs list.
+> Or keep the current calculation, but also add "addr[nr / sizeof(long)]"
+> to the output list, thus telling the compiler exactly what is being
+> clobbered.  Assuming that actually works...
+That works, but sometimes GCC emits the code calculating addr[nr/64]
+before the BTR instruction for no reason.
+Adding this output for clear_bit() makes around 120 kernel functions
+change their sizes. I only checked a handful, but some contained code
+like:
+  cmovns %rdi, %rax
+  sarq $6, %rax
+  leaq (%rsi,%rax,8), %rax
 
-int pidfd = pidfd_open(<tid>, 0);
+Another idea we've come up with is to cast the pointer in BITOP_ADDR()
+to a very big array: https://godbolt.org/z/apHvDc
+Making so prevents the compiler from caching the assembly inputs, but
+has its own drawbacks.
+First, it may potentially yield incorrect assumptions about the size
+of an object passed into the assembly (which may lead to e.g. dropping
+some size checks)
+Second, for smaller arrays these casts may result in excessive
+clobbers (this happens in misc_register(), where GCC decides that the
+input parameter |misc| may alias with the global |misc_minors|
+bitmap).
+Applying the cast to clear_bit() only changes the size of 3 kernel
+functions: hub_port_reset(), misc_register(),
+tick_broadcast_setup_oneshot().
+None of them have visible semantic changes.
 
-This means we can extend pidfd_send_signal() to signal a specific thread.
-As promised in the commit for pidfd_send_signal() [1] the extension is
-based on a flag argument, i.e. the scope of the signal delivery is based on
-the flag argument, not on the type of file descriptor.
-To this end the flag PIDFD_SIGNAL_TID is added. With this change we now
-cover most of the functionality of all the other signal sending functions
-combined:
+> Of course, this would force the compiler to actually compute the
+> offset, which would slow things down.  I have no idea whether this
+> would be better or worse than just using the "memory" clobber.
+Just adding the "memory" clobber to clear_bit() changes sizes of 5
+kernel functions (the three mentioned above, plus hub_activate() and
+native_send_call_func_ipi()) by a small margin.
+This probably means the performance impact of this clobber is
+negligible in this case.
+>                                                         Thanx, Paul
+>
+--
+Alexander Potapenko
+Software Engineer
 
-- pidfd_send_signal(<pidfd>, <sig>, NULL, 0);
-  which is equivalent to
-  kill(<positive-pid>, <signal>)
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
 
-- pidfd_send_signal(<pidfd>, <sig>, <info>, 0);
-  which is equivalent to
-  rt_sigqueueinfo(<tgid>, <sig>, <uinfo>)
-
-- pidfd_send_signal(<pidfd>, <sig>, NULL, PIDFD_SIGNAL_TID);
-  which is equivalent to
-  tgkill(<tgid>, <tid>, <signal)
-
-  rt_tgsigqueueinfo(<tgid>, <tid>, <sig>, <uinfo>)
-- pidfd_send_signal(<pidfd>, <sig>, <info>, PIDFD_SIGNAL_TID);
-  which is equivalent to
-  rt_tgsigqueueinfo(<tgid>, <tid>, <sig>, <uinfo>)
-
-/* References */
-[1]: commit 3eb39f47934 ("signal: add pidfd_send_signal() syscall")
-
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jann Horn <jannh@google.com
-Cc: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Jonathan Kowalski <bl0pbl33p@gmail.com>
-Cc: "Dmitry V. Levin" <ldv@altlinux.org>
-Cc: Andy Lutomirsky <luto@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Florian Weimer <fweimer@redhat.com>
----
- include/uapi/linux/wait.h |   3 +
- kernel/signal.c           | 116 ++++++++++++++++++++++++++------------
- 2 files changed, 82 insertions(+), 37 deletions(-)
-
-diff --git a/include/uapi/linux/wait.h b/include/uapi/linux/wait.h
-index d6c7c0701997..b72f0ef84fe5 100644
---- a/include/uapi/linux/wait.h
-+++ b/include/uapi/linux/wait.h
-@@ -21,4 +21,7 @@
- /* Get a file descriptor for /proc/<pid> of the corresponding pidfd */
- #define PIDFD_GET_PROCFD _IOR('p', 1, int)
- 
-+/* Flags to pass to pidfd_send_signal */
-+#define PIDFD_SIGNAL_TID 1 /* Send signal to specific thread */
-+
- #endif /* _UAPI_LINUX_WAIT_H */
-diff --git a/kernel/signal.c b/kernel/signal.c
-index eb97d0cc6ef7..9f93da85b2b9 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -3557,17 +3557,86 @@ static struct pid *pidfd_to_pid(const struct file *file)
- 	return tgid_pidfd_to_pid(file);
- }
- 
-+static int __do_send_specific(struct task_struct *p, int sig,
-+			      struct kernel_siginfo *info)
-+{
-+	int error = -ESRCH;
-+
-+	error = check_kill_permission(sig, info, p);
-+	/*
-+	 * The null signal is a permissions and process existence probe.
-+	 * No signal is actually delivered.
-+	 */
-+	if (!error && sig) {
-+		error = do_send_sig_info(sig, info, p, PIDTYPE_PID);
-+		/*
-+		 * If lock_task_sighand() failed we pretend the task
-+		 * dies after receiving the signal. The window is tiny,
-+		 * and the signal is private anyway.
-+		 */
-+		if (unlikely(error == -ESRCH))
-+			error = 0;
-+	}
-+
-+	return error;
-+}
-+
-+static int do_send_specific(pid_t tgid, pid_t pid, int sig,
-+			    struct kernel_siginfo *info)
-+{
-+	struct task_struct *p;
-+	int error = -ESRCH;
-+
-+	rcu_read_lock();
-+	p = find_task_by_vpid(pid);
-+	if (p && (tgid <= 0 || task_tgid_vnr(p) == tgid))
-+		error = __do_send_specific(p, sig, info);
-+	rcu_read_unlock();
-+
-+	return error;
-+}
-+
-+static int pidfd_send_signal_specific(struct pid *pid, int sig,
-+				      struct kernel_siginfo *info)
-+{
-+	struct task_struct *p;
-+	int error = -ESRCH;
-+
-+	rcu_read_lock();
-+	p = pid_task(pid, PIDTYPE_PID);
-+	if (p)
-+		error = __do_send_specific(p, sig, info);
-+	rcu_read_unlock();
-+
-+	return error;
-+}
-+
- /**
-- * sys_pidfd_send_signal - send a signal to a process through a task file
-- *                          descriptor
-+ * sys_pidfd_send_signal - send a signal to a process through a pidfd
-+
-  * @pidfd:  the file descriptor of the process
-  * @sig:    signal to be sent
-  * @info:   the signal info
-  * @flags:  future flags to be passed
-  *
-- * The syscall currently only signals via PIDTYPE_PID which covers
-- * kill(<positive-pid>, <signal>. It does not signal threads or process
-- * groups.
-+ * The syscall currently covers:
-+ * - pidfd_send_signal(<pidfd>, <sig>, NULL, 0);
-+ *   which is equivalent to
-+ *   kill(<positive-pid>, <signal>)
-+ *
-+ * - pidfd_send_signal(<pidfd>, <sig>, <info>, 0);
-+ *   which is equivalent to
-+ *   rt_sigqueueinfo(<tgid>, <sig>, <uinfo>)
-+ *
-+ * - pidfd_send_signal(<pidfd>, <sig>, NULL, PIDFD_SIGNAL_TID);
-+ *   which is equivalent to
-+ *   tgkill(<tgid>, <tid>, <signal)
-+ *
-+ *   rt_tgsigqueueinfo(<tgid>, <tid>, <sig>, <uinfo>)
-+ * - pidfd_send_signal(<pidfd>, <sig>, <info>, PIDFD_SIGNAL_TID);
-+ *   which is equivalent to
-+ *   rt_tgsigqueueinfo(<tgid>, <tid>, <sig>, <uinfo>)
-+ *
-  * In order to extend the syscall to threads and process groups the @flags
-  * argument should be used. In essence, the @flags argument will determine
-  * what is signaled and not the file descriptor itself. Put in other words,
-@@ -3585,7 +3654,7 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
- 	kernel_siginfo_t kinfo;
- 
- 	/* Enforce flags be set to 0 until we add an extension. */
--	if (flags)
-+	if (flags & ~PIDFD_SIGNAL_TID)
- 		return -EINVAL;
- 
- 	f = fdget(pidfd);
-@@ -3626,43 +3695,16 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
- 		prepare_kill_siginfo(sig, &kinfo);
- 	}
- 
--	ret = kill_pid_info(sig, &kinfo, pid);
-+	if (flags & PIDFD_SIGNAL_TID)
-+		ret = pidfd_send_signal_specific(pid, sig, &kinfo);
-+	else
-+		ret = kill_pid_info(sig, &kinfo, pid);
- 
- err:
- 	fdput(f);
- 	return ret;
- }
- 
--static int
--do_send_specific(pid_t tgid, pid_t pid, int sig, struct kernel_siginfo *info)
--{
--	struct task_struct *p;
--	int error = -ESRCH;
--
--	rcu_read_lock();
--	p = find_task_by_vpid(pid);
--	if (p && (tgid <= 0 || task_tgid_vnr(p) == tgid)) {
--		error = check_kill_permission(sig, info, p);
--		/*
--		 * The null signal is a permissions and process existence
--		 * probe.  No signal is actually delivered.
--		 */
--		if (!error && sig) {
--			error = do_send_sig_info(sig, info, p, PIDTYPE_PID);
--			/*
--			 * If lock_task_sighand() failed we pretend the task
--			 * dies after receiving the signal. The window is tiny,
--			 * and the signal is private anyway.
--			 */
--			if (unlikely(error == -ESRCH))
--				error = 0;
--		}
--	}
--	rcu_read_unlock();
--
--	return error;
--}
--
- static int do_tkill(pid_t tgid, pid_t pid, int sig)
- {
- 	struct kernel_siginfo info;
--- 
-2.21.0
-
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
