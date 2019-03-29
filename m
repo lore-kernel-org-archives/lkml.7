@@ -3,30 +3,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 469CBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 12:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E2EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 12:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1EF20700
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 12:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D9A20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 12:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729569AbfC2Mjl (ORCPT
+        id S1729578AbfC2Mj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 08:39:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34734 "EHLO mx1.redhat.com"
+        Fri, 29 Mar 2019 08:39:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37358 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729384AbfC2Mjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 08:39:41 -0400
+        id S1729384AbfC2Mj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 08:39:56 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C5DB53086222;
-        Fri, 29 Mar 2019 12:39:40 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2A07E307D84B;
+        Fri, 29 Mar 2019 12:39:56 +0000 (UTC)
 Received: from localhost.localdomain.com (ovpn-12-53.pek2.redhat.com [10.72.12.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A829218E3F;
-        Fri, 29 Mar 2019 12:39:30 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 010B11900A;
+        Fri, 29 Mar 2019 12:39:41 +0000 (UTC)
 From:   Lianbo Jiang <lijiang@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
@@ -34,108 +34,72 @@ Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
         dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
         x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
         Thomas.Lendacky@amd.com
-Subject: [PATCH 1/2 RESEND v10] x86/mm, resource: add a new I/O resource descriptor 'IORES_DESC_RESERVED'
-Date:   Fri, 29 Mar 2019 20:39:13 +0800
-Message-Id: <20190329123914.20939-2-lijiang@redhat.com>
+Subject: [PATCH 2/2 RESEND v10] x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
+Date:   Fri, 29 Mar 2019 20:39:14 +0800
+Message-Id: <20190329123914.20939-3-lijiang@redhat.com>
 In-Reply-To: <20190329123914.20939-1-lijiang@redhat.com>
 References: <20190329123914.20939-1-lijiang@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 29 Mar 2019 12:39:40 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 29 Mar 2019 12:39:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When doing kexec_file_load(), the first kernel needs to pass the e820
-reserved ranges to the second kernel, because some devices may use it
-in kdump kernel, such as PCI devices.
+At present, when using the kexec_file_load() syscall to load the kernel
+image and initramfs(for example: kexec -s -p xxx), the kernel does not
+pass the e820 reserved ranges to the second kernel, which might cause
+two problems:
 
-But, the kernel can not exactly match the e820 reserved ranges when
-walking through the iomem resources via the 'IORES_DESC_NONE', because
-there are several types of e820 that are described as the 'IORES_DESC_NONE'
-type. Please refer to the e820_type_to_iores_desc().
+The first one is the MMCONFIG issue. The basic problem is that this
+device is in PCI segment 1 and the kernel PCI probing can not find it
+without all the e820 I/O reservations being present in the e820 table.
+And the kdump kernel does not have those reservations because the kexec
+command does not pass the I/O reservation via the "memmap=xxx" command
+line option. (This problem does not show up for other vendors, as SGI
+is apparently the actually fails for everyone, but devices in segment 0
+are then found by some legacy lookup method.) The workaround for this
+is to pass the I/O reserved regions to the kdump kernel.
 
-Therefore, add a new I/O resource descriptor 'IORES_DESC_RESERVED' for
-the iomem resources search interfaces. It is helpful to exactly match
-the reserved resource ranges when walking through iomem resources.
+MMCONFIG(aka ECAM) space is described in the ACPI MCFG table. If you don't
+have ECAM: (a) PCI devices won't work at all on non-x86 systems that use
+only ECAM for config access, (b) you won't be albe to access devices on
+non-0 segments, (c) you won't be able to access extended config space(
+address 0x100-0xffff), which means none of the Extended Capabilities will
+be available(AER, ACS, ATS, etc). [Bjorn's comment]
 
-In addition, since the new descriptor 'IORES_DESC_RESERVED' has been
-created for the reserved areas, the code originally related to the
-descriptor 'IORES_DESC_NONE' also need to be updated.
+The second issue is that the SME kdump kernel doesn't work without the
+e820 reserved ranges. When SME is active in kdump kernel, actually, those
+reserved regions are still decrypted, but because those reserved ranges are
+not present at all in kdump kernel e820 table, those reserved regions are
+considered as encrypted, it goes wrong.
 
-Suggested-by: Borislav Petkov <bp@suse.de>
+The e820 reserved range is useful in kdump kernel, so it is necessary to
+pass the e820 reserved ranges to the kdump kernel.
+
+Suggested-by: Dave Young <dyoung@redhat.com>
 Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 ---
- arch/x86/kernel/e820.c |  2 +-
- arch/x86/mm/ioremap.c  | 18 +++++++++++++++---
- include/linux/ioport.h |  1 +
- 3 files changed, 17 insertions(+), 4 deletions(-)
+ arch/x86/kernel/crash.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 2879e234e193..16fcde196243 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -1050,10 +1050,10 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
- 	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
- 	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
- 	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
-+	case E820_TYPE_RESERVED:	return IORES_DESC_RESERVED;
- 	case E820_TYPE_RESERVED_KERN:	/* Fall-through: */
- 	case E820_TYPE_RAM:		/* Fall-through: */
- 	case E820_TYPE_UNUSABLE:	/* Fall-through: */
--	case E820_TYPE_RESERVED:	/* Fall-through: */
- 	default:			return IORES_DESC_NONE;
- 	}
- }
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 0029604af8a4..447eede7ba9e 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -81,9 +81,21 @@ static bool __ioremap_check_ram(struct resource *res)
- 	return false;
- }
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 17ffc869cab8..1db2754df9e9 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -381,6 +381,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
+ 			memmap_entry_callback);
  
--static int __ioremap_check_desc_other(struct resource *res)
-+/*
-+ * Originally, these areas described as IORES_DESC_NONE are not mapped
-+ * as encrypted when using ioremap(), for example, E820_TYPE_{RESERVED,
-+ * RESERVED_KERN,RAM,UNUSABLE}, etc. It checks for a resource that is
-+ * not described as IORES_DESC_NONE, which can make sure the reserved
-+ * areas are not mapped as encrypted when using ioremap().
-+ *
-+ * Now IORES_DESC_RESERVED has been created for the reserved areas so
-+ * the check needs to be expanded so that these areas are not mapped
-+ * encrypted when using ioremap().
-+ */
-+static int __ioremap_check_desc_none_and_reserved(struct resource *res)
- {
--	return (res->desc != IORES_DESC_NONE);
-+	return ((res->desc != IORES_DESC_NONE) &&
-+		(res->desc != IORES_DESC_RESERVED));
- }
- 
- static int __ioremap_res_check(struct resource *res, void *arg)
-@@ -94,7 +106,7 @@ static int __ioremap_res_check(struct resource *res, void *arg)
- 		flags->system_ram = __ioremap_check_ram(res);
- 
- 	if (!flags->desc_other)
--		flags->desc_other = __ioremap_check_desc_other(res);
-+		flags->desc_other = __ioremap_check_desc_none_and_reserved(res);
- 
- 	return flags->system_ram && flags->desc_other;
- }
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index da0ebaec25f0..6ed59de48bd5 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -133,6 +133,7 @@ enum {
- 	IORES_DESC_PERSISTENT_MEMORY_LEGACY	= 5,
- 	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
- 	IORES_DESC_DEVICE_PUBLIC_MEMORY		= 7,
-+	IORES_DESC_RESERVED			= 8,
- };
- 
- /* helpers to define resources */
++	/* Add e820 reserved ranges */
++	cmd.type = E820_TYPE_RESERVED;
++	flags = IORESOURCE_MEM;
++	walk_iomem_res_desc(IORES_DESC_RESERVED, flags, 0, -1, &cmd,
++			   memmap_entry_callback);
++
+ 	/* Add crashk_low_res region */
+ 	if (crashk_low_res.end) {
+ 		ei.addr = crashk_low_res.start;
 -- 
 2.17.1
 
