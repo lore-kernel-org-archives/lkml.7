@@ -2,421 +2,124 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D04AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 03:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F2EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 03:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6A521871
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 03:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92200206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 03:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbfC2DlV (ORCPT
+        id S1728633AbfC2DxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 23:41:21 -0400
-Received: from mga05.intel.com ([192.55.52.43]:21327 "EHLO mga05.intel.com"
+        Thu, 28 Mar 2019 23:53:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48562 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727675AbfC2DlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 23:41:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 20:41:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,283,1549958400"; 
-   d="scan'208";a="156826742"
-Received: from spandruv-mobl3.jf.intel.com ([10.252.196.21])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Mar 2019 20:41:19 -0700
-Message-ID: <30c3eff209246cc184cbddb0ec60e9acd9dd1d6b.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] platform/x86: intel_pmc_core: Convert to a
- platform_driver
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Rajat Jain <rajatja@google.com>,
-        "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Cc:     Rajat Jain <rajatxjain@gmail.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Evan Green <evgreen@google.com>,
-        "Box, David E" <david.e.box@intel.com>
-Date:   Thu, 28 Mar 2019 20:41:19 -0700
-In-Reply-To: <CACK8Z6HQ1QMRygSVgWabO9kUSA3tTL9Uh0Lhw6wv3Vyb4aaFKA@mail.gmail.com>
-References: <20190313222124.229371-1-rajatja@google.com>
-         <20190316081752.GA21812@raj-desk2.iind.intel.com>
-         <CAA93t1qoQx2B9=KuNpuXL_PvdpgGJPzZk8N-KWqS4XyO8qrS5g@mail.gmail.com>
-         <3fc03e60-492a-e9b5-ac9b-caa17f8a8e27@linux.intel.com>
-         <CACK8Z6HGEeM_0AnM1eJcUgNPwFz6_wsT8oFAG2rkV4UZczDi3g@mail.gmail.com>
-         <c98af2ef-5800-0dee-7b58-3be48f612d07@linux.intel.com>
-         <CACK8Z6HQ1QMRygSVgWabO9kUSA3tTL9Uh0Lhw6wv3Vyb4aaFKA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1728026AbfC2DxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 23:53:00 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D8EEDDC905;
+        Fri, 29 Mar 2019 03:52:59 +0000 (UTC)
+Received: from localhost (ovpn-12-24.pek2.redhat.com [10.72.12.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3285C1B466;
+        Fri, 29 Mar 2019 03:52:56 +0000 (UTC)
+Date:   Fri, 29 Mar 2019 11:52:54 +0800
+From:   "bhe@redhat.com" <bhe@redhat.com>
+To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>,
+        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
+Message-ID: <20190329035254.GD1877@MiWiFi-R3L-srv>
+References: <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
+ <20190325123229.GL12016@zn.tnic>
+ <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+ <20190326135714.GG1867@zn.tnic>
+ <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328231100.GC1877@MiWiFi-R3L-srv>
+ <ed9b7ab0-c9c4-a0b8-f4b7-709e597c6f0b@ce.jp.nec.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed9b7ab0-c9c4-a0b8-f4b7-709e597c6f0b@ce.jp.nec.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 29 Mar 2019 03:52:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-25 at 18:41 -0700, Rajat Jain wrote:
-> Hi Rajneesh,
+On 03/29/19 at 03:34am, Junichi Nomura wrote:
+> On 3/29/19 8:11 AM, bhe@redhat.com wrote:
+> > On 03/28/19 at 07:43am, Junichi Nomura wrote:
+> >>  /* Search EFI system tables for RSDP. */
+> >> -static acpi_physical_address efi_get_rsdp_addr(void)
+> >> +static acpi_physical_address __efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables, int size, bool efi_64)
+> > 
+> > Here parameter 'size' and 'efi_64' seems a little duplicated on
+> > functionality. Only passing efi_64 can deduce the size? Personal
+> > opinion.
 > 
+> Yes. But I'm not sure which is preferred.
 > 
-> On Mon, Mar 25, 2019 at 3:23 AM Bhardwaj, Rajneesh
-> <rajneesh.bhardwaj@linux.intel.com> wrote:
-> > 
-> > Hi Rajat
-> > 
-> > On 23-Mar-19 6:00 AM, Rajat Jain wrote:
-> > > Hi Rajneesh,
-> > > 
-> > > 
-> > > 
-> > > On Fri, Mar 22, 2019 at 12:56 PM Bhardwaj, Rajneesh
-> > > <rajneesh.bhardwaj@linux.intel.com> wrote:
-> > > > Some suggestions below
-> > > > 
-> > > > On 18-Mar-19 8:36 PM, Rajat Jain wrote:
-> > > > 
-> > > > On Sat, Mar 16, 2019 at 1:30 AM Rajneesh Bhardwaj
-> > > > <rajneesh.bhardwaj@intel.com> wrote:
-> > > > 
-> > > > On Wed, Mar 13, 2019 at 03:21:23PM -0700, Rajat Jain wrote:
-> > > > 
-> > > > Convert the intel_pmc_core driver to a platform driver. There
-> > > > is no
-> > > > functional change. Some code that tries to determine what kind
-> > > > of
-> > > > CPU this is, has been moved code is moved from pmc_core_probe()
-> > > > to
-> > > > 
-> > > > Possible typo here.
-> > > > 
-> > > > Ummm, you mean grammar error I guess? Sure, I will rephrase.
-> > > > 
-> > > > pmc_core_init().
-> > > > 
-> > > > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > > > 
-> > > > Thanks for sending this. This is certainly useful to support
-> > > > suspend-resume
-> > > > functionality for this driver which is otherwise only possible
-> > > > with PM
-> > > > notifiers otherwise and that is not desirable. Initially this
-> > > > was a PCI
-> > > > driver and after design discussion it was converted to module.
-> > > > I would like
-> > > > to consult Andy and Srinivas for their opinion about binding it
-> > > > to actual
-> > > > platform bus instead of the virtual bus as in its current form.
-> > > > In one of the
-> > > > internal versions, we used a known acpi PNP HID.
-> > > > 
-> > > > Sure, if there is an established ACPI PNP HID, then we could
-> > > > bind it
-> > > > using that, on platforms where we are still developing BIOS /
-> > > > coreboot. However, this might not be possible for shipping
-> > > > systems
-> > > > (Kabylake / skylake) where there is no plan to change the BIOS.
-> > > > 
-> > > > In one of our internal patches, i had used HID of power engine
-> > > > plugin. IIRC, During my testing it was working on KBL, CNL with
-> > > > UEFI BIOS but i highly recommend testing it.
-> > > > 
-> > > > ---8<----8<-----
-> > > > 
-> > > > +static const struct acpi_device_id pmc_acpi_ids[] = {
-> > > > 
-> > > > +             {"INT33A1", 0}, /* _HID for Intel Power Engine,
-> > > > _CID PNP0D80*/
-> > > > 
-> > > > +             { }
-> > > > 
-> > > >   };
-> > > 
-> > > We do not have this device in any of our ACPI tables today. If
-> > > Intel
-> > > can confirm that this is a well known HID to be used for
-> > > attaching
-> > > this driver, we can start putting it on our platform's ACPI going
-> > > forward (Whiskeylake, Cometlake, Cannonlake, Icelake ...). But I
-> > > believe we also need to have this driver attach with the device
-> > > on
-> > > older platforms (Skylake, Kabylake, Amberlake) that are already
-> > > shipping, and running a Non UEFI BIOS (that may not have this HID
-> > > since it is not published).
-> > > 
-> > > Currently the intel_pmc_core driver attaches itself to the
-> > > following
-> > > table of CPU families, without regard to whether it has that HID
-> > > in
-> > > the ACPI or not:
-> > > 
-> > > static const struct x86_cpu_id intel_pmc_core_ids[] = {
-> > >          INTEL_CPU_FAM6(SKYLAKE_MOBILE, spt_reg_map),
-> > >          INTEL_CPU_FAM6(SKYLAKE_DESKTOP, spt_reg_map),
-> > >          INTEL_CPU_FAM6(KABYLAKE_MOBILE, spt_reg_map),
-> > >          INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
-> > >          INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
-> > >          INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
-> > >          {}
-> > > };
-> > 
-> > In the past i tried one hybrid approach i.e. PCI and Platform
-> > driver at
-> > the same time. Based on that, i feel that this idea of spilling
-> > probe
-> > like this may not be the best option. The ACPI CID that i suggested
-> > is
-> > available on most Intel Core Platforms that i have worked on and i
-> > can
-> > help you in verifying it with UEFI BIOS if you want. Meanwhile,
-> > please
-> > see this https://patchwork.kernel.org/patch/9806565/ it gives some
-> > background about this ACPI ID and also points to the LPIT spec.
-> > 
-> > > 
-> > > So to avoid a regression, I suggest that we still maintain the
-> > > above
-> > > table (may be eliminate few entries) and always attach if the CPU
-> > > is
-> > > among the table, and if the CPU is not among the table, use the
-> > > ACPI
-> > > HID to attach. I propose to attach to at least Skylake and
-> > > Kabylake
-> > > systems using the table above, and for Canonlake and Icelake and
-> > > newer, we can rely on BIOS providing the ACPI HID. Of course I do
-> > > not
-> > > know if all non-Google Canonlake/Icelake platforms will have this
-> > > HID
-> > > in their BIOS. If we are not sure, we can include Canonlake and
-> > > Icelake also in that list, an. Please let me know what do you
-> > > think.
-> > 
-> > If Coreboot firmware can not be updated for the shipping devices,
-> > then
-> > can Chromium kernel take the suggested deviation which i think gets
-> > updated OTA periodically? For upstream,  I am waiting to hear from
-> > Rafael, Andi, David and Srinivas for their inputs.
+> The current code is:
 > 
-> So if everyone here thinks we should completely switch to using the
-> ACPI HID "INT33A1" for attaching to the device, sure, we can do that.
-> Yes, for Chromeos, we can put in a work around internally that
-> ensures
-> that shipping chromebooks (Kabylake etc) can work fine without that
-> ACPI ID. What I do not know is if that will cause any regressions
-> outside of Chromeos. Can you discuss with Rafael, Andy, Srinivas
-> internally and let me know on how they'd like to proceed on this.
-> 
-> The other option is to apply this patch as-is so we know that there
-> is
-> no "functional change" and thus no possible regression (so the driver
-> continues to attach to those and only those systems that s it used
-> to,
-> before this patch). And then introduce the ACPI ID Change as a new
-> independent patch.
-Use INT33A1 to enumerate, if this id doesn't exist then fallback to the
-cpuid style. The aim should be that we don't have to add any more CPU
-model to enumerate. But most probably register map will differ so we
-still may end up adding some CPU model relationship.
 
+I would like to change them like below two cases. I personally prefer
+the 2nd one. Feel free to take one you like better.
 
-Thanks,
-Srinivas
+1)
+ __efi_get_rsdp_addr() {
 
+	size = efi_64 ? sizeof(efi_config_table_64_t):sizeof(efi_config_table_32_t);;
 
-> 
-> Let me know.
-> 
-> Thanks,
-> 
-> Rajat
-> 
-> > 
-> > > 
-> > > Thanks,
-> > > 
-> > > Rajat
-> > > 
-> > > > 
-> > > > 
-> > > > -builtin_pci_driver(intel_pmc_core_driver);
-> > > > 
-> > > > +static struct platform_driver pmc_plat_driver = {
-> > > > 
-> > > > +             .remove = pmc_plat_remove,
-> > > > 
-> > > > +             .probe = pmc_plat_probe,
-> > > > 
-> > > > +             .driver = {
-> > > > 
-> > > > +                             .name = "pmc_core_driver",
-> > > > 
-> > > > +                             .acpi_match_table =
-> > > > ACPI_PTR(pmc_acpi_ids),
-> > > > 
-> > > > +             },
-> > > > 
-> > > > +};
-> > > > 
-> > > > ---
-> > > > This is rebased off
-> > > > git://git.infradead.org/linux-platform-drivers-x86.git/for-next
-> > > > 
-> > > >   drivers/platform/x86/intel_pmc_core.c | 93
-> > > > ++++++++++++++++++++-------
-> > > >   1 file changed, 68 insertions(+), 25 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/platform/x86/intel_pmc_core.c
-> > > > b/drivers/platform/x86/intel_pmc_core.c
-> > > > index f2c621b55f49..55578d07610c 100644
-> > > > --- a/drivers/platform/x86/intel_pmc_core.c
-> > > > +++ b/drivers/platform/x86/intel_pmc_core.c
-> > > > @@ -19,6 +19,7 @@
-> > > >   #include <linux/io.h>
-> > > >   #include <linux/module.h>
-> > > >   #include <linux/pci.h>
-> > > > +#include <linux/platform_device.h>
-> > > >   #include <linux/uaccess.h>
-> > > > 
-> > > >   #include <asm/cpu_device_id.h>
-> > > > @@ -854,12 +855,59 @@ static const struct dmi_system_id
-> > > > pmc_core_dmi_table[]  = {
-> > > >        {}
-> > > >   };
-> > > > 
-> > > > -static int __init pmc_core_probe(void)
-> > > > +static int pmc_core_probe(struct platform_device *pdev)
-> > > >   {
-> > > > -     struct pmc_dev *pmcdev = &pmc;
-> > > > +     struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
-> > > > +     int err;
-> > > > +
-> > > > +     pmcdev->regbase = ioremap(pmcdev->base_addr,
-> > > > +                               pmcdev->map->regmap_length);
-> > > > +     if (!pmcdev->regbase)
-> > > > +             return -ENOMEM;
-> > > > +
-> > > > +     mutex_init(&pmcdev->lock);
-> > > > +     pmcdev->pmc_xram_read_bit =
-> > > > pmc_core_check_read_lock_bit();
-> > > > +
-> > > > +     err = pmc_core_dbgfs_register(pmcdev);
-> > > > +     if (err < 0) {
-> > > > +             dev_warn(&pdev->dev, "debugfs register
-> > > > failed.\n");
-> > > > +             iounmap(pmcdev->regbase);
-> > > > +             return err;
-> > > > +     }
-> > > > +
-> > > > +     dmi_check_system(pmc_core_dmi_table);
-> > > > +     dev_info(&pdev->dev, " initialized\n");
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > > +static int pmc_core_remove(struct platform_device *pdev)
-> > > > +{
-> > > > +     struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
-> > > > +
-> > > > +     pmc_core_dbgfs_unregister(pmcdev);
-> > > > +     mutex_destroy(&pmcdev->lock);
-> > > > +     iounmap(pmcdev->regbase);
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > > +static struct platform_driver pmc_core_driver = {
-> > > > +     .driver = {
-> > > > +             .name = "pmc_core",
-> > > > +     },
-> > > > +     .probe = pmc_core_probe,
-> > > > +     .remove = pmc_core_remove,
-> > > > +};
-> > > > +
-> > > > +static struct platform_device pmc_core_device = {
-> > > > +     .name           = "pmc_core",
-> > > > +};
-> > > > +
-> > > > +static int __init pmc_core_init(void)
-> > > > +{
-> > > > +     int ret;
-> > > > 
-> > > > Please use reverse x-mas tree style.
-> > > > 
-> > > > OK, will do.
-> > > > 
-> > > >        const struct x86_cpu_id *cpu_id;
-> > > > +     struct pmc_dev *pmcdev = &pmc;
-> > > >        u64 slp_s0_addr;
-> > > > -     int err;
-> > > > 
-> > > >        cpu_id = x86_match_cpu(intel_pmc_core_ids);
-> > > >        if (!cpu_id)
-> > > > @@ -880,36 +928,31 @@ static int __init pmc_core_probe(void)
-> > > >        else
-> > > >                pmcdev->base_addr = slp_s0_addr - pmcdev->map-
-> > > > >slp_s0_offset;
-> > > > 
-> > > > -     pmcdev->regbase = ioremap(pmcdev->base_addr,
-> > > > -                               pmcdev->map->regmap_length);
-> > > > -     if (!pmcdev->regbase)
-> > > > -             return -ENOMEM;
-> > > > +     platform_set_drvdata(&pmc_core_device, pmcdev);
-> > > > 
-> > > > -     mutex_init(&pmcdev->lock);
-> > > > -     pmcdev->pmc_xram_read_bit =
-> > > > pmc_core_check_read_lock_bit();
-> > > > +     ret = platform_device_register(&pmc_core_device);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > 
-> > > > -     err = pmc_core_dbgfs_register(pmcdev);
-> > > > -     if (err < 0) {
-> > > > -             pr_warn(" debugfs register failed.\n");
-> > > > -             iounmap(pmcdev->regbase);
-> > > > -             return err;
-> > > > -     }
-> > > > +     ret = platform_driver_register(&pmc_core_driver);
-> > > > +     if (ret)
-> > > > +             goto out_remove_dev;
-> > > > 
-> > > > -     dmi_check_system(pmc_core_dmi_table);
-> > > > -     pr_info(" initialized\n");
-> > > >        return 0;
-> > > > +
-> > > > +out_remove_dev:
-> > > > +     platform_device_unregister(&pmc_core_device);
-> > > > +     return ret;
-> > > >   }
-> > > > -module_init(pmc_core_probe)
-> > > > 
-> > > > -static void __exit pmc_core_remove(void)
-> > > > +static void __init pmc_core_exit(void)
-> > > >   {
-> > > > -     struct pmc_dev *pmcdev = &pmc;
-> > > > -
-> > > > -     pmc_core_dbgfs_unregister(pmcdev);
-> > > > -     mutex_destroy(&pmcdev->lock);
-> > > > -     iounmap(pmcdev->regbase);
-> > > > +     platform_driver_unregister(&pmc_core_driver);
-> > > > +     platform_device_unregister(&pmc_core_device);
-> > > >   }
-> > > > -module_exit(pmc_core_remove)
-> > > > +
-> > > > +module_init(pmc_core_init);
-> > > > +module_exit(pmc_core_exit);
-> > > > 
-> > > >   MODULE_LICENSE("GPL v2");
-> > > >   MODULE_DESCRIPTION("Intel PMC Core Driver");
-> > > > --
-> > > > 2.21.0.360.g471c308f928-goog
-> > > > 
-> > > > --
-> > > > Best Regards,
-> > > > Rajneesh
+Or if/else sytle.
 
+         for (i = 0; i < nr_tables; i++) {
+                 config_tables += size;
+                 if (efi_64) {
+                         efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables;
+                         // get guid and table
+                 } else {
+                         efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables;
+                         // get guid and table
+                 }
+                 // check guid and return table if it's valid
+         }
+ }
+ 
+2)
+ __efi_get_rsdp_addr() {
+         for (i = 0; i < nr_tables; i++) {
+                 if (efi_64) {
+			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables + i;
+                         // get guid and table
+                 } else {
+			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables + i;
+                         // get guid and table
+                 }
+                 // check guid and return table if it's valid
+         }
+ }
+> 
+> Or we could create 2 functions, __efi_get_rsdp_addr32() and __efi_get_rsdp_addr64(),
+> and let efi_get_rsdp_addr() to choose which one to use based on signature.
+> 
+> > It might be worth adding code comments here to tell why we only care
+> > about 64bit kexec booting?
+> 
+> I think so. I'll add a comment.
+> 
+> -- 
+> Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
