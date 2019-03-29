@@ -2,104 +2,71 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98376C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF39C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7141A2173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2932183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553842694;
+	bh=RbNngW5JANBeUp2EDQ6gAcz9e4ymVPSRuGPUlOCvfPE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TuOV8OgC4B4t8LTVwqVDVM6BU8m0QTuBfzcUmySqPG8oayb1BNWdY8brMUgFSyO7u
+	 3WmtpZMl/DgT+rteij6iZMHTxtapZFUKVuttbVQAZ7/PcNSNzy2yOcDbAffIZJeKPh
+	 DrFUd2zXM+Y9NbivdiowcgjBLmCc7bJ067+hrpHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbfC2G5b (ORCPT
+        id S1728892AbfC2G6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 02:57:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:21608 "EHLO mx1.redhat.com"
+        Fri, 29 Mar 2019 02:58:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728651AbfC2G5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 02:57:30 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728839AbfC2G6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 02:58:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 75AA120268;
-        Fri, 29 Mar 2019 06:57:30 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-53.pek2.redhat.com [10.72.12.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6989ED1D8;
-        Fri, 29 Mar 2019 06:57:17 +0000 (UTC)
-From:   Lianbo Jiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, akpm@linux-foundation.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
-        Thomas.Lendacky@amd.com
-Subject: [PATCH 2/2 v10] x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
-Date:   Fri, 29 Mar 2019 14:56:49 +0800
-Message-Id: <20190329065649.12468-3-lijiang@redhat.com>
-In-Reply-To: <20190329065649.12468-1-lijiang@redhat.com>
-References: <20190329065649.12468-1-lijiang@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 29 Mar 2019 06:57:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DB662173C;
+        Fri, 29 Mar 2019 06:58:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553842691;
+        bh=RbNngW5JANBeUp2EDQ6gAcz9e4ymVPSRuGPUlOCvfPE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ocs8bxR9gamjHpGaOJPE/v/dgF74iSbxjpvLtLbJsEM6tlnLZubCFxDLgfOS47P9g
+         dW1dtScL7cYYUyFffWH685ApEYPTTL5gvqAKXtARQRoc4VXXaLBvESJ0zTx/LkbyUt
+         211lR89DiYmZzzyPsbRnAdQ07pnBPcarw2qLAoiw=
+Date:   Fri, 29 Mar 2019 07:58:09 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: kernfs: can read/write method grow buffer size?
+Message-ID: <20190329065809.GA3908@kroah.com>
+References: <20190329040922.34ab01c6@nic.cz>
+ <20190329062253.GA9659@kroah.com>
+ <20190329075107.0b4d8c9f@nic.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329075107.0b4d8c9f@nic.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At present, when using the kexec_file_load() syscall to load the kernel
-image and initramfs(for example: kexec -s -p xxx), the kernel does not
-pass the e820 reserved ranges to the second kernel, which might cause
-two problems:
+On Fri, Mar 29, 2019 at 07:51:07AM +0100, Marek Behun wrote:
+> > If this is just for kernfs, and you have your own filesystem, sure, we
+> > can probably do something here.  But if this is for sysfs, no, you all
+> > need to keep to the "one value per file" rule that we have there
+> > please.
+> 
+> Greg, the file satisfies the "one value per file" rule. That value is
+> the currently selected trigger. Writing a trigger name changes this
+> value. It is just that reading also prints all the supported triggers.
 
-The first one is the MMCONFIG issue. The basic problem is that this
-device is in PCI segment 1 and the kernel PCI probing can not find it
-without all the e820 I/O reservations being present in the e820 table.
-And the kdump kernel does not have those reservations because the kexec
-command does not pass the I/O reservation via the "memmap=xxx" command
-line option. (This problem does not show up for other vendors, as SGI
-is apparently the actually fails for everyone, but devices in segment 0
-are then found by some legacy lookup method.) The workaround for this
-is to pass the I/O reserved regions to the kdump kernel.
-
-MMCONFIG(aka ECAM) space is described in the ACPI MCFG table. If you don't
-have ECAM: (a) PCI devices won't work at all on non-x86 systems that use
-only ECAM for config access, (b) you won't be albe to access devices on
-non-0 segments, (c) you won't be able to access extended config space(
-address 0x100-0xffff), which means none of the Extended Capabilities will
-be available(AER, ACS, ATS, etc). [Bjorn's comment]
-
-The second issue is that the SME kdump kernel doesn't work without the
-e820 reserved ranges. When SME is active in kdump kernel, actually, those
-reserved regions are still decrypted, but because those reserved ranges are
-not present at all in kdump kernel e820 table, those reserved regions are
-considered as encrypted, it goes wrong.
-
-The e820 reserved range is useful in kdump kernel, so it is necessary to
-pass the e820 reserved ranges to the kdump kernel.
-
-Suggested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- arch/x86/kernel/crash.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 17ffc869cab8..1db2754df9e9 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -381,6 +381,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
- 			memmap_entry_callback);
- 
-+	/* Add e820 reserved ranges */
-+	cmd.type = E820_TYPE_RESERVED;
-+	flags = IORESOURCE_MEM;
-+	walk_iomem_res_desc(IORES_DESC_RESERVED, flags, 0, -1, &cmd,
-+			   memmap_entry_callback);
-+
- 	/* Add crashk_low_res region */
- 	if (crashk_low_res.end) {
- 		ei.addr = crashk_low_res.start;
--- 
-2.17.1
-
+"all supported triggers" is not a "single value" :)
