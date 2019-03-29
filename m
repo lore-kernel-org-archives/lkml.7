@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304FAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B6CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA5192082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F13902082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:50:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mXVa01cB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vbdKKoXV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbfC2Gtl (ORCPT
+        id S1728908AbfC2GuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 02:49:41 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36772 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728700AbfC2Gti (ORCPT
+        Fri, 29 Mar 2019 02:50:11 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33689 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728811AbfC2Gtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 02:49:38 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k2so568596plt.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 23:49:38 -0700 (PDT)
+        Fri, 29 Mar 2019 02:49:41 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bg8so572743plb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 23:49:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ATUitjO3l5PbwZI7xwdst/n1EivnhW4ELZtfYtpsmzw=;
-        b=mXVa01cBPZ7ASZa37qhHs4ST7gC2TNZy2CJhdh58DleRfCAP5gO4/Gj0HF4UhfotyW
-         dLOckldShqSGLe45uZYTabqXJ7AeBliYVfzcRkDT6llDdzcSEIFoTNbsknh3g8mXCKYM
-         cu6GdE749wjKCS/dl+3vcMExs0my2l0IVThw1yiR33vxNPuAuB/yJKeoOarXtv3tC5gh
-         sxCL+sYFdFyZb+9l8FgrEudBO6Vzqx4X0Sf0B7tFN7YqAYZSAd40G8OshNNhGTQhvrUF
-         Mq5AWfsQtuMHddOvpWqbrxvn6JprOWzNOUOMQ8kR84+nu9qjJPP9EWAlEGVtmb7ib7fM
-         nyHA==
+        bh=m4pOoTrjvfOyO3lHRQoZI3YMKtiCY3JviBbDnHNKrZw=;
+        b=vbdKKoXViIM/SovhysLeQXfHIVYG/D4nV9xP5yW5NZ+wAfQ+AjPJujO7Jje835EFof
+         4tXzapRiS36ccIrdV+mLfOszyR+PHQ7keR5yfyjE0JueDZ+m2QTAD0PxbFDxHj+vqINh
+         FOzsp1lXZtXSnP3vSweHCg0m10zC7gXsuSRw4NmIP6zOVwJl7Dzq+MErSBew2XMJ5hy3
+         3v0eaOWGaSlL+kdmQA/MrOv0dhwUX8WhNvwH8gbJcohL8sc/Dl0IoZ5AhaTVorYkQktB
+         XWMNipRieOA3tmCnbwk5FXAe05ClKoGjGYrUsC6+qCCflkBQXmqtLtj/NsmZb5PBZZmO
+         7l+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ATUitjO3l5PbwZI7xwdst/n1EivnhW4ELZtfYtpsmzw=;
-        b=TrrIuZMnHWVBuvg7NKHlarq9E/FNy4qK8Qr2BIbMAV9ka+Nfn65qIlUc8tCn7Sjhmq
-         ISKuExboaug6uYCIBDVAwF0bQVTp//K3WYLTIeTLePmz/m6fsqLx8EcYHxgsuTSb+MXU
-         feirScBUB3iLa+1CJUE7+NKGZFkC90zB1wUD0C9sCC8geYeKMIG1uAsHieSjrqkJXofy
-         L4CMmFNNgpNVbMa8TfXPwXcb82naMPQkdun/SljVoIRm869YLQ0T9OgejtoW4d97cbL0
-         4WA7FZj4WsqoQoy5/KXiZElcYuzagw+4x1KSvBLshk6B1PFcFlIpc9ehzax8PxP9xYV7
-         o6dw==
-X-Gm-Message-State: APjAAAWYdS6N6Sz3PODIPNjy5Ha5H1bZYNgSPF889kUC462yOCwJwL9X
-        uFAXi7y/z0l+ecXfIWI2i9k=
-X-Google-Smtp-Source: APXvYqzV0tPHbLG88WNKysL3Wa8O359cTEJVEk9eVaBs+hzI7yM83kE12caFJk5WxVMmsfMrp6Spow==
-X-Received: by 2002:a17:902:526:: with SMTP id 35mr44501356plf.276.1553842177646;
-        Thu, 28 Mar 2019 23:49:37 -0700 (PDT)
+        bh=m4pOoTrjvfOyO3lHRQoZI3YMKtiCY3JviBbDnHNKrZw=;
+        b=Y33sZ6IiUHvChk8pGGfLWtvRgWjfAtk3k59zBfL18wbD48vE+a6wsFINPDpZeVfQ4D
+         /Z3R09gUDpj+ecsvv5LyVlM4reogSgbzzWh3S2wARxhuJf/+k/RSdPU2Fi/UYjQMGlih
+         h+dcP7eiiN5IQ6zc4lTcKbzKWURBPakxSUa6hXm5D0YYdRWooYQibvJwoAx/xXutkbke
+         +qfSZZQtrf1LbstS8BRzVGLHuSdC3Y7EOEDsDCzhWO3E2qr15hnEUqpk32l7Pbi7TpyB
+         doQrXaoSmlT9z19Dr+034rO6XW7cjJpJ0v45L7VBo6t1KG3OBYcj//h2OU+vg1xneYUX
+         34Sw==
+X-Gm-Message-State: APjAAAX/Qhs5EXCFEcQBtdJOjnVsEmdJNnKu24c0H2HMHH77K/KLbZuZ
+        mlkM9KaV/eteKZl6Iw2ivPY=
+X-Google-Smtp-Source: APXvYqze/oP0qjRXMP8y7FGSppGFqi5zNAs7vi/n5aMY6ZrDInjtpFmXY971ohTMpMPSRFLOo0haGA==
+X-Received: by 2002:a17:902:2aca:: with SMTP id j68mr270129plb.233.1553842180433;
+        Thu, 28 Mar 2019 23:49:40 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id i5sm1602818pfd.16.2019.03.28.23.49.36
+        by smtp.gmail.com with ESMTPSA id i5sm1602818pfd.16.2019.03.28.23.49.39
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 23:49:36 -0700 (PDT)
+        Thu, 28 Mar 2019 23:49:39 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     Shawn Guo <shawnguo@kernel.org>
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -65,9 +65,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>,
         Fabio Estevam <fabio.estevam@nxp.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/9] ARM: dts: imx6sx: Specify IMX6SX_CLK_IPG as "ipg" clock to SDMA
-Date:   Thu, 28 Mar 2019 23:49:17 -0700
-Message-Id: <20190329064924.8728-2-andrew.smirnov@gmail.com>
+Subject: [PATCH v3 4/9] ARM: dts: imx6ul: Specify IMX6UL_CLK_IPG as "ipg" clock to SDMA
+Date:   Thu, 28 Mar 2019 23:49:19 -0700
+Message-Id: <20190329064924.8728-4-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190329064924.8728-1-andrew.smirnov@gmail.com>
 References: <20190329064924.8728-1-andrew.smirnov@gmail.com>
@@ -81,9 +81,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
 clock to determine if it needs to configure the IP block as operating
 at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
-clocks as IMX6SX_CLK_SDMA results in driver incorrectly thinking that
+clocks as IMX6UL_CLK_SDMA results in driver incorrectly thinking that
 ratio is 1:1 which results in broken SDMA funtionality. Fix the code
-to specify IMX6SX_CLK_IPG as "ipg" clock for SDMA, to avoid detecting
+to specify IMX6UL_CLK_IPG as "ipg" clock for SDMA, to avoid detecting
 incorrect clock ratio.
 
 Fixes: 25aaa75df1e6 ("dmaengine: imx-sdma: add clock ratio 1:1 check")
@@ -96,20 +96,20 @@ Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/imx6sx.dtsi | 2 +-
+ arch/arm/boot/dts/imx6ul.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index df0c59519886..b16a123990a2 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -820,7 +820,7 @@
- 				compatible = "fsl,imx6sx-sdma", "fsl,imx6q-sdma";
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index a77bbcae4571..bbf010c73336 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -708,7 +708,7 @@
+ 					     "fsl,imx35-sdma";
  				reg = <0x020ec000 0x4000>;
  				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX6SX_CLK_SDMA>,
-+				clocks = <&clks IMX6SX_CLK_IPG>,
- 					 <&clks IMX6SX_CLK_SDMA>;
+-				clocks = <&clks IMX6UL_CLK_SDMA>,
++				clocks = <&clks IMX6UL_CLK_IPG>,
+ 					 <&clks IMX6UL_CLK_SDMA>;
  				clock-names = "ipg", "ahb";
  				#dma-cells = <3>;
 -- 
