@@ -2,159 +2,79 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4695C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD952C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D7C20811
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F8F12183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:51:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="BERLBaWo"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DpAcgVdj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbfC2KuD (ORCPT
+        id S1729226AbfC2KvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:50:03 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45632 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729090AbfC2KuC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:50:02 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 5so1106460lft.12
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 03:50:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UyaLyfKCh/8+yGarYKysqxWvWj6HsjNnMDWd9jRPbjI=;
-        b=BERLBaWoBAWy09JXSHLG2LC0a6riP65CkchwpU3WY05jPESMgnf1afU9TSPdZpKvP8
-         WSMaCbWJNONb+BxohIBP2pg4OiNtdRyz13AYiElOZA9R1949ALL8jJZnah5tEf5qGinP
-         tU8EM3Rmk0GgkqWsmfdgCNIdHYgHPWB2DgDNlQ02U7dMeNaU7nXmARZUu03sKsd/9Ua6
-         TfxV6Z0ooqb8l54b7n6A2Zx0KUwzbQh7A9U/1T2bw3rVWE7NhbU6xaC4kY4XY0cRQiVE
-         20eYhcCYaQ49qRMDCUr1CK+Z3JAvRUJ5ZPrf28D8xRPbsjLOKbSoSMzejLsBCmehAjRa
-         q3lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=UyaLyfKCh/8+yGarYKysqxWvWj6HsjNnMDWd9jRPbjI=;
-        b=TgKBXbDkxFkLpZxQtdWF/sBUsjSuUUj7hq8jbXfOIVADWYIljyJElNNMCy+r4Nhg8f
-         f8OFuBAq7rjhNKm0PR4rf7DgyyXJ3vayuzlbfTpLGIl4Z3Fpw4rqps1XQSOr+ge8EjZI
-         WVB2vEq4txGU/ql+qMHsknObmojQrVSaV3RrdRPN2koE6tU4tURTrmx+c5wWSdeE5jpN
-         6qQB9SRwyoXJVr4Jtg4AD2QCrliF/81VF+N810na452QZMiFjAzuJgC5XqYlQWi+/Mg7
-         bVUghudGoSpmRGWLg5y23IPPdgWcBVzOxhEryLHqArRKkHDqfWOe194MFhtD6CKudSkQ
-         FAAg==
-X-Gm-Message-State: APjAAAWoG9Z4rsd68D7ubrGJjJ1b+Sd4U0s1Z6V4ZR2fM45N4sq1nYCo
-        OEUZ9am8FK/zDNqfxed1/vob5w==
-X-Google-Smtp-Source: APXvYqxfKCnGnEYwgQtzauvdWeP4k66FI6q19DHWJq67shOtYNMTdbGf7aYV19R5cjiYepKYXM0EtQ==
-X-Received: by 2002:a19:f81a:: with SMTP id a26mr13987566lff.34.1553856600582;
-        Fri, 29 Mar 2019 03:50:00 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.84.183])
-        by smtp.gmail.com with ESMTPSA id r77sm293335ljb.29.2019.03.29.03.49.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 03:49:59 -0700 (PDT)
-Subject: Re: [PATCH v9 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF controller bindings
-To:     Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org,
-        marek.vasut@gmail.com, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, bbrezillon@kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        devicetree@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, lee.jones@linaro.org
-Cc:     juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>,
-        zhengxunli@mxic.com.tw
-References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
- <1553847606-18122-4-git-send-email-masonccyang@mxic.com.tw>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <5e841334-7cd7-3b5f-77d2-bb39bf8ec8b7@cogentembedded.com>
-Date:   Fri, 29 Mar 2019 13:49:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Fri, 29 Mar 2019 06:51:11 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:43630 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729057AbfC2KvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 06:51:10 -0400
+Received: from zn.tnic (p200300EC2F148A00A084EDD1F3CAD6FC.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:a084:edd1:f3ca:d6fc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5966C1EC082D;
+        Fri, 29 Mar 2019 11:51:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553856669;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=0e85glshDddVnDKYFSqI0DI7WMmCRFw0I8ijzWPUQ3c=;
+        b=DpAcgVdj0atephS5XJdlC4mM76vBPG0hwCBzMg7yrdifTmsTbsebQy6FT0Mw6tW1a7J3vP
+        qs0+l+wA/78kXzVZPUrVp/x9AoIhMUZiU80rZEoYzzitrSb5p19GhpxspTdWkZlBmYSGuH
+        LDL4fdokTlJ3oiOaBBdyPBm7GwPgjTg=
+Date:   Fri, 29 Mar 2019 11:51:12 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     thor.thayer@linux.intel.com
+Cc:     mchehab@kernel.org, james.morse@arm.com,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] EDAC, altera: Initialize peripheral FIFOs in probe()
+Message-ID: <20190329105112.GD21152@zn.tnic>
+References: <1553635771-32693-1-git-send-email-thor.thayer@linux.intel.com>
+ <1553635771-32693-2-git-send-email-thor.thayer@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1553847606-18122-4-git-send-email-masonccyang@mxic.com.tw>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1553635771-32693-2-git-send-email-thor.thayer@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 03/29/2019 11:20 AM, Mason Yang wrote:
-
-> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD controller.
+On Tue, Mar 26, 2019 at 04:29:31PM -0500, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
 > 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> The FIFO memory and ECC initialization doesn't need to be
+> done as a separate operation early in the startup.
+> 
+> Improve the Arria10 and Stratix10 peripheral FIFO init
+> by initializing memory and enabling ECC as part of the
+> device driver initialization.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 > ---
->  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> new file mode 100644
-> index 0000000..577986b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> @@ -0,0 +1,57 @@
-> +Renesas R-Car Gen3 RPC-IF MFD controller Device Tree Bindings
-> +---------------------------------------------------------------------
+>  drivers/edac/altera_edac.c | 162 +++++++++++++++++++++++++--------------------
+>  1 file changed, 91 insertions(+), 71 deletions(-)
 
-   Too many dashes. :-)
+Both applied,
+thanks.
 
-> +
-> +Required properties:
-> +- compatible: should be an SoC-specific compatible value, followed by
-> +		"renesas,rcar-gen3-rpc" as a fallback.
-> +		supported SoC-specific values are:
-> +		"renesas,r8a77995-rpc"	(R-Car D3)
-> +- reg: should contain three register areas:
-> +	first for the base address of rpc-if registers,
-> +	second for the direct mapping read mode and
-> +	third for the write buffer area.
-> +- reg-names: should contain "regs", "dirmap" and "wbuf"
-> +- clocks: should contain 1 entries for the module's clock
-> +- clock-names: should contain "rpc"
+-- 
+Regards/Gruss,
+    Boris.
 
-   What about the "power-domains" and "resets" props?
-
-> +- #address-cells: should be 1
-> +- #size-cells: should be 0
-
-   Why? You don't have the "reg" props in the sub-devices...
-
-> +
-> +Required nodes:
-> +	spi:
-> +	Node for configuring the SPI controller driver.
-> +	Required properties:
-> +		compatible = "renesas,rcar-rpc-spi";
-
-   Sigh... you were supposed to only place the flash device sub-nodes
-under the "main" device node, we don't add the virtual devices to DT,
-there's no matching sub-device in the hardware. You don't have to
-describe these sub-devices in DT, you can register the simple platform
-devices. 
-
-> +
-> +	hf:
-> +	Node for configuring the hyperflash controller driver.
-> +	Required properties:
-> +		compatible = "renesas,rcar-rpc-hf";
-> +
-> +Example:
-> +
-> +	rpc_mfd: rpc-mfd@ee200000 {
-
-   Just "rpc: rpc-if@ee200000, please.
-
-[...]
-
-MBR, Sergei
+Good mailing practices for 400: avoid top-posting and trim the reply.
