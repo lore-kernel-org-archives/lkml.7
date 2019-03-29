@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D767AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86649C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECA7218A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528B4218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553897717;
-	bh=AkblHpdHHAZNCYJo/C5b8rUclMIGMUEZG+mTmi9K/Zw=;
+	s=default; t=1553897722;
+	bh=CdRA+zuFcOtK7M9qt2MrgGfcPTBBbuEZOm1Ez2Ayl40=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=xK7OU0VV2Lmf1txrqLV3yTNof2sVW88//kqLFIO+RudLM4UZhSPhZdZRJf02lTEK2
-	 ed8xPVD+utszdUQyqDtiN4Ki5wb5yRNx51OY94M7JFFqY4sjsLPtLoftThFayEEKCo
-	 ikSiqtPFLXJDDZiUojyYXs4TBc2rvwVSTy4aWktQ=
+	b=X35x+uSP0jNFGUmbD4YB5KB3HsGxa7XV5xQuqHM6EKlQX3s8on2Fyk8qYKBZJntg/
+	 7zCaCYx58N54G9XnXS6nyOBNkX8R/WFaYdCAp7+Cwl7r6BOXr2/Xc4AkNN8BMu9/M7
+	 M8dtX3B06a56r2b5XmOj1XYJ/ZgNt2hmMRCKXwr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbfC2WPQ (ORCPT
+        id S1730552AbfC2WPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 18:15:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46524 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 18:15:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730240AbfC2WPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730518AbfC2WPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Mar 2019 18:15:13 -0400
-Subject: Re: [GIT PULL] SCSI fixes for 5.1-rc2
+Subject: Re: [GIT PULL] Char/Misc driver fixes for 5.1-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553897712;
-        bh=AkblHpdHHAZNCYJo/C5b8rUclMIGMUEZG+mTmi9K/Zw=;
+        s=default; t=1553897713;
+        bh=CdRA+zuFcOtK7M9qt2MrgGfcPTBBbuEZOm1Ez2Ayl40=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=IZAEpARH+uAktX/dpeeuth0UIqj+5dg/HpJc+UDL0WA7ojRDnFjaKENdN7fbN4hR5
-         9e8wB/jVqZxTFjLKYhLdKh0mi8xUx479BfU3D0KXHKMc8DcQukLP+jEMegdSZzVcfX
-         xDd2DrJ/nAR9e4zxChz+4wILUAf6aWvZ0+dXAx8k=
+        b=BlVHTOSzxcbdlvitKB/mLcaeSjKdzx/eMiIC8OnEA8cgnX9dor0UfzjLR/NA8P1ou
+         jnQSpUG0qjHXawzLuUTb+HJi6qxywpHeW/XJRzg2lHvnH9RStW9kJuaq2EZlgBBeI9
+         nt4f2l/kRaB3X9euukpZuC/vsyF2kuF2efojP22Y=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1553887670.2911.16.camel@HansenPartnership.com>
-References: <1553887670.2911.16.camel@HansenPartnership.com>
+In-Reply-To: <20190329193926.GA11564@kroah.com>
+References: <20190329193926.GA11564@kroah.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1553887670.2911.16.camel@HansenPartnership.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
-X-PR-Tracked-Commit-Id: d6e2635b9cf7982102750c5d9e4ba1474afa0981
+X-PR-Tracked-Message-Id: <20190329193926.GA11564@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
+ tags/char-misc-5.1-rc3
+X-PR-Tracked-Commit-Id: 0532a1b0d045115521a93acf28f1270df89ad806
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3467b90737e1551dbaa5b71fd5a54425fd4a72b2
-Message-Id: <155389771259.19616.4315236675175951729.pr-tracker-bot@kernel.org>
-Date:   Fri, 29 Mar 2019 22:15:12 +0000
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+X-PR-Merge-Commit-Id: 6f51092301a42105c5cfcb96033e8734aa1bf160
+Message-Id: <155389771308.19616.3417564581056157019.pr-tracker-bot@kernel.org>
+Date:   Fri, 29 Mar 2019 22:15:13 +0000
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 29 Mar 2019 12:27:50 -0700:
+The pull request you sent on Fri, 29 Mar 2019 20:39:26 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.1-rc3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3467b90737e1551dbaa5b71fd5a54425fd4a72b2
+https://git.kernel.org/torvalds/c/6f51092301a42105c5cfcb96033e8734aa1bf160
 
 Thank you!
 
