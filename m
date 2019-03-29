@@ -2,220 +2,133 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B92C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DF4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A19F21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12C2217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:57:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="c7kO3et4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbfC2Kyw (ORCPT
+        id S1729052AbfC2K5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:54:52 -0400
-Received: from foss.arm.com ([217.140.101.70]:57926 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728837AbfC2Kyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:54:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2BB580D;
-        Fri, 29 Mar 2019 03:54:51 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB4C03F575;
-        Fri, 29 Mar 2019 03:54:50 -0700 (PDT)
-Subject: Re: Unexpected interrupt received in Guest OS when booting after
- "system_reset"
-To:     Heyi Guo <guoheyi@huawei.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org,
-        wanghaibin 00208455 <wanghaibin.wang@huawei.com>
-References: <e8ffbc4e-f7b7-14a1-7614-a3db85c9152f@huawei.com>
- <9a6ece7e-9984-dc9e-8fa2-df9736393dd2@arm.com>
- <9694b5f2-80bd-b85c-8fc5-bd1d917e1b33@huawei.com>
- <2e8f8bfb-4ae2-5fc6-4022-222a8f44e1f6@huawei.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <ad743120-8d9b-57e1-ef19-657047d6ccf8@arm.com>
-Date:   Fri, 29 Mar 2019 10:54:49 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <2e8f8bfb-4ae2-5fc6-4022-222a8f44e1f6@huawei.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 29 Mar 2019 06:57:52 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.116]:39151 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727788AbfC2K5v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 06:57:51 -0400
+Received: from [85.158.142.201] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-b.eu-central-1.aws.symcld.net id 6B/E6-12473-C2AFD9C5; Fri, 29 Mar 2019 10:57:48 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WSWUwTURSGuZ2lg2HIWDAciWCcaKJoKxWJ44O
+  RqNGaaNUHQ0IwOMDYNpaCnaJgYkSMgKioxLVQoGpQMYYEl2jBICSyGFfAXTRoXcAFcWVRdKZT
+  FN/+e77/3P/cm0Nhmg4ynBKyHILdxltZcgxunonHaKcPuhKjuz5y3MEuL8k9/3YNcd87ClRcu
+  6eU5C50f1RxRbeWxJGGy85OtaGmaidpeHq/jjS8dlfjhi81kSuJBMJiS07PWkuY+xpq1Rnb8K
+  ztxUNYDqrDCtEYCmeqMWhuqkLyQcPsU8Hp+vMSCZQOzxG0FCXImmT0UPa+F8k6lFkNntx+Xzf
+  G9CIo76gnZBDCGMB5skCtmJZCT38uoehZ8GC/Gy9ElBQ3BVyHF8hlmlkDx994cCU4B8Gruy99
+  wYHMYrjQ8tN3D2Ii4Ou2M746xoTBY2+5StbAMHCi7jam6HHQ/XKYUPxJkF//Qa3UZ8DNB16ka
+  BYqHzoJRUdAW/kuf3059DXsJuQhgHmMoP3iYT+IgvbKe/4wK3i6m/3NE2DoSa6/oZ2AQ7/vE8
+  p3pcAn101/ciRU7enCFdMdDLyDR1TKE2ZARe1nUtHTodL9DtuHpjpHvc45yuYcZXP6vmwstB7
+  14hUIr0Jcst1iMjvSeItVq4+O1ur1MdpYbWyMjt+sTdYJmdoUweaw8xLU8ZtEnZidlmJN1dkE
+  Rw2Sdit1AxF7CX3INzWi8ZSKHUe/6HclaoKT01OzzbxoTrJnWgWxEU2gKBboxAGJjbULJiFrn
+  cUqLegIBiqIDaWNMqbFDD5NtJgUdB3FUFePdbkwquLRYBmmwW3pNiE8jJ4npzCy1Zxp+3vRyL
+  K3oYjwEBoFBARogjIEe5rF8T/vQWEUYkPoH/ItQRab429ejzSKShqlZ2uJPIqD/4fCcxAezOf
+  P3MtHpC4ayLvR0qQu0TfsPzdt4+ZCdskzY2sr6Q46e9eoip9MnDpiMkQOVyS8DazzHDBMjL6S
+  MTfv4uyieWzBr8K4pJKoNfGlOzpPbnfEuT8VG5/NoZG+rWNhXE32qhul3WFvh/TLJonNfaYVB
+  QG91Vu86znjpUn35md2JrG4aOb1UZhd5P8ANG+PpucDAAA=
+X-Env-Sender: stwiss.opensource@diasemi.com
+X-Msg-Ref: server-13.tower-246.messagelabs.com!1553857067!3745772!1
+X-Originating-IP: [104.47.4.51]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 13159 invoked from network); 29 Mar 2019 10:57:47 -0000
+Received: from mail-am5eur02lp2051.outbound.protection.outlook.com (HELO EUR02-AM5-obe.outbound.protection.outlook.com) (104.47.4.51)
+  by server-13.tower-246.messagelabs.com with AES256-SHA256 encrypted SMTP; 29 Mar 2019 10:57:47 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vEExDvrETVRHCLX+heBp9u+dfhOV5MRapgESVRvaXfY=;
+ b=c7kO3et4vRXFubK+kIHYPS7IDSbOig3R3CBIl/WHmxwAyipvMAfYEDuFu5Y9n2m1DR353IuWr5Wats+Sfi2OG5uc3Jc1NxKsTJG3XowiJKgNZx0MuYYcfoZR1mw+mZt2Vu80j+RsA748XUXwxp+u2HvsWq234P5Mqq9i1bCZy0w=
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM (20.177.62.92) by
+ VI1PR10MB0512.EURPRD10.PROD.OUTLOOK.COM (10.167.201.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.16; Fri, 29 Mar 2019 10:57:45 +0000
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::e426:c8bc:d222:5cd7]) by VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::e426:c8bc:d222:5cd7%4]) with mapi id 15.20.1730.019; Fri, 29 Mar 2019
+ 10:57:45 +0000
+From:   Steve Twiss <stwiss.opensource@diasemi.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: RE: [PATCH 1/6] regulator: da9063: remove platform_data support
+Thread-Topic: [PATCH 1/6] regulator: da9063: remove platform_data support
+Thread-Index: AQHU3aIc2wkSIc3KlkendcBVviXhdaYifYyg
+Date:   Fri, 29 Mar 2019 10:57:45 +0000
+Message-ID: <VI1PR10MB23522CBA67AC5EBB1F7DEE39FE5A0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
+ <20190318154759.21978-2-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190318154759.21978-2-wsa+renesas@sang-engineering.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a6f51991-0461-4733-3451-08d6b4355feb
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:VI1PR10MB0512;
+x-ms-traffictypediagnostic: VI1PR10MB0512:
+x-microsoft-antispam-prvs: <VI1PR10MB0512ADB40CEF979CC572B7F5F55A0@VI1PR10MB0512.EURPRD10.PROD.OUTLOOK.COM>
+x-forefront-prvs: 0991CAB7B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(136003)(376002)(396003)(199004)(189003)(8936002)(186003)(256004)(86362001)(68736007)(71190400001)(52536014)(305945005)(3846002)(6116002)(71200400001)(66066001)(7736002)(53546011)(6506007)(55016002)(11346002)(229853002)(316002)(478600001)(486006)(476003)(14454004)(33656002)(76176011)(446003)(106356001)(7696005)(54906003)(53936002)(2906002)(110136005)(105586002)(8676002)(6436002)(4326008)(81166006)(97736004)(81156014)(26005)(5660300002)(99286004)(25786009)(6246003)(4744005)(102836004)(9686003)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB0512;H:VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: V1w8DNelDI5sMzlj3prce8MLHe5GNHlHIIsa20rvDpbh4RDGvVnzZY99icgR5AItST0DfHavELFPK8x4Mohjd6p9KQaqLkGGUz6JG0IRVWIX4IqC5HxBVSt0Eq92VwNcraPvsnGQ/Jd7A/3/htoQ5jUAQjCnKQbOXGPVQeTEJ3KSfdFL0IwCRyVIOa8qlPGe7Pc3f7xY+AS/xFxRo2QQ4zO9fyyn4cEufxA1IHtsBDcKla630cNGwqjtSGha1CeUf3kEs3lVlv4cyZEF8hHfmyZXykd3juSUuSqPQRwnZr0ql6Vb2GQUk+mksNhAqWKkGRAStTkw+AA8CWL9UY7rKE8F/LwL1ssUUfao6Vz8gbXVtCtljcWRo4E4krH7B38S5DN7cPx3ubNEZsxpTIBnz4p3WljzDcPt0IMBjv1UGQQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6f51991-0461-4733-3451-08d6b4355feb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2019 10:57:45.3969
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB0512
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/03/2019 09:19, Heyi Guo wrote:
-> Hi Marc,
-> 
-> The patch works. I tested for 1.5 hour and 52 VM resets. There were
-> 16 times that a virtual LPI left in the ap_list (seen by an
-> additional printk) during reset and we never saw "Unexpected
-> interrupt received" any more.
+Hi,
 
+On 18 March 2019 15:48, Wolfram Sang wrote:
 
-Thanks for testing, much appreciated.
+> Subject: [PATCH 1/6] regulator: da9063: remove platform_data support
+>=20
+> There are no in-kernel users anymore, so remove this outdated interface.
+>=20
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/regulator/da9063-regulator.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 
-> Just a minor comment: how about replacing /vcpu->arch.vgic_cpu./ with
-> /vgic_cpu->/ in the lock/unlock code line, to reduce some words?
+Thanks!
+Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
 
-Well, as I said, the patch is wrong in other ways, so I wouldn't bother
-with that. It only serves as a test for my theory.
-
-I think I'm slowly warming up to you initial proposal to hook things
-into the PROPBASER/PENDBASER registers, as the LPIs do have a life
-outside of the ITS itself.
-
-I'll try to respin something next week.
-
-Thanks,
-
-	M.
-
-> 
-> Thanks,
-> 
-> Heyi
-> 
-> On 2019/3/29 9:19, Heyi Guo wrote:
->>
->>
->> On 2019/3/29 1:18, Marc Zyngier wrote:
->>> [Please do not send HTML emails]
->> Sorry; will keep in mind next time :)
->>>
->>> On 28/03/2019 15:44, Heyi Guo wrote:
->>>> Hi Marc and Christoffer,
->>>>
->>>> When we issue "system_reset" from qemu monitor to a running VM, guest
->>>> Linux will occasionally get "Unexpected interrupt" after rebooting, with
->>>> kernel message at the bottom.
->>>>
->>>> After some investigation, we found it might be caused by the
->>>> preservation of virtual LPI during system reset: it seems the virtual
->>>> LPI remains in the ap_list during VM reset, as well as its "enabled" and
->>>> "pending_latch" status, and this causes the virtual LPI to be injected
->>>> wrongly after VCPU reboots and enables interrupt.
->>>>
->>>> We propose to clear "enabled" flag of virtual LPI when PROPBASER (or
->>>> GICR_CTRL) of virtual GICR is written to 0, and update virtual LPI
->>>> properties when GICR_CTRL.enableLPIs is set to 1 again.
->>>>
->>>> Any advice? Or did we miss something?
->>> We're clearly missing a trick here, but I'm not convinced of your
->>> approach.
->> To be honest, we were not fully convinced by ourselves either. I was worrying about guest switching GICR_CTRL or GICR_PROPBASER at runtime which probably causes issue for our rough approach.
->>
->>> What should happend is that the redistributors should be reset
->>> as well, and that this should recall any LPI that has been made pending.
->>> Unfortunately, we don't seem to have such code in place, which is
->>> embarrassing.
->>>
->>> Can you give the following, untested patch a go? It isn't right either,
->>> but it should have the right effect. If you confirm that it solves your
->>> problem, we can look at adding the right hooks...
->> Thanks, I'll test this and get back to you.
->> Heyi
->>
->>> Thanks,
->>>
->>>     M.
->>>
->>> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
->>> index ab3f47745d9c..bd9a9250f323 100644
->>> --- a/virt/kvm/arm/vgic/vgic-its.c
->>> +++ b/virt/kvm/arm/vgic/vgic-its.c
->>> @@ -2403,8 +2403,32 @@ static int vgic_its_commit_v0(struct vgic_its *its)
->>>       return 0;
->>>   }
->>>   +static void vgic_nuke_pending_lpis(struct kvm_vcpu *vcpu)
->>> +{
->>> +    struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
->>> +    struct vgic_irq *irq, *tmp;
->>> +    unsigned long flags;
->>> +
->>> + raw_spin_lock_irqsave(&vcpu->arch.vgic_cpu.ap_list_lock, flags);
->>> +
->>> +    list_for_each_entry_safe(irq, tmp, &vgic_cpu->ap_list_head, ap_list) {
->>> +        if (irq->intid >= VGIC_MIN_LPI) {
->>> +            list_del(&irq->ap_list);
->>> +            vgic_put_irq(vcpu->kvm, irq);
->>> +        }
->>> +    }
->>> +
->>> + raw_spin_unlock_irqrestore(&vcpu->arch.vgic_cpu.ap_list_lock, flags);
->>> +}
->>> +
->>>   static void vgic_its_reset(struct kvm *kvm, struct vgic_its *its)
->>>   {
->>> +    struct kvm_vcpu *vcpu;
->>> +    int c;
->>> +
->>> +    kvm_for_each_vcpu(c, vcpu, kvm)
->>> +        vgic_nuke_pending_lpis(vcpu);
->>> +
->>>       /* We need to keep the ABI specific field values */
->>>       its->baser_coll_table &= ~GITS_BASER_VALID;
->>>       its->baser_device_table &= ~GITS_BASER_VALID;
->>>
->>
->>
->>
->> .
->>
-> 
-> 
-
-
--- 
-Jazz is not dead. It just smells funny...
+Regards,
+Steve
