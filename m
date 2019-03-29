@@ -2,92 +2,99 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E72C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54289C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8354C2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553840578;
-	bh=D0KU/sXPxyVv7cqZc0Tm6kWLxD0vLmr3WjqiBXDU7aI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vJpEfmYjoK5j7Y8Iw94CXbnQIYoiFCY7hT5tysbVjxNmoLZ2y4XexsRffQBxJreaf
-	 9XmpKatyhj2lzxBvv0PbQLTPHWwj6cr/mA1qjybTiT9JimQ+wjkIUDsGzLKXPXrJFd
-	 pSXOZTCYkgLDGR4ImO0JicNI9oKY7lyVYvhsIM3I=
+	by mail.kernel.org (Postfix) with ESMTP id 2087E21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfC2GW5 (ORCPT
+        id S1728643AbfC2G1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 02:22:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47110 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 02:27:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53100 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfC2GW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 02:22:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726641AbfC2G1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 02:27:21 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B05A2173C;
-        Fri, 29 Mar 2019 06:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553840576;
-        bh=D0KU/sXPxyVv7cqZc0Tm6kWLxD0vLmr3WjqiBXDU7aI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cG3hE2qSC+Euh8MCiejcujkth4cWSCfhNpDfPrRlRCK5j2iYtY/cYzUZ0FAc6wUfL
-         0IW3Zu5lcX7qzvynSfIbb5hNq+vOisHi9dbywiZ6GrEMvcEEmKcYmuMizaBDBzw7vG
-         9rqfSw0b60NfMZliLtrs1jR7w1uvC01m8CDvMLeI=
-Date:   Fri, 29 Mar 2019 07:22:53 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marek Behun <marek.behun@nic.cz>
-Cc:     Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: kernfs: can read/write method grow buffer size?
-Message-ID: <20190329062253.GA9659@kroah.com>
-References: <20190329040922.34ab01c6@nic.cz>
+        by mx1.redhat.com (Postfix) with ESMTPS id 4C2CB81F01;
+        Fri, 29 Mar 2019 06:27:21 +0000 (UTC)
+Received: from localhost (ovpn-12-24.pek2.redhat.com [10.72.12.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 937AB28551;
+        Fri, 29 Mar 2019 06:27:18 +0000 (UTC)
+Date:   Fri, 29 Mar 2019 14:27:15 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     Dave Young <dyoung@redhat.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel
+ reserved region
+Message-ID: <20190329062715.GA7627@MiWiFi-R3L-srv>
+References: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
+ <20190320002524.GD18740@MiWiFi-R3L-srv>
+ <CAFgQCTt3-9oZ6yi_MGYFOZhn5+cSdJLGf3OQRMJ1CJr0eXiE5w@mail.gmail.com>
+ <20190322075259.GA18740@MiWiFi-R3L-srv>
+ <20190322083419.GB18740@MiWiFi-R3L-srv>
+ <CAFgQCTti4S3TUx_4YHi+Yx6poJbHhekT+Jzjjg__0tpZdA9tRQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190329040922.34ab01c6@nic.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAFgQCTti4S3TUx_4YHi+Yx6poJbHhekT+Jzjjg__0tpZdA9tRQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 29 Mar 2019 06:27:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 04:09:22AM +0100, Marek Behun wrote:
-> Hello Tejun and Greg,
-> 
-> kernfs_fop_open/read/write allocates a buffer for the ->read, ->write,
-> or ->seq_read methods. This buffer is either preallocated or allocated
-> on the spot, with minimum size being PAGE_SIZE, if ->atomic_write_len
-> is not given.
-> 
-> There is a question/problem currently in the led-trigger API, that the
-> PAGE_SIZE buffer can in some specific scenarios be too short.
+On 03/29/19 at 01:45pm, Pingfan Liu wrote:
+> On Fri, Mar 22, 2019 at 4:34 PM Baoquan He <bhe@redhat.com> wrote:
+> >
+> > On 03/22/19 at 03:52pm, Baoquan He wrote:
+> > > On 03/22/19 at 03:43pm, Pingfan Liu wrote:
+> > > > > > +/* parse crashkernel=x@y option */
+> > > > > > +static void mem_avoid_crashkernel_simple(char *option)
+> > > > >
+> > > > > Chao ever mentioned this, I want to ask again, why does it has to be
+> > > > > xxx_simple()?
+> > > > >
+> > > > Seems that I had replied Chao's question in another email. The naming
+> > > > follows the function parse_crashkernel_simple(), as the notes above
+> > >                        ~~~~~~~~~~~~~~~~~~~~~~~~
+> > >
+> > > Sorry, I don't get.  typo?
+> >
+> > OK, I misunderstood it. We do have parse_crashkernel_simple() to handle
+> > crashkernel=size[@offset] case, to differente with other complicated
+> > cases, like crashkernel=size,[high|low],
+> >
+> > Then I am fine with this naming. Soryy about the noise.
+> >
+> > By the way, do you think if we should take care of this case:
+> > crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+> >
+> > It can also specify @offset. Not sure if it's too complicated, you may
+> > have a investigation.
+> >
+> In this case, kernel should get the total memory size info. So
+> process_e820_entries() or process_efi_entries() should be called
+> twice. One before handle_mem_options(), so crashkernel can evaluate
+> the reserved size. It is doable, and what is your opinion about the
 
-And that file is in sysfs?  That's a huge abuse of the sysfs api then :(
-
-> (The trigger file on read returns space separated list of all supported
-> triggers, and the currently chosen one is marked specially. The cpu
-> activity trigger lists "cpu%i" for all CPU cores, which actually broke
-> on some machines with very large number of CPUs. Granted, this could
-> have been solved another way (and maybe will be), but we are now
-> discussing API for HW LED triggers, which can raise the problem anyway,
-> if a specific LED controller supports too many HW LED triggers.)
-> 
-> Is it allowed to grow this buffer if needed, either via krealloc or by
-> creating a special function in kernfs API which does this so that
-> led-trigger could use it?
-> 
-> Or is this completely forbidden?
-
-If this is just for kernfs, and you have your own filesystem, sure, we
-can probably do something here.  But if this is for sysfs, no, you all
-need to keep to the "one value per file" rule that we have there please.
-
-thanks,
-
-greg k-h
+You mean calling process_e820_entries to calculate the RAM size in
+system? I may not do like that, please check what __find_max_addr() is
+doing. Did I get it?
