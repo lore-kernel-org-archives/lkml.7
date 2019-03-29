@@ -2,113 +2,102 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384EBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D964FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090B321773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:03:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="EC8sc3aE"
+	by mail.kernel.org (Postfix) with ESMTP id AD6D5217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:12:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729844AbfC2RDo (ORCPT
+        id S1729841AbfC2RMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 13:03:44 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:34002 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729809AbfC2RDn (ORCPT
+        Fri, 29 Mar 2019 13:12:25 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:41266 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729791AbfC2RMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 13:03:43 -0400
-Received: by mail-yw1-f65.google.com with SMTP id x129so927733ywc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 10:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=W7lLylrMLPHCAGUksv7phTRR5l4lL+wrbNb4nVTTI3U=;
-        b=EC8sc3aEu+o42Lz7ZTNOiKzzHjK/Cc1qEFQ3QLL+kviu9j/p4EcYSruPF3mg9PYqy/
-         UBhsl4c+ufriWbWNHUwWO0GLUoUw2rgMRFoGU49Km7HR2R6JO3yCCUDCvvY1rcPZZw8v
-         4J2Livfcgm024FE7wgwrq/VAQkbMqQovzl1Iw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=W7lLylrMLPHCAGUksv7phTRR5l4lL+wrbNb4nVTTI3U=;
-        b=m9R9LfzRwvhszbLUqOfA3VmQBF78l2bcSwk8WbsNAEIxBEpP/xYMtqlyADS+HTgBUU
-         DuSO3IFqG9NC7GYPGpYa8AdQhpH3AMga0JY10AhmzvqAEnVldt3O0YddAbyw6OG7n22k
-         bpByvstBv5YmugwpPPbJSZ52dPTSILExKcwfniMeo4kuYlErmeJBYQ2/lYYcR6YYasC0
-         7ruLI2QCe372hBqc65zsDqR3QTOcZTxgw7exp9GqggWGMuCQfM0nwSiKiWw2ZWdo+HjB
-         0/IWprbbkB6CTQCGelFYKa8L0MleqxoqElbsE+pMR3wbIhzRYpusMyOgODGYY6lswQSn
-         5vcA==
-X-Gm-Message-State: APjAAAXUO2RkWT6iunPtoA/vf276KIfJqWfoPZ626U0RIe40eX/QyjtY
-        Mf2fPbfdRU3GwR3U+nqL4S4Sox+9Wec0qffH1SYdv8jyuTzBTsjS0PzobhIoSY94FUpea0cwMxh
-        uZYEBZdRULeIClHt7ld2ZITLI8diB0lanszUSA0BovS1ZN+Kc1pP4Qh3xBoVM/jiys3faKVi2IP
-        eCZMo3EEje
-X-Google-Smtp-Source: APXvYqyeYDSQexnr3FGr8Gh2a+0J0RUTkckT7E54wveUyaGPapJFfeTzUlNBN9krRvmaeRINQUO9Vw==
-X-Received: by 2002:a0d:e707:: with SMTP id q7mr19402037ywe.148.1553879022151;
-        Fri, 29 Mar 2019 10:03:42 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id 79sm1461582ywr.110.2019.03.29.10.03.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 10:03:40 -0700 (PDT)
-Subject: Re: [PATCH v4 0/2] Add IPROC PCIe new features
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1551415936-30174-1-git-send-email-srinath.mannam@broadcom.com>
- <20190329165145.GC8768@e107981-ln.cambridge.arm.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <f154e036-c3c3-ad31-d7b1-09a81f11c23e@broadcom.com>
-Date:   Fri, 29 Mar 2019 10:03:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 29 Mar 2019 13:12:24 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 4E95872CC64;
+        Fri, 29 Mar 2019 20:12:21 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 264207CC74C; Fri, 29 Mar 2019 20:12:21 +0300 (MSK)
+Date:   Fri, 29 Mar 2019 20:12:21 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] riscv: fix syscall_get_arguments() and
+ syscall_set_arguments()
+Message-ID: <20190329171221.GA32456@altlinux.org>
 MIME-Version: 1.0
-In-Reply-To: <20190329165145.GC8768@e107981-ln.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+RISC-V syscall arguments are located in orig_a0,a1..a5 fields
+of struct pt_regs.
 
-On 2019-03-29 9:51 a.m., Lorenzo Pieralisi wrote:
-> On Fri, Mar 01, 2019 at 10:22:14AM +0530, Srinath Mannam wrote:
->> This patch set extends support of new IPROC PCIe host controller features
->>   - Add CRS check using controller register status flags
->>   - Add outbound window mapping configuration for 32-bit I/O region
->>
->> This patch set is based on Linux-5.0-rc2.
->>
->> Changes from v3:
->>    - Addressed Lorenzo Pieralisi comments.
->>
->> Changes from v2:
->>    - Based on Lorenzo Pieralisi comments, commit logs are expanded.
->>
->> Changes from v1:
->>    - Addressed Bjorn Helgaas comments.
->>    - Removed set order mode patch from patchset.
->>
->> Srinath Mannam (2):
->>    PCI: iproc: Add CRS check in config read
->>    PCI: iproc: Add outbound configuration for 32-bit I/O region
->>
->>   drivers/pci/controller/pcie-iproc.c | 44 +++++++++++++++++++++++++++++++++----
-> I need Ray a/o Scott ACK to merge this series, thanks.
+Due to an off-by-one bug and a bug in pointer arithmetic
+syscall_get_arguments() was reading s3..s7 fields instead of a1..a5.
+Likewise, syscall_set_arguments() was writing s3..s7 fields
+instead of a1..a5.
 
-Unfortunately we need this due to hardware design (which we continue to 
-inform the silicon team to provide a proper design).
+Fixes: e2c0cdfba7f69 ("RISC-V: User-facing API")
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Will Drewry <wad@chromium.org>
+Cc: linux-riscv@lists.infradead.org
+Cc: stable@vger.kernel.org # v4.15+
+Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+---
+ arch/riscv/include/asm/syscall.h | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-
-Acked-by: Scott Branden <scott.branden@broadcom.com>
->
-> Lorenzo
+diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+index bba3da6ef157..6ea9e1804233 100644
+--- a/arch/riscv/include/asm/syscall.h
++++ b/arch/riscv/include/asm/syscall.h
+@@ -79,10 +79,11 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	if (i == 0) {
+ 		args[0] = regs->orig_a0;
+ 		args++;
+-		i++;
+ 		n--;
++	} else {
++		i--;
+ 	}
+-	memcpy(args, &regs->a1 + i * sizeof(regs->a1), n * sizeof(args[0]));
++	memcpy(args, &regs->a1 + i, n * sizeof(args[0]));
+ }
+ 
+ static inline void syscall_set_arguments(struct task_struct *task,
+@@ -94,10 +95,11 @@ static inline void syscall_set_arguments(struct task_struct *task,
+         if (i == 0) {
+                 regs->orig_a0 = args[0];
+                 args++;
+-                i++;
+                 n--;
+-        }
+-	memcpy(&regs->a1 + i * sizeof(regs->a1), args, n * sizeof(regs->a0));
++	} else {
++		i--;
++	}
++	memcpy(&regs->a1 + i, args, n * sizeof(regs->a1));
+ }
+ 
+ static inline int syscall_get_arch(void)
+-- 
+ldv
