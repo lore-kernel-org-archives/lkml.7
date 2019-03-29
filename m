@@ -2,114 +2,198 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C58C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0BBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52052184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF792183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:51:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbfC2Ouj (ORCPT
+        id S1729668AbfC2OvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:50:39 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33384 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728869AbfC2Ouj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:50:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFEE4A78;
-        Fri, 29 Mar 2019 07:50:38 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F028C3F557;
-        Fri, 29 Mar 2019 07:50:36 -0700 (PDT)
-Subject: Re: [PATCH 02/13] soc/fsl/bman: map FBPR area in the iommu
-To:     laurentiu.tudor@nxp.com, netdev@vger.kernel.org,
-        madalin.bucur@nxp.com, roy.pledge@nxp.com, camelia.groza@nxp.com,
-        leoyang.li@nxp.com
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, davem@davemloft.net,
-        linux-arm-kernel@lists.infradead.org
-References: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
- <20190329140014.8126-3-laurentiu.tudor@nxp.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <b747c418-a495-56e0-c106-a8ec8e82ccb9@arm.com>
-Date:   Fri, 29 Mar 2019 14:50:34 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 29 Mar 2019 10:51:00 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:43001 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728869AbfC2Ou7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:50:59 -0400
+Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1h9sqD-0005om-Ei; Fri, 29 Mar 2019 10:50:48 -0400
+Date:   Fri, 29 Mar 2019 10:50:17 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Simo Sorce <simo@redhat.com>, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V5 09/10] audit: add support for containerid to
+ network namespaces
+Message-ID: <20190329120403.GA30213@hmswarspite.think-freely.org>
+References: <cover.1552665316.git.rgb@redhat.com>
+ <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
+ <CAFqZXNskwTub5Bm_HZqr02VPB4s79CcgAVX8VE2vQYP07-qssg@mail.gmail.com>
+ <20190328011202.6raixwzdimn5b4zk@madcap2.tricolour.ca>
+ <CAHC9VhQYVSrX1Ng7hZejkGSq6ZXtqi+SKmpARASJ4P2_2i3-4w@mail.gmail.com>
+ <20190328214023.qpszfvxbrjlldmmt@madcap2.tricolour.ca>
 MIME-Version: 1.0
-In-Reply-To: <20190329140014.8126-3-laurentiu.tudor@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328214023.qpszfvxbrjlldmmt@madcap2.tricolour.ca>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/03/2019 14:00, laurentiu.tudor@nxp.com wrote:
-> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+On Thu, Mar 28, 2019 at 05:40:23PM -0400, Richard Guy Briggs wrote:
+> On 2019-03-28 11:46, Paul Moore wrote:
+> > On Wed, Mar 27, 2019 at 9:12 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > >
+> > > On 2019-03-27 23:42, Ondrej Mosnacek wrote:
+> > > > On Fri, Mar 15, 2019 at 7:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > Audit events could happen in a network namespace outside of a task
+> > > > > context due to packets received from the net that trigger an auditing
+> > > > > rule prior to being associated with a running task.  The network
+> > > > > namespace could be in use by multiple containers by association to the
+> > > > > tasks in that network namespace.  We still want a way to attribute
+> > > > > these events to any potential containers.  Keep a list per network
+> > > > > namespace to track these audit container identifiiers.
+> > > > >
+> > > > > Add/increment the audit container identifier on:
+> > > > > - initial setting of the audit container identifier via /proc
+> > > > > - clone/fork call that inherits an audit container identifier
+> > > > > - unshare call that inherits an audit container identifier
+> > > > > - setns call that inherits an audit container identifier
+> > > > > Delete/decrement the audit container identifier on:
+> > > > > - an inherited audit container identifier dropped when child set
+> > > > > - process exit
+> > > > > - unshare call that drops a net namespace
+> > > > > - setns call that drops a net namespace
+> > > > >
+> > > > > See: https://github.com/linux-audit/audit-kernel/issues/92
+> > > > > See: https://github.com/linux-audit/audit-testsuite/issues/64
+> > > > > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > > ---
+> > > > >  include/linux/audit.h | 19 ++++++++++++
+> > > > >  kernel/audit.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++++++--
+> > > > >  kernel/nsproxy.c      |  4 +++
+> > > > >  3 files changed, 106 insertions(+), 3 deletions(-)
+> > > > >
+> > > > > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > > > > index fa19fa408931..70255c2dfb9f 100644
+> > > > > --- a/include/linux/audit.h
+> > > > > +++ b/include/linux/audit.h
+> > > > > @@ -27,6 +27,7 @@
+> > > > >  #include <linux/ptrace.h>
+> > > > >  #include <linux/namei.h>  /* LOOKUP_* */
+> > > > >  #include <uapi/linux/audit.h>
+> > > > > +#include <linux/refcount.h>
+> > > > >
+> > > > >  #define AUDIT_INO_UNSET ((unsigned long)-1)
+> > > > >  #define AUDIT_DEV_UNSET ((dev_t)-1)
+> > > > > @@ -99,6 +100,13 @@ struct audit_task_info {
+> > > > >
+> > > > >  extern struct audit_task_info init_struct_audit;
+> > > > >
+> > > > > +struct audit_contid {
+> > > > > +       struct list_head        list;
+> > > > > +       u64                     id;
+> > > > > +       refcount_t              refcount;
+> > > >
+> > > > Hm, since we only ever touch the refcount under a spinlock, I wonder
+> > > > if we could just make it a regular unsigned int (we don't need the
+> > > > atomicity guarantees). OTOH, refcount_t comes with some extra overflow
+> > > > checking, so it's probably better to leave it as is...
+> > >
+> > > Since the update is done using rcu-safe methods, do we even need the
+> > > spin_lock?  Neil?  Paul?
+> > 
+> > As discussed, the refcount field is protected against simultaneous
+> > writes by the spinlock that protects additions/removals from the list
+> > as a whole so I don't believe the refcount_t atomicity is critical in
+> > this regard.
+> > 
+> > Where it gets tricky, and I can't say I'm 100% confident on my answer
+> > here, is if refcount was a regular int and we wanted to access it
+> > outside of a spinlock (to be clear, it doesn't look like this patch
+> > currently does this).  With RCU, if refcount was a regular int
+> > (unsigned or otherwise), I believe it would be possible for different
+> > threads of execution to potentially see different values of refcount
+> > (assuming one thread was adding/removing from the list).  Using a
+> > refcount_t would protect against this, alternatively, taking the
+> > spinlock should also protect against this.
 > 
-> Add a one-to-one iommu mapping for bman private data memory (FBPR).
-> This is required for BMAN to work without faults behind an iommu.
+> Ok, from the above it isn't clear to me if you are happy with the
+> current code or would prefer any changes, or from below that you still
+> need to work it through to make a pronouncement.  It sounds to me you
+> would be ok with *either* spinlock *or* refcount_t, but don't see the
+> need for both.
 > 
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> ---
->   drivers/soc/fsl/qbman/bman_ccsr.c | 11 +++++++++++
->   1 file changed, 11 insertions(+)
+I'll reiterate I think we should keep the refcount type just as it is, not for
+safetys sake, but for readability and convienience.
+
+Because the refcount currently only is used on add and delete operations
+(implying it is only read in paths where its also modified), we need to
+guarantee atomicity against multiple parallel writes.  We already have that
+guarantee because every path in which we call
+refcount_set/refcount_inc/refcount_dec_and_test occurs under the protection of
+the list spin lock, and so from that standpoint we don't need the additional
+guarantees offered by the refcount_t type.
+
+However, if it were to be converted to an int type, we would have to replace the
+refcount_dec_and_test call with this:
+if (x == 0)
+   warn_on_underflow
+   return
+x -= 1;
+if (x == 0)
+   preform_operations_to_free_list_entry
+
+I find refcount_dec_and_test to be far easier to read and maintain, and you
+still have to do all of this under the protection of a spin lock, to protect
+against multiple writes.  And if you ever find that you are adding a pure read
+side query of the refcount, you would need to hold the spin lock there as well,
+instead of just using the available refcount_read api call
+
+Yeah, you would save a few cycles if you didn't use an atomic type here, but
+we're only talking about paths from user space making system calls executing
+here (no high volume per packet receive paths or anything), and these paths have
+already taken a few locks (the list lock, the task lock, etc), so eliminating
+this one atomic isn't going to amount to anything.  Lets leave it as it is and
+buy ourselves the extra code readability.
+
+Neil
+
+> > As we all know, RCU can be tricky at times, so I may be off on the
+> > above; if I am, please provide an explanation so I (and likely others
+> > as well) can learn a little bit more. :)
+> > 
+> > -- 
+> > paul moore
+> > www.paul-moore.com
 > 
-> diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman_ccsr.c
-> index 7c3cc968053c..b209c79511bb 100644
-> --- a/drivers/soc/fsl/qbman/bman_ccsr.c
-> +++ b/drivers/soc/fsl/qbman/bman_ccsr.c
-> @@ -29,6 +29,7 @@
->    */
->   
->   #include "bman_priv.h"
-> +#include <linux/iommu.h>
->   
->   u16 bman_ip_rev;
->   EXPORT_SYMBOL(bman_ip_rev);
-> @@ -178,6 +179,7 @@ static int fsl_bman_probe(struct platform_device *pdev)
->   	int ret, err_irq;
->   	struct device *dev = &pdev->dev;
->   	struct device_node *node = dev->of_node;
-> +	struct iommu_domain *domain;
->   	struct resource *res;
->   	u16 id, bm_pool_cnt;
->   	u8 major, minor;
-> @@ -225,6 +227,15 @@ static int fsl_bman_probe(struct platform_device *pdev)
->   
->   	dev_dbg(dev, "Allocated FBPR 0x%llx 0x%zx\n", fbpr_a, fbpr_sz);
->   
-> +	/* Create an 1-to-1 iommu mapping for FBPR area */
-> +	domain = iommu_get_domain_for_dev(dev);
-
-If that's expected to be the default domain that you're grabbing, then 
-this is *incredibly* fragile. There's nothing to stop the IOVA that you 
-forcibly map from being automatically allocated later and causing some 
-other DMA mapping to fail noisily and unexpectedly. Furthermore, have 
-you tried this with "iommu.passthrough=1"?
-
-That said, I really don't understand what's going on here anyway :/
-
-As far as I can tell from qbman_init_private_mem(), fbpr_a comes from 
-dma_alloc_coherent() and thus would already be a mapped IOVA - isn't 
-this the stuff that Roy converted to nicely use shared-dma-pool regions 
-a while ago?
-
-Robin.
-
-> +	if (domain) {
-> +		ret = iommu_map(domain, fbpr_a, fbpr_a, fbpr_sz,
-> +				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
-> +		if (ret)
-> +			dev_warn(dev, "failed to iommu_map() %d\n", ret);
-> +	}
-> +
->   	bm_set_memory(fbpr_a, fbpr_sz);
->   
->   	err_irq = platform_get_irq(pdev, 0);
+> - RGB
+> 
+> --
+> Richard Guy Briggs <rgb@redhat.com>
+> Sr. S/W Engineer, Kernel Security, Base Operating Systems
+> Remote, Ottawa, Red Hat Canada
+> IRC: rgb, SunRaycer
+> Voice: +1.647.777.2635, Internal: (81) 32635
+> 
 > 
