@@ -2,90 +2,125 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED29BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25627C10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C24F720645
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22622183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbfC2I30 (ORCPT
+        id S1729162AbfC2IaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:29:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52800 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbfC2I3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 04:29:25 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A8FEF1E319;
-        Fri, 29 Mar 2019 08:29:25 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-24.pek2.redhat.com [10.72.12.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CE0935D961;
-        Fri, 29 Mar 2019 08:29:21 +0000 (UTC)
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, rafael@kernel.org, akpm@linux-foundation.org,
-        mhocko@suse.com, osalvador@suse.de, rppt@linux.ibm.com,
-        willy@infradead.org, fanc.fnst@cn.fujitsu.com,
-        Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 2/2] drivers/base/memory.c: Rename the misleading parameter
-Date:   Fri, 29 Mar 2019 16:29:15 +0800
-Message-Id: <20190329082915.19763-2-bhe@redhat.com>
-In-Reply-To: <20190329082915.19763-1-bhe@redhat.com>
-References: <20190329082915.19763-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 29 Mar 2019 08:29:25 +0000 (UTC)
+        Fri, 29 Mar 2019 04:30:12 -0400
+Received: from nat.nue.novell.com ([195.135.221.2]:19758 "EHLO suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728992AbfC2IaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 04:30:12 -0400
+Received: by suse.de (Postfix, from userid 1000)
+        id E08F6473C; Fri, 29 Mar 2019 09:30:10 +0100 (CET)
+Date:   Fri, 29 Mar 2019 09:30:10 +0100
+From:   Oscar Salvador <osalvador@suse.de>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     akpm@linux-foundation.org, mhocko@suse.com,
+        dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 0/4] mm,memory_hotplug: allocate memmap from hotadded
+ memory
+Message-ID: <20190329083006.j7j54nq6pdiffe7v@d104.suse.de>
+References: <20190328134320.13232-1-osalvador@suse.de>
+ <cc68ec6d-3ad2-a998-73dc-cb90f3563899@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cc68ec6d-3ad2-a998-73dc-cb90f3563899@redhat.com>
+User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The input parameter 'phys_index' of memory_block_action() is actually
-the section number, but not the phys_index of memory_block. Fix it.
+On Thu, Mar 28, 2019 at 04:09:06PM +0100, David Hildenbrand wrote:
+> On 28.03.19 14:43, Oscar Salvador wrote:
+> > Hi,
+> > 
+> > since last two RFCs were almost unnoticed (thanks David for the feedback),
+> > I decided to re-work some parts to make it more simple and give it a more
+> > testing, and drop the RFC, to see if it gets more attention.
+> > I also added David's feedback, so now all users of add_memory/__add_memory/
+> > add_memory_resource can specify whether they want to use this feature or not.
+> 
+> Terrific, I will also definetly try to make use of that in the next
+> virito-mem prototype (looks like I'll finally have time to look into it
+> again).
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
-v2->v3:
-  Rename the parameter to 'start_section_nr' from 'sec'.
+Great, I would like to see how this works there :-).
 
- drivers/base/memory.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+> I guess one important thing to mention is that it is no longer possible
+> to remove memory in a different granularity it was added. I slightly
+> remember that ACPI code sometimes "reuses" parts of already added
+> memory. We would have to validate that this can indeed not be an issue.
+> 
+> drivers/acpi/acpi_memhotplug.c:
+> 
+> result = __add_memory(node, info->start_addr, info->length);
+> if (result && result != -EEXIST)
+> 	continue;
+> 
+> What would happen when removing this dimm (->remove_memory())
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index cb8347500ce2..9ea972b2ae79 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -231,13 +231,14 @@ static bool pages_correctly_probed(unsigned long start_pfn)
-  * OK to have direct references to sparsemem variables in here.
-  */
- static int
--memory_block_action(unsigned long phys_index, unsigned long action, int online_type)
-+memory_block_action(unsigned long start_section_nr, unsigned long action,
-+		    int online_type)
- {
- 	unsigned long start_pfn;
- 	unsigned long nr_pages = PAGES_PER_SECTION * sections_per_block;
- 	int ret;
- 
--	start_pfn = section_nr_to_pfn(phys_index);
-+	start_pfn = section_nr_to_pfn(start_section_nr);
- 
- 	switch (action) {
- 	case MEM_ONLINE:
-@@ -251,7 +252,7 @@ memory_block_action(unsigned long phys_index, unsigned long action, int online_t
- 		break;
- 	default:
- 		WARN(1, KERN_WARNING "%s(%ld, %ld) unknown action: "
--		     "%ld\n", __func__, phys_index, action, action);
-+		     "%ld\n", __func__, start_section_nr, action, action);
- 		ret = -EINVAL;
- 	}
- 
+Yeah, I see the point.
+Well, we are safe here because the vmemmap data is being allocated in
+every call to __add_memory/add_memory/add_memory_resource.
+
+E.g:
+
+* Being memblock granularity 128M
+
+# object_add memory-backend-ram,id=ram0,size=256M
+# device_add pc-dimm,id=dimm0,memdev=ram0,node=1
+
+I am not sure how ACPI gets to split the DIMM in memory resources
+(aka mem_device->res_list), but it does not really matter.
+For each mem_device->res_list item, we will make a call to __add_memory,
+which will allocate the vmemmap data for __that__ item, we do not care
+about the others.
+
+And when removing the DIMM, acpi_memory_remove_memory will make a call to
+__remove_memory() for each mem_device->res_list item, and that will take
+care of free up the vmemmap data.
+
+Now, with all my tests, ACPI always considered a DIMM a single memory resource,
+but maybe under different circumstances it gets to split it in different mem
+resources.
+But it does not really matter, as vmemmap data is being created and isolated in
+every call to __add_memory.
+
+> Also have a look at
+> 
+> arch/powerpc/platforms/powernv/memtrace.c
+> 
+> I consider it evil code. It will simply try to offline+unplug *some*
+> memory it finds in *some granularity*. Not sure if this might be
+> problematic-
+
+Heh, memtrace from powerpc ^^, I saw some oddities coming from there, but
+with my code though because I did not get to test that in concret.
+But I am interested to see if it can trigger something, so I will be testing
+that the next days.
+
+> Would there be any "safety net" for adding/removing memory in different
+> granularities?
+
+Uhm, I do not think we need it, or at least I cannot think of a case where this
+could cause trouble with the current design.
+Can you think of any? 
+
+Thanks David ;-)
+
 -- 
-2.17.2
-
+Oscar Salvador
+SUSE L3
