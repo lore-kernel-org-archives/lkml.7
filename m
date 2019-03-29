@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7147C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2866FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6855206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED497206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:22:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RpKgE+4r"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rkpW0/L3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbfC2OWY (ORCPT
+        id S1729558AbfC2OW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:22:24 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59038 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728833AbfC2OWV (ORCPT
+        Fri, 29 Mar 2019 10:22:28 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40672 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729477AbfC2OW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:22:21 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2TEMJ3R088227;
-        Fri, 29 Mar 2019 09:22:19 -0500
+        Fri, 29 Mar 2019 10:22:27 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2TEML2P092390;
+        Fri, 29 Mar 2019 09:22:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553869339;
-        bh=Hf1I4JL1YAW4skLKsE8vMoLluuuGG356tCZImQjB+Fg=;
+        s=ti-com-17Q1; t=1553869341;
+        bh=qJnDgkOxqFadQoMiLLpjwlZ5BhKUQiBDQi/hrexNlJo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=RpKgE+4roYaHkQz6Iw7bPxpvh+rpbmXSk8ITgnscXTGctvbg6SWMMOWdDgr/urN2y
-         iyPg6uAqMDCV46Rmk+oMrECB2pcYhYw1yfGLpEzrNeFkcPzzxHGblu4VZ7LsTGjxgj
-         P9gCq0gbmFfqa0E+0Yb/oLIoQ5bkBVsiVxdHnNQs=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2TEMJo8096411
+        b=rkpW0/L3GJ3PLLEozOC+3Us8lrrqdQnANUPzCgZX2pxHRHrFZzAZhlLNxomRUIv41
+         AZGKQhwm8UiCBp+1kPUXqrCPNgeRDF3l8lYUhCjglO9jww0PnDv80UGs0KkbxAUv+a
+         mbCi0Cvq9sUghgsCDViOC9eNJRl2m0qgRKeOyxLg=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2TEMLP5045763
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 Mar 2019 09:22:19 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 29 Mar 2019 09:22:21 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
- Mar 2019 09:22:19 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2019 09:22:21 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 29 Mar 2019 09:22:19 -0500
+ Frontend Transport; Fri, 29 Mar 2019 09:22:21 -0500
 Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2TEMFPI097780;
-        Fri, 29 Mar 2019 09:22:17 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2TEMFPJ097780;
+        Fri, 29 Mar 2019 09:22:19 -0500
 From:   Faiz Abbas <faiz_abbas@ti.com>
 To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
 CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>,
         <faiz_abbas@ti.com>
-Subject: [PATCH 1/2] mmc: sdhci: Add Quirk for enabling HISPD under special conditions
-Date:   Fri, 29 Mar 2019 19:52:01 +0530
-Message-ID: <20190329142202.15000-2-faiz_abbas@ti.com>
+Subject: [PATCH 2/2] mmc: sdhci_am654: Add QUIRK2_TI_HISPD_BIT
+Date:   Fri, 29 Mar 2019 19:52:02 +0530
+Message-ID: <20190329142202.15000-3-faiz_abbas@ti.com>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20190329142202.15000-1-faiz_abbas@ti.com>
 References: <20190329142202.15000-1-faiz_abbas@ti.com>
@@ -67,76 +67,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some controllers on TI devices requires the HISPD bit to be cleared
-even in some high speed modes. Add a quirk that facilitates this
-requirement.
+According to the AM654x Data Manual[1], the setup timing in lower speed
+modes can only be met if the controller uses a falling edge data launch.
+
+To ensure this, the HIGH_SPEED_ENA (HOST_CONTROL[2]) bit should be
+cleared in default speed, SD high speed, MMC high speed, SDR12 and SDR25
+speed modes.
+
+Enable the SDHCI_QUIRK2_TI_HISPD_BIT quirk to facilitate this.
+
+[1] http://www.ti.com/lit/gpn/am6546 Section 5.10.5.16.1
 
 Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 ---
- drivers/mmc/host/sdhci.c | 36 ++++++++++++++++++++++++------------
- drivers/mmc/host/sdhci.h |  2 ++
- 2 files changed, 26 insertions(+), 12 deletions(-)
+ drivers/mmc/host/sdhci_am654.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index a8141ff9be03..ed4ed6054ddf 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1916,18 +1916,30 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
+diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
+index eea183e90f1b..739a91767d5a 100644
+--- a/drivers/mmc/host/sdhci_am654.c
++++ b/drivers/mmc/host/sdhci_am654.c
+@@ -172,7 +172,8 @@ static const struct sdhci_pltfm_data sdhci_am654_pdata = {
+ 	.ops = &sdhci_am654_ops,
+ 	.quirks = SDHCI_QUIRK_INVERTED_WRITE_PROTECT |
+ 		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
+-	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
++		   SDHCI_QUIRK2_TI_HISPD_BIT,
+ };
  
- 	if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
--		if (ios->timing == MMC_TIMING_SD_HS ||
--		     ios->timing == MMC_TIMING_MMC_HS ||
--		     ios->timing == MMC_TIMING_MMC_HS400 ||
--		     ios->timing == MMC_TIMING_MMC_HS200 ||
--		     ios->timing == MMC_TIMING_MMC_DDR52 ||
--		     ios->timing == MMC_TIMING_UHS_SDR50 ||
--		     ios->timing == MMC_TIMING_UHS_SDR104 ||
--		     ios->timing == MMC_TIMING_UHS_DDR50 ||
--		     ios->timing == MMC_TIMING_UHS_SDR25)
--			ctrl |= SDHCI_CTRL_HISPD;
--		else
--			ctrl &= ~SDHCI_CTRL_HISPD;
-+		if ((host->quirks2 & SDHCI_QUIRK2_TI_HISPD_BIT)) {
-+			if (ios->timing == MMC_TIMING_MMC_HS400 ||
-+			    ios->timing == MMC_TIMING_MMC_HS200 ||
-+			    ios->timing == MMC_TIMING_MMC_DDR52 ||
-+			    ios->timing == MMC_TIMING_UHS_SDR50 ||
-+			    ios->timing == MMC_TIMING_UHS_SDR104 ||
-+			    ios->timing == MMC_TIMING_UHS_DDR50)
-+				ctrl |= SDHCI_CTRL_HISPD;
-+			else
-+				ctrl &= ~SDHCI_CTRL_HISPD;
-+		} else {
-+			if (ios->timing == MMC_TIMING_SD_HS ||
-+			    ios->timing == MMC_TIMING_MMC_HS ||
-+			    ios->timing == MMC_TIMING_MMC_HS400 ||
-+			    ios->timing == MMC_TIMING_MMC_HS200 ||
-+			    ios->timing == MMC_TIMING_MMC_DDR52 ||
-+			    ios->timing == MMC_TIMING_UHS_SDR50 ||
-+			    ios->timing == MMC_TIMING_UHS_SDR104 ||
-+			    ios->timing == MMC_TIMING_UHS_DDR50 ||
-+			    ios->timing == MMC_TIMING_UHS_SDR25)
-+				ctrl |= SDHCI_CTRL_HISPD;
-+			else
-+				ctrl &= ~SDHCI_CTRL_HISPD;
-+		}
- 	}
- 
- 	if (host->version >= SDHCI_SPEC_300) {
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 01002cba1359..aac026c5e184 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -485,6 +485,8 @@ struct sdhci_host {
-  * block count.
-  */
- #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
-+/* Some TI devices need the high speed bit disabled even in high speed modes */
-+#define SDHCI_QUIRK2_TI_HISPD_BIT			(1<<19)
- 
- 	int irq;		/* Device IRQ */
- 	void __iomem *ioaddr;	/* Mapped address */
+ static int sdhci_am654_init(struct sdhci_host *host)
 -- 
 2.19.2
 
