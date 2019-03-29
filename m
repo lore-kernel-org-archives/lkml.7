@@ -2,116 +2,297 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71508C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 774A2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBAB2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:36:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IefhBnKe";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IefhBnKe"
+	by mail.kernel.org (Postfix) with ESMTP id 3E0C32082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:37:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbfC2IgM (ORCPT
+        id S1729134AbfC2Ih0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:36:12 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:57590 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728972AbfC2IgM (ORCPT
+        Fri, 29 Mar 2019 04:37:26 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:27701 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729009AbfC2IhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 04:36:12 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BC083609D4; Fri, 29 Mar 2019 08:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553848570;
-        bh=fi5prG/G9EA1xgUJ8XJXbzqeIE0ziOdMWngwno8k32w=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IefhBnKepUWcMsbC0L36YRMPOE2BQImasez8xb/AbYsp/i7hrqsqRS80wn2w3qOoP
-         XDNO9+/1VLEO8pRGXRwaX045ydCaibITyLV4X37PZyHciBReB+9oPZvyEeN2xWBfyF
-         n0qO2CxPmX0zukOcOEe84Bko1YAjalQC9hYXTjPQ=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8C3D8602F8;
-        Fri, 29 Mar 2019 08:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553848570;
-        bh=fi5prG/G9EA1xgUJ8XJXbzqeIE0ziOdMWngwno8k32w=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IefhBnKepUWcMsbC0L36YRMPOE2BQImasez8xb/AbYsp/i7hrqsqRS80wn2w3qOoP
-         XDNO9+/1VLEO8pRGXRwaX045ydCaibITyLV4X37PZyHciBReB+9oPZvyEeN2xWBfyF
-         n0qO2CxPmX0zukOcOEe84Bko1YAjalQC9hYXTjPQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8C3D8602F8
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] lib/scatterlist: Remove leftover from sg_page_iter
- comment
-To:     Gal Pressman <galpress@amazon.com>, linux-kernel@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>
-References: <1553800491-28583-1-git-send-email-galpress@amazon.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <8e313491-8859-d47f-f104-6d2d783cd63a@codeaurora.org>
-Date:   Fri, 29 Mar 2019 14:06:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 04:37:25 -0400
+X-UUID: dd789b4fc29a43f2a24a77472b830fe1-20190329
+X-UUID: dd789b4fc29a43f2a24a77472b830fe1-20190329
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <yunfei.dong@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 334106146; Fri, 29 Mar 2019 16:37:18 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 29 Mar 2019 16:37:16 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 29 Mar 2019 16:37:16 +0800
+From:   Yunfei Dong <yunfei.dong@mediatek.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Tiffany Lin <tiffany.lin@mediatek.com>
+CC:     Yunfei Dong <yunfei.dong@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH,v3] media: mtk-vcodec: enlarge struct vdec_pic_info fields
+Date:   Fri, 29 Mar 2019 16:37:14 +0800
+Message-ID: <1553848634-16929-1-git-send-email-yunfei.dong@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-In-Reply-To: <1553800491-28583-1-git-send-email-galpress@amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Enlarge the plane number to support more complex case
+and add the support for fmt change case.
 
-On 3/29/2019 12:44 AM, Gal Pressman wrote:
-> Commit d901b2760dc6 ("lib/scatterlist: Provide a DMA page iterator")
-> added the sg DMA iterator but a leftover remained in the sg_page_iter
-> documentation, remove it.
->
-> Cc: Jason Gunthorpe <jgg@mellanox.com>
-> Signed-off-by: Gal Pressman <galpress@amazon.com>
-> ---
->   include/linux/scatterlist.h | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-> index b4be960c7e5d..30a9a55c28ba 100644
-> --- a/include/linux/scatterlist.h
-> +++ b/include/linux/scatterlist.h
-> @@ -340,11 +340,11 @@ int sg_alloc_table_chained(struct sg_table *table, int nents,
->    * sg page iterator
->    *
->    * Iterates over sg entries page-by-page.  On each successful iteration, you
-> - * can call sg_page_iter_page(@piter) to get the current page and its dma
-> - * address.
+Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+---
+Change note:
+add comment for reserved.
+---
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c |   62 +++++++++++++-------
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h |   16 ++---
+ .../media/platform/mtk-vcodec/vdec/vdec_h264_if.c  |    4 +-
+ .../media/platform/mtk-vcodec/vdec/vdec_vp8_if.c   |    4 +-
+ .../media/platform/mtk-vcodec/vdec/vdec_vp9_if.c   |   11 ++--
+ 5 files changed, 57 insertions(+), 40 deletions(-)
 
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+index d022c65..43587c0 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+@@ -129,9 +129,9 @@ static struct vb2_buffer *get_display_buffer(struct mtk_vcodec_ctx *ctx)
+ 	mutex_lock(&ctx->lock);
+ 	if (dstbuf->used) {
+ 		vb2_set_plane_payload(&dstbuf->vb.vb2_buf, 0,
+-					ctx->picinfo.y_bs_sz);
++					ctx->picinfo.fb_sz[0]);
+ 		vb2_set_plane_payload(&dstbuf->vb.vb2_buf, 1,
+-					ctx->picinfo.c_bs_sz);
++					ctx->picinfo.fb_sz[1]);
+ 
+ 		dstbuf->ready_to_display = true;
+ 
+@@ -278,6 +278,27 @@ static void mtk_vdec_flush_decoder(struct mtk_vcodec_ctx *ctx)
+ 	clean_free_buffer(ctx);
+ }
+ 
++static void mtk_vdec_update_fmt(struct mtk_vcodec_ctx *ctx,
++				unsigned int pixelformat)
++{
++	struct mtk_video_fmt *fmt;
++	struct mtk_q_data *dst_q_data;
++	unsigned int k;
++
++	dst_q_data = &ctx->q_data[MTK_Q_DATA_DST];
++	for (k = 0; k < NUM_FORMATS; k++) {
++		fmt = &mtk_video_formats[k];
++		if (fmt->fourcc == pixelformat) {
++			mtk_v4l2_debug(1, "Update cap fourcc(%d -> %d)",
++				dst_q_data->fmt.fourcc, pixelformat);
++			dst_q_data->fmt = fmt;
++			return;
++		}
++	}
++
++	mtk_v4l2_err("Cannot get fourcc(%d), using init value", pixelformat);
++}
++
+ static int mtk_vdec_pic_info_update(struct mtk_vcodec_ctx *ctx)
+ {
+ 	unsigned int dpbsize = 0;
+@@ -299,6 +320,10 @@ static int mtk_vdec_pic_info_update(struct mtk_vcodec_ctx *ctx)
+ 		return -EINVAL;
+ 	}
+ 
++	if (ctx->last_decoded_picinfo.cap_fourcc != ctx->picinfo.cap_fourcc &&
++		ctx->picinfo.cap_fourcc != 0)
++		mtk_vdec_update_fmt(ctx, ctx->picinfo.cap_fourcc);
++
+ 	if ((ctx->last_decoded_picinfo.pic_w == ctx->picinfo.pic_w) ||
+ 	    (ctx->last_decoded_picinfo.pic_h == ctx->picinfo.pic_h))
+ 		return 0;
+@@ -352,11 +377,11 @@ static void mtk_vdec_worker(struct work_struct *work)
+ 	pfb = &dst_buf_info->frame_buffer;
+ 	pfb->base_y.va = vb2_plane_vaddr(&dst_buf->vb2_buf, 0);
+ 	pfb->base_y.dma_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
+-	pfb->base_y.size = ctx->picinfo.y_bs_sz + ctx->picinfo.y_len_sz;
++	pfb->base_y.size = ctx->picinfo.fb_sz[0];
+ 
+ 	pfb->base_c.va = vb2_plane_vaddr(&dst_buf->vb2_buf, 1);
+ 	pfb->base_c.dma_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 1);
+-	pfb->base_c.size = ctx->picinfo.c_bs_sz + ctx->picinfo.c_len_sz;
++	pfb->base_c.size = ctx->picinfo.fb_sz[1];
+ 	pfb->status = 0;
+ 	mtk_v4l2_debug(3, "===>[%d] vdec_if_decode() ===>", ctx->id);
+ 
+@@ -976,14 +1001,13 @@ static int vidioc_vdec_g_fmt(struct file *file, void *priv,
+ 		 * So we just return picinfo yet, and update picinfo in
+ 		 * stop_streaming hook function
+ 		 */
+-		q_data->sizeimage[0] = ctx->picinfo.y_bs_sz +
+-					ctx->picinfo.y_len_sz;
+-		q_data->sizeimage[1] = ctx->picinfo.c_bs_sz +
+-					ctx->picinfo.c_len_sz;
++		q_data->sizeimage[0] = ctx->picinfo.fb_sz[0];
++		q_data->sizeimage[1] = ctx->picinfo.fb_sz[1];
+ 		q_data->bytesperline[0] = ctx->last_decoded_picinfo.buf_w;
+ 		q_data->bytesperline[1] = ctx->last_decoded_picinfo.buf_w;
+ 		q_data->coded_width = ctx->picinfo.buf_w;
+ 		q_data->coded_height = ctx->picinfo.buf_h;
++		ctx->last_decoded_picinfo.cap_fourcc = q_data->fmt->fourcc;
+ 
+ 		/*
+ 		 * Width and height are set to the dimensions
+@@ -1103,10 +1127,11 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
+ 	struct mtk_vcodec_mem src_mem;
+ 	bool res_chg = false;
+ 	int ret = 0;
+-	unsigned int dpbsize = 1;
++	unsigned int dpbsize = 1, i = 0;
+ 	struct mtk_vcodec_ctx *ctx = vb2_get_drv_priv(vb->vb2_queue);
+ 	struct vb2_v4l2_buffer *vb2_v4l2 = NULL;
+ 	struct mtk_video_dec_buf *buf = NULL;
++	struct mtk_q_data *dst_q_data;
+ 
+ 	mtk_v4l2_debug(3, "[%d] (%d) id=%d, vb=%p",
+ 			ctx->id, vb->vb2_queue->type,
+@@ -1194,21 +1219,18 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
+ 	}
+ 
+ 	ctx->last_decoded_picinfo = ctx->picinfo;
+-	ctx->q_data[MTK_Q_DATA_DST].sizeimage[0] =
+-						ctx->picinfo.y_bs_sz +
+-						ctx->picinfo.y_len_sz;
+-	ctx->q_data[MTK_Q_DATA_DST].bytesperline[0] =
+-						ctx->picinfo.buf_w;
+-	ctx->q_data[MTK_Q_DATA_DST].sizeimage[1] =
+-						ctx->picinfo.c_bs_sz +
+-						ctx->picinfo.c_len_sz;
+-	ctx->q_data[MTK_Q_DATA_DST].bytesperline[1] = ctx->picinfo.buf_w;
++	dst_q_data = &ctx->q_data[MTK_Q_DATA_DST];
++	for (i = 0; i < dst_q_data->fmt->num_planes; i++) {
++		dst_q_data->sizeimage[i] = ctx->picinfo.fb_sz[i];
++		dst_q_data->bytesperline[i] = ctx->picinfo.buf_w;
++	}
++
+ 	mtk_v4l2_debug(2, "[%d] vdec_if_init() OK wxh=%dx%d pic wxh=%dx%d sz[0]=0x%x sz[1]=0x%x",
+ 			ctx->id,
+ 			ctx->picinfo.buf_w, ctx->picinfo.buf_h,
+ 			ctx->picinfo.pic_w, ctx->picinfo.pic_h,
+-			ctx->q_data[MTK_Q_DATA_DST].sizeimage[0],
+-			ctx->q_data[MTK_Q_DATA_DST].sizeimage[1]);
++			dst_q_data->sizeimage[0],
++			dst_q_data->sizeimage[1]);
+ 
+ 	ret = vdec_if_get_param(ctx, GET_PARAM_DPB_SIZE, &dpbsize);
+ 	if (dpbsize == 0)
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+index e7e2a10..662a84b 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+@@ -211,24 +211,20 @@ struct mtk_vcodec_pm {
+  * @pic_h: picture height
+  * @buf_w: picture buffer width (64 aligned up from pic_w)
+  * @buf_h: picture buffer heiht (64 aligned up from pic_h)
+- * @y_bs_sz: Y bitstream size
+- * @c_bs_sz: CbCr bitstream size
+- * @y_len_sz: additional size required to store decompress information for y
+- *		plane
+- * @c_len_sz: additional size required to store decompress information for cbcr
+- *		plane
++ * @fb_sz: bitstream size of each plane
+  * E.g. suppose picture size is 176x144,
+  *      buffer size will be aligned to 176x160.
++ * @cap_fourcc: fourcc number(may changed when resolution change)
++ * @reserved: align struct to 64-bit in order to adjust 32-bit and 64-bit os.
+  */
+ struct vdec_pic_info {
+ 	unsigned int pic_w;
+ 	unsigned int pic_h;
+ 	unsigned int buf_w;
+ 	unsigned int buf_h;
+-	unsigned int y_bs_sz;
+-	unsigned int c_bs_sz;
+-	unsigned int y_len_sz;
+-	unsigned int c_len_sz;
++	unsigned int fb_sz[VIDEO_MAX_PLANES];
++	unsigned int cap_fourcc;
++	unsigned int reserved;
+ };
+ 
+ /**
+diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+index 02c960c..cdbcd69 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+@@ -253,8 +253,8 @@ static void get_pic_info(struct vdec_h264_inst *inst,
+ 	*pic = inst->vsi->pic;
+ 	mtk_vcodec_debug(inst, "pic(%d, %d), buf(%d, %d)",
+ 			 pic->pic_w, pic->pic_h, pic->buf_w, pic->buf_h);
+-	mtk_vcodec_debug(inst, "Y(%d, %d), C(%d, %d)", pic->y_bs_sz,
+-			 pic->y_len_sz, pic->c_bs_sz, pic->c_len_sz);
++	mtk_vcodec_debug(inst, "fb size: Y(%d), C(%d)",
++			 pic->fb_sz[0], pic->fb_sz[1]);
+ }
+ 
+ static void get_crop_info(struct vdec_h264_inst *inst, struct v4l2_rect *cr)
+diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+index bac3723..ba79136 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+@@ -294,8 +294,8 @@ static void get_pic_info(struct vdec_vp8_inst *inst, struct vdec_pic_info *pic)
+ 
+ 	mtk_vcodec_debug(inst, "pic(%d, %d), buf(%d, %d)",
+ 			 pic->pic_w, pic->pic_h, pic->buf_w, pic->buf_h);
+-	mtk_vcodec_debug(inst, "Y(%d, %d), C(%d, %d)", pic->y_bs_sz,
+-			 pic->y_len_sz, pic->c_bs_sz, pic->c_len_sz);
++	mtk_vcodec_debug(inst, "fb size: Y(%d), C(%d)",
++			 pic->fb_sz[0], pic->fb_sz[1]);
+ }
+ 
+ static void vp8_dec_finish(struct vdec_vp8_inst *inst)
+diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+index bc8349b..6fe8320 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+@@ -702,10 +702,8 @@ static void init_all_fb_lists(struct vdec_vp9_inst *inst)
+ 
+ static void get_pic_info(struct vdec_vp9_inst *inst, struct vdec_pic_info *pic)
+ {
+-	pic->y_bs_sz = inst->vsi->buf_sz_y_bs;
+-	pic->c_bs_sz = inst->vsi->buf_sz_c_bs;
+-	pic->y_len_sz = inst->vsi->buf_len_sz_y;
+-	pic->c_len_sz = inst->vsi->buf_len_sz_c;
++	pic->fb_sz[0] = inst->vsi->buf_sz_y_bs + inst->vsi->buf_len_sz_y;
++	pic->fb_sz[1] = inst->vsi->buf_sz_c_bs + inst->vsi->buf_len_sz_c;
+ 
+ 	pic->pic_w = inst->vsi->pic_w;
+ 	pic->pic_h = inst->vsi->pic_h;
+@@ -714,8 +712,9 @@ static void get_pic_info(struct vdec_vp9_inst *inst, struct vdec_pic_info *pic)
+ 
+ 	mtk_vcodec_debug(inst, "pic(%d, %d), buf(%d, %d)",
+ 		 pic->pic_w, pic->pic_h, pic->buf_w, pic->buf_h);
+-	mtk_vcodec_debug(inst, "Y(%d, %d), C(%d, %d)", pic->y_bs_sz,
+-		 pic->y_len_sz, pic->c_bs_sz, pic->c_len_sz);
++	mtk_vcodec_debug(inst, "fb size: Y(%d), C(%d)",
++		pic->fb_sz[0],
++		pic->fb_sz[1]);
+ }
+ 
+ static void get_disp_fb(struct vdec_vp9_inst *inst, struct vdec_fb **out_fb)
+-- 
+1.7.9.5
 
-It took me a while till i exact found what you meant by left over.
-
-could have been more specific in the commit,but
-
-Looks  good to me to be removed.
-
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
--Mukesh
-
-
->   @piter->sg will point to the sg holding this page and
-> - * @piter->sg_pgoffset to the page's page offset within the sg. The iteration
-> - * will stop either when a maximum number of sg entries was reached or a
-> - * terminating sg (sg_last(sg) == true) was reached.
-> + * can call sg_page_iter_page(@piter) to get the current page.
-> + * @piter->sg will point to the sg holding this page and @piter->sg_pgoffset to
-> + * the page's page offset within the sg. The iteration will stop either when a
-> + * maximum number of sg entries was reached or a terminating sg
-> + * (sg_last(sg) == true) was reached.
->    */
->   struct sg_page_iter {
->   	struct scatterlist	*sg;		/* sg holding the page */
