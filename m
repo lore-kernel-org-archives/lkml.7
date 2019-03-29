@@ -2,311 +2,309 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D50AC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E07C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0FEF2183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:44:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hvic143J"
+	by mail.kernel.org (Postfix) with ESMTP id C0F98217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553867288;
+	bh=VF7L0We6Dn8bpIXY425Ny41eKVdQiiWtz/9Dj9T73w8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=y0SwR4RkUimTBA7PLsE14GTrhf18tn2eopl6XJMIsC5uv0vzE3KpQGqrCBVbH4Nea
+	 5JpafvtocwFMvxv4UfZtm597zEWhXo8b1frW07OnqiFlZw6uiCRb3upF9u9fMmsn9v
+	 v8GFu8IU9rGasKL0C/v4Dadvo9xM/wwC4A6hSlOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbfC2Noj (ORCPT
+        id S1729721AbfC2NsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 09:44:39 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:35444 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729614AbfC2Noi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 09:44:38 -0400
-Received: by mail-yw1-f67.google.com with SMTP id d132so687021ywa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 06:44:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IZeNVOh8Oj3MeNW2bKmTXh5xM83eIGuDZ5McPaHfjz8=;
-        b=hvic143J31Gpl4y3bO0knbHaCRO5C30SBHkaoTFh6lu/NvpJDQNdcJFRISQVp/fbPg
-         TNPnIbNES97rUNG/ZbgARmHcrxEjlRppRPeafyvUv+diHg0VuTS+2My+9JHSOuujVnJy
-         SDntPHdwzmCtXpxSlq7buSza2CuN5jirQ8roVUbhQp1Jrybj/5fg4raF/CuT3hXS3xSG
-         YFB8DrLfO8n3G4ZIv9R0cwy4eVQKHuTRc8sJWqWGv6106RAZ9Oa8ZKblbf1P0pulMBfZ
-         RvEjThedymL5X15Q1xyGnvFFSqNGw7pOSDzKitl+XLYq/JILFSbJ8hO07YqM27p197iK
-         AbqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IZeNVOh8Oj3MeNW2bKmTXh5xM83eIGuDZ5McPaHfjz8=;
-        b=SQODyTb4bWvBErrQDuR/oUEz57CQW6lOOFlZ0u2iDkkJDj/m1z5wFy9Mle8IB5rgSt
-         3f3NDIjYvj6qCzMWiKxSUoa+0PVdb3t0mzVcjTQW4FXq6bahrqnzrZcF99EX8YHiNVlp
-         A6OZyBfIOUkV7MSQRzkHGYCTb5VdWzoMj8OKiWdrAGDQzTdk2k7+uaOlC4DasV765n2B
-         KpbrCQgiYoUDWC2AbEaS74LFipWZtMOE/0KG0wYi2xoT/ZBSmm7msIWgPYnVSMvRxk6p
-         834I/n4y5LCm3zdjeAVc4Me0aOm6oW3WWikoVDp11cdmPsklzEzRJSTlVFaqxoen0mFY
-         /XNw==
-X-Gm-Message-State: APjAAAWRbqpqkTTcEEW75mN7ty/Nwe8oJXL/TRAbw9F2rOfJOhb1XkFK
-        fjakA0UcsPoWrNjXP1g7r/gBgxUsQvzZxOKsmimXAA==
-X-Google-Smtp-Source: APXvYqyer4omu0H8WbGgh/GMWVyMRnoq3P9erhiEZXlylmsTqtWWkJCskr8XiQABmTX9wYMepDOdJdk82xw4jskAQ5o=
-X-Received: by 2002:a81:7052:: with SMTP id l79mr39774397ywc.299.1553867077642;
- Fri, 29 Mar 2019 06:44:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190311082405.GB4731@dell> <CAPUE2usOdzbHN7NN=Vg8FWE1kR2ayPYxV8qy05eB+bZgG6wD3w@mail.gmail.com>
-In-Reply-To: <CAPUE2usOdzbHN7NN=Vg8FWE1kR2ayPYxV8qy05eB+bZgG6wD3w@mail.gmail.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Fri, 29 Mar 2019 06:44:26 -0700
-Message-ID: <CABXOdTf6kv=utOU92WbMcOAeXVKDZQ8RnNC7+t2C=7KgeNedeA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] iio: cros_ec: Add lid angle driver
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 29 Mar 2019 09:48:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729477AbfC2NsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 09:48:07 -0400
+Received: from localhost.localdomain (unknown [60.186.217.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56A442173C;
+        Fri, 29 Mar 2019 13:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553867285;
+        bh=VF7L0We6Dn8bpIXY425Ny41eKVdQiiWtz/9Dj9T73w8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=hAjxw8jTIoqgmeMpOqK4PXBMq/KxUjNqSi7N8g06mP3mrisglY6H/2pi/JirKNeZH
+         Lo//wto926mIdzpW7dl1Wf4YAcRVkr862L+jmfoXloA+5JxKuqvSqdkREM1aeK2o3U
+         aO6YofHXoRQEjuGujCcHW2Y1fxp7Wnx90PWFf3Tc=
+From:   guoren@kernel.org
+To:     arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        ren_guo@c-sky.com
+Subject: [PATCH] csky: Remove pre-processing pte-dirty&young in entry.S
+Date:   Fri, 29 Mar 2019 21:47:14 +0800
+Message-Id: <1553867234-3769-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 1:41 AM Gwendal Grignou <gwendal@chromium.org> wrote:
->
-> Add a IIO driver that reports the angle between the lid and the base for
-> ChromeOS convertible device.
->
-> Tested on eve with ToT EC firmware.
-> Check driver is loaded and lid angle is correct.
->
-> Change-Id: I3506be4a1405f108eebe6c1d3a3dbe975ca00519
+From: Guo Ren <ren_guo@c-sky.com>
 
-drop. checkpatch.pl should report that.
+do_page_fault()->
+  handle_mm_fault()->
+    __handle_mm_fault()->
+      handle_pte_fault()
 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> ---
->  drivers/iio/common/cros_ec_sensors/Kconfig    |   9 ++
->  drivers/iio/common/cros_ec_sensors/Makefile   |   1 +
->  .../cros_ec_sensors/cros_ec_lid_angle.c       | 138 ++++++++++++++++++
->  drivers/mfd/cros_ec_dev.c                     |  15 +-
->  4 files changed, 160 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
->
-> diff --git a/drivers/iio/common/cros_ec_sensors/Kconfig
-> b/drivers/iio/common/cros_ec_sensors/Kconfig
-> index 135f6825903f..aacc2ab9c34f 100644
-> --- a/drivers/iio/common/cros_ec_sensors/Kconfig
-> +++ b/drivers/iio/common/cros_ec_sensors/Kconfig
-> @@ -20,3 +20,12 @@ config IIO_CROS_EC_SENSORS
->           Accelerometers, Gyroscope and Magnetometer that are
->           presented by the ChromeOS EC Sensor hub.
->           Creates an IIO device for each functions.
-> +
-> +config IIO_CROS_EC_SENSORS_LID_ANGLE
-> +       tristate "ChromeOS EC Sensor for lid angle"
-> +       depends on IIO_CROS_EC_SENSORS_CORE
-> +       help
-> +         Module to report the angle between lid and base for some
-> +         convertible devices.
-> +         This module is loaded when the EC can calculate the angle between the base
-> +         and the lid.
-> diff --git a/drivers/iio/common/cros_ec_sensors/Makefile
-> b/drivers/iio/common/cros_ec_sensors/Makefile
-> index ec716ff2a775..a35ee232ac07 100644
-> --- a/drivers/iio/common/cros_ec_sensors/Makefile
-> +++ b/drivers/iio/common/cros_ec_sensors/Makefile
-> @@ -4,3 +4,4 @@
->
->  obj-$(CONFIG_IIO_CROS_EC_SENSORS_CORE) += cros_ec_sensors_core.o
->  obj-$(CONFIG_IIO_CROS_EC_SENSORS) += cros_ec_sensors.o
-> +obj-$(CONFIG_IIO_CROS_EC_SENSORS_LID_ANGLE) += cros_ec_lid_angle.o
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
-> b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
-> new file mode 100644
-> index 000000000000..92be07d7fa36
-> --- /dev/null
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
-> @@ -0,0 +1,138 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * cros_ec_lid_angle - Driver for CrOS EC lid angle sensor.
-> + *
-> + * Copyright 2018 Google, Inc
-> + *
-> + * This driver uses the cros-ec interface to communicate with the Chrome OS
-> + * EC about counter sensors. Counters are presented through
-> + * iio sysfs.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/common/cros_ec_sensors_core.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/kfifo_buf.h>
-> +#include <linux/iio/trigger.h>
-> +#include <linux/iio/triggered_buffer.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/cros_ec.h>
-> +#include <linux/mfd/cros_ec_commands.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#define DRV_NAME "cros-ec-lid-angle"
-> +
-> +/*
-> + * One channel for the lid angle, the other for timestamp.
-> + */
-> +static const struct iio_chan_spec cros_ec_lid_angle_channels[] = {
-> +       {
-> +               .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +               .scan_type.realbits = CROS_EC_SENSOR_BITS,
-> +               .scan_type.storagebits = CROS_EC_SENSOR_BITS,
-> +               .scan_type.sign = 'u',
-> +               .type = IIO_ANGL
-> +       },
-> +       IIO_CHAN_SOFT_TIMESTAMP(1)
-> +};
-> +
-> +/* State data for ec_sensors iio driver. */
-> +struct cros_ec_lid_angle_state {
-> +       /* Shared by all sensors */
-> +       struct cros_ec_sensors_core_state core;
-> +};
-> +
-> +static int cros_ec_sensors_read_lid_angle(struct iio_dev *indio_dev,
-> +                                         unsigned long scan_mask, s16 *data)
-> +{
-> +       struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
-> +       int ret;
-> +
-> +       st->param.cmd = MOTIONSENSE_CMD_LID_ANGLE;
-> +       ret = cros_ec_motion_send_host_cmd(st, sizeof(st->resp->lid_angle));
-> +       if (ret) {
-> +               dev_warn(&indio_dev->dev, "Unable to read lid angle\n");
-> +               return ret;
-> +       }
-> +
-> +       *data = st->resp->lid_angle.value;
-> +       return 0;
-> +}
-> +
-> +static int cros_ec_lid_angle_read(struct iio_dev *indio_dev,
-> +                                   struct iio_chan_spec const *chan,
-> +                                   int *val, int *val2, long mask)
-> +{
-> +       struct cros_ec_lid_angle_state *st = iio_priv(indio_dev);
-> +       s16 data;
-> +       int ret;
-> +
-> +       mutex_lock(&st->core.cmd_lock);
-> +       ret = cros_ec_sensors_read_lid_angle(indio_dev, 1, &data);
-> +       if (ret)
-> +               return ret;
-> +       *val = data;
-> +       mutex_unlock(&st->core.cmd_lock);
-> +       return IIO_VAL_INT;
-> +}
-> +
-> +static const struct iio_info cros_ec_lid_angle_info = {
-> +       .read_raw = &cros_ec_lid_angle_read,
-> +};
-> +
-> +static int cros_ec_lid_angle_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct iio_dev *indio_dev;
-> +       struct cros_ec_lid_angle_state *state;
-> +       int ret;
-> +
-> +       indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
-> +       if (!indio_dev)
-> +               return -ENOMEM;
-> +
-> +       ret = cros_ec_sensors_core_init(pdev, indio_dev, false);
-> +       if (ret)
-> +               return ret;
-> +
-> +       indio_dev->info = &cros_ec_lid_angle_info;
-> +       state = iio_priv(indio_dev);
-> +       indio_dev->channels = cros_ec_lid_angle_channels;
-> +       indio_dev->num_channels = ARRAY_SIZE(cros_ec_lid_angle_channels);
-> +
-> +       state->core.read_ec_sensors_data = cros_ec_sensors_read_lid_angle;
-> +
-> +       ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
-> +                       cros_ec_sensors_capture, NULL);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return devm_iio_device_register(dev, indio_dev);
-> +}
-> +
-> +static const struct platform_device_id cros_ec_lid_angle_ids[] = {
-> +       {
-> +               .name = DRV_NAME,
-> +       },
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(platform, cros_ec_lid_angle_ids);
-> +
-> +static struct platform_driver cros_ec_lid_angle_platform_driver = {
-> +       .driver = {
-> +               .name   = DRV_NAME,
-> +               .pm     = &cros_ec_sensors_pm_ops,
-> +       },
-> +       .probe          = cros_ec_lid_angle_probe,
-> +       .id_table       = cros_ec_lid_angle_ids,
-> +};
-> +module_platform_driver(cros_ec_lid_angle_platform_driver);
-> +
-> +MODULE_DESCRIPTION("ChromeOS EC driver for reporting convertible lid angle.");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index d275deaecb12..11b5b2fd1f33 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -297,13 +297,17 @@ static void cros_ec_sensors_register(struct
-> cros_ec_dev *ec)
->
->         resp = (struct ec_response_motion_sense *)msg->data;
->         sensor_num = resp->dump.sensor_count;
-> -       /* Allocate 1 extra sensors in FIFO are needed */
-> -       sensor_cells = kcalloc(sensor_num + 1, sizeof(struct mfd_cell),
-> +       /*
-> +        * Allocate extra sensors if lid angle sensor or FIFO are needed.
-> +        */
-> +#define NUM_EXTRA_SENSORS 2
-> +       sensor_cells = kcalloc(sensor_num + NUM_EXTRA_SENSORS,
-> +                              sizeof(struct mfd_cell),
->                                GFP_KERNEL);
->         if (sensor_cells == NULL)
->                 goto error;
->
-> -       sensor_platforms = kcalloc(sensor_num + 1,
-> +       sensor_platforms = kcalloc(sensor_num,
+The handle_pte_fault() will call pte_mkdirty() and pte_mkyoung() to set
+up dirty or valid bit in page-table entry. So there is no need to
+pre-process first-access and first-write in entry.S with assembly code.
 
-Are you sure about this, or did "+ NUM_EXTRA_SENSORS" get lost ?
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+---
+ arch/csky/abiv1/inc/abi/entry.h |  20 --------
+ arch/csky/abiv2/inc/abi/entry.h |  24 ----------
+ arch/csky/include/asm/pgtable.h |  10 ++--
+ arch/csky/kernel/entry.S        | 101 ++++++++--------------------------------
+ 4 files changed, 24 insertions(+), 131 deletions(-)
 
->                                    sizeof(struct cros_ec_sensor_platform),
->                                    GFP_KERNEL);
->         if (sensor_platforms == NULL)
-> @@ -363,6 +367,11 @@ static void cros_ec_sensors_register(struct
-> cros_ec_dev *ec)
->                 sensor_cells[id].name = "cros-ec-ring";
->                 id++;
->         }
-> +       if (cros_ec_check_features(ec,
-> +                               EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS)) {
-> +               sensor_cells[id].name = "cros-ec-lid-angle";
-> +               id++;
-> +       }
->
->         ret = mfd_add_devices(ec->dev, 0, sensor_cells, id,
->                               NULL, 0, NULL);
-> --
-> 2.21.0.360.g471c308f928-goog
+diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
+index 7dacce4..9e343f4 100644
+--- a/arch/csky/abiv1/inc/abi/entry.h
++++ b/arch/csky/abiv1/inc/abi/entry.h
+@@ -126,30 +126,10 @@
+ .endm
+ 
+ /* MMU registers operators. */
+-.macro RD_MIR	rx
+-	cprcr   \rx, cpcr0
+-.endm
+-
+ .macro RD_MEH	rx
+ 	cprcr   \rx, cpcr4
+ .endm
+ 
+-.macro RD_MCIR	rx
+-	cprcr   \rx, cpcr8
+-.endm
+-
+-.macro RD_PGDR  rx
+-	cprcr   \rx, cpcr29
+-.endm
+-
+-.macro WR_MEH	rx
+-	cpwcr   \rx, cpcr4
+-.endm
+-
+-.macro WR_MCIR	rx
+-	cpwcr   \rx, cpcr8
+-.endm
+-
+ .macro SETUP_MMU rx
+ 	lrw	\rx, PHYS_OFFSET | 0xe
+ 	cpwcr	\rx, cpcr30
+diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
+index ea376ed..eb8fecc 100644
+--- a/arch/csky/abiv2/inc/abi/entry.h
++++ b/arch/csky/abiv2/inc/abi/entry.h
+@@ -141,34 +141,10 @@
+ .endm
+ 
+ /* MMU registers operators. */
+-.macro RD_MIR rx
+-	mfcr	\rx, cr<0, 15>
+-.endm
+-
+ .macro RD_MEH rx
+ 	mfcr	\rx, cr<4, 15>
+ .endm
+ 
+-.macro RD_MCIR rx
+-	mfcr	\rx, cr<8, 15>
+-.endm
+-
+-.macro RD_PGDR rx
+-	mfcr	\rx, cr<29, 15>
+-.endm
+-
+-.macro RD_PGDR_K rx
+-	mfcr	\rx, cr<28, 15>
+-.endm
+-
+-.macro WR_MEH rx
+-	mtcr	\rx, cr<4, 15>
+-.endm
+-
+-.macro WR_MCIR rx
+-	mtcr	\rx, cr<8, 15>
+-.endm
+-
+ .macro SETUP_MMU rx
+ 	lrw	\rx, PHYS_OFFSET | 0xe
+ 	mtcr	\rx, cr<30, 15>
+diff --git a/arch/csky/include/asm/pgtable.h b/arch/csky/include/asm/pgtable.h
+index dcea277..60382aa 100644
+--- a/arch/csky/include/asm/pgtable.h
++++ b/arch/csky/include/asm/pgtable.h
+@@ -218,17 +218,15 @@ static inline pte_t pte_mkwrite(pte_t pte)
+ 
+ static inline pte_t pte_mkdirty(pte_t pte)
+ {
+-	pte_val(pte) |= _PAGE_MODIFIED;
+-	if (pte_val(pte) & _PAGE_WRITE)
+-		pte_val(pte) |= _PAGE_DIRTY;
++	pte_val(pte) |= _PAGE_MODIFIED | _PAGE_DIRTY;
++
+ 	return pte;
+ }
+ 
+ static inline pte_t pte_mkyoung(pte_t pte)
+ {
+-	pte_val(pte) |= _PAGE_ACCESSED;
+-	if (pte_val(pte) & _PAGE_READ)
+-		pte_val(pte) |= _PAGE_VALID;
++	pte_val(pte) |= _PAGE_ACCESSED | _PAGE_VALID;
++
+ 	return pte;
+ }
+ 
+diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
+index ecc6e7d..6d89837 100644
+--- a/arch/csky/kernel/entry.S
++++ b/arch/csky/kernel/entry.S
+@@ -13,91 +13,24 @@
+ #include <asm/page.h>
+ #include <asm/thread_info.h>
+ 
+-#define PTE_INDX_MSK    0xffc
+-#define PTE_INDX_SHIFT  10
+-#define _PGDIR_SHIFT    22
+-
+-.macro tlbop_begin name, val0, val1, val2
+-ENTRY(csky_\name)
+-	mtcr    a3, ss2
+-	mtcr    r6, ss3
+-	mtcr    a2, ss4
+-
+-	RD_PGDR	r6
+-	RD_MEH	a3
++.macro tlbop_begin
++	SAVE_ALL EPC_KEEP
+ #ifdef CONFIG_CPU_HAS_TLBI
+-	tlbi.vaas a3
++	RD_MEH	a2
++	tlbi.vaas a2
+ 	sync.is
+-
+-	btsti	a3, 31
+-	bf	1f
+-	RD_PGDR_K r6
+-1:
+ #else
+ 	bgeni	a2, 31
+ 	WR_MCIR	a2
+ 	bgeni	a2, 25
+ 	WR_MCIR	a2
+ #endif
+-	bclri   r6, 0
+-	lrw	a2, PHYS_OFFSET
+-	subu	r6, a2
+-	bseti	r6, 31
+-
+-	mov     a2, a3
+-	lsri    a2, _PGDIR_SHIFT
+-	lsli    a2, 2
+-	addu    r6, a2
+-	ldw     r6, (r6)
+-
+-	lrw	a2, PHYS_OFFSET
+-	subu	r6, a2
+-	bseti	r6, 31
+-
+-	lsri    a3, PTE_INDX_SHIFT
+-	lrw     a2, PTE_INDX_MSK
+-	and     a3, a2
+-	addu    r6, a3
+-	ldw     a3, (r6)
+-
+-	movi	a2, (_PAGE_PRESENT | \val0)
+-	and     a3, a2
+-	cmpne   a3, a2
+-	bt	\name
+-
+-	/* First read/write the page, just update the flags */
+-	ldw     a3, (r6)
+-	bgeni   a2, PAGE_VALID_BIT
+-	bseti   a2, PAGE_ACCESSED_BIT
+-	bseti   a2, \val1
+-	bseti   a2, \val2
+-	or      a3, a2
+-	stw     a3, (r6)
+-
+-	/* Some cpu tlb-hardrefill bypass the cache */
+-#ifdef CONFIG_CPU_NEED_TLBSYNC
+-	movi	a2, 0x22
+-	bseti	a2, 6
+-	mtcr	r6, cr22
+-	mtcr	a2, cr17
+-	sync
+-#endif
+-
+-	mfcr    a3, ss2
+-	mfcr    r6, ss3
+-	mfcr    a2, ss4
+-	rte
+-\name:
+-	mfcr    a3, ss2
+-	mfcr    r6, ss3
+-	mfcr    a2, ss4
+-	SAVE_ALL EPC_KEEP
+ .endm
+-.macro tlbop_end is_write
++
++.macro tlbop_end
++	mov     a0, sp
+ 	RD_MEH	a2
+ 	psrset  ee, ie
+-	mov     a0, sp
+-	movi    a1, \is_write
+ 	jbsr    do_page_fault
+ 	movi    r11_sig, 0             /* r11 = 0, Not a syscall. */
+ 	jmpi    ret_from_exception
+@@ -105,17 +38,23 @@ ENTRY(csky_\name)
+ 
+ .text
+ 
+-tlbop_begin tlbinvalidl, _PAGE_READ, PAGE_VALID_BIT, PAGE_ACCESSED_BIT
+-tlbop_end 0
++ENTRY(csky_tlbinvalidl)
++	tlbop_begin
++	movi	a1, 0
++	tlbop_end
+ 
+-tlbop_begin tlbinvalids, _PAGE_WRITE, PAGE_DIRTY_BIT, PAGE_MODIFIED_BIT
+-tlbop_end 1
++ENTRY(csky_tlbinvalids)
++	tlbop_begin
++	movi	a1, 1
++	tlbop_end
+ 
+-tlbop_begin tlbmodified, _PAGE_WRITE, PAGE_DIRTY_BIT, PAGE_MODIFIED_BIT
++ENTRY(csky_tlbmodified)
++	tlbop_begin
+ #ifndef CONFIG_CPU_HAS_LDSTEX
+-jbsr csky_cmpxchg_fixup
++	jbsr csky_cmpxchg_fixup
+ #endif
+-tlbop_end 1
++	movi	a1, 1
++	tlbop_end
+ 
+ ENTRY(csky_systemcall)
+ 	SAVE_ALL EPC_INCREASE
+-- 
+2.7.4
+
