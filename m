@@ -2,158 +2,170 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA1AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76976C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE2F2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418672054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:16:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+lq4tE3"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="AitOjv1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbfC2IQD (ORCPT
+        id S1729056AbfC2IQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:16:03 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35044 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfC2IQD (ORCPT
+        Fri, 29 Mar 2019 04:16:38 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46224 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728970AbfC2IQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 04:16:03 -0400
-Received: by mail-pg1-f193.google.com with SMTP id g8so851290pgf.2;
-        Fri, 29 Mar 2019 01:16:02 -0700 (PDT)
+        Fri, 29 Mar 2019 04:16:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t17so1389423wrw.13
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 01:16:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cTZwErMy/6ShUmeZ7S5k9yA7EQi480v9XQtsikB0Iyk=;
-        b=W+lq4tE3YCjD1U52oRDyw0MITmhs+JG37iEPbBOYYWnLNS7rw+007GeaP97To0ALve
-         5a59trA+XOpzFum/LO+uIHb3TO4/jgJFpHJPIjzP5bzR4vVQDHDkatNsQ0gVgIqkjw7p
-         SILeRRq4UNFhzFd4spUDKsjR7StsjIjhqfAeQrgvsOVbdCZBBRPNTePmKQCR4dfeO3rl
-         ecDlPtmpYenyBmsstmzszzPmSToyR5hDfcBW69h5Poq2DvyYkLWwH3p4UqbegK3Hkrc/
-         AmR2rmjJqsgMVd7zyTITpAH9KhZJp6sBJu3S1HAAVDxVDNNJSeZJuUjb1sloQNoAP0Ge
-         qx6A==
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6BlD6VMkCe5xLw5Q7JuApqRY+x99uFC+suvVK7/jEtI=;
+        b=AitOjv1E7DnR5LIcpHtjt2Ck5UTPwRTsi9Ts+RjNNc0hLxZiNTN8RxfAr7C3zXsbqD
+         oMf9QDS10sRrd7/XcNDrkKmMjUd7i44oCG7e7a/D0+aLQFc13rKmif7ts/qsUf7VA8Cv
+         MdDgvYdrPBH8LJDXA7oLpSOKNS6JGDtQqIYLOFu9VMR/iHYLaUzZDzPwqjTRaLlZUofy
+         Djbw15Rd3AG+e65koDZF3uZMz9dCfc+056FYAE8G/WGpyiRfSI2A+XI6IEJCJ1Ec39iD
+         vc7PM0mZtSf7/LCqpPBhmAm804eMPgMsRdjjrIRODTYUBCwWnqbKLXqBGrfeLpf702fR
+         YAww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cTZwErMy/6ShUmeZ7S5k9yA7EQi480v9XQtsikB0Iyk=;
-        b=pl+DINtArE2vhcZXxTZP9GHlDSYRguUpZXTgKLTA+qYJb5LhFFK0zxov/qs46/Yo+h
-         XiPPxyTx4jKfET84wj0a6yDonD4QCZlVxqKt/hBSDpFlfLhZqFbQuW9qhiSbG8oD8tLv
-         HWRr+Nj9MJ11tWRsgrJyxsUYavM8VvCaHHL8BKTgv0t6fM9SMVl/ouOuAL43L1bKZCms
-         AQuKSrF2SfT1x/Pd7uCi7UROxJr3muMLZBgppwGHI5t/xVXES9Ix38N9ls1WJddvfJAA
-         c1qvHUu9k4f38AK64vhnQVzi04PahVmGQHLZuEufmq2OJhmsTIFhumSbPf5WJoonsmAG
-         z/mg==
-X-Gm-Message-State: APjAAAWmLvY39BATHFmxOnnfdemOt809o6Jj/eT4NnN5MdnI4gZC+KMW
-        aUGpBUBAZHddghUlg8nTUnY=
-X-Google-Smtp-Source: APXvYqwR14W3/1b/twVjcbAzYIbpu4qF9zun+Lyl3trUkTfVw+1PD3qlqY+YWADGFtlIEzEbg8o8Jg==
-X-Received: by 2002:aa7:8719:: with SMTP id b25mr45884459pfo.90.1553847362300;
-        Fri, 29 Mar 2019 01:16:02 -0700 (PDT)
-Received: from mail.google.com ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id c3sm1923288pfo.2.2019.03.29.01.16.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 01:16:01 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 08:15:59 +0000
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kconfig/[mn]conf: handle backspace (^H) key
-Message-ID: <20190329081558.u54hczsjheacwvtk@mail.google.com>
-References: <20190325151647.11581-1-changbin.du@gmail.com>
- <CAK7LNARkTQoAhjk7qPR4Pn0SHKvW4cvSrtC5brATQ2LbsWegtw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6BlD6VMkCe5xLw5Q7JuApqRY+x99uFC+suvVK7/jEtI=;
+        b=HptaNQT8lz3mmDYCui5GlQxrAwoF66VWdAk846w89ZmuUdFfZUdtRWxj5RGxzZ+enA
+         k4G2NQw/ObjRSAuhl7dErPVWCOoSu0R5ARqd/Ayc4eilhFxSSkqTTQ+xCUU7zYEFusov
+         tbjrnMQcxsL9mKPLwUBmvcNbafBXTwo7xhiYv5bPYCHCUYV2XAjmbU/k9ljHU4BVKl+F
+         8K1Y9GgmwRx9qdmUQSirJ1MUUX1e88ReAi14hekfBDXhPobuhpeKSTvoA48n1S8uSBj5
+         arX0YSjy7X0e/U/Vg24abFQ5clh6PQiKaInUjtMiak32GxEjJv+96z8zJKKXoDQSC2ar
+         AYYg==
+X-Gm-Message-State: APjAAAVHYr/7l1/0aQk5BBBGly2Eb/3VPKaG1j7RMKVJYAM5w4jDXyhr
+        VgBWfXiMqDK26bIx4rHDq4fxJTCDnSD0Y8++5oPi/A==
+X-Google-Smtp-Source: APXvYqyi9OYvo6IDDR5vozj62Dcv3jTa9zAuTSjBcry+S+I6wUJD8wVOQd8zwQjAsAB/JPa/+Xzcjs+zPjts/SYHU3o=
+X-Received: by 2002:adf:f60e:: with SMTP id t14mr28241557wrp.39.1553847394591;
+ Fri, 29 Mar 2019 01:16:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARkTQoAhjk7qPR4Pn0SHKvW4cvSrtC5brATQ2LbsWegtw@mail.gmail.com>
-User-Agent: NeoMutt/20180716-508-7c9a6d
+References: <20190328234328.15860-1-colin.king@canonical.com>
+In-Reply-To: <20190328234328.15860-1-colin.king@canonical.com>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Fri, 29 Mar 2019 09:16:23 +0100
+Message-ID: <CAMGffE=F-NUsfiBpDTO=U_7vOaEQ3QeUQ1+pw4GiEs9WMNj-sg@mail.gmail.com>
+Subject: Re: [PATCH] scsi: pm8001: clean up structurally dead code when
+ PM8001_USE_MSIX is defined
+To:     Colin King <colin.king@canonical.com>
+Cc:     Jack Wang <jinpu.wang@profitbricks.com>,
+        lindar_liu <lindar_liu@usish.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Linux SCSI Mailinglist <linux-scsi@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 04:50:18PM +0900, Masahiro Yamada wrote:
-> On Tue, Mar 26, 2019 at 12:16 AM Changbin Du <changbin.du@gmail.com> wrote:
-> >
-> > Backspace is not working on some terminal emulators which do not send the
-> > key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
-> > But currently only '$?' is handled.
-> 
-> 
-> 
-> Shall I fix '$?' to '^?'
-> if it is a typo?
+On Fri, Mar 29, 2019 at 12:43 AM Colin King <colin.king@canonical.com> wrote:
 >
-yes, please. It is a typo, sorry.
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> When macro PM8001_USE_MSIX is defined there are redundant dead code
+> calls to pm8001_chip_intx_interrupt_{enable|disable}. Clean this up
+> by compiling in the appropriate enable/disable handlers for the
+> defined PM8001_USE_MSIX and undefined PM8001_USE_MSIX cases.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Thanks, Colin,
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+> ---
+>  drivers/scsi/pm8001/pm8001_hwi.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
+> index e4209091c1da..7d81246a432b 100644
+> --- a/drivers/scsi/pm8001/pm8001_hwi.c
+> +++ b/drivers/scsi/pm8001/pm8001_hwi.c
+> @@ -1204,6 +1204,7 @@ void pm8001_chip_iounmap(struct pm8001_hba_info *pm8001_ha)
+>         }
+>  }
+>
+> +#ifndef PM8001_USE_MSIX
+>  /**
+>   * pm8001_chip_interrupt_enable - enable PM8001 chip interrupt
+>   * @pm8001_ha: our hba card information
+> @@ -1225,6 +1226,8 @@ pm8001_chip_intx_interrupt_disable(struct pm8001_hba_info *pm8001_ha)
+>         pm8001_cw32(pm8001_ha, 0, MSGU_ODMR, ODMR_MASK_ALL);
+>  }
+>
+> +#else
+> +
+>  /**
+>   * pm8001_chip_msix_interrupt_enable - enable PM8001 chip interrupt
+>   * @pm8001_ha: our hba card information
+> @@ -1256,6 +1259,7 @@ pm8001_chip_msix_interrupt_disable(struct pm8001_hba_info *pm8001_ha,
+>         msi_index += MSIX_TABLE_BASE;
+>         pm8001_cw32(pm8001_ha, 0,  msi_index, MSIX_INTERRUPT_DISABLE);
+>  }
+> +#endif
+>
+>  /**
+>   * pm8001_chip_interrupt_enable - enable PM8001 chip interrupt
+> @@ -1266,10 +1270,9 @@ pm8001_chip_interrupt_enable(struct pm8001_hba_info *pm8001_ha, u8 vec)
+>  {
+>  #ifdef PM8001_USE_MSIX
+>         pm8001_chip_msix_interrupt_enable(pm8001_ha, 0);
+> -       return;
+> -#endif
+> +#else
+>         pm8001_chip_intx_interrupt_enable(pm8001_ha);
+> -
+> +#endif
+>  }
+>
+>  /**
+> @@ -1281,10 +1284,9 @@ pm8001_chip_interrupt_disable(struct pm8001_hba_info *pm8001_ha, u8 vec)
+>  {
+>  #ifdef PM8001_USE_MSIX
+>         pm8001_chip_msix_interrupt_disable(pm8001_ha, 0);
+> -       return;
+> -#endif
+> +#else
+>         pm8001_chip_intx_interrupt_disable(pm8001_ha);
+> -
+> +#endif
+>  }
+>
+>  /**
+> --
+> 2.20.1
+>
 
-> 
-> 
-> 
-> > Let's also handle '^H' for those
-> > terminals.
-> >
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > ---
-> >  scripts/kconfig/lxdialog/inputbox.c | 3 ++-
-> >  scripts/kconfig/nconf.c             | 2 +-
-> >  scripts/kconfig/nconf.gui.c         | 3 ++-
-> >  3 files changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
-> > index 611945611bf8..1dcfb288ee63 100644
-> > --- a/scripts/kconfig/lxdialog/inputbox.c
-> > +++ b/scripts/kconfig/lxdialog/inputbox.c
-> > @@ -113,7 +113,8 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
-> >                         case KEY_DOWN:
-> >                                 break;
-> >                         case KEY_BACKSPACE:
-> > -                       case 127:
-> > +                       case 8:   /* ^H */
-> > +                       case 127: /* ^? */
-> >                                 if (pos) {
-> >                                         wattrset(dialog, dlg.inputbox.atr);
-> >                                         if (input_x == 0) {
-> > diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
-> > index a4670f4e825a..ac92c0ded6c5 100644
-> > --- a/scripts/kconfig/nconf.c
-> > +++ b/scripts/kconfig/nconf.c
-> > @@ -1048,7 +1048,7 @@ static int do_match(int key, struct match_state *state, int *ans)
-> >                 state->match_direction = FIND_NEXT_MATCH_UP;
-> >                 *ans = get_mext_match(state->pattern,
-> >                                 state->match_direction);
-> > -       } else if (key == KEY_BACKSPACE || key == 127) {
-> > +       } else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
-> >                 state->pattern[strlen(state->pattern)-1] = '\0';
-> >                 adj_match_dir(&state->match_direction);
-> >         } else
-> > diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
-> > index 7be620a1fcdb..77f525a8617c 100644
-> > --- a/scripts/kconfig/nconf.gui.c
-> > +++ b/scripts/kconfig/nconf.gui.c
-> > @@ -439,7 +439,8 @@ int dialog_inputbox(WINDOW *main_window,
-> >                 case KEY_F(F_EXIT):
-> >                 case KEY_F(F_BACK):
-> >                         break;
-> > -               case 127:
-> > +               case 8:   /* ^H */
-> > +               case 127: /* ^? */
-> >                 case KEY_BACKSPACE:
-> >                         if (cursor_position > 0) {
-> >                                 memmove(&result[cursor_position-1],
-> > --
-> > 2.17.1
-> >
-> 
-> 
-> -- 
-> Best Regards
-> Masahiro Yamada
 
 -- 
-Cheers,
-Changbin Du
+Jack Wang
+Linux Kernel Developer
+
+1&1 IONOS Cloud GmbH | Greifswalder Str. 207 | 10405 Berlin | Germany
+Phone: +49 30 57700-8042 | Fax: +49 30 57700-8598
+E-mail: jinpu.wang@cloud.ionos.com | Web: www.ionos.de
+
+
+Head Office: Berlin, Germany
+District Court Berlin Charlottenburg, Registration number: HRB 125506 B
+Executive Management: Christoph Steffens, Matthias Steinberg, Achim Weiss
+
+Member of United Internet
+
+This e-mail may contain confidential and/or privileged information. If
+you are not the intended recipient of this e-mail, you are hereby
+notified that saving, distribution or use of the content of this
+e-mail in any way is prohibited. If you have received this e-mail in
+error, please notify the sender and delete the e-mail.
