@@ -2,135 +2,126 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA96C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7558FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB15206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A832173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:24:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XlnkrGBs";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mm6+59U2"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="BYg4mQrn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbfC2OW1 (ORCPT
+        id S1729206AbfC2OYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:22:27 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:55728 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729429AbfC2OWY (ORCPT
+        Fri, 29 Mar 2019 10:24:30 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33283 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728630AbfC2OY3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:22:24 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 69B10615AB; Fri, 29 Mar 2019 14:22:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553869343;
-        bh=0aIIsZihW3MUOyRReWGYqFxmPt7yP7UL7vWuurCaFNc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XlnkrGBsP6bX3fJW9MsrOiYWnR3St4a3nQoI1KjRlQeKFbvwIKl+p/P03XE0CCd28
-         5GPhoZ+lhlHhNH815JaVoCEcEeDqv/rmdUJnMS7INsfQGPeSX1Jak+XecLAY33cyDo
-         CdmMpFLqtWJ7BsEc7U+7WiAUz/ApGgvpoUg1fZRE=
-Received: from [10.204.78.89] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53ABC615B0;
-        Fri, 29 Mar 2019 14:22:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553869341;
-        bh=0aIIsZihW3MUOyRReWGYqFxmPt7yP7UL7vWuurCaFNc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=mm6+59U2FCAdqQdt5ZeluZDiLU7q6QnMqwtWRhjG35eqWxfiloCzHdtP8l+MBiMQn
-         AUMDaIQFoIO7sjmyrThY8kgaXlgW5KX3d67WJ1VZzWEjxPWRucmiX0ElXjOK73T9Os
-         pRzyo5gZtq5wssfjjeR5g5lSGXCVefapnuTxXHBU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 53ABC615B0
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-Subject: Re: [PATCH] rcu: tree_stall: Correctly unlock root node in
- rcu_check_gp_start_stall
-To:     Mukesh Ojha <mojha@codeaurora.org>, paulmck@linux.vnet.ibm.com,
-        josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1553858828-23097-1-git-send-email-neeraju@codeaurora.org>
- <7a9eed5a-9bcf-460c-abb9-1e9bd6eae102@codeaurora.org>
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-Message-ID: <2a8057f7-0704-5e8f-423e-e56a91a9b448@codeaurora.org>
-Date:   Fri, 29 Mar 2019 19:52:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 29 Mar 2019 10:24:29 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bg8so1133108plb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 07:24:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Cr6+Hgz8ti+JffVYStJyezXO/1XywriRHSV9PBDVcoE=;
+        b=BYg4mQrnMOC0SjSueGeE+mPJ0GPtCzjTqHlcNyqLiORXMCW28bQoYmL74Id+J5BzQu
+         o/JB2L/mfSITGFDmKP/nS6jIJohfvKioATI8WnFelsRMQfVQmokWE6Wg2Wzjao0KJZfo
+         ZG5+C7a+oV2gzoGm0MGFmFEs1n4PFe1fZIsK4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Cr6+Hgz8ti+JffVYStJyezXO/1XywriRHSV9PBDVcoE=;
+        b=AUjBo0Fo+J8Iv9zbbOwHVAmIG2alNbGkwPjVbFksilsQN12X26HHxxooZLWnCahXCR
+         OZf1fpeJNOg8WwQ4zgR7U89AQRYouzLV/HA1q77Ey23FV3Np4sUpubqFO5UwwdTg43RI
+         374Qq3y+e4SiRb4xDpbBDCIPJD4eCnu4moPJmhtLglR39qiFZa+PhRJ9zKIbtL9rQPXQ
+         o5CcRl8XbiyBFkX0NZsxbkrdzgR4n1plcZL1pxDWqV9iThrf4j5ER60J6IzI5TnE28B8
+         loLSqP2Z8etUr7FDzht0bRncHiaq8AjKHRaRAuSSqAZkqybf0rruIefD7YVjT+95VQeY
+         rsNw==
+X-Gm-Message-State: APjAAAWE0n0mVhA/+wu7fZ6l07dOX6g7jFMcchlOfOaqJ5MAMJY+N2uw
+        YDS+eMX6r3FU2guKwsHPCWi2MQ==
+X-Google-Smtp-Source: APXvYqyRi0MqRL+gt9n/oVLbnnxxvCCtRvNbgkOqE6Do6K1obODqt45/lBqBU5RzzE9LRRqS20yHAA==
+X-Received: by 2002:a17:902:7d81:: with SMTP id a1mr41819141plm.202.1553869468943;
+        Fri, 29 Mar 2019 07:24:28 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id c18sm8839160pfc.0.2019.03.29.07.24.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 Mar 2019 07:24:28 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 10:24:26 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 05/13] tools headers uapi: Sync linux/fcntl.h to get the
+ F_SEAL_FUTURE_WRITE addition
+Message-ID: <20190329142426.GA122290@google.com>
+References: <20190329133801.21004-1-acme@kernel.org>
+ <20190329133801.21004-6-acme@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <7a9eed5a-9bcf-460c-abb9-1e9bd6eae102@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329133801.21004-6-acme@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 29, 2019 at 10:37:53AM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> To get the changes in:
+> 
+>   ab3948f58ff8 ("mm/memfd: add an F_SEAL_FUTURE_WRITE seal to memfd")
+> 
+> And silence this perf build warning:
+> 
+>   Warning: Kernel ABI header at 'tools/include/uapi/linux/fcntl.h' differs from latest version at 'include/uapi/linux/fcntl.h'
+>   diff -u tools/include/uapi/linux/fcntl.h include/uapi/linux/fcntl.h
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lkml.kernel.org/n/tip-lvfx5cgf0xzmdi9mcjva1ttl@git.kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-On 3/29/19 6:58 PM, Mukesh Ojha wrote:
-> 
-> On 3/29/2019 4:57 PM, Neeraj Upadhyay wrote:
->> Only unlock the root node, if current node (rnp) is not
->> root node.
->>
->> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-> 
-> 
-> 
->> ---
->>   kernel/rcu/tree_stall.h | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
->> index f65a73a..0651833 100644
->> --- a/kernel/rcu/tree_stall.h
->> +++ b/kernel/rcu/tree_stall.h
-> 
-> 
-> why this is showing as under tree_stall.h while it is under 
-> "kernel/rcu/tree.c"
+thanks!
 
-It's moved in 
-https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=10462d6f58fb6dbde7563e9343505d98d5bfba3d
+ - Joel
 
-Please see linux-rcu dev tree for other changes, which moves code to 
-this file.
-
-
-Thanks
-Neeraj
-
+> ---
+>  tools/include/uapi/linux/fcntl.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->> @@ -630,7 +630,9 @@ static void rcu_check_gp_start_stall(struct 
->> rcu_node *rnp, struct rcu_data *rdp,
->>           time_before(j, rcu_state.gp_req_activity + gpssdelay) ||
->>           time_before(j, rcu_state.gp_activity + gpssdelay) ||
->>           atomic_xchg(&warned, 1)) {
->> -        raw_spin_unlock_rcu_node(rnp_root); /* irqs remain disabled. */
->> +        if (rnp_root != rnp)
->> +            /* irqs remain disabled. */
->> +            raw_spin_unlock_rcu_node(rnp_root);
+> diff --git a/tools/include/uapi/linux/fcntl.h b/tools/include/uapi/linux/fcntl.h
+> index 6448cdd9a350..a2f8658f1c55 100644
+> --- a/tools/include/uapi/linux/fcntl.h
+> +++ b/tools/include/uapi/linux/fcntl.h
+> @@ -41,6 +41,7 @@
+>  #define F_SEAL_SHRINK	0x0002	/* prevent file from shrinking */
+>  #define F_SEAL_GROW	0x0004	/* prevent file from growing */
+>  #define F_SEAL_WRITE	0x0008	/* prevent writes */
+> +#define F_SEAL_FUTURE_WRITE	0x0010  /* prevent future writes while mapped */
+>  /* (1U << 31) is reserved for signed error codes */
+>  
+>  /*
+> -- 
+> 2.20.1
 > 
-> Looks good as it will balance the lock .if it is the root_node, which 
-> was not there earlier, and unlock was happening without any lock on root.
-> 
-> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-> 
-> Cheers,
-> -Mukesh
-> 
->>           raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
->>           return;
->>       }
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
