@@ -2,145 +2,184 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3458CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F51C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 025312054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD7121871
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:22:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="dGL/WWnb";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="dGL/WWnb"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C88C+V5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729752AbfC2PVy (ORCPT
+        id S1729767AbfC2PWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:21:54 -0400
-Received: from node.akkea.ca ([192.155.83.177]:59006 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729046AbfC2PVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:21:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id D6EF74E2056;
-        Fri, 29 Mar 2019 15:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1553872901; bh=c+Umh29DYkRqBlFcskVZzYgx4V4hBQqUQ5qRjU2h++k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=dGL/WWnbjzX1Dql4+JMFqe+uF7xECjWpnznXbFQU3PSfbr97l976V+kNVWuiXxVOw
-         g2q4aWD5jlTDsr8HaYTfjCOeKdAP2tRp8fGnCYmT/6AT5Jl//oicLwbJ+epjTqgXZ7
-         6kTIjw+jPTlG6+gYOBFzs6AQ7ORkq6cG3O+VlQzk=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Aix0FLtboPkI; Fri, 29 Mar 2019 15:21:41 +0000 (UTC)
-Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id C00074E204B;
-        Fri, 29 Mar 2019 15:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1553872901; bh=c+Umh29DYkRqBlFcskVZzYgx4V4hBQqUQ5qRjU2h++k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=dGL/WWnbjzX1Dql4+JMFqe+uF7xECjWpnznXbFQU3PSfbr97l976V+kNVWuiXxVOw
-         g2q4aWD5jlTDsr8HaYTfjCOeKdAP2tRp8fGnCYmT/6AT5Jl//oicLwbJ+epjTqgXZ7
-         6kTIjw+jPTlG6+gYOBFzs6AQ7ORkq6cG3O+VlQzk=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     angus.ainslie@puri.sm
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: [PATCH v2 2/3] dmaengine: imx-sdma: Only check ratio on parts that support 1:1
-Date:   Fri, 29 Mar 2019 08:21:29 -0700
-Message-Id: <20190329152130.18411-3-angus@akkea.ca>
+        Fri, 29 Mar 2019 11:22:06 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:41590 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729502AbfC2PVY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 11:21:24 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2TFJUnK067693;
+        Fri, 29 Mar 2019 15:20:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=koFx+C5akGvVcWEbEMtN4SFZa+JtW8WG4Xyl9jZZWO0=;
+ b=C88C+V5y0mYfNGHFWwjoDwmxdicZcTQY/vEPyocx0lUPEfhcnqaey8YOyEsw7NZSkDTu
+ WT6T2pBW6PLZHo+ZvumEqZ4FtzQXmqRPYsmIQSf6946N9oTObP0BCCtrIqBEFI6HqUov
+ BhkXMRiqYJSXAyv56/qr+BXNRSv4aPC1djmkEbTLNUdIH0dRJq/Ll/nTzn652iVL/n2P
+ lg/59FJGk/hHVFGs1GCq/tACRpmB0QzNejZ63HG9gQHucEGXgnMvgb/68duT81zJG2nf
+ lb6z22Bo1Ao1daWfB7dzeffx89EFgA9dyuDBXTwXvpO6snRNtokCLAWkHetFOxb8U5yk /A== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by aserp2130.oracle.com with ESMTP id 2re6g1d3g2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 15:20:23 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2TFKMN7017336
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 15:20:22 GMT
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2TFKF7T019798;
+        Fri, 29 Mar 2019 15:20:15 GMT
+Received: from ol-bur-x5-4.us.oracle.com (/10.152.128.37)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 29 Mar 2019 08:20:14 -0700
+From:   Alex Kogan <alex.kogan@oracle.com>
+To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
+        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org
+Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        alex.kogan@oracle.com, dave.dice@oracle.com,
+        rahul.x.yadav@oracle.com
+Subject: [PATCH v2 0/5] Add NUMA-awareness to qspinlock
+Date:   Fri, 29 Mar 2019 11:20:01 -0400
+Message-Id: <20190329152006.110370-1-alex.kogan@oracle.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190329152130.18411-1-angus@akkea.ca>
-References: <20190328133828.20999-1-angus@akkea.ca>
- <20190329152130.18411-1-angus@akkea.ca>
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9211 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903290109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On imx8mq B0 chip, AHB/SDMA clock ratio 2:1 can't be supported,
-since SDMA clock ratio has to be increased to 250Mhz, AHB can't reach
-to 500Mhz, so use 1:1 instead.
+This version addresses feedback from Peter and Waiman. In particular,
+the CNA functionality has been moved to a separate file, and is controlled
+by a config option (enabled by default if NUMA is enabled). 
+An optimization has been introduced to reduce the overhead of shuffling 
+threads between waiting queues when the lock is only lightly contended.
 
-To limit this change to the imx8mq for now this patch also adds an
-im8mq-sdma compatible string.
+Summary
+-------
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- drivers/dma/imx-sdma.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+Lock throughput can be increased by handing a lock to a waiter on the
+same NUMA node as the lock holder, provided care is taken to avoid
+starvation of waiters on other NUMA nodes. This patch introduces CNA
+(compact NUMA-aware lock) as the slow path for qspinlock. It can be 
+enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 5f3c1378b90e..99d9f431ae2c 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -419,6 +419,7 @@ struct sdma_driver_data {
- 	int chnenbl0;
- 	int num_events;
- 	struct sdma_script_start_addrs	*script_addrs;
-+	bool check_ratio;
- };
- 
- struct sdma_engine {
-@@ -557,6 +558,13 @@ static struct sdma_driver_data sdma_imx7d = {
- 	.script_addrs = &sdma_script_imx7d,
- };
- 
-+static struct sdma_driver_data sdma_imx8mq = {
-+	.chnenbl0 = SDMA_CHNENBL0_IMX35,
-+	.num_events = 48,
-+	.script_addrs = &sdma_script_imx7d,
-+	.check_ratio = 1,
-+};
-+
- static const struct platform_device_id sdma_devtypes[] = {
- 	{
- 		.name = "imx25-sdma",
-@@ -579,6 +587,9 @@ static const struct platform_device_id sdma_devtypes[] = {
- 	}, {
- 		.name = "imx7d-sdma",
- 		.driver_data = (unsigned long)&sdma_imx7d,
-+	}, {
-+		.name = "imx8mq-sdma",
-+		.driver_data = (unsigned long)&sdma_imx8mq,
- 	}, {
- 		/* sentinel */
- 	}
-@@ -593,6 +604,7 @@ static const struct of_device_id sdma_dt_ids[] = {
- 	{ .compatible = "fsl,imx31-sdma", .data = &sdma_imx31, },
- 	{ .compatible = "fsl,imx25-sdma", .data = &sdma_imx25, },
- 	{ .compatible = "fsl,imx7d-sdma", .data = &sdma_imx7d, },
-+	{ .compatible = "fsl,imx8mq-sdma", .data = &sdma_imx8mq, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, sdma_dt_ids);
-@@ -1852,7 +1864,8 @@ static int sdma_init(struct sdma_engine *sdma)
- 	if (ret)
- 		goto disable_clk_ipg;
- 
--	if (clk_get_rate(sdma->clk_ahb) == clk_get_rate(sdma->clk_ipg))
-+	if (sdma->drvdata->check_ratio &&
-+	    (clk_get_rate(sdma->clk_ahb) == clk_get_rate(sdma->clk_ipg)))
- 		sdma->clk_ratio = 1;
- 
- 	/* Be sure SDMA has not started yet */
+CNA is a NUMA-aware version of the MCS spin-lock. Spinning threads are
+organized in two queues, a main queue for threads running on the same
+node as the current lock holder, and a secondary queue for threads
+running on other nodes. Threads store the ID of the node on which
+they are running in their queue nodes. At the unlock time, the lock
+holder scans the main queue looking for a thread running on the same
+node. If found (call it thread T), all threads in the main queue
+between the current lock holder and T are moved to the end of the
+secondary queue, and the lock is passed to T. If such T is not found, the
+lock is passed to the first node in the secondary queue. Finally, if the
+secondary queue is empty, the lock is passed to the next thread in the
+main queue. To avoid starvation of threads in the secondary queue,
+those threads are moved back to the head of the main queue
+after a certain expected number of intra-node lock hand-offs.
+
+More details are available at https://arxiv.org/abs/1810.05600.
+
+We have done some performance evaluation with the locktorture module
+as well as with several benchmarks from the will-it-scale repo.
+The following locktorture results are from an Oracle X5-4 server
+(four Intel Xeon E7-8895 v3 @ 2.60GHz sockets with 18 hyperthreaded
+cores each). Each number represents an average (over 25 runs) of the
+total number of ops (x10^7) reported at the end of each run. The 
+standard deviation is also reported in (), and in general, with a few
+exceptions, is about 3%. The 'stock' kernel is v5.0-rc8,
+commit 28d49e282665 ("locking/lockdep: Shrink struct lock_class_key"),
+compiled in the default configuration. 'patch' is the modified
+kernel compiled with NUMA_AWARE_SPINLOCKS not set; it is included to show
+that any performance changes to the existing qspinlock implementation are
+essentially noise. 'patch-CNA' is the modified kernel with 
+NUMA_AWARE_SPINLOCKS set; the speedup is calculated dividing 
+'patch-CNA' by 'stock'.
+
+#thr  	 stock  	patch	     patch-CNA 	 speedup (patch-CNA/stock)
+  1  2.731 (0.102)  2.732 (0.093)   2.716 (0.082)  0.995
+  2  3.071 (0.124)  3.084 (0.109)   3.079 (0.113)  1.003
+  4  4.221 (0.138)  4.229 (0.087)   4.408 (0.103)  1.044
+  8  5.366 (0.154)  5.274 (0.094)   6.958 (0.233)  1.297
+ 16  6.673 (0.164)  6.689 (0.095)   8.547 (0.145)  1.281
+ 32  7.365 (0.177)  7.353 (0.183)   9.305 (0.202)  1.263
+ 36  7.473 (0.198)  7.422 (0.181)   9.441 (0.196)  1.263
+ 72  6.805 (0.182)  6.699 (0.170)  10.020 (0.218)  1.472
+108  6.509 (0.082)  6.480 (0.115)  10.027 (0.194)  1.540
+142  6.223 (0.109)  6.294 (0.100)   9.874 (0.183)  1.587
+
+The following tables contain throughput results (ops/us) from the same
+setup for will-it-scale/open1_threads: 
+
+#thr  	 stock  	patch	     patch-CNA 	 speedup (patch-CNA/stock)
+  1  0.565 (0.004)  0.567 (0.001)  0.565 (0.003)  0.999
+  2  0.892 (0.021)  0.899 (0.022)  0.900 (0.018)  1.009
+  4  1.503 (0.031)  1.527 (0.038)  1.481 (0.025)  0.985
+  8  1.755 (0.105)  1.714 (0.079)  1.683 (0.106)  0.959
+ 16  1.740 (0.095)  1.752 (0.087)  1.693 (0.098)  0.973
+ 32  0.884 (0.080)  0.908 (0.090)  1.686 (0.092)  1.906
+ 36  0.907 (0.095)  0.894 (0.088)  1.709 (0.081)  1.885
+ 72  0.856 (0.041)  0.858 (0.043)  1.707 (0.082)  1.994
+108  0.858 (0.039)  0.869 (0.037)  1.732 (0.076)  2.020
+142  0.809 (0.044)  0.854 (0.044)  1.728 (0.083)  2.135
+
+and will-it-scale/lock2_threads:
+
+#thr  	 stock  	patch	     patch-CNA 	 speedup (patch-CNA/stock)
+  1  1.713 (0.004)  1.715 (0.004)  1.711 (0.004)  0.999
+  2  2.889 (0.057)  2.864 (0.078)  2.876 (0.066)  0.995
+  4  4.582 (1.032)  5.066 (0.787)  4.725 (0.959)  1.031
+  8  4.227 (0.196)  4.104 (0.274)  4.092 (0.365)  0.968
+ 16  4.108 (0.141)  4.057 (0.138)  4.010 (0.168)  0.976
+ 32  2.674 (0.125)  2.625 (0.171)  3.958 (0.156)  1.480
+ 36  2.622 (0.107)  2.553 (0.150)  3.978 (0.116)  1.517
+ 72  2.009 (0.090)  1.998 (0.092)  3.932 (0.114)  1.957
+108  2.154 (0.069)  2.089 (0.090)  3.870 (0.081)  1.797
+142  1.953 (0.106)  1.943 (0.111)  3.853 (0.100)  1.973
+
+Further comments are welcome and appreciated.
+
+Alex Kogan (5):
+  locking/qspinlock: Make arch_mcs_spin_unlock_contended more generic
+  locking/qspinlock: Refactor the qspinlock slow path
+  locking/qspinlock: Introduce CNA into the slow path of qspinlock
+  locking/qspinlock: Introduce starvation avoidance into CNA
+  locking/qspinlock: Introduce the shuffle reduction optimization into
+    CNA
+
+ arch/arm/include/asm/mcs_spinlock.h   |   4 +-
+ arch/x86/Kconfig                      |  14 ++
+ include/asm-generic/qspinlock_types.h |  13 ++
+ kernel/locking/mcs_spinlock.h         |  16 ++-
+ kernel/locking/qspinlock.c            |  77 +++++++++--
+ kernel/locking/qspinlock_cna.h        | 245 ++++++++++++++++++++++++++++++++++
+ 6 files changed, 354 insertions(+), 15 deletions(-)
+ create mode 100644 kernel/locking/qspinlock_cna.h
+
 -- 
-2.17.1
+2.11.0 (Apple Git-81)
 
