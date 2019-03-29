@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22946C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776F1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0A4218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC39217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553900113;
-	bh=C30dQuPQY6z/MIzuozVUNRbKpHIzjZdPMzW5q9bAi+U=;
+	s=default; t=1553900115;
+	bh=/VEp+SgN3qmbu/Noq4OqCZ5enEdkJkFStEUpAn+PMwY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=tzzJnXA3JpsHxoM6tHf0iY3+OsFHOxqnXCI9HylftObDrfr50z//opqwiZ1sDB+7f
-	 ZLqhN4A6GTyVFbC8q3CTSEJfIaE2kbBuwgNeiVwa1c+8gZH7DPd8N04O/+UXSLdYlD
-	 9YPDzi50fZSMN6syQB0EjEM928gdCIB0ttgNYBCs=
+	b=au5iK3KSZWSwQ5LADN/JyLsFjUBC9ZZx+hM3hAVrv4fI4GtvDgdCxBmYY633PxJzt
+	 PqJzc6KtEbwYGL4BxKeKa0cOTU9+YLlJclFMBrAf6W1B9AD46tYa8U+aHA37mAJDYg
+	 /emiMIDOOPUef/Gc0l4R28SasIIU8z++laT9WDAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730575AbfC2WzM (ORCPT
+        id S1730600AbfC2WzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 18:55:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56102 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 18:55:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730537AbfC2WzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730555AbfC2WzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Mar 2019 18:55:12 -0400
-Subject: Re: [git pull] IOMMU Fixes for Linux v5.1-rc3
+Subject: Re: [GIT PULL] arm64 fixes for 5.1-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553900111;
-        bh=C30dQuPQY6z/MIzuozVUNRbKpHIzjZdPMzW5q9bAi+U=;
+        s=default; t=1553900112;
+        bh=/VEp+SgN3qmbu/Noq4OqCZ5enEdkJkFStEUpAn+PMwY=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=K01UHg+WjUMkvYMe4eRXlhz07udvjGc5yxVYoxZdju6zzhyw2JQPkUcLP4DQ+5oBj
-         5w5AY49t01MCqgijxsEGRh9U+Uu2YngfctG9p445rejwqfXiAodu6bFVhrl6uKZQ1d
-         5T+V7kcbzmCLibMQ6zurSntEbyXcEjbEN00ktlZo=
+        b=Z3dKxphtHr3/1NNPpYeNoD9rucfu0+pvB74uXTCsNBOi6JxangBzDD+atiz5Ez+UG
+         sXz7TOAzB+GCNi33ngg93YQcqhlPZK7VzwDXf7Sdk9Z2+1TIasU1D6vDrQIQ3op+vc
+         Q+BPaOLiOEz6R9Ut2HnpNKqT3sv6HvI3G+H3hCGw=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190329162636.GA29901@8bytes.org>
-References: <20190329162636.GA29901@8bytes.org>
+In-Reply-To: <20190329190132.GA45422@arrakis.emea.arm.com>
+References: <20190329190132.GA45422@arrakis.emea.arm.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190329162636.GA29901@8bytes.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
- tags/iommu-fixes-v5.1-rc3
-X-PR-Tracked-Commit-Id: 8aafaaf2212192012f5bae305bb31cdf7681d777
+X-PR-Tracked-Message-Id: <20190329190132.GA45422@arrakis.emea.arm.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+X-PR-Tracked-Commit-Id: 9e0a17db517d83d568bb7fa983b54759d4e34f1f
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c0b7f2a5fb957f2d5429b603b1a131ed7c8b4a30
-Message-Id: <155390011171.19491.14295145911465779412.pr-tracker-bot@kernel.org>
-Date:   Fri, 29 Mar 2019 22:55:11 +0000
-To:     Joerg Roedel <joro@8bytes.org>
+X-PR-Merge-Commit-Id: f9007cc601e7b7ed2e0f0c1664d8252fdce964d3
+Message-Id: <155390011225.19491.18229426893167522049.pr-tracker-bot@kernel.org>
+Date:   Fri, 29 Mar 2019 22:55:12 +0000
+To:     Catalin Marinas <catalin.marinas@arm.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 29 Mar 2019 17:26:42 +0100:
+The pull request you sent on Fri, 29 Mar 2019 19:01:34 +0000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.1-rc3
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c0b7f2a5fb957f2d5429b603b1a131ed7c8b4a30
+https://git.kernel.org/torvalds/c/f9007cc601e7b7ed2e0f0c1664d8252fdce964d3
 
 Thank you!
 
