@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D327C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C61C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E8021850
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF86E21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553817926;
-	bh=mC9ZkBI1j4g2UcrzpSbUy4xPO3jLn4BSD+4RRtirvjY=;
+	s=default; t=1553817938;
+	bh=kGlzYNvnx2j57Yy5KzGg35jicf7vTPu7Xw0BB8/0CGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OsUJq9ILYb9VRm9VqvL2VuIivphP02gt2qVGSK0TBlfWBZoSAeqNBrlO0mT2wxMSv
-	 2XwdVwbFmGWU6YF7/UwCAKQAbOOyucISHM52x+X6ZcEeDS5/ESvvqD91VLXnKU5Q5l
-	 3lHOOVtqMQbxvzqcjo3xnM/IMf9LyrIpen2hl9zA=
+	b=kY8YogG1DfZwqdMhZuimUJTNRJSKVMruJat9vkmh+vYWCdpLXt/Wu9HdYqUMInPxN
+	 6fi2l4Esk78MeFXXjOfJ5xHzxa20awSqQB14zTubPBhltvH/MjkurPJn5AhGEESnVX
+	 iR3SIkklifTs0oT81wAUnRtKMgLie0p5Tb911Coc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbfC2AFO (ORCPT
+        id S1728748AbfC2AFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 20:05:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43498 "EHLO mail.kernel.org"
+        Thu, 28 Mar 2019 20:05:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728692AbfC2AFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 20:05:11 -0400
+        id S1728665AbfC2AFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 20:05:08 -0400
 Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 963C7218FD;
-        Fri, 29 Mar 2019 00:05:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85D8E218A3;
+        Fri, 29 Mar 2019 00:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553817910;
-        bh=mC9ZkBI1j4g2UcrzpSbUy4xPO3jLn4BSD+4RRtirvjY=;
+        s=default; t=1553817907;
+        bh=kGlzYNvnx2j57Yy5KzGg35jicf7vTPu7Xw0BB8/0CGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xAWacscwvOeFsgOU4yEM6RG/KH458SibI9WAI6t+0K4xM9XIsQqjxVSncdDopXbHg
-         s3XLTkMKYjGnw+QxIrJfFlqJnM6WhzcdeA7t8dx/Mlg5nsFttHJ53n+l/I8H8ZN7zM
-         OZ+soKlT3RU7W1G28BWrB5kxD1czIgJ/CC6hUcck=
+        b=JJuTEJYv83HVG/h3w7GbkOfA47ZuhG/htoZwMj5mn+tHQBRXmhDNtemE8FtMD3nIW
+         84pa0VNfgXGPurHdxpgB1bqXjA3Eqfp5Pi3EI9OJhxh40oH90h1gr+tyYweAIrmijn
+         JW3RuZG3kWrOUpIjQhm/l1ToFFSF8xnNKMXCg6tc=
 From:   Shuah Khan <shuah@kernel.org>
 To:     mchehab@kernel.org, perex@perex.cz, tiwai@suse.com,
         hverkuil@xs4all.nl
 Cc:     Shuah Khan <shuah@kernel.org>, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: [PATCH v13 5/6] au0828: fix enable and disable source audio and video inconsistencies
-Date:   Thu, 28 Mar 2019 18:05:00 -0600
-Message-Id: <9135b2b177bad233e2676641e26003cddf667c67.1553814518.git.shuah@kernel.org>
+Subject: [PATCH v13 2/6] media: change au0828 to use Media Device Allocator API
+Date:   Thu, 28 Mar 2019 18:04:57 -0600
+Message-Id: <05ec250a56d9eaa868e7c8cf6376d6f8e29bb102.1553814518.git.shuah@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1553814518.git.shuah@kernel.org>
 References: <cover.1553814518.git.shuah@kernel.org>
@@ -56,319 +56,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable and disable source interfaces aren't consistent in enforcing
-how video and audio share the tuner resource.
+Media Device Allocator API to allows multiple drivers share a media device.
+This API solves a very common use-case for media devices where one physical
+device (an USB stick) provides both audio and video. When such media device
+exposes a standard USB Audio class, a proprietary Video class, two or more
+independent drivers will share a single physical USB bridge. In such cases,
+it is necessary to coordinate access to the shared resource.
 
-Fix these issues to enforce the following rules and allow
-sharing between audio and video applications.
+Using this API, drivers can allocate a media device with the shared struct
+device as the key. Once the media device is allocated by a driver, other
+drivers can get a reference to it. The media device is released when all
+the references are released.
 
-- When DVB is streaming, audio/video/vbi/s-video/composite
-  should find the resource busy. DVB holds the tuner in
-  exclusive mode.
-- When video is streaming, audio can share the tuner and vice versa.
-- v4l2 allows multiple applications to open video device.
-- Video applications call enable source multiple times during their
-  run-time. Resource should stay locked until the last application
-  releases it.
-- A shared resource should stay in shared state and locked when it is
-  in use by audio and video. More than one video application is allowed
-  to use the tuner as long as video streaming protocol allows such usage.
-  Resource is released when the last video/audio application releases it.
-- S-Video and Composite hold the resource in exclusive mode.
-- VBI allows more than vbi applications sharing and will not share
-  with another type. When resource is locked by VBI and in use by
-  multiple VBI applications, it should stay locked until the last
-  application disables it.
+Change au0828 to use Media Device Allocator API to allocate media device
+with the parent usb struct device as the key, so it can be shared with the
+snd_usb_audio driver.
 
 Signed-off-by: Shuah Khan <shuah@kernel.org>
 ---
- drivers/media/usb/au0828/au0828-core.c | 182 +++++++++++++++++++------
- drivers/media/usb/au0828/au0828.h      |   5 +-
- 2 files changed, 148 insertions(+), 39 deletions(-)
+ drivers/media/usb/au0828/Kconfig       |  2 ++
+ drivers/media/usb/au0828/au0828-core.c | 13 +++++--------
+ drivers/media/usb/au0828/au0828.h      |  1 +
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/media/usb/au0828/Kconfig b/drivers/media/usb/au0828/Kconfig
+index 65fc067eb864..98de6e24329e 100644
+--- a/drivers/media/usb/au0828/Kconfig
++++ b/drivers/media/usb/au0828/Kconfig
+@@ -2,6 +2,8 @@
+ config VIDEO_AU0828
+ 	tristate "Auvitek AU0828 support"
+ 	depends on I2C && INPUT && DVB_CORE && USB && VIDEO_V4L2
++	select MEDIA_CONTROLLER
++	select MEDIA_CONTROLLER_DVB
+ 	select I2C_ALGOBIT
+ 	select VIDEO_TVEEPROM
+ 	select VIDEOBUF2_VMALLOC if VIDEO_V4L2
 diff --git a/drivers/media/usb/au0828/au0828-core.c b/drivers/media/usb/au0828/au0828-core.c
-index 4f8ba6f64d3c..b8bcab2fa1dc 100644
+index 3f8c92a70116..4f8ba6f64d3c 100644
 --- a/drivers/media/usb/au0828/au0828-core.c
 +++ b/drivers/media/usb/au0828/au0828-core.c
-@@ -272,6 +272,27 @@ static void au0828_media_graph_notify(struct media_entity *new,
- 	}
- }
+@@ -155,9 +155,7 @@ static void au0828_unregister_media_device(struct au0828_dev *dev)
+ 	dev->media_dev->disable_source = NULL;
+ 	mutex_unlock(&mdev->graph_mutex);
  
-+static bool au0828_is_link_sharable(struct media_entity *owner,
-+				    struct media_entity *entity)
-+{
-+	bool sharable = false;
-+
-+	/* Tuner link can be shared by audio and video */
-+	switch (owner->function) {
-+	case MEDIA_ENT_F_IO_V4L:
-+	case MEDIA_ENT_F_AUDIO_CAPTURE:
-+		if (entity->function == MEDIA_ENT_F_IO_V4L ||
-+		    entity->function == MEDIA_ENT_F_AUDIO_CAPTURE)
-+			sharable = true;
-+		break;
-+	case MEDIA_ENT_F_DTV_DEMOD:
-+	case MEDIA_ENT_F_IO_VBI:
-+	default:
-+		break;
-+	}
-+	return sharable;
-+}
-+
- /* Callers should hold graph_mutex */
- static int au0828_enable_source(struct media_entity *entity,
- 				struct media_pipeline *pipe)
-@@ -314,18 +335,20 @@ static int au0828_enable_source(struct media_entity *entity,
- 		/*
- 		 * Default input is tuner and default input_type
- 		 * is AU0828_VMUX_TELEVISION.
--		 * FIXME:
-+		 *
- 		 * There is a problem when s_input is called to
- 		 * change the default input. s_input will try to
- 		 * enable_source before attempting to change the
- 		 * input on the device, and will end up enabling
- 		 * default source which is tuner.
- 		 *
--		 * Additional logic is necessary in au0828
--		 * to detect that the input has changed and
--		 * enable the right source.
-+		 * Additional logic is necessary in au0828 to detect
-+		 * that the input has changed and enable the right
-+		 * source. au0828 handles this case in its s_input.
-+		 * It will disable the old source and enable the new
-+		 * source.
-+		 *
- 		*/
--
- 		if (dev->input_type == AU0828_VMUX_TELEVISION)
- 			find_source = dev->tuner;
- 		else if (dev->input_type == AU0828_VMUX_SVIDEO ||
-@@ -338,27 +361,33 @@ static int au0828_enable_source(struct media_entity *entity,
- 		}
- 	}
- 
--	/* Is an active link between sink and source */
-+	/* Is there an active link between sink and source */
- 	if (dev->active_link) {
--		/*
--		 * If DVB is using the tuner and calling entity is
--		 * audio/video, the following check will be false,
--		 * since sink is different. Result is Busy.
--		 */
--		if (dev->active_link->sink->entity == sink &&
--		    dev->active_link->source->entity == find_source) {
--			/*
--			 * Either ALSA or Video own tuner. sink is
--			 * the same for both. Prevent Video stepping
--			 * on ALSA when ALSA owns the source.
-+		if (dev->active_link_owner == entity) {
-+			/* This check is necessary to handle multiple
-+			 * enable_source calls from v4l_ioctls during
-+			 * the course of video/vbi application run-time.
- 			*/
--			if (dev->active_link_owner != entity &&
--			    dev->active_link_owner->function ==
--						MEDIA_ENT_F_AUDIO_CAPTURE) {
--				pr_debug("ALSA has the tuner\n");
--				ret = -EBUSY;
--				goto end;
--			}
-+			pr_debug("%s already owns the tuner\n", entity->name);
-+			ret = 0;
-+			goto end;
-+		} else if (au0828_is_link_sharable(dev->active_link_owner,
-+			   entity)) {
-+			/* Either ALSA or Video own tuner. Sink is the same
-+			 * for both. Allow sharing the active link between
-+			 * their common source (tuner) and sink (decoder).
-+			 * Starting pipeline between sharing entity and sink
-+			 * will fail with pipe mismatch, while owner has an
-+			 * active pipeline. Switch pipeline ownership from
-+			 * user to owner when owner disables the source.
-+			 */
-+			dev->active_link_shared = true;
-+			/* save the user info to use from disable */
-+			dev->active_link_user = entity;
-+			dev->active_link_user_pipe = pipe;
-+			pr_debug("%s owns the tuner %s can share!\n",
-+				 dev->active_link_owner->name,
-+				 entity->name);
- 			ret = 0;
- 			goto end;
- 		} else {
-@@ -385,7 +414,7 @@ static int au0828_enable_source(struct media_entity *entity,
- 	source = found_link->source->entity;
- 	ret = __media_entity_setup_link(found_link, MEDIA_LNK_FL_ENABLED);
- 	if (ret) {
--		pr_err("Activate tuner link %s->%s. Error %d\n",
-+		pr_err("Activate link from %s->%s. Error %d\n",
- 			source->name, sink->name, ret);
- 		goto end;
- 	}
-@@ -395,25 +424,26 @@ static int au0828_enable_source(struct media_entity *entity,
- 		pr_err("Start Pipeline: %s->%s Error %d\n",
- 			source->name, entity->name, ret);
- 		ret = __media_entity_setup_link(found_link, 0);
--		pr_err("Deactivate link Error %d\n", ret);
-+		if (ret)
-+			pr_err("Deactivate link Error %d\n", ret);
- 		goto end;
- 	}
--	/*
--	 * save active link and active link owner to avoid audio
--	 * deactivating video owned link from disable_source and
--	 * vice versa
-+
-+	/* save link state to allow audio and video share the link
-+	 * and not disable the link while the other is using it.
-+	 * active_link_owner is used to deactivate the link.
- 	*/
- 	dev->active_link = found_link;
- 	dev->active_link_owner = entity;
- 	dev->active_source = source;
- 	dev->active_sink = sink;
- 
--	pr_debug("Enabled Source: %s->%s->%s Ret %d\n",
-+	pr_info("Enabled Source: %s->%s->%s Ret %d\n",
- 		 dev->active_source->name, dev->active_sink->name,
- 		 dev->active_link_owner->name, ret);
- end:
--	pr_debug("au0828_enable_source() end %s %d %d\n",
--		 entity->name, entity->function, ret);
-+	pr_debug("%s end: ent:%s fnc:%d ret %d\n",
-+		 __func__, entity->name, entity->function, ret);
- 	return ret;
- }
- 
-@@ -432,21 +462,95 @@ static void au0828_disable_source(struct media_entity *entity)
- 	if (!dev->active_link)
- 		return;
- 
--	/* link is active - stop pipeline from source (tuner) */
-+	/* link is active - stop pipeline from source
-+	 * (tuner/s-video/Composite) to the entity
-+	 * When DVB/s-video/Composite owns tuner, it won't be in
-+	 * shared state.
-+	 */
- 	if (dev->active_link->sink->entity == dev->active_sink &&
- 	    dev->active_link->source->entity == dev->active_source) {
- 		/*
--		 * prevent video from deactivating link when audio
--		 * has active pipeline
-+		 * Prevent video from deactivating link when audio
-+		 * has active pipeline and vice versa. In addition
-+		 * handle the case when more than one video/vbi
-+		 * application is sharing the link.
- 		*/
-+		bool owner_is_audio = false;
-+
-+		if (dev->active_link_owner->function ==
-+		    MEDIA_ENT_F_AUDIO_CAPTURE)
-+			owner_is_audio = true;
-+
-+		if (dev->active_link_shared) {
-+			pr_debug("Shared link owner %s user %s %d\n",
-+				 dev->active_link_owner->name,
-+				 entity->name, dev->users);
-+
-+			/* Handle video device users > 1
-+			 * When audio owns the shared link with
-+			 * more than one video users, avoid
-+			 * disabling the source and/or switching
-+			 * the owner until the last disable_source
-+			 * call from video _close(). Use dev->users to
-+			 * determine when to switch/disable.
-+			 */
-+			if (dev->active_link_owner != entity) {
-+				/* video device has users > 1 */
-+				if (owner_is_audio && dev->users > 1)
-+					return;
-+
-+				dev->active_link_user = NULL;
-+				dev->active_link_user_pipe = NULL;
-+				dev->active_link_shared = false;
-+				return;
-+			}
-+
-+			/* video owns the link and has users > 1 */
-+			if (!owner_is_audio && dev->users > 1)
-+				return;
-+
-+			/* stop pipeline */
-+			__media_pipeline_stop(dev->active_link_owner);
-+			pr_debug("Pipeline stop for %s\n",
-+				dev->active_link_owner->name);
-+
-+			ret = __media_pipeline_start(
-+					dev->active_link_user,
-+					dev->active_link_user_pipe);
-+			if (ret) {
-+				pr_err("Start Pipeline: %s->%s %d\n",
-+					dev->active_source->name,
-+					dev->active_link_user->name,
-+					ret);
-+				goto deactivate_link;
-+			}
-+			/* link user is now the owner */
-+			dev->active_link_owner = dev->active_link_user;
-+			dev->active_link_user = NULL;
-+			dev->active_link_user_pipe = NULL;
-+			dev->active_link_shared = false;
-+
-+			pr_debug("Pipeline started for %s\n",
-+				dev->active_link_owner->name);
-+			return;
-+		} else if (!owner_is_audio && dev->users > 1)
-+			/* video/vbi owns the link and has users > 1 */
-+			return;
-+
- 		if (dev->active_link_owner != entity)
- 			return;
--		__media_pipeline_stop(entity);
-+
-+		/* stop pipeline */
-+		__media_pipeline_stop(dev->active_link_owner);
-+		pr_debug("Pipeline stop for %s\n",
-+			dev->active_link_owner->name);
-+
-+deactivate_link:
- 		ret = __media_entity_setup_link(dev->active_link, 0);
- 		if (ret)
- 			pr_err("Deactivate link Error %d\n", ret);
- 
--		pr_debug("Disabled Source: %s->%s->%s Ret %d\n",
-+		pr_info("Disabled Source: %s->%s->%s Ret %d\n",
- 			 dev->active_source->name, dev->active_sink->name,
- 			 dev->active_link_owner->name, ret);
- 
-@@ -454,6 +558,8 @@ static void au0828_disable_source(struct media_entity *entity)
- 		dev->active_link_owner = NULL;
- 		dev->active_source = NULL;
- 		dev->active_sink = NULL;
-+		dev->active_link_shared = false;
-+		dev->active_link_user = NULL;
- 	}
- }
+-	media_device_unregister(dev->media_dev);
+-	media_device_cleanup(dev->media_dev);
+-	kfree(dev->media_dev);
++	media_device_delete(dev->media_dev, KBUILD_MODNAME, THIS_MODULE);
+ 	dev->media_dev = NULL;
  #endif
+ }
+@@ -210,14 +208,10 @@ static int au0828_media_device_init(struct au0828_dev *dev,
+ #ifdef CONFIG_MEDIA_CONTROLLER
+ 	struct media_device *mdev;
+ 
+-	mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
++	mdev = media_device_usb_allocate(udev, KBUILD_MODNAME, THIS_MODULE);
+ 	if (!mdev)
+ 		return -ENOMEM;
+ 
+-	/* check if media device is already initialized */
+-	if (!mdev->dev)
+-		media_device_usb_init(mdev, udev, udev->product);
+-
+ 	dev->media_dev = mdev;
+ #endif
+ 	return 0;
+@@ -480,6 +474,9 @@ static int au0828_media_device_register(struct au0828_dev *dev,
+ 		/* register media device */
+ 		ret = media_device_register(dev->media_dev);
+ 		if (ret) {
++			media_device_delete(dev->media_dev, KBUILD_MODNAME,
++					    THIS_MODULE);
++			dev->media_dev = NULL;
+ 			dev_err(&udev->dev,
+ 				"Media Device Register Error: %d\n", ret);
+ 			return ret;
 diff --git a/drivers/media/usb/au0828/au0828.h b/drivers/media/usb/au0828/au0828.h
-index 57b00de8d3f2..b47ecc9affd8 100644
+index 425c35d16057..57b00de8d3f2 100644
 --- a/drivers/media/usb/au0828/au0828.h
 +++ b/drivers/media/usb/au0828/au0828.h
-@@ -284,9 +284,12 @@ struct au0828_dev {
- 	struct media_entity_notify entity_notify;
- 	struct media_entity *tuner;
- 	struct media_link *active_link;
--	struct media_entity *active_link_owner;
- 	struct media_entity *active_source;
- 	struct media_entity *active_sink;
-+	struct media_entity *active_link_owner;
-+	struct media_entity *active_link_user;
-+	struct media_pipeline *active_link_user_pipe;
-+	bool active_link_shared;
- #endif
- };
+@@ -31,6 +31,7 @@
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-fh.h>
+ #include <media/media-device.h>
++#include <media/media-dev-allocator.h>
  
+ /* DVB */
+ #include <media/demux.h>
 -- 
 2.17.1
 
