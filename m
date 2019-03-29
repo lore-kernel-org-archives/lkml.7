@@ -2,71 +2,116 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD8CC10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B252AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CA72184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C4F2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbfC2JCp (ORCPT
+        id S1729258AbfC2JDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 05:02:45 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38704 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726652AbfC2JCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 05:02:44 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 610B6EAD8CBD5CF508DB;
-        Fri, 29 Mar 2019 17:02:42 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 29 Mar 2019 17:02:32 +0800
-From:   nixiaoming <nixiaoming@huawei.com>
-To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <jbrunet@baylibre.com>, <rnayak@ti.com>,
-        <soren.brinkmann@xilinx.com>, <sboyd@codeaurora.org>,
-        <nixiaoming@huawei.com>
-CC:     <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] clk:Fix divide by 0 error in divider_ro_round_rate_parent
-Date:   Fri, 29 Mar 2019 17:05:24 +0800
-Message-ID: <1553850324-25625-1-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Fri, 29 Mar 2019 05:03:30 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56436 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726652AbfC2JD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 05:03:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E660A78;
+        Fri, 29 Mar 2019 02:03:29 -0700 (PDT)
+Received: from queper01-ThinkPad-T460s (unknown [10.37.9.161])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2CF63F557;
+        Fri, 29 Mar 2019 02:03:25 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 09:03:23 +0000
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     edubezval@gmail.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        will.deacon@arm.com, catalin.marinas@arm.com,
+        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH 1/3] arm64: defconfig: Enable CONFIG_ENERGY_MODEL
+Message-ID: <20190329090320.qzsgaytwfyxx4oq3@queper01-ThinkPad-T460s>
+References: <20190328101352.25657-1-quentin.perret@arm.com>
+ <20190328101352.25657-2-quentin.perret@arm.com>
+ <20190328102206.doqj5fykqlld7jkd@queper01-lin>
+ <f5c699d6-f8f8-ab53-2835-329ae2bd8202@linaro.org>
+ <20190328174233.jthsdzxrzmzpjnqd@queper01-lin>
+ <1f99acdf-3f9a-5419-b1b5-1bcb9b36dbb6@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1f99acdf-3f9a-5419-b1b5-1bcb9b36dbb6@linaro.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function divider_recalc_rate The judgment of the return value of
-_get_div indicates that the return value of _get_div may be 0.
-In order to avoid the divide-by-zero error, add check the return value
-of _get_div in the divider_ro_round_rate_parent
+On Thursday 28 Mar 2019 at 20:51:12 (+0100), Daniel Lezcano wrote:
+> On 28/03/2019 18:42, Quentin Perret wrote:
+> > Hi Daniel,
+> > 
+> > On Thursday 28 Mar 2019 at 18:27:49 (+0100), Daniel Lezcano wrote:
+> >> On 28/03/2019 11:22, Quentin Perret wrote:
+> >>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> >>>> index 2d9c39033c1a..3c09bdaaefd3 100644
+> >>>> --- a/arch/arm64/configs/defconfig
+> >>>> +++ b/arch/arm64/configs/defconfig
+> >>>> @@ -97,6 +97,7 @@ CONFIG_XEN=y
+> >>>>  CONFIG_COMPAT=y
+> >>>>  CONFIG_HIBERNATION=y
+> >>>>  CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
+> >>>> +CONFIG_ENERGY_MODEL=n
+> >>>
+> >>> Hmm, sorry I turned this to '=n' for testing and forgot to update the
+> >>> patch. This obviously should be '=y' ...
+> >>
+> >> I did a test without the ENERGY_MODEL config option set, dhrystone and
+> >> the power_allocator policy on the hikey. The board did not mitigate well
+> >> and ended up rebooting.
+> > 
+> > OK ... And is the same thing happening if you just run mainline w/o the
+> > dynamic-power-coefficient binding set for example ? The result _should_
+> > be the same. 
+> 
+> Right, it is the same.
 
-Signed-off-by: nixiaoming <nixiaoming@huawei.com>
----
- drivers/clk/clk-divider.c | 2 ++
- 1 file changed, 2 insertions(+)
+OK.
 
-diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
-index e5a1726..0854e3e 100644
---- a/drivers/clk/clk-divider.c
-+++ b/drivers/clk/clk-divider.c
-@@ -347,6 +347,8 @@ long divider_ro_round_rate_parent(struct clk_hw *hw, struct clk_hw *parent,
- 	int div;
- 
- 	div = _get_div(table, val, flags, width);
-+	if (!div) /* avoid divide-by-zero */
-+		return -EINVAL;
- 
- 	/* Even a read-only clock can propagate a rate change */
- 	if (clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) {
--- 
-1.8.5.6
+> 
+> > If not, then perhaps I missed something. I'll try to
+> > reproduce on my end. Just to be sure, when you say hikey, you mean
+> > hikey960 ? Or 620 ? In any case, thanks for testing :-)
+> 
+> hikey620
+> 
+> >> May be the cpu cooling Kconfig option should add
+> >> a SELECT or a DEPENDS on ENERGY_MODEL ?
+> > 
+> > Right, I've been wondering the same thing. I'm not a big fan of 'select'
+> > because enabling ENERGY_MODEL automatically for the thermal stuff will
+> > also happen to enable other things (EAS) without the user knowing. So
+> > I'd rather keep the ENERGY_MODEL option explicit.
+> > 
+> > But perhaps having THERMAL_GOV_POWER_ALLOCATOR 'depend on ENERGY_MODEL'
+> > could work. It's just that there is no _strong_ dependency, the IPA code
+> > isn't supposed to crash even if there is no EM ...
+> 
+> Given if the ENERGY_MODEL is not set there is a regression we should add
+> the dependency IMO.
 
+Right, that is true. And there are folks who don't use the arm64
+defconfig downstream, so I guess we need to make it clear for them they
+need to enable ENERGY_MODEL from now on.
+
+I'll add a 'depends on ENERGY_MODEL' to 'THERMAL_GOV_POWER_ALLOCATOR' in
+patch 3 for v2.
+
+Thanks,
+Quentin
