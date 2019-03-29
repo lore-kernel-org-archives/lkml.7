@@ -2,333 +2,170 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7405FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47414C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37433206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01ACD206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:20:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="WHbzFAaC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbfC2OUK (ORCPT
+        id S1729401AbfC2OUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:20:10 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:44702 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728966AbfC2OUK (ORCPT
+        Fri, 29 Mar 2019 10:20:37 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:39890 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728652AbfC2OUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:20:10 -0400
-Received: by mail-qk1-f194.google.com with SMTP id y5so1409386qkc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 07:20:09 -0700 (PDT)
+        Fri, 29 Mar 2019 10:20:37 -0400
+Received: by mail-yb1-f193.google.com with SMTP id b88so898708ybi.6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 07:20:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EdPl8wx9CT7eKW049LQPVwPDMTDYASSuYhqDUDUeQzw=;
+        b=WHbzFAaCZ1Rp2mTxkykmaArTeY2OaUeosmIrcGXV6ktIDfrWsXSIgYtiWu1un+hAbq
+         R4fjzyXoQYPoBkdpWu8lE5RFf/92pzrIyLJAs1KhZpiS8FXEYL73m+ZiH2Wh9j4TK6L8
+         abyoN8VPyblI/VtDjAnujRSq46h8XrDiB+HgtCVJXHgFMPEXsnIgZ5waKIYUioG+S2+7
+         UjEK1+iW2ihbPWGBu0fPbPR4P9aj6GuIHj7WKeAVee1sAuoYZe/+KpdLS1/Ueybal7ND
+         4zOSk+UB/lR7hJC1MJLlzwGi9K3tHoDOTkGc6HytXXOWYeoRoVzKe+CK88Tl/AD/CBET
+         AFyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bfIo0anIhfHdTOEe/8IcJoRfhVvvXqiXyBn4RhoVKhc=;
-        b=VsUZWzDl0qT29c+a132ObJUJki7a2OMOu1oLLYBJFcG+Ep3jA5za0zmvvmyokzRowo
-         T/h8FjxdsmxSBSh2bcTk0H1AmGKJGuni9QFAQYF2otSrNcJvq8XT+ijoGMCeVynJ6/nU
-         FJmltfs5wdnb8TQGWYMqDZflpupzv/BMin1Dw6aTdG2dM1ny6Ci2AwjTQm2nVSdG7dwI
-         oz2/A62qgJpyLTu8BpjqQdXe9j0Db1sjTOnYHkLTEy5mlyu3No6RRuEV6XJNIwQDw/YT
-         zI0v2ac4uMbtMYzpFoSpGRebWQ4BIr0w1S+J9stHThuExH/ZMZbgd+eJzJmNPVX2il4V
-         CP+A==
-X-Gm-Message-State: APjAAAVHw+4GtGxLi56PKAX06QuOk/JTPEqfhs1qe9H/9hS80HYaHSiD
-        +cgXKGKZVB5Rp1hAsh/wJEGqDA==
-X-Google-Smtp-Source: APXvYqzpzUYYqtdS5yyXrFndX1kH8LtuTnUBcRgzc9EwfCXik8O5pJQzZ5oll6pWB8Jna+Y8/mPh4Q==
-X-Received: by 2002:a37:59c7:: with SMTP id n190mr37321929qkb.142.1553869209178;
-        Fri, 29 Mar 2019 07:20:09 -0700 (PDT)
-Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
-        by smtp.gmail.com with ESMTPSA id u16sm1583217qtc.84.2019.03.29.07.20.07
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EdPl8wx9CT7eKW049LQPVwPDMTDYASSuYhqDUDUeQzw=;
+        b=TaPT6p6upE8nNcMK1SlHdynm0KDeJQJsKmhRmacANH8xkLTg8rwBkXZ3ttYOB8IIj+
+         fqWcAYIaDdtRb1Uu1b1J0biuavwU2F4yJaU5svE1HxOklG/TYhcK/pCnCDeMrdijK61H
+         jQ1nosi16VbeG4GkWGFhfRYq8hg1vZkoXgmt8qA4CW8D4N+Z9qzTrQWfvrxzWe09oUCp
+         1HBYxHmSuj/PY1SRul/OZsUDUzKcj8Px5KdiisOZLiC/nOeEA2GhfQG3P6KdqR+YcC7P
+         oMjv/GIm2eVL6V6NSBlx+RUtLLRpzFCvdDLAfah+J+IHUu0QEcRHJkCehmejeVQLN6xN
+         oS1A==
+X-Gm-Message-State: APjAAAVhnX7D9xOmoYs9AcA3heR/FeXUBAv0cJ+xqHbWMX2PzI3jQ4H2
+        luUxRiGu58vPOSMMFB8GjA8Guw==
+X-Google-Smtp-Source: APXvYqxr/aJg2GTWvfMraC5VoXtkFI3s/QclcSjNZmIybpu9Sgmnn/PE4/h4exoDcU0bbQePdrrmDg==
+X-Received: by 2002:a25:1482:: with SMTP id 124mr41366879ybu.421.1553869236276;
+        Fri, 29 Mar 2019 07:20:36 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:180::20d1])
+        by smtp.gmail.com with ESMTPSA id p75sm643875ywg.36.2019.03.29.07.20.34
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 07:20:08 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 10:20:06 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 04/13] tools headers uapi: Sync asm-generic/mman-common.h
- and linux/mman.h
-Message-ID: <20190329101404-mutt-send-email-mst@kernel.org>
-References: <20190329133801.21004-1-acme@kernel.org>
- <20190329133801.21004-5-acme@kernel.org>
+        Fri, 29 Mar 2019 07:20:35 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 10:20:33 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Gardon <bgardon@google.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Linux MM <linux-mm@kvack.org>, kvm@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] mm, kvm: account kvm_vcpu_mmap to kmemcg
+Message-ID: <20190329142033.GB2474@cmpxchg.org>
+References: <20190329012836.47013-1-shakeelb@google.com>
+ <20190329023552.GV10344@bombadil.infradead.org>
+ <CALvZod5GiC1+HB3_Mm969Qbgj7s6-unbd141uP5pnMbsufS+mg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190329133801.21004-5-acme@kernel.org>
+In-Reply-To: <CALvZod5GiC1+HB3_Mm969Qbgj7s6-unbd141uP5pnMbsufS+mg@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 10:37:52AM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Thu, Mar 28, 2019 at 08:59:45PM -0700, Shakeel Butt wrote:
+> On Thu, Mar 28, 2019 at 7:36 PM Matthew Wilcox <willy@infradead.org> wrote:
+> > I don't understand why we need a PageKmemcg anyway.  We already
+> > have an entire pointer in struct page; can we not just check whether
+> > page->mem_cgroup is NULL or not?
 > 
-> To deal with the move of some defines from asm-generic/mmap-common.h to
-> linux/mman.h done in:
-> 
->   746c9398f5ac ("arch: move common mmap flags to linux/mman.h")
-> 
-> The generated mmap_flags array stays the same:
-> 
->   $ tools/perf/trace/beauty/mmap_flags.sh
->   static const char *mmap_flags[] = {
-> 	[ilog2(0x40) + 1] = "32BIT",
-> 	[ilog2(0x01) + 1] = "SHARED",
-> 	[ilog2(0x02) + 1] = "PRIVATE",
-> 	[ilog2(0x10) + 1] = "FIXED",
-> 	[ilog2(0x20) + 1] = "ANONYMOUS",
-> 	[ilog2(0x100000) + 1] = "FIXED_NOREPLACE",
-> 	[ilog2(0x0100) + 1] = "GROWSDOWN",
-> 	[ilog2(0x0800) + 1] = "DENYWRITE",
-> 	[ilog2(0x1000) + 1] = "EXECUTABLE",
-> 	[ilog2(0x2000) + 1] = "LOCKED",
-> 	[ilog2(0x4000) + 1] = "NORESERVE",
-> 	[ilog2(0x8000) + 1] = "POPULATE",
-> 	[ilog2(0x10000) + 1] = "NONBLOCK",
-> 	[ilog2(0x20000) + 1] = "STACK",
-> 	[ilog2(0x40000) + 1] = "HUGETLB",
-> 	[ilog2(0x80000) + 1] = "SYNC",
->   };
->   $
-> 
-> And to have the system's sys/mman.h find the definition of MAP_SHARED
-> and MAP_PRIVATE, make sure they are defined in the tools/ mman-common.h
-> in a way that keeps it the same as the kernel's, need for keeping the
-> Android's NDK cross build working.
-> 
-> This silences these perf build warnings:
-> 
->   Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/mman-common.h' differs from latest version at 'include/uapi/asm-generic/mman-common.h'
->   diff -u tools/include/uapi/asm-generic/mman-common.h include/uapi/asm-generic/mman-common.h
->   Warning: Kernel ABI header at 'tools/include/uapi/linux/mman.h' differs from latest version at 'include/uapi/linux/mman.h'
->   diff -u tools/include/uapi/linux/mman.h include/uapi/linux/mman.h
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: https://lkml.kernel.org/n/tip-h80ycpc6pedg9s5z2rwpy6ws@git.kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/arch/alpha/include/uapi/asm/mman.h      |  2 --
->  tools/arch/mips/include/uapi/asm/mman.h       |  2 --
->  tools/arch/parisc/include/uapi/asm/mman.h     |  2 --
->  tools/arch/xtensa/include/uapi/asm/mman.h     |  2 --
->  .../uapi/asm-generic/mman-common-tools.h      | 23 +++++++++++++++++++
->  tools/include/uapi/asm-generic/mman-common.h  |  4 +---
->  tools/include/uapi/asm-generic/mman.h         |  2 +-
->  tools/include/uapi/linux/mman.h               |  4 ++++
->  tools/perf/Makefile.perf                      |  4 ++--
->  tools/perf/check-headers.sh                   |  2 +-
->  tools/perf/trace/beauty/mmap_flags.sh         | 14 ++++++++---
->  11 files changed, 43 insertions(+), 18 deletions(-)
->  create mode 100644 tools/include/uapi/asm-generic/mman-common-tools.h
-> 
-> diff --git a/tools/arch/alpha/include/uapi/asm/mman.h b/tools/arch/alpha/include/uapi/asm/mman.h
-> index c317d3e6867a..ea6a255ae61f 100644
-> --- a/tools/arch/alpha/include/uapi/asm/mman.h
-> +++ b/tools/arch/alpha/include/uapi/asm/mman.h
-> @@ -27,8 +27,6 @@
->  #define MAP_NONBLOCK	0x40000
->  #define MAP_NORESERVE	0x10000
->  #define MAP_POPULATE	0x20000
-> -#define MAP_PRIVATE	0x02
-> -#define MAP_SHARED	0x01
->  #define MAP_STACK	0x80000
->  #define PROT_EXEC	0x4
->  #define PROT_GROWSDOWN	0x01000000
-> diff --git a/tools/arch/mips/include/uapi/asm/mman.h b/tools/arch/mips/include/uapi/asm/mman.h
-> index de2206883abc..c8acaa138d46 100644
-> --- a/tools/arch/mips/include/uapi/asm/mman.h
-> +++ b/tools/arch/mips/include/uapi/asm/mman.h
-> @@ -28,8 +28,6 @@
->  #define MAP_NONBLOCK	0x20000
->  #define MAP_NORESERVE	0x0400
->  #define MAP_POPULATE	0x10000
-> -#define MAP_PRIVATE	0x002
-> -#define MAP_SHARED	0x001
->  #define MAP_STACK	0x40000
->  #define PROT_EXEC	0x04
->  #define PROT_GROWSDOWN	0x01000000
-> diff --git a/tools/arch/parisc/include/uapi/asm/mman.h b/tools/arch/parisc/include/uapi/asm/mman.h
-> index 1bd78758bde9..f9fd1325f5bd 100644
-> --- a/tools/arch/parisc/include/uapi/asm/mman.h
-> +++ b/tools/arch/parisc/include/uapi/asm/mman.h
-> @@ -27,8 +27,6 @@
->  #define MAP_NONBLOCK	0x20000
->  #define MAP_NORESERVE	0x4000
->  #define MAP_POPULATE	0x10000
-> -#define MAP_PRIVATE	0x02
-> -#define MAP_SHARED	0x01
->  #define MAP_STACK	0x40000
->  #define PROT_EXEC	0x4
->  #define PROT_GROWSDOWN	0x01000000
-> diff --git a/tools/arch/xtensa/include/uapi/asm/mman.h b/tools/arch/xtensa/include/uapi/asm/mman.h
-> index 34dde6f44dae..f2b08c990afc 100644
-> --- a/tools/arch/xtensa/include/uapi/asm/mman.h
-> +++ b/tools/arch/xtensa/include/uapi/asm/mman.h
-> @@ -27,8 +27,6 @@
->  #define MAP_NONBLOCK	0x20000
->  #define MAP_NORESERVE	0x0400
->  #define MAP_POPULATE	0x10000
-> -#define MAP_PRIVATE	0x002
-> -#define MAP_SHARED	0x001
->  #define MAP_STACK	0x40000
->  #define PROT_EXEC	0x4
->  #define PROT_GROWSDOWN	0x01000000
-> diff --git a/tools/include/uapi/asm-generic/mman-common-tools.h b/tools/include/uapi/asm-generic/mman-common-tools.h
-> new file mode 100644
-> index 000000000000..af7d0d3a3182
-> --- /dev/null
-> +++ b/tools/include/uapi/asm-generic/mman-common-tools.h
-> @@ -0,0 +1,23 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef __ASM_GENERIC_MMAN_COMMON_TOOLS_ONLY_H
-> +#define __ASM_GENERIC_MMAN_COMMON_TOOLS_ONLY_H
-> +
-> +#include <asm-generic/mman-common.h>
-> +
-> +/* We need this because we need to have tools/include/uapi/ included in the tools
-> + * header search path to get access to stuff that is not yet in the system's
-> + * copy of the files in that directory, but since this cset:
-> + *
-> + *     746c9398f5ac ("arch: move common mmap flags to linux/mman.h")
-> + *
-> + * We end up making sys/mman.h, that is in the system headers, to not find the
-> + * MAP_SHARED and MAP_PRIVATE defines because they are not anymore in our copy
-> + * of asm-generic/mman-common.h.
+> PageKmemcg is for kmem while page->mem_cgroup is used for anon, file
+> and kmem memory. So, page->mem_cgroup can not be used for NULL check
+> unless we unify them. Not sure how complicated would that be.
 
-Isn't the reason they are not found there that you moved them out of
-there in the chunk below?
+A page flag warrants research into this.
 
-> So we define them here and include this header
-> + * from each of the per arch mman.h headers.
-> + */
-> +#ifndef MAP_SHARED
-> +#define MAP_SHARED	0x01		/* Share changes */
-> +#define MAP_PRIVATE	0x02		/* Changes are private */
-> +#define MAP_SHARED_VALIDATE 0x03	/* share + validate extension flags */
-> +#endif
-> +#endif // __ASM_GENERIC_MMAN_COMMON_TOOLS_ONLY_H
-> diff --git a/tools/include/uapi/asm-generic/mman-common.h b/tools/include/uapi/asm-generic/mman-common.h
-> index e7ee32861d51..abd238d0f7a4 100644
-> --- a/tools/include/uapi/asm-generic/mman-common.h
-> +++ b/tools/include/uapi/asm-generic/mman-common.h
-> @@ -15,9 +15,7 @@
->  #define PROT_GROWSDOWN	0x01000000	/* mprotect flag: extend change to start of growsdown vma */
->  #define PROT_GROWSUP	0x02000000	/* mprotect flag: extend change to end of growsup vma */
->  
-> -#define MAP_SHARED	0x01		/* Share changes */
-> -#define MAP_PRIVATE	0x02		/* Changes are private */
-> -#define MAP_SHARED_VALIDATE 0x03	/* share + validate extension flags */
-> +/* 0x01 - 0x03 are defined in linux/mman.h */
->  #define MAP_TYPE	0x0f		/* Mask for type of mapping */
->  #define MAP_FIXED	0x10		/* Interpret addr exactly */
->  #define MAP_ANONYMOUS	0x20		/* don't use a file */
+The only reason we have PageKmemcg() is because of the way we do
+memory type accounting at uncharge time:
 
-> diff --git a/tools/include/uapi/asm-generic/mman.h b/tools/include/uapi/asm-generic/mman.h
-> index 653687d9771b..36c197fc44a0 100644
-> --- a/tools/include/uapi/asm-generic/mman.h
-> +++ b/tools/include/uapi/asm-generic/mman.h
-> @@ -2,7 +2,7 @@
->  #ifndef __ASM_GENERIC_MMAN_H
->  #define __ASM_GENERIC_MMAN_H
->  
-> -#include <asm-generic/mman-common.h>
-> +#include <asm-generic/mman-common-tools.h>
->  
->  #define MAP_GROWSDOWN	0x0100		/* stack-like segment */
->  #define MAP_DENYWRITE	0x0800		/* ETXTBSY */
-> diff --git a/tools/include/uapi/linux/mman.h b/tools/include/uapi/linux/mman.h
-> index d0f515d53299..fc1a64c3447b 100644
-> --- a/tools/include/uapi/linux/mman.h
-> +++ b/tools/include/uapi/linux/mman.h
-> @@ -12,6 +12,10 @@
->  #define OVERCOMMIT_ALWAYS		1
->  #define OVERCOMMIT_NEVER		2
->  
-> +#define MAP_SHARED	0x01		/* Share changes */
-> +#define MAP_PRIVATE	0x02		/* Changes are private */
-> +#define MAP_SHARED_VALIDATE 0x03	/* share + validate extension flags */
-> +
->  /*
->   * Huge page size encoding when MAP_HUGETLB is specified, and a huge page
->   * size other than the default is desired.  See hugetlb_encode.h.
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 01f7555fd933..e8c9f77e9010 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -481,8 +481,8 @@ $(madvise_behavior_array): $(madvise_hdr_dir)/mman-common.h $(madvise_behavior_t
->  mmap_flags_array := $(beauty_outdir)/mmap_flags_array.c
->  mmap_flags_tbl := $(srctree)/tools/perf/trace/beauty/mmap_flags.sh
->  
-> -$(mmap_flags_array): $(asm_generic_uapi_dir)/mman.h $(asm_generic_uapi_dir)/mman-common.h $(mmap_flags_tbl)
-> -	$(Q)$(SHELL) '$(mmap_flags_tbl)' $(asm_generic_uapi_dir) $(arch_asm_uapi_dir) > $@
-> +$(mmap_flags_array): $(linux_uapi_dir)/mman.h $(asm_generic_uapi_dir)/mman.h $(asm_generic_uapi_dir)/mman-common.h $(mmap_flags_tbl)
-> +	$(Q)$(SHELL) '$(mmap_flags_tbl)' $(linux_uapi_dir) $(asm_generic_uapi_dir) $(arch_asm_uapi_dir) > $@
->  
->  mount_flags_array := $(beauty_outdir)/mount_flags_array.c
->  mount_flags_tbl := $(srctree)/tools/perf/trace/beauty/mount_flags.sh
-> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-> index 7b55613924de..c68ee06cae63 100755
-> --- a/tools/perf/check-headers.sh
-> +++ b/tools/perf/check-headers.sh
-> @@ -103,7 +103,7 @@ done
->  # diff with extra ignore lines
->  check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>"'
->  check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>"'
-> -check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common.h>"'
-> +check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
->  check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
->  
->  # diff non-symmetric files
-> diff --git a/tools/perf/trace/beauty/mmap_flags.sh b/tools/perf/trace/beauty/mmap_flags.sh
-> index 32bac9c0d694..5f5eefcb3c74 100755
-> --- a/tools/perf/trace/beauty/mmap_flags.sh
-> +++ b/tools/perf/trace/beauty/mmap_flags.sh
-> @@ -1,15 +1,18 @@
->  #!/bin/sh
->  # SPDX-License-Identifier: LGPL-2.1
->  
-> -if [ $# -ne 2 ] ; then
-> +if [ $# -ne 3 ] ; then
->  	[ $# -eq 1 ] && hostarch=$1 || hostarch=`uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/`
-> +	linux_header_dir=tools/include/uapi/linux
->  	header_dir=tools/include/uapi/asm-generic
->  	arch_header_dir=tools/arch/${hostarch}/include/uapi/asm
->  else
-> -	header_dir=$1
-> -	arch_header_dir=$2
-> +	linux_header_dir=$1
-> +	header_dir=$2
-> +	arch_header_dir=$3
->  fi
->  
-> +linux_mman=${linux_header_dir}/mman.h
->  arch_mman=${arch_header_dir}/mman.h
->  
->  # those in egrep -vw are flags, we want just the bits
-> @@ -20,6 +23,11 @@ egrep -q $regex ${arch_mman} && \
->  (egrep $regex ${arch_mman} | \
->  	sed -r "s/$regex/\2 \1/g"	| \
->  	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n")
-> +egrep -q $regex ${linux_mman} && \
-> +(egrep $regex ${linux_mman} | \
-> +	egrep -vw 'MAP_(UNINITIALIZED|TYPE|SHARED_VALIDATE)' | \
-> +	sed -r "s/$regex/\2 \1/g"	| \
-> +	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n")
->  ([ ! -f ${arch_mman} ] || egrep -q '#[[:space:]]*include[[:space:]]+<uapi/asm-generic/mman.*' ${arch_mman}) &&
->  (egrep $regex ${header_dir}/mman-common.h | \
->  	egrep -vw 'MAP_(UNINITIALIZED|TYPE|SHARED_VALIDATE)' | \
-> -- 
-> 2.20.1
+	if (!PageKmemcg(page)) {
+		unsigned int nr_pages = 1;
+
+		if (PageTransHuge(page)) {
+			nr_pages <<= compound_order(page);
+			ug->nr_huge += nr_pages;
+		}
+		if (PageAnon(page))
+			ug->nr_anon += nr_pages;
+		else {
+			ug->nr_file += nr_pages;
+			if (PageSwapBacked(page))
+				ug->nr_shmem += nr_pages;
+		}
+		ug->pgpgout++;
+	} else {
+		ug->nr_kmem += 1 << compound_order(page);
+		__ClearPageKmemcg(page);
+	}
+
+	[...]
+
+	if (!mem_cgroup_is_root(ug->memcg)) {
+		page_counter_uncharge(&ug->memcg->memory, nr_pages);
+		if (do_memsw_account())
+			page_counter_uncharge(&ug->memcg->memsw, nr_pages);
+		if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) && ug->nr_kmem)
+			page_counter_uncharge(&ug->memcg->kmem, ug->nr_kmem);
+		memcg_oom_recover(ug->memcg);
+	}
+
+	local_irq_save(flags);
+	__mod_memcg_state(ug->memcg, MEMCG_RSS, -ug->nr_anon);
+	__mod_memcg_state(ug->memcg, MEMCG_CACHE, -ug->nr_file);
+	__mod_memcg_state(ug->memcg, MEMCG_RSS_HUGE, -ug->nr_huge);
+	__mod_memcg_state(ug->memcg, NR_SHMEM, -ug->nr_shmem);
+	__count_memcg_events(ug->memcg, PGPGOUT, ug->pgpgout);
+
+But nothing says we have to have all these duplicate private counters,
+or update them this late in the page's lifetime. The generic vmstat
+counters in comparison are updated when 1) we know the page is going
+away but 2) we still know the page type. We can do the same here.
+
+We can either
+
+a) Push up the MEMCG_RSS, MEMCG_CACHE etc. accounting sites to before
+   the pages are uncharged, when the page type is still known, but
+   page->mem_cgroup is exclusive, i.e. when they are deleted from page
+   cache or when their last pte is going away. This would be very
+   close to where the VM updates NR_ANON_MAPPED, NR_FILE_PAGES etc.
+
+or
+
+b) Tweak the existing NR_ANON_MAPPED, NR_FILE_PAGES, NR_ANON_THPS
+   accounting sites to use the lruvec_page_state infra and get rid of
+   the duplicate MEMCG_RSS, MEMCG_CACHE counters completely.
+
+   These sites would need slight adjustments, as they are sometimes
+   before commit_charge() set up page->mem_cgroup, but it doesn't look
+   too complicated to fix that ordering.
+
+The latter would be a great cleanup, and frankly one that is long
+overdue. There is no good reason for all this duplication. We'd not
+only get rid of the private counters and the duplicate accounting
+sites, it would drastically simplify charging and uncharging, and it
+would even obviate the need for a separate kmem (un)charge path.
+
+[ The cgroup1 memcg->kmem thing is the odd-one-out, but I think this
+  is complete legacy at this point and nobody is actively setting
+  limits on that counter anyway. We can break out an explicit v1-only
+  mem_cgroup_charge_legacy_kmem(), put it into the currently accounted
+  callsites for compatibility, and not add any new ones. ]
