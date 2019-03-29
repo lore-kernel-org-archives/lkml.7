@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE04DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E93C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6AB21850
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1119F218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EwqumCfn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmSG4MGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbfC2ANl (ORCPT
+        id S1728967AbfC2ANn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 20:13:41 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38710 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728548AbfC2ANf (ORCPT
+        Thu, 28 Mar 2019 20:13:43 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43216 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728947AbfC2ANl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 20:13:35 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g37so131309plb.5;
-        Thu, 28 Mar 2019 17:13:35 -0700 (PDT)
+        Thu, 28 Mar 2019 20:13:41 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m10so119963plt.10;
+        Thu, 28 Mar 2019 17:13:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7GmyxxsAbglevWR8mh3EqJ6PmOlr7B4jt5/Agj2J4Ac=;
-        b=EwqumCfnku7GyGcp95e8rV3O7AbPyCjVbbd8UR8ydkGM9a5EtlXZVS8i2SubEoIYHP
-         McJ5YfLCwaSZm9yll9vLA2LS18xlrPmJi6SshPgwqlmO7sGAXgzZg5DylYhsIx9Bk6fu
-         OT+y2IGw7u0ypSCtQaEZnbUhDIVspinVx56brpFAqsMzk6/uf1yVzY8mDDiroB+JI0r7
-         5w6+iVwmbnDiG6RDBaVDVXAmIL6kiV12XpLjcG60WSZD5aoeiN4sAahVuj7ix/6BAjZd
-         P+eowZCUQfH/5YMWQaMT8FENsea0LatK05anHUofG7N87REfrEQNwwNEcn8J3n+OI0Vi
-         xI4g==
+        bh=UVgroTjcUkS9nqIZT433GaippAQQkLNBQjYZ9znp6m8=;
+        b=gmSG4MGYIoIQ3MVtWACY83lSq+1Gl5uQL3zWytipSN5r9x3FOeLtqbzTFUz3rpLEsA
+         OS+4hTSdgAtGG1RsXfvUm6HPJutxVVt8kvTXWWH2jK5OlRoUGA7BnC9L0PnxkxYLhevq
+         OYFlSbmuIzSWq32T5CgyKacN5ikRPw7WbyVOW7YcYd1Gs9hBvADTSpgVh/w+ovVvRBxM
+         /SLFrQOr1cEbQwcuSl4wlti0A1K7n6F74jaqKx7tTfK82Jg9a3dz9CLXCc/yQkWpfEF6
+         ZSyuhf8IhClgvxhyeawRbs6NdWIpf4GQNvAE6jFGLwkTOH6kda7lAMdxDChAjMyQ0pGw
+         6zTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7GmyxxsAbglevWR8mh3EqJ6PmOlr7B4jt5/Agj2J4Ac=;
-        b=GuSgzhiOqvtjBb6CIhDnO2N96tHdFQk/FU42UsPzxShO56QUNPliWT+a/9/81JITca
-         wpbIANiEF8wMI99meoVY7VoiiQNdSuwNalCHI+dX8kF1ONdqRuxMDcyRn3X89sm6n+aq
-         s94BE1/y38PZjxv5J/z5t0tuhI/Y2KMHgaJou6QSppdghrTvoMcxi6NE7cGLOx9+T8Ll
-         TKoJ9VykOdLfCxAqkqxR4aS4+EbrhvxkDDX7ny/OBL8YV7Lcfiu5T3sYLMm0xCiBaa8F
-         01Ox4DI5WbajuuSWSBwCbUL1QZvq2kEysM6W39pUStDsAVI7B9hn9FSX2IU/jHfADwSo
-         CevQ==
-X-Gm-Message-State: APjAAAVOAa3Uf31YMoXTHohc7M6iLxDQPwbL7Zp6NH+E+amJNQ+yRj56
-        RvIJ/2c3uTg0rDVnkXWeI+I=
-X-Google-Smtp-Source: APXvYqz+hUdriAR7nmFOZlgbLJXbMVCzEW/FK2d1EhywpIquwvWf+dAkhAnghQDjHb+MElE+FxXelA==
-X-Received: by 2002:a17:902:d889:: with SMTP id b9mr43322285plz.294.1553818414863;
-        Thu, 28 Mar 2019 17:13:34 -0700 (PDT)
+        bh=UVgroTjcUkS9nqIZT433GaippAQQkLNBQjYZ9znp6m8=;
+        b=nH2AZ49899bZMDACVnnmChD3fKKxa+y3VhmaCAMY1MBccov5ZpsFgOsKQsI1ewJD8t
+         IjU/PoqbDPx012pgtpacr/0poSmFM9Prf0NW8TTCBIYkTNd3QZtsVykxBXBq2DH21QVy
+         6tLZtl/YJddFtp8/DqDGydaFP2heSeVnvuUbL2SKvL8v0J0NvwrBrPkShFJvHR06MPDm
+         p9BXbfuoULsr0SXwzzIx4qzxV/8JIlGnMJbgTR/Hw+tSKXSbWmF6v/M/mmagLqCSjnSR
+         8P9NkZjtV1hfTFEU+YEE4GKTl56MVxFKkZXDcI7st9pOOp9kFtseetwZQPXt4jqJQz/K
+         MJqw==
+X-Gm-Message-State: APjAAAVCLfzOlj1Gi5Pmvl08w5FfnBxY9rW6++YgemRYAVAiuIHHPfS+
+        SkjqB2vOvQ0DYwNLXJLqlts=
+X-Google-Smtp-Source: APXvYqzAi9hsLOT3CpGtc/S3ZP25wrACW9rf1NkieFaGLNCEujrAqzkhrAOL4VYS3RGDuWmFkJGdPQ==
+X-Received: by 2002:a17:902:e90b:: with SMTP id cs11mr44878696plb.197.1553818420140;
+        Thu, 28 Mar 2019 17:13:40 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id f125sm432488pfc.91.2019.03.28.17.13.30
+        by smtp.gmail.com with ESMTPSA id f125sm432488pfc.91.2019.03.28.17.13.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 17:13:34 -0700 (PDT)
+        Thu, 28 Mar 2019 17:13:38 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v2 18/24] acpi doc: convert acpi/aml-debugger.txt to rst format
-Date:   Fri, 29 Mar 2019 08:11:29 +0800
-Message-Id: <20190329001135.15847-19-changbin.du@gmail.com>
+Subject: [PATCH v2 19/24] acpi doc: convert acpi/apei/output_format.txt to rst format
+Date:   Fri, 29 Mar 2019 08:11:30 +0800
+Message-Id: <20190329001135.15847-20-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190329001135.15847-1-changbin.du@gmail.com>
 References: <20190329001135.15847-1-changbin.du@gmail.com>
@@ -79,175 +79,331 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- Documentation/acpi/aml-debugger.rst | 75 +++++++++++++++++++++++++++++
- Documentation/acpi/aml-debugger.txt | 66 -------------------------
- Documentation/acpi/index.rst        |  1 +
- 3 files changed, 76 insertions(+), 66 deletions(-)
- create mode 100644 Documentation/acpi/aml-debugger.rst
- delete mode 100644 Documentation/acpi/aml-debugger.txt
+ Documentation/acpi/apei/output_format.rst | 150 ++++++++++++++++++++++
+ Documentation/acpi/apei/output_format.txt | 147 ---------------------
+ Documentation/acpi/index.rst              |   1 +
+ 3 files changed, 151 insertions(+), 147 deletions(-)
+ create mode 100644 Documentation/acpi/apei/output_format.rst
+ delete mode 100644 Documentation/acpi/apei/output_format.txt
 
-diff --git a/Documentation/acpi/aml-debugger.rst b/Documentation/acpi/aml-debugger.rst
+diff --git a/Documentation/acpi/apei/output_format.rst b/Documentation/acpi/apei/output_format.rst
 new file mode 100644
-index 000000000000..a889d43bc6c5
+index 000000000000..c2e7ebddb529
 --- /dev/null
-+++ b/Documentation/acpi/aml-debugger.rst
-@@ -0,0 +1,75 @@
++++ b/Documentation/acpi/apei/output_format.rst
+@@ -0,0 +1,150 @@
 +.. SPDX-License-Identifier: GPL-2.0
-+.. include:: <isonum.txt>
 +
-+================
-+The AML Debugger
-+================
++==================
++APEI output format
++==================
 +
-+:Copyright: |copy| 2016, Intel Corporation
-+:Author: Lv Zheng <lv.zheng@intel.com>
++APEI uses printk as hardware error reporting interface, the output
++format is as follow::
 +
++        <error record> :=
++        APEI generic hardware error status
++        severity: <integer>, <severity string>
++        section: <integer>, severity: <integer>, <severity string>
++        flags: <integer>
++        <section flags strings>
++        fru_id: <uuid string>
++        fru_text: <string>
++        section_type: <section type string>
++        <section data>
 +
-+This document describes the usage of the AML debugger embedded in the Linux
-+kernel.
++        <severity string>* := recoverable | fatal | corrected | info
 +
-+1. Build the debugger
-+=====================
++        <section flags strings># :=
++        [primary][, containment warning][, reset][, threshold exceeded]\
++        [, resource not accessible][, latent error]
 +
-+The following kernel configuration items are required to enable the AML
-+debugger interface from the Linux kernel::
++        <section type string> := generic processor error | memory error | \
++        PCIe error | unknown, <uuid string>
 +
-+   CONFIG_ACPI_DEBUGGER=y
-+   CONFIG_ACPI_DEBUGGER_USER=m
++        <section data> :=
++        <generic processor section data> | <memory section data> | \
++        <pcie section data> | <null>
 +
-+The userspace utilities can be built from the kernel source tree using
-+the following commands::
++        <generic processor section data> :=
++        [processor_type: <integer>, <proc type string>]
++        [processor_isa: <integer>, <proc isa string>]
++        [error_type: <integer>
++        <proc error type strings>]
++        [operation: <integer>, <proc operation string>]
++        [flags: <integer>
++        <proc flags strings>]
++        [level: <integer>]
++        [version_info: <integer>]
++        [processor_id: <integer>]
++        [target_address: <integer>]
++        [requestor_id: <integer>]
++        [responder_id: <integer>]
++        [IP: <integer>]
 +
-+   $ cd tools
-+   $ make acpi
++        <proc type string>* := IA32/X64 | IA64
 +
-+The resultant userspace tool binary is then located at::
++        <proc isa string>* := IA32 | IA64 | X64
 +
-+   tools/power/acpi/acpidbg
++        <processor error type strings># :=
++        [cache error][, TLB error][, bus error][, micro-architectural error]
 +
-+It can be installed to system directories by running "make install" (as a
-+sufficiently privileged user).
++        <proc operation string>* := unknown or generic | data read | data write | \
++        instruction execution
 +
-+2. Start the userspace debugger interface
-+=========================================
++        <proc flags strings># :=
++        [restartable][, precise IP][, overflow][, corrected]
 +
-+After booting the kernel with the debugger built-in, the debugger can be
-+started by using the following commands::
++        <memory section data> :=
++        [error_status: <integer>]
++        [physical_address: <integer>]
++        [physical_address_mask: <integer>]
++        [node: <integer>]
++        [card: <integer>]
++        [module: <integer>]
++        [bank: <integer>]
++        [device: <integer>]
++        [row: <integer>]
++        [column: <integer>]
++        [bit_position: <integer>]
++        [requestor_id: <integer>]
++        [responder_id: <integer>]
++        [target_id: <integer>]
++        [error_type: <integer>, <mem error type string>]
 +
-+   # mount -t debugfs none /sys/kernel/debug
-+   # modprobe acpi_dbg
-+   # tools/power/acpi/acpidbg
++        <mem error type string>* :=
++        unknown | no error | single-bit ECC | multi-bit ECC | \
++        single-symbol chipkill ECC | multi-symbol chipkill ECC | master abort | \
++        target abort | parity error | watchdog timeout | invalid address | \
++        mirror Broken | memory sparing | scrub corrected error | \
++        scrub uncorrected error
 +
-+That spawns the interactive AML debugger environment where you can execute
-+debugger commands.
++        <pcie section data> :=
++        [port_type: <integer>, <pcie port type string>]
++        [version: <integer>.<integer>]
++        [command: <integer>, status: <integer>]
++        [device_id: <integer>:<integer>:<integer>.<integer>
++        slot: <integer>
++        secondary_bus: <integer>
++        vendor_id: <integer>, device_id: <integer>
++        class_code: <integer>]
++        [serial number: <integer>, <integer>]
++        [bridge: secondary_status: <integer>, control: <integer>]
++        [aer_status: <integer>, aer_mask: <integer>
++        <aer status string>
++        [aer_uncor_severity: <integer>]
++        aer_layer=<aer layer string>, aer_agent=<aer agent string>
++        aer_tlp_header: <integer> <integer> <integer> <integer>]
 +
-+The commands are documented in the "ACPICA Overview and Programmer Reference"
-+that can be downloaded from
++        <pcie port type string>* := PCIe end point | legacy PCI end point | \
++        unknown | unknown | root port | upstream switch port | \
++        downstream switch port | PCIe to PCI/PCI-X bridge | \
++        PCI/PCI-X to PCIe bridge | root complex integrated endpoint device | \
++        root complex event collector
 +
-+https://acpica.org/documentation
++        if section severity is fatal or recoverable
++        <aer status string># :=
++        unknown | unknown | unknown | unknown | Data Link Protocol | \
++        unknown | unknown | unknown | unknown | unknown | unknown | unknown | \
++        Poisoned TLP | Flow Control Protocol | Completion Timeout | \
++        Completer Abort | Unexpected Completion | Receiver Overflow | \
++        Malformed TLP | ECRC | Unsupported Request
++        else
++        <aer status string># :=
++        Receiver Error | unknown | unknown | unknown | unknown | unknown | \
++        Bad TLP | Bad DLLP | RELAY_NUM Rollover | unknown | unknown | unknown | \
++        Replay Timer Timeout | Advisory Non-Fatal
++        fi
 +
-+The detailed debugger commands reference is located in Chapter 12 "ACPICA
-+Debugger Reference".  The "help" command can be used for a quick reference.
++        <aer layer string> :=
++        Physical Layer | Data Link Layer | Transaction Layer
 +
-+3. Stop the userspace debugger interface
-+========================================
++        <aer agent string> :=
++        Receiver ID | Requester ID | Completer ID | Transmitter ID
 +
-+The interactive debugger interface can be closed by pressing Ctrl+C or using
-+the "quit" or "exit" commands.  When finished, unload the module with::
++Where, [] designate corresponding content is optional
 +
-+   # rmmod acpi_dbg
++All <field string> description with * has the following format::
 +
-+The module unloading may fail if there is an acpidbg instance running.
++        field: <integer>, <field string>
 +
-+4. Run the debugger in a script
-+===============================
++Where value of <integer> should be the position of "string" in <field
++string> description. Otherwise, <field string> will be "unknown".
 +
-+It may be useful to run the AML debugger in a test script. "acpidbg" supports
-+this in a special "batch" mode.  For example, the following command outputs
-+the entire ACPI namespace::
++All <field strings> description with # has the following format::
 +
-+   # acpidbg -b "namespace"
-diff --git a/Documentation/acpi/aml-debugger.txt b/Documentation/acpi/aml-debugger.txt
++        field: <integer>
++        <field strings>
++
++Where each string in <fields strings> corresponding to one set bit of
++<integer>. The bit position is the position of "string" in <field
++strings> description.
++
++For more detailed explanation of every field, please refer to UEFI
++specification version 2.3 or later, section Appendix N: Common
++Platform Error Record.
+diff --git a/Documentation/acpi/apei/output_format.txt b/Documentation/acpi/apei/output_format.txt
 deleted file mode 100644
-index 75ebeb64ab29..000000000000
---- a/Documentation/acpi/aml-debugger.txt
+index 0c49c197c47a..000000000000
+--- a/Documentation/acpi/apei/output_format.txt
 +++ /dev/null
-@@ -1,66 +0,0 @@
--The AML Debugger
+@@ -1,147 +0,0 @@
+-                     APEI output format
+-                     ~~~~~~~~~~~~~~~~~~
 -
--Copyright (C) 2016, Intel Corporation
--Author: Lv Zheng <lv.zheng@intel.com>
+-APEI uses printk as hardware error reporting interface, the output
+-format is as follow.
 -
+-<error record> :=
+-APEI generic hardware error status
+-severity: <integer>, <severity string>
+-section: <integer>, severity: <integer>, <severity string>
+-flags: <integer>
+-<section flags strings>
+-fru_id: <uuid string>
+-fru_text: <string>
+-section_type: <section type string>
+-<section data>
 -
--This document describes the usage of the AML debugger embedded in the Linux
--kernel.
+-<severity string>* := recoverable | fatal | corrected | info
 -
--1. Build the debugger
+-<section flags strings># :=
+-[primary][, containment warning][, reset][, threshold exceeded]\
+-[, resource not accessible][, latent error]
 -
--   The following kernel configuration items are required to enable the AML
--   debugger interface from the Linux kernel:
+-<section type string> := generic processor error | memory error | \
+-PCIe error | unknown, <uuid string>
 -
--   CONFIG_ACPI_DEBUGGER=y
--   CONFIG_ACPI_DEBUGGER_USER=m
+-<section data> :=
+-<generic processor section data> | <memory section data> | \
+-<pcie section data> | <null>
 -
--   The userspace utilities can be built from the kernel source tree using
--   the following commands:
+-<generic processor section data> :=
+-[processor_type: <integer>, <proc type string>]
+-[processor_isa: <integer>, <proc isa string>]
+-[error_type: <integer>
+-<proc error type strings>]
+-[operation: <integer>, <proc operation string>]
+-[flags: <integer>
+-<proc flags strings>]
+-[level: <integer>]
+-[version_info: <integer>]
+-[processor_id: <integer>]
+-[target_address: <integer>]
+-[requestor_id: <integer>]
+-[responder_id: <integer>]
+-[IP: <integer>]
 -
--   $ cd tools
--   $ make acpi
+-<proc type string>* := IA32/X64 | IA64
 -
--   The resultant userspace tool binary is then located at:
+-<proc isa string>* := IA32 | IA64 | X64
 -
--     tools/power/acpi/acpidbg
+-<processor error type strings># :=
+-[cache error][, TLB error][, bus error][, micro-architectural error]
 -
--   It can be installed to system directories by running "make install" (as a
--   sufficiently privileged user).
+-<proc operation string>* := unknown or generic | data read | data write | \
+-instruction execution
 -
--2. Start the userspace debugger interface
+-<proc flags strings># :=
+-[restartable][, precise IP][, overflow][, corrected]
 -
--   After booting the kernel with the debugger built-in, the debugger can be
--   started by using the following commands:
+-<memory section data> :=
+-[error_status: <integer>]
+-[physical_address: <integer>]
+-[physical_address_mask: <integer>]
+-[node: <integer>]
+-[card: <integer>]
+-[module: <integer>]
+-[bank: <integer>]
+-[device: <integer>]
+-[row: <integer>]
+-[column: <integer>]
+-[bit_position: <integer>]
+-[requestor_id: <integer>]
+-[responder_id: <integer>]
+-[target_id: <integer>]
+-[error_type: <integer>, <mem error type string>]
 -
--   # mount -t debugfs none /sys/kernel/debug
--   # modprobe acpi_dbg
--   # tools/power/acpi/acpidbg
+-<mem error type string>* :=
+-unknown | no error | single-bit ECC | multi-bit ECC | \
+-single-symbol chipkill ECC | multi-symbol chipkill ECC | master abort | \
+-target abort | parity error | watchdog timeout | invalid address | \
+-mirror Broken | memory sparing | scrub corrected error | \
+-scrub uncorrected error
 -
--   That spawns the interactive AML debugger environment where you can execute
--   debugger commands.
+-<pcie section data> :=
+-[port_type: <integer>, <pcie port type string>]
+-[version: <integer>.<integer>]
+-[command: <integer>, status: <integer>]
+-[device_id: <integer>:<integer>:<integer>.<integer>
+-slot: <integer>
+-secondary_bus: <integer>
+-vendor_id: <integer>, device_id: <integer>
+-class_code: <integer>]
+-[serial number: <integer>, <integer>]
+-[bridge: secondary_status: <integer>, control: <integer>]
+-[aer_status: <integer>, aer_mask: <integer>
+-<aer status string>
+-[aer_uncor_severity: <integer>]
+-aer_layer=<aer layer string>, aer_agent=<aer agent string>
+-aer_tlp_header: <integer> <integer> <integer> <integer>]
 -
--   The commands are documented in the "ACPICA Overview and Programmer Reference"
--   that can be downloaded from
+-<pcie port type string>* := PCIe end point | legacy PCI end point | \
+-unknown | unknown | root port | upstream switch port | \
+-downstream switch port | PCIe to PCI/PCI-X bridge | \
+-PCI/PCI-X to PCIe bridge | root complex integrated endpoint device | \
+-root complex event collector
 -
--   https://acpica.org/documentation
+-if section severity is fatal or recoverable
+-<aer status string># :=
+-unknown | unknown | unknown | unknown | Data Link Protocol | \
+-unknown | unknown | unknown | unknown | unknown | unknown | unknown | \
+-Poisoned TLP | Flow Control Protocol | Completion Timeout | \
+-Completer Abort | Unexpected Completion | Receiver Overflow | \
+-Malformed TLP | ECRC | Unsupported Request
+-else
+-<aer status string># :=
+-Receiver Error | unknown | unknown | unknown | unknown | unknown | \
+-Bad TLP | Bad DLLP | RELAY_NUM Rollover | unknown | unknown | unknown | \
+-Replay Timer Timeout | Advisory Non-Fatal
+-fi
 -
--   The detailed debugger commands reference is located in Chapter 12 "ACPICA
--   Debugger Reference".  The "help" command can be used for a quick reference.
+-<aer layer string> :=
+-Physical Layer | Data Link Layer | Transaction Layer
 -
--3. Stop the userspace debugger interface
+-<aer agent string> :=
+-Receiver ID | Requester ID | Completer ID | Transmitter ID
 -
--   The interactive debugger interface can be closed by pressing Ctrl+C or using
--   the "quit" or "exit" commands.  When finished, unload the module with:
+-Where, [] designate corresponding content is optional
 -
--   # rmmod acpi_dbg
+-All <field string> description with * has the following format:
 -
--   The module unloading may fail if there is an acpidbg instance running.
+-field: <integer>, <field string>
 -
--4. Run the debugger in a script
+-Where value of <integer> should be the position of "string" in <field
+-string> description. Otherwise, <field string> will be "unknown".
 -
--   It may be useful to run the AML debugger in a test script. "acpidbg" supports
--   this in a special "batch" mode.  For example, the following command outputs
--   the entire ACPI namespace:
+-All <field strings> description with # has the following format:
 -
--   # acpidbg -b "namespace"
+-field: <integer>
+-<field strings>
+-
+-Where each string in <fields strings> corresponding to one set bit of
+-<integer>. The bit position is the position of "string" in <field
+-strings> description.
+-
+-For more detailed explanation of every field, please refer to UEFI
+-specification version 2.3 or later, section Appendix N: Common
+-Platform Error Record.
 diff --git a/Documentation/acpi/index.rst b/Documentation/acpi/index.rst
-index a3c5ddb15a0e..a1c7ad451099 100644
+index a1c7ad451099..39c647386fe2 100644
 --- a/Documentation/acpi/index.rst
 +++ b/Documentation/acpi/index.rst
-@@ -23,3 +23,4 @@ Linux ACPI (Advanced Configuration and Power Interface)
-    dsdt-override
+@@ -24,3 +24,4 @@ Linux ACPI (Advanced Configuration and Power Interface)
     debug
     method-tracing
-+   aml-debugger
+    aml-debugger
++   apei/output_format
 -- 
 2.20.1
 
