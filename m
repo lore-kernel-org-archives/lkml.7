@@ -2,101 +2,135 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2866FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA96C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED497206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB15206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rkpW0/L3"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XlnkrGBs";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mm6+59U2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbfC2OW2 (ORCPT
+        id S1729511AbfC2OW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:22:28 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40672 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729477AbfC2OW1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Mar 2019 10:22:27 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2TEML2P092390;
-        Fri, 29 Mar 2019 09:22:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553869341;
-        bh=qJnDgkOxqFadQoMiLLpjwlZ5BhKUQiBDQi/hrexNlJo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=rkpW0/L3GJ3PLLEozOC+3Us8lrrqdQnANUPzCgZX2pxHRHrFZzAZhlLNxomRUIv41
-         AZGKQhwm8UiCBp+1kPUXqrCPNgeRDF3l8lYUhCjglO9jww0PnDv80UGs0KkbxAUv+a
-         mbCi0Cvq9sUghgsCDViOC9eNJRl2m0qgRKeOyxLg=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2TEMLP5045763
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 Mar 2019 09:22:21 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
- Mar 2019 09:22:21 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 29 Mar 2019 09:22:21 -0500
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2TEMFPJ097780;
-        Fri, 29 Mar 2019 09:22:19 -0500
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>,
-        <faiz_abbas@ti.com>
-Subject: [PATCH 2/2] mmc: sdhci_am654: Add QUIRK2_TI_HISPD_BIT
-Date:   Fri, 29 Mar 2019 19:52:02 +0530
-Message-ID: <20190329142202.15000-3-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190329142202.15000-1-faiz_abbas@ti.com>
-References: <20190329142202.15000-1-faiz_abbas@ti.com>
+Received: from smtp.codeaurora.org ([198.145.29.96]:55728 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729429AbfC2OWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:22:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 69B10615AB; Fri, 29 Mar 2019 14:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553869343;
+        bh=0aIIsZihW3MUOyRReWGYqFxmPt7yP7UL7vWuurCaFNc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=XlnkrGBsP6bX3fJW9MsrOiYWnR3St4a3nQoI1KjRlQeKFbvwIKl+p/P03XE0CCd28
+         5GPhoZ+lhlHhNH815JaVoCEcEeDqv/rmdUJnMS7INsfQGPeSX1Jak+XecLAY33cyDo
+         CdmMpFLqtWJ7BsEc7U+7WiAUz/ApGgvpoUg1fZRE=
+Received: from [10.204.78.89] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: neeraju@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53ABC615B0;
+        Fri, 29 Mar 2019 14:22:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553869341;
+        bh=0aIIsZihW3MUOyRReWGYqFxmPt7yP7UL7vWuurCaFNc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mm6+59U2FCAdqQdt5ZeluZDiLU7q6QnMqwtWRhjG35eqWxfiloCzHdtP8l+MBiMQn
+         AUMDaIQFoIO7sjmyrThY8kgaXlgW5KX3d67WJ1VZzWEjxPWRucmiX0ElXjOK73T9Os
+         pRzyo5gZtq5wssfjjeR5g5lSGXCVefapnuTxXHBU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 53ABC615B0
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+Subject: Re: [PATCH] rcu: tree_stall: Correctly unlock root node in
+ rcu_check_gp_start_stall
+To:     Mukesh Ojha <mojha@codeaurora.org>, paulmck@linux.vnet.ibm.com,
+        josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1553858828-23097-1-git-send-email-neeraju@codeaurora.org>
+ <7a9eed5a-9bcf-460c-abb9-1e9bd6eae102@codeaurora.org>
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+Message-ID: <2a8057f7-0704-5e8f-423e-e56a91a9b448@codeaurora.org>
+Date:   Fri, 29 Mar 2019 19:52:15 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <7a9eed5a-9bcf-460c-abb9-1e9bd6eae102@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the AM654x Data Manual[1], the setup timing in lower speed
-modes can only be met if the controller uses a falling edge data launch.
 
-To ensure this, the HIGH_SPEED_ENA (HOST_CONTROL[2]) bit should be
-cleared in default speed, SD high speed, MMC high speed, SDR12 and SDR25
-speed modes.
 
-Enable the SDHCI_QUIRK2_TI_HISPD_BIT quirk to facilitate this.
+On 3/29/19 6:58 PM, Mukesh Ojha wrote:
+> 
+> On 3/29/2019 4:57 PM, Neeraj Upadhyay wrote:
+>> Only unlock the root node, if current node (rnp) is not
+>> root node.
+>>
+>> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+> 
+> 
+> 
+>> ---
+>>   kernel/rcu/tree_stall.h | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
+>> index f65a73a..0651833 100644
+>> --- a/kernel/rcu/tree_stall.h
+>> +++ b/kernel/rcu/tree_stall.h
+> 
+> 
+> why this is showing as under tree_stall.h while it is under 
+> "kernel/rcu/tree.c"
 
-[1] http://www.ti.com/lit/gpn/am6546 Section 5.10.5.16.1
+It's moved in 
+https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=10462d6f58fb6dbde7563e9343505d98d5bfba3d
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- drivers/mmc/host/sdhci_am654.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Please see linux-rcu dev tree for other changes, which moves code to 
+this file.
 
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index eea183e90f1b..739a91767d5a 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -172,7 +172,8 @@ static const struct sdhci_pltfm_data sdhci_am654_pdata = {
- 	.ops = &sdhci_am654_ops,
- 	.quirks = SDHCI_QUIRK_INVERTED_WRITE_PROTECT |
- 		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
--	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-+		   SDHCI_QUIRK2_TI_HISPD_BIT,
- };
- 
- static int sdhci_am654_init(struct sdhci_host *host)
+
+Thanks
+Neeraj
+
+> 
+>> @@ -630,7 +630,9 @@ static void rcu_check_gp_start_stall(struct 
+>> rcu_node *rnp, struct rcu_data *rdp,
+>>           time_before(j, rcu_state.gp_req_activity + gpssdelay) ||
+>>           time_before(j, rcu_state.gp_activity + gpssdelay) ||
+>>           atomic_xchg(&warned, 1)) {
+>> -        raw_spin_unlock_rcu_node(rnp_root); /* irqs remain disabled. */
+>> +        if (rnp_root != rnp)
+>> +            /* irqs remain disabled. */
+>> +            raw_spin_unlock_rcu_node(rnp_root);
+> 
+> Looks good as it will balance the lock .if it is the root_node, which 
+> was not there earlier, and unlock was happening without any lock on root.
+> 
+> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> 
+> Cheers,
+> -Mukesh
+> 
+>>           raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>>           return;
+>>       }
+
 -- 
-2.19.2
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
