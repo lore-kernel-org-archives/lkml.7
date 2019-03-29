@@ -2,155 +2,134 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3856C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1697C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07F72070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:12:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MgnTj6v8"
+	by mail.kernel.org (Postfix) with ESMTP id CA35C2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:12:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbfC2KMm (ORCPT
+        id S1728997AbfC2KMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:12:42 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33165 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728907AbfC2KMm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:12:42 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z6so9323032wmi.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 03:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=yMk7UlBf/9xSKlIqns7qRwCnHRkwDfcRdV2w4dM4dNo=;
-        b=MgnTj6v8T9TOquiXtlbl+r4u2teiTGEDT+R3C/rt+OVrMN4mFSn9AJG4LIIThTeNFU
-         vAaO9JB+e9R6PSoKSy8NR/GZzswo6soZXPmjl3yQQ0CLj+yheeRuZa6ExnOV9YDPSBmT
-         59Xq+C3lYC61lPdaSf8dZhjug3I6SQ6TF1mYxcUNmrij9OZtTstqeWRo7pbsGdna4729
-         aomgKCd8ZPvyDCV5jRGvGu+UmrRi+a1scLIGqLSLPDF2uyXztsgzu4g9twt7HEYDameY
-         zw11VSDY+oKcnEpipI2I0ELtEUbz87q6dnhS6MScHslkKwpnxhHJg93K+wZRqRNAwvSI
-         c1GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=yMk7UlBf/9xSKlIqns7qRwCnHRkwDfcRdV2w4dM4dNo=;
-        b=DVBdxPO9f/UfbTyvYGC1FXVq/Ko0I7CmWRnrf60vrLQtQpb835fUtnaCV4fjkZr8xM
-         PAUvjSCs0aBAk99OkiI+5hZ2qxcJLcyLaXHqQ20FB9IzkMny6Je46SM8PxM2Alhi/8/k
-         TRqDuORcfnk0SRuGfef1+ydy6jdfRH6OMqs2wi9l05jtHkOmxR1kBvqusynpF/h2T1Q6
-         ktFmlNc6+xlNVyFspcB1jopgSZsBGK+Gq8eqqO8DIZiLXN1Cn7w2od7yPONg6RpPmtDt
-         1xxsQ0xrkTwkx/kNK4zm6U/WlVzGIvI2OKemrKtmfkcZj+hpxhiKHm1ICSQ5reB3WMPS
-         6bRg==
-X-Gm-Message-State: APjAAAW2TU32RXhTcEXkuSacLo6tPLBMUoODcAkzjtHWqoqCYcs2UXXi
-        /CwtzvqbPIV29CmfkAAyG4YtuDKoSu8=
-X-Google-Smtp-Source: APXvYqz+8DZWYx1Z63Pc78Qy1vI3IAW585QzX1p4p77EWVdrWMsrw+VVxHkLwMxu8sPsQhLiBwZWyg==
-X-Received: by 2002:a1c:9a41:: with SMTP id c62mr2943482wme.108.1553854360434;
-        Fri, 29 Mar 2019 03:12:40 -0700 (PDT)
-Received: from localhost ([49.248.196.175])
-        by smtp.gmail.com with ESMTPSA id e1sm2904064wrw.66.2019.03.29.03.12.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 03:12:39 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com,
-        andy.gross@linaro.org, David Brown <david.brown@linaro.org>
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v2 02/13] arm64: dts: msm8998: efficiency is not valid property
-Date:   Fri, 29 Mar 2019 15:42:08 +0530
-Message-Id: <ccc5ea963b75ce613a11ae77dd4fb42e12bc1507.1553853990.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1553853990.git.amit.kucheria@linaro.org>
-References: <cover.1553853990.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1553853990.git.amit.kucheria@linaro.org>
-References: <cover.1553853990.git.amit.kucheria@linaro.org>
+        Fri, 29 Mar 2019 06:12:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46970 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728907AbfC2KMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 06:12:44 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2B74A3091755;
+        Fri, 29 Mar 2019 10:12:43 +0000 (UTC)
+Received: from localhost (ovpn-12-24.pek2.redhat.com [10.72.12.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CE579CCB;
+        Fri, 29 Mar 2019 10:12:40 +0000 (UTC)
+Date:   Fri, 29 Mar 2019 18:12:32 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     Dave Young <dyoung@redhat.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel
+ reserved region
+Message-ID: <20190329101232.GI7627@MiWiFi-R3L-srv>
+References: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
+ <20190320002524.GD18740@MiWiFi-R3L-srv>
+ <CAFgQCTt3-9oZ6yi_MGYFOZhn5+cSdJLGf3OQRMJ1CJr0eXiE5w@mail.gmail.com>
+ <20190322075259.GA18740@MiWiFi-R3L-srv>
+ <20190322083419.GB18740@MiWiFi-R3L-srv>
+ <CAFgQCTti4S3TUx_4YHi+Yx6poJbHhekT+Jzjjg__0tpZdA9tRQ@mail.gmail.com>
+ <20190329062715.GA7627@MiWiFi-R3L-srv>
+ <CAFgQCTvGnV5NUcyp1RCJa2hHxKiQDM=HRn_GwWs+WUdt1afLQA@mail.gmail.com>
+ <20190329073438.GC7627@MiWiFi-R3L-srv>
+ <CAFgQCTtbfYDzDkeZ_tPqAS2+f2E1dRtHgzZT13D0Zb6pfEEZug@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFgQCTtbfYDzDkeZ_tPqAS2+f2E1dRtHgzZT13D0Zb6pfEEZug@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 29 Mar 2019 10:12:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-efficiency comes from downstream. The valid upstream property is
-capacity-dmips-mhz but until we can come up with those numbers, remove
-this property.
+On 03/29/19 at 06:00pm, Pingfan Liu wrote:
+> On Fri, Mar 29, 2019 at 3:34 PM Baoquan He <bhe@redhat.com> wrote:
+> >
+> > On 03/29/19 at 03:25pm, Pingfan Liu wrote:
+> > > On Fri, Mar 29, 2019 at 2:27 PM Baoquan He <bhe@redhat.com> wrote:
+> > > >
+> > > > On 03/29/19 at 01:45pm, Pingfan Liu wrote:
+> > > > > On Fri, Mar 22, 2019 at 4:34 PM Baoquan He <bhe@redhat.com> wrote:
+> > > > > >
+> > > > > > On 03/22/19 at 03:52pm, Baoquan He wrote:
+> > > > > > > On 03/22/19 at 03:43pm, Pingfan Liu wrote:
+> > > > > > > > > > +/* parse crashkernel=x@y option */
+> > > > > > > > > > +static void mem_avoid_crashkernel_simple(char *option)
+> > > > > > > > >
+> > > > > > > > > Chao ever mentioned this, I want to ask again, why does it has to be
+> > > > > > > > > xxx_simple()?
+> > > > > > > > >
+> > > > > > > > Seems that I had replied Chao's question in another email. The naming
+> > > > > > > > follows the function parse_crashkernel_simple(), as the notes above
+> > > > > > >                        ~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > > > >
+> > > > > > > Sorry, I don't get.  typo?
+> > > > > >
+> > > > > > OK, I misunderstood it. We do have parse_crashkernel_simple() to handle
+> > > > > > crashkernel=size[@offset] case, to differente with other complicated
+> > > > > > cases, like crashkernel=size,[high|low],
+> > > > > >
+> > > > > > Then I am fine with this naming. Soryy about the noise.
+> > > > > >
+> > > > > > By the way, do you think if we should take care of this case:
+> > > > > > crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+> > > > > >
+> > > > > > It can also specify @offset. Not sure if it's too complicated, you may
+> > > > > > have a investigation.
+> > > > > >
+> > > > > In this case, kernel should get the total memory size info. So
+> > > > > process_e820_entries() or process_efi_entries() should be called
+> > > > > twice. One before handle_mem_options(), so crashkernel can evaluate
+> > > > > the reserved size. It is doable, and what is your opinion about the
+> > > >
+> > > > You mean calling process_e820_entries to calculate the RAM size in
+> > > > system? I may not do like that, please check what __find_max_addr() is
+> > > > doing. Did I get it?
+> > >
+> > > Yes, you got my meaning. But __find_max_addr() relies on the info, fed
+> > > by e820__memblock_setup(). It also involves the iteration of all e820
+> > > entries to get the max address. No essential difference, right?
+> >
+> > Hmm, I would say iterating e820 or efi entries to get the mas addr should be
+> > different with calling process_e820_entries(). The 1st is much simpler,
+> > right?
+> >
+> Yes. My original meaning is to reuse process_e820_entries(), but does
+> not call process_mem_region() at the first time.
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 8 --------
- 1 file changed, 8 deletions(-)
+Got it. That would be nice, but it will bring hackery which Thomas and
+Boris have clearly expressed disliking. Adding a new function to find
+the max addr, it truly doesn't reuse code, while it makes the code paths
+and logic are pretty clear. These avoiding cases are bloating code,
+however they usually don't happen in a same system. We make a simply and
+clear logic to make code strightforward with good code comments and
+printing message, it will be easier to debug issue if happened.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index ac25e9142cbd..0b6de0c29ee8 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -78,7 +78,6 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
--			efficiency = <1024>;
- 			next-level-cache = <&L2_0>;
- 			L2_0: l2-cache {
- 				compatible = "arm,arch-cache";
-@@ -97,7 +96,6 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
--			efficiency = <1024>;
- 			next-level-cache = <&L2_0>;
- 			L1_I_1: l1-icache {
- 				compatible = "arm,arch-cache";
-@@ -112,7 +110,6 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
--			efficiency = <1024>;
- 			next-level-cache = <&L2_0>;
- 			L1_I_2: l1-icache {
- 				compatible = "arm,arch-cache";
-@@ -127,7 +124,6 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
--			efficiency = <1024>;
- 			next-level-cache = <&L2_0>;
- 			L1_I_3: l1-icache {
- 				compatible = "arm,arch-cache";
-@@ -142,7 +138,6 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
--			efficiency = <1536>;
- 			next-level-cache = <&L2_1>;
- 			L2_1: l2-cache {
- 				compatible = "arm,arch-cache";
-@@ -161,7 +156,6 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
--			efficiency = <1536>;
- 			next-level-cache = <&L2_1>;
- 			L1_I_101: l1-icache {
- 				compatible = "arm,arch-cache";
-@@ -176,7 +170,6 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x102>;
- 			enable-method = "psci";
--			efficiency = <1536>;
- 			next-level-cache = <&L2_1>;
- 			L1_I_102: l1-icache {
- 				compatible = "arm,arch-cache";
-@@ -191,7 +184,6 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x103>;
- 			enable-method = "psci";
--			efficiency = <1536>;
- 			next-level-cache = <&L2_1>;
- 			L1_I_103: l1-icache {
- 				compatible = "arm,arch-cache";
--- 
-2.17.1
+So, I think a draft patch is welcomed, we can have a look at the logic,
+then polish it later to make a formal patch. Makes sense?
 
+Thanks
+Baoquan
