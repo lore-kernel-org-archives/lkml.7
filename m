@@ -2,134 +2,111 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F219C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45780C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4222082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DCBF2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:39:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="lZxNyi6I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lU5hKulO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729177AbfC2Iid (ORCPT
+        id S1729186AbfC2IjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:38:33 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52822 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729090AbfC2Iid (ORCPT
+        Fri, 29 Mar 2019 04:39:14 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36965 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729068AbfC2IjO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 04:38:33 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a184so1585137wma.2
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 01:38:32 -0700 (PDT)
+        Fri, 29 Mar 2019 04:39:14 -0400
+Received: by mail-pl1-f196.google.com with SMTP id q6so702875pll.4;
+        Fri, 29 Mar 2019 01:39:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VgNeplyT3OFWb28Y+gJ/FuUgcoPKTLA2kpGRRsSxzCI=;
-        b=lZxNyi6INfRPrrEbA3BeOvZnCHpAl8BIODECHC/MZ9c3xZOl5kRJkl7udWwKuG6Y07
-         /0ckQ43oviNNSiGXzPMXlZffil9LxAWt5MlXXS824ds5AmLtQvMMaczF7yuLw6SRTBGP
-         pEK5OHQwUOHY9Xpl9UMZfj6R1v6k1HS9SH+2VYUx4bYmIpTIM47W6ASIgCa0eUvNuG9U
-         7bQp7UUqfRMjKDkv/x/tmlZu7QPVoUd6w6RV0sDsTxG7YTbDRhifurBgaj3xcgciYn1x
-         VwjB8XdM7Ul2ejKmwMUEgz4FEG0HM6THAKDYC16dw1omABVxBGR6lDQ9KBJfNzKFzET1
-         tH9Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Uf5eG+BJ2Wvt73uhFfrT6FHlC65RAt94NCZNgKksaa4=;
+        b=lU5hKulOw/3mICPGiX9W8LovhwuGzPAO5JVLz1bk3UqBlclOpotJHDaG1PowvZOPEj
+         XJyL2dbgTgG1+s9ObcKxoH82PFI5SgKHgcsyKbBUvnWwd7KGnJVJfAX2JQKHqUl5Tt3d
+         9EyHpPlUNd85Nl2JfRI3gbwbApIPE+/dw3JmJ461NcTjbRuSc37nP5hEVq2yddb6uDyy
+         8NukreULiIJb93wGnsj4tIG7YZSxIIeyeqtFU/P3dlxQL6WbaIpMr86k+5MdEoapUL3K
+         X7Z0IzvF0+yJ92dU+rUGbd2MMdinszlLyw2OmzrxjfakN+vXrih5XRcX6p+xdpOObtJK
+         B6Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VgNeplyT3OFWb28Y+gJ/FuUgcoPKTLA2kpGRRsSxzCI=;
-        b=q+nUrKhMK0sUr1xXULTlwU0bZcD5KIklUCXUQ8QpZ8c78Q1rF5lc57sQqn04Xk4QR6
-         kuzMjNOokJRQdlH6Zc32F5E3rPOr/tH3ajgumwHtlFT3XDJtUqr7Ql8kfF5BQfWLtDni
-         M9EOfdT0x+BYJAVnRpnHTQVhFcJb0a6cBGNiFsLv+tiY+awebxOAtS6uV8uQ9lPTl/sg
-         WkgF2VRaF+cNhnYse4YkA60JCoFVLEMh7NfxsW529alPsXlugYOgfKjTpz/+/aYkehX1
-         zyGoZr9dwL3tUA8Uh7DNJxxIVQ4W1VqWoJ14sM3d/HTbKkEAFHA0LYsEpioZivbpV4ju
-         LHjw==
-X-Gm-Message-State: APjAAAWc1n2AUPK6mINkvuSJqMW636sTx6OktlMECT6dONbOAHCYlMCO
-        Kostujz5z6LMdy9cpva151gig+G44UiW397lFZAvwg==
-X-Google-Smtp-Source: APXvYqxYvWrsUeGT15Wvy5OeRAwgZjMg4vNYVlJN6S20n8QbYinagydHtnG4gLbrAmqoLtqftx5/KsqYZnjyPbt/98k=
-X-Received: by 2002:a1c:80c1:: with SMTP id b184mr2737105wmd.109.1553848711373;
- Fri, 29 Mar 2019 01:38:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Uf5eG+BJ2Wvt73uhFfrT6FHlC65RAt94NCZNgKksaa4=;
+        b=nSpnr2wmGz3nQ1Z91ZV8a9UAC9mzT2kjdKbBe3faoPm0REdNv2D2qyYChRsKztpxkd
+         Uss97Zp5wGtLYJE96R9aKsouJF/FHdbmToqvx7ZPe8ucDnB92/o43ew9XlYM4nHwtJv1
+         gz06kRoMikXKBJc8BpEDVDj1DdnpGS0b2uteyKnOO8apvNBPdp55MCXbHZQANUOzb2L7
+         K18md6ELiTlT79KDmAiWn5lLqqE24M2GcydodO++rMYZNxGMey9joiP8m9kPcrex6Uxd
+         X9k6yftjysc5NLzgsWYuckNQBisMw+V4c7hkBmlYrEk7lTL9WI2ZNlh5MNJkaYOq7RoT
+         EaEQ==
+X-Gm-Message-State: APjAAAVn+gnbbDvK5WpAKtww/YznP1lYNEzAxN1tX+N8RKWe/dTwj+PI
+        cPaVAKsN1PhhuMAqaYz9w8c=
+X-Google-Smtp-Source: APXvYqzzN48SjzHapixr5sj4AW7eDLjCb0DDI8yi28SgaRlbbHqh9y61tg3CXZIlLEvN2ME5dwbOTg==
+X-Received: by 2002:a17:902:5a2:: with SMTP id f31mr47348673plf.119.1553848753493;
+        Fri, 29 Mar 2019 01:39:13 -0700 (PDT)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id z21sm1889690pfn.139.2019.03.29.01.39.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 Mar 2019 01:39:12 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Fabio Estevam <festevam@gmail.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 1/4] dt-bindings: iio: imx7d-adc: Add #io-channel-cells to required
+Date:   Fri, 29 Mar 2019 01:38:55 -0700
+Message-Id: <20190329083858.9988-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20171117064904.GZ17200@lahna.fi.intel.com> <CAB4CAwdGQjXc6gsswyCgLTfFRN9CgcC=OJ6pz4rX-HCn8AT-TQ@mail.gmail.com>
- <20171121105205.GP22431@lahna.fi.intel.com> <CAB4CAwcjXi=YX+0PEC6wBdfAZ=am+BceB4HCFzTXzdts_FE2vQ@mail.gmail.com>
- <20171121120422.GR22431@lahna.fi.intel.com> <CAD8Lp444FNHZh6fLUfhfp1i_UBpMbS5QuvJ4FuZn7PKH1Ucy=A@mail.gmail.com>
- <20190327172940.GR3622@lahna.fi.intel.com> <20190328091729.GV9224@smile.fi.intel.com>
- <CAD8Lp44xuzHj4uu3a-Y9wscSyEmuG6=nbww6T9-9FaYZT_qYsw@mail.gmail.com>
- <CAB4CAwfH237-EUgfyR8-KWKo0HJOf=QkxiNjkBRg+gBpbKiM7g@mail.gmail.com> <20190328123444.GX3622@lahna.fi.intel.com>
-In-Reply-To: <20190328123444.GX3622@lahna.fi.intel.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Fri, 29 Mar 2019 16:38:20 +0800
-Message-ID: <CAB4CAwcQTH5BiDDbzfFXTDDuYQ_fuDd_1tKkecf6vwygGQmn5w@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: intel: save HOSTSW_OWN register over suspend/resume
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 8:34 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Thu, Mar 28, 2019 at 08:19:59PM +0800, Chris Chiu wrote:
-> > On Thu, Mar 28, 2019 at 5:38 PM Daniel Drake <drake@endlessm.com> wrote:
-> > >
-> > > On Thu, Mar 28, 2019 at 5:17 PM Andy Shevchenko
-> > > <andriy.shevchenko@intel.com> wrote:
-> > > > Hmm... Can you confirm that laptop you declared as a fixed case and the
-> > > > mentioned here is the same one?
-> > >
-> > > They are definitely not the same exact unit - originally we had a
-> > > pre-production sample, and now we briefly diagnosed a real production
-> > > unit that was sold to a customer. There could be subtle motherboard
-> > > variations as you mention.
-> > >
-> > > > If it's the case, I recommend to ping Asus again and make them check and fix.
-> > >
-> > > We'll keep an eye open for any opportunities to go deeper here.
-> > > However further investigation on both our side and theirs is blocked
-> > > by not having any of the affected hardware (since the models are now
-> > > so old), so I'm not very optimistic that we'll be able to make
-> > > progress there.
-> > >
-> > > > Meanwhile, Mika's proposal sounds feasible and not so intrusive. We may
-> > > > implement this later on.
-> > >
-> > > Chris will work on implementing this for your consideration.
-> > >
-> > > Thanks for the quick feedback!
-> > > Daniel
-> >
-> > What if I modify the patch as follows? It doesn't save HOSTSW_OWN register.
-> > It just toggles the bit specifically for the IRQ GPIO pin after resume when DMI
-> > matches.
->
-> I don't really like having quirks like this if we can avoid it and in
-> this case I think we can. Just always save HOSTSW_OWN and then restore
-> it if there is a GPIO requested and the value differs (and log a warning
-> or something like that).
+Add #io-channel-cells to list of required properties. Needed to be
+able to reference that node by phandle.
 
-You mean save the content of hostsw_own register on padgroup based ex.
-    communities[i].hostown[gpp] = readl(base + gpp * 4);
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+---
+ Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-And then check the hostown bit for the GPIO requested pin in
-intel_pinctrl_resume(),
-differs the hostsw_own bit on pin base (like padcfg), then restore the
-hostsw_own
-value of the padgroug which the GPIO pin is belonging to?
+diff --git a/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt b/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+index 5c184b940669..f1f3a552459b 100644
+--- a/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+@@ -10,6 +10,7 @@ Required properties:
+ - clocks: The root clock of the ADC controller
+ - clock-names: Must contain "adc", matching entry in the clocks property
+ - vref-supply: The regulator supply ADC reference voltage
++- #io-channel-cells: Must be 1 as per ../iio-bindings.txt
+ 
+ Example:
+ adc1: adc@30610000 {
+@@ -19,4 +20,5 @@ adc1: adc@30610000 {
+ 	clocks = <&clks IMX7D_ADC_ROOT_CLK>;
+ 	clock-names = "adc";
+ 	vref-supply = <&reg_vcc_3v3_mcu>;
++	#io-channel-cells = <1>;
+ };
+-- 
+2.20.1
 
-I think what you mean should be a much more straightforward solution
-for this. Could
-you implement this in your way and we can try to help verification. Thanks.
-
-
-Chris
