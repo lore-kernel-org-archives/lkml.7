@@ -2,547 +2,229 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D6CC10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A57C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7D16218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F73218A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbfC2S0n (ORCPT
+        id S1730053AbfC2Sb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 14:26:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41080 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729840AbfC2S0m (ORCPT
+        Fri, 29 Mar 2019 14:31:27 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:46881 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729949AbfC2Sb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 14:26:42 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2TIOMJc108014
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 14:26:40 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rhrbj0uan-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 14:26:40 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 29 Mar 2019 18:26:39 -0000
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 29 Mar 2019 18:26:35 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2TIQYA425362496
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 18:26:34 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F2A94B206A;
-        Fri, 29 Mar 2019 18:26:33 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B5E1EB205F;
-        Fri, 29 Mar 2019 18:26:33 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 29 Mar 2019 18:26:33 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id E2D2916C34EA; Fri, 29 Mar 2019 11:26:35 -0700 (PDT)
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 1/2] rcu: Enable elimination of Tree-RCU softirq processing
-Date:   Fri, 29 Mar 2019 11:26:33 -0700
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190329182608.GA23877@linux.ibm.com>
-References: <20190329182608.GA23877@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19032918-0064-0000-0000-000003C29880
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010836; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000283; SDB=6.01181470; UDB=6.00618379; IPR=6.00962191;
- MB=3.00026212; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-29 18:26:39
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032918-0065-0000-0000-00003CE11146
-Message-Id: <20190329182634.24994-1-paulmck@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-29_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=38 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903290128
+        Fri, 29 Mar 2019 14:31:26 -0400
+Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1h9wHT-0007wZ-LI; Fri, 29 Mar 2019 14:31:17 -0400
+Date:   Fri, 29 Mar 2019 14:30:39 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Alexander Potapenko <glider@google.com>
+Cc:     syzbot <syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>, linux-sctp@vger.kernel.org,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Networking <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladislav Yasevich <vyasevich@gmail.com>
+Subject: Re: KMSAN: kernel-infoleak in sctp_getsockopt (3)
+Message-ID: <20190329183039.GC30213@hmswarspite.think-freely.org>
+References: <000000000000407080058529ff40@google.com>
+ <20190329123025.GB30213@hmswarspite.think-freely.org>
+ <CAG_fn=XiNEhWiswHUschD2dma9SfS+eLRU8gXVJnbo7AozomPg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG_fn=XiNEhWiswHUschD2dma9SfS+eLRU8gXVJnbo7AozomPg@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+On Fri, Mar 29, 2019 at 06:35:40PM +0100, Alexander Potapenko wrote:
+> On Fri, Mar 29, 2019 at 3:51 PM Neil Horman <nhorman@tuxdriver.com> wrote:
+> >
+> > On Thu, Mar 28, 2019 at 09:25:06AM -0700, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    c10a026b kmsan: use __free_pages() in kmsan_iounmap_page_r..
+> > > git tree:       kmsan
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=107d3c7d200000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=a5675814e8eae69e
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=86b5c7c236a22616a72f
+> > > compiler:       clang version 8.0.0 (trunk 350509)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1252834d200000
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com
+> > >
+> > > IPv6: ADDRCONF(NETDEV_CHANGE): veth1_to_hsr: link becomes ready
+> > > IPv6: ADDRCONF(NETDEV_CHANGE): hsr_slave_1: link becomes ready
+> > > 8021q: adding VLAN 0 to HW filter on device batadv0
+> > > 8021q: adding VLAN 0 to HW filter on device batadv0
+> > > ==================================================================
+> > > BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+> > > CPU: 0 PID: 10131 Comm: syz-executor.4 Not tainted 5.0.0+ #16
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > Google 01/01/2011
+> > > Call Trace:
+> > >  __dump_stack lib/dump_stack.c:77 [inline]
+> > >  dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+> > >  kmsan_report+0x131/0x2a0 mm/kmsan/kmsan.c:636
+> > >  kmsan_internal_check_memory+0xaa1/0xbb0 mm/kmsan/kmsan.c:730
+> > >  kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:485
+> > >  _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+> > >  copy_to_user include/linux/uaccess.h:174 [inline]
+> > >  sctp_getsockopt_peer_addrs net/sctp/socket.c:5911 [inline]
+> > >  sctp_getsockopt+0x1668e/0x17f70 net/sctp/socket.c:7562
+> > >  sock_common_getsockopt+0x13f/0x180 net/core/sock.c:2950
+> > >  __sys_getsockopt+0x489/0x550 net/socket.c:1938
+> > >  __do_sys_getsockopt net/socket.c:1949 [inline]
+> > >  __se_sys_getsockopt+0xe1/0x100 net/socket.c:1946
+> > >  __x64_sys_getsockopt+0x62/0x80 net/socket.c:1946
+> > >  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+> > >  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> > > RIP: 0033:0x458209
+> > > Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
+> > > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
+> > > 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> > > RSP: 002b:00007fdbef191c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
+> > > RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000458209
+> > > RDX: 000000000000006c RSI: 0000000000000084 RDI: 0000000000000004
+> > > RBP: 000000000073bf00 R08: 0000000020000300 R09: 0000000000000000
+> > > R10: 0000000020000280 R11: 0000000000000246 R12: 00007fdbef1926d4
+> > > R13: 00000000004c96c8 R14: 00000000004d0310 R15: 00000000ffffffff
+> > >
+> > > Uninit was stored to memory at:
+> > >  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
+> > >  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
+> > >  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
+> > >  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
+> > >  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
+> > >  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
+> > >  sctp_getsockopt_peer_addrs net/sctp/socket.c:5906 [inline]
+> > >  sctp_getsockopt+0x16556/0x17f70 net/sctp/socket.c:7562
+> > >  sock_common_getsockopt+0x13f/0x180 net/core/sock.c:2950
+> > >  __sys_getsockopt+0x489/0x550 net/socket.c:1938
+> > >  __do_sys_getsockopt net/socket.c:1949 [inline]
+> > >  __se_sys_getsockopt+0xe1/0x100 net/socket.c:1946
+> > >  __x64_sys_getsockopt+0x62/0x80 net/socket.c:1946
+> > >  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+> > >  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> > >
+> > > Uninit was stored to memory at:
+> > >  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
+> > >  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
+> > >  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
+> > >  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
+> > >  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
+> > >  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
+> > >  sctp_transport_init net/sctp/transport.c:61 [inline]
+> > >  sctp_transport_new+0x16d/0x9a0 net/sctp/transport.c:115
+> > >  sctp_assoc_add_peer+0x532/0x1f70 net/sctp/associola.c:637
+> > >  sctp_process_param net/sctp/sm_make_chunk.c:2548 [inline]
+> > >  sctp_process_init+0x1a1b/0x3ed0 net/sctp/sm_make_chunk.c:2361
+> > >  sctp_cmd_process_init net/sctp/sm_sideeffect.c:682 [inline]
+> > >  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1410 [inline]
+> > >  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
+> > >  sctp_do_sm+0x3cfc/0x9af0 net/sctp/sm_sideeffect.c:1191
+> > >  sctp_assoc_bh_rcv+0x65a/0xd80 net/sctp/associola.c:1074
+> > >  sctp_inq_push+0x300/0x420 net/sctp/inqueue.c:95
+> > >  sctp_backlog_rcv+0x20a/0xaf0 net/sctp/input.c:354
+> > >  sk_backlog_rcv include/net/sock.h:936 [inline]
+> > >  __release_sock+0x281/0x5f0 net/core/sock.c:2284
+> > >  release_sock+0x99/0x2a0 net/core/sock.c:2800
+> > >  sctp_wait_for_connect+0x3ee/0x860 net/sctp/socket.c:8751
+> > >  sctp_sendmsg_to_asoc+0x2167/0x21a0 net/sctp/socket.c:1967
+> > >  sctp_sendmsg+0x3fd7/0x6700 net/sctp/socket.c:2113
+> > >  inet_sendmsg+0x54a/0x720 net/ipv4/af_inet.c:798
+> > >  sock_sendmsg_nosec net/socket.c:622 [inline]
+> > >  sock_sendmsg net/socket.c:632 [inline]
+> > >  ___sys_sendmsg+0xdb9/0x11b0 net/socket.c:2115
+> > >  __sys_sendmsg net/socket.c:2153 [inline]
+> > >  __do_sys_sendmsg net/socket.c:2162 [inline]
+> > >  __se_sys_sendmsg+0x305/0x460 net/socket.c:2160
+> > >  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2160
+> > >  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+> > >  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> > >
+> > > Local variable description: ----addr.i@sctp_process_init
+> > > Variable was created at:
+> > >  sctp_process_init+0xb5/0x3ed0 net/sctp/sm_make_chunk.c:2324
+> > >  sctp_cmd_process_init net/sctp/sm_sideeffect.c:682 [inline]
+> > >  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1410 [inline]
+> > >  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
+> > >  sctp_do_sm+0x3cfc/0x9af0 net/sctp/sm_sideeffect.c:1191
+> > >
+> > > Bytes 8-15 of 16 are uninitialized
+> > > Memory access of size 16 starts at ffff88809511fc28
+> > > Data copied to user address 0000000020000298
+> > > ==================================================================
+> > >
+> > >
+> > > ---
+> > > This bug is generated by a bot. It may contain errors.
+> > > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > >
+> > > syzbot will keep track of this bug report. See:
+> > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > > syzbot can test patches for this bug, for details see:
+> > > https://goo.gl/tpsmEJ#testing-patches
+> > >
+> > >
+> >
+> >
+> > Hmm, odd.  I see where we are doing the copy_to_user call in
+> > getsockopt_peer_addrs, but the length we copy should always be equal to or less
+> > than what was memcopied to the temp variable.  False positive?
+> I'll take a closer look next week.
+> The bug is reproducible with the following syzkaller program:
+> 
+> r0 = socket$inet(0x2, 0x80001, 0x84)
+> bind$inet(r0, &(0x7f0000000080)={0x2, 0x4e20, @empty}, 0x10)
+> sendmsg(r0, &(0x7f0000000100)={&(0x7f0000006000)=@in={0x2, 0x4e20,
+> @loopback}, 0x80, &(0x7f0000007f80)=[{&(0x7f00000001c0)="de", 0x1}],
+> 0x1}, 0x0)
+> getsockopt$inet_sctp_SCTP_GET_PEER_ADDRS(r0, 0x84, 0x6c,
+> &(0x7f0000000000)={<r5=>0x0, 0x38,
+> "41925f90e4121fadc9c1296dd22ae19d0b1b0942e46fc79e2ecec1056b23199f0ca008915d8dba1b3896c154f2244bbe859fe3423a4b437a"},
+> &(0x7f0000000040)=0x40)
+> 
+> Just need to check where the uninitializedness comes from.
+my only guess would be if we somehow copied an ipv4 address worth of data to the
+buffer (which contains an enum for both ipv4 and ipv6 addresses), and then
+copied an ipv6 address worth of data to userspace, but I don't yet see how that
+can happen.
 
-Some workloads need to change kthread priority for RCU core processing
-without affecting other softirq work.  This commit therefore introduces
-the rcutree.use_softirq kernel boot parameter, which moves the RCU core
-work from softirq to a per-CPU SCHED_OTHER kthread named rcuc.  Use of
-SCHED_OTHER approach avoids the scalability problems that appeared
-with the earlier attempt to move RCU core processing to from softirq
-to kthreads.  That said, kernels built with RCU_BOOST=y will run the
-rcuc kthreads at the RCU-boosting priority.
+Neil
 
-Note that rcutree.use_softirq=0 must be specified to move RCU core
-processing to the rcuc kthreads: rcutree.use_softirq=1 is the default.
-
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Mike Galbraith <efault@gmx.de>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-[ paulmck: Adjust for invoke_rcu_callbacks() only ever being invoked
-  from RCU core processing, in contrast to softirq->rcuc transition
-  in old mainline RCU priority boosting. ]
-[ paulmck: Avoid wakeups when scheduler might have invoked rcu_read_unlock()
-  while holding rq or pi locks, also possibly fixing a pre-existing latent
-  bug involving raise_softirq()-induced wakeups. ]
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
----
- .../admin-guide/kernel-parameters.txt         |   6 +
- kernel/rcu/tree.c                             | 138 ++++++++++++++++--
- kernel/rcu/tree.h                             |   2 +-
- kernel/rcu/tree_plugin.h                      | 134 ++---------------
- 4 files changed, 146 insertions(+), 134 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index d377a2166b79..e2ffb1d9de03 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3672,6 +3672,12 @@
- 			the propagation of recent CPU-hotplug changes up
- 			the rcu_node combining tree.
- 
-+	rcutree.use_softirq=	[KNL]
-+			If set to zero, move all RCU_SOFTIRQ processing to
-+			per-CPU rcuc kthreads.  Defaults to a non-zero
-+			value, meaning that RCU_SOFTIRQ is used by default.
-+			Specify rcutree.use_softirq=0 to use rcuc kthreads.
-+
- 	rcutree.rcu_fanout_exact= [KNL]
- 			Disable autobalancing of the rcu_node combining
- 			tree.  This is used by rcutorture, and might
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index ec77ec336f58..8d6ebc0944ec 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -51,6 +51,12 @@
- #include <linux/tick.h>
- #include <linux/sysrq.h>
- #include <linux/kprobes.h>
-+#include <linux/gfp.h>
-+#include <linux/oom.h>
-+#include <linux/smpboot.h>
-+#include <linux/jiffies.h>
-+#include <linux/sched/isolation.h>
-+#include "../time/tick-internal.h"
- 
- #include "tree.h"
- #include "rcu.h"
-@@ -92,6 +98,9 @@ struct rcu_state rcu_state = {
- /* Dump rcu_node combining tree at boot to verify correct setup. */
- static bool dump_tree;
- module_param(dump_tree, bool, 0444);
-+/* By default, use RCU_SOFTIRQ instead of rcuc kthreads. */
-+static bool use_softirq = 1;
-+module_param(use_softirq, bool, 0444);
- /* Control rcu_node-tree auto-balancing at boot time. */
- static bool rcu_fanout_exact;
- module_param(rcu_fanout_exact, bool, 0444);
-@@ -2253,7 +2262,7 @@ void rcu_force_quiescent_state(void)
- EXPORT_SYMBOL_GPL(rcu_force_quiescent_state);
- 
- /* Perform RCU core processing work for the current CPU.  */
--static __latent_entropy void rcu_core(struct softirq_action *unused)
-+static __latent_entropy void rcu_core(void)
- {
- 	unsigned long flags;
- 	struct rcu_data *rdp = raw_cpu_ptr(&rcu_data);
-@@ -2295,29 +2304,131 @@ static __latent_entropy void rcu_core(struct softirq_action *unused)
- 	trace_rcu_utilization(TPS("End RCU core"));
- }
- 
-+static void rcu_core_si(struct softirq_action *h)
-+{
-+	rcu_core();
-+}
-+
-+static void rcu_wake_cond(struct task_struct *t, int status)
-+{
-+	/*
-+	 * If the thread is yielding, only wake it when this
-+	 * is invoked from idle
-+	 */
-+	if (t && (status != RCU_KTHREAD_YIELDING || is_idle_task(current)))
-+		wake_up_process(t);
-+}
-+
-+static void invoke_rcu_core_kthread(void)
-+{
-+	struct task_struct *t;
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+	__this_cpu_write(rcu_data.rcu_cpu_has_work, 1);
-+	t = __this_cpu_read(rcu_data.rcu_cpu_kthread_task);
-+	if (t != NULL && t != current)
-+		rcu_wake_cond(t, __this_cpu_read(rcu_data.rcu_cpu_kthread_status));
-+	local_irq_restore(flags);
-+}
-+
- /*
-- * Schedule RCU callback invocation.  If the running implementation of RCU
-- * does not support RCU priority boosting, just do a direct call, otherwise
-- * wake up the per-CPU kernel kthread.  Note that because we are running
-- * on the current CPU with softirqs disabled, the rcu_cpu_kthread_task
-- * cannot disappear out from under us.
-+ * Do RCU callback invocation.  Not that if we are running !use_softirq,
-+ * we are already in the rcuc kthread.  If callbacks are offloaded, then
-+ * ->cblist is always empty, so we don't get here.  Therefore, we only
-+ * ever need to check for the scheduler being operational (some callbacks
-+ * do wakeups, so we do need the scheduler).
-  */
- static void invoke_rcu_callbacks(struct rcu_data *rdp)
- {
- 	if (unlikely(!READ_ONCE(rcu_scheduler_fully_active)))
- 		return;
--	if (likely(!rcu_state.boost)) {
--		rcu_do_batch(rdp);
--		return;
--	}
--	invoke_rcu_callbacks_kthread();
-+	rcu_do_batch(rdp);
- }
- 
-+/*
-+ * Wake up this CPU's rcuc kthread to do RCU core processing.
-+ */
- static void invoke_rcu_core(void)
- {
--	if (cpu_online(smp_processor_id()))
-+	if (!cpu_online(smp_processor_id()))
-+		return;
-+	if (use_softirq)
- 		raise_softirq(RCU_SOFTIRQ);
-+	else
-+		invoke_rcu_core_kthread();
-+}
-+
-+static void rcu_cpu_kthread_park(unsigned int cpu)
-+{
-+	per_cpu(rcu_data.rcu_cpu_kthread_status, cpu) = RCU_KTHREAD_OFFCPU;
-+}
-+
-+static int rcu_cpu_kthread_should_run(unsigned int cpu)
-+{
-+	return __this_cpu_read(rcu_data.rcu_cpu_has_work);
-+}
-+
-+/*
-+ * Per-CPU kernel thread that invokes RCU callbacks.  This replaces
-+ * the RCU softirq used in configurations of RCU that do not support RCU
-+ * priority boosting.
-+ */
-+static void rcu_cpu_kthread(unsigned int cpu)
-+{
-+	unsigned int *statusp = this_cpu_ptr(&rcu_data.rcu_cpu_kthread_status);
-+	char work, *workp = this_cpu_ptr(&rcu_data.rcu_cpu_has_work);
-+	int spincnt;
-+
-+	for (spincnt = 0; spincnt < 10; spincnt++) {
-+		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
-+		local_bh_disable();
-+		*statusp = RCU_KTHREAD_RUNNING;
-+		local_irq_disable();
-+		work = *workp;
-+		*workp = 0;
-+		local_irq_enable();
-+		if (work)
-+			rcu_core();
-+		local_bh_enable();
-+		if (*workp == 0) {
-+			trace_rcu_utilization(TPS("End CPU kthread@rcu_wait"));
-+			*statusp = RCU_KTHREAD_WAITING;
-+			return;
-+		}
-+	}
-+	*statusp = RCU_KTHREAD_YIELDING;
-+	trace_rcu_utilization(TPS("Start CPU kthread@rcu_yield"));
-+	schedule_timeout_interruptible(2);
-+	trace_rcu_utilization(TPS("End CPU kthread@rcu_yield"));
-+	*statusp = RCU_KTHREAD_WAITING;
-+}
-+
-+static struct smp_hotplug_thread rcu_cpu_thread_spec = {
-+	.store			= &rcu_data.rcu_cpu_kthread_task,
-+	.thread_should_run	= rcu_cpu_kthread_should_run,
-+	.thread_fn		= rcu_cpu_kthread,
-+	.thread_comm		= "rcuc/%u",
-+	.setup			= rcu_cpu_kthread_setup,
-+	.park			= rcu_cpu_kthread_park,
-+};
-+
-+/*
-+ * Spawn per-CPU RCU core processing kthreads.
-+ */
-+static int __init rcu_spawn_core_kthreads(void)
-+{
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu)
-+		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
-+	if (!IS_ENABLED(CONFIG_RCU_BOOST) && use_softirq)
-+		return 0;
-+	WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec),
-+		  "%s: Could not start rcuc kthread, OOM is now expected behavior\n", __func__);
-+	return 0;
- }
-+early_initcall(rcu_spawn_core_kthreads);
- 
- /*
-  * Handle any core-RCU processing required by a call_rcu() invocation.
-@@ -3355,7 +3466,8 @@ void __init rcu_init(void)
- 	rcu_init_one();
- 	if (dump_tree)
- 		rcu_dump_rcu_node_tree();
--	open_softirq(RCU_SOFTIRQ, rcu_core);
-+	if (use_softirq)
-+		open_softirq(RCU_SOFTIRQ, rcu_core_si);
- 
- 	/*
- 	 * We don't need protection against CPU-hotplug here because
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index e253d11af3c4..a1a72a1ecb02 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -407,8 +407,8 @@ void call_rcu(struct rcu_head *head, rcu_callback_t func);
- static void dump_blkd_tasks(struct rcu_node *rnp, int ncheck);
- static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags);
- static void rcu_preempt_boost_start_gp(struct rcu_node *rnp);
--static void invoke_rcu_callbacks_kthread(void);
- static bool rcu_is_callbacks_kthread(void);
-+static void rcu_cpu_kthread_setup(unsigned int cpu);
- static void __init rcu_spawn_boost_kthreads(void);
- static void rcu_prepare_kthreads(int cpu);
- static void rcu_cleanup_after_idle(void);
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 1102765f91fd..21611862e083 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -11,29 +11,7 @@
-  *	   Paul E. McKenney <paulmck@linux.ibm.com>
-  */
- 
--#include <linux/delay.h>
--#include <linux/gfp.h>
--#include <linux/oom.h>
--#include <linux/sched/debug.h>
--#include <linux/smpboot.h>
--#include <linux/sched/isolation.h>
--#include <uapi/linux/sched/types.h>
--#include "../time/tick-internal.h"
--
--#ifdef CONFIG_RCU_BOOST
- #include "../locking/rtmutex_common.h"
--#else /* #ifdef CONFIG_RCU_BOOST */
--
--/*
-- * Some architectures do not define rt_mutexes, but if !CONFIG_RCU_BOOST,
-- * all uses are in dead code.  Provide a definition to keep the compiler
-- * happy, but add WARN_ON_ONCE() to complain if used in the wrong place.
-- * This probably needs to be excluded from -rt builds.
-- */
--#define rt_mutex_owner(a) ({ WARN_ON_ONCE(1); NULL; })
--#define rt_mutex_futex_unlock(x) WARN_ON_ONCE(1)
--
--#endif /* #else #ifdef CONFIG_RCU_BOOST */
- 
- #ifdef CONFIG_RCU_NOCB_CPU
- static cpumask_var_t rcu_nocb_mask; /* CPUs to have callbacks offloaded. */
-@@ -94,6 +72,8 @@ static void __init rcu_bootup_announce_oddness(void)
- 		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_init_delay);
- 	if (gp_cleanup_delay)
- 		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_cleanup_delay);
-+	if (!use_softirq)
-+		pr_info("\tRCU_SOFTIRQ processing moved to rcuc kthreads.\n");
- 	if (IS_ENABLED(CONFIG_RCU_EQS_DEBUG))
- 		pr_info("\tRCU debug extended QS entry/exit.\n");
- 	rcupdate_announce_bootup_oddness();
-@@ -627,7 +607,7 @@ static void rcu_read_unlock_special(struct task_struct *t)
- 	if (preempt_bh_were_disabled || irqs_were_disabled) {
- 		WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
- 		/* Need to defer quiescent state until everything is enabled. */
--		if (irqs_were_disabled) {
-+		if (irqs_were_disabled && use_softirq) {
- 			/* Enabling irqs does not reschedule, so... */
- 			raise_softirq_irqoff(RCU_SOFTIRQ);
- 		} else {
-@@ -944,18 +924,21 @@ dump_blkd_tasks(struct rcu_node *rnp, int ncheck)
- 
- #endif /* #else #ifdef CONFIG_PREEMPT_RCU */
- 
-+/*
-+ * If boosting, set rcuc kthreads to realtime priority.
-+ */
-+static void rcu_cpu_kthread_setup(unsigned int cpu)
-+{
- #ifdef CONFIG_RCU_BOOST
-+	struct sched_param sp;
- 
--static void rcu_wake_cond(struct task_struct *t, int status)
--{
--	/*
--	 * If the thread is yielding, only wake it when this
--	 * is invoked from idle
--	 */
--	if (status != RCU_KTHREAD_YIELDING || is_idle_task(current))
--		wake_up_process(t);
-+	sp.sched_priority = kthread_prio;
-+	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
-+#endif /* #ifdef CONFIG_RCU_BOOST */
- }
- 
-+#ifdef CONFIG_RCU_BOOST
-+
- /*
-  * Carry out RCU priority boosting on the task indicated by ->exp_tasks
-  * or ->boost_tasks, advancing the pointer to the next task in the
-@@ -1090,23 +1073,6 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
- 	}
- }
- 
--/*
-- * Wake up the per-CPU kthread to invoke RCU callbacks.
-- */
--static void invoke_rcu_callbacks_kthread(void)
--{
--	unsigned long flags;
--
--	local_irq_save(flags);
--	__this_cpu_write(rcu_data.rcu_cpu_has_work, 1);
--	if (__this_cpu_read(rcu_data.rcu_cpu_kthread_task) != NULL &&
--	    current != __this_cpu_read(rcu_data.rcu_cpu_kthread_task)) {
--		rcu_wake_cond(__this_cpu_read(rcu_data.rcu_cpu_kthread_task),
--			      __this_cpu_read(rcu_data.rcu_cpu_kthread_status));
--	}
--	local_irq_restore(flags);
--}
--
- /*
-  * Is the current CPU running the RCU-callbacks kthread?
-  * Caller must have preemption disabled.
-@@ -1160,59 +1126,6 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
- 	return 0;
- }
- 
--static void rcu_cpu_kthread_setup(unsigned int cpu)
--{
--	struct sched_param sp;
--
--	sp.sched_priority = kthread_prio;
--	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
--}
--
--static void rcu_cpu_kthread_park(unsigned int cpu)
--{
--	per_cpu(rcu_data.rcu_cpu_kthread_status, cpu) = RCU_KTHREAD_OFFCPU;
--}
--
--static int rcu_cpu_kthread_should_run(unsigned int cpu)
--{
--	return __this_cpu_read(rcu_data.rcu_cpu_has_work);
--}
--
--/*
-- * Per-CPU kernel thread that invokes RCU callbacks.  This replaces
-- * the RCU softirq used in configurations of RCU that do not support RCU
-- * priority boosting.
-- */
--static void rcu_cpu_kthread(unsigned int cpu)
--{
--	unsigned int *statusp = this_cpu_ptr(&rcu_data.rcu_cpu_kthread_status);
--	char work, *workp = this_cpu_ptr(&rcu_data.rcu_cpu_has_work);
--	int spincnt;
--
--	for (spincnt = 0; spincnt < 10; spincnt++) {
--		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
--		local_bh_disable();
--		*statusp = RCU_KTHREAD_RUNNING;
--		local_irq_disable();
--		work = *workp;
--		*workp = 0;
--		local_irq_enable();
--		if (work)
--			rcu_do_batch(this_cpu_ptr(&rcu_data));
--		local_bh_enable();
--		if (*workp == 0) {
--			trace_rcu_utilization(TPS("End CPU kthread@rcu_wait"));
--			*statusp = RCU_KTHREAD_WAITING;
--			return;
--		}
--	}
--	*statusp = RCU_KTHREAD_YIELDING;
--	trace_rcu_utilization(TPS("Start CPU kthread@rcu_yield"));
--	schedule_timeout_interruptible(2);
--	trace_rcu_utilization(TPS("End CPU kthread@rcu_yield"));
--	*statusp = RCU_KTHREAD_WAITING;
--}
--
- /*
-  * Set the per-rcu_node kthread's affinity to cover all CPUs that are
-  * served by the rcu_node in question.  The CPU hotplug lock is still
-@@ -1243,27 +1156,13 @@ static void rcu_boost_kthread_setaffinity(struct rcu_node *rnp, int outgoingcpu)
- 	free_cpumask_var(cm);
- }
- 
--static struct smp_hotplug_thread rcu_cpu_thread_spec = {
--	.store			= &rcu_data.rcu_cpu_kthread_task,
--	.thread_should_run	= rcu_cpu_kthread_should_run,
--	.thread_fn		= rcu_cpu_kthread,
--	.thread_comm		= "rcuc/%u",
--	.setup			= rcu_cpu_kthread_setup,
--	.park			= rcu_cpu_kthread_park,
--};
--
- /*
-  * Spawn boost kthreads -- called as soon as the scheduler is running.
-  */
- static void __init rcu_spawn_boost_kthreads(void)
- {
- 	struct rcu_node *rnp;
--	int cpu;
- 
--	for_each_possible_cpu(cpu)
--		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
--	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
--		return;
- 	rcu_for_each_leaf_node(rnp)
- 		(void)rcu_spawn_one_boost_kthread(rnp);
- }
-@@ -1286,11 +1185,6 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
- 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- }
- 
--static void invoke_rcu_callbacks_kthread(void)
--{
--	WARN_ON_ONCE(1);
--}
--
- static bool rcu_is_callbacks_kthread(void)
- {
- 	return false;
--- 
-2.17.1
-
+> > Neil
+> >
+> 
+> 
+> 
+> --
+> Alexander Potapenko
+> Software Engineer
+> 
+> Google Germany GmbH
+> Erika-Mann-Straße, 33
+> 80636 München
+> 
+> Geschäftsführer: Paul Manicle, Halimah DeLaine Prado
+> Registergericht und -nummer: Hamburg, HRB 86891
+> Sitz der Gesellschaft: Hamburg
+> 
