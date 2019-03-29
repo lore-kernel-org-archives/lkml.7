@@ -2,249 +2,142 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C55FC10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC07C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2DD62070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277E0218A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:02:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JzgR25kC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbfC2QCR (ORCPT
+        id S1729744AbfC2QCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 12:02:17 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35000 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728961AbfC2QCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 12:02:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AEA780D;
-        Fri, 29 Mar 2019 09:02:16 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C9DF3F614;
-        Fri, 29 Mar 2019 09:02:14 -0700 (PDT)
-Subject: Re: [PATCH V3 3/3] hwmon: pwm-fan: Add RPM support via external
- interrupt
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1553243043-19486-1-git-send-email-stefan.wahren@i2se.com>
- <1553243043-19486-4-git-send-email-stefan.wahren@i2se.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <9d78a496-6d4d-38e9-b57f-c44a0c919f4f@arm.com>
-Date:   Fri, 29 Mar 2019 16:02:12 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 29 Mar 2019 12:02:34 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37231 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728961AbfC2QCe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 12:02:34 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c16so2576879otn.4
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 09:02:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gZocI1SHIOi+y+CZmlS2EmaUnqDOacK/vDCn4VI5GrM=;
+        b=JzgR25kC4l++7jTABaN2rrKfoz+i48okcWfMkYR7hmO5IFY8sx/LcuEonBUkP0/0dZ
+         s7YNniyP3nNQGfxt5sNp/E19XK9VHFYNR85hlCAix8pjXSOACpRtCVivcW5bqPUegl0+
+         2bufc+FYmO+24EwOl9bIrS6S/KmeJ+eNWv2fuGQ0arI9QUSm6UgHM5fPmExFNDsnAaJc
+         +ZSL8N5uh5woYa8iQZnODLnf+/Vy1hIGn/frlRm/xYFjJD/GTrhx9rMZvEp1zxy9UPWH
+         V+VgZJvImfEe2tGVqwAWxl7h176E6zVdaxUdRi6oI5yEdV9aIFVubUR0svK8TJXAE3tM
+         GQPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gZocI1SHIOi+y+CZmlS2EmaUnqDOacK/vDCn4VI5GrM=;
+        b=DBRWkDYjdem0JeQ8DIzge/U6vNSHZJ/5lGISS87YUZo8whdja7moHBBzARqy2vN3Tb
+         FK3kBQDrsTwaxt3USZKwfwvl/zi5zr/4nHABEJpbxPuIDG8k+GZV7sLEXLXktzM7Ki2j
+         r5oWR2JzSLkNq1cvU8+QehMPqjj51CXcNlpIqJLY8HLdhA4uRUXUxsNjfedAsM23eqD8
+         eJaAFYP6TN1Dc8p+gwLa0APb5eJzMn6BESemGJ76yIazn3Xy7qZe86ECutIbLqyHbhbh
+         0XzMW3NAR2v7wteqLToSs88iNWGk866lgAZfRKBUbmsCmVZEvTReFcSj1Ujkf/6ValRg
+         rhGg==
+X-Gm-Message-State: APjAAAXee3E32W5cuggU2E0v3AuRoQfcSoWT1BleW9tQ10BF+jRVn8HF
+        nGdHUVCTkKUWhXh/3PO3+8zziMhhLzpPSvLKoIY+wA==
+X-Google-Smtp-Source: APXvYqwX0qH7mq19xoHHNYY/1wLYoeUkBLWzQ3eYww/f7ltjjadZXutpvHfQQVzfRDjdDTUefmn1+XLXIlx3eHZI2W0=
+X-Received: by 2002:a9d:694c:: with SMTP id p12mr34273929oto.242.1553875353202;
+ Fri, 29 Mar 2019 09:02:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1553243043-19486-4-git-send-email-stefan.wahren@i2se.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190328212321.92463-1-jannh@google.com> <20190328212321.92463-2-jannh@google.com>
+ <20190329133956.GE21152@zn.tnic>
+In-Reply-To: <20190329133956.GE21152@zn.tnic>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 29 Mar 2019 17:02:06 +0100
+Message-ID: <CAG48ez1KY3n5CFVR3y=kE7yU5JkkVSd_Ns8wwsQGxyw53u8J-Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86: fix __user annotations
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qiaowei Ren <qiaowei.ren@intel.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/03/2019 08:24, Stefan Wahren wrote:
-> This adds RPM support to the pwm-fan driver in order to use with
-> fancontrol/pwmconfig. This feature is intended for fans with a tachometer
-> output signal, which generate a defined number of pulses per revolution.
+On Fri, Mar 29, 2019 at 2:39 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Thu, Mar 28, 2019 at 10:23:21PM +0100, Jann Horn wrote:
+> > Fix __user annotations in various places across the x86 tree:
+> >
+> >  - cast to wrong pointer type in __user_atomic_cmpxchg_inatomic()
+> >  - generic_load_microcode() deals with a pointer that can be either a
+> >    kernel pointer or a user pointer; change the code to pass it around as
+> >    a __user pointer, and add explicit casts to convert between __user and
+> >    __kernel
+> >  - save_xstate_epilog() has missing __user in explicit casts
+> >  - setup_sigcontext() and x32_setup_rt_frame() rely on the cast performed
+> >    by put_user_ex() on its first argument, but sparse requires __force for
+> >    casting __user pointers to unsigned long
+> >  - xen_hvm_config() has missing __user
+> >
+> > This patch removes all sparse warnings about the asn:1 address space
+> > (__user) in arch/x86/ for my kernel config.
+> >
+> > Signed-off-by: Jann Horn <jannh@google.com>
+> > ---
+> > This patch requires the previous one, "[PATCH 1/2] kernel.h: use
+> > parentheses around argument in u64_to_user_ptr()", otherwise
+> > xen_hvm_config() breaks. Can we take both together through the x86 tree,
+> > or does the first one have to go through akpm's tree?
+>
+> I don't see why not, unless akpm has objections.
+>
+> However,
+>
+> >  arch/x86/include/asm/uaccess.h        |  3 +--
+> >  arch/x86/include/asm/uaccess_64.h     |  2 +-
+>
+> This chunk is being discussed here already:
+>
+> https://lkml.kernel.org/r/20190228185027.2480-1-ben.dooks@codethink.co.uk
+>
+> and I'd like to take Ben's v2 when Ben adds Linus' explanation.
 
-Thanks for the CC - this is something I was planning to play with now 
-that I have my fan set up, so it's nice to find it already done :)
+Alright, dropped the changes in:
+arch/x86/lib/usercopy_64.c
+arch/x86/include/asm/uaccess_64.h
 
-My board has a 3-wire fan connector driven by an unfiltered PWM output, 
-so unfortunately what I end up measuring is actually the PWM frequency 
-modulated by the rotation pulse frequency. I hacked up some crude 
-low-pass filtering which subsequently got lost in a git reset incident, 
-but I could recreate it if you think it's an idea worth considering 
-(from a bit of research it does seem that 2 or 3-wire fans aren't really 
-meant to be PWMed that way).
+> Then, it would be probably easier if you could split that patch into:
+>
+> >  arch/x86/kernel/cpu/microcode/intel.c | 20 ++++++++++++--------
+>
+> microcode
+>
+> >  arch/x86/kernel/fpu/signal.c          |  6 +++---
+> >  arch/x86/kernel/signal.c              |  4 ++--
+>
+> fpu patch
+>
+> >  arch/x86/kvm/x86.c                    |  8 ++++----
 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->   drivers/hwmon/pwm-fan.c | 100 +++++++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 99 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index 167221c..c8fb6a3 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -18,6 +18,7 @@
->   
->   #include <linux/hwmon.h>
->   #include <linux/hwmon-sysfs.h>
-> +#include <linux/interrupt.h>
->   #include <linux/module.h>
->   #include <linux/mutex.h>
->   #include <linux/of.h>
-> @@ -26,6 +27,7 @@
->   #include <linux/regulator/consumer.h>
->   #include <linux/sysfs.h>
->   #include <linux/thermal.h>
-> +#include <linux/timer.h>
->   
->   #define MAX_PWM 255
->   
-> @@ -33,6 +35,14 @@ struct pwm_fan_ctx {
->   	struct mutex lock;
->   	struct pwm_device *pwm;
->   	struct regulator *reg_en;
-> +
-> +	int irq;
-> +	atomic_t pulses;
-> +	unsigned int rpm;
-> +	u32 pulses_per_revolution;
-> +	ktime_t sample_start;
-> +	struct timer_list rpm_timer;
-> +
->   	unsigned int pwm_value;
->   	unsigned int pwm_fan_state;
->   	unsigned int pwm_fan_max_state;
-> @@ -40,6 +50,32 @@ struct pwm_fan_ctx {
->   	struct thermal_cooling_device *cdev;
->   };
->   
-> +/* This handler assumes self resetting edge triggered interrupt. */
-> +static irqreturn_t pulse_handler(int irq, void *dev_id)
-> +{
-> +	struct pwm_fan_ctx *ctx = dev_id;
-> +
-> +	/* Avoid possible overflow */
-> +	if (atomic_read(&ctx->pulses) < 100000)
+Split these out as suggested. Additionally, I've split out one commit
+for x86/uaccess (the change to arch/x86/include/asm/uaccess.h wasn't
+in Ben's patch).
 
-I agree with Guenter that this seems a bit misplaced - since the raw 
-count itself is unlikely to overflow in practice, it certainly feels 
-more sensible to handle calculation overflow in the calculation itself...
+> kvm patch
 
-> +		atomic_inc(&ctx->pulses);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void sample_timer(struct timer_list *t)
-> +{
-> +	struct pwm_fan_ctx *ctx = from_timer(ctx, t, rpm_timer);
-> +	int pulses, sample_ms;
-> +
-> +	pulses = atomic_read(&ctx->pulses);
-> +	atomic_sub(pulses, &ctx->pulses);
-> +	sample_ms = ktime_ms_delta(ktime_get(), ctx->sample_start);
-> +	ctx->rpm = pulses * 60 * sample_ms / 1000 / ctx->pulses_per_revolution;
-
-...for which maybe mult_frac() could help here, although it might be 
-easier just to do the intermediate calculations in u64 and arrange them 
-to rule out non-constant division.
-
-Robin.
-
-> +
-> +	ctx->sample_start = ktime_get();
-> +	mod_timer(&ctx->rpm_timer, jiffies + HZ);
-> +}
-> +
->   static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
->   {
->   	unsigned long period;
-> @@ -100,15 +136,49 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *attr,
->   	return sprintf(buf, "%u\n", ctx->pwm_value);
->   }
->   
-> +static ssize_t rpm_show(struct device *dev,
-> +			struct device_attribute *attr, char *buf)
-> +{
-> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%u\n", ctx->rpm);
-> +}
->   
->   static SENSOR_DEVICE_ATTR_RW(pwm1, pwm, 0);
-> +static SENSOR_DEVICE_ATTR_RO(fan1_input, rpm, 0);
->   
->   static struct attribute *pwm_fan_attrs[] = {
->   	&sensor_dev_attr_pwm1.dev_attr.attr,
-> +	&sensor_dev_attr_fan1_input.dev_attr.attr,
->   	NULL,
->   };
->   
-> -ATTRIBUTE_GROUPS(pwm_fan);
-> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
-> +				     int n)
-> +{
-> +	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-> +	struct device_attribute *devattr;
-> +
-> +	/* Hide fan_input in case no interrupt is available  */
-> +	devattr = container_of(a, struct device_attribute, attr);
-> +	if (devattr == &sensor_dev_attr_fan1_input.dev_attr) {
-> +		if (ctx->irq < 0)
-> +			return 0;
-> +	}
-> +
-> +	return a->mode;
-> +}
-> +
-> +static const struct attribute_group pwm_fan_group = {
-> +	.attrs = pwm_fan_attrs,
-> +	.is_visible = pwm_fan_attrs_visible,
-> +};
-> +
-> +static const struct attribute_group *pwm_fan_groups[] = {
-> +	&pwm_fan_group,
-> +	NULL,
-> +};
->   
->   /* thermal cooling device callbacks */
->   static int pwm_fan_get_max_state(struct thermal_cooling_device *cdev,
-> @@ -261,6 +331,32 @@ static int pwm_fan_probe(struct platform_device *pdev)
->   		goto err_reg_disable;
->   	}
->   
-> +	timer_setup(&ctx->rpm_timer, sample_timer, 0);
-> +
-> +	if (of_property_read_u32(pdev->dev.of_node, "pulses-per-revolution",
-> +				 &ctx->pulses_per_revolution)) {
-> +		ctx->pulses_per_revolution = 2;
-> +	}
-> +
-> +	if (!ctx->pulses_per_revolution) {
-> +		dev_err(&pdev->dev, "pulses-per-revolution can't be zero.\n");
-> +		ret = -EINVAL;
-> +		goto err_pwm_disable;
-> +	}
-> +
-> +	atomic_set(&ctx->pulses, 0);
-> +	ctx->irq = platform_get_irq(pdev, 0);
-> +	if (ctx->irq >= 0) {
-> +		ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
-> +				       pdev->name, ctx);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Can't get interrupt working.\n");
-> +			goto err_pwm_disable;
-> +		}
-> +		ctx->sample_start = ktime_get();
-> +		mod_timer(&ctx->rpm_timer, jiffies + HZ);
-> +	}
-> +
->   	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
->   						       ctx, pwm_fan_groups);
->   	if (IS_ERR(hwmon)) {
-> @@ -306,6 +402,8 @@ static int pwm_fan_remove(struct platform_device *pdev)
->   	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
->   
->   	thermal_cooling_device_unregister(ctx->cdev);
-> +	del_timer_sync(&ctx->rpm_timer);
-> +
->   	if (ctx->pwm_value)
->   		pwm_disable(ctx->pwm);
->   
-> 
+Actually, looking at the log of that file, and at MAINTAINERS, it
+looks like that should go through the KVM tree? There's also something
+I want to fix in virt/kvm/kvm_main.c, so I have to send some stuff to
+Paolo anyway.
