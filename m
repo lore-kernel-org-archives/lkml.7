@@ -2,98 +2,73 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD06C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7C5C10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3974A21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BB921773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:48:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bZ+hpd2H"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="LWY2W9iI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbfC2IsK (ORCPT
+        id S1729215AbfC2Is0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:48:10 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46836 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729073AbfC2IsJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 04:48:09 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t17so1498678wrw.13
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 01:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=64Gj8AZf4WhRlwdxGg8gYpmTlFLWTDISbuiVXutzY60=;
-        b=bZ+hpd2HLeihVi0tceluPm814OLhZI9DiZmDTLTdqgtCqEfP9W/rPES722d523v+bs
-         NCTmQJuzhCJF9lIhvMigGDKKvbeQkr5hxM3nP45+5EoiFr/r+wx1TEUipR1fOe3fm3a4
-         iYYzvJQrQPWOTbiZ+Q7CnW6QPIgzArNFPaH/QOifBxiy28RtpXSCjKg30860ulsimt/p
-         h7vfqckD+/UQbSJ66okzbh5c0kRgyti8/JIKcuXpPkOQMT0pjo39hp6ler4d50g6nbhr
-         kQn5H/H1ebZUz3NEkRi+QUasyQOF2+s94uj2VQZHZkjALPaRtxr/OShJTTK6+qXFERvf
-         iAPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=64Gj8AZf4WhRlwdxGg8gYpmTlFLWTDISbuiVXutzY60=;
-        b=fghv/QSQQKFUTUnXTxY2eQKP5wmOFZQZNDrg8WF8xLaBGdGwa9J3wjdw0TJZZ86Z/Q
-         EPm6ecptulglltGexCwD9dd1Z505Vl03Y7B86Ts+2Tz3EW4PFOXHmVENyZvKcbBjoh8F
-         YuLW2CV0AZ6+271gQaZOqt4JraYbOD0aB85XBr5UaREn08MXVrBimgXVIP2ZOoFg0XZD
-         6+OLjqsnk3KYtHMFxLo3XDlhLSYIbYEcOykgZ0DGc8Atl0XSEmQl5edgs6BDW7UEXC5B
-         gVNtaEqJ5J4niPvDLqpOHJw9eAqgMwSZ1O24JxnhisH/pSB6mF2vptSAfToj7i7xRwPs
-         4VZg==
-X-Gm-Message-State: APjAAAWbHFcUkQpUjpGrdfCdEsRcKBQ/WBmk/4crla0fF+KcXsqb+DkC
-        2hhIV08vCWGzJioFBSc3b2CoqAdb1aM=
-X-Google-Smtp-Source: APXvYqwIeqllupg+IQfzA48pKPHjKKVUTGXW0uOrefNuxsZYJv+et7HrHS/gNMyOtUQc2HCzWTF0Ag==
-X-Received: by 2002:a5d:6181:: with SMTP id j1mr29550242wru.11.1553849286886;
-        Fri, 29 Mar 2019 01:48:06 -0700 (PDT)
-Received: from localhost ([49.248.196.175])
-        by smtp.gmail.com with ESMTPSA id x192sm2214806wmf.48.2019.03.29.01.48.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 01:48:06 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, andy.gross@linaro.org, joe@perches.com
-Subject: [PATCH v2 1/1] MAINTAINERS: fix typo in file name
-Date:   Fri, 29 Mar 2019 14:17:59 +0530
-Message-Id: <c89ce5c4e66de489bb089dd60cd8a26949501a59.1553848972.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1553848972.git.amit.kucheria@linaro.org>
-References: <cover.1553848972.git.amit.kucheria@linaro.org>
+        Fri, 29 Mar 2019 04:48:26 -0400
+Received: from mail.nic.cz ([217.31.204.67]:43078 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729073AbfC2IsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 04:48:25 -0400
+Received: from localhost (unknown [172.20.6.218])
+        by mail.nic.cz (Postfix) with ESMTPS id 258EA63254;
+        Fri, 29 Mar 2019 09:48:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1553849304; bh=AgkAYS9ByYUk0PRWfebCOMogVjogsATh/yCeLjamddg=;
+        h=Date:From:To;
+        b=LWY2W9iIhgFk5ah+OsTo7G9DBml5wPD5DPjPTfUY5Y9MHnkLR8ctsNZrdxvZqOj4s
+         4f/2Q8f591664I5fLNRW3hBmYh/s7YnC6RGh0dMp3Y5AVM/3hTN91ack0L9pwfIl53
+         W6P3Lh5kVa4U6kmpooYsCfTeo/UPtTII+lNDBB90=
+Date:   Fri, 29 Mar 2019 09:48:23 +0100
+From:   Marek Behun <marek.behun@nic.cz>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: kernfs: can read/write method grow buffer size?
+Message-ID: <20190329094823.426d7ed8@nic.cz>
+In-Reply-To: <20190329083440.GA12945@amd>
+References: <20190329040922.34ab01c6@nic.cz>
+        <20190329062253.GA9659@kroah.com>
+        <20190329083440.GA12945@amd>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.99.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit e31f941cf977 ("MAINTAINERS: update list of qcom drivers") had a
-typo in the filename, replace the underscore with dash.
+> pavel@amd:~/cip$ cat /sys/power/state
+> freeze mem disk
+> pavel@amd:~/cip$ cat /sys/class/leds/phy0-led/trigger
+> none bluetooth-power rfkill-any rfkill-none kbd-scrolllock kbd-numlock
+> kbd-capslock kbd-kanalock kbd-shiftlock kbd-altgrlock kbd-ctrllock
+> kbd-altlock kbd-shiftllock kbd-shiftrlock kbd-ctrlllock kbd-ctrlrlock
+> AC-online BAT0-charging-or-full BAT0-charging BAT0-full
+> BAT0-charging-blink-full-solid rfkill0 phy0rx phy0tx phy0assoc
+> phy0radio [phy0tpt] mmc0 timer heartbeat audio-mute audio-micmute
+> rfkill1 hci0-power rfkill8
+> pavel@amd:~/cip$
+> 
 
-Fixes: e31f941cf977 ("MAINTAINERS: update list of qcom drivers")
-Reported-by: Joe Perches <joe@perches.com>
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, and cpufreq governors too list available governosrs as space
+separated list.
+Maybe the "one value per file" rule was thought-of only after these
+were merged?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3e5a5d263f29..d2c5852a3c8d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2007,7 +2007,7 @@ F:	drivers/i2c/busses/i2c-qup.c
- F:	drivers/i2c/busses/i2c-qcom-geni.c
- F:	drivers/mfd/ssbi.c
- F:	drivers/mmc/host/mmci_qcom*
--F:	drivers/mmc/host/sdhci_msm.c
-+F:	drivers/mmc/host/sdhci-msm.c
- F:	drivers/pci/controller/dwc/pcie-qcom.c
- F:	drivers/phy/qualcomm/
- F:	drivers/power/*/msm*
--- 
-2.17.1
-
+Marek
