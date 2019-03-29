@@ -2,160 +2,124 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8ABAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812F2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE2FD218D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDE22184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553883643;
+	bh=rFITafnfcyqZFy7ndBuiIRJBAhKwNtb9JvZEyqneims=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pyzwQsfPRl8E4v+lm/MtynQqi8Nlj/KFi78ZvcUHTOsGG7DuFw/9bSzcYaGkrS6nc
+	 sqHz8J0WCVWFuUEXlTbpSy50L4e4gETsplM6O7stkhm5ILutitehyMc0ctHAD7jnsb
+	 eECyx5OcisuV5wuyaU/WhXoJLDbTM+TF3NljpMbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730036AbfC2SSu (ORCPT
+        id S1730023AbfC2SUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 14:18:50 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40069 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729932AbfC2SSt (ORCPT
+        Fri, 29 Mar 2019 14:20:42 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33603 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729949AbfC2SUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 14:18:49 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x12so3663102qts.7
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 11:18:49 -0700 (PDT)
+        Fri, 29 Mar 2019 14:20:41 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v14so2103641lfi.0
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 11:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e0e8+89c8WqHpS92sAwslvgKe3+T9VMjo4MG/AIaEJ0=;
+        b=Bwnj99rswxnG2idbOHUyJZMdAA6/RX9IKmqsbaohnDits4oHDao0NNuz88t9FgVDVK
+         HRjuq1haxuwp5ifwqwyiLFG21kWwmC4z+oVljARKqov0I9ykSer92dg1r3W3KuqmbHbb
+         yDmOCYVj9u/+sMrAJ7ea8buStjFkLspM1rnco=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Sgs2rYMOHnC5kvt0WX7uidiNxem2xbxols9lAFHRNyQ=;
-        b=m4AkdFCqDsMGBMzqtAQCLO2bdgBF4oeAz2Ym5Gx28epg0EEn3RPAEGVk0gn4smQnxG
-         qM9+s2XvSRwoTxs3V+DA9jXYF+40HBCbgjtmU/0llGXo4EunB77V9+E+SSoptTvOB8Yn
-         hnV037Zf7PXmY+M6ug8T3+l2NZKy186xDdNB31DOvdyj6thS88d5j/mKJTY9I6DuhVWn
-         FnIUG+ylmoXH7GV51qDxEB0BNViHZ0hPtLXhdbBdqXVDJqOvhUDy7G4GR2aV6fl8bz0d
-         TJEac0f4/e5LNN5r8XHb8MmiN4raHKLkDq0H7H73eWfe8+9cYeTLyzpGh6EQlzRkfR0f
-         HUwQ==
-X-Gm-Message-State: APjAAAXY3Qek3oa8mXx6w0+k3XYHXee7t2zk8a9W3uRyYxuJLMbse929
-        0Qjefey5M6qDEgnPMP8qi6Gb51gCjuI=
-X-Google-Smtp-Source: APXvYqz1GM0rzdUFlTIy56tE9hjmER8Q0XKKc+f4Dl+IeVvkYeCxvTsun15Dzzsss+bWFXKoJz4VUw==
-X-Received: by 2002:a0c:8a54:: with SMTP id 20mr42132656qvu.167.1553883528562;
-        Fri, 29 Mar 2019 11:18:48 -0700 (PDT)
-Received: from localhost (ip72-201-117-66.ph.ph.cox.net. [72.201.117.66])
-        by smtp.gmail.com with ESMTPSA id r15sm1403839qte.65.2019.03.29.11.18.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 11:18:47 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 11:18:46 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Gary R Hook <ghook@amd.com>, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v2] iommu/amd: Reserve exclusion range in iova-domain
-Message-ID: <20190329181846.jjo2wijxkibfs35m@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Gary R Hook <ghook@amd.com>, Joerg Roedel <jroedel@suse.de>
-References: <20190329151037.19112-1-joro@8bytes.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e0e8+89c8WqHpS92sAwslvgKe3+T9VMjo4MG/AIaEJ0=;
+        b=NLRzeiY/FvyAb1u3DqDCzYUO/TeBejhgKPmu8U/bpMjcDomJhriUaTV0eNVH9kFWSD
+         4+ceqk623GD9uvmqJOziAD107zN4igGu5CrPgQ40lCO1Ug5co8d6LMQr0ICq3bosQCW3
+         JQ1VJAWq8CydUtfa+9f3+/yNk8ToJJ42gDeEEJ2T/RF1cvlr8SrSVBqdQS63gfMsD0+D
+         kdCgbwRLjYRVn0H5n1E+pEspWro9Et244ht3w+0y+CNBA5m3kEZSdewTeTmd/eMTV1ps
+         48/rfm09QW4+kHC24FLbbzeXr3mVNiVrXCvNHmbm/nv8udtWpqep7sviUQvATn2PIyOf
+         wr1w==
+X-Gm-Message-State: APjAAAV44fESsOyAn3OUnMEFBOOkYodt/N9M4t5TlcxdwBoyOV0kdH12
+        puSO0HDc7v5+1hw2krTk7hQm8k9C7Mg=
+X-Google-Smtp-Source: APXvYqyxsNA9y9BamWnYDqekhBHBvWZ5H1GjyfRMcgvyAdgodADt7xllaRQTCFCi1xIkJqCqhIaQnA==
+X-Received: by 2002:a19:9107:: with SMTP id t7mr26014894lfd.48.1553883639348;
+        Fri, 29 Mar 2019 11:20:39 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id z20sm407675lfh.66.2019.03.29.11.20.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Mar 2019 11:20:39 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id r24so2811664ljg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 11:20:38 -0700 (PDT)
+X-Received: by 2002:a2e:9ac8:: with SMTP id p8mr11854185ljj.79.1553883154094;
+ Fri, 29 Mar 2019 11:12:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190329151037.19112-1-joro@8bytes.org>
-User-Agent: NeoMutt/20180716
+References: <20190328230512.486297455@goodmis.org> <CAHk-=whtDB2HiEgyKcJPN7m8c83GrY=hQ=p-m-um1N6eSqxczg@mail.gmail.com>
+ <20190329134045.3fb2e69f@gandalf.local.home>
+In-Reply-To: <20190329134045.3fb2e69f@gandalf.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 29 Mar 2019 11:12:18 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjOQpkGb43zE8+djZ99tiVRefJ7mmWFOUN=v6RFRTBvCQ@mail.gmail.com>
+Message-ID: <CAHk-=wjOQpkGb43zE8+djZ99tiVRefJ7mmWFOUN=v6RFRTBvCQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/4 v2] sycalls: Remove args i and n from syscall_get_arguments()
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Roland McGrath <roland@hack.frob.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri Mar 29 19, Joerg Roedel wrote:
->From: Joerg Roedel <jroedel@suse.de>
+On Fri, Mar 29, 2019 at 10:40 AM Steven Rostedt <rostedt@goodmis.org> wrote:
 >
->If a device has an exclusion range specified in the IVRS
->table, this region needs to be reserved in the iova-domain
->of that device. This hasn't happened until now and can cause
->data corruption on data transfered with these devices.
->
->Treat exclusion ranges as reserved regions in the iommu-core
->to fix the problem.
->
->Fixes: be2a022c0dd0 ('x86, AMD IOMMU: add functions to parse IOMMU memory mapping requirements for devices')
->Signed-off-by: Joerg Roedel <jroedel@suse.de>
->---
-> drivers/iommu/amd_iommu.c       | 9 ++++++---
-> drivers/iommu/amd_iommu_init.c  | 7 ++++---
-> drivers/iommu/amd_iommu_types.h | 2 ++
-> 3 files changed, 12 insertions(+), 6 deletions(-)
->
->diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
->index 21cb088d6687..f7cdd2ab7f11 100644
->--- a/drivers/iommu/amd_iommu.c
->+++ b/drivers/iommu/amd_iommu.c
->@@ -3169,21 +3169,24 @@ static void amd_iommu_get_resv_regions(struct device *dev,
-> 		return;
->
-> 	list_for_each_entry(entry, &amd_iommu_unity_map, list) {
->+		int type, prot = 0;
-> 		size_t length;
->-		int prot = 0;
->
-> 		if (devid < entry->devid_start || devid > entry->devid_end)
-> 			continue;
->
->+		type   = IOMMU_RESV_DIRECT;
-> 		length = entry->address_end - entry->address_start;
-> 		if (entry->prot & IOMMU_PROT_IR)
-> 			prot |= IOMMU_READ;
-> 		if (entry->prot & IOMMU_PROT_IW)
-> 			prot |= IOMMU_WRITE;
->+		if (entry->prot & IOMMU_UNITY_MAP_FLAG_EXCL_RANGE)
->+			/* Exclusion range */
->+			type = IOMMU_RESV_RESERVED;
->
-> 		region = iommu_alloc_resv_region(entry->address_start,
->-						 length, prot,
->-						 IOMMU_RESV_DIRECT);
->+						 length, prot, type);
-> 		if (!region) {
-> 			dev_err(dev, "Out of memory allocating dm-regions\n");
-> 			return;
->diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
->index f773792d77fd..1b1378619fc9 100644
->--- a/drivers/iommu/amd_iommu_init.c
->+++ b/drivers/iommu/amd_iommu_init.c
->@@ -2013,6 +2013,9 @@ static int __init init_unity_map_range(struct ivmd_header *m)
-> 	if (e == NULL)
-> 		return -ENOMEM;
->
->+	if (m->flags & IVMD_FLAG_EXCL_RANGE)
->+		init_exclusion_range(m);
->+
-> 	switch (m->type) {
-> 	default:
-> 		kfree(e);
->@@ -2059,9 +2062,7 @@ static int __init init_memory_definitions(struct acpi_table_header *table)
->
-> 	while (p < end) {
-> 		m = (struct ivmd_header *)p;
->-		if (m->flags & IVMD_FLAG_EXCL_RANGE)
->-			init_exclusion_range(m);
->-		else if (m->flags & IVMD_FLAG_UNITY_MAP)
->+		if (m->flags & (IVMD_FLAG_UNITY_MAP | IVMD_FLAG_EXCL_RANGE))
-> 			init_unity_map_range(m);
->
-> 		p += m->length;
->diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
->index eae0741f72dc..87965e4d9647 100644
->--- a/drivers/iommu/amd_iommu_types.h
->+++ b/drivers/iommu/amd_iommu_types.h
->@@ -374,6 +374,8 @@
-> #define IOMMU_PROT_IR 0x01
-> #define IOMMU_PROT_IW 0x02
->
->+#define IOMMU_UNITY_MAP_FLAG_EXCL_RANGE	(1 << 2)
->+
-> /* IOMMU capabilities */
-> #define IOMMU_CAP_IOTLB   24
-> #define IOMMU_CAP_NPCACHE 26
->-- 
->2.16.4
->
+> I'll keep it around for now, but this should go as a warning to Dmitry,
+> to get something using it soon, or they may be dropped.
 
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+I don't think _that_ is the argument.
+
+Quite the reverse: nobody has ever used it, why have it around, and
+much less try to hurry some new pointless user to use it?
+
+The "get system call arguments" code at least can be used somewhat
+generically for things like tracing and strace.
+
+The "set system call arguments" can NOT.
+
+Anybody who sets system call arguments had better intimately know the
+details anyway, and any user code has to have any legacy ptrace
+interface anyway for all but the newest kernels.
+
+So I will just say "NO". No new stupid interface that doesn't have a
+truly immensely convincing reason for it.
+
+And definitely not hurried along by "nobody has ever usefully done
+this before and now people are noticing how bad the interfaces are, so
+let's cobble some sh*t together quickly".
+
+                     Linus
