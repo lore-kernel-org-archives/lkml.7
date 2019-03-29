@@ -2,303 +2,107 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C066C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B53C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32D7E21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B292184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbfC2IwR (ORCPT
+        id S1729233AbfC2IxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:52:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50568 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729102AbfC2IwQ (ORCPT
+        Fri, 29 Mar 2019 04:53:13 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56712 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729109AbfC2IxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 04:52:16 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2T8jil1079144
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 04:52:14 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rhevav8qe-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 04:52:14 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Fri, 29 Mar 2019 08:52:12 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 29 Mar 2019 08:52:09 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2T8q7sg14090402
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 08:52:08 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DFB2852051;
-        Fri, 29 Mar 2019 08:52:07 +0000 (GMT)
-Received: from [9.152.222.62] (unknown [9.152.222.62])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4BA9552067;
-        Fri, 29 Mar 2019 08:52:07 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v6 1/7] s390: ap: kvm: add PQAP interception for AQIC
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1553265828-27823-1-git-send-email-pmorel@linux.ibm.com>
- <1553265828-27823-2-git-send-email-pmorel@linux.ibm.com>
- <32716ed4-559f-0c36-cdf3-4c6662e02f4b@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Fri, 29 Mar 2019 09:52:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 29 Mar 2019 04:53:12 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 25C6C27D87F;
+        Fri, 29 Mar 2019 08:53:11 +0000 (GMT)
+Date:   Fri, 29 Mar 2019 09:53:07 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
+        "nagasuresh12@gmail.com" <nagasuresh12@gmail.com>
+Subject: Re: [LINUX PATCH 2/3] spi: spi-mem: call
+ spi_mem_default_supports_op() first
+Message-ID: <20190329095307.02d970fd@collabora.com>
+In-Reply-To: <d21f7363-eeea-830e-b9b8-ef5bb9e1261b@ti.com>
+References: <1553771784-3364-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+        <20190328205522.272e1da6@collabora.com>
+        <d21f7363-eeea-830e-b9b8-ef5bb9e1261b@ti.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <32716ed4-559f-0c36-cdf3-4c6662e02f4b@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032908-0028-0000-0000-00000359E8CF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032908-0029-0000-0000-00002418ACB4
-Message-Id: <a8df86d7-1515-4267-c097-e31895932de3@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-29_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903290065
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/03/2019 17:12, Tony Krowiak wrote:
-> On 3/22/19 10:43 AM, Pierre Morel wrote:
->> We prepare the interception of the PQAP/AQIC instruction for
->> the case the AQIC facility is enabled in the guest.
->>
->> First of all we do not want to change existing behavior when
->> intercepting AP instructions without the SIE allowing the guest
->> to use AP instructions.
->>
->> In this patch we only handle the AQIC interception allowed by
->> facility 65 which will be enabled when the complete interception
->> infrastructure will be present.
->>
->> We add a callback inside the KVM arch structure for s390 for
->> a VFIO driver to handle a specific response to the PQAP
->> instruction with the AQIC command and only this command.
->>
->> But we want to be able to return a correct answer to the guest
->> even there is no VFIO AP driver in the kernel.
->> Therefor, we inject the correct exceptions from inside KVM for the
->> case the callback is not initialized, which happens when the vfio_ap
->> driver is not loaded.
->>
->> We do consider the responsability of the driver to always initialize
->> the PQAP callback if it defines queues by initializing the CRYCB for
->> a guest.
->> If the callback has been setup we call it.
->> If not we setup an answer considering that no queue is available
->> for the guest when no callback has been setup.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
->>   arch/s390/include/asm/kvm_host.h      |  8 ++++
->>   arch/s390/kvm/priv.c                  | 90 
->> +++++++++++++++++++++++++++++++++++
->>   drivers/s390/crypto/vfio_ap_private.h |  2 +
->>   3 files changed, 100 insertions(+)
->>
->> diff --git a/arch/s390/include/asm/kvm_host.h 
->> b/arch/s390/include/asm/kvm_host.h
->> index a496276..624460b 100644
->> --- a/arch/s390/include/asm/kvm_host.h
->> +++ b/arch/s390/include/asm/kvm_host.h
->> @@ -18,6 +18,7 @@
->>   #include <linux/kvm_host.h>
->>   #include <linux/kvm.h>
->>   #include <linux/seqlock.h>
->> +#include <linux/module.h>
->>   #include <asm/debug.h>
->>   #include <asm/cpu.h>
->>   #include <asm/fpu/api.h>
->> @@ -721,8 +722,15 @@ struct kvm_s390_cpu_model {
->>       unsigned short ibc;
->>   };
->> +struct kvm_s390_module_hook {
->> +    int (*hook)(struct kvm_vcpu *vcpu);
->> +    void *data;
->> +    struct module *owner;
->> +};
->> +
->>   struct kvm_s390_crypto {
->>       struct kvm_s390_crypto_cb *crycb;
->> +    struct kvm_s390_module_hook *pqap_hook;
->>       __u32 crycbd;
->>       __u8 aes_kw;
->>       __u8 dea_kw;
->> diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
->> index 8679bd7..793e48a 100644
->> --- a/arch/s390/kvm/priv.c
->> +++ b/arch/s390/kvm/priv.c
->> @@ -27,6 +27,7 @@
->>   #include <asm/io.h>
->>   #include <asm/ptrace.h>
->>   #include <asm/sclp.h>
->> +#include <asm/ap.h>
->>   #include "gaccess.h"
->>   #include "kvm-s390.h"
->>   #include "trace.h"
->> @@ -592,6 +593,93 @@ static int handle_io_inst(struct kvm_vcpu *vcpu)
->>       }
->>   }
->> +/*
->> + * handle_pqap: Handling pqap interception
->> + * @vcpu: the vcpu having issue the pqap instruction
->> + *
->> + * We now support PQAP/AQIC instructions and we need to correctly
->> + * answer the guest even if no dedicated driver's hook is available.
->> + *
->> + * The intercepting code calls a dedicated callback for this instruction
->> + * if a driver did register one in the CRYPTO satellite of the
->> + * SIE block.
->> + *
->> + * For PQAP AQIC and TAPQ instructions, verify privilege and 
->> specifications.
->> + *
->> + * If no callback available, the queues are not available, return 
->> this to
->> + * the caller.
->> + * Else return the value returned by the callback.
->> + */
->> +static int handle_pqap(struct kvm_vcpu *vcpu)
->> +{
->> +    struct ap_queue_status status = {};
->> +    unsigned long reg0;
->> +    int ret;
->> +    uint8_t fc;
->> +
->> +    /* Verify that the AP instruction are available */
->> +    if (!ap_instructions_available())
->> +        return -EOPNOTSUPP;
->> +    /* Verify that the guest is allowed to use AP instructions */
->> +    if (!(vcpu->arch.sie_block->eca & ECA_APIE))
->> +        return -EOPNOTSUPP;
->> +    /*
->> +     * The only possibly intercepted instructions when AP 
->> instructions are
->> +     * available for the guest are AQIC and TAPQ with the t bit set
->> +     * since we do not set IC.3 (FIII) we currently will not intercept
->> +     * TAPQ.
->> +     * The following code will only treat AQIC function code.
->> +     */
->> +    reg0 = vcpu->run->s.regs.gprs[0];
->> +    fc = reg0 >> 24;
->> +    if (fc != 0x03) {
->> +        pr_warn("%s: Unexpected interception code 0x%02x\n",
->> +            __func__, fc);
->> +        return -EOPNOTSUPP;
->> +    }
->> +    /* All PQAP instructions are allowed for guest kernel only */
->> +    if (vcpu->arch.sie_block->gpsw.mask & PSW_MASK_PSTATE)
->> +        return kvm_s390_inject_program_int(vcpu, PGM_PRIVILEGED_OP);
->> +    /*
->> +     * Common tests for PQAP instructions to generate a specification
->> +     * exception
->> +     */
->> +    /* Zero bits overwrite produce a specification exception */
->> +    if (reg0 & 0x007f0000UL)
->> +        goto specification_except;
->> +    /* If APXA is not installed APQN is limited */
->> +    if (!(vcpu->kvm->arch.crypto.crycbd & 0x02))
->> +        if (reg0 & 0x000030f0UL)
->> +            goto specification_except;
->> +    /* AQIC needs facility 65 */
->> +    if (!test_kvm_facility(vcpu->kvm, 65))
->> +        goto specification_except;
->> +
->> +    /*
->> +     * Verify that the hook callback is registered, lock the owner
->> +     * and call the hook.
->> +     */
->> +    if (vcpu->kvm->arch.crypto.pqap_hook) {
->> +        if (!try_module_get(vcpu->kvm->arch.crypto.pqap_hook->owner))
->> +            return -EOPNOTSUPP;
->> +        ret = vcpu->kvm->arch.crypto.pqap_hook->hook(vcpu);
->> +        module_put(vcpu->kvm->arch.crypto.pqap_hook->owner);
->> +        return ret;
->> +    }
->> +    /*
->> +     * It is the duty of the vfio_driver to register a hook
->> +     * If it does not and we get an exception on AQIC we must
->> +     * guess that there is no vfio_ap_driver at all and no one
->> +     * to handle the guests's CRYCB and the CRYCB is empty.
->> +     */
->> +    status.response_code = 0x01;
->> +    memcpy(&vcpu->run->s.regs.gprs[1], &status, sizeof(status));
->> +    return 0;
->> +
->> +specification_except:
->> +    return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
->> +}
->> +
->>   static int handle_stfl(struct kvm_vcpu *vcpu)
->>   {
->>       int rc;
->> @@ -878,6 +966,8 @@ int kvm_s390_handle_b2(struct kvm_vcpu *vcpu)
->>           return handle_sthyi(vcpu);
->>       case 0x7d:
->>           return handle_stsi(vcpu);
->> +    case 0xaf:
->> +        return handle_pqap(vcpu);
->>       case 0xb1:
->>           return handle_stfl(vcpu);
->>       case 0xb2:
->> diff --git a/drivers/s390/crypto/vfio_ap_private.h 
->> b/drivers/s390/crypto/vfio_ap_private.h
->> index 76b7f98..a910be1 100644
->> --- a/drivers/s390/crypto/vfio_ap_private.h
->> +++ b/drivers/s390/crypto/vfio_ap_private.h
->> @@ -16,6 +16,7 @@
->>   #include <linux/mdev.h>
->>   #include <linux/delay.h>
->>   #include <linux/mutex.h>
->> +#include <linux/kvm_host.h>
->>   #include "ap_bus.h"
->> @@ -81,6 +82,7 @@ struct ap_matrix_mdev {
->>       struct ap_matrix matrix;
->>       struct notifier_block group_notifier;
->>       struct kvm *kvm;
->> +    struct kvm_s390_module_hook pqap_hook;
+On Fri, 29 Mar 2019 13:50:26 +0530
+Vignesh Raghavendra <vigneshr@ti.com> wrote:
+
+> Hi Boris,
 > 
-> I don't understand the purpose of adding this field. We set up the
-> the kvm->arch.crypto.pqap_hook in the vfio_ap_mdev_set_kvm which is
-> also in this same file, why not just use a static struct 
-> kvm_s390_module_hook and reuse it when setting up
-> kvm->arch.crypto.pqap_hook? It saves you from initializing it every
-> time an ap_matrix_mdev is created.
+> On 29/03/19 1:25 AM, Boris Brezillon wrote:
+> > On Thu, 28 Mar 2019 16:46:24 +0530
+> > Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com> wrote:
+> >   
+> >> Call spi_mem_default_supports_op() first, before calling controller
+> >> specific ctlr->supports_op().
+> >> With this, controller drivers can drop checking the buswidths again.  
+> > 
+> > No, this was done on purpose, in case the controller does not want the
+> > default check to be applied (say it does not need bus-width props to
+> > be defined and has another way to check if a device can be accessed in
+> > dual, quad or octal mode).  
+> 
+> Sorry, I don't understand here.
+> Based on capabilities declared in spi_device->mode, m25p80 driver will
+> claim appropriate  SNOR_HWCAPS_*.  SPI NOR layer chooses opcodes based
+> on that for which m25p80 layer populates buswidths.
 
-Having this field embedded in the matrix_mdev allows to easily retrieve 
-the matrix_mdev from the the hook.
+Well, that test in m25p80 should go away and be replaced by a proper
+spi_mem_supports_op() iteration on all modes reported as supported by
+the *chip* (I think that's what I did in my series merging m25p80 code
+into the spi-nor core). But that's not really related to the problem
+we're discussing here.
 
-Thanks,
-Pierre
+> 
+> So, I don't really expect any mismatch in spi_mem_default_supports_op()
+> in the case you mentioned. Or did I miss something? Maybe something SPI
+> NAND specific?
 
+Nothing NAND specific, just something controller specific and how we
+want to deal with buswidth detection. Most memory devices expose their
+caps in some way (be it ID-based detection or using some kind of
+caps/parameters table), so they know what they're capable of. SPI
+controllers know what they're capable of, of course. The only part that
+remains unknown for buswidth negotiation is how things are wired on the
+board. I keep thinking that defining buswidth in the DT (using
+spi-{tx,rx}-bus-width) should only be done if there are board-related
+limiting factors (some IO pins not routed).
+If you look at the code, SPI_{TX,RX}_{DUAL,QUAD,OCTAL} flags are only
+set if the spi-{tx,rx}-bus-width props are defined.
 
-
-
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
-
+The idea behind making spi_mem_default_supports_op() optional is to let
+new drivers implement a new scheme where missing
+spi-{tx,rx}-bus-width does not necessarily mean "use regular SPI mode".
