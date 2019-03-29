@@ -2,107 +2,182 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9E9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCE3C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A4A2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:13:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="vjALSBq8"
+	by mail.kernel.org (Postfix) with ESMTP id EBDE621855
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbfC2CNr (ORCPT
+        id S1728626AbfC2CRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 22:13:47 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46944 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728591AbfC2CNk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 22:13:40 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 1FF74891A9;
-        Fri, 29 Mar 2019 15:13:35 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1553825615;
-        bh=sOot2M4RQ4NMgXtVvOcSTsEE1VW/kDyxlurU8ZosynE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=vjALSBq8DBeJL7xADoYML3RddVnvfRoOXbGHOutSnjWcNjp1Dju00U8qOWTnsmHgc
-         ANhc1imM2jrC0RZEY4q5FQLw7k1XNpva9OiJvWxZsD/Ua8gTRzpFuCpE/lW7YDyoBr
-         u3tTnH0G7IzcDX7XxVKTIHmRk2GfaeS0AK5HJw/ifHk1bPw94nETScfEVKiMj08p3k
-         48DEhpNqMNYiiQ3335NsIA15Qh2Uljgbctr70z5faJ8tj/k8/BUWf/AasKs9avod8P
-         tTObMyVB/JVDw2WUTWE3nC/XaOUzWmfvTROSrreF4R5DTFbWk57XJKCD/MSLcUoyp6
-         tXQWQ2Rmype3g==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5c9d7f4d0002>; Fri, 29 Mar 2019 15:13:33 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id 17BBC13EC56;
-        Fri, 29 Mar 2019 15:13:35 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id F309F1E1124; Fri, 29 Mar 2019 15:13:34 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, marek.vasut@gmail.com, richard@nod.at,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2 2/2] dt-binding: mtd: physmap: Add example using addr-gpios property
-Date:   Fri, 29 Mar 2019 15:13:22 +1300
-Message-Id: <20190329021322.6833-3-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190329021322.6833-1-chris.packham@alliedtelesis.co.nz>
-References: <20190329021322.6833-1-chris.packham@alliedtelesis.co.nz>
+        Thu, 28 Mar 2019 22:17:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49418 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727948AbfC2CRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 22:17:53 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 642703092649;
+        Fri, 29 Mar 2019 02:17:52 +0000 (UTC)
+Received: from redhat.com (ovpn-121-118.rdu2.redhat.com [10.10.121.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3BD9C83B17;
+        Fri, 29 Mar 2019 02:17:51 +0000 (UTC)
+Date:   Thu, 28 Mar 2019 22:17:49 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 09/11] mm/hmm: allow to mirror vma of a file on a DAX
+ backed filesystem v2
+Message-ID: <20190329021748.GH16680@redhat.com>
+References: <20190325144011.10560-1-jglisse@redhat.com>
+ <20190325144011.10560-10-jglisse@redhat.com>
+ <20190328180425.GI31324@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190328180425.GI31324@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 29 Mar 2019 02:17:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an example showing how to use the addr-gpios property to deal with a
-system with limited IO space.
+On Thu, Mar 28, 2019 at 11:04:26AM -0700, Ira Weiny wrote:
+> On Mon, Mar 25, 2019 at 10:40:09AM -0400, Jerome Glisse wrote:
+> > From: Jérôme Glisse <jglisse@redhat.com>
+> > 
+> > HMM mirror is a device driver helpers to mirror range of virtual address.
+> > It means that the process jobs running on the device can access the same
+> > virtual address as the CPU threads of that process. This patch adds support
+> > for mirroring mapping of file that are on a DAX block device (ie range of
+> > virtual address that is an mmap of a file in a filesystem on a DAX block
+> > device). There is no reason to not support such case when mirroring virtual
+> > address on a device.
+> > 
+> > Note that unlike GUP code we do not take page reference hence when we
+> > back-off we have nothing to undo.
+> > 
+> > Changes since v1:
+> >     - improved commit message
+> >     - squashed: Arnd Bergmann: fix unused variable warning in hmm_vma_walk_pud
+> > 
+> > Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+> > Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  mm/hmm.c | 132 ++++++++++++++++++++++++++++++++++++++++++++++---------
+> >  1 file changed, 111 insertions(+), 21 deletions(-)
+> > 
+> > diff --git a/mm/hmm.c b/mm/hmm.c
+> > index 64a33770813b..ce33151c6832 100644
+> > --- a/mm/hmm.c
+> > +++ b/mm/hmm.c
+> > @@ -325,6 +325,7 @@ EXPORT_SYMBOL(hmm_mirror_unregister);
+> >  
+> >  struct hmm_vma_walk {
+> >  	struct hmm_range	*range;
+> > +	struct dev_pagemap	*pgmap;
+> >  	unsigned long		last;
+> >  	bool			fault;
+> >  	bool			block;
+> > @@ -499,6 +500,15 @@ static inline uint64_t pmd_to_hmm_pfn_flags(struct hmm_range *range, pmd_t pmd)
+> >  				range->flags[HMM_PFN_VALID];
+> >  }
+> >  
+> > +static inline uint64_t pud_to_hmm_pfn_flags(struct hmm_range *range, pud_t pud)
+> > +{
+> > +	if (!pud_present(pud))
+> > +		return 0;
+> > +	return pud_write(pud) ? range->flags[HMM_PFN_VALID] |
+> > +				range->flags[HMM_PFN_WRITE] :
+> > +				range->flags[HMM_PFN_VALID];
+> > +}
+> > +
+> >  static int hmm_vma_handle_pmd(struct mm_walk *walk,
+> >  			      unsigned long addr,
+> >  			      unsigned long end,
+> > @@ -520,8 +530,19 @@ static int hmm_vma_handle_pmd(struct mm_walk *walk,
+> >  		return hmm_vma_walk_hole_(addr, end, fault, write_fault, walk);
+> >  
+> >  	pfn = pmd_pfn(pmd) + pte_index(addr);
+> > -	for (i = 0; addr < end; addr += PAGE_SIZE, i++, pfn++)
+> > +	for (i = 0; addr < end; addr += PAGE_SIZE, i++, pfn++) {
+> > +		if (pmd_devmap(pmd)) {
+> > +			hmm_vma_walk->pgmap = get_dev_pagemap(pfn,
+> > +					      hmm_vma_walk->pgmap);
+> > +			if (unlikely(!hmm_vma_walk->pgmap))
+> > +				return -EBUSY;
+> > +		}
+> >  		pfns[i] = hmm_pfn_from_pfn(range, pfn) | cpu_flags;
+> > +	}
+> > +	if (hmm_vma_walk->pgmap) {
+> > +		put_dev_pagemap(hmm_vma_walk->pgmap);
+> > +		hmm_vma_walk->pgmap = NULL;
+> > +	}
+> >  	hmm_vma_walk->last = end;
+> >  	return 0;
+> >  }
+> > @@ -608,10 +629,24 @@ static int hmm_vma_handle_pte(struct mm_walk *walk, unsigned long addr,
+> >  	if (fault || write_fault)
+> >  		goto fault;
+> >  
+> > +	if (pte_devmap(pte)) {
+> > +		hmm_vma_walk->pgmap = get_dev_pagemap(pte_pfn(pte),
+> > +					      hmm_vma_walk->pgmap);
+> > +		if (unlikely(!hmm_vma_walk->pgmap))
+> > +			return -EBUSY;
+> > +	} else if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL) && pte_special(pte)) {
+> > +		*pfn = range->values[HMM_PFN_SPECIAL];
+> > +		return -EFAULT;
+> > +	}
+> > +
+> >  	*pfn = hmm_pfn_from_pfn(range, pte_pfn(pte)) | cpu_flags;
+> 
+> 	<tag>
+> 
+> >  	return 0;
+> >  
+> >  fault:
+> > +	if (hmm_vma_walk->pgmap) {
+> > +		put_dev_pagemap(hmm_vma_walk->pgmap);
+> > +		hmm_vma_walk->pgmap = NULL;
+> > +	}
+> >  	pte_unmap(ptep);
+> >  	/* Fault any virtual address we were asked to fault */
+> >  	return hmm_vma_walk_hole_(addr, end, fault, write_fault, walk);
+> > @@ -699,12 +734,83 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
+> >  			return r;
+> >  		}
+> >  	}
+> > +	if (hmm_vma_walk->pgmap) {
+> > +		put_dev_pagemap(hmm_vma_walk->pgmap);
+> > +		hmm_vma_walk->pgmap = NULL;
+> > +	}
+> 
+> 
+> Why is this here and not in hmm_vma_handle_pte()?  Unless I'm just getting
+> tired this is the corresponding put when hmm_vma_handle_pte() returns 0 above
+> at <tag> above.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-Changes in v2:
-- None
+This is because get_dev_pagemap() optimize away the reference getting
+if we already hold a reference on the correct dev_pagemap. So if we
+were releasing the reference within hmm_vma_handle_pte() then we would
+loose the get_dev_pagemap() optimization.
 
- .../devicetree/bindings/mtd/mtd-physmap.txt      | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Docu=
-mentation/devicetree/bindings/mtd/mtd-physmap.txt
-index 7df0dcaccb7d..c69f4f065d23 100644
---- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-+++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-@@ -96,3 +96,19 @@ An example using SRAM:
- 		bank-width =3D <2>;
- 	};
-=20
-+An example using gpio-addrs
-+
-+	flash@20000000 {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <1>;
-+		compatible =3D "cfi-flash", "jedec-flash";
-+		reg =3D <0x20000000 0x02000000>;
-+		ranges =3D <0 0x00000000 0x02000000
-+		          1 0x02000000 0x02000000>;
-+		bank-width =3D <2>;
-+		addr-gpios =3D <&gpio1 2 GPIO_ACTIVE_HIGH>;
-+		partition@0 {
-+			label =3D "test-part1";
-+			reg =3D <0 0x04000000>;
-+		};
-+	};
---=20
-2.21.0
-
+Cheers,
+Jérôme
