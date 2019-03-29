@@ -2,100 +2,196 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CA7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868BEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C5A218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:13:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553876013;
-	bh=5+ek2XNJjdFVsNWvRwzEpu4rOH5046vZu/j6lBPB1hU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ksRlEYyR/HVw3MX4rRC5MZGeUWLYqhDV5LxQTpu4YK06fiFS90X30YKWiuDih4CvY
-	 YkmiNrzhN/Tdh7/B7MaevuCdqgWNldYEQFenowjecaamwImtzdP9UQ7EBAJFG3DP/E
-	 LKLLidmmyPdwhoT8cvqhjqIgVhQslPHHHDf/3erw=
+	by mail.kernel.org (Postfix) with ESMTP id 46C27218A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:15:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SKLlOV6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbfC2QNc (ORCPT
+        id S1729792AbfC2QPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 12:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728980AbfC2QNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 12:13:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C8C42070B;
-        Fri, 29 Mar 2019 16:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553876011;
-        bh=5+ek2XNJjdFVsNWvRwzEpu4rOH5046vZu/j6lBPB1hU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FwLk+DkavixdVeb/vT9YNPOQNRp25UhIUUQ0Lzt1S7fL8BhW1HyYZVBSla9zhcHfj
-         k+QiN/ENhUH0rd2tbaerzO9l4yayw1Aj+n43dJTdmuhnYeb1VOsgWS6RRqklogpz6j
-         be3956fjCbNUMw19upUNp/4acnxoPh/TAFLFHjP4=
-Date:   Fri, 29 Mar 2019 17:13:28 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Anirudh Rayabharam <anirudh.rayabharam@gmail.com>
-Cc:     hadess@hadess.net, hdegoede@redhat.com, Larry.Finger@lwfinger.net,
-        dan.carpenter@oracle.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: rtl8723bs: core: fix line over 80 characters
- warning
-Message-ID: <20190329161328.GA540@kroah.com>
-References: <20190326182309.GA33380@auvm>
- <20190327181836.GA37876@auvm>
+        Fri, 29 Mar 2019 12:15:10 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:38283 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729584AbfC2QPJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 12:15:09 -0400
+Received: by mail-ua1-f67.google.com with SMTP id t15so294728uao.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 09:15:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MrAbuYWy43paV91ci3MFGSB8/cjRY/sbms3mUt6brqs=;
+        b=SKLlOV6lwZD4eUCyG3t4OFqC5KDBNM3Lpyz5bVMmEnQUC0PJUW4mXJQAEWqT4nCfuk
+         CeUa0LPaMr62Xr8c93O0YEbUysUvEyOdJXagzIjYhNxzu76kjvdbNvmnRq1urbBA0orD
+         jLxJBpOwdPeXPeCtTY6TxC0P17lsFhj4LZ1l4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MrAbuYWy43paV91ci3MFGSB8/cjRY/sbms3mUt6brqs=;
+        b=A81TaSGvShk/puqbMab6faYQ6rWLf5X1mKf0zE0u/HxqsFmZjabZkjVSPy+mNG1Aq/
+         ccyZgi6aTyt4KwZUexsxg4yB74/PS9qta99ECe/nBmBgnqBDsDHU1+CyPKwWKL66ASkB
+         znKgNOklnXNHl45SA16gAzMVvuutFj5dKxt9KrSPKWuN5+JhcEeC/ypceiMy1foRJpY+
+         czg/wNkCg3KYgpcxBN8MDUJWKji62203e7UjDxqJViv/k7Gnch1gEUFpbxS0zXFA0gCL
+         RALfvVutgQFFwrHDfgctBtEmhnmelAZn4cg+FeRZXlJF0Hzps7Wmph9kX2ASJJZJaEzw
+         aqkg==
+X-Gm-Message-State: APjAAAXyXjfiTMMuaq/WYscvD92Lmpo1zjRZNxMsuGqsgtD6pHmFC6YB
+        lOmkIcJqmF3zIYJfOQypCtt6ndZ6oXo=
+X-Google-Smtp-Source: APXvYqw9eJwn9nQQK5oCNSpGgh5gP44WqwfqTtXfn7mRWfjtZiu0Wh53Vey+PtA+kU9hDOpS8RQsCg==
+X-Received: by 2002:ab0:20d9:: with SMTP id z25mr19874750ual.141.1553876107213;
+        Fri, 29 Mar 2019 09:15:07 -0700 (PDT)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id l193sm1497732vka.19.2019.03.29.09.15.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Mar 2019 09:15:06 -0700 (PDT)
+Received: by mail-ua1-f52.google.com with SMTP id d5so859024uan.6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 09:15:05 -0700 (PDT)
+X-Received: by 2002:ab0:604a:: with SMTP id o10mr1347444ual.21.1553876104903;
+ Fri, 29 Mar 2019 09:15:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190327181836.GA37876@auvm>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190328171710.31949-1-dianders@chromium.org> <20190328171710.31949-2-dianders@chromium.org>
+ <f2f82f439f2b7586cb4c83f15122d8d19952d596.camel@collabora.com>
+ <CAD=FV=WOKSHWCHPv9kQT7np6v_ZYBmAsnTpAHJv7zRS_3b46JQ@mail.gmail.com> <CAL_JsqJNPMnVLyPGeK5Jd=QVSO1zWvPEiPcgas03yP_P66M-uw@mail.gmail.com>
+In-Reply-To: <CAL_JsqJNPMnVLyPGeK5Jd=QVSO1zWvPEiPcgas03yP_P66M-uw@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 29 Mar 2019 09:14:43 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UeGChy6iJH1r9tDLmBHP1UR3f3N+7ofJ-pqWC5jYgo5A@mail.gmail.com>
+Message-ID: <CAD=FV=UeGChy6iJH1r9tDLmBHP1UR3f3N+7ofJ-pqWC5jYgo5A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] dt-bindings: Add panel-timing subnode to simple-panel
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Eric Anholt <eric@anholt.net>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 11:49:07PM +0530, Anirudh Rayabharam wrote:
-> Checkpatch.pl complains that these lines are over 80 characters. Use the
-> "psecuritypriv" pointer for consistency, remove unnecessary parantheses
-> and fix the alignment.
-> 
-> This patch just cleans up a condition, it doesn't affect runtime.
-> 
-> Signed-off-by: Anirudh Rayabharam <anirudh.rayabharam@gmail.com>
-> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
-> v2: Made the commit message clearer, removed unnecessary parantheses and fixed
->     the alignment as suggested by Dan Carpenter <dan.carpenter@oracle.com>
-> 
->  drivers/staging/rtl8723bs/core/rtw_ap.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-> index 18fabf5ff44b..8062b7f36de2 100644
-> --- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-> +++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-> @@ -2336,8 +2336,8 @@ void rtw_ap_restore_network(struct adapter *padapter)
->  			Update_RA_Entry(padapter, psta);
->  			/* pairwise key */
->  			/* per sta pairwise key and settings */
-> -			if ((padapter->securitypriv.dot11PrivacyAlgrthm == _TKIP_) ||
-> -				(padapter->securitypriv.dot11PrivacyAlgrthm == _AES_)) {
-> +			if (psecuritypriv->dot11PrivacyAlgrthm == _TKIP_ ||
-> +			    psecuritypriv->dot11PrivacyAlgrthm == _AES_) {
->  				rtw_setstakey_cmd(padapter, psta, true, false);
->  			}
->  		}
+Hi,
 
-Patch does not apply to my staging-next branch :(
+On Fri, Mar 29, 2019 at 9:13 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Thu, Mar 28, 2019 at 6:50 PM Doug Anderson <dianders@chromium.org> wro=
+te:
+> >
+> > Hi,
+> >
+> >
+> > On Thu, Mar 28, 2019 at 1:27 PM Ezequiel Garcia <ezequiel@collabora.com=
+> wrote:
+> > >
+> > > On Thu, 2019-03-28 at 10:17 -0700, Douglas Anderson wrote:
+> > > > From: Sean Paul <seanpaul@chromium.org>
+> > > >
+> > > > This patch adds a new subnode to simple-panel allowing us to overri=
+de
+> > > > the typical timing expressed in the panel's display_timing.
+> > > >
+> > > > Changes in v2:
+> > > >  - Split out the binding into a new patch (Rob)
+> > > >  - display-timings is a new section (Rob)
+> > > >  - Use the full display-timings subnode instead of picking the timi=
+ng
+> > > >    out (Rob/Thierry)
+> > > > Changes in v3:
+> > > >  - Go back to using the timing subnode directly, but rename to
+> > > >    panel-timing (Rob)
+> > > > Changes in v4:
+> > > >  - Simplify desc. for when override should be used (Thierry/Laurent=
+)
+> > > >  - Removed Rob H review since it's been a year and wording changed
+> > > >
+> > > > Cc: Doug Anderson <dianders@chromium.org>
+> > > > Cc: Eric Anholt <eric@anholt.net>
+> > > > Cc: Heiko Stuebner <heiko@sntech.de>
+> > > > Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+> > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > Cc: St=C3=A9phane Marchesin <marcheu@chromium.org>
+> > > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > > Cc: devicetree@vger.kernel.org
+> > > > Cc: dri-devel@lists.freedesktop.org
+> > > > Cc: linux-rockchip@lists.infradead.org
+> > > > Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > > ---
+> > > >
+> > > >  .../bindings/display/panel/simple-panel.txt   | 24 +++++++++++++++=
+++++
+> > > >  1 file changed, 24 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/display/panel/simple=
+-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.t=
+xt
+> > > > index b2b872c710f2..6157f86ddce4 100644
+> > > > --- a/Documentation/devicetree/bindings/display/panel/simple-panel.=
+txt
+> > > > +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.=
+txt
+> > > > @@ -15,6 +15,18 @@ Optional properties:
+> > > >    (hot plug detect) signal, but the signal isn't hooked up so we s=
+hould
+> > > >    hardcode the max delay from the panel spec when powering up the =
+panel.
+> > > >
+> > > > +panel-timing subnode
+> > > > +--------------------
+> > > > +
+> > > > +This optional subnode is for devices which require a mode differin=
+g
+> > > > +from the panel's "typical" display timing.  The panel timings prov=
+ided
+> > > > +here will be ignored if they are found to be outside of allowable
+> > > > +ranges for the given panel.
+> > > > +
+> > >
+> > > Is it OK to put this comment about how the implementation
+> > > will behave when values are out of range, given this is just a bindin=
+g
+> > > spec?
+> > >
+> > > Perhaps -if needed- this sentence can be rephrased to state that,
+> > > e.g. the OS may not be able to apply these values, if the controller
+> > > or device is unable to?
+> >
+> > I will defer to Rob H. on this one, but I'm happy to simply remove the
+> > last sentence.  I was trying to add a more OS-agnostic version of the
+> > bullet points from V3 but agree that we could just remove this from
+> > the bindings completely.
+>
+> Following my opinion that it's not the kernel's job to validate
+> bindings, I would say it's fine for the OS to blindly apply them if it
+> chooses.
+>
+> Plus with schema, you can provide the ranges of values and validate
+> DTs up front (unless you want to validate some result of math
+> operations).
 
-Please rebase and resend.
+OK, I'll remove the sentence and repost sometime early next week.  Thanks!
 
-thanks,
-
-greg k-h
+-Doug
