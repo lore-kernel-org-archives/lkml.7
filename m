@@ -2,105 +2,90 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621D6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20304C10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32AD22070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:13:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZGFrmr7z"
+	by mail.kernel.org (Postfix) with ESMTP id E65AA20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbfC2KNx (ORCPT
+        id S1729368AbfC2KN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:13:53 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50181 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729333AbfC2KNu (ORCPT
+        Fri, 29 Mar 2019 06:13:59 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:26977 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729341AbfC2KNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:13:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z11so1939283wmi.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 03:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=Nh0o7w+Yt9ud7+T6lHPtFI13Y0R7ShnQgi+aiu0VS3Q=;
-        b=ZGFrmr7zZI0jIM9pHHSJelJtWGPZIU0l0RAciOHkHM1DjuIM6iZmobVUiIXoWPsOpX
-         e9uwfcKiOwD1A2+NKeqetExfxWJbVjbKmJQ88BETyDe6d88gS0Z1MdRUzFI4DIIYxLBN
-         7rrdZApkc38NWlFElPDFVr272rtDux3HxDyX4WoFwhQlUw7xQlg3tkGjkZzF6kyfO5PI
-         ov9WKuj3MZ/G5A7duSglQTPfSWZMAPclvk752DT4g+iPWo/H8zU7ifHlQt7WyGAu5Bn7
-         12/hhoUxguTqZpftfdGWIzQnz+L+GcoL5P2VNCnfBX3kewA/O4Y02YyETikhcJpDpaQh
-         Eg7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=Nh0o7w+Yt9ud7+T6lHPtFI13Y0R7ShnQgi+aiu0VS3Q=;
-        b=tI6yTMntMVSsQvfvrlgQe2s6314nuU+SVH3yx2GsRk6HS1bRY00V+2r8rjW5jaHbjq
-         Jiv1Yr2bszBC8ZZYPg9LXDOxTlYerqJLtj/2JDDq8JL2YPW3me/nxFnGPWaw4NA1yk1A
-         2qcM8VJ2D1rlsFfpV0fc7N0SRzFYEa+G4qeKbySh37UWi655G75MKeV92K8hHXqHEHbi
-         eTcbqftff4eptEIBro9LrIaqsYryD5rI5nbEfuwJu6qIo38utx5tPbRKImUI7hI7C49Y
-         Vw7YH6KwYjdsFm/lzqfCW9XDaVygSEiTNJ2jVBbpDzLffYpCvay0COrxhOxwOjgHOnEw
-         cb5Q==
-X-Gm-Message-State: APjAAAUZUB1A3dRExVvY8Wh9ow9p65Tx2zVfRTQvqV6xEcl+p+aX8O+1
-        I3e3pX1aWqFZoQRgYMUmW0oqfmvPcCU=
-X-Google-Smtp-Source: APXvYqx3luLhX/jjPh24NdBSkw8j7xg6LIjb5h3KIj1p+cD/utAHRzRETOmRHrjL8LcTux5rNe5h4A==
-X-Received: by 2002:a1c:a7c5:: with SMTP id q188mr2990714wme.126.1553854428681;
-        Fri, 29 Mar 2019 03:13:48 -0700 (PDT)
-Received: from localhost ([49.248.196.175])
-        by smtp.gmail.com with ESMTPSA id n189sm2558433wmb.28.2019.03.29.03.13.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 03:13:47 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com,
-        andy.gross@linaro.org, David Brown <david.brown@linaro.org>
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v2 13/13] arm64: dts: msm8916: thermal: Convert camera trip type to hot
-Date:   Fri, 29 Mar 2019 15:42:19 +0530
-Message-Id: <86fe318aa10e4fa967b88cf1d0a728271a54613e.1553853990.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1553853990.git.amit.kucheria@linaro.org>
-References: <cover.1553853990.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1553853990.git.amit.kucheria@linaro.org>
-References: <cover.1553853990.git.amit.kucheria@linaro.org>
+        Fri, 29 Mar 2019 06:13:55 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2TAAdml020850;
+        Fri, 29 Mar 2019 11:13:30 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2rhg9w0fah-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 29 Mar 2019 11:13:30 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0E52331;
+        Fri, 29 Mar 2019 10:13:30 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D91E12679;
+        Fri, 29 Mar 2019 10:13:29 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 29 Mar
+ 2019 11:13:29 +0100
+Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Fri, 29 Mar 2019 11:13:29
+ +0100
+From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>
+Subject: [PATCH] ARM: dts: stm32: add power supply of otm8009a on stm32mp157c-dk2
+Date:   Fri, 29 Mar 2019 11:13:26 +0100
+Message-ID: <1553854406-28992-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.23.97]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-29_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't have any cooling-devices related to the camera. Use the "hot"
-trip type so allow the temperature to be exported to userspace and
-remove the "critical" trip.
+This patch adds a new property (power-supply) to panel otm8009a (orisetech)
+on stm32mp157c-dk2  & regulator v3v3 which is always set on until the
+implementation of regulator driver.
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ arch/arm/boot/dts/stm32mp157c-dk2.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index ea734b98ec96..e4b1010f70b6 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -270,12 +270,7 @@
- 				cam_alert0: trip-point@0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
--					type = "passive";
--				};
--				cam_crit: cam_crit {
--					temperature = <95000>;
--					hysteresis = <2000>;
--					type = "critical";
-+					type = "hot";
- 				};
- 			};
- 		};
+diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+index 363aeb9..20ea601 100644
+--- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
++++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+@@ -50,6 +50,7 @@
+ 		compatible = "orisetech,otm8009a";
+ 		reg = <0>;
+ 		reset-gpios = <&gpioe 4 GPIO_ACTIVE_LOW>;
++		power-supply = <&v3v3>;
+ 		status = "okay";
+ 
+ 		port {
 -- 
-2.17.1
+2.7.4
 
