@@ -2,149 +2,103 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C61C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DAEC10F06
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF86E21871
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553817938;
-	bh=kGlzYNvnx2j57Yy5KzGg35jicf7vTPu7Xw0BB8/0CGk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kY8YogG1DfZwqdMhZuimUJTNRJSKVMruJat9vkmh+vYWCdpLXt/Wu9HdYqUMInPxN
-	 6fi2l4Esk78MeFXXjOfJ5xHzxa20awSqQB14zTubPBhltvH/MjkurPJn5AhGEESnVX
-	 iR3SIkklifTs0oT81wAUnRtKMgLie0p5Tb911Coc=
+	by mail.kernel.org (Postfix) with ESMTP id 003FD21850
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:08:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="at/I9UAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbfC2AFh (ORCPT
+        id S1728665AbfC2AIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 20:05:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbfC2AFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 20:05:08 -0400
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85D8E218A3;
-        Fri, 29 Mar 2019 00:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553817907;
-        bh=kGlzYNvnx2j57Yy5KzGg35jicf7vTPu7Xw0BB8/0CGk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JJuTEJYv83HVG/h3w7GbkOfA47ZuhG/htoZwMj5mn+tHQBRXmhDNtemE8FtMD3nIW
-         84pa0VNfgXGPurHdxpgB1bqXjA3Eqfp5Pi3EI9OJhxh40oH90h1gr+tyYweAIrmijn
-         JW3RuZG3kWrOUpIjQhm/l1ToFFSF8xnNKMXCg6tc=
-From:   Shuah Khan <shuah@kernel.org>
-To:     mchehab@kernel.org, perex@perex.cz, tiwai@suse.com,
-        hverkuil@xs4all.nl
-Cc:     Shuah Khan <shuah@kernel.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: [PATCH v13 2/6] media: change au0828 to use Media Device Allocator API
-Date:   Thu, 28 Mar 2019 18:04:57 -0600
-Message-Id: <05ec250a56d9eaa868e7c8cf6376d6f8e29bb102.1553814518.git.shuah@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1553814518.git.shuah@kernel.org>
-References: <cover.1553814518.git.shuah@kernel.org>
+        Thu, 28 Mar 2019 20:08:35 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:45138 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728483AbfC2AIf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 20:08:35 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2T000P7004256
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 17:08:34 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=3gkbfMJOneKV06XXP2I7GAO/385zTkTpsosCzIwinO8=;
+ b=at/I9UAW4sQEBwttrECxQxGncyWJUj+MNQrzsxhigkg4zAQv7L6qYLxBGDYycuqsPo+d
+ r7QvFZL42gHg8/BBtotinHzVhzVKM7+3LnKqGd+4FZqt5BEcY9a4aILP6inzZ7XLNcLC
+ NDIRgSqIPKa2TBKgNbzHbapeVjPyPo8Kcac= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2rh3171v2g-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 17:08:34 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
+ mail.thefacebook.com (2620:10d:c021:18::173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Thu, 28 Mar 2019 17:08:32 -0700
+Received: by dev003.prn2.facebook.com (Postfix, from userid 572441)
+        id 6728B364575B; Thu, 28 Mar 2019 17:08:31 -0700 (PDT)
+Smtp-Origin-Hostprefix: dev
+From:   Matt Mullins <mmullins@fb.com>
+Smtp-Origin-Hostname: dev003.prn2.facebook.com
+To:     <hall@fb.com>, <mmullins@fb.com>, <ast@kernel.org>,
+        <bpf@vger.kernel.org>, <netdev@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH bpf-next 0/3] writable contexts for bpf raw tracepoints
+Date:   Thu, 28 Mar 2019 17:07:55 -0700
+Message-ID: <20190329000758.494762-1-mmullins@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_15:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Media Device Allocator API to allows multiple drivers share a media device.
-This API solves a very common use-case for media devices where one physical
-device (an USB stick) provides both audio and video. When such media device
-exposes a standard USB Audio class, a proprietary Video class, two or more
-independent drivers will share a single physical USB bridge. In such cases,
-it is necessary to coordinate access to the shared resource.
+This adds an opt-in interface for tracepoints to expose a writable context to
+BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE programs that are attached, while
+supporting read-only access from existing BPF_PROG_TYPE_RAW_TRACEPOINT
+programs, as well as from non-BPF-based tracepoints.
 
-Using this API, drivers can allocate a media device with the shared struct
-device as the key. Once the media device is allocated by a driver, other
-drivers can get a reference to it. The media device is released when all
-the references are released.
+The initial motivation is to support tracing that can be observed from the
+remote end of an NBD socket, e.g. by adding flags to the struct nbd_request
+header.  Earlier attempts included adding an NBD-specific tracepoint fd, but in
+code review, I was recommended to implement it more generically -- as a result,
+this patchset is far simpler than my initial try.
 
-Change au0828 to use Media Device Allocator API to allocate media device
-with the parent usb struct device as the key, so it can be shared with the
-snd_usb_audio driver.
+Andrew Hall (1):
+  nbd: add tracepoints for send/receive timing
 
-Signed-off-by: Shuah Khan <shuah@kernel.org>
----
- drivers/media/usb/au0828/Kconfig       |  2 ++
- drivers/media/usb/au0828/au0828-core.c | 13 +++++--------
- drivers/media/usb/au0828/au0828.h      |  1 +
- 3 files changed, 8 insertions(+), 8 deletions(-)
+Matt Mullins (2):
+  bpf: add writable context for raw tracepoints
+  nbd: trace sending nbd requests
 
-diff --git a/drivers/media/usb/au0828/Kconfig b/drivers/media/usb/au0828/Kconfig
-index 65fc067eb864..98de6e24329e 100644
---- a/drivers/media/usb/au0828/Kconfig
-+++ b/drivers/media/usb/au0828/Kconfig
-@@ -2,6 +2,8 @@
- config VIDEO_AU0828
- 	tristate "Auvitek AU0828 support"
- 	depends on I2C && INPUT && DVB_CORE && USB && VIDEO_V4L2
-+	select MEDIA_CONTROLLER
-+	select MEDIA_CONTROLLER_DVB
- 	select I2C_ALGOBIT
- 	select VIDEO_TVEEPROM
- 	select VIDEOBUF2_VMALLOC if VIDEO_V4L2
-diff --git a/drivers/media/usb/au0828/au0828-core.c b/drivers/media/usb/au0828/au0828-core.c
-index 3f8c92a70116..4f8ba6f64d3c 100644
---- a/drivers/media/usb/au0828/au0828-core.c
-+++ b/drivers/media/usb/au0828/au0828-core.c
-@@ -155,9 +155,7 @@ static void au0828_unregister_media_device(struct au0828_dev *dev)
- 	dev->media_dev->disable_source = NULL;
- 	mutex_unlock(&mdev->graph_mutex);
- 
--	media_device_unregister(dev->media_dev);
--	media_device_cleanup(dev->media_dev);
--	kfree(dev->media_dev);
-+	media_device_delete(dev->media_dev, KBUILD_MODNAME, THIS_MODULE);
- 	dev->media_dev = NULL;
- #endif
- }
-@@ -210,14 +208,10 @@ static int au0828_media_device_init(struct au0828_dev *dev,
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	struct media_device *mdev;
- 
--	mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
-+	mdev = media_device_usb_allocate(udev, KBUILD_MODNAME, THIS_MODULE);
- 	if (!mdev)
- 		return -ENOMEM;
- 
--	/* check if media device is already initialized */
--	if (!mdev->dev)
--		media_device_usb_init(mdev, udev, udev->product);
--
- 	dev->media_dev = mdev;
- #endif
- 	return 0;
-@@ -480,6 +474,9 @@ static int au0828_media_device_register(struct au0828_dev *dev,
- 		/* register media device */
- 		ret = media_device_register(dev->media_dev);
- 		if (ret) {
-+			media_device_delete(dev->media_dev, KBUILD_MODNAME,
-+					    THIS_MODULE);
-+			dev->media_dev = NULL;
- 			dev_err(&udev->dev,
- 				"Media Device Register Error: %d\n", ret);
- 			return ret;
-diff --git a/drivers/media/usb/au0828/au0828.h b/drivers/media/usb/au0828/au0828.h
-index 425c35d16057..57b00de8d3f2 100644
---- a/drivers/media/usb/au0828/au0828.h
-+++ b/drivers/media/usb/au0828/au0828.h
-@@ -31,6 +31,7 @@
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-fh.h>
- #include <media/media-device.h>
-+#include <media/media-dev-allocator.h>
- 
- /* DVB */
- #include <media/demux.h>
+ MAINTAINERS                     |   1 +
+ drivers/block/nbd.c             |  13 +++
+ include/linux/bpf.h             |   2 +
+ include/linux/bpf_types.h       |   1 +
+ include/linux/tracepoint-defs.h |   1 +
+ include/trace/bpf_probe.h       |  27 +++++-
+ include/trace/events/nbd.h      | 148 ++++++++++++++++++++++++++++++++
+ include/uapi/linux/bpf.h        |   1 +
+ kernel/bpf/syscall.c            |   8 +-
+ kernel/bpf/verifier.c           |  11 +++
+ kernel/trace/bpf_trace.c        |  21 +++++
+ 11 files changed, 230 insertions(+), 4 deletions(-)
+ create mode 100644 include/trace/events/nbd.h
+
 -- 
 2.17.1
 
