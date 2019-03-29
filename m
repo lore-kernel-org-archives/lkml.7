@@ -2,122 +2,117 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C03AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FECC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8BE218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:40:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="XWSSCotf"
+	by mail.kernel.org (Postfix) with ESMTP id 289792064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:41:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553888482;
+	bh=IhnzjRCSQBK+vXxVogaJZrgUaYfASlIvpdvWT5VAAww=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NpP9OPd0QgBcYJY0phxHJaq2TnVBmhoSPwwrhzaH4Wlwn+NTC7dTGTIhMH9TLZT6e
+	 K/+roCeYSntKR1lsGduWF7aDL+h9z8KyOCqkOVKuqw5OCtH2k/+ERL1TCvIGE5Czn3
+	 0yK6J8dkMKqpq7+IrI080dP61QTYhrPwTJudqWTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbfC2TkM (ORCPT
+        id S1730025AbfC2TlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 15:40:12 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42513 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729652AbfC2TkL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 15:40:11 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w139so2587473oie.9;
-        Fri, 29 Mar 2019 12:40:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aM9EKbz+7/aPftkItrnYnE5lqNxYBNnVwmeQcd9Kol4=;
-        b=XWSSCotf/SUOGGDvpsm0X47JUHungm3R8BL9EMv5wa07skyS3+dCtJVq4UCloshw3r
-         tCOzlMx2D8Ud45cz7xpFGXFlkgy5vKZypantTNwbdsKQYa9PAMEwwIgx8nk9OX/748ao
-         wW7YWWqSYkW1mQbCNCoPUZyr3WkSRX59QbiUUosDYBCNKjPd0Z2Nhtfm37O2ZNThL0Ex
-         OhpVIAStg5NyOLBWVyQ2+Y7HgnLtsY246fsp+D9zZvgLDFZvutnvUNXtrgy8raXM4SU9
-         oLd2gIrVnngCumwnG/ZupTCdcy+wx3GlZGu9f60IgfXpAOyVptXaoqv2B78QLGnouL4C
-         2JoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aM9EKbz+7/aPftkItrnYnE5lqNxYBNnVwmeQcd9Kol4=;
-        b=DRKKvdQAEDHebg8wAqV4MtUlFdUYNJyFWjBwAhp0YqLFADJU6sH2bjQIuGrvDYNciP
-         EvCdl5UqpkxLY6d0GVBPJlh1kvfQMnrR4JTzemjYdAiU9RQtpzv/ocyuMEHgwH+K0nW+
-         CBfcoI7Xb4sWv+liV7KkiKntOb4dzSEVqYwJNduxQyoY7PXig9HCQPLVQ3AZKnhg4R6z
-         jc/tfOFnKBd4YxMjB0gCQQh352HfaAxQB/mNlCZleKgIanfA56nSrz5VdVTFUHgEixPY
-         /M0NILR5VJ23uAXIvuOIT2e6Z804ELOelYpowbRTu6v0VEHCjBoWirh066uC1C7lGs/A
-         IsUg==
-X-Gm-Message-State: APjAAAWA8Y+ZMUW9uviMkssAeApbUQT5qetyLMFWXb7c5bkb0nQ4zqJL
-        O/8OCWYuUWUcCjxPUZLcIkKkTWQL7FDkIqaWfrXfPOVM
-X-Google-Smtp-Source: APXvYqx+0UvqGXfA1c84cS+UB+xOob5koPFek2j1iN3hUhQkOpzkkZ1VnzC/KCsVWVhLAkiY9aLtijKDly7m8gjhGPY=
-X-Received: by 2002:aca:bdc4:: with SMTP id n187mr4966052oif.140.1553888410427;
- Fri, 29 Mar 2019 12:40:10 -0700 (PDT)
+        Fri, 29 Mar 2019 15:41:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729652AbfC2TlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 15:41:20 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8F6E218AE;
+        Fri, 29 Mar 2019 19:41:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553888478;
+        bh=IhnzjRCSQBK+vXxVogaJZrgUaYfASlIvpdvWT5VAAww=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ojKTR1VRIuqgu0FFeOFovaM7I6vyNnlomZnRF7RFkyIFQKbfxkAJyhgei3Gag4dw6
+         83Sc0gkcj7LVEGRqrqDnB0cAcfZCya9B5xnip0U1fY3N5rXjXfeobs5NcYDdfZpsUT
+         zyAC8m8CGrbj+PPSSTMVQwd/8lXmdGTcWNdfmzD8=
+Received: by mail-qt1-f173.google.com with SMTP id v20so3698728qtv.12;
+        Fri, 29 Mar 2019 12:41:18 -0700 (PDT)
+X-Gm-Message-State: APjAAAVP/Be2IW952VsBxhTzqOm8/8yO97Rvr0jZDZIAOlzX0U7BDPUj
+        VnE2vWFAJU2xqKqtyR83K3AjfR770D/Tnnz7hw==
+X-Google-Smtp-Source: APXvYqzCUtNKCf26jdI194VOtmDfMhUt/+PKKdd3Jz7SKJUXM5LxDsOFFwhhEE1DizGlUh19fY+S62qZWDC9YyFbAQo=
+X-Received: by 2002:ac8:30bc:: with SMTP id v57mr42228073qta.26.1553888477975;
+ Fri, 29 Mar 2019 12:41:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190329153325.23869-1-jbrunet@baylibre.com> <20190329153325.23869-2-jbrunet@baylibre.com>
-In-Reply-To: <20190329153325.23869-2-jbrunet@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 29 Mar 2019 20:39:59 +0100
-Message-ID: <CAFBinCDnoY41ZcoHqsngR4WTeczkmOu93R=2G_JOXbdUmHSjMw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] clk: meson: mpll: properly handle spread spectrum
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
+ <1552382461-13051-2-git-send-email-yash.shah@sifive.com> <20190328131657.GA9056@bogus>
+ <be7246a0-2426-995d-0a24-f104c173d752@arm.com> <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
+ <20190329142739.GG21152@zn.tnic>
+In-Reply-To: <20190329142739.GG21152@zn.tnic>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 29 Mar 2019 14:41:05 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLQ1XvQq7L=xA5Z8Y0Xa4Bmp0t2pgxn+hLF+tD=_L7Mvg@mail.gmail.com>
+Message-ID: <CAL_JsqLQ1XvQq7L=xA5Z8Y0Xa4Bmp0t2pgxn+hLF+tD=_L7Mvg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] edac: sifive: Add DT documentation for SiFive L2
+ cache Controller
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     James Morse <james.morse@arm.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerome,
+On Fri, Mar 29, 2019 at 9:27 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Fri, Mar 29, 2019 at 09:11:24AM -0500, Rob Herring wrote:
+> > I honestly don't understand the issue with EDAC is here.
+>
+> The EDAC core supports only one driver and if you need to load more, you
+> need to dance around that.
+>
+> Also, if those drivers need to talk amongst each other, then they need
+> to build something ad-hoc so that they can.
+>
+> And the other architectures can very well do one driver per platform -
+> only ARM wants to do this special thing because DT said so. Or whatever.
+>
+> > Highbank is separate drivers for L2 ECC (PL310) and DDR. Both are used
+> > on highbank.
+>
+> That's because your L2 driver does allocate an edac_device
+> (edac_device_alloc_ctl_info()) and the DDR one an edac_mc
+> (edac_mc_add_mc_with_groups).
+>
+> For example, altera_edac does edac_device_alloc_ctl_info() for each IP
+> block just fine. So a single driver *can* work.
+>
+> > Only the DDR driver is used midway. (I think we never got around to
+> > how to report A15 L2 ECC errors within Linux.)
+> >
+> > In any case, it's all irrelevant to the DT binding. We don't design
+> > bindings around what some particular OS wants.
+>
+> And just because DT dictates one driver per IP block, I'm not going to
+> redesign EDAC to fit that scheme. You or someone else who feels strongly
+> about it, is more than welcome to do so, of course. And then maintain it
+> too.
 
-On Fri, Mar 29, 2019 at 4:34 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->
-> The bit 'SSEN' available on some MPLL DSS outputs is not related to the
-> fractional part of the divider but to the function called
-> 'Spread Spectrum'.
->
-> This function might be used to solve EM issues by adding a jitter on
-> clock signal. This widens the signal spectrum and weakens the peaks in it.
->
-> While spread spectrum might be useful for some application, it is
-> problematic for others, such as audio.
->
-> This patch introduce a new flag to the MPLL driver to enable (or not) the
-> spread spectrum function.
->
-> Fixes: 1f737ffa13ef ("clk: meson: mpll: fix mpll0 fractional part ignored")
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  drivers/clk/meson/clk-mpll.c | 9 ++++++---
->  drivers/clk/meson/clk-mpll.h | 1 +
->  2 files changed, 7 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/clk/meson/clk-mpll.c b/drivers/clk/meson/clk-mpll.c
-> index 64d31c8ba3d0..2d39a8bc367c 100644
-> --- a/drivers/clk/meson/clk-mpll.c
-> +++ b/drivers/clk/meson/clk-mpll.c
-> @@ -141,9 +141,12 @@ static void mpll_init(struct clk_hw *hw)
->         /* Enable the fractional part */
->         meson_parm_write(clk->map, &mpll->sdm_en, 1);
->
-> -       /* Set additional fractional part enable if required */
-> -       if (MESON_PARM_APPLICABLE(&mpll->ssen))
-> -               meson_parm_write(clk->map, &mpll->ssen, 1);
-> +       /* Set spread spectrum if possible */
-> +       if (MESON_PARM_APPLICABLE(&mpll->ssen)) {
-> +               unsigned int ss =
-> +                       mpll->flags & CLK_MESON_MPLL_SPREAD_SPECTRUM ? 1 : 0;
-> +               meson_parm_write(clk->map, &mpll->ssen, ss);
-> +       }
-this changes the "ssen" flag on all supported clocks from 1 (before
-this patch) to 0 (after this patch).
-is this on purpose and how does it affect existing clocks?
+DT dictates aligning with what the h/w looks like which has little to
+do with OS driver design. I never said you should change EDAC and I
+outlined how things should be handled if it is one driver. DT and OS
+subsystems are independent things. I can't tell you how to design the
+subsystem and you can't dictate DT design (based on EDAC design).
 
-based on the original commit 1f737ffa13ef ("clk: meson: mpll: fix
-mpll0 fractional part ignored") it seems that
-CLK_MESON_MPLL_SPREAD_SPECTRUM should be set for mpll0 (at least on
-GXBB and Meson8b)
-
-
-Martin
+Rob
