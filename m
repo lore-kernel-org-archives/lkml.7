@@ -2,212 +2,116 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018CDC10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404D8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6CD218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1E8C218A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:41:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhKxDWPY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mAQET9er"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbfC2Vhg (ORCPT
+        id S1730227AbfC2VlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 17:37:36 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36829 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729771AbfC2Vhe (ORCPT
+        Fri, 29 Mar 2019 17:41:17 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42730 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729939AbfC2VlR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 17:37:34 -0400
-Received: by mail-oi1-f195.google.com with SMTP id l203so2186288oia.3;
-        Fri, 29 Mar 2019 14:37:33 -0700 (PDT)
+        Fri, 29 Mar 2019 17:41:17 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 103so3354383otd.9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 14:41:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=xUrxUBRZpSI/fNVDCiVjC4ND6is1O8GVWjXtdzQrejM=;
-        b=fhKxDWPYGPz9wuhgqrq9WvM7n6s1DJ1U9yJXBfomzGMI4U+eq3kmWM+xT1KL/NSXVg
-         1EI+NHwMkQTSrZMC3ONYiTOs+CWGqN3SAT1E3Y6y4AtGCqUbw4t1yEs2HWK4OYuLHX22
-         YRlS810Bc+to88mjdAug+CP8Qknlszdstu3Baqgs0Ci+9L9jGoelcoz1xeExNxR7Hc6I
-         lbm7h5PxsYHUezNke9zTj/GfyXY0MrbMDLi0v8nc6dLkB7KP4UKsW5t1ss4Wavu++rr5
-         XP3ihK4EyZOV+dCoB6ga6kVF5RQuSxw523OBZ8N60mTTao3HxJfkf/J0CY6HkzyR7cGm
-         YJgQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ntsor/qCmdjkWmlOoyynMkE4TxeGboUKg9xj07HF+bY=;
+        b=mAQET9ertk4bfpkPDVy7Rd90XBuMFVYHFHEHIjjTGcYzg4/ZEAmCOSXAOF7P2edmcE
+         mgvrx2lTDVYxfsp9vL8Z3csVu767QmQms2BdqoN2bP+F/zXP91s8BsBfx+P+NJqvXuoj
+         isA9OkdbEGB+6CVQVg66fV++SyDb1uT9X0JTnuekWfh4XEDcQXO+K5FkYkJ/TO4WKOb3
+         sQW4i643IrU3/756KmObKTfYIdCw8klGe+KxCxux5IQud3IN/fZDugzDf/OjfXZQZuSO
+         yt72cWTi27gtLSoypazdolqvdL0+0dbbaqYHxIaiQZnGDoM3u2E6emll4tMnhxjpmMYf
+         l5AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=xUrxUBRZpSI/fNVDCiVjC4ND6is1O8GVWjXtdzQrejM=;
-        b=an0xVIJVXfIkKyW/LpOHneeE5jDZYTinuUgjRn9rZXZVIivpGPk/0MasO35VpukLso
-         7VW/D7pezW3PYVq4fQgq+AnDg8Dz8FytJy5B7yOc+/bnBI7mdbRNbJ9d3vmJ3nB24C0/
-         ztijZ8jLkSmXhuP9K2lSuJLwxWWzFPoFbQA8/DBNIAN2xtdx6wBhqDvY29JJ/S2ks1It
-         vxCOHrRQ3ecOCvfKO5OEq7Zc2JPnncrtKXH1tRA4LKd/U2ybDpyTViP35dNqMVP7Y1ZK
-         R5Q14UEEELuViTi3KgRCpIoGK7SOIjhBK1HSyb3PC4iCrqDT7wBGYbF2xWHlANDRV1cD
-         Nekg==
-X-Gm-Message-State: APjAAAVAYt55USEneKOHHe7sYuNcdtHJ2GbVq7heu2Uo05F2eZJD4Vgy
-        RBxxyw2qp77AZ0xP+GtLZSU=
-X-Google-Smtp-Source: APXvYqxmwyn8f1qjKoiDSq0lRyE+k2YrfWG4D/pG6hWqeGKE5X87G1YNEcp5JwrdKmCHt8+BqWK+bg==
-X-Received: by 2002:aca:72c6:: with SMTP id p189mr2921384oic.107.1553895453359;
-        Fri, 29 Mar 2019 14:37:33 -0700 (PDT)
-Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
-        by smtp.gmail.com with ESMTPSA id l63sm1241167oia.47.2019.03.29.14.37.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 14:37:32 -0700 (PDT)
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tony Luck <tony.luck@intel.com>, bp@alien8.de,
-        "Bolen, Austin" <austin_bolen@dell.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Robert Moore <robert.moore@intel.com>
-From:   "Alex G." <mr.nuke.me@gmail.com>
-Subject: Fixing the GHES driver vs not causing issues in the first place
-Message-ID: <9acf86ac-a065-e093-347c-e35ac4069e08@gmail.com>
-Date:   Fri, 29 Mar 2019 16:37:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ntsor/qCmdjkWmlOoyynMkE4TxeGboUKg9xj07HF+bY=;
+        b=hGz7GpF8wKHmi2BFv2QaLfk82fdHCU24Zx34s7nYur2EzI7VLSgzJ+OtVYkZBa8PBk
+         x8J/Mmug+PVN6BPpbolhnTUksox35je+hln+72mI2Jwj8ybZp5GYkfe7fiGspmDFkWyI
+         hwnc45c48SvMsbkfKjA5Pnac+17L1wgyg6F6KpfJV2ZQEQViR45ADCSCWdTYbdu4W7ce
+         OSplsXjbYjUreWA1xMxLEbaxJzBcfpSP5DLD3vmbgX/VE+c4Q2wpYKwcxYko3EmyLCBS
+         0jPCDl4jLLsxIFR8Bwe5O5jMLOFhydiPx6D8rHHWIGul3kKCsPw9v//ikds6DsgdzYti
+         Z6ig==
+X-Gm-Message-State: APjAAAUGENoqid5NI2K1Vfg0k5UpqOMEj/t9nlQgqOSVY0iX4Kd2+J+y
+        6/wDcysmZclVseex3L35Nd1pAK1JtkZP3GijSmWhEA==
+X-Google-Smtp-Source: APXvYqyXmqk0SaQBMyL7tl0d2tNueh24Z5B3HMn2BdasJQeT7LOLOxsaKd+ESYa92O+pEdP5+As4EtjrFFtoeiBWPJI=
+X-Received: by 2002:a05:6830:1216:: with SMTP id r22mr11054399otp.198.1553895676071;
+ Fri, 29 Mar 2019 14:41:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190328225925.241998-1-jannh@google.com> <530a0823-5dcd-9006-2057-ae5b9da2389a@codeaurora.org>
+ <CAG48ez3UE6cnA0TZQ-7DUnB_QWPFV04bJsv9oKXfgBtu=ugBLw@mail.gmail.com>
+ <CAG48ez13xg1oUiO_pyDHVbJkWRQdW4CoX7uGzoujyf4L6VB-dw@mail.gmail.com> <3275e86a-5b12-29ff-9b1f-d8eba099ae98@deltatee.com>
+In-Reply-To: <3275e86a-5b12-29ff-9b1f-d8eba099ae98@deltatee.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 29 Mar 2019 22:40:50 +0100
+Message-ID: <CAG48ez1e=vHZqRp7=rQCvOjJnHjQtR5wQKZ69jOAZChto7RDCA@mail.gmail.com>
+Subject: Re: [PATCH] x86/calgary: fix bitcast type warnings
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Mukesh Ojha <mojha@codeaurora.org>,
+        =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>,
+        Muli Ben-Yehuda <mulix@mulix.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The issue of dying inside the GHES driver has popped up a few times before.
-I've looked into fixing this before, but we didn't quite come to agreement
-because the verbiage in the ACPI spec is vague:
-     " When a fatal uncorrected error occurs, the system is
-       restarted to prevent propagation of the error. "
+On Fri, Mar 29, 2019 at 10:32 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+> On 2019-03-29 3:19 p.m., Jann Horn wrote:
+> >>> Can the existing api's not be used here like iowrite64be/ioread64be/ or
+> >>> similar variant in "include/asm-generic/io.h"
+> >>
+> >> Oooh! I didn't realize that those exist. I'll change that and send a v2.
+> Yes, they are very new! It took me a while to get those patches in as it
+> is a bit more complicated than it seems.
+>
+> > Actually, that doesn't work at the moment on x86-64:
+> >
+> > include/asm-generic/io.h only defines these things if
+> > CONFIG_GENERIC_IOMAP isn't defined; and X86 unconditionally defines
+> > it. With CONFIG_GENERIC_IOMAP set, these functions are provided by
+> > include/asm-generic/iomap.h.
+>
+> For CONFIG_GENERIC_IOMAP, lib/iomap.c provides _lo_hi and _hi_lo
+> implementations seeing the pio regions must be emulated with 32bit
+> operations and we have to define the order.
+>
+> > The definitions for these are in lib/iomap.c, except that there are no
+> > definitions for ioread64be() and iowrite64be(); if you try to use
+> > them, you get linker errors.
+>
+> Some platforms implement these but most do not. If I recall correctly
+> only powerpc does.
+>
+> If you want to use 64 bit operations in a portable fashion, you should
+> include "linux/io-64-nonatomic-hi-lo.h" or
+> "linux/io-64-nonatomic-lo-hi.h", depending on weather you want the lower
+> bits or the higher bits to be written or read first in cases where an
+> atomic operation is not available.
 
-This popped up again a couple of times recently [1]. Linus suggested that
-fixing the GHES driver might pay higher dividends. I considered reviving 
-an old
-fix, but put it aside after hearing concerns about the unintended 
-consequences,
-which I'll get to soon.
-
-A few days back, I lost an entire MD RAID1. It was during hot-removal 
-testing
-that I do on an irregular basis, and a kernel panic from the GHES driver had
-caused the system to go down. I have seen some occasional filesystem 
-corruption
-in other crashes, but nothing fsck couldn't fix. The interesting part is 
-that
-the array that was lost was not part of the device set that was being
-hot-removed. The state of things doesn't seem very joyful.
-
-The machine in question is a Dell r740xd. It uses firmware-first (FFS)
-handling for PCIe errors, and is generally good at identifying a hot-removal
-and not bothering the OS about it. The events that I am testing for are
-situations where, due to slow operator, tilted drive, worn connectors, 
-errors
-make it past FFS to the OS -- with "fatal" severity.
-     In that case, the GHES driver sees a fatal hardware error and panics.
-On this machine, FFS reported it as fatal in an attempt to cause the 
-system to
-reboot, and prevent propagation of the error.
-
-     The "prevent propagation of the error" flow was designed around OSes
-that can't do recovery. Firmware assumes an instantaneous reboot, so it does
-not set itself up to report future errors. The EFI reference code does not
-re-arm errors, so we suspect most OEM's firmware will work this way. Despite
-the apparently enormous stupidity of crashing an otherwise perfectly good
-system, there are good and well thought out reasons behind it.
-     An example is reading a block of data from an NVMe drive, and
-encountering a CRC error on the PCIe bus. If we didn't  do an "instantaneous
-reboot" after a previous fatal error, we will not get the CRC error 
-reported.
-Thus, we risk silent data corruption.
-
-     On the Linux side, we can ignore the "fatal" nature of the error, and
-even recover the PCIe devices behind the error. However, this is ill 
-advised for
-the reason listed above.
-
-     The counter argument is that a panic() is more likely to cause
-filesystem corruption. In over one year of testing, I have not seen a single
-incident of data corruption, yet I have seen the boot ask me to run fsck on
-multiple occasions. And this seems to me like a tradeoff problem rather than
-anything else.
-
-     In the case of this Dell machine, there are ways to hot-swap PCIe
-devices them without needing to take either of the risks above:
-     1. Turn off the downstream port manually.
-     2. Insert/replace drive
-     3. Turn on the downstream port manually.
-
-     What bothers me is the firmware's assumption that a fatal error must
-crash the machine. I've looked at the the verbiage in the spec, and I don't
-fully agree that either side respects the contract.
-Our _OSC contract with the firmware says that firmware will report 
-errors to us,
-while we are not allowed to touch certain parts of the device. Following the
-verbiage in the spec, we do need to reboot on a fatal error, but that 
-reboot is
-not guaranteed to be instantaneous. Firmware still has to honor the contract
-and report errors to us. This may seem like a spec non-compliance issue.
-
-     It would be great if FFS would mark the errors as recoverable, but the
-level of validation required makes this unrealistic on existing 
-machines. New
-machines will likely move to the Containment Error Recovery model, which is
-essentially FFS for DPC (PCIe Downstream Port Containment). This leaves the
-current generation of servers in limbo -- I'm led to believe other 
-server OEMs
-have very similar issues.
-
-     Given the dilemma above, I'm really not sure what the right 
-solution is.
-How do we produce a fix that addresses complaints from both sides. When 
-firmware
-gives us a false positive, should we panic? Should we instead print a 
-message
-informing the user/admin that a reboot of the machine is required. Should we
-initiate a reboot automatically?
-
-     From Linux' ability to recover, PCIe fatal errors are false positives
--- every time, all the time. However, their fatality is not there 
-without any
-reason. I do want to avoid opinions that FFS wants us to crash, gives us the
-finger, and we should give the finger back.
-
-     Another option that was discussed before, but was very controversial is
-the fix that involves not causing the problem in the first place [1] 
-[2]. On the
-machines that I have access to, FFS is handled in SMM, which means that 
-all CPU
-cores are held up until the processing of the error is complete. On one
-particular machine (dual 40-core CPU) SMM will talk to the BMC over I/O 
-ports,
-which takes roughly 300 milliseconds. We're losing roughly 24 
-core-seconds to
-a check that might have taken us a couple of clock cycles.
-
-I'm hoping that I was able to give out a good overview of the problems 
-we are
-facing on FFS systems, and I hope that we can find some formula to deal with
-them in a way that is both pleasant and robust. Oh, FFS!
-
-Alex
-
-P.S. If there's interest, I can look for system logs that show the 300+ 
-ms gap
-caused by the SMM handler.
-
-
-[1] 
-https://lore.kernel.org/lkml/20190222010502.2434-1-jonathan.derrick@intel.com/T/#u
-[2] 
-https://lore.kernel.org/lkml/20190222194808.15962-1-mr.nuke.me@gmail.com/
-
+So what is the right thing to do in the context of
+arch/x86/kernel/pci-calgary_64.c? That code wants to perform MMIO with
+endianness conversion, and these accesses are always performed as
+MMIO. Using the non-atomic 64-bit I/O helpers for this would be kind
+of awkward, since the accesses would never actually be split...
