@@ -2,205 +2,103 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A438C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B7DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25FF22184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E14C62082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:29:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iX81zQJy"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xCGJM6Wr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbfC2H3v (ORCPT
+        id S1728953AbfC2H3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 29 Mar 2019 03:29:51 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:64966 "EHLO
+Received: from conuserg-10.nifty.com ([210.131.2.77]:64988 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728874AbfC2H3l (ORCPT
+        with ESMTP id S1728879AbfC2H3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Mar 2019 03:29:41 -0400
 Received: from grover.tkatk1.zaq.ne.jp (zaqdadce369.zaq.ne.jp [218.220.227.105]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x2T7SQaC002537;
-        Fri, 29 Mar 2019 16:28:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x2T7SQaC002537
+        by conuserg-10.nifty.com with ESMTP id x2T7SQa7002537;
+        Fri, 29 Mar 2019 16:28:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x2T7SQa7002537
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553844511;
-        bh=ObWYNlhTH6M+J2I7k37z3SSdQ0S63F11O7FJsYOO3Ok=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iX81zQJykAQ4FVxCiaZbPvv6Al5soNjXDGpYRP0OamciYacsMCYJCjDr0TiC2jWpP
-         MLANEOblmfifleb7xPNEeagNdf9P861v+BoVYNQ2qpwgdrUBh4XSMy4AN1EtT42aNS
-         6ufx547UocSQQyqLiTVT20bLJ6G/Ljb7SxOMve8SVCuXLL1uZ0jEAfFPXCEBgwuQqK
-         E0SOt6ggijEPfmqxVqR5Ho9XkHdSpcdPiiS5o8/KRl4m3m2ekXEFtUlWAAXZWZzT+M
-         iZrrcz9spnGRR28JuUI5x5IrPg3UwH4ggZHUngPgk7LlytvYqEb7z5WqerZ29hzq97
-         zf+Ny0zU+8mog==
+        s=dec2015msa; t=1553844507;
+        bh=ukTnO9IMqmEzjeKRCA0eRgyV1YFCQFAKScpWn4HMm/k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xCGJM6Wrmn+S0Cnc7l33nKlJjUsg9VnSH9IT/+Pwn7e/ghnuD2V8GtVONOxlggu0/
+         N2OBL0tZZQnqqt37tSCJOiqvq1nLMorQ7uj8tUPEYnYv6+3t3wtmKAallcb7pjHTh/
+         rLNPBsIsDO4EsN6k4NdhYxArz5AuQalNpDL7GSTMgWtUto8pGon/ATDGtFaReDGY5e
+         mmNJ4sLJ9Nzl8gq1533YGdffQYz7oXQz0x0krlh/EJekDC32mNBVTrN2T01uHZLY/h
+         7F/E9WEknpX4tqi438e4Mw0jk5bgLLvQZY3PM6N2CNkk+gTsDmQHQ1S4UFUHyF/Jvv
+         8a/C8bK8aMYHw==
 X-Nifty-SrcIP: [218.220.227.105]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-mtd@lists.infradead.org,
         Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree@vger.kernel.org,
         Brian Norris <computersforpeace@gmail.com>,
         linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
         Richard Weinberger <richard@nod.at>,
         David Woodhouse <dwmw2@infradead.org>,
-        Boris Brezillon <bbrezillon@kernel.org>
-Subject: [PATCH v4 5/9] mtd: rawnand: denali: use bool type instead of int where appropriate
-Date:   Fri, 29 Mar 2019 16:28:17 +0900
-Message-Id: <1553844501-7119-6-git-send-email-yamada.masahiro@socionext.com>
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v4 0/9] mtd: rawnand: denali: exec_op(), controller/chip separation, and cleanups
+Date:   Fri, 29 Mar 2019 16:28:12 +0900
+Message-Id: <1553844501-7119-1-git-send-email-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1553844501-7119-1-git-send-email-yamada.masahiro@socionext.com>
-References: <1553844501-7119-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use 'bool' type for the following boolean parameters.
 
- - write (write or read?)
- - dma_avail (DMA engine available or not?)
+I took time for the Denali driver to catch up with the latest framework.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+ - switch over to exec_op() and remove legacy hooks
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
-  - Use bool for dma_avail as well
+ - separate controller/chips
 
- drivers/mtd/nand/raw/denali.c | 23 ++++++++++++-----------
- drivers/mtd/nand/raw/denali.h |  4 ++--
- 2 files changed, 14 insertions(+), 13 deletions(-)
+ - various cleanups
 
-diff --git a/drivers/mtd/nand/raw/denali.c b/drivers/mtd/nand/raw/denali.c
-index eaf4a36..7c106c1 100644
---- a/drivers/mtd/nand/raw/denali.c
-+++ b/drivers/mtd/nand/raw/denali.c
-@@ -533,7 +533,7 @@ static int denali_sw_ecc_fixup(struct nand_chip *chip,
- }
- 
- static void denali_setup_dma64(struct denali_nand_info *denali,
--			       dma_addr_t dma_addr, int page, int write)
-+			       dma_addr_t dma_addr, int page, bool write)
- {
- 	uint32_t mode;
- 	const int page_count = 1;
-@@ -547,7 +547,8 @@ static void denali_setup_dma64(struct denali_nand_info *denali,
- 	 *    burst len = 64 bytes, the number of pages
- 	 */
- 	denali->host_write(denali, mode,
--			   0x01002000 | (64 << 16) | (write << 8) | page_count);
-+			   0x01002000 | (64 << 16) |
-+			   (write ? BIT(8) : 0) | page_count);
- 
- 	/* 2. set memory low address */
- 	denali->host_write(denali, mode, lower_32_bits(dma_addr));
-@@ -557,7 +558,7 @@ static void denali_setup_dma64(struct denali_nand_info *denali,
- }
- 
- static void denali_setup_dma32(struct denali_nand_info *denali,
--			       dma_addr_t dma_addr, int page, int write)
-+			       dma_addr_t dma_addr, int page, bool write)
- {
- 	uint32_t mode;
- 	const int page_count = 1;
-@@ -568,7 +569,7 @@ static void denali_setup_dma32(struct denali_nand_info *denali,
- 
- 	/* 1. setup transfer type and # of pages */
- 	denali->host_write(denali, mode | page,
--			   0x2000 | (write << 8) | page_count);
-+			   0x2000 | (write ? BIT(8) : 0) | page_count);
- 
- 	/* 2. set memory high address bits 23:8 */
- 	denali->host_write(denali, mode | ((dma_addr >> 16) << 8), 0x2200);
-@@ -628,7 +629,7 @@ static int denali_pio_write(struct denali_nand_info *denali, const u32 *buf,
- }
- 
- static int denali_pio_xfer(struct denali_nand_info *denali, void *buf,
--			   size_t size, int page, int write)
-+			   size_t size, int page, bool write)
- {
- 	if (write)
- 		return denali_pio_write(denali, buf, size, page);
-@@ -637,7 +638,7 @@ static int denali_pio_xfer(struct denali_nand_info *denali, void *buf,
- }
- 
- static int denali_dma_xfer(struct denali_nand_info *denali, void *buf,
--			   size_t size, int page, int write)
-+			   size_t size, int page, bool write)
- {
- 	dma_addr_t dma_addr;
- 	uint32_t irq_mask, irq_status, ecc_err_mask;
-@@ -694,7 +695,7 @@ static int denali_dma_xfer(struct denali_nand_info *denali, void *buf,
- }
- 
- static int denali_page_xfer(struct nand_chip *chip, void *buf, size_t size,
--			    int page, int write)
-+			    int page, bool write)
- {
- 	struct denali_nand_info *denali = to_denali(chip);
- 
-@@ -715,7 +716,7 @@ static int denali_read_page(struct nand_chip *chip, uint8_t *buf,
- 	int stat = 0;
- 	int ret;
- 
--	ret = denali_page_xfer(chip, buf, mtd->writesize, page, 0);
-+	ret = denali_page_xfer(chip, buf, mtd->writesize, page, false);
- 	if (ret && ret != -EBADMSG)
- 		return ret;
- 
-@@ -744,7 +745,7 @@ static int denali_write_page(struct nand_chip *chip, const uint8_t *buf,
- {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 
--	return denali_page_xfer(chip, (void *)buf, mtd->writesize, page, 1);
-+	return denali_page_xfer(chip, (void *)buf, mtd->writesize, page, true);
- }
- 
- static int denali_setup_data_interface(struct nand_chip *chip, int chipnr,
-@@ -1001,7 +1002,7 @@ static int denali_attach_chip(struct nand_chip *chip)
- 	int ret;
- 
- 	if (ioread32(denali->reg + FEATURES) & FEATURES__DMA)
--		denali->dma_avail = 1;
-+		denali->dma_avail = true;
- 
- 	if (denali->dma_avail) {
- 		int dma_bit = denali->caps & DENALI_CAP_DMA_64BIT ? 64 : 32;
-@@ -1010,7 +1011,7 @@ static int denali_attach_chip(struct nand_chip *chip)
- 		if (ret) {
- 			dev_info(denali->dev,
- 				 "Failed to set DMA mask. Disabling DMA.\n");
--			denali->dma_avail = 0;
-+			denali->dma_avail = false;
- 		}
- 	}
- 
-diff --git a/drivers/mtd/nand/raw/denali.h b/drivers/mtd/nand/raw/denali.h
-index 4447184..d2603c6 100644
---- a/drivers/mtd/nand/raw/denali.h
-+++ b/drivers/mtd/nand/raw/denali.h
-@@ -303,7 +303,7 @@ struct denali_nand_info {
- 	u32 irq_mask;			/* interrupts we are waiting for */
- 	u32 irq_status;			/* interrupts that have happened */
- 	int irq;
--	int dma_avail;			/* can support DMA? */
-+	bool dma_avail;			/* can support DMA? */
- 	int devs_per_cs;		/* devices connected in parallel */
- 	int oob_skip_bytes;		/* number of bytes reserved for BBM */
- 	int max_banks;
-@@ -313,7 +313,7 @@ struct denali_nand_info {
- 	u32 (*host_read)(struct denali_nand_info *denali, u32 addr);
- 	void (*host_write)(struct denali_nand_info *denali, u32 addr, u32 data);
- 	void (*setup_dma)(struct denali_nand_info *denali, dma_addr_t dma_addr,
--			  int page, int write);
-+			  int page, bool write);
- };
- 
- #define DENALI_CAP_HW_ECC_FIXUP			BIT(0)
+Major changes in v4:
+  - Add denali_exec_out() and denali_exec_in()
+    in order to make denali_exec_instr() readable
+
+  - Make .read_page_raw() and .write_page_raw() even simpler
+    by giving up the performance
+
+Major changes in v3:
+  - Drop "mtd: rawnand: denali: use more precise timeout for NAND_OP_WAITRDT_INSTR"
+    entirely according to the review comments in v2
+
+  - Add comments to helpers in 2/9
+
+Masahiro Yamada (9):
+  mtd: rawnand: denali: use nand_chip pointer more for internal
+    functions
+  mtd: rawnand: denali: refactor raw page accessors
+  mtd: rawnand: denali: remove unneeded casts in denali_{read,write}_pio
+  mtd: rawnand: denali: switch over to ->exec_op() from legacy hooks
+  mtd: rawnand: denali: use bool type instead of int where appropriate
+  mtd: rawnand: denali_pci: rename goto labels
+  mtd: rawnand: denali: decouple controller and NAND chips
+  mtd: rawnand: denali: remove DENALI_NR_BANKS macro
+  mtd: rawnand: denali: clean up coding style
+
+ .../devicetree/bindings/mtd/denali-nand.txt        |   40 +-
+ drivers/mtd/nand/raw/denali.c                      | 1146 ++++++++++----------
+ drivers/mtd/nand/raw/denali.h                      |  117 +-
+ drivers/mtd/nand/raw/denali_dt.c                   |   98 +-
+ drivers/mtd/nand/raw/denali_pci.c                  |   38 +-
+ 5 files changed, 823 insertions(+), 616 deletions(-)
+
 -- 
 2.7.4
 
