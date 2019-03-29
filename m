@@ -2,315 +2,168 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 573C0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1F0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4EE217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21AEF217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbfC2NCo (ORCPT
+        id S1729610AbfC2NEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 09:02:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33980 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729579AbfC2NCo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 09:02:44 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2TCucv0032755
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 09:02:43 -0400
-Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rhk1tk7qa-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 09:02:42 -0400
-Received: from localhost
-        by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Fri, 29 Mar 2019 13:02:41 -0000
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e35.co.us.ibm.com (192.168.1.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 29 Mar 2019 13:02:37 -0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2TD2WmX56950998
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 13:02:32 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E37507805F;
-        Fri, 29 Mar 2019 13:02:31 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 61A2B78060;
-        Fri, 29 Mar 2019 13:02:30 +0000 (GMT)
-Received: from [9.80.196.185] (unknown [9.80.196.185])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 29 Mar 2019 13:02:30 +0000 (GMT)
-Subject: Re: [PATCH v6 1/7] s390: ap: kvm: add PQAP interception for AQIC
-To:     pmorel@linux.ibm.com, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1553265828-27823-1-git-send-email-pmorel@linux.ibm.com>
- <1553265828-27823-2-git-send-email-pmorel@linux.ibm.com>
- <32716ed4-559f-0c36-cdf3-4c6662e02f4b@linux.ibm.com>
- <a8df86d7-1515-4267-c097-e31895932de3@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Fri, 29 Mar 2019 09:02:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 29 Mar 2019 09:04:50 -0400
+Received: from mga04.intel.com ([192.55.52.120]:38874 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729524AbfC2NEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 09:04:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 06:04:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,284,1549958400"; 
+   d="scan'208";a="331871511"
+Received: from bublath-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.42.182])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Mar 2019 06:04:45 -0700
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id 2744F21E50; Fri, 29 Mar 2019 15:04:37 +0200 (EET)
+Date:   Fri, 29 Mar 2019 15:04:36 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing
+ node's parents
+Message-ID: <20190329130436.4fxzki5kljprhyai@kekkonen.localdomain>
+References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
+ <20190326124106.27694-2-sakari.ailus@linux.intel.com>
+ <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
+ <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
+ <20190328141036.mbns3ei4agnginsg@pathway.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <a8df86d7-1515-4267-c097-e31895932de3@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032913-0012-0000-0000-0000171ED8CB
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010834; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000283; SDB=6.01181362; UDB=6.00618314; IPR=6.00962083;
- MB=3.00026207; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-29 13:02:39
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032913-0013-0000-0000-000056ADD2EF
-Message-Id: <496e7e46-d47d-2b20-8e73-772f5d8d2143@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-29_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903290094
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328141036.mbns3ei4agnginsg@pathway.suse.cz>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/29/19 4:52 AM, Pierre Morel wrote:
-> On 28/03/2019 17:12, Tony Krowiak wrote:
->> On 3/22/19 10:43 AM, Pierre Morel wrote:
->>> We prepare the interception of the PQAP/AQIC instruction for
->>> the case the AQIC facility is enabled in the guest.
->>>
->>> First of all we do not want to change existing behavior when
->>> intercepting AP instructions without the SIE allowing the guest
->>> to use AP instructions.
->>>
->>> In this patch we only handle the AQIC interception allowed by
->>> facility 65 which will be enabled when the complete interception
->>> infrastructure will be present.
->>>
->>> We add a callback inside the KVM arch structure for s390 for
->>> a VFIO driver to handle a specific response to the PQAP
->>> instruction with the AQIC command and only this command.
->>>
->>> But we want to be able to return a correct answer to the guest
->>> even there is no VFIO AP driver in the kernel.
->>> Therefor, we inject the correct exceptions from inside KVM for the
->>> case the callback is not initialized, which happens when the vfio_ap
->>> driver is not loaded.
->>>
->>> We do consider the responsability of the driver to always initialize
->>> the PQAP callback if it defines queues by initializing the CRYCB for
->>> a guest.
->>> If the callback has been setup we call it.
->>> If not we setup an answer considering that no queue is available
->>> for the guest when no callback has been setup.
->>>
->>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->>> ---
->>>   arch/s390/include/asm/kvm_host.h      |  8 ++++
->>>   arch/s390/kvm/priv.c                  | 90 
->>> +++++++++++++++++++++++++++++++++++
->>>   drivers/s390/crypto/vfio_ap_private.h |  2 +
->>>   3 files changed, 100 insertions(+)
->>>
->>> diff --git a/arch/s390/include/asm/kvm_host.h 
->>> b/arch/s390/include/asm/kvm_host.h
->>> index a496276..624460b 100644
->>> --- a/arch/s390/include/asm/kvm_host.h
->>> +++ b/arch/s390/include/asm/kvm_host.h
->>> @@ -18,6 +18,7 @@
->>>   #include <linux/kvm_host.h>
->>>   #include <linux/kvm.h>
->>>   #include <linux/seqlock.h>
->>> +#include <linux/module.h>
->>>   #include <asm/debug.h>
->>>   #include <asm/cpu.h>
->>>   #include <asm/fpu/api.h>
->>> @@ -721,8 +722,15 @@ struct kvm_s390_cpu_model {
->>>       unsigned short ibc;
->>>   };
->>> +struct kvm_s390_module_hook {
->>> +    int (*hook)(struct kvm_vcpu *vcpu);
->>> +    void *data;
->>> +    struct module *owner;
->>> +};
->>> +
->>>   struct kvm_s390_crypto {
->>>       struct kvm_s390_crypto_cb *crycb;
->>> +    struct kvm_s390_module_hook *pqap_hook;
->>>       __u32 crycbd;
->>>       __u8 aes_kw;
->>>       __u8 dea_kw;
->>> diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
->>> index 8679bd7..793e48a 100644
->>> --- a/arch/s390/kvm/priv.c
->>> +++ b/arch/s390/kvm/priv.c
->>> @@ -27,6 +27,7 @@
->>>   #include <asm/io.h>
->>>   #include <asm/ptrace.h>
->>>   #include <asm/sclp.h>
->>> +#include <asm/ap.h>
->>>   #include "gaccess.h"
->>>   #include "kvm-s390.h"
->>>   #include "trace.h"
->>> @@ -592,6 +593,93 @@ static int handle_io_inst(struct kvm_vcpu *vcpu)
->>>       }
->>>   }
->>> +/*
->>> + * handle_pqap: Handling pqap interception
->>> + * @vcpu: the vcpu having issue the pqap instruction
->>> + *
->>> + * We now support PQAP/AQIC instructions and we need to correctly
->>> + * answer the guest even if no dedicated driver's hook is available.
->>> + *
->>> + * The intercepting code calls a dedicated callback for this 
->>> instruction
->>> + * if a driver did register one in the CRYPTO satellite of the
->>> + * SIE block.
->>> + *
->>> + * For PQAP AQIC and TAPQ instructions, verify privilege and 
->>> specifications.
->>> + *
->>> + * If no callback available, the queues are not available, return 
->>> this to
->>> + * the caller.
->>> + * Else return the value returned by the callback.
->>> + */
->>> +static int handle_pqap(struct kvm_vcpu *vcpu)
->>> +{
->>> +    struct ap_queue_status status = {};
->>> +    unsigned long reg0;
->>> +    int ret;
->>> +    uint8_t fc;
->>> +
->>> +    /* Verify that the AP instruction are available */
->>> +    if (!ap_instructions_available())
->>> +        return -EOPNOTSUPP;
->>> +    /* Verify that the guest is allowed to use AP instructions */
->>> +    if (!(vcpu->arch.sie_block->eca & ECA_APIE))
->>> +        return -EOPNOTSUPP;
->>> +    /*
->>> +     * The only possibly intercepted instructions when AP 
->>> instructions are
->>> +     * available for the guest are AQIC and TAPQ with the t bit set
->>> +     * since we do not set IC.3 (FIII) we currently will not intercept
->>> +     * TAPQ.
->>> +     * The following code will only treat AQIC function code.
->>> +     */
->>> +    reg0 = vcpu->run->s.regs.gprs[0];
->>> +    fc = reg0 >> 24;
->>> +    if (fc != 0x03) {
->>> +        pr_warn("%s: Unexpected interception code 0x%02x\n",
->>> +            __func__, fc);
->>> +        return -EOPNOTSUPP;
->>> +    }
->>> +    /* All PQAP instructions are allowed for guest kernel only */
->>> +    if (vcpu->arch.sie_block->gpsw.mask & PSW_MASK_PSTATE)
->>> +        return kvm_s390_inject_program_int(vcpu, PGM_PRIVILEGED_OP);
->>> +    /*
->>> +     * Common tests for PQAP instructions to generate a specification
->>> +     * exception
->>> +     */
->>> +    /* Zero bits overwrite produce a specification exception */
->>> +    if (reg0 & 0x007f0000UL)
->>> +        goto specification_except;
->>> +    /* If APXA is not installed APQN is limited */
->>> +    if (!(vcpu->kvm->arch.crypto.crycbd & 0x02))
->>> +        if (reg0 & 0x000030f0UL)
->>> +            goto specification_except;
->>> +    /* AQIC needs facility 65 */
->>> +    if (!test_kvm_facility(vcpu->kvm, 65))
->>> +        goto specification_except;
->>> +
->>> +    /*
->>> +     * Verify that the hook callback is registered, lock the owner
->>> +     * and call the hook.
->>> +     */
->>> +    if (vcpu->kvm->arch.crypto.pqap_hook) {
->>> +        if (!try_module_get(vcpu->kvm->arch.crypto.pqap_hook->owner))
->>> +            return -EOPNOTSUPP;
->>> +        ret = vcpu->kvm->arch.crypto.pqap_hook->hook(vcpu);
->>> +        module_put(vcpu->kvm->arch.crypto.pqap_hook->owner);
->>> +        return ret;
->>> +    }
->>> +    /*
->>> +     * It is the duty of the vfio_driver to register a hook
->>> +     * If it does not and we get an exception on AQIC we must
->>> +     * guess that there is no vfio_ap_driver at all and no one
->>> +     * to handle the guests's CRYCB and the CRYCB is empty.
->>> +     */
->>> +    status.response_code = 0x01;
->>> +    memcpy(&vcpu->run->s.regs.gprs[1], &status, sizeof(status));
->>> +    return 0;
->>> +
->>> +specification_except:
->>> +    return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
->>> +}
->>> +
->>>   static int handle_stfl(struct kvm_vcpu *vcpu)
->>>   {
->>>       int rc;
->>> @@ -878,6 +966,8 @@ int kvm_s390_handle_b2(struct kvm_vcpu *vcpu)
->>>           return handle_sthyi(vcpu);
->>>       case 0x7d:
->>>           return handle_stsi(vcpu);
->>> +    case 0xaf:
->>> +        return handle_pqap(vcpu);
->>>       case 0xb1:
->>>           return handle_stfl(vcpu);
->>>       case 0xb2:
->>> diff --git a/drivers/s390/crypto/vfio_ap_private.h 
->>> b/drivers/s390/crypto/vfio_ap_private.h
->>> index 76b7f98..a910be1 100644
->>> --- a/drivers/s390/crypto/vfio_ap_private.h
->>> +++ b/drivers/s390/crypto/vfio_ap_private.h
->>> @@ -16,6 +16,7 @@
->>>   #include <linux/mdev.h>
->>>   #include <linux/delay.h>
->>>   #include <linux/mutex.h>
->>> +#include <linux/kvm_host.h>
->>>   #include "ap_bus.h"
->>> @@ -81,6 +82,7 @@ struct ap_matrix_mdev {
->>>       struct ap_matrix matrix;
->>>       struct notifier_block group_notifier;
->>>       struct kvm *kvm;
->>> +    struct kvm_s390_module_hook pqap_hook;
->>
->> I don't understand the purpose of adding this field. We set up the
->> the kvm->arch.crypto.pqap_hook in the vfio_ap_mdev_set_kvm which is
->> also in this same file, why not just use a static struct 
->> kvm_s390_module_hook and reuse it when setting up
->> kvm->arch.crypto.pqap_hook? It saves you from initializing it every
->> time an ap_matrix_mdev is created.
-> 
-> Having this field embedded in the matrix_mdev allows to easily retrieve 
-> the matrix_mdev from the the hook.
+Hi Petr,
 
-The only place you do this is in the handle_pqap hook. The reason you
-get the matrix_mdev there is to get the vfio_ap_queue object from the
-matrix_mdev qlist. You could just as well have gotten the vfio_ap_queue
-using the vfio_ap_find_queue() function.
+On Thu, Mar 28, 2019 at 03:10:36PM +0100, Petr Mladek wrote:
+> On Wed 2019-03-27 16:20:37, Sakari Ailus wrote:
+> > Hi Petr,
+> > 
+> > On Wed, Mar 27, 2019 at 01:26:25PM +0100, Petr Mladek wrote:
+> > > On Tue 2019-03-26 14:41:01, Sakari Ailus wrote:
+> > > > Add two convenience functions for accessing node's parents:
+> > > > 
+> > > > fwnode_count_parents() returns the number of parent nodes a given node
+> > > > has. fwnode_get_nth_parent() returns node's parent at a given distance
+> > > > from the node itself.
+> > > > 
+> > > > Also reorder fwnode_get_parent() in property.c according to the same order
+> > > > as in property.h.
+> > > > 
+> > > > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > > > index 8b91ab380d14..61eb6ceacc3f 100644
+> > > > --- a/drivers/base/property.c
+> > > > +++ b/drivers/base/property.c
+> > > > @@ -554,17 +567,49 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
+> > > >  EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+> > > >  
+> > > >  /**
+> > > > - * fwnode_get_parent - Return parent firwmare node
+> > > > - * @fwnode: Firmware whose parent is retrieved
+> > > > + * fwnode_count_parents - Return the number of parents a node has
+> > > > + * @fwnode: The node the parents of which are to be counted
+> > > >   *
+> > > > - * Return parent firmware node of the given node if possible or %NULL if no
+> > > > - * parent was available.
+> > > > + * Returns the number of parents a node has.
+> > > >   */
+> > > > -struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
+> > > > +unsigned int fwnode_count_parents(struct fwnode_handle *fwnode)
+> > > >  {
+> > > > -	return fwnode_call_ptr_op(fwnode, get_parent);
+> > > > +	unsigned int count;
+> > > > +
+> > > > +	fwnode_handle_get(fwnode);
+> > > > +
+> > > > +	for (count = 0; fwnode; count++)
+> > > > +		fwnode = fwnode_get_next_parent(fwnode);
+> > > 
+> > > Is it guaranteed that all parents stay when
+> > > fwnode_get_next_parent() releases the reference count
+> > > for each counted member?
+> > 
+> > fwnode_get_next_parent() only releases the child node after it has acquired
+> > the parent. The only implementation with refcounting for single nodes is
+> > actually OF.
+> 
+> I am still a bit confused. The function is later used the following way:
+> 
+> 	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
+> 		struct fwnode_handle *__fwnode =
+> 			fwnode_get_nth_parent(fwnode, depth);
+> 
+> 		buf = string(buf, end, fwnode_get_name_prefix(__fwnode),
+> 			     default_str_spec);
+> 		buf = string(buf, end, fwnode_get_name(__fwnode),
+> 			     default_str_spec);
+> 
+> 		fwnode_handle_put(__fwnode);
+> 	}
+> 
+> It uses the number to walk the hierarchy over and over again to print
+> the path from root.
+> 
+> I would expect that parents could not get removed until all children
+> are removed. And that the most bottom child (fwnode) must not get
+> removed. Otherwise we would access freed memory in each cycle.
+> 
+> Then there is a question why we need to get the reference of the
+> parents
+> at all.
+> 
+> It might be because we do not need touch refcounting of the parents
+> in this scenario. But we are re-using existing functions where
+> the ref-counting hang-over is important.
+> 
+> Or we really need to increase refcounting of parents. Then it looks
+> suspicious because we want to traverse the same path several times
+> and always have only one node locked (refcounted).
 
-> 
-> Thanks,
-> Pierre
-> 
-> 
-> 
-> 
+I hope I understand your concern better this time.
 
+You basically have to have a reference to a node until you're done
+accessing it. The refcounting in the fwnode framework is based on the OF
+API --- otherwise you couldn't access OF nodes using the framework. ACPI
+does not have those (as you can't dynamically remove nodes). The newly
+added swnode does have refcounting of individual nodes as well.
+
+Even if a node's parent did disappear while printing an fwnode full name,
+it'd mean that
+
+1) fwnode_count_parents() returned an incorrect value (less than expected)
+   or
+
+2) some of the node names could be NULL if node references could not be
+   obtained.
+
+Both would result into garbled output in that case. I have to admit I'm not
+sure if this is possible with OF.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
