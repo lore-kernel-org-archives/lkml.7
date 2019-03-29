@@ -2,226 +2,106 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB44CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B00C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 721E82183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:58:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiWrEgsd"
+	by mail.kernel.org (Postfix) with ESMTP id DCCA62054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:10:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbfC2H6s (ORCPT
+        id S1729001AbfC2IKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 03:58:48 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36680 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729037AbfC2H6r (ORCPT
+        Fri, 29 Mar 2019 04:10:01 -0400
+Received: from p-mail-ext.rd.orange.com ([161.106.1.9]:39112 "EHLO
+        p-mail-ext.rd.orange.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728955AbfC2IKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 03:58:47 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p10so675117pff.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 00:58:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZwHPQaPEkQUOpCAB9JBNV140eejWjgDH4vAkpeBNDEo=;
-        b=BiWrEgsdAAaV0dA6gIVnxevD6KwG8Q6O6u+Uwm+iIhNXzdw1yFE91pclAkrDvCje+N
-         SH20zUCI9fZA3zjafY3Vy0QGYvHH0vQrgsamjG9NjtM85ee2NNm5oU2U6mH5vkFuZ7hX
-         wSPdlTlvJGUNauj1QcUE8ZE3txzPi7zguu6XWN5DNhwj2QqbPoNBqlpibnfEa6YZBTCS
-         Yh7avlFIUdoCthdCF+W4ytXqoXIJtEMZW9e2TAnkoxJ6h2Ro6H8vJivanYQLlSDfGip5
-         SFMTfvr7alVaKUXEAi90sQNyzvLW//pldg9VhiGijJhjvEGDYosaPoLW71dikF9hH2v1
-         YCDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZwHPQaPEkQUOpCAB9JBNV140eejWjgDH4vAkpeBNDEo=;
-        b=ePUMxn34kdmpBOVOu0koZYBaGAsfQMMHxj2shv3Qf3GoXLamfWHs7f/HoREuRXb+Ky
-         Mx2MLG3W7HEP8MzBC3c70r8crW/GS6tBYPol3Bb91oR/LvLaE437ZrtCpc0VZ2QHTFLD
-         EBjIyVnYN4sdl2p8VSFbC5GXBlJkc4MGaLsmfPfA/FzD1mK0/+lsKvqL4hDcQkDOZSs6
-         uQxJEwNQIdA2z3cVaM6LZ5vHq/PjykZWyDUsDRshi1LFAV06LDwyNoJ8TITHdxS1O7cg
-         oeXEKfYTOD5y70Ttch/GQf1uO8jUllXM7TfeOKmZyaNABQ0ejElW/y5cHhNUgEPRftwn
-         Wq6Q==
-X-Gm-Message-State: APjAAAXmhNk5I3YcUCPfQ1F8Bm6sgjwqIFZf6EnD51R+8dKcCubuGikG
-        MD0gQ5tkCYep1h7VqMFeEBk=
-X-Google-Smtp-Source: APXvYqyTzq0C61OZ9qfQaNImt+xG7zTMtxXkYpayPeB83oliP7tabDy3SrMLHrtWZSDIdFrpKQuD8Q==
-X-Received: by 2002:a62:ab12:: with SMTP id p18mr33194495pff.216.1553846326948;
-        Fri, 29 Mar 2019 00:58:46 -0700 (PDT)
-Received: from localhost ([175.223.10.137])
-        by smtp.gmail.com with ESMTPSA id j8sm1628386pff.183.2019.03.29.00.58.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 00:58:46 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 16:58:42 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Jiri Slaby <jslaby@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sahara <keun-o.park@darkmatter.ae>
-Cc:     linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Subject: Re: [linux next] tty/pty: possible circular locking dependency
- detected
-Message-ID: <20190329075842.GA434@jagdpanzerIV>
-References: <20190329073514.GA458@jagdpanzerIV>
+        Fri, 29 Mar 2019 04:10:01 -0400
+X-Greylist: delayed 416 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 Mar 2019 04:10:00 EDT
+Received: from p-mail-ext.rd.orange.com (localhost [127.0.0.1])
+        by localhost (Postfix) with SMTP id B584C5615A8;
+        Fri, 29 Mar 2019 09:02:43 +0100 (CET)
+Received: from p-mail-int.rd.francetelecom.fr (p-mail-int.rd.francetelecom.fr [10.192.117.12])
+        by p-mail-ext.rd.orange.com (Postfix) with ESMTP id 5F5D8561643;
+        Fri, 29 Mar 2019 09:02:36 +0100 (CET)
+Received: from p-mail-int.rd.francetelecom.fr (localhost.localdomain [127.0.0.1])
+        by localhost (Postfix) with SMTP id 13804181605;
+        Fri, 29 Mar 2019 09:02:37 +0100 (CET)
+Received: from yd-CZC9059FTQ.rd.francetelecom.fr (yd-CZC9059FTQ.rd.francetelecom.fr [10.193.71.88])
+        by p-mail-int.rd.francetelecom.fr (Postfix) with ESMTP id 8D1261815EE;
+        Fri, 29 Mar 2019 09:02:36 +0100 (CET)
+From:   =?UTF-8?q?Pierre=20Cr=C3=A9gut?= <pierre.cregut@orange.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Pierre=20Cr=C3=A9gut?= <pierre.cregut@orange.com>
+Subject: [PATCH] PCI/IOV: update num_VFs earlier
+Date:   Fri, 29 Mar 2019 09:00:58 +0100
+Message-Id: <20190329080058.21736-1-pierre.cregut@orange.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190329073514.GA458@jagdpanzerIV>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PMX-Version: 6.4.6.2792898, Antispam-Engine: 2.7.2.2107409, Antispam-Data: 2019.3.29.75716, AntiVirus-Engine: 5.60.0, AntiVirus-Data: 2019.3.28.5600001
+X-PMX-Spam: Gauge=IIIIIIII, Probability=8%, Report='
+ MULTIPLE_RCPTS 0.1, HTML_00_01 0.05, HTML_00_10 0.05, BODYTEXTP_SIZE_3000_LESS 0, BODY_SIZE_1800_1899 0, BODY_SIZE_2000_LESS 0, BODY_SIZE_5000_LESS 0, BODY_SIZE_7000_LESS 0, CT_TEXT_PLAIN_UTF8_CAPS 0, LEGITIMATE_SIGNS 0, MULTIPLE_REAL_RCPTS 0, SINGLE_URI_IN_BODY 0, URI_WITH_PATH_ONLY 0, __ANY_URI 0, __CC_NAME 0, __CC_NAME_DIFF_FROM_ACC 0, __CC_REAL_NAMES 0, __CP_URI_IN_BODY 0, __CT 0, __CTE 0, __CT_TEXT_PLAIN 0, __FRAUD_MONEY_CURRENCY 0, __FRAUD_MONEY_CURRENCY_DOLLAR 0, __FROM_DOMAIN_IN_ANY_CC1 0, __FROM_DOMAIN_IN_RCPT 0, __FROM_UTF_Q 0, __HAS_CC_HDR 0, __HAS_FROM 0, __HAS_MSGID 0, __HAS_X_MAILER 0, __HTTPS_URI 0, __MIME_TEXT_ONLY 0, __MIME_TEXT_P 0, __MIME_TEXT_P1 0, __MIME_VERSION 0, __MULTIPLE_RCPTS_CC_X2 0, __NO_HTML_TAG_RAW 0, __PHISH_SPEAR_SUBJ_PREDICATE 0, __SANE_MSGID 0, __SINGLE_URI_TEXT 0, __SUBJ_ALPHA_END 0, __TO_MALFORMED_2 0, __TO_NO_NAME 0, __URI_IN_BODY 0,
+ __URI_NOT_IMG 0, __URI_NO_WWW 0, __URI_NS , __URI_WITH_PATH 0'
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc-ing Sahara
+Ensure that iov->num_VFs is set before a netlink message is sent
+when the number of VFs is changed. Only the path for num_VFs > 0
+is affected. The path for num_VFs = 0 is already correct.
 
-On (03/29/19 16:35), Sergey Senozhatsky wrote:
-> 5.1.0-rc2-next-20190329
-> 
-> [    8.168722] ======================================================
-> [    8.168723] WARNING: possible circular locking dependency detected
-> [    8.168724] 5.1.0-rc2-next-20190329-dbg-00014-g4d25d68aaf88-dirty #3228 Not tainted
-> [    8.168725] ------------------------------------------------------
-> [    8.168726] bash/380 is trying to acquire lock:
-> [    8.168727] 00000000acce3dce (tty_mutex){+.+.}, at: pty_write+0x31/0xd0
-> [    8.168730] 
->                but task is already holding lock:
-> [    8.168731] 00000000c4f3448a (&ldata->output_lock){+.+.}, at: n_tty_write+0x1b9/0x4a0
-> [    8.168733] 
->                which lock already depends on the new lock.
-> 
+Monitoring programs can relie on netlink messages to track interface
+change and query their state in /sys. But when sriov_numvfs is set to a
+positive value, the netlink message is sent before the value is available
+in sysfs. The value read after the message is received is always zero.
 
-Reverting b9ca5f8560af244 (tty: pty: Fix race condition between
-release_one_tty and pty_write) fixes the warning.
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202991
+Signed-off-by: Pierre Crégut <pierre.cregut@orange.com>
+---
+note: the behaviour can be tested with the following shell script also
+available on the bugzilla (d being the phy device name):
 
-Looking at b9ca5f8560af244, so all pty writes are serialized with
-a global lock? Is this really a great idea?
+ip monitor dev $d | grep --line-buffered "^[0-9]*:" | \
+while read line; do cat /sys/class/net/$d/device/sriov_numvfs; done
 
+ drivers/pci/iov.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I'll keep the lockdep splat for Sahara.
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 3aa115ed3a65..a9655c10e87f 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -351,6 +351,7 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+ 		goto err_pcibios;
+ 	}
+ 
++	iov->num_VFs = nr_virtfn;
+ 	pci_iov_set_numvfs(dev, nr_virtfn);
+ 	iov->ctrl |= PCI_SRIOV_CTRL_VFE | PCI_SRIOV_CTRL_MSE;
+ 	pci_cfg_access_lock(dev);
+@@ -363,7 +364,6 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+ 		goto err_pcibios;
+ 
+ 	kobject_uevent(&dev->dev.kobj, KOBJ_CHANGE);
+-	iov->num_VFs = nr_virtfn;
+ 
+ 	return 0;
+ 
+@@ -379,6 +379,7 @@ static int sriov_enable(struct pci_dev *dev, int nr_virtfn)
+ 	if (iov->link != dev->devfn)
+ 		sysfs_remove_link(&dev->dev.kobj, "dep_link");
+ 
++	iov->num_VFs = 0;
+ 	pci_iov_set_numvfs(dev, 0);
+ 	return rc;
+ }
+-- 
+2.17.1
 
-> [    8.168733] 
->                the existing dependency chain (in reverse order) is:
-> [    8.168734] 
->                -> #4 (&ldata->output_lock){+.+.}:
-> [    8.168737]        __mutex_lock+0x7e/0x8c0
-> [    8.168738]        n_tty_write+0x1b9/0x4a0
-> [    8.168739]        tty_write+0x192/0x2a0
-> [    8.168741]        vfs_write+0xb8/0x1a0
-> [    8.168742]        ksys_write+0x45/0xb0
-> [    8.168744]        do_syscall_64+0x59/0x3bb
-> [    8.168746]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [    8.168746] 
->                -> #3 (&tty->termios_rwsem){++++}:
-> [    8.168748]        down_write+0x38/0x70
-> [    8.168749]        tty_unthrottle+0x19/0x60
-> [    8.168750]        n_tty_open+0x86/0xa0
-> [    8.168751]        tty_ldisc_open.isra.0+0x2b/0x40
-> [    8.168752]        tty_ldisc_setup+0x1e/0x60
-> [    8.168753]        tty_init_dev+0xd9/0x1c0
-> [    8.168754]        tty_open+0x300/0x3c0
-> [    8.168756]        chrdev_open+0x97/0x1c0
-> [    8.168757]        do_dentry_open+0x12f/0x370
-> [    8.168758]        path_openat+0x2ce/0xaa0
-> [    8.168759]        do_filp_open+0x7e/0xd0
-> [    8.168760]        do_sys_open+0x15d/0x210
-> [    8.168762]        kernel_init_freeable+0x2ae/0x317
-> [    8.168764]        kernel_init+0xa/0x101
-> [    8.168765]        ret_from_fork+0x3a/0x50
-> [    8.168765] 
->                -> #2 (&tty->ldisc_sem){++++}:
-> [    8.168767]        __ldsem_down_write_nested+0x55/0x280
-> [    8.168768]        tty_ldisc_lock+0x4b/0x70
-> [    8.168770]        tty_init_dev+0x93/0x1c0
-> [    8.168771]        tty_open+0x300/0x3c0
-> [    8.168772]        chrdev_open+0x97/0x1c0
-> [    8.168773]        do_dentry_open+0x12f/0x370
-> [    8.168774]        path_openat+0x2ce/0xaa0
-> [    8.168775]        do_filp_open+0x7e/0xd0
-> [    8.168776]        do_sys_open+0x15d/0x210
-> [    8.168777]        kernel_init_freeable+0x2ae/0x317
-> [    8.168778]        kernel_init+0xa/0x101
-> [    8.168779]        ret_from_fork+0x3a/0x50
-> [    8.168780] 
->                -> #1 (&tty->legacy_mutex){+.+.}:
-> [    8.168781]        __mutex_lock+0x7e/0x8c0
-> [    8.168782]        tty_init_dev+0x50/0x1c0
-> [    8.168784]        tty_open+0x300/0x3c0
-> [    8.168785]        chrdev_open+0x97/0x1c0
-> [    8.168786]        do_dentry_open+0x12f/0x370
-> [    8.168787]        path_openat+0x2ce/0xaa0
-> [    8.168788]        do_filp_open+0x7e/0xd0
-> [    8.168789]        do_sys_open+0x15d/0x210
-> [    8.168790]        kernel_init_freeable+0x2ae/0x317
-> [    8.168791]        kernel_init+0xa/0x101
-> [    8.168792]        ret_from_fork+0x3a/0x50
-> [    8.168793] 
->                -> #0 (tty_mutex){+.+.}:
-> [    8.168794]        lock_acquire+0x9a/0x170
-> [    8.168795]        __mutex_lock+0x7e/0x8c0
-> [    8.168796]        pty_write+0x31/0xd0
-> [    8.168797]        n_tty_write+0x130/0x4a0
-> [    8.168798]        tty_write+0x192/0x2a0
-> [    8.168800]        vfs_write+0xb8/0x1a0
-> [    8.168801]        ksys_write+0x45/0xb0
-> [    8.168802]        do_syscall_64+0x59/0x3bb
-> [    8.168803]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [    8.168804] 
->                other info that might help us debug this:
-> 
-> [    8.168804] Chain exists of:
->                  tty_mutex --> &tty->termios_rwsem --> &ldata->output_lock
-> 
-> [    8.168806]  Possible unsafe locking scenario:
-> 
-> [    8.168806]        CPU0                    CPU1
-> [    8.168807]        ----                    ----
-> [    8.168807]   lock(&ldata->output_lock);
-> [    8.168808]                                lock(&tty->termios_rwsem);
-> [    8.168809]                                lock(&ldata->output_lock);
-> [    8.168810]   lock(tty_mutex);
-> [    8.168810] 
->                 *** DEADLOCK ***
-> 
-> [    8.168811] 4 locks held by bash/380:
-> [    8.168812]  #0: 0000000022cdab25 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref_wait+0x24/0x50
-> [    8.168814]  #1: 00000000033fee14 (&tty->atomic_write_lock){+.+.}, at: tty_write_lock+0x18/0x50
-> [    8.168815]  #2: 00000000135c3a23 (&o_tty->termios_rwsem/1){++++}, at: n_tty_write+0x8c/0x4a0
-> [    8.168817]  #3: 00000000c4f3448a (&ldata->output_lock){+.+.}, at: n_tty_write+0x1b9/0x4a0
-> [    8.168819] 
->                stack backtrace:
-> [    8.168820] CPU: 1 PID: 380 Comm: bash Not tainted 5.1.0-rc2-next-20190329-dbg-00014-g4d25d68aaf88-dirty #3228
-> [    8.168821] Call Trace:
-> [    8.168823]  dump_stack+0x67/0x90
-> [    8.168825]  print_circular_bug.isra.0.cold+0x1c5/0x225
-> [    8.168826]  check_prev_add.constprop.0+0x5f5/0xd20
-> [    8.168828]  ? mutex_destroy+0x50/0x50
-> [    8.168829]  __lock_acquire+0xc28/0xf90
-> [    8.168830]  ? __lock_acquire+0xc28/0xf90
-> [    8.168831]  lock_acquire+0x9a/0x170
-> [    8.168833]  ? pty_write+0x31/0xd0
-> [    8.168834]  ? pty_write+0x31/0xd0
-> [    8.168835]  __mutex_lock+0x7e/0x8c0
-> [    8.168836]  ? pty_write+0x31/0xd0
-> [    8.168837]  ? n_tty_write+0x1b9/0x4a0
-> [    8.168838]  ? __mutex_lock+0x7e/0x8c0
-> [    8.168839]  ? pty_write+0x31/0xd0
-> [    8.168840]  ? n_tty_write+0x1b9/0x4a0
-> [    8.168842]  ? pty_write+0x31/0xd0
-> [    8.168843]  pty_write+0x31/0xd0
-> [    8.168844]  n_tty_write+0x130/0x4a0
-> [    8.168845]  ? wait_woken+0xa0/0xa0
-> [    8.168846]  tty_write+0x192/0x2a0
-> [    8.168847]  ? n_tty_open+0xa0/0xa0
-> [    8.168849]  vfs_write+0xb8/0x1a0
-> [    8.168850]  ksys_write+0x45/0xb0
-> [    8.168851]  do_syscall_64+0x59/0x3bb
-> [    8.168852]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-> [    8.168854]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-	-ss
