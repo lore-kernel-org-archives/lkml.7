@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2FDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DB4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D263218A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D98218A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:09:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gYF74FVs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lv6Gu8ZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730484AbfC2WI7 (ORCPT
+        id S1730498AbfC2WJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 18:08:59 -0400
-Received: from mail-pl1-f173.google.com ([209.85.214.173]:44314 "EHLO
-        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730384AbfC2WIw (ORCPT
+        Fri, 29 Mar 2019 18:09:05 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46212 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730443AbfC2WIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 18:08:52 -0400
-Received: by mail-pl1-f173.google.com with SMTP id g12so1630417pll.11
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 15:08:51 -0700 (PDT)
+        Fri, 29 Mar 2019 18:08:50 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 9so1655234pfj.13
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 15:08:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iO/j6hu+52hK77yqW3gDnmljlHibOdMHzB9G1hKqcBI=;
-        b=gYF74FVss7m4gBuaCRoW7jMu4b/rT33heLSHVx2QEKy4XAeaEspMbdYo9ajjOkVWO1
-         9EGX31SaE58LNxxI8WgLS+VPuEr6bghiHQ/P2gsSRgJgwymGMdaCK76HO5NtX9swfUz0
-         pntrtdWP8/RPUGCT+gu5dfkHM2Nga8JVzrhw0=
+        bh=2YQOYspJ2byrBgs9Jhml4Q1eg8eEADDA3sFm44l9/z8=;
+        b=Lv6Gu8ZJBAJnnhiTeArKZl66MO2yAgRLdE0WlCJ8XYXh+1Zd3hKPDe+DEBkUsjOfGN
+         YsWDP+q2gP78FiLOJwPLFVynGUuUIX6HzibZK6W8bFUU8mB72kbnD4Wpy7hSP0IEC6ax
+         /ZK79hT7H1sO57ggqPGKr0avjMDoc1od6lwOw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iO/j6hu+52hK77yqW3gDnmljlHibOdMHzB9G1hKqcBI=;
-        b=tpcVCJ8LHJYdNBnjSNtgjA0YEyuS859/wbRX6EuJeGV+ARfKe2xMVwbEe2cCYZj1wv
-         aFLrU3mp9htBXunQ72uri9OXfSIHXSN8u6y3h1JwoXcjF0vnUDJdHfrZDnCg1CwPyepx
-         cB7Yu4CszJUv7NO0d8nnlCvXAQ6i+6ixxzX0ZNJNsrMLMr6oDAc8ZkGoUJUk4h1A/fYr
-         RIMLFpR+hNTyuEgl7y2uNzP21FrS3Gk+JqH+h09jUAaVFiS+RC05lAZyS3+hXXXZ85r3
-         FariizAphWfUKdNHzluysizE3I30254M82TBZWJlwMCJjl5YnbwKKOqv35adoIcPUpd3
-         e9lQ==
-X-Gm-Message-State: APjAAAXH8YO+x5L5RWFxIfj1Y7ySUEt5I+i1PgxeQuwXyoEY2DUmxDSw
-        89b7HpQw/73tyD9jzNmwJQpzBw==
-X-Google-Smtp-Source: APXvYqz6OIaYDKN7iaa7VXPjG0No67LxAsEEv5vfxWrlqNShxkO+PM0FQA0cRkp5yYtCoPt9FO8rlQ==
-X-Received: by 2002:a17:902:968a:: with SMTP id n10mr52068045plp.283.1553897331172;
-        Fri, 29 Mar 2019 15:08:51 -0700 (PDT)
+        bh=2YQOYspJ2byrBgs9Jhml4Q1eg8eEADDA3sFm44l9/z8=;
+        b=QOhvGeCXWf0CcR+lb1O69QhUoTY3OCyv7iOb5TeUvSiKtfhCyTVABeffCHRQpfYLzm
+         fX8mb2zV3fnNWamNo98rASZb9b3ECzxfxryd13Eh5hDcpNdnGwoa6gviJfNS4aQ03ioi
+         2goTA44ISx8PKUPNP6EXhIp7aaY3Rwh6YXK2uS8BbKcM5HBsfO6e7/rmryVF7Hk5can5
+         JUwR+yjjq3vU19AWk7GMLMFgLJBfSPkHLD+TSvWqLxkxD7qzXoUpgTxboqkz9NjMlu18
+         HFGMb2aBpNAdBDN8IAil2eBGoanCz51CcWwkzldQnpScbWTVwSrTL/9LKDf7ynCH0KHK
+         zNxg==
+X-Gm-Message-State: APjAAAWhd93npOG3BiPiQIspIShwqOSdsa5/jGda45/qPAVV7PIdWWVI
+        nK9rhNGqlCucNqKIZa0znYfWnA==
+X-Google-Smtp-Source: APXvYqxCms4Z+kzGVu2z0w9GdNo4xjnmiB98FGxGjluQPNN5nD5zp3TmNKeBRG4fNnxzDUBtSl/G/w==
+X-Received: by 2002:a65:6489:: with SMTP id e9mr32445881pgv.364.1553897329280;
+        Fri, 29 Mar 2019 15:08:49 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b7sm8925514pfj.67.2019.03.29.15.08.50
+        by smtp.gmail.com with ESMTPSA id b7sm8925514pfj.67.2019.03.29.15.08.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 15:08:50 -0700 (PDT)
+        Fri, 29 Mar 2019 15:08:48 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -62,9 +62,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Kieran Bingham <kbingham@kernel.org>,
         Jan Kiszka <jan.kiszka@siemens.com>,
         Jackie Liu <liuyun01@kylinos.cn>
-Subject: [PATCH v2 5/5] scripts/gdb: Silence pep8 checks
-Date:   Fri, 29 Mar 2019 15:08:44 -0700
-Message-Id: <20190329220844.38234-6-swboyd@chromium.org>
+Subject: [PATCH v2 3/5] scripts/gdb: Add rb tree iterating utilities
+Date:   Fri, 29 Mar 2019 15:08:42 -0700
+Message-Id: <20190329220844.38234-4-swboyd@chromium.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 In-Reply-To: <20190329220844.38234-1-swboyd@chromium.org>
 References: <20190329220844.38234-1-swboyd@chromium.org>
@@ -75,8 +75,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These scripts have some pep8 style warnings. Fix them up so that this
-directory is all pep8 clean.
+Implement gdb functions for rb_first(), rb_last(), rb_next(), and
+rb_prev(). These can be useful to iterate through the kernel's red-black
+trees.
 
 Cc: Douglas Anderson <dianders@chromium.org>
 Cc: Nikolay Borisov <n.borisov.lkml@gmail.com>
@@ -85,159 +86,205 @@ Cc: Jan Kiszka <jan.kiszka@siemens.com>
 Cc: Jackie Liu <liuyun01@kylinos.cn>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- scripts/gdb/linux/cpus.py  |  1 +
- scripts/gdb/linux/lists.py |  1 +
- scripts/gdb/linux/proc.py  | 10 ++++++++--
- scripts/gdb/linux/tasks.py |  2 ++
- scripts/gdb/linux/utils.py |  7 ++++---
- 5 files changed, 16 insertions(+), 5 deletions(-)
+ scripts/gdb/linux/rbtree.py | 177 ++++++++++++++++++++++++++++++++++++
+ scripts/gdb/vmlinux-gdb.py  |   1 +
+ 2 files changed, 178 insertions(+)
+ create mode 100644 scripts/gdb/linux/rbtree.py
 
-diff --git a/scripts/gdb/linux/cpus.py b/scripts/gdb/linux/cpus.py
-index ca11e8df31b6..008e62f3190d 100644
---- a/scripts/gdb/linux/cpus.py
-+++ b/scripts/gdb/linux/cpus.py
-@@ -135,6 +135,7 @@ and can help identify the state of hotplugged CPUs"""
-         gdb.write("Online CPUs   : {}\n".format(list(each_online_cpu())))
-         gdb.write("Active CPUs   : {}\n".format(list(each_active_cpu())))
- 
+diff --git a/scripts/gdb/linux/rbtree.py b/scripts/gdb/linux/rbtree.py
+new file mode 100644
+index 000000000000..39db889b874c
+--- /dev/null
++++ b/scripts/gdb/linux/rbtree.py
+@@ -0,0 +1,177 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright 2019 Google LLC.
 +
- LxCpus()
- 
- 
-diff --git a/scripts/gdb/linux/lists.py b/scripts/gdb/linux/lists.py
-index 2f335fbd86fd..1987d756b36b 100644
---- a/scripts/gdb/linux/lists.py
-+++ b/scripts/gdb/linux/lists.py
-@@ -110,4 +110,5 @@ class LxListChk(gdb.Command):
-             raise gdb.GdbError("lx-list-check takes one argument")
-         list_check(gdb.parse_and_eval(argv[0]))
- 
++import gdb
 +
- LxListChk()
-diff --git a/scripts/gdb/linux/proc.py b/scripts/gdb/linux/proc.py
-index 2f01a958eb22..6a56bba233a9 100644
---- a/scripts/gdb/linux/proc.py
-+++ b/scripts/gdb/linux/proc.py
-@@ -29,6 +29,7 @@ class LxCmdLine(gdb.Command):
-     def invoke(self, arg, from_tty):
-         gdb.write(gdb.parse_and_eval("saved_command_line").string() + "\n")
- 
++from linux import utils
 +
- LxCmdLine()
- 
- 
-@@ -43,6 +44,7 @@ class LxVersion(gdb.Command):
-         # linux_banner should contain a newline
-         gdb.write(gdb.parse_and_eval("(char *)linux_banner").string())
- 
++rb_root_type = utils.CachedType("struct rb_root")
++rb_node_type = utils.CachedType("struct rb_node")
 +
- LxVersion()
- 
- 
-@@ -86,6 +88,7 @@ Equivalent to cat /proc/iomem on a running target"""
-     def invoke(self, arg, from_tty):
-         return show_lx_resources("iomem_resource")
- 
 +
- LxIOMem()
- 
- 
-@@ -100,6 +103,7 @@ Equivalent to cat /proc/ioports on a running target"""
-     def invoke(self, arg, from_tty):
-         return show_lx_resources("ioport_resource")
- 
++def rb_first(root):
++    if root.type == rb_root_type.get_type():
++        node = node.address.cast(rb_root_type.get_type().pointer())
++    elif root.type != rb_root_type.get_type().pointer():
++        raise gdb.GdbError("Must be struct rb_root not {}".format(root.type))
 +
- LxIOPorts()
- 
- 
-@@ -149,7 +153,7 @@ values of that process namespace"""
-         if len(argv) >= 1:
-             try:
-                 pid = int(argv[0])
--            except:
-+            except gdb.error:
-                 raise gdb.GdbError("Provide a PID as integer value")
-         else:
-             pid = 1
-@@ -195,6 +199,7 @@ values of that process namespace"""
-                         info_opts(FS_INFO, s_flags),
-                         info_opts(MNT_INFO, m_flags)))
- 
++    node = root['rb_node']
++    if node is 0:
++        return None
 +
- LxMounts()
- 
- 
-@@ -259,7 +264,7 @@ class LxFdtDump(gdb.Command):
- 
-         try:
-             f = open(filename, 'wb')
--        except:
-+        except gdb.error:
-             raise gdb.GdbError("Could not open file to dump fdt")
- 
-         f.write(fdt_buf)
-@@ -267,4 +272,5 @@ class LxFdtDump(gdb.Command):
- 
-         gdb.write("Dumped fdt blob to " + filename + "\n")
- 
++    while node['rb_left']:
++        node = node['rb_left']
 +
- LxFdtDump()
-diff --git a/scripts/gdb/linux/tasks.py b/scripts/gdb/linux/tasks.py
-index f6ab3ccf698f..0301dc1e0138 100644
---- a/scripts/gdb/linux/tasks.py
-+++ b/scripts/gdb/linux/tasks.py
-@@ -79,6 +79,7 @@ class LxPs(gdb.Command):
-                 pid=task["pid"],
-                 comm=task["comm"].string()))
- 
++    return node
 +
- LxPs()
- 
- 
-@@ -134,4 +135,5 @@ variable."""
-         else:
-             raise gdb.GdbError("No task of PID " + str(pid))
- 
 +
- LxThreadInfoByPidFunc()
-diff --git a/scripts/gdb/linux/utils.py b/scripts/gdb/linux/utils.py
-index 50805874cfc3..bc67126118c4 100644
---- a/scripts/gdb/linux/utils.py
-+++ b/scripts/gdb/linux/utils.py
-@@ -66,6 +66,7 @@ Note that TYPE and ELEMENT have to be quoted as strings."""
-         return container_of(ptr, gdb.lookup_type(typename.string()).pointer(),
-                             elementname.string())
- 
++def rb_last(root):
++    if root.type == rb_root_type.get_type():
++        node = node.address.cast(rb_root_type.get_type().pointer())
++    elif root.type != rb_root_type.get_type().pointer():
++        raise gdb.GdbError("Must be struct rb_root not {}".format(root.type))
 +
- ContainerOf()
- 
- 
-@@ -148,14 +149,14 @@ def get_gdbserver_type():
-     def probe_qemu():
-         try:
-             return gdb.execute("monitor info version", to_string=True) != ""
--        except:
-+        except gdb.error:
-             return False
- 
-     def probe_kgdb():
-         try:
-             thread_info = gdb.execute("info thread 2", to_string=True)
-             return "shadowCPU0" in thread_info
--        except:
-+        except gdb.error:
-             return False
- 
-     global gdbserver_type
-@@ -172,7 +173,7 @@ def get_gdbserver_type():
- def gdb_eval_or_none(expresssion):
-     try:
-         return gdb.parse_and_eval(expresssion)
--    except:
-+    except gdb.error:
-         return None
- 
- 
++    node = root['rb_node']
++    if node is 0:
++        return None
++
++    while node['rb_right']:
++        node = node['rb_right']
++
++    return node
++
++
++def rb_parent(node):
++    parent = gdb.Value(node['__rb_parent_color'] & ~3)
++    return parent.cast(rb_node_type.get_type().pointer())
++
++
++def rb_empty_node(node):
++    return node['__rb_parent_color'] == node.address
++
++
++def rb_next(node):
++    if node.type == rb_node_type.get_type():
++        node = node.address.cast(rb_node_type.get_type().pointer())
++    elif node.type != rb_node_type.get_type().pointer():
++        raise gdb.GdbError("Must be struct rb_node not {}".format(node.type))
++
++    if rb_empty_node(node):
++        return None
++
++    if node['rb_right']:
++        node = node['rb_right']
++        while node['rb_left']:
++            node = node['rb_left']
++        return node
++
++    parent = rb_parent(node)
++    while parent and node == parent['rb_right']:
++            node = parent
++            parent = rb_parent(node)
++
++    return parent
++
++
++def rb_prev(node):
++    if node.type == rb_node_type.get_type():
++        node = node.address.cast(rb_node_type.get_type().pointer())
++    elif node.type != rb_node_type.get_type().pointer():
++        raise gdb.GdbError("Must be struct rb_node not {}".format(node.type))
++
++    if rb_empty_node(node):
++        return None
++
++    if node['rb_left']:
++        node = node['rb_left']
++        while node['rb_right']:
++            node = node['rb_right']
++        return node.dereference()
++
++    parent = rb_parent(node)
++    while parent and node == parent['rb_left'].dereference():
++            node = parent
++            parent = rb_parent(node)
++
++    return parent
++
++
++class LxRbFirst(gdb.Function):
++    """Lookup and return a node from an RBTree
++
++$lx_rb_first(root): Return the node at the given index.
++If index is omitted, the root node is dereferenced and returned."""
++
++    def __init__(self):
++        super(LxRbFirst, self).__init__("lx_rb_first")
++
++    def invoke(self, root):
++        result = rb_first(root)
++        if result is None:
++            raise gdb.GdbError("No entry in tree")
++
++        return result
++
++
++LxRbFirst()
++
++
++class LxRbLast(gdb.Function):
++    """Lookup and return a node from an RBTree.
++
++$lx_rb_last(root): Return the node at the given index.
++If index is omitted, the root node is dereferenced and returned."""
++
++    def __init__(self):
++        super(LxRbLast, self).__init__("lx_rb_last")
++
++    def invoke(self, root):
++        result = rb_last(root)
++        if result is None:
++            raise gdb.GdbError("No entry in tree")
++
++        return result
++
++
++LxRbLast()
++
++
++class LxRbNext(gdb.Function):
++    """Lookup and return a node from an RBTree.
++
++$lx_rb_next(node): Return the node at the given index.
++If index is omitted, the root node is dereferenced and returned."""
++
++    def __init__(self):
++        super(LxRbNext, self).__init__("lx_rb_next")
++
++    def invoke(self, node):
++        result = rb_next(node)
++        if result is None:
++            raise gdb.GdbError("No entry in tree")
++
++        return result
++
++
++LxRbNext()
++
++
++class LxRbPrev(gdb.Function):
++    """Lookup and return a node from an RBTree.
++
++$lx_rb_prev(node): Return the node at the given index.
++If index is omitted, the root node is dereferenced and returned."""
++
++    def __init__(self):
++        super(LxRbPrev, self).__init__("lx_rb_prev")
++
++    def invoke(self, node):
++        result = rb_prev(node)
++        if result is None:
++            raise gdb.GdbError("No entry in tree")
++
++        return result
++
++
++LxRbPrev()
+diff --git a/scripts/gdb/vmlinux-gdb.py b/scripts/gdb/vmlinux-gdb.py
+index be0efb5dda5b..89e4aa4f8966 100644
+--- a/scripts/gdb/vmlinux-gdb.py
++++ b/scripts/gdb/vmlinux-gdb.py
+@@ -30,5 +30,6 @@ else:
+     import linux.config
+     import linux.cpus
+     import linux.lists
++    import linux.rbtree
+     import linux.proc
+     import linux.constants
 -- 
 Sent by a computer through tubes
 
