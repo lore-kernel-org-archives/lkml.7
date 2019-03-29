@@ -2,121 +2,109 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8158AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5C3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4F5218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:26:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MZh9cOqw"
+	by mail.kernel.org (Postfix) with ESMTP id 0E0F1217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730493AbfC2W0v (ORCPT
+        id S1730478AbfC2WbP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 18:26:51 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:46696 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730452AbfC2W0u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 18:26:50 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2TMO2vB025382;
-        Fri, 29 Mar 2019 22:26:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=PtEGgfckPDq0wGGpZfAcvK0+M+jCFNuLT7mnbB1esj8=;
- b=MZh9cOqw3volpOs2bh/3blGSvsdQ6fageEiK8M/ds9mRa4BjcBI2Bxs/TxLTuOP42zB9
- 9kCDQB/4jLwNc5uA+yz6JFwL1h0eC0C5dJO3eikmcltB7aA+1qVZdvwiSuBdUj4MPg/Y
- XjWMMAkOLFCQ4NWNHESYaPxEL0yms0qhrj0vWs03GJ1EfpQHSqBo3rzpmGewb4p93sCb
- BfBGQkVZ2BRrvfAFQOcSrNL2g8Uo4AeIvgFM4PxBHRfZcOaZeQPj+yvRdNXcHguvrzrS
- vpyQ1/OFnwS59f2FvSIiGe0a3PJCOESDextxZC9D/6P4fT8EeYZUGQKLXrHsyBkNCXIE 4g== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by aserp2130.oracle.com with ESMTP id 2re6g1eykx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 22:26:21 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2TMQFv0012477
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 22:26:15 GMT
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2TMQDEn009533;
-        Fri, 29 Mar 2019 22:26:13 GMT
-Received: from [10.132.91.175] (/10.132.91.175)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 Mar 2019 15:26:13 -0700
-Subject: Re: [RFC][PATCH 03/16] sched: Wrap rq::lock access
-To:     Julien Desfossez <jdesfossez@digitalocean.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, tim.c.chen@linux.intel.com,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Vineeth Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>
-References: <fcad329b-e421-624a-0d1a-a98466eaf2ed@oracle.com>
- <1553866527-18879-1-git-send-email-jdesfossez@digitalocean.com>
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Message-ID: <6e8e6fa0-8976-5e97-d90c-af0b4a6fc8b2@oracle.com>
-Date:   Fri, 29 Mar 2019 15:23:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 29 Mar 2019 18:31:15 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39635 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730335AbfC2WbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 18:31:14 -0400
+Received: from [IPv6:2607:fb90:3651:4373:48b0:1794:39b7:b336] ([IPv6:2607:fb90:3651:4373:48b0:1794:39b7:b336])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x2TMV0Zx3975236
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Fri, 29 Mar 2019 15:31:01 -0700
+Date:   Fri, 29 Mar 2019 15:30:57 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190329220554.GD4102@linux.ibm.com>
+References: <CAG_fn=X9tpSW6jvJd_COk_RU8zvcr-cxSWuJ05qcV0LotTxEEQ@mail.gmail.com> <20190328162222.GO4102@linux.ibm.com> <CAG_fn=WKA_4Vzsh6yH+=5TFv-EMrX87pr+2c_ANoH_MOVpbe1w@mail.gmail.com> <8e32ab34-c14c-1ccb-76f9-0dcd729a0ef6@zytor.com> <20190329210918.GZ4102@linux.ibm.com> <8092b8aa-bb1c-0266-b308-5cebfb25e2ef@zytor.com> <20190329220554.GD4102@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <1553866527-18879-1-git-send-email-jdesfossez@digitalocean.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9211 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903290152
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: Potentially missing "memory" clobbers in bitops.h for x86
+To:     paulmck@linux.ibm.com, "Paul E. McKenney" <paulmck@linux.ibm.com>
+CC:     Alexander Potapenko <glider@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        James Y Knight <jyknight@google.com>
+From:   hpa@zytor.com
+Message-ID: <CD3717A9-E52B-425C-99B4-96ABD942E626@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/29/19 6:35 AM, Julien Desfossez wrote:
-> On Fri, Mar 22, 2019 at 8:09 PM Subhra Mazumdar <subhra.mazumdar@oracle.com>
-> wrote:
->> Is the core wide lock primarily responsible for the regression? I ran
->> upto patch
->> 12 which also has the core wide lock for tagged cgroups and also calls
->> newidle_balance() from pick_next_task(). I don't see any regression.  Of
->> course
->> the core sched version of pick_next_task() may be doing more but
->> comparing with
->> the __pick_next_task() it doesn't look too horrible.
-> On further testing and investigation, we also agree that spinlock contention
-> is not the major cause for the regression, but we feel that it should be one
-> of the major contributing factors to this performance loss.
+On March 29, 2019 3:05:54 PM PDT, "Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
+>On Fri, Mar 29, 2019 at 02:51:26PM -0700, H. Peter Anvin wrote:
+>> On 3/29/19 2:09 PM, Paul E. McKenney wrote:
+>> >>
+>> >> Note: the atomic versions of these functions obviously need to
+>have
+>> >> "volatile" and the clobber anyway, as they are by definition
+>barriers
+>> >> and moving memory operations around them would be a very serious
+>error.
+>> > 
+>> > The atomic functions that return void don't need to order anything
+>except
+>> > the input and output arguments.  The oddness with clear_bit() is
+>that the
+>> > memory changed isn't necessarily the quantity referenced by the
+>argument,
+>> > if the number of bits specified is large.
+>> > 
+>> > So (for example) atomic_inc() does not need a "memory" clobber,
+>right?
+>> 
+>> I don't believe that is true: the code calling it has a reasonable
+>> expectation that previous memory operations have finished and later
+>> memory operations have not started from the point of view of another
+>> processor. You are more of an expert on memory ordering than I am,
+>but
+>> I'm 89% sure that there is plenty of code in the kernel which makes
+>that
+>> assumption.
 >
+>From Documentation/core-api/atomic_ops.rst:
 >
-I finally did some code bisection and found the following lines are
-basically responsible for the regression. Commenting them out I don't see
-the regressions. Can you confirm? I am yet to figure if this is needed for
-the correctness of core scheduling and if so can we do this better?
+>------------------------------------------------------------------------
+>	void atomic_add(int i, atomic_t *v);
+>	void atomic_sub(int i, atomic_t *v);
+>	void atomic_inc(atomic_t *v);
+>	void atomic_dec(atomic_t *v);
+>
+>These four routines add and subtract integral values to/from the given
+>atomic_t value.  The first two routines pass explicit integers by
+>which to make the adjustment, whereas the latter two use an implicit
+>adjustment value of "1".
+>
+>One very important aspect of these two routines is that they DO NOT
+>require any explicit memory barriers.  They need only perform the
+>atomic_t counter update in an SMP safe manner.
+>------------------------------------------------------------------------
+>
+>So, no, these functions do not imply any ordering other than to the
+>variable modified.  This one predates my joining the Linux kernel
+>community.  ;-)  So any cases where someone is relying on atomic_inc()
+>to provide ordering are bugs.
+>
+>Now for value-returning atomics, for example, atomic_inc_return(),
+>full ordering is indeed required.
+>
+>							Thanx, Paul
 
--------->8-------------
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index fe3918c..3b3388a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3741,8 +3741,8 @@ pick_next_task(struct rq *rq, struct task_struct 
-*prev, struct rq_flags *rf)
-                                  * If there weren't no cookies; we 
-don't need
-                                  * to bother with the other siblings.
-*/
--                               if (i == cpu && !rq->core->core_cookie)
--                                       goto next_class;
-+                               //if (i == cpu && !rq->core->core_cookie)
-+                                       //goto next_class;
-
-continue;
-                         }
+Ok.
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
