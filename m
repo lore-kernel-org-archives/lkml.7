@@ -2,297 +2,136 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774A2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51301C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0C32082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BCFA2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:37:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Y579v6o/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbfC2Ih0 (ORCPT
+        id S1729143AbfC2Ih5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:37:26 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:27701 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729009AbfC2IhZ (ORCPT
+        Fri, 29 Mar 2019 04:37:57 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39723 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729009AbfC2Ih5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 04:37:25 -0400
-X-UUID: dd789b4fc29a43f2a24a77472b830fe1-20190329
-X-UUID: dd789b4fc29a43f2a24a77472b830fe1-20190329
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <yunfei.dong@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 334106146; Fri, 29 Mar 2019 16:37:18 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 29 Mar 2019 16:37:16 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 29 Mar 2019 16:37:16 +0800
-From:   Yunfei Dong <yunfei.dong@mediatek.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Tiffany Lin <tiffany.lin@mediatek.com>
-CC:     Yunfei Dong <yunfei.dong@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH,v3] media: mtk-vcodec: enlarge struct vdec_pic_info fields
-Date:   Fri, 29 Mar 2019 16:37:14 +0800
-Message-ID: <1553848634-16929-1-git-send-email-yunfei.dong@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Fri, 29 Mar 2019 04:37:57 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p20so1296649eds.6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 01:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ldh1DeZZbyWaL0eQH1n+YhO96fj3m6Kxa4r5d6+/TFs=;
+        b=Y579v6o/c4JS38ajfPIJdiBFGQmixI7n536PsM9HUzmbOxh4SWdqJ/nViLVGQ7W1GL
+         YMV7T5+G6R6dFZNLYMcnFyrtm0ptKK99fStJWvKsg6VvQPxg4sht/C90j1H+RUulsTRS
+         pRtYBRbLfoqDHfquO5DBuTesXSgYqBIZZi0PE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=ldh1DeZZbyWaL0eQH1n+YhO96fj3m6Kxa4r5d6+/TFs=;
+        b=Q65vYg17852JiS2wr1g9V5W2NIslO7/8rs9/aOJ2E7Nxk8Ko51UJvT77o571tcY4AU
+         fzpL/u4dPGvPM3fKOVbAieQYATLMuXnBGeSRPNDWWVanV2RmS4HnesdhIn1WavlVIBzV
+         g60w1DBYURrp/c31+xux6IHnfPvSsLDpWTHEAggykz+ZgujQz2/8t0MlYureC5fzdwlV
+         crqwBc0wzQV5xl0+ePVjWcm33OgIO9Wkovx0wYXCmfE+NDJWINRyZK41TahhWtkyiIbC
+         28rp6Kmsj0uoTdaz9bu3cNZ5nTzb63lb5rHu6jjJKR/YOLzjWwgKBRbBT9oJoHgWK1D0
+         5ASw==
+X-Gm-Message-State: APjAAAUWIa3d34uyCwhu1kPX80QkGLzlMRQBlD3BPkzuCvaTjeIUWOfu
+        bB17E/KeGRrOyB1ISaWxzLGhlw==
+X-Google-Smtp-Source: APXvYqzg47d2yabHpbF7/lIkhopmC5UPgpCd1IuP1cwHaNy2Hi0GtsMp9K+UeEmkWnicUSH2pEbb8Q==
+X-Received: by 2002:a17:906:1545:: with SMTP id c5mr17258358ejd.135.1553848675461;
+        Fri, 29 Mar 2019 01:37:55 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id j18sm479063edj.92.2019.03.29.01.37.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 Mar 2019 01:37:54 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 09:37:52 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Eric Anholt <eric@anholt.net>,
+        Eben Upton <eben@raspberrypi.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 1/2] drm/file: Rehabilitate the firstopen hook for
+ non-legacy drivers
+Message-ID: <20190329083752.GD2665@phenom.ffwll.local>
+Mail-Followup-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Eric Anholt <eric@anholt.net>, Eben Upton <eben@raspberrypi.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20190328161306.22757-1-paul.kocialkowski@bootlin.com>
+ <20190328161306.22757-2-paul.kocialkowski@bootlin.com>
+ <20190329083534.GC2665@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329083534.GC2665@phenom.ffwll.local>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enlarge the plane number to support more complex case
-and add the support for fmt change case.
+On Fri, Mar 29, 2019 at 09:35:34AM +0100, Daniel Vetter wrote:
+> On Thu, Mar 28, 2019 at 05:13:05PM +0100, Paul Kocialkowski wrote:
+> > The firstopen DRM driver hook was initially used to perform hardware
+> > initialization, which is now considered legacy. Only a single user of
+> > firstopen remains at this point (savage).
+> > 
+> > In some specific cases, non-legacy drivers may also need to implement
+> > these hooks. For instance on VC4, we need to allocate a 16 MiB buffer
+> > for the GPU. Because it's not required for fbcon, it's a waste to
+> > allocate it before userspace starts using the DRM device.
+> > 
+> > Using firstopen and lastclose for this allocation seems like the best
+> > fit, so re-habilitate the hook to allow it to be called for non-legacy
+> > drivers.
+> > 
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > Reviewed-by: Eric Anholt <eric@anholt.net>
+> > ---
+> >  drivers/gpu/drm/drm_file.c | 3 +--
+> >  include/drm/drm_drv.h      | 3 ---
+> >  2 files changed, 1 insertion(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
+> > index b1838a41ad43..c011b5cbfb6b 100644
+> > --- a/drivers/gpu/drm/drm_file.c
+> > +++ b/drivers/gpu/drm/drm_file.c
+> > @@ -266,8 +266,7 @@ static int drm_setup(struct drm_device * dev)
+> >  {
+> >  	int ret;
+> >  
+> > -	if (dev->driver->firstopen &&
+> > -	    drm_core_check_feature(dev, DRIVER_LEGACY)) {
+> > +	if (dev->driver->firstopen) {
+> 
+> If you guys insist on this (still not a fan myself) pls pull it out of
+> drm_setup - that's all just legacy hw setup in there. I still think
+> tracking this a bit more accurately (if you want to bother with this)
+> would be better.
 
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
----
-Change note:
-add comment for reserved.
----
- drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c |   62 +++++++++++++-------
- drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h |   16 ++---
- .../media/platform/mtk-vcodec/vdec/vdec_h264_if.c  |    4 +-
- .../media/platform/mtk-vcodec/vdec/vdec_vp8_if.c   |    4 +-
- .../media/platform/mtk-vcodec/vdec/vdec_vp9_if.c   |   11 ++--
- 5 files changed, 57 insertions(+), 40 deletions(-)
-
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-index d022c65..43587c0 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-@@ -129,9 +129,9 @@ static struct vb2_buffer *get_display_buffer(struct mtk_vcodec_ctx *ctx)
- 	mutex_lock(&ctx->lock);
- 	if (dstbuf->used) {
- 		vb2_set_plane_payload(&dstbuf->vb.vb2_buf, 0,
--					ctx->picinfo.y_bs_sz);
-+					ctx->picinfo.fb_sz[0]);
- 		vb2_set_plane_payload(&dstbuf->vb.vb2_buf, 1,
--					ctx->picinfo.c_bs_sz);
-+					ctx->picinfo.fb_sz[1]);
- 
- 		dstbuf->ready_to_display = true;
- 
-@@ -278,6 +278,27 @@ static void mtk_vdec_flush_decoder(struct mtk_vcodec_ctx *ctx)
- 	clean_free_buffer(ctx);
- }
- 
-+static void mtk_vdec_update_fmt(struct mtk_vcodec_ctx *ctx,
-+				unsigned int pixelformat)
-+{
-+	struct mtk_video_fmt *fmt;
-+	struct mtk_q_data *dst_q_data;
-+	unsigned int k;
-+
-+	dst_q_data = &ctx->q_data[MTK_Q_DATA_DST];
-+	for (k = 0; k < NUM_FORMATS; k++) {
-+		fmt = &mtk_video_formats[k];
-+		if (fmt->fourcc == pixelformat) {
-+			mtk_v4l2_debug(1, "Update cap fourcc(%d -> %d)",
-+				dst_q_data->fmt.fourcc, pixelformat);
-+			dst_q_data->fmt = fmt;
-+			return;
-+		}
-+	}
-+
-+	mtk_v4l2_err("Cannot get fourcc(%d), using init value", pixelformat);
-+}
-+
- static int mtk_vdec_pic_info_update(struct mtk_vcodec_ctx *ctx)
- {
- 	unsigned int dpbsize = 0;
-@@ -299,6 +320,10 @@ static int mtk_vdec_pic_info_update(struct mtk_vcodec_ctx *ctx)
- 		return -EINVAL;
- 	}
- 
-+	if (ctx->last_decoded_picinfo.cap_fourcc != ctx->picinfo.cap_fourcc &&
-+		ctx->picinfo.cap_fourcc != 0)
-+		mtk_vdec_update_fmt(ctx, ctx->picinfo.cap_fourcc);
-+
- 	if ((ctx->last_decoded_picinfo.pic_w == ctx->picinfo.pic_w) ||
- 	    (ctx->last_decoded_picinfo.pic_h == ctx->picinfo.pic_h))
- 		return 0;
-@@ -352,11 +377,11 @@ static void mtk_vdec_worker(struct work_struct *work)
- 	pfb = &dst_buf_info->frame_buffer;
- 	pfb->base_y.va = vb2_plane_vaddr(&dst_buf->vb2_buf, 0);
- 	pfb->base_y.dma_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
--	pfb->base_y.size = ctx->picinfo.y_bs_sz + ctx->picinfo.y_len_sz;
-+	pfb->base_y.size = ctx->picinfo.fb_sz[0];
- 
- 	pfb->base_c.va = vb2_plane_vaddr(&dst_buf->vb2_buf, 1);
- 	pfb->base_c.dma_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 1);
--	pfb->base_c.size = ctx->picinfo.c_bs_sz + ctx->picinfo.c_len_sz;
-+	pfb->base_c.size = ctx->picinfo.fb_sz[1];
- 	pfb->status = 0;
- 	mtk_v4l2_debug(3, "===>[%d] vdec_if_decode() ===>", ctx->id);
- 
-@@ -976,14 +1001,13 @@ static int vidioc_vdec_g_fmt(struct file *file, void *priv,
- 		 * So we just return picinfo yet, and update picinfo in
- 		 * stop_streaming hook function
- 		 */
--		q_data->sizeimage[0] = ctx->picinfo.y_bs_sz +
--					ctx->picinfo.y_len_sz;
--		q_data->sizeimage[1] = ctx->picinfo.c_bs_sz +
--					ctx->picinfo.c_len_sz;
-+		q_data->sizeimage[0] = ctx->picinfo.fb_sz[0];
-+		q_data->sizeimage[1] = ctx->picinfo.fb_sz[1];
- 		q_data->bytesperline[0] = ctx->last_decoded_picinfo.buf_w;
- 		q_data->bytesperline[1] = ctx->last_decoded_picinfo.buf_w;
- 		q_data->coded_width = ctx->picinfo.buf_w;
- 		q_data->coded_height = ctx->picinfo.buf_h;
-+		ctx->last_decoded_picinfo.cap_fourcc = q_data->fmt->fourcc;
- 
- 		/*
- 		 * Width and height are set to the dimensions
-@@ -1103,10 +1127,11 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
- 	struct mtk_vcodec_mem src_mem;
- 	bool res_chg = false;
- 	int ret = 0;
--	unsigned int dpbsize = 1;
-+	unsigned int dpbsize = 1, i = 0;
- 	struct mtk_vcodec_ctx *ctx = vb2_get_drv_priv(vb->vb2_queue);
- 	struct vb2_v4l2_buffer *vb2_v4l2 = NULL;
- 	struct mtk_video_dec_buf *buf = NULL;
-+	struct mtk_q_data *dst_q_data;
- 
- 	mtk_v4l2_debug(3, "[%d] (%d) id=%d, vb=%p",
- 			ctx->id, vb->vb2_queue->type,
-@@ -1194,21 +1219,18 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
- 	}
- 
- 	ctx->last_decoded_picinfo = ctx->picinfo;
--	ctx->q_data[MTK_Q_DATA_DST].sizeimage[0] =
--						ctx->picinfo.y_bs_sz +
--						ctx->picinfo.y_len_sz;
--	ctx->q_data[MTK_Q_DATA_DST].bytesperline[0] =
--						ctx->picinfo.buf_w;
--	ctx->q_data[MTK_Q_DATA_DST].sizeimage[1] =
--						ctx->picinfo.c_bs_sz +
--						ctx->picinfo.c_len_sz;
--	ctx->q_data[MTK_Q_DATA_DST].bytesperline[1] = ctx->picinfo.buf_w;
-+	dst_q_data = &ctx->q_data[MTK_Q_DATA_DST];
-+	for (i = 0; i < dst_q_data->fmt->num_planes; i++) {
-+		dst_q_data->sizeimage[i] = ctx->picinfo.fb_sz[i];
-+		dst_q_data->bytesperline[i] = ctx->picinfo.buf_w;
-+	}
-+
- 	mtk_v4l2_debug(2, "[%d] vdec_if_init() OK wxh=%dx%d pic wxh=%dx%d sz[0]=0x%x sz[1]=0x%x",
- 			ctx->id,
- 			ctx->picinfo.buf_w, ctx->picinfo.buf_h,
- 			ctx->picinfo.pic_w, ctx->picinfo.pic_h,
--			ctx->q_data[MTK_Q_DATA_DST].sizeimage[0],
--			ctx->q_data[MTK_Q_DATA_DST].sizeimage[1]);
-+			dst_q_data->sizeimage[0],
-+			dst_q_data->sizeimage[1]);
- 
- 	ret = vdec_if_get_param(ctx, GET_PARAM_DPB_SIZE, &dpbsize);
- 	if (dpbsize == 0)
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-index e7e2a10..662a84b 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-@@ -211,24 +211,20 @@ struct mtk_vcodec_pm {
-  * @pic_h: picture height
-  * @buf_w: picture buffer width (64 aligned up from pic_w)
-  * @buf_h: picture buffer heiht (64 aligned up from pic_h)
-- * @y_bs_sz: Y bitstream size
-- * @c_bs_sz: CbCr bitstream size
-- * @y_len_sz: additional size required to store decompress information for y
-- *		plane
-- * @c_len_sz: additional size required to store decompress information for cbcr
-- *		plane
-+ * @fb_sz: bitstream size of each plane
-  * E.g. suppose picture size is 176x144,
-  *      buffer size will be aligned to 176x160.
-+ * @cap_fourcc: fourcc number(may changed when resolution change)
-+ * @reserved: align struct to 64-bit in order to adjust 32-bit and 64-bit os.
-  */
- struct vdec_pic_info {
- 	unsigned int pic_w;
- 	unsigned int pic_h;
- 	unsigned int buf_w;
- 	unsigned int buf_h;
--	unsigned int y_bs_sz;
--	unsigned int c_bs_sz;
--	unsigned int y_len_sz;
--	unsigned int c_len_sz;
-+	unsigned int fb_sz[VIDEO_MAX_PLANES];
-+	unsigned int cap_fourcc;
-+	unsigned int reserved;
- };
- 
- /**
-diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-index 02c960c..cdbcd69 100644
---- a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-+++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-@@ -253,8 +253,8 @@ static void get_pic_info(struct vdec_h264_inst *inst,
- 	*pic = inst->vsi->pic;
- 	mtk_vcodec_debug(inst, "pic(%d, %d), buf(%d, %d)",
- 			 pic->pic_w, pic->pic_h, pic->buf_w, pic->buf_h);
--	mtk_vcodec_debug(inst, "Y(%d, %d), C(%d, %d)", pic->y_bs_sz,
--			 pic->y_len_sz, pic->c_bs_sz, pic->c_len_sz);
-+	mtk_vcodec_debug(inst, "fb size: Y(%d), C(%d)",
-+			 pic->fb_sz[0], pic->fb_sz[1]);
- }
- 
- static void get_crop_info(struct vdec_h264_inst *inst, struct v4l2_rect *cr)
-diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
-index bac3723..ba79136 100644
---- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
-+++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
-@@ -294,8 +294,8 @@ static void get_pic_info(struct vdec_vp8_inst *inst, struct vdec_pic_info *pic)
- 
- 	mtk_vcodec_debug(inst, "pic(%d, %d), buf(%d, %d)",
- 			 pic->pic_w, pic->pic_h, pic->buf_w, pic->buf_h);
--	mtk_vcodec_debug(inst, "Y(%d, %d), C(%d, %d)", pic->y_bs_sz,
--			 pic->y_len_sz, pic->c_bs_sz, pic->c_len_sz);
-+	mtk_vcodec_debug(inst, "fb size: Y(%d), C(%d)",
-+			 pic->fb_sz[0], pic->fb_sz[1]);
- }
- 
- static void vp8_dec_finish(struct vdec_vp8_inst *inst)
-diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-index bc8349b..6fe8320 100644
---- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-+++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-@@ -702,10 +702,8 @@ static void init_all_fb_lists(struct vdec_vp9_inst *inst)
- 
- static void get_pic_info(struct vdec_vp9_inst *inst, struct vdec_pic_info *pic)
- {
--	pic->y_bs_sz = inst->vsi->buf_sz_y_bs;
--	pic->c_bs_sz = inst->vsi->buf_sz_c_bs;
--	pic->y_len_sz = inst->vsi->buf_len_sz_y;
--	pic->c_len_sz = inst->vsi->buf_len_sz_c;
-+	pic->fb_sz[0] = inst->vsi->buf_sz_y_bs + inst->vsi->buf_len_sz_y;
-+	pic->fb_sz[1] = inst->vsi->buf_sz_c_bs + inst->vsi->buf_len_sz_c;
- 
- 	pic->pic_w = inst->vsi->pic_w;
- 	pic->pic_h = inst->vsi->pic_h;
-@@ -714,8 +712,9 @@ static void get_pic_info(struct vdec_vp9_inst *inst, struct vdec_pic_info *pic)
- 
- 	mtk_vcodec_debug(inst, "pic(%d, %d), buf(%d, %d)",
- 		 pic->pic_w, pic->pic_h, pic->buf_w, pic->buf_h);
--	mtk_vcodec_debug(inst, "Y(%d, %d), C(%d, %d)", pic->y_bs_sz,
--		 pic->y_len_sz, pic->c_bs_sz, pic->c_len_sz);
-+	mtk_vcodec_debug(inst, "fb size: Y(%d), C(%d)",
-+		pic->fb_sz[0],
-+		pic->fb_sz[1]);
- }
- 
- static void get_disp_fb(struct vdec_vp9_inst *inst, struct vdec_fb **out_fb)
+Maybe another one: Firstopen is called after ->open, which might be
+confusing. But we can't change that ever because legacy drivers surely
+rely on that somewhere (like the backwards load/unload calling sequence).
+-Daniel
 -- 
-1.7.9.5
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
