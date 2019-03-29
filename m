@@ -2,253 +2,130 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC25C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1A8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A9512173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:52:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553845933;
-	bh=42UZjlQdNfjoiadxhX++OrELca+B2cFnXpLE1h8MDDQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KgkWv4D6qcRsws/4U+iQUJZk+v5zSEx0mhSv3AV4hRuh4MDmtoCqkDVgnlbKMxR2Y
-	 T7A1VlPi7C8CRKRoVIomjiTlAvTjHkufo+AvYtUVSf1aw68pSeepk7lyucw52KzoXX
-	 KvKYraCgOvc1/24F3aI4bASmQhvtGI4R4S0/N7SU=
+	by mail.kernel.org (Postfix) with ESMTP id 628592173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbfC2HwL (ORCPT
+        id S1729020AbfC2Hw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 03:52:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54276 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728939AbfC2HwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 03:52:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DAFECAF8F;
-        Fri, 29 Mar 2019 07:52:07 +0000 (UTC)
-Date:   Fri, 29 Mar 2019 08:52:06 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ben Gardon <bgardon@google.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] mm, kvm: account kvm_vcpu_mmap to kmemcg
-Message-ID: <20190329075206.GA28616@dhcp22.suse.cz>
-References: <20190329012836.47013-1-shakeelb@google.com>
+        Fri, 29 Mar 2019 03:52:28 -0400
+Received: from mga12.intel.com ([192.55.52.136]:35172 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728939AbfC2Hw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 03:52:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 00:52:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,283,1549958400"; 
+   d="scan'208";a="218681730"
+Received: from irsmsx110.ger.corp.intel.com ([163.33.3.25])
+  by orsmga001.jf.intel.com with ESMTP; 29 Mar 2019 00:52:24 -0700
+Received: from irsmsx155.ger.corp.intel.com (163.33.192.3) by
+ irsmsx110.ger.corp.intel.com (163.33.3.25) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 29 Mar 2019 07:50:06 +0000
+Received: from irsmsx102.ger.corp.intel.com ([169.254.2.146]) by
+ irsmsx155.ger.corp.intel.com ([169.254.14.140]) with mapi id 14.03.0415.000;
+ Fri, 29 Mar 2019 07:50:05 +0000
+From:   "Reshetova, Elena" <elena.reshetova@intel.com>
+To:     'Kees Cook' <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>
+CC:     Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: RE: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon
+ syscall
+Thread-Topic: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon
+ syscall
+Thread-Index: AQHU3W7K/qF6gc5OOEis06RmzC4AhqYR090AgAAOl4CAC99ecIABLxOAgAJO6ICAAAwXgIAABToAgAACwaA=
+Date:   Fri, 29 Mar 2019 07:50:05 +0000
+Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4C203E8@IRSMSX102.ger.corp.intel.com>
+References: <20190318094128.1488-1-elena.reshetova@intel.com>
+ <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
+ <CAGXu5jLQaa2FYMOpQPLdRPmUPNY8jq7whM6Wa_YGjfH7oHwx4Q@mail.gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C19A55@IRSMSX102.ger.corp.intel.com>
+ <CALCETrXnfk5zYWmpdLvYbcJ7hhFM13+LPq14MF7s99iqtS4-jg@mail.gmail.com>
+ <CAGXu5j+r-NH5+QY=siE+6RTkUKoRF0Rso6KHM4NOMsCvpcjW5g@mail.gmail.com>
+ <3F1480E2-3D58-4A79-8609-2A9F7991804F@amacapital.net>
+ <CAGXu5jLBP-95aEF2refYimAJ=ea42C_3Ywb+1dZAaVR1rbmP9Q@mail.gmail.com>
+In-Reply-To: <CAGXu5jLBP-95aEF2refYimAJ=ea42C_3Ywb+1dZAaVR1rbmP9Q@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiM2U3MGQ2NGYtZDMyNS00ZmUyLWIxN2QtNTU4ODZiM2IzNWM5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoidUY0eVhXUVBVakZYbHpyaVdyZDA1d2J5Skh3cXcrbUdLdFdcL05ES3R2NklOTTYzcmw3YmZqdytzUW5LYXBOdDEifQ==
+x-originating-ip: [163.33.239.180]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190329012836.47013-1-shakeelb@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28-03-19 18:28:36, Shakeel Butt wrote:
-> A VCPU of a VM can allocate upto three pages which can be mmap'ed by the
-> user space application. At the moment this memory is not charged. On a
-> large machine running large number of VMs (or small number of VMs having
-> large number of VCPUs), this unaccounted memory can be very significant.
-
-Is this really the case. How many machines are we talking about? Say I
-have a virtual machines with 1K cpus, this will result in 12MB. Is this
-significant to the overal size of the virtual machine to even care?
-
-> So, this memory should be charged to a kmemcg. However that is not
-> possible as these pages are mmapped to the userspace and PageKmemcg()
-> was designed with the assumption that such pages will never be mmapped
-> to the userspace.
->
-> One way to solve this problem is by introducing an additional memcg
-> charging API similar to mem_cgroup_[un]charge_skmem(). However skmem
-> charging API usage is contained and shared and no new users are
-> expected but the pages which can be mmapped and should be charged to
-> kmemcg can and will increase. So, requiring the usage for such API will
-> increase the maintenance burden. The simplest solution is to remove the
-> assumption of no mmapping PageKmemcg() pages to user space.
-
-IIRC the only purpose of PageKmemcg is to keep accounting in the legacy
-memcg right. Spending a page flag for that is just no-go. If PageKmemcg
-cannot reuse mapping then we have to find a better place for it (e.g.
-bottom bit in the page->memcg pointer or rethink the whole PageKmemcg.
- 
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> ---
->  arch/s390/kvm/kvm-s390.c       |  2 +-
->  arch/x86/kvm/x86.c             |  2 +-
->  include/linux/page-flags.h     | 26 ++++++++++++++++++--------
->  include/trace/events/mmflags.h |  9 ++++++++-
->  virt/kvm/coalesced_mmio.c      |  2 +-
->  virt/kvm/kvm_main.c            |  2 +-
->  6 files changed, 30 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 4638303ba6a8..1a9e337ed5da 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -2953,7 +2953,7 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
->  		goto out;
->  
->  	BUILD_BUG_ON(sizeof(struct sie_page) != 4096);
-> -	sie_page = (struct sie_page *) get_zeroed_page(GFP_KERNEL);
-> +	sie_page = (struct sie_page *) get_zeroed_page(GFP_KERNEL_ACCOUNT);
->  	if (!sie_page)
->  		goto out_free_cpu;
->  
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 65e4559eef2f..05c0c7eaa5c6 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9019,7 +9019,7 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
->  	else
->  		vcpu->arch.mp_state = KVM_MP_STATE_UNINITIALIZED;
->  
-> -	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
-> +	page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
->  	if (!page) {
->  		r = -ENOMEM;
->  		goto fail;
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index 9f8712a4b1a5..b47a6a327d6a 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -78,6 +78,10 @@
->   * PG_hwpoison indicates that a page got corrupted in hardware and contains
->   * data with incorrect ECC bits that triggered a machine check. Accessing is
->   * not safe since it may cause another machine check. Don't touch!
-> + *
-> + * PG_kmemcg indicates that a kmem page is charged to a memcg. If kmemcg is
-> + * enabled, the page allocator will set PageKmemcg() on  pages allocated with
-> + * __GFP_ACCOUNT. It gets cleared on page free.
->   */
->  
->  /*
-> @@ -130,6 +134,9 @@ enum pageflags {
->  #if defined(CONFIG_IDLE_PAGE_TRACKING) && defined(CONFIG_64BIT)
->  	PG_young,
->  	PG_idle,
-> +#endif
-> +#ifdef CONFIG_MEMCG_KMEM
-> +	PG_kmemcg,
->  #endif
->  	__NR_PAGEFLAGS,
->  
-> @@ -289,6 +296,9 @@ static inline int Page##uname(const struct page *page) { return 0; }
->  #define SETPAGEFLAG_NOOP(uname)						\
->  static inline void SetPage##uname(struct page *page) {  }
->  
-> +#define __SETPAGEFLAG_NOOP(uname)					\
-> +static inline void __SetPage##uname(struct page *page) {  }
-> +
->  #define CLEARPAGEFLAG_NOOP(uname)					\
->  static inline void ClearPage##uname(struct page *page) {  }
->  
-> @@ -427,6 +437,13 @@ TESTCLEARFLAG(Young, young, PF_ANY)
->  PAGEFLAG(Idle, idle, PF_ANY)
->  #endif
->  
-> +#ifdef CONFIG_MEMCG_KMEM
-> +__PAGEFLAG(Kmemcg, kmemcg, PF_NO_TAIL)
-> +#else
-> +TESTPAGEFLAG_FALSE(kmemcg)
-> +__SETPAGEFLAG_NOOP(kmemcg)
-> +__CLEARPAGEFLAG_NOOP(kmemcg)
-> +#endif
->  /*
->   * On an anonymous page mapped into a user virtual memory area,
->   * page->mapping points to its anon_vma, not to a struct address_space;
-> @@ -701,8 +718,7 @@ PAGEFLAG_FALSE(DoubleMap)
->  #define PAGE_MAPCOUNT_RESERVE	-128
->  #define PG_buddy	0x00000080
->  #define PG_offline	0x00000100
-> -#define PG_kmemcg	0x00000200
-> -#define PG_table	0x00000400
-> +#define PG_table	0x00000200
->  
->  #define PageType(page, flag)						\
->  	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
-> @@ -743,12 +759,6 @@ PAGE_TYPE_OPS(Buddy, buddy)
->   */
->  PAGE_TYPE_OPS(Offline, offline)
->  
-> -/*
-> - * If kmemcg is enabled, the buddy allocator will set PageKmemcg() on
-> - * pages allocated with __GFP_ACCOUNT. It gets cleared on page free.
-> - */
-> -PAGE_TYPE_OPS(Kmemcg, kmemcg)
-> -
->  /*
->   * Marks pages in use as page tables.
->   */
-> diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-> index a1675d43777e..d93b78eac5b9 100644
-> --- a/include/trace/events/mmflags.h
-> +++ b/include/trace/events/mmflags.h
-> @@ -79,6 +79,12 @@
->  #define IF_HAVE_PG_IDLE(flag,string)
->  #endif
->  
-> +#ifdef CONFIG_MEMCG_KMEM
-> +#define IF_HAVE_PG_KMEMCG(flag,string) ,{1UL << flag, string}
-> +#else
-> +#define IF_HAVE_PG_KMEMCG(flag,string)
-> +#endif
-> +
->  #define __def_pageflag_names						\
->  	{1UL << PG_locked,		"locked"	},		\
->  	{1UL << PG_waiters,		"waiters"	},		\
-> @@ -105,7 +111,8 @@ IF_HAVE_PG_MLOCK(PG_mlocked,		"mlocked"	)		\
->  IF_HAVE_PG_UNCACHED(PG_uncached,	"uncached"	)		\
->  IF_HAVE_PG_HWPOISON(PG_hwpoison,	"hwpoison"	)		\
->  IF_HAVE_PG_IDLE(PG_young,		"young"		)		\
-> -IF_HAVE_PG_IDLE(PG_idle,		"idle"		)
-> +IF_HAVE_PG_IDLE(PG_idle,		"idle"		)		\
-> +IF_HAVE_PG_KMEMCG(PG_kmemcg,		"kmemcg"	)
->  
->  #define show_page_flags(flags)						\
->  	(flags) ? __print_flags(flags, "|",				\
-> diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
-> index 5294abb3f178..ebf1601de2a5 100644
-> --- a/virt/kvm/coalesced_mmio.c
-> +++ b/virt/kvm/coalesced_mmio.c
-> @@ -110,7 +110,7 @@ int kvm_coalesced_mmio_init(struct kvm *kvm)
->  	int ret;
->  
->  	ret = -ENOMEM;
-> -	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
-> +	page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
->  	if (!page)
->  		goto out_err;
->  
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index f25aa98a94df..de6328dff251 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -306,7 +306,7 @@ int kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
->  	vcpu->pre_pcpu = -1;
->  	INIT_LIST_HEAD(&vcpu->blocked_vcpu_list);
->  
-> -	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
-> +	page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
->  	if (!page) {
->  		r = -ENOMEM;
->  		goto fail;
-> -- 
-> 2.21.0.392.gf8f6787159e-goog
-> 
-
--- 
-Michal Hocko
-SUSE Labs
+PiBPbiBUaHUsIE1hciAyOCwgMjAxOSBhdCA5OjI5IEFNIEFuZHkgTHV0b21pcnNraSA8bHV0b0Bh
+bWFjYXBpdGFsLm5ldD4gd3JvdGU6DQo+ID4gRG9lc27igJl0IHRoaXMganVzdCBsZWFrIHNvbWUg
+b2YgdGhlIGNhbmFyeSB0byB1c2VyIGNvZGUgdGhyb3VnaCBzaWRlIGNoYW5uZWxzPw0KPiANCj4g
+RXJmLCB5ZXMsIGdvb2QgcG9pbnQuIExldCdzIGp1c3QgdXNlIHByYW5kb20gYW5kIGJlIGRvbmUg
+d2l0aCBpdC4NCg0KQW5kIGhlcmUgSSBoYXZlIHNvbWUgbnVtYmVycyBvbiB0aGlzLiBBY3R1YWxs
+eSBwcmFuZG9tIHR1cm5lZCBvdXQgdG8gYmUgcHJldHR5DQpmYXN0LCBldmVuIHdoZW4gY2FsbGVk
+IGV2ZXJ5IHN5c2NhbGwuIFNlZSB0aGUgbnVtYmVycyBiZWxvdzoNCg0KMSkgbG1iZW5jaDogLi9s
+YXRfc3lzY2FsbCAtTiAxMDAwMDAwIG51bGwNCiAgICBiYXNlOiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBTaW1wbGUgc3lzY2FsbDogMC4xNzc0IG1pY3Jvc2Vj
+b25kcw0KICAgIHJhbmRvbV9vZmZzZXQgKHByYW5kb21fdTMyKCkgZXZlcnkgc3lzY2FsbCk6ICAg
+ICBTaW1wbGUgc3lzY2FsbDogMC4xODIyIG1pY3Jvc2Vjb25kcw0KICAgIHJhbmRvbV9vZmZzZXQg
+KHByYW5kb21fdTMyKCkgZXZlcnkgNHRoIHN5c2NhbGwpOiBTaW1wbGUgc3lzY2FsbDogMC4xODQ0
+IG1pY3Jvc2Vjb25kcw0KDQoyKSAgQW5keSdzIHRlc3RzLCBtaXNjLXRlc3RzOiAuL3RpbWluZ190
+ZXN0XzY0IDEwTSBzeXNfZW5vc3lzDQogICAgYmFzZTogICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgMTAwMDAwMDAgbG9vcHMgaW4gMS42MjIyNHMgPSAxNjIuMjIg
+bnNlYyAvIGxvb3ANCiAgICByYW5kb21fb2Zmc2V0IChwcmFuZG9tX3UzMigpIGV2ZXJ5IHN5c2Nh
+bGwpOiAgICAgMTAwMDAwMDAgbG9vcHMgaW4gMS42NDY2MHMgPSAxNjYuMjYgbnNlYyAvIGxvb3AN
+CiAgICByYW5kb21fb2Zmc2V0IChwcmFuZG9tX3UzMigpIGV2ZXJ5IDR0aCBzeXNjYWxsKTogMTAw
+MDAwMDAgbG9vcHMgaW4gMy41MTMxNXMgPSAxNjkuMzAgbnNlYyAvIGxvb3ANCg0KVGhlIHNlY29u
+ZCBjYXNlIGlzIHdoZW4gcHJhbmRvbSBpcyBjYWxsZWQgb25seSBvbmNlIGluIDQgc3lzY2FsbHMg
+YW5kIHVudXNlZCByYW5kb20NCmJpdHMgYXJlIHByZXNlcnZlZCBpbiBhIHBlci1jcHUgYnVmZmVy
+LiBBcyB5b3UgY2FuIHNlZSBpdCBpcyBhY3R1YWxseSBzbG93ZXIgKG1vZHVsbyBteSBtYXliZSBu
+b3QNCnNvIG9wdGltaXplZCBjb2RlIGluIHByYW5kb20sIHNlZSBiZWxvdykgdnMuIGNhbGxpbmcg
+aXQgZXZlcnkgdGltZSwgc28gSSB3b3VsZCB2b3RlIGZvciBhY3R1YWxseSBjYWxsaW5nIGl0IGV2
+ZXJ5IHRpbWUgYW5kIHNhdmluZw0Kb24gdGhlIGhhc3NsZSBhbmQgYWxzbyBhdm9pZCBhZGRpdGlv
+bmFsIGNvZGUgaW4gcHJhbmRvbS4NCg0KQW5kIGJlbG93IGlzIHdoYXQgSSB3YXMgY2FsbGluZyBp
+bnN0ZWFkIG9mIHByYW5kb21fdTMyKCkgdG8gcHJlc2VydmUgcmFuZG9tIGJpdHMNCihuZXRfcmFu
+ZF9zdGF0ZV9idWZmZXIgaXMgYSBuZXcgcGVyLWNwdSBidWZmZXIgSSBhZGRlZCB0byBzYXZlIHJh
+bmRvbSBiaXRzKToNCkFuZCBJIGRpZG4ndCBpbmNsdWRlIHRoZSBjaGVjayBmb3IgYnl0ZXMgPj0g
+c2l6ZW9mKHUzMikgc2luY2UgdGhpcyB3YXMgDQpqdXN0IHBvYyB0byB0ZXN0IHRoZSBiYXNlIHNw
+ZWVkLCBidXQgZm9yIGdlbmVyaWMgY2FzZSBpdCB3b3VsZCBiZSBuZWVkZWQuDQoNCit2b2lkIHBy
+YW5kb21fYnl0ZXNfcHJlc2VydmUodm9pZCAqYnVmLCBzaXplX3QgYnl0ZXMpDQorew0KKyAgICB1
+MzIgKmJ1ZmZlciA9ICZnZXRfY3B1X3ZhcihuZXRfcmFuZF9zdGF0ZV9idWZmZXIpOw0KKyAgICB1
+OCAqcHRyID0gYnVmOw0KKw0KKyAgICBpZiAoISgqYnVmZmVyKSkgew0KKyAgICAgICAgc3RydWN0
+IHJuZF9zdGF0ZSAqc3RhdGUgPSAmZ2V0X2NwdV92YXIobmV0X3JhbmRfc3RhdGUpOw0KKyAgICAg
+ICAgaWYgKGJ5dGVzID4gMCkgew0KKyAgICAgICAgICAgICpidWZmZXIgPSBwcmFuZG9tX3UzMl9z
+dGF0ZShzdGF0ZSk7DQorICAgICAgICAgICAgZG8gew0KKyAgICAgICAgICAgICAgICAqcHRyKysg
+PSAodTgpICpidWZmZXI7DQorICAgICAgICAgICAgICAgIGJ5dGVzLS07DQorICAgICAgICAgICAg
+ICAgICpidWZmZXIgPj49IEJJVFNfUEVSX0JZVEU7DQorICAgICAgICAgICAgfSB3aGlsZSAoYnl0
+ZXMgPiAwKTsNCisgICAgICAgIH0NCisgICAgICAgIHB1dF9jcHVfdmFyKG5ldF9yYW5kX3N0YXRl
+KTsNCisgICAgICAgIHB1dF9jcHVfdmFyKG5ldF9yYW5kX3N0YXRlX2J1ZmZlcik7DQorICAgIH0g
+ZWxzZSB7DQorICAgICAgICBpZiAoYnl0ZXMgPiAwKSB7DQorICAgICAgICAgICAgZG8gew0KKyAg
+ICAgICAgICAgICAgICAqcHRyKysgPSAodTgpICpidWZmZXI7DQorICAgICAgICAgICAgICAgIGJ5
+dGVzLS07DQorICAgICAgICAgICAgICAgICpidWZmZXIgPj49IEJJVFNfUEVSX0JZVEU7DQorICAg
+ICAgICAgICAgfSB3aGlsZSAoYnl0ZXMgPiAwKTsNCisgICAgICAgIH0NCisgICAgICAgIHB1dF9j
+cHVfdmFyKG5ldF9yYW5kX3N0YXRlX2J1ZmZlcik7DQorICAgIH0NCit9DQoNCkkgd2lsbCBzZW5k
+IHRoZSBmaXJzdCB2ZXJzaW9uIG9mIHBhdGNoIChjYWxsaW5nIHByYW5kb21fdTMyKCkgZXZlcnkg
+dGltZSkNCnNob3J0bHkgaWYgYW55b25lIHdhbnRzIHRvIGRvdWJsZSBjaGVjayBwZXJmb3JtYW5j
+ZSBpbXBsaWNhdGlvbnMuIA0KDQpCZXN0IFJlZ2FyZHMsDQpFbGVuYS4NCg==
