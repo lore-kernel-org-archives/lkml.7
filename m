@@ -7,54 +7,58 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E13C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F56C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5C321773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E83A218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TljUoFUD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q8Ossw+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbfC2VrH (ORCPT
+        id S1730351AbfC2VrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 17:47:07 -0400
-Received: from mail-it1-f202.google.com ([209.85.166.202]:36022 "EHLO
+        Fri, 29 Mar 2019 17:47:11 -0400
+Received: from mail-it1-f202.google.com ([209.85.166.202]:36023 "EHLO
         mail-it1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730220AbfC2VrH (ORCPT
+        with ESMTP id S1729998AbfC2VrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 17:47:07 -0400
-Received: by mail-it1-f202.google.com with SMTP id l202so3499936ita.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 14:47:06 -0700 (PDT)
+        Fri, 29 Mar 2019 17:47:10 -0400
+Received: by mail-it1-f202.google.com with SMTP id l202so3500025ita.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 14:47:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Lju3Sh2kmpmmLQeEIQ2kymRMSnNvrQCfL6/ZPFgSoEI=;
-        b=TljUoFUDkPFUmXkzJOJw61Own5HUus9rZgycUxURNEbrdYp95r8+f9pkGC/lLC9ZPs
-         jEloLEiAocsNFr0DXxqX80YLzav3gWJsNUw5Kgz6dgb2mvV7qxZm64MWRMjvwLQ7Ry7W
-         ycmjbmrNlAnL9pD26Zw9wx1/yZxvvZgnEn9Tz3AuF7dV/jOUtV1cSBSDIoRTr7PTz1ox
-         dSaNT5E1o87aRWojcr9J5kDLZ+ONbjqmDWxKmOf4MGPEiAM6+VWPouh85bWd1nOl1+Xu
-         MYEKFY1khKQOFftF2ZlsKiawCLB/jpYNXcvWaZ9PI1vG7xpXKlCsqy83ssMsWOBY94cH
-         /T6w==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=BIUYSdViMIn+To2mUC3qZ7zEN+7GQ3ySY+V/Ekd7gP4=;
+        b=Q8Ossw+hkgnOCqCCmDlkaB7INGKnnX/7XqFXcKnoxXj/6IR9rdXMn1eAfOnQAfHSCT
+         m5BeHO8EWmf2c6BIYwp6PdlKGhI6ShBMM6cXt+rBdSAhe7/Rh5YiIksh4CtpRzijg1qo
+         tV6ArUbKs3AB7BWgOtRAbgWGvaXaX5mGVVyuzxwTdGBQk3qeITV8HlpazvQFhV/dln2P
+         8quJN+t0pFFsPlRVZOX4CJZAdOa/PHbJ0oYA9cjDcH9U/HmXwz1MkjOANht8NAs/pPHK
+         2+8wong01mhW4uGhFW4XZqOzDm+FQoAcnSnPsiB1MG7atw/npWT0MAUqWkqkZR7Dxieb
+         MZ0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Lju3Sh2kmpmmLQeEIQ2kymRMSnNvrQCfL6/ZPFgSoEI=;
-        b=J7lJ+jhK7sqNdTo1dbDhDhRAM9d1MBLkfofp2+S38kGKU79KiiW6R0wkJINHhJ1UwO
-         HQPJZrhIM9MshxCjl3EoP/7lr5I40gGhBOp4qMmMoK1xL4lcZKMkdwl0fajGB2BKykGc
-         ti7gDWjm/3X93M2cwQT7BkSMsG7II9RKhwO20ApyP9XsnzMvOM0taO/yH0DSFsjMsdru
-         +plrU9D3nA1T6JNbWjRSfO+hnFrNoGiAQY8P5stB8pVN+9FSAQ0n0574SlK2EzOOSeoF
-         uRvCBJFEZmAVWKIfwW4yV9VXp9O+MQ2vH5maeu1p4JYxNw3dJ3O1Vc7EulHm8zsvgu03
-         FJ8w==
-X-Gm-Message-State: APjAAAW9JXjkLedj1FVaR+hTKTZUIhik0thQyl7Q5wdLPQeifZ3QgraO
-        i9/9nPmqYqj+H0V8Ivogmd1PoGOprA==
-X-Google-Smtp-Source: APXvYqxkwuw2CQt0Z9Y7/gxlyvhqE8zePmv+jFBrwT9zhInUGeltF4rgFXn71lIir7ufXlWDbjY+81W5bQ==
-X-Received: by 2002:a24:3608:: with SMTP id l8mr2148429itl.35.1553896026529;
- Fri, 29 Mar 2019 14:47:06 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 22:46:49 +0100
-Message-Id: <20190329214652.258477-1-jannh@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=BIUYSdViMIn+To2mUC3qZ7zEN+7GQ3ySY+V/Ekd7gP4=;
+        b=MrT3Z+xUo8gZASK++FN3Di03DurgJ1lkQfYU+rQyyslt1sR6FkUozuMTeITmiDcego
+         ED3+twVkToJgzd1xeAZ+C9yRBPXEEyU40709RxPvgtSPrbjW4CRbqvnWdPFzmOqK1ILj
+         fKfvhXL7yYu7cpkYZ7YpSWkmWeitGGDzukfvKG9Y5dsnafjn0RWxkRgQ4OgEY1cm+Ln3
+         4GA/K15FZsErKKS4kcwzLvYeh+ggfq09hdxLzLQfmIftYeapFNSbFQZP6p1Fgthy5kgD
+         uUtgLcsO/bOVs+Bg2yMe5CNQN//qvKHDxXvuoBg7sUxJnX1+8K3FOEAZ0zZx3BVuLwCc
+         YkFA==
+X-Gm-Message-State: APjAAAWywy294R5F2GAn1ztx7lYfX0WZEnnezDrLrctdNYKDEPVvOoqB
+        88gWde94c4HmHjtbPHZIWq19Jelvtw==
+X-Google-Smtp-Source: APXvYqwowR9WlAl7Fp/7MzuCpLf7ifuupDP7KotIgItUt3ZXdaHLyxYhEOMqnBWfypAOnOrYsYJleUSfsA==
+X-Received: by 2002:a24:9fc4:: with SMTP id c187mr2332485ite.23.1553896029431;
+ Fri, 29 Mar 2019 14:47:09 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 22:46:50 +0100
+In-Reply-To: <20190329214652.258477-1-jannh@google.com>
+Message-Id: <20190329214652.258477-2-jannh@google.com>
 Mime-Version: 1.0
+References: <20190329214652.258477-1-jannh@google.com>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH v3 1/4] kernel.h: use parentheses around argument in u64_to_user_ptr()
+Subject: [PATCH v3 2/4] x86/microcode: Fix __user annotations around generic_load_microcode()
 From:   Jann Horn <jannh@google.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -68,39 +72,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use parentheses around uses of the argument in u64_to_user_ptr() to ensure
-that the cast doesn't apply to part of the argument.
+generic_load_microcode() deals with a pointer that can be either a kernel
+pointer or a user pointer. Pass it around as a __user pointer so that it
+can't be dereferenced accidentally while its address space is unknown.
+Use explicit casts to convert between __user and __kernel to inform the
+checker that these address space conversions are intentional.
 
-There are existing uses of the macro of the form `u64_to_user_ptr(A + B)`,
-which expands to `(void __user *)(uintptr_t)A + B` (the cast applies to the
-first operand of the addition, the addition is a pointer addition). This
-happens to still work as intended, the semantic difference doesn't cause a
-difference in behavior.
-But I want to use u64_to_user_ptr() with a ternary operator in the
-argument, like so: `u64_to_user_ptr(A ? B : C)`. This currently doesn't
-work as intended.
-
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 Signed-off-by: Jann Horn <jannh@google.com>
 ---
- include/linux/kernel.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/microcode/intel.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 34a5036debd3..2d14e21c16c0 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -47,8 +47,8 @@
+diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
+index 16936a24795c..e8ef65c275c7 100644
+--- a/arch/x86/kernel/cpu/microcode/intel.c
++++ b/arch/x86/kernel/cpu/microcode/intel.c
+@@ -861,11 +861,13 @@ static enum ucode_state apply_microcode_intel(int cpu)
+ 	return ret;
+ }
  
- #define u64_to_user_ptr(x) (		\
- {					\
--	typecheck(u64, x);		\
--	(void __user *)(uintptr_t)x;	\
-+	typecheck(u64, (x));		\
-+	(void __user *)(uintptr_t)(x);	\
- }					\
- )
+-static enum ucode_state generic_load_microcode(int cpu, void *data, size_t size,
+-				int (*get_ucode_data)(void *, const void *, size_t))
++static enum ucode_state generic_load_microcode(int cpu,
++		const void __user *data, size_t size,
++		int (*get_ucode_data)(void *, const void __user *, size_t))
+ {
+ 	struct ucode_cpu_info *uci = ucode_cpu_info + cpu;
+-	u8 *ucode_ptr = data, *new_mc = NULL, *mc = NULL;
++	const u8 __user *ucode_ptr = data;
++	u8 *new_mc = NULL, *mc = NULL;
+ 	int new_rev = uci->cpu_sig.rev;
+ 	unsigned int leftover = size;
+ 	unsigned int curr_mc_size = 0, new_mc_size = 0;
+@@ -945,9 +947,10 @@ static enum ucode_state generic_load_microcode(int cpu, void *data, size_t size,
+ 	return ret;
+ }
  
+-static int get_ucode_fw(void *to, const void *from, size_t n)
++static int get_ucode_fw(void *to, const void __user *from, size_t n)
+ {
+-	memcpy(to, from, n);
++	/* cast paired with request_microcode_fw() */
++	memcpy(to, (const void __force *)from, n);
+ 	return 0;
+ }
+ 
+@@ -993,7 +996,8 @@ static enum ucode_state request_microcode_fw(int cpu, struct device *device,
+ 		return UCODE_NFOUND;
+ 	}
+ 
+-	ret = generic_load_microcode(cpu, (void *)firmware->data,
++	/* cast paired with get_ucode_fw() */
++	ret = generic_load_microcode(cpu, (void __force __user *)firmware->data,
+ 				     firmware->size, &get_ucode_fw);
+ 
+ 	release_firmware(firmware);
+@@ -1001,7 +1005,7 @@ static enum ucode_state request_microcode_fw(int cpu, struct device *device,
+ 	return ret;
+ }
+ 
+-static int get_ucode_user(void *to, const void *from, size_t n)
++static int get_ucode_user(void *to, const void __user *from, size_t n)
+ {
+ 	return copy_from_user(to, from, n);
+ }
+@@ -1012,7 +1016,7 @@ request_microcode_user(int cpu, const void __user *buf, size_t size)
+ 	if (is_blacklisted(cpu))
+ 		return UCODE_NFOUND;
+ 
+-	return generic_load_microcode(cpu, (void *)buf, size, &get_ucode_user);
++	return generic_load_microcode(cpu, buf, size, &get_ucode_user);
+ }
+ 
+ static struct microcode_ops microcode_intel_ops = {
 -- 
 2.21.0.392.gf8f6787159e-goog
 
