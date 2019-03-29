@@ -2,110 +2,117 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F792C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC7AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61BF1218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:42:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OP+ShkeV";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hoj7/fQA"
+	by mail.kernel.org (Postfix) with ESMTP id 19EDA218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbfC2UmG (ORCPT
+        id S1730281AbfC2Ump (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 16:42:06 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37208 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730144AbfC2UmG (ORCPT
+        Fri, 29 Mar 2019 16:42:45 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:46455 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730184AbfC2Ump (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 16:42:06 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3399160850; Fri, 29 Mar 2019 20:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553892125;
-        bh=9S3pC+kUlCWjK9/xIV+Tv3Qkubc8ANUKysEbhj6J/js=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OP+ShkeVcpz1oTafwnmwD7+4NTn9Ffm/KSCpFeJazQ92/QfGWNB7/6SrriALPOx/O
-         GYuaUUybot7aJeh+eOGI5pgchqsJuMYoKz4xB0USI9vx3u7JUH0qeW6dA+L5k5xJFS
-         q3gf9vWDnPGZ53r9ga5ulQYgpiNhV656DlasFrcg=
-Received: from [10.79.168.116] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F381060767;
-        Fri, 29 Mar 2019 20:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553892124;
-        bh=9S3pC+kUlCWjK9/xIV+Tv3Qkubc8ANUKysEbhj6J/js=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hoj7/fQAh0Q7TP/023omxmletqARwD/Dgc2KmgKKevoWmchCyzB3jaCLWG+0VMBla
-         tGYfCRvnpEfO6W2R+LbUBOWaSJswvuSAhBtIspFwqkr21csFORILWyfDO1nnpIg1Dd
-         2yPj/z1E6ZYOPjMypwhL7OFOTIxRWnV3gHzJqoos=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F381060767
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] ARM: remove unused <asm/limits.h>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        patches@arm.linux.org.uk
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org
-References: <1553874270-7201-1-git-send-email-yamada.masahiro@socionext.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <ad5c42cb-e61f-589f-c525-83dcecd1a657@codeaurora.org>
-Date:   Sat, 30 Mar 2019 02:11:57 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 16:42:45 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2TKgceL3938845
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 29 Mar 2019 13:42:38 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2TKgb0P3938842;
+        Fri, 29 Mar 2019 13:42:37 -0700
+Date:   Fri, 29 Mar 2019 13:42:37 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
+Message-ID: <tip-606bd60ab6fbcb7f73deeef4fa37cfd5e447a200@git.kernel.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, adrian.hunter@intel.com,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, acme@redhat.com,
+        jolsa@redhat.com
+Reply-To: linux-kernel@vger.kernel.org, jolsa@redhat.com, acme@redhat.com,
+          hpa@zytor.com, adrian.hunter@intel.com, mingo@kernel.org,
+          tglx@linutronix.de
+In-Reply-To: <20190327072826.19168-3-adrian.hunter@intel.com>
+References: <20190327072826.19168-3-adrian.hunter@intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] perf scripts python: exported-sql-viewer.py: Fix
+ python3 support
+Git-Commit-ID: 606bd60ab6fbcb7f73deeef4fa37cfd5e447a200
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <1553874270-7201-1-git-send-email-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  606bd60ab6fbcb7f73deeef4fa37cfd5e447a200
+Gitweb:     https://git.kernel.org/tip/606bd60ab6fbcb7f73deeef4fa37cfd5e447a200
+Author:     Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate: Wed, 27 Mar 2019 09:28:26 +0200
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Thu, 28 Mar 2019 15:53:16 -0300
 
-On 3/29/2019 9:14 PM, Masahiro Yamada wrote:
-> No one includes this.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+perf scripts python: exported-sql-viewer.py: Fix python3 support
 
+Unlike python2, python3 strings are not compatible with byte strings.
+That results in disassembly not working for the branches reports. Fixup
+those places overlooked in the port to python3.
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Fixes: beda0e725e5f ("perf script python: Add Python3 support to exported-sql-viewer.py")
+Link: http://lkml.kernel.org/r/20190327072826.19168-3-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/scripts/python/exported-sql-viewer.py | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-Cheers,
--Mukesh
-
->
-> Version: 5.1-rc2
->
->
->   arch/arm/include/asm/limits.h | 12 ------------
->   1 file changed, 12 deletions(-)
->   delete mode 100644 arch/arm/include/asm/limits.h
->
-> diff --git a/arch/arm/include/asm/limits.h b/arch/arm/include/asm/limits.h
-> deleted file mode 100644
-> index ab15937..0000000
-> --- a/arch/arm/include/asm/limits.h
-> +++ /dev/null
-> @@ -1,12 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -#ifndef __ASM_PIPE_H
-> -#define __ASM_PIPE_H
-> -
-> -#ifndef PAGE_SIZE
-> -#include <asm/page.h>
-> -#endif
-> -
-> -#define PIPE_BUF	PAGE_SIZE
-> -
-> -#endif
-> -
+diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
+index 0cf30956064a..74ef92f1d19a 100755
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -2908,9 +2908,13 @@ class LibXED():
+ 		ok = self.xed_format_context(2, inst.xedp, inst.bufferp, sizeof(inst.buffer), ip, 0, 0)
+ 		if not ok:
+ 			return 0, ""
++		if sys.version_info[0] == 2:
++			result = inst.buffer.value
++		else:
++			result = inst.buffer.value.decode()
+ 		# Return instruction length and the disassembled instruction text
+ 		# For now, assume the length is in byte 166
+-		return inst.xedd[166], inst.buffer.value
++		return inst.xedd[166], result
+ 
+ def TryOpen(file_name):
+ 	try:
+@@ -2926,9 +2930,14 @@ def Is64Bit(f):
+ 	header = f.read(7)
+ 	f.seek(pos)
+ 	magic = header[0:4]
+-	eclass = ord(header[4])
+-	encoding = ord(header[5])
+-	version = ord(header[6])
++	if sys.version_info[0] == 2:
++		eclass = ord(header[4])
++		encoding = ord(header[5])
++		version = ord(header[6])
++	else:
++		eclass = header[4]
++		encoding = header[5]
++		version = header[6]
+ 	if magic == chr(127) + "ELF" and eclass > 0 and eclass < 3 and encoding > 0 and encoding < 3 and version == 1:
+ 		result = True if eclass == 2 else False
+ 	return result
