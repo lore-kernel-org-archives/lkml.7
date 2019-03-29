@@ -2,119 +2,107 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C53EC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A177C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70AB720811
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB368218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:10:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MZABh0Gx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbfC2SKt (ORCPT
+        id S1730000AbfC2SKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 14:10:49 -0400
-Received: from namei.org ([65.99.196.166]:59226 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729652AbfC2SKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 14:10:49 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x2TIAmPw001059;
-        Fri, 29 Mar 2019 18:10:48 GMT
-Date:   Sat, 30 Mar 2019 05:10:48 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] security: yama fix for v5.1
-Message-ID: <alpine.LRH.2.21.1903300509370.689@namei.org>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Fri, 29 Mar 2019 14:10:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58122 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729652AbfC2SKu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 14:10:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cfnDbEyF8f3jK6rE9tvOedJ62dm6dAUPE3LAW9VXfgY=; b=MZABh0GxYIsd0IG3di5ESr7MF
+        kO1b00Kb7MBoGMvrXcbbFpww+LlgET3S5/IqOTrn2i0yWF2kmNAFXCmMtNnDKMLcykhULTvjVBVRe
+        s1xeA3aopEJUHlGDOFG0J/z5YtpuIyqtVGHsESTEHMkblFGMp2ZtQtmZyxk3KmG5jkn85RGtuysv/
+        DRgUUL8Kr0++WAbXLoYVm4Iq2yA2WRuYll0NRZPeNE86DoJ7SEVMyZTz1j/7hhcMZFi6UZJ5x10Tm
+        2DMYHcq9LgQ4Qlr1+xGDCERojwGxMaHIAK/H+aNj/Nrj3iqssx59dQTAy1Lu0PW9jTiVnQuKi0cKe
+        jwaHh6N1g==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h9vxq-0002dh-29; Fri, 29 Mar 2019 18:10:50 +0000
+Subject: Re: [PATCH] gcov: include linux/module.h for within_module
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Hackmann <ghackmann@android.com>,
+        Tri Vo <trong@android.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        kbuild-all@01.org, kbuild test robot <lkp@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <201903291603.7podsjD7%lkp@intel.com>
+ <20190329174541.79972-1-ndesaulniers@google.com>
+ <9f1ad3e1-fad7-2fb4-31c0-d31832468143@infradead.org>
+ <CAKwvOdmv4_8pN5r8EO8c59WN+EE7ZPST8qHKMg7SzPH1rzaqag@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <eea3ce6a-732b-5c1d-9975-eddaeee21cf5@infradead.org>
+Date:   Fri, 29 Mar 2019 11:10:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAKwvOdmv4_8pN5r8EO8c59WN+EE7ZPST8qHKMg7SzPH1rzaqag@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull this fix for the Yama LSM by Jann Horn.
+On 3/29/19 11:09 AM, Nick Desaulniers wrote:
+> On Fri, Mar 29, 2019 at 11:01 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> On 3/29/19 10:45 AM, Nick Desaulniers wrote:
+>>> Fixes commit 8c3d220cb6b5 ("gcov: clang support")
+>>>
+>>> Cc: Greg Hackmann <ghackmann@android.com>
+>>> Cc: Tri Vo <trong@android.com>
+>>> Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+>>> Cc: linux-mm@kvack.org
+>>> Cc: kbuild-all@01.org
+>>> Reported-by: kbuild test robot <lkp@intel.com>
+>>> Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
+>>> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+>>
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>> see https://lore.kernel.org/linux-mm/20190328225107.ULwYw%25akpm@linux-foundation.org/T/#mee26c00158574326e807480fc39dfcbd7bebd5fd
+>>
+>> Did you test this?
+> 
+> Yes, built with gcc 7.3 and
+> defconfig
+> +
+> CONFIG_GCOV_KERNEL=y
+> CONFIG_ARCH_HAS_GCOV_PROFILE_ALL=y
+> CONFIG_GCOV_FORMAT_4_7=y
+> 
+>> kernel/gcov/gcc_4_7.c includes local "gcov.h",
+>> which includes <linux/module.h>, so why didn't that work or why
+>> does this patch work?
+> 
+> Good point. May be something in the configs from 0-day bot.  Boarding
+> a plane for Bangkok, but can dig further once landed.
+> 
+> Maybe module support was disabled?
+
+Yes, I reported the problem with CONFIG_MODULES not enabled.
 
 
-The following changes since commit 8c7ae38d1ce12a0eaeba655df8562552b3596c7f:
-
-  afs: Fix StoreData op marshalling (2019-03-28 08:54:20 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git fixes-v5.1
-
-for you to fetch changes up to 1aa176ef5a451adc0546d5aaa3fb107975c786b7:
-
-  Yama: mark local symbols as static (2019-03-28 10:02:29 -0700)
-
-----------------------------------------------------------------
-Jann Horn (1):
-      Yama: mark local symbols as static
-
- security/yama/yama_lsm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
----
-commit 1aa176ef5a451adc0546d5aaa3fb107975c786b7
-Author: Jann Horn <jannh@google.com>
-Date:   Wed Mar 27 17:21:42 2019 -0700
-
-    Yama: mark local symbols as static
-    
-    sparse complains that Yama defines functions and a variable as non-static
-    even though they don't exist in any header. Fix it by making them static.
-    
-    Co-developed-by: Mukesh Ojha <mojha@codeaurora.org>
-    Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
-    Signed-off-by: Jann Horn <jannh@google.com>
-    [kees: merged similar static-ness fixes into a single patch]
-    Link: https://lkml.kernel.org/r/20190326230841.87834-1-jannh@google.com
-    Link: https://lkml.kernel.org/r/1553673018-19234-1-git-send-email-mojha@codeaurora.org
-    Signed-off-by: Kees Cook <keescook@chromium.org>
-    Signed-off-by: James Morris <james.morris@microsoft.com>
-
-diff --git a/security/yama/yama_lsm.c b/security/yama/yama_lsm.c
-index 57cc60722dd3..efac68556b45 100644
---- a/security/yama/yama_lsm.c
-+++ b/security/yama/yama_lsm.c
-@@ -206,7 +206,7 @@ static void yama_ptracer_del(struct task_struct *tracer,
-  * yama_task_free - check for task_pid to remove from exception list
-  * @task: task being removed
-  */
--void yama_task_free(struct task_struct *task)
-+static void yama_task_free(struct task_struct *task)
- {
- 	yama_ptracer_del(task, task);
- }
-@@ -222,7 +222,7 @@ void yama_task_free(struct task_struct *task)
-  * Return 0 on success, -ve on error.  -ENOSYS is returned when Yama
-  * does not handle the given option.
-  */
--int yama_task_prctl(int option, unsigned long arg2, unsigned long arg3,
-+static int yama_task_prctl(int option, unsigned long arg2, unsigned long arg3,
- 			   unsigned long arg4, unsigned long arg5)
- {
- 	int rc = -ENOSYS;
-@@ -401,7 +401,7 @@ static int yama_ptrace_access_check(struct task_struct *child,
-  *
-  * Returns 0 if following the ptrace is allowed, -ve on error.
-  */
--int yama_ptrace_traceme(struct task_struct *parent)
-+static int yama_ptrace_traceme(struct task_struct *parent)
- {
- 	int rc = 0;
- 
-@@ -452,7 +452,7 @@ static int yama_dointvec_minmax(struct ctl_table *table, int write,
- static int zero;
- static int max_scope = YAMA_SCOPE_NO_ATTACH;
- 
--struct ctl_path yama_sysctl_path[] = {
-+static struct ctl_path yama_sysctl_path[] = {
- 	{ .procname = "kernel", },
- 	{ .procname = "yama", },
- 	{ }
+-- 
+~Randy
