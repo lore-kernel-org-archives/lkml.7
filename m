@@ -2,306 +2,138 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C4AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8520C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F30F2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B268021773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UBgSdKiC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IH8x4/7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbfC2KAU (ORCPT
+        id S1729028AbfC2KBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:00:20 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:33258 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbfC2KAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:00:03 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44Vy001RHrz9v1Nx;
-        Fri, 29 Mar 2019 11:00:00 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=UBgSdKiC; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id YIYA5ogW4pbs; Fri, 29 Mar 2019 11:00:00 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44Vy000C0sz9v1N5;
-        Fri, 29 Mar 2019 11:00:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553853600; bh=hdjQ8Wt9f4+cfq42Pa+br2CMnxyexL9038BQZ3EONhM=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=UBgSdKiC1em6CZ4ZbDFCoDYnh49lgsV4TJcp/1D/TcFz+XEMkmFLdlBhl5wewt1HW
-         KmAg5dsLmOyAHI4GAJzbFC5ScBs7NtQPwPSxa7WtiyDvSGQ8pokQMW07W3q2OofaWw
-         PcF44foNo5RmWaDCTusi56C2CvZHVczO2myjD9Oo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1B3DC8B88A;
-        Fri, 29 Mar 2019 11:00:01 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id LosMpcEChIUR; Fri, 29 Mar 2019 11:00:01 +0100 (CET)
-Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E62F08B889;
-        Fri, 29 Mar 2019 11:00:00 +0100 (CET)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id D92A66FC95; Fri, 29 Mar 2019 10:00:00 +0000 (UTC)
-Message-Id: <c4afde657ef9e4ad0266ae62e9907313c41c4a16.1553853405.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1553853405.git.christophe.leroy@c-s.fr>
-References: <cover.1553853405.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 2/4] powerpc/mm: Move book3s64 specifics in subdirectory
- mm/book3s64
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 29 Mar 2019 10:00:00 +0000 (UTC)
+        Fri, 29 Mar 2019 06:01:01 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:50259 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727387AbfC2KBA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 06:01:00 -0400
+Received: by mail-it1-f194.google.com with SMTP id m137so2872908ita.0
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 03:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l0hO4rYWdv+UasdHDvS+LUyIV32oFDyUl4LF0L6WqaI=;
+        b=IH8x4/7yTlx7bL0pskerXjgJ1ilz7acv4Z0iZ6Py/gUHtd6y2oEMEVogBaRxoro3FW
+         UUua47uiH1A7u7d4/awNIJGHcMJ2Txk2i7CJKjE7at2bOxgAVeto53u2RV/srK/wkzhN
+         YZxu2Pb7P3tEgj+gllV+TLpKGCAWy1znPUCANSNaxwXdjne4hBAIc0axumexYm/NBRz7
+         RYoBS2FgaY6cWm7XRzzG7erjQmunkA1EALw0Zj3UyZNfVjJvOs13RTFkTy0fO1azukNq
+         Bbs7yJAGJBnPJXzWRrJci3iMLp9llZ5qYcVbLo5WTLyVqov3JZ9KlTyBt0yvZK8msrBA
+         GhGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l0hO4rYWdv+UasdHDvS+LUyIV32oFDyUl4LF0L6WqaI=;
+        b=B36KkjYzGcjxIHxy8rU2TfXBjhQd+hkrUuGy7Sai9DYk/Rw9gPgf1pFl7CGONcTamZ
+         b3FMCbOXcfX/M3SCK4Apg8n/JkumeDi8zpYLa+N5Q9YXoXiDAZS4JWX3741MgPgl0qFm
+         WZv94PCd5TAHRWO2pDJJGFArv30BiWWwWX0StW+FtTkSisSQzSU5t7hbEL2AWoyk4IUJ
+         e3S60UlPuZnIuEWrZXUCLOuDwRBqXrdOqb6kKB8H4LYgzeKy0UCcRLZxN5cOC3HUY7g2
+         rJ4mvmnozGaEvS8NnQBUrn//z2cMOks+SHHBfX0oAqa5ThX9GtrSdKEg/nctV/p0onOr
+         Re8g==
+X-Gm-Message-State: APjAAAXug+mEhQR8RfKbyxmi7HkVwYXel3JM9YjU/CtByk8QCwc6nUOV
+        5l4+EmtBfmgoDr08msC8n12mEs33xjsg6n5Qgg==
+X-Google-Smtp-Source: APXvYqz0EoBaTZ19ReU+ErXJY+0EQrFFdcoQIY27hwncAwru4+E0hZQU34IMBsFQKbtqH9I9k8EE0C6nAsVSKRQT/N4=
+X-Received: by 2002:a24:9:: with SMTP id 9mr3750142ita.127.1553853659831; Fri,
+ 29 Mar 2019 03:00:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
+ <20190320002524.GD18740@MiWiFi-R3L-srv> <CAFgQCTt3-9oZ6yi_MGYFOZhn5+cSdJLGf3OQRMJ1CJr0eXiE5w@mail.gmail.com>
+ <20190322075259.GA18740@MiWiFi-R3L-srv> <20190322083419.GB18740@MiWiFi-R3L-srv>
+ <CAFgQCTti4S3TUx_4YHi+Yx6poJbHhekT+Jzjjg__0tpZdA9tRQ@mail.gmail.com>
+ <20190329062715.GA7627@MiWiFi-R3L-srv> <CAFgQCTvGnV5NUcyp1RCJa2hHxKiQDM=HRn_GwWs+WUdt1afLQA@mail.gmail.com>
+ <20190329073438.GC7627@MiWiFi-R3L-srv>
+In-Reply-To: <20190329073438.GC7627@MiWiFi-R3L-srv>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Fri, 29 Mar 2019 18:00:48 +0800
+Message-ID: <CAFgQCTtbfYDzDkeZ_tPqAS2+f2E1dRtHgzZT13D0Zb6pfEEZug@mail.gmail.com>
+Subject: Re: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel reserved region
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Dave Young <dyoung@redhat.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many files in arch/powerpc/mm are only for book3S64. This patch
-creates a subdirectory for them.
+On Fri, Mar 29, 2019 at 3:34 PM Baoquan He <bhe@redhat.com> wrote:
+>
+> On 03/29/19 at 03:25pm, Pingfan Liu wrote:
+> > On Fri, Mar 29, 2019 at 2:27 PM Baoquan He <bhe@redhat.com> wrote:
+> > >
+> > > On 03/29/19 at 01:45pm, Pingfan Liu wrote:
+> > > > On Fri, Mar 22, 2019 at 4:34 PM Baoquan He <bhe@redhat.com> wrote:
+> > > > >
+> > > > > On 03/22/19 at 03:52pm, Baoquan He wrote:
+> > > > > > On 03/22/19 at 03:43pm, Pingfan Liu wrote:
+> > > > > > > > > +/* parse crashkernel=x@y option */
+> > > > > > > > > +static void mem_avoid_crashkernel_simple(char *option)
+> > > > > > > >
+> > > > > > > > Chao ever mentioned this, I want to ask again, why does it has to be
+> > > > > > > > xxx_simple()?
+> > > > > > > >
+> > > > > > > Seems that I had replied Chao's question in another email. The naming
+> > > > > > > follows the function parse_crashkernel_simple(), as the notes above
+> > > > > >                        ~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > > >
+> > > > > > Sorry, I don't get.  typo?
+> > > > >
+> > > > > OK, I misunderstood it. We do have parse_crashkernel_simple() to handle
+> > > > > crashkernel=size[@offset] case, to differente with other complicated
+> > > > > cases, like crashkernel=size,[high|low],
+> > > > >
+> > > > > Then I am fine with this naming. Soryy about the noise.
+> > > > >
+> > > > > By the way, do you think if we should take care of this case:
+> > > > > crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+> > > > >
+> > > > > It can also specify @offset. Not sure if it's too complicated, you may
+> > > > > have a investigation.
+> > > > >
+> > > > In this case, kernel should get the total memory size info. So
+> > > > process_e820_entries() or process_efi_entries() should be called
+> > > > twice. One before handle_mem_options(), so crashkernel can evaluate
+> > > > the reserved size. It is doable, and what is your opinion about the
+> > >
+> > > You mean calling process_e820_entries to calculate the RAM size in
+> > > system? I may not do like that, please check what __find_max_addr() is
+> > > doing. Did I get it?
+> >
+> > Yes, you got my meaning. But __find_max_addr() relies on the info, fed
+> > by e820__memblock_setup(). It also involves the iteration of all e820
+> > entries to get the max address. No essential difference, right?
+>
+> Hmm, I would say iterating e820 or efi entries to get the mas addr should be
+> different with calling process_e820_entries(). The 1st is much simpler,
+> right?
+>
+Yes. My original meaning is to reuse process_e820_entries(), but does
+not call process_mem_region() at the first time.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/mm/Makefile                           | 25 +++----------------
- arch/powerpc/mm/book3s64/Makefile                  | 28 ++++++++++++++++++++++
- arch/powerpc/mm/{ => book3s64}/hash64_4k.c         |  0
- arch/powerpc/mm/{ => book3s64}/hash64_64k.c        |  0
- arch/powerpc/mm/{ => book3s64}/hash_native_64.c    |  0
- arch/powerpc/mm/{ => book3s64}/hash_utils_64.c     |  0
- arch/powerpc/mm/{ => book3s64}/hugepage-hash64.c   |  0
- .../powerpc/mm/{ => book3s64}/hugetlbpage-hash64.c |  0
- arch/powerpc/mm/{ => book3s64}/hugetlbpage-radix.c |  0
- .../mm/{ => book3s64}/mmu_context_book3s64.c       |  0
- arch/powerpc/mm/{ => book3s64}/mmu_context_iommu.c |  0
- arch/powerpc/mm/{ => book3s64}/pgtable-book3s64.c  |  0
- arch/powerpc/mm/{ => book3s64}/pgtable-hash64.c    |  0
- arch/powerpc/mm/{ => book3s64}/pgtable-radix.c     |  0
- arch/powerpc/mm/{ => book3s64}/pkeys.c             |  0
- arch/powerpc/mm/{ => book3s64}/slb.c               |  0
- arch/powerpc/mm/{ => book3s64}/subpage-prot.c      |  0
- arch/powerpc/mm/{ => book3s64}/tlb-radix.c         |  0
- arch/powerpc/mm/{ => book3s64}/tlb_hash64.c        |  0
- arch/powerpc/mm/{ => book3s64}/vphn.c              |  0
- arch/powerpc/mm/{ => book3s64}/vphn.h              |  0
- arch/powerpc/mm/numa.c                             |  2 +-
- 22 files changed, 32 insertions(+), 23 deletions(-)
- create mode 100644 arch/powerpc/mm/book3s64/Makefile
- rename arch/powerpc/mm/{ => book3s64}/hash64_4k.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/hash64_64k.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/hash_native_64.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/hash_utils_64.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/hugepage-hash64.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/hugetlbpage-hash64.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/hugetlbpage-radix.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/mmu_context_book3s64.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/mmu_context_iommu.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/pgtable-book3s64.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/pgtable-hash64.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/pgtable-radix.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/pkeys.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/slb.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/subpage-prot.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/tlb-radix.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/tlb_hash64.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/vphn.c (100%)
- rename arch/powerpc/mm/{ => book3s64}/vphn.h (100%)
-
-diff --git a/arch/powerpc/mm/Makefile b/arch/powerpc/mm/Makefile
-index 3c1bd9fa23cd..a137fdf775e2 100644
---- a/arch/powerpc/mm/Makefile
-+++ b/arch/powerpc/mm/Makefile
-@@ -5,53 +5,34 @@
- 
- ccflags-$(CONFIG_PPC64)	:= $(NO_MINIMAL_TOC)
- 
--CFLAGS_REMOVE_slb.o = $(CC_FLAGS_FTRACE)
--
- obj-y				:= fault.o mem.o pgtable.o mmap.o \
- 				   init_$(BITS).o pgtable_$(BITS).o \
- 				   init-common.o mmu_context.o drmem.o
- obj-$(CONFIG_PPC_MMU_NOHASH)	+= mmu_context_nohash.o tlb_nohash.o \
- 				   tlb_nohash_low.o
- obj-$(CONFIG_PPC_BOOK3E)	+= tlb_low_$(BITS)e.o
--hash64-$(CONFIG_PPC_NATIVE)	:= hash_native_64.o
- obj-$(CONFIG_PPC_BOOK3E_64)   += pgtable-book3e.o
--obj-$(CONFIG_PPC_BOOK3S_64)	+= pgtable-hash64.o hash_utils_64.o slb.o \
--				   $(hash64-y) mmu_context_book3s64.o \
--				   pgtable-book3s64.o pgtable-frag.o
-+obj-$(CONFIG_PPC_BOOK3S_64)	+= book3s64/
-+obj-$(CONFIG_PPC_BOOK3S_64)	+= pgtable-frag.o
- obj-$(CONFIG_PPC32)		+= pgtable-frag.o
--obj-$(CONFIG_PPC_RADIX_MMU)	+= pgtable-radix.o tlb-radix.o
- obj-$(CONFIG_PPC_BOOK3S_32)	+= ppc_mmu_32.o hash_low_32.o mmu_context_hash32.o
--obj-$(CONFIG_PPC_BOOK3S)	+= tlb_hash$(BITS).o
--ifdef CONFIG_PPC_BOOK3S_64
--obj-$(CONFIG_PPC_4K_PAGES)	+= hash64_4k.o
--obj-$(CONFIG_PPC_64K_PAGES)	+= hash64_64k.o
--endif
-+obj-$(CONFIG_PPC_BOOK3S_32)	+= tlb_hash32.o
- obj-$(CONFIG_40x)		+= 40x_mmu.o
- obj-$(CONFIG_44x)		+= 44x_mmu.o
- obj-$(CONFIG_PPC_8xx)		+= 8xx_mmu.o
- obj-$(CONFIG_PPC_FSL_BOOK3E)	+= fsl_booke_mmu.o
- obj-$(CONFIG_NEED_MULTIPLE_NODES) += numa.o
--obj-$(CONFIG_PPC_SPLPAR)	+= vphn.o
- obj-$(CONFIG_PPC_MM_SLICES)	+= slice.o
- obj-y				+= hugetlbpage.o
- ifdef CONFIG_HUGETLB_PAGE
--obj-$(CONFIG_PPC_BOOK3S_64)	+= hugetlbpage-hash64.o
--obj-$(CONFIG_PPC_RADIX_MMU)	+= hugetlbpage-radix.o
- obj-$(CONFIG_PPC_BOOK3E_MMU)	+= hugetlbpage-book3e.o
- endif
--obj-$(CONFIG_TRANSPARENT_HUGEPAGE) += hugepage-hash64.o
--obj-$(CONFIG_PPC_SUBPAGE_PROT)	+= subpage-prot.o
- obj-$(CONFIG_NOT_COHERENT_CACHE) += dma-noncoherent.o
- obj-$(CONFIG_HIGHMEM)		+= highmem.o
- obj-$(CONFIG_PPC_COPRO_BASE)	+= copro_fault.o
--obj-$(CONFIG_SPAPR_TCE_IOMMU)	+= mmu_context_iommu.o
- obj-$(CONFIG_PPC_PTDUMP)	+= ptdump/
--obj-$(CONFIG_PPC_MEM_KEYS)	+= pkeys.o
- 
- # Disable kcov instrumentation on sensitive code
- # This is necessary for booting with kcov enabled on book3e machines
- KCOV_INSTRUMENT_tlb_nohash.o := n
- KCOV_INSTRUMENT_fsl_booke_mmu.o := n
--
--# Instrumenting the SLB fault path can lead to duplicate SLB entries
--KCOV_INSTRUMENT_slb.o := n
-diff --git a/arch/powerpc/mm/book3s64/Makefile b/arch/powerpc/mm/book3s64/Makefile
-new file mode 100644
-index 000000000000..cfea527b66d9
---- /dev/null
-+++ b/arch/powerpc/mm/book3s64/Makefile
-@@ -0,0 +1,28 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for the linux ppc-specific parts of the memory manager.
-+#
-+
-+ccflags-y	:= $(NO_MINIMAL_TOC)
-+
-+CFLAGS_REMOVE_slb.o = $(CC_FLAGS_FTRACE)
-+
-+obj-y				+= pgtable-hash64.o hash_utils_64.o slb.o \
-+				   mmu_context_book3s64.o pgtable-book3s64.o \
-+				   tlb_hash64.o
-+obj-$(CONFIG_PPC_NATIVE)	+= hash_native_64.o
-+obj-$(CONFIG_PPC_RADIX_MMU)	+= pgtable-radix.o tlb-radix.o
-+obj-$(CONFIG_PPC_4K_PAGES)	+= hash64_4k.o
-+obj-$(CONFIG_PPC_64K_PAGES)	+= hash64_64k.o
-+obj-$(CONFIG_PPC_SPLPAR)	+= vphn.o
-+obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage-hash64.o
-+ifdef CONFIG_HUGETLB_PAGE
-+obj-$(CONFIG_PPC_RADIX_MMU)	+= hugetlbpage-radix.o
-+endif
-+obj-$(CONFIG_TRANSPARENT_HUGEPAGE) += hugepage-hash64.o
-+obj-$(CONFIG_PPC_SUBPAGE_PROT)	+= subpage-prot.o
-+obj-$(CONFIG_SPAPR_TCE_IOMMU)	+= mmu_context_iommu.o
-+obj-$(CONFIG_PPC_MEM_KEYS)	+= pkeys.o
-+
-+# Instrumenting the SLB fault path can lead to duplicate SLB entries
-+KCOV_INSTRUMENT_slb.o := n
-diff --git a/arch/powerpc/mm/hash64_4k.c b/arch/powerpc/mm/book3s64/hash64_4k.c
-similarity index 100%
-rename from arch/powerpc/mm/hash64_4k.c
-rename to arch/powerpc/mm/book3s64/hash64_4k.c
-diff --git a/arch/powerpc/mm/hash64_64k.c b/arch/powerpc/mm/book3s64/hash64_64k.c
-similarity index 100%
-rename from arch/powerpc/mm/hash64_64k.c
-rename to arch/powerpc/mm/book3s64/hash64_64k.c
-diff --git a/arch/powerpc/mm/hash_native_64.c b/arch/powerpc/mm/book3s64/hash_native_64.c
-similarity index 100%
-rename from arch/powerpc/mm/hash_native_64.c
-rename to arch/powerpc/mm/book3s64/hash_native_64.c
-diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/book3s64/hash_utils_64.c
-similarity index 100%
-rename from arch/powerpc/mm/hash_utils_64.c
-rename to arch/powerpc/mm/book3s64/hash_utils_64.c
-diff --git a/arch/powerpc/mm/hugepage-hash64.c b/arch/powerpc/mm/book3s64/hugepage-hash64.c
-similarity index 100%
-rename from arch/powerpc/mm/hugepage-hash64.c
-rename to arch/powerpc/mm/book3s64/hugepage-hash64.c
-diff --git a/arch/powerpc/mm/hugetlbpage-hash64.c b/arch/powerpc/mm/book3s64/hugetlbpage-hash64.c
-similarity index 100%
-rename from arch/powerpc/mm/hugetlbpage-hash64.c
-rename to arch/powerpc/mm/book3s64/hugetlbpage-hash64.c
-diff --git a/arch/powerpc/mm/hugetlbpage-radix.c b/arch/powerpc/mm/book3s64/hugetlbpage-radix.c
-similarity index 100%
-rename from arch/powerpc/mm/hugetlbpage-radix.c
-rename to arch/powerpc/mm/book3s64/hugetlbpage-radix.c
-diff --git a/arch/powerpc/mm/mmu_context_book3s64.c b/arch/powerpc/mm/book3s64/mmu_context_book3s64.c
-similarity index 100%
-rename from arch/powerpc/mm/mmu_context_book3s64.c
-rename to arch/powerpc/mm/book3s64/mmu_context_book3s64.c
-diff --git a/arch/powerpc/mm/mmu_context_iommu.c b/arch/powerpc/mm/book3s64/mmu_context_iommu.c
-similarity index 100%
-rename from arch/powerpc/mm/mmu_context_iommu.c
-rename to arch/powerpc/mm/book3s64/mmu_context_iommu.c
-diff --git a/arch/powerpc/mm/pgtable-book3s64.c b/arch/powerpc/mm/book3s64/pgtable-book3s64.c
-similarity index 100%
-rename from arch/powerpc/mm/pgtable-book3s64.c
-rename to arch/powerpc/mm/book3s64/pgtable-book3s64.c
-diff --git a/arch/powerpc/mm/pgtable-hash64.c b/arch/powerpc/mm/book3s64/pgtable-hash64.c
-similarity index 100%
-rename from arch/powerpc/mm/pgtable-hash64.c
-rename to arch/powerpc/mm/book3s64/pgtable-hash64.c
-diff --git a/arch/powerpc/mm/pgtable-radix.c b/arch/powerpc/mm/book3s64/pgtable-radix.c
-similarity index 100%
-rename from arch/powerpc/mm/pgtable-radix.c
-rename to arch/powerpc/mm/book3s64/pgtable-radix.c
-diff --git a/arch/powerpc/mm/pkeys.c b/arch/powerpc/mm/book3s64/pkeys.c
-similarity index 100%
-rename from arch/powerpc/mm/pkeys.c
-rename to arch/powerpc/mm/book3s64/pkeys.c
-diff --git a/arch/powerpc/mm/slb.c b/arch/powerpc/mm/book3s64/slb.c
-similarity index 100%
-rename from arch/powerpc/mm/slb.c
-rename to arch/powerpc/mm/book3s64/slb.c
-diff --git a/arch/powerpc/mm/subpage-prot.c b/arch/powerpc/mm/book3s64/subpage-prot.c
-similarity index 100%
-rename from arch/powerpc/mm/subpage-prot.c
-rename to arch/powerpc/mm/book3s64/subpage-prot.c
-diff --git a/arch/powerpc/mm/tlb-radix.c b/arch/powerpc/mm/book3s64/tlb-radix.c
-similarity index 100%
-rename from arch/powerpc/mm/tlb-radix.c
-rename to arch/powerpc/mm/book3s64/tlb-radix.c
-diff --git a/arch/powerpc/mm/tlb_hash64.c b/arch/powerpc/mm/book3s64/tlb_hash64.c
-similarity index 100%
-rename from arch/powerpc/mm/tlb_hash64.c
-rename to arch/powerpc/mm/book3s64/tlb_hash64.c
-diff --git a/arch/powerpc/mm/vphn.c b/arch/powerpc/mm/book3s64/vphn.c
-similarity index 100%
-rename from arch/powerpc/mm/vphn.c
-rename to arch/powerpc/mm/book3s64/vphn.c
-diff --git a/arch/powerpc/mm/vphn.h b/arch/powerpc/mm/book3s64/vphn.h
-similarity index 100%
-rename from arch/powerpc/mm/vphn.h
-rename to arch/powerpc/mm/book3s64/vphn.h
-diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-index f976676004ad..6ef516718da3 100644
---- a/arch/powerpc/mm/numa.c
-+++ b/arch/powerpc/mm/numa.c
-@@ -1063,7 +1063,7 @@ u64 memory_hotplug_max(void)
- /* Virtual Processor Home Node (VPHN) support */
- #ifdef CONFIG_PPC_SPLPAR
- 
--#include "vphn.h"
-+#include "book3s64/vphn.h"
- 
- struct topology_update_data {
- 	struct topology_update_data *next;
--- 
-2.13.3
-
+Thanks,
+Pingfan
