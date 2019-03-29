@@ -2,125 +2,100 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963BCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAD1C10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580E320693
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:40:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="CnIIlDxN"
+	by mail.kernel.org (Postfix) with ESMTP id 5F6F720693
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbfC2Jkw (ORCPT
+        id S1728855AbfC2Jl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 05:40:52 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:25957 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbfC2Jkv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 05:40:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1553852450; x=1585388450;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=UqD7KQpC2Q6OSONr0aK3ErBm2UEDd0xfy6kjO3kwT50=;
-  b=CnIIlDxN11oUpb6D35jtkXajhfbH7UC3BMumeJxkrp6U+fkFcp/ubIP/
-   jPCnzW+SBgtUhOYBKdPY/p6CEgR8ZPSYFyVKZt9eCRaHgfWUHvbdzXxSD
-   pjyN8x5EwoSqj11CWdpFvZQqyYAAFy5VUGPnZ4eJJEWO+ZIKYmnb2Ykuo
-   k=;
-X-IronPort-AV: E=Sophos;i="5.60,284,1549929600"; 
-   d="scan'208";a="393629002"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 29 Mar 2019 09:40:49 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x2T9ejNO116429
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Fri, 29 Mar 2019 09:40:48 GMT
-Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 29 Mar 2019 09:40:47 +0000
-Received: from [10.95.75.73] (10.43.162.118) by EX13D19EUB003.ant.amazon.com
- (10.43.166.69) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Fri, 29 Mar
- 2019 09:40:44 +0000
-Subject: Re: [PATCH] lib/scatterlist: Remove leftover from sg_page_iter
- comment
-To:     Mukesh Ojha <mojha@codeaurora.org>, <linux-kernel@vger.kernel.org>
-CC:     Jason Gunthorpe <jgg@mellanox.com>
-References: <1553800491-28583-1-git-send-email-galpress@amazon.com>
- <8e313491-8859-d47f-f104-6d2d783cd63a@codeaurora.org>
-From:   Gal Pressman <galpress@amazon.com>
-Message-ID: <a232e623-b998-0d67-68ac-4e38ea9c4709@amazon.com>
-Date:   Fri, 29 Mar 2019 12:40:40 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Fri, 29 Mar 2019 05:41:28 -0400
+Received: from mga04.intel.com ([192.55.52.120]:18863 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728704AbfC2Jl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 05:41:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 02:41:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,284,1549958400"; 
+   d="scan'208";a="218706784"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.156])
+  by orsmga001.jf.intel.com with ESMTP; 29 Mar 2019 02:41:23 -0700
+Date:   Fri, 29 Mar 2019 11:41:23 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Domenico Andreoli <domenico.andreoli@linux.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, pauldzim@gmail.com,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm: turn on TPM on suspend for TPM 1.x
+Message-ID: <20190329094123.GB21379@linux.intel.com>
+References: <20190322105120.8441-1-jarkko.sakkinen@linux.intel.com>
+ <20190328171926.4luwqofh67uwgt5e@dumbo>
 MIME-Version: 1.0
-In-Reply-To: <8e313491-8859-d47f-f104-6d2d783cd63a@codeaurora.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.43.162.118]
-X-ClientProxiedBy: EX13D17UWB001.ant.amazon.com (10.43.161.252) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328171926.4luwqofh67uwgt5e@dumbo>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-Mar-19 11:36, Mukesh Ojha wrote:
+On Thu, Mar 28, 2019 at 06:19:26PM +0100, Domenico Andreoli wrote:
+> On Fri, Mar 22, 2019 at 12:51:20PM +0200, Jarkko Sakkinen wrote:
+> > tpm_chip_start/stop() should be also called for TPM 1.x devices on
+> > suspend. Add that functionality back. Do not lock the chip because
+> > it is unnecessary as there are no multiple threads using it when
+> > doing the suspend.
+> > 
+> > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
+> > Reported-by: Paul Zimmerman <pauldzim@gmail.com>
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> >  drivers/char/tpm/tpm-interface.c | 14 ++++++--------
+> >  1 file changed, 6 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+> > index 83ece5639f86..ae1030c9b086 100644
+> > --- a/drivers/char/tpm/tpm-interface.c
+> > +++ b/drivers/char/tpm/tpm-interface.c
+> > @@ -402,15 +402,13 @@ int tpm_pm_suspend(struct device *dev)
+> >  	if (chip->flags & TPM_CHIP_FLAG_ALWAYS_POWERED)
+> >  		return 0;
+> >  
+> > -	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+> > -		mutex_lock(&chip->tpm_mutex);
+> > -		if (!tpm_chip_start(chip)) {
+> > +	if (!tpm_chip_start(chip)) {
+> > +		if (chip->flags & TPM_CHIP_FLAG_TPM2)
+> >  			tpm2_shutdown(chip, TPM2_SU_STATE);
+> > -			tpm_chip_stop(chip);
+> > -		}
+> > -		mutex_unlock(&chip->tpm_mutex);
+> > -	} else {
+> > -		rc = tpm1_pm_suspend(chip, tpm_suspend_pcr);
+> > +		else
+> > +			rc = tpm1_pm_suspend(chip, tpm_suspend_pcr);
+> > +
+> > +		tpm_chip_stop(chip);
+> >  	}
+> >  
+> >  	return rc;
 > 
-> On 3/29/2019 12:44 AM, Gal Pressman wrote:
->> Commit d901b2760dc6 ("lib/scatterlist: Provide a DMA page iterator")
->> added the sg DMA iterator but a leftover remained in the sg_page_iter
->> documentation, remove it.
->>
->> Cc: Jason Gunthorpe <jgg@mellanox.com>
->> Signed-off-by: Gal Pressman <galpress@amazon.com>
->> ---
->>   include/linux/scatterlist.h | 10 +++++-----
->>   1 file changed, 5 insertions(+), 5 deletions(-)
->>
->> diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
->> index b4be960c7e5d..30a9a55c28ba 100644
->> --- a/include/linux/scatterlist.h
->> +++ b/include/linux/scatterlist.h
->> @@ -340,11 +340,11 @@ int sg_alloc_table_chained(struct sg_table *table, int
->> nents,
->>    * sg page iterator
->>    *
->>    * Iterates over sg entries page-by-page.  On each successful iteration, you
->> - * can call sg_page_iter_page(@piter) to get the current page and its dma
->> - * address.
-> 
-> 
-> It took me a while till i exact found what you meant by left over.
-> 
-> could have been more specific in the commit,but
-> 
-> Looks  good to me to be removed.
-> 
-> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> Tested-by: Domenico Andreoli <domenico.andreoli@linux.com>
 
-You're right, should've been more specific.
-Should I resubmit?
+Thank you! I'll do a PR to James during the weekend.
 
-> 
-> -Mukesh
-> 
-> 
->>   @piter->sg will point to the sg holding this page and
->> - * @piter->sg_pgoffset to the page's page offset within the sg. The iteration
->> - * will stop either when a maximum number of sg entries was reached or a
->> - * terminating sg (sg_last(sg) == true) was reached.
->> + * can call sg_page_iter_page(@piter) to get the current page.
->> + * @piter->sg will point to the sg holding this page and @piter->sg_pgoffset to
->> + * the page's page offset within the sg. The iteration will stop either when a
->> + * maximum number of sg entries was reached or a terminating sg
->> + * (sg_last(sg) == true) was reached.
->>    */
->>   struct sg_page_iter {
->>       struct scatterlist    *sg;        /* sg holding the page */
+/Jarkko
