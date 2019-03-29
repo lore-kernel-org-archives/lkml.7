@@ -2,100 +2,112 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF7DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9481C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED9082173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:31:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dt7wegrq"
+	by mail.kernel.org (Postfix) with ESMTP id 82443217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbfC2QbQ (ORCPT
+        id S1729676AbfC2QhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 12:31:16 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53450 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729454AbfC2QbP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 12:31:15 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q16so3137051wmj.3;
-        Fri, 29 Mar 2019 09:31:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AD4Zq+VXx0GYrhfI0Z8qq8G3N5JLcbGHvDtfK/HmkcA=;
-        b=Dt7wegrq63Gkl5pZrk+X/YE/3PjOSYepqXHYxBpc9q0n2C6p5n2gQm4Y5H6gfSaqVE
-         rjBAYwn7Zgfq1HAnBxHP9XXBG6xk1wblaoeJz5fvPrwEA60/wjdIh9kESCg8XrDtsYP9
-         kImUyost3ZAqM9e9GcNBqiCf+eAkwG8LqJivawlQIRCY56Sqds3KQzSewEb5SqSsEhRN
-         /jihnTJHESzVMyrK2ii21eEn7FUgpBzLoAfrwQI3siGZ9BUnljQasDvBDzBaQ6a1x30G
-         PQYTHiQ8+/Fz4HWj5ESTU4233MjnQ443XVyt/K4v81vSQJ8pKt3miMGgz1xjCnFAeN0h
-         DCyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AD4Zq+VXx0GYrhfI0Z8qq8G3N5JLcbGHvDtfK/HmkcA=;
-        b=totLsxN5gJuj5NryVOA/4fjksxb7gvSZlJlstbTTwSuD6RS6opLAE3pHe5l5TwLhrW
-         w7/C94rxUWkw5vH6UQd6nhwxelxtHI/ancVCJGFdSlt1se39X6NjEOjxWACPfHVXXh+7
-         ouQ/A3HQhlcPDmNuGTU+JgE88E5JBPorLF2hYcOw+bBwSAmtf0+lV3VPj9g5i/JZqoMr
-         1nfg3+Jiw3oL20HLWhsfdu0ud9do8NV+PgTUunuul7KlnKcXO9EqbERRSoE2tbwc+2ht
-         Pt4wnhb+imHlvdNKNSpMnyvzMFYAcCeplMYYxial0N3U9ZDiAxL84rBteQ7kVP06EpH2
-         6Xww==
-X-Gm-Message-State: APjAAAV2g1r0HKGSsOC5H4X59T1PUUcQ43tT0kpNLx+k7mzGJ9lgo2xe
-        7BIXavJZmJpBYIrEMqGuzlx59JbG
-X-Google-Smtp-Source: APXvYqxRxs7gSt+KXahfxzte6iVaBGMpJRTY5EDu2Oj5rhpCm1aVNZ5KzgDK06KskR5jgBVPXek52Q==
-X-Received: by 2002:a7b:c147:: with SMTP id z7mr4243607wmi.67.1553877073945;
-        Fri, 29 Mar 2019 09:31:13 -0700 (PDT)
-Received: from kwango.redhat.com (ovpn-brq.redhat.com. [213.175.37.11])
-        by smtp.gmail.com with ESMTPSA id t81sm4753041wmb.5.2019.03.29.09.31.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 09:31:12 -0700 (PDT)
-From:   Ilya Dryomov <idryomov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph fixes for 5.1-rc3
-Date:   Fri, 29 Mar 2019 17:32:13 +0100
-Message-Id: <20190329163213.17081-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.19.2
+        Fri, 29 Mar 2019 12:37:02 -0400
+Received: from foss.arm.com ([217.140.101.70]:35492 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728924AbfC2QhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 12:37:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A7DF80D;
+        Fri, 29 Mar 2019 09:37:01 -0700 (PDT)
+Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7177A3F68F;
+        Fri, 29 Mar 2019 09:36:59 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 16:36:49 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: xilinx: Check for __get_free_pages() failure
+Message-ID: <20190329163641.GA8768@e107981-ln.cambridge.arm.com>
+References: <20190325215105.GB24180@google.com>
+ <20190325221909.26315-1-kjlu@umn.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325221909.26315-1-kjlu@umn.edu>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, Mar 25, 2019 at 05:19:09PM -0500, Kangjie Lu wrote:
+> If __get_free_pages() fails, the patch returns -ENOMEM to avoid
+> NULL pointer dereference.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+> v3: remove "unlikely", as suggested by Bjorn Helgaas.
+> v2: caller is redefined to accept the error code, as suggested by
+> Steven Price <steven.price@arm.com>
+> ---
+>  drivers/pci/controller/pcie-xilinx.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
 
-The following changes since commit 8c2ffd9174779014c3fe1f96d9dc3641d9175f00:
+Updated commit log and applied to pci/xilinx for v5.2.
 
-  Linux 5.1-rc2 (2019-03-24 14:02:26 -0700)
+Thanks,
+Lorenzo
 
-are available in the Git repository at:
-
-  https://github.com/ceph/ceph-client.git tags/ceph-for-5.1-rc3
-
-for you to fetch changes up to daf5cc27eed99afdea8d96e71b89ba41f5406ef6:
-
-  ceph: fix use-after-free on symlink traversal (2019-03-27 19:00:37 +0100)
-
-----------------------------------------------------------------
-A patch to avoid choking on multipage bvecs in the messenger and
-a small use-after-free fix.
-
-----------------------------------------------------------------
-Al Viro (1):
-      ceph: fix use-after-free on symlink traversal
-
-Ilya Dryomov (1):
-      libceph: fix breakage caused by multipage bvecs
-
- fs/ceph/inode.c      | 2 +-
- net/ceph/messenger.c | 8 ++++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+> diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
+> index 9bd1a35cd5d8..abc214e94f7c 100644
+> --- a/drivers/pci/controller/pcie-xilinx.c
+> +++ b/drivers/pci/controller/pcie-xilinx.c
+> @@ -336,14 +336,19 @@ static const struct irq_domain_ops msi_domain_ops = {
+>   * xilinx_pcie_enable_msi - Enable MSI support
+>   * @port: PCIe port information
+>   */
+> -static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
+> +static int xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
+>  {
+>  	phys_addr_t msg_addr;
+>  
+>  	port->msi_pages = __get_free_pages(GFP_KERNEL, 0);
+> +	if (!port->msi_pages)
+> +		return -ENOMEM;
+> +
+>  	msg_addr = virt_to_phys((void *)port->msi_pages);
+>  	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
+>  	pcie_write(port, msg_addr, XILINX_PCIE_REG_MSIBASE2);
+> +
+> +	return 0;
+>  }
+>  
+>  /* INTx Functions */
+> @@ -498,6 +503,7 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+>  	struct device *dev = port->dev;
+>  	struct device_node *node = dev->of_node;
+>  	struct device_node *pcie_intc_node;
+> +	int ret;
+>  
+>  	/* Setup INTx */
+>  	pcie_intc_node = of_get_next_child(node, NULL);
+> @@ -526,7 +532,9 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+>  			return -ENODEV;
+>  		}
+>  
+> -		xilinx_pcie_enable_msi(port);
+> +		ret = xilinx_pcie_enable_msi(port);
+> +		if (ret)
+> +			return ret;
+>  	}
+>  
+>  	return 0;
+> -- 
+> 2.17.1
+> 
