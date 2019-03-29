@@ -2,182 +2,122 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB9EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1E1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275A920811
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E372075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:40:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="itYrHCLc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbfC2Kjd (ORCPT
+        id S1729075AbfC2Kj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:39:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58288 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728689AbfC2Kjd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:39:33 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1h9ou8-0005mQ-Ir; Fri, 29 Mar 2019 10:38:32 +0000
-Subject: Re: [PATCH] scsi: pm8001: clean up structurally dead code when
- PM8001_USE_MSIX is defined
-To:     Mukesh Ojha <mojha@codeaurora.org>,
-        Jack Wang <jinpu.wang@profitbricks.com>, lindar_liu@usish.com,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190328234328.15860-1-colin.king@canonical.com>
- <a038c561-9fe8-f58e-2a5a-e7e95aca9eee@codeaurora.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <f1dcaf50-2a77-a17b-45e9-477939500b48@canonical.com>
-Date:   Fri, 29 Mar 2019 10:38:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Fri, 29 Mar 2019 06:39:59 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:41938 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729050AbfC2Kj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 06:39:57 -0400
+Received: from zn.tnic (p200300EC2F148A00A084EDD1F3CAD6FC.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:a084:edd1:f3ca:d6fc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 434DA1EC082D;
+        Fri, 29 Mar 2019 11:39:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553855996;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=uqyR0dwp809uKHGAQhJekWc/ky04xKAxHRHufvjw7HU=;
+        b=itYrHCLc/2jLXbAyKdFVkj6jrkttnpS2QygK6P2hqNYD0VX35iet39WVMk6u/1rhL8LjVh
+        U1uUo7pAFkufaVWfDmEOJddiJxmZRTI645+oX20xUxH6ScXRvaEIFr8pXumiXdhNuYNA8g
+        FWWfidsrGGidtOzUelfc2sRJfGvZ39g=
+Date:   Fri, 29 Mar 2019 11:39:58 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Lianbo Jiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, akpm@linux-foundation.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
+        Thomas.Lendacky@amd.com
+Subject: Re: [PATCH 1/2 v10] x86/mm, resource: add a new I/O resource
+ descriptor 'IORES_DESC_RESERVED'
+Message-ID: <20190329103958.GC21152@zn.tnic>
+References: <20190329065649.12468-1-lijiang@redhat.com>
+ <20190329065649.12468-2-lijiang@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <a038c561-9fe8-f58e-2a5a-e7e95aca9eee@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20190329065649.12468-2-lijiang@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/03/2019 10:29, Mukesh Ojha wrote:
+On Fri, Mar 29, 2019 at 02:56:48PM +0800, Lianbo Jiang wrote:
+> When doing kexec_file_load(), the first kernel needs to pass the e820
+> reserved ranges to the second kernel, because some devices may use it
+> in kdump kernel, such as PCI devices.
 > 
-> On 3/29/2019 5:13 AM, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> When macro PM8001_USE_MSIX is defined there are redundant dead code
->> calls to pm8001_chip_intx_interrupt_{enable|disable}. Clean this up
->> by compiling in the appropriate enable/disable handlers for the
->> defined PM8001_USE_MSIX and undefined PM8001_USE_MSIX cases.
->>
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> But, the kernel can not exactly match the e820 reserved ranges when
+> walking through the iomem resources via the 'IORES_DESC_NONE', because
+> there are several types of e820 that are described as the 'IORES_DESC_NONE'
+> type. Please refer to the e820_type_to_iores_desc().
 > 
+> Therefore, add a new I/O resource descriptor 'IORES_DESC_RESERVED' for
+> the iomem resources search interfaces. It is helpful to exactly match
+> the reserved resource ranges when walking through iomem resources.
 > 
-> This looks good.
+> In addition, since the new descriptor 'IORES_DESC_RESERVED' has been
+> created for the reserved areas, the code originally related to the
+> descriptor 'IORES_DESC_NONE' also need to be updated.
 > 
-> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> Suggested-by: Borislav Petkov <bp@suse.de>
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+>  arch/x86/kernel/e820.c |  2 +-
+>  arch/x86/mm/ioremap.c  | 16 ++++++++++++++--
+>  include/linux/ioport.h |  1 +
+>  3 files changed, 16 insertions(+), 3 deletions(-)
 > 
-> 
-> Not relevant to this patch but Can you do something about
-> pm8001_chip_is_our_interupt() as well ?
+> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> index 2879e234e193..16fcde196243 100644
+> --- a/arch/x86/kernel/e820.c
+> +++ b/arch/x86/kernel/e820.c
+> @@ -1050,10 +1050,10 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
+>  	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
+>  	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
+>  	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
+> +	case E820_TYPE_RESERVED:	return IORES_DESC_RESERVED;
+>  	case E820_TYPE_RESERVED_KERN:	/* Fall-through: */
+>  	case E820_TYPE_RAM:		/* Fall-through: */
+>  	case E820_TYPE_UNUSABLE:	/* Fall-through: */
+> -	case E820_TYPE_RESERVED:	/* Fall-through: */
+>  	default:			return IORES_DESC_NONE;
+>  	}
+>  }
+> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+> index 0029604af8a4..5671ec24df49 100644
+> --- a/arch/x86/mm/ioremap.c
+> +++ b/arch/x86/mm/ioremap.c
+> @@ -81,9 +81,21 @@ static bool __ioremap_check_ram(struct resource *res)
+>  	return false;
+>  }
+>  
+> -static int __ioremap_check_desc_other(struct resource *res)
 
-Ah, yes, I missed that one, will do that sometime today.
+I can see this patch doesn't build even without applying and building
+it.
 
-> 
-> 
-> Cheers,
-> -Mukesh
->> ---
->>   drivers/scsi/pm8001/pm8001_hwi.c | 14 ++++++++------
->>   1 file changed, 8 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/scsi/pm8001/pm8001_hwi.c
->> b/drivers/scsi/pm8001/pm8001_hwi.c
->> index e4209091c1da..7d81246a432b 100644
->> --- a/drivers/scsi/pm8001/pm8001_hwi.c
->> +++ b/drivers/scsi/pm8001/pm8001_hwi.c
->> @@ -1204,6 +1204,7 @@ void pm8001_chip_iounmap(struct pm8001_hba_info
->> *pm8001_ha)
->>       }
->>   }
->>   +#ifndef PM8001_USE_MSIX
->>   /**
->>    * pm8001_chip_interrupt_enable - enable PM8001 chip interrupt
->>    * @pm8001_ha: our hba card information
->> @@ -1225,6 +1226,8 @@ pm8001_chip_intx_interrupt_disable(struct
->> pm8001_hba_info *pm8001_ha)
->>       pm8001_cw32(pm8001_ha, 0, MSGU_ODMR, ODMR_MASK_ALL);
->>   }
->>   +#else
->> +
->>   /**
->>    * pm8001_chip_msix_interrupt_enable - enable PM8001 chip interrupt
->>    * @pm8001_ha: our hba card information
->> @@ -1256,6 +1259,7 @@ pm8001_chip_msix_interrupt_disable(struct
->> pm8001_hba_info *pm8001_ha,
->>       msi_index += MSIX_TABLE_BASE;
->>       pm8001_cw32(pm8001_ha, 0,  msi_index, MSIX_INTERRUPT_DISABLE);
->>   }
->> +#endif
->>     /**
->>    * pm8001_chip_interrupt_enable - enable PM8001 chip interrupt
->> @@ -1266,10 +1270,9 @@ pm8001_chip_interrupt_enable(struct
->> pm8001_hba_info *pm8001_ha, u8 vec)
->>   {
->>   #ifdef PM8001_USE_MSIX
->>       pm8001_chip_msix_interrupt_enable(pm8001_ha, 0);
->> -    return;
->> -#endif
->> +#else
->>       pm8001_chip_intx_interrupt_enable(pm8001_ha);
->> -
->> +#endif
->>   }
->>     /**
->> @@ -1281,10 +1284,9 @@ pm8001_chip_interrupt_disable(struct
->> pm8001_hba_info *pm8001_ha, u8 vec)
->>   {
->>   #ifdef PM8001_USE_MSIX
->>       pm8001_chip_msix_interrupt_disable(pm8001_ha, 0);
->> -    return;
->> -#endif
->> +#else
->>       pm8001_chip_intx_interrupt_disable(pm8001_ha);
->> -
->> +#endif
->>   }
->>     /**
+How about you build-test your stuff before submitting?
 
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
