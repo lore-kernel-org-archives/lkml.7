@@ -2,140 +2,149 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018BEC10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF15C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCEF32186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28FE02184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:10:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oW0tE8g7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbfC2PIx (ORCPT
+        id S1729289AbfC2PKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:08:53 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42729 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728848AbfC2PIx (ORCPT
+        Fri, 29 Mar 2019 11:10:30 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:34476 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728848AbfC2PK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:08:53 -0400
-Received: by mail-qt1-f196.google.com with SMTP id p20so2669522qtc.9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 08:08:52 -0700 (PDT)
+        Fri, 29 Mar 2019 11:10:29 -0400
+Received: by mail-pf1-f201.google.com with SMTP id j1so1690431pff.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 08:10:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=m5+J7r1VBfrdcP6uJuO95LQiwCpHc/yHDQw72h3urf8=;
+        b=oW0tE8g7ZZYFlvGBzbeDQ35ncg7nPur8tnhSblujfZrrjXj+k+T4Po0LE9LQgtVKLw
+         n7yCMvCuf9IrJ39nPEKxH9TW5HiGNRMPxiBQ86iLa8Zp/fy/k1Zip7S3cahBB3z9kfUo
+         mioZoWhsgoCARoMbHAIKwzUM/G0EUPOVIEsbeoVI5kqrUVx3d4QqrkFP0ZFNjCF0Ij3s
+         A9s67r6jDTHOQkfq+D8DGwTUzzVzo3EkDYBTRBF7X7YJ1i3HCJpKlE67H//LIlHgQHEP
+         FTBbJw3ZCN8RwwJtTFmvVX9GPY9IN+hw7S6DKRVFndIgwP0dqJrveDyYiNxoI34aKwmB
+         pL+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Op0S9e4x5Kscr7h7eXmRDVk/JsCI4DJblah3z5xAD5s=;
-        b=WpydAHWdOVFFh2yvuYq93fBvRcAuEVEYnO5kMT9wKJKKaSJMQfItTzPigH0tK1Obj4
-         FdraUH6LP4aVL990TLX+aQKGZLi4+4naT67da7ZDUMpV+aX4BTDCXySONDH2+RQDOMxZ
-         RLoN6Klf8jkja1CqsJ7dSC8DXw/L2PW786tj1RVG/FdVp73FRiXa7O71v8DnQJXaR1tt
-         GZnb4UlFtdWcPcsGxOlSSKqkswpyfcN7JIKyomv7N2LwcSZNbY76aGG6ZBNLzSE/A5Qs
-         eVzCp3xlsL2nMfBUDp5aK/lEdMDIU7YybWL6QKEK0hD4vVtcWuPNoRvKmMPS9cAIoJkP
-         OamQ==
-X-Gm-Message-State: APjAAAUIH+LG2V2YYvHIxWaNLJoJjfDK3NIhMtrqvnZjyjKe/h3654Ht
-        N5grC4WTAOceVxaadf8qaGzDDw==
-X-Google-Smtp-Source: APXvYqwSURTkVA80rMos1Y/SrKKWTM65DCM27okuf26x0TIA02J8JpidaqJbyIfkHE4PLF309IdXWA==
-X-Received: by 2002:aed:3f49:: with SMTP id q9mr41973253qtf.279.1553872132003;
-        Fri, 29 Mar 2019 08:08:52 -0700 (PDT)
-Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
-        by smtp.gmail.com with ESMTPSA id k41sm1846322qtc.89.2019.03.29.08.08.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 08:08:50 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 11:08:43 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
-        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
-        dodgen@google.com, konrad.wilk@oracle.com, dhildenb@redhat.com,
-        aarcange@redhat.com, alexander.duyck@gmail.com
-Subject: Re: On guest free page hinting and OOM
-Message-ID: <20190329104311-mutt-send-email-mst@kernel.org>
-References: <20190329084058-mutt-send-email-mst@kernel.org>
- <f6332928-d6a4-7a75-245d-2c534cf6e710@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f6332928-d6a4-7a75-245d-2c534cf6e710@redhat.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=m5+J7r1VBfrdcP6uJuO95LQiwCpHc/yHDQw72h3urf8=;
+        b=j+/ctJuEpb+MaUe56FrlbY9RlwUDV+c7esuDHu1Budd5HCYIKtUxDCYuFCJxRLOqWz
+         HNbr2YbdYARLCdypVq7zz0w8IzPy4mDaXnSGMEu1gxaWIEn0KTWEqZpPGuqPSRqofFC/
+         h4X3oGHlOiC7+DSLMEb/ciuX2vG68scLvEbl7ifY4qGt5Jzn5zi8Eo4qsDDAQf7zKWQi
+         B/+fHF+8xN8Y0S/r1xxiSLtW4AfEyvYpjIMVUS2rw7EyCIH2l9AZnrsgFt5mkeQxXhd+
+         FQo5CsmA4XTZGOtoAfO6+52yKM1odb4myYlH9fZ+K4w/Q2Jycw0Vz/12WqYqUDawoZgO
+         Oj/g==
+X-Gm-Message-State: APjAAAUYN2A0X1c5hFi7+eYf+y8A2Gn2Mby1++5RxcSgdKxop3HrLwue
+        d+ZUbAWBvVS2aN/oFOA9vJJlVUG1WHqa
+X-Google-Smtp-Source: APXvYqwiZwvBOltMs9I4OhU7gcFMnGzl9uDBH1IxTQX4GOsMahpF57ZywVce/nkTSX8Iwjlwplg1kADKR5vt
+X-Received: by 2002:a62:d241:: with SMTP id c62mr560123pfg.110.1553872228903;
+ Fri, 29 Mar 2019 08:10:28 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 08:10:25 -0700
+Message-Id: <20190329151025.204094-1-venture@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+Subject: [PATCH v8 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+From:   Patrick Venture <venture@google.com>
+To:     venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 03:24:24PM +0100, David Hildenbrand wrote:
-> 
-> We had a very simple idea in mind: As long as a hinting request is
-> pending, don't actually trigger any OOM activity, but wait for it to be
-> processed. Can be done using simple atomic variable.
-> 
-> This is a scenario that will only pop up when already pretty low on
-> memory. And the main difference to ballooning is that we *know* we will
-> get more memory soon.
+Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
 
-No we don't.  If we keep polling we are quite possibly keeping the CPU
-busy so delaying the hint request processing.  Again the issue it's a
-tradeoff. One performance for the other. Very hard to know which path do
-you hit in advance, and in the real world no one has the time to profile
-and tune things. By comparison trading memory for performance is well
-understood.
+Signed-off-by: Patrick Venture <venture@google.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes for v8:
+- None
+Changes for v7:
+- Moved node under the syscon node it requires
+Changes for v6:
+- None
+Changes for v5:
+- None
+Changes for v4:
+- None
+Changes for v3:
+- None
+Changes for v2:
+- Added comment about syscon required parameter.
+---
+ .../bindings/misc/aspeed-p2a-ctrl.txt         | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
 
+diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+new file mode 100644
+index 0000000000000..088cc4e3dc54b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+@@ -0,0 +1,48 @@
++======================================================================
++Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
++======================================================================
++
++The bridge is available on platforms with the VGA enabled on the Aspeed device.
++In this case, the host has access to a 64KiB window into all of the BMC's
++memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
++has read access to all the regions of memory, however the host only has read
++and write access depending on a register controlled by the BMC.
++
++Required properties:
++===================
++
++ - compatible: must be one of:
++	- "aspeed,ast2400-p2a-ctrl"
++	- "aspeed,ast2500-p2a-ctrl"
++
++ - syscon: handle to syscon device node controlling PCI.
++
++Optional properties:
++===================
++
++- memory-region: A phandle to a reserved_memory region to be used for the PCI
++		to AHB mapping
++
++The p2a-control node should be the child of a syscon node with the required
++property:
++
++- compatible : Should be one of the following:
++		"aspeed,ast2400-scu", "syscon", "simple-mfd"
++		"aspeed,g4-scu", "syscon", "simple-mfd"
++		"aspeed,ast2500-scu", "syscon", "simple-mfd"
++		"aspeed,g5-scu", "syscon", "simple-mfd"
++
++Example:
++
++g4 Example
++----------
++
++syscon: scu@1e6e2000 {
++	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
++	reg = <0x1e6e2000 0x1a8>;
++
++	p2a: p2a-control {
++		compatible = "aspeed,ast2400-p2a-ctrl";
++		memory-region = <&reserved_memory>;
++	};
++};
+-- 
+2.21.0.392.gf8f6787159e-goog
 
-> "appended to guest memory", "global list of memory", malicious guests
-> always using that memory like what about NUMA?
-
-This can be up to the guest. A good approach would be to take
-a chunk out of each node and add to the hints buffer.
-
-> What about different page
-> granularity?
-
-Seems like an orthogonal issue to me.
-
-> What about malicious guests?
-
-That's an interesting question.  Host can actually enforce that # of
-hinted free pages at least matches the hint buffer size.
-
-
-> What about more hitning
-> requests than the buffer is capable to handle?
-
-The idea is that we don't send more hints than in the buffer.
-In this way host can actually control the overhead which
-is probably a good thing - host knows how much benefit
-can be derived from hinting. Guest doesn't.
-
-> Honestly, requiring page hinting to make use of actual ballooning or
-> additional memory makes me shiver. I hope I don't get nightmares ;) In
-> the long term we might want to get rid of the inflation/deflation side
-> of virtio-balloon, not require it.
-> 
-> Please don't over-engineer an issue we haven't even see yet.
-
-All hinting patches are very lightly tested as it is. OOM especially is
-very hard to test properly.  So *I* will sleep better at night if we
-don't have corner cases.  Balloon is already involved in MM for
-isolation and somehow we live with that.  So wait until you see actual
-code before worrying about nightmares.
-
-> Especially
-> not using a mechanism that sounds more involved than actual hinting.
-
-That would depend on the implementation.
-It's just moving a page between two lists.
-
-
-> 
-> As always, I might be very wrong, but this sounds way too complicated to
-> me, both on the guest and the hypervisor side.
-
-On the hypervisor side it can be literally nothing if we don't
-want to enforce buffer size.
-
-> -- 
-> 
-> Thanks,
-> 
-> David / dhildenb
