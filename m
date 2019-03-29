@@ -2,146 +2,133 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C119FC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04797C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845572183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1021217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:32:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="CI8DD5Iw"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ET2bm4PF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbfC2L2Z (ORCPT
+        id S1729410AbfC2Lcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 07:28:25 -0400
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.4]:50362 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728800AbfC2L2Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 07:28:24 -0400
-Received: from [85.158.142.104] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-a.eu-central-1.aws.symcld.net id BE/E2-13147-5510E9C5; Fri, 29 Mar 2019 11:28:21 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WSeUgUcRTH/e0cjebGuCq+llZqw6JjNjcppkI
-  qItooQSjosmN2ndyB3dFmd8kMyg6Qji0pu9arDTGyPwSzMpMyKelAra3UrJS1tdKyQ7uLaGdn
-  u/77/N73+77z3vAoTHOL1FJ8rpOXRM6mJ6Nw67RIllmOyjKSP9+ZyR7xB0i25+MNxD4a+kSw9
-  +tLSPZ8/xsVe6B10TzSVFO1hzQ9aW8gTc+91bhpuCYxHV9NCKI5O3cDYf3qHsZyrpC5177h+c
-  hH7EVRFE5XY9CYP6iSHxq6UAVPPAFMefQguHv4BrkXRVIkbYSy12+RzHG0C16cOBoyYfQuFbx
-  4ej1kiqVnQ3l+h0oxzQFfa2OYZ8PFM/4Q43QSvPNdwGRW02vBX3suFKqhjyF4eHqpzJH0Oijq
-  LSFkRrQOPuw4G/JjdAJ0BcpDOUDTUNHQhikcD/3Pfob966Hg6uAIpT4VWjoCSGE9VHZ6CIV14
-  CvfF6xTQU6D4rpZ8i5AdyFo/TaEK57JUNyyO9yrBW/bh3CmDd60HAzXx8D3xzsJpdlNwmDdfk
-  JZxgLvSlvCDYlQ5fbjiukuBj+7fuDKNlPh5OUhshBN8vyznOcfSeEpUOl9hXlCPywGbp0I4Cc
-  RXoVmmSUhy+q0c4KNMSYnM0ZjCmNkjNNTDFwewxl4F2PhRafEBVUDt9lhcGyxW2yZBpF31qDg
-  WWVuQlvrkL8gqwmNplT6eHXvl9IMzShzduYWK+ewrpdcNt7RhMZQlB7UZERZhiZG4rP43I2CL
-  Xibv2WgovVx6qTgdWrUjhzO7hCyFOk2YqjGU/5STIOL2SKvTVAzcgYtm6wu8U/E7wv3IZ02Vo
-  0iIiI00Tm8ZBec/+sDKIFC+lj1gJwSLYjOP18aCA6hCg4xsL1YHsLJ/ZW0+WjcrgXeAr91kn3
-  uiuq8xM7KvrRxHebK+lcrzdNSxb4ilgkce2nK0wlpR73p4+e73a6msfsfFG67J9WnxEc2WGIP
-  LSzKOF6/SiueKno5tntZGtGjPX9Z13/z3PvbFYtrR7ePWtLNNadmXlqTur1zw6eR0ooZ7Pyoq
-  6Qw4fD0ic19a5v1uMPKGSdjkoP7BeychiHcAwAA
-X-Env-Sender: stwiss.opensource@diasemi.com
-X-Msg-Ref: server-25.tower-229.messagelabs.com!1553858900!3476446!1
-X-Originating-IP: [104.47.9.56]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 29751 invoked from network); 29 Mar 2019 11:28:20 -0000
-Received: from mail-ve1eur03lp2056.outbound.protection.outlook.com (HELO EUR03-VE1-obe.outbound.protection.outlook.com) (104.47.9.56)
-  by server-25.tower-229.messagelabs.com with AES256-SHA256 encrypted SMTP; 29 Mar 2019 11:28:20 -0000
+        Fri, 29 Mar 2019 07:32:54 -0400
+Received: from mail-eopbgr810047.outbound.protection.outlook.com ([40.107.81.47]:12931
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727675AbfC2Lcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 07:32:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iSHj3EBj5iMYNO4nXSSk64O6uNVbaTOdz1vK+rMNwDY=;
- b=CI8DD5IwRgzsOahzjsCptfUhHk1FatLz4I0y2weRChFwr0YZhON6NnRDJH9+/44jwW9uttsMT23YoAuEIzYAzMcFpuPbJisrbRtiJRM5BnUvTkBXb09BHqY8FUnhW6VHensVCX2n7wVCS8QfNPM52vABnSIgl2j+d49XwuRcR20=
-Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM (20.177.62.92) by
- VI1PR10MB1757.EURPRD10.PROD.OUTLOOK.COM (10.165.194.146) with Microsoft SMTP
+ bh=vIZa0gGXWYtnYNV9WwjgV7EZWCgffQvkG91JW5NRy8k=;
+ b=ET2bm4PF3OY6qzctBn8N9oyIz4qgt9oPbr9+bTyO7In+6Kecsx0SNRHqwQWoF9wIVYpVq1ki/pwAewUxwXaXw6ynvIwuPf6T0RPraj123SOszYSsOT4BwwC3yS/TQikT65ukYZ9kqE/eJMTVddoRsJeSaamJqOvMudhQaqroD04=
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
+ MN2PR12MB3359.namprd12.prod.outlook.com (20.178.241.220) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.19; Fri, 29 Mar 2019 11:28:19 +0000
-Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::e426:c8bc:d222:5cd7]) by VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::e426:c8bc:d222:5cd7%4]) with mapi id 15.20.1730.019; Fri, 29 Mar 2019
- 11:28:19 +0000
-From:   Steve Twiss <stwiss.opensource@diasemi.com>
-To:     'Wolfram Sang' <wsa+renesas@sang-engineering.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Subject: RE: [PATCH 0/6] mfd: da9063: remove platform_data
-Thread-Topic: [PATCH 0/6] mfd: da9063: remove platform_data
-Thread-Index: AQHU3aIiRxuJGE6LNESZwBdNcQFfU6YigYOwgAAGF5A=
-Date:   Fri, 29 Mar 2019 11:28:19 +0000
-Message-ID: <VI1PR10MB23529DC9BBD619A8BCD7D363FE5A0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
-References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
- <VI1PR10MB235256E1840C1E594ECDC0A5FE5A0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
-In-Reply-To: <VI1PR10MB235256E1840C1E594ECDC0A5FE5A0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
-Accept-Language: en-GB, en-US
+ 15.20.1750.16; Fri, 29 Mar 2019 11:32:51 +0000
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::50cc:3c60:7379:46b]) by MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::50cc:3c60:7379:46b%2]) with mapi id 15.20.1750.017; Fri, 29 Mar 2019
+ 11:32:50 +0000
+From:   "Mehta, Sanju" <Sanju.Mehta@amd.com>
+To:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "dave.jiang@intel.com" <dave.jiang@intel.com>,
+        "allenbh@gmail.com" <allenbh@gmail.com>
+CC:     "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Mehta, Sanju" <Sanju.Mehta@amd.com>
+Subject: [PATCH] point to right memory window index
+Thread-Topic: [PATCH] point to right memory window index
+Thread-Index: AQHU5iMklFxgu091o06fvBhkVIOkqw==
+Date:   Fri, 29 Mar 2019 11:32:50 +0000
+Message-ID: <1553859137-4439-1-git-send-email-Sanju.Mehta@amd.com>
+Accept-Language: en-IN, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-clientproxiedby: MA1PR01CA0143.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:71::13) To MN2PR12MB3455.namprd12.prod.outlook.com
+ (2603:10b6:208:d0::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Sanju.Mehta@amd.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.240.73.196]
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [165.204.156.251]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a3f53ecc-2bfc-4194-8368-08d6b439a513
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:VI1PR10MB1757;
-x-ms-traffictypediagnostic: VI1PR10MB1757:
-x-ms-exchange-purlcount: 3
-x-microsoft-antispam-prvs: <VI1PR10MB1757AE2DAC8413EF2D8420BFF55A0@VI1PR10MB1757.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-office365-filtering-correlation-id: 5c145c7a-bddc-4bc2-79f6-08d6b43a46a9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:MN2PR12MB3359;
+x-ms-traffictypediagnostic: MN2PR12MB3359:
+x-microsoft-antispam-prvs: <MN2PR12MB33596CA026065999744B4B78E55A0@MN2PR12MB3359.namprd12.prod.outlook.com>
 x-forefront-prvs: 0991CAB7B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(346002)(376002)(396003)(136003)(199004)(189003)(105586002)(68736007)(74316002)(106356001)(99286004)(316002)(6436002)(4744005)(256004)(6506007)(6116002)(3846002)(76176011)(71200400001)(110136005)(6246003)(186003)(14444005)(66066001)(54906003)(2501003)(33656002)(6306002)(55016002)(53936002)(9686003)(93156006)(71190400001)(2940100002)(2906002)(25786009)(4326008)(86362001)(446003)(966005)(11346002)(97736004)(7736002)(8676002)(52536014)(102836004)(476003)(81156014)(7696005)(486006)(53546011)(81166006)(26005)(305945005)(8936002)(229853002)(14454004)(478600001)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB1757;H:VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(376002)(346002)(396003)(136003)(199004)(189003)(50226002)(14454004)(478600001)(186003)(316002)(476003)(2616005)(5660300002)(36756003)(72206003)(110136005)(54906003)(81156014)(81166006)(486006)(71200400001)(71190400001)(68736007)(8676002)(26005)(2501003)(305945005)(3846002)(7736002)(6116002)(2906002)(2201001)(52116002)(6512007)(99286004)(386003)(25786009)(6506007)(4326008)(256004)(106356001)(86362001)(53936002)(14444005)(102836004)(6436002)(66066001)(97736004)(6486002)(105586002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3359;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Y+u5o7RTMTqMrN6hIbLB5n1u2ook09Rk888ey4riJ+hu7ZsYJ/rvUOe5wslWLXiVp9CCi6nLdt47NlGkUU/1JT+5iXpeQE3ovv2OEm7Gd4ozVCjIKArQMM69DHm9LSkYhmrgRHZpHG0LODJuAWtfLcHom4cu3035cALNppm/OWsAQZshQUa6WzuVDoDxksbpLMcEyhSHppPG5tB+hvbikanGj9jqnsgVmUyHDdnsKfLiby/EJAUKyLG+0E1RKg/PsUMVScJup53/Tfq3eI9GZlgSCVQqYFQQmrjuIt5E+A8urflb00o4N0NvQTF/zvcIBD+JZzfJ6kWoi7xqPcfAT831kRnNq6mBPigJ050cM/4vqidj1d8dnLnKQhE9XySks9URcPhDHeChqOQeb67HiFAjBO8xvxNXF6RhLpGCjSE=
-Content-Type: text/plain; charset="us-ascii"
+x-microsoft-antispam-message-info: 8jbqL75cLR61QqT3FH5re+AMK+e6cHaJglFVNWHRDyHjWtCYUB9s3yHZaCaFDuIeqgh94ONLBzscWBGySAaJSrv9WqWoRpk+yWJfdwDNJdBKpJONyV1M8xaUVNJAj/No4Xcaiy1il66gqXZRfwmK7RCBHFfN6qVWnmGbfSDFLx2tTg3MPIe2Pl/+Bk1Wa1tR5Sk1kae6Ns2uox2NjwbZPNQ0KVR9n5FTBzb0AKUezZvz0UqWb0zev9+kqVe6upw2xaHEN7G95SCxRbgl1WasgiZkY9kCab41iX7IKUXhPPg/yyH/wAJBLBMWxMWX/2PHYEWFR47i+bYKaBRR03T2/oLq067xY6qmrlWGMZMPURNHBLktsyGxr1NIRbBn8gPOKodQ0UevxfxV4AjAMqiiieMd+4OmNqzlclVwcRcYEPA=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3f53ecc-2bfc-4194-8368-08d6b439a513
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2019 11:28:19.4308
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c145c7a-bddc-4bc2-79f6-08d6b43a46a9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2019 11:32:50.9451
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB1757
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3359
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Caveat.
+From: Sanjay R Mehta <sanju.mehta@amd.com>
 
-On 29 March 2019 11:02 Steve Twiss, wrote:
+second parameter of ntb_peer_mw_get_addr is pointing to wrong memory
+window index by passing "peer gidx" instead of "local gidx".
 
-> Subject: RE: [PATCH 0/6] mfd: da9063: remove platform_data
->=20
- [...]
->=20
-> I've acked-by and tested-by for all the patches now. Apologies because it=
- took
-> such a long time to get around to looking at this.
->=20
-> (For my benefit) I regression tested against v5.0 and v5.1-rc1, ok.
+For ex, "local gidx" value is '0' and "peer gidx" value is '1', then
 
-These were tested with two extra patches that are not in vanilla v5.0 or v5=
-.1.-rc1.
+on peer side ntb_mw_set_trans() api is used as below with gidx pointing to
+local side gidx which is '0', so memroy window '0' is chosen and XLAT '0'
+will be programmed by peer side.
 
-One is in discussion and one is applied to linux-next,=20
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next-history.git=
-/commit/?id=3D70b464918e5331e488058870fcc6821d54c4e541
+    ntb_mw_set_trans(perf->ntb, peer->pidx, peer->gidx, peer->inbuf_xlat,
+                    peer->inbuf_size);
 
-E-mail threads are here:
+Now, on local side ntb_peer_mw_get_addr() is been used as below with gidx
+pointing to "peer gidx" which is '1', so pointing to memory window '1'
+instead of memory window '0'.
 
-https://lore.kernel.org/lkml/20190318163132.1BB633FBA2@swsrvapps-01.diasemi=
-.com/
-https://lore.kernel.org/lkml/20190320120604.7D99B3FBE9@swsrvapps-01.diasemi=
-.com/
+    ntb_peer_mw_get_addr(perf->ntb,  peer->gidx, &phys_addr,
+                        &peer->outbuf_size);
 
-Regards,
-Steve
+So this patch pass "local gidx" as parameter to ntb_peer_mw_get_addr().
+
+Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
+---
+ drivers/ntb/test/ntb_perf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
+index c7d1a48..08e18d7 100644
+--- a/drivers/ntb/test/ntb_perf.c
++++ b/drivers/ntb/test/ntb_perf.c
+@@ -1381,7 +1381,7 @@ static int perf_setup_peer_mw(struct perf_peer *peer)
+ 	int ret;
+=20
+ 	/* Get outbound MW parameters and map it */
+-	ret =3D ntb_peer_mw_get_addr(perf->ntb, peer->gidx, &phys_addr,
++	ret =3D ntb_peer_mw_get_addr(perf->ntb, perf->gidx, &phys_addr,
+ 				   &peer->outbuf_size);
+ 	if (ret)
+ 		return ret;
+--=20
+2.7.4
 
