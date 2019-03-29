@@ -2,82 +2,201 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703ACC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7E4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 334F22064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6E4206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbfC2KTE (ORCPT
+        id S1728846AbfC2KVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:19:04 -0400
-Received: from verein.lst.de ([213.95.11.211]:51485 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbfC2KTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:19:03 -0400
-Received: by newverein.lst.de (Postfix, from userid 2005)
-        id E301068CEC; Fri, 29 Mar 2019 11:18:53 +0100 (CET)
-Date:   Fri, 29 Mar 2019 11:18:53 +0100
-From:   Torsten Duwe <duwe@lst.de>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        live-patching@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 0/5] arm64: ftrace with regs
-Message-ID: <20190329101853.GA18386@lst.de>
-References: <20190208150826.44EBC68DD2@newverein.lst.de> <0f8d2e77-7e51-fba8-b179-102318d9ff84@arm.com> <20190311114945.GA5625@lst.de> <20190311121804.GB23361@lakrids.cambridge.arm.com>
+        Fri, 29 Mar 2019 06:21:08 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:35687 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728545AbfC2KVH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 06:21:07 -0400
+Received: by mail-it1-f200.google.com with SMTP id n19so1737410itb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 03:21:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=UmmF448XHdo5pxs//nvqZwGPRyIlFuZ0HrvD+OUJE5E=;
+        b=h1NTYkrptD05kvYhuH07nk4Z/rrc0CUfh73Gcqt9g3KIsboqyEXR8aRZKQvTE1dyaS
+         4jukvPbD/c6aY1VxhqApdFry4vGAABsrPeeVOdy9Uk81BGJ98P5W1pOVANlvtz7c5vGY
+         dm4nf+u1rLHQS9IwIT/Gtj3NoQaoXMSAnR1JYZCYPJIpGzUlsaZU1F1xoqp2JKZHR+n7
+         AXGa/gpyi6zkDByvIQBT2wLxeGeARLbu7czaN2e9ZKLCuiNUNjvmcmKRLq4jCmwujXMm
+         uriHE570VdOm/9SyueeJ5mfNN58nJWayNw2LijdnoXsVptH4+1w98vDlfgRqCsWLPlyN
+         W7IA==
+X-Gm-Message-State: APjAAAXCJJCMg0iBiCZpG/b9RxxlHHHEf2sBBbp5NXMMY8JN9xZnfS52
+        KVSQ6VPIoRGzluJj0tkDH7lvWApapObHwb25Yc2CltZLIzLI
+X-Google-Smtp-Source: APXvYqxsEo/hFHnS5Y+Ix6DoleqvV6bVeAe806Y1nFlfaW1z57VDpsKNzrS+/ucYFRxb/9abjHfn+QjaFAOCrjCYd+EN99dcLcJC
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311121804.GB23361@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Received: by 2002:a6b:8f01:: with SMTP id r1mr5023337iod.27.1553854866598;
+ Fri, 29 Mar 2019 03:21:06 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 03:21:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005b34690585390766@google.com>
+Subject: BUG: unable to handle kernel paging request in ip6_fragment
+From:   syzbot <syzbot+e8ce541d095e486074fc@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, kafai@fb.com, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 12:18:05PM +0000, Mark Rutland wrote:
-> Hi Torsten,
-> 
-> On Mon, Mar 11, 2019 at 12:49:46PM +0100, Torsten Duwe wrote:
-> > On Wed, Feb 13, 2019 at 11:11:04AM +0000, Julien Thierry wrote:
-> > > Hi Torsten,
-> > > 
-> > > On 08/02/2019 15:08, Torsten Duwe wrote:
-> > > > Patch series v8, as discussed.
-> > > > The whole series applies cleanly on 5.0-rc5
-> > 
-> > So what's the status now? Besides debatable minor style
-> > issues there were no more objections to v8. Would this
-> > go through the ARM repo or via the ftrace repo?
-> 
-> Sorry, I have some half-written review comments that I will clean up and
-> send shortly.
+Hello,
 
-Ping?
+syzbot found the following crash on:
 
-> As commented on prior versions, I'd very much like to see the
-> MCOUNT_ADDR hack go, by teaching the core ftrace code to not assume that
-> an mcount symbol exists.
+HEAD commit:    8c838f53 dpaa2-eth: fix race condition with bql frame acco..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=12b83a9b200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f05902bca21d8935
+dashboard link: https://syzkaller.appspot.com/bug?extid=e8ce541d095e486074fc
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> We should be able to do that by separating the notion of NOPing a patch
-> site from the notion of initializing it for the first time.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-This is generally a good idea, and would affect other architectures as well,
-see arch/s390/kernel/ftrace.c ftrace_make_nop(...)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e8ce541d095e486074fc@syzkaller.appspotmail.com
 
-I propose to do this in a second round.
+bridge0: received packet on bridge_slave_0 with own address as source  
+address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source  
+address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+BUG: unable to handle kernel paging request at ffffed10184a61b2
+#PF error: [normal kernel read fault]
+PGD 21fff0067 P4D 21fff0067 PUD 12fff9067 PMD 0
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 30201 Comm: syz-executor.3 Not tainted 5.0.0+ #139
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:ip6_fragment+0x17d3/0x3760 net/ipv6/ip6_output.c:830
+Code: 48 8b bd 70 ff ff ff 0f b7 c0 48 03 87 c0 00 00 00 48 29 c1 48 89 cf  
+48 01 f7 48 01 d7 48 89 f8 48 89 fa 48 c1 e8 03 83 e2 07 <42> 0f b6 04 20  
+38 d0 7f 08 84 c0 0f 85 b2 16 00 00 48 89 d8 c6 07
+RSP: 0018:ffff8880ae906cf8 EFLAGS: 00010206
+RAX: 1ffff110184a61b2 RBX: ffff888093e2c2b8 RCX: 000000002e704b06
+RDX: 0000000000000006 RSI: 0000000000000010 RDI: ffff8880c2530d96
+RBP: ffff8880ae906e50 R08: 1ffff110127c5852 R09: ffffed10127c5857
+R10: ffff8880982f0274 R11: ffff888093e2c2b7 R12: dffffc0000000000
+R13: ffff8880982f0080 R14: ffff8880982f0134 R15: ffff8880982f0132
+FS:  00007f45d3bce700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffed10184a61b2 CR3: 000000004c0a7000 CR4: 00000000001406e0
+Call Trace:
+  <IRQ>
+  br_nf_dev_queue_xmit+0xc49/0x14c0 net/bridge/br_netfilter_hooks.c:766
+  NF_HOOK include/linux/netfilter.h:289 [inline]
+  NF_HOOK include/linux/netfilter.h:283 [inline]
+  br_nf_post_routing+0x7aa/0x1250 net/bridge/br_netfilter_hooks.c:818
+  nf_hook_entry_hookfn include/linux/netfilter.h:119 [inline]
+  nf_hook_slow+0xbf/0x1f0 net/netfilter/core.c:511
+  nf_hook include/linux/netfilter.h:244 [inline]
+  NF_HOOK include/linux/netfilter.h:287 [inline]
+  br_forward_finish+0x215/0x400 net/bridge/br_forward.c:69
+  br_nf_hook_thresh+0x2ec/0x380 net/bridge/br_netfilter_hooks.c:1006
+  br_nf_forward_finish+0x2eb/0x690 net/bridge/br_netfilter_hooks.c:540
+  NF_HOOK include/linux/netfilter.h:289 [inline]
+  NF_HOOK include/linux/netfilter.h:283 [inline]
+  br_nf_forward_ip net/bridge/br_netfilter_hooks.c:608 [inline]
+  br_nf_forward_ip+0x877/0x1630 net/bridge/br_netfilter_hooks.c:551
+  nf_hook_entry_hookfn include/linux/netfilter.h:119 [inline]
+  nf_hook_slow+0xbf/0x1f0 net/netfilter/core.c:511
+  nf_hook include/linux/netfilter.h:244 [inline]
+  NF_HOOK include/linux/netfilter.h:287 [inline]
+  __br_forward+0x393/0xb00 net/bridge/br_forward.c:113
+  deliver_clone+0x61/0xc0 net/bridge/br_forward.c:129
+  maybe_deliver net/bridge/br_forward.c:184 [inline]
+  maybe_deliver net/bridge/br_forward.c:172 [inline]
+  br_flood+0x4da/0x710 net/bridge/br_forward.c:226
+  br_handle_frame_finish+0xf4e/0x14c0 net/bridge/br_input.c:169
+  br_nf_hook_thresh+0x2ec/0x380 net/bridge/br_netfilter_hooks.c:1006
+  br_nf_pre_routing_finish_ipv6+0x700/0xdc0  
+net/bridge/br_netfilter_ipv6.c:210
+  NF_HOOK include/linux/netfilter.h:289 [inline]
+  br_nf_pre_routing_ipv6+0x437/0x810 net/bridge/br_netfilter_ipv6.c:240
+  br_nf_pre_routing+0xf2e/0x14b0 net/bridge/br_netfilter_hooks.c:482
+  nf_hook_entry_hookfn include/linux/netfilter.h:119 [inline]
+  nf_hook_slow+0xbf/0x1f0 net/netfilter/core.c:511
+  nf_hook include/linux/netfilter.h:244 [inline]
+  NF_HOOK include/linux/netfilter.h:287 [inline]
+  br_handle_frame+0x95b/0x1450 net/bridge/br_input.c:305
+  __netif_receive_skb_core+0xa96/0x3040 net/core/dev.c:4902
+  __netif_receive_skb_one_core+0xa8/0x1a0 net/core/dev.c:4971
+  __netif_receive_skb+0x2c/0x1c0 net/core/dev.c:5083
+  process_backlog+0x206/0x750 net/core/dev.c:5923
+  napi_poll net/core/dev.c:6346 [inline]
+  net_rx_action+0x4fa/0x1070 net/core/dev.c:6412
+  __do_softirq+0x266/0x95a kernel/softirq.c:293
+  do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1027
+  </IRQ>
+  do_softirq.part.0+0x11a/0x170 kernel/softirq.c:338
+  do_softirq kernel/softirq.c:330 [inline]
+  __local_bh_enable_ip+0x211/0x270 kernel/softirq.c:190
+  local_bh_enable include/linux/bottom_half.h:32 [inline]
+  rcu_read_unlock_bh include/linux/rcupdate.h:684 [inline]
+  ip6_finish_output2+0xbcf/0x2550 net/ipv6/ip6_output.c:121
+  ip6_finish_output+0x577/0xc30 net/ipv6/ip6_output.c:154
+  NF_HOOK_COND include/linux/netfilter.h:278 [inline]
+  ip6_output+0x235/0x7f0 net/ipv6/ip6_output.c:171
+  dst_output include/net/dst.h:444 [inline]
+  ip6_local_out+0xc4/0x1b0 net/ipv6/output_core.c:176
+  ip6_send_skb+0xbb/0x350 net/ipv6/ip6_output.c:1733
+  udp_v6_send_skb.isra.0+0x839/0x14f0 net/ipv6/udp.c:1179
+  udpv6_sendmsg+0x21e3/0x28d0 net/ipv6/udp.c:1476
+  inet_sendmsg+0x147/0x5d0 net/ipv4/af_inet.c:798
+  sock_sendmsg_nosec net/socket.c:651 [inline]
+  sock_sendmsg+0xdd/0x130 net/socket.c:661
+  __sys_sendto+0x262/0x380 net/socket.c:1932
+  __do_sys_sendto net/socket.c:1944 [inline]
+  __se_sys_sendto net/socket.c:1940 [inline]
+  __x64_sys_sendto+0xe1/0x1a0 net/socket.c:1940
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458209
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f45d3bcdc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 0000000000458209
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 00000000200000c0 R09: 000000000000001c
+R10: 0000000024000000 R11: 0000000000000246 R12: 00007f45d3bce6d4
+R13: 00000000004c58c4 R14: 00000000004d9850 R15: 00000000ffffffff
+Modules linked in:
+CR2: ffffed10184a61b2
+---[ end trace 1b4a2dda4d31a4ee ]---
+RIP: 0010:ip6_fragment+0x17d3/0x3760 net/ipv6/ip6_output.c:830
+Code: 48 8b bd 70 ff ff ff 0f b7 c0 48 03 87 c0 00 00 00 48 29 c1 48 89 cf  
+48 01 f7 48 01 d7 48 89 f8 48 89 fa 48 c1 e8 03 83 e2 07 <42> 0f b6 04 20  
+38 d0 7f 08 84 c0 0f 85 b2 16 00 00 48 89 d8 c6 07
+RSP: 0018:ffff8880ae906cf8 EFLAGS: 00010206
+RAX: 1ffff110184a61b2 RBX: ffff888093e2c2b8 RCX: 000000002e704b06
+RDX: 0000000000000006 RSI: 0000000000000010 RDI: ffff8880c2530d96
+RBP: ffff8880ae906e50 R08: 1ffff110127c5852 R09: ffffed10127c5857
+R10: ffff8880982f0274 R11: ffff888093e2c2b7 R12: dffffc0000000000
+R13: ffff8880982f0080 R14: ffff8880982f0134 R15: ffff8880982f0132
+FS:  00007f45d3bce700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffed10184a61b2 CR3: 000000004c0a7000 CR4: 00000000001406e0
 
-	Torsten
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
