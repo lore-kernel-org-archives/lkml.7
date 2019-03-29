@@ -2,108 +2,115 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7D2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CC9C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C292184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E78FB2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:45:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gaireg.de header.i=@gaireg.de header.b="QziBWQ1R"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U9KbfiY2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbfC2RpS (ORCPT
+        id S1729895AbfC2Rpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 13:45:18 -0400
-Received: from gaireg.de ([37.221.197.43]:35448 "EHLO gaireg.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbfC2RpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 13:45:18 -0400
-Received: from me.gaireg.de (unknown [194.8.217.178])
-        by gaireg.de (Postfix) with ESMTPSA id 6DA4640FFFEC;
-        Fri, 29 Mar 2019 18:45:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gaireg.de; s=mail;
-        t=1553881514; bh=Y4JWry3TOjnN0yph0XRF9lnx+z1O0f9NlF5QZqp1mPU=;
-        h=From:To:Cc:Subject:Date;
-        b=QziBWQ1RUdfFF6os2tTGtyuw28whGcQ+Sxu3qh9aY6n/IR5kJr7vh4NQJHVzPmEA1
-         fded7ear72jkDnBtunz8JYCBBdq2+Uta7WPZ6KZikqFKId0eunDUgUusFyrpQTm25F
-         B/W4KU4KIGMITcpcEx0GKT8EelImFhq9745LCzWA=
-From:   =?UTF-8?q?Randolph=20Maa=C3=9Fen?= <gaireg@gaireg.de>
-To:     gaireg@gaireg.de
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Fri, 29 Mar 2019 13:45:54 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:55773 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728977AbfC2Rpy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 13:45:54 -0400
+Received: by mail-qt1-f201.google.com with SMTP id h51so2937818qte.22
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 10:45:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=MY/FhGStq36GLtRvOP3TUiFwwq8ZbgwnWXgDNjfyXLc=;
+        b=U9KbfiY2tmMN3GbfNt8jNImUF01m6grsBPWSAKAY+TrMvuGI6cltQvl/Nirx7lcbau
+         /akZ/ARDBKBCMYz1I19MMPsToUhiU4BJcVIzKJV6YKtUdE+bzoUnHPToaaCd2naMOIcV
+         ZOtykiTHkOTpTb3WJkmcOfffCA+58ktbybVfG6xMgrWhv46+yngJmvLRhCyWQETNKMyJ
+         1WWioQfxhI3z8MqAPw7T5CTFK7yCulwR3rMPL/3fVEFMgCF+IBB2IlQ+korX36XTuOHG
+         EB0aNuRSnIgnZEgMx9fBh8DS75VMssmVPBjHGBoAp6X+bazkB2/R8bYyJxs8T23jiQif
+         73qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=MY/FhGStq36GLtRvOP3TUiFwwq8ZbgwnWXgDNjfyXLc=;
+        b=TJvGC74D8XZulJFhr+L3DT1ro6ZIfHwXytIUHWJjul2Zlo/UpfLCgvnf6pVIA3xw05
+         2uhwWakcymB+rGU8ZMOxIcIUFAceu4aez/A5AqtTFE4mUW91rbwLkrYFR83gyOvh4Xzh
+         GDdFe+9e1Lsuj5IBuBs50DQWj4VexcpbDEPuRkJmLlC8+CuPqJ7XidGCRywm//knpkc+
+         3JA6n+YwVN6Ggl0JbCJ8uOcDuY+VSLOX9jIVvycEmWg4bqIdgS1NSl27fiIxj+4iLxI1
+         l/O/nQvLVGkhtG2ZIcKRxYHl0qgrMcqIWo3punLqqpkqN035W62jznYEH5ao5dnSmH0m
+         j02A==
+X-Gm-Message-State: APjAAAVn2kCUppfN7Y/0D6tEfQe+s5iK5Iy+Kqcz8wW7NJJcZ7oYr5mu
+        WaFHVOX06b28XXOK3gY+aZiR/l7ZnmdvrKL0QG4=
+X-Google-Smtp-Source: APXvYqxtGdNegUoK0pdi/nSTKMHASrseGZaV3kE5Z3L0T9xsiDIdV2DrQQlwb5i+SndR8Lbae0m3yNWoCYyCgBJwxzs=
+X-Received: by 2002:a37:6704:: with SMTP id b4mr3214830qkc.29.1553881552858;
+ Fri, 29 Mar 2019 10:45:52 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 10:45:41 -0700
+In-Reply-To: <201903291603.7podsjD7%lkp@intel.com>
+Message-Id: <20190329174541.79972-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <201903291603.7podsjD7%lkp@intel.com>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+Subject: [PATCH] gcov: include linux/module.h for within_module
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     oberpar@linux.ibm.com, akpm@linux-foundation.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Greg Hackmann <ghackmann@android.com>,
+        Tri Vo <trong@android.com>, linux-mm@kvack.org,
+        kbuild-all@01.org, kbuild test robot <lkp@intel.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2] spi: tegra20-slink: change chip select action order
-Date:   Fri, 29 Mar 2019 18:44:11 +0100
-Message-Id: <20190329174411.13832-1-gaireg@gaireg.de>
-X-Mailer: git-send-email 2.11.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To transfer via SPI the tegra20-slink driver first sets the command
-register, which contains the chip select value, and after that the
-command2 register, which contains the chip select line. This leads to a
-small spike in the chip selct 0 line between the set of the value and
-the selection of the chip select line.
+Fixes commit 8c3d220cb6b5 ("gcov: clang support")
 
-This commit changes the order of the register writes so that first the
-chip select line is chosen and then the value is set, removing the
-spike.
-
-Signed-off-by: Randolph Maaßen <gaireg@gaireg.de>
-Reviewed-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
+Cc: Greg Hackmann <ghackmann@android.com>
+Cc: Tri Vo <trong@android.com>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: linux-mm@kvack.org
+Cc: kbuild-all@01.org
+Reported-by: kbuild test robot <lkp@intel.com>
+Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
-v2: fixed typo in comment: bevore -> before
----
- drivers/spi/spi-tegra20-slink.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ kernel/gcov/gcc_3_4.c | 1 +
+ kernel/gcov/gcc_4_7.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-slink.c
-index 1427f343b39a..2d173fadeb19 100644
---- a/drivers/spi/spi-tegra20-slink.c
-+++ b/drivers/spi/spi-tegra20-slink.c
-@@ -717,9 +717,6 @@ static int tegra_slink_start_transfer_one(struct spi_device *spi,
- 	command2 = tspi->command2_reg;
- 	command2 &= ~(SLINK_RXEN | SLINK_TXEN);
+diff --git a/kernel/gcov/gcc_3_4.c b/kernel/gcov/gcc_3_4.c
+index 801ee4b0b969..0eda59ef57df 100644
+--- a/kernel/gcov/gcc_3_4.c
++++ b/kernel/gcov/gcc_3_4.c
+@@ -16,6 +16,7 @@
+  */
  
--	tegra_slink_writel(tspi, command, SLINK_COMMAND);
--	tspi->command_reg = command;
--
- 	tspi->cur_direction = 0;
- 	if (t->rx_buf) {
- 		command2 |= SLINK_RXEN;
-@@ -729,9 +726,18 @@ static int tegra_slink_start_transfer_one(struct spi_device *spi,
- 		command2 |= SLINK_TXEN;
- 		tspi->cur_direction |= DATA_DIR_TX;
- 	}
-+
-+	/*
-+	 * Writing to the command2 register before the command register prevents
-+	 * a spike in chip_select line 0. This selects the chip_select line
-+	 * before changing the chip_select value.
-+	 */
- 	tegra_slink_writel(tspi, command2, SLINK_COMMAND2);
- 	tspi->command2_reg = command2;
+ #include <linux/errno.h>
++#include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/seq_file.h>
+diff --git a/kernel/gcov/gcc_4_7.c b/kernel/gcov/gcc_4_7.c
+index ec37563674d6..677851284fe2 100644
+--- a/kernel/gcov/gcc_4_7.c
++++ b/kernel/gcov/gcc_4_7.c
+@@ -13,6 +13,7 @@
+  */
  
-+	tegra_slink_writel(tspi, command, SLINK_COMMAND);
-+	tspi->command_reg = command;
-+
- 	if (total_fifo_words > SLINK_FIFO_DEPTH)
- 		ret = tegra_slink_start_dma_based_transfer(tspi, t);
- 	else
+ #include <linux/errno.h>
++#include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/seq_file.h>
 -- 
-2.11.0
+2.21.0.392.gf8f6787159e-goog
 
