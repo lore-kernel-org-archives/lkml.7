@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E664C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 341B0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA3C12184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2B92184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729515AbfC2OAe (ORCPT
+        id S1729409AbfC2OA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:00:34 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:60336 "EHLO inva021.nxp.com"
+        Fri, 29 Mar 2019 10:00:29 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59990 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729378AbfC2OA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:00:27 -0400
+        id S1729163AbfC2OAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:00:21 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9772720019E;
-        Fri, 29 Mar 2019 15:00:25 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C28A9200294;
+        Fri, 29 Mar 2019 15:00:19 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8B5192000D8;
-        Fri, 29 Mar 2019 15:00:25 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B65A0200270;
+        Fri, 29 Mar 2019 15:00:19 +0100 (CET)
 Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.74.120])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 017AC20606;
-        Fri, 29 Mar 2019 15:00:24 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 14CAB20606;
+        Fri, 29 Mar 2019 15:00:19 +0100 (CET)
 From:   laurentiu.tudor@nxp.com
 To:     netdev@vger.kernel.org, madalin.bucur@nxp.com, roy.pledge@nxp.com,
         camelia.groza@nxp.com, leoyang.li@nxp.com
@@ -35,9 +35,9 @@ Cc:     davem@davemloft.net, iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH 13/13] dpaa_eth: fix SG frame cleanup
-Date:   Fri, 29 Mar 2019 16:00:14 +0200
-Message-Id: <20190329140014.8126-14-laurentiu.tudor@nxp.com>
+Subject: [PATCH 04/13] soc/fsl/qman-portal: map CENA area in the iommu
+Date:   Fri, 29 Mar 2019 16:00:05 +0200
+Message-Id: <20190329140014.8126-5-laurentiu.tudor@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
 References: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
@@ -49,29 +49,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Fix issue with the entry indexing in the sg frame cleanup code being
-off-by-1. This problem showed up when doing some basic iperf tests and
-manifested in traffic coming to a halt.
+Add a one-to-one iommu mapping for qman portal CENA register area.
+This is required for QMAN stashing to work without faults behind
+an iommu.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/fsl/qbman/qman_portal.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index daede7272768..40420edc9ce6 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -1663,7 +1663,7 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
- 				 qm_sg_entry_get_len(&sgt[0]), dma_dir);
+diff --git a/drivers/soc/fsl/qbman/qman_portal.c b/drivers/soc/fsl/qbman/qman_portal.c
+index 661c9b234d32..dfb62f9815e9 100644
+--- a/drivers/soc/fsl/qbman/qman_portal.c
++++ b/drivers/soc/fsl/qbman/qman_portal.c
+@@ -29,6 +29,7 @@
+  */
  
- 		/* remaining pages were mapped with skb_frag_dma_map() */
--		for (i = 1; i < nr_frags; i++) {
-+		for (i = 1; i <= nr_frags; i++) {
- 			WARN_ON(qm_sg_entry_is_ext(&sgt[i]));
+ #include "qman_priv.h"
++#include <linux/iommu.h>
  
- 			dma_unmap_page(dev, qm_sg_addr(&sgt[i]),
+ struct qman_portal *qman_dma_portal;
+ EXPORT_SYMBOL(qman_dma_portal);
+@@ -224,6 +225,7 @@ static int qman_portal_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *node = dev->of_node;
++	struct iommu_domain *domain;
+ 	struct qm_portal_config *pcfg;
+ 	struct resource *addr_phys[2];
+ 	int irq, cpu, err;
+@@ -286,6 +288,21 @@ static int qman_portal_probe(struct platform_device *pdev)
+ 		goto err_ioremap2;
+ 	}
+ 
++	/* Create an 1-to-1 iommu mapping for cena portal area */
++	domain = iommu_get_domain_for_dev(dev);
++	if (domain) {
++		/*
++		 * Note: not mapping this as cacheable triggers the infamous
++		 * QMan CIDE error.
++		 */
++		err = iommu_map(domain,
++				addr_phys[0]->start, addr_phys[0]->start,
++				resource_size(addr_phys[0]),
++				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
++		if (err)
++			dev_warn(dev, "failed to iommu_map() %d\n", err);
++	}
++
+ 	pcfg->pools = qm_get_pools_sdqcr();
+ 
+ 	spin_lock(&qman_lock);
 -- 
 2.17.1
 
