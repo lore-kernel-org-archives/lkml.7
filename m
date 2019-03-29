@@ -2,282 +2,388 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243EDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86E9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2CF82075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883E72075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:42:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rMt+kFo+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbfC2Pld (ORCPT
+        id S1729489AbfC2Pmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:41:33 -0400
-Received: from mga06.intel.com ([134.134.136.31]:8191 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728815AbfC2Plc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:41:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 08:40:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,284,1549958400"; 
-   d="scan'208";a="144965899"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by FMSMGA003.fm.intel.com with ESMTP; 29 Mar 2019 08:40:29 -0700
-Subject: [PATCH 5/6] pci/p2pdma: Track pgmap references per resource,
- not globally
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     akpm@linux-foundation.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
-        linux-pci@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 29 Mar 2019 08:27:50 -0700
-Message-ID: <155387327020.2443841.6446837127378298192.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <155387324370.2443841.574715745262628837.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <155387324370.2443841.574715745262628837.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
+        Fri, 29 Mar 2019 11:42:40 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49280 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728815AbfC2Pmj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 11:42:39 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2TFfrDA129732;
+        Fri, 29 Mar 2019 10:41:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553874113;
+        bh=FRKM8j2L6/l6ow0vZkYygwujfL1sXfa+Oni0VYN9/w8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rMt+kFo+iEdK5AsyXUkYIKKAzvwMkDR5YOTfw2OOAap7j4/i1SAbAVVR9XWcdE2yh
+         faReB1vMHBm+DMzM8g/J9rGqGgnvpvme2pV8HsRfy9ojVMY9PArT33zm1TwbzxJwik
+         g2k2NoR2nT9AdGhMpV7x8EFQOxGFfa0f8s6B43uU=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2TFfr48033065
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 Mar 2019 10:41:53 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
+ Mar 2019 10:41:52 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 29 Mar 2019 10:41:52 -0500
+Received: from [10.250.67.168] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2TFfpL0082234;
+        Fri, 29 Mar 2019 10:41:52 -0500
+Subject: Re: [RFC][PATCH 4/6 v3] dma-buf: heaps: Add CMA heap to dmabuf heapss
+To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
+CC:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        butao <butao@hisilicon.com>,
+        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
+        Yudongbin <yudongbin@hisilicon.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+References: <1553818562-2516-1-git-send-email-john.stultz@linaro.org>
+ <1553818562-2516-5-git-send-email-john.stultz@linaro.org>
+ <CA+M3ks6kWmhHv9GFCSkNPLJKU-_cctpA9d20UXzrLfudBrrHjA@mail.gmail.com>
+ <c35bef87-df92-148c-cd83-aaf2ee61e644@ti.com>
+ <CA+M3ks4+REvR=0mLFt-hS4dSfRpx9HLrryb1rfSbYiRSLT2OZQ@mail.gmail.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <42c5e635-bec9-6ba1-18c6-50d6a69e9d9d@ti.com>
+Date:   Fri, 29 Mar 2019 10:41:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <CA+M3ks4+REvR=0mLFt-hS4dSfRpx9HLrryb1rfSbYiRSLT2OZQ@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for fixing a race between devm_memremap_pages_release()
-and the final put of a page from the device-page-map, allocate a
-percpu-ref per p2pdma resource mapping.
+On 3/29/19 10:30 AM, Benjamin Gaignard wrote:
+> Le ven. 29 mars 2019 à 16:19, Andrew F. Davis <afd@ti.com> a écrit :
+>>
+>> On 3/29/19 9:44 AM, Benjamin Gaignard wrote:
+>>> Le ven. 29 mars 2019 à 01:16, John Stultz <john.stultz@linaro.org> a écrit :
+>>>>
+>>>> This adds a CMA heap, which allows userspace to allocate
+>>>> a dma-buf of contiguous memory out of a CMA region.
+>>>>
+>>>> This code is an evolution of the Android ION implementation, so
+>>>> thanks to its original author and maintainters:
+>>>>   Benjamin Gaignard, Laura Abbott, and others!
+>>>>
+>>>> Cc: Laura Abbott <labbott@redhat.com>
+>>>> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+>>>> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+>>>> Cc: Liam Mark <lmark@codeaurora.org>
+>>>> Cc: Pratik Patel <pratikp@codeaurora.org>
+>>>> Cc: Brian Starkey <Brian.Starkey@arm.com>
+>>>> Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
+>>>> Cc: Sudipto Paul <Sudipto.Paul@arm.com>
+>>>> Cc: Andrew F. Davis <afd@ti.com>
+>>>> Cc: Xu YiPing <xuyiping@hisilicon.com>
+>>>> Cc: "Chenfeng (puck)" <puck.chen@hisilicon.com>
+>>>> Cc: butao <butao@hisilicon.com>
+>>>> Cc: "Xiaqing (A)" <saberlily.xia@hisilicon.com>
+>>>> Cc: Yudongbin <yudongbin@hisilicon.com>
+>>>> Cc: Christoph Hellwig <hch@infradead.org>
+>>>> Cc: Chenbo Feng <fengc@google.com>
+>>>> Cc: Alistair Strachan <astrachan@google.com>
+>>>> Cc: dri-devel@lists.freedesktop.org
+>>>> Signed-off-by: John Stultz <john.stultz@linaro.org>
+>>>> ---
+>>>> v2:
+>>>> * Switch allocate to return dmabuf fd
+>>>> * Simplify init code
+>>>> * Checkpatch fixups
+>>>> v3:
+>>>> * Switch to inline function for to_cma_heap()
+>>>> * Minor cleanups suggested by Brian
+>>>> * Fold in new registration style from Andrew
+>>>> * Folded in changes from Andrew to use simplified page list
+>>>>   from the heap helpers
+>>>> ---
+>>>>  drivers/dma-buf/heaps/Kconfig    |   8 ++
+>>>>  drivers/dma-buf/heaps/Makefile   |   1 +
+>>>>  drivers/dma-buf/heaps/cma_heap.c | 170 +++++++++++++++++++++++++++++++++++++++
+>>>>  3 files changed, 179 insertions(+)
+>>>>  create mode 100644 drivers/dma-buf/heaps/cma_heap.c
+>>>>
+>>>> diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
+>>>> index 2050527..a5eef06 100644
+>>>> --- a/drivers/dma-buf/heaps/Kconfig
+>>>> +++ b/drivers/dma-buf/heaps/Kconfig
+>>>> @@ -4,3 +4,11 @@ config DMABUF_HEAPS_SYSTEM
+>>>>         help
+>>>>           Choose this option to enable the system dmabuf heap. The system heap
+>>>>           is backed by pages from the buddy allocator. If in doubt, say Y.
+>>>> +
+>>>> +config DMABUF_HEAPS_CMA
+>>>> +       bool "DMA-BUF CMA Heap"
+>>>> +       depends on DMABUF_HEAPS && DMA_CMA
+>>>> +       help
+>>>> +         Choose this option to enable dma-buf CMA heap. This heap is backed
+>>>> +         by the Contiguous Memory Allocator (CMA). If your system has these
+>>>> +         regions, you should say Y here.
+>>>> diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
+>>>> index d1808ec..6e54cde 100644
+>>>> --- a/drivers/dma-buf/heaps/Makefile
+>>>> +++ b/drivers/dma-buf/heaps/Makefile
+>>>> @@ -1,3 +1,4 @@
+>>>>  # SPDX-License-Identifier: GPL-2.0
+>>>>  obj-y                                  += heap-helpers.o
+>>>>  obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)      += system_heap.o
+>>>> +obj-$(CONFIG_DMABUF_HEAPS_CMA)         += cma_heap.o
+>>>> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
+>>>> new file mode 100644
+>>>> index 0000000..f4485c60
+>>>> --- /dev/null
+>>>> +++ b/drivers/dma-buf/heaps/cma_heap.c
+>>>> @@ -0,0 +1,170 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * DMABUF CMA heap exporter
+>>>> + *
+>>>> + * Copyright (C) 2012, 2019 Linaro Ltd.
+>>>> + * Author: <benjamin.gaignard@linaro.org> for ST-Ericsson.
+>>>> + */
+>>>> +
+>>>> +#include <linux/device.h>
+>>>> +#include <linux/dma-buf.h>
+>>>> +#include <linux/dma-heap.h>
+>>>> +#include <linux/slab.h>
+>>>> +#include <linux/errno.h>
+>>>> +#include <linux/err.h>
+>>>> +#include <linux/cma.h>
+>>>> +#include <linux/scatterlist.h>
+>>>> +#include <linux/highmem.h>
+>>>> +
+>>>> +#include "heap-helpers.h"
+>>>> +
+>>>> +struct cma_heap {
+>>>> +       struct dma_heap *heap;
+>>>> +       struct cma *cma;
+>>>> +};
+>>>> +
+>>>> +static void cma_heap_free(struct heap_helper_buffer *buffer)
+>>>> +{
+>>>> +       struct cma_heap *cma_heap = dma_heap_get_data(buffer->heap_buffer.heap);
+>>>> +       struct page *pages = buffer->priv_virt;
+>>>> +       unsigned long nr_pages;
+>>>> +
+>>>> +       nr_pages = buffer->heap_buffer.size >> PAGE_SHIFT;
+>>>> +
+>>>> +       /* free page list */
+>>>> +       kfree(buffer->pages);
+>>>> +       /* release memory */
+>>>> +       cma_release(cma_heap->cma, pages, nr_pages);
+>>>> +       kfree(buffer);
+>>>> +}
+>>>> +
+>>>> +/* dmabuf heap CMA operations functions */
+>>>> +static int cma_heap_allocate(struct dma_heap *heap,
+>>>> +                               unsigned long len,
+>>>> +                               unsigned long flags)
+>>>> +{
+>>>> +       struct cma_heap *cma_heap = dma_heap_get_data(heap);
+>>>> +       struct heap_helper_buffer *helper_buffer;
+>>>> +       struct page *pages;
+>>>> +       size_t size = PAGE_ALIGN(len);
+>>>> +       unsigned long nr_pages = size >> PAGE_SHIFT;
+>>>> +       unsigned long align = get_order(size);
+>>>> +       DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
+>>>> +       struct dma_buf *dmabuf;
+>>>> +       int ret = -ENOMEM;
+>>>> +       pgoff_t pg;
+>>>> +
+>>>> +       if (align > CONFIG_CMA_ALIGNMENT)
+>>>> +               align = CONFIG_CMA_ALIGNMENT;
+>>>> +
+>>>> +       helper_buffer = kzalloc(sizeof(*helper_buffer), GFP_KERNEL);
+>>>> +       if (!helper_buffer)
+>>>> +               return -ENOMEM;
+>>>> +
+>>>> +       INIT_HEAP_HELPER_BUFFER(helper_buffer, cma_heap_free);
+>>>> +       helper_buffer->heap_buffer.flags = flags;
+>>>> +       helper_buffer->heap_buffer.heap = heap;
+>>>> +       helper_buffer->heap_buffer.size = len;
+>>>> +
+>>>> +       pages = cma_alloc(cma_heap->cma, nr_pages, align, false);
+>>>> +       if (!pages)
+>>>> +               goto free_buf;
+>>>> +
+>>>> +       if (PageHighMem(pages)) {
+>>>> +               unsigned long nr_clear_pages = nr_pages;
+>>>> +               struct page *page = pages;
+>>>> +
+>>>> +               while (nr_clear_pages > 0) {
+>>>> +                       void *vaddr = kmap_atomic(page);
+>>>> +
+>>>> +                       memset(vaddr, 0, PAGE_SIZE);
+>>>> +                       kunmap_atomic(vaddr);
+>>>> +                       page++;
+>>>> +                       nr_clear_pages--;
+>>>> +               }
+>>>> +       } else {
+>>>> +               memset(page_address(pages), 0, size);
+>>>> +       }
+>>>> +
+>>>> +       helper_buffer->pagecount = nr_pages;
+>>>> +       helper_buffer->pages = kmalloc_array(helper_buffer->pagecount,
+>>>> +                                            sizeof(*helper_buffer->pages),
+>>>> +                                            GFP_KERNEL);
+>>>> +       if (!helper_buffer->pages) {
+>>>> +               ret = -ENOMEM;
+>>>> +               goto free_cma;
+>>>> +       }
+>>>> +
+>>>> +       for (pg = 0; pg < helper_buffer->pagecount; pg++) {
+>>>> +               helper_buffer->pages[pg] = &pages[pg];
+>>>> +               if (!helper_buffer->pages[pg])
+>>>> +                       goto free_pages;
+>>>> +       }
+>>>> +
+>>>> +       /* create the dmabuf */
+>>>> +       exp_info.ops = &heap_helper_ops;
+>>>> +       exp_info.size = len;
+>>>> +       exp_info.flags = O_RDWR;
+>>>
+>>> I think that the flags should be provided when requesting the allocation
+>>> like it is done in DRM or V4L2.
+>>> For me DMA_HEAP_VALID_FLAGS = (O_CLOEXEC | O_ACCMODE).
+>>>
+>>
+>>
+>> So something like done in udmabuf?
+>>
+>> https://elixir.bootlin.com/linux/v5.1-rc1/source/include/uapi/linux/udmabuf.h#L8
+>>
+>> I think that can be arranged.
+> 
+> I have in mind what is done by DRM:
+> https://elixir.bootlin.com/linux/v5.1-rc1/source/include/uapi/drm/drm.h#L707
+> 
+> V4L2 does the same but without redefine the flags (which is better)
+> 
 
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/pci/p2pdma.c |  114 ++++++++++++++++++++++++++++++++------------------
- 1 file changed, 73 insertions(+), 41 deletions(-)
+That would mean we would need a whole flag word passed in just for file
+flags when I only ever see one bit being useful(O_CLOEXEC or not). Do
+you see any situation where we need more than default O_RDWR and
+optional O_CLOEXEC for a dma-buf file?
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 595a534bd749..1b96c1688715 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -20,12 +20,16 @@
- #include <linux/seq_buf.h>
- 
- struct pci_p2pdma {
--	struct percpu_ref devmap_ref;
--	struct completion devmap_ref_done;
- 	struct gen_pool *pool;
- 	bool p2pmem_published;
- };
- 
-+struct p2pdma_pagemap {
-+	struct dev_pagemap pgmap;
-+	struct percpu_ref ref;
-+	struct completion ref_done;
-+};
-+
- static ssize_t size_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
- {
-@@ -74,28 +78,31 @@ static const struct attribute_group p2pmem_group = {
- 	.name = "p2pmem",
- };
- 
-+static struct p2pdma_pagemap *to_p2p_pgmap(struct percpu_ref *ref)
-+{
-+	return container_of(ref, struct p2pdma_pagemap, ref);
-+}
-+
- static void pci_p2pdma_percpu_release(struct percpu_ref *ref)
- {
--	struct pci_p2pdma *p2p =
--		container_of(ref, struct pci_p2pdma, devmap_ref);
-+	struct p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(ref);
- 
--	complete_all(&p2p->devmap_ref_done);
-+	complete(&p2p_pgmap->ref_done);
- }
- 
- static void pci_p2pdma_percpu_kill(struct percpu_ref *ref)
- {
--	/*
--	 * pci_p2pdma_add_resource() may be called multiple times
--	 * by a driver and may register the percpu_kill devm action multiple
--	 * times. We only want the first action to actually kill the
--	 * percpu_ref.
--	 */
--	if (percpu_ref_is_dying(ref))
--		return;
--
- 	percpu_ref_kill(ref);
- }
- 
-+static void pci_p2pdma_percpu_cleanup(void *ref)
-+{
-+	struct p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(ref);
-+
-+	wait_for_completion(&p2p_pgmap->ref_done);
-+	percpu_ref_exit(&p2p_pgmap->ref);
-+}
-+
- static void pci_p2pdma_release(void *data)
- {
- 	struct pci_dev *pdev = data;
-@@ -103,12 +110,12 @@ static void pci_p2pdma_release(void *data)
- 	if (!pdev->p2pdma)
- 		return;
- 
--	wait_for_completion(&pdev->p2pdma->devmap_ref_done);
--	percpu_ref_exit(&pdev->p2pdma->devmap_ref);
-+	/* Flush and disable pci_alloc_p2p_mem() */
-+	pdev->p2pdma = NULL;
-+	synchronize_rcu();
- 
- 	gen_pool_destroy(pdev->p2pdma->pool);
- 	sysfs_remove_group(&pdev->dev.kobj, &p2pmem_group);
--	pdev->p2pdma = NULL;
- }
- 
- static int pci_p2pdma_setup(struct pci_dev *pdev)
-@@ -124,12 +131,6 @@ static int pci_p2pdma_setup(struct pci_dev *pdev)
- 	if (!p2p->pool)
- 		goto out;
- 
--	init_completion(&p2p->devmap_ref_done);
--	error = percpu_ref_init(&p2p->devmap_ref,
--			pci_p2pdma_percpu_release, 0, GFP_KERNEL);
--	if (error)
--		goto out_pool_destroy;
--
- 	error = devm_add_action_or_reset(&pdev->dev, pci_p2pdma_release, pdev);
- 	if (error)
- 		goto out_pool_destroy;
-@@ -163,6 +164,7 @@ static int pci_p2pdma_setup(struct pci_dev *pdev)
- int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
- 			    u64 offset)
- {
-+	struct p2pdma_pagemap *p2p_pgmap;
- 	struct dev_pagemap *pgmap;
- 	void *addr;
- 	int error;
-@@ -185,14 +187,32 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
- 			return error;
- 	}
- 
--	pgmap = devm_kzalloc(&pdev->dev, sizeof(*pgmap), GFP_KERNEL);
--	if (!pgmap)
-+	p2p_pgmap = devm_kzalloc(&pdev->dev, sizeof(*p2p_pgmap), GFP_KERNEL);
-+	if (!p2p_pgmap)
- 		return -ENOMEM;
- 
-+	init_completion(&p2p_pgmap->ref_done);
-+	error = percpu_ref_init(&p2p_pgmap->ref,
-+			pci_p2pdma_percpu_release, 0, GFP_KERNEL);
-+	if (error)
-+		goto pgmap_free;
-+
-+	/*
-+	 * FIXME: the percpu_ref_exit needs to be coordinated internal
-+	 * to devm_memremap_pages_release(). Duplicate the same ordering
-+	 * as other devm_memremap_pages() users for now.
-+	 */
-+	error = devm_add_action(&pdev->dev, pci_p2pdma_percpu_cleanup,
-+			&p2p_pgmap->ref);
-+	if (error)
-+		goto ref_cleanup;
-+
-+	pgmap = &p2p_pgmap->pgmap;
-+
- 	pgmap->res.start = pci_resource_start(pdev, bar) + offset;
- 	pgmap->res.end = pgmap->res.start + size - 1;
- 	pgmap->res.flags = pci_resource_flags(pdev, bar);
--	pgmap->ref = &pdev->p2pdma->devmap_ref;
-+	pgmap->ref = &p2p_pgmap->ref;
- 	pgmap->type = MEMORY_DEVICE_PCI_P2PDMA;
- 	pgmap->pci_p2pdma_bus_offset = pci_bus_address(pdev, bar) -
- 		pci_resource_start(pdev, bar);
-@@ -201,12 +221,13 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
- 	addr = devm_memremap_pages(&pdev->dev, pgmap);
- 	if (IS_ERR(addr)) {
- 		error = PTR_ERR(addr);
--		goto pgmap_free;
-+		goto ref_exit;
- 	}
- 
--	error = gen_pool_add_virt(pdev->p2pdma->pool, (unsigned long)addr,
-+	error = gen_pool_add_owner(pdev->p2pdma->pool, (unsigned long)addr,
- 			pci_bus_address(pdev, bar) + offset,
--			resource_size(&pgmap->res), dev_to_node(&pdev->dev));
-+			resource_size(&pgmap->res), dev_to_node(&pdev->dev),
-+			&p2p_pgmap->ref);
- 	if (error)
- 		goto pages_free;
- 
-@@ -217,8 +238,10 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
- 
- pages_free:
- 	devm_memunmap_pages(&pdev->dev, pgmap);
-+ref_cleanup:
-+	percpu_ref_exit(&p2p_pgmap->ref);
- pgmap_free:
--	devm_kfree(&pdev->dev, pgmap);
-+	devm_kfree(&pdev->dev, p2p_pgmap);
- 	return error;
- }
- EXPORT_SYMBOL_GPL(pci_p2pdma_add_resource);
-@@ -555,19 +578,25 @@ EXPORT_SYMBOL_GPL(pci_p2pmem_find_many);
-  */
- void *pci_alloc_p2pmem(struct pci_dev *pdev, size_t size)
- {
--	void *ret;
-+	void *ret = NULL;
-+	struct percpu_ref *ref;
- 
-+	rcu_read_lock();
- 	if (unlikely(!pdev->p2pdma))
--		return NULL;
--
--	if (unlikely(!percpu_ref_tryget_live(&pdev->p2pdma->devmap_ref)))
--		return NULL;
--
--	ret = (void *)gen_pool_alloc(pdev->p2pdma->pool, size);
-+		goto out;
- 
--	if (unlikely(!ret))
--		percpu_ref_put(&pdev->p2pdma->devmap_ref);
-+	ret = (void *)gen_pool_alloc_owner(pdev->p2pdma->pool, size,
-+			(void **) &ref);
-+	if (!ret)
-+		goto out;
- 
-+	if (unlikely(!percpu_ref_tryget_live(ref))) {
-+		gen_pool_free(pdev->p2pdma->pool, (unsigned long) ret, size);
-+		ret = NULL;
-+		goto out;
-+	}
-+out:
-+	rcu_read_unlock();
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(pci_alloc_p2pmem);
-@@ -580,8 +609,11 @@ EXPORT_SYMBOL_GPL(pci_alloc_p2pmem);
-  */
- void pci_free_p2pmem(struct pci_dev *pdev, void *addr, size_t size)
- {
--	gen_pool_free(pdev->p2pdma->pool, (uintptr_t)addr, size);
--	percpu_ref_put(&pdev->p2pdma->devmap_ref);
-+	struct percpu_ref *ref;
-+
-+	gen_pool_free_owner(pdev->p2pdma->pool, (uintptr_t)addr, size,
-+			(void **) &ref);
-+	percpu_ref_put(ref);
- }
- EXPORT_SYMBOL_GPL(pci_free_p2pmem);
- 
+Andrew
 
+> Benjamin
+> 
+>>
+>> John,
+>>
+>> This might be a good reason to move the dma_buf_fd() call below out of
+>> the heap and back into the core. That way the file exporting flags can
+>> be common and core handled. I don't think it would complicate the error
+>> handling any as we only need to dma_buf_put(dmabuf) in the core on
+>> failure and the heap specific cleanup will happen for us.
+>>
+>> Andrew
+>>
+>>
+>>> Benjamin
+>>>
+>>> Benjamin
+>>>
+>>>> +       exp_info.priv = &helper_buffer->heap_buffer;
+>>>> +       dmabuf = dma_buf_export(&exp_info);
+>>>> +       if (IS_ERR(dmabuf)) {
+>>>> +               ret = PTR_ERR(dmabuf);
+>>>> +               goto free_pages;
+>>>> +       }
+>>>> +
+>>>> +       helper_buffer->heap_buffer.dmabuf = dmabuf;
+>>>> +       helper_buffer->priv_virt = pages;
+>>>> +
+>>>> +       ret = dma_buf_fd(dmabuf, O_CLOEXEC);
+>>>> +       if (ret < 0) {
+>>>> +               dma_buf_put(dmabuf);
+>>>> +               /* just return, as put will call release and that will free */
+>>>> +               return ret;
+>>>> +       }
+>>>> +
+>>>> +       return ret;
+>>>> +
+>>>> +free_pages:
+>>>> +       kfree(helper_buffer->pages);
+>>>> +free_cma:
+>>>> +       cma_release(cma_heap->cma, pages, nr_pages);
+>>>> +free_buf:
+>>>> +       kfree(helper_buffer);
+>>>> +       return ret;
+>>>> +}
+>>>> +
+>>>> +static struct dma_heap_ops cma_heap_ops = {
+>>>> +       .allocate = cma_heap_allocate,
+>>>> +};
+>>>> +
+>>>> +static int __add_cma_heap(struct cma *cma, void *data)
+>>>> +{
+>>>> +       struct cma_heap *cma_heap;
+>>>> +       struct dma_heap_export_info exp_info;
+>>>> +
+>>>> +       cma_heap = kzalloc(sizeof(*cma_heap), GFP_KERNEL);
+>>>> +       if (!cma_heap)
+>>>> +               return -ENOMEM;
+>>>> +       cma_heap->cma = cma;
+>>>> +
+>>>> +       exp_info.name = cma_get_name(cma);
+>>>> +       exp_info.ops = &cma_heap_ops;
+>>>> +       exp_info.priv = cma_heap;
+>>>> +
+>>>> +       cma_heap->heap = dma_heap_add(&exp_info);
+>>>> +       if (IS_ERR(cma_heap->heap)) {
+>>>> +               int ret = PTR_ERR(cma_heap->heap);
+>>>> +
+>>>> +               kfree(cma_heap);
+>>>> +               return ret;
+>>>> +       }
+>>>> +
+>>>> +       return 0;
+>>>> +}
+>>>> +
+>>>> +static int add_cma_heaps(void)
+>>>> +{
+>>>> +       cma_for_each_area(__add_cma_heap, NULL);
+>>>> +       return 0;
+>>>> +}
+>>>> +device_initcall(add_cma_heaps);
+>>>> --
+>>>> 2.7.4
+>>>>
