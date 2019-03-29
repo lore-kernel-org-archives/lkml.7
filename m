@@ -2,282 +2,96 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57187C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6764EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0322070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:13:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xacPfH2G"
+	by mail.kernel.org (Postfix) with ESMTP id 38D3E2183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbfC2KNe (ORCPT
+        id S1729293AbfC2KNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:13:34 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37826 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbfC2KNc (ORCPT
+        Fri, 29 Mar 2019 06:13:37 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:42594 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729137AbfC2KNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:13:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w10so1870300wrm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 03:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=OujNZc42kCq7zUXMisag/ClKHZpikAp2j81GdH4F8c8=;
-        b=xacPfH2G5Gwha82agXR2eh+YYw351Qi7DUx8/wuwk4IRijVMSYTz0vWKDawvLVK3zl
-         WTE0wzo9RljBbwJme/revgCSuLovGwQ35BRfzapRaXdnkoGlMBF7OQ8OdTNWEprzsE9d
-         ZFnQ6rQIECfrN4u3qddbkwUJ2WJjjuDur1nhVRCRm5T5h2bD+EwMcHx81pEFSePwk7cE
-         2u7ivr2eaohJupE+otV4g/FxdCXfpDP3WktKRTOKusFFBnbNtGUsrvAhCtrefDUvKtWv
-         eC1QVfqQqyMbpMNk35FNcdSB+vGPgsc/kdbDaFyhp/s60g6GX5sagDaMdIEURaZf4dHI
-         ymbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=OujNZc42kCq7zUXMisag/ClKHZpikAp2j81GdH4F8c8=;
-        b=dc25HMEWUOQ/gsmpZL62Mbe0LMOqpEki7DFDG9fSjhAPQuDNusKYzyS0ZTdeEBHzkw
-         yh3qg/vbK/Ue29YEotAbVRjh/NPxRG4WA6IBtpYYGxF80K/vyaDjpKKJXbgGYE5GXmC7
-         q9i4LbjbN7Oa/+VESLvHT5PmvbO5pgFbYxUqbwkDnRrhuYXUPirNL0s5vKLZjNkx/HbC
-         8rflKWytKECTqO0VpSI4+blJSi6oRgsXuJ4/uoi1YEECBGoRvgDV4YTR2QCql8/fh9L/
-         YgDhyUION9HFnOs2gaLytSr5iquxFOXDYNB3UnJniPkfcigExgTGGFuOq5o3nmI6Cpxf
-         ybhQ==
-X-Gm-Message-State: APjAAAW9qBGTsMr0sMbp3fscHGNAFhK65Mkds5JEYxWpDg4PeEZ4Y/zj
-        IFYM9DaE7jEHb1gcSnOZXcvknrlFus0=
-X-Google-Smtp-Source: APXvYqw2B2MxFkZycud6NYFGKfZk2DCf618bP1nWJ6zy7KC92ePs1kWhsIvaQ+PMjEPgQAOBBcSPHw==
-X-Received: by 2002:adf:e487:: with SMTP id i7mr31150308wrm.264.1553854410139;
-        Fri, 29 Mar 2019 03:13:30 -0700 (PDT)
-Received: from localhost ([49.248.196.175])
-        by smtp.gmail.com with ESMTPSA id y127sm1595565wmg.29.2019.03.29.03.13.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 03:13:29 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com,
-        andy.gross@linaro.org, David Brown <david.brown@linaro.org>
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v2 10/13] arm64: dts: msm8998: thermal: Make trip names consistent
-Date:   Fri, 29 Mar 2019 15:42:16 +0530
-Message-Id: <ba15d6f24f555999fe14aa8bd370123f6a7ecd96.1553853990.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1553853990.git.amit.kucheria@linaro.org>
-References: <cover.1553853990.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1553853990.git.amit.kucheria@linaro.org>
-References: <cover.1553853990.git.amit.kucheria@linaro.org>
+        Fri, 29 Mar 2019 06:13:11 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2TAAeOo020867;
+        Fri, 29 Mar 2019 11:12:56 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2rhg9w0f6w-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 29 Mar 2019 11:12:56 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1F6F831;
+        Fri, 29 Mar 2019 10:12:56 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0081A2669;
+        Fri, 29 Mar 2019 10:12:55 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.435.0; Fri, 29 Mar
+ 2019 11:12:56 +0100
+Received: from localhost (10.201.23.16) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Fri, 29 Mar 2019 11:12:55
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <alexandre.torgue@st.com>, <robh@kernel.org>,
+        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
+Subject: [PATCH 2/2] ARM: dts: stm32: add spdfirx pins to stm32mp157c
+Date:   Fri, 29 Mar 2019 11:12:45 +0100
+Message-ID: <1553854365-19866-3-git-send-email-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1553854365-19866-1-git-send-email-olivier.moysan@st.com>
+References: <1553854365-19866-1-git-send-email-olivier.moysan@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.16]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-29_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maintain naming consistency with what was landed for sdm845. Simplifies
-parsing for test tools.
+This patch adds spdifrx support on stm32mp157c eval board.
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 48 +++++++++++++--------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 26e476078cb6..998017d4d847 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -338,20 +338,20 @@
- 	};
- 
- 	thermal-zones {
--		cpu-thermal0 {
-+		cpu0-thermal {
- 			polling-delay-passive = <250>;
- 			polling-delay = <1000>;
- 
- 			thermal-sensors = <&tsens0 1>;
- 
- 			trips {
--				cpu_alert0: trip0 {
-+				cpu0_alert0: trip-point@0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index 9104896e6066..54c133094a8f 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -393,6 +393,19 @@
  				};
- 
--				cpu_crit0: trip1 {
-+				cpu0_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -359,20 +359,20 @@
  			};
- 		};
  
--		cpu-thermal1 {
-+		cpu1-thermal {
- 			polling-delay-passive = <250>;
- 			polling-delay = <1000>;
- 
- 			thermal-sensors = <&tsens0 2>;
- 
- 			trips {
--				cpu_alert1: trip0 {
-+				cpu1_alert0: trip-point@0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit1: trip1 {
-+				cpu1_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -380,20 +380,20 @@
- 			};
- 		};
- 
--		cpu-thermal2 {
-+		cpu2-thermal {
- 			polling-delay-passive = <250>;
- 			polling-delay = <1000>;
- 
- 			thermal-sensors = <&tsens0 3>;
- 
- 			trips {
--				cpu_alert2: trip0 {
-+				cpu2_alert0: trip-point@0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit2: trip1 {
-+				cpu2_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -401,20 +401,20 @@
- 			};
- 		};
- 
--		cpu-thermal3 {
-+		cpu3-thermal {
- 			polling-delay-passive = <250>;
- 			polling-delay = <1000>;
- 
- 			thermal-sensors = <&tsens0 4>;
- 
- 			trips {
--				cpu_alert3: trip0 {
-+				cpu3_alert0: trip-point@0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit3: trip1 {
-+				cpu3_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -422,20 +422,20 @@
- 			};
- 		};
- 
--		cpu-thermal4 {
-+		cpu4-thermal {
- 			polling-delay-passive = <250>;
- 			polling-delay = <1000>;
- 
- 			thermal-sensors = <&tsens0 7>;
- 
- 			trips {
--				cpu_alert4: trip0 {
-+				cpu4_alert0: trip-point@0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit4: trip1 {
-+				cpu4_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -443,20 +443,20 @@
- 			};
- 		};
- 
--		cpu-thermal5 {
-+		cpu5-thermal {
- 			polling-delay-passive = <250>;
- 			polling-delay = <1000>;
- 
- 			thermal-sensors = <&tsens0 8>;
- 
- 			trips {
--				cpu_alert5: trip0 {
-+				cpu5_alert0: trip-point@0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit5: trip1 {
-+				cpu5_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -464,20 +464,20 @@
- 			};
- 		};
- 
--		cpu-thermal6 {
-+		cpu6-thermal {
- 			polling-delay-passive = <250>;
- 			polling-delay = <1000>;
- 
- 			thermal-sensors = <&tsens0 9>;
- 
- 			trips {
--				cpu_alert6: trip0 {
-+				cpu6_alert0: trip-point@0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit6: trip1 {
-+				cpu6_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -485,20 +485,20 @@
- 			};
- 		};
- 
--		cpu-thermal7 {
-+		cpu7-thermal {
- 			polling-delay-passive = <250>;
- 			polling-delay = <1000>;
- 
- 			thermal-sensors = <&tsens0 10>;
- 
- 			trips {
--				cpu_alert7: trip0 {
-+				cpu7_alert0: trip-point@0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit7: trip1 {
-+				cpu7_crit: cpu_crit {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
++			spdifrx_pins_a: spdifrx-0 {
++				pins {
++					pinmux = <STM32_PINMUX('G', 12, AF8)>; /* SPDIF_IN1 */
++					bias-disable;
++				};
++			};
++
++			spdifrx_sleep_pins_a: spdifrx-1 {
++				pins {
++					pinmux = <STM32_PINMUX('G', 12, ANALOG)>; /* SPDIF_IN1 */
++				};
++			};
++
+ 			uart4_pins_a: uart4-0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
 -- 
-2.17.1
+2.7.4
 
