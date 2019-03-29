@@ -2,94 +2,78 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA7CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEED5C10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 768D0206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813C3206C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbfC2ON6 (ORCPT
+        id S1729402AbfC2OOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:13:58 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:49076 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728833AbfC2ON5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:13:57 -0400
-Received: (qmail 2706 invoked by uid 2102); 29 Mar 2019 10:13:56 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 29 Mar 2019 10:13:56 -0400
-Date:   Fri, 29 Mar 2019 10:13:56 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Oliver Neukum <oneukum@suse.com>
-cc:     gregkh@linuxfoundation.org, <usb-storage@lists.one-eyed-alien.net>,
-        <Jacky.Cao@sony.com>, <Kento.A.Kobayashi@sony.com>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH] usb: uas: fix usb subsystem hang after power off hub
- port
-In-Reply-To: <1553791752.6310.2.camel@suse.com>
-Message-ID: <Pine.LNX.4.44L0.1903291007150.1497-100000@iolanthe.rowland.org>
+        Fri, 29 Mar 2019 10:14:24 -0400
+Received: from mga07.intel.com ([134.134.136.100]:63861 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728973AbfC2OOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:14:23 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 07:14:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,284,1549958400"; 
+   d="scan'208";a="331887781"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Mar 2019 07:14:21 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h9sGx-0005oa-Rs; Fri, 29 Mar 2019 16:14:19 +0200
+Date:   Fri, 29 Mar 2019 16:14:19 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing
+ node's parents
+Message-ID: <20190329141419.GY9224@smile.fi.intel.com>
+References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
+ <20190326124106.27694-2-sakari.ailus@linux.intel.com>
+ <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
+ <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
+ <20190328141036.mbns3ei4agnginsg@pathway.suse.cz>
+ <20190329130436.4fxzki5kljprhyai@kekkonen.localdomain>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329130436.4fxzki5kljprhyai@kekkonen.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Mar 2019, Oliver Neukum wrote:
+On Fri, Mar 29, 2019 at 03:04:36PM +0200, Sakari Ailus wrote:
+> On Thu, Mar 28, 2019 at 03:10:36PM +0100, Petr Mladek wrote:
 
-> On Do, 2019-03-28 at 11:57 -0400, Alan Stern wrote:
-> > On Thu, 28 Mar 2019, Oliver Neukum wrote:
-> > 
-> > > On Do, 2019-03-28 at 07:53 +0000, Kento.A.Kobayashi@sony.com wrote:
-> > > > Hi,
-> > > > 
-> > > > > Sorry,
-> > > > > 
-> > > > > I thought this was clear. Your patch is making the assumption that the reset is triggered by the SCSI layer. You cannot make that assumption, as there is an ioctl for resetting a USB device.
-> > > > > In case we are getting an error during the reset (our endpoints vanish), the device driver must report that to the USB layer, so the driver will always be disconnected.
-> > > > > We cannot drop errors.
-> > > > > 
-> > > > >   Regards
-> > > > >           Oliver
-> > > > 
-> > > > This patch modified uas_post_reset to skip rebind operation to avoid exception while -ENODEV happens not drop error.
-> > > > If uas_post_reset happens -ENODEV, usb_reset_and_verify_device must happen error.
-> > > > So,when we use ioctl(USBDEVFS_RESET) to reset device, if usb_reset_and_verify_device happens error, the error will be reported through ioctl return value. 
-> > > 
-> > > OK, It is possible that I am stupid. We must rebind if uas_post_reset()
-> > > fails. The driver will crash without the endpoints. Can you please
-> > > explain again in greater detail, what you are trying to achieve?
-> > 
-> > Actually no, the driver doesn't have to do anything if the post-reset 
-> > method fails.  usbcore will take care of rebinding automatically.
-> 
-> Yes, but the rebinding is not optional. Hence, either the post_reset()
-> must fail to trigger it, or it will be triggered anyway.
-> So if the rebinding hangs the machine, I cannot see how alter
-> changing the return value of uas_post_reset() would help.
-> 
-> It looks to me like the state transitions of SCSI are too
-> restrictive.
+> You basically have to have a reference to a node until you're done
+> accessing it. The refcounting in the fwnode framework is based on the OF
+> API --- otherwise you couldn't access OF nodes using the framework.
 
-Maybe I don't understand the problem correctly.  It sounds like the
-problem occurs because uas tries to rebind (Where, how, and why does it
-do this?  I don't see anything special in uas_post_reset) using the
-same scsi_host structure as before instead of creating a new one.  
-Trying to reuse a defunct host is definitely not allowed.
+> ACPI
+> does not have those (as you can't dynamically remove nodes).
 
-But if uas didn't try to do anything special, it would be unbound from
-the device, causing the scsi_host to be destroyed.  Then when usbcore
-automatically attempted a rebind, uas would create a new scsi_host and
-the rebind would have a chance to succeed, without hanging anything.
+What about configfs where we can load / unload tables at run time?
 
-If this description is wrong, please explain more fully.
+> The newly
+> added swnode does have refcounting of individual nodes as well.
 
-Alan Stern
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
