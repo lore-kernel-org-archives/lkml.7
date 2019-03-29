@@ -2,145 +2,200 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1B3C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DACC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25892173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E32206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:54:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="K7SYjhIu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbfC2Pxn (ORCPT
+        id S1729576AbfC2Pyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:53:43 -0400
-Received: from mga14.intel.com ([192.55.52.115]:64455 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729380AbfC2Pxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:53:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 08:53:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,284,1549958400"; 
-   d="scan'208";a="138518376"
-Received: from jamiecan-mobl.amr.corp.intel.com (HELO spandruv-mobl.amr.corp.intel.com) ([10.252.132.180])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Mar 2019 08:53:40 -0700
-Message-ID: <0fc21af78c41e49aea452f971b5afe1271a09f3f.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] platform/x86: intel_pmc_core: Convert to a
- platform_driver
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rajatxjain@gmail.com
-Cc:     Rajat Jain <rajatja@google.com>,
-        "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Evan Green <evgreen@google.com>,
-        "Box, David E" <david.e.box@intel.com>
-Date:   Fri, 29 Mar 2019 08:53:39 -0700
-In-Reply-To: <CAA93t1p915ofjgzLeW3n+tsKrDWU0wDjf7QXu1fwTao0U-bqLQ@mail.gmail.com>
-References: <20190313222124.229371-1-rajatja@google.com>
-         <20190316081752.GA21812@raj-desk2.iind.intel.com>
-         <CAA93t1qoQx2B9=KuNpuXL_PvdpgGJPzZk8N-KWqS4XyO8qrS5g@mail.gmail.com>
-         <3fc03e60-492a-e9b5-ac9b-caa17f8a8e27@linux.intel.com>
-         <CACK8Z6HGEeM_0AnM1eJcUgNPwFz6_wsT8oFAG2rkV4UZczDi3g@mail.gmail.com>
-         <c98af2ef-5800-0dee-7b58-3be48f612d07@linux.intel.com>
-         <CACK8Z6HQ1QMRygSVgWabO9kUSA3tTL9Uh0Lhw6wv3Vyb4aaFKA@mail.gmail.com>
-         <30c3eff209246cc184cbddb0ec60e9acd9dd1d6b.camel@linux.intel.com>
-         <CAA93t1p915ofjgzLeW3n+tsKrDWU0wDjf7QXu1fwTao0U-bqLQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-1.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 29 Mar 2019 11:54:45 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42659 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728853AbfC2Pyp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 11:54:45 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g3so3179938wrx.9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 08:54:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zrSpjNKWo+VxkqnG1fy57YXNJNah4GR2oKpOsjS7Ne4=;
+        b=K7SYjhIulP256a6OSQ5dJKoTPBswE+Dx1ImJPd5X7+2HLBlF40xvB17ZUgtQVQpYja
+         YxtTBEqhgXlUfKT7rfch91TE5Qp6L+tijJui3/u5YTk29jesNFCN4OIHSz14Z9jN6OAh
+         h+ycmVBDUA5aCerBw6C/owyms2lLv5lf+L2adeEfQbgCTsFrNkbdRNt9bbd88QIlrqzf
+         MSDQKegCMLbI7KnDgC9nOoZzWEsRD8MZ+bmNJxsfTFOByf4RMcb4u1sOl/fCq/P60U9E
+         AlMjVqpFNky7larEs/LaIqQgKJdEvbKyVYtqcQ9XcqksalDMFbZvhZgf0k0DA1Mo8WxJ
+         o0ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zrSpjNKWo+VxkqnG1fy57YXNJNah4GR2oKpOsjS7Ne4=;
+        b=dm7u/uBHqlWLVTqoENFocskZpXUroTVph/WPRQ+vlAEJyAdCrlWT72howDNUqwOq92
+         8XP1SVOqIptmqci3NOEdE/e9QrXjuem0rscEIqOg4xk6cuPRLIa0IV6oQ1o0XWh97RrI
+         sPHi6DZI7yistJAtGLfjtqNizn22tz5cCOLr5raoTmjFds2LiVykCi18BWHWFQQE4SeL
+         v5sdcj4tSxCtXFFtx8GKA8v/aSqVtdqbTm3u2Ln/Q2/kFBiuKXCVj3mQYRzLP2w1/O05
+         Gx9nSo8NJNYvwJL5c1SGXEn+grWGqt3clXAnDYUP5cgrNfTBU3kCdgxA1cDq0GSzf5v4
+         mO8g==
+X-Gm-Message-State: APjAAAUS4qrFNk/7xspEmnIiGEzkncs5dbciUonYbheTEB4CVf2dBjhS
+        KfCA60UbYrpQeotsU0/DrQWefw==
+X-Google-Smtp-Source: APXvYqynRc7cWYhfJvBUQeTbJUGPO7LH6H8sibwhV5+7GfiAfTYp41dWnbX54soYEdq/lqoonPQjUA==
+X-Received: by 2002:adf:fa47:: with SMTP id y7mr2593967wrr.27.1553874882338;
+        Fri, 29 Mar 2019 08:54:42 -0700 (PDT)
+Received: from localhost.localdomain (p2E5A5955.dip0.t-ipconnect.de. [46.90.89.85])
+        by smtp.gmail.com with ESMTPSA id e1sm4177959wrw.66.2019.03.29.08.54.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Mar 2019 08:54:40 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     jannh@google.com, luto@kernel.org, dhowells@redhat.com,
+        serge@hallyn.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     arnd@arndb.de, ebiederm@xmission.com, khlebnikov@yandex-team.ru,
+        keescook@chromium.org, adobriyan@gmail.com, tglx@linutronix.de,
+        mtk.manpages@gmail.com, bl0pbl33p@gmail.com, ldv@altlinux.org,
+        akpm@linux-foundation.org, oleg@redhat.com,
+        nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
+        viro@zeniv.linux.org.uk, joel@joelfernandes.org, dancol@google.com,
+        Christian Brauner <christian@brauner.io>
+Subject: [PATCH v2 0/5] pid: add pidfd_open()
+Date:   Fri, 29 Mar 2019 16:54:20 +0100
+Message-Id: <20190329155425.26059-1-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-03-28 at 22:29 -0700, Rajat Jain wrote:
-> Hi Srinivas,
-> 
-> 
+/* Introduction */
+This adds the pidfd_open() syscall.
+pidfd_open() allows to retrieve file descriptors for a given pid. This
+includes both file descriptors for processes and file descriptors for
+threads.
 
-[...]
+With the addition of this syscalls pidfds become independent of procfs just
+as pids are. Of course, if CONFIG_PROC_FS is not set then metadata access
+for processes will not be possible but everything else will just work fine.
+In addition, this allows us to remove the dependency of pidfd_send_signal()
+on procfs and enable it unconditionally.
+With the ability to call pidfd_open() on tids we can now add a flag to
+pidfd_send_signal() to signal to a specific thread capturing the
+functionality of tgkill() and related thread-focused signal syscalls.
 
-> So if everyone here thinks we should completely switch to using
-> > > the
-> > > ACPI HID "INT33A1" for attaching to the device, sure, we can do
-> > > that.
-> > > Yes, for Chromeos, we can put in a work around internally that
-> > > ensures
-> > > that shipping chromebooks (Kabylake etc) can work fine without
-> > > that
-> > > ACPI ID. What I do not know is if that will cause any regressions
-> > > outside of Chromeos. Can you discuss with Rafael, Andy, Srinivas
-> > > internally and let me know on how they'd like to proceed on this.
-> > > 
-> > > The other option is to apply this patch as-is so we know that
-> > > there
-> > > is
-> > > no "functional change" and thus no possible regression (so the
-> > > driver
-> > > continues to attach to those and only those systems that s it
-> > > used
-> > > to,
-> > > before this patch). And then introduce the ACPI ID Change as a
-> > > new
-> > > independent patch.
-> > 
-> > Use INT33A1 to enumerate, if this id doesn't exist then fallback to
-> > the
-> > cpuid style. The aim should be that we don't have to add any more
-> > CPU
-> > model to enumerate. But most probably register map will differ so
-> > we
-> > still may end up adding some CPU model relationship.
-> 
-> Thanks for the guidance. Just to reconfirm my understanding of your
-> suggestion:
-> 
-> Here is the suggestive code Rajneesh provided, and I intend to do it
-> similarly:
-> 
-> +static const struct acpi_device_id pmc_acpi_ids[] = {
-> +             {"INT33A1", 0}, /* _HID for Intel Power Engine, _CID
-> PNP0D80*/
-> +             { }
-> +};
-> 
-> +static struct platform_driver pmc_plat_driver = {
-> +             .remove = pmc_plat_remove,
-> +             .probe = pmc_plat_probe,
-> +             .driver = {
-> +                             .name = "pmc_core_driver",
-> +                             .acpi_match_table =
-> ACPI_PTR(pmc_acpi_ids),
-> +             },
-> +};
-> 
-> My understanding is that with this, the kernel would use
-> acpi_match_table to automatically create the platform_device on a
-> platform where ACPI tables contain the INT33A1 HID, and thus we don't
-> need to create the platform_device in module_init time on such
-> platforms.
-Yes. There will be /sys/bus/platform/devices/INT33A1:00.
+The desire to lift the restriction for pidfds on procfs has been expressed
+by multiple people (cf. the commit message of commit
+3eb39f47934f9d5a3027fe00d906a45fe3a15fad and [2]).
 
+/* Signature */
+int pidfd_open(pid_t pid, unsigned int flags);
 
->  So are you saying that during init, I should check if the
-> ACPI HID INT33A1 is not present on the platform, then use the cpu_id
-> table to create the platform_device? Thus newer platforms will not
-> need an entry in the table.
-Yes. Preferably in a different file as Andy would like. So the the
-current driver only implements platform driver for INT33A1. The other driver which will enumerate on CPUID and create INT33A1 platform device  if there is no ACPI match via acpi_match_device() or similar API, for INT33A1. When you create a platform device the pmc driver will be probed.
+/* pidfds are anon inode file descriptors */
+These pidfds are allocated using anon_inode_getfd(), are O_CLOEXEC by
+default and can be used with the pidfd_send_signal() syscall. They are not
+dirfds and as such have the advantage that we can make them pollable or
+readable in the future if we see a need to do so. The pidfds are not
+associated with a specific pid namespaces but rather only reference struct
+pid of a given process in their private_data member.
+Additionally, Andy made an argument that we should go forward with
+non-proc-dirfd file descriptors for the sake of security and extensibility
+(cf. [3]). This will unblock or help move along work on pidfd_wait which
+is currently ongoing.
 
-Thanks,
-Srinivas
+/* Process Metadata Access */
+One of the oustanding issues has been how to get information about a given
+process if pidfds are regular file descriptors and do not provide access to
+the process /proc/<pid> directory.
+Various solutions have been proposed. The one that most people prefer is to
+be able to retrieve a file descriptor to /proc/<pid> based on a pidfd
+(cf. [5]). The prefered solution for how to do this has been to implement
+an ioctl that for pidfds that translates a pidfd into a dirfd for
+/proc/<pid>. This has been implemented in this patchset as well. If
+PIDFD_GET_PROCFD is passed as a command to an ioctl() taking a pidfd and an
+fd referring to a procfs directory as an argument a corresponding dirfd to
+/proc/<pid> can be retrieved.
+The ioctl() makes very sure that the struct pid associated with the
+/proc/<pid> fd is identical to the struct pid stashed in the pidfd. This
+ensures that we avoid pid recycling issues.
 
+/* Testing */
+The patchset comes with tests (which btw. I consider mandatory with
+every feature-patch that intends to go through the pidfd tree):
+- test that no invalid flags can be passed to pidfd_open()
+- test that no invalid pid can be passed to pidfd_open()
+- test that a pidfd can be retrieved with pidfd_open()
+- test whether a pidfd can be converted into an fd to /proc/<pid> to get
+  metadata access
+- test that a pidfd retrieved based on a pid that has been recycled cannot
+  be converted into /proc/<pid> for that recycled pid
+
+/* Example */
+int pidfd = pidfd_open(1234, 0);
+int procfd = open("/proc", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+int procpidfd = ioctl(pidfd, PIDFD_GET_PROCFD, procfd);
+int statusfd = openat(procpidfd, "status", O_RDONLY | O_CLOEXEC);
+int ret = read(statusfd, buf, sizeof(buf));
+ret = pidfd_send_signal(pidfd, SIGKILL, NULL, 0);
+
+/* References */
+[1]: https://lore.kernel.org/lkml/20181228233725.722tdfgijxcssg76@brauner.io/
+[2]: https://lore.kernel.org/lkml/20190320203910.GA2842@avx2/
+[3]: https://lore.kernel.org/lkml/CALCETrXO=V=+qEdLDVPf8eCgLZiB9bOTrUfe0V-U-tUZoeoRDA@mail.gmail.com
+[4]: https://lore.kernel.org/lkml/CAHk-=wgmKZm-fESEiLq_W37sKpqCY89nQkPNfWhvF_CQ1ANgcw@mail.gmail.com
+[5]: https://lore.kernel.org/lkml/533075A9-A6CF-4549-AFC8-B90505B198FD@joelfernandes.org
+
+Christian Brauner (4):
+  pid: add pidfd_open()
+  signal: support pidfd_open() with pidfd_send_signal()
+  signal: PIDFD_SIGNAL_TID threads via pidfds
+  tests: add pidfd_open() tests
+
+David Howells (1):
+  Make anon_inodes unconditional
+
+ arch/arm/kvm/Kconfig                          |   1 -
+ arch/arm64/kvm/Kconfig                        |   1 -
+ arch/mips/kvm/Kconfig                         |   1 -
+ arch/powerpc/kvm/Kconfig                      |   1 -
+ arch/s390/kvm/Kconfig                         |   1 -
+ arch/x86/Kconfig                              |   1 -
+ arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
+ arch/x86/kvm/Kconfig                          |   1 -
+ drivers/base/Kconfig                          |   1 -
+ drivers/char/tpm/Kconfig                      |   1 -
+ drivers/dma-buf/Kconfig                       |   1 -
+ drivers/gpio/Kconfig                          |   1 -
+ drivers/iio/Kconfig                           |   1 -
+ drivers/infiniband/Kconfig                    |   1 -
+ drivers/vfio/Kconfig                          |   1 -
+ fs/Makefile                                   |   2 +-
+ fs/notify/fanotify/Kconfig                    |   1 -
+ fs/notify/inotify/Kconfig                     |   1 -
+ include/linux/pid.h                           |   2 +
+ include/linux/syscalls.h                      |   1 +
+ include/uapi/linux/wait.h                     |   5 +
+ init/Kconfig                                  |  10 -
+ kernel/pid.c                                  | 181 +++++++++
+ kernel/signal.c                               | 130 +++++--
+ kernel/sys_ni.c                               |   3 -
+ tools/testing/selftests/pidfd/Makefile        |   2 +-
+ tools/testing/selftests/pidfd/pidfd.h         |  57 +++
+ .../testing/selftests/pidfd/pidfd_open_test.c | 361 ++++++++++++++++++
+ tools/testing/selftests/pidfd/pidfd_test.c    |  41 +-
+ 30 files changed, 701 insertions(+), 112 deletions(-)
+ create mode 100644 tools/testing/selftests/pidfd/pidfd.h
+ create mode 100644 tools/testing/selftests/pidfd/pidfd_open_test.c
+
+-- 
+2.21.0
 
