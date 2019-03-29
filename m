@@ -2,148 +2,86 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704DEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 880D6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3C020651
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA3920651
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbfC2N6r (ORCPT
+        id S1729009AbfC2OAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 09:58:47 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60688 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728683AbfC2N6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 09:58:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C097FA78;
-        Fri, 29 Mar 2019 06:58:46 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 647F83F59C;
-        Fri, 29 Mar 2019 06:58:42 -0700 (PDT)
-Subject: Re: [RFC PATCH] irqchip/gic-v3: Make gic_handle_irq() notrace
-To:     Zenghui Yu <yuzenghui@huawei.com>, julien.thierry@arm.com,
-        rostedt@goodmis.org
-Cc:     mingo@redhat.com, catalin.marinas@arm.com, will.deacon@arm.com,
-        mark.rutland@arm.com, linux@armlinux.org.uk, james.morse@arm.com,
-        suzuki.poulose@arm.com, wanghaibin.wang@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1553865808-30604-1-git-send-email-yuzenghui@huawei.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <237b00d0-8a8d-ede6-91b1-c3e23e61925c@arm.com>
-Date:   Fri, 29 Mar 2019 13:58:40 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+        Fri, 29 Mar 2019 10:00:02 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:35738 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728804AbfC2OAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:00:02 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 711A0207AE;
+        Fri, 29 Mar 2019 15:00:00 +0100 (CET)
+Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 5A3211FF15;
+        Fri, 29 Mar 2019 15:00:00 +0100 (CET)
+Subject: Re: [PATCH] phy: qcom: qmp: Add SDM845 PCIe QMP PHY support
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Can Guo <cang@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+References: <20190226065919.22218-1-bjorn.andersson@linaro.org>
+ <513163ea-78fe-2910-2e82-a7014bda82e8@free.fr>
+Message-ID: <6ec3dc39-ea9b-db3b-25d1-822601d06391@free.fr>
+Date:   Fri, 29 Mar 2019 15:00:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <1553865808-30604-1-git-send-email-yuzenghui@huawei.com>
+In-Reply-To: <513163ea-78fe-2910-2e82-a7014bda82e8@free.fr>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri Mar 29 15:00:00 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+On 22/03/2019 14:42, Marc Gonzalez wrote:
 
-On 29/03/2019 13:23, Zenghui Yu wrote:
-> Enable pseudo NMI together with function_graph tracer, will lead
-> the system to a hang. This is easy to reproduce,
+> On 26/02/2019 07:59, Bjorn Andersson wrote:
 > 
->   1) Set "irqchip.gicv3_pseudo_nmi=1" on the kernel command line
->   2) echo function_graph > /sys/kernel/debug/tracing/current_tracer
+>> @@ -1384,6 +1536,11 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>>  
+>>  	qcom_qmp_phy_configure(pcs, cfg->regs, cfg->pcs_tbl, cfg->pcs_tbl_num);
+>>  
+>> +	if (cfg->pcs_misc_tbl) {
+>> +		qcom_qmp_phy_configure(pcs_misc, cfg->regs, cfg->pcs_misc_tbl,
+>> +				       cfg->pcs_misc_tbl_num);
+>> +	}
+>> +
+>>  	/*
+>>  	 * UFS PHY requires the deassert of software reset before serdes start.
+>>  	 * For UFS PHYs that do not have software reset control bits, defer
 > 
-> This patch (RFC) set gic_handle_irq() as notrace and it seems works
-> fine now. But I have no idea about what the issue is exactly, and
-> you can regard this patch as a report then :)
+> I think it would be better to configure pcs_misc *before* pcs.
+> That would be closer to what downstream does (for 835 and 845 at least).
 > 
-> Can someone give a look at it and provide some explanations ?
+> Also you don't need to test for NULL as that is already done in
+> qcom_qmp_phy_configure() -- and in fact even that test is redundant,
+> since the array is not dereferenced when count is 0.
 > 
-> Thanks!
-> 
-> Cc: Julien Thierry <julien.thierry@arm.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->  drivers/irqchip/irq-gic-v3.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index 15e55d3..8d0c25f 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -487,7 +487,7 @@ static inline void gic_handle_nmi(u32 irqnr, struct pt_regs *regs)
->  		gic_deactivate_unhandled(irqnr);
->  }
->  
-> -static asmlinkage void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
-> +static asmlinkage notrace void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
->  {
->  	u32 irqnr;
->  
-> 
+> When are you planning on sending a v2 of your PCIe series?
 
+I split my comments across 3 messages. Have you seen them all?
+(And taken them into account?)
 
-That's interesting. Do you have any out of tree patch that actually
-makes use of the pseudo-NMI feature? Without those patches, the
-behaviour should stay unchanged.
+Note: I folded the drivers/phy/qualcomm/phy-qcom-qmp.h definitions within
+[PATCH v3 1/2] phy: qcom-qmp: Add msm8998 PCIe QMP PHY support
 
-On the other hand, if you can generate pseudo-NMIs, you could end-up
-tracing gic_handle_irq whilst being inside the tracing code with
-interrupts being notionally disabled (and that could be pretty bad).
-
-So, patches or no patches?
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Regards.
