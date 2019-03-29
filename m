@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2862C10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 04:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0E0C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 04:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8409721773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 04:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A20821773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 04:14:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbfC2EOo (ORCPT
+        id S1728761AbfC2EOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 00:14:44 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5204 "EHLO huawei.com"
+        Fri, 29 Mar 2019 00:14:54 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48914 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728660AbfC2EOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728655AbfC2EOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Mar 2019 00:14:38 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2489B3022D72F885C4F3;
-        Fri, 29 Mar 2019 12:14:30 +0800 (CST)
+        by Forcepoint Email with ESMTP id 84C19D4B1A73A2153A29;
+        Fri, 29 Mar 2019 12:14:35 +0800 (CST)
 Received: from vm100-107-113-134.huawei.com (100.107.113.134) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 29 Mar 2019 12:14:22 +0800
+ 14.3.408.0; Fri, 29 Mar 2019 12:14:25 +0800
 From:   Yu Chen <chenyu56@huawei.com>
 To:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -35,22 +35,14 @@ CC:     <john.stultz@linaro.org>, <suzhuangluan@hisilicon.com>,
         <lipengcheng8@huawei.com>, <songxiaowei@hisilicon.com>,
         <xuyiping@hisilicon.com>, <xuyoujun4@huawei.com>,
         <yudongbin@hisilicon.com>, <zangleigang@hisilicon.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Yu Chen <chenyu56@huawei.com>, Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Arnd Bergmann" <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>,
-        Pengcheng Li <lpc.li@hisilicon.com>,
-        Jianguo Sun <sunjianguo1@huawei.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jiancheng Xue <xuejiancheng@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>
-Subject: [PATCH v5 07/13] phy: Add usb phy support for hi3660 Soc of Hisilicon
-Date:   Fri, 29 Mar 2019 12:14:03 +0800
-Message-ID: <20190329041409.70138-8-chenyu56@huawei.com>
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH v5 10/13] usb: dwc3: Registering a role switch in the DRD code.
+Date:   Fri, 29 Mar 2019 12:14:06 +0800
+Message-ID: <20190329041409.70138-11-chenyu56@huawei.com>
 X-Mailer: git-send-email 2.15.0-rc2
 In-Reply-To: <20190329041409.70138-1-chenyu56@huawei.com>
 References: <20190329041409.70138-1-chenyu56@huawei.com>
@@ -63,335 +55,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver handles usb phy power on and shutdown for hi3660 Soc of
-Hisilicon.
+The Type-C drivers use USB role switch API to inform the
+system about the negotiated data role, so registering a role
+switch in the DRD code in order to support platforms with
+USB Type-C connectors.
 
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Pengcheng Li <lpc.li@hisilicon.com>
-Cc: Jianguo Sun <sunjianguo1@huawei.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Cc: Jun Li <lijun.kernel@gmail.com>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
 Cc: John Stultz <john.stultz@linaro.org>
-Cc: Binghui Wang <wangbinghui@hisilicon.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 ---
-v1:
-* Remove unused code and add comment for time delay as suggested by
-Kishon Vijay Abraham I.
 v2:
-* Fix license declaration.
-* Remove redundant parens.
-* Remove unused member variables in struct hi3660_priv.
+* Assign fwnode in dwc3_role_switch.
+v3:
+* Add default mode property for usb role switch.
+* Add select USB_ROLE_SWITCH for USB_DWC3_DUAL_ROLE in Kconfig.
+* Do usb_role_switch_register only if property "usb-role-switch"
+* present.
 v4:
-* Add comments for HI3660_USB_DEFAULT_PHY_PARAM.
-* Add margin for usleep_range.
-* Get regmap of otg_bc from parent's of_node.
+* Add description for 'role_sw' and 'role_switch_default_mode'.
+v5:
+* Init dwc3 mode for usb_role_switch branch.
 ---
 ---
- MAINTAINERS                             |   8 ++
- drivers/phy/hisilicon/Kconfig           |  10 ++
- drivers/phy/hisilicon/Makefile          |   1 +
- drivers/phy/hisilicon/phy-hi3660-usb3.c | 233 ++++++++++++++++++++++++++++++++
- 4 files changed, 252 insertions(+)
- create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
+ drivers/usb/dwc3/Kconfig |  1 +
+ drivers/usb/dwc3/core.h  |  6 +++++
+ drivers/usb/dwc3/drd.c   | 63 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 69 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3e5a5d263f29..c0057dd82dbd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16084,6 +16084,14 @@ L:	linux-usb@vger.kernel.org
- S:	Maintained
- F:	drivers/usb/roles/intel-xhci-usb-role-switch.c
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index 2b1494460d0c..661b1d2efc8b 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -44,6 +44,7 @@ config USB_DWC3_DUAL_ROLE
+ 	bool "Dual Role mode"
+ 	depends on ((USB=y || USB=USB_DWC3) && (USB_GADGET=y || USB_GADGET=USB_DWC3))
+ 	depends on (EXTCON=y || EXTCON=USB_DWC3)
++	select USB_ROLE_SWITCH
+ 	help
+ 	  This is the default mode of working of DWC3 controller where
+ 	  both host and gadget features are enabled.
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 6a050d663ec7..e6d40f79faa7 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -25,6 +25,7 @@
+ #include <linux/usb/ch9.h>
+ #include <linux/usb/gadget.h>
+ #include <linux/usb/otg.h>
++#include <linux/usb/role.h>
+ #include <linux/ulpi/interface.h>
  
-+USB IP DRIVER FOR HISILICON KIRIN
-+M:	Yu Chen <chenyu56@huawei.com>
-+M:	Binghui Wang <wangbinghui@hisilicon.com>
-+L:	linux-usb@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-+F:	drivers/phy/hisilicon/phy-hi3660-usb3.c
-+
- USB ISP116X DRIVER
- M:	Olav Kongas <ok@artecdesign.ee>
- L:	linux-usb@vger.kernel.org
-diff --git a/drivers/phy/hisilicon/Kconfig b/drivers/phy/hisilicon/Kconfig
-index b40ee54a1a50..3c142f08987c 100644
---- a/drivers/phy/hisilicon/Kconfig
-+++ b/drivers/phy/hisilicon/Kconfig
-@@ -12,6 +12,16 @@ config PHY_HI6220_USB
+ #include <linux/phy/phy.h>
+@@ -958,6 +959,9 @@ struct dwc3_scratchpad_array {
+  * @hsphy_mode: UTMI phy mode, one of following:
+  *		- USBPHY_INTERFACE_MODE_UTMI
+  *		- USBPHY_INTERFACE_MODE_UTMIW
++ * role_sw: usb_role_switch handle
++ * role_switch_default_mode: default operation mode of controller while
++ *			usb role is USB_ROLE_NONE.
+  * @usb2_phy: pointer to USB2 PHY
+  * @usb3_phy: pointer to USB3 PHY
+  * @usb2_generic_phy: pointer to USB2 PHY
+@@ -1091,6 +1095,8 @@ struct dwc3 {
+ 	struct extcon_dev	*edev;
+ 	struct notifier_block	edev_nb;
+ 	enum usb_phy_interface	hsphy_mode;
++	struct usb_role_switch	*role_sw;
++	enum usb_dr_mode	role_switch_default_mode;
  
- 	  To compile this driver as a module, choose M here.
+ 	u32			fladj;
+ 	u32			irq_gadget;
+diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+index 726100d1ac0d..3a83596735c4 100644
+--- a/drivers/usb/dwc3/drd.c
++++ b/drivers/usb/dwc3/drd.c
+@@ -479,6 +479,43 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
+ 	return edev;
+ }
  
-+config PHY_HI3660_USB
-+	tristate "hi3660 USB PHY support"
-+	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
-+	select GENERIC_PHY
-+	select MFD_SYSCON
-+	help
-+	  Enable this to support the HISILICON HI3660 USB PHY.
-+
-+	  To compile this driver as a module, choose M here.
-+
- config PHY_HISTB_COMBPHY
- 	tristate "HiSilicon STB SoCs COMBPHY support"
- 	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
-diff --git a/drivers/phy/hisilicon/Makefile b/drivers/phy/hisilicon/Makefile
-index f662a4fe18d8..75ba64e2faf8 100644
---- a/drivers/phy/hisilicon/Makefile
-+++ b/drivers/phy/hisilicon/Makefile
-@@ -1,4 +1,5 @@
- obj-$(CONFIG_PHY_HI6220_USB)		+= phy-hi6220-usb.o
-+obj-$(CONFIG_PHY_HI3660_USB)		+= phy-hi3660-usb3.o
- obj-$(CONFIG_PHY_HISTB_COMBPHY)		+= phy-histb-combphy.o
- obj-$(CONFIG_PHY_HISI_INNO_USB2)	+= phy-hisi-inno-usb2.o
- obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
-diff --git a/drivers/phy/hisilicon/phy-hi3660-usb3.c b/drivers/phy/hisilicon/phy-hi3660-usb3.c
-new file mode 100644
-index 000000000000..cc0af2c044d0
---- /dev/null
-+++ b/drivers/phy/hisilicon/phy-hi3660-usb3.c
-@@ -0,0 +1,233 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Phy provider for USB 3.0 controller on HiSilicon 3660 platform
-+ *
-+ * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
-+ *		http://www.huawei.com
-+ *
-+ * Authors: Yu Chen <chenyu56@huawei.com>
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define PERI_CRG_CLK_EN4			0x40
-+#define PERI_CRG_CLK_DIS4			0x44
-+#define GT_CLK_USB3OTG_REF			BIT(0)
-+#define GT_ACLK_USB3OTG				BIT(1)
-+
-+#define PERI_CRG_RSTEN4				0x90
-+#define PERI_CRG_RSTDIS4			0x94
-+#define IP_RST_USB3OTGPHY_POR			BIT(3)
-+#define IP_RST_USB3OTG				BIT(5)
-+
-+#define PERI_CRG_ISODIS				0x148
-+#define USB_REFCLK_ISO_EN			BIT(25)
-+
-+#define PCTRL_PERI_CTRL3			0x10
-+#define PCTRL_PERI_CTRL3_MSK_START		16
-+#define USB_TCXO_EN				BIT(1)
-+
-+#define PCTRL_PERI_CTRL24			0x64
-+#define SC_CLK_USB3PHY_3MUX1_SEL		BIT(25)
-+
-+#define USBOTG3_CTRL0				0x00
-+#define SC_USB3PHY_ABB_GT_EN			BIT(15)
-+
-+#define USBOTG3_CTRL2				0x08
-+#define USBOTG3CTRL2_POWERDOWN_HSP		BIT(0)
-+#define USBOTG3CTRL2_POWERDOWN_SSP		BIT(1)
-+
-+#define USBOTG3_CTRL3				0x0C
-+#define USBOTG3_CTRL3_VBUSVLDEXT		BIT(6)
-+#define USBOTG3_CTRL3_VBUSVLDEXTSEL		BIT(5)
-+
-+#define USBOTG3_CTRL4				0x10
-+
-+#define USBOTG3_CTRL7				0x1c
-+#define REF_SSP_EN				BIT(16)
-+
-+/* This value config the default txtune parameter of the usb 2.0 phy */
-+#define HI3660_USB_DEFAULT_PHY_PARAM		0x1c466e3
-+
-+struct hi3660_priv {
-+	struct device *dev;
-+	struct regmap *peri_crg;
-+	struct regmap *pctrl;
-+	struct regmap *otg_bc;
-+	u32 eye_diagram_param;
-+};
-+
-+static int hi3660_phy_init(struct phy *phy)
++static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
 +{
-+	struct hi3660_priv *priv = phy_get_drvdata(phy);
-+	u32 val, mask;
-+	int ret;
++	struct dwc3 *dwc = dev_get_drvdata(dev);
++	u32 mode;
 +
-+	/* usb refclk iso disable */
-+	ret = regmap_write(priv->peri_crg, PERI_CRG_ISODIS, USB_REFCLK_ISO_EN);
-+	if (ret)
-+		goto out;
++	switch (role) {
++	case USB_ROLE_HOST:
++		mode = DWC3_GCTL_PRTCAP_HOST;
++		break;
++	case USB_ROLE_DEVICE:
++		mode = DWC3_GCTL_PRTCAP_DEVICE;
++		break;
++	default:
++		if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
++			mode = DWC3_GCTL_PRTCAP_HOST;
++		else
++			mode = DWC3_GCTL_PRTCAP_DEVICE;
++		break;
++	}
 +
-+	/* enable usb_tcxo_en */
-+	val = USB_TCXO_EN | (USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START);
-+	ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3, val);
-+	if (ret)
-+		goto out;
-+
-+	/* assert phy */
-+	val = IP_RST_USB3OTGPHY_POR | IP_RST_USB3OTG;
-+	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTEN4, val);
-+	if (ret)
-+		goto out;
-+
-+	/* enable phy ref clk */
-+	val = SC_USB3PHY_ABB_GT_EN;
-+	mask = val;
-+	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL0, mask, val);
-+	if (ret)
-+		goto out;
-+
-+	val = REF_SSP_EN;
-+	mask = val;
-+	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL7, mask, val);
-+	if (ret)
-+		goto out;
-+
-+	/* exit from IDDQ mode */
-+	mask = USBOTG3CTRL2_POWERDOWN_HSP | USBOTG3CTRL2_POWERDOWN_SSP;
-+	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL2, mask, 0);
-+	if (ret)
-+		goto out;
-+
-+	/* delay for exit from IDDQ mode */
-+	usleep_range(100, 120);
-+
-+	/* deassert phy */
-+	val = IP_RST_USB3OTGPHY_POR | IP_RST_USB3OTG;
-+	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTDIS4, val);
-+	if (ret)
-+		goto out;
-+
-+	/* delay for phy deasserted */
-+	usleep_range(10000, 15000);
-+
-+	/* fake vbus valid signal */
-+	val = USBOTG3_CTRL3_VBUSVLDEXT | USBOTG3_CTRL3_VBUSVLDEXTSEL;
-+	mask = val;
-+	ret = regmap_update_bits(priv->otg_bc, USBOTG3_CTRL3, mask, val);
-+	if (ret)
-+		goto out;
-+
-+	/* delay for vbus valid */
-+	usleep_range(100, 120);
-+
-+	ret = regmap_write(priv->otg_bc, USBOTG3_CTRL4,
-+			priv->eye_diagram_param);
-+	if (ret)
-+		goto out;
-+
++	dwc3_set_mode(dwc, mode);
 +	return 0;
-+out:
-+	dev_err(priv->dev, "failed to init phy ret: %d\n", ret);
-+	return ret;
 +}
 +
-+static int hi3660_phy_exit(struct phy *phy)
++static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
 +{
-+	struct hi3660_priv *priv = phy_get_drvdata(phy);
-+	u32 val;
-+	int ret;
++	struct dwc3 *dwc = dev_get_drvdata(dev);
++	unsigned long flags;
++	enum usb_role role;
 +
-+	/* assert phy */
-+	val = IP_RST_USB3OTGPHY_POR;
-+	ret = regmap_write(priv->peri_crg, PERI_CRG_RSTEN4, val);
-+	if (ret)
-+		goto out;
++	spin_lock_irqsave(&dwc->lock, flags);
++	role = dwc->current_otg_role;
++	spin_unlock_irqrestore(&dwc->lock, flags);
 +
-+	/* disable usb_tcxo_en */
-+	val = USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START;
-+	ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3, val);
-+	if (ret)
-+		goto out;
-+
-+	return 0;
-+out:
-+	dev_err(priv->dev, "failed to exit phy ret: %d\n", ret);
-+	return ret;
++	return role;
 +}
 +
-+static struct phy_ops hi3660_phy_ops = {
-+	.init		= hi3660_phy_init,
-+	.exit		= hi3660_phy_exit,
-+	.owner		= THIS_MODULE,
-+};
+ int dwc3_drd_init(struct dwc3 *dwc)
+ {
+ 	int ret, irq;
+@@ -487,7 +524,28 @@ int dwc3_drd_init(struct dwc3 *dwc)
+ 	if (IS_ERR(dwc->edev))
+ 		return PTR_ERR(dwc->edev);
+ 
+-	if (dwc->edev) {
++	if (device_property_read_bool(dwc->dev, "usb-role-switch")) {
++		struct usb_role_switch_desc dwc3_role_switch = {0};
++		u32 mode;
 +
-+static int hi3660_phy_probe(struct platform_device *pdev)
-+{
-+	struct phy_provider *phy_provider;
-+	struct device *dev = &pdev->dev;
-+	struct phy *phy;
-+	struct hi3660_priv *priv;
++		if (device_property_read_bool(dwc->dev,
++				"role-switch-default-host")) {
++			dwc->role_switch_default_mode = USB_DR_MODE_HOST;
++			mode = DWC3_GCTL_PRTCAP_HOST;
++		} else {
++			dwc->role_switch_default_mode = USB_DR_MODE_PERIPHERAL;
++			mode = DWC3_GCTL_PRTCAP_DEVICE;
++		}
++		dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
++		dwc3_role_switch.set = dwc3_usb_role_switch_set;
++		dwc3_role_switch.get = dwc3_usb_role_switch_get;
++		dwc->role_sw = usb_role_switch_register(dwc->dev,
++							&dwc3_role_switch);
++		if (IS_ERR(dwc->role_sw))
++			return PTR_ERR(dwc->role_sw);
 +
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
++		dwc3_set_mode(dwc, mode);
++	} else if (dwc->edev) {
+ 		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
+ 		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
+ 					       &dwc->edev_nb);
+@@ -534,6 +592,9 @@ void dwc3_drd_exit(struct dwc3 *dwc)
+ {
+ 	unsigned long flags;
+ 
++	if (dwc->role_sw)
++		usb_role_switch_unregister(dwc->role_sw);
 +
-+	priv->dev = dev;
-+	priv->peri_crg = syscon_regmap_lookup_by_phandle(dev->of_node,
-+					"hisilicon,pericrg-syscon");
-+	if (IS_ERR(priv->peri_crg)) {
-+		dev_err(dev, "no hisilicon,pericrg-syscon\n");
-+		return PTR_ERR(priv->peri_crg);
-+	}
-+
-+	priv->pctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
-+					"hisilicon,pctrl-syscon");
-+	if (IS_ERR(priv->pctrl)) {
-+		dev_err(dev, "no hisilicon,pctrl-syscon\n");
-+		return PTR_ERR(priv->pctrl);
-+	}
-+
-+	/* node of hi3660 phy is a sub-node of usb3_otg_bc */
-+	priv->otg_bc = syscon_node_to_regmap(dev->parent->of_node);
-+	if (IS_ERR(priv->otg_bc)) {
-+		dev_err(dev, "no hisilicon,usb3-otg-bc-syscon\n");
-+		return PTR_ERR(priv->otg_bc);
-+	}
-+
-+	if (of_property_read_u32(dev->of_node, "hisilicon,eye-diagram-param",
-+		&(priv->eye_diagram_param)))
-+		priv->eye_diagram_param = HI3660_USB_DEFAULT_PHY_PARAM;
-+
-+	phy = devm_phy_create(dev, NULL, &hi3660_phy_ops);
-+	if (IS_ERR(phy))
-+		return PTR_ERR(phy);
-+
-+	phy_set_drvdata(phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id hi3660_phy_of_match[] = {
-+	{.compatible = "hisilicon,hi3660-usb-phy",},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, hi3660_phy_of_match);
-+
-+static struct platform_driver hi3660_phy_driver = {
-+	.probe	= hi3660_phy_probe,
-+	.driver = {
-+		.name	= "hi3660-usb-phy",
-+		.of_match_table	= hi3660_phy_of_match,
-+	}
-+};
-+module_platform_driver(hi3660_phy_driver);
-+
-+MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Hilisicon Hi3660 USB3 PHY Driver");
+ 	if (dwc->edev)
+ 		extcon_unregister_notifier(dwc->edev, EXTCON_USB_HOST,
+ 					   &dwc->edev_nb);
 -- 
 2.15.0-rc2
 
