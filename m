@@ -2,130 +2,212 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86DAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 01:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7B7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 971B22173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 01:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F8E12173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:00:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pD1HY0H2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbfC2B70 (ORCPT
+        id S1728556AbfC2CAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 21:59:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34514 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727434AbfC2B70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 21:59:26 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4A6BA3086205;
-        Fri, 29 Mar 2019 01:59:25 +0000 (UTC)
-Received: from redhat.com (ovpn-121-118.rdu2.redhat.com [10.10.121.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DC41C8958A;
-        Fri, 29 Mar 2019 01:59:23 +0000 (UTC)
-Date:   Thu, 28 Mar 2019 21:59:19 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2 07/11] mm/hmm: add default fault flags to avoid the
- need to pre-fill pfns arrays.
-Message-ID: <20190329015919.GF16680@redhat.com>
-References: <20190328221203.GF13560@redhat.com>
- <555ad864-d1f9-f513-9666-0d3d05dbb85d@nvidia.com>
- <20190328223153.GG13560@redhat.com>
- <768f56f5-8019-06df-2c5a-b4187deaac59@nvidia.com>
- <20190328232125.GJ13560@redhat.com>
- <d2008b88-962f-b7b4-8351-9e1df95ea2cc@nvidia.com>
- <20190328164231.GF31324@iweiny-DESK2.sc.intel.com>
- <20190329011727.GC16680@redhat.com>
- <f053e75e-25b5-d95a-bb3c-73411ba49e3e@nvidia.com>
- <20190329014259.GD16680@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190329014259.GD16680@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 29 Mar 2019 01:59:25 +0000 (UTC)
+        Thu, 28 Mar 2019 22:00:34 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45980 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbfC2CAd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 22:00:33 -0400
+Received: by mail-pf1-f196.google.com with SMTP id e24so249203pfi.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 19:00:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=9mFNMPw/QqsPqy7z42cyHVgjXHf3L4n2v/4T6hDyU3k=;
+        b=pD1HY0H2AkUwC5ez7LWSNW0wENVttMfNRkxe6ruo9yyVGmD8PQi8wHNodzbr2SrAz1
+         Lv4Ip8Mjt2MduyXPjjBsSmnDMlezrBpSCAMh46/3CTRYAeoK8ryf8YyfDTpCsJaJrHcy
+         9dwz1W+GWRRvv92gsSKBtAKux61AeF6pThB6VoCrTK/7xRWP32WnqB3Hl0fhrPyfSnPT
+         8AKI85hZu4VCDCs/oeXSVAJsphIqTjd00Cyca2j9BK7YdE/i0Gptz66eIAAQ7RP2Szqq
+         NWLAZ1r9bal69xAsmH7dQCsst2HKRXUosTCgN/nbrqYJNnsmengTTCduRCa0Cm1WiSUh
+         u5MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9mFNMPw/QqsPqy7z42cyHVgjXHf3L4n2v/4T6hDyU3k=;
+        b=Hec2hKt827zvP7Eh904dKOydvltBgFbzlI1nJB/n9SRGkU5Iu5bfcdvWj/QEsGr3iW
+         IdYLa2/bTj0aolbE8PbbmSvH62BfYC+bLASs5egtsfSx9IeWhWl4Tk7SMUqf2Z0v9Vkp
+         EpiYPMinQn7Hk8mbvafzLUSg6FSeLbw+Z5cE926EnK+SkQP06dCJ5eC04z5ZzqMVtwG6
+         I5qHVhIMmed15I/P7Zs5rKZ+qBxwdpAlx9UOLA8fsUODdeiSKkod0WFXf69nwqTu81hs
+         ZZzlXcn2colPVgD6RqwqZIzWZgj91mNW8Z3Ou/hLCIgK9/rDnIMtOocMlzupXZO2z4Pc
+         Ht1Q==
+X-Gm-Message-State: APjAAAUbxgC2fNV7+1ztlF6VSKxvG40JZoJLdYvkD6zBHcCcRSnS9Gi4
+        q6jPsmI+yCcyNtC+3tV03jU=
+X-Google-Smtp-Source: APXvYqyA3faPZm9DPg6+5laCJz73cNffztZ6C2eQlqKFjP/jm2ipt+FFssxn/amc1zw9S88N/jbRRw==
+X-Received: by 2002:aa7:9193:: with SMTP id x19mr35924480pfa.108.1553824832833;
+        Thu, 28 Mar 2019 19:00:32 -0700 (PDT)
+Received: from ubuntu.huaqin.com ([220.232.156.66])
+        by smtp.gmail.com with ESMTPSA id n65sm666279pfb.160.2019.03.28.19.00.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 19:00:31 -0700 (PDT)
+From:   tony.zou.hq@gmail.com
+To:     alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        linux-kernel@vger.kernel.org
+Cc:     dbasehore@chromium.org,
+        Tony Zou <zoutao@huaqin.corp-partner.google.com>
+Subject: [PATCH] max98357a:add dai without triggered by pcm
+Date:   Fri, 29 Mar 2019 09:51:59 +0800
+Message-Id: <1553824319-2155-1-git-send-email-tony.zou.hq@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 09:42:59PM -0400, Jerome Glisse wrote:
-> On Thu, Mar 28, 2019 at 06:30:26PM -0700, John Hubbard wrote:
-> > On 3/28/19 6:17 PM, Jerome Glisse wrote:
-> > > On Thu, Mar 28, 2019 at 09:42:31AM -0700, Ira Weiny wrote:
-> > >> On Thu, Mar 28, 2019 at 04:28:47PM -0700, John Hubbard wrote:
-> > >>> On 3/28/19 4:21 PM, Jerome Glisse wrote:
-> > >>>> On Thu, Mar 28, 2019 at 03:40:42PM -0700, John Hubbard wrote:
-> > >>>>> On 3/28/19 3:31 PM, Jerome Glisse wrote:
-> > >>>>>> On Thu, Mar 28, 2019 at 03:19:06PM -0700, John Hubbard wrote:
-> > >>>>>>> On 3/28/19 3:12 PM, Jerome Glisse wrote:
-> > >>>>>>>> On Thu, Mar 28, 2019 at 02:59:50PM -0700, John Hubbard wrote:
-> > >>>>>>>>> On 3/25/19 7:40 AM, jglisse@redhat.com wrote:
-> > >>>>>>>>>> From: Jérôme Glisse <jglisse@redhat.com>
-> > >>> [...]
-> > >> Indeed I did not realize there is an hmm "pfn" until I saw this function:
-> > >>
-> > >> /*
-> > >>  * hmm_pfn_from_pfn() - create a valid HMM pfn value from pfn
-> > >>  * @range: range use to encode HMM pfn value
-> > >>  * @pfn: pfn value for which to create the HMM pfn
-> > >>  * Returns: valid HMM pfn for the pfn
-> > >>  */
-> > >> static inline uint64_t hmm_pfn_from_pfn(const struct hmm_range *range,
-> > >>                                         unsigned long pfn)
-> > >>
-> > >> So should this patch contain some sort of helper like this... maybe?
-> > >>
-> > >> I'm assuming the "hmm_pfn" being returned above is the device pfn being
-> > >> discussed here?
-> > >>
-> > >> I'm also thinking calling it pfn is confusing.  I'm not advocating a new type
-> > >> but calling the "device pfn's" "hmm_pfn" or "device_pfn" seems like it would
-> > >> have shortened the discussion here.
-> > >>
-> > > 
-> > > That helper is also use today by nouveau so changing that name is not that
-> > > easy it does require the multi-release dance. So i am not sure how much
-> > > value there is in a name change.
-> > > 
-> > 
-> > Once the dust settles, I would expect that a name change for this could go
-> > via Andrew's tree, right? It seems incredible to claim that we've built something
-> > that effectively does not allow any minor changes!
-> > 
-> > I do think it's worth some *minor* trouble to improve the name, assuming that we
-> > can do it in a simple patch, rather than some huge maintainer-level effort.
-> 
-> Change to nouveau have to go through nouveau tree so changing name means:
->  -  release N add function with new name, maybe make the old function just
->     a wrapper to the new function
->  -  release N+1 update user to use the new name
->  -  release N+2 remove the old name
-> 
-> So it is do-able but it is painful so i rather do that one latter that now
-> as i am sure people will then complain again about some little thing and it
-> will post pone this whole patchset on that new bit. To avoid post-poning
-> RDMA and bunch of other patchset that build on top of that i rather get
-> this patchset in and then do more changes in the next cycle.
-> 
-> This is just a capacity thing.
+From: Tony Zou <zoutao@huaqin.corp-partner.google.com>
 
-Also for clarity changes to API i am doing in this patchset is to make
-the ODP convertion easier and thus they bring a real hard value. Renaming
-those function is esthetic, i am not saying it is useless, i am saying it
-does not have the same value as those other changes and i would rather not
-miss another merge window just for esthetic changes.
+max98357a's enable pin need setting independently
+when max98357a is shared I2S with other codec.
 
-Cheers,
-Jérôme
+add dai "max98357a-hifi" without pcm trigger,
+and use "Spk PA Switch" to set the enable pin.
+
+Signed-off-by: Tony Zou <zoutao@huaqin.corp-partner.google.com>
+---
+ sound/soc/codecs/max98357a.c |   94 ++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 77 insertions(+), 17 deletions(-)
+
+diff --git a/sound/soc/codecs/max98357a.c b/sound/soc/codecs/max98357a.c
+index d469576..bd3e77b 100644
+--- a/sound/soc/codecs/max98357a.c
++++ b/sound/soc/codecs/max98357a.c
+@@ -51,12 +51,52 @@ static int max98357a_daiops_trigger(struct snd_pcm_substream *substream,
+ 	return 0;
+ }
+ 
++static const char * const ext_spk_text[] = {
++	"Off", "On"
++};
++
++static const struct soc_enum ext_spk_enum =
++	SOC_ENUM_SINGLE(SND_SOC_NOPM, 0,
++			ARRAY_SIZE(ext_spk_text), ext_spk_text);
++
++
++static const struct snd_kcontrol_new ext_spk_mux =
++	SOC_DAPM_ENUM("Spk PA Switch", ext_spk_enum);
++
++
++static int max98357a_enable_spk_pa(struct snd_soc_dapm_widget *w,
++		struct snd_kcontrol *kcontrol, int event)
++{
++	struct snd_soc_component *cmpnt = snd_soc_dapm_to_component(w->dapm);
++	struct gpio_desc *sdmode = snd_soc_component_get_drvdata(cmpnt);
++
++	if (!sdmode)
++		return 0;
++
++	switch (event) {
++	case SND_SOC_DAPM_POST_PMU:
++		gpiod_set_value(sdmode, 1);
++		break;
++	case SND_SOC_DAPM_PRE_PMD:
++		gpiod_set_value(sdmode, 0);
++		break;
++	}
++	return 0;
++}
++
++
+ static const struct snd_soc_dapm_widget max98357a_dapm_widgets[] = {
+ 	SND_SOC_DAPM_OUTPUT("Speaker"),
++	SND_SOC_DAPM_SPK("Spk PA", max98357a_enable_spk_pa),
++	SND_SOC_DAPM_MUX("Spk PA Switch", SND_SOC_NOPM, 0, 0,
++			&ext_spk_mux),
+ };
+ 
+ static const struct snd_soc_dapm_route max98357a_dapm_routes[] = {
+ 	{"Speaker", NULL, "HiFi Playback"},
++	{"Speaker", NULL, "Spk PA"},
++	{"Spk PA", NULL, "Spk PA Switch"},
++	{"Spk PA Switch", "On", "HiFi Playback1"},
+ };
+ 
+ static int max98357a_component_probe(struct snd_soc_component *component)
+@@ -88,30 +128,50 @@ static int max98357a_component_probe(struct snd_soc_component *component)
+ 	.trigger	= max98357a_daiops_trigger,
+ };
+ 
+-static struct snd_soc_dai_driver max98357a_dai_driver = {
+-	.name = "HiFi",
+-	.playback = {
+-		.stream_name	= "HiFi Playback",
+-		.formats	= SNDRV_PCM_FMTBIT_S16 |
+-					SNDRV_PCM_FMTBIT_S24 |
+-					SNDRV_PCM_FMTBIT_S32,
+-		.rates		= SNDRV_PCM_RATE_8000 |
+-					SNDRV_PCM_RATE_16000 |
+-					SNDRV_PCM_RATE_48000 |
+-					SNDRV_PCM_RATE_96000,
+-		.rate_min	= 8000,
+-		.rate_max	= 96000,
+-		.channels_min	= 1,
+-		.channels_max	= 2,
++static struct snd_soc_dai_driver max98357a_dai_driver[] = {
++	{
++		.name = "HiFi",
++		.playback = {
++			.stream_name	= "HiFi Playback",
++			.formats	= SNDRV_PCM_FMTBIT_S16 |
++						SNDRV_PCM_FMTBIT_S24 |
++						SNDRV_PCM_FMTBIT_S32,
++			.rates		= SNDRV_PCM_RATE_8000 |
++						SNDRV_PCM_RATE_16000 |
++						SNDRV_PCM_RATE_48000 |
++						SNDRV_PCM_RATE_96000,
++			.rate_min	= 8000,
++			.rate_max	= 96000,
++			.channels_min	= 1,
++			.channels_max	= 2,
++		},
++		.ops    = &max98357a_dai_ops,
++	},
++	{
++		.name = "max98357a-hifi",
++		.playback = {
++			.stream_name	= "HiFi Playback1",
++			.formats	= SNDRV_PCM_FMTBIT_S16 |
++						SNDRV_PCM_FMTBIT_S24 |
++						SNDRV_PCM_FMTBIT_S32,
++			.rates		= SNDRV_PCM_RATE_8000 |
++						SNDRV_PCM_RATE_16000 |
++						SNDRV_PCM_RATE_48000 |
++						SNDRV_PCM_RATE_96000,
++			.rate_min	= 8000,
++			.rate_max	= 96000,
++			.channels_min	= 1,
++			.channels_max	= 2,
++		},
++		.ops    = NULL,
+ 	},
+-	.ops    = &max98357a_dai_ops,
+ };
+ 
+ static int max98357a_platform_probe(struct platform_device *pdev)
+ {
+ 	return devm_snd_soc_register_component(&pdev->dev,
+ 			&max98357a_component_driver,
+-			&max98357a_dai_driver, 1);
++			max98357a_dai_driver, ARRAY_SIZE(max98357a_dai_driver));
+ }
+ 
+ static int max98357a_platform_remove(struct platform_device *pdev)
+-- 
+1.7.9.5
+
