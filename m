@@ -2,101 +2,109 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AFAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5C1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A2B2173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 564CF2173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:10:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="h3fWBhxu"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AOPLZ71J";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RBVVf9TN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfC2HI3 (ORCPT
+        id S1728871AbfC2HKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 03:08:29 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43817 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728781AbfC2HI3 (ORCPT
+        Fri, 29 Mar 2019 03:10:18 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34362 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728781AbfC2HKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 03:08:29 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z9so748865pgu.10
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 00:08:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gfPi45QJJqhIIedzCy1HlV3AEmusPO9AnxU7G0DFItg=;
-        b=h3fWBhxu4bWiy4yWklLvntlw4Mqi6SOUlJDQEI0d12m5cSYthJOFXxVrmus6jlRhhG
-         PQh07+fVVy2bnmg5jKuL/KCjkwBK7wuuVKkItkGqyf9a7iZjjbKu7fBq4FGz0I+4sQSX
-         +zsN/anlq2Vx4KntOjJC5sCfvqO74BOG47yFlggOukLekSJVZBL6hIQPUBp8WtcvvNDR
-         +9DrNMTqEAftw25oeB9Hj55obvEwgbGycN5YptRiNXZpqQmZ+FHYH0zVa8VAPOsDPEL0
-         rQz2WKXp67EgN8/Ini0msGOJcYKMIkF3T5w2UN/LITONwgBWuInIkFG1zZ9X6FqDJAYL
-         efYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=gfPi45QJJqhIIedzCy1HlV3AEmusPO9AnxU7G0DFItg=;
-        b=IfJURWByAlWagXnyTPAuZiqfx+/O44YefV7LA1hQ4KcrFbzz8smWAD7YzTbl168rU0
-         p5upHLMTmTGlK730Zmm7tZvOiwcYYiko/qApi7MOxZJ3m+nPXjS11GnUyPJxGn4p0KH7
-         PM0FMWWO1AL615N6GtFHaTmM+A8vPSsTDEImY6HjPLBAIhTdNnRt2jUR9wdna1BQfola
-         7kX7PLMiYyUdS2zogCXvLrTUZKTSrdK/tUxzoKGQF341a5CUqG2RF6/SVkvY7pt18Y1a
-         cNuOFq4dATgSiHqcNeJgHu+O5xm7oaj2SdVa/EVb2u5qlkv7NGVSZ2uvaKe1Cpw/J8Jl
-         CVMQ==
-X-Gm-Message-State: APjAAAVoJlpuXZ3rkeCutx1kMcFD6Hc+2jAtXzG0jc+pjGh2KkBUcwYH
-        +vm7FmwR/FRmqgHEEXv4G8y2og==
-X-Google-Smtp-Source: APXvYqyLjpVx2ol8AiHQuAtuxjQyU1nSiPHyDLXOeKhkW7sV6ELDQ2W3QmY62I2gspLZWnDZbgCZCw==
-X-Received: by 2002:aa7:83ce:: with SMTP id j14mr17881639pfn.57.1553843308440;
-        Fri, 29 Mar 2019 00:08:28 -0700 (PDT)
-Received: from localhost ([64.62.193.194])
-        by smtp.gmail.com with ESMTPSA id i10sm1421927pgs.26.2019.03.29.00.08.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 00:08:27 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 00:08:27 -0700 (PDT)
-X-Google-Original-Date: Fri, 29 Mar 2019 00:08:19 PDT (-0700)
-Subject:     Re: [PATCH] RISC-V: Fix FIXMAP_TOP to avoid overlap with VMALLOC area
-In-Reply-To: <CAAhSdy2pqVS7LPfiaQzw90=kvaJDL63KbMXEiqHg_Raa_LiNxw@mail.gmail.com>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <Anup.Patel@wdc.com>, aou@eecs.berkeley.edu,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>, rppt@linux.ibm.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     anup@brainfault.org
-Message-ID: <mhng-e96d098b-3a74-4d5d-86f8-f46f2e81e5e2@palmer-si-x1c4>
-Mime-Version: 1.0 (MHng)
+        Fri, 29 Mar 2019 03:10:17 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 079CA6087D; Fri, 29 Mar 2019 07:10:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553843417;
+        bh=fTmRJ0Ikgi+Z+X2xIKdBVKDGhs0L7AcQwgQVjfgpKa0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AOPLZ71J5A25IMWyC7C9iiLNnnzdKgx1VJ8Uu3Yp4+3Lwh7oz8V+/4oKCqphfElub
+         26VjWUSKEMZIVOibQcBw9S9nXKmhPchByCQ9Ok70W2kg7VpFaSJmnTwu+95U+qRqC5
+         glWOHyefq5M8D2GocXiE7/pVC5Ld2wbtesEnJbh8=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ECB3B606AC;
+        Fri, 29 Mar 2019 07:10:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553843415;
+        bh=fTmRJ0Ikgi+Z+X2xIKdBVKDGhs0L7AcQwgQVjfgpKa0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=RBVVf9TN7B5S8z4+2cdWi38s6EfM2/6+FK6XNNtVW9N29q1Dd8VUzGyleeSy0ADU7
+         SgP9Xj5v7jQpe63sSoS4xQnBDSddD5Uo3hE6mQaGVfILdQyCdAQ7TO6+BSLayB2njw
+         qBHNlQ1zQBeyMXmyQDRDsscSoaXllIxzm8ueDiqw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ECB3B606AC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] scsi: bnx2fc: remove unneeded variable
+To:     Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        QLogic-Storage-Upstream@qlogic.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1553829852-16525-1-git-send-email-dingxiang@cmss.chinamobile.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <bde8b876-eda6-b23b-5401-cd07015fd767@codeaurora.org>
+Date:   Fri, 29 Mar 2019 12:40:08 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1553829852-16525-1-git-send-email-dingxiang@cmss.chinamobile.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Mar 2019 23:50:09 PDT (-0700), anup@brainfault.org wrote:
-> Hi Palmer,
->
-> On Fri, Mar 29, 2019 at 11:48 AM Palmer Dabbelt <palmer@sifive.com> wrote:
->>
->> On Fri, 22 Mar 2019 06:25:09 PDT (-0700), Christoph Hellwig wrote:
->> > Looks good,
->> >
->> > Reviewed-by: Christoph Hellwig <hch@lst.de>
->>
->> Thanks.  I've added this to my fixes list for the next RC.
->
-> I have another RC fix as well:
->
-> "[PATCH v4] RISC-V: Always compile mm/init.c with cmodel=medany and notrace "
->
-> https://patchwork.kernel.org/patch/10870605/
 
-That one is already in:
+On 3/29/2019 8:54 AM, Ding Xiang wrote:
+> "rc" is unneeded,just return SUCCESS
 
-    https://git.kernel.org/pub/scm/linux/kernel/git/palmer/riscv-linux.git/log/?h=for-linus
+"rc variable is  not needed in `bnx2fc_abts_cleanup`. Fix this by 
+removing it ."
 
-I just didn't have time to get an actual PR together for the RC this week 
-because I didn't get a chance to properly test everything.
+
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+-Mukesh
+
+>
+> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+> ---
+>   drivers/scsi/bnx2fc/bnx2fc_io.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/scsi/bnx2fc/bnx2fc_io.c b/drivers/scsi/bnx2fc/bnx2fc_io.c
+> index bc9f2a2..8def63c 100644
+> --- a/drivers/scsi/bnx2fc/bnx2fc_io.c
+> +++ b/drivers/scsi/bnx2fc/bnx2fc_io.c
+> @@ -1083,7 +1083,6 @@ int bnx2fc_eh_device_reset(struct scsi_cmnd *sc_cmd)
+>   static int bnx2fc_abts_cleanup(struct bnx2fc_cmd *io_req)
+>   {
+>   	struct bnx2fc_rport *tgt = io_req->tgt;
+> -	int rc = SUCCESS;
+>   	unsigned int time_left;
+>   
+>   	io_req->wait_for_comp = 1;
+> @@ -1110,7 +1109,7 @@ static int bnx2fc_abts_cleanup(struct bnx2fc_cmd *io_req)
+>   	kref_put(&io_req->refcount, bnx2fc_cmd_release);
+>   
+>   	spin_lock_bh(&tgt->tgt_lock);
+> -	return rc;
+> +	return SUCCESS;
+>   }
+>   
+>   /**
