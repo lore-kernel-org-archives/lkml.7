@@ -2,95 +2,287 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BE4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E5FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFE12184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:01:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="BpD7+A8P"
+	by mail.kernel.org (Postfix) with ESMTP id E118F2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbfC2OBZ (ORCPT
+        id S1729806AbfC2OB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:01:25 -0400
-Received: from forwardcorp1o.cmail.yandex.net ([37.9.109.47]:52360 "EHLO
-        forwardcorp1o.cmail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728720AbfC2OBW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:01:22 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1o.cmail.yandex.net (Yandex) with ESMTP id 407A020EF0;
-        Fri, 29 Mar 2019 17:01:19 +0300 (MSK)
-Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
-        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id rgKlzJY0yI-1I34egO4;
-        Fri, 29 Mar 2019 17:01:19 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1553868079; bh=W7/RS3vHJEbXBp2niGN4WUhiiMnPTF+LmOZwA1GB9ps=;
-        h=Message-ID:Date:To:From:Subject;
-        b=BpD7+A8Pudi56qbvTXEpBI2C8bQ5UyGyEieWMZ5HiKFd3laF5DdeqPS6z/Od+zPVt
-         TVxtYZUdTN74vqrBpxRz5ouCEq0jVS+JDuI8smKTTE++H4W7SLUhkmjMhJOMBXtgAM
-         tgfUPuOoqKkF42lciXz8TYeJChOsvEOJnJZXPY+8=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:cccc:f1a4:6b5a:61d8])
-        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id Bnb6ODpKCW-1IsiVsO7;
-        Fri, 29 Mar 2019 17:01:18 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH] block/bfq: fix ifdef for CONFIG_BFQ_GROUP_IOSCHED=y
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 29 Mar 2019 17:01:18 +0300
-Message-ID: <155386807826.3190.16175453392005064129.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Fri, 29 Mar 2019 10:01:29 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39752 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729247AbfC2OAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:00:23 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2F52D1A012B;
+        Fri, 29 Mar 2019 15:00:21 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 227821A00A7;
+        Fri, 29 Mar 2019 15:00:21 +0100 (CET)
+Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.74.120])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 865FD20606;
+        Fri, 29 Mar 2019 15:00:20 +0100 (CET)
+From:   laurentiu.tudor@nxp.com
+To:     netdev@vger.kernel.org, madalin.bucur@nxp.com, roy.pledge@nxp.com,
+        camelia.groza@nxp.com, leoyang.li@nxp.com
+Cc:     davem@davemloft.net, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: [PATCH 06/13] soc/fsl/qbman_portals: add APIs to retrieve the probing status
+Date:   Fri, 29 Mar 2019 16:00:07 +0200
+Message-Id: <20190329140014.8126-7-laurentiu.tudor@nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
+References: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace BFQ_GROUP_IOSCHED_ENABLED with CONFIG_BFQ_GROUP_IOSCHED.
-Code under these ifdefs never worked, something might be broken.
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Fixes: 0471559c2fbd ("block, bfq: add/remove entity weights correctly")
-Fixes: 73d58118498b ("block, bfq: consider also ioprio classes in symmetry detection")
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Add a couple of new APIs to check the probing status of the required
+cpu bound qman and bman portals:
+ 'int bman_portals_probed()' and 'int qman_portals_probed()'.
+They return the following values.
+ *  1 if qman/bman portals were all probed correctly
+ *  0 if qman/bman portals were not yet probed
+ * -1 if probing of qman/bman portals failed
+Portals are considered successful probed if no error occurred during
+the probing of any of the portals and if enough portals were probed
+to have one available for each cpu.
+The error handling paths were slightly rearranged in order to fit this
+new functionality without being too intrusive.
+Drivers that use qman/bman portal driver services are required to use
+these APIs before calling any functions exported by these drivers or
+otherwise they will crash the kernel.
+First user will be the dpaa1 ethernet driver, coming in a subsequent
+patch.
+
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- block/bfq-iosched.c |    2 +-
- block/bfq-wf2q.c    |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/soc/fsl/qbman/bman_portal.c | 22 ++++++++++++++++++----
+ drivers/soc/fsl/qbman/qman_portal.c | 23 +++++++++++++++++++----
+ include/soc/fsl/bman.h              |  8 ++++++++
+ include/soc/fsl/qman.h              |  9 +++++++++
+ 4 files changed, 54 insertions(+), 8 deletions(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 4c592496a16a..fac188dd78fa 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -674,7 +674,7 @@ static bool bfq_symmetric_scenario(struct bfq_data *bfqd)
- 	 * at least two nodes.
- 	 */
- 	return !(varied_queue_weights || multiple_classes_busy
--#ifdef BFQ_GROUP_IOSCHED_ENABLED
-+#ifdef CONFIG_BFQ_GROUP_IOSCHED
- 	       || bfqd->num_groups_with_pending_reqs > 0
- #endif
- 		);
-diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-index 63311d1ff1ed..a11bef75483d 100644
---- a/block/bfq-wf2q.c
-+++ b/block/bfq-wf2q.c
-@@ -1012,7 +1012,7 @@ static void __bfq_activate_entity(struct bfq_entity *entity,
- 		entity->on_st = true;
+diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bman_portal.c
+index 2c95cf59f3e7..7819bc29936d 100644
+--- a/drivers/soc/fsl/qbman/bman_portal.c
++++ b/drivers/soc/fsl/qbman/bman_portal.c
+@@ -32,6 +32,7 @@
+ 
+ static struct bman_portal *affine_bportals[NR_CPUS];
+ static struct cpumask portal_cpus;
++static int __bman_portals_probed;
+ /* protect bman global registers and global data shared among portals */
+ static DEFINE_SPINLOCK(bman_lock);
+ 
+@@ -87,6 +88,12 @@ static int bman_online_cpu(unsigned int cpu)
+ 	return 0;
+ }
+ 
++int bman_portals_probed(void)
++{
++	return __bman_portals_probed;
++}
++EXPORT_SYMBOL_GPL(bman_portals_probed);
++
+ static int bman_portal_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -104,8 +111,10 @@ static int bman_portal_probe(struct platform_device *pdev)
  	}
  
--#ifdef BFQ_GROUP_IOSCHED_ENABLED
-+#ifdef CONFIG_BFQ_GROUP_IOSCHED
- 	if (!bfq_entity_to_bfqq(entity)) { /* bfq_group */
- 		struct bfq_group *bfqg =
- 			container_of(entity, struct bfq_group, entity);
+ 	pcfg = devm_kmalloc(dev, sizeof(*pcfg), GFP_KERNEL);
+-	if (!pcfg)
++	if (!pcfg) {
++		__bman_portals_probed = -1;
+ 		return -ENOMEM;
++	}
+ 
+ 	pcfg->dev = dev;
+ 
+@@ -113,14 +122,14 @@ static int bman_portal_probe(struct platform_device *pdev)
+ 					     DPAA_PORTAL_CE);
+ 	if (!addr_phys[0]) {
+ 		dev_err(dev, "Can't get %pOF property 'reg::CE'\n", node);
+-		return -ENXIO;
++		goto err_ioremap1;
+ 	}
+ 
+ 	addr_phys[1] = platform_get_resource(pdev, IORESOURCE_MEM,
+ 					     DPAA_PORTAL_CI);
+ 	if (!addr_phys[1]) {
+ 		dev_err(dev, "Can't get %pOF property 'reg::CI'\n", node);
+-		return -ENXIO;
++		goto err_ioremap1;
+ 	}
+ 
+ 	pcfg->cpu = -1;
+@@ -128,7 +137,7 @@ static int bman_portal_probe(struct platform_device *pdev)
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq <= 0) {
+ 		dev_err(dev, "Can't get %pOF IRQ'\n", node);
+-		return -ENXIO;
++		goto err_ioremap1;
+ 	}
+ 	pcfg->irq = irq;
+ 
+@@ -156,6 +165,9 @@ static int bman_portal_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	cpumask_set_cpu(cpu, &portal_cpus);
++	if (!__bman_portals_probed &&
++	    cpumask_weight(&portal_cpus) == num_online_cpus())
++		__bman_portals_probed = 1;
+ 	spin_unlock(&bman_lock);
+ 	pcfg->cpu = cpu;
+ 
+@@ -175,6 +187,8 @@ static int bman_portal_probe(struct platform_device *pdev)
+ err_ioremap2:
+ 	memunmap(pcfg->addr_virt_ce);
+ err_ioremap1:
++	 __bman_portals_probed = -1;
++
+ 	return -ENXIO;
+ }
+ 
+diff --git a/drivers/soc/fsl/qbman/qman_portal.c b/drivers/soc/fsl/qbman/qman_portal.c
+index bce56da2b01f..11ba6c77c0d6 100644
+--- a/drivers/soc/fsl/qbman/qman_portal.c
++++ b/drivers/soc/fsl/qbman/qman_portal.c
+@@ -39,6 +39,7 @@ EXPORT_SYMBOL(qman_dma_portal);
+ #define CONFIG_FSL_DPA_PIRQ_FAST  1
+ 
+ static struct cpumask portal_cpus;
++static int __qman_portals_probed;
+ /* protect qman global registers and global data shared among portals */
+ static DEFINE_SPINLOCK(qman_lock);
+ 
+@@ -221,6 +222,12 @@ static int qman_online_cpu(unsigned int cpu)
+ 	return 0;
+ }
+ 
++int qman_portals_probed(void)
++{
++	return __qman_portals_probed;
++}
++EXPORT_SYMBOL_GPL(qman_portals_probed);
++
+ static int qman_portal_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -240,8 +247,10 @@ static int qman_portal_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	pcfg = devm_kmalloc(dev, sizeof(*pcfg), GFP_KERNEL);
+-	if (!pcfg)
++	if (!pcfg) {
++		__qman_portals_probed = -1;
+ 		return -ENOMEM;
++	}
+ 
+ 	pcfg->dev = dev;
+ 
+@@ -249,19 +258,20 @@ static int qman_portal_probe(struct platform_device *pdev)
+ 					     DPAA_PORTAL_CE);
+ 	if (!addr_phys[0]) {
+ 		dev_err(dev, "Can't get %pOF property 'reg::CE'\n", node);
+-		return -ENXIO;
++		goto err_ioremap1;
+ 	}
+ 
+ 	addr_phys[1] = platform_get_resource(pdev, IORESOURCE_MEM,
+ 					     DPAA_PORTAL_CI);
+ 	if (!addr_phys[1]) {
+ 		dev_err(dev, "Can't get %pOF property 'reg::CI'\n", node);
+-		return -ENXIO;
++		goto err_ioremap1;
+ 	}
+ 
+ 	err = of_property_read_u32(node, "cell-index", &val);
+ 	if (err) {
+ 		dev_err(dev, "Can't get %pOF property 'cell-index'\n", node);
++		__qman_portals_probed = -1;
+ 		return err;
+ 	}
+ 	pcfg->channel = val;
+@@ -269,7 +279,7 @@ static int qman_portal_probe(struct platform_device *pdev)
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq <= 0) {
+ 		dev_err(dev, "Can't get %pOF IRQ\n", node);
+-		return -ENXIO;
++		goto err_ioremap1;
+ 	}
+ 	pcfg->irq = irq;
+ 
+@@ -314,6 +324,9 @@ static int qman_portal_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	cpumask_set_cpu(cpu, &portal_cpus);
++	if (!__qman_portals_probed &&
++	    cpumask_weight(&portal_cpus) == num_online_cpus())
++		__qman_portals_probed = 1;
+ 	spin_unlock(&qman_lock);
+ 	pcfg->cpu = cpu;
+ 
+@@ -338,6 +351,8 @@ static int qman_portal_probe(struct platform_device *pdev)
+ err_ioremap2:
+ 	memunmap(pcfg->addr_virt_ce);
+ err_ioremap1:
++	__qman_portals_probed = -1;
++
+ 	return -ENXIO;
+ }
+ 
+diff --git a/include/soc/fsl/bman.h b/include/soc/fsl/bman.h
+index 5b99cb2ea5ef..173e4049d963 100644
+--- a/include/soc/fsl/bman.h
++++ b/include/soc/fsl/bman.h
+@@ -133,5 +133,13 @@ int bman_acquire(struct bman_pool *pool, struct bm_buffer *bufs, u8 num);
+  * failed to probe or 0 if the bman driver did not probed yet.
+  */
+ int bman_is_probed(void);
++/**
++ * bman_portals_probed - Check if all cpu bound bman portals are probed
++ *
++ * Returns 1 if all the required cpu bound bman portals successfully probed,
++ * -1 if probe errors appeared or 0 if the bman portals did not yet finished
++ * probing.
++ */
++int bman_portals_probed(void);
+ 
+ #endif	/* __FSL_BMAN_H */
+diff --git a/include/soc/fsl/qman.h b/include/soc/fsl/qman.h
+index 5cc7af06c1ba..aa31c05a103a 100644
+--- a/include/soc/fsl/qman.h
++++ b/include/soc/fsl/qman.h
+@@ -1194,6 +1194,15 @@ int qman_release_cgrid(u32 id);
+  */
+ int qman_is_probed(void);
+ 
++/**
++ * qman_portals_probed - Check if all cpu bound qman portals are probed
++ *
++ * Returns 1 if all the required cpu bound qman portals successfully probed,
++ * -1 if probe errors appeared or 0 if the qman portals did not yet finished
++ * probing.
++ */
++int qman_portals_probed(void);
++
+ /**
+  * qman_dqrr_get_ithresh - Get coalesce interrupt threshold
+  * @portal: portal to get the value for
+-- 
+2.17.1
 
