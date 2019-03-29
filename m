@@ -6,187 +6,126 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DF6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 01:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86DAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 01:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91CC62183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 01:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971B22173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 01:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbfC2BuH (ORCPT
+        id S1728487AbfC2B70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 21:50:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47344 "EHLO mx1.redhat.com"
+        Thu, 28 Mar 2019 21:59:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34514 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727658AbfC2BuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 21:50:07 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1727434AbfC2B70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 21:59:26 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 345833099FD0;
-        Fri, 29 Mar 2019 01:50:07 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4A6BA3086205;
+        Fri, 29 Mar 2019 01:59:25 +0000 (UTC)
 Received: from redhat.com (ovpn-121-118.rdu2.redhat.com [10.10.121.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 02F606FDDE;
-        Fri, 29 Mar 2019 01:50:05 +0000 (UTC)
-Date:   Thu, 28 Mar 2019 21:50:03 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DC41C8958A;
+        Fri, 29 Mar 2019 01:59:23 +0000 (UTC)
+Date:   Thu, 28 Mar 2019 21:59:19 -0400
 From:   Jerome Glisse <jglisse@redhat.com>
 To:     John Hubbard <jhubbard@nvidia.com>
 Cc:     Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2 02/11] mm/hmm: use reference counting for HMM struct v2
-Message-ID: <20190329015003.GE16680@redhat.com>
-References: <20190325144011.10560-1-jglisse@redhat.com>
- <20190325144011.10560-3-jglisse@redhat.com>
- <20190328110719.GA31324@iweiny-DESK2.sc.intel.com>
- <20190328191122.GA5740@redhat.com>
- <c8fd897f-b9d3-a77b-9898-78e20221ba44@nvidia.com>
- <20190328212145.GA13560@redhat.com>
- <fcb7be01-38c1-ed1f-70a0-d03dc9260473@nvidia.com>
- <20190328165708.GH31324@iweiny-DESK2.sc.intel.com>
- <20190329010059.GB16680@redhat.com>
- <55dd8607-c91b-12ab-e6d7-adfe6d9cb5e2@nvidia.com>
+Subject: Re: [PATCH v2 07/11] mm/hmm: add default fault flags to avoid the
+ need to pre-fill pfns arrays.
+Message-ID: <20190329015919.GF16680@redhat.com>
+References: <20190328221203.GF13560@redhat.com>
+ <555ad864-d1f9-f513-9666-0d3d05dbb85d@nvidia.com>
+ <20190328223153.GG13560@redhat.com>
+ <768f56f5-8019-06df-2c5a-b4187deaac59@nvidia.com>
+ <20190328232125.GJ13560@redhat.com>
+ <d2008b88-962f-b7b4-8351-9e1df95ea2cc@nvidia.com>
+ <20190328164231.GF31324@iweiny-DESK2.sc.intel.com>
+ <20190329011727.GC16680@redhat.com>
+ <f053e75e-25b5-d95a-bb3c-73411ba49e3e@nvidia.com>
+ <20190329014259.GD16680@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <55dd8607-c91b-12ab-e6d7-adfe6d9cb5e2@nvidia.com>
+In-Reply-To: <20190329014259.GD16680@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 29 Mar 2019 01:50:07 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 29 Mar 2019 01:59:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 06:18:35PM -0700, John Hubbard wrote:
-> On 3/28/19 6:00 PM, Jerome Glisse wrote:
-> > On Thu, Mar 28, 2019 at 09:57:09AM -0700, Ira Weiny wrote:
-> >> On Thu, Mar 28, 2019 at 05:39:26PM -0700, John Hubbard wrote:
-> >>> On 3/28/19 2:21 PM, Jerome Glisse wrote:
-> >>>> On Thu, Mar 28, 2019 at 01:43:13PM -0700, John Hubbard wrote:
-> >>>>> On 3/28/19 12:11 PM, Jerome Glisse wrote:
-> >>>>>> On Thu, Mar 28, 2019 at 04:07:20AM -0700, Ira Weiny wrote:
-> >>>>>>> On Mon, Mar 25, 2019 at 10:40:02AM -0400, Jerome Glisse wrote:
-> >>>>>>>> From: Jérôme Glisse <jglisse@redhat.com>
-> >>> [...]
-> >>>>>>>> @@ -67,14 +78,9 @@ struct hmm {
-> >>>>>>>>   */
-> >>>>>>>>  static struct hmm *hmm_register(struct mm_struct *mm)
-> >>>>>>>>  {
-> >>>>>>>> -	struct hmm *hmm = READ_ONCE(mm->hmm);
-> >>>>>>>> +	struct hmm *hmm = mm_get_hmm(mm);
-> >>>>>>>
-> >>>>>>> FWIW: having hmm_register == "hmm get" is a bit confusing...
-> >>>>>>
-> >>>>>> The thing is that you want only one hmm struct per process and thus
-> >>>>>> if there is already one and it is not being destroy then you want to
-> >>>>>> reuse it.
-> >>>>>>
-> >>>>>> Also this is all internal to HMM code and so it should not confuse
-> >>>>>> anyone.
-> >>>>>>
-> >>>>>
-> >>>>> Well, it has repeatedly come up, and I'd claim that it is quite 
-> >>>>> counter-intuitive. So if there is an easy way to make this internal 
-> >>>>> HMM code clearer or better named, I would really love that to happen.
-> >>>>>
-> >>>>> And we shouldn't ever dismiss feedback based on "this is just internal
-> >>>>> xxx subsystem code, no need for it to be as clear as other parts of the
-> >>>>> kernel", right?
-> >>>>
-> >>>> Yes but i have not seen any better alternative that present code. If
-> >>>> there is please submit patch.
-> >>>>
-> >>>
-> >>> Ira, do you have any patch you're working on, or a more detailed suggestion there?
-> >>> If not, then I might (later, as it's not urgent) propose a small cleanup patch 
-> >>> I had in mind for the hmm_register code. But I don't want to duplicate effort 
-> >>> if you're already thinking about it.
-> >>
-> >> No I don't have anything.
-> >>
-> >> I was just really digging into these this time around and I was about to
-> >> comment on the lack of "get's" for some "puts" when I realized that
-> >> "hmm_register" _was_ the get...
-> >>
-> >> :-(
-> >>
+On Thu, Mar 28, 2019 at 09:42:59PM -0400, Jerome Glisse wrote:
+> On Thu, Mar 28, 2019 at 06:30:26PM -0700, John Hubbard wrote:
+> > On 3/28/19 6:17 PM, Jerome Glisse wrote:
+> > > On Thu, Mar 28, 2019 at 09:42:31AM -0700, Ira Weiny wrote:
+> > >> On Thu, Mar 28, 2019 at 04:28:47PM -0700, John Hubbard wrote:
+> > >>> On 3/28/19 4:21 PM, Jerome Glisse wrote:
+> > >>>> On Thu, Mar 28, 2019 at 03:40:42PM -0700, John Hubbard wrote:
+> > >>>>> On 3/28/19 3:31 PM, Jerome Glisse wrote:
+> > >>>>>> On Thu, Mar 28, 2019 at 03:19:06PM -0700, John Hubbard wrote:
+> > >>>>>>> On 3/28/19 3:12 PM, Jerome Glisse wrote:
+> > >>>>>>>> On Thu, Mar 28, 2019 at 02:59:50PM -0700, John Hubbard wrote:
+> > >>>>>>>>> On 3/25/19 7:40 AM, jglisse@redhat.com wrote:
+> > >>>>>>>>>> From: Jérôme Glisse <jglisse@redhat.com>
+> > >>> [...]
+> > >> Indeed I did not realize there is an hmm "pfn" until I saw this function:
+> > >>
+> > >> /*
+> > >>  * hmm_pfn_from_pfn() - create a valid HMM pfn value from pfn
+> > >>  * @range: range use to encode HMM pfn value
+> > >>  * @pfn: pfn value for which to create the HMM pfn
+> > >>  * Returns: valid HMM pfn for the pfn
+> > >>  */
+> > >> static inline uint64_t hmm_pfn_from_pfn(const struct hmm_range *range,
+> > >>                                         unsigned long pfn)
+> > >>
+> > >> So should this patch contain some sort of helper like this... maybe?
+> > >>
+> > >> I'm assuming the "hmm_pfn" being returned above is the device pfn being
+> > >> discussed here?
+> > >>
+> > >> I'm also thinking calling it pfn is confusing.  I'm not advocating a new type
+> > >> but calling the "device pfn's" "hmm_pfn" or "device_pfn" seems like it would
+> > >> have shortened the discussion here.
+> > >>
+> > > 
+> > > That helper is also use today by nouveau so changing that name is not that
+> > > easy it does require the multi-release dance. So i am not sure how much
+> > > value there is in a name change.
+> > > 
 > > 
-> > The get is mm_get_hmm() were you get a reference on HMM from a mm struct.
-> > John in previous posting complained about me naming that function hmm_get()
-> > and thus in this version i renamed it to mm_get_hmm() as we are getting
-> > a reference on hmm from a mm struct.
-> 
-> Well, that's not what I recommended, though. The actual conversation went like
-> this [1]:
-> 
-> ---------------------------------------------------------------
-> >> So for this, hmm_get() really ought to be symmetric with
-> >> hmm_put(), by taking a struct hmm*. And the null check is
-> >> not helping here, so let's just go with this smaller version:
-> >>
-> >> static inline struct hmm *hmm_get(struct hmm *hmm)
-> >> {
-> >>     if (kref_get_unless_zero(&hmm->kref))
-> >>         return hmm;
-> >>
-> >>     return NULL;
-> >> }
-> >>
-> >> ...and change the few callers accordingly.
-> >>
-> >
-> > What about renaning hmm_get() to mm_get_hmm() instead ?
-> >
-> 
-> For a get/put pair of functions, it would be ideal to pass
-> the same argument type to each. It looks like we are passing
-> around hmm*, and hmm retains a reference count on hmm->mm,
-> so I think you have a choice of using either mm* or hmm* as
-> the argument. I'm not sure that one is better than the other
-> here, as the lifetimes appear to be linked pretty tightly.
-> 
-> Whichever one is used, I think it would be best to use it
-> in both the _get() and _put() calls. 
-> ---------------------------------------------------------------
-> 
-> Your response was to change the name to mm_get_hmm(), but that's not
-> what I recommended.
-
-Because i can not do that, hmm_put() can _only_ take hmm struct as
-input while hmm_get() can _only_ get mm struct as input.
-
-hmm_put() can only take hmm because the hmm we are un-referencing
-might no longer be associated with any mm struct and thus i do not
-have a mm struct to use.
-
-hmm_get() can only get mm as input as we need to be careful when
-accessing the hmm field within the mm struct and thus it is better
-to have that code within a function than open coded and duplicated
-all over the place.
-
-> 
+> > Once the dust settles, I would expect that a name change for this could go
+> > via Andrew's tree, right? It seems incredible to claim that we've built something
+> > that effectively does not allow any minor changes!
 > > 
-> > The hmm_put() is just releasing the reference on the hmm struct.
-> > 
-> > Here i feel i am getting contradicting requirement from different people.
-> > I don't think there is a way to please everyone here.
-> > 
+> > I do think it's worth some *minor* trouble to improve the name, assuming that we
+> > can do it in a simple patch, rather than some huge maintainer-level effort.
 > 
-> That's not a true conflict: you're comparing your actual implementation
-> to Ira's request, rather than comparing my request to Ira's request.
+> Change to nouveau have to go through nouveau tree so changing name means:
+>  -  release N add function with new name, maybe make the old function just
+>     a wrapper to the new function
+>  -  release N+1 update user to use the new name
+>  -  release N+2 remove the old name
 > 
-> I think there's a way forward. Ira and I are actually both asking for the
-> same thing:
+> So it is do-able but it is painful so i rather do that one latter that now
+> as i am sure people will then complain again about some little thing and it
+> will post pone this whole patchset on that new bit. To avoid post-poning
+> RDMA and bunch of other patchset that build on top of that i rather get
+> this patchset in and then do more changes in the next cycle.
 > 
-> a) clear, concise get/put routines
-> 
-> b) avoiding odd side effects in functions that have one name, but do
-> additional surprising things.
+> This is just a capacity thing.
 
-Please show me code because i do not see any other way to do it then
-how i did.
+Also for clarity changes to API i am doing in this patchset is to make
+the ODP convertion easier and thus they bring a real hard value. Renaming
+those function is esthetic, i am not saying it is useless, i am saying it
+does not have the same value as those other changes and i would rather not
+miss another merge window just for esthetic changes.
 
 Cheers,
 Jérôme
