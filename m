@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48EAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01879C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B73D2183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF37120651
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbfC2OAv (ORCPT
+        id S1729367AbfC2OAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:00:51 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39950 "EHLO inva020.nxp.com"
+        Fri, 29 Mar 2019 10:00:25 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39716 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729371AbfC2OA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:00:27 -0400
+        id S1729228AbfC2OAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:00:22 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E8C2D1A0297;
-        Fri, 29 Mar 2019 15:00:24 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7FBE21A0290;
+        Fri, 29 Mar 2019 15:00:20 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E5CF11A0293;
-        Fri, 29 Mar 2019 15:00:24 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7362D1A0289;
+        Fri, 29 Mar 2019 15:00:20 +0100 (CET)
 Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.74.120])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6558E20606;
-        Fri, 29 Mar 2019 15:00:24 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id CE04220606;
+        Fri, 29 Mar 2019 15:00:19 +0100 (CET)
 From:   laurentiu.tudor@nxp.com
 To:     netdev@vger.kernel.org, madalin.bucur@nxp.com, roy.pledge@nxp.com,
         camelia.groza@nxp.com, leoyang.li@nxp.com
@@ -35,9 +35,9 @@ Cc:     davem@davemloft.net, iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH 12/13] dpaa_eth: fix iova handling for sg frames
-Date:   Fri, 29 Mar 2019 16:00:13 +0200
-Message-Id: <20190329140014.8126-13-laurentiu.tudor@nxp.com>
+Subject: [PATCH 05/13] soc/fsl/bqman: page align iommu mapping sizes
+Date:   Fri, 29 Mar 2019 16:00:06 +0200
+Message-Id: <20190329140014.8126-6-laurentiu.tudor@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
 References: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
@@ -49,127 +49,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-The driver relies on the no longer valid assumption that dma addresses
-(iovas) are identical to physical addressees and uses phys_to_virt() to
-make iova -> vaddr conversions. Fix this also for scatter-gather frames
-using the iova -> phys conversion function added in the previous patch.
-While at it, clean-up a redundant dpaa_bpid2pool() and pass the bp
-as parameter.
+Prior to calling iommu_map()/iommu_unmap() page align the size or
+failures such as below could happen:
+
+iommu: unaligned: iova 0x... pa 0x... size 0x4000 min_pagesz 0x10000
+qman_portal 500000000.qman-portal: failed to iommu_map() -22
+
+Seen when booted a kernel compiled with 64K page size support.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
 ---
- .../net/ethernet/freescale/dpaa/dpaa_eth.c    | 41 +++++++++++--------
- 1 file changed, 24 insertions(+), 17 deletions(-)
+ drivers/soc/fsl/qbman/bman_ccsr.c   | 2 +-
+ drivers/soc/fsl/qbman/qman_ccsr.c   | 4 ++--
+ drivers/soc/fsl/qbman/qman_portal.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index f17edc80dc37..daede7272768 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -1646,14 +1646,17 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
- 
- 	if (unlikely(qm_fd_get_format(fd) == qm_fd_sg)) {
- 		nr_frags = skb_shinfo(skb)->nr_frags;
--		dma_unmap_single(dev, addr,
--				 qm_fd_get_offset(fd) + DPAA_SGT_SIZE,
--				 dma_dir);
- 
- 		/* The sgt buffer has been allocated with netdev_alloc_frag(),
- 		 * it's from lowmem.
+diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman_ccsr.c
+index b209c79511bb..3a6e01bde32d 100644
+--- a/drivers/soc/fsl/qbman/bman_ccsr.c
++++ b/drivers/soc/fsl/qbman/bman_ccsr.c
+@@ -230,7 +230,7 @@ static int fsl_bman_probe(struct platform_device *pdev)
+ 	/* Create an 1-to-1 iommu mapping for FBPR area */
+ 	domain = iommu_get_domain_for_dev(dev);
+ 	if (domain) {
+-		ret = iommu_map(domain, fbpr_a, fbpr_a, fbpr_sz,
++		ret = iommu_map(domain, fbpr_a, fbpr_a, PAGE_ALIGN(fbpr_sz),
+ 				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
+ 		if (ret)
+ 			dev_warn(dev, "failed to iommu_map() %d\n", ret);
+diff --git a/drivers/soc/fsl/qbman/qman_ccsr.c b/drivers/soc/fsl/qbman/qman_ccsr.c
+index eec7700507e1..8d3c950ce52d 100644
+--- a/drivers/soc/fsl/qbman/qman_ccsr.c
++++ b/drivers/soc/fsl/qbman/qman_ccsr.c
+@@ -783,11 +783,11 @@ static int fsl_qman_probe(struct platform_device *pdev)
+ 	/* Create an 1-to-1 iommu mapping for fqd and pfdr areas */
+ 	domain = iommu_get_domain_for_dev(dev);
+ 	if (domain) {
+-		ret = iommu_map(domain, fqd_a, fqd_a, fqd_sz,
++		ret = iommu_map(domain, fqd_a, fqd_a, PAGE_ALIGN(fqd_sz),
+ 				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
+ 		if (ret)
+ 			dev_warn(dev, "iommu_map(fqd) failed %d\n", ret);
+-		ret = iommu_map(domain, pfdr_a, pfdr_a, pfdr_sz,
++		ret = iommu_map(domain, pfdr_a, pfdr_a, PAGE_ALIGN(pfdr_sz),
+ 				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
+ 		if (ret)
+ 			dev_warn(dev, "iommu_map(pfdr) failed %d\n", ret);
+diff --git a/drivers/soc/fsl/qbman/qman_portal.c b/drivers/soc/fsl/qbman/qman_portal.c
+index dfb62f9815e9..bce56da2b01f 100644
+--- a/drivers/soc/fsl/qbman/qman_portal.c
++++ b/drivers/soc/fsl/qbman/qman_portal.c
+@@ -297,7 +297,7 @@ static int qman_portal_probe(struct platform_device *pdev)
  		 */
--		sgt = phys_to_virt(addr + qm_fd_get_offset(fd));
-+		sgt = phys_to_virt(dpaa_iova_to_phys(dev,
-+						     addr +
-+						     qm_fd_get_offset(fd)));
-+
-+		dma_unmap_single(dev, addr,
-+				 qm_fd_get_offset(fd) + DPAA_SGT_SIZE,
-+				 dma_dir);
- 
- 		/* sgt[0] is from lowmem, was dma_map_single()-ed */
- 		dma_unmap_single(dev, qm_sg_addr(&sgt[0]),
-@@ -1668,7 +1671,7 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
- 		}
- 
- 		/* Free the page frag that we allocated on Tx */
--		skb_free_frag(phys_to_virt(addr));
-+		skb_free_frag(skbh);
- 	} else {
- 		dma_unmap_single(dev, addr,
- 				 skb_tail_pointer(skb) - (u8 *)skbh, dma_dir);
-@@ -1729,14 +1732,14 @@ static struct sk_buff *contig_fd_to_skb(const struct dpaa_priv *priv,
-  * The page fragment holding the S/G Table is recycled here.
-  */
- static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
--				    const struct qm_fd *fd)
-+				    const struct qm_fd *fd,
-+				    struct dpaa_bp *dpaa_bp,
-+				    void *vaddr)
- {
- 	ssize_t fd_off = qm_fd_get_offset(fd);
--	dma_addr_t addr = qm_fd_addr(fd);
- 	const struct qm_sg_entry *sgt;
- 	struct page *page, *head_page;
--	struct dpaa_bp *dpaa_bp;
--	void *vaddr, *sg_vaddr;
-+	void *sg_vaddr;
- 	int frag_off, frag_len;
- 	struct sk_buff *skb;
- 	dma_addr_t sg_addr;
-@@ -1745,7 +1748,6 @@ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
- 	int *count_ptr;
- 	int i;
- 
--	vaddr = phys_to_virt(addr);
- 	WARN_ON(!IS_ALIGNED((unsigned long)vaddr, SMP_CACHE_BYTES));
- 
- 	/* Iterate through the SGT entries and add data buffers to the skb */
-@@ -1756,14 +1758,18 @@ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
- 		WARN_ON(qm_sg_entry_is_ext(&sgt[i]));
- 
- 		sg_addr = qm_sg_addr(&sgt[i]);
--		sg_vaddr = phys_to_virt(sg_addr);
--		WARN_ON(!IS_ALIGNED((unsigned long)sg_vaddr,
--				    SMP_CACHE_BYTES));
- 
- 		/* We may use multiple Rx pools */
- 		dpaa_bp = dpaa_bpid2pool(sgt[i].bpid);
--		if (!dpaa_bp)
-+		if (!dpaa_bp) {
-+			pr_info("%s: fail to get dpaa_bp for sg bpid %d\n",
-+				__func__, sgt[i].bpid);
- 			goto free_buffers;
-+		}
-+		sg_vaddr = phys_to_virt(dpaa_iova_to_phys(dpaa_bp->dev,
-+							  sg_addr));
-+		WARN_ON(!IS_ALIGNED((unsigned long)sg_vaddr,
-+				    SMP_CACHE_BYTES));
- 
- 		count_ptr = this_cpu_ptr(dpaa_bp->percpu_count);
- 		dma_unmap_single(dpaa_bp->dev, sg_addr, dpaa_bp->size,
-@@ -1835,10 +1841,11 @@ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
- 	/* free all the SG entries */
- 	for (i = 0; i < DPAA_SGT_MAX_ENTRIES ; i++) {
- 		sg_addr = qm_sg_addr(&sgt[i]);
--		sg_vaddr = phys_to_virt(sg_addr);
--		skb_free_frag(sg_vaddr);
- 		dpaa_bp = dpaa_bpid2pool(sgt[i].bpid);
- 		if (dpaa_bp) {
-+			sg_addr = dpaa_iova_to_phys(dpaa_bp->dev, sg_addr);
-+			sg_vaddr = phys_to_virt(sg_addr);
-+			skb_free_frag(sg_vaddr);
- 			count_ptr = this_cpu_ptr(dpaa_bp->percpu_count);
- 			(*count_ptr)--;
- 		}
-@@ -2331,7 +2338,7 @@ static enum qman_cb_dqrr_result rx_default_dqrr(struct qman_portal *portal,
- 	if (likely(fd_format == qm_fd_contig))
- 		skb = contig_fd_to_skb(priv, fd, dpaa_bp, vaddr);
- 	else
--		skb = sg_fd_to_skb(priv, fd);
-+		skb = sg_fd_to_skb(priv, fd, dpaa_bp, vaddr);
- 	if (!skb)
- 		return qman_cb_dqrr_consume;
- 
+ 		err = iommu_map(domain,
+ 				addr_phys[0]->start, addr_phys[0]->start,
+-				resource_size(addr_phys[0]),
++				PAGE_ALIGN(resource_size(addr_phys[0])),
+ 				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
+ 		if (err)
+ 			dev_warn(dev, "failed to iommu_map() %d\n", err);
 -- 
 2.17.1
 
