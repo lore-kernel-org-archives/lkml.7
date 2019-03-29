@@ -2,136 +2,158 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE26C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 003BCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B5F2183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BD62173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:51:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="oQ6DqanQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbfC2NsM (ORCPT
+        id S1729731AbfC2NvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 09:48:12 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:33312 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729626AbfC2NsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 09:48:08 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 4EE9420BAC;
-        Fri, 29 Mar 2019 14:48:06 +0100 (CET)
-Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 3023E20B19;
-        Fri, 29 Mar 2019 14:48:06 +0100 (CET)
-Subject: Re: [PATCH v5] PCI: qcom: Use default config space read function
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
- <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
- <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
- <38ad143b-3b07-4d19-8ccd-ca39fb51e53d@free.fr>
- <7d3d788a-d6a3-a70b-adab-6c65771cacc4@free.fr>
- <3c76613e-e60d-94b8-dd6f-b8f4e1928263@linaro.org>
- <2f901228-52db-7661-8257-ca8fd2ff2a46@free.fr>
- <29664b43-535c-c4b1-a93d-18f49687f929@linaro.org>
- <b0e0dc68-4be9-1b0f-7528-fb7d143fea2b@free.fr>
- <9c5a7620-e9ed-82d6-0708-34fe33e39030@linaro.org>
- <29d33e81-fe8d-7fd9-843d-cc53ea6c9586@free.fr>
- <a53911a5-198a-5073-59cf-a61ba067bfd8@free.fr>
- <eb1d808e-00aa-5411-be03-2a1a8c8d655a@mm-sol.com>
- <8cd24928-54d0-c320-b53f-08332d434477@free.fr>
- <f142da4d-303a-89f3-ba5a-b6800d613e15@free.fr>
- <df27f753-9464-02c0-b621-d5d7b54a3403@mm-sol.com>
- <66ae38dc-1c0c-5a76-be23-fb87db90b327@free.fr>
-Message-ID: <b2789ca1-b046-e154-2338-e5298080587a@free.fr>
-Date:   Fri, 29 Mar 2019 14:48:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 29 Mar 2019 09:51:07 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:21542 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729639AbfC2NvH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 09:51:07 -0400
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x2TDofYT028644;
+        Fri, 29 Mar 2019 22:50:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x2TDofYT028644
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1553867442;
+        bh=z07dstaWaASY9Xr9tFB5a3Sy7OXdHBbB/QFb0ZKL+5Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oQ6DqanQuwRMxvpEiKoE7e8P4STQmFYuZTj4W5I9Om2g/Xlr0kwmvvdIYqPzj1lX7
+         Xqk3s3AzqVTS6cfp4xJ3O5T2Q3VS/9m12B2ljM7ACdfKqIGLR7hEHH/XVi+12aOJWm
+         x6GoYxNd0xOUgqxF1HtSuENYCvjxxF6vwlGQRrgA4Cwt83bd/5D1ZKTxUTNVk1lUa4
+         7Y2DhreDZCwuCRvWoJbEeSw/6LMCNFHQzhJOL9YWC8N0MlBOVW3NkHaF7QFe7Dz3h5
+         hquoDM9607EIsxSG159wOtbP0UYGfjKd5bxnsRXBKYa0h3cfDVwjah0W5dXZv+NEll
+         aI+6Vnhf+o53g==
+X-Nifty-SrcIP: [209.85.222.52]
+Received: by mail-ua1-f52.google.com with SMTP id f88so686879uaf.2;
+        Fri, 29 Mar 2019 06:50:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAVixeUqqhIENyw55YMPjE1mSi4LpcJHXMXXZqyEg2Fbzr1Aa+jb
+        FRAO96+WUfg0ZHCZGDsGC59cyYe9sX/yLIXBi8o=
+X-Google-Smtp-Source: APXvYqxkZauXKtY9hE+RQiBpumEp1M5sUCzTyG3eeRks+HcvWSgRSGHhkO06tsXvjiO3k0AE0nRrQYHCd6aW/S2jrg4=
+X-Received: by 2002:ab0:3058:: with SMTP id x24mr17778681ual.95.1553867440537;
+ Fri, 29 Mar 2019 06:50:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <66ae38dc-1c0c-5a76-be23-fb87db90b327@free.fr>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri Mar 29 14:48:06 2019 +0100 (CET)
+References: <20190325151647.11581-1-changbin.du@gmail.com> <CAK7LNARkTQoAhjk7qPR4Pn0SHKvW4cvSrtC5brATQ2LbsWegtw@mail.gmail.com>
+ <20190329081558.u54hczsjheacwvtk@mail.google.com>
+In-Reply-To: <20190329081558.u54hczsjheacwvtk@mail.google.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 29 Mar 2019 22:50:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ9-m5BKcNwwNp1m-PeX+B+fFwBVqKc88Trsyu4E+J1uQ@mail.gmail.com>
+Message-ID: <CAK7LNAQ9-m5BKcNwwNp1m-PeX+B+fFwBVqKc88Trsyu4E+J1uQ@mail.gmail.com>
+Subject: Re: [PATCH] kconfig/[mn]conf: handle backspace (^H) key
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bjorn,
+On Fri, Mar 29, 2019 at 5:16 PM Changbin Du <changbin.du@gmail.com> wrote:
+>
+> On Fri, Mar 29, 2019 at 04:50:18PM +0900, Masahiro Yamada wrote:
+> > On Tue, Mar 26, 2019 at 12:16 AM Changbin Du <changbin.du@gmail.com> wrote:
+> > >
+> > > Backspace is not working on some terminal emulators which do not send the
+> > > key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
+> > > But currently only '$?' is handled.
+> >
+> >
+> >
+> > Shall I fix '$?' to '^?'
+> > if it is a typo?
+> >
+> yes, please. It is a typo, sorry.
+>
 
-I think this patch is good enough to land now.
+Fixed the typo,
+and applied to linux-kbuild/fixes. Thanks.
 
-Regards.
 
-On 25/03/2019 16:42, Marc Gonzalez wrote:
 
-> Move the device class fudge to a proper fixup function, and remove
-> qcom_pcie_rd_own_conf() which has become useless.
-> 
-> NB: dw_pcie_setup_rc() already did the right thing, but it's broken
-> on older qcom chips, such as 8064.
-> 
-> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> ---
-> Changes from v4 to v5: Apply fixup to all qcom chips, the same way it was before
-> (thus the code remains functionally equivalent)
-> Drop Srinivas' Tested-by tag because of the change
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 23 ++++++-----------------
->  1 file changed, 6 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index a7f703556790..0ed235d560e3 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1129,25 +1129,8 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
->  	return ret;
->  }
->  
-> -static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
-> -				 u32 *val)
-> -{
-> -	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> -
-> -	/* the device class is not reported correctly from the register */
-> -	if (where == PCI_CLASS_REVISION && size == 4) {
-> -		*val = readl(pci->dbi_base + PCI_CLASS_REVISION);
-> -		*val &= 0xff;	/* keep revision id */
-> -		*val |= PCI_CLASS_BRIDGE_PCI << 16;
-> -		return PCIBIOS_SUCCESSFUL;
-> -	}
-> -
-> -	return dw_pcie_read(pci->dbi_base + where, size, val);
-> -}
-> -
->  static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
->  	.host_init = qcom_pcie_host_init,
-> -	.rd_own_conf = qcom_pcie_rd_own_conf,
->  };
->  
->  /* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
-> @@ -1309,6 +1292,12 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ }
->  };
->  
-> +static void qcom_fixup_class(struct pci_dev *dev)
-> +{
-> +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
-> +
->  static struct platform_driver qcom_pcie_driver = {
->  	.probe = qcom_pcie_probe,
->  	.driver = {
+> >
+> >
+> >
+> > > Let's also handle '^H' for those
+> > > terminals.
+> > >
+> > > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > > ---
+> > >  scripts/kconfig/lxdialog/inputbox.c | 3 ++-
+> > >  scripts/kconfig/nconf.c             | 2 +-
+> > >  scripts/kconfig/nconf.gui.c         | 3 ++-
+> > >  3 files changed, 5 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
+> > > index 611945611bf8..1dcfb288ee63 100644
+> > > --- a/scripts/kconfig/lxdialog/inputbox.c
+> > > +++ b/scripts/kconfig/lxdialog/inputbox.c
+> > > @@ -113,7 +113,8 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
+> > >                         case KEY_DOWN:
+> > >                                 break;
+> > >                         case KEY_BACKSPACE:
+> > > -                       case 127:
+> > > +                       case 8:   /* ^H */
+> > > +                       case 127: /* ^? */
+> > >                                 if (pos) {
+> > >                                         wattrset(dialog, dlg.inputbox.atr);
+> > >                                         if (input_x == 0) {
+> > > diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
+> > > index a4670f4e825a..ac92c0ded6c5 100644
+> > > --- a/scripts/kconfig/nconf.c
+> > > +++ b/scripts/kconfig/nconf.c
+> > > @@ -1048,7 +1048,7 @@ static int do_match(int key, struct match_state *state, int *ans)
+> > >                 state->match_direction = FIND_NEXT_MATCH_UP;
+> > >                 *ans = get_mext_match(state->pattern,
+> > >                                 state->match_direction);
+> > > -       } else if (key == KEY_BACKSPACE || key == 127) {
+> > > +       } else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
+> > >                 state->pattern[strlen(state->pattern)-1] = '\0';
+> > >                 adj_match_dir(&state->match_direction);
+> > >         } else
+> > > diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
+> > > index 7be620a1fcdb..77f525a8617c 100644
+> > > --- a/scripts/kconfig/nconf.gui.c
+> > > +++ b/scripts/kconfig/nconf.gui.c
+> > > @@ -439,7 +439,8 @@ int dialog_inputbox(WINDOW *main_window,
+> > >                 case KEY_F(F_EXIT):
+> > >                 case KEY_F(F_BACK):
+> > >                         break;
+> > > -               case 127:
+> > > +               case 8:   /* ^H */
+> > > +               case 127: /* ^? */
+> > >                 case KEY_BACKSPACE:
+> > >                         if (cursor_position > 0) {
+> > >                                 memmove(&result[cursor_position-1],
+> > > --
+> > > 2.17.1
+> > >
+> >
+> >
+> > --
+> > Best Regards
+> > Masahiro Yamada
+>
+> --
+> Cheers,
+> Changbin Du
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
