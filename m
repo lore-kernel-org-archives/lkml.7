@@ -2,117 +2,144 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0776C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1310C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86AF12183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A644A20700
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:59:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QAYqZnf9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbfC2A6R (ORCPT
+        id S1728643AbfC2A7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 20:58:17 -0400
-Received: from mga14.intel.com ([192.55.52.115]:36071 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727948AbfC2A6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 20:58:16 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 17:58:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,282,1549958400"; 
-   d="scan'208";a="135750908"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Mar 2019 17:58:16 -0700
-Date:   Thu, 28 Mar 2019 09:57:09 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Jerome Glisse <jglisse@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2 02/11] mm/hmm: use reference counting for HMM struct v2
-Message-ID: <20190328165708.GH31324@iweiny-DESK2.sc.intel.com>
-References: <20190325144011.10560-1-jglisse@redhat.com>
- <20190325144011.10560-3-jglisse@redhat.com>
- <20190328110719.GA31324@iweiny-DESK2.sc.intel.com>
- <20190328191122.GA5740@redhat.com>
- <c8fd897f-b9d3-a77b-9898-78e20221ba44@nvidia.com>
- <20190328212145.GA13560@redhat.com>
- <fcb7be01-38c1-ed1f-70a0-d03dc9260473@nvidia.com>
+        Thu, 28 Mar 2019 20:59:36 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35700 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727948AbfC2A7g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 20:59:36 -0400
+Received: by mail-qt1-f194.google.com with SMTP id h39so812559qte.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 17:59:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8ke6WThcmB0DO5fvasc8RvsEiirs2/ACHMR2kRjHXfI=;
+        b=QAYqZnf9WBvtO9KfdxTLgMHmhLKHUWcBa1KXLJE5no9pPg66oS/tbKhFZy5TN1z76F
+         p2BXl+UfjVFvVewLO14FjViGOOQq2R3ce+jq/wC0Ce35CT6VHOGWq3Hd/HRrlOiZQNbk
+         6cFyn1UrGqF4mQYWUMbTzo8fmN+8s2XD2tvz6PFG4zZawpFdzVG3QEEqt48p0P4iiSjE
+         henj0tUTWv0dk2oiluqQXRT11UwDcXc1LTLgtqtzbkNxhFA3p7187/3JueqQYzbgnJ5I
+         XjdvYZp+PetmTISjt2ZO12rLAMftcZZNjhXtalUeSIZjve3OdNX9i5Mqvcvvc2C+LOsg
+         iBcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8ke6WThcmB0DO5fvasc8RvsEiirs2/ACHMR2kRjHXfI=;
+        b=GEmrnYhMiBpMw5tW2TY27JmFCExpzUMz3iIUowlZEDAc0FF3gsCmEGUHOTqBGIAh2E
+         wEjihIpRMAStGu2U2BH/BrNWjlCps7B4exqNp3ItmHRBL/TlxK2xmnyxquHBZ057w8Xs
+         fbRCrL66HKODJc3KjqL/axUqiqxv72iFALKxCNobTyMCj1DRthWcQKEwx2YWb2clMOXe
+         SE63Sh6lcRRgVjJc6OTMNyizXIxCb9qFZVzAQTqcMDYCW3Z75Xd1R7//dSVWe7PUBb8Z
+         ywgNcy7gts0UGcXVIZviqYOn+TR9f+TT0BweMD1gafKG9Uq8NCLR3BEK3vFlHyi/vf9k
+         0E0A==
+X-Gm-Message-State: APjAAAUdi/NrWO/R1Sk6UmgcRm+PtOh0u2jrD1kLAizT0VvPW/jyaWJP
+        mxRyBbo3trcbNeHKsjD8n2BuiHJq8wpByfONCyc3yQ==
+X-Google-Smtp-Source: APXvYqx9FUKcFcoTcTFcNeKQTaPtKZUNfKOpgfnBqMamfcWTLjsMI4xe/xR2UPXpHHxNS8hhYO4Ywhu1eIdomBtXYQQ=
+X-Received: by 2002:a0c:9906:: with SMTP id h6mr38693883qvd.45.1553821175225;
+ Thu, 28 Mar 2019 17:59:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fcb7be01-38c1-ed1f-70a0-d03dc9260473@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <CAHRSSEzGaZw4y4gKzyJzxmrkL20NpTAtB8mDeDs+JzsTWeDZKA@mail.gmail.com>
+ <000000000000a8bbbb058530a12a@google.com>
+In-Reply-To: <000000000000a8bbbb058530a12a@google.com>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Thu, 28 Mar 2019 17:59:23 -0700
+Message-ID: <CAHRSSEy3od0-7HMCOjbHprc9ihu3VqkJi1-5OKew0oN-2BcPvA@mail.gmail.com>
+Subject: Re: kernel BUG at drivers/android/binder_alloc.c:LINE! (3)
+To:     syzbot <syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com>
+Cc:     =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@android.com>,
+        syzkaller-bugs@googlegroups.com, Todd Kjos <tkjos@android.com>
+Content-Type: multipart/mixed; boundary="00000000000033183c0585312fec"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 05:39:26PM -0700, John Hubbard wrote:
-> On 3/28/19 2:21 PM, Jerome Glisse wrote:
-> > On Thu, Mar 28, 2019 at 01:43:13PM -0700, John Hubbard wrote:
-> >> On 3/28/19 12:11 PM, Jerome Glisse wrote:
-> >>> On Thu, Mar 28, 2019 at 04:07:20AM -0700, Ira Weiny wrote:
-> >>>> On Mon, Mar 25, 2019 at 10:40:02AM -0400, Jerome Glisse wrote:
-> >>>>> From: Jérôme Glisse <jglisse@redhat.com>
-> [...]
-> >>>>> @@ -67,14 +78,9 @@ struct hmm {
-> >>>>>   */
-> >>>>>  static struct hmm *hmm_register(struct mm_struct *mm)
-> >>>>>  {
-> >>>>> -	struct hmm *hmm = READ_ONCE(mm->hmm);
-> >>>>> +	struct hmm *hmm = mm_get_hmm(mm);
-> >>>>
-> >>>> FWIW: having hmm_register == "hmm get" is a bit confusing...
-> >>>
-> >>> The thing is that you want only one hmm struct per process and thus
-> >>> if there is already one and it is not being destroy then you want to
-> >>> reuse it.
-> >>>
-> >>> Also this is all internal to HMM code and so it should not confuse
-> >>> anyone.
-> >>>
-> >>
-> >> Well, it has repeatedly come up, and I'd claim that it is quite 
-> >> counter-intuitive. So if there is an easy way to make this internal 
-> >> HMM code clearer or better named, I would really love that to happen.
-> >>
-> >> And we shouldn't ever dismiss feedback based on "this is just internal
-> >> xxx subsystem code, no need for it to be as clear as other parts of the
-> >> kernel", right?
-> > 
-> > Yes but i have not seen any better alternative that present code. If
-> > there is please submit patch.
-> > 
-> 
-> Ira, do you have any patch you're working on, or a more detailed suggestion there?
-> If not, then I might (later, as it's not urgent) propose a small cleanup patch 
-> I had in mind for the hmm_register code. But I don't want to duplicate effort 
-> if you're already thinking about it.
+--00000000000033183c0585312fec
+Content-Type: text/plain; charset="UTF-8"
 
-No I don't have anything.
+Sigh. One more try... master with the same patch as an attachment.
+(the patch is already queued up in gregkh's 'char-misc-linus' branch).
 
-I was just really digging into these this time around and I was about to
-comment on the lack of "get's" for some "puts" when I realized that
-"hmm_register" _was_ the get...
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+master
 
-:-(
+On Thu, Mar 28, 2019 at 5:20 PM syzbot
+<syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot tried to test the proposed patch but build/boot failed:
+>
+> timed out
+>
+>
+>
+>
+>
+>
+> Tested on:
+>
+> commit:         0532a1b0 virt: vbox: Implement passing requestor info to t..
+> git tree:
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
+> char-misc-linus
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
 
-Ira
+--00000000000033183c0585312fec
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-binder-fix-crash-in-binder_alloc_do_buffer_copy.patch"
+Content-Disposition: attachment; 
+	filename="0001-binder-fix-crash-in-binder_alloc_do_buffer_copy.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jttcy0c60>
+X-Attachment-Id: f_jttcy0c60
 
-> 
-> 
-> thanks,
-> -- 
-> John Hubbard
-> NVIDIA
-> 
-> 
+RnJvbSBkNDljOTVjOTQ0YzE1NzMyZWY1N2YxYzg3NmUyNDgzOGIyZGRmMzRiIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBUb2RkIEtqb3MgPHRram9zQGdvb2dsZS5jb20+CkRhdGU6IFR1
+ZSwgMTkgTWFyIDIwMTkgMDk6NTM6MDEgLTA3MDAKU3ViamVjdDogW1BBVENIXSBiaW5kZXI6IGZp
+eCBCVUdfT04gZm91bmQgYnkgc2VsaW51eC10ZXN0c3VpdGUKClRoZSBzZWxpbnV4LXRlc3RzdWl0
+ZSBmb3VuZCBhbiBpc3N1ZSByZXN1bHRpbmcgaW4gYSBCVUdfT04oKQp3aGVyZSBhIGNvbmRpdGlv
+bmFsIHJlbGllZCBvbiBhIHNpemVfdCBnb2luZyBuZWdhdGl2ZSB3aGVuCmNoZWNraW5nIHRoZSB2
+YWxpZGl0eSBvZiBhIGJ1ZmZlciBvZmZzZXQuCgpGaXhlczogN2E2N2EzOTMyMGRmICgiYmluZGVy
+OiBhZGQgZnVuY3Rpb24gdG8gY29weSBiaW5kZXIgb2JqZWN0IGZyb20gYnVmZmVyIikKUmVwb3J0
+ZWQtYnk6IFBhdWwgTW9vcmUgPHBhdWxAcGF1bC1tb29yZS5jb20+ClRlc3RlZC1ieTogUGF1bCBN
+b29yZSA8cGF1bEBwYXVsLW1vb3JlLmNvbT4KU2lnbmVkLW9mZi1ieTogVG9kZCBLam9zIDx0a2pv
+c0Bnb29nbGUuY29tPgotLS0KUGxlYXNlIGFkZCB0byA1LjEgKGZpeGVzIHByb2JsZW0gaW50cm9k
+dWNlZCBpbiA1LjEtcmMxKQoKIGRyaXZlcnMvYW5kcm9pZC9iaW5kZXIuYyB8IDMgKystCiAxIGZp
+bGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9hbmRyb2lkL2JpbmRlci5jIGIvZHJpdmVycy9hbmRyb2lkL2JpbmRlci5jCmluZGV4
+IDg2ODU4ODJkYTY0Y2QuLjRiOWM3Y2E0OTJlNmQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvYW5kcm9p
+ZC9iaW5kZXIuYworKysgYi9kcml2ZXJzL2FuZHJvaWQvYmluZGVyLmMKQEAgLTIwNTcsNyArMjA1
+Nyw4IEBAIHN0YXRpYyBzaXplX3QgYmluZGVyX2dldF9vYmplY3Qoc3RydWN0IGJpbmRlcl9wcm9j
+ICpwcm9jLAogCXNpemVfdCBvYmplY3Rfc2l6ZSA9IDA7CiAKIAlyZWFkX3NpemUgPSBtaW5fdChz
+aXplX3QsIHNpemVvZigqb2JqZWN0KSwgYnVmZmVyLT5kYXRhX3NpemUgLSBvZmZzZXQpOwotCWlm
+IChyZWFkX3NpemUgPCBzaXplb2YoKmhkcikgfHwgIUlTX0FMSUdORUQob2Zmc2V0LCBzaXplb2Yo
+dTMyKSkpCisJaWYgKG9mZnNldCA+IGJ1ZmZlci0+ZGF0YV9zaXplIHx8IHJlYWRfc2l6ZSA8IHNp
+emVvZigqaGRyKSB8fAorCSAgICAhSVNfQUxJR05FRChvZmZzZXQsIHNpemVvZih1MzIpKSkKIAkJ
+cmV0dXJuIDA7CiAJYmluZGVyX2FsbG9jX2NvcHlfZnJvbV9idWZmZXIoJnByb2MtPmFsbG9jLCBv
+YmplY3QsIGJ1ZmZlciwKIAkJCQkgICAgICBvZmZzZXQsIHJlYWRfc2l6ZSk7Ci0tIAoyLjIxLjAu
+MjI1Lmc4MTBiMjY5ZDFhYy1nb29nCgo=
+--00000000000033183c0585312fec--
