@@ -3,81 +3,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDF7C10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D186C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE81421871
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565F0218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbfC2QoP (ORCPT
+        id S1729787AbfC2QqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 12:44:15 -0400
-Received: from mail02.iobjects.de ([188.40.134.68]:46076 "EHLO
-        mail02.iobjects.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729150AbfC2QoP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 12:44:15 -0400
-Received: from tux.wizards.de (pD9EBF050.dip0.t-ipconnect.de [217.235.240.80])
-        by mail02.iobjects.de (Postfix) with ESMTPSA id 7FD264164E66;
-        Fri, 29 Mar 2019 17:44:13 +0100 (CET)
-Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
-        by tux.wizards.de (Postfix) with ESMTP id 4D335F01606;
-        Fri, 29 Mar 2019 17:44:13 +0100 (CET)
-Subject: Re: [PATCH] block/bfq: fix ifdef for CONFIG_BFQ_GROUP_IOSCHED=y
-To:     Jens Axboe <axboe@kernel.dk>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-block@vger.kernel.org,
-        Paolo Valente <paolo.valente@linaro.org>,
-        linux-kernel@vger.kernel.org
-References: <155386807826.3190.16175453392005064129.stgit@buzz>
- <c40b8d4a-c504-fdf4-0b96-64aaeb167435@applied-asynchrony.com>
- <5234a971-2b6a-47b1-0071-8f3bd07d9fc3@kernel.dk>
- <cf0dc6b2-6ecf-c895-6c21-8746700bdae4@applied-asynchrony.com>
- <6be15f08-dbb4-6b43-3d95-44044f1acdbc@kernel.dk>
-From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <3c87a84f-9fb2-2407-a5a3-723b314d8e58@applied-asynchrony.com>
-Date:   Fri, 29 Mar 2019 17:44:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 12:46:10 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15426 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728853AbfC2QqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 12:46:09 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 09:46:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,285,1549958400"; 
+   d="asc'?scan'208";a="126992194"
+Received: from mvaitla-mobl.amr.corp.intel.com ([10.252.138.221])
+  by orsmga007.jf.intel.com with ESMTP; 29 Mar 2019 09:46:08 -0700
+Message-ID: <406ed115ce8c3bd690c0d434f8d5a5062ab4f793.camel@intel.com>
+Subject: Re: linux-next: Fixes tag needs some work in the net tree
+From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arvind Sankar <niveditas98@gmail.com>
+Date:   Fri, 29 Mar 2019 09:46:06 -0700
+In-Reply-To: <20190329142605.5e3263d1@canb.auug.org.au>
+References: <20190329142605.5e3263d1@canb.auug.org.au>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-B1aM37n2wI2XBDiwefHM"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <6be15f08-dbb4-6b43-3d95-44044f1acdbc@kernel.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/29/19 5:15 PM, Jens Axboe wrote:
->>>> Good catch! I run without group scheduling and therefore didn't notice these
->>>> stray defines earlier. For 5.1 it should merge cleanly; adding this on top of
->>>> the pending 5.2 BFQ patches required a small context fixup in hunk #1 due to
->>>> "block, bfq: do not idle for lowest-weight queues".
->>>
->>> I'm hesitant to apply this, since the group scheduling stuff has obviously never
->>> been tested.
->>
->> This is simply a regression in 5.1 caused by 73d58118498b - nothing else,
->> and as such this fix needs to go into 5.1 as well. I'm sure Paolo will agree.
->> What you so ominously  call "the group scheduling stuff" has been there and
->> shipping in mainline since day 1 of the BFQ merge, and it works fine in 5.0.
-> 
-> If that's the case (I didn't check how far back it went), then yes, it should
-> of course go into 5.1.
 
-Yay.
+--=-B1aM37n2wI2XBDiwefHM
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> The ominous nature of my reply I'll chalk up to your interpretation
+On Fri, 2019-03-29 at 14:26 +1100, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> In commit
+>=20
+>   dabb8338be53 ("igb: Fix WARN_ONCE on runtime suspend")
+>=20
+> Fixes tag
+>=20
+>   Fixes: fb29f76cc566 ("igb: Fix an issue that PME is not enabled during
+> runtime suspend")
+>=20
+> has these problem(s):
+>=20
+>   - Target SHA1 does not exist
+>=20
+> Did you mean:
+>=20
+> Fixes: 1fb3a7a75e2e ("igb: Fix an issue that PME is not enabled during
+> runtime suspend")
+>=20
 
-Fair enough ;)
+Yes
 
-A more interesting question is why upstream uses undefined defines
-for patches. That's a first-rate self-grenade if I've ever seen one,
-and obviously something that is easily missed. Paolo?
+--=-B1aM37n2wI2XBDiwefHM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
--h
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAlyeS84ACgkQ5W/vlVpL
+7c7U3hAAjDrnd5mqw58ZPFtepxXH+dM4967nXKVYwZjxpc/bHcLYblMLw3haHifK
+EcRUneeqG7zg4Ps/CiNiVg+BXMtOtFkt7465GPVL5F4/pbcTahP7jYqO9cWX6pEt
+zG6dseCaK+up5WuQ5RW50+tVS6MOKwANDvB+oZ4qzfEUymhX2/QRV6GJhPl42e0m
+viAIa+leMtCWp294igX0ltZ22gAUQhpW6C9zlrhpwFFdJmy3i71uZN/HaARBFnDi
+OJVGeO25yBpDrCYWl9cYBw1D+6SDEJYPAEPQSolZ9l4iBjYM/SqJlKvkAG7U9IiW
+EOVYEb505LpYB2vexX29wzMhaz9WUG8x2CrDuj5cecSPIOKNasWEEYnblWLFNSvU
+45dC24IevWFc3ZbySh66fI+orBxeuV6IhK8iDTL7/kY0dE6zq8Ra5e3AJBMKn1Iw
+/Q2mQL4gJujdyIIZd9Z+SmyGlD6GmGQu7TyDtY8cpSB9VZimCv1lHML/aXePBT2Q
+Iwe9rrW8jGTDB2UqJYs+qn91hDDRX8b5bE+bcu37zZoOcQizsgtbUZ4xNMcnqqz5
+ChDR7C7++YQ4kRVUs31EJKxbrJm5eKV+US1n4jYXdyM62VaSZutt/V4X9X+blIM0
+sNwSTLH0DH/kHgGFS1WKI18HPzLuOmUUQhDp7fiGPjx3M7+XXIk=
+=jE88
+-----END PGP SIGNATURE-----
+
+--=-B1aM37n2wI2XBDiwefHM--
+
