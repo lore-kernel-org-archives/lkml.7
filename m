@@ -2,104 +2,150 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B526C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE1EC10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 444412183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F7C2173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbfC2JTn (ORCPT
+        id S1729290AbfC2JUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 05:19:43 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:15463 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728676AbfC2JTl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 05:19:41 -0400
-X-IronPort-AV: E=Sophos;i="5.60,283,1549900800"; 
-   d="scan'208";a="57995283"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 29 Mar 2019 17:19:39 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id 7A88E4CD615E;
-        Fri, 29 Mar 2019 17:19:39 +0800 (CST)
-Received: from localhost.localdomain (10.167.225.56) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Fri, 29 Mar 2019 17:19:38 +0800
-Date:   Fri, 29 Mar 2019 17:18:50 +0800
-From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
-To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
-CC:     Borislav Petkov <bp@alien8.de>, "bhe@redhat.com" <bhe@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        "kasong@redhat.com" <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Message-ID: <20190329091850.GJ4234@localhost.localdomain>
-References: <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
- <20190326135714.GG1867@zn.tnic>
- <20190327014852.GA3659@MiWiFi-R3L-srv>
- <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
- <20190328064343.GA1877@MiWiFi-R3L-srv>
- <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
- <20190328155256.GP22720@zn.tnic>
- <20190329072037.GA5840@jeru.linux.bs1.fc.nec.co.jp>
- <20190329082929.GH4234@localhost.localdomain>
- <5dba5878-4bc7-e9cd-134d-ce88e8b6a766@ce.jp.nec.com>
+        Fri, 29 Mar 2019 05:20:04 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39266 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728676AbfC2JUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 05:20:04 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 22D916E25BE330483374;
+        Fri, 29 Mar 2019 17:20:02 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.55) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.408.0; Fri, 29 Mar 2019
+ 17:19:52 +0800
+Subject: Re: Unexpected interrupt received in Guest OS when booting after
+ "system_reset"
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+References: <e8ffbc4e-f7b7-14a1-7614-a3db85c9152f@huawei.com>
+ <9a6ece7e-9984-dc9e-8fa2-df9736393dd2@arm.com>
+ <9694b5f2-80bd-b85c-8fc5-bd1d917e1b33@huawei.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        wanghaibin 00208455 <wanghaibin.wang@huawei.com>
+From:   Heyi Guo <guoheyi@huawei.com>
+Message-ID: <2e8f8bfb-4ae2-5fc6-4022-222a8f44e1f6@huawei.com>
+Date:   Fri, 29 Mar 2019 17:19:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <5dba5878-4bc7-e9cd-134d-ce88e8b6a766@ce.jp.nec.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [10.167.225.56]
-X-yoursite-MailScanner-ID: 7A88E4CD615E.AD6B9
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
+In-Reply-To: <9694b5f2-80bd-b85c-8fc5-bd1d917e1b33@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.55]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 08:39:45AM +0000, Junichi Nomura wrote:
->On 3/29/19 5:29 PM, Chao Fan wrote:
->> On Fri, Mar 29, 2019 at 07:20:38AM +0000, Junichi Nomura wrote:
->>> +	return __efi_get_rsdp_addr(config_tables, nr_tables, efi_64);
->>> +#else
->>> +	return 0;
->>> #endif
->>> -	return rsdp_addr;
->> 
->> I remeber the rsdp_addr is defined before #ifdef CONFIG_EFI
->> If so, you don't need
->> #else
->> 	return 0;
->
->I moved the whole __efi_get_rsdp_addr() to the inside of #ifdef CONFIG_EFI
->and both kexec_get_rsdp_addr() and efi_get_rsdp_addr() just return 0 if
->CONFIG_EFI is not defined.
+Hi Marc,
 
-Ah, got it. I will add the patch and do a simple test.
->
->> BY the way, what's your patch based on? I like add patch on my local
->> branch and then review code, but failed.
->> I try to use 'patch -p1 <' your patch to the latest tip master branch,
->> but failed.
->
->The patch is based on Linus's v5.1-rc2.
+The patch works. I tested for 1.5 hour and 52 VM resets. There were 16 times that a virtual LPI left in the ap_list (seen by an additional printk) during reset and we never saw "Unexpected interrupt received" any more.
+
+Just a minor comment: how about replacing /vcpu->arch.vgic_cpu./ with /vgic_cpu->/ in the lock/unlock code line, to reduce some words?
 
 Thanks,
-Chao Fan
 
+Heyi
+
+On 2019/3/29 9:19, Heyi Guo wrote:
 >
->-- 
->Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
 >
+> On 2019/3/29 1:18, Marc Zyngier wrote:
+>> [Please do not send HTML emails]
+> Sorry; will keep in mind next time :)
+>>
+>> On 28/03/2019 15:44, Heyi Guo wrote:
+>>> Hi Marc and Christoffer,
+>>>
+>>> When we issue "system_reset" from qemu monitor to a running VM, guest
+>>> Linux will occasionally get "Unexpected interrupt" after rebooting, with
+>>> kernel message at the bottom.
+>>>
+>>> After some investigation, we found it might be caused by the
+>>> preservation of virtual LPI during system reset: it seems the virtual
+>>> LPI remains in the ap_list during VM reset, as well as its "enabled" and
+>>> "pending_latch" status, and this causes the virtual LPI to be injected
+>>> wrongly after VCPU reboots and enables interrupt.
+>>>
+>>> We propose to clear "enabled" flag of virtual LPI when PROPBASER (or
+>>> GICR_CTRL) of virtual GICR is written to 0, and update virtual LPI
+>>> properties when GICR_CTRL.enableLPIs is set to 1 again.
+>>>
+>>> Any advice? Or did we miss something?
+>> We're clearly missing a trick here, but I'm not convinced of your
+>> approach.
+> To be honest, we were not fully convinced by ourselves either. I was worrying about guest switching GICR_CTRL or GICR_PROPBASER at runtime which probably causes issue for our rough approach.
+>
+>> What should happend is that the redistributors should be reset
+>> as well, and that this should recall any LPI that has been made pending.
+>> Unfortunately, we don't seem to have such code in place, which is
+>> embarrassing.
+>>
+>> Can you give the following, untested patch a go? It isn't right either,
+>> but it should have the right effect. If you confirm that it solves your
+>> problem, we can look at adding the right hooks...
+> Thanks, I'll test this and get back to you.
+> Heyi
+>
+>> Thanks,
+>>
+>>     M.
+>>
+>> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
+>> index ab3f47745d9c..bd9a9250f323 100644
+>> --- a/virt/kvm/arm/vgic/vgic-its.c
+>> +++ b/virt/kvm/arm/vgic/vgic-its.c
+>> @@ -2403,8 +2403,32 @@ static int vgic_its_commit_v0(struct vgic_its *its)
+>>       return 0;
+>>   }
+>>   +static void vgic_nuke_pending_lpis(struct kvm_vcpu *vcpu)
+>> +{
+>> +    struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
+>> +    struct vgic_irq *irq, *tmp;
+>> +    unsigned long flags;
+>> +
+>> + raw_spin_lock_irqsave(&vcpu->arch.vgic_cpu.ap_list_lock, flags);
+>> +
+>> +    list_for_each_entry_safe(irq, tmp, &vgic_cpu->ap_list_head, ap_list) {
+>> +        if (irq->intid >= VGIC_MIN_LPI) {
+>> +            list_del(&irq->ap_list);
+>> +            vgic_put_irq(vcpu->kvm, irq);
+>> +        }
+>> +    }
+>> +
+>> + raw_spin_unlock_irqrestore(&vcpu->arch.vgic_cpu.ap_list_lock, flags);
+>> +}
+>> +
+>>   static void vgic_its_reset(struct kvm *kvm, struct vgic_its *its)
+>>   {
+>> +    struct kvm_vcpu *vcpu;
+>> +    int c;
+>> +
+>> +    kvm_for_each_vcpu(c, vcpu, kvm)
+>> +        vgic_nuke_pending_lpis(vcpu);
+>> +
+>>       /* We need to keep the ABI specific field values */
+>>       its->baser_coll_table &= ~GITS_BASER_VALID;
+>>       its->baser_device_table &= ~GITS_BASER_VALID;
+>>
+>
+>
+>
+> .
 >
 
 
