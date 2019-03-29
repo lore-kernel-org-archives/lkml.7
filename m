@@ -2,213 +2,307 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA51FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5B3C10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94BF7218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7495F218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pHkKQ/LI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P2Denelq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aKX4cT8D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730099AbfC2UI2 (ORCPT
+        id S1730120AbfC2UIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 16:08:28 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43624 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730069AbfC2UI1 (ORCPT
+        Fri, 29 Mar 2019 16:08:54 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42070 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730069AbfC2UIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 16:08:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6B58E6079C; Fri, 29 Mar 2019 20:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553890106;
-        bh=UmAeqrYgORAQU1P7uA+dzqDjikUQdc0mD1x4bfTKj+k=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=pHkKQ/LISwXgwVrWJh5lB3q4++bxdCYj6F5al9peMEE7GyH9HqoNzXl046uBvOW82
-         Xty4YniU8ZWnXf+vW1A/kI0JM+WGh0Xj/P7wKJg7t3RgEi7hPT9oblwEyA3pMgCrUE
-         sTwg/osvnwoE4ncqM+77iRXQ0TGHnn0JZLYitxDE=
-Received: from [10.79.168.116] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 03E2C605A2;
-        Fri, 29 Mar 2019 20:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553890105;
-        bh=UmAeqrYgORAQU1P7uA+dzqDjikUQdc0mD1x4bfTKj+k=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=P2Denelqjz3TgvlD+0P0qcBRc4F0KTH0HOUszXykTdE+ZxYvGhN7ZzLu3DoNv1ncM
-         l5lqaV/HrP2jfrnU8JtDdfAvQzilhQ4djA1qT+VwPS/z+2K3w7qzpwaavSGvb0L0/k
-         DfvExRchjCPT2snAG5etQe0rTuXdGTqFJtICzSa8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 03E2C605A2
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] scsi: pm8001: clean up structurally dead code when
- PM8001_USE_MSIX is defined (part2)
-To:     Colin King <colin.king@canonical.com>,
-        Jack Wang <jinpu.wang@profitbricks.com>, lindar_liu@usish.com,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190329153221.29238-1-colin.king@canonical.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <0c08b258-e61d-60ee-7702-728fa96c435d@codeaurora.org>
-Date:   Sat, 30 Mar 2019 01:38:15 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 16:08:54 -0400
+Received: by mail-io1-f68.google.com with SMTP id c4so2753530ioh.9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 13:08:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:in-reply-to:references:mime-version:date:message-id:subject:to
+         :cc;
+        bh=Sv400k/Q1N8W5OLz0DKplbZxtCE0vRXE1zV06dT7MsY=;
+        b=aKX4cT8DxtcAaPoAu29wIk8v/4UoyvDdh9gEF31hXob2jTzi3neXbSFPHAk0+68fVz
+         4mBVkKZryjGguPbIDpZRKQdC9Whcaj7yhhsDtGCYtf8hdT8DONCpcL+f1m5epMHFehu9
+         kp/uWGmb6JIbw7cFR40E6uitlQMKI5GaepIog=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:in-reply-to:references:mime-version:date
+         :message-id:subject:to:cc;
+        bh=Sv400k/Q1N8W5OLz0DKplbZxtCE0vRXE1zV06dT7MsY=;
+        b=OsU5JoBOf24het6Yuhg6S8+0LCEeuV6R3+1+9EBmN1it8kcKRiMUochhKEBYczk8yi
+         0+wlabW7iSlsPNzj2TtbniOOAlhsa//auIsy01rkSJwdgpA5MEYxWF5USVIllsX/qBv3
+         UX3tbcce3Q83J+pFImb9QWO662i6erydCBQa0FzeHd9NOi1gb+TKs4zVyxodPIAU9yFV
+         FxPeI7sZhioI1RPfgUri8m90Xc+spDQuEZdsKfmwD/eeP+x3iOX2mqxHFIepta5qv8Gr
+         tnjqnkHIDUV1gNCuV8/KxPwiWylD/XNSfbxFaT8TlBW5l1APX6dVUCX9b4Em/lhd2sxf
+         TebA==
+X-Gm-Message-State: APjAAAXpordXM0omLk/dY/+on3/NVpxNgj5993d/5hO4H4+cSkol+7Nq
+        3H9IBxoByy1FQyCQdLEQ6tmVa6h3VEY9D7jG10ErGQ==
+X-Google-Smtp-Source: APXvYqxso5raRZbg2zeTBB5ZhzHqRMFa18g193aZPxwnEnVVAhJNF0ByY7gL3jV3dWGkkKj+ztThhnusn8JCRjeiN3E=
+X-Received: by 2002:a5d:8b42:: with SMTP id c2mr26512361iot.192.1553890133140;
+ Fri, 29 Mar 2019 13:08:53 -0700 (PDT)
+Received: from 764776645087 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 29 Mar 2019 13:08:52 -0700
+From:   Gwendal Grignou <gwendal@chromium.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+In-Reply-To: <CAPUE2uskDvefZbt5Ydz8Eu3+Aavu+AzPY5WuAYj0ziYP373oRA@mail.gmail.com>
+References: <CAPUE2uskDvefZbt5Ydz8Eu3+Aavu+AzPY5WuAYj0ziYP373oRA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190329153221.29238-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Date:   Fri, 29 Mar 2019 13:08:52 -0700
+Message-ID: <CAPUE2uu5SyVevcWbxc7B6Tf1jTOCmYBgfWsgZJBDLC4xf=rQ_A@mail.gmail.com>
+Subject: [PATCH v5] iio: cros_ec: Add lid angle driver
+To:     enric.balletbo@collabora.com, bleung@chromium.org,
+        groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add a IIO driver that reports the angle between the lid and the base for
+ChromeOS convertible device.
 
-On 3/29/2019 9:02 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> When macro PM8001_USE_MSIX is defined there is redundant dead code
-> call to pm8001_cr32.  Clean this up for the defined PM8001_USE_MSIX and
-> undefined PM8001_USE_MSIX cases.
->
-> Also rename the functions pm8001_chip_is_our_interupt,
-> pm80xx_chip_is_our_interupt and function pointer is_our_interrupt
-> to fix spelling mistakes.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Tested on eve with ToT EC firmware.
+Check driver is loaded and lid angle is correct.
 
-It would be better if you could split this into two patch, one for dead 
-code and other for renaming.
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+---
+Changes in v5:
+- Remove unnecessary define.
+- v4 was the wrong patch file
 
-Otherwise change looks good.
+Changes in v3:
+- Use static channel array, simplify code because index is always 0.
 
-Once you fix above you could include .
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Changes in v2:
+- Fix license, remove driver_module field.
 
-Cheers,
--Mukesh
+ drivers/iio/common/cros_ec_sensors/Kconfig    |   9 ++
+ drivers/iio/common/cros_ec_sensors/Makefile   |   1 +
+ .../cros_ec_sensors/cros_ec_lid_angle.c       | 138 ++++++++++++++++++
+ drivers/mfd/cros_ec_dev.c                     |  13 +-
+ 4 files changed, 158 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
 
+diff --git a/drivers/iio/common/cros_ec_sensors/Kconfig
+b/drivers/iio/common/cros_ec_sensors/Kconfig
+index 135f6825903f..aacc2ab9c34f 100644
+--- a/drivers/iio/common/cros_ec_sensors/Kconfig
++++ b/drivers/iio/common/cros_ec_sensors/Kconfig
+@@ -20,3 +20,12 @@ config IIO_CROS_EC_SENSORS
+ 	  Accelerometers, Gyroscope and Magnetometer that are
+ 	  presented by the ChromeOS EC Sensor hub.
+ 	  Creates an IIO device for each functions.
++
++config IIO_CROS_EC_SENSORS_LID_ANGLE
++	tristate "ChromeOS EC Sensor for lid angle"
++	depends on IIO_CROS_EC_SENSORS_CORE
++	help
++	  Module to report the angle between lid and base for some
++	  convertible devices.
++	  This module is loaded when the EC can calculate the angle between the base
++	  and the lid.
+diff --git a/drivers/iio/common/cros_ec_sensors/Makefile
+b/drivers/iio/common/cros_ec_sensors/Makefile
+index ec716ff2a775..a35ee232ac07 100644
+--- a/drivers/iio/common/cros_ec_sensors/Makefile
++++ b/drivers/iio/common/cros_ec_sensors/Makefile
+@@ -4,3 +4,4 @@
 
-> ---
->   drivers/scsi/pm8001/pm8001_hwi.c  | 11 ++++++-----
->   drivers/scsi/pm8001/pm8001_init.c |  4 ++--
->   drivers/scsi/pm8001/pm8001_sas.h  |  2 +-
->   drivers/scsi/pm8001/pm80xx_hwi.c  | 11 ++++++-----
->   4 files changed, 15 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
-> index e4209091c1da..627075d00918 100644
-> --- a/drivers/scsi/pm8001/pm8001_hwi.c
-> +++ b/drivers/scsi/pm8001/pm8001_hwi.c
-> @@ -4623,17 +4623,18 @@ static int pm8001_chip_phy_ctl_req(struct pm8001_hba_info *pm8001_ha,
->   	return ret;
->   }
->   
-> -static u32 pm8001_chip_is_our_interupt(struct pm8001_hba_info *pm8001_ha)
-> +static u32 pm8001_chip_is_our_interrupt(struct pm8001_hba_info *pm8001_ha)
->   {
-> -	u32 value;
->   #ifdef PM8001_USE_MSIX
->   	return 1;
-> -#endif
-> +#else
-> +	u32 value;
-> +
->   	value = pm8001_cr32(pm8001_ha, 0, MSGU_ODR);
->   	if (value)
->   		return 1;
->   	return 0;
-> -
-> +#endif
->   }
->   
->   /**
-> @@ -5119,7 +5120,7 @@ const struct pm8001_dispatch pm8001_8001_dispatch = {
->   	.chip_rst		= pm8001_hw_chip_rst,
->   	.chip_iounmap		= pm8001_chip_iounmap,
->   	.isr			= pm8001_chip_isr,
-> -	.is_our_interupt	= pm8001_chip_is_our_interupt,
-> +	.is_our_interrupt	= pm8001_chip_is_our_interrupt,
->   	.isr_process_oq		= process_oq,
->   	.interrupt_enable 	= pm8001_chip_interrupt_enable,
->   	.interrupt_disable	= pm8001_chip_interrupt_disable,
-> diff --git a/drivers/scsi/pm8001/pm8001_init.c b/drivers/scsi/pm8001/pm8001_init.c
-> index a36060c23b37..3374f553c617 100644
-> --- a/drivers/scsi/pm8001/pm8001_init.c
-> +++ b/drivers/scsi/pm8001/pm8001_init.c
-> @@ -201,7 +201,7 @@ static irqreturn_t pm8001_interrupt_handler_msix(int irq, void *opaque)
->   
->   	if (unlikely(!pm8001_ha))
->   		return IRQ_NONE;
-> -	if (!PM8001_CHIP_DISP->is_our_interupt(pm8001_ha))
-> +	if (!PM8001_CHIP_DISP->is_our_interrupt(pm8001_ha))
->   		return IRQ_NONE;
->   #ifdef PM8001_USE_TASKLET
->   	tasklet_schedule(&pm8001_ha->tasklet[irq_vector->irq_id]);
-> @@ -224,7 +224,7 @@ static irqreturn_t pm8001_interrupt_handler_intx(int irq, void *dev_id)
->   	pm8001_ha = sha->lldd_ha;
->   	if (unlikely(!pm8001_ha))
->   		return IRQ_NONE;
-> -	if (!PM8001_CHIP_DISP->is_our_interupt(pm8001_ha))
-> +	if (!PM8001_CHIP_DISP->is_our_interrupt(pm8001_ha))
->   		return IRQ_NONE;
->   
->   #ifdef PM8001_USE_TASKLET
-> diff --git a/drivers/scsi/pm8001/pm8001_sas.h b/drivers/scsi/pm8001/pm8001_sas.h
-> index f88b0d33c385..ac6d8e3f22de 100644
-> --- a/drivers/scsi/pm8001/pm8001_sas.h
-> +++ b/drivers/scsi/pm8001/pm8001_sas.h
-> @@ -197,7 +197,7 @@ struct pm8001_dispatch {
->   	int (*chip_ioremap)(struct pm8001_hba_info *pm8001_ha);
->   	void (*chip_iounmap)(struct pm8001_hba_info *pm8001_ha);
->   	irqreturn_t (*isr)(struct pm8001_hba_info *pm8001_ha, u8 vec);
-> -	u32 (*is_our_interupt)(struct pm8001_hba_info *pm8001_ha);
-> +	u32 (*is_our_interrupt)(struct pm8001_hba_info *pm8001_ha);
->   	int (*isr_process_oq)(struct pm8001_hba_info *pm8001_ha, u8 vec);
->   	void (*interrupt_enable)(struct pm8001_hba_info *pm8001_ha, u8 vec);
->   	void (*interrupt_disable)(struct pm8001_hba_info *pm8001_ha, u8 vec);
-> diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-> index 536d2b4384f8..301de40eb708 100644
-> --- a/drivers/scsi/pm8001/pm80xx_hwi.c
-> +++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-> @@ -4617,17 +4617,18 @@ static int pm80xx_chip_phy_ctl_req(struct pm8001_hba_info *pm8001_ha,
->   	return pm8001_mpi_build_cmd(pm8001_ha, circularQ, opc, &payload, 0);
->   }
->   
-> -static u32 pm80xx_chip_is_our_interupt(struct pm8001_hba_info *pm8001_ha)
-> +static u32 pm80xx_chip_is_our_interrupt(struct pm8001_hba_info *pm8001_ha)
->   {
-> -	u32 value;
->   #ifdef PM8001_USE_MSIX
->   	return 1;
-> -#endif
-> +#else
-> +	u32 value;
-> +
->   	value = pm8001_cr32(pm8001_ha, 0, MSGU_ODR);
->   	if (value)
->   		return 1;
->   	return 0;
-> -
-> +#endif
->   }
->   
->   /**
-> @@ -4724,7 +4725,7 @@ const struct pm8001_dispatch pm8001_80xx_dispatch = {
->   	.chip_rst		= pm80xx_hw_chip_rst,
->   	.chip_iounmap		= pm8001_chip_iounmap,
->   	.isr			= pm80xx_chip_isr,
-> -	.is_our_interupt	= pm80xx_chip_is_our_interupt,
-> +	.is_our_interrupt	= pm80xx_chip_is_our_interrupt,
->   	.isr_process_oq		= process_oq,
->   	.interrupt_enable	= pm80xx_chip_interrupt_enable,
->   	.interrupt_disable	= pm80xx_chip_interrupt_disable,
+ obj-$(CONFIG_IIO_CROS_EC_SENSORS_CORE) += cros_ec_sensors_core.o
+ obj-$(CONFIG_IIO_CROS_EC_SENSORS) += cros_ec_sensors.o
++obj-$(CONFIG_IIO_CROS_EC_SENSORS_LID_ANGLE) += cros_ec_lid_angle.o
+diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+new file mode 100644
+index 000000000000..92be07d7fa36
+--- /dev/null
++++ b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+@@ -0,0 +1,138 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * cros_ec_lid_angle - Driver for CrOS EC lid angle sensor.
++ *
++ * Copyright 2018 Google, Inc
++ *
++ * This driver uses the cros-ec interface to communicate with the Chrome OS
++ * EC about counter sensors. Counters are presented through
++ * iio sysfs.
++ */
++
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/iio/buffer.h>
++#include <linux/iio/common/cros_ec_sensors_core.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/kfifo_buf.h>
++#include <linux/iio/trigger.h>
++#include <linux/iio/triggered_buffer.h>
++#include <linux/iio/trigger_consumer.h>
++#include <linux/kernel.h>
++#include <linux/mfd/cros_ec.h>
++#include <linux/mfd/cros_ec_commands.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++
++#define DRV_NAME "cros-ec-lid-angle"
++
++/*
++ * One channel for the lid angle, the other for timestamp.
++ */
++static const struct iio_chan_spec cros_ec_lid_angle_channels[] = {
++	{
++		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
++		.scan_type.realbits = CROS_EC_SENSOR_BITS,
++		.scan_type.storagebits = CROS_EC_SENSOR_BITS,
++		.scan_type.sign = 'u',
++		.type = IIO_ANGL
++	},
++	IIO_CHAN_SOFT_TIMESTAMP(1)
++};
++
++/* State data for ec_sensors iio driver. */
++struct cros_ec_lid_angle_state {
++	/* Shared by all sensors */
++	struct cros_ec_sensors_core_state core;
++};
++
++static int cros_ec_sensors_read_lid_angle(struct iio_dev *indio_dev,
++					  unsigned long scan_mask, s16 *data)
++{
++	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
++	int ret;
++
++	st->param.cmd = MOTIONSENSE_CMD_LID_ANGLE;
++	ret = cros_ec_motion_send_host_cmd(st, sizeof(st->resp->lid_angle));
++	if (ret) {
++		dev_warn(&indio_dev->dev, "Unable to read lid angle\n");
++		return ret;
++	}
++
++	*data = st->resp->lid_angle.value;
++	return 0;
++}
++
++static int cros_ec_lid_angle_read(struct iio_dev *indio_dev,
++				    struct iio_chan_spec const *chan,
++				    int *val, int *val2, long mask)
++{
++	struct cros_ec_lid_angle_state *st = iio_priv(indio_dev);
++	s16 data;
++	int ret;
++
++	mutex_lock(&st->core.cmd_lock);
++	ret = cros_ec_sensors_read_lid_angle(indio_dev, 1, &data);
++	if (ret)
++		return ret;
++	*val = data;
++	mutex_unlock(&st->core.cmd_lock);
++	return IIO_VAL_INT;
++}
++
++static const struct iio_info cros_ec_lid_angle_info = {
++	.read_raw = &cros_ec_lid_angle_read,
++};
++
++static int cros_ec_lid_angle_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct iio_dev *indio_dev;
++	struct cros_ec_lid_angle_state *state;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	ret = cros_ec_sensors_core_init(pdev, indio_dev, false);
++	if (ret)
++		return ret;
++
++	indio_dev->info = &cros_ec_lid_angle_info;
++	state = iio_priv(indio_dev);
++	indio_dev->channels = cros_ec_lid_angle_channels;
++	indio_dev->num_channels = ARRAY_SIZE(cros_ec_lid_angle_channels);
++
++	state->core.read_ec_sensors_data = cros_ec_sensors_read_lid_angle;
++
++	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
++			cros_ec_sensors_capture, NULL);
++	if (ret)
++		return ret;
++
++	return devm_iio_device_register(dev, indio_dev);
++}
++
++static const struct platform_device_id cros_ec_lid_angle_ids[] = {
++	{
++		.name = DRV_NAME,
++	},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(platform, cros_ec_lid_angle_ids);
++
++static struct platform_driver cros_ec_lid_angle_platform_driver = {
++	.driver = {
++		.name	= DRV_NAME,
++		.pm	= &cros_ec_sensors_pm_ops,
++	},
++	.probe		= cros_ec_lid_angle_probe,
++	.id_table	= cros_ec_lid_angle_ids,
++};
++module_platform_driver(cros_ec_lid_angle_platform_driver);
++
++MODULE_DESCRIPTION("ChromeOS EC driver for reporting convertible lid angle.");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index d275deaecb12..52ea2f1c87a1 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -297,13 +297,15 @@ static void cros_ec_sensors_register(struct
+cros_ec_dev *ec)
+
+ 	resp = (struct ec_response_motion_sense *)msg->data;
+ 	sensor_num = resp->dump.sensor_count;
+-	/* Allocate 1 extra sensors in FIFO are needed */
+-	sensor_cells = kcalloc(sensor_num + 1, sizeof(struct mfd_cell),
++	/*
++	 * Allocate 2 extra sensors if lid angle sensor and/or FIFO are needed.
++	 */
++	sensor_cells = kcalloc(sensor_num + 2, sizeof(struct mfd_cell),
+ 			       GFP_KERNEL);
+ 	if (sensor_cells == NULL)
+ 		goto error;
+
+-	sensor_platforms = kcalloc(sensor_num + 1,
++	sensor_platforms = kcalloc(sensor_num,
+ 				   sizeof(struct cros_ec_sensor_platform),
+ 				   GFP_KERNEL);
+ 	if (sensor_platforms == NULL)
+@@ -363,6 +365,11 @@ static void cros_ec_sensors_register(struct
+cros_ec_dev *ec)
+ 		sensor_cells[id].name = "cros-ec-ring";
+ 		id++;
+ 	}
++	if (cros_ec_check_features(ec,
++				EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS)) {
++		sensor_cells[id].name = "cros-ec-lid-angle";
++		id++;
++	}
+
+ 	ret = mfd_add_devices(ec->dev, 0, sensor_cells, id,
+ 			      NULL, 0, NULL);
+-- 
+2.21.0.360.g471c308f928-goog
