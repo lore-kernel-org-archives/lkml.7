@@ -2,149 +2,106 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F7CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94517C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5371E2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FE42070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:12:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E79+1WD6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbfC2KK0 (ORCPT
+        id S1728810AbfC2KMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:10:26 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35401 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727654AbfC2KKZ (ORCPT
+        Fri, 29 Mar 2019 06:12:30 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38951 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728630AbfC2KM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:10:25 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2TAA5eX3738879
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 29 Mar 2019 03:10:05 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2TAA5e93738874;
-        Fri, 29 Mar 2019 03:10:05 -0700
-Date:   Fri, 29 Mar 2019 03:10:05 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Matteo Croce <tipbot@zytor.com>
-Message-ID: <tip-f560bd19d2fe0e54851d706b72acbc6f2eed3567@git.kernel.org>
-Cc:     mcroce@redhat.com, ard.biesheuvel@linaro.org, hpa@zytor.com,
-        bp@suse.de, tglx@linutronix.de, mingo@redhat.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-efi@vger.kernel.org, mojha@codeaurora.org
-Reply-To: linux-kernel@vger.kernel.org, x86@kernel.org,
-          linux-efi@vger.kernel.org, mojha@codeaurora.org,
-          mcroce@redhat.com, ard.biesheuvel@linaro.org, hpa@zytor.com,
-          bp@suse.de, tglx@linutronix.de, mingo@kernel.org,
-          mingo@redhat.com
-In-Reply-To: <20190328114233.27835-1-mcroce@redhat.com>
-References: <20190328114233.27835-1-mcroce@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/realmode: Make set_real_mode_mem() static
- inline
-Git-Commit-ID: f560bd19d2fe0e54851d706b72acbc6f2eed3567
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+        Fri, 29 Mar 2019 06:12:29 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j9so1869023wrn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 03:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=+y2/6kyAo4OW6pN0+X/HTs1Di6/VAYdc4IbJi/g6D0s=;
+        b=E79+1WD6yG7I1rAGwucw8mSrRpVZzdtyj60LFUTOZHzaTBwdVj7+5p/ShoGPSqJZQF
+         A0IZ9kfVm4Vvoa9YRfKrxhmzNyKtQwie8682AkOyPVnMnQFqMrPweRwwwkYleu2dAEp/
+         t+wULHGOUCDYcnjz58xpjosl0BoKqaIzXnSReeY1bqw6LzwIUJJFEHkBtWf+p1hxobnD
+         uSfe+SzJ8f8FgJzK37cIgjc5Sgl0k5f0GeW389kzqWeFV4FWMjqIAAHi3s3YBK63n7vk
+         okjvTlz9OdUDrddjhTYQ2IZEWkRMIX04MjdyAp+p8A/TJcM+sHxPpEM8HkcNA5H+Hmxw
+         LoSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+y2/6kyAo4OW6pN0+X/HTs1Di6/VAYdc4IbJi/g6D0s=;
+        b=KNCsqKuwXxlmuVEY90OgWpdvxNgb1RhHZJWzuWlT1aJ9fEK9uW4rdjjDBHOkWYy1ht
+         /8CU7vaVSZ+hRJtefKZkbVYjeNBErLYtJRKr154cKzUclRBGCB+vs/QhPjt5Vg9aZdaa
+         Q9OFcWiU/urKRRoxUMn3bTru+CPAOHQYfiZtaDxu0+FYetPxdR12b06CDw1E8f9Qki7Y
+         uPAJ5O2ouTXkY6Y93WdEUxRAt3LJL8tF5R+LHSrm4UEuaJorbUgIkzFrzLtMi+KWuOcn
+         hBZCswaeXmzHsNVMXgwGiX1yNneUihnQCEMU0NBXdnGZ+9JeI7unji5vl8j/tGtR6NcE
+         RNtQ==
+X-Gm-Message-State: APjAAAX9YBpKbojbHXaeBh6002NcT7CyCpgIza32er/+NPSL03035CVZ
+        UUDrDJAsY4TlvXJyxFCsXsPGvwOss4E=
+X-Google-Smtp-Source: APXvYqx/K6/OhePyJmLhHnw1UNWISPEFUL4c2IPAdLrS3SmO1alBA91ceXJX0i6B+aX+ddTlW7kmEQ==
+X-Received: by 2002:adf:eb84:: with SMTP id t4mr32636389wrn.100.1553854347780;
+        Fri, 29 Mar 2019 03:12:27 -0700 (PDT)
+Received: from localhost ([49.248.196.175])
+        by smtp.gmail.com with ESMTPSA id f128sm1572404wme.28.2019.03.29.03.12.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 Mar 2019 03:12:26 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com,
+        andy.gross@linaro.org, David Brown <david.brown@linaro.org>
+Cc:     devicetree@vger.kernel.org
+Subject: [PATCH v2 00/13] qcom: dts: thermal cleanups
+Date:   Fri, 29 Mar 2019 15:42:06 +0530
+Message-Id: <cover.1553853990.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f560bd19d2fe0e54851d706b72acbc6f2eed3567
-Gitweb:     https://git.kernel.org/tip/f560bd19d2fe0e54851d706b72acbc6f2eed3567
-Author:     Matteo Croce <mcroce@redhat.com>
-AuthorDate: Thu, 28 Mar 2019 12:42:33 +0100
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Fri, 29 Mar 2019 10:16:27 +0100
+Changes since v1:
+- Devices that are not associated with cooling-maps use the 'hot' type
+- Remove critical trip from such devices too and restrict that type of CPUs
+- For 8916, add the sensor on the modem
 
-x86/realmode: Make set_real_mode_mem() static inline
+Description:
+- Expose all temperature sensors on msm8916, msm996, msm8998, sdm845
+- split up the register address map for msm8998
+- standardize names of the various thermal-zones across boards to make it
+  easy for test scripts to parse
 
-Remove the unused @size argument and move it into a header file, so it
-can be inlined.
+Amit Kucheria (13):
+  arm64: dts: msm8998: thermal: split address space into two
+  arm64: dts: msm8998: efficiency is not valid property
+  arm64: dts: msm8916: thermal: Add sensor for modem
+  arm64: dts: msm8996: thermal: Add temperature sensors near major
+    peripherals
+  arm64: dts: msm8998: thermal: Fix the cpu sensor numbers
+  arm64: dts: msm8998: thermal: Fix the gpu sensor number
+  arm64: dts: msm8998: thermal: GPU has two sensors, add the second
+  arm64: dts: msm8998: thermal: Add temperature sensors near major
+    peripherals
+  arm64: dts: sdm845: thermal: Add temperature sensors near major
+    peripherals
+  arm64: dts: msm8998: thermal: Make trip names consistent
+  arm64: dts: msm8916: thermal: Make trip names consistent
+  arm64: dts: msm8996: thermal: Make trip names consistent
+  arm64: dts: msm8916: thermal: Convert camera trip type to hot
 
- [ bp: Massage. ]
+ arch/arm64/boot/dts/qcom/msm8916.dtsi |  41 +++--
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 174 ++++++++++++++++--
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 242 +++++++++++++++++++++-----
+ arch/arm64/boot/dts/qcom/sdm845.dtsi  | 205 ++++++++++++++++++++++
+ 4 files changed, 589 insertions(+), 73 deletions(-)
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-efi <linux-efi@vger.kernel.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190328114233.27835-1-mcroce@redhat.com
----
- arch/x86/include/asm/realmode.h | 6 +++++-
- arch/x86/platform/efi/quirks.c  | 2 +-
- arch/x86/realmode/init.c        | 9 +--------
- 3 files changed, 7 insertions(+), 10 deletions(-)
+-- 
+2.17.1
 
-diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-index 63b3393bd98e..c53682303c9c 100644
---- a/arch/x86/include/asm/realmode.h
-+++ b/arch/x86/include/asm/realmode.h
-@@ -77,7 +77,11 @@ static inline size_t real_mode_size_needed(void)
- 	return ALIGN(real_mode_blob_end - real_mode_blob, PAGE_SIZE);
- }
- 
--void set_real_mode_mem(phys_addr_t mem, size_t size);
-+static inline void set_real_mode_mem(phys_addr_t mem)
-+{
-+	real_mode_header = (struct real_mode_header *) __va(mem);
-+}
-+
- void reserve_real_mode(void);
- 
- #endif /* __ASSEMBLY__ */
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 458a0e2bcc57..a25a9fd987a9 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -449,7 +449,7 @@ void __init efi_free_boot_services(void)
- 		 */
- 		rm_size = real_mode_size_needed();
- 		if (rm_size && (start + rm_size) < (1<<20) && size >= rm_size) {
--			set_real_mode_mem(start, rm_size);
-+			set_real_mode_mem(start);
- 			start += rm_size;
- 			size -= rm_size;
- 		}
-diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-index 47d097946872..7dce39c8c034 100644
---- a/arch/x86/realmode/init.c
-+++ b/arch/x86/realmode/init.c
-@@ -15,13 +15,6 @@ u32 *trampoline_cr4_features;
- /* Hold the pgd entry used on booting additional CPUs */
- pgd_t trampoline_pgd_entry;
- 
--void __init set_real_mode_mem(phys_addr_t mem, size_t size)
--{
--	void *base = __va(mem);
--
--	real_mode_header = (struct real_mode_header *) base;
--}
--
- void __init reserve_real_mode(void)
- {
- 	phys_addr_t mem;
-@@ -40,7 +33,7 @@ void __init reserve_real_mode(void)
- 	}
- 
- 	memblock_reserve(mem, size);
--	set_real_mode_mem(mem, size);
-+	set_real_mode_mem(mem);
- }
- 
- static void __init setup_real_mode(void)
