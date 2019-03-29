@@ -2,186 +2,179 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAC2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 05:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D02C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 05:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB7E20700
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 05:21:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Hbg058hj"
+	by mail.kernel.org (Postfix) with ESMTP id 7DFD220700
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 05:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfC2FVd (ORCPT
+        id S1728355AbfC2FXC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 01:21:33 -0400
-Received: from mail-eopbgr700074.outbound.protection.outlook.com ([40.107.70.74]:33025
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725830AbfC2FVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 01:21:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LvtgkPTDWzEw01GN19ybLJOvA3AegP3XKepr6yVM1es=;
- b=Hbg058hj7qRgDnNCsMRdG3xff8dCzvnR9grhKKgFG4ZVrFaOXx0p0FjcnhbEuFBIcqzFjQqChblSSgmBVCyrclpF2PNyP8Qdgc0eaXiqu4aOejcEHxnODWJ+c20u2uiGP4Ii7QyqPlpZiYx3NPhZcNGoD0Ro1wqCwozU35AAfTY=
-Received: from MWHPR02MB2623.namprd02.prod.outlook.com (10.168.206.9) by
- MWHPR02MB2782.namprd02.prod.outlook.com (10.175.49.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.16; Fri, 29 Mar 2019 05:21:29 +0000
-Received: from MWHPR02MB2623.namprd02.prod.outlook.com
- ([fe80::c89d:e485:cb5e:89cf]) by MWHPR02MB2623.namprd02.prod.outlook.com
- ([fe80::c89d:e485:cb5e:89cf%5]) with mapi id 15.20.1730.019; Fri, 29 Mar 2019
- 05:21:29 +0000
-From:   Naga Sureshkumar Relli <nagasure@xilinx.com>
-To:     Helmut Grohne <helmut.grohne@intenta.de>
-CC:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        "nagasureshkumarrelli@gmail.com" <nagasureshkumarrelli@gmail.com>
-Subject: RE: [LINUX PATCH v13] rawnand: pl353: Add basic driver for arm pl353
- smc nand interface
-Thread-Topic: [LINUX PATCH v13] rawnand: pl353: Add basic driver for arm pl353
- smc nand interface
-Thread-Index: AQHUwEH1zZQS3QRob0y10ZaiOKtLVqYeLsaAgAFJyICAAb/7AIABJDSg
-Date:   Fri, 29 Mar 2019 05:21:29 +0000
-Message-ID: <MWHPR02MB2623540BA389042E7795E071AF5A0@MWHPR02MB2623.namprd02.prod.outlook.com>
-References: <1549694247-24625-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
- <20190326132721.52e7ktnptgwvzeor@laureti-dev>
- <MWHPR02MB26235ED95B0F0AE89B2A0972AF580@MWHPR02MB2623.namprd02.prod.outlook.com>
- <20190328115106.i7ytk2uqno7i4h4u@laureti-dev>
-In-Reply-To: <20190328115106.i7ytk2uqno7i4h4u@laureti-dev>
-Accept-Language: en-US
-Content-Language: en-US
+        Fri, 29 Mar 2019 01:23:02 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:41647 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfC2FXB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 01:23:01 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x2T5MY9A021796
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 29 Mar 2019 14:22:34 +0900
+Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2T5MYk2002617;
+        Fri, 29 Mar 2019 14:22:34 +0900
+Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
+        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x2T5MYgr026380;
+        Fri, 29 Mar 2019 14:22:34 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.148] [10.38.151.148]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-3804741; Fri, 29 Mar 2019 14:20:57 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC20GP.gisp.nec.co.jp ([10.38.151.148]) with mapi id 14.03.0319.002; Fri,
+ 29 Mar 2019 14:20:56 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "David Rientjes" <rientjes@google.com>, Alex Ghiti <alex@ghiti.fr>,
+        Jing Xiangfeng <jingxiangfeng@huawei.com>
+Subject: Re: [PATCH REBASED] hugetlbfs: fix potential over/underflow setting
+ node specific nr_hugepages
+Thread-Topic: [PATCH REBASED] hugetlbfs: fix potential over/underflow
+ setting node specific nr_hugepages
+Thread-Index: AQHU5bJpwT7PIMyllUOstwX/Np6niKYhfBmA
+Date:   Fri, 29 Mar 2019 05:20:56 +0000
+Message-ID: <20190329052055.GA32733@hori.linux.bs1.fc.nec.co.jp>
+References: <20190328220533.19884-1-mike.kravetz@oracle.com>
+In-Reply-To: <20190328220533.19884-1-mike.kravetz@oracle.com>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
 X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=nagasure@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 576a48b8-07ff-4e44-872c-08d6b4066637
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:MWHPR02MB2782;
-x-ms-traffictypediagnostic: MWHPR02MB2782:
-x-microsoft-antispam-prvs: <MWHPR02MB2782D31D21A472F93BCFC046AF5A0@MWHPR02MB2782.namprd02.prod.outlook.com>
-x-forefront-prvs: 0991CAB7B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(39860400002)(136003)(366004)(396003)(53234004)(13464003)(199004)(189003)(3846002)(106356001)(7696005)(71190400001)(71200400001)(99286004)(105586002)(66066001)(93886005)(7736002)(55016002)(52536014)(14454004)(5660300002)(86362001)(7416002)(74316002)(53936002)(305945005)(229853002)(186003)(33656002)(6436002)(102836004)(9686003)(6506007)(53546011)(68736007)(6916009)(26005)(25786009)(256004)(4326008)(478600001)(76176011)(8936002)(8676002)(6246003)(54906003)(81166006)(81156014)(486006)(97736004)(6116002)(446003)(11346002)(476003)(316002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2782;H:MWHPR02MB2623.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: a//2DyhcBYG8zB5dHG0Na3m1h6C0iwRujhwuZIwjt2nE2aywqp6fA21NQVg8WZxr1/cHbBRLjDevYC6kjohA+h+uXQaOa8/aARoXGzQ4C5QPR1AKXUMZGvQzSw7BMYMJVO/+6oeliJRMEJ0rVN8ZECJCAMANKeYN61qUZytSxQLZQtJAcIS6pg8dTucKf7sP1ayi4xW7k+/zY5XcoQrORDQRpjWoQl3nXiaqwcAecZpnNsAa3tNqrC9gQMshjH/YjWJe1ogfIIC0/mQgWkvkSuotci7h+y61U5kUj4rqRy0HU+A1PMoK37s/U3rQcbesXg/wkl94hsreHRTG9RCFsOJO0GKnYelX2yfoiEpxVFov1sp8sG+h8/gMWQcc52yG8ELNj8kkyEZDeS13JTiXiRs4XwPibtLpGLgHWg/qxV8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-originating-ip: [10.34.125.148]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <100B784E0786CF49863E2D1C40235DF7@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 576a48b8-07ff-4e44-872c-08d6b4066637
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2019 05:21:29.6311
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2782
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helmut,
+On Thu, Mar 28, 2019 at 03:05:33PM -0700, Mike Kravetz wrote:
+> The number of node specific huge pages can be set via a file such as:
+> /sys/devices/system/node/node1/hugepages/hugepages-2048kB/nr_hugepages
+> When a node specific value is specified, the global number of huge
+> pages must also be adjusted.  This adjustment is calculated as the
+> specified node specific value + (global value - current node value).
+> If the node specific value provided by the user is large enough, this
+> calculation could overflow an unsigned long leading to a smaller
+> than expected number of huge pages.
+> 
+> To fix, check the calculation for overflow.  If overflow is detected,
+> use ULONG_MAX as the requested value.  This is inline with the user
+> request to allocate as many huge pages as possible.
+> 
+> It was also noticed that the above calculation was done outside the
+> hugetlb_lock.  Therefore, the values could be inconsistent and result
+> in underflow.  To fix, the calculation is moved within the routine
+> set_max_huge_pages() where the lock is held.
+> 
+> In addition, the code in __nr_hugepages_store_common() which tries to
+> handle the case of not being able to allocate a node mask would likely
+> result in incorrect behavior.  Luckily, it is very unlikely we will
+> ever take this path.  If we do, simply return ENOMEM.
+> 
+> Reported-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
 
-> -----Original Message-----
-> From: Helmut Grohne <helmut.grohne@intenta.de>
-> Sent: Thursday, March 28, 2019 5:21 PM
-> To: Naga Sureshkumar Relli <nagasure@xilinx.com>
-> Cc: bbrezillon@kernel.org; miquel.raynal@bootlin.com; richard@nod.at;
-> dwmw2@infradead.org; computersforpeace@gmail.com; marek.vasut@gmail.com; =
-linux-
-> mtd@lists.infradead.org; linux-kernel@vger.kernel.org; Michal Simek <mich=
-als@xilinx.com>;
-> nagasureshkumarrelli@gmail.com
-> Subject: Re: [LINUX PATCH v13] rawnand: pl353: Add basic driver for arm p=
-l353 smc nand
-> interface
->=20
-> Hi Naga,
->=20
-> On Wed, Mar 27, 2019 at 09:13:59AM +0000, Naga Sureshkumar Relli wrote:
-> > It's a on-die ECC capable device. Did u mentioned nand-ecc-mode =3D "on=
--die" in dts.
-> > The same part I tested by mentioning "on-die" property in dts and it wo=
-rked for me.
-> > Please share the dts entries for NAND.
-> > Also if it is x8 bus then please mention nand-bus-width =3D <8>; If it
-> > is x16 mention nand-bus-width =3D <16>;
->=20
-> Thank you for pointing at the relevant properties. Indeed, these were mis=
-sing in my previous
-> tests. I am now using the following dt (generated from multiple fragments=
-, giving the
-> decompiled dt here):
->=20
-> | memory-controller@e000e000 {
-> | 	#address-cells =3D <0x2>;
-> | 	#size-cells =3D <0x1>;
-> | 	status =3D "okay";
-> | 	clock-names =3D "memclk", "apb_pclk";
-> | 	clocks =3D <0x1 0xb 0x1 0x2c>;
-> | 	compatible =3D "arm,pl353-smc-r2p1", "arm,primecell";
-> | 	interrupt-parent =3D <0x4>;
-> | 	interrupts =3D <0x0 0x12 0x4>;
-> | 	ranges =3D <0x0 0x0 0xe1000000 0x1000000>;
-> | 	reg =3D <0xe000e000 0x1000>;
-> |
-> | 	flash@e1000000 {
-> | 		status =3D "okay";
-> | 		compatible =3D "arm,pl353-nand-r2p1";
-> | 		reg =3D <0x0 0x0 0x1000000>;
-> | 		#address-cells =3D <0x1>;
-> | 		#size-cells =3D <0x1>;
-> | 		nand-ecc-mode =3D "on-die";
-> | 		nand-ecc-algo =3D "hamming";
-> | 		nand-bus-width =3D <0x8>;
-> | 	};
-> | };
->=20
-> With this dt, the device is successfully initialized and the data read is=
- mostly intact. When
-> using it with jffs2, I get loads of ECC errors though (offsets and length=
-s vary):
->=20
-> | jffs2: mtd->read(0x800 bytes from 0xb60000) returned ECC error
->=20
-> Reverting back to the out-of-tree driver (4.14), it works normally, so a =
-hardware defect seems
-> unlikely. I compared a register dump of the smc between those drivers and=
- the only difference I
-> could find was NAND timings (at 0xE000E180), which are much lower with th=
-e new drivers
-> as it does not consume the arm,nand-cycle-* properties that the old drive=
-r consumed. I tried
-> hard coding the previous timings, but the ECC errors persist. This leads =
-me to conclude that
-> timings are not the cause for what I am seeing.
->=20
-> Is there anything else I can try to diagnose it?
-Thanks for trying with new dts.
-Previously we will pass the nand-cycle-* through dts.
-But now framework is giving all the timing information of SDR. So we will j=
-ust configure those
-Timings. I will recheck the driver about the timings.
+Looks good to me.
 
-Till now I tried mtd-utils(mtd-debug) and ubifs.
-I haven't tried jffs2. Let me give a try and will let you know.
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 
-Thanks,
-Naga Sureshkumar Relli.
->=20
-> Helmut
+> ---
+> This was sent upstream during 5.1 merge window, but dropped as it was
+> based on an earlier version of Alex Ghiti's patch which was dropped.
+> Now rebased on top of Alex Ghiti's "[PATCH v8 0/4] Fix free/allocation
+> of runtime gigantic pages" series which was just added to mmotm.
+> 
+>  mm/hugetlb.c | 41 ++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 34 insertions(+), 7 deletions(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index f3e84c1bef11..f79ae4e42159 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -2287,13 +2287,33 @@ static int adjust_pool_surplus(struct hstate *h, nodemask_t *nodes_allowed,
+>  }
+>  
+>  #define persistent_huge_pages(h) (h->nr_huge_pages - h->surplus_huge_pages)
+> -static int set_max_huge_pages(struct hstate *h, unsigned long count,
+> +static int set_max_huge_pages(struct hstate *h, unsigned long count, int nid,
+>  			      nodemask_t *nodes_allowed)
+>  {
+>  	unsigned long min_count, ret;
+>  
+>  	spin_lock(&hugetlb_lock);
+>  
+> +	/*
+> +	 * Check for a node specific request.
+> +	 * Changing node specific huge page count may require a corresponding
+> +	 * change to the global count.  In any case, the passed node mask
+> +	 * (nodes_allowed) will restrict alloc/free to the specified node.
+> +	 */
+> +	if (nid != NUMA_NO_NODE) {
+> +		unsigned long old_count = count;
+> +
+> +		count += h->nr_huge_pages - h->nr_huge_pages_node[nid];
+> +		/*
+> +		 * User may have specified a large count value which caused the
+> +		 * above calculation to overflow.  In this case, they wanted
+> +		 * to allocate as many huge pages as possible.  Set count to
+> +		 * largest possible value to align with their intention.
+> +		 */
+> +		if (count < old_count)
+> +			count = ULONG_MAX;
+> +	}
+> +
+>  	/*
+>  	 * Gigantic pages runtime allocation depend on the capability for large
+>  	 * page range allocation.
+> @@ -2445,15 +2465,22 @@ static ssize_t __nr_hugepages_store_common(bool obey_mempolicy,
+>  		}
+>  	} else if (nodes_allowed) {
+>  		/*
+> -		 * per node hstate attribute: adjust count to global,
+> -		 * but restrict alloc/free to the specified node.
+> +		 * Node specific request.  count adjustment happens in
+> +		 * set_max_huge_pages() after acquiring hugetlb_lock.
+>  		 */
+> -		count += h->nr_huge_pages - h->nr_huge_pages_node[nid];
+>  		init_nodemask_of_node(nodes_allowed, nid);
+> -	} else
+> -		nodes_allowed = &node_states[N_MEMORY];
+> +	} else {
+> +		/*
+> +		 * Node specific request, but we could not allocate the few
+> +		 * words required for a node mask.  We are unlikely to hit
+> +		 * this condition.  Since we can not pass down the appropriate
+> +		 * node mask, just return ENOMEM.
+> +		 */
+> +		err = -ENOMEM;
+> +		goto out;
+> +	}
+>  
+> -	err = set_max_huge_pages(h, count, nodes_allowed);
+> +	err = set_max_huge_pages(h, count, nid, nodes_allowed);
+>  
+>  out:
+>  	if (nodes_allowed != &node_states[N_MEMORY])
+> -- 
+> 2.20.1
+> 
+> 
