@@ -2,107 +2,111 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8DCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88E8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E06C2184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8B3218A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:48:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Q5W3TctA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="4f8i0dd8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nD9QT3wJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbfC2TrY (ORCPT
+        id S1730052AbfC2TsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 15:47:24 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:52009 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729766AbfC2TrX (ORCPT
+        Fri, 29 Mar 2019 15:48:24 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45500 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729832AbfC2TsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 15:47:23 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 4D6DC21EF6;
-        Fri, 29 Mar 2019 15:47:22 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Fri, 29 Mar 2019 15:47:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=KUZkqbMOavjGSFogsh72ZmNCQhi
-        URfUGj/YR6ZogTxM=; b=Q5W3TctAMMGxmIipAwlo6hK19I7O01PakOMZtS4f3JG
-        qUG1Ts06hRbK7sW71AHEHQTRXd3gcxb0xLp59ElnmhxPac/fHjWH9ITizxWp8OSB
-        /4Iyb41UH+yaH3+qdg/1NmWcofj3kkw5zNUB/C0+tQn8B5KegpAmG4Gqd8HYfoIh
-        mLfrclLl/c3MOBvJycqFHrnhPZ/7/3MPdLqi2KQpbroXB07jMnYjAzA9Tvgqtrzh
-        DVDU5j7LzDsd0xjPfgmLPTsaZgNabzkyamHYHIqDoziXSXdMH1CkQCWsei0KFA6v
-        FwbS5387i9Ltyf4PVvfhhA9v55Ot0AgkT8DJQ/t8VBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=KUZkqb
-        MOavjGSFogsh72ZmNCQhiURfUGj/YR6ZogTxM=; b=4f8i0dd873WIA3FgKaoBE8
-        N2cD20b97cD8t8rGcmJwjkUTlk8LbQGJvFvgecMqB0s2nv68QsDVHYFF5J1tCALK
-        5I6xpEmGgUbuUYpZvzD5xHhP63CCEe8im7JEQ1YFqc8vbOQTZkUQIe254y7/3Cb3
-        J+UNDR4NnT+LFNdJllqrTQUphO5YThgMgVrPBFEgSJPW7opcrjxIYIz1+8WjGZJf
-        TlhEsVjHbqN2Rtabnbqv4LXL0Bm+yMaj44XBAkXQf/4Bjg1qshVOViAaudB/UoSb
-        PjofYNA1P11Y+wjT9jP1vY+fBkvZV6npxMQtFce2MgBZWvsmrnQMIHVJDt+YYH8g
-        ==
-X-ME-Sender: <xms:SXaeXMQ8uq8ARRIhsuYu9X6VlmojZ4xbyt-e6iV35qyGguetUfePww>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrkeejgddutdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
-    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
-    vehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:SXaeXOaYwpZ5IlGvuzDdM_41DgU87e6hOvE1W7Ud1cHAUys1Y_MUAQ>
-    <xmx:SXaeXB9V0ilb6toVwmj6lJ01srTQpwRardh1sJqOwzSXtyot8dh8uw>
-    <xmx:SXaeXKImeXXyeVkFrZ-vt986_LvNTyICqrdxwEAmKCoFUmsV7cyYLA>
-    <xmx:SnaeXAtKAej87KgsJhrOIB9qUa8hpuoQgFE_r45dP9we0gGtFs6u4g>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 60C7110390;
-        Fri, 29 Mar 2019 15:47:20 -0400 (EDT)
-Date:   Fri, 29 Mar 2019 20:47:18 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Razvan Stefanescu <razvan.stefanescu@microchip.com>
-Subject: Re: linux-next: Fixes tag needs some work in the tty.current tree
-Message-ID: <20190329194718.GE12004@kroah.com>
-References: <20190328072734.2093d03c@canb.auug.org.au>
+        Fri, 29 Mar 2019 15:48:24 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y6so2970932ljd.12;
+        Fri, 29 Mar 2019 12:48:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=N3pG+J+6pm8soWtrcGWPf9mBg2VNzd/Fy5QrHExC9ag=;
+        b=nD9QT3wJaG6eqfuGtHKibKV42cf0wKvbkMChc5xwTgU+d+KUBEr2aAyxZSVls0ffYR
+         tOuHnHIQUcqs3QxnPqgvYos/D6WJwn1CHpNETRtwOdp9p7fyhdPek64Pw2uccE7fxOs7
+         x0gz6wzGIKgLnhV7YlDm+qDxdyTgMCPMDdXdT80YxSWv5QlgL6ow/m8yS77Ck6nu7EX7
+         E7qXn3p/ckUu4kVhm81YL4MIqS7lLCGA/nGgtLWdQENpkWqW0aFrZOymslSAXzEqCChn
+         0UhhXQwFW1Ne19IDE8Ofrkm/vQrZJRoAB49/CsE+w6wpYdMsRF1KbkODs+lnTOnDB1zn
+         yOYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=N3pG+J+6pm8soWtrcGWPf9mBg2VNzd/Fy5QrHExC9ag=;
+        b=ImZMjqd3WkO/UZDwahEOw0CZ5rL53PqMI4J40jufH94Qs+653wbq4DV/wtPlGK42QD
+         S6PooA5zbWg7CMsa2OyFAwgT3AuR2u+EImvFyb0NrhJptVdcciQhJVxoB2H0teZjnHcL
+         xUQXlBBFnpO+ml9d/9I96NwZk0xiVVpMBTsY55gxrbFSo+8jxUVYSv8Fl3h+2+BveSKE
+         mvxcKzeHV8ymiff0ciqTaxI9Y+aSjmRbGk9Ygi1g4IUPKJKpXy88L4/stJZrunqfY6e8
+         rIAbYDkP1hsrHfZuwl9ur1XnSE46IE6H+hj4RUl1ZtTul4keIDE6fRipA+5yhWgkWJbj
+         r30w==
+X-Gm-Message-State: APjAAAVXeEsgP/mB3tPOKWHUmU4fbDN2WtN3Q9n9Ov5GORUBvORuXjlI
+        WcKQn1eVtrfbKNCl+esWQio=
+X-Google-Smtp-Source: APXvYqzF/2fOwI6KQOSTMY8fNrPkMIAmgjG2VRlj5lalIiB+rE3uCWTq5udPn2xbkHnS7O2UBscrAw==
+X-Received: by 2002:a2e:9117:: with SMTP id m23mr19604532ljg.197.1553888902200;
+        Fri, 29 Mar 2019 12:48:22 -0700 (PDT)
+Received: from z50.localnet (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id f18sm517668lja.91.2019.03.29.12.48.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Mar 2019 12:48:21 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] media: ov6650: Move v4l2_clk_get() to ov6650_video_probe() helper
+Date:   Fri, 29 Mar 2019 20:48:19 +0100
+Message-ID: <43180252.PEphI5Jep4@z50>
+In-Reply-To: <20190329183923.t7sxzqf5qa4z3yfs@kekkonen.localdomain>
+References: <20190325003501.14687-1-jmkrzyszt@gmail.com> <20190325003501.14687-2-jmkrzyszt@gmail.com> <20190329183923.t7sxzqf5qa4z3yfs@kekkonen.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190328072734.2093d03c@canb.auug.org.au>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 07:27:34AM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> In commit
-> 
->   69646d7a3689 ("tty/serial: atmel: RS485 HD w/DMA: enable RX after TX is stopped")
-> 
-> Fixes tag
-> 
->   Fixes: b389f173aaa1 ("tty/serial: atmel: RS485 half duplex w/DMA: enable
-> 
-> has these problem(s):
-> 
->   - Subject has leading but no trailing parentheses
->   - Subject has leading but no trailing quotes
-> 
-> Please do not split Fixes tags across more than 1 line.
+Hi Sakari,
 
-Is there a script somewhere that I can use to run on my tree before I
-push it out, much like I do now for the signed-off-by checks?
+On Friday, March 29, 2019 7:39:24 PM CET Sakari Ailus wrote:
+> Hi Janus,
+> 
+> Thanks for the patchset.
+> 
+> On Mon, Mar 25, 2019 at 01:35:00AM +0100, Janusz Krzysztofik wrote:
+> > ...
+> >  
+> >  done:
+> >  	ov6650_s_power(&priv->subdev, 0);
+> > +	if (ret) {
+> > +eclkput:
+> > +		v4l2_clk_put(priv->clk);
+> 
+> Could you rework the error handling, please? Labels should be outside
+> conditionals. 
 
-thanks,
+OK.
 
-greg k-h
+> See e.g. the smiapp driver
+> (drivers/media/i2c/smiapp/smiapp-core.c). I've pushed my master branch
+> here:
+> 
+> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/>
+
+I'm currently syncing my linux-media remote tracking branches with 
+git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media.git
+Should I switch to a different repository, e.g. yours?
+
+Thanks,
+Janusz
+
+
+
