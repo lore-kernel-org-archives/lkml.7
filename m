@@ -2,99 +2,73 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54289C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD43C10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2087E21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C7621773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbfC2G1V (ORCPT
+        id S1728734AbfC2G2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 02:27:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53100 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726641AbfC2G1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 02:27:21 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4C2CB81F01;
-        Fri, 29 Mar 2019 06:27:21 +0000 (UTC)
-Received: from localhost (ovpn-12-24.pek2.redhat.com [10.72.12.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 937AB28551;
-        Fri, 29 Mar 2019 06:27:18 +0000 (UTC)
-Date:   Fri, 29 Mar 2019 14:27:15 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     Dave Young <dyoung@redhat.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel
- reserved region
-Message-ID: <20190329062715.GA7627@MiWiFi-R3L-srv>
-References: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
- <20190320002524.GD18740@MiWiFi-R3L-srv>
- <CAFgQCTt3-9oZ6yi_MGYFOZhn5+cSdJLGf3OQRMJ1CJr0eXiE5w@mail.gmail.com>
- <20190322075259.GA18740@MiWiFi-R3L-srv>
- <20190322083419.GB18740@MiWiFi-R3L-srv>
- <CAFgQCTti4S3TUx_4YHi+Yx6poJbHhekT+Jzjjg__0tpZdA9tRQ@mail.gmail.com>
+        Fri, 29 Mar 2019 02:28:36 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2468 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728676AbfC2G2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 02:28:36 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 8AAFB4DE2BE7F08AE776;
+        Fri, 29 Mar 2019 14:28:33 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 29 Mar 2019 14:28:33 +0800
+Received: from [10.134.22.195] (10.134.22.195) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 29 Mar 2019 14:28:32 +0800
+Subject: Re: [PATCH] staging: erofs: keep corrupted fs from crashing kernel in
+ erofs_readdir()
+To:     Gao Xiang <hsiangkao@aol.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        <weidu.du@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        "# 4 . 19+" <stable@vger.kernel.org>
+References: <20190328201458.30629-1-hsiangkao@aol.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <3f371610-71bb-03c1-ac7d-37832e475e94@huawei.com>
+Date:   Fri, 29 Mar 2019 14:28:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFgQCTti4S3TUx_4YHi+Yx6poJbHhekT+Jzjjg__0tpZdA9tRQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 29 Mar 2019 06:27:21 +0000 (UTC)
+In-Reply-To: <20190328201458.30629-1-hsiangkao@aol.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/29/19 at 01:45pm, Pingfan Liu wrote:
-> On Fri, Mar 22, 2019 at 4:34 PM Baoquan He <bhe@redhat.com> wrote:
-> >
-> > On 03/22/19 at 03:52pm, Baoquan He wrote:
-> > > On 03/22/19 at 03:43pm, Pingfan Liu wrote:
-> > > > > > +/* parse crashkernel=x@y option */
-> > > > > > +static void mem_avoid_crashkernel_simple(char *option)
-> > > > >
-> > > > > Chao ever mentioned this, I want to ask again, why does it has to be
-> > > > > xxx_simple()?
-> > > > >
-> > > > Seems that I had replied Chao's question in another email. The naming
-> > > > follows the function parse_crashkernel_simple(), as the notes above
-> > >                        ~~~~~~~~~~~~~~~~~~~~~~~~
-> > >
-> > > Sorry, I don't get.  typo?
-> >
-> > OK, I misunderstood it. We do have parse_crashkernel_simple() to handle
-> > crashkernel=size[@offset] case, to differente with other complicated
-> > cases, like crashkernel=size,[high|low],
-> >
-> > Then I am fine with this naming. Soryy about the noise.
-> >
-> > By the way, do you think if we should take care of this case:
-> > crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
-> >
-> > It can also specify @offset. Not sure if it's too complicated, you may
-> > have a investigation.
-> >
-> In this case, kernel should get the total memory size info. So
-> process_e820_entries() or process_efi_entries() should be called
-> twice. One before handle_mem_options(), so crashkernel can evaluate
-> the reserved size. It is doable, and what is your opinion about the
+On 2019/3/29 4:14, Gao Xiang wrote:
+> From: Gao Xiang <gaoxiang25@huawei.com>
+> 
+> After commit 419d6efc50e9, kernel cannot be crashed in the namei
+> path. However, corrupted nameoff can do harm in the process of
+> readdir for scenerios without dm-verity as well. Fix it now.
+> 
+> Fixes: 3aa8ec716e52 ("staging: erofs: add directory operations")
+> Cc: <stable@vger.kernel.org> # 4.19+
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-You mean calling process_e820_entries to calculate the RAM size in
-system? I may not do like that, please check what __find_max_addr() is
-doing. Did I get it?
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+
+Thanks,
