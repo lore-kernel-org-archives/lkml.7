@@ -4,65 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29E9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B054C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507BE204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B62218FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 20:54:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="T5XH4UXx"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="ZF7KZ3a+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730332AbfC2Ux7 (ORCPT
+        id S1730344AbfC2UyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 16:53:59 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34390 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730151AbfC2Ux6 (ORCPT
+        Fri, 29 Mar 2019 16:54:02 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36564 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730151AbfC2UyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 16:53:58 -0400
-Received: by mail-ed1-f67.google.com with SMTP id x14so3194928eds.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 13:53:57 -0700 (PDT)
+        Fri, 29 Mar 2019 16:54:01 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s16so3178433edr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 13:54:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1EdFJr1wqFodZvRBJe1lUJf8A8cE8w12Blsb/XkAOvk=;
-        b=T5XH4UXx+82HvAjoLPk/gVafZHUuyM0GfCiicuqdJEVr8+iEmUuoNSGiQg9a0RLxPj
-         JKZEQw0++ukSv7iQe/JqJD9yFU7WdjHg8tAnBzkjideHRPvvfbYXxyl52ewbsoDdm201
-         0xtMgBNvyHhksi6A0wrqg9wNyyswdA5YIdGxc=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=FMyiaAUrglPJr9Arc64c88/PB/gC/yTx+LGIxuZdRXY=;
+        b=ZF7KZ3a+wPMB83dx9ZvTO+sXidYeP5+yuTKINB6muqpk7lnqhs9w38kcky4DMdkcto
+         J/HfjJXk0+vXVzXI/JHMa1xxR6YUhFGdDiM8Nwr9gOjt2cCIvmJx7DVz5cgDO5PJ2T09
+         129pQq7rpMcF/y3p8Y3Ige/pjiuxRsWonFsYE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1EdFJr1wqFodZvRBJe1lUJf8A8cE8w12Blsb/XkAOvk=;
-        b=bRBxMeqqzWMatPBis1rrJxAAVxkBY2Nin4P37LowqQYegwQwWKpIjgJsmMgu5beoFN
-         NnEYUFqEbfQTioi5Bz7ZXAvjOc+4Tst2OxxSZTAPD06wH4MYq0PS3HWDI9jrdD75Dg9m
-         iZlMcsgBjS4lnx2mFtugfCCbq8vJWnGiM8aQbffnkjXJgFowCfOghrrY24bKarhUdkPu
-         dSvVMrwjp5sMMbreELSQSf8RM7mTYUhZXCgkIuFUtgtcKlujceAcNTKMBrRUqethwN7R
-         +mIDDkukVFrQWOE29icq684iDuaJGPAJXgo+H5mh6WZxrb6RfDC1832nwqX0O9WOP37i
-         lFjA==
-X-Gm-Message-State: APjAAAXc3XUIt75tcjUvZ+ZqVgWzpo3u7plMB3+58IxDCVyxOd39Zkkc
-        orKEH1SeFPLDOzGlArOh4HznIQ==
-X-Google-Smtp-Source: APXvYqyStjGuth1FAQd8JN4AYOWXjjyM1PG3adp1ZRF1iivryVSNt2EDfCRhRazvcapAWfovZcG0lw==
-X-Received: by 2002:a50:f9c1:: with SMTP id a1mr33223660edq.278.1553892836955;
-        Fri, 29 Mar 2019 13:53:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=FMyiaAUrglPJr9Arc64c88/PB/gC/yTx+LGIxuZdRXY=;
+        b=NJofmGLVxMm7Bv7bOGeMK9OxnnLUdBwtMot5yelp8AsEhJQB9mP089KEGeshc4Pinz
+         i4iLeKGHddSl8876N2EQf/lGEfE/uyfw6Aaq8GC57HxD2UQk2QUoPzmCBeAdj2u8rU1j
+         8+I89X05ov9ESuwsBKG091uuSXzXToWZa3a3UKX97UpFeFHrad+IjnOWaJ7P9pCKutSz
+         0FMNx48obK55nqHUlmO3iyFihqYbIjboWboU7WqZVAvpmn6PEd555ePytnQmXd3Okqpt
+         4Dw3Du//9kvB27+kZ76nVEDAAVTrWnN3jQ86f1M+0+3uFnlDRNeD6XEb62QMbBzSPR49
+         DdqA==
+X-Gm-Message-State: APjAAAUBP1dPXDyA247k2uuEzJkwA92Ni1vkHQt4et1bYejYRtpZ0hJ+
+        DrogL4jmVxAt1uSmQlG5J977bQ==
+X-Google-Smtp-Source: APXvYqzQFn76lVf0VZ/muJtUBdRTbteadVVuub5KckkfjbaAtgkcyqmuAQVW3/VjOhOiKOGBBIpVgw==
+X-Received: by 2002:a50:e70a:: with SMTP id a10mr33771038edn.70.1553892839303;
+        Fri, 29 Mar 2019 13:53:59 -0700 (PDT)
 Received: from prevas-ravi.prevas.se (ip-5-186-118-63.cgn.fibianet.dk. [5.186.118.63])
-        by smtp.gmail.com with ESMTPSA id 35sm902636edh.43.2019.03.29.13.53.55
+        by smtp.gmail.com with ESMTPSA id 35sm902636edh.43.2019.03.29.13.53.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 13:53:56 -0700 (PDT)
+        Fri, 29 Mar 2019 13:53:58 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Yury Norov <ynorov@caviumnetworks.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] lib/bitmap.c: remove unused EXPORT_SYMBOLs
-Date:   Fri, 29 Mar 2019 21:53:50 +0100
-Message-Id: <20190329205353.6010-1-linux@rasmusvillemoes.dk>
+Subject: [PATCH 2/2] lib/bitmap.c: guard exotic bitmap functions by CONFIG_NUMA
+Date:   Fri, 29 Mar 2019 21:53:51 +0100
+Message-Id: <20190329205353.6010-2-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190329205353.6010-1-linux@rasmusvillemoes.dk>
+References: <20190329205353.6010-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,50 +72,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AFAICT, there have never been any callers of these functions outside
-mm/mempolicy.c (via their nodemask.h wrappers). In particular, no
-modular code has ever used them, and given their somewhat exotic
-semantics, I highly doubt they will ever find such a use. In any case,
-no need to export them currently.
+The bitmap_remap, _bitremap, _onto and _fold functions are only used,
+via their node_ wrappers, in mm/mempolicy.c, which is only built for
+CONFIG_NUMA. The helper bitmap_ord_to_pos used by these functions is
+global, but its only external caller is node_random() in lib/nodemask.c,
+which is also guarded by CONFIG_NUMA.
+
+For !CONFIG_NUMA:
+
+add/remove: 0/6 grow/shrink: 0/0 up/down: 0/-621 (-621)
+Function                                     old     new   delta
+bitmap_pos_to_ord                             20       -     -20
+bitmap_ord_to_pos                             70       -     -70
+bitmap_bitremap                               81       -     -81
+bitmap_fold                                  113       -    -113
+bitmap_onto                                  123       -    -123
+bitmap_remap                                 214       -    -214
+Total: Before=4776, After=4155, chg -13.00%
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- lib/bitmap.c | 4 ----
- 1 file changed, 4 deletions(-)
+ lib/bitmap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/lib/bitmap.c b/lib/bitmap.c
-index 98872e9025da..66421f304f7d 100644
+index 66421f304f7d..3f3b8051f342 100644
 --- a/lib/bitmap.c
 +++ b/lib/bitmap.c
-@@ -757,7 +757,6 @@ void bitmap_remap(unsigned long *dst, const unsigned long *src,
- 			set_bit(bitmap_ord_to_pos(new, n % w, nbits), dst);
- 	}
- }
--EXPORT_SYMBOL(bitmap_remap);
+@@ -649,6 +649,7 @@ int bitmap_parselist_user(const char __user *ubuf,
+ EXPORT_SYMBOL(bitmap_parselist_user);
  
- /**
-  * bitmap_bitremap - Apply map defined by a pair of bitmaps to a single bit
-@@ -795,7 +794,6 @@ int bitmap_bitremap(int oldbit, const unsigned long *old,
- 	else
- 		return bitmap_ord_to_pos(new, n % w, bits);
- }
--EXPORT_SYMBOL(bitmap_bitremap);
  
++#ifdef CONFIG_NUMA
  /**
-  * bitmap_onto - translate one bitmap relative to another
-@@ -930,7 +928,6 @@ void bitmap_onto(unsigned long *dst, const unsigned long *orig,
- 		m++;
- 	}
- }
--EXPORT_SYMBOL(bitmap_onto);
- 
- /**
-  * bitmap_fold - fold larger bitmap into smaller, modulo specified size
-@@ -955,7 +952,6 @@ void bitmap_fold(unsigned long *dst, const unsigned long *orig,
+  * bitmap_pos_to_ord - find ordinal of set bit at given position in bitmap
+  *	@buf: pointer to a bitmap
+@@ -952,6 +953,7 @@ void bitmap_fold(unsigned long *dst, const unsigned long *orig,
  	for_each_set_bit(oldbit, orig, nbits)
  		set_bit(oldbit % sz, dst);
  }
--EXPORT_SYMBOL(bitmap_fold);
++#endif /* CONFIG_NUMA */
  
  /*
   * Common code for bitmap_*_region() routines.
