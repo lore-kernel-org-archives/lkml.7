@@ -2,129 +2,124 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB07C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E9FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0A12075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D34EC2184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:06:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="WhzoXxUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729395AbfC2PEL (ORCPT
+        id S1729228AbfC2PGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:04:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5206 "EHLO huawei.com"
+        Fri, 29 Mar 2019 11:06:45 -0400
+Received: from mail-eopbgr780050.outbound.protection.outlook.com ([40.107.78.50]:54816
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728720AbfC2PEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:04:10 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E214EDB6B05F9EE6F112;
-        Fri, 29 Mar 2019 23:04:07 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Fri, 29 Mar 2019
- 23:04:01 +0800
-Subject: Re: [RFC PATCH] irqchip/gic-v3: Make gic_handle_irq() notrace
-To:     Marc Zyngier <marc.zyngier@arm.com>, <julien.thierry@arm.com>,
-        <rostedt@goodmis.org>
-CC:     <mingo@redhat.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <mark.rutland@arm.com>,
-        <linux@armlinux.org.uk>, <james.morse@arm.com>,
-        <suzuki.poulose@arm.com>, <wanghaibin.wang@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1553865808-30604-1-git-send-email-yuzenghui@huawei.com>
- <237b00d0-8a8d-ede6-91b1-c3e23e61925c@arm.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <bf434b0c-2b17-b92d-3171-a57203486c84@huawei.com>
-Date:   Fri, 29 Mar 2019 23:02:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
-MIME-Version: 1.0
-In-Reply-To: <237b00d0-8a8d-ede6-91b1-c3e23e61925c@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        id S1728720AbfC2PGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 11:06:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KjPVuGMGM9X9DfF0U08yWvyT6XyEBbKHBcLNd0XUlJk=;
+ b=WhzoXxUNwKMFi8L8RK80MAvQznwMSIlwfLazzAilekayvVHxmYv0V1gXdBRVUlzvk1Byj3N4U9MsF+CeFNWKcCOKh25fll92jccEW/Bx0/OMcFgSSOmUVFDt7TmqLpuEPcZP82oepHCLPdnuM+wEx+XjVr6oybyfF9R9TbFaxxQ=
+Received: from DM5PR12MB1449.namprd12.prod.outlook.com (10.172.38.138) by
+ DM5PR12MB1419.namprd12.prod.outlook.com (10.168.238.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.17; Fri, 29 Mar 2019 15:06:41 +0000
+Received: from DM5PR12MB1449.namprd12.prod.outlook.com
+ ([fe80::890d:8adb:6785:6ca1]) by DM5PR12MB1449.namprd12.prod.outlook.com
+ ([fe80::890d:8adb:6785:6ca1%4]) with mapi id 15.20.1750.017; Fri, 29 Mar 2019
+ 15:06:41 +0000
+From:   Gary R Hook <ghook@amd.com>
+To:     Joerg Roedel <joro@8bytes.org>
+CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iommu/amd: Reserve exclusion range in iova-domain
+Thread-Topic: [PATCH] iommu/amd: Reserve exclusion range in iova-domain
+Thread-Index: AQHU5VNRZt3XbAojqUi3B+DRJlpqRKYhIQOAgAGR/YCAAARegA==
+Date:   Fri, 29 Mar 2019 15:06:41 +0000
+Message-ID: <241612a5-b041-e419-a3bc-e2a2e6ef1687@amd.com>
+References: <20190328104459.18589-1-joro@8bytes.org>
+ <3850c381-30d6-b2a3-d976-66939d8e612a@amd.com>
+ <20190329145101.GA27670@8bytes.org>
+In-Reply-To: <20190329145101.GA27670@8bytes.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR0102CA0017.prod.exchangelabs.com (2603:10b6:805:1::30)
+ To DM5PR12MB1449.namprd12.prod.outlook.com (2603:10b6:4:d::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Gary.Hook@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.78.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3d622f4b-fe0a-4fe9-d5cc-08d6b4582666
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DM5PR12MB1419;
+x-ms-traffictypediagnostic: DM5PR12MB1419:
+x-microsoft-antispam-prvs: <DM5PR12MB14192864C01FC076B05CBC96FD5A0@DM5PR12MB1419.namprd12.prod.outlook.com>
+x-forefront-prvs: 0991CAB7B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(396003)(136003)(366004)(199004)(189003)(4326008)(25786009)(72206003)(71200400001)(478600001)(8936002)(2906002)(68736007)(256004)(14454004)(26005)(186003)(3846002)(6116002)(102836004)(53546011)(6506007)(52116002)(76176011)(99286004)(54906003)(316002)(71190400001)(386003)(31696002)(31686004)(5660300002)(106356001)(97736004)(6246003)(81166006)(105586002)(6916009)(6436002)(6486002)(229853002)(36756003)(305945005)(6512007)(7736002)(81156014)(66066001)(476003)(446003)(486006)(2616005)(11346002)(53936002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1419;H:DM5PR12MB1449.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Rttm3Qt+reDNP3q+W5SW0Q2uQRVB0y9LxRfUlLf01BWMGXLHEC38U+kTFmmL9QFV+WFA0ScMiMigQXEgzqx+2nXlG8aCDzTd56Dcm0vTYqRkrpW+IVjPfBbLgwt9iqAOJq9RsFU9HW9WdrH+KsrdpRhov/SjSkI/ioUGrXdgvzzrX4C0eUAWnAVkOLvCSEq2gX8j4mODVD1rkbmEm79YY51UitL80PQCd2jqu4BLsMtnTKhGq9J/TcD0Cv2Ujn8T605xb0bHEXXpUzy07RAb/ojbiH6Gw8UTlfYGdHukYlk+qyG/BA4HyvOKVjcV3gURs5ZzPLfgCUwAUegTryyNcrRBttlM2baD++RWEHMrltXqa3zg46IUR5NrvpS0Z4rG+Mrmh9bHCXDy+uvO0H2rJux8UN+jyGHvunZcCiyrF+c=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5FCFB7220A210641957EFD4281705B35@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d622f4b-fe0a-4fe9-d5cc-08d6b4582666
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2019 15:06:41.6481
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1419
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2019/3/29 21:58, Marc Zyngier wrote:
-> Hi Zenghui,
-> 
-> On 29/03/2019 13:23, Zenghui Yu wrote:
->> Enable pseudo NMI together with function_graph tracer, will lead
->> the system to a hang. This is easy to reproduce,
->>
->>    1) Set "irqchip.gicv3_pseudo_nmi=1" on the kernel command line
->>    2) echo function_graph > /sys/kernel/debug/tracing/current_tracer
->>
->> This patch (RFC) set gic_handle_irq() as notrace and it seems works
->> fine now. But I have no idea about what the issue is exactly, and
->> you can regard this patch as a report then :)
->>
->> Can someone give a look at it and provide some explanations ?
->>
->> Thanks!
->>
->> Cc: Julien Thierry <julien.thierry@arm.com>
->> Cc: Steven Rostedt <rostedt@goodmis.org>
->> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->> ---
->>   drivers/irqchip/irq-gic-v3.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
->> index 15e55d3..8d0c25f 100644
->> --- a/drivers/irqchip/irq-gic-v3.c
->> +++ b/drivers/irqchip/irq-gic-v3.c
->> @@ -487,7 +487,7 @@ static inline void gic_handle_nmi(u32 irqnr, struct pt_regs *regs)
->>   		gic_deactivate_unhandled(irqnr);
->>   }
->>   
->> -static asmlinkage void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
->> +static asmlinkage notrace void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
->>   {
->>   	u32 irqnr;
->>   
->>
-> 
-> 
-> That's interesting. Do you have any out of tree patch that actually
-> makes use of the pseudo-NMI feature? Without those patches, the
-> behaviour should stay unchanged.
-
-I am at commit 1a9df9e29c2afecf6e3089442d429b377279ca3c. No more
-patches, and this is the most confusing. Just out of curiosity, I
-wanted to run Julien's "Use NMI for perf interrupt" patch (posted
-on the mailing list), so I have to enable NMI first.
-
-That said, with
-   1) Select Kernel Feature -> Support for NMI-like interrupts
-   2) Set "irqchip.gicv3_pseudo_nmi=1" on the kernel command line
-   3) No pseudo-NMIs have been generated at all
-and this issue was hit.
-
-
-thanks,
-
-zenghui
-
-> 
-> On the other hand, if you can generate pseudo-NMIs, you could end-up
-> tracing gic_handle_irq whilst being inside the tracing code with
-> interrupts being notionally disabled (and that could be pretty bad).
-> 
-> So, patches or no patches?
-> 
-> Thanks,
-> 
-> 	M.
-> 
-
+T24gMy8yOS8xOSA5OjUxIEFNLCBKb2VyZyBSb2VkZWwgd3JvdGU6DQo+IEhpIEdhcnksDQo+IA0K
+PiBPbiBUaHUsIE1hciAyOCwgMjAxOSBhdCAwMjo1MjoxOVBNICswMDAwLCBHYXJ5IFIgSG9vayB3
+cm90ZToNCj4+IE9uIDMvMjgvMTkgNTo0NCBBTSwgSm9lcmcgUm9lZGVsIHdyb3RlOg0KPj4+ICsJ
+CWlmIChlbnRyeS0+cHJvdCAmICgxIDw8IDIpKQ0KPj4NCj4+IENvdWxkIHdlIGFkZCAjZGVmaW5l
+IElPTU1VX1dSSVRFX0VYQ0wgKDEgPDwgMikgdG8gYW1kX2lvbW11X3R5cGVzLmg/DQo+IA0KPiBZ
+ZXMsIEkgcmVwbGFjZSB0aGF0IG1hZ2ljIG51bWJlciB3aXRoIGEgZGVzY3JpcHRpdmUgbmFtZS4N
+Cg0KU3VwZXI7IHRoYW5rcy4NCg0KPj4gVGhlIHByb2JsZW0gSSBzZWUgaGVyZSBpcyB0aGF0IGlm
+LCBmb3Igc29tZSB1bnRvbGQgcmVhc29uLCB0aGVyZSBpcyBtb3JlDQo+PiB0aGFuIG9uZSBleGNs
+dXNpb24gcmFuZ2UgZW1pdHRlZCwgd2hlcmUgb25seSB0aGUgbGFzdCBvbmUgd2lucyBpbiB0aGUN
+Cj4+IGhhcmR3YXJlLCB3ZSdkIHN0aWxsIGVuZCB1cCB3aXRoIG1vcmUgdGhhbiBvbmUgcmFuZ2Ug
+cmVzZXJ2ZWQgaW4gdGhlDQo+PiBJT1ZBIHRyZWUuIENsZWFybHksIHRoaXMgaXMgZXh0cmVtZWx5
+IHVubGlrZWx5LCBidXQgd291bGRuJ3Qgd2Ugd2FudCB0bw0KPj4gcHJvdGVjdCBhZ2FpbnN0IHRo
+YXQgc29ydCBvZiBtaXN1c2UvbWlzdGFrZT8NCj4+DQo+PiBJIGNvdWxkIGJlIG1pc3Npbmcgc29t
+ZXRoaW5nLg0KPiANCj4gTm8sIHlvdSBhcmUgbm90LCB0aGlzIGNvdWxkIHN0aWxsIGJlIGEgcHJv
+YmxlbS4gVW50aWwgbm93IGl0IGlzbid0LA0KPiBiZWNhdXNlIHRoaXMgd2VlayB3YXMgdGhlIGZp
+cnN0IHRpbWUgSSBoYXZlIGV2ZXJ5IHNlZW4gYW4gQU1EIElPTU1VDQo+IHN5c3RlbSBtYWtpbmcg
+dXNlIG9mIGV4Y2x1c2lvbiByYW5nZXMsIGFuZCBpdCBkb2Vzbid0IGhhdmUgdGhpcyBwcm9ibGVt
+Lg0KPiANCj4gQnV0IHRoaXMgcHJvYmxlbSBoYXMgYmVlbiBpbiB0aGUgY29kZSBldmVuIGJlZm9y
+ZSB0aGlzIHBhdGNoIGFuZCBuZWVkcw0KPiB0byBiZSBhZGRyZXNzZWQgc2VwYXJhdGx5LiBJIHRo
+aW5rIGl0IGlzIHRoZSBiZXN0IG9wdGlvbiB0byBjYW5jZWwgSU9NTVUNCj4gaW5pdGlhbGl6YXRp
+b24gd2hlbiB0aGUgSVZSUyB0YWJsZSBkZWZpbmVzIGNvbmZsaWN0aW5nIGV4Y2x1c2lvbiByYW5n
+ZXMNCj4gZm9yIGEgc2luZ2xlIElPTU1VIGluc3RhbmNlLg0KDQpSZWFsbHk/IEludGVyZXN0aW5n
+LiBNYXkgSSBhc2sgd2hvLCBhcyBJJ3ZlIG5vdCBzZWVuIGl0IHlldCwgZWl0aGVyPw0KDQpUaGlz
+IGNoYW5nZSBhY2NvbXBsaXNoZXMgdGhlIGdvYWwgb2Ygc2V0dGluZyBleGNsdXNpb24gKyByZXNl
+cnZpbmcgdGhlIA0KSU9WQSByYW5nZSwgYW5kIGlzIHZlcmlmaWVkIHdpdGggdGVzdGluZz8gQ29v
+bC4gT25lIHdvbmRlcnMgaWYgdGhleSd2ZSANCmNvbnNpZGVyZWQgYSB1bml0eSByYW5nZT8NCg0K
+QWdyZWUgdGhhdCBhZGRyZXNzaW5nIHRoZSB1bmlxdWVuZXNzIGlzc3VlIHNlcGFyYXRlbHkgaXMg
+ZmluZS4gSSdkIA0KcHJvYmFibHkgcHJlZmVyICJmaXJzdCBvbmUgd2lucyIgdW50aWwgSU9WQSB0
+cmVlIGNsZWFuLXVwIGNvdWxkIGJlIA0KaW1wbGVtZW50ZWQgZm9yICJsYXN0IG9uZSB3aW5zIi4u
+Li4gYnV0IEknbSBzZWVpbmcgdGhhdCB0aGVyZSBhcmUgYXQgDQpsZWFzdCB0d28gc3BvdHMgaW4g
+dGhlIGNvZGUgdGhhdCBuZWVkIGF0dGVudGlvbi4gSSBtYXkgZ28gZXhwZXJpbWVudCANCndpdGgg
+dGhpcy4NCg0KQWxsIHRvbGQsIHRoaXMgaXMgcmVhbGx5IGFib3V0IGhhbmRsaW5nIGEgY29ybmVy
+IGNhc2UsIGFzIHRoZSBsaWtlbGlob29kIA0Kb2YgYSBCSU9TIHRyeWluZyB0byBzZXQgdXAgPjEg
+ZXhjbHVzaW9uIHJhbmdlcyBzZWVtcyBpbXByb2JhYmxlLCBpZiBub3QgDQppbXBvc3NpYmxlLg0K
+DQoNCmdyaA0K
