@@ -2,116 +2,247 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NORMAL_HTTP_TO_IP,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE19DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883C2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 755992184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553885413;
-	bh=pQZnyx7z1bl8M0Zh90wSuauyzk4v8LtktYLjmNjH1m0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LdBgeJm0vBuTLIHDTwlj92THNUqYAcALEisUT0k0/aychhHLZa29ZdWB2Au3d95oO
-	 AR9Q1QpQ+ePcLSY3B/FWrabdGrqn2L2ks9+ZJqYCc+mslmjama+rtFj9xCSis89j/l
-	 ApybGS9SoE0jE3Ssk2379OFh5n3eJ/wSAbjiU+dU=
+	by mail.kernel.org (Postfix) with ESMTP id 320872184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:51:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="heMtpq5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfC2SuM (ORCPT
+        id S1730109AbfC2Svk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 14:50:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729993AbfC2SuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 14:50:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B96E2184D;
-        Fri, 29 Mar 2019 18:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553885410;
-        bh=pQZnyx7z1bl8M0Zh90wSuauyzk4v8LtktYLjmNjH1m0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XYWrEmsbqSzwLwTf+IjIbEE1PCIUiE1j2/lGCaRR2UPFbTszS/9dRVlABqGqjfw7L
-         RGgovz8yKhXbyeykjn/7GPz4UNkGjoQyp3MBqzTrNUWp2CyzLbpR4vMeoF5sBePEwH
-         zAck8W8ZUyBBSRIztHb152LKGGFDXAh4w9U6Ob+I=
-Date:   Fri, 29 Mar 2019 19:50:08 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] habanalabs: improve error messages
-Message-ID: <20190329185008.GA4809@kroah.com>
-References: <20190328071313.5306-1-oded.gabbay@gmail.com>
- <20190329162955.GA10386@kroah.com>
- <CAFCwf12oTXFsOaMaFOq4AfPDC3qYExvP9yKB7Za8G7W76O_A0Q@mail.gmail.com>
+        Fri, 29 Mar 2019 14:51:40 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:33673 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730059AbfC2Svj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 14:51:39 -0400
+Received: by mail-it1-f194.google.com with SMTP id v8so11716134itf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 11:51:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lvXk8LrPAKf1bEhUXc8LTBlS8+n1nk49658dYXPp3Rw=;
+        b=heMtpq5NH4F1tdYsVT9WElAcSrD6pKIbyZ0AFmlcfx7OsG62WaivpTZ0lSJfoHTIdW
+         mIpIVL8cqxgzbQGUvlExSmcui1UKHEgCgltGqD3q1H7MGSGdrMeOwTTbAaQvqIvfnxrx
+         gJpd2PByxgg+7D3GRuR4KuyN2EYx+mrZ8QYfZ5vk9WJBRZTZDvjH51Su5r+DHKiGn6Qt
+         cRQJxHdlH7P+u9esBYq6Ywd6ANnozIIilh4f4NketZkyO69I3qpsO+VvLg35aVhnZqsO
+         QHG8f5pViGK8TA2cp10D3bj64YTqd48kgalywreSSiSs8BLpjdgheGUOaq7Lxn7PiIFu
+         cpnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lvXk8LrPAKf1bEhUXc8LTBlS8+n1nk49658dYXPp3Rw=;
+        b=LV3UVNvZklA7eC3OownGHsGUUyolRnB91u4/Yl/nq7QLJjeMPxc2RHMDCadgBIkz0T
+         Hq4l1IRshKBw6X2Oo0S6hYE4MpMjOA/cEF8Xh1tZ56Y+A3LUMj8Be2xL2HYuidczwXnp
+         XS/LOopy9ft02NXqc9L828hIpRfIyx/OxlriTI/MPprNWA6w9m7gNe7OVijW7Khz/dZY
+         KH03LIIIF9+7YCkKaiyMibkxbNSGAVF4puGwzaw8HW2HjqTwdOsQnKgg6/38P5QNkV30
+         0jyjAmeKj+QsvsGbsTIDEckVEa/zommOTDLIoefAsAxPMDep7bhqzrtXm3ABFUZoA2yO
+         DO9A==
+X-Gm-Message-State: APjAAAUn4bsDWAmi43c/pXyx8UbJK63yNwaDH58a9eJKhsL5TmvZUM9q
+        vEC55kE1dk6JIj5KAw83X4ucCVeyweImi9AsKbUFaA==
+X-Google-Smtp-Source: APXvYqy+lnBDTyC5xtjWIIGts6IclTfHRSp/wlzTy73OIA9Bdya3AFaMiHy9/FvFRXilKeSL8ncICfK5OcV+P3j5y7g=
+X-Received: by 2002:a24:9a86:: with SMTP id l128mr5871517ite.12.1553885498466;
+ Fri, 29 Mar 2019 11:51:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFCwf12oTXFsOaMaFOq4AfPDC3qYExvP9yKB7Za8G7W76O_A0Q@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <000000000000407080058529ff40@google.com> <20190329123025.GB30213@hmswarspite.think-freely.org>
+ <CAG_fn=XiNEhWiswHUschD2dma9SfS+eLRU8gXVJnbo7AozomPg@mail.gmail.com> <20190329183039.GC30213@hmswarspite.think-freely.org>
+In-Reply-To: <20190329183039.GC30213@hmswarspite.think-freely.org>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 29 Mar 2019 19:51:27 +0100
+Message-ID: <CACT4Y+YFjn2bMrd6xpuYV1au-nOnascKy1NXsqKwZr7m5CYHrQ@mail.gmail.com>
+Subject: Re: KMSAN: kernel-infoleak in sctp_getsockopt (3)
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        syzbot <syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>, linux-sctp@vger.kernel.org,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Networking <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladislav Yasevich <vyasevich@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 08:29:08PM +0300, Oded Gabbay wrote:
-> On Fri, Mar 29, 2019 at 7:29 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+On Fri, Mar 29, 2019 at 7:31 PM Neil Horman <nhorman@tuxdriver.com> wrote:
+>
+> On Fri, Mar 29, 2019 at 06:35:40PM +0100, Alexander Potapenko wrote:
+> > On Fri, Mar 29, 2019 at 3:51 PM Neil Horman <nhorman@tuxdriver.com> wrote:
+> > >
+> > > On Thu, Mar 28, 2019 at 09:25:06AM -0700, syzbot wrote:
+> > > > Hello,
+> > > >
+> > > > syzbot found the following crash on:
+> > > >
+> > > > HEAD commit:    c10a026b kmsan: use __free_pages() in kmsan_iounmap_page_r..
+> > > > git tree:       kmsan
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=107d3c7d200000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=a5675814e8eae69e
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=86b5c7c236a22616a72f
+> > > > compiler:       clang version 8.0.0 (trunk 350509)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1252834d200000
+> > > >
+> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > Reported-by: syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com
+> > > >
+> > > > IPv6: ADDRCONF(NETDEV_CHANGE): veth1_to_hsr: link becomes ready
+> > > > IPv6: ADDRCONF(NETDEV_CHANGE): hsr_slave_1: link becomes ready
+> > > > 8021q: adding VLAN 0 to HW filter on device batadv0
+> > > > 8021q: adding VLAN 0 to HW filter on device batadv0
+> > > > ==================================================================
+> > > > BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+> > > > CPU: 0 PID: 10131 Comm: syz-executor.4 Not tainted 5.0.0+ #16
+> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > > Google 01/01/2011
+> > > > Call Trace:
+> > > >  __dump_stack lib/dump_stack.c:77 [inline]
+> > > >  dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+> > > >  kmsan_report+0x131/0x2a0 mm/kmsan/kmsan.c:636
+> > > >  kmsan_internal_check_memory+0xaa1/0xbb0 mm/kmsan/kmsan.c:730
+> > > >  kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:485
+> > > >  _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+> > > >  copy_to_user include/linux/uaccess.h:174 [inline]
+> > > >  sctp_getsockopt_peer_addrs net/sctp/socket.c:5911 [inline]
+> > > >  sctp_getsockopt+0x1668e/0x17f70 net/sctp/socket.c:7562
+> > > >  sock_common_getsockopt+0x13f/0x180 net/core/sock.c:2950
+> > > >  __sys_getsockopt+0x489/0x550 net/socket.c:1938
+> > > >  __do_sys_getsockopt net/socket.c:1949 [inline]
+> > > >  __se_sys_getsockopt+0xe1/0x100 net/socket.c:1946
+> > > >  __x64_sys_getsockopt+0x62/0x80 net/socket.c:1946
+> > > >  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+> > > >  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> > > > RIP: 0033:0x458209
+> > > > Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
+> > > > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
+> > > > 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> > > > RSP: 002b:00007fdbef191c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
+> > > > RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000458209
+> > > > RDX: 000000000000006c RSI: 0000000000000084 RDI: 0000000000000004
+> > > > RBP: 000000000073bf00 R08: 0000000020000300 R09: 0000000000000000
+> > > > R10: 0000000020000280 R11: 0000000000000246 R12: 00007fdbef1926d4
+> > > > R13: 00000000004c96c8 R14: 00000000004d0310 R15: 00000000ffffffff
+> > > >
+> > > > Uninit was stored to memory at:
+> > > >  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
+> > > >  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
+> > > >  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
+> > > >  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
+> > > >  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
+> > > >  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
+> > > >  sctp_getsockopt_peer_addrs net/sctp/socket.c:5906 [inline]
+> > > >  sctp_getsockopt+0x16556/0x17f70 net/sctp/socket.c:7562
+> > > >  sock_common_getsockopt+0x13f/0x180 net/core/sock.c:2950
+> > > >  __sys_getsockopt+0x489/0x550 net/socket.c:1938
+> > > >  __do_sys_getsockopt net/socket.c:1949 [inline]
+> > > >  __se_sys_getsockopt+0xe1/0x100 net/socket.c:1946
+> > > >  __x64_sys_getsockopt+0x62/0x80 net/socket.c:1946
+> > > >  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+> > > >  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> > > >
+> > > > Uninit was stored to memory at:
+> > > >  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
+> > > >  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
+> > > >  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
+> > > >  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
+> > > >  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
+> > > >  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
+> > > >  sctp_transport_init net/sctp/transport.c:61 [inline]
+> > > >  sctp_transport_new+0x16d/0x9a0 net/sctp/transport.c:115
+> > > >  sctp_assoc_add_peer+0x532/0x1f70 net/sctp/associola.c:637
+> > > >  sctp_process_param net/sctp/sm_make_chunk.c:2548 [inline]
+> > > >  sctp_process_init+0x1a1b/0x3ed0 net/sctp/sm_make_chunk.c:2361
+> > > >  sctp_cmd_process_init net/sctp/sm_sideeffect.c:682 [inline]
+> > > >  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1410 [inline]
+> > > >  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
+> > > >  sctp_do_sm+0x3cfc/0x9af0 net/sctp/sm_sideeffect.c:1191
+> > > >  sctp_assoc_bh_rcv+0x65a/0xd80 net/sctp/associola.c:1074
+> > > >  sctp_inq_push+0x300/0x420 net/sctp/inqueue.c:95
+> > > >  sctp_backlog_rcv+0x20a/0xaf0 net/sctp/input.c:354
+> > > >  sk_backlog_rcv include/net/sock.h:936 [inline]
+> > > >  __release_sock+0x281/0x5f0 net/core/sock.c:2284
+> > > >  release_sock+0x99/0x2a0 net/core/sock.c:2800
+> > > >  sctp_wait_for_connect+0x3ee/0x860 net/sctp/socket.c:8751
+> > > >  sctp_sendmsg_to_asoc+0x2167/0x21a0 net/sctp/socket.c:1967
+> > > >  sctp_sendmsg+0x3fd7/0x6700 net/sctp/socket.c:2113
+> > > >  inet_sendmsg+0x54a/0x720 net/ipv4/af_inet.c:798
+> > > >  sock_sendmsg_nosec net/socket.c:622 [inline]
+> > > >  sock_sendmsg net/socket.c:632 [inline]
+> > > >  ___sys_sendmsg+0xdb9/0x11b0 net/socket.c:2115
+> > > >  __sys_sendmsg net/socket.c:2153 [inline]
+> > > >  __do_sys_sendmsg net/socket.c:2162 [inline]
+> > > >  __se_sys_sendmsg+0x305/0x460 net/socket.c:2160
+> > > >  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2160
+> > > >  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+> > > >  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> > > >
+> > > > Local variable description: ----addr.i@sctp_process_init
+> > > > Variable was created at:
+> > > >  sctp_process_init+0xb5/0x3ed0 net/sctp/sm_make_chunk.c:2324
+> > > >  sctp_cmd_process_init net/sctp/sm_sideeffect.c:682 [inline]
+> > > >  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1410 [inline]
+> > > >  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
+> > > >  sctp_do_sm+0x3cfc/0x9af0 net/sctp/sm_sideeffect.c:1191
+> > > >
+> > > > Bytes 8-15 of 16 are uninitialized
+> > > > Memory access of size 16 starts at ffff88809511fc28
+> > > > Data copied to user address 0000000020000298
+> > > > ==================================================================
+> > > >
+> > > >
+> > > > ---
+> > > > This bug is generated by a bot. It may contain errors.
+> > > > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > > > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > > >
+> > > > syzbot will keep track of this bug report. See:
+> > > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > > > syzbot can test patches for this bug, for details see:
+> > > > https://goo.gl/tpsmEJ#testing-patches
+> > > >
+> > > >
+> > >
+> > >
+> > > Hmm, odd.  I see where we are doing the copy_to_user call in
+> > > getsockopt_peer_addrs, but the length we copy should always be equal to or less
+> > > than what was memcopied to the temp variable.  False positive?
+> > I'll take a closer look next week.
+> > The bug is reproducible with the following syzkaller program:
 > >
-> > On Thu, Mar 28, 2019 at 09:13:13AM +0200, Oded Gabbay wrote:
-> > > This patch improves two error messages to help the user to
-> > > better understand what error occurred.
-> > >
-> > > Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-> > > ---
-> > >  drivers/misc/habanalabs/command_submission.c | 3 ++-
-> > >  drivers/misc/habanalabs/memory.c             | 2 +-
-> > >  2 files changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
-> > > index f908643f871f..02c48da0b645 100644
-> > > --- a/drivers/misc/habanalabs/command_submission.c
-> > > +++ b/drivers/misc/habanalabs/command_submission.c
-> > > @@ -261,7 +261,8 @@ static void cs_timedout(struct work_struct *work)
-> > >       ctx_asid = cs->ctx->asid;
-> > >
-> > >       /* TODO: add information about last signaled seq and last emitted seq */
-> > > -     dev_err(hdev->dev, "CS %d.%llu got stuck!\n", ctx_asid, cs->sequence);
-> > > +     dev_err(hdev->dev, "User %d command submission %llu got stuck!\n",
-> > > +             ctx_asid, cs->sequence);
-> > >
-> > >       cs_put(cs);
-> > >
-> > > diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
-> > > index ce1fda40a8b8..39788b1cf8d0 100644
-> > > --- a/drivers/misc/habanalabs/memory.c
-> > > +++ b/drivers/misc/habanalabs/memory.c
-> > > @@ -109,7 +109,7 @@ static int alloc_device_memory(struct hl_ctx *ctx, struct hl_mem_in *args,
-> > >                                                       page_size);
-> > >                       if (!phys_pg_pack->pages[i]) {
-> > >                               dev_err(hdev->dev,
-> > > -                                     "ioctl failed to allocate page\n");
-> > > +                                     "Failed to allocate device memory (out of memory)\n");
+> > r0 = socket$inet(0x2, 0x80001, 0x84)
+> > bind$inet(r0, &(0x7f0000000080)={0x2, 0x4e20, @empty}, 0x10)
+> > sendmsg(r0, &(0x7f0000000100)={&(0x7f0000006000)=@in={0x2, 0x4e20,
+> > @loopback}, 0x80, &(0x7f0000007f80)=[{&(0x7f00000001c0)="de", 0x1}],
+> > 0x1}, 0x0)
+> > getsockopt$inet_sctp_SCTP_GET_PEER_ADDRS(r0, 0x84, 0x6c,
+> > &(0x7f0000000000)={<r5=>0x0, 0x38,
+> > "41925f90e4121fadc9c1296dd22ae19d0b1b0942e46fc79e2ecec1056b23199f0ca008915d8dba1b3896c154f2244bbe859fe3423a4b437a"},
+> > &(0x7f0000000040)=0x40)
 > >
-> > No need for a message at all here, right?  The core should have already
-> > told you you had a problem.
-> >
-> > greg k-h
-> 
-> No, I don't think so, because this function is called for allocating
-> memory in the device's DRAM. So we don't pass through the Linux core
-> code inside.
-> We use the generic genalloc module to implement the device's DRAM
-> physical page allocator, and AFAIK, you won't get any message in case
-> genalloc fails to find a free memory in its pool.
-> Even if genalloc prints something, I would prefer to display a more
-> meaningful message to the user in this case. This allocation is
-> directly requested by the user (its part of the IOCTL code) and he
-> should know how it failed, no ?
+> > Just need to check where the uninitializedness comes from.
+> my only guess would be if we somehow copied an ipv4 address worth of data to the
+> buffer (which contains an enum for both ipv4 and ipv6 addresses), and then
+> copied an ipv6 address worth of data to userspace,
 
-Ok, that sounds reasonable, nevermind :)
+This seems to partially confirm this:
 
-greg k-h
+> Bytes 8-15 of 16 are uninitialized
+
+Not 4 bytes are initialized, but still half of the ipv6 addr.
+
+
+> but I don't yet see how that
+> can happen.
+
+The repro says "#{"threaded":true,"collide":true,"repeat":true,"procs":6".
+So I would assume there is a race somewhere.
