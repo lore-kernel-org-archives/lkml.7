@@ -2,110 +2,98 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6042C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3072DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F7D20811
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFEE320811
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:13:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JSzU3388"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbfC2SLN (ORCPT
+        id S1729968AbfC2SNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 14:11:13 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:52826 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729902AbfC2SLL (ORCPT
+        Fri, 29 Mar 2019 14:13:24 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45766 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729702AbfC2SNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 14:11:11 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id D572B72CC64;
-        Fri, 29 Mar 2019 21:11:09 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id C7C0C7CC74C; Fri, 29 Mar 2019 21:11:09 +0300 (MSK)
-Date:   Fri, 29 Mar 2019 21:11:09 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Will Drewry <wad@chromium.org>,
-        Kees Cook <keescook@chromium.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@redhat.com>, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] riscv: fix syscall_get_arguments() and
- syscall_set_arguments()
-Message-ID: <20190329181109.GA32651@altlinux.org>
-References: <20190329171221.GA32456@altlinux.org>
- <20190329131514.3e4ec93e@gandalf.local.home>
- <CAEn-LTpY6Tto1N9irXJeOb4iB=qSYhb=jM0E=Z9ppumbPX6GSw@mail.gmail.com>
- <20190329135635.7e136350@gandalf.local.home>
+        Fri, 29 Mar 2019 14:13:23 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2TIDF8J094107;
+        Fri, 29 Mar 2019 13:13:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553883195;
+        bh=L17Cb1fDtelrIXbBPXz4CRwLeJizoVah/z2YYeqNE3k=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=JSzU3388ZiOOuMfZ6mZNNBTia1w2L3GQDBcQ3Eko39BtS/Fg/YUpZrt+rEMN+WSuX
+         RZdXkrv3vFvsRro7H3Cxrdz63jnfSAtHtvtPJo1HL8lEq11DKx3fLMyufySEwVT3iM
+         tu30UX/XJwpa5pcIU/pyT1gv+QtZITpGpXRMHe1s=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2TIDFMm093120
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 Mar 2019 13:13:15 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
+ Mar 2019 13:13:15 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 29 Mar 2019 13:13:15 -0500
+Received: from legion.dal.desgin.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2TIDFfN040396;
+        Fri, 29 Mar 2019 13:13:15 -0500
+Received: from localhost ([10.250.67.168])
+        by legion.dal.desgin.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x2TIDEU04851;
+        Fri, 29 Mar 2019 13:13:14 -0500 (CDT)
+From:   "Andrew F. Davis" <afd@ti.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>
+CC:     <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, "Andrew F . Davis" <afd@ti.com>
+Subject: [PATCH 2/4] ARM: dts: imx: Use new CODEC reset pin name
+Date:   Fri, 29 Mar 2019 13:13:11 -0500
+Message-ID: <20190329181313.21009-2-afd@ti.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190329181313.21009-1-afd@ti.com>
+References: <20190329181313.21009-1-afd@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
-Content-Disposition: inline
-In-Reply-To: <20190329135635.7e136350@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The correct DT property for specifying a GPIO used for reset
+is "reset-gpios", the driver now accepts this name, use it here.
 
---EVF5PPMfhYS0aIcm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ arch/arm/boot/dts/imx6qdl-gw5903.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Fri, Mar 29, 2019 at 01:56:35PM -0400, Steven Rostedt wrote:
-> On Fri, 29 Mar 2019 18:52:18 +0100
-> David Abdurachmanov <david.abdurachmanov@gmail.com> wrote:
->=20
-> > I have alternative version posted in December part of SECCOMP
-> > patchset which is based on arm64 implementation.
-> >=20
-> > http://lists.infradead.org/pipermail/linux-riscv/2018-December/002450.h=
-tml
-> >=20
-> > I noticed that SECCOMP wasn't working properly if filters were
-> > checking syscall arguments, because populated arguments were wrong.
-> >=20
-> > Btw, I plan to send v2 of SECCOMP patchset soonish.
->=20
-> Please do. I want to get my patch series out, which will require these
-> changes.
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5903.dtsi b/arch/arm/boot/dts/imx6qdl-gw5903.dtsi
+index 9cb9a7439121..aee9221f0f29 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw5903.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw5903.dtsi
+@@ -311,7 +311,7 @@
+ 	tlv320aic3105: codec@18 {
+ 		compatible = "ti,tlv320aic3x";
+ 		reg = <0x18>;
+-		gpio-reset = <&gpio5 17 GPIO_ACTIVE_LOW>;
++		reset-gpios = <&gpio5 17 GPIO_ACTIVE_LOW>;
+ 		clocks = <&clks IMX6QDL_CLK_CKO>;
+ 		ai3x-micbias-vg = <2>; /* MICBIAS_2_5V */
+ 		/* Regulators */
+-- 
+2.21.0
 
-Sorry, I haven't seen the alternative patch posted by David before.
-Apparently, besides fixing the bug it also introduces new sanity checks
-of "i" and "n" arguments in syscall_get_arguments() and
-syscall_set_arguments().
-
-Given that your patchset removes these arguments completely,
-I see little sense in adding new checks that are going to be removed
-by the subsequent commit in the series.
-
-
---=20
-ldv
-
---EVF5PPMfhYS0aIcm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJcnl+9AAoJEAVFT+BVnCUIg2IP/0CQe7zqBd/Ucsy5T9H2Qg+z
-cEUGm375hGIVystw8XU6VkZzKKDH5vNv35puJWVPuGyb9LgBVBdpDJo5Y+2icT/t
-IONzwecTV4CGQQxT1sdaQdt/zSqDLOczOyby1jOEyqoZy0EGMlrDiDVK251OmQHT
-uoqY0HAnaNoNAYGP6ZsO+QNg4bZWonH1AFUxj2Q2Y6h+m28ObyLlRpyuTYRYm696
-NBMMWs/oHwb51AA3bR5IfXBZ0hqErWmrk4VJ2LeW2c5xo9thKH4mmLligglACkYa
-JKBE4nMmizUFTSu/rKMqisPqEesY3yqgRyj/dRgSQ0/ElDBfhqBxknJUOcLdV7FG
-VdiGBln6HrxHsvVvLGJpCa+oH1ju0rW00zvBn726oQt3FVD/7djUwHkKb7DcmEc0
-ux+dPVnyNnLM1gxjeRFhbcgQfXWMG5GA3HRDUJpzqFmHP4lbzqxPjdVou4XzFIz0
-MngCuVsGEhWsBrTzb4/ZS6BZjn40YvrgsyUI767MwtKG8WylaRpWkarpoOgEc36/
-2LuG6IEkVNVY9Cv7r8xC59DUqOu2TeDHMKrpjnf6Z+5aKThQyB8GdmugVu/Dj1Ph
-7FAbjAC3wRECwnkjcJnbRfvLdZ3/haO00tIccDVGmzJl2aiQm3wllFW9y6qVo/E1
-j+36iOMurjxeiB/dzEJ+
-=0Lij
------END PGP SIGNATURE-----
-
---EVF5PPMfhYS0aIcm--
