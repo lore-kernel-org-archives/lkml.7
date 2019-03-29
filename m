@@ -1,160 +1,225 @@
-Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAC6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 23:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838A4C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB38218A6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 23:55:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Sh1RN6Jx"
+	by mail.kernel.org (Postfix) with ESMTP id 4C902218A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbfC2Xz0 (ORCPT
+        id S1730145AbfC3AHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 19:55:26 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44692 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729911AbfC2Xz0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 19:55:26 -0400
-Received: by mail-ed1-f65.google.com with SMTP id x10so3412457edh.11
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 16:55:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Nrq8BWIRn/YQVWfwi4OFVGnUNZFD63iddewfvjotgQI=;
-        b=Sh1RN6Jxs1gFkA3SskG5lvwlPbMTGxkv/jl4a+JkL8A037+KAO3MMlRrP4fhseHpcg
-         eOapaIdUcKWYSuGeo7Jzrm+H6Mvfr76qQ44+SdqyVV6fndYpFeU88/Mc2/Bzu3j6zxcg
-         Z4qkPFz+BsfbeWiTVSf7Ytm7hkw0aOD+H2/mx8XMiEqXIYxrvI4vnxmGurKJtcdo+VLQ
-         dCKbFRjUFxUVXeudZMWlxDokCU7vjaKzy2a7dCATniQsA2WwnK0A99iMwrJpACHJO6S4
-         0/wuhqV9u/O+cBtG861+zA1de+AOtuHqbsJm49VTomDtKqRn8zQoWxHnNAPew/D83X+z
-         JJcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nrq8BWIRn/YQVWfwi4OFVGnUNZFD63iddewfvjotgQI=;
-        b=Rl/kAokBB7KLHc8vjfXsDyqoHYzsdGzDVsP1l44fQFQ3n7rXLv+0GSJM11lBVC86rF
-         SmPgbGTX5BA9W7Zw2o72/aKoqx+Pxpx905pXS/wM6c+oXVgwq9ADCCtBMvMpNaMsl5BB
-         9wUyw+mGYpjQIDEagt1sR7gyKDmLt6hsI7am+e1PY2WVj2Y74bDW+k7tTvqLDNqOmP3N
-         yjbKCue/ScK4WvVimBgA7RMDKZykBzKgKvX9lSlq8e8r3Zc2dM515fdJq/BDp6LR0Z02
-         MbeHXG+/uT61BqjKrf4spHJDfdCDtO0xv5dlQrpBAr4JVce8LPb845/XAbRJZxZvuPNG
-         J6YA==
-X-Gm-Message-State: APjAAAUa/ae8UItNLsPrxv7JUlK19xSnEHDPlc0mSZALng2WknhRFbXz
-        sB0+om7aohacVCDQ2eQt6HdvUQ==
-X-Google-Smtp-Source: APXvYqzh1InaO8TIYwLkJnyVa22NMbp8jWJefLs0l6ulXEHHvzhXp4RjcBhcRLMHlsbTVFDel23otQ==
-X-Received: by 2002:a17:906:5e0d:: with SMTP id n13mr29351915eju.37.1553903724202;
-        Fri, 29 Mar 2019 16:55:24 -0700 (PDT)
-Received: from brauner.io ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
-        by smtp.gmail.com with ESMTPSA id d8sm577242ejm.29.2019.03.29.16.55.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 29 Mar 2019 16:55:23 -0700 (PDT)
-Date:   Sat, 30 Mar 2019 00:55:22 +0100
-From:   Christian Brauner <christian@brauner.io>
-To:     Jann Horn <jannh@google.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
-Subject: Re: [PATCH v2 2/5] pid: add pidfd_open()
-Message-ID: <20190329235521.wrtuyoualsvcgz5k@brauner.io>
-References: <20190329155425.26059-1-christian@brauner.io>
- <20190329155425.26059-3-christian@brauner.io>
- <CAG48ez0Arzdtjxj9zVVTaL=T6tX16e6OcR75rtk9mavCbnMK6w@mail.gmail.com>
+        Fri, 29 Mar 2019 20:07:39 -0400
+Received: from vps-vb.mhejs.net ([37.28.154.113]:36770 "EHLO vps-vb.mhejs.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730022AbfC3AHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:07:38 -0400
+X-Greylist: delayed 962 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 Mar 2019 20:07:37 EDT
+Received: from MUA
+        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <mail@maciej.szmigiero.name>)
+        id 1hA1HW-0003ma-0x; Sat, 30 Mar 2019 00:51:30 +0100
+From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+To:     Michael Krufky <mkrufky@linuxtv.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Andy Walls <awalls@md.metrocast.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCH v9 0/4] [media] Add analog mode support for Medion MD95700
+Date:   Sat, 30 Mar 2019 00:51:20 +0100
+Message-Id: <cover.1553903063.git.mail@maciej.szmigiero.name>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAG48ez0Arzdtjxj9zVVTaL=T6tX16e6OcR75rtk9mavCbnMK6w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 12:45:46AM +0100, Jann Horn wrote:
-> On Fri, Mar 29, 2019 at 4:54 PM Christian Brauner <christian@brauner.io> wrote:
-> > /* Introduction */
-> > This adds the pidfd_open() syscall.
-> > pidfd_open() allows to retrieve file descriptors for a given pid. This
-> > includes both file descriptors for processes and file descriptors for
-> > threads.
-> 
-> Looks good to me, overall. Apart from a few nits below:
-> Reviewed-by: Jann Horn <jannh@google.com>
+This series adds support for analog part of Medion 95700 in the cxusb
+driver.
 
-Thanks! Will fixup the nits and add your Reviewed-by!
+What works:
+* Video capture at various sizes with sequential fields,
+* Input switching (TV Tuner, Composite, S-Video),
+* TV and radio tuning,
+* Video standard switching and auto detection,
+* Radio mode switching (stereo / mono),
+* Unplugging while capturing,
+* DVB / analog coexistence,
+* Raw BT.656 stream support.
 
-> 
-> [...]
-> > diff --git a/kernel/pid.c b/kernel/pid.c
-> > index 20881598bdfa..8c9e15e0e463 100644
-> > --- a/kernel/pid.c
-> > +++ b/kernel/pid.c
-> [...]
-> > +static struct file *pidfd_open_proc_pid(const struct file *procf, pid_t pid,
-> > +                                       const struct pid *pidfd_pid)
-> > +{
-> > +       char name[12]; /* int to strlen + \0 but with */
-> 
-> nit: comment suddenly ends at "but with"?
+What does not work yet:
+* Audio,
+* VBI,
+* Picture controls.
 
-Will fix.
+This series (as a one patch) was submitted for inclusion few years ago,
+then waited few months in a patch queue.
+Unfortunately, by the time it was supposed to be merged there
+were enough changes in media that it was no longer mergeable.
 
-> 
-> [...]
-> > +}
-> > +
-> > +static inline int pidfd_to_procfd(int procfd, struct file *pidfd_file)
-> > +{
-> > +       long fd;
-> 
-> nit: This should probably be an int?
+I thought at that time that I will be able to rebase and retest it soon
+but unfortunately up till now I was never able to find enough time to do
+so.
+Also, with the passing of time the implementation diverged more and
+more from the current kernel code, necessitating even more reworking.
 
-Yes.
+That last iteration can be found here:
+https://patchwork.linuxtv.org/patch/8048/
 
-> 
-> [...]
-> > +       return fd;
-> > +}
-> [...]
-> > +static long pidfd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> > +{
-> > +       int procfd = arg;
-> 
-> nit: I think it'd be semantically cleaner to move this assignment into
-> the switch case, but I don't feel about it strongly.
+Since that version there had been the following changes:
+* Adaptation to changes in V4L2 / DVB core,
 
-Agreed.
+* Radio device was added, with a possibility to tune to a FM radio
+station and switch between stereo and mono modes (tested by taping
+audio signal directly at tuner output pin),
 
-> 
-> > +       switch (cmd) {
-> > +       case PIDFD_GET_PROCFD:
-> > +               return pidfd_to_procfd(procfd, file);
-> > +       default:
-> > +               return -ENOTTY;
-> > +       }
-> > +}
+* DVB / analog coexistence was improved - resolved a few cases where
+DVB core would switch off power or reset the tuner when the device
+was still being used but in the analog mode,
+
+* Fixed issues reported by v4l2-compliance,
+
+* Switching to raw BT.656 mode is now done by a custom streaming
+parameter set via VIDIOC_S_PARM ioctl instead of using a
+V4L2_BUF_TYPE_PRIVATE buffer (which was removed from V4L2),
+
+* General small code cleanups (like using BIT() or ARRAY_SIZE() macros
+instead of open coding them, code formatting improvements, etc.).
+
+Changes from v1:
+* Only support configuration of cx25840 pins that the cxusb driver is
+actually using so there is no need for an ugly CX25840_PIN() macro,
+
+* Split cxusb changes into two patches: first one implementing
+digital / analog coexistence in this driver, second one adding the
+actual implementation of the analog mode,
+
+* Fix a warning reported by kbuild test robot.
+
+Changes from v2:
+* Split out ivtv cx25840 platform data zero-initialization to a separate
+commit,
+
+* Add kernel-doc description of struct cx25840_state,
+
+* Make sure that all variables used in CX25840_VCONFIG_OPTION() and
+CX25840_VCONFIG_SET_BIT() macros are their explicit parameters,
+
+* Split out some code from cxusb_medion_copy_field() and
+cxusb_medion_v_complete_work() functions to separate ones to increase
+their readability,
+
+* Generate masks using GENMASK() and BIT() macros in cx25840.h and
+cxusb.h.
+
+Changes from v3:
+Add SPDX tag to a newly added "cxusb-analog.c" file.
+
+Changes from v4:
+* Make analog support conditional on a new DVB_USB_CXUSB_ANALOG Kconfig
+option,
+
+* Use '//' comments in the header of a newly added "cxusb-analog.c"
+file,
+
+* Don't print errors on memory allocation failures,
+
+* Get rid of the driver MODULE_VERSION(),
+
+* Small formating fix of a one line.
+
+Changes from v5:
+Rebase onto current media_tree/master.
+
+Changes from v6:
+Adapt to commit 4eb2f55728abbe changing V4L2_SUBDEV_IO_PIN_* from bit
+masks to bit numbers.
+Thanks to Dan Carpenter's kbuild bot for catching this.
+
+Changes from v7:
+* Simplify cx25840_function_to_pad() assuming that the values of
+individual members of I/O pad enum will always match the actual
+chip register values,
+
+* Add a comment that the above is now a requirement to the I/O pad enum,
+
+* Don't #undef macros in the cx25840 patch,
+
+* Change "generic_mode" variable type in struct cx25840_state to bool,
+
+* Prefix todo-style comments added by the cx25840 patch with "TODO:",
+
+* Add a core init op to the cx25840 driver and use it to turn the
+generic_mode on instead of doing it via the platform data,
+
+* Use the above core init op to also provide a vconfig configuration
+to the cx25840 driver so the cxusb driver does not have to pass this
+(constant) configuration there on every video input change,
+
+* Remove cxusb_auxbuf_advance(), cxusb_auxbuf_begin() and
+cxusb_auxbuf_isend(),
+
+* Add a missing frame sequence counter support,
+
+* Test the driver with v4l2-compliance with streaming tests enabled,
+
+* Set device_caps in struct video_device during probe instead of returning
+it manually in vidioc_querycap handler,
+
+* Don't set the format name in vidioc_enum_fmt_vid_cap handler,
+
+* Drop various memset() zeroing in ioctl handlers, as suggested during
+last review,
+
+* Enforce minimum buffer count via in_buffers_needed field of
+struct vb2_queue instead of doing it in queue_setup callback,
+
+* Rewrite stream starting / stopping / configuration mechanism using a
+'stop_streaming' flag, remove cxusb_medion_stream_busy(),
+
+* Set the lock field in struct vb2_queue so vb2_ops_wait_prepare() /
+vb2_ops_wait_finish() helpers can be utilized,
+
+* Split out raw (unprocessed) BT.656 stream capturing support to a
+separate patch, adapt it to a recent change introduced by
+commit 8a7c5594c020 ("v4l2-ioctl: clear fields in s_parm") that forced
+extendedmode set by VIDIOC_S_PARM to zero,
+
+* Add a comment that if we ever need to support analog mode in similar
+hardware then this code should be made generic,
+
+* Remove a requirement that URB length has to be less than full frame
+size,
+
+* Limit URB length to avoid very high order memory allocations,
+
+* Remove out-of-order incoming URB support: this can't really happen,
+
+* Small cleanups here and there.
+
+Changes from v8:
+Rebase onto current media_tree/master.
+
+ drivers/media/i2c/cx25840/cx25840-core.c |  376 ++++-
+ drivers/media/i2c/cx25840/cx25840-core.h |   12 +
+ drivers/media/i2c/cx25840/cx25840-vbi.c  |    3 +
+ drivers/media/usb/dvb-usb/Kconfig        |   16 +-
+ drivers/media/usb/dvb-usb/Makefile       |    3 +
+ drivers/media/usb/dvb-usb/cxusb-analog.c | 1910 ++++++++++++++++++++++
+ drivers/media/usb/dvb-usb/cxusb.c        |  452 ++++-
+ drivers/media/usb/dvb-usb/cxusb.h        |  157 ++
+ drivers/media/usb/dvb-usb/dvb-usb-dvb.c  |   20 +-
+ drivers/media/usb/dvb-usb/dvb-usb-init.c |   13 +
+ drivers/media/usb/dvb-usb/dvb-usb.h      |    8 +
+ drivers/media/v4l2-core/v4l2-ioctl.c     |    3 +-
+ include/media/drv-intf/cx25840.h         |   66 +-
+ 13 files changed, 2978 insertions(+), 61 deletions(-)
+ create mode 100644 drivers/media/usb/dvb-usb/cxusb-analog.c
