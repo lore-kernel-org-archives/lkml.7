@@ -2,195 +2,157 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E41C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5752AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B0F217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:35:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="AX+5tIq8"
+	by mail.kernel.org (Postfix) with ESMTP id 30E3D2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 11:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbfC2LfU (ORCPT
+        id S1729422AbfC2Li0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 07:35:20 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:57920 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727675AbfC2LfU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 07:35:20 -0400
-Received: from grover.tkatk1.zaq.ne.jp (zaqdadce369.zaq.ne.jp [218.220.227.105]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x2TBWphT012559;
-        Fri, 29 Mar 2019 20:32:52 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x2TBWphT012559
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553859173;
-        bh=tEJutIG3Lh/EZkRCNYRIQ9ceoZoPdFp7/y8BL0YMjyY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AX+5tIq8j4ohThNs6xJDKIPJdON3aYv91vuxqpuqEiHXTPA3BK75CKGm+CP1msmDw
-         yC1URWCQwcJoXdoSwfXeK4TqIRypGy4uAP5KixRISBC9qlicfRLXmAzlV6TGLKWNxH
-         TYRemkI9COgy8w0X5+z30SWyOy6SZDfnvkESm1UrBSntV8ML5EzFfQrVc7ZRNdIwct
-         HuyrHaW96dtuVANjcsF+Hn/JfsMnSm9XHwUiRZc4fLehrYOror9sGuJkD/S3snRYmH
-         Zbz8XwQc+/+IuCr9zY7zSgxtzJUtXrOukqKR72Wd1cUh9ApYEVyAOEXTZci4R/F8GZ
-         Aoo2kb2QMwYqA==
-X-Nifty-SrcIP: [218.220.227.105]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sean Paul <sean@poorly.run>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        nouveau@lists.freedesktop.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        "James (Qian) Wang" <james.qian.wang@arm.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        amd-gfx@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        intel-gvt-dev@lists.freedesktop.org,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        freedreno@lists.freedesktop.org
-Subject: [PATCH v2] drm: prefix header search paths with $(srctree)/
-Date:   Fri, 29 Mar 2019 20:32:41 +0900
-Message-Id: <1553859161-2628-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 29 Mar 2019 07:38:26 -0400
+Received: from mga02.intel.com ([134.134.136.20]:52229 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728704AbfC2LiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 07:38:25 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 04:38:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,284,1549958400"; 
+   d="scan'208";a="138315353"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga003.jf.intel.com with ESMTP; 29 Mar 2019 04:38:21 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h9ppz-0004VM-I2; Fri, 29 Mar 2019 13:38:19 +0200
+Date:   Fri, 29 Mar 2019 13:38:19 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au, lukas@wunner.de
+Subject: Re: [PATCH v14 00/11] Introduce the for_each_set_clump8 macro
+Message-ID: <20190329113819.GR9224@smile.fi.intel.com>
+References: <cover.1553828158.git.vilhelm.gray@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1553828158.git.vilhelm.gray@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the Kbuild core manipulates header search paths in a crazy
-way [1].
+On Fri, Mar 29, 2019 at 12:03:30PM +0900, William Breathitt Gray wrote:
+> Changes in v14:
+>   - Redefine bitmap_get_value8, bitmap_set_value8, and find_next_clump8
+>     as static inline functions
+>   - Rename 'idx' variable to 'index' in the bitmap_get_value8 and
+>     bitmap_set_value8 functions
+>   - Remove superfluous parens in gen_74x164_set_multiple
+> 
 
-To fix this mess, I want all Makefiles to add explicit $(srctree)/ to
-the search paths in the srctree. Some Makefiles are already written in
-that way, but not all. The goal of this work is to make the notation
-consistent, and finally get rid of the gross hacks.
+Thank you!
 
-Having whitespaces after -I does not matter since commit 48f6e3cf5bc6
-("kbuild: do not drop -I without parameter").
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[1]: https://patchwork.kernel.org/patch/9632347/
+> While adding GPIO get_multiple/set_multiple callback support for various
+> drivers, I noticed a pattern of looping manifesting that would be useful
+> standardized as a macro.
+> 
+> This patchset introduces the for_each_set_clump8 macro and utilizes it
+> in several GPIO drivers. The for_each_set_clump macro8 facilitates a
+> for-loop syntax that iterates over a memory region entire groups of set
+> bits at a time.
+> 
+> For example, suppose you would like to iterate over a 32-bit integer 8
+> bits at a time, skipping over 8-bit groups with no set bit, where
+> XXXXXXXX represents the current 8-bit group:
+> 
+>     Example:        10111110 00000000 11111111 00110011
+>     First loop:     10111110 00000000 11111111 XXXXXXXX
+>     Second loop:    10111110 00000000 XXXXXXXX 00110011
+>     Third loop:     XXXXXXXX 00000000 11111111 00110011
+> 
+> Each iteration of the loop returns the next 8-bit group that has at
+> least one set bit.
+> 
+> The for_each_set_clump8 macro has four parameters:
+> 
+>     * start: set to the bit offset of the current clump
+>     * clump: set to the current clump value
+>     * bits: bitmap to search within
+>     * size: bitmap size in number of bits
+> 
+> In this version of the patchset, the for_each_set_clump macro has been
+> reimplemented and simplified based on the suggestions provided by Rasmus
+> Villemoes and Andy Shevchenko in the version 4 submission.
+> 
+> In particular, the function of the for_each_set_clump macro has been
+> restricted to handle only 8-bit clumps; the drivers that use the
+> for_each_set_clump macro only handle 8-bit ports so a generic
+> for_each_set_clump implementation is not necessary. Thus, a solution for
+> large clumps (i.e. those larger than the width of a bitmap word) can be
+> postponed until a driver appears that actually requires such a generic
+> for_each_set_clump implementation.
+> 
+> For what it's worth, a semi-generic for_each_set_clump (i.e. for clumps
+> smaller than the width of a bitmap word) can be implemented by simply
+> replacing the hardcoded '8' and '0xFF' instances with respective
+> variables. I have not yet had a need for such an implementation, and
+> since it falls short of a true generic for_each_set_clump function, I
+> have decided to forgo such an implementation for now.
+> 
+> In addition, the bitmap_get_value8 and bitmap_set_value8 functions are
+> introduced to get and set 8-bit values respectively. Their use is based
+> on the behavior suggested in the patchset version 4 review.
+> 
+> William Breathitt Gray (11):
+>   bitops: Introduce the for_each_set_clump8 macro
+>   lib/test_bitmap.c: Add for_each_set_clump8 test cases
+>   gpio: 104-dio-48e: Utilize for_each_set_clump8 macro
+>   gpio: 104-idi-48: Utilize for_each_set_clump8 macro
+>   gpio: gpio-mm: Utilize for_each_set_clump8 macro
+>   gpio: ws16c48: Utilize for_each_set_clump8 macro
+>   gpio: pci-idio-16: Utilize for_each_set_clump8 macro
+>   gpio: pcie-idio-24: Utilize for_each_set_clump8 macro
+>   gpio: uniphier: Utilize for_each_set_clump8 macro
+>   gpio: 74x164: Utilize the for_each_set_clump8 macro
+>   thermal: intel: intel_soc_dts_iosf: Utilize for_each_set_clump8 macro
+> 
+>  drivers/gpio/gpio-104-dio-48e.c            |  73 ++++----------
+>  drivers/gpio/gpio-104-idi-48.c             |  36 ++-----
+>  drivers/gpio/gpio-74x164.c                 |  19 ++--
+>  drivers/gpio/gpio-gpio-mm.c                |  73 ++++----------
+>  drivers/gpio/gpio-pci-idio-16.c            |  75 +++++---------
+>  drivers/gpio/gpio-pcie-idio-24.c           | 109 ++++++++-------------
+>  drivers/gpio/gpio-uniphier.c               |  16 ++-
+>  drivers/gpio/gpio-ws16c48.c                |  73 ++++----------
+>  drivers/thermal/intel/intel_soc_dts_iosf.c |  29 +++---
+>  drivers/thermal/intel/intel_soc_dts_iosf.h |   2 -
+>  include/asm-generic/bitops/find.h          |  61 ++++++++++++
+>  include/linux/bitops.h                     |   5 +
+>  lib/test_bitmap.c                          |  65 ++++++++++++
+>  13 files changed, 299 insertions(+), 337 deletions(-)
+> 
+> -- 
+> 2.21.0
+> 
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
----
-
-I put all gpu/drm changes into a single patch because
-they are trivial conversion.
-
-If you are interested in the big picture of this work,
-the full patch set is available at the following URL.
-
-git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git build-test
-
-
-Changes in v2:
-  - fix up the new driver komeda
-  - Add Sam's Reviewed-by
-
- drivers/gpu/drm/amd/amdgpu/Makefile         | 2 +-
- drivers/gpu/drm/amd/lib/Makefile            | 2 +-
- drivers/gpu/drm/arm/display/komeda/Makefile | 4 ++--
- drivers/gpu/drm/i915/gvt/Makefile           | 2 +-
- drivers/gpu/drm/msm/Makefile                | 6 +++---
- drivers/gpu/drm/nouveau/Kbuild              | 8 ++++----
- 6 files changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/Makefile b/drivers/gpu/drm/amd/amdgpu/Makefile
-index 466da59..62bf9da 100644
---- a/drivers/gpu/drm/amd/amdgpu/Makefile
-+++ b/drivers/gpu/drm/amd/amdgpu/Makefile
-@@ -23,7 +23,7 @@
- # Makefile for the drm device driver.  This driver provides support for the
- # Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
- 
--FULL_AMD_PATH=$(src)/..
-+FULL_AMD_PATH=$(srctree)/$(src)/..
- DISPLAY_FOLDER_NAME=display
- FULL_AMD_DISPLAY_PATH = $(FULL_AMD_PATH)/$(DISPLAY_FOLDER_NAME)
- 
-diff --git a/drivers/gpu/drm/amd/lib/Makefile b/drivers/gpu/drm/amd/lib/Makefile
-index 6902430..d534992 100644
---- a/drivers/gpu/drm/amd/lib/Makefile
-+++ b/drivers/gpu/drm/amd/lib/Makefile
-@@ -27,6 +27,6 @@
- # driver components or later moved to kernel/lib for sharing with
- # other drivers.
- 
--ccflags-y := -I$(src)/../include
-+ccflags-y := -I $(srctree)/$(src)/../include
- 
- obj-$(CONFIG_CHASH) += chash.o
-diff --git a/drivers/gpu/drm/arm/display/komeda/Makefile b/drivers/gpu/drm/arm/display/komeda/Makefile
-index 1b875e5..a72e30c 100644
---- a/drivers/gpu/drm/arm/display/komeda/Makefile
-+++ b/drivers/gpu/drm/arm/display/komeda/Makefile
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- ccflags-y := \
--	-I$(src)/../include \
--	-I$(src)
-+	-I $(srctree)/$(src)/../include \
-+	-I $(srctree)/$(src)
- 
- komeda-y := \
- 	komeda_drv.o \
-diff --git a/drivers/gpu/drm/i915/gvt/Makefile b/drivers/gpu/drm/i915/gvt/Makefile
-index 271fb46..ea8324a 100644
---- a/drivers/gpu/drm/i915/gvt/Makefile
-+++ b/drivers/gpu/drm/i915/gvt/Makefile
-@@ -5,5 +5,5 @@ GVT_SOURCE := gvt.o aperture_gm.o handlers.o vgpu.o trace_points.o firmware.o \
- 	execlist.o scheduler.o sched_policy.o mmio_context.o cmd_parser.o debugfs.o \
- 	fb_decoder.o dmabuf.o page_track.o
- 
--ccflags-y				+= -I$(src) -I$(src)/$(GVT_DIR)
-+ccflags-y				+= -I $(srctree)/$(src) -I $(srctree)/$(src)/$(GVT_DIR)/
- i915-y					+= $(addprefix $(GVT_DIR)/, $(GVT_SOURCE))
-diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
-index 56a70c7..b7b1ebd 100644
---- a/drivers/gpu/drm/msm/Makefile
-+++ b/drivers/gpu/drm/msm/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
--ccflags-y := -Idrivers/gpu/drm/msm
--ccflags-y += -Idrivers/gpu/drm/msm/disp/dpu1
--ccflags-$(CONFIG_DRM_MSM_DSI) += -Idrivers/gpu/drm/msm/dsi
-+ccflags-y := -I $(srctree)/$(src)
-+ccflags-y += -I $(srctree)/$(src)/disp/dpu1
-+ccflags-$(CONFIG_DRM_MSM_DSI) += -I $(srctree)/$(src)/dsi
- 
- msm-y := \
- 	adreno/adreno_device.o \
-diff --git a/drivers/gpu/drm/nouveau/Kbuild b/drivers/gpu/drm/nouveau/Kbuild
-index ea3035e..4fae728 100644
---- a/drivers/gpu/drm/nouveau/Kbuild
-+++ b/drivers/gpu/drm/nouveau/Kbuild
-@@ -1,7 +1,7 @@
--ccflags-y += -I$(src)/include
--ccflags-y += -I$(src)/include/nvkm
--ccflags-y += -I$(src)/nvkm
--ccflags-y += -I$(src)
-+ccflags-y += -I $(srctree)/$(src)/include
-+ccflags-y += -I $(srctree)/$(src)/include/nvkm
-+ccflags-y += -I $(srctree)/$(src)/nvkm
-+ccflags-y += -I $(srctree)/$(src)
- 
- # NVKM - HW resource manager
- #- code also used by various userspace tools/tests
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
+
 
