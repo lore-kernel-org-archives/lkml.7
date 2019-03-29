@@ -2,151 +2,99 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60DAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B61C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B958D20651
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DBE82183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbfC2OCO (ORCPT
+        id S1729439AbfC2OCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:02:14 -0400
-Received: from mga11.intel.com ([192.55.52.93]:5813 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728683AbfC2OCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:02:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 07:02:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,284,1549958400"; 
-   d="scan'208";a="159581716"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Mar 2019 07:02:11 -0700
-Subject: Re: [PATCH v5] mmc: sdhci-omap: Don't finish_mrq() on a command error
- during tuning
-To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
-Cc:     ulf.hansson@linaro.org, kishon@ti.com
-References: <20190329121042.24415-1-faiz_abbas@ti.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <c8c5b4d1-6120-748f-acc6-3f7e41cf7ad0@intel.com>
-Date:   Fri, 29 Mar 2019 16:00:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 10:02:42 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:48942 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728996AbfC2OCm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:02:42 -0400
+Received: (qmail 1797 invoked by uid 2102); 29 Mar 2019 10:02:41 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 29 Mar 2019 10:02:41 -0400
+Date:   Fri, 29 Mar 2019 10:02:41 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 0/6] ARM: davinci: ohci-da8xx: model the vbus GPIO as
+ a fixed regulator
+In-Reply-To: <20190329093334.3885-1-brgl@bgdev.pl>
+Message-ID: <Pine.LNX.4.44L0.1903291002140.1497-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20190329121042.24415-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/03/19 2:10 PM, Faiz Abbas wrote:
-> commit 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
-> callback") skips data resets during tuning operation. Because of this,
-> a data error or data finish interrupt might still arrive after a command
-> error has been handled and the mrq ended. This ends up with a "mmc0: Got
-> data interrupt 0x00000002 even though no data operation was in progress"
-> error message.
-> 
-> Fix this by adding a platform specific callback for sdhci_irq. Mark the
-> mrq as a failure but wait for a data interrupt instead of calling
-> finish_mrq().
-> 
-> Fixes: 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
-> callback")
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+On Fri, 29 Mar 2019, Bartosz Golaszewski wrote:
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Historically the power supply management in this driver has been handled
+> in two separate places in parallel. Device-tree users simply defined an
+> appropriate regulator, while two boards with no DT support (da830-evm and
+> omapl138-hawk) passed functions defined in their respective board files
+> over platform data. These functions simply used legacy GPIO calls to
+> watch the oc GPIO for interrupts and disable the vbus GPIO when the irq
+> fires.
+> 
+> Commit d193abf1c913 ("usb: ohci-da8xx: add vbus and overcurrent gpios")
+> updated these GPIO calls to the modern API and moved them inside the
+> driver.
+> 
+> This however is not the optimal solution for the vbus GPIO as it
+> duplicates code. Instead we should model the GPIO as a fixed regulator
+> that can be controlled with a GPIO.
+> 
+> This series adds fixed regulators for all users of vbus GPIO, adds
+> overcurrent protection using the existing vbus regulator in the USB
+> driver and removes the vbus GPIO calls once they're no longer used.
+> 
+> v1 -> v2:
+> - add patch 1/6 that fixes an existing problem with missing array
+>   sentinels in GPIO lookups
+> - add patch 2/6 that removes an unnecessary use count variable from the
+>   driver
+> - reorder the changes: add support for overcurrent protection using the
+>   existing vbus regulator first, then setup fixed regulators in board
+>   files and finally remove the vbus GPIO from the ohci driver
+> 
+> Bartosz Golaszewski (6):
+>   ARM: davinci: add missing sentinels to GPIO lookup tables
+>   usb: ohci-da8xx: let the regulator framework keep track of use count
+>   usb: ohci-da8xx: disable the regulator if the overcurrent irq fired
+>   ARM: davinci: omapl138-hawk: add a fixed regulator for ohci-da8xx
+>   ARM: davinci: da830-evm: add a fixed regulator for ohci-da8xx
+>   usb: ohci-da8xx: drop the vbus GPIO
+> 
+>  arch/arm/mach-davinci/board-da830-evm.c     | 51 ++++++++++++++++++--
+>  arch/arm/mach-davinci/board-da850-evm.c     |  1 +
+>  arch/arm/mach-davinci/board-dm355-evm.c     |  1 +
+>  arch/arm/mach-davinci/board-dm644x-evm.c    |  1 +
+>  arch/arm/mach-davinci/board-omapl138-hawk.c | 50 ++++++++++++++++++--
+>  drivers/usb/host/ohci-da8xx.c               | 52 ++++++++++-----------
+>  6 files changed, 122 insertions(+), 34 deletions(-)
 
-> ---
-> Tested with 100 times boot tests on dra71x-evm, dra72x-evm and
-> dra7xx-evm.
-> 
-> v5:
-> Drop patch 1 and replace call to sdhci_finish_command() with
-> host->cmd = NULL
-> 
-> v4:
-> Fixed commit description for patch 1.
-> Added SDHCI_INT_TIMEOUT to CMD_ERR_MASK in patch 2.
-> 
-> v3:
-> Removed the command error specific callback and using the already
-> existing sdhci_irq callback instead. No measurable drop in performance.
-> 
-> v2:
-> Added EXPORT_SYMBOL_GPL for sdhci_cmd_err and sdhci_send_command to fix
-> errors when built as module.
-> 
->  drivers/mmc/host/sdhci-omap.c | 38 +++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-> index 5bbed477c9b1..9f2af89ae9b5 100644
-> --- a/drivers/mmc/host/sdhci-omap.c
-> +++ b/drivers/mmc/host/sdhci-omap.c
-> @@ -797,6 +797,43 @@ void sdhci_omap_reset(struct sdhci_host *host, u8 mask)
->  	sdhci_reset(host, mask);
->  }
->  
-> +#define CMD_ERR_MASK (SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX |\
-> +		      SDHCI_INT_TIMEOUT)
-> +#define CMD_MASK (CMD_ERR_MASK | SDHCI_INT_RESPONSE)
-> +
-> +static irqreturn_t sdhci_omap_irq(struct sdhci_host *host, u32 intmask)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	if (omap_host->is_tuning && host->cmd && !host->data_early &&
-> +	    (intmask & CMD_ERR_MASK)) {
-> +
-> +		/*
-> +		 * Since we are not resetting data lines during tuning
-> +		 * operation, data error or data complete interrupts
-> +		 * might still arrive. Mark this request as a failure
-> +		 * but still wait for the data interrupt
-> +		 */
-> +		if (intmask & SDHCI_INT_TIMEOUT)
-> +			host->cmd->error = -ETIMEDOUT;
-> +		else
-> +			host->cmd->error = -EILSEQ;
-> +
-> +		host->cmd = NULL;
-> +
-> +		/*
-> +		 * Sometimes command error interrupts and command complete
-> +		 * interrupt will arrive together. Clear all command related
-> +		 * interrupts here.
-> +		 */
-> +		sdhci_writel(host, intmask & CMD_MASK, SDHCI_INT_STATUS);
-> +		intmask &= ~CMD_MASK;
-> +	}
-> +
-> +	return intmask;
-> +}
-> +
->  static struct sdhci_ops sdhci_omap_ops = {
->  	.set_clock = sdhci_omap_set_clock,
->  	.set_power = sdhci_omap_set_power,
-> @@ -807,6 +844,7 @@ static struct sdhci_ops sdhci_omap_ops = {
->  	.platform_send_init_74_clocks = sdhci_omap_init_74_clocks,
->  	.reset = sdhci_omap_reset,
->  	.set_uhs_signaling = sdhci_omap_set_uhs_signaling,
-> +	.irq = sdhci_omap_irq,
->  };
->  
->  static int sdhci_omap_set_capabilities(struct sdhci_omap_host *omap_host)
-> 
+For patches 2, 3, and 6:
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+
+Alan Stern
 
