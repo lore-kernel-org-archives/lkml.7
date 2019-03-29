@@ -2,269 +2,150 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F45C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 510F0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52DF1206C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tIoL7oVc"
+	by mail.kernel.org (Postfix) with ESMTP id 228CD20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbfC2OSh (ORCPT
+        id S1729423AbfC2OTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:18:37 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36658 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728804AbfC2OSg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:18:36 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2TEHoxr101309;
-        Fri, 29 Mar 2019 09:17:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553869070;
-        bh=N6h3VzTAWvuedTPmQhD9kI7Q4RP5rM5ZZ4elHfV4EpE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tIoL7oVc+8WBGKNtGCwiRfnX8r6m/IToUaismX2MsRbItudPwuk4CYtMyx7xcNVIY
-         r/16KzPirxqVzcWrwZ7rhmA4fvqJBb0REOA+TBXcT9pGIc2NNX2I7I5YPE9qs44CJm
-         KeQST/JKpECY7bVgPtLzCWII618J2pFxFg3TTN/c=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2TEHogx057551
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 Mar 2019 09:17:50 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
- Mar 2019 09:17:49 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 29 Mar 2019 09:17:49 -0500
-Received: from [10.250.67.168] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2TEHm1Y088853;
-        Fri, 29 Mar 2019 09:17:49 -0500
-Subject: Re: [RFC][PATCH 0/6 v3] DMA-BUF Heaps (destaging ION)
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-CC:     Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        <dri-devel@lists.freedesktop.org>
-References: <1553818562-2516-1-git-send-email-john.stultz@linaro.org>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <7670750b-0889-390e-2862-e0be9f220292@ti.com>
-Date:   Fri, 29 Mar 2019 09:17:49 -0500
+        Fri, 29 Mar 2019 10:19:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53112 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729351AbfC2OTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:19:01 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A6DA63082E58;
+        Fri, 29 Mar 2019 14:19:00 +0000 (UTC)
+Received: from [10.36.112.74] (ovpn-112-74.ams2.redhat.com [10.36.112.74])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 667A118A28;
+        Fri, 29 Mar 2019 14:18:57 +0000 (UTC)
+Subject: Re: [PATCH RFC] KVM: x86: vmx: throttle immediate exit through
+ preemtion timer to assist buggy guests
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org
+References: <20190328203110.20655-1-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <f64742ef-c67d-db0f-d812-2b6f5048d7ee@redhat.com>
+Date:   Fri, 29 Mar 2019 15:18:56 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <1553818562-2516-1-git-send-email-john.stultz@linaro.org>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190328203110.20655-1-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 29 Mar 2019 14:19:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/28/19 7:15 PM, John Stultz wrote:
-> Here is another RFC of the dma-buf heaps patchset Andrew and I
-> have been working on which tries to destage a fair chunk of ION
-> functionality.
+On 28/03/19 21:31, Vitaly Kuznetsov wrote:
 > 
-> The patchset implements per-heap devices which can be opened
-> directly and then an ioctl is used to allocate a dmabuf from the
-> heap.
+> The 'hang' scenario develops like this:
+> 1) Hyper-V boots and QEMU is trying to inject two irq simultaneously. One
+>  of them is level-triggered. KVM injects the edge-triggered one and
+>  requests immediate exit to inject the level-triggered:
 > 
-> The interface is similar, but much simpler then IONs, only
-> providing an ALLOC ioctl.
+>  kvm_set_irq:          gsi 23 level 1 source 0
+>  kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
+>  kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
+>  kvm_msi_set_irq:      dst 0 vec 96 (Fixed|physical|edge)
+>  kvm_apic_accept_irq:  apicid 0 vec 96 (Fixed|edge)
+>  kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000060 int_info_err 0
 > 
-> Also, I've provided simple system and cma heaps. The system
-> heap in particular is missing the page-pool optimizations ION
-> had, but works well enough to validate the interface.
+> 2) Hyper-V requires one of its VMs to run to handle the situation but
+>  immediate exit happens:
 > 
-> I've booted and tested these patches with AOSP on the HiKey960
-> using the kernel tree here:
->   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap
-> 
-> And the userspace changes here:
->   https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
-> 
-> 
-> Compared to ION, this patchset is missing the system-contig,
-> carveout and chunk heaps, as I don't have a device that uses
-> those, so I'm unable to do much useful validation there.
-> Additionally we have no upstream users of chunk or carveout,
-> and the system-contig has been deprecated in the common/andoid-*
-> kernels, so this should be ok.
-> 
+>  kvm_entry:            vcpu 0
+>  kvm_exit:             reason VMRESUME rip 0xfffff80006a40115 info 0 0
+>  kvm_entry:            vcpu 0
+>  kvm_exit:             reason PREEMPTION_TIMER rip 0xfffff8022f3d8350 info 0 0
+>  kvm_nested_vmexit:    rip fffff8022f3d8350 reason PREEMPTION_TIMER info1 0 info2 0 int_info 0 int_info_err 0
+>  kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000050 int_info_err 0
 
+I supposed before this there was an eoi for vector 96?
 
-I'd like to go over my use-cases for a moment to see if we can get some
-agreement on what to do with the carveout/chunk heaps.
+The main issue with your patch is that the preemption timer is buggy on
+some processors (it runs too fast) and on those processors we shouldn't
+use it with nonzero deadline.  In particular because it runs too fast it
+may not hide the bug.
 
-We used DRM (omapdrm) to get buffers for display, GPU, and multi-media.
-Our out-of-tree CMEM driver[0] for remote processing (OpenCL/CV/VX)
-buffers. And for secure heaps we use what are basically slightly
-modified ION carveout heaps.
+I think level-triggered interrupts are required for the bug to show.
+Edge-triggered interrupts usually have to be acknowledged with a device
+register before the host device will trigger another interrupt; or at
+least the interrupt event, for example an incoming network packet, must
+happen again.  This way, when the guest hangs it puts some back pressure
+on the host.
 
-Now with the DMA-Heap framework what we can do is for sub-systems with
-IOMMUs use 'system' heap (GPU). For those that need contiguous memory
-(display, MM) we have 'cma' heap (and maybe 'system-contig' at some
-point). For our SRAM areas used in remote processing I've posted an RFC
-for a heap[1] to provide allocations from those areas.
+I think we should do in QEMU the same fix that was done in the in-kernel
+IOAPIC.
 
-The above leaves one last gap for us, uncached/unmapped areas from
-regular memory. I propose this is where we use the 'carveout' heap.
-Right now to get some contiguous/cached memory with DT you can:
-
-reserved-memory {
-	[...]
-	cma_memory {
-		compatible = "shared-dma-pool";
-		reg = <0x79000000 0x400000>;
-		reusable;
-	};
-
-	coherent_memory@78000000 {
-		reg = <0x78000000 0x800000>;
-		no-map;
-	};
-};
-
-'cma_memory' will show up as a 'cma' heap, so all good there.
-
-Looking at 'coherent_memory' it will not have valid backing 'struct
-page' and so cannot be given cached mappings as the standard dma memory
-ops would fail. This would give this area the right properties for both
-users who don't want to do all the cache maintenance ops (Liam?) and for
-secure heaps that have restrictions on access from Linux running CPU.
-
-The question then is how to mark these areas for export with DMA-Heaps?
-Maybe a cma_for_each_area() like function but for dma coherent areas?
-
-Anyway for now this is not super important and I can post a patchset at
-some later point for this when I get it working and tested internally.
-
-[0]
-http://software-dl.ti.com/processor-sdk-linux/esd/docs/latest/linux/Foundational_Components_CMEM.html
-[1] https://patchwork.kernel.org/patch/10863957/
-
-Thanks,
-Andrew
-
-
-> I've also removed the stats accounting for now, since it should
-> be implemented by the heaps themselves.
-> 
-> 
-> New in v3:
-> * Proper /dev/heap/* names on both Android and classic Linux
->   environments
-> * Major rework of the helper code from Andrew
-> * Dummy test device added to test importing
-> * *Lots* of cleanups suggested by many (thank you for all the
->   input)!
-> 
-> 
-> Outstanding concerns:
-> * Potential need for private flags in interface for secure
->   heaps. Need to better understand secure heap usage.
-> * Making sure the performance issues from potentially unnecessary
->   cache-management operations can be resolved properly for system
->   and cma heaps (outstanding issue from ION).
-> 
-> 
-> Eventual TODOS:
-> * Sanity filtering for heap names
-> * Reimplement performance optimizations for system heap
-> * Add stats accounting to system/cma heaps
-> * Make the kselftest more useful
-> * Add other heaps folks see as useful (would love to get
->   some help from actual carveout/chunk users)!
-> 
-> That said, the main user-interface is shaping up and I wanted
-> to get some input on the device model (particularly from GreKH)
-> and any other API/ABI specific input. 
-> 
-> thanks
-> -john
-> 
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Liam Mark <lmark@codeaurora.org>
-> Cc: Pratik Patel <pratikp@codeaurora.org>
-> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
-> Cc: Sudipto Paul <Sudipto.Paul@arm.com>
-> Cc: Andrew F. Davis <afd@ti.com>
-> Cc: Xu YiPing <xuyiping@hisilicon.com>
-> Cc: "Chenfeng (puck)" <puck.chen@hisilicon.com>
-> Cc: butao <butao@hisilicon.com>
-> Cc: "Xiaqing (A)" <saberlily.xia@hisilicon.com>
-> Cc: Yudongbin <yudongbin@hisilicon.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Chenbo Feng <fengc@google.com>
-> Cc: Alistair Strachan <astrachan@google.com>
-> Cc: dri-devel@lists.freedesktop.org
-> 
-> Andrew F. Davis (2):
->   dma-buf: Add dma-buf heaps framework
->   dma-buf: Add Dummy Importer Test Device
-> 
-> John Stultz (4):
->   dma-buf: heaps: Add heap helpers
->   dma-buf: heaps: Add system heap to dmabuf heaps
->   dma-buf: heaps: Add CMA heap to dmabuf heapss
->   kselftests: Add dma-heap test
-> 
->  MAINTAINERS                                        |  18 ++
->  drivers/dma-buf/Kconfig                            |  16 ++
->  drivers/dma-buf/Makefile                           |   3 +
->  drivers/dma-buf/dma-buf-testdev.c                  | 239 +++++++++++++++++++
->  drivers/dma-buf/dma-heap.c                         | 234 ++++++++++++++++++
->  drivers/dma-buf/heaps/Kconfig                      |  14 ++
->  drivers/dma-buf/heaps/Makefile                     |   4 +
->  drivers/dma-buf/heaps/cma_heap.c                   | 170 ++++++++++++++
->  drivers/dma-buf/heaps/heap-helpers.c               | 261 +++++++++++++++++++++
->  drivers/dma-buf/heaps/heap-helpers.h               |  55 +++++
->  drivers/dma-buf/heaps/system_heap.c                | 120 ++++++++++
->  include/linux/dma-heap.h                           |  58 +++++
->  include/uapi/linux/dma-buf-testdev.h               |  37 +++
->  include/uapi/linux/dma-heap.h                      |  52 ++++
->  tools/testing/selftests/dmabuf-heaps/Makefile      |  11 +
->  tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 169 +++++++++++++
->  16 files changed, 1461 insertions(+)
->  create mode 100644 drivers/dma-buf/dma-buf-testdev.c
->  create mode 100644 drivers/dma-buf/dma-heap.c
->  create mode 100644 drivers/dma-buf/heaps/Kconfig
->  create mode 100644 drivers/dma-buf/heaps/Makefile
->  create mode 100644 drivers/dma-buf/heaps/cma_heap.c
->  create mode 100644 drivers/dma-buf/heaps/heap-helpers.c
->  create mode 100644 drivers/dma-buf/heaps/heap-helpers.h
->  create mode 100644 drivers/dma-buf/heaps/system_heap.c
->  create mode 100644 include/linux/dma-heap.h
->  create mode 100644 include/uapi/linux/dma-buf-testdev.h
->  create mode 100644 include/uapi/linux/dma-heap.h
->  create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
->  create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> 
+Paolo
