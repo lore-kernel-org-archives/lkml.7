@@ -2,134 +2,111 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1697C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADD3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA35C2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3572070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:12:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KkLs4yE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbfC2KMr (ORCPT
+        id S1729033AbfC2KMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:12:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46970 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728907AbfC2KMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:12:44 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2B74A3091755;
-        Fri, 29 Mar 2019 10:12:43 +0000 (UTC)
-Received: from localhost (ovpn-12-24.pek2.redhat.com [10.72.12.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CE579CCB;
-        Fri, 29 Mar 2019 10:12:40 +0000 (UTC)
-Date:   Fri, 29 Mar 2019 18:12:32 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     Dave Young <dyoung@redhat.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel
- reserved region
-Message-ID: <20190329101232.GI7627@MiWiFi-R3L-srv>
-References: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
- <20190320002524.GD18740@MiWiFi-R3L-srv>
- <CAFgQCTt3-9oZ6yi_MGYFOZhn5+cSdJLGf3OQRMJ1CJr0eXiE5w@mail.gmail.com>
- <20190322075259.GA18740@MiWiFi-R3L-srv>
- <20190322083419.GB18740@MiWiFi-R3L-srv>
- <CAFgQCTti4S3TUx_4YHi+Yx6poJbHhekT+Jzjjg__0tpZdA9tRQ@mail.gmail.com>
- <20190329062715.GA7627@MiWiFi-R3L-srv>
- <CAFgQCTvGnV5NUcyp1RCJa2hHxKiQDM=HRn_GwWs+WUdt1afLQA@mail.gmail.com>
- <20190329073438.GC7627@MiWiFi-R3L-srv>
- <CAFgQCTtbfYDzDkeZ_tPqAS2+f2E1dRtHgzZT13D0Zb6pfEEZug@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFgQCTtbfYDzDkeZ_tPqAS2+f2E1dRtHgzZT13D0Zb6pfEEZug@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 29 Mar 2019 10:12:43 +0000 (UTC)
+        Fri, 29 Mar 2019 06:12:50 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38987 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729000AbfC2KMt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 06:12:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j9so1870317wrn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 03:12:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=/lEw2WJIQYdMZsFOVD8QtaZ94Qz62D3Eglt9Vc/R/YE=;
+        b=KkLs4yE4PyAr+Yl1regGK7dtXQO096QUH7ZsFUL/hY034MN4bhzXJlWdS+nA2ZD2R6
+         XGhjd5+Ak3r17le6xL59ByNnqVO0czpMJMlma2BaKZQ5ALm+C5KlAFsx3eEXCV+vjjh8
+         4G8P/GtqMAq368GPHCzUmuzUcPikcQS0/+ndm0OxZYNGgR+d7FYDHTxwuDfR832rJk+b
+         s5CvoCGf9zm8wyLtravwWTre6C50nunJnLcpQh/WEkiYyLW46gedIf+yrG9W5GwJDbUM
+         H5OcHfcleHY11r2iFkROF1cyPicEenEHNL9E0vLYXlWJOTWhk78urdhZYRoDcgSNhDAQ
+         Au+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=/lEw2WJIQYdMZsFOVD8QtaZ94Qz62D3Eglt9Vc/R/YE=;
+        b=EDhDZVHKjTGPXn8nwrOjgoeE8SsZhcyVW7Xoj0NoGJiicGGUKXm9EOxOgVdJzj3ONK
+         aeUjm2CMXZ7KAKtg25rWs+CXOUtcfmB0WtTYdxmI7WHVIiT9gT0NoMMJiz/UgNCaz33U
+         9hOa0dMggZTimGgaYsXhxdTLy/m8IO67fg5eOi3eXYAUmbC3pSMx/eAF4/6ma3zfIAfo
+         +14Wj09PfI8u14MSJEOA/i67inKZkJel+a+uSC2SdZL/qPukajbqDrkDVw8tTBjFSQLB
+         A3OhalluoVLGwt1zLVtZZTOpsBESJCJeW6klc+pPhz2rPdgq4qc8gtcvigQ1lr5qPmDe
+         jIHA==
+X-Gm-Message-State: APjAAAXfUtQp5amcbQ0Iu5bEkrZq0zfLyW+KCrtD5RJccX/5CB1z3Q0U
+        50AQWAMjTE+76iyJ2yGz40piGuIwT/I=
+X-Google-Smtp-Source: APXvYqwwJ/LLEGH1Pr0MC/8BeRkg0z3t4Yplbrq4oxIxl6Bm7aLpmnzh4KEydM7ATwLyek0jyWG6zw==
+X-Received: by 2002:a5d:4081:: with SMTP id o1mr5840015wrp.241.1553854366992;
+        Fri, 29 Mar 2019 03:12:46 -0700 (PDT)
+Received: from localhost ([49.248.196.175])
+        by smtp.gmail.com with ESMTPSA id z14sm2072519wrv.78.2019.03.29.03.12.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 Mar 2019 03:12:46 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com,
+        andy.gross@linaro.org, David Brown <david.brown@linaro.org>
+Cc:     devicetree@vger.kernel.org
+Subject: [PATCH v2 03/13] arm64: dts: msm8916: thermal: Add sensor for modem
+Date:   Fri, 29 Mar 2019 15:42:09 +0530
+Message-Id: <0f5d5623be3c60efde8a98b45b2e5808190d3675.1553853990.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1553853990.git.amit.kucheria@linaro.org>
+References: <cover.1553853990.git.amit.kucheria@linaro.org>
+In-Reply-To: <cover.1553853990.git.amit.kucheria@linaro.org>
+References: <cover.1553853990.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/29/19 at 06:00pm, Pingfan Liu wrote:
-> On Fri, Mar 29, 2019 at 3:34 PM Baoquan He <bhe@redhat.com> wrote:
-> >
-> > On 03/29/19 at 03:25pm, Pingfan Liu wrote:
-> > > On Fri, Mar 29, 2019 at 2:27 PM Baoquan He <bhe@redhat.com> wrote:
-> > > >
-> > > > On 03/29/19 at 01:45pm, Pingfan Liu wrote:
-> > > > > On Fri, Mar 22, 2019 at 4:34 PM Baoquan He <bhe@redhat.com> wrote:
-> > > > > >
-> > > > > > On 03/22/19 at 03:52pm, Baoquan He wrote:
-> > > > > > > On 03/22/19 at 03:43pm, Pingfan Liu wrote:
-> > > > > > > > > > +/* parse crashkernel=x@y option */
-> > > > > > > > > > +static void mem_avoid_crashkernel_simple(char *option)
-> > > > > > > > >
-> > > > > > > > > Chao ever mentioned this, I want to ask again, why does it has to be
-> > > > > > > > > xxx_simple()?
-> > > > > > > > >
-> > > > > > > > Seems that I had replied Chao's question in another email. The naming
-> > > > > > > > follows the function parse_crashkernel_simple(), as the notes above
-> > > > > > >                        ~~~~~~~~~~~~~~~~~~~~~~~~
-> > > > > > >
-> > > > > > > Sorry, I don't get.  typo?
-> > > > > >
-> > > > > > OK, I misunderstood it. We do have parse_crashkernel_simple() to handle
-> > > > > > crashkernel=size[@offset] case, to differente with other complicated
-> > > > > > cases, like crashkernel=size,[high|low],
-> > > > > >
-> > > > > > Then I am fine with this naming. Soryy about the noise.
-> > > > > >
-> > > > > > By the way, do you think if we should take care of this case:
-> > > > > > crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
-> > > > > >
-> > > > > > It can also specify @offset. Not sure if it's too complicated, you may
-> > > > > > have a investigation.
-> > > > > >
-> > > > > In this case, kernel should get the total memory size info. So
-> > > > > process_e820_entries() or process_efi_entries() should be called
-> > > > > twice. One before handle_mem_options(), so crashkernel can evaluate
-> > > > > the reserved size. It is doable, and what is your opinion about the
-> > > >
-> > > > You mean calling process_e820_entries to calculate the RAM size in
-> > > > system? I may not do like that, please check what __find_max_addr() is
-> > > > doing. Did I get it?
-> > >
-> > > Yes, you got my meaning. But __find_max_addr() relies on the info, fed
-> > > by e820__memblock_setup(). It also involves the iteration of all e820
-> > > entries to get the max address. No essential difference, right?
-> >
-> > Hmm, I would say iterating e820 or efi entries to get the mas addr should be
-> > different with calling process_e820_entries(). The 1st is much simpler,
-> > right?
-> >
-> Yes. My original meaning is to reuse process_e820_entries(), but does
-> not call process_mem_region() at the first time.
+On platforms that have a modem, sensor 0 monitors the modem.
 
-Got it. That would be nice, but it will bring hackery which Thomas and
-Boris have clearly expressed disliking. Adding a new function to find
-the max addr, it truly doesn't reuse code, while it makes the code paths
-and logic are pretty clear. These avoiding cases are bloating code,
-however they usually don't happen in a same system. We make a simply and
-clear logic to make code strightforward with good code comments and
-printing message, it will be easier to debug issue if happened.
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-So, I think a draft patch is welcomed, we can have a look at the logic,
-then polish it later to make a formal patch. Makes sense?
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 0803ca8c02da..c8aa9a0986d2 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -278,7 +278,21 @@
+ 					type = "critical";
+ 				};
+ 			};
++		};
++
++		modem-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 0>;
+ 
++			trips {
++				modem_alert0: trip-point@0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++			};
+ 		};
+ 
+ 	};
+-- 
+2.17.1
 
-Thanks
-Baoquan
