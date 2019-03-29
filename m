@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4026FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B10C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6232075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9845F218CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:12:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r7z5aQhs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJ8HSQcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbfC2AMx (ORCPT
+        id S1728851AbfC2AM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 20:12:53 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38668 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728684AbfC2AMv (ORCPT
+        Thu, 28 Mar 2019 20:12:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37107 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728684AbfC2AM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 20:12:51 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g37so130622plb.5;
-        Thu, 28 Mar 2019 17:12:51 -0700 (PDT)
+        Thu, 28 Mar 2019 20:12:57 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 8so152978pfr.4;
+        Thu, 28 Mar 2019 17:12:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dA0pfVy9Llp9FksORyMVq9pfw5s+gke+P4BgXYNJeeo=;
-        b=r7z5aQhsWEhbn7kCS76LPZ4ilzzXTDIrZ3jJCXuA2rWTsVR5ug9fwe7AMQgsrfuGQ/
-         uzUBR0SLq0PNY7Hzdl3Py6KroyBUg4uOWnTrCh5CrydS7m3gvuljGk627y3lCnVoCbaO
-         2v6GL+juDflEW/QPPsUb4vmYdKv+EY73Hzf/UiAkG258f+gEloId2sxgDdxYAqAEebs9
-         AKsfFj5OrdfZfIK/9/6vp3PX7OvP8WrX1UGsQqw9VbT1fOEoI3MZl5DOwX6+/fZdYBhK
-         Q2AJpb9A/Xi/F01pDz/jjl7eGv0M3hrprb3Rci/IvgNdLi8w88jidFtD+0ySb6D1heAD
-         O9hQ==
+        bh=KmFCOp1zzXDTR/WkGfGYEVJ0LQS5ChGN6DXlYhfq/Q0=;
+        b=ZJ8HSQcMk+pOaaN9E2C21ZqZ+RGDfnXmeB8xHP/SWCMB+dwzQZ8QU9DdlmthA9fUWO
+         PJwEh9xNgbCek69XiPVHJR6LtsY81UH0qJoWvLL+xgWvr4AAl1NrM6yaRaa4Y7uwZgUL
+         UTrmBGcsJ7oOJ3QBw9gcwiGUW8gvmzbsP+aLCa7nujfq0Hsik4ev4zUV6+lxH6m9nyjC
+         KpkMMtu2Ycnjyn+T29C0YiEJmKcSJQq+cnYSd/oRjqROzxkTa2S5d2aMJVV57Wf8FYCr
+         hqTa4Afl7aq+PVbiaJInkr5iuyVnEE90Ixa1BJd/NBtoM6HahLwZDomWv5Dy6Pfpl3DB
+         Vv9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dA0pfVy9Llp9FksORyMVq9pfw5s+gke+P4BgXYNJeeo=;
-        b=noSNfxmymlqBbdKnXm35v8DgSkL713Oq1EqNyRI/18kKqeoz5fhv1lDnESXYD0FgOh
-         A1lI4JuAEabOuuxlKZ9fde7pD/ZcFX1LuJzXK7JsV36364O8rDRDHCflEfw0LSQUBcMT
-         dF5AB/EUPrzzJozGkz7axEeUkY82dgHRg+exM7EG/DTJZQ70RmJnKRcREr4NP88nCZ2p
-         rvKPhB4cxrF6FcJngmFGT3zPyqJeej5BbqhZE04bTCBNEjUg7qhByccVRJdVKcWaM4LM
-         oc7CtXCH3kv2ZiPdL41EBYlUcUI8fWjSXipp1SiWxDj0WKWqydXSX/k51SicjcDefENc
-         fUsA==
-X-Gm-Message-State: APjAAAXC8KlPF9MU5L9TJpljIv8uA75C6SUcWNUR04AgTVYpdB8Jbs28
-        wzto0xSIhXVp9SdziMuVsDE=
-X-Google-Smtp-Source: APXvYqy45uaxYLth+Oi1BXGfYGI+C9L/2A0z8jA0vfyOnVeftBbw3ron1+afhnoLBXBaDYfeaYfWAw==
-X-Received: by 2002:a17:902:a511:: with SMTP id s17mr45195710plq.262.1553818370648;
-        Thu, 28 Mar 2019 17:12:50 -0700 (PDT)
+        bh=KmFCOp1zzXDTR/WkGfGYEVJ0LQS5ChGN6DXlYhfq/Q0=;
+        b=rYoADd2sjqzFmDlhEe2cuxLGlKUfoideXaWZHhcFR+c2tvheb9jjx2fSFhPu+J+X+/
+         jHDzEFHVuPNN3UV3KN4bRm7jQP5ecJgUTgzXKKo3BGT+rh0ZXG6BOyC1bExGv1LCVfvG
+         AmOo8mS9wXDR2KsO59GI/qzM+5/mXQ4i2LxSEXZ8JE0CbzYid0Hrp00L7A/4K7t+U3QA
+         /2AdCH7+EaUEU+Z20Dfa7dx0O+/OXfUMchkLLUjYtQjmScMvOhsOkxex1T54e1K+3RD6
+         2gq/TBFIIue5iqnwGknwLK+4uwTdy9n8UJmEajMC8HkoBwoADLCZIBrwak0WTuN5T8dz
+         gAog==
+X-Gm-Message-State: APjAAAVr8C9K+EuesW671MgD/6/li8VhJVQLWVHymn1oARwSBjs9N9RD
+        9eVN0ktuXpeWTmZEaX8MbkA=
+X-Google-Smtp-Source: APXvYqy/6azm44zZ71XXhOxXggTPTBzxiMhI0jvmqy8wpEj1h420lISyztLqfXIg0xuSkfYCECVhnA==
+X-Received: by 2002:a65:4549:: with SMTP id x9mr43900442pgr.3.1553818375399;
+        Thu, 28 Mar 2019 17:12:55 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id f125sm432488pfc.91.2019.03.28.17.12.46
+        by smtp.gmail.com with ESMTPSA id f125sm432488pfc.91.2019.03.28.17.12.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 17:12:49 -0700 (PDT)
+        Thu, 28 Mar 2019 17:12:54 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v2 09/24] acpi doc: convert acpi/method-customizing.txt to rst format
-Date:   Fri, 29 Mar 2019 08:11:20 +0800
-Message-Id: <20190329001135.15847-10-changbin.du@gmail.com>
+Subject: [PATCH v2 10/24] acpi doc: convert acpi/initrd_table_override.txt to rst format
+Date:   Fri, 29 Mar 2019 08:11:21 +0800
+Message-Id: <20190329001135.15847-11-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190329001135.15847-1-changbin.du@gmail.com>
 References: <20190329001135.15847-1-changbin.du@gmail.com>
@@ -79,189 +79,265 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- Documentation/acpi/index.rst              |  1 +
- Documentation/acpi/method-customizing.rst | 82 +++++++++++++++++++++++
- Documentation/acpi/method-customizing.txt | 73 --------------------
- 3 files changed, 83 insertions(+), 73 deletions(-)
- create mode 100644 Documentation/acpi/method-customizing.rst
- delete mode 100644 Documentation/acpi/method-customizing.txt
+ Documentation/acpi/index.rst                 |   1 +
+ Documentation/acpi/initrd_table_override.rst | 120 +++++++++++++++++++
+ Documentation/acpi/initrd_table_override.txt | 111 -----------------
+ 3 files changed, 121 insertions(+), 111 deletions(-)
+ create mode 100644 Documentation/acpi/initrd_table_override.rst
+ delete mode 100644 Documentation/acpi/initrd_table_override.txt
 
 diff --git a/Documentation/acpi/index.rst b/Documentation/acpi/index.rst
-index 0fae18cc1eea..409e98f19748 100644
+index 409e98f19748..213c4601a42c 100644
 --- a/Documentation/acpi/index.rst
 +++ b/Documentation/acpi/index.rst
-@@ -14,3 +14,4 @@ Linux ACPI (Advanced Configuration and Power Interface)
-    DSD-properties-rules
+@@ -15,3 +15,4 @@ Linux ACPI (Advanced Configuration and Power Interface)
     gpio-properties
     scan_handlers
-+   method-customizing
-diff --git a/Documentation/acpi/method-customizing.rst b/Documentation/acpi/method-customizing.rst
+    method-customizing
++   initrd_table_override
+diff --git a/Documentation/acpi/initrd_table_override.rst b/Documentation/acpi/initrd_table_override.rst
 new file mode 100644
-index 000000000000..32eb1cdc1549
+index 000000000000..0787b2b91ded
 --- /dev/null
-+++ b/Documentation/acpi/method-customizing.rst
-@@ -0,0 +1,82 @@
++++ b/Documentation/acpi/initrd_table_override.rst
+@@ -0,0 +1,120 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+=======================================
-+Linux ACPI Custom Control Method How To
-+=======================================
++================================
++Upgrading ACPI tables via initrd
++================================
 +
-+:Author: Zhang Rui <rui.zhang@intel.com>
++1) Introduction (What is this about)
++2) What is this for
++3) How does it work
++4) References (Where to retrieve userspace tools)
 +
++1) What is this about
++=====================
 +
-+Linux supports customizing ACPI control methods at runtime.
++If the ACPI_TABLE_UPGRADE compile option is true, it is possible to
++upgrade the ACPI execution environment that is defined by the ACPI tables
++via upgrading the ACPI tables provided by the BIOS with an instrumented,
++modified, more recent version one, or installing brand new ACPI tables.
 +
-+Users can use this to:
++When building initrd with kernel in a single image, option
++ACPI_TABLE_OVERRIDE_VIA_BUILTIN_INITRD should also be true for this
++feature to work.
 +
-+1. override an existing method which may not work correctly,
-+   or just for debugging purposes.
-+2. insert a completely new method in order to create a missing
-+   method such as _OFF, _ON, _STA, _INI, etc.
++For a full list of ACPI tables that can be upgraded/installed, take a look
++at the char `*table_sigs[MAX_ACPI_SIGNATURE];` definition in
++drivers/acpi/tables.c.
 +
-+For these cases, it is far simpler to dynamically install a single
-+control method rather than override the entire DSDT, because kernel
-+rebuild/reboot is not needed and test result can be got in minutes.
++All ACPI tables iasl (Intel's ACPI compiler and disassembler) knows should
++be overridable, except:
 +
-+.. note:: Only ACPI METHOD can be overridden, any other object types like
-+   "Device", "OperationRegion", are not recognized. Methods
-+   declared inside scope operators are also not supported.
-+.. note:: The same ACPI control method can be overridden for many times,
-+   and it's always the latest one that used by Linux/kernel.
-+.. note:: To get the ACPI debug object output (Store (AAAA, Debug)),
-+   please run "echo 1 > /sys/module/acpi/parameters/aml_debug_output".
++  - ACPI_SIG_RSDP (has a signature of 6 bytes)
++  - ACPI_SIG_FACS (does not have an ordinary ACPI table header)
 +
-+1. override an existing method
-+==============================
-+a) get the ACPI table via ACPI sysfs I/F. e.g. to get the DSDT,
-+   just run "cat /sys/firmware/acpi/tables/DSDT > /tmp/dsdt.dat"
-+b) disassemble the table by running "iasl -d dsdt.dat".
-+c) rewrite the ASL code of the method and save it in a new file,
-+d) package the new file (psr.asl) to an ACPI table format.
-+   Here is an example of a customized \_SB._AC._PSR method::
-+
-+      DefinitionBlock ("", "SSDT", 1, "", "", 0x20080715)
-+      {
-+         Method (\_SB_.AC._PSR, 0, NotSerialized)
-+         {
-+            Store ("In AC _PSR", Debug)
-+            Return (ACON)
-+         }
-+      }
-+
-+   Note that the full pathname of the method in ACPI namespace
-+   should be used.
-+e) assemble the file to generate the AML code of the method.
-+   e.g. "iasl -vw 6084 psr.asl" (psr.aml is generated as a result)
-+   If parameter "-vw 6084" is not supported by your iASL compiler,
-+   please try a newer version.
-+f) mount debugfs by "mount -t debugfs none /sys/kernel/debug"
-+g) override the old method via the debugfs by running
-+   "cat /tmp/psr.aml > /sys/kernel/debug/acpi/custom_method"
-+
-+2. insert a new method
-+======================
-+This is easier than overriding an existing method.
-+We just need to create the ASL code of the method we want to
-+insert and then follow the step c) ~ g) in section 1.
-+
-+3. undo your changes
-+====================
-+The "undo" operation is not supported for a new inserted method
-+right now, i.e. we can not remove a method currently.
-+For an overridden method, in order to undo your changes, please
-+save a copy of the method original ASL code in step c) section 1,
-+and redo step c) ~ g) to override the method with the original one.
++Both could get implemented as well.
 +
 +
-+.. note:: We can use a kernel with multiple custom ACPI method running,
-+   But each individual write to debugfs can implement a SINGLE
-+   method override. i.e. if we want to insert/override multiple
-+   ACPI methods, we need to redo step c) ~ g) for multiple times.
++2) What is this for
++===================
 +
-+.. note:: Be aware that root can mis-use this driver to modify arbitrary
-+   memory and gain additional rights, if root's privileges got
-+   restricted (for example if root is not allowed to load additional
-+   modules after boot).
-diff --git a/Documentation/acpi/method-customizing.txt b/Documentation/acpi/method-customizing.txt
++Complain to your platform/BIOS vendor if you find a bug which is so severe
++that a workaround is not accepted in the Linux kernel. And this facility
++allows you to upgrade the buggy tables before your platform/BIOS vendor
++releases an upgraded BIOS binary.
++
++This facility can be used by platform/BIOS vendors to provide a Linux
++compatible environment without modifying the underlying platform firmware.
++
++This facility also provides a powerful feature to easily debug and test
++ACPI BIOS table compatibility with the Linux kernel by modifying old
++platform provided ACPI tables or inserting new ACPI tables.
++
++It can and should be enabled in any kernel because there is no functional
++change with not instrumented initrds.
++
++
++3) How does it work
++===================
++::
++
++  # Extract the machine's ACPI tables:
++  cd /tmp
++  acpidump >acpidump
++  acpixtract -a acpidump
++  # Disassemble, modify and recompile them:
++  iasl -d *.dat
++  # For example add this statement into a _PRT (PCI Routing Table) function
++  # of the DSDT:
++  Store("HELLO WORLD", debug)
++  # And increase the OEM Revision. For example, before modification:
++  DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000000)
++  # After modification:
++  DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000001)
++  iasl -sa dsdt.dsl
++  # Add the raw ACPI tables to an uncompressed cpio archive.
++  # They must be put into a /kernel/firmware/acpi directory inside the cpio
++  # archive. Note that if the table put here matches a platform table
++  # (similar Table Signature, and similar OEMID, and similar OEM Table ID)
++  # with a more recent OEM Revision, the platform table will be upgraded by
++  # this table. If the table put here doesn't match a platform table
++  # (dissimilar Table Signature, or dissimilar OEMID, or dissimilar OEM Table
++  # ID), this table will be appended.
++  mkdir -p kernel/firmware/acpi
++  cp dsdt.aml kernel/firmware/acpi
++  # A maximum of "NR_ACPI_INITRD_TABLES (64)" tables are currently allowed
++  # (see osl.c):
++  iasl -sa facp.dsl
++  iasl -sa ssdt1.dsl
++  cp facp.aml kernel/firmware/acpi
++  cp ssdt1.aml kernel/firmware/acpi
++  # The uncompressed cpio archive must be the first. Other, typically
++  # compressed cpio archives, must be concatenated on top of the uncompressed
++  # one. Following command creates the uncompressed cpio archive and
++  # concatenates the original initrd on top:
++  find kernel | cpio -H newc --create > /boot/instrumented_initrd
++  cat /boot/initrd >>/boot/instrumented_initrd
++  # reboot with increased acpi debug level, e.g. boot params:
++  acpi.debug_level=0x2 acpi.debug_layer=0xFFFFFFFF
++  # and check your syslog:
++  [    1.268089] ACPI: PCI Interrupt Routing Table [\_SB_.PCI0._PRT]
++  [    1.272091] [ACPI Debug]  String [0x0B] "HELLO WORLD"
++
++iasl is able to disassemble and recompile quite a lot different,
++also static ACPI tables.
++
++
++4) Where to retrieve userspace tools
++====================================
++
++iasl and acpixtract are part of Intel's ACPICA project:
++http://acpica.org/
++
++and should be packaged by distributions (for example in the acpica package
++on SUSE).
++
++acpidump can be found in Len Browns pmtools:
++ftp://kernel.org/pub/linux/kernel/people/lenb/acpi/utils/pmtools/acpidump
++
++This tool is also part of the acpica package on SUSE.
++Alternatively, used ACPI tables can be retrieved via sysfs in latest kernels:
++/sys/firmware/acpi/tables
+diff --git a/Documentation/acpi/initrd_table_override.txt b/Documentation/acpi/initrd_table_override.txt
 deleted file mode 100644
-index 7235da975f23..000000000000
---- a/Documentation/acpi/method-customizing.txt
+index 30437a6db373..000000000000
+--- a/Documentation/acpi/initrd_table_override.txt
 +++ /dev/null
-@@ -1,73 +0,0 @@
--Linux ACPI Custom Control Method How To
--=======================================
+@@ -1,111 +0,0 @@
+-Upgrading ACPI tables via initrd
+-================================
 -
--Written by Zhang Rui <rui.zhang@intel.com>
+-1) Introduction (What is this about)
+-2) What is this for
+-3) How does it work
+-4) References (Where to retrieve userspace tools)
 -
+-1) What is this about
+----------------------
 -
--Linux supports customizing ACPI control methods at runtime.
+-If the ACPI_TABLE_UPGRADE compile option is true, it is possible to
+-upgrade the ACPI execution environment that is defined by the ACPI tables
+-via upgrading the ACPI tables provided by the BIOS with an instrumented,
+-modified, more recent version one, or installing brand new ACPI tables.
 -
--Users can use this to
--1. override an existing method which may not work correctly,
--   or just for debugging purposes.
--2. insert a completely new method in order to create a missing
--   method such as _OFF, _ON, _STA, _INI, etc.
--For these cases, it is far simpler to dynamically install a single
--control method rather than override the entire DSDT, because kernel
--rebuild/reboot is not needed and test result can be got in minutes.
+-When building initrd with kernel in a single image, option
+-ACPI_TABLE_OVERRIDE_VIA_BUILTIN_INITRD should also be true for this
+-feature to work.
 -
--Note: Only ACPI METHOD can be overridden, any other object types like
--      "Device", "OperationRegion", are not recognized. Methods
--      declared inside scope operators are also not supported.
--Note: The same ACPI control method can be overridden for many times,
--      and it's always the latest one that used by Linux/kernel.
--Note: To get the ACPI debug object output (Store (AAAA, Debug)),
--      please run "echo 1 > /sys/module/acpi/parameters/aml_debug_output".
--
--1. override an existing method
--   a) get the ACPI table via ACPI sysfs I/F. e.g. to get the DSDT,
--      just run "cat /sys/firmware/acpi/tables/DSDT > /tmp/dsdt.dat"
--   b) disassemble the table by running "iasl -d dsdt.dat".
--   c) rewrite the ASL code of the method and save it in a new file,
--   d) package the new file (psr.asl) to an ACPI table format.
--      Here is an example of a customized \_SB._AC._PSR method,
--
--      DefinitionBlock ("", "SSDT", 1, "", "", 0x20080715)
--      {
--	Method (\_SB_.AC._PSR, 0, NotSerialized)
--	{
--		Store ("In AC _PSR", Debug)
--		Return (ACON)
--	}
--      }
--      Note that the full pathname of the method in ACPI namespace
--      should be used.
--   e) assemble the file to generate the AML code of the method.
--      e.g. "iasl -vw 6084 psr.asl" (psr.aml is generated as a result)
--      If parameter "-vw 6084" is not supported by your iASL compiler,
--      please try a newer version.
--   f) mount debugfs by "mount -t debugfs none /sys/kernel/debug"
--   g) override the old method via the debugfs by running
--      "cat /tmp/psr.aml > /sys/kernel/debug/acpi/custom_method"
--
--2. insert a new method
--   This is easier than overriding an existing method.
--   We just need to create the ASL code of the method we want to
--   insert and then follow the step c) ~ g) in section 1.
--
--3. undo your changes
--   The "undo" operation is not supported for a new inserted method
--   right now, i.e. we can not remove a method currently.
--   For an overridden method, in order to undo your changes, please
--   save a copy of the method original ASL code in step c) section 1,
--   and redo step c) ~ g) to override the method with the original one.
+-For a full list of ACPI tables that can be upgraded/installed, take a look
+-at the char *table_sigs[MAX_ACPI_SIGNATURE]; definition in
+-drivers/acpi/tables.c.
+-All ACPI tables iasl (Intel's ACPI compiler and disassembler) knows should
+-be overridable, except:
+-   - ACPI_SIG_RSDP (has a signature of 6 bytes)
+-   - ACPI_SIG_FACS (does not have an ordinary ACPI table header)
+-Both could get implemented as well.
 -
 -
--Note: We can use a kernel with multiple custom ACPI method running,
--      But each individual write to debugfs can implement a SINGLE
--      method override. i.e. if we want to insert/override multiple
--      ACPI methods, we need to redo step c) ~ g) for multiple times.
+-2) What is this for
+--------------------
 -
--Note: Be aware that root can mis-use this driver to modify arbitrary
--      memory and gain additional rights, if root's privileges got
--      restricted (for example if root is not allowed to load additional
--      modules after boot).
+-Complain to your platform/BIOS vendor if you find a bug which is so severe
+-that a workaround is not accepted in the Linux kernel. And this facility
+-allows you to upgrade the buggy tables before your platform/BIOS vendor
+-releases an upgraded BIOS binary.
+-
+-This facility can be used by platform/BIOS vendors to provide a Linux
+-compatible environment without modifying the underlying platform firmware.
+-
+-This facility also provides a powerful feature to easily debug and test
+-ACPI BIOS table compatibility with the Linux kernel by modifying old
+-platform provided ACPI tables or inserting new ACPI tables.
+-
+-It can and should be enabled in any kernel because there is no functional
+-change with not instrumented initrds.
+-
+-
+-3) How does it work
+--------------------
+-
+-# Extract the machine's ACPI tables:
+-cd /tmp
+-acpidump >acpidump
+-acpixtract -a acpidump
+-# Disassemble, modify and recompile them:
+-iasl -d *.dat
+-# For example add this statement into a _PRT (PCI Routing Table) function
+-# of the DSDT:
+-Store("HELLO WORLD", debug)
+-# And increase the OEM Revision. For example, before modification:
+-DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000000)
+-# After modification:
+-DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000001)
+-iasl -sa dsdt.dsl
+-# Add the raw ACPI tables to an uncompressed cpio archive.
+-# They must be put into a /kernel/firmware/acpi directory inside the cpio
+-# archive. Note that if the table put here matches a platform table
+-# (similar Table Signature, and similar OEMID, and similar OEM Table ID)
+-# with a more recent OEM Revision, the platform table will be upgraded by
+-# this table. If the table put here doesn't match a platform table
+-# (dissimilar Table Signature, or dissimilar OEMID, or dissimilar OEM Table
+-# ID), this table will be appended.
+-mkdir -p kernel/firmware/acpi
+-cp dsdt.aml kernel/firmware/acpi
+-# A maximum of "NR_ACPI_INITRD_TABLES (64)" tables are currently allowed
+-# (see osl.c):
+-iasl -sa facp.dsl
+-iasl -sa ssdt1.dsl
+-cp facp.aml kernel/firmware/acpi
+-cp ssdt1.aml kernel/firmware/acpi
+-# The uncompressed cpio archive must be the first. Other, typically
+-# compressed cpio archives, must be concatenated on top of the uncompressed
+-# one. Following command creates the uncompressed cpio archive and
+-# concatenates the original initrd on top:
+-find kernel | cpio -H newc --create > /boot/instrumented_initrd
+-cat /boot/initrd >>/boot/instrumented_initrd
+-# reboot with increased acpi debug level, e.g. boot params:
+-acpi.debug_level=0x2 acpi.debug_layer=0xFFFFFFFF
+-# and check your syslog:
+-[    1.268089] ACPI: PCI Interrupt Routing Table [\_SB_.PCI0._PRT]
+-[    1.272091] [ACPI Debug]  String [0x0B] "HELLO WORLD"
+-
+-iasl is able to disassemble and recompile quite a lot different,
+-also static ACPI tables.
+-
+-
+-4) Where to retrieve userspace tools
+-------------------------------------
+-
+-iasl and acpixtract are part of Intel's ACPICA project:
+-http://acpica.org/
+-and should be packaged by distributions (for example in the acpica package
+-on SUSE).
+-
+-acpidump can be found in Len Browns pmtools:
+-ftp://kernel.org/pub/linux/kernel/people/lenb/acpi/utils/pmtools/acpidump
+-This tool is also part of the acpica package on SUSE.
+-Alternatively, used ACPI tables can be retrieved via sysfs in latest kernels:
+-/sys/firmware/acpi/tables
 -- 
 2.20.1
 
