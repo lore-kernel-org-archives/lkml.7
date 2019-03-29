@@ -2,104 +2,108 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E2EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 12:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4740DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 12:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D9A20700
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 12:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDE320700
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 12:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbfC2Mj4 (ORCPT
+        id S1729594AbfC2MkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 08:39:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37358 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729384AbfC2Mj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 08:39:56 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2A07E307D84B;
-        Fri, 29 Mar 2019 12:39:56 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-53.pek2.redhat.com [10.72.12.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 010B11900A;
-        Fri, 29 Mar 2019 12:39:41 +0000 (UTC)
-From:   Lianbo Jiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, akpm@linux-foundation.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
-        Thomas.Lendacky@amd.com
-Subject: [PATCH 2/2 RESEND v10] x86/kexec_file: add reserved e820 ranges to kdump kernel e820 table
-Date:   Fri, 29 Mar 2019 20:39:14 +0800
-Message-Id: <20190329123914.20939-3-lijiang@redhat.com>
-In-Reply-To: <20190329123914.20939-1-lijiang@redhat.com>
-References: <20190329123914.20939-1-lijiang@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 29 Mar 2019 12:39:56 +0000 (UTC)
+        Fri, 29 Mar 2019 08:40:01 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:52515 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729384AbfC2MkA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 08:40:00 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2TCWjgM004410;
+        Fri, 29 Mar 2019 13:39:52 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2rddhc4xqc-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 29 Mar 2019 13:39:52 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9691B38;
+        Fri, 29 Mar 2019 12:39:51 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5B663DDC;
+        Fri, 29 Mar 2019 12:39:51 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.435.0; Fri, 29 Mar
+ 2019 13:39:51 +0100
+Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Fri, 29 Mar 2019 13:39:51
+ +0100
+From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-media@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>
+Subject: [PATCH] media: platform: stm32: wait end of transmission
+Date:   Fri, 29 Mar 2019 13:39:42 +0100
+Message-ID: <1553863182-6544-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.23.97]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-29_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At present, when using the kexec_file_load() syscall to load the kernel
-image and initramfs(for example: kexec -s -p xxx), the kernel does not
-pass the e820 reserved ranges to the second kernel, which might cause
-two problems:
+It is mandatory to write CEC_CFGR only when CECEN=0. To protect
+transmission, a check have been added to delayed logical address
+modification. This patch is necessary tp pass all tests of compliance.
 
-The first one is the MMCONFIG issue. The basic problem is that this
-device is in PCI segment 1 and the kernel PCI probing can not find it
-without all the e820 I/O reservations being present in the e820 table.
-And the kdump kernel does not have those reservations because the kexec
-command does not pass the I/O reservation via the "memmap=xxx" command
-line option. (This problem does not show up for other vendors, as SGI
-is apparently the actually fails for everyone, but devices in segment 0
-are then found by some legacy lookup method.) The workaround for this
-is to pass the I/O reserved regions to the kdump kernel.
-
-MMCONFIG(aka ECAM) space is described in the ACPI MCFG table. If you don't
-have ECAM: (a) PCI devices won't work at all on non-x86 systems that use
-only ECAM for config access, (b) you won't be albe to access devices on
-non-0 segments, (c) you won't be able to access extended config space(
-address 0x100-0xffff), which means none of the Extended Capabilities will
-be available(AER, ACS, ATS, etc). [Bjorn's comment]
-
-The second issue is that the SME kdump kernel doesn't work without the
-e820 reserved ranges. When SME is active in kdump kernel, actually, those
-reserved regions are still decrypted, but because those reserved ranges are
-not present at all in kdump kernel e820 table, those reserved regions are
-considered as encrypted, it goes wrong.
-
-The e820 reserved range is useful in kdump kernel, so it is necessary to
-pass the e820 reserved ranges to the kdump kernel.
-
-Suggested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
 ---
- arch/x86/kernel/crash.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/media/platform/stm32/stm32-cec.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 17ffc869cab8..1db2754df9e9 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -381,6 +381,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
- 			memmap_entry_callback);
+diff --git a/drivers/media/platform/stm32/stm32-cec.c b/drivers/media/platform/stm32/stm32-cec.c
+index 7c496bc..8a86b2c 100644
+--- a/drivers/media/platform/stm32/stm32-cec.c
++++ b/drivers/media/platform/stm32/stm32-cec.c
+@@ -56,6 +56,13 @@
+ #define ALL_TX_IT	(TXEND | TXBR | TXACKE | TXERR | TXUDR | ARBLST)
+ #define ALL_RX_IT	(RXEND | RXBR | RXACKE | RXOVR)
  
-+	/* Add e820 reserved ranges */
-+	cmd.type = E820_TYPE_RESERVED;
-+	flags = IORESOURCE_MEM;
-+	walk_iomem_res_desc(IORES_DESC_RESERVED, flags, 0, -1, &cmd,
-+			   memmap_entry_callback);
++/*
++ * 400 ms is the time it takes for one 16 byte message to be
++ * transferred and 5 is the maximum number of retries. Add
++ * another 100 ms as a margin.
++ */
++#define CEC_XFER_TIMEOUT_MS (5 * 400 + 100)
 +
- 	/* Add crashk_low_res region */
- 	if (crashk_low_res.end) {
- 		ei.addr = crashk_low_res.start;
+ struct stm32_cec {
+ 	struct cec_adapter	*adap;
+ 	struct device		*dev;
+@@ -188,7 +195,11 @@ static int stm32_cec_adap_log_addr(struct cec_adapter *adap, u8 logical_addr)
+ {
+ 	struct stm32_cec *cec = adap->priv;
+ 	u32 oar = (1 << logical_addr) << 16;
++	u32 val;
+ 
++	/* Poll every 100µs the register CEC_CR to wait end of transmission */
++	regmap_read_poll_timeout(cec->regmap, CEC_CR, val, !(val & TXSOM),
++				 100, CEC_XFER_TIMEOUT_MS * 1000);
+ 	regmap_update_bits(cec->regmap, CEC_CR, CECEN, 0);
+ 
+ 	if (logical_addr == CEC_LOG_ADDR_INVALID)
 -- 
-2.17.1
+2.7.4
 
