@@ -3,165 +3,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB003C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D606C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76EBB218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0CC9218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:16:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730063AbfC2SOO (ORCPT
+        id S1730002AbfC2SQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 14:14:14 -0400
-Received: from anholt.net ([50.246.234.109]:33616 "EHLO anholt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729652AbfC2SON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 14:14:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id C829410A1518;
-        Fri, 29 Mar 2019 11:14:12 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id 2gFnKf8qZt2K; Fri, 29 Mar 2019 11:14:11 -0700 (PDT)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id F146D10A05DD;
-        Fri, 29 Mar 2019 11:14:10 -0700 (PDT)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id 7F1E62FE2F72; Fri, 29 Mar 2019 11:14:10 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Daniel Stone <daniel@fooishbar.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Eben Upton <eben@raspberrypi.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 1/2] drm/file: Rehabilitate the firstopen hook for non-legacy drivers
-In-Reply-To: <901ea65c770c80e22c69032affe3b1a22652b608.camel@bootlin.com>
-References: <20190320154809.14823-1-paul.kocialkowski@bootlin.com> <20190320154809.14823-2-paul.kocialkowski@bootlin.com> <87zhpph4c2.fsf@anholt.net> <82618ee8c2a2380a62b1fb894e5c35c602e20f3d.camel@bootlin.com> <20190328185307.GZ2665@phenom.ffwll.local> <CAPj87rMmW_7Kiy==ZxvvmHXhQLWC+F=uxed442HpMMZr=MwjRA@mail.gmail.com> <5ed7c5f361bca47d3f9771f9ed27e28e2fccb179.camel@bootlin.com> <20190329152502.GO2665@phenom.ffwll.local> <901ea65c770c80e22c69032affe3b1a22652b608.camel@bootlin.com>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/25.2.2 (x86_64-pc-linux-gnu)
-Date:   Fri, 29 Mar 2019 11:14:09 -0700
-Message-ID: <87r2appmz2.fsf@anholt.net>
+        Fri, 29 Mar 2019 14:16:23 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:58788 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729921AbfC2SQX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 14:16:23 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 0F77D72CCAD;
+        Fri, 29 Mar 2019 21:16:20 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id F1DAB7CC74C; Fri, 29 Mar 2019 21:16:19 +0300 (MSK)
+Date:   Fri, 29 Mar 2019 21:16:19 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Guo Ren <guoren@kernel.org>, Palmer Dabbelt <palmer@sifive.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: fix syscall_get_arguments() and
+ syscall_set_arguments()
+Message-ID: <20190329181619.GB32651@altlinux.org>
+References: <20190329171221.GA32456@altlinux.org>
+ <20190329131514.3e4ec93e@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="61jdw2sOBCFtR2d/"
+Content-Disposition: inline
+In-Reply-To: <20190329131514.3e4ec93e@gandalf.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
+
+--61jdw2sOBCFtR2d/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
+On Fri, Mar 29, 2019 at 01:15:14PM -0400, Steven Rostedt wrote:
+> On Fri, 29 Mar 2019 20:12:21 +0300
+> "Dmitry V. Levin" <ldv@altlinux.org> wrote:
+>=20
+> > RISC-V syscall arguments are located in orig_a0,a1..a5 fields
+> > of struct pt_regs.
+> >=20
+> > Due to an off-by-one bug and a bug in pointer arithmetic
+> > syscall_get_arguments() was reading s3..s7 fields instead of a1..a5.
+> > Likewise, syscall_set_arguments() was writing s3..s7 fields
+> > instead of a1..a5.
+>=20
+> Should I add this to my series? And then rebase on top of it?
 
-> Hi,
->
-> Le vendredi 29 mars 2019 =C3=A0 16:25 +0100, Daniel Vetter a =C3=A9crit :
->> On Fri, Mar 29, 2019 at 04:02:23PM +0100, Paul Kocialkowski wrote:
->> > Hi,
->> >=20
->> > On Fri, 2019-03-29 at 09:09 +0000, Daniel Stone wrote:
->> > > Hi,
->> > >=20
->> > > On Thu, 28 Mar 2019 at 18:53, Daniel Vetter <daniel@ffwll.ch> wrote:
->> > > > On Thu, Mar 21, 2019 at 04:27:06PM +0100, Paul Kocialkowski wrote:
->> > > > > I don't see other options either, and using firstclose/lastopen =
-feels
->> > > > > overall more readable in the driver code.
->> > > > >=20
->> > > > > I'm not sure there is such a big overhead associated with alloca=
-ting
->> > > > > the binner BO (it seems that the current implementation tries to=
- alloc
->> > > > > until the specific memory constraints for the buffer are met, so
->> > > > > perhaps that can take time). But if there is, I suppose it's bes=
-t to
->> > > > > have that when starting up rather than delaying the first render
->> > > > > operation.
->> > > >=20
->> > > > I'm not entirely buying the "we don't need this for fbcon only" ar=
-gument -
->> > > > there's plenty of dumb kms clients too (boot splash and whatever e=
-lse
->> > > > there might be). If you don't want to keep this around I think all=
-ocating
->> > > > on first non-dumb bo allocation and dropping it when the last such=
- fd
->> > > > closes sounds like a much better idea. Needs a bit more state, you=
- need to
->> > > > track per drm_file whether you've already allocated a non-dumb bo,=
- and a
->> > > > drm_device refcount, but that's not much. Firstopen feels like the=
- wrong
->> > > > thing.
->> > > >=20
->> > > > Another option would be first_renderopen or something like that, e=
-xcept
->> > > > you can also render on the legacy node and I'm not sure how much t=
-here's a
->> > > > demand for this in other drivers. In the end you have open/close
->> > > > callbacks, you can do all the driver specific things you want to d=
-o in
->> > > > there.
->> > >=20
->> > > I'd like to avoid doing it in open where possible, since that hurts
->> > > device enumeration from userspace.
->> >=20
->> > I've noticed the same issue with firstopen, where our buffer is
->> > allocated/liberated a couple of times during enumeration, before the
->> > final open that stays alive during use.
->> >=20
->> > I'm not sure what is preferable between that and allocating when the
->> > GPU is first used. Slowing down the first GPU operation with the
->> > allocation does not sound too great either and it feels like the buffer
->> > should have been allocated earlier.
->> >=20
->> > To me, it feels I think it's better to have delays due to allocation at
->> > enumeration / startup rather than later on, but I might be missing some
->> > elements to have a clear idea.
->> >=20
->> > What do you think?
->>=20
->> We'll have the delay somewhere on driver load. Better to have it only on=
-ce
->> (when the driver starts using gem for real), than a bunch of time, at
->> least once while enumerating and then once more while actually
->> initializing. I think if you allocat this on first non-dumb gem_create,
->> and on first command submission (just so evil userspace can't screw up t=
-he
->> hw too badly), that should be perfectly fine.
->
-> I'm not totally convinced that it's okay to have a delay outside of
-> init/enumeration, even if it's a smaller delay.
+This is fine with me.  If you are adding the fix for riscv,
+please consider adding the fix for csky, too.
 
-You'll have non-dumb buffers created during GL context creation, so
-early in xserver or other KMS-and-GL-using application init anyway.
-Seems like a perfectly fine plan to me.
 
---=-=-=
+--=20
+ldv
+
+--61jdw2sOBCFtR2d/
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlyeYHIACgkQtdYpNtH8
-nuhPIA/+K0tMT0orfpgyXvw725SRAhlrTO24BGljRqgYHPENY1sx/2UuVnsfPioN
-qKFVulOOTP5H3y0J+4wNq9pgKmWc09EVgTsRbhM4d+x5SN8YFCjfeLYU3Hjje1HW
-VJRgNAQKUvVFZTiac6Z8URjR1GzDmirFpsRqIL7Q3eJ2FyPpCit5ZX6vqBeOOHez
-Ib5fAbiiQCRwocyqUqzutQWwxYg/K3a8A+N0RKiqxBi3DT9MUD8IXT1JgpnXb5Go
-B+6KeolL9gvCd8Nyz7dyqh3Qpi0AMHOcXEZF8e/J6XGpguHYm3do7NF2ZCNugnJU
-A+fFEG9hA6DluLCTGd9jqpKUB/Ub7DY7ILue6xxSAdECIC6jkv133b+DBB5cUur+
-iUw5eRLeU7Vt3FZlEKFFK7EW3jH1Q4PLW40g4gzR5Hv7hqz1R+mPMCrxzsi4HhCw
-eUMIE76p+x7zTIBSxIYk3C+Er10hfEClYZtWFCGdEZurYrOltDU6dWRJEPEy4LZC
-Ye1rmjbj7CF8ZxrKQMcigfSezxfrE29X+Uc5Jk82SEIxTe0Ggtd3fbsLCN/j8vQV
-pF05JwcnjFoAeb816UrbJNOHInEx5G1klUoKNznpg7yWPMH5RXSZxBH4yKumPkyK
-G/GcXKKVoD53cINjhFpiZKRiqKOe+31T+9kRjOaGRsjqan/J8kA=
-=fnRm
+iQIcBAEBCAAGBQJcnmDzAAoJEAVFT+BVnCUIEwoQAJFU9YuwW0jEozEhXNul4GNR
+E1aMCIPrK/9OKouxQNBkQSRgE5bnbmvvSW5UBDKmJ+kzHXSTvZ2iOV5aPkng7Svk
+eVjeBnu8pdX3uNFpZ5WHDVfs+qr7oDuBZpdmK3h1RfxA9PBtwpg/SBOBXlGwCS+J
+vYn19hxasA5hJ3bXlBP0ssiQT0hTsqmTkIfD0QWtaPJq3lRXYYHt29CoEgXE6/qv
+Ju5XS/2pSH6Lt7JJQvT9BmcE7VIJI/T91mRS7CD8UfS2wyaNDV1r3/PMx2KF+nmN
+z/4MTFYXbVHKuxn8ljg6qUWhV4lEaKXInBuIKZN/LHmiuRxgTST6EoBYZrtYjr+O
+D6KyotRxjJR703YYrZmZq90Ms/nzshgU5OAeg6mdurmC6wYaf7Sm7WdcZv97HMJ1
+FHxpy3zhtIuhif6riqolNqusOXFkhtADURXkSfNoJhiig4EWRxrcOml7+dzQN9Z1
+QoVkx79yVTFeV8VbnxhYGR0OkSgmp/DOwa0jBJDCecTBs5lmkGe0WPNd5mYhQ/jw
+0SevXWtSTbY9BEiTangFnkx1YuwyFybAHTzvgbVBoagWTbypZU3P57s+Sne5xNN/
+MZ6EVNraPEbtimzLrXjvqKXgSHCgkmhzP0u3Z4ll1JRz6qA0jL5k43wwB6842+Ss
+XhK4Wa03+nTDpzzB4P1j
+=wm1N
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--61jdw2sOBCFtR2d/--
