@@ -2,353 +2,116 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B269C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27643C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C2B218D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D36218D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:49:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d0ndCF3g"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ExtgvdXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbfC2Qsu (ORCPT
+        id S1729825AbfC2QtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 12:48:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36022 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728936AbfC2Qsu (ORCPT
+        Fri, 29 Mar 2019 12:49:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37768 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728936AbfC2QtG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 12:48:50 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2TGmGeL069319;
-        Fri, 29 Mar 2019 11:48:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553878096;
-        bh=9roQN0/r9QpT4Y1NMYe9F8T6MCBeN2zQHRLGWimY8QU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=d0ndCF3gOpQ6RAya9gHtHP+IpGJZ7bFKoo1Ot5zmCVN+W+rt3Hjzs8GpH709hCEuq
-         n6tmgM0TftZjtNAIklqTWgiYt+9RDUhWTYztELVnRpkU5/KORyL3orNseC9UKbp/ys
-         0yk7b7X3KZDNemtBYaA/LR4VlLyFNaIqO4N6+CYs=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2TGmGn1112967
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 Mar 2019 11:48:16 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
- Mar 2019 11:48:15 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 29 Mar 2019 11:48:16 -0500
-Received: from [10.250.67.168] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2TGmENJ043252;
-        Fri, 29 Mar 2019 11:48:15 -0500
-Subject: Re: [RFC][PATCH 4/6 v3] dma-buf: heaps: Add CMA heap to dmabuf heapss
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-CC:     Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        <dri-devel@lists.freedesktop.org>
-References: <1553818562-2516-1-git-send-email-john.stultz@linaro.org>
- <1553818562-2516-5-git-send-email-john.stultz@linaro.org>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <d70a6663-d383-e06f-57a8-7b7fb556241b@ti.com>
-Date:   Fri, 29 Mar 2019 11:48:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 29 Mar 2019 12:49:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v84so2185710oif.4
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 09:49:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JaOWiwaKjM/I8d+hQLjfmNO8tEmcYpcTncowB6z1DDU=;
+        b=ExtgvdXsHJcSeieqJ7N5ScpYmu8tDtRSUQml9XKuZm8rsSnCFaeaoxQUt1flK8oCDU
+         G62NJC6NGcgJr/TDkTiZyyKdDQhEpuI4QL9qd+NfZ3pzO6pCMO3/HF2Bm40dgZ2il7eD
+         TEHVOjuw1v9iAYYds61GShDszbSD+CAvXmnXB/lOmRDCssvZeXD2+Sa2+SmdP21XCulv
+         REWN1qGykUpTgDUfKbO+mCjyEZ0ZyPOyBdK0WfEuVbnOVSuCtOmVwOYiEK+Z9/xfMD79
+         BNrn1p80jCSiqd5PlOuP2gLNcS7f159p2V8vx19RQ2G4SLuAG2zM3VhLADaly414MEbQ
+         ZrWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JaOWiwaKjM/I8d+hQLjfmNO8tEmcYpcTncowB6z1DDU=;
+        b=M+lnyLLpmp77dT3hx3xy7/Jh5xUHZ0Md2PSfqMHl13pKFZUH69/Z51sNn20naahwI9
+         5IEdQ1DYnwJoQ3beyqly1f01QoREqVhBEibQ8+mmOX4wLgKEjDqKD19OtkP4krqb0K2I
+         ED0Cv9Uwpi7TZpG1+4hams9gYP4ogTK3vRlJEE7Npb2vAY68adgPh7Suivnd8/WQOEbV
+         NSn7YZTPIqukDncctZw3hLQUVvZe5qZ49myYajK/7/adzPnU1ic3FP11AxYy9mu25Zf0
+         XL+Wr614Oy54imddUKSDPQewza4Du+F81XlbSZGl3xqCUroZ3XRAnLbmPZAhIoPhJwYJ
+         papw==
+X-Gm-Message-State: APjAAAVG9O3LqcaheuU6105RPdFj7wkxrdsE/cHV5Au4lo7Zjl4F06Yn
+        9zXMyE2jI82S7+dKcfW75kkcGnVAKrEsvSdo0ZmGsQ==
+X-Google-Smtp-Source: APXvYqxU7bcOjv9ajNYbpHtV3ISnmlb8/RTSuZVjTrExqHMDLoknIqr0iGfvnMI57lfwdiKnvSc07XwsIlN7n/alsJg=
+X-Received: by 2002:aca:eb44:: with SMTP id j65mr1440087oih.0.1553878144628;
+ Fri, 29 Mar 2019 09:49:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1553818562-2516-5-git-send-email-john.stultz@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190328225925.241998-1-jannh@google.com> <530a0823-5dcd-9006-2057-ae5b9da2389a@codeaurora.org>
+In-Reply-To: <530a0823-5dcd-9006-2057-ae5b9da2389a@codeaurora.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 29 Mar 2019 17:48:38 +0100
+Message-ID: <CAG48ez3UE6cnA0TZQ-7DUnB_QWPFV04bJsv9oKXfgBtu=ugBLw@mail.gmail.com>
+Subject: Re: [PATCH] x86/calgary: fix bitcast type warnings
+To:     Mukesh Ojha <mojha@codeaurora.org>
+Cc:     Muli Ben-Yehuda <mulix@mulix.org>, Jon Mason <jdmason@kudzu.us>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/28/19 7:16 PM, John Stultz wrote:
-> This adds a CMA heap, which allows userspace to allocate
-> a dma-buf of contiguous memory out of a CMA region.
-> 
-> This code is an evolution of the Android ION implementation, so
-> thanks to its original author and maintainters:
->   Benjamin Gaignard, Laura Abbott, and others!
-> 
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Liam Mark <lmark@codeaurora.org>
-> Cc: Pratik Patel <pratikp@codeaurora.org>
-> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
-> Cc: Sudipto Paul <Sudipto.Paul@arm.com>
-> Cc: Andrew F. Davis <afd@ti.com>
-> Cc: Xu YiPing <xuyiping@hisilicon.com>
-> Cc: "Chenfeng (puck)" <puck.chen@hisilicon.com>
-> Cc: butao <butao@hisilicon.com>
-> Cc: "Xiaqing (A)" <saberlily.xia@hisilicon.com>
-> Cc: Yudongbin <yudongbin@hisilicon.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Chenbo Feng <fengc@google.com>
-> Cc: Alistair Strachan <astrachan@google.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v2:
-> * Switch allocate to return dmabuf fd
-> * Simplify init code
-> * Checkpatch fixups
-> v3:
-> * Switch to inline function for to_cma_heap()
-> * Minor cleanups suggested by Brian
-> * Fold in new registration style from Andrew
-> * Folded in changes from Andrew to use simplified page list
->   from the heap helpers
-> ---
->  drivers/dma-buf/heaps/Kconfig    |   8 ++
->  drivers/dma-buf/heaps/Makefile   |   1 +
->  drivers/dma-buf/heaps/cma_heap.c | 170 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 179 insertions(+)
->  create mode 100644 drivers/dma-buf/heaps/cma_heap.c
-> 
-> diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
-> index 2050527..a5eef06 100644
-> --- a/drivers/dma-buf/heaps/Kconfig
-> +++ b/drivers/dma-buf/heaps/Kconfig
-> @@ -4,3 +4,11 @@ config DMABUF_HEAPS_SYSTEM
->  	help
->  	  Choose this option to enable the system dmabuf heap. The system heap
->  	  is backed by pages from the buddy allocator. If in doubt, say Y.
-> +
-> +config DMABUF_HEAPS_CMA
-> +	bool "DMA-BUF CMA Heap"
-> +	depends on DMABUF_HEAPS && DMA_CMA
-> +	help
-> +	  Choose this option to enable dma-buf CMA heap. This heap is backed
-> +	  by the Contiguous Memory Allocator (CMA). If your system has these
-> +	  regions, you should say Y here.
-> diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
-> index d1808ec..6e54cde 100644
-> --- a/drivers/dma-buf/heaps/Makefile
-> +++ b/drivers/dma-buf/heaps/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-y					+= heap-helpers.o
->  obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)	+= system_heap.o
-> +obj-$(CONFIG_DMABUF_HEAPS_CMA)		+= cma_heap.o
-> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
-> new file mode 100644
-> index 0000000..f4485c60
-> --- /dev/null
-> +++ b/drivers/dma-buf/heaps/cma_heap.c
-> @@ -0,0 +1,170 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * DMABUF CMA heap exporter
-> + *
-> + * Copyright (C) 2012, 2019 Linaro Ltd.
-> + * Author: <benjamin.gaignard@linaro.org> for ST-Ericsson.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/dma-buf.h>
-> +#include <linux/dma-heap.h>
-> +#include <linux/slab.h>
-> +#include <linux/errno.h>
-> +#include <linux/err.h>
-> +#include <linux/cma.h>
-> +#include <linux/scatterlist.h>
-> +#include <linux/highmem.h>
-> +
-> +#include "heap-helpers.h"
-> +
-> +struct cma_heap {
-> +	struct dma_heap *heap;
-> +	struct cma *cma;
-> +};
-> +
-> +static void cma_heap_free(struct heap_helper_buffer *buffer)
-> +{
-> +	struct cma_heap *cma_heap = dma_heap_get_data(buffer->heap_buffer.heap);
-> +	struct page *pages = buffer->priv_virt;
-> +	unsigned long nr_pages;
-> +
-> +	nr_pages = buffer->heap_buffer.size >> PAGE_SHIFT;
+On Fri, Mar 29, 2019 at 9:19 AM Mukesh Ojha <mojha@codeaurora.org> wrote:
+> On 3/29/2019 4:29 AM, Jann Horn wrote:
+> > The sparse checker attempts to ensure that all conversions between
+> > fixed-endianness numbers and numbers with native endianness are explicit.
+> > However, the calgary code reads and writes big-endian numbers from/to IO
+> > memory using {read,write}{l,q}(), which return native-endian numbers.
+> >
+> > This could be addressed by putting __force casts all over the place, but
+> > that would kind of defeat the point of the warning. Instead, create new
+> > helpers {read,write}{l,q}_be() for big-endian IO that convert from/to
+> > native endianness.
+> >
+> > Most of this patch is a straightforward conversion; the following parts
+> > aren't just mechanical replacement:
+> >
+> >   - ->tar_val is now a native-endian number instead of big-endian
+> >   - calioc2_handle_quirks() did `cpu_to_be32(readl(target))` when it
+> >     intended to do `be32_to_cpu(readl(target))` (but that has no actual
+> >     effects outside of type warnings)
+> >
+> > This gets rid of 108 lines of sparse warnings.
+> >
+> > Signed-off-by: Jann Horn <jannh@google.com>
+> > ---
+> > compile-tested only
+> >
+> >   arch/x86/kernel/pci-calgary_64.c | 108 ++++++++++++++++++-------------
+> >   1 file changed, 64 insertions(+), 44 deletions(-)
+> >
+> > diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci-calgary_64.c
+> > index c70720f61a34..36cd66d940fb 100644
+> > --- a/arch/x86/kernel/pci-calgary_64.c
+> > +++ b/arch/x86/kernel/pci-calgary_64.c
+> > @@ -534,6 +534,26 @@ static inline int is_cal_pci_dev(unsigned short device)
+> >       return (is_calgary(device) || is_calioc2(device));
+> >   }
+>
+>
+> Can the existing api's not be used here like iowrite64be/ioread64be/ or
+> similar variant in "include/asm-generic/io.h"
 
-Could also use the count in helper_buffer->pagecount.
-
-> +
-> +	/* free page list */
-> +	kfree(buffer->pages);
-> +	/* release memory */
-> +	cma_release(cma_heap->cma, pages, nr_pages);
-> +	kfree(buffer);
-> +}
-> +
-> +/* dmabuf heap CMA operations functions */
-> +static int cma_heap_allocate(struct dma_heap *heap,
-> +				unsigned long len,
-> +				unsigned long flags)
-> +{
-> +	struct cma_heap *cma_heap = dma_heap_get_data(heap);
-> +	struct heap_helper_buffer *helper_buffer;
-> +	struct page *pages;
-> +	size_t size = PAGE_ALIGN(len);
-> +	unsigned long nr_pages = size >> PAGE_SHIFT;
-> +	unsigned long align = get_order(size);
-> +	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-> +	struct dma_buf *dmabuf;
-> +	int ret = -ENOMEM;
-> +	pgoff_t pg;
-> +
-> +	if (align > CONFIG_CMA_ALIGNMENT)
-> +		align = CONFIG_CMA_ALIGNMENT;
-> +
-> +	helper_buffer = kzalloc(sizeof(*helper_buffer), GFP_KERNEL);
-> +	if (!helper_buffer)
-> +		return -ENOMEM;
-> +
-> +	INIT_HEAP_HELPER_BUFFER(helper_buffer, cma_heap_free);
-> +	helper_buffer->heap_buffer.flags = flags;
-> +	helper_buffer->heap_buffer.heap = heap;
-> +	helper_buffer->heap_buffer.size = len;
-> +
-> +	pages = cma_alloc(cma_heap->cma, nr_pages, align, false);
-> +	if (!pages)
-> +		goto free_buf;
-> +
-> +	if (PageHighMem(pages)) {
-
-Can the allocated pages list cross the high mem line?
-
-If so then:
-
-foreach(nr_pages) {
-	if (PageHighMem(page))
-		clear_highpage(page);
-	else
-		clear_page(page_address(page));
-}
-
-If not still should use clear_highpage() below.
-
-Andrew
-
-> +		unsigned long nr_clear_pages = nr_pages;
-> +		struct page *page = pages;
-> +
-> +		while (nr_clear_pages > 0) {
-> +			void *vaddr = kmap_atomic(page);
-> +
-> +			memset(vaddr, 0, PAGE_SIZE);
-> +			kunmap_atomic(vaddr);
-> +			page++;
-> +			nr_clear_pages--;
-> +		}
-> +	} else {
-> +		memset(page_address(pages), 0, size);
-> +	}
-> +
-> +	helper_buffer->pagecount = nr_pages;
-> +	helper_buffer->pages = kmalloc_array(helper_buffer->pagecount,
-> +					     sizeof(*helper_buffer->pages),
-> +					     GFP_KERNEL);
-> +	if (!helper_buffer->pages) {
-> +		ret = -ENOMEM;
-> +		goto free_cma;
-> +	}
-> +
-> +	for (pg = 0; pg < helper_buffer->pagecount; pg++) {
-> +		helper_buffer->pages[pg] = &pages[pg];
-> +		if (!helper_buffer->pages[pg])
-> +			goto free_pages;
-> +	}
-> +
-> +	/* create the dmabuf */
-> +	exp_info.ops = &heap_helper_ops;
-> +	exp_info.size = len;
-> +	exp_info.flags = O_RDWR;
-> +	exp_info.priv = &helper_buffer->heap_buffer;
-> +	dmabuf = dma_buf_export(&exp_info);
-> +	if (IS_ERR(dmabuf)) {
-> +		ret = PTR_ERR(dmabuf);
-> +		goto free_pages;
-> +	}
-> +
-> +	helper_buffer->heap_buffer.dmabuf = dmabuf;
-> +	helper_buffer->priv_virt = pages;
-> +
-> +	ret = dma_buf_fd(dmabuf, O_CLOEXEC);
-> +	if (ret < 0) {
-> +		dma_buf_put(dmabuf);
-> +		/* just return, as put will call release and that will free */
-> +		return ret;
-> +	}
-> +
-> +	return ret;
-> +
-> +free_pages:
-> +	kfree(helper_buffer->pages);
-> +free_cma:
-> +	cma_release(cma_heap->cma, pages, nr_pages);
-> +free_buf:
-> +	kfree(helper_buffer);
-> +	return ret;
-> +}
-> +
-> +static struct dma_heap_ops cma_heap_ops = {
-> +	.allocate = cma_heap_allocate,
-> +};
-> +
-> +static int __add_cma_heap(struct cma *cma, void *data)
-> +{
-> +	struct cma_heap *cma_heap;
-> +	struct dma_heap_export_info exp_info;
-> +
-> +	cma_heap = kzalloc(sizeof(*cma_heap), GFP_KERNEL);
-> +	if (!cma_heap)
-> +		return -ENOMEM;
-> +	cma_heap->cma = cma;
-> +
-> +	exp_info.name = cma_get_name(cma);
-> +	exp_info.ops = &cma_heap_ops;
-> +	exp_info.priv = cma_heap;
-> +
-> +	cma_heap->heap = dma_heap_add(&exp_info);
-> +	if (IS_ERR(cma_heap->heap)) {
-> +		int ret = PTR_ERR(cma_heap->heap);
-> +
-> +		kfree(cma_heap);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int add_cma_heaps(void)
-> +{
-> +	cma_for_each_area(__add_cma_heap, NULL);
-> +	return 0;
-> +}
-> +device_initcall(add_cma_heaps);
-> 
+Oooh! I didn't realize that those exist. I'll change that and send a v2.
