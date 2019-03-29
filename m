@@ -2,109 +2,101 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D541EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235EBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F182183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D476E217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:10:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="u2rOx3GL"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Hzrd13p4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbfC2OJ1 (ORCPT
+        id S1728774AbfC2OKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:09:27 -0400
-Received: from node.akkea.ca ([192.155.83.177]:55936 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbfC2OJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:09:27 -0400
-Received: by node.akkea.ca (Postfix, from userid 33)
-        id 89E6D4E204D; Fri, 29 Mar 2019 14:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1553868566; bh=pXsYLgQavd8fTBMtWNBZ5DMPnBT/+YoHV2PZjK3PbCg=;
-        h=To:Subject:Date:From:Cc:In-Reply-To:References;
-        b=u2rOx3GLYX8PObQ+1clDQgGBnt7V0+aS7HpphSgJsf+eCG/VtZiitSrohksnfag0u
-         kgpDGxyfKn31SMM7zceltLMvMcgnDXg7d/MsWulRTSrDH2oDkGa3ICEm9Vh8lWJHfm
-         pSEhGPUdvpzySnSnjZI9oHKsCQjMhxdYVWoqzbD0=
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH 1/4] arm64: dts: imx8mq: Fix the fsl,imx8mq-sdma  compatible string
-X-PHP-Originating-Script: 1000:rcube.php
+        Fri, 29 Mar 2019 10:10:41 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46475 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728808AbfC2OKl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:10:41 -0400
+Received: by mail-io1-f68.google.com with SMTP id b9so1801273iot.13
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 07:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=InFNj43Ew+zCZHSNgM4rGAqFiRaGJhlAqF5jIgxZqrQ=;
+        b=Hzrd13p4BfDoZijAoBqMNkX/RL1AjjiYrqxr6RxGIuH2eYPg1YHh5EgmMNsXp2KSvt
+         QX7zak8YntPOEH/F3XtCxTts+ZoarAGlTh/V8scjWKGr93u81ztKWMO+6zGL//dznWOe
+         jxic1068pnpG52O4giIvypSvVpPashLRsYLvCE9whD2/VXzuOvT08wPwc1E304pV3SG2
+         K4ZIoFNX13aQWZXu8hzB275LWNSzBsp4DTmp8KjzvIMgCTkwfIH/kM1PSLf+5/hQHAbU
+         G8wOUYuwyDRAmLtx1rrVh9IS+ldca4RIdZhpYDMIXvfPoonmfMtnvgePvoZ1bR8E2hhM
+         /fWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=InFNj43Ew+zCZHSNgM4rGAqFiRaGJhlAqF5jIgxZqrQ=;
+        b=gL2KhtY19M84h7mbw+E4I+k7H0AJGWrAC5YzAcNrQbxzInpFVSCOCSGQvAVRV70zLo
+         SkBcjOoxPVd0blUvwVTTh+XUfyQHi2eEnLudNHW2tSOtd9leHYQVh11mXfGfapubjBk/
+         XUX4L0UaHiJJ62T+WM4KAq8qm1qYx2IrMRsY5hT6JVq2YjllMt65ejm1TT8ilDs/UMh5
+         BjZn9f4ygjUns4Nkz/N7l1EmlkqYqzJZQ8pU1uBleha3bQxxsU5zRI3kQ6FuzgGYIFWg
+         +X97MmqM8qFbNPiTVqTlH+EBIfDuG8yIoCZVprV6SyHF2UCvQlCeAWZAJqpV+QzINZQU
+         We5Q==
+X-Gm-Message-State: APjAAAVcCrBTmispgU0gXJ4rAQmsi5/M+8drGWudBPkodTkus/sGb6sM
+        pglhizFi0wAv4ErIsfDh5mkZCQ==
+X-Google-Smtp-Source: APXvYqx0F5SUC3ltQ3YKga9JM9tVZEzbQrIBCj0jmkkJ2owsxSdbL6R6hx2SVMn8jioOgkN1yEH6yQ==
+X-Received: by 2002:a5e:8a07:: with SMTP id d7mr35777563iok.194.1553868640406;
+        Fri, 29 Mar 2019 07:10:40 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id m6sm812672ioj.36.2019.03.29.07.10.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Mar 2019 07:10:39 -0700 (PDT)
+Subject: Re: Bisected GFP in bfq_bfqq_expire on v5.1-rc1
+To:     Dmitrii Tcvetkov <demfloro@demfloro.ru>,
+        linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Paolo Valente <paolo.valente@linaro.org>
+References: <20190329160227.7d55c8dd@fire.localdomain>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0e203a26-b941-cef4-dff1-013999d4b041@kernel.dk>
+Date:   Fri, 29 Mar 2019 08:10:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20190329160227.7d55c8dd@fire.localdomain>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 29 Mar 2019 07:09:26 -0700
-From:   Angus Ainslie <angus@akkea.ca>
-Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <CAEnQRZCjCAhi2OqpSGN8rmGYCqyOmLP=+=L0djcq2C6ksk29LQ@mail.gmail.com>
-References: <20190328133828.20999-1-angus@akkea.ca>
- <20190328133828.20999-2-angus@akkea.ca>
- <AM0PR04MB421112C3EE79B279953A9252805A0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CAEnQRZCjCAhi2OqpSGN8rmGYCqyOmLP=+=L0djcq2C6ksk29LQ@mail.gmail.com>
-Message-ID: <bc7d4617cf7f29fa05f823f48b8ba4d6@www.akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-29 04:20, Daniel Baluta wrote:
-> On Fri, Mar 29, 2019 at 11:11 AM Aisheng Dong <aisheng.dong@nxp.com> 
-> wrote:
->> 
->> > From: Angus Ainslie (Purism) [mailto:angus@akkea.ca]
->> > Sent: Thursday, March 28, 2019 9:38 PM
->> >
->> > Fix a typo in the compatible string
->> >
->> > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
->> > ---
->> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
->> > b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
->> > index 81d5ce1b1ec1..07099f82965e 100644
->> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
->> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
->> > @@ -720,7 +720,7 @@
->> >                       };
->> >
->> >                       sdma1: sdma@30bd0000 {
->> > -                             compatible = "fsl, imx8mq-sdma","fsl,imx7d-sdma";
->> > +                             compatible = "fsl,mx8mq-sdma","fsl,imx7d-sdma";
->> 
->> This is a bit strange.
->> If binding doc says like that, probably we'd better fix the typo in 
->> binding doc
->> to use the same style.
+On 3/29/19 7:02 AM, Dmitrii Tcvetkov wrote:
+> Hi,
 > 
-> Oh, indeed.
+> I got kernel panic since v5.1-rc1 when working with files on block
+> device with BFQ scheduler assigned. I didn't find trivial way to
+> reproduce the panic but "git checkout origin/linux-5.0.y"
+> on linux-stable-rc[1] git repo on btrfs filesystem reproduces the
+> problem 100% of the time on my bare-metal machine and in a VM.
 > 
-> Angus, shouldn't this be fsl,imx8mq-sdma instead of fsl,mx8mq-sdma. I
-> was just paying
-> attention to the extra space in my patch.
+> Bisect led me to commit 9dee8b3b057e1 (block, bfq: fix queue removal
+> from weights tree). After reverting this commit on top of current
+> mainline master(9936328b41ce) I can't reproduce the problem.
+> 
+> dmesg with the panic and bisect log attached.
+> 
+> [1] https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 
-Correct I took too many characters when I dropped the space. I'll fix it 
-for v2.
+Paolo, can you please take a look at this?
 
-Angus
+
+-- 
+Jens Axboe
+
