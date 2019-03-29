@@ -2,114 +2,105 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C50C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 04:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5970C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 04:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C119B2173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 04:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52061206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 04:34:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sdf.org header.i=@sdf.org header.b="S6NzVGSn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfC2EO2 (ORCPT
+        id S1726532AbfC2EeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 00:14:28 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5762 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725385AbfC2EO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 00:14:27 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1271DB581EB8826C502E;
-        Fri, 29 Mar 2019 12:14:25 +0800 (CST)
-Received: from vm100-107-113-134.huawei.com (100.107.113.134) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 29 Mar 2019 12:14:15 +0800
-From:   Yu Chen <chenyu56@huawei.com>
-To:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <john.stultz@linaro.org>, <suzhuangluan@hisilicon.com>,
-        <kongfei@hisilicon.com>, <liuyu712@hisilicon.com>,
-        <wanghu17@hisilicon.com>, <butao@hisilicon.com>,
-        <chenyao11@huawei.com>, <fangshengzhou@hisilicon.com>,
-        <lipengcheng8@huawei.com>, <songxiaowei@hisilicon.com>,
-        <xuyiping@hisilicon.com>, <xuyoujun4@huawei.com>,
-        <yudongbin@hisilicon.com>, <zangleigang@hisilicon.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>
-Subject: [PATCH v5 01/13] dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
-Date:   Fri, 29 Mar 2019 12:13:57 +0800
-Message-ID: <20190329041409.70138-2-chenyu56@huawei.com>
-X-Mailer: git-send-email 2.15.0-rc2
-In-Reply-To: <20190329041409.70138-1-chenyu56@huawei.com>
-References: <20190329041409.70138-1-chenyu56@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [100.107.113.134]
-X-CFilter-Loop: Reflected
+        Fri, 29 Mar 2019 00:34:10 -0400
+Received: from mx.sdf.org ([205.166.94.20]:59125 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbfC2EeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 00:34:10 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2T4VqZU005980
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
+        Fri, 29 Mar 2019 04:31:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sdf.org; s=default;
+        t=1553833921; bh=MSlrUev1tWLvZ+5hN9M4dKFNaBlpRQgRF66IHzEREIg=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc;
+        b=S6NzVGSn86KRcTDxLvasrhx8kZzwOEj53Y16+v/C8y8nVvaE0tkHgiYNiJSI/s/60
+         cqzkDGsm2U1isXiTmztXQHNp+sf+UQzK1OMia2hGGTXg4gK02cdbXBHQ39szMwCpUR
+         yfO8ToZP3oo8l5EzWpbMCEV3MB7wNPq7I0u5PD1E=
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id x2T4Vq5A024120;
+        Fri, 29 Mar 2019 04:31:52 GMT
+Date:   Fri, 29 Mar 2019 04:31:52 GMT
+Message-Id: <201903290431.x2T4Vq5A024120@sdf.org>
+In-Reply-To: <f63c410e0ff76009c9b58e01027e751ff7fdb749.1552704200.git.lkml@sdf.org>
+References: <f63c410e0ff76009c9b58e01027e751ff7fdb749.1552704200.git.lkml@sdf.org>
+From:   George Spelvin <lkml@sdf.org>
+Subject: [PATCH 6/5] lib/list_sort: Fix GCC warning
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        kbuild test robot <lkp@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        George Spelvin <lkml@sdf.org>,
+        Andrey Abramov <st5pub@yandex.ru>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Daniel Wagner <daniel.wagner@siemens.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Don Mullis <don.mullis@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds binding documentation for supporting the hi3660 usb
-phy on boards like the HiKey960.
+It turns out that GCC 4.9, 7.3, and 8.1 ignore the __pure
+attribute on function pointers and (with the standard kernel
+compile flags) emit a warning about it.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Binghui Wang <wangbinghui@hisilicon.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
----
-v1:
-* Fix some format error as suggested by Rob.
-v2:
-* Change hi3660 usb PHY to hi3660 USB PHY
-v3:
-* Make device node a subnode of usb3_otg_bc register.
-v4:
-* Remove "hisilicon,usb3-otg-bc-syscon" property
----
----
- .../devicetree/bindings/phy/phy-hi3660-usb3.txt    | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+Even though it accurately describes a comparison function
+(the compiler need not reload cached pointers across the call),
+it doesn't actually help GCC 8.3's code generation, so just
+omit it.
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-new file mode 100644
-index 000000000000..e88ba7d92dcb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-@@ -0,0 +1,26 @@
-+Hisilicon hi3660 USB PHY
-+-----------------------
-+
-+Required properties:
-+- compatible: should be "hisilicon,hi3660-usb-phy"
-+- #phy-cells: must be 0
-+- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
-+- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
-+- hisilicon,eye-diagram-param: parameter set for phy
-+Refer to phy/phy-bindings.txt for the generic PHY binding properties
-+
-+This is a subnode of usb3_otg_bc register node.
-+
-+Example:
-+	usb3_otg_bc: usb3_otg_bc@ff200000 {
-+		compatible = "syscon", "simple-mfd";
-+		reg = <0x0 0xff200000 0x0 0x1000>;
-+
-+		usb-phy {
-+			compatible = "hisilicon,hi3660-usb-phy";
-+			#phy-cells = <0>;
-+			hisilicon,pericrg-syscon = <&crg_ctrl>;
-+			hisilicon,pctrl-syscon = <&pctrl>;
-+			hisilicon,eye-diagram-param = <0x22466e4>;
-+		};
-+	};
+Signed-off-by: George Spelvin <lkml@sdf.org>
+Fixes: 820c81be5237 ("lib/list_sort: simplify and remove MAX_LIST_LENGTH_BITS")
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ lib/list_sort.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/lib/list_sort.c b/lib/list_sort.c
+index 623a9158ac8a..b1b492e20f1d 100644
+--- a/lib/list_sort.c
++++ b/lib/list_sort.c
+@@ -8,12 +8,16 @@
+ #include <linux/list.h>
+ 
+ /*
+- * By declaring the compare function with the __pure attribute, we give
+- * the compiler more opportunity to optimize.  Ideally, we'd use this in
+- * the prototype of list_sort(), but that would involve a lot of churn
+- * at all call sites, so just cast the function pointer passed in.
++ * A more accurate type for comparison functions.  Ideally, we'd use
++ * this in the prototype of list_sort(), but that would involve a lot of
++ * churn at all call sites, so just cast the function pointer passed in.
++ *
++ * This could also include __pure to give the compiler more opportunity
++ * to optimize, but that elicits an "attribute ignored" warning on
++ * GCC <= 8.1, and doesn't change GCC 8.3's code generation at all,
++ * so it's omitted.
+  */
+-typedef int __pure __attribute__((nonnull(2,3))) (*cmp_func)(void *,
++typedef int __attribute__((nonnull(2,3))) (*cmp_func)(void *,
+ 		struct list_head const *, struct list_head const *);
+ 
+ /*
 -- 
-2.15.0-rc2
+2.20.1
 
