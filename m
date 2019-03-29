@@ -2,183 +2,129 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B85C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65B4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F98A2184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:25:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LhmyzT4z"
+	by mail.kernel.org (Postfix) with ESMTP id 7BAA6218A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:27:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730285AbfC2VZn (ORCPT
+        id S1730324AbfC2V1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 17:25:43 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45976 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729652AbfC2VZm (ORCPT
+        Fri, 29 Mar 2019 17:27:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51532 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730137AbfC2V1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 17:25:42 -0400
-Received: by mail-oi1-f196.google.com with SMTP id y84so2780532oia.12
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 14:25:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SrxeZI0xNm9dzWvmFFvMwHqAH/sUZ2XFgxd5gGb/NsA=;
-        b=LhmyzT4zWeJlaOW591zu+6ntI6jBc/ZheRj/nkGiZ0uVMCV/K+24rq7TY9U4J+HjQA
-         yPNiGgSpeFQyx1dU6OWJZxcTkFB2pVASLbvAFx+yVs1Nm8fIeV+tgKA1ue5PTt3zvjtr
-         o+oY7p8+LVoeflep5UKqtSzV3whP7kXKhy/GulRL3ISURMqehv21kmS3UyuBW3XX4QZh
-         BuB/DiDgBUksH37KDj20mbh49qQvfmhKLa2Fl7Nil96V45NYz7prHNUyyWT25DDdYQaH
-         DOpfuwAdcX3GMClWJla8V95SW2bYu3Q5o9BkQvgvK1z1UoZo3LG0TbhEoJMhaW5nEBHA
-         bY8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SrxeZI0xNm9dzWvmFFvMwHqAH/sUZ2XFgxd5gGb/NsA=;
-        b=pznJP1RuyUaokQRRNqL7rp+94AD3ZIGg6156eCg6MwCgCB77ti+1E588/GmYtVIMCi
-         zeBiLsCxvbp+/cnKS6AVq4E4UyDp03eEHhvAFUpDcekNaBlTXKDXGsD5EwfZxWSmOnNC
-         g3L4aChqAp3B+A+MaoZN16Ko43Qj7myAg653pA9t4Yxpz2fxC+m3DUca9Avo4m+wDmU6
-         YsmCaXDlemAsxVB8xz8WXhvGaTwwvcG0nTaJ3RIiS9BXHjz4g4x/5fFMPC6Uh/s8cAQc
-         idH/FcFAZaRlJ2rS08se5X8IOB0IYggDUKxC8f+0WSIuyJLdcY5KFj1X2VtU4us/fC9w
-         RAPA==
-X-Gm-Message-State: APjAAAUnpBHYwgrOvZdjVAkE+wkQ5ehOuKQW/LrLTtqAq8HERsn+8E9e
-        yzvrdUuNnmSoWUJBE0FhXWsThS9m8AJZo5UUss7cQw==
-X-Google-Smtp-Source: APXvYqxH0XFRVTnzUJWmbJk21g6OS6KWjlmf/jQgbsskptFW+T9YlZ56fvnPYKWPhcuKuyH9HurV6/Syaz/vvPCQVjA=
-X-Received: by 2002:aca:e4cc:: with SMTP id b195mr5260368oih.39.1553894741377;
- Fri, 29 Mar 2019 14:25:41 -0700 (PDT)
+        Fri, 29 Mar 2019 17:27:07 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2TLOLlX028637
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 17:27:06 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rht8q2gk9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 17:27:06 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Fri, 29 Mar 2019 21:27:05 -0000
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 29 Mar 2019 21:27:01 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2TLR0h724248334
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 21:27:00 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9DF07B2066;
+        Fri, 29 Mar 2019 21:27:00 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80659B2064;
+        Fri, 29 Mar 2019 21:27:00 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 29 Mar 2019 21:27:00 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id DC5C416C170A; Fri, 29 Mar 2019 14:27:02 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 14:27:02 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Mukesh Ojha <mojha@codeaurora.org>
+Cc:     Neeraj Upadhyay <neeraju@codeaurora.org>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        rcu@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu: tree_plugin: Dump specified number of blocked tasks
+Reply-To: paulmck@linux.ibm.com
+References: <1553853352-14253-1-git-send-email-neeraju@codeaurora.org>
+ <35a95581-138d-b047-b809-aff803287a23@codeaurora.org>
 MIME-Version: 1.0
-References: <20190328225925.241998-1-jannh@google.com> <530a0823-5dcd-9006-2057-ae5b9da2389a@codeaurora.org>
- <CAG48ez3UE6cnA0TZQ-7DUnB_QWPFV04bJsv9oKXfgBtu=ugBLw@mail.gmail.com> <CAG48ez13xg1oUiO_pyDHVbJkWRQdW4CoX7uGzoujyf4L6VB-dw@mail.gmail.com>
-In-Reply-To: <CAG48ez13xg1oUiO_pyDHVbJkWRQdW4CoX7uGzoujyf4L6VB-dw@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Fri, 29 Mar 2019 22:25:15 +0100
-Message-ID: <CAG48ez0qtiy-Bss32A5KdvtJfJOyt_M1w67X7=05gPBtkywi2g@mail.gmail.com>
-Subject: Re: [PATCH] x86/calgary: fix bitcast type warnings
-To:     Mukesh Ojha <mojha@codeaurora.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     Muli Ben-Yehuda <mulix@mulix.org>, Jon Mason <jdmason@kudzu.us>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <35a95581-138d-b047-b809-aff803287a23@codeaurora.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19032921-0064-0000-0000-000003C2AE37
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010836; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000283; SDB=6.01181531; UDB=6.00618415; IPR=6.00962251;
+ MB=3.00026215; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-29 21:27:04
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032921-0065-0000-0000-00003CE178B4
+Message-Id: <20190329212702.GA4102@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-29_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903290146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 10:19 PM Jann Horn <jannh@google.com> wrote:
->
-> +Logan Gunthorpe and Horia Geant=C4=83, since they've written a bunch of =
-this code
->
-> On Fri, Mar 29, 2019 at 5:48 PM Jann Horn <jannh@google.com> wrote:
-> > On Fri, Mar 29, 2019 at 9:19 AM Mukesh Ojha <mojha@codeaurora.org> wrot=
-e:
-> > > On 3/29/2019 4:29 AM, Jann Horn wrote:
-> > > > The sparse checker attempts to ensure that all conversions between
-> > > > fixed-endianness numbers and numbers with native endianness are exp=
-licit.
-> > > > However, the calgary code reads and writes big-endian numbers from/=
-to IO
-> > > > memory using {read,write}{l,q}(), which return native-endian number=
-s.
-> > > >
-> > > > This could be addressed by putting __force casts all over the place=
-, but
-> > > > that would kind of defeat the point of the warning. Instead, create=
- new
-> > > > helpers {read,write}{l,q}_be() for big-endian IO that convert from/=
-to
-> > > > native endianness.
-> > > >
-> > > > Most of this patch is a straightforward conversion; the following p=
-arts
-> > > > aren't just mechanical replacement:
-> > > >
-> > > >   - ->tar_val is now a native-endian number instead of big-endian
-> > > >   - calioc2_handle_quirks() did `cpu_to_be32(readl(target))` when i=
-t
-> > > >     intended to do `be32_to_cpu(readl(target))` (but that has no ac=
-tual
-> > > >     effects outside of type warnings)
-> > > >
-> > > > This gets rid of 108 lines of sparse warnings.
-> > > >
-> > > > Signed-off-by: Jann Horn <jannh@google.com>
-> > > > ---
-> > > > compile-tested only
-> > > >
-> > > >   arch/x86/kernel/pci-calgary_64.c | 108 ++++++++++++++++++--------=
------
-> > > >   1 file changed, 64 insertions(+), 44 deletions(-)
-> > > >
-> > > > diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci=
--calgary_64.c
-> > > > index c70720f61a34..36cd66d940fb 100644
-> > > > --- a/arch/x86/kernel/pci-calgary_64.c
-> > > > +++ b/arch/x86/kernel/pci-calgary_64.c
-> > > > @@ -534,6 +534,26 @@ static inline int is_cal_pci_dev(unsigned shor=
-t device)
-> > > >       return (is_calgary(device) || is_calioc2(device));
-> > > >   }
-> > >
-> > >
-> > > Can the existing api's not be used here like iowrite64be/ioread64be/ =
-or
-> > > similar variant in "include/asm-generic/io.h"
+On Fri, Mar 29, 2019 at 03:42:44PM +0530, Mukesh Ojha wrote:
+> 
+> On 3/29/2019 3:25 PM, Neeraj Upadhyay wrote:
+> >dump_blkd_tasks() uses 10 as the max number of blocked
+> >tasks, which are printed. However, it has an argument
+> >which provides that number. So, use the argument value
+> >instead. As all callers currently pass 10 as the number,
+> >there isn't any impact.
 > >
-> > Oooh! I didn't realize that those exist. I'll change that and send a v2=
-.
->
-> Actually, that doesn't work at the moment on x86-64:
->
-> include/asm-generic/io.h only defines these things if
-> CONFIG_GENERIC_IOMAP isn't defined; and X86 unconditionally defines
-> it. With CONFIG_GENERIC_IOMAP set, these functions are provided by
-> include/asm-generic/iomap.h.
->
-> include/asm-generic/iomap.h has extern definitions of them:
->
-> extern unsigned int ioread8(void __iomem *);
-> extern unsigned int ioread16(void __iomem *);
-> extern unsigned int ioread16be(void __iomem *);
-> extern unsigned int ioread32(void __iomem *);
-> extern unsigned int ioread32be(void __iomem *);
-> #ifdef CONFIG_64BIT
-> extern u64 ioread64(void __iomem *);
-> extern u64 ioread64be(void __iomem *);
-> #endif
-> [...]
-> extern void iowrite8(u8, void __iomem *);
-> extern void iowrite16(u16, void __iomem *);
-> extern void iowrite16be(u16, void __iomem *);
-> extern void iowrite32(u32, void __iomem *);
-> extern void iowrite32be(u32, void __iomem *);
-> #ifdef CONFIG_64BIT
-> extern void iowrite64(u64, void __iomem *);
-> extern void iowrite64be(u64, void __iomem *);
-> #endif
->
-> The definitions for these are in lib/iomap.c, except that there are no
-> definitions for ioread64be() and iowrite64be(); if you try to use
-> them, you get linker errors.
->
-> I guess maybe the fix for that would be to, in iomap.c, just implement
-> iowrite64{,be} the same way as iowrite32{,be}, just under a "#ifdef
-> CONFIG_64BIT"?
+> >Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+> 
+> Looks good to me.
+> 
+> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-... nope, I don't think I can figure out the proper fix here. There is
-no inq(), because 64-bit port I/O apparently isn't a thing. So it'd
-have to use pio_read64_lo_hi() for ports, but readq() for MMIO? Which
-is what ioread64_lo_hi() already does? I'm confused.
+Applied, thank you both!
+
+							Thanx, Paul
+
+> Cheers,
+> -Mukesh
+> 
+> >---
+> >  kernel/rcu/tree_plugin.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> >diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> >index 3960294..08bcd87 100644
+> >--- a/kernel/rcu/tree_plugin.h
+> >+++ b/kernel/rcu/tree_plugin.h
+> >@@ -740,7 +740,7 @@ void exit_rcu(void)
+> >  	i = 0;
+> >  	list_for_each(lhp, &rnp->blkd_tasks) {
+> >  		pr_cont(" %p", lhp);
+> >-		if (++i >= 10)
+> >+		if (++i >= ncheck)
+> >  			break;
+> >  	}
+> >  	pr_cont("\n");
+> 
+
