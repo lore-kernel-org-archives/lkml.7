@@ -2,130 +2,200 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8C2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778E3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74FD217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:55:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hnisAFtR"
+	by mail.kernel.org (Postfix) with ESMTP id 4DEEF2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 22:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730329AbfC2Vzf (ORCPT
+        id S1730407AbfC2WE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 17:55:35 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41980 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729771AbfC2Vzf (ORCPT
+        Fri, 29 Mar 2019 18:04:29 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:58230 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730394AbfC2WE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 17:55:35 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y5so1619433plk.8
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 14:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ecc389FYQ0L59bBTC8JbGTFUcbTIY5rYmXWozIAY7B4=;
-        b=hnisAFtR/2zxLT/Jp/D+xocLkDC5DbBCrBqQd1WlPOllJVYBmrOsvIlBy2t0MkoFst
-         /AdTOTF4vVNZVzBuIHXNgFku7pSkultEU3AM5taXmGWgPSCbRNEnRu8me7EUPTBQVbCs
-         AGBgehOsiQKtwGT+s7caWz7dhIyLweX7iSqfU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ecc389FYQ0L59bBTC8JbGTFUcbTIY5rYmXWozIAY7B4=;
-        b=oIowSS5Z5f4hwYCPYzBzmrZXbfWOluR07ruZvlFe8lMYIbpl4kQhZnFPJciYYAVtdi
-         CM8b8sowwW36eI+5fvNSGbOelIkNa4JjqCztmSniJJ583i3a4+GaowuvxWv3zA0uvfby
-         dlWAu1GGegwq5CJLsab79sbmE3fYPPVsQhmEP0NO2SQXE2GpKw8nOxq8WaLNm05Fe83E
-         0oHKHn85LPpvMK/k0WJ2p2PWFBeH6rl5d2RkxG6+GOsqIYWxZd7ybskEo7irQXzRQvAT
-         cd+XvTsHCKeYdRMELUbvxDqIWXR8uFVFwuOqLLzuuFAgN66wRwWGxBrgnVEz8Q8Jn1iK
-         5MRQ==
-X-Gm-Message-State: APjAAAW6+Iv2ZTKYrD4CdiaX+h6cYNLIG/jBiumk6QzezeaVAuZqh0Zv
-        13Vlmdm/0PESELmYzwhLt5MtnA==
-X-Google-Smtp-Source: APXvYqzS56Wdd5AWjHRFithraHo+bIHKtALoqOiZvTC3cbnpcBptYR/yiu6zV7xXACzJgcbuF9StdQ==
-X-Received: by 2002:a17:902:b618:: with SMTP id b24mr48434370pls.73.1553896534506;
-        Fri, 29 Mar 2019 14:55:34 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id 20sm4301146pfn.131.2019.03.29.14.55.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 14:55:33 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Ziyuan Xu <xzy.xu@rock-chips.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        ryandcase@chromium.org, Elaine Zhang <zhangqing@rock-chips.com>,
-        mka@chromium.org, Douglas Anderson <dianders@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] clk: rockchip: Fix video codec clocks on rk3288
-Date:   Fri, 29 Mar 2019 14:54:55 -0700
-Message-Id: <20190329215455.159717-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+        Fri, 29 Mar 2019 18:04:28 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 41BB772CC64;
+        Sat, 30 Mar 2019 01:04:26 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 33BC17CCE4F; Sat, 30 Mar 2019 01:04:26 +0300 (MSK)
+Date:   Sat, 30 Mar 2019 01:04:26 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 13/25] m68k: add asm/syscall.h
+Message-ID: <20190329220425.GA3563@altlinux.org>
+References: <20181210042352.GA6092@altlinux.org>
+ <20181210043010.GM6131@altlinux.org>
+ <CAMuHMdVYq_2P=gb_zbSGFkPWASTds6uSPTyyhyNAgp2Qm5+feQ@mail.gmail.com>
+ <20181210124059.GA11942@altlinux.org>
+ <CAMuHMdW8ejp4gm2Xh-8inSQngQ5zRQ9bfsg1SG+BAD8RFV8xcA@mail.gmail.com>
+ <20181210133025.GG11942@altlinux.org>
+ <20181212085516.GA13288@altlinux.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Disposition: inline
+In-Reply-To: <20181212085516.GA13288@altlinux.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It appears that there is a typo in the rk3288 TRM.  For
-GRF_SOC_CON0[7] it says that 0 means "vepu" and 1 means "vdpu".  It's
-the other way around.
 
-How do I know?  Here's my evidence:
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-1. Prior to commit 4d3e84f99628 ("clk: rockchip: describe aclk_vcodec
-   using the new muxgrf type on rk3288") we always pretended that we
-   were using "aclk_vdpu" and the comment in the code said that this
-   matched the default setting in the system.  In fact the default
-   setting is 0 according to the TRM and according to reading memory
-   at bootup.  In addition rk3288-based Chromebooks ran like this and
-   the video codecs worked.
-2. With the existing clock code if you boot up and try to enable the
-   new VIDEO_ROCKCHIP_VPU as a module (and without "clk_ignore_unused"
-   on the command line), you get errors like "failed to get ack on
-   domain 'pd_video', val=0x80208".  After flipping vepu/vdpu things
-   init OK.
-3. If I export and add both the vepu and vdpu to the list of clocks
-   for RK3288_PD_VIDEO I can get past the power domain errors, but now
-   I freeze when the vpu_mmu gets initted.
-4. If I just mark the "vdpu" as IGNORE_UNUSED then everything boots up
-   and probes OK showing that somehow the "vdpu" was important to keep
-   enabled.  This is because we were actually using it as a parent.
-5. After this change I can hack "aclk_vcodec_pre" to parent from
-   "aclk_vepu" using assigned-clocks and the video codec still probes
-   OK.
+On Wed, Dec 12, 2018 at 11:55:16AM +0300, Dmitry V. Levin wrote:
+> On Mon, Dec 10, 2018 at 04:30:25PM +0300, Dmitry V. Levin wrote:
+> > On Mon, Dec 10, 2018 at 02:06:28PM +0100, Geert Uytterhoeven wrote:
+> > > On Mon, Dec 10, 2018 at 1:41 PM Dmitry V. Levin <ldv@altlinux.org> wr=
+ote:
+> > > > On Mon, Dec 10, 2018 at 09:45:42AM +0100, Geert Uytterhoeven wrote:
+> > > > > On Mon, Dec 10, 2018 at 5:30 AM Dmitry V. Levin <ldv@altlinux.org=
+> wrote:
+> > > > > > syscall_get_* functions are required to be implemented on all
+> > > > > > architectures in order to extend the generic ptrace API with
+> > > > > > PTRACE_GET_SYSCALL_INFO request.
+> > > > > >
+> > > > > > This introduces asm/syscall.h on m68k implementing all 5 syscal=
+l_get_*
+> > > > > > functions as documented in asm-generic/syscall.h: syscall_get_n=
+r,
+> > > > > > syscall_get_arguments, syscall_get_error, syscall_get_return_va=
+lue,
+> > > > > > and syscall_get_arch.
+> > > > > >
+> > > > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
+> > > > > > Cc: Andy Lutomirski <luto@kernel.org>
+> > > > > > Cc: Elvira Khabirova <lineprinter@altlinux.org>
+> > > > > > Cc: Eugene Syromyatnikov <esyr@redhat.com>
+> > > > > > Cc: linux-m68k@lists.linux-m68k.org
+> > > > > > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+> > > > > > ---
+> > > > > >
+> > > > > > Notes:
+> > > > > >     v5: added syscall_get_nr, syscall_get_arguments, syscall_ge=
+t_error,
+> > > > > >         and syscall_get_return_value
+> > > > > >     v1: added syscall_get_arch
+> > > > >
+> > > > > > --- /dev/null
+> > > > > > +++ b/arch/m68k/include/asm/syscall.h
+> > > > > > @@ -0,0 +1,39 @@
+> > > > >
+> > > > > > +static inline void
+> > > > > > +syscall_get_arguments(struct task_struct *task, struct pt_regs=
+ *regs,
+> > > > > > +                     unsigned int i, unsigned int n, unsigned =
+long *args)
+> > > > > > +{
+> > > > > > +       BUG_ON(i + n > 6);
+> > > > >
+> > > > > Does this have to crash the kernel?
+> > > >
+> > > > This is what most of other architectures do, but we could choose
+> > > > a softer approach, e.g. use WARN_ON_ONCE instead.
+> > > >
+> > > > > Perhaps you can return an error code instead?
+> > > >
+> > > > That would be problematic given the signature of this function
+> > > > and the nature of the potential bug which would most likely be a us=
+age error.
+> > >=20
+> > > Of course to handle that, the function's signature need to be changed.
+> > > Changing it has the advantage that the error handling can be done at =
+the
+> > > caller, in common code, instead of duplicating it for all
+> > > architectures, possibly
+> > > leading to different semantics.
+> >=20
+> > Given that *all* current users of syscall_get_arguments specify i =3D=
+=3D 0
+> > (and there is an architecture that has BUG_ON(i)),=20
+> > it should be really a usage error to get into situation where i + n > 6,
+> > I wish a BUILD_BUG_ON could be used here instead.
+> >=20
+> > I don't think it worths pushing the change of API just to convert
+> > a "cannot happen" assertion into an error that would have to be dealt w=
+ith
+> > on the caller side.
+>=20
+> I suggest the following BUG_ON replacement for syscall_get_arguments:
+>=20
+> #define SYSCALL_MAX_ARGS 6
+>=20
+> static inline void
+> syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+> 		      unsigned int i, unsigned int n, unsigned long *args)
+> {
+> 	/*
+> 	 * Ideally there should have been
+> 	 * BUILD_BUG_ON(i + n > SYSCALL_MAX_ARGS);
+> 	 * instead of these checks.
+> 	 */
+> 	if (unlikely(i > SYSCALL_MAX_ARGS)) {
+> 		WARN_ONCE(1, "i > SYSCALL_MAX_ARGS");
+> 		return;
+> 	}
+> 	if (unlikely(n > SYSCALL_MAX_ARGS - i)) {
+> 		WARN_ONCE(1, "i + n > SYSCALL_MAX_ARGS");
+> 		n =3D SYSCALL_MAX_ARGS - i;
+> 	}
+> 	BUILD_BUG_ON(sizeof(regs->d1) !=3D sizeof(args[0]));
+> 	memcpy(args, &regs->d1 + i, n * sizeof(args[0]));
+> }
 
-Fixes: 4d3e84f99628 ("clk: rockchip: describe aclk_vcodec using the new muxgrf type on rk3288")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-I currently have no way to test the JPEG mem2mem driver, so hopefully
-others can test this and make sure it's happy for them.  I'm just
-happy not to get strange errors at boot anymore.
+There seems to be a more straightforward approach to this issue.
 
- drivers/clk/rockchip/clk-rk3288.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Assuming there is a general consensus [1] to get rid of "i" and "n"
+arguments of syscall_get_arguments(), the implementation could be
+simplified to
 
-diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-index 5a67b7869960..4d767f9c3a80 100644
---- a/drivers/clk/rockchip/clk-rk3288.c
-+++ b/drivers/clk/rockchip/clk-rk3288.c
-@@ -219,7 +219,7 @@ PNAME(mux_hsadcout_p)	= { "hsadc_src", "ext_hsadc" };
- PNAME(mux_edp_24m_p)	= { "ext_edp_24m", "xin24m" };
- PNAME(mux_tspout_p)	= { "cpll", "gpll", "npll", "xin27m" };
- 
--PNAME(mux_aclk_vcodec_pre_p)	= { "aclk_vepu", "aclk_vdpu" };
-+PNAME(mux_aclk_vcodec_pre_p)	= { "aclk_vdpu", "aclk_vepu" };
- PNAME(mux_usbphy480m_p)		= { "sclk_otgphy1_480m", "sclk_otgphy2_480m",
- 				    "sclk_otgphy0_480m" };
- PNAME(mux_hsicphy480m_p)	= { "cpll", "gpll", "usbphy480m_src" };
--- 
-2.21.0.392.gf8f6787159e-goog
+static inline void
+syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+		      unsigned long *args)
+{
+	memcpy(args, &regs->d1, 6 * sizeof(args[0]));
+}
 
+[1] https://lore.kernel.org/lkml/20190328230512.486297455@goodmis.org/
+
+
+--=20
+ldv
+
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJcnpZpAAoJEAVFT+BVnCUI4vIQAPQqju1aoX3/IZxEksFJW+ev
+dIbmz5U9rnjfdtM50I6X9mysyxyR2HNniWeuFZbt0tHmpAhu16O8Bnp9KvxYr5Dm
+ftvzu6VPj44c/S09aLdnlBLSgFJcckQqGauuggS67ADhENuFv9pAWYNBUz6oEKWv
+RawTPm+1po3rUVgm2Ob3AK9mujgsuShyhvWxc2ObZgUBptYVC7BhnbOErBRYIomi
+FPeEmA0esJN2HeU2KNuq9H+tOpzODEIY9EfF2m4b+LLFgCwI4OqL34KiQ57qbNJ/
+aywwUV+TAMahEgxNFPEt1nDgx4S23EaMoI49y5W/l8lKIqKD3uc+AKOzTIabDnE3
+ntY8i1YWUBaOZ14oqZJ5AQtzIr51mgu7H4LmNIJQvJoxGj5T8tJ2f2VlLDIlyTEG
+bw8O+pnAof6GcaXxBvjuvwpXyegApM/s11a5G2ERCLLaWtnEloNf8Ud/ZCVLsPV6
+ppHcvjY/OhI+vglUiz2gm5AuR7ci6afdFzUkvWuwM3kHOdudsVANM3EK7Whp4BZt
+K6G8uy2wT4j9xTqLBsJoHuOkbchXn9+d/jBVUUuEs2IumK8SoWolynuyIA8VRepB
+MrM7o6RcWNtT/x/5Ew9HkVJERzPwkAtNVKn+vEwNlwiRKar/up/UPZIqMSPdikKz
+7y4/HcyUgWxDuWb5uvpz
+=i7SW
+-----END PGP SIGNATURE-----
+
+--SLDf9lqlvOQaIe6s--
