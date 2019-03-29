@@ -2,98 +2,125 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D606C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FDFC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CC9218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B141E218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:18:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aCWK7gJz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730002AbfC2SQX (ORCPT
+        id S1730008AbfC2SSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 14:16:23 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:58788 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729921AbfC2SQX (ORCPT
+        Fri, 29 Mar 2019 14:18:46 -0400
+Received: from mail-oi1-f202.google.com ([209.85.167.202]:46424 "EHLO
+        mail-oi1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729932AbfC2SSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 14:16:23 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 0F77D72CCAD;
-        Fri, 29 Mar 2019 21:16:20 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id F1DAB7CC74C; Fri, 29 Mar 2019 21:16:19 +0300 (MSK)
-Date:   Fri, 29 Mar 2019 21:16:19 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Guo Ren <guoren@kernel.org>, Palmer Dabbelt <palmer@sifive.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: fix syscall_get_arguments() and
- syscall_set_arguments()
-Message-ID: <20190329181619.GB32651@altlinux.org>
-References: <20190329171221.GA32456@altlinux.org>
- <20190329131514.3e4ec93e@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="61jdw2sOBCFtR2d/"
-Content-Disposition: inline
-In-Reply-To: <20190329131514.3e4ec93e@gandalf.local.home>
+        Fri, 29 Mar 2019 14:18:45 -0400
+Received: by mail-oi1-f202.google.com with SMTP id r190so1202048oie.13
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 11:18:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=TseWlpWgDOC1dH/DYUii6Dj7Adu2b04wsLgsksnWzVs=;
+        b=aCWK7gJzF3d75NDpKwWtvmS/qE84L+JURj00H6Rnfrs9q+nLcB7Iar9x4ITUCEC0Nb
+         3lumsJUWh9/3schkD1WrA+EGu2Vu6ZLjfVb6lYn94aGhq8iMp69ap/CFBL1esizbgHGT
+         zuRylkxVZv3nLdX/jczIvsCBbtQkWaKggyYZ2Fo3Tedv2UuFmPW5INX+fQNmYKnrmwCA
+         2cb9kFZDTglPbLG6521pJ03Rx2hZfprggupI01xKA2z7uvIgASCVvL13RwWwi7kGKJ4q
+         zj0Urly5rpwdSrRefTuReJ4cPhu5Bc6ksomuE39b6dp1n3b0lMTAt5Fbp92I3eBS84u8
+         6VUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=TseWlpWgDOC1dH/DYUii6Dj7Adu2b04wsLgsksnWzVs=;
+        b=bn6/Gk+lu8Zp3kG+YcKkf48P4EuymfZZYvX8rZk+5s3+itrV80y7D8D78l5iMoYgAF
+         k3AuLC/uXiGhN3MTCwlqZH/oLF/o/OITpAKLHgTPwKP89SUrBUt+a6EaPj5pKG7oxutJ
+         ckoly+d2qvwaIQVxUFHf/07Auwn7NN4FzTd1Y+7qzKrim31aWAqz9MHTMYVa3PBJqwUQ
+         +bo1QsfKJMbJVZNBJAj7tRFoI+99pvHPacvl2uEhPpbkheyxhbiSbzHrCDdw8D1a63cc
+         7zbdRP48nGhoMHV/9EjfA3L+95klvr7fpUCExWXOESOfm8kOGCOh1nhiyCxNF4APB5PH
+         pQQg==
+X-Gm-Message-State: APjAAAU4tEOsV4UpU2nM4yyOUR0c+88t9cyv9V5txB1HV9eieKPIgPUJ
+        qC2T4XEVIPYLak9pDesH8635BQ7gbvp+d8wfKQE=
+X-Google-Smtp-Source: APXvYqzfwHSCPcOtHrOCnhWc8fdsm1m+pGdQUhnhIoEflOxbRll66KgIaKEOvChamCyINXmb+mMmrq9F7N5iWy8mcRo=
+X-Received: by 2002:aca:3841:: with SMTP id f62mr4238023oia.9.1553883524800;
+ Fri, 29 Mar 2019 11:18:44 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 11:18:39 -0700
+In-Reply-To: <eea3ce6a-732b-5c1d-9975-eddaeee21cf5@infradead.org>
+Message-Id: <20190329181839.139301-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <eea3ce6a-732b-5c1d-9975-eddaeee21cf5@infradead.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+Subject: [PATCH v2] gcov: fix when CONFIG_MODULES is not set
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     oberpar@linux.ibm.com, akpm@linux-foundation.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Greg Hackmann <ghackmann@android.com>,
+        Tri Vo <trong@android.com>, linux-mm@kvack.org,
+        kbuild-all@01.org, Randy Dunlap <rdunlap@infradead.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fixes commit 8c3d220cb6b5 ("gcov: clang support")
 
---61jdw2sOBCFtR2d/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: Greg Hackmann <ghackmann@android.com>
+Cc: Tri Vo <trong@android.com>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: linux-mm@kvack.org
+Cc: kbuild-all@01.org
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ kernel/gcov/gcc_3_4.c | 4 ++++
+ kernel/gcov/gcc_4_7.c | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-On Fri, Mar 29, 2019 at 01:15:14PM -0400, Steven Rostedt wrote:
-> On Fri, 29 Mar 2019 20:12:21 +0300
-> "Dmitry V. Levin" <ldv@altlinux.org> wrote:
->=20
-> > RISC-V syscall arguments are located in orig_a0,a1..a5 fields
-> > of struct pt_regs.
-> >=20
-> > Due to an off-by-one bug and a bug in pointer arithmetic
-> > syscall_get_arguments() was reading s3..s7 fields instead of a1..a5.
-> > Likewise, syscall_set_arguments() was writing s3..s7 fields
-> > instead of a1..a5.
->=20
-> Should I add this to my series? And then rebase on top of it?
+diff --git a/kernel/gcov/gcc_3_4.c b/kernel/gcov/gcc_3_4.c
+index 801ee4b0b969..8fc30f178351 100644
+--- a/kernel/gcov/gcc_3_4.c
++++ b/kernel/gcov/gcc_3_4.c
+@@ -146,7 +146,11 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
+  */
+ bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
+ {
++#ifdef CONFIG_MODULES
+ 	return within_module((unsigned long)info, mod);
++#else
++	return false;
++#endif
+ }
+ 
+ /* Symbolic links to be created for each profiling data file. */
+diff --git a/kernel/gcov/gcc_4_7.c b/kernel/gcov/gcc_4_7.c
+index ec37563674d6..0b6886d4a4dd 100644
+--- a/kernel/gcov/gcc_4_7.c
++++ b/kernel/gcov/gcc_4_7.c
+@@ -159,7 +159,11 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
+  */
+ bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
+ {
++#ifdef CONFIG_MODULES
+ 	return within_module((unsigned long)info, mod);
++#else
++	return false;
++#endif
+ }
+ 
+ /* Symbolic links to be created for each profiling data file. */
+-- 
+2.21.0.392.gf8f6787159e-goog
 
-This is fine with me.  If you are adding the fix for riscv,
-please consider adding the fix for csky, too.
-
-
---=20
-ldv
-
---61jdw2sOBCFtR2d/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJcnmDzAAoJEAVFT+BVnCUIEwoQAJFU9YuwW0jEozEhXNul4GNR
-E1aMCIPrK/9OKouxQNBkQSRgE5bnbmvvSW5UBDKmJ+kzHXSTvZ2iOV5aPkng7Svk
-eVjeBnu8pdX3uNFpZ5WHDVfs+qr7oDuBZpdmK3h1RfxA9PBtwpg/SBOBXlGwCS+J
-vYn19hxasA5hJ3bXlBP0ssiQT0hTsqmTkIfD0QWtaPJq3lRXYYHt29CoEgXE6/qv
-Ju5XS/2pSH6Lt7JJQvT9BmcE7VIJI/T91mRS7CD8UfS2wyaNDV1r3/PMx2KF+nmN
-z/4MTFYXbVHKuxn8ljg6qUWhV4lEaKXInBuIKZN/LHmiuRxgTST6EoBYZrtYjr+O
-D6KyotRxjJR703YYrZmZq90Ms/nzshgU5OAeg6mdurmC6wYaf7Sm7WdcZv97HMJ1
-FHxpy3zhtIuhif6riqolNqusOXFkhtADURXkSfNoJhiig4EWRxrcOml7+dzQN9Z1
-QoVkx79yVTFeV8VbnxhYGR0OkSgmp/DOwa0jBJDCecTBs5lmkGe0WPNd5mYhQ/jw
-0SevXWtSTbY9BEiTangFnkx1YuwyFybAHTzvgbVBoagWTbypZU3P57s+Sne5xNN/
-MZ6EVNraPEbtimzLrXjvqKXgSHCgkmhzP0u3Z4ll1JRz6qA0jL5k43wwB6842+Ss
-XhK4Wa03+nTDpzzB4P1j
-=wm1N
------END PGP SIGNATURE-----
-
---61jdw2sOBCFtR2d/--
