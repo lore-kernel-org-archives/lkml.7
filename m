@@ -2,122 +2,99 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF8BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CBDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DA8218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F7AB218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:51:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i2WEi6uH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbfC2Qvc (ORCPT
+        id S1729822AbfC2Qvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 12:51:32 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42785 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728977AbfC2Qvb (ORCPT
+        Fri, 29 Mar 2019 12:51:45 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38432 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728977AbfC2Qvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 12:51:31 -0400
-Received: by mail-qt1-f196.google.com with SMTP id p20so3079934qtc.9
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 09:51:31 -0700 (PDT)
+        Fri, 29 Mar 2019 12:51:44 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w137so2190815oiw.5;
+        Fri, 29 Mar 2019 09:51:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N1HCigfA8bQHvJ/BGlEGTuP3vkUjfhaoQn+F89AQ34M=;
+        b=i2WEi6uHY5m6gssBWupSUY66gXWQs8xsF8Kz4jMWmI6x+y3iLiTGkl6/3R7t/xAY6i
+         njr1lp3+GQvrI/Utt93iFFLr9I0o0Sk+3MTqzn7+QaSZFs/5JGACSkMngPCb/SLd0s8g
+         MtOEyYpudDQayUXc+jv4E2Q8/8PM8SYv667ukw0IfHrwlMNYFZuMkHaYY3Fcq/Bmk9sG
+         FajdNklnWRjGoulivNM4AsJdtccMtYMRGamPqyyocJHg8l4lt96OdtgqHHOKaUWnxNQD
+         EH6mOaFKZ5vDuhVox6lMXTccyoicONbIPrJWNMFuoSQcas2sgbMKHci7l4dgi45AIWem
+         erZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JnQtOm1yPrnbkzP6/W9hj/ZhgDKVeNsjW2OawjBvYTY=;
-        b=nBEHDhoD08nlLWK/EJbqEXMpMkCU6h1s5jnkbCJ9YtqzSLyPNEdxTt13plB+7EByhk
-         Q5+4I1+4r2Y9lbQelEjMLhZ4xGAH16T+xIgrh6nhuRQzf1SQ9aop3Y2BHRZUks9OyYl7
-         5dNsupFzTfIwkydFMIX982dOcAkgCdUsLo/c5Im2UFUWn523XTxYq8rT9dmzuw6AIDxs
-         wDvWIitK2MS+COgWBBoduvqnlq30Gh93zuTSiybn5sOp/ZS+TXY6Jp7bPQVuScxZr4tc
-         7ohGpNbzUZATmSpp2okYikxa8dBk6pScA1XgUnWN8pBEscRXwaW4xVpVpJ4rd9hBiOeN
-         D6Jg==
-X-Gm-Message-State: APjAAAU37TMELFNKAaDszFM1fgkXVAph+HZgxs0AfzCUI+Yksr5oKbzB
-        wJKIiIn1nhP+3t4SfIChavTKgw==
-X-Google-Smtp-Source: APXvYqxBgfBkI11ElcG4ShAYKMBjANr6IPgccDr6/JrHGDJDvwRxxD++gvYrD29fhyrttrIle3nwrw==
-X-Received: by 2002:a0c:a424:: with SMTP id w33mr41335410qvw.5.1553878290672;
-        Fri, 29 Mar 2019 09:51:30 -0700 (PDT)
-Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
-        by smtp.gmail.com with ESMTPSA id x201sm1403846qkb.92.2019.03.29.09.51.28
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=N1HCigfA8bQHvJ/BGlEGTuP3vkUjfhaoQn+F89AQ34M=;
+        b=NmBizlicA1AQzDNGpI04OqnLtccVzyoC/2WAaBjfpw7lMje/34DDAoSXRwllkpCQSp
+         EM/xYsQsUVrJLh+MU3jO4L0orzbBWxv0jUCqeKuaCOVuqFN1hm5ZESEn7+3WANF3WRWA
+         kKv0K/c2SlT3hrK1RDmKWGFYct1yYCVpfihRRme0H53NxoMBTGL6thNRlzArISt6sUcH
+         4xyai8hQouBtzSxX7Wrdj7xeP9Aa66SeubsbV9Fs992ZPoe6/r76z7LkMvonWHoIQyqp
+         HAnZcHQ9rHnt96tjHbIcCmi0DAVDf2aY0LXynxOtFHUjuz3r5+IfnhpmG3Ql8siP0gJC
+         Ao1w==
+X-Gm-Message-State: APjAAAW1M7y0awrEMHwOX807NCarxp4URtcSOFpbhzyys7Hnz7mQfkwj
+        lIg69NGMvV7erMM8ygSnAz3pim0=
+X-Google-Smtp-Source: APXvYqxI3mP5WxwqW9kp53XWCg+T9Wdk5qTE/pdg7j2rI2YcCrakUmQEEqYjEtgYRKzYQEFcIHAm9Q==
+X-Received: by 2002:aca:df05:: with SMTP id w5mr4258485oig.150.1553878303469;
+        Fri, 29 Mar 2019 09:51:43 -0700 (PDT)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id 101sm1117739otl.76.2019.03.29.09.51.42
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 09:51:29 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 12:51:26 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
-        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
-        dodgen@google.com, konrad.wilk@oracle.com, dhildenb@redhat.com,
-        aarcange@redhat.com, alexander.duyck@gmail.com
-Subject: Re: On guest free page hinting and OOM
-Message-ID: <20190329125034-mutt-send-email-mst@kernel.org>
-References: <20190329084058-mutt-send-email-mst@kernel.org>
- <f6332928-d6a4-7a75-245d-2c534cf6e710@redhat.com>
- <20190329104311-mutt-send-email-mst@kernel.org>
- <7a3baa90-5963-e6e2-c862-9cd9cc1b5f60@redhat.com>
- <f0ee075d-3e99-efd5-8c82-98d53b9f204f@redhat.com>
+        Fri, 29 Mar 2019 09:51:42 -0700 (PDT)
+Received: from minyard.net (75-108-126-199.enidcmtk01.res.dyn.suddenlink.net [75.108.126.199])
+        by serve.minyard.net (Postfix) with ESMTPSA id E7CEF18003A;
+        Fri, 29 Mar 2019 16:51:41 +0000 (UTC)
+Date:   Fri, 29 Mar 2019 11:51:40 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, cminyard@mvista.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tty/serial: Add a serial port simulator
+Message-ID: <20190329165140.GD31733@minyard.net>
+Reply-To: minyard@acm.org
+References: <20190305171231.22133-1-minyard@acm.org>
+ <eea0ad95-8344-371a-1dd0-58c8366a355b@infradead.org>
+ <20190306015149.GD4290@minyard.net>
+ <041e137e-0b9d-04f9-255d-b1f402b23c17@infradead.org>
+ <447407be-0f49-f29d-6e81-bf4ed0a6e56b@zytor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f0ee075d-3e99-efd5-8c82-98d53b9f204f@redhat.com>
+In-Reply-To: <447407be-0f49-f29d-6e81-bf4ed0a6e56b@zytor.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 04:45:58PM +0100, David Hildenbrand wrote:
-> On 29.03.19 16:37, David Hildenbrand wrote:
-> > On 29.03.19 16:08, Michael S. Tsirkin wrote:
-> >> On Fri, Mar 29, 2019 at 03:24:24PM +0100, David Hildenbrand wrote:
-> >>>
-> >>> We had a very simple idea in mind: As long as a hinting request is
-> >>> pending, don't actually trigger any OOM activity, but wait for it to be
-> >>> processed. Can be done using simple atomic variable.
-> >>>
-> >>> This is a scenario that will only pop up when already pretty low on
-> >>> memory. And the main difference to ballooning is that we *know* we will
-> >>> get more memory soon.
-> >>
-> >> No we don't.  If we keep polling we are quite possibly keeping the CPU
-> >> busy so delaying the hint request processing.  Again the issue it's a
-> > 
-> > You can always yield. But that's a different topic.
-> > 
-> >> tradeoff. One performance for the other. Very hard to know which path do
-> >> you hit in advance, and in the real world no one has the time to profile
-> >> and tune things. By comparison trading memory for performance is well
-> >> understood.
-> >>
-> >>
-> >>> "appended to guest memory", "global list of memory", malicious guests
-> >>> always using that memory like what about NUMA?
-> >>
-> >> This can be up to the guest. A good approach would be to take
-> >> a chunk out of each node and add to the hints buffer.
-> > 
-> > This might lead to you not using the buffer efficiently. But also,
-> > different topic.
-> > 
-> >>
-> >>> What about different page
-> >>> granularity?
-> >>
-> >> Seems like an orthogonal issue to me.
-> > 
-> > It is similar, yes. But if you support multiple granularities (e.g.
-> > MAX_ORDER - 1, MAX_ORDER - 2 ...) you might have to implement some sort
-> > of buddy for the buffer. This is different than just a list for each node.
+On Thu, Mar 28, 2019 at 12:39:12PM -0700, H. Peter Anvin wrote:
+> Dumb question: this is basically a pty on steroids. Wouldn't this be
+> better done by enhancing the pty devices?
 
-Right but we don't plan to do it yet.
+I did look at that, but it would be pretty invasive to pty.  There's
+no modem control stuff, none of the other special serial ioctls.  And
+the locking in this driver is fairly strange because you have two
+serial ports looking at each other's data for modem control.  But
+that might not be a big deal.
 
-> Oh, and before I forget, different zones might of course also be a problem.
+Adding the speed simulation to ptys would also be really strange.
+That's not a deal-breaker, I suppose, but it's not much of a serial
+port simulation without it.
 
-I would just split the hint buffer evenly between zones.
-
-> 
-> -- 
-> 
-> Thanks,
-> 
-> David / dhildenb
+-corey
