@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5432C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292F2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30162184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9762173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553866738;
-	bh=SkJNJd+wJX0ueJU247e9GspNYRCEhJUKJSkJnCs/It8=;
+	s=default; t=1553866742;
+	bh=98jJ9oNLxV9vvGTTeUcoU8GtKcSejZXOv18WUM0iyWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wwW6uM2tlN6D0ydLDX/+i5+QgSgTEMGMqI1OzI4qlM9FOo5hzOUjcmxlUl+puhTjD
-	 1fYzWYd0yRRzKSreDyBLW1LDPFO1t8JaA+sJKOFL0wW7SAIBWfyLQaz5mllJBOJMLo
-	 tQro0h96+sa9W3A1e7VC1TlaDDlJhcYyosUFPLeY=
+	b=V349BvwwrGJSzBEZaridnv1yTAGzJdy8O+szef+IdYKIlqmpcD6jvDDbfmqzD2IPM
+	 E1rCtFZ8RXFaKH8WliQUFZnZEzXZgCyzlia6zyOmAZES42W4eEM+5f6bs0zp3Stsal
+	 6o+6U6UWVur6adgl9Oh6jfL2DNrIPXXKi9grgqfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbfC2Ni5 (ORCPT
+        id S1729899AbfC2NjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 09:38:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34192 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 09:39:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729859AbfC2Niy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 09:38:54 -0400
+        id S1729644AbfC2Ni6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 09:38:58 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2466D2183F;
-        Fri, 29 Mar 2019 13:38:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BAC421850;
+        Fri, 29 Mar 2019 13:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553866733;
-        bh=SkJNJd+wJX0ueJU247e9GspNYRCEhJUKJSkJnCs/It8=;
+        s=default; t=1553866737;
+        bh=98jJ9oNLxV9vvGTTeUcoU8GtKcSejZXOv18WUM0iyWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yiGLETrG+bpHgLmPkxYTlwCnDRzZrtqIce9DLvZNuQFWtcNgw6gOt96/KDg2F21Y1
-         uGMzn01V0bHKkLxKqcIszPiWwnSFHtlMu95UW1B2Nf/wD7fWYwQWGBXLAJWWWtTdsd
-         VNpDV5CFckbeh2QZXGS2L6o7mltoU3ZPerBsxvw4=
+        b=d+aWrF9rYIMCkEe13Tjb6GXKG4e47pi90Z6zGyi0iXkV9amxYkT6M3cDHH5pH7l5N
+         U0OYCBiPsKA1Lop0N72xdtASdK6Xt8pkDYlCUY7kfSxcm5h1kM4nvNIXHELNuBw4vG
+         IaLl+5y7ZztkMyyzTL0GFvqgNYTsawqH+tUabDvM=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>, stable@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 12/13] perf scripts python: exported-sql-viewer.py: Fix python3 support
-Date:   Fri, 29 Mar 2019 10:38:00 -0300
-Message-Id: <20190329133801.21004-13-acme@kernel.org>
+Subject: [PATCH 13/13] perf pmu: Fix parser error for uncore event alias
+Date:   Fri, 29 Mar 2019 10:38:01 -0300
+Message-Id: <20190329133801.21004-14-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190329133801.21004-1-acme@kernel.org>
 References: <20190329133801.21004-1-acme@kernel.org>
@@ -60,58 +62,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Unlike python2, python3 strings are not compatible with byte strings.
-That results in disassembly not working for the branches reports. Fixup
-those places overlooked in the port to python3.
+Perf fails to parse uncore event alias, for example:
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Fixes: beda0e725e5f ("perf script python: Add Python3 support to exported-sql-viewer.py")
-Link: http://lkml.kernel.org/r/20190327072826.19168-3-adrian.hunter@intel.com
+  # perf stat -e unc_m_clockticks -a --no-merge sleep 1
+  event syntax error: 'unc_m_clockticks'
+                       \___ parser error
+
+Current code assumes that the event alias is from one specific PMU.
+
+To find the PMU, perf strcmps the PMU name of event alias with the real
+PMU name on the system.
+
+However, the uncore event alias may be from multiple PMUs with common
+prefix. The PMU name of uncore event alias is the common prefix.
+
+For example, UNC_M_CLOCKTICKS is clock event for iMC, which include 6
+PMUs with the same prefix "uncore_imc" on a skylake server.
+
+The real PMU names on the system for iMC are uncore_imc_0 ...
+uncore_imc_5.
+
+The strncmp is used to only check the common prefix for uncore event
+alias.
+
+With the patch:
+
+  # perf stat -e unc_m_clockticks -a --no-merge sleep 1
+  Performance counter stats for 'system wide':
+
+       723,594,722      unc_m_clockticks [uncore_imc_5]
+       724,001,954      unc_m_clockticks [uncore_imc_3]
+       724,042,655      unc_m_clockticks [uncore_imc_1]
+       724,161,001      unc_m_clockticks [uncore_imc_4]
+       724,293,713      unc_m_clockticks [uncore_imc_2]
+       724,340,901      unc_m_clockticks [uncore_imc_0]
+
+       1.002090060 seconds time elapsed
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Thomas Richter <tmricht@linux.ibm.com>
+Cc: stable@vger.kernel.org
+Fixes: ea1fa48c055f ("perf stat: Handle different PMU names with common prefix")
+Link: http://lkml.kernel.org/r/1552672814-156173-1-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../perf/scripts/python/exported-sql-viewer.py  | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ tools/perf/util/pmu.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 0cf30956064a..74ef92f1d19a 100755
---- a/tools/perf/scripts/python/exported-sql-viewer.py
-+++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -2908,9 +2908,13 @@ class LibXED():
- 		ok = self.xed_format_context(2, inst.xedp, inst.bufferp, sizeof(inst.buffer), ip, 0, 0)
- 		if not ok:
- 			return 0, ""
-+		if sys.version_info[0] == 2:
-+			result = inst.buffer.value
-+		else:
-+			result = inst.buffer.value.decode()
- 		# Return instruction length and the disassembled instruction text
- 		# For now, assume the length is in byte 166
--		return inst.xedd[166], inst.buffer.value
-+		return inst.xedd[166], result
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 6199a3174ab9..e0429f4ef335 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -732,10 +732,20 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
  
- def TryOpen(file_name):
- 	try:
-@@ -2926,9 +2930,14 @@ def Is64Bit(f):
- 	header = f.read(7)
- 	f.seek(pos)
- 	magic = header[0:4]
--	eclass = ord(header[4])
--	encoding = ord(header[5])
--	version = ord(header[6])
-+	if sys.version_info[0] == 2:
-+		eclass = ord(header[4])
-+		encoding = ord(header[5])
-+		version = ord(header[6])
-+	else:
-+		eclass = header[4]
-+		encoding = header[5]
-+		version = header[6]
- 	if magic == chr(127) + "ELF" and eclass > 0 and eclass < 3 and encoding > 0 and encoding < 3 and version == 1:
- 		result = True if eclass == 2 else False
- 	return result
+ 		if (!is_arm_pmu_core(name)) {
+ 			pname = pe->pmu ? pe->pmu : "cpu";
++
++			/*
++			 * uncore alias may be from different PMU
++			 * with common prefix
++			 */
++			if (pmu_is_uncore(name) &&
++			    !strncmp(pname, name, strlen(pname)))
++				goto new_alias;
++
+ 			if (strcmp(pname, name))
+ 				continue;
+ 		}
+ 
++new_alias:
+ 		/* need type casts to override 'const' */
+ 		__perf_pmu__new_alias(head, NULL, (char *)pe->name,
+ 				(char *)pe->desc, (char *)pe->event,
 -- 
 2.20.1
 
