@@ -2,131 +2,113 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EE9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB96C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61A2D2173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A65132183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:57:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TzBdHLN7";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DHvjLmdu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbfC2G5S (ORCPT
+        id S1728861AbfC2G5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 02:57:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59788 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728651AbfC2G5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 02:57:17 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 29 Mar 2019 02:57:22 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49910 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728651AbfC2G5V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 02:57:21 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id A882D60A24; Fri, 29 Mar 2019 06:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553842640;
+        bh=1gxmQxuk3yyax1HdDebP5caU2lwb2VCo51Y4et8nY0c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=TzBdHLN7frw0nQwa7XB7Bt4VBgtX3k+vntnZw/SRiNOC7P+SY4I4YDLblIUFObycO
+         26S/cPaXfU0O2ahGcPOF4vw+amDnYkvjhsH7yee/um8WYQU8iWqbJUC60pNHSGujHI
+         8v1+25deiF40dwKERCKx9haF8Xli/z8FzqFpsGX8=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 44951DBD74;
-        Fri, 29 Mar 2019 06:57:17 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-53.pek2.redhat.com [10.72.12.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F13EBD1D8;
-        Fri, 29 Mar 2019 06:57:07 +0000 (UTC)
-From:   Lianbo Jiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, akpm@linux-foundation.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
-        Thomas.Lendacky@amd.com
-Subject: [PATCH 1/2 v10] x86/mm, resource: add a new I/O resource descriptor 'IORES_DESC_RESERVED'
-Date:   Fri, 29 Mar 2019 14:56:48 +0800
-Message-Id: <20190329065649.12468-2-lijiang@redhat.com>
-In-Reply-To: <20190329065649.12468-1-lijiang@redhat.com>
-References: <20190329065649.12468-1-lijiang@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 29 Mar 2019 06:57:17 +0000 (UTC)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 097F760A42;
+        Fri, 29 Mar 2019 06:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553842635;
+        bh=1gxmQxuk3yyax1HdDebP5caU2lwb2VCo51Y4et8nY0c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DHvjLmduL4COoHYJNm0nQ1RxWRjjacFzT/Vq81TraWmN/oovrqn7ZGfuh6udZefXo
+         nBvlilZDL15db2SF3Y2yhMj5sE3I6YLUYvhyfi4ceD9ab7utoyqesnpqg6lu1w3lrZ
+         OP+E0sdNdYUJNLt/H3f9/da8vzTmShegZjKmc4EA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 097F760A42
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH -next] drm/omap: Use PTR_ERR_OR_ZERO in hdmi4_core_init()
+To:     YueHaibing <yuehaibing@huawei.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sean Paul <seanpaul@chromium.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        Benoit Parrot <bparrot@ti.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20190329014136.20318-1-yuehaibing@huawei.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <f99b8eb0-b758-7781-8bd8-bb1c95ecb8fa@codeaurora.org>
+Date:   Fri, 29 Mar 2019 12:27:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190329014136.20318-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When doing kexec_file_load(), the first kernel needs to pass the e820
-reserved ranges to the second kernel, because some devices may use it
-in kdump kernel, such as PCI devices.
 
-But, the kernel can not exactly match the e820 reserved ranges when
-walking through the iomem resources via the 'IORES_DESC_NONE', because
-there are several types of e820 that are described as the 'IORES_DESC_NONE'
-type. Please refer to the e820_type_to_iores_desc().
+On 3/29/2019 7:11 AM, YueHaibing wrote:
+> Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Therefore, add a new I/O resource descriptor 'IORES_DESC_RESERVED' for
-the iomem resources search interfaces. It is helpful to exactly match
-the reserved resource ranges when walking through iomem resources.
 
-In addition, since the new descriptor 'IORES_DESC_RESERVED' has been
-created for the reserved areas, the code originally related to the
-descriptor 'IORES_DESC_NONE' also need to be updated.
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-Suggested-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- arch/x86/kernel/e820.c |  2 +-
- arch/x86/mm/ioremap.c  | 16 ++++++++++++++--
- include/linux/ioport.h |  1 +
- 3 files changed, 16 insertions(+), 3 deletions(-)
+-Mukesh
 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 2879e234e193..16fcde196243 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -1050,10 +1050,10 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
- 	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
- 	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
- 	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
-+	case E820_TYPE_RESERVED:	return IORES_DESC_RESERVED;
- 	case E820_TYPE_RESERVED_KERN:	/* Fall-through: */
- 	case E820_TYPE_RAM:		/* Fall-through: */
- 	case E820_TYPE_UNUSABLE:	/* Fall-through: */
--	case E820_TYPE_RESERVED:	/* Fall-through: */
- 	default:			return IORES_DESC_NONE;
- 	}
- }
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 0029604af8a4..5671ec24df49 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -81,9 +81,21 @@ static bool __ioremap_check_ram(struct resource *res)
- 	return false;
- }
- 
--static int __ioremap_check_desc_other(struct resource *res)
-+/*
-+ * Originally, these areas described as IORES_DESC_NONE are not mapped
-+ * as encrypted when using ioremap(), for example, E820_TYPE_{RESERVED,
-+ * RESERVED_KERN,RAM,UNUSABLE}, etc. It checks for a resource that is
-+ * not described as IORES_DESC_NONE, which can make sure the reserved
-+ * areas are not mapped as encrypted when using ioremap().
-+ *
-+ * Now IORES_DESC_RESERVED has been created for the reserved areas so
-+ * the check needs to be expanded so that these areas are not mapped
-+ * encrypted when using ioremap().
-+ */
-+static int __ioremap_check_desc_none_and_reserved(struct resource *res)
- {
--	return (res->desc != IORES_DESC_NONE);
-+	return ((res->desc != IORES_DESC_NONE) &&
-+		(res->desc != IORES_DESC_RESERVED));
- }
- 
- static int __ioremap_res_check(struct resource *res, void *arg)
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index da0ebaec25f0..6ed59de48bd5 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -133,6 +133,7 @@ enum {
- 	IORES_DESC_PERSISTENT_MEMORY_LEGACY	= 5,
- 	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
- 	IORES_DESC_DEVICE_PUBLIC_MEMORY		= 7,
-+	IORES_DESC_RESERVED			= 8,
- };
- 
- /* helpers to define resources */
--- 
-2.17.1
+> ---
+>   drivers/gpu/drm/omapdrm/dss/hdmi4_core.c | 5 +----
+>   1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+> index e384b95ad857..8287ade5ece0 100644
+> --- a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+> @@ -934,8 +934,5 @@ int hdmi4_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
+>   
+>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
+>   	core->base = devm_ioremap_resource(&pdev->dev, res);
+> -	if (IS_ERR(core->base))
+> -		return PTR_ERR(core->base);
+> -
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(core->base);
+>   }
 
+
+
+>
+>
+>
+>
+>
