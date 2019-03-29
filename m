@@ -2,113 +2,108 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F75C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C36C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D486521773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF730218CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:51:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="hUbiP6/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbfC2Vuh (ORCPT
+        id S1730470AbfC2VvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 17:50:37 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33979 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730438AbfC2Vug (ORCPT
+        Fri, 29 Mar 2019 17:51:01 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:36278 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730235AbfC2VvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 17:50:36 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v10so2875015oib.1;
-        Fri, 29 Mar 2019 14:50:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rs7S2foonqwWEFVwaHGYfcLOLiZaazzWH2lQCi+hjMA=;
-        b=sygLuyCAJ0lYuF1fnjoqobyKERvh2F3QZmDCZY7aTJeIz9PJUHjseKEYR3f+25RFRe
-         rDgrFuqZskMtGswsm70rqDVZVZ6xWVkydCsrnjjvRjGOM4HgFrpPjBY9+/8kGqoK3ews
-         sgpzC+Gf/7+iw9no5Ln2BkuUqI3FVVrJiKlmLvrpSO0YYsDVwqG9MV7OztJOnNK1CrIO
-         Tn6cDPB7ZfDzqOvffKGu/sJ45WWQpy6CD6i7P1f1OOaVHeJ7oowMeja61/8Ol8R3sCzY
-         7H2KXACAlkx/5Te4nHAQUTrHSKu7Q7PvKNYP2i6QCeEsY3/X2sF5pIuzY8/Zp92dAlko
-         efxQ==
-X-Gm-Message-State: APjAAAVOkz+4qDvkvU5ZnE+KZWOMxc88iE8LMPNdUpH2G09iQ7/NkJcM
-        ExNA0xQ2ZXNjz5ppQGxDYKSeEvZaJ8g=
-X-Google-Smtp-Source: APXvYqwkVQgvKESgMO8tQ/CZ8tYJNWaiUxGGab5htJF5uIjO3AvZU5JLP5voYdVpflaGgkF0T8cP7A==
-X-Received: by 2002:aca:d8c5:: with SMTP id p188mr4910723oig.144.1553896235992;
-        Fri, 29 Mar 2019 14:50:35 -0700 (PDT)
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com. [209.85.210.51])
-        by smtp.gmail.com with ESMTPSA id 2sm857884ots.22.2019.03.29.14.50.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 29 Mar 2019 14:50:35 -0700 (PDT)
-Received: by mail-ot1-f51.google.com with SMTP id u15so3372317otq.10;
-        Fri, 29 Mar 2019 14:50:34 -0700 (PDT)
-X-Received: by 2002:a9d:6d92:: with SMTP id x18mr20780140otp.112.1553896234713;
- Fri, 29 Mar 2019 14:50:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190329140014.8126-1-laurentiu.tudor@nxp.com> <20190329140014.8126-2-laurentiu.tudor@nxp.com>
-In-Reply-To: <20190329140014.8126-2-laurentiu.tudor@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 29 Mar 2019 16:50:23 -0500
-X-Gmail-Original-Message-ID: <CADRPPNQ9AGRvq8XDjeTerUBry+_hO-U=shCXFaqHhtc9QvMvng@mail.gmail.com>
-Message-ID: <CADRPPNQ9AGRvq8XDjeTerUBry+_hO-U=shCXFaqHhtc9QvMvng@mail.gmail.com>
-Subject: Re: [PATCH 01/13] soc/fsl/qman: fixup liodns only on ppc targets
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     Netdev <netdev@vger.kernel.org>, madalin.bucur@nxp.com,
-        Roy Pledge <roy.pledge@nxp.com>, camelia.groza@nxp.com,
-        David Miller <davem@davemloft.net>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 29 Mar 2019 17:51:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1553896257; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:content-type:
+         content-transfer-encoding:in-reply-to:references;
+        bh=wkpCQ/XRRAPuFOdrcQfHW7MIhSu/wQWwkPELiLIoap4=;
+        b=hUbiP6/JIx6Mkv2WeovIt7OCcfk375+8w7aOoQllaquwx1WuJyLONg3eRi4dX+NkWTyewn
+        vPBt9nxSSDzhqZhgsl3hVrTE5GsbdGlbg6XF+LqdBHst2HePSLPBhaBZyvsn3zuRv0jyxW
+        k3NpV3waavpij0nEHHkNOmgUXIDTk5g=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/3] ASoC: es8316: Add support for inverted jack detect
+Date:   Fri, 29 Mar 2019 22:50:43 +0100
+Message-Id: <20190329215045.6254-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 9:01 AM <laurentiu.tudor@nxp.com> wrote:
->
-> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
->
-> ARM SoCs use SMMU so the liodn fixup done in the qman driver is no
-> longer making sense and it also breaks the ICID settings inherited
-> from u-boot. Do the fixups only for PPC targets.
->
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> ---
->  drivers/soc/fsl/qbman/qman_ccsr.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/soc/fsl/qbman/qman_ccsr.c b/drivers/soc/fsl/qbman/qman_ccsr.c
-> index 109b38de3176..12e414ca3b03 100644
-> --- a/drivers/soc/fsl/qbman/qman_ccsr.c
-> +++ b/drivers/soc/fsl/qbman/qman_ccsr.c
-> @@ -598,6 +598,7 @@ static int qman_init_ccsr(struct device *dev)
->  #define LIO_CFG_LIODN_MASK 0x0fff0000
->  void qman_liodn_fixup(u16 channel)
->  {
-> +#ifdef CONFIG_PPC
->         static int done;
->         static u32 liodn_offset;
->         u32 before, after;
-> @@ -617,6 +618,7 @@ void qman_liodn_fixup(u16 channel)
->                 qm_ccsr_out(REG_REV3_QCSP_LIO_CFG(idx), after);
->         else
->                 qm_ccsr_out(REG_QCSP_LIO_CFG(idx), after);
-> +#endif
+On some devices (Teclast X98+ II tablet, maybe others), the jack
+detection has been wired backwards, so when the ES8316 reports
+headphones being present it means they are actually not plugged.
 
-According to the Linux coding style recommendation, it would be better
-to put the #ifdef into the header files
-"drivers/soc/fsl/qbman/qman_priv.h".  And I'm not sure if this is
-needed on PPC when IOMMU(PAMU) driver is not compiled, if not,
-probably using CONFIG_PAMU as condition would be even better.
+Use a quirk around this incorrect behaviour, which can be enabled
+through the 'everest,jack-detect-inverted' boolean device property.
 
->  }
->
->  #define IO_CFG_SDEST_MASK 0x00ff0000
-> --
-> 2.17.1
->
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ sound/soc/codecs/es8316.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
+index 6d4a323f786b..ec2770b3f77d 100644
+--- a/sound/soc/codecs/es8316.c
++++ b/sound/soc/codecs/es8316.c
+@@ -43,6 +43,7 @@ struct es8316_priv {
+ 	unsigned int sysclk;
+ 	unsigned int allowed_rates[NR_SUPPORTED_MCLK_LRCK_RATIOS];
+ 	struct snd_pcm_hw_constraint_list sysclk_constraints;
++	bool jd_inverted;
+ };
+ 
+ /*
+@@ -577,6 +578,9 @@ static irqreturn_t es8316_irq(int irq, void *data)
+ 	if (!es8316->jack)
+ 		goto out;
+ 
++	if (es8316->jd_inverted)
++		flags ^= ES8316_GPIO_FLAG_HP_NOT_INSERTED;
++
+ 	dev_dbg(comp->dev, "gpio flags %#04x\n", flags);
+ 	if (flags & ES8316_GPIO_FLAG_HP_NOT_INSERTED) {
+ 		/* Jack removed, or spurious IRQ? */
+@@ -592,6 +596,8 @@ static irqreturn_t es8316_irq(int irq, void *data)
+ 		/* Jack inserted, determine type */
+ 		es8316_enable_micbias_for_mic_gnd_short_detect(comp);
+ 		regmap_read(es8316->regmap, ES8316_GPIO_FLAG, &flags);
++		if (es8316->jd_inverted)
++			flags ^= ES8316_GPIO_FLAG_HP_NOT_INSERTED;
+ 		dev_dbg(comp->dev, "gpio flags %#04x\n", flags);
+ 		if (flags & ES8316_GPIO_FLAG_HP_NOT_INSERTED) {
+ 			/* Jack unplugged underneath us */
+@@ -633,6 +639,14 @@ static void es8316_enable_jack_detect(struct snd_soc_component *component,
+ {
+ 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
+ 
++	/*
++	 * Init es8316->jd_inverted here and not in the probe, as we cannot
++	 * guarantee that the bytchr-es8316 driver, which might set this
++	 * property, will probe before us.
++	 */
++	es8316->jd_inverted = device_property_read_bool(component->dev,
++							"everest,jack-detect-inverted");
++
+ 	mutex_lock(&es8316->lock);
+ 
+ 	es8316->jack = jack;
+-- 
+2.11.0
+
