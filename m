@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B17BBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38665C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76066218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33E2218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbfC2TNr convert rfc822-to-8bit (ORCPT
+        id S1729920AbfC2TSE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 15:13:47 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39936 "EHLO gloria.sntech.de"
+        Fri, 29 Mar 2019 15:18:04 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:40010 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729483AbfC2TNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 15:13:46 -0400
+        id S1729720AbfC2TSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 15:18:04 -0400
 Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1h9wwY-0000OM-GJ; Fri, 29 Mar 2019 20:13:34 +0100
+        id 1h9x0o-0000Pg-Ls; Fri, 29 Mar 2019 20:17:58 +0100
 From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
 To:     Douglas Anderson <dianders@chromium.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -35,16 +35,13 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Ezequiel Garcia <ezequiel@collabora.com>,
         Enric =?ISO-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>,
         Rob Herring <robh+dt@kernel.org>, mka@chromium.org,
-        Eric Anholt <eric@anholt.net>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v4 2/7] drm/panel: simple: Add ability to override typical timing
-Date:   Fri, 29 Mar 2019 20:13:33 +0100
-Message-ID: <1637882.fJ8YATuT5C@diego>
-In-Reply-To: <20190328171710.31949-3-dianders@chromium.org>
-References: <20190328171710.31949-1-dianders@chromium.org> <20190328171710.31949-3-dianders@chromium.org>
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v4 4/7] drm/panel: simple: Use display_timing for Innolux n116bge
+Date:   Fri, 29 Mar 2019 20:17:57 +0100
+Message-ID: <4434574.6rqfZtZq1D@diego>
+In-Reply-To: <20190328171710.31949-5-dianders@chromium.org>
+References: <20190328171710.31949-1-dianders@chromium.org> <20190328171710.31949-5-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="iso-8859-1"
@@ -53,49 +50,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 28. März 2019, 18:17:05 CET schrieb Douglas Anderson:
-> From: Sean Paul <seanpaul@chromium.org>
+Am Donnerstag, 28. März 2019, 18:17:07 CET schrieb Douglas Anderson:
+> Convert the Innolux n116bge from using a fixed mode to specifying a
+> display timing with min/typ/max values.
 > 
-> This patch adds the ability to override the typical display timing for a
-> given panel. This is useful for devices which have timing constraints
-> that do not apply across the entire display driver (eg: to avoid
-> crosstalk between panel and digitizer on certain laptops). The rules are
-> as follows:
+> Note that the n116bge's datasheet doesn't fit too well into DRM's way
+> of specifying things.  Specifically the panel's datasheet just
+> specifies the vertical blanking period and horizontal blanking period
+> and doesn't break things out.  For now we'll leave everything as a
+> fixed value but just allow adjusting the pixel clock.  I've added a
+> comment on what the datasheet claims so someone could later expand
+> things to fit their needs if they wanted to test other blanking
+> periods.
 > 
-> - panel must not specify fixed mode (since the override mode will
->   either be the same as the fixed mode, or we'll be unable to
->   check the bounds of the overried)
-> - panel must specify at least one display_timing range which will be
->   used to ensure the override mode fits within its bounds
+> The goal here is to be able to specify the panel timings in the device
+> tree for several rk3288 Chromebooks (like rk3288-veryon-jerry).  These
+> Chromebooks have all been running in the downstream kernel with the
+> standard porches and sync lengths but just with a slightly slower
+> pixel clock because the 76.42 MHz clock is not achievable from the
+> fixed PLL that was available.  These Chromebooks only achieve a
+> refresh rate of ~58 Hz.  While it's probable that we could adjust the
+> timings to achieve 60 Hz it's probably wisest to match what's been
+> running on these devices all these years.
 > 
-> Changes in v2:
->  - Parse the full display-timings node (using the native-mode) (Rob)
-> Changes in v3:
->  - No longer parse display-timings subnode, use panel-timing (Rob)
+> I'll note that though the upstream kernel has always tried to achieve
+> 76.42 MHz, it has actually been running at 74.25 MHz also since the
+> video processor is parented off the same fixed PLL.
+> 
 > Changes in v4:
->  - Don't add mode from timing if override was specified (Thierry)
->  - Add warning if timing and fixed mode was specified (Thierry)
->  - Don't add fixed mode if timing was specified (Thierry)
->  - Refactor/rename a bit to avoid extra indentation from "if" tests
->  - i should be unsigned (Thierry)
->  - Add annoying WARN_ONs for some cases (Thierry)
->  - Simplify 'No display_timing found' handling (Thierry)
->  - Rename to panel_simple_parse_override_mode() (Thierry)
+>  - display_timing for Innolux n116bge new for v4.
 > 
-> Cc: Doug Anderson <dianders@chromium.org>
-> Cc: Eric Anholt <eric@anholt.net>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Stéphane Marchesin <marcheu@chromium.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-on a rk3399-kevin and rk3288-jerry
+on a rk3288-jerry and rk3288-pinky
 Tested-by: Heiko Stuebner <heiko@sntech.de>
+
 
 
