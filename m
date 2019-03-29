@@ -2,342 +2,528 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C14C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CDCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0669218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B0A21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:13:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="paydmlBw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfC2ANb (ORCPT
+        id S1728946AbfC2ANg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 20:13:31 -0400
-Received: from mga07.intel.com ([134.134.136.100]:44538 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728548AbfC2ANa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 20:13:36 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46169 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728627AbfC2ANa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Mar 2019 20:13:30 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 17:13:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,282,1549958400"; 
-   d="scan'208";a="311314120"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga005.jf.intel.com with ESMTP; 28 Mar 2019 17:13:28 -0700
-Date:   Thu, 28 Mar 2019 09:12:21 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     jglisse@redhat.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2 06/11] mm/hmm: improve driver API to work and wait
- over a range v2
-Message-ID: <20190328161221.GE31324@iweiny-DESK2.sc.intel.com>
-References: <20190325144011.10560-1-jglisse@redhat.com>
- <20190325144011.10560-7-jglisse@redhat.com>
+Received: by mail-pf1-f194.google.com with SMTP id 9so133700pfj.13;
+        Thu, 28 Mar 2019 17:13:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LyfhsLmaq1V/aRur5dBa23CgZwjMWfYxpowPFGnTGR0=;
+        b=paydmlBwJ2XI2N8hY9lfibXtsaIQkRd8r8lKYjePd2UF1RqKq2ltayJxPTquya0kQI
+         svdLdMz9wNfEGmtT8tWvB393ckVPprHXZnEGgqDJr7+Yi04nw9ACgtJspz8Io9iBeuwT
+         TTQVPZCjVxD8a26ambGFDJUy3CY6HwaESb1RFKXrJNM6fkxsGBPvr+Q0GiGzHG64lgiT
+         FJRWFis81l6YxbLGWGU1kdls0zDci1y6O7IUbOvKFgTSjfK/IgUUj5LU01a7nAIXYaD1
+         GoezeolaGn0tL7U3uwnqstrYYOoEq0Q0Y6wfkE0FqvIDYnobJxpsjYZt2w2S49Ll/tGj
+         KRXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LyfhsLmaq1V/aRur5dBa23CgZwjMWfYxpowPFGnTGR0=;
+        b=BSu1OHOYEFdgglJAsNJHT7/uxScF1eRV0zqVarg6FMmFxaFJoYTza3z0JBC3yoLFt9
+         4mMLoLs/qv8GGNqpAuojFtL09rFG7X3yGhOuF+W5uagSruXN9T3ug21v1k5BOULuhsNz
+         U1HQKCSUTL5EXV71izdytlY4XZMkzOqv65FNZ3bjTnVe+YN1R2q5bMfUkLGU4r4nPUf3
+         GKYlm//mYgtKw8OKR6aRlIkZFGnFR5LZYMPAmkHp9ld89tuNFEhqf1iS17lQZGSeWk+/
+         D0FSI1vs8LbVtwoeHLQCQ94OR7Tvbubn1DCm5oyXyvKZNH5KRDUpYcoFBmT09kncdS2A
+         K5Xg==
+X-Gm-Message-State: APjAAAUpRTdnyRHd5aEaV+9+Gxgld13kuliLIOuP+RpFiqZOIlFtE6UF
+        Jss5S4HZwmQuZyAqQccIupU=
+X-Google-Smtp-Source: APXvYqwlXI65t9ff0em03xfocdCE174QBjvYlPXAZRuZ65cU0hCrh9LvegrLg8/bweU9AKQypQn7tg==
+X-Received: by 2002:a65:64cf:: with SMTP id t15mr28370588pgv.322.1553818409723;
+        Thu, 28 Mar 2019 17:13:29 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id f125sm432488pfc.91.2019.03.28.17.13.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 17:13:29 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v2 17/24] acpi doc: convert acpi/method-tracing.txt to rst format
+Date:   Fri, 29 Mar 2019 08:11:28 +0800
+Message-Id: <20190329001135.15847-18-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190329001135.15847-1-changbin.du@gmail.com>
+References: <20190329001135.15847-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190325144011.10560-7-jglisse@redhat.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 10:40:06AM -0400, Jerome Glisse wrote:
-> From: Jérôme Glisse <jglisse@redhat.com>
-> 
-> A common use case for HMM mirror is user trying to mirror a range
-> and before they could program the hardware it get invalidated by
-> some core mm event. Instead of having user re-try right away to
-> mirror the range provide a completion mechanism for them to wait
-> for any active invalidation affecting the range.
-> 
-> This also changes how hmm_range_snapshot() and hmm_range_fault()
-> works by not relying on vma so that we can drop the mmap_sem
-> when waiting and lookup the vma again on retry.
-> 
-> Changes since v1:
->     - squashed: Dan Carpenter: potential deadlock in nonblocking code
-> 
-> Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> ---
->  include/linux/hmm.h | 208 ++++++++++++++---
->  mm/hmm.c            | 528 +++++++++++++++++++++-----------------------
->  2 files changed, 428 insertions(+), 308 deletions(-)
-> 
-> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> index e9afd23c2eac..79671036cb5f 100644
-> --- a/include/linux/hmm.h
-> +++ b/include/linux/hmm.h
-> @@ -77,8 +77,34 @@
->  #include <linux/migrate.h>
->  #include <linux/memremap.h>
->  #include <linux/completion.h>
-> +#include <linux/mmu_notifier.h>
->  
-> -struct hmm;
-> +
-> +/*
-> + * struct hmm - HMM per mm struct
-> + *
-> + * @mm: mm struct this HMM struct is bound to
-> + * @lock: lock protecting ranges list
-> + * @ranges: list of range being snapshotted
-> + * @mirrors: list of mirrors for this mm
-> + * @mmu_notifier: mmu notifier to track updates to CPU page table
-> + * @mirrors_sem: read/write semaphore protecting the mirrors list
-> + * @wq: wait queue for user waiting on a range invalidation
-> + * @notifiers: count of active mmu notifiers
-> + * @dead: is the mm dead ?
-> + */
-> +struct hmm {
-> +	struct mm_struct	*mm;
-> +	struct kref		kref;
-> +	struct mutex		lock;
-> +	struct list_head	ranges;
-> +	struct list_head	mirrors;
-> +	struct mmu_notifier	mmu_notifier;
-> +	struct rw_semaphore	mirrors_sem;
-> +	wait_queue_head_t	wq;
-> +	long			notifiers;
-> +	bool			dead;
-> +};
->  
->  /*
->   * hmm_pfn_flag_e - HMM flag enums
-> @@ -155,6 +181,38 @@ struct hmm_range {
->  	bool			valid;
->  };
->  
-> +/*
-> + * hmm_range_wait_until_valid() - wait for range to be valid
-> + * @range: range affected by invalidation to wait on
-> + * @timeout: time out for wait in ms (ie abort wait after that period of time)
-> + * Returns: true if the range is valid, false otherwise.
-> + */
-> +static inline bool hmm_range_wait_until_valid(struct hmm_range *range,
-> +					      unsigned long timeout)
-> +{
-> +	/* Check if mm is dead ? */
-> +	if (range->hmm == NULL || range->hmm->dead || range->hmm->mm == NULL) {
-> +		range->valid = false;
-> +		return false;
-> +	}
-> +	if (range->valid)
-> +		return true;
-> +	wait_event_timeout(range->hmm->wq, range->valid || range->hmm->dead,
-> +			   msecs_to_jiffies(timeout));
-> +	/* Return current valid status just in case we get lucky */
-> +	return range->valid;
-> +}
-> +
-> +/*
-> + * hmm_range_valid() - test if a range is valid or not
-> + * @range: range
-> + * Returns: true if the range is valid, false otherwise.
-> + */
-> +static inline bool hmm_range_valid(struct hmm_range *range)
-> +{
-> +	return range->valid;
-> +}
-> +
->  /*
->   * hmm_pfn_to_page() - return struct page pointed to by a valid HMM pfn
->   * @range: range use to decode HMM pfn value
-> @@ -357,51 +415,133 @@ void hmm_mirror_unregister(struct hmm_mirror *mirror);
->  
->  
->  /*
-> - * To snapshot the CPU page table, call hmm_vma_get_pfns(), then take a device
-> - * driver lock that serializes device page table updates, then call
-> - * hmm_vma_range_done(), to check if the snapshot is still valid. The same
-> - * device driver page table update lock must also be used in the
-> - * hmm_mirror_ops.sync_cpu_device_pagetables() callback, so that CPU page
-> - * table invalidation serializes on it.
-> + * To snapshot the CPU page table you first have to call hmm_range_register()
-> + * to register the range. If hmm_range_register() return an error then some-
-> + * thing is horribly wrong and you should fail loudly. If it returned true then
-> + * you can wait for the range to be stable with hmm_range_wait_until_valid()
-> + * function, a range is valid when there are no concurrent changes to the CPU
-> + * page table for the range.
-> + *
-> + * Once the range is valid you can call hmm_range_snapshot() if that returns
-> + * without error then you can take your device page table lock (the same lock
-> + * you use in the HMM mirror sync_cpu_device_pagetables() callback). After
-> + * taking that lock you have to check the range validity, if it is still valid
-> + * (ie hmm_range_valid() returns true) then you can program the device page
-> + * table, otherwise you have to start again. Pseudo code:
-> + *
-> + *      mydevice_prefault(mydevice, mm, start, end)
-> + *      {
-> + *          struct hmm_range range;
-> + *          ...
->   *
-> - * YOU MUST CALL hmm_vma_range_done() ONCE AND ONLY ONCE EACH TIME YOU CALL
-> - * hmm_range_snapshot() WITHOUT ERROR !
-> + *          ret = hmm_range_register(&range, mm, start, end);
-> + *          if (ret)
-> + *              return ret;
->   *
-> - * IF YOU DO NOT FOLLOW THE ABOVE RULE THE SNAPSHOT CONTENT MIGHT BE INVALID !
-> - */
-> -long hmm_range_snapshot(struct hmm_range *range);
-> -bool hmm_vma_range_done(struct hmm_range *range);
-> -
-> -
-> -/*
-> - * Fault memory on behalf of device driver. Unlike handle_mm_fault(), this will
-> - * not migrate any device memory back to system memory. The HMM pfn array will
-> - * be updated with the fault result and current snapshot of the CPU page table
-> - * for the range.
-> + *          down_read(mm->mmap_sem);
-> + *      again:
-> + *
-> + *          if (!hmm_range_wait_until_valid(&range, TIMEOUT)) {
-> + *              up_read(&mm->mmap_sem);
-> + *              hmm_range_unregister(range);
-> + *              // Handle time out, either sleep or retry or something else
-> + *              ...
-> + *              return -ESOMETHING; || goto again;
-> + *          }
-> + *
-> + *          ret = hmm_range_snapshot(&range); or hmm_range_fault(&range);
-> + *          if (ret == -EAGAIN) {
-> + *              down_read(mm->mmap_sem);
-> + *              goto again;
-> + *          } else if (ret == -EBUSY) {
-> + *              goto again;
-> + *          }
-> + *
-> + *          up_read(&mm->mmap_sem);
-> + *          if (ret) {
-> + *              hmm_range_unregister(range);
-> + *              return ret;
-> + *          }
-> + *
-> + *          // It might not have snap-shoted the whole range but only the first
-> + *          // npages, the return values is the number of valid pages from the
-> + *          // start of the range.
-> + *          npages = ret;
->   *
-> - * The mmap_sem must be taken in read mode before entering and it might be
-> - * dropped by the function if the block argument is false. In that case, the
-> - * function returns -EAGAIN.
-> + *          ...
->   *
-> - * Return value does not reflect if the fault was successful for every single
-> - * address or not. Therefore, the caller must to inspect the HMM pfn array to
-> - * determine fault status for each address.
-> + *          mydevice_page_table_lock(mydevice);
-> + *          if (!hmm_range_valid(range)) {
-> + *              mydevice_page_table_unlock(mydevice);
-> + *              goto again;
-> + *          }
->   *
-> - * Trying to fault inside an invalid vma will result in -EINVAL.
-> + *          mydevice_populate_page_table(mydevice, range, npages);
-> + *          ...
-> + *          mydevice_take_page_table_unlock(mydevice);
-> + *          hmm_range_unregister(range);
->   *
-> - * See the function description in mm/hmm.c for further documentation.
-> + *          return 0;
-> + *      }
-> + *
-> + * The same scheme apply to hmm_range_fault() (ie replace hmm_range_snapshot()
-> + * with hmm_range_fault() in above pseudo code).
-> + *
-> + * YOU MUST CALL hmm_range_unregister() ONCE AND ONLY ONCE EACH TIME YOU CALL
-> + * hmm_range_register() AND hmm_range_register() RETURNED TRUE ! IF YOU DO NOT
-> + * FOLLOW THIS RULE MEMORY CORRUPTION WILL ENSUE !
->   */
-> +int hmm_range_register(struct hmm_range *range,
-> +		       struct mm_struct *mm,
-> +		       unsigned long start,
-> +		       unsigned long end);
-> +void hmm_range_unregister(struct hmm_range *range);
+This converts the plain text documentation to reStructuredText format and
+add it to Sphinx TOC tree. No essential content change.
 
-The above comment is great!  But I think you also need to update
-Documentation/vm/hmm.rst:hmm_range_snapshot() to show the use of
-hmm_range_[un]register()
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+---
+ Documentation/acpi/index.rst          |   1 +
+ Documentation/acpi/method-tracing.rst | 225 ++++++++++++++++++++++++++
+ Documentation/acpi/method-tracing.txt | 192 ----------------------
+ 3 files changed, 226 insertions(+), 192 deletions(-)
+ create mode 100644 Documentation/acpi/method-tracing.rst
+ delete mode 100644 Documentation/acpi/method-tracing.txt
 
-> +long hmm_range_snapshot(struct hmm_range *range);
->  long hmm_range_fault(struct hmm_range *range, bool block);
->  
-> +/*
-> + * HMM_RANGE_DEFAULT_TIMEOUT - default timeout (ms) when waiting for a range
-> + *
-> + * When waiting for mmu notifiers we need some kind of time out otherwise we
-> + * could potentialy wait for ever, 1000ms ie 1s sounds like a long time to
-> + * wait already.
-> + */
-> +#define HMM_RANGE_DEFAULT_TIMEOUT 1000
-> +
->  /* This is a temporary helper to avoid merge conflict between trees. */
-> +static inline bool hmm_vma_range_done(struct hmm_range *range)
-> +{
-> +	bool ret = hmm_range_valid(range);
-> +
-> +	hmm_range_unregister(range);
-> +	return ret;
-> +}
-> +
->  static inline int hmm_vma_fault(struct hmm_range *range, bool block)
->  {
-> -	long ret = hmm_range_fault(range, block);
-> -	if (ret == -EBUSY)
-> -		ret = -EAGAIN;
-> -	else if (ret == -EAGAIN)
-> -		ret = -EBUSY;
-> -	return ret < 0 ? ret : 0;
-> +	long ret;
-> +
-> +	ret = hmm_range_register(range, range->vma->vm_mm,
-> +				 range->start, range->end);
-> +	if (ret)
-> +		return (int)ret;
-> +
-> +	if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT)) {
-> +		up_read(&range->vma->vm_mm->mmap_sem);
-> +		return -EAGAIN;
-> +	}
-> +
-> +	ret = hmm_range_fault(range, block);
-> +	if (ret <= 0) {
-> +		if (ret == -EBUSY || !ret) {
-> +			up_read(&range->vma->vm_mm->mmap_sem);
-> +			ret = -EBUSY;
-> +		} else if (ret == -EAGAIN)
-> +			ret = -EBUSY;
-> +		hmm_range_unregister(range);
-> +		return ret;
-> +	}
-> +	return 0;
-
-Is hmm_vma_fault() also temporary to keep the nouveau driver working?  It looks
-like it to me.
-
-This and hmm_vma_range_done() above are part of the old interface which is in
-the Documentation correct?  As stated above we should probably change that
-documentation with this patch to ensure no new users of these 2 functions
-appear.
-
-Ira
+diff --git a/Documentation/acpi/index.rst b/Documentation/acpi/index.rst
+index ee0000a396e4..a3c5ddb15a0e 100644
+--- a/Documentation/acpi/index.rst
++++ b/Documentation/acpi/index.rst
+@@ -22,3 +22,4 @@ Linux ACPI (Advanced Configuration and Power Interface)
+    initrd_table_override
+    dsdt-override
+    debug
++   method-tracing
+diff --git a/Documentation/acpi/method-tracing.rst b/Documentation/acpi/method-tracing.rst
+new file mode 100644
+index 000000000000..7a997ba168d7
+--- /dev/null
++++ b/Documentation/acpi/method-tracing.rst
+@@ -0,0 +1,225 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
++
++=====================
++ACPICA Trace Facility
++=====================
++
++:Copyright: |copy| 2015, Intel Corporation
++:Author: Lv Zheng <lv.zheng@intel.com>
++
++
++:Abstract: This document describes the functions and the interfaces of the
++  method tracing facility.
++
++1. Functionalities and usage examples
++=====================================
++
++ACPICA provides method tracing capability. And two functions are
++currently implemented using this capability.
++
++Log reducer
++--------------
++
++ACPICA subsystem provides debugging outputs when CONFIG_ACPI_DEBUG is
++enabled. The debugging messages which are deployed via
++ACPI_DEBUG_PRINT() macro can be reduced at 2 levels - per-component
++level (known as debug layer, configured via
++/sys/module/acpi/parameters/debug_layer) and per-type level (known as
++debug level, configured via /sys/module/acpi/parameters/debug_level).
++
++But when the particular layer/level is applied to the control method
++evaluations, the quantity of the debugging outputs may still be too
++large to be put into the kernel log buffer. The idea thus is worked out
++to only enable the particular debug layer/level (normally more detailed)
++logs when the control method evaluation is started, and disable the
++detailed logging when the control method evaluation is stopped.
++
++The following command examples illustrate the usage of the "log reducer"
++functionality:
++
++a. Filter out the debug layer/level matched logs when control methods
++   are being evaluated::
++
++      # cd /sys/module/acpi/parameters
++      # echo "0xXXXXXXXX" > trace_debug_layer
++      # echo "0xYYYYYYYY" > trace_debug_level
++      # echo "enable" > trace_state
++
++b. Filter out the debug layer/level matched logs when the specified
++   control method is being evaluated::
++
++      # cd /sys/module/acpi/parameters
++      # echo "0xXXXXXXXX" > trace_debug_layer
++      # echo "0xYYYYYYYY" > trace_debug_level
++      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
++      # echo "method" > /sys/module/acpi/parameters/trace_state
++
++c. Filter out the debug layer/level matched logs when the specified
++   control method is being evaluated for the first time::
++
++      # cd /sys/module/acpi/parameters
++      # echo "0xXXXXXXXX" > trace_debug_layer
++      # echo "0xYYYYYYYY" > trace_debug_level
++      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
++      # echo "method-once" > /sys/module/acpi/parameters/trace_state
++
++Where:
++   0xXXXXXXXX/0xYYYYYYYY
++     Refer to Documentation/acpi/debug.txt for possible debug layer/level
++     masking values.
++   \PPPP.AAAA.TTTT.HHHH
++     Full path of a control method that can be found in the ACPI namespace.
++     It needn't be an entry of a control method evaluation.
++
++AML tracer
++-------------
++
++There are special log entries added by the method tracing facility at
++the "trace points" the AML interpreter starts/stops to execute a control
++method, or an AML opcode. Note that the format of the log entries are
++subject to change::
++
++   [    0.186427]   exdebug-0398 ex_trace_point        : Method Begin [0xf58394d8:\_SB.PCI0.LPCB.ECOK] execution.
++   [    0.186630]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905c88:If] execution.
++   [    0.186820]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905cc0:LEqual] execution.
++   [    0.187010]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905a20:-NamePath-] execution.
++   [    0.187214]   exdebug-0398 ex_trace_point        : Opcode End [0xf5905a20:-NamePath-] execution.
++   [    0.187407]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905f60:One] execution.
++   [    0.187594]   exdebug-0398 ex_trace_point        : Opcode End [0xf5905f60:One] execution.
++   [    0.187789]   exdebug-0398 ex_trace_point        : Opcode End [0xf5905cc0:LEqual] execution.
++   [    0.187980]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905cc0:Return] execution.
++   [    0.188146]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905f60:One] execution.
++   [    0.188334]   exdebug-0398 ex_trace_point        : Opcode End [0xf5905f60:One] execution.
++   [    0.188524]   exdebug-0398 ex_trace_point        : Opcode End [0xf5905cc0:Return] execution.
++   [    0.188712]   exdebug-0398 ex_trace_point        : Opcode End [0xf5905c88:If] execution.
++   [    0.188903]   exdebug-0398 ex_trace_point        : Method End [0xf58394d8:\_SB.PCI0.LPCB.ECOK] execution.
++
++Developers can utilize these special log entries to track the AML
++interpretion, thus can aid issue debugging and performance tuning. Note
++that, as the "AML tracer" logs are implemented via ACPI_DEBUG_PRINT()
++macro, CONFIG_ACPI_DEBUG is also required to be enabled for enabling
++"AML tracer" logs.
++
++The following command examples illustrate the usage of the "AML tracer"
++functionality:
++
++a. Filter out the method start/stop "AML tracer" logs when control
++   methods are being evaluated::
++
++      # cd /sys/module/acpi/parameters
++      # echo "0x80" > trace_debug_layer
++      # echo "0x10" > trace_debug_level
++      # echo "enable" > trace_state
++
++b. Filter out the method start/stop "AML tracer" when the specified
++   control method is being evaluated::
++
++      # cd /sys/module/acpi/parameters
++      # echo "0x80" > trace_debug_layer
++      # echo "0x10" > trace_debug_level
++      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
++      # echo "method" > trace_state
++
++c. Filter out the method start/stop "AML tracer" logs when the specified
++   control method is being evaluated for the first time::
++
++      # cd /sys/module/acpi/parameters
++      # echo "0x80" > trace_debug_layer
++      # echo "0x10" > trace_debug_level
++      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
++      # echo "method-once" > trace_state
++
++d. Filter out the method/opcode start/stop "AML tracer" when the
++   specified control method is being evaluated::
++
++      # cd /sys/module/acpi/parameters
++      # echo "0x80" > trace_debug_layer
++      # echo "0x10" > trace_debug_level
++      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
++      # echo "opcode" > trace_state
++
++e. Filter out the method/opcode start/stop "AML tracer" when the
++   specified control method is being evaluated for the first time::
++
++      # cd /sys/module/acpi/parameters
++      # echo "0x80" > trace_debug_layer
++      # echo "0x10" > trace_debug_level
++      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
++      # echo "opcode-opcode" > trace_state
++
++Note that all above method tracing facility related module parameters can
++be used as the boot parameters, for example::
++
++   acpi.trace_debug_layer=0x80 acpi.trace_debug_level=0x10 \
++   acpi.trace_method_name=\_SB.LID0._LID acpi.trace_state=opcode-once
++
++2. Interface descriptions
++=========================
++
++All method tracing functions can be configured via ACPI module
++parameters that are accessible at /sys/module/acpi/parameters/:
++
++trace_method_name
++The full path of the AML method that the user wants to trace.
++Note that the full path shouldn't contain the trailing "_"s in its
++name segments but may contain "\" to form an absolute path.
++
++trace_debug_layer
++The temporary debug_layer used when the tracing feature is enabled.
++Using ACPI_EXECUTER (0x80) by default, which is the debug_layer
++used to match all "AML tracer" logs.
++
++trace_debug_level
++The temporary debug_level used when the tracing feature is enabled.
++Using ACPI_LV_TRACE_POINT (0x10) by default, which is the
++debug_level used to match all "AML tracer" logs.
++
++trace_state
++The status of the tracing feature.
++Users can enable/disable this debug tracing feature by executing
++the following command::
++
++   # echo string > /sys/module/acpi/parameters/trace_state
++
++Where "string" should be one of the following:
++
++"disable"
++      Disable the method tracing feature.
++"enable"
++      Enable the method tracing feature.
++      ACPICA debugging messages matching
++      "trace_debug_layer/trace_debug_level" during any method
++      execution will be logged.
++"method"
++      Enable the method tracing feature.
++      ACPICA debugging messages matching
++      "trace_debug_layer/trace_debug_level" during method execution
++      of "trace_method_name" will be logged.
++"method-once"
++      Enable the method tracing feature.
++      ACPICA debugging messages matching
++      "trace_debug_layer/trace_debug_level" during method execution
++      of "trace_method_name" will be logged only once.
++"opcode"
++      Enable the method tracing feature.
++      ACPICA debugging messages matching
++      "trace_debug_layer/trace_debug_level" during method/opcode
++      execution of "trace_method_name" will be logged.
++"opcode-once"
++      Enable the method tracing feature.
++      ACPICA debugging messages matching
++      "trace_debug_layer/trace_debug_level" during method/opcode
++      execution of "trace_method_name" will be logged only once.
++
++Note that, the difference between the "enable" and other feature
++enabling options are:
++
++1. When "enable" is specified, since
++   "trace_debug_layer/trace_debug_level" shall apply to all control
++   method evaluations, after configuring "trace_state" to "enable",
++   "trace_method_name" will be reset to NULL.
++2. When "method/opcode" is specified, if
++   "trace_method_name" is NULL when "trace_state" is configured to
++   these options, the "trace_debug_layer/trace_debug_level" will
++   apply to all control method evaluations.
+diff --git a/Documentation/acpi/method-tracing.txt b/Documentation/acpi/method-tracing.txt
+deleted file mode 100644
+index 0aba14c8f459..000000000000
+--- a/Documentation/acpi/method-tracing.txt
++++ /dev/null
+@@ -1,192 +0,0 @@
+-ACPICA Trace Facility
+-
+-Copyright (C) 2015, Intel Corporation
+-Author: Lv Zheng <lv.zheng@intel.com>
+-
+-
+-Abstract:
+-
+-This document describes the functions and the interfaces of the method
+-tracing facility.
+-
+-1. Functionalities and usage examples:
+-
+-   ACPICA provides method tracing capability. And two functions are
+-   currently implemented using this capability.
+-
+-   A. Log reducer
+-   ACPICA subsystem provides debugging outputs when CONFIG_ACPI_DEBUG is
+-   enabled. The debugging messages which are deployed via
+-   ACPI_DEBUG_PRINT() macro can be reduced at 2 levels - per-component
+-   level (known as debug layer, configured via
+-   /sys/module/acpi/parameters/debug_layer) and per-type level (known as
+-   debug level, configured via /sys/module/acpi/parameters/debug_level).
+-
+-   But when the particular layer/level is applied to the control method
+-   evaluations, the quantity of the debugging outputs may still be too
+-   large to be put into the kernel log buffer. The idea thus is worked out
+-   to only enable the particular debug layer/level (normally more detailed)
+-   logs when the control method evaluation is started, and disable the
+-   detailed logging when the control method evaluation is stopped.
+-
+-   The following command examples illustrate the usage of the "log reducer"
+-   functionality:
+-   a. Filter out the debug layer/level matched logs when control methods
+-      are being evaluated:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0xXXXXXXXX" > trace_debug_layer
+-      # echo "0xYYYYYYYY" > trace_debug_level
+-      # echo "enable" > trace_state
+-   b. Filter out the debug layer/level matched logs when the specified
+-      control method is being evaluated:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0xXXXXXXXX" > trace_debug_layer
+-      # echo "0xYYYYYYYY" > trace_debug_level
+-      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
+-      # echo "method" > /sys/module/acpi/parameters/trace_state
+-   c. Filter out the debug layer/level matched logs when the specified
+-      control method is being evaluated for the first time:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0xXXXXXXXX" > trace_debug_layer
+-      # echo "0xYYYYYYYY" > trace_debug_level
+-      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
+-      # echo "method-once" > /sys/module/acpi/parameters/trace_state
+-   Where:
+-      0xXXXXXXXX/0xYYYYYYYY: Refer to Documentation/acpi/debug.txt for
+-			     possible debug layer/level masking values.
+-      \PPPP.AAAA.TTTT.HHHH: Full path of a control method that can be found
+-			    in the ACPI namespace. It needn't be an entry
+-			    of a control method evaluation.
+-
+-   B. AML tracer
+-
+-   There are special log entries added by the method tracing facility at
+-   the "trace points" the AML interpreter starts/stops to execute a control
+-   method, or an AML opcode. Note that the format of the log entries are
+-   subject to change:
+-     [    0.186427]   exdebug-0398 ex_trace_point        : Method Begin [0xf58394d8:\_SB.PCI0.LPCB.ECOK] execution.
+-     [    0.186630]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905c88:If] execution.
+-     [    0.186820]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905cc0:LEqual] execution.
+-     [    0.187010]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905a20:-NamePath-] execution.
+-     [    0.187214]   exdebug-0398 ex_trace_point        : Opcode End [0xf5905a20:-NamePath-] execution.
+-     [    0.187407]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905f60:One] execution.
+-     [    0.187594]   exdebug-0398 ex_trace_point        : Opcode End [0xf5905f60:One] execution.
+-     [    0.187789]   exdebug-0398 ex_trace_point        : Opcode End [0xf5905cc0:LEqual] execution.
+-     [    0.187980]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905cc0:Return] execution.
+-     [    0.188146]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905f60:One] execution.
+-     [    0.188334]   exdebug-0398 ex_trace_point        : Opcode End [0xf5905f60:One] execution.
+-     [    0.188524]   exdebug-0398 ex_trace_point        : Opcode End [0xf5905cc0:Return] execution.
+-     [    0.188712]   exdebug-0398 ex_trace_point        : Opcode End [0xf5905c88:If] execution.
+-     [    0.188903]   exdebug-0398 ex_trace_point        : Method End [0xf58394d8:\_SB.PCI0.LPCB.ECOK] execution.
+-
+-   Developers can utilize these special log entries to track the AML
+-   interpretion, thus can aid issue debugging and performance tuning. Note
+-   that, as the "AML tracer" logs are implemented via ACPI_DEBUG_PRINT()
+-   macro, CONFIG_ACPI_DEBUG is also required to be enabled for enabling
+-   "AML tracer" logs.
+-
+-   The following command examples illustrate the usage of the "AML tracer"
+-   functionality:
+-   a. Filter out the method start/stop "AML tracer" logs when control
+-      methods are being evaluated:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0x80" > trace_debug_layer
+-      # echo "0x10" > trace_debug_level
+-      # echo "enable" > trace_state
+-   b. Filter out the method start/stop "AML tracer" when the specified
+-      control method is being evaluated:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0x80" > trace_debug_layer
+-      # echo "0x10" > trace_debug_level
+-      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
+-      # echo "method" > trace_state
+-   c. Filter out the method start/stop "AML tracer" logs when the specified
+-      control method is being evaluated for the first time:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0x80" > trace_debug_layer
+-      # echo "0x10" > trace_debug_level
+-      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
+-      # echo "method-once" > trace_state
+-   d. Filter out the method/opcode start/stop "AML tracer" when the
+-      specified control method is being evaluated:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0x80" > trace_debug_layer
+-      # echo "0x10" > trace_debug_level
+-      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
+-      # echo "opcode" > trace_state
+-   e. Filter out the method/opcode start/stop "AML tracer" when the
+-      specified control method is being evaluated for the first time:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0x80" > trace_debug_layer
+-      # echo "0x10" > trace_debug_level
+-      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
+-      # echo "opcode-opcode" > trace_state
+-
+-  Note that all above method tracing facility related module parameters can
+-  be used as the boot parameters, for example:
+-      acpi.trace_debug_layer=0x80 acpi.trace_debug_level=0x10 \
+-      acpi.trace_method_name=\_SB.LID0._LID acpi.trace_state=opcode-once
+-
+-2. Interface descriptions:
+-
+-   All method tracing functions can be configured via ACPI module
+-   parameters that are accessible at /sys/module/acpi/parameters/:
+-
+-   trace_method_name
+-	The full path of the AML method that the user wants to trace.
+-	Note that the full path shouldn't contain the trailing "_"s in its
+-	name segments but may contain "\" to form an absolute path.
+-
+-   trace_debug_layer
+-	The temporary debug_layer used when the tracing feature is enabled.
+-	Using ACPI_EXECUTER (0x80) by default, which is the debug_layer
+-	used to match all "AML tracer" logs.
+-
+-   trace_debug_level
+-	The temporary debug_level used when the tracing feature is enabled.
+-	Using ACPI_LV_TRACE_POINT (0x10) by default, which is the
+-	debug_level used to match all "AML tracer" logs.
+-
+-   trace_state
+-	The status of the tracing feature.
+-	Users can enable/disable this debug tracing feature by executing
+-	the following command:
+-	    # echo string > /sys/module/acpi/parameters/trace_state
+-	Where "string" should be one of the following:
+-	"disable"
+-	    Disable the method tracing feature.
+-	"enable"
+-	    Enable the method tracing feature.
+-	    ACPICA debugging messages matching
+-	    "trace_debug_layer/trace_debug_level" during any method
+-	    execution will be logged.
+-	"method"
+-	    Enable the method tracing feature.
+-	    ACPICA debugging messages matching
+-	    "trace_debug_layer/trace_debug_level" during method execution
+-	    of "trace_method_name" will be logged.
+-	"method-once"
+-	    Enable the method tracing feature.
+-	    ACPICA debugging messages matching
+-	    "trace_debug_layer/trace_debug_level" during method execution
+-	    of "trace_method_name" will be logged only once.
+-	"opcode"
+-	    Enable the method tracing feature.
+-	    ACPICA debugging messages matching
+-	    "trace_debug_layer/trace_debug_level" during method/opcode
+-	    execution of "trace_method_name" will be logged.
+-	"opcode-once"
+-	    Enable the method tracing feature.
+-	    ACPICA debugging messages matching
+-	    "trace_debug_layer/trace_debug_level" during method/opcode
+-	    execution of "trace_method_name" will be logged only once.
+-	Note that, the difference between the "enable" and other feature
+-        enabling options are:
+-	1. When "enable" is specified, since
+-	   "trace_debug_layer/trace_debug_level" shall apply to all control
+-	   method evaluations, after configuring "trace_state" to "enable",
+-	   "trace_method_name" will be reset to NULL.
+-	2. When "method/opcode" is specified, if
+-	   "trace_method_name" is NULL when "trace_state" is configured to
+-	   these options, the "trace_debug_layer/trace_debug_level" will
+-	   apply to all control method evaluations.
+-- 
+2.20.1
 
