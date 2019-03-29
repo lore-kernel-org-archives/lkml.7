@@ -2,164 +2,73 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF48C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B166FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05BD1218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A86C2184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 19:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfC2S6s (ORCPT
+        id S1730103AbfC2TBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 14:58:48 -0400
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:3035 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730049AbfC2S6r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 14:58:47 -0400
-X-Greylist: delayed 572 seconds by postgrey-1.27 at vger.kernel.org; Fri, 29 Mar 2019 14:58:46 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id CB36B3F460;
-        Fri, 29 Mar 2019 19:49:12 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id VYT-JXepVbUR; Fri, 29 Mar 2019 19:49:11 +0100 (CET)
-Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
-        (Authenticated sender: mb547485)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 00AE73F42B;
-        Fri, 29 Mar 2019 19:49:10 +0100 (CET)
-Date:   Fri, 29 Mar 2019 19:49:10 +0100
-From:   Fredrik Noring <noring@nocrew.org>
-To:     Shile Zhang <shile.zhang@linux.alibaba.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH] fbdev: fix divide error in fb_var_to_videomode
-Message-ID: <20190329184910.GA4055@sx9>
-References: <1552998003-237288-1-git-send-email-shile.zhang@linux.alibaba.com>
- <0560ca36-a7a8-ed6f-d66f-059336e6b5e9@linux.alibaba.com>
+        Fri, 29 Mar 2019 15:01:39 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:36784 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729840AbfC2TBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 15:01:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27892A78;
+        Fri, 29 Mar 2019 12:01:38 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3AD7C3F59C;
+        Fri, 29 Mar 2019 12:01:37 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 19:01:34 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] arm64 fixes for 5.1-rc3
+Message-ID: <20190329190132.GA45422@arrakis.emea.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0560ca36-a7a8-ed6f-d66f-059336e6b5e9@linux.alibaba.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shile,
+Hi Linus,
 
-Thank you for your report and patch.
+Please pull the arm64 fix below. Thanks.
 
-On Tue, Mar 26, 2019 at 01:54:13PM +0800, Shile Zhang wrote:
-> Hi, Bartlomiej, Fredrik, Daniel,
-> 
-> Could you please help to have a look at this patch?
+The following changes since commit 8c2ffd9174779014c3fe1f96d9dc3641d9175f00:
 
-I have tested your patch with a MIPS R5900 system and indeed there is
-a division by zero, although my kernel inhibits the exception that you
-observed.
+  Linux 5.1-rc2 (2019-03-24 14:02:26 -0700)
 
-The statements
+are available in the Git repository at:
 
-	mode->refresh = 0;
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
 
-	if (!var->pixclock)
-		return;
+for you to fetch changes up to 9e0a17db517d83d568bb7fa983b54759d4e34f1f:
 
-a bit further up in fb_var_to_videomode seem to suggest that setting
-mode->refresh to zero signals an invalid value. Your patch makes sense
-to me in that having htotal or vtotal zero is equally absurd.
+  arm64: replace memblock_alloc_low with memblock_alloc (2019-03-27 18:12:41 +0000)
 
-The note above the function could be improved to clarify the meaning
-of assigning zero to mode->refresh. The refresh field is marked as
-optional in the fb_videomode structure definition; perhaps zero is a
-special value for this purpose.
+----------------------------------------------------------------
+Use memblock_alloc() instead of memblock_alloc_low() in
+request_standard_resources(), the latter being limited to the low 4G
+memory range on arm64.
 
-Interestingly, the division by zero on the MIPS R5900 assigns -1 to
-mode->refresh, which isn't zero as one might prefer for a video mode
-that is invalid. Your patch would correct this anomaly.
+----------------------------------------------------------------
+Chen Zhou (1):
+      arm64: replace memblock_alloc_low with memblock_alloc
 
-Hopefully Bartlomiej or someone else with authority to approve your
-patch submission will have a look at it.
+ arch/arm64/kernel/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Fredrik
-
-> On 2019/3/19 20:20, shile.zhang@linux.alibaba.com wrote:
-> > From: Shile Zhang <shile.zhang@linux.alibaba.com>
-> >
-> > To fix following divide-by-zero error found by Syzkaller:
-> >
-> >    divide error: 0000 [#1] SMP PTI
-> >    CPU: 7 PID: 8447 Comm: test Kdump: loaded Not tainted 4.19.24-8.al7.x86_64 #1
-> >    Hardware name: Alibaba Cloud Alibaba Cloud ECS, BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-> >    RIP: 0010:fb_var_to_videomode+0xae/0xc0
-> >    Code: 04 44 03 46 78 03 4e 7c 44 03 46 68 03 4e 70 89 ce d1 ee 69 c0 e8 03 00 00 f6 c2 01 0f 45 ce 83 e2 02 8d 34 09 0f 45 ce 31 d2 <41> f7 f0 31 d2 f7 f1 89 47 08 f3 c3 66 0f 1f 44 00 00 0f 1f 44 00
-> >    RSP: 0018:ffffb7e189347bf0 EFLAGS: 00010246
-> >    RAX: 00000000e1692410 RBX: ffffb7e189347d60 RCX: 0000000000000000
-> >    RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffb7e189347c10
-> >    RBP: ffff99972a091c00 R08: 0000000000000000 R09: 0000000000000000
-> >    R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000100
-> >    R13: 0000000000010000 R14: 00007ffd66baf6d0 R15: 0000000000000000
-> >    FS:  00007f2054d11740(0000) GS:ffff99972fbc0000(0000) knlGS:0000000000000000
-> >    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >    CR2: 00007f205481fd20 CR3: 00000004288a0001 CR4: 00000000001606a0
-> >    Call Trace:
-> >     fb_set_var+0x257/0x390
-> >     ? lookup_fast+0xbb/0x2b0
-> >     ? fb_open+0xc0/0x140
-> >     ? chrdev_open+0xa6/0x1a0
-> >     do_fb_ioctl+0x445/0x5a0
-> >     do_vfs_ioctl+0x92/0x5f0
-> >     ? __alloc_fd+0x3d/0x160
-> >     ksys_ioctl+0x60/0x90
-> >     __x64_sys_ioctl+0x16/0x20
-> >     do_syscall_64+0x5b/0x190
-> >     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >    RIP: 0033:0x7f20548258d7
-> >    Code: 44 00 00 48 8b 05 b9 15 2d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 89 15 2d 00 f7 d8 64 89 01 48
-> >
-> > It can be triggered easily with following test code:
-> >
-> >    #include <linux/fb.h>
-> >    #include <fcntl.h>
-> >    #include <sys/ioctl.h>
-> >    int main(void)
-> >    {
-> >            struct fb_var_screeninfo var = {.activate = 0x100, .pixclock = 60};
-> >            int fd = open("/dev/fb0", O_RDWR);
-> >            if (fd < 0)
-> >                    return 1;
-> >
-> >            if (ioctl(fd, FBIOPUT_VSCREENINFO, &var))
-> >                    return 1;
-> >
-> >            return 0;
-> >    }
-> >
-> > Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-> > ---
-> >   drivers/video/fbdev/core/modedb.c | 3 +++
-> >   1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/video/fbdev/core/modedb.c b/drivers/video/fbdev/core/modedb.c
-> > index 283d9307..ac04987 100644
-> > --- a/drivers/video/fbdev/core/modedb.c
-> > +++ b/drivers/video/fbdev/core/modedb.c
-> > @@ -935,6 +935,9 @@ void fb_var_to_videomode(struct fb_videomode *mode,
-> >   	if (var->vmode & FB_VMODE_DOUBLE)
-> >   		vtotal *= 2;
-> >   
-> > +	if (!htotal || !vtotal)
-> > +		return;
-> > +
-> >   	hfreq = pixclock/htotal;
-> >   	mode->refresh = hfreq/vtotal;
-> >   }
+-- 
+Catalin
