@@ -2,99 +2,90 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9328FC10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF2BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8B8206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3555F206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:58:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JESSw5GI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbfC2P41 (ORCPT
+        id S1729678AbfC2P6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:56:27 -0400
-Received: from mail02.iobjects.de ([188.40.134.68]:45912 "EHLO
-        mail02.iobjects.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728839AbfC2P40 (ORCPT
+        Fri, 29 Mar 2019 11:58:07 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54866 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728958AbfC2P6G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:56:26 -0400
-Received: from tux.wizards.de (pD9EBF050.dip0.t-ipconnect.de [217.235.240.80])
-        by mail02.iobjects.de (Postfix) with ESMTPSA id 8A9FC4164673;
-        Fri, 29 Mar 2019 16:56:24 +0100 (CET)
-Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
-        by tux.wizards.de (Postfix) with ESMTP id 36F2CF01604;
-        Fri, 29 Mar 2019 16:56:24 +0100 (CET)
-Subject: Re: [PATCH] block/bfq: fix ifdef for CONFIG_BFQ_GROUP_IOSCHED=y
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        linux-kernel@vger.kernel.org
-References: <155386807826.3190.16175453392005064129.stgit@buzz>
-From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <c40b8d4a-c504-fdf4-0b96-64aaeb167435@applied-asynchrony.com>
-Date:   Fri, 29 Mar 2019 16:56:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 11:58:06 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2TFw1mu125078;
+        Fri, 29 Mar 2019 10:58:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553875081;
+        bh=wH9LUPrJqKUpGl5H8O5YKCImdImswwDl0NwpUTdppc0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JESSw5GIKaahGtgkSBJAP3IIeuidX8m0kvK4VEraJO5mVLJZJyHBbyYl1wZQiBiaF
+         AFnd7+0qtIUX2oZo3oiN9lyKp25Ig3J0oCZwl7S/4QdR1VhB1LC/N9hU2fBc+rx8ay
+         W4+3NwX3vWIpvNjC6mjG0s1LQe0yduYaqwkJH+EY=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2TFw17r053574
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 Mar 2019 10:58:01 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
+ Mar 2019 10:58:01 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 29 Mar 2019 10:58:01 -0500
+Received: from [172.22.188.74] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2TFvx3t105141;
+        Fri, 29 Mar 2019 10:57:59 -0500
+Subject: Re: [RFC PATCH net-next] net: ethernet: ti: cpsw: drop
+ TI_DAVINCI_CPDMA config option
+To:     "David S. Miller" <davem@davemloft.net>,
+        <linux-omap@vger.kernel.org>
+CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1553794193-8098-1-git-send-email-grygorii.strashko@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <2b50d7d7-ba17-af6f-4c5d-c84106176f1b@ti.com>
+Date:   Fri, 29 Mar 2019 17:55:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <155386807826.3190.16175453392005064129.stgit@buzz>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1553794193-8098-1-git-send-email-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/29/19 3:01 PM, Konstantin Khlebnikov wrote:
-> Replace BFQ_GROUP_IOSCHED_ENABLED with CONFIG_BFQ_GROUP_IOSCHED.
-> Code under these ifdefs never worked, something might be broken.
+
+
+On 28.03.19 19:29, Grygorii Strashko wrote:
+> Both drivers CPSW and EMAC can't work without CPDMA, hence simplify build
+> of those drivers by always linking davinci_cpdma and drop TI_DAVINCI_CPDMA
+> config option.
+> Note. the davinci_emac driver module was changed to "ti_davinci_emac" to
+> make build work.
 > 
-> Fixes: 0471559c2fbd ("block, bfq: add/remove entity weights correctly")
-> Fixes: 73d58118498b ("block, bfq: consider also ioprio classes in symmetry detection")
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > ---
->   block/bfq-iosched.c |    2 +-
->   block/bfq-wf2q.c    |    2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-> index 4c592496a16a..fac188dd78fa 100644
-> --- a/block/bfq-iosched.c
-> +++ b/block/bfq-iosched.c
-> @@ -674,7 +674,7 @@ static bool bfq_symmetric_scenario(struct bfq_data *bfqd)
->   	 * at least two nodes.
->   	 */
->   	return !(varied_queue_weights || multiple_classes_busy
-> -#ifdef BFQ_GROUP_IOSCHED_ENABLED
-> +#ifdef CONFIG_BFQ_GROUP_IOSCHED
->   	       || bfqd->num_groups_with_pending_reqs > 0
->   #endif
->   		);
-> diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-> index 63311d1ff1ed..a11bef75483d 100644
-> --- a/block/bfq-wf2q.c
-> +++ b/block/bfq-wf2q.c
-> @@ -1012,7 +1012,7 @@ static void __bfq_activate_entity(struct bfq_entity *entity,
->   		entity->on_st = true;
->   	}
->   
-> -#ifdef BFQ_GROUP_IOSCHED_ENABLED
-> +#ifdef CONFIG_BFQ_GROUP_IOSCHED
->   	if (!bfq_entity_to_bfqq(entity)) { /* bfq_group */
->   		struct bfq_group *bfqg =
->   			container_of(entity, struct bfq_group, entity);
-> 
-> 
+Sry, wrong patch version, ignore it please.
 
-Good catch! I run without group scheduling and therefore didn't notice these
-stray defines earlier. For 5.1 it should merge cleanly; adding this on top of
-the pending 5.2 BFQ patches required a small context fixup in hunk #1 due to
-"block, bfq: do not idle for lowest-weight queues".
-
-Reviewed-by: Holger Hoffstätte <holger@applied-asynchrony.com>
-
-cheers,
-Holger
+-- 
+Best regards,
+grygorii
