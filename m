@@ -2,194 +2,96 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E05EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968E9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE78C21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621CD21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 06:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DCJ4BiZ1";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FMfhw8wB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSIbP6BU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbfC2Gc3 (ORCPT
+        id S1728756AbfC2Gdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 02:32:29 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34004 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbfC2Gc3 (ORCPT
+        Fri, 29 Mar 2019 02:33:51 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:33786 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726999AbfC2Gdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 02:32:29 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7FBC0608CC; Fri, 29 Mar 2019 06:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553841148;
-        bh=U9JolyigyoUdXwTTKNcmJjEBXaM8kw3G/V+EhjwJlVE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=DCJ4BiZ1WWPSFIsQSMkqF49d4DKnDHcmggmDsv/L1lOEpyKQllpl+tnQ8UDT7mrMc
-         PqcZxndAcVR+EFtcW8UVznE2FHoNdZy3X38LkfpDljcRUqeGmbxhUROsjlItCRdOuB
-         NTDmeZlufDryF5RsGV8UnuAVLcpF6FWikpIAv71c=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4F29A604BE;
-        Fri, 29 Mar 2019 06:32:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553841147;
-        bh=U9JolyigyoUdXwTTKNcmJjEBXaM8kw3G/V+EhjwJlVE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FMfhw8wBhocN8ySZZAujcMYNzHA9ibJfrIR9/clHj4/HJYRfIF8Mxioh8FQ3KE302
-         1xXPosMOyj0O8EV/gAPOoU8ogp3S1jTKKLUjRO5oTjvwHfz147zt7BSJWzH5AgzsWv
-         a/OfYXtHmzl3vhYriZED8j9DGBPXz73nt5g1C9yg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4F29A604BE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH v2] gpu:drm: Remove duplicate headers
-To:     Jagadeesh Pagadala <jagdsh.linux@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        a.hajda@samsung.com, airlied@linux.ie, daniel@ffwll.ch,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org
-References: <1553721116-37832-1-git-send-email-jagdsh.linux@gmail.com>
- <20190328065124.GB4846@pendragon.ideasonboard.com>
- <20190328160206.GA94653@CentOS76.localdomain>
- <20190328141210.GA4813@pendragon.ideasonboard.com>
- <20190328190203.GA27353@CentOS76.localdomain>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <65ce06ec-32b7-c662-ef4d-9ee9d1315e5a@codeaurora.org>
-Date:   Fri, 29 Mar 2019 12:02:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 02:33:51 -0400
+Received: by mail-it1-f195.google.com with SMTP id v8so10246045itf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 23:33:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+oqaIbL6ylI+8fFUXJYe7iARxhR7eGybBzyFMPOeBbw=;
+        b=WSIbP6BUTVF4UEqxSfvegOb431EOvPR82Tqpus3TmHV9QEXg6Z+w3D1dwj864cAapz
+         SmWEh3vGmywfzFCa9huCrxdUo2hhxFUUiLK/COYMNGVm1MDRoDUKhKUT7v+Nve+S26bj
+         mT4b+cvzZsRxFsKNwwdyFCwq2pM7PTbbMzq49l/j5lLuLI5GL/LQP6xRKxz93JBVSZJL
+         8mh9/egJbonaqQ6uvUI8/A4KMDb372nFzQx/6k7jd7mMxgmHf/FewKFoSgXbcuQdFVPJ
+         1NacALFtXJwdO6XC/UB8AI8GwVk7DAoBDX24Cz4JF//ENzi3xPzmVZgrDXsvZ23AiEKQ
+         8QdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+oqaIbL6ylI+8fFUXJYe7iARxhR7eGybBzyFMPOeBbw=;
+        b=PZMo0525o2GHux8GRLCaHuOqtjJJNSd/dxF4fMgE6Mf8asw4a6Hnbk9LxObKQQHydj
+         7wpjcxBeUHQlDcLb446cdiGHs/XPdHlyzFkE0KcqvkTrVp0PJNTiOEs6Th6nzKIQBHyF
+         zKf7Opn6MQLfWysZgytI1RecV80pufztDKQZV2JiTlNGNF9BkW9jU2IyZJ2iXFNPmEYT
+         QRzuEhMqF8bFAcNTQm++LosEclo8qhkWLQ7Afr8I6tNRH4hRt/IwtNM39FchJcOSCWZA
+         OtZqozVlUzT1vGSpewvpfz5j3bTom3isYezmnRotDMEV+roFxee3nJbQKBbJODkEGu8m
+         4ozw==
+X-Gm-Message-State: APjAAAUSqB26igHtxfp7GFpDshsziCuKUaJnA8E3kOZttYfd6dfKDqxK
+        1HMK6OgmC4MxXb2NCTRvzoO+AvbVnXs+KlTtQFw=
+X-Google-Smtp-Source: APXvYqwr3xGhG8aitB+WszmzQ1y90VN97Gy+U7zH7Rxtj3gSRle4EP0mTw0sWFvqyCLRGCTOezntTD0xFWuPDtUgmPM=
+X-Received: by 2002:a02:924d:: with SMTP id y13mr25249919jag.24.1553841230379;
+ Thu, 28 Mar 2019 23:33:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190328190203.GA27353@CentOS76.localdomain>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20190325050100.29517-1-andrew.smirnov@gmail.com>
+ <CAOMZO5BOR2DS-w3oOHsT_hTttgK=OPQZYwUywXdZFLRzbrb6Zg@mail.gmail.com>
+ <CAHQ1cqHGgJMWMFx04fEzhzONPUrbjqD=3yPEyFsE=XGJDbJjmg@mail.gmail.com> <CAOMZO5DkBp=BbgcBbktGYMun1jiXKf5aJFPO1L2YUghB-UQoHQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5DkBp=BbgcBbktGYMun1jiXKf5aJFPO1L2YUghB-UQoHQ@mail.gmail.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Thu, 28 Mar 2019 23:33:39 -0700
+Message-ID: <CAHQ1cqGOxqY2qV8ipejU+vLgTvxa1Y+jn0-CPdgYaLWkKPhp+g@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl: Specify IMX6QDL_CLK_IPG as "ipg" clock
+ for SDMA
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Angus Ainslie <angus@akkea.ca>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 27, 2019 at 4:17 AM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Andrey,
+>
+> On Tue, Mar 26, 2019 at 11:52 PM Andrey Smirnov
+> <andrew.smirnov@gmail.com> wrote:
+>
+> > I think it is worth fixing in DT, regardless if we do anything about
+> > SDMA driver or not. I'll add fixes for 6SX and 7D in v2.
+>
+> What about imx25, imx31, imx50, imx51, imx53, imx6sl, imx6ul, imx6sll,
+> imx6ull, etc?
+>
 
-On 3/29/2019 12:32 AM, Jagadeesh Pagadala wrote:
-> On Thu, Mar 28, 2019 at 04:12:10PM +0200, Laurent Pinchart wrote:
->> Hi Jagadeesh,
->>
->> On Thu, Mar 28, 2019 at 09:32:06PM +0530, Jagadeesh Pagadala wrote:
->>> On Thu, Mar 28, 2019 at 08:51:24AM +0200, Laurent Pinchart wrote:
->>>> On Thu, Mar 28, 2019 at 02:41:56AM +0530, jagdsh.linux@gmail.com wrote:
->>>>> From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
->>>>>
->>>>> Remove duplicate headers which are included twice.
->>>> Could you, while at it, also sort the existing #include statements
->>>> alphabetically ? This should help avoiding similar issues in the future.
->>>>
->>>>> Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+I believe imx25, imx31, imx35 already have proper clocks configured.
+I'll add the rest in v3.
 
-
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
--Mukesh
-
->>>>> ---
->>>>>   drivers/gpu/drm/bridge/panel.c       | 1 -
->>>>>   drivers/gpu/drm/i915/intel_display.c | 7 -------
->>>>>   2 files changed, 8 deletions(-)
->>>>>
->>>>> diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
->>>>> index 38eeaf8..eb9567d 100644
->>>>> --- a/drivers/gpu/drm/bridge/panel.c
->>>>> +++ b/drivers/gpu/drm/bridge/panel.c
->>>>> @@ -15,7 +15,6 @@
->>>>>   #include <drm/drm_encoder.h>
->>>>>   #include <drm/drm_modeset_helper_vtables.h>
->>>>>   #include <drm/drm_probe_helper.h>
->>>>> -#include <drm/drm_panel.h>
->>>>>   
->>>>>   struct panel_bridge {
->>>>>   	struct drm_bridge bridge;
->>>>> diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
->>>>> index ccb6163..1166342 100644
->>>>> --- a/drivers/gpu/drm/i915/intel_display.c
->>>>> +++ b/drivers/gpu/drm/i915/intel_display.c
->>>>> @@ -51,14 +51,7 @@
->>>>>   #include "intel_dsi.h"
->>>>>   #include "intel_frontbuffer.h"
->>>>>   
->>>>> -#include "intel_drv.h"
->>>>> -#include "intel_dsi.h"
->>>>> -#include "intel_frontbuffer.h"
->>>>> -
->>>>> -#include "i915_drv.h"
->>>>> -#include "i915_gem_clflush.h"
->>>>>   #include "i915_reset.h"
->>>>> -#include "i915_trace.h"
->>>>>   
->>>>>   /* Primary plane formats for gen <= 3 */
->>>>>   static const u32 i8xx_primary_formats[] = {
->>>  From c9a68b204fe4bb013c2b8481ca8239c957dd69cc Mon Sep 17 00:00:00 2001
->>> From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
->>> Date: Thu, 28 Mar 2019 21:20:12 +0530
->>> Subject: [PATCH] gpu:drm: sort the existing #includes alphabetically
->>>
->>> Hi Laurent,
->>>
->>> Hopefully this helps.
->> It does, thanks. If you squash it with your original patch and send a
->> v2, you can add my
->>
->> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>
->>> Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
->>> ---
->>>   drivers/gpu/drm/bridge/panel.c       | 2 +-
->>>   drivers/gpu/drm/i915/intel_display.c | 4 ++--
->>>   2 files changed, 3 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
->>> index eb9567d..000ba7c 100644
->>> --- a/drivers/gpu/drm/bridge/panel.c
->>> +++ b/drivers/gpu/drm/bridge/panel.c
->>> @@ -9,11 +9,11 @@
->>>    */
->>>   
->>>   #include <drm/drmP.h>
->>> -#include <drm/drm_panel.h>
->>>   #include <drm/drm_atomic_helper.h>
->>>   #include <drm/drm_connector.h>
->>>   #include <drm/drm_encoder.h>
->>>   #include <drm/drm_modeset_helper_vtables.h>
->>> +#include <drm/drm_panel.h>
->>>   #include <drm/drm_probe_helper.h>
->>>   
->>>   struct panel_bridge {
->>> diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
->>> index 1166342..7956e89 100644
->>> --- a/drivers/gpu/drm/i915/intel_display.c
->>> +++ b/drivers/gpu/drm/i915/intel_display.c
->>> @@ -46,13 +46,13 @@
->>>   
->>>   #include "i915_drv.h"
->>>   #include "i915_gem_clflush.h"
->>> +#include "i915_reset.h"
->>>   #include "i915_trace.h"
->>> +
->>>   #include "intel_drv.h"
->>>   #include "intel_dsi.h"
->>>   #include "intel_frontbuffer.h"
->>>   
->>> -#include "i915_reset.h"
->>> -
->>>   /* Primary plane formats for gen <= 3 */
->>>   static const u32 i8xx_primary_formats[] = {
->>>   	DRM_FORMAT_C8,
->> -- 
->> Regards,
->>
->> Laurent Pinchart
+Thanks,
+Andrey Smirnov
