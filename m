@@ -2,229 +2,103 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A57C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A5EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F73218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C83218A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:35:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AWgglrbK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730053AbfC2Sb1 (ORCPT
+        id S1730048AbfC2SfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 14:31:27 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:46881 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729949AbfC2Sb0 (ORCPT
+        Fri, 29 Mar 2019 14:35:04 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37567 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729950AbfC2SfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 14:31:26 -0400
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1h9wHT-0007wZ-LI; Fri, 29 Mar 2019 14:31:17 -0400
-Date:   Fri, 29 Mar 2019 14:30:39 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Alexander Potapenko <glider@google.com>
-Cc:     syzbot <syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>, linux-sctp@vger.kernel.org,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Networking <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vladislav Yasevich <vyasevich@gmail.com>
-Subject: Re: KMSAN: kernel-infoleak in sctp_getsockopt (3)
-Message-ID: <20190329183039.GC30213@hmswarspite.think-freely.org>
-References: <000000000000407080058529ff40@google.com>
- <20190329123025.GB30213@hmswarspite.think-freely.org>
- <CAG_fn=XiNEhWiswHUschD2dma9SfS+eLRU8gXVJnbo7AozomPg@mail.gmail.com>
+        Fri, 29 Mar 2019 14:35:04 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 8so1452534pfr.4
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 11:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5kSCQAW7dq7IFUwoEXSQ34/U4lmIJq7WYV2MIl57mkY=;
+        b=AWgglrbK0gxXBUIwWnQgzqqyZCGSvsZTn+lEr15EjzOFLBkEIRXAJBmEEQ4sHW9bXv
+         rLGnXarow7a377CZ97tjmjNuZUrUYKiq+J0weJNbT6VdHBubZPSSMLqRNFD9JXU9cv/4
+         CaR5lsRSpCntml74J7Z1G09lT5Ft92GccbIBk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5kSCQAW7dq7IFUwoEXSQ34/U4lmIJq7WYV2MIl57mkY=;
+        b=lVmcLEzg/+4n7iE1vJLq/4XdOuG6NQJdmQNU7nYzKk9Opm4Q2pi/a6Hhrv8DICY0ZT
+         fj0kXxqebSd/MHMNiuX+pI5SoXCYLxs8wDtXLuTmKllTqcsZf6zjPPtV+JSH0Py5d46p
+         3x2lUPGR1gWpmZA0yP8LBM5u5fRiaM1RLr+6xKy1zvfTSiuaTnR3g2MwC4XtL0i+5HDK
+         fwMElizsM5aMQb8XiRlebPT2V3JuqXncAf/K2raeizrUsY9SxMQVRsAdsp5+PNS6SpEy
+         cYdM1cWz1SSo044FwklPcMKDqsp0KOzwh9EWW+zQIYuSSAQ+2/F91nd+kqkO3ZsRhlFU
+         mjCA==
+X-Gm-Message-State: APjAAAUl+GUyxMaWYy0RK41L5iMkuNI44PpirqJL1x9ccUk/PxqMvT+w
+        QQQXrB2WlCp0TfzkY42ZTS+LJA==
+X-Google-Smtp-Source: APXvYqxm7ynm/UPgaZm7TQbR1bnYlP3UB2+8vrZm7DBoTg8sA4VmWrHCT8nN5ICsogVvClyJtBs5nQ==
+X-Received: by 2002:a63:e310:: with SMTP id f16mr45879432pgh.93.1553884503699;
+        Fri, 29 Mar 2019 11:35:03 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id y23sm3805783pfn.25.2019.03.29.11.35.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 Mar 2019 11:35:03 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 11:35:02 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regulator: vctrl: Remove unneeded continue statement
+Message-ID: <20190329183502.GG112750@google.com>
+References: <20190329014631.17999-1-axel.lin@ingics.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG_fn=XiNEhWiswHUschD2dma9SfS+eLRU8gXVJnbo7AozomPg@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190329014631.17999-1-axel.lin@ingics.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 06:35:40PM +0100, Alexander Potapenko wrote:
-> On Fri, Mar 29, 2019 at 3:51 PM Neil Horman <nhorman@tuxdriver.com> wrote:
-> >
-> > On Thu, Mar 28, 2019 at 09:25:06AM -0700, syzbot wrote:
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    c10a026b kmsan: use __free_pages() in kmsan_iounmap_page_r..
-> > > git tree:       kmsan
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=107d3c7d200000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=a5675814e8eae69e
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=86b5c7c236a22616a72f
-> > > compiler:       clang version 8.0.0 (trunk 350509)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1252834d200000
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com
-> > >
-> > > IPv6: ADDRCONF(NETDEV_CHANGE): veth1_to_hsr: link becomes ready
-> > > IPv6: ADDRCONF(NETDEV_CHANGE): hsr_slave_1: link becomes ready
-> > > 8021q: adding VLAN 0 to HW filter on device batadv0
-> > > 8021q: adding VLAN 0 to HW filter on device batadv0
-> > > ==================================================================
-> > > BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-> > > CPU: 0 PID: 10131 Comm: syz-executor.4 Not tainted 5.0.0+ #16
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > Google 01/01/2011
-> > > Call Trace:
-> > >  __dump_stack lib/dump_stack.c:77 [inline]
-> > >  dump_stack+0x173/0x1d0 lib/dump_stack.c:113
-> > >  kmsan_report+0x131/0x2a0 mm/kmsan/kmsan.c:636
-> > >  kmsan_internal_check_memory+0xaa1/0xbb0 mm/kmsan/kmsan.c:730
-> > >  kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:485
-> > >  _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-> > >  copy_to_user include/linux/uaccess.h:174 [inline]
-> > >  sctp_getsockopt_peer_addrs net/sctp/socket.c:5911 [inline]
-> > >  sctp_getsockopt+0x1668e/0x17f70 net/sctp/socket.c:7562
-> > >  sock_common_getsockopt+0x13f/0x180 net/core/sock.c:2950
-> > >  __sys_getsockopt+0x489/0x550 net/socket.c:1938
-> > >  __do_sys_getsockopt net/socket.c:1949 [inline]
-> > >  __se_sys_getsockopt+0xe1/0x100 net/socket.c:1946
-> > >  __x64_sys_getsockopt+0x62/0x80 net/socket.c:1946
-> > >  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-> > >  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-> > > RIP: 0033:0x458209
-> > > Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> > > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> > > 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > > RSP: 002b:00007fdbef191c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
-> > > RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000458209
-> > > RDX: 000000000000006c RSI: 0000000000000084 RDI: 0000000000000004
-> > > RBP: 000000000073bf00 R08: 0000000020000300 R09: 0000000000000000
-> > > R10: 0000000020000280 R11: 0000000000000246 R12: 00007fdbef1926d4
-> > > R13: 00000000004c96c8 R14: 00000000004d0310 R15: 00000000ffffffff
-> > >
-> > > Uninit was stored to memory at:
-> > >  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
-> > >  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
-> > >  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
-> > >  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
-> > >  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
-> > >  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
-> > >  sctp_getsockopt_peer_addrs net/sctp/socket.c:5906 [inline]
-> > >  sctp_getsockopt+0x16556/0x17f70 net/sctp/socket.c:7562
-> > >  sock_common_getsockopt+0x13f/0x180 net/core/sock.c:2950
-> > >  __sys_getsockopt+0x489/0x550 net/socket.c:1938
-> > >  __do_sys_getsockopt net/socket.c:1949 [inline]
-> > >  __se_sys_getsockopt+0xe1/0x100 net/socket.c:1946
-> > >  __x64_sys_getsockopt+0x62/0x80 net/socket.c:1946
-> > >  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-> > >  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-> > >
-> > > Uninit was stored to memory at:
-> > >  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
-> > >  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
-> > >  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
-> > >  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
-> > >  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
-> > >  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
-> > >  sctp_transport_init net/sctp/transport.c:61 [inline]
-> > >  sctp_transport_new+0x16d/0x9a0 net/sctp/transport.c:115
-> > >  sctp_assoc_add_peer+0x532/0x1f70 net/sctp/associola.c:637
-> > >  sctp_process_param net/sctp/sm_make_chunk.c:2548 [inline]
-> > >  sctp_process_init+0x1a1b/0x3ed0 net/sctp/sm_make_chunk.c:2361
-> > >  sctp_cmd_process_init net/sctp/sm_sideeffect.c:682 [inline]
-> > >  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1410 [inline]
-> > >  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
-> > >  sctp_do_sm+0x3cfc/0x9af0 net/sctp/sm_sideeffect.c:1191
-> > >  sctp_assoc_bh_rcv+0x65a/0xd80 net/sctp/associola.c:1074
-> > >  sctp_inq_push+0x300/0x420 net/sctp/inqueue.c:95
-> > >  sctp_backlog_rcv+0x20a/0xaf0 net/sctp/input.c:354
-> > >  sk_backlog_rcv include/net/sock.h:936 [inline]
-> > >  __release_sock+0x281/0x5f0 net/core/sock.c:2284
-> > >  release_sock+0x99/0x2a0 net/core/sock.c:2800
-> > >  sctp_wait_for_connect+0x3ee/0x860 net/sctp/socket.c:8751
-> > >  sctp_sendmsg_to_asoc+0x2167/0x21a0 net/sctp/socket.c:1967
-> > >  sctp_sendmsg+0x3fd7/0x6700 net/sctp/socket.c:2113
-> > >  inet_sendmsg+0x54a/0x720 net/ipv4/af_inet.c:798
-> > >  sock_sendmsg_nosec net/socket.c:622 [inline]
-> > >  sock_sendmsg net/socket.c:632 [inline]
-> > >  ___sys_sendmsg+0xdb9/0x11b0 net/socket.c:2115
-> > >  __sys_sendmsg net/socket.c:2153 [inline]
-> > >  __do_sys_sendmsg net/socket.c:2162 [inline]
-> > >  __se_sys_sendmsg+0x305/0x460 net/socket.c:2160
-> > >  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2160
-> > >  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-> > >  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-> > >
-> > > Local variable description: ----addr.i@sctp_process_init
-> > > Variable was created at:
-> > >  sctp_process_init+0xb5/0x3ed0 net/sctp/sm_make_chunk.c:2324
-> > >  sctp_cmd_process_init net/sctp/sm_sideeffect.c:682 [inline]
-> > >  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1410 [inline]
-> > >  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
-> > >  sctp_do_sm+0x3cfc/0x9af0 net/sctp/sm_sideeffect.c:1191
-> > >
-> > > Bytes 8-15 of 16 are uninitialized
-> > > Memory access of size 16 starts at ffff88809511fc28
-> > > Data copied to user address 0000000020000298
-> > > ==================================================================
-> > >
-> > >
-> > > ---
-> > > This bug is generated by a bot. It may contain errors.
-> > > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > >
-> > > syzbot will keep track of this bug report. See:
-> > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > > syzbot can test patches for this bug, for details see:
-> > > https://goo.gl/tpsmEJ#testing-patches
-> > >
-> > >
-> >
-> >
-> > Hmm, odd.  I see where we are doing the copy_to_user call in
-> > getsockopt_peer_addrs, but the length we copy should always be equal to or less
-> > than what was memcopied to the temp variable.  False positive?
-> I'll take a closer look next week.
-> The bug is reproducible with the following syzkaller program:
-> 
-> r0 = socket$inet(0x2, 0x80001, 0x84)
-> bind$inet(r0, &(0x7f0000000080)={0x2, 0x4e20, @empty}, 0x10)
-> sendmsg(r0, &(0x7f0000000100)={&(0x7f0000006000)=@in={0x2, 0x4e20,
-> @loopback}, 0x80, &(0x7f0000007f80)=[{&(0x7f00000001c0)="de", 0x1}],
-> 0x1}, 0x0)
-> getsockopt$inet_sctp_SCTP_GET_PEER_ADDRS(r0, 0x84, 0x6c,
-> &(0x7f0000000000)={<r5=>0x0, 0x38,
-> "41925f90e4121fadc9c1296dd22ae19d0b1b0942e46fc79e2ecec1056b23199f0ca008915d8dba1b3896c154f2244bbe859fe3423a4b437a"},
-> &(0x7f0000000040)=0x40)
-> 
-> Just need to check where the uninitializedness comes from.
-my only guess would be if we somehow copied an ipv4 address worth of data to the
-buffer (which contains an enum for both ipv4 and ipv6 addresses), and then
-copied an ipv6 address worth of data to userspace, but I don't yet see how that
-can happen.
+Hi Axel,
 
-Neil
+On Fri, Mar 29, 2019 at 09:46:31AM +0800, Axel Lin wrote:
 
-> > Neil
-> >
+As Mukesh already mentioned, there should be a short description.
+
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+> ---
+>  drivers/regulator/vctrl-regulator.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> 
-> 
-> --
-> Alexander Potapenko
-> Software Engineer
-> 
-> Google Germany GmbH
-> Erika-Mann-Straße, 33
-> 80636 München
-> 
-> Geschäftsführer: Paul Manicle, Halimah DeLaine Prado
-> Registergericht und -nummer: Hamburg, HRB 86891
-> Sitz der Gesellschaft: Hamburg
-> 
+> diff --git a/drivers/regulator/vctrl-regulator.c b/drivers/regulator/vctrl-regulator.c
+> index 78de002037c7..259864520a06 100644
+> --- a/drivers/regulator/vctrl-regulator.c
+> +++ b/drivers/regulator/vctrl-regulator.c
+> @@ -334,10 +334,8 @@ static int vctrl_init_vtable(struct platform_device *pdev)
+>  		ctrl_uV = regulator_list_voltage(ctrl_reg, i);
+>  
+>  		if (ctrl_uV < vrange_ctrl->min_uV ||
+> -		    ctrl_uV > vrange_ctrl->max_uV) {
+> +		    ctrl_uV > vrange_ctrl->max_uV)
+>  			rdesc->n_voltages--;
+> -			continue;
+> -		}
+
+indeed, the 'continue' is pointless here. I guess at some stage of
+development something else was done in the loop and this is a
+leftover.
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
