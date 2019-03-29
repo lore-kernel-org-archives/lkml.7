@@ -2,184 +2,103 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F51C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93966C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD7121871
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6306B21871
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:22:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C88C+V5y"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="rUfFtm/G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbfC2PWG (ORCPT
+        id S1729773AbfC2PWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:22:06 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:41590 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729502AbfC2PVY (ORCPT
+        Fri, 29 Mar 2019 11:22:44 -0400
+Received: from sonic302-27.consmr.mail.gq1.yahoo.com ([98.137.68.153]:42612
+        "EHLO sonic302-27.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728902AbfC2PWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:21:24 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2TFJUnK067693;
-        Fri, 29 Mar 2019 15:20:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=koFx+C5akGvVcWEbEMtN4SFZa+JtW8WG4Xyl9jZZWO0=;
- b=C88C+V5y0mYfNGHFWwjoDwmxdicZcTQY/vEPyocx0lUPEfhcnqaey8YOyEsw7NZSkDTu
- WT6T2pBW6PLZHo+ZvumEqZ4FtzQXmqRPYsmIQSf6946N9oTObP0BCCtrIqBEFI6HqUov
- BhkXMRiqYJSXAyv56/qr+BXNRSv4aPC1djmkEbTLNUdIH0dRJq/Ll/nTzn652iVL/n2P
- lg/59FJGk/hHVFGs1GCq/tACRpmB0QzNejZ63HG9gQHucEGXgnMvgb/68duT81zJG2nf
- lb6z22Bo1Ao1daWfB7dzeffx89EFgA9dyuDBXTwXvpO6snRNtokCLAWkHetFOxb8U5yk /A== 
-Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
-        by aserp2130.oracle.com with ESMTP id 2re6g1d3g2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 15:20:23 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2TFKMN7017336
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 15:20:22 GMT
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2TFKF7T019798;
-        Fri, 29 Mar 2019 15:20:15 GMT
-Received: from ol-bur-x5-4.us.oracle.com (/10.152.128.37)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 Mar 2019 08:20:14 -0700
-From:   Alex Kogan <alex.kogan@oracle.com>
-To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
-        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        alex.kogan@oracle.com, dave.dice@oracle.com,
-        rahul.x.yadav@oracle.com
-Subject: [PATCH v2 0/5] Add NUMA-awareness to qspinlock
-Date:   Fri, 29 Mar 2019 11:20:01 -0400
-Message-Id: <20190329152006.110370-1-alex.kogan@oracle.com>
-X-Mailer: git-send-email 2.17.1
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9211 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903290109
+        Fri, 29 Mar 2019 11:22:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1553872963; bh=XxfoYfDV7GveqTi3MJzPeWXcKvLpJ0Refbu9/OAASBE=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=rUfFtm/Gf1oIPsIcMb677E1Xhu+xb9pYYe4XgCE1R8EjH3omDiTSMj20fcOmNxWLpErlUt8ud9kTKMB7b0Luv1du3LeairnjRL4arz1l0TnZZeDzsX9XtGOs9lA+THgiXzZaAbbwziLZGvf/QAOnHSapz9TxVmH5XXCP41CKo/6dTIrcwxFEsvr0WO8i6CzNKDfuRcGXf3ulsq2CAfKCFmuqgSMqM+HTQHiaj7jqwcAQbVB2V/biNLU0o/MbYtJsijPgzFy0FHgiJq1QeZDvC5NseZskG9mEoTuOQBQ/mCru0TEq7zjF/0CTf1dLORDYDbCx8cC5FOaD74z+zmSLVQ==
+X-YMail-OSG: qiwv1P8VM1mIZkchkuZ6W1uKFFYMV7TUfF6SFu5MS1ZVHU.GpYXbU9T9OQPWS7R
+ rnpTBfCKbNWPvg.R_TWU_Is9qhU6lDF6eKXjZegvKLROlt5N2K0ohSr_pmIFAaYpDX7Krbuke_C4
+ XVF1T9BypJG0ZUzZNGieDoC6JE8rKRE3kFFpxQ6iJwcPfKj9OW4PY2iiH3thDiqRDEDVmW3NpzUG
+ _7M2iINTl0p__nXou0uiDI_TH0HeH0cpYL9pTpOvW2oquwVhv6As4ZSSF1xcX0iOOpu5fzzbQC90
+ NlSEM9w1D_aGY2JA7N2axnbjE3ajVJ725.bXFPaCHhJY7wrY0FhHOTt64AjM8NHf5oBhGKHRzyG8
+ uZ91oWCwTIvbgOC0FSxHZ5yh2mYdRRTkorD3nBvYSt36uaLnvXy7MCjc9l22JODAuN6hD7jn7JwD
+ i.a8XyNTiew7LE6YWzPCnr9Fc2of7dHS5vWArSFdZtXplosniqdkFpeyNW02bWBFL6nJt0AwRRmk
+ ejZdWBDR4vHfrJ8NI9PZQLXeLHlzS_BnZkFoMCRkIAE52csCKCyerf1zcWrZQGBfSMj_KV8ZcqLB
+ fjYl5w2mRUrDV9caXhV10P3IOP08PZf.iR3fKt5EAz5PbDj7NsRw3ZfuXL.97l.8M7lYdUccutMq
+ hsEpHKAQtbymHDCJO8p9.OjdaiecQU2cbrVZHJ7AHFloaMhe6ZD6yfUtX8RcbMtNHzMzqbv5tKX6
+ uWtJ4gld90o_jmtiGSS4QkBvN_hXhsyXOUUEyi.FpfAgCqs.fFb.gQRodBLMswJsEMTyJ5FrAnT1
+ tnohCW6Tvz_3e1wWyCCHTjzwmmriFfWzAMdzY80GUqsd40FwgcS0Ke.nnPZW2DiQGvlC80Fctq0u
+ cf.wQRAwfySV5xkEvSIf0dLO0rM79ChD4xyrmjkLpMR1R4a2Q9NuVIvIkxl58OSOSsa4ZNBTU3vl
+ nt3XXkjG3dIJ6GtuZUwEnOP1wtNAb0aJ02_T9NRpteHqp6tc3e.gS9EiJqGBPQtKMjfyeQvettO0
+ iwIpqD4GFa2BPtRQM9zLqpp7vFeFHKsvA_KuklfleDu2APHUhEPyCT5iM60cPB74tC2fuf2A0Xwl
+ MDXvRAd4qa5CTvTDa10DNIF3wVlSBkUsdXjEtUscA5pmUi5g9OkcMaI_IKXOJzSnil0NRBRLJSD0
+ -
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.gq1.yahoo.com with HTTP; Fri, 29 Mar 2019 15:22:43 +0000
+Received: from c-67-169-65-224.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([67.169.65.224])
+          by smtp425.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 40785259f151e5088712ba2aa88d58dc;
+          Fri, 29 Mar 2019 15:22:41 +0000 (UTC)
+Subject: Re: [PATCH] Bad file pattern in 'SELINUX SECURITY MODULE'
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     joe@perches.com, linux-kernel@vger.kernel.org,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        keescook@chromium.org
+References: <20190325232125.1781-1-casey@schaufler-ca.com>
+ <CAHC9VhRJUxnEyFvJQ3PR+aQTnGt=GZ+EZ-oBQihEE9WgQ9n5EA@mail.gmail.com>
+ <CAHC9VhReNxpWNg6WfCShRijO+AWC9TR8dzCP8COwz_Qe0xr4wA@mail.gmail.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <3e26c0e8-c427-dc40-cc3b-6201f80b383c@schaufler-ca.com>
+Date:   Fri, 29 Mar 2019 08:22:40 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAHC9VhReNxpWNg6WfCShRijO+AWC9TR8dzCP8COwz_Qe0xr4wA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This version addresses feedback from Peter and Waiman. In particular,
-the CNA functionality has been moved to a separate file, and is controlled
-by a config option (enabled by default if NUMA is enabled). 
-An optimization has been introduced to reduce the overhead of shuffling 
-threads between waiting queues when the lock is only lightly contended.
+On 3/29/2019 6:33 AM, Paul Moore wrote:
+> On Mon, Mar 25, 2019 at 7:52 PM Paul Moore <paul@paul-moore.com> wrote:
+>> On Mon, Mar 25, 2019 at 7:21 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+>>> The include/linux/selinux.h file has been removed.
+>>> Remove the entry from the MAINTAINERS file.
+>>>
+>>> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+>>> ---
+>>>   MAINTAINERS | 1 -
+>>>   1 file changed, 1 deletion(-)
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 3e5a5d263f29..1039c34dff3c 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -13947,7 +13947,6 @@ W:      https://selinuxproject.org
+>>>   W:     https://github.com/SELinuxProject
+>>>   T:     git git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+>>>   S:     Supported
+>>> -F:     include/linux/selinux*
+>> This is fine with me, but if we're updating this file, we should
+>> probably add the following:
+>>
+>> F: include/uapi/linux/selinux_netlink.h
+> Are you going to update this Casey or should I?
 
-Summary
--------
+I wasn't planning to do more than fix what I'd broken.
+Have at it. Thanks.
 
-Lock throughput can be increased by handing a lock to a waiter on the
-same NUMA node as the lock holder, provided care is taken to avoid
-starvation of waiters on other NUMA nodes. This patch introduces CNA
-(compact NUMA-aware lock) as the slow path for qspinlock. It can be 
-enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
-
-CNA is a NUMA-aware version of the MCS spin-lock. Spinning threads are
-organized in two queues, a main queue for threads running on the same
-node as the current lock holder, and a secondary queue for threads
-running on other nodes. Threads store the ID of the node on which
-they are running in their queue nodes. At the unlock time, the lock
-holder scans the main queue looking for a thread running on the same
-node. If found (call it thread T), all threads in the main queue
-between the current lock holder and T are moved to the end of the
-secondary queue, and the lock is passed to T. If such T is not found, the
-lock is passed to the first node in the secondary queue. Finally, if the
-secondary queue is empty, the lock is passed to the next thread in the
-main queue. To avoid starvation of threads in the secondary queue,
-those threads are moved back to the head of the main queue
-after a certain expected number of intra-node lock hand-offs.
-
-More details are available at https://arxiv.org/abs/1810.05600.
-
-We have done some performance evaluation with the locktorture module
-as well as with several benchmarks from the will-it-scale repo.
-The following locktorture results are from an Oracle X5-4 server
-(four Intel Xeon E7-8895 v3 @ 2.60GHz sockets with 18 hyperthreaded
-cores each). Each number represents an average (over 25 runs) of the
-total number of ops (x10^7) reported at the end of each run. The 
-standard deviation is also reported in (), and in general, with a few
-exceptions, is about 3%. The 'stock' kernel is v5.0-rc8,
-commit 28d49e282665 ("locking/lockdep: Shrink struct lock_class_key"),
-compiled in the default configuration. 'patch' is the modified
-kernel compiled with NUMA_AWARE_SPINLOCKS not set; it is included to show
-that any performance changes to the existing qspinlock implementation are
-essentially noise. 'patch-CNA' is the modified kernel with 
-NUMA_AWARE_SPINLOCKS set; the speedup is calculated dividing 
-'patch-CNA' by 'stock'.
-
-#thr  	 stock  	patch	     patch-CNA 	 speedup (patch-CNA/stock)
-  1  2.731 (0.102)  2.732 (0.093)   2.716 (0.082)  0.995
-  2  3.071 (0.124)  3.084 (0.109)   3.079 (0.113)  1.003
-  4  4.221 (0.138)  4.229 (0.087)   4.408 (0.103)  1.044
-  8  5.366 (0.154)  5.274 (0.094)   6.958 (0.233)  1.297
- 16  6.673 (0.164)  6.689 (0.095)   8.547 (0.145)  1.281
- 32  7.365 (0.177)  7.353 (0.183)   9.305 (0.202)  1.263
- 36  7.473 (0.198)  7.422 (0.181)   9.441 (0.196)  1.263
- 72  6.805 (0.182)  6.699 (0.170)  10.020 (0.218)  1.472
-108  6.509 (0.082)  6.480 (0.115)  10.027 (0.194)  1.540
-142  6.223 (0.109)  6.294 (0.100)   9.874 (0.183)  1.587
-
-The following tables contain throughput results (ops/us) from the same
-setup for will-it-scale/open1_threads: 
-
-#thr  	 stock  	patch	     patch-CNA 	 speedup (patch-CNA/stock)
-  1  0.565 (0.004)  0.567 (0.001)  0.565 (0.003)  0.999
-  2  0.892 (0.021)  0.899 (0.022)  0.900 (0.018)  1.009
-  4  1.503 (0.031)  1.527 (0.038)  1.481 (0.025)  0.985
-  8  1.755 (0.105)  1.714 (0.079)  1.683 (0.106)  0.959
- 16  1.740 (0.095)  1.752 (0.087)  1.693 (0.098)  0.973
- 32  0.884 (0.080)  0.908 (0.090)  1.686 (0.092)  1.906
- 36  0.907 (0.095)  0.894 (0.088)  1.709 (0.081)  1.885
- 72  0.856 (0.041)  0.858 (0.043)  1.707 (0.082)  1.994
-108  0.858 (0.039)  0.869 (0.037)  1.732 (0.076)  2.020
-142  0.809 (0.044)  0.854 (0.044)  1.728 (0.083)  2.135
-
-and will-it-scale/lock2_threads:
-
-#thr  	 stock  	patch	     patch-CNA 	 speedup (patch-CNA/stock)
-  1  1.713 (0.004)  1.715 (0.004)  1.711 (0.004)  0.999
-  2  2.889 (0.057)  2.864 (0.078)  2.876 (0.066)  0.995
-  4  4.582 (1.032)  5.066 (0.787)  4.725 (0.959)  1.031
-  8  4.227 (0.196)  4.104 (0.274)  4.092 (0.365)  0.968
- 16  4.108 (0.141)  4.057 (0.138)  4.010 (0.168)  0.976
- 32  2.674 (0.125)  2.625 (0.171)  3.958 (0.156)  1.480
- 36  2.622 (0.107)  2.553 (0.150)  3.978 (0.116)  1.517
- 72  2.009 (0.090)  1.998 (0.092)  3.932 (0.114)  1.957
-108  2.154 (0.069)  2.089 (0.090)  3.870 (0.081)  1.797
-142  1.953 (0.106)  1.943 (0.111)  3.853 (0.100)  1.973
-
-Further comments are welcome and appreciated.
-
-Alex Kogan (5):
-  locking/qspinlock: Make arch_mcs_spin_unlock_contended more generic
-  locking/qspinlock: Refactor the qspinlock slow path
-  locking/qspinlock: Introduce CNA into the slow path of qspinlock
-  locking/qspinlock: Introduce starvation avoidance into CNA
-  locking/qspinlock: Introduce the shuffle reduction optimization into
-    CNA
-
- arch/arm/include/asm/mcs_spinlock.h   |   4 +-
- arch/x86/Kconfig                      |  14 ++
- include/asm-generic/qspinlock_types.h |  13 ++
- kernel/locking/mcs_spinlock.h         |  16 ++-
- kernel/locking/qspinlock.c            |  77 +++++++++--
- kernel/locking/qspinlock_cna.h        | 245 ++++++++++++++++++++++++++++++++++
- 6 files changed, 354 insertions(+), 15 deletions(-)
- create mode 100644 kernel/locking/qspinlock_cna.h
-
--- 
-2.11.0 (Apple Git-81)
-
+>
+>>>   F:     security/selinux/
+>>>   F:     scripts/selinux/
+>>>   F:     Documentation/admin-guide/LSM/SELinux.rst
