@@ -2,180 +2,165 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1609C10F06
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76858C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 03:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B9E2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:59:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pp63DvsX"
+	by mail.kernel.org (Postfix) with ESMTP id 3F4092183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 03:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbfC2C76 (ORCPT
+        id S1728656AbfC2DAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 22:59:58 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:51503 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727815AbfC2C76 (ORCPT
+        Thu, 28 Mar 2019 23:00:04 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:56484 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727815AbfC2DAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 22:59:58 -0400
-Received: by mail-yw1-f73.google.com with SMTP id s11so632702ywa.18
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 19:59:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=e4qO0Xpnv7bzZTjFrcD9GxfRGtNUSgyuAtohdyhEJNs=;
-        b=pp63DvsXUBltHv4i/TUcaEaPCKT3+inYGWPS0Lz312IxhQ8amc9nSgRU2Df7yNlU+b
-         /0BJeu+RyJGezMH8Ix7OpfNsTlfG5o+nqMVIXul8ahpq1Gp/lvPtvatJ/vX/JLW3YMbx
-         zd/oNiOvX9be/+QGAKEAc+pmxRI/1cJ5lHRt+J6VpcozDqWIVmx6APM10KlfS3QaIImT
-         IuW/H5F0iU1fpSV117Hi3O/Mml0mjapID4DzwWTCAo51glC1gBMyoOZlXlcv7BP79HYi
-         t2QRiYwTHKGgdzMbJTvmWJ4TUWhxsw34S2sv+UAT+3S+z7WDZEsovUpfxgodyVYA1jhN
-         Qz7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=e4qO0Xpnv7bzZTjFrcD9GxfRGtNUSgyuAtohdyhEJNs=;
-        b=H1V1lDks9+ywFquZ1SMJXhLcR2bb1EDmLirkwO3NTksW4wM5oKaC84Ll8rX4PTaSyO
-         mBsISRsusv45J9FbLNqXKxpSSX2xHgqK4QQ1UHgDpOsO6mbYiIUp+EfRWyQ9CP6dMMed
-         C0iWYFlqCEpzeLbr0zK5Nfq1n7skOTFxSqu7qTBIJP/neb8JgkA/nJs77o5ShQkc0rD5
-         /fWHuO3pUSf0jlEv9vTcEwPQGnc9wBPK94gL+wAGXKDn3xmJV7rZ46wvtM8luyoGxukk
-         ZPlluN1H/rhrCpNZr72F+xMud2TOgVDa2MGuWb9W23FI4ccEifQEOeTpCFCjsf2gfT31
-         WMyw==
-X-Gm-Message-State: APjAAAW8RfMBKFs+D6ojI79jbrBHqGPWFHZYo2580T9GPtsVRNc3wGmI
-        q788Bp2o8jJUAh5hSUCZYcxaAJhbh207
-X-Google-Smtp-Source: APXvYqxShNIharv4eHH0PKSmwDPDmLymMu8pE7OMG2rmXEuUZy8zXj/6+pCA3PEar0uht0VY1SrRH62NOhUj
-X-Received: by 2002:a81:dd0:: with SMTP id 199mr3114723ywn.21.1553828396833;
- Thu, 28 Mar 2019 19:59:56 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 10:59:50 +0800
-In-Reply-To: <20190128072948.45788-1-linfish@google.com>
-Message-Id: <20190329025950.52582-1-linfish@google.com>
-Mime-Version: 1.0
-References: <20190128072948.45788-1-linfish@google.com>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH v7] [media] v4l: add I / P frame min max QP definitions
-From:   Fish Lin <linfish@google.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Keiichi Watanabe <keiichiw@chromium.org>,
-        Smitha T Murthy <smitha.t@samsung.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fish Lin <linfish@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 28 Mar 2019 23:00:03 -0400
+X-UUID: 5d9e33b57d0a47c49819110200f0a150-20190329
+X-UUID: 5d9e33b57d0a47c49819110200f0a150-20190329
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <chang-an.chen@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 232000272; Fri, 29 Mar 2019 10:59:54 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 29 Mar 2019 10:59:52 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 29 Mar 2019 10:59:52 +0800
+From:   Chang-An Chen <chang-an.chen@mediatek.com>
+To:     Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     John Stultz <john.stultz@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Corey Minyard <cminyard@mvista.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        <kuohong.wang@mediatek.com>, <freddy.hsin@mediatek.com>,
+        Chang-An Chen <chang-an.chen@mediatek.com>
+Subject: [PATCH v2] sched/clock: Prevent generic sched_clock wrap caused by tick_freeze()
+Date:   Fri, 29 Mar 2019 10:59:09 +0800
+Message-ID: <1553828349-8914-1-git-send-email-chang-an.chen@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 37D2788DCE6E192A4D30B7F6CBA7ACA6C585B44012A8B55DF98EBFB5EB8A71DD2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add following V4L2 QP parameters for H.264:
-* V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP
-* V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP
-* V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP
-* V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP
+tick_freeze() introduced by suspend-to-idle in commit 124cf9117c5f
+("PM / sleep: Make it possible to quiesce timers during suspend-to-idle")
+will use timekeeping_suspend() instead of syscore_suspend() during
+suspend-to-idle. It means that generic sched_clock will keep going because
+sched_clock_suspend() and sched_clock_resume() are not taken during
+suspend-to-idle. This will lead to generic sched_clock wrap.
 
-These controls will limit QP range for intra and inter frame,
-provide more manual control to improve video encode quality.
+For example:
+In my arm system with suspend-to-idle enabled, sched_clock is registered
+as "56 bits at 13MHz, resolution 76ns, wraps every 4398046511101ns", which
+means the real wrapping duration is 8796093022202ns.
 
-Signed-off-by: Fish Lin <linfish@google.com>
+[  134.551779] suspend-to-idle suspend (timekeeping_suspend())
+[ 1204.912239] suspend-to-idle resume (timekeeping_resume())
+......
+[ 1206.912239] suspend-to-idle suspend (timekeeping_suspend())
+[ 5880.502807] suspend-to-idle resume (timekeeping_resume())
+......
+[ 6000.403724] suspend-to-idle suspend (timekeeping_suspend())
+[ 8035.753167] suspend-to-idle resume  (timekeeping_resume())
+......
+[ 8795.786684] (2)[321:charger_thread]......
+[ 8795.788387] (2)[321:charger_thread]......
+[    0.057226] (0)[0:swapper/0]......
+[    0.061447] (2)[0:swapper/2]......
+
+Sched_clock was not stopped during suspend-to-idle, and sched_clock_poll
+hrtimer was not expired because timekeeping_suspend() is taken during
+suspend-to-idle. It makes sched_clock wrap at kernel time 8796s.
+
+To fix this issue, we add sched_clock_suspend() and sched_clock_resume() in
+tick_freeze() together with timekeeping_suspend() and timekeeping_resume()
+to make sure generic sched_clock wrapping will not happen.
+
+Signed-off-by: Chang-An Chen <chang-an.chen@mediatek.com>
+Fixes: 124cf9117c5f (PM / sleep: Make it possible to quiesce timers during suspend-to-idle)
 ---
-Changelog since v6:
-- Adjust ctrl id start from 385.
+ kernel/time/sched_clock.c |    4 ++--
+ kernel/time/tick-common.c |    2 ++
+ kernel/time/timekeeping.h |    7 +++++++
+ 3 files changed, 11 insertions(+), 2 deletions(-)
 
-Changelog since v5:
-- Adjust documentation wording.
-
-Changelog since v4:
-- Fix patch subject and send again.
-
-Changelog since v3:
-- Put document in ext-ctrls-codec.rst instead of extended-controls.rst
-  (which was previous version).
-
-Changelog since v2:
-- Add interaction with V4L2_CID_MPEG_VIDEO_H264_MIN/MAX_QP
-  description in the document.
-
-Changelog since v1:
-- Add description in document.
-
- .../media/uapi/v4l/ext-ctrls-codec.rst        | 24 +++++++++++++++++++
- drivers/media/v4l2-core/v4l2-ctrls.c          |  4 ++++
- include/uapi/linux/v4l2-controls.h            |  6 +++++
- 3 files changed, 34 insertions(+)
-
-diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-index c97fb7923be5..5b2db52d3b4e 100644
---- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-+++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-@@ -1048,6 +1048,30 @@ enum v4l2_mpeg_video_h264_entropy_mode -
-     Quantization parameter for an B frame for H264. Valid range: from 0
-     to 51.
-
-+``V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP (integer)``
-+    Minimum quantization parameter for the H264 I frame to limit I frame
-+    quality to a range. Valid range: from 0 to 51. If
-+    V4L2_CID_MPEG_VIDEO_H264_MIN_QP is also set, the quantization parameter
-+    should be chosen to meet both requirements.
-+
-+``V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP (integer)``
-+    Maximum quantization parameter for the H264 I frame to limit I frame
-+    quality to a range. Valid range: from 0 to 51. If
-+    V4L2_CID_MPEG_VIDEO_H264_MAX_QP is also set, the quantization parameter
-+    should be chosen to meet both requirements.
-+
-+``V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP (integer)``
-+    Minimum quantization parameter for the H264 P frame to limit P frame
-+    quality to a range. Valid range: from 0 to 51. If
-+    V4L2_CID_MPEG_VIDEO_H264_MIN_QP is also set, the quantization parameter
-+    should be chosen to meet both requirements.
-+
-+``V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP (integer)``
-+    Maximum quantization parameter for the H264 P frame to limit P frame
-+    quality to a range. Valid range: from 0 to 51. If
-+    V4L2_CID_MPEG_VIDEO_H264_MAX_QP is also set, the quantization parameter
-+    should be chosen to meet both requirements.
-+
- ``V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP (integer)``
-     Quantization parameter for an I frame for MPEG4. Valid range: from 1
-     to 31.
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index b79d3bbd8350..115fb8debe23 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -828,6 +828,10 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_MPEG_VIDEO_H264_CONSTRAINED_INTRA_PREDICTION:
- 								return "H264 Constrained Intra Pred";
- 	case V4L2_CID_MPEG_VIDEO_H264_CHROMA_QP_INDEX_OFFSET:	return "H264 Chroma QP Index Offset";
-+	case V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP:		return "H264 I-Frame Minimum QP Value";
-+	case V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP:		return "H264 I-Frame Maximum QP Value";
-+	case V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP:		return "H264 P-Frame Minimum QP Value";
-+	case V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP:		return "H264 P-Frame Maximum QP Value";
- 	case V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:		return "MPEG4 I-Frame QP Value";
- 	case V4L2_CID_MPEG_VIDEO_MPEG4_P_FRAME_QP:		return "MPEG4 P-Frame QP Value";
- 	case V4L2_CID_MPEG_VIDEO_MPEG4_B_FRAME_QP:		return "MPEG4 B-Frame QP Value";
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 06479f2fb3ae..4421baa84177 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -535,6 +535,12 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type {
- #define V4L2_CID_MPEG_VIDEO_H264_HIERARCHICAL_CODING_LAYER_QP	(V4L2_CID_MPEG_BASE+382)
- #define V4L2_CID_MPEG_VIDEO_H264_CONSTRAINED_INTRA_PREDICTION	(V4L2_CID_MPEG_BASE+383)
- #define V4L2_CID_MPEG_VIDEO_H264_CHROMA_QP_INDEX_OFFSET		(V4L2_CID_MPEG_BASE+384)
-+#define V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MIN_QP	(V4L2_CID_MPEG_BASE+385)
-+#define V4L2_CID_MPEG_VIDEO_H264_I_FRAME_MAX_QP	(V4L2_CID_MPEG_BASE+386)
-+#define V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MIN_QP	(V4L2_CID_MPEG_BASE+387)
-+#define V4L2_CID_MPEG_VIDEO_H264_P_FRAME_MAX_QP	(V4L2_CID_MPEG_BASE+388)
- #define V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP	(V4L2_CID_MPEG_BASE+400)
- #define V4L2_CID_MPEG_VIDEO_MPEG4_P_FRAME_QP	(V4L2_CID_MPEG_BASE+401)
- #define V4L2_CID_MPEG_VIDEO_MPEG4_B_FRAME_QP	(V4L2_CID_MPEG_BASE+402)
---
-2.21.0.225.g810b269d1ac-goog
+diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
+index 094b82c..930113b 100644
+--- a/kernel/time/sched_clock.c
++++ b/kernel/time/sched_clock.c
+@@ -272,7 +272,7 @@ static u64 notrace suspended_sched_clock_read(void)
+ 	return cd.read_data[seq & 1].epoch_cyc;
+ }
+ 
+-static int sched_clock_suspend(void)
++int sched_clock_suspend(void)
+ {
+ 	struct clock_read_data *rd = &cd.read_data[0];
+ 
+@@ -283,7 +283,7 @@ static int sched_clock_suspend(void)
+ 	return 0;
+ }
+ 
+-static void sched_clock_resume(void)
++void sched_clock_resume(void)
+ {
+ 	struct clock_read_data *rd = &cd.read_data[0];
+ 
+diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
+index 529143b..df40146 100644
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -487,6 +487,7 @@ void tick_freeze(void)
+ 		trace_suspend_resume(TPS("timekeeping_freeze"),
+ 				     smp_processor_id(), true);
+ 		system_state = SYSTEM_SUSPEND;
++		sched_clock_suspend();
+ 		timekeeping_suspend();
+ 	} else {
+ 		tick_suspend_local();
+@@ -510,6 +511,7 @@ void tick_unfreeze(void)
+ 
+ 	if (tick_freeze_depth == num_online_cpus()) {
+ 		timekeeping_resume();
++		sched_clock_resume();
+ 		system_state = SYSTEM_RUNNING;
+ 		trace_suspend_resume(TPS("timekeeping_freeze"),
+ 				     smp_processor_id(), false);
+diff --git a/kernel/time/timekeeping.h b/kernel/time/timekeeping.h
+index 7a9b4eb..141ab3a 100644
+--- a/kernel/time/timekeeping.h
++++ b/kernel/time/timekeeping.h
+@@ -14,6 +14,13 @@ extern ktime_t ktime_get_update_offsets_now(unsigned int *cwsseq,
+ extern void timekeeping_warp_clock(void);
+ extern int timekeeping_suspend(void);
+ extern void timekeeping_resume(void);
++#ifdef CONFIG_GENERIC_SCHED_CLOCK
++extern int sched_clock_suspend(void);
++extern void sched_clock_resume(void);
++#else
++static inline int sched_clock_suspend(void) { return 0; }
++static inline void sched_clock_resume(void) { }
++#endif
+ 
+ extern void do_timer(unsigned long ticks);
+ extern void update_wall_time(void);
+-- 
+1.7.9.5
 
