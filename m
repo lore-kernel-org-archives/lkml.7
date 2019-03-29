@@ -2,244 +2,310 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57567C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAAAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C532184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:49:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553870958;
-	bh=LcPcDWHAuhuZDdope4gQ4cyfi1+m1Drx0JTP25Jx96Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Wdpt9ZwUJBMp/adi+ms4P8FNCakWpWapqZ+fHfC8DDKe/jMrqUmHSe2K0t6F7nMXN
-	 o2UcW/lKNd7ernQRxBEdQSyA5ooBW7EX3YBUri2NgD+IteleP40TEsZ8R3MM/H9IZN
-	 dGyJgTpnJ9bnwII1wzoDLGFQKefPIPT9pPUc6Jd8=
+	by mail.kernel.org (Postfix) with ESMTP id 008402184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbfC2OtR (ORCPT
+        id S1729556AbfC2Oto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:49:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35546 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 10:49:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39754 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728848AbfC2OtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:49:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729013AbfC2Otn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:49:43 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E0152183F;
-        Fri, 29 Mar 2019 14:49:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553870954;
-        bh=LcPcDWHAuhuZDdope4gQ4cyfi1+m1Drx0JTP25Jx96Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=poGyT4kG1F7grA2zkTXL70C7gm+gf0xPep6Jw8zmbQFQdR5BbxehzwidLAUqRpCBx
-         c9nEc7bm5wc1N23uHnTnGsNsT9oAwwz2mQnl0OtCC8rJtaw2WKelsaWGLJIRFgPyE5
-         TggFBunT4Ox9jZ4EklV4POQhAdQYkI35b0MEv8C4=
-Date:   Fri, 29 Mar 2019 15:49:12 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Sahara <keun-o.park@darkmatter.ae>, LKP <lkp@01.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: b9ca5f8560 ("tty: pty: Fix race condition between .."): WARNING:
- possible circular locking dependency detected
-Message-ID: <20190329144912.GA13805@kroah.com>
-References: <5c9e0c8d.seShxg/Fx+3ABgH1%lkp@intel.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id CCA8130BC666;
+        Fri, 29 Mar 2019 14:49:42 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3F21D17AC1;
+        Fri, 29 Mar 2019 14:49:42 +0000 (UTC)
+Date:   Fri, 29 Mar 2019 08:49:41 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Kirti Wankhede <kwankhede@nvidia.com>
+Cc:     Parav Pandit <parav@mellanox.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Neo Jia <cjia@nvidia.com>
+Subject: Re: [PATCH 8/8] vfio/mdev: Improve the create/remove sequence
+Message-ID: <20190329084941.785fae4d@x1.home>
+In-Reply-To: <69027775-7ca9-ff69-f1cc-1dc9b2001136@nvidia.com>
+References: <1553296835-37522-1-git-send-email-parav@mellanox.com>
+        <1553296835-37522-9-git-send-email-parav@mellanox.com>
+        <244348f7-4d72-b7c5-9d82-34db296ff885@nvidia.com>
+        <VI1PR0501MB2271EB7C5A92CEA195A2FA59D15F0@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+        <69027775-7ca9-ff69-f1cc-1dc9b2001136@nvidia.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5c9e0c8d.seShxg/Fx+3ABgH1%lkp@intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 29 Mar 2019 14:49:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 08:16:13PM +0800, kernel test robot wrote:
-> Greetings,
-> 
-> 0day kernel testing robot got the below dmesg and the first bad commit is
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-> 
-> commit b9ca5f8560af244489b4a1bc1ae88b341f24bc95
-> Author:     Sahara <keun-o.park@darkmatter.ae>
-> AuthorDate: Mon Feb 11 11:09:15 2019 +0400
-> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> CommitDate: Thu Mar 28 01:28:23 2019 +0900
-> 
->     tty: pty: Fix race condition between release_one_tty and pty_write
->     
->     Especially when a linked tty is used such as pty, the linked tty
->     port's buf works have not been cancelled while master tty port's
->     buf work has been cancelled. Since release_one_tty and flush_to_ldisc
->     run in workqueue threads separately, when pty_cleanup happens and
->     link tty port is freed, flush_to_ldisc tries to access freed port
->     and port->itty, eventually it causes a panic.
->     This patch utilizes the magic value with holding the tty_mutex to
->     check if the tty->link is valid.
->     
->     Fixes: 2b022ab7542d ("pty: cancel pty slave port buf's work in tty_release")
->     Signed-off-by: Sahara <keun-o.park@darkmatter.ae>
->     Cc: stable <stable@vger.kernel.org>
->     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> 75ddbc1fb1  tty: vt.c: Fix TIOCL_BLANKSCREEN console blanking if blankinterval == 0
-> b9ca5f8560  tty: pty: Fix race condition between release_one_tty and pty_write
-> 1baf02ec98  Add linux-next specific files for 20190329
-> +-------------------------------------------------------+------------+------------+---------------+
-> |                                                       | 75ddbc1fb1 | b9ca5f8560 | next-20190329 |
-> +-------------------------------------------------------+------------+------------+---------------+
-> | boot_successes                                        | 33         | 0          | 0             |
-> | boot_failures                                         | 0          | 13         | 15            |
-> | WARNING:possible_circular_locking_dependency_detected | 0          | 13         | 15            |
-> +-------------------------------------------------------+------------+------------+---------------+
-> 
-> [   15.391201] Freeing unused kernel image memory: 944K
-> [   15.393319] Run /init as init process
-> [   15.477473] random: init: uninitialized urandom read (12 bytes read)
-> [   15.558322] 
-> [   15.559003] ======================================================
-> [   15.561203] WARNING: possible circular locking dependency detected
-> [   15.563150] 5.1.0-rc1-00016-gb9ca5f8 #1 Not tainted
-> [   15.568331] ------------------------------------------------------
-> [   15.580095] rc.local/191 is trying to acquire lock:
-> [   15.589105] (____ptrval____) (tty_mutex){+.+.}, at: pty_write+0x2f/0xb7
-> [   15.600307] 
-> [   15.600307] but task is already holding lock:
-> [   15.602974] (____ptrval____) (&ldata->output_lock){+.+.}, at: n_tty_write+0x115/0x3bb
-> [   15.605798] 
-> [   15.605798] which lock already depends on the new lock.
-> [   15.605798] 
-> [   15.608300] 
-> [   15.608300] the existing dependency chain (in reverse order) is:
-> [   15.611994] 
-> [   15.611994] -> #4 (&ldata->output_lock){+.+.}:
-> [   15.623017]        __mutex_lock+0x79/0x372
-> [   15.623045]        n_tty_write+0x115/0x3bb
-> [   15.623049]        tty_write+0x194/0x22b
-> [   15.623079]        vfs_write+0xb1/0xd5
-> [   15.623086]        ksys_write+0x4b/0x7b
-> [   15.647711] init: plymouth main process (195) killed by SEGV signal
-> [   15.650724]        do_syscall_64+0x58/0x66
-> [   15.650754]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [   15.685239] 
-> [   15.685239] -> #3 (&o_tty->termios_rwsem/1){++++}:
-> [   15.685299]        down_write+0x3c/0x7b
-> [   15.685307]        tty_unthrottle+0x14/0x49
-> [   15.685332]        n_tty_open+0x86/0x8d
-> [   15.685338]        tty_ldisc_open+0x22/0x30
-> [   15.685366]        tty_ldisc_setup+0x2d/0x4c
-> [   15.727650]        tty_init_dev+0xfe/0x193
-> [   15.727657]        ptmx_open+0x92/0x150
-> [   15.727666]        chrdev_open+0x16c/0x18f
-> [   15.727672]        do_dentry_open+0x181/0x298
-> [   15.727678]        path_openat+0x528/0x650
-> [   15.727689]        do_filp_open+0x48/0x9e
-> [   15.735723]        do_sys_open+0x5c/0xc3
-> [   15.739572]        do_syscall_64+0x58/0x66
-> [   15.746991]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [   15.757427] 
-> [   15.757427] -> #2 (&tty->ldisc_sem){++++}:
-> [   15.766988]        __ldsem_down_write_nested+0x42/0x21f
-> [   15.773999]        tty_ldisc_lock+0x46/0x60
-> [   15.776112]        tty_init_dev+0xd7/0x193
-> [   15.777865]        tty_open+0x2f7/0x31d
-> [   15.779223]        chrdev_open+0x16c/0x18f
-> [   15.780654]        do_dentry_open+0x181/0x298
-> [   15.781991]        path_openat+0x528/0x650
-> [   15.789623]        do_filp_open+0x48/0x9e
-> [   15.796915]        do_sys_open+0x5c/0xc3
-> [   15.804146]        kernel_init_freeable+0x215/0x284
-> [   15.813157]        kernel_init+0x5/0xeb
-> [   15.820251]        ret_from_fork+0x24/0x30
-> [   15.827767] 
-> [   15.827767] -> #1 (&tty->legacy_mutex){+.+.}:
-> [   15.836777]        __mutex_lock+0x79/0x372
-> [   15.838698]        tty_init_dev+0x43/0x193
-> [   15.840349]        tty_open+0x2f7/0x31d
-> [   15.841760]        chrdev_open+0x16c/0x18f
-> [   15.843071]        do_dentry_open+0x181/0x298
-> [   15.844358]        path_openat+0x528/0x650
-> [   15.848305]        do_filp_open+0x48/0x9e
-> [   15.855789]        do_sys_open+0x5c/0xc3
-> [   15.863014]        kernel_init_freeable+0x215/0x284
-> [   15.871967]        kernel_init+0x5/0xeb
-> [   15.879349]        ret_from_fork+0x24/0x30
-> [   15.881580] 
-> [   15.881580] -> #0 (tty_mutex){+.+.}:
-> [   15.883640]        lock_acquire+0x144/0x16f
-> [   15.884811]        __mutex_lock+0x79/0x372
-> [   15.885803]        pty_write+0x2f/0xb7
-> [   15.886693]        n_tty_write+0x21a/0x3bb
-> [   15.887851]        tty_write+0x194/0x22b
-> [   15.890606]        vfs_write+0xb1/0xd5
-> [   15.897737]        ksys_write+0x4b/0x7b
-> [   15.904866]        do_syscall_64+0x58/0x66
-> [   15.912475]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [   15.922784] 
-> [   15.922784] other info that might help us debug this:
-> [   15.922784] 
-> [   15.927523] Chain exists of:
-> [   15.927523]   tty_mutex --> &o_tty->termios_rwsem/1 --> &ldata->output_lock
-> [   15.927523] 
-> [   15.931529]  Possible unsafe locking scenario:
-> [   15.931529] 
-> [   15.933800]        CPU0                    CPU1
-> [   15.942161]        ----                    ----
-> [   15.950652]   lock(&ldata->output_lock);
-> [   15.958041]                                lock(&o_tty->termios_rwsem/1);
-> [   15.969346]                                lock(&ldata->output_lock);
-> [   15.972347]   lock(tty_mutex);
-> [   15.973536] 
-> [   15.973536]  *** DEADLOCK ***
-> [   15.973536] 
-> [   15.975519] 4 locks held by rc.local/191:
-> [   15.976751]  #0: (____ptrval____) (&tty->ldisc_sem){++++}, at: tty_ldisc_ref_wait+0x1b/0x35
-> [   15.979326]  #1: (____ptrval____) (&tty->atomic_write_lock){+.+.}, at: tty_write_lock+0x13/0x3a
-> [   15.995462]  #2: (____ptrval____) (&o_tty->termios_rwsem/1){++++}, at: n_tty_write+0x62/0x3bb
-> [   16.011273]  #3: (____ptrval____) (&ldata->output_lock){+.+.}, at: n_tty_write+0x115/0x3bb
-> [   16.026602] 
-> [   16.026602] stack backtrace:
-> [   16.034151] CPU: 1 PID: 191 Comm: rc.local Not tainted 5.1.0-rc1-00016-gb9ca5f8 #1
-> [   16.047411] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-> [   16.062578] Call Trace:
-> [   16.065417]  dump_stack+0x67/0x8e
-> [   16.066775]  print_circular_bug+0x1c7/0x1d4
-> [   16.068353]  check_prev_add+0x168/0x317
-> [   16.069787]  ? check_prev_add+0x2f1/0x317
-> [   16.071089]  ? __lock_acquire+0xa02/0xb02
-> [   16.072074]  __lock_acquire+0xa02/0xb02
-> [   16.072933]  lock_acquire+0x144/0x16f
-> [   16.073744]  ? pty_write+0x2f/0xb7
-> [   16.074434]  ? pty_write+0x2f/0xb7
-> [   16.075100]  __mutex_lock+0x79/0x372
-> [   16.078781]  ? pty_write+0x2f/0xb7
-> [   16.083937]  ? pty_write+0x2f/0xb7
-> [   16.090640]  pty_write+0x2f/0xb7
-> [   16.097181]  n_tty_write+0x21a/0x3bb
-> [   16.102755]  ? __wake_up_locked_key_bookmark+0x12/0x12
-> [   16.110519]  tty_write+0x194/0x22b
-> [   16.112182]  ? copy_from_read_buf+0xf9/0xf9
-> [   16.113493]  vfs_write+0xb1/0xd5
-> [   16.114399]  ksys_write+0x4b/0x7b
-> [   16.115248]  do_syscall_64+0x58/0x66
-> [   16.116161]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [   16.117376] RIP: 0033:0x7f1f91f15100
-> [   16.118223] Code: 73 01 c3 48 8b 0d 40 0d 2d 00 31 d2 48 29 c2 64 89 11 48 83 c8 ff eb ea 90 90 83 3d dd 70 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 de b0 01 00 48 89 04 24
-> [   16.140575] RSP: 002b:00007ffe599448d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> [   16.153704] RAX: ffffffffffffffda RBX: 0000000000000017 RCX: 00007f1f91f15100
-> [   16.157815] RDX: 0000000000000017 RSI: 0000000000e0b808 RDI: 0000000000000001
-> [   16.160600] RBP: 0000000000e0b808 R08: 000000000000000a R09: 00007f1f92835700
-> [   16.162841] R10: 00007ffe59944710 R11: 0000000000000246 R12: 00007f1f921e7260
-> [   16.164912] R13: 0000000000000017 R14: 0000000000000000 R15: 0000000000e12f88
-> Kernel tests: Boot OK!
-> [   16.254509] random: trinity: uninitialized urandom read (4 bytes read)
-> [   16.343589] random: mountall: uninitialized urandom read (12 bytes read)
+On Thu, 28 Mar 2019 22:50:38 +0530
+Kirti Wankhede <kwankhede@nvidia.com> wrote:
 
-Thanks for this, I've now reverted it.
+> On 3/26/2019 9:00 PM, Parav Pandit wrote:
+> > 
+> >   
+> >> -----Original Message-----
+> >> From: Kirti Wankhede <kwankhede@nvidia.com>
+> >> Sent: Tuesday, March 26, 2019 2:06 AM
+> >> To: Parav Pandit <parav@mellanox.com>; kvm@vger.kernel.org; linux-
+> >> kernel@vger.kernel.org; alex.williamson@redhat.com
+> >> Cc: Neo Jia <cjia@nvidia.com>
+> >> Subject: Re: [PATCH 8/8] vfio/mdev: Improve the create/remove sequence
+> >>
+> >>
+> >>
+> >> On 3/23/2019 4:50 AM, Parav Pandit wrote:  
+> >>> There are five problems with current code structure.
+> >>> 1. mdev device is placed on the mdev bus before it is created in the
+> >>> vendor driver. Once a device is placed on the mdev bus without
+> >>> creating its supporting underlying vendor device, an open() can get
+> >>> triggered by userspace on partially initialized device.
+> >>> Below ladder diagram highlight it.
+> >>>
+> >>>       cpu-0                                       cpu-1
+> >>>       -----                                       -----
+> >>>    create_store()
+> >>>      mdev_create_device()
+> >>>        device_register()
+> >>>           ...
+> >>>          vfio_mdev_probe()
+> >>>          ...creates char device
+> >>>                                         vfio_mdev_open()
+> >>>                                           parent->ops->open(mdev)
+> >>>                                             vfio_ap_mdev_open()
+> >>>                                               matrix_mdev = NULL
+> >>>         [...]
+> >>>         parent->ops->create()
+> >>>           vfio_ap_mdev_create()
+> >>>             mdev_set_drvdata(mdev, matrix_mdev);
+> >>>             /* Valid pointer set above */
+> >>>  
+> >>
+> >> VFIO interface uses sysfs path of device or PCI device's BDF where it checks
+> >> sysfs file for that device exist.
+> >> In case of VFIO mdev device, above situation will never happen as open will
+> >> only get called if sysfs entry for that device exist.
+> >>
+> >> If you don't use VFIO interface then this situation can arise. In that case
+> >> probe() can be used for very basic initialization then create actual char
+> >> device from create().
+> >>  
+> > I explained you that create() cannot do the heavy lifting work of creating netdev and rdma dev because at that stage driver doesn't know whether its getting used for VM or host.
+> > create() needs to create the device that probe() can work on in stable manner.
+> >   
+> 
+> You can identify if its getting used by VM or host from create(). Since
+> probe() happens first, from create() you can check
+> mdev_dev(mdev)->driver->name, if its 'vfio_mdev' then its getting used
+> by VM, otherwise used by host.
 
-greg k-h
+If this is suggesting that we should have different create paths based
+on driver name, please no.  Mdev devices should not be special, they're
+attached to a bus which can host multiple drivers and devices on that
+bus should have the ability to switch between drivers.  Not to mention
+that a strcmp of a driver name to infer the purpose of a device is just
+ugly as can be.
+
+> >>> 2. Current creation sequence is,
+> >>>    parent->ops_create()
+> >>>    groups_register()
+> >>>
+> >>> Remove sequence is,
+> >>>    parent->ops->remove()
+> >>>    groups_unregister()
+> >>> However, remove sequence should be exact mirror of creation sequence.
+> >>> Once this is achieved, all users of the mdev will be terminated first
+> >>> before removing underlying vendor device.
+> >>> (Follow standard linux driver model).
+> >>> At that point vendor's remove() ops shouldn't failed because device is
+> >>> taken off the bus that should terminate the users.
+> >>>  
+> >>
+> >> If VMM or user space application is using mdev device,
+> >> parent->ops->remove() can return failure. In that case sysfs files
+> >> shouldn't be removed. Hence above sequence is followed for remove.
+> >>
+> >> Standard linux driver model doesn't allow remove() to fail, but in of mdev
+> >> framework, interface is defined to handle such error case.
+> >>  
+> > But the sequence is incorrect for wider use case.  
+> >>  
+> >>> 3. Additionally any new mdev driver that wants to work on mdev device
+> >>> during probe() routine registered using mdev_register_driver() needs
+> >>> to get stable mdev structure.
+> >>>  
+> >>
+> >> Things that you are trying to handle with mdev structure from probe(),
+> >> couldn't that be moved to create()?
+> >>  
+> > No, as explained before and above.
+> > That approach just doesn't look right.
+> >  
+> 
+> As I mentioned abouve, you can do that.
+
+But it would be wrong to do so.
+
+> >>  
+> >>> 4. In following sequence, child devices created while removing mdev
+> >>> parent device can be left out, or it may lead to race of removing half
+> >>> initialized child mdev devices.
+> >>>
+> >>> issue-1:
+> >>> --------
+> >>>        cpu-0                         cpu-1
+> >>>        -----                         -----
+> >>>                                   mdev_unregister_device()
+> >>>                                      device_for_each_child()
+> >>>                                         mdev_device_remove_cb()
+> >>>                                             mdev_device_remove()
+> >>> create_store()
+> >>>   mdev_device_create()                   [...]
+> >>>        device_register()
+> >>>                                   parent_remove_sysfs_files()
+> >>>                                   /* BUG: device added by cpu-0
+> >>>                                    * whose parent is getting removed.
+> >>>                                    */
+> >>>
+> >>> issue-2:
+> >>> --------
+> >>>        cpu-0                         cpu-1
+> >>>        -----                         -----
+> >>> create_store()
+> >>>   mdev_device_create()                   [...]
+> >>>        device_register()
+> >>>
+> >>>        [...]                      mdev_unregister_device()
+> >>>                                      device_for_each_child()
+> >>>                                         mdev_device_remove_cb()
+> >>>                                             mdev_device_remove()
+> >>>
+> >>>        mdev_create_sysfs_files()
+> >>>        /* BUG: create is adding
+> >>>         * sysfs files for a device
+> >>>         * which is undergoing removal.
+> >>>         */
+> >>>                                  parent_remove_sysfs_files()
+> >>>
+> >>> 5. Below crash is observed when user initiated remove is in progress
+> >>> and mdev_unregister_driver() completes parent unregistration.
+> >>>
+> >>>        cpu-0                         cpu-1
+> >>>        -----                         -----
+> >>> remove_store()
+> >>>    mdev_device_remove()
+> >>>    active = false;
+> >>>                                   mdev_unregister_device()
+> >>>                                     remove type
+> >>>    [...]
+> >>>    mdev_remove_ops() crashes.
+> >>>
+> >>> This is similar race like create() racing with mdev_unregister_device().
+> >>>
+> >>> mtty mtty: MDEV: Registered
+> >>> iommu: Adding device 83b8f4f2-509f-382f-3c1e-e6bfe0fa1001 to group 57
+> >>> vfio_mdev 83b8f4f2-509f-382f-3c1e-e6bfe0fa1001: MDEV: group_id = 57
+> >>> mdev_device_remove sleep started mtty mtty: MDEV: Unregistering
+> >>> mtty_dev: Unloaded!
+> >>> BUG: unable to handle kernel paging request at ffffffffc027d668 PGD
+> >>> af9818067 P4D af9818067 PUD af981a067 PMD 8583c3067 PTE 0
+> >>> Oops: 0000 [#1] SMP PTI
+> >>> CPU: 15 PID: 3517 Comm: bash Kdump: loaded Not tainted
+> >>> 5.0.0-rc7-vdevbus+ #2 Hardware name: Supermicro
+> >>> SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
+> >>> RIP: 0010:mdev_device_remove_ops+0x1a/0x50 [mdev] Call Trace:
+> >>>  mdev_device_remove+0xef/0x130 [mdev]
+> >>>  remove_store+0x77/0xa0 [mdev]
+> >>>  kernfs_fop_write+0x113/0x1a0
+> >>>  __vfs_write+0x33/0x1b0
+> >>>  ? rcu_read_lock_sched_held+0x64/0x70
+> >>>  ? rcu_sync_lockdep_assert+0x2a/0x50
+> >>>  ? __sb_start_write+0x121/0x1b0
+> >>>  ? vfs_write+0x17c/0x1b0
+> >>>  vfs_write+0xad/0x1b0
+> >>>  ? trace_hardirqs_on_thunk+0x1a/0x1c
+> >>>  ksys_write+0x55/0xc0
+> >>>  do_syscall_64+0x5a/0x210
+> >>>
+> >>> Therefore, mdev core is improved in following ways to overcome above
+> >>> issues.
+> >>>
+> >>> 1. Before placing mdev devices on the bus, perform vendor drivers
+> >>> creation which supports the mdev creation.
+> >>> This ensures that mdev specific all necessary fields are initialized
+> >>> before a given mdev can be accessed by bus driver.
+> >>>
+> >>> 2. During remove flow, first remove the device from the bus. This
+> >>> ensures that any bus specific devices and data is cleared.
+> >>> Once device is taken of the mdev bus, perform remove() of mdev from
+> >>> the vendor driver.
+> >>>  
+> >>
+> >> If user space application is using the device and someone underneath
+> >> remove the device from bus, how would use space application know that
+> >> device is being removed?  
+> > vfio_mdev guards and wait for device to get closed.
+> > 
+> > One sample trace is below.
+> > [<0>] vfio_del_group_dev+0x34a/0x3c0 [vfio]
+> > [<0>] mdev_remove+0x21/0x40 [mdev]
+> > [<0>] device_release_driver_internal+0xe8/0x1b0
+> > [<0>] bus_remove_device+0xf9/0x170
+> > [<0>] device_del+0x168/0x350
+> > [<0>] mdev_device_remove_common+0x1e/0x60 [mdev]
+> > [<0>] mdev_device_remove_cb+0x1a/0x30 [mdev]
+> > [<0>] device_for_each_child+0x47/0x90
+> > [<0>] mdev_unregister_device+0xdb/0x100 [mdev]
+> > [<0>] mtty_dev_exit+0x17/0x843 [mtty]
+> > [<0>] __x64_sys_delete_module+0x16b/0x240
+> > [<0>] do_syscall_64+0x5a/0x210
+> > [<0>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > [<0>] 0xffffffffffffffff
+> >   
+> >> If DMA is setup, user space application is accessing that memory and device
+> >> is removed from bus - how will you restrict to not to remove that device? If
+> >> remove() is not restricted then host might crash.
+> >> I know Linux kernel device core model doesn't allow remove() to fail, but we
+> >> had tackled that problem for mdev devices in this framework. I prefer not to
+> >> change this behavior. This will regress existing working drivers.
+> >>  
+> > vfio layer ensures that open device cannot be removed from above trace.
+> > 
+> > Other drivers will follow similar method. In case of mlx5 driver which binds
+> > to mdev follows standard driver model to terminate for this mdev device,
+> > similar way for pci device.
+> >   
+> 
+> But then remove() or write on 'remove' sysfs would block, which could be
+> indefinite. For example in case of VM, it will block until VM is not
+> shutdown.
+> With current approach, write on 'remove' sysfs doesn't block.
+
+OTOH, why should mdev be different than any other driver?  Blocking is
+the current solution for all directly assigned vfio devices.  This is a
+compromise between the device model not allowing an error return and
+lack of support to be able to revoke mmaps to the device.  We already
+have an interface in vfio to request a device from a cooperative user
+(Maxim proposed adding this to the mdev interface), lacking a revoke
+interface, that can be further escalated to killing the process.  What
+we've heard previously when pursuing an error path from removing a
+device is that all responsibility lies with the admin in using these
+interfaces.  If a remove is requested, it should be honored.  If that
+results in killing a task, the fault is on the admin.  Mdev is not its
+own island to decide a different model. Thanks,
+
+Alex
