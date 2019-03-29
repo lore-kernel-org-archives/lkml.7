@@ -2,88 +2,152 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76616C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67861C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47165206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318A7206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:06:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e08Y5pL5"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="tF7VCVvc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbfC2OFX (ORCPT
+        id S1729145AbfC2OGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:05:23 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40598 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728833AbfC2OFW (ORCPT
+        Fri, 29 Mar 2019 10:06:04 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42935 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728713AbfC2OGE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:05:22 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2TE3pXC186536;
-        Fri, 29 Mar 2019 14:04:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=C6xZHf8lFi2uBI1WxZNU478lOA3CGjHP0MydF18ySoY=;
- b=e08Y5pL5oz8BykRoc2edTI2Rw/KxC95/YC8/mJQ+LxCZairLeiDw1fj6KdzuMUvRE88H
- OOW3u8oIKW14UD3RjNjv6UH1YyadYgl4U+0Z11AWCA1QoKW60/VsBVjsZnFwO9EhFGZ7
- KlqpWG0Uvc1G7IVf/WfOBoq5TQP1yO3V/qY/1Jt2fGiv/h2MQkfbx6DgLfwqF15hAqCz
- y457vKKqB7LVA6k+TdpBbdhqSu5kA101GPfKQ/GeKm+Li30zNJDFV+3ae0TGb+XJpOyt
- FFGfg/NwW0VpYs5YQuX8DE0vi5zyw3PvqC/T+8JxxTc/mbFe67npHCwL5BWuKuKYEoAK mQ== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by userp2130.oracle.com with ESMTP id 2re6g1mjx7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 14:04:59 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2TE4xuS030354
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 14:04:59 GMT
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2TE4wbm003756;
-        Fri, 29 Mar 2019 14:04:58 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 Mar 2019 07:04:57 -0700
-To:     Colin King <colin.king@canonical.com>
-Cc:     QLogic-Storage-Upstream@cavium.com,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: qedi: remove declaration of nvm_image from stack
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190327181103.15677-1-colin.king@canonical.com>
-Date:   Fri, 29 Mar 2019 10:04:53 -0400
-In-Reply-To: <20190327181103.15677-1-colin.king@canonical.com> (Colin King's
-        message of "Wed, 27 Mar 2019 18:11:03 +0000")
-Message-ID: <yq1d0m9srne.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 29 Mar 2019 10:06:04 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p6so1272301pgh.9
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 07:06:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FapvRZyYiTZFWw/6Cc7PifpPyHkEerUXRp6Ch6YJf0A=;
+        b=tF7VCVvcWTY29ojQUUysyh/P0Pgj4R/Zotjh4Q1WjuimdiGBtpx1TJ3gVaBeoLEYCY
+         snyfunBcuZcYbOakoS02/9E/VpDV3bLqlW0lnWCacW76Q2auhlX534a2JAG9JQZf1Jt4
+         mDwdLGhp8cOC5ln3kKwubQUUDNtDecD8LByd8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FapvRZyYiTZFWw/6Cc7PifpPyHkEerUXRp6Ch6YJf0A=;
+        b=Vh2EFJ8bNnp9zqhub4FKsGS/ZYROirw6bVZmlTeAYXSOd2vgPP+mxt6uxnSy0EpTb5
+         M5TkAc8LRct+HHA1n1SiT8fRsuBED/MudunZz5SOmz+XF/++X2qMh8AFqWwslp+zdTKU
+         qiNQddKmfydkfyXhAj57sJH3UXgABr14h37RlMKWWRr6fe2+7YTLeTHoYOsYC66NAdR3
+         p/8THHN2NV00jo0/hr4Oxfkw5X+1V+5PbrLjfoXeWAoHGlIE0JAuloCUhYAm/zWHjAG7
+         bU088T5iiMdYFmHfikXHRwqvOnHStRD0nL7Vl7P0DlqeMP8a5NMOlZgBJT4iPjT1rWqX
+         cPqw==
+X-Gm-Message-State: APjAAAWCAHELgMdT/maSxVH17cO2lVmDSJ9V/knLo2EGzR0yHc/Fh2G6
+        3GrPY6JFjQrw4O+LM2j9uit/lxE+tNU=
+X-Google-Smtp-Source: APXvYqzfoifDNvO+AAJ31IC+65JGwHTduv8nIYZJs+T39N4diMjz3GScgCgQIpc49zYbNE0Vq9aQmQ==
+X-Received: by 2002:a63:5405:: with SMTP id i5mr41461290pgb.212.1553868362899;
+        Fri, 29 Mar 2019 07:06:02 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id i64sm3178896pfb.112.2019.03.29.07.06.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Mar 2019 07:06:01 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        oleg@redhat.com, jannh@google.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v2] doc/rcuref: Document real world examples in kernel
+Date:   Fri, 29 Mar 2019 10:05:55 -0400
+Message-Id: <20190329140555.118463-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9210 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=813 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903290101
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Document similar real world examples in the kernel corresponding to the
+second and third code snippets. Also correct an issue in
+release_referenced() in the code snippet example.
 
-Colin,
+Cc: oleg@redhat.com
+Cc: jannh@google.com
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-> The nvm_image is a large struct qedi_nvm_iscsi_image object of over
-> 24K so don't declare it on the stack just for a sizeof requirement;
-> use sizeof on struct qedi_nvm_iscsi_image instead.
+v1->v2:
+ - minor fixups, label code listings.
 
-Applied to 5.1/scsi-fixes. Thanks!
+ Documentation/RCU/rcuref.txt | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/RCU/rcuref.txt b/Documentation/RCU/rcuref.txt
+index 613033ff2b9b..a49d525ce975 100644
+--- a/Documentation/RCU/rcuref.txt
++++ b/Documentation/RCU/rcuref.txt
+@@ -12,6 +12,7 @@ please read on.
+ Reference counting on elements of lists which are protected by traditional
+ reader/writer spinlocks or semaphores are straightforward:
+ 
++CODE LISTING A:
+ 1.				2.
+ add()				search_and_reference()
+ {				{
+@@ -28,7 +29,8 @@ add()				search_and_reference()
+ release_referenced()			delete()
+ {					{
+     ...					    write_lock(&list_lock);
+-    atomic_dec(&el->rc, relfunc)	    ...
++    if(atomic_dec_and_test(&el->rc))	    ...
++	kfree(el);
+     ...					    remove_element
+ }					    write_unlock(&list_lock);
+  					    ...
+@@ -44,6 +46,7 @@ search_and_reference() could potentially hold reference to an element which
+ has already been deleted from the list/array.  Use atomic_inc_not_zero()
+ in this scenario as follows:
+ 
++CODE LISTING B:
+ 1.					2.
+ add()					search_and_reference()
+ {					{
+@@ -79,6 +82,7 @@ search_and_reference() code path.  In such cases, the
+ atomic_dec_and_test() may be moved from delete() to el_free()
+ as follows:
+ 
++CODE LISTING C:
+ 1.					2.
+ add()					search_and_reference()
+ {					{
+@@ -114,6 +118,13 @@ element can therefore safely be freed.  This in turn guarantees that if
+ any reader finds the element, that reader may safely acquire a reference
+ without checking the value of the reference counter.
+ 
++As can be seen, a clear advantage of the pattern in listing C is, if there are
++several calls to search_and_reference() in parallel to the delete(), then all
++of those will succeed in obtaining a reference to the object if the object
++could be found in the list before it was deleted in delete(), unlike the
++pattern in listing B which would fail to acquire references in such a situation
++even though the object is still in memory.
++
+ In cases where delete() can sleep, synchronize_rcu() can be called from
+ delete(), so that el_free() can be subsumed into delete as follows:
+ 
+@@ -130,3 +141,7 @@ delete()
+     	kfree(el);
+     ...
+ }
++
++As additional examples in the kernel, the pattern in listing C is used by
++reference counting of struct pid, while the pattern in listing B is used by
++struct posix_acl.
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.21.0.392.gf8f6787159e-goog
