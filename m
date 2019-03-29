@@ -2,107 +2,96 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED2FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7750DC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4942C2183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 454F321773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EM2q6YDQ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FKXkKv4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbfC2Ijc (ORCPT
+        id S1729067AbfC2Ijl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:39:32 -0400
-Received: from mail-pg1-f175.google.com ([209.85.215.175]:38637 "EHLO
-        mail-pg1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729188AbfC2IjR (ORCPT
+        Fri, 29 Mar 2019 04:39:41 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55614 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729188AbfC2Ijk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 04:39:17 -0400
-Received: by mail-pg1-f175.google.com with SMTP id j26so874291pgl.5;
-        Fri, 29 Mar 2019 01:39:16 -0700 (PDT)
+        Fri, 29 Mar 2019 04:39:40 -0400
+Received: by mail-wm1-f68.google.com with SMTP id o25so1568940wmf.5
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 01:39:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=T/EbcEuSb4+GVtPwZ6CTWAqigRhpwJKmXogMtZe4IOA=;
-        b=EM2q6YDQE8uajRpv97pUFUeqJKZZ/4mu1aUELtmQy9knzFB/8bMF8dcje/WjKS5rCj
-         IhcBIt7alk3pF3U9gQcDXeCZkrmCYsiMF5ONyDz1g6uCYepmLqcj2E69UErhMsVn+7YH
-         7o6iUrqnbF8OVUWx21Xkz7Np7DMwqJMyGjpnrp6NE95hkcdP27F1NrQLsGxx61pdEHD9
-         euIubxXmbRFxb55JprK3Gw117OhGfsmkC0cUVNf5fFOpYsNWRAej6o0IucYbUXaUYr5s
-         kcxK8hXaHhG417IYia5N9NV8iXmKgzuTLHOYscm43iB22pWQKDJrCFZ/Cz0a9nInsK1c
-         z1CQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=oV9s7B6fOCEuHBo7NqIclE7KCi1bwoXzo8XlZY4r4hU=;
+        b=FKXkKv4C4JhWKV6p6n9guP/PK1Y8XKgAooRp8BD9Lg5pLUJLrbgJVxioVBKg7lHhvQ
+         qw5Ib+w8nWtcSVzPix02g6TLa8CRrCBUik1HkN4JGeldmfGYm5KcmbtGwNLf0N5HvK2s
+         NDiOy6/cb8HGdLlGMIodsFAOg2PxiXBWKsVqjN0XRsJ+aSF+6Q0HGa7EFl5aN/iGxuXw
+         cEzg70Zm7UrGN3xAesDL1a+evvWwCnQmFuSmCp8aDmyHDoeLEirZrORJIH8XARHG+HXA
+         AiDUhwh6I6f9mLfQ0htpbAZOyagqQ1rGrzv2v3qPbcnoDDB+WdzH3WCWjY7rOM8mtqoH
+         NgdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=T/EbcEuSb4+GVtPwZ6CTWAqigRhpwJKmXogMtZe4IOA=;
-        b=SPbrBvq4JRQrfnWW7H6blxn+CJkLHqRINq9EY7TOHPp0GqYl5eKXBx1GzM1spauvTZ
-         nmIPuZPJ1Rz69U4KmbdOMX89B+PDGsHPRnAGTCB5Spm9Aa0fD46rteChh47J8QOz9q5Z
-         1tDP5FrecuZnMBJ8vBmOvvdUYXywlGnj4gmccgrNAcqgTnpPZHEqSVSXHNkRlPlLbGHD
-         hjzIzgw1J0HJLaN9pRrTnX6gtpPGjkSATNlGYE7DB+0O1WC7ztml2I9Dz2q4u+xyUCo4
-         IdgdLMARK2cjIwMBpoq0C3SNj+GLRiGZVVla30JsfdXCzTK+LexDvGZA3AWSx6eYY1pw
-         AZyw==
-X-Gm-Message-State: APjAAAU7ihCL8vCQZs7fEV35dl3g0eDKAFtXmtaO3ZGX8XkKGBs4zTyv
-        oEfVPVDuiX/CjWN7dfPJtngRB123
-X-Google-Smtp-Source: APXvYqzRJ9RLReddQkT0yKMZKFm7PR7nBzWMj4CO4q/E/cnoq6rk2hrbWTxK5V51oIS0rUAc3IYFog==
-X-Received: by 2002:a63:f707:: with SMTP id x7mr36479288pgh.343.1553848756276;
-        Fri, 29 Mar 2019 01:39:16 -0700 (PDT)
-Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id z21sm1889690pfn.139.2019.03.29.01.39.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 29 Mar 2019 01:39:15 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Rob Herring <robh@kernel.org>, Chris Healy <cphealy@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 3/4] dt-bindings: arm: fsl: Add support for ZII i.MX7 RPU2 board
-Date:   Fri, 29 Mar 2019 01:38:57 -0700
-Message-Id: <20190329083858.9988-3-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190329083858.9988-1-andrew.smirnov@gmail.com>
-References: <20190329083858.9988-1-andrew.smirnov@gmail.com>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=oV9s7B6fOCEuHBo7NqIclE7KCi1bwoXzo8XlZY4r4hU=;
+        b=uBQciDumkOg1NV59IhuIPj9byx4qXzV3N+01ilCkNWVeWqGEbPxNTT3RiHPuMACmI/
+         F/gpbfnAPBKUXGDSOAfU0drvUthCvuLKhE4szHFO+p816LSNXlYLDLfd/iVT8sqSMzbn
+         7wLn0JqFp/QizirZilQPxuP4G30v2MpLxyVC9TThZyCUDQku0wbBKVjvIvgyl94RaMkX
+         qJPqxuibGEHWRK5HRJe13hYFnqOOHWHjIPWYp9ZqfYVjVIwS75CLtxImyYdaNHnFnyFC
+         JrFPCv4xSHIX5BeOU5XoOfhhE3iu1ea8GJ7kFjvp3n16xoJNj8sPnU6BRKe+WelY0gqW
+         TtOw==
+X-Gm-Message-State: APjAAAWxZWmYX6GI9UkPoWtATWgnqxMEOr3rYn3/gsPYt9e2QN4sFzBm
+        Ik0Q+sz9EUTyofiTZJL8JxGWkg==
+X-Google-Smtp-Source: APXvYqyotLkWO5lGRRr4pxM4xWl0007akwWtBATfp/8oZNh8Xqd7ZJcbgLMj6TnkzEM3lNF35v91uA==
+X-Received: by 2002:a1c:7008:: with SMTP id l8mr2632175wmc.63.1553848778160;
+        Fri, 29 Mar 2019 01:39:38 -0700 (PDT)
+Received: from boomer.baylibre.com ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
+        by smtp.gmail.com with ESMTPSA id a17sm1422214wmg.40.2019.03.29.01.39.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 29 Mar 2019 01:39:37 -0700 (PDT)
+Message-ID: <e8360360029a29296b98586f1d1a440996d89947.camel@baylibre.com>
+Subject: Re: [PATCH] clk: meson: vid-pll-div: remove warning and return 0 on
+ invalid config
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Fri, 29 Mar 2019 09:39:35 +0100
+In-Reply-To: <20190327151348.27402-1-narmstrong@baylibre.com>
+References: <20190327151348.27402-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for ZII i.MX7 RPU2 board.
+On Wed, 2019-03-27 at 16:13 +0100, Neil Armstrong wrote:
+> The vid_pll_div is a programmable fractional divider, but vendor gives a
+> limited of known configuration value and it's corresponding fraction.
+> 
+> Thus when at reset value (0) or unknown value, we cannot determine the
+> result rate.
+> 
+> The initial behaviour was to print a warning, but the warning triggers
+> at each boot and when the clock tree is refreshed.
+> 
+> This patch moves the print to debug and returns 0 instead of the
+> parent rate.
+> 
+> Fixes: 72dbb8c94d0d ("clk: meson: Add vid_pll divider driver")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/clk/meson/vid-pll-div.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index fb0a37bf16b8..18ffe3bfecf7 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -141,6 +141,7 @@ properties:
-         items:
-           - enum:
-               - fsl,imx7d-sdb             # i.MX7 SabreSD Board
-+              - zii,imx7d-rpu2            # ZII RPU2 Board
-           - const: fsl,imx7d
- 
-       - description:
--- 
-2.20.1
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
 
