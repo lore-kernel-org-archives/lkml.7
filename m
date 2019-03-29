@@ -2,97 +2,151 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FB0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60DAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA1E42184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B958D20651
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbfC2OBv (ORCPT
+        id S1729473AbfC2OCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:01:51 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39604 "EHLO inva020.nxp.com"
+        Fri, 29 Mar 2019 10:02:14 -0400
+Received: from mga11.intel.com ([192.55.52.93]:5813 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729010AbfC2OAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:00:20 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7552F1A0188;
-        Fri, 29 Mar 2019 15:00:18 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 691971A00A7;
-        Fri, 29 Mar 2019 15:00:18 +0100 (CET)
-Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.74.120])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D78BD20606;
-        Fri, 29 Mar 2019 15:00:17 +0100 (CET)
-From:   laurentiu.tudor@nxp.com
-To:     netdev@vger.kernel.org, madalin.bucur@nxp.com, roy.pledge@nxp.com,
-        camelia.groza@nxp.com, leoyang.li@nxp.com
-Cc:     davem@davemloft.net, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH 02/13] soc/fsl/bman: map FBPR area in the iommu
-Date:   Fri, 29 Mar 2019 16:00:03 +0200
-Message-Id: <20190329140014.8126-3-laurentiu.tudor@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
-References: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1728683AbfC2OCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:02:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 07:02:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,284,1549958400"; 
+   d="scan'208";a="159581716"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Mar 2019 07:02:11 -0700
+Subject: Re: [PATCH v5] mmc: sdhci-omap: Don't finish_mrq() on a command error
+ during tuning
+To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
+Cc:     ulf.hansson@linaro.org, kishon@ti.com
+References: <20190329121042.24415-1-faiz_abbas@ti.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <c8c5b4d1-6120-748f-acc6-3f7e41cf7ad0@intel.com>
+Date:   Fri, 29 Mar 2019 16:00:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190329121042.24415-1-faiz_abbas@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+On 29/03/19 2:10 PM, Faiz Abbas wrote:
+> commit 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
+> callback") skips data resets during tuning operation. Because of this,
+> a data error or data finish interrupt might still arrive after a command
+> error has been handled and the mrq ended. This ends up with a "mmc0: Got
+> data interrupt 0x00000002 even though no data operation was in progress"
+> error message.
+> 
+> Fix this by adding a platform specific callback for sdhci_irq. Mark the
+> mrq as a failure but wait for a data interrupt instead of calling
+> finish_mrq().
+> 
+> Fixes: 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
+> callback")
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 
-Add a one-to-one iommu mapping for bman private data memory (FBPR).
-This is required for BMAN to work without faults behind an iommu.
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
----
- drivers/soc/fsl/qbman/bman_ccsr.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman_ccsr.c
-index 7c3cc968053c..b209c79511bb 100644
---- a/drivers/soc/fsl/qbman/bman_ccsr.c
-+++ b/drivers/soc/fsl/qbman/bman_ccsr.c
-@@ -29,6 +29,7 @@
-  */
- 
- #include "bman_priv.h"
-+#include <linux/iommu.h>
- 
- u16 bman_ip_rev;
- EXPORT_SYMBOL(bman_ip_rev);
-@@ -178,6 +179,7 @@ static int fsl_bman_probe(struct platform_device *pdev)
- 	int ret, err_irq;
- 	struct device *dev = &pdev->dev;
- 	struct device_node *node = dev->of_node;
-+	struct iommu_domain *domain;
- 	struct resource *res;
- 	u16 id, bm_pool_cnt;
- 	u8 major, minor;
-@@ -225,6 +227,15 @@ static int fsl_bman_probe(struct platform_device *pdev)
- 
- 	dev_dbg(dev, "Allocated FBPR 0x%llx 0x%zx\n", fbpr_a, fbpr_sz);
- 
-+	/* Create an 1-to-1 iommu mapping for FBPR area */
-+	domain = iommu_get_domain_for_dev(dev);
-+	if (domain) {
-+		ret = iommu_map(domain, fbpr_a, fbpr_a, fbpr_sz,
-+				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
-+		if (ret)
-+			dev_warn(dev, "failed to iommu_map() %d\n", ret);
-+	}
-+
- 	bm_set_memory(fbpr_a, fbpr_sz);
- 
- 	err_irq = platform_get_irq(pdev, 0);
--- 
-2.17.1
+> ---
+> Tested with 100 times boot tests on dra71x-evm, dra72x-evm and
+> dra7xx-evm.
+> 
+> v5:
+> Drop patch 1 and replace call to sdhci_finish_command() with
+> host->cmd = NULL
+> 
+> v4:
+> Fixed commit description for patch 1.
+> Added SDHCI_INT_TIMEOUT to CMD_ERR_MASK in patch 2.
+> 
+> v3:
+> Removed the command error specific callback and using the already
+> existing sdhci_irq callback instead. No measurable drop in performance.
+> 
+> v2:
+> Added EXPORT_SYMBOL_GPL for sdhci_cmd_err and sdhci_send_command to fix
+> errors when built as module.
+> 
+>  drivers/mmc/host/sdhci-omap.c | 38 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+> index 5bbed477c9b1..9f2af89ae9b5 100644
+> --- a/drivers/mmc/host/sdhci-omap.c
+> +++ b/drivers/mmc/host/sdhci-omap.c
+> @@ -797,6 +797,43 @@ void sdhci_omap_reset(struct sdhci_host *host, u8 mask)
+>  	sdhci_reset(host, mask);
+>  }
+>  
+> +#define CMD_ERR_MASK (SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX |\
+> +		      SDHCI_INT_TIMEOUT)
+> +#define CMD_MASK (CMD_ERR_MASK | SDHCI_INT_RESPONSE)
+> +
+> +static irqreturn_t sdhci_omap_irq(struct sdhci_host *host, u32 intmask)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
+> +
+> +	if (omap_host->is_tuning && host->cmd && !host->data_early &&
+> +	    (intmask & CMD_ERR_MASK)) {
+> +
+> +		/*
+> +		 * Since we are not resetting data lines during tuning
+> +		 * operation, data error or data complete interrupts
+> +		 * might still arrive. Mark this request as a failure
+> +		 * but still wait for the data interrupt
+> +		 */
+> +		if (intmask & SDHCI_INT_TIMEOUT)
+> +			host->cmd->error = -ETIMEDOUT;
+> +		else
+> +			host->cmd->error = -EILSEQ;
+> +
+> +		host->cmd = NULL;
+> +
+> +		/*
+> +		 * Sometimes command error interrupts and command complete
+> +		 * interrupt will arrive together. Clear all command related
+> +		 * interrupts here.
+> +		 */
+> +		sdhci_writel(host, intmask & CMD_MASK, SDHCI_INT_STATUS);
+> +		intmask &= ~CMD_MASK;
+> +	}
+> +
+> +	return intmask;
+> +}
+> +
+>  static struct sdhci_ops sdhci_omap_ops = {
+>  	.set_clock = sdhci_omap_set_clock,
+>  	.set_power = sdhci_omap_set_power,
+> @@ -807,6 +844,7 @@ static struct sdhci_ops sdhci_omap_ops = {
+>  	.platform_send_init_74_clocks = sdhci_omap_init_74_clocks,
+>  	.reset = sdhci_omap_reset,
+>  	.set_uhs_signaling = sdhci_omap_set_uhs_signaling,
+> +	.irq = sdhci_omap_irq,
+>  };
+>  
+>  static int sdhci_omap_set_capabilities(struct sdhci_omap_host *omap_host)
+> 
 
