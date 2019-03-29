@@ -2,78 +2,93 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27312C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B19C1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB18C20811
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5D620811
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 00:21:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D9hll5Vh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbfC2AUB (ORCPT
+        id S1728757AbfC2AVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 20:20:01 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:33440 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728012AbfC2AUB (ORCPT
+        Thu, 28 Mar 2019 20:21:21 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:42012 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728471AbfC2AVV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 20:20:01 -0400
-Received: by mail-io1-f69.google.com with SMTP id n15so447400ioc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 17:20:01 -0700 (PDT)
+        Thu, 28 Mar 2019 20:21:21 -0400
+Received: by mail-yb1-f193.google.com with SMTP id k123so246421ybf.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 17:21:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4PQ2Fp0hnP01x3/hYrgH1f0ZWXIu6WHBdgbH0UORCo4=;
+        b=D9hll5VhGg/rpsx+Z7qxEZt8RL3XQSjdRRmU0s3d8Vpb4ZxkZCkbfHsOmPVQJK5AjG
+         HxAwGGwnszPcGtGnG3Ulyu5FJ78hjcTgKeDzZGVRjXDjvCt3oODANvk86V0ywhxy6jAv
+         XZoszjen4+mtl2vt4uqErBCWF0mWHdjdHph31tlve2HJd3J932AmsT6ukX3g7DhE5csO
+         usnzPRMNQhpWFgWFN+3Ra+AfIixtrPAkugPG3MQSth0wBuFM8rxucOYJ40Tn2hbu67im
+         P+62i01HHr02pWwyoA0uwUpryD6xQezUyihiTGeT2ouCCsyprKIUtSdgv4dNiRxdOj2G
+         Oj6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=WljGOgr6+V0So5MSNDm2U/a9k/KnU7qagWjQqFfr+r4=;
-        b=bYWArz4Gbl5s9ojHfzZE0W5E/y5HgcSpXEeHYELKGBRL/x9pYFcsG95LwASyV9oPZq
-         irJ7oVgYmN+qbq3NhJLRxGNJW81GL9jHhywlHIvQWEMVIv6bYF6cYIFI+FSVKRg1+aMC
-         Dxa8b7z/HdSPxPzCoV6VX6ZMVKj91RkSa1JXV6L/Hb86SPXi0ZPXAogI+bQOXQZjl1eO
-         sMIZVTl5xpvPVIzGOukQ6VhU7JqeqJAWqfm6QCVGduqAolQHJjsz03f1VK+WHxny0ZjD
-         TtXvqCK3PuwSg7DDVy4QoXwPHvtYValvtaCKFYbry0lRV+0837mHlqWSHgINM/87VQxx
-         N1Gw==
-X-Gm-Message-State: APjAAAXmBNhWkxfKhR5bnZUbVco3WM7Lc7anhNzK/S1guejMdu9qh8gS
-        PMFn1++tuAx2oX0KnYNZ+408sE844WWWo11RHnV3GsH4O+og
-X-Google-Smtp-Source: APXvYqwznfpHktjc7pzobmaq2euNxjjFSlfghV3aG+rNsx1BzCwHfD8bKWX/D7H8wcfU33ED7uZsMSvWK/OMDLOxRSYcqfTv6RAz
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4PQ2Fp0hnP01x3/hYrgH1f0ZWXIu6WHBdgbH0UORCo4=;
+        b=bLGQbE2t6ytR78xlFtAz75nf2+m7UQT7+QTWtrUPYxcNpAa6axSvdz2pM1PkVFiqnb
+         4+IItf0r04G2ShAk76QjJBkLYZJhO1M2tWBbRbOVP3cxYYxxOWg/bfVhokhietbSDWfk
+         yeUyBb7RSVUZaPqSekwtz6Sm/Uk3N8fsElOlmt1UJw28fPj7mPMs6mQZYlCg0EWOmkek
+         F18lPyIvtxeyLjCKaAzjtLKkLuC4cX3UOBA4RVJPm/4VpWqkz30+tzaW5XhoAUFiR5aG
+         1jvquRZliw5kirtgSqsV+KLPT9LWMgY+iYEx3hA2LgoHRnNZtj8qXbDFh9auUpWinY4E
+         Gimg==
+X-Gm-Message-State: APjAAAVsnTulQhJHejJIspW/JltfzjeVtvVvBoKDPzsNaxD3fXcR5N9L
+        RHvmg47OBJeIlBI5eJU7MVbPRA==
+X-Google-Smtp-Source: APXvYqzPwfSvOYZy8PCxQklcCF9WNZvoBP0eUnaU63haSF11oYMEGiz1atyv7x5+ASSL1uhzmjIymA==
+X-Received: by 2002:a25:cc3:: with SMTP id 186mr4891293ybm.178.1553818880254;
+        Thu, 28 Mar 2019 17:21:20 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li931-65.members.linode.com. [45.56.113.65])
+        by smtp.gmail.com with ESMTPSA id l144sm159927ywb.75.2019.03.28.17.21.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 17:21:19 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 08:21:09 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     mathieu.poirier@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        shiwanglai@hisilicon.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: coresight: Support static funnel
+Message-ID: <20190329002109.GC967@leoy-ThinkPad-X240s>
+References: <20190328023509.22242-1-leo.yan@linaro.org>
+ <20190328023509.22242-2-leo.yan@linaro.org>
+ <4b0ecaee-a578-f328-7f62-8ca49f7729bb@arm.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:885:: with SMTP id o5mr888604itk.27.1553818800665;
- Thu, 28 Mar 2019 17:20:00 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 17:20:00 -0700
-In-Reply-To: <CAHRSSEzGaZw4y4gKzyJzxmrkL20NpTAtB8mDeDs+JzsTWeDZKA@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a8bbbb058530a12a@google.com>
-Subject: Re: kernel BUG at drivers/android/binder_alloc.c:LINE! (3)
-From:   syzbot <syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com>
-To:     arve@android.com, christian@brauner.io, devel@driverdev.osuosl.org,
-        gregkh@linuxfoundation.org, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, maco@android.com,
-        syzkaller-bugs@googlegroups.com, tkjos@android.com,
-        tkjos@google.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4b0ecaee-a578-f328-7f62-8ca49f7729bb@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Mar 28, 2019 at 07:24:35PM +0000, Suzuki K Poulose wrote:
+> On 03/28/2019 02:35 AM, Leo Yan wrote:
+> > Document DT binding for static (non-configurable) funnel and give an
+> > example for it.
+> > 
+> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > Cc: Wanglai Shi <shiwanglai@hisilicon.com>
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> 
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-syzbot tried to test the proposed patch but build/boot failed:
-
-timed out
-
-
-
-
-
-
-Tested on:
-
-commit:         0532a1b0 virt: vbox: Implement passing requestor info to t..
-git tree:        
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git  
-char-misc-linus
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
+Thanks for reviewing, Rob & Suzuki.
