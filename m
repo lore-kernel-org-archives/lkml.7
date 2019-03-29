@@ -2,124 +2,114 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F941C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C58C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C042183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E52052184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:50:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbfC2OuI (ORCPT
+        id S1729643AbfC2Ouj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:50:08 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:42957 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729435AbfC2OuG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:50:06 -0400
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1h9spR-0005o5-Es; Fri, 29 Mar 2019 10:50:01 -0400
-Date:   Fri, 29 Mar 2019 10:49:27 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Ondrej Mosnacek <omosnace@redhat.com>, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Simo Sorce <simo@redhat.com>, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V5 09/10] audit: add support for containerid to
- network namespaces
-Message-ID: <20190328112100.GA11558@hmswarspite.think-freely.org>
-References: <cover.1552665316.git.rgb@redhat.com>
- <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
- <CAFqZXNskwTub5Bm_HZqr02VPB4s79CcgAVX8VE2vQYP07-qssg@mail.gmail.com>
- <20190328011202.6raixwzdimn5b4zk@madcap2.tricolour.ca>
+        Fri, 29 Mar 2019 10:50:39 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33384 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728869AbfC2Ouj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:50:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFEE4A78;
+        Fri, 29 Mar 2019 07:50:38 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F028C3F557;
+        Fri, 29 Mar 2019 07:50:36 -0700 (PDT)
+Subject: Re: [PATCH 02/13] soc/fsl/bman: map FBPR area in the iommu
+To:     laurentiu.tudor@nxp.com, netdev@vger.kernel.org,
+        madalin.bucur@nxp.com, roy.pledge@nxp.com, camelia.groza@nxp.com,
+        leoyang.li@nxp.com
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, davem@davemloft.net,
+        linux-arm-kernel@lists.infradead.org
+References: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
+ <20190329140014.8126-3-laurentiu.tudor@nxp.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <b747c418-a495-56e0-c106-a8ec8e82ccb9@arm.com>
+Date:   Fri, 29 Mar 2019 14:50:34 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190328011202.6raixwzdimn5b4zk@madcap2.tricolour.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190329140014.8126-3-laurentiu.tudor@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 09:12:02PM -0400, Richard Guy Briggs wrote:
-> On 2019-03-27 23:42, Ondrej Mosnacek wrote:
-> > On Fri, Mar 15, 2019 at 7:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > Audit events could happen in a network namespace outside of a task
-> > > context due to packets received from the net that trigger an auditing
-> > > rule prior to being associated with a running task.  The network
-> > > namespace could be in use by multiple containers by association to the
-> > > tasks in that network namespace.  We still want a way to attribute
-> > > these events to any potential containers.  Keep a list per network
-> > > namespace to track these audit container identifiiers.
-> > >
-> > > Add/increment the audit container identifier on:
-> > > - initial setting of the audit container identifier via /proc
-> > > - clone/fork call that inherits an audit container identifier
-> > > - unshare call that inherits an audit container identifier
-> > > - setns call that inherits an audit container identifier
-> > > Delete/decrement the audit container identifier on:
-> > > - an inherited audit container identifier dropped when child set
-> > > - process exit
-> > > - unshare call that drops a net namespace
-> > > - setns call that drops a net namespace
-> > >
-> > > See: https://github.com/linux-audit/audit-kernel/issues/92
-> > > See: https://github.com/linux-audit/audit-testsuite/issues/64
-> > > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > ---
-> > >  include/linux/audit.h | 19 ++++++++++++
-> > >  kernel/audit.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++++++--
-> > >  kernel/nsproxy.c      |  4 +++
-> > >  3 files changed, 106 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > > index fa19fa408931..70255c2dfb9f 100644
-> > > --- a/include/linux/audit.h
-> > > +++ b/include/linux/audit.h
-> > > @@ -27,6 +27,7 @@
-> > >  #include <linux/ptrace.h>
-> > >  #include <linux/namei.h>  /* LOOKUP_* */
-> > >  #include <uapi/linux/audit.h>
-> > > +#include <linux/refcount.h>
-> > >
-> > >  #define AUDIT_INO_UNSET ((unsigned long)-1)
-> > >  #define AUDIT_DEV_UNSET ((dev_t)-1)
-> > > @@ -99,6 +100,13 @@ struct audit_task_info {
-> > >
-> > >  extern struct audit_task_info init_struct_audit;
-> > >
-> > > +struct audit_contid {
-> > > +       struct list_head        list;
-> > > +       u64                     id;
-> > > +       refcount_t              refcount;
-> > 
-> > Hm, since we only ever touch the refcount under a spinlock, I wonder
-> > if we could just make it a regular unsigned int (we don't need the
-> > atomicity guarantees). OTOH, refcount_t comes with some extra overflow
-> > checking, so it's probably better to leave it as is...
+On 29/03/2019 14:00, laurentiu.tudor@nxp.com wrote:
+> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 > 
-> Since the update is done using rcu-safe methods, do we even need the
-> spin_lock?  Neil?  Paul?
+> Add a one-to-one iommu mapping for bman private data memory (FBPR).
+> This is required for BMAN to work without faults behind an iommu.
 > 
-Yes, we do.  Rcu-safe methods only apply to read side operations, we still need
-traditional mutual exclusion on the write side of the operation.  That is to say
-we need to protect the list against multiple writers at the same time, and for
-that we need a spin lock.
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> ---
+>   drivers/soc/fsl/qbman/bman_ccsr.c | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman_ccsr.c
+> index 7c3cc968053c..b209c79511bb 100644
+> --- a/drivers/soc/fsl/qbman/bman_ccsr.c
+> +++ b/drivers/soc/fsl/qbman/bman_ccsr.c
+> @@ -29,6 +29,7 @@
+>    */
+>   
+>   #include "bman_priv.h"
+> +#include <linux/iommu.h>
+>   
+>   u16 bman_ip_rev;
+>   EXPORT_SYMBOL(bman_ip_rev);
+> @@ -178,6 +179,7 @@ static int fsl_bman_probe(struct platform_device *pdev)
+>   	int ret, err_irq;
+>   	struct device *dev = &pdev->dev;
+>   	struct device_node *node = dev->of_node;
+> +	struct iommu_domain *domain;
+>   	struct resource *res;
+>   	u16 id, bm_pool_cnt;
+>   	u8 major, minor;
+> @@ -225,6 +227,15 @@ static int fsl_bman_probe(struct platform_device *pdev)
+>   
+>   	dev_dbg(dev, "Allocated FBPR 0x%llx 0x%zx\n", fbpr_a, fbpr_sz);
+>   
+> +	/* Create an 1-to-1 iommu mapping for FBPR area */
+> +	domain = iommu_get_domain_for_dev(dev);
 
-Neil
+If that's expected to be the default domain that you're grabbing, then 
+this is *incredibly* fragile. There's nothing to stop the IOVA that you 
+forcibly map from being automatically allocated later and causing some 
+other DMA mapping to fail noisily and unexpectedly. Furthermore, have 
+you tried this with "iommu.passthrough=1"?
+
+That said, I really don't understand what's going on here anyway :/
+
+As far as I can tell from qbman_init_private_mem(), fbpr_a comes from 
+dma_alloc_coherent() and thus would already be a mapped IOVA - isn't 
+this the stuff that Roy converted to nicely use shared-dma-pool regions 
+a while ago?
+
+Robin.
+
+> +	if (domain) {
+> +		ret = iommu_map(domain, fbpr_a, fbpr_a, fbpr_sz,
+> +				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
+> +		if (ret)
+> +			dev_warn(dev, "failed to iommu_map() %d\n", ret);
+> +	}
+> +
+>   	bm_set_memory(fbpr_a, fbpr_sz);
+>   
+>   	err_irq = platform_get_irq(pdev, 0);
+> 
