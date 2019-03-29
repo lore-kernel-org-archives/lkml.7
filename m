@@ -2,207 +2,303 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114CBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C066C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD436206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D7E21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 08:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbfC2Ivd (ORCPT
+        id S1729220AbfC2IwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 04:51:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54100 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729102AbfC2Ivd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 04:51:33 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0DD1230238FE;
-        Fri, 29 Mar 2019 08:51:32 +0000 (UTC)
-Received: from [10.36.117.0] (unknown [10.36.117.0])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3492561B7A;
-        Fri, 29 Mar 2019 08:51:30 +0000 (UTC)
-Subject: Re: [PATCH 0/4] mm,memory_hotplug: allocate memmap from hotadded
- memory
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     akpm@linux-foundation.org, mhocko@suse.com,
-        dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20190328134320.13232-1-osalvador@suse.de>
- <cc68ec6d-3ad2-a998-73dc-cb90f3563899@redhat.com>
- <20190329083006.j7j54nq6pdiffe7v@d104.suse.de>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <e9f3013a-bee2-159b-02ca-fc9546d525f2@redhat.com>
-Date:   Fri, 29 Mar 2019 09:51:29 +0100
+        Fri, 29 Mar 2019 04:52:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50568 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729102AbfC2IwQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 04:52:16 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2T8jil1079144
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 04:52:14 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rhevav8qe-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 04:52:14 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Fri, 29 Mar 2019 08:52:12 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 29 Mar 2019 08:52:09 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2T8q7sg14090402
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Mar 2019 08:52:08 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DFB2852051;
+        Fri, 29 Mar 2019 08:52:07 +0000 (GMT)
+Received: from [9.152.222.62] (unknown [9.152.222.62])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4BA9552067;
+        Fri, 29 Mar 2019 08:52:07 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v6 1/7] s390: ap: kvm: add PQAP interception for AQIC
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
+        david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1553265828-27823-1-git-send-email-pmorel@linux.ibm.com>
+ <1553265828-27823-2-git-send-email-pmorel@linux.ibm.com>
+ <32716ed4-559f-0c36-cdf3-4c6662e02f4b@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Fri, 29 Mar 2019 09:52:06 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190329083006.j7j54nq6pdiffe7v@d104.suse.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <32716ed4-559f-0c36-cdf3-4c6662e02f4b@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 29 Mar 2019 08:51:32 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19032908-0028-0000-0000-00000359E8CF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032908-0029-0000-0000-00002418ACB4
+Message-Id: <a8df86d7-1515-4267-c097-e31895932de3@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-29_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903290065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> Great, I would like to see how this works there :-).
-> 
->> I guess one important thing to mention is that it is no longer possible
->> to remove memory in a different granularity it was added. I slightly
->> remember that ACPI code sometimes "reuses" parts of already added
->> memory. We would have to validate that this can indeed not be an issue.
+On 28/03/2019 17:12, Tony Krowiak wrote:
+> On 3/22/19 10:43 AM, Pierre Morel wrote:
+>> We prepare the interception of the PQAP/AQIC instruction for
+>> the case the AQIC facility is enabled in the guest.
 >>
->> drivers/acpi/acpi_memhotplug.c:
+>> First of all we do not want to change existing behavior when
+>> intercepting AP instructions without the SIE allowing the guest
+>> to use AP instructions.
 >>
->> result = __add_memory(node, info->start_addr, info->length);
->> if (result && result != -EEXIST)
->> 	continue;
+>> In this patch we only handle the AQIC interception allowed by
+>> facility 65 which will be enabled when the complete interception
+>> infrastructure will be present.
 >>
->> What would happen when removing this dimm (->remove_memory())
-> 
-> Yeah, I see the point.
-> Well, we are safe here because the vmemmap data is being allocated in
-> every call to __add_memory/add_memory/add_memory_resource.
-> 
-> E.g:
-> 
-> * Being memblock granularity 128M
-> 
-> # object_add memory-backend-ram,id=ram0,size=256M
-> # device_add pc-dimm,id=dimm0,memdev=ram0,node=1
-
-So, this should result in one __add_memory() call with 256MB, creating
-two memory block devices (128MB). I *assume* (haven't looked at the
-details yet, sorry), that you will allocate vmmap for (and on!) each of
-these two 128MB sections/memblocks, correct?
-
-> 
-> I am not sure how ACPI gets to split the DIMM in memory resources
-> (aka mem_device->res_list), but it does not really matter.
-> For each mem_device->res_list item, we will make a call to __add_memory,
-> which will allocate the vmemmap data for __that__ item, we do not care
-> about the others.
-> 
-> And when removing the DIMM, acpi_memory_remove_memory will make a call to
-> __remove_memory() for each mem_device->res_list item, and that will take
-> care of free up the vmemmap data.
-
-Ah okay, that makes sense.
-
-> 
-> Now, with all my tests, ACPI always considered a DIMM a single memory resource,
-> but maybe under different circumstances it gets to split it in different mem
-> resources.
-> But it does not really matter, as vmemmap data is being created and isolated in
-> every call to __add_memory.
-
-Yes, as long as the calls to add_memory matches remove_memory, we are
-totally fine. I am wondering if that could not be the case. A simplified
-example:
-
-A DIMM overlaps with some other system ram, as detected and added during
-boot. When detecting the dimm, __add_memory() returns -EEXIST.
-
-Now, wehn unplugging the dimm, we call remove_memory(), but only remove
-the DIMM part. I wonder how/if something like that can happen and how
-the system would react.
-
-I guess I'll have to do some more ACPI code reading to find out how this
--EEXIST case can come to life.
-
-> 
->> Also have a look at
+>> We add a callback inside the KVM arch structure for s390 for
+>> a VFIO driver to handle a specific response to the PQAP
+>> instruction with the AQIC command and only this command.
 >>
->> arch/powerpc/platforms/powernv/memtrace.c
+>> But we want to be able to return a correct answer to the guest
+>> even there is no VFIO AP driver in the kernel.
+>> Therefor, we inject the correct exceptions from inside KVM for the
+>> case the callback is not initialized, which happens when the vfio_ap
+>> driver is not loaded.
 >>
->> I consider it evil code. It will simply try to offline+unplug *some*
->> memory it finds in *some granularity*. Not sure if this might be
->> problematic-
+>> We do consider the responsability of the driver to always initialize
+>> the PQAP callback if it defines queues by initializing the CRYCB for
+>> a guest.
+>> If the callback has been setup we call it.
+>> If not we setup an answer considering that no queue is available
+>> for the guest when no callback has been setup.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> ---
+>>   arch/s390/include/asm/kvm_host.h      |  8 ++++
+>>   arch/s390/kvm/priv.c                  | 90 
+>> +++++++++++++++++++++++++++++++++++
+>>   drivers/s390/crypto/vfio_ap_private.h |  2 +
+>>   3 files changed, 100 insertions(+)
+>>
+>> diff --git a/arch/s390/include/asm/kvm_host.h 
+>> b/arch/s390/include/asm/kvm_host.h
+>> index a496276..624460b 100644
+>> --- a/arch/s390/include/asm/kvm_host.h
+>> +++ b/arch/s390/include/asm/kvm_host.h
+>> @@ -18,6 +18,7 @@
+>>   #include <linux/kvm_host.h>
+>>   #include <linux/kvm.h>
+>>   #include <linux/seqlock.h>
+>> +#include <linux/module.h>
+>>   #include <asm/debug.h>
+>>   #include <asm/cpu.h>
+>>   #include <asm/fpu/api.h>
+>> @@ -721,8 +722,15 @@ struct kvm_s390_cpu_model {
+>>       unsigned short ibc;
+>>   };
+>> +struct kvm_s390_module_hook {
+>> +    int (*hook)(struct kvm_vcpu *vcpu);
+>> +    void *data;
+>> +    struct module *owner;
+>> +};
+>> +
+>>   struct kvm_s390_crypto {
+>>       struct kvm_s390_crypto_cb *crycb;
+>> +    struct kvm_s390_module_hook *pqap_hook;
+>>       __u32 crycbd;
+>>       __u8 aes_kw;
+>>       __u8 dea_kw;
+>> diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
+>> index 8679bd7..793e48a 100644
+>> --- a/arch/s390/kvm/priv.c
+>> +++ b/arch/s390/kvm/priv.c
+>> @@ -27,6 +27,7 @@
+>>   #include <asm/io.h>
+>>   #include <asm/ptrace.h>
+>>   #include <asm/sclp.h>
+>> +#include <asm/ap.h>
+>>   #include "gaccess.h"
+>>   #include "kvm-s390.h"
+>>   #include "trace.h"
+>> @@ -592,6 +593,93 @@ static int handle_io_inst(struct kvm_vcpu *vcpu)
+>>       }
+>>   }
+>> +/*
+>> + * handle_pqap: Handling pqap interception
+>> + * @vcpu: the vcpu having issue the pqap instruction
+>> + *
+>> + * We now support PQAP/AQIC instructions and we need to correctly
+>> + * answer the guest even if no dedicated driver's hook is available.
+>> + *
+>> + * The intercepting code calls a dedicated callback for this instruction
+>> + * if a driver did register one in the CRYPTO satellite of the
+>> + * SIE block.
+>> + *
+>> + * For PQAP AQIC and TAPQ instructions, verify privilege and 
+>> specifications.
+>> + *
+>> + * If no callback available, the queues are not available, return 
+>> this to
+>> + * the caller.
+>> + * Else return the value returned by the callback.
+>> + */
+>> +static int handle_pqap(struct kvm_vcpu *vcpu)
+>> +{
+>> +    struct ap_queue_status status = {};
+>> +    unsigned long reg0;
+>> +    int ret;
+>> +    uint8_t fc;
+>> +
+>> +    /* Verify that the AP instruction are available */
+>> +    if (!ap_instructions_available())
+>> +        return -EOPNOTSUPP;
+>> +    /* Verify that the guest is allowed to use AP instructions */
+>> +    if (!(vcpu->arch.sie_block->eca & ECA_APIE))
+>> +        return -EOPNOTSUPP;
+>> +    /*
+>> +     * The only possibly intercepted instructions when AP 
+>> instructions are
+>> +     * available for the guest are AQIC and TAPQ with the t bit set
+>> +     * since we do not set IC.3 (FIII) we currently will not intercept
+>> +     * TAPQ.
+>> +     * The following code will only treat AQIC function code.
+>> +     */
+>> +    reg0 = vcpu->run->s.regs.gprs[0];
+>> +    fc = reg0 >> 24;
+>> +    if (fc != 0x03) {
+>> +        pr_warn("%s: Unexpected interception code 0x%02x\n",
+>> +            __func__, fc);
+>> +        return -EOPNOTSUPP;
+>> +    }
+>> +    /* All PQAP instructions are allowed for guest kernel only */
+>> +    if (vcpu->arch.sie_block->gpsw.mask & PSW_MASK_PSTATE)
+>> +        return kvm_s390_inject_program_int(vcpu, PGM_PRIVILEGED_OP);
+>> +    /*
+>> +     * Common tests for PQAP instructions to generate a specification
+>> +     * exception
+>> +     */
+>> +    /* Zero bits overwrite produce a specification exception */
+>> +    if (reg0 & 0x007f0000UL)
+>> +        goto specification_except;
+>> +    /* If APXA is not installed APQN is limited */
+>> +    if (!(vcpu->kvm->arch.crypto.crycbd & 0x02))
+>> +        if (reg0 & 0x000030f0UL)
+>> +            goto specification_except;
+>> +    /* AQIC needs facility 65 */
+>> +    if (!test_kvm_facility(vcpu->kvm, 65))
+>> +        goto specification_except;
+>> +
+>> +    /*
+>> +     * Verify that the hook callback is registered, lock the owner
+>> +     * and call the hook.
+>> +     */
+>> +    if (vcpu->kvm->arch.crypto.pqap_hook) {
+>> +        if (!try_module_get(vcpu->kvm->arch.crypto.pqap_hook->owner))
+>> +            return -EOPNOTSUPP;
+>> +        ret = vcpu->kvm->arch.crypto.pqap_hook->hook(vcpu);
+>> +        module_put(vcpu->kvm->arch.crypto.pqap_hook->owner);
+>> +        return ret;
+>> +    }
+>> +    /*
+>> +     * It is the duty of the vfio_driver to register a hook
+>> +     * If it does not and we get an exception on AQIC we must
+>> +     * guess that there is no vfio_ap_driver at all and no one
+>> +     * to handle the guests's CRYCB and the CRYCB is empty.
+>> +     */
+>> +    status.response_code = 0x01;
+>> +    memcpy(&vcpu->run->s.regs.gprs[1], &status, sizeof(status));
+>> +    return 0;
+>> +
+>> +specification_except:
+>> +    return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
+>> +}
+>> +
+>>   static int handle_stfl(struct kvm_vcpu *vcpu)
+>>   {
+>>       int rc;
+>> @@ -878,6 +966,8 @@ int kvm_s390_handle_b2(struct kvm_vcpu *vcpu)
+>>           return handle_sthyi(vcpu);
+>>       case 0x7d:
+>>           return handle_stsi(vcpu);
+>> +    case 0xaf:
+>> +        return handle_pqap(vcpu);
+>>       case 0xb1:
+>>           return handle_stfl(vcpu);
+>>       case 0xb2:
+>> diff --git a/drivers/s390/crypto/vfio_ap_private.h 
+>> b/drivers/s390/crypto/vfio_ap_private.h
+>> index 76b7f98..a910be1 100644
+>> --- a/drivers/s390/crypto/vfio_ap_private.h
+>> +++ b/drivers/s390/crypto/vfio_ap_private.h
+>> @@ -16,6 +16,7 @@
+>>   #include <linux/mdev.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/mutex.h>
+>> +#include <linux/kvm_host.h>
+>>   #include "ap_bus.h"
+>> @@ -81,6 +82,7 @@ struct ap_matrix_mdev {
+>>       struct ap_matrix matrix;
+>>       struct notifier_block group_notifier;
+>>       struct kvm *kvm;
+>> +    struct kvm_s390_module_hook pqap_hook;
 > 
-> Heh, memtrace from powerpc ^^, I saw some oddities coming from there, but
-> with my code though because I did not get to test that in concret.
-> But I am interested to see if it can trigger something, so I will be testing
-> that the next days.
-> 
->> Would there be any "safety net" for adding/removing memory in different
->> granularities?
-> 
-> Uhm, I do not think we need it, or at least I cannot think of a case where this
-> could cause trouble with the current design.
-> Can you think of any? 
+> I don't understand the purpose of adding this field. We set up the
+> the kvm->arch.crypto.pqap_hook in the vfio_ap_mdev_set_kvm which is
+> also in this same file, why not just use a static struct 
+> kvm_s390_module_hook and reuse it when setting up
+> kvm->arch.crypto.pqap_hook? It saves you from initializing it every
+> time an ap_matrix_mdev is created.
 
-Nope, as long as it works (especially no change to what we had before),
-no safety net needed :)
+Having this field embedded in the matrix_mdev allows to easily retrieve 
+the matrix_mdev from the the hook.
+
+Thanks,
+Pierre
 
 
-I was just curious if
-
-add_memory() followed by remove_memory() used to work before and if you
-patches might change that behavior.
-
-Thanks! Will try to look into the details soon!
-
-> 
-> Thanks David ;-)
-> 
 
 
 -- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
-Thanks,
-
-David / dhildenb
