@@ -2,108 +2,109 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90200C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D541EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A36E206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F182183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 14:09:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QXb1LBZw";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mm5D6fIh"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="u2rOx3GL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbfC2OHd (ORCPT
+        id S1729055AbfC2OJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 10:07:33 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42816 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728713AbfC2OHc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 10:07:32 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BFF9A61570; Fri, 29 Mar 2019 14:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553868451;
-        bh=lr8gVn+JEAPnNvkty/sTPLFZxa/laEWN12wveQ3lIyY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QXb1LBZwDWsYxNu2d89xloowNCdullJNaeGndjTTN+qGN+fAkq6cPsFtay21k8wJd
-         iSEh6Sh5W8wXsXkIoF+QfJbg/bO1SZS5mn/l8TiYUMMHGnQTR5kQ1ei6ow2s9AxpHV
-         5MHoyZc+9MXduXZDo4X1OGHOtgfJicmDC0NcQs3w=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D78B860DB4;
-        Fri, 29 Mar 2019 14:07:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553868450;
-        bh=lr8gVn+JEAPnNvkty/sTPLFZxa/laEWN12wveQ3lIyY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=mm5D6fIhCDYeQLprGZNxpR6jA3B7dsOY3jvdCQMRh4zyArnMKefcfPA6dWF5HadtS
-         2zx9ZVv3f4FEtZOoEz6rDGp8oWUgylhEIosGi2BWeABra+UMN/ut9WyxW5MyTxHzKY
-         BIl1yNao1cEeG/5IJqddJPOoI7NlpUJnP0nlfuDg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D78B860DB4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH v2 1/2] MAINTAINERS: fix bad pattern in ARM/NUVOTON NPCM
-To:     Tomer Maimon <tmaimon77@gmail.com>, joe@perches.com,
-        avifishman70@gmail.com, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, brendanhiggins@google.com,
-        tali.perry1@gmail.com, akpm@linux-foundation.org,
-        gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-References: <20190328235752.334462-1-tmaimon77@gmail.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <367707d3-9f3f-e15b-1db3-eedb2e23981d@codeaurora.org>
-Date:   Fri, 29 Mar 2019 19:37:21 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 10:09:27 -0400
+Received: from node.akkea.ca ([192.155.83.177]:55936 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728652AbfC2OJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 10:09:27 -0400
+Received: by node.akkea.ca (Postfix, from userid 33)
+        id 89E6D4E204D; Fri, 29 Mar 2019 14:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1553868566; bh=pXsYLgQavd8fTBMtWNBZ5DMPnBT/+YoHV2PZjK3PbCg=;
+        h=To:Subject:Date:From:Cc:In-Reply-To:References;
+        b=u2rOx3GLYX8PObQ+1clDQgGBnt7V0+aS7HpphSgJsf+eCG/VtZiitSrohksnfag0u
+         kgpDGxyfKn31SMM7zceltLMvMcgnDXg7d/MsWulRTSrDH2oDkGa3ICEm9Vh8lWJHfm
+         pSEhGPUdvpzySnSnjZI9oHKsCQjMhxdYVWoqzbD0=
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH 1/4] arm64: dts: imx8mq: Fix the fsl,imx8mq-sdma  compatible string
+X-PHP-Originating-Script: 1000:rcube.php
 MIME-Version: 1.0
-In-Reply-To: <20190328235752.334462-1-tmaimon77@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Date:   Fri, 29 Mar 2019 07:09:26 -0700
+From:   Angus Ainslie <angus@akkea.ca>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Carlo Caione <ccaione@baylibre.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <CAEnQRZCjCAhi2OqpSGN8rmGYCqyOmLP=+=L0djcq2C6ksk29LQ@mail.gmail.com>
+References: <20190328133828.20999-1-angus@akkea.ca>
+ <20190328133828.20999-2-angus@akkea.ca>
+ <AM0PR04MB421112C3EE79B279953A9252805A0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CAEnQRZCjCAhi2OqpSGN8rmGYCqyOmLP=+=L0djcq2C6ksk29LQ@mail.gmail.com>
+Message-ID: <bc7d4617cf7f29fa05f823f48b8ba4d6@www.akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-03-29 04:20, Daniel Baluta wrote:
+> On Fri, Mar 29, 2019 at 11:11 AM Aisheng Dong <aisheng.dong@nxp.com> 
+> wrote:
+>> 
+>> > From: Angus Ainslie (Purism) [mailto:angus@akkea.ca]
+>> > Sent: Thursday, March 28, 2019 9:38 PM
+>> >
+>> > Fix a typo in the compatible string
+>> >
+>> > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+>> > ---
+>> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 +-
+>> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >
+>> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> > b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> > index 81d5ce1b1ec1..07099f82965e 100644
+>> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> > @@ -720,7 +720,7 @@
+>> >                       };
+>> >
+>> >                       sdma1: sdma@30bd0000 {
+>> > -                             compatible = "fsl, imx8mq-sdma","fsl,imx7d-sdma";
+>> > +                             compatible = "fsl,mx8mq-sdma","fsl,imx7d-sdma";
+>> 
+>> This is a bit strange.
+>> If binding doc says like that, probably we'd better fix the typo in 
+>> binding doc
+>> to use the same style.
+> 
+> Oh, indeed.
+> 
+> Angus, shouldn't this be fsl,imx8mq-sdma instead of fsl,mx8mq-sdma. I
+> was just paying
+> attention to the extra space in my patch.
 
-On 3/29/2019 5:27 AM, Tomer Maimon wrote:
-> In the process of upstreaming architecture support for ARM/NUVOTON NPCM
-> include/dt-bindings/clock/nuvoton,npcm7xx-clks.h was renamed
-> include/dt-bindings/clock/nuvoton,npcm7xx-clock.h without updating
-> MAINTAINERS. This updates the MAINTAINERS pattern to match the new name
-> of this file.
->
-> Fixes: 6a498e06ba22 ("MAINTAINERS: Add entry for the Nuvoton NPCM architecture")
-> Reported-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+Correct I took too many characters when I dropped the space. I'll fix it 
+for v2.
 
-
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
-Cheers,
--Mukesh
-
-> ---
->   MAINTAINERS | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3e5a5d263f29..8b305d2f2a8a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1900,7 +1900,7 @@ L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
->   S:	Supported
->   F:	arch/arm/mach-npcm/
->   F:	arch/arm/boot/dts/nuvoton-npcm*
-> -F:	include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
-> +F:	include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
->   F:	drivers/*/*npcm*
->   F:	Documentation/devicetree/bindings/*/*npcm*
->   F:	Documentation/devicetree/bindings/*/*/*npcm*
+Angus
