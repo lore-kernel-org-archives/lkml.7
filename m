@@ -2,115 +2,75 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F23C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBB4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D83218D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:52:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eHvhaOyf"
+	by mail.kernel.org (Postfix) with ESMTP id F0689218D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbfC2QwF (ORCPT
+        id S1729872AbfC2QxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 12:52:05 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:57056 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728977AbfC2QwE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 12:52:04 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2TGq2hC019862;
-        Fri, 29 Mar 2019 11:52:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553878322;
-        bh=xvrU2Sslz3Ll7h4ui3tdSmGX5iYETj272CZM1M4goug=;
-        h=From:To:CC:Subject:Date;
-        b=eHvhaOyf3ZvgCGYwGUnLysGi/U+KJnl2AzBaYCFeTCC5oKV+Ybs2DZXeBv5cP5qRj
-         uaWS0JT5sJt5Hy8cA5XiumZ4/sBkgNP0SpWipnsmfJcCu18+VC/Wn0gvbyrlze+92Q
-         Qo3ADHHQkodeK17xc82MM24LzZOxlDY955rOE8+8=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2TGq2KS038035
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 29 Mar 2019 11:52:02 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
- Mar 2019 11:52:02 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 29 Mar 2019 11:52:02 -0500
-Received: from legion.dal.desgin.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2TGq2ab044058;
-        Fri, 29 Mar 2019 11:52:02 -0500
-Received: from localhost ([10.250.67.168])
-        by legion.dal.desgin.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x2TGq0U27156;
-        Fri, 29 Mar 2019 11:52:01 -0500 (CDT)
-From:   "Andrew F. Davis" <afd@ti.com>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>
-Subject: [PATCH] dma-buf: Make mmap callback actually optional
-Date:   Fri, 29 Mar 2019 11:52:01 -0500
-Message-ID: <20190329165201.16233-1-afd@ti.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 29 Mar 2019 12:53:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728936AbfC2QxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 12:53:00 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88EB5218D0;
+        Fri, 29 Mar 2019 16:52:59 +0000 (UTC)
+Date:   Fri, 29 Mar 2019 12:52:58 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jason Behmer <jbehmer@google.com>
+Cc:     tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
+Subject: Re: Nested events with zero deltas, can use absolute timestamps
+ instead?
+Message-ID: <20190329125258.2c6fe0cb@gandalf.local.home>
+In-Reply-To: <CAMmhGqKc27W03roONYXhmwB0dtz5Z8nGoS2MLSsKJ3Zotv5-JA@mail.gmail.com>
+References: <CAMmhGqKc27W03roONYXhmwB0dtz5Z8nGoS2MLSsKJ3Zotv5-JA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The docs state the callback is optional but it is not, make it optional.
+On Fri, 29 Mar 2019 09:30:36 -0700
+Jason Behmer <jbehmer@google.com> wrote:
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- drivers/dma-buf/dma-buf.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+> Hi Steven and Tom,
+> I recently ran into a problem with correlating timestamps across CPUs and
+> finally was able to track it down to the fact that nested events are given
+> zero deltas, and so are placed earlier in time than they actually occurred.
+> 
+> I'm on an older version and wanted to check if this problem still exists on
+> head and it appears that it does, but I also ran into Tom's commits adding
+> the ability to use absolute timestamps instead of deltas.  It seems like
+> this option could fix the problem.
+> 
+> It seems like ideally nested events could just always use these absolute
+> timestamps instead of zero deltas, as it appears the implementation of
+> absolute timestamps is flexible enough to have a mix of deltas and
+> absolutes in the stream of events.  A fix that would require less work
+> would be for me to just turn on absolute timestamps for my entire trace,
+> but I see that the file to do that isn't yet writable to support that.
+> 
+> Before trying to do either of these things I wanted to run it by both of
+> you to see if there's something I'm missing here.  What do you think?
+> 
 
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index 7c858020d14b..4d4ae9fe9ac8 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -90,6 +90,10 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
- 
- 	dmabuf = file->private_data;
- 
-+	/* check if buffer supports mmap */
-+	if (!dmabuf->ops->mmap)
-+		return -EINVAL;
-+
- 	/* check for overflowing the buffer's size */
- 	if (vma->vm_pgoff + vma_pages(vma) >
- 	    dmabuf->size >> PAGE_SHIFT)
-@@ -404,8 +408,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
- 			  || !exp_info->ops
- 			  || !exp_info->ops->map_dma_buf
- 			  || !exp_info->ops->unmap_dma_buf
--			  || !exp_info->ops->release
--			  || !exp_info->ops->mmap)) {
-+			  || !exp_info->ops->release)) {
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-@@ -906,6 +909,10 @@ int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
- 	if (WARN_ON(!dmabuf || !vma))
- 		return -EINVAL;
- 
-+	/* check if buffer supports mmap */
-+	if (!dmabuf->ops->mmap)
-+		return -EINVAL;
-+
- 	/* check for offset overflow */
- 	if (pgoff + vma_pages(vma) < pgoff)
- 		return -EOVERFLOW;
--- 
-2.21.0
+Yes this is an issue I need to fix. I have some ideas on how to handle
+this. I may need to go about looking into them again.
 
+It may be possible to add an option to have all nested events use the
+full timestamp as well.
+
+I'll have to think about this a bit more.
+
+-- Steve
