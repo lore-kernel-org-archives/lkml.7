@@ -2,122 +2,116 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ED4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E35CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43EB4218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:03:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553882592;
-	bh=vox8oGBRQV+MgZtRkkqSzuj2o6548YVpFsXtBmRJfBk=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=CId1V6z02v295808rQMy7gVp58LkP0+p+bKPG+CvoxzGwt2xEeX0hXpo63a17ma0f
-	 pvs8pshN7lylzzUyInkzEYAiQHfT5hdTp+mNjLrraGxjmLSLVwcISJrLsVAMoZ5Hhq
-	 8HDiJEL16g4qHdJw4OHiQ4LMN5+b8K93Xbjt+At0=
+	by mail.kernel.org (Postfix) with ESMTP id 1A1FE218A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3k18amv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbfC2SDL (ORCPT
+        id S1729954AbfC2SDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 14:03:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729702AbfC2SDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 14:03:10 -0400
-Received: from [192.168.1.3] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16960206B7;
-        Fri, 29 Mar 2019 18:03:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553882589;
-        bh=vox8oGBRQV+MgZtRkkqSzuj2o6548YVpFsXtBmRJfBk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fhPEDeWNMsZyGnULebOowHUa2bteHSMSb7lHfCjKmdvb9eXbPHz24eFMqhxx6OB2T
-         QW5JuUM/p5xBQ33cVIoZjM3JDdzJdJ9aH0gw5LbHD5XOaXuqQhciGaddYQ5/luP8ol
-         GsxrGasyZ0JTdxiTh6TnkHdRJogIZgDIBB95ye/M=
-Subject: Re: [PATCHv3 3/3] arm64: dts: stratix10: Use new Stratix10 EDAC
- bindings
-To:     thor.thayer@linux.intel.com, bp@alien8.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     mchehab@kernel.org, james.morse@arm.com,
-        devicetree@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1553529476-26181-1-git-send-email-thor.thayer@linux.intel.com>
- <1553529476-26181-4-git-send-email-thor.thayer@linux.intel.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <519c8bc3-1f04-2e9c-00a0-147f23db1a44@kernel.org>
-Date:   Fri, 29 Mar 2019 13:03:08 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 29 Mar 2019 14:03:35 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46553 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729929AbfC2SDf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 14:03:35 -0400
+Received: by mail-ed1-f67.google.com with SMTP id d1so2756041edd.13
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 11:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3ToysUKbyIJdhK0Jy+JvqWwSmXFVVVtJFZtxHYxMj6E=;
+        b=D3k18amvkc0nKB+dvuONeyAQJnjZ5iifJ84TZ8VkhoJZZPzQBQaPn3egX/6G1RgHUP
+         tG0ZytnfCcstvew6HopB0iGXzpNHu9v1K0smGf53bMS/SDLibB9PmMmP4OOczdPTrkCR
+         pn7/Na3OXR2/3XehRdeTEepJQcwZKcL14e8PmVwUPnrbgGe2gOHOEqf1rSeQlLufKAEX
+         U9GRD+dA0c7wuX2vIl9JmQcZIyZWp/dpijG0WfiYLUuiTodVl8ZzBSy79sydVXwqikRb
+         1lF2H7tn3eRwCVfNjuQ2QC9hegxglQ/yKMi8vqa4P1AcLUFrLS3gxVg3r7maJfsOY98l
+         w95w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3ToysUKbyIJdhK0Jy+JvqWwSmXFVVVtJFZtxHYxMj6E=;
+        b=YhMkBlzpuzn6RKEh71KAGpxXLpkMMsUi0aGOTA6Gt7N9QsZAG1UCHI/Z7v6CIubTvG
+         eJ8XqLMspESJTJKcR27YvQqoDbM4s1Xttb6/CCvPrNiCw40eXpQ25Nng3AGbOVp4PdSf
+         Q9z5cj/LlJWOrQvO3/XLkbsj6pDRAo+hV0XdY6DChXnUv1EXCp8T2mbD4Oh1inqf7yKy
+         uLpJU2gl+ZB6jbhM0ET3A0ByEKwcNs7bhrLHhfmhL8+XD5/TteduWpTwoMLuAmpgp+Ue
+         7Bvftzk2EaIlEUO4Fvrx1bdKUiJ0XtDVTQoWtUcVXhCco6iP+XEl6Ynh71CTBFh8zyrh
+         ukwQ==
+X-Gm-Message-State: APjAAAUWaEqKz7dRewG0Syus0k9q9uHiL2xFpxbVzsfuC8oMkE7CaIQw
+        2Qw4oo+eqCcF+VMIKdM3bo4=
+X-Google-Smtp-Source: APXvYqxZfxiLIYYzUQslceK1cJbwyMC88mGal7mclDYyGSFWdv2SBucqQ4hG/8ZlGHyK4rr64AwnKg==
+X-Received: by 2002:a17:906:af6d:: with SMTP id os13mr27517451ejb.222.1553882613686;
+        Fri, 29 Mar 2019 11:03:33 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:4079:2f00:b0f8:92a3:86b7:4ccc])
+        by smtp.gmail.com with ESMTPSA id p16sm813204eds.61.2019.03.29.11.03.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Mar 2019 11:03:32 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 19:03:31 +0100
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Qiaowei Ren <qiaowei.ren@intel.com>
+Subject: Re: [PATCH v2 3/4] x86/fpu: Fix __user annotations
+Message-ID: <20190329180329.hl3t7a43sg3sshsf@ltop.local>
+References: <20190329163047.223508-1-jannh@google.com>
+ <20190329163047.223508-3-jannh@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1553529476-26181-4-git-send-email-thor.thayer@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329163047.223508-3-jannh@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/25/19 10:57 AM, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
+On Fri, Mar 29, 2019 at 05:30:46PM +0100, Jann Horn wrote:
+> In save_xstate_epilog(), use __user when type-casting userspace pointers.
 > 
-> Use the new Stratix10 binding format for EDAC nodes.
-> 
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-> ---
-> v2-3 No change
-> ---
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 25 ++++++++++++-----------
->  1 file changed, 13 insertions(+), 12 deletions(-)
-> 
+> In setup_sigcontext() and x32_setup_rt_frame(), perform explicit __force
+> casts for converting userspace pointers to unsigned long; put_user_ex()
+> already performs a cast, but without __force, which is required by sparse
+> for conversions from userspace pointers to numbers.
 
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+...
+ 
+> diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+> index 08dfd4c1a4f9..e13cd972f9af 100644
+> --- a/arch/x86/kernel/signal.c
+> +++ b/arch/x86/kernel/signal.c
+> @@ -206,7 +206,7 @@ int setup_sigcontext(struct sigcontext __user *sc, void __user *fpstate,
+>  		put_user_ex(regs->ss, &sc->ss);
+>  #endif /* CONFIG_X86_32 */
+>  
+> -		put_user_ex(fpstate, &sc->fpstate);
+> +		put_user_ex((unsigned long __force)fpstate, &sc->fpstate);
+
+The __force here is not needed and in fact meaningless as the address
+space annotations and checks only concern pointers. By casting a
+pointer to an unsigned long, all type info is lost anyway and thus
+no address-space checks are performed. It's a bit like such casts
+always have an implicit __force already included.
+
+> @@ -569,7 +569,7 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+>  			restorer = NULL;
+>  			err |= -EFAULT;
+>  		}
+> -		put_user_ex(restorer, &frame->pretcode);
+> +		put_user_ex((unsigned long __force)restorer, &frame->pretcode);
+
+Same here.
+
+Best regards,
+-- Luc Van Oostenryck
