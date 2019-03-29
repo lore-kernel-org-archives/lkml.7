@@ -2,129 +2,109 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8091DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923ACC10F05
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5991821773
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FFC921773
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 09:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553850809;
+	bh=aPC2d2BG8JKbxfmQM3ZzVRWNCQOcYyw7to59r1ya5Dk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XfT3IixCmv/3vitScI0XsR0PjJRBnE0ktV/7hZIHsdXoeTBWl0h98ncDlzp46ECEB
+	 qDQE9ZW4x8AxNJQqFmhIqL3C+vx6UlZlYGXwFiLHYmLfaailruUtaanuxcUOZM+lKm
+	 S7+TncwxGDxlZZzmW25AaJiQwVtyuGjTN0uwE+6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbfC2JMb (ORCPT
+        id S1729264AbfC2JN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 05:12:31 -0400
-Received: from mga02.intel.com ([134.134.136.20]:14002 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728703AbfC2JMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 05:12:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 02:12:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,284,1549958400"; 
-   d="scan'208";a="333147931"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Mar 2019 02:12:28 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        jolsa@redhat.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH] perf: Fix the address filterig fix
-Date:   Fri, 29 Mar 2019 11:12:12 +0200
-Message-Id: <20190329091212.29870-1-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 29 Mar 2019 05:13:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38610 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728703AbfC2JN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 05:13:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 89C11AE52;
+        Fri, 29 Mar 2019 09:13:26 +0000 (UTC)
+Date:   Fri, 29 Mar 2019 10:13:25 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rafael@kernel.org, akpm@linux-foundation.org, osalvador@suse.de,
+        rppt@linux.ibm.com, willy@infradead.org, fanc.fnst@cn.fujitsu.com
+Subject: Re: [PATCH v3 2/2] drivers/base/memory.c: Rename the misleading
+ parameter
+Message-ID: <20190329091325.GD28616@dhcp22.suse.cz>
+References: <20190329082915.19763-1-bhe@redhat.com>
+ <20190329082915.19763-2-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329082915.19763-2-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit c60f83b813e5 ("perf, pt, coresight: Fix address filters for vmas
-with non-zero offset") changes the address filtering logic to communicate
-filter ranges to the PMU driver via a single address range object, instead
-of having the driver do the final bit of math. That change forgets to take
-into account kernel filters, which are not calculated the same way as DSO
-based filters.
+On Fri 29-03-19 16:29:15, Baoquan He wrote:
+> The input parameter 'phys_index' of memory_block_action() is actually
+> the section number, but not the phys_index of memory_block. Fix it.
 
-Fix that by passing the kernel filters the same way as file-based filters.
-This doesn't require any additional changes in the drivers.
+I have tried to explain that the naming is mostly a relict from the past
+than really a misleading name http://lkml.kernel.org/r/20190326093315.GL28406@dhcp22.suse.cz
+Maybe it would be good to reflect that in the changelog
+ 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: c60f83b813e5 ("perf, pt, coresight: Fix address filters for vmas with non-zero offset")
-Reported-by: Adrian Hunter <adrian.hunter@intel.com>
----
- kernel/events/core.c | 37 +++++++++++++++++++++----------------
- 1 file changed, 21 insertions(+), 16 deletions(-)
+btw. I've acked the previous version as well.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5f59d848171e..53e7188fa854 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9041,26 +9041,29 @@ static void perf_event_addr_filters_apply(struct perf_event *event)
- 	if (task == TASK_TOMBSTONE)
- 		return;
- 
--	if (!ifh->nr_file_filters)
--		return;
--
--	mm = get_task_mm(event->ctx->task);
--	if (!mm)
--		goto restart;
-+	if (ifh->nr_file_filters) {
-+		mm = get_task_mm(event->ctx->task);
-+		if (!mm)
-+			goto restart;
- 
--	down_read(&mm->mmap_sem);
-+		down_read(&mm->mmap_sem);
-+	}
- 
- 	raw_spin_lock_irqsave(&ifh->lock, flags);
- 	list_for_each_entry(filter, &ifh->list, entry) {
--		event->addr_filter_ranges[count].start = 0;
--		event->addr_filter_ranges[count].size = 0;
-+		if (filter->path.dentry) {
-+			/*
-+			 * Adjust base offset if the filter is associated to a
-+			 * binary that needs to be mapped:
-+			 */
-+			event->addr_filter_ranges[count].start = 0;
-+			event->addr_filter_ranges[count].size = 0;
- 
--		/*
--		 * Adjust base offset if the filter is associated to a binary
--		 * that needs to be mapped:
--		 */
--		if (filter->path.dentry)
- 			perf_addr_filter_apply(filter, mm, &event->addr_filter_ranges[count]);
-+		} else {
-+			event->addr_filter_ranges[count].start = filter->offset;
-+			event->addr_filter_ranges[count].size  = filter->size;
-+		}
- 
- 		count++;
- 	}
-@@ -9068,9 +9071,11 @@ static void perf_event_addr_filters_apply(struct perf_event *event)
- 	event->addr_filters_gen++;
- 	raw_spin_unlock_irqrestore(&ifh->lock, flags);
- 
--	up_read(&mm->mmap_sem);
-+	if (ifh->nr_file_filters) {
-+		up_read(&mm->mmap_sem);
- 
--	mmput(mm);
-+		mmput(mm);
-+	}
- 
- restart:
- 	perf_event_stop(event, 1);
+> ---
+> v2->v3:
+>   Rename the parameter to 'start_section_nr' from 'sec'.
+> 
+>  drivers/base/memory.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index cb8347500ce2..9ea972b2ae79 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -231,13 +231,14 @@ static bool pages_correctly_probed(unsigned long start_pfn)
+>   * OK to have direct references to sparsemem variables in here.
+>   */
+>  static int
+> -memory_block_action(unsigned long phys_index, unsigned long action, int online_type)
+> +memory_block_action(unsigned long start_section_nr, unsigned long action,
+> +		    int online_type)
+>  {
+>  	unsigned long start_pfn;
+>  	unsigned long nr_pages = PAGES_PER_SECTION * sections_per_block;
+>  	int ret;
+>  
+> -	start_pfn = section_nr_to_pfn(phys_index);
+> +	start_pfn = section_nr_to_pfn(start_section_nr);
+>  
+>  	switch (action) {
+>  	case MEM_ONLINE:
+> @@ -251,7 +252,7 @@ memory_block_action(unsigned long phys_index, unsigned long action, int online_t
+>  		break;
+>  	default:
+>  		WARN(1, KERN_WARNING "%s(%ld, %ld) unknown action: "
+> -		     "%ld\n", __func__, phys_index, action, action);
+> +		     "%ld\n", __func__, start_section_nr, action, action);
+>  		ret = -EINVAL;
+>  	}
+>  
+> -- 
+> 2.17.2
+> 
+
 -- 
-2.20.1
-
+Michal Hocko
+SUSE Labs
