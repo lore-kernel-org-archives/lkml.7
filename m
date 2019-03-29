@@ -2,144 +2,311 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102B1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D50AC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C929B217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FEF2183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 13:44:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oXiPAsh/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hvic143J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729707AbfC2Nmw (ORCPT
+        id S1729717AbfC2Noj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 09:42:52 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:35612 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729483AbfC2Nmv (ORCPT
+        Fri, 29 Mar 2019 09:44:39 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:35444 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729614AbfC2Noi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 09:42:51 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2TDcfEc166951;
-        Fri, 29 Mar 2019 13:42:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=OlpjFDm5VAkgLKlMNSJXlOgzEQM6QMYRwaEqsah7Io4=;
- b=oXiPAsh/OjawaXGWtEy4FUwp1zZCImqnC8OxKKWl8gxd1+KlwBR54X/n4CQwL7w6oVnP
- tPBLkkMqksVCv0GNEaEuDbn9l2CHg0p9MmtceHLk35NkQie8eo0fNKk5kBlNrvqXWdZM
- HE+X4iZIN9VKIWo75l2Iu9A+ynsSegmgXMYAnti7A523ojcT/c3D6N5RmCNXFOEv4zH8
- XMW9O6k3JD/bPRtmSKpDyfgfVNIjXCpKZtnQYyWSqP2YQ2vWXDISK7OfEWVdXiyYtkHW
- knEVUeTA39TVl0U3LEu7i1NaaMI3z1c2enWVSzKhdej3s50/5QGmlgBT5qNX3ru5Whqq MQ== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by aserp2130.oracle.com with ESMTP id 2re6g1cff6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 13:42:45 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2TDgiUC023246
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 13:42:44 GMT
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2TDghab023861;
-        Fri, 29 Mar 2019 13:42:44 GMT
-Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 Mar 2019 06:42:43 -0700
-Subject: Re: [PATCH] x86/Xen: streamline (and fix) PV CPU enumeration
-To:     Jan Beulich <JBeulich@suse.com>
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org
-References: <5C9B92EA020000780022227B@prv1-mh.provo.novell.com>
- <2f027b4b-dce2-3e90-dc1b-c824bc8eb355@oracle.com>
- <5C9C8DDC0200007800222606@prv1-mh.provo.novell.com>
- <eda3938f-02a5-e5a2-4718-d75bc488f296@oracle.com>
- <5C9DDD530200007800222B22@prv1-mh.provo.novell.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <24df98be-21e7-617e-7651-ae34e2a2e512@oracle.com>
-Date:   Fri, 29 Mar 2019 09:42:27 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 29 Mar 2019 09:44:38 -0400
+Received: by mail-yw1-f67.google.com with SMTP id d132so687021ywa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 06:44:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IZeNVOh8Oj3MeNW2bKmTXh5xM83eIGuDZ5McPaHfjz8=;
+        b=hvic143J31Gpl4y3bO0knbHaCRO5C30SBHkaoTFh6lu/NvpJDQNdcJFRISQVp/fbPg
+         TNPnIbNES97rUNG/ZbgARmHcrxEjlRppRPeafyvUv+diHg0VuTS+2My+9JHSOuujVnJy
+         SDntPHdwzmCtXpxSlq7buSza2CuN5jirQ8roVUbhQp1Jrybj/5fg4raF/CuT3hXS3xSG
+         YFB8DrLfO8n3G4ZIv9R0cwy4eVQKHuTRc8sJWqWGv6106RAZ9Oa8ZKblbf1P0pulMBfZ
+         RvEjThedymL5X15Q1xyGnvFFSqNGw7pOSDzKitl+XLYq/JILFSbJ8hO07YqM27p197iK
+         AbqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IZeNVOh8Oj3MeNW2bKmTXh5xM83eIGuDZ5McPaHfjz8=;
+        b=SQODyTb4bWvBErrQDuR/oUEz57CQW6lOOFlZ0u2iDkkJDj/m1z5wFy9Mle8IB5rgSt
+         3f3NDIjYvj6qCzMWiKxSUoa+0PVdb3t0mzVcjTQW4FXq6bahrqnzrZcF99EX8YHiNVlp
+         A6OZyBfIOUkV7MSQRzkHGYCTb5VdWzoMj8OKiWdrAGDQzTdk2k7+uaOlC4DasV765n2B
+         KpbrCQgiYoUDWC2AbEaS74LFipWZtMOE/0KG0wYi2xoT/ZBSmm7msIWgPYnVSMvRxk6p
+         834I/n4y5LCm3zdjeAVc4Me0aOm6oW3WWikoVDp11cdmPsklzEzRJSTlVFaqxoen0mFY
+         /XNw==
+X-Gm-Message-State: APjAAAWRbqpqkTTcEEW75mN7ty/Nwe8oJXL/TRAbw9F2rOfJOhb1XkFK
+        fjakA0UcsPoWrNjXP1g7r/gBgxUsQvzZxOKsmimXAA==
+X-Google-Smtp-Source: APXvYqyer4omu0H8WbGgh/GMWVyMRnoq3P9erhiEZXlylmsTqtWWkJCskr8XiQABmTX9wYMepDOdJdk82xw4jskAQ5o=
+X-Received: by 2002:a81:7052:: with SMTP id l79mr39774397ywc.299.1553867077642;
+ Fri, 29 Mar 2019 06:44:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5C9DDD530200007800222B22@prv1-mh.provo.novell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9210 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903290099
+References: <20190311082405.GB4731@dell> <CAPUE2usOdzbHN7NN=Vg8FWE1kR2ayPYxV8qy05eB+bZgG6wD3w@mail.gmail.com>
+In-Reply-To: <CAPUE2usOdzbHN7NN=Vg8FWE1kR2ayPYxV8qy05eB+bZgG6wD3w@mail.gmail.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Fri, 29 Mar 2019 06:44:26 -0700
+Message-ID: <CABXOdTf6kv=utOU92WbMcOAeXVKDZQ8RnNC7+t2C=7KgeNedeA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] iio: cros_ec: Add lid angle driver
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/29/19 4:54 AM, Jan Beulich wrote:
->>>> On 28.03.19 at 17:50, <boris.ostrovsky@oracle.com> wrote:
->>
->> Given especially xen_pv_smp_prepare_cpus(), I think re-working proper
->> setting of present/possible masks is well beyond the scope of your
->> original patch.
-> Well, then the question is, what (if any) changes are you
-> expecting me to make for this change to be acceptable? Or do
-> you perhaps want me to add a 2nd patch on top addressing
-> the other outlined anomalies?
+On Fri, Mar 29, 2019 at 1:41 AM Gwendal Grignou <gwendal@chromium.org> wrote:
+>
+> Add a IIO driver that reports the angle between the lid and the base for
+> ChromeOS convertible device.
+>
+> Tested on eve with ToT EC firmware.
+> Check driver is loaded and lid angle is correct.
+>
+> Change-Id: I3506be4a1405f108eebe6c1d3a3dbe975ca00519
 
-If your goal is just to fix the dom0_max_vcpus issue then this patch is
-sufficient (but the commit message should say that this is what the
-patch is for).
+drop. checkpatch.pl should report that.
 
-But if you are trying to make cpu masks management done properly then I
-think this patch alone does not address this fully.
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> ---
+>  drivers/iio/common/cros_ec_sensors/Kconfig    |   9 ++
+>  drivers/iio/common/cros_ec_sensors/Makefile   |   1 +
+>  .../cros_ec_sensors/cros_ec_lid_angle.c       | 138 ++++++++++++++++++
+>  drivers/mfd/cros_ec_dev.c                     |  15 +-
+>  4 files changed, 160 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+>
+> diff --git a/drivers/iio/common/cros_ec_sensors/Kconfig
+> b/drivers/iio/common/cros_ec_sensors/Kconfig
+> index 135f6825903f..aacc2ab9c34f 100644
+> --- a/drivers/iio/common/cros_ec_sensors/Kconfig
+> +++ b/drivers/iio/common/cros_ec_sensors/Kconfig
+> @@ -20,3 +20,12 @@ config IIO_CROS_EC_SENSORS
+>           Accelerometers, Gyroscope and Magnetometer that are
+>           presented by the ChromeOS EC Sensor hub.
+>           Creates an IIO device for each functions.
+> +
+> +config IIO_CROS_EC_SENSORS_LID_ANGLE
+> +       tristate "ChromeOS EC Sensor for lid angle"
+> +       depends on IIO_CROS_EC_SENSORS_CORE
+> +       help
+> +         Module to report the angle between lid and base for some
+> +         convertible devices.
+> +         This module is loaded when the EC can calculate the angle between the base
+> +         and the lid.
+> diff --git a/drivers/iio/common/cros_ec_sensors/Makefile
+> b/drivers/iio/common/cros_ec_sensors/Makefile
+> index ec716ff2a775..a35ee232ac07 100644
+> --- a/drivers/iio/common/cros_ec_sensors/Makefile
+> +++ b/drivers/iio/common/cros_ec_sensors/Makefile
+> @@ -4,3 +4,4 @@
+>
+>  obj-$(CONFIG_IIO_CROS_EC_SENSORS_CORE) += cros_ec_sensors_core.o
+>  obj-$(CONFIG_IIO_CROS_EC_SENSORS) += cros_ec_sensors.o
+> +obj-$(CONFIG_IIO_CROS_EC_SENSORS_LID_ANGLE) += cros_ec_lid_angle.o
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+> b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+> new file mode 100644
+> index 000000000000..92be07d7fa36
+> --- /dev/null
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
+> @@ -0,0 +1,138 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * cros_ec_lid_angle - Driver for CrOS EC lid angle sensor.
+> + *
+> + * Copyright 2018 Google, Inc
+> + *
+> + * This driver uses the cros-ec interface to communicate with the Chrome OS
+> + * EC about counter sensors. Counters are presented through
+> + * iio sysfs.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/common/cros_ec_sensors_core.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/kfifo_buf.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/cros_ec.h>
+> +#include <linux/mfd/cros_ec_commands.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#define DRV_NAME "cros-ec-lid-angle"
+> +
+> +/*
+> + * One channel for the lid angle, the other for timestamp.
+> + */
+> +static const struct iio_chan_spec cros_ec_lid_angle_channels[] = {
+> +       {
+> +               .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +               .scan_type.realbits = CROS_EC_SENSOR_BITS,
+> +               .scan_type.storagebits = CROS_EC_SENSOR_BITS,
+> +               .scan_type.sign = 'u',
+> +               .type = IIO_ANGL
+> +       },
+> +       IIO_CHAN_SOFT_TIMESTAMP(1)
+> +};
+> +
+> +/* State data for ec_sensors iio driver. */
+> +struct cros_ec_lid_angle_state {
+> +       /* Shared by all sensors */
+> +       struct cros_ec_sensors_core_state core;
+> +};
+> +
+> +static int cros_ec_sensors_read_lid_angle(struct iio_dev *indio_dev,
+> +                                         unsigned long scan_mask, s16 *data)
+> +{
+> +       struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
+> +       int ret;
+> +
+> +       st->param.cmd = MOTIONSENSE_CMD_LID_ANGLE;
+> +       ret = cros_ec_motion_send_host_cmd(st, sizeof(st->resp->lid_angle));
+> +       if (ret) {
+> +               dev_warn(&indio_dev->dev, "Unable to read lid angle\n");
+> +               return ret;
+> +       }
+> +
+> +       *data = st->resp->lid_angle.value;
+> +       return 0;
+> +}
+> +
+> +static int cros_ec_lid_angle_read(struct iio_dev *indio_dev,
+> +                                   struct iio_chan_spec const *chan,
+> +                                   int *val, int *val2, long mask)
+> +{
+> +       struct cros_ec_lid_angle_state *st = iio_priv(indio_dev);
+> +       s16 data;
+> +       int ret;
+> +
+> +       mutex_lock(&st->core.cmd_lock);
+> +       ret = cros_ec_sensors_read_lid_angle(indio_dev, 1, &data);
+> +       if (ret)
+> +               return ret;
+> +       *val = data;
+> +       mutex_unlock(&st->core.cmd_lock);
+> +       return IIO_VAL_INT;
+> +}
+> +
+> +static const struct iio_info cros_ec_lid_angle_info = {
+> +       .read_raw = &cros_ec_lid_angle_read,
+> +};
+> +
+> +static int cros_ec_lid_angle_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct iio_dev *indio_dev;
+> +       struct cros_ec_lid_angle_state *state;
+> +       int ret;
+> +
+> +       indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
+> +       if (!indio_dev)
+> +               return -ENOMEM;
+> +
+> +       ret = cros_ec_sensors_core_init(pdev, indio_dev, false);
+> +       if (ret)
+> +               return ret;
+> +
+> +       indio_dev->info = &cros_ec_lid_angle_info;
+> +       state = iio_priv(indio_dev);
+> +       indio_dev->channels = cros_ec_lid_angle_channels;
+> +       indio_dev->num_channels = ARRAY_SIZE(cros_ec_lid_angle_channels);
+> +
+> +       state->core.read_ec_sensors_data = cros_ec_sensors_read_lid_angle;
+> +
+> +       ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+> +                       cros_ec_sensors_capture, NULL);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return devm_iio_device_register(dev, indio_dev);
+> +}
+> +
+> +static const struct platform_device_id cros_ec_lid_angle_ids[] = {
+> +       {
+> +               .name = DRV_NAME,
+> +       },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(platform, cros_ec_lid_angle_ids);
+> +
+> +static struct platform_driver cros_ec_lid_angle_platform_driver = {
+> +       .driver = {
+> +               .name   = DRV_NAME,
+> +               .pm     = &cros_ec_sensors_pm_ops,
+> +       },
+> +       .probe          = cros_ec_lid_angle_probe,
+> +       .id_table       = cros_ec_lid_angle_ids,
+> +};
+> +module_platform_driver(cros_ec_lid_angle_platform_driver);
+> +
+> +MODULE_DESCRIPTION("ChromeOS EC driver for reporting convertible lid angle.");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> index d275deaecb12..11b5b2fd1f33 100644
+> --- a/drivers/mfd/cros_ec_dev.c
+> +++ b/drivers/mfd/cros_ec_dev.c
+> @@ -297,13 +297,17 @@ static void cros_ec_sensors_register(struct
+> cros_ec_dev *ec)
+>
+>         resp = (struct ec_response_motion_sense *)msg->data;
+>         sensor_num = resp->dump.sensor_count;
+> -       /* Allocate 1 extra sensors in FIFO are needed */
+> -       sensor_cells = kcalloc(sensor_num + 1, sizeof(struct mfd_cell),
+> +       /*
+> +        * Allocate extra sensors if lid angle sensor or FIFO are needed.
+> +        */
+> +#define NUM_EXTRA_SENSORS 2
+> +       sensor_cells = kcalloc(sensor_num + NUM_EXTRA_SENSORS,
+> +                              sizeof(struct mfd_cell),
+>                                GFP_KERNEL);
+>         if (sensor_cells == NULL)
+>                 goto error;
+>
+> -       sensor_platforms = kcalloc(sensor_num + 1,
+> +       sensor_platforms = kcalloc(sensor_num,
 
--boris
+Are you sure about this, or did "+ NUM_EXTRA_SENSORS" get lost ?
 
+>                                    sizeof(struct cros_ec_sensor_platform),
+>                                    GFP_KERNEL);
+>         if (sensor_platforms == NULL)
+> @@ -363,6 +367,11 @@ static void cros_ec_sensors_register(struct
+> cros_ec_dev *ec)
+>                 sensor_cells[id].name = "cros-ec-ring";
+>                 id++;
+>         }
+> +       if (cros_ec_check_features(ec,
+> +                               EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS)) {
+> +               sensor_cells[id].name = "cros-ec-lid-angle";
+> +               id++;
+> +       }
+>
+>         ret = mfd_add_devices(ec->dev, 0, sensor_cells, id,
+>                               NULL, 0, NULL);
+> --
+> 2.21.0.360.g471c308f928-goog
