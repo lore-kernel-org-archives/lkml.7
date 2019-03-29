@@ -2,171 +2,102 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D365C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2733AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3247218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E386D218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:33:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m8JViSNA"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wHR4ItWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbfC2Pco (ORCPT
+        id S1729667AbfC2Pdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:32:44 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:54730 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728720AbfC2Pcn (ORCPT
+        Fri, 29 Mar 2019 11:33:35 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33984 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729480AbfC2Pdf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:32:43 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2TFT5cn076374;
-        Fri, 29 Mar 2019 15:32:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=mGWSACrkMo1yya3P4I6MhhCZpSkW9f4Lh5S0L5Z85JM=;
- b=m8JViSNAvwbT4lmmEiRlcbwRmXlWr/6C9hgfE1kSmV6FeMska8h/1B37NyqilxlXxQFo
- 80ewalnT+8EApPFEHIu0n93X9kwb0iWDv50ngCiEBYBqWIVE3nr9dyaL7j9iQva1YDl3
- d8/04t2hc5T6vl2nE94RfFdELvcnNJbBt4auwBiBg8qYSMqEpWFcDFfV5idy4E6z3qOy
- alNX0RXOwwX3pVXHCRVyP1RBr4uxMbCOf6sJxOJkR4DF6pgj8kdUKnH5EmH+Ws3Kvn4I
- QYlJ2Qrn6bSR/WPZLkTZGBrGsnWuZnw6zTo26Fkn/fwjpKylQRMOtYJjzgpZ9cIBIYJa bg== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by aserp2130.oracle.com with ESMTP id 2re6g1d5v8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 15:32:38 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2TFWb5E004311
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 15:32:37 GMT
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2TFWakK024417;
-        Fri, 29 Mar 2019 15:32:36 GMT
-Received: from [192.168.14.112] (/79.183.242.215)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 Mar 2019 08:32:36 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH RFC] KVM: x86: vmx: throttle immediate exit through
- preemtion timer to assist buggy guests
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <89d4189b-de6a-7634-de8b-29a044a86e12@redhat.com>
-Date:   Fri, 29 Mar 2019 18:32:32 +0300
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Fri, 29 Mar 2019 11:33:35 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p10so3144107wrq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 08:33:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vCCYZzG5Ka9N2oZ7rttqC09lmztU1e5JZDTYPl18vOw=;
+        b=wHR4ItWvESwCW43C9tWHsCFK9V6gu0YOKGckKb8Z3kMeIzkIKTjGuaVv2UIN9aeWzi
+         BpjE9VSIjvr5S/K88iK204/7ecIOs6SIiy1t8Tq0i28axpXU+0d/OoBOPVMBNlMV9mvi
+         5oB2mYCOffwIo8OBvkEdGVWTlapFH2E7meQy67KN6h38K9NodTEGdnisT+vvKtTFTbCH
+         LTZhaunBkQKxO3hr8jBcsTlnygJc8T2DU9DHmz9uPhTpmnd1iQWvZlE8SNBf04m+Tf7M
+         2XANNRuO7EbQyMu8FB1x2wPTije34hacTNsJqS1lbVBY/Zi/AMqkxKyrcFFQ1wCCRziQ
+         7WvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vCCYZzG5Ka9N2oZ7rttqC09lmztU1e5JZDTYPl18vOw=;
+        b=tIuOzLII5dEa5cNDjzpRDuDyGO1Pf4hNGGbiirxnWbAa142CosMQzFOj4gAJ9/DUfH
+         654t6e2I0zoXE75ys1Vyql62HM4q0eBxfajkGquTMIo8iDS6tjnBZSegg3uqaSLZhAv1
+         bto2aGpCynSxOIRtgjkPT1Ei46Bp8dLfJsaOxpf9VWGBTwGS/jjsUocPJDlnkhA87RR5
+         Z3Z+vu3SnrGsIyCDP2PJGZGleYD7KjXzsezKdnVg681bo7Ccz6lMJltN9V2MxgWGs4wQ
+         yOCR++AEjZPzIVWN98UYdRY3m6P7zJjGxHHA6bSUOskcmOSzvEWDo1CqwqwaQ7xzW9CF
+         QZ4A==
+X-Gm-Message-State: APjAAAXiItEhPfgNM5C6SI8wzGHBfhHFlqoKoqOVSmCPVz9EWXWqX8y/
+        kS7x8+56sB786IPUtunoRxYfLQ==
+X-Google-Smtp-Source: APXvYqxdSf6XsxRRtkdzz5tcSjr7T+I/B+Cef6fa3PvYVwpHHlB36/NXAlsVCkRMNBlvfnX0EP8NvQ==
+X-Received: by 2002:adf:fd41:: with SMTP id h1mr14632674wrs.155.1553873613265;
+        Fri, 29 Mar 2019 08:33:33 -0700 (PDT)
+Received: from boomer.local ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
+        by smtp.googlemail.com with ESMTPSA id s18sm1930173wmc.41.2019.03.29.08.33.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 Mar 2019 08:33:32 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <63F1B6AE-F7A0-40D9-9582-558723800682@oracle.com>
-References: <20190328203110.20655-1-vkuznets@redhat.com>
- <f64742ef-c67d-db0f-d812-2b6f5048d7ee@redhat.com>
- <87d0m93frp.fsf@vitty.brq.redhat.com>
- <89d4189b-de6a-7634-de8b-29a044a86e12@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9211 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903290110
+Subject: [PATCH 0/3] clk: meson: fix mpll jitter
+Date:   Fri, 29 Mar 2019 16:33:22 +0100
+Message-Id: <20190329153325.23869-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As reported on this [0] mpll series, We are observing a lot of jitter
+on the MPLL outputs of the g12a. No such jitter is seen on gx family.
+On the axg family, only MPLL2 seems affected.
 
+The jitter can be as high as +/- 4%.
 
-> On 29 Mar 2019, at 18:01, Paolo Bonzini <pbonzini@redhat.com> wrote:
->=20
-> On 29/03/19 15:40, Vitaly Kuznetsov wrote:
->> Paolo Bonzini <pbonzini@redhat.com> writes:
->>=20
->>> On 28/03/19 21:31, Vitaly Kuznetsov wrote:
->>>>=20
->>>> The 'hang' scenario develops like this:
->>>> 1) Hyper-V boots and QEMU is trying to inject two irq =
-simultaneously. One
->>>> of them is level-triggered. KVM injects the edge-triggered one and
->>>> requests immediate exit to inject the level-triggered:
->>>>=20
->>>> kvm_set_irq:          gsi 23 level 1 source 0
->>>> kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
->>>> kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
->>>> kvm_msi_set_irq:      dst 0 vec 96 (Fixed|physical|edge)
->>>> kvm_apic_accept_irq:  apicid 0 vec 96 (Fixed|edge)
->>>> kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 =
-int_info 80000060 int_info_err 0
->>>>=20
->>>> 2) Hyper-V requires one of its VMs to run to handle the situation =
-but
->>>> immediate exit happens:
->>>>=20
->>>> kvm_entry:            vcpu 0
->>>> kvm_exit:             reason VMRESUME rip 0xfffff80006a40115 info 0 =
-0
->>>> kvm_entry:            vcpu 0
->>>> kvm_exit:             reason PREEMPTION_TIMER rip =
-0xfffff8022f3d8350 info 0 0
->>>> kvm_nested_vmexit:    rip fffff8022f3d8350 reason PREEMPTION_TIMER =
-info1 0 info2 0 int_info 0 int_info_err 0
->>>> kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 =
-int_info 80000050 int_info_err 0
->>>=20
->>> I supposed before this there was an eoi for vector 96?
->>=20
->> AFAIR: no, it seems that it is actually the VM it is trying to resume
->> (Windows partition?) which needs to do some work and with the =
-preemtion
->> timer of 0 we don't allow it to.
->=20
-> kvm_apic_accept_irq placed IRQ 96 in IRR, and Hyper-V should be =
-running
-> with "acknowledge interrupt on exit" since int_info is nonzero in
-> kvm_nested_vmexit_inject.
->=20
-> Therefore, at the kvm_nested_vmexit_inject tracepoint KVM should have
-> set bit 96 in ISR; and because PPR is now 96, interrupt 80 should have
-> never been delivered.  Unless 96 is an auto-EOI interrupt, in which =
-case
-> this comment would apply
->=20
->          /*
->           * For auto-EOI interrupts, there might be another pending
->           * interrupt above PPR, so check whether to raise another
->           * KVM_REQ_EVENT.
->           */
->=20
-> IIRC there was an enlightenment to tell Windows "I support auto-EOI =
-but
-> please don't use it".  If this is what's happening, that would also =
-fix it.
->=20
-> Thanks,
->=20
-> Paolo
+This is a problem for audio application. This may cause distortion on
+i2s and completely break SPDIF.
 
-Paolo I am not sure this is the case here.
-Please read my other replies in this email thread.
+After exchanging with Amlogic, it seems he have activated (by mistake)
+the 'spread spectrum' feature.
 
-I think this is just a standard issue of a level-triggered interrupt =
-handler in L1 (Hyper-V) that performs EOI before it lowers the irq-line.
-I don=E2=80=99t think vector 96 is even related to the issue at hand =
-here. This is why after it was already handled, the loop of =
-EXTERNAL_INTERRUPT
-happens on vector 80 and not vector 96.
+This patchset properly set the bit responsible for the spread spectrum
+in the mpll driver and add the required correction in the related clock
+controllers.
 
-In addition, there is a missing optimisation from Hyper-V that after it =
-handles an EXTERNAL_INTERRUPT exit, it doesn=E2=80=99t enable interrupts
-to receive other pending host interrupts (In our case, the pending =
-vector 80) and will therefore only receive it once it enters back to L2
-which will cause another EXTERNAL_INTERRUPT exit but this time on vector =
-80.
+Jerome Brunet (3):
+  clk: meson: mpll: properly handle spread spectrum
+  clk: meson: gxbb: no spread spectrum on mpll0
+  clk: meson: axg: spread spectrum is on mpll2
 
--Liran
+ drivers/clk/meson/axg.c      | 10 +++++-----
+ drivers/clk/meson/clk-mpll.c |  9 ++++++---
+ drivers/clk/meson/clk-mpll.h |  1 +
+ drivers/clk/meson/gxbb.c     |  5 -----
+ 4 files changed, 12 insertions(+), 13 deletions(-)
 
+-- 
+2.20.1
 
