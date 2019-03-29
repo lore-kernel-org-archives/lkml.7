@@ -2,171 +2,226 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F353C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB44CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6FED2183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721E82183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 07:58:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ndlrwYuZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiWrEgsd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbfC2H6K (ORCPT
+        id S1729136AbfC2H6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 03:58:10 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:22059 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729037AbfC2H6A (ORCPT
+        Fri, 29 Mar 2019 03:58:48 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36680 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729037AbfC2H6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 03:58:00 -0400
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190329075756epoutp02e3049f6b1b71f877ff6d28fc120e19f8~QXvTEMoOB0251002510epoutp02x;
-        Fri, 29 Mar 2019 07:57:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190329075756epoutp02e3049f6b1b71f877ff6d28fc120e19f8~QXvTEMoOB0251002510epoutp02x
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1553846276;
-        bh=o2dx41Jhej6AqxcttNIRSbItvBM9G6Zdz2rRQgL4ChM=;
-        h=From:To:Cc:Subject:Date:In-reply-to:References:From;
-        b=ndlrwYuZ/sX4+kSIrfHkkY0qgl8ya4DrXs4GVr7ffCZK0laiFkqB4d+Pe04FDVywi
-         q2PKp7hTWxFwADQyx6pj0bohiLUr6JyQ67/Vs7c94LrhMVf1S2NaMG44bFlH7i4C0a
-         Q2vkqpjUp1UOgurTr+IiTA0JXTmgUwJ2QsmpB40w=
-Received: from epsmges2p4.samsung.com (unknown [182.195.42.72]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20190329075756epcas2p210aace814bd6c7972388c31e6e2e199f~QXvSfDiyP3185131851epcas2p2y;
-        Fri, 29 Mar 2019 07:57:56 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        FF.F1.04207.400DD9C5; Fri, 29 Mar 2019 16:57:56 +0900 (KST)
-Received: from epsmgms2p2new.samsung.com (unknown [182.195.42.143]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20190329075755epcas2p2d2670db217ae3519d2c4b93d5e3749d1~QXvSND9UU1387513875epcas2p2X;
-        Fri, 29 Mar 2019 07:57:55 +0000 (GMT)
-X-AuditID: b6c32a48-689ff7000000106f-45-5c9dd0046a3b
-Received: from epmmp1.local.host ( [203.254.227.16]) by
-        epsmgms2p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9D.CF.03620.300DD9C5; Fri, 29 Mar 2019 16:57:55 +0900 (KST)
-Received: from test-PowerEdge-R720.sa.corp.samsungelectronics.net
-        ([107.108.221.212]) by mmp1.samsung.com (Oracle Communications Messaging
-        Server 7.0.5.31.0 64bit (built May  5 2014)) with ESMTPA id
-        <0PP40008VBFTTN20@mmp1.samsung.com>; Fri, 29 Mar 2019 16:57:55 +0900 (KST)
-From:   Kanchan Joshi <joshi.k@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org
-Cc:     axboe@fb.com, prakash.v@samsung.com, anshul@samsung.com,
-        joshiiitr@gmail.com, Kanchan Joshi <joshi.k@samsung.com>
-Subject: [PATCH v3 5/7] fs: introduce APIs to enable sending write-hint with
- buffer-head
-Date:   Fri, 29 Mar 2019 13:23:50 +0530
-Message-id: <1553846032-4451-6-git-send-email-joshi.k@samsung.com>
-X-Mailer: git-send-email 2.7.4
-In-reply-to: <1553846032-4451-1-git-send-email-joshi.k@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsWy7bCmhS7LhbkxBm9fsVv8nj6F1eL/nmNs
-        Fkf/v2WzOP/2MJPF3lvaFjPn3WGz2LP3JIvF5V1z2CzmL3vKbnFlyiJmBy6Pic3v2D12zrrL
-        7rF5Sb1H35ZVjB6fN8kFsEZx2aSk5mSWpRbp2yVwZTz7eYm14JFwxcZHE5kaGE8KdDFyckgI
-        mEhsaZ7L0sXIxSEksINRYtmHC+wQzndGiVfP1jHCVLWc/8sIkdjNKPHs1Q4WkISQwHQmiQeH
-        DLsYOTjYBDQlLkwuBakREZgDNGnfNGaQGmaBcom/U64ygtQIC0RJbJnID2KyCKhK3G2LBang
-        FXCSuPWjjx1ilZzEzXOdYJ2cAs4SH683gx0nIbCATWL3t/ssEEUuEq1vbzJD2NISz1ZthLqz
-        WOLXnaPMEA0djBLXG2ZCNdhLXNzzlwniHj6JjsN/2UGOkBDglehoE4Io8ZA48GYKK8SP0xgl
-        Ji04xjaBUWIBI8MqRrHUguLc9NRiowITveLE3OLSvHS95PzcTYzg6NPy2MF44JzPIUYBDkYl
-        Ht4Pu+fECLEmlhVX5h5ilOBgVhLhDTw3N0aINyWxsiq1KD++qDQntfgQozQHi5I470PpudFC
-        AumJJanZqakFqUUwWSYOTqkGxmmlTOUBf6fuLHC8EHDybrKj2YPVyQnbp+gdS0p/XMd8eONZ
-        nfv3bc5ODzpbtD2I64HCAyEjm/mff57oTG6SEJ2dd0SVpz3fTOjDy12rXGf8mZo6Tau3fcn6
-        h8bbHl16GZL7UPK586NKuaQnofaul3xX9krNN9lQvdHrwctPIWHRT58sNTFoFFFiKc5INNRi
-        LipOBACcwuDuugIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKLMWRmVeSWpSXmKPExsVy+t9jAV3mC3NjDHb+N7L4PX0Kq8X/PcfY
-        LI7+f8tmcf7tYSaLvbe0LWbOu8NmsWfvSRaLy7vmsFnMX/aU3eLKlEXMDlweE5vfsXvsnHWX
-        3WPzknqPvi2rGD0+b5ILYI3isklJzcksSy3St0vgynj28xJrwSPhio2PJjI1MJ4U6GLk5JAQ
-        MJFoOf+XsYuRi0NIYCejxIOFn5hBEkICM5kkbpzi72Lk4GAT0JS4MLkUpEZEYA6jRM/u9awg
-        cWaBcokpmzhBTGGBKIktE8GqWQRUJe62xYIM4RVwkrj1o48dYpOcxM1znWDDOQWcJT5eb2aB
-        WOQksfZ+A/sERp4FjAyrGCVTC4pz03OLjQqM8lLL9YoTc4tL89L1kvNzNzECA2vbYa3+HYyP
-        l8QfYhTgYFTi4Z2xc06MEGtiWXFl7iFGCQ5mJRHewHNzY4R4UxIrq1KL8uOLSnNSiw8xSnOw
-        KInz8ucfixQSSE8sSc1OTS1ILYLJMnFwSjUwluZvMzrWueXpofBT9wUMNknvX+S5fJNg+BpT
-        re1F7CtP/d1+yL+feepN5emp56eoFOz67VpncW5y/5RlGnliU6IP7I5nmmZvtHw+R29l66Xq
-        O1t28MzfJnph883sK2KfnPaHLo8NCW/elZi5YQKDv67Yvd7tCyT94jdWRF+bG25nWZwZ8Pjh
-        byWW4oxEQy3mouJEAB+RxC4oAgAA
-X-CMS-MailID: 20190329075755epcas2p2d2670db217ae3519d2c4b93d5e3749d1
-CMS-TYPE: 102P
-X-CMS-RootMailID: 20190329075755epcas2p2d2670db217ae3519d2c4b93d5e3749d1
-References: <1553846032-4451-1-git-send-email-joshi.k@samsung.com>
-        <CGME20190329075755epcas2p2d2670db217ae3519d2c4b93d5e3749d1@epcas2p2.samsung.com>
+        Fri, 29 Mar 2019 03:58:47 -0400
+Received: by mail-pf1-f194.google.com with SMTP id p10so675117pff.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 00:58:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZwHPQaPEkQUOpCAB9JBNV140eejWjgDH4vAkpeBNDEo=;
+        b=BiWrEgsdAAaV0dA6gIVnxevD6KwG8Q6O6u+Uwm+iIhNXzdw1yFE91pclAkrDvCje+N
+         SH20zUCI9fZA3zjafY3Vy0QGYvHH0vQrgsamjG9NjtM85ee2NNm5oU2U6mH5vkFuZ7hX
+         wSPdlTlvJGUNauj1QcUE8ZE3txzPi7zguu6XWN5DNhwj2QqbPoNBqlpibnfEa6YZBTCS
+         Yh7avlFIUdoCthdCF+W4ytXqoXIJtEMZW9e2TAnkoxJ6h2Ro6H8vJivanYQLlSDfGip5
+         SFMTfvr7alVaKUXEAi90sQNyzvLW//pldg9VhiGijJhjvEGDYosaPoLW71dikF9hH2v1
+         YCDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZwHPQaPEkQUOpCAB9JBNV140eejWjgDH4vAkpeBNDEo=;
+        b=ePUMxn34kdmpBOVOu0koZYBaGAsfQMMHxj2shv3Qf3GoXLamfWHs7f/HoREuRXb+Ky
+         Mx2MLG3W7HEP8MzBC3c70r8crW/GS6tBYPol3Bb91oR/LvLaE437ZrtCpc0VZ2QHTFLD
+         EBjIyVnYN4sdl2p8VSFbC5GXBlJkc4MGaLsmfPfA/FzD1mK0/+lsKvqL4hDcQkDOZSs6
+         uQxJEwNQIdA2z3cVaM6LZ5vHq/PjykZWyDUsDRshi1LFAV06LDwyNoJ8TITHdxS1O7cg
+         oeXEKfYTOD5y70Ttch/GQf1uO8jUllXM7TfeOKmZyaNABQ0ejElW/y5cHhNUgEPRftwn
+         Wq6Q==
+X-Gm-Message-State: APjAAAXmhNk5I3YcUCPfQ1F8Bm6sgjwqIFZf6EnD51R+8dKcCubuGikG
+        MD0gQ5tkCYep1h7VqMFeEBk=
+X-Google-Smtp-Source: APXvYqyTzq0C61OZ9qfQaNImt+xG7zTMtxXkYpayPeB83oliP7tabDy3SrMLHrtWZSDIdFrpKQuD8Q==
+X-Received: by 2002:a62:ab12:: with SMTP id p18mr33194495pff.216.1553846326948;
+        Fri, 29 Mar 2019 00:58:46 -0700 (PDT)
+Received: from localhost ([175.223.10.137])
+        by smtp.gmail.com with ESMTPSA id j8sm1628386pff.183.2019.03.29.00.58.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 29 Mar 2019 00:58:46 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 16:58:42 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Jiri Slaby <jslaby@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sahara <keun-o.park@darkmatter.ae>
+Cc:     linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: [linux next] tty/pty: possible circular locking dependency
+ detected
+Message-ID: <20190329075842.GA434@jagdpanzerIV>
+References: <20190329073514.GA458@jagdpanzerIV>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329073514.GA458@jagdpanzerIV>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-submit_bh and write_dirty_buffer do not take write-hint as parameter.
-This introduces variants which do, and pass write-hint down.
+Cc-ing Sahara
 
-Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
----
- fs/buffer.c                 | 18 ++++++++++++++++--
- include/linux/buffer_head.h |  3 +++
- 2 files changed, 19 insertions(+), 2 deletions(-)
+On (03/29/19 16:35), Sergey Senozhatsky wrote:
+> 5.1.0-rc2-next-20190329
+> 
+> [    8.168722] ======================================================
+> [    8.168723] WARNING: possible circular locking dependency detected
+> [    8.168724] 5.1.0-rc2-next-20190329-dbg-00014-g4d25d68aaf88-dirty #3228 Not tainted
+> [    8.168725] ------------------------------------------------------
+> [    8.168726] bash/380 is trying to acquire lock:
+> [    8.168727] 00000000acce3dce (tty_mutex){+.+.}, at: pty_write+0x31/0xd0
+> [    8.168730] 
+>                but task is already holding lock:
+> [    8.168731] 00000000c4f3448a (&ldata->output_lock){+.+.}, at: n_tty_write+0x1b9/0x4a0
+> [    8.168733] 
+>                which lock already depends on the new lock.
+> 
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 52d024b..19cf910 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -3094,6 +3094,13 @@ int submit_bh(int op, int op_flags, struct buffer_head *bh)
- }
- EXPORT_SYMBOL(submit_bh);
- 
-+int submit_bh_write_hint(int op, int op_flags, struct buffer_head *bh,
-+			 enum rw_hint hint)
-+{
-+	return submit_bh_wbc(op, op_flags, bh, hint, NULL);
-+}
-+EXPORT_SYMBOL(submit_bh_write_hint);
-+
- /**
-  * ll_rw_block: low-level access to block devices (DEPRECATED)
-  * @op: whether to %READ or %WRITE
-@@ -3151,6 +3158,13 @@ EXPORT_SYMBOL(ll_rw_block);
- 
- void write_dirty_buffer(struct buffer_head *bh, int op_flags)
- {
-+	write_dirty_buffer_with_hint(bh, op_flags, 0);
-+}
-+EXPORT_SYMBOL(write_dirty_buffer);
-+
-+void write_dirty_buffer_with_hint(struct buffer_head *bh, int op_flags,
-+				   enum rw_hint hint)
-+{
- 	lock_buffer(bh);
- 	if (!test_clear_buffer_dirty(bh)) {
- 		unlock_buffer(bh);
-@@ -3158,9 +3172,9 @@ void write_dirty_buffer(struct buffer_head *bh, int op_flags)
- 	}
- 	bh->b_end_io = end_buffer_write_sync;
- 	get_bh(bh);
--	submit_bh(REQ_OP_WRITE, op_flags, bh);
-+	submit_bh_wbc(REQ_OP_WRITE, op_flags, bh, hint, NULL);
- }
--EXPORT_SYMBOL(write_dirty_buffer);
-+EXPORT_SYMBOL(write_dirty_buffer_with_hint);
- 
- /*
-  * For a data-integrity writeout, we need to wait upon any in-progress I/O
-diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
-index 7b73ef7..3d682ac 100644
---- a/include/linux/buffer_head.h
-+++ b/include/linux/buffer_head.h
-@@ -200,7 +200,10 @@ void ll_rw_block(int, int, int, struct buffer_head * bh[]);
- int sync_dirty_buffer(struct buffer_head *bh);
- int __sync_dirty_buffer(struct buffer_head *bh, int op_flags);
- void write_dirty_buffer(struct buffer_head *bh, int op_flags);
-+void write_dirty_buffer_with_hint(struct buffer_head *bh, int op_flags,
-+				   enum rw_hint hint);
- int submit_bh(int, int, struct buffer_head *);
-+int submit_bh_write_hint(int, int, struct buffer_head *, enum rw_hint hint);
- void write_boundary_block(struct block_device *bdev,
- 			sector_t bblock, unsigned blocksize);
- int bh_uptodate_or_lock(struct buffer_head *bh);
--- 
-2.7.4
+Reverting b9ca5f8560af244 (tty: pty: Fix race condition between
+release_one_tty and pty_write) fixes the warning.
 
+Looking at b9ca5f8560af244, so all pty writes are serialized with
+a global lock? Is this really a great idea?
+
+
+I'll keep the lockdep splat for Sahara.
+
+> [    8.168733] 
+>                the existing dependency chain (in reverse order) is:
+> [    8.168734] 
+>                -> #4 (&ldata->output_lock){+.+.}:
+> [    8.168737]        __mutex_lock+0x7e/0x8c0
+> [    8.168738]        n_tty_write+0x1b9/0x4a0
+> [    8.168739]        tty_write+0x192/0x2a0
+> [    8.168741]        vfs_write+0xb8/0x1a0
+> [    8.168742]        ksys_write+0x45/0xb0
+> [    8.168744]        do_syscall_64+0x59/0x3bb
+> [    8.168746]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [    8.168746] 
+>                -> #3 (&tty->termios_rwsem){++++}:
+> [    8.168748]        down_write+0x38/0x70
+> [    8.168749]        tty_unthrottle+0x19/0x60
+> [    8.168750]        n_tty_open+0x86/0xa0
+> [    8.168751]        tty_ldisc_open.isra.0+0x2b/0x40
+> [    8.168752]        tty_ldisc_setup+0x1e/0x60
+> [    8.168753]        tty_init_dev+0xd9/0x1c0
+> [    8.168754]        tty_open+0x300/0x3c0
+> [    8.168756]        chrdev_open+0x97/0x1c0
+> [    8.168757]        do_dentry_open+0x12f/0x370
+> [    8.168758]        path_openat+0x2ce/0xaa0
+> [    8.168759]        do_filp_open+0x7e/0xd0
+> [    8.168760]        do_sys_open+0x15d/0x210
+> [    8.168762]        kernel_init_freeable+0x2ae/0x317
+> [    8.168764]        kernel_init+0xa/0x101
+> [    8.168765]        ret_from_fork+0x3a/0x50
+> [    8.168765] 
+>                -> #2 (&tty->ldisc_sem){++++}:
+> [    8.168767]        __ldsem_down_write_nested+0x55/0x280
+> [    8.168768]        tty_ldisc_lock+0x4b/0x70
+> [    8.168770]        tty_init_dev+0x93/0x1c0
+> [    8.168771]        tty_open+0x300/0x3c0
+> [    8.168772]        chrdev_open+0x97/0x1c0
+> [    8.168773]        do_dentry_open+0x12f/0x370
+> [    8.168774]        path_openat+0x2ce/0xaa0
+> [    8.168775]        do_filp_open+0x7e/0xd0
+> [    8.168776]        do_sys_open+0x15d/0x210
+> [    8.168777]        kernel_init_freeable+0x2ae/0x317
+> [    8.168778]        kernel_init+0xa/0x101
+> [    8.168779]        ret_from_fork+0x3a/0x50
+> [    8.168780] 
+>                -> #1 (&tty->legacy_mutex){+.+.}:
+> [    8.168781]        __mutex_lock+0x7e/0x8c0
+> [    8.168782]        tty_init_dev+0x50/0x1c0
+> [    8.168784]        tty_open+0x300/0x3c0
+> [    8.168785]        chrdev_open+0x97/0x1c0
+> [    8.168786]        do_dentry_open+0x12f/0x370
+> [    8.168787]        path_openat+0x2ce/0xaa0
+> [    8.168788]        do_filp_open+0x7e/0xd0
+> [    8.168789]        do_sys_open+0x15d/0x210
+> [    8.168790]        kernel_init_freeable+0x2ae/0x317
+> [    8.168791]        kernel_init+0xa/0x101
+> [    8.168792]        ret_from_fork+0x3a/0x50
+> [    8.168793] 
+>                -> #0 (tty_mutex){+.+.}:
+> [    8.168794]        lock_acquire+0x9a/0x170
+> [    8.168795]        __mutex_lock+0x7e/0x8c0
+> [    8.168796]        pty_write+0x31/0xd0
+> [    8.168797]        n_tty_write+0x130/0x4a0
+> [    8.168798]        tty_write+0x192/0x2a0
+> [    8.168800]        vfs_write+0xb8/0x1a0
+> [    8.168801]        ksys_write+0x45/0xb0
+> [    8.168802]        do_syscall_64+0x59/0x3bb
+> [    8.168803]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [    8.168804] 
+>                other info that might help us debug this:
+> 
+> [    8.168804] Chain exists of:
+>                  tty_mutex --> &tty->termios_rwsem --> &ldata->output_lock
+> 
+> [    8.168806]  Possible unsafe locking scenario:
+> 
+> [    8.168806]        CPU0                    CPU1
+> [    8.168807]        ----                    ----
+> [    8.168807]   lock(&ldata->output_lock);
+> [    8.168808]                                lock(&tty->termios_rwsem);
+> [    8.168809]                                lock(&ldata->output_lock);
+> [    8.168810]   lock(tty_mutex);
+> [    8.168810] 
+>                 *** DEADLOCK ***
+> 
+> [    8.168811] 4 locks held by bash/380:
+> [    8.168812]  #0: 0000000022cdab25 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref_wait+0x24/0x50
+> [    8.168814]  #1: 00000000033fee14 (&tty->atomic_write_lock){+.+.}, at: tty_write_lock+0x18/0x50
+> [    8.168815]  #2: 00000000135c3a23 (&o_tty->termios_rwsem/1){++++}, at: n_tty_write+0x8c/0x4a0
+> [    8.168817]  #3: 00000000c4f3448a (&ldata->output_lock){+.+.}, at: n_tty_write+0x1b9/0x4a0
+> [    8.168819] 
+>                stack backtrace:
+> [    8.168820] CPU: 1 PID: 380 Comm: bash Not tainted 5.1.0-rc2-next-20190329-dbg-00014-g4d25d68aaf88-dirty #3228
+> [    8.168821] Call Trace:
+> [    8.168823]  dump_stack+0x67/0x90
+> [    8.168825]  print_circular_bug.isra.0.cold+0x1c5/0x225
+> [    8.168826]  check_prev_add.constprop.0+0x5f5/0xd20
+> [    8.168828]  ? mutex_destroy+0x50/0x50
+> [    8.168829]  __lock_acquire+0xc28/0xf90
+> [    8.168830]  ? __lock_acquire+0xc28/0xf90
+> [    8.168831]  lock_acquire+0x9a/0x170
+> [    8.168833]  ? pty_write+0x31/0xd0
+> [    8.168834]  ? pty_write+0x31/0xd0
+> [    8.168835]  __mutex_lock+0x7e/0x8c0
+> [    8.168836]  ? pty_write+0x31/0xd0
+> [    8.168837]  ? n_tty_write+0x1b9/0x4a0
+> [    8.168838]  ? __mutex_lock+0x7e/0x8c0
+> [    8.168839]  ? pty_write+0x31/0xd0
+> [    8.168840]  ? n_tty_write+0x1b9/0x4a0
+> [    8.168842]  ? pty_write+0x31/0xd0
+> [    8.168843]  pty_write+0x31/0xd0
+> [    8.168844]  n_tty_write+0x130/0x4a0
+> [    8.168845]  ? wait_woken+0xa0/0xa0
+> [    8.168846]  tty_write+0x192/0x2a0
+> [    8.168847]  ? n_tty_open+0xa0/0xa0
+> [    8.168849]  vfs_write+0xb8/0x1a0
+> [    8.168850]  ksys_write+0x45/0xb0
+> [    8.168851]  do_syscall_64+0x59/0x3bb
+> [    8.168852]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+> [    8.168854]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+	-ss
