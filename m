@@ -2,109 +2,110 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FCCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF5BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4AE20811
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B8120811
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 17:34:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rpQ8UfJS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O1D2CevQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbfC2RdH (ORCPT
+        id S1729894AbfC2Re3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 13:33:07 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:53204 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729483AbfC2RdG (ORCPT
+        Fri, 29 Mar 2019 13:34:29 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33714 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729483AbfC2Re3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 13:33:06 -0400
-Received: by mail-it1-f193.google.com with SMTP id g17so4994103ita.2
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 10:33:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HocMLJBbVzAgBs+xylFVdouRdmxq8t5QzvhR7VCy7R0=;
-        b=rpQ8UfJSC9Qw8PtpDH8b14HfCpHkxWOSORdBAJcAAaGHBHgoFwP6hPjHzhmDRAuUy+
-         o/piIG+cgNvxXMLCQ2nxfDOFAVy8v+dK5mpOdNHRdCqDiD7zNxw00sGP8xB2dA3Bm2Sa
-         H5xQqq55H0wL0dNeypSZWSXrOUU++mnY+wSXgf7FoTvbtw2pYfriEQAvjJ/SdQykCn1S
-         lS00dk+C+psu60wqj++/+QExGlXmJ4gMAG3M3BEDMGxbZ4iNZZJTMq85ADNN2oDp16T7
-         bNukb509DXrkM9g9chv0aifgfZjiTKQmD4Q6QOViPQJyy8AD6b0Muuj0Qefl83wYqzL8
-         Ox6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HocMLJBbVzAgBs+xylFVdouRdmxq8t5QzvhR7VCy7R0=;
-        b=aBlcIDqm82PXKtjO4Iy5QjtoyBSr8CJmOWFIOX1vKL1FSn2i6fliSehzZFOrq58Rzf
-         h2xuSZwjH7tbzY1av42LKI2EIrTcHi/bgCNSRXrm7KPNDIXPcgDISvvXgSL0mizvgxpj
-         BgqArpjXAnLD6wSwNLEMFfqLwwOQq0o6JzlpYRMfJtvTd7eixqM+In5DYzIu2UQsKdFC
-         Q12ht3xRwO1JFm1OBeBtAdDDiYPCOlt2ZCDS4ziFVpZLQ7Z4yjfwh/N+b1JkEsRE66c3
-         +QoWnE72t1DOHYp+bY6pGb0mOTmSGPXALsNEa9Xcz7o2L7Oo7gTgYXxphLOwPdKSECyM
-         3qLw==
-X-Gm-Message-State: APjAAAWZfj6Mt6HWXqm9/u5p/Hw71D6A6Pie0Zq5df3EnqL+Ib/Oao3q
-        2rqJYqwhPsF5rB63PBGdA+78GHlp9mxpc6Kf/maizQ==
-X-Google-Smtp-Source: APXvYqzN7owRmriALBZIhc6C4dp618i9IsQzYaOLotviCjw/82XtMd/iq3Bf2wPNG2LKiBh2rMkFZrZ4bW0DqGNa3Ec=
-X-Received: by 2002:a24:2441:: with SMTP id f62mr5036919ita.155.1553880785756;
- Fri, 29 Mar 2019 10:33:05 -0700 (PDT)
+        Fri, 29 Mar 2019 13:34:29 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2THYRZ6032730;
+        Fri, 29 Mar 2019 12:34:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553880867;
+        bh=QxQfcfn0O/wNidZNs+QiyQ7UbiBLTB0CeLj+vHNmjtQ=;
+        h=From:To:CC:Subject:Date;
+        b=O1D2CevQd2RlwEgJWNY31c3nYR7z7ZDE/RnsHVOw8Nlq4t2oeffFOvW6hfR+rbnx8
+         7N1I3vkgL0eAdxZ7gA6QgRSjlI1h+cjv9ECqHq06NoHmag+gS8SgYYODZ+aOin1d4r
+         Td9kgYtJgnOZnq+Zx+k3f4a+1iexcEfrs+WaJm6Y=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2THYRW6093662
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 Mar 2019 12:34:27 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
+ Mar 2019 12:34:27 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 29 Mar 2019 12:34:27 -0500
+Received: from legion.dal.desgin.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2THYRr0097091;
+        Fri, 29 Mar 2019 12:34:27 -0500
+Received: from localhost ([10.250.67.168])
+        by legion.dal.desgin.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x2THYQU16108;
+        Fri, 29 Mar 2019 12:34:26 -0500 (CDT)
+From:   "Andrew F. Davis" <afd@ti.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+Subject: [PATCH] [media] videobuf-dma-contig: Use size of buffer in mmap not vma size
+Date:   Fri, 29 Mar 2019 12:34:27 -0500
+Message-ID: <20190329173427.18238-1-afd@ti.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190328235752.334462-1-tmaimon77@gmail.com> <20190328235752.334462-2-tmaimon77@gmail.com>
-In-Reply-To: <20190328235752.334462-2-tmaimon77@gmail.com>
-From:   Benjamin Fair <benjaminfair@google.com>
-Date:   Fri, 29 Mar 2019 10:32:29 -0700
-Message-ID: <CADKL2t5VuWA=Cx9q9Ddx+rZGbe1YoRKMWwfdFOCyxuGiMCOiPg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] MAINTAINERS: Add maintainer and replacing reviewer
- ARM/NUVOTON NPCM
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     joe@perches.com, avifishman70@gmail.com,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Tali Perry <tali.perry1@gmail.com>, akpm@linux-foundation.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 4:58 PM Tomer Maimon <tmaimon77@gmail.com> wrote:
->
-> Adding Tali Perry as Nuvoton NPCM maintainer
-> Replacing Brendan Higgins Nuvoton NPCM reviewer with
-> Benjamin Fair.
->
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+The size of the vma can be larger than the size of the backing buffer.
+Use the buffer size over vma size to prevent exposing extra memory
+to userspace.
 
-Reviewed-by: Benjamin Fair <benjaminfair@google.com>
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ drivers/media/v4l2-core/videobuf-dma-contig.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> ---
->  MAINTAINERS | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8b305d2f2a8a..4ece87fcc166 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1893,9 +1893,10 @@ T:       git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git
->  ARM/NUVOTON NPCM ARCHITECTURE
->  M:     Avi Fishman <avifishman70@gmail.com>
->  M:     Tomer Maimon <tmaimon77@gmail.com>
-> +M:     Tali Perry <tali.perry1@gmail.com>
->  R:     Patrick Venture <venture@google.com>
->  R:     Nancy Yuen <yuenn@google.com>
-> -R:     Brendan Higgins <brendanhiggins@google.com>
-> +R:     Benjamin Fair <benjaminfair@google.com>
->  L:     openbmc@lists.ozlabs.org (moderated for non-subscribers)
->  S:     Supported
->  F:     arch/arm/mach-npcm/
-> --
-> 2.14.1
->
+diff --git a/drivers/media/v4l2-core/videobuf-dma-contig.c b/drivers/media/v4l2-core/videobuf-dma-contig.c
+index e1bf50df4c70..65e2655d22b7 100644
+--- a/drivers/media/v4l2-core/videobuf-dma-contig.c
++++ b/drivers/media/v4l2-core/videobuf-dma-contig.c
+@@ -280,7 +280,6 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
+ 	struct videobuf_dma_contig_memory *mem;
+ 	struct videobuf_mapping *map;
+ 	int retval;
+-	unsigned long size;
+ 
+ 	dev_dbg(q->dev, "%s\n", __func__);
+ 
+@@ -303,7 +302,6 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
+ 		goto error;
+ 
+ 	/* Try to remap memory */
+-	size = vma->vm_end - vma->vm_start;
+ 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+ 
+ 	/* the "vm_pgoff" is just used in v4l2 to find the
+@@ -314,7 +312,7 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
+ 	 */
+ 	vma->vm_pgoff = 0;
+ 
+-	retval = vm_iomap_memory(vma, mem->dma_handle, size);
++	retval = vm_iomap_memory(vma, mem->dma_handle, mem->size);
+ 	if (retval) {
+ 		dev_err(q->dev, "mmap: remap failed with error %d. ",
+ 			retval);
+-- 
+2.21.0
+
