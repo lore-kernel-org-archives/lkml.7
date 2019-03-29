@@ -2,157 +2,122 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEB2C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4F8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96CB62075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1D720811
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 10:42:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jc5/ErcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbfC2Kmi (ORCPT
+        id S1729278AbfC2Kmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 06:42:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5763 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728737AbfC2Kmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 06:42:37 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AB8E973CA26D6D9B9EB3;
-        Fri, 29 Mar 2019 18:42:35 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Fri, 29 Mar 2019
- 18:42:25 +0800
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [RFC PATCH v2 1/3] resource: Request IO port regions from
- children of ioport_resource
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <1553105650-28012-1-git-send-email-john.garry@huawei.com>
- <1553105650-28012-2-git-send-email-john.garry@huawei.com>
- <20190325233255.GF24180@google.com>
- <b9164269-c2a1-e0fa-4c17-2d06fb42f39b@huawei.com>
- <20190326224810.GY24180@google.com> <20190328174655.GC19825@red-moon>
-CC:     <wangkefeng.wang@huawei.com>, <arnd@arndb.de>, <rafael@kernel.org>,
-        <linux-pci@vger.kernel.org>, Will Deacon <will.deacon@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <andy.shevchenko@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Catalin Marinas" <catalin.marinas@arm.com>, <bp@suse.de>,
-        <linux@roeck-us.net>
-Message-ID: <418943e2-19cd-f4b9-b5e1-2a49bce99b66@huawei.com>
-Date:   Fri, 29 Mar 2019 10:42:17 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Fri, 29 Mar 2019 06:42:46 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44415 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728737AbfC2Kmp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 06:42:45 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y7so1951075wrn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 03:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xjoUxT2gkADqHwB+nNuWWmWXvp2B9McV9Ra5Ovdxhsg=;
+        b=jc5/ErcRbqTGWc9QbkN1Y6HPztAcnWwu8U9zfE/caCAKzasJm4w88E9CN1Ep9q/D7F
+         InpIeAcNXTu8p8ceBfTR73GOpIAKg6NH+wd+8b21uPS0SJ29kuw6jgOvyU95ZzMXq67K
+         k8WWBAeFjPH4iXY3mn4mQQs5Q//sjdqu589v43/75QBvSWYqcVhoVxIBONBAAITZIXLs
+         nfDVO2XIdBZmfqM6uCBlUU+3lT0aiX8FJcd67eSqSNY2SsNPbycBCbkjTUyfySdgmxeZ
+         lmxVaNtuCXdFG2/2D4k+Kbku48BUmCon4d3EW1CoJnz1SOj6kRtM1wquzdlziaBiftlm
+         5lkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xjoUxT2gkADqHwB+nNuWWmWXvp2B9McV9Ra5Ovdxhsg=;
+        b=XtfCC0PvoPFMn8UM8QIORbCqCLD+CKfxA1B4rLcG8rSRnMluYqboioV72xz0sDLHNs
+         s78wdkUR8QFTk7yX8JVxRK9+sM3kDjHeMAa/sJVBk9yb/XE/HDmOwYxuVpKyFsYvXTm9
+         iTpdEIUpNnF393Ms65zDTXt+dREDxgUArkpNAMrKzaQvsWnFo+y+MuHDkQKJaYYUr5pU
+         XYxdqoBvfMtGnMvr9xQfPXPVXXfP8msCEJWyMUL3RDItteCN8q43QHcGSETxyf3Bl7gY
+         dWNqlva0YASp8wXvJQj4wQLX0otx7Hv70db61Jf3Z1DzR7VnJ6hY5MFNkBN05Javez4g
+         H1pA==
+X-Gm-Message-State: APjAAAVeC9E1wAJOZJuFGNZtX622GylQZhNY8a/Tl9IA5ULD7TRzhoN7
+        Du+h+YjvhPsq7/m3aHP4dCZ0Nw==
+X-Google-Smtp-Source: APXvYqyWb9L4wJ7B4TwT3YXN62UrChbKBqVp9DXuulQ+v/QLIQ0nGS8u4lI1P+KeBfI8cUT3mZ8s3Q==
+X-Received: by 2002:adf:ba81:: with SMTP id p1mr29266278wrg.192.1553856162947;
+        Fri, 29 Mar 2019 03:42:42 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id o15sm1632826wrj.59.2019.03.29.03.42.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 29 Mar 2019 03:42:41 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        dri-devel@lists.freedesktop.org, jernej.skrabec@siol.net,
+        heiko@sntech.de, maxime.ripard@bootlin.com, hjc@rock-chips.com,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RFC 0/5] drm/meson: Add support for HDMI2.0 YUV420 4k60
+Date:   Fri, 29 Mar 2019 11:42:35 +0100
+Message-Id: <20190329104240.29585-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190328174655.GC19825@red-moon>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/03/2019 17:46, Lorenzo Pieralisi wrote:
-> On Tue, Mar 26, 2019 at 05:48:10PM -0500, Bjorn Helgaas wrote:
->
-> [...]
->
+The Synopsys DW-HDMI CSC does not support downsampling to YUV420, so
+the encoder must downsamle before, feeding the controller with a YUV420
+pixel stream.
 
-Hi Lorenzo,
+The encoder must declare the new bus format enc encoding the bridge, in
+order to take it in account.
 
+To solve this, a new format_set() bridge op is added, permitting setting
+a new input bus format and encoding to the bridge chain.
 
->> I'm not convinced about this last sentence.
->>
->> It's true that on most modern systems, including that Intel PCH, the
->> Super I/O controller is attached via an LPC bridge on a PCI bus.
->>
->> But I don't think it's an actual requirement that PCI be involved.
->> There certainly once were systems, e.g., PC/104, that had ISA devices
->> but no PCI.  Maybe Super I/O attached via ISA is obsolete enough that
->> we don't care any more, but I really don't know.
->>
->>>> On x86, I think inb/inw/inl from a port where nothing responds
->>>> probably just returns ~0, and outb/outw/outl just get dropped.
->>>> Shouldn't arm64 do the same, without crashing?
->>>
->>> That would be ideal and we're doing something similar in patch 2/3.
->>>
->>> So on ARM64 we have to IO remap the PCI IO resource. If this mapping is not
->>> done (due to no PCI host), then any inb/inw/inl calls will crash the system.
->>
->> My take is that ARM64 is responsible for implementing inb/inw/inl in
->> such a way that they don't crash.  I don't think it's practical to
->> update all the old ISA drivers or even the core code to work around
->> that.
->
-> The problem is that those drivers are accessing a resource that does not
-> exist in practice, it is taken for granted on x86 systems (and on IA64)
-> because that was an actual bus (actual or emulated) and was made part of
-> the architecture. The ISA space is not necessarily tied to PCI,
-> at least not always.
->
-> Side note: these drivers can't be compiled on PPC, it would be
-> good to understand why, I have a hunch it can be related.
+This solves YUV420 setup, but also solved setting 10bit, 12bit or 16bit
+input bus format in order to support HDMI >8bit depths.
 
-I mentioned this earlier:
+The DW-HDMI controller is updated to dynamically select a coherent output
+bus format depending on the input bus format and on the internal CSC
+supported modes.
 
-I saw that in commits like 746cdfbf01c0 ("hwmon: Avoid building drivers 
-forpowerpc that read/write ISA addresses"), PPC would not build these
-drivers, as, like arm, it has no native ISA.
+The DW-HDMI is also updated to support the connector display_info bus_formats
+entry to permit forcing a specific output bus format to force, for example,
+an YUV444 output format instead of the default RGB output bus format.
 
-However I still don't think just avoiding compiling these drivers for 
-certain archs solves the problem.
+Only the meson DRM dw_hdmi glue allows ycbcr420 modes, so no breakage
+is expected here.
 
-[...]
+The remaining patches adds support for 4:2:0 output and clock setup for
+the meson DW-HDMI glue, and how YUV444 output can be forced.
 
->>>>> [1] https://www.spinics.net/lists/linux-pci/msg49821.html
->>>>
->>>> Please use a https://lore.kernel.org/ URL instead of spinics.net.
->>>
->>> ok, I hope that I can find this old thread.
->>
->> The beauty of lore.kernel.org is that the URL contains the Message-ID, so
->> it's easy build the URL and it would contain useful information even if
->> lore.kernel.org disappeared:
->>
->> https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
->
-> Yes, the bottom line is what Arnd outlined in the thread above.
->
-> ISA IO port space is not necessarily PCI but it does not exist
-> architecturally on ARM systems.
->
-> Taking the example of IA64, the ISA space is memory mapped (like any
-> other arch except for x86) but IIUC the virtual mapping for the ISA
-> port space _always_ exists on IA64 so this issue won't happen.
->
-> Arnd pointed out a solution in the thread above but I need to check
-> if that's feasible.
+Neil Armstrong (5):
+  drm/bridge: dw-hdmi: allow ycbcr420 modes for >= 0x200a
+  drm/bridge: add encoder support to specify bridge input format
+  drm/bridge: dw-hdmi: Add support for dynamic output format setup
+  drm/meson: Add YUV420 output support
+  drm/meson: Output in YUV444 if sink supports it
 
-I doubt that it can work now.
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 127 ++++++++++++++++++++--
+ drivers/gpu/drm/drm_bridge.c              |  35 ++++++
+ drivers/gpu/drm/meson/meson_dw_hdmi.c     | 111 ++++++++++++++++---
+ drivers/gpu/drm/meson/meson_vclk.c        |  93 ++++++++++++----
+ drivers/gpu/drm/meson/meson_vclk.h        |   7 +-
+ drivers/gpu/drm/meson/meson_venc.c        |   6 +-
+ drivers/gpu/drm/meson/meson_venc.h        |  11 ++
+ drivers/gpu/drm/meson/meson_venc_cvbs.c   |   3 +-
+ include/drm/bridge/dw_hdmi.h              |   1 +
+ include/drm/drm_bridge.h                  |  19 ++++
+ 10 files changed, 358 insertions(+), 55 deletions(-)
 
-Since we when introduced the concept of logical PIO space, this IO space 
-became sparely populated by 2 regions - MMIO and indirect IO - so we 
-cannot grow it as we map in regions. I also don't think it works for 
-when we IO unmap regions.
-
-Thanks,
-John
-
->
-> Lorenzo
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
-> .
->
-
+-- 
+2.21.0
 
