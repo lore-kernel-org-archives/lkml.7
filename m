@@ -6,40 +6,40 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308F2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EB6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05AC3218A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18207206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbfC2P1b (ORCPT
+        id S1729546AbfC2P2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:27:31 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.40]:32754 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728910AbfC2P1b (ORCPT
+        Fri, 29 Mar 2019 11:28:43 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.250]:21012 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728839AbfC2P2n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:27:31 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 642AA1026D24
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 10:27:30 -0500 (CDT)
+        Fri, 29 Mar 2019 11:28:43 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id F07A2E112
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 10:28:42 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 9tPmhPl3EYTGM9tPmhajfB; Fri, 29 Mar 2019 10:27:30 -0500
+        id 9tQwhg6mu2PzO9tQwhyEmI; Fri, 29 Mar 2019 10:28:42 -0500
 X-Authority-Reason: nr=8
-Received: from [189.250.126.17] (port=51972 helo=embeddedor)
+Received: from [189.250.126.17] (port=51976 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.91)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1h9tPj-002heF-Gp; Fri, 29 Mar 2019 10:27:29 -0500
-Date:   Fri, 29 Mar 2019 10:27:26 -0500
+        id 1h9tQw-002iI5-7e; Fri, 29 Mar 2019 10:28:42 -0500
+Date:   Fri, 29 Mar 2019 10:28:41 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 To:     Vishal Kulkarni <vishal@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>,
         Neil Horman <nhorman@tuxdriver.com>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH 1/2 net-next] cxgb3/l2t: Fix undefined behaviour
-Message-ID: <0d7b7e61aa857ea5273f8fd5fc98242b5d2a39b2.1553872521.git.gustavo@embeddedor.com>
+Subject: [PATCH 2/2 net-next] cxgb3/l2t: Use struct_size() in kvzalloc()
+Message-ID: <dff5311c52b3179f146c8a49cc58d32176743440.1553872521.git.gustavo@embeddedor.com>
 References: <cover.1553872521.git.gustavo@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,13 +54,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.250.126.17
 X-Source-L: No
-X-Exim-ID: 1h9tPj-002heF-Gp
+X-Exim-ID: 1h9tQw-002iI5-7e
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.126.17]:51972
+X-Source-Sender: (embeddedor) [189.250.126.17]:51976
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
+X-Email-Count: 15
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,43 +68,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The use of zero-sized array causes undefined behaviour when it is not
-the last member in a structure. As it happens to be in this case.
-
-Also, the current code makes use of a language extension to the C90
-standard, but the preferred mechanism to declare variable-length
-types such as this one is a flexible array member, introduced in
-C99:
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
 struct foo {
-        int stuff;
-        struct boo array[];
+    int stuff;
+    struct boo entry[];
 };
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last. Which is beneficial
-to cultivate a high-quality code.
+size = sizeof(struct foo) + count * sizeof(struct boo);
+instance = kvzalloc(size, GFP_KERNEL);
 
-Fixes: e48f129c2f20 ("[SCSI] cxgb3i: convert cdev->l2opt to use rcu to prevent NULL dereference")
+Instead of leaving these open-coded and prone to type mistakes, we can
+now use the new struct_size() helper:
+
+instance = kvzalloc(struct_size(instance, entry, count), GFP_KERNEL);
+
+Notice that, in this case, variable size is not necessary, hence
+it is removed.
+
+This code was detected with the help of Coccinelle.
+
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/net/ethernet/chelsio/cxgb3/l2t.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb3/l2t.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/l2t.h b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-index c2fd323c4078..ea75f275023f 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-+++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-@@ -75,8 +75,8 @@ struct l2t_data {
- 	struct l2t_entry *rover;	/* starting point for next allocation */
- 	atomic_t nfree;		/* number of free entries */
- 	rwlock_t lock;
--	struct l2t_entry l2tab[0];
- 	struct rcu_head rcu_head;	/* to handle rcu cleanup */
-+	struct l2t_entry l2tab[];
- };
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/l2t.c b/drivers/net/ethernet/chelsio/cxgb3/l2t.c
+index 0e9182d3f02c..b3e4118a15e7 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/l2t.c
++++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.c
+@@ -443,9 +443,9 @@ void t3_l2t_update(struct t3cdev *dev, struct neighbour *neigh)
+ struct l2t_data *t3_init_l2t(unsigned int l2t_capacity)
+ {
+ 	struct l2t_data *d;
+-	int i, size = sizeof(*d) + l2t_capacity * sizeof(struct l2t_entry);
++	int i;
  
- typedef void (*arp_failure_handler_func)(struct t3cdev * dev,
+-	d = kvzalloc(size, GFP_KERNEL);
++	d = kvzalloc(struct_size(d, l2tab, l2t_capacity), GFP_KERNEL);
+ 	if (!d)
+ 		return NULL;
+ 
 -- 
 2.21.0
 
