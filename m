@@ -2,152 +2,150 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFA4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C1CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C4E218D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C6F218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 15:47:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JvVDuvRu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LRagdDwq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729639AbfC2PrG (ORCPT
+        id S1729701AbfC2PrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 11:47:06 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45508 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728720AbfC2PrF (ORCPT
+        Fri, 29 Mar 2019 11:47:22 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49772 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729269AbfC2PrV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 11:47:05 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2TFiEpq086454;
-        Fri, 29 Mar 2019 15:46:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=lS0u088dL4tnbqma1voQcLEpll1W+vEvDUZXzHWfnBo=;
- b=JvVDuvRunQP1KMAE/WMz1dVGJxaue8MjvvO8m2ULN97VNbZNXR2rrsAkHs4fUZ1R7P5O
- rcvydEoL3emw64unbVihcIaAtDRQarCV4GGpw1xBruPbc3TEKoEaJQW0oDHJ6zejCM83
- evDvIys7lAraI6//FxemDB3PO/kSOrFDjOvQizwR+9lJqQb3SdbYO+17tL2TSElIZdgZ
- 5TDqy87jXYq6rPPcO1Ro3kBxkgL3+TJyGCTvJ4vgzy2QIbEl4Ug0A+x97hFTusEJq8BW
- UBgR2Ei7QIbzL9kVCsn7juV5YOpUFiMBkkjADJcWCZRScNxcYRt2IVaYLK9tPM5QE4uD 9A== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2130.oracle.com with ESMTP id 2re6g1n7jv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 15:46:59 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2TFkrjI029891
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Mar 2019 15:46:53 GMT
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2TFkqox003631;
-        Fri, 29 Mar 2019 15:46:52 GMT
-Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 29 Mar 2019 08:46:51 -0700
-Subject: Re: [PATCH] x86/Xen: streamline (and fix) PV CPU enumeration
-To:     Jan Beulich <JBeulich@suse.com>
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org
-References: <5C9B92EA020000780022227B@prv1-mh.provo.novell.com>
- <2f027b4b-dce2-3e90-dc1b-c824bc8eb355@oracle.com>
- <5C9C8DDC0200007800222606@prv1-mh.provo.novell.com>
- <eda3938f-02a5-e5a2-4718-d75bc488f296@oracle.com>
- <5C9DDD530200007800222B22@prv1-mh.provo.novell.com>
- <24df98be-21e7-617e-7651-ae34e2a2e512@oracle.com>
- <5C9E35EF0200007800222E0B@prv1-mh.provo.novell.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <67fe1063-128a-7dfd-3d8d-8915a80b807d@oracle.com>
-Date:   Fri, 29 Mar 2019 11:46:49 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 29 Mar 2019 11:47:21 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2TFlGIC000368;
+        Fri, 29 Mar 2019 10:47:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553874436;
+        bh=AmbVrhxS9g/ZR6yBKcKLqSqDLiYJR2GhKSi862P1jss=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=LRagdDwqJAoRKgvHtDRiaDVSkA4zcImvgSZrqyNCC7XsLaQkMrewEq2EjMxc8kPuI
+         9PdcCqGlPrcY6Jp374YEQwUB/xiU5LPgHUxrfH2vBL773tE09A1JZc7ZxhM5fhvx2r
+         A1K1VYMregcObjf5P7U814u/H+3SPXYqpBm/T4iA=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2TFlGoh040859
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 Mar 2019 10:47:16 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 29
+ Mar 2019 10:47:15 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 29 Mar 2019 10:47:15 -0500
+Received: from legion.dal.desgin.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2TFlF28074385;
+        Fri, 29 Mar 2019 10:47:15 -0500
+Received: from localhost ([10.250.67.168])
+        by legion.dal.desgin.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x2TFlFU27657;
+        Fri, 29 Mar 2019 10:47:15 -0500 (CDT)
+From:   "Andrew F. Davis" <afd@ti.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+Subject: [PATCH v3 2/2] ASoC: tlv320aic31xx: Add button press detection
+Date:   Fri, 29 Mar 2019 10:47:04 -0500
+Message-ID: <20190329154704.4922-2-afd@ti.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190329154704.4922-1-afd@ti.com>
+References: <20190329154704.4922-1-afd@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <5C9E35EF0200007800222E0B@prv1-mh.provo.novell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9211 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903290112
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/29/19 11:12 AM, Jan Beulich wrote:
->>>> On 29.03.19 at 14:42, <boris.ostrovsky@oracle.com> wrote:
->> On 3/29/19 4:54 AM, Jan Beulich wrote:
->>>>>> On 28.03.19 at 17:50, <boris.ostrovsky@oracle.com> wrote:
->>>> Given especially xen_pv_smp_prepare_cpus(), I think re-working proper
->>>> setting of present/possible masks is well beyond the scope of your
->>>> original patch.
->>> Well, then the question is, what (if any) changes are you
->>> expecting me to make for this change to be acceptable? Or do
->>> you perhaps want me to add a 2nd patch on top addressing
->>> the other outlined anomalies?
->> If your goal is just to fix the dom0_max_vcpus issue then this patch is
->> sufficient (but the commit message should say that this is what the
->> patch is for).
->>
->> But if you are trying to make cpu masks management done properly then I
->> think this patch alone does not address this fully.
-> I.e. folding the further items discussed into this patch would be
-> fine by you? (I'm just trying to avoid having to go through
-> several more rounds of patch submissions.)
+This device can optionally detect headset or microphone button presses.
+Add support for this by passing this event to the jack layer.
 
-If you decide to pursue this (mask management) then it's up to you ---
-if you feel you can/should do it all in a single patch then I don't see
-why not.
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
 
--boris
+Changes from v1:
+ - Rebase
+
+Changes from v2:
+ - Rebase
+
+ sound/soc/codecs/tlv320aic31xx.c | 17 +++++++++++++++--
+ sound/soc/codecs/tlv320aic31xx.h |  3 ++-
+ 2 files changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
+index 3e11b3d41f3d..f59632ed2230 100644
+--- a/sound/soc/codecs/tlv320aic31xx.c
++++ b/sound/soc/codecs/tlv320aic31xx.c
+@@ -1380,10 +1380,21 @@ static irqreturn_t aic31xx_irq(int irq, void *data)
+ 		dev_err(dev, "Short circuit on Left output is detected\n");
+ 	if (value & AIC31XX_HPRSCDETECT)
+ 		dev_err(dev, "Short circuit on Right output is detected\n");
+-	if (value & AIC31XX_HSPLUG) {
++	if (value & (AIC31XX_HSPLUG | AIC31XX_BUTTONPRESS)) {
+ 		unsigned int val;
+ 		int status = 0;
+ 
++		ret = regmap_read(aic31xx->regmap, AIC31XX_INTRDACFLAG2,
++				  &val);
++		if (ret) {
++			dev_err(dev, "Failed to read interrupt mask: %d\n",
++				ret);
++			goto exit;
++		}
++
++		if (val & AIC31XX_BUTTONPRESS)
++			status |= SND_JACK_BTN_0;
++
+ 		ret = regmap_read(aic31xx->regmap, AIC31XX_HSDETECT, &val);
+ 		if (ret) {
+ 			dev_err(dev, "Failed to read headset type: %d\n", ret);
+@@ -1408,7 +1419,8 @@ static irqreturn_t aic31xx_irq(int irq, void *data)
+ 	}
+ 	if (value & ~(AIC31XX_HPLSCDETECT |
+ 		      AIC31XX_HPRSCDETECT |
+-		      AIC31XX_HSPLUG))
++		      AIC31XX_HSPLUG |
++		      AIC31XX_BUTTONPRESS))
+ 		dev_err(dev, "Unknown DAC interrupt flags: 0x%08x\n", value);
+ 
+ read_overflow:
+@@ -1522,6 +1534,7 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
+ 
+ 		regmap_write(aic31xx->regmap, AIC31XX_INT1CTRL,
+ 			     AIC31XX_HSPLUGDET |
++			     AIC31XX_BUTTONPRESSDET |
+ 			     AIC31XX_SC |
+ 			     AIC31XX_ENGINE);
+ 
+diff --git a/sound/soc/codecs/tlv320aic31xx.h b/sound/soc/codecs/tlv320aic31xx.h
+index 9985ceed97ae..cb024955c978 100644
+--- a/sound/soc/codecs/tlv320aic31xx.h
++++ b/sound/soc/codecs/tlv320aic31xx.h
+@@ -21,7 +21,8 @@
+ #define DAC31XX_BIT			BIT(3)
+ 
+ #define AIC31XX_JACK_MASK (SND_JACK_HEADPHONE | \
+-			   SND_JACK_HEADSET)
++			   SND_JACK_HEADSET | \
++			   SND_JACK_BTN_0)
+ 
+ enum aic31xx_type {
+ 	AIC3100	= 0,
+-- 
+2.21.0
+
