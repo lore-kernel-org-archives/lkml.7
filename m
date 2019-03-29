@@ -2,117 +2,105 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B52BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D0EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4C62075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:05:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FTQr6Kw4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FTQr6Kw4"
+	by mail.kernel.org (Postfix) with ESMTP id 4C9D62075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 21:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730265AbfC2VFQ (ORCPT
+        id S1730217AbfC2VI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 17:05:16 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34124 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729484AbfC2VFQ (ORCPT
+        Fri, 29 Mar 2019 17:08:57 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38341 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729734AbfC2VI4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 17:05:16 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E195D6087F; Fri, 29 Mar 2019 21:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553893514;
-        bh=Bm+FhgcWpIOxRWZE783xh+grrAzGVTZ46mPn0ETr6Eg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FTQr6Kw4PEkGKhKQjiXqbt+EFixyNyzCr5goqfjpMQbtaeZOvJDnERHpr/x+4dhC8
-         efBq8miCtuK8hLoez4sqwE9ks/ALxxEGMgLowqNsk1WfGBCKRN20EftdRtAaEjUQ8V
-         l67avATSmU4p9KYZM/oS0jVpBpx84fWxhpMUvbkA=
-Received: from [10.79.168.116] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 79C40602FC;
-        Fri, 29 Mar 2019 21:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553893514;
-        bh=Bm+FhgcWpIOxRWZE783xh+grrAzGVTZ46mPn0ETr6Eg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FTQr6Kw4PEkGKhKQjiXqbt+EFixyNyzCr5goqfjpMQbtaeZOvJDnERHpr/x+4dhC8
-         efBq8miCtuK8hLoez4sqwE9ks/ALxxEGMgLowqNsk1WfGBCKRN20EftdRtAaEjUQ8V
-         l67avATSmU4p9KYZM/oS0jVpBpx84fWxhpMUvbkA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 79C40602FC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH v2 2/2] MAINTAINERS: Add maintainer and replacing reviewer
- ARM/NUVOTON NPCM
-To:     Benjamin Fair <benjaminfair@google.com>,
-        Tomer Maimon <tmaimon77@gmail.com>
-Cc:     joe@perches.com, avifishman70@gmail.com,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Tali Perry <tali.perry1@gmail.com>, akpm@linux-foundation.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-References: <20190328235752.334462-1-tmaimon77@gmail.com>
- <20190328235752.334462-2-tmaimon77@gmail.com>
- <CADKL2t5VuWA=Cx9q9Ddx+rZGbe1YoRKMWwfdFOCyxuGiMCOiPg@mail.gmail.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <3fbe0a4e-bb9f-3a20-32e4-6ea0d3155a04@codeaurora.org>
-Date:   Sat, 30 Mar 2019 02:35:03 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 29 Mar 2019 17:08:56 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h9yk8-0000iv-Mq; Fri, 29 Mar 2019 22:08:52 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h9yk7-0006bi-Kz; Fri, 29 Mar 2019 22:08:51 +0100
+Date:   Fri, 29 Mar 2019 22:08:51 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     laurentiu.tudor@nxp.com
+Cc:     linux-i2c@vger.kernel.org, wsa+renesas@sang-engineering.com,
+        linux-kernel@vger.kernel.org, leoyang.li@nxp.com,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH] i2c: imx: don't leak the i2c adapter on error
+Message-ID: <20190329210851.gi57f5jamxio3mxr@pengutronix.de>
+References: <20190329124817.6717-1-laurentiu.tudor@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <CADKL2t5VuWA=Cx9q9Ddx+rZGbe1YoRKMWwfdFOCyxuGiMCOiPg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190329124817.6717-1-laurentiu.tudor@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 29, 2019 at 02:48:17PM +0200, laurentiu.tudor@nxp.com wrote:
+> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> 
+> Make sure to free the i2c adapter on the error exit path.
+> 
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-On 3/29/2019 11:02 PM, Benjamin Fair wrote:
-> On Thu, Mar 28, 2019 at 4:58 PM Tomer Maimon <tmaimon77@gmail.com> wrote:
->> Adding Tali Perry as Nuvoton NPCM maintainer
->> Replacing Brendan Higgins Nuvoton NPCM reviewer with
->> Benjamin Fair.
->>
->> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
->> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Benjamin Fair <benjaminfair@google.com>
+>  drivers/i2c/busses/i2c-imx.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index 42fed40198a0..2dfd33f48cd8 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -1169,11 +1169,13 @@ static int i2c_imx_probe(struct platform_device *pdev)
+>  	/* Init DMA config if supported */
+>  	ret = i2c_imx_dma_request(i2c_imx, phy_addr);
+>  	if (ret < 0)
+> -		goto clk_notifier_unregister;
+> +		goto del_adapter;
+>  
+>  	dev_info(&i2c_imx->adapter.dev, "IMX I2C adapter registered\n");
+>  	return 0;   /* Return OK */
+>  
+> +del_adapter:
+> +	 i2c_del_adapter(&i2c_imx->adapter);
 
+Indention problem here, please remove the superflous space here.
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Other than that:
 
->
->> ---
->>   MAINTAINERS | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 8b305d2f2a8a..4ece87fcc166 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -1893,9 +1893,10 @@ T:       git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git
->>   ARM/NUVOTON NPCM ARCHITECTURE
->>   M:     Avi Fishman <avifishman70@gmail.com>
->>   M:     Tomer Maimon <tmaimon77@gmail.com>
->> +M:     Tali Perry <tali.perry1@gmail.com>
->>   R:     Patrick Venture <venture@google.com>
->>   R:     Nancy Yuen <yuenn@google.com>
->> -R:     Brendan Higgins <brendanhiggins@google.com>
->> +R:     Benjamin Fair <benjaminfair@google.com>
->>   L:     openbmc@lists.ozlabs.org (moderated for non-subscribers)
->>   S:     Supported
->>   F:     arch/arm/mach-npcm/
->> --
->> 2.14.1
->>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Fixes: e1ab9a468e3b ("i2c: imx: improve the error handling in i2c_imx_dma_request()")
+
+Thanks
+Uwe
+
+>  clk_notifier_unregister:
+>  	clk_notifier_unregister(i2c_imx->clk, &i2c_imx->clk_change_nb);
+>  rpm_disable:
+> -- 
+> 2.17.1
+> 
+> 
+> 
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
