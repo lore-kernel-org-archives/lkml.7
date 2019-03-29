@@ -7,129 +7,223 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD972C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46190C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F66217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08062206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 16:39:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="nyXYIod6"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="trFQUzSB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbfC2Qiy (ORCPT
+        id S1729893AbfC2Qij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 12:38:54 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:40082 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729796AbfC2Qij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Mar 2019 12:38:39 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:52609 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729796AbfC2Qif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 12:38:35 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44W6qx3vvVz9tyQj;
-        Fri, 29 Mar 2019 17:38:37 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 44W6qr2tsqz9tyQd;
+        Fri, 29 Mar 2019 17:38:32 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=nyXYIod6; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=trFQUzSB; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id AglH_oIGkeWC; Fri, 29 Mar 2019 17:38:37 +0100 (CET)
+        with ESMTP id MZ2F4kzoKJS9; Fri, 29 Mar 2019 17:38:32 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44W6qx2s6Dz9tyQR;
-        Fri, 29 Mar 2019 17:38:37 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44W6qr1mfdz9tyQP;
+        Fri, 29 Mar 2019 17:38:32 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553877517; bh=DsBNl9Sur9OH4PdUs/hysFTLVmz5ylaox1/f92Sqvd8=;
+        t=1553877512; bh=Nn7y9niThmKUvevx3q50lC3WSkdJf9qvxs5/rH9nF4U=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=nyXYIod6pPssD/qU4noHRCfYT525MBEvMU9Wgzk1LG+QUimSD2fx7YqBqYoEXNtHV
-         yGU5P73h5tLN3abw0dYDIMAYfgn3OVyJec8eyZlFp/C/eEa0Sz3l5JjGahChOo9eJR
-         0UhyU0ZZCB9jBfl2SurWY9pF1vvxWaV9X2hORn4k=
+        b=trFQUzSB1y8DIVI15we5QcMCOisaM+0apejZ3p/HTAVfyCFZEIVikPLg3Q8qkD1XD
+         F5Q00w5/g07HNhu8cqP+K5V/IrpWIm6UKZEA69QdkVUU0YTe2Wewq0OJ7JpArW/kXD
+         NH3cq2UVxG4XjadMfxRKNd6iIvKo7yh0vDv2tyZQ=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 050768B93D;
-        Fri, 29 Mar 2019 17:38:39 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D46EB8B93D;
+        Fri, 29 Mar 2019 17:38:33 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id L-087Tu9WM4e; Fri, 29 Mar 2019 17:38:38 +0100 (CET)
+        with ESMTP id sVRb1EBIRJsU; Fri, 29 Mar 2019 17:38:33 +0100 (CET)
 Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E2D498B938;
-        Fri, 29 Mar 2019 17:38:38 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B21CF8B938;
+        Fri, 29 Mar 2019 17:38:33 +0100 (CET)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id C3AB16FC56; Fri, 29 Mar 2019 16:38:38 +0000 (UTC)
-Message-Id: <7b2c2ab6328b33b3cacc47d24f5cb20b6fcbf96b.1553877076.git.christophe.leroy@c-s.fr>
+        id 9A2D16FC56; Fri, 29 Mar 2019 16:38:33 +0000 (UTC)
+Message-Id: <516db0beacc65176837838f8c62d2aa6d8de74ce.1553877076.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1553877076.git.christophe.leroy@c-s.fr>
 References: <cover.1553877076.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 16/17] powerpc/32: don't do syscall stuff in
- transfer_to_handler
+Subject: [PATCH v2 11/17] powerpc/32: get rid of COPY_EE in exception entry
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 29 Mar 2019 16:38:38 +0000 (UTC)
+Date:   Fri, 29 Mar 2019 16:38:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As syscalls are now handled via a fast entry path, syscall related
-actions can be removed from the generic transfer_to_handler path.
+EXC_XFER_TEMPLATE() is not called with COPY_EE anymore so
+we can get rid of copyee parameters and related COPY_EE and NOCOPY
+macros.
+
+Suggested-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+[splited out from benh RFC patch]
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/entry_32.S | 19 -------------------
- 1 file changed, 19 deletions(-)
+ arch/powerpc/kernel/head_32.h    | 12 ++++--------
+ arch/powerpc/kernel/head_40x.S   |  8 +++-----
+ arch/powerpc/kernel/head_booke.h | 22 ++++++++--------------
+ 3 files changed, 15 insertions(+), 27 deletions(-)
 
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index edd119d3c52b..c648b75f41a3 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -211,7 +211,6 @@ transfer_to_handler_cont:
- 	 */
- 	tophys(r12, r1)
- 	lwz	r12,_MSR(r12)
--	xor	r12,r10,r12
- 	andi.	r12,r12,MSR_EE
- 	bne	1f
+diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
+index 8881b6887841..14cb0af2f494 100644
+--- a/arch/powerpc/kernel/head_32.h
++++ b/arch/powerpc/kernel/head_32.h
+@@ -103,28 +103,24 @@
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD;	\
+ 	xfer(n, hdlr)
  
-@@ -252,9 +251,6 @@ reenable_mmu:
- 	 * the rest is restored from the exception frame.
- 	 */
+-#define EXC_XFER_TEMPLATE(hdlr, trap, msr, copyee, tfer, ret)	\
++#define EXC_XFER_TEMPLATE(hdlr, trap, msr, tfer, ret)		\
+ 	li	r10,trap;					\
+ 	stw	r10,_TRAP(r11);					\
+ 	LOAD_MSR_KERNEL(r10, msr);				\
+-	copyee(r10, r9);					\
+ 	bl	tfer;						\
+ 	.long	hdlr;						\
+ 	.long	ret
  
--	/* Are we enabling or disabling interrupts ? */
--	andi.	r0,r10,MSR_EE
+-#define COPY_EE(d, s)		rlwimi d,s,0,MSR_EE
+-#define NOCOPY(d, s)
 -
- 	stwu	r1,-32(r1)
- 	stw	r9,8(r1)
- 	stw	r11,12(r1)
-@@ -262,8 +258,6 @@ reenable_mmu:
- 	stw	r4,20(r1)
- 	stw	r5,24(r1)
+ #define EXC_XFER_STD(n, hdlr)		\
+-	EXC_XFER_TEMPLATE(hdlr, n, MSR_KERNEL, NOCOPY, transfer_to_handler_full,	\
++	EXC_XFER_TEMPLATE(hdlr, n, MSR_KERNEL, transfer_to_handler_full,	\
+ 			  ret_from_except_full)
  
--	bne-	0f
--
- 	/* If we are disabling interrupts (normal case), simply log it with
- 	 * lockdep
- 	 */
-@@ -281,19 +275,6 @@ reenable_mmu:
- 	mtctr	r11
- 	mtlr	r9
- 	bctr				/* jump to handler */
--
--	/* If we are enabling interrupt, this is a syscall. They shouldn't
--	 * happen while interrupts are disabled, so let's do a warning here.
--	 */
--0:	trap
--	EMIT_BUG_ENTRY 0b,__FILE__,__LINE__, BUGFLAG_WARNING
--	bl	trace_hardirqs_on
--
--	/* Now enable for real */
--	mfmsr	r10
--	ori	r10,r10,MSR_EE
--	mtmsr	r10
--	b	2b
- #endif /* CONFIG_TRACE_IRQFLAGS */
+ #define EXC_XFER_LITE(n, hdlr)		\
+-	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL, NOCOPY, transfer_to_handler, \
++	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL, transfer_to_handler, \
+ 			  ret_from_except)
  
- #if defined (CONFIG_PPC_BOOK3S_32) || defined(CONFIG_E500)
+ #define EXC_XFER_SYS(n, hdlr)		\
+-	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL | MSR_EE, NOCOPY, transfer_to_handler, \
++	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL | MSR_EE, transfer_to_handler, \
+ 			  ret_from_except)
+ 
+ #endif /* __HEAD_32_H__ */
+diff --git a/arch/powerpc/kernel/head_40x.S b/arch/powerpc/kernel/head_40x.S
+index 71597fb7cd89..b68de183faf1 100644
+--- a/arch/powerpc/kernel/head_40x.S
++++ b/arch/powerpc/kernel/head_40x.S
+@@ -166,8 +166,7 @@ _ENTRY(saved_ksp_limit)
+ 	CRITICAL_EXCEPTION_PROLOG;				\
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD;			\
+ 	EXC_XFER_TEMPLATE(hdlr, n+2, (MSR_KERNEL & ~(MSR_ME|MSR_DE|MSR_CE)), \
+-			  NOCOPY, crit_transfer_to_handler,	\
+-			  ret_from_crit_exc)
++			  crit_transfer_to_handler, ret_from_crit_exc)
+ 
+ /*
+  * 0x0100 - Critical Interrupt Exception
+@@ -651,7 +650,7 @@ _ENTRY(saved_ksp_limit)
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	EXC_XFER_TEMPLATE(DebugException, 0x2002, \
+ 		(MSR_KERNEL & ~(MSR_ME|MSR_DE|MSR_CE)), \
+-		NOCOPY, crit_transfer_to_handler, ret_from_crit_exc)
++		crit_transfer_to_handler, ret_from_crit_exc)
+ 
+ 	/* Programmable Interval Timer (PIT) Exception. (from 0x1000) */
+ Decrementer:
+@@ -673,8 +672,7 @@ WDTException:
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD;
+ 	EXC_XFER_TEMPLATE(WatchdogException, 0x1020+2,
+ 	                  (MSR_KERNEL & ~(MSR_ME|MSR_DE|MSR_CE)),
+-			  NOCOPY, crit_transfer_to_handler,
+-			  ret_from_crit_exc)
++			  crit_transfer_to_handler, ret_from_crit_exc)
+ 
+ /*
+  * The other Data TLB exceptions bail out to this point
+diff --git a/arch/powerpc/kernel/head_booke.h b/arch/powerpc/kernel/head_booke.h
+index 264976c43f34..56dd1341eb3d 100644
+--- a/arch/powerpc/kernel/head_booke.h
++++ b/arch/powerpc/kernel/head_booke.h
+@@ -217,8 +217,7 @@ END_BTB_FLUSH_SECTION
+ 	CRITICAL_EXCEPTION_PROLOG(intno);				\
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD;				\
+ 	EXC_XFER_TEMPLATE(hdlr, n+2, (MSR_KERNEL & ~(MSR_ME|MSR_DE|MSR_CE)), \
+-			  NOCOPY, crit_transfer_to_handler, \
+-			  ret_from_crit_exc)
++			  crit_transfer_to_handler, ret_from_crit_exc)
+ 
+ #define MCHECK_EXCEPTION(n, label, hdlr)			\
+ 	START_EXCEPTION(label);					\
+@@ -227,32 +226,27 @@ END_BTB_FLUSH_SECTION
+ 	stw	r5,_ESR(r11);					\
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD;			\
+ 	EXC_XFER_TEMPLATE(hdlr, n+4, (MSR_KERNEL & ~(MSR_ME|MSR_DE|MSR_CE)), \
+-			  NOCOPY, mcheck_transfer_to_handler,   \
+-			  ret_from_mcheck_exc)
++			  mcheck_transfer_to_handler, ret_from_mcheck_exc)
+ 
+-#define EXC_XFER_TEMPLATE(hdlr, trap, msr, copyee, tfer, ret)	\
++#define EXC_XFER_TEMPLATE(hdlr, trap, msr, tfer, ret)	\
+ 	li	r10,trap;					\
+ 	stw	r10,_TRAP(r11);					\
+ 	lis	r10,msr@h;					\
+ 	ori	r10,r10,msr@l;					\
+-	copyee(r10, r9);					\
+ 	bl	tfer;		 				\
+ 	.long	hdlr;						\
+ 	.long	ret
+ 
+-#define COPY_EE(d, s)		rlwimi d,s,0,16,16
+-#define NOCOPY(d, s)
+-
+ #define EXC_XFER_STD(n, hdlr)		\
+-	EXC_XFER_TEMPLATE(hdlr, n, MSR_KERNEL, NOCOPY, transfer_to_handler_full, \
++	EXC_XFER_TEMPLATE(hdlr, n, MSR_KERNEL, transfer_to_handler_full, \
+ 			  ret_from_except_full)
+ 
+ #define EXC_XFER_LITE(n, hdlr)		\
+-	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL, NOCOPY, transfer_to_handler, \
++	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL, transfer_to_handler, \
+ 			  ret_from_except)
+ 
+ #define EXC_XFER_SYS(n, hdlr)						\
+-	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL | MSR_EE, NOCOPY, transfer_to_handler, \
++	EXC_XFER_TEMPLATE(hdlr, n+1, MSR_KERNEL | MSR_EE, transfer_to_handler, \
+ 			  ret_from_except)
+ 
+ /* Check for a single step debug exception while in an exception
+@@ -319,7 +313,7 @@ END_BTB_FLUSH_SECTION
+ 	/* continue normal handling for a debug exception... */		      \
+ 2:	mfspr	r4,SPRN_DBSR;						      \
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD;				      \
+-	EXC_XFER_TEMPLATE(DebugException, 0x2008, (MSR_KERNEL & ~(MSR_ME|MSR_DE|MSR_CE)), NOCOPY, debug_transfer_to_handler, ret_from_debug_exc)
++	EXC_XFER_TEMPLATE(DebugException, 0x2008, (MSR_KERNEL & ~(MSR_ME|MSR_DE|MSR_CE)), debug_transfer_to_handler, ret_from_debug_exc)
+ 
+ #define DEBUG_CRIT_EXCEPTION						      \
+ 	START_EXCEPTION(DebugCrit);					      \
+@@ -372,7 +366,7 @@ END_BTB_FLUSH_SECTION
+ 	/* continue normal handling for a critical exception... */	      \
+ 2:	mfspr	r4,SPRN_DBSR;						      \
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD;				      \
+-	EXC_XFER_TEMPLATE(DebugException, 0x2002, (MSR_KERNEL & ~(MSR_ME|MSR_DE|MSR_CE)), NOCOPY, crit_transfer_to_handler, ret_from_crit_exc)
++	EXC_XFER_TEMPLATE(DebugException, 0x2002, (MSR_KERNEL & ~(MSR_ME|MSR_DE|MSR_CE)), crit_transfer_to_handler, ret_from_crit_exc)
+ 
+ #define DATA_STORAGE_EXCEPTION						      \
+ 	START_EXCEPTION(DataStorage)					      \
 -- 
 2.13.3
 
