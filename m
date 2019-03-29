@@ -2,57 +2,101 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6883EC10F05
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ED4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37406218A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:01:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="djw4196f"
+	by mail.kernel.org (Postfix) with ESMTP id 43EB4218A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 18:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553882592;
+	bh=vox8oGBRQV+MgZtRkkqSzuj2o6548YVpFsXtBmRJfBk=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=CId1V6z02v295808rQMy7gVp58LkP0+p+bKPG+CvoxzGwt2xEeX0hXpo63a17ma0f
+	 pvs8pshN7lylzzUyInkzEYAiQHfT5hdTp+mNjLrraGxjmLSLVwcISJrLsVAMoZ5Hhq
+	 8HDiJEL16g4qHdJw4OHiQ4LMN5+b8K93Xbjt+At0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbfC2SBX (ORCPT
+        id S1729925AbfC2SDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 14:01:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57976 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729702AbfC2SBX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 14:01:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dd5MRiFBsN+AsSinzvLVsYwYGLT+K1KoqVgd4aICLWI=; b=djw4196fs7me/2RwMmGT2/Hbm
-        gPLkrFCdsSxgDNZ9TtT2SJuF7swl5kDNMYn97QPHtcC/PP0/5yCjIuzi4b92h3fi48pXcKVmVzhKW
-        N/D9RlOik/hcGz836JhB7hx8EC26CNlp2t5ygx+6SuwxOl8/F4uH4Y5Vbw3h0oqbwQJasqznuthAQ
-        Khg9Rhk6iUo+O8kLjaMuxeQa17ulfsa25amkAUdrpllUhJGNzHPsQ4kZQAnPJDrhe8fsx3WCg6L3r
-        ilO/DhaA44rqrOC+cVIKMnlHMym7e5k7LRdY3r6B6vH+D5xafK6QT9UGKZrSsMieeUIPs8lUwtVgw
-        UqUMs0QQw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h9voa-0008Jr-T2; Fri, 29 Mar 2019 18:01:21 +0000
-Subject: Re: [PATCH] gcov: include linux/module.h for within_module
-To:     Nick Desaulniers <ndesaulniers@google.com>, oberpar@linux.ibm.com,
-        akpm@linux-foundation.org
-Cc:     Greg Hackmann <ghackmann@android.com>, Tri Vo <trong@android.com>,
-        linux-mm@kvack.org, kbuild-all@01.org,
-        kbuild test robot <lkp@intel.com>,
+        Fri, 29 Mar 2019 14:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729702AbfC2SDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 14:03:10 -0400
+Received: from [192.168.1.3] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16960206B7;
+        Fri, 29 Mar 2019 18:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553882589;
+        bh=vox8oGBRQV+MgZtRkkqSzuj2o6548YVpFsXtBmRJfBk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fhPEDeWNMsZyGnULebOowHUa2bteHSMSb7lHfCjKmdvb9eXbPHz24eFMqhxx6OB2T
+         QW5JuUM/p5xBQ33cVIoZjM3JDdzJdJ9aH0gw5LbHD5XOaXuqQhciGaddYQ5/luP8ol
+         GsxrGasyZ0JTdxiTh6TnkHdRJogIZgDIBB95ye/M=
+Subject: Re: [PATCHv3 3/3] arm64: dts: stratix10: Use new Stratix10 EDAC
+ bindings
+To:     thor.thayer@linux.intel.com, bp@alien8.de, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     mchehab@kernel.org, james.morse@arm.com,
+        devicetree@vger.kernel.org, linux-edac@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <201903291603.7podsjD7%lkp@intel.com>
- <20190329174541.79972-1-ndesaulniers@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9f1ad3e1-fad7-2fb4-31c0-d31832468143@infradead.org>
-Date:   Fri, 29 Mar 2019 11:01:15 -0700
+References: <1553529476-26181-1-git-send-email-thor.thayer@linux.intel.com>
+ <1553529476-26181-4-git-send-email-thor.thayer@linux.intel.com>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <519c8bc3-1f04-2e9c-00a0-147f23db1a44@kernel.org>
+Date:   Fri, 29 Mar 2019 13:03:08 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190329174541.79972-1-ndesaulniers@google.com>
+In-Reply-To: <1553529476-26181-4-git-send-email-thor.thayer@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -61,58 +105,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/29/19 10:45 AM, Nick Desaulniers wrote:
-> Fixes commit 8c3d220cb6b5 ("gcov: clang support")
+
+
+On 3/25/19 10:57 AM, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
 > 
-> Cc: Greg Hackmann <ghackmann@android.com>
-> Cc: Tri Vo <trong@android.com>
-> Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-> Cc: linux-mm@kvack.org
-> Cc: kbuild-all@01.org
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-see https://lore.kernel.org/linux-mm/20190328225107.ULwYw%25akpm@linux-foundation.org/T/#mee26c00158574326e807480fc39dfcbd7bebd5fd
-
-Did you test this?  kernel/gcov/gcc_4_7.c includes local "gcov.h",
-which includes <linux/module.h>, so why didn't that work or why
-does this patch work?
-
-thanks.
-
+> Use the new Stratix10 binding format for EDAC nodes.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 > ---
->  kernel/gcov/gcc_3_4.c | 1 +
->  kernel/gcov/gcc_4_7.c | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/kernel/gcov/gcc_3_4.c b/kernel/gcov/gcc_3_4.c
-> index 801ee4b0b969..0eda59ef57df 100644
-> --- a/kernel/gcov/gcc_3_4.c
-> +++ b/kernel/gcov/gcc_3_4.c
-> @@ -16,6 +16,7 @@
->   */
->  
->  #include <linux/errno.h>
-> +#include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/string.h>
->  #include <linux/seq_file.h>
-> diff --git a/kernel/gcov/gcc_4_7.c b/kernel/gcov/gcc_4_7.c
-> index ec37563674d6..677851284fe2 100644
-> --- a/kernel/gcov/gcc_4_7.c
-> +++ b/kernel/gcov/gcc_4_7.c
-> @@ -13,6 +13,7 @@
->   */
->  
->  #include <linux/errno.h>
-> +#include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/string.h>
->  #include <linux/seq_file.h>
+> v2-3 No change
+> ---
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 25 ++++++++++++-----------
+>  1 file changed, 13 insertions(+), 12 deletions(-)
 > 
 
-
--- 
-~Randy
+Acked-by: Dinh Nguyen <dinguyen@kernel.org>
