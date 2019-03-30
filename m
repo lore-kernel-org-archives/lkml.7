@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F343DC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C3EC10F05
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94552064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474EB206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907748;
-	bh=HkSu02AY4LCUt9CVYD0jFoUUfKp8HSSGzIdVrp17Jc4=;
+	s=default; t=1553907753;
+	bh=4Qg+J3Eh2tSGt/8dJEgaJlibAzXc3Fv0Y2o2lbQAxWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hg4pzKE7oVqOiPxF8wT6eU9Bz0Wytw0FrHM/IUatuwNjcrO9/eMcx1AzgZ2ac4Afb
-	 1zYVEmuPlqgYraMOlwV3AryFLYKav/a9N7IXaaQ9M987BPIN2g5Sq2oV2VI56ziyy1
-	 cRMHSSHINA510D2+nPlP4k/lYWLSfSy5Z9aJFLw0=
+	b=GE8MgDG00nuNYN6Hvj5BLFFW8T4Cn0mM5+w24lEhWQuXKtQagYDKwbCY8Dcj/zhJ/
+	 UYqXa12XZlrL5AWJJ3nlWtI0UMaeCAKhJVaKI2S73KPlJIukfK3pA6I0Yg7RStcV0Y
+	 sI3Aoy6zz2PyapSjLS2tujL7Uefvpyzo9C8+6GkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731952AbfC3BC1 (ORCPT
+        id S1731087AbfC3Azr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:02:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35136 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:55:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731350AbfC3Azt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:55:49 -0400
+        id S1731330AbfC3Azl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:55:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8139218FD;
-        Sat, 30 Mar 2019 00:55:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 401BD218E2;
+        Sat, 30 Mar 2019 00:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907348;
-        bh=HkSu02AY4LCUt9CVYD0jFoUUfKp8HSSGzIdVrp17Jc4=;
+        s=default; t=1553907340;
+        bh=4Qg+J3Eh2tSGt/8dJEgaJlibAzXc3Fv0Y2o2lbQAxWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xXMFidnMevx1CycVAsBVFoVanXnx/eB6M02adVZ2C0fZCT+4soS1W09WeIbv+Cxfy
-         dJ2tixM5meGV0iS2VSFvplJ6ySsz1Ud3RMhSKUg6AJwBFJedNCMjFjerZQm1du/C+S
-         tXLTfcXktpY5TClSmhF8aBhHJLYuYCEnz+fhxxps=
+        b=VcVmUvVnU/fehlqpTSHyBLnwW1QYoY2cIdv6n6PLFxcFrXBzkLWO90bU0csee4jEp
+         iR238htfBH9blIYjJ7nywgpLJcAS+Dqk4nIjQkgU3eoH4wM+xgSXARQxX4gqfMPWXo
+         XiMVPZIi0ny8CQAUqiSe2CEZSad5LcEZB+MzZt/U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        mark gross <mgross@intel.com>, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.14 34/37] iommu/vt-d: Check capability before disabling protected memory
-Date:   Fri, 29 Mar 2019 20:54:35 -0400
-Message-Id: <20190330005441.27540-34-sashal@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 29/37] perf tests: Fix a memory leak in test__perf_evsel__tp_sched_test()
+Date:   Fri, 29 Mar 2019 20:54:30 -0400
+Message-Id: <20190330005441.27540-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
 References: <20190330005441.27540-1-sashal@kernel.org>
@@ -61,40 +64,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Changbin Du <changbin.du@gmail.com>
 
-[ Upstream commit 5bb71fc790a88d063507dc5d445ab8b14e845591 ]
+[ Upstream commit d982b33133284fa7efa0e52ae06b88f9be3ea764 ]
 
-The spec states in 10.4.16 that the Protected Memory Enable
-Register should be treated as read-only for implementations
-not supporting protected memory regions (PLMR and PHMR fields
-reported as Clear in the Capability register).
+  =================================================================
+  ==20875==ERROR: LeakSanitizer: detected memory leaks
 
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: mark gross <mgross@intel.com>
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
-Fixes: f8bab73515ca5 ("intel-iommu: PMEN support")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+  Direct leak of 1160 byte(s) in 1 object(s) allocated from:
+      #0 0x7f1b6fc84138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
+      #1 0x55bd50005599 in zalloc util/util.h:23
+      #2 0x55bd500068f5 in perf_evsel__newtp_idx util/evsel.c:327
+      #3 0x55bd4ff810fc in perf_evsel__newtp /home/work/linux/tools/perf/util/evsel.h:216
+      #4 0x55bd4ff81608 in test__perf_evsel__tp_sched_test tests/evsel-tp-sched.c:69
+      #5 0x55bd4ff528e6 in run_test tests/builtin-test.c:358
+      #6 0x55bd4ff52baf in test_and_print tests/builtin-test.c:388
+      #7 0x55bd4ff543fe in __cmd_test tests/builtin-test.c:583
+      #8 0x55bd4ff5572f in cmd_test tests/builtin-test.c:722
+      #9 0x55bd4ffc4087 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #10 0x55bd4ffc45c6 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #11 0x55bd4ffc49ca in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #12 0x55bd4ffc5138 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #13 0x7f1b6e34809a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+
+  Indirect leak of 19 byte(s) in 1 object(s) allocated from:
+      #0 0x7f1b6fc83f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
+      #1 0x7f1b6e3ac30f in vasprintf (/lib/x86_64-linux-gnu/libc.so.6+0x8830f)
+
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 6a6cd11d4e57 ("perf test: Add test for the sched tracepoint format fields")
+Link: http://lkml.kernel.org/r/20190316080556.3075-17-changbin.du@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/tests/evsel-tp-sched.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 802ba7b16e09..fe935293fa7b 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1646,6 +1646,9 @@ static void iommu_disable_protect_mem_regions(struct intel_iommu *iommu)
- 	u32 pmen;
- 	unsigned long flags;
+diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
+index 67bcbf876776..210e57ebacad 100644
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -85,5 +85,6 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
+ 	if (perf_evsel__test_field(evsel, "target_cpu", 4, true))
+ 		ret = -1;
  
-+	if (!cap_plmr(iommu->cap) && !cap_phmr(iommu->cap))
-+		return;
-+
- 	raw_spin_lock_irqsave(&iommu->register_lock, flags);
- 	pmen = readl(iommu->reg + DMAR_PMEN_REG);
- 	pmen &= ~DMA_PMEN_EPM;
++	perf_evsel__delete(evsel);
+ 	return ret;
+ }
 -- 
 2.19.1
 
