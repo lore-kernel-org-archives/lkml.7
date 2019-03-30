@@ -7,48 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8440C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3E0C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B507F206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A502064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907964;
-	bh=adC080+lYXQp/+OPTHAwFYTkd60xB6dfS/JrS3+/GQc=;
+	s=default; t=1553907972;
+	bh=87+GCCcWB/VaEalSOy+QNtnhzKqxmH9lpQyyDGH1vbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p7ipafwd2lqt6loXpzbWGkKTXCSs/JeExCiP01MWow51LYlCuyhXCNMMKPXF3Lm8z
-	 T04NRyHNIkFrv3qpoITBO8AK9VboM8HMlotIq75ZbXYvstMyl0aQEax51HjW7IjBUa
-	 EYCCp70EdTjNTx3MOCBug5bBFG55/KKDvTeQMEKM=
+	b=CBJ6Xr0HqMiQ28NkoyhpjtemgdgpOzsCAHVdaoJka8Zwz3cZ7HESV2etipo1yqPIx
+	 p3TnvZJN1uJudAOiXykVgsyUB+qsgBmnvX1MIkYA2pveXf3ANywVx9T4tG6Jjy2I+H
+	 tyc3hQ/+jZUPKqNwmWlN2Py+rdF5qWiljX7PM2RU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731544AbfC3BGD (ORCPT
+        id S1731345AbfC3Axp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:06:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:53:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731355AbfC3Axq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:53:46 -0400
+        id S1731309AbfC3Axn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:53:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B74F218D0;
-        Sat, 30 Mar 2019 00:53:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 280C2218AC;
+        Sat, 30 Mar 2019 00:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907226;
-        bh=adC080+lYXQp/+OPTHAwFYTkd60xB6dfS/JrS3+/GQc=;
+        s=default; t=1553907221;
+        bh=87+GCCcWB/VaEalSOy+QNtnhzKqxmH9lpQyyDGH1vbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0hT0ZwrMfDs30GsXWmY2xtY88nBeQihxPSSKVfMgn09dei3KnxixYWNNhmTiYRdW7
-         GVkBC55yWVG8Q1P4yNbFyt04XaO0YM11vZ4ELudHRmqTlC1TlM5UYaTagulNvsCw2K
-         lmj2EMx18xsp9dhKvSqAY9gfKK3KIdJfxPlqY3WU=
+        b=AeWMTOyplu87CHgtLGz4lpwYU/F7nGX71Afa7XIoXOo9Kovp8I4QAK9TLdME1FVWW
+         fqxgEgQ5NV6dVrZchpnZ+U44uAd3FWFoIV7sa55OGj06e0MxsIdwXiI8d0kzxroiZ8
+         RYl/0e3yRGBNG62a4YZ1yTymevoKb+A9yVAq0qOU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matteo Croce <mcroce@redhat.com>, Borislav Petkov <bp@alien8.de>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Quentin Perret <quentin.perret@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rik van Riel <riel@surriel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 26/52] x86/mm: Don't leak kernel addresses
-Date:   Fri, 29 Mar 2019 20:52:33 -0400
-Message-Id: <20190330005301.26868-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 24/52] sched/cpufreq: Fix 32-bit math overflow
+Date:   Fri, 29 Mar 2019 20:52:31 -0400
+Message-Id: <20190330005301.26868-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005301.26868-1-sashal@kernel.org>
 References: <20190330005301.26868-1-sashal@kernel.org>
@@ -61,49 +68,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit a3151724437f54076cc10bc02b1c4f0003ae36cd ]
+[ Upstream commit a23314e9d88d89d49e69db08f60b7caa470f04e1 ]
 
-Since commit:
+Vincent Wang reported that get_next_freq() has a mult overflow bug on
+32-bit platforms in the IOWAIT boost case, since in that case {util,max}
+are in freq units instead of capacity units.
 
-  ad67b74d2469d9b8 ("printk: hash addresses printed with %p")
+Solve this by moving the IOWAIT boost to capacity units. And since this
+means @max is constant; simplify the code.
 
-at boot "____ptrval____" is printed instead of actual addresses:
-
-    found SMP MP-table at [mem 0x000f5cc0-0x000f5ccf] mapped at [(____ptrval____)]
-
-Instead of changing the print to "%px", and leaking a kernel addresses,
-just remove the print completely, like in:
-
-  071929dbdd865f77 ("arm64: Stop printing the virtual memory layout").
-
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Reported-by: Vincent Wang <vincent.wang@unisoc.com>
+Tested-by: Vincent Wang <vincent.wang@unisoc.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
+Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Quentin Perret <quentin.perret@arm.com>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Rik van Riel <riel@surriel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190305083202.GU32494@hirez.programming.kicks-ass.net
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/mpparse.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/sched/cpufreq_schedutil.c | 59 ++++++++++++++------------------
+ 1 file changed, 25 insertions(+), 34 deletions(-)
 
-diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
-index f1c5eb99d445..ddb1ca6923b1 100644
---- a/arch/x86/kernel/mpparse.c
-+++ b/arch/x86/kernel/mpparse.c
-@@ -599,8 +599,8 @@ static int __init smp_scan_config(unsigned long base, unsigned long length)
- 			mpf_base = base;
- 			mpf_found = true;
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 3fffad3bc8a8..217f81ecae17 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -50,10 +50,10 @@ struct sugov_cpu {
  
--			pr_info("found SMP MP-table at [mem %#010lx-%#010lx] mapped at [%p]\n",
--				base, base + sizeof(*mpf) - 1, mpf);
-+			pr_info("found SMP MP-table at [mem %#010lx-%#010lx]\n",
-+				base, base + sizeof(*mpf) - 1);
+ 	bool			iowait_boost_pending;
+ 	unsigned int		iowait_boost;
+-	unsigned int		iowait_boost_max;
+ 	u64			last_update;
  
- 			memblock_reserve(base, sizeof(*mpf));
- 			if (mpf->physptr)
+ 	unsigned long		bw_dl;
++	unsigned long		min;
+ 	unsigned long		max;
+ 
+ 	/* The field below is for single-CPU policies only: */
+@@ -283,8 +283,7 @@ static bool sugov_iowait_reset(struct sugov_cpu *sg_cpu, u64 time,
+ 	if (delta_ns <= TICK_NSEC)
+ 		return false;
+ 
+-	sg_cpu->iowait_boost = set_iowait_boost
+-		? sg_cpu->sg_policy->policy->min : 0;
++	sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
+ 	sg_cpu->iowait_boost_pending = set_iowait_boost;
+ 
+ 	return true;
+@@ -324,14 +323,13 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
+ 
+ 	/* Double the boost at each request */
+ 	if (sg_cpu->iowait_boost) {
+-		sg_cpu->iowait_boost <<= 1;
+-		if (sg_cpu->iowait_boost > sg_cpu->iowait_boost_max)
+-			sg_cpu->iowait_boost = sg_cpu->iowait_boost_max;
++		sg_cpu->iowait_boost =
++			min_t(unsigned int, sg_cpu->iowait_boost << 1, SCHED_CAPACITY_SCALE);
+ 		return;
+ 	}
+ 
+ 	/* First wakeup after IO: start with minimum boost */
+-	sg_cpu->iowait_boost = sg_cpu->sg_policy->policy->min;
++	sg_cpu->iowait_boost = sg_cpu->min;
+ }
+ 
+ /**
+@@ -353,47 +351,38 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
+  * This mechanism is designed to boost high frequently IO waiting tasks, while
+  * being more conservative on tasks which does sporadic IO operations.
+  */
+-static void sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
+-			       unsigned long *util, unsigned long *max)
++static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
++					unsigned long util, unsigned long max)
+ {
+-	unsigned int boost_util, boost_max;
++	unsigned long boost;
+ 
+ 	/* No boost currently required */
+ 	if (!sg_cpu->iowait_boost)
+-		return;
++		return util;
+ 
+ 	/* Reset boost if the CPU appears to have been idle enough */
+ 	if (sugov_iowait_reset(sg_cpu, time, false))
+-		return;
++		return util;
+ 
+-	/*
+-	 * An IO waiting task has just woken up:
+-	 * allow to further double the boost value
+-	 */
+-	if (sg_cpu->iowait_boost_pending) {
+-		sg_cpu->iowait_boost_pending = false;
+-	} else {
++	if (!sg_cpu->iowait_boost_pending) {
+ 		/*
+-		 * Otherwise: reduce the boost value and disable it when we
+-		 * reach the minimum.
++		 * No boost pending; reduce the boost value.
+ 		 */
+ 		sg_cpu->iowait_boost >>= 1;
+-		if (sg_cpu->iowait_boost < sg_cpu->sg_policy->policy->min) {
++		if (sg_cpu->iowait_boost < sg_cpu->min) {
+ 			sg_cpu->iowait_boost = 0;
+-			return;
++			return util;
+ 		}
+ 	}
+ 
++	sg_cpu->iowait_boost_pending = false;
++
+ 	/*
+-	 * Apply the current boost value: a CPU is boosted only if its current
+-	 * utilization is smaller then the current IO boost level.
++	 * @util is already in capacity scale; convert iowait_boost
++	 * into the same scale so we can compare.
+ 	 */
+-	boost_util = sg_cpu->iowait_boost;
+-	boost_max = sg_cpu->iowait_boost_max;
+-	if (*util * boost_max < *max * boost_util) {
+-		*util = boost_util;
+-		*max = boost_max;
+-	}
++	boost = (sg_cpu->iowait_boost * max) >> SCHED_CAPACITY_SHIFT;
++	return max(boost, util);
+ }
+ 
+ #ifdef CONFIG_NO_HZ_COMMON
+@@ -440,7 +429,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+ 
+ 	util = sugov_get_util(sg_cpu);
+ 	max = sg_cpu->max;
+-	sugov_iowait_apply(sg_cpu, time, &util, &max);
++	util = sugov_iowait_apply(sg_cpu, time, util, max);
+ 	next_f = get_next_freq(sg_policy, util, max);
+ 	/*
+ 	 * Do not reduce the frequency if the CPU has not been idle
+@@ -480,7 +469,7 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
+ 
+ 		j_util = sugov_get_util(j_sg_cpu);
+ 		j_max = j_sg_cpu->max;
+-		sugov_iowait_apply(j_sg_cpu, time, &j_util, &j_max);
++		j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
+ 
+ 		if (j_util * max > j_max * util) {
+ 			util = j_util;
+@@ -817,7 +806,9 @@ static int sugov_start(struct cpufreq_policy *policy)
+ 		memset(sg_cpu, 0, sizeof(*sg_cpu));
+ 		sg_cpu->cpu			= cpu;
+ 		sg_cpu->sg_policy		= sg_policy;
+-		sg_cpu->iowait_boost_max	= policy->cpuinfo.max_freq;
++		sg_cpu->min			=
++			(SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
++			policy->cpuinfo.max_freq;
+ 	}
+ 
+ 	for_each_cpu(cpu, policy->cpus) {
 -- 
 2.19.1
 
