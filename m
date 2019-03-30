@@ -2,156 +2,130 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C981C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5704C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 10:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E46B02184D
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:59:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BUMMNWCd";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fHhtajqJ"
+	by mail.kernel.org (Postfix) with ESMTP id 88C05218CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 10:01:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbfC3J7A (ORCPT
+        id S1730637AbfC3KBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 05:59:00 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39976 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730372AbfC3J7A (ORCPT
+        Sat, 30 Mar 2019 06:01:04 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:14883 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730474AbfC3KBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 05:59:00 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 620F561110; Sat, 30 Mar 2019 09:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553939938;
-        bh=YwPPQXD8Nw0XqGJWkHPsI/ayS6Fml0waQceWOVmBq7g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BUMMNWCdxQY/QJ4cvUSW8LBn6XeeHfr9diawYJnsbwjKvt9EZRVMcrVobsFrG1WlH
-         vYIfqXZCs0qNDhhAi3jK3VIRqLYEPD5JCeLd9mKVNOXwQc66He/C+jTtyEZyM8cRpJ
-         hJO8epP5EwLE2pouLfLPvL3Fyp2M/TFg0vaq15sA=
-Received: from [10.79.174.164] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 08ECD60A4E;
-        Sat, 30 Mar 2019 09:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553939933;
-        bh=YwPPQXD8Nw0XqGJWkHPsI/ayS6Fml0waQceWOVmBq7g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fHhtajqJxIZweByZZgH71N/dxy2Qt+DHpoMZoeyDgeg76yBAgiF2Fe+C6eHYtcqgh
-         OzleMOW3ZJYPKjm5Yn9XVUg2Sd7QXnlpS+HuMAQa4C1KPoeP/gNlAr+lHsyAs6k1EM
-         wME2XoddP/fxZZVMWMEnioMGuay8JJpgtWpynu3o=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 08ECD60A4E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH -next] crypto: nx842 - remove set but not used variables
- 'dpadding' and 'max_sync_size'
-To:     Yue Haibing <yuehaibing@huawei.com>, haren@us.ibm.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au
-Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-References: <20190330055429.25848-1-yuehaibing@huawei.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <e69b2afd-8697-f51c-af4a-89b262f4d3d9@codeaurora.org>
-Date:   Sat, 30 Mar 2019 15:28:39 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 30 Mar 2019 06:01:03 -0400
+X-UUID: d6dadaeebc8f40e68a8e73bd5111d592-20190330
+X-UUID: d6dadaeebc8f40e68a8e73bd5111d592-20190330
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 277456615; Sat, 30 Mar 2019 18:00:55 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 30 Mar 2019 18:00:53 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 30 Mar 2019 18:00:53 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Honghui Zhang <honghui.zhang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH] PCI: mediatek: get optional clock by devm_clk_get_optional()
+Date:   Sat, 30 Mar 2019 18:00:51 +0800
+Message-ID: <1553940051-10367-1-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-In-Reply-To: <20190330055429.25848-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use devm_clk_get_optional() to get optional clock
 
-On 3/30/2019 11:24 AM, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/crypto/nx/nx-842.c: In function 'decompress':
-> drivers/crypto/nx/nx-842.c:356:25: warning: variable 'dpadding' set but not used [-Wunused-but-set-variable]
-> drivers/crypto/nx/nx-842-pseries.c: In function 'nx842_pseries_compress':
-> drivers/crypto/nx/nx-842-pseries.c:299:15: warning: variable 'max_sync_size' set but not used [-Wunused-but-set-variable]
-> drivers/crypto/nx/nx-842-pseries.c: In function 'nx842_pseries_decompress':
-> drivers/crypto/nx/nx-842-pseries.c:430:15: warning: variable 'max_sync_size' set but not used [-Wunused-but-set-variable]
->
-> They are not used any more and can be removed.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ drivers/pci/controller/pcie-mediatek.c | 46 ++++++--------------------
+ 1 file changed, 11 insertions(+), 35 deletions(-)
 
-Cheers,
--Mukesh
-> ---
->   drivers/crypto/nx/nx-842-pseries.c | 6 ++----
->   drivers/crypto/nx/nx-842.c         | 3 +--
->   2 files changed, 3 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/crypto/nx/nx-842-pseries.c b/drivers/crypto/nx/nx-842-pseries.c
-> index 6686997..5793284 100644
-> --- a/drivers/crypto/nx/nx-842-pseries.c
-> +++ b/drivers/crypto/nx/nx-842-pseries.c
-> @@ -296,7 +296,7 @@ static int nx842_pseries_compress(const unsigned char *in, unsigned int inlen,
->   	struct nx842_workmem *workmem;
->   	struct nx842_scatterlist slin, slout;
->   	struct nx_csbcpb *csbcpb;
-> -	int ret = 0, max_sync_size;
-> +	int ret = 0;
->   	unsigned long inbuf, outbuf;
->   	struct vio_pfo_op op = {
->   		.done = NULL,
-> @@ -319,7 +319,6 @@ static int nx842_pseries_compress(const unsigned char *in, unsigned int inlen,
->   		rcu_read_unlock();
->   		return -ENODEV;
->   	}
-> -	max_sync_size = local_devdata->max_sync_size;
->   	dev = local_devdata->dev;
->   
->   	/* Init scatterlist */
-> @@ -427,7 +426,7 @@ static int nx842_pseries_decompress(const unsigned char *in, unsigned int inlen,
->   	struct nx842_workmem *workmem;
->   	struct nx842_scatterlist slin, slout;
->   	struct nx_csbcpb *csbcpb;
-> -	int ret = 0, max_sync_size;
-> +	int ret = 0;
->   	unsigned long inbuf, outbuf;
->   	struct vio_pfo_op op = {
->   		.done = NULL,
-> @@ -451,7 +450,6 @@ static int nx842_pseries_decompress(const unsigned char *in, unsigned int inlen,
->   		rcu_read_unlock();
->   		return -ENODEV;
->   	}
-> -	max_sync_size = local_devdata->max_sync_size;
->   	dev = local_devdata->dev;
->   
->   	workmem = PTR_ALIGN(wmem, WORKMEM_ALIGN);
-> diff --git a/drivers/crypto/nx/nx-842.c b/drivers/crypto/nx/nx-842.c
-> index d94e25d..f06565d 100644
-> --- a/drivers/crypto/nx/nx-842.c
-> +++ b/drivers/crypto/nx/nx-842.c
-> @@ -353,7 +353,7 @@ static int decompress(struct nx842_crypto_ctx *ctx,
->   	unsigned int adj_slen = slen;
->   	u8 *src = p->in, *dst = p->out;
->   	u16 padding = be16_to_cpu(g->padding);
-> -	int ret, spadding = 0, dpadding = 0;
-> +	int ret, spadding = 0;
->   	ktime_t timeout;
->   
->   	if (!slen || !required_len)
-> @@ -413,7 +413,6 @@ static int decompress(struct nx842_crypto_ctx *ctx,
->   		spadding = 0;
->   		dst = p->out;
->   		dlen = p->oremain;
-> -		dpadding = 0;
->   		if (dlen < required_len) { /* have ignore bytes */
->   			dst = ctx->dbounce;
->   			dlen = BOUNCE_BUFFER_SIZE;
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 0b6c72804e03..9a66a018489b 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -915,49 +915,25 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+ 
+ 	/* sys_ck might be divided into the following parts in some chips */
+ 	snprintf(name, sizeof(name), "ahb_ck%d", slot);
+-	port->ahb_ck = devm_clk_get(dev, name);
+-	if (IS_ERR(port->ahb_ck)) {
+-		if (PTR_ERR(port->ahb_ck) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-
+-		port->ahb_ck = NULL;
+-	}
++	port->ahb_ck = devm_clk_get_optional(dev, name);
++	if (IS_ERR(port->ahb_ck))
++		return PTR_ERR(port->ahb_ck);
+ 
+ 	snprintf(name, sizeof(name), "axi_ck%d", slot);
+-	port->axi_ck = devm_clk_get(dev, name);
+-	if (IS_ERR(port->axi_ck)) {
+-		if (PTR_ERR(port->axi_ck) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-
+-		port->axi_ck = NULL;
+-	}
++	port->axi_ck = devm_clk_get_optional(dev, name);
++		return PTR_ERR(port->axi_ck);
+ 
+ 	snprintf(name, sizeof(name), "aux_ck%d", slot);
+-	port->aux_ck = devm_clk_get(dev, name);
+-	if (IS_ERR(port->aux_ck)) {
+-		if (PTR_ERR(port->aux_ck) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-
+-		port->aux_ck = NULL;
+-	}
++	port->aux_ck = devm_clk_get_optional(dev, name);
++		return PTR_ERR(port->aux_ck);
+ 
+ 	snprintf(name, sizeof(name), "obff_ck%d", slot);
+-	port->obff_ck = devm_clk_get(dev, name);
+-	if (IS_ERR(port->obff_ck)) {
+-		if (PTR_ERR(port->obff_ck) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-
+-		port->obff_ck = NULL;
+-	}
++	port->obff_ck = devm_clk_get_optional(dev, name);
++		return PTR_ERR(port->obff_ck);
+ 
+ 	snprintf(name, sizeof(name), "pipe_ck%d", slot);
+-	port->pipe_ck = devm_clk_get(dev, name);
+-	if (IS_ERR(port->pipe_ck)) {
+-		if (PTR_ERR(port->pipe_ck) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-
+-		port->pipe_ck = NULL;
+-	}
++	port->pipe_ck = devm_clk_get_optional(dev, name);
++		return PTR_ERR(port->pipe_ck);
+ 
+ 	snprintf(name, sizeof(name), "pcie-rst%d", slot);
+ 	port->reset = devm_reset_control_get_optional_exclusive(dev, name);
+-- 
+2.20.1
+
