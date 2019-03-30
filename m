@@ -2,187 +2,105 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E2DC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 06:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633CCC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 06:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 203A5218A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 06:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2550F218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 06:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553929001;
+	bh=ciVAwKW0UtcHusISo2tny1nh5kNuvPiHyLyzNGwEL1w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G9rxxcRrsq8EqBOxaIr4Pvo/Np5hL1OPMcyUrbe1BFqZVVRJB3qfgpDPtOA3/NITA
+	 dtnsbtM6Uxs2j9PMEhjdzJ5XQkzi+QBIv3J1HoC2DgGmnfBaeUqSQFNwluABw3HB2m
+	 m5i7OMZfPA3MdtBc9mvSjGWewQhaHVY6L3Wylh3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfC3GoG (ORCPT
+        id S1726514AbfC3G4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 02:44:06 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:51623 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbfC3GoG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 02:44:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id y18so3457673ior.18
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 23:44:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=K5SMdJaZJB95kT5u+7rmDdpDmH0kDxc5YL8C/yODxys=;
-        b=k0iZiZCNGQGPMiO1wjJRELCocpEMoBveA4PUsXiko3eDOf4T7Hk5PmDRJF6aNHckEP
-         mv5GVH5Y4gHSMp+f9VCST4HJngxcwGnseiD7MW4VEoMgBQ6MK40IFjcoTaXQnIisltIR
-         JvZdhPk1mId90NbtA3eb1szvGvzsgO4cpKp4ZH1OU7SV+TIKOQb80bIQ1GOrbQCYXvmQ
-         mT1vyC+a0x6HgsQnsLDokos7EZop7bgY/a6zdhb/fKadPx4bMYt3MhBM7bKsqgKK12ny
-         KHJSluagXYh1IKOqWGujz3zWDcMz5dVHeLq0q6GMTu3DHBNoYLULplRZUFtUIgkxUvsh
-         SHWA==
-X-Gm-Message-State: APjAAAUg9Vf2aF3G8YvAT9d2cfhXlKBgFSBIxDe6zIbk2QdMzApiVa9+
-        jsICyM3OISvK0gazjTUlRDPHAXXDuGFy9s78juBKnMVqgrmZ
-X-Google-Smtp-Source: APXvYqwuhk6oL3uWNTgWkBEvNAG6uJ0nRBa5OMgYhKb1k7OlKjv06ktHCxJP0pUN6IQ86hwMgupNVZqN0dZ1ex5lUA+JpfQCZiHt
+        Sat, 30 Mar 2019 02:56:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbfC3G4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 02:56:39 -0400
+Received: from localhost (unknown [188.90.30.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16A26218A6;
+        Sat, 30 Mar 2019 06:56:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553928998;
+        bh=ciVAwKW0UtcHusISo2tny1nh5kNuvPiHyLyzNGwEL1w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b2uiYpRYQYPgDJaXuonSE+q+nWceHx5TqJx5Br0/aUMi5RBTQLCz/beeOls/Zm9xf
+         IjQJouEN5g0GVwMdNRmtqV5r4MfdNXVl6JsTdX0CDRIYyWxg9jb3Pyxx6UJ+HYXW85
+         sRLsbav20Xx9Bv4YTOerYwmZaSthUgRj1QeuufFY=
+Date:   Sat, 30 Mar 2019 07:56:34 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Zengtao (B)" <prime.zeng@hisilicon.com>
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Todd Kjos <tkjos@android.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [PATCH] staging: android: ion: refactory ion_alloc for kernel
+ driver use
+Message-ID: <20190330065634.GA4221@kroah.com>
+References: <1553884816-37850-1-git-send-email-prime.zeng@hisilicon.com>
+ <20190329160336.GB5906@kroah.com>
+ <678F3D1BB717D949B966B68EAEB446ED24EBDE4F@DGGEMM506-MBS.china.huawei.com>
 MIME-Version: 1.0
-X-Received: by 2002:a24:76c2:: with SMTP id z185mr3103741itb.22.1553928245376;
- Fri, 29 Mar 2019 23:44:05 -0700 (PDT)
-Date:   Fri, 29 Mar 2019 23:44:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000012a4cd05854a1d0a@google.com>
-Subject: KASAN: use-after-free Read in rdma_listen (2)
-From:   syzbot <syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com>
-To:     danielj@mellanox.com, danitg@mellanox.com, dledford@redhat.com,
-        jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, parav@mellanox.com,
-        swise@opengridcomputing.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED24EBDE4F@DGGEMM506-MBS.china.huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat, Mar 30, 2019 at 02:32:35AM +0000, Zengtao (B) wrote:
+> >-----Original Message-----
+> >From: Greg Kroah-Hartman [mailto:gregkh@linuxfoundation.org]
+> >Sent: Saturday, March 30, 2019 12:04 AM
+> >To: Zengtao (B) <prime.zeng@hisilicon.com>
+> >Cc: labbott@redhat.com; sumit.semwal@linaro.org;
+> >devel@driverdev.osuosl.org; Todd Kjos <tkjos@android.com>;
+> >linux-kernel@vger.kernel.org; dri-devel@lists.freedesktop.org;
+> >linaro-mm-sig@lists.linaro.org; Arve Hjønnevåg <arve@android.com>;
+> >Joel Fernandes <joel@joelfernandes.org>; Martijn Coenen
+> ><maco@android.com>; Christian Brauner <christian@brauner.io>
+> >Subject: Re: [PATCH] staging: android: ion: refactory ion_alloc for kernel
+> >driver use
+> >
+> >On Sat, Mar 30, 2019 at 02:40:16AM +0800, Zeng Tao wrote:
+> >> There are two reasons for this patch:
+> >> 1. There are some potential requirements for ion_alloc in kernel
+> >> space, some media drivers need to allocate media buffers from ion
+> >> instead of buddy or dma framework, this is more convient and clean
+> >> very for media drivers. And In that case, ion is the only media buffer
+> >> provider, it's more easier to maintain.
+> >
+> >As this really is just DMA, what is wrong with the existing dma framework
+> >that makes it hard to use?  You have seen all of the changes recently to it,
+> >right?
+> 
+> The current dma framework is powerful enough(to me, and more complex ^_^)
+> , CMA, IOMMU are all integrated, it's good. But buffer sharing, statistics, debug,
+>  are not so friendly for media drivers(each driver has to do all, but duplicate jobs).
 
-syzbot found the following crash on:
+Then go add statistics and debugging to the dma code so that everyone
+benefits!
 
-HEAD commit:    9936328b Merge tag 'pci-v5.1-fixes-1' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16380473200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
-dashboard link: https://syzkaller.appspot.com/bug?extid=adb15cf8c2798e4e0db4
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11580c3f200000
+thanks,
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14b80c3f200000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=16b80c3f200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12b80c3f200000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in __list_add_valid+0x9a/0xa0 lib/list_debug.c:26
-Read of size 8 at addr ffff8880a5d2b3e0 by task syz-executor.0/7797
-
-CPU: 1 PID: 7797 Comm: syz-executor.0 Not tainted 5.1.0-rc2+ #43
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
-  kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  __list_add_valid+0x9a/0xa0 lib/list_debug.c:26
-  __list_add include/linux/list.h:60 [inline]
-  list_add_tail include/linux/list.h:93 [inline]
-  cma_listen_on_all drivers/infiniband/core/cma.c:2483 [inline]
-  rdma_listen+0x6b7/0x970 drivers/infiniband/core/cma.c:3537
-  ucma_listen+0x14d/0x1c0 drivers/infiniband/core/ucma.c:1100
-  ucma_write+0x2da/0x3c0 drivers/infiniband/core/ucma.c:1696
-  __vfs_write+0x8d/0x110 fs/read_write.c:485
-  vfs_write+0x20c/0x580 fs/read_write.c:549
-  ksys_write+0xea/0x1f0 fs/read_write.c:598
-  __do_sys_write fs/read_write.c:610 [inline]
-  __se_sys_write fs/read_write.c:607 [inline]
-  __x64_sys_write+0x73/0xb0 fs/read_write.c:607
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458209
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb9c2080c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458209
-RDX: 0000000000000010 RSI: 00000000200001c0 RDI: 0000000000000003
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb9c20816d4
-R13: 00000000004c77c2 R14: 00000000004dd780 R15: 00000000ffffffff
-
-Allocated by task 7794:
-  save_stack+0x45/0xd0 mm/kasan/common.c:75
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_kmalloc mm/kasan/common.c:497 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:511
-  kmem_cache_alloc_trace+0x151/0x760 mm/slab.c:3621
-  kmalloc include/linux/slab.h:545 [inline]
-  kzalloc include/linux/slab.h:740 [inline]
-  __rdma_create_id+0x5f/0x4e0 drivers/infiniband/core/cma.c:878
-  ucma_create_id+0x1de/0x640 drivers/infiniband/core/ucma.c:506
-  ucma_write+0x2da/0x3c0 drivers/infiniband/core/ucma.c:1696
-  __vfs_write+0x8d/0x110 fs/read_write.c:485
-  vfs_write+0x20c/0x580 fs/read_write.c:549
-  ksys_write+0xea/0x1f0 fs/read_write.c:598
-  __do_sys_write fs/read_write.c:610 [inline]
-  __se_sys_write fs/read_write.c:607 [inline]
-  __x64_sys_write+0x73/0xb0 fs/read_write.c:607
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 7789:
-  save_stack+0x45/0xd0 mm/kasan/common.c:75
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
-  __cache_free mm/slab.c:3498 [inline]
-  kfree+0xcf/0x230 mm/slab.c:3821
-  rdma_destroy_id+0x719/0xaa0 drivers/infiniband/core/cma.c:1852
-  ucma_close+0x115/0x320 drivers/infiniband/core/ucma.c:1777
-  __fput+0x2e5/0x8d0 fs/file_table.c:278
-  ____fput+0x16/0x20 fs/file_table.c:309
-  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:166
-  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
-  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880a5d2b200
-  which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 480 bytes inside of
-  2048-byte region [ffff8880a5d2b200, ffff8880a5d2ba00)
-The buggy address belongs to the page:
-page:ffffea0002974a80 count:1 mapcount:0 mapping:ffff88812c3f0c40 index:0x0  
-compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea000231da88 ffff88812c3f1948 ffff88812c3f0c40
-raw: 0000000000000000 ffff8880a5d2a100 0000000100000003 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8880a5d2b280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8880a5d2b300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8880a5d2b380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                        ^
-  ffff8880a5d2b400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8880a5d2b480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+greg k-h
