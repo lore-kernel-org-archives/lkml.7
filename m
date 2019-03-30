@@ -2,615 +2,307 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0069CC4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28BBC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4126218A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553961638;
-	bh=eT+IBxxuOtf5odYnaiRCWGUJ10aMgQxd0IfF30H/gkk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Gx8KTI/MyNvXfSjcwSauejq0nsHw4OPbHoftXr3kcry95BHBxCNVlZUnO3vuVwdnS
-	 ZC9KVLFVHbxHEY+TdjRxAaO1IWvBhF6sJsdoVk2yLYcnGVPPMle1mrjcRab/Q+PD+w
-	 MVQrBZpGEIylaqX6h4jcvHMB2j6eLs9t49PlIaBg=
+	by mail.kernel.org (Postfix) with ESMTP id 7A7262082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:08:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CeR239CR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730919AbfC3QAh (ORCPT
+        id S1730891AbfC3QIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 12:00:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730532AbfC3QAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 12:00:37 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 681D7218A3;
-        Sat, 30 Mar 2019 16:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553961635;
-        bh=eT+IBxxuOtf5odYnaiRCWGUJ10aMgQxd0IfF30H/gkk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sZNNC2XDb3akTl3J/S8WXmYKjKfBE+tK1/Y464ImTEMSOVRvaZqnKbrVEyg/LETw0
-         YseEMq0Hotg7+qq7HziOekNYFzshUB9jtGEPT7GZk4tOrNMBHVLz1cdrjZ83H19efC
-         k68D4XOvxfmYjZ50loBmKLV3z4QhwGIXbao9rUeM=
-Date:   Sat, 30 Mar 2019 16:00:30 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Ibtsam Ul-Haq <ibtsam.haq.0x01@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] iio: Add driver for TLA202x ADCs
-Message-ID: <20190330160030.347e4f6e@archlinux>
-In-Reply-To: <1553608583-29006-1-git-send-email-ibtsam.haq.0x01@gmail.com>
-References: <1553608583-29006-1-git-send-email-ibtsam.haq.0x01@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 30 Mar 2019 12:08:45 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:36620 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730733AbfC3QIo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 12:08:44 -0400
+Received: by mail-vs1-f68.google.com with SMTP id n4so3092660vsm.3
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 09:08:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jWSKGgPglMSsML8XN2EAPZWYnlWwCcwK1JGP6pz/I+I=;
+        b=CeR239CRrkZxUCUhBKt1gVOc1ldiSEJvvqCIpKxFdLxBegj1qltGSqwRHBG5ds/gIn
+         xQYKnFrXloEmNWsixMYIANU1HAIPUYc2Zb6Pu9/q82VLqhRS0UUJHTgu1/EOtAQe2D2h
+         coKqWxC3pAse5ZcW/PBsXdrL2TM9KBP3yHPn+hAtZs1KCPWqI/z5CXIvW4WAO+4GFQOq
+         +YPcFmCoCyroXex3kOkv5e9+9d0GEXlb1w/gAVQQUVWfc8KJvVlLuqfGhA6C8lv5racB
+         ZpqYNAuV1ItZXKX7QLbiL6WYVDMcgacbWDxTnJBAgYUwQyURSuUsTpqYHgIa1Qid7eYk
+         E/rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jWSKGgPglMSsML8XN2EAPZWYnlWwCcwK1JGP6pz/I+I=;
+        b=g4fO0nU/lTMDY4BDC1apht/xoW3/Iq5jbeZVGXfw2ugxDVYAd3poxvdLuhjWrdPyh9
+         xe3nGbrmpC4WxgOugQVBFkc9yTXxJo9Ix4rQiL5WDY6tzH03ygKUr796ipR4uhm3c7GR
+         zxAJIWCoDsXbZ5cu4fnIA64bjADOzLbpNhsSlmaLQQVPeSnKm+OQt9dBLS1M/mBY39PT
+         /YOy2dWREm4HgtHQvr0Gd0I3CVVcbxFUPfmk8IKJTdAfkEaDn+qU9OvIIgFDsVRULeH9
+         NAtiPWIp+F/gWjnHFqXauDodlqeaghbUj862GoiRqEpnnSp74e8VKyCDKfofQWqulUT7
+         YtIw==
+X-Gm-Message-State: APjAAAV5GjHsCN6zkS/rxRpgvtbC/EbWljQylVF6j5Gboo34vVNV7qEy
+        v50ZqOkCZA5qQ1hXPfogOOhXfNDKQeS9cLd18Lb9eg==
+X-Google-Smtp-Source: APXvYqwTg/5QkZt/DfC2iDQ+XQO8sRu7XPbeOmn0FQpNlTcxYvJ9xmWZlm6cHLyoy7yPqRlZwb2S/SFWs7ZCrEi57u0=
+X-Received: by 2002:a67:bc01:: with SMTP id t1mr33933054vsn.149.1553962122872;
+ Sat, 30 Mar 2019 09:08:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190327162147.23198-1-christian@brauner.io> <20190327162147.23198-3-christian@brauner.io>
+ <CAGLj2rG8xMMt8-+r-pauA_qi4aun2y_kBZMCZGkXWQsKJrb-Ww@mail.gmail.com>
+ <20190327213404.pv4wqtkjbufkx36u@brauner.io> <CAGLj2rHpYAOGz0h0k2pS4JwFSQkMmRSUWxa4BtO+7BUMD21vdQ@mail.gmail.com>
+ <20190327222543.huugotqcew6jyytv@brauner.io> <CAGLj2rG0Sbho6MnPSmcS73Xj=oG92E4W_QLRu4dD8NfweoUm5Q@mail.gmail.com>
+ <20190328103813.eogszrqbitw3e7k7@brauner.io> <CAKOZueusdFurOb_uFZ3PDmZeJvYvHVKMx6=TpiWPERkKRiHfiw@mail.gmail.com>
+ <CAGLj2rEtgiJfmKgo4bJvmBYp1Y5f1SELVfEu7Ayfi62zOAxjGQ@mail.gmail.com>
+ <CAKOZuesjdfNptM9Pt_uzsDVefW6LXhHPHG2a3rJRAe0rpeWX6g@mail.gmail.com> <CAGLj2rGFOv-AcHSuxF2YBz=WKNi7iLGp3i5KzAq7E1fo14B9Lg@mail.gmail.com>
+In-Reply-To: <CAGLj2rGFOv-AcHSuxF2YBz=WKNi7iLGp3i5KzAq7E1fo14B9Lg@mail.gmail.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Sat, 30 Mar 2019 09:08:31 -0700
+Message-ID: <CAKOZues9uQyhOix2=NmWPFD3B7o7Fru+4PwDHODSAWZOsyyKNw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] pid: add pidfd_open()
+To:     Jonathan Kowalski <bl0pbl33p@gmail.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Andy Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Joel Fernandes <joel@joelfernandes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019 14:56:19 +0100
-Ibtsam Ul-Haq <ibtsam.haq.0x01@gmail.com> wrote:
+On Sat, Mar 30, 2019 at 7:30 AM Jonathan Kowalski <bl0pbl33p@gmail.com> wrote:
+>
+> On Sat, Mar 30, 2019 at 7:39 AM Daniel Colascione <dancol@google.com> wrote:
+> >
+> >  [SNIP]
+> >
+> > Thanks again.
+> >
+> > I agree that the operation we're discussing has a simple signature,
+> > but signature flexibility isn't the only reason to prefer a system
+> > call over an ioctl. There are other reasons for preferring system
+> > calls to ioctls (safety, tracing, etc.) that apply even if the
+> > operation we're discussing has a relatively simple signature: for
+> > example, every system call has a distinct and convenient ftrace event,
+> > but ioctls don't; strace filtering Just Works on a
+> > system-call-by-system-call basis, but it doesn't for ioctls; and
+>
+> It does for those with a unique number.
 
-> Basic driver for Texas Instruments TLA202x series ADCs. Input
-> channels are configurable from the device tree. Input scaling
-> is supported. Trigger buffer support is not yet implemented.
-> 
-> Signed-off-by: Ibtsam Ul-Haq <ibtsam.haq.0x01@gmail.com>
-Down to the nitpicks on this version so should be good for a v4.
+There's no such thing as a unique ioctl number though. Anyone is free
+to create an ioctl with a conflicting number. Sure, you can guarantee
+ioctl request number uniqueness within things that ship with the
+kernel, but you can also guarantee system call number uniqueness, so
+what do we gain by using an ioctl? And yes, you can do *some*
+filtering based on ioctl command, but it's frequently more awkward
+than the system call equivalent and sometimes doesn't work at all.
+What's the strace -e pidfd_open equivalent for an ioctl? Grep isn't
+quite equivalent.
 
-Also probably some minor tweaks needed due to the discussion around
-the dt binding.
+> > documentation for system calls is much more discoverable (e.g., man
+> > -k) than documentation for ioctls. Even if the distinction doesn't
+> > matter much, IMHO, it still matters a little, enough to favor a system
+> > call without an offsetting advantage for the ioctl option.
+>
+> It will be alongside other I/O operations in the pidfd man page.
+>
+> >
+> > > If you start adding a system call for every specific operation on file
+> > > descriptors, it *will* become a problem.
+> >
+> > I'm not sure what you mean. Do you mean that adding a top-level system
+> > call for every operation that might apply to one specific kind of file
+> > descriptor would lead, as the overall result, to the kernel having
+> > enough system calls to cause negative consequences? I'm not sure I
+> > agree, but accepting this idea for the sake of discussion: shouldn't
+> > we be more okay with system calls for features present on almost all
+> > systems --- like procfs --- even if we punt to ioctls very rarely-used
+> > functionality, e.g., some hypothetical special squeak noise that you
+> > could get some specific 1995 adlib clone to make?
+>
+> Consider if we were to do:
+>
+> int procpidfd_open(int pidfd, int procrootfd);
+>
+> This system call is useless besides a very specific operation for a
+> very specific usecase on a file descriptor.
 
-Jonathan
+I don't understand this argument based on an operation being "very
+specific". Are you suggesting that epoll_wait should have been an
+ioctl? I don't see how an operation being specific to a type of file
+descriptor is an argument for making that operation an ioctl instead
+of a system call.
 
-> ---
-> Changes in v3:
-> - Added locking when setting SCALE
-> - Removed deep-indented goto in read_raw
-> - Other minor points mentioned in v2 review
-> ---
-> Changes in v2:
-> - changed commit message
-> - Added mutex to protect channel selection
-> - Removed redundant mutex around i2c transfers
-> - Removed PROCESSED channel output
-> - Added SCALE info
-> - Removed Continuous Mode since continuous read not supported
-> - Removed SAMP_FREQ info since continuous read not supported
-> ---
-> ---
->  drivers/iio/adc/Kconfig      |  11 ++
->  drivers/iio/adc/Makefile     |   1 +
->  drivers/iio/adc/ti-tla2024.c | 460 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 472 insertions(+)
->  create mode 100644 drivers/iio/adc/ti-tla2024.c
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 5762565..8c214c8 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -816,6 +816,17 @@ config TI_AM335X_ADC
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called ti_am335x_adc.
->  
-> +config TI_TLA2024
-> +	tristate "Texas Instruments TLA2024/TLA2022/TLA2021 ADC driver"
-> +	depends on OF
-> +	depends on I2C
-> +	help
-> +	  Say yes here to build support for Texas Instruments TLA2024,
-> +	  TLA2022 or TLA2021 I2C Analog to Digital Converters.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called ti-tla2024.
-> +
->  config TI_TLC4541
->  	tristate "Texas Instruments TLC4541 ADC driver"
->  	depends on SPI
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 9874e05..819f35b 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -75,6 +75,7 @@ obj-$(CONFIG_TI_ADS7950) += ti-ads7950.o
->  obj-$(CONFIG_TI_ADS8688) += ti-ads8688.o
->  obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
->  obj-$(CONFIG_TI_TLC4541) += ti-tlc4541.o
-> +obj-$(CONFIG_TI_TLA2024) += ti-tla2024.o
->  obj-$(CONFIG_TWL4030_MADC) += twl4030-madc.o
->  obj-$(CONFIG_TWL6030_GPADC) += twl6030-gpadc.o
->  obj-$(CONFIG_VF610_ADC) += vf610_adc.o
-> diff --git a/drivers/iio/adc/ti-tla2024.c b/drivers/iio/adc/ti-tla2024.c
-> new file mode 100644
-> index 0000000..f0eed4a
-> --- /dev/null
-> +++ b/drivers/iio/adc/ti-tla2024.c
-> @@ -0,0 +1,460 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + *
-> + * Texas Instruments TLA2021/TLA2022/TLA2024 12-bit ADC driver
-> + *
-> + * Copyright (C) 2019 Koninklijke Philips N.V.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/i2c.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +
-> +#define TLA2024_DATA 0x00
-> +#define TLA2024_DATA_RES_MASK GENMASK(15, 4)
-> +#define TLA2024_DATA_RES_SHIFT 4
-> +
-> +#define TLA2024_CONF 0x01
-> +#define TLA2024_CONF_OS_MASK BIT(15)
-> +#define TLA2024_CONF_OS_SHIFT 15
-> +#define TLA2024_CONF_MUX_MASK GENMASK(14, 12)
-> +#define TLA2024_CONF_MUX_SHIFT 12
-> +#define TLA2024_CONF_PGA_MASK GENMASK(11, 9)
-> +#define TLA2024_CONF_PGA_SHIFT 9
-> +#define TLA2024_CONF_MODE_MASK BIT(8)
-> +#define TLA2024_CONF_MODE_SHIFT 8
-> +#define TLA2024_CONF_DR_MASK GENMASK(7, 5)
-> +#define TLA2024_CONF_DR_SHIFT 5
-> +
-> +#define TLA2024_CONV_RETRY 10
-> +
-> +struct tla202x_model {
-> +	unsigned int mux_available;
-> +	unsigned int pga_available;
-> +};
-> +
-> +struct tla2024 {
-> +	struct i2c_client *i2c;
-> +	struct tla202x_model *model;
-> +	struct mutex lock;
-> +	u8 used_mux_channels;
-> +};
-> +
-> +struct tla2024_channel {
-> +	int ainp;
-> +	int ainn;
-> +	const char *datasheet_name;
-> +	bool differential;
-> +};
-> +
-> +static const struct tla2024_channel tla2024_all_channels[] = {
-> +	{0, 1, "AIN0-AIN1", 1},
-> +	{0, 3, "AIN0-AIN3", 1},
-> +	{1, 3, "AIN1-AIN3", 1},
-> +	{2, 3, "AIN2-AIN3", 1},
-> +	{0, -1, "AIN0", 0},
-> +	{1, -1, "AIN1", 0},
-> +	{2, -1, "AIN2", 0},
-> +	{3, -1, "AIN3", 0},
-> +};
-> +
-> +static int tla2024_find_chan_idx(u32 ainp_in, u32 ainn_in, u16 *idx)
-> +{
-> +	u16 i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(tla2024_all_channels); i++) {
-> +		if ((tla2024_all_channels[i].ainp == ainp_in) &&
-> +		    (tla2024_all_channels[i].ainn == ainn_in)) {
-> +			*idx = i;
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +#define TLA202x_MODEL(_mux, _pga)		\
-> +	{					\
-> +		.mux_available = (_mux),	\
-> +		.pga_available = (_pga),	\
-> +	}
-> +
-> +enum tla2024_model_id {
-> +	TLA2021 = 0,
-> +	TLA2022 = 1,
-> +	TLA2024 = 2,
-> +};
-> +
-> +static struct tla202x_model tla202x_models[] = {
-> +	[TLA2021] = TLA202x_MODEL(0, 0),
-> +	[TLA2022] = TLA202x_MODEL(0, 1),
-> +	[TLA2024] = TLA202x_MODEL(1, 1),
-> +};
-> +
-> +static const int tla2024_scale[] = { /* scale, int plus micro */
-> +	3, 0, 2, 0, 1, 0, 0, 500000, 0, 250000, 0, 125000 };
-> +
-> +static int tla2024_get(struct tla2024 *priv, u8 addr, u16 mask,
-> +		       u16 shift, u16 *val)
-> +{
-> +	int ret;
-> +	u16 data;
-> +
-> +	ret = i2c_smbus_read_word_swapped(priv->i2c, addr);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	data = ret;
-> +	*val = (mask & data) >> shift;
-> +
-> +	return 0;
-> +}
-> +
-> +static int tla2024_set(struct tla2024 *priv, u8 addr, u16 mask,
-> +		       u16 shift, u16 val)
-> +{
-> +	int ret;
-> +	u16 data;
-> +
-> +	ret = i2c_smbus_read_word_swapped(priv->i2c, addr);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	data = ret;
-> +	data &= ~mask;
-> +	data |= mask & (val << shift);
-> +
-> +	ret = i2c_smbus_write_word_swapped(priv->i2c, addr, data);
-> +
-> +	return ret;
-> +}
-> +
-> +static int tla2024_read_avail(struct iio_dev *idev,
-> +			      struct iio_chan_spec const *chan,
-> +			      const int **vals, int *type, int *length,
-> +			      long mask)
-> +{
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +
-> +		*length = ARRAY_SIZE(tla2024_scale);
-> +		*vals = tla2024_scale;
-> +
-> +		*type = IIO_VAL_INT_PLUS_MICRO;
-> +		return IIO_AVAIL_LIST;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int tla2024_of_find_chan(struct tla2024 *priv, struct device_node *ch)
-> +{
-> +	u16 chan_idx = 0;
-> +	u32 ainp, ainn;
-> +	int ret;
-> +
-> +	ret = of_property_read_u32_index(ch, "single-channel", 0, &ainp);
-> +	if (ret) {
-> +		ret = of_property_read_u32_index(ch,
-> +						 "diff-channels", 0, &ainp);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = of_property_read_u32_index(ch,
-> +						 "diff-channels", 1, &ainn);
-> +		if (ret)
-> +			return ret;
-> +
-> +	} else {
-> +		ainn = UINT_MAX;
-> +	}
-> +
-> +	ret = tla2024_find_chan_idx(ainp, ainn, &chan_idx);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* if model doesn"t have mux then only channel 0 is allowed */
-> +	if (!priv->model->mux_available && chan_idx)
-> +		return -EINVAL;
-> +
-> +	/* if already used */
-> +	if ((priv->used_mux_channels) & (1 << chan_idx))
-> +		return -EINVAL;
-> +
-> +	return chan_idx;
-> +}
-> +
-> +static int tla2024_init_chan(struct iio_dev *idev, struct device_node *node,
-> +			     struct iio_chan_spec *chan)
-> +{
-> +	struct tla2024 *priv = iio_priv(idev);
-> +	u16 chan_idx;
-> +	int ret;
-> +
-> +	ret = tla2024_of_find_chan(priv, node);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	chan_idx = ret;
-> +	priv->used_mux_channels |= BIT(chan_idx);
-> +	chan->type = IIO_VOLTAGE;
-> +	chan->channel = tla2024_all_channels[chan_idx].ainp;
-> +	chan->channel2 = tla2024_all_channels[chan_idx].ainn;
-> +	chan->differential = tla2024_all_channels[chan_idx].differential;
-> +	chan->datasheet_name = tla2024_all_channels[chan_idx].datasheet_name;
-> +	chan->indexed = 1;
-> +	chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
-> +	chan->info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE);
-> +	chan->info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SCALE);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tla2024_wait(struct tla2024 *priv)
-> +{
-> +	int ret;
-> +	unsigned int retry = TLA2024_CONV_RETRY;
-> +	u16 status;
-> +
-> +	do {
-> +		if (!--retry)
-> +			return -EIO;
-> +		ret = tla2024_get(priv, TLA2024_CONF, TLA2024_CONF_OS_MASK,
-> +				  TLA2024_CONF_OS_SHIFT, &status);
-> +		if (ret < 0)
-> +			return ret;
+> Then, you figure you might
+> want to support procpidfd back to pidfd (although YAGNI), so you will
+> add a CMD or flags argument now,
 
-> +		if (!status)
-> +			usleep_range(25, 1000);
-> +	} while (!status);
-> +
-> +	return ret;
+Why would we need a system call at all? And why are we invoking
+hypothetical argument B in an argument against adding operation A as a
+system call? B doesn't exist yet. As Christian mentioned, we could
+create a named /proc/pid/handle file which, when opened, would yield a
+pidfd. More generally, though: if we expose new functionality, we can
+make a new system call. Why is that worse than adding a new ioctl
+code?
 
-return 0; It can't be anything else and get here (I think!)
+> int procpidfd_open(int pidfd, int procrootfd/procpidfd, unsigned int flags);
+>
+>   int procpidfd = procpidfd_open(fd, procrootfd, PIDFD_TO_PROCPIDFD);
+>   int pidfd = procpidfd_open(-1, procpidfd, PROCPIDFD_TO_PIDFD);
+>
+> vs procpidfd2pidfd(int procpidfd); if you did not foresee the need.
+> Then, you want pidfd2pid, and so on.
+>
+> If you don't, you will have to add a command interface in the new
+> system call, which changes parameters depending on the flags. This is
+> already starting to get ugly.
 
-> +}
-> +
-> +static int tla2024_singleshot_conv(struct tla2024 *priv,
-> +				   struct iio_chan_spec const *chan, int *val)
-> +{
-> +	int ret;
-> +	u32 ainp = chan->channel;
-> +	u32 ainn = chan->channel2;
+> In the end, it's a matter of taste,
 
-Are these local variables worthwhile as value only used in one place?
+I don't think it's quite a matter of taste. That idiom suggests that
+the two options are roughly functionally equivalent. In this case,
+there are clear and specific technical reasons to prefer system calls.
+We're not talking about two equivalent approaches. Making the
+operation a system call gives users more power, and we shouldn't
+deprive them of this power without a good reason. So far, I haven't
+seen such a reason.
 
-> +	u16 chan_id, data;
-> +	s16 tmp;
-> +
-> +	ret = tla2024_set(priv, TLA2024_CONF, TLA2024_CONF_MODE_MASK,
-> +			  TLA2024_CONF_MODE_SHIFT, 1);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = tla2024_find_chan_idx(ainp, ainn, &chan_id);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = tla2024_set(priv, TLA2024_CONF, TLA2024_CONF_MUX_MASK,
-> +			  TLA2024_CONF_MUX_SHIFT, chan_id);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = tla2024_set(priv, TLA2024_CONF, TLA2024_CONF_OS_MASK,
-> +			  TLA2024_CONF_OS_SHIFT, 1);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = tla2024_wait(priv);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = tla2024_get(priv, TLA2024_DATA, TLA2024_DATA_RES_MASK,
-> +			  TLA2024_DATA_RES_SHIFT, &data);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	tmp = (s16)(data << TLA2024_DATA_RES_SHIFT);
-> +	*val = tmp >> TLA2024_DATA_RES_SHIFT;
-> +	return IIO_VAL_INT;
-> +}
-> +
-> +static int tla2024_set_scale(struct tla2024 *priv, int val, int val2)
-> +{
-> +	int i;
-> +
-> +	if (!(priv->model->pga_available))
-> +		return -EINVAL; /* scale can't be changed if no pga */
-> +
-> +	for (i = 0; i < ARRAY_SIZE(tla2024_scale); i = i + 2) {
-> +		if ((tla2024_scale[i] == val) &&
-> +		    (tla2024_scale[i + 1] == val2))
-> +			break;
-> +	}
-> +
-> +	if (i == ARRAY_SIZE(tla2024_scale))
-> +		return -EINVAL;
-> +
-> +	return tla2024_set(priv, TLA2024_CONF, TLA2024_CONF_PGA_MASK,
-> +			   TLA2024_CONF_PGA_SHIFT, i >> 1);
-> +}
-> +
-> +static int tla2024_get_scale(struct tla2024 *priv, int *val, int *val2)
-> +{
-> +	u16 data;
-> +	int ret;
-> +
-> +	if (!(priv->model->pga_available)) {
-> +		*val = 1; /* Scale always 1 mV when no PGA */
-> +		return IIO_VAL_INT;
-> +	}
-> +	ret = tla2024_get(priv, TLA2024_CONF, TLA2024_CONF_PGA_MASK,
-> +			  TLA2024_CONF_PGA_SHIFT, &data);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* gain for the 3bit pga values 6 and 7 is same as at 5 */
-> +	if (data >= (ARRAY_SIZE(tla2024_scale) >> 1))
-> +		data = (ARRAY_SIZE(tla2024_scale) >> 1) - 1;
-> +
-> +	*val = tla2024_scale[data << 1];
-> +	*val2 = tla2024_scale[(data << 1) + 1];
+>  this
+> pattern if exploited leads to endless proliferation of the system call
+> interface, often ridden with short-sighted APIs, because you cannot
+> know if you want a focused call or a command style call.
 
-When doing indexes like this it's probably more readable to just use * 2
-rather than the shift.  The compiler should figure it out anyway.
-Also / 2 is fine when can be evaluated at compile time as above.
+Bad interfaces proliferate no matter what, and there's no difference
+in support burden between an ioctl and a system call: both need to
+work indefinitely. Are you saying that it's easier to remove a bad
+interface if it's an ioctl instead of a system call? I don't recall
+any precedent, but maybe I'm wrong.
 
-> +	return IIO_VAL_INT_PLUS_MICRO;
-> +}
-> +
-> +static int tla2024_read_raw(struct iio_dev *idev,
-> +			    struct iio_chan_spec const *channel, int *val,
-> +			    int *val2, long mask)
-> +{
-> +	struct tla2024 *priv = iio_priv(idev);
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		mutex_lock(&priv->lock);
-> +		ret = tla2024_singleshot_conv(priv, channel, val);
-> +		mutex_unlock(&priv->lock);
-> +		return ret;
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		return tla2024_get_scale(priv, val, val2);
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int tla2024_write_raw(struct iio_dev *idev,
-> +			     struct iio_chan_spec const *chan,
-> +			     int val, int val2, long mask)
-> +{
-> +	struct tla2024 *priv = iio_priv(idev);
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +		mutex_lock(&priv->lock);
-> +		ret = tla2024_set_scale(priv, val, val2);
-> +		mutex_unlock(&priv->lock);
-> +		return ret;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
+> ioctl is
+> already a command interface, and 10 system calls for each command is
+> _NOT_ nice, from a user perspective.
 
-The ordering of functions in here seems a little strange. I would
-bring this together with the individual channel init code above
-and not have it between the callbacks and the definition of the
-struct iio_info below.
+syscall(2) is already a "command" interface, just with more automatic
+features than ioctl. What do we gain by pushing the "command" down a
+level from the syscall(2) multiplexer to the ioctl(2) multiplexer?
 
-> +static int tla2024_of_chan_init(struct iio_dev *idev)
-> +{
-> +	struct device_node *node = idev->dev.of_node;
-> +	struct device_node *child;
-> +	struct iio_chan_spec *channels;
-> +	int ret, i, num_channels;
-> +
-> +	num_channels = of_get_available_child_count(node);
-> +	if (!num_channels) {
-> +		dev_err(&idev->dev, "no channels configured\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	channels = devm_kcalloc(&idev->dev, num_channels,
-> +				sizeof(struct iio_chan_spec), GFP_KERNEL);
-> +	if (!channels)
-> +		return -ENOMEM;
-> +
-> +	i = 0;
-> +	for_each_available_child_of_node(node, child) {
-> +		ret = tla2024_init_chan(idev, child, &channels[i]);
-> +		if (ret) {
-> +			of_node_put(child);
-> +			return ret;
-> +		}
-> +		i++;
-> +	}
-> +
-> +	idev->channels = channels;
-> +	idev->num_channels = num_channels;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct iio_info tla2024_info = {
-> +	.read_raw = tla2024_read_raw,
-> +	.write_raw = tla2024_write_raw,
-> +	.read_avail = tla2024_read_avail,
-> +};
-> +
-> +static int tla2024_probe(struct i2c_client *client,
-> +			 const struct i2c_device_id *id)
-> +{
-> +	struct iio_dev *iio;
-> +	struct tla2024 *priv;
-> +	int ret;
-> +
-> +	if (!i2c_check_functionality(client->adapter,
-> +				     I2C_FUNC_SMBUS_WORD_DATA))
-> +		return -EOPNOTSUPP;
-> +
-> +	iio = devm_iio_device_alloc(&client->dev, sizeof(*priv));
-> +	if (!iio)
-> +		return -ENOMEM;
-> +
-> +	priv = iio_priv(iio);
-> +	priv->i2c = client;
-> +	priv->model = &tla202x_models[id->driver_data];
-> +	mutex_init(&priv->lock);
-> +
-> +	iio->dev.parent = &client->dev;
-> +	iio->dev.of_node = client->dev.of_node;
-> +	iio->name = client->name;
-> +	iio->modes = INDIO_DIRECT_MODE;
-> +	iio->info = &tla2024_info;
-> +
-> +	ret = tla2024_of_chan_init(iio);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return devm_iio_device_register(&client->dev, iio);
-> +}
-> +
-> +static const struct i2c_device_id tla2024_id[] = {
-> +	{ "tla2024", TLA2024 },
-> +	{ "tla2022", TLA2022 },
-> +	{ "tla2021", TLA2021 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, tla2024_id);
-> +
-> +static const struct of_device_id tla2024_of_match[] = {
-> +	{ .compatible = "ti,tla2024" },
-> +	{ .compatible = "ti,tla2022" },
-> +	{ .compatible = "ti,tla2021" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, tla2024_of_match);
-> +
-> +static struct i2c_driver tla2024_driver = {
-> +	.driver = {
-> +		.name = "tla2024",
-> +		.of_match_table = of_match_ptr(tla2024_of_match),
-> +	},
-> +	.probe = tla2024_probe,
-> +	.id_table = tla2024_id,
-> +};
-> +module_i2c_driver(tla2024_driver);
-> +
-> +MODULE_AUTHOR("Ibtsam Haq <ibtsam.haq@philips.com>");
-> +MODULE_DESCRIPTION("Texas Instruments TLA2021/TLA2022/TLA2024 ADC driver");
-> +MODULE_LICENSE("GPL v2");
+> > > Besides, the translation is
+> > > just there because it is racy to do in userspace,  it is not some well
+> > > defined core kernel functionality.
+> > > Therefore, it is just a way to
+> > > enter the kernel to do the openat in a race free and safe manner.
+> >
+> > I agree that the translation has to be done in the kernel, not
+> > userspace, and that the kernel must provide to userspace some
+> > interface for requesting that the translation happen: we're just
+> > discussing the shape of this interface. Shouldn't all interfaces
+> > provided by the kernel to userspace be equally well defined? I'm not
+> > sure that the internal simplicity of the operation matters much
+> > either. There are already explicit system calls for some
+> > simple-to-implement things, e.g., timerfd_gettime. It's worth noting
+> > that timerfd is (IIRC), like procfs, a feature that's both ubiquitous
+> > and optional.
+>
+> It is well defined, it has a well defined signature, and it will error
+> out if you don't use it properly. Again, what it does is very limited
+> and niche. I am not sure it warrants a system call of its own.
 
+Do we need to think in terms of whether a bit of functionality
+"warrants" a system call? A system call is not expensive to add.
+Instead of thinking of whether a function meets some bar for promotion
+to a system call, we should be thinking of whether a function meets
+the bar for demotion to ioctl. System calls are generally more useful
+to users than ioctls, and all things being equal, creating an
+interface more pleasant for users should be the priority.
+
+> timerfd_gettime was an afterthought anyway, that's probably not a good
+> example (it was more to just match the POSIX timers interface as the
+> original timerfd never had support for querying, so the split into two
+> steps, create and initialize, you could argue one could do it without
+> a syscall, but it still has a well defined argument list, and
+> accepting elaborate data structures into an ioctl is not a good
+> interface to plumb, so that's easily justified).
+
+TCGETS deals with an elaborate data structure.
+
+In any case, I don't think the elaborate data structure argument is
+relevant. The things that the system call mechanism lets you do that
+the ioctl mechanism does not are independent of whether a system call
+accepts simple or complex argument types. And ioctl and a system call
+both specify a bit of kernel mode code to run: the difference is in
+identifying that bit of kernel-side code to run and in the features
+you get automatically through the call mechanism.
+
+> It's much like socket and setsockopt/getsockopt in nature. I would
+> even say APIs separating creation and configuration age well and are
+> better, but a process doesn't fit such a model cleanly.
+>
+> > > As is, the facility being provided through an ioctl on the pidfd is
+> > > not something I'd consider a problem.
+> >
+> > You're right that from a signature perspective, using an ioctl isn't a
+> > problem. I just want to make sure we take into account the other,
+> > non-signature advantages that system calls have over ioctls.
+> >
+> > > I think the translation stuff
+> > > should also probably be an extension of ioctl_ns(2) (but I wouldn't be
+> > > opposed if translate_pid is resurrected as is).
+> > > For anything more involved than ioctl(pidfd, PIDFD_TO_PROCFD,
+> > > procrootfd), I'd agree that a system call would be a cleaner
+> > > interface, otherwise, if you cannot generalise it, using ioctls as a
+> > > command interface is probably the better tradeoff here.
+> >
+> > Sure: I just want to better understand everyone else's thought process
+> > here, having been frustrated with things like the termios ioctls being
+> > ioctls.
+>
+> On that note, I don't buy the safety argument here, or the seccomp argument.
+>
+> You need to consider what this is, on a case by case basis.
+>
+> ioctl(pidfd, PIDFD_TO_PROCFD, procrootfd);
+>
+> See? You need /proc's root fd to be able to get to the /proc/<PID> dir
+> fd, in a race free manner. You don't need to have the overhead of
+> filtering to contain access, as privilege is bound to descriptors.
+
+There's no filtering overhead when you haven't enabled filtering, right?
+
+You seem to be making an argument that we should make this facility an
+ioctl because we don't need the features that the system call
+mechanism provides --- correct me if I'm wrong. Even if we can't see a
+case for filtering or containment or tracing _today_, such a case
+might arise in the future, as has happened many times before. Besides,
+we haven't touched on the other features we get "for free" when we
+make an operation a system call, e.g., explicit tracing support.  I
+don't understand why we should forestall these uses cases, both
+present and future, by using an ioctl instead of a system call,
+especially when we get so little in return. I think there's a lot of
+value in regularity and consistency and that making some operations
+ioctls and some syscalls based on details like whether an operation
+accepts a structure or a primitive makes the system less flexible and
+understandable.
+
+> [snip further discussion along the same lines]
