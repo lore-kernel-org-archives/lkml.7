@@ -2,169 +2,123 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FBFC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 03:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB4EC4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 04:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7023218A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 03:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FAAB218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 04:00:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NQHus6+s";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OYzIMBXX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A7Y7hpNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbfC3Don (ORCPT
+        id S1725882AbfC3EAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 23:44:43 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38254 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730144AbfC3Don (ORCPT
+        Sat, 30 Mar 2019 00:00:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59544 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbfC3EAO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 23:44:43 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 23EE56079C; Sat, 30 Mar 2019 03:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553917482;
-        bh=93iznbvlKQ3F7xK/RPlPSlA0NlZ9shD2OCP07kE9t/M=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NQHus6+s2eQCFJxzfo8wko4+qq5ffr0vsA2OP3tVGQp3hWabHAOrAMi80GCjE56AG
-         oLamI49lv+OzSKe1pQ11aFTqD3ZvcK5zQHwQs1JyJXAiqJ7MIIwJfUDAgTkla3Cefr
-         3aKDtVj9Kx7KkQ5Nbm87HdAaR2EiG7HORBGn94mI=
-Received: from [10.204.78.89] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 887906079C;
-        Sat, 30 Mar 2019 03:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553917481;
-        bh=93iznbvlKQ3F7xK/RPlPSlA0NlZ9shD2OCP07kE9t/M=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OYzIMBXXC322DJxTAt9nqRG48Bf1MIT85Mnifdzs4FExyQPSpzRFlH5hzCXHKILrr
-         ykQcl5mBychb5k5yTR3xCQ7iezXIOXA3bfdgS1PfDkOM5i7R6PiNeTD3O8n6CqtWOE
-         dYFHEp1fV3xLz9bNXHPIeR5TGHqIjlIZyh0L+pes=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 887906079C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-Subject: Re: [PATCH] rcu: tree_stall: Correctly unlock root node in
- rcu_check_gp_start_stall
-To:     paulmck@linux.ibm.com
-Cc:     Mukesh Ojha <mojha@codeaurora.org>, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, joel@joelfernandes.org,
-        rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1553858828-23097-1-git-send-email-neeraju@codeaurora.org>
- <7a9eed5a-9bcf-460c-abb9-1e9bd6eae102@codeaurora.org>
- <2a8057f7-0704-5e8f-423e-e56a91a9b448@codeaurora.org>
- <20190329212755.GB4102@linux.ibm.com>
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-Message-ID: <10b7ba19-9184-a4aa-d609-a644fcbe0503@codeaurora.org>
-Date:   Sat, 30 Mar 2019 09:14:36 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Sat, 30 Mar 2019 00:00:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=b0PRcjySJV9g1FLkDfsLDA2NdAo7Q/GRjEeeMMiAxdw=; b=A7Y7hpNSQV+NhTG6k2jDAjRyR
+        QI/WlkpramYnv9xxxWujcOrHeNNZVn+plyD8iMlTR2BSjxcwAihl5igBz67Hqdk4BMKirbMxmu0D+
+        zSahQyvorrTWTJ185ccoYkbChs4UIEhm+6gyOmk0iWdMO7et/XNLs3QgN2t3ZsB5Sfxge6I8kdJAn
+        wK6GDjqHm89eGmyJ9TWZ2579qJ6FPMd7p71k8MTNWX6mOzMcOQQka7a2Mv4jbq3Y1LURxXnV5PNyZ
+        QOR+/SG63aa0j8nboZyi1JEX5wu3FfnV8tDaC7x01JmENRBKCBgaHwKa7dsRdXMGAqLZTarjMmRyr
+        osWeVJ/Sw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hA5A9-0007Sf-KP; Sat, 30 Mar 2019 04:00:09 +0000
+Date:   Fri, 29 Mar 2019 21:00:09 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/12] pci doc: convert PCI/MSI-HOWTO.txt to rst format
+Message-ID: <20190330040009.GY10344@bombadil.infradead.org>
+References: <20190329160413.4293-1-changbin.du@gmail.com>
+ <20190329160413.4293-6-changbin.du@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190329212755.GB4102@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329160413.4293-6-changbin.du@gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Mar 30, 2019 at 12:04:06AM +0800, Changbin Du wrote:
+> @@ -1,13 +1,18 @@
+> -		The MSI Driver Guide HOWTO
+> -	Tom L Nguyen tom.l.nguyen@intel.com
+> -			10/03/2003
+> -	Revised Feb 12, 2004 by Martine Silbermann
+> -		email: Martine.Silbermann@hp.com
+> -	Revised Jun 25, 2004 by Tom L Nguyen
+> -	Revised Jul  9, 2008 by Matthew Wilcox <willy@linux.intel.com>
+> -		Copyright 2003, 2008 Intel Corporation
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. include:: <isonum.txt>
+> +
+> +==========================
+> +The MSI Driver Guide HOWTO
+> +==========================
+> +
+> +:Authors: - Tom L Nguyen <tom.l.nguyen@intel.com> 10/03/2003
+> +          - Revised Feb 12, 2004 by Martine Silbermann <Martine.Silbermann@hp.com>
+> +	  - Revised Jun 25, 2004 by Tom L Nguyen
+> +	  - Revised Jul  9, 2008 by Matthew Wilcox <willy@linux.intel.com>
+> +	    Copyright 2003, 2008 Intel Corporation
 
+The copyright line doesn't work quite the way it should in the rendered HTML.
 
-On 3/30/19 2:57 AM, Paul E. McKenney wrote:
-> On Fri, Mar 29, 2019 at 07:52:15PM +0530, Neeraj Upadhyay wrote:
->>
->>
->> On 3/29/19 6:58 PM, Mukesh Ojha wrote:
->>>
->>> On 3/29/2019 4:57 PM, Neeraj Upadhyay wrote:
->>>> Only unlock the root node, if current node (rnp) is not
->>>> root node.
->>>>
->>>> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
->>>
->>>
->>>
->>>> ---
->>>>    kernel/rcu/tree_stall.h | 4 +++-
->>>>    1 file changed, 3 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
->>>> index f65a73a..0651833 100644
->>>> --- a/kernel/rcu/tree_stall.h
->>>> +++ b/kernel/rcu/tree_stall.h
->>>
->>>
->>> why this is showing as under tree_stall.h while it is under
->>> "kernel/rcu/tree.c"
->>
->> It's moved in https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=10462d6f58fb6dbde7563e9343505d98d5bfba3d
->>
->> Please see linux-rcu dev tree for other changes, which moves code to
->> this file.
->>
->>
->> Thanks
->> Neeraj
->>
->>>
->>>> @@ -630,7 +630,9 @@ static void rcu_check_gp_start_stall(struct
->>>> rcu_node *rnp, struct rcu_data *rdp,
->>>>            time_before(j, rcu_state.gp_req_activity + gpssdelay) ||
->>>>            time_before(j, rcu_state.gp_activity + gpssdelay) ||
->>>>            atomic_xchg(&warned, 1)) {
->>>> -        raw_spin_unlock_rcu_node(rnp_root); /* irqs remain disabled. */
->>>> +        if (rnp_root != rnp)
->>>> +            /* irqs remain disabled. */
->>>> +            raw_spin_unlock_rcu_node(rnp_root);
->>>
->>> Looks good as it will balance the lock .if it is the root_node,
->>> which was not there earlier, and unlock was happening without any
->>> lock on root.
->>>
->>> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-> 
-> Applied, again thank you both!
-> 
-> In both cases, I updated the commit log, so please check to make sure
-> that I didn't mess anything up.
-> 
-> 							Thanx, Paul
-> 
+It seems to me it should be:
 
-Thanks Paul. One minor comment on 
-https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=ec6530e763046b6bb1f4c2c2aed49ebc68aae2a0 
+:Copyright: 2003, 2008 Intel Corporation
 
+Tom has used an ambiguous date format; given it appeared in the tree
+in December 2003, I suspect he's used middle-endian format.  It doesn't
+really seem relevant to have the dates here any more, so we could skip
+including them.  Also, none of these email addresses work, so perhaps
+just drop those too.
 
-"it clearly does not make sense to release
-both rnp->lock and rnp->lock"
+:Authors: Tom L Nguyen; Martine Silbermann; Matthew Wilcox
 
-should be rnp->lock and rnp_root->lock
+>  1. About this guide
+> +===================
 
+Should we drop the numbering of sections as part of this conversion?
+I'd be inclined to.
 
+>  4.2 Using MSI
+> +-------------
+>  
+>  Most of the hard work is done for the driver in the PCI layer.  The driver
+>  simply has to request that the PCI layer set up the MSI capability for this
+>  device.
+>  
+>  To automatically use MSI or MSI-X interrupt vectors, use the following
+> -function:
+> +function::
+>  
+>    int pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>  		unsigned int max_vecs, unsigned int flags);
 
-Thanks
-Neeraj
+This should really be turned into kernel-doc and moved to pci.h, but
+that seems like an awfully large amount of work to ask you to do when
+you're already doing so much to improve the situation.
 
->>> Cheers,
->>> -Mukesh
->>>
->>>>            raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
->>>>            return;
->>>>        }
->>
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
->> member of the Code Aurora Forum, hosted by The Linux Foundation
->>
-> 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
+This is also a really bad document.  It has three audiences; people
+configuring their kernel, people writing device drivers and people trying
+to debug why their kernel doesn't work.  Again, that's not on you to
+fix, but it's pretty frustrating to see so much good information so
+badly organised.
