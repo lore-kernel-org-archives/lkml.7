@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011A5C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11A4C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B2721773
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA3921773
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909586;
-	bh=gQ04Yzl6PozTHXt1FVWymE1AMT7iwANLAKSO2FtDftQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v++/pXnzFVxY2jBgcAY4Ip4xeGom6zbQW4JOnj43oLexX5RxFABapLp9y16CR6Jl8
-	 BMnqv4iHYNLika9YlQPHCVLmmRNiX0PBtKFqRoSgK5jdY8B0IuqcpDyCheYlw88/NP
-	 SxZXmrqAptoaYjgYOUnZrYiJyJnwgZX0D3xfpVpQ=
+	s=default; t=1553909595;
+	bh=wxCFi0Vwx4s7u0bNIU7e/yZ+bi5iPpGjLQsdyxd/4cY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=tI6fCINx+SfGPxu+Fg0drDrxz3CH++q1UNSUyp7n9wx5DFgp40SvkZB8BMPQA46En
+	 DfdNzDphCvBWNQY+pXLXz6e0arjCueocajNZ9TMZikBpgzzdA3VdslhLO5tK/Iu61r
+	 nLY3Vat7TAEmTiDqB3rNlmAX/cpd7QkQ84Up9a1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731848AbfC3BdF (ORCPT
+        id S1732380AbfC3Bcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:33:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40692 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:32:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732390AbfC3Bch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:32:37 -0400
+        id S1732342AbfC3Bca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:32:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5417218D8;
-        Sat, 30 Mar 2019 01:32:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADBB921773;
+        Sat, 30 Mar 2019 01:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909556;
-        bh=gQ04Yzl6PozTHXt1FVWymE1AMT7iwANLAKSO2FtDftQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2itY0W+MdUARd8EZ2k3QF/YrjLb6KLj1B0uSuKzpUph5soGlvJCxaCVgkY2zinPMY
-         R7AH4U8GuhnvYNIz7HONw/kzNcLBce7rp8Q7IZdYDdbqNojPQcahCW1Q87FU3KAjAN
-         7d88DggnjS4hrwxTJL3p7vZyef/iZhxRB3x+x/Q0=
+        s=default; t=1553909549;
+        bh=wxCFi0Vwx4s7u0bNIU7e/yZ+bi5iPpGjLQsdyxd/4cY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=R3ubPsV/1EZ3/gGEABS4RL9+6ux+KajMFaaVn93d6uC1HW8pNdVkUbBM1LLtunSNI
+         2Hb6yBtwjKkcCtLcw9UwKy7G6hVpb5kbaYmxEkn7vVSgq9pJZFOcTC3U65WGi8d/WE
+         5g3GCJn7ion6KEm0yxHhfQKQtY7dw45xqmkBnJF0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julia Cartwright <julia@ni.com>, Joerg Roedel <jroedel@suse.de>,
+Cc:     Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 3.18 07/10] iommu/dmar: Fix buffer overflow during PCI bus notification
-Date:   Fri, 29 Mar 2019 21:32:24 -0400
-Message-Id: <20190330013227.1365-7-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 01/10] rsi: improve kernel thread handling to fix kernel panic
+Date:   Fri, 29 Mar 2019 21:32:18 -0400
+Message-Id: <20190330013227.1365-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190330013227.1365-1-sashal@kernel.org>
-References: <20190330013227.1365-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,87 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Cartwright <julia@ni.com>
+From: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
 
-[ Upstream commit cffaaf0c816238c45cd2d06913476c83eb50f682 ]
+[ Upstream commit 4c62764d0fc21a34ffc44eec1210038c3a2e4473 ]
 
-Commit 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI
-device path") changed the type of the path data, however, the change in
-path type was not reflected in size calculations.  Update to use the
-correct type and prevent a buffer overflow.
+While running regressions, observed below kernel panic when sdio disconnect
+called. This is because of, kthread_stop() is taking care of
+wait_for_completion() by default. When wait_for_completion triggered
+in kthread_stop and as it was done already, giving kernel panic.
+Hence, removing redundant wait_for_completion() from rsi_kill_thread().
 
-This bug manifests in systems with deep PCI hierarchies, and can lead to
-an overflow of the static allocated buffer (dmar_pci_notify_info_buf),
-or can lead to overflow of slab-allocated data.
+... skipping ...
+BUG: unable to handle kernel NULL pointer dereference at           (null)
+IP: [<ffffffff810a63df>] exit_creds+0x1f/0x50
+PGD 0
+Oops: 0002 [#1] SMP
+CPU: 0 PID: 6502 Comm: rmmod Tainted: G  OE   4.15.9-Generic #154-Ubuntu
+Hardware name: Dell Inc. Edge Gateway 3003/ , BIOS 01.00.00 04/17/2017
+Stack:
+ffff88007392e600 ffff880075847dc0 ffffffff8108160a 0000000000000000
+ffff88007392e600 ffff880075847de8 ffffffff810a484b ffff880076127000
+ffff88003cd3a800 ffff880074f12a00 ffff880075847e28 ffffffffc09bed15
+Call Trace:
+[<ffffffff8108160a>] __put_task_struct+0x5a/0x140
+[<ffffffff810a484b>] kthread_stop+0x10b/0x110
+[<ffffffffc09bed15>] rsi_disconnect+0x2f5/0x300 [ven_rsi_sdio]
+[<ffffffff81578bcb>] ? __pm_runtime_resume+0x5b/0x80
+[<ffffffff816f0918>] sdio_bus_remove+0x38/0x100
+[<ffffffff8156cc64>] __device_release_driver+0xa4/0x150
+[<ffffffff8156d7a5>] driver_detach+0xb5/0xc0
+[<ffffffff8156c6c5>] bus_remove_driver+0x55/0xd0
+[<ffffffff8156dfbc>] driver_unregister+0x2c/0x50
+[<ffffffff816f0b8a>] sdio_unregister_driver+0x1a/0x20
+[<ffffffffc09bf0f5>] rsi_module_exit+0x15/0x30 [ven_rsi_sdio]
+[<ffffffff8110cad8>] SyS_delete_module+0x1b8/0x210
+[<ffffffff81851dc8>] entry_SYSCALL_64_fastpath+0x1c/0xbb
 
-   BUG: KASAN: global-out-of-bounds in dmar_alloc_pci_notify_info+0x1d5/0x2e0
-   Write of size 1 at addr ffffffff90445d80 by task swapper/0/1
-   CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W       4.14.87-rt49-02406-gd0a0e96 #1
-   Call Trace:
-    ? dump_stack+0x46/0x59
-    ? print_address_description+0x1df/0x290
-    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
-    ? kasan_report+0x256/0x340
-    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
-    ? e820__memblock_setup+0xb0/0xb0
-    ? dmar_dev_scope_init+0x424/0x48f
-    ? __down_write_common+0x1ec/0x230
-    ? dmar_dev_scope_init+0x48f/0x48f
-    ? dmar_free_unused_resources+0x109/0x109
-    ? cpumask_next+0x16/0x20
-    ? __kmem_cache_create+0x392/0x430
-    ? kmem_cache_create+0x135/0x2f0
-    ? e820__memblock_setup+0xb0/0xb0
-    ? intel_iommu_init+0x170/0x1848
-    ? _raw_spin_unlock_irqrestore+0x32/0x60
-    ? migrate_enable+0x27a/0x5b0
-    ? sched_setattr+0x20/0x20
-    ? migrate_disable+0x1fc/0x380
-    ? task_rq_lock+0x170/0x170
-    ? try_to_run_init_process+0x40/0x40
-    ? locks_remove_file+0x85/0x2f0
-    ? dev_prepare_static_identity_mapping+0x78/0x78
-    ? rt_spin_unlock+0x39/0x50
-    ? lockref_put_or_lock+0x2a/0x40
-    ? dput+0x128/0x2f0
-    ? __rcu_read_unlock+0x66/0x80
-    ? __fput+0x250/0x300
-    ? __rcu_read_lock+0x1b/0x30
-    ? mntput_no_expire+0x38/0x290
-    ? e820__memblock_setup+0xb0/0xb0
-    ? pci_iommu_init+0x25/0x63
-    ? pci_iommu_init+0x25/0x63
-    ? do_one_initcall+0x7e/0x1c0
-    ? initcall_blacklisted+0x120/0x120
-    ? kernel_init_freeable+0x27b/0x307
-    ? rest_init+0xd0/0xd0
-    ? kernel_init+0xf/0x120
-    ? rest_init+0xd0/0xd0
-    ? ret_from_fork+0x1f/0x40
-   The buggy address belongs to the variable:
-    dmar_pci_notify_info_buf+0x40/0x60
-
-Fixes: 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI device path")
-Signed-off-by: Julia Cartwright <julia@ni.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dmar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/rsi/rsi_common.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index 6b78e131f6dd..f6a42ea14ef1 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -134,7 +134,7 @@ dmar_alloc_pci_notify_info(struct pci_dev *dev, unsigned long event)
- 		for (tmp = dev; tmp; tmp = tmp->bus->self)
- 			level++;
+diff --git a/drivers/net/wireless/rsi/rsi_common.h b/drivers/net/wireless/rsi/rsi_common.h
+index d3fbe33d2324..a13f08fd8690 100644
+--- a/drivers/net/wireless/rsi/rsi_common.h
++++ b/drivers/net/wireless/rsi/rsi_common.h
+@@ -75,7 +75,6 @@ static inline int rsi_kill_thread(struct rsi_thread *handle)
+ 	atomic_inc(&handle->thread_done);
+ 	rsi_set_event(&handle->event);
  
--	size = sizeof(*info) + level * sizeof(struct acpi_dmar_pci_path);
-+	size = sizeof(*info) + level * sizeof(info->path[0]);
- 	if (size <= sizeof(dmar_pci_notify_info_buf)) {
- 		info = (struct dmar_pci_notify_info *)dmar_pci_notify_info_buf;
- 	} else {
+-	wait_for_completion(&handle->completion);
+ 	return kthread_stop(handle->task);
+ }
+ 
 -- 
 2.19.1
 
