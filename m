@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0520AC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDF8C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4F42183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D352183F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909974;
-	bh=L7uDZZxZvhFPl7B5XiCY5PPTWCibWG3KeFn/ZwM1Mo0=;
+	s=default; t=1553909980;
+	bh=rxXJWDPvJs2UMJ9Z3PSv4K+5+nO5vXyxgxTSKPp+yjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XycibsBpb9VXQZU+LhD8zMI7E7N2A/JlvOr4rSRFDE2UjbuDnktxMjQfsFdYj6b6T
-	 eFpWamsWefvs+nwQgnFWh3oVslxFp8P0shs1RHPOQIKP6ppGyxTk0VVh1ZXUMdurim
-	 chlffypli5yHBFS3W/mAI9HcRge0OYi4m7ClrVXc=
+	b=UXwipqFmjS6VaqYQoJp2v0Zh5nijmZbVZeEOtZDF6vhj+qsgkYXHAo+sz/vu/4qED
+	 EYtrqrDr784+Z1Y+djC57I+h7lN3v7HdwJCxnwdYCAC1AYZVUBiqdeK7Zyp0JIisNN
+	 9bEQm8LpX4gdbcAiQIMng8znXeGlLOUKHr3nNZGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731454AbfC3Bjd (ORCPT
+        id S1731270AbfC3BaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:39:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:30:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731276AbfC3BaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:30:02 -0400
+        id S1730961AbfC3B36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:29:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 521CF21773;
-        Sat, 30 Mar 2019 01:30:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1913217F5;
+        Sat, 30 Mar 2019 01:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909401;
-        bh=L7uDZZxZvhFPl7B5XiCY5PPTWCibWG3KeFn/ZwM1Mo0=;
+        s=default; t=1553909398;
+        bh=rxXJWDPvJs2UMJ9Z3PSv4K+5+nO5vXyxgxTSKPp+yjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VixmxkB57Dak/Mma90Fw6BI66bjfVCTQ2WCdr6qYPV4FM78UTtTW0NvUZEKYKFYdb
-         QS24jV8mr9bAf/swJC+ASj+Q7IlSMzYCxGhB3sw8DhpvIWG+VcfrYPbaNlUSnJ46V2
-         zCR30GRYzp6RVAhg5EeXytlw/y9oD7Wo8tQ2l+JE=
+        b=Qfdc1FggHPrPcESscXO4xsT1bWNAwapAy3Cj/2WS/FYx7/HR/RfbEn1qcM3lhufNf
+         lh+XJhirwcm+3CERvglFTdHaQfu3+19n3X8hTTjj1/TIQmRlw0kPkxet1ORxULgDvq
+         xm3YEenmDVKML2SXK6hFJDFEpux0O8fJGsxK+3Eo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 30/57] ALSA: hda: fix front speakers on Huawei MBXP
-Date:   Fri, 29 Mar 2019 21:28:23 -0400
-Message-Id: <20190330012854.32212-30-sashal@kernel.org>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 28/57] nvme-pci: fix conflicting p2p resource adds
+Date:   Fri, 29 Mar 2019 21:28:21 -0400
+Message-Id: <20190330012854.32212-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
 References: <20190330012854.32212-1-sashal@kernel.org>
@@ -58,68 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ayman Bagabas <ayman.bagabas@gmail.com>
+From: Keith Busch <keith.busch@intel.com>
 
-[ Upstream commit 8ac51bbc4cfec4ef08b03bef24b31e2d50ef8b37 ]
+[ Upstream commit 9fe5c59ff6a1e5e26a39b75489a1420e7eaaf0b1 ]
 
-This patch solves bug 200501 'Only 2 of 4 speakers playing sound.'
-It enables the front speakers on Huawei Matebook X Pro laptops.
-These laptops come with Dolby Atmos sound system and these pins
-configuration enables the front speakers.
+The nvme pci driver had been adding its CMB resource to the P2P DMA
+subsystem everytime on on a controller reset. This results in the
+following warning:
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=200501
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+    ------------[ cut here ]------------
+    nvme 0000:00:03.0: Conflicting mapping in same section
+    WARNING: CPU: 7 PID: 81 at kernel/memremap.c:155 devm_memremap_pages+0xa6/0x380
+    ...
+    Call Trace:
+     pci_p2pdma_add_resource+0x153/0x370
+     nvme_reset_work+0x28c/0x17b1 [nvme]
+     ? add_timer+0x107/0x1e0
+     ? dequeue_entity+0x81/0x660
+     ? dequeue_entity+0x3b0/0x660
+     ? pick_next_task_fair+0xaf/0x610
+     ? __switch_to+0xbc/0x410
+     process_one_work+0x1cf/0x350
+     worker_thread+0x215/0x3d0
+     ? process_one_work+0x350/0x350
+     kthread+0x107/0x120
+     ? kthread_park+0x80/0x80
+     ret_from_fork+0x1f/0x30
+    ---[ end trace f7ea76ac6ee72727 ]---
+    nvme nvme0: failed to register the CMB
+
+This patch fixes this by registering the CMB with P2P only once.
+
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/nvme/host/pci.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 877293149e3a..61d91b2f3994 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5602,6 +5602,7 @@ enum {
- 	ALC298_FIXUP_TPT470_DOCK,
- 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
- 	ALC255_FIXUP_DELL_HEADSET_MIC,
-+	ALC256_FIXUP_HUAWEI_MBXP_PINS,
- 	ALC295_FIXUP_HP_X360,
- 	ALC221_FIXUP_HP_HEADSET_MIC,
- 	ALC285_FIXUP_LENOVO_HEADPHONE_NOISE,
-@@ -5884,6 +5885,22 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MIC
- 	},
-+	[ALC256_FIXUP_HUAWEI_MBXP_PINS] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{0x12, 0x90a60130},
-+			{0x13, 0x40000000},
-+			{0x14, 0x90170110},
-+			{0x18, 0x411111f0},
-+			{0x19, 0x04a11040},
-+			{0x1a, 0x411111f0},
-+			{0x1b, 0x90170112},
-+			{0x1d, 0x40759a05},
-+			{0x1e, 0x411111f0},
-+			{0x21, 0x04211020},
-+			{ }
-+		},
-+	},
- 	[ALC269_FIXUP_ASUS_X101_FUNC] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc269_fixup_x101_headset_mic,
-@@ -6812,6 +6829,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x511f, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x3bf8, "Quanta FL1", ALC269_FIXUP_PCM_44K),
- 	SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", ALC269_FIXUP_LENOVO_EAPD),
-+	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MBXP", ALC256_FIXUP_HUAWEI_MBXP_PINS),
- 	SND_PCI_QUIRK(0x1b7d, 0xa831, "Ordissimo EVE2 ", ALC269VB_FIXUP_ORDISSIMO_EVE2), /* Also known as Malata PC-B1303 */
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 7b9ef8e734e7..dca87cb485e9 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1649,6 +1649,9 @@ static void nvme_map_cmb(struct nvme_dev *dev)
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+ 	int bar;
  
- #if 0
++	if (dev->cmb_size)
++		return;
++
+ 	dev->cmbsz = readl(dev->bar + NVME_REG_CMBSZ);
+ 	if (!dev->cmbsz)
+ 		return;
+@@ -2133,7 +2136,6 @@ static void nvme_pci_disable(struct nvme_dev *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+ 
+-	nvme_release_cmb(dev);
+ 	pci_free_irq_vectors(pdev);
+ 
+ 	if (pci_is_enabled(pdev)) {
+@@ -2585,6 +2587,7 @@ static void nvme_remove(struct pci_dev *pdev)
+ 	nvme_stop_ctrl(&dev->ctrl);
+ 	nvme_remove_namespaces(&dev->ctrl);
+ 	nvme_dev_disable(dev, true);
++	nvme_release_cmb(dev);
+ 	nvme_free_host_mem(dev);
+ 	nvme_dev_remove_admin(dev);
+ 	nvme_free_queues(dev, 0);
 -- 
 2.19.1
 
