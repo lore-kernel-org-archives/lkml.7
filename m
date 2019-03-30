@@ -2,132 +2,80 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD08C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 04:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2FAC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 04:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6773F2173C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 04:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 305A22184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 04:56:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="UDTT5YlX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TagtwPQo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbfC3ExT (ORCPT
+        id S1726388AbfC3E4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 00:53:19 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:45303 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfC3ExS (ORCPT
+        Sat, 30 Mar 2019 00:56:23 -0400
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:33027 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfC3E4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 00:53:18 -0400
-Received: from grover.tkatk1.zaq.ne.jp (zaqdadce369.zaq.ne.jp [218.220.227.105]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x2U4pLAS007869;
-        Sat, 30 Mar 2019 13:51:21 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x2U4pLAS007869
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553921483;
-        bh=pPtH2t8GZ8WqRr4VJX9/foridPbWBTo0wL5g5vqglAE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UDTT5YlXYzmV8aMr64IB9o/kx9x1SJcsuDQRVB6zc2+ncJxYU/ylUjjCaZsNrRTBG
-         7Q9UvzIIKGMWVDC+bn1T3gtD6qEXpRVWdgKX12Og05nhDGPNKoU050KHM5J4YM5plW
-         VNAjhxTJOyOxzVt4aPyh96ZEVQwIoLcNPVsA2z8kO8SEx+n4im/pNq+a9xm6DCJkCq
-         wh+GZPtByurdKUccFQib7S3wH7R4x/80IRV6BLZnatRuN69zbsYKPIjAUgpfXhWc/p
-         0sTX6rGOgBMkFgode+b8egs88JrUIrOqFKipdFYMcZHoIilGc14B/iG8n/SVJR6qGa
-         EQ8Kpcf8xl4VA==
-X-Nifty-SrcIP: [218.220.227.105]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Gross <andy.gross@linaro.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        Sagar Dharia <sdharia@codeaurora.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arch@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH] Remove SPDX "WITH Linux-syscall-note" from kernel-space headers
-Date:   Sat, 30 Mar 2019 13:50:53 +0900
-Message-Id: <1553921453-23777-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Sat, 30 Mar 2019 00:56:23 -0400
+Received: by mail-oi1-f173.google.com with SMTP id e5so3355674oii.0
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 21:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=in-reply-to:to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=NDH5M1HR79nQl3W+HKG6wYCnLsxMYX+/zRRqVQVrfXM=;
+        b=TagtwPQoi/RLYk8fBn+aZ28+G0aTOXRCfZ+npCUCtv1uBQDUgEz4vcdwriM9e/DcZF
+         qM/UkyPBfRcw46J+TKwA6kvz9702adQPEAFVOjLpIZIbDk0d+8nmfgkf8ije1SaDoGUe
+         HH0nUVwSluRjWTJ16t3fysyHGa55qzm1jNRw1A37nBujBgopKXUlbgHQ4kTvu0GsZuoF
+         GArfAqKTl8998/80DL9dHTIvo925c2YkS3EB/KdgxMMkIYp+dcvaPst1JfQA8xmE03Zw
+         WK8IfCRtWJjO0R1pL93ombdF8/tMnACJYK4H0orPIWfwuCufRNtH0Tv49MjYIfwGboRZ
+         yEUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:in-reply-to:to:from:subject:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=NDH5M1HR79nQl3W+HKG6wYCnLsxMYX+/zRRqVQVrfXM=;
+        b=Z0x5B+h+48RXW9Rdr5SyA/OTYScnckEOgGfvEK8OWx8YruhStJnduZWD+zZt1qtubH
+         C6rnmnpIWr0i+I6F8NBOamEh1uFYYKG05jWm1ZGKMN5pMG2L6t/4j0km9OKolsPKEyJ7
+         Ev3FXY4cpu//Acmb00f8o+T1stkQbHOKCoB+UUdVi3fE14I2Eer6VvyEcDqXUp7GwEuS
+         gnHogzod32fem0PqQI7hYLXOkPD2NoKU5DlUDTJ+YAhexW9G+9PsoEMjN2AbmF7Bn/FY
+         JKSoNJwma5nTeX994SstUre2kW+SP9tT4vMlWT8xP/4zQnUFSQQAwT6/mCffeH/qFqmI
+         Havw==
+X-Gm-Message-State: APjAAAU6PpdUKKfGS1LTUepILl+LPvDQLOrH0O8vWRmS1H/JrWFUsSnc
+        zMvuXyGG/Mi9wej7tdNmgkFltA4v
+X-Google-Smtp-Source: APXvYqzrAbN1b4coZW5zUFy2WL7P0kZKViz8wKAs1Uyun3Mx87Yage6ArwyCqd8VSh8YSIbClwwaPA==
+X-Received: by 2002:aca:3dc4:: with SMTP id k187mr6059344oia.40.1553921782307;
+        Fri, 29 Mar 2019 21:56:22 -0700 (PDT)
+Received: from [192.168.0.2] ([98.156.228.54])
+        by smtp.gmail.com with ESMTPSA id d70sm2007910oih.18.2019.03.29.21.56.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Mar 2019 21:56:21 -0700 (PDT)
+In-Reply-To: <241612a5-b041-e419-a3bc-e2a2e6ef1687@amd.com>
+To:     ghook@amd.com, joro@8bytes.org, jroedel@suse.de,
+        linux-kernel@vger.kernel.org
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: Re: [PATCH] iommu/amd: Reserve exclusion range in iova-domain
+Message-ID: <01b394b8-a402-a3d5-7cc6-4787028ec155@gmail.com>
+Date:   Fri, 29 Mar 2019 23:56:18 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Antivirus: Avast (VPS 190329-4, 03/29/2019), Outbound message
+X-Antivirus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "WITH Linux-syscall-note" should be added to headers exported to
-the user-space.
+Tested on a Dell PowerEdge R7425 system on which this problem is easily reproducible.
 
-Some kernel-space headers have "WITH Linux-syscall-note", which seems
-a mistake.
-
-[1] arch/x86/include/asm/hyperv-tlfs.h
-
-5a4858032217 ("x86/hyper-v: move hyperv.h out of uapi") moved this file
-out of uapi, but missed to update the SPDX License tag.
-
-[2] include/asm-generic/shmparam.h
-
-76ce2a80a28e ("Rename include/{uapi => }/asm-generic/shmparam.h really")
-moved this file out of uapi, but missed to update the SPDX License tag.
-
-[3] include/linux/qcom-geni-se.h
-
-eddac5af0654 ("soc: qcom: Add GENI based QUP Wrapper driver") added this
-file, but I do now see a good reason why its license tag must include
-"WITH Linux-syscall-note".
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- arch/x86/include/asm/hyperv-tlfs.h | 2 +-
- include/asm-generic/shmparam.h     | 2 +-
- include/linux/qcom-geni-se.h       | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index 2bdbbbc..cdf44aa 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/* SPDX-License-Identifier: GPL-2.0 */
- 
- /*
-  * This file contains definitions from Hyper-V Hypervisor Top-Level Functional
-diff --git a/include/asm-generic/shmparam.h b/include/asm-generic/shmparam.h
-index 8b78c0b..b8f9035 100644
---- a/include/asm-generic/shmparam.h
-+++ b/include/asm-generic/shmparam.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/* SPDX-License-Identifier: GPL-2.0 */
- #ifndef __ASM_GENERIC_SHMPARAM_H
- #define __ASM_GENERIC_SHMPARAM_H
- 
-diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-index 3bcd67f..dd46494 100644
---- a/include/linux/qcom-geni-se.h
-+++ b/include/linux/qcom-geni-se.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-  */
--- 
-2.7.4
-
+Tested-by: Stuart Hayes <stuart.w.hayes@gmail.com>
