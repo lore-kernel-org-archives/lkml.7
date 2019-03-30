@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4609C10F05
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23B7C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B469217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D9B217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907588;
-	bh=x3EtDR0sDMXQxk3PzdNEji9N54zBVR1bl0DXXytkpSQ=;
+	s=default; t=1553907590;
+	bh=DMGADTDGE/aozbhdPAAWR6ULxxXG/YRWcslZIjbXqJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JmmcAQ/MRAOg3Y4X7W/JO8F9iLLrCeBVuI9j+avI+FRW+6wQFxfBvN+hw+bmYSwOx
-	 ArW6xhE6lcs23cQbODWpDO3NK+Z9/CemAHOLafpj/NFoPhZkpKwpphrY/hehsfU1mn
-	 MCap1bY3jMlRS5UcMOe7fvj2oOGUvBuSCU32Y2Rw=
+	b=UbNlUsI9YfQUac4g362WJ2Ia9jU2F9FRx/3iBMz9drfd0ttQJZjCTtLjhejw3bS8E
+	 4UqCEY6e9lTx5mVy2FzJvGfBuWVocKHrbyHEHa+ud0BbBbTxntUQgea+pnUS1E8sQH
+	 JRTatWQ+El8E6pbmG5UCXzb/gKM0+XtF4Uj3SSrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732046AbfC3A5D (ORCPT
+        id S1732156AbfC3A7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:57:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36876 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:59:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732032AbfC3A46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:56:58 -0400
+        id S1732047AbfC3A5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:57:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90764206DD;
-        Sat, 30 Mar 2019 00:56:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29BAB2064A;
+        Sat, 30 Mar 2019 00:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907418;
-        bh=x3EtDR0sDMXQxk3PzdNEji9N54zBVR1bl0DXXytkpSQ=;
+        s=default; t=1553907423;
+        bh=DMGADTDGE/aozbhdPAAWR6ULxxXG/YRWcslZIjbXqJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XDSEOXMt2tkkWMS/E0wJlUC/C5B/UTm7iH8fJDjHMbjgfOtVMd39gAO8xOtHHZqOL
-         ufrPs/Skty0b805mULtgvIrPgrDhHUVyn3j/Mwcy3Qnq3j30JlVvn1iB3XiZikeqwa
-         kOO3ib5wCO+Fb9F8gynspJco8PvQCGMrfJxdzMUE=
+        b=EdtF8OncqqUlEXSZz4+8ArT9aNtAQBFecxaFV7d2ok2mRaP8cc18wVg6Fvs/XrmK/
+         CH1Ovd61o/caAKnIUNDwitEJ9qpbPLynQ8s9EB3q+7yyZ/xb0QgXB01fxcNDmUHQmW
+         3bHMCTFNozR57N2PSB2g9Hz3WlowTE2LudlAtTXE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 05/21] ALSA: sb8: add a check for request_region
-Date:   Fri, 29 Mar 2019 20:56:33 -0400
-Message-Id: <20190330005649.28475-5-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 08/21] ALSA: opl3: fix mismatch between snd_opl3_drum_switch definition and declaration
+Date:   Fri, 29 Mar 2019 20:56:36 -0400
+Message-Id: <20190330005649.28475-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005649.28475-1-sashal@kernel.org>
 References: <20190330005649.28475-1-sashal@kernel.org>
@@ -58,35 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit dcd0feac9bab901d5739de51b3f69840851f8919 ]
+[ Upstream commit b4748e7ab731e436cf5db4786358ada5dd2db6dd ]
 
-In case request_region fails, the fix returns an error code to
-avoid NULL pointer dereference.
+The function snd_opl3_drum_switch declaration in the header file
+has the order of the two arguments on_off and vel swapped when
+compared to the definition arguments of vel and on_off.  Fix this
+by swapping them around to match the definition.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+This error predates the git history, so no idea when this error
+was introduced.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/isa/sb/sb8.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/drivers/opl3/opl3_voice.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/isa/sb/sb8.c b/sound/isa/sb/sb8.c
-index b8e2391c33ff..0c7fe1418447 100644
---- a/sound/isa/sb/sb8.c
-+++ b/sound/isa/sb/sb8.c
-@@ -111,6 +111,10 @@ static int snd_sb8_probe(struct device *pdev, unsigned int dev)
+diff --git a/sound/drivers/opl3/opl3_voice.h b/sound/drivers/opl3/opl3_voice.h
+index a371c075ac87..e26702559f61 100644
+--- a/sound/drivers/opl3/opl3_voice.h
++++ b/sound/drivers/opl3/opl3_voice.h
+@@ -41,7 +41,7 @@ void snd_opl3_timer_func(unsigned long data);
  
- 	/* block the 0x388 port to avoid PnP conflicts */
- 	acard->fm_res = request_region(0x388, 4, "SoundBlaster FM");
-+	if (!acard->fm_res) {
-+		err = -EBUSY;
-+		goto _err;
-+	}
+ /* Prototypes for opl3_drums.c */
+ void snd_opl3_load_drums(struct snd_opl3 *opl3);
+-void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int on_off, int vel, struct snd_midi_channel *chan);
++void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int vel, int on_off, struct snd_midi_channel *chan);
  
- 	if (port[dev] != SNDRV_AUTO_PORT) {
- 		if ((err = snd_sbdsp_create(card, port[dev], irq[dev],
+ /* Prototypes for opl3_oss.c */
+ #ifdef CONFIG_SND_SEQUENCER_OSS
 -- 
 2.19.1
 
