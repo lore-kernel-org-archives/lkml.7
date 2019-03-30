@@ -2,114 +2,272 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9918C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93008C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB25217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909664;
-	bh=y/JBzzutBR/zgUzVeE5K25N7xJX3zxX+2cvaxga6bMM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iyUcOdiUE71i5w2hUJXZL9eYAfdPeFazs8r2ZQI4DEkHQRirgmefIgCRXgeud80lY
-	 jreuyy4ptv0fX/yOKEo6sSagZeM9FtGj90PG3uBeyEto5zb5pUwPgxwze+MY0I640y
-	 VSwvMyOmdcwiPXXNIalUmZayCZ0o7n9SxkylMkyE=
+	by mail.kernel.org (Postfix) with ESMTP id 5AA072184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="MsdB1jhv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732108AbfC3BeW (ORCPT
+        id S1732206AbfC3Be0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:34:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732253AbfC3BcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:32:08 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 932E121773;
-        Sat, 30 Mar 2019 01:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909528;
-        bh=y/JBzzutBR/zgUzVeE5K25N7xJX3zxX+2cvaxga6bMM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ag82PQsyEsaMhbPu/ZxbzU/m1YGjpOaUoUxmeiIvhid9fANOq88uhIx3H1tTc3Tgn
-         CIqExJwvglfAlb1+JBwx4/hjllpR2bDKwRjKOicyn1bf9LgtlR1vO5hUAaORUx54ff
-         ur/frTLWFo4ia9XHGNcLfUw7/HgWoNm/i+Sj+F1o=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 06/16] ARM: samsung: Limit SAMSUNG_PM_CHECK config option to non-Exynos platforms
-Date:   Fri, 29 Mar 2019 21:31:50 -0400
-Message-Id: <20190330013200.1130-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190330013200.1130-1-sashal@kernel.org>
-References: <20190330013200.1130-1-sashal@kernel.org>
+        Fri, 29 Mar 2019 21:34:26 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45119 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731060AbfC3BeV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:34:21 -0400
+Received: by mail-ed1-f67.google.com with SMTP id m16so3525493edd.12
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 18:34:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tBykamkGXGhl6g5OEQcE2XhD7B931pY9hJ+thiyv0u4=;
+        b=MsdB1jhvLCntID2DE9REDtIIJU1Brw/9Qc+lSTdpFEOsOX9uLJMjbVyVtUt2duARuo
+         iZb2mHAwFkuvftXQHDSVgZA94WyAZ3F6xDLymkjZ+CcPo2DzHwXZE6OkwIBgx6nq+yV7
+         YtCuuWVrY40ZYeBNRLgvS5fqR/oAwwQ0tO+/H+8GGE049SzjCzGWs2tOisbBKRjZBjmS
+         aqY36PH/soM3xk7h7mioN6oeutqn8e4BKFd9VU1qY4yrJmBIgrSp9M5MtFcHgCILiRuA
+         XivrtPKz9ST38rPnLR3VHGSZMEteg1nOkqBhGLbS+unIotIN1qgxhuLAvrrpeZjfjjY+
+         WPvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tBykamkGXGhl6g5OEQcE2XhD7B931pY9hJ+thiyv0u4=;
+        b=GedKERigQugKw5VFxanA3abpu50KXc9wnFHe7+HYxQHssqxBDA7q69CpqoCCkiCMNe
+         C4Kr6AIJwyA8ptMV4EMjwdvqjPSbY7KcofR+gYGczW1D0JqwcSgWNULhtREgyYr4CbF8
+         qA+8rg2gUixHE/xZB6VgsdWQfu/qqgkzB5wSWTsXaLtUA6fs1UC63g0VzNixxGjXA5vV
+         CQssZ1mbi7hPXehC6xFbXfZnydM5RhrI+MjGO587UfY3LfeYKUM3vP5KfHMbuG/mM3dF
+         h8T3x5bcVI6YZ1pSv5d0bkAqt0moOMS4yE8DVdwQva416agEFtUIIuGA2lw6dR4A2hW+
+         34zA==
+X-Gm-Message-State: APjAAAXxNExAmd5EJielzkyfH4Bjo8E2NV+3SF43pqbR1fWFzawM1yJX
+        GvWimBp566iHF5k89Y+capUtzg==
+X-Google-Smtp-Source: APXvYqzwZejrsokjFgwpyZOtXLYAEVmrhJefNsKFWTLPa531h+rglKpofKM3PFSW2EFos/T+n/0lPA==
+X-Received: by 2002:a50:95fa:: with SMTP id x55mr32103298eda.49.1553909659519;
+        Fri, 29 Mar 2019 18:34:19 -0700 (PDT)
+Received: from brauner.io ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
+        by smtp.gmail.com with ESMTPSA id d37sm1086791ede.79.2019.03.29.18.34.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 29 Mar 2019 18:34:19 -0700 (PDT)
+Date:   Sat, 30 Mar 2019 02:34:17 +0100
+From:   Christian Brauner <christian@brauner.io>
+To:     Jann Horn <jannh@google.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>,
+        Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH v2 4/5] signal: PIDFD_SIGNAL_TID threads via pidfds
+Message-ID: <20190330013416.vnidfkjbsxxhzslm@brauner.io>
+References: <20190329155425.26059-1-christian@brauner.io>
+ <20190329155425.26059-5-christian@brauner.io>
+ <CAG48ez0=Q2CzgTGLiEU7F9B=gS-58VrpKz2XQ369cemo2FJdbQ@mail.gmail.com>
+ <20190330012229.yt3hecmgaj2r6vp7@brauner.io>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190330012229.yt3hecmgaj2r6vp7@brauner.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+On Sat, Mar 30, 2019 at 02:22:29AM +0100, Christian Brauner wrote:
+> On Sat, Mar 30, 2019 at 02:06:34AM +0100, Jann Horn wrote:
+> > On Fri, Mar 29, 2019 at 4:54 PM Christian Brauner <christian@brauner.io> wrote:
+> > > With the addition of pidfd_open() it is possible for users to reference a
+> > > specific thread by doing:
+> > >
+> > > int pidfd = pidfd_open(<tid>, 0);
+> > >
+> > > This means we can extend pidfd_send_signal() to signal a specific thread.
+> > > As promised in the commit for pidfd_send_signal() [1] the extension is
+> > > based on a flag argument, i.e. the scope of the signal delivery is based on
+> > > the flag argument, not on the type of file descriptor.
+> > > To this end the flag PIDFD_SIGNAL_TID is added. With this change we now
+> > > cover most of the functionality of all the other signal sending functions
+> > > combined:
+> > [...]
+> > > diff --git a/include/uapi/linux/wait.h b/include/uapi/linux/wait.h
+> > > index d6c7c0701997..b72f0ef84fe5 100644
+> > > --- a/include/uapi/linux/wait.h
+> > > +++ b/include/uapi/linux/wait.h
+> > [...]
+> > > +/* Flags to pass to pidfd_send_signal */
+> > > +#define PIDFD_SIGNAL_TID 1 /* Send signal to specific thread */
+> > 
+> > nit: s/1/1U/; the flags argument is an `unsigned int`
+> 
+> Will change.
+> 
+> > 
+> > >  #endif /* _UAPI_LINUX_WAIT_H */
+> > > diff --git a/kernel/signal.c b/kernel/signal.c
+> > > index eb97d0cc6ef7..9f93da85b2b9 100644
+> > > --- a/kernel/signal.c
+> > > +++ b/kernel/signal.c
+> > [...]
+> > > +static int pidfd_send_signal_specific(struct pid *pid, int sig,
+> > > +                                     struct kernel_siginfo *info)
+> > > +{
+> > > +       struct task_struct *p;
+> > > +       int error = -ESRCH;
+> > > +
+> > > +       rcu_read_lock();
+> > > +       p = pid_task(pid, PIDTYPE_PID);
+> > > +       if (p)
+> > > +               error = __do_send_specific(p, sig, info);
+> > > +       rcu_read_unlock();
+> > > +
+> > > +       return error;
+> > > +}
+> > > +
+> > >  /**
+> > > - * sys_pidfd_send_signal - send a signal to a process through a task file
+> > > - *                          descriptor
+> > > + * sys_pidfd_send_signal - send a signal to a process through a pidfd
+> > > +
+> > >   * @pidfd:  the file descriptor of the process
+> > >   * @sig:    signal to be sent
+> > >   * @info:   the signal info
+> > >   * @flags:  future flags to be passed
+> > 
+> > nit: comment is outdated, it isn't "future flags" anymore
+> 
+> Will remove.
+> 
+> > 
+> > [...]
+> > > + *   rt_tgsigqueueinfo(<tgid>, <tid>, <sig>, <uinfo>)
+> > > + * - pidfd_send_signal(<pidfd>, <sig>, <info>, PIDFD_SIGNAL_TID);
+> > > + *   which is equivalent to
+> > > + *   rt_tgsigqueueinfo(<tgid>, <tid>, <sig>, <uinfo>)
+> > > + *
+> > >   * In order to extend the syscall to threads and process groups the @flags
+> > >   * argument should be used. In essence, the @flags argument will determine
+> > >   * what is signaled and not the file descriptor itself. Put in other words,
+> > 
+> > nit: again, outdated comment about @flags
+> 
+> Will update.
+> 
+> > 
+> > [...]
+> > > @@ -3626,43 +3695,16 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+> > >                 prepare_kill_siginfo(sig, &kinfo);
+> > >         }
+> > >
+> > > -       ret = kill_pid_info(sig, &kinfo, pid);
+> > > +       if (flags & PIDFD_SIGNAL_TID)
+> > > +               ret = pidfd_send_signal_specific(pid, sig, &kinfo);
+> > > +       else
+> > > +               ret = kill_pid_info(sig, &kinfo, pid);
+> > 
+> > nit: maybe give pidfd_send_signal_specific() and kill_pid_info() the
+> > same signatures, since they perform similar operations with the same
+> > argument types?
+> 
+> Yes, let's do
+> pidfd_send_signal_specific.(pid, sig, &kinfo);
+> kill_pid_info..............(pid, sig, &kinfo);
+> 
+> so it matches the argument order of the syscalls itself too.
 
-[ Upstream commit 6862fdf2201ab67cd962dbf0643d37db909f4860 ]
+Strike that. We should do:
+pidfd_send_signal_specific.(sig, &kinfo, pid);
+kill_pid_info..............(sig, &kinfo, pid);
 
-"S3C2410 PM Suspend Memory CRC" feature (controlled by
-SAMSUNG_PM_CHECK config option) is incompatible with highmem
-(uses phys_to_virt() instead of proper mapping) which is used by
-the majority of Exynos boards. The issue manifests itself in OOPS
-on affected boards, i.e. on Odroid-U3 I got the following one:
+because kill_pid_info() is called in multiple places so we would
+needlessly shovle code around.
 
-Unable to handle kernel paging request at virtual address f0000000
-pgd = 1c0f9bb4
-[f0000000] *pgd=00000000
-Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-[<c0458034>] (crc32_le) from [<c0121f8c>] (s3c_pm_makecheck+0x34/0x54)
-[<c0121f8c>] (s3c_pm_makecheck) from [<c0121efc>] (s3c_pm_run_res+0x74/0x8c)
-[<c0121efc>] (s3c_pm_run_res) from [<c0121ecc>] (s3c_pm_run_res+0x44/0x8c)
-[<c0121ecc>] (s3c_pm_run_res) from [<c01210b8>] (exynos_suspend_enter+0x64/0x148)
-[<c01210b8>] (exynos_suspend_enter) from [<c018893c>] (suspend_devices_and_enter+0x9ec/0xe74)
-[<c018893c>] (suspend_devices_and_enter) from [<c0189534>] (pm_suspend+0x770/0xc04)
-[<c0189534>] (pm_suspend) from [<c0186ce8>] (state_store+0x6c/0xcc)
-[<c0186ce8>] (state_store) from [<c09db434>] (kobj_attr_store+0x14/0x20)
-[<c09db434>] (kobj_attr_store) from [<c02fa63c>] (sysfs_kf_write+0x4c/0x50)
-[<c02fa63c>] (sysfs_kf_write) from [<c02f97a4>] (kernfs_fop_write+0xfc/0x1e4)
-[<c02f97a4>] (kernfs_fop_write) from [<c027b198>] (__vfs_write+0x2c/0x140)
-[<c027b198>] (__vfs_write) from [<c027b418>] (vfs_write+0xa4/0x160)
-[<c027b418>] (vfs_write) from [<c027b5d8>] (ksys_write+0x40/0x8c)
-[<c027b5d8>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-
-Add PLAT_S3C24XX, ARCH_S3C64XX and ARCH_S5PV210 dependencies to
-SAMSUNG_PM_CHECK config option to hide it on Exynos platforms.
-
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/plat-samsung/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-index 57729b915003..b9396dcf836d 100644
---- a/arch/arm/plat-samsung/Kconfig
-+++ b/arch/arm/plat-samsung/Kconfig
-@@ -255,7 +255,7 @@ config S3C_PM_DEBUG_LED_SMDK
- 
- config SAMSUNG_PM_CHECK
- 	bool "S3C2410 PM Suspend Memory CRC"
--	depends on PM
-+	depends on PM && (PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210)
- 	select CRC32
- 	help
- 	  Enable the PM code's memory area checksum over sleep. This option
--- 
-2.19.1
-
+> 
+> > 
+> > Something that was already kinda weird in the existing code, but is
+> > getting worse with TIDs is the handling of SI_USER with siginfo.
+> 
+> Right, that's what we discussed earlier.
+> 
+> > Copying context lines from above here:
+> > 
+> >         if (info) {
+> >                 ret = copy_siginfo_from_user_any(&kinfo, info);
+> >                 if (unlikely(ret))
+> >                         goto err;
+> >                 ret = -EINVAL;
+> >                 if (unlikely(sig != kinfo.si_signo))
+> >                         goto err;
+> >                 if ((task_pid(current) != pid) &&
+> >                     (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL)) {
+> >                         /* Only allow sending arbitrary signals to yourself. */
+> >                         ret = -EPERM;
+> >                         if (kinfo.si_code != SI_USER)
+> >                                 goto err;
+> >                         /* Turn this into a regular kill signal. */
+> >                         prepare_kill_siginfo(sig, &kinfo);
+> >                 }
+> >         } else {
+> >                 prepare_kill_siginfo(sig, &kinfo);
+> >         }
+> > 
+> > So for signals to PIDs, the rule is that if you send siginfo with
+> > SI_USER to yourself, the siginfo is preserved; otherwise the kernel
+> > silently clobbers it. That's already kind of weird - silent behavior
+> 
+> Clobbers as in "silently replaces it whatever it seems fit?
+> 
+> > difference depending on a security check. But now, for signals to
+> > threads, I think the result is going to be that signalling the thread
+> > group leader preserves information, and signalling any other thread
+> > clobbers it? If so, that seems bad.
+> > 
+> > do_rt_sigqueueinfo() seems to have the same issue, from a glance - but
+> > there, at least the error case is just a -EPERM, not a silent behavior
+> > difference.
+> > 
+> > Would it make sense to refuse sending siginfo with SI_USER to
+> > non-current? If you actually want to send a normal SI_USER signal, you
+> 
+> Yeah.
+> 
+> > can use info==NULL, right? That should create wrongness parity with
+> > do_rt_sigqueueinfo().
+> 
+> So you'd just do (just doing it non-elegantly rn):
+> if ((task_pid(current) != pid) &&
+>     (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL)) {
+>         ret = -EPERM;
+>         goto err;
+> }
+> 
+> > To improve things further, I guess you'd have to move the comparison
+> > against current into pidfd_send_signal_specific(), or move the task
+> > lookup out of it, or something like that?
+> 
+> Looks like a sane suggestion to me. Would you care to send a patch for
+> that? This is clearly a bugfix suitable for 5.1 so I'd rather not wait
+> until 5.2.
