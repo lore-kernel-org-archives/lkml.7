@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65EAC10F05
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74870C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83510218FC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F1C218D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909461;
-	bh=kh6x85vlARnyrHOWz1eLCy80ymVjJzn7TIMHAgPuY18=;
+	s=default; t=1553909464;
+	bh=7wECnrCF++N1FhjFDlTHh7neg8t/BZx/6YS38KLyr+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z3rYtB5+a5kOnkAg6nts+zRs6M5qOOhX+SL9aypdEecSRAqJY+twbbrSHRARh7/0g
-	 7XoxcSY/6k/C63yVgeZfsHh8VXrlj7ChDbURQPZTDAqHAN2vHAszaNyuPOn8V+vC9V
-	 sSbTMJb6BFaHNT+Jmu0PauZaogM4a2QLF6zA56Ow=
+	b=gxQz6ajv5ifv6J+Q5vKBTXrf+GQFhf3dM8KmN+ULELzm5poPHClpdlbyVLrz5tcYm
+	 kygA4M5/2l2k+SwzUV9Rm8XZ3yJn2gorIUDiSp9p/OemcTXydLra0wgqJVY6jt7+rG
+	 CUj/a4+T+gBtlYQs69WOFNct78U37TjLsIMBiXi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731820AbfC3BbA (ORCPT
+        id S1731838AbfC3BbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:31:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38262 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:31:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731784AbfC3Ba5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:30:57 -0400
+        id S1731817AbfC3BbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:31:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C2D62184C;
-        Sat, 30 Mar 2019 01:30:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23EC021773;
+        Sat, 30 Mar 2019 01:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909456;
-        bh=kh6x85vlARnyrHOWz1eLCy80ymVjJzn7TIMHAgPuY18=;
+        s=default; t=1553909459;
+        bh=7wECnrCF++N1FhjFDlTHh7neg8t/BZx/6YS38KLyr+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kcrlbwsLpu/XwEH8MQWjH/tKen9veYuA4QC+TjaOm6JgQxV4joLwQ2X7DHFi0IozW
-         4ZbjfVyhl04ul0VGtVr93KwV3kVMZPauQGvy8E+peYWPfPnH6VIS3vJyL8U7TOPPgW
-         tIwS8BF2PFRUHKJ+6Meoa8ITNqSk9hpA1jwQE0dU=
+        b=mNMpoMKOxrB5cMsNIjQldI+EwJmXrRfenOGLf4gB248H6RDDwxYU7l0Neufgg36gP
+         nXNWjilfkDGb0ch6mXmJIXT+Kn6UvPIaHvgwRQz2FwROKcRK+KHMLw911MSKUJ3tLD
+         Tg6uCVpgsdyquO017JcftzgsFQelfiylj0LodWbA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 16/37] cifs: fallback to older infolevels on findfirst queryinfo retry
-Date:   Fri, 29 Mar 2019 21:29:59 -0400
-Message-Id: <20190330013020.379-16-sashal@kernel.org>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 18/37] nvme-pci: fix conflicting p2p resource adds
+Date:   Fri, 29 Mar 2019 21:30:01 -0400
+Message-Id: <20190330013020.379-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013020.379-1-sashal@kernel.org>
 References: <20190330013020.379-1-sashal@kernel.org>
@@ -57,112 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Keith Busch <keith.busch@intel.com>
 
-[ Upstream commit 3b7960caceafdfc2cdfe2850487f8d091eb41144 ]
+[ Upstream commit 9fe5c59ff6a1e5e26a39b75489a1420e7eaaf0b1 ]
 
-In cases where queryinfo fails, we have cases in cifs (vers=1.0)
-where with backupuid mounts we retry the query info with findfirst.
-This doesn't work to some NetApp servers which don't support
-WindowsXP (and later) infolevel 261 (SMB_FIND_FILE_ID_FULL_DIR_INFO)
-so in this case use other info levels (in this case it will usually
-be level 257, SMB_FIND_FILE_DIRECTORY_INFO).
+The nvme pci driver had been adding its CMB resource to the P2P DMA
+subsystem everytime on on a controller reset. This results in the
+following warning:
 
-(Also fixes some indentation)
+    ------------[ cut here ]------------
+    nvme 0000:00:03.0: Conflicting mapping in same section
+    WARNING: CPU: 7 PID: 81 at kernel/memremap.c:155 devm_memremap_pages+0xa6/0x380
+    ...
+    Call Trace:
+     pci_p2pdma_add_resource+0x153/0x370
+     nvme_reset_work+0x28c/0x17b1 [nvme]
+     ? add_timer+0x107/0x1e0
+     ? dequeue_entity+0x81/0x660
+     ? dequeue_entity+0x3b0/0x660
+     ? pick_next_task_fair+0xaf/0x610
+     ? __switch_to+0xbc/0x410
+     process_one_work+0x1cf/0x350
+     worker_thread+0x215/0x3d0
+     ? process_one_work+0x350/0x350
+     kthread+0x107/0x120
+     ? kthread_park+0x80/0x80
+     ret_from_fork+0x1f/0x30
+    ---[ end trace f7ea76ac6ee72727 ]---
+    nvme nvme0: failed to register the CMB
 
-See kernel bugzilla 201435
+This patch fixes this by registering the CMB with P2P only once.
 
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/inode.c | 67 +++++++++++++++++++++++++++----------------------
- 1 file changed, 37 insertions(+), 30 deletions(-)
+ drivers/nvme/host/pci.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index a90a637ae79a..6fd4a6a75234 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -779,43 +779,50 @@ cifs_get_inode_info(struct inode **inode, const char *full_path,
- 	} else if ((rc == -EACCES) && backup_cred(cifs_sb) &&
- 		   (strcmp(server->vals->version_string, SMB1_VERSION_STRING)
- 		      == 0)) {
--			/*
--			 * For SMB2 and later the backup intent flag is already
--			 * sent if needed on open and there is no path based
--			 * FindFirst operation to use to retry with
--			 */
-+		/*
-+		 * For SMB2 and later the backup intent flag is already
-+		 * sent if needed on open and there is no path based
-+		 * FindFirst operation to use to retry with
-+		 */
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 06355ca832db..ae03a5b70324 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1546,6 +1546,9 @@ static void __iomem *nvme_map_cmb(struct nvme_dev *dev)
+ 	void __iomem *cmb;
+ 	int bar;
  
--			srchinf = kzalloc(sizeof(struct cifs_search_info),
--						GFP_KERNEL);
--			if (srchinf == NULL) {
--				rc = -ENOMEM;
--				goto cgii_exit;
--			}
-+		srchinf = kzalloc(sizeof(struct cifs_search_info),
-+					GFP_KERNEL);
-+		if (srchinf == NULL) {
-+			rc = -ENOMEM;
-+			goto cgii_exit;
-+		}
++	if (dev->cmb_size)
++		return;
++
+ 	dev->cmbsz = readl(dev->bar + NVME_REG_CMBSZ);
+ 	if (!(NVME_CMB_SZ(dev->cmbsz)))
+ 		return NULL;
+@@ -2034,7 +2037,6 @@ static void nvme_pci_disable(struct nvme_dev *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
  
--			srchinf->endOfSearch = false;
-+		srchinf->endOfSearch = false;
-+		if (tcon->unix_ext)
-+			srchinf->info_level = SMB_FIND_FILE_UNIX;
-+		else if ((tcon->ses->capabilities &
-+			 tcon->ses->server->vals->cap_nt_find) == 0)
-+			srchinf->info_level = SMB_FIND_FILE_INFO_STANDARD;
-+		else if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM)
- 			srchinf->info_level = SMB_FIND_FILE_ID_FULL_DIR_INFO;
-+		else /* no srvino useful for fallback to some netapp */
-+			srchinf->info_level = SMB_FIND_FILE_DIRECTORY_INFO;
+-	nvme_release_cmb(dev);
+ 	pci_free_irq_vectors(pdev);
  
--			srchflgs = CIFS_SEARCH_CLOSE_ALWAYS |
--					CIFS_SEARCH_CLOSE_AT_END |
--					CIFS_SEARCH_BACKUP_SEARCH;
-+		srchflgs = CIFS_SEARCH_CLOSE_ALWAYS |
-+				CIFS_SEARCH_CLOSE_AT_END |
-+				CIFS_SEARCH_BACKUP_SEARCH;
- 
--			rc = CIFSFindFirst(xid, tcon, full_path,
--				cifs_sb, NULL, srchflgs, srchinf, false);
--			if (!rc) {
--				data =
--				(FILE_ALL_INFO *)srchinf->srch_entries_start;
-+		rc = CIFSFindFirst(xid, tcon, full_path,
-+			cifs_sb, NULL, srchflgs, srchinf, false);
-+		if (!rc) {
-+			data = (FILE_ALL_INFO *)srchinf->srch_entries_start;
- 
--				cifs_dir_info_to_fattr(&fattr,
--				(FILE_DIRECTORY_INFO *)data, cifs_sb);
--				fattr.cf_uniqueid = le64_to_cpu(
--				((SEARCH_ID_FULL_DIR_INFO *)data)->UniqueId);
--				validinum = true;
-+			cifs_dir_info_to_fattr(&fattr,
-+			(FILE_DIRECTORY_INFO *)data, cifs_sb);
-+			fattr.cf_uniqueid = le64_to_cpu(
-+			((SEARCH_ID_FULL_DIR_INFO *)data)->UniqueId);
-+			validinum = true;
- 
--				cifs_buf_release(srchinf->ntwrk_buf_start);
--			}
--			kfree(srchinf);
--			if (rc)
--				goto cgii_exit;
-+			cifs_buf_release(srchinf->ntwrk_buf_start);
-+		}
-+		kfree(srchinf);
-+		if (rc)
-+			goto cgii_exit;
- 	} else
- 		goto cgii_exit;
- 
+ 	if (pci_is_enabled(pdev)) {
+@@ -2434,6 +2436,7 @@ static void nvme_remove(struct pci_dev *pdev)
+ 	nvme_stop_ctrl(&dev->ctrl);
+ 	nvme_remove_namespaces(&dev->ctrl);
+ 	nvme_dev_disable(dev, true);
++	nvme_release_cmb(dev);
+ 	nvme_free_host_mem(dev);
+ 	nvme_dev_remove_admin(dev);
+ 	nvme_free_queues(dev, 0);
 -- 
 2.19.1
 
