@@ -2,217 +2,108 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C514FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1B2C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964D1206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FCE0205C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553908189;
+	bh=o0FzjwNuqPm1Z10x6EB0cmafSwvt1zpWYrGhlGJDzPk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zBy//WQQAvLgrrHihJ+6ZIuU29PUr3D5wRBTOfkvu0/RR+zfNmYHTjirqLr1IYE1k
+	 AhpR9lWMvmcKJGgwYUX1Dpcoel9/01WxhnzHiT3nZr0g3IigzsjGfiZE7aK1JHzKE9
+	 UWtO9DawRCTPm5y0vH3IRpgFz+nmTs0owS1gGPDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731452AbfC3BJb convert rfc822-to-8bit (ORCPT
+        id S1730963AbfC3AwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:09:31 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:33183 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730589AbfC3BJ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:09:29 -0400
-X-Originating-IP: 149.199.65.200
-Received: from fisel.enstb.org (unknown [149.199.65.200])
-        (Authenticated sender: ronan@keryell.fr)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 0EB311BF230;
-        Sat, 30 Mar 2019 01:09:21 +0000 (UTC)
-From:   Ronan KERYELL <ronan@keryell.fr>
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Sonal Santan <sonals@xilinx.com>, Daniel Vetter <daniel@ffwll.ch>,
-        "dri-devel\@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Cyril Chemparathy <cyrilc@xilinx.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lizhi Hou <lizhih@xilinx.com>,
-        Michal Simek <michals@xilinx.com>,
-        "airlied\@redhat.com" <airlied@redhat.com>,
-        linux-fpga@vger.kernel.org, Ralph Wittig <wittig@xilinx.com>,
-        Ronan Keryell <rkeryell@xilinx.com>
-Subject: Re: [RFC PATCH Xilinx Alveo 0/6] Xilinx PCIe accelerator driver
-References: <20190319215401.6562-1-sonal.santan@xilinx.com>
-        <20190325202810.GG2665@phenom.ffwll.local>
-        <BYAPR02MB51608FDF39B39898FAAEBFEEBB5F0@BYAPR02MB5160.namprd02.prod.outlook.com>
-        <CAKMK7uHh5KNaTO+a4ZA+vPQcPKUBwODsx+pPCWNp3sxe9TFP0Q@mail.gmail.com>
-        <BYAPR02MB51603A1AD72F704112B55B90BB580@BYAPR02MB5160.namprd02.prod.outlook.com>
-        <20190327141137.GK2665@phenom.ffwll.local>
-        <BYAPR02MB5160162639C2EAC6B19901B7BB590@BYAPR02MB5160.namprd02.prod.outlook.com>
-        <CAPM=9tyLNOXCaKGQkCCmo4tt=Dny0j984-=q8utjwv-aX-Y6BQ@mail.gmail.com>
-Date:   Fri, 29 Mar 2019 18:09:18 -0700
-In-Reply-To: <CAPM=9tyLNOXCaKGQkCCmo4tt=Dny0j984-=q8utjwv-aX-Y6BQ@mail.gmail.com> (Dave
-        Airlie's message of "Fri, 29 Mar 2019 14:56:17 +1000")
-Message-ID: <871s2pw4ld.fsf@fisel.enstb.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 29 Mar 2019 20:52:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730931AbfC3AwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:52:14 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 751A9218AC;
+        Sat, 30 Mar 2019 00:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553907133;
+        bh=o0FzjwNuqPm1Z10x6EB0cmafSwvt1zpWYrGhlGJDzPk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kbNqOvrNjrrFir8aiNFSG+G9FIEZObVySrGnwR1aajp9TS01IEXI6NZi871j912+2
+         UAVYD2hVVpW6Ku3juZSoisY1FCyIfsE4UvBwKWVngZTLoB4301ozY4p9DNY+pt+cRe
+         lNTYuy+V+R8mobpnzcnbbvT+NDImaNXmefzfrzO0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 42/67] perf map: Remove map from 'names' tree in __maps__remove()
+Date:   Fri, 29 Mar 2019 20:50:22 -0400
+Message-Id: <20190330005047.25998-42-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190330005047.25998-1-sashal@kernel.org>
+References: <20190330005047.25998-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am adding linux-fpga@vger.kernel.org, since this is why I missed this
-thread in the first place...
+From: Changbin Du <changbin.du@gmail.com>
 
->>>>> On Fri, 29 Mar 2019 14:56:17 +1000, Dave Airlie <airlied@gmail.com> said:
+[ Upstream commit b49265e04410b97b31a5ee66ef6782c1b2d6cd2c ]
 
-Hi Dave!
+There are two trees for each map inserted by maps__insert(), so remove
+it from the 'names' tree in __maps__remove().
 
-    Dave> On Thu, 28 Mar 2019 at 10:14, Sonal Santan <sonals@xilinx.com> wrote:
+Detected with gcc's ASan.
 
-    >>> From: Daniel Vetter [mailto:daniel.vetter@ffwll.ch]
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 1e6285699b30 ("perf symbols: Fix slowness due to -ffunction-section")
+Link: http://lkml.kernel.org/r/20190316080556.3075-11-changbin.du@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/util/map.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-[...]
-
-    >>> Note: There's no expectation for the fully optimizing compiler,
-    >>> and we're totally ok if there's an optimizing proprietary
-    >>> compiler and a basic open one (amd, and bunch of other
-    >>> companies all have such dual stacks running on top of drm
-    >>> kernel drivers). But a basic compiler that can convert basic
-    >>> kernels into machine code is expected.
-
-    >> Although the compiler is not open source the compilation flow
-    >> lets users examine output from various stages. For example if you
-    >> write your kernel in OpenCL/C/C++ you can view the RTL
-    >> (Verilog/VHDL) output produced by first stage of compilation.
-    >> Note that the compiler is really generating a custom circuit
-    >> given a high level input which in the last phase gets synthesized
-    >> into bitstream. Expert hardware designers can handcraft a circuit
-    >> in RTL and feed it to the compiler. Our FPGA tools let you view
-    >> the generated hardware design, the register map, etc. You can get
-    >> more information about a compiled design by running XRT tool like
-    >> xclbinutil on the generated file.
-
-    >> In essence compiling for FPGAs is quite different than compiling
-    >> for GPU/CPU/DSP.  Interestingly FPGA compilers can run anywhere
-    >> from 30 mins to a few hours to compile a testcase.
-
-    Dave> So is there any open source userspace generator for what this
-    Dave> interface provides? Is the bitstream format that gets fed into
-    Dave> the FPGA proprietary and is it signed?
-
-Short answer:
-
-- a bitstream is an opaque content similar to various firmware handled
-  by Linux, EFI capsules, x86 microcode, WiFi modems, etc.
-
-- there is no open-source generator for what the interface consume;
-
-- I do not know if it is signed;
-
-- it is probably similar to what Intel FPGA (not GPU) drivers provide
-  already inside the Linux kernel and I guess there is no pure
-  open-source way to generate their bit-stream either.
-
-
-Long answer:
-
-- processors, GPU and other digital circuits are designed from a lot of
-  elementary transistors, wires, capacitors, resistors... using some
-  very complex (and expensive) tools from some EDA companies but at the
-  end, after months of work, they come often with a "simple" public
-  interface, the... instruction set! So it is rather "easy" at the end
-  to generate some instructions with a compiler such as LLVM from a
-  description of this ISA or some reverse engineering. Note that even if
-  the ISA is public, it is very difficult to make another efficient
-  processor from scratch just from this ISA, so there is often no
-  concern about making this ISA public to develop the ecosystem ;
-
-- FPGA are field-programmable gate arrays, made also from a lot of
-  elementary transistors, wires, capacitors, resistors... but organized
-  in billions of very low-level elementary gates, memory elements, DSP
-  blocks, I/O blocks, clock generators, specific
-  accelerators... directly exposed to the user and that can be
-  programmed according to a configuration memory (the bitstream) that
-  details how to connect each part, routing element, configuring each
-  elemental piece of hardware.  So instead of just writing instructions
-  like on a CPU or a GPU, you need to configure each bit of the
-  architecture in such a way it does something interesting for
-  you. Concretely, you write some programs in RTL languages (Verilog,
-  VHDL) or higher-level (C/C++, OpenCL, SYCL...)  and you use some very
-  complex (and expensive) tools from some EDA companies to generate the
-  bitstream implementing an equivalent circuit with the same
-  semantics. Since the architecture is so low level, there is a direct
-  mapping between the configuration memory (bitstream) and the hardware
-  architecture itself, so if it is public then it is easy to duplicate
-  the FPGA itself and to start a new FPGA company. That is unfortunately
-  something the existing FPGA companies do not want... ;-)
-
-To summarize:
-
-- on a CPU & GPU, the vendor used the expensive EDA tools once already
-  for you and provide the simpler ISA interface;
-
-- on an FPGA, you have access to a pile of low-level hardware and it is
-  up to you to use the lengthy process of building your own computing
-  architecture using the heavy expensive very subtle EDA tools that will
-  run for hours or days to generate some good-enough placement for your
-  pleasure.
-
-There is some public documentation on-line:
-https://www.xilinx.com/products/silicon-devices/fpga/virtex-ultrascale-plus.html#documentation
-
-To have an idea of the elementary architecture:
-https://www.xilinx.com/support/documentation/user_guides/ug574-ultrascale-clb.pdf
-https://www.xilinx.com/support/documentation/user_guides/ug579-ultrascale-dsp.pdf
-https://www.xilinx.com/support/documentation/user_guides/ug573-ultrascale-memory-resources.pdf
-
-Even on the configuration and the file format, but without any detailed semantics:
-https://www.xilinx.com/support/documentation/user_guides/ug570-ultrascale-configuration.pdf
-
-
-The Xilinx compiler xocc taking for example some LLVM IR and generating
-some bitstream is not open-source and will probably never be for the
-reasons above... :-(
-
-Xilinx is open-sourcing all what can reasonably be open-sourced:
-
-- the user-level and system run-time, including the OpenCL runtime:
-  https://github.com/Xilinx/XRT to handle the bitstreams generated by
-  some close-source tools
-
-- the kernel device drivers which are already in
-  https://github.com/Xilinx/XRT but we want to upstream into the Linux
-  kernel to make life easier (this is the matter of this e-mail thread);
-
-- to generate some real code in the most (modern and) open-source way,
-  there is an open-source framework to compile some SYCL C++ including
-  some Xilinx FPGA-specific extensions down to SPIR LLVM IR using
-  Clang/LLVM and to feed the close-source xocc tool with it
-  https://github.com/triSYCL/triSYCL
-
-  You can see starting from
-  https://github.com/triSYCL/triSYCL/blob/master/tests/Makefile#L322 how
-  to start from C++ code, generate some SPIR LLVM IR and to feed xocc
-  and build a fat binary that will use the XRT runtime.
-
-  Some documentation in
-  https://github.com/triSYCL/triSYCL/blob/master/doc/architecture.rst
-
-  There are other more official ways to generate bitstream (they are
-  called products instead of research projects like triSYCL :-) ).
-
-  We are also working on an other open-source SYCL compiler with Intel
-  to have a better common implementation
-  https://github.com/intel/llvm/wiki and to upstream this into Clang/LLVM.
-
-So for Xilinx FPGA, you can see the LLVM IR as the equivalent of PTX for
-nVidia. But xocc is close-source for some more fundamental reasons: it
-would expose all the details of the FPGA. I guess this is exactly the
-same for Xilinx FPGA.
-
-Note that probably most of the tool chains used to generate the
-low-level firmware for the various CPU (microcode), GPU, etc. are
-also close-source.
-
-See you,
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 6751301a755c..750ecc3dad50 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -911,6 +911,9 @@ static void __maps__remove(struct maps *maps, struct map *map)
+ {
+ 	rb_erase_init(&map->rb_node, &maps->entries);
+ 	map__put(map);
++
++	rb_erase_init(&map->rb_node_name, &maps->names);
++	map__put(map);
+ }
+ 
+ void maps__remove(struct maps *maps, struct map *map)
 -- 
-Ronan KERYELL, Xilinx Research Labs / San José, California.
+2.19.1
+
