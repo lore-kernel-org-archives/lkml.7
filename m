@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF55C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061BDC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1671D218CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC188206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907285;
-	bh=cRkDvbkGVjYnAxmFphy6GMC2+BOMm5V6n+aNWwX+i6M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rKaCUjmjsMEbLExecSDbSpMgE5pCSCU9opA1Xs9ECUOobs2NN6pa4rZFp7VSxceYH
-	 N89ke0dQF6WPQTuRcubiJOo5BgH3/HoaxlywrAAu5bOowDNKo5L7AJf4rpYIyMa2lP
-	 oYKhd36VdHECCOS7uZWqpsIPxeHlNnezij5f6Rsk=
+	s=default; t=1553907287;
+	bh=vemJgVnvUTgPaZf/beP1yOIgaEzuc5GHCyBce1gxYPI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QvlREPX5Bg4mIQxZAjcpwWgoWh38qfKwUfvnPf6HT1ZgMcxszYwqYpDSlubU53Y7H
+	 Y0tYEoluDARHNLJtPfdw6IS030FkvIszvxnbcoRqRYBJPNi7hVn0Svcwn6DwiW2L9v
+	 f/yy1hSKB6LQX9V8j0jo/XdGdzRpLdBkc+4h1z50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731588AbfC3Ayn (ORCPT
+        id S1730706AbfC3Ayq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:54:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33652 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:54:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730667AbfC3Ayj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:54:39 -0400
+        id S1731587AbfC3Ayn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:54:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1031218D3;
-        Sat, 30 Mar 2019 00:54:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46D4B218CD;
+        Sat, 30 Mar 2019 00:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907278;
-        bh=cRkDvbkGVjYnAxmFphy6GMC2+BOMm5V6n+aNWwX+i6M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RSIG1gii2TUfnUHEuSkVtImHP2grqUg/OEZVubk/UYtBL7sqP97SsuY0j9Xs/eEnI
-         Xkm+baXeXahjoD4Dlndqg+2H1WIHqx3Gocx8DtshD7Zogx10fEaqfOWNa1qRqIkc2t
-         xET8d7LuZ62CwWujfxmg7GIW92mqpOHdzQA9d8qc=
+        s=default; t=1553907283;
+        bh=vemJgVnvUTgPaZf/beP1yOIgaEzuc5GHCyBce1gxYPI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Nn7hFODl5eweB1PFM2vxy1ybViXMOaaujC2uplsYFCjvh485pg7KYDrd4CAi+OPan
+         PI3KWKCe+412j0pR608YUeSlOo/pN50jvp9AAiayGjEOXuWOxaUCtvyaheDEyhef9f
+         FdhtPahkQuGIVxOpZLxJhS8d8E7VWfyjxgHNgn7U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 52/52] ext4: prohibit fstrim in norecovery mode
-Date:   Fri, 29 Mar 2019 20:52:59 -0400
-Message-Id: <20190330005301.26868-52-sashal@kernel.org>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 01/37] ARC: u-boot args: check that magic number is correct
+Date:   Fri, 29 Mar 2019 20:54:02 -0400
+Message-Id: <20190330005441.27540-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190330005301.26868-1-sashal@kernel.org>
-References: <20190330005301.26868-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,40 +58,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-[ Upstream commit 18915b5873f07e5030e6fb108a050fa7c71c59fb ]
+[ Upstream commit edb64bca50cd736c6894cc6081d5263c007ce005 ]
 
-The ext4 fstrim implementation uses the block bitmaps to find free space
-that can be discarded.  If we haven't replayed the journal, the bitmaps
-will be stale and we absolutely *cannot* use stale metadata to zap the
-underlying storage.
+In case of devboards we really often disable bootloader and load
+Linux image in memory via JTAG. Even if kernel tries to verify
+uboot_tag and uboot_arg there is sill a chance that we treat some
+garbage in registers as valid u-boot arguments in JTAG case.
+E.g. it is enough to have '1' in r0 to treat any value in r2 as
+a boot command line.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+So check that magic number passed from u-boot is correct and drop
+u-boot arguments otherwise. That helps to reduce the possibility
+of using garbage as u-boot arguments in JTAG case.
+
+We can safely check U-boot magic value (0x0) in linux passed via
+r1 register as U-boot pass it from the beginning. So there is no
+backward-compatibility issues.
+
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/ioctl.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arc/kernel/head.S  | 1 +
+ arch/arc/kernel/setup.c | 8 ++++++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index 2e76fb55d94a..5f24fdc140ad 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -999,6 +999,13 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		if (!blk_queue_discard(q))
- 			return -EOPNOTSUPP;
+diff --git a/arch/arc/kernel/head.S b/arch/arc/kernel/head.S
+index 1f945d0f40da..208bf2c9e7b0 100644
+--- a/arch/arc/kernel/head.S
++++ b/arch/arc/kernel/head.S
+@@ -107,6 +107,7 @@ ENTRY(stext)
+ 	;    r2 = pointer to uboot provided cmdline or external DTB in mem
+ 	; These are handled later in handle_uboot_args()
+ 	st	r0, [@uboot_tag]
++	st      r1, [@uboot_magic]
+ 	st	r2, [@uboot_arg]
+ #endif
  
-+		/*
-+		 * We haven't replayed the journal, so we cannot use our
-+		 * block-bitmap-guided storage zapping commands.
-+		 */
-+		if (test_opt(sb, NOLOAD) && ext4_has_feature_journal(sb))
-+			return -EROFS;
+diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+index 709649e5f9bc..6b8d106e0d53 100644
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -35,6 +35,7 @@ unsigned int intr_to_DE_cnt;
+ 
+ /* Part of U-boot ABI: see head.S */
+ int __initdata uboot_tag;
++int __initdata uboot_magic;
+ char __initdata *uboot_arg;
+ 
+ const struct machine_desc *machine_desc;
+@@ -433,6 +434,8 @@ static inline bool uboot_arg_invalid(unsigned long addr)
+ #define UBOOT_TAG_NONE		0
+ #define UBOOT_TAG_CMDLINE	1
+ #define UBOOT_TAG_DTB		2
++/* We always pass 0 as magic from U-boot */
++#define UBOOT_MAGIC_VALUE	0
+ 
+ void __init handle_uboot_args(void)
+ {
+@@ -448,6 +451,11 @@ void __init handle_uboot_args(void)
+ 		goto ignore_uboot_args;
+ 	}
+ 
++	if (uboot_magic != UBOOT_MAGIC_VALUE) {
++		pr_warn(IGNORE_ARGS "non zero uboot magic\n");
++		goto ignore_uboot_args;
++	}
 +
- 		if (copy_from_user(&range, (struct fstrim_range __user *)arg,
- 		    sizeof(range)))
- 			return -EFAULT;
+ 	if (uboot_tag != UBOOT_TAG_NONE &&
+             uboot_arg_invalid((unsigned long)uboot_arg)) {
+ 		pr_warn(IGNORE_ARGS "invalid uboot arg: '%px'\n", uboot_arg);
 -- 
 2.19.1
 
