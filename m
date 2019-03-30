@@ -4,59 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBDAC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0C4C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C048217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875592064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553908076;
-	bh=yqn5BA5jPL9u/0ljYsNfje1cy7vTvZn6nJUSSlowly8=;
+	s=default; t=1553908092;
+	bh=zSoqEq5ZCwLh2ApenEVJzG3l9Ztn3aAeNCnVJBQdzxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k66lnSIlNj4DDUFj6pIfLJY8+1x/YFcjlNebhYFQsOZX8eQ8c2c+Kz6PSxTnzf1QJ
-	 +eiJx71d4q70eh/2x+a2Svfrw1E6bmfDJetIDnL3oKvUYR12ul5s0FAmWH+qHp/WEL
-	 jX/8YMSViFIwaiJXP1kREYx3zUe2JfPrMDV/POTY=
+	b=T7S0JwCNoE0ZTQXCu9kHbuH9x5FUcUJXrz3atkQkvakUa8sSKIlOmyAkkoEr3EyU7
+	 57l8yiuj60cTZqIogpYN6TcwO+zT8R49eIioEtb2jf9RopxA6U40TW1Ds4Yvo1Krml
+	 1rBa0i8QmWzrReEnQ+0HFyPXrKznEMugYfu5fuU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731482AbfC3BHz (ORCPT
+        id S1731478AbfC3BIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:07:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59996 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:08:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731192AbfC3AxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:53:10 -0400
+        id S1730716AbfC3Aw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:52:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9757218E2;
-        Sat, 30 Mar 2019 00:53:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48C65218CD;
+        Sat, 30 Mar 2019 00:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907190;
-        bh=yqn5BA5jPL9u/0ljYsNfje1cy7vTvZn6nJUSSlowly8=;
+        s=default; t=1553907179;
+        bh=zSoqEq5ZCwLh2ApenEVJzG3l9Ztn3aAeNCnVJBQdzxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jdb760+FoqLMGJPA1QYOBnKoQ7KBtrnG6jiAkZyTOxQWITdMDF1U0CJoHruAI/DJq
-         jQUOJMINlKCyhACWHQX9Cci8yNXTnor5ItJZmPpgo+t2Lc0zDL9iDKA/QeOcnSXmsT
-         wkeuagKf2923pFbRSvvjijsDRgQNi38xqQR4XY2Q=
+        b=I43xEA0P4OP5sz0Z+x82e5hwbLAjd03E9OHZ9I7k7d5mXIwxTZ5KDDsHTcDzdKGvc
+         L99y7h2aTOG2W9tZ+qKmNQOnwUtlftqrwa/aFeRxzlHEv7AqHFGs+pX2Tut1/XaCbD
+         WW/OcMvclcWj6t5csHxIizfT3Ne/ZhddTVX9RC5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 05/52] perf data: Don't store auxtrace index for directory data file
-Date:   Fri, 29 Mar 2019 20:52:12 -0400
-Message-Id: <20190330005301.26868-5-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 67/67] ext4: prohibit fstrim in norecovery mode
+Date:   Fri, 29 Mar 2019 20:50:47 -0400
+Message-Id: <20190330005047.25998-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190330005301.26868-1-sashal@kernel.org>
-References: <20190330005301.26868-1-sashal@kernel.org>
+In-Reply-To: <20190330005047.25998-1-sashal@kernel.org>
+References: <20190330005047.25998-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -66,43 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit cd3dd8dd8ff62374d90cb3f2e54b8c94106c7810 ]
+[ Upstream commit 18915b5873f07e5030e6fb108a050fa7c71c59fb ]
 
-We can't store the auxtrace index when we store into multiple files,
-because we keep only offset for it, not the file.
+The ext4 fstrim implementation uses the block bitmaps to find free space
+that can be discarded.  If we haven't replayed the journal, the bitmaps
+will be stale and we absolutely *cannot* use stale metadata to zap the
+underlying storage.
 
-The auxtrace data will be processed correctly in the 'pipe' mode.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190308134745.5057-3-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-record.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/ioctl.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 22ebeb92ac51..f5b438486a64 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -178,7 +178,7 @@ static int record__process_auxtrace(struct perf_tool *tool,
- 	size_t padding;
- 	u8 pad[8] = {0};
+diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+index 2e76fb55d94a..5f24fdc140ad 100644
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -999,6 +999,13 @@ resizefs_out:
+ 		if (!blk_queue_discard(q))
+ 			return -EOPNOTSUPP;
  
--	if (!perf_data__is_pipe(data)) {
-+	if (!perf_data__is_pipe(data) && !perf_data__is_dir(data)) {
- 		off_t file_offset;
- 		int fd = perf_data__fd(data);
- 		int err;
++		/*
++		 * We haven't replayed the journal, so we cannot use our
++		 * block-bitmap-guided storage zapping commands.
++		 */
++		if (test_opt(sb, NOLOAD) && ext4_has_feature_journal(sb))
++			return -EROFS;
++
+ 		if (copy_from_user(&range, (struct fstrim_range __user *)arg,
+ 		    sizeof(range)))
+ 			return -EFAULT;
 -- 
 2.19.1
 
