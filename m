@@ -2,111 +2,133 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB17DC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A34C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885E2218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:44:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e4pSODDu";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BbWp/vi5"
+	by mail.kernel.org (Postfix) with ESMTP id 5B663218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbfC3JoY (ORCPT
+        id S1730539AbfC3Ju5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 05:44:24 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51892 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730453AbfC3JoX (ORCPT
+        Sat, 30 Mar 2019 05:50:57 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38870 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730384AbfC3Ju4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 05:44:23 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id F03C560A05; Sat, 30 Mar 2019 09:44:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553939063;
-        bh=TjGv+aiL37/BKi0d8iCmd4zoi3/v0/JT63TWhrlt8qo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=e4pSODDuK5ag7Opjt0JHzT6ayHmQnJLrRPwkczDvr3YKAaZPL371YJehXlzlqp6ZA
-         qKWtmh/A2SGMrLT6m0OeWGJf0foWm7j7Umt5KpI1nlj42H3bS8PXrPzQPJP6m/8Ah/
-         AiXGc76cY4dYMvXj4oSJnNPpxT/hxQhI4yxeoPtI=
-Received: from [10.79.174.164] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78A516087D;
-        Sat, 30 Mar 2019 09:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553939060;
-        bh=TjGv+aiL37/BKi0d8iCmd4zoi3/v0/JT63TWhrlt8qo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BbWp/vi5X436olsYp2pQzOjnnOpjGGFxK0fgBXJqYrsG8queFZWBu0UVGld9Idl0S
-         8+Ma517Xe9dBUvZkOZiz+lytn2qDqpE4WUI16TumKVMr/M3GsaMMmqOrogb52yM3wv
-         r7TjhsS7SP8x5IQSUNj+wV0vACB6OgA4PrAzQYb4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 78A516087D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH v2 1/2] clk:Fix divide-by-zero in
- divider_ro_round_rate_parent
-To:     nixiaoming <nixiaoming@huawei.com>, jbrunet@baylibre.com,
-        mturquette@baylibre.com, sboyd@codeaurora.org,
-        soren.brinkmann@xilinx.com
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1553913085-51237-1-git-send-email-nixiaoming@huawei.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <fcbcceb2-e59b-465a-ec36-cde354425898@codeaurora.org>
-Date:   Sat, 30 Mar 2019 15:14:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 30 Mar 2019 05:50:56 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2U9mxB5061550
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 05:50:55 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rj4f8av9e-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 05:50:55 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Sat, 30 Mar 2019 09:50:53 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 30 Mar 2019 09:50:50 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2U9ooxs59113630
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 30 Mar 2019 09:50:50 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E43CDA4054;
+        Sat, 30 Mar 2019 09:50:49 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 04694A405B;
+        Sat, 30 Mar 2019 09:50:49 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.204.99])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat, 30 Mar 2019 09:50:48 +0000 (GMT)
+Date:   Sat, 30 Mar 2019 12:50:47 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rafael@kernel.org, akpm@linux-foundation.org, mhocko@suse.com,
+        osalvador@suse.de, willy@infradead.org, fanc.fnst@cn.fujitsu.com
+Subject: Re: [PATCH v3 1/2] mm/sparse: Clean up the obsolete code comment
+References: <20190329082915.19763-1-bhe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1553913085-51237-1-git-send-email-nixiaoming@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329082915.19763-1-bhe@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19033009-0008-0000-0000-000002D43C17
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19033009-0009-0000-0000-000022403DBC
+Message-Id: <20190330095046.GA26141@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-30_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903300071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 29, 2019 at 04:29:14PM +0800, Baoquan He wrote:
+> The code comment above sparse_add_one_section() is obsolete and
+> incorrect, clean it up and write new one.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-On 3/30/2019 8:01 AM, nixiaoming wrote:
-> In the function divider_recalc_rate() The judgment of the return value of
-> _get_div() indicates that the return value of _get_div() may be 0.
-
-s/may be/can be
-
-
-> In order to avoid the divide-by-zero error, add check the return values.
-s/add check the/add check for
-
-> of _get_div() in the divider_ro_round_rate_parent()
->
-> Signed-off-by: nixiaoming <nixiaoming@huawei.com>
-
-
-Please fix the commit text.
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
-Cheers,
--Mukesh
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
 
 > ---
->   drivers/clk/clk-divider.c | 3 +++
->   1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
-> index e5a1726..f4bf7a4 100644
-> --- a/drivers/clk/clk-divider.c
-> +++ b/drivers/clk/clk-divider.c
-> @@ -347,6 +347,9 @@ long divider_ro_round_rate_parent(struct clk_hw *hw, struct clk_hw *parent,
->   	int div;
->   
->   	div = _get_div(table, val, flags, width);
-> +	/* avoid divide-by-zero */
-> +	if (!div)
-> +		return -EINVAL;
->   
->   	/* Even a read-only clock can propagate a rate change */
->   	if (clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) {
+> v2->v3:
+>   Normalize the code comment to use '/**' at 1st line of doc
+>   above function.
+> v1-v2:
+>   Add comments to explain what the returned value means for
+>   each error code.
+>  mm/sparse.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 69904aa6165b..363f9d31b511 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -684,10 +684,19 @@ static void free_map_bootmem(struct page *memmap)
+>  #endif /* CONFIG_MEMORY_HOTREMOVE */
+>  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
+>  
+> -/*
+> - * returns the number of sections whose mem_maps were properly
+> - * set.  If this is <=0, then that means that the passed-in
+> - * map was not consumed and must be freed.
+> +/**
+> + * sparse_add_one_section - add a memory section
+> + * @nid: The node to add section on
+> + * @start_pfn: start pfn of the memory range
+> + * @altmap: device page map
+> + *
+> + * This is only intended for hotplug.
+> + *
+> + * Returns:
+> + *   0 on success.
+> + *   Other error code on failure:
+> + *     - -EEXIST - section has been present.
+> + *     - -ENOMEM - out of memory.
+>   */
+>  int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
+>  				     struct vmem_altmap *altmap)
+> -- 
+> 2.17.2
+> 
+
+-- 
+Sincerely yours,
+Mike.
+
