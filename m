@@ -2,54 +2,59 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D621FC4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C277FC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E6F217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A62F218FC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909376;
-	bh=FiFwcmYHHeLB5CagW34gpRQYI7hN2R9aKNRXUBcdFrQ=;
+	s=default; t=1553909381;
+	bh=3Ul6jd7zc8I5sfFaHKiXP3rSe+I2qphyqxcGi4T2p2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MSQ6r17o0o+HIMajdn6vpk1EP7+bSnDzOCztCEpGbXpXU2WzaSxlaBE7soc+sgKkN
-	 9t9GcUpX+xi9dXSLmco0PIFip6nKT4agFjzesR8J8nqSXsXYyBsuUPgB6fv3ZxKzCt
-	 yZMCc3prHrIgJKdp2ALt/FTKrAZo1WsZRFYdycx8=
+	b=1EG2rZPnCngghm3DKt2Zom87So8zdQqeVF49pW3SEPM/2PzOWe8EoKvykb+i27NfV
+	 sC/g9oNn/eek9lLynfMyOSrrNHgIjGyqPWDI3keRmqgK2ejVcn4Ed2C9UBLxsV65hU
+	 sHy4vTrbBunHQY2Yy+L7oUNgubceuD4xMNg+L7Ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731050AbfC3B3f (ORCPT
+        id S1731122AbfC3B3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:29:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36376 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:29:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730961AbfC3B3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:29:30 -0400
+        id S1730961AbfC3B3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:29:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F07D9218D3;
-        Sat, 30 Mar 2019 01:29:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C321321773;
+        Sat, 30 Mar 2019 01:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909369;
-        bh=FiFwcmYHHeLB5CagW34gpRQYI7hN2R9aKNRXUBcdFrQ=;
+        s=default; t=1553909375;
+        bh=3Ul6jd7zc8I5sfFaHKiXP3rSe+I2qphyqxcGi4T2p2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mfaeUckAA8jpv/boWr3wOcwrAJqG579VtqJbJe6Urm0xCLxBXoglLRkXTCYtWNgE3
-         FtnLSwtqOpoAgDrO6fM7lBUGtpjxH/ksg/hUAs4/njYRW6s9asRtSO0tHeGfqxo65H
-         2ysu/aNOzsooN8g7zM5ovSZUISk/4rPy8MrG79KQ=
+        b=xbejVAHjGFOMTpI6azVQZgsNqSmC+oGhbB54fuMzCxKlnwsmClbLLX+PaBoTQDKOc
+         wgLKkMcU3TXVcmwaE/RtNAo1UrMwZZwK4tN5FVtaFR6cZAWNfBQM5S1XTC+Vf0Q8zg
+         JQE2DKXXGT2iQauwtNSTecO+Pbbqe4boRoPYe+XA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 16/57] ARM: samsung: Limit SAMSUNG_PM_CHECK config option to non-Exynos platforms
-Date:   Fri, 29 Mar 2019 21:28:09 -0400
-Message-Id: <20190330012854.32212-16-sashal@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C3=84m=C3=83=C2=A1=C3=85=E2=84=A2?= 
+        <rkrcmar@redhat.com>, Wanpeng Li <wanpeng.li@hotmail.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 20/57] KVM: nVMX: restore host state in nested_vmx_vmexit for VMFail
+Date:   Fri, 29 Mar 2019 21:28:13 -0400
+Message-Id: <20190330012854.32212-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
 References: <20190330012854.32212-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,58 +63,325 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 6862fdf2201ab67cd962dbf0643d37db909f4860 ]
+[ Upstream commit bd18bffca35397214ae68d85cf7203aca25c3c1d ]
 
-"S3C2410 PM Suspend Memory CRC" feature (controlled by
-SAMSUNG_PM_CHECK config option) is incompatible with highmem
-(uses phys_to_virt() instead of proper mapping) which is used by
-the majority of Exynos boards. The issue manifests itself in OOPS
-on affected boards, i.e. on Odroid-U3 I got the following one:
+A VMEnter that VMFails (as opposed to VMExits) does not touch host
+state beyond registers that are explicitly noted in the VMFail path,
+e.g. EFLAGS.  Host state does not need to be loaded because VMFail
+is only signaled for consistency checks that occur before the CPU
+starts to load guest state, i.e. there is no need to restore any
+state as nothing has been modified.  But in the case where a VMFail
+is detected by hardware and not by KVM (due to deferring consistency
+checks to hardware), KVM has already loaded some amount of guest
+state.  Luckily, "loaded" only means loaded to KVM's software model,
+i.e. vmcs01 has not been modified.  So, unwind our software model to
+the pre-VMEntry host state.
 
-Unable to handle kernel paging request at virtual address f0000000
-pgd = 1c0f9bb4
-[f0000000] *pgd=00000000
-Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-[<c0458034>] (crc32_le) from [<c0121f8c>] (s3c_pm_makecheck+0x34/0x54)
-[<c0121f8c>] (s3c_pm_makecheck) from [<c0121efc>] (s3c_pm_run_res+0x74/0x8c)
-[<c0121efc>] (s3c_pm_run_res) from [<c0121ecc>] (s3c_pm_run_res+0x44/0x8c)
-[<c0121ecc>] (s3c_pm_run_res) from [<c01210b8>] (exynos_suspend_enter+0x64/0x148)
-[<c01210b8>] (exynos_suspend_enter) from [<c018893c>] (suspend_devices_and_enter+0x9ec/0xe74)
-[<c018893c>] (suspend_devices_and_enter) from [<c0189534>] (pm_suspend+0x770/0xc04)
-[<c0189534>] (pm_suspend) from [<c0186ce8>] (state_store+0x6c/0xcc)
-[<c0186ce8>] (state_store) from [<c09db434>] (kobj_attr_store+0x14/0x20)
-[<c09db434>] (kobj_attr_store) from [<c02fa63c>] (sysfs_kf_write+0x4c/0x50)
-[<c02fa63c>] (sysfs_kf_write) from [<c02f97a4>] (kernfs_fop_write+0xfc/0x1e4)
-[<c02f97a4>] (kernfs_fop_write) from [<c027b198>] (__vfs_write+0x2c/0x140)
-[<c027b198>] (__vfs_write) from [<c027b418>] (vfs_write+0xa4/0x160)
-[<c027b418>] (vfs_write) from [<c027b5d8>] (ksys_write+0x40/0x8c)
-[<c027b5d8>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+Not restoring host state in this VMFail path leads to a variety of
+failures because we end up with stale data in vcpu->arch, e.g. CR0,
+CR4, EFER, etc... will all be out of sync relative to vmcs01.  Any
+significant delta in the stale data is all but guaranteed to crash
+L1, e.g. emulation of SMEP, SMAP, UMIP, WP, etc... will be wrong.
 
-Add PLAT_S3C24XX, ARCH_S3C64XX and ARCH_S5PV210 dependencies to
-SAMSUNG_PM_CHECK config option to hide it on Exynos platforms.
+An alternative to this "soft" reload would be to load host state from
+vmcs12 as if we triggered a VMExit (as opposed to VMFail), but that is
+wildly inconsistent with respect to the VMX architecture, e.g. an L1
+VMM with separate VMExit and VMFail paths would explode.
 
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Note that this approach does not mean KVM is 100% accurate with
+respect to VMX hardware behavior, even at an architectural level
+(the exact order of consistency checks is microarchitecture specific).
+But 100% emulation accuracy isn't the goal (with this patch), rather
+the goal is to be consistent in the information delivered to L1, e.g.
+a VMExit should not fall-through VMENTER, and a VMFail should not jump
+to HOST_RIP.
+
+This technically reverts commit "5af4157388ad (KVM: nVMX: Fix mmu
+context after VMLAUNCH/VMRESUME failure)", but retains the core
+aspects of that patch, just in an open coded form due to the need to
+pull state from vmcs01 instead of vmcs12.  Restoring host state
+resolves a variety of issues introduced by commit "4f350c6dbcb9
+(kvm: nVMX: Handle deferred early VMLAUNCH/VMRESUME failure properly)",
+which remedied the incorrect behavior of treating VMFail like VMExit
+but in doing so neglected to restore arch state that had been modified
+prior to attempting nested VMEnter.
+
+A sample failure that occurs due to stale vcpu.arch state is a fault
+of some form while emulating an LGDT (due to emulated UMIP) from L1
+after a failed VMEntry to L3, in this case when running the KVM unit
+test test_tpr_threshold_values in L1.  L0 also hits a WARN in this
+case due to a stale arch.cr4.UMIP.
+
+L1:
+  BUG: unable to handle kernel paging request at ffffc90000663b9e
+  PGD 276512067 P4D 276512067 PUD 276513067 PMD 274efa067 PTE 8000000271de2163
+  Oops: 0009 [#1] SMP
+  CPU: 5 PID: 12495 Comm: qemu-system-x86 Tainted: G        W         4.18.0-rc2+ #2
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+  RIP: 0010:native_load_gdt+0x0/0x10
+
+  ...
+
+  Call Trace:
+   load_fixmap_gdt+0x22/0x30
+   __vmx_load_host_state+0x10e/0x1c0 [kvm_intel]
+   vmx_switch_vmcs+0x2d/0x50 [kvm_intel]
+   nested_vmx_vmexit+0x222/0x9c0 [kvm_intel]
+   vmx_handle_exit+0x246/0x15a0 [kvm_intel]
+   kvm_arch_vcpu_ioctl_run+0x850/0x1830 [kvm]
+   kvm_vcpu_ioctl+0x3a1/0x5c0 [kvm]
+   do_vfs_ioctl+0x9f/0x600
+   ksys_ioctl+0x66/0x70
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x4f/0x100
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+L0:
+  WARNING: CPU: 2 PID: 3529 at arch/x86/kvm/vmx.c:6618 handle_desc+0x28/0x30 [kvm_intel]
+  ...
+  CPU: 2 PID: 3529 Comm: qemu-system-x86 Not tainted 4.17.2-coffee+ #76
+  Hardware name: Intel Corporation Kabylake Client platform/KBL S
+  RIP: 0010:handle_desc+0x28/0x30 [kvm_intel]
+
+  ...
+
+  Call Trace:
+   kvm_arch_vcpu_ioctl_run+0x863/0x1840 [kvm]
+   kvm_vcpu_ioctl+0x3a1/0x5c0 [kvm]
+   do_vfs_ioctl+0x9f/0x5e0
+   ksys_ioctl+0x66/0x70
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x49/0xf0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 5af4157388ad (KVM: nVMX: Fix mmu context after VMLAUNCH/VMRESUME failure)
+Fixes: 4f350c6dbcb9 (kvm: nVMX: Handle deferred early VMLAUNCH/VMRESUME failure properly)
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim KrÄmÃ¡Å™ <rkrcmar@redhat.com>
+Cc: Wanpeng Li <wanpeng.li@hotmail.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-samsung/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx.c | 173 +++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 153 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-index b600e38364eb..377ff9cda667 100644
---- a/arch/arm/plat-samsung/Kconfig
-+++ b/arch/arm/plat-samsung/Kconfig
-@@ -256,7 +256,7 @@ config S3C_PM_DEBUG_LED_SMDK
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index 4029d3783e18..d4d6b08c88b9 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -13175,24 +13175,6 @@ static void prepare_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
+ 	kvm_clear_interrupt_queue(vcpu);
+ }
  
- config SAMSUNG_PM_CHECK
- 	bool "S3C2410 PM Suspend Memory CRC"
--	depends on PM
-+	depends on PM && (PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210)
- 	select CRC32
- 	help
- 	  Enable the PM code's memory area checksum over sleep. This option
+-static void load_vmcs12_mmu_host_state(struct kvm_vcpu *vcpu,
+-			struct vmcs12 *vmcs12)
+-{
+-	u32 entry_failure_code;
+-
+-	nested_ept_uninit_mmu_context(vcpu);
+-
+-	/*
+-	 * Only PDPTE load can fail as the value of cr3 was checked on entry and
+-	 * couldn't have changed.
+-	 */
+-	if (nested_vmx_load_cr3(vcpu, vmcs12->host_cr3, false, &entry_failure_code))
+-		nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_PDPTE_FAIL);
+-
+-	if (!enable_ept)
+-		vcpu->arch.walk_mmu->inject_page_fault = kvm_inject_page_fault;
+-}
+-
+ /*
+  * A part of what we need to when the nested L2 guest exits and we want to
+  * run its L1 parent, is to reset L1's guest state to the host state specified
+@@ -13206,6 +13188,7 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
+ 				   struct vmcs12 *vmcs12)
+ {
+ 	struct kvm_segment seg;
++	u32 entry_failure_code;
+ 
+ 	if (vmcs12->vm_exit_controls & VM_EXIT_LOAD_IA32_EFER)
+ 		vcpu->arch.efer = vmcs12->host_ia32_efer;
+@@ -13232,7 +13215,17 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
+ 	vcpu->arch.cr4_guest_owned_bits = ~vmcs_readl(CR4_GUEST_HOST_MASK);
+ 	vmx_set_cr4(vcpu, vmcs12->host_cr4);
+ 
+-	load_vmcs12_mmu_host_state(vcpu, vmcs12);
++	nested_ept_uninit_mmu_context(vcpu);
++
++	/*
++	 * Only PDPTE load can fail as the value of cr3 was checked on entry and
++	 * couldn't have changed.
++	 */
++	if (nested_vmx_load_cr3(vcpu, vmcs12->host_cr3, false, &entry_failure_code))
++		nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_PDPTE_FAIL);
++
++	if (!enable_ept)
++		vcpu->arch.walk_mmu->inject_page_fault = kvm_inject_page_fault;
+ 
+ 	/*
+ 	 * If vmcs01 don't use VPID, CPU flushes TLB on every
+@@ -13328,6 +13321,140 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
+ 		nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_MSR_FAIL);
+ }
+ 
++static inline u64 nested_vmx_get_vmcs01_guest_efer(struct vcpu_vmx *vmx)
++{
++	struct shared_msr_entry *efer_msr;
++	unsigned int i;
++
++	if (vm_entry_controls_get(vmx) & VM_ENTRY_LOAD_IA32_EFER)
++		return vmcs_read64(GUEST_IA32_EFER);
++
++	if (cpu_has_load_ia32_efer)
++		return host_efer;
++
++	for (i = 0; i < vmx->msr_autoload.guest.nr; ++i) {
++		if (vmx->msr_autoload.guest.val[i].index == MSR_EFER)
++			return vmx->msr_autoload.guest.val[i].value;
++	}
++
++	efer_msr = find_msr_entry(vmx, MSR_EFER);
++	if (efer_msr)
++		return efer_msr->data;
++
++	return host_efer;
++}
++
++static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
++{
++	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
++	struct vmx_msr_entry g, h;
++	struct msr_data msr;
++	gpa_t gpa;
++	u32 i, j;
++
++	vcpu->arch.pat = vmcs_read64(GUEST_IA32_PAT);
++
++	if (vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS) {
++		/*
++		 * L1's host DR7 is lost if KVM_GUESTDBG_USE_HW_BP is set
++		 * as vmcs01.GUEST_DR7 contains a userspace defined value
++		 * and vcpu->arch.dr7 is not squirreled away before the
++		 * nested VMENTER (not worth adding a variable in nested_vmx).
++		 */
++		if (vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP)
++			kvm_set_dr(vcpu, 7, DR7_FIXED_1);
++		else
++			WARN_ON(kvm_set_dr(vcpu, 7, vmcs_readl(GUEST_DR7)));
++	}
++
++	/*
++	 * Note that calling vmx_set_{efer,cr0,cr4} is important as they
++	 * handle a variety of side effects to KVM's software model.
++	 */
++	vmx_set_efer(vcpu, nested_vmx_get_vmcs01_guest_efer(vmx));
++
++	vcpu->arch.cr0_guest_owned_bits = X86_CR0_TS;
++	vmx_set_cr0(vcpu, vmcs_readl(CR0_READ_SHADOW));
++
++	vcpu->arch.cr4_guest_owned_bits = ~vmcs_readl(CR4_GUEST_HOST_MASK);
++	vmx_set_cr4(vcpu, vmcs_readl(CR4_READ_SHADOW));
++
++	nested_ept_uninit_mmu_context(vcpu);
++	vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
++	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
++
++	/*
++	 * Use ept_save_pdptrs(vcpu) to load the MMU's cached PDPTRs
++	 * from vmcs01 (if necessary).  The PDPTRs are not loaded on
++	 * VMFail, like everything else we just need to ensure our
++	 * software model is up-to-date.
++	 */
++	ept_save_pdptrs(vcpu);
++
++	kvm_mmu_reset_context(vcpu);
++
++	if (cpu_has_vmx_msr_bitmap())
++		vmx_update_msr_bitmap(vcpu);
++
++	/*
++	 * This nasty bit of open coding is a compromise between blindly
++	 * loading L1's MSRs using the exit load lists (incorrect emulation
++	 * of VMFail), leaving the nested VM's MSRs in the software model
++	 * (incorrect behavior) and snapshotting the modified MSRs (too
++	 * expensive since the lists are unbound by hardware).  For each
++	 * MSR that was (prematurely) loaded from the nested VMEntry load
++	 * list, reload it from the exit load list if it exists and differs
++	 * from the guest value.  The intent is to stuff host state as
++	 * silently as possible, not to fully process the exit load list.
++	 */
++	msr.host_initiated = false;
++	for (i = 0; i < vmcs12->vm_entry_msr_load_count; i++) {
++		gpa = vmcs12->vm_entry_msr_load_addr + (i * sizeof(g));
++		if (kvm_vcpu_read_guest(vcpu, gpa, &g, sizeof(g))) {
++			pr_debug_ratelimited(
++				"%s read MSR index failed (%u, 0x%08llx)\n",
++				__func__, i, gpa);
++			goto vmabort;
++		}
++
++		for (j = 0; j < vmcs12->vm_exit_msr_load_count; j++) {
++			gpa = vmcs12->vm_exit_msr_load_addr + (j * sizeof(h));
++			if (kvm_vcpu_read_guest(vcpu, gpa, &h, sizeof(h))) {
++				pr_debug_ratelimited(
++					"%s read MSR failed (%u, 0x%08llx)\n",
++					__func__, j, gpa);
++				goto vmabort;
++			}
++			if (h.index != g.index)
++				continue;
++			if (h.value == g.value)
++				break;
++
++			if (nested_vmx_load_msr_check(vcpu, &h)) {
++				pr_debug_ratelimited(
++					"%s check failed (%u, 0x%x, 0x%x)\n",
++					__func__, j, h.index, h.reserved);
++				goto vmabort;
++			}
++
++			msr.index = h.index;
++			msr.data = h.value;
++			if (kvm_set_msr(vcpu, &msr)) {
++				pr_debug_ratelimited(
++					"%s WRMSR failed (%u, 0x%x, 0x%llx)\n",
++					__func__, j, h.index, h.value);
++				goto vmabort;
++			}
++		}
++	}
++
++	return;
++
++vmabort:
++	nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_MSR_FAIL);
++}
++
+ /*
+  * Emulate an exit from nested guest (L2) to L1, i.e., prepare to run L1
+  * and modify vmcs12 to make it see what it would expect to see there if
+@@ -13472,7 +13599,13 @@ static void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
+ 	 */
+ 	nested_vmx_failValid(vcpu, VMXERR_ENTRY_INVALID_CONTROL_FIELD);
+ 
+-	load_vmcs12_mmu_host_state(vcpu, vmcs12);
++	/*
++	 * Restore L1's host state to KVM's software model.  We're here
++	 * because a consistency check was caught by hardware, which
++	 * means some amount of guest state has been propagated to KVM's
++	 * model and needs to be unwound to the host's state.
++	 */
++	nested_vmx_restore_host_state(vcpu);
+ 
+ 	/*
+ 	 * The emulated instruction was already skipped in
 -- 
 2.19.1
 
