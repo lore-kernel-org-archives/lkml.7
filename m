@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC474C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E63FDC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F64D218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B696121908
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907481;
-	bh=OMeQNR0rlG8i2h7nX5hzkqZZcwHydMe7mvc+KQyClYw=;
+	s=default; t=1553907485;
+	bh=TOvrNNfLSD2nytXgIuqfq5xYudGVN8xc9NdeIP6d5qE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dyAqj1o7ULvee6Dls7Kbaj7RXR/ZPKJmhPYMz8WRUjQ4Rn+wKXbVginx1s3uJ+v0g
-	 0anA2ebz1M62yVIPvM/SFArxG07UMbpB8rF7GwiNDevcP214SEtW3JqiY0+0vRY0m6
-	 VwcLtzOmjMSo94HJoebrlGaRX0A5k47xDIUvY5PM=
+	b=nU9QRqvXjghvggZ+THK1feXyZ2nuwYNBc7A3X44QEagMK4Sj8m9maKsT+MqngEW0+
+	 iQLpWqjQpUGuJa6s0dKp+cAcDwDPOXNaaNAoMHGRcVj1jvBUfmB8WLcoN1RBnRffr1
+	 HR2HYJXmIJkbWH3pmSjhBli441UBo+FXKZ/Rb4Ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732237AbfC3A6A (ORCPT
+        id S1732246AbfC3A6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:58:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38584 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:58:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731584AbfC3A57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:57:59 -0400
+        id S1732228AbfC3A6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:58:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7738E218D9;
-        Sat, 30 Mar 2019 00:57:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC76D218AC;
+        Sat, 30 Mar 2019 00:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907478;
-        bh=OMeQNR0rlG8i2h7nX5hzkqZZcwHydMe7mvc+KQyClYw=;
+        s=default; t=1553907479;
+        bh=TOvrNNfLSD2nytXgIuqfq5xYudGVN8xc9NdeIP6d5qE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wIYAMB3izP8pgRfu1iGsD8eA4Ei5G18J1kLaPJGk0zWReBR+NfVzb+BFi3vYvQNP+
-         jq0c/SmHIzp6mKHpA3OsfVscL9lw+FQPrcaDcEDKNkS/uXKiTHXnLNIARe70ah7nCL
-         /URUYSGb/dGHYcHPiGKzD4b+M1O5kKgEx4cX7CHA=
+        b=2iBJY3Ewmpug+4KlzJoIzmZ94ZNlc0XSxQPPCGzUot2rCXhM4dOXJIJcFDZm06Cf9
+         XzZAmL8hS/r0KV5i5EZJLyrEDQenEEyIjCj3G/HOXVEbpbM+69RSowpWFRL2YQBVGg
+         01zXckZSGXJDiKdF8zp8OvA4z3n6czypZxF4tq/g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        mark gross <mgross@intel.com>, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 3.18 14/15] iommu/vt-d: Check capability before disabling protected memory
-Date:   Fri, 29 Mar 2019 20:57:29 -0400
-Message-Id: <20190330005730.28777-14-sashal@kernel.org>
+Cc:     Steve French <stfrench@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 15/15] fix incorrect error code mapping for OBJECTID_NOT_FOUND
+Date:   Fri, 29 Mar 2019 20:57:30 -0400
+Message-Id: <20190330005730.28777-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005730.28777-1-sashal@kernel.org>
 References: <20190330005730.28777-1-sashal@kernel.org>
@@ -61,40 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Steve French <stfrench@microsoft.com>
 
-[ Upstream commit 5bb71fc790a88d063507dc5d445ab8b14e845591 ]
+[ Upstream commit 85f9987b236cf46e06ffdb5c225cf1f3c0acb789 ]
 
-The spec states in 10.4.16 that the Protected Memory Enable
-Register should be treated as read-only for implementations
-not supporting protected memory regions (PLMR and PHMR fields
-reported as Clear in the Capability register).
+It was mapped to EIO which can be confusing when user space
+queries for an object GUID for an object for which the server
+file system doesn't support (or hasn't saved one).
 
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: mark gross <mgross@intel.com>
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
-Fixes: f8bab73515ca5 ("intel-iommu: PMEN support")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+As Amir Goldstein suggested this is similar to ENOATTR
+(equivalently ENODATA in Linux errno definitions) so
+changing NT STATUS code mapping for OBJECTID_NOT_FOUND
+to ENODATA.
+
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/cifs/smb2maperror.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 2068cb59f7ed..b1966269f26a 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1402,6 +1402,9 @@ static void iommu_disable_protect_mem_regions(struct intel_iommu *iommu)
- 	u32 pmen;
- 	unsigned long flags;
- 
-+	if (!cap_plmr(iommu->cap) && !cap_phmr(iommu->cap))
-+		return;
-+
- 	raw_spin_lock_irqsave(&iommu->register_lock, flags);
- 	pmen = readl(iommu->reg + DMAR_PMEN_REG);
- 	pmen &= ~DMA_PMEN_EPM;
+diff --git a/fs/cifs/smb2maperror.c b/fs/cifs/smb2maperror.c
+index 98c25b969ab8..7e93d5706bf6 100644
+--- a/fs/cifs/smb2maperror.c
++++ b/fs/cifs/smb2maperror.c
+@@ -1034,7 +1034,8 @@ static const struct status_to_posix_error smb2_error_map_table[] = {
+ 	{STATUS_UNFINISHED_CONTEXT_DELETED, -EIO,
+ 	"STATUS_UNFINISHED_CONTEXT_DELETED"},
+ 	{STATUS_NO_TGT_REPLY, -EIO, "STATUS_NO_TGT_REPLY"},
+-	{STATUS_OBJECTID_NOT_FOUND, -EIO, "STATUS_OBJECTID_NOT_FOUND"},
++	/* Note that ENOATTTR and ENODATA are the same errno */
++	{STATUS_OBJECTID_NOT_FOUND, -ENODATA, "STATUS_OBJECTID_NOT_FOUND"},
+ 	{STATUS_NO_IP_ADDRESSES, -EIO, "STATUS_NO_IP_ADDRESSES"},
+ 	{STATUS_WRONG_CREDENTIAL_HANDLE, -EIO,
+ 	"STATUS_WRONG_CREDENTIAL_HANDLE"},
 -- 
 2.19.1
 
