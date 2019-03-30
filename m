@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBDFC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 250F9C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E642184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E3421773
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909600;
-	bh=Im0w4GXVZqxX/0E9kmMmA5ChuyrdYRSiKTrfwMfsMxs=;
+	s=default; t=1553909609;
+	bh=dJcTonHcE9ZfkthOewQkVw1x7Tcna61UTKy5RCwBDyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sDJ0aleY21fbhjYTPWlnL4BPDA51VCxDHcSnl/2tWL7bAc3uWGC4wLqHXuXyPpvi4
-	 /PgoBweKuPGO+zGBfmZCUy9fFHti9YgvSkYuaw8+eURZAa58U1UMuwCDbKzpjOfSqd
-	 KbmjYC9Z6Cgyjt3mSHelfrKJbz4lHSODOCAwewaU=
+	b=nkziP3ANIAPjF3OMkFRotVPqVCBWNtBkKWdylXA7YajfMHO6MQ2KEIYLCpJYwNjQL
+	 /7qxI843LsNGrnX/mwiG34nPGxX1DqupFodLem/itsANH+b4rXMkRFGS7qIy+YgA5d
+	 oj/wpfGVbdR9lYoA/691Gg9K6AdVQ/3SxfE2Zf04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731884AbfC3BdS (ORCPT
+        id S1731910AbfC3Bd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:33:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40632 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:33:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732370AbfC3Bce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:32:34 -0400
+        id S1732366AbfC3Bcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:32:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93E2221773;
-        Sat, 30 Mar 2019 01:32:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E0E7218E2;
+        Sat, 30 Mar 2019 01:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909554;
-        bh=Im0w4GXVZqxX/0E9kmMmA5ChuyrdYRSiKTrfwMfsMxs=;
+        s=default; t=1553909553;
+        bh=dJcTonHcE9ZfkthOewQkVw1x7Tcna61UTKy5RCwBDyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vFi35TQxySdtVNYr4n5vvknLlZ5BUMbFzOg6pntX9NK1uB1sh2G9KC0bpZ1NYZh5S
-         sriDKlqZfLsEevRYQ8b/sXQGXp46HBED6dGz2xe7iBVE3sHuVqT14567oKBkRCxtqJ
-         XFG9uwHub6fO/U8LAnV0f/U6T/3Wlz+7RbgbcpZQ=
+        b=zyhTx/gOA2rxp/JT3EM1XnMJJMuCWmOQtSSbzUNqD9YTRSroCPKu+PuTAZebL0t2I
+         atLHhvBG2qMn6Z0kXSnbbfSAAs4W3Y591be07HHtmJVpBW24QCz8tSJqZnElPDVJZB
+         5RNyd14ZYiwxnpm8zNRyZthQlYSc1P4Q9yX6268g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 05/10] ARM: samsung: Limit SAMSUNG_PM_CHECK config option to non-Exynos platforms
-Date:   Fri, 29 Mar 2019 21:32:22 -0400
-Message-Id: <20190330013227.1365-5-sashal@kernel.org>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 04/10] serial: uartps: console_setup() can't be placed to init section
+Date:   Fri, 29 Mar 2019 21:32:21 -0400
+Message-Id: <20190330013227.1365-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013227.1365-1-sashal@kernel.org>
 References: <20190330013227.1365-1-sashal@kernel.org>
@@ -59,58 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Michal Simek <michal.simek@xilinx.com>
 
-[ Upstream commit 6862fdf2201ab67cd962dbf0643d37db909f4860 ]
+[ Upstream commit 4bb1ce2350a598502b23088b169e16b43d4bc639 ]
 
-"S3C2410 PM Suspend Memory CRC" feature (controlled by
-SAMSUNG_PM_CHECK config option) is incompatible with highmem
-(uses phys_to_virt() instead of proper mapping) which is used by
-the majority of Exynos boards. The issue manifests itself in OOPS
-on affected boards, i.e. on Odroid-U3 I got the following one:
+When console device is rebinded, console_setup() is called again.
+But marking it as __init means that function will be clear after boot is
+complete. If console device is binded again console_setup() is not found
+and error "Unable to handle kernel paging request at virtual address"
+is reported.
 
-Unable to handle kernel paging request at virtual address f0000000
-pgd = 1c0f9bb4
-[f0000000] *pgd=00000000
-Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-[<c0458034>] (crc32_le) from [<c0121f8c>] (s3c_pm_makecheck+0x34/0x54)
-[<c0121f8c>] (s3c_pm_makecheck) from [<c0121efc>] (s3c_pm_run_res+0x74/0x8c)
-[<c0121efc>] (s3c_pm_run_res) from [<c0121ecc>] (s3c_pm_run_res+0x44/0x8c)
-[<c0121ecc>] (s3c_pm_run_res) from [<c01210b8>] (exynos_suspend_enter+0x64/0x148)
-[<c01210b8>] (exynos_suspend_enter) from [<c018893c>] (suspend_devices_and_enter+0x9ec/0xe74)
-[<c018893c>] (suspend_devices_and_enter) from [<c0189534>] (pm_suspend+0x770/0xc04)
-[<c0189534>] (pm_suspend) from [<c0186ce8>] (state_store+0x6c/0xcc)
-[<c0186ce8>] (state_store) from [<c09db434>] (kobj_attr_store+0x14/0x20)
-[<c09db434>] (kobj_attr_store) from [<c02fa63c>] (sysfs_kf_write+0x4c/0x50)
-[<c02fa63c>] (sysfs_kf_write) from [<c02f97a4>] (kernfs_fop_write+0xfc/0x1e4)
-[<c02f97a4>] (kernfs_fop_write) from [<c027b198>] (__vfs_write+0x2c/0x140)
-[<c027b198>] (__vfs_write) from [<c027b418>] (vfs_write+0xa4/0x160)
-[<c027b418>] (vfs_write) from [<c027b5d8>] (ksys_write+0x40/0x8c)
-[<c027b5d8>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-
-Add PLAT_S3C24XX, ARCH_S3C64XX and ARCH_S5PV210 dependencies to
-SAMSUNG_PM_CHECK config option to hide it on Exynos platforms.
-
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-samsung/Kconfig | 2 +-
+ drivers/tty/serial/xilinx_uartps.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-index 9bd2776e7d05..2c3cf321f933 100644
---- a/arch/arm/plat-samsung/Kconfig
-+++ b/arch/arm/plat-samsung/Kconfig
-@@ -287,7 +287,7 @@ config S3C_PM_DEBUG_LED_SMDK
- 
- config SAMSUNG_PM_CHECK
- 	bool "S3C2410 PM Suspend Memory CRC"
--	depends on PM
-+	depends on PM && (PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210)
- 	select CRC32
- 	help
- 	  Enable the PM code's memory area checksum over sleep. This option
+diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+index df28ef14382b..892446cc28fa 100644
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -1120,7 +1120,7 @@ static void cdns_uart_console_write(struct console *co, const char *s,
+  *
+  * Return: 0 on success, negative errno otherwise.
+  */
+-static int __init cdns_uart_console_setup(struct console *co, char *options)
++static int cdns_uart_console_setup(struct console *co, char *options)
+ {
+ 	struct uart_port *port = &cdns_uart_port[co->index];
+ 	int baud = 9600;
 -- 
 2.19.1
 
