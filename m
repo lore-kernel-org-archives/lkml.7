@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A668AC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC30EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7323E217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC242218A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909498;
-	bh=cyapoTQDqIbhvkK8TArTFoumqsvHdI0Co+7aTOsBap4=;
+	s=default; t=1553909503;
+	bh=Ax7z+jaG1F8bqsO5V85H6yQ/4cjlVVJjQmO3GPQOoB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=StIettwWcWSP4l2dSwlf5MDK3gnCR0W6fOgrM5xAaiouaokn4L9WIh7DpbVgQY9iX
-	 MhGZhNPqkQ9vGaROFZwz/KPjuSP/42zgELRviPVbcjAY2m/z75Z/a4/Z03XY4zGo4h
-	 Hp43eWoH/5Mofct8rbDbbiRKu1LF5oemYLcYbYPA=
+	b=k2CEcLKWyUJF8QnRHMIw8gKldNfxyCTkUiP5PS3uLBlXy+5TXNsnDC8so8oHkgZ+y
+	 eZtNdCXb8z7967yQcACw17GNMrkVSLLUAaj/Xqu7gFrqWMGJpPe3Rn84H986EJr7sy
+	 bkemRxvdCdE5Md13hGE8MI1N6iZT+hgi8z7Abjls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731198AbfC3Bbh (ORCPT
+        id S1732139AbfC3Bbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:31:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39270 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:31:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731189AbfC3Bbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:31:35 -0400
+        id S1732097AbfC3Bbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:31:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AED21217F5;
-        Sat, 30 Mar 2019 01:31:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA407217F5;
+        Sat, 30 Mar 2019 01:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909495;
-        bh=cyapoTQDqIbhvkK8TArTFoumqsvHdI0Co+7aTOsBap4=;
+        s=default; t=1553909499;
+        bh=Ax7z+jaG1F8bqsO5V85H6yQ/4cjlVVJjQmO3GPQOoB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v1hU22vyav65X3ER1Dj0Ev3IJ59LODn1PbQUhPDDmI65gSto4kCa4e6DNWdtdly+n
-         lo+El/n11goSd0/7EL+GkINDZ+L6w62QA92Q0ithT5cow8s8YdebJDsThwXMvRr1LZ
-         r/2gRuhf3GSnji64/35dVNtiLIMsondeATy1Osfk=
+        b=Zm8lYE3CM7I+MK9bpAEXLdIUJ2KkkQ2BWz/AaaPGO5vehWvZsf7kjqpRy1uFWf/5n
+         zSyO9i99yCPElOIF9lmkQL8ql0ENMCENz4jgAEHPaPlRqbFZNwrrw2YgWPImIPPOkP
+         bf2ilToVSMwX2BNm0A2mFvzAWlcrs7XXp12gOXFE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 08/21] ARM: samsung: Limit SAMSUNG_PM_CHECK config option to non-Exynos platforms
-Date:   Fri, 29 Mar 2019 21:30:59 -0400
-Message-Id: <20190330013112.784-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 11/21] kernel: hung_task.c: disable on suspend
+Date:   Fri, 29 Mar 2019 21:31:02 -0400
+Message-Id: <20190330013112.784-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013112.784-1-sashal@kernel.org>
 References: <20190330013112.784-1-sashal@kernel.org>
@@ -59,58 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit 6862fdf2201ab67cd962dbf0643d37db909f4860 ]
+[ Upstream commit a1c6ca3c6de763459a6e93b644ec6518c890ba1c ]
 
-"S3C2410 PM Suspend Memory CRC" feature (controlled by
-SAMSUNG_PM_CHECK config option) is incompatible with highmem
-(uses phys_to_virt() instead of proper mapping) which is used by
-the majority of Exynos boards. The issue manifests itself in OOPS
-on affected boards, i.e. on Odroid-U3 I got the following one:
+It is possible to observe hung_task complaints when system goes to
+suspend-to-idle state:
 
-Unable to handle kernel paging request at virtual address f0000000
-pgd = 1c0f9bb4
-[f0000000] *pgd=00000000
-Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-[<c0458034>] (crc32_le) from [<c0121f8c>] (s3c_pm_makecheck+0x34/0x54)
-[<c0121f8c>] (s3c_pm_makecheck) from [<c0121efc>] (s3c_pm_run_res+0x74/0x8c)
-[<c0121efc>] (s3c_pm_run_res) from [<c0121ecc>] (s3c_pm_run_res+0x44/0x8c)
-[<c0121ecc>] (s3c_pm_run_res) from [<c01210b8>] (exynos_suspend_enter+0x64/0x148)
-[<c01210b8>] (exynos_suspend_enter) from [<c018893c>] (suspend_devices_and_enter+0x9ec/0xe74)
-[<c018893c>] (suspend_devices_and_enter) from [<c0189534>] (pm_suspend+0x770/0xc04)
-[<c0189534>] (pm_suspend) from [<c0186ce8>] (state_store+0x6c/0xcc)
-[<c0186ce8>] (state_store) from [<c09db434>] (kobj_attr_store+0x14/0x20)
-[<c09db434>] (kobj_attr_store) from [<c02fa63c>] (sysfs_kf_write+0x4c/0x50)
-[<c02fa63c>] (sysfs_kf_write) from [<c02f97a4>] (kernfs_fop_write+0xfc/0x1e4)
-[<c02f97a4>] (kernfs_fop_write) from [<c027b198>] (__vfs_write+0x2c/0x140)
-[<c027b198>] (__vfs_write) from [<c027b418>] (vfs_write+0xa4/0x160)
-[<c027b418>] (vfs_write) from [<c027b5d8>] (ksys_write+0x40/0x8c)
-[<c027b5d8>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+ # echo freeze > /sys/power/state
 
-Add PLAT_S3C24XX, ARCH_S3C64XX and ARCH_S5PV210 dependencies to
-SAMSUNG_PM_CHECK config option to hide it on Exynos platforms.
+ PM: Syncing filesystems ... done.
+ Freezing user space processes ... (elapsed 0.001 seconds) done.
+ OOM killer disabled.
+ Freezing remaining freezable tasks ... (elapsed 0.002 seconds) done.
+ sd 0:0:0:0: [sda] Synchronizing SCSI cache
+ INFO: task bash:1569 blocked for more than 120 seconds.
+       Not tainted 4.19.0-rc3_+ #687
+ "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+ bash            D    0  1569    604 0x00000000
+ Call Trace:
+  ? __schedule+0x1fe/0x7e0
+  schedule+0x28/0x80
+  suspend_devices_and_enter+0x4ac/0x750
+  pm_suspend+0x2c0/0x310
 
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Register a PM notifier to disable the detector on suspend and re-enable
+back on wakeup.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-samsung/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/hung_task.c | 30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-index e8229b9fee4a..3265b8f86069 100644
---- a/arch/arm/plat-samsung/Kconfig
-+++ b/arch/arm/plat-samsung/Kconfig
-@@ -258,7 +258,7 @@ config S3C_PM_DEBUG_LED_SMDK
+diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+index fd781a468f32..fb00cf30abd1 100644
+--- a/kernel/hung_task.c
++++ b/kernel/hung_task.c
+@@ -15,6 +15,7 @@
+ #include <linux/lockdep.h>
+ #include <linux/export.h>
+ #include <linux/sysctl.h>
++#include <linux/suspend.h>
+ #include <linux/utsname.h>
+ #include <trace/events/sched.h>
  
- config SAMSUNG_PM_CHECK
- 	bool "S3C2410 PM Suspend Memory CRC"
--	depends on PM
-+	depends on PM && (PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210)
- 	select CRC32
- 	help
- 	  Enable the PM code's memory area checksum over sleep. This option
+@@ -221,6 +222,28 @@ void reset_hung_task_detector(void)
+ }
+ EXPORT_SYMBOL_GPL(reset_hung_task_detector);
+ 
++static bool hung_detector_suspended;
++
++static int hungtask_pm_notify(struct notifier_block *self,
++			      unsigned long action, void *hcpu)
++{
++	switch (action) {
++	case PM_SUSPEND_PREPARE:
++	case PM_HIBERNATION_PREPARE:
++	case PM_RESTORE_PREPARE:
++		hung_detector_suspended = true;
++		break;
++	case PM_POST_SUSPEND:
++	case PM_POST_HIBERNATION:
++	case PM_POST_RESTORE:
++		hung_detector_suspended = false;
++		break;
++	default:
++		break;
++	}
++	return NOTIFY_OK;
++}
++
+ /*
+  * kthread which checks for tasks stuck in D state
+  */
+@@ -235,7 +258,8 @@ static int watchdog(void *dummy)
+ 		long t = hung_timeout_jiffies(hung_last_checked, timeout);
+ 
+ 		if (t <= 0) {
+-			if (!atomic_xchg(&reset_hung_task, 0))
++			if (!atomic_xchg(&reset_hung_task, 0) &&
++			    !hung_detector_suspended)
+ 				check_hung_uninterruptible_tasks(timeout);
+ 			hung_last_checked = jiffies;
+ 			continue;
+@@ -249,6 +273,10 @@ static int watchdog(void *dummy)
+ static int __init hung_task_init(void)
+ {
+ 	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
++
++	/* Disable hung task detector on suspend */
++	pm_notifier(hungtask_pm_notify, 0);
++
+ 	watchdog_task = kthread_run(watchdog, NULL, "khungtaskd");
+ 
+ 	return 0;
 -- 
 2.19.1
 
