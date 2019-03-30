@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3200AC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF71C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E888E218CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 261E0218CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907210;
-	bh=ul2sLvyD1f84cfcacpe4EO4sPFWG1eckXIPx0tvUgRg=;
+	s=default; t=1553907213;
+	bh=LeYvrwRUDltMhwxcC2hToscHxsD8jdn6J1GyX0eLcQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hP75wSVYaHyHz9EOFWZ3qHzrRn1VMPfgJRQE1SPNSIv46RJslA0HJbTwir9gJZcaW
-	 CbJCvP7wJ7LtVrMMIeeCU0JcMtrNLX224SHJNImVtn3on0rDw3sM2r7UmBCbM9/dpI
-	 9Dt+HD+AtnlKlWr5lwNtW+9l2x6eucyxkNSGLx20=
+	b=XqWMLaEVOQOjF6M6EoRFEEEawe5jkUEZIZsMRBWRu4xZ1EFwf26nnR0qtLD/DsHPx
+	 ewQTbH7G5hMcEgol5u39a1qehMZeAnJSqmAyjv+tAmXBZAB7gtXpZwPMzV89zY8LII
+	 TylWNrhpiD2fUa3VtD2+mrPW0clYkZDRti5y+uCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731275AbfC3Ax2 (ORCPT
+        id S1731288AbfC3Axb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:53:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60268 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:53:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730444AbfC3AxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:53:25 -0400
+        id S1731269AbfC3Ax2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:53:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A66FE218AC;
-        Sat, 30 Mar 2019 00:53:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6098218CD;
+        Sat, 30 Mar 2019 00:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907205;
-        bh=ul2sLvyD1f84cfcacpe4EO4sPFWG1eckXIPx0tvUgRg=;
+        s=default; t=1553907207;
+        bh=LeYvrwRUDltMhwxcC2hToscHxsD8jdn6J1GyX0eLcQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zv6FEDxR6VcB43m8+29QC75Y9jgXEgB9haBYhy6kvwuh0hmVmhlB+FjevqOVBryTq
-         eg3QJtJpngpnJswivTDpZWtqHPETla+CchOnRTUfFJxD42HNb5a9DE/fX2u3iX6e2Z
-         lQ3DxOACBHa7Ma5ZO+YsOLmkxgH2gT0Cfb8K/uHI=
+        b=ilOZ7skmT3iSZzKaa1dMgCj8+z+0aJIH/SCb9lWdXNObrb42ezxcohMd/7ZgZB1by
+         JRZ6BbKDSEbTeulknGsV86uIFwt+anbbZjtO+SqWFCl1k+7OQC6dKEkTM7Awi94fdj
+         fczPfPndwbM2vLx450V29oog3V92Ant3ZEmuGNeE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/52] mmc: davinci: remove extraneous __init annotation
-Date:   Fri, 29 Mar 2019 20:52:22 -0400
-Message-Id: <20190330005301.26868-15-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 16/52] ALSA: opl3: fix mismatch between snd_opl3_drum_switch definition and declaration
+Date:   Fri, 29 Mar 2019 20:52:23 -0400
+Message-Id: <20190330005301.26868-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005301.26868-1-sashal@kernel.org>
 References: <20190330005301.26868-1-sashal@kernel.org>
@@ -58,40 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 9ce58dd7d9da3ca0d7cb8c9568f1c6f4746da65a ]
+[ Upstream commit b4748e7ab731e436cf5db4786358ada5dd2db6dd ]
 
-Building with clang finds a mistaken __init tag:
+The function snd_opl3_drum_switch declaration in the header file
+has the order of the two arguments on_off and vel swapped when
+compared to the definition arguments of vel and on_off.  Fix this
+by swapping them around to match the definition.
 
-WARNING: vmlinux.o(.text+0x5e4250): Section mismatch in reference from the function davinci_mmcsd_probe() to the function .init.text:init_mmcsd_host()
-The function davinci_mmcsd_probe() references
-the function __init init_mmcsd_host().
-This is often because davinci_mmcsd_probe lacks a __init
-annotation or the annotation of init_mmcsd_host is wrong.
+This error predates the git history, so no idea when this error
+was introduced.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/davinci_mmc.c | 2 +-
+ sound/drivers/opl3/opl3_voice.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
-index 9e68c3645e22..e6f14257a7d0 100644
---- a/drivers/mmc/host/davinci_mmc.c
-+++ b/drivers/mmc/host/davinci_mmc.c
-@@ -1117,7 +1117,7 @@ static inline void mmc_davinci_cpufreq_deregister(struct mmc_davinci_host *host)
- {
- }
- #endif
--static void __init init_mmcsd_host(struct mmc_davinci_host *host)
-+static void init_mmcsd_host(struct mmc_davinci_host *host)
- {
+diff --git a/sound/drivers/opl3/opl3_voice.h b/sound/drivers/opl3/opl3_voice.h
+index 5b02bd49fde4..4e4ecc21760b 100644
+--- a/sound/drivers/opl3/opl3_voice.h
++++ b/sound/drivers/opl3/opl3_voice.h
+@@ -41,7 +41,7 @@ void snd_opl3_timer_func(struct timer_list *t);
  
- 	mmc_davinci_reset_ctrl(host, 1);
+ /* Prototypes for opl3_drums.c */
+ void snd_opl3_load_drums(struct snd_opl3 *opl3);
+-void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int on_off, int vel, struct snd_midi_channel *chan);
++void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int vel, int on_off, struct snd_midi_channel *chan);
+ 
+ /* Prototypes for opl3_oss.c */
+ #if IS_ENABLED(CONFIG_SND_SEQUENCER_OSS)
 -- 
 2.19.1
 
