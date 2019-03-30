@@ -2,324 +2,128 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093E7C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 15:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1EEC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 15:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD00205C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 15:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CFE2075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 15:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbfC3PQC (ORCPT
+        id S1730839AbfC3PZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 11:16:02 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:38187 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1730532AbfC3PQC (ORCPT
+        Sat, 30 Mar 2019 11:25:10 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54798 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730531AbfC3PZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 11:16:02 -0400
-Received: (qmail 19016 invoked by uid 500); 30 Mar 2019 11:16:01 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 30 Mar 2019 11:16:01 -0400
-Date:   Sat, 30 Mar 2019 11:16:01 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Joel Fernandes <joel@joelfernandes.org>
-cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
-Subject: Re: [PATCH] Convert struct pid count to refcount_t
-In-Reply-To: <20190330023639.GA214473@google.com>
-Message-ID: <Pine.LNX.4.44L0.1903301053080.18505-100000@netrider.rowland.org>
+        Sat, 30 Mar 2019 11:25:10 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hAFqx-0003tT-FY; Sat, 30 Mar 2019 15:25:03 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Aditya Pakki <pakki001@umn.edu>, Sean Young <sean@mess.org>,
+        linux-media@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dvb: clean up redundant break statements
+Date:   Sat, 30 Mar 2019 15:25:03 +0000
+Message-Id: <20190330152503.9923-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 Mar 2019, Joel Fernandes wrote:
+From: Colin Ian King <colin.king@canonical.com>
 
-> On Thu, Mar 28, 2019 at 10:37:07AM -0700, Paul E. McKenney wrote:
-> > On Thu, Mar 28, 2019 at 05:26:42PM +0100, Oleg Nesterov wrote:
-> > > On 03/28, Jann Horn wrote:
-> > > >
-> > > > Since we're just talking about RCU stuff now, adding Paul McKenney to
-> > > > the thread.
-> > > 
-> > > Since you added Paul let me add more confusion to this thread ;)
-> > 
-> > Woo-hoo!!!  More confusion!  Bring it on!!!  ;-)
-> 
-> Nice to take part in the confusion fun too!!! ;-)
-> 
-> > > There were some concerns about the lack of barriers in put_pid(), but I can't
-> > > find that old discussion and I forgot the result of that discussion...
-> > > 
-> > > Paul, could you confirm that this code
-> > > 
-> > > 	CPU_0		CPU_1
-> > > 
-> > > 	X = 1;		if (READ_ONCE(Y))
-> > > 	mb();			X = 2;
-> > > 	Y = 1;		BUG_ON(X != 2);
-> > > 
-> > > 
-> > > is correct? I think it is, control dependency pairs with mb(), right?
-> > 
-> > The BUG_ON() is supposed to happen at the end of time, correct?
-> > As written, there is (in the strict sense) a data race between the load
-> > of X in the BUG_ON() and CPU_0's store to X.  In a less strict sense,
-> > you could of course argue that this data race is harmless, especially
-> > if X is a single byte.  But the more I talk to compiler writers, the
-> > less comfortable I become with data races in general.  :-/
-> > 
-> > So I would also feel better if the "Y = 1" was WRITE_ONCE().
-> > 
-> > On the other hand, this is a great opportunity to try out Alan Stern's
-> > prototype plain-accesses patch to the Linux Kernel Memory Model (LKMM)!
-> > 
-> > https://lkml.kernel.org/r/Pine.LNX.4.44L0.1903191459270.1593-200000@iolanthe.rowland.org
-> > 
-> > Also adding Alan on CC.
-> > 
-> > Here is what I believe is the litmus test that your are interested in:
-> > 
-> > ------------------------------------------------------------------------
-> > C OlegNesterov-put_pid
-> > 
-> > {}
-> > 
-> > P0(int *x, int *y)
-> > {
-> > 	*x = 1;
-> > 	smp_mb();
-> > 	*y = 1;
-> > }
-> > 
-> > P1(int *x, int *y)
-> > {
-> > 	int r1;
-> > 
-> > 	r1 = READ_ONCE(*y);
-> > 	if (r1)
-> > 		*x = 2;
-> > }
-> > 
-> > exists (1:r1=1 /\ ~x=2)
-> > ------------------------------------------------------------------------
-> > 
-> > Running this through herd with Alan's patch detects the data race
-> > and says that the undesired outcome is allowed:
-> > 
-> > 	$ herd7  -conf linux-kernel.cfg /tmp/OlegNesterov-put_pid.litmus 
-> > 	Test OlegNesterov-put_pid Allowed
-> > 	States 3
-> > 	1:r1=0; x=1;
-> > 	1:r1=1; x=1;
-> > 	1:r1=1; x=2;
-> > 	Ok
-> > 	Witnesses
-> > 	Positive: 1 Negative: 2
-> > 	Flag data-race
-> > 	Condition exists (1:r1=1 /\ not (x=2))
-> > 	Observation OlegNesterov-put_pid Sometimes 1 2
-> > 	Time OlegNesterov-put_pid 0.00
-> > 	Hash=a3e0043ad753effa860fea37eeba0a76
-> > 
-> > Using WRITE_ONCE() for P0()'s store to y still allows this outcome,
-> > although it does remove the "Flag data-race".
-> > 
-> > Using WRITE_ONCE() for both P0()'s store to y and P1()'s store to x
-> > gets rid of both the "Flag data-race" and the undesired outcome:
-> > 
-> > 	$ herd7  -conf linux-kernel.cfg /tmp/OlegNesterov-put_pid-WO-WO.litmus 
-> > 	Test OlegNesterov-put_pid-WO-WO Allowed
-> > 	States 2
-> > 	1:r1=0; x=1;
-> > 	1:r1=1; x=2;
-> > 	No
-> > 	Witnesses
-> > 	Positive: 0 Negative: 2
-> > 	Condition exists (1:r1=1 /\ not (x=2))
-> > 	Observation OlegNesterov-put_pid-WO-WO Never 0 2
-> > 	Time OlegNesterov-put_pid-WO-WO 0.01
-> > 	Hash=6e1643e3c5e4739b590bde0a8e8a918e
-> > 
-> > Here is the corresponding litmus test, in case I messed something up:
-> > 
-> > ------------------------------------------------------------------------
-> > C OlegNesterov-put_pid-WO-WO
-> > 
-> > {}
-> > 
-> > P0(int *x, int *y)
-> > {
-> > 	*x = 1;
-> > 	smp_mb();
-> > 	WRITE_ONCE(*y, 1);
-> > }
-> > 
-> > P1(int *x, int *y)
-> > {
-> > 	int r1;
-> > 
-> > 	r1 = READ_ONCE(*y);
-> > 	if (r1)
-> > 		WRITE_ONCE(*x, 2);
-> > }
-> > 
-> > exists (1:r1=1 /\ ~x=2)
-> 
-> I ran the above examples too. Its a bit confusing to me why the WRITE_ONCE in
-> P0() is required,
+There are several places where a break statement occurs before
+a following break statement; these are unnecessary and can be
+removed to clean up the code a little.
 
-If the "WRITE_ONCE(*y, 1)" in P0 were written instead as "*y = 1", it
-would race with P1's "READ_ONCE(*y)".
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/media/dvb-frontends/drxd_hard.c | 30 +++++--------------------
+ 1 file changed, 5 insertions(+), 25 deletions(-)
 
->  and why would the READ_ONCE / WRITE_ONCE in P1() not be
-> sufficient to prevent the exists condition. Shouldn't the compiler know that,
-> in P0(), it should not reorder the store to y=1 before the x=1 because there
-> is an explicit barrier between the 2 stores? Looks me to me like a broken
-> compiler :-|. 
-> 
-> So I would have expected the following litmus to result in Never, but it
-> doesn't with Alan's patch:
-> 
-> P0(int *x, int *y)
-> {
-> 	*x = 1;
-> 	smp_mb();
-> 	*y = 1;
-> }
-> 
-> P1(int *x, int *y)
-> {
-> 	int r1;
-> 
-> 	r1 = READ_ONCE(*y);
-> 	if (r1)
-> 		WRITE_ONCE(*x, 2);
-> }
-> 
-> exists (1:r1=1 /\ ~x=2)
-
-You have to realize that in the presence of a data race, all bets are
-off.  The memory model will still output a prediction, but there is no
-guarantee that the prediction will be correct.
-
-In this case P0's write to y races with P1's READ_ONCE.  Therefore the 
-memory model may very will give an incorrect result.
-
-> > ------------------------------------------------------------------------
-> > 
-> > > If not, then put_pid() needs atomic_read_acquire() as it was proposed in that
-> > > discussion.
-> > 
-> > Good point, let's try with smp_load_acquire() in P1():
-> > 
-> > 	$ herd7  -conf linux-kernel.cfg /tmp/OlegNesterov-put_pid-WO-sla.litmus 
-> > 	Test OlegNesterov-put_pid-WO-sla Allowed
-> > 	States 2
-> > 	1:r1=0; x=1;
-> > 	1:r1=1; x=2;
-> > 	No
-> > 	Witnesses
-> > 	Positive: 0 Negative: 2
-> > 	Condition exists (1:r1=1 /\ not (x=2))
-> > 	Observation OlegNesterov-put_pid-WO-sla Never 0 2
-> > 	Time OlegNesterov-put_pid-WO-sla 0.01
-> > 	Hash=4fb0276eabf924793dec1970199db3a6
-> > 
-> > This also works.  Here is the litmus test:
-> > 
-> > ------------------------------------------------------------------------
-> > C OlegNesterov-put_pid-WO-sla
-> > 
-> > {}
-> > 
-> > P0(int *x, int *y)
-> > {
-> > 	*x = 1;
-> > 	smp_mb();
-> > 	WRITE_ONCE(*y, 1);
-> > }
-> > 
-> > P1(int *x, int *y)
-> > {
-> > 	int r1;
-> > 
-> > 	r1 = smp_load_acquire(y);
-> > 	if (r1)
-> > 		*x = 2;
-> > }
-> > 
-> > exists (1:r1=1 /\ ~x=2)
-> > ------------------------------------------------------------------------
-> > 
-> > Demoting P0()'s WRITE_ONCE() to a plain write while leaving P1()'s
-> > smp_load_acquire() gets us a data race and allows the undesired
-> > outcome:
-> 
-> Yeah, I think this is also what I was confused about above, is why is that
-> WRITE_ONCE required in P0() because there's already an smp_mb there. Surely
-> I'm missing something. ;-)
-
-A plain write to *y in P0 races with the smp_load_acquire in P1.  
-That's all -- it's not very deep or subtle.  Remember, the definition
-of a race is two concurrent accesses to the same variable from
-different CPUs, where at least one of the accesses is plain and at
-least one of them is a write.
-
-I've heard that people on the C++ Standards committee have proposed
-that plain writes should not race with marked reads.  That is, when
-such concurrent accesses occur the outcome should be an undefined
-result for the marked read rather than undefined behavior.  If this
-change gets adopted and we put it into the memory model, then your
-expectation would be correct.  But as things stand, it isn't.
-
-Alan
-
-> > 	$ herd7  -conf linux-kernel.cfg /tmp/OlegNesterov-put_pid-sla.litmus 
-> > 	Test OlegNesterov-put_pid-sla Allowed
-> > 	States 3
-> > 	1:r1=0; x=1;
-> > 	1:r1=1; x=1;
-> > 	1:r1=1; x=2;
-> > 	Ok
-> > 	Witnesses
-> > 	Positive: 1 Negative: 2
-> > 	Flag data-race
-> > 	Condition exists (1:r1=1 /\ not (x=2))
-> > 	Observation OlegNesterov-put_pid-sla Sometimes 1 2
-> > 	Time OlegNesterov-put_pid-sla 0.01
-> > 	Hash=ec6f71f3d9f7cd6e45a874c872e3d946
-> > 
-> > But what if you are certain that the compiler cannot mess up your use
-> > of plain C-language loads and stores?  Then simply tell LKMM that they
-> > are READ_ONCE() and WRITE_ONCE(), respectively.  LKMM is admittedly
-> > somewhat paranoid, but real C compilers really do tear stores of certain
-> > constants on systems (like x86) that have store-immediate instructions,
-> > so a bit of paranoia is not misplaced here.  ;-)
-> > 
-> > Plus please note that this patch to LKMM is prototype and thus subject
-> > to change.
-> 
-> Ah I see. Appreciate if Alan can also CC me on future posting of this since
-> I'm quite interested. ;-)
-> 
-> thanks,
-> 
->  - Joel
-
-
+diff --git a/drivers/media/dvb-frontends/drxd_hard.c b/drivers/media/dvb-frontends/drxd_hard.c
+index 0a5b15bee1d7..c597d6fc3046 100644
+--- a/drivers/media/dvb-frontends/drxd_hard.c
++++ b/drivers/media/dvb-frontends/drxd_hard.c
+@@ -2263,61 +2263,41 @@ static int DRX_Start(struct drxd_state *state, s32 off)
+ 		case DRX_CHANNEL_LOW:
+ 			transmissionParams |= SC_RA_RAM_OP_PARAM_PRIO_LO;
+ 			status = Write16(state, EC_SB_REG_PRIOR__A, EC_SB_REG_PRIOR_LO, 0x0000);
+-			if (status < 0)
+-				break;
+ 			break;
+ 		case DRX_CHANNEL_HIGH:
+ 			transmissionParams |= SC_RA_RAM_OP_PARAM_PRIO_HI;
+ 			status = Write16(state, EC_SB_REG_PRIOR__A, EC_SB_REG_PRIOR_HI, 0x0000);
+-			if (status < 0)
+-				break;
+ 			break;
+-
+ 		}
+ 
+ 		switch (p->code_rate_HP) {
+ 		case FEC_1_2:
+ 			transmissionParams |= SC_RA_RAM_OP_PARAM_RATE_1_2;
+-			if (state->type_A) {
++			if (state->type_A)
+ 				status = Write16(state, EC_VD_REG_SET_CODERATE__A, EC_VD_REG_SET_CODERATE_C1_2, 0x0000);
+-				if (status < 0)
+-					break;
+-			}
+ 			break;
+ 		default:
+ 			operationMode |= SC_RA_RAM_OP_AUTO_RATE__M;
+ 			/* fall through */
+ 		case FEC_2_3:
+ 			transmissionParams |= SC_RA_RAM_OP_PARAM_RATE_2_3;
+-			if (state->type_A) {
++			if (state->type_A)
+ 				status = Write16(state, EC_VD_REG_SET_CODERATE__A, EC_VD_REG_SET_CODERATE_C2_3, 0x0000);
+-				if (status < 0)
+-					break;
+-			}
+ 			break;
+ 		case FEC_3_4:
+ 			transmissionParams |= SC_RA_RAM_OP_PARAM_RATE_3_4;
+-			if (state->type_A) {
++			if (state->type_A)
+ 				status = Write16(state, EC_VD_REG_SET_CODERATE__A, EC_VD_REG_SET_CODERATE_C3_4, 0x0000);
+-				if (status < 0)
+-					break;
+-			}
+ 			break;
+ 		case FEC_5_6:
+ 			transmissionParams |= SC_RA_RAM_OP_PARAM_RATE_5_6;
+-			if (state->type_A) {
++			if (state->type_A)
+ 				status = Write16(state, EC_VD_REG_SET_CODERATE__A, EC_VD_REG_SET_CODERATE_C5_6, 0x0000);
+-				if (status < 0)
+-					break;
+-			}
+ 			break;
+ 		case FEC_7_8:
+ 			transmissionParams |= SC_RA_RAM_OP_PARAM_RATE_7_8;
+-			if (state->type_A) {
++			if (state->type_A)
+ 				status = Write16(state, EC_VD_REG_SET_CODERATE__A, EC_VD_REG_SET_CODERATE_C7_8, 0x0000);
+-				if (status < 0)
+-					break;
+-			}
+ 			break;
+ 		}
+ 		if (status < 0)
+-- 
+2.20.1
 
