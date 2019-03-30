@@ -6,45 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17171C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB892C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC62421773
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2FD3204FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909635;
-	bh=Qv5aealfddI2YBCXVAk7A0IzRyydbcaAY3WKEawdfnc=;
+	s=default; t=1553909639;
+	bh=qW2A3pzZhdCEAwNbFIboI9FbT4nJ0KMg+zBoOwSMQcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zUmH479fpVJSNGuPFBKa0Njqsl+HTd8uxpSBeqQpZCR+auQ9lEh5pCar0dYZtfBS9
-	 zuz7R6L/pFSNsr232yxTH1Vt/drbLgx5s4hwcdgSFwufL3LPY5qXB33EuSOEjvarrR
-	 g6aLQlmQEoKT1HMO8tAA7e/Tft6bZy/WKoRguFrE=
+	b=W5rtsimXlN1pyljNbhPThoqYEo/weAn7OpVHbx+ygK0aDF/ONEChvw/HJbmM/iG1o
+	 9ncawyfYD1e2I8Q6H7yNI0NBZGl6H2Fg6TMb93rWqxJfA/y2WG4TEQyUbIIFZaY/RB
+	 ypJuaJt699MobuYgzi3Fo9AmFBK2vBpHF5lyJL9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732302AbfC3BcP (ORCPT
+        id S1732028AbfC3Bd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40124 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:33:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732244AbfC3BcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:32:11 -0400
+        id S1732301AbfC3BcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:32:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADD53218FC;
-        Sat, 30 Mar 2019 01:32:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19300218E2;
+        Sat, 30 Mar 2019 01:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909530;
-        bh=Qv5aealfddI2YBCXVAk7A0IzRyydbcaAY3WKEawdfnc=;
+        s=default; t=1553909534;
+        bh=qW2A3pzZhdCEAwNbFIboI9FbT4nJ0KMg+zBoOwSMQcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwFWkPgqzBKdvdf8xKqUXoH0Qo10csipsDlz8ctCzrsxx6sbk3DIdNKbupQGGKNBm
-         vIovzUlN66kvhNXugW5fa3/8HOD9e9bKD+Bgf0a+82bSnznACKpD552Qs8v2BPL5Mg
-         5NGCn7FbEhWtljnxO+WMRX83frp9eAFth4O7Gdfw=
+        b=0GVdleChpl1PBUqtN/NsKZqpC/qyaHqhdgWIx8E0OfFbGn+iq58nJKOnemveVFCom
+         Bek5F7fhCpNN0o0p19PNjl1QN9vP6fnkINPMD0va+UEaQ7tVtj4K4c5+i77SImOcr4
+         2xR41c1xS29o1RzDi8WXC6b91xR9Ilc1fuvGUkTk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/16] cifs: fallback to older infolevels on findfirst queryinfo retry
-Date:   Fri, 29 Mar 2019 21:31:52 -0400
-Message-Id: <20190330013200.1130-8-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 12/16] ext4: prohibit fstrim in norecovery mode
+Date:   Fri, 29 Mar 2019 21:31:56 -0400
+Message-Id: <20190330013200.1130-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013200.1130-1-sashal@kernel.org>
 References: <20190330013200.1130-1-sashal@kernel.org>
@@ -57,113 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit 3b7960caceafdfc2cdfe2850487f8d091eb41144 ]
+[ Upstream commit 18915b5873f07e5030e6fb108a050fa7c71c59fb ]
 
-In cases where queryinfo fails, we have cases in cifs (vers=1.0)
-where with backupuid mounts we retry the query info with findfirst.
-This doesn't work to some NetApp servers which don't support
-WindowsXP (and later) infolevel 261 (SMB_FIND_FILE_ID_FULL_DIR_INFO)
-so in this case use other info levels (in this case it will usually
-be level 257, SMB_FIND_FILE_DIRECTORY_INFO).
+The ext4 fstrim implementation uses the block bitmaps to find free space
+that can be discarded.  If we haven't replayed the journal, the bitmaps
+will be stale and we absolutely *cannot* use stale metadata to zap the
+underlying storage.
 
-(Also fixes some indentation)
-
-See kernel bugzilla 201435
-
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/inode.c | 69 +++++++++++++++++++++++++++----------------------
- 1 file changed, 38 insertions(+), 31 deletions(-)
+ fs/ext4/ioctl.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index 5c3187df9ab9..d8bd8dd36211 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -759,43 +759,50 @@ cifs_get_inode_info(struct inode **inode, const char *full_path,
- 	} else if ((rc == -EACCES) && backup_cred(cifs_sb) &&
- 		   (strcmp(server->vals->version_string, SMB1_VERSION_STRING)
- 		      == 0)) {
--			/*
--			 * For SMB2 and later the backup intent flag is already
--			 * sent if needed on open and there is no path based
--			 * FindFirst operation to use to retry with
--			 */
--
--			srchinf = kzalloc(sizeof(struct cifs_search_info),
--						GFP_KERNEL);
--			if (srchinf == NULL) {
--				rc = -ENOMEM;
--				goto cgii_exit;
--			}
+diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+index bcd7c4788903..e44e3cd738b6 100644
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -599,6 +599,13 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		if (!blk_queue_discard(q))
+ 			return -EOPNOTSUPP;
+ 
 +		/*
-+		 * For SMB2 and later the backup intent flag is already
-+		 * sent if needed on open and there is no path based
-+		 * FindFirst operation to use to retry with
++		 * We haven't replayed the journal, so we cannot use our
++		 * block-bitmap-guided storage zapping commands.
 +		 */
++		if (test_opt(sb, NOLOAD) && ext4_has_feature_journal(sb))
++			return -EROFS;
 +
-+		srchinf = kzalloc(sizeof(struct cifs_search_info),
-+					GFP_KERNEL);
-+		if (srchinf == NULL) {
-+			rc = -ENOMEM;
-+			goto cgii_exit;
-+		}
- 
--			srchinf->endOfSearch = false;
-+		srchinf->endOfSearch = false;
-+		if (tcon->unix_ext)
-+			srchinf->info_level = SMB_FIND_FILE_UNIX;
-+		else if ((tcon->ses->capabilities &
-+			 tcon->ses->server->vals->cap_nt_find) == 0)
-+			srchinf->info_level = SMB_FIND_FILE_INFO_STANDARD;
-+		else if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM)
- 			srchinf->info_level = SMB_FIND_FILE_ID_FULL_DIR_INFO;
-+		else /* no srvino useful for fallback to some netapp */
-+			srchinf->info_level = SMB_FIND_FILE_DIRECTORY_INFO;
- 
--			srchflgs = CIFS_SEARCH_CLOSE_ALWAYS |
--					CIFS_SEARCH_CLOSE_AT_END |
--					CIFS_SEARCH_BACKUP_SEARCH;
-+		srchflgs = CIFS_SEARCH_CLOSE_ALWAYS |
-+				CIFS_SEARCH_CLOSE_AT_END |
-+				CIFS_SEARCH_BACKUP_SEARCH;
- 
--			rc = CIFSFindFirst(xid, tcon, full_path,
--				cifs_sb, NULL, srchflgs, srchinf, false);
--			if (!rc) {
--				data =
--				(FILE_ALL_INFO *)srchinf->srch_entries_start;
-+		rc = CIFSFindFirst(xid, tcon, full_path,
-+			cifs_sb, NULL, srchflgs, srchinf, false);
-+		if (!rc) {
-+			data = (FILE_ALL_INFO *)srchinf->srch_entries_start;
- 
--				cifs_dir_info_to_fattr(&fattr,
--				(FILE_DIRECTORY_INFO *)data, cifs_sb);
--				fattr.cf_uniqueid = le64_to_cpu(
--				((SEARCH_ID_FULL_DIR_INFO *)data)->UniqueId);
--				validinum = true;
-+			cifs_dir_info_to_fattr(&fattr,
-+			(FILE_DIRECTORY_INFO *)data, cifs_sb);
-+			fattr.cf_uniqueid = le64_to_cpu(
-+			((SEARCH_ID_FULL_DIR_INFO *)data)->UniqueId);
-+			validinum = true;
- 
--				cifs_buf_release(srchinf->ntwrk_buf_start);
--			}
--			kfree(srchinf);
--			if (rc)
--				goto cgii_exit;
-+			cifs_buf_release(srchinf->ntwrk_buf_start);
-+		}
-+		kfree(srchinf);
-+		if (rc)
-+			goto cgii_exit;
- 	} else
- 		goto cgii_exit;
- 
+ 		if (copy_from_user(&range, (struct fstrim_range __user *)arg,
+ 		    sizeof(range)))
+ 			return -EFAULT;
 -- 
 2.19.1
 
