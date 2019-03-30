@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11A4C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBDFC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCA3921773
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E642184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909595;
-	bh=wxCFi0Vwx4s7u0bNIU7e/yZ+bi5iPpGjLQsdyxd/4cY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=tI6fCINx+SfGPxu+Fg0drDrxz3CH++q1UNSUyp7n9wx5DFgp40SvkZB8BMPQA46En
-	 DfdNzDphCvBWNQY+pXLXz6e0arjCueocajNZ9TMZikBpgzzdA3VdslhLO5tK/Iu61r
-	 nLY3Vat7TAEmTiDqB3rNlmAX/cpd7QkQ84Up9a1w=
+	s=default; t=1553909600;
+	bh=Im0w4GXVZqxX/0E9kmMmA5ChuyrdYRSiKTrfwMfsMxs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sDJ0aleY21fbhjYTPWlnL4BPDA51VCxDHcSnl/2tWL7bAc3uWGC4wLqHXuXyPpvi4
+	 /PgoBweKuPGO+zGBfmZCUy9fFHti9YgvSkYuaw8+eURZAa58U1UMuwCDbKzpjOfSqd
+	 KbmjYC9Z6Cgyjt3mSHelfrKJbz4lHSODOCAwewaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732380AbfC3Bcf (ORCPT
+        id S1731884AbfC3BdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:32:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40514 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:33:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732342AbfC3Bca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:32:30 -0400
+        id S1732370AbfC3Bce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:32:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADBB921773;
-        Sat, 30 Mar 2019 01:32:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93E2221773;
+        Sat, 30 Mar 2019 01:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909549;
-        bh=wxCFi0Vwx4s7u0bNIU7e/yZ+bi5iPpGjLQsdyxd/4cY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=R3ubPsV/1EZ3/gGEABS4RL9+6ux+KajMFaaVn93d6uC1HW8pNdVkUbBM1LLtunSNI
-         2Hb6yBtwjKkcCtLcw9UwKy7G6hVpb5kbaYmxEkn7vVSgq9pJZFOcTC3U65WGi8d/WE
-         5g3GCJn7ion6KEm0yxHhfQKQtY7dw45xqmkBnJF0=
+        s=default; t=1553909554;
+        bh=Im0w4GXVZqxX/0E9kmMmA5ChuyrdYRSiKTrfwMfsMxs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vFi35TQxySdtVNYr4n5vvknLlZ5BUMbFzOg6pntX9NK1uB1sh2G9KC0bpZ1NYZh5S
+         sriDKlqZfLsEevRYQ8b/sXQGXp46HBED6dGz2xe7iBVE3sHuVqT14567oKBkRCxtqJ
+         XFG9uwHub6fO/U8LAnV0f/U6T/3Wlz+7RbgbcpZQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 01/10] rsi: improve kernel thread handling to fix kernel panic
-Date:   Fri, 29 Mar 2019 21:32:18 -0400
-Message-Id: <20190330013227.1365-1-sashal@kernel.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 3.18 05/10] ARM: samsung: Limit SAMSUNG_PM_CHECK config option to non-Exynos platforms
+Date:   Fri, 29 Mar 2019 21:32:22 -0400
+Message-Id: <20190330013227.1365-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190330013227.1365-1-sashal@kernel.org>
+References: <20190330013227.1365-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,61 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-[ Upstream commit 4c62764d0fc21a34ffc44eec1210038c3a2e4473 ]
+[ Upstream commit 6862fdf2201ab67cd962dbf0643d37db909f4860 ]
 
-While running regressions, observed below kernel panic when sdio disconnect
-called. This is because of, kthread_stop() is taking care of
-wait_for_completion() by default. When wait_for_completion triggered
-in kthread_stop and as it was done already, giving kernel panic.
-Hence, removing redundant wait_for_completion() from rsi_kill_thread().
+"S3C2410 PM Suspend Memory CRC" feature (controlled by
+SAMSUNG_PM_CHECK config option) is incompatible with highmem
+(uses phys_to_virt() instead of proper mapping) which is used by
+the majority of Exynos boards. The issue manifests itself in OOPS
+on affected boards, i.e. on Odroid-U3 I got the following one:
 
-... skipping ...
-BUG: unable to handle kernel NULL pointer dereference at           (null)
-IP: [<ffffffff810a63df>] exit_creds+0x1f/0x50
-PGD 0
-Oops: 0002 [#1] SMP
-CPU: 0 PID: 6502 Comm: rmmod Tainted: G  OE   4.15.9-Generic #154-Ubuntu
-Hardware name: Dell Inc. Edge Gateway 3003/ , BIOS 01.00.00 04/17/2017
-Stack:
-ffff88007392e600 ffff880075847dc0 ffffffff8108160a 0000000000000000
-ffff88007392e600 ffff880075847de8 ffffffff810a484b ffff880076127000
-ffff88003cd3a800 ffff880074f12a00 ffff880075847e28 ffffffffc09bed15
-Call Trace:
-[<ffffffff8108160a>] __put_task_struct+0x5a/0x140
-[<ffffffff810a484b>] kthread_stop+0x10b/0x110
-[<ffffffffc09bed15>] rsi_disconnect+0x2f5/0x300 [ven_rsi_sdio]
-[<ffffffff81578bcb>] ? __pm_runtime_resume+0x5b/0x80
-[<ffffffff816f0918>] sdio_bus_remove+0x38/0x100
-[<ffffffff8156cc64>] __device_release_driver+0xa4/0x150
-[<ffffffff8156d7a5>] driver_detach+0xb5/0xc0
-[<ffffffff8156c6c5>] bus_remove_driver+0x55/0xd0
-[<ffffffff8156dfbc>] driver_unregister+0x2c/0x50
-[<ffffffff816f0b8a>] sdio_unregister_driver+0x1a/0x20
-[<ffffffffc09bf0f5>] rsi_module_exit+0x15/0x30 [ven_rsi_sdio]
-[<ffffffff8110cad8>] SyS_delete_module+0x1b8/0x210
-[<ffffffff81851dc8>] entry_SYSCALL_64_fastpath+0x1c/0xbb
+Unable to handle kernel paging request at virtual address f0000000
+pgd = 1c0f9bb4
+[f0000000] *pgd=00000000
+Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+[<c0458034>] (crc32_le) from [<c0121f8c>] (s3c_pm_makecheck+0x34/0x54)
+[<c0121f8c>] (s3c_pm_makecheck) from [<c0121efc>] (s3c_pm_run_res+0x74/0x8c)
+[<c0121efc>] (s3c_pm_run_res) from [<c0121ecc>] (s3c_pm_run_res+0x44/0x8c)
+[<c0121ecc>] (s3c_pm_run_res) from [<c01210b8>] (exynos_suspend_enter+0x64/0x148)
+[<c01210b8>] (exynos_suspend_enter) from [<c018893c>] (suspend_devices_and_enter+0x9ec/0xe74)
+[<c018893c>] (suspend_devices_and_enter) from [<c0189534>] (pm_suspend+0x770/0xc04)
+[<c0189534>] (pm_suspend) from [<c0186ce8>] (state_store+0x6c/0xcc)
+[<c0186ce8>] (state_store) from [<c09db434>] (kobj_attr_store+0x14/0x20)
+[<c09db434>] (kobj_attr_store) from [<c02fa63c>] (sysfs_kf_write+0x4c/0x50)
+[<c02fa63c>] (sysfs_kf_write) from [<c02f97a4>] (kernfs_fop_write+0xfc/0x1e4)
+[<c02f97a4>] (kernfs_fop_write) from [<c027b198>] (__vfs_write+0x2c/0x140)
+[<c027b198>] (__vfs_write) from [<c027b418>] (vfs_write+0xa4/0x160)
+[<c027b418>] (vfs_write) from [<c027b5d8>] (ksys_write+0x40/0x8c)
+[<c027b5d8>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
 
-Signed-off-by: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Add PLAT_S3C24XX, ARCH_S3C64XX and ARCH_S5PV210 dependencies to
+SAMSUNG_PM_CHECK config option to hide it on Exynos platforms.
+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/rsi/rsi_common.h | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/plat-samsung/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/rsi/rsi_common.h b/drivers/net/wireless/rsi/rsi_common.h
-index d3fbe33d2324..a13f08fd8690 100644
---- a/drivers/net/wireless/rsi/rsi_common.h
-+++ b/drivers/net/wireless/rsi/rsi_common.h
-@@ -75,7 +75,6 @@ static inline int rsi_kill_thread(struct rsi_thread *handle)
- 	atomic_inc(&handle->thread_done);
- 	rsi_set_event(&handle->event);
+diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
+index 9bd2776e7d05..2c3cf321f933 100644
+--- a/arch/arm/plat-samsung/Kconfig
++++ b/arch/arm/plat-samsung/Kconfig
+@@ -287,7 +287,7 @@ config S3C_PM_DEBUG_LED_SMDK
  
--	wait_for_completion(&handle->completion);
- 	return kthread_stop(handle->task);
- }
- 
+ config SAMSUNG_PM_CHECK
+ 	bool "S3C2410 PM Suspend Memory CRC"
+-	depends on PM
++	depends on PM && (PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210)
+ 	select CRC32
+ 	help
+ 	  Enable the PM code's memory area checksum over sleep. This option
 -- 
 2.19.1
 
