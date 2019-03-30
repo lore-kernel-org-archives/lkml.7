@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6677EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214DCC10F05
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375A621773
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E575521773
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:33:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909618;
-	bh=cGINo2G9NJviNEYta8KQ1WQxCIaRnCgpB7wfY+2l/aQ=;
+	s=default; t=1553909629;
+	bh=5y/0UnUG36K2VRfnxSS0bUH0byC7HoR2dSLLFSsOkJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wRPrCYxn0oueUWiWNCgDIzXYU5uPbRr5uiFO09L95XNHGQ2s7r19zs2CGn1k8b6PC
-	 yPrQKBR/w/rFbYqa4HxSg88gvQYBBaVWtszRffmAA0P+r4QMyTl48HvT2oL0VYEB2e
-	 TKBcx+YnUn6EI7T0XDpxAVzG7o/ysWm/Tm3ApCdM=
+	b=Ww8jgrDd8Q57FR5E5BK0P+ZqbUs4J4ClnwBKmwdJmZwWuBuC23Uf5PZCSnGkVe7eX
+	 yvblsxwiX3wb5KfIapxoKa+0ZwiOfEEc01klLUH0yrgrwQ3zaCe5i+bWpPHvHGwDP9
+	 fDA2pmQEqerALiKYvWa4Z5d43nEif3wfXSN7Qrq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732043AbfC3Bdh (ORCPT
+        id S1732319AbfC3BcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:33:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40584 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:32:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730993AbfC3Bcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:32:33 -0400
+        id S1732295AbfC3BcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:32:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5060A218A6;
-        Sat, 30 Mar 2019 01:32:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 027992184C;
+        Sat, 30 Mar 2019 01:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909552;
-        bh=cGINo2G9NJviNEYta8KQ1WQxCIaRnCgpB7wfY+2l/aQ=;
+        s=default; t=1553909533;
+        bh=5y/0UnUG36K2VRfnxSS0bUH0byC7HoR2dSLLFSsOkJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NS9SVBQWe1aHJqMK7YkThpw8zti3NlJ0r1byvK/KeF1sCyr96AXpWIjtkLJz6PEbG
-         WRo4ozKBbXYAA6saViv8zM6n6sR36/kvVLjRUqxZEVkD2GpQVnnoBEQFUwtRjb0KsC
-         1qYFa7iRNHG4LuaNyBcVl4IIvjxlDwGG3julLbfg=
+        b=E1k9/Ozf1JjQie19mhxJLaF1yp1FI5YPe9WGRDic25fASbLpgxQj1UT3T8UIKZOiU
+         1FoskNVhq8pEhHup4VQsLSPVzMxsFM0BAssf5I62bl6gYV2mfOPRiDz8mpCASLJidZ
+         swKRYSoKLS8tM1zKi9FMLF9sWKjLKpYcYoj833qo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinu-Razvan Chis-Serban <justcsdr@gmail.com>,
-        Dominique Martinet <dominique.martinet@cea.fr>,
+Cc:     Julia Cartwright <julia@ni.com>, Joerg Roedel <jroedel@suse.de>,
         Sasha Levin <sashal@kernel.org>,
-        v9fs-developer@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 3.18 03/10] 9p locks: add mount option for lock retry interval
-Date:   Fri, 29 Mar 2019 21:32:20 -0400
-Message-Id: <20190330013227.1365-3-sashal@kernel.org>
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.4 11/16] iommu/dmar: Fix buffer overflow during PCI bus notification
+Date:   Fri, 29 Mar 2019 21:31:55 -0400
+Message-Id: <20190330013200.1130-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190330013227.1365-1-sashal@kernel.org>
-References: <20190330013227.1365-1-sashal@kernel.org>
+In-Reply-To: <20190330013200.1130-1-sashal@kernel.org>
+References: <20190330013200.1130-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,121 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinu-Razvan Chis-Serban <justcsdr@gmail.com>
+From: Julia Cartwright <julia@ni.com>
 
-[ Upstream commit 5e172f75e51e3de1b4274146d9b990f803cb5c2a ]
+[ Upstream commit cffaaf0c816238c45cd2d06913476c83eb50f682 ]
 
-The default P9_LOCK_TIMEOUT can be too long for some users exporting
-a local file system to a guest VM (30s), make this configurable at
-mount time.
+Commit 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI
+device path") changed the type of the path data, however, the change in
+path type was not reflected in size calculations.  Update to use the
+correct type and prevent a buffer overflow.
 
-Link: http://lkml.kernel.org/r/1536295827-3181-1-git-send-email-asmadeus@codewreck.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=195727
-Signed-off-by: Dinu-Razvan Chis-Serban <justcsdr@gmail.com>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+This bug manifests in systems with deep PCI hierarchies, and can lead to
+an overflow of the static allocated buffer (dmar_pci_notify_info_buf),
+or can lead to overflow of slab-allocated data.
+
+   BUG: KASAN: global-out-of-bounds in dmar_alloc_pci_notify_info+0x1d5/0x2e0
+   Write of size 1 at addr ffffffff90445d80 by task swapper/0/1
+   CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W       4.14.87-rt49-02406-gd0a0e96 #1
+   Call Trace:
+    ? dump_stack+0x46/0x59
+    ? print_address_description+0x1df/0x290
+    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
+    ? kasan_report+0x256/0x340
+    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
+    ? e820__memblock_setup+0xb0/0xb0
+    ? dmar_dev_scope_init+0x424/0x48f
+    ? __down_write_common+0x1ec/0x230
+    ? dmar_dev_scope_init+0x48f/0x48f
+    ? dmar_free_unused_resources+0x109/0x109
+    ? cpumask_next+0x16/0x20
+    ? __kmem_cache_create+0x392/0x430
+    ? kmem_cache_create+0x135/0x2f0
+    ? e820__memblock_setup+0xb0/0xb0
+    ? intel_iommu_init+0x170/0x1848
+    ? _raw_spin_unlock_irqrestore+0x32/0x60
+    ? migrate_enable+0x27a/0x5b0
+    ? sched_setattr+0x20/0x20
+    ? migrate_disable+0x1fc/0x380
+    ? task_rq_lock+0x170/0x170
+    ? try_to_run_init_process+0x40/0x40
+    ? locks_remove_file+0x85/0x2f0
+    ? dev_prepare_static_identity_mapping+0x78/0x78
+    ? rt_spin_unlock+0x39/0x50
+    ? lockref_put_or_lock+0x2a/0x40
+    ? dput+0x128/0x2f0
+    ? __rcu_read_unlock+0x66/0x80
+    ? __fput+0x250/0x300
+    ? __rcu_read_lock+0x1b/0x30
+    ? mntput_no_expire+0x38/0x290
+    ? e820__memblock_setup+0xb0/0xb0
+    ? pci_iommu_init+0x25/0x63
+    ? pci_iommu_init+0x25/0x63
+    ? do_one_initcall+0x7e/0x1c0
+    ? initcall_blacklisted+0x120/0x120
+    ? kernel_init_freeable+0x27b/0x307
+    ? rest_init+0xd0/0xd0
+    ? kernel_init+0xf/0x120
+    ? rest_init+0xd0/0xd0
+    ? ret_from_fork+0x1f/0x40
+   The buggy address belongs to the variable:
+    dmar_pci_notify_info_buf+0x40/0x60
+
+Fixes: 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI device path")
+Signed-off-by: Julia Cartwright <julia@ni.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/v9fs.c     | 21 +++++++++++++++++++++
- fs/9p/v9fs.h     |  1 +
- fs/9p/vfs_file.c |  6 +++++-
- 3 files changed, 27 insertions(+), 1 deletion(-)
+ drivers/iommu/dmar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/9p/v9fs.c b/fs/9p/v9fs.c
-index 6894b085f0ee..4f02d1db6e27 100644
---- a/fs/9p/v9fs.c
-+++ b/fs/9p/v9fs.c
-@@ -59,6 +59,8 @@ enum {
- 	Opt_cache_loose, Opt_fscache, Opt_mmap,
- 	/* Access options */
- 	Opt_access, Opt_posixacl,
-+	/* Lock timeout option */
-+	Opt_locktimeout,
- 	/* Error token */
- 	Opt_err
- };
-@@ -78,6 +80,7 @@ static const match_table_t tokens = {
- 	{Opt_cachetag, "cachetag=%s"},
- 	{Opt_access, "access=%s"},
- 	{Opt_posixacl, "posixacl"},
-+	{Opt_locktimeout, "locktimeout=%u"},
- 	{Opt_err, NULL}
- };
+diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+index 5a63e32a4a6b..cbad1926cec1 100644
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -143,7 +143,7 @@ dmar_alloc_pci_notify_info(struct pci_dev *dev, unsigned long event)
+ 		for (tmp = dev; tmp; tmp = tmp->bus->self)
+ 			level++;
  
-@@ -126,6 +129,7 @@ static int v9fs_parse_options(struct v9fs_session_info *v9ses, char *opts)
- #ifdef CONFIG_9P_FSCACHE
- 	v9ses->cachetag = NULL;
- #endif
-+	v9ses->session_lock_timeout = P9_LOCK_TIMEOUT;
- 
- 	if (!opts)
- 		return 0;
-@@ -298,6 +302,23 @@ static int v9fs_parse_options(struct v9fs_session_info *v9ses, char *opts)
- #endif
- 			break;
- 
-+		case Opt_locktimeout:
-+			r = match_int(&args[0], &option);
-+			if (r < 0) {
-+				p9_debug(P9_DEBUG_ERROR,
-+					 "integer field, but no integer?\n");
-+				ret = r;
-+				continue;
-+			}
-+			if (option < 1) {
-+				p9_debug(P9_DEBUG_ERROR,
-+					 "locktimeout must be a greater than zero integer.\n");
-+				ret = -EINVAL;
-+				continue;
-+			}
-+			v9ses->session_lock_timeout = (long)option * HZ;
-+			break;
-+
- 		default:
- 			continue;
- 		}
-diff --git a/fs/9p/v9fs.h b/fs/9p/v9fs.h
-index 099c7712631c..5e748e716b36 100644
---- a/fs/9p/v9fs.h
-+++ b/fs/9p/v9fs.h
-@@ -117,6 +117,7 @@ struct v9fs_session_info {
- 	struct list_head slist; /* list of sessions registered with v9fs */
- 	struct backing_dev_info bdi;
- 	struct rw_semaphore rename_sem;
-+	long session_lock_timeout; /* retry interval for blocking locks */
- };
- 
- /* cache_validity flags */
-diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
-index 5594505e6e73..1d32409e5a19 100644
---- a/fs/9p/vfs_file.c
-+++ b/fs/9p/vfs_file.c
-@@ -152,6 +152,7 @@ static int v9fs_file_do_lock(struct file *filp, int cmd, struct file_lock *fl)
- 	uint8_t status;
- 	int res = 0;
- 	unsigned char fl_type;
-+	struct v9fs_session_info *v9ses;
- 
- 	fid = filp->private_data;
- 	BUG_ON(fid == NULL);
-@@ -187,6 +188,8 @@ static int v9fs_file_do_lock(struct file *filp, int cmd, struct file_lock *fl)
- 	if (IS_SETLKW(cmd))
- 		flock.flags = P9_LOCK_FLAGS_BLOCK;
- 
-+	v9ses = v9fs_inode2v9ses(file_inode(filp));
-+
- 	/*
- 	 * if its a blocked request and we get P9_LOCK_BLOCKED as the status
- 	 * for lock request, keep on trying
-@@ -200,7 +203,8 @@ static int v9fs_file_do_lock(struct file *filp, int cmd, struct file_lock *fl)
- 			break;
- 		if (status == P9_LOCK_BLOCKED && !IS_SETLKW(cmd))
- 			break;
--		if (schedule_timeout_interruptible(P9_LOCK_TIMEOUT) != 0)
-+		if (schedule_timeout_interruptible(v9ses->session_lock_timeout)
-+				!= 0)
- 			break;
- 	}
- 
+-	size = sizeof(*info) + level * sizeof(struct acpi_dmar_pci_path);
++	size = sizeof(*info) + level * sizeof(info->path[0]);
+ 	if (size <= sizeof(dmar_pci_notify_info_buf)) {
+ 		info = (struct dmar_pci_notify_info *)dmar_pci_notify_info_buf;
+ 	} else {
 -- 
 2.19.1
 
