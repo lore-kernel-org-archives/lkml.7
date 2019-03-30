@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F9FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96958C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB77217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F27A217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909911;
-	bh=+oGEJGlWZ3n+aKt5lLM28Dlds+Sx0OaLv3xQF9+r2G0=;
+	s=default; t=1553909922;
+	bh=medsS/GthY0++x3BIRM1RDwZYj1gsre25PAdoQGCwio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ukvJNMY65inCjIwJDkhlq7roqoQQkNszkL9fOciR046smgTkqlwIkFSGIWIklbUWU
-	 CQDoIdnUGoTVDXFnmtUjHFcKSyjAqYhm/MApmxi+0RJXOxfHk4dvnOb8otlW342tNa
-	 Z/fi6VaesjBPuexzr7XIq11jAKxv5FIhay2Lt0mg=
+	b=r9ZjTJeAt7Nza2vC7VHTuoOFRZ/NoUoPzVa1H3yAGlWvhzfnYSU9uaMJlmzEslrRg
+	 lYtItlMqBaQrysZagL1EDSCkxn/pYsJM5ITTrtIVSAlQhtpsD8AotD5N1TGmFWdH3/
+	 IzaV/W5uB4SZVAw4JnmY8w7MASnkqFH5VPdv14hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbfC3BiY (ORCPT
+        id S1730623AbfC3BaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:38:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37492 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:30:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731450AbfC3BaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:30:20 -0400
+        id S1731362AbfC3BaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:30:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8041B218D8;
-        Sat, 30 Mar 2019 01:30:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BF92218A6;
+        Sat, 30 Mar 2019 01:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909419;
-        bh=+oGEJGlWZ3n+aKt5lLM28Dlds+Sx0OaLv3xQF9+r2G0=;
+        s=default; t=1553909411;
+        bh=medsS/GthY0++x3BIRM1RDwZYj1gsre25PAdoQGCwio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DZriNhXSlYB0oLCtuq6l6XX4HAIWgXzrfGlyBK/XdH3BJljdDm/UZrDdfEf3LFcXp
-         ufoPJ3bmeeS3VjVWV1vwUSmT51Rqavf9DVqTcCclnp2Y5nz4X7p2zFBFyI/hv6mKog
-         V7ZDRsBdpHLyxPMOQwohiC75D+IxS0QKyyjpogKA=
+        b=aa/ePOD6ZrOk7RlgIxCUlFiYxmzxQj/uNUIWsG1BnUg6YVcLTGnMPEQ8Qht9Gum4I
+         Drev+q3biX+2gCa1dPmW7Zfj+11guWMruO1ek1i7wvbpucRi3uep473sdjQ9gWxHM0
+         I2bnenbTZFwIaCf3+K/5RANiEeYh//3tnTbCl5LA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Kees Cook <keescook@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 44/57] lkdtm: Add tests for NULL pointer dereference
-Date:   Fri, 29 Mar 2019 21:28:37 -0400
-Message-Id: <20190330012854.32212-44-sashal@kernel.org>
+Cc:     Julia Cartwright <julia@ni.com>, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.19 38/57] iommu/dmar: Fix buffer overflow during PCI bus notification
+Date:   Fri, 29 Mar 2019 21:28:31 -0400
+Message-Id: <20190330012854.32212-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
 References: <20190330012854.32212-1-sashal@kernel.org>
@@ -58,91 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Julia Cartwright <julia@ni.com>
 
-[ Upstream commit 59a12205d3c32aee4c13ca36889fdf7cfed31126 ]
+[ Upstream commit cffaaf0c816238c45cd2d06913476c83eb50f682 ]
 
-Introduce lkdtm tests for NULL pointer dereference: check access or exec
-at NULL address, since these errors tend to be reported differently from
-the general fault error text. For example from x86:
+Commit 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI
+device path") changed the type of the path data, however, the change in
+path type was not reflected in size calculations.  Update to use the
+correct type and prevent a buffer overflow.
 
-    pr_alert("BUG: unable to handle kernel %s at %px\n",
-        address < PAGE_SIZE ? "NULL pointer dereference" : "paging request",
-        (void *)address);
+This bug manifests in systems with deep PCI hierarchies, and can lead to
+an overflow of the static allocated buffer (dmar_pci_notify_info_buf),
+or can lead to overflow of slab-allocated data.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+   BUG: KASAN: global-out-of-bounds in dmar_alloc_pci_notify_info+0x1d5/0x2e0
+   Write of size 1 at addr ffffffff90445d80 by task swapper/0/1
+   CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W       4.14.87-rt49-02406-gd0a0e96 #1
+   Call Trace:
+    ? dump_stack+0x46/0x59
+    ? print_address_description+0x1df/0x290
+    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
+    ? kasan_report+0x256/0x340
+    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
+    ? e820__memblock_setup+0xb0/0xb0
+    ? dmar_dev_scope_init+0x424/0x48f
+    ? __down_write_common+0x1ec/0x230
+    ? dmar_dev_scope_init+0x48f/0x48f
+    ? dmar_free_unused_resources+0x109/0x109
+    ? cpumask_next+0x16/0x20
+    ? __kmem_cache_create+0x392/0x430
+    ? kmem_cache_create+0x135/0x2f0
+    ? e820__memblock_setup+0xb0/0xb0
+    ? intel_iommu_init+0x170/0x1848
+    ? _raw_spin_unlock_irqrestore+0x32/0x60
+    ? migrate_enable+0x27a/0x5b0
+    ? sched_setattr+0x20/0x20
+    ? migrate_disable+0x1fc/0x380
+    ? task_rq_lock+0x170/0x170
+    ? try_to_run_init_process+0x40/0x40
+    ? locks_remove_file+0x85/0x2f0
+    ? dev_prepare_static_identity_mapping+0x78/0x78
+    ? rt_spin_unlock+0x39/0x50
+    ? lockref_put_or_lock+0x2a/0x40
+    ? dput+0x128/0x2f0
+    ? __rcu_read_unlock+0x66/0x80
+    ? __fput+0x250/0x300
+    ? __rcu_read_lock+0x1b/0x30
+    ? mntput_no_expire+0x38/0x290
+    ? e820__memblock_setup+0xb0/0xb0
+    ? pci_iommu_init+0x25/0x63
+    ? pci_iommu_init+0x25/0x63
+    ? do_one_initcall+0x7e/0x1c0
+    ? initcall_blacklisted+0x120/0x120
+    ? kernel_init_freeable+0x27b/0x307
+    ? rest_init+0xd0/0xd0
+    ? kernel_init+0xf/0x120
+    ? rest_init+0xd0/0xd0
+    ? ret_from_fork+0x1f/0x40
+   The buggy address belongs to the variable:
+    dmar_pci_notify_info_buf+0x40/0x60
+
+Fixes: 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI device path")
+Signed-off-by: Julia Cartwright <julia@ni.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/lkdtm/core.c  |  2 ++
- drivers/misc/lkdtm/lkdtm.h |  2 ++
- drivers/misc/lkdtm/perms.c | 18 ++++++++++++++++++
- 3 files changed, 22 insertions(+)
+ drivers/iommu/dmar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-index 2154d1bfd18b..07caaa2cfe1e 100644
---- a/drivers/misc/lkdtm/core.c
-+++ b/drivers/misc/lkdtm/core.c
-@@ -152,7 +152,9 @@ static const struct crashtype crashtypes[] = {
- 	CRASHTYPE(EXEC_VMALLOC),
- 	CRASHTYPE(EXEC_RODATA),
- 	CRASHTYPE(EXEC_USERSPACE),
-+	CRASHTYPE(EXEC_NULL),
- 	CRASHTYPE(ACCESS_USERSPACE),
-+	CRASHTYPE(ACCESS_NULL),
- 	CRASHTYPE(WRITE_RO),
- 	CRASHTYPE(WRITE_RO_AFTER_INIT),
- 	CRASHTYPE(WRITE_KERN),
-diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-index 9e513dcfd809..8c3f2e6af256 100644
---- a/drivers/misc/lkdtm/lkdtm.h
-+++ b/drivers/misc/lkdtm/lkdtm.h
-@@ -45,7 +45,9 @@ void lkdtm_EXEC_KMALLOC(void);
- void lkdtm_EXEC_VMALLOC(void);
- void lkdtm_EXEC_RODATA(void);
- void lkdtm_EXEC_USERSPACE(void);
-+void lkdtm_EXEC_NULL(void);
- void lkdtm_ACCESS_USERSPACE(void);
-+void lkdtm_ACCESS_NULL(void);
+diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+index d9c748b6f9e4..7f9824b0609e 100644
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -144,7 +144,7 @@ dmar_alloc_pci_notify_info(struct pci_dev *dev, unsigned long event)
+ 		for (tmp = dev; tmp; tmp = tmp->bus->self)
+ 			level++;
  
- /* lkdtm_refcount.c */
- void lkdtm_REFCOUNT_INC_OVERFLOW(void);
-diff --git a/drivers/misc/lkdtm/perms.c b/drivers/misc/lkdtm/perms.c
-index fa54add6375a..62f76d506f04 100644
---- a/drivers/misc/lkdtm/perms.c
-+++ b/drivers/misc/lkdtm/perms.c
-@@ -164,6 +164,11 @@ void lkdtm_EXEC_USERSPACE(void)
- 	vm_munmap(user_addr, PAGE_SIZE);
- }
- 
-+void lkdtm_EXEC_NULL(void)
-+{
-+	execute_location(NULL, CODE_AS_IS);
-+}
-+
- void lkdtm_ACCESS_USERSPACE(void)
- {
- 	unsigned long user_addr, tmp = 0;
-@@ -195,6 +200,19 @@ void lkdtm_ACCESS_USERSPACE(void)
- 	vm_munmap(user_addr, PAGE_SIZE);
- }
- 
-+void lkdtm_ACCESS_NULL(void)
-+{
-+	unsigned long tmp;
-+	unsigned long *ptr = (unsigned long *)NULL;
-+
-+	pr_info("attempting bad read at %px\n", ptr);
-+	tmp = *ptr;
-+	tmp += 0xc0dec0de;
-+
-+	pr_info("attempting bad write at %px\n", ptr);
-+	*ptr = tmp;
-+}
-+
- void __init lkdtm_perms_init(void)
- {
- 	/* Make sure we can write to __ro_after_init values during __init */
+-	size = sizeof(*info) + level * sizeof(struct acpi_dmar_pci_path);
++	size = sizeof(*info) + level * sizeof(info->path[0]);
+ 	if (size <= sizeof(dmar_pci_notify_info_buf)) {
+ 		info = (struct dmar_pci_notify_info *)dmar_pci_notify_info_buf;
+ 	} else {
 -- 
 2.19.1
 
