@@ -2,307 +2,110 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C28BBC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED97BC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7262082C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:08:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CeR239CR"
+	by mail.kernel.org (Postfix) with ESMTP id BA91C2173C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553962170;
+	bh=7e3mC5bpvn9PPaYCiJ38W6lX7L61veK4wh8eYeu/JVQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CyC8YmkuFDYuvEnVnm4O7io3yZJKMKz7NRYwlS5RUdz9nxAG8LKafz3u35DjDAXI/
+	 vb+XErTB4LSjV6q83E2RXcKg4upG3GaWxnkCzXN7dHZdRuuxCWE9pL9SPo+jZFd+96
+	 RNGNj0Tgkb0x/KXyNw+llYhFDHhc9LUAEvHmQPb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730891AbfC3QIp (ORCPT
+        id S1730946AbfC3QJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 12:08:45 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:36620 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730733AbfC3QIo (ORCPT
+        Sat, 30 Mar 2019 12:09:29 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35247 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730733AbfC3QJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 12:08:44 -0400
-Received: by mail-vs1-f68.google.com with SMTP id n4so3092660vsm.3
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 09:08:43 -0700 (PDT)
+        Sat, 30 Mar 2019 12:09:29 -0400
+Received: by mail-lj1-f195.google.com with SMTP id t4so4516497ljc.2
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 09:09:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jWSKGgPglMSsML8XN2EAPZWYnlWwCcwK1JGP6pz/I+I=;
-        b=CeR239CRrkZxUCUhBKt1gVOc1ldiSEJvvqCIpKxFdLxBegj1qltGSqwRHBG5ds/gIn
-         xQYKnFrXloEmNWsixMYIANU1HAIPUYc2Zb6Pu9/q82VLqhRS0UUJHTgu1/EOtAQe2D2h
-         coKqWxC3pAse5ZcW/PBsXdrL2TM9KBP3yHPn+hAtZs1KCPWqI/z5CXIvW4WAO+4GFQOq
-         +YPcFmCoCyroXex3kOkv5e9+9d0GEXlb1w/gAVQQUVWfc8KJvVlLuqfGhA6C8lv5racB
-         ZpqYNAuV1ItZXKX7QLbiL6WYVDMcgacbWDxTnJBAgYUwQyURSuUsTpqYHgIa1Qid7eYk
-         E/rA==
+        bh=ZoGUtS9aezEjh657hTxl/2nLS7gtTCX3mBgWFI/otHk=;
+        b=KWq5bClZrtD2QuethBOJCCzwEJppfjZBsZLTGiLsWKEQKxLFPm9Xm2Jgtw6niIyN4i
+         xwpVwq7Kqs15vLxyPXGNPBTsXJgjs76055HvxZxOkiAlk2qimGBSO22Uo5f9x2+NB8qF
+         MuIV/iWYvCJHqrfU/luhOrxNr+ZysZ4NZXswA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jWSKGgPglMSsML8XN2EAPZWYnlWwCcwK1JGP6pz/I+I=;
-        b=g4fO0nU/lTMDY4BDC1apht/xoW3/Iq5jbeZVGXfw2ugxDVYAd3poxvdLuhjWrdPyh9
-         xe3nGbrmpC4WxgOugQVBFkc9yTXxJo9Ix4rQiL5WDY6tzH03ygKUr796ipR4uhm3c7GR
-         zxAJIWCoDsXbZ5cu4fnIA64bjADOzLbpNhsSlmaLQQVPeSnKm+OQt9dBLS1M/mBY39PT
-         /YOy2dWREm4HgtHQvr0Gd0I3CVVcbxFUPfmk8IKJTdAfkEaDn+qU9OvIIgFDsVRULeH9
-         NAtiPWIp+F/gWjnHFqXauDodlqeaghbUj862GoiRqEpnnSp74e8VKyCDKfofQWqulUT7
-         YtIw==
-X-Gm-Message-State: APjAAAV5GjHsCN6zkS/rxRpgvtbC/EbWljQylVF6j5Gboo34vVNV7qEy
-        v50ZqOkCZA5qQ1hXPfogOOhXfNDKQeS9cLd18Lb9eg==
-X-Google-Smtp-Source: APXvYqwTg/5QkZt/DfC2iDQ+XQO8sRu7XPbeOmn0FQpNlTcxYvJ9xmWZlm6cHLyoy7yPqRlZwb2S/SFWs7ZCrEi57u0=
-X-Received: by 2002:a67:bc01:: with SMTP id t1mr33933054vsn.149.1553962122872;
- Sat, 30 Mar 2019 09:08:42 -0700 (PDT)
+        bh=ZoGUtS9aezEjh657hTxl/2nLS7gtTCX3mBgWFI/otHk=;
+        b=W/6pcIRQ5mOz9nc/FmTN3vlUZ5gakeDLEPelz4a07JeNAkR3HYE5B5f4oofdclwZuN
+         HDcKcfdsU3O08UFOseZHOq1eqqXvZXResQux7PqhJ5tZhXufpy3M9bukslCjcTCPvMVy
+         e5/GWN3RlhodAAVzw7hRIUmQq1ASNu25qU7n10+2Wc+DwnNZ64rTydGR/XZLLxGHYyje
+         rZmPYrd3GeVv807yH7nmFPGU3MVkXi9bsUp+m2439ZUdClpOyUd6Fm5ikKjj7OPp3o1B
+         LqJLi7WO3xweYT3b5mfDXAuRo4JSH2Ni/SMlLvFTnbGD02FNc4aSh+0xNsvYzdBfpNQt
+         U18w==
+X-Gm-Message-State: APjAAAXjHb0Mlc0EtwQ5pNeb1b7pfExlkRHbwXUrjTt3C0S6asTPFgjT
+        +s8fAgsxrrLKrV9oPL6uNkrHxFUL9bQ=
+X-Google-Smtp-Source: APXvYqwt1zzRNzbTXOMwi0UscP4gk1xqzo2Pgqc7DrMtLvFAUePE2NEJzhg6vPLpioFqhktZWZ6wEA==
+X-Received: by 2002:a2e:974d:: with SMTP id f13mr29782703ljj.140.1553962167062;
+        Sat, 30 Mar 2019 09:09:27 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id h14sm999402ljg.10.2019.03.30.09.09.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 30 Mar 2019 09:09:26 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id h16so4466809ljg.11
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 09:09:26 -0700 (PDT)
+X-Received: by 2002:a2e:3e0e:: with SMTP id l14mr23470417lja.125.1553962166079;
+ Sat, 30 Mar 2019 09:09:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190327162147.23198-1-christian@brauner.io> <20190327162147.23198-3-christian@brauner.io>
- <CAGLj2rG8xMMt8-+r-pauA_qi4aun2y_kBZMCZGkXWQsKJrb-Ww@mail.gmail.com>
- <20190327213404.pv4wqtkjbufkx36u@brauner.io> <CAGLj2rHpYAOGz0h0k2pS4JwFSQkMmRSUWxa4BtO+7BUMD21vdQ@mail.gmail.com>
- <20190327222543.huugotqcew6jyytv@brauner.io> <CAGLj2rG0Sbho6MnPSmcS73Xj=oG92E4W_QLRu4dD8NfweoUm5Q@mail.gmail.com>
- <20190328103813.eogszrqbitw3e7k7@brauner.io> <CAKOZueusdFurOb_uFZ3PDmZeJvYvHVKMx6=TpiWPERkKRiHfiw@mail.gmail.com>
- <CAGLj2rEtgiJfmKgo4bJvmBYp1Y5f1SELVfEu7Ayfi62zOAxjGQ@mail.gmail.com>
- <CAKOZuesjdfNptM9Pt_uzsDVefW6LXhHPHG2a3rJRAe0rpeWX6g@mail.gmail.com> <CAGLj2rGFOv-AcHSuxF2YBz=WKNi7iLGp3i5KzAq7E1fo14B9Lg@mail.gmail.com>
-In-Reply-To: <CAGLj2rGFOv-AcHSuxF2YBz=WKNi7iLGp3i5KzAq7E1fo14B9Lg@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Sat, 30 Mar 2019 09:08:31 -0700
-Message-ID: <CAKOZues9uQyhOix2=NmWPFD3B7o7Fru+4PwDHODSAWZOsyyKNw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] pid: add pidfd_open()
-To:     Jonathan Kowalski <bl0pbl33p@gmail.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+References: <20190329155425.26059-1-christian@brauner.io>
+In-Reply-To: <20190329155425.26059-1-christian@brauner.io>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 30 Mar 2019 09:09:10 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjq4dTPcz-qsvhpm5F42SDHCoqEWv1V=rs_kt6MC=ZThA@mail.gmail.com>
+Message-ID: <CAHk-=wjq4dTPcz-qsvhpm5F42SDHCoqEWv1V=rs_kt6MC=ZThA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Jann Horn <jannh@google.com>, Andrew Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>, serge@hallyn.com,
         Linux API <linux-api@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         Kees Cook <keescook@chromium.org>,
         Alexey Dobriyan <adobriyan@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
+        bl0pbl33p@gmail.com, "Dmitry V. Levin" <ldv@altlinux.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
+        nagarathnam.muthusamy@oracle.com, Aleksa Sarai <cyphar@cyphar.com>,
         Al Viro <viro@zeniv.linux.org.uk>,
-        Joel Fernandes <joel@joelfernandes.org>
+        Joel Fernandes <joel@joelfernandes.org>, dancol@google.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 7:30 AM Jonathan Kowalski <bl0pbl33p@gmail.com> wrote:
+On Fri, Mar 29, 2019 at 8:54 AM Christian Brauner <christian@brauner.io> wrote:
 >
-> On Sat, Mar 30, 2019 at 7:39 AM Daniel Colascione <dancol@google.com> wrote:
-> >
-> >  [SNIP]
-> >
-> > Thanks again.
-> >
-> > I agree that the operation we're discussing has a simple signature,
-> > but signature flexibility isn't the only reason to prefer a system
-> > call over an ioctl. There are other reasons for preferring system
-> > calls to ioctls (safety, tracing, etc.) that apply even if the
-> > operation we're discussing has a relatively simple signature: for
-> > example, every system call has a distinct and convenient ftrace event,
-> > but ioctls don't; strace filtering Just Works on a
-> > system-call-by-system-call basis, but it doesn't for ioctls; and
->
-> It does for those with a unique number.
+> /* Introduction */
+> This adds the pidfd_open() syscall.
+> pidfd_open() allows to retrieve file descriptors for a given pid. This
+> includes both file descriptors for processes and file descriptors for
+> threads.
 
-There's no such thing as a unique ioctl number though. Anyone is free
-to create an ioctl with a conflicting number. Sure, you can guarantee
-ioctl request number uniqueness within things that ship with the
-kernel, but you can also guarantee system call number uniqueness, so
-what do we gain by using an ioctl? And yes, you can do *some*
-filtering based on ioctl command, but it's frequently more awkward
-than the system call equivalent and sometimes doesn't work at all.
-What's the strace -e pidfd_open equivalent for an ioctl? Grep isn't
-quite equivalent.
+I'm ok with the pidfd_open() call to just get a pidfd, but that
+"pidfd_to_profs()" needs to go away.
 
-> > documentation for system calls is much more discoverable (e.g., man
-> > -k) than documentation for ioctls. Even if the distinction doesn't
-> > matter much, IMHO, it still matters a little, enough to favor a system
-> > call without an offsetting advantage for the ioctl option.
->
-> It will be alongside other I/O operations in the pidfd man page.
->
-> >
-> > > If you start adding a system call for every specific operation on file
-> > > descriptors, it *will* become a problem.
-> >
-> > I'm not sure what you mean. Do you mean that adding a top-level system
-> > call for every operation that might apply to one specific kind of file
-> > descriptor would lead, as the overall result, to the kernel having
-> > enough system calls to cause negative consequences? I'm not sure I
-> > agree, but accepting this idea for the sake of discussion: shouldn't
-> > we be more okay with system calls for features present on almost all
-> > systems --- like procfs --- even if we punt to ioctls very rarely-used
-> > functionality, e.g., some hypothetical special squeak noise that you
-> > could get some specific 1995 adlib clone to make?
->
-> Consider if we were to do:
->
-> int procpidfd_open(int pidfd, int procrootfd);
->
-> This system call is useless besides a very specific operation for a
-> very specific usecase on a file descriptor.
+If you want to open the /proc/<pid>/status file, then just do that.
+This whole "do one and convert to the other" needs to die. No, no, no.
 
-I don't understand this argument based on an operation being "very
-specific". Are you suggesting that epoll_wait should have been an
-ioctl? I don't see how an operation being specific to a type of file
-descriptor is an argument for making that operation an ioctl instead
-of a system call.
-
-> Then, you figure you might
-> want to support procpidfd back to pidfd (although YAGNI), so you will
-> add a CMD or flags argument now,
-
-Why would we need a system call at all? And why are we invoking
-hypothetical argument B in an argument against adding operation A as a
-system call? B doesn't exist yet. As Christian mentioned, we could
-create a named /proc/pid/handle file which, when opened, would yield a
-pidfd. More generally, though: if we expose new functionality, we can
-make a new system call. Why is that worse than adding a new ioctl
-code?
-
-> int procpidfd_open(int pidfd, int procrootfd/procpidfd, unsigned int flags);
->
->   int procpidfd = procpidfd_open(fd, procrootfd, PIDFD_TO_PROCPIDFD);
->   int pidfd = procpidfd_open(-1, procpidfd, PROCPIDFD_TO_PIDFD);
->
-> vs procpidfd2pidfd(int procpidfd); if you did not foresee the need.
-> Then, you want pidfd2pid, and so on.
->
-> If you don't, you will have to add a command interface in the new
-> system call, which changes parameters depending on the flags. This is
-> already starting to get ugly.
-
-> In the end, it's a matter of taste,
-
-I don't think it's quite a matter of taste. That idiom suggests that
-the two options are roughly functionally equivalent. In this case,
-there are clear and specific technical reasons to prefer system calls.
-We're not talking about two equivalent approaches. Making the
-operation a system call gives users more power, and we shouldn't
-deprive them of this power without a good reason. So far, I haven't
-seen such a reason.
-
->  this
-> pattern if exploited leads to endless proliferation of the system call
-> interface, often ridden with short-sighted APIs, because you cannot
-> know if you want a focused call or a command style call.
-
-Bad interfaces proliferate no matter what, and there's no difference
-in support burden between an ioctl and a system call: both need to
-work indefinitely. Are you saying that it's easier to remove a bad
-interface if it's an ioctl instead of a system call? I don't recall
-any precedent, but maybe I'm wrong.
-
-> ioctl is
-> already a command interface, and 10 system calls for each command is
-> _NOT_ nice, from a user perspective.
-
-syscall(2) is already a "command" interface, just with more automatic
-features than ioctl. What do we gain by pushing the "command" down a
-level from the syscall(2) multiplexer to the ioctl(2) multiplexer?
-
-> > > Besides, the translation is
-> > > just there because it is racy to do in userspace,  it is not some well
-> > > defined core kernel functionality.
-> > > Therefore, it is just a way to
-> > > enter the kernel to do the openat in a race free and safe manner.
-> >
-> > I agree that the translation has to be done in the kernel, not
-> > userspace, and that the kernel must provide to userspace some
-> > interface for requesting that the translation happen: we're just
-> > discussing the shape of this interface. Shouldn't all interfaces
-> > provided by the kernel to userspace be equally well defined? I'm not
-> > sure that the internal simplicity of the operation matters much
-> > either. There are already explicit system calls for some
-> > simple-to-implement things, e.g., timerfd_gettime. It's worth noting
-> > that timerfd is (IIRC), like procfs, a feature that's both ubiquitous
-> > and optional.
->
-> It is well defined, it has a well defined signature, and it will error
-> out if you don't use it properly. Again, what it does is very limited
-> and niche. I am not sure it warrants a system call of its own.
-
-Do we need to think in terms of whether a bit of functionality
-"warrants" a system call? A system call is not expensive to add.
-Instead of thinking of whether a function meets some bar for promotion
-to a system call, we should be thinking of whether a function meets
-the bar for demotion to ioctl. System calls are generally more useful
-to users than ioctls, and all things being equal, creating an
-interface more pleasant for users should be the priority.
-
-> timerfd_gettime was an afterthought anyway, that's probably not a good
-> example (it was more to just match the POSIX timers interface as the
-> original timerfd never had support for querying, so the split into two
-> steps, create and initialize, you could argue one could do it without
-> a syscall, but it still has a well defined argument list, and
-> accepting elaborate data structures into an ioctl is not a good
-> interface to plumb, so that's easily justified).
-
-TCGETS deals with an elaborate data structure.
-
-In any case, I don't think the elaborate data structure argument is
-relevant. The things that the system call mechanism lets you do that
-the ioctl mechanism does not are independent of whether a system call
-accepts simple or complex argument types. And ioctl and a system call
-both specify a bit of kernel mode code to run: the difference is in
-identifying that bit of kernel-side code to run and in the features
-you get automatically through the call mechanism.
-
-> It's much like socket and setsockopt/getsockopt in nature. I would
-> even say APIs separating creation and configuration age well and are
-> better, but a process doesn't fit such a model cleanly.
->
-> > > As is, the facility being provided through an ioctl on the pidfd is
-> > > not something I'd consider a problem.
-> >
-> > You're right that from a signature perspective, using an ioctl isn't a
-> > problem. I just want to make sure we take into account the other,
-> > non-signature advantages that system calls have over ioctls.
-> >
-> > > I think the translation stuff
-> > > should also probably be an extension of ioctl_ns(2) (but I wouldn't be
-> > > opposed if translate_pid is resurrected as is).
-> > > For anything more involved than ioctl(pidfd, PIDFD_TO_PROCFD,
-> > > procrootfd), I'd agree that a system call would be a cleaner
-> > > interface, otherwise, if you cannot generalise it, using ioctls as a
-> > > command interface is probably the better tradeoff here.
-> >
-> > Sure: I just want to better understand everyone else's thought process
-> > here, having been frustrated with things like the termios ioctls being
-> > ioctls.
->
-> On that note, I don't buy the safety argument here, or the seccomp argument.
->
-> You need to consider what this is, on a case by case basis.
->
-> ioctl(pidfd, PIDFD_TO_PROCFD, procrootfd);
->
-> See? You need /proc's root fd to be able to get to the /proc/<PID> dir
-> fd, in a race free manner. You don't need to have the overhead of
-> filtering to contain access, as privilege is bound to descriptors.
-
-There's no filtering overhead when you haven't enabled filtering, right?
-
-You seem to be making an argument that we should make this facility an
-ioctl because we don't need the features that the system call
-mechanism provides --- correct me if I'm wrong. Even if we can't see a
-case for filtering or containment or tracing _today_, such a case
-might arise in the future, as has happened many times before. Besides,
-we haven't touched on the other features we get "for free" when we
-make an operation a system call, e.g., explicit tracing support.  I
-don't understand why we should forestall these uses cases, both
-present and future, by using an ioctl instead of a system call,
-especially when we get so little in return. I think there's a lot of
-value in regularity and consistency and that making some operations
-ioctls and some syscalls based on details like whether an operation
-accepts a structure or a primitive makes the system less flexible and
-understandable.
-
-> [snip further discussion along the same lines]
+                   Linus
