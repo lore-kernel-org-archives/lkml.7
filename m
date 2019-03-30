@@ -2,79 +2,93 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B46C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 21:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B333C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 21:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F01D2082C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 21:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D602082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 21:55:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sdf.org header.i=@sdf.org header.b="SwqNmgTJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730977AbfC3Vmo (ORCPT
+        id S1730955AbfC3VvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 17:42:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57815 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730582AbfC3Vmn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 17:42:43 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hALkP-0004jh-Jx; Sat, 30 Mar 2019 21:42:41 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: dsa: fix negative loop bound error on for loop
-Date:   Sat, 30 Mar 2019 21:42:41 +0000
-Message-Id: <20190330214241.15311-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Sat, 30 Mar 2019 17:51:13 -0400
+Received: from mx.sdf.org ([205.166.94.20]:53593 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730395AbfC3VvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 17:51:13 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2ULnJnf001935
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
+        Sat, 30 Mar 2019 21:49:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sdf.org; s=default;
+        t=1553982568; bh=3cYNnE/FBsA3L4QFmUGg+COhq867b5/quLF0sFMqsdc=;
+        h=Date:From:To:Subject:Cc:In-Reply-To:References;
+        b=SwqNmgTJSP3xohQRM1tpLqbM/iho6IxcIzoIHrKC3ZM61eDRLY3+bpS7ZSH1jTO4a
+         h/VaHIIy+bExI4oPBT+snnXQzan/ORNWoCUHW6+QRz2dk3MSWDpOyTYNZXU1N3ZEsi
+         hHu7w7HzU3ZH5/MpKQ4YU7isdf8XPvwdHvmG1qdE=
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id x2ULnHN8017274;
+        Sat, 30 Mar 2019 21:49:17 GMT
+Date:   Sat, 30 Mar 2019 21:49:17 GMT
+From:   George Spelvin <lkml@sdf.org>
+Message-Id: <201903302149.x2ULnHN8017274@sdf.org>
+To:     gregkh@linuxfoundation.org, lkml@sdf.org
+Subject: Re: [PATCH 5/5] Lib: sort.h: replace int size with size_t size in the swap function
+Cc:     adrian.hunter@intel.com, ard.biesheuvel@linaro.org,
+        benh@kernel.crashing.org, bp@alien8.de, darrick.wong@oracle.com,
+        dchinner@redhat.com, dedekind1@gmail.com, hpa@zytor.com,
+        jlbec@evilplan.org, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        mark@fasheh.com, mingo@redhat.com, mpe@ellerman.id.au,
+        naveen.n.rao@linux.vnet.ibm.com, paulus@samba.org, richard@nod.at,
+        st5pub@yandex.ru, tglx@linutronix.de, vgupta@synopsys.com,
+        x86@kernel.org
+In-Reply-To: <20190330202418.GB27435@kroah.com>
+References: <18626931553963861@sas1-b3ec53dbc12b.qloud-c.yandex.net>,
+    <20467491553964233@myt4-c0b480c282c8.qloud-c.yandex.net>,
+    <20190330183826.GB21828@kroah.com>,
+    <201903302015.x2UKFnSL003850@sdf.org>,
+    <20190330202418.GB27435@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Sat, 30 Mar 2019 at 21:24:18 +0100, Greg KH wrote:
+> On Sat, Mar 30, 2019 at 08:15:49PM +0000, George Spelvin wrote:
+>> On Sat, 30 Mar 2019 at 19:38:26 +0100 Greh KH wrote;
+>> > On Sat, Mar 30, 2019 at 07:43:53PM +0300, Andrey Abramov wrote:
+>>>> Replace int type with size_t type of the size argument
+>>>> in the swap function, also affect all its dependencies.
+>>>
+>>> This says _what_ the patch does, but it gives no clue as to _why_ you
+>>> are doing this.  Neither did your 0/5 patch :(
+>>>
+>>> Why make this change?  Nothing afterward depends on it from what I can
+>>> tell, so why is it needed?
+>>
+>> It's just a minor cleanup, making things less surprising for future
+>> programmers.  As I wrote in a comment in my patches, using a signed type
+>> for an object size is definitely a wart; ever since C89 it's expected
+>> you'd use size_t for the purpose.
+>
+> You did not say that in this commit log :)
 
-Currently the for-loop using an unsigned int for the loop counter
-which is problematic when comparing it to the signed int count
-This is an issue because if the signed int is negative then
-the negative loop bound is implicitly cast to an unsigned int on
-the comparison to loop counter i and will yield a very large value,
-eventually causing an error when memmove/memcpy'ing outside the
-allocated region pointed to by ndata.
+Just to clarify: Not My Patch.  I approve, but it's Andrey's patch.
 
-Fix this by simply making the loop counter i a signed int;
+Your point is taken that the commit message needs to be improved
+to explain why.  I just answered because it wasn't clear how much
+of your question was rhetorical.
 
-Fixes: f2f2356685bc ("net: dsa: move master ethtool code")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- net/dsa/master.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> If you think it is a wart, wonderful, yes, let's fix it up.  But again,
+> a changelog comment should explain _why_ a commit is needed, not _what_
+> it does, as we can see from the diff itself exactly what the commit
+> does.
 
-diff --git a/net/dsa/master.c b/net/dsa/master.c
-index c58f33931be1..1b659647a303 100644
---- a/net/dsa/master.c
-+++ b/net/dsa/master.c
-@@ -87,8 +87,7 @@ static void dsa_master_get_strings(struct net_device *dev, uint32_t stringset,
- 	struct dsa_switch *ds = cpu_dp->ds;
- 	int port = cpu_dp->index;
- 	int len = ETH_GSTRING_LEN;
--	int mcount = 0, count;
--	unsigned int i;
-+	int mcount = 0, count, i;
- 	uint8_t pfx[4];
- 	uint8_t *ndata;
- 
--- 
-2.20.1
-
+It was so obvious to me that I didn't question it, but you have a
+good point and I'm sure Andrey can clarify.  Thanks for the attention!
