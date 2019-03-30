@@ -2,123 +2,107 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB4EC4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 04:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A526C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 04:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FAAB218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 04:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03BD20663
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 04:05:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A7Y7hpNS"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CD8VxCTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbfC3EAO (ORCPT
+        id S1726008AbfC3EF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 00:00:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59544 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbfC3EAO (ORCPT
+        Sat, 30 Mar 2019 00:05:29 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44139 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725824AbfC3EF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 00:00:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=b0PRcjySJV9g1FLkDfsLDA2NdAo7Q/GRjEeeMMiAxdw=; b=A7Y7hpNSQV+NhTG6k2jDAjRyR
-        QI/WlkpramYnv9xxxWujcOrHeNNZVn+plyD8iMlTR2BSjxcwAihl5igBz67Hqdk4BMKirbMxmu0D+
-        zSahQyvorrTWTJ185ccoYkbChs4UIEhm+6gyOmk0iWdMO7et/XNLs3QgN2t3ZsB5Sfxge6I8kdJAn
-        wK6GDjqHm89eGmyJ9TWZ2579qJ6FPMd7p71k8MTNWX6mOzMcOQQka7a2Mv4jbq3Y1LURxXnV5PNyZ
-        QOR+/SG63aa0j8nboZyi1JEX5wu3FfnV8tDaC7x01JmENRBKCBgaHwKa7dsRdXMGAqLZTarjMmRyr
-        osWeVJ/Sw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hA5A9-0007Sf-KP; Sat, 30 Mar 2019 04:00:09 +0000
-Date:   Fri, 29 Mar 2019 21:00:09 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/12] pci doc: convert PCI/MSI-HOWTO.txt to rst format
-Message-ID: <20190330040009.GY10344@bombadil.infradead.org>
-References: <20190329160413.4293-1-changbin.du@gmail.com>
- <20190329160413.4293-6-changbin.du@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190329160413.4293-6-changbin.du@gmail.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+        Sat, 30 Mar 2019 00:05:29 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g12so1905425pll.11
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 21:05:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FjEvGJEPFn8oXL1HhH1RTdos5pVV7O6gPJ+nxkGEee4=;
+        b=CD8VxCTLX0oVfkAwjRaT5ggpC4ttURLUQhJmTzab1JzejecOSUsANTRoql7Fef25tA
+         ZCHPS39rzpL6VF5AlyAuiduZOTR1myCZu8CYXr72d4WA5FJdbTdVI6j+ezEiAUX8H2zW
+         K+fIZLIQoU6UdhYvR3yxOZqxlE7nyRdrJyVcmiQTFlnEEAUAJduE7IeyNDpiUNvOryCJ
+         gHE+w+B7JzJBXw+fVbBlVYQhv80mAZhMD+hi8HNIPhLQLGF2mxY62R6vVj2ayAB/6wJl
+         K9HDTwwVrJ6RMZWweJjZlXD1TIr0vb6nB5DeUQScjZSzSpbxR4ElJPdOOI0sqEd7YVKJ
+         a2SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=FjEvGJEPFn8oXL1HhH1RTdos5pVV7O6gPJ+nxkGEee4=;
+        b=KS385pfzdWOMtJwPumfmKwoqYY3VW1KoDQU0uuxxDjwsWZe1K0mphVUqnj2XeumS6Z
+         GvKAyhPDYexsxeS6OpkMqAuJQav77QoU0XK43vKcZzf9FSAOZdfoEeU1NhlX21IyjeHo
+         0EIzT7hQuWkBwF7CEKsynevxwsVt0D87skp+/fTWV7+Zk5UpRogYhjeB1AqkUx1jqHUo
+         X2cshIiHhbXoSWxN6MRZ3pLDTrVi100yG0xfRBclzKh10LGfKP4Pg4zp9P41hzXsb0Nc
+         w9hqheFfoFNthSy94QWlKzR2szr9y80/Ubglkw64KoWiEvonrQ88z5yMvnW+sHspMaue
+         i1Bg==
+X-Gm-Message-State: APjAAAVc+AdLdKSc8ksLcGmnMg+sbG5B+m2vt0YmSz8pwhssjx12pNit
+        mhcqg5qty4Oh9nD54NqD8YcdQoInYIfsaa77
+X-Google-Smtp-Source: APXvYqw60JK5gh+MUx+YPzLAwPQQ45wjNt68g9zDP2EEPDbhzLQeXeN6QuTxlAbm7EOPmDUn/3SUmA==
+X-Received: by 2002:a17:902:900a:: with SMTP id a10mr53629171plp.183.1553918728573;
+        Fri, 29 Mar 2019 21:05:28 -0700 (PDT)
+Received: from localhost ([64.62.193.194])
+        by smtp.gmail.com with ESMTPSA id e4sm1082958pgd.32.2019.03.29.21.05.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 29 Mar 2019 21:05:27 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 21:05:27 -0700 (PDT)
+X-Google-Original-Date: Fri, 29 Mar 2019 20:45:23 PDT (-0700)
+Subject:     Re: [RFC][PATCH 0/4 v2] sycalls: Remove args i and n from syscall_get_arguments()
+In-Reply-To: <20190329134045.3fb2e69f@gandalf.local.home>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, mingo@kernel.org,
+        akpm@linux-foundation.org, luto@amacapital.net,
+        roland@hack.frob.com, oleg@redhat.com, linux-arch@vger.kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, gustavo@embeddedor.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        linux@dominikbrodowski.net, luto@kernel.org, keescook@chromium.org,
+        ebiederm@xmission.com, ldv@altlinux.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     rostedt@goodmis.org
+Message-ID: <mhng-8e9b547b-7fe3-43d2-9dea-b217de923605@palmer-si-x1c4>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 12:04:06AM +0800, Changbin Du wrote:
-> @@ -1,13 +1,18 @@
-> -		The MSI Driver Guide HOWTO
-> -	Tom L Nguyen tom.l.nguyen@intel.com
-> -			10/03/2003
-> -	Revised Feb 12, 2004 by Martine Silbermann
-> -		email: Martine.Silbermann@hp.com
-> -	Revised Jun 25, 2004 by Tom L Nguyen
-> -	Revised Jul  9, 2008 by Matthew Wilcox <willy@linux.intel.com>
-> -		Copyright 2003, 2008 Intel Corporation
-> +.. SPDX-License-Identifier: GPL-2.0
-> +.. include:: <isonum.txt>
-> +
-> +==========================
-> +The MSI Driver Guide HOWTO
-> +==========================
-> +
-> +:Authors: - Tom L Nguyen <tom.l.nguyen@intel.com> 10/03/2003
-> +          - Revised Feb 12, 2004 by Martine Silbermann <Martine.Silbermann@hp.com>
-> +	  - Revised Jun 25, 2004 by Tom L Nguyen
-> +	  - Revised Jul  9, 2008 by Matthew Wilcox <willy@linux.intel.com>
-> +	    Copyright 2003, 2008 Intel Corporation
+On Fri, 29 Mar 2019 10:40:45 PDT (-0700), rostedt@goodmis.org wrote:
+> On Fri, 29 Mar 2019 10:24:58 -0700
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>
+>> The whole series looks fine to me.
+>
+> Great! I may just send a pull request to you, after some fixes (see
+> below).
+>
+>>
+>> I still suspect that we should just remove the syscall_set_arguments()
+>> thing entirely, but even without that, the cleanup of the calling
+>> convention is at least an improvement.
+>
+> I'll keep it around for now, but this should go as a warning to Dmitry,
+> to get something using it soon, or they may be dropped.
+>
+> Also, Dmitry found a few bugs with the current
+> syscall_set/get_arguments() on some of the archs (riscv and csky). Which
+> I'll add at the front of this series and update my changes to keep the
+> same logic.
 
-The copyright line doesn't work quite the way it should in the rendered HTML.
+Thanks.  I'm happy to have you take the RISC-V fix through your tree.
 
-It seems to me it should be:
-
-:Copyright: 2003, 2008 Intel Corporation
-
-Tom has used an ambiguous date format; given it appeared in the tree
-in December 2003, I suspect he's used middle-endian format.  It doesn't
-really seem relevant to have the dates here any more, so we could skip
-including them.  Also, none of these email addresses work, so perhaps
-just drop those too.
-
-:Authors: Tom L Nguyen; Martine Silbermann; Matthew Wilcox
-
->  1. About this guide
-> +===================
-
-Should we drop the numbering of sections as part of this conversion?
-I'd be inclined to.
-
->  4.2 Using MSI
-> +-------------
->  
->  Most of the hard work is done for the driver in the PCI layer.  The driver
->  simply has to request that the PCI layer set up the MSI capability for this
->  device.
->  
->  To automatically use MSI or MSI-X interrupt vectors, use the following
-> -function:
-> +function::
->  
->    int pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
->  		unsigned int max_vecs, unsigned int flags);
-
-This should really be turned into kernel-doc and moved to pci.h, but
-that seems like an awfully large amount of work to ask you to do when
-you're already doing so much to improve the situation.
-
-This is also a really bad document.  It has three audiences; people
-configuring their kernel, people writing device drivers and people trying
-to debug why their kernel doesn't work.  Again, that's not on you to
-fix, but it's pretty frustrating to see so much good information so
-badly organised.
+>
+> Then I'll post a non RFC version.
+>
+> -- Steve
