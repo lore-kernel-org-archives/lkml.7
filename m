@@ -2,51 +2,51 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC31FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BE2C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC8D217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A91217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553910007;
-	bh=rBxZkjukOLFjsKQLOILGKnvVuhN5XKBDLNS6LwUvXSU=;
+	s=default; t=1553910013;
+	bh=/YDHOgL/tSBnVUy+gBUJQ2XXaLnuamsARngpraor9Fk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CEIfBTkmylDQQZb2Jm8xIxUn0ALaGgPRB+Oi6qIVx6CTA2HX/70i43mjQIIOw3zED
-	 xCvDnKYrllCW9ZGObH7Zb3eSBK1pCuut2hEIOgxCX/9XwOjy0LqlyX0wFGLb46LgTF
-	 isEC/Oj1SQejsD9kuR7r5PvxSy7a6ZVq4KJ3UQfk=
+	b=yr9FYblVBRjRyxMsxVmlkuS/clnUhJ42z09RMa/B+2rwS0OuuYGTx+5MIja/FM6zF
+	 naUh502uJVlM6qrC2yR6scnJGh61Z3uTHKdFiOxshk4v6OsygJuiiEBSHdSSONvSS7
+	 GqUKz3oPbzOuZpsPvw1K/vtSoW44pbP1aJsN23wQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbfC3B3i (ORCPT
+        id S1731384AbfC3BkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:29:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36456 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:40:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731033AbfC3B3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:29:35 -0400
+        id S1731066AbfC3B3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:29:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A63D5218D9;
-        Sat, 30 Mar 2019 01:29:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49037218D3;
+        Sat, 30 Mar 2019 01:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909374;
-        bh=rBxZkjukOLFjsKQLOILGKnvVuhN5XKBDLNS6LwUvXSU=;
+        s=default; t=1553909377;
+        bh=/YDHOgL/tSBnVUy+gBUJQ2XXaLnuamsARngpraor9Fk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JAMWho1Vuka3EaSFIoSg3eE505RK7hX2qOlZlm6nFhrWSOWYPp18iYcj9i1v+F2nS
-         zmo+1pD43ftUVpV30dXBHaRB6AAhRQizZgLOHM3PMOVAABuukMqisp+X1UGdds9loh
-         P+eRUDY0u7TEhyEmyldzbiYn7qGEchFxkPr174QQ=
+        b=us8u/Mf2tGPllNtR4UnBnu4FxDQ619iCkIQN2DPm10BtWEv1ViQbsnOR6jORuhQx5
+         SqxjBigb9WjFCwGazUj/Q/7+KnzDwqt+BAnIIhxT5t8GzC9RDBSY2kfZvDUx7PIFO1
+         tJhHavjcXT+vAekgngnuRy9C0TbcLOtUn5Iqqdh8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/57] HID: usbhid: Add quirk for Redragon/Dragonrise Seymur 2
-Date:   Fri, 29 Mar 2019 21:28:12 -0400
-Message-Id: <20190330012854.32212-19-sashal@kernel.org>
+Cc:     "ndesaulniers@google.com" <ndesaulniers@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-sparse@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 21/57] compiler.h: update definition of unreachable()
+Date:   Fri, 29 Mar 2019 21:28:14 -0400
+Message-Id: <20190330012854.32212-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
 References: <20190330012854.32212-1-sashal@kernel.org>
@@ -59,51 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: "ndesaulniers@google.com" <ndesaulniers@google.com>
 
-[ Upstream commit ce9d58d3eafcb2d452a69bdcc1c5f8b8ff640de5 ]
+[ Upstream commit fe0640eb30b7da261ae84d252ed9ed3c7e68dfd8 ]
 
-Redragon Seymur 2 stops working since commit 190d7f02ce8e ("HID: input:
-do not increment usages when a duplicate is found").
+Fixes the objtool warning seen with Clang:
+arch/x86/mm/fault.o: warning: objtool: no_context()+0x220: unreachable
+instruction
 
-Use quirk HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE suggested by the commit
-can solve the issue.
+Fixes commit 815f0ddb346c ("include/linux/compiler*.h: make compiler-*.h
+mutually exclusive")
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=200995
-BugLink: https://bugs.launchpad.net/bugs/1793846
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Josh noted that the fallback definition was meant to work around a
+pre-gcc-4.6 bug. GCC still needs to work around
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82365, so compiler-gcc.h
+defines its own version of unreachable().  Clang and ICC can use this
+shared definition.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/204
+Suggested-by: Andy Lutomirski <luto@amacapital.net>
+Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+ include/linux/compiler.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index b7870e7e41d4..97d33b8ed36c 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -348,6 +348,7 @@
- #define USB_DEVICE_ID_DMI_ENC		0x5fab
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 269d376f5a11..81c2238b884c 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -124,7 +124,10 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ # define ASM_UNREACHABLE
+ #endif
+ #ifndef unreachable
+-# define unreachable() do { annotate_reachable(); do { } while (1); } while (0)
++# define unreachable() do {		\
++	annotate_unreachable();		\
++	__builtin_unreachable();	\
++} while (0)
+ #endif
  
- #define USB_VENDOR_ID_DRAGONRISE		0x0079
-+#define USB_DEVICE_ID_REDRAGON_SEYMUR2		0x0006
- #define USB_DEVICE_ID_DRAGONRISE_WIIU		0x1800
- #define USB_DEVICE_ID_DRAGONRISE_PS3		0x1801
- #define USB_DEVICE_ID_DRAGONRISE_DOLPHINBAR	0x1803
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 77316f022c5a..94088c0ed68a 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -70,6 +70,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DMI, USB_DEVICE_ID_DMI_ENC), HID_QUIRK_NOGET },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DRACAL_RAPHNET, USB_DEVICE_ID_RAPHNET_2NES2SNES), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DRACAL_RAPHNET, USB_DEVICE_ID_RAPHNET_4NES4SNES), HID_QUIRK_MULTI_INPUT },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_DRAGONRISE, USB_DEVICE_ID_REDRAGON_SEYMUR2), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DRAGONRISE, USB_DEVICE_ID_DRAGONRISE_DOLPHINBAR), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DRAGONRISE, USB_DEVICE_ID_DRAGONRISE_GAMECUBE1), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DRAGONRISE, USB_DEVICE_ID_DRAGONRISE_PS3), HID_QUIRK_MULTI_INPUT },
+ /*
 -- 
 2.19.1
 
