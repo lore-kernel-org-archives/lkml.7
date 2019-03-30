@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88EDC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CDEC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB0B2064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527012064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907797;
-	bh=cJTu6/IaXk1wHCpAZfs4T9/yrHV38fO6AuxQwqrxWAk=;
+	s=default; t=1553907801;
+	bh=7kzd2CTa3Sj3YVRfYPoYgBS9aWNS30lTiWaKD4/fns0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dFceOe5Wm/J8Y88CF4eeCk4zKeussJSuXM/DmgJz5+zrLCcjOFzZqy2o6FhPM7lDc
-	 3wU4EN5F/pwwbRDoqKGsG2sY1U8tuwhBuwEd7diUbo3C3mHGtlBhyWw7OUNMWt8WJV
-	 G0xKpPVIyIuB1LXYlzx5sZuH/yxACNyKZZoMPR7g=
+	b=De/fZutY1Y0WzM+7BZ1B+cRmERc8CaR4DbcSU0W1OBALwI68E7pkG/RdAA5YpDIAh
+	 Lxb2bqFfpGn7ROLsWczBNeW0UNSso0VKsTEcs3qNRGa/AQ9kGWySKlCU7HU9QfzpIm
+	 3ZLPW3N6xZ0KifigzsqO4zXkhG/KlJf1rmMRzHio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731716AbfC3AzP (ORCPT
+        id S1731707AbfC3AzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:55:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34348 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:55:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730921AbfC3AzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:55:11 -0400
+        id S1731674AbfC3AzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:55:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DABA218D3;
-        Sat, 30 Mar 2019 00:55:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CB5B218D3;
+        Sat, 30 Mar 2019 00:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907310;
-        bh=cJTu6/IaXk1wHCpAZfs4T9/yrHV38fO6AuxQwqrxWAk=;
+        s=default; t=1553907305;
+        bh=7kzd2CTa3Sj3YVRfYPoYgBS9aWNS30lTiWaKD4/fns0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jmuPdsIaPxg4VI4SbnZDkGzU1RC5UOeTGt3ymcy4OLPnIU6/zX9mp8BDn+KvaYOii
-         eL+d8OlJBXa5vynrQo3SoCOTokVShBKY661GzYsY0uBiKwt9D8CcS3gF3zNNtfUwX4
-         39XvhpZUZ/GGIe6JMo3aKtJtAR1VTv9NpWjC+loY=
+        b=FiDMiijWPnjYAIeX2D8NQ4jUFUWhmUXlmWwPHtV2THRr134fPcwS7BFXsb38XdVJH
+         pRry7iqbE6CD3bPv2ge5s/USeir1jlS+MisoQKotfNbUM//gODwCTxPofwA/Lhpvk4
+         jaLk5nh0i87zfP2ARx0X6gPQXjEHX5G88lKXeMCc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maurizio Lombardi <mlombard@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/37] scsi: iscsi: flush running unbind operations when removing a session
-Date:   Fri, 29 Mar 2019 20:54:18 -0400
-Message-Id: <20190330005441.27540-17-sashal@kernel.org>
+Cc:     Matthew Garrett <matthewgarrett@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Nisha Aram <nisha.aram@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 14/37] thermal/int340x_thermal: Add additional UUIDs
+Date:   Fri, 29 Mar 2019 20:54:15 -0400
+Message-Id: <20190330005441.27540-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
 References: <20190330005441.27540-1-sashal@kernel.org>
@@ -59,71 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maurizio Lombardi <mlombard@redhat.com>
+From: Matthew Garrett <matthewgarrett@google.com>
 
-[ Upstream commit 165aa2bfb42904b1bec4bf2fa257c8c603c14a06 ]
+[ Upstream commit 16fc8eca1975358111dbd7ce65e4ce42d1a848fb ]
 
-In some cases, the iscsi_remove_session() function is called while an
-unbind_work operation is still running.  This may cause a situation where
-sysfs objects are removed in an incorrect order, triggering a kernel
-warning.
+Add more supported DPTF policies than the driver currently exposes.
 
-[  605.249442] ------------[ cut here ]------------
-[  605.259180] sysfs group 'power' not found for kobject 'target2:0:0'
-[  605.321371] WARNING: CPU: 1 PID: 26794 at fs/sysfs/group.c:235 sysfs_remove_group+0x76/0x80
-[  605.341266] Modules linked in: dm_service_time target_core_user target_core_pscsi target_core_file target_core_iblock iscsi_target_mod target_core_mod nls_utf8 isofs ppdev bochs_drm nfit ttm libnvdimm drm_kms_helper syscopyarea sysfillrect sysimgblt joydev pcspkr fb_sys_fops drm i2c_piix4 sg parport_pc parport xfs libcrc32c dm_multipath sr_mod sd_mod cdrom ata_generic 8021q garp mrp ata_piix stp crct10dif_pclmul crc32_pclmul llc libata crc32c_intel virtio_net net_failover ghash_clmulni_intel serio_raw failover sunrpc dm_mirror dm_region_hash dm_log dm_mod be2iscsi bnx2i cnic uio cxgb4i cxgb4 libcxgbi libcxgb qla4xxx iscsi_boot_sysfs iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi
-[  605.627479] CPU: 1 PID: 26794 Comm: kworker/u32:2 Not tainted 4.18.0-60.el8.x86_64 #1
-[  605.721401] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
-[  605.823651] Workqueue: scsi_wq_2 __iscsi_unbind_session [scsi_transport_iscsi]
-[  605.830940] RIP: 0010:sysfs_remove_group+0x76/0x80
-[  605.922907] Code: 48 89 df 5b 5d 41 5c e9 38 c4 ff ff 48 89 df e8 e0 bf ff ff eb cb 49 8b 14 24 48 8b 75 00 48 c7 c7 38 73 cb a7 e8 24 77 d7 ff <0f> 0b 5b 5d 41 5c c3 0f 1f 00 0f 1f 44 00 00 41 56 41 55 41 54 55
-[  606.122304] RSP: 0018:ffffbadcc8d1bda8 EFLAGS: 00010286
-[  606.218492] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[  606.326381] RDX: ffff98bdfe85eb40 RSI: ffff98bdfe856818 RDI: ffff98bdfe856818
-[  606.514498] RBP: ffffffffa7ab73e0 R08: 0000000000000268 R09: 0000000000000007
-[  606.529469] R10: 0000000000000000 R11: ffffffffa860d9ad R12: ffff98bdf978e838
-[  606.630535] R13: ffff98bdc2cd4010 R14: ffff98bdc2cd3ff0 R15: ffff98bdc2cd4000
-[  606.824707] FS:  0000000000000000(0000) GS:ffff98bdfe840000(0000) knlGS:0000000000000000
-[  607.018333] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  607.117844] CR2: 00007f84b78ac024 CR3: 000000002c00a003 CR4: 00000000003606e0
-[  607.117844] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  607.420926] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  607.524236] Call Trace:
-[  607.530591]  device_del+0x56/0x350
-[  607.624393]  ? ata_tlink_match+0x30/0x30 [libata]
-[  607.727805]  ? attribute_container_device_trigger+0xb4/0xf0
-[  607.829911]  scsi_target_reap_ref_release+0x39/0x50
-[  607.928572]  scsi_remove_target+0x1a2/0x1d0
-[  608.017350]  __iscsi_unbind_session+0xb3/0x160 [scsi_transport_iscsi]
-[  608.117435]  process_one_work+0x1a7/0x360
-[  608.132917]  worker_thread+0x30/0x390
-[  608.222900]  ? pwq_unbound_release_workfn+0xd0/0xd0
-[  608.323989]  kthread+0x112/0x130
-[  608.418318]  ? kthread_bind+0x30/0x30
-[  608.513821]  ret_from_fork+0x35/0x40
-[  608.613909] ---[ end trace 0b98c310c8a6138c ]---
-
-Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
-Acked-by: Chris Leech <cleech@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Cc: Nisha Aram <nisha.aram@intel.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_iscsi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/thermal/int340x_thermal/int3400_thermal.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index f6542c159ed6..b4d06bd9ed51 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -2185,6 +2185,8 @@ void iscsi_remove_session(struct iscsi_cls_session *session)
- 	scsi_target_unblock(&session->dev, SDEV_TRANSPORT_OFFLINE);
- 	/* flush running scans then delete devices */
- 	flush_work(&session->scan_work);
-+	/* flush running unbind operations */
-+	flush_work(&session->unbind_work);
- 	__iscsi_unbind_session(&session->unbind_work);
+diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
+index 43b90fd577e4..34dc4d6dda66 100644
+--- a/drivers/thermal/int340x_thermal/int3400_thermal.c
++++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
+@@ -22,6 +22,13 @@ enum int3400_thermal_uuid {
+ 	INT3400_THERMAL_PASSIVE_1,
+ 	INT3400_THERMAL_ACTIVE,
+ 	INT3400_THERMAL_CRITICAL,
++	INT3400_THERMAL_ADAPTIVE_PERFORMANCE,
++	INT3400_THERMAL_EMERGENCY_CALL_MODE,
++	INT3400_THERMAL_PASSIVE_2,
++	INT3400_THERMAL_POWER_BOSS,
++	INT3400_THERMAL_VIRTUAL_SENSOR,
++	INT3400_THERMAL_COOLING_MODE,
++	INT3400_THERMAL_HARDWARE_DUTY_CYCLING,
+ 	INT3400_THERMAL_MAXIMUM_UUID,
+ };
  
- 	/* hw iscsi may not have removed all connections from session */
+@@ -29,6 +36,13 @@ static char *int3400_thermal_uuids[INT3400_THERMAL_MAXIMUM_UUID] = {
+ 	"42A441D6-AE6A-462b-A84B-4A8CE79027D3",
+ 	"3A95C389-E4B8-4629-A526-C52C88626BAE",
+ 	"97C68AE7-15FA-499c-B8C9-5DA81D606E0A",
++	"63BE270F-1C11-48FD-A6F7-3AF253FF3E2D",
++	"5349962F-71E6-431D-9AE8-0A635B710AEE",
++	"9E04115A-AE87-4D1C-9500-0F3E340BFE75",
++	"F5A35014-C209-46A4-993A-EB56DE7530A1",
++	"6ED722A7-9240-48A5-B479-31EEF723D7CF",
++	"16CAF1B7-DD38-40ED-B1C1-1B8A1913D531",
++	"BE84BABF-C4D4-403D-B495-3128FD44dAC1",
+ };
+ 
+ struct int3400_thermal_priv {
 -- 
 2.19.1
 
