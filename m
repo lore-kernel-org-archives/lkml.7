@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764DCC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8440C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463F72064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B507F206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907962;
-	bh=pqlBKN1d1dXCkmQY0aMxwp3AVNPihM84yptkl7umcFY=;
+	s=default; t=1553907964;
+	bh=adC080+lYXQp/+OPTHAwFYTkd60xB6dfS/JrS3+/GQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OsOs7rI10R8v58SGFzkeaP84m0imjMBlzmeob9Mp9NbblVoQIKNCrZeVc11xlBBuw
-	 J8HOHlykA1Oy/FLlInGs8H8leea4LLjycQSzLFMdYLvxYNNgWdPhQ6dxVrdRJEPv5i
-	 q8mMg6EVuJxXRvoL/7/oQlNkcoHINfJpsOzOlbZY=
+	b=p7ipafwd2lqt6loXpzbWGkKTXCSs/JeExCiP01MWow51LYlCuyhXCNMMKPXF3Lm8z
+	 T04NRyHNIkFrv3qpoITBO8AK9VboM8HMlotIq75ZbXYvstMyl0aQEax51HjW7IjBUa
+	 EYCCp70EdTjNTx3MOCBug5bBFG55/KKDvTeQMEKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731354AbfC3Axq (ORCPT
+        id S1731544AbfC3BGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:53:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60528 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:06:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731325AbfC3Axk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:53:40 -0400
+        id S1731355AbfC3Axq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:53:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8132218D0;
-        Sat, 30 Mar 2019 00:53:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B74F218D0;
+        Sat, 30 Mar 2019 00:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907219;
-        bh=pqlBKN1d1dXCkmQY0aMxwp3AVNPihM84yptkl7umcFY=;
+        s=default; t=1553907226;
+        bh=adC080+lYXQp/+OPTHAwFYTkd60xB6dfS/JrS3+/GQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wz9iSNJ8Bmi8bucc56BM1EJZ3a7BeSOqCzF6J1964HZhuUf9yVrB1tCzX/YRyt7Rq
-         qJGsR8/LUCQAK1TueVvnU63HHtmMlOngSGISeqQUQB2uOlR/dR+qy3lekCGTILD7FW
-         vKXFSiNSw53X2qtF2sHNRGbi9PYw3cRvYjC8NxMs=
+        b=0hT0ZwrMfDs30GsXWmY2xtY88nBeQihxPSSKVfMgn09dei3KnxixYWNNhmTiYRdW7
+         GVkBC55yWVG8Q1P4yNbFyt04XaO0YM11vZ4ELudHRmqTlC1TlM5UYaTagulNvsCw2K
+         lmj2EMx18xsp9dhKvSqAY9gfKK3KIdJfxPlqY3WU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maurizio Lombardi <mlombard@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/52] scsi: iscsi: flush running unbind operations when removing a session
-Date:   Fri, 29 Mar 2019 20:52:30 -0400
-Message-Id: <20190330005301.26868-23-sashal@kernel.org>
+Cc:     Matteo Croce <mcroce@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 26/52] x86/mm: Don't leak kernel addresses
+Date:   Fri, 29 Mar 2019 20:52:33 -0400
+Message-Id: <20190330005301.26868-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005301.26868-1-sashal@kernel.org>
 References: <20190330005301.26868-1-sashal@kernel.org>
@@ -59,71 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maurizio Lombardi <mlombard@redhat.com>
+From: Matteo Croce <mcroce@redhat.com>
 
-[ Upstream commit 165aa2bfb42904b1bec4bf2fa257c8c603c14a06 ]
+[ Upstream commit a3151724437f54076cc10bc02b1c4f0003ae36cd ]
 
-In some cases, the iscsi_remove_session() function is called while an
-unbind_work operation is still running.  This may cause a situation where
-sysfs objects are removed in an incorrect order, triggering a kernel
-warning.
+Since commit:
 
-[  605.249442] ------------[ cut here ]------------
-[  605.259180] sysfs group 'power' not found for kobject 'target2:0:0'
-[  605.321371] WARNING: CPU: 1 PID: 26794 at fs/sysfs/group.c:235 sysfs_remove_group+0x76/0x80
-[  605.341266] Modules linked in: dm_service_time target_core_user target_core_pscsi target_core_file target_core_iblock iscsi_target_mod target_core_mod nls_utf8 isofs ppdev bochs_drm nfit ttm libnvdimm drm_kms_helper syscopyarea sysfillrect sysimgblt joydev pcspkr fb_sys_fops drm i2c_piix4 sg parport_pc parport xfs libcrc32c dm_multipath sr_mod sd_mod cdrom ata_generic 8021q garp mrp ata_piix stp crct10dif_pclmul crc32_pclmul llc libata crc32c_intel virtio_net net_failover ghash_clmulni_intel serio_raw failover sunrpc dm_mirror dm_region_hash dm_log dm_mod be2iscsi bnx2i cnic uio cxgb4i cxgb4 libcxgbi libcxgb qla4xxx iscsi_boot_sysfs iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi
-[  605.627479] CPU: 1 PID: 26794 Comm: kworker/u32:2 Not tainted 4.18.0-60.el8.x86_64 #1
-[  605.721401] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
-[  605.823651] Workqueue: scsi_wq_2 __iscsi_unbind_session [scsi_transport_iscsi]
-[  605.830940] RIP: 0010:sysfs_remove_group+0x76/0x80
-[  605.922907] Code: 48 89 df 5b 5d 41 5c e9 38 c4 ff ff 48 89 df e8 e0 bf ff ff eb cb 49 8b 14 24 48 8b 75 00 48 c7 c7 38 73 cb a7 e8 24 77 d7 ff <0f> 0b 5b 5d 41 5c c3 0f 1f 00 0f 1f 44 00 00 41 56 41 55 41 54 55
-[  606.122304] RSP: 0018:ffffbadcc8d1bda8 EFLAGS: 00010286
-[  606.218492] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[  606.326381] RDX: ffff98bdfe85eb40 RSI: ffff98bdfe856818 RDI: ffff98bdfe856818
-[  606.514498] RBP: ffffffffa7ab73e0 R08: 0000000000000268 R09: 0000000000000007
-[  606.529469] R10: 0000000000000000 R11: ffffffffa860d9ad R12: ffff98bdf978e838
-[  606.630535] R13: ffff98bdc2cd4010 R14: ffff98bdc2cd3ff0 R15: ffff98bdc2cd4000
-[  606.824707] FS:  0000000000000000(0000) GS:ffff98bdfe840000(0000) knlGS:0000000000000000
-[  607.018333] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  607.117844] CR2: 00007f84b78ac024 CR3: 000000002c00a003 CR4: 00000000003606e0
-[  607.117844] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  607.420926] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  607.524236] Call Trace:
-[  607.530591]  device_del+0x56/0x350
-[  607.624393]  ? ata_tlink_match+0x30/0x30 [libata]
-[  607.727805]  ? attribute_container_device_trigger+0xb4/0xf0
-[  607.829911]  scsi_target_reap_ref_release+0x39/0x50
-[  607.928572]  scsi_remove_target+0x1a2/0x1d0
-[  608.017350]  __iscsi_unbind_session+0xb3/0x160 [scsi_transport_iscsi]
-[  608.117435]  process_one_work+0x1a7/0x360
-[  608.132917]  worker_thread+0x30/0x390
-[  608.222900]  ? pwq_unbound_release_workfn+0xd0/0xd0
-[  608.323989]  kthread+0x112/0x130
-[  608.418318]  ? kthread_bind+0x30/0x30
-[  608.513821]  ret_from_fork+0x35/0x40
-[  608.613909] ---[ end trace 0b98c310c8a6138c ]---
+  ad67b74d2469d9b8 ("printk: hash addresses printed with %p")
 
-Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
-Acked-by: Chris Leech <cleech@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+at boot "____ptrval____" is printed instead of actual addresses:
+
+    found SMP MP-table at [mem 0x000f5cc0-0x000f5ccf] mapped at [(____ptrval____)]
+
+Instead of changing the print to "%px", and leaking a kernel addresses,
+just remove the print completely, like in:
+
+  071929dbdd865f77 ("arm64: Stop printing the virtual memory layout").
+
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_iscsi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/mpparse.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index 6fd2fe210fc3..4d0fc6b01fa0 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -2185,6 +2185,8 @@ void iscsi_remove_session(struct iscsi_cls_session *session)
- 	scsi_target_unblock(&session->dev, SDEV_TRANSPORT_OFFLINE);
- 	/* flush running scans then delete devices */
- 	flush_work(&session->scan_work);
-+	/* flush running unbind operations */
-+	flush_work(&session->unbind_work);
- 	__iscsi_unbind_session(&session->unbind_work);
+diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
+index f1c5eb99d445..ddb1ca6923b1 100644
+--- a/arch/x86/kernel/mpparse.c
++++ b/arch/x86/kernel/mpparse.c
+@@ -599,8 +599,8 @@ static int __init smp_scan_config(unsigned long base, unsigned long length)
+ 			mpf_base = base;
+ 			mpf_found = true;
  
- 	/* hw iscsi may not have removed all connections from session */
+-			pr_info("found SMP MP-table at [mem %#010lx-%#010lx] mapped at [%p]\n",
+-				base, base + sizeof(*mpf) - 1, mpf);
++			pr_info("found SMP MP-table at [mem %#010lx-%#010lx]\n",
++				base, base + sizeof(*mpf) - 1);
+ 
+ 			memblock_reserve(base, sizeof(*mpf));
+ 			if (mpf->physptr)
 -- 
 2.19.1
 
