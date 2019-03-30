@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27F2C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FE8C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7A1218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89CC21773
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909551;
-	bh=tKYdMALfSdq2ofZ+dNb1XIL+u6dpI9M9BDJsWvgL768=;
+	s=default; t=1553909557;
+	bh=sJyWYweGw3BPO/JaNDNgRsG6OjewBCw/EhSGhP/gKKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zYcHGIIitXJLFW1zpXKxj2BC/0LNcsGZpDMw193HK6EACq4MLYcZyYpN1jq3NDn9Y
-	 nvfguLumfrC6pOg+QNZS+y24fSyIjChWRPN/0AXNVwrJsDH1/8Q8MDl8Fk653XPsO0
-	 nQTbDxFzir1Y33H/VIRDtg79D2t0J838nDoaoJw8=
+	b=GLxqOWXrfa/8xbNN/fd+rB6S+Zos9iDC2Had2iD6xQURWayxWa+x7xTxWJBzebaKT
+	 MHC8NQVQvGMNogk04X7CHJJ3bBdRyUZOn9KUKM3aDNZCn/8o1NosL8fqkee3Ei+K31
+	 W3j1auRIIZYH1eSbpj/mEFjMAq/8kvUe16xDdUm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732353AbfC3Bc3 (ORCPT
+        id S1732392AbfC3Bch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:32:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40396 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:32:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732342AbfC3BcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:32:25 -0400
+        id S1732350AbfC3Bc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:32:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0D39218A6;
-        Sat, 30 Mar 2019 01:32:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FA6D21773;
+        Sat, 30 Mar 2019 01:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909544;
-        bh=tKYdMALfSdq2ofZ+dNb1XIL+u6dpI9M9BDJsWvgL768=;
+        s=default; t=1553909547;
+        bh=sJyWYweGw3BPO/JaNDNgRsG6OjewBCw/EhSGhP/gKKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TBW8RG/w71GuXdgl21y1gjnRXvMoRfOJTz74kZN+hjlTknvBXd1R14Q8IULygQSrr
-         6I36/vo1C3WX6L5VHYH0HLCkQeKuW9NB2dsEl9aXv6Q5n2jUuhiG2wjH1j0n/gEb1x
-         YfmhZ/JQoh+VD9fV3wIjIjM36rJAiNKgSiCc2VkU=
+        b=NrGo8EWLJkmFUBbvhbU+b/Tkg42vdv7lKYZc42MTN71oIuZPEXNZ8+J8cSzUZMp6o
+         KwiImJjB5IXolMlep2eEsDoMWwuy9/fzaYwwy3H06ZbgzQs3enHPL1vD2FBaZ1zVuC
+         38b4V7m12z9zR8MBc0C+YrcQkF3+X9BrdJ9dyJrM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanislaw Gruszka <sgruszka@redhat.com>,
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 15/16] lib/div64.c: off by one in shift
-Date:   Fri, 29 Mar 2019 21:31:59 -0400
-Message-Id: <20190330013200.1130-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 16/16] include/linux/swap.h: use offsetof() instead of custom __swapoffset macro
+Date:   Fri, 29 Mar 2019 21:32:00 -0400
+Message-Id: <20190330013200.1130-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013200.1130-1-sashal@kernel.org>
 References: <20190330013200.1130-1-sashal@kernel.org>
@@ -60,52 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislaw Gruszka <sgruszka@redhat.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-[ Upstream commit cdc94a37493135e355dfc0b0e086d84e3eadb50d ]
+[ Upstream commit a4046c06be50a4f01d435aa7fe57514818e6cc82 ]
 
-fls counts bits starting from 1 to 32 (returns 0 for zero argument).  If
-we add 1 we shift right one bit more and loose precision from divisor,
-what cause function incorect results with some numbers.
+Use offsetof() to calculate offset of a field to take advantage of
+compiler built-in version when possible, and avoid UBSAN warning when
+compiling with Clang:
 
-Corrected code was tested in user-space, see bugzilla:
-   https://bugzilla.kernel.org/show_bug.cgi?id=202391
+  UBSAN: Undefined behaviour in mm/swapfile.c:3010:38
+  member access within null pointer of type 'union swap_header'
+  CPU: 6 PID: 1833 Comm: swapon Tainted: G S                4.19.23 #43
+  Call trace:
+   dump_backtrace+0x0/0x194
+   show_stack+0x20/0x2c
+   __dump_stack+0x20/0x28
+   dump_stack+0x70/0x94
+   ubsan_epilogue+0x14/0x44
+   ubsan_type_mismatch_common+0xf4/0xfc
+   __ubsan_handle_type_mismatch_v1+0x34/0x54
+   __se_sys_swapon+0x654/0x1084
+   __arm64_sys_swapon+0x1c/0x24
+   el0_svc_common+0xa8/0x150
+   el0_svc_compat_handler+0x2c/0x38
+   el0_svc_compat+0x8/0x18
 
-Link: http://lkml.kernel.org/r/1548686944-11891-1-git-send-email-sgruszka@redhat.com
-Fixes: 658716d19f8f ("div64_u64(): improve precision on 32bit platforms")
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Reported-by: Siarhei Volkau <lis8215@gmail.com>
-Tested-by: Siarhei Volkau <lis8215@gmail.com>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+Link: http://lkml.kernel.org/r/20190312081902.223764-1-pihsun@chromium.org
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/div64.c | 4 ++--
+ include/linux/swap.h | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/div64.c b/lib/div64.c
-index 62a698a432bc..75b8521c2146 100644
---- a/lib/div64.c
-+++ b/lib/div64.c
-@@ -100,7 +100,7 @@ u64 div64_u64_rem(u64 dividend, u64 divisor, u64 *remainder)
- 		quot = div_u64_rem(dividend, divisor, &rem32);
- 		*remainder = rem32;
- 	} else {
--		int n = 1 + fls(high);
-+		int n = fls(high);
- 		quot = div_u64(dividend >> n, divisor >> n);
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index d8ca2eaa3a8b..0a0b7529dae4 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -135,9 +135,9 @@ struct swap_extent {
+ /*
+  * Max bad pages in the new format..
+  */
+-#define __swapoffset(x) ((unsigned long)&((union swap_header *)0)->x)
+ #define MAX_SWAP_BADPAGES \
+-	((__swapoffset(magic.magic) - __swapoffset(info.badpages)) / sizeof(int))
++	((offsetof(union swap_header, magic.magic) - \
++	  offsetof(union swap_header, info.badpages)) / sizeof(int))
  
- 		if (quot != 0)
-@@ -138,7 +138,7 @@ u64 div64_u64(u64 dividend, u64 divisor)
- 	if (high == 0) {
- 		quot = div_u64(dividend, divisor);
- 	} else {
--		int n = 1 + fls(high);
-+		int n = fls(high);
- 		quot = div_u64(dividend >> n, divisor >> n);
- 
- 		if (quot != 0)
+ enum {
+ 	SWP_USED	= (1 << 0),	/* is slot in swap_info[] used? */
 -- 
 2.19.1
 
