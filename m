@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D348C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1660C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11DC0218FE
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C293521773
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909353;
-	bh=u827Z5qV59wRGxFKo7Q9MOJ2WcAVe/6HFKVPTQrBQ94=;
+	s=default; t=1553909355;
+	bh=Jl0KP1gBPY46F7Qi5eYWw3hmLXbME6CJbG8G1cX4GG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jWJhclKDaw/ij5UHhCSKhsZblKWbOD7rpJY+YDuNS9P2C0HMh62ROzodAtehGvTVy
-	 UfFsFzqksPmbF6UJeK4V3VcnlOXqrcR4DwQTEYmV/16mVK+ONhx9hhIOthQzjdg/HP
-	 KNuERpjJxrDGtyoGw7bLH/zKk3RPISttWcukJSm8=
+	b=sPLXA6iwFmuM1OmlykNNBaGwIALaNPp2FIPls20RuV4tNhRLy5d5CBleENJQ7Sk32
+	 Foh1p573/nEk2yvTxcFg0Zy7yl0burGsOdN6VFo2Q/MAn/g5q1W5j6f8OkmaJKCeGw
+	 Eb9MpHhqgoitXkwKLVUJSN0l5gwFSar/fmhoNs4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730861AbfC3B3M (ORCPT
+        id S1730452AbfC3B3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:29:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35960 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730769AbfC3B3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:29:10 -0400
+        id S1730848AbfC3B3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:29:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FB5C218A6;
-        Sat, 30 Mar 2019 01:29:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3BC321773;
+        Sat, 30 Mar 2019 01:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909349;
-        bh=u827Z5qV59wRGxFKo7Q9MOJ2WcAVe/6HFKVPTQrBQ94=;
+        s=default; t=1553909351;
+        bh=Jl0KP1gBPY46F7Qi5eYWw3hmLXbME6CJbG8G1cX4GG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iv1xI+zOCKbm1qEUXfpqlKqxWKuoV1Joev7Y5S//542lNw8LQsF+SmznVlqGKEoZQ
-         NoIy+eXtT7T0Izck1wlmwuRvD/8ioTo0EyQmenGS+ViMu/occdnrLAXKL8nv4s3gLt
-         5VL1kpDPxK7RVJrPPAJ7LXlV6EdMmATO9O62YJ24=
+        b=v86s28Yb6KjrzIV3sVkDcswCYulyl9udSjJExrMtjwPjfSrsCNQ9wjWdT9UrmNdtr
+         OS3IkHJCaJiHH9cPOeM5Qhj7kGWlvuOIpd56jVK0TbSbSYcQealIjW7DwFlqL6I+0p
+         IL90+yHNLBCoy1I3ZIEAqSZ6ZiBTzgzkb6SEcq5k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        John Allen <jallen@linux.ibm.com>,
-        Haren Myneni <haren@us.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 11/57] powerpc/pseries: Remove prrn_work workqueue
-Date:   Fri, 29 Mar 2019 21:28:04 -0400
-Message-Id: <20190330012854.32212-11-sashal@kernel.org>
+Cc:     Brad Love <brad@nextdimension.cc>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/57] media: au0828: cannot kfree dev before usb disconnect
+Date:   Fri, 29 Mar 2019 21:28:05 -0400
+Message-Id: <20190330012854.32212-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
 References: <20190330012854.32212-1-sashal@kernel.org>
@@ -61,125 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+From: Brad Love <brad@nextdimension.cc>
 
-[ Upstream commit cd24e457fd8b2d087d9236700c8d2957054598bf ]
+[ Upstream commit 4add7104919f9e94e0db03e234caeadbfcc02ea9 ]
 
-When a PRRN event is received we are already running in a worker
-thread. Instead of spawning off another worker thread on the prrn_work
-workqueue to handle the PRRN event we can just call the PRRN handler
-routine directly.
+If au0828_analog_register fails, the dev is kfree'd and then flow
+jumps to done, which can call au0828_usb_disconnect. Since all USB
+error codes are negative, au0828_usb_disconnect will be called. The
+problem is au0828_usb_disconnect uses dev, if dev is NULL then there
+is immediate oops encountered.
 
-With this update we can also pass the scope variable for the PRRN
-event directly to the handler instead of it being a global variable.
+[    7.454307] au0828: au0828_usb_probe() au0282_dev_register failed to register on V4L2
+[    7.454323] BUG: unable to handle kernel NULL pointer dereference at 0000000000000050
+[    7.454421] PGD 0 P4D 0
+[    7.454457] Oops: 0002 [#1] SMP PTI
+[    7.454500] CPU: 1 PID: 262 Comm: systemd-udevd Tainted: P           O      4.18.3 #1
+[    7.454584] Hardware name: Google Panther/Panther, BIOS MattDevo 04/27/2015
+[    7.454670] RIP: 0010:_raw_spin_lock_irqsave+0x2c/0x50
+[    7.454725] Code: 44 00 00 55 48 89 e5 41 54 53 48 89 fb 9c 58 0f 1f 44 00 00 49 89 c4 fa 66 0f 1f 44 00 00 e8 db 23 1b ff 31 c0 ba 01 00 00 00 <f0> 0f b1 13 85 c0 75 08 4c 89 e0 5b 41 5c 5d c3 89 c6 48 89 df e8
+[    7.455004] RSP: 0018:ffff9130f53ef988 EFLAGS: 00010046
+[    7.455063] RAX: 0000000000000000 RBX: 0000000000000050 RCX: 0000000000000000
+[    7.455139] RDX: 0000000000000001 RSI: 0000000000000003 RDI: 0000000000000050
+[    7.455216] RBP: ffff9130f53ef998 R08: 0000000000000018 R09: 0000000000000090
+[    7.455292] R10: ffffed4cc53cb000 R11: ffffed4cc53cb108 R12: 0000000000000082
+[    7.455369] R13: ffff9130cf2c6188 R14: 0000000000000000 R15: 0000000000000018
+[    7.455447] FS:  00007f2ff8514cc0(0000) GS:ffff9130fcb00000(0000) knlGS:0000000000000000
+[    7.455535] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    7.455597] CR2: 0000000000000050 CR3: 00000001753f0002 CR4: 00000000000606a0
+[    7.455675] Call Trace:
+[    7.455713]  __wake_up_common_lock+0x65/0xc0
+[    7.455764]  __wake_up+0x13/0x20
+[    7.455808]  ir_lirc_unregister+0x57/0xe0 [rc_core]
+[    7.455865]  rc_unregister_device+0xa0/0xc0 [rc_core]
+[    7.455935]  au0828_rc_unregister+0x25/0x40 [au0828]
+[    7.455999]  au0828_usb_disconnect+0x33/0x80 [au0828]
+[    7.456064]  au0828_usb_probe.cold.16+0x8d/0x2aa [au0828]
+[    7.456130]  usb_probe_interface+0xf1/0x300
+[    7.456184]  driver_probe_device+0x2e3/0x460
+[    7.456235]  __driver_attach+0xe4/0x110
+[    7.456282]  ? driver_probe_device+0x460/0x460
+[    7.456335]  bus_for_each_dev+0x74/0xb0
+[    7.456385]  ? kmem_cache_alloc_trace+0x15d/0x1d0
+[    7.456441]  driver_attach+0x1e/0x20
+[    7.456485]  bus_add_driver+0x159/0x230
+[    7.456532]  driver_register+0x70/0xc0
+[    7.456578]  usb_register_driver+0x7f/0x140
+[    7.456626]  ? 0xffffffffc0474000
+[    7.456674]  au0828_init+0xbc/0x1000 [au0828]
+[    7.456725]  do_one_initcall+0x4a/0x1c9
+[    7.456771]  ? _cond_resched+0x19/0x30
+[    7.456817]  ? kmem_cache_alloc_trace+0x15d/0x1d0
+[    7.456873]  do_init_module+0x60/0x210
+[    7.456918]  load_module+0x221b/0x2710
+[    7.456966]  ? vfs_read+0xf5/0x120
+[    7.457010]  __do_sys_finit_module+0xbd/0x120
+[    7.457061]  ? __do_sys_finit_module+0xbd/0x120
+[    7.457115]  __x64_sys_finit_module+0x1a/0x20
+[    7.457166]  do_syscall_64+0x5b/0x110
+[    7.457210]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-This patch fixes the following oops mnessage we are seeing in PRRN testing:
-
-  Oops: Bad kernel stack pointer, sig: 6 [#1]
-  SMP NR_CPUS=2048 NUMA pSeries
-  Modules linked in: nfsv3 nfs_acl rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver nfs lockd grace sunrpc fscache binfmt_misc reiserfs vfat fat rpadlpar_io(X) rpaphp(X) tcp_diag udp_diag inet_diag unix_diag af_packet_diag netlink_diag af_packet xfs libcrc32c dm_service_time ibmveth(X) ses enclosure scsi_transport_sas rtc_generic btrfs xor raid6_pq sd_mod ibmvscsi(X) scsi_transport_srp ipr(X) libata sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua scsi_mod autofs4
-  Supported: Yes, External                                                     54
-  CPU: 7 PID: 18967 Comm: kworker/u96:0 Tainted: G                 X 4.4.126-94.22-default #1
-  Workqueue: pseries hotplug workque pseries_hp_work_fn
-  task: c000000775367790 ti: c00000001ebd4000 task.ti: c00000070d140000
-  NIP: 0000000000000000 LR: 000000001fb3d050 CTR: 0000000000000000
-  REGS: c00000001ebd7d40 TRAP: 0700   Tainted: G                 X  (4.4.126-94.22-default)
-  MSR: 8000000102081000 <41,VEC,ME5  CR: 28000002  XER: 20040018   4
-  CFAR: 000000001fb3d084 40 419   1                                3
-  GPR00: 000000000000000040000000000010007 000000001ffff400 000000041fffe200
-  GPR04: 000000000000008050000000000000000 000000001fb15fa8 0000000500000500
-  GPR08: 000000000001f40040000000000000001 0000000000000000 000005:5200040002
-  GPR12: 00000000000000005c000000007a05400 c0000000000e89f8 000000001ed9f668
-  GPR16: 000000001fbeff944000000001fbeff94 000000001fb545e4 0000006000000060
-  GPR20: ffffffffffffffff4ffffffffffffffff 0000000000000000 0000000000000000
-  GPR24: 00000000000000005400000001fb3c000 0000000000000000 000000001fb1b040
-  GPR28: 000000001fb240004000000001fb440d8 0000000000000008 0000000000000000
-  NIP [0000000000000000] 5         (null)
-  LR [000000001fb3d050] 031fb3d050
-  Call Trace:            4
-  Instruction dump:      4                                       5:47 12    2
-  XXXXXXXX XXXXXXXX XXXXX4XX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
-  XXXXXXXX XXXXXXXX XXXXX5XX XXXXXXXX 60000000 60000000 60000000 60000000
-  ---[ end trace aa5627b04a7d9d6b ]---                                       3NMI watchdog: BUG: soft lockup - CPU#27 stuck for 23s! [kworker/27:0:13903]
-  Modules linked in: nfsv3 nfs_acl rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver nfs lockd grace sunrpc fscache binfmt_misc reiserfs vfat fat rpadlpar_io(X) rpaphp(X) tcp_diag udp_diag inet_diag unix_diag af_packet_diag netlink_diag af_packet xfs libcrc32c dm_service_time ibmveth(X) ses enclosure scsi_transport_sas rtc_generic btrfs xor raid6_pq sd_mod ibmvscsi(X) scsi_transport_srp ipr(X) libata sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua scsi_mod autofs4
-  Supported: Yes, External
-  CPU: 27 PID: 13903 Comm: kworker/27:0 Tainted: G      D          X 4.4.126-94.22-default #1
-  Workqueue: events prrn_work_fn
-  task: c000000747cfa390 ti: c00000074712c000 task.ti: c00000074712c000
-  NIP: c0000000008002a8 LR: c000000000090770 CTR: 000000000032e088
-  REGS: c00000074712f7b0 TRAP: 0901   Tainted: G      D          X  (4.4.126-94.22-default)
-  MSR: 8000000100009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 22482044  XER: 20040000
-  CFAR: c0000000008002c4 SOFTE: 1
-  GPR00: c000000000090770 c00000074712fa30 c000000000f09800 c000000000fa1928 6:02
-  GPR04: c000000775f5e000 fffffffffffffffe 0000000000000001 c000000000f42db8
-  GPR08: 0000000000000001 0000000080000007 0000000000000000 0000000000000000
-  GPR12: 8006210083180000 c000000007a14400
-  NIP [c0000000008002a8] _raw_spin_lock+0x68/0xd0
-  LR [c000000000090770] mobility_rtas_call+0x50/0x100
-  Call Trace:            59                                        5
-  [c00000074712fa60] [c000000000090770] mobility_rtas_call+0x50/0x100
-  [c00000074712faf0] [c000000000090b08] pseries_devicetree_update+0xf8/0x530
-  [c00000074712fc20] [c000000000031ba4] prrn_work_fn+0x34/0x50
-  [c00000074712fc40] [c0000000000e0390] process_one_work+0x1a0/0x4e0
-  [c00000074712fcd0] [c0000000000e0870] worker_thread+0x1a0/0x6105:57       2
-  [c00000074712fd80] [c0000000000e8b18] kthread+0x128/0x150
-  [c00000074712fe30] [c0000000000096f8] ret_from_kernel_thread+0x5c/0x64
-  Instruction dump:
-  2c090000 40c20010 7d40192d 40c2fff0 7c2004ac 2fa90000 40de0018 5:540030   3
-  e8010010 ebe1fff8 7c0803a6 4e800020 <7c210b78> e92d0000 89290009 792affe3
-
-Signed-off-by: John Allen <jallen@linux.ibm.com>
-Signed-off-by: Haren Myneni <haren@us.ibm.com>
-Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Brad Love <brad@nextdimension.cc>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/rtasd.c | 17 +++--------------
- 1 file changed, 3 insertions(+), 14 deletions(-)
+ drivers/media/usb/au0828/au0828-core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/rtasd.c b/arch/powerpc/kernel/rtasd.c
-index 44d66c33d59d..23b88b923f06 100644
---- a/arch/powerpc/kernel/rtasd.c
-+++ b/arch/powerpc/kernel/rtasd.c
-@@ -274,27 +274,16 @@ void pSeries_log_error(char *buf, unsigned int err_type, int fatal)
- }
+diff --git a/drivers/media/usb/au0828/au0828-core.c b/drivers/media/usb/au0828/au0828-core.c
+index cd363a2100d4..257ae0d8cfe2 100644
+--- a/drivers/media/usb/au0828/au0828-core.c
++++ b/drivers/media/usb/au0828/au0828-core.c
+@@ -629,7 +629,6 @@ static int au0828_usb_probe(struct usb_interface *interface,
+ 		pr_err("%s() au0282_dev_register failed to register on V4L2\n",
+ 			__func__);
+ 		mutex_unlock(&dev->lock);
+-		kfree(dev);
+ 		goto done;
+ 	}
  
- #ifdef CONFIG_PPC_PSERIES
--static s32 prrn_update_scope;
--
--static void prrn_work_fn(struct work_struct *work)
-+static void handle_prrn_event(s32 scope)
- {
- 	/*
- 	 * For PRRN, we must pass the negative of the scope value in
- 	 * the RTAS event.
- 	 */
--	pseries_devicetree_update(-prrn_update_scope);
-+	pseries_devicetree_update(-scope);
- 	numa_update_cpu_topology(false);
- }
- 
--static DECLARE_WORK(prrn_work, prrn_work_fn);
--
--static void prrn_schedule_update(u32 scope)
--{
--	flush_work(&prrn_work);
--	prrn_update_scope = scope;
--	schedule_work(&prrn_work);
--}
--
- static void handle_rtas_event(const struct rtas_error_log *log)
- {
- 	if (rtas_error_type(log) != RTAS_TYPE_PRRN || !prrn_is_enabled())
-@@ -303,7 +292,7 @@ static void handle_rtas_event(const struct rtas_error_log *log)
- 	/* For PRRN Events the extended log length is used to denote
- 	 * the scope for calling rtas update-nodes.
- 	 */
--	prrn_schedule_update(rtas_error_extended_log_length(log));
-+	handle_prrn_event(rtas_error_extended_log_length(log));
- }
- 
- #else
 -- 
 2.19.1
 
