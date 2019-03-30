@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFB3C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90384C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E0E2184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B491218D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553910857;
-	bh=40zwdr6bQSLWUP6pogszPsje1G4+poWN1hnfo28qJnY=;
+	s=default; t=1553910867;
+	bh=mC9ZkBI1j4g2UcrzpSbUy4xPO3jLn4BSD+4RRtirvjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WhPCJYuVQ7u7Jf90pikTiE7fGP0n7p1BLVgBMOCUuhP9HPl2+bjdzq0yml8U7HwCf
-	 Ho5o/si8RR3vfuLnjhn1nceh6+1k5aQ+3miDYzUxV0pcqr1x3C5TjAg2BVCOWf7Riz
-	 T49uAml5k0c2xFroQWC3Cna3nLkxFVj+eTzogZ50=
+	b=NLAJtZh/2M2gkz2ZmGAMFZartfxA56H4lxxvf/q5Oy4IRmNMrh48QctQuGwu3otK4
+	 tuw9LHy2CYpbpc3bhvk6AML8joHGjmHbMnlW2vbm+aayelPsNzRhf3b9o6KiF38274
+	 PAVmqbIVtwrXIVSRSaSQc5q5qseIG88FEbY0NskQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbfC3ByP (ORCPT
+        id S1730536AbfC3ByZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:54:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52470 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:54:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730370AbfC3ByK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:54:10 -0400
+        id S1729858AbfC3ByJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:54:09 -0400
 Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 215F121901;
-        Sat, 30 Mar 2019 01:54:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C129B21903;
+        Sat, 30 Mar 2019 01:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553910849;
-        bh=40zwdr6bQSLWUP6pogszPsje1G4+poWN1hnfo28qJnY=;
+        s=default; t=1553910848;
+        bh=mC9ZkBI1j4g2UcrzpSbUy4xPO3jLn4BSD+4RRtirvjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X8FNg0FKDdRgQyK74M4ouDI4SKn/hFyAwZjXhO17Pv45/2c1IqRXwvP1oBlbrtRnF
-         awibPrt5g+MW1T9dZjuGXVUm6zitPVNWDkda1wH8+YPhXtlVky38TT27FfDxj00lE+
-         YyJyW727EBMZQi5/e+nBdqfkBq9fop4oZgaZEwaM=
+        b=jTk+BFjyAxYMOB98sZ/cF0CsXH+D+rwAxn9AmcQqsGBvmjxIpnjrowltxBB2yINGS
+         2XydF/mKVVPhy5H5eSzik8QrF6RieFa967FFA20vfsX5oUQU8kWYpftu54WUHTAmXK
+         eSZhG3wQpwOVeFIRyknowbxVqmJkBx387sFZodKw=
 From:   Shuah Khan <shuah@kernel.org>
 To:     mchehab@kernel.org, perex@perex.cz, tiwai@suse.com,
         hverkuil@xs4all.nl
 Cc:     Shuah Khan <shuah@kernel.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: [PATCH v14 6/6] selftests: media_dev_allocator api test
-Date:   Fri, 29 Mar 2019 19:54:01 -0600
-Message-Id: <58769883bfbb8b959b12952d155de87fc01f6d99.1553909893.git.shuah@kernel.org>
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: [PATCH v14 5/6] au0828: fix enable and disable source audio and video inconsistencies
+Date:   Fri, 29 Mar 2019 19:54:00 -0600
+Message-Id: <a314cc4fbfa5ae928cd9f13b8e16046e38418273.1553909893.git.shuah@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1553909892.git.shuah@kernel.org>
 References: <cover.1553909892.git.shuah@kernel.org>
@@ -58,121 +56,319 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new test for Media Device Allocator API.
+Enable and disable source interfaces aren't consistent in enforcing
+how video and audio share the tuner resource.
 
-Media Device Allocator API to allows multiple drivers share a media device.
-This API solves a very common use-case for media devices where one physical
-device (an USB stick) provides both audio and video. When such media device
-exposes a standard USB Audio class, a proprietary Video class, two or more
-independent drivers will share a single physical USB bridge. In such cases,
-it is necessary to coordinate access to the shared resource.
+Fix these issues to enforce the following rules and allow
+sharing between audio and video applications.
 
-Using this API, drivers can allocate a media device with the shared struct
-device as the key. Once the media device is allocated by a driver, other
-drivers can get a reference to it. The media device is released when all
-the references are released.
-
-This test does a series of unbind/bind tests to make sure media device
-is released correctly when it is no longer is use and when the last
-driver releases the reference.
+- When DVB is streaming, audio/video/vbi/s-video/composite
+  should find the resource busy. DVB holds the tuner in
+  exclusive mode.
+- When video is streaming, audio can share the tuner and vice versa.
+- v4l2 allows multiple applications to open video device.
+- Video applications call enable source multiple times during their
+  run-time. Resource should stay locked until the last application
+  releases it.
+- A shared resource should stay in shared state and locked when it is
+  in use by audio and video. More than one video application is allowed
+  to use the tuner as long as video streaming protocol allows such usage.
+  Resource is released when the last video/audio application releases it.
+- S-Video and Composite hold the resource in exclusive mode.
+- VBI allows more than vbi applications sharing and will not share
+  with another type. When resource is locked by VBI and in use by
+  multiple VBI applications, it should stay locked until the last
+  application disables it.
 
 Signed-off-by: Shuah Khan <shuah@kernel.org>
 ---
- .../media_tests/media_dev_allocator.sh        | 85 +++++++++++++++++++
- 1 file changed, 85 insertions(+)
- create mode 100755 tools/testing/selftests/media_tests/media_dev_allocator.sh
+ drivers/media/usb/au0828/au0828-core.c | 182 +++++++++++++++++++------
+ drivers/media/usb/au0828/au0828.h      |   5 +-
+ 2 files changed, 148 insertions(+), 39 deletions(-)
 
-diff --git a/tools/testing/selftests/media_tests/media_dev_allocator.sh b/tools/testing/selftests/media_tests/media_dev_allocator.sh
-new file mode 100755
-index 000000000000..ffe00c59a483
---- /dev/null
-+++ b/tools/testing/selftests/media_tests/media_dev_allocator.sh
-@@ -0,0 +1,85 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Media Device Allocator API test script
-+# Copyright (c) 2019 Shuah Khan <shuah@kernel.org>
+diff --git a/drivers/media/usb/au0828/au0828-core.c b/drivers/media/usb/au0828/au0828-core.c
+index 4f8ba6f64d3c..b8bcab2fa1dc 100644
+--- a/drivers/media/usb/au0828/au0828-core.c
++++ b/drivers/media/usb/au0828/au0828-core.c
+@@ -272,6 +272,27 @@ static void au0828_media_graph_notify(struct media_entity *new,
+ 	}
+ }
+ 
++static bool au0828_is_link_sharable(struct media_entity *owner,
++				    struct media_entity *entity)
++{
++	bool sharable = false;
 +
-+echo "Media Device Allocator testing: unbind and bind"
-+echo "media driver $1 audio driver $2"
++	/* Tuner link can be shared by audio and video */
++	switch (owner->function) {
++	case MEDIA_ENT_F_IO_V4L:
++	case MEDIA_ENT_F_AUDIO_CAPTURE:
++		if (entity->function == MEDIA_ENT_F_IO_V4L ||
++		    entity->function == MEDIA_ENT_F_AUDIO_CAPTURE)
++			sharable = true;
++		break;
++	case MEDIA_ENT_F_DTV_DEMOD:
++	case MEDIA_ENT_F_IO_VBI:
++	default:
++		break;
++	}
++	return sharable;
++}
 +
-+MDRIVER=/sys/bus/usb/drivers/$1
-+cd $MDRIVER
-+MDEV=$(ls -d *\-*)
+ /* Callers should hold graph_mutex */
+ static int au0828_enable_source(struct media_entity *entity,
+ 				struct media_pipeline *pipe)
+@@ -314,18 +335,20 @@ static int au0828_enable_source(struct media_entity *entity,
+ 		/*
+ 		 * Default input is tuner and default input_type
+ 		 * is AU0828_VMUX_TELEVISION.
+-		 * FIXME:
++		 *
+ 		 * There is a problem when s_input is called to
+ 		 * change the default input. s_input will try to
+ 		 * enable_source before attempting to change the
+ 		 * input on the device, and will end up enabling
+ 		 * default source which is tuner.
+ 		 *
+-		 * Additional logic is necessary in au0828
+-		 * to detect that the input has changed and
+-		 * enable the right source.
++		 * Additional logic is necessary in au0828 to detect
++		 * that the input has changed and enable the right
++		 * source. au0828 handles this case in its s_input.
++		 * It will disable the old source and enable the new
++		 * source.
++		 *
+ 		*/
+-
+ 		if (dev->input_type == AU0828_VMUX_TELEVISION)
+ 			find_source = dev->tuner;
+ 		else if (dev->input_type == AU0828_VMUX_SVIDEO ||
+@@ -338,27 +361,33 @@ static int au0828_enable_source(struct media_entity *entity,
+ 		}
+ 	}
+ 
+-	/* Is an active link between sink and source */
++	/* Is there an active link between sink and source */
+ 	if (dev->active_link) {
+-		/*
+-		 * If DVB is using the tuner and calling entity is
+-		 * audio/video, the following check will be false,
+-		 * since sink is different. Result is Busy.
+-		 */
+-		if (dev->active_link->sink->entity == sink &&
+-		    dev->active_link->source->entity == find_source) {
+-			/*
+-			 * Either ALSA or Video own tuner. sink is
+-			 * the same for both. Prevent Video stepping
+-			 * on ALSA when ALSA owns the source.
++		if (dev->active_link_owner == entity) {
++			/* This check is necessary to handle multiple
++			 * enable_source calls from v4l_ioctls during
++			 * the course of video/vbi application run-time.
+ 			*/
+-			if (dev->active_link_owner != entity &&
+-			    dev->active_link_owner->function ==
+-						MEDIA_ENT_F_AUDIO_CAPTURE) {
+-				pr_debug("ALSA has the tuner\n");
+-				ret = -EBUSY;
+-				goto end;
+-			}
++			pr_debug("%s already owns the tuner\n", entity->name);
++			ret = 0;
++			goto end;
++		} else if (au0828_is_link_sharable(dev->active_link_owner,
++			   entity)) {
++			/* Either ALSA or Video own tuner. Sink is the same
++			 * for both. Allow sharing the active link between
++			 * their common source (tuner) and sink (decoder).
++			 * Starting pipeline between sharing entity and sink
++			 * will fail with pipe mismatch, while owner has an
++			 * active pipeline. Switch pipeline ownership from
++			 * user to owner when owner disables the source.
++			 */
++			dev->active_link_shared = true;
++			/* save the user info to use from disable */
++			dev->active_link_user = entity;
++			dev->active_link_user_pipe = pipe;
++			pr_debug("%s owns the tuner %s can share!\n",
++				 dev->active_link_owner->name,
++				 entity->name);
+ 			ret = 0;
+ 			goto end;
+ 		} else {
+@@ -385,7 +414,7 @@ static int au0828_enable_source(struct media_entity *entity,
+ 	source = found_link->source->entity;
+ 	ret = __media_entity_setup_link(found_link, MEDIA_LNK_FL_ENABLED);
+ 	if (ret) {
+-		pr_err("Activate tuner link %s->%s. Error %d\n",
++		pr_err("Activate link from %s->%s. Error %d\n",
+ 			source->name, sink->name, ret);
+ 		goto end;
+ 	}
+@@ -395,25 +424,26 @@ static int au0828_enable_source(struct media_entity *entity,
+ 		pr_err("Start Pipeline: %s->%s Error %d\n",
+ 			source->name, entity->name, ret);
+ 		ret = __media_entity_setup_link(found_link, 0);
+-		pr_err("Deactivate link Error %d\n", ret);
++		if (ret)
++			pr_err("Deactivate link Error %d\n", ret);
+ 		goto end;
+ 	}
+-	/*
+-	 * save active link and active link owner to avoid audio
+-	 * deactivating video owned link from disable_source and
+-	 * vice versa
 +
-+ADRIVER=/sys/bus/usb/drivers/$2
-+cd $ADRIVER
-+ADEV=$(ls -d *\-*.1)
++	/* save link state to allow audio and video share the link
++	 * and not disable the link while the other is using it.
++	 * active_link_owner is used to deactivate the link.
+ 	*/
+ 	dev->active_link = found_link;
+ 	dev->active_link_owner = entity;
+ 	dev->active_source = source;
+ 	dev->active_sink = sink;
+ 
+-	pr_debug("Enabled Source: %s->%s->%s Ret %d\n",
++	pr_info("Enabled Source: %s->%s->%s Ret %d\n",
+ 		 dev->active_source->name, dev->active_sink->name,
+ 		 dev->active_link_owner->name, ret);
+ end:
+-	pr_debug("au0828_enable_source() end %s %d %d\n",
+-		 entity->name, entity->function, ret);
++	pr_debug("%s end: ent:%s fnc:%d ret %d\n",
++		 __func__, entity->name, entity->function, ret);
+ 	return ret;
+ }
+ 
+@@ -432,21 +462,95 @@ static void au0828_disable_source(struct media_entity *entity)
+ 	if (!dev->active_link)
+ 		return;
+ 
+-	/* link is active - stop pipeline from source (tuner) */
++	/* link is active - stop pipeline from source
++	 * (tuner/s-video/Composite) to the entity
++	 * When DVB/s-video/Composite owns tuner, it won't be in
++	 * shared state.
++	 */
+ 	if (dev->active_link->sink->entity == dev->active_sink &&
+ 	    dev->active_link->source->entity == dev->active_source) {
+ 		/*
+-		 * prevent video from deactivating link when audio
+-		 * has active pipeline
++		 * Prevent video from deactivating link when audio
++		 * has active pipeline and vice versa. In addition
++		 * handle the case when more than one video/vbi
++		 * application is sharing the link.
+ 		*/
++		bool owner_is_audio = false;
 +
-+echo "=================================="
-+echo "Test unbind both devices - start"
-+echo "Running unbind of $MDEV from $MDRIVER"
-+echo $MDEV > $MDRIVER/unbind;
++		if (dev->active_link_owner->function ==
++		    MEDIA_ENT_F_AUDIO_CAPTURE)
++			owner_is_audio = true;
 +
-+echo "Media device should still be present!"
-+ls -l /dev/media*
++		if (dev->active_link_shared) {
++			pr_debug("Shared link owner %s user %s %d\n",
++				 dev->active_link_owner->name,
++				 entity->name, dev->users);
 +
-+echo "sound driver is at: $ADRIVER"
-+echo "Device is: $ADEV"
++			/* Handle video device users > 1
++			 * When audio owns the shared link with
++			 * more than one video users, avoid
++			 * disabling the source and/or switching
++			 * the owner until the last disable_source
++			 * call from video _close(). Use dev->users to
++			 * determine when to switch/disable.
++			 */
++			if (dev->active_link_owner != entity) {
++				/* video device has users > 1 */
++				if (owner_is_audio && dev->users > 1)
++					return;
 +
-+echo "Running unbind of $ADEV from $ADRIVER"
-+echo $ADEV > $ADRIVER/unbind;
++				dev->active_link_user = NULL;
++				dev->active_link_user_pipe = NULL;
++				dev->active_link_shared = false;
++				return;
++			}
 +
-+echo "Media device should have been deleted!"
-+ls -l /dev/media*
-+echo "Test unbind both devices - end"
++			/* video owns the link and has users > 1 */
++			if (!owner_is_audio && dev->users > 1)
++				return;
 +
-+echo "=================================="
++			/* stop pipeline */
++			__media_pipeline_stop(dev->active_link_owner);
++			pr_debug("Pipeline stop for %s\n",
++				dev->active_link_owner->name);
 +
-+echo "Test bind both devices - start"
-+echo "Running bind of $MDEV from $MDRIVER"
-+echo $MDEV > $MDRIVER/bind;
++			ret = __media_pipeline_start(
++					dev->active_link_user,
++					dev->active_link_user_pipe);
++			if (ret) {
++				pr_err("Start Pipeline: %s->%s %d\n",
++					dev->active_source->name,
++					dev->active_link_user->name,
++					ret);
++				goto deactivate_link;
++			}
++			/* link user is now the owner */
++			dev->active_link_owner = dev->active_link_user;
++			dev->active_link_user = NULL;
++			dev->active_link_user_pipe = NULL;
++			dev->active_link_shared = false;
 +
-+echo "Media device should be present!"
-+ls -l /dev/media*
++			pr_debug("Pipeline started for %s\n",
++				dev->active_link_owner->name);
++			return;
++		} else if (!owner_is_audio && dev->users > 1)
++			/* video/vbi owns the link and has users > 1 */
++			return;
 +
-+echo "Running bind of $ADEV from $ADRIVER"
-+echo $ADEV > $ADRIVER/bind;
+ 		if (dev->active_link_owner != entity)
+ 			return;
+-		__media_pipeline_stop(entity);
 +
-+echo "Media device should be there!"
-+ls -l /dev/media*
++		/* stop pipeline */
++		__media_pipeline_stop(dev->active_link_owner);
++		pr_debug("Pipeline stop for %s\n",
++			dev->active_link_owner->name);
 +
-+echo "Test bind both devices - end"
-+
-+echo "=================================="
-+
-+echo "Test unbind $MDEV - bind $MDEV - unbind $ADEV - bind $ADEV start"
-+
-+echo "Running unbind of $MDEV from $MDRIVER"
-+echo $MDEV > $MDRIVER/unbind;
-+
-+echo "Media device should be there!"
-+ls -l /dev/media*
-+
-+sleep 1
-+
-+echo "Running bind of $MDEV from $MDRIVER"
-+echo $MDEV > $MDRIVER/bind;
-+
-+echo "Media device should be there!"
-+ls -l /dev/media*
-+
-+echo "Running unbind of $ADEV from $ADRIVER"
-+echo $ADEV > $ADRIVER/unbind;
-+
-+echo "Media device should be there!"
-+ls -l /dev/media*
-+
-+sleep 1
-+
-+echo "Running bind of $ADEV from $ADRIVER"
-+echo $ADEV > $ADRIVER/bind;
-+
-+echo "Media device should be there!"
-+ls -l /dev/media*
-+
-+echo "Test unbind $MDEV - bind $MDEV - unbind $ADEV - bind $ADEV end"
-+echo "=================================="
++deactivate_link:
+ 		ret = __media_entity_setup_link(dev->active_link, 0);
+ 		if (ret)
+ 			pr_err("Deactivate link Error %d\n", ret);
+ 
+-		pr_debug("Disabled Source: %s->%s->%s Ret %d\n",
++		pr_info("Disabled Source: %s->%s->%s Ret %d\n",
+ 			 dev->active_source->name, dev->active_sink->name,
+ 			 dev->active_link_owner->name, ret);
+ 
+@@ -454,6 +558,8 @@ static void au0828_disable_source(struct media_entity *entity)
+ 		dev->active_link_owner = NULL;
+ 		dev->active_source = NULL;
+ 		dev->active_sink = NULL;
++		dev->active_link_shared = false;
++		dev->active_link_user = NULL;
+ 	}
+ }
+ #endif
+diff --git a/drivers/media/usb/au0828/au0828.h b/drivers/media/usb/au0828/au0828.h
+index 57b00de8d3f2..b47ecc9affd8 100644
+--- a/drivers/media/usb/au0828/au0828.h
++++ b/drivers/media/usb/au0828/au0828.h
+@@ -284,9 +284,12 @@ struct au0828_dev {
+ 	struct media_entity_notify entity_notify;
+ 	struct media_entity *tuner;
+ 	struct media_link *active_link;
+-	struct media_entity *active_link_owner;
+ 	struct media_entity *active_source;
+ 	struct media_entity *active_sink;
++	struct media_entity *active_link_owner;
++	struct media_entity *active_link_user;
++	struct media_pipeline *active_link_user_pipe;
++	bool active_link_shared;
+ #endif
+ };
+ 
 -- 
 2.17.1
 
