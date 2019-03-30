@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE7BC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37A1C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C9E2064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A47FD206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907832;
-	bh=b2K2eIGj2uQepp65sE1ldmyX3wAyGhtLbu+UpsqNiVc=;
+	s=default; t=1553907835;
+	bh=7k+qywM7+9s1/QIjVO3Wx5InUyMN7qVHjhciD1rBnZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j8JPduAAUR/+V5/61ILGi5T9NX6J5uQW3FtMhovW5F6/8tulve0vjq4MB+U5XwYDi
-	 HNRJeGJaxLzFkSGHvP431iNvHdvlNinkY0sKZtNaZa8Im9aGSsbDA5aydrNUXNFfa5
-	 3gd6HAOX9mOYLkzwk2YjXXJIw6EGG1wBiSJtT4A4=
+	b=D+LIMk9tXYfYy4gvDuFP5sEX1IFLuoViikqrUIg9kL2dL5GNtg4eRHFq3OaD88HR2
+	 8gCgjywZEvyX2rjrRn0AIPKk01K2lWHJUZf64U3KXwvQbqBM4W485+ALMGcH997gFV
+	 +tia1UYeYhxH0y1y5U7vesrFlD+LR/WBRZJhO8GE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbfC3Ay6 (ORCPT
+        id S1731807AbfC3BDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:54:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34038 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:03:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731609AbfC3Ayz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:54:55 -0400
+        id S1731643AbfC3Ay6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:54:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13846218AC;
-        Sat, 30 Mar 2019 00:54:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 803FE218D3;
+        Sat, 30 Mar 2019 00:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907294;
-        bh=b2K2eIGj2uQepp65sE1ldmyX3wAyGhtLbu+UpsqNiVc=;
+        s=default; t=1553907297;
+        bh=7k+qywM7+9s1/QIjVO3Wx5InUyMN7qVHjhciD1rBnZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iad0FZY34MWXhy2o2T+mmLVl6mUGTIjCxxX8+jtZmz1vGMIAnq2UDwGdEf4wr0CIq
-         xisiHK/pMDEuLkPiwLk9GPdRRi/ROXLwesIQj9dhVBfNl64MtnfTB0acpRE19BZqaT
-         B9KkVDa3qv24YY3p1LcnHcdW4ixPljIeOowC3U1U=
+        b=onX6E/YsRtvCRSTqYI25WvwQ4kFfBHfjjPtezcaWoOyQ4kxxsxRFu6IQyRen2TsdD
+         LzyPeyhuhwwkzV4NZuRRdNkunFFA/Zz4oaYi5aVmuDr1vBc+Kl1JTHruNA8fNhwqYv
+         gaFpjKk8bfOcrOjX6Z2sRWyvGDK1HAIOZocIbIY0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 09/37] IB/mlx4: Fix race condition between catas error reset and aliasguid flows
-Date:   Fri, 29 Mar 2019 20:54:10 -0400
-Message-Id: <20190330005441.27540-9-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 10/37] mmc: davinci: remove extraneous __init annotation
+Date:   Fri, 29 Mar 2019 20:54:11 -0400
+Message-Id: <20190330005441.27540-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
 References: <20190330005441.27540-1-sashal@kernel.org>
@@ -60,38 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 587443e7773e150ae29e643ee8f41a1eed226565 ]
+[ Upstream commit 9ce58dd7d9da3ca0d7cb8c9568f1c6f4746da65a ]
 
-Code review revealed a race condition which could allow the catas error
-flow to interrupt the alias guid query post mechanism at random points.
-Thiis is fixed by doing cancel_delayed_work_sync() instead of
-cancel_delayed_work() during the alias guid mechanism destroy flow.
+Building with clang finds a mistaken __init tag:
 
-Fixes: a0c64a17aba8 ("mlx4: Add alias_guid mechanism")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+WARNING: vmlinux.o(.text+0x5e4250): Section mismatch in reference from the function davinci_mmcsd_probe() to the function .init.text:init_mmcsd_host()
+The function davinci_mmcsd_probe() references
+the function __init init_mmcsd_host().
+This is often because davinci_mmcsd_probe lacks a __init
+annotation or the annotation of init_mmcsd_host is wrong.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/alias_GUID.c | 2 +-
+ drivers/mmc/host/davinci_mmc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/alias_GUID.c b/drivers/infiniband/hw/mlx4/alias_GUID.c
-index 155b4dfc0ae8..baab9afa9174 100644
---- a/drivers/infiniband/hw/mlx4/alias_GUID.c
-+++ b/drivers/infiniband/hw/mlx4/alias_GUID.c
-@@ -804,8 +804,8 @@ void mlx4_ib_destroy_alias_guid_service(struct mlx4_ib_dev *dev)
- 	unsigned long flags;
+diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
+index 351330dfb954..1bd1819cca7d 100644
+--- a/drivers/mmc/host/davinci_mmc.c
++++ b/drivers/mmc/host/davinci_mmc.c
+@@ -1118,7 +1118,7 @@ static inline void mmc_davinci_cpufreq_deregister(struct mmc_davinci_host *host)
+ {
+ }
+ #endif
+-static void __init init_mmcsd_host(struct mmc_davinci_host *host)
++static void init_mmcsd_host(struct mmc_davinci_host *host)
+ {
  
- 	for (i = 0 ; i < dev->num_ports; i++) {
--		cancel_delayed_work(&dev->sriov.alias_guid.ports_guid[i].alias_guid_work);
- 		det = &sriov->alias_guid.ports_guid[i];
-+		cancel_delayed_work_sync(&det->alias_guid_work);
- 		spin_lock_irqsave(&sriov->alias_guid.ag_work_lock, flags);
- 		while (!list_empty(&det->cb_list)) {
- 			cb_ctx = list_entry(det->cb_list.next,
+ 	mmc_davinci_reset_ctrl(host, 1);
 -- 
 2.19.1
 
