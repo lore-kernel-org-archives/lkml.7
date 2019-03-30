@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0375EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B42C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58C4218D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C72C218D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907071;
-	bh=Wlm3zhTg5MozIoVOkMkt5/tJnKCyeynamqGMYczvank=;
+	s=default; t=1553907077;
+	bh=LeYvrwRUDltMhwxcC2hToscHxsD8jdn6J1GyX0eLcQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HwmeKPMnjrmJl3436thdjz1PmNK2eKvoEFn1bTKPJlxbco44KhjBfHvw6LxjTqlIN
-	 9IWrUDqPxrk+KFeyLe+vR7b/LE55ysWEkrUYQ3My37h3RWYGXWSh5JBsjOhmNN/zBJ
-	 T2znVPb22AU4Jyp50g7aCx34+qme0VkQ/3Ikmz+0=
+	b=okuWVQMXCUQoAEQazsSSk8L8Y3wo5g4tSGHIS7U/tVW/MLiTJIXiNmk4YpYt8P8Zx
+	 NACriw9u2lKBNn0cWUB5fx5ZqXpzRlxtSyBV7oHH30uq+YYLShFALgnn/lnuMrcdXe
+	 3q5lsEJaqoAXm/XkjP3C5WKMpxJUfMheUvOnjxd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730656AbfC3AvK (ORCPT
+        id S1730687AbfC3AvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:51:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57778 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:51:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730592AbfC3AvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:51:07 -0400
+        id S1730592AbfC3AvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:51:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C7C0206DD;
-        Sat, 30 Mar 2019 00:51:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DDD2206DD;
+        Sat, 30 Mar 2019 00:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907067;
-        bh=Wlm3zhTg5MozIoVOkMkt5/tJnKCyeynamqGMYczvank=;
+        s=default; t=1553907071;
+        bh=LeYvrwRUDltMhwxcC2hToscHxsD8jdn6J1GyX0eLcQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=foJf7IDXNu/Y3RZfkzZ3YOiXryAQuPUrL20rk+VE/roMAL5RfHSZHAZuT4t/5fuuX
-         7JtXDoZguVAngaa0LNthETo2FZhWXzOJAWjdKuYiahDf5whAifgvBpl10ch6owB2Hv
-         s4YlIcwQmlS7n/TeCrtSDvPeeF1H3TiHItT8yAVI=
+        b=cJU8BtxUEE7oHTW/NpBH5rX/JQpNbvkNxxcIw4ya114zgIaBasByFmwVgfqWIiyVG
+         gme5dKZDLADQzK9aoRHKwqDK3T3DStyf319NZYPudp7DPyG5aCJbDtPJrkDpCor98e
+         7y8VM42b4M+0rTdi1b9tMzgbJ/hs5J0wbJN0/9K4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 15/67] i40iw: Avoid panic when handling the inetdev event
-Date:   Fri, 29 Mar 2019 20:49:55 -0400
-Message-Id: <20190330005047.25998-15-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 17/67] ALSA: opl3: fix mismatch between snd_opl3_drum_switch definition and declaration
+Date:   Fri, 29 Mar 2019 20:49:57 -0400
+Message-Id: <20190330005047.25998-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005047.25998-1-sashal@kernel.org>
 References: <20190330005047.25998-1-sashal@kernel.org>
@@ -58,77 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Feng Tang <feng.tang@intel.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit ec4fe4bcc584b55e24e8d1768f5510a62c0fd619 ]
+[ Upstream commit b4748e7ab731e436cf5db4786358ada5dd2db6dd ]
 
-There is a panic reported that on a system with x722 ethernet, when doing
-the operations like:
+The function snd_opl3_drum_switch declaration in the header file
+has the order of the two arguments on_off and vel swapped when
+compared to the definition arguments of vel and on_off.  Fix this
+by swapping them around to match the definition.
 
-	# ip link add br0 type bridge
-	# ip link set eno1 master br0
-	# systemctl restart systemd-networkd
+This error predates the git history, so no idea when this error
+was introduced.
 
-The system will panic "BUG: unable to handle kernel null pointer
-dereference at 0000000000000034", with call chain:
-
-	i40iw_inetaddr_event
-	notifier_call_chain
-	blocking_notifier_call_chain
-	notifier_call_chain
-	__inet_del_ifa
-	inet_rtm_deladdr
-	rtnetlink_rcv_msg
-	netlink_rcv_skb
-	rtnetlink_rcv
-	netlink_unicast
-	netlink_sendmsg
-	sock_sendmsg
-	__sys_sendto
-
-It is caused by "local_ipaddr = ntohl(in->ifa_list->ifa_address)", while
-the in->ifa_list is NULL.
-
-So add a check for the "in->ifa_list == NULL" case, and skip the ARP
-operation accordingly.
-
-Signed-off-by: Feng Tang <feng.tang@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/i40iw/i40iw_utils.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ sound/drivers/opl3/opl3_voice.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_utils.c b/drivers/infiniband/hw/i40iw/i40iw_utils.c
-index 59e978141ad4..e99177533930 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_utils.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_utils.c
-@@ -173,7 +173,12 @@ int i40iw_inetaddr_event(struct notifier_block *notifier,
+diff --git a/sound/drivers/opl3/opl3_voice.h b/sound/drivers/opl3/opl3_voice.h
+index 5b02bd49fde4..4e4ecc21760b 100644
+--- a/sound/drivers/opl3/opl3_voice.h
++++ b/sound/drivers/opl3/opl3_voice.h
+@@ -41,7 +41,7 @@ void snd_opl3_timer_func(struct timer_list *t);
  
- 		rcu_read_lock();
- 		in = __in_dev_get_rcu(upper_dev);
--		local_ipaddr = ntohl(in->ifa_list->ifa_address);
-+
-+		if (!in->ifa_list)
-+			local_ipaddr = 0;
-+		else
-+			local_ipaddr = ntohl(in->ifa_list->ifa_address);
-+
- 		rcu_read_unlock();
- 	} else {
- 		local_ipaddr = ntohl(ifa->ifa_address);
-@@ -185,6 +190,11 @@ int i40iw_inetaddr_event(struct notifier_block *notifier,
- 	case NETDEV_UP:
- 		/* Fall through */
- 	case NETDEV_CHANGEADDR:
-+
-+		/* Just skip if no need to handle ARP cache */
-+		if (!local_ipaddr)
-+			break;
-+
- 		i40iw_manage_arp_cache(iwdev,
- 				       netdev->dev_addr,
- 				       &local_ipaddr,
+ /* Prototypes for opl3_drums.c */
+ void snd_opl3_load_drums(struct snd_opl3 *opl3);
+-void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int on_off, int vel, struct snd_midi_channel *chan);
++void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int vel, int on_off, struct snd_midi_channel *chan);
+ 
+ /* Prototypes for opl3_oss.c */
+ #if IS_ENABLED(CONFIG_SND_SEQUENCER_OSS)
 -- 
 2.19.1
 
