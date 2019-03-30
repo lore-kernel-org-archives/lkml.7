@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C03C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC20C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9D95217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5D8217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553908036;
-	bh=biFYfu9WpHqSG/bnvdiyGpFVUNHO9I/6b9h7+lwpex0=;
+	s=default; t=1553908044;
+	bh=ClFW02Yg+r/zz+F4SmUdivedqWVlgy5NqK02UBOTaXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1QDkLD5xpjMbgGDbso16gLCF02/Z9c+zfimgbZgJu2w746PHRiu6pAeSywGMFU9Ep
-	 vlrlsnx1W+Oq1No+elmzQlMZyUq3RjRinDdww+f/uMLBO+hzVHMaKlGKt/qrzXHMz5
-	 WhahZ4p52Zy7WUYMBBESW711ZFAnMa+DtIPRybK4=
+	b=csYWOjhz2WteK8/XTOBcJbKU1njaah8DNp6q5DnZQGGk2a0ctDJNlzZvl2EP6TjBx
+	 VDJN8HMCgu1U8deQKx1oMyw8MHBOkS3nnSshjgBbgCVMOyZzY7w3s5eiJPVh+6GA2R
+	 xmjhh4UX4cVWA9bNJKrc23sKJDYv396RLG1gTifQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731477AbfC3BHP (ORCPT
+        id S1731460AbfC3BHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60234 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:07:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730451AbfC3AxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:53:23 -0400
+        id S1731244AbfC3AxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:53:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B537218CD;
-        Sat, 30 Mar 2019 00:53:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07757218CD;
+        Sat, 30 Mar 2019 00:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907203;
-        bh=biFYfu9WpHqSG/bnvdiyGpFVUNHO9I/6b9h7+lwpex0=;
+        s=default; t=1553907200;
+        bh=ClFW02Yg+r/zz+F4SmUdivedqWVlgy5NqK02UBOTaXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mV2bvo/sRd3yLKJpLrNGOJOcdfObd2sjniaKNFWVKzJpW1+Y3kEo50xd8AES6/3PU
-         UUStHri3eN7vW4M0xKOvPm5KVoZ89PelBBt0UMcKzKttfrbz/wJxTam9478anf+nva
-         ZVumnUbnMA5sTePw6NVsre2OCHd+Kel3zZLOXuc8=
+        b=1RwQuPCULRsasbRxYPHNuEmqrFCAsKYPkIVBv2kEiEPGarXtXMk6G6JsLCV7ICLYR
+         JAlEJMcF+Mmbo/37a10zBkYOwqTafwVZr3oVdwQ9LanvYVErSoToeejhYqarhaGIPq
+         2IJSXCAET++Gnn8GbAbkKHtdbfGHtzH57iKAPHTo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/52] i40iw: Avoid panic when handling the inetdev event
-Date:   Fri, 29 Mar 2019 20:52:21 -0400
-Message-Id: <20190330005301.26868-14-sashal@kernel.org>
+Cc:     Dave Airlie <airlied@redhat.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 12/52] drm/udl: use drm_gem_object_put_unlocked.
+Date:   Fri, 29 Mar 2019 20:52:19 -0400
+Message-Id: <20190330005301.26868-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005301.26868-1-sashal@kernel.org>
 References: <20190330005301.26868-1-sashal@kernel.org>
@@ -59,77 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Feng Tang <feng.tang@intel.com>
+From: Dave Airlie <airlied@redhat.com>
 
-[ Upstream commit ec4fe4bcc584b55e24e8d1768f5510a62c0fd619 ]
+[ Upstream commit 8f3b487685b2acf71b42bb30d68fd9271bec8695 ]
 
-There is a panic reported that on a system with x722 ethernet, when doing
-the operations like:
+When Daniel removed struct_mutex he didn't fix this call to the unlocked
+variant which is required since we no longer use struct mutex.
 
-	# ip link add br0 type bridge
-	# ip link set eno1 master br0
-	# systemctl restart systemd-networkd
+This fixes a bunch of:
+WARNING: CPU: 4 PID: 1370 at drivers/gpu/drm/drm_gem.c:931 drm_gem_object_put+0x2b/0x30 [drm]
+Modules linked in: udl xt_CHECKSUM ipt_MASQUERADE tun bridge stp llc nf_conntrack_netbios_ns nf_conntrack_broadcast xt_CT ip6t>
+CPU: 4 PID: 1370 Comm: Xorg Not tainted 5.0.0+ #2
 
-The system will panic "BUG: unable to handle kernel null pointer
-dereference at 0000000000000034", with call chain:
+backtraces when you plug in a udl device.
 
-	i40iw_inetaddr_event
-	notifier_call_chain
-	blocking_notifier_call_chain
-	notifier_call_chain
-	__inet_del_ifa
-	inet_rtm_deladdr
-	rtnetlink_rcv_msg
-	netlink_rcv_skb
-	rtnetlink_rcv
-	netlink_unicast
-	netlink_sendmsg
-	sock_sendmsg
-	__sys_sendto
-
-It is caused by "local_ipaddr = ntohl(in->ifa_list->ifa_address)", while
-the in->ifa_list is NULL.
-
-So add a check for the "in->ifa_list == NULL" case, and skip the ARP
-operation accordingly.
-
-Signed-off-by: Feng Tang <feng.tang@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: ae358dacd217 (drm/udl: Get rid of dev->struct_mutex usage)
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Dave Airlie <airlied@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/i40iw/i40iw_utils.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/udl/udl_gem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_utils.c b/drivers/infiniband/hw/i40iw/i40iw_utils.c
-index a9ea966877f2..dda8e79d4b27 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_utils.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_utils.c
-@@ -173,7 +173,12 @@ int i40iw_inetaddr_event(struct notifier_block *notifier,
+diff --git a/drivers/gpu/drm/udl/udl_gem.c b/drivers/gpu/drm/udl/udl_gem.c
+index d5a23295dd80..bb7b58407039 100644
+--- a/drivers/gpu/drm/udl/udl_gem.c
++++ b/drivers/gpu/drm/udl/udl_gem.c
+@@ -224,7 +224,7 @@ int udl_gem_mmap(struct drm_file *file, struct drm_device *dev,
+ 	*offset = drm_vma_node_offset_addr(&gobj->base.vma_node);
  
- 		rcu_read_lock();
- 		in = __in_dev_get_rcu(upper_dev);
--		local_ipaddr = ntohl(in->ifa_list->ifa_address);
-+
-+		if (!in->ifa_list)
-+			local_ipaddr = 0;
-+		else
-+			local_ipaddr = ntohl(in->ifa_list->ifa_address);
-+
- 		rcu_read_unlock();
- 	} else {
- 		local_ipaddr = ntohl(ifa->ifa_address);
-@@ -185,6 +190,11 @@ int i40iw_inetaddr_event(struct notifier_block *notifier,
- 	case NETDEV_UP:
- 		/* Fall through */
- 	case NETDEV_CHANGEADDR:
-+
-+		/* Just skip if no need to handle ARP cache */
-+		if (!local_ipaddr)
-+			break;
-+
- 		i40iw_manage_arp_cache(iwdev,
- 				       netdev->dev_addr,
- 				       &local_ipaddr,
+ out:
+-	drm_gem_object_put(&gobj->base);
++	drm_gem_object_put_unlocked(&gobj->base);
+ unlock:
+ 	mutex_unlock(&udl->gem_lock);
+ 	return ret;
 -- 
 2.19.1
 
