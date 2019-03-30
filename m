@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2E6C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE385C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60B05218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F92218FD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907341;
-	bh=8tCQ63z1LN0nW/DS904ke3H0fUQ4cIajF/EfgphXrLw=;
+	s=default; t=1553907346;
+	bh=DuBdEdG4C10uQ/VybgsnniNYLisy4B48gkFMudNEeGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AmnGy+dICBxWkpDPR4rL0vL6QZG70II/tB2K9SCiGDegOaEA+PipE2CyOsy+XUXya
-	 pj4QsAXYTqYJg3NBX/tLeRnv6kiDGa+9C5ZKiwqsoJwVddRStKplu4eN0iZVjWKzLR
-	 +I10Yowg+t2jpN7xdjsy/mIhx0tstBEQn5ukVr8k=
+	b=m0t8vLyRGli2jpJ0/55qQV81KGZmpynTPWeaMgLZT6MpuhSBFpkX7er6I7/6dKqIm
+	 PPGJyE64S4kXIBWRsPqb0fg4GtJnoYyCHpVWQo3caDwHH/yXsY1+CzIg9p/NzLA/Cb
+	 srgzX1EHbwLWcpMCoZ9EHPRYgtYomQxgmYE2nAIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731797AbfC3Azk (ORCPT
+        id S1731806AbfC3Azp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:55:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34842 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731786AbfC3Azi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:55:38 -0400
+        id S1730632AbfC3Azm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:55:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88C7D218EA;
-        Sat, 30 Mar 2019 00:55:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B35E62064A;
+        Sat, 30 Mar 2019 00:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907337;
-        bh=8tCQ63z1LN0nW/DS904ke3H0fUQ4cIajF/EfgphXrLw=;
+        s=default; t=1553907341;
+        bh=DuBdEdG4C10uQ/VybgsnniNYLisy4B48gkFMudNEeGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hdzb45qzx4VdTegpQ67RTasGXm8ELRbccwSTv6QKPXrnxR96Oo8613e8kUQCippp3
-         4AxP9r+5rEM17BBXKzGcWSGJdWaVF+AQoJdK2cwOnnwuAEWAUt93vBXmwu19HYztV1
-         mOrnekoY81aDXgNBcSb1E6ETVp+M1LBqb7Piggg4=
+        b=LnI4UfFXr90spiIab2PmmMNNh6OrA/1W28Z9py+4/twQQm3qEfYtTtQiIlupYw3mV
+         8E7/V7SI9xgyjKCyqH2OjTGjMM1E4iINCCa+CW3bWN8pouQDxKeXgqOnrPAcvoomkG
+         4wWMWgzOwkBbXQwSEi5S6UT98Gzh/YHVeBwxINBo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     Jianguo Chen <chenjianguo3@huawei.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 28/37] perf tests: Fix memory leak by expr__find_other() in test__expr()
-Date:   Fri, 29 Mar 2019 20:54:29 -0400
-Message-Id: <20190330005441.27540-28-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 30/37] irqchip/mbigen: Don't clear eventid when freeing an MSI
+Date:   Fri, 29 Mar 2019 20:54:31 -0400
+Message-Id: <20190330005441.27540-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
 References: <20190330005441.27540-1-sashal@kernel.org>
@@ -66,66 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Jianguo Chen <chenjianguo3@huawei.com>
 
-[ Upstream commit f97a8991d3b998e518f56794d879f645964de649 ]
+[ Upstream commit fca269f201a8d9985c0a31fb60b15d4eb57cef80 ]
 
-  =================================================================
-  ==7506==ERROR: LeakSanitizer: detected memory leaks
+mbigen_write_msg clears eventid bits of a mbigen register
+when free a interrupt, because msi_domain_deactivate memset
+struct msg to zero. Then multiple mbigen pins with zero eventid
+will report the same interrupt number.
 
-  Direct leak of 13 byte(s) in 3 object(s) allocated from:
-      #0 0x7f03339d6070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
-      #1 0x5625e53aaef0 in expr__find_other util/expr.y:221
-      #2 0x5625e51bcd3f in test__expr tests/expr.c:52
-      #3 0x5625e51528e6 in run_test tests/builtin-test.c:358
-      #4 0x5625e5152baf in test_and_print tests/builtin-test.c:388
-      #5 0x5625e51543fe in __cmd_test tests/builtin-test.c:583
-      #6 0x5625e515572f in cmd_test tests/builtin-test.c:722
-      #7 0x5625e51c3fb8 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #8 0x5625e51c44f7 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #9 0x5625e51c48fb in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #10 0x5625e51c5069 in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #11 0x7f033214d09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+The eventid clear call trace:
+                free_irq
+                __free_irq
+                irq_shutdown
+                irq_domain_deactivate_irq
+                __irq_domain_deactivate_irq
+                __irq_domain_deactivate_irq
+                msi_domain_deactivate
+                platform_msi_write_msg
+                mbigen_write_msg
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 075167363f8b ("perf tools: Add a simple expression parser for JSON")
-Link: http://lkml.kernel.org/r/20190316080556.3075-16-changbin.du@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jianguo Chen <chenjianguo3@huawei.com>
+[maz: massaged subject]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/expr.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-mbigen.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index 01f0706995a9..9acc1e80b936 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -19,7 +19,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	const char *p;
- 	const char **other;
- 	double val;
--	int ret;
-+	int i, ret;
- 	struct parse_ctx ctx;
- 	int num_other;
+diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+index 567b29c47608..98b6e1d4b1a6 100644
+--- a/drivers/irqchip/irq-mbigen.c
++++ b/drivers/irqchip/irq-mbigen.c
+@@ -161,6 +161,9 @@ static void mbigen_write_msg(struct msi_desc *desc, struct msi_msg *msg)
+ 	void __iomem *base = d->chip_data;
+ 	u32 val;
  
-@@ -56,6 +56,9 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	TEST_ASSERT_VAL("find other", !strcmp(other[1], "BAZ"));
- 	TEST_ASSERT_VAL("find other", !strcmp(other[2], "BOZO"));
- 	TEST_ASSERT_VAL("find other", other[3] == NULL);
-+
-+	for (i = 0; i < num_other; i++)
-+		free((void *)other[i]);
- 	free((void *)other);
++	if (!msg->address_lo && !msg->address_hi)
++		return;
++ 
+ 	base += get_mbigen_vec_reg(d->hwirq);
+ 	val = readl_relaxed(base);
  
- 	return 0;
 -- 
 2.19.1
 
