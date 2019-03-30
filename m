@@ -2,133 +2,109 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A34C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1536DC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B663218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80F5218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553939523;
+	bh=R1wnTyYHKBdrpMuOnPY6PjkthVhGnJmHch4A+C6pfl0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0J3fHpamilPp9oVfzQI4Gpe1aJZoTZVEtX3slIOgX/kEIE9eXWiqfJKuYGsxRIQHw
+	 y83xTcOUaemM9Y1uz7YMD8La/jdGjgDFCeOzKC3UT/2McTc0x+qIkAeX4WPZ7INav1
+	 vuj/u+/p/3+s6SsMISQyLK0D/vIAn4HJmWzD6L/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbfC3Ju5 (ORCPT
+        id S1730610AbfC3JwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 05:50:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38870 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730384AbfC3Ju4 (ORCPT
+        Sat, 30 Mar 2019 05:52:02 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41225 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730384AbfC3JwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 05:50:56 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2U9mxB5061550
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 05:50:55 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rj4f8av9e-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 05:50:55 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Sat, 30 Mar 2019 09:50:53 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 30 Mar 2019 09:50:50 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2U9ooxs59113630
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 30 Mar 2019 09:50:50 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E43CDA4054;
-        Sat, 30 Mar 2019 09:50:49 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 04694A405B;
-        Sat, 30 Mar 2019 09:50:49 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.204.99])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat, 30 Mar 2019 09:50:48 +0000 (GMT)
-Date:   Sat, 30 Mar 2019 12:50:47 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rafael@kernel.org, akpm@linux-foundation.org, mhocko@suse.com,
-        osalvador@suse.de, willy@infradead.org, fanc.fnst@cn.fujitsu.com
-Subject: Re: [PATCH v3 1/2] mm/sparse: Clean up the obsolete code comment
-References: <20190329082915.19763-1-bhe@redhat.com>
+        Sat, 30 Mar 2019 05:52:02 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 64so4274732otb.8;
+        Sat, 30 Mar 2019 02:52:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1fLAfCJZ4QHKKG92hhSU0p1/0Zr1BKU3DdRY30fp6io=;
+        b=f5dfdDAqfjchIgOnEw7/WqXuKrf/OdEl9HLyNMLlepq/0/RfN+fX/d5csHvTdOnhzV
+         ipVMaI2Cu7j4lmVkC7iDrFJq5V6Bskael389deAPZMGqcOn6MnME6c+xfFlvImB6yZM+
+         RSPOqP1qCvv2/2mWWzYZwvY0IyWokhIGWXYLXFoOQdCjEgmudVnYp31XqRaqEqoGmTmA
+         8Nk55qbZ7osZHKBIFsvYnSrOv0oR2sFUxrhdWebxMicEx8aeM0y7EjaOGrNzrpshvO9i
+         VL5156MjS4ypUzHjWvpeevtGPNBvppldSM0S6qFvkzRSZY/U8WKw6xJcnUfxTjAizEOp
+         d+sg==
+X-Gm-Message-State: APjAAAUP89GEjUaX8F+l4hn2clldZtFbykqpctq7lT6pX+92D1GMsoTP
+        3ZcckFJABniIf7MmLSFLIbJ6TQ2u8tvPjCRpWcE=
+X-Google-Smtp-Source: APXvYqzO7u0xqEu0Azh++fVbXO7beF7FImkAq/G2mXSyY9/IOnLs5KmOxEFfIztZlj2Y/pmyn8AMjApnBAe/TImymE0=
+X-Received: by 2002:a05:6830:1592:: with SMTP id i18mr9921992otr.244.1553939521407;
+ Sat, 30 Mar 2019 02:52:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190329082915.19763-1-bhe@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19033009-0008-0000-0000-000002D43C17
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19033009-0009-0000-0000-000022403DBC
-Message-Id: <20190330095046.GA26141@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-30_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903300071
+References: <20190329001135.15847-1-changbin.du@gmail.com> <20190329001135.15847-2-changbin.du@gmail.com>
+In-Reply-To: <20190329001135.15847-2-changbin.du@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 30 Mar 2019 10:51:50 +0100
+Message-ID: <CAJZ5v0h=tpzWJrt02ET28EG9hn6eSusLV68FZCV8nnXHDBxHEQ@mail.gmail.com>
+Subject: Re: [PATCH v2 01/24] Documentation: add Linux ACPI to Sphinx TOC tree
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 04:29:14PM +0800, Baoquan He wrote:
-> The code comment above sparse_add_one_section() is obsolete and
-> incorrect, clean it up and write new one.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-
+On Fri, Mar 29, 2019 at 1:12 AM Changbin Du <changbin.du@gmail.com> wrote:
+>
+> Add a index.rst for trace subsystem. More docs will be added later.
+>
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
 > ---
-> v2->v3:
->   Normalize the code comment to use '/**' at 1st line of doc
->   above function.
-> v1-v2:
->   Add comments to explain what the returned value means for
->   each error code.
->  mm/sparse.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 69904aa6165b..363f9d31b511 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -684,10 +684,19 @@ static void free_map_bootmem(struct page *memmap)
->  #endif /* CONFIG_MEMORY_HOTREMOVE */
->  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
->  
-> -/*
-> - * returns the number of sections whose mem_maps were properly
-> - * set.  If this is <=0, then that means that the passed-in
-> - * map was not consumed and must be freed.
-> +/**
-> + * sparse_add_one_section - add a memory section
-> + * @nid: The node to add section on
-> + * @start_pfn: start pfn of the memory range
-> + * @altmap: device page map
-> + *
-> + * This is only intended for hotplug.
-> + *
-> + * Returns:
-> + *   0 on success.
-> + *   Other error code on failure:
-> + *     - -EEXIST - section has been present.
-> + *     - -ENOMEM - out of memory.
->   */
->  int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
->  				     struct vmem_altmap *altmap)
-> -- 
-> 2.17.2
-> 
+>  Documentation/acpi/index.rst | 8 ++++++++
+>  Documentation/index.rst      | 1 +
+>  2 files changed, 9 insertions(+)
+>  create mode 100644 Documentation/acpi/index.rst
+>
+> diff --git a/Documentation/acpi/index.rst b/Documentation/acpi/index.rst
+> new file mode 100644
+> index 000000000000..7241ceb1673c
+> --- /dev/null
+> +++ b/Documentation/acpi/index.rst
+> @@ -0,0 +1,8 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=======================================================
+> +Linux ACPI (Advanced Configuration and Power Interface)
 
--- 
-Sincerely yours,
-Mike.
+"Linux ACPI Support", please.
 
+> +=======================================================
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> diff --git a/Documentation/index.rst b/Documentation/index.rst
+> index 80a421cb935e..e3aa28275894 100644
+> --- a/Documentation/index.rst
+> +++ b/Documentation/index.rst
+> @@ -90,6 +90,7 @@ needed).
+>     filesystems/index
+>     vm/index
+>     bpf/index
+> +   acpi/index
+>     misc-devices/index
+>
+>  Architecture-specific documentation
+> --
+> 2.20.1
+>
