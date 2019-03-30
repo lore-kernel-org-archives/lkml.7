@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C46F5C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5E3C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6A4206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142BE206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907416;
-	bh=TOvrNNfLSD2nytXgIuqfq5xYudGVN8xc9NdeIP6d5qE=;
+	s=default; t=1553907420;
+	bh=2rWYJvhuNuUnH+vJBk8D51hT1wy7nXgnOojCXjyMeGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f4PWTZDXkiuxzF3JUJdggilWpm+8nNzvT5i/SElpns8zGtJSVvJcs/MONzkvOrNo2
-	 dTh132wyq9nxuRU8Nx2acKSe+aVBK+jsfX9mbrK8xA78oeu+j7ga2DJllvr9PqpoOV
-	 QuR9tijQSH42bzpS6/bHgyOHF3xKnWsLK0ees8R8=
+	b=beFLoth2jCd0XQYYnl6tQ4ILnK0ctdR2MiFYKkAVZ+gn9iQXkBRJORJNqrsuM7B3Z
+	 H95D0digACwj+MM/yxaurTbGL2iN/CJUOvPw+TgYN9z78qvTbkncn5IYmm0J+fsaBl
+	 K5i6bCCji0GlyLXYtUHEHSWR/RLmDfSy8Wa6D7os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732025AbfC3A4z (ORCPT
+        id S1732034AbfC3A47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:56:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36616 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:56:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731419AbfC3A4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:56:48 -0400
+        id S1731419AbfC3A44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:56:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C26F206DD;
-        Sat, 30 Mar 2019 00:56:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A9072064A;
+        Sat, 30 Mar 2019 00:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907408;
-        bh=TOvrNNfLSD2nytXgIuqfq5xYudGVN8xc9NdeIP6d5qE=;
+        s=default; t=1553907416;
+        bh=2rWYJvhuNuUnH+vJBk8D51hT1wy7nXgnOojCXjyMeGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p+Vwx0WO9xMwuMoz4ZzZ6OzJqBnK9Uqal55txEJYjFxaOVoFVA0fXp8EqA9l19Fxj
-         ei0Gi6fN2ezJCDqkJmRpSyxyjWbRJ82jwHJ/GSYflxVCNBbxZKl69HCKYUMaLnzr4z
-         7Z1pRZHoKzGNm16NkjzgrO+zKVtAt4rfuXpmPTPA=
+        b=iO5R5f2cWSRwoLJl4bGCJ9pUUmKW6m/xYcuNdX8WL+2P+cZq0zDp83Sedac9XKi8k
+         0dJDH09jZxuz6XmElutCWAfZPMVXSzhtQMueyt7bXbDJXY9MY71owtkErqg14u5pcv
+         sQG81PhhhQDzY+XK/kZGvpElMFm52Vrcy6e5uHJU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve French <stfrench@microsoft.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 26/27] fix incorrect error code mapping for OBJECTID_NOT_FOUND
-Date:   Fri, 29 Mar 2019 20:55:52 -0400
-Message-Id: <20190330005555.28087-26-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 04/21] ALSA: echoaudio: add a check for ioremap_nocache
+Date:   Fri, 29 Mar 2019 20:56:32 -0400
+Message-Id: <20190330005649.28475-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190330005555.28087-1-sashal@kernel.org>
-References: <20190330005555.28087-1-sashal@kernel.org>
+In-Reply-To: <20190330005649.28475-1-sashal@kernel.org>
+References: <20190330005649.28475-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,40 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 85f9987b236cf46e06ffdb5c225cf1f3c0acb789 ]
+[ Upstream commit 6ade657d6125ec3ec07f95fa51e28138aef6208f ]
 
-It was mapped to EIO which can be confusing when user space
-queries for an object GUID for an object for which the server
-file system doesn't support (or hasn't saved one).
+In case ioremap_nocache fails, the fix releases chip and returns
+an error code upstream to avoid NULL pointer dereference.
 
-As Amir Goldstein suggested this is similar to ENOATTR
-(equivalently ENODATA in Linux errno definitions) so
-changing NT STATUS code mapping for OBJECTID_NOT_FOUND
-to ENODATA.
-
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2maperror.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/pci/echoaudio/echoaudio.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/cifs/smb2maperror.c b/fs/cifs/smb2maperror.c
-index 98c25b969ab8..7e93d5706bf6 100644
---- a/fs/cifs/smb2maperror.c
-+++ b/fs/cifs/smb2maperror.c
-@@ -1034,7 +1034,8 @@ static const struct status_to_posix_error smb2_error_map_table[] = {
- 	{STATUS_UNFINISHED_CONTEXT_DELETED, -EIO,
- 	"STATUS_UNFINISHED_CONTEXT_DELETED"},
- 	{STATUS_NO_TGT_REPLY, -EIO, "STATUS_NO_TGT_REPLY"},
--	{STATUS_OBJECTID_NOT_FOUND, -EIO, "STATUS_OBJECTID_NOT_FOUND"},
-+	/* Note that ENOATTTR and ENODATA are the same errno */
-+	{STATUS_OBJECTID_NOT_FOUND, -ENODATA, "STATUS_OBJECTID_NOT_FOUND"},
- 	{STATUS_NO_IP_ADDRESSES, -EIO, "STATUS_NO_IP_ADDRESSES"},
- 	{STATUS_WRONG_CREDENTIAL_HANDLE, -EIO,
- 	"STATUS_WRONG_CREDENTIAL_HANDLE"},
+diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
+index 286f5e3686a3..d73ee11a32bd 100644
+--- a/sound/pci/echoaudio/echoaudio.c
++++ b/sound/pci/echoaudio/echoaudio.c
+@@ -1953,6 +1953,11 @@ static int snd_echo_create(struct snd_card *card,
+ 	}
+ 	chip->dsp_registers = (volatile u32 __iomem *)
+ 		ioremap_nocache(chip->dsp_registers_phys, sz);
++	if (!chip->dsp_registers) {
++		dev_err(chip->card->dev, "ioremap failed\n");
++		snd_echo_free(chip);
++		return -ENOMEM;
++	}
+ 
+ 	if (request_irq(pci->irq, snd_echo_interrupt, IRQF_SHARED,
+ 			KBUILD_MODNAME, chip)) {
 -- 
 2.19.1
 
