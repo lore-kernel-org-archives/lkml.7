@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC0DC10F05
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC11C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0CC7217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A62C217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909705;
-	bh=F6+S0FmcpycSsMgDZGHyNP20iyso8rh/p3uvRgLwuIg=;
+	s=default; t=1553909710;
+	bh=qN3KnGaB8wvJhtu8jmZUjEjkwWAMS5KCHp6eMLgDUQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T89hscNpDD9eRHLqqtkyzIgGuT7pFyDVbyK5niuR3xHJ3dyhMS/MsUSrPUzBhuC+m
-	 DLGyiJGxcdGv+vRa9zR6MTd5charJ1usmCRJMQ32Ts4W/lmnWJrJllyXU2OebWTmhH
-	 C/24Y/sBTTACLsIfIEkKR+UgmRQpUqcHOSEvCrHo=
+	b=UH4H1ogV2cTw/d+UJ5kT6ZIQovw8ADlYAN1eNeYSvmP13gatFh90+1X6M8WwYtqmt
+	 cCYnkXKw4tps+B/3VGgwL8y6laRUjM0DWnOm6NPTkCoqXT45ci9uWe6JFiwwuRqkWt
+	 PdaHDxZQzGDQMcelLRmsTywCCyTxYHjg3j9JiQg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732179AbfC3Bbw (ORCPT
+        id S1732087AbfC3BfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:31:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39536 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:35:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732155AbfC3Bbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:31:46 -0400
+        id S1732174AbfC3Bbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:31:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC34921773;
-        Sat, 30 Mar 2019 01:31:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2315F21773;
+        Sat, 30 Mar 2019 01:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909505;
-        bh=F6+S0FmcpycSsMgDZGHyNP20iyso8rh/p3uvRgLwuIg=;
+        s=default; t=1553909509;
+        bh=qN3KnGaB8wvJhtu8jmZUjEjkwWAMS5KCHp6eMLgDUQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LT1VpxH65sK+0ltohktmxGt+pgPrvH0ur2bUyiFwAGBElBPPQynMXJUHof0R6Zcfs
-         CU5LZLOpHRxMwRlcStagDg0MTbXUYv9xV4dN12EQty1RPX42SUeXDQH+ltmW3KwPGA
-         OYqFhLQK7Hj/6qLJc2pNJkhf26KzbPNZoCNU/avY=
+        b=bvFsTk3jGf9g3fL36B4s1VO0CWtBuuSc8pisItPfnXCqyXgzh+4tBMTBU6YonsO9y
+         bhVwBN6zhhpXXh9ppOcqEJLu1IU04qruSBzrHaWw0PBcG8hncH8roWnhvCo7pO9Ol1
+         P+jkfCTjPiOkSeXIP4JXNmzn2Hq0F2kE/4wvbHOY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/21] soc/tegra: pmc: Drop locking from tegra_powergate_is_powered()
-Date:   Fri, 29 Mar 2019 21:31:06 -0400
-Message-Id: <20190330013112.784-15-sashal@kernel.org>
+Cc:     Yang Shi <yang.shi@linaro.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 18/21] ARM: 8839/1: kprobe: make patch_lock a raw_spinlock_t
+Date:   Fri, 29 Mar 2019 21:31:09 -0400
+Message-Id: <20190330013112.784-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013112.784-1-sashal@kernel.org>
 References: <20190330013112.784-1-sashal@kernel.org>
@@ -59,64 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Yang Shi <yang.shi@linaro.org>
 
-[ Upstream commit b6e1fd17a38bd1d97c11d69fd3207b3ef9bfa4b3 ]
+[ Upstream commit 143c2a89e0e5fda6c6fd08d7bc1126438c19ae90 ]
 
-This fixes splats like the one below if CONFIG_DEBUG_ATOMIC_SLEEP=y
-and machine (Tegra30) booted with SMP=n or all secondary CPU's are put
-offline. Locking isn't needed because it protects atomic operation.
+When running kprobe on -rt kernel, the below bug is caught:
 
-BUG: sleeping function called from invalid context at kernel/locking/mutex.c:254
-in_atomic(): 1, irqs_disabled(): 128, pid: 0, name: swapper/0
-CPU: 0 PID: 0 Comm: swapper/0 Tainted: G         C        4.18.0-next-20180821-00180-gc3ebb6544e44-dirty #823
-Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-[<c01134f4>] (unwind_backtrace) from [<c010db2c>] (show_stack+0x20/0x24)
-[<c010db2c>] (show_stack) from [<c0bd0f3c>] (dump_stack+0x94/0xa8)
-[<c0bd0f3c>] (dump_stack) from [<c0151df8>] (___might_sleep+0x13c/0x174)
-[<c0151df8>] (___might_sleep) from [<c0151ea0>] (__might_sleep+0x70/0xa8)
-[<c0151ea0>] (__might_sleep) from [<c0bec2b8>] (mutex_lock+0x2c/0x70)
-[<c0bec2b8>] (mutex_lock) from [<c0589844>] (tegra_powergate_is_powered+0x44/0xa8)
-[<c0589844>] (tegra_powergate_is_powered) from [<c0581a60>] (tegra30_cpu_rail_off_ready+0x30/0x74)
-[<c0581a60>] (tegra30_cpu_rail_off_ready) from [<c0122244>] (tegra30_idle_lp2+0xa0/0x108)
-[<c0122244>] (tegra30_idle_lp2) from [<c0853438>] (cpuidle_enter_state+0x140/0x540)
-[<c0853438>] (cpuidle_enter_state) from [<c08538a4>] (cpuidle_enter+0x40/0x4c)
-[<c08538a4>] (cpuidle_enter) from [<c01595e0>] (call_cpuidle+0x30/0x48)
-[<c01595e0>] (call_cpuidle) from [<c01599f8>] (do_idle+0x238/0x28c)
-[<c01599f8>] (do_idle) from [<c0159d28>] (cpu_startup_entry+0x28/0x2c)
-[<c0159d28>] (cpu_startup_entry) from [<c0be76c8>] (rest_init+0xd8/0xdc)
-[<c0be76c8>] (rest_init) from [<c1200f50>] (start_kernel+0x41c/0x430)
+|BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:931
+|in_atomic(): 1, irqs_disabled(): 128, pid: 14, name: migration/0
+|Preemption disabled at:[<802f2b98>] cpu_stopper_thread+0xc0/0x140
+|CPU: 0 PID: 14 Comm: migration/0 Tainted: G O 4.8.3-rt2 #1
+|Hardware name: Freescale LS1021A
+|[<8025a43c>] (___might_sleep)
+|[<80b5b324>] (rt_spin_lock)
+|[<80b5c31c>] (__patch_text_real)
+|[<80b5c3ac>] (patch_text_stop_machine)
+|[<802f2920>] (multi_cpu_stop)
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Since patch_text_stop_machine() is called in stop_machine() which
+disables IRQ, sleepable lock should be not used in this atomic context,
+ so replace patch_lock to raw lock.
+
+Signed-off-by: Yang Shi <yang.shi@linaro.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/tegra/pmc.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ arch/arm/kernel/patch.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 9685f9b8be07..a12710c917a1 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -512,16 +512,10 @@ EXPORT_SYMBOL(tegra_powergate_power_off);
-  */
- int tegra_powergate_is_powered(unsigned int id)
- {
--	int status;
--
- 	if (!tegra_powergate_is_valid(id))
- 		return -EINVAL;
+diff --git a/arch/arm/kernel/patch.c b/arch/arm/kernel/patch.c
+index 69bda1a5707e..1f665acaa6a9 100644
+--- a/arch/arm/kernel/patch.c
++++ b/arch/arm/kernel/patch.c
+@@ -15,7 +15,7 @@ struct patch {
+ 	unsigned int insn;
+ };
  
--	mutex_lock(&pmc->powergates_lock);
--	status = tegra_powergate_state(id);
--	mutex_unlock(&pmc->powergates_lock);
--
--	return status;
-+	return tegra_powergate_state(id);
+-static DEFINE_SPINLOCK(patch_lock);
++static DEFINE_RAW_SPINLOCK(patch_lock);
+ 
+ static void __kprobes *patch_map(void *addr, int fixmap, unsigned long *flags)
+ 	__acquires(&patch_lock)
+@@ -32,7 +32,7 @@ static void __kprobes *patch_map(void *addr, int fixmap, unsigned long *flags)
+ 		return addr;
+ 
+ 	if (flags)
+-		spin_lock_irqsave(&patch_lock, *flags);
++		raw_spin_lock_irqsave(&patch_lock, *flags);
+ 	else
+ 		__acquire(&patch_lock);
+ 
+@@ -47,7 +47,7 @@ static void __kprobes patch_unmap(int fixmap, unsigned long *flags)
+ 	clear_fixmap(fixmap);
+ 
+ 	if (flags)
+-		spin_unlock_irqrestore(&patch_lock, *flags);
++		raw_spin_unlock_irqrestore(&patch_lock, *flags);
+ 	else
+ 		__release(&patch_lock);
  }
- 
- /**
 -- 
 2.19.1
 
