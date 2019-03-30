@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCEEC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176A9C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD6D217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBB3217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909736;
-	bh=bWJNelJR/lwI8bQYkoLqjDtR2FngJVr0+nR4qS7QfeY=;
+	s=default; t=1553909742;
+	bh=sJmc3O3B7SP1Dx9Px0615ChtVccgIjkfm0VckgPiBGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qvnQVkgPGkLv6Go/zmr1miXBpTBFhbib0yDN+J47kQYuuHfLir/HdN8sESbyZ+rv9
-	 6nxz361Vxl4Rl0K4L3awAckahpB0kgutUOvnw7gs0bOmANKsnlDkrYzyqZnP+u7LdP
-	 1BtUsDbmtZSb3w2tAZLqE5UIz1Gvp7ufTRmFPgLE=
+	b=FruGgyWU7IC7UEYiKlagLe6RY0EFRrj6y3Q+4Vok/gSbWq46kEfTKWvzTx//WA/Qq
+	 4W8VxH1VZkvggiImrX5X3J6g9n85ZJ9zIvwLB0KkbcNQVaYAN+8gEA+5+j7BAfK51h
+	 KJhND89MWa4BkiStvdP4DSJH5/XM/sWBspQad3DY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732340AbfC3Bff (ORCPT
+        id S1732099AbfC3Bbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:35:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39416 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:31:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732110AbfC3Bbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:31:41 -0400
+        id S1730674AbfC3Bbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:31:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8EF321773;
-        Sat, 30 Mar 2019 01:31:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6773C21773;
+        Sat, 30 Mar 2019 01:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909500;
-        bh=bWJNelJR/lwI8bQYkoLqjDtR2FngJVr0+nR4qS7QfeY=;
+        s=default; t=1553909494;
+        bh=sJmc3O3B7SP1Dx9Px0615ChtVccgIjkfm0VckgPiBGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JWzvxdoA7mPQqDwZjAve2p8/gjssT+XmmTZ6y6inGg+YfxxPqT8IN10wR76bX+DNi
-         hz7zv6EuXOLcVHcz/jWaPbk6NolByEI/8RwW4igc5X50sAA71vNSTYlpv4/TWGKx5f
-         GBYaXRhcWpYiN9dWwzbeomtR/p7D7W/aFSIfcRAw=
+        b=NDtEqQaSqYKiQCfOayrl9PYHMEZwX71c88KHQT6zdvAaceb6uD7pd0Jpcd35CmNeo
+         U6Sv0kmhZm3xrGsgr0bZ0jxaxp25sEUsgbFb4E+nZWV+3fQesW1HBJD3WfIQOPoXEm
+         YIGx34jViyctIcZnjHKqdMyPMYjGxs30ZMUywQ4w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 12/21] crypto: sha256/arm - fix crash bug in Thumb2 build
-Date:   Fri, 29 Mar 2019 21:31:03 -0400
-Message-Id: <20190330013112.784-12-sashal@kernel.org>
+Cc:     Julian Sax <jsbc@gmx.de>, Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 07/21] HID: i2c-hid: override HID descriptors for certain devices
+Date:   Fri, 29 Mar 2019 21:30:58 -0400
+Message-Id: <20190330013112.784-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013112.784-1-sashal@kernel.org>
 References: <20190330013112.784-1-sashal@kernel.org>
@@ -58,97 +59,556 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Julian Sax <jsbc@gmx.de>
 
-[ Upstream commit 69216a545cf81b2b32d01948f7039315abaf75a0 ]
+[ Upstream commit 9ee3e06610fdb8a601cde59c92089fb6c1deb4aa ]
 
-The SHA256 code we adopted from the OpenSSL project uses a rather
-peculiar way to take the address of the round constant table: it
-takes the address of the sha256_block_data_order() routine, and
-substracts a constant known quantity to arrive at the base of the
-table, which is emitted by the same assembler code right before
-the routine's entry point.
+A particular touchpad (SIPODEV SP1064) refuses to supply the HID
+descriptors. This patch provides the framework for overriding these
+descriptors based on DMI data. It also includes the descriptors for
+said touchpad, which were extracted by listening to the traffic of the
+windows filter driver, as well as the DMI data for the laptops known
+to use this device.
 
-However, recent versions of binutils have helpfully changed the
-behavior of references emitted via an ADR instruction when running
-in Thumb2 mode: it now takes the Thumb execution mode bit into
-account, which is bit 0 af the address. This means the produced
-table address also has bit 0 set, and so we end up with an address
-value pointing 1 byte past the start of the table, which results
-in crashes such as
+Relevant Bug: https://bugzilla.redhat.com/show_bug.cgi?id=1526312
 
-  Unable to handle kernel paging request at virtual address bf825000
-  pgd = 42f44b11
-  [bf825000] *pgd=80000040206003, *pmd=5f1bd003, *pte=00000000
-  Internal error: Oops: 207 [#1] PREEMPT SMP THUMB2
-  Modules linked in: sha256_arm(+) sha1_arm_ce sha1_arm ...
-  CPU: 7 PID: 396 Comm: cryptomgr_test Not tainted 5.0.0-rc6+ #144
-  Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-  PC is at sha256_block_data_order+0xaaa/0xb30 [sha256_arm]
-  LR is at __this_module+0x17fd/0xffffe800 [sha256_arm]
-  pc : [<bf820bca>]    lr : [<bf824ffd>]    psr: 800b0033
-  sp : ebc8bbe8  ip : faaabe1c  fp : 2fdd3433
-  r10: 4c5f1692  r9 : e43037df  r8 : b04b0a5a
-  r7 : c369d722  r6 : 39c3693e  r5 : 7a013189  r4 : 1580d26b
-  r3 : 8762a9b0  r2 : eea9c2cd  r1 : 3e9ab536  r0 : 1dea4ae7
-  Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA Thumb  Segment user
-  Control: 70c5383d  Table: 6b8467c0  DAC: dbadc0de
-  Process cryptomgr_test (pid: 396, stack limit = 0x69e1fe23)
-  Stack: (0xebc8bbe8 to 0xebc8c000)
-  ...
-  unwind: Unknown symbol address bf820bca
-  unwind: Index not found bf820bca
-  Code: 441a ea80 40f9 440a (f85e) 3b04
-  ---[ end trace e560cce92700ef8a ]---
-
-Given that this affects older kernels as well, in case they are built
-with a recent toolchain, apply a minimal backportable fix, which is
-to emit another non-code label at the start of the routine, and
-reference that instead. (This is similar to the current upstream state
-of this file in OpenSSL)
-
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Reported-and-tested-by: ahormann@gmx.net
+Reported-and-tested-by: Bruno Jesus <bruno.fl.jesus@gmail.com>
+Reported-and-tested-by: Dietrich <enaut.w@googlemail.com>
+Reported-and-tested-by: kloxdami@yahoo.com
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/sha256-armv4.pl       | 3 ++-
- arch/arm/crypto/sha256-core.S_shipped | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/hid/i2c-hid/Makefile                  |   3 +
+ .../hid/i2c-hid/{i2c-hid.c => i2c-hid-core.c} |  56 ++-
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c      | 376 ++++++++++++++++++
+ drivers/hid/i2c-hid/i2c-hid.h                 |  20 +
+ 4 files changed, 437 insertions(+), 18 deletions(-)
+ rename drivers/hid/i2c-hid/{i2c-hid.c => i2c-hid-core.c} (96%)
+ create mode 100644 drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+ create mode 100644 drivers/hid/i2c-hid/i2c-hid.h
 
-diff --git a/arch/arm/crypto/sha256-armv4.pl b/arch/arm/crypto/sha256-armv4.pl
-index fac0533ea633..f64e8413ab9a 100644
---- a/arch/arm/crypto/sha256-armv4.pl
-+++ b/arch/arm/crypto/sha256-armv4.pl
-@@ -205,10 +205,11 @@ K256:
- .global	sha256_block_data_order
- .type	sha256_block_data_order,%function
- sha256_block_data_order:
-+.Lsha256_block_data_order:
- #if __ARM_ARCH__<7
- 	sub	r3,pc,#8		@ sha256_block_data_order
- #else
--	adr	r3,sha256_block_data_order
-+	adr	r3,.Lsha256_block_data_order
- #endif
- #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
- 	ldr	r12,.LOPENSSL_armcap
-diff --git a/arch/arm/crypto/sha256-core.S_shipped b/arch/arm/crypto/sha256-core.S_shipped
-index 555a1a8eec90..72c248081d27 100644
---- a/arch/arm/crypto/sha256-core.S_shipped
-+++ b/arch/arm/crypto/sha256-core.S_shipped
-@@ -86,10 +86,11 @@ K256:
- .global	sha256_block_data_order
- .type	sha256_block_data_order,%function
- sha256_block_data_order:
-+.Lsha256_block_data_order:
- #if __ARM_ARCH__<7
- 	sub	r3,pc,#8		@ sha256_block_data_order
- #else
--	adr	r3,sha256_block_data_order
-+	adr	r3,.Lsha256_block_data_order
- #endif
- #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
- 	ldr	r12,.LOPENSSL_armcap
+diff --git a/drivers/hid/i2c-hid/Makefile b/drivers/hid/i2c-hid/Makefile
+index 832d8f9aaba2..099e1ce2f234 100644
+--- a/drivers/hid/i2c-hid/Makefile
++++ b/drivers/hid/i2c-hid/Makefile
+@@ -3,3 +3,6 @@
+ #
+ 
+ obj-$(CONFIG_I2C_HID)				+= i2c-hid.o
++
++i2c-hid-objs					=  i2c-hid-core.o
++i2c-hid-$(CONFIG_DMI)				+= i2c-hid-dmi-quirks.o
+diff --git a/drivers/hid/i2c-hid/i2c-hid.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+similarity index 96%
+rename from drivers/hid/i2c-hid/i2c-hid.c
+rename to drivers/hid/i2c-hid/i2c-hid-core.c
+index ce2b80009c19..850527d5fab1 100644
+--- a/drivers/hid/i2c-hid/i2c-hid.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -42,6 +42,7 @@
+ #include <linux/i2c/i2c-hid.h>
+ 
+ #include "../hid-ids.h"
++#include "i2c-hid.h"
+ 
+ /* quirks to control the device */
+ #define I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV	BIT(0)
+@@ -724,6 +725,7 @@ static int i2c_hid_parse(struct hid_device *hid)
+ 	char *rdesc;
+ 	int ret;
+ 	int tries = 3;
++	char *use_override;
+ 
+ 	i2c_hid_dbg(ihid, "entering %s\n", __func__);
+ 
+@@ -742,26 +744,37 @@ static int i2c_hid_parse(struct hid_device *hid)
+ 	if (ret)
+ 		return ret;
+ 
+-	rdesc = kzalloc(rsize, GFP_KERNEL);
++	use_override = i2c_hid_get_dmi_hid_report_desc_override(client->name,
++								&rsize);
+ 
+-	if (!rdesc) {
+-		dbg_hid("couldn't allocate rdesc memory\n");
+-		return -ENOMEM;
+-	}
++	if (use_override) {
++		rdesc = use_override;
++		i2c_hid_dbg(ihid, "Using a HID report descriptor override\n");
++	} else {
++		rdesc = kzalloc(rsize, GFP_KERNEL);
+ 
+-	i2c_hid_dbg(ihid, "asking HID report descriptor\n");
++		if (!rdesc) {
++			dbg_hid("couldn't allocate rdesc memory\n");
++			return -ENOMEM;
++		}
+ 
+-	ret = i2c_hid_command(client, &hid_report_descr_cmd, rdesc, rsize);
+-	if (ret) {
+-		hid_err(hid, "reading report descriptor failed\n");
+-		kfree(rdesc);
+-		return -EIO;
++		i2c_hid_dbg(ihid, "asking HID report descriptor\n");
++
++		ret = i2c_hid_command(client, &hid_report_descr_cmd,
++				      rdesc, rsize);
++		if (ret) {
++			hid_err(hid, "reading report descriptor failed\n");
++			kfree(rdesc);
++			return -EIO;
++		}
+ 	}
+ 
+ 	i2c_hid_dbg(ihid, "Report Descriptor: %*ph\n", rsize, rdesc);
+ 
+ 	ret = hid_parse_report(hid, rdesc, rsize);
+-	kfree(rdesc);
++	if (!use_override)
++		kfree(rdesc);
++
+ 	if (ret) {
+ 		dbg_hid("parsing report descriptor failed\n");
+ 		return ret;
+@@ -899,12 +912,19 @@ static int i2c_hid_fetch_hid_descriptor(struct i2c_hid *ihid)
+ 	int ret;
+ 
+ 	/* i2c hid fetch using a fixed descriptor size (30 bytes) */
+-	i2c_hid_dbg(ihid, "Fetching the HID descriptor\n");
+-	ret = i2c_hid_command(client, &hid_descr_cmd, ihid->hdesc_buffer,
+-				sizeof(struct i2c_hid_desc));
+-	if (ret) {
+-		dev_err(&client->dev, "hid_descr_cmd failed\n");
+-		return -ENODEV;
++	if (i2c_hid_get_dmi_i2c_hid_desc_override(client->name)) {
++		i2c_hid_dbg(ihid, "Using a HID descriptor override\n");
++		ihid->hdesc =
++			*i2c_hid_get_dmi_i2c_hid_desc_override(client->name);
++	} else {
++		i2c_hid_dbg(ihid, "Fetching the HID descriptor\n");
++		ret = i2c_hid_command(client, &hid_descr_cmd,
++				      ihid->hdesc_buffer,
++				      sizeof(struct i2c_hid_desc));
++		if (ret) {
++			dev_err(&client->dev, "hid_descr_cmd failed\n");
++			return -ENODEV;
++		}
+ 	}
+ 
+ 	/* Validate the length of HID descriptor, the 4 first bytes:
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+new file mode 100644
+index 000000000000..1d645c9ab417
+--- /dev/null
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -0,0 +1,376 @@
++// SPDX-License-Identifier: GPL-2.0+
++
++/*
++ * Quirks for I2C-HID devices that do not supply proper descriptors
++ *
++ * Copyright (c) 2018 Julian Sax <jsbc@gmx.de>
++ *
++ */
++
++#include <linux/types.h>
++#include <linux/dmi.h>
++#include <linux/mod_devicetable.h>
++
++#include "i2c-hid.h"
++
++
++struct i2c_hid_desc_override {
++	union {
++		struct i2c_hid_desc *i2c_hid_desc;
++		uint8_t             *i2c_hid_desc_buffer;
++	};
++	uint8_t              *hid_report_desc;
++	unsigned int          hid_report_desc_size;
++	uint8_t              *i2c_name;
++};
++
++
++/*
++ * descriptors for the SIPODEV SP1064 touchpad
++ *
++ * This device does not supply any descriptors and on windows a filter
++ * driver operates between the i2c-hid layer and the device and injects
++ * these descriptors when the device is prompted. The descriptors were
++ * extracted by listening to the i2c-hid traffic that occurs between the
++ * windows filter driver and the windows i2c-hid driver.
++ */
++
++static const struct i2c_hid_desc_override sipodev_desc = {
++	.i2c_hid_desc_buffer = (uint8_t [])
++	{0x1e, 0x00,                  /* Length of descriptor                 */
++	 0x00, 0x01,                  /* Version of descriptor                */
++	 0xdb, 0x01,                  /* Length of report descriptor          */
++	 0x21, 0x00,                  /* Location of report descriptor        */
++	 0x24, 0x00,                  /* Location of input report             */
++	 0x1b, 0x00,                  /* Max input report length              */
++	 0x25, 0x00,                  /* Location of output report            */
++	 0x11, 0x00,                  /* Max output report length             */
++	 0x22, 0x00,                  /* Location of command register         */
++	 0x23, 0x00,                  /* Location of data register            */
++	 0x11, 0x09,                  /* Vendor ID                            */
++	 0x88, 0x52,                  /* Product ID                           */
++	 0x06, 0x00,                  /* Version ID                           */
++	 0x00, 0x00, 0x00, 0x00       /* Reserved                             */
++	},
++
++	.hid_report_desc = (uint8_t [])
++	{0x05, 0x01,                  /* Usage Page (Desktop),                */
++	 0x09, 0x02,                  /* Usage (Mouse),                       */
++	 0xA1, 0x01,                  /* Collection (Application),            */
++	 0x85, 0x01,                  /*     Report ID (1),                   */
++	 0x09, 0x01,                  /*     Usage (Pointer),                 */
++	 0xA1, 0x00,                  /*     Collection (Physical),           */
++	 0x05, 0x09,                  /*         Usage Page (Button),         */
++	 0x19, 0x01,                  /*         Usage Minimum (01h),         */
++	 0x29, 0x02,                  /*         Usage Maximum (02h),         */
++	 0x25, 0x01,                  /*         Logical Maximum (1),         */
++	 0x75, 0x01,                  /*         Report Size (1),             */
++	 0x95, 0x02,                  /*         Report Count (2),            */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x95, 0x06,                  /*         Report Count (6),            */
++	 0x81, 0x01,                  /*         Input (Constant),            */
++	 0x05, 0x01,                  /*         Usage Page (Desktop),        */
++	 0x09, 0x30,                  /*         Usage (X),                   */
++	 0x09, 0x31,                  /*         Usage (Y),                   */
++	 0x15, 0x81,                  /*         Logical Minimum (-127),      */
++	 0x25, 0x7F,                  /*         Logical Maximum (127),       */
++	 0x75, 0x08,                  /*         Report Size (8),             */
++	 0x95, 0x02,                  /*         Report Count (2),            */
++	 0x81, 0x06,                  /*         Input (Variable, Relative),  */
++	 0xC0,                        /*     End Collection,                  */
++	 0xC0,                        /* End Collection,                      */
++	 0x05, 0x0D,                  /* Usage Page (Digitizer),              */
++	 0x09, 0x05,                  /* Usage (Touchpad),                    */
++	 0xA1, 0x01,                  /* Collection (Application),            */
++	 0x85, 0x04,                  /*     Report ID (4),                   */
++	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
++	 0x09, 0x22,                  /*     Usage (Finger),                  */
++	 0xA1, 0x02,                  /*     Collection (Logical),            */
++	 0x15, 0x00,                  /*         Logical Minimum (0),         */
++	 0x25, 0x01,                  /*         Logical Maximum (1),         */
++	 0x09, 0x47,                  /*         Usage (Touch Valid),         */
++	 0x09, 0x42,                  /*         Usage (Tip Switch),          */
++	 0x95, 0x02,                  /*         Report Count (2),            */
++	 0x75, 0x01,                  /*         Report Size (1),             */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x95, 0x01,                  /*         Report Count (1),            */
++	 0x75, 0x03,                  /*         Report Size (3),             */
++	 0x25, 0x05,                  /*         Logical Maximum (5),         */
++	 0x09, 0x51,                  /*         Usage (Contact Identifier),  */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x75, 0x01,                  /*         Report Size (1),             */
++	 0x95, 0x03,                  /*         Report Count (3),            */
++	 0x81, 0x03,                  /*         Input (Constant, Variable),  */
++	 0x05, 0x01,                  /*         Usage Page (Desktop),        */
++	 0x26, 0x44, 0x0A,            /*         Logical Maximum (2628),      */
++	 0x75, 0x10,                  /*         Report Size (16),            */
++	 0x55, 0x0E,                  /*         Unit Exponent (14),          */
++	 0x65, 0x11,                  /*         Unit (Centimeter),           */
++	 0x09, 0x30,                  /*         Usage (X),                   */
++	 0x46, 0x1A, 0x04,            /*         Physical Maximum (1050),     */
++	 0x95, 0x01,                  /*         Report Count (1),            */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x46, 0xBC, 0x02,            /*         Physical Maximum (700),      */
++	 0x26, 0x34, 0x05,            /*         Logical Maximum (1332),      */
++	 0x09, 0x31,                  /*         Usage (Y),                   */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0xC0,                        /*     End Collection,                  */
++	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
++	 0x09, 0x22,                  /*     Usage (Finger),                  */
++	 0xA1, 0x02,                  /*     Collection (Logical),            */
++	 0x25, 0x01,                  /*         Logical Maximum (1),         */
++	 0x09, 0x47,                  /*         Usage (Touch Valid),         */
++	 0x09, 0x42,                  /*         Usage (Tip Switch),          */
++	 0x95, 0x02,                  /*         Report Count (2),            */
++	 0x75, 0x01,                  /*         Report Size (1),             */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x95, 0x01,                  /*         Report Count (1),            */
++	 0x75, 0x03,                  /*         Report Size (3),             */
++	 0x25, 0x05,                  /*         Logical Maximum (5),         */
++	 0x09, 0x51,                  /*         Usage (Contact Identifier),  */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x75, 0x01,                  /*         Report Size (1),             */
++	 0x95, 0x03,                  /*         Report Count (3),            */
++	 0x81, 0x03,                  /*         Input (Constant, Variable),  */
++	 0x05, 0x01,                  /*         Usage Page (Desktop),        */
++	 0x26, 0x44, 0x0A,            /*         Logical Maximum (2628),      */
++	 0x75, 0x10,                  /*         Report Size (16),            */
++	 0x09, 0x30,                  /*         Usage (X),                   */
++	 0x46, 0x1A, 0x04,            /*         Physical Maximum (1050),     */
++	 0x95, 0x01,                  /*         Report Count (1),            */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x46, 0xBC, 0x02,            /*         Physical Maximum (700),      */
++	 0x26, 0x34, 0x05,            /*         Logical Maximum (1332),      */
++	 0x09, 0x31,                  /*         Usage (Y),                   */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0xC0,                        /*     End Collection,                  */
++	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
++	 0x09, 0x22,                  /*     Usage (Finger),                  */
++	 0xA1, 0x02,                  /*     Collection (Logical),            */
++	 0x25, 0x01,                  /*         Logical Maximum (1),         */
++	 0x09, 0x47,                  /*         Usage (Touch Valid),         */
++	 0x09, 0x42,                  /*         Usage (Tip Switch),          */
++	 0x95, 0x02,                  /*         Report Count (2),            */
++	 0x75, 0x01,                  /*         Report Size (1),             */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x95, 0x01,                  /*         Report Count (1),            */
++	 0x75, 0x03,                  /*         Report Size (3),             */
++	 0x25, 0x05,                  /*         Logical Maximum (5),         */
++	 0x09, 0x51,                  /*         Usage (Contact Identifier),  */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x75, 0x01,                  /*         Report Size (1),             */
++	 0x95, 0x03,                  /*         Report Count (3),            */
++	 0x81, 0x03,                  /*         Input (Constant, Variable),  */
++	 0x05, 0x01,                  /*         Usage Page (Desktop),        */
++	 0x26, 0x44, 0x0A,            /*         Logical Maximum (2628),      */
++	 0x75, 0x10,                  /*         Report Size (16),            */
++	 0x09, 0x30,                  /*         Usage (X),                   */
++	 0x46, 0x1A, 0x04,            /*         Physical Maximum (1050),     */
++	 0x95, 0x01,                  /*         Report Count (1),            */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x46, 0xBC, 0x02,            /*         Physical Maximum (700),      */
++	 0x26, 0x34, 0x05,            /*         Logical Maximum (1332),      */
++	 0x09, 0x31,                  /*         Usage (Y),                   */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0xC0,                        /*     End Collection,                  */
++	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
++	 0x09, 0x22,                  /*     Usage (Finger),                  */
++	 0xA1, 0x02,                  /*     Collection (Logical),            */
++	 0x25, 0x01,                  /*         Logical Maximum (1),         */
++	 0x09, 0x47,                  /*         Usage (Touch Valid),         */
++	 0x09, 0x42,                  /*         Usage (Tip Switch),          */
++	 0x95, 0x02,                  /*         Report Count (2),            */
++	 0x75, 0x01,                  /*         Report Size (1),             */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x95, 0x01,                  /*         Report Count (1),            */
++	 0x75, 0x03,                  /*         Report Size (3),             */
++	 0x25, 0x05,                  /*         Logical Maximum (5),         */
++	 0x09, 0x51,                  /*         Usage (Contact Identifier),  */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x75, 0x01,                  /*         Report Size (1),             */
++	 0x95, 0x03,                  /*         Report Count (3),            */
++	 0x81, 0x03,                  /*         Input (Constant, Variable),  */
++	 0x05, 0x01,                  /*         Usage Page (Desktop),        */
++	 0x26, 0x44, 0x0A,            /*         Logical Maximum (2628),      */
++	 0x75, 0x10,                  /*         Report Size (16),            */
++	 0x09, 0x30,                  /*         Usage (X),                   */
++	 0x46, 0x1A, 0x04,            /*         Physical Maximum (1050),     */
++	 0x95, 0x01,                  /*         Report Count (1),            */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0x46, 0xBC, 0x02,            /*         Physical Maximum (700),      */
++	 0x26, 0x34, 0x05,            /*         Logical Maximum (1332),      */
++	 0x09, 0x31,                  /*         Usage (Y),                   */
++	 0x81, 0x02,                  /*         Input (Variable),            */
++	 0xC0,                        /*     End Collection,                  */
++	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
++	 0x55, 0x0C,                  /*     Unit Exponent (12),              */
++	 0x66, 0x01, 0x10,            /*     Unit (Seconds),                  */
++	 0x47, 0xFF, 0xFF, 0x00, 0x00,/*     Physical Maximum (65535),        */
++	 0x27, 0xFF, 0xFF, 0x00, 0x00,/*     Logical Maximum (65535),         */
++	 0x75, 0x10,                  /*     Report Size (16),                */
++	 0x95, 0x01,                  /*     Report Count (1),                */
++	 0x09, 0x56,                  /*     Usage (Scan Time),               */
++	 0x81, 0x02,                  /*     Input (Variable),                */
++	 0x09, 0x54,                  /*     Usage (Contact Count),           */
++	 0x25, 0x7F,                  /*     Logical Maximum (127),           */
++	 0x75, 0x08,                  /*     Report Size (8),                 */
++	 0x81, 0x02,                  /*     Input (Variable),                */
++	 0x05, 0x09,                  /*     Usage Page (Button),             */
++	 0x09, 0x01,                  /*     Usage (01h),                     */
++	 0x25, 0x01,                  /*     Logical Maximum (1),             */
++	 0x75, 0x01,                  /*     Report Size (1),                 */
++	 0x95, 0x01,                  /*     Report Count (1),                */
++	 0x81, 0x02,                  /*     Input (Variable),                */
++	 0x95, 0x07,                  /*     Report Count (7),                */
++	 0x81, 0x03,                  /*     Input (Constant, Variable),      */
++	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
++	 0x85, 0x02,                  /*     Report ID (2),                   */
++	 0x09, 0x55,                  /*     Usage (Contact Count Maximum),   */
++	 0x09, 0x59,                  /*     Usage (59h),                     */
++	 0x75, 0x04,                  /*     Report Size (4),                 */
++	 0x95, 0x02,                  /*     Report Count (2),                */
++	 0x25, 0x0F,                  /*     Logical Maximum (15),            */
++	 0xB1, 0x02,                  /*     Feature (Variable),              */
++	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
++	 0x85, 0x07,                  /*     Report ID (7),                   */
++	 0x09, 0x60,                  /*     Usage (60h),                     */
++	 0x75, 0x01,                  /*     Report Size (1),                 */
++	 0x95, 0x01,                  /*     Report Count (1),                */
++	 0x25, 0x01,                  /*     Logical Maximum (1),             */
++	 0xB1, 0x02,                  /*     Feature (Variable),              */
++	 0x95, 0x07,                  /*     Report Count (7),                */
++	 0xB1, 0x03,                  /*     Feature (Constant, Variable),    */
++	 0x85, 0x06,                  /*     Report ID (6),                   */
++	 0x06, 0x00, 0xFF,            /*     Usage Page (FF00h),              */
++	 0x09, 0xC5,                  /*     Usage (C5h),                     */
++	 0x26, 0xFF, 0x00,            /*     Logical Maximum (255),           */
++	 0x75, 0x08,                  /*     Report Size (8),                 */
++	 0x96, 0x00, 0x01,            /*     Report Count (256),              */
++	 0xB1, 0x02,                  /*     Feature (Variable),              */
++	 0xC0,                        /* End Collection,                      */
++	 0x06, 0x00, 0xFF,            /* Usage Page (FF00h),                  */
++	 0x09, 0x01,                  /* Usage (01h),                         */
++	 0xA1, 0x01,                  /* Collection (Application),            */
++	 0x85, 0x0D,                  /*     Report ID (13),                  */
++	 0x26, 0xFF, 0x00,            /*     Logical Maximum (255),           */
++	 0x19, 0x01,                  /*     Usage Minimum (01h),             */
++	 0x29, 0x02,                  /*     Usage Maximum (02h),             */
++	 0x75, 0x08,                  /*     Report Size (8),                 */
++	 0x95, 0x02,                  /*     Report Count (2),                */
++	 0xB1, 0x02,                  /*     Feature (Variable),              */
++	 0xC0,                        /* End Collection,                      */
++	 0x05, 0x0D,                  /* Usage Page (Digitizer),              */
++	 0x09, 0x0E,                  /* Usage (Configuration),               */
++	 0xA1, 0x01,                  /* Collection (Application),            */
++	 0x85, 0x03,                  /*     Report ID (3),                   */
++	 0x09, 0x22,                  /*     Usage (Finger),                  */
++	 0xA1, 0x02,                  /*     Collection (Logical),            */
++	 0x09, 0x52,                  /*         Usage (Device Mode),         */
++	 0x25, 0x0A,                  /*         Logical Maximum (10),        */
++	 0x95, 0x01,                  /*         Report Count (1),            */
++	 0xB1, 0x02,                  /*         Feature (Variable),          */
++	 0xC0,                        /*     End Collection,                  */
++	 0x09, 0x22,                  /*     Usage (Finger),                  */
++	 0xA1, 0x00,                  /*     Collection (Physical),           */
++	 0x85, 0x05,                  /*         Report ID (5),               */
++	 0x09, 0x57,                  /*         Usage (57h),                 */
++	 0x09, 0x58,                  /*         Usage (58h),                 */
++	 0x75, 0x01,                  /*         Report Size (1),             */
++	 0x95, 0x02,                  /*         Report Count (2),            */
++	 0x25, 0x01,                  /*         Logical Maximum (1),         */
++	 0xB1, 0x02,                  /*         Feature (Variable),          */
++	 0x95, 0x06,                  /*         Report Count (6),            */
++	 0xB1, 0x03,                  /*         Feature (Constant, Variable),*/
++	 0xC0,                        /*     End Collection,                  */
++	 0xC0                         /* End Collection                       */
++	},
++	.hid_report_desc_size = 475,
++	.i2c_name = "SYNA3602:00"
++};
++
++
++static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
++	{
++		.ident = "Teclast F6 Pro",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TECLAST"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "F6 Pro"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
++	{
++		.ident = "Teclast F7",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TECLAST"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "F7"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
++	{
++		.ident = "Trekstor Primebook C13",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Primebook C13"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
++	{
++		.ident = "Trekstor Primebook C11",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Primebook C11"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
++	{
++		.ident = "Direkt-Tek DTLAPY116-2",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Direkt-Tek"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "DTLAPY116-2"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
++	{
++		.ident = "Mediacom Flexbook Edge 11",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MEDIACOM"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	}
++};
++
++
++struct i2c_hid_desc *i2c_hid_get_dmi_i2c_hid_desc_override(uint8_t *i2c_name)
++{
++	struct i2c_hid_desc_override *override;
++	const struct dmi_system_id *system_id;
++
++	system_id = dmi_first_match(i2c_hid_dmi_desc_override_table);
++	if (!system_id)
++		return NULL;
++
++	override = system_id->driver_data;
++	if (strcmp(override->i2c_name, i2c_name))
++		return NULL;
++
++	return override->i2c_hid_desc;
++}
++
++char *i2c_hid_get_dmi_hid_report_desc_override(uint8_t *i2c_name,
++					       unsigned int *size)
++{
++	struct i2c_hid_desc_override *override;
++	const struct dmi_system_id *system_id;
++
++	system_id = dmi_first_match(i2c_hid_dmi_desc_override_table);
++	if (!system_id)
++		return NULL;
++
++	override = system_id->driver_data;
++	if (strcmp(override->i2c_name, i2c_name))
++		return NULL;
++
++	*size = override->hid_report_desc_size;
++	return override->hid_report_desc;
++}
+diff --git a/drivers/hid/i2c-hid/i2c-hid.h b/drivers/hid/i2c-hid/i2c-hid.h
+new file mode 100644
+index 000000000000..a8c19aef5824
+--- /dev/null
++++ b/drivers/hid/i2c-hid/i2c-hid.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++
++#ifndef I2C_HID_H
++#define I2C_HID_H
++
++
++#ifdef CONFIG_DMI
++struct i2c_hid_desc *i2c_hid_get_dmi_i2c_hid_desc_override(uint8_t *i2c_name);
++char *i2c_hid_get_dmi_hid_report_desc_override(uint8_t *i2c_name,
++					       unsigned int *size);
++#else
++static inline struct i2c_hid_desc
++		   *i2c_hid_get_dmi_i2c_hid_desc_override(uint8_t *i2c_name)
++{ return NULL; }
++static inline char *i2c_hid_get_dmi_hid_report_desc_override(uint8_t *i2c_name,
++							     unsigned int *size)
++{ return NULL; }
++#endif
++
++#endif
 -- 
 2.19.1
 
