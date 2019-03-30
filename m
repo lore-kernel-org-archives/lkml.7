@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E4DC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD94C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A6802064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F1F2064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907710;
-	bh=nLkVCSkqSD/JAwyRnGT/TobpeTGPIsvP9H2N1/Bfgbk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=x9oj9W7BoZ+5BAiIQ7TSMUuEdJAww5tt1cdtkESCAbQsv2v4Mooo0lpXOlhEpxml4
-	 pNl2lKa9HTETXtMtQfbvIC+HGSc09UXj5PhW1BqZUI4Gp+CN3GFY018Yopz3GHVZ1p
-	 9cyWY0IZ/DBj5imWMYqOKrYMcT03A9YG5BUjQn1w=
+	s=default; t=1553907714;
+	bh=uOPriazYxEMhJNuDW4ck+4JdjpO7vbXs66C879b8UII=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kZE/8ztuuAs53xWHArEt3nBPE5hBz2oUOYWhl77mew6k8l5kaEGIyzLec3a+j9ar5
+	 jCjagxivi3I9akfnWfIexYifewhgKxSREGubyJItJOfvhFO5qfvASWpOFuMRCRwTx9
+	 xvxDHW95ljL0yj9/bPhnNdXPxfzszeOhUT8Giohw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731883AbfC3A4E (ORCPT
+        id S1731873AbfC3A4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35358 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:56:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731280AbfC3Az6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:55:58 -0400
+        id S1731838AbfC3Azw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:55:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0206F2064A;
-        Sat, 30 Mar 2019 00:55:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BB11218D3;
+        Sat, 30 Mar 2019 00:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907357;
-        bh=nLkVCSkqSD/JAwyRnGT/TobpeTGPIsvP9H2N1/Bfgbk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YeQ4IwRdwG+kca7ux57e/Y33Uw7oKc041Eo2cmj+s6jZlBe58y6V5E1Ob4bnoEiiZ
-         cCRRh/+Sw4kEqgX5o3KhbIlFrYwHbuQDnXI7RwLoKjUnip3WcdEBaqmtOSVPYyUYNA
-         hNcGnRP9/eoC0r6U1j4XyZ9npDOBh4GU5HZEsLx0=
+        s=default; t=1553907352;
+        bh=uOPriazYxEMhJNuDW4ck+4JdjpO7vbXs66C879b8UII=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wqYQlOdExKKXK14bEh+0c17dboQOFtIMzVPtq2Qvl5j9CKCaWK+oRoVT/CaFcECoY
+         sV1vtvKfasYKwOASuvPPUI1OWb838JUZ+FzuZwGVWK+pEC/mGl5sn4QAKwGH2AfhvB
+         ReKcdOY23Rn2BennNO3GZZeyTqdy7bYOV5deHenY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 01/27] ARC: u-boot args: check that magic number is correct
-Date:   Fri, 29 Mar 2019 20:55:27 -0400
-Message-Id: <20190330005555.28087-1-sashal@kernel.org>
+Cc:     Steve French <stfrench@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 36/37] fix incorrect error code mapping for OBJECTID_NOT_FOUND
+Date:   Fri, 29 Mar 2019 20:54:37 -0400
+Message-Id: <20190330005441.27540-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
+References: <20190330005441.27540-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,78 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Steve French <stfrench@microsoft.com>
 
-[ Upstream commit edb64bca50cd736c6894cc6081d5263c007ce005 ]
+[ Upstream commit 85f9987b236cf46e06ffdb5c225cf1f3c0acb789 ]
 
-In case of devboards we really often disable bootloader and load
-Linux image in memory via JTAG. Even if kernel tries to verify
-uboot_tag and uboot_arg there is sill a chance that we treat some
-garbage in registers as valid u-boot arguments in JTAG case.
-E.g. it is enough to have '1' in r0 to treat any value in r2 as
-a boot command line.
+It was mapped to EIO which can be confusing when user space
+queries for an object GUID for an object for which the server
+file system doesn't support (or hasn't saved one).
 
-So check that magic number passed from u-boot is correct and drop
-u-boot arguments otherwise. That helps to reduce the possibility
-of using garbage as u-boot arguments in JTAG case.
+As Amir Goldstein suggested this is similar to ENOATTR
+(equivalently ENODATA in Linux errno definitions) so
+changing NT STATUS code mapping for OBJECTID_NOT_FOUND
+to ENODATA.
 
-We can safely check U-boot magic value (0x0) in linux passed via
-r1 register as U-boot pass it from the beginning. So there is no
-backward-compatibility issues.
-
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/kernel/head.S  | 1 +
- arch/arc/kernel/setup.c | 8 ++++++++
- 2 files changed, 9 insertions(+)
+ fs/cifs/smb2maperror.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arc/kernel/head.S b/arch/arc/kernel/head.S
-index 1f945d0f40da..208bf2c9e7b0 100644
---- a/arch/arc/kernel/head.S
-+++ b/arch/arc/kernel/head.S
-@@ -107,6 +107,7 @@ ENTRY(stext)
- 	;    r2 = pointer to uboot provided cmdline or external DTB in mem
- 	; These are handled later in handle_uboot_args()
- 	st	r0, [@uboot_tag]
-+	st      r1, [@uboot_magic]
- 	st	r2, [@uboot_arg]
- #endif
- 
-diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-index 9119bea503a7..9f96120eee6e 100644
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -32,6 +32,7 @@ unsigned int intr_to_DE_cnt;
- 
- /* Part of U-boot ABI: see head.S */
- int __initdata uboot_tag;
-+int __initdata uboot_magic;
- char __initdata *uboot_arg;
- 
- const struct machine_desc *machine_desc;
-@@ -400,6 +401,8 @@ static inline bool uboot_arg_invalid(unsigned long addr)
- #define UBOOT_TAG_NONE		0
- #define UBOOT_TAG_CMDLINE	1
- #define UBOOT_TAG_DTB		2
-+/* We always pass 0 as magic from U-boot */
-+#define UBOOT_MAGIC_VALUE	0
- 
- void __init handle_uboot_args(void)
- {
-@@ -415,6 +418,11 @@ void __init handle_uboot_args(void)
- 		goto ignore_uboot_args;
- 	}
- 
-+	if (uboot_magic != UBOOT_MAGIC_VALUE) {
-+		pr_warn(IGNORE_ARGS "non zero uboot magic\n");
-+		goto ignore_uboot_args;
-+	}
-+
- 	if (uboot_tag != UBOOT_TAG_NONE &&
-             uboot_arg_invalid((unsigned long)uboot_arg)) {
- 		pr_warn(IGNORE_ARGS "invalid uboot arg: '%px'\n", uboot_arg);
+diff --git a/fs/cifs/smb2maperror.c b/fs/cifs/smb2maperror.c
+index d7e839cb773f..92c9cdf4704d 100644
+--- a/fs/cifs/smb2maperror.c
++++ b/fs/cifs/smb2maperror.c
+@@ -1035,7 +1035,8 @@ static const struct status_to_posix_error smb2_error_map_table[] = {
+ 	{STATUS_UNFINISHED_CONTEXT_DELETED, -EIO,
+ 	"STATUS_UNFINISHED_CONTEXT_DELETED"},
+ 	{STATUS_NO_TGT_REPLY, -EIO, "STATUS_NO_TGT_REPLY"},
+-	{STATUS_OBJECTID_NOT_FOUND, -EIO, "STATUS_OBJECTID_NOT_FOUND"},
++	/* Note that ENOATTTR and ENODATA are the same errno */
++	{STATUS_OBJECTID_NOT_FOUND, -ENODATA, "STATUS_OBJECTID_NOT_FOUND"},
+ 	{STATUS_NO_IP_ADDRESSES, -EIO, "STATUS_NO_IP_ADDRESSES"},
+ 	{STATUS_WRONG_CREDENTIAL_HANDLE, -EIO,
+ 	"STATUS_WRONG_CREDENTIAL_HANDLE"},
 -- 
 2.19.1
 
