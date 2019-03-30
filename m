@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B792C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B996C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC90218D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4144B2064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907313;
-	bh=uvcSHLBCNSC7LVeh3qFCOeC9h1zv3W5nJkfCczyl6r0=;
+	s=default; t=1553907320;
+	bh=RwNR+kjl5ZS6DhvRQw2XoNrM1bCe4f5UOribRFTK8tQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZGwjsj3mOXEwoKI4YrjCreLB8r13Zp6d8gPwo3oyulxkmpGv4mj9C6Om8aiwjnuNU
-	 iPh68XFY1p2Sa0sPUEKN9voYmhOMv/6928sLiSnaVuivJgcbg1nvTsdvPpIQ479Bre
-	 iJ0x/dW8+MIFFBaQl5LIFmmjmhZ/6ttrmHdImYWk=
+	b=cDvizuSqsxTSnz0gbUW6BTCYB7kOD8LWSsxTYGb+A8VXvSccfd7meXn3nX0SOYFHG
+	 sa10m2iiiS2g39I8fmVRWc1Gjt5824y2RyoHzM3y7/bsslMbBdAn5LzkP8xw4PiROj
+	 w12n0bS2b3nBBihW3vnp7KFMB+oGrBfoveSDN/VY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731694AbfC3AzL (ORCPT
+        id S1730945AbfC3AzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:55:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34188 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:55:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731156AbfC3AzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:55:03 -0400
+        id S1731698AbfC3AzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:55:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BCC52064A;
-        Sat, 30 Mar 2019 00:55:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FF162064A;
+        Sat, 30 Mar 2019 00:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907302;
-        bh=uvcSHLBCNSC7LVeh3qFCOeC9h1zv3W5nJkfCczyl6r0=;
+        s=default; t=1553907312;
+        bh=RwNR+kjl5ZS6DhvRQw2XoNrM1bCe4f5UOribRFTK8tQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CgTAZk/7RBgRwoKgLOtHiX4cOHBPw+8NHeVZXcIUKpAZcLw3zq63gyvE1ok3QpovS
-         I/JDT/wF1HflJFkIcG8obH3b3JxVrSGhqzuSnnd5YIPNdmYj4wUlsKEleLbE6eFMDk
-         oUpXHg1C792TneEojRg+y7dsFVR9OCPLgIu/iT8Y=
+        b=tCpyr4nBRN+tk638f1iyS8WTVn+4mGbRqFyQ5bM3Cutv95XIyRgqkwYGk0gt5GXAi
+         StqlABKvhzWX/JA5VmoG6PoqPLMhmc1bSiSF9DJFKDvx5VyUkk/Vdok6B4pn4azSAk
+         /HeOWeOLNRGSMqtIlk5bUXwVxMpbHGjO/U/3jdZ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Phil Elwell <phil@raspberrypi.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/37] thermal: bcm2835: Fix crash in bcm2835_thermal_debugfs
-Date:   Fri, 29 Mar 2019 20:54:14 -0400
-Message-Id: <20190330005441.27540-13-sashal@kernel.org>
+Cc:     Matteo Croce <mcroce@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 18/37] x86/mm: Don't leak kernel addresses
+Date:   Fri, 29 Mar 2019 20:54:19 -0400
+Message-Id: <20190330005441.27540-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
 References: <20190330005441.27540-1-sashal@kernel.org>
@@ -59,60 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Elwell <phil@raspberrypi.org>
+From: Matteo Croce <mcroce@redhat.com>
 
-[ Upstream commit 35122495a8c6683e863acf7b05a7036b2be64c7a ]
+[ Upstream commit a3151724437f54076cc10bc02b1c4f0003ae36cd ]
 
-"cat /sys/kernel/debug/bcm2835_thermal/regset" causes a NULL pointer
-dereference in bcm2835_thermal_debugfs. The driver makes use of the
-implementation details of the thermal framework to retrieve a pointer
-to its private data from a struct thermal_zone_device, and gets it
-wrong - leading to the crash. Instead, store its private data as the
-drvdata and retrieve the thermal_zone_device pointer from it.
+Since commit:
 
-Fixes: bcb7dd9ef206 ("thermal: bcm2835: add thermal driver for bcm2835 SoC")
+  ad67b74d2469d9b8 ("printk: hash addresses printed with %p")
 
-Signed-off-by: Phil Elwell <phil@raspberrypi.org>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+at boot "____ptrval____" is printed instead of actual addresses:
+
+    found SMP MP-table at [mem 0x000f5cc0-0x000f5ccf] mapped at [(____ptrval____)]
+
+Instead of changing the print to "%px", and leaking a kernel addresses,
+just remove the print completely, like in:
+
+  071929dbdd865f77 ("arm64: Stop printing the virtual memory layout").
+
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/broadcom/bcm2835_thermal.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ arch/x86/kernel/mpparse.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thermal/broadcom/bcm2835_thermal.c b/drivers/thermal/broadcom/bcm2835_thermal.c
-index 24b006a95142..8646fb7425f2 100644
---- a/drivers/thermal/broadcom/bcm2835_thermal.c
-+++ b/drivers/thermal/broadcom/bcm2835_thermal.c
-@@ -128,8 +128,7 @@ static const struct debugfs_reg32 bcm2835_thermal_regs[] = {
+diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
+index bc6bc6689e68..1c52acaa5bec 100644
+--- a/arch/x86/kernel/mpparse.c
++++ b/arch/x86/kernel/mpparse.c
+@@ -596,8 +596,8 @@ static int __init smp_scan_config(unsigned long base, unsigned long length)
+ 			mpf_base = base;
+ 			mpf_found = true;
  
- static void bcm2835_thermal_debugfs(struct platform_device *pdev)
- {
--	struct thermal_zone_device *tz = platform_get_drvdata(pdev);
--	struct bcm2835_thermal_data *data = tz->devdata;
-+	struct bcm2835_thermal_data *data = platform_get_drvdata(pdev);
- 	struct debugfs_regset32 *regset;
+-			pr_info("found SMP MP-table at [mem %#010lx-%#010lx] mapped at [%p]\n",
+-				base, base + sizeof(*mpf) - 1, mpf);
++			pr_info("found SMP MP-table at [mem %#010lx-%#010lx]\n",
++				base, base + sizeof(*mpf) - 1);
  
- 	data->debugfsdir = debugfs_create_dir("bcm2835_thermal", NULL);
-@@ -275,7 +274,7 @@ static int bcm2835_thermal_probe(struct platform_device *pdev)
- 
- 	data->tz = tz;
- 
--	platform_set_drvdata(pdev, tz);
-+	platform_set_drvdata(pdev, data);
- 
- 	/*
- 	 * Thermal_zone doesn't enable hwmon as default,
-@@ -299,8 +298,8 @@ static int bcm2835_thermal_probe(struct platform_device *pdev)
- 
- static int bcm2835_thermal_remove(struct platform_device *pdev)
- {
--	struct thermal_zone_device *tz = platform_get_drvdata(pdev);
--	struct bcm2835_thermal_data *data = tz->devdata;
-+	struct bcm2835_thermal_data *data = platform_get_drvdata(pdev);
-+	struct thermal_zone_device *tz = data->tz;
- 
- 	debugfs_remove_recursive(data->debugfsdir);
- 	thermal_zone_of_sensor_unregister(&pdev->dev, tz);
+ 			memblock_reserve(base, sizeof(*mpf));
+ 			if (mpf->physptr)
 -- 
 2.19.1
 
