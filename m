@@ -7,52 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4C4C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE9EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9B92064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1DF42064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907498;
-	bh=rzjyfQEpFv4H7gSD6jzBTtPDAWEjwXIrIHIBEONb1TI=;
+	s=default; t=1553907503;
+	bh=DMGADTDGE/aozbhdPAAWR6ULxxXG/YRWcslZIjbXqJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XyoN6AXcobkvtYP/Y3z3FHLcJvmfnewH6n3TwWEv8+5P8qSyRa7MwqNKlpg884uVv
-	 1Tbr0ZnXs8wXbPEKvSkTcgnp2PyDyrxYMEl9tkyJnNtZf6FEzv1YrvDe++4BsMVlmG
-	 2Atr/mazqZObY2ZbRn6ChpgwtBSfg0XxWdAU24TA=
+	b=lH59So6RCvZehqECeGsGmfzCth06oacbxND99GrqtSjN+8lC5hwEpx9xC8+FuJwAn
+	 Gstvqe/jCIy4jEAKZ267qprGs//b5YXefuUeN4sM+tOQ2dkJgS04BRZvpfikrPv5eG
+	 bYMUCvLYGVMnqL4LqnabirD8uFKGzff3x7aWT/iM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731940AbfC3A6R (ORCPT
+        id S1732197AbfC3A5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:58:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38476 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:57:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730880AbfC3A5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:57:55 -0400
+        id S1732172AbfC3A5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:57:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DE82218D3;
-        Sat, 30 Mar 2019 00:57:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE5E7206DD;
+        Sat, 30 Mar 2019 00:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907474;
-        bh=rzjyfQEpFv4H7gSD6jzBTtPDAWEjwXIrIHIBEONb1TI=;
+        s=default; t=1553907464;
+        bh=DMGADTDGE/aozbhdPAAWR6ULxxXG/YRWcslZIjbXqJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gjwTOFz98KnUww/qbXqjl1s73RmqSmdgnuT1Y9uiuziN8mi8773XO0FDKwSQZ1zlu
-         ACuJH/NOrd4sEwGiQXnMIIIaW3KtijKRsgtPpK14gV3XO0Y3ytqy4QtQXP9/8jivjy
-         ZHRE7Yh5/SXVIdZJKF5nZJYK87a7b0ehMen7nAlc=
+        b=a8L38y3iAZaulNwCR+H4tZ6fnV9j96YbWJSPynxq9Lu9vbyXFvssyyeNUIqXZKxuA
+         EgLjADH8ztr+mRFWvHPidpFfYqTkASVHl8r385kMAL52C51RKWGzGOsl+fDEKztetQ
+         mvgMt4SniCrZL9b7VI0G75fTwRM4UPjeKcuAG+/g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        Thomas Gleixner <tglx@linutronix.de>, kjlu@umn.edu,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Joe Perches <joe@perches.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Roland Dreier <roland@purestorage.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 12/15] x86/hpet: Prevent potential NULL pointer dereference
-Date:   Fri, 29 Mar 2019 20:57:27 -0400
-Message-Id: <20190330005730.28777-12-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 3.18 07/15] ALSA: opl3: fix mismatch between snd_opl3_drum_switch definition and declaration
+Date:   Fri, 29 Mar 2019 20:57:22 -0400
+Message-Id: <20190330005730.28777-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005730.28777-1-sashal@kernel.org>
 References: <20190330005730.28777-1-sashal@kernel.org>
@@ -65,43 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 2e84f116afca3719c9d0a1a78b47b48f75fd5724 ]
+[ Upstream commit b4748e7ab731e436cf5db4786358ada5dd2db6dd ]
 
-hpet_virt_address may be NULL when ioremap_nocache fail, but the code lacks
-a check.
+The function snd_opl3_drum_switch declaration in the header file
+has the order of the two arguments on_off and vel swapped when
+compared to the definition arguments of vel and on_off.  Fix this
+by swapping them around to match the definition.
 
-Add a check to prevent NULL pointer dereference.
+This error predates the git history, so no idea when this error
+was introduced.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: kjlu@umn.edu
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Joe Perches <joe@perches.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Roland Dreier <roland@purestorage.com>
-Link: https://lkml.kernel.org/r/20190319021958.17275-1-pakki001@umn.edu
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/hpet.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/drivers/opl3/opl3_voice.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-index 319bcb9372fe..3e9c5725732f 100644
---- a/arch/x86/kernel/hpet.c
-+++ b/arch/x86/kernel/hpet.c
-@@ -799,6 +799,8 @@ int __init hpet_enable(void)
- 		return 0;
+diff --git a/sound/drivers/opl3/opl3_voice.h b/sound/drivers/opl3/opl3_voice.h
+index a371c075ac87..e26702559f61 100644
+--- a/sound/drivers/opl3/opl3_voice.h
++++ b/sound/drivers/opl3/opl3_voice.h
+@@ -41,7 +41,7 @@ void snd_opl3_timer_func(unsigned long data);
  
- 	hpet_set_mapping();
-+	if (!hpet_virt_address)
-+		return 0;
+ /* Prototypes for opl3_drums.c */
+ void snd_opl3_load_drums(struct snd_opl3 *opl3);
+-void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int on_off, int vel, struct snd_midi_channel *chan);
++void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int vel, int on_off, struct snd_midi_channel *chan);
  
- 	/*
- 	 * Read the period and check for a sane value:
+ /* Prototypes for opl3_oss.c */
+ #ifdef CONFIG_SND_SEQUENCER_OSS
 -- 
 2.19.1
 
