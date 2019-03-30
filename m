@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2744FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7843C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE292064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 742C02064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907507;
-	bh=OTS7ru6Rr6WW0fFMEqp8EMkWXr/AZK+QaamrNdDKA9k=;
+	s=default; t=1553907514;
+	bh=4KJxXYGcFKveDYYLeG54Wtp2Teuuvs2/pAV8XavI0pQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ogJN0JONABsBLHvi7rV5k4xKyPD4b6vuwEhC7DdWxbe1LckjnXhVsZP52XaFw60pv
-	 vhMm14WtoIab+jUdgv1UhSQxn8w2+4yd/phVDR6fFXkN4VNMLIDCu+4/izsQaqa8C7
-	 EymhcZRMj/ZGMOTIWjnQfqzQQxUQB5GQJ5xVwqac=
+	b=HplV39b0JnIlxlvXNQkvX+AdB97t1J8KXUilqGcioy4qfBKoUKRJ78Siqlftg/nr+
+	 xJE7tYoPB1l5YNdN36LKoSWyjOGMx4WB16IRg9wzu/iWZknYLw5ataG9RGNWqaS+YR
+	 L6lW3w7Hmq1J8M4qR5jWkCyCwk0uhs5v+5OeJe9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731948AbfC3A60 (ORCPT
+        id S1732003AbfC3A6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:58:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38338 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:58:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732194AbfC3A5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:57:50 -0400
+        id S1732187AbfC3A5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:57:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 658D12184C;
-        Sat, 30 Mar 2019 00:57:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21486206DD;
+        Sat, 30 Mar 2019 00:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907469;
-        bh=OTS7ru6Rr6WW0fFMEqp8EMkWXr/AZK+QaamrNdDKA9k=;
+        s=default; t=1553907466;
+        bh=4KJxXYGcFKveDYYLeG54Wtp2Teuuvs2/pAV8XavI0pQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l7hOYVGXXRonLne0L/ZrfVa5WKp0445lkkfnsA51AiemEdeX/i6zQje7XqBhUgvzc
-         xFOw643rwTMJ8ESUfqi4RlBLBkF3mtDu18X2Z4YG/C7JvLk3yeh84XWZPt9CjceIac
-         Fm6TV9wQ3QDkDnrohRiFc3RJM7hRljPIkkyI1+Oo=
+        b=bkzgtdBs58ru3s3aW8e+/vnA3PieeHunOEvM0oxoe59SnnYGwGyHQY326rt04oICV
+         ZLszyW9VNXRxYOuQK3BI5f47dMXDmt0uQ8VP6o8iJpY1FW2pSP6+8/uMjlRLHD+2go
+         RhxDLqQZCkGnj8F/CN0aXSW8yWKqfMT+m1huKyqY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 10/15] perf top: Fix error handling in cmd_top()
-Date:   Fri, 29 Mar 2019 20:57:25 -0400
-Message-Id: <20190330005730.28777-10-sashal@kernel.org>
+Cc:     Matthew Garrett <matthewgarrett@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 08/15] thermal/int340x_thermal: fix mode setting
+Date:   Fri, 29 Mar 2019 20:57:23 -0400
+Message-Id: <20190330005730.28777-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005730.28777-1-sashal@kernel.org>
 References: <20190330005730.28777-1-sashal@kernel.org>
@@ -64,43 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Matthew Garrett <matthewgarrett@google.com>
 
-[ Upstream commit 70c819e4bf1c5f492768b399d898d458ccdad2b6 ]
+[ Upstream commit 396ee4d0cd52c13b3f6421b8d324d65da5e7e409 ]
 
-We should go to the cleanup path, to avoid leaks, detected using gcc's
-ASan.
+int3400 only pushes the UUID into the firmware when the mode is flipped
+to "enable". The current code only exposes the mode flag if the firmware
+supports the PASSIVE_1 UUID, which not all machines do. Remove the
+restriction.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/20190316080556.3075-9-changbin.du@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-top.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/thermal/int340x_thermal/int3400_thermal.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index c5b9c3f01d85..ea02883c3405 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1256,8 +1256,9 @@ int cmd_top(int argc, const char **argv, const char *prefix __maybe_unused)
- 	symbol_conf.priv_size = sizeof(struct annotation);
+diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
+index edc1cce117ba..7b96b20e939a 100644
+--- a/drivers/thermal/int340x_thermal/int3400_thermal.c
++++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
+@@ -208,10 +208,9 @@ static int int3400_thermal_probe(struct platform_device *pdev)
  
- 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
--	if (symbol__init(NULL) < 0)
--		return -1;
-+	status = symbol__init(NULL);
-+	if (status < 0)
-+		goto out_delete_evlist;
+ 	platform_set_drvdata(pdev, priv);
  
- 	sort__setup_elide(stdout);
- 
+-	if (priv->uuid_bitmap & 1 << INT3400_THERMAL_PASSIVE_1) {
+-		int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
+-		int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
+-	}
++	int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
++	int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
++
+ 	priv->thermal = thermal_zone_device_register("INT3400 Thermal", 0, 0,
+ 						priv, &int3400_thermal_ops,
+ 						&int3400_thermal_params, 0, 0);
 -- 
 2.19.1
 
