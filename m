@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61983C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5751C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 250E1206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD62206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907772;
-	bh=qnhmCz+mZymO+eGA9LDvfuTzVLL3mazASGYcNkyv4O4=;
+	s=default; t=1553907778;
+	bh=Kf8XHJgy1r6Y0lLxuA3IoUlQYDg5qrOLxQ/jC4tWejA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zfWdzi3q+pC5UE/OM/mfU1hLfz+HoGRsxnmQcjrrt5MuBII/qI4DlDsUs6BF5Fg2D
-	 g/GCM1ciVhKO8B41AXJI13cYj3F+wM5OtzUM81zUcUdVOZrn6I4qDFO4yMxUkx8vgo
-	 e8NGIjyB1WbktC6MA6NLPPYSjDE23ZzT/lrxnYb8=
+	b=AcdqCYiGSzk0HiUWy2jNTSZrVwRdk0jINqwFKjPtfwaDiEg5uGxWeq7+4OQVrbjan
+	 NT/v6OTcduePrTwiTHLkaJtwPRGlf3qTsWyt/AvJGWt8x+23nW6TNxAN8XBs7/2WDR
+	 t2q+q0y6NvPDUy0hPtD7pKB9GWSWEzJGTSEOEz+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731904AbfC3BCv (ORCPT
+        id S1731768AbfC3Aze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:02:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34782 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:55:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731772AbfC3Azg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:55:36 -0400
+        id S1731744AbfC3Az0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:55:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07E62218FF;
-        Sat, 30 Mar 2019 00:55:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9203F206DD;
+        Sat, 30 Mar 2019 00:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907335;
-        bh=qnhmCz+mZymO+eGA9LDvfuTzVLL3mazASGYcNkyv4O4=;
+        s=default; t=1553907325;
+        bh=Kf8XHJgy1r6Y0lLxuA3IoUlQYDg5qrOLxQ/jC4tWejA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=serbYU5HhW8FlSr4NwxXF5ThMCsZjVlI8tUNswyANxdLPKqm/NaGoYHROCmWJTlIr
-         UH7RsXeZzy5DiL9+Lz15hd5ldTcCWBHfTh9Ay7P/VMPlzQjb8R2IQTHKfS6NuRtiHI
-         hDkkX4OxpWajZZZpBvNordChcGP3qvsUx3rRJQoM=
+        b=Mi1FG3sFXZi9I0T1iUQjzunhcLr5K5rK5LeNwmPZXaMeWwqVH2yRzjSZ6aOOaCa+L
+         KNV2FMd+iOibrUk8/uug//DZPSLpQjcEOzH8ECBV6xZR4sMnny3bmII5LR8bvuKHkb
+         b7CcLXDIlp7DAxJG9T0NvLBYEP5eFuzi9Ge8hvs4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Changbin Du <changbin.du@gmail.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
+        Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 27/37] perf tests: Fix a memory leak of cpu_map object in the openat_syscall_event_on_all_cpus test
-Date:   Fri, 29 Mar 2019 20:54:28 -0400
-Message-Id: <20190330005441.27540-27-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 23/37] perf build-id: Fix memory leak in print_sdt_events()
+Date:   Fri, 29 Mar 2019 20:54:24 -0400
+Message-Id: <20190330005441.27540-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
 References: <20190330005441.27540-1-sashal@kernel.org>
@@ -66,65 +67,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Changbin Du <changbin.du@gmail.com>
 
-[ Upstream commit 93faa52e8371f0291ee1ff4994edae2b336b6233 ]
+[ Upstream commit 8bde8516893da5a5fdf06121f74d11b52ab92df5 ]
 
-  =================================================================
-  ==7497==ERROR: LeakSanitizer: detected memory leaks
+Detected with gcc's ASan:
 
-  Direct leak of 40 byte(s) in 1 object(s) allocated from:
-      #0 0x7f0333a88f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
-      #1 0x5625e5326213 in cpu_map__trim_new util/cpumap.c:45
-      #2 0x5625e5326703 in cpu_map__read util/cpumap.c:103
-      #3 0x5625e53267ef in cpu_map__read_all_cpu_map util/cpumap.c:120
-      #4 0x5625e5326915 in cpu_map__new util/cpumap.c:135
-      #5 0x5625e517b355 in test__openat_syscall_event_on_all_cpus tests/openat-syscall-all-cpus.c:36
-      #6 0x5625e51528e6 in run_test tests/builtin-test.c:358
-      #7 0x5625e5152baf in test_and_print tests/builtin-test.c:388
-      #8 0x5625e51543fe in __cmd_test tests/builtin-test.c:583
-      #9 0x5625e515572f in cmd_test tests/builtin-test.c:722
-      #10 0x5625e51c3fb8 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #11 0x5625e51c44f7 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #12 0x5625e51c48fb in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #13 0x5625e51c5069 in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #14 0x7f033214d09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+  Direct leak of 4356 byte(s) in 120 object(s) allocated from:
+      #0 0x7ff1a2b5a070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
+      #1 0x55719aef4814 in build_id_cache__origname util/build-id.c:215
+      #2 0x55719af649b6 in print_sdt_events util/parse-events.c:2339
+      #3 0x55719af66272 in print_events util/parse-events.c:2542
+      #4 0x55719ad1ecaa in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
+      #5 0x55719aec745d in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #6 0x55719aec7d1a in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #7 0x55719aec8184 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #8 0x55719aeca41a in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #9 0x7ff1a07ae09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: f30a79b012e5 ("perf tools: Add reference counting for cpu_map object")
-Link: http://lkml.kernel.org/r/20190316080556.3075-15-changbin.du@gmail.com
+Fixes: 40218daea1db ("perf list: Show SDT and pre-cached events")
+Link: http://lkml.kernel.org/r/20190316080556.3075-7-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/openat-syscall-all-cpus.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/build-id.c     | 1 +
+ tools/perf/util/parse-events.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
-index c531e6deb104..493ecb611540 100644
---- a/tools/perf/tests/openat-syscall-all-cpus.c
-+++ b/tools/perf/tests/openat-syscall-all-cpus.c
-@@ -45,7 +45,7 @@ int test__openat_syscall_event_on_all_cpus(struct test *test __maybe_unused, int
- 	if (IS_ERR(evsel)) {
- 		tracing_path__strerror_open_tp(errno, errbuf, sizeof(errbuf), "syscalls", "sys_enter_openat");
- 		pr_debug("%s\n", errbuf);
--		goto out_thread_map_delete;
-+		goto out_cpu_map_delete;
- 	}
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index 7f8553630c4d..69910deab6e0 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -185,6 +185,7 @@ char *build_id_cache__linkname(const char *sbuild_id, char *bf, size_t size)
+ 	return bf;
+ }
  
- 	if (perf_evsel__open(evsel, cpus, threads) < 0) {
-@@ -119,6 +119,8 @@ int test__openat_syscall_event_on_all_cpus(struct test *test __maybe_unused, int
- 	perf_evsel__close_fd(evsel);
- out_evsel_delete:
- 	perf_evsel__delete(evsel);
-+out_cpu_map_delete:
-+	cpu_map__put(cpus);
- out_thread_map_delete:
- 	thread_map__put(threads);
- 	return err;
++/* The caller is responsible to free the returned buffer. */
+ char *build_id_cache__origname(const char *sbuild_id)
+ {
+ 	char *linkname;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index ec3517326a68..29e2bb304168 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2180,6 +2180,7 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
+ 				printf("  %-50s [%s]\n", buf, "SDT event");
+ 				free(buf);
+ 			}
++			free(path);
+ 		} else
+ 			printf("  %-50s [%s]\n", nd->s, "SDT event");
+ 		if (nd2) {
 -- 
 2.19.1
 
