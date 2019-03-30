@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB698C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D63C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79EFE217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3204E217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909674;
-	bh=SRdcnnMcXeRQBzMwoIb1//1YXXGl/oHlFx9EjazCSBY=;
+	s=default; t=1553909681;
+	bh=zLdlzUhh2mHD0D1zMEKXc9r7VwXzLhL5pQV9R+VfJiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SSnUDX4ptwbGAJLbVFIwE+YnDtQ4DCCi4QK2eF5rHewCNsoof+r4C0T1a2aJvbST/
-	 T9H6bgq8uSRPLL7cpkgT7DWnQjcSuzmlXFDNr6XgH9MTFEo7b/VeKVEfyWuWWV7Oxz
-	 L9C7h7Gb8KQ3ZtsXax9QlzwsH/p8EW2z2QT6xNoE=
+	b=Un8Ynt0BFHGo6PLVIwYVt6m07f0Pt3AIaKnOe5MBA5afp2e4xgXmO+hStyJdgQyT7
+	 FQMyyVHSHrgabBSA2rDDILavw0D9iT/u3AjEwwywDh0mCJhNl0em9vWXfwO7btmf5F
+	 IMVebn48uGeIa/tIDAx6SmTHyFTWCDMrLK/KKUNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731410AbfC3BcI (ORCPT
+        id S1732231AbfC3Bej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:32:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39968 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:34:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730898AbfC3BcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:32:04 -0400
+        id S1731356AbfC3BcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:32:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03C89217F5;
-        Sat, 30 Mar 2019 01:32:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41FF52184C;
+        Sat, 30 Mar 2019 01:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909523;
-        bh=SRdcnnMcXeRQBzMwoIb1//1YXXGl/oHlFx9EjazCSBY=;
+        s=default; t=1553909525;
+        bh=zLdlzUhh2mHD0D1zMEKXc9r7VwXzLhL5pQV9R+VfJiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dRgKgwgXVc1+Dx1anJ3vDg69v1bF4Tp8a2vr90P7pLKm9SlUXT2y5h87p64pMO33a
-         Q0NNMNABjT9lAoDYdKpLL09C2buqdQpH8o2d8Jdqeo6jEgx8ZjTwuYmeDjriH17tya
-         x16HwAM1qIg78zdht9yQf3aOu1HPbytztzkOKI2I=
+        b=UWjBYafDJRvWFQYUtmSIPhsr3wPSpnPyC7p0CYHJS1k2Y92KMIDTX9tZHAIrWO/Rw
+         4C02+J87OmbPgckyjFg01O1tX5DAi33CnhAevsyUIxtCINTlSfibRfPkJMTVIKiOn4
+         n2f1XpVd4cRQr+NnAD7J3/0EmBhSZqLtYcaq7mdo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gertjan Halkes <gertjan@google.com>,
+Cc:     Dinu-Razvan Chis-Serban <justcsdr@gmail.com>,
         Dominique Martinet <dominique.martinet@cea.fr>,
         Sasha Levin <sashal@kernel.org>,
-        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/16] 9p: do not trust pdu content for stat item size
-Date:   Fri, 29 Mar 2019 21:31:46 -0400
-Message-Id: <20190330013200.1130-2-sashal@kernel.org>
+        v9fs-developer@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.4 03/16] 9p locks: add mount option for lock retry interval
+Date:   Fri, 29 Mar 2019 21:31:47 -0400
+Message-Id: <20190330013200.1130-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013200.1130-1-sashal@kernel.org>
 References: <20190330013200.1130-1-sashal@kernel.org>
@@ -59,75 +59,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gertjan Halkes <gertjan@google.com>
+From: Dinu-Razvan Chis-Serban <justcsdr@gmail.com>
 
-[ Upstream commit 2803cf4379ed252894f046cb8812a48db35294e3 ]
+[ Upstream commit 5e172f75e51e3de1b4274146d9b990f803cb5c2a ]
 
-v9fs_dir_readdir() could deadloop if a struct was sent with a size set
-to -2
+The default P9_LOCK_TIMEOUT can be too long for some users exporting
+a local file system to a guest VM (30s), make this configurable at
+mount time.
 
-Link: http://lkml.kernel.org/r/1536134432-11997-1-git-send-email-asmadeus@codewreck.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=88021
-Signed-off-by: Gertjan Halkes <gertjan@google.com>
+Link: http://lkml.kernel.org/r/1536295827-3181-1-git-send-email-asmadeus@codewreck.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=195727
+Signed-off-by: Dinu-Razvan Chis-Serban <justcsdr@gmail.com>
 Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/vfs_dir.c   | 8 +++-----
- net/9p/protocol.c | 3 ++-
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ fs/9p/v9fs.c     | 21 +++++++++++++++++++++
+ fs/9p/v9fs.h     |  1 +
+ fs/9p/vfs_file.c |  6 +++++-
+ 3 files changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/fs/9p/vfs_dir.c b/fs/9p/vfs_dir.c
-index 7d889f56b8e7..05769219d2c2 100644
---- a/fs/9p/vfs_dir.c
-+++ b/fs/9p/vfs_dir.c
-@@ -105,7 +105,6 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
- 	int err = 0;
- 	struct p9_fid *fid;
- 	int buflen;
--	int reclen = 0;
- 	struct p9_rdir *rdir;
- 	struct kvec kvec;
+diff --git a/fs/9p/v9fs.c b/fs/9p/v9fs.c
+index 6caca025019d..1e9bb8db7b48 100644
+--- a/fs/9p/v9fs.c
++++ b/fs/9p/v9fs.c
+@@ -59,6 +59,8 @@ enum {
+ 	Opt_cache_loose, Opt_fscache, Opt_mmap,
+ 	/* Access options */
+ 	Opt_access, Opt_posixacl,
++	/* Lock timeout option */
++	Opt_locktimeout,
+ 	/* Error token */
+ 	Opt_err
+ };
+@@ -78,6 +80,7 @@ static const match_table_t tokens = {
+ 	{Opt_cachetag, "cachetag=%s"},
+ 	{Opt_access, "access=%s"},
+ 	{Opt_posixacl, "posixacl"},
++	{Opt_locktimeout, "locktimeout=%u"},
+ 	{Opt_err, NULL}
+ };
  
-@@ -138,11 +137,10 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
- 		while (rdir->head < rdir->tail) {
- 			err = p9stat_read(fid->clnt, rdir->buf + rdir->head,
- 					  rdir->tail - rdir->head, &st);
--			if (err) {
-+			if (err <= 0) {
- 				p9_debug(P9_DEBUG_VFS, "returned %d\n", err);
- 				return -EIO;
- 			}
--			reclen = st.size+2;
+@@ -126,6 +129,7 @@ static int v9fs_parse_options(struct v9fs_session_info *v9ses, char *opts)
+ #ifdef CONFIG_9P_FSCACHE
+ 	v9ses->cachetag = NULL;
+ #endif
++	v9ses->session_lock_timeout = P9_LOCK_TIMEOUT;
  
- 			over = !dir_emit(ctx, st.name, strlen(st.name),
- 					 v9fs_qid2ino(&st.qid), dt_type(&st));
-@@ -150,8 +148,8 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
- 			if (over)
- 				return 0;
+ 	if (!opts)
+ 		return 0;
+@@ -298,6 +302,23 @@ static int v9fs_parse_options(struct v9fs_session_info *v9ses, char *opts)
+ #endif
+ 			break;
  
--			rdir->head += reclen;
--			ctx->pos += reclen;
-+			rdir->head += err;
-+			ctx->pos += err;
++		case Opt_locktimeout:
++			r = match_int(&args[0], &option);
++			if (r < 0) {
++				p9_debug(P9_DEBUG_ERROR,
++					 "integer field, but no integer?\n");
++				ret = r;
++				continue;
++			}
++			if (option < 1) {
++				p9_debug(P9_DEBUG_ERROR,
++					 "locktimeout must be a greater than zero integer.\n");
++				ret = -EINVAL;
++				continue;
++			}
++			v9ses->session_lock_timeout = (long)option * HZ;
++			break;
++
+ 		default:
+ 			continue;
  		}
- 	}
- }
-diff --git a/net/9p/protocol.c b/net/9p/protocol.c
-index 145f80518064..7f1b45c082c9 100644
---- a/net/9p/protocol.c
-+++ b/net/9p/protocol.c
-@@ -570,9 +570,10 @@ int p9stat_read(struct p9_client *clnt, char *buf, int len, struct p9_wstat *st)
- 	if (ret) {
- 		p9_debug(P9_DEBUG_9P, "<<< p9stat_read failed: %d\n", ret);
- 		trace_9p_protocol_dump(clnt, &fake_pdu);
-+		return ret;
- 	}
+diff --git a/fs/9p/v9fs.h b/fs/9p/v9fs.h
+index 6877050384a1..3775f275ede3 100644
+--- a/fs/9p/v9fs.h
++++ b/fs/9p/v9fs.h
+@@ -116,6 +116,7 @@ struct v9fs_session_info {
+ 	struct list_head slist; /* list of sessions registered with v9fs */
+ 	struct backing_dev_info bdi;
+ 	struct rw_semaphore rename_sem;
++	long session_lock_timeout; /* retry interval for blocking locks */
+ };
  
--	return ret;
-+	return fake_pdu.offset;
- }
- EXPORT_SYMBOL(p9stat_read);
+ /* cache_validity flags */
+diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
+index 62ce8b4a7e5f..373cc50544e9 100644
+--- a/fs/9p/vfs_file.c
++++ b/fs/9p/vfs_file.c
+@@ -154,6 +154,7 @@ static int v9fs_file_do_lock(struct file *filp, int cmd, struct file_lock *fl)
+ 	uint8_t status = P9_LOCK_ERROR;
+ 	int res = 0;
+ 	unsigned char fl_type;
++	struct v9fs_session_info *v9ses;
  
+ 	fid = filp->private_data;
+ 	BUG_ON(fid == NULL);
+@@ -189,6 +190,8 @@ static int v9fs_file_do_lock(struct file *filp, int cmd, struct file_lock *fl)
+ 	if (IS_SETLKW(cmd))
+ 		flock.flags = P9_LOCK_FLAGS_BLOCK;
+ 
++	v9ses = v9fs_inode2v9ses(file_inode(filp));
++
+ 	/*
+ 	 * if its a blocked request and we get P9_LOCK_BLOCKED as the status
+ 	 * for lock request, keep on trying
+@@ -202,7 +205,8 @@ static int v9fs_file_do_lock(struct file *filp, int cmd, struct file_lock *fl)
+ 			break;
+ 		if (status == P9_LOCK_BLOCKED && !IS_SETLKW(cmd))
+ 			break;
+-		if (schedule_timeout_interruptible(P9_LOCK_TIMEOUT) != 0)
++		if (schedule_timeout_interruptible(v9ses->session_lock_timeout)
++				!= 0)
+ 			break;
+ 		/*
+ 		 * p9_client_lock_dotl overwrites flock.client_id with the
 -- 
 2.19.1
 
