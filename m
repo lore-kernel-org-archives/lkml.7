@@ -2,130 +2,94 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5704C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 10:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D647CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 10:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C05218CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 10:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97166218FC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 10:02:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TD6HiWvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730637AbfC3KBE (ORCPT
+        id S1730653AbfC3KC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 06:01:04 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:14883 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730474AbfC3KBD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 06:01:03 -0400
-X-UUID: d6dadaeebc8f40e68a8e73bd5111d592-20190330
-X-UUID: d6dadaeebc8f40e68a8e73bd5111d592-20190330
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 277456615; Sat, 30 Mar 2019 18:00:55 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 30 Mar 2019 18:00:53 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 30 Mar 2019 18:00:53 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Ryder Lee <ryder.lee@mediatek.com>,
-        Honghui Zhang <honghui.zhang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH] PCI: mediatek: get optional clock by devm_clk_get_optional()
-Date:   Sat, 30 Mar 2019 18:00:51 +0800
-Message-ID: <1553940051-10367-1-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Sat, 30 Mar 2019 06:02:27 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:46596 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730532AbfC3KC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 06:02:27 -0400
+Received: from zn.tnic (p200300EC2F148A00C43C95AA310C833A.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:c43c:95aa:310c:833a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3648C1EC066F;
+        Sat, 30 Mar 2019 11:02:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553940145;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=fPgktxmAoVc55FNFVGCEpY8L5UOzA8MrHbl6ThgEQBY=;
+        b=TD6HiWvlY6sw5rz+KHKtZq/YNs0nhajn5roI4hESZnU60puluYUfkimnZDRE0cZhzX53Kx
+        jjuFzrLYxvDMj5x+Yfw217ZDDF8fAmHmZ9Kmg7OaFKM3f5dhv5jXSITcVtUVvgwj0fIiD0
+        NCtcW+hVHRlwDXYCsx7jknKRgPqMQCo=
+From:   Borislav Petkov <bp@alien8.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Erwan Velu <e.velu@criteo.com>, Len Brown <lenb@kernel.org>,
+        linux-pm@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH] cpufreq/intel_pstate: Do not issue the not supported message on !Intel
+Date:   Sat, 30 Mar 2019 11:02:25 +0100
+Message-Id: <20190330100225.14744-1-bp@alien8.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_clk_get_optional() to get optional clock
+From: Borislav Petkov <bp@suse.de>
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Issue the CPU-not-supported message only on Intel machines as this
+driver is Intel-only. Which means, the print statement can remain
+KERN_INFO for ease of debugging (no need to enable it first in dynamic
+debug).
+
+While at it, correct it to say CPU "model" which is what that test does.
+
+Fixes: 076b862c7e44 ("cpufreq: intel_pstate: Add reasons for failure and debug messages")
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Erwan Velu <e.velu@criteo.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: linux-pm@vger.kernel.org
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+CC: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/pci/controller/pcie-mediatek.c | 46 ++++++--------------------
- 1 file changed, 11 insertions(+), 35 deletions(-)
+ drivers/cpufreq/intel_pstate.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 0b6c72804e03..9a66a018489b 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -915,49 +915,25 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index ea62e3f02d56..19854f01e2fa 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -2608,7 +2608,9 @@ static int __init intel_pstate_init(void)
+ 	} else {
+ 		id = x86_match_cpu(intel_pstate_cpu_ids);
+ 		if (!id) {
+-			pr_info("CPU ID not supported\n");
++			if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
++				pr_info("CPU model not supported\n");
++
+ 			return -ENODEV;
+ 		}
  
- 	/* sys_ck might be divided into the following parts in some chips */
- 	snprintf(name, sizeof(name), "ahb_ck%d", slot);
--	port->ahb_ck = devm_clk_get(dev, name);
--	if (IS_ERR(port->ahb_ck)) {
--		if (PTR_ERR(port->ahb_ck) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
--
--		port->ahb_ck = NULL;
--	}
-+	port->ahb_ck = devm_clk_get_optional(dev, name);
-+	if (IS_ERR(port->ahb_ck))
-+		return PTR_ERR(port->ahb_ck);
- 
- 	snprintf(name, sizeof(name), "axi_ck%d", slot);
--	port->axi_ck = devm_clk_get(dev, name);
--	if (IS_ERR(port->axi_ck)) {
--		if (PTR_ERR(port->axi_ck) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
--
--		port->axi_ck = NULL;
--	}
-+	port->axi_ck = devm_clk_get_optional(dev, name);
-+		return PTR_ERR(port->axi_ck);
- 
- 	snprintf(name, sizeof(name), "aux_ck%d", slot);
--	port->aux_ck = devm_clk_get(dev, name);
--	if (IS_ERR(port->aux_ck)) {
--		if (PTR_ERR(port->aux_ck) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
--
--		port->aux_ck = NULL;
--	}
-+	port->aux_ck = devm_clk_get_optional(dev, name);
-+		return PTR_ERR(port->aux_ck);
- 
- 	snprintf(name, sizeof(name), "obff_ck%d", slot);
--	port->obff_ck = devm_clk_get(dev, name);
--	if (IS_ERR(port->obff_ck)) {
--		if (PTR_ERR(port->obff_ck) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
--
--		port->obff_ck = NULL;
--	}
-+	port->obff_ck = devm_clk_get_optional(dev, name);
-+		return PTR_ERR(port->obff_ck);
- 
- 	snprintf(name, sizeof(name), "pipe_ck%d", slot);
--	port->pipe_ck = devm_clk_get(dev, name);
--	if (IS_ERR(port->pipe_ck)) {
--		if (PTR_ERR(port->pipe_ck) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
--
--		port->pipe_ck = NULL;
--	}
-+	port->pipe_ck = devm_clk_get_optional(dev, name);
-+		return PTR_ERR(port->pipe_ck);
- 
- 	snprintf(name, sizeof(name), "pcie-rst%d", slot);
- 	port->reset = devm_reset_control_get_optional_exclusive(dev, name);
 -- 
-2.20.1
+2.21.0
 
