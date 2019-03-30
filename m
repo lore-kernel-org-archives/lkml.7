@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDA0C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88EDC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24B92064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB0B2064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907792;
-	bh=sL94BgoWL7UGHj659l0V9xGnUIuemmh1zMALROTlvjg=;
+	s=default; t=1553907797;
+	bh=cJTu6/IaXk1wHCpAZfs4T9/yrHV38fO6AuxQwqrxWAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A+DZEe9R0Ru0WwvhJ2uMKYuDRCSCI42M0IuCl3Gb2vFdb6gnLiJaUVwIeX+dLacBg
-	 fUs94NP2B371pWnBYXTNQP+4lUuNg0PEJLiREASK2GAQfww2jIv8Xmc4xaqXHGPXXx
-	 XPpUBcHhrOB2s/adWZzVp4YXPS3h5CNIkasMeuHI=
+	b=dFceOe5Wm/J8Y88CF4eeCk4zKeussJSuXM/DmgJz5+zrLCcjOFzZqy2o6FhPM7lDc
+	 3wU4EN5F/pwwbRDoqKGsG2sY1U8tuwhBuwEd7diUbo3C3mHGtlBhyWw7OUNMWt8WJV
+	 G0xKpPVIyIuB1LXYlzx5sZuH/yxACNyKZZoMPR7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731737AbfC3AzY (ORCPT
+        id S1731716AbfC3AzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:55:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34490 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:55:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731720AbfC3AzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:55:16 -0400
+        id S1730921AbfC3AzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:55:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21CCE218FC;
-        Sat, 30 Mar 2019 00:55:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DABA218D3;
+        Sat, 30 Mar 2019 00:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907316;
-        bh=sL94BgoWL7UGHj659l0V9xGnUIuemmh1zMALROTlvjg=;
+        s=default; t=1553907310;
+        bh=cJTu6/IaXk1wHCpAZfs4T9/yrHV38fO6AuxQwqrxWAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gDIPnmrBIxPka08zi+9+CL5kectryoeLCSQkAcibOk8rJUO38T5iE5/UIExJcUEJB
-         8mFPA7icp6tN328fBq1nxYS1eUqWlRQYUmW+AFzefSfSBL2S+Ty7owc2bkvO1B97CS
-         +rgVRsp5M6EmYPY5p1kZm/zZnGWoONhUT0pYykzc=
+        b=jmuPdsIaPxg4VI4SbnZDkGzU1RC5UOeTGt3ymcy4OLPnIU6/zX9mp8BDn+KvaYOii
+         eL+d8OlJBXa5vynrQo3SoCOTokVShBKY661GzYsY0uBiKwt9D8CcS3gF3zNNtfUwX4
+         39XvhpZUZ/GGIe6JMo3aKtJtAR1VTv9NpWjC+loY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 20/37] perf list: Don't forget to drop the reference to the allocated thread_map
-Date:   Fri, 29 Mar 2019 20:54:21 -0400
-Message-Id: <20190330005441.27540-20-sashal@kernel.org>
+Cc:     Maurizio Lombardi <mlombard@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 17/37] scsi: iscsi: flush running unbind operations when removing a session
+Date:   Fri, 29 Mar 2019 20:54:18 -0400
+Message-Id: <20190330005441.27540-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
 References: <20190330005441.27540-1-sashal@kernel.org>
@@ -64,53 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Maurizio Lombardi <mlombard@redhat.com>
 
-[ Upstream commit 39df730b09774bd860e39ea208a48d15078236cb ]
+[ Upstream commit 165aa2bfb42904b1bec4bf2fa257c8c603c14a06 ]
 
-Detected via gcc's ASan:
+In some cases, the iscsi_remove_session() function is called while an
+unbind_work operation is still running.  This may cause a situation where
+sysfs objects are removed in an incorrect order, triggering a kernel
+warning.
 
-  Direct leak of 2048 byte(s) in 64 object(s) allocated from:
-    6     #0 0x7f606512e370 in __interceptor_realloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee370)
-    7     #1 0x556b0f1d7ddd in thread_map__realloc util/thread_map.c:43
-    8     #2 0x556b0f1d84c7 in thread_map__new_by_tid util/thread_map.c:85
-    9     #3 0x556b0f0e045e in is_event_supported util/parse-events.c:2250
-   10     #4 0x556b0f0e1aa1 in print_hwcache_events util/parse-events.c:2382
-   11     #5 0x556b0f0e3231 in print_events util/parse-events.c:2514
-   12     #6 0x556b0ee0a66e in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
-   13     #7 0x556b0f01e0ae in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-   14     #8 0x556b0f01e859 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-   15     #9 0x556b0f01edc8 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-   16     #10 0x556b0f01f71f in main /home/changbin/work/linux/tools/perf/perf.c:520
-   17     #11 0x7f6062ccf09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+[  605.249442] ------------[ cut here ]------------
+[  605.259180] sysfs group 'power' not found for kobject 'target2:0:0'
+[  605.321371] WARNING: CPU: 1 PID: 26794 at fs/sysfs/group.c:235 sysfs_remove_group+0x76/0x80
+[  605.341266] Modules linked in: dm_service_time target_core_user target_core_pscsi target_core_file target_core_iblock iscsi_target_mod target_core_mod nls_utf8 isofs ppdev bochs_drm nfit ttm libnvdimm drm_kms_helper syscopyarea sysfillrect sysimgblt joydev pcspkr fb_sys_fops drm i2c_piix4 sg parport_pc parport xfs libcrc32c dm_multipath sr_mod sd_mod cdrom ata_generic 8021q garp mrp ata_piix stp crct10dif_pclmul crc32_pclmul llc libata crc32c_intel virtio_net net_failover ghash_clmulni_intel serio_raw failover sunrpc dm_mirror dm_region_hash dm_log dm_mod be2iscsi bnx2i cnic uio cxgb4i cxgb4 libcxgbi libcxgb qla4xxx iscsi_boot_sysfs iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi
+[  605.627479] CPU: 1 PID: 26794 Comm: kworker/u32:2 Not tainted 4.18.0-60.el8.x86_64 #1
+[  605.721401] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
+[  605.823651] Workqueue: scsi_wq_2 __iscsi_unbind_session [scsi_transport_iscsi]
+[  605.830940] RIP: 0010:sysfs_remove_group+0x76/0x80
+[  605.922907] Code: 48 89 df 5b 5d 41 5c e9 38 c4 ff ff 48 89 df e8 e0 bf ff ff eb cb 49 8b 14 24 48 8b 75 00 48 c7 c7 38 73 cb a7 e8 24 77 d7 ff <0f> 0b 5b 5d 41 5c c3 0f 1f 00 0f 1f 44 00 00 41 56 41 55 41 54 55
+[  606.122304] RSP: 0018:ffffbadcc8d1bda8 EFLAGS: 00010286
+[  606.218492] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+[  606.326381] RDX: ffff98bdfe85eb40 RSI: ffff98bdfe856818 RDI: ffff98bdfe856818
+[  606.514498] RBP: ffffffffa7ab73e0 R08: 0000000000000268 R09: 0000000000000007
+[  606.529469] R10: 0000000000000000 R11: ffffffffa860d9ad R12: ffff98bdf978e838
+[  606.630535] R13: ffff98bdc2cd4010 R14: ffff98bdc2cd3ff0 R15: ffff98bdc2cd4000
+[  606.824707] FS:  0000000000000000(0000) GS:ffff98bdfe840000(0000) knlGS:0000000000000000
+[  607.018333] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  607.117844] CR2: 00007f84b78ac024 CR3: 000000002c00a003 CR4: 00000000003606e0
+[  607.117844] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  607.420926] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  607.524236] Call Trace:
+[  607.530591]  device_del+0x56/0x350
+[  607.624393]  ? ata_tlink_match+0x30/0x30 [libata]
+[  607.727805]  ? attribute_container_device_trigger+0xb4/0xf0
+[  607.829911]  scsi_target_reap_ref_release+0x39/0x50
+[  607.928572]  scsi_remove_target+0x1a2/0x1d0
+[  608.017350]  __iscsi_unbind_session+0xb3/0x160 [scsi_transport_iscsi]
+[  608.117435]  process_one_work+0x1a7/0x360
+[  608.132917]  worker_thread+0x30/0x390
+[  608.222900]  ? pwq_unbound_release_workfn+0xd0/0xd0
+[  608.323989]  kthread+0x112/0x130
+[  608.418318]  ? kthread_bind+0x30/0x30
+[  608.513821]  ret_from_fork+0x35/0x40
+[  608.613909] ---[ end trace 0b98c310c8a6138c ]---
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 89896051f8da ("perf tools: Do not put a variable sized type not at the end of a struct")
-Link: http://lkml.kernel.org/r/20190316080556.3075-3-changbin.du@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
+Acked-by: Chris Leech <cleech@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/parse-events.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/scsi_transport_iscsi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index d0b92d374ba9..ec3517326a68 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2109,6 +2109,7 @@ static bool is_event_supported(u8 type, unsigned config)
- 		perf_evsel__delete(evsel);
- 	}
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index f6542c159ed6..b4d06bd9ed51 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -2185,6 +2185,8 @@ void iscsi_remove_session(struct iscsi_cls_session *session)
+ 	scsi_target_unblock(&session->dev, SDEV_TRANSPORT_OFFLINE);
+ 	/* flush running scans then delete devices */
+ 	flush_work(&session->scan_work);
++	/* flush running unbind operations */
++	flush_work(&session->unbind_work);
+ 	__iscsi_unbind_session(&session->unbind_work);
  
-+	thread_map__put(tmap);
- 	return ret;
- }
- 
+ 	/* hw iscsi may not have removed all connections from session */
 -- 
 2.19.1
 
