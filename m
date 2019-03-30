@@ -2,290 +2,124 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2C7C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 10:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB750C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 10:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916D0205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 10:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9305B205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 10:24:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HCSZsszM";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YXlhrLVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730640AbfC3KWi (ORCPT
+        id S1730651AbfC3KYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 06:22:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:1832 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730372AbfC3KWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 06:22:37 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Mar 2019 03:22:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,288,1549958400"; 
-   d="scan'208";a="136115890"
-Received: from rajeev-desktop.iind.intel.com (HELO intel.com) ([10.223.84.39])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Mar 2019 03:22:34 -0700
-Date:   Sat, 30 Mar 2019 15:52:30 +0530
-From:   Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-To:     Nick Crews <ncrews@chromium.org>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        benjamin.tissoires@redhat.com, jikos@kernel.org,
-        jettrink@chromium.org, Gwendal Grignou <gwendal@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v3] HID: intel-ish-hid: ISH firmware loader client driver
-Message-ID: <20190330102230.GB19202@intel.com>
-References: <1553889813-17677-1-git-send-email-rushikesh.s.kadam@intel.com>
- <CAHX4x85jFVYhOpRCKfvhYEqhXFwpKaK3_5gEit1EMaXY3L4Z4g@mail.gmail.com>
+        Sat, 30 Mar 2019 06:24:37 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51732 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730372AbfC3KYh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 06:24:37 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 40DF66087A; Sat, 30 Mar 2019 10:24:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553941476;
+        bh=c6w/vatA4fK1daMlMWy7NENrUDUs12PCSFvza7TioPc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=HCSZsszM9TPCGa3tXf5imqKAGYoTQfWo+pFvb9y84G2z7tfglmYgWtrUcix9nK0RO
+         eY/gOkqY9U9PLFQv099HYF/0JM+K/dvV7d2N4/Rv+TDiRbNy2AotVxszPCKkB4lEnk
+         HJpi1EzAzls6BwNHcGjM8uo6ryl41B1F6aISo2zM=
+Received: from [10.79.169.73] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01DFD6085C;
+        Sat, 30 Mar 2019 10:24:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553941475;
+        bh=c6w/vatA4fK1daMlMWy7NENrUDUs12PCSFvza7TioPc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YXlhrLVKtRAtE7QncKfrNGPZIsALIfuwE6jurIq6cetf3UUD46t28Lh/5+Dy3McRf
+         C9du0kVdO2Qe5eWjugtB6vO0C5Hu0vGtxrGCO+Tj5ct0vbilH/QQo2P948zOXHAVqu
+         dBJ+g9/GYvVsncU2P5tb0hoOuzVWTf2L0yG94mQc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 01DFD6085C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] x86/calgary: fix bitcast type warnings
+To:     Jann Horn <jannh@google.com>
+Cc:     Muli Ben-Yehuda <mulix@mulix.org>, Jon Mason <jdmason@kudzu.us>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+References: <20190328225925.241998-1-jannh@google.com>
+ <530a0823-5dcd-9006-2057-ae5b9da2389a@codeaurora.org>
+ <CAG48ez01TR7xBRgdAyvoHBjttn-ffr-8KBS8sJ904TDm4FLH+Q@mail.gmail.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <c1c85afd-fbfb-01cd-a1d2-fc5474dee740@codeaurora.org>
+Date:   Sat, 30 Mar 2019 15:54:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHX4x85jFVYhOpRCKfvhYEqhXFwpKaK3_5gEit1EMaXY3L4Z4g@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAG48ez01TR7xBRgdAyvoHBjttn-ffr-8KBS8sJ904TDm4FLH+Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick
-I've few comments below about your suggestions,
 
-On Fri, Mar 29, 2019 at 04:30:18PM -0700, Nick Crews wrote:
-> On Fri, Mar 29, 2019 at 1:03 PM Rushikesh S Kadam
-> <rushikesh.s.kadam@intel.com> wrote:
-> >
-> > +/**
-> > + * ish_fw_xfer_ishtp() Loads ISH firmware using ishtp interface
-> > + * @client_data:       Client data instance
-> > + * @fw:                        Pointer to firmware data struct in host memory
-> > + *
-> > + * This function uses ISH-TP to transfer ISH firmware from host to
-> > + * ISH SRAM. Lower layers may use IPC or DMA depending on firmware
-> > + * support.
-> > + *
-> > + * Return: 0 for success, negative error code for failure.
-> > + */
-> > +static int ish_fw_xfer_ishtp(struct ishtp_cl_data *client_data,
-> > +                            const struct firmware *fw)
-> > +{
-> > +       int rv;
-> > +       u32 fragment_offset, fragment_size, payload_max_size;
-> > +       struct loader_xfer_ipc_fragment *ldr_xfer_ipc_frag;
-> > +       struct loader_msg_hdr ldr_xfer_ipc_ack;
-> > +
-> > +       payload_max_size =
-> > +               LOADER_SHIM_IPC_BUF_SIZE - IPC_FRAGMENT_DATA_PREAMBLE;
-> > +
-> > +       ldr_xfer_ipc_frag = kzalloc(LOADER_SHIM_IPC_BUF_SIZE, GFP_KERNEL);
-> > +       if (!ldr_xfer_ipc_frag) {
-> 
-> Log error here.
-> 
+On 3/30/2019 3:15 AM, Jann Horn wrote:
+> On Fri, Mar 29, 2019 at 9:19 AM Mukesh Ojha <mojha@codeaurora.org> wrote:
+>> On 3/29/2019 4:29 AM, Jann Horn wrote:
+>>> The sparse checker attempts to ensure that all conversions between
+>>> fixed-endianness numbers and numbers with native endianness are explicit.
+>>> However, the calgary code reads and writes big-endian numbers from/to IO
+>>> memory using {read,write}{l,q}(), which return native-endian numbers.
+>>>
+>>> This could be addressed by putting __force casts all over the place, but
+>>> that would kind of defeat the point of the warning. Instead, create new
+>>> helpers {read,write}{l,q}_be() for big-endian IO that convert from/to
+>>> native endianness.
+>>>
+>>> Most of this patch is a straightforward conversion; the following parts
+>>> aren't just mechanical replacement:
+>>>
+>>>    - ->tar_val is now a native-endian number instead of big-endian
+>>>    - calioc2_handle_quirks() did `cpu_to_be32(readl(target))` when it
+>>>      intended to do `be32_to_cpu(readl(target))` (but that has no actual
+>>>      effects outside of type warnings)
+>>>
+>>> This gets rid of 108 lines of sparse warnings.
+>>>
+>>> Signed-off-by: Jann Horn <jannh@google.com>
+>>> ---
+>>> compile-tested only
+>>>
+>>>    arch/x86/kernel/pci-calgary_64.c | 108 ++++++++++++++++++-------------
+>>>    1 file changed, 64 insertions(+), 44 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci-calgary_64.c
+>>> index c70720f61a34..36cd66d940fb 100644
+>>> --- a/arch/x86/kernel/pci-calgary_64.c
+>>> +++ b/arch/x86/kernel/pci-calgary_64.c
+>>> @@ -534,6 +534,26 @@ static inline int is_cal_pci_dev(unsigned short device)
+>>>        return (is_calgary(device) || is_calioc2(device));
+>>>    }
+>>
+>> Can the existing api's not be used here like iowrite64be/ioread64be/ or
+>> similar variant in "include/asm-generic/io.h"
+> Given what Logan said, I think it probably makes sense to keep the patch as-is?
 
-The error code is logged in calling function
-load_fw_from_host(). Is that good enough?
+Sure go ahead, will have a look at this patch one more time.
 
-I believe the checkpatch script too, would
-recommend against adding debug print for ENOMEM
-error.
 
-> > +       /*
-> > +        * payload_max_size should be set to minimum of
-> > +        *  (1) Size of firmware to be loaded,
-> > +        *  (2) Max DMA buffer size supported by Shim firmware,
-> > +        *  (3) DMA buffer size limit set by boot_param dma_buf_size_limit.
-> > +        */
-> > +       payload_max_size = min3(fw->size,
-> > +                               (size_t)shim_fw_buf_size,
-> > +                               (size_t)dma_buf_size_limit);
-> > +
-> > +       /*
-> > +        * Buffer size should be multiple of cacheline size
-> > +        * if it's not, select the previous cacheline boundary.
-> > +        */
-> > +       payload_max_size &= ~(L1_CACHE_BYTES - 1);
-> > +
-> > +       dma_buf = kmalloc(payload_max_size, GFP_KERNEL | GFP_DMA32);
-> > +       if (!dma_buf) {
-> 
-> Log error here.
- 
-Same comment as above.
 
-> > +static int load_fw_from_host(struct ishtp_cl_data *client_data)
-> > +{
-> > +       int rv;
-> > +       u32 xfer_mode;
-> > +       char *filename;
-> > +       const struct firmware *fw;
-> > +       struct shim_fw_info fw_info;
-> > +       struct ishtp_cl *loader_ishtp_cl = client_data->loader_ishtp_cl;
-> > +
-> > +       client_data->flag_retry = false;
-> > +
-> > +       filename = kzalloc(FILENAME_SIZE, GFP_KERNEL);
-> > +       if (!filename) {
-> > +               client_data->flag_retry = true;
-> > +               rv = -ENOMEM;
-> 
-> log error here
-> 
-
-We log the error code below.
-
-> > +/**
-> > + * loader_ishtp_cl_probe() - ISH-TP client driver probe
-> > + * @cl_device:         ISH-TP client device instance
-> > + *
-> > + * This function gets called on device create on ISH-TP bus
-> > + *
-> > + * Return: 0 for success, negative error code for failure
-> > + */
-> > +static int loader_ishtp_cl_probe(struct ishtp_cl_device *cl_device)
-> > +{
-> > +       struct ishtp_cl *loader_ishtp_cl;
-> > +       struct ishtp_cl_data *client_data;
-> > +       int rv;
-> > +
-> > +       client_data = devm_kzalloc(ishtp_device(cl_device),
-> > +                                  sizeof(*client_data),
-> > +                                  GFP_KERNEL);
-> > +       if (!client_data)
-> 
-> log error here
-
-Again, I thought it was against practise to log
-"out of memory" debug prints in probe()
-
-But will add if you tell me this is the right way.
-
-> 
-> > +               return -ENOMEM;
-> > +
-> > +       loader_ishtp_cl = ishtp_cl_allocate(cl_device);
-> > +       if (!loader_ishtp_cl)
-> 
-> log error here
-
-Same comment.
-
-Thanks
-Rushikesh
-
-> 
-> > +               return -ENOMEM;
-> > +
-> > +       ishtp_set_drvdata(cl_device, loader_ishtp_cl);
-> > +       ishtp_set_client_data(loader_ishtp_cl, client_data);
-> > +       client_data->loader_ishtp_cl = loader_ishtp_cl;
-> > +       client_data->cl_device = cl_device;
-> > +
-> > +       init_waitqueue_head(&client_data->response.wait_queue);
-> > +
-> > +       INIT_WORK(&client_data->work_ishtp_reset,
-> > +                 reset_handler);
-> > +       INIT_WORK(&client_data->work_fw_load,
-> > +                 load_fw_from_host_handler);
-> > +
-> > +       rv = loader_init(loader_ishtp_cl, 0);
-> > +       if (rv < 0) {
-> > +               ishtp_cl_free(loader_ishtp_cl);
-> > +               return rv;
-> > +       }
-> > +       ishtp_get_device(cl_device);
-> > +
-> > +       client_data->retry_count = 0;
-> > +
-> > +       /* ISH firmware loading from host */
-> > +       schedule_work(&client_data->work_fw_load);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +/**
-> > + * loader_ishtp_cl_remove() - ISH-TP client driver remove
-> > + * @cl_device:         ISH-TP client device instance
-> > + *
-> > + * This function gets called on device remove on ISH-TP bus
-> > + *
-> > + * Return: 0
-> > + */
-> > +static int loader_ishtp_cl_remove(struct ishtp_cl_device *cl_device)
-> > +{
-> > +       struct ishtp_cl_data *client_data;
-> > +       struct ishtp_cl *loader_ishtp_cl = ishtp_get_drvdata(cl_device);
-> > +
-> > +       client_data = ishtp_get_client_data(loader_ishtp_cl);
-> > +
-> > +       /*
-> > +        * The sequence of the following two cancel_work_sync() is
-> > +        * important. The work_fw_load can in turn schedue
-> > +        * work_ishtp_reset, so first cancel work_fw_load then
-> > +        * cancel work_ishtp_reset.
-> > +        */
-> > +       cancel_work_sync(&client_data->work_fw_load);
-> > +       cancel_work_sync(&client_data->work_ishtp_reset);
-> > +       loader_deinit(loader_ishtp_cl);
-> > +       ishtp_put_device(cl_device);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +/**
-> > + * loader_ishtp_cl_reset() - ISH-TP client driver reset
-> > + * @cl_device:         ISH-TP client device instance
-> > + *
-> > + * This function gets called on device reset on ISH-TP bus
-> > + *
-> > + * Return: 0
-> > + */
-> > +static int loader_ishtp_cl_reset(struct ishtp_cl_device *cl_device)
-> > +{
-> > +       struct ishtp_cl_data *client_data;
-> > +       struct ishtp_cl *loader_ishtp_cl = ishtp_get_drvdata(cl_device);
-> > +
-> > +       client_data = ishtp_get_client_data(loader_ishtp_cl);
-> > +
-> > +       schedule_work(&client_data->work_ishtp_reset);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static struct ishtp_cl_driver  loader_ishtp_cl_driver = {
-> > +       .name = "ish-loader",
-> > +       .guid = &loader_ishtp_guid,
-> > +       .probe = loader_ishtp_cl_probe,
-> > +       .remove = loader_ishtp_cl_remove,
-> > +       .reset = loader_ishtp_cl_reset,
-> > +};
-> > +
-> > +static int __init ish_loader_init(void)
-> > +{
-> > +       return ishtp_cl_driver_register(&loader_ishtp_cl_driver, THIS_MODULE);
-> > +}
-> > +
-> > +static void __exit ish_loader_exit(void)
-> > +{
-> > +       ishtp_cl_driver_unregister(&loader_ishtp_cl_driver);
-> > +}
-> > +
-> > +late_initcall(ish_loader_init);
-> > +module_exit(ish_loader_exit);
-> > +
-> > +module_param(dma_buf_size_limit, int, 0644);
-> > +MODULE_PARM_DESC(dma_buf_size_limit, "Limit the DMA buf size to this value in bytes");
-> > +
-> > +MODULE_DESCRIPTION("ISH ISH-TP Host firmware Loader Client Driver");
-> > +MODULE_AUTHOR("Rushikesh S Kadam <rushikesh.s.kadam@intel.com>");
-> > +
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_ALIAS("ishtp:*");
-> > --
-> > 1.9.1
-> >
-
--- 
