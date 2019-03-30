@@ -6,56 +6,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3725AC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 13:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78B9C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 13:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0494A2173C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 13:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9519E2173C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 13:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553953567;
-	bh=Sk+I0e7844vkKIE0ypmM0wuVfGHvOPACHFieNHNhzhw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rqYIqXXvk0CpY2HBEbGhXro3t0GDlrgRI1fmZ2M+FHbxAtKVohBveupnvkpZ5pSy4
-	 eIAJQvVLcD2qKdrvHsYxLs3gA3h7X7dDqHn57plUSfpD/cu1BHdAElgyRTAoZQfm8d
-	 ItYQANzIOWmw1EO90DCvoqiJatPHEDCHDtL9EzdY=
+	s=default; t=1553953570;
+	bh=0QilTRzxNO5xB15mBruAGJAMibWGxas3okOvzDSSd8U=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=N81SseAmJ52Hj106zlPboRmhv5TwzaKhC9ADAyeDgyo3Qk48fsp71JaVwTlwJ11bq
+	 X7V1PxbbfZfnyHE5pyZsbVdlbvPQn7Rl3Y21OmnaRLyHzyuvE6h4CmxeCQX70AlWoX
+	 4+HrP7yJguuvJrixnpRE6a+gZJhv8N/s6iyGkrmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730884AbfC3NqF (ORCPT
+        id S1730871AbfC3NqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 09:46:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58786 "EHLO
+        Sat, 30 Mar 2019 09:46:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58784 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730832AbfC3NqE (ORCPT
+        with ESMTP id S1730839AbfC3NqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 30 Mar 2019 09:46:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WhTYYcLYB0qKAESlP/uiHPBljgf2X5519zWL0dGBM+k=; b=UxFCxcwaUC3N8dqcdz7b/RzRN1
-        pywQ4Td53QQTVlNrzkGpDx1tASqDReJzphm/DtXX2XCu9X1yEUMiJH8rpNwC5sexmfwxgsjjyRoi2
-        84vJVSPoErLyR5Ptq6Zq1rXrfAstFF9DD6miQXn5JcAQ+LATcBqYSSjpWzQwAzgWia4u1XTXcOx/k
-        5eMtYOTHdyW9NzjtXgwf4b9M0l4JGFFt0cGMEijrw0oGpEp6SNgOeT7KEVd9ZShUVgOZjHp7na6Vo
-        Vk0Tx90KzBqrT7nqJ3IAtmxDimmE7iRd0F8Yhe0Hcf1l7DNZ+VU/mS9jPWlSMh4L5smqBLucQPhGb
-        FW67yxhA==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ymGHAe8Xb+yjWOhZHRIj9ejbnXMe6pMmo0/tWfE5DPI=; b=foMBxMvVYX7b90DNeiET/+RuP
+        xeBp1yySYd8YL6X5c8IGeqx7oA8qbxaAWLc6StnwE9meiu/WZG2+ixj2hoRDGolVeu+CqGQhFTxLB
+        b+5GAdQ7WYanWJgtkDyN9AD2NhnQ+bvBW4EL6cVUorZz5KVAR+4m3exF0XqITTYr7TRdlmMoE2yhH
+        yMHwcKvT1gC2f5LvX2OZ6NnsZPIV/MZCJC28DurOnoEBinBOsaoSWBBkwCBx3aHdnM4nucVlpu4Us
+        0ua5akGXBQ53g3+euT0IBe7/5KeUNowZCeDnam20PeJNo9G/4Ap319TiMM2kFRonf6W1pOfUOokZT
+        oLoRLo89g==;
 Received: from [179.95.36.211] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hAEJ9-0003vT-Ny; Sat, 30 Mar 2019 13:46:03 +0000
+        id 1hAEJ9-0003vS-OT; Sat, 30 Mar 2019 13:46:03 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hAEJ6-0007P9-RR; Sat, 30 Mar 2019 10:46:00 -0300
+        id 1hAEJ6-0007P6-QP; Sat, 30 Mar 2019 10:46:00 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 2/2] docs: scripts/sphinx-pre-install: suggest latexmk for building pdf
-Date:   Sat, 30 Mar 2019 10:45:59 -0300
-Message-Id: <71c5daeccf3f874f766c2c0995bcae3991f86eb1.1553953553.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 1/2] docs: Makefile: use latexmk if available
+Date:   Sat, 30 Mar 2019 10:45:58 -0300
+Message-Id: <bfcc25db0c687797697d4ad71703ff8449072fad.1553953553.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <bfcc25db0c687797697d4ad71703ff8449072fad.1553953553.git.mchehab+samsung@kernel.org>
-References: <bfcc25db0c687797697d4ad71703ff8449072fad.1553953553.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,29 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usage of latexmk improves the PDF output, as it re-run
-xelatex when it detects the need, in order to properly generate
-indexes and cross-references.
+In the past, Sphinx was generating a LaTex Makefile that would
+run xelatex 3 times. Running it multiple times is needed in order
+to make the indexes right.
 
-As this is not a mandatory requirement, only suggest its
-addition.
+However, newer versions of it runs it just once, as it expects
+the machine to use the "latexmk" build, with automatically
+detects the need for rebuilds.
+
+So, add a logic at the Makefile in order to detect if latexmk
+is installed. If so, it will call it.
+
+As an additional bonus, the output of latexmk is a little bit
+better, making easier to identify build problems.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/sphinx-pre-install | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/Makefile | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 067459760a7b..f6a5c0bae31e 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -532,6 +532,7 @@ sub check_needs()
- 	check_program("dot", 1);
- 	check_program("convert", 1);
- 	check_program("rsvg-convert", 1) if ($pdf);
-+	check_program("latexmk", 1) if ($pdf);
+diff --git a/Documentation/Makefile b/Documentation/Makefile
+index 9786957c6a35..e889e7cb8511 100644
+--- a/Documentation/Makefile
++++ b/Documentation/Makefile
+@@ -28,8 +28,13 @@ ifeq ($(HAVE_SPHINX),0)
  
- 	check_distros();
+ else # HAVE_SPHINX
+ 
+-# User-friendly check for pdflatex
++# User-friendly check for pdflatex and latexmk
+ HAVE_PDFLATEX := $(shell if which $(PDFLATEX) >/dev/null 2>&1; then echo 1; else echo 0; fi)
++HAVE_LATEXMK := $(shell if which latexmk >/dev/null 2>&1; then echo 1; else echo 0; fi)
++
++ifeq ($(HAVE_LATEXMK),1)
++	PDFLATEX := latexmk -$(PDFLATEX)
++endif #HAVE_LATEXMK
+ 
+ # Internal variables.
+ PAPEROPT_a4     = -D latex_paper_size=a4
+@@ -82,7 +87,7 @@ pdfdocs:
+ else # HAVE_PDFLATEX
+ 
+ pdfdocs: latexdocs
+-	$(foreach var,$(SPHINXDIRS), $(MAKE) PDFLATEX=$(PDFLATEX) LATEXOPTS="$(LATEXOPTS)" -C $(BUILDDIR)/$(var)/latex || exit;)
++	$(foreach var,$(SPHINXDIRS), $(MAKE) PDFLATEX="$(PDFLATEX)" LATEXOPTS="$(LATEXOPTS)" -C $(BUILDDIR)/$(var)/latex || exit;)
+ 
+ endif # HAVE_PDFLATEX
  
 -- 
 2.20.1
