@@ -2,79 +2,123 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D60CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B293C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3695B218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 053D6218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:49:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553906999;
+	bh=YfMGlcqzJvLqsR52Rr/cdP7QW7zXjPeLPRX5Ihzq2+o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KSvhnlAHV03eBt7yF4JjfiFb73wslKNr1HSCAiUqJJzk01ufJsku6ZqmVwb1RTyMe
+	 rcVAPVprqPNQ8BxweJzbZYGVHfS4tStgpp23s6lqNtPq9ZgAX+zjp/OJVsDIsb3KNs
+	 A7PzPJK6fP5dQuufz5ZPX/lwZQt+qQBjGfKX/fd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730627AbfC3As0 (ORCPT
+        id S1730381AbfC3At5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:48:26 -0400
-Received: from mga18.intel.com ([134.134.136.126]:21332 "EHLO mga18.intel.com"
+        Fri, 29 Mar 2019 20:49:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730454AbfC3Arw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:47:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 17:47:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,286,1549958400"; 
-   d="scan'208";a="136048036"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga008.fm.intel.com with ESMTP; 29 Mar 2019 17:47:51 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id DD53F301C78; Fri, 29 Mar 2019 17:47:50 -0700 (PDT)
-From:   Andi Kleen <andi@firstfloor.org>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v2 2/9] x86/cpu/amd: Ifdef 32bit only assembler for 32bit
-Date:   Fri, 29 Mar 2019 17:47:36 -0700
-Message-Id: <20190330004743.29541-2-andi@firstfloor.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190330004743.29541-1-andi@firstfloor.org>
-References: <20190330004743.29541-1-andi@firstfloor.org>
+        id S1730162AbfC3At5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:49:57 -0400
+Received: from guoren-Inspiron-7460 (23.83.240.247.16clouds.com [23.83.240.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 981F1206DD;
+        Sat, 30 Mar 2019 00:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553906996;
+        bh=YfMGlcqzJvLqsR52Rr/cdP7QW7zXjPeLPRX5Ihzq2+o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SzyF6x+hLsVSLV2GYxP7enzMzvmCkBUHxvZSXsEKtvWSTxsxlRE8t2diHx00JjU5i
+         s6iyJrnTdL0XwSrjrVNDag2z2yYNQfoOvCYC9Hq3KBhCw6He6lb2IsL9e61fRLnOXx
+         F34gOwbn7WqNPKllRppebG05Kww50EmsVW6ookXU=
+Date:   Sat, 30 Mar 2019 08:49:49 +0800
+From:   Guo Ren <guoren@kernel.org>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] csky: fix syscall_get_arguments() and
+ syscall_set_arguments()
+Message-ID: <20190330004949.GA15705@guoren-Inspiron-7460>
+References: <20190329171230.GB32456@altlinux.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329171230.GB32456@altlinux.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+Thx Dmitry,
 
-The "vide" inline assembler is only needed on 32bit kernels for old
-32bit only CPUs.  Ifdef it to not include it into 64bit kernels.
+It works for me.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- arch/x86/kernel/cpu/amd.c | 2 ++
- 1 file changed, 2 insertions(+)
+Tested-by: Guo Ren <ren_guo@c-sky.com>
+Acked-by: Guo Ren <ren_guo@c-sky.com>
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 1bcb489e07e7..fb6a64bd765f 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -82,12 +82,14 @@ static inline int wrmsrl_amd_safe(unsigned msr, unsigned long long val)
-  *	performance at the same time..
-  */
- 
-+#ifdef CONFIG_X86_32
- extern __visible void vide(void);
- __asm__(".text\n"
- 	".globl vide\n"
- 	".type vide, @function\n"
- 	".align 4\n"
- 	"vide: ret\n");
-+#endif
- 
- static void init_amd_k5(struct cpuinfo_x86 *c)
- {
--- 
-2.20.1
-
+On Fri, Mar 29, 2019 at 08:12:30PM +0300, Dmitry V. Levin wrote:
+> C-SKY syscall arguments are located in orig_a0,a1,a2,a3,regs[0],regs[1]
+> fields of struct pt_regs.
+> 
+> Due to an off-by-one bug and a bug in pointer arithmetic
+> syscall_get_arguments() was reading orig_a0,regs[1..5] fields instead.
+> Likewise, syscall_set_arguments() was writing orig_a0,regs[1..5] fields
+> instead.
+> 
+> Fixes: 4859bfca11c7d ("csky: System Call")
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Andy Lutomirski <luto@amacapital.net>
+> Cc: Will Drewry <wad@chromium.org>
+> Cc: stable@vger.kernel.org # v4.20+
+> Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+> ---
+>  arch/csky/include/asm/syscall.h | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/csky/include/asm/syscall.h b/arch/csky/include/asm/syscall.h
+> index d637445737b7..9a9cd81e66c1 100644
+> --- a/arch/csky/include/asm/syscall.h
+> +++ b/arch/csky/include/asm/syscall.h
+> @@ -49,10 +49,11 @@ syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+>  	if (i == 0) {
+>  		args[0] = regs->orig_a0;
+>  		args++;
+> -		i++;
+>  		n--;
+> +	} else {
+> +		i--;
+>  	}
+> -	memcpy(args, &regs->a1 + i * sizeof(regs->a1), n * sizeof(args[0]));
+> +	memcpy(args, &regs->a1 + i, n * sizeof(args[0]));
+>  }
+>  
+>  static inline void
+> @@ -63,10 +64,11 @@ syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
+>  	if (i == 0) {
+>  		regs->orig_a0 = args[0];
+>  		args++;
+> -		i++;
+>  		n--;
+> +	} else {
+> +		i--;
+>  	}
+> -	memcpy(&regs->a1 + i * sizeof(regs->a1), args, n * sizeof(regs->a0));
+> +	memcpy(&regs->a1 + i, args, n * sizeof(regs->a1));
+>  }
+>  
+>  static inline int
+> -- 
+> ldv
