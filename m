@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82AAC4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEADC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAD18218A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA0C21773
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909435;
-	bh=cgWWA4NdB4H980FSIjqAM4q10d158oVXZcb0Y/IiNRg=;
+	s=default; t=1553909439;
+	bh=Jl0KP1gBPY46F7Qi5eYWw3hmLXbME6CJbG8G1cX4GG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imLI9Hsf5/npItMUczrf+3XuTjIjmICzCdKqgvz4SwM5ltw3sXladm7cActtFSiXy
-	 GSYQZmThHnR+nj2zkX4D2CsitlpNBj/JagEW5tSOhvEK93jNCcQjWZTlW7K6wmW0r2
-	 NIkU0DdxEllFioZyxQdngpDcQouLAoL3ZJWcU2kA=
+	b=sSK+Y3ZKep09o12PDkHVc0vcwVfB+au8Y5quFogH9Mr/GKMRms6B7y8Y8Whn8p/yh
+	 5bY+gkOg9J6Xt/MgGdI6mWRIVEPjZfDbFF5GdQ8XLMCT7r0WA7scMjMNE38pjCiu9Y
+	 DT+NcS6GP4+WXdoJ8l0Ry4MZ1WeuNZi2g9KQm/Wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbfC3Bae (ORCPT
+        id S1731721AbfC3Bai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:30:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37724 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:30:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731626AbfC3Ba3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:30:29 -0400
+        id S1731703AbfC3Baf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:30:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 571D1217F5;
-        Sat, 30 Mar 2019 01:30:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58B68218A6;
+        Sat, 30 Mar 2019 01:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909428;
-        bh=cgWWA4NdB4H980FSIjqAM4q10d158oVXZcb0Y/IiNRg=;
+        s=default; t=1553909434;
+        bh=Jl0KP1gBPY46F7Qi5eYWw3hmLXbME6CJbG8G1cX4GG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQtZOGe+637WoDW5PKyAq3uMPjHxs/6lK1Kvp1W7Yf4IoJxAKPpCb3ZqLOqbRTnBt
-         Xg3xgJ9YYo7A+7ufTwoZB5EP0GjGRi8qQ2jDxMjkX8xupBATJ9UFGkeoX1Wao9jw76
-         INvm8MuAWDl51YVIJ4M6bnAlHEGe3+/BsldzXvo0=
+        b=sftbXXcGlpP3jlOtJljwvgWZyTjNEbzMtcKUBH3qcfJQajRO/K+EER63OQ/+7Yl49
+         R/g3FSom3uNWUkVWSZnvt51W6HqIE1AV6xHpfJ+DEhHjcctIIAu/AW2lXtErWafYcn
+         UxxqNRN7xDjF9uBKYODj/o0dj0Ao8DmTKlKrBrrc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/37] netfilter: xt_cgroup: shrink size of v2 path
-Date:   Fri, 29 Mar 2019 21:29:49 -0400
-Message-Id: <20190330013020.379-6-sashal@kernel.org>
+Cc:     Brad Love <brad@nextdimension.cc>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/37] media: au0828: cannot kfree dev before usb disconnect
+Date:   Fri, 29 Mar 2019 21:29:52 -0400
+Message-Id: <20190330013020.379-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013020.379-1-sashal@kernel.org>
 References: <20190330013020.379-1-sashal@kernel.org>
@@ -60,158 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Brad Love <brad@nextdimension.cc>
 
-[ Upstream commit 0d704967f4a49cc2212350b3e4a8231f8b4283ed ]
+[ Upstream commit 4add7104919f9e94e0db03e234caeadbfcc02ea9 ]
 
-cgroup v2 path field is PATH_MAX which is too large, this is placing too
-much pressure on memory allocation for people with many rules doing
-cgroup v1 classid matching, side effects of this are bug reports like:
+If au0828_analog_register fails, the dev is kfree'd and then flow
+jumps to done, which can call au0828_usb_disconnect. Since all USB
+error codes are negative, au0828_usb_disconnect will be called. The
+problem is au0828_usb_disconnect uses dev, if dev is NULL then there
+is immediate oops encountered.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=200639
+[    7.454307] au0828: au0828_usb_probe() au0282_dev_register failed to register on V4L2
+[    7.454323] BUG: unable to handle kernel NULL pointer dereference at 0000000000000050
+[    7.454421] PGD 0 P4D 0
+[    7.454457] Oops: 0002 [#1] SMP PTI
+[    7.454500] CPU: 1 PID: 262 Comm: systemd-udevd Tainted: P           O      4.18.3 #1
+[    7.454584] Hardware name: Google Panther/Panther, BIOS MattDevo 04/27/2015
+[    7.454670] RIP: 0010:_raw_spin_lock_irqsave+0x2c/0x50
+[    7.454725] Code: 44 00 00 55 48 89 e5 41 54 53 48 89 fb 9c 58 0f 1f 44 00 00 49 89 c4 fa 66 0f 1f 44 00 00 e8 db 23 1b ff 31 c0 ba 01 00 00 00 <f0> 0f b1 13 85 c0 75 08 4c 89 e0 5b 41 5c 5d c3 89 c6 48 89 df e8
+[    7.455004] RSP: 0018:ffff9130f53ef988 EFLAGS: 00010046
+[    7.455063] RAX: 0000000000000000 RBX: 0000000000000050 RCX: 0000000000000000
+[    7.455139] RDX: 0000000000000001 RSI: 0000000000000003 RDI: 0000000000000050
+[    7.455216] RBP: ffff9130f53ef998 R08: 0000000000000018 R09: 0000000000000090
+[    7.455292] R10: ffffed4cc53cb000 R11: ffffed4cc53cb108 R12: 0000000000000082
+[    7.455369] R13: ffff9130cf2c6188 R14: 0000000000000000 R15: 0000000000000018
+[    7.455447] FS:  00007f2ff8514cc0(0000) GS:ffff9130fcb00000(0000) knlGS:0000000000000000
+[    7.455535] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    7.455597] CR2: 0000000000000050 CR3: 00000001753f0002 CR4: 00000000000606a0
+[    7.455675] Call Trace:
+[    7.455713]  __wake_up_common_lock+0x65/0xc0
+[    7.455764]  __wake_up+0x13/0x20
+[    7.455808]  ir_lirc_unregister+0x57/0xe0 [rc_core]
+[    7.455865]  rc_unregister_device+0xa0/0xc0 [rc_core]
+[    7.455935]  au0828_rc_unregister+0x25/0x40 [au0828]
+[    7.455999]  au0828_usb_disconnect+0x33/0x80 [au0828]
+[    7.456064]  au0828_usb_probe.cold.16+0x8d/0x2aa [au0828]
+[    7.456130]  usb_probe_interface+0xf1/0x300
+[    7.456184]  driver_probe_device+0x2e3/0x460
+[    7.456235]  __driver_attach+0xe4/0x110
+[    7.456282]  ? driver_probe_device+0x460/0x460
+[    7.456335]  bus_for_each_dev+0x74/0xb0
+[    7.456385]  ? kmem_cache_alloc_trace+0x15d/0x1d0
+[    7.456441]  driver_attach+0x1e/0x20
+[    7.456485]  bus_add_driver+0x159/0x230
+[    7.456532]  driver_register+0x70/0xc0
+[    7.456578]  usb_register_driver+0x7f/0x140
+[    7.456626]  ? 0xffffffffc0474000
+[    7.456674]  au0828_init+0xbc/0x1000 [au0828]
+[    7.456725]  do_one_initcall+0x4a/0x1c9
+[    7.456771]  ? _cond_resched+0x19/0x30
+[    7.456817]  ? kmem_cache_alloc_trace+0x15d/0x1d0
+[    7.456873]  do_init_module+0x60/0x210
+[    7.456918]  load_module+0x221b/0x2710
+[    7.456966]  ? vfs_read+0xf5/0x120
+[    7.457010]  __do_sys_finit_module+0xbd/0x120
+[    7.457061]  ? __do_sys_finit_module+0xbd/0x120
+[    7.457115]  __x64_sys_finit_module+0x1a/0x20
+[    7.457166]  do_syscall_64+0x5b/0x110
+[    7.457210]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-This patch registers a new revision that shrinks the cgroup path to 512
-bytes, which is the same approach we follow in similar extensions that
-have a path field.
-
-Cc: Tejun Heo <tj@kernel.org>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Brad Love <brad@nextdimension.cc>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/netfilter/xt_cgroup.h | 16 ++++++
- net/netfilter/xt_cgroup.c                | 72 ++++++++++++++++++++++++
- 2 files changed, 88 insertions(+)
+ drivers/media/usb/au0828/au0828-core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/uapi/linux/netfilter/xt_cgroup.h b/include/uapi/linux/netfilter/xt_cgroup.h
-index e96dfa1b34f7..b74e370d6133 100644
---- a/include/uapi/linux/netfilter/xt_cgroup.h
-+++ b/include/uapi/linux/netfilter/xt_cgroup.h
-@@ -22,4 +22,20 @@ struct xt_cgroup_info_v1 {
- 	void		*priv __attribute__((aligned(8)));
- };
+diff --git a/drivers/media/usb/au0828/au0828-core.c b/drivers/media/usb/au0828/au0828-core.c
+index cd363a2100d4..257ae0d8cfe2 100644
+--- a/drivers/media/usb/au0828/au0828-core.c
++++ b/drivers/media/usb/au0828/au0828-core.c
+@@ -629,7 +629,6 @@ static int au0828_usb_probe(struct usb_interface *interface,
+ 		pr_err("%s() au0282_dev_register failed to register on V4L2\n",
+ 			__func__);
+ 		mutex_unlock(&dev->lock);
+-		kfree(dev);
+ 		goto done;
+ 	}
  
-+#define XT_CGROUP_PATH_MAX	512
-+
-+struct xt_cgroup_info_v2 {
-+	__u8		has_path;
-+	__u8		has_classid;
-+	__u8		invert_path;
-+	__u8		invert_classid;
-+	union {
-+		char	path[XT_CGROUP_PATH_MAX];
-+		__u32	classid;
-+	};
-+
-+	/* kernel internal data */
-+	void		*priv __attribute__((aligned(8)));
-+};
-+
- #endif /* _UAPI_XT_CGROUP_H */
-diff --git a/net/netfilter/xt_cgroup.c b/net/netfilter/xt_cgroup.c
-index 891f4e7e8ea7..db18c0177b0f 100644
---- a/net/netfilter/xt_cgroup.c
-+++ b/net/netfilter/xt_cgroup.c
-@@ -66,6 +66,38 @@ static int cgroup_mt_check_v1(const struct xt_mtchk_param *par)
- 	return 0;
- }
- 
-+static int cgroup_mt_check_v2(const struct xt_mtchk_param *par)
-+{
-+	struct xt_cgroup_info_v2 *info = par->matchinfo;
-+	struct cgroup *cgrp;
-+
-+	if ((info->invert_path & ~1) || (info->invert_classid & ~1))
-+		return -EINVAL;
-+
-+	if (!info->has_path && !info->has_classid) {
-+		pr_info("xt_cgroup: no path or classid specified\n");
-+		return -EINVAL;
-+	}
-+
-+	if (info->has_path && info->has_classid) {
-+		pr_info_ratelimited("path and classid specified\n");
-+		return -EINVAL;
-+	}
-+
-+	info->priv = NULL;
-+	if (info->has_path) {
-+		cgrp = cgroup_get_from_path(info->path);
-+		if (IS_ERR(cgrp)) {
-+			pr_info_ratelimited("invalid path, errno=%ld\n",
-+					    PTR_ERR(cgrp));
-+			return -EINVAL;
-+		}
-+		info->priv = cgrp;
-+	}
-+
-+	return 0;
-+}
-+
- static bool
- cgroup_mt_v0(const struct sk_buff *skb, struct xt_action_param *par)
- {
-@@ -95,6 +127,24 @@ static bool cgroup_mt_v1(const struct sk_buff *skb, struct xt_action_param *par)
- 			info->invert_classid;
- }
- 
-+static bool cgroup_mt_v2(const struct sk_buff *skb, struct xt_action_param *par)
-+{
-+	const struct xt_cgroup_info_v2 *info = par->matchinfo;
-+	struct sock_cgroup_data *skcd = &skb->sk->sk_cgrp_data;
-+	struct cgroup *ancestor = info->priv;
-+	struct sock *sk = skb->sk;
-+
-+	if (!sk || !sk_fullsock(sk) || !net_eq(xt_net(par), sock_net(sk)))
-+		return false;
-+
-+	if (ancestor)
-+		return cgroup_is_descendant(sock_cgroup_ptr(skcd), ancestor) ^
-+			info->invert_path;
-+	else
-+		return (info->classid == sock_cgroup_classid(skcd)) ^
-+			info->invert_classid;
-+}
-+
- static void cgroup_mt_destroy_v1(const struct xt_mtdtor_param *par)
- {
- 	struct xt_cgroup_info_v1 *info = par->matchinfo;
-@@ -103,6 +153,14 @@ static void cgroup_mt_destroy_v1(const struct xt_mtdtor_param *par)
- 		cgroup_put(info->priv);
- }
- 
-+static void cgroup_mt_destroy_v2(const struct xt_mtdtor_param *par)
-+{
-+	struct xt_cgroup_info_v2 *info = par->matchinfo;
-+
-+	if (info->priv)
-+		cgroup_put(info->priv);
-+}
-+
- static struct xt_match cgroup_mt_reg[] __read_mostly = {
- 	{
- 		.name		= "cgroup",
-@@ -130,6 +188,20 @@ static struct xt_match cgroup_mt_reg[] __read_mostly = {
- 				  (1 << NF_INET_POST_ROUTING) |
- 				  (1 << NF_INET_LOCAL_IN),
- 	},
-+	{
-+		.name		= "cgroup",
-+		.revision	= 2,
-+		.family		= NFPROTO_UNSPEC,
-+		.checkentry	= cgroup_mt_check_v2,
-+		.match		= cgroup_mt_v2,
-+		.matchsize	= sizeof(struct xt_cgroup_info_v2),
-+		.usersize	= offsetof(struct xt_cgroup_info_v2, priv),
-+		.destroy	= cgroup_mt_destroy_v2,
-+		.me		= THIS_MODULE,
-+		.hooks		= (1 << NF_INET_LOCAL_OUT) |
-+				  (1 << NF_INET_POST_ROUTING) |
-+				  (1 << NF_INET_LOCAL_IN),
-+	},
- };
- 
- static int __init cgroup_mt_init(void)
 -- 
 2.19.1
 
