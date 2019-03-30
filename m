@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994FBC4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A139FC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFB1206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7520E206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553908324;
-	bh=6PYDiqOyMBKGjsOYaBQ/3YxVMPUov6leeuFtK5wVyVg=;
+	s=default; t=1553908327;
+	bh=czX7Zd/g3kyUXVdFDo5SvQxafuYSC32mQ/YC+uh/OTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gDQ2FgTsPeAw5MMb516YouEt739WyekOsaVFKmupvSuUcibucisquGMxUeL7oGDSN
-	 tP3zTucnFe0G9m5VAolM0Z+M9AAXMiDlAaaLlmrAYyPEl4q5Wr6I/UufWUpzHT70pW
-	 Yf1NiOkjMRDyFXNkOR76meIzrYTAJo1OedkVeTUU=
+	b=LN1gyp830Tt9xwQUdyrCi2QxaTWqwCPBMTM1wC79TMfFMzF+lbHvT1FidlO39Tc0e
+	 ZmS9u76Aindogpj5NTou15iy51KcgVQ/akiz5o1FmAm44k/oioe8BzLABlH19oyD/B
+	 S7hZSlJwqjcLky7mHYRV0Hp3olapMCU/2a0yEj+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730454AbfC3Auy (ORCPT
+        id S1730991AbfC3BMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:50:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57406 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:12:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730411AbfC3Auv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:50:51 -0400
+        id S1730436AbfC3Aux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:50:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD71218CD;
-        Sat, 30 Mar 2019 00:50:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4F65218AC;
+        Sat, 30 Mar 2019 00:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907050;
-        bh=6PYDiqOyMBKGjsOYaBQ/3YxVMPUov6leeuFtK5wVyVg=;
+        s=default; t=1553907052;
+        bh=czX7Zd/g3kyUXVdFDo5SvQxafuYSC32mQ/YC+uh/OTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZW7yRpSb72BVRhmkVnXT8zYxQC24dDUgO3D9jHXc6468awXpHMHuRMZlFl99Qkq41
-         T9zdjmO4f7q02RI+nYqi+gHHOC1eQPektl80TfS9TWw+9NstPKifVhsYiw4d5RIoDf
-         x6V23VUOoPze3I2l4ehO4PDYjOsWqeVY0rLwwBBU=
+        b=1D09TiayVgSi7D+JYcXsuk3j7B4+7CgN8OqAxFVf6EWFUUFMExh0uD1LGcFEna03l
+         PmahVxSIqxpja46dlveWZdy8uCzqe6xaN4nttIqgU0+TEIkHGRUtBMxCwAeM4rUY1Z
+         8STWEu8LTmm6HAZWTABXodPfq6KKWmUYoxEPTxTs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Corentin Labbe <clabbe@baylibre.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+Cc:     Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 02/67] arc: hsdk_defconfig: Enable CONFIG_BLK_DEV_RAM
-Date:   Fri, 29 Mar 2019 20:49:42 -0400
-Message-Id: <20190330005047.25998-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 04/67] perf/core: Restore mmap record type correctly
+Date:   Fri, 29 Mar 2019 20:49:44 -0400
+Message-Id: <20190330005047.25998-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005047.25998-1-sashal@kernel.org>
 References: <20190330005047.25998-1-sashal@kernel.org>
@@ -59,36 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe@baylibre.com>
+From: Stephane Eranian <eranian@google.com>
 
-[ Upstream commit 0728aeb7ead99a9b0dac2f3c92b3752b4e02ff97 ]
+[ Upstream commit d9c1bb2f6a2157b38e8eb63af437cb22701d31ee ]
 
-We have now a HSDK device in our kernelci lab, but kernel builded via
-the hsdk_defconfig lacks ramfs supports, so it cannot boot kernelci jobs
-yet.
+On mmap(), perf_events generates a RECORD_MMAP record and then checks
+which events are interested in this record. There are currently 2
+versions of mmap records: RECORD_MMAP and RECORD_MMAP2. MMAP2 is larger.
+The event configuration controls which version the user level tool
+accepts.
 
-So this patch enable CONFIG_BLK_DEV_RAM in hsdk_defconfig.
+If the event->attr.mmap2=1 field then MMAP2 record is returned.  The
+perf_event_mmap_output() takes care of this. It checks attr->mmap2 and
+corrects the record fields before putting it in the sampling buffer of
+the event.  At the end the function restores the modified MMAP record
+fields.
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+The problem is that the function restores the size but not the type.
+Thus, if a subsequent event only accepts MMAP type, then it would
+instead receive an MMAP2 record with a size of MMAP record.
+
+This patch fixes the problem by restoring the record type on exit.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Fixes: 13d7a2410fa6 ("perf: Add attr->mmap2 attribute to an event")
+Link: http://lkml.kernel.org/r/20190307185233.225521-1-eranian@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/configs/hsdk_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/events/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
-index 87b23b7fb781..aefcf7a4e17a 100644
---- a/arch/arc/configs/hsdk_defconfig
-+++ b/arch/arc/configs/hsdk_defconfig
-@@ -8,6 +8,7 @@ CONFIG_NAMESPACES=y
- # CONFIG_UTS_NS is not set
- # CONFIG_PID_NS is not set
- CONFIG_BLK_DEV_INITRD=y
-+CONFIG_BLK_DEV_RAM=y
- CONFIG_EMBEDDED=y
- CONFIG_PERF_EVENTS=y
- # CONFIG_VM_EVENT_COUNTERS is not set
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 26d6edab051a..2e2305a81047 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7178,6 +7178,7 @@ static void perf_event_mmap_output(struct perf_event *event,
+ 	struct perf_output_handle handle;
+ 	struct perf_sample_data sample;
+ 	int size = mmap_event->event_id.header.size;
++	u32 type = mmap_event->event_id.header.type;
+ 	int ret;
+ 
+ 	if (!perf_event_mmap_match(event, data))
+@@ -7221,6 +7222,7 @@ static void perf_event_mmap_output(struct perf_event *event,
+ 	perf_output_end(&handle);
+ out:
+ 	mmap_event->event_id.header.size = size;
++	mmap_event->event_id.header.type = type;
+ }
+ 
+ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
 -- 
 2.19.1
 
