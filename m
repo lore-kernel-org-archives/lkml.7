@@ -2,37 +2,37 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0143C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 08:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E362C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 08:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6EB7218A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 08:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43DE7218A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 08:12:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbfC3IMr (ORCPT
+        id S1730463AbfC3IMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 30 Mar 2019 04:12:47 -0400
-Received: from mga01.intel.com ([192.55.52.88]:44783 "EHLO mga01.intel.com"
+Received: from mga06.intel.com ([134.134.136.31]:41053 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730215AbfC3IMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726385AbfC3IMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 30 Mar 2019 04:12:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Mar 2019 01:12:46 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Mar 2019 01:12:45 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,287,1549958400"; 
-   d="scan'208";a="138544600"
+   d="scan'208";a="159784801"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 30 Mar 2019 01:12:44 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 30 Mar 2019 01:12:44 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1hA96Z-0002cY-Rw; Sat, 30 Mar 2019 16:12:43 +0800
-Date:   Sat, 30 Mar 2019 16:12:13 +0800
+        id 1hA96Z-0002cA-Qo; Sat, 30 Mar 2019 16:12:43 +0800
+Date:   Sat, 30 Mar 2019 16:12:15 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Yannick =?iso-8859-1?Q?Fertr=E9?= <yannick.fertre@st.com>
 Cc:     kbuild-all@01.org, Andrzej Hajda <a.hajda@samsung.com>,
@@ -45,8 +45,8 @@ Cc:     kbuild-all@01.org, Andrzej Hajda <a.hajda@samsung.com>,
         Alexandre Torgue <alexandre.torgue@st.com>,
         Benjamin Gaignard <benjamin.gaignard@st.com>,
         Philippe Cornu <philippe.cornu@st.com>
-Subject: Re: [PATCH] drm/bridge: sii902x: initialize CEC device
-Message-ID: <201903301609.CLRb6w97%lkp@intel.com>
+Subject: [RFC PATCH] drm/bridge: sii902x: sii902x_cec_init() can be static
+Message-ID: <20190330081215.GA24391@lkp-kbuild01>
 References: <1553862958-6454-1-git-send-email-yannick.fertre@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -58,27 +58,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi "Yannick,
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on linus/master]
-[also build test WARNING on v5.1-rc2 next-20190329]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Yannick-Fertr/drm-bridge-sii902x-initialize-CEC-device/20190330-102132
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/gpu/drm/bridge/sii902x.c:485:5: sparse: symbol 'sii902x_cec_init' was not declared. Should it be static?
-
-Please review and possibly fold the followup patch.
-
+Fixes: 1402bda01406 ("drm/bridge: sii902x: initialize CEC device")
+Signed-off-by: kbuild test robot <lkp@intel.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ sii902x.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
+index d33c097..42a0a7a 100644
+--- a/drivers/gpu/drm/bridge/sii902x.c
++++ b/drivers/gpu/drm/bridge/sii902x.c
+@@ -482,7 +482,7 @@ static int sii902x_i2c_bypass_deselect(struct i2c_mux_core *mux, u32 chan_id)
+ 	return 0;
+ }
+ 
+-int sii902x_cec_init(struct device *dev, struct sii902x *sii902x)
++static int sii902x_cec_init(struct device *dev, struct sii902x *sii902x)
+ {
+ 	struct i2c_client *client;
+ 	int ret;
