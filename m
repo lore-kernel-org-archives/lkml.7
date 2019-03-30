@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2898CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E04DDC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBEED218CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A614D21901
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907404;
-	bh=R6yRyfmNsDKWAEcQkfEw1dVNPASycIOdygEfXnF9whc=;
+	s=default; t=1553907408;
+	bh=gFHA+BOBN4ViB1KBzJE0keYncPxz5sGE1z0SyKDXPFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBYF7t+BhspqspoIX900BiDkL7QrPwoVT9LH53SzwsNcffBERKeSWDJ2ZB572brBJ
-	 dn727IA3JQEys2/odoZGpab6rdQFt/Gm/sgSUa+UeZw07DZJYZzD0eaUKOjanc7i/p
-	 FJOxK/shHesdjFCofWYnIQ4t3BG//05TtCoJCpZk=
+	b=Kfe8jPWf/fXHPwjSIBjPaNTa7oeLx8BzVJGkLEJafGQMSE6mckry3MMR/7t+E66IL
+	 dy6tu+dS1hs+b9wdNbsi8zE8VU42fkWxTPsysN0hgl7Ik4vRm4YNgxoN26Rs40B5cw
+	 mJi1rsiZRmnspWhnJmzy6Zz03zU6yU6NIrXpQ7oM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbfC3A4l (ORCPT
+        id S1731994AbfC3A4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36324 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:56:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731972AbfC3A4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:56:38 -0400
+        id S1731977AbfC3A4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:56:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9271921900;
-        Sat, 30 Mar 2019 00:56:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B8E42064A;
+        Sat, 30 Mar 2019 00:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907397;
-        bh=R6yRyfmNsDKWAEcQkfEw1dVNPASycIOdygEfXnF9whc=;
+        s=default; t=1553907401;
+        bh=gFHA+BOBN4ViB1KBzJE0keYncPxz5sGE1z0SyKDXPFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mI/VLWNorOe8OzV0LwLCIg33VfyoQwYDJSQYNyMeoWDJmhr0IFkXzjzzEofg9mCWA
-         u5bTzxvVm1VGRD9e4OLrPJYwzYWFeVMYmYtDddUrc9LVKLq3HSs57cPAiav5TYwWgD
-         d/8Y6/vawU6Re5uUGNUDehvwMl8BHUPpVH8QIc5A=
+        b=D/YXgqXbarJPuPOl3BSf6OhHSb4rxkoIR668mWXpAu7smjvvcghwpUQR0CbGVwlqf
+         G10Q/Dk6Zmrb7SwFqO0tLtUX1ndmnqHx2JF/UyjciMDzWfxz25mgPK32WtMeRPzMlD
+         Tnn37H5N/JJp3wYvxBEiVBjxcTyBTCza734hzvPI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Thomas Gleixner <tglx@linutronix.de>, kjlu@umn.edu,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joe Perches <joe@perches.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Roland Dreier <roland@purestorage.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 20/27] perf tests: Fix a memory leak in test__perf_evsel__tp_sched_test()
-Date:   Fri, 29 Mar 2019 20:55:46 -0400
-Message-Id: <20190330005555.28087-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 22/27] x86/hpet: Prevent potential NULL pointer dereference
+Date:   Fri, 29 Mar 2019 20:55:48 -0400
+Message-Id: <20190330005555.28087-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005555.28087-1-sashal@kernel.org>
 References: <20190330005555.28087-1-sashal@kernel.org>
@@ -64,59 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit d982b33133284fa7efa0e52ae06b88f9be3ea764 ]
+[ Upstream commit 2e84f116afca3719c9d0a1a78b47b48f75fd5724 ]
 
-  =================================================================
-  ==20875==ERROR: LeakSanitizer: detected memory leaks
+hpet_virt_address may be NULL when ioremap_nocache fail, but the code lacks
+a check.
 
-  Direct leak of 1160 byte(s) in 1 object(s) allocated from:
-      #0 0x7f1b6fc84138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
-      #1 0x55bd50005599 in zalloc util/util.h:23
-      #2 0x55bd500068f5 in perf_evsel__newtp_idx util/evsel.c:327
-      #3 0x55bd4ff810fc in perf_evsel__newtp /home/work/linux/tools/perf/util/evsel.h:216
-      #4 0x55bd4ff81608 in test__perf_evsel__tp_sched_test tests/evsel-tp-sched.c:69
-      #5 0x55bd4ff528e6 in run_test tests/builtin-test.c:358
-      #6 0x55bd4ff52baf in test_and_print tests/builtin-test.c:388
-      #7 0x55bd4ff543fe in __cmd_test tests/builtin-test.c:583
-      #8 0x55bd4ff5572f in cmd_test tests/builtin-test.c:722
-      #9 0x55bd4ffc4087 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #10 0x55bd4ffc45c6 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #11 0x55bd4ffc49ca in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #12 0x55bd4ffc5138 in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #13 0x7f1b6e34809a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+Add a check to prevent NULL pointer dereference.
 
-  Indirect leak of 19 byte(s) in 1 object(s) allocated from:
-      #0 0x7f1b6fc83f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
-      #1 0x7f1b6e3ac30f in vasprintf (/lib/x86_64-linux-gnu/libc.so.6+0x8830f)
-
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 6a6cd11d4e57 ("perf test: Add test for the sched tracepoint format fields")
-Link: http://lkml.kernel.org/r/20190316080556.3075-17-changbin.du@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: kjlu@umn.edu
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Joe Perches <joe@perches.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Roland Dreier <roland@purestorage.com>
+Link: https://lkml.kernel.org/r/20190319021958.17275-1-pakki001@umn.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/evsel-tp-sched.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/hpet.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
-index 66b53f10eb18..e449059973f2 100644
---- a/tools/perf/tests/evsel-tp-sched.c
-+++ b/tools/perf/tests/evsel-tp-sched.c
-@@ -84,5 +84,6 @@ int test__perf_evsel__tp_sched_test(int subtest __maybe_unused)
- 	if (perf_evsel__test_field(evsel, "target_cpu", 4, true))
- 		ret = -1;
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index 756634f14df6..775c23d4021a 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -914,6 +914,8 @@ int __init hpet_enable(void)
+ 		return 0;
  
-+	perf_evsel__delete(evsel);
- 	return ret;
- }
+ 	hpet_set_mapping();
++	if (!hpet_virt_address)
++		return 0;
+ 
+ 	/*
+ 	 * Read the period and check for a sane value:
 -- 
 2.19.1
 
