@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4243C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82AAC4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771B6218D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD18218A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909433;
-	bh=Xe+F8AMn/oMUKBuJALQBNrirq8eQsJho9L4iIQTQiSw=;
+	s=default; t=1553909435;
+	bh=cgWWA4NdB4H980FSIjqAM4q10d158oVXZcb0Y/IiNRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mFgJU1b8MwuJD/D5jIGGr9jyuYsaRFCwVOsMH7/J0zJ0uR/ds4rlJtq1w2TaDfzJ/
-	 jWT9kXZCuyEv/YgtX0Z3lpbSNR+BWCBERREoseNysG9gsTG189oTI6TL/vW3z03uSJ
-	 kJhwp+ctD/R2DRUKe1Ks3QG9EFB6pyGOJPCjuaR8=
+	b=imLI9Hsf5/npItMUczrf+3XuTjIjmICzCdKqgvz4SwM5ltw3sXladm7cActtFSiXy
+	 GSYQZmThHnR+nj2zkX4D2CsitlpNBj/JagEW5tSOhvEK93jNCcQjWZTlW7K6wmW0r2
+	 NIkU0DdxEllFioZyxQdngpDcQouLAoL3ZJWcU2kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731688AbfC3Bac (ORCPT
+        id S1731705AbfC3Bae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37774 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:30:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731648AbfC3Ba3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731626AbfC3Ba3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Mar 2019 21:30:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0D7D218D3;
-        Sat, 30 Mar 2019 01:30:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 571D1217F5;
+        Sat, 30 Mar 2019 01:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909429;
-        bh=Xe+F8AMn/oMUKBuJALQBNrirq8eQsJho9L4iIQTQiSw=;
+        s=default; t=1553909428;
+        bh=cgWWA4NdB4H980FSIjqAM4q10d158oVXZcb0Y/IiNRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VB2Srvqdg2kLNnquY/j3l3ujEwPqRztclMJzNSxtUJ38jKdYJ24W9vHN+Djhh0PRk
-         ldgnVLn16sL7w5aduBRqqh19XdqfgQpzNb6idIMdQHQzgK80kLEZyj8nhVWQJOot/6
-         vU/QJ/toiNktoz4M/VOmEedVemki/fKFOeaWNnRY=
+        b=XQtZOGe+637WoDW5PKyAq3uMPjHxs/6lK1Kvp1W7Yf4IoJxAKPpCb3ZqLOqbRTnBt
+         Xg3xgJ9YYo7A+7ufTwoZB5EP0GjGRi8qQ2jDxMjkX8xupBATJ9UFGkeoX1Wao9jw76
+         INvm8MuAWDl51YVIJ4M6bnAlHEGe3+/BsldzXvo0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/37] serial: uartps: console_setup() can't be placed to init section
-Date:   Fri, 29 Mar 2019 21:29:50 -0400
-Message-Id: <20190330013020.379-7-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/37] netfilter: xt_cgroup: shrink size of v2 path
+Date:   Fri, 29 Mar 2019 21:29:49 -0400
+Message-Id: <20190330013020.379-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013020.379-1-sashal@kernel.org>
 References: <20190330013020.379-1-sashal@kernel.org>
@@ -59,36 +60,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Simek <michal.simek@xilinx.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 4bb1ce2350a598502b23088b169e16b43d4bc639 ]
+[ Upstream commit 0d704967f4a49cc2212350b3e4a8231f8b4283ed ]
 
-When console device is rebinded, console_setup() is called again.
-But marking it as __init means that function will be clear after boot is
-complete. If console device is binded again console_setup() is not found
-and error "Unable to handle kernel paging request at virtual address"
-is reported.
+cgroup v2 path field is PATH_MAX which is too large, this is placing too
+much pressure on memory allocation for people with many rules doing
+cgroup v1 classid matching, side effects of this are bug reports like:
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=200639
+
+This patch registers a new revision that shrinks the cgroup path to 512
+bytes, which is the same approach we follow in similar extensions that
+have a path field.
+
+Cc: Tejun Heo <tj@kernel.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Acked-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/xilinx_uartps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/uapi/linux/netfilter/xt_cgroup.h | 16 ++++++
+ net/netfilter/xt_cgroup.c                | 72 ++++++++++++++++++++++++
+ 2 files changed, 88 insertions(+)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index f438a2158006..b0da63737aa1 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -1270,7 +1270,7 @@ static void cdns_uart_console_write(struct console *co, const char *s,
-  *
-  * Return: 0 on success, negative errno otherwise.
-  */
--static int __init cdns_uart_console_setup(struct console *co, char *options)
-+static int cdns_uart_console_setup(struct console *co, char *options)
+diff --git a/include/uapi/linux/netfilter/xt_cgroup.h b/include/uapi/linux/netfilter/xt_cgroup.h
+index e96dfa1b34f7..b74e370d6133 100644
+--- a/include/uapi/linux/netfilter/xt_cgroup.h
++++ b/include/uapi/linux/netfilter/xt_cgroup.h
+@@ -22,4 +22,20 @@ struct xt_cgroup_info_v1 {
+ 	void		*priv __attribute__((aligned(8)));
+ };
+ 
++#define XT_CGROUP_PATH_MAX	512
++
++struct xt_cgroup_info_v2 {
++	__u8		has_path;
++	__u8		has_classid;
++	__u8		invert_path;
++	__u8		invert_classid;
++	union {
++		char	path[XT_CGROUP_PATH_MAX];
++		__u32	classid;
++	};
++
++	/* kernel internal data */
++	void		*priv __attribute__((aligned(8)));
++};
++
+ #endif /* _UAPI_XT_CGROUP_H */
+diff --git a/net/netfilter/xt_cgroup.c b/net/netfilter/xt_cgroup.c
+index 891f4e7e8ea7..db18c0177b0f 100644
+--- a/net/netfilter/xt_cgroup.c
++++ b/net/netfilter/xt_cgroup.c
+@@ -66,6 +66,38 @@ static int cgroup_mt_check_v1(const struct xt_mtchk_param *par)
+ 	return 0;
+ }
+ 
++static int cgroup_mt_check_v2(const struct xt_mtchk_param *par)
++{
++	struct xt_cgroup_info_v2 *info = par->matchinfo;
++	struct cgroup *cgrp;
++
++	if ((info->invert_path & ~1) || (info->invert_classid & ~1))
++		return -EINVAL;
++
++	if (!info->has_path && !info->has_classid) {
++		pr_info("xt_cgroup: no path or classid specified\n");
++		return -EINVAL;
++	}
++
++	if (info->has_path && info->has_classid) {
++		pr_info_ratelimited("path and classid specified\n");
++		return -EINVAL;
++	}
++
++	info->priv = NULL;
++	if (info->has_path) {
++		cgrp = cgroup_get_from_path(info->path);
++		if (IS_ERR(cgrp)) {
++			pr_info_ratelimited("invalid path, errno=%ld\n",
++					    PTR_ERR(cgrp));
++			return -EINVAL;
++		}
++		info->priv = cgrp;
++	}
++
++	return 0;
++}
++
+ static bool
+ cgroup_mt_v0(const struct sk_buff *skb, struct xt_action_param *par)
  {
- 	struct uart_port *port = &cdns_uart_port[co->index];
- 	int baud = 9600;
+@@ -95,6 +127,24 @@ static bool cgroup_mt_v1(const struct sk_buff *skb, struct xt_action_param *par)
+ 			info->invert_classid;
+ }
+ 
++static bool cgroup_mt_v2(const struct sk_buff *skb, struct xt_action_param *par)
++{
++	const struct xt_cgroup_info_v2 *info = par->matchinfo;
++	struct sock_cgroup_data *skcd = &skb->sk->sk_cgrp_data;
++	struct cgroup *ancestor = info->priv;
++	struct sock *sk = skb->sk;
++
++	if (!sk || !sk_fullsock(sk) || !net_eq(xt_net(par), sock_net(sk)))
++		return false;
++
++	if (ancestor)
++		return cgroup_is_descendant(sock_cgroup_ptr(skcd), ancestor) ^
++			info->invert_path;
++	else
++		return (info->classid == sock_cgroup_classid(skcd)) ^
++			info->invert_classid;
++}
++
+ static void cgroup_mt_destroy_v1(const struct xt_mtdtor_param *par)
+ {
+ 	struct xt_cgroup_info_v1 *info = par->matchinfo;
+@@ -103,6 +153,14 @@ static void cgroup_mt_destroy_v1(const struct xt_mtdtor_param *par)
+ 		cgroup_put(info->priv);
+ }
+ 
++static void cgroup_mt_destroy_v2(const struct xt_mtdtor_param *par)
++{
++	struct xt_cgroup_info_v2 *info = par->matchinfo;
++
++	if (info->priv)
++		cgroup_put(info->priv);
++}
++
+ static struct xt_match cgroup_mt_reg[] __read_mostly = {
+ 	{
+ 		.name		= "cgroup",
+@@ -130,6 +188,20 @@ static struct xt_match cgroup_mt_reg[] __read_mostly = {
+ 				  (1 << NF_INET_POST_ROUTING) |
+ 				  (1 << NF_INET_LOCAL_IN),
+ 	},
++	{
++		.name		= "cgroup",
++		.revision	= 2,
++		.family		= NFPROTO_UNSPEC,
++		.checkentry	= cgroup_mt_check_v2,
++		.match		= cgroup_mt_v2,
++		.matchsize	= sizeof(struct xt_cgroup_info_v2),
++		.usersize	= offsetof(struct xt_cgroup_info_v2, priv),
++		.destroy	= cgroup_mt_destroy_v2,
++		.me		= THIS_MODULE,
++		.hooks		= (1 << NF_INET_LOCAL_OUT) |
++				  (1 << NF_INET_POST_ROUTING) |
++				  (1 << NF_INET_LOCAL_IN),
++	},
+ };
+ 
+ static int __init cgroup_mt_init(void)
 -- 
 2.19.1
 
