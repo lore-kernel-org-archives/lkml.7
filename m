@@ -7,54 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E85C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 11:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBA4C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 11:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3600C218A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 11:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2443A218AE
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 11:20:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KKKmmSaC"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YcpbO7p8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbfC3LU2 (ORCPT
+        id S1730731AbfC3LUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 07:20:28 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57422 "EHLO mail.skyhub.de"
+        Sat, 30 Mar 2019 07:20:30 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57398 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730604AbfC3LUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 07:20:25 -0400
+        id S1730683AbfC3LU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 07:20:28 -0400
 Received: from zn.tnic (p200300EC2F148A00C43C95AA310C833A.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:c43c:95aa:310c:833a])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7A3851EC0669;
-        Sat, 30 Mar 2019 12:20:24 +0100 (CET)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3E64C1EC097D;
+        Sat, 30 Mar 2019 12:20:26 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553944824;
+        t=1553944826;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hp7oE/CMRKNGeYfnWmTM/xbQu45KCZIxI1VPtKPg7bQ=;
-        b=KKKmmSaCltTRKvuKg6HpkTwMODNaTy94M0pBX6L3idU7YtRlKIunJtURS/FHVZ9nxCg8+u
-        gcrnXAZhjm4q0HMNDHVxDpAJ6oUx2Vd1AuE+GVo5WVGP657v0AVv4VMBiS4/ZZKEDSzmjo
-        nurP0ewddw1EIii+TIoOgNRMm9FXCqQ=
+        bh=by3cHj7ff/5lUELGrHsXoDpuXXg5BYdhSdIkb+9kPjE=;
+        b=YcpbO7p8q2X47TjjVxi0Rq+oH6OcO3oTb0upSxnUYuaiDwGUr8ibYxA3s3rYqCKRx98cid
+        1KbLRvz2XduZHe4DcinP8MaISA3cyYQ/W0tpVlkK8BRUrqtk0+YmP/3YfrMS8hlPkvQxk2
+        xp3Mf+GFosVHTQy7voHV62T6qwaBqFg=
 From:   Borislav Petkov <bp@alien8.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Nadav Amit <nadav.amit@gmail.com>,
         Andy Lutomirski <luto@amacapital.net>,
         Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Subject: [PATCH 3/5] x86/kvm: Convert some slow-path static_cpu_has() callers to boot_cpu_has()
-Date:   Sat, 30 Mar 2019 12:20:20 +0100
-Message-Id: <20190330112022.28888-4-bp@alien8.de>
+        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 5/5] drivers/cpufreq: Convert some slow-path static_cpu_has() callers to boot_cpu_has()
+Date:   Sat, 30 Mar 2019 12:20:22 +0100
+Message-Id: <20190330112022.28888-6-bp@alien8.de>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190330112022.28888-1-bp@alien8.de>
 References: <20190330112022.28888-1-bp@alien8.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -69,90 +67,128 @@ boot_cpu_has() variant.
 No functional changes.
 
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86@kernel.org
+Cc: Len Brown <lenb@kernel.org>
+Cc: linux-pm@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- arch/x86/kvm/svm.c     | 10 +++++-----
- arch/x86/kvm/vmx/vmx.c |  4 ++--
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/cpufreq/amd_freq_sensitivity.c |  2 +-
+ drivers/cpufreq/intel_pstate.c         | 18 +++++++++---------
+ drivers/cpufreq/powernow-k8.c          |  2 +-
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index b5b128a0a051..ecc6aba37b8f 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -835,7 +835,7 @@ static void svm_init_erratum_383(void)
- 	int err;
- 	u64 val;
+diff --git a/drivers/cpufreq/amd_freq_sensitivity.c b/drivers/cpufreq/amd_freq_sensitivity.c
+index 4ac7c3cf34be..6927a8c0e748 100644
+--- a/drivers/cpufreq/amd_freq_sensitivity.c
++++ b/drivers/cpufreq/amd_freq_sensitivity.c
+@@ -124,7 +124,7 @@ static int __init amd_freq_sensitivity_init(void)
+ 			PCI_DEVICE_ID_AMD_KERNCZ_SMBUS, NULL);
  
--	if (!static_cpu_has_bug(X86_BUG_AMD_TLB_MMATCH))
-+	if (!boot_cpu_has_bug(X86_BUG_AMD_TLB_MMATCH))
- 		return;
+ 	if (!pcidev) {
+-		if (!static_cpu_has(X86_FEATURE_PROC_FEEDBACK))
++		if (!boot_cpu_has(X86_FEATURE_PROC_FEEDBACK))
+ 			return -ENODEV;
+ 	}
  
- 	/* Use _safe variants to not break nested virtualization */
-@@ -889,7 +889,7 @@ static int has_svm(void)
- static void svm_hardware_disable(void)
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index e22f0dbaebb1..ea62e3f02d56 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -522,7 +522,7 @@ static s16 intel_pstate_get_epb(struct cpudata *cpu_data)
+ 	u64 epb;
+ 	int ret;
+ 
+-	if (!static_cpu_has(X86_FEATURE_EPB))
++	if (!boot_cpu_has(X86_FEATURE_EPB))
+ 		return -ENXIO;
+ 
+ 	ret = rdmsrl_on_cpu(cpu_data->cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
+@@ -536,7 +536,7 @@ static s16 intel_pstate_get_epp(struct cpudata *cpu_data, u64 hwp_req_data)
  {
- 	/* Make sure we clean up behind us */
--	if (static_cpu_has(X86_FEATURE_TSCRATEMSR))
-+	if (boot_cpu_has(X86_FEATURE_TSCRATEMSR))
- 		wrmsrl(MSR_AMD64_TSC_RATIO, TSC_RATIO_DEFAULT);
+ 	s16 epp;
  
- 	cpu_svm_disable();
-@@ -931,7 +931,7 @@ static int svm_hardware_enable(void)
+-	if (static_cpu_has(X86_FEATURE_HWP_EPP)) {
++	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+ 		/*
+ 		 * When hwp_req_data is 0, means that caller didn't read
+ 		 * MSR_HWP_REQUEST, so need to read and get EPP.
+@@ -561,7 +561,7 @@ static int intel_pstate_set_epb(int cpu, s16 pref)
+ 	u64 epb;
+ 	int ret;
  
- 	wrmsrl(MSR_VM_HSAVE_PA, page_to_pfn(sd->save_area) << PAGE_SHIFT);
+-	if (!static_cpu_has(X86_FEATURE_EPB))
++	if (!boot_cpu_has(X86_FEATURE_EPB))
+ 		return -ENXIO;
  
--	if (static_cpu_has(X86_FEATURE_TSCRATEMSR)) {
-+	if (boot_cpu_has(X86_FEATURE_TSCRATEMSR)) {
- 		wrmsrl(MSR_AMD64_TSC_RATIO, TSC_RATIO_DEFAULT);
- 		__this_cpu_write(current_tsc_ratio, TSC_RATIO_DEFAULT);
+ 	ret = rdmsrl_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
+@@ -609,7 +609,7 @@ static int intel_pstate_get_energy_pref_index(struct cpudata *cpu_data)
+ 	if (epp < 0)
+ 		return epp;
+ 
+-	if (static_cpu_has(X86_FEATURE_HWP_EPP)) {
++	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+ 		if (epp == HWP_EPP_PERFORMANCE)
+ 			return 1;
+ 		if (epp <= HWP_EPP_BALANCE_PERFORMANCE)
+@@ -618,7 +618,7 @@ static int intel_pstate_get_energy_pref_index(struct cpudata *cpu_data)
+ 			return 3;
+ 		else
+ 			return 4;
+-	} else if (static_cpu_has(X86_FEATURE_EPB)) {
++	} else if (boot_cpu_has(X86_FEATURE_EPB)) {
+ 		/*
+ 		 * Range:
+ 		 *	0x00-0x03	:	Performance
+@@ -646,7 +646,7 @@ static int intel_pstate_set_energy_pref_index(struct cpudata *cpu_data,
+ 
+ 	mutex_lock(&intel_pstate_limits_lock);
+ 
+-	if (static_cpu_has(X86_FEATURE_HWP_EPP)) {
++	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+ 		u64 value;
+ 
+ 		ret = rdmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, &value);
+@@ -821,7 +821,7 @@ static void intel_pstate_hwp_set(unsigned int cpu)
+ 		epp = cpu_data->epp_powersave;
  	}
-@@ -2252,7 +2252,7 @@ static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 	for (i = 0; i < NR_HOST_SAVE_USER_MSRS; i++)
- 		rdmsrl(host_save_user_msrs[i], svm->host_user_msrs[i]);
+ update_epp:
+-	if (static_cpu_has(X86_FEATURE_HWP_EPP)) {
++	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+ 		value &= ~GENMASK_ULL(31, 24);
+ 		value |= (u64)epp << 24;
+ 	} else {
+@@ -846,7 +846,7 @@ static void intel_pstate_hwp_force_min_perf(int cpu)
+ 	value |= HWP_MIN_PERF(min_perf);
  
--	if (static_cpu_has(X86_FEATURE_TSCRATEMSR)) {
-+	if (boot_cpu_has(X86_FEATURE_TSCRATEMSR)) {
- 		u64 tsc_ratio = vcpu->arch.tsc_scaling_ratio;
- 		if (tsc_ratio != __this_cpu_read(current_tsc_ratio)) {
- 			__this_cpu_write(current_tsc_ratio, tsc_ratio);
-@@ -2260,7 +2260,7 @@ static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 		}
+ 	/* Set EPP/EPB to min */
+-	if (static_cpu_has(X86_FEATURE_HWP_EPP))
++	if (boot_cpu_has(X86_FEATURE_HWP_EPP))
+ 		value |= HWP_ENERGY_PERF_PREFERENCE(HWP_EPP_POWERSAVE);
+ 	else
+ 		intel_pstate_set_epb(cpu, HWP_EPP_BALANCE_POWERSAVE);
+@@ -1194,7 +1194,7 @@ static void __init intel_pstate_sysfs_expose_params(void)
+ static void intel_pstate_hwp_enable(struct cpudata *cpudata)
+ {
+ 	/* First disable HWP notification interrupt as we don't process them */
+-	if (static_cpu_has(X86_FEATURE_HWP_NOTIFY))
++	if (boot_cpu_has(X86_FEATURE_HWP_NOTIFY))
+ 		wrmsrl_on_cpu(cpudata->cpu, MSR_HWP_INTERRUPT, 0x00);
+ 
+ 	wrmsrl_on_cpu(cpudata->cpu, MSR_PM_ENABLE, 0x1);
+diff --git a/drivers/cpufreq/powernow-k8.c b/drivers/cpufreq/powernow-k8.c
+index fb77b39a4ce3..3c12e03fa343 100644
+--- a/drivers/cpufreq/powernow-k8.c
++++ b/drivers/cpufreq/powernow-k8.c
+@@ -1178,7 +1178,7 @@ static int powernowk8_init(void)
+ 	unsigned int i, supported_cpus = 0;
+ 	int ret;
+ 
+-	if (static_cpu_has(X86_FEATURE_HW_PSTATE)) {
++	if (boot_cpu_has(X86_FEATURE_HW_PSTATE)) {
+ 		__request_acpi_cpufreq();
+ 		return -ENODEV;
  	}
- 	/* This assumes that the kernel never uses MSR_TSC_AUX */
--	if (static_cpu_has(X86_FEATURE_RDTSCP))
-+	if (boot_cpu_has(X86_FEATURE_RDTSCP))
- 		wrmsrl(MSR_TSC_AUX, svm->tsc_aux);
- 
- 	if (sd->current_vmcb != svm->vmcb) {
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c73375e01ab8..0cb0d26564ca 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6423,7 +6423,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	if (vcpu->guest_debug & KVM_GUESTDBG_SINGLESTEP)
- 		vmx_set_interrupt_shadow(vcpu, 0);
- 
--	if (static_cpu_has(X86_FEATURE_PKU) &&
-+	if (boot_cpu_has(X86_FEATURE_PKU) &&
- 	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE) &&
- 	    vcpu->arch.pkru != vmx->host_pkru)
- 		__write_pkru(vcpu->arch.pkru);
-@@ -6512,7 +6512,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	 * back on host, so it is safe to read guest PKRU from current
- 	 * XSAVE.
- 	 */
--	if (static_cpu_has(X86_FEATURE_PKU) &&
-+	if (boot_cpu_has(X86_FEATURE_PKU) &&
- 	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE)) {
- 		vcpu->arch.pkru = __read_pkru();
- 		if (vcpu->arch.pkru != vmx->host_pkru)
 -- 
 2.21.0
 
