@@ -7,55 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6690C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFF0C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B833F2184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C5A217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909850;
-	bh=kWhj8/bIaPGCa6WIfHjsvItK2SOu/uykrgSNdmB1U2k=;
+	s=default; t=1553909876;
+	bh=rQLJv/2SMiTvz2Vug3f0dOGP2fNBIcvrrnTFXWR93uw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uBRJ58QIYxuwy1LuDuCbiG52ONX4sgefPnbd0ZEv3V55aQMEiFJQPvemB3tewO4Uw
-	 bCzrQ4QuoFKgFCdQXElb3Aevdl4uu/J0xPHTsp7WqIG2detedziNd2z4YuAxM7KLW/
-	 aH0EWM7UOnwaPft2pw+zVv6ZATOa1G/BQZDaXafE=
+	b=J0C9XVCxNaJI1AAnlbzAQ1IdfANfozx2lCPYMlzw4O1ugY9P8eesvR3TyCtBjxNn/
+	 d7YG3CuehhedWVTpcC8lBbGZSR7+UlWSuPWhIT8JRZ28zir7ERQcZdHjxuPEzNl6pk
+	 dTJVKPwr3gsrVRdTmSwqHyvUyu8BISPYYauzlDnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731917AbfC3Bh3 (ORCPT
+        id S1731592AbfC3Ba1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:37:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38136 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:30:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731759AbfC3Baw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:30:52 -0400
+        id S1731490AbfC3BaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:30:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E25712184C;
-        Sat, 30 Mar 2019 01:30:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94A87217F5;
+        Sat, 30 Mar 2019 01:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909452;
-        bh=kWhj8/bIaPGCa6WIfHjsvItK2SOu/uykrgSNdmB1U2k=;
+        s=default; t=1553909423;
+        bh=rQLJv/2SMiTvz2Vug3f0dOGP2fNBIcvrrnTFXWR93uw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OiVImN3Tn8vWFgCX4wpmeOMjGCtb/uiHwJB9NKRgkosXxPmjSoOp79EeGLq+IDNzf
-         2UhpRWwk4mKW+0prZIkiGP+65Rwc2q2ftPQqB6t36pvU+wTfo0jNFLqFY8Gh+BnWAI
-         6Fbr952QZPjwrHYPkGBlpJIXfMnBoys3b1Pl+TEo=
+        b=zJcTOitem/96LcGS+kJyQKKcb5UgAN9oT3FolEsQxW6gzmbdcPp2GyDxt8UMfmNjC
+         3odN2Pw8YDzTTL8J3Y1diJJQJUq5lLHj2LBTFRV76ZIFUoZEtAI6Yp1MN8wRfdkTSG
+         XcmLfMBbILgm5wOoZFFk86UPs0pdflL34IFKTkIs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
-        Jonathan Dieter <jdieter@gmail.com>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>, linux-usb@vger.kernel.org,
-        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 12/37] usbip: fix vhci_hcd controller counting
-Date:   Fri, 29 Mar 2019 21:29:55 -0400
-Message-Id: <20190330013020.379-12-sashal@kernel.org>
+Cc:     Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 02/37] rsi: improve kernel thread handling to fix kernel panic
+Date:   Fri, 29 Mar 2019 21:29:45 -0400
+Message-Id: <20190330013020.379-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013020.379-1-sashal@kernel.org>
 References: <20190330013020.379-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,58 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Żenczykowski <maze@google.com>
+From: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
 
-[ Upstream commit e0a2e73e501c77037c8756137e87b12c7c3c9793 ]
+[ Upstream commit 4c62764d0fc21a34ffc44eec1210038c3a2e4473 ]
 
-Without this usbip fails on a machine with devices
-that lexicographically come after vhci_hcd.
+While running regressions, observed below kernel panic when sdio disconnect
+called. This is because of, kthread_stop() is taking care of
+wait_for_completion() by default. When wait_for_completion triggered
+in kthread_stop and as it was done already, giving kernel panic.
+Hence, removing redundant wait_for_completion() from rsi_kill_thread().
 
-ie.
-  $ ls -l /sys/devices/platform
-  ...
-  drwxr-xr-x. 4 root root    0 Sep 19 16:21 serial8250
-  -rw-r--r--. 1 root root 4096 Sep 19 23:50 uevent
-  drwxr-xr-x. 6 root root    0 Sep 20 13:15 vhci_hcd.0
-  drwxr-xr-x. 4 root root    0 Sep 19 16:22 w83627hf.656
+... skipping ...
+BUG: unable to handle kernel NULL pointer dereference at           (null)
+IP: [<ffffffff810a63df>] exit_creds+0x1f/0x50
+PGD 0
+Oops: 0002 [#1] SMP
+CPU: 0 PID: 6502 Comm: rmmod Tainted: G  OE   4.15.9-Generic #154-Ubuntu
+Hardware name: Dell Inc. Edge Gateway 3003/ , BIOS 01.00.00 04/17/2017
+Stack:
+ffff88007392e600 ffff880075847dc0 ffffffff8108160a 0000000000000000
+ffff88007392e600 ffff880075847de8 ffffffff810a484b ffff880076127000
+ffff88003cd3a800 ffff880074f12a00 ffff880075847e28 ffffffffc09bed15
+Call Trace:
+[<ffffffff8108160a>] __put_task_struct+0x5a/0x140
+[<ffffffff810a484b>] kthread_stop+0x10b/0x110
+[<ffffffffc09bed15>] rsi_disconnect+0x2f5/0x300 [ven_rsi_sdio]
+[<ffffffff81578bcb>] ? __pm_runtime_resume+0x5b/0x80
+[<ffffffff816f0918>] sdio_bus_remove+0x38/0x100
+[<ffffffff8156cc64>] __device_release_driver+0xa4/0x150
+[<ffffffff8156d7a5>] driver_detach+0xb5/0xc0
+[<ffffffff8156c6c5>] bus_remove_driver+0x55/0xd0
+[<ffffffff8156dfbc>] driver_unregister+0x2c/0x50
+[<ffffffff816f0b8a>] sdio_unregister_driver+0x1a/0x20
+[<ffffffffc09bf0f5>] rsi_module_exit+0x15/0x30 [ven_rsi_sdio]
+[<ffffffff8110cad8>] SyS_delete_module+0x1b8/0x210
+[<ffffffff81851dc8>] entry_SYSCALL_64_fastpath+0x1c/0xbb
 
-Because it detects 'w83627hf.656' as another vhci_hcd controller,
-and then fails to be able to talk to it.
-
-Note: this doesn't actually fix usbip's support for multiple
-controllers... that's still broken for other reasons
-("vhci_hcd.0" is hardcoded in a string macro), but is enough to
-actually make it work on the above machine.
-
-See also:
-  https://bugzilla.redhat.com/show_bug.cgi?id=1631148
-
-Cc: Jonathan Dieter <jdieter@gmail.com>
-Cc: Valentina Manea <valentina.manea.m@gmail.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: linux-usb@vger.kernel.org
-Signed-off-by: Maciej Żenczykowski <zenczykowski@gmail.com>
-Acked-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
-Tested-by: Jonathan Dieter <jdieter@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/usb/usbip/libsrc/vhci_driver.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/rsi/rsi_common.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/usb/usbip/libsrc/vhci_driver.c b/tools/usb/usbip/libsrc/vhci_driver.c
-index ed8c9d360c0f..4225d462701d 100644
---- a/tools/usb/usbip/libsrc/vhci_driver.c
-+++ b/tools/usb/usbip/libsrc/vhci_driver.c
-@@ -150,7 +150,7 @@ static int get_nports(struct udev_device *hc_device)
+diff --git a/drivers/net/wireless/rsi/rsi_common.h b/drivers/net/wireless/rsi/rsi_common.h
+index e579d694d13c..21986ba56a3c 100644
+--- a/drivers/net/wireless/rsi/rsi_common.h
++++ b/drivers/net/wireless/rsi/rsi_common.h
+@@ -74,7 +74,6 @@ static inline int rsi_kill_thread(struct rsi_thread *handle)
+ 	atomic_inc(&handle->thread_done);
+ 	rsi_set_event(&handle->event);
  
- static int vhci_hcd_filter(const struct dirent *dirent)
- {
--	return strcmp(dirent->d_name, "vhci_hcd") >= 0;
-+	return !strncmp(dirent->d_name, "vhci_hcd.", 9);
+-	wait_for_completion(&handle->completion);
+ 	return kthread_stop(handle->task);
  }
  
- static int get_ncontrollers(void)
 -- 
 2.19.1
 
