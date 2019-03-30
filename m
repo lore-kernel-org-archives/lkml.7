@@ -7,55 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A32A5C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA5AC4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B702218D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC34218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907228;
-	bh=t0UkHPUNSywfB4fEO3vyA7A8ScZSqk4+KfYx5LEbmzo=;
+	s=default; t=1553907231;
+	bh=tCpEh7hOJBCr1sY4ULgtXrUul+CldAHX88szFQ98N4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EeGHa/MwIQb+gEWoD1SWvJeoViiq/cPuZ3QqsDRmzRnDjZEpYLuQaHP74fKMU3Cug
-	 x4loJW7A8J11DwTaTKK/fS0d65kC+7Z+4nUyz6gvENfjWHz/SPaPN7Bt/8mSXeDMQB
-	 fnWXLkFL/ZWzoIx9cybcIkjT5zhiUegcMRH0xLB4=
+	b=jl+2mUgkDJICOu76mYsbVvj+zoSBGH76G+aT9UcaS3Aw5czCWl3QFFhmQBfvI9Nns
+	 dPTnzoWtYBn0HKAhXB1YtnceQ0ydu/LY0fSp2eC9U8zVxTrNUhDigW7Vr2CrkSctz+
+	 OscLF+N6OPTb2/UNa18M9/oV0K/JUW9OZVGm4qto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731366AbfC3Axr (ORCPT
+        id S1731376AbfC3Axt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:53:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60604 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:53:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730839AbfC3Axo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:53:44 -0400
+        id S1730839AbfC3Axr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:53:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1811C218CD;
-        Sat, 30 Mar 2019 00:53:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A59218D3;
+        Sat, 30 Mar 2019 00:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907223;
-        bh=t0UkHPUNSywfB4fEO3vyA7A8ScZSqk4+KfYx5LEbmzo=;
+        s=default; t=1553907227;
+        bh=tCpEh7hOJBCr1sY4ULgtXrUul+CldAHX88szFQ98N4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wmJiMghJ5CRYTlhsBjWk3XSviU+el9kIseG4E4b01H7K9pAnm4CbkRlHN58lD1CTO
-         Q2xbwVhXoYqNfEmurn6x5NEBiWxV8ybK36B+koB88OkY5noCgD5sNXycGIjrXqMnck
-         cSjn24xNKQJuWvavO+1drU+BkL+VQZd0Z0HjVNuU=
+        b=LYkaYrtg+fGhAmB3DaatdmoIm23HzqLTeTjfwMZz5+1B4joQ4BlqLVulqARh3RX11
+         T0WRMvWHPTuDL8YgfSOMMMZ1b811rFvIY2PhKTkzRqDpvXvvUee4J7iBb5lX92BLwI
+         Dyn9q/FeOGvR0mXzvDCZ52sCE/myzwRAFbRaRSy0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 25/52] sched/core: Fix buffer overflow in cgroup2 property cpu.max
-Date:   Fri, 29 Mar 2019 20:52:32 -0400
-Message-Id: <20190330005301.26868-25-sashal@kernel.org>
+Cc:     David Arcari <darcari@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 27/52] tools/power turbostat: return the exit status of a command
+Date:   Fri, 29 Mar 2019 20:52:34 -0400
+Message-Id: <20190330005301.26868-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005301.26868-1-sashal@kernel.org>
 References: <20190330005301.26868-1-sashal@kernel.org>
@@ -68,46 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: David Arcari <darcari@redhat.com>
 
-[ Upstream commit 4c47acd824aaaa8fc6dc519fb4e08d1522105b7a ]
+[ Upstream commit 2a95496634a017c19641f26f00907af75b962f01 ]
 
-Add limit into sscanf format string for on-stack buffer.
+turbostat failed to return a non-zero exit status even though the
+supplied command (turbostat <command>) failed.  Currently when turbostat
+forks a command it returns zero instead of the actual exit status of the
+command.  Modify the code to return the exit status.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Li Zefan <lizefan@huawei.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 0d5936344f30 ("sched: Implement interface for cgroup unified hierarchy")
-Link: https://lkml.kernel.org/r/155189230232.2620.13120481613524200065.stgit@buzz
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: David Arcari <darcari@redhat.com>
+Acked-by: Len Brown <len.brown@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/power/x86/turbostat/turbostat.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 152a0b0c91bb..33e7557fe8e3 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6929,7 +6929,7 @@ static int __maybe_unused cpu_period_quota_parse(char *buf,
- {
- 	char tok[21];	/* U64_MAX */
- 
--	if (!sscanf(buf, "%s %llu", tok, periodp))
-+	if (sscanf(buf, "%20s %llu", tok, periodp) < 1)
- 		return -EINVAL;
- 
- 	*periodp *= NSEC_PER_USEC;
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 980bd9d20646..83964f796edb 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -5054,6 +5054,9 @@ int fork_it(char **argv)
+ 		signal(SIGQUIT, SIG_IGN);
+ 		if (waitpid(child_pid, &status, 0) == -1)
+ 			err(status, "waitpid");
++
++		if (WIFEXITED(status))
++			status = WEXITSTATUS(status);
+ 	}
+ 	/*
+ 	 * n.b. fork_it() does not check for errors from for_all_cpus()
 -- 
 2.19.1
 
