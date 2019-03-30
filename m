@@ -2,56 +2,55 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55811C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9876BC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13B1921900
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0852184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909346;
-	bh=QhZm/KqZhUVgOFQ/5WAIAtmJuVZSSTfWUqQYtFSZs1M=;
+	s=default; t=1553909349;
+	bh=hiFphtc3oFNVlCRFqyYbJSrqUSlUPWP//X1v1toM0M8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IL7NMMrkF8ytR8go4nPamKFbOScpJcw4I0eMP8efvNxbkntaa+cLdnvh9ZhqfVs6C
-	 DB51sRWMCZQmwbQeMbS5XYqO0z9qmgtzhsedFk5I582ZebPG8G57K7WYRbg/hwMUNw
-	 OtCxCS4iDwBlppNTjPvHma5Fa2H96c0xXkHNxpGc=
+	b=kzs7bSCeWthrHe5em3N7cC+io9wdULEctb7WEzj3dpZLPFL1lzz1I/is8W5FbJ3Uf
+	 OmnDEewSPSv5d9Opdjb1pAsMvwYAR+Rgmke9sUNE6GIzLTcL1Ttuk3EobElmyJrCdm
+	 R23YwcTlEIDK1G376ffdcCijRTJpZTTWdpzz44H4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730778AbfC3B3F (ORCPT
+        id S1730805AbfC3B3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:29:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35720 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:29:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730680AbfC3B3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:29:01 -0400
+        id S1730769AbfC3B3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:29:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D13A5217F5;
-        Sat, 30 Mar 2019 01:28:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B11C218EA;
+        Sat, 30 Mar 2019 01:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909339;
-        bh=QhZm/KqZhUVgOFQ/5WAIAtmJuVZSSTfWUqQYtFSZs1M=;
+        s=default; t=1553909344;
+        bh=hiFphtc3oFNVlCRFqyYbJSrqUSlUPWP//X1v1toM0M8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NsjcBH7i9+3D9gWM2DuXKZhoID9eO4Nuq7a+hmxqeheQmMdAT7KkfGBCLH7+XuJP+
-         ZFrZBkgucvld8PcQuFuWCJ/eZ40ElGVHzMTf6SG5a/zSmnZ8K2aKUhQdtiN3Wym9fp
-         hEJQTCcrpynKFfPntwCBqv5+LF3i20gXO9vMjTFE=
+        b=t6R3zsJKxu0Z4Y9PksOZuNiGBGcalGDO9OivRaczrdLG1JjLzJI+bWQdCpiQ1IRun
+         cclzH22yJ76o/N1ZPESwMvri5ktd9a2aqedscLcCkUGPrO9aY5horNIHV3ZzI5ivSm
+         OcfTQr5grtnprySJKVQT+pYhLatKmmNhjr5Y90WE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 04/57] f2fs: fix to avoid NULL pointer dereference on se->discard_map
-Date:   Fri, 29 Mar 2019 21:27:57 -0400
-Message-Id: <20190330012854.32212-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/57] f2fs: fix to do sanity check with current segment number
+Date:   Fri, 29 Mar 2019 21:28:01 -0400
+Message-Id: <20190330012854.32212-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
 References: <20190330012854.32212-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,353 +61,137 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 7d20c8abb2edcf962ca857d51f4d0f9cd4b19053 ]
+[ Upstream commit 042be0f849e5fc24116d0afecfaf926eed5cac63 ]
 
-https://bugzilla.kernel.org/show_bug.cgi?id=200951
+https://bugzilla.kernel.org/show_bug.cgi?id=200219
 
-These is a NULL pointer dereference issue reported in bugzilla:
+Reproduction way:
+- mount image
+- run poc code
+- umount image
 
-Hi,
-in the setup there is a SATA SSD connected to a SATA-to-USB bridge.
+F2FS-fs (loop1): Bitmap was wrongly set, blk:15364
+------------[ cut here ]------------
+kernel BUG at /home/yuchao/git/devf2fs/segment.c:2061!
+invalid opcode: 0000 [#1] PREEMPT SMP
+CPU: 2 PID: 17686 Comm: umount Tainted: G        W  O      4.18.0-rc2+ #39
+Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+EIP: update_sit_entry+0x459/0x4e0 [f2fs]
+Code: e8 1c b5 fd ff 0f 0b 0f 0b 8b 45 e4 c7 44 24 08 9c 7a 6c f8 c7 44 24 04 bc 4a 6c f8 89 44 24 0c 8b 06 89 04 24 e8 f7 b4 fd ff <0f> 0b 8b 45 e4 0f b6 d2 89 54 24 10 c7 44 24 08 60 7a 6c f8 c7 44
+EAX: 00000032 EBX: 000000f8 ECX: 00000002 EDX: 00000001
+ESI: d7177000 EDI: f520fe68 EBP: d6477c6c ESP: d6477c34
+DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010282
+CR0: 80050033 CR2: b7fbe000 CR3: 2a99b3c0 CR4: 000406f0
+Call Trace:
+ f2fs_allocate_data_block+0x124/0x580 [f2fs]
+ do_write_page+0x78/0x150 [f2fs]
+ f2fs_do_write_node_page+0x25/0xa0 [f2fs]
+ __write_node_page+0x2bf/0x550 [f2fs]
+ f2fs_sync_node_pages+0x60e/0x6d0 [f2fs]
+ ? sync_inode_metadata+0x2f/0x40
+ ? f2fs_write_checkpoint+0x28f/0x7d0 [f2fs]
+ ? up_write+0x1e/0x80
+ f2fs_write_checkpoint+0x2a9/0x7d0 [f2fs]
+ ? mark_held_locks+0x5d/0x80
+ ? _raw_spin_unlock_irq+0x27/0x50
+ kill_f2fs_super+0x68/0x90 [f2fs]
+ deactivate_locked_super+0x3d/0x70
+ deactivate_super+0x40/0x60
+ cleanup_mnt+0x39/0x70
+ __cleanup_mnt+0x10/0x20
+ task_work_run+0x81/0xa0
+ exit_to_usermode_loop+0x59/0xa7
+ do_fast_syscall_32+0x1f5/0x22c
+ entry_SYSENTER_32+0x53/0x86
+EIP: 0xb7f95c51
+Code: c1 1e f7 ff ff 89 e5 8b 55 08 85 d2 8b 81 64 cd ff ff 74 02 89 02 5d c3 8b 0c 24 c3 8b 1c 24 c3 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
+EAX: 00000000 EBX: 0871ab90 ECX: bfb2cd00 EDX: 00000000
+ESI: 00000000 EDI: 0871ab90 EBP: 0871ab90 ESP: bfb2cd7c
+DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
+Modules linked in: f2fs(O) crc32_generic bnep rfcomm bluetooth ecdh_generic snd_intel8x0 snd_ac97_codec ac97_bus snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi snd_seq pcbc joydev aesni_intel snd_seq_device aes_i586 snd_timer crypto_simd snd cryptd soundcore mac_hid serio_raw video i2c_piix4 parport_pc ppdev lp parport hid_generic psmouse usbhid hid e1000 [last unloaded: f2fs]
+---[ end trace d423f83982cfcdc5 ]---
 
-The disc is "Samsung SSD 850 PRO 256G" which supports TRIM.
-There are four partitions:
- sda1: FAT  /boot
- sda2: F2FS /
- sda3: F2FS /home
- sda4: F2FS
+The reason is, different log headers using the same segment, once
+one log's next block address is used by another log, it will cause
+panic as above.
 
-The bridge is ASMT1153e which uses the "uas" driver.
-There is no TRIM pass-through, so, when mounting it reports:
- mounting with "discard" option, but the device does not support discard
+Main area: 24 segs, 24 secs 24 zones
+  - COLD  data: 0, 0, 0
+  - WARM  data: 1, 1, 1
+  - HOT   data: 20, 20, 20
+  - Dir   dnode: 22, 22, 22
+  - File   dnode: 22, 22, 22
+  - Indir nodes: 21, 21, 21
 
-The USB host is USB3.0 and UASP capable. It is the one on RK3399.
-
-Given this everything works fine, except there is no TRIM support.
-
-In order to enable TRIM a new UDEV rule is added [1]:
- /etc/udev/rules.d/10-sata-bridge-trim.rules:
- ACTION=="add|change", ATTRS{idVendor}=="174c", ATTRS{idProduct}=="55aa", SUBSYSTEM=="scsi_disk", ATTR{provisioning_mode}="unmap"
-After reboot any F2FS write hangs forever and dmesg reports:
- Unable to handle kernel NULL pointer dereference
-
-Also tested on a x86_64 system: works fine even with TRIM enabled.
- same disc
- same bridge
- different usb host controller
- different cpu architecture
- not root filesystem
-
-Regards,
-  Vicenç.
-
-[1] Post #5 in https://bbs.archlinux.org/viewtopic.php?id=236280
-
- Unable to handle kernel NULL pointer dereference at virtual address 000000000000003e
- Mem abort info:
-   ESR = 0x96000004
-   Exception class = DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
- Data abort info:
-   ISV = 0, ISS = 0x00000004
-   CM = 0, WnR = 0
- user pgtable: 4k pages, 48-bit VAs, pgdp = 00000000626e3122
- [000000000000003e] pgd=0000000000000000
- Internal error: Oops: 96000004 [#1] SMP
- Modules linked in: overlay snd_soc_hdmi_codec rc_cec dw_hdmi_i2s_audio dw_hdmi_cec snd_soc_simple_card snd_soc_simple_card_utils snd_soc_rockchip_i2s rockchip_rga snd_soc_rockchip_pcm rockchipdrm videobuf2_dma_sg v4l2_mem2mem rtc_rk808 videobuf2_memops analogix_dp videobuf2_v4l2 videobuf2_common dw_hdmi dw_wdt cec rc_core videodev drm_kms_helper media drm rockchip_thermal rockchip_saradc realtek drm_panel_orientation_quirks syscopyarea sysfillrect sysimgblt fb_sys_fops dwmac_rk stmmac_platform stmmac pwm_bl squashfs loop crypto_user gpio_keys hid_kensington
- CPU: 5 PID: 957 Comm: nvim Not tainted 4.19.0-rc1-1-ARCH #1
- Hardware name: Sapphire-RK3399 Board (DT)
- pstate: 00000005 (nzcv daif -PAN -UAO)
- pc : update_sit_entry+0x304/0x4b0
- lr : update_sit_entry+0x108/0x4b0
- sp : ffff00000ca13bd0
- x29: ffff00000ca13bd0 x28: 000000000000003e
- x27: 0000000000000020 x26: 0000000000080000
- x25: 0000000000000048 x24: ffff8000ebb85cf8
- x23: 0000000000000253 x22: 00000000ffffffff
- x21: 00000000000535f2 x20: 00000000ffffffdf
- x19: ffff8000eb9e6800 x18: ffff8000eb9e6be8
- x17: 0000000007ce6926 x16: 000000001c83ffa8
- x15: 0000000000000000 x14: ffff8000f602df90
- x13: 0000000000000006 x12: 0000000000000040
- x11: 0000000000000228 x10: 0000000000000000
- x9 : 0000000000000000 x8 : 0000000000000000
- x7 : 00000000000535f2 x6 : ffff8000ebff3440
- x5 : ffff8000ebff3440 x4 : ffff8000ebe3a6c8
- x3 : 00000000ffffffff x2 : 0000000000000020
- x1 : 0000000000000000 x0 : ffff8000eb9e5800
- Process nvim (pid: 957, stack limit = 0x0000000063a78320)
- Call trace:
-  update_sit_entry+0x304/0x4b0
-  f2fs_invalidate_blocks+0x98/0x140
-  truncate_node+0x90/0x400
-  f2fs_remove_inode_page+0xe8/0x340
-  f2fs_evict_inode+0x2b0/0x408
-  evict+0xe0/0x1e0
-  iput+0x160/0x260
-  do_unlinkat+0x214/0x298
-  __arm64_sys_unlinkat+0x3c/0x68
-  el0_svc_handler+0x94/0x118
-  el0_svc+0x8/0xc
- Code: f9400800 b9488400 36080140 f9400f01 (387c4820)
- ---[ end trace a0f21a307118c477 ]---
-
-The reason is it is possible to enable discard flag on block queue via
-UDEV, but during mount, f2fs will initialize se->discard_map only if
-this flag is set, once the flag is set after mount, f2fs may dereference
-NULL pointer on se->discard_map.
-
-So this patch does below changes to fix this issue:
-- initialize and update se->discard_map all the time.
-- don't clear DISCARD option if device has no QUEUE_FLAG_DISCARD flag
-during mount.
-- don't issue small discard on zoned block device.
-- introduce some functions to enhance the readability.
+So this patch adds sanity check to detect such condition to avoid
+this issue.
 
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Tested-by: Vicente Bergas <vicencb@gmail.com>
+
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/debug.c   |  3 +--
- fs/f2fs/f2fs.h    | 15 ++++++++---
- fs/f2fs/file.c    |  2 +-
- fs/f2fs/segment.c | 65 ++++++++++++++++++++---------------------------
- fs/f2fs/super.c   | 16 +++---------
- 5 files changed, 46 insertions(+), 55 deletions(-)
+ fs/f2fs/super.c | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
-index 214a968962a1..ebe649d9793c 100644
---- a/fs/f2fs/debug.c
-+++ b/fs/f2fs/debug.c
-@@ -190,8 +190,7 @@ static void update_mem_info(struct f2fs_sb_info *sbi)
- 	si->base_mem += MAIN_SEGS(sbi) * sizeof(struct seg_entry);
- 	si->base_mem += f2fs_bitmap_size(MAIN_SEGS(sbi));
- 	si->base_mem += 2 * SIT_VBLOCK_MAP_SIZE * MAIN_SEGS(sbi);
--	if (f2fs_discard_en(sbi))
--		si->base_mem += SIT_VBLOCK_MAP_SIZE * MAIN_SEGS(sbi);
-+	si->base_mem += SIT_VBLOCK_MAP_SIZE * MAIN_SEGS(sbi);
- 	si->base_mem += SIT_VBLOCK_MAP_SIZE;
- 	if (sbi->segs_per_sec > 1)
- 		si->base_mem += MAIN_SECS(sbi) * sizeof(struct sec_entry);
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 42aef5c94927..19d2bbaf4c25 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3410,11 +3410,20 @@ static inline int get_blkz_type(struct f2fs_sb_info *sbi,
- }
- #endif
- 
--static inline bool f2fs_discard_en(struct f2fs_sb_info *sbi)
-+static inline bool f2fs_hw_should_discard(struct f2fs_sb_info *sbi)
- {
--	struct request_queue *q = bdev_get_queue(sbi->sb->s_bdev);
-+	return f2fs_sb_has_blkzoned(sbi->sb);
-+}
- 
--	return blk_queue_discard(q) || f2fs_sb_has_blkzoned(sbi->sb);
-+static inline bool f2fs_hw_support_discard(struct f2fs_sb_info *sbi)
-+{
-+	return blk_queue_discard(bdev_get_queue(sbi->sb->s_bdev));
-+}
-+
-+static inline bool f2fs_realtime_discard_enable(struct f2fs_sb_info *sbi)
-+{
-+	return (test_opt(sbi, DISCARD) && f2fs_hw_support_discard(sbi)) ||
-+					f2fs_hw_should_discard(sbi);
- }
- 
- static inline void set_opt_mode(struct f2fs_sb_info *sbi, unsigned int mt)
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 81c1dd635a8d..9fc076ca002d 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1983,7 +1983,7 @@ static int f2fs_ioc_fitrim(struct file *filp, unsigned long arg)
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
--	if (!blk_queue_discard(q))
-+	if (!f2fs_hw_support_discard(F2FS_SB(sb)))
- 		return -EOPNOTSUPP;
- 
- 	if (copy_from_user(&range, (struct fstrim_range __user *)arg,
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 1fa6f8185766..ac038563273d 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1744,11 +1744,11 @@ static bool add_discard_addrs(struct f2fs_sb_info *sbi, struct cp_control *cpc,
- 	struct list_head *head = &SM_I(sbi)->dcc_info->entry_list;
- 	int i;
- 
--	if (se->valid_blocks == max_blocks || !f2fs_discard_en(sbi))
-+	if (se->valid_blocks == max_blocks || !f2fs_hw_support_discard(sbi))
- 		return false;
- 
- 	if (!force) {
--		if (!test_opt(sbi, DISCARD) || !se->valid_blocks ||
-+		if (!f2fs_realtime_discard_enable(sbi) || !se->valid_blocks ||
- 			SM_I(sbi)->dcc_info->nr_discards >=
- 				SM_I(sbi)->dcc_info->max_discards)
- 			return false;
-@@ -1854,7 +1854,7 @@ void f2fs_clear_prefree_segments(struct f2fs_sb_info *sbi,
- 				dirty_i->nr_dirty[PRE]--;
- 		}
- 
--		if (!test_opt(sbi, DISCARD))
-+		if (!f2fs_realtime_discard_enable(sbi))
- 			continue;
- 
- 		if (force && start >= cpc->trim_start &&
-@@ -2044,8 +2044,7 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
- 			del = 0;
- 		}
- 
--		if (f2fs_discard_en(sbi) &&
--			!f2fs_test_and_set_bit(offset, se->discard_map))
-+		if (!f2fs_test_and_set_bit(offset, se->discard_map))
- 			sbi->discard_blks--;
- 
- 		/* don't overwrite by SSR to keep node chain */
-@@ -2073,8 +2072,7 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
- 			del = 0;
- 		}
- 
--		if (f2fs_discard_en(sbi) &&
--			f2fs_test_and_clear_bit(offset, se->discard_map))
-+		if (f2fs_test_and_clear_bit(offset, se->discard_map))
- 			sbi->discard_blks++;
- 	}
- 	if (!f2fs_test_bit(offset, se->ckpt_valid_map))
-@@ -2690,7 +2688,7 @@ int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range)
- 	 * discard option. User configuration looks like using runtime discard
- 	 * or periodic fstrim instead of it.
- 	 */
--	if (test_opt(sbi, DISCARD))
-+	if (f2fs_realtime_discard_enable(sbi))
- 		goto out;
- 
- 	start_block = START_BLOCK(sbi, start_segno);
-@@ -3781,13 +3779,11 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
- 			return -ENOMEM;
- #endif
- 
--		if (f2fs_discard_en(sbi)) {
--			sit_i->sentries[start].discard_map
--				= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE,
--								GFP_KERNEL);
--			if (!sit_i->sentries[start].discard_map)
--				return -ENOMEM;
--		}
-+		sit_i->sentries[start].discard_map
-+			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE,
-+							GFP_KERNEL);
-+		if (!sit_i->sentries[start].discard_map)
-+			return -ENOMEM;
- 	}
- 
- 	sit_i->tmp_map = f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
-@@ -3935,18 +3931,16 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
- 				total_node_blocks += se->valid_blocks;
- 
- 			/* build discard map only one time */
--			if (f2fs_discard_en(sbi)) {
--				if (is_set_ckpt_flags(sbi, CP_TRIMMED_FLAG)) {
--					memset(se->discard_map, 0xff,
--						SIT_VBLOCK_MAP_SIZE);
--				} else {
--					memcpy(se->discard_map,
--						se->cur_valid_map,
--						SIT_VBLOCK_MAP_SIZE);
--					sbi->discard_blks +=
--						sbi->blocks_per_seg -
--						se->valid_blocks;
--				}
-+			if (is_set_ckpt_flags(sbi, CP_TRIMMED_FLAG)) {
-+				memset(se->discard_map, 0xff,
-+					SIT_VBLOCK_MAP_SIZE);
-+			} else {
-+				memcpy(se->discard_map,
-+					se->cur_valid_map,
-+					SIT_VBLOCK_MAP_SIZE);
-+				sbi->discard_blks +=
-+					sbi->blocks_per_seg -
-+					se->valid_blocks;
- 			}
- 
- 			if (sbi->segs_per_sec > 1)
-@@ -3984,16 +3978,13 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
- 		if (IS_NODESEG(se->type))
- 			total_node_blocks += se->valid_blocks;
- 
--		if (f2fs_discard_en(sbi)) {
--			if (is_set_ckpt_flags(sbi, CP_TRIMMED_FLAG)) {
--				memset(se->discard_map, 0xff,
--							SIT_VBLOCK_MAP_SIZE);
--			} else {
--				memcpy(se->discard_map, se->cur_valid_map,
--							SIT_VBLOCK_MAP_SIZE);
--				sbi->discard_blks += old_valid_blocks;
--				sbi->discard_blks -= se->valid_blocks;
--			}
-+		if (is_set_ckpt_flags(sbi, CP_TRIMMED_FLAG)) {
-+			memset(se->discard_map, 0xff, SIT_VBLOCK_MAP_SIZE);
-+		} else {
-+			memcpy(se->discard_map, se->cur_valid_map,
-+						SIT_VBLOCK_MAP_SIZE);
-+			sbi->discard_blks += old_valid_blocks;
-+			sbi->discard_blks -= se->valid_blocks;
- 		}
- 
- 		if (sbi->segs_per_sec > 1) {
 diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index c9639ef0e8d5..ec50b95c7ea5 100644
+index ec50b95c7ea5..442cc9023dfc 100644
 --- a/fs/f2fs/super.c
 +++ b/fs/f2fs/super.c
-@@ -360,7 +360,6 @@ static int f2fs_check_quota_options(struct f2fs_sb_info *sbi)
- static int parse_options(struct super_block *sb, char *options)
- {
- 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
--	struct request_queue *q;
- 	substring_t args[MAX_OPT_ARGS];
- 	char *p, *name;
- 	int arg = 0;
-@@ -415,14 +414,7 @@ static int parse_options(struct super_block *sb, char *options)
- 				return -EINVAL;
- 			break;
- 		case Opt_discard:
--			q = bdev_get_queue(sb->s_bdev);
--			if (blk_queue_discard(q)) {
--				set_opt(sbi, DISCARD);
--			} else if (!f2fs_sb_has_blkzoned(sb)) {
--				f2fs_msg(sb, KERN_WARNING,
--					"mounting with \"discard\" option, but "
--					"the device does not support discard");
--			}
-+			set_opt(sbi, DISCARD);
- 			break;
- 		case Opt_nodiscard:
- 			if (f2fs_sb_has_blkzoned(sb)) {
-@@ -1032,7 +1024,8 @@ static void f2fs_put_super(struct super_block *sb)
- 	/* be sure to wait for any on-going discard commands */
- 	dropped = f2fs_wait_discard_bios(sbi);
+@@ -2328,7 +2328,7 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 	unsigned int segment_count_main;
+ 	unsigned int cp_pack_start_sum, cp_payload;
+ 	block_t user_block_count;
+-	int i;
++	int i, j;
  
--	if (f2fs_discard_en(sbi) && !sbi->discard_blks && !dropped) {
-+	if ((f2fs_hw_support_discard(sbi) || f2fs_hw_should_discard(sbi)) &&
-+					!sbi->discard_blks && !dropped) {
- 		struct cp_control cpc = {
- 			.reason = CP_UMOUNT | CP_TRIMMED,
- 		};
-@@ -1402,8 +1395,7 @@ static void default_options(struct f2fs_sb_info *sbi)
- 	set_opt(sbi, NOHEAP);
- 	sbi->sb->s_flags |= SB_LAZYTIME;
- 	set_opt(sbi, FLUSH_MERGE);
--	if (blk_queue_discard(bdev_get_queue(sbi->sb->s_bdev)))
--		set_opt(sbi, DISCARD);
-+	set_opt(sbi, DISCARD);
- 	if (f2fs_sb_has_blkzoned(sbi->sb))
- 		set_opt_mode(sbi, F2FS_MOUNT_LFS);
- 	else
+ 	total = le32_to_cpu(raw_super->segment_count);
+ 	fsmeta = le32_to_cpu(raw_super->segment_count_ckpt);
+@@ -2369,11 +2369,43 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 		if (le32_to_cpu(ckpt->cur_node_segno[i]) >= main_segs ||
+ 			le16_to_cpu(ckpt->cur_node_blkoff[i]) >= blocks_per_seg)
+ 			return 1;
++		for (j = i + 1; j < NR_CURSEG_NODE_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
++				le32_to_cpu(ckpt->cur_node_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Node segment (%u, %u) has the same "
++					"segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_node_segno[i]));
++				return 1;
++			}
++		}
+ 	}
+ 	for (i = 0; i < NR_CURSEG_DATA_TYPE; i++) {
+ 		if (le32_to_cpu(ckpt->cur_data_segno[i]) >= main_segs ||
+ 			le16_to_cpu(ckpt->cur_data_blkoff[i]) >= blocks_per_seg)
+ 			return 1;
++		for (j = i + 1; j < NR_CURSEG_DATA_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_data_segno[i]) ==
++				le32_to_cpu(ckpt->cur_data_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Data segment (%u, %u) has the same "
++					"segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_data_segno[i]));
++				return 1;
++			}
++		}
++	}
++	for (i = 0; i < NR_CURSEG_NODE_TYPE; i++) {
++		for (j = i; j < NR_CURSEG_DATA_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
++				le32_to_cpu(ckpt->cur_data_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Data segment (%u) and Data segment (%u)"
++					" has the same segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_node_segno[i]));
++				return 1;
++			}
++		}
+ 	}
+ 
+ 	sit_bitmap_size = le32_to_cpu(ckpt->sit_ver_bitmap_bytesize);
 -- 
 2.19.1
 
