@@ -2,133 +2,95 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30396C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 02:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE24C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 02:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8AF9218D9
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 02:17:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="RZsZ90Q0"
+	by mail.kernel.org (Postfix) with ESMTP id 82AF7218D9
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 02:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730308AbfC3CRd (ORCPT
+        id S1730328AbfC3CUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 22:17:33 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33487 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730001AbfC3CRd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 22:17:33 -0400
-Received: by mail-ed1-f65.google.com with SMTP id q3so3630583edg.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 19:17:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PD76K0NMhqfbElUsgcEMx0/FxEoi+G99p31kq6K+oNQ=;
-        b=RZsZ90Q02ELCKPExop1F7jMsE3jxMR+12PItPJtoVm9TlCfVVrOvXWMdBz4SIBX9RM
-         XR2JStkdXj1GC1xtbjI4yKw9CUzcFOBv0fnPRxGDzD+92FLDDDR5CJ7bRKGfFaJVXywG
-         9JI5inCs0UhM79HfOlXdERJG/EBv+jCvvxR9KYBTSbbip926I2WQYA/7ar2Jee/jn19s
-         CnAwm4YA9VUbzXKUksWDDYRZZ01u6vs3rozhTVzpzjbN755CkJZQNNLfs65JV6+KoEtp
-         /1xO0mDQuY79YlgtJOJk+8JSIsXtTywKyirDumMPQKLhVYcyZ6mL9ftdWU3LAqPPLpOd
-         eAJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PD76K0NMhqfbElUsgcEMx0/FxEoi+G99p31kq6K+oNQ=;
-        b=lfrRgKQjmO3SgZi5rU1gTxkduREcp7cjFxuHCoDQH27PBWX/Ynq8VIbEvrCt+8oTDE
-         YtrIqoDF2/89noUrZbR5Uz0QloISNLgh2PrjX1p+gLqKe7A8esSnTHZzqBbt958bLspv
-         g6Lijitoabif6rKyro2jSZLrkKaHLCXjvW9PICobYsfBKkSbAFx7dpDZRcCriYHvDliD
-         pkyI3k4PjXLdZ72kvAK198jXjrj9khEe2AjFSycCcVa4SRwaNArNzsqvd1bBOhu91ON4
-         NHRHrrtR7rpY/9DYXAiKz6g7cPuN2gwsdza6uOH+nxEFwisfl6ya1HxraqPGPOJ06eHN
-         Un1A==
-X-Gm-Message-State: APjAAAViDhsy4Jm1c0ikdWQMtxFzZk/rxLfjF/5edf/IdRF6oJR4NJiK
-        5vZmF9ZxVZ8FRtCQ0hdM3Q9WCvNItWI=
-X-Google-Smtp-Source: APXvYqxYE17N6pdZY7DWKhm/nJaVq6UoNfZQAPRnVYy1JHQK1hUH8dkVEu4StR8TLWqkBciOHCHdvg==
-X-Received: by 2002:a05:6402:608:: with SMTP id n8mr34061648edv.136.1553912251712;
-        Fri, 29 Mar 2019 19:17:31 -0700 (PDT)
-Received: from brauner.io ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
-        by smtp.gmail.com with ESMTPSA id h34sm1112489edb.13.2019.03.29.19.17.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 29 Mar 2019 19:17:31 -0700 (PDT)
-Date:   Sat, 30 Mar 2019 03:17:30 +0100
-From:   Christian Brauner <christian@brauner.io>
-To:     Jann Horn <jannh@google.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] signal: don't silently convert SI_USER signals to
- non-current pidfd
-Message-ID: <20190330021729.3utry4va44jt4ib6@brauner.io>
-References: <20190330021232.191205-1-jannh@google.com>
+        Fri, 29 Mar 2019 22:20:34 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2100 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730001AbfC3CUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 22:20:33 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 2B92843BD1C6D1B2CA67;
+        Sat, 30 Mar 2019 10:20:31 +0800 (CST)
+Received: from DGGEMM527-MBS.china.huawei.com ([169.254.5.15]) by
+ DGGEMM405-HUB.china.huawei.com ([10.3.20.213]) with mapi id 14.03.0415.000;
+ Sat, 30 Mar 2019 10:20:27 +0800
+From:   Nixiaoming <nixiaoming@huawei.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        "chao.xie@marvell.com" <chao.xie@marvell.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>
+CC:     "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] clk:mmp: clk-mix.c fix divide-by-zero
+Thread-Topic: [PATCH] clk:mmp: clk-mix.c fix divide-by-zero
+Thread-Index: AQHU5iSaev3dXbGlJEaC+jDlGRDXyaYisJYAgAC9fAA=
+Date:   Sat, 30 Mar 2019 02:20:27 +0000
+Message-ID: <E490CD805F7529488761C40FD9D26EF12AAC0143@DGGEMM527-MBS.china.huawei.com>
+References: <1553859960-31501-1-git-send-email-nixiaoming@huawei.com>
+ <155389969479.20095.682832622477946593@swboyd.mtv.corp.google.com>
+In-Reply-To: <155389969479.20095.682832622477946593@swboyd.mtv.corp.google.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.57.88.168]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190330021232.191205-1-jannh@google.com>
-User-Agent: NeoMutt/20180716
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 03:12:32AM +0100, Jann Horn wrote:
-> The current sys_pidfd_send_signal() silently turns signals with explicit
-> SI_USER context that are sent to non-current tasks into signals with
-> kernel-generated siginfo.
-> This is unlike do_rt_sigqueueinfo(), which returns -EPERM in this case.
-> If a user actually wants to send a signal with kernel-provided siginfo,
-> they can do that with pidfd_send_signal(pidfd, sig, NULL, 0); so allowing
-> this case is unnecessary.
-> 
-> Instead of silently replacing the siginfo, just bail out with an error;
-> this is consistent with other interfaces and avoids special-casing behavior
-> based on security checks.
-> 
-> Fixes: 3eb39f47934f ("signal: add pidfd_send_signal() syscall")
-> Signed-off-by: Jann Horn <jannh@google.com>
-
-Reviewed-by: Christian Brauner <christian@brauner.io>
-
-As discussed in
-https://lore.kernel.org/lkml/20190330012229.yt3hecmgaj2r6vp7@brauner.io
-targeting this for a 5.1 rc.
-
-> ---
->  kernel/signal.c | 13 ++++---------
->  1 file changed, 4 insertions(+), 9 deletions(-)
-> 
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index b7953934aa99..f98448cf2def 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -3605,16 +3605,11 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
->  		if (unlikely(sig != kinfo.si_signo))
->  			goto err;
->  
-> +		/* Only allow sending arbitrary signals to yourself. */
-> +		ret = -EPERM;
->  		if ((task_pid(current) != pid) &&
-> -		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL)) {
-> -			/* Only allow sending arbitrary signals to yourself. */
-> -			ret = -EPERM;
-> -			if (kinfo.si_code != SI_USER)
-> -				goto err;
-> -
-> -			/* Turn this into a regular kill signal. */
-> -			prepare_kill_siginfo(sig, &kinfo);
-> -		}
-> +		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
-> +			goto err;
->  	} else {
->  		prepare_kill_siginfo(sig, &kinfo);
->  	}
-> -- 
-> 2.21.0.392.gf8f6787159e-goog
-> 
+T24gMy8zMC8yMDE5IDY6NDggQU0gU3RlcGhlbiBCb3lkIHdyb3RlOg0KPlF1b3Rpbmcgbml4aWFv
+bWluZyAoMjAxOS0wMy0yOSAwNDo0NjowMCkNCj4+IFRoZSBfZ2V0X2RpdiBmdW5jdGlvbiBoYXMg
+YSBicmFuY2ggd2l0aCBhIHJldHVybiB2YWx1ZSBvZiAwDQo+PiBBZGQgYSBjaGVjayBvbiB0aGUg
+cmV0dXJuIHZhbHVlIG9mIF9nZXRfZGl2IHRvIGF2b2lkIGRpdmlkZS1ieS16ZXJvDQo+PiANCj4+
+IFNpZ25lZC1vZmYtYnk6IG5peGlhb21pbmcgPG5peGlhb21pbmdAaHVhd2VpLmNvbT4NCj4NCj5T
+aW1pbGFyIHF1ZXN0aW9ucyBhcHBseSBoZXJlIGFzIHRoZXkgZG8gb24gdGhlIGdlbmVyaWMgZGl2
+aWRlciBwYXRjaCB5b3UNCj5zZW50Lg0KPg0KX2dldF9kaXYoKSBpbiBib3RoIGZpbGVzIGlzIGEg
+ZGlmZmVyZW50IGZ1bmN0aW9uLCB3aXRoIGEgZGl2aWRlLWJ5LXplcm8gcHJvYmxlbQ0KSSB3aWxs
+IG9yZ2FuaXplIGl0IGludG8gYSBwYXRjaCBzZXQgbGF0ZXIuDQoNCj4+IC0tLQ0KPj4gIGRyaXZl
+cnMvY2xrL21tcC9jbGstbWl4LmMgfCA0ICsrKysNCj4+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNl
+cnRpb25zKCspDQo+PiANCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9tbXAvY2xrLW1peC5j
+IGIvZHJpdmVycy9jbGsvbW1wL2Nsay1taXguYw0KPj4gaW5kZXggOTA4MTRiMi4uOWQxNTJjMiAx
+MDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvY2xrL21tcC9jbGstbWl4LmMNCj4+ICsrKyBiL2RyaXZl
+cnMvY2xrL21tcC9jbGstbWl4LmMNCj4+IEBAIC0yNDUsNiArMjQ1LDggQEAgc3RhdGljIGludCBt
+bXBfY2xrX21peF9kZXRlcm1pbmVfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywNCj4+ICAgICAgICAg
+ICAgICAgICAgICAgICAgIGRpdl92YWxfbWF4ID0gX2dldF9tYXhkaXYobWl4KTsNCj4+ICAgICAg
+ICAgICAgICAgICAgICAgICAgIGZvciAoaiA9IDA7IGogPCBkaXZfdmFsX21heDsgaisrKSB7DQo+
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRpdiA9IF9nZXRfZGl2KG1peCwgaik7
+DQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmICghZGl2KSAvKiBhdm9pZCBk
+aXZpZGUtYnktemVybyAqLw0KPg0KPldoeSBjYW4ndCB3ZSByZXR1cm4gMSBmb3IgdGhlIGRpdmlk
+ZXIgdmFsdWUgaGVyZT8NCg0KSSBwZXJzb25hbGx5IHVuZGVyc3RhbmQgdGhhdCBhbiBleGNlcHRp
+b24gb3Igc2tpcCBzaG91bGQgYmUgdGhyb3duIGFmdGVyIGRpdmlkaW5nIGJ5IDAuDQpEaXJlY3Rs
+eSBtb2RpZmllZCB0byBvdGhlciB2YWx1ZXMsIEkgYW0gbm90IHN1cmUgd2hldGhlciBpdCBhZmZl
+Y3RzIHRoZSBsb2dpYw0KTXkgbG9naWNhbCB1bmRlcnN0YW5kaW5nIG9mIHRoaXMgY29kZSBpcyBu
+b3QgY2xlYXIgZW5vdWdoLCBJIHN0aWxsIG5lZWQgeW91ciBndWlkYW5jZS4NCj4NCj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsNCj4+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgbWl4X3JhdGUgPSBwYXJlbnRfcmF0ZSAvIGRpdjsNCj4+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ2FwID0gYWJzKG1peF9yYXRlIC0gcmVx
+LT5yYXRlKTsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYgKCFwYXJlbnRf
+YmVzdCB8fCBnYXAgPCBnYXBfYmVzdCkgew0KPj4gQEAgLTM0MSw2ICszNDMsOCBAQCBzdGF0aWMg
+dW5zaWduZWQgbG9uZyBtbXBfY2xrX21peF9yZWNhbGNfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywN
+Cj4+ICAgICAgICAgc2hpZnQgPSBtaXgtPnJlZ19pbmZvLnNoaWZ0X2RpdjsNCj4+ICANCj4+ICAg
+ICAgICAgZGl2ID0gX2dldF9kaXYobWl4LCBNTVBfQ0xLX0JJVFNfR0VUX1ZBTChtdXhfZGl2LCB3
+aWR0aCwgc2hpZnQpKTsNCj4+ICsgICAgICAgaWYgKCFkaXYpIC8qIGF2b2lkIGRpdmlkZS1ieS16
+ZXJvICovDQo+DQo+U2FtZSBxdWVzdGlvbi4NCkkgcGVyc29uYWxseSB1bmRlcnN0YW5kIHRoYXQg
+YW4gZXhjZXB0aW9uIG9yIHNraXAgc2hvdWxkIGJlIHRocm93biBhZnRlciBkaXZpZGluZyBieSAw
+Lg0KRGlyZWN0bHkgbW9kaWZpZWQgdG8gb3RoZXIgdmFsdWVzLCBJIGFtIG5vdCBzdXJlIHdoZXRo
+ZXIgaXQgYWZmZWN0cyB0aGUgbG9naWMNCk15IGxvZ2ljYWwgdW5kZXJzdGFuZGluZyBvZiB0aGlz
+IGNvZGUgaXMgbm90IGNsZWFyIGVub3VnaCwgSSBzdGlsbCBuZWVkIHlvdXIgZ3VpZGFuY2UuDQo+
+DQo+PiArICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+PiAgDQo+PiAgICAgICAgIHJl
+dHVybiBwYXJlbnRfcmF0ZSAvIGRpdjsNCj4+ICB9DQo+DQo=
