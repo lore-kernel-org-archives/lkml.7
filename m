@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C276FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72053C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCEB217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4426F217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553910083;
-	bh=7Hqa+hd3SjcWJChOGFb42MMRW0TR0vlPtBDXq6GjTGI=;
+	s=default; t=1553910093;
+	bh=+mDl56pnovCRf9l6Z6D8C5RXi93XiDdjkUo7wLHnqTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dAGiROma10fN+LraPI6GYk73Zs0OnfX/wFVUcuLJxBnNmlMhLsIqUaF1Jto3YMYrY
-	 MwDBOV6n7fF/xkLo5hzdSh6g41kOLPyssK1xwiKVd1x/UiSs0arcYDFDnZtOsTvbOy
-	 pVcV62v+Bx24l7haiqGkT2uzmk0/N2DcYcDASwnQ=
+	b=oMizecAQk7OOAfjod16JAVAZiI/KZ2NleFhnZU77iIdYlgPGaG7CRNcqf3zgtkqdo
+	 ua4NgggzLUEK58RdM44p0MxP5LGl/QlOkb0lajy9pKce1m4RswjAmHGiqMZLCV7uyc
+	 xNzlVjoTShpQNKScLNJ1qzsV4N2BaZO1MSVrAnyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731654AbfC3BlW (ORCPT
+        id S1730570AbfC3B2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:41:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35690 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:28:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730664AbfC3B27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:28:59 -0400
+        id S1730233AbfC3B2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:28:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BCC5218A6;
-        Sat, 30 Mar 2019 01:28:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85435218A6;
+        Sat, 30 Mar 2019 01:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909338;
-        bh=7Hqa+hd3SjcWJChOGFb42MMRW0TR0vlPtBDXq6GjTGI=;
+        s=default; t=1553909325;
+        bh=+mDl56pnovCRf9l6Z6D8C5RXi93XiDdjkUo7wLHnqTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EeoMkCkkrhlbCA7CUSP/Tkg2U9ZpFRABR1HhkD83IQeKnKz+kBrT4OihjN3At6v0r
-         WgxNpkIbdKfFMgCs5CD4ZE0o8xxLHs8vaCoxQWZ/yvXVGCFUpdj/Wsy1/34JkSEg+v
-         izLE5m/jA/ErUFnW1TLFRVnS9hELE0V7kETKWBW8=
+        b=iChJXJehvx9Vr4qPsHK5XB3BvbuzQHCMEdxW3/6Iq2ylpN1VAGE0yEhTnjiN6aatC
+         CfEGI+II/InCwuKmew7Yllze1q6JmmzgpngUCLdfjCZT4mLX6CQ0VgeIvOaIGHYzkQ
+         FDaW/V4bb6q2sssow2wlayPWFXKX19ubgWbL5L2Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 03/57] rsi: improve kernel thread handling to fix kernel panic
-Date:   Fri, 29 Mar 2019 21:27:56 -0400
-Message-Id: <20190330012854.32212-3-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Kees Cook <keescook@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 02/25] lkdtm: Print real addresses
+Date:   Fri, 29 Mar 2019 21:28:19 -0400
+Message-Id: <20190330012842.32091-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
-References: <20190330012854.32212-1-sashal@kernel.org>
+In-Reply-To: <20190330012842.32091-1-sashal@kernel.org>
+References: <20190330012842.32091-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,61 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 4c62764d0fc21a34ffc44eec1210038c3a2e4473 ]
+[ Upstream commit 4c411157a42f122051ae3469bee0b5cabe89e139 ]
 
-While running regressions, observed below kernel panic when sdio disconnect
-called. This is because of, kthread_stop() is taking care of
-wait_for_completion() by default. When wait_for_completion triggered
-in kthread_stop and as it was done already, giving kernel panic.
-Hence, removing redundant wait_for_completion() from rsi_kill_thread().
+Today, when doing a lkdtm test before the readiness of the
+random generator, (ptrval) is printed instead of the address
+at which it perform the fault:
 
-... skipping ...
-BUG: unable to handle kernel NULL pointer dereference at           (null)
-IP: [<ffffffff810a63df>] exit_creds+0x1f/0x50
-PGD 0
-Oops: 0002 [#1] SMP
-CPU: 0 PID: 6502 Comm: rmmod Tainted: G  OE   4.15.9-Generic #154-Ubuntu
-Hardware name: Dell Inc. Edge Gateway 3003/ , BIOS 01.00.00 04/17/2017
-Stack:
-ffff88007392e600 ffff880075847dc0 ffffffff8108160a 0000000000000000
-ffff88007392e600 ffff880075847de8 ffffffff810a484b ffff880076127000
-ffff88003cd3a800 ffff880074f12a00 ffff880075847e28 ffffffffc09bed15
-Call Trace:
-[<ffffffff8108160a>] __put_task_struct+0x5a/0x140
-[<ffffffff810a484b>] kthread_stop+0x10b/0x110
-[<ffffffffc09bed15>] rsi_disconnect+0x2f5/0x300 [ven_rsi_sdio]
-[<ffffffff81578bcb>] ? __pm_runtime_resume+0x5b/0x80
-[<ffffffff816f0918>] sdio_bus_remove+0x38/0x100
-[<ffffffff8156cc64>] __device_release_driver+0xa4/0x150
-[<ffffffff8156d7a5>] driver_detach+0xb5/0xc0
-[<ffffffff8156c6c5>] bus_remove_driver+0x55/0xd0
-[<ffffffff8156dfbc>] driver_unregister+0x2c/0x50
-[<ffffffff816f0b8a>] sdio_unregister_driver+0x1a/0x20
-[<ffffffffc09bf0f5>] rsi_module_exit+0x15/0x30 [ven_rsi_sdio]
-[<ffffffff8110cad8>] SyS_delete_module+0x1b8/0x210
-[<ffffffff81851dc8>] entry_SYSCALL_64_fastpath+0x1c/0xbb
+[ 1597.337030] lkdtm: Performing direct entry EXEC_USERSPACE
+[ 1597.337142] lkdtm: attempting ok execution at (ptrval)
+[ 1597.337398] lkdtm: attempting bad execution at (ptrval)
+[ 1597.337460] kernel tried to execute user page (77858000) -exploit attempt? (uid: 0)
+[ 1597.344769] Unable to handle kernel paging request for instruction fetch
+[ 1597.351392] Faulting instruction address: 0x77858000
+[ 1597.356312] Oops: Kernel access of bad area, sig: 11 [#1]
 
-Signed-off-by: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+If the lkdtm test is done later on, it prints an hashed address.
+
+In both cases this is pointless. The purpose of the test is to
+ensure the kernel generates an Oops at the expected address,
+so real addresses needs to be printed. This patch fixes that.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/rsi/rsi_common.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/misc/lkdtm/perms.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/wireless/rsi/rsi_common.h b/drivers/net/wireless/rsi/rsi_common.h
-index d9ff3b8be86e..60f1f286b030 100644
---- a/drivers/net/wireless/rsi/rsi_common.h
-+++ b/drivers/net/wireless/rsi/rsi_common.h
-@@ -75,7 +75,6 @@ static inline int rsi_kill_thread(struct rsi_thread *handle)
- 	atomic_inc(&handle->thread_done);
- 	rsi_set_event(&handle->event);
+diff --git a/drivers/misc/lkdtm/perms.c b/drivers/misc/lkdtm/perms.c
+index 53b85c9d16b8..fa54add6375a 100644
+--- a/drivers/misc/lkdtm/perms.c
++++ b/drivers/misc/lkdtm/perms.c
+@@ -47,7 +47,7 @@ static noinline void execute_location(void *dst, bool write)
+ {
+ 	void (*func)(void) = dst;
  
--	wait_for_completion(&handle->completion);
- 	return kthread_stop(handle->task);
+-	pr_info("attempting ok execution at %p\n", do_nothing);
++	pr_info("attempting ok execution at %px\n", do_nothing);
+ 	do_nothing();
+ 
+ 	if (write == CODE_WRITE) {
+@@ -55,7 +55,7 @@ static noinline void execute_location(void *dst, bool write)
+ 		flush_icache_range((unsigned long)dst,
+ 				   (unsigned long)dst + EXEC_SIZE);
+ 	}
+-	pr_info("attempting bad execution at %p\n", func);
++	pr_info("attempting bad execution at %px\n", func);
+ 	func();
  }
  
+@@ -66,14 +66,14 @@ static void execute_user_location(void *dst)
+ 	/* Intentionally crossing kernel/user memory boundary. */
+ 	void (*func)(void) = dst;
+ 
+-	pr_info("attempting ok execution at %p\n", do_nothing);
++	pr_info("attempting ok execution at %px\n", do_nothing);
+ 	do_nothing();
+ 
+ 	copied = access_process_vm(current, (unsigned long)dst, do_nothing,
+ 				   EXEC_SIZE, FOLL_WRITE);
+ 	if (copied < EXEC_SIZE)
+ 		return;
+-	pr_info("attempting bad execution at %p\n", func);
++	pr_info("attempting bad execution at %px\n", func);
+ 	func();
+ }
+ 
+@@ -82,7 +82,7 @@ void lkdtm_WRITE_RO(void)
+ 	/* Explicitly cast away "const" for the test. */
+ 	unsigned long *ptr = (unsigned long *)&rodata;
+ 
+-	pr_info("attempting bad rodata write at %p\n", ptr);
++	pr_info("attempting bad rodata write at %px\n", ptr);
+ 	*ptr ^= 0xabcd1234;
+ }
+ 
+@@ -100,7 +100,7 @@ void lkdtm_WRITE_RO_AFTER_INIT(void)
+ 		return;
+ 	}
+ 
+-	pr_info("attempting bad ro_after_init write at %p\n", ptr);
++	pr_info("attempting bad ro_after_init write at %px\n", ptr);
+ 	*ptr ^= 0xabcd1234;
+ }
+ 
+@@ -112,7 +112,7 @@ void lkdtm_WRITE_KERN(void)
+ 	size = (unsigned long)do_overwritten - (unsigned long)do_nothing;
+ 	ptr = (unsigned char *)do_overwritten;
+ 
+-	pr_info("attempting bad %zu byte write at %p\n", size, ptr);
++	pr_info("attempting bad %zu byte write at %px\n", size, ptr);
+ 	memcpy(ptr, (unsigned char *)do_nothing, size);
+ 	flush_icache_range((unsigned long)ptr, (unsigned long)(ptr + size));
+ 
+@@ -185,11 +185,11 @@ void lkdtm_ACCESS_USERSPACE(void)
+ 
+ 	ptr = (unsigned long *)user_addr;
+ 
+-	pr_info("attempting bad read at %p\n", ptr);
++	pr_info("attempting bad read at %px\n", ptr);
+ 	tmp = *ptr;
+ 	tmp += 0xc0dec0de;
+ 
+-	pr_info("attempting bad write at %p\n", ptr);
++	pr_info("attempting bad write at %px\n", ptr);
+ 	*ptr = tmp;
+ 
+ 	vm_munmap(user_addr, PAGE_SIZE);
 -- 
 2.19.1
 
