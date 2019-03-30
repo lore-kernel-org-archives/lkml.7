@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74870C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0B6C10F05
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F1C218D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C03D21773
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909464;
-	bh=7wECnrCF++N1FhjFDlTHh7neg8t/BZx/6YS38KLyr+0=;
+	s=default; t=1553909466;
+	bh=bWJNelJR/lwI8bQYkoLqjDtR2FngJVr0+nR4qS7QfeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gxQz6ajv5ifv6J+Q5vKBTXrf+GQFhf3dM8KmN+ULELzm5poPHClpdlbyVLrz5tcYm
-	 kygA4M5/2l2k+SwzUV9Rm8XZ3yJn2gorIUDiSp9p/OemcTXydLra0wgqJVY6jt7+rG
-	 CUj/a4+T+gBtlYQs69WOFNct78U37TjLsIMBiXi4=
+	b=zSNxDJWhNVXoYFJBh9BzCv/Vxzyu+dDYVuXVoZ5nw7BY+MYN26QqXcIWmL2tUSVWH
+	 G67KOvjfuDE7lRUfHh8lZQ2s2IHLmrutGAQcrOlIDIesMREFXupQ/csG+fwU3bukLr
+	 RPF7NSV7UJ1RDBJbuMenJabBuh91I/YsgWdT1dTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731838AbfC3BbD (ORCPT
+        id S1731860AbfC3BbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:31:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38336 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:31:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731817AbfC3BbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:31:00 -0400
+        id S1731829AbfC3BbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:31:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23EC021773;
-        Sat, 30 Mar 2019 01:30:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F1CE218D8;
+        Sat, 30 Mar 2019 01:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909459;
-        bh=7wECnrCF++N1FhjFDlTHh7neg8t/BZx/6YS38KLyr+0=;
+        s=default; t=1553909462;
+        bh=bWJNelJR/lwI8bQYkoLqjDtR2FngJVr0+nR4qS7QfeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mNMpoMKOxrB5cMsNIjQldI+EwJmXrRfenOGLf4gB248H6RDDwxYU7l0Neufgg36gP
-         nXNWjilfkDGb0ch6mXmJIXT+Kn6UvPIaHvgwRQz2FwROKcRK+KHMLw911MSKUJ3tLD
-         Tg6uCVpgsdyquO017JcftzgsFQelfiylj0LodWbA=
+        b=HRJInvu8M7BOJYw/PyZPKELjKT3jsaODE7qfXiiDaUbDbGAPB6UbUW8DI4GsvNpZQ
+         gDkiUxrFQR4nT4VV2gIcuMuN5Ajn2E/gCq49wVPMtcoA8CWyVvo4J8l2FvIEzDs1jf
+         HOxpkcLqxN5Ib1DHtDieFyXlt1IKnUKAq0wGgFgE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 18/37] nvme-pci: fix conflicting p2p resource adds
-Date:   Fri, 29 Mar 2019 21:30:01 -0400
-Message-Id: <20190330013020.379-18-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 20/37] crypto: sha256/arm - fix crash bug in Thumb2 build
+Date:   Fri, 29 Mar 2019 21:30:03 -0400
+Message-Id: <20190330013020.379-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013020.379-1-sashal@kernel.org>
 References: <20190330013020.379-1-sashal@kernel.org>
@@ -59,76 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <keith.busch@intel.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit 9fe5c59ff6a1e5e26a39b75489a1420e7eaaf0b1 ]
+[ Upstream commit 69216a545cf81b2b32d01948f7039315abaf75a0 ]
 
-The nvme pci driver had been adding its CMB resource to the P2P DMA
-subsystem everytime on on a controller reset. This results in the
-following warning:
+The SHA256 code we adopted from the OpenSSL project uses a rather
+peculiar way to take the address of the round constant table: it
+takes the address of the sha256_block_data_order() routine, and
+substracts a constant known quantity to arrive at the base of the
+table, which is emitted by the same assembler code right before
+the routine's entry point.
 
-    ------------[ cut here ]------------
-    nvme 0000:00:03.0: Conflicting mapping in same section
-    WARNING: CPU: 7 PID: 81 at kernel/memremap.c:155 devm_memremap_pages+0xa6/0x380
-    ...
-    Call Trace:
-     pci_p2pdma_add_resource+0x153/0x370
-     nvme_reset_work+0x28c/0x17b1 [nvme]
-     ? add_timer+0x107/0x1e0
-     ? dequeue_entity+0x81/0x660
-     ? dequeue_entity+0x3b0/0x660
-     ? pick_next_task_fair+0xaf/0x610
-     ? __switch_to+0xbc/0x410
-     process_one_work+0x1cf/0x350
-     worker_thread+0x215/0x3d0
-     ? process_one_work+0x350/0x350
-     kthread+0x107/0x120
-     ? kthread_park+0x80/0x80
-     ret_from_fork+0x1f/0x30
-    ---[ end trace f7ea76ac6ee72727 ]---
-    nvme nvme0: failed to register the CMB
+However, recent versions of binutils have helpfully changed the
+behavior of references emitted via an ADR instruction when running
+in Thumb2 mode: it now takes the Thumb execution mode bit into
+account, which is bit 0 af the address. This means the produced
+table address also has bit 0 set, and so we end up with an address
+value pointing 1 byte past the start of the table, which results
+in crashes such as
 
-This patch fixes this by registering the CMB with P2P only once.
+  Unable to handle kernel paging request at virtual address bf825000
+  pgd = 42f44b11
+  [bf825000] *pgd=80000040206003, *pmd=5f1bd003, *pte=00000000
+  Internal error: Oops: 207 [#1] PREEMPT SMP THUMB2
+  Modules linked in: sha256_arm(+) sha1_arm_ce sha1_arm ...
+  CPU: 7 PID: 396 Comm: cryptomgr_test Not tainted 5.0.0-rc6+ #144
+  Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+  PC is at sha256_block_data_order+0xaaa/0xb30 [sha256_arm]
+  LR is at __this_module+0x17fd/0xffffe800 [sha256_arm]
+  pc : [<bf820bca>]    lr : [<bf824ffd>]    psr: 800b0033
+  sp : ebc8bbe8  ip : faaabe1c  fp : 2fdd3433
+  r10: 4c5f1692  r9 : e43037df  r8 : b04b0a5a
+  r7 : c369d722  r6 : 39c3693e  r5 : 7a013189  r4 : 1580d26b
+  r3 : 8762a9b0  r2 : eea9c2cd  r1 : 3e9ab536  r0 : 1dea4ae7
+  Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA Thumb  Segment user
+  Control: 70c5383d  Table: 6b8467c0  DAC: dbadc0de
+  Process cryptomgr_test (pid: 396, stack limit = 0x69e1fe23)
+  Stack: (0xebc8bbe8 to 0xebc8c000)
+  ...
+  unwind: Unknown symbol address bf820bca
+  unwind: Index not found bf820bca
+  Code: 441a ea80 40f9 440a (f85e) 3b04
+  ---[ end trace e560cce92700ef8a ]---
 
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Given that this affects older kernels as well, in case they are built
+with a recent toolchain, apply a minimal backportable fix, which is
+to emit another non-code label at the start of the routine, and
+reference that instead. (This is similar to the current upstream state
+of this file in OpenSSL)
+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/crypto/sha256-armv4.pl       | 3 ++-
+ arch/arm/crypto/sha256-core.S_shipped | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 06355ca832db..ae03a5b70324 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1546,6 +1546,9 @@ static void __iomem *nvme_map_cmb(struct nvme_dev *dev)
- 	void __iomem *cmb;
- 	int bar;
- 
-+	if (dev->cmb_size)
-+		return;
-+
- 	dev->cmbsz = readl(dev->bar + NVME_REG_CMBSZ);
- 	if (!(NVME_CMB_SZ(dev->cmbsz)))
- 		return NULL;
-@@ -2034,7 +2037,6 @@ static void nvme_pci_disable(struct nvme_dev *dev)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev->dev);
- 
--	nvme_release_cmb(dev);
- 	pci_free_irq_vectors(pdev);
- 
- 	if (pci_is_enabled(pdev)) {
-@@ -2434,6 +2436,7 @@ static void nvme_remove(struct pci_dev *pdev)
- 	nvme_stop_ctrl(&dev->ctrl);
- 	nvme_remove_namespaces(&dev->ctrl);
- 	nvme_dev_disable(dev, true);
-+	nvme_release_cmb(dev);
- 	nvme_free_host_mem(dev);
- 	nvme_dev_remove_admin(dev);
- 	nvme_free_queues(dev, 0);
+diff --git a/arch/arm/crypto/sha256-armv4.pl b/arch/arm/crypto/sha256-armv4.pl
+index fac0533ea633..f64e8413ab9a 100644
+--- a/arch/arm/crypto/sha256-armv4.pl
++++ b/arch/arm/crypto/sha256-armv4.pl
+@@ -205,10 +205,11 @@ K256:
+ .global	sha256_block_data_order
+ .type	sha256_block_data_order,%function
+ sha256_block_data_order:
++.Lsha256_block_data_order:
+ #if __ARM_ARCH__<7
+ 	sub	r3,pc,#8		@ sha256_block_data_order
+ #else
+-	adr	r3,sha256_block_data_order
++	adr	r3,.Lsha256_block_data_order
+ #endif
+ #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
+ 	ldr	r12,.LOPENSSL_armcap
+diff --git a/arch/arm/crypto/sha256-core.S_shipped b/arch/arm/crypto/sha256-core.S_shipped
+index 555a1a8eec90..72c248081d27 100644
+--- a/arch/arm/crypto/sha256-core.S_shipped
++++ b/arch/arm/crypto/sha256-core.S_shipped
+@@ -86,10 +86,11 @@ K256:
+ .global	sha256_block_data_order
+ .type	sha256_block_data_order,%function
+ sha256_block_data_order:
++.Lsha256_block_data_order:
+ #if __ARM_ARCH__<7
+ 	sub	r3,pc,#8		@ sha256_block_data_order
+ #else
+-	adr	r3,sha256_block_data_order
++	adr	r3,.Lsha256_block_data_order
+ #endif
+ #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
+ 	ldr	r12,.LOPENSSL_armcap
 -- 
 2.19.1
 
