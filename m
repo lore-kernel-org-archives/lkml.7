@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6E0C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC112C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA0E218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D88D21773
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909481;
-	bh=wxCFi0Vwx4s7u0bNIU7e/yZ+bi5iPpGjLQsdyxd/4cY=;
+	s=default; t=1553909485;
+	bh=u47I8oHlk3OoAVfy+t1YP+munm5gsPkC/WeZAJOKUA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MQKezWqMN3tiLfDMd7nhsfB9Cq9199/GFQH6GHUbfuVjizWc1KZQaN5DT+w1o1jAO
-	 E/rD8VZ8HUtNSqz7y0+pe/Jw6+sQtEh30nVkFV5Js+5tZBJkPvAJ9vKuwdoPTA9PL4
-	 Viej/AqkBfnagGtGmAE3XMC7hekMeDOl8yN8VgDg=
+	b=2vxSb0P/ShZspCYMfVwjrn7uVQcRttm3I10IOy5x6CiVmjvjXk9lyz86InH622Qi5
+	 +5WJYPqPX7uYl3qZpA9y/hdieN3WvxFfIoUsw12Y3svHVR8T3z3ZNFdNrNUVJfN0q1
+	 lxotp8n0Shlm6FUshqrxrS0qH7WoD9b6NGgC2hqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732008AbfC3BbU (ORCPT
+        id S1732048AbfC3BbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:31:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38754 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:31:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731938AbfC3BbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:31:16 -0400
+        id S1731992AbfC3BbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:31:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A2CB218D9;
-        Sat, 30 Mar 2019 01:31:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40EBE218A6;
+        Sat, 30 Mar 2019 01:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909475;
-        bh=wxCFi0Vwx4s7u0bNIU7e/yZ+bi5iPpGjLQsdyxd/4cY=;
+        s=default; t=1553909479;
+        bh=u47I8oHlk3OoAVfy+t1YP+munm5gsPkC/WeZAJOKUA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iV3G5j18qfSYoxYcDZ0qRbD353hcU7tho4cngBfrdVOUQUWyZYohU1NtLsu1SIHtx
-         schBkPd18n2xpbT/dykYX0rq7NLAyHhSygObYjI25UlokwCBpVnIGVcWHLve2bFMqX
-         UP6AlW8Lw5r2Xd3HzkrkFOraM9HUlt5Yk+gP+HQc=
+        b=OifHgJu3+JtH8/W44D9chtRBAO7rHje/JhWkEPB1Ha6wCfVU0fp6B6VBTcHwZsFGB
+         0iCy0JZiWVVk7S55sA+ZzYGlAlowKbecQDI3H3Ts9yTPSXgYvqH87msdwcG80UyyHb
+         SugHvyR1xVFOexcUhMy76AcQp+J7m1QaFEg0S/P0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/21] rsi: improve kernel thread handling to fix kernel panic
-Date:   Fri, 29 Mar 2019 21:30:53 -0400
-Message-Id: <20190330013112.784-2-sashal@kernel.org>
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.9 05/21] f2fs: fix to do sanity check with current segment number
+Date:   Fri, 29 Mar 2019 21:30:56 -0400
+Message-Id: <20190330013112.784-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013112.784-1-sashal@kernel.org>
 References: <20190330013112.784-1-sashal@kernel.org>
@@ -60,61 +59,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 4c62764d0fc21a34ffc44eec1210038c3a2e4473 ]
+[ Upstream commit 042be0f849e5fc24116d0afecfaf926eed5cac63 ]
 
-While running regressions, observed below kernel panic when sdio disconnect
-called. This is because of, kthread_stop() is taking care of
-wait_for_completion() by default. When wait_for_completion triggered
-in kthread_stop and as it was done already, giving kernel panic.
-Hence, removing redundant wait_for_completion() from rsi_kill_thread().
+https://bugzilla.kernel.org/show_bug.cgi?id=200219
 
-... skipping ...
-BUG: unable to handle kernel NULL pointer dereference at           (null)
-IP: [<ffffffff810a63df>] exit_creds+0x1f/0x50
-PGD 0
-Oops: 0002 [#1] SMP
-CPU: 0 PID: 6502 Comm: rmmod Tainted: G  OE   4.15.9-Generic #154-Ubuntu
-Hardware name: Dell Inc. Edge Gateway 3003/ , BIOS 01.00.00 04/17/2017
-Stack:
-ffff88007392e600 ffff880075847dc0 ffffffff8108160a 0000000000000000
-ffff88007392e600 ffff880075847de8 ffffffff810a484b ffff880076127000
-ffff88003cd3a800 ffff880074f12a00 ffff880075847e28 ffffffffc09bed15
+Reproduction way:
+- mount image
+- run poc code
+- umount image
+
+F2FS-fs (loop1): Bitmap was wrongly set, blk:15364
+------------[ cut here ]------------
+kernel BUG at /home/yuchao/git/devf2fs/segment.c:2061!
+invalid opcode: 0000 [#1] PREEMPT SMP
+CPU: 2 PID: 17686 Comm: umount Tainted: G        W  O      4.18.0-rc2+ #39
+Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+EIP: update_sit_entry+0x459/0x4e0 [f2fs]
+Code: e8 1c b5 fd ff 0f 0b 0f 0b 8b 45 e4 c7 44 24 08 9c 7a 6c f8 c7 44 24 04 bc 4a 6c f8 89 44 24 0c 8b 06 89 04 24 e8 f7 b4 fd ff <0f> 0b 8b 45 e4 0f b6 d2 89 54 24 10 c7 44 24 08 60 7a 6c f8 c7 44
+EAX: 00000032 EBX: 000000f8 ECX: 00000002 EDX: 00000001
+ESI: d7177000 EDI: f520fe68 EBP: d6477c6c ESP: d6477c34
+DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010282
+CR0: 80050033 CR2: b7fbe000 CR3: 2a99b3c0 CR4: 000406f0
 Call Trace:
-[<ffffffff8108160a>] __put_task_struct+0x5a/0x140
-[<ffffffff810a484b>] kthread_stop+0x10b/0x110
-[<ffffffffc09bed15>] rsi_disconnect+0x2f5/0x300 [ven_rsi_sdio]
-[<ffffffff81578bcb>] ? __pm_runtime_resume+0x5b/0x80
-[<ffffffff816f0918>] sdio_bus_remove+0x38/0x100
-[<ffffffff8156cc64>] __device_release_driver+0xa4/0x150
-[<ffffffff8156d7a5>] driver_detach+0xb5/0xc0
-[<ffffffff8156c6c5>] bus_remove_driver+0x55/0xd0
-[<ffffffff8156dfbc>] driver_unregister+0x2c/0x50
-[<ffffffff816f0b8a>] sdio_unregister_driver+0x1a/0x20
-[<ffffffffc09bf0f5>] rsi_module_exit+0x15/0x30 [ven_rsi_sdio]
-[<ffffffff8110cad8>] SyS_delete_module+0x1b8/0x210
-[<ffffffff81851dc8>] entry_SYSCALL_64_fastpath+0x1c/0xbb
+ f2fs_allocate_data_block+0x124/0x580 [f2fs]
+ do_write_page+0x78/0x150 [f2fs]
+ f2fs_do_write_node_page+0x25/0xa0 [f2fs]
+ __write_node_page+0x2bf/0x550 [f2fs]
+ f2fs_sync_node_pages+0x60e/0x6d0 [f2fs]
+ ? sync_inode_metadata+0x2f/0x40
+ ? f2fs_write_checkpoint+0x28f/0x7d0 [f2fs]
+ ? up_write+0x1e/0x80
+ f2fs_write_checkpoint+0x2a9/0x7d0 [f2fs]
+ ? mark_held_locks+0x5d/0x80
+ ? _raw_spin_unlock_irq+0x27/0x50
+ kill_f2fs_super+0x68/0x90 [f2fs]
+ deactivate_locked_super+0x3d/0x70
+ deactivate_super+0x40/0x60
+ cleanup_mnt+0x39/0x70
+ __cleanup_mnt+0x10/0x20
+ task_work_run+0x81/0xa0
+ exit_to_usermode_loop+0x59/0xa7
+ do_fast_syscall_32+0x1f5/0x22c
+ entry_SYSENTER_32+0x53/0x86
+EIP: 0xb7f95c51
+Code: c1 1e f7 ff ff 89 e5 8b 55 08 85 d2 8b 81 64 cd ff ff 74 02 89 02 5d c3 8b 0c 24 c3 8b 1c 24 c3 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
+EAX: 00000000 EBX: 0871ab90 ECX: bfb2cd00 EDX: 00000000
+ESI: 00000000 EDI: 0871ab90 EBP: 0871ab90 ESP: bfb2cd7c
+DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
+Modules linked in: f2fs(O) crc32_generic bnep rfcomm bluetooth ecdh_generic snd_intel8x0 snd_ac97_codec ac97_bus snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi snd_seq pcbc joydev aesni_intel snd_seq_device aes_i586 snd_timer crypto_simd snd cryptd soundcore mac_hid serio_raw video i2c_piix4 parport_pc ppdev lp parport hid_generic psmouse usbhid hid e1000 [last unloaded: f2fs]
+---[ end trace d423f83982cfcdc5 ]---
 
-Signed-off-by: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+The reason is, different log headers using the same segment, once
+one log's next block address is used by another log, it will cause
+panic as above.
+
+Main area: 24 segs, 24 secs 24 zones
+  - COLD  data: 0, 0, 0
+  - WARM  data: 1, 1, 1
+  - HOT   data: 20, 20, 20
+  - Dir   dnode: 22, 22, 22
+  - File   dnode: 22, 22, 22
+  - Indir nodes: 21, 21, 21
+
+So this patch adds sanity check to detect such condition to avoid
+this issue.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/rsi/rsi_common.h | 1 -
- 1 file changed, 1 deletion(-)
+ fs/f2fs/super.c | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/rsi/rsi_common.h b/drivers/net/wireless/rsi/rsi_common.h
-index d3fbe33d2324..a13f08fd8690 100644
---- a/drivers/net/wireless/rsi/rsi_common.h
-+++ b/drivers/net/wireless/rsi/rsi_common.h
-@@ -75,7 +75,6 @@ static inline int rsi_kill_thread(struct rsi_thread *handle)
- 	atomic_inc(&handle->thread_done);
- 	rsi_set_event(&handle->event);
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 83a96334dc07..4ebe69572475 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1489,7 +1489,7 @@ int sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 	unsigned int segment_count_main;
+ 	unsigned int cp_pack_start_sum, cp_payload;
+ 	block_t user_block_count;
+-	int i;
++	int i, j;
  
--	wait_for_completion(&handle->completion);
- 	return kthread_stop(handle->task);
- }
+ 	total = le32_to_cpu(raw_super->segment_count);
+ 	fsmeta = le32_to_cpu(raw_super->segment_count_ckpt);
+@@ -1530,11 +1530,43 @@ int sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 		if (le32_to_cpu(ckpt->cur_node_segno[i]) >= main_segs ||
+ 			le16_to_cpu(ckpt->cur_node_blkoff[i]) >= blocks_per_seg)
+ 			return 1;
++		for (j = i + 1; j < NR_CURSEG_NODE_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
++				le32_to_cpu(ckpt->cur_node_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Node segment (%u, %u) has the same "
++					"segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_node_segno[i]));
++				return 1;
++			}
++		}
+ 	}
+ 	for (i = 0; i < NR_CURSEG_DATA_TYPE; i++) {
+ 		if (le32_to_cpu(ckpt->cur_data_segno[i]) >= main_segs ||
+ 			le16_to_cpu(ckpt->cur_data_blkoff[i]) >= blocks_per_seg)
+ 			return 1;
++		for (j = i + 1; j < NR_CURSEG_DATA_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_data_segno[i]) ==
++				le32_to_cpu(ckpt->cur_data_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Data segment (%u, %u) has the same "
++					"segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_data_segno[i]));
++				return 1;
++			}
++		}
++	}
++	for (i = 0; i < NR_CURSEG_NODE_TYPE; i++) {
++		for (j = i; j < NR_CURSEG_DATA_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
++				le32_to_cpu(ckpt->cur_data_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Data segment (%u) and Data segment (%u)"
++					" has the same segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_node_segno[i]));
++				return 1;
++			}
++		}
+ 	}
  
+ 	sit_bitmap_size = le32_to_cpu(ckpt->sit_ver_bitmap_bytesize);
 -- 
 2.19.1
 
