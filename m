@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC20C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EEBC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5D8217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBEB22064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553908044;
-	bh=ClFW02Yg+r/zz+F4SmUdivedqWVlgy5NqK02UBOTaXc=;
+	s=default; t=1553908052;
+	bh=BCZTI8lB5BBNy2e4lIxEPcWkl+s2OsRLAbkfFcuNc5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=csYWOjhz2WteK8/XTOBcJbKU1njaah8DNp6q5DnZQGGk2a0ctDJNlzZvl2EP6TjBx
-	 VDJN8HMCgu1U8deQKx1oMyw8MHBOkS3nnSshjgBbgCVMOyZzY7w3s5eiJPVh+6GA2R
-	 xmjhh4UX4cVWA9bNJKrc23sKJDYv396RLG1gTifQ=
+	b=XlMZyAmMREmS+aMqTiSpctUYBrBpkzNztDahvJojAepcN5RfI59lUMCYsvfZ5o4Tq
+	 Stv4Ac7fXAreH64ULa38+fA/vaC59UK2rLZ046RpSa1ix6S1ZTLhGyXHHjE46DjGUu
+	 CUCsO3hGljNyYvqZ9jXSEaIii5P5rOttDYqHZE6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731460AbfC3BHX (ORCPT
+        id S1731507AbfC3BHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:07:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60198 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:07:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731244AbfC3AxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:53:21 -0400
+        id S1731233AbfC3AxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:53:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07757218CD;
-        Sat, 30 Mar 2019 00:53:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC019218CD;
+        Sat, 30 Mar 2019 00:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907200;
-        bh=ClFW02Yg+r/zz+F4SmUdivedqWVlgy5NqK02UBOTaXc=;
+        s=default; t=1553907197;
+        bh=BCZTI8lB5BBNy2e4lIxEPcWkl+s2OsRLAbkfFcuNc5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1RwQuPCULRsasbRxYPHNuEmqrFCAsKYPkIVBv2kEiEPGarXtXMk6G6JsLCV7ICLYR
-         JAlEJMcF+Mmbo/37a10zBkYOwqTafwVZr3oVdwQ9LanvYVErSoToeejhYqarhaGIPq
-         2IJSXCAET++Gnn8GbAbkKHtdbfGHtzH57iKAPHTo=
+        b=z1vwgQmPFkv2nUPKjxZgxLetQ8vdmxwM1QAhufDhMNJzBjQIjU4HyBiVYjyhm+zBY
+         50FIOqSerajwiOGu3yQTlGdZyQ3m3vXbhQgDWDpq6AHT3phbZvr7WLqAHrsH6OPdpg
+         OdLtzGLHnynolS7MUPrqF5i02MTGl9RLM91BmvsY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Airlie <airlied@redhat.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 12/52] drm/udl: use drm_gem_object_put_unlocked.
-Date:   Fri, 29 Mar 2019 20:52:19 -0400
-Message-Id: <20190330005301.26868-12-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 10/52] ALSA: sb8: add a check for request_region
+Date:   Fri, 29 Mar 2019 20:52:17 -0400
+Message-Id: <20190330005301.26868-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005301.26868-1-sashal@kernel.org>
 References: <20190330005301.26868-1-sashal@kernel.org>
@@ -60,42 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Airlie <airlied@redhat.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 8f3b487685b2acf71b42bb30d68fd9271bec8695 ]
+[ Upstream commit dcd0feac9bab901d5739de51b3f69840851f8919 ]
 
-When Daniel removed struct_mutex he didn't fix this call to the unlocked
-variant which is required since we no longer use struct mutex.
+In case request_region fails, the fix returns an error code to
+avoid NULL pointer dereference.
 
-This fixes a bunch of:
-WARNING: CPU: 4 PID: 1370 at drivers/gpu/drm/drm_gem.c:931 drm_gem_object_put+0x2b/0x30 [drm]
-Modules linked in: udl xt_CHECKSUM ipt_MASQUERADE tun bridge stp llc nf_conntrack_netbios_ns nf_conntrack_broadcast xt_CT ip6t>
-CPU: 4 PID: 1370 Comm: Xorg Not tainted 5.0.0+ #2
-
-backtraces when you plug in a udl device.
-
-Fixes: ae358dacd217 (drm/udl: Get rid of dev->struct_mutex usage)
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/udl/udl_gem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/isa/sb/sb8.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/udl/udl_gem.c b/drivers/gpu/drm/udl/udl_gem.c
-index d5a23295dd80..bb7b58407039 100644
---- a/drivers/gpu/drm/udl/udl_gem.c
-+++ b/drivers/gpu/drm/udl/udl_gem.c
-@@ -224,7 +224,7 @@ int udl_gem_mmap(struct drm_file *file, struct drm_device *dev,
- 	*offset = drm_vma_node_offset_addr(&gobj->base.vma_node);
+diff --git a/sound/isa/sb/sb8.c b/sound/isa/sb/sb8.c
+index d77dcba276b5..1eb8b61a185b 100644
+--- a/sound/isa/sb/sb8.c
++++ b/sound/isa/sb/sb8.c
+@@ -111,6 +111,10 @@ static int snd_sb8_probe(struct device *pdev, unsigned int dev)
  
- out:
--	drm_gem_object_put(&gobj->base);
-+	drm_gem_object_put_unlocked(&gobj->base);
- unlock:
- 	mutex_unlock(&udl->gem_lock);
- 	return ret;
+ 	/* block the 0x388 port to avoid PnP conflicts */
+ 	acard->fm_res = request_region(0x388, 4, "SoundBlaster FM");
++	if (!acard->fm_res) {
++		err = -EBUSY;
++		goto _err;
++	}
+ 
+ 	if (port[dev] != SNDRV_AUTO_PORT) {
+ 		if ((err = snd_sbdsp_create(card, port[dev], irq[dev],
 -- 
 2.19.1
 
