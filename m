@@ -6,37 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3804DC4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA60C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA43218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D4C218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:48:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbfC3Arx (ORCPT
+        id S1730598AbfC3AsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:47:53 -0400
-Received: from mga17.intel.com ([192.55.52.151]:6268 "EHLO mga17.intel.com"
+        Fri, 29 Mar 2019 20:48:12 -0400
+Received: from mga06.intel.com ([134.134.136.31]:64217 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730082AbfC3Arv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:47:51 -0400
+        id S1730463AbfC3Arw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:47:52 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 17:47:51 -0700
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 17:47:50 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,286,1549958400"; 
-   d="scan'208";a="311618921"
+   d="scan'208";a="129912806"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga005.jf.intel.com with ESMTP; 29 Mar 2019 17:47:50 -0700
+  by orsmga008.jf.intel.com with ESMTP; 29 Mar 2019 17:47:51 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 09D5E301C79; Fri, 29 Mar 2019 17:47:51 -0700 (PDT)
+        id 21762301C79; Fri, 29 Mar 2019 17:47:51 -0700 (PDT)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        yi.y.sun@linux.intel.com, kys@microsoft.com, haiyangz@microsoft.com
-Subject: [PATCH v2 6/9] x86/hyperv: Make hv_vcpu_is_preempted visible
-Date:   Fri, 29 Mar 2019 17:47:40 -0700
-Message-Id: <20190330004743.29541-6-andi@firstfloor.org>
+Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v2 9/9] x86/cpu/bugs: Fix __initconst usage in bugs.c
+Date:   Fri, 29 Mar 2019 17:47:43 -0700
+Message-Id: <20190330004743.29541-9-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190330004743.29541-1-andi@firstfloor.org>
 References: <20190330004743.29541-1-andi@firstfloor.org>
@@ -49,32 +48,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-This function is referrenced from assembler, so need to be marked
-visible for LTO.
+Fix some of the recently added const tables to use __initconst
+for const data instead of __initdata which causes section attribute
+conflicts.
 
-Cc: yi.y.sun@linux.intel.com
-Cc: kys@microsoft.com
-Cc: haiyangz@microsoft.com
-Reviewed-by: Yi Sun <yi.y.sun@linux.intel.com>
-Fixes: 3a025de64bf8 x86/hyperv: Enable PV qspinlock for Hyper-V
+Fixes: fa1202ef2243 ("x86/speculation: Add command line control")
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- arch/x86/hyperv/hv_spinlock.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/bugs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
-index a861b0456b1a..07f21a06392f 100644
---- a/arch/x86/hyperv/hv_spinlock.c
-+++ b/arch/x86/hyperv/hv_spinlock.c
-@@ -56,7 +56,7 @@ static void hv_qlock_wait(u8 *byte, u8 val)
- /*
-  * Hyper-V does not support this so far.
-  */
--bool hv_vcpu_is_preempted(int vcpu)
-+__visible bool hv_vcpu_is_preempted(int vcpu)
- {
- 	return false;
- }
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 2da82eff0eb4..b91b3bfa5cfb 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -275,7 +275,7 @@ static const struct {
+ 	const char			*option;
+ 	enum spectre_v2_user_cmd	cmd;
+ 	bool				secure;
+-} v2_user_options[] __initdata = {
++} v2_user_options[] __initconst = {
+ 	{ "auto",		SPECTRE_V2_USER_CMD_AUTO,		false },
+ 	{ "off",		SPECTRE_V2_USER_CMD_NONE,		false },
+ 	{ "on",			SPECTRE_V2_USER_CMD_FORCE,		true  },
+@@ -419,7 +419,7 @@ static const struct {
+ 	const char *option;
+ 	enum spectre_v2_mitigation_cmd cmd;
+ 	bool secure;
+-} mitigation_options[] __initdata = {
++} mitigation_options[] __initconst = {
+ 	{ "off",		SPECTRE_V2_CMD_NONE,		  false },
+ 	{ "on",			SPECTRE_V2_CMD_FORCE,		  true  },
+ 	{ "retpoline",		SPECTRE_V2_CMD_RETPOLINE,	  false },
+@@ -658,7 +658,7 @@ static const char * const ssb_strings[] = {
+ static const struct {
+ 	const char *option;
+ 	enum ssb_mitigation_cmd cmd;
+-} ssb_mitigation_options[]  __initdata = {
++} ssb_mitigation_options[]  __initconst = {
+ 	{ "auto",	SPEC_STORE_BYPASS_CMD_AUTO },    /* Platform decides */
+ 	{ "on",		SPEC_STORE_BYPASS_CMD_ON },      /* Disable Speculative Store Bypass */
+ 	{ "off",	SPEC_STORE_BYPASS_CMD_NONE },    /* Don't touch Speculative Store Bypass */
 -- 
 2.20.1
 
