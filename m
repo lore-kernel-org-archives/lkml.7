@@ -2,79 +2,98 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C76C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08C3C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4B02173C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC24521773
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbfC3ANe (ORCPT
+        id S1730361AbfC3ARQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:13:34 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:15631 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729963AbfC3ANe (ORCPT
+        Fri, 29 Mar 2019 20:17:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44082 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729771AbfC3ARP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:13:34 -0400
-Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2U0D7L8037310;
-        Sat, 30 Mar 2019 09:13:07 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp);
- Sat, 30 Mar 2019 09:13:07 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126072090247.bbtec.net [126.72.90.247])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2U0D7qO037307
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sat, 30 Mar 2019 09:13:07 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: Re: INFO: rcu detected stall in corrupted (3)
-To:     syzbot <syzbot+65cecdd27b726c261799@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-References: <000000000000b08190058543449f@google.com>
-Cc:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        luto@kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        x86@kernel.org
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <8ecb5bc9-5761-64d0-64b2-1310300a64ec@I-love.SAKURA.ne.jp>
-Date:   Sat, 30 Mar 2019 09:13:07 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Fri, 29 Mar 2019 20:17:15 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hA1gP-00026s-82; Sat, 30 Mar 2019 00:17:13 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: alienware-wmi: fix kfree on potentially uninitialized pointer
+Date:   Sat, 30 Mar 2019 00:17:12 +0000
+Message-Id: <20190330001712.8923-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <000000000000b08190058543449f@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/03/30 7:34, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    8c2ffd91 Linux 5.1-rc2
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15099d2b200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
-> dashboard link: https://syzkaller.appspot.com/bug?extid=65cecdd27b726c261799
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17d3c67d200000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11d4f317200000
-> 
-> Bisection is inconclusive: the bug happens on the oldest tested release.
+From: Colin Ian King <colin.king@canonical.com>
 
-This reproducer does sched_setattr(SCHED_DEADLINE) with bogus value, as with
-a reproducer for "INFO: rcu detected stall in sys_sendfile64" did.
+Currently the kfree of output.pointer can be potentially freeing
+an uninitalized pointer in the case where out_data is NULL. Fix this
+by reworking the case where out_data is not-null to perform the
+ACPI status check and also the kfree of outpoint.pointer in one block
+and hence ensuring the pointer is only freed when it has been used.
 
-  sched_setattr(0, {size=0, sched_policy=0x6 /* SCHED_DEADLINE */, sched_flags=0, sched_nice=0, sched_priority=0, sched_runtime=65535, sched_deadline=4611686018427453437, sched_period=0}, 0) = 0
+Also replace the if (ptr != NULL) idiom with just if (ptr).
 
-#syz invalid
+Fixes: ff0e9f26288d ("platform/x86: alienware-wmi: Correct a memory leak")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/platform/x86/alienware-wmi.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
+index f10af5c383c5..c0d1555735cd 100644
+--- a/drivers/platform/x86/alienware-wmi.c
++++ b/drivers/platform/x86/alienware-wmi.c
+@@ -522,23 +522,22 @@ static acpi_status alienware_wmax_command(struct wmax_basic_args *in_args,
+ 
+ 	input.length = (acpi_size) sizeof(*in_args);
+ 	input.pointer = in_args;
+-	if (out_data != NULL) {
++	if (out_data) {
+ 		output.length = ACPI_ALLOCATE_BUFFER;
+ 		output.pointer = NULL;
+ 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
+ 					     command, &input, &output);
+-	} else
++		if (ACPI_SUCCESS(status)) {
++			obj = (union acpi_object *)output.pointer;
++			if (obj && obj->type == ACPI_TYPE_INTEGER)
++				*out_data = (u32)obj->integer.value;
++		}
++		kfree(output.pointer);
++	} else {
+ 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
+ 					     command, &input, NULL);
+-
+-	if (ACPI_SUCCESS(status) && out_data != NULL) {
+-		obj = (union acpi_object *)output.pointer;
+-		if (obj && obj->type == ACPI_TYPE_INTEGER)
+-			*out_data = (u32) obj->integer.value;
+ 	}
+-	kfree(output.pointer);
+ 	return status;
+-
+ }
+ 
+ /*
+-- 
+2.20.1
+
