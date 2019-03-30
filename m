@@ -2,272 +2,132 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93008C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB698C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA072184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="MsdB1jhv"
+	by mail.kernel.org (Postfix) with ESMTP id 79EFE217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553909674;
+	bh=SRdcnnMcXeRQBzMwoIb1//1YXXGl/oHlFx9EjazCSBY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SSnUDX4ptwbGAJLbVFIwE+YnDtQ4DCCi4QK2eF5rHewCNsoof+r4C0T1a2aJvbST/
+	 T9H6bgq8uSRPLL7cpkgT7DWnQjcSuzmlXFDNr6XgH9MTFEo7b/VeKVEfyWuWWV7Oxz
+	 L9C7h7Gb8KQ3ZtsXax9QlzwsH/p8EW2z2QT6xNoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732206AbfC3Be0 (ORCPT
+        id S1731410AbfC3BcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:34:26 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45119 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731060AbfC3BeV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:34:21 -0400
-Received: by mail-ed1-f67.google.com with SMTP id m16so3525493edd.12
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 18:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tBykamkGXGhl6g5OEQcE2XhD7B931pY9hJ+thiyv0u4=;
-        b=MsdB1jhvLCntID2DE9REDtIIJU1Brw/9Qc+lSTdpFEOsOX9uLJMjbVyVtUt2duARuo
-         iZb2mHAwFkuvftXQHDSVgZA94WyAZ3F6xDLymkjZ+CcPo2DzHwXZE6OkwIBgx6nq+yV7
-         YtCuuWVrY40ZYeBNRLgvS5fqR/oAwwQ0tO+/H+8GGE049SzjCzGWs2tOisbBKRjZBjmS
-         aqY36PH/soM3xk7h7mioN6oeutqn8e4BKFd9VU1qY4yrJmBIgrSp9M5MtFcHgCILiRuA
-         XivrtPKz9ST38rPnLR3VHGSZMEteg1nOkqBhGLbS+unIotIN1qgxhuLAvrrpeZjfjjY+
-         WPvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tBykamkGXGhl6g5OEQcE2XhD7B931pY9hJ+thiyv0u4=;
-        b=GedKERigQugKw5VFxanA3abpu50KXc9wnFHe7+HYxQHssqxBDA7q69CpqoCCkiCMNe
-         C4Kr6AIJwyA8ptMV4EMjwdvqjPSbY7KcofR+gYGczW1D0JqwcSgWNULhtREgyYr4CbF8
-         qA+8rg2gUixHE/xZB6VgsdWQfu/qqgkzB5wSWTsXaLtUA6fs1UC63g0VzNixxGjXA5vV
-         CQssZ1mbi7hPXehC6xFbXfZnydM5RhrI+MjGO587UfY3LfeYKUM3vP5KfHMbuG/mM3dF
-         h8T3x5bcVI6YZ1pSv5d0bkAqt0moOMS4yE8DVdwQva416agEFtUIIuGA2lw6dR4A2hW+
-         34zA==
-X-Gm-Message-State: APjAAAXxNExAmd5EJielzkyfH4Bjo8E2NV+3SF43pqbR1fWFzawM1yJX
-        GvWimBp566iHF5k89Y+capUtzg==
-X-Google-Smtp-Source: APXvYqzwZejrsokjFgwpyZOtXLYAEVmrhJefNsKFWTLPa531h+rglKpofKM3PFSW2EFos/T+n/0lPA==
-X-Received: by 2002:a50:95fa:: with SMTP id x55mr32103298eda.49.1553909659519;
-        Fri, 29 Mar 2019 18:34:19 -0700 (PDT)
-Received: from brauner.io ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
-        by smtp.gmail.com with ESMTPSA id d37sm1086791ede.79.2019.03.29.18.34.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 29 Mar 2019 18:34:19 -0700 (PDT)
-Date:   Sat, 30 Mar 2019 02:34:17 +0100
-From:   Christian Brauner <christian@brauner.io>
-To:     Jann Horn <jannh@google.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>,
-        Florian Weimer <fweimer@redhat.com>
-Subject: Re: [PATCH v2 4/5] signal: PIDFD_SIGNAL_TID threads via pidfds
-Message-ID: <20190330013416.vnidfkjbsxxhzslm@brauner.io>
-References: <20190329155425.26059-1-christian@brauner.io>
- <20190329155425.26059-5-christian@brauner.io>
- <CAG48ez0=Q2CzgTGLiEU7F9B=gS-58VrpKz2XQ369cemo2FJdbQ@mail.gmail.com>
- <20190330012229.yt3hecmgaj2r6vp7@brauner.io>
+        Fri, 29 Mar 2019 21:32:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730898AbfC3BcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:32:04 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03C89217F5;
+        Sat, 30 Mar 2019 01:32:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553909523;
+        bh=SRdcnnMcXeRQBzMwoIb1//1YXXGl/oHlFx9EjazCSBY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dRgKgwgXVc1+Dx1anJ3vDg69v1bF4Tp8a2vr90P7pLKm9SlUXT2y5h87p64pMO33a
+         Q0NNMNABjT9lAoDYdKpLL09C2buqdQpH8o2d8Jdqeo6jEgx8ZjTwuYmeDjriH17tya
+         x16HwAM1qIg78zdht9yQf3aOu1HPbytztzkOKI2I=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Gertjan Halkes <gertjan@google.com>,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        Sasha Levin <sashal@kernel.org>,
+        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/16] 9p: do not trust pdu content for stat item size
+Date:   Fri, 29 Mar 2019 21:31:46 -0400
+Message-Id: <20190330013200.1130-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190330013200.1130-1-sashal@kernel.org>
+References: <20190330013200.1130-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190330012229.yt3hecmgaj2r6vp7@brauner.io>
-User-Agent: NeoMutt/20180716
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 02:22:29AM +0100, Christian Brauner wrote:
-> On Sat, Mar 30, 2019 at 02:06:34AM +0100, Jann Horn wrote:
-> > On Fri, Mar 29, 2019 at 4:54 PM Christian Brauner <christian@brauner.io> wrote:
-> > > With the addition of pidfd_open() it is possible for users to reference a
-> > > specific thread by doing:
-> > >
-> > > int pidfd = pidfd_open(<tid>, 0);
-> > >
-> > > This means we can extend pidfd_send_signal() to signal a specific thread.
-> > > As promised in the commit for pidfd_send_signal() [1] the extension is
-> > > based on a flag argument, i.e. the scope of the signal delivery is based on
-> > > the flag argument, not on the type of file descriptor.
-> > > To this end the flag PIDFD_SIGNAL_TID is added. With this change we now
-> > > cover most of the functionality of all the other signal sending functions
-> > > combined:
-> > [...]
-> > > diff --git a/include/uapi/linux/wait.h b/include/uapi/linux/wait.h
-> > > index d6c7c0701997..b72f0ef84fe5 100644
-> > > --- a/include/uapi/linux/wait.h
-> > > +++ b/include/uapi/linux/wait.h
-> > [...]
-> > > +/* Flags to pass to pidfd_send_signal */
-> > > +#define PIDFD_SIGNAL_TID 1 /* Send signal to specific thread */
-> > 
-> > nit: s/1/1U/; the flags argument is an `unsigned int`
-> 
-> Will change.
-> 
-> > 
-> > >  #endif /* _UAPI_LINUX_WAIT_H */
-> > > diff --git a/kernel/signal.c b/kernel/signal.c
-> > > index eb97d0cc6ef7..9f93da85b2b9 100644
-> > > --- a/kernel/signal.c
-> > > +++ b/kernel/signal.c
-> > [...]
-> > > +static int pidfd_send_signal_specific(struct pid *pid, int sig,
-> > > +                                     struct kernel_siginfo *info)
-> > > +{
-> > > +       struct task_struct *p;
-> > > +       int error = -ESRCH;
-> > > +
-> > > +       rcu_read_lock();
-> > > +       p = pid_task(pid, PIDTYPE_PID);
-> > > +       if (p)
-> > > +               error = __do_send_specific(p, sig, info);
-> > > +       rcu_read_unlock();
-> > > +
-> > > +       return error;
-> > > +}
-> > > +
-> > >  /**
-> > > - * sys_pidfd_send_signal - send a signal to a process through a task file
-> > > - *                          descriptor
-> > > + * sys_pidfd_send_signal - send a signal to a process through a pidfd
-> > > +
-> > >   * @pidfd:  the file descriptor of the process
-> > >   * @sig:    signal to be sent
-> > >   * @info:   the signal info
-> > >   * @flags:  future flags to be passed
-> > 
-> > nit: comment is outdated, it isn't "future flags" anymore
-> 
-> Will remove.
-> 
-> > 
-> > [...]
-> > > + *   rt_tgsigqueueinfo(<tgid>, <tid>, <sig>, <uinfo>)
-> > > + * - pidfd_send_signal(<pidfd>, <sig>, <info>, PIDFD_SIGNAL_TID);
-> > > + *   which is equivalent to
-> > > + *   rt_tgsigqueueinfo(<tgid>, <tid>, <sig>, <uinfo>)
-> > > + *
-> > >   * In order to extend the syscall to threads and process groups the @flags
-> > >   * argument should be used. In essence, the @flags argument will determine
-> > >   * what is signaled and not the file descriptor itself. Put in other words,
-> > 
-> > nit: again, outdated comment about @flags
-> 
-> Will update.
-> 
-> > 
-> > [...]
-> > > @@ -3626,43 +3695,16 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
-> > >                 prepare_kill_siginfo(sig, &kinfo);
-> > >         }
-> > >
-> > > -       ret = kill_pid_info(sig, &kinfo, pid);
-> > > +       if (flags & PIDFD_SIGNAL_TID)
-> > > +               ret = pidfd_send_signal_specific(pid, sig, &kinfo);
-> > > +       else
-> > > +               ret = kill_pid_info(sig, &kinfo, pid);
-> > 
-> > nit: maybe give pidfd_send_signal_specific() and kill_pid_info() the
-> > same signatures, since they perform similar operations with the same
-> > argument types?
-> 
-> Yes, let's do
-> pidfd_send_signal_specific.(pid, sig, &kinfo);
-> kill_pid_info..............(pid, sig, &kinfo);
-> 
-> so it matches the argument order of the syscalls itself too.
+From: Gertjan Halkes <gertjan@google.com>
 
-Strike that. We should do:
-pidfd_send_signal_specific.(sig, &kinfo, pid);
-kill_pid_info..............(sig, &kinfo, pid);
+[ Upstream commit 2803cf4379ed252894f046cb8812a48db35294e3 ]
 
-because kill_pid_info() is called in multiple places so we would
-needlessly shovle code around.
+v9fs_dir_readdir() could deadloop if a struct was sent with a size set
+to -2
 
-> 
-> > 
-> > Something that was already kinda weird in the existing code, but is
-> > getting worse with TIDs is the handling of SI_USER with siginfo.
-> 
-> Right, that's what we discussed earlier.
-> 
-> > Copying context lines from above here:
-> > 
-> >         if (info) {
-> >                 ret = copy_siginfo_from_user_any(&kinfo, info);
-> >                 if (unlikely(ret))
-> >                         goto err;
-> >                 ret = -EINVAL;
-> >                 if (unlikely(sig != kinfo.si_signo))
-> >                         goto err;
-> >                 if ((task_pid(current) != pid) &&
-> >                     (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL)) {
-> >                         /* Only allow sending arbitrary signals to yourself. */
-> >                         ret = -EPERM;
-> >                         if (kinfo.si_code != SI_USER)
-> >                                 goto err;
-> >                         /* Turn this into a regular kill signal. */
-> >                         prepare_kill_siginfo(sig, &kinfo);
-> >                 }
-> >         } else {
-> >                 prepare_kill_siginfo(sig, &kinfo);
-> >         }
-> > 
-> > So for signals to PIDs, the rule is that if you send siginfo with
-> > SI_USER to yourself, the siginfo is preserved; otherwise the kernel
-> > silently clobbers it. That's already kind of weird - silent behavior
-> 
-> Clobbers as in "silently replaces it whatever it seems fit?
-> 
-> > difference depending on a security check. But now, for signals to
-> > threads, I think the result is going to be that signalling the thread
-> > group leader preserves information, and signalling any other thread
-> > clobbers it? If so, that seems bad.
-> > 
-> > do_rt_sigqueueinfo() seems to have the same issue, from a glance - but
-> > there, at least the error case is just a -EPERM, not a silent behavior
-> > difference.
-> > 
-> > Would it make sense to refuse sending siginfo with SI_USER to
-> > non-current? If you actually want to send a normal SI_USER signal, you
-> 
-> Yeah.
-> 
-> > can use info==NULL, right? That should create wrongness parity with
-> > do_rt_sigqueueinfo().
-> 
-> So you'd just do (just doing it non-elegantly rn):
-> if ((task_pid(current) != pid) &&
->     (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL)) {
->         ret = -EPERM;
->         goto err;
-> }
-> 
-> > To improve things further, I guess you'd have to move the comparison
-> > against current into pidfd_send_signal_specific(), or move the task
-> > lookup out of it, or something like that?
-> 
-> Looks like a sane suggestion to me. Would you care to send a patch for
-> that? This is clearly a bugfix suitable for 5.1 so I'd rather not wait
-> until 5.2.
+Link: http://lkml.kernel.org/r/1536134432-11997-1-git-send-email-asmadeus@codewreck.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=88021
+Signed-off-by: Gertjan Halkes <gertjan@google.com>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/9p/vfs_dir.c   | 8 +++-----
+ net/9p/protocol.c | 3 ++-
+ 2 files changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/fs/9p/vfs_dir.c b/fs/9p/vfs_dir.c
+index 7d889f56b8e7..05769219d2c2 100644
+--- a/fs/9p/vfs_dir.c
++++ b/fs/9p/vfs_dir.c
+@@ -105,7 +105,6 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
+ 	int err = 0;
+ 	struct p9_fid *fid;
+ 	int buflen;
+-	int reclen = 0;
+ 	struct p9_rdir *rdir;
+ 	struct kvec kvec;
+ 
+@@ -138,11 +137,10 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
+ 		while (rdir->head < rdir->tail) {
+ 			err = p9stat_read(fid->clnt, rdir->buf + rdir->head,
+ 					  rdir->tail - rdir->head, &st);
+-			if (err) {
++			if (err <= 0) {
+ 				p9_debug(P9_DEBUG_VFS, "returned %d\n", err);
+ 				return -EIO;
+ 			}
+-			reclen = st.size+2;
+ 
+ 			over = !dir_emit(ctx, st.name, strlen(st.name),
+ 					 v9fs_qid2ino(&st.qid), dt_type(&st));
+@@ -150,8 +148,8 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
+ 			if (over)
+ 				return 0;
+ 
+-			rdir->head += reclen;
+-			ctx->pos += reclen;
++			rdir->head += err;
++			ctx->pos += err;
+ 		}
+ 	}
+ }
+diff --git a/net/9p/protocol.c b/net/9p/protocol.c
+index 145f80518064..7f1b45c082c9 100644
+--- a/net/9p/protocol.c
++++ b/net/9p/protocol.c
+@@ -570,9 +570,10 @@ int p9stat_read(struct p9_client *clnt, char *buf, int len, struct p9_wstat *st)
+ 	if (ret) {
+ 		p9_debug(P9_DEBUG_9P, "<<< p9stat_read failed: %d\n", ret);
+ 		trace_9p_protocol_dump(clnt, &fake_pdu);
++		return ret;
+ 	}
+ 
+-	return ret;
++	return fake_pdu.offset;
+ }
+ EXPORT_SYMBOL(p9stat_read);
+ 
+-- 
+2.19.1
+
