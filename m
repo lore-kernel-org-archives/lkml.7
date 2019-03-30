@@ -2,154 +2,187 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631A7C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 06:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E2DC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 06:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E7272184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 06:25:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ELr8fceC"
+	by mail.kernel.org (Postfix) with ESMTP id 203A5218A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 06:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbfC3GZR (ORCPT
+        id S1726827AbfC3GoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 02:25:17 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36155 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfC3GZQ (ORCPT
+        Sat, 30 Mar 2019 02:44:06 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:51623 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbfC3GoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 02:25:16 -0400
-Received: by mail-qt1-f196.google.com with SMTP id s15so5218896qtn.3;
-        Fri, 29 Mar 2019 23:25:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=So+1AjqY2B3hpkxsqiZAinMeQ5z4HoPx4le+MMpEwD8=;
-        b=ELr8fceCtBEORgYwia9kSiZbhR68x8euvkj7NnMre69NFWLGJjQseDBpe2R4+eEsCm
-         qp/+a5zypayLB0nuoMaPTO7XjmXHAueaFqP0CC++t3LnzvEZn0MNzZQAhIYoknnh6QrK
-         gdKOyZlKA8bvgbWDqiGDhEK7zgeoGAM6/J2MDasyx2cdOX1lIahv5d582yOmWHbU91j1
-         ME3H3JJUzr2eauewMfHdAyg+niTF/rIW1xu4b6A267p0fLN+sxTk4BjzWs5QXamfaEow
-         thOwljj+5oT+GXdZ1d0viBifEyciOmyHhuyE6A9bt5ci2RIjx8ujPOP7x/vdxsxZD2tG
-         1msA==
+        Sat, 30 Mar 2019 02:44:06 -0400
+Received: by mail-io1-f72.google.com with SMTP id y18so3457673ior.18
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 23:44:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=So+1AjqY2B3hpkxsqiZAinMeQ5z4HoPx4le+MMpEwD8=;
-        b=dYDgJBFblvuYEiL5tb9YytHtlTYTN7tFreELagagT6jolDi0licST958NKmNMxHkrG
-         BAKIoibO2AOvLiAQ1NeFc2ahcX2f+to5kar+ifqyrGPMSqOJ6QKeMnXeOMIUW8D9hFdG
-         tplUVw7KOHWvYFNIti+LDS1/tcBsEkRcvpgD5oQpbnp/AB/UyVeniHQNoOqs/XjWiNAh
-         Y5VWYoxKgcrquFUC50POQT8OmF+xMuawmnxtG45Jxa8ka/by32os8I125imHNUNg/M8B
-         Jt53J5RTRgAH5Dw9KLmWccwr7RWI4haxE5vj4M1uFSi9wtYIs+NZ149k9x/v2Vo/tJbX
-         ia3g==
-X-Gm-Message-State: APjAAAUOR5bFOkOsxLa9BFB56A6Y07ToB1XqvayMk0Prcj14u9B5FqQY
-        KmAJG4QLsaD9mGzg+nmVFos7tq+uKCAXfkkgGGY=
-X-Google-Smtp-Source: APXvYqy4WpvLF/0GOLGbDmi0Q6CIpTeqJIAASNcNvLhz9tU2PaF1K6pYCiLQJvIayb9/+5XeBbp/JSXmZamyQYAWdFM=
-X-Received: by 2002:ac8:3042:: with SMTP id g2mr44122464qte.1.1553927115292;
- Fri, 29 Mar 2019 23:25:15 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=K5SMdJaZJB95kT5u+7rmDdpDmH0kDxc5YL8C/yODxys=;
+        b=k0iZiZCNGQGPMiO1wjJRELCocpEMoBveA4PUsXiko3eDOf4T7Hk5PmDRJF6aNHckEP
+         mv5GVH5Y4gHSMp+f9VCST4HJngxcwGnseiD7MW4VEoMgBQ6MK40IFjcoTaXQnIisltIR
+         JvZdhPk1mId90NbtA3eb1szvGvzsgO4cpKp4ZH1OU7SV+TIKOQb80bIQ1GOrbQCYXvmQ
+         mT1vyC+a0x6HgsQnsLDokos7EZop7bgY/a6zdhb/fKadPx4bMYt3MhBM7bKsqgKK12ny
+         KHJSluagXYh1IKOqWGujz3zWDcMz5dVHeLq0q6GMTu3DHBNoYLULplRZUFtUIgkxUvsh
+         SHWA==
+X-Gm-Message-State: APjAAAUg9Vf2aF3G8YvAT9d2cfhXlKBgFSBIxDe6zIbk2QdMzApiVa9+
+        jsICyM3OISvK0gazjTUlRDPHAXXDuGFy9s78juBKnMVqgrmZ
+X-Google-Smtp-Source: APXvYqwuhk6oL3uWNTgWkBEvNAG6uJ0nRBa5OMgYhKb1k7OlKjv06ktHCxJP0pUN6IQ86hwMgupNVZqN0dZ1ex5lUA+JpfQCZiHt
 MIME-Version: 1.0
-References: <20190327162147.23198-1-christian@brauner.io> <20190327162147.23198-3-christian@brauner.io>
- <CAGLj2rG8xMMt8-+r-pauA_qi4aun2y_kBZMCZGkXWQsKJrb-Ww@mail.gmail.com>
- <20190327213404.pv4wqtkjbufkx36u@brauner.io> <CAGLj2rHpYAOGz0h0k2pS4JwFSQkMmRSUWxa4BtO+7BUMD21vdQ@mail.gmail.com>
- <20190327222543.huugotqcew6jyytv@brauner.io> <CAGLj2rG0Sbho6MnPSmcS73Xj=oG92E4W_QLRu4dD8NfweoUm5Q@mail.gmail.com>
- <20190328103813.eogszrqbitw3e7k7@brauner.io> <CAKOZueusdFurOb_uFZ3PDmZeJvYvHVKMx6=TpiWPERkKRiHfiw@mail.gmail.com>
-In-Reply-To: <CAKOZueusdFurOb_uFZ3PDmZeJvYvHVKMx6=TpiWPERkKRiHfiw@mail.gmail.com>
-From:   Jonathan Kowalski <bl0pbl33p@gmail.com>
-Date:   Sat, 30 Mar 2019 06:25:09 +0000
-Message-ID: <CAGLj2rEtgiJfmKgo4bJvmBYp1Y5f1SELVfEu7Ayfi62zOAxjGQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] pid: add pidfd_open()
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Joel Fernandes <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a24:76c2:: with SMTP id z185mr3103741itb.22.1553928245376;
+ Fri, 29 Mar 2019 23:44:05 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 23:44:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000012a4cd05854a1d0a@google.com>
+Subject: KASAN: use-after-free Read in rdma_listen (2)
+From:   syzbot <syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com>
+To:     danielj@mellanox.com, danitg@mellanox.com, dledford@redhat.com,
+        jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, parav@mellanox.com,
+        swise@opengridcomputing.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 5:35 AM Daniel Colascione <dancol@google.com> wrote:
->
-> On Thu, Mar 28, 2019 at 3:38 AM Christian Brauner <christian@brauner.io> wrote:
-> >
-> > > All that said, thanks for the work on this once again. My intention is
-> > > just that we don't end up with an API that could have been done better
-> > > and be cleaner to use for potential users in the coming years.
-> >
-> > Thanks for your input on all of this. I still don't find multiplexers in
-> > the style of seccomp()/fsconfig()/keyctl() to be a problem since they
-> > deal with a specific task. They are very much different from ioctl()s in
-> > that regard. But since Joel, you, and Daniel found the pidctl() approach
-> > not very nice I dropped it. The interface needs to be satisfactory for
-> > all of us especially since Android and other system managers will be the
-> > main consumers.
->
-> Thanks.
->
-> > So let's split this into pidfd_open(pid_t pid, unsigned int flags) which
-> > allows to cleanly get pidfds independent procfs and do the translation
-> > to procpidfds in an ioctl() as we've discussed in prior threads. This
->
-> I sustain my objection to adding an ioctl. Compared to a system call,
-> an ioctl has a more rigid interface, greater susceptibility to
-> programmer error (due to the same ioctl control code potentially doing
-> different things for different file types), longer path length, and
-> more awkward filtering/monitoring/auditing/tracing. We've discussed
-> this issue at length before, and I thought we all agreed to use system
-> calls, not ioctl, for core kernel functionality. So why is an ioctl
-> suddenly back on the table? The way I see it, an ioctl has no
-> advantages except for 1) conserving system call numbers, which are not
-> scarce, and 2) avoiding the system call number coordination problem
-> (and the coordination problem isn't a factor for core kernel code). I
-> don't understand everyone's reluctance to add new system calls. What
-> am I missing? Why would we give up all the advantages that a system
-> call gives us?
->
+Hello,
 
-I agree in general, but in this particular case a system call or an
-ioctl doesn't matter much, all it does is take the pidfd, the command,
-and /proc's dir fd.
+syzbot found the following crash on:
 
-If you start adding a system call for every specific operation on file
-descriptors, it *will* become a problem. Besides, the translation is
-just there because it is racy to do in userspace,  it is not some well
-defined core kernel functionality. Therefore, it is just a way to
-enter the kernel to do the openat in a race free and safe manner.
+HEAD commit:    9936328b Merge tag 'pci-v5.1-fixes-1' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16380473200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
+dashboard link: https://syzkaller.appspot.com/bug?extid=adb15cf8c2798e4e0db4
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11580c3f200000
 
-As is, the facility being provided through an ioctl on the pidfd is
-not something I'd consider a problem. I think the translation stuff
-should also probably be an extension of ioctl_ns(2) (but I wouldn't be
-opposed if translate_pid is resurrected as is).
+Bisection is inconclusive: the bug happens on the oldest tested release.
 
-For anything more involved than ioctl(pidfd, PIDFD_TO_PROCFD,
-procrootfd), I'd agree that a system call would be a cleaner
-interface, otherwise, if you cannot generalise it, using ioctls as a
-command interface is probably the better tradeoff here.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14b80c3f200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16b80c3f200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12b80c3f200000
 
-> I also don't understand Andy's argument on the other thread that an
-> ioctl is okay if it's an "operation on an FD" --- *most* system calls
-> are operations on FDs. We don't have an ioctl for sendmsg(2) and it's
-> an "operation on an FD".
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+adb15cf8c2798e4e0db4@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in __list_add_valid+0x9a/0xa0 lib/list_debug.c:26
+Read of size 8 at addr ffff8880a5d2b3e0 by task syz-executor.0/7797
+
+CPU: 1 PID: 7797 Comm: syz-executor.0 Not tainted 5.1.0-rc2+ #43
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+  kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  __list_add_valid+0x9a/0xa0 lib/list_debug.c:26
+  __list_add include/linux/list.h:60 [inline]
+  list_add_tail include/linux/list.h:93 [inline]
+  cma_listen_on_all drivers/infiniband/core/cma.c:2483 [inline]
+  rdma_listen+0x6b7/0x970 drivers/infiniband/core/cma.c:3537
+  ucma_listen+0x14d/0x1c0 drivers/infiniband/core/ucma.c:1100
+  ucma_write+0x2da/0x3c0 drivers/infiniband/core/ucma.c:1696
+  __vfs_write+0x8d/0x110 fs/read_write.c:485
+  vfs_write+0x20c/0x580 fs/read_write.c:549
+  ksys_write+0xea/0x1f0 fs/read_write.c:598
+  __do_sys_write fs/read_write.c:610 [inline]
+  __se_sys_write fs/read_write.c:607 [inline]
+  __x64_sys_write+0x73/0xb0 fs/read_write.c:607
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458209
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fb9c2080c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458209
+RDX: 0000000000000010 RSI: 00000000200001c0 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb9c20816d4
+R13: 00000000004c77c2 R14: 00000000004dd780 R15: 00000000ffffffff
+
+Allocated by task 7794:
+  save_stack+0x45/0xd0 mm/kasan/common.c:75
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_kmalloc mm/kasan/common.c:497 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:511
+  kmem_cache_alloc_trace+0x151/0x760 mm/slab.c:3621
+  kmalloc include/linux/slab.h:545 [inline]
+  kzalloc include/linux/slab.h:740 [inline]
+  __rdma_create_id+0x5f/0x4e0 drivers/infiniband/core/cma.c:878
+  ucma_create_id+0x1de/0x640 drivers/infiniband/core/ucma.c:506
+  ucma_write+0x2da/0x3c0 drivers/infiniband/core/ucma.c:1696
+  __vfs_write+0x8d/0x110 fs/read_write.c:485
+  vfs_write+0x20c/0x580 fs/read_write.c:549
+  ksys_write+0xea/0x1f0 fs/read_write.c:598
+  __do_sys_write fs/read_write.c:610 [inline]
+  __se_sys_write fs/read_write.c:607 [inline]
+  __x64_sys_write+0x73/0xb0 fs/read_write.c:607
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 7789:
+  save_stack+0x45/0xd0 mm/kasan/common.c:75
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
+  __cache_free mm/slab.c:3498 [inline]
+  kfree+0xcf/0x230 mm/slab.c:3821
+  rdma_destroy_id+0x719/0xaa0 drivers/infiniband/core/cma.c:1852
+  ucma_close+0x115/0x320 drivers/infiniband/core/ucma.c:1777
+  __fput+0x2e5/0x8d0 fs/file_table.c:278
+  ____fput+0x16/0x20 fs/file_table.c:309
+  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:166
+  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a5d2b200
+  which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 480 bytes inside of
+  2048-byte region [ffff8880a5d2b200, ffff8880a5d2ba00)
+The buggy address belongs to the page:
+page:ffffea0002974a80 count:1 mapcount:0 mapping:ffff88812c3f0c40 index:0x0  
+compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea000231da88 ffff88812c3f1948 ffff88812c3f0c40
+raw: 0000000000000000 ffff8880a5d2a100 0000000100000003 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a5d2b280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a5d2b300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8880a5d2b380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                        ^
+  ffff8880a5d2b400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a5d2b480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
