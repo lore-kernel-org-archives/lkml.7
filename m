@@ -2,100 +2,81 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D2FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 07:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D5EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 07:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF86218A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 07:13:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Sp/W0/Ke";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="49eMlc9j"
+	by mail.kernel.org (Postfix) with ESMTP id 4C25D218A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 07:14:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553930059;
+	bh=m/bu1YNDeF39z3RkMwdY/oUvePXTHcgLZDbAoqVrNgM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yGCD+OIF6Zxyb4RmI9XIOdHYhBOiB8ZPwqe77Z1YcVYFmww1KQ8ZyJbRJ42OvNiKQ
+	 xRImYLMgeQLq94xqZ4RvltnRKg0U3ZAShNIjY5NrgGTjC3knGxPgajK1fYmLWYZz/b
+	 Z6md72Ez5EHC59F/SwoFKbo7Sd8jO73sSGL3Mpog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730213AbfC3HNJ (ORCPT
+        id S1730322AbfC3HOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 03:13:09 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:42807 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726209AbfC3HNJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 03:13:09 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2439A22028;
-        Sat, 30 Mar 2019 03:13:06 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sat, 30 Mar 2019 03:13:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=JAsN6jrD2sUa5XnDavoOpIyge+S
-        UI9rJos1wEEAIbJI=; b=Sp/W0/KevkAoyUP3e33Bvt1TjFPRveT4dgXaoEzelxL
-        XV+xnyO7bO2q7Pv6yhy6K1HdMmK1IqMKM2oQqqE471db7qO6dS/qdpP0buXMDSNs
-        CsOPnUJf0cLgx+5cLsveM8eVbzLP/zzmEgbVbhOLMta+PeNBAVMBpHke6/gx1x5K
-        zIsb2XlSIJeE14it3SiLgnXeD+IoAAoebA+hlNEdUZCiCjC5/nzB1AoovEF6c9I3
-        fCG6dd2ohb64KPndUTK/FlTDyMoA2Euh1HtEH/bI/pV+danuOv5cAUp93soUFPYO
-        DJJkjXTebRebrgtAPFWk+tYQEVt7agcaDqid10Es+2g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=JAsN6j
-        rD2sUa5XnDavoOpIyge+SUI9rJos1wEEAIbJI=; b=49eMlc9jj2shM7gINmPA22
-        DpH6V6sasjIZKBm694AnYjo5FnJQ9mZf8o7dfW4Q7P05CHgiMicLcz88AFABUock
-        H57lNxxdbe9HebaE/qtKCQyEJd4dOIDnURQXSA57K55rt+7naJf19dEc3Nuhd/JP
-        HR7wA3qgKhy8/VBUnS2slfvXb//AusNysEk/Ua5N4Dm+2QgOMbxML+RfRx8aVOYO
-        cNJBx/wFxm7OIK33+8xrIPckun9J2WOfTz5Zsh5PQd6H+ftssg/uCzL0wewDGiyA
-        SIa31iJ3L96t+yTQpcX/N4X5G9omQUd+0TYZ0Vp/0xM9PplMeWRwxDIayVufk2ow
-        ==
-X-ME-Sender: <xms:ABefXHpJUQDnfNaAYykSELBJCvFf7W0gT9MwIron8e4BHqxOEB6pIw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrkeekgddutdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppedukeekrdeltddrfedtrd
-    duheeinecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
-    ucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:ABefXKfy0TG3vXuBaicF6lBaaWhkTcR7SpUlQBimZXJ9c_KylH0tMA>
-    <xmx:ABefXFgMLPjVJ0ZcKlACo6UZ6eR7g4lBv3Sy1r7F-H6wfd2FMjSCiA>
-    <xmx:ABefXAJWJ4qbLIjRq6mMKdtalxz37qd1o4E9t4bTqU-BYYaGmUg-Tw>
-    <xmx:AhefXPFfjCJa2Z6IM377vmKEOc2x95zBWfWoqoF5U3VNT9KZSpcUcQ>
+        Sat, 30 Mar 2019 03:14:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726132AbfC3HOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 03:14:17 -0400
 Received: from localhost (unknown [188.90.30.156])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 10F22E43A3;
-        Sat, 30 Mar 2019 03:13:03 -0400 (EDT)
-Date:   Sat, 30 Mar 2019 08:13:01 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Razvan Stefanescu <razvan.stefanescu@microchip.com>
-Subject: Re: linux-next: Fixes tag needs some work in the tty.current tree
-Message-ID: <20190330071301.GB5068@kroah.com>
-References: <20190328072734.2093d03c@canb.auug.org.au>
- <20190329194718.GE12004@kroah.com>
- <20190330162529.65805441@canb.auug.org.au>
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A4F82173C;
+        Sat, 30 Mar 2019 07:14:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553930056;
+        bh=m/bu1YNDeF39z3RkMwdY/oUvePXTHcgLZDbAoqVrNgM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jDPGFPdfvcQGePOdTQE7BB6g0feFIjbhSacsP5mhOjnwmzkcE3Z0GyCJccA9p2N9M
+         JJwR6K6jzjBbY1O8wpT5ZNHnvMxTjTMohTZTW5Tp3SSNsi7QuZaTlWyek2zCjTfowj
+         iFdqs8k7FY9zrNQaxCCOdd6Kle5jZNCW/1rmLCqY=
+Date:   Sat, 30 Mar 2019 08:14:13 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     jslaby@suse.com, linux-kernel@vger.kernel.org
+Subject: Re: a kernel address leak via copy_to_user in drivers/tty/rocket.c
+Message-ID: <20190330071413.GA5507@kroah.com>
+References: <CABXRUiSUzuf+Ki1Pj9oUkgZC0ELkA4N1aZpwBrZ7Gu3nyGwPMQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190330162529.65805441@canb.auug.org.au>
+In-Reply-To: <CABXRUiSUzuf+Ki1Pj9oUkgZC0ELkA4N1aZpwBrZ7Gu3nyGwPMQ@mail.gmail.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 04:25:29PM +1100, Stephen Rothwell wrote:
-> Hi Greg,
+On Sat, Mar 30, 2019 at 03:05:11PM +0800, Fuqian Huang wrote:
+> Hi, recently I found that there is a kernel address leaks to user
+> space via copy_to_user in
+> drivers/tty/rocket.c:1287 (linux-5.0.5)
+> static int rp_ioctl(struct tty_struct *tty, unsigned int cmd, unsigned
+> long arg) {
+>   ...
+>   case RCKP_GET_STRUCT:
+>       if (copy_to_user(argp, info, sizeof(struct r_port))
+>   ...
+> }
+> The `info` is a struct r_port. and the field `r_port.port.ops` is an
+> constant pointer,
+> and it points to a constant object `rocket_port_ops` during the initialization.
+> (function init_r_port) (drivers/tty/rocket.c:633)
 > 
-> On Fri, 29 Mar 2019 20:47:18 +0100 Greg KH <greg@kroah.com> wrote:
-> >
-> > Is there a script somewhere that I can use to run on my tree before I
-> > push it out, much like I do now for the signed-off-by checks?
-> 
-> Attached is what I use ...
+> patch suggestion:
+> set the pointer field to null before the copy to user call.
 
-Nice, thanks!
+Great, can you send a patch to fix this so that you get the proper
+credit for finding and resolving it?
 
-Perhaps this should be added to checkpatch someday :)
+thanks,
 
 greg k-h
