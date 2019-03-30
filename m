@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E79AC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A5EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 425542184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D627217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553908118;
-	bh=RR4WGbZ678KnUXmmrIFaR/JZIireJljtlwxDrTiAkbo=;
+	s=default; t=1553908123;
+	bh=S5PeUGUAYe/Kz+Y3zj+oBMXsduxpAypjMN641UXFObk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xse1FHHW0r251ekF3eJMX9fBgbtQcFTYXtSvUmXJi8EAMwhRfK0OM0PIT0Sq9nUAk
-	 2n8od7nqDTKq7b3Mq9612OrUncH8EUvTa4S+puss/wq2/tAjr0IkCn3PjECQfUq6LI
-	 kOtjCrixbHqoKHgih3YBkE5BfJz7ni1j3AvTvZpI=
+	b=HQvx0UOgDJPBvsuq/4mdrOeT6ovRF2OSkx3NqfLatqtdm22Su7yzw0DqKZKrPvlMX
+	 oZp8tTtpZRY63ys2Z37xxr+y3wINRWEly1od3IKpl4bkK5Y5T3qBqS0pXieo3Gt+hD
+	 jJl298G3BsIrJkKBOJDIiV4MUe3DG+CTtPFLenQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731372AbfC3BIh (ORCPT
+        id S1731106AbfC3Awq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:08:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731104AbfC3Awq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 29 Mar 2019 20:52:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730317AbfC3Awl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:52:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBC91218D3;
-        Sat, 30 Mar 2019 00:52:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06DAE218AC;
+        Sat, 30 Mar 2019 00:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907165;
-        bh=RR4WGbZ678KnUXmmrIFaR/JZIireJljtlwxDrTiAkbo=;
+        s=default; t=1553907161;
+        bh=S5PeUGUAYe/Kz+Y3zj+oBMXsduxpAypjMN641UXFObk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U17Vlxqm6uzcs9E4i3yrC49M+7DeUXJG2AcbBEJuD4CSqZvlORIzcRiMxWhQwGyn4
-         aAuKhcdYCizpNWeyYKyAB0isyt+Zor8uzOj/2sCnN4gKg/urp1oIORHNm/ruPNVy++
-         8WogjyCZqTrUcaweXlDbf6Xwk5OhEPw7acCtUfGo=
+        b=LknTNTIkfhX23GX8bggquQkorWICpG20z2swaDNn8hEK9orcqi50YdnFkTBdzVHLZ
+         Vmcwey0FDxLQrmRfh61YIDvgoth/nDTNwRQc/tDFBsMHQUzyrREhJF/C3PaWqkBZnp
+         KqBEYHBMKyOtQG8duK306gHJalTK1laaAykVI6Rw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        mark gross <mgross@intel.com>, Joerg Roedel <jroedel@suse.de>,
+Cc:     Kangjie Lu <kjlu@umn.edu>, Thomas Gleixner <tglx@linutronix.de>,
+        pakki001@umn.edu, Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.0 60/67] iommu/vt-d: Check capability before disabling protected memory
-Date:   Fri, 29 Mar 2019 20:50:40 -0400
-Message-Id: <20190330005047.25998-60-sashal@kernel.org>
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 57/67] x86/hyperv: Prevent potential NULL pointer dereference
+Date:   Fri, 29 Mar 2019 20:50:37 -0400
+Message-Id: <20190330005047.25998-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005047.25998-1-sashal@kernel.org>
 References: <20190330005047.25998-1-sashal@kernel.org>
@@ -61,40 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 5bb71fc790a88d063507dc5d445ab8b14e845591 ]
+[ Upstream commit 534c89c22e26b183d838294f0937ee092c82ad3a ]
 
-The spec states in 10.4.16 that the Protected Memory Enable
-Register should be treated as read-only for implementations
-not supporting protected memory regions (PLMR and PHMR fields
-reported as Clear in the Capability register).
+The page allocation in hv_cpu_init() can fail, but the code does not
+have a check for that.
 
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: mark gross <mgross@intel.com>
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
-Fixes: f8bab73515ca5 ("intel-iommu: PMEN support")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Add a check and return -ENOMEM when the allocation fails.
+
+[ tglx: Massaged changelog ]
+
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Acked-by: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: pakki001@umn.edu
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-hyperv@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190314054651.1315-1-kjlu@umn.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/hyperv/hv_init.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 78188bf7e90d..63b427cc13d5 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1534,6 +1534,9 @@ static void iommu_disable_protect_mem_regions(struct intel_iommu *iommu)
- 	u32 pmen;
- 	unsigned long flags;
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 7abb09e2eeb8..dfdb4ce1ae9c 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -102,9 +102,13 @@ static int hv_cpu_init(unsigned int cpu)
+ 	u64 msr_vp_index;
+ 	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
+ 	void **input_arg;
++	struct page *pg;
  
-+	if (!cap_plmr(iommu->cap) && !cap_phmr(iommu->cap))
-+		return;
-+
- 	raw_spin_lock_irqsave(&iommu->register_lock, flags);
- 	pmen = readl(iommu->reg + DMAR_PMEN_REG);
- 	pmen &= ~DMA_PMEN_EPM;
+ 	input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
+-	*input_arg = page_address(alloc_page(GFP_KERNEL));
++	pg = alloc_page(GFP_KERNEL);
++	if (unlikely(!pg))
++		return -ENOMEM;
++	*input_arg = page_address(pg);
+ 
+ 	hv_get_vp_index(msr_vp_index);
+ 
 -- 
 2.19.1
 
