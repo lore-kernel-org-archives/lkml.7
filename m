@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896E4C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5D8C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4CE206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194C8217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907981;
-	bh=5HhNwzQQCLObKkDU/xaFVEEf9sy0v+ST4SVbFoB5hZ0=;
+	s=default; t=1553907986;
+	bh=uvcSHLBCNSC7LVeh3qFCOeC9h1zv3W5nJkfCczyl6r0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OcaIg8NsGJnQgOOBpxbTrNWcC2eiDzF6C7otX1chekKAc09nQ5cm8C1fPLf3+nWUL
-	 4cGtKPkThaeHFg8GUtTR3y5TzTkIaFZcX6B+JdfgXq5hQP9C1a5TGiD02kuXtjrPX/
-	 xpwq8IJLidRQQ2jHqP9Q39A+0euaFvhjJ73uRp+I=
+	b=JnJJj/j6IPz/rAhkSmEwc3tYNpR56TXc7ByCv49jCLcE6JnF7ELu8+FBDcgnaMydb
+	 zUz8PRudiIzG8x0JlDVrMU5scWvuUUP5dB+u1/zEcEuKwB0uiDRrBY5vCXk8G+myK5
+	 E3ngaYkwrFQzNKOhBwsaHqa1hzJ5FVoTitbmdh2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731533AbfC3BGT (ORCPT
+        id S1731311AbfC3Axi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:06:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60516 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731312AbfC3Axj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:53:39 -0400
+        id S1730532AbfC3Axd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:53:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E898B218CD;
-        Sat, 30 Mar 2019 00:53:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9782E218AC;
+        Sat, 30 Mar 2019 00:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907218;
-        bh=5HhNwzQQCLObKkDU/xaFVEEf9sy0v+ST4SVbFoB5hZ0=;
+        s=default; t=1553907212;
+        bh=uvcSHLBCNSC7LVeh3qFCOeC9h1zv3W5nJkfCczyl6r0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QBzYwfqtzt3AbLz702WdL74Wb+3R/B4ggSN07v2jM5QtoGuAVefHd0U4revFAzMRp
-         XIIC1CQj4Y1lunAkL3WbC6Okw4+nw63ihL6TkNB997tZAtpZElmDxZLYgzxdoeGABS
-         0YOI7TL977yW0XoLZD7ZCrrfhqtp6XiTBwfUZ81w=
+        b=uiffqfM/Vk5Rodl2Hx4tpQcfYYJW6USWgqvgI6M1Nol2tsn/p6Crdy2Op0pJVrxjC
+         XnkvVuvL1MVPSy9fSTqSlc1l+4oJXWiaJ4uSL1+jf5u0nixfZHXbW/aSgxdEb7q+Pc
+         ZXUhIi7edqrcY0fLOYtk+ZdQsX7ftI6ui9XL+yDI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Rui <rui.zhang@intel.com>, Sasha Levin <sashal@kernel.org>,
-        linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 22/52] thermal/intel_powerclamp: fix truncated kthread name
-Date:   Fri, 29 Mar 2019 20:52:29 -0400
-Message-Id: <20190330005301.26868-22-sashal@kernel.org>
+Cc:     Phil Elwell <phil@raspberrypi.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/52] thermal: bcm2835: Fix crash in bcm2835_thermal_debugfs
+Date:   Fri, 29 Mar 2019 20:52:26 -0400
+Message-Id: <20190330005301.26868-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005301.26868-1-sashal@kernel.org>
 References: <20190330005301.26868-1-sashal@kernel.org>
@@ -58,34 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Rui <rui.zhang@intel.com>
+From: Phil Elwell <phil@raspberrypi.org>
 
-[ Upstream commit e925b5be5751f6a7286bbd9a4cbbc4ac90cc5fa6 ]
+[ Upstream commit 35122495a8c6683e863acf7b05a7036b2be64c7a ]
 
-kthread name only allows 15 characters (TASK_COMMON_LEN is 16).
-Thus rename the kthreads created by intel_powerclamp driver from
-"kidle_inject/ + decimal cpuid" to "kidle_inj/ + decimal cpuid"
-to avoid truncated kthead name for cpu 100 and later.
+"cat /sys/kernel/debug/bcm2835_thermal/regset" causes a NULL pointer
+dereference in bcm2835_thermal_debugfs. The driver makes use of the
+implementation details of the thermal framework to retrieve a pointer
+to its private data from a struct thermal_zone_device, and gets it
+wrong - leading to the crash. Instead, store its private data as the
+drvdata and retrieve the thermal_zone_device pointer from it.
 
+Fixes: bcb7dd9ef206 ("thermal: bcm2835: add thermal driver for bcm2835 SoC")
+
+Signed-off-by: Phil Elwell <phil@raspberrypi.org>
 Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/intel_powerclamp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thermal/broadcom/bcm2835_thermal.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/thermal/intel_powerclamp.c b/drivers/thermal/intel_powerclamp.c
-index ea1aa7dbe42c..8e8328347c0e 100644
---- a/drivers/thermal/intel_powerclamp.c
-+++ b/drivers/thermal/intel_powerclamp.c
-@@ -494,7 +494,7 @@ static void start_power_clamp_worker(unsigned long cpu)
- 	struct powerclamp_worker_data *w_data = per_cpu_ptr(worker_data, cpu);
- 	struct kthread_worker *worker;
+diff --git a/drivers/thermal/broadcom/bcm2835_thermal.c b/drivers/thermal/broadcom/bcm2835_thermal.c
+index 24b006a95142..8646fb7425f2 100644
+--- a/drivers/thermal/broadcom/bcm2835_thermal.c
++++ b/drivers/thermal/broadcom/bcm2835_thermal.c
+@@ -128,8 +128,7 @@ static const struct debugfs_reg32 bcm2835_thermal_regs[] = {
  
--	worker = kthread_create_worker_on_cpu(cpu, 0, "kidle_inject/%ld", cpu);
-+	worker = kthread_create_worker_on_cpu(cpu, 0, "kidle_inj/%ld", cpu);
- 	if (IS_ERR(worker))
- 		return;
+ static void bcm2835_thermal_debugfs(struct platform_device *pdev)
+ {
+-	struct thermal_zone_device *tz = platform_get_drvdata(pdev);
+-	struct bcm2835_thermal_data *data = tz->devdata;
++	struct bcm2835_thermal_data *data = platform_get_drvdata(pdev);
+ 	struct debugfs_regset32 *regset;
  
+ 	data->debugfsdir = debugfs_create_dir("bcm2835_thermal", NULL);
+@@ -275,7 +274,7 @@ static int bcm2835_thermal_probe(struct platform_device *pdev)
+ 
+ 	data->tz = tz;
+ 
+-	platform_set_drvdata(pdev, tz);
++	platform_set_drvdata(pdev, data);
+ 
+ 	/*
+ 	 * Thermal_zone doesn't enable hwmon as default,
+@@ -299,8 +298,8 @@ static int bcm2835_thermal_probe(struct platform_device *pdev)
+ 
+ static int bcm2835_thermal_remove(struct platform_device *pdev)
+ {
+-	struct thermal_zone_device *tz = platform_get_drvdata(pdev);
+-	struct bcm2835_thermal_data *data = tz->devdata;
++	struct bcm2835_thermal_data *data = platform_get_drvdata(pdev);
++	struct thermal_zone_device *tz = data->tz;
+ 
+ 	debugfs_remove_recursive(data->debugfsdir);
+ 	thermal_zone_of_sensor_unregister(&pdev->dev, tz);
 -- 
 2.19.1
 
