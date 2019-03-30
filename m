@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE385C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FFEC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75F92218FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EAA218CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907346;
-	bh=DuBdEdG4C10uQ/VybgsnniNYLisy4B48gkFMudNEeGc=;
+	s=default; t=1553907353;
+	bh=f6BYvAxD7UhTqYmqTgiKN6eSDGoYoNVsqjjMq7NbeSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m0t8vLyRGli2jpJ0/55qQV81KGZmpynTPWeaMgLZT6MpuhSBFpkX7er6I7/6dKqIm
-	 PPGJyE64S4kXIBWRsPqb0fg4GtJnoYyCHpVWQo3caDwHH/yXsY1+CzIg9p/NzLA/Cb
-	 srgzX1EHbwLWcpMCoZ9EHPRYgtYomQxgmYE2nAIU=
+	b=O8T26FqV5tHtD8eejE1s3FMRgyJt5eRjgefT/YYX+nYCNYn15bdCfP9H/8rh8Ce3K
+	 H/oez5BURZWcJjF7Jmzfu/chxIGIhpJtE9nppVGp8MvMrQftKoRyiDgt2k6etWLZz4
+	 U5Q+gKOAfhLDmVDGZ0q/5Nt9Z4VKl90tpzesT/U0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731806AbfC3Azp (ORCPT
+        id S1731837AbfC3Azv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34960 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:55:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730632AbfC3Azm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:55:42 -0400
+        id S1731816AbfC3Azr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:55:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B35E62064A;
-        Sat, 30 Mar 2019 00:55:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89B06218D8;
+        Sat, 30 Mar 2019 00:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907341;
-        bh=DuBdEdG4C10uQ/VybgsnniNYLisy4B48gkFMudNEeGc=;
+        s=default; t=1553907347;
+        bh=f6BYvAxD7UhTqYmqTgiKN6eSDGoYoNVsqjjMq7NbeSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LnI4UfFXr90spiIab2PmmMNNh6OrA/1W28Z9py+4/twQQm3qEfYtTtQiIlupYw3mV
-         8E7/V7SI9xgyjKCyqH2OjTGjMM1E4iINCCa+CW3bWN8pouQDxKeXgqOnrPAcvoomkG
-         4wWMWgzOwkBbXQwSEi5S6UT98Gzh/YHVeBwxINBo=
+        b=NuC+zR85i1AK2rztTTBu8fh4ei0I9vE0ps5//DBgP0JAMHwWLii5L+pzbFI4HaLCg
+         HBzIv32AK5/XvOvDJAJuuOc6wrDCBNLNXn39EqHulpqGcsGs7Py27FAw6XWwYJNYLl
+         K/yfhx1QWnIB5+f7KPrHGzMPikIVRQGwibnCmd9w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jianguo Chen <chenjianguo3@huawei.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 30/37] irqchip/mbigen: Don't clear eventid when freeing an MSI
-Date:   Fri, 29 Mar 2019 20:54:31 -0400
-Message-Id: <20190330005441.27540-30-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 33/37] drm/nouveau/debugfs: Fix check of pm_runtime_get_sync failure
+Date:   Fri, 29 Mar 2019 20:54:34 -0400
+Message-Id: <20190330005441.27540-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
 References: <20190330005441.27540-1-sashal@kernel.org>
@@ -59,48 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jianguo Chen <chenjianguo3@huawei.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit fca269f201a8d9985c0a31fb60b15d4eb57cef80 ]
+[ Upstream commit 909e9c9c428376e2a43d178ed4b0a2d5ba9cb7d3 ]
 
-mbigen_write_msg clears eventid bits of a mbigen register
-when free a interrupt, because msi_domain_deactivate memset
-struct msg to zero. Then multiple mbigen pins with zero eventid
-will report the same interrupt number.
+pm_runtime_get_sync returns negative on failure.
 
-The eventid clear call trace:
-                free_irq
-                __free_irq
-                irq_shutdown
-                irq_domain_deactivate_irq
-                __irq_domain_deactivate_irq
-                __irq_domain_deactivate_irq
-                msi_domain_deactivate
-                platform_msi_write_msg
-                mbigen_write_msg
-
-Signed-off-by: Jianguo Chen <chenjianguo3@huawei.com>
-[maz: massaged subject]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fixes: eaeb9010bb4b ("drm/nouveau/debugfs: Wake up GPU before doing any reclocking")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mbigen.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/nouveau/nouveau_debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
-index 567b29c47608..98b6e1d4b1a6 100644
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -161,6 +161,9 @@ static void mbigen_write_msg(struct msi_desc *desc, struct msi_msg *msg)
- 	void __iomem *base = d->chip_data;
- 	u32 val;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_debugfs.c b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
+index 9109b69cd052..9635704a1d86 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_debugfs.c
++++ b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
+@@ -161,7 +161,7 @@ nouveau_debugfs_pstate_set(struct file *file, const char __user *ubuf,
+ 	}
  
-+	if (!msg->address_lo && !msg->address_hi)
-+		return;
-+ 
- 	base += get_mbigen_vec_reg(d->hwirq);
- 	val = readl_relaxed(base);
- 
+ 	ret = pm_runtime_get_sync(drm->dev);
+-	if (IS_ERR_VALUE(ret) && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES)
+ 		return ret;
+ 	ret = nvif_mthd(ctrl, NVIF_CONTROL_PSTATE_USER, &args, sizeof(args));
+ 	pm_runtime_put_autosuspend(drm->dev);
 -- 
 2.19.1
 
