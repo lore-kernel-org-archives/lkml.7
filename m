@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7016CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B862C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C63F218E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D84D218D9
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909429;
-	bh=lENhMCBsYuhXrnuhEosELf/+OFe5LAr2hb0tEln6doU=;
+	s=default; t=1553909431;
+	bh=Mdy06QLyGgnJd1Wt2zQ/O9OY7y39tcLG8p8++Q+aKfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ofQVMTL3bIyPWeQWpHoIDlTVxbEQ3lEov/3ZItmnbQ4ziKp42bU/avhDqskz32ine
-	 65DxSuhTjro4HPD4wfGiFJXwFm8yvFU2N83GBmIQupmnZkvyVHzbEGxPIlwWucFQWB
-	 WBVkvbO2rtYYzMkuyWCcn8YmdqXufT/U7BO17P2o=
+	b=GyIHHbPC7SXYbykcL8Y5NW/OElt1NLbcQcyWkrT8G0NPx+E4QT+/fWYbAOTx06QcD
+	 ZDIRLVVbmTGeEyrmHAinbi4iNlUAnZhhflv9UiZz+TZ6ebZX1fSJeam8ip96TU7C0v
+	 TVSLCe6wqQE1S+/ClYsyKAHANCqWRx6wEaB3tCr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731622AbfC3Ba2 (ORCPT
+        id S1730737AbfC3Ba3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:30:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37656 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:30:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731503AbfC3BaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:30:25 -0400
+        id S1731591AbfC3Ba2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:30:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE942218D8;
-        Sat, 30 Mar 2019 01:30:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3182821773;
+        Sat, 30 Mar 2019 01:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909424;
-        bh=lENhMCBsYuhXrnuhEosELf/+OFe5LAr2hb0tEln6doU=;
+        s=default; t=1553909426;
+        bh=Mdy06QLyGgnJd1Wt2zQ/O9OY7y39tcLG8p8++Q+aKfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nahZmmHRN1Php9iKTLznn1n3iR9F+noYbp+6ZdwVn8zEwE2c/ajJcVMDGids5AbCJ
-         9gQXGWQ9eiKBFTwOnrTcBHBPfR3XlnPhJZj1uHH0cPJpzdmPzGHkDZIdfT6FZc2L/O
-         7WLUDS61SdgVpKw8rLyXTDp/CFdBVelWdBvxOB/A=
+        b=BSf7Sfb9F9GWoMlqv5/5Ub5460s7bHhdGxpvdY5/KyVO4Ey01BthZXT7LYKS2Tvd5
+         mOomSrJHAkzzo0taTUhJ1xV2K2oJpcEykWlp3F5v1p46Ij/R0FTtv/uWjNQHsFblsO
+         SPvIqPhwLX5NeurlbNc1wQtQOUlh+6U3u60Z4iZ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gertjan Halkes <gertjan@google.com>,
-        Dominique Martinet <dominique.martinet@cea.fr>,
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/37] 9p: do not trust pdu content for stat item size
-Date:   Fri, 29 Mar 2019 21:29:46 -0400
-Message-Id: <20190330013020.379-3-sashal@kernel.org>
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.14 05/37] f2fs: fix to do sanity check with current segment number
+Date:   Fri, 29 Mar 2019 21:29:48 -0400
+Message-Id: <20190330013020.379-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013020.379-1-sashal@kernel.org>
 References: <20190330013020.379-1-sashal@kernel.org>
@@ -60,75 +59,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gertjan Halkes <gertjan@google.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 2803cf4379ed252894f046cb8812a48db35294e3 ]
+[ Upstream commit 042be0f849e5fc24116d0afecfaf926eed5cac63 ]
 
-v9fs_dir_readdir() could deadloop if a struct was sent with a size set
-to -2
+https://bugzilla.kernel.org/show_bug.cgi?id=200219
 
-Link: http://lkml.kernel.org/r/1536134432-11997-1-git-send-email-asmadeus@codewreck.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=88021
-Signed-off-by: Gertjan Halkes <gertjan@google.com>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Reproduction way:
+- mount image
+- run poc code
+- umount image
+
+F2FS-fs (loop1): Bitmap was wrongly set, blk:15364
+------------[ cut here ]------------
+kernel BUG at /home/yuchao/git/devf2fs/segment.c:2061!
+invalid opcode: 0000 [#1] PREEMPT SMP
+CPU: 2 PID: 17686 Comm: umount Tainted: G        W  O      4.18.0-rc2+ #39
+Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+EIP: update_sit_entry+0x459/0x4e0 [f2fs]
+Code: e8 1c b5 fd ff 0f 0b 0f 0b 8b 45 e4 c7 44 24 08 9c 7a 6c f8 c7 44 24 04 bc 4a 6c f8 89 44 24 0c 8b 06 89 04 24 e8 f7 b4 fd ff <0f> 0b 8b 45 e4 0f b6 d2 89 54 24 10 c7 44 24 08 60 7a 6c f8 c7 44
+EAX: 00000032 EBX: 000000f8 ECX: 00000002 EDX: 00000001
+ESI: d7177000 EDI: f520fe68 EBP: d6477c6c ESP: d6477c34
+DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010282
+CR0: 80050033 CR2: b7fbe000 CR3: 2a99b3c0 CR4: 000406f0
+Call Trace:
+ f2fs_allocate_data_block+0x124/0x580 [f2fs]
+ do_write_page+0x78/0x150 [f2fs]
+ f2fs_do_write_node_page+0x25/0xa0 [f2fs]
+ __write_node_page+0x2bf/0x550 [f2fs]
+ f2fs_sync_node_pages+0x60e/0x6d0 [f2fs]
+ ? sync_inode_metadata+0x2f/0x40
+ ? f2fs_write_checkpoint+0x28f/0x7d0 [f2fs]
+ ? up_write+0x1e/0x80
+ f2fs_write_checkpoint+0x2a9/0x7d0 [f2fs]
+ ? mark_held_locks+0x5d/0x80
+ ? _raw_spin_unlock_irq+0x27/0x50
+ kill_f2fs_super+0x68/0x90 [f2fs]
+ deactivate_locked_super+0x3d/0x70
+ deactivate_super+0x40/0x60
+ cleanup_mnt+0x39/0x70
+ __cleanup_mnt+0x10/0x20
+ task_work_run+0x81/0xa0
+ exit_to_usermode_loop+0x59/0xa7
+ do_fast_syscall_32+0x1f5/0x22c
+ entry_SYSENTER_32+0x53/0x86
+EIP: 0xb7f95c51
+Code: c1 1e f7 ff ff 89 e5 8b 55 08 85 d2 8b 81 64 cd ff ff 74 02 89 02 5d c3 8b 0c 24 c3 8b 1c 24 c3 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
+EAX: 00000000 EBX: 0871ab90 ECX: bfb2cd00 EDX: 00000000
+ESI: 00000000 EDI: 0871ab90 EBP: 0871ab90 ESP: bfb2cd7c
+DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
+Modules linked in: f2fs(O) crc32_generic bnep rfcomm bluetooth ecdh_generic snd_intel8x0 snd_ac97_codec ac97_bus snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi snd_seq pcbc joydev aesni_intel snd_seq_device aes_i586 snd_timer crypto_simd snd cryptd soundcore mac_hid serio_raw video i2c_piix4 parport_pc ppdev lp parport hid_generic psmouse usbhid hid e1000 [last unloaded: f2fs]
+---[ end trace d423f83982cfcdc5 ]---
+
+The reason is, different log headers using the same segment, once
+one log's next block address is used by another log, it will cause
+panic as above.
+
+Main area: 24 segs, 24 secs 24 zones
+  - COLD  data: 0, 0, 0
+  - WARM  data: 1, 1, 1
+  - HOT   data: 20, 20, 20
+  - Dir   dnode: 22, 22, 22
+  - File   dnode: 22, 22, 22
+  - Indir nodes: 21, 21, 21
+
+So this patch adds sanity check to detect such condition to avoid
+this issue.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/vfs_dir.c   | 8 +++-----
- net/9p/protocol.c | 3 ++-
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ fs/f2fs/super.c | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/fs/9p/vfs_dir.c b/fs/9p/vfs_dir.c
-index 48db9a9f13f9..cb6c4031af55 100644
---- a/fs/9p/vfs_dir.c
-+++ b/fs/9p/vfs_dir.c
-@@ -105,7 +105,6 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
- 	int err = 0;
- 	struct p9_fid *fid;
- 	int buflen;
--	int reclen = 0;
- 	struct p9_rdir *rdir;
- 	struct kvec kvec;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index fc5c41257e68..4c169ba50c0f 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1959,7 +1959,7 @@ int sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 	unsigned int segment_count_main;
+ 	unsigned int cp_pack_start_sum, cp_payload;
+ 	block_t user_block_count;
+-	int i;
++	int i, j;
  
-@@ -138,11 +137,10 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
- 		while (rdir->head < rdir->tail) {
- 			err = p9stat_read(fid->clnt, rdir->buf + rdir->head,
- 					  rdir->tail - rdir->head, &st);
--			if (err) {
-+			if (err <= 0) {
- 				p9_debug(P9_DEBUG_VFS, "returned %d\n", err);
- 				return -EIO;
- 			}
--			reclen = st.size+2;
- 
- 			over = !dir_emit(ctx, st.name, strlen(st.name),
- 					 v9fs_qid2ino(&st.qid), dt_type(&st));
-@@ -150,8 +148,8 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
- 			if (over)
- 				return 0;
- 
--			rdir->head += reclen;
--			ctx->pos += reclen;
-+			rdir->head += err;
-+			ctx->pos += err;
- 		}
+ 	total = le32_to_cpu(raw_super->segment_count);
+ 	fsmeta = le32_to_cpu(raw_super->segment_count_ckpt);
+@@ -2000,11 +2000,43 @@ int sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 		if (le32_to_cpu(ckpt->cur_node_segno[i]) >= main_segs ||
+ 			le16_to_cpu(ckpt->cur_node_blkoff[i]) >= blocks_per_seg)
+ 			return 1;
++		for (j = i + 1; j < NR_CURSEG_NODE_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
++				le32_to_cpu(ckpt->cur_node_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Node segment (%u, %u) has the same "
++					"segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_node_segno[i]));
++				return 1;
++			}
++		}
  	}
- }
-diff --git a/net/9p/protocol.c b/net/9p/protocol.c
-index 9743837aebc6..766d1ef4640a 100644
---- a/net/9p/protocol.c
-+++ b/net/9p/protocol.c
-@@ -570,9 +570,10 @@ int p9stat_read(struct p9_client *clnt, char *buf, int len, struct p9_wstat *st)
- 	if (ret) {
- 		p9_debug(P9_DEBUG_9P, "<<< p9stat_read failed: %d\n", ret);
- 		trace_9p_protocol_dump(clnt, &fake_pdu);
-+		return ret;
+ 	for (i = 0; i < NR_CURSEG_DATA_TYPE; i++) {
+ 		if (le32_to_cpu(ckpt->cur_data_segno[i]) >= main_segs ||
+ 			le16_to_cpu(ckpt->cur_data_blkoff[i]) >= blocks_per_seg)
+ 			return 1;
++		for (j = i + 1; j < NR_CURSEG_DATA_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_data_segno[i]) ==
++				le32_to_cpu(ckpt->cur_data_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Data segment (%u, %u) has the same "
++					"segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_data_segno[i]));
++				return 1;
++			}
++		}
++	}
++	for (i = 0; i < NR_CURSEG_NODE_TYPE; i++) {
++		for (j = i; j < NR_CURSEG_DATA_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
++				le32_to_cpu(ckpt->cur_data_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Data segment (%u) and Data segment (%u)"
++					" has the same segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_node_segno[i]));
++				return 1;
++			}
++		}
  	}
  
--	return ret;
-+	return fake_pdu.offset;
- }
- EXPORT_SYMBOL(p9stat_read);
- 
+ 	sit_bitmap_size = le32_to_cpu(ckpt->sit_ver_bitmap_bytesize);
 -- 
 2.19.1
 
