@@ -7,47 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9849C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A32A5C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77073218D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B702218D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907222;
-	bh=6kxAV1aPuRBvUbsRPh7OcZzfa3+hd/ZNKcf65LRx4xU=;
+	s=default; t=1553907228;
+	bh=t0UkHPUNSywfB4fEO3vyA7A8ScZSqk4+KfYx5LEbmzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0uOBablQToC+Xoo/v1JDSAnpPprxtRLh+hoOXeZ91WByD6JtCY1WSRQAZAI/zCuIT
-	 H3A8uecMuI4a21zGRtBG3zU4U7WGvLOxTvjSaKBu0NI0hJkdXkI1QbpVUFVOvPpkES
-	 /gXWIxeRqsiFzuL0xlpV5NTBdUZqSV8Vfzl0edI8=
+	b=EeGHa/MwIQb+gEWoD1SWvJeoViiq/cPuZ3QqsDRmzRnDjZEpYLuQaHP74fKMU3Cug
+	 x4loJW7A8J11DwTaTKK/fS0d65kC+7Z+4nUyz6gvENfjWHz/SPaPN7Bt/8mSXeDMQB
+	 fnWXLkFL/ZWzoIx9cybcIkjT5zhiUegcMRH0xLB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731332AbfC3Axl (ORCPT
+        id S1731366AbfC3Axr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60480 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:53:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731309AbfC3Axi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:53:38 -0400
+        id S1730839AbfC3Axo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:53:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B87A5218AC;
-        Sat, 30 Mar 2019 00:53:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1811C218CD;
+        Sat, 30 Mar 2019 00:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907217;
-        bh=6kxAV1aPuRBvUbsRPh7OcZzfa3+hd/ZNKcf65LRx4xU=;
+        s=default; t=1553907223;
+        bh=t0UkHPUNSywfB4fEO3vyA7A8ScZSqk4+KfYx5LEbmzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DMAubSyqRLz/Js/tNZrYfAtF7Tv8MB+uPHQyqhdbPH+UMdqPYGqaooUxziKpyEObT
-         y6Em6xFmX7x1uUjfUK2WRhDvs9fScdLUYcOUZX3uLzjDUHRUA/NA7J0MHDue2idtbT
-         iPQOI4h4/x0agLIoDSRfA8iNMsbMBy4ucKtGKH8E=
+        b=wmJiMghJ5CRYTlhsBjWk3XSviU+el9kIseG4E4b01H7K9pAnm4CbkRlHN58lD1CTO
+         Q2xbwVhXoYqNfEmurn6x5NEBiWxV8ybK36B+koB88OkY5noCgD5sNXycGIjrXqMnck
+         cSjn24xNKQJuWvavO+1drU+BkL+VQZd0Z0HjVNuU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 21/52] thermal/int340x_thermal: fix mode setting
-Date:   Fri, 29 Mar 2019 20:52:28 -0400
-Message-Id: <20190330005301.26868-21-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 25/52] sched/core: Fix buffer overflow in cgroup2 property cpu.max
+Date:   Fri, 29 Mar 2019 20:52:32 -0400
+Message-Id: <20190330005301.26868-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005301.26868-1-sashal@kernel.org>
 References: <20190330005301.26868-1-sashal@kernel.org>
@@ -60,40 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <matthewgarrett@google.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 396ee4d0cd52c13b3f6421b8d324d65da5e7e409 ]
+[ Upstream commit 4c47acd824aaaa8fc6dc519fb4e08d1522105b7a ]
 
-int3400 only pushes the UUID into the firmware when the mode is flipped
-to "enable". The current code only exposes the mode flag if the firmware
-supports the PASSIVE_1 UUID, which not all machines do. Remove the
-restriction.
+Add limit into sscanf format string for on-stack buffer.
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Li Zefan <lizefan@huawei.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 0d5936344f30 ("sched: Implement interface for cgroup unified hierarchy")
+Link: https://lkml.kernel.org/r/155189230232.2620.13120481613524200065.stgit@buzz
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/int340x_thermal/int3400_thermal.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
-index 51c9097eaf7a..e9d58de8b5da 100644
---- a/drivers/thermal/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
-@@ -316,10 +316,9 @@ static int int3400_thermal_probe(struct platform_device *pdev)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 152a0b0c91bb..33e7557fe8e3 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6929,7 +6929,7 @@ static int __maybe_unused cpu_period_quota_parse(char *buf,
+ {
+ 	char tok[21];	/* U64_MAX */
  
- 	platform_set_drvdata(pdev, priv);
+-	if (!sscanf(buf, "%s %llu", tok, periodp))
++	if (sscanf(buf, "%20s %llu", tok, periodp) < 1)
+ 		return -EINVAL;
  
--	if (priv->uuid_bitmap & 1 << INT3400_THERMAL_PASSIVE_1) {
--		int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
--		int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
--	}
-+	int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
-+	int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
-+
- 	priv->thermal = thermal_zone_device_register("INT3400 Thermal", 0, 0,
- 						priv, &int3400_thermal_ops,
- 						&int3400_thermal_params, 0, 0);
+ 	*periodp *= NSEC_PER_USEC;
 -- 
 2.19.1
 
