@@ -2,104 +2,104 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C468CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30679C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91EF52075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:31:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553938319;
-	bh=tgEJJsEp8HLK1niWW9oIcWkzJIxjOzFoVIV8bUJ0VlE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QDxl3Sm6VPhZ8zoNB/6HnWizezzu7ib795tZzw5Z7Wrt+3tZOJwTVJ0c0JgEm3/Xn
-	 WxVjOG7a6tjDghJCsD/+RqiyVuSh+M6tomWkYqVdzdXLcqSy7pJus0kr0Jjx3q++sn
-	 d7z/WMG/XpX2zZfk1kx0mmi7IojCXNHw9PQwM52A=
+	by mail.kernel.org (Postfix) with ESMTP id 03CE0218D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbfC3Jb6 (ORCPT
+        id S1730529AbfC3Jkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 05:31:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730453AbfC3Jb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 05:31:57 -0400
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFA4E2075E;
-        Sat, 30 Mar 2019 09:31:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553938316;
-        bh=tgEJJsEp8HLK1niWW9oIcWkzJIxjOzFoVIV8bUJ0VlE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NRwgdgKda486H3zPX22uXby3nX7q1xj7baYk1kYymUawG8cEyABTO+iilCzlPTI//
-         zzjaqOSVoJDzem209CKzJiORgVgakubh7wysfDYV/ze+n/lYK3MSq0if8jUA10yGeR
-         lHv9ukJjMBGtj7HXMNUWG/cG4CI9jFRwjiRU9ltg=
-Date:   Sat, 30 Mar 2019 10:31:52 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Luca Coelho <luca@coelho.fi>
-Cc:     Laura Abbott <labbott@redhat.com>, linux-kernel@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org,
-        Luca Coelho <luciano.coelho@intel.com>,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH] iwlwifi: properly check debugfs dentry before using it
-Message-ID: <20190330093152.GB14300@kroah.com>
-References: <20190122152151.16139-24-gregkh@linuxfoundation.org>
- <03bb68be-8e42-a463-2d57-3be051dc2016@redhat.com>
- <20190327012600.GA3649@kroah.com>
- <5660d50d-6cbf-3b36-6e6c-312b1617ed23@redhat.com>
- <20190327015346.GA17979@kroah.com>
- <5f9c8beda0e925b079aa9342ce1c9523659837a4.camel@coelho.fi>
- <20190330092247.GA14300@kroah.com>
+        Sat, 30 Mar 2019 05:40:41 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:11264 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730352AbfC3Jkl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 05:40:41 -0400
+X-UUID: ddb145fcc7f04df395684655b3a82732-20190330
+X-UUID: ddb145fcc7f04df395684655b3a82732-20190330
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1398553601; Sat, 30 Mar 2019 17:40:29 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 30 Mar 2019 17:40:28 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 30 Mar 2019 17:40:27 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [next PATCH] usb: mtu3: get optional clock by devm_clk_get_optional()
+Date:   Sat, 30 Mar 2019 17:40:18 +0800
+Message-ID: <1553938818-9883-1-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190330092247.GA14300@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-debugfs can now report an error code if something went wrong instead of
-just NULL.  So if the return value is to be used as a "real" dentry, it
-needs to be checked if it is an error before dereferencing it.
+Use devm_clk_get_optional() to get optional clock
 
-This is now happening because of ff9fb72bc077 ("debugfs: return error
-values, not NULL").  If multiple iwlwifi devices are in the system, this
-can cause problems when the driver attempts to create the main debugfs
-directory again.  Later on in the code we fail horribly by trying to
-dereference a pointer that is an error value.
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ drivers/usb/mtu3/mtu3_plat.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
 
-Reported-by: Laura Abbott <labbott@redhat.com>
-Cc: Johannes Berg <johannes.berg@intel.com>
-Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Cc: Luca Coelho <luciano.coelho@intel.com>
-Cc: Intel Linux Wireless <linuxwifi@intel.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: stable <stable@vger.kernel.org> # 5.0
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
-index 2453ceabf00d..6925527d8457 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
-@@ -774,8 +774,7 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
- 		return;
+diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
+index dca8bd864e63..fd0f6c5dfbc1 100644
+--- a/drivers/usb/mtu3/mtu3_plat.c
++++ b/drivers/usb/mtu3/mtu3_plat.c
+@@ -211,19 +211,6 @@ static void ssusb_ip_sw_reset(struct ssusb_mtk *ssusb)
+ 	mtu3_setbits(ssusb->ippc_base, U3D_SSUSB_IP_PW_CTRL2, SSUSB_IP_DEV_PDN);
+ }
  
- 	mvmvif->dbgfs_dir = debugfs_create_dir("iwlmvm", dbgfs_dir);
+-/* ignore the error if the clock does not exist */
+-static struct clk *get_optional_clk(struct device *dev, const char *id)
+-{
+-	struct clk *opt_clk;
 -
--	if (!mvmvif->dbgfs_dir) {
-+	if (IS_ERR_OR_NULL(mvmvif->dbgfs_dir)) {
- 		IWL_ERR(mvm, "Failed to create debugfs directory under %pd\n",
- 			dbgfs_dir);
- 		return;
+-	opt_clk = devm_clk_get(dev, id);
+-	/* ignore error number except EPROBE_DEFER */
+-	if (IS_ERR(opt_clk) && (PTR_ERR(opt_clk) != -EPROBE_DEFER))
+-		opt_clk = NULL;
+-
+-	return opt_clk;
+-}
+-
+ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ {
+ 	struct device_node *node = pdev->dev.of_node;
+@@ -245,15 +232,15 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 		return PTR_ERR(ssusb->sys_clk);
+ 	}
+ 
+-	ssusb->ref_clk = get_optional_clk(dev, "ref_ck");
++	ssusb->ref_clk = devm_clk_get_optional(dev, "ref_ck");
+ 	if (IS_ERR(ssusb->ref_clk))
+ 		return PTR_ERR(ssusb->ref_clk);
+ 
+-	ssusb->mcu_clk = get_optional_clk(dev, "mcu_ck");
++	ssusb->mcu_clk = devm_clk_get_optional(dev, "mcu_ck");
+ 	if (IS_ERR(ssusb->mcu_clk))
+ 		return PTR_ERR(ssusb->mcu_clk);
+ 
+-	ssusb->dma_clk = get_optional_clk(dev, "dma_ck");
++	ssusb->dma_clk = devm_clk_get_optional(dev, "dma_ck");
+ 	if (IS_ERR(ssusb->dma_clk))
+ 		return PTR_ERR(ssusb->dma_clk);
+ 
+-- 
+2.20.1
+
