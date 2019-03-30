@@ -2,56 +2,51 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8408C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4309C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 999E3218CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97520206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907111;
-	bh=J3OkqfjhbXs8dhjxrX8SXeORMGeAQ+e74HJjzp7Z1Dc=;
+	s=default; t=1553907114;
+	bh=vuvNGReKYaEXTPVdnuLDTS9aoOOlZI0yvO/PUDq0HGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A9PT8qjUwTyVcxuqr9uvvk5V3WNIbrAu0Oea9MumZyQH5Bq0zWX8e3fehkR6bTUzT
-	 aX5UujH0vI8FcFZEaQBvvkbmlWSc2XY6OusYBAilGahp330toRo40ywnDsipf/OqNz
-	 VI7nRlFjlRHqyNmc4buwm3IufC323KlSBM43ttjg=
+	b=USIoIUSt/U2aXpsyLy5txlkRWrNP1hHwTF8EoDCYjp6l4Z5WYdeY4eCWfIGFN1+1l
+	 sLxGjApBls45rFnve34l+u/hgeJG+/ixM3abnyOLwTJR66WjM+27i9LpRx7q6G92SX
+	 CPVw0Bv1d7P6jAYrk8zVITMHe/Jfo870xuGeu8Ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730853AbfC3Avt (ORCPT
+        id S1730224AbfC3Avr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:51:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58462 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:51:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730833AbfC3Avq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:51:46 -0400
+        id S1730827AbfC3Avo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:51:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04A11218AC;
-        Sat, 30 Mar 2019 00:51:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3600206DD;
+        Sat, 30 Mar 2019 00:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907106;
-        bh=J3OkqfjhbXs8dhjxrX8SXeORMGeAQ+e74HJjzp7Z1Dc=;
+        s=default; t=1553907103;
+        bh=vuvNGReKYaEXTPVdnuLDTS9aoOOlZI0yvO/PUDq0HGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rMvL+Vz9JEM/ckSpKmToRrZHzAFiRsAgJlfiyiuYmsGQcDEDhF+nYdJKHQpbQEe7I
-         bGXlFHJXX2FFagfD3uxwE1nnBlwbaAymFhZ0gCFSs649ko1MLR6m1I8/Vfq63kOAqH
-         Ue/m3ozJ3oAt3/IOioZCXGQWDBgalzO/rBXsqa3o=
+        b=OnKlJh+ElAMsFnQ9H03Ed4JoOA4elXdFwFw1uixgWBXaT6ct1tf9uxjdckdsFRgjh
+         9JjNfU9lV9yBRhhN8tzIUI72Z6LzKpoUOJvR9/aDsNWawldPHNXqUvCrfRl7ZwgONB
+         vPCw7qvmDzOdG+l4V75UBapv8oZ5qtGyEWcaSttE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+Cc:     Andi Kleen <ak@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 34/67] perf list: Don't forget to drop the reference to the allocated thread_map
-Date:   Fri, 29 Mar 2019 20:50:14 -0400
-Message-Id: <20190330005047.25998-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 33/67] perf stat: Fix --no-scale
+Date:   Fri, 29 Mar 2019 20:50:13 -0400
+Message-Id: <20190330005047.25998-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005047.25998-1-sashal@kernel.org>
 References: <20190330005047.25998-1-sashal@kernel.org>
@@ -64,53 +59,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-[ Upstream commit 39df730b09774bd860e39ea208a48d15078236cb ]
+[ Upstream commit 75998bb263bf48c1c85d78cd2d2f3a97d3747cab ]
 
-Detected via gcc's ASan:
+The -c option to enable multiplex scaling has been useless for quite
+some time because scaling is default.
 
-  Direct leak of 2048 byte(s) in 64 object(s) allocated from:
-    6     #0 0x7f606512e370 in __interceptor_realloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee370)
-    7     #1 0x556b0f1d7ddd in thread_map__realloc util/thread_map.c:43
-    8     #2 0x556b0f1d84c7 in thread_map__new_by_tid util/thread_map.c:85
-    9     #3 0x556b0f0e045e in is_event_supported util/parse-events.c:2250
-   10     #4 0x556b0f0e1aa1 in print_hwcache_events util/parse-events.c:2382
-   11     #5 0x556b0f0e3231 in print_events util/parse-events.c:2514
-   12     #6 0x556b0ee0a66e in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
-   13     #7 0x556b0f01e0ae in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-   14     #8 0x556b0f01e859 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-   15     #9 0x556b0f01edc8 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-   16     #10 0x556b0f01f71f in main /home/changbin/work/linux/tools/perf/perf.c:520
-   17     #11 0x7f6062ccf09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+It's only useful as --no-scale to disable scaling. But the non scaling
+code path has bitrotted and doesn't print anything because perf output
+code relies on value run/ena information.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 89896051f8da ("perf tools: Do not put a variable sized type not at the end of a struct")
-Link: http://lkml.kernel.org/r/20190316080556.3075-3-changbin.du@gmail.com
+Also even when we don't want to scale a value it's still useful to show
+its multiplex percentage.
+
+This patch:
+  - Fixes help and documentation to show --no-scale instead of -c
+  - Removes -c, only keeps the long option because -c doesn't support negatives.
+  - Enables running/enabled even with --no-scale
+  - And fixes some other problems in the no-scale output.
+
+Before:
+
+  $ perf stat --no-scale -e cycles true
+
+   Performance counter stats for 'true':
+
+       <not counted>      cycles
+
+         0.000984154 seconds time elapsed
+
+After:
+
+  $ ./perf stat --no-scale -e cycles true
+
+   Performance counter stats for 'true':
+
+             706,070      cycles
+
+         0.001219821 seconds time elapsed
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+LPU-Reference: 20190314225002.30108-9-andi@firstfloor.org
+Link: https://lkml.kernel.org/n/tip-xggjvwcdaj2aqy8ib3i4b1g6@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/parse-events.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/Documentation/perf-stat.txt |  5 ++---
+ tools/perf/builtin-stat.c              |  3 ++-
+ tools/perf/util/evsel.c                |  3 +--
+ tools/perf/util/stat.c                 | 12 ++++--------
+ 4 files changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 920e1e6551dd..9afd0d2beef5 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2271,6 +2271,7 @@ static bool is_event_supported(u8 type, unsigned config)
- 		perf_evsel__delete(evsel);
- 	}
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 4bc2085e5197..39c05f89104e 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -72,9 +72,8 @@ report::
+ --all-cpus::
+         system-wide collection from all CPUs (default if no target is specified)
  
-+	thread_map__put(tmap);
- 	return ret;
- }
+--c::
+---scale::
+-	scale/normalize counter values
++--no-scale::
++	Don't scale/normalize counter values
  
+ -d::
+ --detailed::
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 63a3afc7f32b..a52295dbad2b 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -728,7 +728,8 @@ static struct option stat_options[] = {
+ 		    "system-wide collection from all CPUs"),
+ 	OPT_BOOLEAN('g', "group", &group,
+ 		    "put the counters into a counter group"),
+-	OPT_BOOLEAN('c', "scale", &stat_config.scale, "scale/normalize counters"),
++	OPT_BOOLEAN(0, "scale", &stat_config.scale,
++		    "Use --no-scale to disable counter scaling for multiplexing"),
+ 	OPT_INCR('v', "verbose", &verbose,
+ 		    "be more verbose (show counter open errors, etc)"),
+ 	OPT_INTEGER('r', "repeat", &stat_config.run_count,
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index dbc0466db368..142e1ca94992 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1341,8 +1341,7 @@ void perf_counts_values__scale(struct perf_counts_values *count,
+ 			scaled = 1;
+ 			count->val = (u64)((double) count->val * count->ena / count->run + 0.5);
+ 		}
+-	} else
+-		count->ena = count->run = 0;
++	}
+ 
+ 	if (pscaled)
+ 		*pscaled = scaled;
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 4d40515307b8..2856cc9d5a31 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -291,10 +291,8 @@ process_counter_values(struct perf_stat_config *config, struct perf_evsel *evsel
+ 		break;
+ 	case AGGR_GLOBAL:
+ 		aggr->val += count->val;
+-		if (config->scale) {
+-			aggr->ena += count->ena;
+-			aggr->run += count->run;
+-		}
++		aggr->ena += count->ena;
++		aggr->run += count->run;
+ 	case AGGR_UNSET:
+ 	default:
+ 		break;
+@@ -442,10 +440,8 @@ int create_perf_stat_counter(struct perf_evsel *evsel,
+ 	struct perf_event_attr *attr = &evsel->attr;
+ 	struct perf_evsel *leader = evsel->leader;
+ 
+-	if (config->scale) {
+-		attr->read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
+-				    PERF_FORMAT_TOTAL_TIME_RUNNING;
+-	}
++	attr->read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
++			    PERF_FORMAT_TOTAL_TIME_RUNNING;
+ 
+ 	/*
+ 	 * The event is part of non trivial group, let's enable
 -- 
 2.19.1
 
