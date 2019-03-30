@@ -2,73 +2,156 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE68C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 11:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA9DC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 11:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD3B42183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 11:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B53512183F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 11:07:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKE7oOSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbfC3K6R (ORCPT
+        id S1730693AbfC3LHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 06:58:17 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:21461 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730372AbfC3K6Q (ORCPT
+        Sat, 30 Mar 2019 07:07:54 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43079 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730597AbfC3LHx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 06:58:16 -0400
-Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2UAvoEd042700;
-        Sat, 30 Mar 2019 19:57:50 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp);
- Sat, 30 Mar 2019 19:57:50 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126072090247.bbtec.net [126.72.90.247])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2UAvnJD042695
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sat, 30 Mar 2019 19:57:49 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: INFO: rcu detected stall in corrupted (3)
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        syzbot <syzbot+65cecdd27b726c261799@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com, "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, mingo@redhat.com,
-        x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-References: <000000000000b08190058543449f@google.com>
- <8ecb5bc9-5761-64d0-64b2-1310300a64ec@I-love.SAKURA.ne.jp>
- <alpine.DEB.2.21.1903300843230.2476@nanos.tec.linutronix.de>
- <daec0343-b905-f483-602b-9c0b9e9b1379@i-love.sakura.ne.jp>
- <20190330104529.GB5935@zn.tnic>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <77650d72-e2ec-e084-c929-210b16b8afb9@i-love.sakura.ne.jp>
-Date:   Sat, 30 Mar 2019 19:57:50 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 30 Mar 2019 07:07:53 -0400
+Received: by mail-pl1-f196.google.com with SMTP id m10so2204424plt.10;
+        Sat, 30 Mar 2019 04:07:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hEzqti2at/SdXPxvZZZcw5JS0bkMUItsjBSbx22Zqgs=;
+        b=NKE7oOSxwW2EatecRzi2gLjJym8Czl4k2QQC0tKWp2LfnV9PmhpGkXxDd1nlpwdsUf
+         R5Vp3BL4kaWG4RmN3k/J2Tc8jbi1HWB2VO5ABbefhXMsyPUnNi+LTSuIHWvWU3/tAGzX
+         qaj9RMHXI9DHfsnr+rRVc69HktJsr6Qp1Gh3G559pHfdbstG0I+7F3ThqWQXwWTXL0M6
+         46VUf/2DmMuQyHx1on8AlS6iM79AEaxebSM058V6H67hXaOuJAD5y00YnbRWemTEAjCi
+         /iQGfFyQD+85bCb/x5liSw8bQAbDe0IcMOVKkNZFEiRiALDilb7aAJWr3D6BfcQHgpBW
+         Yrxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hEzqti2at/SdXPxvZZZcw5JS0bkMUItsjBSbx22Zqgs=;
+        b=BwT+ZkS1+Q0eDMy2gNrqYMGPCTB8/Che8yEju7FkkyIk2AAlnyHe9dCaLZ3kEq7WrN
+         /dzkKUUEneWldOvHa5PJmA0ycmXS6uC5/qa+90dmLFFDbhz/L96zJHvQRAQf0NobFcRO
+         7rcSkRbXTrwK33FV9JKlYAjwW81vitfu0/EDfOyTNnAwCYIcMePv6M5/tYzjMMM/PPhK
+         LehDPRGanDAAMwas4NLERzyIe6zyoeXfZJBnizmjfHrAY/RXzWljsRG8MCJvwC32LawX
+         /fPOzt0yNQUO29RSNoZpxMZr8ap+aCR3znBPxCtH/qC/szAUZVO0vxOQXY72VdBTOY4b
+         31bQ==
+X-Gm-Message-State: APjAAAVAVa2/WLc9MuDRL7QmoO6959gNspiggNDVgl1/9nCzm7+d2aRs
+        egX4cV4DFeqmgr77/o2M9SE=
+X-Google-Smtp-Source: APXvYqxgbR7KwhzHo2g4x9GkLgA7PVDsRhC3jnWKPaMy1pDxB8cQEAKUeYsg0ihi2y7FKd9CTthDcQ==
+X-Received: by 2002:a17:902:be09:: with SMTP id r9mr1224529pls.215.1553944073212;
+        Sat, 30 Mar 2019 04:07:53 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.91.90])
+        by smtp.gmail.com with ESMTPSA id h3sm5480109pgv.38.2019.03.30.04.07.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 30 Mar 2019 04:07:52 -0700 (PDT)
+Date:   Sat, 30 Mar 2019 16:37:48 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, mingo@redhat.com,
+        roopa@cumulusnetworks.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, linux-sparse@vger.kernel.org
+Subject: Re: [PATCH] trace: events: fix  error directive in argument list
+Message-ID: <20190330110747.GA3461@hari-Inspiron-1545>
+References: <20190325195303.GA20629@hari-Inspiron-1545>
+ <20190329232215.itsvo3jj3lu4gr7k@ltop.local>
 MIME-Version: 1.0
-In-Reply-To: <20190330104529.GB5935@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329232215.itsvo3jj3lu4gr7k@ltop.local>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/03/30 19:45, Borislav Petkov wrote:
-> On Sat, Mar 30, 2019 at 07:40:11PM +0900, Tetsuo Handa wrote:
->> But how can the scheduler be aware of various watchdogs' thresholds?
+On Sat, Mar 30, 2019 at 12:22:17AM +0100, Luc Van Oostenryck wrote:
+> On Tue, Mar 26, 2019 at 01:23:03AM +0530, Hariprasad Kelam wrote:
+> > This patch fixes below spare errors.
+> > 
+> > Sparse error:
+> > make C=2 CF=-D__CHECK_ENDIAN__ M=net/core
+> > ./include/trace/events/neigh.h:73:1: error: directive in argument list
+> > ./include/trace/events/neigh.h:78:1: error: directive in argument list
+> > ./include/trace/events/neigh.h:150:1: error: directive in argument list
+> > ./include/trace/events/neigh.h:155:1: error: directive in argument list
+> > 
+> > Changes below two lines to signle line to avoid sparse error
+> >  #if IS_ENABLED(CONFIG_IPV6)
+> >                if (n->tbl->family == AF_INET6) {
+> > to if (IS_ENABLED(CONFIG_IPV6) && n->tbl->family == AF_INET6)
+> > 
+> > and removes reassigning pin6 pointer when IPV6 is enabled
+> > 
+> > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> > ---
+> >  include/trace/events/neigh.h | 19 +++++--------------
+> >  1 file changed, 5 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/include/trace/events/neigh.h b/include/trace/events/neigh.h
+> > index 0bdb085..6e310ea 100644
+> > --- a/include/trace/events/neigh.h
+> > +++ b/include/trace/events/neigh.h
+> > @@ -70,15 +70,11 @@ TRACE_EVENT(neigh_update,
+> >  		else
+> >  			*p32 = 0;
+> >  
+> > -#if IS_ENABLED(CONFIG_IPV6)
+> > -		if (n->tbl->family == AF_INET6) {
+> > -			pin6 = (struct in6_addr *)__entry->primary_key6;
+> > +		if (IS_ENABLED(CONFIG_IPV6) && n->tbl->family == AF_INET6)
+> >  			*pin6 = *(struct in6_addr *)n->primary_key;
 > 
-> I think what tglx means is sched_setattr() should be fixed to fail due
-> to the bogus value.
+> Why removing the line wheer pin6 is assigned?
+> IMO, the patch should be:
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -		if (n->tbl->family == AF_INET6) {
+> +		if (IS_ENABLED(CONFIG_IPV6) && n->tbl->family == AF_INET6)
+>  			pin6 = (struct in6_addr *)__entry->primary_key6;
+>   			*pin6 = *(struct in6_addr *)n->primary_key;
 > 
+> > @@ -147,15 +143,10 @@ DECLARE_EVENT_CLASS(neigh__update,
+> >  		else
+> >  			*p32 = 0;
+> >  
+> > -#if IS_ENABLED(CONFIG_IPV6)
+> > -		if (n->tbl->family == AF_INET6) {
+> > -			pin6 = (struct in6_addr *)__entry->primary_key6;
+>
+pin6  is already assinged .Assinging pin6 is redudant in if loop
+ Below is the original code
+ <code-snippet>
+		pin6 = (struct in6_addr *)__entry->primary_key6;
+		p32 = (__be32 *)__entry->primary_key4;
 
-Yes. But what such threshold be? 0.1 second? 1 second? 10 seconds?
-Can we find a threshold where everyone can agree on?
+		if (n->tbl->family == AF_INET)
+			*p32 = *(__be32 *)n->primary_key;
+		else
+			*p32 = 0;
+
+#if IS_ENABLED(CONFIG_IPV6)
+		if (n->tbl->family == AF_INET6) {
+                       pin6 = (struct in6_addr *)__entry->primary_key6;
+		       *pin6 = *(struct in6_addr *)n->primary_key;
+		} else
+#endif
+                {
+			ipv6_addr_set_v4mapped(*p32, pin6);
+		}
+ </code-snippet>
+
+
+> Same here.
+> 
+> -- Luc Van Oostenryck
