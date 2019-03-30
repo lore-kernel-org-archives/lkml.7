@@ -2,1491 +2,196 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9823BC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 22:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6264EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 22:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFAE20989
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 22:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF3420989
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 22:37:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUJMxMsi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4UE83rn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbfC3Wem (ORCPT
+        id S1731033AbfC3WhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 18:34:42 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39267 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730666AbfC3Wel (ORCPT
+        Sat, 30 Mar 2019 18:37:24 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39964 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730996AbfC3WhY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 18:34:41 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b65so2660234plb.6;
-        Sat, 30 Mar 2019 15:34:40 -0700 (PDT)
+        Sat, 30 Mar 2019 18:37:24 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h22so4991144edw.7;
+        Sat, 30 Mar 2019 15:37:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=kUqHg2+BdlP1ZcpZ2200FGioY5SHTtc7UayoAf/grk4=;
-        b=SUJMxMsiz4VClBhBkpL2xpWEADXYBrlF4O56n4qJzgnsh2GngHMbjXgcGamCz/BTpv
-         t7zstMNqn/WK3O6CQ/lA7OUYQT5oq07ATcXc4KghgkqSLpRVNTyr4+at/VJxFSjePSng
-         3UIuvdSM7XV6myy7ZwJoXb2z+Fjaak6j8Btr1Kf3ysLzlLlxOdwBN98VBsXuhIjVCDmo
-         U0afrrFgOjfGhnvwJeUBilAusj1tfiD+swLHTooP5CnybbIIubx0J5L7AVfGasHrnx+m
-         70vKyrRBzXTEGkN17SQ+67aBM8UxOaKBCWuozaWeo5cQBg39/7TIPwZvAoqKp6h/1aMT
-         QSrA==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pK3plyBmjAV4xHZUQyKdGxR9hXUzh16No6voNcD6UPQ=;
+        b=U4UE83rnFvQfvT+VbJeqdJRGi9/uOCz1Em4L7EqZDuPNZgTOnM7xg2hC4CUfBLe/Hb
+         Ey0Ek+4YSTBO/L3e543W75+r68JZ0E18vHsOxdES9e7hLXygHTua60Mo0xC2kHM4U4fa
+         JRArOFk9scFPQ39UlQUFpPN0fk7YOV8ieQD5KwegVYjt31idE9bw81th0DIIO+n5HCwQ
+         68krMqrzAO+Sn+3q8UjUTrBomvAdWlaeL9m6o/Ngvs6jqQ66HB/m9mANVonezV782fsf
+         gF+2qey8SNdvBys3Y6591GJ2akvcil4MRv9Oub0HnDO/QOwBiqsOgTcGNWn1/kNx1BG7
+         ZgAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=kUqHg2+BdlP1ZcpZ2200FGioY5SHTtc7UayoAf/grk4=;
-        b=KI92q92r3D1Fgx13D5+gZ2P3UJBFiWDssXDOmDq9YrASrTjqdYrMxc2XgmM9PvwZ8F
-         Hvf/Qh240RIJXgpGG76zh8G5S1ldu2Mfzio9zgzVGtFWzqmP3w7PYJU+sKXYQIBGiKgh
-         eYSGVtjSLa0DbJSHg2EBkHz1LDqBvx6chqHulfvK5JdJZ02XvzYih32o9CWbOKCDfZWS
-         Q7rJTNJGrhKaFrpMgQ8f54EKyuiGJaLgDg/rWizDCtkI3zm+PDUNRC3vVfOggJWzdv+1
-         /9VInxISJuJ5o3MSB0/dxxc/Xsti2ubBTQutPxxhiT7zI63UGbSq+PIEFCUT9F3zBxWd
-         T+aA==
-X-Gm-Message-State: APjAAAX67CSFN7jfIQfoFTyyfQsT1NAn/PvFAQhX8NWCmpN+twAv0auf
-        WqeeiGgEnLILJS1MYPEkmoshUIkjaCgUuA==
-X-Google-Smtp-Source: APXvYqwTlzdw93SlAl+kNSkfT+pLiCBgjpwI3c03xVwdAiavpmh7oMwSt5PATDLFf+0cX8AGZyw22g==
-X-Received: by 2002:a17:902:7481:: with SMTP id h1mr15671183pll.206.1553985278951;
-        Sat, 30 Mar 2019 15:34:38 -0700 (PDT)
-Received: from nishad (p640014-ipngn8201hodogaya.kanagawa.ocn.ne.jp. [60.46.49.14])
-        by smtp.gmail.com with ESMTPSA id t8sm7363671pgp.5.2019.03.30.15.34.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 30 Mar 2019 15:34:38 -0700 (PDT)
-Date:   Sun, 31 Mar 2019 04:04:29 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ARCH: Use the correct style for SPDX License Identifier
-Message-ID: <20190330223423.GA14432@nishad>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=pK3plyBmjAV4xHZUQyKdGxR9hXUzh16No6voNcD6UPQ=;
+        b=Dm3ymcT9qhh43CQeMklTOuOVXQYpvNkX/0Rp93IhvIRqFU7vOuo9sFeFt7VtCFxN/S
+         awbjk5nQAifIlPVJedbec/J1ocxJgru03A4z8sO6P/A5PWMkVvIraRQblN4V3uL/KJHn
+         tdhMiCSTPaYLEp4pDk/VhUqK5ttOVa4761wRNt6GBHeOebYGzRgPSHVCjW4sSJJW0g8t
+         /ugFVwfNeDqUbsQcoKVPedl8WpTh8IR0u6rkbodyyefBJ/uFfFgbwtaLwczYpOYGCkPp
+         rhU4JNTkwUDTNwyLNu5uAyfGI+ZD+I7/QgaZkYalTBQ0pJmgYZpj0tLMVZwPdF4mCXrF
+         SW2w==
+X-Gm-Message-State: APjAAAUrWWfHnrVa39zyppQUDAhYm+Zy2PFYuE7WUQr3OXnPo+CYJfBW
+        +MDd9aGU5sQ/m0wwS6NM6Wg=
+X-Google-Smtp-Source: APXvYqwpxBdaOB3ibILa8ZpcsHR0wyXBOtZMpUAZRGcRkVJRNMB2qYb6vWk1Q9KrA2A/3PDqz4yNew==
+X-Received: by 2002:a50:97d0:: with SMTP id f16mr35619709edb.287.1553985441257;
+        Sat, 30 Mar 2019 15:37:21 -0700 (PDT)
+Received: from [192.168.0.61] (xd520f242.cust.hiper.dk. [213.32.242.66])
+        by smtp.gmail.com with ESMTPSA id g27sm1817009edg.77.2019.03.30.15.37.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 30 Mar 2019 15:37:20 -0700 (PDT)
+Subject: Re: [PATCH] net/bluetooth: Fix bound check in event handling
+To:     Dan Carpenter <dan.carpenter@oracle.com>, kbuild@01.org
+Cc:     kbuild-all@01.org, marcel@holtmann.org, johan.hedberg@gmail.com,
+        davem@davemloft.net, linux-bluetooth@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller@googlegroups.com
+References: <20190330071757.GU32613@kadam>
+From:   Tomas Bortoli <tomasbortoli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tomasbortoli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ede5be42-1113-3873-208b-ca46bee922c3@gmail.com>
+Date:   Sat, 30 Mar 2019 23:37:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190330071757.GU32613@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in the Hardware Architecture subsystem. For C header files
-Documentation/process/license-rules.rst mandates C-like comments
-(opposed to C source files where C++ style should be used)
+Hi Dan,
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46
-and making some manual changes.
+On 3/30/19 8:17 AM, Dan Carpenter wrote:
+> [ This is an old warning.  Sorry for missing it earlier.  I would have
+>   caught it when the code was merged as well so there was no real risk
+>   but it's just awkward.  ]
+> 
+> Hi Tomas,
+> 
+> url:    https://github.com/0day-ci/linux/commits/Tomas-Bortoli/net-bluetooth-Fix-bound-check-in-event-handling/20190301-213647
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git master
+> 
+> smatch warnings:
+> net/bluetooth/hci_event.c:3986 hci_inquiry_result_with_rssi_evt() warn: potential pointer math issue ('info' is a 120 bit pointer)
+> 
+> # https://github.com/0day-ci/linux/commit/00305742c021794f147b348d45eb10ea26e5a514
+> git remote add linux-review https://github.com/0day-ci/linux
+> git remote update linux-review
+> git checkout 00305742c021794f147b348d45eb10ea26e5a514
+> vim +3986 net/bluetooth/hci_event.c
+> 
+> 6039aa73 Gustavo Padovan 2012-05-23  3963  static void hci_inquiry_result_with_rssi_evt(struct hci_dev *hdev,
+> 807deac2 Gustavo Padovan 2012-05-17  3964  					     struct sk_buff *skb)
+> a9de9248 Marcel Holtmann 2007-10-20  3965  {
+> a9de9248 Marcel Holtmann 2007-10-20  3966  	struct inquiry_data data;
+> a9de9248 Marcel Holtmann 2007-10-20  3967  	int num_rsp = *((__u8 *) skb->data);
+> a9de9248 Marcel Holtmann 2007-10-20  3968  
+> a9de9248 Marcel Holtmann 2007-10-20  3969  	BT_DBG("%s num_rsp %d", hdev->name, num_rsp);
+> a9de9248 Marcel Holtmann 2007-10-20  3970  
+> a9de9248 Marcel Holtmann 2007-10-20  3971  	if (!num_rsp)
+> a9de9248 Marcel Holtmann 2007-10-20  3972  		return;
+> a9de9248 Marcel Holtmann 2007-10-20  3973  
+> d7a5a11d Marcel Holtmann 2015-03-13  3974  	if (hci_dev_test_flag(hdev, HCI_PERIODIC_INQ))
+> 1519cc17 Andre Guedes    2012-03-21  3975  		return;
+> 1519cc17 Andre Guedes    2012-03-21  3976  
+> a9de9248 Marcel Holtmann 2007-10-20  3977  	hci_dev_lock(hdev);
+> a9de9248 Marcel Holtmann 2007-10-20  3978  
+> a9de9248 Marcel Holtmann 2007-10-20  3979  	if ((skb->len - 1) / num_rsp != sizeof(struct inquiry_info_with_rssi)) {
+> 138d22ef Szymon Janc     2011-02-17  3980  		struct inquiry_info_with_rssi_and_pscan_mode *info;
+> 138d22ef Szymon Janc     2011-02-17  3981  		info = (void *) (skb->data + 1);
+> a9de9248 Marcel Holtmann 2007-10-20  3982  
+> e17acd40 Johan Hedberg   2011-03-30  3983  		for (; num_rsp; num_rsp--, info++) {
+> af58925c Marcel Holtmann 2014-07-01  3984  			u32 flags;
+> af58925c Marcel Holtmann 2014-07-01  3985  
+> 00305742 Tomas Bortoli   2019-02-28 @3986  			if ((void *)(info + sizeof(info)) >
+>                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> This should be (void *)info + sizeof(info).  The code you have will
+> break for valid uses because the pointer math error.  I notice that
+> this isn't merged into linux-next, but it does seem required.  I am
+> writing a similar fix for a different function.
+> 
+> Another way to write this would be:
+> 
+> 		if ((u8 *)(info + 1) > &skb->data[skb->len]) {
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
-Changes in v2:
- - Added a note in the patch description.
----
- arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h     | 2 +-
- arch/arm64/include/asm/pointer_auth.h             | 2 +-
- arch/arm64/include/asm/sdei.h                     | 2 +-
- arch/arm64/include/asm/vmap_stack.h               | 2 +-
- arch/nds32/include/asm/assembler.h                | 2 +-
- arch/nds32/include/asm/barrier.h                  | 2 +-
- arch/nds32/include/asm/bitfield.h                 | 2 +-
- arch/nds32/include/asm/cache.h                    | 2 +-
- arch/nds32/include/asm/cache_info.h               | 2 +-
- arch/nds32/include/asm/cacheflush.h               | 2 +-
- arch/nds32/include/asm/current.h                  | 2 +-
- arch/nds32/include/asm/delay.h                    | 2 +-
- arch/nds32/include/asm/elf.h                      | 2 +-
- arch/nds32/include/asm/fixmap.h                   | 2 +-
- arch/nds32/include/asm/futex.h                    | 2 +-
- arch/nds32/include/asm/highmem.h                  | 2 +-
- arch/nds32/include/asm/io.h                       | 2 +-
- arch/nds32/include/asm/irqflags.h                 | 2 +-
- arch/nds32/include/asm/l2_cache.h                 | 2 +-
- arch/nds32/include/asm/linkage.h                  | 2 +-
- arch/nds32/include/asm/memory.h                   | 2 +-
- arch/nds32/include/asm/mmu.h                      | 2 +-
- arch/nds32/include/asm/mmu_context.h              | 2 +-
- arch/nds32/include/asm/module.h                   | 2 +-
- arch/nds32/include/asm/nds32.h                    | 2 +-
- arch/nds32/include/asm/page.h                     | 2 +-
- arch/nds32/include/asm/pgalloc.h                  | 2 +-
- arch/nds32/include/asm/pgtable.h                  | 2 +-
- arch/nds32/include/asm/proc-fns.h                 | 2 +-
- arch/nds32/include/asm/processor.h                | 2 +-
- arch/nds32/include/asm/ptrace.h                   | 2 +-
- arch/nds32/include/asm/shmparam.h                 | 2 +-
- arch/nds32/include/asm/string.h                   | 2 +-
- arch/nds32/include/asm/swab.h                     | 2 +-
- arch/nds32/include/asm/syscall.h                  | 2 +-
- arch/nds32/include/asm/syscalls.h                 | 2 +-
- arch/nds32/include/asm/thread_info.h              | 2 +-
- arch/nds32/include/asm/tlb.h                      | 2 +-
- arch/nds32/include/asm/tlbflush.h                 | 2 +-
- arch/nds32/include/asm/uaccess.h                  | 2 +-
- arch/nds32/include/asm/unistd.h                   | 2 +-
- arch/nds32/include/asm/vdso.h                     | 2 +-
- arch/nds32/include/asm/vdso_datapage.h            | 2 +-
- arch/nds32/include/asm/vdso_timer_info.h          | 2 +-
- arch/nds32/include/uapi/asm/auxvec.h              | 2 +-
- arch/nds32/include/uapi/asm/byteorder.h           | 2 +-
- arch/nds32/include/uapi/asm/cachectl.h            | 2 +-
- arch/nds32/include/uapi/asm/param.h               | 2 +-
- arch/nds32/include/uapi/asm/ptrace.h              | 2 +-
- arch/nds32/include/uapi/asm/sigcontext.h          | 2 +-
- arch/nds32/include/uapi/asm/unistd.h              | 2 +-
- arch/powerpc/include/asm/pnv-ocxl.h               | 2 +-
- arch/sh/drivers/pci/pci-sh5.h                     | 4 ++--
- arch/sh/drivers/pci/pci-sh7751.h                  | 4 ++--
- arch/sh/drivers/pci/pci-sh7780.h                  | 4 ++--
- arch/sh/drivers/pci/pcie-sh7786.h                 | 4 ++--
- arch/sh/include/asm/addrspace.h                   | 4 ++--
- arch/sh/include/asm/bl_bit_64.h                   | 4 ++--
- arch/sh/include/asm/cache_insns_64.h              | 4 ++--
- arch/sh/include/asm/device.h                      | 4 ++--
- arch/sh/include/asm/dma-register.h                | 4 ++--
- arch/sh/include/asm/dma.h                         | 4 ++--
- arch/sh/include/asm/dwarf.h                       | 4 ++--
- arch/sh/include/asm/fixmap.h                      | 4 ++--
- arch/sh/include/asm/flat.h                        | 4 ++--
- arch/sh/include/asm/freq.h                        | 4 ++--
- arch/sh/include/asm/gpio.h                        | 4 ++--
- arch/sh/include/asm/machvec.h                     | 4 ++--
- arch/sh/include/asm/pgtable.h                     | 4 ++--
- arch/sh/include/asm/sfp-machine.h                 | 4 ++--
- arch/sh/include/asm/shmparam.h                    | 4 ++--
- arch/sh/include/asm/siu.h                         | 4 ++--
- arch/sh/include/asm/spinlock-cas.h                | 4 ++--
- arch/sh/include/asm/spinlock-llsc.h               | 4 ++--
- arch/sh/include/asm/spinlock.h                    | 4 ++--
- arch/sh/include/asm/switch_to.h                   | 4 ++--
- arch/sh/include/asm/switch_to_64.h                | 4 ++--
- arch/sh/include/asm/tlb_64.h                      | 4 ++--
- arch/sh/include/asm/traps_64.h                    | 4 ++--
- arch/sh/include/asm/watchdog.h                    | 4 ++--
- arch/sh/include/cpu-common/cpu/addrspace.h        | 4 ++--
- arch/sh/include/cpu-common/cpu/mmu_context.h      | 4 ++--
- arch/sh/include/cpu-common/cpu/pfc.h              | 4 ++--
- arch/sh/include/cpu-sh2/cpu/cache.h               | 4 ++--
- arch/sh/include/cpu-sh2/cpu/freq.h                | 4 ++--
- arch/sh/include/cpu-sh2/cpu/watchdog.h            | 4 ++--
- arch/sh/include/cpu-sh2a/cpu/cache.h              | 4 ++--
- arch/sh/include/cpu-sh2a/cpu/freq.h               | 4 ++--
- arch/sh/include/cpu-sh3/cpu/cache.h               | 4 ++--
- arch/sh/include/cpu-sh3/cpu/dma-register.h        | 4 ++--
- arch/sh/include/cpu-sh3/cpu/freq.h                | 4 ++--
- arch/sh/include/cpu-sh3/cpu/gpio.h                | 4 ++--
- arch/sh/include/cpu-sh3/cpu/mmu_context.h         | 4 ++--
- arch/sh/include/cpu-sh3/cpu/watchdog.h            | 4 ++--
- arch/sh/include/cpu-sh4/cpu/addrspace.h           | 4 ++--
- arch/sh/include/cpu-sh4/cpu/cache.h               | 4 ++--
- arch/sh/include/cpu-sh4/cpu/dma-register.h        | 4 ++--
- arch/sh/include/cpu-sh4/cpu/fpu.h                 | 4 ++--
- arch/sh/include/cpu-sh4/cpu/freq.h                | 4 ++--
- arch/sh/include/cpu-sh4/cpu/mmu_context.h         | 4 ++--
- arch/sh/include/cpu-sh4/cpu/sh7786.h              | 4 ++--
- arch/sh/include/cpu-sh4/cpu/sq.h                  | 4 ++--
- arch/sh/include/cpu-sh4/cpu/watchdog.h            | 4 ++--
- arch/sh/include/mach-common/mach/hp6xx.h          | 4 ++--
- arch/sh/include/mach-common/mach/magicpanelr2.h   | 4 ++--
- arch/sh/include/mach-common/mach/mangle-port.h    | 4 ++--
- arch/sh/include/mach-common/mach/microdev.h       | 4 ++--
- arch/sh/include/mach-common/mach/secureedge5410.h | 4 ++--
- arch/sh/include/mach-dreamcast/mach/dma.h         | 4 ++--
- arch/sh/include/mach-dreamcast/mach/pci.h         | 4 ++--
- arch/sh/include/mach-dreamcast/mach/sysasic.h     | 4 ++--
- arch/sh/include/mach-se/mach/se7721.h             | 4 ++--
- arch/x86/include/asm/cpu_entry_area.h             | 2 +-
- arch/x86/include/asm/pti.h                        | 2 +-
- arch/x86/kernel/process.h                         | 2 +-
- 115 files changed, 175 insertions(+), 175 deletions(-)
+Yeah it hasn't been accepted afaik. Why just + 1 ? Also,
+&skb->data[skb->len] is right after the last byte so the > should rather
+be a >=, I think.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h b/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
-index 1b4cb0c55744..385c455a7c98 100644
---- a/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
-+++ b/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2018 MediaTek Inc.
-  * Author: Zhiyong Tao <zhiyong.tao@mediatek.com>
-diff --git a/arch/arm64/include/asm/pointer_auth.h b/arch/arm64/include/asm/pointer_auth.h
-index 15d49515efdd..d328540cb85e 100644
---- a/arch/arm64/include/asm/pointer_auth.h
-+++ b/arch/arm64/include/asm/pointer_auth.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- #ifndef __ASM_POINTER_AUTH_H
- #define __ASM_POINTER_AUTH_H
- 
-diff --git a/arch/arm64/include/asm/sdei.h b/arch/arm64/include/asm/sdei.h
-index ffe47d766c25..63e0b92a5fbb 100644
---- a/arch/arm64/include/asm/sdei.h
-+++ b/arch/arm64/include/asm/sdei.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2017 Arm Ltd.
- #ifndef __ASM_SDEI_H
- #define __ASM_SDEI_H
-diff --git a/arch/arm64/include/asm/vmap_stack.h b/arch/arm64/include/asm/vmap_stack.h
-index 0b5ec6e08c10..0a12115d9638 100644
---- a/arch/arm64/include/asm/vmap_stack.h
-+++ b/arch/arm64/include/asm/vmap_stack.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2017 Arm Ltd.
- #ifndef __ASM_VMAP_STACK_H
- #define __ASM_VMAP_STACK_H
-diff --git a/arch/nds32/include/asm/assembler.h b/arch/nds32/include/asm/assembler.h
-index c3855782a541..5e7c56926049 100644
---- a/arch/nds32/include/asm/assembler.h
-+++ b/arch/nds32/include/asm/assembler.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __NDS32_ASSEMBLER_H__
-diff --git a/arch/nds32/include/asm/barrier.h b/arch/nds32/include/asm/barrier.h
-index faafc373ea6c..16413172fd50 100644
---- a/arch/nds32/include/asm/barrier.h
-+++ b/arch/nds32/include/asm/barrier.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __NDS32_ASM_BARRIER_H
-diff --git a/arch/nds32/include/asm/bitfield.h b/arch/nds32/include/asm/bitfield.h
-index 7414fcbbab4e..e75212c76b20 100644
---- a/arch/nds32/include/asm/bitfield.h
-+++ b/arch/nds32/include/asm/bitfield.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __NDS32_BITFIELD_H__
-diff --git a/arch/nds32/include/asm/cache.h b/arch/nds32/include/asm/cache.h
-index 347db4881c5f..fc3c41b59169 100644
---- a/arch/nds32/include/asm/cache.h
-+++ b/arch/nds32/include/asm/cache.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __NDS32_CACHE_H__
-diff --git a/arch/nds32/include/asm/cache_info.h b/arch/nds32/include/asm/cache_info.h
-index 38ec458ba543..e89d8078f3a6 100644
---- a/arch/nds32/include/asm/cache_info.h
-+++ b/arch/nds32/include/asm/cache_info.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- struct cache_info {
-diff --git a/arch/nds32/include/asm/cacheflush.h b/arch/nds32/include/asm/cacheflush.h
-index 8b26198d51bb..d9ac7e6408ef 100644
---- a/arch/nds32/include/asm/cacheflush.h
-+++ b/arch/nds32/include/asm/cacheflush.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __NDS32_CACHEFLUSH_H__
-diff --git a/arch/nds32/include/asm/current.h b/arch/nds32/include/asm/current.h
-index b4dcd22b7bcb..65d30096142b 100644
---- a/arch/nds32/include/asm/current.h
-+++ b/arch/nds32/include/asm/current.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef _ASM_NDS32_CURRENT_H
-diff --git a/arch/nds32/include/asm/delay.h b/arch/nds32/include/asm/delay.h
-index 519ba97acb6e..56ea3894f8f8 100644
---- a/arch/nds32/include/asm/delay.h
-+++ b/arch/nds32/include/asm/delay.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __NDS32_DELAY_H__
-diff --git a/arch/nds32/include/asm/elf.h b/arch/nds32/include/asm/elf.h
-index 02250626b9f0..1c8e56d7013d 100644
---- a/arch/nds32/include/asm/elf.h
-+++ b/arch/nds32/include/asm/elf.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASMNDS32_ELF_H
-diff --git a/arch/nds32/include/asm/fixmap.h b/arch/nds32/include/asm/fixmap.h
-index 0e60e153a71a..5a4bf11e5800 100644
---- a/arch/nds32/include/asm/fixmap.h
-+++ b/arch/nds32/include/asm/fixmap.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASM_NDS32_FIXMAP_H
-diff --git a/arch/nds32/include/asm/futex.h b/arch/nds32/include/asm/futex.h
-index baf178bf1d0b..5213c65c2e0b 100644
---- a/arch/nds32/include/asm/futex.h
-+++ b/arch/nds32/include/asm/futex.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __NDS32_FUTEX_H__
-diff --git a/arch/nds32/include/asm/highmem.h b/arch/nds32/include/asm/highmem.h
-index 425d546cb059..b3a82c97ded3 100644
---- a/arch/nds32/include/asm/highmem.h
-+++ b/arch/nds32/include/asm/highmem.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef _ASM_HIGHMEM_H
-diff --git a/arch/nds32/include/asm/io.h b/arch/nds32/include/asm/io.h
-index 71cd226d6863..7cbf76ec439d 100644
---- a/arch/nds32/include/asm/io.h
-+++ b/arch/nds32/include/asm/io.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASM_NDS32_IO_H
-diff --git a/arch/nds32/include/asm/irqflags.h b/arch/nds32/include/asm/irqflags.h
-index 2bfd00f8bc48..fb45ec46bb1b 100644
---- a/arch/nds32/include/asm/irqflags.h
-+++ b/arch/nds32/include/asm/irqflags.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #include <asm/nds32.h>
-diff --git a/arch/nds32/include/asm/l2_cache.h b/arch/nds32/include/asm/l2_cache.h
-index 37dd5ef61de8..3ea48e19e6de 100644
---- a/arch/nds32/include/asm/l2_cache.h
-+++ b/arch/nds32/include/asm/l2_cache.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef L2_CACHE_H
-diff --git a/arch/nds32/include/asm/linkage.h b/arch/nds32/include/asm/linkage.h
-index e708c8bdb926..a696469abb70 100644
---- a/arch/nds32/include/asm/linkage.h
-+++ b/arch/nds32/include/asm/linkage.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASM_LINKAGE_H
-diff --git a/arch/nds32/include/asm/memory.h b/arch/nds32/include/asm/memory.h
-index 60efc726b56e..3f4b5eeb5be2 100644
---- a/arch/nds32/include/asm/memory.h
-+++ b/arch/nds32/include/asm/memory.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASM_NDS32_MEMORY_H
-diff --git a/arch/nds32/include/asm/mmu.h b/arch/nds32/include/asm/mmu.h
-index 88b9ee8c1064..89d63afee455 100644
---- a/arch/nds32/include/asm/mmu.h
-+++ b/arch/nds32/include/asm/mmu.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __NDS32_MMU_H
-diff --git a/arch/nds32/include/asm/mmu_context.h b/arch/nds32/include/asm/mmu_context.h
-index fd7d13cefccc..b8fd3d189fdc 100644
---- a/arch/nds32/include/asm/mmu_context.h
-+++ b/arch/nds32/include/asm/mmu_context.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASM_NDS32_MMU_CONTEXT_H
-diff --git a/arch/nds32/include/asm/module.h b/arch/nds32/include/asm/module.h
-index 16cf9c7237ad..a3a08e993c65 100644
---- a/arch/nds32/include/asm/module.h
-+++ b/arch/nds32/include/asm/module.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef _ASM_NDS32_MODULE_H
-diff --git a/arch/nds32/include/asm/nds32.h b/arch/nds32/include/asm/nds32.h
-index 68c38151c3e4..4994f6a9e0a0 100644
---- a/arch/nds32/include/asm/nds32.h
-+++ b/arch/nds32/include/asm/nds32.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef _ASM_NDS32_NDS32_H_
-diff --git a/arch/nds32/include/asm/page.h b/arch/nds32/include/asm/page.h
-index 947f0491c9a7..8feb1fa12f01 100644
---- a/arch/nds32/include/asm/page.h
-+++ b/arch/nds32/include/asm/page.h
-@@ -1,5 +1,5 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * SPDX-License-Identifier: GPL-2.0
-  * Copyright (C) 2005-2017 Andes Technology Corporation
-  */
- 
-diff --git a/arch/nds32/include/asm/pgalloc.h b/arch/nds32/include/asm/pgalloc.h
-index 3c5fee5b5759..3cbc749c79aa 100644
---- a/arch/nds32/include/asm/pgalloc.h
-+++ b/arch/nds32/include/asm/pgalloc.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef _ASMNDS32_PGALLOC_H
-diff --git a/arch/nds32/include/asm/pgtable.h b/arch/nds32/include/asm/pgtable.h
-index ee59c1f9e4fc..c70cc56bec09 100644
---- a/arch/nds32/include/asm/pgtable.h
-+++ b/arch/nds32/include/asm/pgtable.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef _ASMNDS32_PGTABLE_H
-diff --git a/arch/nds32/include/asm/proc-fns.h b/arch/nds32/include/asm/proc-fns.h
-index bedc4f59e064..27c617fa77af 100644
---- a/arch/nds32/include/asm/proc-fns.h
-+++ b/arch/nds32/include/asm/proc-fns.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __NDS32_PROCFNS_H__
-diff --git a/arch/nds32/include/asm/processor.h b/arch/nds32/include/asm/processor.h
-index 72024f8bc129..b82369c7659d 100644
---- a/arch/nds32/include/asm/processor.h
-+++ b/arch/nds32/include/asm/processor.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASM_NDS32_PROCESSOR_H
-diff --git a/arch/nds32/include/asm/ptrace.h b/arch/nds32/include/asm/ptrace.h
-index c4538839055c..919ee223620c 100644
---- a/arch/nds32/include/asm/ptrace.h
-+++ b/arch/nds32/include/asm/ptrace.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASM_NDS32_PTRACE_H
-diff --git a/arch/nds32/include/asm/shmparam.h b/arch/nds32/include/asm/shmparam.h
-index fd1cff64b68e..3aeee946973d 100644
---- a/arch/nds32/include/asm/shmparam.h
-+++ b/arch/nds32/include/asm/shmparam.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef _ASMNDS32_SHMPARAM_H
-diff --git a/arch/nds32/include/asm/string.h b/arch/nds32/include/asm/string.h
-index 179272caa540..cae8fe16de98 100644
---- a/arch/nds32/include/asm/string.h
-+++ b/arch/nds32/include/asm/string.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASM_NDS32_STRING_H
-diff --git a/arch/nds32/include/asm/swab.h b/arch/nds32/include/asm/swab.h
-index e01a755a37d2..362a466f2976 100644
---- a/arch/nds32/include/asm/swab.h
-+++ b/arch/nds32/include/asm/swab.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __NDS32_SWAB_H__
-diff --git a/arch/nds32/include/asm/syscall.h b/arch/nds32/include/asm/syscall.h
-index 7501e376a6b1..4efbea8324e7 100644
---- a/arch/nds32/include/asm/syscall.h
-+++ b/arch/nds32/include/asm/syscall.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2008-2009 Red Hat, Inc.  All rights reserved.
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
-diff --git a/arch/nds32/include/asm/syscalls.h b/arch/nds32/include/asm/syscalls.h
-index da32101b455d..f3b16f602cb5 100644
---- a/arch/nds32/include/asm/syscalls.h
-+++ b/arch/nds32/include/asm/syscalls.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASM_NDS32_SYSCALLS_H
-diff --git a/arch/nds32/include/asm/thread_info.h b/arch/nds32/include/asm/thread_info.h
-index bff741ff337b..3734b1c1cf82 100644
---- a/arch/nds32/include/asm/thread_info.h
-+++ b/arch/nds32/include/asm/thread_info.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASM_NDS32_THREAD_INFO_H
-diff --git a/arch/nds32/include/asm/tlb.h b/arch/nds32/include/asm/tlb.h
-index b35ae5eae3ab..0c24cefaba81 100644
---- a/arch/nds32/include/asm/tlb.h
-+++ b/arch/nds32/include/asm/tlb.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASMNDS32_TLB_H
-diff --git a/arch/nds32/include/asm/tlbflush.h b/arch/nds32/include/asm/tlbflush.h
-index 9b411f401903..62e63b891a4a 100644
---- a/arch/nds32/include/asm/tlbflush.h
-+++ b/arch/nds32/include/asm/tlbflush.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef _ASMNDS32_TLBFLUSH_H
-diff --git a/arch/nds32/include/asm/uaccess.h b/arch/nds32/include/asm/uaccess.h
-index 116598b47c4d..8916ad9f9f13 100644
---- a/arch/nds32/include/asm/uaccess.h
-+++ b/arch/nds32/include/asm/uaccess.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef _ASMANDES_UACCESS_H
-diff --git a/arch/nds32/include/asm/unistd.h b/arch/nds32/include/asm/unistd.h
-index b586a2862beb..bf5e2d440913 100644
---- a/arch/nds32/include/asm/unistd.h
-+++ b/arch/nds32/include/asm/unistd.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/nds32/include/asm/vdso.h b/arch/nds32/include/asm/vdso.h
-index af2c6afc2469..89b113ffc3dc 100644
---- a/arch/nds32/include/asm/vdso.h
-+++ b/arch/nds32/include/asm/vdso.h
-@@ -1,5 +1,5 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * SPDX-License-Identifier: GPL-2.0
-  * Copyright (C) 2005-2017 Andes Technology Corporation
-  */
- 
-diff --git a/arch/nds32/include/asm/vdso_datapage.h b/arch/nds32/include/asm/vdso_datapage.h
-index 79db5a12ca5e..cd1dda3da0f9 100644
---- a/arch/nds32/include/asm/vdso_datapage.h
-+++ b/arch/nds32/include/asm/vdso_datapage.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2012 ARM Limited
- // Copyright (C) 2005-2017 Andes Technology Corporation
- #ifndef __ASM_VDSO_DATAPAGE_H
-diff --git a/arch/nds32/include/asm/vdso_timer_info.h b/arch/nds32/include/asm/vdso_timer_info.h
-index 50ba117cff12..328439ce37db 100644
---- a/arch/nds32/include/asm/vdso_timer_info.h
-+++ b/arch/nds32/include/asm/vdso_timer_info.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- extern struct timer_info_t timer_info;
-diff --git a/arch/nds32/include/uapi/asm/auxvec.h b/arch/nds32/include/uapi/asm/auxvec.h
-index 2d3213f5e595..b5d58ea8decb 100644
---- a/arch/nds32/include/uapi/asm/auxvec.h
-+++ b/arch/nds32/include/uapi/asm/auxvec.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASM_AUXVEC_H
-diff --git a/arch/nds32/include/uapi/asm/byteorder.h b/arch/nds32/include/uapi/asm/byteorder.h
-index a23f6f3a2468..511e653c709d 100644
---- a/arch/nds32/include/uapi/asm/byteorder.h
-+++ b/arch/nds32/include/uapi/asm/byteorder.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __NDS32_BYTEORDER_H__
-diff --git a/arch/nds32/include/uapi/asm/cachectl.h b/arch/nds32/include/uapi/asm/cachectl.h
-index 4cdca9b23974..73793662815c 100644
---- a/arch/nds32/include/uapi/asm/cachectl.h
-+++ b/arch/nds32/include/uapi/asm/cachectl.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 1994, 1995, 1996 by Ralf Baechle
- // Copyright (C) 2005-2017 Andes Technology Corporation
- #ifndef	_ASM_CACHECTL
-diff --git a/arch/nds32/include/uapi/asm/param.h b/arch/nds32/include/uapi/asm/param.h
-index e3fb723ee362..2977534a6bd3 100644
---- a/arch/nds32/include/uapi/asm/param.h
-+++ b/arch/nds32/include/uapi/asm/param.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __ASM_NDS32_PARAM_H
-diff --git a/arch/nds32/include/uapi/asm/ptrace.h b/arch/nds32/include/uapi/asm/ptrace.h
-index 358c99e399d0..1a6e01c00e6f 100644
---- a/arch/nds32/include/uapi/asm/ptrace.h
-+++ b/arch/nds32/include/uapi/asm/ptrace.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef __UAPI_ASM_NDS32_PTRACE_H
-diff --git a/arch/nds32/include/uapi/asm/sigcontext.h b/arch/nds32/include/uapi/asm/sigcontext.h
-index 58afc416473e..628ff6b75825 100644
---- a/arch/nds32/include/uapi/asm/sigcontext.h
-+++ b/arch/nds32/include/uapi/asm/sigcontext.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #ifndef _ASMNDS32_SIGCONTEXT_H
-diff --git a/arch/nds32/include/uapi/asm/unistd.h b/arch/nds32/include/uapi/asm/unistd.h
-index 4ec8f543103f..c691735017ed 100644
---- a/arch/nds32/include/uapi/asm/unistd.h
-+++ b/arch/nds32/include/uapi/asm/unistd.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2005-2017 Andes Technology Corporation
- 
- #define __ARCH_WANT_STAT64
-diff --git a/arch/powerpc/include/asm/pnv-ocxl.h b/arch/powerpc/include/asm/pnv-ocxl.h
-index 208b5503f4ed..7de82647e761 100644
---- a/arch/powerpc/include/asm/pnv-ocxl.h
-+++ b/arch/powerpc/include/asm/pnv-ocxl.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+/* SPDX-License-Identifier: GPL-2.0+ */
- // Copyright 2017 IBM Corp.
- #ifndef _ASM_PNV_OCXL_H
- #define _ASM_PNV_OCXL_H
-diff --git a/arch/sh/drivers/pci/pci-sh5.h b/arch/sh/drivers/pci/pci-sh5.h
-index 91348af0ef6c..0d2c093fd984 100644
---- a/arch/sh/drivers/pci/pci-sh5.h
-+++ b/arch/sh/drivers/pci/pci-sh5.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright (C) 2001 David J. Mckay (david.mckay@st.com)
-  *
-  * Definitions for the SH5 PCI hardware.
-diff --git a/arch/sh/drivers/pci/pci-sh7751.h b/arch/sh/drivers/pci/pci-sh7751.h
-index d1951e50effc..9e23cf7113ac 100644
---- a/arch/sh/drivers/pci/pci-sh7751.h
-+++ b/arch/sh/drivers/pci/pci-sh7751.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  *	Low-Level PCI Support for SH7751 targets
-  *
-  *  Dustin McIntire (dustin@sensoria.com) (c) 2001
-diff --git a/arch/sh/drivers/pci/pci-sh7780.h b/arch/sh/drivers/pci/pci-sh7780.h
-index e2ac770f8e35..7ba87b62e439 100644
---- a/arch/sh/drivers/pci/pci-sh7780.h
-+++ b/arch/sh/drivers/pci/pci-sh7780.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  *	Low-Level PCI Support for SH7780 targets
-  *
-  *  Dustin McIntire (dustin@sensoria.com) (c) 2001
-diff --git a/arch/sh/drivers/pci/pcie-sh7786.h b/arch/sh/drivers/pci/pcie-sh7786.h
-index ffe383681a0b..c5e2221b6359 100644
---- a/arch/sh/drivers/pci/pcie-sh7786.h
-+++ b/arch/sh/drivers/pci/pcie-sh7786.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * SH7786 PCI-Express controller definitions.
-  *
-  * Copyright (C) 2008, 2009 Renesas Technology Corp.
-diff --git a/arch/sh/include/asm/addrspace.h b/arch/sh/include/asm/addrspace.h
-index 34bfbcddcce0..c663527cab7c 100644
---- a/arch/sh/include/asm/addrspace.h
-+++ b/arch/sh/include/asm/addrspace.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright (C) 1999 by Kaz Kojima
-  *
-  * Defitions for the address spaces of the SH CPUs.
-diff --git a/arch/sh/include/asm/bl_bit_64.h b/arch/sh/include/asm/bl_bit_64.h
-index aac9780fe864..c6032f194f4c 100644
---- a/arch/sh/include/asm/bl_bit_64.h
-+++ b/arch/sh/include/asm/bl_bit_64.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright (C) 2000, 2001  Paolo Alberelli
-  * Copyright (C) 2003  Paul Mundt
-  * Copyright (C) 2004  Richard Curnow
-diff --git a/arch/sh/include/asm/cache_insns_64.h b/arch/sh/include/asm/cache_insns_64.h
-index ed682b987b0d..768f18aae612 100644
---- a/arch/sh/include/asm/cache_insns_64.h
-+++ b/arch/sh/include/asm/cache_insns_64.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright (C) 2000, 2001  Paolo Alberelli
-  * Copyright (C) 2003  Paul Mundt
-  * Copyright (C) 2004  Richard Curnow
-diff --git a/arch/sh/include/asm/device.h b/arch/sh/include/asm/device.h
-index 6f3e686a1c6f..75e0f44f8969 100644
---- a/arch/sh/include/asm/device.h
-+++ b/arch/sh/include/asm/device.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Arch specific extensions to struct device
-  */
- #ifndef __ASM_SH_DEVICE_H
-diff --git a/arch/sh/include/asm/dma-register.h b/arch/sh/include/asm/dma-register.h
-index 724dab912b71..96fed7b02b0f 100644
---- a/arch/sh/include/asm/dma-register.h
-+++ b/arch/sh/include/asm/dma-register.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Common header for the legacy SH DMA driver and the new dmaengine driver
-  *
-  * extracted from arch/sh/include/asm/dma-sh.h:
-diff --git a/arch/sh/include/asm/dma.h b/arch/sh/include/asm/dma.h
-index 4d5a21a891c0..faa1b66b9397 100644
---- a/arch/sh/include/asm/dma.h
-+++ b/arch/sh/include/asm/dma.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/dma.h
-  *
-  * Copyright (C) 2003, 2004  Paul Mundt
-diff --git a/arch/sh/include/asm/dwarf.h b/arch/sh/include/asm/dwarf.h
-index 571954474122..661d1b9f07d4 100644
---- a/arch/sh/include/asm/dwarf.h
-+++ b/arch/sh/include/asm/dwarf.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright (C) 2009 Matt Fleming <matt@console-pimps.org>
-  */
- #ifndef __ASM_SH_DWARF_H
-diff --git a/arch/sh/include/asm/fixmap.h b/arch/sh/include/asm/fixmap.h
-index e30348c58073..15abcd96f4b2 100644
---- a/arch/sh/include/asm/fixmap.h
-+++ b/arch/sh/include/asm/fixmap.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * fixmap.h: compile-time virtual memory allocation
-  *
-  * Copyright (C) 1998 Ingo Molnar
-diff --git a/arch/sh/include/asm/flat.h b/arch/sh/include/asm/flat.h
-index 843d458b8329..6adbdfda6951 100644
---- a/arch/sh/include/asm/flat.h
-+++ b/arch/sh/include/asm/flat.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/flat.h
-  *
-  * uClinux flat-format executables
-diff --git a/arch/sh/include/asm/freq.h b/arch/sh/include/asm/freq.h
-index 18133bf83738..693183a63bfb 100644
---- a/arch/sh/include/asm/freq.h
-+++ b/arch/sh/include/asm/freq.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0+
-- *
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-  * include/asm-sh/freq.h
-  *
-  * Copyright (C) 2002, 2003 Paul Mundt
-diff --git a/arch/sh/include/asm/gpio.h b/arch/sh/include/asm/gpio.h
-index 351918894e86..18319e97a5ec 100644
---- a/arch/sh/include/asm/gpio.h
-+++ b/arch/sh/include/asm/gpio.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  *  include/asm-sh/gpio.h
-  *
-  * Generic GPIO API and pinmux table support for SuperH.
-diff --git a/arch/sh/include/asm/machvec.h b/arch/sh/include/asm/machvec.h
-index f7d05546beca..76c528b8df83 100644
---- a/arch/sh/include/asm/machvec.h
-+++ b/arch/sh/include/asm/machvec.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/machvec.h
-  *
-  * Copyright 2000 Stuart Menefy (stuart.menefy@st.com)
-diff --git a/arch/sh/include/asm/pgtable.h b/arch/sh/include/asm/pgtable.h
-index 3587103afe59..daa593d9f81f 100644
---- a/arch/sh/include/asm/pgtable.h
-+++ b/arch/sh/include/asm/pgtable.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * This file contains the functions and defines necessary to modify and
-  * use the SuperH page table tree.
-  *
-diff --git a/arch/sh/include/asm/sfp-machine.h b/arch/sh/include/asm/sfp-machine.h
-index cbc7cf8c97ce..77b40ceec36c 100644
---- a/arch/sh/include/asm/sfp-machine.h
-+++ b/arch/sh/include/asm/sfp-machine.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0+
-- *
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-  * Machine-dependent software floating-point definitions.
-    SuperH kernel version.
-    Copyright (C) 1997,1998,1999 Free Software Foundation, Inc.
-diff --git a/arch/sh/include/asm/shmparam.h b/arch/sh/include/asm/shmparam.h
-index 6c580a644a78..4a83ec04128a 100644
---- a/arch/sh/include/asm/shmparam.h
-+++ b/arch/sh/include/asm/shmparam.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/shmparam.h
-  *
-  * Copyright (C) 1999 Niibe Yutaka
-diff --git a/arch/sh/include/asm/siu.h b/arch/sh/include/asm/siu.h
-index 35e4839d381e..1af6844b1f00 100644
---- a/arch/sh/include/asm/siu.h
-+++ b/arch/sh/include/asm/siu.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * platform header for the SIU ASoC driver
-  *
-  * Copyright (C) 2009-2010 Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-diff --git a/arch/sh/include/asm/spinlock-cas.h b/arch/sh/include/asm/spinlock-cas.h
-index 3d49985ebf41..c9ed7492dd5d 100644
---- a/arch/sh/include/asm/spinlock-cas.h
-+++ b/arch/sh/include/asm/spinlock-cas.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/spinlock-cas.h
-  *
-  * Copyright (C) 2015 SEI
-diff --git a/arch/sh/include/asm/spinlock-llsc.h b/arch/sh/include/asm/spinlock-llsc.h
-index 786ee0fde3b0..5508c0d47091 100644
---- a/arch/sh/include/asm/spinlock-llsc.h
-+++ b/arch/sh/include/asm/spinlock-llsc.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/spinlock-llsc.h
-  *
-  * Copyright (C) 2002, 2003 Paul Mundt
-diff --git a/arch/sh/include/asm/spinlock.h b/arch/sh/include/asm/spinlock.h
-index fa6801f63551..6cc36df2ddd3 100644
---- a/arch/sh/include/asm/spinlock.h
-+++ b/arch/sh/include/asm/spinlock.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/spinlock.h
-  *
-  * Copyright (C) 2002, 2003 Paul Mundt
-diff --git a/arch/sh/include/asm/switch_to.h b/arch/sh/include/asm/switch_to.h
-index 9eec80ab5aa2..3fe65cf11319 100644
---- a/arch/sh/include/asm/switch_to.h
-+++ b/arch/sh/include/asm/switch_to.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright (C) 2000, 2001  Paolo Alberelli
-  * Copyright (C) 2003  Paul Mundt
-  * Copyright (C) 2004  Richard Curnow
-diff --git a/arch/sh/include/asm/switch_to_64.h b/arch/sh/include/asm/switch_to_64.h
-index 2dbf2311669f..87a08602f1c9 100644
---- a/arch/sh/include/asm/switch_to_64.h
-+++ b/arch/sh/include/asm/switch_to_64.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright (C) 2000, 2001  Paolo Alberelli
-  * Copyright (C) 2003  Paul Mundt
-  * Copyright (C) 2004  Richard Curnow
-diff --git a/arch/sh/include/asm/tlb_64.h b/arch/sh/include/asm/tlb_64.h
-index 59fa0a23dad7..dac46f8c5216 100644
---- a/arch/sh/include/asm/tlb_64.h
-+++ b/arch/sh/include/asm/tlb_64.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/tlb_64.h
-  *
-  * Copyright (C) 2003  Paul Mundt
-diff --git a/arch/sh/include/asm/traps_64.h b/arch/sh/include/asm/traps_64.h
-index f28db6dfbe45..7e5e902d2278 100644
---- a/arch/sh/include/asm/traps_64.h
-+++ b/arch/sh/include/asm/traps_64.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright (C) 2000, 2001  Paolo Alberelli
-  * Copyright (C) 2003  Paul Mundt
-  * Copyright (C) 2004  Richard Curnow
-diff --git a/arch/sh/include/asm/watchdog.h b/arch/sh/include/asm/watchdog.h
-index cecd0fc507f9..6f64666186c2 100644
---- a/arch/sh/include/asm/watchdog.h
-+++ b/arch/sh/include/asm/watchdog.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0+
-- *
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-  * include/asm-sh/watchdog.h
-  *
-  * Copyright (C) 2002, 2003 Paul Mundt
-diff --git a/arch/sh/include/cpu-common/cpu/addrspace.h b/arch/sh/include/cpu-common/cpu/addrspace.h
-index d8bf5d7d2fdf..2c0f54e68bb2 100644
---- a/arch/sh/include/cpu-common/cpu/addrspace.h
-+++ b/arch/sh/include/cpu-common/cpu/addrspace.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Definitions for the address spaces of the SH-2 CPUs.
-  *
-  * Copyright (C) 2003  Paul Mundt
-diff --git a/arch/sh/include/cpu-common/cpu/mmu_context.h b/arch/sh/include/cpu-common/cpu/mmu_context.h
-index cef3a30dbf97..0f2602e1c963 100644
---- a/arch/sh/include/cpu-common/cpu/mmu_context.h
-+++ b/arch/sh/include/cpu-common/cpu/mmu_context.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh2/mmu_context.h
-  *
-  * Copyright (C) 2003  Paul Mundt
-diff --git a/arch/sh/include/cpu-common/cpu/pfc.h b/arch/sh/include/cpu-common/cpu/pfc.h
-index 879d2c9da537..8ca16923cc40 100644
---- a/arch/sh/include/cpu-common/cpu/pfc.h
-+++ b/arch/sh/include/cpu-common/cpu/pfc.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * SH Pin Function Control Initialization
-  *
-  * Copyright (C) 2012  Renesas Solutions Corp.
-diff --git a/arch/sh/include/cpu-sh2/cpu/cache.h b/arch/sh/include/cpu-sh2/cpu/cache.h
-index 070aa9f50d3f..9508876fede0 100644
---- a/arch/sh/include/cpu-sh2/cpu/cache.h
-+++ b/arch/sh/include/cpu-sh2/cpu/cache.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh2/cache.h
-  *
-  * Copyright (C) 2003 Paul Mundt
-diff --git a/arch/sh/include/cpu-sh2/cpu/freq.h b/arch/sh/include/cpu-sh2/cpu/freq.h
-index fb2e5d2831bc..a598fba55059 100644
---- a/arch/sh/include/cpu-sh2/cpu/freq.h
-+++ b/arch/sh/include/cpu-sh2/cpu/freq.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh2/freq.h
-  *
-  * Copyright (C) 2006  Yoshinori Sato
-diff --git a/arch/sh/include/cpu-sh2/cpu/watchdog.h b/arch/sh/include/cpu-sh2/cpu/watchdog.h
-index 141fe296d751..ef3941c3b726 100644
---- a/arch/sh/include/cpu-sh2/cpu/watchdog.h
-+++ b/arch/sh/include/cpu-sh2/cpu/watchdog.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh2/watchdog.h
-  *
-  * Copyright (C) 2002, 2003 Paul Mundt
-diff --git a/arch/sh/include/cpu-sh2a/cpu/cache.h b/arch/sh/include/cpu-sh2a/cpu/cache.h
-index 06efb233eb35..259e4cbc4131 100644
---- a/arch/sh/include/cpu-sh2a/cpu/cache.h
-+++ b/arch/sh/include/cpu-sh2a/cpu/cache.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh2a/cache.h
-  *
-  * Copyright (C) 2004 Paul Mundt
-diff --git a/arch/sh/include/cpu-sh2a/cpu/freq.h b/arch/sh/include/cpu-sh2a/cpu/freq.h
-index fb0813f47043..a637324e0f43 100644
---- a/arch/sh/include/cpu-sh2a/cpu/freq.h
-+++ b/arch/sh/include/cpu-sh2a/cpu/freq.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh2a/freq.h
-  *
-  * Copyright (C) 2006  Yoshinori Sato
-diff --git a/arch/sh/include/cpu-sh3/cpu/cache.h b/arch/sh/include/cpu-sh3/cpu/cache.h
-index f57124826943..99f53e41e781 100644
---- a/arch/sh/include/cpu-sh3/cpu/cache.h
-+++ b/arch/sh/include/cpu-sh3/cpu/cache.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh3/cache.h
-  *
-  * Copyright (C) 1999 Niibe Yutaka
-diff --git a/arch/sh/include/cpu-sh3/cpu/dma-register.h b/arch/sh/include/cpu-sh3/cpu/dma-register.h
-index c0f921fb4edc..efc3632756bf 100644
---- a/arch/sh/include/cpu-sh3/cpu/dma-register.h
-+++ b/arch/sh/include/cpu-sh3/cpu/dma-register.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * SH3 CPU-specific DMA definitions, used by both DMA drivers
-  *
-  * Copyright (C) 2010 Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-diff --git a/arch/sh/include/cpu-sh3/cpu/freq.h b/arch/sh/include/cpu-sh3/cpu/freq.h
-index 7290f02b7173..5968337d7e84 100644
---- a/arch/sh/include/cpu-sh3/cpu/freq.h
-+++ b/arch/sh/include/cpu-sh3/cpu/freq.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh3/freq.h
-  *
-  * Copyright (C) 2002, 2003 Paul Mundt
-diff --git a/arch/sh/include/cpu-sh3/cpu/gpio.h b/arch/sh/include/cpu-sh3/cpu/gpio.h
-index aeb0588ace98..391d55f4b689 100644
---- a/arch/sh/include/cpu-sh3/cpu/gpio.h
-+++ b/arch/sh/include/cpu-sh3/cpu/gpio.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  *  include/asm-sh/cpu-sh3/gpio.h
-  *
-  *  Copyright (C) 2007  Markus Brunner, Mark Jonas
-diff --git a/arch/sh/include/cpu-sh3/cpu/mmu_context.h b/arch/sh/include/cpu-sh3/cpu/mmu_context.h
-index ead9a6f72113..45a3ac26a6c5 100644
---- a/arch/sh/include/cpu-sh3/cpu/mmu_context.h
-+++ b/arch/sh/include/cpu-sh3/cpu/mmu_context.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh3/mmu_context.h
-  *
-  * Copyright (C) 1999 Niibe Yutaka
-diff --git a/arch/sh/include/cpu-sh3/cpu/watchdog.h b/arch/sh/include/cpu-sh3/cpu/watchdog.h
-index 9d7e9d986809..406f770f956a 100644
---- a/arch/sh/include/cpu-sh3/cpu/watchdog.h
-+++ b/arch/sh/include/cpu-sh3/cpu/watchdog.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh3/watchdog.h
-  *
-  * Copyright (C) 2002, 2003 Paul Mundt
-diff --git a/arch/sh/include/cpu-sh4/cpu/addrspace.h b/arch/sh/include/cpu-sh4/cpu/addrspace.h
-index f006c9489f5a..92a6e0348e70 100644
---- a/arch/sh/include/cpu-sh4/cpu/addrspace.h
-+++ b/arch/sh/include/cpu-sh4/cpu/addrspace.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright (C) 1999 by Kaz Kojima
-  *
-  * Defitions for the address spaces of the SH-4 CPUs.
-diff --git a/arch/sh/include/cpu-sh4/cpu/cache.h b/arch/sh/include/cpu-sh4/cpu/cache.h
-index 72b4d13da127..a2a0f2739ce4 100644
---- a/arch/sh/include/cpu-sh4/cpu/cache.h
-+++ b/arch/sh/include/cpu-sh4/cpu/cache.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh4/cache.h
-  *
-  * Copyright (C) 1999 Niibe Yutaka
-diff --git a/arch/sh/include/cpu-sh4/cpu/dma-register.h b/arch/sh/include/cpu-sh4/cpu/dma-register.h
-index 53f7ab990d88..4a284e70a757 100644
---- a/arch/sh/include/cpu-sh4/cpu/dma-register.h
-+++ b/arch/sh/include/cpu-sh4/cpu/dma-register.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * SH4 CPU-specific DMA definitions, used by both DMA drivers
-  *
-  * Copyright (C) 2010 Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-diff --git a/arch/sh/include/cpu-sh4/cpu/fpu.h b/arch/sh/include/cpu-sh4/cpu/fpu.h
-index 29f451bfef19..7722f23b6118 100644
---- a/arch/sh/include/cpu-sh4/cpu/fpu.h
-+++ b/arch/sh/include/cpu-sh4/cpu/fpu.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * linux/arch/sh/kernel/cpu/sh4/sh4_fpu.h
-  *
-  * Copyright (C) 2006 STMicroelectronics Limited
-diff --git a/arch/sh/include/cpu-sh4/cpu/freq.h b/arch/sh/include/cpu-sh4/cpu/freq.h
-index 662f0f30e106..5d9cdaa0c4ba 100644
---- a/arch/sh/include/cpu-sh4/cpu/freq.h
-+++ b/arch/sh/include/cpu-sh4/cpu/freq.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh4/freq.h
-  *
-  * Copyright (C) 2002, 2003 Paul Mundt
-diff --git a/arch/sh/include/cpu-sh4/cpu/mmu_context.h b/arch/sh/include/cpu-sh4/cpu/mmu_context.h
-index 421b56d5c595..df5335e9e80f 100644
---- a/arch/sh/include/cpu-sh4/cpu/mmu_context.h
-+++ b/arch/sh/include/cpu-sh4/cpu/mmu_context.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh4/mmu_context.h
-  *
-  * Copyright (C) 1999 Niibe Yutaka
-diff --git a/arch/sh/include/cpu-sh4/cpu/sh7786.h b/arch/sh/include/cpu-sh4/cpu/sh7786.h
-index 8f9bfbf3cdb1..4af6e5a2cd97 100644
---- a/arch/sh/include/cpu-sh4/cpu/sh7786.h
-+++ b/arch/sh/include/cpu-sh4/cpu/sh7786.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * SH7786 Pinmux
-  *
-  * Copyright (C) 2008, 2009  Renesas Solutions Corp.
-diff --git a/arch/sh/include/cpu-sh4/cpu/sq.h b/arch/sh/include/cpu-sh4/cpu/sq.h
-index 81966e41fc21..91f6b1022e5f 100644
---- a/arch/sh/include/cpu-sh4/cpu/sq.h
-+++ b/arch/sh/include/cpu-sh4/cpu/sq.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh4/sq.h
-  *
-  * Copyright (C) 2001, 2002, 2003  Paul Mundt
-diff --git a/arch/sh/include/cpu-sh4/cpu/watchdog.h b/arch/sh/include/cpu-sh4/cpu/watchdog.h
-index fa7bcb398b8c..5190f7a8ed99 100644
---- a/arch/sh/include/cpu-sh4/cpu/watchdog.h
-+++ b/arch/sh/include/cpu-sh4/cpu/watchdog.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/cpu-sh4/watchdog.h
-  *
-  * Copyright (C) 2002, 2003 Paul Mundt
-diff --git a/arch/sh/include/mach-common/mach/hp6xx.h b/arch/sh/include/mach-common/mach/hp6xx.h
-index 71241f0d02a1..10e8c4cf2247 100644
---- a/arch/sh/include/mach-common/mach/hp6xx.h
-+++ b/arch/sh/include/mach-common/mach/hp6xx.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright (C) 2003, 2004, 2005  Andriy Skulysh
-  */
- #ifndef __ASM_SH_HP6XX_H
-diff --git a/arch/sh/include/mach-common/mach/magicpanelr2.h b/arch/sh/include/mach-common/mach/magicpanelr2.h
-index c2d218cea74b..ee8a76c4e21f 100644
---- a/arch/sh/include/mach-common/mach/magicpanelr2.h
-+++ b/arch/sh/include/mach-common/mach/magicpanelr2.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  *  include/asm-sh/magicpanelr2.h
-  *
-  *  Copyright (C) 2007  Markus Brunner, Mark Jonas
-diff --git a/arch/sh/include/mach-common/mach/mangle-port.h b/arch/sh/include/mach-common/mach/mangle-port.h
-index dd5a761a52ee..3cca842fd1d2 100644
---- a/arch/sh/include/mach-common/mach/mangle-port.h
-+++ b/arch/sh/include/mach-common/mach/mangle-port.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * SH version cribbed from the MIPS copy:
-  *
-  * Copyright (C) 2003, 2004 Ralf Baechle
-diff --git a/arch/sh/include/mach-common/mach/microdev.h b/arch/sh/include/mach-common/mach/microdev.h
-index 0e2f9ab11976..38c4120bf439 100644
---- a/arch/sh/include/mach-common/mach/microdev.h
-+++ b/arch/sh/include/mach-common/mach/microdev.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * linux/include/asm-sh/microdev.h
-  *
-  * Copyright (C) 2003 Sean McGoogan (Sean.McGoogan@superh.com)
-diff --git a/arch/sh/include/mach-common/mach/secureedge5410.h b/arch/sh/include/mach-common/mach/secureedge5410.h
-index dfc68aa91003..d0be04b6cd38 100644
---- a/arch/sh/include/mach-common/mach/secureedge5410.h
-+++ b/arch/sh/include/mach-common/mach/secureedge5410.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/snapgear.h
-  *
-  * Modified version of io_se.h for the snapgear-specific functions.
-diff --git a/arch/sh/include/mach-dreamcast/mach/dma.h b/arch/sh/include/mach-dreamcast/mach/dma.h
-index a773a763843a..40537ca3c110 100644
---- a/arch/sh/include/mach-dreamcast/mach/dma.h
-+++ b/arch/sh/include/mach-dreamcast/mach/dma.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/dreamcast/dma.h
-  *
-  * Copyright (C) 2003 Paul Mundt
-diff --git a/arch/sh/include/mach-dreamcast/mach/pci.h b/arch/sh/include/mach-dreamcast/mach/pci.h
-index c037c1ec63a9..fec7f8aa9c5b 100644
---- a/arch/sh/include/mach-dreamcast/mach/pci.h
-+++ b/arch/sh/include/mach-dreamcast/mach/pci.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/dreamcast/pci.h
-  *
-  * Copyright (C) 2001, 2002  M. R. Brown
-diff --git a/arch/sh/include/mach-dreamcast/mach/sysasic.h b/arch/sh/include/mach-dreamcast/mach/sysasic.h
-index ed69ce7f2030..03daca6ea92b 100644
---- a/arch/sh/include/mach-dreamcast/mach/sysasic.h
-+++ b/arch/sh/include/mach-dreamcast/mach/sysasic.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * include/asm-sh/dreamcast/sysasic.h
-  *
-  * Definitions for the Dreamcast System ASIC and related peripherals.
-diff --git a/arch/sh/include/mach-se/mach/se7721.h b/arch/sh/include/mach-se/mach/se7721.h
-index 82226d40faf5..b1940b6f9649 100644
---- a/arch/sh/include/mach-se/mach/se7721.h
-+++ b/arch/sh/include/mach-se/mach/se7721.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright (C) 2008 Renesas Solutions Corp.
-  *
-  * Hitachi UL SolutionEngine 7721 Support.
-diff --git a/arch/x86/include/asm/cpu_entry_area.h b/arch/x86/include/asm/cpu_entry_area.h
-index 29c706415443..84006ca0f17a 100644
---- a/arch/x86/include/asm/cpu_entry_area.h
-+++ b/arch/x86/include/asm/cpu_entry_area.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- 
- #ifndef _ASM_X86_CPU_ENTRY_AREA_H
- #define _ASM_X86_CPU_ENTRY_AREA_H
-diff --git a/arch/x86/include/asm/pti.h b/arch/x86/include/asm/pti.h
-index 5df09a0b80b8..07375b476c4f 100644
---- a/arch/x86/include/asm/pti.h
-+++ b/arch/x86/include/asm/pti.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- #ifndef _ASM_X86_PTI_H
- #define _ASM_X86_PTI_H
- #ifndef __ASSEMBLY__
-diff --git a/arch/x86/kernel/process.h b/arch/x86/kernel/process.h
-index 320ab978fb1f..1d0797b2338a 100644
---- a/arch/x86/kernel/process.h
-+++ b/arch/x86/kernel/process.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- //
- // Code shared between 32 and 64 bit
- 
--- 
-2.17.1
+your code looks better (as per pointer casting) but is logically
+different from what I proposed with v2:
+
+https://lkml.org/lkml/2019/3/4/892
+
+I think the bound check should validate that there is enough data from
+the info pointer to read an entire struct
+inquiry_info_with_rssi_and_pscan_mode.
+
+Best regards,
+Tomas
 
