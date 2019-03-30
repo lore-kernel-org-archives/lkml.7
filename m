@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1222EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F85C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E52217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB93217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909796;
-	bh=DmawPRaMrk1HaIMhcxgDMlWe2Oo1jLyWLs30oNu+jug=;
+	s=default; t=1553909805;
+	bh=eZNLlmvij2VlqzvKd7YlKXa23vF+hS8ShTOqJZQ/jFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OUw8es6qoB5CSPtEL4yCOaJGqzWlmwmR3lOsKPSV+W8NV/v0wqgznoimSt6HxZ2QF
-	 N9jsqczKlO5UB9x0StW4TGrv80yZibj+FUbS/UUMT00xDUsHnwe+g9U+GfO5IC0KVW
-	 AG666xTioOi9KW/ELnIRhc8OGgPzxIS1AKv7Aw6Q=
+	b=MoZwS+P6fUHQ78Gom3K8/3rWtr8gbNLI0ZHzaboHaZLag5iP2Gg7JpeiLyJzhNnAh
+	 BHN+H6MCmzpxq7hiv9fTdmFMKkPiRJPLUaxYf26MsHk1maZjnwPftEHw2D5SKm8plo
+	 D1r2lSATTyAJhzyYV1QQAQB3NwbAyfDcGqsGv1/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731362AbfC3Bgf (ORCPT
+        id S1732035AbfC3Bgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:36:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38602 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:36:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730954AbfC3BbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:31:09 -0400
+        id S1731861AbfC3BbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:31:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7024F217F5;
-        Sat, 30 Mar 2019 01:31:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5171218D3;
+        Sat, 30 Mar 2019 01:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909469;
-        bh=DmawPRaMrk1HaIMhcxgDMlWe2Oo1jLyWLs30oNu+jug=;
+        s=default; t=1553909465;
+        bh=eZNLlmvij2VlqzvKd7YlKXa23vF+hS8ShTOqJZQ/jFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jd9Homdd443lCGXNLhV1Mc5MKNPCzKRjlSS8kQV5BRAcR4Bb+D9+NHjwQ5r6PxlF4
-         ZryZ/2mwqTS0MAnTN7VZu5eXCGsakuaUT+4gfLWsOH8/TY5739fb7WLpyTOIc4fLPE
-         7GTaiet/lAC/WHCuStCBgzdAvvHgUGeZEOfui1l8=
+        b=pRCGYJa+NAcXkSJGYUyichQ1l/n6ET892ar+BccNv1OFi8Ty/iW5+ZR+1sqUJNGln
+         E/cjj57uzmrihWBCFSdF41qyAGjx8SI/tyv2YTvjBappH0R5hA8T5tLKJrXzYUJWVW
+         7noYUV2ytnY0Sh8QzhitiJchQZ/Kkdmd3LHZGvYA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 25/37] ext4: prohibit fstrim in norecovery mode
-Date:   Fri, 29 Mar 2019 21:30:08 -0400
-Message-Id: <20190330013020.379-25-sashal@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 23/37] kvm: properly check debugfs dentry before using it
+Date:   Fri, 29 Mar 2019 21:30:06 -0400
+Message-Id: <20190330013020.379-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013020.379-1-sashal@kernel.org>
 References: <20190330013020.379-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,40 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 18915b5873f07e5030e6fb108a050fa7c71c59fb ]
+[ Upstream commit 8ed0579c12b2fe56a1fac2f712f58fc26c1dc49b ]
 
-The ext4 fstrim implementation uses the block bitmaps to find free space
-that can be discarded.  If we haven't replayed the journal, the bitmaps
-will be stale and we absolutely *cannot* use stale metadata to zap the
-underlying storage.
+debugfs can now report an error code if something went wrong instead of
+just NULL.  So if the return value is to be used as a "real" dentry, it
+needs to be checked if it is an error before dereferencing it.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+This is now happening because of ff9fb72bc077 ("debugfs: return error
+values, not NULL").  syzbot has found a way to trigger multiple debugfs
+files attempting to be created, which fails, and then the error code
+gets passed to dentry_path_raw() which obviously does not like it.
+
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Reported-and-tested-by: syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
+Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+Cc: kvm@vger.kernel.org
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/ioctl.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ virt/kvm/kvm_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index 7917cc89ab21..3dbf4e414706 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -940,6 +940,13 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		if (!blk_queue_discard(q))
- 			return -EOPNOTSUPP;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 66cc315efa6d..cf6a86631267 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3911,7 +3911,7 @@ static void kvm_uevent_notify_change(unsigned int type, struct kvm *kvm)
+ 	}
+ 	add_uevent_var(env, "PID=%d", kvm->userspace_pid);
  
-+		/*
-+		 * We haven't replayed the journal, so we cannot use our
-+		 * block-bitmap-guided storage zapping commands.
-+		 */
-+		if (test_opt(sb, NOLOAD) && ext4_has_feature_journal(sb))
-+			return -EROFS;
-+
- 		if (copy_from_user(&range, (struct fstrim_range __user *)arg,
- 		    sizeof(range)))
- 			return -EFAULT;
+-	if (kvm->debugfs_dentry) {
++	if (!IS_ERR_OR_NULL(kvm->debugfs_dentry)) {
+ 		char *tmp, *p = kmalloc(PATH_MAX, GFP_KERNEL);
+ 
+ 		if (p) {
 -- 
 2.19.1
 
