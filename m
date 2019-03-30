@@ -2,105 +2,103 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4345C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 05:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC98DC10F0A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 05:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D58F218A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 05:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A36218A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 05:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553924596;
+	bh=ebyU1xh/LAWXwMIwVYqVq1jdrJRLGm7c+F3dlI/CX8M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CgsBWTyMKFxUdHn1zZSe8rxRrE/IiXlFxJb8dIlfXywRhnl2EMJrUeLqvJzaWGk9h
+	 YSX0oOjLVjfDVMW/PIBeCzGbHGB876IT5jpjG3UeGxwL9sFrrkd/abNYR6fE31QEuM
+	 kl6DS6kYfGSOu7Dposus5pcwcuuoe1PiaR2jPsCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbfC3FnC (ORCPT
+        id S1730390AbfC3FnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 01:43:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52988 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726434AbfC3FnB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 01:43:01 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2U5cHcW043577
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 01:43:00 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rhw3f9nxd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 01:43:00 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Sat, 30 Mar 2019 05:42:59 -0000
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 30 Mar 2019 05:42:56 -0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2U5gtes12058860
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 30 Mar 2019 05:42:55 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65B26112064;
-        Sat, 30 Mar 2019 05:42:55 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D8CCC112061;
-        Sat, 30 Mar 2019 05:42:53 +0000 (GMT)
-Received: from skywalker.ibmuc.com (unknown [9.85.85.132])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat, 30 Mar 2019 05:42:53 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH] mm: Fix build warning
-Date:   Sat, 30 Mar 2019 11:12:48 +0530
-X-Mailer: git-send-email 2.20.1
+        Sat, 30 Mar 2019 01:43:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726434AbfC3FnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 01:43:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECAA2218AC;
+        Sat, 30 Mar 2019 05:43:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553924594;
+        bh=ebyU1xh/LAWXwMIwVYqVq1jdrJRLGm7c+F3dlI/CX8M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K7WYJONPEV/GhFY9G4mAt2pCMc9p24gDGy9uEJVLWFMiUp34PcVRPSo3bmqsmjncr
+         gM2VcnDhO6ucND9ZhoiQ15p1cf/2p2JLJ5QxGB/4fKmQqK/R+Dq72G19wbq4wzQ/Dm
+         FqylzNDd5aA/fNLEOLz/qVgHd+8+lTLto4/pHSN8=
+Date:   Sat, 30 Mar 2019 06:43:11 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 33/57] blk-mq: protect
+ debugfs_create_files() from failures
+Message-ID: <20190330054311.GA23655@kroah.com>
+References: <20190330012854.32212-1-sashal@kernel.org>
+ <20190330012854.32212-33-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19033005-2213-0000-0000-0000036C650A
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010838; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000283; SDB=6.01181690; UDB=6.00618514; IPR=6.00962416;
- MB=3.00026217; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-30 05:42:57
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19033005-2214-0000-0000-00005DD71D5D
-Message-Id: <20190330054248.28357-1-aneesh.kumar@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-30_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903300038
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190330012854.32212-33-sashal@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mm/debug.c: In function ‘dump_mm’:
-include/linux/kern_levels.h:5:18: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 19 has type ‘long int’ [-Wformat=]
-              ~~~^
+On Fri, Mar 29, 2019 at 09:28:26PM -0400, Sasha Levin wrote:
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> [ Upstream commit 36991ca68db9dd43bac7f3519f080ee3939263ef ]
+> 
+> If debugfs were to return a non-NULL error for a debugfs call, using
+> that pointer later in debugfs_create_files() would crash.
+> 
+> Fix that by properly checking the pointer before referencing it.
+> 
+> Reported-by: Michal Hocko <mhocko@kernel.org>
+> Reported-and-tested-by: syzbot+b382ba6a802a3d242790@syzkaller.appspotmail.com
+> Reported-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  block/blk-mq-debugfs.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+> index cb1e6cf7ac48..9dc3a0896462 100644
+> --- a/block/blk-mq-debugfs.c
+> +++ b/block/blk-mq-debugfs.c
+> @@ -806,6 +806,9 @@ static const struct blk_mq_debugfs_attr blk_mq_debugfs_ctx_attrs[] = {
+>  static bool debugfs_create_files(struct dentry *parent, void *data,
+>  				 const struct blk_mq_debugfs_attr *attr)
+>  {
+> +	if (IS_ERR_OR_NULL(parent))
+> +		return false;
+> +
+>  	d_inode(parent)->i_private = data;
+>  
+>  	for (; attr->name; attr++) {
+> -- 
+> 2.19.1
+> 
 
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
----
- mm/debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This was a 5.0-only thing, no need for it to be backported anywhere.
+Please drop it from all of your trees.
 
-diff --git a/mm/debug.c b/mm/debug.c
-index c0b31b6c3877..c134e76918dc 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -137,7 +137,7 @@ void dump_mm(const struct mm_struct *mm)
- 		"mmap_base %lu mmap_legacy_base %lu highest_vm_end %lu\n"
- 		"pgd %px mm_users %d mm_count %d pgtables_bytes %lu map_count %d\n"
- 		"hiwater_rss %lx hiwater_vm %lx total_vm %lx locked_vm %lx\n"
--		"pinned_vm %llx data_vm %lx exec_vm %lx stack_vm %lx\n"
-+		"pinned_vm %lx data_vm %lx exec_vm %lx stack_vm %lx\n"
- 		"start_code %lx end_code %lx start_data %lx end_data %lx\n"
- 		"start_brk %lx brk %lx start_stack %lx\n"
- 		"arg_start %lx arg_end %lx env_start %lx env_end %lx\n"
--- 
-2.20.1
+thanks,
 
+greg k-h
