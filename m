@@ -2,149 +2,94 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833D0C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C492C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 02:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5050E2184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:54:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553910880;
-	bh=kGlzYNvnx2j57Yy5KzGg35jicf7vTPu7Xw0BB8/0CGk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RHmIS8UjEognDNa9mR2i2QtmifnETX5f1TGTBIFH02VIkZGLoCHHlcvQCXAGVPhqd
-	 J6gqijzI7P/DufD6GZs+B+7vr5xVgCsk8Vzw767rCJ+euEUPGKxvVpFpSDpI/8AL4c
-	 sfi9qFjptNZsubHgmQOlycNieWOYyuMoNi7BiKVo=
+	by mail.kernel.org (Postfix) with ESMTP id 02982218FC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 02:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbfC3Byj (ORCPT
+        id S1730271AbfC3CED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:54:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52306 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730104AbfC3ByG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:54:06 -0400
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B3D4218E2;
-        Sat, 30 Mar 2019 01:54:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553910845;
-        bh=kGlzYNvnx2j57Yy5KzGg35jicf7vTPu7Xw0BB8/0CGk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gRkJzDGx350qAirDmrkO10Sv2ihYHeIYd5mF20cIkDaJz4ScFrm4e8aFKA/GfgPxA
-         Yut9g62P6N6gAwcp7J8xaK43gxumY375NJknyNvauCrdo23B/P+l2/AV6b5NEL0lof
-         462SaNeCYM9DdPp5xg0mG9DnsA4h2Lj8MGuxKhdA=
-From:   Shuah Khan <shuah@kernel.org>
-To:     mchehab@kernel.org, perex@perex.cz, tiwai@suse.com,
-        hverkuil@xs4all.nl
-Cc:     Shuah Khan <shuah@kernel.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: [PATCH v14 2/6] media: change au0828 to use Media Device Allocator API
-Date:   Fri, 29 Mar 2019 19:53:57 -0600
-Message-Id: <a2ff6ba4f36564194872833ec400367e541da754.1553909893.git.shuah@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <cover.1553909892.git.shuah@kernel.org>
-References: <cover.1553909892.git.shuah@kernel.org>
+        Fri, 29 Mar 2019 22:04:03 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2099 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730107AbfC3CED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 22:04:03 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 518A5EDF6931E36797A6;
+        Sat, 30 Mar 2019 10:03:59 +0800 (CST)
+Received: from DGGEMM423-HUB.china.huawei.com (10.1.198.40) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Sat, 30 Mar 2019 10:03:58 +0800
+Received: from DGGEMM527-MBS.china.huawei.com ([169.254.5.15]) by
+ dggemm423-hub.china.huawei.com ([10.1.198.40]) with mapi id 14.03.0415.000;
+ Sat, 30 Mar 2019 10:03:54 +0800
+From:   Nixiaoming <nixiaoming@huawei.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        "jbrunet@baylibre.com" <jbrunet@baylibre.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "rnayak@ti.com" <rnayak@ti.com>,
+        "sboyd@codeaurora.org" <sboyd@codeaurora.org>,
+        "soren.brinkmann@xilinx.com" <soren.brinkmann@xilinx.com>
+CC:     "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] clk:Fix divide by 0 error in
+ divider_ro_round_rate_parent
+Thread-Topic: [PATCH] clk:Fix divide by 0 error in
+ divider_ro_round_rate_parent
+Thread-Index: AQHU5g4qGuS4E91IJkeHCCRnAu+mCqYirwcAgAC2brA=
+Date:   Sat, 30 Mar 2019 02:03:54 +0000
+Message-ID: <E490CD805F7529488761C40FD9D26EF12AABF10E@DGGEMM527-MBS.china.huawei.com>
+References: <1553850324-25625-1-git-send-email-nixiaoming@huawei.com>
+ <155389932276.20095.12054188967513679921@swboyd.mtv.corp.google.com>
+In-Reply-To: <155389932276.20095.12054188967513679921@swboyd.mtv.corp.google.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.57.88.168]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Media Device Allocator API to allows multiple drivers share a media device.
-This API solves a very common use-case for media devices where one physical
-device (an USB stick) provides both audio and video. When such media device
-exposes a standard USB Audio class, a proprietary Video class, two or more
-independent drivers will share a single physical USB bridge. In such cases,
-it is necessary to coordinate access to the shared resource.
-
-Using this API, drivers can allocate a media device with the shared struct
-device as the key. Once the media device is allocated by a driver, other
-drivers can get a reference to it. The media device is released when all
-the references are released.
-
-Change au0828 to use Media Device Allocator API to allocate media device
-with the parent usb struct device as the key, so it can be shared with the
-snd_usb_audio driver.
-
-Signed-off-by: Shuah Khan <shuah@kernel.org>
----
- drivers/media/usb/au0828/Kconfig       |  2 ++
- drivers/media/usb/au0828/au0828-core.c | 13 +++++--------
- drivers/media/usb/au0828/au0828.h      |  1 +
- 3 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/media/usb/au0828/Kconfig b/drivers/media/usb/au0828/Kconfig
-index 65fc067eb864..98de6e24329e 100644
---- a/drivers/media/usb/au0828/Kconfig
-+++ b/drivers/media/usb/au0828/Kconfig
-@@ -2,6 +2,8 @@
- config VIDEO_AU0828
- 	tristate "Auvitek AU0828 support"
- 	depends on I2C && INPUT && DVB_CORE && USB && VIDEO_V4L2
-+	select MEDIA_CONTROLLER
-+	select MEDIA_CONTROLLER_DVB
- 	select I2C_ALGOBIT
- 	select VIDEO_TVEEPROM
- 	select VIDEOBUF2_VMALLOC if VIDEO_V4L2
-diff --git a/drivers/media/usb/au0828/au0828-core.c b/drivers/media/usb/au0828/au0828-core.c
-index 3f8c92a70116..4f8ba6f64d3c 100644
---- a/drivers/media/usb/au0828/au0828-core.c
-+++ b/drivers/media/usb/au0828/au0828-core.c
-@@ -155,9 +155,7 @@ static void au0828_unregister_media_device(struct au0828_dev *dev)
- 	dev->media_dev->disable_source = NULL;
- 	mutex_unlock(&mdev->graph_mutex);
- 
--	media_device_unregister(dev->media_dev);
--	media_device_cleanup(dev->media_dev);
--	kfree(dev->media_dev);
-+	media_device_delete(dev->media_dev, KBUILD_MODNAME, THIS_MODULE);
- 	dev->media_dev = NULL;
- #endif
- }
-@@ -210,14 +208,10 @@ static int au0828_media_device_init(struct au0828_dev *dev,
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	struct media_device *mdev;
- 
--	mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
-+	mdev = media_device_usb_allocate(udev, KBUILD_MODNAME, THIS_MODULE);
- 	if (!mdev)
- 		return -ENOMEM;
- 
--	/* check if media device is already initialized */
--	if (!mdev->dev)
--		media_device_usb_init(mdev, udev, udev->product);
--
- 	dev->media_dev = mdev;
- #endif
- 	return 0;
-@@ -480,6 +474,9 @@ static int au0828_media_device_register(struct au0828_dev *dev,
- 		/* register media device */
- 		ret = media_device_register(dev->media_dev);
- 		if (ret) {
-+			media_device_delete(dev->media_dev, KBUILD_MODNAME,
-+					    THIS_MODULE);
-+			dev->media_dev = NULL;
- 			dev_err(&udev->dev,
- 				"Media Device Register Error: %d\n", ret);
- 			return ret;
-diff --git a/drivers/media/usb/au0828/au0828.h b/drivers/media/usb/au0828/au0828.h
-index 425c35d16057..57b00de8d3f2 100644
---- a/drivers/media/usb/au0828/au0828.h
-+++ b/drivers/media/usb/au0828/au0828.h
-@@ -31,6 +31,7 @@
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-fh.h>
- #include <media/media-device.h>
-+#include <media/media-dev-allocator.h>
- 
- /* DVB */
- #include <media/demux.h>
--- 
-2.17.1
-
+T24gMy8zMC8yMDE5IDY6NDIgQU0gU3RlcGhlbiBCb3lkIHdyb3RlOg0KPlF1b3Rpbmcgbml4aWFv
+bWluZyAoMjAxOS0wMy0yOSAwMjowNToyNCkNCj4+IEluIHRoZSBmdW5jdGlvbiBkaXZpZGVyX3Jl
+Y2FsY19yYXRlIFRoZSBqdWRnbWVudCBvZiB0aGUgcmV0dXJuIHZhbHVlIG9mDQo+DQo+UGxlYXNl
+IHdyaXRlIGRpdmlkZXJfcmVjYWxjX3JhdGUoKSB3aXRoIHBhcmVudGhlc2lzIHRvIHNob3cgaXQn
+cyBhDQo+ZnVuY3Rpb24uDQo+DQo+PiBfZ2V0X2RpdiBpbmRpY2F0ZXMgdGhhdCB0aGUgcmV0dXJu
+IHZhbHVlIG9mIF9nZXRfZGl2IG1heSBiZSAwLg0KPg0KPl9fZ2V0X2RpdigpDQpUaGFuayB5b3Ug
+Zm9yIHlvdXIgZ3VpZGFuY2UsIEkgd2lsbCBjb3JyZWN0IGl0IGxhdGVyIGluIHRoZSBwYXRjaC4N
+Cg0KPj4gSW4gb3JkZXIgdG8gYXZvaWQgdGhlIGRpdmlkZS1ieS16ZXJvIGVycm9yLCBhZGQgY2hl
+Y2sgdGhlIHJldHVybiB2YWx1ZQ0KPj4gb2YgX2dldF9kaXYgaW4gdGhlIGRpdmlkZXJfcm9fcm91
+bmRfcmF0ZV9wYXJlbnQNCj4+IA0KPj4gU2lnbmVkLW9mZi1ieTogbml4aWFvbWluZyA8bml4aWFv
+bWluZ0BodWF3ZWkuY29tPg0KPg0KPklzIHRoaXMgeW91ciBuYW1lPyBuaXhpYW9taW5nPyBPciBp
+cyBpdCB3cml0dGVuIHNvbWUgb3RoZXIgd2F5Pw0KDQpDaGluZXNlIG5hbWUg5YCq5bCP5piODQo+
+PiAtLS0NCj4+ICBkcml2ZXJzL2Nsay9jbGstZGl2aWRlci5jIHwgMiArKw0KPj4gIDEgZmlsZSBj
+aGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4+IA0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xr
+L2Nsay1kaXZpZGVyLmMgYi9kcml2ZXJzL2Nsay9jbGstZGl2aWRlci5jDQo+PiBpbmRleCBlNWEx
+NzI2Li4wODU0ZTNlIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9jbGsvY2xrLWRpdmlkZXIuYw0K
+Pj4gKysrIGIvZHJpdmVycy9jbGsvY2xrLWRpdmlkZXIuYw0KPj4gQEAgLTM0Nyw2ICszNDcsOCBA
+QCBsb25nIGRpdmlkZXJfcm9fcm91bmRfcmF0ZV9wYXJlbnQoc3RydWN0IGNsa19odyAqaHcsIHN0
+cnVjdCBjbGtfaHcgKnBhcmVudCwNCj4+ICAgICAgICAgaW50IGRpdjsNCj4+ICANCj4+ICAgICAg
+ICAgZGl2ID0gX2dldF9kaXYodGFibGUsIHZhbCwgZmxhZ3MsIHdpZHRoKTsNCj4+ICsgICAgICAg
+aWYgKCFkaXYpIC8qIGF2b2lkIGRpdmlkZS1ieS16ZXJvICovDQo+PiArICAgICAgICAgICAgICAg
+cmV0dXJuIC1FSU5WQUw7DQo+DQo+SG93IGRvZXMgX2dldF9kaXYoKSByZXR1cm4gMD8gV2hhdCBp
+cyB0aGUgdmFsdWUgb2YgJ2ZsYWdzJyBoZXJlIHdoZW4NCj50aGlzIGdvZXMgd3Jvbmc/DQoNCmRp
+dmlkZXJfcm9fcm91bmRfcmF0ZV9wYXJlbnQoKSBhbmQgZGl2aWRlcl9yZWNhbGNfcmF0ZSgpIGFy
+ZSBmdW5jdGlvbnMNCiBvZiB0aGUgRVhQT1JUX1NZTUJPTF9HUEwgYXR0cmlidXRlDQoNCklmIF9n
+ZXRfZGl2KCkgY2FuIHJldHVybiAwIGluIHRoZSBhcmd1bWVudCBvZiBkaXZpZGVyX3JlY2FsY19y
+YXRlKCkNClRoZW4gc2hvdWxkIGJlIGFibGUgdG8gcmV0dXJuIDAgaW4gZGl2aWRlcl9yb19yb3Vu
+ZF9yYXRlX3BhcmVudCgpDQoNCj4NCj4+ICANCj4+ICAgICAgICAgLyogRXZlbiBhIHJlYWQtb25s
+eSBjbG9jayBjYW4gcHJvcGFnYXRlIGEgcmF0ZSBjaGFuZ2UgKi8NCj4+ICAgICAgICAgaWYgKGNs
+a19od19nZXRfZmxhZ3MoaHcpICYgQ0xLX1NFVF9SQVRFX1BBUkVOVCkgew0KPj4gLS0gDQo+PiAx
+LjguNS42DQo+PiANCj4NCj5Xb3cgdGhhdCdzIGEgNSB5ZWFyIG9sZCB2ZXJzaW9uIG9mIGdpdCEN
+Cj4NCj4NCg==
