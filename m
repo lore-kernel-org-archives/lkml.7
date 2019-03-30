@@ -2,57 +2,56 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5751C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55D8C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADD62206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62C4206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907778;
-	bh=Kf8XHJgy1r6Y0lLxuA3IoUlQYDg5qrOLxQ/jC4tWejA=;
+	s=default; t=1553907782;
+	bh=LLirDe/7dVHKGnJPHFuQs5+t0wYM8N7KnD9UdgI4a2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AcdqCYiGSzk0HiUWy2jNTSZrVwRdk0jINqwFKjPtfwaDiEg5uGxWeq7+4OQVrbjan
-	 NT/v6OTcduePrTwiTHLkaJtwPRGlf3qTsWyt/AvJGWt8x+23nW6TNxAN8XBs7/2WDR
-	 t2q+q0y6NvPDUy0hPtD7pKB9GWSWEzJGTSEOEz+Q=
+	b=qFIpJfZ8et5neuiiD3Zqej3iwWziCfU5MXNIW3qKXHHXC6wOa1b6ukP5t6t4JHKiG
+	 nlCT+ktTIy8oWzzNtkCXZtyo9XsTKdZQGx02su7UvzYdvH05WpZTFBDTB1296XTRUL
+	 /la8GscitKUhkj+ZFiV7OTx/37kofGVNtKNfS63M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731768AbfC3Aze (ORCPT
+        id S1731647AbfC3BDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:55:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34622 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:03:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731744AbfC3Az0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:55:26 -0400
+        id S1731759AbfC3Azd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:55:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9203F206DD;
-        Sat, 30 Mar 2019 00:55:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BCFE218D3;
+        Sat, 30 Mar 2019 00:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907325;
-        bh=Kf8XHJgy1r6Y0lLxuA3IoUlQYDg5qrOLxQ/jC4tWejA=;
+        s=default; t=1553907332;
+        bh=LLirDe/7dVHKGnJPHFuQs5+t0wYM8N7KnD9UdgI4a2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mi1FG3sFXZi9I0T1iUQjzunhcLr5K5rK5LeNwmPZXaMeWwqVH2yRzjSZ6aOOaCa+L
-         KNV2FMd+iOibrUk8/uug//DZPSLpQjcEOzH8ECBV6xZR4sMnny3bmII5LR8bvuKHkb
-         b7CcLXDIlp7DAxJG9T0NvLBYEP5eFuzi9Ge8hvs4=
+        b=j7piR11FQnuPWmtSKIhiPkwDSwaTSBYbaXykopd4G62yUhmDQI+BEcKl3Szp4Sk+m
+         e0etQzLGb54dXYUccqeuWgOWvKakFOdQ0BaKC63rlvaE1cKvvX/t405fx0TSuRhY9I
+         tm5qCUXLC9sFRwY17bTiFR/g8raPA2Bw+FGNlDoY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changbin Du <changbin.du@gmail.com>,
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 23/37] perf build-id: Fix memory leak in print_sdt_events()
-Date:   Fri, 29 Mar 2019 20:54:24 -0400
-Message-Id: <20190330005441.27540-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 26/37] perf evsel: Free evsel->counts in perf_evsel__exit()
+Date:   Fri, 29 Mar 2019 20:54:27 -0400
+Message-Id: <20190330005441.27540-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
 References: <20190330005441.27540-1-sashal@kernel.org>
@@ -65,65 +64,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 8bde8516893da5a5fdf06121f74d11b52ab92df5 ]
+[ Upstream commit 42dfa451d825a2ad15793c476f73e7bbc0f9d312 ]
 
-Detected with gcc's ASan:
+Using gcc's ASan, Changbin reports:
 
-  Direct leak of 4356 byte(s) in 120 object(s) allocated from:
-      #0 0x7ff1a2b5a070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
-      #1 0x55719aef4814 in build_id_cache__origname util/build-id.c:215
-      #2 0x55719af649b6 in print_sdt_events util/parse-events.c:2339
-      #3 0x55719af66272 in print_events util/parse-events.c:2542
-      #4 0x55719ad1ecaa in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
-      #5 0x55719aec745d in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #6 0x55719aec7d1a in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #7 0x55719aec8184 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #8 0x55719aeca41a in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #9 0x7ff1a07ae09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+  =================================================================
+  ==7494==ERROR: LeakSanitizer: detected memory leaks
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+  Direct leak of 48 byte(s) in 1 object(s) allocated from:
+      #0 0x7f0333a89138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
+      #1 0x5625e5330a5e in zalloc util/util.h:23
+      #2 0x5625e5330a9b in perf_counts__new util/counts.c:10
+      #3 0x5625e5330ca0 in perf_evsel__alloc_counts util/counts.c:47
+      #4 0x5625e520d8e5 in __perf_evsel__read_on_cpu util/evsel.c:1505
+      #5 0x5625e517a985 in perf_evsel__read_on_cpu /home/work/linux/tools/perf/util/evsel.h:347
+      #6 0x5625e517ad1a in test__openat_syscall_event tests/openat-syscall.c:47
+      #7 0x5625e51528e6 in run_test tests/builtin-test.c:358
+      #8 0x5625e5152baf in test_and_print tests/builtin-test.c:388
+      #9 0x5625e51543fe in __cmd_test tests/builtin-test.c:583
+      #10 0x5625e515572f in cmd_test tests/builtin-test.c:722
+      #11 0x5625e51c3fb8 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #12 0x5625e51c44f7 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #13 0x5625e51c48fb in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #14 0x5625e51c5069 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #15 0x7f033214d09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+
+  Indirect leak of 72 byte(s) in 1 object(s) allocated from:
+      #0 0x7f0333a89138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
+      #1 0x5625e532560d in zalloc util/util.h:23
+      #2 0x5625e532566b in xyarray__new util/xyarray.c:10
+      #3 0x5625e5330aba in perf_counts__new util/counts.c:15
+      #4 0x5625e5330ca0 in perf_evsel__alloc_counts util/counts.c:47
+      #5 0x5625e520d8e5 in __perf_evsel__read_on_cpu util/evsel.c:1505
+      #6 0x5625e517a985 in perf_evsel__read_on_cpu /home/work/linux/tools/perf/util/evsel.h:347
+      #7 0x5625e517ad1a in test__openat_syscall_event tests/openat-syscall.c:47
+      #8 0x5625e51528e6 in run_test tests/builtin-test.c:358
+      #9 0x5625e5152baf in test_and_print tests/builtin-test.c:388
+      #10 0x5625e51543fe in __cmd_test tests/builtin-test.c:583
+      #11 0x5625e515572f in cmd_test tests/builtin-test.c:722
+      #12 0x5625e51c3fb8 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #13 0x5625e51c44f7 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #14 0x5625e51c48fb in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #15 0x5625e51c5069 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #16 0x7f033214d09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+
+His patch took care of evsel->prev_raw_counts, but the above backtraces
+are about evsel->counts, so fix that instead.
+
+Reported-by: Changbin Du <changbin.du@gmail.com>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 40218daea1db ("perf list: Show SDT and pre-cached events")
-Link: http://lkml.kernel.org/r/20190316080556.3075-7-changbin.du@gmail.com
+Link: https://lkml.kernel.org/n/tip-hd1x13g59f0nuhe4anxhsmfp@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/build-id.c     | 1 +
- tools/perf/util/parse-events.c | 1 +
- 2 files changed, 2 insertions(+)
+ tools/perf/util/evsel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 7f8553630c4d..69910deab6e0 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -185,6 +185,7 @@ char *build_id_cache__linkname(const char *sbuild_id, char *bf, size_t size)
- 	return bf;
- }
- 
-+/* The caller is responsible to free the returned buffer. */
- char *build_id_cache__origname(const char *sbuild_id)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 44c2f62b47a3..0cf6f537f980 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1229,6 +1229,7 @@ void perf_evsel__exit(struct perf_evsel *evsel)
  {
- 	char *linkname;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index ec3517326a68..29e2bb304168 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2180,6 +2180,7 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
- 				printf("  %-50s [%s]\n", buf, "SDT event");
- 				free(buf);
- 			}
-+			free(path);
- 		} else
- 			printf("  %-50s [%s]\n", nd->s, "SDT event");
- 		if (nd2) {
+ 	assert(list_empty(&evsel->node));
+ 	assert(evsel->evlist == NULL);
++	perf_evsel__free_counts(evsel);
+ 	perf_evsel__free_fd(evsel);
+ 	perf_evsel__free_id(evsel);
+ 	perf_evsel__free_config_terms(evsel);
 -- 
 2.19.1
 
