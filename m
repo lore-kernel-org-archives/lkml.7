@@ -2,137 +2,146 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5C6C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 07:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D275CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 08:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81699218A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 07:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93BBD218A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 08:01:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWDfwo1q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pBYE9nMD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbfC3H6B (ORCPT
+        id S1730405AbfC3IBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 03:58:01 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52070 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbfC3H6A (ORCPT
+        Sat, 30 Mar 2019 04:01:52 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:35922 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbfC3IBv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 03:58:00 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 4so4780432wmf.1;
-        Sat, 30 Mar 2019 00:57:59 -0700 (PDT)
+        Sat, 30 Mar 2019 04:01:51 -0400
+Received: by mail-yw1-f66.google.com with SMTP id u197so1519695ywf.3
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 01:01:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cCZI3GRmOYbCqRvIGi3XJe8r+zVw9MkB0uujbMoC2iU=;
-        b=TWDfwo1qd0lNl8srnZdAhSqwVQPLNfD9kjFKljiRdJNP5QwuNVomgP+Ha0WigZ6FBY
-         9PSIChWYARlnCElR87DkLi7DwvllVHwSR6E52RlG1+17hQPfnSOkPKb6lL5LdMbBeWe0
-         ufl1jDvLm3M+M6efUxeeQdEooxnYVkXLDvedTonHsLRK5kT7tgVJnTPlvQXeKJrhduzT
-         i4LCGGKNwrA0qwyTIr8zkqjV16dFP5brDGUxh4ZIsJ6lTZwKMIrLqjcOKZar9Kmv+9sc
-         2U/kT9+rfx5UYoY0XH0cAU00BOsSHtPreHcatEqzM1ERluDUXeemUL8ytWDlkV4EJ3Vq
-         wsgg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ou/EcZgQ2kTCfnCpqt+bAtN9998cp2UD9Yy35ZEn2LA=;
+        b=pBYE9nMDAZ+C4RWCEw30YschYJK8nAN56MvuWQ4+XPV3PpjMnLFOATHHwF6adyYhBU
+         soGw3PIZa4pzcYEhPL1FUgfaRUX5ir9Q2RckqOTF+GqDYL5EoXv/+sBwEt3VREhfuqYL
+         X9Z3HIjEtqKJEqoGQwW1nlsXlLQJJIXxL8bYhUYzVOpVFuoaTfNsGua85fcf/b8ag7do
+         Go8XeEp/8ZZ6RdSDVRFbcG2bLcsDa5OBE1F145DxPl6xSZyg/HtZXOw1lY7ALLpaL7X1
+         4wnkgLpK+EJUYf6PGK8b6/1/GqSqQrExWorNdeT75QcmZVK1Pv4H6dQy7eVf5etJCqrM
+         48yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cCZI3GRmOYbCqRvIGi3XJe8r+zVw9MkB0uujbMoC2iU=;
-        b=tY2AXrxfxOY2q1tZsFPzHLCvOwvTCdemyyhMxQ2b01O1au5ZAp5jGNwmZRMOSqXh0z
-         l9IumhcC9U4Qljb4gPYCXs6j7q5qYzcGmiFAgTVI6SqznTV5DuIN4481TaIqj+T1GQlC
-         nxLaIxPH4T8nBNiE+TZ/OSoOqNmETRHp0cNKPdNfRZA03ejBwRIxtm5mLZiWBBExGO5w
-         0Bz7BeAhdMMBFaLVYBiF/NOUjGyqyxhgRdBEMjctzqF/E7wqIrhoOAWQMvMTfzdGwD7m
-         MzRTDRrhmBunsHXKTIMsd0d1l1xztDu9fTFIgvCOZtm4yH3NmiMRvXoNI0hFGRax79VF
-         yxEg==
-X-Gm-Message-State: APjAAAUZdboTMU5JWRrxHI2rRN5j7b5IE3reJucZIfo3LBZyx+IqBsdY
-        y1gi8SwiWKeY1DTjrJ4z4sk=
-X-Google-Smtp-Source: APXvYqyitWqbIwgEYbCNEbkJjGPux1Aox+7cr5mqQhdyZxi88EH9HplN0sso7ApSGmc8Zw8Ys+DRUQ==
-X-Received: by 2002:a1c:208c:: with SMTP id g134mr437732wmg.70.1553932678876;
-        Sat, 30 Mar 2019 00:57:58 -0700 (PDT)
-Received: from [192.168.8.147] (58.85.136.77.rev.sfr.net. [77.136.85.58])
-        by smtp.gmail.com with ESMTPSA id v16sm8545787wro.48.2019.03.30.00.57.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 Mar 2019 00:57:58 -0700 (PDT)
-Subject: Re: [PATCH net] ipv6: Fix dangling pointer when ipv6 fragment
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-To:     hujunwei <hujunwei4@huawei.com>, davem@davemloft.net,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     mingfangsen@huawei.com, liuzhiqiang26@huawei.com,
-        zhangwenhao8@huawei.com
-References: <cbbedd1f-3e99-85f7-86d7-d02a86d59c29@huawei.com>
- <ee0fb75b-f976-02ae-31e3-c3f957f71923@gmail.com>
-Message-ID: <a277b9c7-22e0-3763-89e5-504514d2e9b0@gmail.com>
-Date:   Sat, 30 Mar 2019 00:57:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ou/EcZgQ2kTCfnCpqt+bAtN9998cp2UD9Yy35ZEn2LA=;
+        b=PFLiqr1eB2rU86tk1f4vAosoGZ4VZCMRfl2hh8xX8o/4Jt0YCfMAbGoi5Z1nC9LKSl
+         vxt6b9DyLSrBSerMxPB6AHGeVdouaLCbVaqQgd3tYoiSsquRoeW3wm0q23Ahdb0FV0wn
+         l+tNgGmvha0MEYkOAEJCboOgqhpVzRXPRqfbdd1r1TDse75HeEKlmqc6nMTXmdnd5WBB
+         K0Zz76Tq21rwJL8lByKF2+Ma5FtE0dX3xXCwMEc8/b4HavGqKkrcQYVg7l2xTv8yCR6H
+         kL/t6q6WWDjjP0/TNCleAe7FHC9gHGtj7tEA4wl0BsW2ht6E1XeO4NrUeVDWyC9MHw+A
+         BSsg==
+X-Gm-Message-State: APjAAAWp41hCjY76SyiuWGpqbjZSg3q8tkpXzqUhTIPeQmwRBzm5ZrxX
+        /3II5/D6uHDDpxuiEtNULBKzmFQv1wOEY/9/1kqznrKy
+X-Google-Smtp-Source: APXvYqwGoMZoxw9YhLomX+24J4qFHd/zWXrOmjrt34eNL+WA4jCnAl6tVRcUZ5Er3VOhmeGgM2If/knh74P1UaidNZE=
+X-Received: by 2002:a0d:e487:: with SMTP id n129mr35807007ywe.487.1553932911212;
+ Sat, 30 Mar 2019 01:01:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ee0fb75b-f976-02ae-31e3-c3f957f71923@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CABXRUiSUzuf+Ki1Pj9oUkgZC0ELkA4N1aZpwBrZ7Gu3nyGwPMQ@mail.gmail.com>
+ <20190330071413.GA5507@kroah.com>
+In-Reply-To: <20190330071413.GA5507@kroah.com>
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Date:   Sat, 30 Mar 2019 16:02:38 +0800
+Message-ID: <CABXRUiSvSP=L3Twkya9HiuzQHmJngTET3XEKoxGGpSfPxb-_tw@mail.gmail.com>
+Subject: Re: a kernel address leak via copy_to_user in drivers/tty/rocket.c
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     jslaby@suse.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I add a function to mask all pointer fields of struct r_port. (Other
+pointer fields may have a similar issue, so I set all pointer fields
+to NULL);
+The modified code is marked with ">"
 
+>1274 static void mask_pointer(struct r_port *info, struct r_port *masked_i=
+nfo) {
+>1275   memcpy(masked_info, info, sizeof (struct r_port));
+>1276   masked_info->port.tty =3D NULL;
+>1277   masked_info->port.itty =3D NULL;
+>1278   masked_info->port.ops =3D NULL;
+>1279   masked_info->port.client_ops =3D NULL;
+>1280   memset(&masked_info->port.open_wait.head, 0, sizeof(struct list_hea=
+d));
+>1281   memset(&masked_info->port.delta_msr_wait.head, 0, sizeof(struct lis=
+t_head));
+>1282   memset(&masked_info->port.mutex.wait_list, 0, sizeof(struct list_he=
+ad));
+>1283   memset(&masked_info->port.buf_mutex.wait_list, 0, sizeof(struct lis=
+t_head));
+>1284   masked_info->port.xmit_buf =3D NULL;
+>1285   masked_info->port.client_data =3D NULL;
+>1286   masked_info->ctlp =3D NULL;
+>1287   masked_info->xmit_buf =3D NULL;
+>1288   memset(&masked_info->write_mtx.wait_list, 0, sizeof(struct list_hea=
+d));
+>1289 }
+1290
+1291 /*  IOCTL call handler into the driver */
+1292 static int rp_ioctl(struct tty_struct *tty,
+1293         unsigned int cmd, unsigned long arg)
+1294 {
+1295   struct r_port *info =3D tty->driver_data;
+>1296   struct r_port *masked_info;
+1297   void __user *argp =3D (void __user *)arg;
+1298   int ret =3D 0;
+1299
+1300   if (cmd !=3D RCKP_GET_PORTS && rocket_paranoia_check(info, "rp_ioctl=
+"))
+1301     return -ENXIO;
+1302   switch (cmd) {
+1303   case RCKP_GET_STRUCT:
+>1304     masked_info =3D kzalloc(sizeof (struct r_port), GFP_KERNEL);
+>1305     mask_pointer(info, masked_info);
+>1306     if (copy_to_user(argp, masked_info, sizeof (struct r_port)))
+1307       ret =3D -EFAULT;
 
-On 03/30/2019 12:48 AM, Eric Dumazet wrote:
-> 
-> 
-> On 03/30/2019 12:29 AM, hujunwei wrote:
->> From: Junwei Hu <hujunwei4@huawei.com>
->>
->> At the beginning of ip6_fragment func, the prevhdr pointer is
->> obtained in the ip6_find_1stfragopt func.
->> However, all the pointers pointing into skb header may change
->> when calling skb_checksum_help func with
->> skb->ip_summed = CHECKSUM_PARTIAL condition.
->> The prevhdr pointe will be dangling if it is not reloaded after
->> calling __skb_linearize func in skb_checksum_help func.
->>
->> Here, I add a variable, nexthdr_offset, to evaluate the offset,
->> which does not changes even after calling __skb_linearize func.
->>
-
-...
-
->> diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
->> index edbd12067170..6db3c60b3b66 100644
->> --- a/net/ipv6/ip6_output.c
->> +++ b/net/ipv6/ip6_output.c
->> @@ -606,12 +606,14 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
->>      __be32 frag_id;
->>      int ptr, offset = 0, err = 0;
->>      u8 *prevhdr, nexthdr = 0;
->> +    u8 nexthdr_offset;
-
-Why u8 here ?
-
-I would use "unsigned int" really.
-
->>  
->>      err = ip6_find_1stfragopt(skb, &prevhdr);
->>      if (err < 0)
->>          goto fail;
->>      hlen = err;
->>      nexthdr = *prevhdr;
->> +    nexthdr_offset = prevhdr - skb_network_header(skb);
->>  
->>      mtu = ip6_skb_dst_mtu(skb);
->>  
->> @@ -646,6 +648,8 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
->>          (err = skb_checksum_help(skb)))
->>          goto fail;
->>  
->> +    prevhdr = skb_network_header(skb) + nexthdr_offset;
->> +
->>      hroom = LL_RESERVED_SPACE(rt->dst.dev);
->>      if (skb_has_frag_list(skb)) {
->>          unsigned int first_len = skb_pagelen(skb);
->>
+Greg KH <gregkh@linuxfoundation.org> =E6=96=BC 2019=E5=B9=B43=E6=9C=8830=E6=
+=97=A5=E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=883:14=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Sat, Mar 30, 2019 at 03:05:11PM +0800, Fuqian Huang wrote:
+> > Hi, recently I found that there is a kernel address leaks to user
+> > space via copy_to_user in
+> > drivers/tty/rocket.c:1287 (linux-5.0.5)
+> > static int rp_ioctl(struct tty_struct *tty, unsigned int cmd, unsigned
+> > long arg) {
+> >   ...
+> >   case RCKP_GET_STRUCT:
+> >       if (copy_to_user(argp, info, sizeof(struct r_port))
+> >   ...
+> > }
+> > The `info` is a struct r_port. and the field `r_port.port.ops` is an
+> > constant pointer,
+> > and it points to a constant object `rocket_port_ops` during the initial=
+ization.
+> > (function init_r_port) (drivers/tty/rocket.c:633)
+> >
+> > patch suggestion:
+> > set the pointer field to null before the copy to user call.
+>
+> Great, can you send a patch to fix this so that you get the proper
+> credit for finding and resolving it?
+>
+> thanks,
+>
+> greg k-h
