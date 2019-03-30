@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861B4C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADDBC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 556ED217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21545217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909688;
-	bh=wxCFi0Vwx4s7u0bNIU7e/yZ+bi5iPpGjLQsdyxd/4cY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=RkVzVGhyRgSoOoKX5IsQ3VI0oyzW4YO8mks+s0JV+QClJth+5090CBQ257nw7guPk
-	 CLA/RYqQjV/+VgJigPzM71ps6pIHvYK2WxzdlpvsCMB0XfUaLh0A9HaDJ0Hz0p10EJ
-	 CmPUMrxsdmbahk7x+aPjWPH5fe5n71QSPmBT/gos=
+	s=default; t=1553909700;
+	bh=Yv57S6M8AFqu2q8SN0uJQdADdTUO5n3ahE1W2XhhRDY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=keDEBapqFZgGijM7KmyQQL1zwmVwP1ihX0LCetmcQVwE0bcorJV1hg8BZpgkRle7S
+	 4cM5ixgQ5NF1+Ec1qBFJyoAtdHk88HFB4irTAkEjWl7K4bLGKpMdNi4ggKD7/su4Xm
+	 pRm+sOSBCaX4GF18h0tT/zYz62l40EcxgCRm/EdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732323AbfC3Ber (ORCPT
+        id S1732067AbfC3Be6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:34:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39936 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:34:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731362AbfC3BcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:32:03 -0400
+        id S1732201AbfC3Bb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:31:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C06F421773;
-        Sat, 30 Mar 2019 01:32:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADF76218D3;
+        Sat, 30 Mar 2019 01:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909522;
-        bh=wxCFi0Vwx4s7u0bNIU7e/yZ+bi5iPpGjLQsdyxd/4cY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IwHmbjleYJfB+5GY3e9ftOhWrNpdUS41e7KDr00N+yoBm/pD5o47RBv/DgcA83qLr
-         TAV3hGJpHf43KKuf5ZpNMNFT8aRKTawGAmqzgsy3v93agOw9MBbGSuVt2BxL0w+Ist
-         /GuxFaYL++/uBn3vnqbzw9rSckd2xX364j1eCsWA=
+        s=default; t=1553909517;
+        bh=Yv57S6M8AFqu2q8SN0uJQdADdTUO5n3ahE1W2XhhRDY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jasyPbxnT1VJ2OeU/XTADPAESZZsaotGYw3bTTt/IWqiGdw6gTQDzxk4eVUP5zNSl
+         tXJgyjeJwQAbRcqjQz9VfW75AkrvubnNfqEWtqKQnFhlS/5MSI+wFRYq8h2hjZ0WY7
+         LGKIX+FyYFTz8lifiCY4tTZvOWloQWB8hlZzOH88=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 01/16] rsi: improve kernel thread handling to fix kernel panic
-Date:   Fri, 29 Mar 2019 21:31:45 -0400
-Message-Id: <20190330013200.1130-1-sashal@kernel.org>
+Cc:     Stanislaw Gruszka <sgruszka@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 20/21] lib/div64.c: off by one in shift
+Date:   Fri, 29 Mar 2019 21:31:11 -0400
+Message-Id: <20190330013112.784-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190330013112.784-1-sashal@kernel.org>
+References: <20190330013112.784-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,61 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+From: Stanislaw Gruszka <sgruszka@redhat.com>
 
-[ Upstream commit 4c62764d0fc21a34ffc44eec1210038c3a2e4473 ]
+[ Upstream commit cdc94a37493135e355dfc0b0e086d84e3eadb50d ]
 
-While running regressions, observed below kernel panic when sdio disconnect
-called. This is because of, kthread_stop() is taking care of
-wait_for_completion() by default. When wait_for_completion triggered
-in kthread_stop and as it was done already, giving kernel panic.
-Hence, removing redundant wait_for_completion() from rsi_kill_thread().
+fls counts bits starting from 1 to 32 (returns 0 for zero argument).  If
+we add 1 we shift right one bit more and loose precision from divisor,
+what cause function incorect results with some numbers.
 
-... skipping ...
-BUG: unable to handle kernel NULL pointer dereference at           (null)
-IP: [<ffffffff810a63df>] exit_creds+0x1f/0x50
-PGD 0
-Oops: 0002 [#1] SMP
-CPU: 0 PID: 6502 Comm: rmmod Tainted: G  OE   4.15.9-Generic #154-Ubuntu
-Hardware name: Dell Inc. Edge Gateway 3003/ , BIOS 01.00.00 04/17/2017
-Stack:
-ffff88007392e600 ffff880075847dc0 ffffffff8108160a 0000000000000000
-ffff88007392e600 ffff880075847de8 ffffffff810a484b ffff880076127000
-ffff88003cd3a800 ffff880074f12a00 ffff880075847e28 ffffffffc09bed15
-Call Trace:
-[<ffffffff8108160a>] __put_task_struct+0x5a/0x140
-[<ffffffff810a484b>] kthread_stop+0x10b/0x110
-[<ffffffffc09bed15>] rsi_disconnect+0x2f5/0x300 [ven_rsi_sdio]
-[<ffffffff81578bcb>] ? __pm_runtime_resume+0x5b/0x80
-[<ffffffff816f0918>] sdio_bus_remove+0x38/0x100
-[<ffffffff8156cc64>] __device_release_driver+0xa4/0x150
-[<ffffffff8156d7a5>] driver_detach+0xb5/0xc0
-[<ffffffff8156c6c5>] bus_remove_driver+0x55/0xd0
-[<ffffffff8156dfbc>] driver_unregister+0x2c/0x50
-[<ffffffff816f0b8a>] sdio_unregister_driver+0x1a/0x20
-[<ffffffffc09bf0f5>] rsi_module_exit+0x15/0x30 [ven_rsi_sdio]
-[<ffffffff8110cad8>] SyS_delete_module+0x1b8/0x210
-[<ffffffff81851dc8>] entry_SYSCALL_64_fastpath+0x1c/0xbb
+Corrected code was tested in user-space, see bugzilla:
+   https://bugzilla.kernel.org/show_bug.cgi?id=202391
 
-Signed-off-by: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: http://lkml.kernel.org/r/1548686944-11891-1-git-send-email-sgruszka@redhat.com
+Fixes: 658716d19f8f ("div64_u64(): improve precision on 32bit platforms")
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Reported-by: Siarhei Volkau <lis8215@gmail.com>
+Tested-by: Siarhei Volkau <lis8215@gmail.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/rsi/rsi_common.h | 1 -
- 1 file changed, 1 deletion(-)
+ lib/div64.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/rsi/rsi_common.h b/drivers/net/wireless/rsi/rsi_common.h
-index d3fbe33d2324..a13f08fd8690 100644
---- a/drivers/net/wireless/rsi/rsi_common.h
-+++ b/drivers/net/wireless/rsi/rsi_common.h
-@@ -75,7 +75,6 @@ static inline int rsi_kill_thread(struct rsi_thread *handle)
- 	atomic_inc(&handle->thread_done);
- 	rsi_set_event(&handle->event);
+diff --git a/lib/div64.c b/lib/div64.c
+index 7f345259c32f..c1c1a4c36dd5 100644
+--- a/lib/div64.c
++++ b/lib/div64.c
+@@ -102,7 +102,7 @@ u64 div64_u64_rem(u64 dividend, u64 divisor, u64 *remainder)
+ 		quot = div_u64_rem(dividend, divisor, &rem32);
+ 		*remainder = rem32;
+ 	} else {
+-		int n = 1 + fls(high);
++		int n = fls(high);
+ 		quot = div_u64(dividend >> n, divisor >> n);
  
--	wait_for_completion(&handle->completion);
- 	return kthread_stop(handle->task);
- }
+ 		if (quot != 0)
+@@ -140,7 +140,7 @@ u64 div64_u64(u64 dividend, u64 divisor)
+ 	if (high == 0) {
+ 		quot = div_u64(dividend, divisor);
+ 	} else {
+-		int n = 1 + fls(high);
++		int n = fls(high);
+ 		quot = div_u64(dividend >> n, divisor >> n);
  
+ 		if (quot != 0)
 -- 
 2.19.1
 
