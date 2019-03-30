@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CC4C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41833C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75CC22184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13DA9217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909768;
-	bh=KWCTemIsquG7Y9GTcsTvkGOFi4ehdUv/YZSv8/UFDoA=;
+	s=default; t=1553909779;
+	bh=pFU7LbRbresPwXeXDTxoQEj2/VAfHGs8AQiBhZKy4L0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AYYkYFo5cJ2IC7QH4slYuZ9m++HTg/I1QJkTP2TPdhhbbqwuUCzyOwUKRMZXCyoK9
-	 rABXJGwGMr2ne+8ne9Aypth9tNFhUfD1FRvF8VigtxSJKYPGsQ43SMv8qhzBURsuHX
-	 2Sdx7O8u55/xnF/eb3UaxeWMNm8zlt2KsMPqpRrQ=
+	b=ndGJ322d6P1RyPVwsLrcyO4aeBXE1gWT1Sxf79vX4PD3Y6kdM7D/Db7KsHj2h8/D0
+	 qOGf+BjVpNFvC3RF5Yg3U4Y9Y4zq+r44gQMshlew1R1qaqOAmoLBhhoDxDyuM5OJEY
+	 Ko2XbVDrTZM5o3RxQ4V9kNvc3UQKdzrzvOdWEATs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731967AbfC3BbR (ORCPT
+        id S1731800AbfC3BgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:31:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38624 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:36:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730933AbfC3BbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:31:11 -0400
+        id S1731942AbfC3BbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:31:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 897AD218D8;
-        Sat, 30 Mar 2019 01:31:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6B7421773;
+        Sat, 30 Mar 2019 01:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909470;
-        bh=KWCTemIsquG7Y9GTcsTvkGOFi4ehdUv/YZSv8/UFDoA=;
+        s=default; t=1553909476;
+        bh=pFU7LbRbresPwXeXDTxoQEj2/VAfHGs8AQiBhZKy4L0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cvlGxQEgMbRUvPaLpd9SCfLnpT2pbT9ITe99fHLaCf+nPDiiniRn4BEr9sw4hzPVv
-         FnfGN0iKkWPqBcfSXenDQsGp6gHD0ey7jTYIdsBUktspuxVACImC+PbvxSji4m5MLa
-         VCevPB8P4kQLZdbwcMl+oNHoEDyoE5Mc4Nf9UYfE=
+        b=P3qrFocP+o7SJx1j4CdhFkybtb41YNg74U9Leuge26ZZslOAdexFSbdjViT7TA6Vh
+         s1vm4Rgt/FXG41oMn3UhW2QfKySBfYAXw1/At/mzR78OO2wJY8Av2eZUbkTfQv4CmK
+         gdJv0gjdehN+fETsckiA2VM41aARULEnJ0SsEh7U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Kees Cook <keescook@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 26/37] lkdtm: Print real addresses
-Date:   Fri, 29 Mar 2019 21:30:09 -0400
-Message-Id: <20190330013020.379-26-sashal@kernel.org>
+Cc:     Gertjan Halkes <gertjan@google.com>,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        Sasha Levin <sashal@kernel.org>,
+        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/21] 9p: do not trust pdu content for stat item size
+Date:   Fri, 29 Mar 2019 21:30:54 -0400
+Message-Id: <20190330013112.784-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190330013020.379-1-sashal@kernel.org>
-References: <20190330013020.379-1-sashal@kernel.org>
+In-Reply-To: <20190330013112.784-1-sashal@kernel.org>
+References: <20190330013112.784-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,115 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Gertjan Halkes <gertjan@google.com>
 
-[ Upstream commit 4c411157a42f122051ae3469bee0b5cabe89e139 ]
+[ Upstream commit 2803cf4379ed252894f046cb8812a48db35294e3 ]
 
-Today, when doing a lkdtm test before the readiness of the
-random generator, (ptrval) is printed instead of the address
-at which it perform the fault:
+v9fs_dir_readdir() could deadloop if a struct was sent with a size set
+to -2
 
-[ 1597.337030] lkdtm: Performing direct entry EXEC_USERSPACE
-[ 1597.337142] lkdtm: attempting ok execution at (ptrval)
-[ 1597.337398] lkdtm: attempting bad execution at (ptrval)
-[ 1597.337460] kernel tried to execute user page (77858000) -exploit attempt? (uid: 0)
-[ 1597.344769] Unable to handle kernel paging request for instruction fetch
-[ 1597.351392] Faulting instruction address: 0x77858000
-[ 1597.356312] Oops: Kernel access of bad area, sig: 11 [#1]
-
-If the lkdtm test is done later on, it prints an hashed address.
-
-In both cases this is pointless. The purpose of the test is to
-ensure the kernel generates an Oops at the expected address,
-so real addresses needs to be printed. This patch fixes that.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: http://lkml.kernel.org/r/1536134432-11997-1-git-send-email-asmadeus@codewreck.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=88021
+Signed-off-by: Gertjan Halkes <gertjan@google.com>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/lkdtm_perms.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ fs/9p/vfs_dir.c   | 8 +++-----
+ net/9p/protocol.c | 3 ++-
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/misc/lkdtm_perms.c b/drivers/misc/lkdtm_perms.c
-index 53b85c9d16b8..fa54add6375a 100644
---- a/drivers/misc/lkdtm_perms.c
-+++ b/drivers/misc/lkdtm_perms.c
-@@ -47,7 +47,7 @@ static noinline void execute_location(void *dst, bool write)
- {
- 	void (*func)(void) = dst;
+diff --git a/fs/9p/vfs_dir.c b/fs/9p/vfs_dir.c
+index 48db9a9f13f9..cb6c4031af55 100644
+--- a/fs/9p/vfs_dir.c
++++ b/fs/9p/vfs_dir.c
+@@ -105,7 +105,6 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
+ 	int err = 0;
+ 	struct p9_fid *fid;
+ 	int buflen;
+-	int reclen = 0;
+ 	struct p9_rdir *rdir;
+ 	struct kvec kvec;
  
--	pr_info("attempting ok execution at %p\n", do_nothing);
-+	pr_info("attempting ok execution at %px\n", do_nothing);
- 	do_nothing();
+@@ -138,11 +137,10 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
+ 		while (rdir->head < rdir->tail) {
+ 			err = p9stat_read(fid->clnt, rdir->buf + rdir->head,
+ 					  rdir->tail - rdir->head, &st);
+-			if (err) {
++			if (err <= 0) {
+ 				p9_debug(P9_DEBUG_VFS, "returned %d\n", err);
+ 				return -EIO;
+ 			}
+-			reclen = st.size+2;
  
- 	if (write == CODE_WRITE) {
-@@ -55,7 +55,7 @@ static noinline void execute_location(void *dst, bool write)
- 		flush_icache_range((unsigned long)dst,
- 				   (unsigned long)dst + EXEC_SIZE);
+ 			over = !dir_emit(ctx, st.name, strlen(st.name),
+ 					 v9fs_qid2ino(&st.qid), dt_type(&st));
+@@ -150,8 +148,8 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
+ 			if (over)
+ 				return 0;
+ 
+-			rdir->head += reclen;
+-			ctx->pos += reclen;
++			rdir->head += err;
++			ctx->pos += err;
+ 		}
  	}
--	pr_info("attempting bad execution at %p\n", func);
-+	pr_info("attempting bad execution at %px\n", func);
- 	func();
  }
- 
-@@ -66,14 +66,14 @@ static void execute_user_location(void *dst)
- 	/* Intentionally crossing kernel/user memory boundary. */
- 	void (*func)(void) = dst;
- 
--	pr_info("attempting ok execution at %p\n", do_nothing);
-+	pr_info("attempting ok execution at %px\n", do_nothing);
- 	do_nothing();
- 
- 	copied = access_process_vm(current, (unsigned long)dst, do_nothing,
- 				   EXEC_SIZE, FOLL_WRITE);
- 	if (copied < EXEC_SIZE)
- 		return;
--	pr_info("attempting bad execution at %p\n", func);
-+	pr_info("attempting bad execution at %px\n", func);
- 	func();
- }
- 
-@@ -82,7 +82,7 @@ void lkdtm_WRITE_RO(void)
- 	/* Explicitly cast away "const" for the test. */
- 	unsigned long *ptr = (unsigned long *)&rodata;
- 
--	pr_info("attempting bad rodata write at %p\n", ptr);
-+	pr_info("attempting bad rodata write at %px\n", ptr);
- 	*ptr ^= 0xabcd1234;
- }
- 
-@@ -100,7 +100,7 @@ void lkdtm_WRITE_RO_AFTER_INIT(void)
- 		return;
+diff --git a/net/9p/protocol.c b/net/9p/protocol.c
+index 145f80518064..7f1b45c082c9 100644
+--- a/net/9p/protocol.c
++++ b/net/9p/protocol.c
+@@ -570,9 +570,10 @@ int p9stat_read(struct p9_client *clnt, char *buf, int len, struct p9_wstat *st)
+ 	if (ret) {
+ 		p9_debug(P9_DEBUG_9P, "<<< p9stat_read failed: %d\n", ret);
+ 		trace_9p_protocol_dump(clnt, &fake_pdu);
++		return ret;
  	}
  
--	pr_info("attempting bad ro_after_init write at %p\n", ptr);
-+	pr_info("attempting bad ro_after_init write at %px\n", ptr);
- 	*ptr ^= 0xabcd1234;
+-	return ret;
++	return fake_pdu.offset;
  }
+ EXPORT_SYMBOL(p9stat_read);
  
-@@ -112,7 +112,7 @@ void lkdtm_WRITE_KERN(void)
- 	size = (unsigned long)do_overwritten - (unsigned long)do_nothing;
- 	ptr = (unsigned char *)do_overwritten;
- 
--	pr_info("attempting bad %zu byte write at %p\n", size, ptr);
-+	pr_info("attempting bad %zu byte write at %px\n", size, ptr);
- 	memcpy(ptr, (unsigned char *)do_nothing, size);
- 	flush_icache_range((unsigned long)ptr, (unsigned long)(ptr + size));
- 
-@@ -185,11 +185,11 @@ void lkdtm_ACCESS_USERSPACE(void)
- 
- 	ptr = (unsigned long *)user_addr;
- 
--	pr_info("attempting bad read at %p\n", ptr);
-+	pr_info("attempting bad read at %px\n", ptr);
- 	tmp = *ptr;
- 	tmp += 0xc0dec0de;
- 
--	pr_info("attempting bad write at %p\n", ptr);
-+	pr_info("attempting bad write at %px\n", ptr);
- 	*ptr = tmp;
- 
- 	vm_munmap(user_addr, PAGE_SIZE);
 -- 
 2.19.1
 
