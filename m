@@ -2,127 +2,113 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620FCC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA7AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31793218D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD91C218D0
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:39:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="SBAbLJ+y"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gHvSRmbT";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EQqPvFDb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbfC3QjB (ORCPT
+        id S1730814AbfC3QjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 12:39:01 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45902 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730395AbfC3Qi7 (ORCPT
+        Sat, 30 Mar 2019 12:39:04 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46840 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730395AbfC3QjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 12:38:59 -0400
-Received: by mail-ed1-f65.google.com with SMTP id m16so4560071edd.12
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 09:38:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jjm0qai9ZYPiT6TdWCxaI36M0QNMMCcOH+KsLm1g4yk=;
-        b=SBAbLJ+yrT3ryIK8UHLD8e8YOy5e0RUB5qoIpTlBgTCKRnKhaWgXL1opeOGSFccP1+
-         Rr+c5AGBH96NUOy+P5hPzupqRZwaBGNsPgk6Gemwv1DeT7woLhWA0211e0SyjGBunmkv
-         B/LcHtd96AYr1f6m06qZau9xqoc45UoeqNJXrGWSc4cGFsNZCOLtdIVSHTMqNo0IlWLf
-         MZrBcH6oFRTw2XgEA0Icu5Kp7f+v88CaXuKK4rKNvr2wI8hFiasqtIW6OIJaKD2t/MNd
-         VqkMLvPNkrTb7JhylLzuHWXb9zFFQOLaqfYkH3FewhL0ID/zUpmTScMvrauYoZ5BznXB
-         L2Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jjm0qai9ZYPiT6TdWCxaI36M0QNMMCcOH+KsLm1g4yk=;
-        b=Ex/11anN9l2ozGn/BCiR8tIQ1Ihx7bm/hPQCCpdOzwpPdPVhQ5c3XOrY+seqK3feOf
-         LBcovnYleojLcKKshJzgTk5289hhvvNa8JawIcPYnPy5sO/lDdbGAgbDjcsOU24Ib7Qk
-         c0nm7nMVcfxZoW+6UQ9NY/rfjzFjMh0IDZNZO+H+oHiRYiWadyCkgFRQxqDGG4uIVF03
-         Kr1kGlameHqAIYyLItZUC9bn1yaP7M/O3FqXg759ponAfCYt9JHeiiNlIrDgWfWq44lZ
-         9efHSLZo/66Og53bSa6LWmzcoohFeFQHSsWiOTb4kz5w8VFOpBalWjoOPbdzBv//AVN4
-         wnxA==
-X-Gm-Message-State: APjAAAW4zqa529xhdGJ18gvxO/x4gZ/O/2y5dwHdCq3q8wx6Fj+3EjUu
-        Tu5x3VV6HaUke2dmXHJonqgYFqR69Pc=
-X-Google-Smtp-Source: APXvYqwjwbGrlXkFfHKuLi9tVi+NPei06uIdq8rzwFfzs86tuXCrs4S8TxJXuTGg+WQUNI0MlV81qw==
-X-Received: by 2002:a50:97d0:: with SMTP id f16mr34880013edb.287.1553963937408;
-        Sat, 30 Mar 2019 09:38:57 -0700 (PDT)
-Received: from brauner.io ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
-        by smtp.gmail.com with ESMTPSA id z35sm1613912edd.81.2019.03.30.09.38.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 30 Mar 2019 09:38:56 -0700 (PDT)
-Date:   Sat, 30 Mar 2019 17:38:55 +0100
-From:   Christian Brauner <christian@brauner.io>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
-Message-ID: <20190330163854.t67m2h6m3hmshqtg@brauner.io>
-References: <20190329155425.26059-1-christian@brauner.io>
- <CAHk-=wjq4dTPcz-qsvhpm5F42SDHCoqEWv1V=rs_kt6MC=ZThA@mail.gmail.com>
- <BCD99947-5F55-4116-8F74-D6832E50340B@brauner.io>
- <CAHk-=whcA0kAWGqet9oJdyttjhP7J4PcU2Ly=n_Qyo6rMJNxRg@mail.gmail.com>
- <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com>
+        Sat, 30 Mar 2019 12:39:02 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8077260A50; Sat, 30 Mar 2019 16:39:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553963941;
+        bh=Co9dNLzvCqN5cyB9tc1+ZDc3Ab1HcLsdrQHHP69FeeM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=gHvSRmbToflNSNZOkfQVoDERP/DllCZ474t54q2WyaZ/53P8zwp1yvzAvUfQNUS1T
+         MA85Wav2zV28OClNpsqKFtgOcu3DLGNVN9L2vHyGJe34eXVeJh5IuK/QwrlMec8OhP
+         s+LHZ4+oxMipeMg+InTOsNvQGOJslIAV3xL1bYNc=
+Received: from [10.79.169.97] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2C9FF60736;
+        Sat, 30 Mar 2019 16:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553963940;
+        bh=Co9dNLzvCqN5cyB9tc1+ZDc3Ab1HcLsdrQHHP69FeeM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EQqPvFDbc/L3TZIpQgHHFD5TdMdd/N9kveUekqRgtXANF8thDIcF2MUSzkr2jrSWr
+         wx77Dd+VucrkEvqlMAqs1yc5WZnepBHc3xYlJo8raI0OMLdybE3OG9f3/RzGSQ91J8
+         WtPw6kLCHyKi2QV74gcKBIeJGYtTaOiCyki7V+JY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2C9FF60736
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] PCI: rockchip: fix bitwise operations on status and
+ ROCKCHIP_PCIE_EP_CMD_STATUS_IS
+To:     Colin King <colin.king@canonical.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shawn Lin <shawn.lin@rock-chips.com>
+References: <20190330150910.9389-1-colin.king@canonical.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <ae010bdd-b65a-fa4f-e364-bf0432555f6b@codeaurora.org>
+Date:   Sat, 30 Mar 2019 22:08:45 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190330150910.9389-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 09:34:02AM -0700, Daniel Colascione wrote:
-> On Sat, Mar 30, 2019 at 9:24 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Sat, Mar 30, 2019 at 9:19 AM Christian Brauner <christian@brauner.io> wrote:
-> > >
-> > > From pure API perspective that's all I care about: independence of procfs.
-> > > Once we have pidfd_open() we can cleanly signal threads etc.
-> >
-> > But "independence from procfs" means that you damn well don't then do
-> > "oh, now I have a pidfd, I want to turn it into a /proc fd and then
-> > munge around there".
-> >
-> > So I'm literally saying that it had better really *be* independent
-> > from /proc. It is the standalone version, but it's most definitely
-> > also the version that doesn't then give you secret access to /proc.
-> 
-> Just to be clear, I'm not proposing granting secret access to procfs,
-> and as far as I can see, nobody else is either. We've been talking
-> about making it easier to avoid races when you happen to want a pidfd
-> and a procfs fd that point to the same process, not granting access
-> that you didn't have before. If you'd rather not connect procfs and
-> pidfds, we can take this functionality off the table.
 
-This is dead! Nothing like this will make it through this tree. I have
-no intention of endangering pidfd_send_signal().
+On 3/30/2019 8:39 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Currently the bitwise operations on the u16 variable 'status' with
+> the setting ROCKCHIP_PCIE_EP_CMD_STATUS_IS are incorrect because
+> ROCKCHIP_PCIE_EP_CMD_STATUS_IS is 1UL<<19 which is wider than the
+> u16 variable.  Fix this by making status a u32.  (Not tested).
+>
+> Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   drivers/pci/controller/pcie-rockchip-ep.c | 2 +-
 
-Christian
+
+Looks valid to me.
+
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+Cheers,
+-Mukesh
+
+
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> index a5d799e2dff2..d743b0a48988 100644
+> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> @@ -350,7 +350,7 @@ static void rockchip_pcie_ep_assert_intx(struct rockchip_pcie_ep *ep, u8 fn,
+>   	struct rockchip_pcie *rockchip = &ep->rockchip;
+>   	u32 r = ep->max_regions - 1;
+>   	u32 offset;
+> -	u16 status;
+> +	u32 status;
+>   	u8 msg_code;
+>   
+>   	if (unlikely(ep->irq_pci_addr != ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR ||
