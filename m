@@ -2,96 +2,142 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3972C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4806C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBB6218A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BB9E217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:01:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L9vGwET7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730708AbfC3MA3 (ORCPT
+        id S1730722AbfC3MBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 08:00:29 -0400
-Received: from nov-007-i650.relay.mailchannels.net ([46.232.183.204]:40768
-        "EHLO nov-007-i650.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730384AbfC3MA2 (ORCPT
+        Sat, 30 Mar 2019 08:01:45 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35303 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730384AbfC3MBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 08:00:28 -0400
-X-Greylist: delayed 370 seconds by postgrey-1.27 at vger.kernel.org; Sat, 30 Mar 2019 08:00:26 EDT
-X-Sender-Id: novatrend|x-authuser|juerg@bitron.ch
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 8D671BE0CA3;
-        Sat, 30 Mar 2019 11:54:12 +0000 (UTC)
-Received: from srv17.tophost.ch (swiss-ingress-1.ch.mailchannels.com [46.232.183.5])
-        by relay.mailchannels.net (Postfix) with ESMTPA id 68AC2BE0C60;
-        Sat, 30 Mar 2019 11:54:03 +0000 (UTC)
-X-Sender-Id: novatrend|x-authuser|juerg@bitron.ch
-Received: from srv17.tophost.ch (srv17.tophost.ch [193.33.128.155])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.15.2);
-        Sat, 30 Mar 2019 11:54:12 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: novatrend|x-authuser|juerg@bitron.ch
-X-MailChannels-Auth-Id: novatrend
-X-Trade-Continue: 27f30e331c53dcfd_1553946852120_2575866182
-X-MC-Loop-Signature: 1553946852120:1503120581
-X-MC-Ingress-Time: 1553946852119
-Received: from [80.219.231.201] (port=47868 helo=jzen.bitron.ch)
-        by srv17.tophost.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.91)
-        (envelope-from <j@bitron.ch>)
-        id 1hACYg-0004VR-L1; Sat, 30 Mar 2019 12:53:58 +0100
-Message-ID: <f0d590b96b7d11ae21a9a06040b8ffa85fa74e2a.camel@bitron.ch>
-Subject: Re: [PATCH v2 2/5] pid: add pidfd_open()
-From:   =?ISO-8859-1?Q?J=FCrg?= Billeter <j@bitron.ch>
-To:     Christian Brauner <christian@brauner.io>, jannh@google.com,
-        luto@kernel.org, dhowells@redhat.com, serge@hallyn.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     arnd@arndb.de, ebiederm@xmission.com, khlebnikov@yandex-team.ru,
-        keescook@chromium.org, adobriyan@gmail.com, tglx@linutronix.de,
-        mtk.manpages@gmail.com, bl0pbl33p@gmail.com, ldv@altlinux.org,
-        akpm@linux-foundation.org, oleg@redhat.com,
-        nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
-        viro@zeniv.linux.org.uk, joel@joelfernandes.org, dancol@google.com
-Date:   Sat, 30 Mar 2019 12:53:57 +0100
-In-Reply-To: <20190329155425.26059-3-christian@brauner.io>
-References: <20190329155425.26059-1-christian@brauner.io>
-         <20190329155425.26059-3-christian@brauner.io>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
+        Sat, 30 Mar 2019 08:01:44 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s39so4261021edb.2;
+        Sat, 30 Mar 2019 05:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nP4MXbiHp2m8P5mBk8HuUBMOHGAhobONFf01lBSeFAo=;
+        b=L9vGwET764mV0cl2gi9NGrFTVHQRZIQphvfIi7NkURyLcvo2f4FihNU2BaQt8sEeLj
+         uhgP8FKbVGeYJc8vYRC1kgCAvNOM/TffWt4NpWoMbdEocCnD0QsMHmT5vQnTO9gnKEsG
+         +5JVaMUv4OGBDjsXAZc915Pot4vhF/lVyZULxqC2U4djTJ+fZDLIQCP1aY7LrlnQMoRE
+         20A0tl8AHk9+KxQf2UAQn26k5r2Y6/R7P7Sew60z3aJ0lximEE4BjR8Xju5XIBh6XkH4
+         w9zRt50iGtPYsc3C3IbQiNYhAk89AtdVTqo+MDlEmrI085D1L4xGmCk9Wj18hiX/0w0o
+         Ds1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nP4MXbiHp2m8P5mBk8HuUBMOHGAhobONFf01lBSeFAo=;
+        b=P5NF6CwILhNMZ8piqzuGE5LnyJSiAM8Ll6a2Qs1lH1lXyuj5O8dfBz3iSROMMLf7eO
+         i718wXOuNK3LjcQlSHL5z2JKk4uVNeKLzatgLWNlIzxLcu1cVDMcYGVDRdjEKQ3uAzYq
+         ORaJno68/DUlszR3m5F7FaWWH4Nt6YYFshxTlQmpo6at2vMgVfQRS4wCOK0iyYach9u7
+         qaCqi49wHmxWAmGXlMqdug8gBdHBHuudhMA5FVPochkAz/VzBelwRuWjaiIwRLLkdn+o
+         6zPi49ZOkzjmg8Xk2eAkfKgRxPjMQ5fn8TA+CiRzXqbTOYE1wsPNHdSrQWfR3vvCT4V6
+         ZKqQ==
+X-Gm-Message-State: APjAAAU8e8KRtbVDYRcoWzlZDweH/yvJcAm9/K2tDMgiyC0Xtynuv7rP
+        f9bK0kYu2WRnom+axINa4dg=
+X-Google-Smtp-Source: APXvYqyEDTgMBor9CvvuNZfod51SbK7jVWWtly1xRfRsxcoKlm7lxNqs+yf6oGfMlVXgrszINcplCg==
+X-Received: by 2002:a50:ca0d:: with SMTP id d13mr15121011edi.72.1553947302779;
+        Sat, 30 Mar 2019 05:01:42 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:4079:2f00:3464:9f03:ecff:1b10])
+        by smtp.gmail.com with ESMTPSA id v5sm1418105edr.2.2019.03.30.05.01.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 30 Mar 2019 05:01:42 -0700 (PDT)
+Date:   Sat, 30 Mar 2019 13:01:41 +0100
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, mingo@redhat.com,
+        roopa@cumulusnetworks.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, linux-sparse@vger.kernel.org
+Subject: Re: [PATCH] trace: events: fix  error directive in argument list
+Message-ID: <20190330120139.ps4u7j6w4snnhkkb@ltop.local>
+References: <20190325195303.GA20629@hari-Inspiron-1545>
+ <20190329232215.itsvo3jj3lu4gr7k@ltop.local>
+ <20190330110747.GA3461@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AuthUser: juerg@bitron.ch
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190330110747.GA3461@hari-Inspiron-1545>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-29 at 16:54 +0100, Christian Brauner wrote:
-> diff --git a/include/uapi/linux/wait.h b/include/uapi/linux/wait.h
-> index ac49a220cf2a..d6c7c0701997 100644
-> --- a/include/uapi/linux/wait.h
-> +++ b/include/uapi/linux/wait.h
-> @@ -18,5 +18,7 @@
->  #define P_PID		1
->  #define P_PGID		2
->  
-> +/* Get a file descriptor for /proc/<pid> of the corresponding pidfd
-> */
-> +#define PIDFD_GET_PROCFD _IOR('p', 1, int)
->  
->  #endif /* _UAPI_LINUX_WAIT_H */
+On Sat, Mar 30, 2019 at 04:37:48PM +0530, Hariprasad Kelam wrote:
+> On Sat, Mar 30, 2019 at 12:22:17AM +0100, Luc Van Oostenryck wrote:
+> > On Tue, Mar 26, 2019 at 01:23:03AM +0530, Hariprasad Kelam wrote:
+> > > This patch fixes below spare errors.
+> > > 
+> > > Sparse error:
+> > > make C=2 CF=-D__CHECK_ENDIAN__ M=net/core
+> > > ./include/trace/events/neigh.h:73:1: error: directive in argument list
+> > > ./include/trace/events/neigh.h:78:1: error: directive in argument list
+> > > ./include/trace/events/neigh.h:150:1: error: directive in argument list
+> > > ./include/trace/events/neigh.h:155:1: error: directive in argument list
+> > > 
+> > > Changes below two lines to signle line to avoid sparse error
+> > >  #if IS_ENABLED(CONFIG_IPV6)
+> > >                if (n->tbl->family == AF_INET6) {
+> > > to if (IS_ENABLED(CONFIG_IPV6) && n->tbl->family == AF_INET6)
+> > > 
+> > > and removes reassigning pin6 pointer when IPV6 is enabled
+> > > 
+> > > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> > > ---
+> > >  include/trace/events/neigh.h | 19 +++++--------------
+> > >  1 file changed, 5 insertions(+), 14 deletions(-)
+> > > 
+> > > diff --git a/include/trace/events/neigh.h b/include/trace/events/neigh.h
+> > > index 0bdb085..6e310ea 100644
+> > > --- a/include/trace/events/neigh.h
+> > > +++ b/include/trace/events/neigh.h
+> > > @@ -70,15 +70,11 @@ TRACE_EVENT(neigh_update,
+> > >  		else
+> > >  			*p32 = 0;
+> > >  
+> > > -#if IS_ENABLED(CONFIG_IPV6)
+> > > -		if (n->tbl->family == AF_INET6) {
+> > > -			pin6 = (struct in6_addr *)__entry->primary_key6;
+> > > +		if (IS_ENABLED(CONFIG_IPV6) && n->tbl->family == AF_INET6)
+> > >  			*pin6 = *(struct in6_addr *)n->primary_key;
+> > 
+> > Why removing the line wheer pin6 is assigned?
+> > IMO, the patch should be:
+> > -#if IS_ENABLED(CONFIG_IPV6)
+> > -		if (n->tbl->family == AF_INET6) {
+> > +		if (IS_ENABLED(CONFIG_IPV6) && n->tbl->family == AF_INET6)
+> >  			pin6 = (struct in6_addr *)__entry->primary_key6;
+> >   			*pin6 = *(struct in6_addr *)n->primary_key;
+> > 
+> > > @@ -147,15 +143,10 @@ DECLARE_EVENT_CLASS(neigh__update,
+> > >  		else
+> > >  			*p32 = 0;
+> > >  
+> > > -#if IS_ENABLED(CONFIG_IPV6)
+> > > -		if (n->tbl->family == AF_INET6) {
+> > > -			pin6 = (struct in6_addr *)__entry->primary_key6;
+> >
+> pin6  is already assigned.
 
-This is missing an entry in Documentation/ioctl/ioctl-number.txt and is
-actually conflicting with existing entries.
+OK, I see. IMO, it would be better to have 2 patches for this:
+one for the redundant assignment to pin6 and anotther one for
+the IS_ENABLED() change but feel free, if needed, to add my
 
-However, I'd actually prefer a syscall to allow strict whitelisting via
-seccomp and avoid the other ioctl disadvantages that Daniel has already
-mentioned.
+  Reviewed-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-Cheers,
-Jürg
 
+-- Luc
