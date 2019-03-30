@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-15.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A739CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25271C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2812184D
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61AF218AE
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553936610;
-	bh=HC/LzwoMId+8km5QVzkQX3m8VSnNWD1+PF8L9bwGKvQ=;
+	s=default; t=1553936646;
+	bh=9XpoHmj+dDePqF7x6cgjJlgDCldztdWkSvqcNO4PSQU=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=XZMhJnC/VzwSSiW6LOce+KAAOFA84OQSmNTKPee1EEZfbModgH3cVGgSfkAQOc9oG
-	 ca2f/+lcms2EkRv2h+VcWDslEPH5I7GKwXt/KSzU7/GvVxYGhQE5+ZziYZU89Ovy56
-	 /rCHJ6e9j9akF4WK50Ghu9SsgEQOv2XlRfSEjEs4=
+	b=QlTn9Hx3Y7RDt2NHEX6j640bqmVtXeMBrIokGET+0xgYqfO71Uvlada/83BkT9pIn
+	 i1SbiXHz/t66tNa2UrAEl1MOO9l6ja3HiSTmNLsxkHDe0LwalEz/fG04BIckCDJ5Of
+	 PpNWFQLCJtd+qsNhggUy7EiyLXWMpLjjuzLdm6zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730445AbfC3JD3 (ORCPT
+        id S1730500AbfC3JEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 05:03:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47010 "EHLO mail.kernel.org"
+        Sat, 30 Mar 2019 05:04:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730372AbfC3JD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 05:03:28 -0400
+        id S1730462AbfC3JEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 05:04:04 -0400
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95FBB2184D;
-        Sat, 30 Mar 2019 09:03:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEE082184D;
+        Sat, 30 Mar 2019 09:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553936607;
-        bh=HC/LzwoMId+8km5QVzkQX3m8VSnNWD1+PF8L9bwGKvQ=;
+        s=default; t=1553936643;
+        bh=9XpoHmj+dDePqF7x6cgjJlgDCldztdWkSvqcNO4PSQU=;
         h=Date:From:To:Cc:Subject:From;
-        b=BsCl9ZakcD4WsuVoid/9JQptYlOFRJVhSn9zgiBJN3x7U5elcphO+20R3UpTYfjrh
-         S9RWIhFVY0u/LscjyttGYTw7WeQbpeXZZ9I8RKrW0zxIamWBwbVi4jG7IZiCQoHeCm
-         2eWr3P2i3y2PGG9JtDrZeWZSpJu8s8CPwZYSkF2M=
-Date:   Sat, 30 Mar 2019 10:03:23 +0100
+        b=BgJvISHUxGi4A3gFwbIp34uZu0dcE3MAfbMj5EpS74oHC2XbJBWwwmjJsfky8eaU5
+         r3Y/iuesttZ2oncbdZpsfvEO39Zjg9bWZ9LV1Z0GPGykcdow/frd9DH3deoJ2QKtMh
+         CWgp4cJSJTk8IrEcD9/MVuPGG0BCXg2y80a1BHgk=
+Date:   Sat, 30 Mar 2019 10:04:00 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [GIT PULL] USB fixes for 5.1-rc3
-Message-ID: <20190330090323.GA5549@kroah.com>
+Cc:     Jiri Slaby <jslaby@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [GIT PULL] TTY/Serial fixes for 5.1-rc3
+Message-ID: <20190330090400.GA5598@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 User-Agent: Mutt/1.11.4 (2019-03-13)
@@ -62,112 +64,68 @@ The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.1-rc3
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.1-rc3
 
-for you to fetch changes up to d65d25b84f1f19cc35819a733576cafc54adc275:
+for you to fetch changes up to f4e68d58cf2b20a581759bbc7228052534652673:
 
-  Merge tag 'usb-serial-5.1-rc3' of https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial into usb-linus (2019-03-29 15:31:16 +0100)
+  tty: fix NULL pointer issue when tty_port ops is not set (2019-03-28 01:21:21 +0900)
 
 ----------------------------------------------------------------
-USB fixes for 5.1-rc3
+TTY/Serial fixes for 5.1-rc3
 
-Here are some small USB fixes for 5.1-rc3.
+Here are some small tty and serial driver fixes for 5.1-rc3.
 
-Nothing major at all here, just a small collection of fixes for reported
-issues, and potential problems with error handling paths.  Also a few
-new device ids, as normal.
+Nothing major here, just a number of potential problems fixes for error
+handling paths, as well as some other minor bugfixes for reported issues
+with 5.1-rc1.
 
 All of these have been in linux-next with no reported issues.
 
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ----------------------------------------------------------------
-Aditya Pakki (1):
-      usb: usb251xb: fix to avoid potential NULL pointer dereference
+Aditya Pakki (2):
+      serial: mvebu-uart: Fix to avoid a potential NULL pointer dereference
+      serial: max310x: Fix to avoid potential NULL pointer dereference
 
-Arnd Bergmann (1):
-      usb: mtu3: fix EXTCON dependency
+Erin Lo (1):
+      dt-bindings: serial: Add compatible for Mediatek MT8183
 
-Bjørn Mork (1):
-      USB: serial: option: add Olicard 600
+Fabien Dessenne (1):
+      tty: fix NULL pointer issue when tty_port ops is not set
 
-Chen-Yu Tsai (2):
-      phy: sun4i-usb: Support set_mode to USB_HOST for non-OTG PHYs
-      usb: core: Try generic PHY_MODE_USB_HOST if usb_phy_roothub_set_mode fails
+Hoan Nguyen An (1):
+      serial: sh-sci: Fix setting SCSCR_TIE while transferring data
 
-Fabrizio Castro (1):
-      usb: common: Consider only available nodes for dr_mode
+Kangjie Lu (2):
+      tty: atmel_serial: fix a potential NULL pointer dereference
+      tty: mxs-auart: fix a potential NULL pointer dereference
 
-Felipe Balbi (1):
-      usb: dwc3: pci: add support for Comet Lake PCH ID
+Mao Wenan (1):
+      sc16is7xx: missing unregister/delete driver on error in sc16is7xx_init()
 
-George McCollister (1):
-      USB: serial: ftdi_sio: add additional NovaTech products
+Nathan Chancellor (1):
+      tty: serial: qcom_geni_serial: Initialize baud in qcom_geni_console_setup
 
-Greg Kroah-Hartman (3):
-      USB: serial: cp210x: add new device id
-      Merge tag 'fixes-for-v5.1-rc2' of git://git.kernel.org/.../balbi/usb into usb-linus
-      Merge tag 'usb-serial-5.1-rc3' of https://git.kernel.org/.../johan/usb-serial into usb-linus
+Petr Å tetiar (1):
+      serial: ar933x_uart: Fix build failure with disabled console
 
-Guido Kiener (3):
-      usb: gadget: net2280: Fix overrun of OUT messages
-      usb: gadget: net2280: Fix net2280_dequeue()
-      usb: gadget: net2272: Fix net2272_dequeue()
+Razvan Stefanescu (2):
+      tty/serial: atmel: Add is_half_duplex helper
+      tty/serial: atmel: RS485 HD w/DMA: enable RX after TX is stopped
 
-Gustavo A. R. Silva (2):
-      usb: typec: Fix unchecked return value
-      usb: usb251xb: Remove unnecessary comparison of unsigned integer with >= 0
+Wentao Wang (1):
+      Disable kgdboc failed by echo space to /sys/module/kgdboc/parameters/kgdboc
 
-Hans de Goede (1):
-      usb: typec: tcpm: Try PD-2.0 if sink does not respond to 3.0 source-caps
-
-Kristian Evensen (1):
-      USB: serial: option: add support for Quectel EM12
-
-Lin Yi (1):
-      USB: serial: mos7720: fix mos_parport refcount imbalance on error path
-
-Mans Rullgard (1):
-      USB: serial: option: set driver_info for SIM5218 and compatibles
-
-Mathias Nyman (3):
-      xhci: Fix port resume done detection for SS ports with LPM enabled
-      usb: xhci: dbc: Don't free all memory with spinlock held
-      xhci: Don't let USB3 ports stuck in polling state prevent suspend
-
-Mukesh Ojha (1):
-      usb: u132-hcd: fix resource leak
-
-Radoslav Gerganov (1):
-      USB: gadget: f_hid: fix deadlock in f_hidg_write()
-
-Romain Izard (1):
-      usb: cdc-acm: fix race during wakeup blocking TX traffic
-
-Yasushi Asano (1):
-      usb: host: xhci-rcar: Add XHCI_TRUST_TX_LENGTH quirk
-
- drivers/phy/allwinner/phy-sun4i-usb.c |  5 ++++-
- drivers/usb/class/cdc-acm.c           |  4 +---
- drivers/usb/common/common.c           |  2 ++
- drivers/usb/core/hcd.c                |  3 +++
- drivers/usb/dwc3/dwc3-pci.c           |  4 ++++
- drivers/usb/gadget/function/f_hid.c   |  6 +++---
- drivers/usb/gadget/udc/net2272.c      |  1 +
- drivers/usb/gadget/udc/net2280.c      |  8 +++-----
- drivers/usb/host/u132-hcd.c           |  3 +++
- drivers/usb/host/xhci-dbgcap.c        |  5 +++--
- drivers/usb/host/xhci-hub.c           | 19 ++++++++++++-------
- drivers/usb/host/xhci-rcar.c          |  1 +
- drivers/usb/host/xhci-ring.c          |  9 ++++++---
- drivers/usb/host/xhci.h               |  8 ++++++++
- drivers/usb/misc/usb251xb.c           |  4 ++--
- drivers/usb/mtu3/Kconfig              |  1 +
- drivers/usb/serial/cp210x.c           |  1 +
- drivers/usb/serial/ftdi_sio.c         |  2 ++
- drivers/usb/serial/ftdi_sio_ids.h     |  4 +++-
- drivers/usb/serial/mos7720.c          |  4 ++--
- drivers/usb/serial/option.c           | 17 ++++++++++++-----
- drivers/usb/typec/tcpm/tcpm.c         | 27 ++++++++++++++++++++++++++-
- drivers/usb/typec/tcpm/wcove.c        |  9 +++++++--
- 23 files changed, 110 insertions(+), 37 deletions(-)
+ .../devicetree/bindings/serial/mtk-uart.txt        |  1 +
+ drivers/tty/serial/ar933x_uart.c                   | 24 ++++------
+ drivers/tty/serial/atmel_serial.c                  | 52 +++++++++++++++-------
+ drivers/tty/serial/kgdboc.c                        |  4 +-
+ drivers/tty/serial/max310x.c                       |  2 +
+ drivers/tty/serial/mvebu-uart.c                    |  3 ++
+ drivers/tty/serial/mxs-auart.c                     |  4 ++
+ drivers/tty/serial/qcom_geni_serial.c              |  2 +-
+ drivers/tty/serial/sc16is7xx.c                     | 12 ++++-
+ drivers/tty/serial/sh-sci.c                        | 12 +----
+ drivers/tty/tty_port.c                             | 10 ++---
+ 11 files changed, 75 insertions(+), 51 deletions(-)
