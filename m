@@ -2,106 +2,80 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C5AC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 05:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C47C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 05:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A9E218A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 05:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JA7eWF6d"
+	by mail.kernel.org (Postfix) with ESMTP id 08171218A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 05:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfC3FNQ (ORCPT
+        id S1726524AbfC3FRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 01:13:16 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:39161 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfC3FNP (ORCPT
+        Sat, 30 Mar 2019 01:17:02 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:53410 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfC3FRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 01:13:15 -0400
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x2U5D8Vg014349;
-        Sat, 30 Mar 2019 14:13:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x2U5D8Vg014349
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553922789;
-        bh=t7TyDUY81lBPi6ENn3MikPu7eYnfN/pWe8GuycbfvAs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JA7eWF6diP8J41HXBJjFbmyQWlvQ5WqOcv0JVAC0CH51mkh6D+wKDBhtKLrzAOX5V
-         8MFOMCoNgbLSCW7sBruUjsTDbcy8a28fzeqdO/4j8IgJdz6j24i1Ii6SaMDkFpLPpP
-         XbkgzKHz7qZzdrpiMv56U8uxd/3bSp21GSLOYQQkx9cAtwu6Xj3vE6ZHPpbTJERLJn
-         Z6yz/wv3JVWhpQhgKYG7Qg02L6UcAvLaeSE7WxzR9cL6p271S1PAZ/7alVmzyJBIWK
-         g+D3jGn7ntH3Ng3Kp5fkb+oA3A36S+dBS0sjXUCXLiV/DSiUDD2tCRICIfeaU99WY5
-         ktHve3GoAcLeA==
-X-Nifty-SrcIP: [209.85.217.42]
-Received: by mail-vs1-f42.google.com with SMTP id j184so2537111vsd.11;
-        Fri, 29 Mar 2019 22:13:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAW3K6dzgzMt7MacT5lf/6Z/s92OMtR1eqMXHppMdpjgi4QiIyWp
-        ehH1lGjqicnX7bIaZaxrC4Yk8hogslQRxAcqhmM=
-X-Google-Smtp-Source: APXvYqye5EL2t2ErpQ2MTBTuMK/Evt8RcNfFRnFt0/CUfflSc96pjFkhLb7cZPi4VVDhavei/DJGRCUO4MEcT1Qwkzo=
-X-Received: by 2002:a67:7a43:: with SMTP id v64mr32268528vsc.54.1553922788056;
- Fri, 29 Mar 2019 22:13:08 -0700 (PDT)
+        Sat, 30 Mar 2019 01:17:02 -0400
+Received: by mail-it1-f197.google.com with SMTP id 190so4151463itv.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2019 22:17:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=eQHRr9Tl3iWA/tAC3rOoFC/Acid0hZi2e+ZYmjdnEhc=;
+        b=KsddFyhnu27PytVCKTYRF6sBj5womwuSDPWP+1X626n95vs209sAjx17eHSi1pOCjQ
+         KO0LnQjUqpvhM9/2N+wG3cJdjdij90XIlO5vsOQ3cMwlMA4VWOBAmlpP2HbeihJMb4Kq
+         czQqCs13UBLlDqCo2LlCjrlTUEBiYB32GM1dRzkSxvsokEUpMh9qOKb10AIbpQqSc2nN
+         UI6Tbs1Iy/TgkrvvXHC9LkDNAEELpMSBL0xLYVZh9iceLwita4qvJfwJBIR36WBLYjmV
+         iUsu+dJAC5vcfmKHZPTQJfDInwE92qWwt+okM0oAwy0Y69tFeUL0zN9TqdUCxzpqWkIc
+         2vSw==
+X-Gm-Message-State: APjAAAXnYHZCo/5sjBu+/PXPVZ1Z/yltfC9r80EOb1qd0scdD7X7Frd1
+        d4PTkz4k3+OZxyziL8AClK41S6OHQpIc6VMVeGfpEXP/L4Fo
+X-Google-Smtp-Source: APXvYqyUrGXnxeyNx/Ny2a1mSn2QPuivugZT22c1VykyKiGmUbYWAMvWZ03eHH9ErtA2Rbj0Fwv/tbxEEPmEbrZMTMBCcb+/HLRC
 MIME-Version: 1.0
-References: <1553581936-6476-1-git-send-email-yamada.masahiro@socionext.com>
-In-Reply-To: <1553581936-6476-1-git-send-email-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 30 Mar 2019 14:12:32 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARSXgBOPiSNm6mByTWhijTaxq=Omo5FsEju-_Fbe0uLKw@mail.gmail.com>
-Message-ID: <CAK7LNARSXgBOPiSNm6mByTWhijTaxq=Omo5FsEju-_Fbe0uLKw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: fix warning "overriding recipe for target 'Makefile'"
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a02:4086:: with SMTP id n128mr6036484jaa.19.1553923021525;
+ Fri, 29 Mar 2019 22:17:01 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 22:17:01 -0700
+In-Reply-To: <00000000000006602605752ffa1a@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b4d871058548e5c8@google.com>
+Subject: Re: general protection fault in tcp_cleanup_ulp
+From:   syzbot <syzbot+0b3ccd4f62dac2cf3a7d@syzkaller.appspotmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        edumazet@google.com, john.fastabend@gmail.com,
+        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 3:46 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> If you do "make Makefile" with GNU Make 3.x, the following warning
-> is displayed:
->
->   $ make Makefile
->   Makefile:165: warning: overriding recipe for target 'Makefile'
->   Makefile:51: warning: ignoring old recipe for target 'Makefile'
->   make[1]: Nothing to be done for 'Makefile'.
->   make: Nothing to be done for 'Makefile'.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+syzbot has bisected this bug to:
 
-Applied to linux-kbuild.
+commit 90545cdc3f2b2ea700e24335610cd181e73756da
+Author: Daniel Borkmann <daniel@iogearbox.net>
+Date:   Thu Aug 16 19:49:07 2018 +0000
 
+     tcp, ulp: fix leftover icsk_ulp_ops preventing sock from reattach
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15dab897200000
+start commit:   28619527 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       bpf
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17dab897200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13dab897200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8f59875069d721b6
+dashboard link: https://syzkaller.appspot.com/bug?extid=0b3ccd4f62dac2cf3a7d
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13537269400000
 
->
->  Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Makefile b/Makefile
-> index 70fc778..1b361bd 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -161,7 +161,7 @@ ifeq ($(need-sub-make),1)
->
->  PHONY += $(MAKECMDGOALS) sub-make
->
-> -$(filter-out _all sub-make $(CURDIR)/Makefile, $(MAKECMDGOALS)) _all: sub-make
-> +$(filter-out _all sub-make $(lastword $(MAKEFILE_LIST)), $(MAKECMDGOALS)) _all: sub-make
->         @:
->
->  # Invoke a second make in the output directory, passing relevant variables
-> --
-> 2.7.4
->
+Reported-by: syzbot+0b3ccd4f62dac2cf3a7d@syzkaller.appspotmail.com
+Fixes: 90545cdc3f2b ("tcp, ulp: fix leftover icsk_ulp_ops preventing sock  
+from reattach")
 
-
--- 
-Best Regards
-Masahiro Yamada
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
