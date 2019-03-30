@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E0CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F32C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA076218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0DB8206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907689;
-	bh=hgghZ/hARqcHF+1rolDJTOdBDdiMsLzOH+LL906o+NI=;
+	s=default; t=1553907695;
+	bh=DMGADTDGE/aozbhdPAAWR6ULxxXG/YRWcslZIjbXqJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b/TtSEhqsnjAyom1OlIb1q9fno+Z7Lf5KetNWAKpkJAmuCFm4IxKFrHnrlXvg6ok9
-	 G3muCGUIxuwdhbutxlDu/Odbh3g+BK4vVcO9z+lw1eTEdhhWYnD6GhYr2I1gL6SUs3
-	 tufmpcAa6maS+i8o5F5aymKLFrKDMH8x1Ni85uo0=
+	b=Uk6BJNI8JIHEwQVb0XPA2XZMH1kKPYtIa+KuzHCXHGCJ0NO6ORVz0HQNJUPcJXYqS
+	 KiuLwC0Si0xg7RO05U3iyS1ZVVDUDX0KbImQilNzGLoG9l+bB/xIM7jqWaPC8TBCkQ
+	 kbugxI1ZUZW1ccsbMoAoS5NepgBX+xpxPMbnV7js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732031AbfC3BB2 (ORCPT
+        id S1732065AbfC3BBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:01:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35694 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:01:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731900AbfC3A4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:56:14 -0400
+        id S1731418AbfC3A4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:56:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8092B218AC;
-        Sat, 30 Mar 2019 00:56:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 296D72064A;
+        Sat, 30 Mar 2019 00:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907373;
-        bh=hgghZ/hARqcHF+1rolDJTOdBDdiMsLzOH+LL906o+NI=;
+        s=default; t=1553907370;
+        bh=DMGADTDGE/aozbhdPAAWR6ULxxXG/YRWcslZIjbXqJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iIEihrd25Vwg6TjMI5QvaV8HewcuWQgma/98zgrVRdrC3NksYnc90PwSai+B1SKgq
-         3LkyEd6ytJw8QawKGp+9MxlTLkO4mKlfFi9Bq9sQNs8dbfimTz/TaEW76rLr1fFdzl
-         jdW1pW1v/WPEQTmo3LRG1VOIpTCThEvkiE3LItys=
+        b=gK+PjGgB3gRt7XkEDBUeL8p0HR3E05SYjNmxllQJae+F/NbYN6bSWA6FffJR4iwW7
+         azB1ovEdBzj1HYa8jXgWHDiTvBxilJG6YzTusI2BjFJ4ycvJw0QN7q80GZdznP3JE+
+         MbsWiaobN56fJNCGWXHlXNsWIXrM2A1Wxg+D0LqI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Nisha Aram <nisha.aram@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 10/27] thermal/int340x_thermal: Add additional UUIDs
-Date:   Fri, 29 Mar 2019 20:55:36 -0400
-Message-Id: <20190330005555.28087-10-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 09/27] ALSA: opl3: fix mismatch between snd_opl3_drum_switch definition and declaration
+Date:   Fri, 29 Mar 2019 20:55:35 -0400
+Message-Id: <20190330005555.28087-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005555.28087-1-sashal@kernel.org>
 References: <20190330005555.28087-1-sashal@kernel.org>
@@ -61,52 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <matthewgarrett@google.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 16fc8eca1975358111dbd7ce65e4ce42d1a848fb ]
+[ Upstream commit b4748e7ab731e436cf5db4786358ada5dd2db6dd ]
 
-Add more supported DPTF policies than the driver currently exposes.
+The function snd_opl3_drum_switch declaration in the header file
+has the order of the two arguments on_off and vel swapped when
+compared to the definition arguments of vel and on_off.  Fix this
+by swapping them around to match the definition.
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Nisha Aram <nisha.aram@intel.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+This error predates the git history, so no idea when this error
+was introduced.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/int340x_thermal/int3400_thermal.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ sound/drivers/opl3/opl3_voice.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
-index 5836e5554433..0beed2899163 100644
---- a/drivers/thermal/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
-@@ -20,6 +20,13 @@ enum int3400_thermal_uuid {
- 	INT3400_THERMAL_PASSIVE_1,
- 	INT3400_THERMAL_ACTIVE,
- 	INT3400_THERMAL_CRITICAL,
-+	INT3400_THERMAL_ADAPTIVE_PERFORMANCE,
-+	INT3400_THERMAL_EMERGENCY_CALL_MODE,
-+	INT3400_THERMAL_PASSIVE_2,
-+	INT3400_THERMAL_POWER_BOSS,
-+	INT3400_THERMAL_VIRTUAL_SENSOR,
-+	INT3400_THERMAL_COOLING_MODE,
-+	INT3400_THERMAL_HARDWARE_DUTY_CYCLING,
- 	INT3400_THERMAL_MAXIMUM_UUID,
- };
+diff --git a/sound/drivers/opl3/opl3_voice.h b/sound/drivers/opl3/opl3_voice.h
+index a371c075ac87..e26702559f61 100644
+--- a/sound/drivers/opl3/opl3_voice.h
++++ b/sound/drivers/opl3/opl3_voice.h
+@@ -41,7 +41,7 @@ void snd_opl3_timer_func(unsigned long data);
  
-@@ -27,6 +34,13 @@ static u8 *int3400_thermal_uuids[INT3400_THERMAL_MAXIMUM_UUID] = {
- 	"42A441D6-AE6A-462b-A84B-4A8CE79027D3",
- 	"3A95C389-E4B8-4629-A526-C52C88626BAE",
- 	"97C68AE7-15FA-499c-B8C9-5DA81D606E0A",
-+	"63BE270F-1C11-48FD-A6F7-3AF253FF3E2D",
-+	"5349962F-71E6-431D-9AE8-0A635B710AEE",
-+	"9E04115A-AE87-4D1C-9500-0F3E340BFE75",
-+	"F5A35014-C209-46A4-993A-EB56DE7530A1",
-+	"6ED722A7-9240-48A5-B479-31EEF723D7CF",
-+	"16CAF1B7-DD38-40ED-B1C1-1B8A1913D531",
-+	"BE84BABF-C4D4-403D-B495-3128FD44dAC1",
- };
+ /* Prototypes for opl3_drums.c */
+ void snd_opl3_load_drums(struct snd_opl3 *opl3);
+-void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int on_off, int vel, struct snd_midi_channel *chan);
++void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int vel, int on_off, struct snd_midi_channel *chan);
  
- struct int3400_thermal_priv {
+ /* Prototypes for opl3_oss.c */
+ #ifdef CONFIG_SND_SEQUENCER_OSS
 -- 
 2.19.1
 
