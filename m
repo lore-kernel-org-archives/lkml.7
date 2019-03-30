@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF61C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A1CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3222184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75246218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907467;
-	bh=KQ4Mhll6Huex1+5ptENFTuvXEMbNp9avBkHTSgvWIB4=;
+	s=default; t=1553907473;
+	bh=sTnlT9fuDAeUB3/iucjyhRAAO8zpsjswbUXbqvyY5QE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pPoTWL7FCniYktEe9RqaTMZ6LSCSSY9jVTsP78kTgd1I/IBKpkGLe6YlXAs4NAPyx
-	 FZ0V0dAcfa5aRef2camV3zwaIZVaAIIsgusKPN+lfLlYUil4tOvSzgDDNjqc1/p176
-	 kpy5OxjMzmvsuZDBotTcnGl/24iGYc9ax6/8afos=
+	b=Zl3NUbBBHxtdnl7Vakl/tNmPaU+5nSqW5iAIGewdkuk47+lTU01vbWf7wG+9VBvl3
+	 7mCZocFTJQ8RAwf9mw3junQhPLSTDg6TphWa9Sa3kwfMmIv/4jnQgg/tMaUtIxqav0
+	 CXYBnzpIeBJoqFwq7Zhuvj7Bo2Cm1M3RmZSezFxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732186AbfC3A5q (ORCPT
+        id S1732210AbfC3A5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:57:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38012 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:57:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731497AbfC3A5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:57:39 -0400
+        id S1732192AbfC3A5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:57:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01F6A206DD;
-        Sat, 30 Mar 2019 00:57:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D2B4217F5;
+        Sat, 30 Mar 2019 00:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907458;
-        bh=KQ4Mhll6Huex1+5ptENFTuvXEMbNp9avBkHTSgvWIB4=;
+        s=default; t=1553907468;
+        bh=sTnlT9fuDAeUB3/iucjyhRAAO8zpsjswbUXbqvyY5QE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zD6vL7EYUFlaIZczRyWSKzwWEMAsw9i90D9vsZnCkw1OxXCjMnx1OpTjLqqdLjxEV
-         jVN5LpiW3Ir86MqCo6eW49pwmDKorLzktSnhhJ23eUb5WbtFz7oJbabkCRxS8Uvc5H
-         +WewuHGYl+ANuxa23zCke8+hGIO9BR5oPPt5GAs0=
+        b=ACVuOw2bXW1lZhI9ksXvl12tc9HCwRtLCMXv/Z6wvgiVTQk1Ez6N5lNwOWKP/HLoR
+         adig8uoYpyTEyNER9r+vyh4WHXtrDT32eS96NH2PlkhJBbtASVOdLEPfyuXsvxxIv1
+         l7Mn6ibE6Sq+XsDRbj+YVOFecSkduTS8SIzeKgZQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 04/15] ALSA: sb8: add a check for request_region
-Date:   Fri, 29 Mar 2019 20:57:19 -0400
-Message-Id: <20190330005730.28777-4-sashal@kernel.org>
+Cc:     David Arcari <darcari@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 09/15] tools/power turbostat: return the exit status of a command
+Date:   Fri, 29 Mar 2019 20:57:24 -0400
+Message-Id: <20190330005730.28777-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005730.28777-1-sashal@kernel.org>
 References: <20190330005730.28777-1-sashal@kernel.org>
@@ -58,35 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: David Arcari <darcari@redhat.com>
 
-[ Upstream commit dcd0feac9bab901d5739de51b3f69840851f8919 ]
+[ Upstream commit 2a95496634a017c19641f26f00907af75b962f01 ]
 
-In case request_region fails, the fix returns an error code to
-avoid NULL pointer dereference.
+turbostat failed to return a non-zero exit status even though the
+supplied command (turbostat <command>) failed.  Currently when turbostat
+forks a command it returns zero instead of the actual exit status of the
+command.  Modify the code to return the exit status.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: David Arcari <darcari@redhat.com>
+Acked-by: Len Brown <len.brown@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/isa/sb/sb8.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/power/x86/turbostat/turbostat.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/isa/sb/sb8.c b/sound/isa/sb/sb8.c
-index 6c32b3aa34af..938262d3aa7b 100644
---- a/sound/isa/sb/sb8.c
-+++ b/sound/isa/sb/sb8.c
-@@ -111,6 +111,10 @@ static int snd_sb8_probe(struct device *pdev, unsigned int dev)
- 
- 	/* block the 0x388 port to avoid PnP conflicts */
- 	acard->fm_res = request_region(0x388, 4, "SoundBlaster FM");
-+	if (!acard->fm_res) {
-+		err = -EBUSY;
-+		goto _err;
-+	}
- 
- 	if (port[dev] != SNDRV_AUTO_PORT) {
- 		if ((err = snd_sbdsp_create(card, port[dev], irq[dev],
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index f771e09eef33..06e1bf9bf1a8 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -2347,6 +2347,9 @@ int fork_it(char **argv)
+ 		signal(SIGQUIT, SIG_IGN);
+ 		if (waitpid(child_pid, &status, 0) == -1)
+ 			err(status, "waitpid");
++
++		if (WIFEXITED(status))
++			status = WEXITSTATUS(status);
+ 	}
+ 	/*
+ 	 * n.b. fork_it() does not check for errors from for_all_cpus()
 -- 
 2.19.1
 
