@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9952C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956DAC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6746218FC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58ABE217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909525;
-	bh=eb2BA6jFF294aObngBKx0bY6n9zCQWJLhBaTeK3hFKw=;
+	s=default; t=1553909531;
+	bh=X2TnbvXMEZR4JPGHMWi+uFdCWlarJ65/tyJFDAF8q84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s40xVyNwcdPFkTeBnWBLPZxnTHNiV17uWJvcwT1TUIRPlBbSjjQMiIyEufMg5pleY
-	 0sVGDjyYcdFVTH7lwzhpxiIoysXMU1cO6QcX+c+sPbKdNcv+LbpQ+0M2SErrb+etjL
-	 Qzvnwx64PYGVuW0p3NOhpQaNw8jLhVJd0COmCO9Q=
+	b=Rq6Se5KghrGBSB+hrnWvpYQpkpn3O17mte5Dp1qykC7pFnSX1qwCuJ2TXLbyNOpZN
+	 uiywSDzeZpfNsBbLTWn9r5K7cZqUrijJrxj9J8DAZH3ItjnsLwzNxO951cpA9g91qJ
+	 ubYteRHm/9ZsULkKAnpai1K4p1MTjrJeeqS0IoeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732227AbfC3BcE (ORCPT
+        id S1732274AbfC3BcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:32:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39862 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:32:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731356AbfC3BcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:32:00 -0400
+        id S1732244AbfC3BcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:32:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39AA921773;
-        Sat, 30 Mar 2019 01:31:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77601218FC;
+        Sat, 30 Mar 2019 01:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909519;
-        bh=eb2BA6jFF294aObngBKx0bY6n9zCQWJLhBaTeK3hFKw=;
+        s=default; t=1553909527;
+        bh=X2TnbvXMEZR4JPGHMWi+uFdCWlarJ65/tyJFDAF8q84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=npvf+c42w+bcZgz1MGHy3bzg6N7qyEC3+ory+zL2NGPooGfmCq/+UtBpXFBE61Uwj
-         ZOTY6a/m9rPf0i2qnylaiL2GNKSgg31bn2uxR2da9vHkwWMt65XROdI8qvaMXCnAlw
-         8gnX/pqnTvt5eHPjVxam3v/DCLRLhMB6t1SxGyDw=
+        b=t+PVeaJNojZVvzpibn4PSdyyRlZ8MKl5B7uJzZEghdcXYzCt3ADVzVe2jnmdI/PpQ
+         i/Wkv7jxlXvokNNDBCYXgcm8tduzdov7szU/kg01rxbF2eZazJNXgbX9dH/wve3nVx
+         0q6dV/wMQga3z9YWumc/sizM5Cm78oO2SxcZLjGA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 21/21] include/linux/swap.h: use offsetof() instead of custom __swapoffset macro
-Date:   Fri, 29 Mar 2019 21:31:12 -0400
-Message-Id: <20190330013112.784-21-sashal@kernel.org>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 05/16] serial: uartps: console_setup() can't be placed to init section
+Date:   Fri, 29 Mar 2019 21:31:49 -0400
+Message-Id: <20190330013200.1130-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190330013112.784-1-sashal@kernel.org>
-References: <20190330013112.784-1-sashal@kernel.org>
+In-Reply-To: <20190330013200.1130-1-sashal@kernel.org>
+References: <20190330013200.1130-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,58 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+From: Michal Simek <michal.simek@xilinx.com>
 
-[ Upstream commit a4046c06be50a4f01d435aa7fe57514818e6cc82 ]
+[ Upstream commit 4bb1ce2350a598502b23088b169e16b43d4bc639 ]
 
-Use offsetof() to calculate offset of a field to take advantage of
-compiler built-in version when possible, and avoid UBSAN warning when
-compiling with Clang:
+When console device is rebinded, console_setup() is called again.
+But marking it as __init means that function will be clear after boot is
+complete. If console device is binded again console_setup() is not found
+and error "Unable to handle kernel paging request at virtual address"
+is reported.
 
-  UBSAN: Undefined behaviour in mm/swapfile.c:3010:38
-  member access within null pointer of type 'union swap_header'
-  CPU: 6 PID: 1833 Comm: swapon Tainted: G S                4.19.23 #43
-  Call trace:
-   dump_backtrace+0x0/0x194
-   show_stack+0x20/0x2c
-   __dump_stack+0x20/0x28
-   dump_stack+0x70/0x94
-   ubsan_epilogue+0x14/0x44
-   ubsan_type_mismatch_common+0xf4/0xfc
-   __ubsan_handle_type_mismatch_v1+0x34/0x54
-   __se_sys_swapon+0x654/0x1084
-   __arm64_sys_swapon+0x1c/0x24
-   el0_svc_common+0xa8/0x150
-   el0_svc_compat_handler+0x2c/0x38
-   el0_svc_compat+0x8/0x18
-
-Link: http://lkml.kernel.org/r/20190312081902.223764-1-pihsun@chromium.org
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/swap.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/xilinx_uartps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 55ff5593c193..2228907d08ff 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -135,9 +135,9 @@ struct swap_extent {
- /*
-  * Max bad pages in the new format..
+diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+index 4f2f4aca8d2e..06efcef1b495 100644
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -1145,7 +1145,7 @@ static void cdns_uart_console_write(struct console *co, const char *s,
+  *
+  * Return: 0 on success, negative errno otherwise.
   */
--#define __swapoffset(x) ((unsigned long)&((union swap_header *)0)->x)
- #define MAX_SWAP_BADPAGES \
--	((__swapoffset(magic.magic) - __swapoffset(info.badpages)) / sizeof(int))
-+	((offsetof(union swap_header, magic.magic) - \
-+	  offsetof(union swap_header, info.badpages)) / sizeof(int))
- 
- enum {
- 	SWP_USED	= (1 << 0),	/* is slot in swap_info[] used? */
+-static int __init cdns_uart_console_setup(struct console *co, char *options)
++static int cdns_uart_console_setup(struct console *co, char *options)
+ {
+ 	struct uart_port *port = &cdns_uart_port[co->index];
+ 	int baud = 9600;
 -- 
 2.19.1
 
