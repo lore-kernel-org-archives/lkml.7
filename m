@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3557C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F8AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6915A2064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628E9206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907847;
-	bh=BCZTI8lB5BBNy2e4lIxEPcWkl+s2OsRLAbkfFcuNc5c=;
+	s=default; t=1553907853;
+	bh=hl+GM3jHmztv9w0sroHjw7Cr+Tx2RD74FHeWw5bEgAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1R19VF/CayUnX2ZW+7j5mX630wICqvvV7anRujhx+yFoKThpruZfybeaQoRs/TEJ9
-	 UYY+QYUl9fNz45f5du/4yHyV7uQ35OMnJdKa0FxVyP3zPnslA9fFnq2wZrlDv+fw3v
-	 VSi4mpBd/KQtbKRp4fKDE2YuY7fcwyv5ICcd+R8U=
+	b=xeoPyPY+Lt/6HegAx0KW9qS7u9GSmdK18ntbtP/jB48K6JALXMXgIVL49vKL+/N3g
+	 VZ72NPCmTYUZdwNIaTUXGg2id79W4cP8OQ/yB9wVbYFX+zcMDpLusF7yTHXvlGCytM
+	 WhMjx1u+a8qMvz1rd+qBn6vPsCbq3nF4a9tD3Pj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731809AbfC3BEG (ORCPT
+        id S1731842AbfC3BEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:04:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33986 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:04:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731626AbfC3Ayx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:54:53 -0400
+        id S1731161AbfC3Ayv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:54:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14692218CD;
-        Sat, 30 Mar 2019 00:54:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D9E32064A;
+        Sat, 30 Mar 2019 00:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907292;
-        bh=BCZTI8lB5BBNy2e4lIxEPcWkl+s2OsRLAbkfFcuNc5c=;
+        s=default; t=1553907290;
+        bh=hl+GM3jHmztv9w0sroHjw7Cr+Tx2RD74FHeWw5bEgAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QYznGQwp2xOPZlCS3M5cv5Yxkka5OYLlWRidk2NUXRZhXS7JZrfIXHTvdoX9R0A9t
-         wXDvaYlNEq4TEOCECVlDp2IDPop9TYnVqotfwxCvpxdwPzqcTEhBdLj+RDQw3p924w
-         gtKwAZY+BIVCahXbHDwPlD89jGwAFwtAOii2BRfk=
+        b=ai9yBGVG/Wq9zanzRGnbu25osXpTLL2Kp2PnXICrij+nkxkF5QZn8DXN4IoDxUqAc
+         lgQ76cmxgjEpqjaFDoXIWFvaUd8duN+MkLz+fN6FUaGS6TstxzsYnkjRY1sc+B8NWq
+         pU6/0ClIA5W6UgFkj7G8V6e1fIjY4tY4gWN4OEbU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kangjie Lu <kjlu@umn.edu>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 07/37] ALSA: sb8: add a check for request_region
-Date:   Fri, 29 Mar 2019 20:54:08 -0400
-Message-Id: <20190330005441.27540-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 06/37] ALSA: echoaudio: add a check for ioremap_nocache
+Date:   Fri, 29 Mar 2019 20:54:07 -0400
+Message-Id: <20190330005441.27540-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
 References: <20190330005441.27540-1-sashal@kernel.org>
@@ -60,33 +60,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit dcd0feac9bab901d5739de51b3f69840851f8919 ]
+[ Upstream commit 6ade657d6125ec3ec07f95fa51e28138aef6208f ]
 
-In case request_region fails, the fix returns an error code to
-avoid NULL pointer dereference.
+In case ioremap_nocache fails, the fix releases chip and returns
+an error code upstream to avoid NULL pointer dereference.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/isa/sb/sb8.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/pci/echoaudio/echoaudio.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/isa/sb/sb8.c b/sound/isa/sb/sb8.c
-index d77dcba276b5..1eb8b61a185b 100644
---- a/sound/isa/sb/sb8.c
-+++ b/sound/isa/sb/sb8.c
-@@ -111,6 +111,10 @@ static int snd_sb8_probe(struct device *pdev, unsigned int dev)
- 
- 	/* block the 0x388 port to avoid PnP conflicts */
- 	acard->fm_res = request_region(0x388, 4, "SoundBlaster FM");
-+	if (!acard->fm_res) {
-+		err = -EBUSY;
-+		goto _err;
+diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
+index d68f99e076a8..e1f0bcd45c37 100644
+--- a/sound/pci/echoaudio/echoaudio.c
++++ b/sound/pci/echoaudio/echoaudio.c
+@@ -1953,6 +1953,11 @@ static int snd_echo_create(struct snd_card *card,
+ 	}
+ 	chip->dsp_registers = (volatile u32 __iomem *)
+ 		ioremap_nocache(chip->dsp_registers_phys, sz);
++	if (!chip->dsp_registers) {
++		dev_err(chip->card->dev, "ioremap failed\n");
++		snd_echo_free(chip);
++		return -ENOMEM;
 +	}
  
- 	if (port[dev] != SNDRV_AUTO_PORT) {
- 		if ((err = snd_sbdsp_create(card, port[dev], irq[dev],
+ 	if (request_irq(pci->irq, snd_echo_interrupt, IRQF_SHARED,
+ 			KBUILD_MODNAME, chip)) {
 -- 
 2.19.1
 
