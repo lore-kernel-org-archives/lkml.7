@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADDBC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC0DC10F05
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21545217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CC7217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909700;
-	bh=Yv57S6M8AFqu2q8SN0uJQdADdTUO5n3ahE1W2XhhRDY=;
+	s=default; t=1553909705;
+	bh=F6+S0FmcpycSsMgDZGHyNP20iyso8rh/p3uvRgLwuIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=keDEBapqFZgGijM7KmyQQL1zwmVwP1ihX0LCetmcQVwE0bcorJV1hg8BZpgkRle7S
-	 4cM5ixgQ5NF1+Ec1qBFJyoAtdHk88HFB4irTAkEjWl7K4bLGKpMdNi4ggKD7/su4Xm
-	 pRm+sOSBCaX4GF18h0tT/zYz62l40EcxgCRm/EdA=
+	b=T89hscNpDD9eRHLqqtkyzIgGuT7pFyDVbyK5niuR3xHJ3dyhMS/MsUSrPUzBhuC+m
+	 DLGyiJGxcdGv+vRa9zR6MTd5charJ1usmCRJMQ32Ts4W/lmnWJrJllyXU2OebWTmhH
+	 C/24Y/sBTTACLsIfIEkKR+UgmRQpUqcHOSEvCrHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732067AbfC3Be6 (ORCPT
+        id S1732179AbfC3Bbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:34:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39832 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:31:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732201AbfC3Bb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:31:57 -0400
+        id S1732155AbfC3Bbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:31:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADF76218D3;
-        Sat, 30 Mar 2019 01:31:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC34921773;
+        Sat, 30 Mar 2019 01:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909517;
-        bh=Yv57S6M8AFqu2q8SN0uJQdADdTUO5n3ahE1W2XhhRDY=;
+        s=default; t=1553909505;
+        bh=F6+S0FmcpycSsMgDZGHyNP20iyso8rh/p3uvRgLwuIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jasyPbxnT1VJ2OeU/XTADPAESZZsaotGYw3bTTt/IWqiGdw6gTQDzxk4eVUP5zNSl
-         tXJgyjeJwQAbRcqjQz9VfW75AkrvubnNfqEWtqKQnFhlS/5MSI+wFRYq8h2hjZ0WY7
-         LGKIX+FyYFTz8lifiCY4tTZvOWloQWB8hlZzOH88=
+        b=LT1VpxH65sK+0ltohktmxGt+pgPrvH0ur2bUyiFwAGBElBPPQynMXJUHof0R6Zcfs
+         CU5LZLOpHRxMwRlcStagDg0MTbXUYv9xV4dN12EQty1RPX42SUeXDQH+ltmW3KwPGA
+         OYqFhLQK7Hj/6qLJc2pNJkhf26KzbPNZoCNU/avY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanislaw Gruszka <sgruszka@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 20/21] lib/div64.c: off by one in shift
-Date:   Fri, 29 Mar 2019 21:31:11 -0400
-Message-Id: <20190330013112.784-20-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 15/21] soc/tegra: pmc: Drop locking from tegra_powergate_is_powered()
+Date:   Fri, 29 Mar 2019 21:31:06 -0400
+Message-Id: <20190330013112.784-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330013112.784-1-sashal@kernel.org>
 References: <20190330013112.784-1-sashal@kernel.org>
@@ -60,52 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislaw Gruszka <sgruszka@redhat.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit cdc94a37493135e355dfc0b0e086d84e3eadb50d ]
+[ Upstream commit b6e1fd17a38bd1d97c11d69fd3207b3ef9bfa4b3 ]
 
-fls counts bits starting from 1 to 32 (returns 0 for zero argument).  If
-we add 1 we shift right one bit more and loose precision from divisor,
-what cause function incorect results with some numbers.
+This fixes splats like the one below if CONFIG_DEBUG_ATOMIC_SLEEP=y
+and machine (Tegra30) booted with SMP=n or all secondary CPU's are put
+offline. Locking isn't needed because it protects atomic operation.
 
-Corrected code was tested in user-space, see bugzilla:
-   https://bugzilla.kernel.org/show_bug.cgi?id=202391
+BUG: sleeping function called from invalid context at kernel/locking/mutex.c:254
+in_atomic(): 1, irqs_disabled(): 128, pid: 0, name: swapper/0
+CPU: 0 PID: 0 Comm: swapper/0 Tainted: G         C        4.18.0-next-20180821-00180-gc3ebb6544e44-dirty #823
+Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+[<c01134f4>] (unwind_backtrace) from [<c010db2c>] (show_stack+0x20/0x24)
+[<c010db2c>] (show_stack) from [<c0bd0f3c>] (dump_stack+0x94/0xa8)
+[<c0bd0f3c>] (dump_stack) from [<c0151df8>] (___might_sleep+0x13c/0x174)
+[<c0151df8>] (___might_sleep) from [<c0151ea0>] (__might_sleep+0x70/0xa8)
+[<c0151ea0>] (__might_sleep) from [<c0bec2b8>] (mutex_lock+0x2c/0x70)
+[<c0bec2b8>] (mutex_lock) from [<c0589844>] (tegra_powergate_is_powered+0x44/0xa8)
+[<c0589844>] (tegra_powergate_is_powered) from [<c0581a60>] (tegra30_cpu_rail_off_ready+0x30/0x74)
+[<c0581a60>] (tegra30_cpu_rail_off_ready) from [<c0122244>] (tegra30_idle_lp2+0xa0/0x108)
+[<c0122244>] (tegra30_idle_lp2) from [<c0853438>] (cpuidle_enter_state+0x140/0x540)
+[<c0853438>] (cpuidle_enter_state) from [<c08538a4>] (cpuidle_enter+0x40/0x4c)
+[<c08538a4>] (cpuidle_enter) from [<c01595e0>] (call_cpuidle+0x30/0x48)
+[<c01595e0>] (call_cpuidle) from [<c01599f8>] (do_idle+0x238/0x28c)
+[<c01599f8>] (do_idle) from [<c0159d28>] (cpu_startup_entry+0x28/0x2c)
+[<c0159d28>] (cpu_startup_entry) from [<c0be76c8>] (rest_init+0xd8/0xdc)
+[<c0be76c8>] (rest_init) from [<c1200f50>] (start_kernel+0x41c/0x430)
 
-Link: http://lkml.kernel.org/r/1548686944-11891-1-git-send-email-sgruszka@redhat.com
-Fixes: 658716d19f8f ("div64_u64(): improve precision on 32bit platforms")
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Reported-by: Siarhei Volkau <lis8215@gmail.com>
-Tested-by: Siarhei Volkau <lis8215@gmail.com>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/div64.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/soc/tegra/pmc.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/lib/div64.c b/lib/div64.c
-index 7f345259c32f..c1c1a4c36dd5 100644
---- a/lib/div64.c
-+++ b/lib/div64.c
-@@ -102,7 +102,7 @@ u64 div64_u64_rem(u64 dividend, u64 divisor, u64 *remainder)
- 		quot = div_u64_rem(dividend, divisor, &rem32);
- 		*remainder = rem32;
- 	} else {
--		int n = 1 + fls(high);
-+		int n = fls(high);
- 		quot = div_u64(dividend >> n, divisor >> n);
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 9685f9b8be07..a12710c917a1 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -512,16 +512,10 @@ EXPORT_SYMBOL(tegra_powergate_power_off);
+  */
+ int tegra_powergate_is_powered(unsigned int id)
+ {
+-	int status;
+-
+ 	if (!tegra_powergate_is_valid(id))
+ 		return -EINVAL;
  
- 		if (quot != 0)
-@@ -140,7 +140,7 @@ u64 div64_u64(u64 dividend, u64 divisor)
- 	if (high == 0) {
- 		quot = div_u64(dividend, divisor);
- 	} else {
--		int n = 1 + fls(high);
-+		int n = fls(high);
- 		quot = div_u64(dividend >> n, divisor >> n);
+-	mutex_lock(&pmc->powergates_lock);
+-	status = tegra_powergate_state(id);
+-	mutex_unlock(&pmc->powergates_lock);
+-
+-	return status;
++	return tegra_powergate_state(id);
+ }
  
- 		if (quot != 0)
+ /**
 -- 
 2.19.1
 
