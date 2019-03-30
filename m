@@ -2,169 +2,104 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B684C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C468CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7BCE218A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91EF52075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553938319;
+	bh=tgEJJsEp8HLK1niWW9oIcWkzJIxjOzFoVIV8bUJ0VlE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QDxl3Sm6VPhZ8zoNB/6HnWizezzu7ib795tZzw5Z7Wrt+3tZOJwTVJ0c0JgEm3/Xn
+	 WxVjOG7a6tjDghJCsD/+RqiyVuSh+M6tomWkYqVdzdXLcqSy7pJus0kr0Jjx3q++sn
+	 d7z/WMG/XpX2zZfk1kx0mmi7IojCXNHw9PQwM52A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730621AbfC3J2z (ORCPT
+        id S1730574AbfC3Jb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 05:28:55 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:32371 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730384AbfC3J2j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 05:28:39 -0400
-X-UUID: 65079cd4cc8c4e979fad429f6ebe7f3f-20190330
-X-UUID: 65079cd4cc8c4e979fad429f6ebe7f3f-20190330
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 391326359; Sat, 30 Mar 2019 17:28:33 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 30 Mar 2019 17:28:32 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 30 Mar 2019 17:28:31 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Dongjin Kim <tobetter@gmail.com>
-Subject: [PATCH 3/5] usb: misc: usb3503: get optional clock by devm_clk_get_optional()
-Date:   Sat, 30 Mar 2019 17:28:18 +0800
-Message-ID: <ae25effac3e4e6f559a4e043caf6607f7cee5cac.1553937592.git.chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <2ec86ffd7de45dabaa7257019a79f1e80751934c.1553937592.git.chunfeng.yun@mediatek.com>
-References: <2ec86ffd7de45dabaa7257019a79f1e80751934c.1553937592.git.chunfeng.yun@mediatek.com>
+        Sat, 30 Mar 2019 05:31:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730453AbfC3Jb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 05:31:57 -0400
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFA4E2075E;
+        Sat, 30 Mar 2019 09:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553938316;
+        bh=tgEJJsEp8HLK1niWW9oIcWkzJIxjOzFoVIV8bUJ0VlE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NRwgdgKda486H3zPX22uXby3nX7q1xj7baYk1kYymUawG8cEyABTO+iilCzlPTI//
+         zzjaqOSVoJDzem209CKzJiORgVgakubh7wysfDYV/ze+n/lYK3MSq0if8jUA10yGeR
+         lHv9ukJjMBGtj7HXMNUWG/cG4CI9jFRwjiRU9ltg=
+Date:   Sat, 30 Mar 2019 10:31:52 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Luca Coelho <luca@coelho.fi>
+Cc:     Laura Abbott <labbott@redhat.com>, linux-kernel@vger.kernel.org,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org,
+        Luca Coelho <luciano.coelho@intel.com>,
+        stable <stable@vger.kernel.org>
+Subject: [PATCH] iwlwifi: properly check debugfs dentry before using it
+Message-ID: <20190330093152.GB14300@kroah.com>
+References: <20190122152151.16139-24-gregkh@linuxfoundation.org>
+ <03bb68be-8e42-a463-2d57-3be051dc2016@redhat.com>
+ <20190327012600.GA3649@kroah.com>
+ <5660d50d-6cbf-3b36-6e6c-312b1617ed23@redhat.com>
+ <20190327015346.GA17979@kroah.com>
+ <5f9c8beda0e925b079aa9342ce1c9523659837a4.camel@coelho.fi>
+ <20190330092247.GA14300@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190330092247.GA14300@kroah.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_clk_get_optional() to get optional clock
+debugfs can now report an error code if something went wrong instead of
+just NULL.  So if the return value is to be used as a "real" dentry, it
+needs to be checked if it is an error before dereferencing it.
 
-Cc: Dongjin Kim <tobetter@gmail.com>
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/usb/misc/usb3503.c | 48 ++++++++++++++------------------------
- 1 file changed, 18 insertions(+), 30 deletions(-)
+This is now happening because of ff9fb72bc077 ("debugfs: return error
+values, not NULL").  If multiple iwlwifi devices are in the system, this
+can cause problems when the driver attempts to create the main debugfs
+directory again.  Later on in the code we fail horribly by trying to
+dereference a pointer that is an error value.
 
-diff --git a/drivers/usb/misc/usb3503.c b/drivers/usb/misc/usb3503.c
-index d5141aa79dd4..72f39a9751b5 100644
---- a/drivers/usb/misc/usb3503.c
-+++ b/drivers/usb/misc/usb3503.c
-@@ -172,7 +172,6 @@ static int usb3503_probe(struct usb3503 *hub)
- 		hub->gpio_reset		= pdata->gpio_reset;
- 		hub->mode		= pdata->initial_mode;
- 	} else if (np) {
--		struct clk *clk;
- 		u32 rate = 0;
- 		hub->port_off_mask = 0;
- 
-@@ -198,34 +197,29 @@ static int usb3503_probe(struct usb3503 *hub)
- 			}
- 		}
- 
--		clk = devm_clk_get(dev, "refclk");
--		if (IS_ERR(clk) && PTR_ERR(clk) != -ENOENT) {
-+		hub->clk = devm_clk_get_optional(dev, "refclk");
-+		if (IS_ERR(hub->clk)) {
- 			dev_err(dev, "unable to request refclk (%ld)\n",
--					PTR_ERR(clk));
--			return PTR_ERR(clk);
-+					PTR_ERR(hub->clk));
-+			return PTR_ERR(hub->clk);
- 		}
- 
--		if (!IS_ERR(clk)) {
--			hub->clk = clk;
--
--			if (rate != 0) {
--				err = clk_set_rate(hub->clk, rate);
--				if (err) {
--					dev_err(dev,
--						"unable to set reference clock rate to %d\n",
--						(int) rate);
--					return err;
--				}
--			}
--
--			err = clk_prepare_enable(hub->clk);
-+		if (rate != 0) {
-+			err = clk_set_rate(hub->clk, rate);
- 			if (err) {
- 				dev_err(dev,
--					"unable to enable reference clock\n");
-+					"unable to set reference clock rate to %d\n",
-+					(int)rate);
- 				return err;
- 			}
- 		}
- 
-+		err = clk_prepare_enable(hub->clk);
-+		if (err) {
-+			dev_err(dev, "unable to enable reference clock\n");
-+			return err;
-+		}
-+
- 		property = of_get_property(np, "disabled-ports", &len);
- 		if (property && (len / sizeof(u32)) > 0) {
- 			int i;
-@@ -324,8 +318,7 @@ static int usb3503_i2c_remove(struct i2c_client *i2c)
- 	struct usb3503 *hub;
- 
- 	hub = i2c_get_clientdata(i2c);
--	if (hub->clk)
--		clk_disable_unprepare(hub->clk);
-+	clk_disable_unprepare(hub->clk);
- 
- 	return 0;
- }
-@@ -348,8 +341,7 @@ static int usb3503_platform_remove(struct platform_device *pdev)
- 	struct usb3503 *hub;
- 
- 	hub = platform_get_drvdata(pdev);
--	if (hub->clk)
--		clk_disable_unprepare(hub->clk);
-+	clk_disable_unprepare(hub->clk);
- 
- 	return 0;
- }
-@@ -358,18 +350,14 @@ static int usb3503_platform_remove(struct platform_device *pdev)
- static int usb3503_suspend(struct usb3503 *hub)
- {
- 	usb3503_switch_mode(hub, USB3503_MODE_STANDBY);
--
--	if (hub->clk)
--		clk_disable_unprepare(hub->clk);
-+	clk_disable_unprepare(hub->clk);
- 
- 	return 0;
- }
- 
- static int usb3503_resume(struct usb3503 *hub)
- {
--	if (hub->clk)
--		clk_prepare_enable(hub->clk);
--
-+	clk_prepare_enable(hub->clk);
- 	usb3503_switch_mode(hub, hub->mode);
- 
- 	return 0;
--- 
-2.20.1
+Reported-by: Laura Abbott <labbott@redhat.com>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Cc: Luca Coelho <luciano.coelho@intel.com>
+Cc: Intel Linux Wireless <linuxwifi@intel.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: stable <stable@vger.kernel.org> # 5.0
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
+index 2453ceabf00d..6925527d8457 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
+@@ -774,8 +774,7 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
+ 		return;
+ 
+ 	mvmvif->dbgfs_dir = debugfs_create_dir("iwlmvm", dbgfs_dir);
+-
+-	if (!mvmvif->dbgfs_dir) {
++	if (IS_ERR_OR_NULL(mvmvif->dbgfs_dir)) {
+ 		IWL_ERR(mvm, "Failed to create debugfs directory under %pd\n",
+ 			dbgfs_dir);
+ 		return;
