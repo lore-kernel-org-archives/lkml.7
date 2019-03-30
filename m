@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5225C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE7BC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E722064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C9E2064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907821;
-	bh=OOlzChoIjJkCyDbVNoFtt/JFFXQ8YfktHK0RFA/Cc48=;
+	s=default; t=1553907832;
+	bh=b2K2eIGj2uQepp65sE1ldmyX3wAyGhtLbu+UpsqNiVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r8KTdssCvGgPP3duGx024My3k2QYFxYnvKEZtepNaDhwrfjY7JSC4zcnhbPJ6Ap3d
-	 JgYXgIyHU3dNDvMdFrGaHAVOim8YnoQwhn/RO5l92fNCTCaPMfHsKUd+svtXbM/F92
-	 daONYZaK3WqDDoDxnCZSQIiwjWaUgLCW/m69NTnQ=
+	b=j8JPduAAUR/+V5/61ILGi5T9NX6J5uQW3FtMhovW5F6/8tulve0vjq4MB+U5XwYDi
+	 HNRJeGJaxLzFkSGHvP431iNvHdvlNinkY0sKZtNaZa8Im9aGSsbDA5aydrNUXNFfa5
+	 3gd6HAOX9mOYLkzwk2YjXXJIw6EGG1wBiSJtT4A4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731918AbfC3BDk (ORCPT
+        id S1730819AbfC3Ay6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:03:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34312 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:54:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731679AbfC3AzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:55:08 -0400
+        id S1731609AbfC3Ayz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:54:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33B0B2064A;
-        Sat, 30 Mar 2019 00:55:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13846218AC;
+        Sat, 30 Mar 2019 00:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907308;
-        bh=OOlzChoIjJkCyDbVNoFtt/JFFXQ8YfktHK0RFA/Cc48=;
+        s=default; t=1553907294;
+        bh=b2K2eIGj2uQepp65sE1ldmyX3wAyGhtLbu+UpsqNiVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uEOnXo9Vf36LQiagwIuPS47HYl66oX6Pgnk3C35YuGVJxE3U/0dpjF5vOjs7FqozD
-         0QWAhTGX2e1kz+S+8sRSVV3ZfyRunyQJrdqjgsfgAzzv/W0i/0xuCw8lUFUNGUU2Kw
-         loBN9N9ERq/UeODpcOKErXqk8QhapeaI7mdQXSiU=
+        b=iad0FZY34MWXhy2o2T+mmLVl6mUGTIjCxxX8+jtZmz1vGMIAnq2UDwGdEf4wr0CIq
+         xisiHK/pMDEuLkPiwLk9GPdRRi/ROXLwesIQj9dhVBfNl64MtnfTB0acpRE19BZqaT
+         B9KkVDa3qv24YY3p1LcnHcdW4ixPljIeOowC3U1U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/37] thermal/int340x_thermal: fix mode setting
-Date:   Fri, 29 Mar 2019 20:54:16 -0400
-Message-Id: <20190330005441.27540-15-sashal@kernel.org>
+Cc:     Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/37] IB/mlx4: Fix race condition between catas error reset and aliasguid flows
+Date:   Fri, 29 Mar 2019 20:54:10 -0400
+Message-Id: <20190330005441.27540-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
 References: <20190330005441.27540-1-sashal@kernel.org>
@@ -60,40 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <matthewgarrett@google.com>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit 396ee4d0cd52c13b3f6421b8d324d65da5e7e409 ]
+[ Upstream commit 587443e7773e150ae29e643ee8f41a1eed226565 ]
 
-int3400 only pushes the UUID into the firmware when the mode is flipped
-to "enable". The current code only exposes the mode flag if the firmware
-supports the PASSIVE_1 UUID, which not all machines do. Remove the
-restriction.
+Code review revealed a race condition which could allow the catas error
+flow to interrupt the alias guid query post mechanism at random points.
+Thiis is fixed by doing cancel_delayed_work_sync() instead of
+cancel_delayed_work() during the alias guid mechanism destroy flow.
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Fixes: a0c64a17aba8 ("mlx4: Add alias_guid mechanism")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/int340x_thermal/int3400_thermal.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/mlx4/alias_GUID.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
-index 34dc4d6dda66..4a20f4d47b1d 100644
---- a/drivers/thermal/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
-@@ -316,10 +316,9 @@ static int int3400_thermal_probe(struct platform_device *pdev)
+diff --git a/drivers/infiniband/hw/mlx4/alias_GUID.c b/drivers/infiniband/hw/mlx4/alias_GUID.c
+index 155b4dfc0ae8..baab9afa9174 100644
+--- a/drivers/infiniband/hw/mlx4/alias_GUID.c
++++ b/drivers/infiniband/hw/mlx4/alias_GUID.c
+@@ -804,8 +804,8 @@ void mlx4_ib_destroy_alias_guid_service(struct mlx4_ib_dev *dev)
+ 	unsigned long flags;
  
- 	platform_set_drvdata(pdev, priv);
- 
--	if (priv->uuid_bitmap & 1 << INT3400_THERMAL_PASSIVE_1) {
--		int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
--		int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
--	}
-+	int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
-+	int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
-+
- 	priv->thermal = thermal_zone_device_register("INT3400 Thermal", 0, 0,
- 						priv, &int3400_thermal_ops,
- 						&int3400_thermal_params, 0, 0);
+ 	for (i = 0 ; i < dev->num_ports; i++) {
+-		cancel_delayed_work(&dev->sriov.alias_guid.ports_guid[i].alias_guid_work);
+ 		det = &sriov->alias_guid.ports_guid[i];
++		cancel_delayed_work_sync(&det->alias_guid_work);
+ 		spin_lock_irqsave(&sriov->alias_guid.ag_work_lock, flags);
+ 		while (!list_empty(&det->cb_list)) {
+ 			cb_ctx = list_entry(det->cb_list.next,
 -- 
 2.19.1
 
