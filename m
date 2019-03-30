@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4041CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E72C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C25206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728632064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907557;
-	bh=8PqTYXkGEZ/E1p/imxr3Wu/x5kMhasBAtsCGBDz7350=;
+	s=default; t=1553907569;
+	bh=BARagYluGP3C9HORMpnlfhRnLa2R19Yu7Zz0HvuoSXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AqCvhzvocZm3Agl0bwRJseDfSYF6ZvmrNGYA/l/5o4pqmCH5iSvYT7xLqGG7O7KFA
-	 wmPftbTZjdUEioBiucblMt+VebZDoCbU30LTLj/8iqDUktBjWTkqcVklyPuP06R0Nh
-	 qH9k4Uerif7dP+vQud/qat2LtjY/YbGb8xMC378o=
+	b=Qxbi8XBLQQOX+EFg0rYZIBzTt9d8bXhTOZZOSPxa9KLWJS1fjNnZiqt/o4eOUixzQ
+	 sn498SfA6EIITeY3gKd3EMM/60tqHMhh2Zw9LGQgfLfJCgKfo+L7HQmiZfIELsqt54
+	 /kJyL6A5Xt0RJ44fpbYEzLFtd9b0nuVHRgHGGHgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732118AbfC3A7Q (ORCPT
+        id S1732137AbfC3A72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:59:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37562 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:59:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731028AbfC3A5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:57:25 -0400
+        id S1731724AbfC3A5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:57:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC14B218CD;
-        Sat, 30 Mar 2019 00:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0CCA217F5;
+        Sat, 30 Mar 2019 00:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907444;
-        bh=8PqTYXkGEZ/E1p/imxr3Wu/x5kMhasBAtsCGBDz7350=;
+        s=default; t=1553907436;
+        bh=BARagYluGP3C9HORMpnlfhRnLa2R19Yu7Zz0HvuoSXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dUoNs2uRBzEteM853Uo158jSf00d/2gGxaZQRlR3U8AOQyzTa9ciU68tBTUVeRB71
-         ts643gtef2ypSUL65NQrOFKd69h1uj2a2K7LJdajUm1uiOwEUym4zN4JCuLSzHdixV
-         9nk1aEALmg8OegheE51xJU20UZCrhfLMjKCJtqAM=
+        b=IodWZBI8SloKMo6Nfeb8M2IwxbdxyL0Ze+Drbv7EPkC+p8gM8JGLKfg8XpjANER4P
+         aS3SAKzvywFIDWa+Ft3nqnS2xWaLD2iqrZdfX/9DHci4zY5mEJrMQkKgXLWMw6Dzpk
+         6F1lJnVYWWW+iYUPDTpo8CVloG8pYEODEOIhp+3w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Whitehead <tedheadster@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org,
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 17/21] x86/cpu/cyrix: Use correct macros for Cyrix calls on Geode processors
-Date:   Fri, 29 Mar 2019 20:56:45 -0400
-Message-Id: <20190330005649.28475-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 14/21] perf tests: Fix a memory leak of cpu_map object in the openat_syscall_event_on_all_cpus test
+Date:   Fri, 29 Mar 2019 20:56:42 -0400
+Message-Id: <20190330005649.28475-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005649.28475-1-sashal@kernel.org>
 References: <20190330005649.28475-1-sashal@kernel.org>
@@ -59,108 +64,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Whitehead <tedheadster@gmail.com>
+From: Changbin Du <changbin.du@gmail.com>
 
-[ Upstream commit 18fb053f9b827bd98cfc64f2a35df8ab19745a1d ]
+[ Upstream commit 93faa52e8371f0291ee1ff4994edae2b336b6233 ]
 
-There are comments in processor-cyrix.h advising you to _not_ make calls
-using the deprecated macros in this style:
+  =================================================================
+  ==7497==ERROR: LeakSanitizer: detected memory leaks
 
-  setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x80);
+  Direct leak of 40 byte(s) in 1 object(s) allocated from:
+      #0 0x7f0333a88f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
+      #1 0x5625e5326213 in cpu_map__trim_new util/cpumap.c:45
+      #2 0x5625e5326703 in cpu_map__read util/cpumap.c:103
+      #3 0x5625e53267ef in cpu_map__read_all_cpu_map util/cpumap.c:120
+      #4 0x5625e5326915 in cpu_map__new util/cpumap.c:135
+      #5 0x5625e517b355 in test__openat_syscall_event_on_all_cpus tests/openat-syscall-all-cpus.c:36
+      #6 0x5625e51528e6 in run_test tests/builtin-test.c:358
+      #7 0x5625e5152baf in test_and_print tests/builtin-test.c:388
+      #8 0x5625e51543fe in __cmd_test tests/builtin-test.c:583
+      #9 0x5625e515572f in cmd_test tests/builtin-test.c:722
+      #10 0x5625e51c3fb8 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #11 0x5625e51c44f7 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #12 0x5625e51c48fb in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #13 0x5625e51c5069 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #14 0x7f033214d09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
 
-This is because it expands the macro into a non-functioning calling
-sequence. The calling order must be:
-
-  outb(CX86_CCR2, 0x22);
-  inb(0x23);
-
-From the comments:
-
- * When using the old macros a line like
- *   setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
- * gets expanded to:
- *  do {
- *    outb((CX86_CCR2), 0x22);
- *    outb((({
- *        outb((CX86_CCR2), 0x22);
- *        inb(0x23);
- *    }) | 0x88), 0x23);
- *  } while (0);
-
-The new macros fix this problem, so use them instead. Tested on an
-actual Geode processor.
-
-Signed-off-by: Matthew Whitehead <tedheadster@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: luto@kernel.org
-Link: https://lkml.kernel.org/r/1552596361-8967-2-git-send-email-tedheadster@gmail.com
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: f30a79b012e5 ("perf tools: Add reference counting for cpu_map object")
+Link: http://lkml.kernel.org/r/20190316080556.3075-15-changbin.du@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/cyrix.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/tests/openat-syscall-all-cpus.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/cyrix.c b/arch/x86/kernel/cpu/cyrix.c
-index 15e47c1cd412..6e4e4191abb5 100644
---- a/arch/x86/kernel/cpu/cyrix.c
-+++ b/arch/x86/kernel/cpu/cyrix.c
-@@ -121,7 +121,7 @@ static void set_cx86_reorder(void)
- 	setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10); /* enable MAPEN */
+diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
+index 2006485a2859..3848d5ab378d 100644
+--- a/tools/perf/tests/openat-syscall-all-cpus.c
++++ b/tools/perf/tests/openat-syscall-all-cpus.c
+@@ -35,7 +35,7 @@ int test__openat_syscall_event_on_all_cpus(void)
+ 	if (IS_ERR(evsel)) {
+ 		tracing_path__strerror_open_tp(errno, errbuf, sizeof(errbuf), "syscalls", "sys_enter_openat");
+ 		pr_debug("%s\n", errbuf);
+-		goto out_thread_map_delete;
++		goto out_cpu_map_delete;
+ 	}
  
- 	/* Load/Store Serialize to mem access disable (=reorder it) */
--	setCx86_old(CX86_PCR0, getCx86_old(CX86_PCR0) & ~0x80);
-+	setCx86(CX86_PCR0, getCx86(CX86_PCR0) & ~0x80);
- 	/* set load/store serialize from 1GB to 4GB */
- 	ccr3 |= 0xe0;
- 	setCx86(CX86_CCR3, ccr3);
-@@ -132,11 +132,11 @@ static void set_cx86_memwb(void)
- 	printk(KERN_INFO "Enable Memory-Write-back mode on Cyrix/NSC processor.\n");
- 
- 	/* CCR2 bit 2: unlock NW bit */
--	setCx86_old(CX86_CCR2, getCx86_old(CX86_CCR2) & ~0x04);
-+	setCx86(CX86_CCR2, getCx86(CX86_CCR2) & ~0x04);
- 	/* set 'Not Write-through' */
- 	write_cr0(read_cr0() | X86_CR0_NW);
- 	/* CCR2 bit 2: lock NW bit and set WT1 */
--	setCx86_old(CX86_CCR2, getCx86_old(CX86_CCR2) | 0x14);
-+	setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x14);
- }
- 
- /*
-@@ -150,14 +150,14 @@ static void geode_configure(void)
- 	local_irq_save(flags);
- 
- 	/* Suspend on halt power saving and enable #SUSP pin */
--	setCx86_old(CX86_CCR2, getCx86_old(CX86_CCR2) | 0x88);
-+	setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
- 
- 	ccr3 = getCx86(CX86_CCR3);
- 	setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10);	/* enable MAPEN */
- 
- 
- 	/* FPU fast, DTE cache, Mem bypass */
--	setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x38);
-+	setCx86(CX86_CCR4, getCx86(CX86_CCR4) | 0x38);
- 	setCx86(CX86_CCR3, ccr3);			/* disable MAPEN */
- 
- 	set_cx86_memwb();
-@@ -292,7 +292,7 @@ static void init_cyrix(struct cpuinfo_x86 *c)
- 		/* GXm supports extended cpuid levels 'ala' AMD */
- 		if (c->cpuid_level == 2) {
- 			/* Enable cxMMX extensions (GX1 Datasheet 54) */
--			setCx86_old(CX86_CCR7, getCx86_old(CX86_CCR7) | 1);
-+			setCx86(CX86_CCR7, getCx86(CX86_CCR7) | 1);
- 
- 			/*
- 			 * GXm : 0x30 ... 0x5f GXm  datasheet 51
-@@ -315,7 +315,7 @@ static void init_cyrix(struct cpuinfo_x86 *c)
- 		if (dir1 > 7) {
- 			dir0_msn++;  /* M II */
- 			/* Enable MMX extensions (App note 108) */
--			setCx86_old(CX86_CCR7, getCx86_old(CX86_CCR7)|1);
-+			setCx86(CX86_CCR7, getCx86(CX86_CCR7)|1);
- 		} else {
- 			/* A 6x86MX - it has the bug. */
- 			set_cpu_bug(c, X86_BUG_COMA);
+ 	if (perf_evsel__open(evsel, cpus, threads) < 0) {
+@@ -109,6 +109,8 @@ int test__openat_syscall_event_on_all_cpus(void)
+ 	perf_evsel__close_fd(evsel, 1, threads->nr);
+ out_evsel_delete:
+ 	perf_evsel__delete(evsel);
++out_cpu_map_delete:
++	cpu_map__put(cpus);
+ out_thread_map_delete:
+ 	thread_map__put(threads);
+ 	return err;
 -- 
 2.19.1
 
