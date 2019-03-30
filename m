@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7843C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BF1C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742C02064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC5D22064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907514;
-	bh=4KJxXYGcFKveDYYLeG54Wtp2Teuuvs2/pAV8XavI0pQ=;
+	s=default; t=1553907526;
+	bh=UmOG/tAeBEFjK8vfFL/IMzLKIaW9d+pJLwTIaAY22mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HplV39b0JnIlxlvXNQkvX+AdB97t1J8KXUilqGcioy4qfBKoUKRJ78Siqlftg/nr+
-	 xJE7tYoPB1l5YNdN36LKoSWyjOGMx4WB16IRg9wzu/iWZknYLw5ataG9RGNWqaS+YR
-	 L6lW3w7Hmq1J8M4qR5jWkCyCwk0uhs5v+5OeJe9I=
+	b=xdC4sX6w9wDCeqe9HljE1oiNdPLGw9GLbBooZC7TbaMGmTIoMiOYa6fpHXh224MD5
+	 xRQAsc/fMXuQegFgLL/2F/RLM+LxkvazXs6JGdPEA2zXgx7AREPXO8zoBbvPY6gww2
+	 zzUMzGdHPR1mMGS/tSbiTgsnhBEuL8J3v0KCMITg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732003AbfC3A6c (ORCPT
+        id S1732030AbfC3A6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:58:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38252 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:58:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732187AbfC3A5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:57:47 -0400
+        id S1732150AbfC3A5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:57:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21486206DD;
-        Sat, 30 Mar 2019 00:57:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D23D2184C;
+        Sat, 30 Mar 2019 00:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907466;
-        bh=4KJxXYGcFKveDYYLeG54Wtp2Teuuvs2/pAV8XavI0pQ=;
+        s=default; t=1553907462;
+        bh=UmOG/tAeBEFjK8vfFL/IMzLKIaW9d+pJLwTIaAY22mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkzgtdBs58ru3s3aW8e+/vnA3PieeHunOEvM0oxoe59SnnYGwGyHQY326rt04oICV
-         ZLszyW9VNXRxYOuQK3BI5f47dMXDmt0uQ8VP6o8iJpY1FW2pSP6+8/uMjlRLHD+2go
-         RhxDLqQZCkGnj8F/CN0aXSW8yWKqfMT+m1huKyqY=
+        b=FStKEnnhyPdrGV2kLmznjPK8IY6MFGt2RZumqI0hJFVeydHvRZcBAThds6r46+QRY
+         Br01wVvbmJGHwmuGQbpUBAjcIshDviQ6b/pqB2urJivhfpH6Sz8gXL/okw0nHZqlAr
+         lyBIFcRkw4WqkAklKpODmHFqfRYY6YTO9sdVMteI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 08/15] thermal/int340x_thermal: fix mode setting
-Date:   Fri, 29 Mar 2019 20:57:23 -0400
-Message-Id: <20190330005730.28777-8-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 06/15] mmc: davinci: remove extraneous __init annotation
+Date:   Fri, 29 Mar 2019 20:57:21 -0400
+Message-Id: <20190330005730.28777-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005730.28777-1-sashal@kernel.org>
 References: <20190330005730.28777-1-sashal@kernel.org>
@@ -59,40 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <matthewgarrett@google.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 396ee4d0cd52c13b3f6421b8d324d65da5e7e409 ]
+[ Upstream commit 9ce58dd7d9da3ca0d7cb8c9568f1c6f4746da65a ]
 
-int3400 only pushes the UUID into the firmware when the mode is flipped
-to "enable". The current code only exposes the mode flag if the firmware
-supports the PASSIVE_1 UUID, which not all machines do. Remove the
-restriction.
+Building with clang finds a mistaken __init tag:
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+WARNING: vmlinux.o(.text+0x5e4250): Section mismatch in reference from the function davinci_mmcsd_probe() to the function .init.text:init_mmcsd_host()
+The function davinci_mmcsd_probe() references
+the function __init init_mmcsd_host().
+This is often because davinci_mmcsd_probe lacks a __init
+annotation or the annotation of init_mmcsd_host is wrong.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/int340x_thermal/int3400_thermal.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/mmc/host/davinci_mmc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
-index edc1cce117ba..7b96b20e939a 100644
---- a/drivers/thermal/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
-@@ -208,10 +208,9 @@ static int int3400_thermal_probe(struct platform_device *pdev)
+diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
+index 5d4c5e0fba2f..7e154a8213e2 100644
+--- a/drivers/mmc/host/davinci_mmc.c
++++ b/drivers/mmc/host/davinci_mmc.c
+@@ -1147,7 +1147,7 @@ static inline void mmc_davinci_cpufreq_deregister(struct mmc_davinci_host *host)
+ {
+ }
+ #endif
+-static void __init init_mmcsd_host(struct mmc_davinci_host *host)
++static void init_mmcsd_host(struct mmc_davinci_host *host)
+ {
  
- 	platform_set_drvdata(pdev, priv);
- 
--	if (priv->uuid_bitmap & 1 << INT3400_THERMAL_PASSIVE_1) {
--		int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
--		int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
--	}
-+	int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
-+	int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
-+
- 	priv->thermal = thermal_zone_device_register("INT3400 Thermal", 0, 0,
- 						priv, &int3400_thermal_ops,
- 						&int3400_thermal_params, 0, 0);
+ 	mmc_davinci_reset_ctrl(host, 1);
 -- 
 2.19.1
 
