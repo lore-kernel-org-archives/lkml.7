@@ -2,50 +2,53 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EA2C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F5AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3482064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADEC2064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553908101;
-	bh=6i0S6zJFG1Q40c58r4bonoIhc1v3eXHM4YsFxEsHxX4=;
+	s=default; t=1553908110;
+	bh=RzAtCefQ3OD6Q8QN7QVo/Tz6csJDHqpBNS3hw4q8h/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X+X3Ae4Apt6FJJ0WvfbPYtmZiZm9NIrGBIKXu0Pfigt2ItDdnCZs+VGLJeYSBlXLv
-	 t5+/pAacfLl9tmjz2U0LwecudsgVAHU4eJ3Nww0XBzjOHV1LrwSr8UqjCWCAnM5g3q
-	 qacidrdMqF4IFDjlYHPPBAU//ovydWXz28TjRdb0=
+	b=K4uiGU+L4kl9CT+oXOyS21zKro6VgfDqf/LyPIEG+Nb9T4FuXgnzZoA60RWCoq2gD
+	 Z13Utu9wMFiPtlRjQSufOAPfc+AVKqCAyTxiUmY1ST4UhF2GamXnCNduJqCERZI11B
+	 g6TisbQ7CnvkCaotlKo3whTepy4IF1AQ2Ux8a9bU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731414AbfC3BIU (ORCPT
+        id S1731359AbfC3BI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:08:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59610 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:08:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731129AbfC3Aww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:52:52 -0400
+        id S1731119AbfC3Awu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:52:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6F50206DD;
-        Sat, 30 Mar 2019 00:52:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E993218CD;
+        Sat, 30 Mar 2019 00:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907171;
-        bh=6i0S6zJFG1Q40c58r4bonoIhc1v3eXHM4YsFxEsHxX4=;
+        s=default; t=1553907169;
+        bh=RzAtCefQ3OD6Q8QN7QVo/Tz6csJDHqpBNS3hw4q8h/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mtALCwdX2JiChKlM4vBPpj9FBJCb1OwdpAG3LhmaoClCafM1+dXDiMJHMJUytDotl
-         qTLjvnMx+hkriTiBtJV67Vkqo/goNsUU1afv/SJiaAG4nVoVEfbywqY5ZqrJEFgmcN
-         rAAjI6GJI4qzxrAhI2jiXJALbleHQmqobDfv9DSw=
+        b=IbIyUHLulBTVDFJvTh/yIjcpEmGkedgi++Fo9iqZfqq+gPtfbHwJZhA7mxPErkQu6
+         83HYLxGrc4m+jaq/eRC6mqLhES79DUzm+Hc3ixV+K4c8Iu4v1ozkp0HFA3Ur7Lqmte
+         e66ApSckbKkHsaM/1PTfKGYnpIBZSdXTTNMDe+Rg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve French <stfrench@microsoft.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 64/67] fix incorrect error code mapping for OBJECTID_NOT_FOUND
-Date:   Fri, 29 Mar 2019 20:50:44 -0400
-Message-Id: <20190330005047.25998-64-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 62/67] x86/hw_breakpoints: Make default case in hw_breakpoint_arch_parse() return an error
+Date:   Fri, 29 Mar 2019 20:50:42 -0400
+Message-Id: <20190330005047.25998-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005047.25998-1-sashal@kernel.org>
 References: <20190330005047.25998-1-sashal@kernel.org>
@@ -58,40 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 85f9987b236cf46e06ffdb5c225cf1f3c0acb789 ]
+[ Upstream commit e898e69d6b9475bf123f99b3c5d1a67bb7cb2361 ]
 
-It was mapped to EIO which can be confusing when user space
-queries for an object GUID for an object for which the server
-file system doesn't support (or hasn't saved one).
+When building with -Wsometimes-uninitialized, Clang warns:
 
-As Amir Goldstein suggested this is similar to ENOATTR
-(equivalently ENODATA in Linux errno definitions) so
-changing NT STATUS code mapping for OBJECTID_NOT_FOUND
-to ENODATA.
+arch/x86/kernel/hw_breakpoint.c:355:2: warning: variable 'align' is used
+uninitialized whenever switch default is taken
+[-Wsometimes-uninitialized]
 
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Amir Goldstein <amir73il@gmail.com>
+The default cannot be reached because arch_build_bp_info() initializes
+hw->len to one of the specified cases. Nevertheless the warning is valid
+and returning -EINVAL makes sure that this cannot be broken by future
+modifications.
+
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: clang-built-linux@googlegroups.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/392
+Link: https://lkml.kernel.org/r/20190307212756.4648-1-natechancellor@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2maperror.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/hw_breakpoint.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/cifs/smb2maperror.c b/fs/cifs/smb2maperror.c
-index 924269cec135..e32c264e3adb 100644
---- a/fs/cifs/smb2maperror.c
-+++ b/fs/cifs/smb2maperror.c
-@@ -1036,7 +1036,8 @@ static const struct status_to_posix_error smb2_error_map_table[] = {
- 	{STATUS_UNFINISHED_CONTEXT_DELETED, -EIO,
- 	"STATUS_UNFINISHED_CONTEXT_DELETED"},
- 	{STATUS_NO_TGT_REPLY, -EIO, "STATUS_NO_TGT_REPLY"},
--	{STATUS_OBJECTID_NOT_FOUND, -EIO, "STATUS_OBJECTID_NOT_FOUND"},
-+	/* Note that ENOATTTR and ENODATA are the same errno */
-+	{STATUS_OBJECTID_NOT_FOUND, -ENODATA, "STATUS_OBJECTID_NOT_FOUND"},
- 	{STATUS_NO_IP_ADDRESSES, -EIO, "STATUS_NO_IP_ADDRESSES"},
- 	{STATUS_WRONG_CREDENTIAL_HANDLE, -EIO,
- 	"STATUS_WRONG_CREDENTIAL_HANDLE"},
+diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+index 34a5c1715148..2882fe1d2a78 100644
+--- a/arch/x86/kernel/hw_breakpoint.c
++++ b/arch/x86/kernel/hw_breakpoint.c
+@@ -357,6 +357,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+ #endif
+ 	default:
+ 		WARN_ON_ONCE(1);
++		return -EINVAL;
+ 	}
+ 
+ 	/*
 -- 
 2.19.1
 
