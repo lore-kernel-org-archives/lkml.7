@@ -2,107 +2,133 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22ACBC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 18:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90129C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 18:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE2BA218A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 18:36:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553970973;
-	bh=ycL/FmvTFv31dFiOYMFqKEzYgUmDeDoDHFggDEipugA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vXEwJ8gU7z8yF2Mn/Zqoj9dQJIdDAc1nj3KMFvzJolFBdbxAv/xJAA2KAv8RYBjzC
-	 49Fyq3qz1ggnCwuzEyaK0zpmIAjBbP7RUSybZC6Qe60kuMRf7B7ZiVfPwLZ1LWHXvk
-	 N0nNw7Tp2pid9h4jPiv9DKYF/n5nKmoAgL16KgfY=
+	by mail.kernel.org (Postfix) with ESMTP id 65714218A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 18:39:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NpFUP1Om";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jHX8ONOg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbfC3SgM (ORCPT
+        id S1730772AbfC3SjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 14:36:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730619AbfC3SgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 14:36:11 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 30 Mar 2019 14:39:20 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51600 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730606AbfC3SjT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 14:39:19 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0579B602AE; Sat, 30 Mar 2019 18:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553971159;
+        bh=Xgke/FOsS6oIqAeywAyqaV72XxASsaICTQqdSasJLfE=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=NpFUP1OmKbwtxoCEsqGdnNcMca+UlscX6ImAAGFiJl2161q2GcGE6M0/u5Gp2aHCH
+         Xt1WCDLQKcOXQxg4uccbWMK76z2HllAqiVdc7/YjwPk1h1Wd7JoIXRdaOdd+IYtZgM
+         5IWgZvedT/yBUdWlL7THsIPxNdWGC6W49wlyGInk=
+Received: from [10.79.169.97] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BABA2082C;
-        Sat, 30 Mar 2019 18:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553970970;
-        bh=ycL/FmvTFv31dFiOYMFqKEzYgUmDeDoDHFggDEipugA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zlt/v5ibXSjFpchuLpB73RkXRco8CF92/sIL6QbT2ofzA/AJdgv3oMRGQvEFy5cDk
-         MU95b5/5ztMeH/NUYMwkKnv6QYgzkl3Aj+HkACges0vyjlxKGorp/nLeMp/Wh+boiC
-         nomLtUrWDlLaEOIXJDAs7htf5HyKUqOZf4NX+iDQ=
-Date:   Sat, 30 Mar 2019 18:36:03 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Shinji Kanematsu <kanematsu.shinji@socionext.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org,
-        orito.takao@socionext.com, sugaya.taichi@socionext.com,
-        kasai.kazuhiro@socionext.com,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: Re: [PATCH 0/2] Add Updown Counter support for Milbeaut M10V SoC
-Message-ID: <20190330183603.55886d4f@archlinux>
-In-Reply-To: <1553581954-13487-1-git-send-email-kanematsu.shinji@socionext.com>
-References: <1553581954-13487-1-git-send-email-kanematsu.shinji@socionext.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBC6D602AE;
+        Sat, 30 Mar 2019 18:39:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553971158;
+        bh=Xgke/FOsS6oIqAeywAyqaV72XxASsaICTQqdSasJLfE=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=jHX8ONOgzTM897VscZU/t0znGD7Z+R58NpVE/cHJr7fglgORFAxVJXYUy0gZ+5hy+
+         fPj7XCLwH7XRUmXkLjSF09GEeYomoM13Ur4rJYeNJT7ncuyZHT0GrluHNuj9ZsIVlK
+         3AvW3ZO3/3xHa+m1rZvaPBplwrJyF77s7Kqx18hY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CBC6D602AE
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH v2] trace: events: fix error directive in argument list
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        luc.vanoostenryck@gmail.com, rostedt@goodmis.org, mingo@redhat.com,
+        roopa@cumulusnetworks.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+References: <20190330181823.GA16263@hari-Inspiron-1545>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <fd591816-0144-94fa-a91b-35787ff03e86@codeaurora.org>
+Date:   Sun, 31 Mar 2019 00:09:10 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190330181823.GA16263@hari-Inspiron-1545>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019 15:32:34 +0900
-Shinji Kanematsu <kanematsu.shinji@socionext.com> wrote:
 
-> This is a series of patch which adds Updown Counter support on
-> Milbeaut M10V SoC.
-> 
-> The Updown Counter counts input pulse signal from external quadrature encoder.
-> It also has input pulse signal counter function.
-Hi Shinji,
+On 3/30/2019 11:48 PM, Hariprasad Kelam wrote:
+> This patch fixes below spare errors.
+>
+> Sparse error:
+> make C=2 CF=-D__CHECK_ENDIAN__ M=net/core
+> ./include/trace/events/neigh.h:73:1: error: directive in argument list
+> ./include/trace/events/neigh.h:78:1: error: directive in argument list
+> ./include/trace/events/neigh.h:150:1: error: directive in argument list
+> ./include/trace/events/neigh.h:155:1: error: directive in argument list
+>
+> Changes below two lines to signle line to avoid sparse error
+>                 if (n->tbl->family == AF_INET6) {
+> to if (IS_ENABLED(CONFIG_IPV6) && n->tbl->family == AF_INET6)
+>
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
-Are you aware of the counter subsystem that has been proposed (and
-as far as I am concerned is ready to be merged)?
 
-https://patchwork.kernel.org/project/linux-iio/list/?series=147
-(I think that's the latest version posted)..
-William, perhaps you could give an update?
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-(bad luck, you are getting popular ;)
+Cheers,
+-Mukesh
 
-I'll take a quick review as it stands, as some issues may carry over.
-I appreciate that it's always unfortunate to try to upstream stuff at the
-same time as a new framework is being developed / upstreamed, but I don't
-intend to take any additional counter drivers into IIO.  We just
-end up having to maintain old interfaces in more and more drivers.
 
-Thanks,
-
-Jonathan
-
-> 
-> Shinji Kanematsu (2):
->   dt-bindings: iio: counter: Add Milbeaut Updown Counter
->   iio: counter: Add support for Milbeaut Updown Counter
-> 
->  .../bindings/iio/counter/milbeaut-updown_cnt.txt   |  22 ++
->  drivers/iio/counter/Kconfig                        |  12 +
->  drivers/iio/counter/Makefile                       |   1 +
->  drivers/iio/counter/milbeaut-updown.h              |  38 ++
->  drivers/iio/counter/milbeaut-updown_cnt.c          | 385 +++++++++++++++++++++
->  5 files changed, 458 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
->  create mode 100644 drivers/iio/counter/milbeaut-updown.h
->  create mode 100644 drivers/iio/counter/milbeaut-updown_cnt.c
-> 
-
+> ---
+> Changes in V2:
+>                  -Divide patch to only address spare error
+> ---
+>   include/trace/events/neigh.h | 8 ++------
+>   1 file changed, 2 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/trace/events/neigh.h b/include/trace/events/neigh.h
+> index 0bdb085..2ca0180 100644
+> --- a/include/trace/events/neigh.h
+> +++ b/include/trace/events/neigh.h
+> @@ -70,12 +70,10 @@ TRACE_EVENT(neigh_update,
+>   		else
+>   			*p32 = 0;
+>   
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -		if (n->tbl->family == AF_INET6) {
+> +		if (IS_ENABLED(CONFIG_IPV6) && n->tbl->family == AF_INET6) {
+>   			pin6 = (struct in6_addr *)__entry->primary_key6;
+>   			*pin6 = *(struct in6_addr *)n->primary_key;
+>   		} else
+> -#endif
+>   		{
+>   			ipv6_addr_set_v4mapped(*p32, pin6);
+>   		}
+> @@ -147,12 +145,10 @@ DECLARE_EVENT_CLASS(neigh__update,
+>   		else
+>   			*p32 = 0;
+>   
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -		if (n->tbl->family == AF_INET6) {
+> +		if (IS_ENABLED(CONFIG_IPV6) && n->tbl->family == AF_INET6) {
+>   			pin6 = (struct in6_addr *)__entry->primary_key6;
+>   			*pin6 = *(struct in6_addr *)n->primary_key;
+>   		} else
+> -#endif
+>   		{
+>   			ipv6_addr_set_v4mapped(*p32, pin6);
+>   		}
