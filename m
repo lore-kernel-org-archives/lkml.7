@@ -2,139 +2,105 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B43C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 05:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4345C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 05:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C17412184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 05:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D58F218A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 05:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbfC3FmB (ORCPT
+        id S1730333AbfC3FnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 01:42:01 -0400
-Received: from smtp.nue.novell.com ([195.135.221.5]:49652 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbfC3FmB (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
-        Sat, 30 Mar 2019 01:42:01 -0400
-Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
-        by smtp.nue.novell.com with ESMTP (TLS encrypted); Sat, 30 Mar 2019 06:41:59 +0100
-Received: from linux-l9pv.suse (nwb-a10-snat.microfocus.com [10.120.13.201])
-        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Sat, 30 Mar 2019 05:41:28 +0000
-Date:   Sat, 30 Mar 2019 13:41:23 +0800
-From:   joeyli <jlee@suse.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "Lee, Chun-Yi" <joeyli.kernel@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        Josh Boyer <jwboyer@fedoraproject.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH 1/2] efi: add a function for transferring status to string
-Message-ID: <20190330054123.GX26049@linux-l9pv.suse>
-References: <20190324002621.3551-1-jlee@suse.com>
- <CAKv+Gu9B6h3zGVTctepd1GE5LaaMaT5x14Le1v05AOhbH36bpQ@mail.gmail.com>
- <1553713442.4608.20.camel@linux.ibm.com>
+        Sat, 30 Mar 2019 01:43:02 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52988 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726434AbfC3FnB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 01:43:01 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2U5cHcW043577
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 01:43:00 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rhw3f9nxd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 01:43:00 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Sat, 30 Mar 2019 05:42:59 -0000
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 30 Mar 2019 05:42:56 -0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2U5gtes12058860
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 30 Mar 2019 05:42:55 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 65B26112064;
+        Sat, 30 Mar 2019 05:42:55 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D8CCC112061;
+        Sat, 30 Mar 2019 05:42:53 +0000 (GMT)
+Received: from skywalker.ibmuc.com (unknown [9.85.85.132])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat, 30 Mar 2019 05:42:53 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH] mm: Fix build warning
+Date:   Sat, 30 Mar 2019 11:12:48 +0530
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553713442.4608.20.camel@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19033005-2213-0000-0000-0000036C650A
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010838; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000283; SDB=6.01181690; UDB=6.00618514; IPR=6.00962416;
+ MB=3.00026217; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-30 05:42:57
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19033005-2214-0000-0000-00005DD71D5D
+Message-Id: <20190330054248.28357-1-aneesh.kumar@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-30_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903300038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mimi,
+mm/debug.c: In function ‘dump_mm’:
+include/linux/kern_levels.h:5:18: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 19 has type ‘long int’ [-Wformat=]
+              ~~~^
 
-On Wed, Mar 27, 2019 at 03:04:02PM -0400, Mimi Zohar wrote:
-> On Wed, 2019-03-27 at 19:58 +0100, Ard Biesheuvel wrote:
-> > On Sun, 24 Mar 2019 at 01:26, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
-> > >
-> > > This function can be used to transfer EFI status code to string
-> > > for printing out debug message. Using this function can improve
-> > > the readability of log.
-> 
-> Maybe instead of "for transferring status" use "to convert the status
-> value to a" in the Subject line and here in the patch description.
->
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+---
+ mm/debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for your suggestion. I will change subject and description.
- 
-> > >
-> > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > > Cc: Kees Cook <keescook@chromium.org>
-> > > Cc: Anton Vorontsov <anton@enomsg.org>
-> > > Cc: Colin Cross <ccross@android.com>
-> > > Cc: Tony Luck <tony.luck@intel.com>
-> > > Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
-> > > ---
-> > >  include/linux/efi.h | 28 ++++++++++++++++++++++++++++
-> > >  1 file changed, 28 insertions(+)
-> > >
-> > > diff --git a/include/linux/efi.h b/include/linux/efi.h
-> > > index 54357a258b35..a43cb0dc37af 100644
-> > > --- a/include/linux/efi.h
-> > > +++ b/include/linux/efi.h
-> > > @@ -1768,4 +1768,32 @@ struct linux_efi_memreserve {
-> > >  #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
-> > >         / sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
-> > >
-> > > +#define EFI_STATUS_STR(_status) \
-> > > +case EFI_##_status: \
-> > > +       return "EFI_" __stringify(_status);
-> > > +
-> > > +static inline char *
-> > > +efi_status_to_str(efi_status_t status)
-> > > +{
-> > > +       switch (status) {
-> > > +       EFI_STATUS_STR(SUCCESS)
-> > > +       EFI_STATUS_STR(LOAD_ERROR)
-> > > +       EFI_STATUS_STR(INVALID_PARAMETER)
-> > > +       EFI_STATUS_STR(UNSUPPORTED)
-> > > +       EFI_STATUS_STR(BAD_BUFFER_SIZE)
-> > > +       EFI_STATUS_STR(BUFFER_TOO_SMALL)
-> > > +       EFI_STATUS_STR(NOT_READY)
-> > > +       EFI_STATUS_STR(DEVICE_ERROR)
-> > > +       EFI_STATUS_STR(WRITE_PROTECTED)
-> > > +       EFI_STATUS_STR(OUT_OF_RESOURCES)
-> > > +       EFI_STATUS_STR(NOT_FOUND)
-> > > +       EFI_STATUS_STR(ABORTED)
-> > > +       EFI_STATUS_STR(SECURITY_VIOLATION)
-> > > +       default:
-> > > +               pr_warn("Unknown efi status: 0x%lx", status);
-> > > +       }
-> > > +
-> > > +       return "Unknown efi status";
-> > > +}
-> > > +
-> > >  #endif /* _LINUX_EFI_H */
-> > > --
-> > > 2.16.4
-> > >
-> > 
-> > Please turn this into a proper function so that not every calling
-> > object has to duplicate all these strings.
-> 
-> Hi Ard,
-> 
-> Keeping the status values and strings in sync is difficult.  I was
-> going to suggest moving the macro immediately after the status value
-> definitions.
->
+diff --git a/mm/debug.c b/mm/debug.c
+index c0b31b6c3877..c134e76918dc 100644
+--- a/mm/debug.c
++++ b/mm/debug.c
+@@ -137,7 +137,7 @@ void dump_mm(const struct mm_struct *mm)
+ 		"mmap_base %lu mmap_legacy_base %lu highest_vm_end %lu\n"
+ 		"pgd %px mm_users %d mm_count %d pgtables_bytes %lu map_count %d\n"
+ 		"hiwater_rss %lx hiwater_vm %lx total_vm %lx locked_vm %lx\n"
+-		"pinned_vm %llx data_vm %lx exec_vm %lx stack_vm %lx\n"
++		"pinned_vm %lx data_vm %lx exec_vm %lx stack_vm %lx\n"
+ 		"start_code %lx end_code %lx start_data %lx end_data %lx\n"
+ 		"start_brk %lx brk %lx start_stack %lx\n"
+ 		"arg_start %lx arg_end %lx env_start %lx env_end %lx\n"
+-- 
+2.20.1
 
-I will move the code to after the status value definitions.
-
-Thanks
-Joey Lee 
