@@ -7,52 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B30CFC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F40C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835442064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 186B5206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553908207;
-	bh=XryQgtJK0aCvtvehU6kPCBvAIZjglRIkeo1yv6eJYAM=;
+	s=default; t=1553908217;
+	bh=Qy4wuXaregnXLlD1xlrd/KImvb/pLXPO/gp9AQRS5Kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rAuZQO5SUGl6yg+StVI0dL75XrlHSXPq6uzL3CwhCo6bq4YDJt7AM3GUWdfRq41oS
-	 6a5ewkmXHXtmeJiG9DJCWspMFbZhTAWelwr1+O6sxrUvU7ew/wDO1YnnBCP6lb+aFY
-	 l//eFvr6Rl3WaT555cP2911x62/A/6g3627/G+3M=
+	b=wmPPgO9KHEPPupjTdcVqjTuiSvxaFQgsvxJPXcXDpix61GgmEAOGUIJ2O5DeOKl3z
+	 goBCPfBfDDCvRXldACMq9itT++J6McrjioFH1TlZRwjFWYcLIfpVjVJ1ftYovmmhqz
+	 22tL4/snyXMdeXPJ4qS7IWpKmcVL31x+Fdazzxdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730888AbfC3AwF (ORCPT
+        id S1731067AbfC3BKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:52:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58666 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:10:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730878AbfC3AwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:52:02 -0400
+        id S1730811AbfC3Avk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:51:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F2F9218E2;
-        Sat, 30 Mar 2019 00:52:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86C4C218D0;
+        Sat, 30 Mar 2019 00:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907121;
-        bh=XryQgtJK0aCvtvehU6kPCBvAIZjglRIkeo1yv6eJYAM=;
+        s=default; t=1553907099;
+        bh=Qy4wuXaregnXLlD1xlrd/KImvb/pLXPO/gp9AQRS5Kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kPsEoQjmey7xekaXLeEfJ4Anq75ztPE6tBLosbWQMa02AZpC73q3Mk11Kkltq8cPM
-         bZfYs6SEMAjj60i3SrqUWpY62Cybnd4SzU6EHtbyChceXoaztqDmIoLxpySILpicNd
-         g2tvRLHOMniiH7qp+m/cStSrdaOOvH2B8FRA0QDw=
+        b=P1/JtGPjxgMwzwx6TBVQvSwI56Aqcy3XZFBgq6NMZoghRtGw+CNDALl1tSRs/7Rd0
+         qtgXDOYmkLn/ufUvmBNqCs0/Y+V+oE9Rzcp2OUE3nTcyyg4ghGs9D8yPpzAV2LADDY
+         7WZ9oqdExLg54ynTot5MIXiPvve9FKaxZ1Oqnbzg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Taeung Song <treeze.taeung@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 37/67] perf config: Fix a memory leak in collect_config()
-Date:   Fri, 29 Mar 2019 20:50:17 -0400
-Message-Id: <20190330005047.25998-37-sashal@kernel.org>
+Cc:     Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 32/67] scsi: qla2xxx: Fix NULL pointer crash due to stale CPUID
+Date:   Fri, 29 Mar 2019 20:50:12 -0400
+Message-Id: <20190330005047.25998-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005047.25998-1-sashal@kernel.org>
 References: <20190330005047.25998-1-sashal@kernel.org>
@@ -65,58 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Himanshu Madhani <hmadhani@marvell.com>
 
-[ Upstream commit 54569ba4b06d5baedae4614bde33a25a191473ba ]
+[ Upstream commit ac444b4f0ace05d7c4c99f6b1e5b0cae0852f025 ]
 
-Detected with gcc's ASan:
+This patch fixes crash due to NULL pointer derefrence because CPU pointer
+is not set and used by driver.  Instead, driver is passes CPU as tag via
+ha->isp_ops->{lun_reset|target_reset}
 
-  Direct leak of 66 byte(s) in 5 object(s) allocated from:
-      #0 0x7ff3b1f32070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
-      #1 0x560c8761034d in collect_config util/config.c:597
-      #2 0x560c8760d9cb in get_value util/config.c:169
-      #3 0x560c8760dfd7 in perf_parse_file util/config.c:285
-      #4 0x560c8760e0d2 in perf_config_from_file util/config.c:476
-      #5 0x560c876108fd in perf_config_set__init util/config.c:661
-      #6 0x560c87610c72 in perf_config_set__new util/config.c:709
-      #7 0x560c87610d2f in perf_config__init util/config.c:718
-      #8 0x560c87610e5d in perf_config util/config.c:730
-      #9 0x560c875ddea0 in main /home/changbin/work/linux/tools/perf/perf.c:442
-      #10 0x7ff3afb8609a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+[   30.160780] qla2xxx [0000:a0:00.1]-8038:9: Cable is unplugged...
+[   69.984045] qla2xxx [0000:a0:00.0]-8009:8: DEVICE RESET ISSUED nexus=8:0:0 cmd=00000000b0d62f46.
+[   69.992849] BUG: unable to handle kernel NULL pointer dereference at 0000000000000040
+[   70.000680] PGD 0 P4D 0
+[   70.003232] Oops: 0000 [#1] SMP PTI
+[   70.006727] CPU: 2 PID: 6714 Comm: sg_reset Kdump: loaded Not tainted 4.18.0-67.el8.x86_64 #1
+[   70.015258] Hardware name: NEC Express5800/T110j [N8100-2758Y]/MX32-PH0-NJ, BIOS F11 02/13/2019
+[   70.024016] RIP: 0010:blk_mq_rq_cpu+0x9/0x10
+[   70.028315] Code: 01 58 01 00 00 48 83 c0 28 48 3d 80 02 00 00 75 ab c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48
+ 8b 47 08 <8b> 40 40 c3 0f 1f 00 0f 1f 44 00 00 48 83 ec 10 48 c7 c6 20 6e 7c
+[   70.047087] RSP: 0018:ffff99a481487d58 EFLAGS: 00010246
+[   70.052322] RAX: 0000000000000000 RBX: ffffffffc041b08b RCX: 0000000000000000
+[   70.059466] RDX: 0000000000000000 RSI: ffff8d10b6b16898 RDI: ffff8d10b341e400
+[   70.066615] RBP: ffffffffc03a6bd0 R08: 0000000000000415 R09: 0000000000aaaaaa
+[   70.073765] R10: 0000000000000001 R11: 0000000000000001 R12: ffff8d10b341e528
+[   70.080914] R13: ffff8d10aadefc00 R14: ffff8d0f64efa998 R15: ffff8d0f64efa000
+[   70.088083] FS:  00007f90a201e540(0000) GS:ffff8d10b6b00000(0000) knlGS:0000000000000000
+[   70.096188] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   70.101959] CR2: 0000000000000040 CR3: 0000000268886005 CR4: 00000000003606e0
+[   70.109127] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   70.116277] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   70.123425] Call Trace:
+[   70.125896]  __qla2xxx_eh_generic_reset+0xb1/0x220 [qla2xxx]
+[   70.131572]  scsi_ioctl_reset+0x1f5/0x2a0
+[   70.135600]  scsi_ioctl+0x18e/0x397
+[   70.139099]  ? sd_ioctl+0x7c/0x100 [sd_mod]
+[   70.143287]  blkdev_ioctl+0x32b/0x9f0
+[   70.146954]  ? __check_object_size+0xa3/0x181
+[   70.151323]  block_ioctl+0x39/0x40
+[   70.154735]  do_vfs_ioctl+0xa4/0x630
+[   70.158322]  ? syscall_trace_enter+0x1d3/0x2c0
+[   70.162769]  ksys_ioctl+0x60/0x90
+[   70.166104]  __x64_sys_ioctl+0x16/0x20
+[   70.169859]  do_syscall_64+0x5b/0x1b0
+[   70.173532]  entry_SYSCALL_64_after_hwframe+0x65/0xca
+[   70.178587] RIP: 0033:0x7f90a1b3445b
+[   70.182183] Code: 0f 1e fa 48 8b 05 2d aa 2c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00
+ 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d fd a9 2c 00 f7 d8 64 89 01 48
+[   70.200956] RSP: 002b:00007fffdca88b68 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+[   70.208535] RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f90a1b3445b
+[   70.215684] RDX: 00007fffdca88b84 RSI: 0000000000002284 RDI: 0000000000000003
+[   70.222833] RBP: 00007fffdca88ca8 R08: 00007fffdca88b84 R09: 0000000000000000
+[   70.229981] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fffdca88b84
+[   70.237131] R13: 0000000000000000 R14: 000055ab09b0bd28 R15: 0000000000000000
+[   70.244284] Modules linked in: nft_chain_route_ipv4 xt_CHECKSUM nft_chain_nat_ipv4 ipt_MASQUERADE nf_nat_ipv4 nf_nat nf_conntrack_ipv4
+ nf_defrag_ipv4 xt_conntrack nf_conntrack libcrc32c ipt_REJECT nf_reject_ipv4 nft_counter nft_compat tun bridge stp llc nf_tables nfnetli
+nk devlink sunrpc vfat fat intel_rapl intel_pmc_core x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm wmi_bmof iTCO_wdt iTCO_
+vendor_support irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel ipmi_ssif intel_cstate intel_uncore intel_rapl_perf ipmi_si jo
+ydev pcspkr ipmi_devintf sg wmi ipmi_msghandler video acpi_power_meter acpi_pad mei_me i2c_i801 mei ip_tables ext4 mbcache jbd2 sr_mod cd
+rom sd_mod qla2xxx ast i2c_algo_bit drm_kms_helper nvme_fc syscopyarea sysfillrect uas sysimgblt fb_sys_fops nvme_fabrics ttm
+[   70.314805]  usb_storage nvme_core crc32c_intel scsi_transport_fc ahci drm libahci tg3 libata megaraid_sas pinctrl_cannonlake pinctrl_
+intel
+[   70.327335] CR2: 0000000000000040
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Taeung Song <treeze.taeung@gmail.com>
-Fixes: 20105ca1240c ("perf config: Introduce perf_config_set class")
-Link: http://lkml.kernel.org/r/20190316080556.3075-6-changbin.du@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 9cf2bab630765 ("block: kill request ->cpu member")
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/config.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 1ea8f898f1a1..9ecdbd5986b3 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -632,11 +632,10 @@ static int collect_config(const char *var, const char *value,
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 7e35ce2162d0..503fda4e7e8e 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -1459,7 +1459,7 @@ __qla2xxx_eh_generic_reset(char *name, enum nexus_wait_type type,
+ 		goto eh_reset_failed;
  	}
- 
- 	ret = set_value(item, value);
--	return ret;
- 
- out_free:
- 	free(key);
--	return -1;
-+	return ret;
- }
- 
- int perf_config_set__collect(struct perf_config_set *set, const char *file_name,
+ 	err = 2;
+-	if (do_reset(fcport, cmd->device->lun, blk_mq_rq_cpu(cmd->request) + 1)
++	if (do_reset(fcport, cmd->device->lun, 1)
+ 		!= QLA_SUCCESS) {
+ 		ql_log(ql_log_warn, vha, 0x800c,
+ 		    "do_reset failed for cmd=%p.\n", cmd);
 -- 
 2.19.1
 
