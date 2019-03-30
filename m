@@ -4,58 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37669C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFBEC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF357205C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F263205C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553908237;
-	bh=Y0DyrFn/Mj3oz8YPrEBmNZGX9FX9trbQvcL6o5posys=;
+	s=default; t=1553908242;
+	bh=GHt7RPK5STg/MjAaQD62mPmQocY0GJBTY4ZmOqLbUfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XdblSOWyCYlZZpZZgmM0OJZMs1YZRDB/qoP+lHkdMUuH+Z5N9veLkeHC3hgvTF2nq
-	 tknTrd14ZdefXo24Ubf9Gf+wId0Lc3jfsEHDp3YZIgkEX/1wDZ09UGj6pITvQsfL9v
-	 s/4TsbpLU3qU+fKL8PfFayIhI+iCEnMET4ukr08A=
+	b=H92jzv5JJva1cUAPrV3y2+M47D1UUC1Ohj0+Yo+JF6etzVsoGCjRBcTzizcTRgcie
+	 lerm9B4VFXLgJW+O+alIVD4jqx+5UdTXctBCudjlKl6wht9x5e3n6yCKvhvyofEv9N
+	 x4isU72urtsd9YuOJBw5LC80d5gToNjbpBLhxUrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731089AbfC3BKg (ORCPT
+        id S1730747AbfC3Av3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58196 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:51:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730761AbfC3Avd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:51:33 -0400
+        id S1730698AbfC3Av0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:51:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 972EB218AC;
-        Sat, 30 Mar 2019 00:51:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5962206DD;
+        Sat, 30 Mar 2019 00:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907093;
-        bh=Y0DyrFn/Mj3oz8YPrEBmNZGX9FX9trbQvcL6o5posys=;
+        s=default; t=1553907085;
+        bh=GHt7RPK5STg/MjAaQD62mPmQocY0GJBTY4ZmOqLbUfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eu6/R1AYFBSStc1sO6MF2Hmq1kdu7xs6v1y8XwufAJ8rnFTIsLNTDOLo3ddBPzdMq
-         4HAvgwzg5h8oF+DbpAduNXnpR8CCzuQ7cvQXksSDJ38PLnHEQ+/runOJIPnT3DGBAn
-         qLfg5ZYCUPA3vXk+U/gYACsgKpoH7xWfnxJJ5dnI=
+        b=Iqu2TJt4qMUNd1otFEOXgm2Qr2hv3Hi7+A4Z0lwIEyNi5mZlZzKVxeQK3GACdWmak
+         tTrjJCrfuCEgFAV+IlQVb+1MdmXuRRwmNWbBRgfVNE5NXLBN5XqtPhrCw1KqDvK6eZ
+         vmesfmyvOc0XbXE5RqjV4mvo6YmCV077e9WqDl5w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 28/67] sched/core: Fix buffer overflow in cgroup2 property cpu.max
-Date:   Fri, 29 Mar 2019 20:50:08 -0400
-Message-Id: <20190330005047.25998-28-sashal@kernel.org>
+Cc:     Matthew Garrett <matthewgarrett@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 24/67] thermal/int340x_thermal: fix mode setting
+Date:   Fri, 29 Mar 2019 20:50:04 -0400
+Message-Id: <20190330005047.25998-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005047.25998-1-sashal@kernel.org>
 References: <20190330005047.25998-1-sashal@kernel.org>
@@ -68,46 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Matthew Garrett <matthewgarrett@google.com>
 
-[ Upstream commit 4c47acd824aaaa8fc6dc519fb4e08d1522105b7a ]
+[ Upstream commit 396ee4d0cd52c13b3f6421b8d324d65da5e7e409 ]
 
-Add limit into sscanf format string for on-stack buffer.
+int3400 only pushes the UUID into the firmware when the mode is flipped
+to "enable". The current code only exposes the mode flag if the firmware
+supports the PASSIVE_1 UUID, which not all machines do. Remove the
+restriction.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Li Zefan <lizefan@huawei.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 0d5936344f30 ("sched: Implement interface for cgroup unified hierarchy")
-Link: https://lkml.kernel.org/r/155189230232.2620.13120481613524200065.stgit@buzz
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index d8d76a65cfdd..e843fbd9012e 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6941,7 +6941,7 @@ static int __maybe_unused cpu_period_quota_parse(char *buf,
- {
- 	char tok[21];	/* U64_MAX */
+diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+index e0f39cacbc18..5f3ed24e26ec 100644
+--- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
++++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+@@ -313,10 +313,9 @@ static int int3400_thermal_probe(struct platform_device *pdev)
  
--	if (!sscanf(buf, "%s %llu", tok, periodp))
-+	if (sscanf(buf, "%20s %llu", tok, periodp) < 1)
- 		return -EINVAL;
+ 	platform_set_drvdata(pdev, priv);
  
- 	*periodp *= NSEC_PER_USEC;
+-	if (priv->uuid_bitmap & 1 << INT3400_THERMAL_PASSIVE_1) {
+-		int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
+-		int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
+-	}
++	int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
++	int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
++
+ 	priv->thermal = thermal_zone_device_register("INT3400 Thermal", 0, 0,
+ 						priv, &int3400_thermal_ops,
+ 						&int3400_thermal_params, 0, 0);
 -- 
 2.19.1
 
