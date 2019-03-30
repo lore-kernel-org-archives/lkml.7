@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EFEC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066AEC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 654962184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A21217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909986;
-	bh=wFBjDRC1cmKCA36nkAYZ/nKjJl0ch7eCLOt4oToGhmQ=;
+	s=default; t=1553909997;
+	bh=HCVAH2sr7l+ULzYinwOBQaGwyD8hEINZPE5Ym4L4tk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HZOVEQqJ7A29x9/EgM+YCHvn/HRtF5T5c1JTrsEOj+vgjeO+8BLupOyuDAJFiVpHH
-	 IuHvMWOo05f6RbMLYYLFow5jWW9GTt8PcccBs3VazaxBCPE+vIrEJ2k5bEl8JB9Cx+
-	 IR7FqYRnNrkoGGgNND2HY0pvbwkqpSq62pTDI2wA=
+	b=l+AkIJ+MNMbTWLwID8koMnh3VTUz3SSNnC7j0EIsuz2n73fGDE2nXBKF/jQtTmUF8
+	 /uGF69UgmEw9ECoY6OQjbB0SZ9zZH04eooc31/NN/HZX/TNQb4CT84uF7Od90uYLZF
+	 /CE5e+d3koT3Vo6mx3g6AytTDAyCM7sOqgFIJNaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731552AbfC3Bjo (ORCPT
+        id S1731706AbfC3Bj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36932 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:39:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731245AbfC3BaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:30:00 -0400
+        id S1731033AbfC3B3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:29:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D90BA218D9;
-        Sat, 30 Mar 2019 01:29:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67DEE217F5;
+        Sat, 30 Mar 2019 01:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909399;
-        bh=wFBjDRC1cmKCA36nkAYZ/nKjJl0ch7eCLOt4oToGhmQ=;
+        s=default; t=1553909378;
+        bh=HCVAH2sr7l+ULzYinwOBQaGwyD8hEINZPE5Ym4L4tk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fd+7FqUqClrIup5dQP43QuMTluC0F7FWpG5k8NgoehBhwL+3Mw4VWdys0tDpd8UOZ
-         cgYXlOsqVWHuMf4oU0BkNwJUzUmwekxr2LCcXgQUHW0miOD+9hvC2tfiYRVf0OROqF
-         YCM4ayym3330d72jTA7N2QPZNlgk2rmJICN8yp9I=
+        b=2PfNlS2kkorLghQrjGAckBxott3S6/yCPXgw4Kt+mJzXGL5mr4ulBO0pcYpwU0INV
+         dm+S44ftZkKholE+Ix+fmxqdww7Pe2J2p9kVKwOmTcXZjtb0YNLe4yqBn8RMwsEKzl
+         QX8TeZxU/7iBNnMj84wJ6JZXgawnfJ+VnY1ft610=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trigger Huang <Trigger.Huang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 29/57] drm/ttm: Fix bo_global and mem_global kfree error
-Date:   Fri, 29 Mar 2019 21:28:22 -0400
-Message-Id: <20190330012854.32212-29-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 22/57] netfilter: nf_flow_table: remove flowtable hook flush routine in netns exit routine
+Date:   Fri, 29 Mar 2019 21:28:15 -0400
+Message-Id: <20190330012854.32212-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
 References: <20190330012854.32212-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,95 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trigger Huang <Trigger.Huang@amd.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 30f33126feca0fe16df9e9302ffc28a953e2eb37 ]
+[ Upstream commit b7f1a16d29b2e28d3dcbb070511bd703e306281b ]
 
-ttm_bo_glob and ttm_mem_glob are defined as structure instance, while
-not allocated by kzalloc, so kfree should not be invoked to release
-them anymore. Otherwise, it will cause the following kernel BUG when
-unloading amdgpu module
+When device is unregistered, flowtable flush routine is called
+by notifier_call(nf_tables_flowtable_event). and exit callback of
+nftables pernet_operation(nf_tables_exit_net) also has flowtable flush
+routine. but when network namespace is destroyed, both notifier_call
+and pernet_operation are called. hence flowtable flush routine in
+pernet_operation is unnecessary.
 
-[   48.419294] kernel BUG at /build/linux-5s7Xkn/linux-4.15.0/mm/slub.c:3894!
-[   48.419352] invalid opcode: 0000 [#1] SMP PTI
-[   48.419387] Modules linked in: amdgpu(OE-) amdchash(OE) amdttm(OE) amd_sched(OE) amdkcl(OE) amd_iommu_v2 drm_kms_helper drm i2c_algo_bit fb_sys_fops syscopyarea sysfillrect sysimgblt snd_hda_codec_generic snd_hda_intel snd_hda_codec snd_hda_core snd_hwdep kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi pcbc snd_seq snd_seq_device snd_timer aesni_intel snd soundcore joydev aes_x86_64 crypto_simd glue_helper cryptd input_leds mac_hid serio_raw binfmt_misc nfsd auth_rpcgss nfs_acl lockd grace sunrpc sch_fq_codel parport_pc ppdev lp parport ip_tables x_tables autofs4 8139too psmouse i2c_piix4 8139cp mii floppy pata_acpi
-[   48.419782] CPU: 1 PID: 1281 Comm: modprobe Tainted: G           OE    4.15.0-20-generic #21-Ubuntu
-[   48.419838] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-[   48.419901] RIP: 0010:kfree+0x137/0x180
-[   48.419934] RSP: 0018:ffffb02101273bf8 EFLAGS: 00010246
-[   48.419974] RAX: ffffeee1418ad7e0 RBX: ffffffffc075f100 RCX: ffff8fed7fca7ed0
-[   48.420025] RDX: 0000000000000000 RSI: 000000000003440e RDI: 0000000022400000
-[   48.420073] RBP: ffffb02101273c10 R08: 0000000000000010 R09: ffff8fed7ffd3680
-[   48.420121] R10: ffffeee1418ad7c0 R11: ffff8fed7ffd3000 R12: ffffffffc075e2c0
-[   48.420169] R13: ffffffffc074ec10 R14: ffff8fed73063900 R15: ffff8fed737428e8
-[   48.420216] FS:  00007fdc912ec540(0000) GS:ffff8fed7fc80000(0000) knlGS:0000000000000000
-[   48.420267] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   48.420308] CR2: 000055fa40c30060 CR3: 000000023470a006 CR4: 00000000003606e0
-[   48.420358] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   48.420405] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   48.420452] Call Trace:
-[   48.420485]  ttm_bo_global_kobj_release+0x20/0x30 [amdttm]
-[   48.420528]  kobject_release+0x6a/0x180
-[   48.420562]  kobject_put+0x28/0x50
-[   48.420595]  ttm_bo_global_release+0x36/0x50 [amdttm]
-[   48.420636]  amdttm_bo_device_release+0x119/0x180 [amdttm]
-[   48.420678]  ? amdttm_bo_clean_mm+0xa6/0xf0 [amdttm]
-[   48.420760]  amdgpu_ttm_fini+0xc9/0x180 [amdgpu]
-[   48.420821]  amdgpu_bo_fini+0x12/0x40 [amdgpu]
-[   48.420889]  gmc_v9_0_sw_fini+0x40/0x50 [amdgpu]
-[   48.420947]  amdgpu_device_fini+0x36f/0x4c0 [amdgpu]
-[   48.421007]  amdgpu_driver_unload_kms+0xb4/0x150 [amdgpu]
-[   48.421058]  drm_dev_unregister+0x46/0xf0 [drm]
-[   48.421102]  drm_dev_unplug+0x12/0x70 [drm]
+test commands:
+   %ip netns add vm1
+   %ip netns exec vm1 nft add table ip filter
+   %ip netns exec vm1 nft add flowtable ip filter w \
+	{ hook ingress priority 0\; devices = { lo }\; }
+   %ip netns del vm1
 
-Signed-off-by: Trigger Huang <Trigger.Huang@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+splat looks like:
+[  265.187019] WARNING: CPU: 0 PID: 87 at net/netfilter/core.c:309 nf_hook_entry_head+0xc7/0xf0
+[  265.187112] Modules linked in: nf_flow_table_ipv4 nf_flow_table nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_tables nfnetlink ip_tables x_tables
+[  265.187390] CPU: 0 PID: 87 Comm: kworker/u4:2 Not tainted 4.19.0-rc3+ #5
+[  265.187453] Workqueue: netns cleanup_net
+[  265.187514] RIP: 0010:nf_hook_entry_head+0xc7/0xf0
+[  265.187546] Code: 8d 81 68 03 00 00 5b c3 89 d0 83 fa 04 48 8d 84 c7 e8 11 00 00 76 81 0f 0b 31 c0 e9 78 ff ff ff 0f 0b 48 83 c4 08 31 c0 5b c3 <0f> 0b 31 c0 e9 65 ff ff ff 0f 0b 31 c0 e9 5c ff ff ff 48 89 0c 24
+[  265.187573] RSP: 0018:ffff88011546f098 EFLAGS: 00010246
+[  265.187624] RAX: ffffffff8d90e135 RBX: 1ffff10022a8de1c RCX: 0000000000000000
+[  265.187645] RDX: 0000000000000000 RSI: 0000000000000005 RDI: ffff880116298040
+[  265.187645] RBP: ffff88010ea4c1a8 R08: 0000000000000000 R09: 0000000000000000
+[  265.187645] R10: ffff88011546f1d8 R11: ffffed0022c532c1 R12: ffff88010ea4c1d0
+[  265.187645] R13: 0000000000000005 R14: dffffc0000000000 R15: ffff88010ea4c1c4
+[  265.187645] FS:  0000000000000000(0000) GS:ffff88011b200000(0000) knlGS:0000000000000000
+[  265.187645] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  265.187645] CR2: 00007fdfb8d00000 CR3: 0000000057a16000 CR4: 00000000001006f0
+[  265.187645] Call Trace:
+[  265.187645]  __nf_unregister_net_hook+0xca/0x5d0
+[  265.187645]  ? nf_hook_entries_free.part.3+0x80/0x80
+[  265.187645]  ? save_trace+0x300/0x300
+[  265.187645]  nf_unregister_net_hooks+0x2e/0x40
+[  265.187645]  nf_tables_exit_net+0x479/0x1340 [nf_tables]
+[  265.187645]  ? find_held_lock+0x39/0x1c0
+[  265.187645]  ? nf_tables_abort+0x30/0x30 [nf_tables]
+[  265.187645]  ? inet_frag_destroy_rcu+0xd0/0xd0
+[  265.187645]  ? trace_hardirqs_on+0x93/0x210
+[  265.187645]  ? __bpf_trace_preemptirq_template+0x10/0x10
+[  265.187645]  ? inet_frag_destroy_rcu+0xd0/0xd0
+[  265.187645]  ? inet_frag_destroy_rcu+0xd0/0xd0
+[  265.187645]  ? __mutex_unlock_slowpath+0x17f/0x740
+[  265.187645]  ? wait_for_completion+0x710/0x710
+[  265.187645]  ? bucket_table_free+0xb2/0x1f0
+[  265.187645]  ? nested_table_free+0x130/0x130
+[  265.187645]  ? __lock_is_held+0xb4/0x140
+[  265.187645]  ops_exit_list.isra.10+0x94/0x140
+[  265.187645]  cleanup_net+0x45b/0x900
+[ ... ]
+
+This WARNING means that hook unregisteration is failed because
+all flowtables hooks are already unregistered by notifier_call.
+
+Network namespace exit routine guarantees that all devices will be
+unregistered first. then, other exit callbacks of pernet_operations
+are called. so that removing flowtable flush routine in exit callback of
+pernet_operation(nf_tables_exit_net) doesn't make flowtable leak.
+
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ttm/ttm_bo.c     | 1 -
- drivers/gpu/drm/ttm/ttm_memory.c | 9 ---------
- 2 files changed, 10 deletions(-)
+ net/netfilter/nf_tables_api.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
-index 7c484729f9b2..268f5a3b3122 100644
---- a/drivers/gpu/drm/ttm/ttm_bo.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo.c
-@@ -1445,7 +1445,6 @@ static void ttm_bo_global_kobj_release(struct kobject *kobj)
- 		container_of(kobj, struct ttm_bo_global, kobj);
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 7d424fd27025..c06393fc716d 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -7203,9 +7203,6 @@ static void __nft_release_tables(struct net *net)
  
- 	__free_page(glob->dummy_read_page);
--	kfree(glob);
- }
- 
- void ttm_bo_global_release(struct drm_global_reference *ref)
-diff --git a/drivers/gpu/drm/ttm/ttm_memory.c b/drivers/gpu/drm/ttm/ttm_memory.c
-index 450387c92b63..df73d5ff84a8 100644
---- a/drivers/gpu/drm/ttm/ttm_memory.c
-+++ b/drivers/gpu/drm/ttm/ttm_memory.c
-@@ -216,14 +216,6 @@ static ssize_t ttm_mem_global_store(struct kobject *kobj,
- 	return size;
- }
- 
--static void ttm_mem_global_kobj_release(struct kobject *kobj)
--{
--	struct ttm_mem_global *glob =
--		container_of(kobj, struct ttm_mem_global, kobj);
--
--	kfree(glob);
--}
--
- static struct attribute *ttm_mem_global_attrs[] = {
- 	&ttm_mem_global_lower_mem_limit,
- 	NULL
-@@ -235,7 +227,6 @@ static const struct sysfs_ops ttm_mem_global_ops = {
- };
- 
- static struct kobj_type ttm_mem_glob_kobj_type = {
--	.release = &ttm_mem_global_kobj_release,
- 	.sysfs_ops = &ttm_mem_global_ops,
- 	.default_attrs = ttm_mem_global_attrs,
- };
+ 		list_for_each_entry(chain, &table->chains, list)
+ 			nf_tables_unregister_hook(net, table, chain);
+-		list_for_each_entry(flowtable, &table->flowtables, list)
+-			nf_unregister_net_hooks(net, flowtable->ops,
+-						flowtable->ops_len);
+ 		/* No packets are walking on these chains anymore. */
+ 		ctx.table = table;
+ 		list_for_each_entry(chain, &table->chains, list) {
 -- 
 2.19.1
 
