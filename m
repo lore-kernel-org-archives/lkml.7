@@ -2,123 +2,133 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B293C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B35FC4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053D6218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E169206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553906999;
-	bh=YfMGlcqzJvLqsR52Rr/cdP7QW7zXjPeLPRX5Ihzq2+o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KSvhnlAHV03eBt7yF4JjfiFb73wslKNr1HSCAiUqJJzk01ufJsku6ZqmVwb1RTyMe
-	 rcVAPVprqPNQ8BxweJzbZYGVHfS4tStgpp23s6lqNtPq9ZgAX+zjp/OJVsDIsb3KNs
-	 A7PzPJK6fP5dQuufz5ZPX/lwZQt+qQBjGfKX/fd4=
+	s=default; t=1553907052;
+	bh=fpdcRjayh6oL3S9Dpm1LRC1Q8PZ9WXwm+cSMuiSVaew=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xBZqh+Bys+zm5gMdmB5dmjT0RDW04jMLnc8FllBAjYYg1pkEzSX7Nh1pzl5Vy/qBJ
+	 /1FnU3NH+gi3GBXqkCh7ZcWRb2+sC60hHxxhzKVG6BmjrRkvzeHk7LHHIT7BRz8k8h
+	 qFK4DdNBNvj2Sbg5YKC0csodW4BqNdfzHLLA7sPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbfC3At5 (ORCPT
+        id S1730416AbfC3Auu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:49:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57234 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:50:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730162AbfC3At5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:49:57 -0400
-Received: from guoren-Inspiron-7460 (23.83.240.247.16clouds.com [23.83.240.247])
+        id S1730162AbfC3Auu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:50:50 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 981F1206DD;
-        Sat, 30 Mar 2019 00:49:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 119C8206DD;
+        Sat, 30 Mar 2019 00:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553906996;
-        bh=YfMGlcqzJvLqsR52Rr/cdP7QW7zXjPeLPRX5Ihzq2+o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SzyF6x+hLsVSLV2GYxP7enzMzvmCkBUHxvZSXsEKtvWSTxsxlRE8t2diHx00JjU5i
-         s6iyJrnTdL0XwSrjrVNDag2z2yYNQfoOvCYC9Hq3KBhCw6He6lb2IsL9e61fRLnOXx
-         F34gOwbn7WqNPKllRppebG05Kww50EmsVW6ookXU=
-Date:   Sat, 30 Mar 2019 08:49:49 +0800
-From:   Guo Ren <guoren@kernel.org>
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] csky: fix syscall_get_arguments() and
- syscall_set_arguments()
-Message-ID: <20190330004949.GA15705@guoren-Inspiron-7460>
-References: <20190329171230.GB32456@altlinux.org>
+        s=default; t=1553907049;
+        bh=fpdcRjayh6oL3S9Dpm1LRC1Q8PZ9WXwm+cSMuiSVaew=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GmYy6iKdSbtLFXMv1cxo1+CkZDGyIa2usOsli3OlRBuwK/bY5MB7U1UiMfMRfKLHZ
+         +b9k2R4Ne56UsurGDq4GJmpZvHiTCqBDMguHVxABlgvoftrG8HnztL7Yo0Yxynq0av
+         Z8BI2YSbpF9mBYofecgk2ueWuQ9YCYpt5RhAthPI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 01/67] ARC: u-boot args: check that magic number is correct
+Date:   Fri, 29 Mar 2019 20:49:41 -0400
+Message-Id: <20190330005047.25998-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190329171230.GB32456@altlinux.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thx Dmitry,
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-It works for me.
+[ Upstream commit edb64bca50cd736c6894cc6081d5263c007ce005 ]
 
-Tested-by: Guo Ren <ren_guo@c-sky.com>
-Acked-by: Guo Ren <ren_guo@c-sky.com>
+In case of devboards we really often disable bootloader and load
+Linux image in memory via JTAG. Even if kernel tries to verify
+uboot_tag and uboot_arg there is sill a chance that we treat some
+garbage in registers as valid u-boot arguments in JTAG case.
+E.g. it is enough to have '1' in r0 to treat any value in r2 as
+a boot command line.
 
-On Fri, Mar 29, 2019 at 08:12:30PM +0300, Dmitry V. Levin wrote:
-> C-SKY syscall arguments are located in orig_a0,a1,a2,a3,regs[0],regs[1]
-> fields of struct pt_regs.
-> 
-> Due to an off-by-one bug and a bug in pointer arithmetic
-> syscall_get_arguments() was reading orig_a0,regs[1..5] fields instead.
-> Likewise, syscall_set_arguments() was writing orig_a0,regs[1..5] fields
-> instead.
-> 
-> Fixes: 4859bfca11c7d ("csky: System Call")
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Andy Lutomirski <luto@amacapital.net>
-> Cc: Will Drewry <wad@chromium.org>
-> Cc: stable@vger.kernel.org # v4.20+
-> Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
-> ---
->  arch/csky/include/asm/syscall.h | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/csky/include/asm/syscall.h b/arch/csky/include/asm/syscall.h
-> index d637445737b7..9a9cd81e66c1 100644
-> --- a/arch/csky/include/asm/syscall.h
-> +++ b/arch/csky/include/asm/syscall.h
-> @@ -49,10 +49,11 @@ syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
->  	if (i == 0) {
->  		args[0] = regs->orig_a0;
->  		args++;
-> -		i++;
->  		n--;
-> +	} else {
-> +		i--;
->  	}
-> -	memcpy(args, &regs->a1 + i * sizeof(regs->a1), n * sizeof(args[0]));
-> +	memcpy(args, &regs->a1 + i, n * sizeof(args[0]));
->  }
->  
->  static inline void
-> @@ -63,10 +64,11 @@ syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
->  	if (i == 0) {
->  		regs->orig_a0 = args[0];
->  		args++;
-> -		i++;
->  		n--;
-> +	} else {
-> +		i--;
->  	}
-> -	memcpy(&regs->a1 + i * sizeof(regs->a1), args, n * sizeof(regs->a0));
-> +	memcpy(&regs->a1 + i, args, n * sizeof(regs->a1));
->  }
->  
->  static inline int
-> -- 
-> ldv
+So check that magic number passed from u-boot is correct and drop
+u-boot arguments otherwise. That helps to reduce the possibility
+of using garbage as u-boot arguments in JTAG case.
+
+We can safely check U-boot magic value (0x0) in linux passed via
+r1 register as U-boot pass it from the beginning. So there is no
+backward-compatibility issues.
+
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arc/kernel/head.S  | 1 +
+ arch/arc/kernel/setup.c | 8 ++++++++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/arch/arc/kernel/head.S b/arch/arc/kernel/head.S
+index 30e090625916..a72bbda2f7aa 100644
+--- a/arch/arc/kernel/head.S
++++ b/arch/arc/kernel/head.S
+@@ -106,6 +106,7 @@ ENTRY(stext)
+ 	;    r2 = pointer to uboot provided cmdline or external DTB in mem
+ 	; These are handled later in handle_uboot_args()
+ 	st	r0, [@uboot_tag]
++	st      r1, [@uboot_magic]
+ 	st	r2, [@uboot_arg]
+ 
+ 	; setup "current" tsk and optionally cache it in dedicated r25
+diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+index 7b2340996cf8..7b3a7b3b380c 100644
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -36,6 +36,7 @@ unsigned int intr_to_DE_cnt;
+ 
+ /* Part of U-boot ABI: see head.S */
+ int __initdata uboot_tag;
++int __initdata uboot_magic;
+ char __initdata *uboot_arg;
+ 
+ const struct machine_desc *machine_desc;
+@@ -497,6 +498,8 @@ static inline bool uboot_arg_invalid(unsigned long addr)
+ #define UBOOT_TAG_NONE		0
+ #define UBOOT_TAG_CMDLINE	1
+ #define UBOOT_TAG_DTB		2
++/* We always pass 0 as magic from U-boot */
++#define UBOOT_MAGIC_VALUE	0
+ 
+ void __init handle_uboot_args(void)
+ {
+@@ -511,6 +514,11 @@ void __init handle_uboot_args(void)
+ 		goto ignore_uboot_args;
+ 	}
+ 
++	if (uboot_magic != UBOOT_MAGIC_VALUE) {
++		pr_warn(IGNORE_ARGS "non zero uboot magic\n");
++		goto ignore_uboot_args;
++	}
++
+ 	if (uboot_tag != UBOOT_TAG_NONE &&
+             uboot_arg_invalid((unsigned long)uboot_arg)) {
+ 		pr_warn(IGNORE_ARGS "invalid uboot arg: '%px'\n", uboot_arg);
+-- 
+2.19.1
+
