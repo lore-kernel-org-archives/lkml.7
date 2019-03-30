@@ -2,506 +2,197 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2283C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 14:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4E2C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 14:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABCC32183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 14:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C95CC2183F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 14:18:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8bfn1rO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730896AbfC3OQs (ORCPT
+        id S1730911AbfC3OSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 10:16:48 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33062 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730844AbfC3OQr (ORCPT
+        Sat, 30 Mar 2019 10:18:46 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51909 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730838AbfC3OSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 10:16:47 -0400
-Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E8E4A280B0E;
-        Sat, 30 Mar 2019 14:16:44 +0000 (GMT)
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] eeprom: at25: Convert the driver to the spi-mem interface
-Date:   Sat, 30 Mar 2019 15:16:37 +0100
-Message-Id: <20190330141637.22632-1-boris.brezillon@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 30 Mar 2019 10:18:45 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 4so5410664wmf.1;
+        Sat, 30 Mar 2019 07:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=46wkvm0w5QxqlVYof1WHt4ADpelrKMDMx5zOPv8wNxk=;
+        b=K8bfn1rO3MaJLqejsWAwv0YGYA7F3ebPmKxOMAHptXXij3D/TZar+YqBWHELV28Z+w
+         IFmQyGZz7OEsX1UkBO37+olpmYe/y0f0wEuZAB97JjE++l9S4/NNrQONTrZBbfrpLlWy
+         Yo4PZsNVEF1jw3QcwqgtB3M6lQH00fo51aCur40RC4aOH33elzxizUJI4h9QVDRY0IbK
+         RtcjDPtctM8Nr5XGDpWw6zBjHywudoWbSCLcoAU6vHsN9muimk46FH8uRvcGmeVY1fSh
+         sHDZh9NymZfypuqXmikYsL3vgAuJ5XjkTQIJ8WUMOltGJtmVxiZcaI00X5c6mnW2dhLU
+         J6Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=46wkvm0w5QxqlVYof1WHt4ADpelrKMDMx5zOPv8wNxk=;
+        b=TWj+yU0u0wONkhcBJoBssvXloDLGLpm7HLoR/OtE2t7kJOHWDQKSFDUZi9RdY5wCks
+         vs0oPSkxZLpUrsirtXb+n1guasxyvneVu3k3S31lqx8oTbRkS8VBeU+15K+z6/KPz8sV
+         HlZKJ641EVR30RGvQ51Td1amkdXRk8EVYcfJFsEBnjoNZxGrIy8Bf9mxsFhrxtR94o56
+         bYPWh1ZvuWAfeex31gxf2b6FLccfy3kC3kD7Ze+emdKcO6j9LfyQ71KKZw1ewGsEh73P
+         LTQjx77VGBCK46plwJPKUyp3CPkLxWByN4P9VrdgE0kdHkiLE3j9k8wSC/F+XVq4Klc5
+         TTqw==
+X-Gm-Message-State: APjAAAVDgGRksFh3N/tKwY2qUtxRDWoHrDPl05We5RaOneWJGCimnTEu
+        h0VVYqej3z4rwkINZpLrp8QFFHz8koZ2X9ebAfo=
+X-Google-Smtp-Source: APXvYqzN17hDQf0Q2OFsteCv0+4GfSx91BujUEMNw3r5Ugp5mqhxGHq7RPJoFGD77wyMU8adcpsy16amK9Pvs4e0iJ4=
+X-Received: by 2002:a1c:c401:: with SMTP id u1mr6622777wmf.129.1553955523267;
+ Sat, 30 Mar 2019 07:18:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <000000000000cfda050585171f3b@google.com>
+In-Reply-To: <000000000000cfda050585171f3b@google.com>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Sat, 30 Mar 2019 22:18:32 +0800
+Message-ID: <CADvbK_d47Ac6VqRiCoHE4xi0OfGHiSKoyVEZ9AXgVtAS8ObTQg@mail.gmail.com>
+Subject: Re: KMSAN: uninit-value in tipc_nl_compat_bearer_enable (2)
+To:     syzbot <syzbot+8b707430713eb46e1e45@syzkaller.appspotmail.com>
+Cc:     davem <davem@davemloft.net>,
+        Alexander Potapenko <glider@google.com>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        network dev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        tipc-discussion@lists.sourceforge.net,
+        Ying Xue <ying.xue@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AT25 protocol fits pretty well in the spi-mem model. Convert the
-at25 spi driver to a spi-mem driver and use the dirmap API instead of
-forging SPI messages manually.
-This makes the driver compatible with spi-mem-only controllers
-(controllers implementing only the spi_mem ops).
+On Thu, Mar 28, 2019 at 1:55 AM syzbot
+<syzbot+8b707430713eb46e1e45@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    9536b452 kmsan: uaccess.h: fix variable name conflicts
+> git tree:       kmsan
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15f5d583200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=a5675814e8eae69e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=8b707430713eb46e1e45
+> compiler:       clang version 8.0.0 (trunk 350509)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16438e1b200000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16898cd7200000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+8b707430713eb46e1e45@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KMSAN: uninit-value in memchr+0xce/0x110 lib/string.c:961
+> CPU: 0 PID: 10526 Comm: syz-executor961 Not tainted 5.0.0+ #13
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+>   kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:600
+>   __msan_warning+0x82/0xf0 mm/kmsan/kmsan_instr.c:313
+>   memchr+0xce/0x110 lib/string.c:961
+>   string_is_valid net/tipc/netlink_compat.c:176 [inline]
+>   tipc_nl_compat_bearer_enable+0x2c4/0x910 net/tipc/netlink_compat.c:401
+It's using the wrong length to check if b->name is valid when
+b->name size < TIPC_MAX_BEARER_NAME. The right count
+should start from tipc_bearer_config->name.
 
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
----
- drivers/misc/eeprom/at25.c | 282 +++++++++++++++++++++++--------------
- 1 file changed, 176 insertions(+), 106 deletions(-)
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index 4ad3586..895f368 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -397,7 +397,9 @@ static int tipc_nl_compat_bearer_enable(struct
+tipc_nl_compat_cmd_doit *cmd,
+        if (!bearer)
+                return -EMSGSIZE;
 
-diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
-index 99de6939cd5a..818853babbd0 100644
---- a/drivers/misc/eeprom/at25.c
-+++ b/drivers/misc/eeprom/at25.c
-@@ -17,7 +17,7 @@
- #include <linux/sched.h>
- 
- #include <linux/nvmem-provider.h>
--#include <linux/spi/spi.h>
-+#include <linux/spi/spi-mem.h>
- #include <linux/spi/eeprom.h>
- #include <linux/property.h>
- 
-@@ -29,12 +29,17 @@
-  */
- 
- struct at25_data {
--	struct spi_device	*spi;
-+	struct spi_mem		*spimem;
- 	struct mutex		lock;
- 	struct spi_eeprom	chip;
- 	unsigned		addrlen;
- 	struct nvmem_config	nvmem_config;
- 	struct nvmem_device	*nvmem;
-+	void			*scratchbuf;
-+	struct {
-+		struct spi_mem_dirmap_desc *rdesc[2];
-+		struct spi_mem_dirmap_desc *wdesc[2];
-+	} dirmap;
- };
- 
- #define	AT25_WREN	0x06		/* latch the write enable */
-@@ -63,17 +68,89 @@ struct at25_data {
- 
- #define	io_limit	PAGE_SIZE	/* bytes */
- 
-+static int at25_create_dirmaps(struct at25_data *at25)
-+{
-+	struct spi_mem_dirmap_info info = {
-+		.op_tmpl = SPI_MEM_OP(SPI_MEM_OP_CMD(AT25_READ, 1),
-+				      SPI_MEM_OP_ADDR(at25->addrlen, 0, 1),
-+				      SPI_MEM_OP_NO_DUMMY,
-+				      SPI_MEM_OP_DATA_IN(0, NULL, 1)),
-+		.offset = 0,
-+		.length = at25->chip.byte_len,
-+	};
-+	struct device *dev = &at25->spimem->spi->dev;
-+
-+	if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR)
-+		info.length = 256;
-+
-+	at25->dirmap.rdesc[0] = devm_spi_mem_dirmap_create(dev, at25->spimem,
-+							   &info);
-+	if (IS_ERR(at25->dirmap.rdesc[0]))
-+		return PTR_ERR(at25->dirmap.rdesc[0]);
-+
-+	info.op_tmpl.cmd.opcode = AT25_WRITE;
-+	info.op_tmpl.data.dir = SPI_MEM_DATA_OUT;
-+
-+	at25->dirmap.wdesc[0] = devm_spi_mem_dirmap_create(dev, at25->spimem,
-+							   &info);
-+	if (IS_ERR(at25->dirmap.wdesc[0]))
-+		return PTR_ERR(at25->dirmap.wdesc[0]);
-+
-+	if (!(at25->chip.flags & EE_INSTR_BIT3_IS_ADDR))
-+		return 0;
-+
-+	info.length = at25->chip.byte_len - 256;
-+	info.op_tmpl.cmd.opcode = AT25_READ | AT25_INSTR_BIT3;
-+	info.op_tmpl.data.dir = SPI_MEM_DATA_IN;
-+
-+	at25->dirmap.rdesc[1] = devm_spi_mem_dirmap_create(dev, at25->spimem,
-+							   &info);
-+	if (IS_ERR(at25->dirmap.rdesc[1]))
-+		return PTR_ERR(at25->dirmap.rdesc[1]);
-+
-+	info.op_tmpl.cmd.opcode = AT25_WRITE | AT25_INSTR_BIT3;
-+	info.op_tmpl.data.dir = SPI_MEM_DATA_OUT;
-+
-+	at25->dirmap.wdesc[1] = devm_spi_mem_dirmap_create(dev, at25->spimem,
-+							   &info);
-+	if (IS_ERR(at25->dirmap.wdesc[1]))
-+		return PTR_ERR(at25->dirmap.wdesc[1]);
-+
-+	return 0;
-+}
-+
-+static int at25_rdsr(struct at25_data *at25)
-+{
-+	struct spi_mem_op op = SPI_MEM_OP(SPI_MEM_OP_CMD(AT25_RDSR, 1),
-+					  SPI_MEM_OP_NO_ADDR,
-+					  SPI_MEM_OP_NO_DUMMY,
-+					  SPI_MEM_OP_DATA_IN(1, at25->scratchbuf, 1));
-+	int ret;
-+
-+	ret = spi_mem_exec_op(at25->spimem, &op);
-+	if (ret)
-+		return ret;
-+
-+	return *((u8 *)at25->scratchbuf);
-+}
-+
-+static int at25_wren(struct at25_data *at25)
-+{
-+	struct spi_mem_op op = SPI_MEM_OP(SPI_MEM_OP_CMD(AT25_WREN, 1),
-+					  SPI_MEM_OP_NO_ADDR,
-+					  SPI_MEM_OP_NO_DUMMY,
-+					  SPI_MEM_OP_NO_DATA);
-+
-+	return spi_mem_exec_op(at25->spimem, &op);
-+}
-+
- static int at25_ee_read(void *priv, unsigned int offset,
- 			void *val, size_t count)
- {
-+	struct spi_mem_dirmap_desc *desc;
- 	struct at25_data *at25 = priv;
--	char *buf = val;
--	u8			command[EE_MAXADDRLEN + 1];
--	u8			*cp;
-+	unsigned int dirmap_offset;
- 	ssize_t			status;
--	struct spi_transfer	t[2];
--	struct spi_message	m;
--	u8			instr;
- 
- 	if (unlikely(offset >= at25->chip.byte_len))
- 		return -EINVAL;
-@@ -82,38 +159,14 @@ static int at25_ee_read(void *priv, unsigned int offset,
- 	if (unlikely(!count))
- 		return -EINVAL;
- 
--	cp = command;
--
--	instr = AT25_READ;
--	if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR)
--		if (offset >= (1U << (at25->addrlen * 8)))
--			instr |= AT25_INSTR_BIT3;
--	*cp++ = instr;
--
--	/* 8/16/24-bit address is written MSB first */
--	switch (at25->addrlen) {
--	default:	/* case 3 */
--		*cp++ = offset >> 16;
--		/* fall through */
--	case 2:
--		*cp++ = offset >> 8;
--		/* fall through */
--	case 1:
--	case 0:	/* can't happen: for better codegen */
--		*cp++ = offset >> 0;
-+	if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR && offset > 255) {
-+		desc = at25->dirmap.rdesc[1];
-+		dirmap_offset = offset - 256;
-+	} else {
-+		desc = at25->dirmap.rdesc[0];
-+		dirmap_offset = offset;
- 	}
- 
--	spi_message_init(&m);
--	memset(t, 0, sizeof(t));
--
--	t[0].tx_buf = command;
--	t[0].len = at25->addrlen + 1;
--	spi_message_add_tail(&t[0], &m);
--
--	t[1].rx_buf = buf;
--	t[1].len = count;
--	spi_message_add_tail(&t[1], &m);
--
- 	mutex_lock(&at25->lock);
- 
- 	/* Read it all at once.
-@@ -122,8 +175,8 @@ static int at25_ee_read(void *priv, unsigned int offset,
- 	 * other devices on the bus need to be accessed regularly or
- 	 * this chip is clocked very slowly
- 	 */
--	status = spi_sync(at25->spi, &m);
--	dev_dbg(&at25->spi->dev, "read %zu bytes at %d --> %zd\n",
-+	status = spi_mem_dirmap_read(desc, dirmap_offset, count, val);
-+	dev_dbg(&at25->spimem->spi->dev, "read %zu bytes at %d --> %zd\n",
- 		count, offset, status);
- 
- 	mutex_unlock(&at25->lock);
-@@ -149,7 +202,7 @@ static int at25_ee_write(void *priv, unsigned int off, void *val, size_t count)
- 	buf_size = at25->chip.page_size;
- 	if (buf_size > io_limit)
- 		buf_size = io_limit;
--	bounce = kmalloc(buf_size + at25->addrlen + 1, GFP_KERNEL);
-+	bounce = kmalloc(buf_size, GFP_KERNEL);
- 	if (!bounce)
- 		return -ENOMEM;
- 
-@@ -158,48 +211,37 @@ static int at25_ee_write(void *priv, unsigned int off, void *val, size_t count)
- 	 */
- 	mutex_lock(&at25->lock);
- 	do {
-+		struct spi_mem_dirmap_desc *desc;
- 		unsigned long	timeout, retries;
- 		unsigned	segment;
--		unsigned	offset = (unsigned) off;
--		u8		*cp = bounce;
-+		unsigned int	dirmap_offset;
- 		int		sr;
--		u8		instr;
- 
--		*cp = AT25_WREN;
--		status = spi_write(at25->spi, cp, 1);
-+		status = at25_wren(at25);
- 		if (status < 0) {
--			dev_dbg(&at25->spi->dev, "WREN --> %d\n", status);
-+			dev_dbg(&at25->spimem->spi->dev, "WREN --> %d\n",
-+				status);
- 			break;
- 		}
- 
--		instr = AT25_WRITE;
--		if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR)
--			if (offset >= (1U << (at25->addrlen * 8)))
--				instr |= AT25_INSTR_BIT3;
--		*cp++ = instr;
--
--		/* 8/16/24-bit address is written MSB first */
--		switch (at25->addrlen) {
--		default:	/* case 3 */
--			*cp++ = offset >> 16;
--			/* fall through */
--		case 2:
--			*cp++ = offset >> 8;
--			/* fall through */
--		case 1:
--		case 0:	/* can't happen: for better codegen */
--			*cp++ = offset >> 0;
-+		if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR && off > 255) {
-+			desc = at25->dirmap.wdesc[1];
-+			dirmap_offset = off -  256;
-+		} else {
-+			desc = at25->dirmap.wdesc[0];
-+			dirmap_offset = off;
- 		}
- 
- 		/* Write as much of a page as we can */
--		segment = buf_size - (offset % buf_size);
-+		segment = buf_size - (dirmap_offset % buf_size);
- 		if (segment > count)
- 			segment = count;
--		memcpy(cp, buf, segment);
--		status = spi_write(at25->spi, bounce,
--				segment + at25->addrlen + 1);
--		dev_dbg(&at25->spi->dev, "write %u bytes at %u --> %d\n",
--			segment, offset, status);
-+		memcpy(bounce, buf, segment);
-+		status = spi_mem_dirmap_write(desc, dirmap_offset, segment,
-+					      bounce);
-+		dev_dbg(&at25->spimem->spi->dev,
-+			"write %u bytes at %u --> %d\n",
-+			segment, off, status);
- 		if (status < 0)
- 			break;
- 
-@@ -211,10 +253,9 @@ static int at25_ee_write(void *priv, unsigned int off, void *val, size_t count)
- 		timeout = jiffies + msecs_to_jiffies(EE_TIMEOUT);
- 		retries = 0;
- 		do {
--
--			sr = spi_w8r8(at25->spi, AT25_RDSR);
-+			sr = at25_rdsr(at25);
- 			if (sr < 0 || (sr & AT25_SR_nRDY)) {
--				dev_dbg(&at25->spi->dev,
-+				dev_dbg(&at25->spimem->spi->dev,
- 					"rdsr --> %d (%02x)\n", sr, sr);
- 				/* at HZ=100, this is sloooow */
- 				msleep(1);
-@@ -225,9 +266,9 @@ static int at25_ee_write(void *priv, unsigned int off, void *val, size_t count)
- 		} while (retries++ < 3 || time_before_eq(jiffies, timeout));
- 
- 		if ((sr < 0) || (sr & AT25_SR_nRDY)) {
--			dev_err(&at25->spi->dev,
-+			dev_err(&at25->spimem->spi->dev,
- 				"write %u bytes offset %u, timeout after %u msecs\n",
--				segment, offset,
-+				segment, off,
- 				jiffies_to_msecs(jiffies -
- 					(timeout - EE_TIMEOUT)));
- 			status = -ETIMEDOUT;
-@@ -304,7 +345,7 @@ static int at25_fw_to_chip(struct device *dev, struct spi_eeprom *chip)
- 	return 0;
- }
- 
--static int at25_probe(struct spi_device *spi)
-+static int at25_probe(struct spi_mem *spimem)
- {
- 	struct at25_data	*at25 = NULL;
- 	struct spi_eeprom	chip;
-@@ -313,12 +354,12 @@ static int at25_probe(struct spi_device *spi)
- 	int			addrlen;
- 
- 	/* Chip description */
--	if (!spi->dev.platform_data) {
--		err = at25_fw_to_chip(&spi->dev, &chip);
-+	if (!spimem->spi->dev.platform_data) {
-+		err = at25_fw_to_chip(&spimem->spi->dev, &chip);
- 		if (err)
- 			return err;
- 	} else
--		chip = *(struct spi_eeprom *)spi->dev.platform_data;
-+		chip = *(struct spi_eeprom *)spimem->spi->dev.platform_data;
- 
- 	/* For now we only support 8/16/24 bit addressing */
- 	if (chip.flags & EE_ADDR1)
-@@ -328,37 +369,49 @@ static int at25_probe(struct spi_device *spi)
- 	else if (chip.flags & EE_ADDR3)
- 		addrlen = 3;
- 	else {
--		dev_dbg(&spi->dev, "unsupported address type\n");
-+		dev_dbg(&spimem->spi->dev, "unsupported address type\n");
- 		return -EINVAL;
- 	}
- 
--	/* Ping the chip ... the status register is pretty portable,
--	 * unlike probing manufacturer IDs.  We do expect that system
--	 * firmware didn't write it in the past few milliseconds!
--	 */
--	sr = spi_w8r8(spi, AT25_RDSR);
--	if (sr < 0 || sr & AT25_SR_nRDY) {
--		dev_dbg(&spi->dev, "rdsr --> %d (%02x)\n", sr, sr);
--		return -ENXIO;
--	}
--
--	at25 = devm_kzalloc(&spi->dev, sizeof(struct at25_data), GFP_KERNEL);
-+	at25 = devm_kzalloc(&spimem->spi->dev, sizeof(struct at25_data),
-+			    GFP_KERNEL);
- 	if (!at25)
- 		return -ENOMEM;
- 
- 	mutex_init(&at25->lock);
- 	at25->chip = chip;
--	at25->spi = spi;
--	spi_set_drvdata(spi, at25);
-+	at25->spimem = spimem;
-+	spi_mem_set_drvdata(spimem, at25);
- 	at25->addrlen = addrlen;
- 
--	at25->nvmem_config.name = dev_name(&spi->dev);
--	at25->nvmem_config.dev = &spi->dev;
-+	/*
-+	 * Can't be allocated with devm_kmalloc() because we need a DMA-safe
-+	 * buffer.
-+	 */
-+	at25->scratchbuf = kmalloc(1, GFP_KERNEL);
-+
-+	/* Ping the chip ... the status register is pretty portable,
-+	 * unlike probing manufacturer IDs.  We do expect that system
-+	 * firmware didn't write it in the past few milliseconds!
-+	 */
-+	sr = at25_rdsr(at25);
-+	if (sr < 0 || sr & AT25_SR_nRDY) {
-+		dev_dbg(&spimem->spi->dev, "rdsr --> %d (%02x)\n", sr, sr);
-+		err = -ENXIO;
-+		goto err_free_scratchbuf;
-+	}
-+
-+	err = at25_create_dirmaps(at25);
-+	if (err)
-+		goto err_free_scratchbuf;
-+
-+	at25->nvmem_config.name = dev_name(&spimem->spi->dev);
-+	at25->nvmem_config.dev = &spimem->spi->dev;
- 	at25->nvmem_config.read_only = chip.flags & EE_READONLY;
- 	at25->nvmem_config.root_only = true;
- 	at25->nvmem_config.owner = THIS_MODULE;
- 	at25->nvmem_config.compat = true;
--	at25->nvmem_config.base_dev = &spi->dev;
-+	at25->nvmem_config.base_dev = &spimem->spi->dev;
- 	at25->nvmem_config.reg_read = at25_ee_read;
- 	at25->nvmem_config.reg_write = at25_ee_write;
- 	at25->nvmem_config.priv = at25;
-@@ -366,17 +419,34 @@ static int at25_probe(struct spi_device *spi)
- 	at25->nvmem_config.word_size = 1;
- 	at25->nvmem_config.size = chip.byte_len;
- 
--	at25->nvmem = devm_nvmem_register(&spi->dev, &at25->nvmem_config);
--	if (IS_ERR(at25->nvmem))
--		return PTR_ERR(at25->nvmem);
-+	at25->nvmem = devm_nvmem_register(&spimem->spi->dev,
-+					  &at25->nvmem_config);
-+	if (IS_ERR(at25->nvmem)) {
-+		err = PTR_ERR(at25->nvmem);
-+		goto err_free_scratchbuf;
-+	}
- 
--	dev_info(&spi->dev, "%d %s %s eeprom%s, pagesize %u\n",
-+	dev_info(&spimem->spi->dev, "%d %s %s eeprom%s, pagesize %u\n",
- 		(chip.byte_len < 1024) ? chip.byte_len : (chip.byte_len / 1024),
- 		(chip.byte_len < 1024) ? "Byte" : "KByte",
- 		at25->chip.name,
- 		(chip.flags & EE_READONLY) ? " (readonly)" : "",
- 		at25->chip.page_size);
- 	return 0;
-+
-+err_free_scratchbuf:
-+	kfree(at25->scratchbuf);
-+
-+	return err;
-+}
-+
-+static int at25_remove(struct spi_mem *spimem)
-+{
-+	struct at25_data *at25 = spi_mem_get_drvdata(spimem);
-+
-+	kfree(at25->scratchbuf);
-+
-+	return 0;
- }
- 
- /*-------------------------------------------------------------------------*/
-@@ -387,15 +457,15 @@ static const struct of_device_id at25_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, at25_of_match);
- 
--static struct spi_driver at25_driver = {
--	.driver = {
--		.name		= "at25",
-+static struct spi_mem_driver at25_driver = {
-+	.spidrv.driver = {
-+		.name = "at25",
- 		.of_match_table = at25_of_match,
- 	},
--	.probe		= at25_probe,
-+	.probe = at25_probe,
-+	.remove = at25_remove,
- };
--
--module_spi_driver(at25_driver);
-+module_spi_mem_driver(at25_driver);
- 
- MODULE_DESCRIPTION("Driver for most SPI EEPROMs");
- MODULE_AUTHOR("David Brownell");
--- 
-2.20.1
+-       len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_BEARER_NAME);
++       len = TLV_GET_DATA_LEN(msg->req);
++       len -= offsetof(struct tipc_bearer_config, name);
++       len = min_t(int, len, TIPC_MAX_BEARER_NAME);
+        if (!string_is_valid(b->name, len))
+                return -EINVAL;
 
+The simliar thing should be done in:
+tipc_nl_compat_media_set()
+tipc_nl_compat_bearer_set()
+tipc_nl_compat_link_set()
+
+>   __tipc_nl_compat_doit net/tipc/netlink_compat.c:321 [inline]
+>   tipc_nl_compat_doit+0x3aa/0xaf0 net/tipc/netlink_compat.c:354
+>   tipc_nl_compat_handle net/tipc/netlink_compat.c:1162 [inline]
+>   tipc_nl_compat_recv+0x1ae7/0x2750 net/tipc/netlink_compat.c:1265
+>   genl_family_rcv_msg net/netlink/genetlink.c:601 [inline]
+>   genl_rcv_msg+0x185f/0x1a60 net/netlink/genetlink.c:626
+>   netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
+>   genl_rcv+0x63/0x80 net/netlink/genetlink.c:637
+>   netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+>   netlink_unicast+0xf3e/0x1020 net/netlink/af_netlink.c:1336
+>   netlink_sendmsg+0x127f/0x1300 net/netlink/af_netlink.c:1917
+>   sock_sendmsg_nosec net/socket.c:622 [inline]
+>   sock_sendmsg net/socket.c:632 [inline]
+>   ___sys_sendmsg+0xdb9/0x11b0 net/socket.c:2115
+>   __sys_sendmsg net/socket.c:2153 [inline]
+>   __do_sys_sendmsg net/socket.c:2162 [inline]
+>   __se_sys_sendmsg+0x305/0x460 net/socket.c:2160
+>   __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2160
+>   do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+>   entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> RIP: 0033:0x440209
+> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffc77bfd0a8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440209
+> RDX: 0000000000000000 RSI: 0000000020000140 RDI: 0000000000000003
+> RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a90
+> R13: 0000000000401b20 R14: 0000000000000000 R15: 0000000000000000
+>
+> Uninit was created at:
+>   kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
+>   kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:159
+>   kmsan_kmalloc+0xa6/0x130 mm/kmsan/kmsan_hooks.c:176
+>   kmsan_slab_alloc+0xe/0x10 mm/kmsan/kmsan_hooks.c:185
+>   slab_post_alloc_hook mm/slab.h:445 [inline]
+>   slab_alloc_node mm/slub.c:2773 [inline]
+>   __kmalloc_node_track_caller+0xe9e/0xff0 mm/slub.c:4398
+>   __kmalloc_reserve net/core/skbuff.c:140 [inline]
+>   __alloc_skb+0x309/0xa20 net/core/skbuff.c:208
+>   alloc_skb include/linux/skbuff.h:1012 [inline]
+>   netlink_alloc_large_skb net/netlink/af_netlink.c:1182 [inline]
+>   netlink_sendmsg+0xb82/0x1300 net/netlink/af_netlink.c:1892
+>   sock_sendmsg_nosec net/socket.c:622 [inline]
+>   sock_sendmsg net/socket.c:632 [inline]
+>   ___sys_sendmsg+0xdb9/0x11b0 net/socket.c:2115
+>   __sys_sendmsg net/socket.c:2153 [inline]
+>   __do_sys_sendmsg net/socket.c:2162 [inline]
+>   __se_sys_sendmsg+0x305/0x460 net/socket.c:2160
+>   __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2160
+>   do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+>   entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> ==================================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
