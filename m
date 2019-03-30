@@ -3,40 +3,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3049EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58339C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A5A2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 360A921905
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730550AbfC3Ar5 (ORCPT
+        id S1730523AbfC3Arz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:47:57 -0400
-Received: from mga06.intel.com ([134.134.136.31]:64217 "EHLO mga06.intel.com"
+        Fri, 29 Mar 2019 20:47:55 -0400
+Received: from mga06.intel.com ([134.134.136.31]:64235 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730468AbfC3Arx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:47:53 -0400
+        id S1730464AbfC3Arw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:47:52 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 17:47:50 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,286,1549958400"; 
-   d="scan'208";a="129912804"
+   d="scan'208";a="129912805"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
   by orsmga008.jf.intel.com with ESMTP; 29 Mar 2019 17:47:51 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 11E62301BE3; Fri, 29 Mar 2019 17:47:51 -0700 (PDT)
+        id 19BA2301BE3; Fri, 29 Mar 2019 17:47:51 -0700 (PDT)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        mhiramat@kernel.org
-Subject: [PATCH v2 7/9] x86/kprobes: Make trampoline_handler global and visible
-Date:   Fri, 29 Mar 2019 17:47:41 -0700
-Message-Id: <20190330004743.29541-7-andi@firstfloor.org>
+        pbonzini@redhat.com
+Subject: [PATCH v2 8/9] x86/kvm: Make steal_time visible
+Date:   Fri, 29 Mar 2019 17:47:42 -0700
+Message-Id: <20190330004743.29541-8-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190330004743.29541-1-andi@firstfloor.org>
 References: <20190330004743.29541-1-andi@firstfloor.org>
@@ -49,29 +49,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-This function is referenced from assembler, so in LTO
-it needs to be global and visible to not be optimized away.
+This per cpu variable is accessed from assembler code, so needs
+to be visible.
 
-Cc: mhiramat@kernel.org
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: pbonzini@redhat.com
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- arch/x86/kernel/kprobes/core.c | 2 +-
+ arch/x86/kernel/kvm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 31ab91c9c4e9..1309a4eb3119 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -752,7 +752,7 @@ STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 5c93a65ee1e5..3f0cc828cc36 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -67,7 +67,7 @@ static int __init parse_no_stealacc(char *arg)
+ early_param("no-steal-acc", parse_no_stealacc);
+ 
+ static DEFINE_PER_CPU_DECRYPTED(struct kvm_vcpu_pv_apf_data, apf_reason) __aligned(64);
+-static DEFINE_PER_CPU_DECRYPTED(struct kvm_steal_time, steal_time) __aligned(64);
++DEFINE_PER_CPU_DECRYPTED(struct kvm_steal_time, steal_time) __aligned(64) __visible;
+ static int has_steal_clock = 0;
+ 
  /*
-  * Called from kretprobe_trampoline
-  */
--static __used void *trampoline_handler(struct pt_regs *regs)
-+__used __visible void *trampoline_handler(struct pt_regs *regs)
- {
- 	struct kretprobe_instance *ri = NULL;
- 	struct hlist_head *head, empty_rp;
 -- 
 2.20.1
 
