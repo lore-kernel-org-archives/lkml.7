@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BEEC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9F4C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1A9B217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE80C217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909927;
-	bh=qWjm99XOLT/i8r1sif+C2VpV1a2vmTbiwYlyt1RKa+M=;
+	s=default; t=1553909940;
+	bh=CrnHpAHWMsIKEIV0V4z+LoVRE7CGIO/twZsBgN/VmP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YK5cC/Z5tzU5p3RNDq/bk58sbkyvRIHrop2jlBSVt1IEis1uYt5gqbh6N+JSqQXOu
-	 cw4v6IuIuxduO/wZtk9JnQsUeC7VIO8SaJfAXwCFXV2QIeYr/qH1Y6sop5JeUSv7Mm
-	 ni9VbRFA0l6SQEsBEI6FtP8NvZsT6+h71SG2ICTw=
+	b=CW2qj1GWbT5n1jJu1oUhaN2+usfmjGC96qaBYo580gC3bqEUC6WqjQiPpB8yMuOQA
+	 RuGDzhedSlCAVIBcjdidn71ZYaeg+N0+LplCkiFr1IsP3QksZnh25c+ATc3Wr1expw
+	 fw2DlWaJ9R/GwOFZk+d5c83KbBWesSOET4/Pe7xU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731780AbfC3Biq (ORCPT
+        id S1731657AbfC3Bi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:38:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37372 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:38:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731392AbfC3BaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:30:14 -0400
+        id S1730621AbfC3BaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:30:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9608B218D8;
-        Sat, 30 Mar 2019 01:30:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A826217F5;
+        Sat, 30 Mar 2019 01:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909413;
-        bh=qWjm99XOLT/i8r1sif+C2VpV1a2vmTbiwYlyt1RKa+M=;
+        s=default; t=1553909408;
+        bh=CrnHpAHWMsIKEIV0V4z+LoVRE7CGIO/twZsBgN/VmP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lO/ZVPXTHqGKuJihWGArz9xOAgFawtfjuj0+8V7o2Hklwly+aq8iqTozeA0I42IAU
-         SdsIOK4zso3eykEwtGB+7hGG8EA71ja3RknhCdgVL6wR8/O9o5cuxEgHPw2SnUq2Jn
-         56w9yIcmGghDlTYN9eMyV/0PhCpFgElDdLTO36QY=
+        b=Cr0onx27gyLiMFto14IIxR/7FLHLNEwM03OpBVUI7/I/vG+2pNnggSmgJkBl4eN8A
+         CP45IIN4jIC1IoQT5qPgG4/5gntunzMWPTwP9QwJ5M/5pI7gNJFac2kuNfepB09+4y
+         cHrk/PlRTrPmiR/b1Whnp+v0gg4qJ5DxSwWET4Ag=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 40/57] kvm: properly check debugfs dentry before using it
-Date:   Fri, 29 Mar 2019 21:28:33 -0400
-Message-Id: <20190330012854.32212-40-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 36/57] crypto: sha512/arm - fix crash bug in Thumb2 build
+Date:   Fri, 29 Mar 2019 21:28:29 -0400
+Message-Id: <20190330012854.32212-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
 References: <20190330012854.32212-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,44 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit 8ed0579c12b2fe56a1fac2f712f58fc26c1dc49b ]
+[ Upstream commit c64316502008064c158fa40cc250665e461b0f2a ]
 
-debugfs can now report an error code if something went wrong instead of
-just NULL.  So if the return value is to be used as a "real" dentry, it
-needs to be checked if it is an error before dereferencing it.
+The SHA512 code we adopted from the OpenSSL project uses a rather
+peculiar way to take the address of the round constant table: it
+takes the address of the sha256_block_data_order() routine, and
+substracts a constant known quantity to arrive at the base of the
+table, which is emitted by the same assembler code right before
+the routine's entry point.
 
-This is now happening because of ff9fb72bc077 ("debugfs: return error
-values, not NULL").  syzbot has found a way to trigger multiple debugfs
-files attempting to be created, which fails, and then the error code
-gets passed to dentry_path_raw() which obviously does not like it.
+However, recent versions of binutils have helpfully changed the
+behavior of references emitted via an ADR instruction when running
+in Thumb2 mode: it now takes the Thumb execution mode bit into
+account, which is bit 0 af the address. This means the produced
+table address also has bit 0 set, and so we end up with an address
+value pointing 1 byte past the start of the table, which results
+in crashes such as
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Reported-and-tested-by: syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-Cc: kvm@vger.kernel.org
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  Unable to handle kernel paging request at virtual address bf825000
+  pgd = 42f44b11
+  [bf825000] *pgd=80000040206003, *pmd=5f1bd003, *pte=00000000
+  Internal error: Oops: 207 [#1] PREEMPT SMP THUMB2
+  Modules linked in: sha256_arm(+) sha1_arm_ce sha1_arm ...
+  CPU: 7 PID: 396 Comm: cryptomgr_test Not tainted 5.0.0-rc6+ #144
+  Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+  PC is at sha256_block_data_order+0xaaa/0xb30 [sha256_arm]
+  LR is at __this_module+0x17fd/0xffffe800 [sha256_arm]
+  pc : [<bf820bca>]    lr : [<bf824ffd>]    psr: 800b0033
+  sp : ebc8bbe8  ip : faaabe1c  fp : 2fdd3433
+  r10: 4c5f1692  r9 : e43037df  r8 : b04b0a5a
+  r7 : c369d722  r6 : 39c3693e  r5 : 7a013189  r4 : 1580d26b
+  r3 : 8762a9b0  r2 : eea9c2cd  r1 : 3e9ab536  r0 : 1dea4ae7
+  Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA Thumb  Segment user
+  Control: 70c5383d  Table: 6b8467c0  DAC: dbadc0de
+  Process cryptomgr_test (pid: 396, stack limit = 0x69e1fe23)
+  Stack: (0xebc8bbe8 to 0xebc8c000)
+  ...
+  unwind: Unknown symbol address bf820bca
+  unwind: Index not found bf820bca
+  Code: 441a ea80 40f9 440a (f85e) 3b04
+  ---[ end trace e560cce92700ef8a ]---
+
+Given that this affects older kernels as well, in case they are built
+with a recent toolchain, apply a minimal backportable fix, which is
+to emit another non-code label at the start of the routine, and
+reference that instead. (This is similar to the current upstream state
+of this file in OpenSSL)
+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/kvm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/crypto/sha512-armv4.pl       | 3 ++-
+ arch/arm/crypto/sha512-core.S_shipped | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index c436d95fd7aa..fb74f994cb63 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -3912,7 +3912,7 @@ static void kvm_uevent_notify_change(unsigned int type, struct kvm *kvm)
- 	}
- 	add_uevent_var(env, "PID=%d", kvm->userspace_pid);
- 
--	if (kvm->debugfs_dentry) {
-+	if (!IS_ERR_OR_NULL(kvm->debugfs_dentry)) {
- 		char *tmp, *p = kmalloc(PATH_MAX, GFP_KERNEL);
- 
- 		if (p) {
+diff --git a/arch/arm/crypto/sha512-armv4.pl b/arch/arm/crypto/sha512-armv4.pl
+index fb5d15048c0b..788c17b56ecc 100644
+--- a/arch/arm/crypto/sha512-armv4.pl
++++ b/arch/arm/crypto/sha512-armv4.pl
+@@ -274,10 +274,11 @@ WORD64(0x5fcb6fab,0x3ad6faec, 0x6c44198c,0x4a475817)
+ .global	sha512_block_data_order
+ .type	sha512_block_data_order,%function
+ sha512_block_data_order:
++.Lsha512_block_data_order:
+ #if __ARM_ARCH__<7
+ 	sub	r3,pc,#8		@ sha512_block_data_order
+ #else
+-	adr	r3,sha512_block_data_order
++	adr	r3,.Lsha512_block_data_order
+ #endif
+ #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
+ 	ldr	r12,.LOPENSSL_armcap
+diff --git a/arch/arm/crypto/sha512-core.S_shipped b/arch/arm/crypto/sha512-core.S_shipped
+index b1c334a49cda..710ea309769e 100644
+--- a/arch/arm/crypto/sha512-core.S_shipped
++++ b/arch/arm/crypto/sha512-core.S_shipped
+@@ -141,10 +141,11 @@ WORD64(0x5fcb6fab,0x3ad6faec, 0x6c44198c,0x4a475817)
+ .global	sha512_block_data_order
+ .type	sha512_block_data_order,%function
+ sha512_block_data_order:
++.Lsha512_block_data_order:
+ #if __ARM_ARCH__<7
+ 	sub	r3,pc,#8		@ sha512_block_data_order
+ #else
+-	adr	r3,sha512_block_data_order
++	adr	r3,.Lsha512_block_data_order
+ #endif
+ #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
+ 	ldr	r12,.LOPENSSL_armcap
 -- 
 2.19.1
 
