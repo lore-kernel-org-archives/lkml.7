@@ -6,36 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA60C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17953C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D4C218AC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B94218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbfC3AsM (ORCPT
+        id S1730583AbfC3AsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:48:12 -0400
-Received: from mga06.intel.com ([134.134.136.31]:64217 "EHLO mga06.intel.com"
+        Fri, 29 Mar 2019 20:48:11 -0400
+Received: from mga06.intel.com ([134.134.136.31]:64235 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730463AbfC3Arw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:47:52 -0400
+        id S1730471AbfC3Arx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:47:53 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Mar 2019 17:47:50 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,286,1549958400"; 
-   d="scan'208";a="129912806"
+   d="scan'208";a="129912803"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
   by orsmga008.jf.intel.com with ESMTP; 29 Mar 2019 17:47:51 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 21762301C79; Fri, 29 Mar 2019 17:47:51 -0700 (PDT)
+        id 01BD9301BE3; Fri, 29 Mar 2019 17:47:51 -0700 (PDT)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v2 9/9] x86/cpu/bugs: Fix __initconst usage in bugs.c
-Date:   Fri, 29 Mar 2019 17:47:43 -0700
-Message-Id: <20190330004743.29541-9-andi@firstfloor.org>
+Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        jgross@suse.com, boris.ostrovsky@oracle.com
+Subject: [PATCH v2 5/9] x86/xen: Mark xen_vcpu_stolen as __visible
+Date:   Fri, 29 Mar 2019 17:47:39 -0700
+Message-Id: <20190330004743.29541-5-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190330004743.29541-1-andi@firstfloor.org>
 References: <20190330004743.29541-1-andi@firstfloor.org>
@@ -48,47 +49,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Fix some of the recently added const tables to use __initconst
-for const data instead of __initdata which causes section attribute
-conflicts.
+This function is referenced from assembler, so needs to be marked
+__visible for LTO.
 
-Fixes: fa1202ef2243 ("x86/speculation: Add command line control")
+Cc: jgross@suse.com
+Cc: boris.ostrovsky@oracle.com
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- arch/x86/kernel/cpu/bugs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/xen/time.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 2da82eff0eb4..b91b3bfa5cfb 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -275,7 +275,7 @@ static const struct {
- 	const char			*option;
- 	enum spectre_v2_user_cmd	cmd;
- 	bool				secure;
--} v2_user_options[] __initdata = {
-+} v2_user_options[] __initconst = {
- 	{ "auto",		SPECTRE_V2_USER_CMD_AUTO,		false },
- 	{ "off",		SPECTRE_V2_USER_CMD_NONE,		false },
- 	{ "on",			SPECTRE_V2_USER_CMD_FORCE,		true  },
-@@ -419,7 +419,7 @@ static const struct {
- 	const char *option;
- 	enum spectre_v2_mitigation_cmd cmd;
- 	bool secure;
--} mitigation_options[] __initdata = {
-+} mitigation_options[] __initconst = {
- 	{ "off",		SPECTRE_V2_CMD_NONE,		  false },
- 	{ "on",			SPECTRE_V2_CMD_FORCE,		  true  },
- 	{ "retpoline",		SPECTRE_V2_CMD_RETPOLINE,	  false },
-@@ -658,7 +658,7 @@ static const char * const ssb_strings[] = {
- static const struct {
- 	const char *option;
- 	enum ssb_mitigation_cmd cmd;
--} ssb_mitigation_options[]  __initdata = {
-+} ssb_mitigation_options[]  __initconst = {
- 	{ "auto",	SPEC_STORE_BYPASS_CMD_AUTO },    /* Platform decides */
- 	{ "on",		SPEC_STORE_BYPASS_CMD_ON },      /* Disable Speculative Store Bypass */
- 	{ "off",	SPEC_STORE_BYPASS_CMD_NONE },    /* Don't touch Speculative Store Bypass */
+diff --git a/drivers/xen/time.c b/drivers/xen/time.c
+index 0968859c29d0..04b59dab30f5 100644
+--- a/drivers/xen/time.c
++++ b/drivers/xen/time.c
+@@ -144,7 +144,7 @@ void xen_get_runstate_snapshot(struct vcpu_runstate_info *res)
+ }
+ 
+ /* return true when a vcpu could run but has no real cpu to run on */
+-bool xen_vcpu_stolen(int vcpu)
++__visible bool xen_vcpu_stolen(int vcpu)
+ {
+ 	return per_cpu(xen_runstate, vcpu).state == RUNSTATE_runnable;
+ }
 -- 
 2.20.1
 
