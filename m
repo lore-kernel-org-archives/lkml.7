@@ -2,142 +2,87 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4806C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C431EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB9E217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A746217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:04:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L9vGwET7"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="GUqfKCXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730722AbfC3MBp (ORCPT
+        id S1730771AbfC3ME3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 08:01:45 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35303 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730384AbfC3MBo (ORCPT
+        Sat, 30 Mar 2019 08:04:29 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:36041 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730691AbfC3ME2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 08:01:44 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s39so4261021edb.2;
-        Sat, 30 Mar 2019 05:01:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nP4MXbiHp2m8P5mBk8HuUBMOHGAhobONFf01lBSeFAo=;
-        b=L9vGwET764mV0cl2gi9NGrFTVHQRZIQphvfIi7NkURyLcvo2f4FihNU2BaQt8sEeLj
-         uhgP8FKbVGeYJc8vYRC1kgCAvNOM/TffWt4NpWoMbdEocCnD0QsMHmT5vQnTO9gnKEsG
-         +5JVaMUv4OGBDjsXAZc915Pot4vhF/lVyZULxqC2U4djTJ+fZDLIQCP1aY7LrlnQMoRE
-         20A0tl8AHk9+KxQf2UAQn26k5r2Y6/R7P7Sew60z3aJ0lximEE4BjR8Xju5XIBh6XkH4
-         w9zRt50iGtPYsc3C3IbQiNYhAk89AtdVTqo+MDlEmrI085D1L4xGmCk9Wj18hiX/0w0o
-         Ds1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nP4MXbiHp2m8P5mBk8HuUBMOHGAhobONFf01lBSeFAo=;
-        b=P5NF6CwILhNMZ8piqzuGE5LnyJSiAM8Ll6a2Qs1lH1lXyuj5O8dfBz3iSROMMLf7eO
-         i718wXOuNK3LjcQlSHL5z2JKk4uVNeKLzatgLWNlIzxLcu1cVDMcYGVDRdjEKQ3uAzYq
-         ORaJno68/DUlszR3m5F7FaWWH4Nt6YYFshxTlQmpo6at2vMgVfQRS4wCOK0iyYach9u7
-         qaCqi49wHmxWAmGXlMqdug8gBdHBHuudhMA5FVPochkAz/VzBelwRuWjaiIwRLLkdn+o
-         6zPi49ZOkzjmg8Xk2eAkfKgRxPjMQ5fn8TA+CiRzXqbTOYE1wsPNHdSrQWfR3vvCT4V6
-         ZKqQ==
-X-Gm-Message-State: APjAAAU8e8KRtbVDYRcoWzlZDweH/yvJcAm9/K2tDMgiyC0Xtynuv7rP
-        f9bK0kYu2WRnom+axINa4dg=
-X-Google-Smtp-Source: APXvYqyEDTgMBor9CvvuNZfod51SbK7jVWWtly1xRfRsxcoKlm7lxNqs+yf6oGfMlVXgrszINcplCg==
-X-Received: by 2002:a50:ca0d:: with SMTP id d13mr15121011edi.72.1553947302779;
-        Sat, 30 Mar 2019 05:01:42 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:4079:2f00:3464:9f03:ecff:1b10])
-        by smtp.gmail.com with ESMTPSA id v5sm1418105edr.2.2019.03.30.05.01.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 Mar 2019 05:01:42 -0700 (PDT)
-Date:   Sat, 30 Mar 2019 13:01:41 +0100
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, mingo@redhat.com,
-        roopa@cumulusnetworks.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, linux-sparse@vger.kernel.org
-Subject: Re: [PATCH] trace: events: fix  error directive in argument list
-Message-ID: <20190330120139.ps4u7j6w4snnhkkb@ltop.local>
-References: <20190325195303.GA20629@hari-Inspiron-1545>
- <20190329232215.itsvo3jj3lu4gr7k@ltop.local>
- <20190330110747.GA3461@hari-Inspiron-1545>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190330110747.GA3461@hari-Inspiron-1545>
-User-Agent: NeoMutt/20180716
+        Sat, 30 Mar 2019 08:04:28 -0400
+Received: from grover.tkatk1.zaq.ne.jp (zaqdadce369.zaq.ne.jp [218.220.227.105]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x2UC4MsN021262;
+        Sat, 30 Mar 2019 21:04:23 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x2UC4MsN021262
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1553947463;
+        bh=FHNK6eyXi8sis+WrpzX624MLFcG4c9ZDVhLL5yNCvIQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GUqfKCXumTTXXHmrKSXNdkpjrlJBkG7x90UZEWrqZMCQNCrtFkZk8Cz5dxb1s0Csh
+         8DipHMZQ489U4bhE3BpLDCw3WfVHlzVFpntsxDOteSnrxM71lOkTggMPon8i9Y4kjL
+         qbsqlGOnIhkPjP9uJvOwAOxQ4fjtOWEj0z0L1bLv2kvgYINVJf/5hpt/5TYNZIILoM
+         c5swsIQFgUzBLDUiUtDQyNASRey+brKS6sQyU21BttCyOE5LVHpI/9UKKw0NcetzvG
+         AAPlnGxpUqrSKGblny+79Kb8XPRMhr9RLWd6kkzhFZpOycEOO9Zz+Kaf02AsWDEt+t
+         tuRk5sUmYOY3Q==
+X-Nifty-SrcIP: [218.220.227.105]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/6] kbuild: pass $(MAKECMDGOALS) to sub-make as is
+Date:   Sat, 30 Mar 2019 21:04:13 +0900
+Message-Id: <1553947458-8311-1-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 04:37:48PM +0530, Hariprasad Kelam wrote:
-> On Sat, Mar 30, 2019 at 12:22:17AM +0100, Luc Van Oostenryck wrote:
-> > On Tue, Mar 26, 2019 at 01:23:03AM +0530, Hariprasad Kelam wrote:
-> > > This patch fixes below spare errors.
-> > > 
-> > > Sparse error:
-> > > make C=2 CF=-D__CHECK_ENDIAN__ M=net/core
-> > > ./include/trace/events/neigh.h:73:1: error: directive in argument list
-> > > ./include/trace/events/neigh.h:78:1: error: directive in argument list
-> > > ./include/trace/events/neigh.h:150:1: error: directive in argument list
-> > > ./include/trace/events/neigh.h:155:1: error: directive in argument list
-> > > 
-> > > Changes below two lines to signle line to avoid sparse error
-> > >  #if IS_ENABLED(CONFIG_IPV6)
-> > >                if (n->tbl->family == AF_INET6) {
-> > > to if (IS_ENABLED(CONFIG_IPV6) && n->tbl->family == AF_INET6)
-> > > 
-> > > and removes reassigning pin6 pointer when IPV6 is enabled
-> > > 
-> > > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> > > ---
-> > >  include/trace/events/neigh.h | 19 +++++--------------
-> > >  1 file changed, 5 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/include/trace/events/neigh.h b/include/trace/events/neigh.h
-> > > index 0bdb085..6e310ea 100644
-> > > --- a/include/trace/events/neigh.h
-> > > +++ b/include/trace/events/neigh.h
-> > > @@ -70,15 +70,11 @@ TRACE_EVENT(neigh_update,
-> > >  		else
-> > >  			*p32 = 0;
-> > >  
-> > > -#if IS_ENABLED(CONFIG_IPV6)
-> > > -		if (n->tbl->family == AF_INET6) {
-> > > -			pin6 = (struct in6_addr *)__entry->primary_key6;
-> > > +		if (IS_ENABLED(CONFIG_IPV6) && n->tbl->family == AF_INET6)
-> > >  			*pin6 = *(struct in6_addr *)n->primary_key;
-> > 
-> > Why removing the line wheer pin6 is assigned?
-> > IMO, the patch should be:
-> > -#if IS_ENABLED(CONFIG_IPV6)
-> > -		if (n->tbl->family == AF_INET6) {
-> > +		if (IS_ENABLED(CONFIG_IPV6) && n->tbl->family == AF_INET6)
-> >  			pin6 = (struct in6_addr *)__entry->primary_key6;
-> >   			*pin6 = *(struct in6_addr *)n->primary_key;
-> > 
-> > > @@ -147,15 +143,10 @@ DECLARE_EVENT_CLASS(neigh__update,
-> > >  		else
-> > >  			*p32 = 0;
-> > >  
-> > > -#if IS_ENABLED(CONFIG_IPV6)
-> > > -		if (n->tbl->family == AF_INET6) {
-> > > -			pin6 = (struct in6_addr *)__entry->primary_key6;
-> >
-> pin6  is already assigned.
+Manipulating $(MAKECMDGOALS) for sub-make seems odd to me.
 
-OK, I see. IMO, it would be better to have 2 patches for this:
-one for the redundant assignment to pin6 and anotther one for
-the IS_ENABLED() change but feel free, if needed, to add my
+[1] 'make O=foo sub-make' is turned into 'make O=foo', which builds
+the default targets. It would make sense to terminate the build with:
 
-  Reviewed-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+  *** No rule to make target 'sub-make'.  Stop.
 
+[2] 'make O=foo defconfig _all' is turned into 'make O=foo defconfig',
+which changes the behavior.
 
--- Luc
+Let's pass $(MAKECMDGOALS) as is.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 92ad066..9cbd367 100644
+--- a/Makefile
++++ b/Makefile
+@@ -168,7 +168,7 @@ $(filter-out _all sub-make $(lastword $(MAKEFILE_LIST)), $(MAKECMDGOALS)) _all:
+ sub-make:
+ 	$(Q)$(MAKE) \
+ 	$(if $(KBUILD_OUTPUT),-C $(KBUILD_OUTPUT) KBUILD_SRC=$(CURDIR)) \
+-	-f $(CURDIR)/Makefile $(filter-out _all sub-make,$(MAKECMDGOALS))
++	-f $(CURDIR)/Makefile $(MAKECMDGOALS)
+ 
+ endif # need-sub-make
+ endif # sub_make_done
+-- 
+2.7.4
+
