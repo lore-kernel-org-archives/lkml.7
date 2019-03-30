@@ -2,129 +2,136 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651B4C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 17:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A89BC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 17:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D51D218CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 17:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED563218CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 17:18:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="G+yofZ6M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="so0L3sFt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730668AbfC3RMU (ORCPT
+        id S1730727AbfC3RSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 13:12:20 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43683 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730477AbfC3RMU (ORCPT
+        Sat, 30 Mar 2019 13:18:43 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45419 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730215AbfC3RSn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 13:12:20 -0400
-Received: by mail-ed1-f68.google.com with SMTP id d26so4622288ede.10
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 10:12:19 -0700 (PDT)
+        Sat, 30 Mar 2019 13:18:43 -0400
+Received: by mail-ed1-f67.google.com with SMTP id m16so4608799edd.12;
+        Sat, 30 Mar 2019 10:18:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=zC8Nl9G6/l5MMFOXorxDKy0jA9yGChzBjLvNeElBA7o=;
-        b=G+yofZ6M4v5SaeLy/9xv1r+7DYHVR32oTFlPrWToYcUx+oQhgkI9/JnLaDzXJxgLrL
-         v+dlBaFETZlGkMKEXQ4vif/yNh0uwn/lU4BWZGhUlQ+Og71Y0UpZYs0mbA8anLytC9Ib
-         q0Cm2GPUWSlz8DjoeF3v/EXOsJm68KHIKHLvDN3LHx5P99mcURoj8boGD7evpBJDm+Ic
-         QbBk+88dxc9mwiU2cqniD6N7/10O2JTTXRcKaSLFp4lBTRNTZ3bVmV4jQLZa04Y1gALF
-         vNZ8ey9b+xGfv8ce6Y79oLxv6dd6QMMcaWs1yrilAKEzmukv5FRg9NKXyaWb50YugdjA
-         X9Gg==
+        bh=S8BG72Oo0tHX897kf8Kx9NqYQIQigjHsIA8Roy9YfVw=;
+        b=so0L3sFtKtc3gkNjFmz8Z1YrT2fmAPUKnvzW/OpbV+fiTCwxGKW6RDwMVCspRjFOd2
+         MKd9cBMgDcIEj0I6pACu6nPsK2rHHikJ4bZI5BJSkf8L3DNL77w9pAK1aCiF2WTZVcnr
+         qAZV0CGRIciKYtBcDf8q3lSx/AlzN+OjiW9FrucEka4cYJYDrKqbDdO8TZJsPWEAqfEZ
+         vgijki4GxblPF4WqR2LMu8a4rXWerNxk57Ezvm57wuaZQ1i7j/7KmD8/o/Ps6I0u6aFp
+         /mHrZXHs6GUiZJVKiRcGkD1STLRnpaV0si9OryKuuuulaGYIJ0CMLhD+rcGjUtfjaeYu
+         F1fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zC8Nl9G6/l5MMFOXorxDKy0jA9yGChzBjLvNeElBA7o=;
-        b=jrwvS9u7r+D3WFNmm9KneE8OD2MmrzzjaApgLy5x2fqYLg7nXjWa0KZZyxUIu+MdXq
-         o+Bg1CLJpTKED/xiOlYnp10lceBrcRpIhBnWA65s6NPO2XskkSTmdJkSMQdsakF7TBlk
-         baPumOq2XUhu27UOnz07kYC6xTXVtCYyNwK52cHYr+X1Te3M4UE+FaGnbRGYhAu5iuql
-         UN1H8Bf6rAxjI8wX+l/rSCqPhSLKW6lrBW//9C5GZ4Q/h7QSev/7Wst9HxO3tm7wY8vn
-         hfCH8AQRjMPtddv5bnbA7uis3yKCt2N9D8ioWYkIyZiouSGj4A5Ry6uOWFc0+syZ1+pk
-         7/eA==
-X-Gm-Message-State: APjAAAUC2P/LWT2Iun965iRBtga2x8Hye7EMrb/Q6QLzzOc8VBc2p0ui
-        exwTMC/XpCw2zHivzumAZwjzmQ==
-X-Google-Smtp-Source: APXvYqzIDJtVV8x++xTwRnO0Zg/BI+kUfwuZlJ43GI5vWYALvikbhUlAxUHFS3lGu0q/jZzKGpvmIQ==
-X-Received: by 2002:a50:8854:: with SMTP id c20mr36027528edc.167.1553965938416;
-        Sat, 30 Mar 2019 10:12:18 -0700 (PDT)
-Received: from brauner.io ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
-        by smtp.gmail.com with ESMTPSA id f13sm1657765eda.38.2019.03.30.10.12.16
+        bh=S8BG72Oo0tHX897kf8Kx9NqYQIQigjHsIA8Roy9YfVw=;
+        b=l4ruqe33UFqWykknOW7c5AdvxOLPB6nHYy++i786Rb9uAwdRVQbhi+nAZQxu4ji6Vy
+         evx2jH08VHZF17oKLQ9h8XFrbRUXYnugu7naE97LYDTLV2+sdm5VQUUSsy0KPMl797J/
+         D4Ck4y6/vF8F8Cay3yiLEzOt53YECbspyqTOwaq44O92SIfLmHXPmE3NEF0vIBmM40jD
+         bGruWE2BGu3cYuWuuuDnC2ArA4fYR9prg1XGMpY3o7Pfa3VqlhcZ1UpDidU/lau5kTVZ
+         no90DYax2YyuKPcUQaPnVRqp7Kzs95WJ0M0ZO0wFWmEJfOQapcFURpiKkXr8Ddn+q6ad
+         9kCg==
+X-Gm-Message-State: APjAAAVaZPXV3EPZM2S7hQs2TZhwjXaunic1q9I1CivNO+VSOTPGUsbQ
+        1KEHkfUDYNSOt/IwHX7jvsI=
+X-Google-Smtp-Source: APXvYqwpDgPk+vDRhNzxobWSo6pWjtVA942tnOcgxftiOGsBY4lGaJJnzaDMMK3dMMRBbpz6wtpHdQ==
+X-Received: by 2002:a50:8850:: with SMTP id c16mr29446255edc.145.1553966321627;
+        Sat, 30 Mar 2019 10:18:41 -0700 (PDT)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id g41sm1659252edb.23.2019.03.30.10.18.40
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 30 Mar 2019 10:12:17 -0700 (PDT)
-Date:   Sat, 30 Mar 2019 18:12:16 +0100
-From:   Christian Brauner <christian@brauner.io>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
-Message-ID: <20190330171215.3yrfxwodstmgzmxy@brauner.io>
-References: <20190329155425.26059-1-christian@brauner.io>
- <CAHk-=wjq4dTPcz-qsvhpm5F42SDHCoqEWv1V=rs_kt6MC=ZThA@mail.gmail.com>
- <BCD99947-5F55-4116-8F74-D6832E50340B@brauner.io>
- <CAHk-=whcA0kAWGqet9oJdyttjhP7J4PcU2Ly=n_Qyo6rMJNxRg@mail.gmail.com>
- <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com>
- <CAHk-=wj0o8BiUrYiM5ZcTS6JxBh1M60O36Ms8-EqLQ139=1L4g@mail.gmail.com>
+        Sat, 30 Mar 2019 10:18:40 -0700 (PDT)
+Date:   Sat, 30 Mar 2019 10:18:38 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 4.9 25/30] USB: core: only clean up what we allocated
+Message-ID: <20190330171838.GA2150@archlinux-ryzen>
+References: <20190326042607.558087893@linuxfoundation.org>
+ <20190326042608.413616958@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wj0o8BiUrYiM5ZcTS6JxBh1M60O36Ms8-EqLQ139=1L4g@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190326042608.413616958@linuxfoundation.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 10:04:33AM -0700, Linus Torvalds wrote:
-> On Sat, Mar 30, 2019 at 9:34 AM Daniel Colascione <dancol@google.com> wrote:
-> >
-> > Just to be clear, I'm not proposing granting secret access to procfs,
-> > and as far as I can see, nobody else is either. We've been talking
-> > about making it easier to avoid races when you happen to want a pidfd
-> > and a procfs fd that point to the same process
+On Tue, Mar 26, 2019 at 03:30:04PM +0900, Greg Kroah-Hartman wrote:
+> 4.9-stable review patch.  If anyone has any objections, please let me know.
 > 
-> So I thought that was the whole point of just opening /proc/<pid>.
-> Exactly because that way you can then use openat() from there on.
+> ------------------
+> 
+> From: Andrey Konovalov <andreyknvl@google.com>
+> 
+> commit 32fd87b3bbf5f7a045546401dfe2894dbbf4d8c3 upstream.
+> 
+> When cleaning up the configurations, make sure we only free the number
+> of configurations and interfaces that we could have allocated.
+> 
+> Reported-by: Andrey Konovalov <andreyknvl@google.com>
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>  drivers/usb/core/config.c |    9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> --- a/drivers/usb/core/config.c
+> +++ b/drivers/usb/core/config.c
+> @@ -763,18 +763,21 @@ void usb_destroy_configuration(struct us
+>  		return;
+>  
+>  	if (dev->rawdescriptors) {
+> -		for (i = 0; i < dev->descriptor.bNumConfigurations; i++)
+> +		for (i = 0; i < dev->descriptor.bNumConfigurations &&
+> +				i < USB_MAXCONFIG; i++)
+>  			kfree(dev->rawdescriptors[i]);
+>  
+>  		kfree(dev->rawdescriptors);
+>  		dev->rawdescriptors = NULL;
+>  	}
+>  
+> -	for (c = 0; c < dev->descriptor.bNumConfigurations; c++) {
+> +	for (c = 0; c < dev->descriptor.bNumConfigurations &&
+> +			c < USB_MAXCONFIG; c++) {
+>  		struct usb_host_config *cf = &dev->config[c];
+>  
+>  		kfree(cf->string);
+> -		for (i = 0; i < cf->desc.bNumInterfaces; i++) {
+> +		for (i = 0; i < cf->desc.bNumInterfaces &&
+> +				i < USB_MAXINTERFACES; i++) {
+>  			if (cf->intf_cache[i])
+>  				kref_put(&cf->intf_cache[i]->ref,
+>  					  usb_release_interface_cache);
+> 
+> 
 
-To clarify, what the Android guys really wanted to be part of the api is
-a way to get race-free access to metadata associated with a given pidfd.
-And the idea was that *if and only if procfs is mounted* you could do:
+You reverted this upstream in commit cf4df407e0d7 ("Revert "USB: core:
+only clean up what we allocated"") in favor of commit 48a4ff1c7bb5
+("USB: core: prevent malicious bNumInterfaces overflow"), which has been
+in this tree since 4.9.71.
 
-int pidfd = pidfd_open(1234, 0);
-
-int procfd = open("/proc", O_RDONLY | O_CLOEXEC);
-int procpidfd = ioctl(pidfd, PIDFD_TO_PROCFD, procfd);
-
-and then we internally verify that the struct pid that the pidfd is
-refering to, is still the same as the one that /proc/<pid> is refering
-to and only then do we return an fd for the process /proc/<pid>
-directory which would then allow you to do, e.g.:
-
-int statusfd = openat(procpidfd, "status", O_RDONLY | O_CLOEXEC);
-
-this would provide race-free access to metadat but again, only if /proc
-is mounted and available to the user. But if that's an instant NAK we
-will definitely *not* do this.
+Sorry for not catching this earlier,
+Nathan
