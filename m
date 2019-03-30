@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40997C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096B7C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060C52064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDBD12064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907887;
-	bh=Pxv0WfrAuEfMCy9ovtQ8oUryleOJFqEyemC20+3XJmY=;
+	s=default; t=1553907893;
+	bh=kRKCU2ybWTB648Uu/xlaDDrMgWhJ9Iv+rBjVGh1cdd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J/CrXAwyg7uqArZo+0Gpm3nfdtpmtZttKdia1+C8ZnP/Ket/PNHTUNH/Gq8AaT0H+
-	 FsrpbGAj+pr8rEp/0pp1pjUQMia7BIe/+PN7kxTWm3jgLpfBZ9goeq0fFMvMOqTzjp
-	 9FHiPAPfbhdynoOMHB7a93JFBeggvqvNEQQeM2G4=
+	b=cST58iUzpohuuy/Ao1ZbnzRCtEyYQXvlgz2HmAVh7VV16hV6HCteykD6x+bCshY6A
+	 7fQ3ZP9ajgZ9qrbRaEaJIbomktkCXGdft+CjbLOZDQlyvzGjZ6EL1pG8szwp1zHG6r
+	 IcPehHB0ibYNvUpbfLY9Jdyz4x+4jLVANIsXcPTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731687AbfC3BEq (ORCPT
+        id S1731739AbfC3BEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:04:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33432 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:04:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731532AbfC3Ay3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:54:29 -0400
+        id S1730636AbfC3Ay1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:54:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E44D4218D8;
-        Sat, 30 Mar 2019 00:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EB622064A;
+        Sat, 30 Mar 2019 00:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907268;
-        bh=Pxv0WfrAuEfMCy9ovtQ8oUryleOJFqEyemC20+3XJmY=;
+        s=default; t=1553907266;
+        bh=kRKCU2ybWTB648Uu/xlaDDrMgWhJ9Iv+rBjVGh1cdd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CpnTbjcGJgUu4/jhDRFYEhjuRj0vfsU4RXdR0VD9dOewt4DlpTTCDLNdkMrvIJaX1
-         GWH2JHVC0amx3IaBx/VN5Lt/f0uQgK7f2T9lBTIrtncutxlcyhb5hTf/iziNPWJTvP
-         PMqPtqioh+fjdzt3DN64biSh3Pkj3QCoN/Y1Y22c=
+        b=jHQGV1sOLiTyLM1DHzkP8vbscBLXoEZ+lQtlhoB/HldeDK/tyzJfkcoa9hOIOPVLf
+         vEmWzdedrrNs6vAvZzt7a/5Oh7R/6JEpGwvJklDv7+bhJi26VDLgqhpWOb/HZyVnQL
+         G/7t81HgjYMSusoLR+o3BoDUMDrUFxGXh9c/qfuk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        mark gross <mgross@intel.com>, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 48/52] iommu/vt-d: Check capability before disabling protected memory
-Date:   Fri, 29 Mar 2019 20:52:55 -0400
-Message-Id: <20190330005301.26868-48-sashal@kernel.org>
+Cc:     Matthew Whitehead <tedheadster@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 46/52] x86/cpu/cyrix: Use correct macros for Cyrix calls on Geode processors
+Date:   Fri, 29 Mar 2019 20:52:53 -0400
+Message-Id: <20190330005301.26868-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005301.26868-1-sashal@kernel.org>
 References: <20190330005301.26868-1-sashal@kernel.org>
@@ -61,40 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Matthew Whitehead <tedheadster@gmail.com>
 
-[ Upstream commit 5bb71fc790a88d063507dc5d445ab8b14e845591 ]
+[ Upstream commit 18fb053f9b827bd98cfc64f2a35df8ab19745a1d ]
 
-The spec states in 10.4.16 that the Protected Memory Enable
-Register should be treated as read-only for implementations
-not supporting protected memory regions (PLMR and PHMR fields
-reported as Clear in the Capability register).
+There are comments in processor-cyrix.h advising you to _not_ make calls
+using the deprecated macros in this style:
 
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: mark gross <mgross@intel.com>
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
-Fixes: f8bab73515ca5 ("intel-iommu: PMEN support")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+  setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x80);
+
+This is because it expands the macro into a non-functioning calling
+sequence. The calling order must be:
+
+  outb(CX86_CCR2, 0x22);
+  inb(0x23);
+
+From the comments:
+
+ * When using the old macros a line like
+ *   setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
+ * gets expanded to:
+ *  do {
+ *    outb((CX86_CCR2), 0x22);
+ *    outb((({
+ *        outb((CX86_CCR2), 0x22);
+ *        inb(0x23);
+ *    }) | 0x88), 0x23);
+ *  } while (0);
+
+The new macros fix this problem, so use them instead. Tested on an
+actual Geode processor.
+
+Signed-off-by: Matthew Whitehead <tedheadster@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: luto@kernel.org
+Link: https://lkml.kernel.org/r/1552596361-8967-2-git-send-email-tedheadster@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kernel/cpu/cyrix.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 2b8f5ebae821..603bf5233a99 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1624,6 +1624,9 @@ static void iommu_disable_protect_mem_regions(struct intel_iommu *iommu)
- 	u32 pmen;
- 	unsigned long flags;
+diff --git a/arch/x86/kernel/cpu/cyrix.c b/arch/x86/kernel/cpu/cyrix.c
+index 8949b7ae6d92..fa61c870ada9 100644
+--- a/arch/x86/kernel/cpu/cyrix.c
++++ b/arch/x86/kernel/cpu/cyrix.c
+@@ -124,7 +124,7 @@ static void set_cx86_reorder(void)
+ 	setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10); /* enable MAPEN */
  
-+	if (!cap_plmr(iommu->cap) && !cap_phmr(iommu->cap))
-+		return;
-+
- 	raw_spin_lock_irqsave(&iommu->register_lock, flags);
- 	pmen = readl(iommu->reg + DMAR_PMEN_REG);
- 	pmen &= ~DMA_PMEN_EPM;
+ 	/* Load/Store Serialize to mem access disable (=reorder it) */
+-	setCx86_old(CX86_PCR0, getCx86_old(CX86_PCR0) & ~0x80);
++	setCx86(CX86_PCR0, getCx86(CX86_PCR0) & ~0x80);
+ 	/* set load/store serialize from 1GB to 4GB */
+ 	ccr3 |= 0xe0;
+ 	setCx86(CX86_CCR3, ccr3);
+@@ -135,11 +135,11 @@ static void set_cx86_memwb(void)
+ 	pr_info("Enable Memory-Write-back mode on Cyrix/NSC processor.\n");
+ 
+ 	/* CCR2 bit 2: unlock NW bit */
+-	setCx86_old(CX86_CCR2, getCx86_old(CX86_CCR2) & ~0x04);
++	setCx86(CX86_CCR2, getCx86(CX86_CCR2) & ~0x04);
+ 	/* set 'Not Write-through' */
+ 	write_cr0(read_cr0() | X86_CR0_NW);
+ 	/* CCR2 bit 2: lock NW bit and set WT1 */
+-	setCx86_old(CX86_CCR2, getCx86_old(CX86_CCR2) | 0x14);
++	setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x14);
+ }
+ 
+ /*
+@@ -153,14 +153,14 @@ static void geode_configure(void)
+ 	local_irq_save(flags);
+ 
+ 	/* Suspend on halt power saving and enable #SUSP pin */
+-	setCx86_old(CX86_CCR2, getCx86_old(CX86_CCR2) | 0x88);
++	setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
+ 
+ 	ccr3 = getCx86(CX86_CCR3);
+ 	setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10);	/* enable MAPEN */
+ 
+ 
+ 	/* FPU fast, DTE cache, Mem bypass */
+-	setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x38);
++	setCx86(CX86_CCR4, getCx86(CX86_CCR4) | 0x38);
+ 	setCx86(CX86_CCR3, ccr3);			/* disable MAPEN */
+ 
+ 	set_cx86_memwb();
+@@ -296,7 +296,7 @@ static void init_cyrix(struct cpuinfo_x86 *c)
+ 		/* GXm supports extended cpuid levels 'ala' AMD */
+ 		if (c->cpuid_level == 2) {
+ 			/* Enable cxMMX extensions (GX1 Datasheet 54) */
+-			setCx86_old(CX86_CCR7, getCx86_old(CX86_CCR7) | 1);
++			setCx86(CX86_CCR7, getCx86(CX86_CCR7) | 1);
+ 
+ 			/*
+ 			 * GXm : 0x30 ... 0x5f GXm  datasheet 51
+@@ -319,7 +319,7 @@ static void init_cyrix(struct cpuinfo_x86 *c)
+ 		if (dir1 > 7) {
+ 			dir0_msn++;  /* M II */
+ 			/* Enable MMX extensions (App note 108) */
+-			setCx86_old(CX86_CCR7, getCx86_old(CX86_CCR7)|1);
++			setCx86(CX86_CCR7, getCx86(CX86_CCR7)|1);
+ 		} else {
+ 			/* A 6x86MX - it has the bug. */
+ 			set_cpu_bug(c, X86_BUG_COMA);
 -- 
 2.19.1
 
