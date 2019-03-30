@@ -2,127 +2,250 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAA8C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D322EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DF2217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:53:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="YFyUHNT1"
+	by mail.kernel.org (Postfix) with ESMTP id 9D5572183F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:55:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbfC3Mxv (ORCPT
+        id S1730723AbfC3Mzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 08:53:51 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:27622 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730723AbfC3Mxu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 08:53:50 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x2UCrNxw007752;
-        Sat, 30 Mar 2019 21:53:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x2UCrNxw007752
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553950404;
-        bh=2bJ6Rz8EsFR+S/vsYNns82RctdtVzrPs2oGgHbgn+l8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YFyUHNT1njYCY4ZzQroCC8CKNOgwEcHdCrfLvaddXQrQUkCiWpU69DmSbIGqXaenR
-         1iH19hsN9Hvd1uQGHD7DtBo+WGxr3VjNl1DCjqzcAo6xmeITixpeEgYFwtfNsRYb0L
-         lR0su/USKtErkVB4fRewoCGqCo8W7QDUKmnjV0AHYMSK7mde95AROp940vVf10H1jp
-         PXhz0ZcMo/kh8pXTZ/38zOnEd7WfeWR20uzJAORHCfE8hbN0wxRDGUX+8hd7X7RGDI
-         AL0nUZpkRkV5IaqYLSa2cvbyKDPbQD459k3rTFWUFjXuHtJHhPs+b9SlyJA5Taguyg
-         1oxMKGD8ocRRQ==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id w13so1870212vsc.4;
-        Sat, 30 Mar 2019 05:53:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAWIfcBHFqyF/dHGVqy5aSGf8ns23ueV42R1YX2uYXhpNqhdrubs
-        /bhXokJFl6o7AXFVbqcigJ+ny5dyrCp0qmfLGCY=
-X-Google-Smtp-Source: APXvYqxG1xe6Q0IBtKRSagLOMjCqZIMaW/ypjHUgEzQXmw9IPRtIaKQHi2wMyryG/cURnQYPx9GJGU0QEkmMpUSDpkc=
-X-Received: by 2002:a67:7f44:: with SMTP id a65mr15672913vsd.179.1553950402678;
- Sat, 30 Mar 2019 05:53:22 -0700 (PDT)
+        Sat, 30 Mar 2019 08:55:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33768 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730689AbfC3Mzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 08:55:51 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EAFC281DF3;
+        Sat, 30 Mar 2019 12:55:49 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EECA41A7D4;
+        Sat, 30 Mar 2019 12:55:38 +0000 (UTC)
+Date:   Sat, 30 Mar 2019 08:55:36 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Paul Moore <paul@paul-moore.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Simo Sorce <simo@redhat.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
+Subject: Re: [PATCH ghak90 V5 05/10] audit: add containerid support for
+ ptrace and signals
+Message-ID: <20190330125536.mipbgw2hjewz3zem@madcap2.tricolour.ca>
+References: <cover.1552665316.git.rgb@redhat.com>
+ <a5a612bff629574cf4b678e7c7a9315e0e60a27c.1552665316.git.rgb@redhat.com>
+ <CAFqZXNuMjvds9OKoj--zgn5j8CGuW55ZGhTPHtKGb+ZOR6B2-A@mail.gmail.com>
+ <20190328020410.pl7odjknw7robdk3@madcap2.tricolour.ca>
 MIME-Version: 1.0
-References: <20190325181425.247227-1-helgaas@kernel.org> <20190325181425.247227-5-helgaas@kernel.org>
- <20190325182608.GS251185@google.com>
-In-Reply-To: <20190325182608.GS251185@google.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 30 Mar 2019 21:52:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATKqbb1L4LzofncJsYCUL1iDwUyy6WOTOE0X82ydVPDdg@mail.gmail.com>
-Message-ID: <CAK7LNATKqbb1L4LzofncJsYCUL1iDwUyy6WOTOE0X82ydVPDdg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] CPER: Remove unnecessary use of user-space types
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328020410.pl7odjknw7robdk3@madcap2.tricolour.ca>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Sat, 30 Mar 2019 12:55:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 3:26 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Mar 25, 2019 at 01:14:25PM -0500, helgaas@kernel.org wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > "__u32" and similar types are intended for things exported to user-space,
-> > including structs used in ioctls; see include/uapi/asm-generic/int-l64.h.
-> >
-> > They are not needed for the CPER struct definitions, which not exported to
-> > user-space and not used in ioctls.  Replace them with the typical "u32" and
-> > similar types.  No functional change intended.
-> >
-> > The reason for changing this is to remove the question of "why do we use
-> > __u32 here instead of u32?"  We should use __u32 when there's a reason for
-> > it; otherwise, we should prefer u32 for consistency.
-> >
-> > Reference: Documentation/process/coding-style.rst
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > CC: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > CC: Andrew Morton <akpm@linux-foundation.org>
->
-> I cc'd you folks because you were part of this conversation:
->
->   https://lore.kernel.org/lkml/1526350925-14922-3-git-send-email-yamada.masahiro@socionext.com/T/#u
->
-> I *think* the conclusion there was that this sort of change makes
-> sense, but I want to make sure.  If it does make sense, I'm surprised
-> at how much stuff in include/linux/ still uses __u32 when it doesn't
-> appear to need it.
+On 2019-03-27 22:04, Richard Guy Briggs wrote:
+> On 2019-03-27 22:17, Ondrej Mosnacek wrote:
+> > On Fri, Mar 15, 2019 at 7:34 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > Add audit container identifier support to ptrace and signals.  In
+> > > particular, the "ref" field provides a way to label the auxiliary record
+> > > to which it is associated.
+> > >
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > Acked-by: Serge Hallyn <serge@hallyn.com>
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > ---
+> > >  include/linux/audit.h |  1 +
+> > >  kernel/audit.c        |  2 ++
+> > >  kernel/audit.h        |  2 ++
+> > >  kernel/auditsc.c      | 23 +++++++++++++++++------
+> > >  4 files changed, 22 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > > index 43438192ca2a..ebd6625ca80e 100644
+> > > --- a/include/linux/audit.h
+> > > +++ b/include/linux/audit.h
+> > > @@ -35,6 +35,7 @@ struct audit_sig_info {
+> > >         uid_t           uid;
+> > >         pid_t           pid;
+> > >         char            ctx[0];
+> > > +       u64             cid;
+> > >  };
+> > 
+> > It seems like this structure implicitly defines the format of some
+> > message that is sent to userspace... If so, how will userspace detect
+> > that a new format (including the cid) is being used? Even assuming the
+> > fixed order as pointed out by Neil, the message still seems to be
+> > variable-sized so userspace cannot even use the length to infer that.
+> > Am I missing something here? (I hope I am :)
+> 
+> How humble of you again.  No, you're not missing something.  This ends
+> up being an api change...  That can be fixed in userspace by checking
+> for AUDIT_FEATURE_BITMAP_CONTAINERID, but how do we make a newer kernel
+> not break an older userspace...  I think this was the original rationale
+> for adding it after the ctx but totally missing the fact that the latter
+> is a variable-length field.
 
+The way to address this on Steve Grubb's advice is to create a new
+message type that incorporates a new struct with the structure above,
+leaving the old one with the old message type deprecated.  I've coded
+this up along with userspace support.
 
-This patch looks good to me.
+> This patch really should be split into audit_sig_cid changes in a patch
+> by itself and target_cid changes which could go with the second and
+> fourth patches.
 
-I still fail to understand Greg's comment in
-the referred URL, though.
+I've also done this which Paul had already asked for, not quite in this
+form.
 
+I believe this addresses all the outstanding issues.
 
-"__u32" and similar types are intended for things exported to user-space.
+> > >  struct audit_buffer;
+> > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > index 8cc0e88d7f2a..cfa659b3f6c4 100644
+> > > --- a/kernel/audit.c
+> > > +++ b/kernel/audit.c
+> > > @@ -138,6 +138,7 @@ struct audit_net {
+> > >  kuid_t         audit_sig_uid = INVALID_UID;
+> > >  pid_t          audit_sig_pid = -1;
+> > >  u32            audit_sig_sid = 0;
+> > > +u64            audit_sig_cid = AUDIT_CID_UNSET;
+> > >
+> > >  /* Records can be lost in several ways:
+> > >     0) [suppressed in audit_alloc]
+> > > @@ -1515,6 +1516,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+> > >                         memcpy(sig_data->ctx, ctx, len);
+> > >                         security_release_secctx(ctx, len);
+> > >                 }
+> > > +               sig_data->cid = audit_sig_cid;
+> > >                 audit_send_reply(skb, seq, AUDIT_SIGNAL_INFO, 0, 0,
+> > >                                  sig_data, sizeof(*sig_data) + len);
+> > >                 kfree(sig_data);
+> > > diff --git a/kernel/audit.h b/kernel/audit.h
+> > > index c00e2ee3c6b3..c5ac6436317e 100644
+> > > --- a/kernel/audit.h
+> > > +++ b/kernel/audit.h
+> > > @@ -148,6 +148,7 @@ struct audit_context {
+> > >         kuid_t              target_uid;
+> > >         unsigned int        target_sessionid;
+> > >         u32                 target_sid;
+> > > +       u64                 target_cid;
+> > >         char                target_comm[TASK_COMM_LEN];
+> > >
+> > >         struct audit_tree_refs *trees, *first_trees;
+> > > @@ -344,6 +345,7 @@ extern void audit_filter_inodes(struct task_struct *tsk,
+> > >  extern pid_t audit_sig_pid;
+> > >  extern kuid_t audit_sig_uid;
+> > >  extern u32 audit_sig_sid;
+> > > +extern u64 audit_sig_cid;
+> > >
+> > >  extern int audit_filter(int msgtype, unsigned int listtype);
+> > >
+> > > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> > > index a8c8b44b954d..f04e115df5dc 100644
+> > > --- a/kernel/auditsc.c
+> > > +++ b/kernel/auditsc.c
+> > > @@ -113,6 +113,7 @@ struct audit_aux_data_pids {
+> > >         kuid_t                  target_uid[AUDIT_AUX_PIDS];
+> > >         unsigned int            target_sessionid[AUDIT_AUX_PIDS];
+> > >         u32                     target_sid[AUDIT_AUX_PIDS];
+> > > +       u64                     target_cid[AUDIT_AUX_PIDS];
+> > >         char                    target_comm[AUDIT_AUX_PIDS][TASK_COMM_LEN];
+> > >         int                     pid_count;
+> > >  };
+> > > @@ -1514,7 +1515,7 @@ static void audit_log_exit(void)
+> > >         for (aux = context->aux_pids; aux; aux = aux->next) {
+> > >                 struct audit_aux_data_pids *axs = (void *)aux;
+> > >
+> > > -               for (i = 0; i < axs->pid_count; i++)
+> > > +               for (i = 0; i < axs->pid_count; i++) {
+> > >                         if (audit_log_pid_context(context, axs->target_pid[i],
+> > >                                                   axs->target_auid[i],
+> > >                                                   axs->target_uid[i],
+> > > @@ -1522,14 +1523,20 @@ static void audit_log_exit(void)
+> > >                                                   axs->target_sid[i],
+> > >                                                   axs->target_comm[i]))
+> > >                                 call_panic = 1;
+> > > +                       audit_log_contid(context, axs->target_cid[i]);
+> > > +               }
+> > >         }
+> > >
+> > > -       if (context->target_pid &&
+> > > -           audit_log_pid_context(context, context->target_pid,
+> > > -                                 context->target_auid, context->target_uid,
+> > > -                                 context->target_sessionid,
+> > > -                                 context->target_sid, context->target_comm))
+> > > +       if (context->target_pid) {
+> > > +               if (audit_log_pid_context(context, context->target_pid,
+> > > +                                         context->target_auid,
+> > > +                                         context->target_uid,
+> > > +                                         context->target_sessionid,
+> > > +                                         context->target_sid,
+> > > +                                         context->target_comm))
+> > >                         call_panic = 1;
+> > > +               audit_log_contid(context, context->target_cid);
+> > > +       }
+> > >
+> > >         if (context->pwd.dentry && context->pwd.mnt) {
+> > >                 ab = audit_log_start(context, GFP_KERNEL, AUDIT_CWD);
+> > > @@ -2360,6 +2367,7 @@ void __audit_ptrace(struct task_struct *t)
+> > >         context->target_uid = task_uid(t);
+> > >         context->target_sessionid = audit_get_sessionid(t);
+> > >         security_task_getsecid(t, &context->target_sid);
+> > > +       context->target_cid = audit_get_contid(t);
+> > >         memcpy(context->target_comm, t->comm, TASK_COMM_LEN);
+> > >  }
+> > >
+> > > @@ -2387,6 +2395,7 @@ int audit_signal_info(int sig, struct task_struct *t)
+> > >                 else
+> > >                         audit_sig_uid = uid;
+> > >                 security_task_getsecid(current, &audit_sig_sid);
+> > > +               audit_sig_cid = audit_get_contid(current);
+> > >         }
+> > >
+> > >         if (!audit_signals || audit_dummy_context())
+> > > @@ -2400,6 +2409,7 @@ int audit_signal_info(int sig, struct task_struct *t)
+> > >                 ctx->target_uid = t_uid;
+> > >                 ctx->target_sessionid = audit_get_sessionid(t);
+> > >                 security_task_getsecid(t, &ctx->target_sid);
+> > > +               ctx->target_cid = audit_get_contid(t);
+> > >                 memcpy(ctx->target_comm, t->comm, TASK_COMM_LEN);
+> > >                 return 0;
+> > >         }
+> > > @@ -2421,6 +2431,7 @@ int audit_signal_info(int sig, struct task_struct *t)
+> > >         axp->target_uid[axp->pid_count] = t_uid;
+> > >         axp->target_sessionid[axp->pid_count] = audit_get_sessionid(t);
+> > >         security_task_getsecid(t, &axp->target_sid[axp->pid_count]);
+> > > +       axp->target_cid[axp->pid_count] = audit_get_contid(t);
+> > >         memcpy(axp->target_comm[axp->pid_count], t->comm, TASK_COMM_LEN);
+> > >         axp->pid_count++;
+> > >
+> > 
+> > Ondrej Mosnacek <omosnace at redhat dot com>
+> 
+> - RGB
 
-This is clearly documented.
-
-Documentation/process/coding-style.rst:
-
- (e) Types safe for use in userspace.
-
-     In certain structures which are visible to userspace, we cannot
-     require C99 types and cannot use the ``u32`` form above. Thus, we
-     use __u32 and similar types in all structures which are shared
-     with userspace.
-
-
-
-I'd be eager to see a document that suggests __u32 and similar types
-in ioctl structures.
-
-
-
+- RGB
 
 --
-Best Regards
-Masahiro Yamada
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
