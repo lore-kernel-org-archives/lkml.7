@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CDEC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28CFC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0AA206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFF2218FC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907160;
-	bh=DuBdEdG4C10uQ/VybgsnniNYLisy4B48gkFMudNEeGc=;
+	s=default; t=1553907164;
+	bh=HUJBN6Ya1g2wLdkAVJwrWj3bJxCyZioPXGQcWSzvJl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jL+uMNwdZ1GdDt+5pN7/ntbWyUOylhEyug8SxSUv6XAWCsvQnPpqOQ5QBNH00NlFX
-	 t9HyJa+9tLe0/fGw5fcyT8Kk4lMXY9pvgeRorIBdCCMHvyHIjFPL5kJZwEyt29z7jT
-	 i1MLcJaOBVRIxFYyD1m1W6+96ozx5RzXbVf9r7s0=
+	b=d7N8SD+7WOlV6OsKT48OpZDJBRS0nUcnwEE3A7pDSdd+QYOs6bgy8sgWx9I/b7VLY
+	 DKI3Kk9qJuDifi7yNmEm8RC7iOqubZjWgiVJxM7nOeYMCwrIyl+8DTDX7CkHPuqIm0
+	 Qz/BEsyQ1+kyuuGimFj96GTsUoMYM1FYne28sYGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731080AbfC3Awj (ORCPT
+        id S1731092AbfC3Awn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59326 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:52:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731058AbfC3Awh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:52:37 -0400
+        id S1731058AbfC3Awk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:52:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57EF5218D9;
-        Sat, 30 Mar 2019 00:52:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DC45218EA;
+        Sat, 30 Mar 2019 00:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907157;
-        bh=DuBdEdG4C10uQ/VybgsnniNYLisy4B48gkFMudNEeGc=;
+        s=default; t=1553907159;
+        bh=HUJBN6Ya1g2wLdkAVJwrWj3bJxCyZioPXGQcWSzvJl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IbZ+BIXuQju5wmxlskHKs3WcLbis8R2OvL8F5TTAj6EwyygOh8L5HWOzxnvuyGpKn
-         u+EEqWQEeS69oXAaVVFtNo9Hcg4HKeO2mrQn7KrMnhZvdmhaQglNPDUsiW2jwZqOGF
-         9XDdT9ffAODnlO9qZ8ze27Z0mSBYz8hRi0uIk18Y=
+        b=AQ3JRuVOOxPqexvXJwQocO/wsxTTTXY4p72ZJ3KAABo/lr2RJuf7pNOSCpQycG0OP
+         Gjz8DRvdfQZ5NWYa6bmInijZlpWBTNoidL/vjEnh4lQ44lvTMoRm3z2pTtNGe4xN+e
+         0JBWdPhhj5XWmrwkBIxrf5BBoRq6pRtyoqRSTOvo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jianguo Chen <chenjianguo3@huawei.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Thomas Gleixner <tglx@linutronix.de>, kjlu@umn.edu,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joe Perches <joe@perches.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Roland Dreier <roland@purestorage.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 55/67] irqchip/mbigen: Don't clear eventid when freeing an MSI
-Date:   Fri, 29 Mar 2019 20:50:35 -0400
-Message-Id: <20190330005047.25998-55-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 56/67] x86/hpet: Prevent potential NULL pointer dereference
+Date:   Fri, 29 Mar 2019 20:50:36 -0400
+Message-Id: <20190330005047.25998-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005047.25998-1-sashal@kernel.org>
 References: <20190330005047.25998-1-sashal@kernel.org>
@@ -59,48 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jianguo Chen <chenjianguo3@huawei.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit fca269f201a8d9985c0a31fb60b15d4eb57cef80 ]
+[ Upstream commit 2e84f116afca3719c9d0a1a78b47b48f75fd5724 ]
 
-mbigen_write_msg clears eventid bits of a mbigen register
-when free a interrupt, because msi_domain_deactivate memset
-struct msg to zero. Then multiple mbigen pins with zero eventid
-will report the same interrupt number.
+hpet_virt_address may be NULL when ioremap_nocache fail, but the code lacks
+a check.
 
-The eventid clear call trace:
-                free_irq
-                __free_irq
-                irq_shutdown
-                irq_domain_deactivate_irq
-                __irq_domain_deactivate_irq
-                __irq_domain_deactivate_irq
-                msi_domain_deactivate
-                platform_msi_write_msg
-                mbigen_write_msg
+Add a check to prevent NULL pointer dereference.
 
-Signed-off-by: Jianguo Chen <chenjianguo3@huawei.com>
-[maz: massaged subject]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: kjlu@umn.edu
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Joe Perches <joe@perches.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Roland Dreier <roland@purestorage.com>
+Link: https://lkml.kernel.org/r/20190319021958.17275-1-pakki001@umn.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mbigen.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kernel/hpet.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
-index 567b29c47608..98b6e1d4b1a6 100644
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -161,6 +161,9 @@ static void mbigen_write_msg(struct msi_desc *desc, struct msi_msg *msg)
- 	void __iomem *base = d->chip_data;
- 	u32 val;
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index dfd3aca82c61..fb32925a2e62 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -905,6 +905,8 @@ int __init hpet_enable(void)
+ 		return 0;
  
-+	if (!msg->address_lo && !msg->address_hi)
-+		return;
-+ 
- 	base += get_mbigen_vec_reg(d->hwirq);
- 	val = readl_relaxed(base);
+ 	hpet_set_mapping();
++	if (!hpet_virt_address)
++		return 0;
  
+ 	/*
+ 	 * Read the period and check for a sane value:
 -- 
 2.19.1
 
