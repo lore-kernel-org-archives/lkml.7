@@ -5,58 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C0AC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 22:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9823BC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 22:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA1D2183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 22:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DFAE20989
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 22:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPbrw6wu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUJMxMsi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731018AbfC3WVW (ORCPT
+        id S1731006AbfC3Wem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 18:21:22 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34720 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730807AbfC3WVW (ORCPT
+        Sat, 30 Mar 2019 18:34:42 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39267 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730666AbfC3Wel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 18:21:22 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b3so2705061pfd.1;
-        Sat, 30 Mar 2019 15:21:21 -0700 (PDT)
+        Sat, 30 Mar 2019 18:34:41 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b65so2660234plb.6;
+        Sat, 30 Mar 2019 15:34:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=FLY0phxzQU1i4FlbPl6wKkKUMzg4dAwUEH18HUOoj6Y=;
-        b=YPbrw6wu1koKt7iKHF69XMTesSCLnEWXo3BeSSvQfN+tLPbk2OktXhjTYxO7EgbIml
-         j+ax4dDSO3z/R9uJ1s3qEzpqUlZbjPxA+vRsM+J9PVBhXYkX9ua+PyFpK3NH62wtjZMX
-         UdC+nnVQ7qtixLLpZvg5sCJofPeLArPwNE1+a5gSb08lK07qWnIvw5oLLP1BzJDqUsLE
-         VQI2O9fjyCldt8Fn6qPCrGDlZg0QPyOYHHxoWkrjyODaG4eaYhO3OJdkB+MNG2yLWX/q
-         DGVOIxmSD8QiShbGNxwoLBoe6qFcmIlBeEARywcHIbgmRSpv5oiRnRjtOYLdudq6hPSz
-         A2eQ==
+        bh=kUqHg2+BdlP1ZcpZ2200FGioY5SHTtc7UayoAf/grk4=;
+        b=SUJMxMsiz4VClBhBkpL2xpWEADXYBrlF4O56n4qJzgnsh2GngHMbjXgcGamCz/BTpv
+         t7zstMNqn/WK3O6CQ/lA7OUYQT5oq07ATcXc4KghgkqSLpRVNTyr4+at/VJxFSjePSng
+         3UIuvdSM7XV6myy7ZwJoXb2z+Fjaak6j8Btr1Kf3ysLzlLlxOdwBN98VBsXuhIjVCDmo
+         U0afrrFgOjfGhnvwJeUBilAusj1tfiD+swLHTooP5CnybbIIubx0J5L7AVfGasHrnx+m
+         70vKyrRBzXTEGkN17SQ+67aBM8UxOaKBCWuozaWeo5cQBg39/7TIPwZvAoqKp6h/1aMT
+         QSrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=FLY0phxzQU1i4FlbPl6wKkKUMzg4dAwUEH18HUOoj6Y=;
-        b=BVvllACOqe7tcZYxv1amYSSnjHUPotEHOVIX6gWpegeoScLbyh2v7dUAY3tzW45rGn
-         mA5vbP6xUXFxdiVaYp1FXzLkHBnUUTKF+OU0Vb8a+3y5CLKYjfD0a2c+dI/9Ul+B5FCp
-         INsh7B/bDtqhUAJuLMu3pVaNanGj9pRQDs1no60AlED/kLrTYHjXy9o41IMUuLFtIwU/
-         U/z7SOgzfh01Z7N4kjHzxdrLmwCSovkSAPG8vpnhMWeTic9Caz17BL4RKn750rhJTEAN
-         eqJ3l3P1v604waCtHsl5YWYrUNh/CIliTUcrzGbpSuu2W05eUh22f83GdW31PguTwEXa
-         RDlg==
-X-Gm-Message-State: APjAAAWYb6PS+v5JUoYzRu9fUXw42lOqjufn77jW0pRbhkpAFvbTH+Oc
-        K8e/P/J7hS3zITC6j/sEr0M=
-X-Google-Smtp-Source: APXvYqx6bvmV7XLOE8CF7vUs5xtbR9gNOlzc8ytAEySxUqYNxrH2JyeOUH9wXihb3kAdNLpII1jX1A==
-X-Received: by 2002:a63:4542:: with SMTP id u2mr52503249pgk.291.1553984480136;
-        Sat, 30 Mar 2019 15:21:20 -0700 (PDT)
+        bh=kUqHg2+BdlP1ZcpZ2200FGioY5SHTtc7UayoAf/grk4=;
+        b=KI92q92r3D1Fgx13D5+gZ2P3UJBFiWDssXDOmDq9YrASrTjqdYrMxc2XgmM9PvwZ8F
+         Hvf/Qh240RIJXgpGG76zh8G5S1ldu2Mfzio9zgzVGtFWzqmP3w7PYJU+sKXYQIBGiKgh
+         eYSGVtjSLa0DbJSHg2EBkHz1LDqBvx6chqHulfvK5JdJZ02XvzYih32o9CWbOKCDfZWS
+         Q7rJTNJGrhKaFrpMgQ8f54EKyuiGJaLgDg/rWizDCtkI3zm+PDUNRC3vVfOggJWzdv+1
+         /9VInxISJuJ5o3MSB0/dxxc/Xsti2ubBTQutPxxhiT7zI63UGbSq+PIEFCUT9F3zBxWd
+         T+aA==
+X-Gm-Message-State: APjAAAX67CSFN7jfIQfoFTyyfQsT1NAn/PvFAQhX8NWCmpN+twAv0auf
+        WqeeiGgEnLILJS1MYPEkmoshUIkjaCgUuA==
+X-Google-Smtp-Source: APXvYqwTlzdw93SlAl+kNSkfT+pLiCBgjpwI3c03xVwdAiavpmh7oMwSt5PATDLFf+0cX8AGZyw22g==
+X-Received: by 2002:a17:902:7481:: with SMTP id h1mr15671183pll.206.1553985278951;
+        Sat, 30 Mar 2019 15:34:38 -0700 (PDT)
 Received: from nishad (p640014-ipngn8201hodogaya.kanagawa.ocn.ne.jp. [60.46.49.14])
-        by smtp.gmail.com with ESMTPSA id v19sm11387668pfa.138.2019.03.30.15.21.14
+        by smtp.gmail.com with ESMTPSA id t8sm7363671pgp.5.2019.03.30.15.34.33
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 30 Mar 2019 15:21:19 -0700 (PDT)
-Date:   Sun, 31 Mar 2019 03:51:09 +0530
+        Sat, 30 Mar 2019 15:34:38 -0700 (PDT)
+Date:   Sun, 31 Mar 2019 04:04:29 +0530
 From:   Nishad Kamdar <nishadkamdar@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Joe Perches <joe@perches.com>,
@@ -72,7 +73,7 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Subject: [PATCH v2] ARCH: Use the correct style for SPDX License Identifier
-Message-ID: <20190330222104.GA14173@nishad>
+Message-ID: <20190330223423.GA14432@nishad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -93,6 +94,9 @@ and making some manual changes.
 
 Suggested-by: Joe Perches <joe@perches.com>
 Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+Changes in v2:
+ - Added a note in the patch description.
 ---
  arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h     | 2 +-
  arch/arm64/include/asm/pointer_auth.h             | 2 +-
