@@ -2,102 +2,85 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909ACC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B84A9C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF38218D0
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 843B8218E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 09:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553938845;
-	bh=UUUsc2YEK6jUrQB1mE7DirtN25/9BTwMtnB1WDaIO88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GPmBbkBBmnfQDeirzqj2O/2K6zd8bNvxCBHYGJYDwJPWf2lGXLIuYiHi4qmc16IVS
-	 WFXGrSLtSUKfuJRfgu0eiOIjN+M5U3ILyZx1uZFHEdrmHM5UwwGHx7U3ARq4Zi9bAw
-	 C5jFz7mB+TPxHeQFTmj0XaPsGj2vy9ganZqPhUVw=
+	s=default; t=1553938917;
+	bh=LkKZk6pDoy1mn0WceG9/G9zcgWPupGUKZwVGsPw1M6s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iPLVHXOspYf/c7p1pauoSDq5+PiaNodHJcbVwaeawcPaD/YpfFJUcbinAkqUT9d4O
+	 ZbsE4/65u1SVWWeN/+JLzIau3igIkQqYbeUlQjQqsBR5GNSUijs42ZtZWRbdLq+gsn
+	 gDzvdcXnP4RROV+zZHeTkGGqZ9s/7o/A0hXIsKCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730579AbfC3Jko (ORCPT
+        id S1730607AbfC3Jl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 05:40:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730352AbfC3Jkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 05:40:43 -0400
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10E25218A6;
-        Sat, 30 Mar 2019 09:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553938842;
-        bh=UUUsc2YEK6jUrQB1mE7DirtN25/9BTwMtnB1WDaIO88=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b9wY18usn8EbvWTIueyf8KLg67mSElrt3kzu1dHQvRzuvYqLhF/bDIGAl6b/2ehbd
-         RPSLJqO5DYL+ClrX0ENpZKUfzzZpGO0/7ftYcLp/mP8yei95GUVdvZlsryiWNzINBf
-         jHa/eLFIAdE7s4iuEQi7UO/b0BEULlsv5UNhoSkQ=
-Date:   Sat, 30 Mar 2019 10:40:39 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "# 3.4.x" <stable@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Ravindra Lokhande <rlokhande@nvidia.com>,
-        Vinod Koul <vinod.koul@intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [BACKPORT 4.4.y 02/25] ALSA: compress: add support for 32bit
- calls in a 64bit kernel
-Message-ID: <20190330094039.GA17316@kroah.com>
-References: <20190322154425.3852517-1-arnd@arndb.de>
- <20190322154425.3852517-3-arnd@arndb.de>
- <20190326010911.GB29420@kroah.com>
- <CAK8P3a22Mp9yR49CEe2bq240SuSpbvy1XBDa2sSvWYMt=AZM3Q@mail.gmail.com>
+        Sat, 30 Mar 2019 05:41:56 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37500 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730352AbfC3Jl4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 05:41:56 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c16so4373695otn.4;
+        Sat, 30 Mar 2019 02:41:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LkKZk6pDoy1mn0WceG9/G9zcgWPupGUKZwVGsPw1M6s=;
+        b=l448sWENozxn8mx6VlTbPY1GrH4X7cXB4BbPwpbH+mDF0YpiCHvoDAYGTvemNWsb+a
+         orbm8ekBufcYoXgn5ZQANpFHsAOQU5tLmGlZIuB5fnuIe8+DfCcNTPn8vcFQXotffouH
+         45HoxM0hmxPt61XKAT34+m7mgYab+8Mi7D31Mk3KoFJ+AlHaQun4RsL05uuMHEHcHLsx
+         9004oYKcFmvVIA50U0tZ3FWVmVXS0190UuEyYV2XL3KVVz7I+SKA/aLFTsG3m0jP0o4l
+         +TyuE+ITtilLEu0FDhjRkRVQgdH2+ki7+g2EuQZwnphEGVR+JbSdfUQfL93ZSVQO9zVg
+         olgw==
+X-Gm-Message-State: APjAAAVVht5GfHRCq9Y7QhQetzq/PYPLcJneQZfrG4dGPUNHQ2yz6rxM
+        LxfIPUmZ5z3uZ8Wk6gBWlcVHxkwWAADJ+KnsinI=
+X-Google-Smtp-Source: APXvYqxUVZoWkXNoOwzteEdgC/6rx+NiDVELHzdqLL62SCTHd146Mv3b4t/8s2STZI46hj0PS+aj5mqgTXLczkNripY=
+X-Received: by 2002:a9d:738c:: with SMTP id j12mr35958556otk.119.1553938915592;
+ Sat, 30 Mar 2019 02:41:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a22Mp9yR49CEe2bq240SuSpbvy1XBDa2sSvWYMt=AZM3Q@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190329001135.15847-1-changbin.du@gmail.com>
+In-Reply-To: <20190329001135.15847-1-changbin.du@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 30 Mar 2019 10:41:44 +0100
+Message-ID: <CAJZ5v0gKX9E+U_9eKfTr7pWGH=jxMLz_Jr850-6BcbG3xBz5qg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/24] Include linux ACPI docs into Sphinx TOC tree
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 08:55:14AM +0100, Arnd Bergmann wrote:
-> On Tue, Mar 26, 2019 at 2:23 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Fri, Mar 22, 2019 at 04:43:53PM +0100, Arnd Bergmann wrote:
-> > > From: Ravindra Lokhande <rlokhande@nvidia.com>
-> > >
-> > > Compress offload does not support ioctl calls from a 32bit userspace
-> > > in a 64 bit kernel. This patch adds support for ioctls from a 32bit
-> > > userspace in a 64bit kernel
-> > >
-> > > Signed-off-by: Ravindra Lokhande <rlokhande@nvidia.com>
-> > > Acked-by: Vinod Koul <vinod.koul@intel.com>
-> > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> > > (cherry picked from commit c10368897e104c008c610915a218f0fe5fa4ec96)
-> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > > ---
-> > >  sound/core/compress_offload.c | 13 +++++++++++++
-> > >  1 file changed, 13 insertions(+)
-> >
-> > How is this not a "new feature"?  What bug does this fix?  Has this ever
-> > worked in the past?
-> 
-> It has never worked in the past, but I consider it a bug for the compat layer
-> to behave differently from native code. In this case, any 32-bit application
-> using the SNDRV_COMPRESS_* ioctls will just fail to do anything on
-> a 64-bit kernel at all without the trivial fix that should have been there when
-> the driver was originally merged.
+On Fri, Mar 29, 2019 at 1:11 AM Changbin Du <changbin.du@gmail.com> wrote:
+>
+> Hi Corbet and All,
+> The kernel now uses Sphinx to generate intelligent and beautiful documentation
+> from reStructuredText files. I converted most of the Linux ACPI docs to rst
+> format in this serias.
 
-Ok, fair enough, now queued up.
+First, I appreciated the effort, thanks for your work!
 
-greg k-h
+> For you to preview, please visit below url:
+> http://104.238.181.70:8080/kernel-doc/acpi/index.html
+
+So currently all of this appears under Kernel API documentation, but
+the majority of it is not about kernel API.
+
+At least some of it could go under admin-guide IMO.
+
+Thanks,
+Rafael
