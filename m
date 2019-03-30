@@ -2,181 +2,210 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74311C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 20:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93427C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 20:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B062218A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 20:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F93218A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 20:59:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWzSw4+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbfC3U6A (ORCPT
+        id S1730959AbfC3U7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 16:58:00 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:33751 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730571AbfC3U57 (ORCPT
+        Sat, 30 Mar 2019 16:59:40 -0400
+Received: from mail-pf1-f173.google.com ([209.85.210.173]:39080 "EHLO
+        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730571AbfC3U7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 16:57:59 -0400
-Received: by mail-vs1-f66.google.com with SMTP id a190so3330349vsd.0
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 13:57:58 -0700 (PDT)
+        Sat, 30 Mar 2019 16:59:40 -0400
+Received: by mail-pf1-f173.google.com with SMTP id i17so2648791pfo.6
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 13:59:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UUijhV8dvOp5quDJo+Y2duIDmubs9G49tAISmUGTeM4=;
+        b=jWzSw4+JmgYpPJW7IQnYpnEj5DAsbMOVO9MaKHWkuBQKhtCmRu0OhfL+YLGelkIip9
+         o32K3OZlQcPut6KZ2yvMnlhZGPFWMYj1DKPQZGCm8DqIA1WA2ikoxwQsF/5olIFs6T+1
+         OT54YA3rVodu000NtMeBV34QqSZyjPa8/lel86nEaE24MXlGN3ZfljTWSkWziXIm3jBT
+         xUtPHvbFBzpnAnjulEei7Vjp7ItkdvQrnYhQ0+H9QLEJ2mHDFAgQfRN9Me4IrIltvZ1I
+         P9EafgK20zZItarYsR4Vu0Zhjp8UGd2niJfGQiez7iYM12RGKNLgNN/GDf4u5fN2vYrI
+         /Rew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sU5k31hDXmDtm8fePAfmAKLlgTYsFoWtHgD7PbFIOBI=;
-        b=uGbchdtRN8V1Rlfpw6QfxHvmq19hnzsaK6LhI3vCBZo9DMLIN8CYTt2Lr33ub3mFay
-         KeZelrlTlVDCy51pAdc/uDU0gj4/Ep5sXNQtDPxjZBKJqh/xO8dkCjJj578qMQHLzF5D
-         PZkxiTJ05PUUly/GNIQq2J7DnmibTscdqpYYhfpeV923SJ4+LwrTSCpcajDiIE0AttHn
-         wy46C4/Gj84ss7zgBRQLYRc242AufofZ//byaW3vsmlH4qA2+HAgG7e9RtP8MPlbBiEU
-         Z5f0NsBzafWKqRlCAXu3soVIFz/6NTqIFaE/9DRnTvsNHLdGmnsWC6+Msy1CAsDMkXTE
-         8OZw==
-X-Gm-Message-State: APjAAAUTUfGJZ2bf1Nlbk0i9Yeruzw6rA3+izws11PYXYE6VzHyPi0MR
-        //nxWmh9wLJWGnRf0sp+lGIWY17sci7KlaBN6sg=
-X-Google-Smtp-Source: APXvYqw9iUzeya+dzxFWxgcj8aZqF1Opxx4/WXa9vypGw6baCS/aOgPbwOROTRDlApv8A6LEjrB8NeiSLExlAZJhZJk=
-X-Received: by 2002:a67:8546:: with SMTP id h67mr15290063vsd.11.1553979477943;
- Sat, 30 Mar 2019 13:57:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UUijhV8dvOp5quDJo+Y2duIDmubs9G49tAISmUGTeM4=;
+        b=hCjm+BdzuaNS2PJZNNaXAN/dvpU17Myj6S27k4e8ZiOwadktct4B7fuRNAp69e58kt
+         0xJg0v6fJ/LRH5GMWTdS5/RFkF7B8LFbkX+QJkvabQ5RHYe3A4MdsogMr+/dX4yj+6aj
+         hj1pbVgDyAmcsQ/UFcDdIG2e6tGShdsO0WYhEAJcydrglBalUy4IU7yp/9oC2X+SMKw3
+         xZ1HdlHELKdZGoPRi6AYvTw/CBDGaZJ/cAwPROluO4cc/3IkB37dFdWGD56JHhr8lZ3h
+         4WoVTj72pFreqXG+ach0VkTBoDM6leqV3G+olirVj1SHgFHydohv4aQrJqvLWIoItWhv
+         z9pg==
+X-Gm-Message-State: APjAAAX2pxPLWQnAX9SKglWLzcLlmaolQ7a/7D5ub7l2Vgit3qC9ZyXE
+        RNULtschYw1NI0shyWm9FYddxWG/
+X-Google-Smtp-Source: APXvYqzwCg3cFpW70M7+KU+YpnmdpKWmRHdkVzwppLqxme7yRPB43sO+W/ysnym7k+/oe0k8zgnl4Q==
+X-Received: by 2002:a63:8142:: with SMTP id t63mr48037279pgd.63.1553979579059;
+        Sat, 30 Mar 2019 13:59:39 -0700 (PDT)
+Received: from zen.local (216-160-106-16.tukw.qwest.net. [216.160.106.16])
+        by smtp.gmail.com with ESMTPSA id b2sm3095981pfo.150.2019.03.30.13.59.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 30 Mar 2019 13:59:38 -0700 (PDT)
+From:   Trent Piepho <tpiepho@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Trent Piepho <tpiepho@gmail.com>,
+        Oskar Schirmer <oskar@scara.com>
+Subject: [PATCH] lib: Fix possible incorrect result from rational fractions helper
+Date:   Sat, 30 Mar 2019 13:58:55 -0700
+Message-Id: <20190330205855.19396-1-tpiepho@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20181210042352.GA6092@altlinux.org> <20181210043010.GM6131@altlinux.org>
- <CAMuHMdVYq_2P=gb_zbSGFkPWASTds6uSPTyyhyNAgp2Qm5+feQ@mail.gmail.com>
- <20181210124059.GA11942@altlinux.org> <CAMuHMdW8ejp4gm2Xh-8inSQngQ5zRQ9bfsg1SG+BAD8RFV8xcA@mail.gmail.com>
- <20181210133025.GG11942@altlinux.org> <20181212085516.GA13288@altlinux.org> <20190329220425.GA3563@altlinux.org>
-In-Reply-To: <20190329220425.GA3563@altlinux.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 30 Mar 2019 21:57:46 +0100
-Message-ID: <CAMuHMdWBvEXbxAZtE4nMDRKeaHoiNYbPVkd-bawNMrTb-PTPjw@mail.gmail.com>
-Subject: Re: [PATCH v5 13/25] m68k: add asm/syscall.h
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Elvira Khabirova <lineprinter@altlinux.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CC Steven
+In some cases the previous algorithm would not return the closest
+approximation.  This would happen when a semi-convergent was the
+closest, as the previous algorithm would only consider convergents.
 
-On Fri, Mar 29, 2019 at 11:04 PM Dmitry V. Levin <ldv@altlinux.org> wrote:
-> On Wed, Dec 12, 2018 at 11:55:16AM +0300, Dmitry V. Levin wrote:
-> > On Mon, Dec 10, 2018 at 04:30:25PM +0300, Dmitry V. Levin wrote:
-> > > On Mon, Dec 10, 2018 at 02:06:28PM +0100, Geert Uytterhoeven wrote:
-> > > > On Mon, Dec 10, 2018 at 1:41 PM Dmitry V. Levin <ldv@altlinux.org> wrote:
-> > > > > On Mon, Dec 10, 2018 at 09:45:42AM +0100, Geert Uytterhoeven wrote:
-> > > > > > On Mon, Dec 10, 2018 at 5:30 AM Dmitry V. Levin <ldv@altlinux.org> wrote:
-> > > > > > > syscall_get_* functions are required to be implemented on all
-> > > > > > > architectures in order to extend the generic ptrace API with
-> > > > > > > PTRACE_GET_SYSCALL_INFO request.
-> > > > > > >
-> > > > > > > This introduces asm/syscall.h on m68k implementing all 5 syscall_get_*
-> > > > > > > functions as documented in asm-generic/syscall.h: syscall_get_nr,
-> > > > > > > syscall_get_arguments, syscall_get_error, syscall_get_return_value,
-> > > > > > > and syscall_get_arch.
-> > > > > > >
-> > > > > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > > > > > Cc: Oleg Nesterov <oleg@redhat.com>
-> > > > > > > Cc: Andy Lutomirski <luto@kernel.org>
-> > > > > > > Cc: Elvira Khabirova <lineprinter@altlinux.org>
-> > > > > > > Cc: Eugene Syromyatnikov <esyr@redhat.com>
-> > > > > > > Cc: linux-m68k@lists.linux-m68k.org
-> > > > > > > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
-> > > > > > > ---
-> > > > > > >
-> > > > > > > Notes:
-> > > > > > >     v5: added syscall_get_nr, syscall_get_arguments, syscall_get_error,
-> > > > > > >         and syscall_get_return_value
-> > > > > > >     v1: added syscall_get_arch
-> > > > > >
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/arch/m68k/include/asm/syscall.h
-> > > > > > > @@ -0,0 +1,39 @@
-> > > > > >
-> > > > > > > +static inline void
-> > > > > > > +syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
-> > > > > > > +                     unsigned int i, unsigned int n, unsigned long *args)
-> > > > > > > +{
-> > > > > > > +       BUG_ON(i + n > 6);
-> > > > > >
-> > > > > > Does this have to crash the kernel?
-> > > > >
-> > > > > This is what most of other architectures do, but we could choose
-> > > > > a softer approach, e.g. use WARN_ON_ONCE instead.
-> > > > >
-> > > > > > Perhaps you can return an error code instead?
-> > > > >
-> > > > > That would be problematic given the signature of this function
-> > > > > and the nature of the potential bug which would most likely be a usage error.
-> > > >
-> > > > Of course to handle that, the function's signature need to be changed.
-> > > > Changing it has the advantage that the error handling can be done at the
-> > > > caller, in common code, instead of duplicating it for all
-> > > > architectures, possibly
-> > > > leading to different semantics.
-> > >
-> > > Given that *all* current users of syscall_get_arguments specify i == 0
-> > > (and there is an architecture that has BUG_ON(i)),
-> > > it should be really a usage error to get into situation where i + n > 6,
-> > > I wish a BUILD_BUG_ON could be used here instead.
-> > >
-> > > I don't think it worths pushing the change of API just to convert
-> > > a "cannot happen" assertion into an error that would have to be dealt with
-> > > on the caller side.
-> >
-> > I suggest the following BUG_ON replacement for syscall_get_arguments:
-> >
-> > #define SYSCALL_MAX_ARGS 6
-> >
-> > static inline void
-> > syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
-> >                     unsigned int i, unsigned int n, unsigned long *args)
-> > {
-> >       /*
-> >        * Ideally there should have been
-> >        * BUILD_BUG_ON(i + n > SYSCALL_MAX_ARGS);
-> >        * instead of these checks.
-> >        */
-> >       if (unlikely(i > SYSCALL_MAX_ARGS)) {
-> >               WARN_ONCE(1, "i > SYSCALL_MAX_ARGS");
-> >               return;
-> >       }
-> >       if (unlikely(n > SYSCALL_MAX_ARGS - i)) {
-> >               WARN_ONCE(1, "i + n > SYSCALL_MAX_ARGS");
-> >               n = SYSCALL_MAX_ARGS - i;
-> >       }
-> >       BUILD_BUG_ON(sizeof(regs->d1) != sizeof(args[0]));
-> >       memcpy(args, &regs->d1 + i, n * sizeof(args[0]));
-> > }
->
-> There seems to be a more straightforward approach to this issue.
->
-> Assuming there is a general consensus [1] to get rid of "i" and "n"
-> arguments of syscall_get_arguments(), the implementation could be
-> simplified to
->
-> static inline void
-> syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
->                       unsigned long *args)
-> {
->         memcpy(args, &regs->d1, 6 * sizeof(args[0]));
-> }
->
-> [1] https://lore.kernel.org/lkml/20190328230512.486297455@goodmis.org/
+As an example, consider an initial value of 5/4, and trying to find the
+closest approximation with a maximum of 4 for numerator and denominator.
+The previous algorithm would return 1/1 as the closest approximation,
+while this version will return the correct answer of 4/3.
 
-Yeah, no longer a need for all these ugly checks, good.
+To do this, the main loop performs effectively the same operations as it
+did before.  It must now keep track of the last three approximations,
+n2/d2 .. n0/d0, while before it only needed the last two.
 
-Gr{oetje,eeting}s,
+If an exact answer is not found, the algorithm will now calculate the
+best semi-convergent term, t, which is a single expression with two
+divisions:
+    min((max_numerator - n0) / n1, (max_denominator - d0) / d1)
 
-                        Geert
+This will be used if it is better than previous convergent.  The test
+for this is generally a simple comparison, 2*t > a.  But in an edge
+case, where the convergent's final term is even and the best allowable
+semi-convergent has a final term of exactly half the convergent's final
+term, the more complex comparison (d0*dp > d1*d) is used.
 
+I also wrote some comments explaining the code.  While one still needs
+to look up the math elsewhere, they should help a lot to follow how the
+code relates to that math.
+
+Cc: Oskar Schirmer <oskar@scara.com>
+Signed-off-by: Trent Piepho <tpiepho@gmail.com>
+---
+ lib/rational.c | 63 +++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 50 insertions(+), 13 deletions(-)
+
+diff --git a/lib/rational.c b/lib/rational.c
+index ba7443677c90..31fb27db2deb 100644
+--- a/lib/rational.c
++++ b/lib/rational.c
+@@ -3,6 +3,7 @@
+  * rational fractions
+  *
+  * Copyright (C) 2009 emlix GmbH, Oskar Schirmer <oskar@scara.com>
++ * Copyright (C) 2019 Trent Piepho <tpiepho@gmail.com>
+  *
+  * helper functions when coping with rational numbers
+  */
+@@ -10,6 +11,7 @@
+ #include <linux/rational.h>
+ #include <linux/compiler.h>
+ #include <linux/export.h>
++#include <linux/kernel.h>
+ 
+ /*
+  * calculate best rational approximation for a given fraction
+@@ -33,30 +35,65 @@ void rational_best_approximation(
+ 	unsigned long max_numerator, unsigned long max_denominator,
+ 	unsigned long *best_numerator, unsigned long *best_denominator)
+ {
+-	unsigned long n, d, n0, d0, n1, d1;
++	/* n/d is the starting rational, which is continually
++	 * decreased each iteration using the Euclidean algorithm.
++	 *
++	 * dp is the value of d from the prior iteration.
++	 *
++	 * n2/d2, n1/d1, and n0/d0 are our successively more accurate
++	 * approximations of the rational.  They are, respectively,
++	 * the current, previous, and two prior iterations of it.
++	 *
++	 * a is current term of the continued fraction.
++	 */
++	unsigned long n, d, n0, d0, n1, d1, n2, d2;
+ 	n = given_numerator;
+ 	d = given_denominator;
+ 	n0 = d1 = 0;
+ 	n1 = d0 = 1;
++
+ 	for (;;) {
+-		unsigned long t, a;
+-		if ((n1 > max_numerator) || (d1 > max_denominator)) {
+-			n1 = n0;
+-			d1 = d0;
+-			break;
+-		}
++		unsigned long dp, a;
++
+ 		if (d == 0)
+ 			break;
+-		t = d;
++		/* Find next term in continued fraction, 'a', via
++		 * Euclidean algorithm.
++		 */
++		dp = d;
+ 		a = n / d;
+ 		d = n % d;
+-		n = t;
+-		t = n0 + a * n1;
++		n = dp;
++
++		/* Calculate the current rational approximation (aka
++		 * convergent), n2/d2, using the term just found and
++		 * the two prior approximations.
++		 */
++		n2 = n0 + a * n1;
++		d2 = d0 + a * d1;
++
++		/* If the current convergent exceeds the maxes, then
++		 * return either the previous convergent or the
++		 * largest semi-convergent, the final term of which is
++		 * found below as 't'.
++		 */
++		if ((n2 > max_numerator) || (d2 > max_denominator)) {
++			unsigned long t = min((max_numerator - n0) / n1,
++					      (max_denominator - d0) / d1);
++
++			/* This tests if the semi-convergent is closer
++			 * than the previous convergent.
++			 */
++			if (2u * t > a || (2u * t == a && d0 * dp > d1 * d)) {
++				n1 = n0 + t * n1;
++				d1 = d0 + t * d1;
++			}
++			break;
++		}
+ 		n0 = n1;
+-		n1 = t;
+-		t = d0 + a * d1;
++		n1 = n2;
+ 		d0 = d1;
+-		d1 = t;
++		d1 = d2;
+ 	}
+ 	*best_numerator = n1;
+ 	*best_denominator = d1;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
