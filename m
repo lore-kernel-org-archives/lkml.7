@@ -6,55 +6,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C277FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0E5C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A62F218FC
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E471D218D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909381;
-	bh=3Ul6jd7zc8I5sfFaHKiXP3rSe+I2qphyqxcGi4T2p2M=;
+	s=default; t=1553909384;
+	bh=fo/8hnDJcfAZDMU7YdqyvMppKYmCE5HvL4nKY1mvhUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1EG2rZPnCngghm3DKt2Zom87So8zdQqeVF49pW3SEPM/2PzOWe8EoKvykb+i27NfV
-	 sC/g9oNn/eek9lLynfMyOSrrNHgIjGyqPWDI3keRmqgK2ejVcn4Ed2C9UBLxsV65hU
-	 sHy4vTrbBunHQY2Yy+L7oUNgubceuD4xMNg+L7Ds=
+	b=NYmAFtPcjOlm5hIlGQIyUliDe7IUpNH6KuSVHBWs9MIe4wzNGGhJGZtaMJIlGolXT
+	 bkHftO3coyvvD4nx0nPF1+94OtThKxejKwAerHMQaz/ZNkKrXs545y276Dn6btZ7ZG
+	 EushjXoY4OZexiz5pcVFyg4B+utOv4O9a33MNLrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731122AbfC3B3k (ORCPT
+        id S1731169AbfC3B3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:29:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:29:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730961AbfC3B3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:29:36 -0400
+        id S1731119AbfC3B3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:29:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C321321773;
-        Sat, 30 Mar 2019 01:29:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5D3B218D9;
+        Sat, 30 Mar 2019 01:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909375;
-        bh=3Ul6jd7zc8I5sfFaHKiXP3rSe+I2qphyqxcGi4T2p2M=;
+        s=default; t=1553909379;
+        bh=fo/8hnDJcfAZDMU7YdqyvMppKYmCE5HvL4nKY1mvhUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xbejVAHjGFOMTpI6azVQZgsNqSmC+oGhbB54fuMzCxKlnwsmClbLLX+PaBoTQDKOc
-         wgLKkMcU3TXVcmwaE/RtNAo1UrMwZZwK4tN5FVtaFR6cZAWNfBQM5S1XTC+Vf0Q8zg
-         JQE2DKXXGT2iQauwtNSTecO+Pbbqe4boRoPYe+XA=
+        b=ZJdlF6ssxmi2sNqWsRwZLKyUrX4UBVovJAFCiKAeDEp4jpX9/4f5sVj7YSTvI2Llk
+         P6dZXNXagCJZXsGMa66rBkAoSjhx/vfGc1sZ36FwgRMSKTVluaFDEo3RwSMAy0JHMl
+         vETSs9giL2RhgmX+byUD2W+2d2zRUZoW/blmGgVk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C3=84m=C3=83=C2=A1=C3=85=E2=84=A2?= 
-        <rkrcmar@redhat.com>, Wanpeng Li <wanpeng.li@hotmail.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 20/57] KVM: nVMX: restore host state in nested_vmx_vmexit for VMFail
-Date:   Fri, 29 Mar 2019 21:28:13 -0400
-Message-Id: <20190330012854.32212-20-sashal@kernel.org>
+Cc:     Sheng Yong <shengyong1@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 23/57] f2fs: cleanup dirty pages if recover failed
+Date:   Fri, 29 Mar 2019 21:28:16 -0400
+Message-Id: <20190330012854.32212-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
 References: <20190330012854.32212-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,325 +59,227 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Sheng Yong <shengyong1@huawei.com>
 
-[ Upstream commit bd18bffca35397214ae68d85cf7203aca25c3c1d ]
+[ Upstream commit 26b5a079197c8cb6725565968b7fd3299bd1877b ]
 
-A VMEnter that VMFails (as opposed to VMExits) does not touch host
-state beyond registers that are explicitly noted in the VMFail path,
-e.g. EFLAGS.  Host state does not need to be loaded because VMFail
-is only signaled for consistency checks that occur before the CPU
-starts to load guest state, i.e. there is no need to restore any
-state as nothing has been modified.  But in the case where a VMFail
-is detected by hardware and not by KVM (due to deferring consistency
-checks to hardware), KVM has already loaded some amount of guest
-state.  Luckily, "loaded" only means loaded to KVM's software model,
-i.e. vmcs01 has not been modified.  So, unwind our software model to
-the pre-VMEntry host state.
+During recover, we will try to create new dentries for inodes with
+dentry_mark. But if the parent is missing (e.g. killed by fsck),
+recover will break. But those recovered dirty pages are not cleanup.
+This will hit f2fs_bug_on:
 
-Not restoring host state in this VMFail path leads to a variety of
-failures because we end up with stale data in vcpu->arch, e.g. CR0,
-CR4, EFER, etc... will all be out of sync relative to vmcs01.  Any
-significant delta in the stale data is all but guaranteed to crash
-L1, e.g. emulation of SMEP, SMAP, UMIP, WP, etc... will be wrong.
+[   53.519566] F2FS-fs (loop0): Found nat_bits in checkpoint
+[   53.539354] F2FS-fs (loop0): recover_inode: ino = 5, name = file, inline = 3
+[   53.539402] F2FS-fs (loop0): recover_dentry: ino = 5, name = file, dir = 0, err = -2
+[   53.545760] F2FS-fs (loop0): Cannot recover all fsync data errno=-2
+[   53.546105] F2FS-fs (loop0): access invalid blkaddr:4294967295
+[   53.546171] WARNING: CPU: 1 PID: 1798 at fs/f2fs/checkpoint.c:163 f2fs_is_valid_blkaddr+0x26c/0x320
+[   53.546174] Modules linked in:
+[   53.546183] CPU: 1 PID: 1798 Comm: mount Not tainted 4.19.0-rc2+ #1
+[   53.546186] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   53.546191] RIP: 0010:f2fs_is_valid_blkaddr+0x26c/0x320
+[   53.546195] Code: 85 bb 00 00 00 48 89 df 88 44 24 07 e8 ad a8 db ff 48 8b 3b 44 89 e1 48 c7 c2 40 03 72 a9 48 c7 c6 e0 01 72 a9 e8 84 3c ff ff <0f> 0b 0f b6 44 24 07 e9 8a 00 00 00 48 8d bf 38 01 00 00 e8 7c a8
+[   53.546201] RSP: 0018:ffff88006c067768 EFLAGS: 00010282
+[   53.546208] RAX: 0000000000000000 RBX: ffff880068844200 RCX: ffffffffa83e1a33
+[   53.546211] RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88006d51e590
+[   53.546215] RBP: 0000000000000005 R08: ffffed000daa3cb3 R09: ffffed000daa3cb3
+[   53.546218] R10: 0000000000000001 R11: ffffed000daa3cb2 R12: 00000000ffffffff
+[   53.546221] R13: ffff88006a1f8000 R14: 0000000000000200 R15: 0000000000000009
+[   53.546226] FS:  00007fb2f3646840(0000) GS:ffff88006d500000(0000) knlGS:0000000000000000
+[   53.546229] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   53.546234] CR2: 00007f0fd77f0008 CR3: 00000000687e6002 CR4: 00000000000206e0
+[   53.546237] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   53.546240] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   53.546242] Call Trace:
+[   53.546248]  f2fs_submit_page_bio+0x95/0x740
+[   53.546253]  read_node_page+0x161/0x1e0
+[   53.546271]  ? truncate_node+0x650/0x650
+[   53.546283]  ? add_to_page_cache_lru+0x12c/0x170
+[   53.546288]  ? pagecache_get_page+0x262/0x2d0
+[   53.546292]  __get_node_page+0x200/0x660
+[   53.546302]  f2fs_update_inode_page+0x4a/0x160
+[   53.546306]  f2fs_write_inode+0x86/0xb0
+[   53.546317]  __writeback_single_inode+0x49c/0x620
+[   53.546322]  writeback_single_inode+0xe4/0x1e0
+[   53.546326]  sync_inode_metadata+0x93/0xd0
+[   53.546330]  ? sync_inode+0x10/0x10
+[   53.546342]  ? do_raw_spin_unlock+0xed/0x100
+[   53.546347]  f2fs_sync_inode_meta+0xe0/0x130
+[   53.546351]  f2fs_fill_super+0x287d/0x2d10
+[   53.546367]  ? vsnprintf+0x742/0x7a0
+[   53.546372]  ? f2fs_commit_super+0x180/0x180
+[   53.546379]  ? up_write+0x20/0x40
+[   53.546385]  ? set_blocksize+0x5f/0x140
+[   53.546391]  ? f2fs_commit_super+0x180/0x180
+[   53.546402]  mount_bdev+0x181/0x200
+[   53.546406]  mount_fs+0x94/0x180
+[   53.546411]  vfs_kern_mount+0x6c/0x1e0
+[   53.546415]  do_mount+0xe5e/0x1510
+[   53.546420]  ? fs_reclaim_release+0x9/0x30
+[   53.546424]  ? copy_mount_string+0x20/0x20
+[   53.546428]  ? fs_reclaim_acquire+0xd/0x30
+[   53.546435]  ? __might_sleep+0x2c/0xc0
+[   53.546440]  ? ___might_sleep+0x53/0x170
+[   53.546453]  ? __might_fault+0x4c/0x60
+[   53.546468]  ? _copy_from_user+0x95/0xa0
+[   53.546474]  ? memdup_user+0x39/0x60
+[   53.546478]  ksys_mount+0x88/0xb0
+[   53.546482]  __x64_sys_mount+0x5d/0x70
+[   53.546495]  do_syscall_64+0x65/0x130
+[   53.546503]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   53.547639] ---[ end trace b804d1ea2fec893e ]---
 
-An alternative to this "soft" reload would be to load host state from
-vmcs12 as if we triggered a VMExit (as opposed to VMFail), but that is
-wildly inconsistent with respect to the VMX architecture, e.g. an L1
-VMM with separate VMExit and VMFail paths would explode.
+So if recover fails, we need to drop all recovered data.
 
-Note that this approach does not mean KVM is 100% accurate with
-respect to VMX hardware behavior, even at an architectural level
-(the exact order of consistency checks is microarchitecture specific).
-But 100% emulation accuracy isn't the goal (with this patch), rather
-the goal is to be consistent in the information delivered to L1, e.g.
-a VMExit should not fall-through VMENTER, and a VMFail should not jump
-to HOST_RIP.
-
-This technically reverts commit "5af4157388ad (KVM: nVMX: Fix mmu
-context after VMLAUNCH/VMRESUME failure)", but retains the core
-aspects of that patch, just in an open coded form due to the need to
-pull state from vmcs01 instead of vmcs12.  Restoring host state
-resolves a variety of issues introduced by commit "4f350c6dbcb9
-(kvm: nVMX: Handle deferred early VMLAUNCH/VMRESUME failure properly)",
-which remedied the incorrect behavior of treating VMFail like VMExit
-but in doing so neglected to restore arch state that had been modified
-prior to attempting nested VMEnter.
-
-A sample failure that occurs due to stale vcpu.arch state is a fault
-of some form while emulating an LGDT (due to emulated UMIP) from L1
-after a failed VMEntry to L3, in this case when running the KVM unit
-test test_tpr_threshold_values in L1.  L0 also hits a WARN in this
-case due to a stale arch.cr4.UMIP.
-
-L1:
-  BUG: unable to handle kernel paging request at ffffc90000663b9e
-  PGD 276512067 P4D 276512067 PUD 276513067 PMD 274efa067 PTE 8000000271de2163
-  Oops: 0009 [#1] SMP
-  CPU: 5 PID: 12495 Comm: qemu-system-x86 Tainted: G        W         4.18.0-rc2+ #2
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-  RIP: 0010:native_load_gdt+0x0/0x10
-
-  ...
-
-  Call Trace:
-   load_fixmap_gdt+0x22/0x30
-   __vmx_load_host_state+0x10e/0x1c0 [kvm_intel]
-   vmx_switch_vmcs+0x2d/0x50 [kvm_intel]
-   nested_vmx_vmexit+0x222/0x9c0 [kvm_intel]
-   vmx_handle_exit+0x246/0x15a0 [kvm_intel]
-   kvm_arch_vcpu_ioctl_run+0x850/0x1830 [kvm]
-   kvm_vcpu_ioctl+0x3a1/0x5c0 [kvm]
-   do_vfs_ioctl+0x9f/0x600
-   ksys_ioctl+0x66/0x70
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x4f/0x100
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-L0:
-  WARNING: CPU: 2 PID: 3529 at arch/x86/kvm/vmx.c:6618 handle_desc+0x28/0x30 [kvm_intel]
-  ...
-  CPU: 2 PID: 3529 Comm: qemu-system-x86 Not tainted 4.17.2-coffee+ #76
-  Hardware name: Intel Corporation Kabylake Client platform/KBL S
-  RIP: 0010:handle_desc+0x28/0x30 [kvm_intel]
-
-  ...
-
-  Call Trace:
-   kvm_arch_vcpu_ioctl_run+0x863/0x1840 [kvm]
-   kvm_vcpu_ioctl+0x3a1/0x5c0 [kvm]
-   do_vfs_ioctl+0x9f/0x5e0
-   ksys_ioctl+0x66/0x70
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x49/0xf0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 5af4157388ad (KVM: nVMX: Fix mmu context after VMLAUNCH/VMRESUME failure)
-Fixes: 4f350c6dbcb9 (kvm: nVMX: Handle deferred early VMLAUNCH/VMRESUME failure properly)
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim KrÄmÃ¡Å™ <rkrcmar@redhat.com>
-Cc: Wanpeng Li <wanpeng.li@hotmail.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sheng Yong <shengyong1@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx.c | 173 +++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 153 insertions(+), 20 deletions(-)
+ fs/f2fs/recovery.c | 32 +++++++++++++++++++++-----------
+ fs/f2fs/super.c    | 15 ++++++++++++++-
+ 2 files changed, 35 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 4029d3783e18..d4d6b08c88b9 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -13175,24 +13175,6 @@ static void prepare_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
- 	kvm_clear_interrupt_queue(vcpu);
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 9a8579fb3a30..ae0e5f2e67b4 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -99,8 +99,12 @@ static struct fsync_inode_entry *add_fsync_inode(struct f2fs_sb_info *sbi,
+ 	return ERR_PTR(err);
  }
  
--static void load_vmcs12_mmu_host_state(struct kvm_vcpu *vcpu,
--			struct vmcs12 *vmcs12)
--{
--	u32 entry_failure_code;
--
--	nested_ept_uninit_mmu_context(vcpu);
--
--	/*
--	 * Only PDPTE load can fail as the value of cr3 was checked on entry and
--	 * couldn't have changed.
--	 */
--	if (nested_vmx_load_cr3(vcpu, vmcs12->host_cr3, false, &entry_failure_code))
--		nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_PDPTE_FAIL);
--
--	if (!enable_ept)
--		vcpu->arch.walk_mmu->inject_page_fault = kvm_inject_page_fault;
--}
--
- /*
-  * A part of what we need to when the nested L2 guest exits and we want to
-  * run its L1 parent, is to reset L1's guest state to the host state specified
-@@ -13206,6 +13188,7 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
- 				   struct vmcs12 *vmcs12)
+-static void del_fsync_inode(struct fsync_inode_entry *entry)
++static void del_fsync_inode(struct fsync_inode_entry *entry, int drop)
  {
- 	struct kvm_segment seg;
-+	u32 entry_failure_code;
- 
- 	if (vmcs12->vm_exit_controls & VM_EXIT_LOAD_IA32_EFER)
- 		vcpu->arch.efer = vmcs12->host_ia32_efer;
-@@ -13232,7 +13215,17 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
- 	vcpu->arch.cr4_guest_owned_bits = ~vmcs_readl(CR4_GUEST_HOST_MASK);
- 	vmx_set_cr4(vcpu, vmcs12->host_cr4);
- 
--	load_vmcs12_mmu_host_state(vcpu, vmcs12);
-+	nested_ept_uninit_mmu_context(vcpu);
-+
-+	/*
-+	 * Only PDPTE load can fail as the value of cr3 was checked on entry and
-+	 * couldn't have changed.
-+	 */
-+	if (nested_vmx_load_cr3(vcpu, vmcs12->host_cr3, false, &entry_failure_code))
-+		nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_PDPTE_FAIL);
-+
-+	if (!enable_ept)
-+		vcpu->arch.walk_mmu->inject_page_fault = kvm_inject_page_fault;
- 
- 	/*
- 	 * If vmcs01 don't use VPID, CPU flushes TLB on every
-@@ -13328,6 +13321,140 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
- 		nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_MSR_FAIL);
++	if (drop) {
++		/* inode should not be recovered, drop it */
++		f2fs_inode_synced(entry->inode);
++	}
+ 	iput(entry->inode);
+ 	list_del(&entry->list);
+ 	kmem_cache_free(fsync_entry_slab, entry);
+@@ -321,12 +325,12 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
+ 	return err;
  }
  
-+static inline u64 nested_vmx_get_vmcs01_guest_efer(struct vcpu_vmx *vmx)
-+{
-+	struct shared_msr_entry *efer_msr;
-+	unsigned int i;
-+
-+	if (vm_entry_controls_get(vmx) & VM_ENTRY_LOAD_IA32_EFER)
-+		return vmcs_read64(GUEST_IA32_EFER);
-+
-+	if (cpu_has_load_ia32_efer)
-+		return host_efer;
-+
-+	for (i = 0; i < vmx->msr_autoload.guest.nr; ++i) {
-+		if (vmx->msr_autoload.guest.val[i].index == MSR_EFER)
-+			return vmx->msr_autoload.guest.val[i].value;
+-static void destroy_fsync_dnodes(struct list_head *head)
++static void destroy_fsync_dnodes(struct list_head *head, int drop)
+ {
+ 	struct fsync_inode_entry *entry, *tmp;
+ 
+ 	list_for_each_entry_safe(entry, tmp, head, list)
+-		del_fsync_inode(entry);
++		del_fsync_inode(entry, drop);
+ }
+ 
+ static int check_index_in_prev_nodes(struct f2fs_sb_info *sbi,
+@@ -561,7 +565,7 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ }
+ 
+ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+-						struct list_head *dir_list)
++		struct list_head *tmp_inode_list, struct list_head *dir_list)
+ {
+ 	struct curseg_info *curseg;
+ 	struct page *page = NULL;
+@@ -615,7 +619,7 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+ 		}
+ 
+ 		if (entry->blkaddr == blkaddr)
+-			del_fsync_inode(entry);
++			list_move_tail(&entry->list, tmp_inode_list);
+ next:
+ 		/* check next segment */
+ 		blkaddr = next_blkaddr_of_node(page);
+@@ -628,7 +632,7 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+ 
+ int f2fs_recover_fsync_data(struct f2fs_sb_info *sbi, bool check_only)
+ {
+-	struct list_head inode_list;
++	struct list_head inode_list, tmp_inode_list;
+ 	struct list_head dir_list;
+ 	int err;
+ 	int ret = 0;
+@@ -659,6 +663,7 @@ int f2fs_recover_fsync_data(struct f2fs_sb_info *sbi, bool check_only)
+ 	}
+ 
+ 	INIT_LIST_HEAD(&inode_list);
++	INIT_LIST_HEAD(&tmp_inode_list);
+ 	INIT_LIST_HEAD(&dir_list);
+ 
+ 	/* prevent checkpoint */
+@@ -677,11 +682,16 @@ int f2fs_recover_fsync_data(struct f2fs_sb_info *sbi, bool check_only)
+ 	need_writecp = true;
+ 
+ 	/* step #2: recover data */
+-	err = recover_data(sbi, &inode_list, &dir_list);
++	err = recover_data(sbi, &inode_list, &tmp_inode_list, &dir_list);
+ 	if (!err)
+ 		f2fs_bug_on(sbi, !list_empty(&inode_list));
++	else {
++		/* restore s_flags to let iput() trash data */
++		sbi->sb->s_flags = s_flags;
 +	}
+ skip:
+-	destroy_fsync_dnodes(&inode_list);
++	destroy_fsync_dnodes(&inode_list, err);
++	destroy_fsync_dnodes(&tmp_inode_list, err);
+ 
+ 	/* truncate meta pages to be used by the recovery */
+ 	truncate_inode_pages_range(META_MAPPING(sbi),
+@@ -690,13 +700,13 @@ int f2fs_recover_fsync_data(struct f2fs_sb_info *sbi, bool check_only)
+ 	if (err) {
+ 		truncate_inode_pages_final(NODE_MAPPING(sbi));
+ 		truncate_inode_pages_final(META_MAPPING(sbi));
++	} else {
++		clear_sbi_flag(sbi, SBI_POR_DOING);
+ 	}
+-
+-	clear_sbi_flag(sbi, SBI_POR_DOING);
+ 	mutex_unlock(&sbi->cp_mutex);
+ 
+ 	/* let's drop all the directory inodes for clean checkpoint */
+-	destroy_fsync_dnodes(&dir_list);
++	destroy_fsync_dnodes(&dir_list, err);
+ 
+ 	if (need_writecp) {
+ 		set_sbi_flag(sbi, SBI_IS_RECOVERED);
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 442cc9023dfc..08162f39d3f7 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1884,6 +1884,19 @@ void f2fs_quota_off_umount(struct super_block *sb)
+ 	}
+ }
+ 
++static void f2fs_truncate_quota_inode_pages(struct super_block *sb)
++{
++	struct quota_info *dqopt = sb_dqopt(sb);
++	int type;
 +
-+	efer_msr = find_msr_entry(vmx, MSR_EFER);
-+	if (efer_msr)
-+		return efer_msr->data;
-+
-+	return host_efer;
++	for (type = 0; type < MAXQUOTAS; type++) {
++		if (!dqopt->files[type])
++			continue;
++		f2fs_inode_synced(dqopt->files[type]);
++	}
 +}
 +
-+static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
-+{
-+	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	struct vmx_msr_entry g, h;
-+	struct msr_data msr;
-+	gpa_t gpa;
-+	u32 i, j;
 +
-+	vcpu->arch.pat = vmcs_read64(GUEST_IA32_PAT);
-+
-+	if (vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS) {
-+		/*
-+		 * L1's host DR7 is lost if KVM_GUESTDBG_USE_HW_BP is set
-+		 * as vmcs01.GUEST_DR7 contains a userspace defined value
-+		 * and vcpu->arch.dr7 is not squirreled away before the
-+		 * nested VMENTER (not worth adding a variable in nested_vmx).
-+		 */
-+		if (vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP)
-+			kvm_set_dr(vcpu, 7, DR7_FIXED_1);
-+		else
-+			WARN_ON(kvm_set_dr(vcpu, 7, vmcs_readl(GUEST_DR7)));
-+	}
-+
-+	/*
-+	 * Note that calling vmx_set_{efer,cr0,cr4} is important as they
-+	 * handle a variety of side effects to KVM's software model.
-+	 */
-+	vmx_set_efer(vcpu, nested_vmx_get_vmcs01_guest_efer(vmx));
-+
-+	vcpu->arch.cr0_guest_owned_bits = X86_CR0_TS;
-+	vmx_set_cr0(vcpu, vmcs_readl(CR0_READ_SHADOW));
-+
-+	vcpu->arch.cr4_guest_owned_bits = ~vmcs_readl(CR4_GUEST_HOST_MASK);
-+	vmx_set_cr4(vcpu, vmcs_readl(CR4_READ_SHADOW));
-+
-+	nested_ept_uninit_mmu_context(vcpu);
-+	vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
-+	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
-+
-+	/*
-+	 * Use ept_save_pdptrs(vcpu) to load the MMU's cached PDPTRs
-+	 * from vmcs01 (if necessary).  The PDPTRs are not loaded on
-+	 * VMFail, like everything else we just need to ensure our
-+	 * software model is up-to-date.
-+	 */
-+	ept_save_pdptrs(vcpu);
-+
-+	kvm_mmu_reset_context(vcpu);
-+
-+	if (cpu_has_vmx_msr_bitmap())
-+		vmx_update_msr_bitmap(vcpu);
-+
-+	/*
-+	 * This nasty bit of open coding is a compromise between blindly
-+	 * loading L1's MSRs using the exit load lists (incorrect emulation
-+	 * of VMFail), leaving the nested VM's MSRs in the software model
-+	 * (incorrect behavior) and snapshotting the modified MSRs (too
-+	 * expensive since the lists are unbound by hardware).  For each
-+	 * MSR that was (prematurely) loaded from the nested VMEntry load
-+	 * list, reload it from the exit load list if it exists and differs
-+	 * from the guest value.  The intent is to stuff host state as
-+	 * silently as possible, not to fully process the exit load list.
-+	 */
-+	msr.host_initiated = false;
-+	for (i = 0; i < vmcs12->vm_entry_msr_load_count; i++) {
-+		gpa = vmcs12->vm_entry_msr_load_addr + (i * sizeof(g));
-+		if (kvm_vcpu_read_guest(vcpu, gpa, &g, sizeof(g))) {
-+			pr_debug_ratelimited(
-+				"%s read MSR index failed (%u, 0x%08llx)\n",
-+				__func__, i, gpa);
-+			goto vmabort;
-+		}
-+
-+		for (j = 0; j < vmcs12->vm_exit_msr_load_count; j++) {
-+			gpa = vmcs12->vm_exit_msr_load_addr + (j * sizeof(h));
-+			if (kvm_vcpu_read_guest(vcpu, gpa, &h, sizeof(h))) {
-+				pr_debug_ratelimited(
-+					"%s read MSR failed (%u, 0x%08llx)\n",
-+					__func__, j, gpa);
-+				goto vmabort;
-+			}
-+			if (h.index != g.index)
-+				continue;
-+			if (h.value == g.value)
-+				break;
-+
-+			if (nested_vmx_load_msr_check(vcpu, &h)) {
-+				pr_debug_ratelimited(
-+					"%s check failed (%u, 0x%x, 0x%x)\n",
-+					__func__, j, h.index, h.reserved);
-+				goto vmabort;
-+			}
-+
-+			msr.index = h.index;
-+			msr.data = h.value;
-+			if (kvm_set_msr(vcpu, &msr)) {
-+				pr_debug_ratelimited(
-+					"%s WRMSR failed (%u, 0x%x, 0x%llx)\n",
-+					__func__, j, h.index, h.value);
-+				goto vmabort;
-+			}
-+		}
-+	}
-+
-+	return;
-+
-+vmabort:
-+	nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_MSR_FAIL);
-+}
-+
- /*
-  * Emulate an exit from nested guest (L2) to L1, i.e., prepare to run L1
-  * and modify vmcs12 to make it see what it would expect to see there if
-@@ -13472,7 +13599,13 @@ static void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
- 	 */
- 	nested_vmx_failValid(vcpu, VMXERR_ENTRY_INVALID_CONTROL_FIELD);
+ static int f2fs_get_projid(struct inode *inode, kprojid_t *projid)
+ {
+ 	*projid = F2FS_I(inode)->i_projid;
+@@ -3130,10 +3143,10 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
  
--	load_vmcs12_mmu_host_state(vcpu, vmcs12);
-+	/*
-+	 * Restore L1's host state to KVM's software model.  We're here
-+	 * because a consistency check was caught by hardware, which
-+	 * means some amount of guest state has been propagated to KVM's
-+	 * model and needs to be unwound to the host's state.
-+	 */
-+	nested_vmx_restore_host_state(vcpu);
- 
+ free_meta:
+ #ifdef CONFIG_QUOTA
++	f2fs_truncate_quota_inode_pages(sb);
+ 	if (f2fs_sb_has_quota_ino(sb) && !f2fs_readonly(sb))
+ 		f2fs_quota_off_umount(sbi->sb);
+ #endif
+-	f2fs_sync_inode_meta(sbi);
  	/*
- 	 * The emulated instruction was already skipped in
+ 	 * Some dirty meta pages can be produced by f2fs_recover_orphan_inodes()
+ 	 * failed by EIO. Then, iput(node_inode) can trigger balance_fs_bg()
 -- 
 2.19.1
 
