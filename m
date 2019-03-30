@@ -2,131 +2,115 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 412DFC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E15C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF7620657
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:14:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="FfK9mrK9"
+	by mail.kernel.org (Postfix) with ESMTP id 6849A2184D
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 12:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730718AbfC3MOz (ORCPT
+        id S1730763AbfC3MiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 08:14:55 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:52463 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730535AbfC3MOy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 08:14:54 -0400
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x2UCEh92006588
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 21:14:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x2UCEh92006588
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1553948084;
-        bh=FvcjRSwm+l7BcuSlqeVv/mbXcW2eWKSjZsOPYlTDy5o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FfK9mrK9uHifnafe/Syjn+OTbLsjjKABEoL8m8AAETaidDkKwSmRDD/buTnJiJjBn
-         SPzM9bkcJQOuaSfPhwJ3qIBOp/poSVxib34iEmb5bB6ImoAyByZfFZwOX9Rj45Fjth
-         iHHQQdbb3PpnQvqcFbZqwgAbxbHJEmBf6H8uBV++jD9p3RqoVcILZvof2VzRvGm6fE
-         7XMtZY6l7/5X8Cqn43KwVcBODqAq/rYefiSRkM3YvH9SB2qs9maO0xSawEbo25KkZb
-         Ks1BKiGBL48rfOYNuQAof6HW6mwSpCO1XP1Kxm+ZrCBPOJeDwZ+7kFKgIZQsS2n+me
-         kGD9qF1GHJmSQ==
-X-Nifty-SrcIP: [209.85.222.54]
-Received: by mail-ua1-f54.google.com with SMTP id p13so1571381uaa.11
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 05:14:43 -0700 (PDT)
-X-Gm-Message-State: APjAAAUoODNnWZmSMJemBDHZDlaXNlTh4lU0oyOWLgj739DpF1nr6Tj0
-        cGO58SC5JbMJMl1sg4U2Wvx+w5uTeNlp/KMmy70=
-X-Google-Smtp-Source: APXvYqxMOHLkMRjk6Z4+nR25e0Kg2WWnh+QXl3hVxkBLSDJZnaHyaBspHAtcwThItcA+BgTH9czpHiuahchqdwedtBQ=
-X-Received: by 2002:ab0:348a:: with SMTP id c10mr30776275uar.25.1553948082679;
- Sat, 30 Mar 2019 05:14:42 -0700 (PDT)
+        Sat, 30 Mar 2019 08:38:19 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5767 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730689AbfC3MiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 08:38:19 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E8942ED12A1F47046443;
+        Sat, 30 Mar 2019 20:38:15 +0800 (CST)
+Received: from [127.0.0.1] (10.184.191.73) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Sat, 30 Mar 2019
+ 20:38:05 +0800
+Subject: Re: [PATCH net] ipv6: Fix dangling pointer when ipv6 fragment
+To:     Eric Dumazet <eric.dumazet@gmail.com>, <davem@davemloft.net>,
+        <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <mingfangsen@huawei.com>, <liuzhiqiang26@huawei.com>,
+        <zhangwenhao8@huawei.com>
+References: <cbbedd1f-3e99-85f7-86d7-d02a86d59c29@huawei.com>
+ <ee0fb75b-f976-02ae-31e3-c3f957f71923@gmail.com>
+ <a277b9c7-22e0-3763-89e5-504514d2e9b0@gmail.com>
+From:   hujunwei <hujunwei4@huawei.com>
+Message-ID: <30d10040-50ae-f212-271f-210972436151@huawei.com>
+Date:   Sat, 30 Mar 2019 20:37:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190323015227.245455-1-dianders@chromium.org>
-In-Reply-To: <20190323015227.245455-1-dianders@chromium.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 30 Mar 2019 21:14:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARe3gQeBqNux4hFoq2-uHRQ=vS_6C=h2Dpy=ruZaRZkEA@mail.gmail.com>
-Message-ID: <CAK7LNARe3gQeBqNux4hFoq2-uHRQ=vS_6C=h2Dpy=ruZaRZkEA@mail.gmail.com>
-Subject: Re: [PATCH] kdb: Get rid of broken attempt to print CCVERSION in kdb summary
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a277b9c7-22e0-3763-89e5-504514d2e9b0@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.184.191.73]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 10:55 AM Douglas Anderson <dianders@chromium.org> wrote:
->
-> If you drop into kdb and type "summary", it prints out a line that
-> says this:
->
->   ccversion  CCVERSION
->
-> ...and I don't mean that it actually prints out the version of the C
-> compiler.  It literally prints out the string "CCVERSION".
->
-> The version of the C Compiler is already printed at boot up and it
-> doesn't seem useful to replicate this in kdb.  Let's just delete it.
-> We can also delete the bit of the Makefile that called the C compiler
-> in an attempt to pass this into kdb.  This will remove one extra call
-> to the C compiler at Makefile parse time and (very slightly) speed up
-> builds.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+Hi Eri,
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Thanks for your suggestion, u8 may not enough when the packet have a lot of exthdr.
+
+I will update the patch in v2, by the way update Report-by tag.
 
 
+On 2019/3/30 15:57, Eric Dumazet wrote:
+>
+> On 03/30/2019 12:48 AM, Eric Dumazet wrote:
+>>
+>> On 03/30/2019 12:29 AM, hujunwei wrote:
+>>> From: Junwei Hu <hujunwei4@huawei.com>
+>>>
+>>> At the beginning of ip6_fragment func, the prevhdr pointer is
+>>> obtained in the ip6_find_1stfragopt func.
+>>> However, all the pointers pointing into skb header may change
+>>> when calling skb_checksum_help func with
+>>> skb->ip_summed = CHECKSUM_PARTIAL condition.
+>>> The prevhdr pointe will be dangling if it is not reloaded after
+>>> calling __skb_linearize func in skb_checksum_help func.
+>>>
+>>> Here, I add a variable, nexthdr_offset, to evaluate the offset,
+>>> which does not changes even after calling __skb_linearize func.
+>>>
+> ...
+>
+>>> diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+>>> index edbd12067170..6db3c60b3b66 100644
+>>> --- a/net/ipv6/ip6_output.c
+>>> +++ b/net/ipv6/ip6_output.c
+>>> @@ -606,12 +606,14 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+>>>      __be32 frag_id;
+>>>      int ptr, offset = 0, err = 0;
+>>>      u8 *prevhdr, nexthdr = 0;
+>>> +    u8 nexthdr_offset;
+> Why u8 here ?
+>
+> I would use "unsigned int" really.
+>
+>>>  
+>>>      err = ip6_find_1stfragopt(skb, &prevhdr);
+>>>      if (err < 0)
+>>>          goto fail;
+>>>      hlen = err;
+>>>      nexthdr = *prevhdr;
+>>> +    nexthdr_offset = prevhdr - skb_network_header(skb);
+>>>  
+>>>      mtu = ip6_skb_dst_mtu(skb);
+>>>  
+>>> @@ -646,6 +648,8 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+>>>          (err = skb_checksum_help(skb)))
+>>>          goto fail;
+>>>  
+>>> +    prevhdr = skb_network_header(skb) + nexthdr_offset;
+>>> +
+>>>      hroom = LL_RESERVED_SPACE(rt->dst.dev);
+>>>      if (skb_has_frag_list(skb)) {
+>>>          unsigned int first_len = skb_pagelen(skb);
+>>>
+> .
+>
 
->  kernel/debug/kdb/Makefile   | 1 -
->  kernel/debug/kdb/kdb_main.c | 1 -
->  2 files changed, 2 deletions(-)
->
-> diff --git a/kernel/debug/kdb/Makefile b/kernel/debug/kdb/Makefile
-> index d4fc58f4b88d..efac857c5511 100644
-> --- a/kernel/debug/kdb/Makefile
-> +++ b/kernel/debug/kdb/Makefile
-> @@ -6,7 +6,6 @@
->  # Copyright (c) 2009 Wind River Systems, Inc. All Rights Reserved.
->  #
->
-> -CCVERSION      := $(shell $(CC) -v 2>&1 | sed -ne '$$p')
->  obj-y := kdb_io.o kdb_main.o kdb_support.o kdb_bt.o gen-kdb_cmds.o kdb_bp.o kdb_debugger.o
->  obj-$(CONFIG_KDB_KEYBOARD)    += kdb_keyboard.o
->
-> diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-> index 82a3b32a7cfc..fc96dbf8d9de 100644
-> --- a/kernel/debug/kdb/kdb_main.c
-> +++ b/kernel/debug/kdb/kdb_main.c
-> @@ -2522,7 +2522,6 @@ static int kdb_summary(int argc, const char **argv)
->         kdb_printf("machine    %s\n", init_uts_ns.name.machine);
->         kdb_printf("nodename   %s\n", init_uts_ns.name.nodename);
->         kdb_printf("domainname %s\n", init_uts_ns.name.domainname);
-> -       kdb_printf("ccversion  %s\n", __stringify(CCVERSION));
->
->         now = __ktime_get_real_seconds();
->         time64_to_tm(now, 0, &tm);
-> --
-> 2.21.0.392.gf8f6787159e-goog
->
-
-
--- 
-Best Regards
-Masahiro Yamada
