@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5E3C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64EDC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142BE206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FEA8218AC
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907420;
-	bh=2rWYJvhuNuUnH+vJBk8D51hT1wy7nXgnOojCXjyMeGU=;
+	s=default; t=1553907425;
+	bh=f4uOTuu5Erp0L/M6RuYzZWhPl0Y01/a6VjUYJjvhx3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=beFLoth2jCd0XQYYnl6tQ4ILnK0ctdR2MiFYKkAVZ+gn9iQXkBRJORJNqrsuM7B3Z
-	 H95D0digACwj+MM/yxaurTbGL2iN/CJUOvPw+TgYN9z78qvTbkncn5IYmm0J+fsaBl
-	 K5i6bCCji0GlyLXYtUHEHSWR/RLmDfSy8Wa6D7os=
+	b=rso9kUpYbRnzlfp08J8FNVtaoyUXT97kU5ZGsYRGV0LGhzgH8Jne475mVDZWXqjuv
+	 zi/s600AEapbUdFO0VAsCghaVMdPiPl5oIy70vzLY81jJLIAScCsc6o9UBZmO/z0P6
+	 1uRnuQl6s6/2C+yDn9kRPB+v65AJVUxWEeArZfaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732034AbfC3A47 (ORCPT
+        id S1732057AbfC3A5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:56:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36828 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:57:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731419AbfC3A44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:56:56 -0400
+        id S1732035AbfC3A5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:57:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A9072064A;
-        Sat, 30 Mar 2019 00:56:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F87D2064A;
+        Sat, 30 Mar 2019 00:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907416;
-        bh=2rWYJvhuNuUnH+vJBk8D51hT1wy7nXgnOojCXjyMeGU=;
+        s=default; t=1553907419;
+        bh=f4uOTuu5Erp0L/M6RuYzZWhPl0Y01/a6VjUYJjvhx3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iO5R5f2cWSRwoLJl4bGCJ9pUUmKW6m/xYcuNdX8WL+2P+cZq0zDp83Sedac9XKi8k
-         0dJDH09jZxuz6XmElutCWAfZPMVXSzhtQMueyt7bXbDJXY9MY71owtkErqg14u5pcv
-         sQG81PhhhQDzY+XK/kZGvpElMFm52Vrcy6e5uHJU=
+        b=J6+XXAr9Lis8FbafrdsU4xEneDXoZ1MVttq8AyfR3WATytMol7In1YBInEpKLknRc
+         7LXpmx6/HwsH0SgipMjhDrA+8pvbsCVh0Ew8IAz+Stcfy4cFyogz60RpMhkb//jmoH
+         scN/Hs4e95PKS4zFGLQd9CFXftnTDDLg8bPG5S8Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 04/21] ALSA: echoaudio: add a check for ioremap_nocache
-Date:   Fri, 29 Mar 2019 20:56:32 -0400
-Message-Id: <20190330005649.28475-4-sashal@kernel.org>
+Cc:     Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 06/21] IB/mlx4: Fix race condition between catas error reset and aliasguid flows
+Date:   Fri, 29 Mar 2019 20:56:34 -0400
+Message-Id: <20190330005649.28475-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005649.28475-1-sashal@kernel.org>
 References: <20190330005649.28475-1-sashal@kernel.org>
@@ -58,36 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit 6ade657d6125ec3ec07f95fa51e28138aef6208f ]
+[ Upstream commit 587443e7773e150ae29e643ee8f41a1eed226565 ]
 
-In case ioremap_nocache fails, the fix releases chip and returns
-an error code upstream to avoid NULL pointer dereference.
+Code review revealed a race condition which could allow the catas error
+flow to interrupt the alias guid query post mechanism at random points.
+Thiis is fixed by doing cancel_delayed_work_sync() instead of
+cancel_delayed_work() during the alias guid mechanism destroy flow.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: a0c64a17aba8 ("mlx4: Add alias_guid mechanism")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/echoaudio/echoaudio.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/infiniband/hw/mlx4/alias_GUID.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
-index 286f5e3686a3..d73ee11a32bd 100644
---- a/sound/pci/echoaudio/echoaudio.c
-+++ b/sound/pci/echoaudio/echoaudio.c
-@@ -1953,6 +1953,11 @@ static int snd_echo_create(struct snd_card *card,
- 	}
- 	chip->dsp_registers = (volatile u32 __iomem *)
- 		ioremap_nocache(chip->dsp_registers_phys, sz);
-+	if (!chip->dsp_registers) {
-+		dev_err(chip->card->dev, "ioremap failed\n");
-+		snd_echo_free(chip);
-+		return -ENOMEM;
-+	}
+diff --git a/drivers/infiniband/hw/mlx4/alias_GUID.c b/drivers/infiniband/hw/mlx4/alias_GUID.c
+index 21cb41a60fe8..3a70b418d913 100644
+--- a/drivers/infiniband/hw/mlx4/alias_GUID.c
++++ b/drivers/infiniband/hw/mlx4/alias_GUID.c
+@@ -805,8 +805,8 @@ void mlx4_ib_destroy_alias_guid_service(struct mlx4_ib_dev *dev)
+ 	unsigned long flags;
  
- 	if (request_irq(pci->irq, snd_echo_interrupt, IRQF_SHARED,
- 			KBUILD_MODNAME, chip)) {
+ 	for (i = 0 ; i < dev->num_ports; i++) {
+-		cancel_delayed_work(&dev->sriov.alias_guid.ports_guid[i].alias_guid_work);
+ 		det = &sriov->alias_guid.ports_guid[i];
++		cancel_delayed_work_sync(&det->alias_guid_work);
+ 		spin_lock_irqsave(&sriov->alias_guid.ag_work_lock, flags);
+ 		while (!list_empty(&det->cb_list)) {
+ 			cb_ctx = list_entry(det->cb_list.next,
 -- 
 2.19.1
 
