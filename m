@@ -2,129 +2,807 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FC0C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 08:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A2CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 08:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 973B7218A6
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 08:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39714218A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 08:52:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="x4DlHdlH"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UlMYSRBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbfC3IXq (ORCPT
+        id S1730404AbfC3Iwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 04:23:46 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47458 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbfC3IXp (ORCPT
+        Sat, 30 Mar 2019 04:52:49 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45373 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730082AbfC3Iwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 04:23:45 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2U8NUpo004021;
-        Sat, 30 Mar 2019 08:23:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=JwYHH3ic4/NTdaL1iGDZRhwCd6PYwuMQZN5M0MjgR3A=;
- b=x4DlHdlHMWC4o9KZ7WiAJAuZ592b2hJV3zXYDhhSX1X1yUqRNTlC32a4Pcv24TIS3o/a
- fbTz/DNgDK8wAH8Wma4aNSU6QO7W+hAkzw93aCrzk4/2kizgOHMAF6JINEC58aENo1ma
- i7jazS27xmToFfuNGiN03osc7WzLlGAE4M8NKzfhiAbYjbVbHgO+RM/JGNE7Qe8ht3qN
- Hu8B0wOIp3hEg6uZtkdwq/ZnBGyR9kGLK0ocvu7B91/X8q0qt9t1/KmncR54lZN1VwpI
- kuAX8vUOFRiwl/Y9aDKufsDe1NQzdw1hQyJd2txufQeUfp5lpsVySETZ+2AkjJ4RuzKN QA== 
-Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
-        by userp2130.oracle.com with ESMTP id 2rhyvsrk3k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 30 Mar 2019 08:23:29 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2U8NTUL011454
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 30 Mar 2019 08:23:29 GMT
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2U8NOSL012415;
-        Sat, 30 Mar 2019 08:23:24 GMT
-Received: from kadam (/41.202.241.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 30 Mar 2019 01:23:23 -0700
-Date:   Sat, 30 Mar 2019 11:23:10 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     kbuild@01.org, Tomas Bortoli <tomasbortoli@gmail.com>
-Cc:     johan.hedberg@gmail.com, netdev@vger.kernel.org,
-        marcel@holtmann.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, syzkaller@googlegroups.com,
-        kbuild-all@01.org, davem@davemloft.net
-Subject: Re: [kbuild] [PATCH] net/bluetooth: Fix bound check in event handling
-Message-ID: <20190330082310.GV32613@kadam>
-References: <20190228195939.30685-1-tomasbortoli@gmail.com>
- <20190330071757.GU32613@kadam>
+        Sat, 30 Mar 2019 04:52:49 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so3711300iom.12
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 01:52:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FQ2zezFKJV7NqPVXUYlEXJ5Jope7xjkKrrFAtsquezw=;
+        b=UlMYSRBj7XJ/nL36420tsBAPW53rW700WKFi8DvfPiWXtuMf+nSdMAe7islaNQOZKF
+         MAGyw3cKJ06v1fupho/TT9kFkog+iq7JDSpGmBe6S4kTDE5p57rkKLjg8SDcbnhJGB8e
+         5KhTkS0bIDhRRhre/oUL4c8aVj5uS51TE9QW2FxQ7NnLJtEkMEdBFxSnquwhgJFt1SHg
+         OqrZjz9yAbEnUJfZl/iDFBYQFFAGajH33JFcBc4ZQpTgdq9CubaBaaOBRbNpVpWe6YfI
+         JHF7UuvE/kjzFVZyB1gn0QXjNUM281QCf7tpzrHlAKC0KJQxRHJupSoYzcAKexK4g2XX
+         Ja2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FQ2zezFKJV7NqPVXUYlEXJ5Jope7xjkKrrFAtsquezw=;
+        b=o5zUc2wd2BmJ7LF4ch9b3ttwE9QSmz+kgL/MBRZermyKr9sH71w/MR71LdMXskid1v
+         WbaTOeF/S/chh6Hbwsf4Q54I6QTMFXrioc4llEVhzZ6TAn2h0Kr9fu0NJElMT0ZHQlgu
+         V6XHFu6luuBEGDsD/95IWFRLo1rXys2p8pKA9MY9xdxiBzpUKv2578YuyZJBxg8KeOnn
+         PzSkqwqUFSEADsxExI/GrlEigc3nVltgB+rAWowO5uKglZI+jgl1gXX6T1qxCYV72AhK
+         dVE9fwsYhYc6JOvrURQblkomuqhlHWVEOoQ6/EQTRHRXb5aVv+knDo6Ewj6ewm2zaZLc
+         d0Mw==
+X-Gm-Message-State: APjAAAXoMlCM14D2jeACIAwSZivtmVr0LgQntRtiBZW9e9GrX35dC4kV
+        kezqXhi4knB+kw2wqkfjQM21V3fTyyE64tSmj6Be3g==
+X-Google-Smtp-Source: APXvYqx+K33NMFijkOKjimroHWmupjSikZ49Ws35UhuLG/3a1LNrfOBAh0X1CVlDIcN8/BB2wnd2f+5dpscFbL5yYs8=
+X-Received: by 2002:a5d:9457:: with SMTP id x23mr19355644ior.271.1553935967996;
+ Sat, 30 Mar 2019 01:52:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190330071757.GU32613@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9211 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903300061
+References: <1550561795-31132-1-git-send-email-min.guo@mediatek.com> <1550561795-31132-7-git-send-email-min.guo@mediatek.com>
+In-Reply-To: <1550561795-31132-7-git-send-email-min.guo@mediatek.com>
+From:   Fabien Parent <fparent@baylibre.com>
+Date:   Sat, 30 Mar 2019 09:52:36 +0100
+Message-ID: <CAOwMV_w5W1d0nXDtm7ui4S9oy5x6kvD+jMthWdQ6tDWYFMjs=A@mail.gmail.com>
+Subject: Re: [PATCH v5 6/6] usb: musb: Add support for MediaTek musb controller
+To:     min.guo@mediatek.com
+Cc:     Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Yonglong Wu <yonglong.wu@mediatek.com>,
+        hdegoede@redhat.com, tony@atomide.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        chunfeng.yun@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 10:17:57AM +0300, Dan Carpenter wrote:
-> [ This is an old warning.  Sorry for missing it earlier.  I would have
->   caught it when the code was merged as well so there was no real risk
->   but it's just awkward.  ]
-> 
-> Hi Tomas,
-> 
-> url:    https://github.com/0day-ci/linux/commits/Tomas-Bortoli/net-bluetooth-Fix-bound-check-in-event-handling/20190301-213647
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git master
-> 
-> smatch warnings:
-> net/bluetooth/hci_event.c:3986 hci_inquiry_result_with_rssi_evt() warn: potential pointer math issue ('info' is a 120 bit pointer)
-> 
-> # https://github.com/0day-ci/linux/commit/00305742c021794f147b348d45eb10ea26e5a514
-> git remote add linux-review https://github.com/0day-ci/linux
-> git remote update linux-review
-> git checkout 00305742c021794f147b348d45eb10ea26e5a514
-> vim +3986 net/bluetooth/hci_event.c
-> 
-> 6039aa73 Gustavo Padovan 2012-05-23  3963  static void hci_inquiry_result_with_rssi_evt(struct hci_dev *hdev,
-> 807deac2 Gustavo Padovan 2012-05-17  3964  					     struct sk_buff *skb)
-> a9de9248 Marcel Holtmann 2007-10-20  3965  {
-> a9de9248 Marcel Holtmann 2007-10-20  3966  	struct inquiry_data data;
-> a9de9248 Marcel Holtmann 2007-10-20  3967  	int num_rsp = *((__u8 *) skb->data);
-> a9de9248 Marcel Holtmann 2007-10-20  3968  
-> a9de9248 Marcel Holtmann 2007-10-20  3969  	BT_DBG("%s num_rsp %d", hdev->name, num_rsp);
-> a9de9248 Marcel Holtmann 2007-10-20  3970  
-> a9de9248 Marcel Holtmann 2007-10-20  3971  	if (!num_rsp)
-> a9de9248 Marcel Holtmann 2007-10-20  3972  		return;
-> a9de9248 Marcel Holtmann 2007-10-20  3973  
-> d7a5a11d Marcel Holtmann 2015-03-13  3974  	if (hci_dev_test_flag(hdev, HCI_PERIODIC_INQ))
-> 1519cc17 Andre Guedes    2012-03-21  3975  		return;
-> 1519cc17 Andre Guedes    2012-03-21  3976  
-> a9de9248 Marcel Holtmann 2007-10-20  3977  	hci_dev_lock(hdev);
-> a9de9248 Marcel Holtmann 2007-10-20  3978  
-> a9de9248 Marcel Holtmann 2007-10-20  3979  	if ((skb->len - 1) / num_rsp != sizeof(struct inquiry_info_with_rssi)) {
-> 138d22ef Szymon Janc     2011-02-17  3980  		struct inquiry_info_with_rssi_and_pscan_mode *info;
-> 138d22ef Szymon Janc     2011-02-17  3981  		info = (void *) (skb->data + 1);
-> a9de9248 Marcel Holtmann 2007-10-20  3982  
-> e17acd40 Johan Hedberg   2011-03-30  3983  		for (; num_rsp; num_rsp--, info++) {
-> af58925c Marcel Holtmann 2014-07-01  3984  			u32 flags;
-> af58925c Marcel Holtmann 2014-07-01  3985  
-> 00305742 Tomas Bortoli   2019-02-28 @3986  			if ((void *)(info + sizeof(info)) >
->                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> This should be (void *)info + sizeof(info).  The code you have will
-                                ^^^^^^^^^^^^
-				sizeof(*info)
-Sorry...
+Hi Min Guo,
 
-regards,
-dan carpenter
+On Tue, Feb 19, 2019 at 8:39 AM <min.guo@mediatek.com> wrote:
+>
+> From: Min Guo <min.guo@mediatek.com>
+>
+> This adds support for MediaTek musb controller in
+> host, peripheral and otg mode.
+> There are some quirk of MediaTek musb controller, such as:
+>  -W1C interrupt status registers
+>  -Private data toggle registers
+>  -No dedicated DMA interrupt line
+>
+> Signed-off-by: Min Guo <min.guo@mediatek.com>
+> Signed-off-by: Yonglong Wu <yonglong.wu@mediatek.com>
+> ---
+> changes in v5:
+> 1. Replace musb_readb() with musb_clearb() to clear common/tx/rx pending interrupts
+> 2. Make musb_clearb/w() return the value of musb_readb/w()
+> 3. Add driver to get child nodes of usb connector and extcon device
+>
+> changes in v4:
+> 1. no changes
+>
+> changes in v3:
+> suggested by Bin:
+> 1. Remove 'u8/u16 data' parameter in clearb/w() hooks
+> 2. Replace musb_readb/w() with musb_clearb/w() to clear interrupts status
+>
+> changes in v2:
+> suggested by Bin:
+> 1. Add summarize of MediaTek musb controller differences in the commit log
+> 2. Add "|| COMPILE_TEST" in Kconfig
+> 3. Move MediaTek's private toggle registers from musb_regs.h to mediatek.c
+> 4. Replace musb_readl() with musb_readw() to read 16bit toggle register
+> ---
+>  drivers/usb/musb/Kconfig    |   8 +-
+>  drivers/usb/musb/Makefile   |   1 +
+>  drivers/usb/musb/mediatek.c | 629 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 637 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/usb/musb/mediatek.c
+>
+> diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
+> index ad08895..b72b7c1 100644
+> --- a/drivers/usb/musb/Kconfig
+> +++ b/drivers/usb/musb/Kconfig
+> @@ -115,6 +115,12 @@ config USB_MUSB_JZ4740
+>         depends on USB_MUSB_GADGET
+>         depends on USB_OTG_BLACKLIST_HUB
+>
+> +config USB_MUSB_MEDIATEK
+> +       tristate "MediaTek platforms"
+> +       depends on ARCH_MEDIATEK || COMPILE_TEST
+> +       depends on NOP_USB_XCEIV
+> +       depends on GENERIC_PHY
+> +
+>  config USB_MUSB_AM335X_CHILD
+>         tristate
+>
+> @@ -141,7 +147,7 @@ config USB_UX500_DMA
+>
+>  config USB_INVENTRA_DMA
+>         bool 'Inventra'
+> -       depends on USB_MUSB_OMAP2PLUS
+> +       depends on USB_MUSB_OMAP2PLUS || USB_MUSB_MEDIATEK
+>         help
+>           Enable DMA transfers using Mentor's engine.
+>
+> diff --git a/drivers/usb/musb/Makefile b/drivers/usb/musb/Makefile
+> index 3a88c79..63d82d0 100644
+> --- a/drivers/usb/musb/Makefile
+> +++ b/drivers/usb/musb/Makefile
+> @@ -24,6 +24,7 @@ obj-$(CONFIG_USB_MUSB_DA8XX)                  += da8xx.o
+>  obj-$(CONFIG_USB_MUSB_UX500)                   += ux500.o
+>  obj-$(CONFIG_USB_MUSB_JZ4740)                  += jz4740.o
+>  obj-$(CONFIG_USB_MUSB_SUNXI)                   += sunxi.o
+> +obj-$(CONFIG_USB_MUSB_MEDIATEK)                += mediatek.o
+>
+>
+>  obj-$(CONFIG_USB_MUSB_AM335X_CHILD)            += musb_am335x.o
+> diff --git a/drivers/usb/musb/mediatek.c b/drivers/usb/musb/mediatek.c
+> new file mode 100644
+> index 0000000..946b453
+> --- /dev/null
+> +++ b/drivers/usb/musb/mediatek.c
+> @@ -0,0 +1,629 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018 MediaTek Inc.
+> + *
+> + * Author:
+> + *  Min Guo <min.guo@mediatek.com>
+> + *  Yonglong Wu <yonglong.wu@mediatek.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/usb/usb_phy_generic.h>
+> +#include "musb_core.h"
+> +#include "musb_dma.h"
+> +
+> +#define USB_L1INTS     0x00a0
+> +#define USB_L1INTM     0x00a4
+> +#define MTK_MUSB_TXFUNCADDR    0x0480
+> +
+> +/* MediaTek controller toggle enable and status reg */
+> +#define MUSB_RXTOG             0x80
+> +#define MUSB_RXTOGEN           0x82
+> +#define MUSB_TXTOG             0x84
+> +#define MUSB_TXTOGEN           0x86
+> +
+> +#define TX_INT_STATUS          BIT(0)
+> +#define RX_INT_STATUS          BIT(1)
+> +#define USBCOM_INT_STATUS              BIT(2)
+> +#define DMA_INT_STATUS         BIT(3)
+> +
+> +#define DMA_INTR_STATUS_MSK            GENMASK(7, 0)
+> +#define DMA_INTR_UNMASK_SET_MSK        GENMASK(31, 24)
+> +
+> +enum mtk_vbus_id_state {
+> +       MTK_ID_FLOAT = 1,
+> +       MTK_ID_GROUND,
+> +       MTK_VBUS_OFF,
+> +       MTK_VBUS_VALID,
+> +};
+> +
+> +struct mtk_glue {
+> +       struct device *dev;
+> +       struct musb *musb;
+> +       struct platform_device *musb_pdev;
+> +       struct platform_device *usb_phy;
+> +       struct phy *phy;
+> +       struct usb_phy *xceiv;
+> +       enum phy_mode phy_mode;
+> +       struct clk *main;
+> +       struct clk *mcu;
+> +       struct clk *univpll;
+> +       struct regulator *vbus;
+> +       struct extcon_dev *edev;
+> +       struct notifier_block vbus_nb;
+> +       struct notifier_block id_nb;
+> +};
+> +
+> +static int mtk_musb_clks_get(struct mtk_glue *glue)
+> +{
+> +       struct device *dev = glue->dev;
+> +
+> +       glue->main = devm_clk_get(dev, "main");
+> +       if (IS_ERR(glue->main)) {
+> +               dev_err(dev, "fail to get main clock\n");
+> +               return PTR_ERR(glue->main);
+> +       }
+> +
+> +       glue->mcu = devm_clk_get(dev, "mcu");
+> +       if (IS_ERR(glue->mcu)) {
+> +               dev_err(dev, "fail to get mcu clock\n");
+> +               return PTR_ERR(glue->mcu);
+> +       }
+> +
+> +       glue->univpll = devm_clk_get(dev, "univpll");
+> +       if (IS_ERR(glue->univpll)) {
+> +               dev_err(dev, "fail to get univpll clock\n");
+> +               return PTR_ERR(glue->univpll);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_musb_clks_enable(struct mtk_glue *glue)
+> +{
+> +       int ret;
+> +
+> +       ret = clk_prepare_enable(glue->main);
+> +       if (ret) {
+> +               dev_err(glue->dev, "failed to enable main clock\n");
+> +               goto err_main_clk;
+> +       }
+> +
+> +       ret = clk_prepare_enable(glue->mcu);
+> +       if (ret) {
+> +               dev_err(glue->dev, "failed to enable mcu clock\n");
+> +               goto err_mcu_clk;
+> +       }
+> +
+> +       ret = clk_prepare_enable(glue->univpll);
+> +       if (ret) {
+> +               dev_err(glue->dev, "failed to enable univpll clock\n");
+> +               goto err_univpll_clk;
+> +       }
+> +
+> +       return 0;
+> +
+> +err_univpll_clk:
+> +       clk_disable_unprepare(glue->mcu);
+> +err_mcu_clk:
+> +       clk_disable_unprepare(glue->main);
+> +err_main_clk:
+> +       return ret;
+> +}
+> +
+> +static void mtk_musb_clks_disable(struct mtk_glue *glue)
+> +{
+> +       clk_disable_unprepare(glue->univpll);
+> +       clk_disable_unprepare(glue->mcu);
+> +       clk_disable_unprepare(glue->main);
+> +}
+> +
+> +static void mtk_musb_set_vbus(struct musb *musb, int is_on)
+> +{
+> +       struct device *dev = musb->controller;
+> +       struct mtk_glue *glue = dev_get_drvdata(dev->parent);
+> +       int ret;
+> +
+> +       /* vbus is optional */
+> +       if (!glue->vbus)
+> +               return;
+> +
+> +       dev_dbg(musb->controller, "%s, is_on=%d\r\n", __func__, is_on);
+> +       if (is_on) {
+> +               ret = regulator_enable(glue->vbus);
+> +               if (ret) {
+> +                       dev_err(glue->dev, "fail to enable vbus regulator\n");
+> +                       return;
+> +               }
+> +       } else {
+> +               regulator_disable(glue->vbus);
+> +       }
+> +}
+> +
+> +/*
+> + * switch to host: -> MTK_VBUS_OFF --> MTK_ID_GROUND
+> + * switch to device: -> MTK_ID_FLOAT --> MTK_VBUS_VALID
+> + */
+> +static void mtk_musb_set_mailbox(struct mtk_glue *glue,
+> +                                enum mtk_vbus_id_state status)
+> +{
+> +       struct musb *musb = glue->musb;
+> +       u8 devctl = 0;
+> +
+> +       dev_dbg(glue->dev, "mailbox state(%d)\n", status);
+> +       switch (status) {
+> +       case MTK_ID_GROUND:
+> +               phy_power_on(glue->phy);
+> +               devctl = readb(musb->mregs + MUSB_DEVCTL);
+> +               musb->xceiv->otg->state = OTG_STATE_A_WAIT_VRISE;
+> +               mtk_musb_set_vbus(musb, 1);
+> +               glue->phy_mode = PHY_MODE_USB_HOST;
+> +               phy_set_mode(glue->phy, glue->phy_mode);
+> +               devctl |= MUSB_DEVCTL_SESSION;
+> +               musb_writeb(musb->mregs, MUSB_DEVCTL, devctl);
+> +               MUSB_HST_MODE(musb);
+> +               break;
+> +       /*
+> +        * MTK_ID_FLOAT process is the same as MTK_VBUS_VALID
+> +        * except that turn off VBUS
+> +        */
+> +       case MTK_ID_FLOAT:
+> +               mtk_musb_set_vbus(musb, 0);
+> +               /* fall through */
+> +       case MTK_VBUS_OFF:
+> +               musb->xceiv->otg->state = OTG_STATE_B_IDLE;
+> +               devctl &= ~MUSB_DEVCTL_SESSION;
+> +               musb_writeb(musb->mregs, MUSB_DEVCTL, devctl);
+> +               phy_power_off(glue->phy);
+> +               break;
+> +       case MTK_VBUS_VALID:
+> +               phy_power_on(glue->phy);
+> +               glue->phy_mode = PHY_MODE_USB_DEVICE;
+> +               phy_set_mode(glue->phy, glue->phy_mode);
+> +               MUSB_DEV_MODE(musb);
+> +               break;
+> +       default:
+> +               dev_err(glue->dev, "invalid state\n");
+> +       }
+> +}
+> +
+> +static int mtk_musb_id_notifier(struct notifier_block *nb,
+> +                               unsigned long event, void *ptr)
+> +{
+> +       struct mtk_glue *glue = container_of(nb, struct mtk_glue, id_nb);
+> +
+> +       if (event)
+> +               mtk_musb_set_mailbox(glue, MTK_ID_GROUND);
+> +       else
+> +               mtk_musb_set_mailbox(glue, MTK_ID_FLOAT);
+> +
+> +       return NOTIFY_DONE;
+> +}
+> +
+> +static int mtk_musb_vbus_notifier(struct notifier_block *nb,
+> +                                 unsigned long event, void *ptr)
+> +{
+> +       struct mtk_glue *glue = container_of(nb, struct mtk_glue, vbus_nb);
+> +
+> +       if (event)
+> +               mtk_musb_set_mailbox(glue, MTK_VBUS_VALID);
+> +       else
+> +               mtk_musb_set_mailbox(glue, MTK_VBUS_OFF);
+> +
+> +       return NOTIFY_DONE;
+> +}
+> +
+> +static void mtk_otg_switch_init(struct mtk_glue *glue)
+> +{
+> +       int ret;
+> +
+> +       /* extcon is optional */
+> +       if (!glue->edev)
+> +               return;
+> +
+> +       glue->vbus_nb.notifier_call = mtk_musb_vbus_notifier;
+> +       ret = devm_extcon_register_notifier(glue->dev, glue->edev, EXTCON_USB,
+> +                                           &glue->vbus_nb);
+> +       if (ret < 0)
+> +               dev_err(glue->dev, "failed to register notifier for USB\n");
+> +
+> +       glue->id_nb.notifier_call = mtk_musb_id_notifier;
+> +       ret = devm_extcon_register_notifier(glue->dev, glue->edev,
+> +                                           EXTCON_USB_HOST, &glue->id_nb);
+> +       if (ret < 0)
+> +               dev_err(glue->dev, "failed to register notifier for USB-HOST\n");
+> +
+> +       dev_dbg(glue->dev, "EXTCON_USB: %d, EXTCON_USB_HOST: %d\n",
+> +               extcon_get_state(glue->edev, EXTCON_USB),
+> +               extcon_get_state(glue->edev, EXTCON_USB_HOST));
+> +
+> +       /* default as host, switch to device mode if needed */
+> +       if (extcon_get_state(glue->edev, EXTCON_USB_HOST) == false)
+> +               mtk_musb_set_mailbox(glue, MTK_ID_FLOAT);
+> +       if (extcon_get_state(glue->edev, EXTCON_USB) == true)
+> +               mtk_musb_set_mailbox(glue, MTK_VBUS_VALID);
+> +}
+> +
+> +static irqreturn_t generic_interrupt(int irq, void *__hci)
+> +{
+> +       unsigned long flags;
+> +       irqreturn_t retval = IRQ_NONE;
+> +       struct musb *musb = __hci;
+> +
+> +       spin_lock_irqsave(&musb->lock, flags);
+> +       musb->int_usb = musb_clearb(musb->mregs, MUSB_INTRUSB);
+> +       musb->int_rx = musb_clearw(musb->mregs, MUSB_INTRRX);
+> +       musb->int_tx = musb_clearw(musb->mregs, MUSB_INTRTX);
+> +
+> +       if (musb->int_usb || musb->int_tx || musb->int_rx)
+> +               retval = musb_interrupt(musb);
+> +
+> +       spin_unlock_irqrestore(&musb->lock, flags);
+> +
+> +       return retval;
+> +}
+> +
+> +static irqreturn_t mtk_musb_interrupt(int irq, void *dev_id)
+> +{
+> +       irqreturn_t retval = IRQ_NONE;
+> +       struct musb *musb = (struct musb *)dev_id;
+> +       u32 l1_ints;
+> +
+> +       l1_ints = musb_readl(musb->mregs, USB_L1INTS) &
+> +                       musb_readl(musb->mregs, USB_L1INTM);
+> +
+> +       if (l1_ints & (TX_INT_STATUS | RX_INT_STATUS | USBCOM_INT_STATUS))
+> +               retval = generic_interrupt(irq, musb);
+> +
+> +#if defined(CONFIG_USB_INVENTRA_DMA)
+> +       if (l1_ints & DMA_INT_STATUS)
+> +               retval = dma_controller_irq(irq, musb->dma_controller);
+> +#endif
+> +       return retval;
+> +}
+> +
+> +static u32 mtk_musb_busctl_offset(u8 epnum, u16 offset)
+> +{
+> +       return MTK_MUSB_TXFUNCADDR + offset + 8 * epnum;
+> +}
+> +
+> +static u8 mtk_musb_clearb(void __iomem *addr, unsigned int offset)
+> +{
+> +       u8 data;
+> +
+> +       /* W1C */
+> +       data = musb_readb(addr, offset);
+> +       musb_writeb(addr, offset, data);
+> +       return data;
+> +}
+> +
+> +static u16 mtk_musb_clearw(void __iomem *addr, unsigned int offset)
+> +{
+> +       u16 data;
+> +
+> +       /* W1C */
+> +       data = musb_readw(addr, offset);
+> +       musb_writew(addr, offset, data);
+> +       return data;
+> +}
+> +
+> +static int mtk_musb_init(struct musb *musb)
+> +{
+> +       struct device *dev = musb->controller;
+> +       struct mtk_glue *glue = dev_get_drvdata(dev->parent);
+> +       int ret;
+> +
+> +       glue->musb = musb;
+> +       musb->phy = glue->phy;
+> +       musb->xceiv = glue->xceiv;
+> +       musb->is_host = false;
+> +       musb->isr = mtk_musb_interrupt;
+> +       ret = phy_init(glue->phy);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = phy_power_on(glue->phy);
+> +       if (ret) {
+> +               phy_exit(glue->phy);
+> +               return ret;
+> +       }
+> +
+> +       phy_set_mode(glue->phy, glue->phy_mode);
+> +
+> +#if defined(CONFIG_USB_INVENTRA_DMA)
+> +       musb_writel(musb->mregs, MUSB_HSDMA_INTR,
+> +                   DMA_INTR_STATUS_MSK | DMA_INTR_UNMASK_SET_MSK);
+> +#endif
+> +       musb_writel(musb->mregs, USB_L1INTM, TX_INT_STATUS | RX_INT_STATUS |
+> +                   USBCOM_INT_STATUS | DMA_INT_STATUS);
+> +       return 0;
+> +}
+> +
+> +static u16 mtk_musb_get_toggle(struct musb_qh *qh, int is_out)
+> +{
+> +       struct musb *musb = qh->hw_ep->musb;
+> +       u8 epnum = qh->hw_ep->epnum;
+> +       u16 toggle;
+> +
+> +       if (is_out)
+> +               toggle = musb_readw(musb->mregs, MUSB_TXTOG);
+> +       else
+> +               toggle = musb_readw(musb->mregs, MUSB_RXTOG);
+> +
+> +       return toggle & (1 << epnum);
+> +}
+> +
+> +static u16 mtk_musb_set_toggle(struct musb_qh *qh, int is_out, struct urb *urb)
+> +{
+> +       struct musb *musb = qh->hw_ep->musb;
+> +       u8 epnum = qh->hw_ep->epnum;
+> +       u16 toggle;
+> +
+> +       toggle = usb_gettoggle(urb->dev, qh->epnum, is_out);
+> +
+> +       if (is_out) {
+> +               musb_writew(musb->mregs, MUSB_TXTOGEN, (1 << epnum));
+> +               musb_writew(musb->mregs, MUSB_TXTOG, (toggle << epnum));
+> +       } else {
+> +               musb_writew(musb->mregs, MUSB_RXTOGEN, (1 << epnum));
+> +               musb_writew(musb->mregs, MUSB_RXTOG, (toggle << epnum));
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_musb_set_mode(struct musb *musb, u8 mode)
+> +{
+> +       struct device *dev = musb->controller;
+> +       struct mtk_glue *glue = dev_get_drvdata(dev->parent);
+> +       enum phy_mode new_mode;
+> +
+> +       switch (mode) {
+> +       case MUSB_HOST:
+> +               new_mode = PHY_MODE_USB_HOST;
+> +               mtk_musb_set_vbus(musb, 1);
+> +               break;
+> +       case MUSB_PERIPHERAL:
+> +               new_mode = PHY_MODE_USB_DEVICE;
+> +               break;
+> +       case MUSB_OTG:
+> +               new_mode = PHY_MODE_USB_HOST;
+> +               break;
+> +       default:
+> +               dev_err(musb->controller->parent,
+> +                       "Error requested mode not supported by this kernel\n");
+> +               return -EINVAL;
+> +       }
+> +       if (glue->phy_mode == new_mode)
+> +               return 0;
+> +
+> +       mtk_musb_set_mailbox(glue, MTK_ID_GROUND);
+> +       return 0;
+> +}
+> +
+> +static int mtk_musb_exit(struct musb *musb)
+> +{
+> +       struct device *dev = musb->controller;
+> +       struct mtk_glue *glue = dev_get_drvdata(dev->parent);
+> +
+> +       phy_power_off(glue->phy);
+> +       phy_exit(glue->phy);
+> +       mtk_musb_clks_disable(glue);
+> +
+> +       pm_runtime_put_sync(dev);
+> +       pm_runtime_disable(dev);
+> +       return 0;
+> +}
+> +
+> +static const struct musb_platform_ops mtk_musb_ops = {
+> +       .quirks = MUSB_DMA_INVENTRA,
+> +       .init = mtk_musb_init,
+> +       .get_toggle = mtk_musb_get_toggle,
+> +       .set_toggle = mtk_musb_set_toggle,
+> +       .exit = mtk_musb_exit,
+> +#ifdef CONFIG_USB_INVENTRA_DMA
+> +       .dma_init = musbhs_dma_controller_create_noirq,
+> +       .dma_exit = musbhs_dma_controller_destroy,
+> +#endif
+> +       .clearb = mtk_musb_clearb,
+> +       .clearw = mtk_musb_clearw,
+> +       .busctl_offset = mtk_musb_busctl_offset,
+> +       .set_mode = mtk_musb_set_mode,
+> +       .set_vbus = mtk_musb_set_vbus,
+> +};
+> +
+> +#define MTK_MUSB_MAX_EP_NUM    8
+> +#define MTK_MUSB_RAM_BITS      11
+> +
+> +static struct musb_fifo_cfg mtk_musb_mode_cfg[] = {
+> +       { .hw_ep_num = 1, .style = FIFO_TX, .maxpacket = 512, },
+> +       { .hw_ep_num = 1, .style = FIFO_RX, .maxpacket = 512, },
+> +       { .hw_ep_num = 2, .style = FIFO_TX, .maxpacket = 512, },
+> +       { .hw_ep_num = 2, .style = FIFO_RX, .maxpacket = 512, },
+> +       { .hw_ep_num = 3, .style = FIFO_TX, .maxpacket = 512, },
+> +       { .hw_ep_num = 3, .style = FIFO_RX, .maxpacket = 512, },
+> +       { .hw_ep_num = 4, .style = FIFO_TX, .maxpacket = 512, },
+> +       { .hw_ep_num = 4, .style = FIFO_RX, .maxpacket = 512, },
+> +       { .hw_ep_num = 5, .style = FIFO_TX, .maxpacket = 512, },
+> +       { .hw_ep_num = 5, .style = FIFO_RX, .maxpacket = 512, },
+> +       { .hw_ep_num = 6, .style = FIFO_TX, .maxpacket = 1024, },
+> +       { .hw_ep_num = 6, .style = FIFO_RX, .maxpacket = 1024, },
+> +       { .hw_ep_num = 7, .style = FIFO_TX, .maxpacket = 512, },
+> +       { .hw_ep_num = 7, .style = FIFO_RX, .maxpacket = 64, },
+> +};
+> +
+> +static const struct musb_hdrc_config mtk_musb_hdrc_config = {
+> +       .fifo_cfg = mtk_musb_mode_cfg,
+> +       .fifo_cfg_size = ARRAY_SIZE(mtk_musb_mode_cfg),
+> +       .multipoint = true,
+> +       .dyn_fifo = true,
+> +       .num_eps = MTK_MUSB_MAX_EP_NUM,
+> +       .ram_bits = MTK_MUSB_RAM_BITS,
+> +};
+> +
+> +static const struct platform_device_info mtk_dev_info = {
+> +       .name = "musb-hdrc",
+> +       .id = PLATFORM_DEVID_AUTO,
+> +       .dma_mask = DMA_BIT_MASK(32),
+> +};
+> +
+> +static int mtk_musb_probe(struct platform_device *pdev)
+> +{
+> +       struct musb_hdrc_platform_data *pdata;
+> +       struct mtk_glue *glue;
+> +       struct platform_device_info pinfo;
+> +       struct device *dev = &pdev->dev;
+> +       struct device_node *np = dev->of_node;
+> +       struct device_node *child, *extcon_node;
+> +       int ret = -ENOMEM;
+> +
+> +       glue = devm_kzalloc(dev, sizeof(*glue), GFP_KERNEL);
+> +       if (!glue)
+> +               return -ENOMEM;
+> +
+> +       glue->dev = dev;
+> +       pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +       if (!pdata)
+> +               return -ENOMEM;
+> +
+> +       ret = mtk_musb_clks_get(glue);
+> +       if (ret)
+> +               return ret;
+> +
+> +       pdata->config = &mtk_musb_hdrc_config;
+> +       pdata->platform_ops = &mtk_musb_ops;
+> +
+> +       glue->vbus = devm_regulator_get(dev, "vbus");
+> +       if (IS_ERR(glue->vbus)) {
+> +               dev_err(dev, "fail to get vbus\n");
+> +               return PTR_ERR(glue->vbus);
+> +       }
+> +
+> +       child = of_get_child_by_name(np, "connector");
+> +       if (!child) {
+> +               dev_err(dev, "failed to find usb connector node\n");
+> +               return ERR_PTR(-ENODEV);
 
+The 'probe' function is returning an 'int' and not a pointer. This
+line should trigger a warning.
+
+> +       }
+> +
+> +       extcon_node = of_parse_phandle(child, "extcon", 0);
+> +       if (!extcon_node) {
+> +               dev_err(dev, "failed to get extcon phandle");
+> +               return ERR_PTR(-ENODEV);
+
+Same here
+
+> +       }
+> +
+> +       glue->edev = extcon_find_edev_by_node(extcon_node);
+> +       if (IS_ERR(glue->edev)) {
+> +               dev_err(dev, "fail to get extcon\n");
+> +               return PTR_ERR(glue->edev);
+> +       }
+> +
+> +       pdata->mode = usb_get_dr_mode(dev);
+> +       switch (pdata->mode) {
+> +       case USB_DR_MODE_HOST:
+> +               glue->phy_mode = PHY_MODE_USB_HOST;
+> +               break;
+> +       case USB_DR_MODE_PERIPHERAL:
+> +               glue->phy_mode = PHY_MODE_USB_DEVICE;
+> +               break;
+> +       default:
+> +               pdata->mode = USB_DR_MODE_OTG;
+> +               /* FALL THROUGH */
+> +       case USB_DR_MODE_OTG:
+> +               glue->phy_mode = PHY_MODE_USB_OTG;
+> +               break;
+> +       }
+> +
+> +       glue->phy = devm_of_phy_get_by_index(dev, np, 0);
+> +       if (IS_ERR(glue->phy)) {
+> +               dev_err(dev, "fail to getting phy %ld\n",
+> +                       PTR_ERR(glue->phy));
+> +               return PTR_ERR(glue->phy);
+> +       }
+> +
+> +       glue->usb_phy = usb_phy_generic_register();
+> +       if (IS_ERR(glue->usb_phy)) {
+> +               dev_err(dev, "fail to registering usb-phy %ld\n",
+> +                       PTR_ERR(glue->usb_phy));
+> +               return PTR_ERR(glue->usb_phy);
+> +       }
+> +
+> +       glue->xceiv = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+> +       if (IS_ERR(glue->xceiv)) {
+> +               dev_err(dev, "fail to getting usb-phy %d\n", ret);
+> +               ret = PTR_ERR(glue->xceiv);
+> +               goto err_unregister_usb_phy;
+> +       }
+> +
+> +       platform_set_drvdata(pdev, glue);
+> +       pm_runtime_enable(dev);
+> +       pm_runtime_get_sync(dev);
+> +
+> +       ret = mtk_musb_clks_enable(glue);
+> +       if (ret)
+> +               goto err_enable_clk;
+> +
+> +       pinfo = mtk_dev_info;
+> +       pinfo.parent = dev;
+> +       pinfo.res = pdev->resource;
+> +       pinfo.num_res = pdev->num_resources;
+> +       pinfo.data = pdata;
+> +       pinfo.size_data = sizeof(*pdata);
+> +
+> +       glue->musb_pdev = platform_device_register_full(&pinfo);
+> +       if (IS_ERR(glue->musb_pdev)) {
+> +               ret = PTR_ERR(glue->musb_pdev);
+> +               dev_err(dev, "failed to register musb device: %d\n", ret);
+> +               goto err_device_register;
+> +       }
+> +
+> +       if (pdata->mode == USB_DR_MODE_OTG)
+> +               mtk_otg_switch_init(glue);
+> +
+> +       return 0;
+> +
+> +err_device_register:
+> +       mtk_musb_clks_disable(glue);
+> +err_enable_clk:
+> +       pm_runtime_put_sync(dev);
+> +       pm_runtime_disable(dev);
+> +err_unregister_usb_phy:
+> +       usb_phy_generic_unregister(glue->usb_phy);
+> +       return ret;
+> +}
+> +
+> +static int mtk_musb_remove(struct platform_device *pdev)
+> +{
+> +       struct mtk_glue *glue = platform_get_drvdata(pdev);
+> +       struct platform_device *usb_phy = glue->usb_phy;
+> +
+> +       platform_device_unregister(glue->musb_pdev);
+> +       usb_phy_generic_unregister(usb_phy);
+> +
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id mtk_musb_match[] = {
+> +       {.compatible = "mediatek,mtk-musb",},
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, mtk_musb_match);
+> +#endif
+> +
+> +static struct platform_driver mtk_musb_driver = {
+> +       .probe = mtk_musb_probe,
+> +       .remove = mtk_musb_remove,
+> +       .driver = {
+> +                  .name = "musb-mtk",
+> +                  .of_match_table = of_match_ptr(mtk_musb_match),
+> +       },
+> +};
+> +
+> +module_platform_driver(mtk_musb_driver);
+> +
+> +MODULE_DESCRIPTION("MediaTek MUSB Glue Layer");
+> +MODULE_AUTHOR("Min Guo <min.guo@mediatek.com>");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
