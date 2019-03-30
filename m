@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101B9C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0ADC4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D669F2183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D55B2183F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553910038;
-	bh=eBZUywteNKvuDQ3xoiq3Xg8hQIPWQ4S+HTBb1ym2EiQ=;
+	s=default; t=1553910053;
+	bh=vBo4IsUezcIL3tubt4Tz4uuwzErRkyJ7COzUFCRa5Cw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hJdZGkGqaelS0MyvOAHPIvzIHPAnc5kbImwh3UIhCrzIRxWlQTGBMSxu2yHCzz0ah
-	 MlUfZKJBi8y5/C2lB9XGf6UYk4QJLqoqTfOSYrAW71VGNHSxk2c7CJlQO1X+5Uj+5V
-	 qhWPMyqJvtJmeF5Xgy7TehYE+QkA5mxvKlPKRkh4=
+	b=uuktGlwXjiTcjZef3E/UP59vtdJyjqatm1a0MVqpK/stCL5QP/b0NJ1y8GWU+EYMa
+	 S5yN5gNugFLsN9TKB+VWi68lMK2BkbT4xQGuNYbOCGDirB6k28KJU7AAbMkcM6ogtf
+	 1FqKrswf4R0Lbpsb+gupKdZMnASosmeG+VBaK6JM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730990AbfC3B3b (ORCPT
+        id S1731584AbfC3Bkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:29:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36356 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:40:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730941AbfC3B33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:29:29 -0400
+        id S1730680AbfC3B3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:29:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D69E2217F5;
-        Sat, 30 Mar 2019 01:29:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CA38218FD;
+        Sat, 30 Mar 2019 01:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909368;
-        bh=eBZUywteNKvuDQ3xoiq3Xg8hQIPWQ4S+HTBb1ym2EiQ=;
+        s=default; t=1553909345;
+        bh=vBo4IsUezcIL3tubt4Tz4uuwzErRkyJ7COzUFCRa5Cw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PBB+Z4zN5or8naJMMurz+xp1HuEt8nb5nJDYCv03jPJgzZWuZ5M8nUjLh0dz+TRES
-         XwUBQzIZ/usjhVFX5dULW7gsFALUSNCkNniQnHucawKhix27JrrOSyn86mqHtspqna
-         Fi/7mmmVIIKd/zqSfsIithri0WIYZv9J7pKGr7sc=
+        b=YdGQFAURrfVVjCAT1S2mybRT6KACNkNkhtohd6kF6nL03rxmxZA/VaTDbIk4VVurO
+         l7+zfrOerWq8BnKLHa5YLNUPgZVsvX8yRI0mbgTHbFruALMcAJl/sAoOh6N08WsSgg
+         ZGKCTcRVjYzzq+RmHOBKZ8/VXEy3d6GOJ6qAtLgc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yanjiang Jin <yanjiang.jin@hxt-semitech.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/57] pinctrl: core: make sure strcmp() doesn't get a null parameter
-Date:   Fri, 29 Mar 2019 21:28:08 -0400
-Message-Id: <20190330012854.32212-15-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 09/57] netfilter: xt_cgroup: shrink size of v2 path
+Date:   Fri, 29 Mar 2019 21:28:02 -0400
+Message-Id: <20190330012854.32212-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
 References: <20190330012854.32212-1-sashal@kernel.org>
@@ -59,71 +60,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yanjiang Jin <yanjiang.jin@hxt-semitech.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 54a58185bfafb5af5045fb8388c45daa373f90f3 ]
+[ Upstream commit 0d704967f4a49cc2212350b3e4a8231f8b4283ed ]
 
-Some drivers, for example, QCOM's qdf2xxx, set groups[gpio].name only
-when gpio is valid, and leave invalid gpio names as null.
-If we want to access the sys node "pinconf-groups",
-pinctrl_get_group_selector() -> get_group_name() may return a null
-pointer if group_selector is invalid, then the below Kernel panic
-would happen since strcmp() uses this null pointer to do comparison.
+cgroup v2 path field is PATH_MAX which is too large, this is placing too
+much pressure on memory allocation for people with many rules doing
+cgroup v1 classid matching, side effects of this are bug reports like:
 
- Unable to handle kernel NULL pointer dereference at ss 00000000
-el:Internal error: Oops: 9600000[ 143.080279]
-SMP
- CPU: 19 PID: 2493 Comm: read_all Tainted: G O
-.aarch64 #1
- Hardware name: HXT Semiconductor HXT REP-2 System
- PC is at strcmp+0x18/0x154
- LR is at pinctrl_get_group_selector+0x6c/0xe8
- Process read_all (pid: 2493, stack limit =
- Call trace:
- Exception stack
-  strcmp+0x18/0x154
-  pin_config_group_get+0x64/0xd8
-  pinconf_generic_dump_one+0xd8/0x1c0
-  pinconf_generic_dump_pins+0x94/0xc8
-  pinconf_groups_show+0xb4/0x104
-  seq_read+0x178/0x464
-  full_proxy_read+0x6c/0xac
-  __vfs_read+0x58/0x178
-  vfs_read+0x94/0x164
-  SyS_read+0x60/0xc0
-  __sys_trace_return+0x0/0x4
- --[ end trace]--
- Kernel panic - not syncing: Fatal exception
+https://bugzilla.kernel.org/show_bug.cgi?id=200639
 
-Signed-off-by: Yanjiang Jin <yanjiang.jin@hxt-semitech.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+This patch registers a new revision that shrinks the cgroup path to 512
+bytes, which is the same approach we follow in similar extensions that
+have a path field.
+
+Cc: Tejun Heo <tj@kernel.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Acked-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/uapi/linux/netfilter/xt_cgroup.h | 16 ++++++
+ net/netfilter/xt_cgroup.c                | 72 ++++++++++++++++++++++++
+ 2 files changed, 88 insertions(+)
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index a3dd777e3ce8..c6ff4d5fa482 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -627,7 +627,7 @@ static int pinctrl_generic_group_name_to_selector(struct pinctrl_dev *pctldev,
- 	while (selector < ngroups) {
- 		const char *gname = ops->get_group_name(pctldev, selector);
+diff --git a/include/uapi/linux/netfilter/xt_cgroup.h b/include/uapi/linux/netfilter/xt_cgroup.h
+index e96dfa1b34f7..b74e370d6133 100644
+--- a/include/uapi/linux/netfilter/xt_cgroup.h
++++ b/include/uapi/linux/netfilter/xt_cgroup.h
+@@ -22,4 +22,20 @@ struct xt_cgroup_info_v1 {
+ 	void		*priv __attribute__((aligned(8)));
+ };
  
--		if (!strcmp(function, gname))
-+		if (gname && !strcmp(function, gname))
- 			return selector;
++#define XT_CGROUP_PATH_MAX	512
++
++struct xt_cgroup_info_v2 {
++	__u8		has_path;
++	__u8		has_classid;
++	__u8		invert_path;
++	__u8		invert_classid;
++	union {
++		char	path[XT_CGROUP_PATH_MAX];
++		__u32	classid;
++	};
++
++	/* kernel internal data */
++	void		*priv __attribute__((aligned(8)));
++};
++
+ #endif /* _UAPI_XT_CGROUP_H */
+diff --git a/net/netfilter/xt_cgroup.c b/net/netfilter/xt_cgroup.c
+index 5d92e1781980..5cb1ecb29ea4 100644
+--- a/net/netfilter/xt_cgroup.c
++++ b/net/netfilter/xt_cgroup.c
+@@ -68,6 +68,38 @@ static int cgroup_mt_check_v1(const struct xt_mtchk_param *par)
+ 	return 0;
+ }
  
- 		selector++;
-@@ -743,7 +743,7 @@ int pinctrl_get_group_selector(struct pinctrl_dev *pctldev,
- 	while (group_selector < ngroups) {
- 		const char *gname = pctlops->get_group_name(pctldev,
- 							    group_selector);
--		if (!strcmp(gname, pin_group)) {
-+		if (gname && !strcmp(gname, pin_group)) {
- 			dev_dbg(pctldev->dev,
- 				"found group selector %u for %s\n",
- 				group_selector,
++static int cgroup_mt_check_v2(const struct xt_mtchk_param *par)
++{
++	struct xt_cgroup_info_v2 *info = par->matchinfo;
++	struct cgroup *cgrp;
++
++	if ((info->invert_path & ~1) || (info->invert_classid & ~1))
++		return -EINVAL;
++
++	if (!info->has_path && !info->has_classid) {
++		pr_info("xt_cgroup: no path or classid specified\n");
++		return -EINVAL;
++	}
++
++	if (info->has_path && info->has_classid) {
++		pr_info_ratelimited("path and classid specified\n");
++		return -EINVAL;
++	}
++
++	info->priv = NULL;
++	if (info->has_path) {
++		cgrp = cgroup_get_from_path(info->path);
++		if (IS_ERR(cgrp)) {
++			pr_info_ratelimited("invalid path, errno=%ld\n",
++					    PTR_ERR(cgrp));
++			return -EINVAL;
++		}
++		info->priv = cgrp;
++	}
++
++	return 0;
++}
++
+ static bool
+ cgroup_mt_v0(const struct sk_buff *skb, struct xt_action_param *par)
+ {
+@@ -99,6 +131,24 @@ static bool cgroup_mt_v1(const struct sk_buff *skb, struct xt_action_param *par)
+ 			info->invert_classid;
+ }
+ 
++static bool cgroup_mt_v2(const struct sk_buff *skb, struct xt_action_param *par)
++{
++	const struct xt_cgroup_info_v2 *info = par->matchinfo;
++	struct sock_cgroup_data *skcd = &skb->sk->sk_cgrp_data;
++	struct cgroup *ancestor = info->priv;
++	struct sock *sk = skb->sk;
++
++	if (!sk || !sk_fullsock(sk) || !net_eq(xt_net(par), sock_net(sk)))
++		return false;
++
++	if (ancestor)
++		return cgroup_is_descendant(sock_cgroup_ptr(skcd), ancestor) ^
++			info->invert_path;
++	else
++		return (info->classid == sock_cgroup_classid(skcd)) ^
++			info->invert_classid;
++}
++
+ static void cgroup_mt_destroy_v1(const struct xt_mtdtor_param *par)
+ {
+ 	struct xt_cgroup_info_v1 *info = par->matchinfo;
+@@ -107,6 +157,14 @@ static void cgroup_mt_destroy_v1(const struct xt_mtdtor_param *par)
+ 		cgroup_put(info->priv);
+ }
+ 
++static void cgroup_mt_destroy_v2(const struct xt_mtdtor_param *par)
++{
++	struct xt_cgroup_info_v2 *info = par->matchinfo;
++
++	if (info->priv)
++		cgroup_put(info->priv);
++}
++
+ static struct xt_match cgroup_mt_reg[] __read_mostly = {
+ 	{
+ 		.name		= "cgroup",
+@@ -134,6 +192,20 @@ static struct xt_match cgroup_mt_reg[] __read_mostly = {
+ 				  (1 << NF_INET_POST_ROUTING) |
+ 				  (1 << NF_INET_LOCAL_IN),
+ 	},
++	{
++		.name		= "cgroup",
++		.revision	= 2,
++		.family		= NFPROTO_UNSPEC,
++		.checkentry	= cgroup_mt_check_v2,
++		.match		= cgroup_mt_v2,
++		.matchsize	= sizeof(struct xt_cgroup_info_v2),
++		.usersize	= offsetof(struct xt_cgroup_info_v2, priv),
++		.destroy	= cgroup_mt_destroy_v2,
++		.me		= THIS_MODULE,
++		.hooks		= (1 << NF_INET_LOCAL_OUT) |
++				  (1 << NF_INET_POST_ROUTING) |
++				  (1 << NF_INET_LOCAL_IN),
++	},
+ };
+ 
+ static int __init cgroup_mt_init(void)
 -- 
 2.19.1
 
