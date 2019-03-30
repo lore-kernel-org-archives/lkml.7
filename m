@@ -2,70 +2,72 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB57C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 20:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628BBC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 20:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC639217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 20:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334AC217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 20:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731025AbfC3UO2 (ORCPT
+        id S1730992AbfC3UR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 16:14:28 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57173 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730851AbfC3UO2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 16:14:28 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hAKMx-0007Gx-15; Sat, 30 Mar 2019 20:14:23 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Stanislaw Gruszka <sgruszka@redhat.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iwlegacy: remove redundant assignment to *res
-Date:   Sat, 30 Mar 2019 20:14:22 +0000
-Message-Id: <20190330201422.8024-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Sat, 30 Mar 2019 16:17:29 -0400
+Received: from mx.sdf.org ([205.166.94.20]:62454 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730613AbfC3UR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 16:17:28 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2UKFpBZ007337
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
+        Sat, 30 Mar 2019 20:15:52 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id x2UKFnSL003850;
+        Sat, 30 Mar 2019 20:15:49 GMT
+Date:   Sat, 30 Mar 2019 20:15:49 GMT
+From:   George Spelvin <lkml@sdf.org>
+Message-Id: <201903302015.x2UKFnSL003850@sdf.org>
+To:     gregkh@linuxfoundation.org, st5pub@yandex.ru
+Subject: Re: [PATCH 5/5] Lib: sort.h: replace int size with size_t size in the swap function
+Cc:     adrian.hunter@intel.com, ard.biesheuvel@linaro.org,
+        benh@kernel.crashing.org, bp@alien8.de, darrick.wong@oracle.com,
+        dchinner@redhat.com, dedekind1@gmail.com, hpa@zytor.com,
+        jlbec@evilplan.org, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        lkml@sdf.org, mark@fasheh.com, mingo@redhat.com,
+        mpe@ellerman.id.au, naveen.n.rao@linux.vnet.ibm.com,
+        paulus@samba.org, richard@nod.at, tglx@linutronix.de,
+        vgupta@synopsys.com, x86@kernel.org
+In-Reply-To: <20190330183826.GB21828@kroah.com>
+References: <18626931553963861@sas1-b3ec53dbc12b.qloud-c.yandex.net>,
+    <20467491553964233@myt4-c0b480c282c8.qloud-c.yandex.net>,
+    <20190330183826.GB21828@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Sat, 30 Mar 2019 at 19:38:26 +0100 greh k-h wrote;
+> On Sat, Mar 30, 2019 at 07:43:53PM +0300, Andrey Abramov wrote:
+>> Replace int type with size_t type of the size argument
+>> in the swap function, also affect all its dependencies.
+>
+> This says _what_ the patch does, but it gives no clue as to _why_ you
+> are doing this.  Neither did your 0/5 patch :(
+>
+> Why make this change?  Nothing afterward depends on it from what I can
+> tell, so why is it needed?
 
-Currently 1 is being assigned to *res and then it is immediately
-updated with the computed result.  The first assignment is
-redundant and can be removed.
+It's just a minor cleanup, making things less surprising for future
+programmers.  As I wrote in a comment in my patches, using a signed type
+for an object size is definitely a wart; ever since C89 it's expected
+you'd use size_t for the purpose.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/wireless/intel/iwlegacy/4965.c | 1 -
- 1 file changed, 1 deletion(-)
+The connection is that it's a natural consequence of doing a pass over
+every call site.
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/4965.c b/drivers/net/wireless/intel/iwlegacy/4965.c
-index ce4144a89217..a20b6c885047 100644
---- a/drivers/net/wireless/intel/iwlegacy/4965.c
-+++ b/drivers/net/wireless/intel/iwlegacy/4965.c
-@@ -577,7 +577,6 @@ il4965_math_div_round(s32 num, s32 denom, s32 * res)
- 		sign = -sign;
- 		denom = -denom;
- 	}
--	*res = 1;
- 	*res = ((num * 2 + denom) / (denom * 2)) * sign;
- 
- 	return 1;
--- 
-2.20.1
-
+You're right it could be dropped from the series harmlessly, but it
+comes from the same work.  But it's all of *three* call sites in the kernel
+which are affected.  Surely that's not an unreasonable amount of churn
+to clean up a wart?
