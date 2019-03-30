@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC57C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994FBC4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A512206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFB1206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553908320;
-	bh=hEWvx/5Bx2Iu4Hjl4xWwrJJPetoCuNRgamHIZ47OHAk=;
+	s=default; t=1553908324;
+	bh=6PYDiqOyMBKGjsOYaBQ/3YxVMPUov6leeuFtK5wVyVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bOClqq4TmNPKNpK3NQ1wHinQsqZOxaF+hna35dYrJy+LQ5o8y1JVs1MLFnhyp+IEJ
-	 mKRc3u37g0RcdKAag6qgRIs6g96+G045r3g/c2b12EOESyWKtmACFOMOwhEqv/+Ra/
-	 9h4cZUvpI+QWtsdAe77wqJKdMwf4PMxi+uZh+J+g=
+	b=gDQ2FgTsPeAw5MMb516YouEt739WyekOsaVFKmupvSuUcibucisquGMxUeL7oGDSN
+	 tP3zTucnFe0G9m5VAolM0Z+M9AAXMiDlAaaLlmrAYyPEl4q5Wr6I/UufWUpzHT70pW
+	 Yf1NiOkjMRDyFXNkOR76meIzrYTAJo1OedkVeTUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730489AbfC3Auz (ORCPT
+        id S1730454AbfC3Auy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:50:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57436 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:50:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730162AbfC3Auw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:50:52 -0400
+        id S1730411AbfC3Auv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:50:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDD5B218D0;
-        Sat, 30 Mar 2019 00:50:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFD71218CD;
+        Sat, 30 Mar 2019 00:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907051;
-        bh=hEWvx/5Bx2Iu4Hjl4xWwrJJPetoCuNRgamHIZ47OHAk=;
+        s=default; t=1553907050;
+        bh=6PYDiqOyMBKGjsOYaBQ/3YxVMPUov6leeuFtK5wVyVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A01Y9Jdl3S3sPhjZOsJH71WxLC035EEtkqaJn7BHatZGpAJe1hkpFnJlhzvD1SvSw
-         X5WQ7FJfakbfcL48g44sLdN6LHojtqUvE+pKREPkKsNxO8sywBB2LxJREfCqEQ7bdZ
-         /Yfg/u0Y+h4Dyo1yD/zCLn4x1Swumlxuh8p6qAiE=
+        b=ZW7yRpSb72BVRhmkVnXT8zYxQC24dDUgO3D9jHXc6468awXpHMHuRMZlFl99Qkq41
+         T9zdjmO4f7q02RI+nYqi+gHHOC1eQPektl80TfS9TWw+9NstPKifVhsYiw4d5RIoDf
+         x6V23VUOoPze3I2l4ehO4PDYjOsWqeVY0rLwwBBU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     ZhangXiaoxu <zhangxiaoxu5@huawei.com>, Jan Kara <jack@suse.cz>,
+Cc:     Corentin Labbe <clabbe@baylibre.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 03/67] inotify: Fix fsnotify_mark refcount leak in inotify_update_existing_watch()
-Date:   Fri, 29 Mar 2019 20:49:43 -0400
-Message-Id: <20190330005047.25998-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 02/67] arc: hsdk_defconfig: Enable CONFIG_BLK_DEV_RAM
+Date:   Fri, 29 Mar 2019 20:49:42 -0400
+Message-Id: <20190330005047.25998-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005047.25998-1-sashal@kernel.org>
 References: <20190330005047.25998-1-sashal@kernel.org>
@@ -58,47 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Corentin Labbe <clabbe@baylibre.com>
 
-[ Upstream commit 62c9d2674b31d4c8a674bee86b7edc6da2803aea ]
+[ Upstream commit 0728aeb7ead99a9b0dac2f3c92b3752b4e02ff97 ]
 
-Commit 4d97f7d53da7dc83 ("inotify: Add flag IN_MASK_CREATE for
-inotify_add_watch()") forgot to call fsnotify_put_mark() with
-IN_MASK_CREATE after fsnotify_find_mark()
+We have now a HSDK device in our kernelci lab, but kernel builded via
+the hsdk_defconfig lacks ramfs supports, so it cannot boot kernelci jobs
+yet.
 
-Fixes: 4d97f7d53da7dc83 ("inotify: Add flag IN_MASK_CREATE for inotify_add_watch()")
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+So this patch enable CONFIG_BLK_DEV_RAM in hsdk_defconfig.
+
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/notify/inotify/inotify_user.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arc/configs/hsdk_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/notify/inotify/inotify_user.c b/fs/notify/inotify/inotify_user.c
-index 798f1253141a..3b7b8e95c98a 100644
---- a/fs/notify/inotify/inotify_user.c
-+++ b/fs/notify/inotify/inotify_user.c
-@@ -519,8 +519,10 @@ static int inotify_update_existing_watch(struct fsnotify_group *group,
- 	fsn_mark = fsnotify_find_mark(&inode->i_fsnotify_marks, group);
- 	if (!fsn_mark)
- 		return -ENOENT;
--	else if (create)
--		return -EEXIST;
-+	else if (create) {
-+		ret = -EEXIST;
-+		goto out;
-+	}
- 
- 	i_mark = container_of(fsn_mark, struct inotify_inode_mark, fsn_mark);
- 
-@@ -548,6 +550,7 @@ static int inotify_update_existing_watch(struct fsnotify_group *group,
- 	/* return the wd */
- 	ret = i_mark->wd;
- 
-+out:
- 	/* match the get from fsnotify_find_mark() */
- 	fsnotify_put_mark(fsn_mark);
- 
+diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+index 87b23b7fb781..aefcf7a4e17a 100644
+--- a/arch/arc/configs/hsdk_defconfig
++++ b/arch/arc/configs/hsdk_defconfig
+@@ -8,6 +8,7 @@ CONFIG_NAMESPACES=y
+ # CONFIG_UTS_NS is not set
+ # CONFIG_PID_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++CONFIG_BLK_DEV_RAM=y
+ CONFIG_EMBEDDED=y
+ CONFIG_PERF_EVENTS=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
 -- 
 2.19.1
 
