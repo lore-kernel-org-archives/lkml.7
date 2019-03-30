@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACEDC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E83C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B212206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1937F2184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907607;
-	bh=fFQtP9435ikGB02gwAVe0l5/Rk1qlQe3kIjJetswgyA=;
+	s=default; t=1553907609;
+	bh=yztPiWvUA7CL8JpVq1R9n/8I+LTZMWNWDSpcYss84pk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VdTGrpwMqNl69UdrAgeglZOlMblbbWGgg7lnd6BHHOHuFlLLZ96OuZqjLZq3tgz0y
-	 YC0GAOoSdPS8wH4/pP9lUzSw3WD6NZi5XflCAVUISj1zqPC9U2JEUzz5/Jesd5Pyhb
-	 O2djnb22M1hg/jaO9+2lPnkJBEjvfYamHcjDGZ1g=
+	b=TVfGTOY8/nsio6TkK8jHe0dcXGbWqlYNTgQKJSpeMBPoXZm5IrnvviESO/RPzE1AF
+	 Y2JXHWGHoNSQQUWf2AwBBTVhyYLw159HcsXQ3oGyLcOroLN0bZWUrlWJOJsUxbhoWN
+	 1sbt8d9Whaqc7OEs1E1T7qoVd0OMTln4A04XQfs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732016AbfC3A4y (ORCPT
+        id S1732059AbfC3BAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:56:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36536 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:00:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731986AbfC3A4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:56:45 -0400
+        id S1732015AbfC3A4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:56:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D59B2218D3;
-        Sat, 30 Mar 2019 00:56:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E910218AC;
+        Sat, 30 Mar 2019 00:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907404;
-        bh=fFQtP9435ikGB02gwAVe0l5/Rk1qlQe3kIjJetswgyA=;
+        s=default; t=1553907414;
+        bh=yztPiWvUA7CL8JpVq1R9n/8I+LTZMWNWDSpcYss84pk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ldet82ulFFYQRGab8kYEPOTR8g7D4OvTCrK1NakjNLXQHbIRQUK//OWUhAYR9MjF0
-         yjKbMEAj60vFRFHNjrWw/na795Gh+nho1BX6FaRSSSUsZcWdX4E5CPHx1JaS2geoUe
-         He3LY1PCdt9AT7cbjh2dttQp09QKGBNKmO/xZHNI=
+        b=dK3ZHpuUpCUPzXVa43+LBgWhYmBfFNRsd6NsubzDBcsTmzKyzQnquIQTTgGwfQmyd
+         kpXOJVnGQm58/F04Z8Sjan8leXqSH/8v/ZeqRe/9D/F2rU43hGF13VcAKGRHWIjvVE
+         xgFJ2vIR9ueZGLrnXynxeEAOp3GSFLpKeB7Mbkn0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        mark gross <mgross@intel.com>, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.9 24/27] iommu/vt-d: Check capability before disabling protected memory
-Date:   Fri, 29 Mar 2019 20:55:50 -0400
-Message-Id: <20190330005555.28087-24-sashal@kernel.org>
+Cc:     Lukas Czerner <lczerner@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 03/21] ext4: report real fs size after failed resize
+Date:   Fri, 29 Mar 2019 20:56:31 -0400
+Message-Id: <20190330005649.28475-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190330005555.28087-1-sashal@kernel.org>
-References: <20190330005555.28087-1-sashal@kernel.org>
+In-Reply-To: <20190330005649.28475-1-sashal@kernel.org>
+References: <20190330005649.28475-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,40 +57,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Lukas Czerner <lczerner@redhat.com>
 
-[ Upstream commit 5bb71fc790a88d063507dc5d445ab8b14e845591 ]
+[ Upstream commit 6c7328400e0488f7d49e19e02290ba343b6811b2 ]
 
-The spec states in 10.4.16 that the Protected Memory Enable
-Register should be treated as read-only for implementations
-not supporting protected memory regions (PLMR and PHMR fields
-reported as Clear in the Capability register).
+Currently when the file system resize using ext4_resize_fs() fails it
+will report into log that "resized filesystem to <requested block
+count>".  However this may not be true in the case of failure.  Use the
+current block count as returned by ext4_blocks_count() to report the
+block count.
 
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: mark gross <mgross@intel.com>
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
-Fixes: f8bab73515ca5 ("intel-iommu: PMEN support")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Additionally, report a warning that "error occurred during file system
+resize"
+
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/ext4/resize.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 86e349614e21..28feb1744710 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1636,6 +1636,9 @@ static void iommu_disable_protect_mem_regions(struct intel_iommu *iommu)
- 	u32 pmen;
- 	unsigned long flags;
- 
-+	if (!cap_plmr(iommu->cap) && !cap_phmr(iommu->cap))
-+		return;
-+
- 	raw_spin_lock_irqsave(&iommu->register_lock, flags);
- 	pmen = readl(iommu->reg + DMAR_PMEN_REG);
- 	pmen &= ~DMA_PMEN_EPM;
+diff --git a/fs/ext4/resize.c b/fs/ext4/resize.c
+index 22c90eb9a4e0..5223eb25bf59 100644
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -2047,6 +2047,10 @@ int ext4_resize_fs(struct super_block *sb, ext4_fsblk_t n_blocks_count)
+ 		free_flex_gd(flex_gd);
+ 	if (resize_inode != NULL)
+ 		iput(resize_inode);
+-	ext4_msg(sb, KERN_INFO, "resized filesystem to %llu", n_blocks_count);
++	if (err)
++		ext4_warning(sb, "error (%d) occurred during "
++			     "file system resize", err);
++	ext4_msg(sb, KERN_INFO, "resized filesystem to %llu",
++		 ext4_blocks_count(es));
+ 	return err;
+ }
 -- 
 2.19.1
 
