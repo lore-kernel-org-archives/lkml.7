@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CDEC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F03DC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527012064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65AFC2064A
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907801;
-	bh=7kzd2CTa3Sj3YVRfYPoYgBS9aWNS30lTiWaKD4/fns0=;
+	s=default; t=1553907805;
+	bh=jbU7B9RObD4qnBKtElk5zwC2SZk45ljcBFm5oSLcyG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=De/fZutY1Y0WzM+7BZ1B+cRmERc8CaR4DbcSU0W1OBALwI68E7pkG/RdAA5YpDIAh
-	 Lxb2bqFfpGn7ROLsWczBNeW0UNSso0VKsTEcs3qNRGa/AQ9kGWySKlCU7HU9QfzpIm
-	 3ZLPW3N6xZ0KifigzsqO4zXkhG/KlJf1rmMRzHio=
+	b=Fx2UV7SFp9Nxaa7xWIqGDk8KNONakhNSvWsuNi4eirnRz3S8bm7IpDEJ0uliRPLdZ
+	 DifxNNsE6f8Tbcde4g9wSL+2Gwf2EMcvaygH3gFrSYm7/xM4y1sWC0kQOPHAqP3F00
+	 xH3CSfuKM0bq1sU4Mus2MQxF3pM+zSyApHkCJDvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731707AbfC3AzO (ORCPT
+        id S1731863AbfC3BDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:55:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34250 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731674AbfC3AzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:55:06 -0400
+        id S1731704AbfC3AzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:55:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CB5B218D3;
-        Sat, 30 Mar 2019 00:55:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA4B5218AC;
+        Sat, 30 Mar 2019 00:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907305;
-        bh=7kzd2CTa3Sj3YVRfYPoYgBS9aWNS30lTiWaKD4/fns0=;
+        s=default; t=1553907313;
+        bh=jbU7B9RObD4qnBKtElk5zwC2SZk45ljcBFm5oSLcyG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FiDMiijWPnjYAIeX2D8NQ4jUFUWhmUXlmWwPHtV2THRr134fPcwS7BFXsb38XdVJH
-         pRry7iqbE6CD3bPv2ge5s/USeir1jlS+MisoQKotfNbUM//gODwCTxPofwA/Lhpvk4
-         jaLk5nh0i87zfP2ARx0X6gPQXjEHX5G88lKXeMCc=
+        b=ITZ5lPcFRbO8CdpLUXwuBlu0FJ+1d3j+KKR6dVkM8VKHcNzI4ROP0H3xPMy7EUaPP
+         jKZbH/Nzuk3B3loZBtS2ahGNwaY16kSPNQvX8HcQPi6ukXAU4TDOtljUDten5IZMBr
+         A0hfuxLMBmvoUr76gCnfJdU5nFJV4V3qM47b7NLU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Nisha Aram <nisha.aram@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>,
+Cc:     David Arcari <darcari@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 14/37] thermal/int340x_thermal: Add additional UUIDs
-Date:   Fri, 29 Mar 2019 20:54:15 -0400
-Message-Id: <20190330005441.27540-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 19/37] tools/power turbostat: return the exit status of a command
+Date:   Fri, 29 Mar 2019 20:54:20 -0400
+Message-Id: <20190330005441.27540-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330005441.27540-1-sashal@kernel.org>
 References: <20190330005441.27540-1-sashal@kernel.org>
@@ -61,52 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <matthewgarrett@google.com>
+From: David Arcari <darcari@redhat.com>
 
-[ Upstream commit 16fc8eca1975358111dbd7ce65e4ce42d1a848fb ]
+[ Upstream commit 2a95496634a017c19641f26f00907af75b962f01 ]
 
-Add more supported DPTF policies than the driver currently exposes.
+turbostat failed to return a non-zero exit status even though the
+supplied command (turbostat <command>) failed.  Currently when turbostat
+forks a command it returns zero instead of the actual exit status of the
+command.  Modify the code to return the exit status.
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Nisha Aram <nisha.aram@intel.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: David Arcari <darcari@redhat.com>
+Acked-by: Len Brown <len.brown@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/int340x_thermal/int3400_thermal.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ tools/power/x86/turbostat/turbostat.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
-index 43b90fd577e4..34dc4d6dda66 100644
---- a/drivers/thermal/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
-@@ -22,6 +22,13 @@ enum int3400_thermal_uuid {
- 	INT3400_THERMAL_PASSIVE_1,
- 	INT3400_THERMAL_ACTIVE,
- 	INT3400_THERMAL_CRITICAL,
-+	INT3400_THERMAL_ADAPTIVE_PERFORMANCE,
-+	INT3400_THERMAL_EMERGENCY_CALL_MODE,
-+	INT3400_THERMAL_PASSIVE_2,
-+	INT3400_THERMAL_POWER_BOSS,
-+	INT3400_THERMAL_VIRTUAL_SENSOR,
-+	INT3400_THERMAL_COOLING_MODE,
-+	INT3400_THERMAL_HARDWARE_DUTY_CYCLING,
- 	INT3400_THERMAL_MAXIMUM_UUID,
- };
- 
-@@ -29,6 +36,13 @@ static char *int3400_thermal_uuids[INT3400_THERMAL_MAXIMUM_UUID] = {
- 	"42A441D6-AE6A-462b-A84B-4A8CE79027D3",
- 	"3A95C389-E4B8-4629-A526-C52C88626BAE",
- 	"97C68AE7-15FA-499c-B8C9-5DA81D606E0A",
-+	"63BE270F-1C11-48FD-A6F7-3AF253FF3E2D",
-+	"5349962F-71E6-431D-9AE8-0A635B710AEE",
-+	"9E04115A-AE87-4D1C-9500-0F3E340BFE75",
-+	"F5A35014-C209-46A4-993A-EB56DE7530A1",
-+	"6ED722A7-9240-48A5-B479-31EEF723D7CF",
-+	"16CAF1B7-DD38-40ED-B1C1-1B8A1913D531",
-+	"BE84BABF-C4D4-403D-B495-3128FD44dAC1",
- };
- 
- struct int3400_thermal_priv {
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 7a1b20ec5216..d1b2348db0f9 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -4588,6 +4588,9 @@ int fork_it(char **argv)
+ 		signal(SIGQUIT, SIG_IGN);
+ 		if (waitpid(child_pid, &status, 0) == -1)
+ 			err(status, "waitpid");
++
++		if (WIFEXITED(status))
++			status = WEXITSTATUS(status);
+ 	}
+ 	/*
+ 	 * n.b. fork_it() does not check for errors from for_all_cpus()
 -- 
 2.19.1
 
