@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA24C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703E7C4360F
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2682217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA3A217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909952;
-	bh=/whm1QkDMsWRIvlgpYbYFQkdHbzOPGlq8lTze7MXfkA=;
+	s=default; t=1553909961;
+	bh=02ZL2Kyi+KabP+XFQTKVaops8woaxQyouiGWb92C7W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ifo0UNdUI/VUuL5c1EHkrVqDpKTPMz1rTpHzx8x8F04df6ooIgDlrtYDGOtZZpr+D
-	 vPHEbEtkpDx8OnBo7KE5ZGyC5fbyKx7zGHtzyOixRKyFzQPc3ZpF1bbTfeXZZje8W6
-	 c9vc8QlSG9suQK3FLh12RAk2FXRmcU8waD2bLeC8=
+	b=V6IB+0vMU3WbGlZgCrqUI36FVlL7y11mmVxILYYVXinJjisueaRQDXXVKD18t0E2n
+	 Lzgnxw155QwJx6RmZdxDLXq7gCzm1u3JyMHZ+pjE3RD8oAmTfAMFjV3xDw7h5YJa8u
+	 XcwgiWRrT85wLxl1MtS2l9vOKJpIGs+mdN7yIDhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730932AbfC3BjK (ORCPT
+        id S1731738AbfC3BjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:39:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37106 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:39:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730435AbfC3BaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:30:07 -0400
+        id S1730496AbfC3BaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:30:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB35E218A6;
-        Sat, 30 Mar 2019 01:30:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79F34217F5;
+        Sat, 30 Mar 2019 01:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909406;
-        bh=/whm1QkDMsWRIvlgpYbYFQkdHbzOPGlq8lTze7MXfkA=;
+        s=default; t=1553909404;
+        bh=02ZL2Kyi+KabP+XFQTKVaops8woaxQyouiGWb92C7W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tbL/JeIfvdiHGB4C7XrqCalAtzidKK4hnSQTKxjhRYYZ/G1AkUrZxAODDOVppUkSW
-         L9C4YJDgcimCXsp+ENm0bvoC8jjYpnpqCs2Jekce+EPDzsvVPIzl6vM+W2VnKzbRuU
-         1ApjPXAMPZpxNE0Ayk+YRyi1wprqeqdmbnfySU3E=
+        b=m76aYhcTQvqnJT7CwuH6EjDsk2E4v0IXYrMCp5/4E0jVPFLhqa81Xbl0XU1VjWU5l
+         6PukS6eBhO6QItuIhXcEV8GmtNE92JQjFeA9/v+llgRAsWFBY/uB4QOmToT4b+SdqM
+         OusqwmsE5b2636+OM+SU7Qh590S7jKzfh3c04II0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 34/57] xfrm: destroy xfrm_state synchronously on net exit path
-Date:   Fri, 29 Mar 2019 21:28:27 -0400
-Message-Id: <20190330012854.32212-34-sashal@kernel.org>
+Cc:     shamir rabinovitch <shamir.rabinovitch@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 32/57] net/rds: fix warn in rds_message_alloc_sgs
+Date:   Fri, 29 Mar 2019 21:28:25 -0400
+Message-Id: <20190330012854.32212-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
 References: <20190330012854.32212-1-sashal@kernel.org>
@@ -59,222 +60,387 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: shamir rabinovitch <shamir.rabinovitch@oracle.com>
 
-[ Upstream commit f75a2804da391571563c4b6b29e7797787332673 ]
+[ Upstream commit ea010070d0a7497253d5a6f919f6dd107450b31a ]
 
-xfrm_state_put() moves struct xfrm_state to the GC list
-and schedules the GC work to clean it up. On net exit call
-path, xfrm_state_flush() is called to clean up and
-xfrm_flush_gc() is called to wait for the GC work to complete
-before exit.
+redundant copy_from_user in rds_sendmsg system call expose rds
+to issue where rds_rdma_extra_size walk the rds iovec and and
+calculate the number pf pages (sgs) it need to add to the tail of
+rds message and later rds_cmsg_rdma_args copy the rds iovec again
+and re calculate the same number and get different result causing
+WARN_ON in rds_message_alloc_sgs.
 
-However, this doesn't work because one of the ->destructor(),
-ipcomp_destroy(), schedules the same GC work again inside
-the GC work. It is hard to wait for such a nested async
-callback. This is also why syzbot still reports the following
-warning:
+fix this by doing the copy_from_user only once per rds_sendmsg
+system call.
 
- WARNING: CPU: 1 PID: 33 at net/ipv6/xfrm6_tunnel.c:351 xfrm6_tunnel_net_exit+0x2cb/0x500 net/ipv6/xfrm6_tunnel.c:351
- ...
-  ops_exit_list.isra.0+0xb0/0x160 net/core/net_namespace.c:153
-  cleanup_net+0x51d/0xb10 net/core/net_namespace.c:551
-  process_one_work+0xd0c/0x1ce0 kernel/workqueue.c:2153
-  worker_thread+0x143/0x14a0 kernel/workqueue.c:2296
-  kthread+0x357/0x430 kernel/kthread.c:246
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+When issue occur the below dump is seen:
 
-In fact, it is perfectly fine to bypass GC and destroy xfrm_state
-synchronously on net exit call path, because it is in process context
-and doesn't need a work struct to do any blocking work.
+WARNING: CPU: 0 PID: 19789 at net/rds/message.c:316 rds_message_alloc_sgs+0x10c/0x160 net/rds/message.c:316
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 19789 Comm: syz-executor827 Not tainted 4.19.0-next-20181030+ #101
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x244/0x39d lib/dump_stack.c:113
+ panic+0x2ad/0x55c kernel/panic.c:188
+ __warn.cold.8+0x20/0x45 kernel/panic.c:540
+ report_bug+0x254/0x2d0 lib/bug.c:186
+ fixup_bug arch/x86/kernel/traps.c:178 [inline]
+ do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:271
+ do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:290
+ invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:969
+RIP: 0010:rds_message_alloc_sgs+0x10c/0x160 net/rds/message.c:316
+Code: c0 74 04 3c 03 7e 6c 44 01 ab 78 01 00 00 e8 2b 9e 35 fa 4c 89 e0 48 83 c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 14 9e 35 fa <0f> 0b 31 ff 44 89 ee e8 18 9f 35 fa 45 85 ed 75 1b e8 fe 9d 35 fa
+RSP: 0018:ffff8801c51b7460 EFLAGS: 00010293
+RAX: ffff8801bc412080 RBX: ffff8801d7bf4040 RCX: ffffffff8749c9e6
+RDX: 0000000000000000 RSI: ffffffff8749ca5c RDI: 0000000000000004
+RBP: ffff8801c51b7490 R08: ffff8801bc412080 R09: ffffed003b5c5b67
+R10: ffffed003b5c5b67 R11: ffff8801dae2db3b R12: 0000000000000000
+R13: 000000000007165c R14: 000000000007165c R15: 0000000000000005
+ rds_cmsg_rdma_args+0x82d/0x1510 net/rds/rdma.c:623
+ rds_cmsg_send net/rds/send.c:971 [inline]
+ rds_sendmsg+0x19a2/0x3180 net/rds/send.c:1273
+ sock_sendmsg_nosec net/socket.c:622 [inline]
+ sock_sendmsg+0xd5/0x120 net/socket.c:632
+ ___sys_sendmsg+0x7fd/0x930 net/socket.c:2117
+ __sys_sendmsg+0x11d/0x280 net/socket.c:2155
+ __do_sys_sendmsg net/socket.c:2164 [inline]
+ __se_sys_sendmsg net/socket.c:2162 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2162
+ do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x44a859
+Code: e8 dc e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 6b cb fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f1d4710ada8 EFLAGS: 00000297 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000006dcc28 RCX: 000000000044a859
+RDX: 0000000000000000 RSI: 0000000020001600 RDI: 0000000000000003
+RBP: 00000000006dcc20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000297 R12: 00000000006dcc2c
+R13: 646e732f7665642f R14: 00007f1d4710b9c0 R15: 00000000006dcd2c
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-This patch introduces xfrm_state_put_sync() which simply bypasses
-GC, and lets its callers to decide whether to use this synchronous
-version. On net exit path, xfrm_state_fini() and
-xfrm6_tunnel_net_exit() use it. And, as ipcomp_destroy() itself is
-blocking, it can use xfrm_state_put_sync() directly too.
-
-Also rename xfrm_state_gc_destroy() to ___xfrm_state_destroy() to
-reflect this change.
-
-Fixes: b48c05ab5d32 ("xfrm: Fix warning in xfrm6_tunnel_net_exit.")
-Reported-and-tested-by: syzbot+e9aebef558e3ed673934@syzkaller.appspotmail.com
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Reported-by: syzbot+26de17458aeda9d305d8@syzkaller.appspotmail.com
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: shamir rabinovitch <shamir.rabinovitch@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/xfrm.h      | 12 +++++++++---
- net/ipv6/xfrm6_tunnel.c |  2 +-
- net/key/af_key.c        |  2 +-
- net/xfrm/xfrm_state.c   | 30 +++++++++++++++++++-----------
- net/xfrm/xfrm_user.c    |  2 +-
- 5 files changed, 31 insertions(+), 17 deletions(-)
+ net/rds/rdma.c | 63 +++++++++++++++++++++++++-------------------------
+ net/rds/rds.h  | 20 ++++++++++++----
+ net/rds/send.c | 50 +++++++++++++++++++++++++++++++++------
+ 3 files changed, 91 insertions(+), 42 deletions(-)
 
-diff --git a/include/net/xfrm.h b/include/net/xfrm.h
-index da588def3c61..5e3daf53b3d1 100644
---- a/include/net/xfrm.h
-+++ b/include/net/xfrm.h
-@@ -850,7 +850,7 @@ static inline void xfrm_pols_put(struct xfrm_policy **pols, int npols)
- 		xfrm_pol_put(pols[i]);
+diff --git a/net/rds/rdma.c b/net/rds/rdma.c
+index 98237feb607a..e1965d9cbcf8 100644
+--- a/net/rds/rdma.c
++++ b/net/rds/rdma.c
+@@ -517,9 +517,10 @@ static int rds_rdma_pages(struct rds_iovec iov[], int nr_iovecs)
+ 	return tot_pages;
  }
  
--void __xfrm_state_destroy(struct xfrm_state *);
-+void __xfrm_state_destroy(struct xfrm_state *, bool);
- 
- static inline void __xfrm_state_put(struct xfrm_state *x)
+-int rds_rdma_extra_size(struct rds_rdma_args *args)
++int rds_rdma_extra_size(struct rds_rdma_args *args,
++			struct rds_iov_vector *iov)
  {
-@@ -860,7 +860,13 @@ static inline void __xfrm_state_put(struct xfrm_state *x)
- static inline void xfrm_state_put(struct xfrm_state *x)
- {
- 	if (refcount_dec_and_test(&x->refcnt))
--		__xfrm_state_destroy(x);
-+		__xfrm_state_destroy(x, false);
-+}
-+
-+static inline void xfrm_state_put_sync(struct xfrm_state *x)
-+{
-+	if (refcount_dec_and_test(&x->refcnt))
-+		__xfrm_state_destroy(x, true);
- }
- 
- static inline void xfrm_state_hold(struct xfrm_state *x)
-@@ -1616,7 +1622,7 @@ struct xfrmk_spdinfo {
- 
- struct xfrm_state *xfrm_find_acq_byseq(struct net *net, u32 mark, u32 seq);
- int xfrm_state_delete(struct xfrm_state *x);
--int xfrm_state_flush(struct net *net, u8 proto, bool task_valid);
-+int xfrm_state_flush(struct net *net, u8 proto, bool task_valid, bool sync);
- int xfrm_dev_state_flush(struct net *net, struct net_device *dev, bool task_valid);
- void xfrm_sad_getinfo(struct net *net, struct xfrmk_sadinfo *si);
- void xfrm_spd_getinfo(struct net *net, struct xfrmk_spdinfo *si);
-diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
-index f5b4febeaa25..bc65db782bfb 100644
---- a/net/ipv6/xfrm6_tunnel.c
-+++ b/net/ipv6/xfrm6_tunnel.c
-@@ -344,8 +344,8 @@ static void __net_exit xfrm6_tunnel_net_exit(struct net *net)
- 	struct xfrm6_tunnel_net *xfrm6_tn = xfrm6_tunnel_pernet(net);
- 	unsigned int i;
- 
--	xfrm_state_flush(net, IPSEC_PROTO_ANY, false);
- 	xfrm_flush_gc();
-+	xfrm_state_flush(net, IPSEC_PROTO_ANY, false, true);
- 
- 	for (i = 0; i < XFRM6_TUNNEL_SPI_BYADDR_HSIZE; i++)
- 		WARN_ON_ONCE(!hlist_empty(&xfrm6_tn->spi_byaddr[i]));
-diff --git a/net/key/af_key.c b/net/key/af_key.c
-index 7da629d59717..7d4bed955060 100644
---- a/net/key/af_key.c
-+++ b/net/key/af_key.c
-@@ -1773,7 +1773,7 @@ static int pfkey_flush(struct sock *sk, struct sk_buff *skb, const struct sadb_m
- 	if (proto == 0)
+-	struct rds_iovec vec;
++	struct rds_iovec *vec;
+ 	struct rds_iovec __user *local_vec;
+ 	int tot_pages = 0;
+ 	unsigned int nr_pages;
+@@ -530,13 +531,23 @@ int rds_rdma_extra_size(struct rds_rdma_args *args)
+ 	if (args->nr_local == 0)
  		return -EINVAL;
  
--	err = xfrm_state_flush(net, proto, true);
-+	err = xfrm_state_flush(net, proto, true, false);
- 	err2 = unicast_flush_resp(sk, hdr);
- 	if (err || err2) {
- 		if (err == -ESRCH) /* empty table - go quietly */
-diff --git a/net/xfrm/xfrm_state.c b/net/xfrm/xfrm_state.c
-index cc0203efb584..3f729cd512af 100644
---- a/net/xfrm/xfrm_state.c
-+++ b/net/xfrm/xfrm_state.c
-@@ -432,7 +432,7 @@ void xfrm_state_free(struct xfrm_state *x)
- }
- EXPORT_SYMBOL(xfrm_state_free);
++	iov->iov = kcalloc(args->nr_local,
++			   sizeof(struct rds_iovec),
++			   GFP_KERNEL);
++	if (!iov->iov)
++		return -ENOMEM;
++
++	vec = &iov->iov[0];
++
++	if (copy_from_user(vec, local_vec, args->nr_local *
++			   sizeof(struct rds_iovec)))
++		return -EFAULT;
++	iov->len = args->nr_local;
++
+ 	/* figure out the number of pages in the vector */
+-	for (i = 0; i < args->nr_local; i++) {
+-		if (copy_from_user(&vec, &local_vec[i],
+-				   sizeof(struct rds_iovec)))
+-			return -EFAULT;
++	for (i = 0; i < args->nr_local; i++, vec++) {
  
--static void xfrm_state_gc_destroy(struct xfrm_state *x)
-+static void ___xfrm_state_destroy(struct xfrm_state *x)
+-		nr_pages = rds_pages_in_vec(&vec);
++		nr_pages = rds_pages_in_vec(vec);
+ 		if (nr_pages == 0)
+ 			return -EINVAL;
+ 
+@@ -558,15 +569,15 @@ int rds_rdma_extra_size(struct rds_rdma_args *args)
+  * Extract all arguments and set up the rdma_op
+  */
+ int rds_cmsg_rdma_args(struct rds_sock *rs, struct rds_message *rm,
+-			  struct cmsghdr *cmsg)
++		       struct cmsghdr *cmsg,
++		       struct rds_iov_vector *vec)
  {
- 	tasklet_hrtimer_cancel(&x->mtimer);
- 	del_timer_sync(&x->rtimer);
-@@ -474,7 +474,7 @@ static void xfrm_state_gc_task(struct work_struct *work)
- 	synchronize_rcu();
+ 	struct rds_rdma_args *args;
+ 	struct rm_rdma_op *op = &rm->rdma;
+ 	int nr_pages;
+ 	unsigned int nr_bytes;
+ 	struct page **pages = NULL;
+-	struct rds_iovec iovstack[UIO_FASTIOV], *iovs = iovstack;
+-	int iov_size;
++	struct rds_iovec *iovs;
+ 	unsigned int i, j;
+ 	int ret = 0;
  
- 	hlist_for_each_entry_safe(x, tmp, &gc_list, gclist)
--		xfrm_state_gc_destroy(x);
-+		___xfrm_state_destroy(x);
- }
- 
- static enum hrtimer_restart xfrm_timer_handler(struct hrtimer *me)
-@@ -598,14 +598,19 @@ struct xfrm_state *xfrm_state_alloc(struct net *net)
- }
- EXPORT_SYMBOL(xfrm_state_alloc);
- 
--void __xfrm_state_destroy(struct xfrm_state *x)
-+void __xfrm_state_destroy(struct xfrm_state *x, bool sync)
- {
- 	WARN_ON(x->km.state != XFRM_STATE_DEAD);
- 
--	spin_lock_bh(&xfrm_state_gc_lock);
--	hlist_add_head(&x->gclist, &xfrm_state_gc_list);
--	spin_unlock_bh(&xfrm_state_gc_lock);
--	schedule_work(&xfrm_state_gc_work);
-+	if (sync) {
-+		synchronize_rcu();
-+		___xfrm_state_destroy(x);
-+	} else {
-+		spin_lock_bh(&xfrm_state_gc_lock);
-+		hlist_add_head(&x->gclist, &xfrm_state_gc_list);
-+		spin_unlock_bh(&xfrm_state_gc_lock);
-+		schedule_work(&xfrm_state_gc_work);
-+	}
- }
- EXPORT_SYMBOL(__xfrm_state_destroy);
- 
-@@ -708,7 +713,7 @@ xfrm_dev_state_flush_secctx_check(struct net *net, struct net_device *dev, bool
- }
- #endif
- 
--int xfrm_state_flush(struct net *net, u8 proto, bool task_valid)
-+int xfrm_state_flush(struct net *net, u8 proto, bool task_valid, bool sync)
- {
- 	int i, err = 0, cnt = 0;
- 
-@@ -730,7 +735,10 @@ int xfrm_state_flush(struct net *net, u8 proto, bool task_valid)
- 				err = xfrm_state_delete(x);
- 				xfrm_audit_state_delete(x, err ? 0 : 1,
- 							task_valid);
--				xfrm_state_put(x);
-+				if (sync)
-+					xfrm_state_put_sync(x);
-+				else
-+					xfrm_state_put(x);
- 				if (!err)
- 					cnt++;
- 
-@@ -2217,7 +2225,7 @@ void xfrm_state_delete_tunnel(struct xfrm_state *x)
- 		if (atomic_read(&t->tunnel_users) == 2)
- 			xfrm_state_delete(t);
- 		atomic_dec(&t->tunnel_users);
--		xfrm_state_put(t);
-+		xfrm_state_put_sync(t);
- 		x->tunnel = NULL;
+@@ -586,31 +597,23 @@ int rds_cmsg_rdma_args(struct rds_sock *rs, struct rds_message *rm,
+ 		goto out_ret;
  	}
+ 
+-	/* Check whether to allocate the iovec area */
+-	iov_size = args->nr_local * sizeof(struct rds_iovec);
+-	if (args->nr_local > UIO_FASTIOV) {
+-		iovs = sock_kmalloc(rds_rs_to_sk(rs), iov_size, GFP_KERNEL);
+-		if (!iovs) {
+-			ret = -ENOMEM;
+-			goto out_ret;
+-		}
++	if (vec->len != args->nr_local) {
++		ret = -EINVAL;
++		goto out_ret;
+ 	}
+ 
+-	if (copy_from_user(iovs, (struct rds_iovec __user *)(unsigned long) args->local_vec_addr, iov_size)) {
+-		ret = -EFAULT;
+-		goto out;
+-	}
++	iovs = vec->iov;
+ 
+ 	nr_pages = rds_rdma_pages(iovs, args->nr_local);
+ 	if (nr_pages < 0) {
+ 		ret = -EINVAL;
+-		goto out;
++		goto out_ret;
+ 	}
+ 
+ 	pages = kcalloc(nr_pages, sizeof(struct page *), GFP_KERNEL);
+ 	if (!pages) {
+ 		ret = -ENOMEM;
+-		goto out;
++		goto out_ret;
+ 	}
+ 
+ 	op->op_write = !!(args->flags & RDS_RDMA_READWRITE);
+@@ -623,7 +626,7 @@ int rds_cmsg_rdma_args(struct rds_sock *rs, struct rds_message *rm,
+ 	op->op_sg = rds_message_alloc_sgs(rm, nr_pages);
+ 	if (!op->op_sg) {
+ 		ret = -ENOMEM;
+-		goto out;
++		goto out_pages;
+ 	}
+ 
+ 	if (op->op_notify || op->op_recverr) {
+@@ -635,7 +638,7 @@ int rds_cmsg_rdma_args(struct rds_sock *rs, struct rds_message *rm,
+ 		op->op_notifier = kmalloc(sizeof(struct rds_notifier), GFP_KERNEL);
+ 		if (!op->op_notifier) {
+ 			ret = -ENOMEM;
+-			goto out;
++			goto out_pages;
+ 		}
+ 		op->op_notifier->n_user_token = args->user_token;
+ 		op->op_notifier->n_status = RDS_RDMA_SUCCESS;
+@@ -681,7 +684,7 @@ int rds_cmsg_rdma_args(struct rds_sock *rs, struct rds_message *rm,
+ 		 */
+ 		ret = rds_pin_pages(iov->addr, nr, pages, !op->op_write);
+ 		if (ret < 0)
+-			goto out;
++			goto out_pages;
+ 		else
+ 			ret = 0;
+ 
+@@ -714,13 +717,11 @@ int rds_cmsg_rdma_args(struct rds_sock *rs, struct rds_message *rm,
+ 				nr_bytes,
+ 				(unsigned int) args->remote_vec.bytes);
+ 		ret = -EINVAL;
+-		goto out;
++		goto out_pages;
+ 	}
+ 	op->op_bytes = nr_bytes;
+ 
+-out:
+-	if (iovs != iovstack)
+-		sock_kfree_s(rds_rs_to_sk(rs), iovs, iov_size);
++out_pages:
+ 	kfree(pages);
+ out_ret:
+ 	if (ret)
+diff --git a/net/rds/rds.h b/net/rds/rds.h
+index c4dcf654d8fe..4234ab81b5af 100644
+--- a/net/rds/rds.h
++++ b/net/rds/rds.h
+@@ -386,6 +386,18 @@ static inline void rds_message_zcopy_queue_init(struct rds_msg_zcopy_queue *q)
+ 	INIT_LIST_HEAD(&q->zcookie_head);
  }
-@@ -2377,8 +2385,8 @@ void xfrm_state_fini(struct net *net)
- 	unsigned int sz;
  
- 	flush_work(&net->xfrm.state_hash_work);
--	xfrm_state_flush(net, IPSEC_PROTO_ANY, false);
- 	flush_work(&xfrm_state_gc_work);
-+	xfrm_state_flush(net, IPSEC_PROTO_ANY, false, true);
++struct rds_iov_vector {
++	struct rds_iovec *iov;
++	int               len;
++};
++
++struct rds_iov_vector_arr {
++	struct rds_iov_vector *vec;
++	int                    len;
++	int                    indx;
++	int                    incr;
++};
++
+ struct rds_message {
+ 	refcount_t		m_refcount;
+ 	struct list_head	m_sock_item;
+@@ -904,13 +916,13 @@ int rds_get_mr(struct rds_sock *rs, char __user *optval, int optlen);
+ int rds_get_mr_for_dest(struct rds_sock *rs, char __user *optval, int optlen);
+ int rds_free_mr(struct rds_sock *rs, char __user *optval, int optlen);
+ void rds_rdma_drop_keys(struct rds_sock *rs);
+-int rds_rdma_extra_size(struct rds_rdma_args *args);
+-int rds_cmsg_rdma_args(struct rds_sock *rs, struct rds_message *rm,
+-			  struct cmsghdr *cmsg);
++int rds_rdma_extra_size(struct rds_rdma_args *args,
++			struct rds_iov_vector *iov);
+ int rds_cmsg_rdma_dest(struct rds_sock *rs, struct rds_message *rm,
+ 			  struct cmsghdr *cmsg);
+ int rds_cmsg_rdma_args(struct rds_sock *rs, struct rds_message *rm,
+-			  struct cmsghdr *cmsg);
++			  struct cmsghdr *cmsg,
++			  struct rds_iov_vector *vec);
+ int rds_cmsg_rdma_map(struct rds_sock *rs, struct rds_message *rm,
+ 			  struct cmsghdr *cmsg);
+ void rds_rdma_free_op(struct rm_rdma_op *ro);
+diff --git a/net/rds/send.c b/net/rds/send.c
+index fe785ee819dd..ec2267cbf85f 100644
+--- a/net/rds/send.c
++++ b/net/rds/send.c
+@@ -876,13 +876,15 @@ static int rds_send_queue_rm(struct rds_sock *rs, struct rds_connection *conn,
+  * rds_message is getting to be quite complicated, and we'd like to allocate
+  * it all in one go. This figures out how big it needs to be up front.
+  */
+-static int rds_rm_size(struct msghdr *msg, int num_sgs)
++static int rds_rm_size(struct msghdr *msg, int num_sgs,
++		       struct rds_iov_vector_arr *vct)
+ {
+ 	struct cmsghdr *cmsg;
+ 	int size = 0;
+ 	int cmsg_groups = 0;
+ 	int retval;
+ 	bool zcopy_cookie = false;
++	struct rds_iov_vector *iov, *tmp_iov;
  
- 	WARN_ON(!list_empty(&net->xfrm.state_all));
+ 	for_each_cmsghdr(cmsg, msg) {
+ 		if (!CMSG_OK(msg, cmsg))
+@@ -893,8 +895,24 @@ static int rds_rm_size(struct msghdr *msg, int num_sgs)
  
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index ab557827aac0..7e4904b93004 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -1932,7 +1932,7 @@ static int xfrm_flush_sa(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	struct xfrm_usersa_flush *p = nlmsg_data(nlh);
- 	int err;
+ 		switch (cmsg->cmsg_type) {
+ 		case RDS_CMSG_RDMA_ARGS:
++			if (vct->indx >= vct->len) {
++				vct->len += vct->incr;
++				tmp_iov =
++					krealloc(vct->vec,
++						 vct->len *
++						 sizeof(struct rds_iov_vector),
++						 GFP_KERNEL);
++				if (!tmp_iov) {
++					vct->len -= vct->incr;
++					return -ENOMEM;
++				}
++				vct->vec = tmp_iov;
++			}
++			iov = &vct->vec[vct->indx];
++			memset(iov, 0, sizeof(struct rds_iov_vector));
++			vct->indx++;
+ 			cmsg_groups |= 1;
+-			retval = rds_rdma_extra_size(CMSG_DATA(cmsg));
++			retval = rds_rdma_extra_size(CMSG_DATA(cmsg), iov);
+ 			if (retval < 0)
+ 				return retval;
+ 			size += retval;
+@@ -951,10 +969,11 @@ static int rds_cmsg_zcopy(struct rds_sock *rs, struct rds_message *rm,
+ }
  
--	err = xfrm_state_flush(net, p->proto, true);
-+	err = xfrm_state_flush(net, p->proto, true, false);
- 	if (err) {
- 		if (err == -ESRCH) /* empty table */
- 			return 0;
+ static int rds_cmsg_send(struct rds_sock *rs, struct rds_message *rm,
+-			 struct msghdr *msg, int *allocated_mr)
++			 struct msghdr *msg, int *allocated_mr,
++			 struct rds_iov_vector_arr *vct)
+ {
+ 	struct cmsghdr *cmsg;
+-	int ret = 0;
++	int ret = 0, ind = 0;
+ 
+ 	for_each_cmsghdr(cmsg, msg) {
+ 		if (!CMSG_OK(msg, cmsg))
+@@ -968,7 +987,10 @@ static int rds_cmsg_send(struct rds_sock *rs, struct rds_message *rm,
+ 		 */
+ 		switch (cmsg->cmsg_type) {
+ 		case RDS_CMSG_RDMA_ARGS:
+-			ret = rds_cmsg_rdma_args(rs, rm, cmsg);
++			if (ind >= vct->indx)
++				return -ENOMEM;
++			ret = rds_cmsg_rdma_args(rs, rm, cmsg, &vct->vec[ind]);
++			ind++;
+ 			break;
+ 
+ 		case RDS_CMSG_RDMA_DEST:
+@@ -1084,6 +1106,11 @@ int rds_sendmsg(struct socket *sock, struct msghdr *msg, size_t payload_len)
+ 		      sock_flag(rds_rs_to_sk(rs), SOCK_ZEROCOPY));
+ 	int num_sgs = ceil(payload_len, PAGE_SIZE);
+ 	int namelen;
++	struct rds_iov_vector_arr vct = {0};
++	int ind;
++
++	/* expect 1 RDMA CMSG per rds_sendmsg. can still grow if more needed. */
++	vct.incr = 1;
+ 
+ 	/* Mirror Linux UDP mirror of BSD error message compatibility */
+ 	/* XXX: Perhaps MSG_MORE someday */
+@@ -1220,7 +1247,7 @@ int rds_sendmsg(struct socket *sock, struct msghdr *msg, size_t payload_len)
+ 		num_sgs = iov_iter_npages(&msg->msg_iter, INT_MAX);
+ 	}
+ 	/* size of rm including all sgs */
+-	ret = rds_rm_size(msg, num_sgs);
++	ret = rds_rm_size(msg, num_sgs, &vct);
+ 	if (ret < 0)
+ 		goto out;
+ 
+@@ -1270,7 +1297,7 @@ int rds_sendmsg(struct socket *sock, struct msghdr *msg, size_t payload_len)
+ 	rm->m_conn_path = cpath;
+ 
+ 	/* Parse any control messages the user may have included. */
+-	ret = rds_cmsg_send(rs, rm, msg, &allocated_mr);
++	ret = rds_cmsg_send(rs, rm, msg, &allocated_mr, &vct);
+ 	if (ret) {
+ 		/* Trigger connection so that its ready for the next retry */
+ 		if (ret ==  -EAGAIN)
+@@ -1348,9 +1375,18 @@ int rds_sendmsg(struct socket *sock, struct msghdr *msg, size_t payload_len)
+ 	if (ret)
+ 		goto out;
+ 	rds_message_put(rm);
++
++	for (ind = 0; ind < vct.indx; ind++)
++		kfree(vct.vec[ind].iov);
++	kfree(vct.vec);
++
+ 	return payload_len;
+ 
+ out:
++	for (ind = 0; ind < vct.indx; ind++)
++		kfree(vct.vec[ind].iov);
++	kfree(vct.vec);
++
+ 	/* If the user included a RDMA_MAP cmsg, we allocated a MR on the fly.
+ 	 * If the sendmsg goes through, we keep the MR. If it fails with EAGAIN
+ 	 * or in any other way, we need to destroy the MR again */
 -- 
 2.19.1
 
