@@ -2,96 +2,75 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D51EC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48535C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 531D12184D
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553962329;
-	bh=Mbmh71Rr0u7jNuSwlT0PeR6clqao/MVNHnI2bVTa1yE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YFcId06U0IDFy2O5AFzK2KXMzHYx74emLvaUZ/Akdv97XjdVOHhBmwhPcfx6raRBn
-	 Lk06oJsFlus/QQk0F46yvU+W25jaHI8MQ0hZ/hZ+i+Xw26t2gs6ECeCUCfooXGbwNn
-	 Z1i+o3iDThwv+Kee67TX9m8m0xjXq0OoK4I/EtKk=
+	by mail.kernel.org (Postfix) with ESMTP id 0C10B2173C
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 16:13:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WFU+Y6P0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730982AbfC3QMI (ORCPT
+        id S1730966AbfC3QNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 12:12:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730796AbfC3QMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 12:12:07 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3D732173C;
-        Sat, 30 Mar 2019 16:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553962326;
-        bh=Mbmh71Rr0u7jNuSwlT0PeR6clqao/MVNHnI2bVTa1yE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xD+TMDPVUaEeZkk30qdhOCiRGg/XFdnGig/8EW8KCGVpvwpIa1cjtROSfAiGznNnt
-         hc16gSsYW+CPYU43+E8tbrb/74szQYrvAofrE/z8DI+cbQk8YEW2jlH4kD+5xl7GZO
-         tS74oQk004kgEGBQ/qHIkU4cnyWsrSaBPvUOE3u8=
-Date:   Sat, 30 Mar 2019 16:12:00 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Andreas Klinger <ak@it-klinger.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] devantech-srf04.yaml: transform DT binding to YAML
-Message-ID: <20190330161200.6d0dec48@archlinux>
-In-Reply-To: <CAL_JsqKV1Qy05oX9wm+Fz1HAkAEe4gE3whCNvafPfxsg6hgp8A@mail.gmail.com>
-References: <20190326133938.oitfjxlx2kou26lm@arbad>
-        <CAL_JsqKV1Qy05oX9wm+Fz1HAkAEe4gE3whCNvafPfxsg6hgp8A@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 30 Mar 2019 12:13:22 -0400
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:44307 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730796AbfC3QNW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 12:13:22 -0400
+Received: by mail-wr1-f51.google.com with SMTP id y7so6264092wrn.11;
+        Sat, 30 Mar 2019 09:13:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=D4t2OFTHRWIowRhfn68GI6Nt93T3e9VAQoVXgmwE3/U=;
+        b=WFU+Y6P0zx9CyCIlrvwcVJp4gnWFLfyzStNvkfaSZvkcP4VgoxWYHFTAGW+dxjJS/3
+         zR91Ys/TaroTXgl2vWXOEh77iasOTAQrD1imbvNTHNKJqBSadt3jaGpgQP1oDQoLHTPZ
+         vXFOsMziOptBWi8CIqbbCxKJJii8Gw3gxH8NSpaXcz4j251v9lqlFAbwg8T+MCLs87HB
+         aP/7gsC3iPQurJdkQ0aZxTIDwgvCDYRvaNzjhkQojpRjwEj401M9VEZ8cJYUqGmKA5mi
+         hyAZzVOJT+vlTosgigqnub6nIlVhId15/MSGAl0n535azqXlL3hiftRQ4ivsVPJeg3kj
+         0g8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=D4t2OFTHRWIowRhfn68GI6Nt93T3e9VAQoVXgmwE3/U=;
+        b=Xey4IZhvaH+3ghtCPU1GpOGDGdFwzo4H2gIy1Q0UgmPeXFHIY0jEmQKO+3sshIsCZ5
+         8M2R0uJwShb+G1RYwM9XJ/YlhIF0+Oj4NHTxxqmKvaeVBV1LX+lGCXJRIBaByIIEoEZj
+         CWj0+A+VRO30DhHeHZE7dBNUR46BUItFHhg6FEXt7OPXFG1SDAQ6re6ujM/lhcqOT6kG
+         lDMJtffUqbwY3daezzxRaXEqf1idGLz/CA4NqQS6yZPvS6TGQgAI9Z25C3kkAklvmw8l
+         pgspsXy9F5+C47tB8aGYHJ6YstC8YBHroR7sGc+K+QccckVgKVo8rW8Cg8ajooByrLOJ
+         RW8Q==
+X-Gm-Message-State: APjAAAUkBNf0Cc/N6tKupnL2B7CX4uuSFFcsbjKVk09HtAcpIqyR99qo
+        nLtplwM0cHIzUHrbCjSD0HLAsoXVmxjof7VAubNdV9ZUKVc=
+X-Google-Smtp-Source: APXvYqy99adDKfdO/5IFHKhCHhBjd8RNyrGISrVv3D2yzM78qkZ4zOnpwQB8Jh5vRqtCOQ2IF2HbLrKgh+i5u9AqpTo=
+X-Received: by 2002:adf:eb0c:: with SMTP id s12mr17158405wrn.229.1553962399948;
+ Sat, 30 Mar 2019 09:13:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From:   Evalds Iodzevics <evalds.iodzevics@gmail.com>
+Date:   Sat, 30 Mar 2019 18:13:16 +0200
+Message-ID: <CADqhmmcCA_UjV899cHn8SOTSp89BvjMgnd5TcijCWqp6KnhdJw@mail.gmail.com>
+Subject: missing patch
+To:     stable@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Mar 2019 08:13:17 -0500
-Rob Herring <robh+dt@kernel.org> wrote:
+Hi back in the December of 2016 there was commit
+"1c52d859cb2d417e7216d3e56bb7fea88444cec9"
 
-> On Tue, Mar 26, 2019 at 8:40 AM Andreas Klinger <ak@it-klinger.de> wrote:
-> >
-> > devantech-srf04.yaml: yaml devicetree binding for iio ultrasonic
-> > proximity driver of devantech srf04
-> >
-> > use devantech-srf04.txt, transform binding into yaml and remove the
-> > outdated DT documentation
-> >
-> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> > ---
-> >  .../bindings/iio/proximity/devantech-srf04.txt     | 28 ----------
-> >  .../bindings/iio/proximity/devantech-srf04.yaml    | 59 ++++++++++++++++++++++
-> >  2 files changed, 59 insertions(+), 28 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml  
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Given I've been feeling guilty for ages about never reviewing Rob's original work on
-this (it sat in my todo list for a large number of months before I dropped it because
-it had already merged), I'm very happy to see that it ends up being this simple!
-I guess we have a lot of these change over patches to go ;)
+witch was followed shortly by  "c198b121b1a1d7a7171770c634cd49191bac4477"
 
-Applied to the togreg branch of iio.git and pushed out as testing. Does anyone check
-these yet?
+Unfortunately only the first commit was later included in long-term kernel
+branches such as 4.4 and 4.9 witch left some of microcode functionality
+broken on 32 bit systems
 
-Thanks,
-
-Jonathan
-
+I guess it should be easily fixed by including
+"c198b121b1a1d7a7171770c634cd49191bac4477" in those branches
