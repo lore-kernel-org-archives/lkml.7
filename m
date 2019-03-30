@@ -2,80 +2,94 @@ Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A016C10F05
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB0AC10F05
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5504D2082F
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7005D218D3
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:28:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553909326;
+	bh=cRkDvbkGVjYnAxmFphy6GMC2+BOMm5V6n+aNWwX+i6M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cWkKbRYMOQ4wxjyaz9NOW0QkPEhzB4xTRsYRJKn8fw9e1hJ86CbGWdM7SlNJ28Klt
+	 iTZcAL/kILNn0QE3Nj1IZOWLjKZhI/Kqg0wXbFGVd5R5NxEOtLyz8tJZJqcIqrL0zB
+	 NssjcRWlsEwZ1R5jvRza6ijDfhL4Vt60+iGMDFMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbfC3BYc (ORCPT
+        id S1730455AbfC3B2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:24:32 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5208 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729919AbfC3BYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:24:31 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AC76CD99DFBBFFEDA9F3;
-        Sat, 30 Mar 2019 09:24:28 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.408.0; Sat, 30 Mar 2019 09:24:18 +0800
-From:   nixiaoming <nixiaoming@huawei.com>
-To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <nixiaoming@huawei.com>, <chao.xie@marvell.com>,
-        <mojha@codeaurora.org>
-CC:     <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] clk:mmp: clk-mix.c fix divide-by-zero
-Date:   Sat, 30 Mar 2019 09:27:14 +0800
-Message-ID: <1553909234-49311-1-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Fri, 29 Mar 2019 21:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730233AbfC3B2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:28:44 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DED0217F5;
+        Sat, 30 Mar 2019 01:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553909324;
+        bh=cRkDvbkGVjYnAxmFphy6GMC2+BOMm5V6n+aNWwX+i6M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EOT0fkZ9AFgFR7RvA9ZTqsHuQVosL9w11+bvGtPD4oVEg5gp5vLFSrm/rCiSylrzG
+         lOVb7PmWb9byv2eyzUPOyWHOsEjuyteL43sH1/hl6CY0bh93CxxgT9GfX3XQCM60Mm
+         WTSJRb/y0JWzqs0/jz4YqH8XKYO6g0Uvx1uv4L1s=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 01/25] ext4: prohibit fstrim in norecovery mode
+Date:   Fri, 29 Mar 2019 21:28:18 -0400
+Message-Id: <20190330012842.32091-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The _get_div function has a branch with a return value of 0
-Add a check on the return value of _get_div to avoid divide-by-zero
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-Signed-off-by: nixiaoming <nixiaoming@huawei.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+[ Upstream commit 18915b5873f07e5030e6fb108a050fa7c71c59fb ]
+
+The ext4 fstrim implementation uses the block bitmaps to find free space
+that can be discarded.  If we haven't replayed the journal, the bitmaps
+will be stale and we absolutely *cannot* use stale metadata to zap the
+underlying storage.
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mmp/clk-mix.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/ext4/ioctl.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/clk/mmp/clk-mix.c b/drivers/clk/mmp/clk-mix.c
-index 90814b2..6ed5ad7 100644
---- a/drivers/clk/mmp/clk-mix.c
-+++ b/drivers/clk/mmp/clk-mix.c
-@@ -245,6 +245,9 @@ static int mmp_clk_mix_determine_rate(struct clk_hw *hw,
- 			div_val_max = _get_maxdiv(mix);
- 			for (j = 0; j < div_val_max; j++) {
- 				div = _get_div(mix, j);
-+				/* avoid divide-by-zero */
-+				if (!div)
-+					continue;
- 				mix_rate = parent_rate / div;
- 				gap = abs(mix_rate - req->rate);
- 				if (!parent_best || gap < gap_best) {
-@@ -341,6 +344,9 @@ static unsigned long mmp_clk_mix_recalc_rate(struct clk_hw *hw,
- 	shift = mix->reg_info.shift_div;
+diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+index 2e76fb55d94a..5f24fdc140ad 100644
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -999,6 +999,13 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		if (!blk_queue_discard(q))
+ 			return -EOPNOTSUPP;
  
- 	div = _get_div(mix, MMP_CLK_BITS_GET_VAL(mux_div, width, shift));
-+	/* avoid divide-by-zero */
-+	if (!div)
-+		return -EINVAL;
- 
- 	return parent_rate / div;
- }
++		/*
++		 * We haven't replayed the journal, so we cannot use our
++		 * block-bitmap-guided storage zapping commands.
++		 */
++		if (test_opt(sb, NOLOAD) && ext4_has_feature_journal(sb))
++			return -EROFS;
++
+ 		if (copy_from_user(&range, (struct fstrim_range __user *)arg,
+ 		    sizeof(range)))
+ 			return -EFAULT;
 -- 
-1.8.5.6
+2.19.1
 
