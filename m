@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB0AC10F05
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE6EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7005D218D3
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72752217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909326;
-	bh=cRkDvbkGVjYnAxmFphy6GMC2+BOMm5V6n+aNWwX+i6M=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cWkKbRYMOQ4wxjyaz9NOW0QkPEhzB4xTRsYRJKn8fw9e1hJ86CbGWdM7SlNJ28Klt
-	 iTZcAL/kILNn0QE3Nj1IZOWLjKZhI/Kqg0wXbFGVd5R5NxEOtLyz8tJZJqcIqrL0zB
-	 NssjcRWlsEwZ1R5jvRza6ijDfhL4Vt60+iGMDFMQ=
+	s=default; t=1553909332;
+	bh=BJUL/fC5NXpEvSqYmaHLYBsDsUSf9XCm3DWQQw8Kd9g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cpw51HcdwZi1VM56AFDayeEDqAOFAFF5YbFGD1n+bOIoduxQWI1LfAeQyg+BDB0eq
+	 /9R5YM1i0reLhwjrV7jId1ei5dvntu78O+anQlQhGtYa8L38XzLDzdjZXV7Dz9Nfhd
+	 D7E+z5Zn6ze3OpxhlOEhS7peDeku7XTRdWsL9Ino=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730455AbfC3B2p (ORCPT
+        id S1730647AbfC3B2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:28:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35238 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:28:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730233AbfC3B2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:28:44 -0400
+        id S1730539AbfC3B2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:28:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DED0217F5;
-        Sat, 30 Mar 2019 01:28:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2B42217F5;
+        Sat, 30 Mar 2019 01:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909324;
-        bh=cRkDvbkGVjYnAxmFphy6GMC2+BOMm5V6n+aNWwX+i6M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EOT0fkZ9AFgFR7RvA9ZTqsHuQVosL9w11+bvGtPD4oVEg5gp5vLFSrm/rCiSylrzG
-         lOVb7PmWb9byv2eyzUPOyWHOsEjuyteL43sH1/hl6CY0bh93CxxgT9GfX3XQCM60Mm
-         WTSJRb/y0JWzqs0/jz4YqH8XKYO6g0Uvx1uv4L1s=
+        s=default; t=1553909328;
+        bh=BJUL/fC5NXpEvSqYmaHLYBsDsUSf9XCm3DWQQw8Kd9g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z9ExKVPTZE7GlkhKogFNH1r5YsjxtY+OJ3A5/5xRpbLL4Lt5NfyM3n7R3BqbAEO/s
+         qsCf8Ga1BJpRjfLtPlYZ3jNr0RlteUZM9O4QX61sA82itXzh+rLqZigiJR0P7d9rKi
+         KB5Yp04ZxKZABBeIQTcz15arKF8BYC5vMQ9DwzuE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 01/25] ext4: prohibit fstrim in norecovery mode
-Date:   Fri, 29 Mar 2019 21:28:18 -0400
-Message-Id: <20190330012842.32091-1-sashal@kernel.org>
+Cc:     wentalou <Wentao.Lou@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 04/25] drm/amdgpu: psp_ring_destroy cause psp->km_ring.ring_mem NULL
+Date:   Fri, 29 Mar 2019 21:28:21 -0400
+Message-Id: <20190330012842.32091-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190330012842.32091-1-sashal@kernel.org>
+References: <20190330012842.32091-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,40 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: wentalou <Wentao.Lou@amd.com>
 
-[ Upstream commit 18915b5873f07e5030e6fb108a050fa7c71c59fb ]
+[ Upstream commit 14d20ec7f31ef96a2e7dcf7880b13dde1d473b56 ]
 
-The ext4 fstrim implementation uses the block bitmaps to find free space
-that can be discarded.  If we haven't replayed the journal, the bitmaps
-will be stale and we absolutely *cannot* use stale metadata to zap the
-underlying storage.
+psp_ring_destroy inside psp_load_fw cause psp->km_ring.ring_mem NULL.
+Call Trace occurred when psp_cmd_submit.
+should be psp_ring_stop instead.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Xiangliang Yu <Xiangliang.Yu@amd.com>
+Signed-off-by: Wentao Lou <Wentao.Lou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/ioctl.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index 2e76fb55d94a..5f24fdc140ad 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -999,6 +999,13 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		if (!blk_queue_discard(q))
- 			return -EOPNOTSUPP;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+index 3a9b48b227ac..a7208ca0bfe3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+@@ -546,7 +546,7 @@ static int psp_load_fw(struct amdgpu_device *adev)
+ 	struct psp_context *psp = &adev->psp;
  
-+		/*
-+		 * We haven't replayed the journal, so we cannot use our
-+		 * block-bitmap-guided storage zapping commands.
-+		 */
-+		if (test_opt(sb, NOLOAD) && ext4_has_feature_journal(sb))
-+			return -EROFS;
-+
- 		if (copy_from_user(&range, (struct fstrim_range __user *)arg,
- 		    sizeof(range)))
- 			return -EFAULT;
+ 	if (amdgpu_sriov_vf(adev) && adev->in_gpu_reset) {
+-		psp_ring_destroy(psp, PSP_RING_TYPE__KM);
++		psp_ring_stop(psp, PSP_RING_TYPE__KM); /* should not destroy ring, only stop */
+ 		goto skip_memalloc;
+ 	}
+ 
 -- 
 2.19.1
 
