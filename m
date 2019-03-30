@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70987C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79417C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42023218CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430BB218CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 00:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553907187;
-	bh=172nifVKcfFkw0oAxh+qLl0NH80fc7AEEhuMGxpDauM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=kR0FDmuoPofGF38tC8jDDz7c2F8bUzzS978A9jQw56ofscC6JDSx5c/p/To/2idp9
-	 1qLyETS+iMSGZtz0YYqaeGAGje1YY4eqOkbqlYJSr8HvB22NGwx7c/oirrkf95Ce1l
-	 GmfSwjQ9jbBqIlFEBYMvblIafpDIal6ikRgdiA40=
+	s=default; t=1553907189;
+	bh=oBqjwoQ4rcw7MDiNO0dAcglh4Jv/DadBndXmk6eYE0k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=A0yBqSweRQDWpA+ux9sgY9yXbO4F8RbkUXkhheYxPN+XKc6hA57pk4CrXWi4udGry
+	 NwLenoZZWBnRs4nLkLzGPTnLaUl2kaODsZCBYldMI8BRg/VgWyY3++AKgCl6aPBJEc
+	 9z3YWJ70WHOIkQrJuHLgX0ae2b2TD9IVy6TZQ2EU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731175AbfC3AxG (ORCPT
+        id S1731186AbfC3AxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 20:53:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59864 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 20:53:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730714AbfC3AxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 20:53:04 -0400
+        id S1731172AbfC3AxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 20:53:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D382218CD;
-        Sat, 30 Mar 2019 00:53:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32980218E2;
+        Sat, 30 Mar 2019 00:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553907183;
-        bh=172nifVKcfFkw0oAxh+qLl0NH80fc7AEEhuMGxpDauM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Zx0Fcj4BYLPmzyJtr6l//xyrSY5m6Pqzp6Qnm50UFk3nCzhUFCiYoVyQ15ULdRNz5
-         Ne8vyT/I3yrSTrWcLt5z7BYE7vcYUcaHbMV56EQQjRxpaVMzqXTV4ie/w5fBybq18E
-         fSY2nqeAYsQqkgKmXSYD+HHDIWXwtG9irKldoYdA=
+        s=default; t=1553907185;
+        bh=oBqjwoQ4rcw7MDiNO0dAcglh4Jv/DadBndXmk6eYE0k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qE/YEWkbBoMxvLwnbZuyAAashGNRwpEblfWKxo7jCOoK1cYyGDyZgJPaKaXOAlSfV
+         Qb7r42R+IMuM+2i7+Q+xF535+PuSawwW6gq2t+2lDlfF8sKiEca60tKTTGoZBeJldd
+         76h8LUnYtPWYypyZdFLGOAr1fKk/5URNcN0+2qQo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+Cc:     Corentin Labbe <clabbe@baylibre.com>,
         Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 01/52] ARC: u-boot args: check that magic number is correct
-Date:   Fri, 29 Mar 2019 20:52:08 -0400
-Message-Id: <20190330005301.26868-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 02/52] arc: hsdk_defconfig: Enable CONFIG_BLK_DEV_RAM
+Date:   Fri, 29 Mar 2019 20:52:09 -0400
+Message-Id: <20190330005301.26868-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190330005301.26868-1-sashal@kernel.org>
+References: <20190330005301.26868-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,78 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Corentin Labbe <clabbe@baylibre.com>
 
-[ Upstream commit edb64bca50cd736c6894cc6081d5263c007ce005 ]
+[ Upstream commit 0728aeb7ead99a9b0dac2f3c92b3752b4e02ff97 ]
 
-In case of devboards we really often disable bootloader and load
-Linux image in memory via JTAG. Even if kernel tries to verify
-uboot_tag and uboot_arg there is sill a chance that we treat some
-garbage in registers as valid u-boot arguments in JTAG case.
-E.g. it is enough to have '1' in r0 to treat any value in r2 as
-a boot command line.
+We have now a HSDK device in our kernelci lab, but kernel builded via
+the hsdk_defconfig lacks ramfs supports, so it cannot boot kernelci jobs
+yet.
 
-So check that magic number passed from u-boot is correct and drop
-u-boot arguments otherwise. That helps to reduce the possibility
-of using garbage as u-boot arguments in JTAG case.
+So this patch enable CONFIG_BLK_DEV_RAM in hsdk_defconfig.
 
-We can safely check U-boot magic value (0x0) in linux passed via
-r1 register as U-boot pass it from the beginning. So there is no
-backward-compatibility issues.
-
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
 Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/kernel/head.S  | 1 +
- arch/arc/kernel/setup.c | 8 ++++++++
- 2 files changed, 9 insertions(+)
+ arch/arc/configs/hsdk_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arc/kernel/head.S b/arch/arc/kernel/head.S
-index 1f945d0f40da..208bf2c9e7b0 100644
---- a/arch/arc/kernel/head.S
-+++ b/arch/arc/kernel/head.S
-@@ -107,6 +107,7 @@ ENTRY(stext)
- 	;    r2 = pointer to uboot provided cmdline or external DTB in mem
- 	; These are handled later in handle_uboot_args()
- 	st	r0, [@uboot_tag]
-+	st      r1, [@uboot_magic]
- 	st	r2, [@uboot_arg]
- #endif
- 
-diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-index 3320ca2fe20f..a1218937abd6 100644
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -35,6 +35,7 @@ unsigned int intr_to_DE_cnt;
- 
- /* Part of U-boot ABI: see head.S */
- int __initdata uboot_tag;
-+int __initdata uboot_magic;
- char __initdata *uboot_arg;
- 
- const struct machine_desc *machine_desc;
-@@ -484,6 +485,8 @@ static inline bool uboot_arg_invalid(unsigned long addr)
- #define UBOOT_TAG_NONE		0
- #define UBOOT_TAG_CMDLINE	1
- #define UBOOT_TAG_DTB		2
-+/* We always pass 0 as magic from U-boot */
-+#define UBOOT_MAGIC_VALUE	0
- 
- void __init handle_uboot_args(void)
- {
-@@ -499,6 +502,11 @@ void __init handle_uboot_args(void)
- 		goto ignore_uboot_args;
- 	}
- 
-+	if (uboot_magic != UBOOT_MAGIC_VALUE) {
-+		pr_warn(IGNORE_ARGS "non zero uboot magic\n");
-+		goto ignore_uboot_args;
-+	}
-+
- 	if (uboot_tag != UBOOT_TAG_NONE &&
-             uboot_arg_invalid((unsigned long)uboot_arg)) {
- 		pr_warn(IGNORE_ARGS "invalid uboot arg: '%px'\n", uboot_arg);
+diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+index 2a1d2cbfee1a..651fa7978e51 100644
+--- a/arch/arc/configs/hsdk_defconfig
++++ b/arch/arc/configs/hsdk_defconfig
+@@ -8,6 +8,7 @@ CONFIG_NAMESPACES=y
+ # CONFIG_UTS_NS is not set
+ # CONFIG_PID_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++CONFIG_BLK_DEV_RAM=y
+ CONFIG_EMBEDDED=y
+ CONFIG_PERF_EVENTS=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
 -- 
 2.19.1
 
