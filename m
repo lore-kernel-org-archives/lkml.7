@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9F4C43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA24C43381
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE80C217F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2682217F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 01:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553909940;
-	bh=CrnHpAHWMsIKEIV0V4z+LoVRE7CGIO/twZsBgN/VmP4=;
+	s=default; t=1553909952;
+	bh=/whm1QkDMsWRIvlgpYbYFQkdHbzOPGlq8lTze7MXfkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CW2qj1GWbT5n1jJu1oUhaN2+usfmjGC96qaBYo580gC3bqEUC6WqjQiPpB8yMuOQA
-	 RuGDzhedSlCAVIBcjdidn71ZYaeg+N0+LplCkiFr1IsP3QksZnh25c+ATc3Wr1expw
-	 fw2DlWaJ9R/GwOFZk+d5c83KbBWesSOET4/Pe7xU=
+	b=Ifo0UNdUI/VUuL5c1EHkrVqDpKTPMz1rTpHzx8x8F04df6ooIgDlrtYDGOtZZpr+D
+	 vPHEbEtkpDx8OnBo7KE5ZGyC5fbyKx7zGHtzyOixRKyFzQPc3ZpF1bbTfeXZZje8W6
+	 c9vc8QlSG9suQK3FLh12RAk2FXRmcU8waD2bLeC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731657AbfC3Bi7 (ORCPT
+        id S1730932AbfC3BjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 29 Mar 2019 21:38:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37226 "EHLO mail.kernel.org"
+        Fri, 29 Mar 2019 21:39:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730621AbfC3BaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 29 Mar 2019 21:30:10 -0400
+        id S1730435AbfC3BaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 29 Mar 2019 21:30:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A826217F5;
-        Sat, 30 Mar 2019 01:30:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB35E218A6;
+        Sat, 30 Mar 2019 01:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553909408;
-        bh=CrnHpAHWMsIKEIV0V4z+LoVRE7CGIO/twZsBgN/VmP4=;
+        s=default; t=1553909406;
+        bh=/whm1QkDMsWRIvlgpYbYFQkdHbzOPGlq8lTze7MXfkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cr0onx27gyLiMFto14IIxR/7FLHLNEwM03OpBVUI7/I/vG+2pNnggSmgJkBl4eN8A
-         CP45IIN4jIC1IoQT5qPgG4/5gntunzMWPTwP9QwJ5M/5pI7gNJFac2kuNfepB09+4y
-         cHrk/PlRTrPmiR/b1Whnp+v0gg4qJ5DxSwWET4Ag=
+        b=tbL/JeIfvdiHGB4C7XrqCalAtzidKK4hnSQTKxjhRYYZ/G1AkUrZxAODDOVppUkSW
+         L9C4YJDgcimCXsp+ENm0bvoC8jjYpnpqCs2Jekce+EPDzsvVPIzl6vM+W2VnKzbRuU
+         1ApjPXAMPZpxNE0Ayk+YRyi1wprqeqdmbnfySU3E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 36/57] crypto: sha512/arm - fix crash bug in Thumb2 build
-Date:   Fri, 29 Mar 2019 21:28:29 -0400
-Message-Id: <20190330012854.32212-36-sashal@kernel.org>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 34/57] xfrm: destroy xfrm_state synchronously on net exit path
+Date:   Fri, 29 Mar 2019 21:28:27 -0400
+Message-Id: <20190330012854.32212-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
 References: <20190330012854.32212-1-sashal@kernel.org>
@@ -59,97 +59,222 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit c64316502008064c158fa40cc250665e461b0f2a ]
+[ Upstream commit f75a2804da391571563c4b6b29e7797787332673 ]
 
-The SHA512 code we adopted from the OpenSSL project uses a rather
-peculiar way to take the address of the round constant table: it
-takes the address of the sha256_block_data_order() routine, and
-substracts a constant known quantity to arrive at the base of the
-table, which is emitted by the same assembler code right before
-the routine's entry point.
+xfrm_state_put() moves struct xfrm_state to the GC list
+and schedules the GC work to clean it up. On net exit call
+path, xfrm_state_flush() is called to clean up and
+xfrm_flush_gc() is called to wait for the GC work to complete
+before exit.
 
-However, recent versions of binutils have helpfully changed the
-behavior of references emitted via an ADR instruction when running
-in Thumb2 mode: it now takes the Thumb execution mode bit into
-account, which is bit 0 af the address. This means the produced
-table address also has bit 0 set, and so we end up with an address
-value pointing 1 byte past the start of the table, which results
-in crashes such as
+However, this doesn't work because one of the ->destructor(),
+ipcomp_destroy(), schedules the same GC work again inside
+the GC work. It is hard to wait for such a nested async
+callback. This is also why syzbot still reports the following
+warning:
 
-  Unable to handle kernel paging request at virtual address bf825000
-  pgd = 42f44b11
-  [bf825000] *pgd=80000040206003, *pmd=5f1bd003, *pte=00000000
-  Internal error: Oops: 207 [#1] PREEMPT SMP THUMB2
-  Modules linked in: sha256_arm(+) sha1_arm_ce sha1_arm ...
-  CPU: 7 PID: 396 Comm: cryptomgr_test Not tainted 5.0.0-rc6+ #144
-  Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-  PC is at sha256_block_data_order+0xaaa/0xb30 [sha256_arm]
-  LR is at __this_module+0x17fd/0xffffe800 [sha256_arm]
-  pc : [<bf820bca>]    lr : [<bf824ffd>]    psr: 800b0033
-  sp : ebc8bbe8  ip : faaabe1c  fp : 2fdd3433
-  r10: 4c5f1692  r9 : e43037df  r8 : b04b0a5a
-  r7 : c369d722  r6 : 39c3693e  r5 : 7a013189  r4 : 1580d26b
-  r3 : 8762a9b0  r2 : eea9c2cd  r1 : 3e9ab536  r0 : 1dea4ae7
-  Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA Thumb  Segment user
-  Control: 70c5383d  Table: 6b8467c0  DAC: dbadc0de
-  Process cryptomgr_test (pid: 396, stack limit = 0x69e1fe23)
-  Stack: (0xebc8bbe8 to 0xebc8c000)
-  ...
-  unwind: Unknown symbol address bf820bca
-  unwind: Index not found bf820bca
-  Code: 441a ea80 40f9 440a (f85e) 3b04
-  ---[ end trace e560cce92700ef8a ]---
+ WARNING: CPU: 1 PID: 33 at net/ipv6/xfrm6_tunnel.c:351 xfrm6_tunnel_net_exit+0x2cb/0x500 net/ipv6/xfrm6_tunnel.c:351
+ ...
+  ops_exit_list.isra.0+0xb0/0x160 net/core/net_namespace.c:153
+  cleanup_net+0x51d/0xb10 net/core/net_namespace.c:551
+  process_one_work+0xd0c/0x1ce0 kernel/workqueue.c:2153
+  worker_thread+0x143/0x14a0 kernel/workqueue.c:2296
+  kthread+0x357/0x430 kernel/kthread.c:246
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 
-Given that this affects older kernels as well, in case they are built
-with a recent toolchain, apply a minimal backportable fix, which is
-to emit another non-code label at the start of the routine, and
-reference that instead. (This is similar to the current upstream state
-of this file in OpenSSL)
+In fact, it is perfectly fine to bypass GC and destroy xfrm_state
+synchronously on net exit call path, because it is in process context
+and doesn't need a work struct to do any blocking work.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+This patch introduces xfrm_state_put_sync() which simply bypasses
+GC, and lets its callers to decide whether to use this synchronous
+version. On net exit path, xfrm_state_fini() and
+xfrm6_tunnel_net_exit() use it. And, as ipcomp_destroy() itself is
+blocking, it can use xfrm_state_put_sync() directly too.
+
+Also rename xfrm_state_gc_destroy() to ___xfrm_state_destroy() to
+reflect this change.
+
+Fixes: b48c05ab5d32 ("xfrm: Fix warning in xfrm6_tunnel_net_exit.")
+Reported-and-tested-by: syzbot+e9aebef558e3ed673934@syzkaller.appspotmail.com
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/sha512-armv4.pl       | 3 ++-
- arch/arm/crypto/sha512-core.S_shipped | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ include/net/xfrm.h      | 12 +++++++++---
+ net/ipv6/xfrm6_tunnel.c |  2 +-
+ net/key/af_key.c        |  2 +-
+ net/xfrm/xfrm_state.c   | 30 +++++++++++++++++++-----------
+ net/xfrm/xfrm_user.c    |  2 +-
+ 5 files changed, 31 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm/crypto/sha512-armv4.pl b/arch/arm/crypto/sha512-armv4.pl
-index fb5d15048c0b..788c17b56ecc 100644
---- a/arch/arm/crypto/sha512-armv4.pl
-+++ b/arch/arm/crypto/sha512-armv4.pl
-@@ -274,10 +274,11 @@ WORD64(0x5fcb6fab,0x3ad6faec, 0x6c44198c,0x4a475817)
- .global	sha512_block_data_order
- .type	sha512_block_data_order,%function
- sha512_block_data_order:
-+.Lsha512_block_data_order:
- #if __ARM_ARCH__<7
- 	sub	r3,pc,#8		@ sha512_block_data_order
- #else
--	adr	r3,sha512_block_data_order
-+	adr	r3,.Lsha512_block_data_order
+diff --git a/include/net/xfrm.h b/include/net/xfrm.h
+index da588def3c61..5e3daf53b3d1 100644
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -850,7 +850,7 @@ static inline void xfrm_pols_put(struct xfrm_policy **pols, int npols)
+ 		xfrm_pol_put(pols[i]);
+ }
+ 
+-void __xfrm_state_destroy(struct xfrm_state *);
++void __xfrm_state_destroy(struct xfrm_state *, bool);
+ 
+ static inline void __xfrm_state_put(struct xfrm_state *x)
+ {
+@@ -860,7 +860,13 @@ static inline void __xfrm_state_put(struct xfrm_state *x)
+ static inline void xfrm_state_put(struct xfrm_state *x)
+ {
+ 	if (refcount_dec_and_test(&x->refcnt))
+-		__xfrm_state_destroy(x);
++		__xfrm_state_destroy(x, false);
++}
++
++static inline void xfrm_state_put_sync(struct xfrm_state *x)
++{
++	if (refcount_dec_and_test(&x->refcnt))
++		__xfrm_state_destroy(x, true);
+ }
+ 
+ static inline void xfrm_state_hold(struct xfrm_state *x)
+@@ -1616,7 +1622,7 @@ struct xfrmk_spdinfo {
+ 
+ struct xfrm_state *xfrm_find_acq_byseq(struct net *net, u32 mark, u32 seq);
+ int xfrm_state_delete(struct xfrm_state *x);
+-int xfrm_state_flush(struct net *net, u8 proto, bool task_valid);
++int xfrm_state_flush(struct net *net, u8 proto, bool task_valid, bool sync);
+ int xfrm_dev_state_flush(struct net *net, struct net_device *dev, bool task_valid);
+ void xfrm_sad_getinfo(struct net *net, struct xfrmk_sadinfo *si);
+ void xfrm_spd_getinfo(struct net *net, struct xfrmk_spdinfo *si);
+diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
+index f5b4febeaa25..bc65db782bfb 100644
+--- a/net/ipv6/xfrm6_tunnel.c
++++ b/net/ipv6/xfrm6_tunnel.c
+@@ -344,8 +344,8 @@ static void __net_exit xfrm6_tunnel_net_exit(struct net *net)
+ 	struct xfrm6_tunnel_net *xfrm6_tn = xfrm6_tunnel_pernet(net);
+ 	unsigned int i;
+ 
+-	xfrm_state_flush(net, IPSEC_PROTO_ANY, false);
+ 	xfrm_flush_gc();
++	xfrm_state_flush(net, IPSEC_PROTO_ANY, false, true);
+ 
+ 	for (i = 0; i < XFRM6_TUNNEL_SPI_BYADDR_HSIZE; i++)
+ 		WARN_ON_ONCE(!hlist_empty(&xfrm6_tn->spi_byaddr[i]));
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index 7da629d59717..7d4bed955060 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -1773,7 +1773,7 @@ static int pfkey_flush(struct sock *sk, struct sk_buff *skb, const struct sadb_m
+ 	if (proto == 0)
+ 		return -EINVAL;
+ 
+-	err = xfrm_state_flush(net, proto, true);
++	err = xfrm_state_flush(net, proto, true, false);
+ 	err2 = unicast_flush_resp(sk, hdr);
+ 	if (err || err2) {
+ 		if (err == -ESRCH) /* empty table - go quietly */
+diff --git a/net/xfrm/xfrm_state.c b/net/xfrm/xfrm_state.c
+index cc0203efb584..3f729cd512af 100644
+--- a/net/xfrm/xfrm_state.c
++++ b/net/xfrm/xfrm_state.c
+@@ -432,7 +432,7 @@ void xfrm_state_free(struct xfrm_state *x)
+ }
+ EXPORT_SYMBOL(xfrm_state_free);
+ 
+-static void xfrm_state_gc_destroy(struct xfrm_state *x)
++static void ___xfrm_state_destroy(struct xfrm_state *x)
+ {
+ 	tasklet_hrtimer_cancel(&x->mtimer);
+ 	del_timer_sync(&x->rtimer);
+@@ -474,7 +474,7 @@ static void xfrm_state_gc_task(struct work_struct *work)
+ 	synchronize_rcu();
+ 
+ 	hlist_for_each_entry_safe(x, tmp, &gc_list, gclist)
+-		xfrm_state_gc_destroy(x);
++		___xfrm_state_destroy(x);
+ }
+ 
+ static enum hrtimer_restart xfrm_timer_handler(struct hrtimer *me)
+@@ -598,14 +598,19 @@ struct xfrm_state *xfrm_state_alloc(struct net *net)
+ }
+ EXPORT_SYMBOL(xfrm_state_alloc);
+ 
+-void __xfrm_state_destroy(struct xfrm_state *x)
++void __xfrm_state_destroy(struct xfrm_state *x, bool sync)
+ {
+ 	WARN_ON(x->km.state != XFRM_STATE_DEAD);
+ 
+-	spin_lock_bh(&xfrm_state_gc_lock);
+-	hlist_add_head(&x->gclist, &xfrm_state_gc_list);
+-	spin_unlock_bh(&xfrm_state_gc_lock);
+-	schedule_work(&xfrm_state_gc_work);
++	if (sync) {
++		synchronize_rcu();
++		___xfrm_state_destroy(x);
++	} else {
++		spin_lock_bh(&xfrm_state_gc_lock);
++		hlist_add_head(&x->gclist, &xfrm_state_gc_list);
++		spin_unlock_bh(&xfrm_state_gc_lock);
++		schedule_work(&xfrm_state_gc_work);
++	}
+ }
+ EXPORT_SYMBOL(__xfrm_state_destroy);
+ 
+@@ -708,7 +713,7 @@ xfrm_dev_state_flush_secctx_check(struct net *net, struct net_device *dev, bool
+ }
  #endif
- #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
- 	ldr	r12,.LOPENSSL_armcap
-diff --git a/arch/arm/crypto/sha512-core.S_shipped b/arch/arm/crypto/sha512-core.S_shipped
-index b1c334a49cda..710ea309769e 100644
---- a/arch/arm/crypto/sha512-core.S_shipped
-+++ b/arch/arm/crypto/sha512-core.S_shipped
-@@ -141,10 +141,11 @@ WORD64(0x5fcb6fab,0x3ad6faec, 0x6c44198c,0x4a475817)
- .global	sha512_block_data_order
- .type	sha512_block_data_order,%function
- sha512_block_data_order:
-+.Lsha512_block_data_order:
- #if __ARM_ARCH__<7
- 	sub	r3,pc,#8		@ sha512_block_data_order
- #else
--	adr	r3,sha512_block_data_order
-+	adr	r3,.Lsha512_block_data_order
- #endif
- #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
- 	ldr	r12,.LOPENSSL_armcap
+ 
+-int xfrm_state_flush(struct net *net, u8 proto, bool task_valid)
++int xfrm_state_flush(struct net *net, u8 proto, bool task_valid, bool sync)
+ {
+ 	int i, err = 0, cnt = 0;
+ 
+@@ -730,7 +735,10 @@ int xfrm_state_flush(struct net *net, u8 proto, bool task_valid)
+ 				err = xfrm_state_delete(x);
+ 				xfrm_audit_state_delete(x, err ? 0 : 1,
+ 							task_valid);
+-				xfrm_state_put(x);
++				if (sync)
++					xfrm_state_put_sync(x);
++				else
++					xfrm_state_put(x);
+ 				if (!err)
+ 					cnt++;
+ 
+@@ -2217,7 +2225,7 @@ void xfrm_state_delete_tunnel(struct xfrm_state *x)
+ 		if (atomic_read(&t->tunnel_users) == 2)
+ 			xfrm_state_delete(t);
+ 		atomic_dec(&t->tunnel_users);
+-		xfrm_state_put(t);
++		xfrm_state_put_sync(t);
+ 		x->tunnel = NULL;
+ 	}
+ }
+@@ -2377,8 +2385,8 @@ void xfrm_state_fini(struct net *net)
+ 	unsigned int sz;
+ 
+ 	flush_work(&net->xfrm.state_hash_work);
+-	xfrm_state_flush(net, IPSEC_PROTO_ANY, false);
+ 	flush_work(&xfrm_state_gc_work);
++	xfrm_state_flush(net, IPSEC_PROTO_ANY, false, true);
+ 
+ 	WARN_ON(!list_empty(&net->xfrm.state_all));
+ 
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index ab557827aac0..7e4904b93004 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -1932,7 +1932,7 @@ static int xfrm_flush_sa(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	struct xfrm_usersa_flush *p = nlmsg_data(nlh);
+ 	int err;
+ 
+-	err = xfrm_state_flush(net, p->proto, true);
++	err = xfrm_state_flush(net, p->proto, true, false);
+ 	if (err) {
+ 		if (err == -ESRCH) /* empty table */
+ 			return 0;
 -- 
 2.19.1
 
