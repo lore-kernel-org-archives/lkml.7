@@ -2,102 +2,108 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,T_HK_NAME_DR,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F35C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5323C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AFC52146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A39A2146F
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:05:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbfCaJEC (ORCPT
+        id S1726901AbfCaJFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 05:04:02 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:56710 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbfCaJEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 05:04:02 -0400
-X-Greylist: delayed 1215 seconds by postgrey-1.27 at vger.kernel.org; Sun, 31 Mar 2019 05:04:02 EDT
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x2V8hBd4031679;
-        Sun, 31 Mar 2019 03:43:11 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x2V8h9ki031678;
-        Sun, 31 Mar 2019 03:43:09 -0500
-Date:   Sun, 31 Mar 2019 03:43:09 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Dr . Greg Wettstein" <greg@enjellic.com>
-Subject: Re: [PATCH v19,RESEND 24/27] x86/vdso: Add __vdso_sgx_enter_enclave() to wrap SGX enclave transitions
-Message-ID: <20190331084309.GA31645@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <CALCETrV589POrG3RaPHBWOFuytkWjeJgJgLHk4OKbizOgJVKZQ@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F4E85E989@ORSMSX116.amr.corp.intel.com> <20190325180349.GF31069@linux.intel.com> <CALCETrXqb3CHefN-RLudC61jwdbLFS8cXuS4V5OJ6HTuf_arYw@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F4E85FABF@ORSMSX116.amr.corp.intel.com> <CALCETrVcR_etAHSVZxvCz7CcPnF4ajpcWiRCtFrOckVWVJByHA@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F4E860C69@ORSMSX116.amr.corp.intel.com> <CALCETrUUv3WSX7uL22DnWg8FOJqVyB=tknxbGDWb9wpx7zY2CQ@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F4E8617BF@ORSMSX116.amr.corp.intel.com> <20190329094814.GE21379@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190329094814.GE21379@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Sun, 31 Mar 2019 03:43:11 -0500 (CDT)
+        Sun, 31 Mar 2019 05:05:31 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59738 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726710AbfCaJFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 05:05:30 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 556E12B0468991598D8D;
+        Sun, 31 Mar 2019 17:05:28 +0800 (CST)
+Received: from [127.0.0.1] (10.184.191.73) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Sun, 31 Mar 2019
+ 17:05:19 +0800
+Subject: [PATCH v2 net] ipv6: Fix dangling pointer when ipv6 fragment
+From:   hujunwei <hujunwei4@huawei.com>
+To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mingfangsen@huawei.com>, <liuzhiqiang26@huawei.com>,
+        <zhangwenhao8@huawei.com>, <wangxiaogang3@huawei.com>
+References: <cbbedd1f-3e99-85f7-86d7-d02a86d59c29@huawei.com>
+Message-ID: <9104f44b-2ce0-7be9-2fca-8b6c12abbb86@huawei.com>
+Date:   Sun, 31 Mar 2019 17:04:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <cbbedd1f-3e99-85f7-86d7-d02a86d59c29@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.184.191.73]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 11:48:14AM +0200, Jarkko Sakkinen wrote:
+From: Junwei Hu <hujunwei4@huawei.com>
 
-Good morning to everyone, I hope the weekend is going well.
+At the beginning of ip6_fragment func, the prevhdr pointer is
+obtained in the ip6_find_1stfragopt func.
+However, all the pointers pointing into skb header may change
+when calling skb_checksum_help func with
+skb->ip_summed = CHECKSUM_PARTIAL condition.
+The prevhdr pointe will be dangling if it is not reloaded after
+calling __skb_linearize func in skb_checksum_help func.
 
-> Not gonna make it to v20. I'm aiming to send it early next week and have
-> already closed the content.
+Here, I add a variable, nexthdr_offset, to evaluate the offset,
+which does not changes even after calling __skb_linearize func.
 
-What is the status of your jarkko-sgx/next and jarkko-sgx/master
-branches with respect to all of this?
+Fixes: 405c92f7a541 ("ipv6: add defensive check for CHECKSUM_PARTIAL skbs in ip_fragment")
+Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
+Reported-by: Wenhao Zhang <zhangwenhao8@huawei.com>
+Reported-by: syzbot+e8ce541d095e486074fc@syzkaller.appspotmail.com
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+---
+V1->V2:
+- change nexthdr_offset to unsigned int
+- add Reported-by: syzbot+e8ce541d095e486074fc@syzkaller.appspotmail.com
 
-We have our SFLC patch series currently staged on top of
-jarkko-sgx/next and we will re-stage them on top of whatever you are
-pushing upstream from.
+ net/ipv6/ip6_output.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> /Jarkko
+diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+index edbd12067170..e51f3c648b09 100644
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -601,7 +601,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+                 inet6_sk(skb->sk) : NULL;
+     struct ipv6hdr *tmp_hdr;
+     struct frag_hdr *fh;
+-    unsigned int mtu, hlen, left, len;
++    unsigned int mtu, hlen, left, len, nexthdr_offset;
+     int hroom, troom;
+     __be32 frag_id;
+     int ptr, offset = 0, err = 0;
+@@ -612,6 +612,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+         goto fail;
+     hlen = err;
+     nexthdr = *prevhdr;
++    nexthdr_offset = prevhdr - skb_network_header(skb);
+ 
+     mtu = ip6_skb_dst_mtu(skb);
+ 
+@@ -646,6 +647,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+         (err = skb_checksum_help(skb)))
+         goto fail;
+ 
++    prevhdr = skb_network_header(skb) + nexthdr_offset;
+     hroom = LL_RESERVED_SPACE(rt->dst.dev);
+     if (skb_has_frag_list(skb)) {
+         unsigned int first_len = skb_pagelen(skb);
+-- 
+2.19.1
 
-Have a good remainder of the weekend.
-
-Dr. Greg
-
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686
-FAX: 701-281-3949           EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"Can't they?
-
- A 64bit number incremented every millisecond can grow for half a
- billion years.  As far as I'm concerned, that is forever."
-                                -- Neil Brown
-                                   linux-raid
