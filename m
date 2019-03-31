@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC859C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B9AC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E08121841
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCFAC20850
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6OX7nQW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PELb+UfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731836AbfCaR46 (ORCPT
+        id S1731558AbfCaR5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 13:56:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46430 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731432AbfCaRz3 (ORCPT
+        Sun, 31 Mar 2019 13:57:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43529 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731229AbfCaRzZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 13:55:29 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t17so8866474wrw.13;
-        Sun, 31 Mar 2019 10:55:28 -0700 (PDT)
+        Sun, 31 Mar 2019 13:55:25 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k17so8882754wrx.10;
+        Sun, 31 Mar 2019 10:55:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9UieC8SNUHtr0UeIZ9JjjndAyBPlP3CHDw+GpQuyQ5I=;
-        b=n6OX7nQWbHuyBNwZpwgnL0yaaLElawzMwPgAY480woNbWmELdlyzuCFjpds6llUXk7
-         +fC5sUfuWhbPQgQblHFfH59UDuFQRS2HeR5P+Mhc+KWRhxTLc0skVYNMUIQlfIMXr8nL
-         8Wdour4vev3/nRYYT0s70BxYxMl9ZF7Ng6fbI73iCx26Nv9v6InckBlCp7cJvEWBqPtJ
-         rI4H3FcryYOblzU5L/C2A7ypXf0mn0dXU0gydLyfg5fpr6M0bEhn2We6m5JRAfwAaZU4
-         2qtRHTZCZ842oqTG/BxP/v3lzMAnon0VwvEDhZsD/8XN3xtiQ67pN7YLFnjuu0Nwv/qO
-         aHwg==
+        bh=iEhJTflmg7KQbde2xxTokDIVhFAkE+Q29EtuKzQtszg=;
+        b=PELb+UfJ8HoI9ookcICAo3IwkUY0c2tLvZ7urw0BMaDJYgwyqZt6ySJMyUptzKOu6C
+         GhZ9Uegw+yjDHgmCA/6yYirywG4h9Pa++S736ffa8HKVsLiETmoxVQRADwSdBFsFoS7/
+         uIt+vJO5kt9XW9WMVr5tIYpyoFpZnPG0ZlUZMb0ecTSUoMC4QX21+dODfij5Aj1Trz3M
+         RDeySQpHuOfIlZ5+B+tQ3ZfU4bBERu3bC3xwQs7T4axfPp1PDcpErA67drmp5/6oab0u
+         uKzGMTkanJCp1mfjrixLTUsga2eLKRWhZz2FAatgtyMwR9mv3QnfHQVvLEF5p0abYvi7
+         9pZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=9UieC8SNUHtr0UeIZ9JjjndAyBPlP3CHDw+GpQuyQ5I=;
-        b=rBP0CvFS2ra9K6Q0x155qaxt/UNBWrq0Y0t7Lcx74Kp1irub4ryg7uIvbAisesoqLE
-         OITPIlPtpwlK2lPNoWqNt8c8IKLy9NvI0kccFeeRhuVQDme4snps4H6IBjHkfvTO14Kg
-         ZiDx9peVbO+J7/M4fuidfKS/atKxBylaGJ+yVnpHnb0x2D0OKoId++KLFz6+3Zf7ZZ0U
-         6SCQGMCI+hqlPAynnxbOBbM36bf1Iz9J8dkJU4ljpemw2b59VWgUqxGMGAZ/Ae40v8cE
-         Bpa3EWvXj+kS9gRDtU2osRTFgUbZ0v9rkwXabMWxUTuPAWvHBAZ2BhtDTggeqJ/jdCm4
-         fGZg==
-X-Gm-Message-State: APjAAAWKOwyTdleWqtWwifMbqW7HAWMo4AWGsxU+/YeVTdaqWpuoAJcl
-        IiY0u+KjPWpeYLvNWMh1wKw5jWQp
-X-Google-Smtp-Source: APXvYqwTRFj7IWGaLQXR5A0hplS0/J57CoVTM2asgDak0/Zaxrp+f3hz8bdoJuG3iGzv0HpkHfqdyw==
-X-Received: by 2002:adf:e74f:: with SMTP id c15mr24199773wrn.23.1554054927742;
-        Sun, 31 Mar 2019 10:55:27 -0700 (PDT)
+        bh=iEhJTflmg7KQbde2xxTokDIVhFAkE+Q29EtuKzQtszg=;
+        b=Fo8qmNbCiOIV/iA6r3E97Mm9DK1m00JNszKZf/BQCfZM9gOhO+LmQp1aRHsDi9REch
+         q/FBm66lW+L3jIyqy/FDcmgRgePxgpYWrK3tE/liVyoj3jpfn0LnZTOsNziJhV4ktoG5
+         pKnMdDJeY+TW+XYpK6wPqLqddgkcsODasRg8wHrh6DXnE3EKLPZbkwGuIL3KQy8DXCEW
+         o3XWoiFGvLOCtM/UfOEvzYw6eyXm29pc9nD7s2ECYEz6dKIC22A2bcS1zJJUAiSVoCle
+         ZLwj9lUXiLIV/Lk5awo5p1x0P5wLZVF7yFAcR+GdbkBvnIi9c6UtEUIINk9+9W1Z09Qu
+         6t4A==
+X-Gm-Message-State: APjAAAUe2+19uMEHCZoSEd7VmkrONrOqm25F+2QlvZEEHDxKVFb7YIsw
+        fn5FGGL3FEVmnMPxTypgVsrUgD0j
+X-Google-Smtp-Source: APXvYqxLVwIlMD82Z6tKL/QpXUkFSh0hCGKd2WTKmv5DVqmWwZfitd/X40Ugk7FieA4UzPnZopJYUQ==
+X-Received: by 2002:a5d:6406:: with SMTP id z6mr35739579wru.266.1554054922883;
+        Sun, 31 Mar 2019 10:55:22 -0700 (PDT)
 Received: from myhost.home (bds153.neoplus.adsl.tpnet.pl. [83.28.4.153])
-        by smtp.gmail.com with ESMTPSA id d7sm7473688wmf.31.2019.03.31.10.55.26
+        by smtp.gmail.com with ESMTPSA id d7sm7473688wmf.31.2019.03.31.10.55.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 31 Mar 2019 10:55:27 -0700 (PDT)
+        Sun, 31 Mar 2019 10:55:22 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         pavel@ucw.cz, robh@kernel.org, jacek.anaszewski@gmail.com,
-        Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v3 09/25] leds: lt3593: Use generic support for composing LED names
-Date:   Sun, 31 Mar 2019 19:54:45 +0200
-Message-Id: <20190331175501.23471-10-jacek.anaszewski@gmail.com>
+        Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v3 06/25] dt-bindings: sc27xx-blt: Add function and color properties
+Date:   Sun, 31 Mar 2019 19:54:42 +0200
+Message-Id: <20190331175501.23471-7-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
 References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
@@ -71,72 +71,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to using generic LED support for composing LED class
-device name.
+Refer to new "function" and "color" properties and mark "label"
+as deprecated.
 
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Daniel Mack <daniel@zonque.org>
+Cc: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/leds/leds-lt3593.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index 83e8e58d81cb..b72752f26b22 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -10,10 +10,10 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/of.h>
--#include <uapi/linux/uleds.h>
-+
-+#define LED_LT3593_NAME "lt3593"
+diff --git a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+index dddf84f9c7ea..df2b4e1c492b 100644
+--- a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
++++ b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+@@ -14,7 +14,9 @@ Required child properties:
+ - reg: Port this LED is connected to.
  
- struct lt3593_led_data {
--	char name[LED_MAX_NAME_SIZE];
- 	struct led_classdev cdev;
- 	struct gpio_desc *gpiod;
+ Optional child properties:
+-- label: See Documentation/devicetree/bindings/leds/common.txt.
++- function: See Documentation/devicetree/bindings/leds/common.txt.
++- color: See Documentation/devicetree/bindings/leds/common.txt.
++- label: See Documentation/devicetree/bindings/leds/common.txt (deprecated).
+ 
+ Examples:
+ 
+@@ -25,17 +27,17 @@ led-controller@200 {
+ 	reg = <0x200>;
+ 
+ 	led@0 {
+-		label = "red";
++		color = <LED_COLOR_ID_RED>;
+ 		reg = <0x0>;
+ 	};
+ 
+ 	led@1 {
+-		label = "green";
++		color = <LED_COLOR_ID_GREEN>;
+ 		reg = <0x1>;
+ 	};
+ 
+ 	led@2 {
+-		label = "blue";
++		color = <LED_COLOR_ID_BLUE>;
+ 		reg = <0x2>;
+ 	};
  };
-@@ -66,6 +66,7 @@ static int lt3593_led_probe(struct platform_device *pdev)
- 	struct lt3593_led_data *led_data;
- 	struct fwnode_handle *child;
- 	int ret, state = LEDS_GPIO_DEFSTATE_OFF;
-+	struct led_init_data init_data;
- 	const char *tmp;
- 
- 	if (!dev->of_node)
-@@ -86,14 +87,6 @@ static int lt3593_led_probe(struct platform_device *pdev)
- 
- 	child = device_get_next_child_node(dev, NULL);
- 
--	ret = fwnode_property_read_string(child, "label", &tmp);
--	if (ret < 0)
--		snprintf(led_data->name, sizeof(led_data->name),
--			 "lt3593::");
--	else
--		snprintf(led_data->name, sizeof(led_data->name),
--			 "lt3593:%s", tmp);
--
- 	fwnode_property_read_string(child, "linux,default-trigger",
- 				    &led_data->cdev.default_trigger);
- 
-@@ -102,11 +95,14 @@ static int lt3593_led_probe(struct platform_device *pdev)
- 			state = LEDS_GPIO_DEFSTATE_ON;
- 	}
- 
--	led_data->cdev.name = led_data->name;
- 	led_data->cdev.brightness_set_blocking = lt3593_led_set;
- 	led_data->cdev.brightness = state ? LED_FULL : LED_OFF;
- 
--	ret = devm_led_classdev_register(dev, &led_data->cdev);
-+	init_data.fwnode = child;
-+	init_data.led_hw_name = LED_LT3593_NAME;
-+	init_data.default_label = ":";
-+
-+	ret = devm_led_classdev_register_ext(dev, &led_data->cdev, &init_data);
- 	if (ret < 0) {
- 		fwnode_handle_put(child);
- 		return ret;
 -- 
 2.11.0
 
