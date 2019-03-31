@@ -2,113 +2,134 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3CAC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D68C10F06
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A901E20643
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:24:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XwIcq9Ot";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A2JPEDop"
+	by mail.kernel.org (Postfix) with ESMTP id 315B820989
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554024599;
+	bh=zhhun6mQ82gwyWR4UdaJuqLb1UL/DUD2L9k6gira5bc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0kL1jfQ0n4EfC5POt7ce+AhHSmeC/rl0FI5S5T3azcg2bure4Ks7xTaC3sZ/aa4WD
+	 2zwOF7S53Ymivsgz7xnLUVHlqlwpAqJGzOkh9R+SaC1XbnTBYuEJdM2Poi9E3Tr03/
+	 RO/5SxBx5lAjBMRGGt3Rn+oD179eTCrJulQi/fNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfCaJYZ (ORCPT
+        id S1726892AbfCaJ35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 05:24:25 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33006 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbfCaJYZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 05:24:25 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1A1D56081E; Sun, 31 Mar 2019 09:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554024264;
-        bh=4WOT/BoFlYFkhYyHXVc3Dvgw4H1LazYIh9UH+2gfxc8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XwIcq9OtINv4/laVNoSdnL24VNTDPgJWQJxYD6o/BgOIleg4vjA8br2OpMPS0C9pH
-         Adbh4/T9aOzDaVQmGSaL9wlAb6lucc2Xaz0FoaHb11jwjZd6SMAmVs6pyOzn1z+4W+
-         ftxHfSmiGc9o3+86qYQDkP4+S5hM/vxn7lLpCh8M=
-Received: from [10.79.166.22] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sun, 31 Mar 2019 05:29:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726734AbfCaJ35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 05:29:57 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B220360736;
-        Sun, 31 Mar 2019 09:24:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554024263;
-        bh=4WOT/BoFlYFkhYyHXVc3Dvgw4H1LazYIh9UH+2gfxc8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=A2JPEDopCq3iZwjdtXzLpXOCug2wKSPp07VcJSjwt5YUQUM77ZsOi6TrRweq1QvM0
-         qzV6hPOPtvckUgvyUImac6baCPwWvhZmdu/AIRLlAJo9Khn7wUYE7ZX/RlxD65uOLt
-         kCXXLvsYNOZp+fPF8a852w3bzKu8dfUDBY5g/v8A=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B220360736
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] spi: oc-tiny: fix negative loop bound error on for loop
-To:     Colin King <colin.king@canonical.com>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190330212300.11675-1-colin.king@canonical.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <88c53375-5727-c865-05ba-829b6e7d5128@codeaurora.org>
-Date:   Sun, 31 Mar 2019 14:54:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C230206DD;
+        Sun, 31 Mar 2019 09:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554024596;
+        bh=zhhun6mQ82gwyWR4UdaJuqLb1UL/DUD2L9k6gira5bc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2LvkKnyhWaKjCI7r7gtdqnHvHPnkMAfyR6q+7ILTRyDzkyki95+4+tY6geoU0ozog
+         +rG8uzkUarFko4bNKUupArbBlxUzW/+AniljUdIUpqWWKRivycTvERxGNl2Q4MEgig
+         rBjAbzlouDYvUjE41qH5vRmups/DZo1Wmh5Io4Ec=
+Date:   Sun, 31 Mar 2019 10:29:47 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Cristian Sicilia <sicilia.cristian@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] staging: iio: adc: ad7280a: Tab alignment
+Message-ID: <20190331102947.5fdffbb9@archlinux>
+In-Reply-To: <cc87225c83ca9d0aa18598d3f3519965bbc14764.1553447138.git.sicilia.cristian@gmail.com>
+References: <cover.1553366098.git.sicilia.cristian@gmail.com>
+        <cover.1553447138.git.sicilia.cristian@gmail.com>
+        <cc87225c83ca9d0aa18598d3f3519965bbc14764.1553447138.git.sicilia.cristian@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190330212300.11675-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 24 Mar 2019 18:23:09 +0100
+Cristian Sicilia <sicilia.cristian@gmail.com> wrote:
 
-On 3/31/2019 2:53 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> Currently the for-loop using an unsigned int for the loop counter
-> which is problematic when comparing it to the signed int
-> gt->gpio_cs_count.  This is an issue because if the signed int is
-> negative (for example, the call to of_gpio_count failed) then
-> the negative loop bound is implicitly cast to an unsigned int on
-> the comparison to loop counter i and will yield a very large value,
-> eventually causing an array bounds overflow on hw->gpio_cs.
->
-> Fix this by simply making the loop counter i a signed int;
->
-> Fixes: ca632f556697 ("spi: reorganize drivers")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Aligned some parameters.
+> 
+> Signed-off-by: Cristian Sicilia <sicilia.cristian@gmail.com>
+Applied to the togreg branch of iio.git and pushed out as testing.
+
+Thanks,
+
+Jonathan
+
 > ---
->   drivers/spi/spi-oc-tiny.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/spi/spi-oc-tiny.c b/drivers/spi/spi-oc-tiny.c
-> index 085f580be7ec..81f74b938dc9 100644
-> --- a/drivers/spi/spi-oc-tiny.c
-> +++ b/drivers/spi/spi-oc-tiny.c
-> @@ -206,7 +206,7 @@ static int tiny_spi_of_probe(struct platform_device *pdev)
->   {
->   	struct tiny_spi *hw = platform_get_drvdata(pdev);
->   	struct device_node *np = pdev->dev.of_node;
-> -	unsigned int i;
-> +	int i;
+>  drivers/staging/iio/adc/ad7280a.c | 36 ++++++++++++++++++------------------
+>  1 file changed, 18 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
+> index d9df126..571535d 100644
+> --- a/drivers/staging/iio/adc/ad7280a.c
+> +++ b/drivers/staging/iio/adc/ad7280a.c
+> @@ -830,30 +830,30 @@ static irqreturn_t ad7280_event_handler(int irq, void *private)
+>  }
+>  
+>  static IIO_DEVICE_ATTR_NAMED(in_thresh_low_value,
+> -		in_voltage-voltage_thresh_low_value,
+> -		0644,
+> -		ad7280_read_channel_config,
+> -		ad7280_write_channel_config,
+> -		AD7280A_CELL_UNDERVOLTAGE);
+> +			     in_voltage-voltage_thresh_low_value,
+> +			     0644,
+> +			     ad7280_read_channel_config,
+> +			     ad7280_write_channel_config,
+> +			     AD7280A_CELL_UNDERVOLTAGE);
+>  
+>  static IIO_DEVICE_ATTR_NAMED(in_thresh_high_value,
+> -		in_voltage-voltage_thresh_high_value,
+> -		0644,
+> -		ad7280_read_channel_config,
+> -		ad7280_write_channel_config,
+> -		AD7280A_CELL_OVERVOLTAGE);
+> +			     in_voltage-voltage_thresh_high_value,
+> +			     0644,
+> +			     ad7280_read_channel_config,
+> +			     ad7280_write_channel_config,
+> +			     AD7280A_CELL_OVERVOLTAGE);
+>  
+>  static IIO_DEVICE_ATTR(in_temp_thresh_low_value,
+> -		0644,
+> -		ad7280_read_channel_config,
+> -		ad7280_write_channel_config,
+> -		AD7280A_AUX_ADC_UNDERVOLTAGE);
+> +		       0644,
+> +		       ad7280_read_channel_config,
+> +		       ad7280_write_channel_config,
+> +		       AD7280A_AUX_ADC_UNDERVOLTAGE);
+>  
+>  static IIO_DEVICE_ATTR(in_temp_thresh_high_value,
+> -		0644,
+> -		ad7280_read_channel_config,
+> -		ad7280_write_channel_config,
+> -		AD7280A_AUX_ADC_OVERVOLTAGE);
+> +		       0644,
+> +		       ad7280_read_channel_config,
+> +		       ad7280_write_channel_config,
+> +		       AD7280A_AUX_ADC_OVERVOLTAGE);
+>  
+>  static struct attribute *ad7280_event_attributes[] = {
+>  	&iio_dev_attr_in_thresh_low_value.dev_attr.attr,
 
-
-Same issue, here as well like your other patch. you are putting wrapper 
-over a original issue by not checking the returned value.
-Please fix that in both patches.
-
-
-
-Thanks.
-Mukesh
-
->   	u32 val;
->   
->   	if (!np)
