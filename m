@@ -2,66 +2,66 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4232BC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53BDC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C41020870
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 874CA20870
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:49:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="b/lsL4/y"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="D2kttabG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731360AbfCaRsE (ORCPT
+        id S1731334AbfCaRta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 13:48:04 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39967 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731269AbfCaRsE (ORCPT
+        Sun, 31 Mar 2019 13:49:30 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33022 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731237AbfCaRt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 13:48:04 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h4so8865628wre.7
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 10:48:03 -0700 (PDT)
+        Sun, 31 Mar 2019 13:49:29 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z6so13733152wmi.0
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 10:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloud.ionos.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xoDVc6qwD3yWLXry4REsZCGe/aZt6auFVMXcpkGOgYU=;
-        b=b/lsL4/ys+IyaDTQbktPpdEgxEtsL5du3XD5lwlYTf9XIhCgsmZoQtOeaA0UIfEp5p
-         KDbfsWUnB7RZVN47vEsHcJsdoXu8EER8zu6ocwwnvnZzmqYoc1RP3f6+SAtxAxTetdaY
-         WnfCOexAQfft/LLXUJZjkAYu68SYm+0cxtSuaO2N6ci4OQL/oco5ois3tJ01dHT7WOyN
-         GjSMdZjEEhml+sOcATcgUXcgoUpJsB3SOlBcIDQ9sIYE3yF02lkxMsFolKjgz7ARDJnH
-         g6lpTVh7kwrrJHyLkWDRPuy87G/1HfcjOUDfeIxl4Uq1MHbcYi68y8dyVFNfsqu6SKAm
-         Wb/w==
+        bh=H9OU9Lj4qFWVXxFm6r/i0BpMX8i5DXMWXJH3S9m4beI=;
+        b=D2kttabGkAex/H1jBPJhyIF/RAbwL0iKr6s/RbAgttbjKCLL6oWxhNWR0HDK4LTRsG
+         PKV8imzQoePZrODeJEmUP+TJ48kVxt1Omt0b2DAndH1N5TL05VWOHgpIsWSNzno3aBgX
+         uiU06G4ro7x7i/9TQlPSafIms44yZh0iOh5jLqk6Tt3XUWkOosxVBU3Zh8YtrC8IMoAK
+         wMmcY6t4u5Iec4FL4dEgWKlviEKj8qEmfzZEPPu2tJdZmfgzyRJ8FO8ME77d69iNeJzt
+         Mufg1UUEkpT1kXxPaCVJKl9eeXv0dGDx9Ef1uyjUb9mYE2ZvH2+Me1qrxFYUp9O6RVDy
+         zzUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xoDVc6qwD3yWLXry4REsZCGe/aZt6auFVMXcpkGOgYU=;
-        b=TMsOjfxOGsQTFO8JJTzcI838ayYZ1iLqLrOky/KO4Dgg4xWkyO9Zu9VG07umQqCMBc
-         K3VcSh3HZUlMYx7v5PWndnwi4upzRyFV1GDvBce+6klZ9ahN7kAzi2BAO8bUjfRcUeA8
-         AmReTzyIRlVCugvuqBpukKNaDNsnU62XgSnzXAENuGt3OVnxg4t6ERDmwF5+jcIkgekt
-         vdgGip2UUJ2H5bBcXmz41/D/q34Tj+y2vJugzr7hb9iKusmOtYoqBUEJOIkaHqwbaEVU
-         UFR15MTcp56N0H7DaMZP+2Q+OI0Pqty9vLHzW4LYYMEaDPU87AlTIFWC4G1fxb72yXdk
-         paPg==
-X-Gm-Message-State: APjAAAV1LkEyERPDZNQza59W9ce7X+ZQuiiI2nGHrHKLhWq5+1dbmyg0
-        IjMQt9z0nRFo9dvlh4SatenwttR5Rw4w7tXMMjMJ1w==
-X-Google-Smtp-Source: APXvYqwFf4nAMu0Ry8NXeuCogymFIdIrrgCmfxY/ncAiPL1c/lw5wu/riVMJ3HiUBv2Ca0r9srzvJz9qQ5c9TI4rT8E=
-X-Received: by 2002:adf:e60d:: with SMTP id p13mr37490584wrm.265.1554054482716;
- Sun, 31 Mar 2019 10:48:02 -0700 (PDT)
+        bh=H9OU9Lj4qFWVXxFm6r/i0BpMX8i5DXMWXJH3S9m4beI=;
+        b=scL5EZkzKB+w4eMrEEB2lJbDH6/A9F3qQ8ASQa5wd5ursCoCd/Ho3apWlU/werByy0
+         oy4aV7tQATn/flKxM+rF6LdWp/3cNt2VQJVNi/O026hdjsCr8eII7dcWulv8ehqyO1eZ
+         fJ78Ye5UhT2TpoVCc6COVlUq+8p8Bq5iJFgsrgJDEeXOF2jwL7+SJOwpPOfBR6zfV0If
+         I/qWf/P/e5rzum2uSx3v7zKusYUMAWLhSFgU8BmsFw8N7AmM/yAde/yHipNbpP22PdjR
+         Oh6qsmsMhOrJbaG2JifEt/3PJkEDAyCj7OKiF2hbsDcwCpoNulQ33jjwC85UpUqBj0SR
+         Gglw==
+X-Gm-Message-State: APjAAAWBdKXO7BQljqfUTQ47YUU7/H2EL/Xpq9FKnf1UslAsR0QQ2SG2
+        8rOYO/JsoetohuCUI2pV7MVzAmDZ/VE9+kBmoLZXfQ==
+X-Google-Smtp-Source: APXvYqyfksbycu2oBJaiv37LczOn24vf/sfHLvadxdp/iD0MhKPlSi2F1AchsxoTKBC1GycPkkOnNWRMnGsZD0JPB1M=
+X-Received: by 2002:a1c:1f08:: with SMTP id f8mr3741213wmf.97.1554054568117;
+ Sun, 31 Mar 2019 10:49:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190329234423.5611-1-colin.king@canonical.com> <20190329234423.5611-2-colin.king@canonical.com>
-In-Reply-To: <20190329234423.5611-2-colin.king@canonical.com>
+References: <822122908.274859.1553944071609@ox-groupware.bfs.de>
+In-Reply-To: <822122908.274859.1553944071609@ox-groupware.bfs.de>
 From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Sun, 31 Mar 2019 19:47:53 +0200
-Message-ID: <CAMGffE=2Gzx_LGjv9znERm0W38A3XpGF4r7nVgTvHrf+3Pg6-A@mail.gmail.com>
+Date:   Sun, 31 Mar 2019 19:49:18 +0200
+Message-ID: <CAMGffE=byzyhREomahYv9-VfiTYd2K3NoKPJc0p9K3f5fwUKPA@mail.gmail.com>
 Subject: Re: [PATCH 1/2] scsi: pm8001: clean up structurally dead code when
  PM8001_USE_MSIX is defined
-To:     Colin King <colin.king@canonical.com>
-Cc:     Jack Wang <jinpu.wang@profitbricks.com>,
+To:     Walter Harms <wharms@bfs.de>
+Cc:     Colin King <colin.king@canonical.com>,
+        Jack Wang <jinpu.wang@profitbricks.com>,
         lindar_liu <lindar_liu@usish.com>,
         "James E . J . Bottomley" <jejb@linux.ibm.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
@@ -73,74 +73,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 12:44 AM Colin King <colin.king@canonical.com> wrote:
+On Sat, Mar 30, 2019 at 12:07 PM Walter Harms <wharms@bfs.de> wrote:
 >
-> From: Colin Ian King <colin.king@canonical.com>
+> the ifdef jungle does not make thinks more readable. I am aware that
+> using neg is also not good but in this special case it seems helpful
+> to have only one branch, like:
 >
-> When macro PM8001_USE_MSIX is defined there is redundant dead code
-> call to pm8001_cr32.  Clean this up for the defined PM8001_USE_MSIX and
-> undefined PM8001_USE_MSIX cases.
+> static u32 pm80xx_chip_is_our_interupt(struct pm8001_hba_info *pm8001_ha)
+> {
+> #ifndef PM8001_USE_MSIX
+>         u32 value;
 >
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Thanks, Colin,
-Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-> ---
->  drivers/scsi/pm8001/pm8001_hwi.c | 7 ++++---
->  drivers/scsi/pm8001/pm80xx_hwi.c | 7 ++++---
->  2 files changed, 8 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
-> index e4209091c1da..434498a78946 100644
-> --- a/drivers/scsi/pm8001/pm8001_hwi.c
-> +++ b/drivers/scsi/pm8001/pm8001_hwi.c
-> @@ -4625,15 +4625,16 @@ static int pm8001_chip_phy_ctl_req(struct pm8001_hba_info *pm8001_ha,
->
->  static u32 pm8001_chip_is_our_interupt(struct pm8001_hba_info *pm8001_ha)
->  {
-> -       u32 value;
->  #ifdef PM8001_USE_MSIX
->         return 1;
-> -#endif
-> +#else
-> +       u32 value;
-> +
 >         value = pm8001_cr32(pm8001_ha, 0, MSGU_ODR);
->         if (value)
->                 return 1;
->         return 0;
-> -
-> +#endif
->  }
->
->  /**
-> diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-> index 536d2b4384f8..4a176e60307f 100644
-> --- a/drivers/scsi/pm8001/pm80xx_hwi.c
-> +++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-> @@ -4619,15 +4619,16 @@ static int pm80xx_chip_phy_ctl_req(struct pm8001_hba_info *pm8001_ha,
->
->  static u32 pm80xx_chip_is_our_interupt(struct pm8001_hba_info *pm8001_ha)
->  {
-> -       u32 value;
->  #ifdef PM8001_USE_MSIX
+>         if (!value)
+>                 return 0;
+> #endif
 >         return 1;
-> -#endif
-> +#else
-> +       u32 value;
-> +
->         value = pm8001_cr32(pm8001_ha, 0, MSGU_ODR);
->         if (value)
->                 return 1;
->         return 0;
-> -
-> +#endif
->  }
 >
->  /**
-> --
-> 2.20.1
+>   }
 >
+> just my 2 cents,
+>
+> re,
+>  wh
 
+Both version looks good to me, I've acked Colin's version.
+
+Thanks!
 
 -- 
 Jack Wang
