@@ -2,208 +2,366 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5FBC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C0EC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D8020870
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A9B20870
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:55:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7YHHt4e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQOfYeEj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731344AbfCaRzO (ORCPT
+        id S1731373AbfCaRzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 13:55:14 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43516 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731228AbfCaRzO (ORCPT
+        Sun, 31 Mar 2019 13:55:18 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54585 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731229AbfCaRzP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 13:55:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id k17so8882351wrx.10;
-        Sun, 31 Mar 2019 10:55:11 -0700 (PDT)
+        Sun, 31 Mar 2019 13:55:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c1so6648517wml.4;
+        Sun, 31 Mar 2019 10:55:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=lzH4aC313mJST3ZULspMhUqFXGrLZXE+Kj3cGLbwBHE=;
-        b=N7YHHt4etKuyCKJ4qvlqucxJkk8okikpO9Lb3mgr+L096WyC/9gXnMyOvtr6PWL9Yn
-         pRr02ucwoT2Qr5e/kjuVxZZUfhPRpl89wfCEFuyE9afzJnk7kit05gnWNQQ4vmI1suw5
-         pfMRF6xvuXTXZ1RCkzOz2mMjAmq4SMvsyQ8BxS9dwhv0MjzE7vBbctpmzkPRYz+hP4N0
-         3nnkoV91hQfKdfcr2eGVPFCK8Q/9Ezg3k5OYpRQ+3XNMzhVC+jPsCknBza1X5Ryxu+FR
-         OqXx1UMbmjK5HmJ6fFzDQU5ZYG1ddd6zfM/r6q+rWr0UzYP0lSy4M8ikjqherbYSq7zG
-         zmfw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=qHjaB3ZdBXQzqPVdVyRz65YAwbYDya6MDunBvnDHX0Y=;
+        b=DQOfYeEj+6H/2V0hmlyGM8YUjC7j30oPZOusiPB7i9fs62WLt4HBPWhHRV32v8Z1/p
+         lQL+LF464fTl2UFWxc7uRClxP6XjFDAZA24/q4U44vjiO7e+085hPpK5vTzaexUw0ejv
+         hMLjfN3BE6LkFAcNQIHTlMO6Tlu/f9n59lkyO1Ci4e+z3XCgq92gEu2xpcqisPN5S8tZ
+         9n+MotXkg56/3bgex3+tmtWYjopXtgSWzDQlgU7J3EKHFXX8TroxKjqoPN/8JiH02uXx
+         mRWY9y8dmtLadQBLPYne3mPq0rzaIzwGKkZmrt89BomVVYbymYB8CkwKDqRao9lEIs3r
+         iPcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lzH4aC313mJST3ZULspMhUqFXGrLZXE+Kj3cGLbwBHE=;
-        b=R9KUR2QZYyvpVotDw8dLBvj7J+PHkY8VWP/x7NkmupdatFRrUZGXAmwsVZlNc1Kl9i
-         f90I3xfWZvnb+i6gPPet2+Etf0jaKMaek6v0N83v9iOfOk1Vq3b5k6mW1ok/TTmnZnf9
-         e4hs4zQ66QQHg0rdCqXfELD2WJ7/gXuxI6+gomJo+6KHqlwEK8mC1GrxwFWCPiDkLAGq
-         I7ayhUtBtpZF3RErswkwpu5PejCib1RjGaE1rXSDKmru6Eq302j+BGZkAA9bOzbmane/
-         Va4UE8AnI3afKe//l32meSJJUR9qgusst++71/qKHd4vQsHDLtMcKUCRXy5fNwvEkGq6
-         m9Vw==
-X-Gm-Message-State: APjAAAVmXW88OYrYbxeKC6EPGn3y5ldCMyjGWZl3XDVzNbYnNgo/Erje
-        NImGJpMFWd2GGHc0bJTcI3l4Yi28
-X-Google-Smtp-Source: APXvYqzmQAg9oyfKicj71Q6j526JAvMLCHFFPp0uyRflq4THOHHmhbG3UXLhHc0n5jWhRqEi++EWaQ==
-X-Received: by 2002:adf:e683:: with SMTP id r3mr22326437wrm.286.1554054910657;
-        Sun, 31 Mar 2019 10:55:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=qHjaB3ZdBXQzqPVdVyRz65YAwbYDya6MDunBvnDHX0Y=;
+        b=IHrGP+gmiI7aJtiw3czrfM68hF9ynI771wKT/MbIVoUrnDNap05pCauqyF24H+/KpP
+         CWAYjJ/6copP4JW33lXgldhLTr8vqQjJ3KbXq7SBH3FoefzYOHBssyvsiwqp2g33XdIc
+         qWZody7PuiFRVsaQsdoDdqWgb0JWZW5bimCyTVU8bvSZ+lIilyWKE8te705+edCYsJAT
+         pvl5zgL5EC+okVoJgmHN+GA+oavDeZbTa2vPR+9eK7W/Bpe3SMvZyTGWIqFp3rJAptxx
+         1R1rgb5Gikfn6Om1KYQHFQIqYXKSem0HIk9cYfV0ds6E95V0xAGOLMOWXG5Ft6Ls2gJN
+         LLhA==
+X-Gm-Message-State: APjAAAUdZVMalk/Jqp4F92sqN5E1BIdLS/54cjMEAkZHxCRvPNseAZFd
+        DhgtuxfKTsRTRqCclpUSkpwB5fze
+X-Google-Smtp-Source: APXvYqx5GXsoYChrWVk4Nx+Rm9bSSBlyX5bK1z0nGWc0uorNuhPAmNT/qTanz+NUkcmMNkijgd77BQ==
+X-Received: by 2002:a7b:c304:: with SMTP id k4mr10572037wmj.22.1554054912891;
+        Sun, 31 Mar 2019 10:55:12 -0700 (PDT)
 Received: from myhost.home (bds153.neoplus.adsl.tpnet.pl. [83.28.4.153])
-        by smtp.gmail.com with ESMTPSA id d7sm7473688wmf.31.2019.03.31.10.55.08
+        by smtp.gmail.com with ESMTPSA id d7sm7473688wmf.31.2019.03.31.10.55.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 31 Mar 2019 10:55:09 -0700 (PDT)
+        Sun, 31 Mar 2019 10:55:12 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pavel@ucw.cz, robh@kernel.org, jacek.anaszewski@gmail.com
-Subject: [PATCH v3 00/25] Add generic support for composing LED class device name
-Date:   Sun, 31 Mar 2019 19:54:36 +0200
-Message-Id: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
+        pavel@ucw.cz, robh@kernel.org, jacek.anaszewski@gmail.com,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Dan Murphy <dmurphy@ti.com>, Daniel Mack <daniel@zonque.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Oleh Kravchenko <oleg@kaa.org.ua>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>
+Subject: [PATCH v3 01/25] leds: class: Improve LED and LED flash class registration API
+Date:   Sun, 31 Mar 2019 19:54:37 +0200
+Message-Id: <20190331175501.23471-2-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
+References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes from v2:
+Replace of_led_classdev_register() with led_classdev_register_ext(), which
+accepts easily extendable struct led_init_data, instead of the fixed
+struct device_node argument. The latter can be now passed in a fwnode
+property of the struct led_init_data.
 
-- removed from drivers the responsibility of calling led_compose_name()
-- added struct device* argument to led_compose_name() to allow using
-  dev_<level> logging functions for more informative logs
-- adjusted the list of LED_FUNCTION definitions according to the v2 review
-  remarks
-- renamed default_desc to default_label in the struct led_init_data
-- added led-enumerator DT property to the common LED bindings
-- removed LED_COLOR_NAME definitions from include/dt-bindings/leds/common.h
-- change DT color property type from string to integer
-- change struct initialization list to explicit property assignment in leds-sc27xx-bltc.c
-- use led->client->name for led_hw_name in leds-lm3692x.c
-- few other minor improvements to docs etc.
+The modification is driven by the need for passing another argument
+to the LED class initialization function - a LED class device name.
+Currently it is conveyed in the "name" char pointer property of
+struct led_classdev, which is semantically and functionally incorrect
+since it is needed only on LED class device registration, but persists
+in system memory throughout the whole LED class device lifetime.
 
-Changes from v1:
+Whereas in case of the name strings coming from DT "label" property or
+statically initialized ones the cost is only the pointer size, it grows
+to LED_MAX_NAME_SIZE (64) with the advent of a new LED class device naming
+scheme, where color and function properties come from separate board
+firmware properties and the name needs to be constructed in a new buffer.
 
-- improved led_parse_properties() to parse label property at first
-  and return immediately after parsing succeeds
-- added tool get_led_device_info.sh for retrieving LED class device's
-  parent device related information
-- extended LED naming section of Documentation/leds/leds-class.txt
-- adjusted the list of LED_FUNCTION definitions according to the v1 review
-  remarks
-- added standard LED_COLOR_NAME definitions
-- removed functions.h and moved both LED_FUNCTION and LED_COLOR_NAME
-  definitions to include/dt-bindings/common.h
-- rebased leds-as3645a changes on top of the patch switching to fwnode
-  property API
-- updated DT bindings to use new LED_COLOR_NAME definitions
-- improved common LED bindings to not use address unit for sub-nodes
-  without reg property
+The change will not break any existing clients since the patch alters
+also existing led_classdev{_flash}_register() macro wrappers, that pass
+NULL in place of init_data, which leads to using legacy name
+initialization path basing on the struct led_classdev's "name" property.
 
-Generally I still insist on deprecating label property and devicename
-section of LED name. The tool I added for obtaining LED device name
-proves availability of the related information in other places in
-the sysfs. Other discussed use cases are covered in the updated
-Documentation/leds/leds-class.txt.
+Two existing users of devm_of_led_classdev_registers() are modified
+to use devm_led_classdev_register(), which will not impact their
+operation since they in fact didn't need to pass struct device_node on
+registration from the beginning.
 
-Beside that, I tried also to create macros for automatic composition
-of "-N" suffixed LED functions, so that it would not be necessary
-to pollute common.h with plenty repetitions of the same function,
-differing only with the postfix. Unfortunately, the preprocessor
-of the dtc compiler seems not to accept string concatenetation.
-I.e. it is not possible to to the following assighment:
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Baolin Wang <baolin.wang@linaro.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Dan Murphy <dmurphy@ti.com>
+Cc: Daniel Mack <daniel@zonque.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Simon Shields <simon@lineageos.org>
+---
+ drivers/leds/led-class-flash.c  |  9 +++++----
+ drivers/leds/led-class.c        | 29 +++++++++++++++++------------
+ drivers/leds/leds-cr0014114.c   |  3 +--
+ drivers/leds/leds-gpio.c        |  2 +-
+ include/linux/led-class-flash.h | 15 ++++++++++-----
+ include/linux/leds.h            | 35 +++++++++++++++++++++++++----------
+ 6 files changed, 59 insertions(+), 34 deletions(-)
 
-function = "hdd""-1"
-
-If anyone knows how to obviate this shortocoming please let me know.
-
-Original cover letter:
-
-LED class device naming pattern included devicename section, which had
-unpleasant effect of varying userspace interface dependent on underlaying
-hardware. Moreover, this information was redundant in the LED name, since
-the LED controller name could have been obtained from sysfs device group
-
-This patch set introduces a led_compose_name() function in the LED core,
-which unifies and simplifies LED class device name composition. This
-change is accompanied by the improvements in the common LED DT bindings
-where two new properties are introduced: "function" and "color" . The two
-deprecate the old "label" property which was leaving too much room for
-interpretation, leading to inconsistent LED naming.
-
-There are also changes in LED DT node naming, which are in line with
-DT maintainer's request from [0].
-
-Since some DT LED naming unification, related to not including devicename
-section in "label" DT property, is being requested during reviews of new
-LED class drivers for almost a year now, then those drivers are the first
-candidates for optimalization and the first users of the new
-led_compose_name() API. The modifications were tested with Qemu,
-by stubbing the driver internals where hardware interaction was needed
-for proper probing.
-
-Thanks,
-Jacek Anaszewski
-
-Jacek Anaszewski (25):
-  leds: class: Improve LED and LED flash class registration API
-  dt-bindings: leds: Add LED_FUNCTION definitions
-  dt-bindings: leds: Add LED_COLOR_ID definitions
-  dt-bindings: leds: Add function, color and led-enumerator properties
-  leds: core: Add support for composing LED class device names
-  dt-bindings: sc27xx-blt: Add function and color properties
-  leds: sc27xx-blt: Use generic support for composing LED names
-  dt-bindings: lt3593: Add function and color properties
-  leds: lt3593: Use generic support for composing LED names
-  dt-bindings: lp8860: Add function and color properties
-  leds: lp8860: Use generic support for composing LED names
-  dt-bindings: lm3692x: Add function and color properties
-  leds: lm3692x: Use generic support for composing LED names
-  dt-bindings: lm36010: Add function and color properties
-  leds: lm3601x: Use generic support for composing LED names
-  dt-bindings: cr0014114: Add function and color properties
-  leds: cr0014114: Use generic support for composing LED names
-  dt-bindings: aat1290: Add function and color properties
-  leds: aat1290: Use generic support for composing LED names
-  dt-bindings: as3645a: Add function and color properties
-  leds: as3645a: Use generic support for composing LED names
-  dt-bindings: leds-gpio: Add function and color properties
-  leds: gpio: Use generic support for composing LED names
-  dt-bindings: an30259a: Add function and color properties
-  leds: an30259a: Use generic support for composing LED names
-
- .../devicetree/bindings/leds/ams,as3645a.txt       | 22 +++--
- Documentation/devicetree/bindings/leds/common.txt  | 61 ++++++++++++--
- .../devicetree/bindings/leds/leds-aat1290.txt      | 12 ++-
- .../devicetree/bindings/leds/leds-an30259a.txt     | 22 +++--
- .../devicetree/bindings/leds/leds-cr0014114.txt    | 26 ++++--
- .../devicetree/bindings/leds/leds-gpio.txt         | 23 ++++--
- .../devicetree/bindings/leds/leds-lm3601x.txt      | 10 ++-
- .../devicetree/bindings/leds/leds-lm3692x.txt      |  9 +-
- .../devicetree/bindings/leds/leds-lp8860.txt       |  9 +-
- .../devicetree/bindings/leds/leds-lt3593.txt       | 11 ++-
- .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  | 10 ++-
- Documentation/leds/leds-class.txt                  | 27 +++++-
- drivers/leds/led-class-flash.c                     |  9 +-
- drivers/leds/led-class.c                           | 58 +++++++++----
- drivers/leds/led-core.c                            | 96 ++++++++++++++++++++++
- drivers/leds/leds-aat1290.c                        | 14 ++--
- drivers/leds/leds-an30259a.c                       | 25 +++---
- drivers/leds/leds-as3645a.c                        | 69 ++++++----------
- drivers/leds/leds-cr0014114.c                      | 33 +++-----
- drivers/leds/leds-gpio.c                           | 23 +++---
- drivers/leds/leds-lm3601x.c                        | 38 ++++-----
- drivers/leds/leds-lm3692x.c                        | 22 ++---
- drivers/leds/leds-lp8860.c                         | 35 ++++----
- drivers/leds/leds-lt3593.c                         | 20 ++---
- drivers/leds/leds-sc27xx-bltc.c                    | 22 ++---
- include/dt-bindings/leds/common.h                  | 47 +++++++++++
- include/linux/led-class-flash.h                    | 15 ++--
- include/linux/leds.h                               | 78 +++++++++++++++---
- tools/leds/get_led_device_info.sh                  | 81 ++++++++++++++++++
- 29 files changed, 660 insertions(+), 267 deletions(-)
- create mode 100755 tools/leds/get_led_device_info.sh
-
+diff --git a/drivers/leds/led-class-flash.c b/drivers/leds/led-class-flash.c
+index cf398275a53c..8d1c1177bb9a 100644
+--- a/drivers/leds/led-class-flash.c
++++ b/drivers/leds/led-class-flash.c
+@@ -285,8 +285,9 @@ static void led_flash_init_sysfs_groups(struct led_classdev_flash *fled_cdev)
+ 	led_cdev->groups = flash_groups;
+ }
+ 
+-int led_classdev_flash_register(struct device *parent,
+-				struct led_classdev_flash *fled_cdev)
++int led_classdev_flash_register_ext(struct device *parent,
++				    struct led_classdev_flash *fled_cdev,
++				    struct led_init_data *init_data)
+ {
+ 	struct led_classdev *led_cdev;
+ 	const struct led_flash_ops *ops;
+@@ -312,13 +313,13 @@ int led_classdev_flash_register(struct device *parent,
+ 	}
+ 
+ 	/* Register led class device */
+-	ret = led_classdev_register(parent, led_cdev);
++	ret = led_classdev_register_ext(parent, led_cdev, init_data);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(led_classdev_flash_register);
++EXPORT_SYMBOL_GPL(led_classdev_flash_register_ext);
+ 
+ void led_classdev_flash_unregister(struct led_classdev_flash *fled_cdev)
+ {
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index 3c7e3487b373..2f09156b0c63 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -17,6 +17,7 @@
+ #include <linux/leds.h>
+ #include <linux/list.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/timer.h>
+@@ -244,14 +245,16 @@ static int led_classdev_next_name(const char *init_name, char *name,
+ }
+ 
+ /**
+- * of_led_classdev_register - register a new object of led_classdev class.
++ * led_classdev_register_ext - register a new object of led_classdev class
++ *			       with init data.
+  *
+  * @parent: parent of LED device
+  * @led_cdev: the led_classdev structure for this device.
+- * @np: DT node describing this LED
++ * @init_data: LED class device initialization data
+  */
+-int of_led_classdev_register(struct device *parent, struct device_node *np,
+-			    struct led_classdev *led_cdev)
++int led_classdev_register_ext(struct device *parent,
++			      struct led_classdev *led_cdev,
++			      struct led_init_data *init_data)
+ {
+ 	char name[LED_MAX_NAME_SIZE];
+ 	int ret;
+@@ -268,7 +271,8 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
+ 		mutex_unlock(&led_cdev->led_access);
+ 		return PTR_ERR(led_cdev->dev);
+ 	}
+-	led_cdev->dev->of_node = np;
++	if (init_data && init_data->fwnode)
++		led_cdev->dev->of_node = to_of_node(init_data->fwnode);
+ 
+ 	if (ret)
+ 		dev_warn(parent, "Led %s renamed to %s due to name collision",
+@@ -313,7 +317,7 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(of_led_classdev_register);
++EXPORT_SYMBOL_GPL(led_classdev_register_ext);
+ 
+ /**
+  * led_classdev_unregister - unregisters a object of led_properties class.
+@@ -358,14 +362,15 @@ static void devm_led_classdev_release(struct device *dev, void *res)
+ }
+ 
+ /**
+- * devm_of_led_classdev_register - resource managed led_classdev_register()
++ * devm_led_classdev_register_ext - resource managed led_classdev_register_ext()
+  *
+  * @parent: parent of LED device
+  * @led_cdev: the led_classdev structure for this device.
++ * @init_data: LED class device initialization data
+  */
+-int devm_of_led_classdev_register(struct device *parent,
+-				  struct device_node *np,
+-				  struct led_classdev *led_cdev)
++int devm_led_classdev_register_ext(struct device *parent,
++				   struct led_classdev *led_cdev,
++				   struct led_init_data *init_data)
+ {
+ 	struct led_classdev **dr;
+ 	int rc;
+@@ -374,7 +379,7 @@ int devm_of_led_classdev_register(struct device *parent,
+ 	if (!dr)
+ 		return -ENOMEM;
+ 
+-	rc = of_led_classdev_register(parent, np, led_cdev);
++	rc = led_classdev_register_ext(parent, led_cdev, init_data);
+ 	if (rc) {
+ 		devres_free(dr);
+ 		return rc;
+@@ -385,7 +390,7 @@ int devm_of_led_classdev_register(struct device *parent,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(devm_of_led_classdev_register);
++EXPORT_SYMBOL_GPL(devm_led_classdev_register_ext);
+ 
+ static int devm_led_classdev_match(struct device *dev, void *res, void *data)
+ {
+diff --git a/drivers/leds/leds-cr0014114.c b/drivers/leds/leds-cr0014114.c
+index 0e4262462cb9..1c82152764d2 100644
+--- a/drivers/leds/leds-cr0014114.c
++++ b/drivers/leds/leds-cr0014114.c
+@@ -207,8 +207,7 @@ static int cr0014114_probe_dt(struct cr0014114 *priv)
+ 		led->ldev.max_brightness	  = CR_MAX_BRIGHTNESS;
+ 		led->ldev.brightness_set_blocking = cr0014114_set_sync;
+ 
+-		ret = devm_of_led_classdev_register(priv->dev, np,
+-						    &led->ldev);
++		ret = devm_led_classdev_register(priv->dev, &led->ldev);
+ 		if (ret) {
+ 			dev_err(priv->dev,
+ 				"failed to register LED device %s, err %d",
+diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+index 998f2ff6914d..b26cf78993d1 100644
+--- a/drivers/leds/leds-gpio.c
++++ b/drivers/leds/leds-gpio.c
+@@ -112,7 +112,7 @@ static int create_gpio_led(const struct gpio_led *template,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return devm_of_led_classdev_register(parent, np, &led_dat->cdev);
++	return devm_led_classdev_register(parent, &led_dat->cdev);
+ }
+ 
+ struct gpio_leds_priv {
+diff --git a/include/linux/led-class-flash.h b/include/linux/led-class-flash.h
+index 700efaa9e115..ded8d9fa6149 100644
+--- a/include/linux/led-class-flash.h
++++ b/include/linux/led-class-flash.h
+@@ -90,15 +90,20 @@ static inline struct led_classdev_flash *lcdev_to_flcdev(
+ }
+ 
+ /**
+- * led_classdev_flash_register - register a new object of led_classdev class
+- *				 with support for flash LEDs
+- * @parent: the flash LED to register
++ * led_classdev_flash_register_ext - register a new object of LED class with
++ *				     init data and with support for flash LEDs
++ * @parent: LED flash controller device this flash LED is driven by
+  * @fled_cdev: the led_classdev_flash structure for this device
++ * @init_data: the LED class flash device initialization data
+  *
+  * Returns: 0 on success or negative error value on failure
+  */
+-extern int led_classdev_flash_register(struct device *parent,
+-				struct led_classdev_flash *fled_cdev);
++extern int led_classdev_flash_register_ext(struct device *parent,
++					struct led_classdev_flash *fled_cdev,
++					struct led_init_data *init_data);
++
++#define led_classdev_flash_register(parent, fled_cdev)		\
++	led_classdev_flash_register_ext(parent, fled_cdev, NULL)
+ 
+ /**
+  * led_classdev_flash_unregister - unregisters an object of led_classdev class
+diff --git a/include/linux/leds.h b/include/linux/leds.h
+index 78204650fe2a..c87a091c04d9 100644
+--- a/include/linux/leds.h
++++ b/include/linux/leds.h
+@@ -20,6 +20,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/timer.h>
+ #include <linux/workqueue.h>
++#include <uapi/linux/uleds.h>
+ 
+ struct device;
+ struct led_pattern;
+@@ -34,6 +35,11 @@ enum led_brightness {
+ 	LED_FULL	= 255,
+ };
+ 
++struct led_init_data {
++	/* Device fwnode handle */
++	struct fwnode_handle *fwnode;
++};
++
+ struct led_classdev {
+ 	const char		*name;
+ 	enum led_brightness	 brightness;
+@@ -129,16 +135,25 @@ struct led_classdev {
+ 	struct mutex		led_access;
+ };
+ 
+-extern int of_led_classdev_register(struct device *parent,
+-				    struct device_node *np,
+-				    struct led_classdev *led_cdev);
+-#define led_classdev_register(parent, led_cdev)				\
+-	of_led_classdev_register(parent, NULL, led_cdev)
+-extern int devm_of_led_classdev_register(struct device *parent,
+-					 struct device_node *np,
+-					 struct led_classdev *led_cdev);
+-#define devm_led_classdev_register(parent, led_cdev)			\
+-	devm_of_led_classdev_register(parent, NULL, led_cdev)
++/**
++ * led_classdev_register_ext - register a new object of LED class with
++ *			       init data
++ * @parent: LED controller device this LED is driven by
++ * @led_cdev: the led_classdev structure for this device
++ * @init_data: the LED class device initialization data
++ *
++ * Returns: 0 on success or negative error value on failure
++ */
++extern int led_classdev_register_ext(struct device *parent,
++				     struct led_classdev *led_cdev,
++				     struct led_init_data *init_data);
++#define led_classdev_register(parent, led_cdev)			\
++	led_classdev_register_ext(parent, led_cdev, NULL)
++extern int devm_led_classdev_register_ext(struct device *parent,
++					  struct led_classdev *led_cdev,
++					  struct led_init_data *init_data);
++#define devm_led_classdev_register(parent, led_cdev)		\
++	devm_led_classdev_register_ext(parent, led_cdev, NULL)
+ extern void led_classdev_unregister(struct led_classdev *led_cdev);
+ extern void devm_led_classdev_unregister(struct device *parent,
+ 					 struct led_classdev *led_cdev);
 -- 
 2.11.0
 
