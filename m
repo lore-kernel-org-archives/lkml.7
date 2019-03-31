@@ -2,142 +2,145 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B8EC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 15:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F94C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 15:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA352086C
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 15:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54ABD20872
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 15:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8Ut0kmJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lpY7ert1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731289AbfCaPO5 (ORCPT
+        id S1731243AbfCaPVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 11:14:57 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:36549 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731211AbfCaPO5 (ORCPT
+        Sun, 31 Mar 2019 11:21:53 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:45911 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731162AbfCaPVw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 11:14:57 -0400
-Received: by mail-vs1-f66.google.com with SMTP id n4so4032301vsm.3
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 08:14:56 -0700 (PDT)
+        Sun, 31 Mar 2019 11:21:52 -0400
+Received: by mail-vs1-f65.google.com with SMTP id n14so3990506vsp.12
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 08:21:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DBsJQsFvMrPo98lUzLMYhevM4wuKttyWGnDZLyEeI5I=;
-        b=g8Ut0kmJICKhqDxP9atG/H7Yv4fVseGuy/EJ91DIaFNaNUChAwd8eHHAES77CHLOQw
-         FBpBn0MJZN4mET3h8XVOVH9IEyznbDrugOr1ja+ByNxA9weKhZxlju++8WK34SMj28mN
-         YGD3QWiDi/VGpavY/U2rSijys5shVfs9SswggySLdG+d/J4K6125qVEiBd598N23NipS
-         ngaIdVaO7WQdcXXJWP629G3WBf1zj0bsKBGwOeJeA5Y3Ho3yyhZoJeQ1iL0u469qQUrG
-         F2SjoN3wW9nUpYUs35Griy9rZ1XxvFF8DZJk9o7GKebS7K9fdqysYigelvrYMB9gdWsD
-         xw/Q==
+        bh=+llreTrJt/JdzQbNiKe3QjVP9ZEEoAd9OjEaM4nLe9M=;
+        b=lpY7ert1TcoA4tHo25RQZtbNwfddZsEc/6jwbwye4t+A4wwx1Hv8C+HisE8O1NWVOe
+         l5QrbQsiVy9SBDPfhOp+jAM4YoN+jc+VXUqN2gknKR70DnsbnXdNDjujF7Vy8AuNgQqE
+         jYTdphIsKjUPdj2Pmy7Vjc+H+qEm0/oeXx46hTqznfxU1YVZFfY/DeijT++4htDzNffP
+         MoPLrXKY7dSP+UjXD9sce7X3zuQBybzafPcpfdi4mt+ThTpWrWHOo03quUVI7LiUcVzD
+         PrOXgblG3zmA8ByGZpR7iQ/4b33RlukCXqnwjq5ZHYnG6Uu34ZkFjSBSzzHobT0mNH6L
+         aAWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DBsJQsFvMrPo98lUzLMYhevM4wuKttyWGnDZLyEeI5I=;
-        b=OrU6d2GqP48JOCewYpO6gnLl4yg8YIk0MmVUE2FAuRsY+YwO0dVMAWJsGz9nPLD0DS
-         IuGkcfApMjGbBYGTlZ9KfeTP10s2wp77QAl1nbuo/ynGcQRx9A5OfkG9vH6wnHcnyMXn
-         HPans76zDjFnQMx+yz24pCykUNNI4R8cadBC6hZLz3J/IPYFRkljIsTKtaHm36EmOaeQ
-         4DzlEwV+l6LHbCJYKnP/X0gIrlA7cy65TCmzJ7nDO0Bp+UJQY+WD/3EgAwtFkA1SpYZb
-         WUBpaLDsfW1P6xhYBmJ+CT/OYepy/ebYue/blqWRlrsB+xP2BjPI1q0tMwszEnU642PX
-         0e4g==
-X-Gm-Message-State: APjAAAXE7j9BYyn2bljcyJq+uPo0rek2iGwVdOgWk9XWKZlsA44RAeeB
-        SE10RheV40do8AVVBF1QErj0pMo3wEbDWfcncF0=
-X-Google-Smtp-Source: APXvYqzK83/i8i+qsrzflAplGdVyteBV7BJTIGue66UCsb4hczK2yA3KU2IVzZJMpVg9VE0gQiZ444gz58oe1gcx8jY=
-X-Received: by 2002:a67:f694:: with SMTP id n20mr35245354vso.9.1554045296313;
- Sun, 31 Mar 2019 08:14:56 -0700 (PDT)
+        bh=+llreTrJt/JdzQbNiKe3QjVP9ZEEoAd9OjEaM4nLe9M=;
+        b=mtgqKln+4JW1eSL8+O/4IjlVVw0z+e1rZoTgjG84ILHAdB1/JeEWEE39KMTqwh7qHM
+         sxF9ZKaHHhvsjL1Lu4iB0PcMVQzygJiQG1VfRxYEP4zEneHKtm/E+KlhSQAKKLDUHKwl
+         0FthU40H7SFMkZoUxxMPxeRpvmzowzdeMjR7coPU1ZAtvgHDrPQzaqL91jHokOH2i89w
+         wPqgHnGafhBjM64pMaUJNswPLDRy/XaQlJCgJkaA3U//lnazg1jUZTbf3zhHPSpDMyw5
+         kHZVnuOeK2zwUrd7CZcZ9Q8BiikZQTLiO/rHSuqwyVcTwZBgLX+zLAH16QASWgFQh5RZ
+         mPiA==
+X-Gm-Message-State: APjAAAV7vrXemBmAdecO45c8IIXkXP0XFeMnvksowRdj71CM67AngXLO
+        gzWGsaLyRjY/U2kzAdIHmopDOKQZ5RZYdDshHgDrlw==
+X-Google-Smtp-Source: APXvYqz2iqUolcpoLH3fHhBwiU+3Cwt9f931KYGp8+Tw6vBtVYlcE6pDZxUX8h2+UGk71eq2HG8jCnHWPOAQF3mTDuw=
+X-Received: by 2002:a67:ea0a:: with SMTP id g10mr13091406vso.77.1554045711026;
+ Sun, 31 Mar 2019 08:21:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190314032047.15790-1-vichy.kuo@gmail.com> <20190319153114.GI59586@arrakis.emea.arm.com>
-In-Reply-To: <20190319153114.GI59586@arrakis.emea.arm.com>
-From:   pierre kuo <vichy.kuo@gmail.com>
-Date:   Sun, 31 Mar 2019 23:14:44 +0800
-Message-ID: <CAOVJa8HSB34ggku=96KAb6qju3G5-uGYFxCE6O2eQRMwU4bd1A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] initrd: move initrd_start calculate within linear
- mapping range check
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Florian Fainelli <f.fainelli@gmail.com>
+References: <20190329155425.26059-1-christian@brauner.io> <CAHk-=wjq4dTPcz-qsvhpm5F42SDHCoqEWv1V=rs_kt6MC=ZThA@mail.gmail.com>
+ <CAKOZueuDWWYtg9gUpUgTG2k-gVPE1KBEkstr5eP=FC2EzdmaoA@mail.gmail.com>
+ <CAHk-=wjka0W1g3asQp2H=5ot=kkS-Mp+Cx6KHr0rNkGFfCOLYA@mail.gmail.com>
+ <CAHk-=wi1kQDVN22qv7M=bWU+CngZZXcPAMKCsDZMeuY3k2tkyg@mail.gmail.com>
+ <20190331010716.GA189578@google.com> <CAG48ez387kGbD_dLqEbZ1U9rKFbfP0EF9cMVjQT6nwc9=Y9CNw@mail.gmail.com>
+ <20190331040810.GB189578@google.com> <CAG48ez2gb94SqS30Ai4+VBHhnzBp5Po9_u00nMrvUW6Wqq6hPA@mail.gmail.com>
+ <CAHk-=wiZ40LVjnXSi9iHLE_-ZBsWFGCgdmNiYZUXn1-V5YBg2g@mail.gmail.com> <20190331150507.zpyugdvtmr6rgpda@brauner.io>
+In-Reply-To: <20190331150507.zpyugdvtmr6rgpda@brauner.io>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Sun, 31 Mar 2019 08:21:39 -0700
+Message-ID: <CAKOZues=PUZzKWoL10qiaLXgbDwE0YjygSdf4ZZSZHvOYMO=3w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Catalin:
-
-> On Thu, Mar 14, 2019 at 11:20:47AM +0800, pierre Kuo wrote:
-> > in the previous case, initrd_start and initrd_end can be successfully
-> > returned either (base < memblock_start_of_DRAM()) or (base + size >
-> > memblock_start_of_DRAM() + linear_region_size).
-> >
-> > That means even linear mapping range check fail for initrd_start and
-> > initrd_end, it still can get virtual address. Here we put
-> > initrd_start/initrd_end to be calculated only when linear mapping check
-> > pass.
-> >
-> > Fixes: c756c592e442 ("arm64: Utilize phys_initrd_start/phys_initrd_size")
+On Sun, Mar 31, 2019 at 8:05 AM Christian Brauner <christian@brauner.io> wrote:
 >
-> For future versions, please also cc the author of the original commit
-> you are fixing.
-
-Got it and thanks for ur warm reminder ^^
-
+> On Sun, Mar 31, 2019 at 07:52:28AM -0700, Linus Torvalds wrote:
+> > On Sat, Mar 30, 2019 at 9:47 PM Jann Horn <jannh@google.com> wrote:
+> > >
+> > > Sure, given a pidfd_clone() syscall, as long as the parent of the
+> > > process is giving you a pidfd for it and you don't have to deal with
+> > > grandchildren created by fork() calls outside your control, that
+> > > works.
 > >
-> >  arch/arm64/mm/init.c | 8 +++-----
-> >  1 file changed, 3 insertions(+), 5 deletions(-)
+> > Don't do pidfd_clone() and pidfd_wait().
 > >
-> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > index 7205a9085b4d..1adf418de685 100644
-> > --- a/arch/arm64/mm/init.c
-> > +++ b/arch/arm64/mm/init.c
-> > @@ -425,6 +425,9 @@ void __init arm64_memblock_init(void)
-> >                       memblock_remove(base, size); /* clear MEMBLOCK_ flags */
-> >                       memblock_add(base, size);
-> >                       memblock_reserve(base, size);
-> > +                     /* the generic initrd code expects virtual addresses */
-> > +                     initrd_start = __phys_to_virt(phys_initrd_start);
-> > +                     initrd_end = initrd_start + phys_initrd_size;
-> >               }
-> >       }
-> >
-> > @@ -450,11 +453,6 @@ void __init arm64_memblock_init(void)
-> >        * pagetables with memblock.
-> >        */
-> >       memblock_reserve(__pa_symbol(_text), _end - _text);
-> > -     if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {
-> > -             /* the generic initrd code expects virtual addresses */
-> > -             initrd_start = __phys_to_virt(phys_initrd_start);
-> > -             initrd_end = initrd_start + phys_initrd_size;
-> > -     }
+> > Both of those existing system calls already get a "flags" argument.
+> > Just make a WPIDFD (for waitid) and CLONE_PIDFD (for clone) bit, and
+> > make the existing system calls just take/return a pidfd.
 >
-> With CONFIG_RANDOMIZE_BASE we can get a further change to memstart_addr
-> after the place where you moved the initrd_{start,end} setting, which
-> would result in a different value for __phys_to_virt(phys_initrd_start).
+> Yes, that's one of the options I was considering but was afraid of
+> pitching it because of the very massive opposition I got
+> regarding"multiplexers". I'm perfectly happy with doing it this way.
 
-I found what you mean, since __phys_to_virt will use PHYS_OFFSET
-(memstart_addr) for calculating.
-How about moving CONFIG_RANDOMIZE_BASE part of code ahead of
-CONFIG_BLK_DEV_INITRD checking?
+This approach is fine by me, FWIW. I like it more than a general-purpose pidctl.
 
-That means below (d) moving ahead of (c)
-prvious:
-if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} ---(a)
-if (memory_limit != PHYS_ADDR_MAX) {}            ---(b)
-if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {} ---(c)
-if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {} ---(d)
+> Btw, the /proc/<pid> race issue that is mentioned constantly is simply
+> avoidable by placing the pid that the pidfd has stashed relative to the
+> callers' procfs mount's pid namespace in the pidfd's fdinfo. So there's
+> not even a need to really go through /proc/<pid> in the first place. A
+> caller wanting to get metadata access and avoid a race with pid
+> recycling can then simply do:
+>
+> int pidfd = pidfd_open(pid, 0);
+> int pid = parse_fdinfo("/proc/self/fdinfo/<pidfd>");
+> int procpidfd = open("/proc/<pid>", ...);
 
-now:
-if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) { ---(a)
-if (memory_limit != PHYS_ADDR_MAX) {}              ----------------(b)
-if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}  --------------(d)
-if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}  ---(c)
+IMHO, it's worth documenting this procedure in the pidfd man page.
 
-Appreciate your kind advice.
+> /* Test if process still exists by sending signal 0 through our pidfd. */
+
+Are you planning on officially documenting this incantation in the
+pidfd man page?
+
+> int ret = pidfd_send_signal(pid, 0, NULL, PIDFD_SIGNAL_THREAD);
+> if (ret < 0 && errno == ESRCH) {
+>         /* pid has been recycled and procpidfd refers to another process */
+> }
+
+I was going to suggest that WNOHANG also works for this purpose, but
+that idea raises another question: normally, you can wait*(2) on a
+process only once. Are you imagining waitid on a pidfd succeeding more
+than one? ISTM that the pidfd would need to internally store not just
+a struct pid, but the exit status as well or some way to get to it.
