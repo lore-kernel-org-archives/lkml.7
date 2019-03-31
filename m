@@ -2,157 +2,128 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F16CC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 14:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9C2C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 14:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6B820882
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 14:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B6E20882
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 14:52:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554043969;
+	bh=oSBvfnV2idMF21pC3lnnGen0Yh8xrOOLeiUn3KCdygs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Be4rQql3+I1QYbceaa1+3qf7CNkIvCIze+yv6ZUUQUURmK2w+n8F8Txa6bYwo4A2H
+	 b0rRdIObXO49v8LOMnyR0fC7FKDGmJ35E6wqGntM+OoTE7G6p1bons3ioJdbkSNqmA
+	 KgSmGGn/QaKxFn9RzX2ono+WuEAXcOTrvhE9ax5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731258AbfCaOqn (ORCPT
+        id S1731276AbfCaOws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 10:46:43 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:41198 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731130AbfCaOqm (ORCPT
+        Sun, 31 Mar 2019 10:52:48 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34909 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731146AbfCaOwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 10:46:42 -0400
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id E40C072CCAE;
-        Sun, 31 Mar 2019 17:46:38 +0300 (MSK)
-Received: from beacon.altlinux.org (unknown [185.6.174.98])
-        by imap.altlinux.org (Postfix) with ESMTPSA id B87014A4A16;
-        Sun, 31 Mar 2019 17:46:38 +0300 (MSK)
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        David Howells <dhowells@redhat.com>,
-        Denis Kenzior <denkenz@gmail.com>, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] KEYS: asym_tpm: move setting set_pub_key parameters into derive_pub_key
-Date:   Sun, 31 Mar 2019 17:46:12 +0300
-Message-Id: <20190331144612.22029-1-vt@altlinux.org>
-X-Mailer: git-send-email 2.11.0
+        Sun, 31 Mar 2019 10:52:47 -0400
+Received: by mail-lj1-f193.google.com with SMTP id t4so5824375ljc.2
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 07:52:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2y7OgXdpOdTE+br0K6QafAQdwQ5xYRbe0gstaLiCTtc=;
+        b=Zlw0KAsuj3qtXgQM/1AUYXYLuKAP8JZoO8b6FkXvAVEf2M57udZ/hmvhE9CsJOvtTX
+         HqyMCNidoPgwjh3iUvKcMza4Fw2FVRg7dbd6tk6/8yBkRql/4fs9IV3hQkYPV5Yi4lky
+         H3VjMPFwIMt1zv/CQDZHky9I0uV0EE67lNEhg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2y7OgXdpOdTE+br0K6QafAQdwQ5xYRbe0gstaLiCTtc=;
+        b=rtwBWmGHiL4VjhMyb48O4zaHiXQKbnrNmny63ihvG5Nzd3nqCPe2RqWfEpXA+oQY81
+         l1sDJiiejnX/IIC+nVonTxmFH+oR21U14vuj9/vHGTrCtPWahkAXEP6wyGF8+mLYT7aF
+         eFcSJBepHXr3qPQkNfjyKFQ1aNIT+xUXQg0OWpHhf7y5AnHT8Yh5wC0KpGIk8KjDh9ZY
+         ZVjlyuqMlQEA1nS0SMH2KYaCGBHZ7zDL8N0px0zFRT90o083MzUIxmbHyCmnwn128SMx
+         l1jtanohnLLlTtryFxXADbHIkTWTojVsWMlXU6AB+uJ2nZwa6uE7BFe2Z6rlGfYPyhN5
+         XHoA==
+X-Gm-Message-State: APjAAAXlvsVEKmlqrXOVQjChCsD4eR4C2P3Zmb6tZFEM+srsPM7TTTMv
+        iebvNRf2vR+6y88skVtaPSrkQ9ztPUw=
+X-Google-Smtp-Source: APXvYqwi4OLownBqCl2qqK75bV9SrmcWexfV2ylFa+JAL9kiH9CfBnoEgoeGMW0wIdJpHrusAkv6tQ==
+X-Received: by 2002:a2e:8089:: with SMTP id i9mr31416795ljg.137.1554043965495;
+        Sun, 31 Mar 2019 07:52:45 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id t81sm1311565lff.21.2019.03.31.07.52.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 31 Mar 2019 07:52:45 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id 10so4447994lfr.8
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 07:52:44 -0700 (PDT)
+X-Received: by 2002:a19:ca02:: with SMTP id a2mr29932559lfg.88.1554043964483;
+ Sun, 31 Mar 2019 07:52:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190329155425.26059-1-christian@brauner.io> <CAHk-=wjq4dTPcz-qsvhpm5F42SDHCoqEWv1V=rs_kt6MC=ZThA@mail.gmail.com>
+ <CAKOZueuDWWYtg9gUpUgTG2k-gVPE1KBEkstr5eP=FC2EzdmaoA@mail.gmail.com>
+ <CAHk-=wjka0W1g3asQp2H=5ot=kkS-Mp+Cx6KHr0rNkGFfCOLYA@mail.gmail.com>
+ <CAHk-=wi1kQDVN22qv7M=bWU+CngZZXcPAMKCsDZMeuY3k2tkyg@mail.gmail.com>
+ <20190331010716.GA189578@google.com> <CAG48ez387kGbD_dLqEbZ1U9rKFbfP0EF9cMVjQT6nwc9=Y9CNw@mail.gmail.com>
+ <20190331040810.GB189578@google.com> <CAG48ez2gb94SqS30Ai4+VBHhnzBp5Po9_u00nMrvUW6Wqq6hPA@mail.gmail.com>
+In-Reply-To: <CAG48ez2gb94SqS30Ai4+VBHhnzBp5Po9_u00nMrvUW6Wqq6hPA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 31 Mar 2019 07:52:28 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiZ40LVjnXSi9iHLE_-ZBsWFGCgdmNiYZUXn1-V5YBg2g@mail.gmail.com>
+Message-ID: <CAHk-=wiZ40LVjnXSi9iHLE_-ZBsWFGCgdmNiYZUXn1-V5YBg2g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
+To:     Jann Horn <jannh@google.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Andrew Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only reason for derive_pub_key() is to take a TPM-blob formatted
-public key and convert it to ASN.1 format understood by
-crypto_akcipher_set_pub_key. Because we are changing set_pub_key input
-format (adding key parameters) - update that function to generate proper
-zero values instead of generating them each time after the call.
+On Sat, Mar 30, 2019 at 9:47 PM Jann Horn <jannh@google.com> wrote:
+>
+> Sure, given a pidfd_clone() syscall, as long as the parent of the
+> process is giving you a pidfd for it and you don't have to deal with
+> grandchildren created by fork() calls outside your control, that
+> works.
 
-Suggested-by: Denis Kenzior <denkenz@gmail.com>
-Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
----
-This should be applied after "crypto: add EC-RDSA (GOST 34.10) algorithm" patchset.
+Don't do pidfd_clone() and pidfd_wait().
 
- crypto/asymmetric_keys/asym_tpm.c | 34 ++++++++++++++--------------------
- 1 file changed, 14 insertions(+), 20 deletions(-)
+Both of those existing system calls already get a "flags" argument.
+Just make a WPIDFD (for waitid) and CLONE_PIDFD (for clone) bit, and
+make the existing system calls just take/return a pidfd.
 
-diff --git a/crypto/asymmetric_keys/asym_tpm.c b/crypto/asymmetric_keys/asym_tpm.c
-index d95d7ec50e5a..b138acf3a5e6 100644
---- a/crypto/asymmetric_keys/asym_tpm.c
-+++ b/crypto/asymmetric_keys/asym_tpm.c
-@@ -276,6 +276,10 @@ static int tpm_sign(struct tpm_buf *tb,
- 
- 	return datalen;
- }
-+
-+/* Room to fit two u32 zeros for algo id and parameters length. */
-+#define SETKEY_PARAMS_SIZE (sizeof(u32) * 2)
-+
- /*
-  * Maximum buffer size for the BER/DER encoded public key.  The public key
-  * is of the form SEQUENCE { INTEGER n, INTEGER e } where n is a maximum 2048
-@@ -286,8 +290,9 @@ static int tpm_sign(struct tpm_buf *tb,
-  *     - 257 bytes of n
-  *   - max 2 bytes for INTEGER e type/length
-  *     - 3 bytes of e
-+ * - 4+4 of zeros for set_pub_key parameters (SETKEY_PARAMS_SIZE)
-  */
--#define PUB_KEY_BUF_SIZE (4 + 4 + 257 + 2 + 3)
-+#define PUB_KEY_BUF_SIZE (4 + 4 + 257 + 2 + 3 + SETKEY_PARAMS_SIZE)
- 
- /*
-  * Provide a part of a description of the key for /proc/keys.
-@@ -364,6 +369,8 @@ static uint32_t derive_pub_key(const void *pub_key, uint32_t len, uint8_t *buf)
- 	cur = encode_tag_length(cur, 0x02, sizeof(e));
- 	memcpy(cur, e, sizeof(e));
- 	cur += sizeof(e);
-+	/* Zero parameters to satisfy set_pub_key ABI. */
-+	memset(cur, 0, SETKEY_PARAMS_SIZE);
- 
- 	return cur - buf;
- }
-@@ -395,12 +402,6 @@ static int determine_akcipher(const char *encoding, const char *hash_algo,
- 	return -ENOPKG;
- }
- 
--static u8 *tpm_pack_u32(u8 *dst, u32 val)
--{
--	memcpy(dst, &val, sizeof(val));
--	return dst + sizeof(val);
--}
--
- /*
-  * Query information about a key.
-  */
-@@ -428,14 +429,11 @@ static int tpm_key_query(const struct kernel_pkey_params *params,
- 	der_pub_key_len = derive_pub_key(tk->pub_key, tk->pub_key_len,
- 					 der_pub_key);
- 
--	pkey = kmalloc(der_pub_key_len + sizeof(u32) * 2, GFP_KERNEL);
-+	pkey = kmalloc(der_pub_key_len + SETKEY_PARAMS_SIZE, GFP_KERNEL);
- 	if (!pkey)
- 		goto error_free_tfm;
--	memcpy(pkey, der_pub_key, der_pub_key_len);
-+	memcpy(pkey, der_pub_key, der_pub_key_len + SETKEY_PARAMS_SIZE);
- 	ptr = pkey + der_pub_key_len;
--	/* Set dummy parameters to satisfy set_pub_key ABI. */
--	ptr = tpm_pack_u32(ptr, 0); /* algo */
--	ptr = tpm_pack_u32(ptr, 0); /* parameter length */
- 
- 	ret = crypto_akcipher_set_pub_key(tfm, pkey, der_pub_key_len);
- 	if (ret < 0)
-@@ -493,13 +491,11 @@ static int tpm_key_encrypt(struct tpm_key *tk,
- 	der_pub_key_len = derive_pub_key(tk->pub_key, tk->pub_key_len,
- 					 der_pub_key);
- 
--	pkey = kmalloc(der_pub_key_len + sizeof(u32) * 2, GFP_KERNEL);
-+	pkey = kmalloc(der_pub_key_len + SETKEY_PARAMS_SIZE, GFP_KERNEL);
- 	if (!pkey)
- 		goto error_free_tfm;
--	memcpy(pkey, der_pub_key, der_pub_key_len);
-+	memcpy(pkey, der_pub_key, der_pub_key_len + SETKEY_PARAMS_SIZE);
- 	ptr = pkey + der_pub_key_len;
--	ptr = tpm_pack_u32(ptr, 0); /* algo */
--	ptr = tpm_pack_u32(ptr, 0); /* parameter length */
- 
- 	ret = crypto_akcipher_set_pub_key(tfm, pkey, der_pub_key_len);
- 	if (ret < 0)
-@@ -798,13 +794,11 @@ static int tpm_key_verify_signature(const struct key *key,
- 	der_pub_key_len = derive_pub_key(tk->pub_key, tk->pub_key_len,
- 					 der_pub_key);
- 
--	pkey = kmalloc(der_pub_key_len + sizeof(u32) * 2, GFP_KERNEL);
-+	pkey = kmalloc(der_pub_key_len + SETKEY_PARAMS_SIZE, GFP_KERNEL);
- 	if (!pkey)
- 		goto error_free_tfm;
--	memcpy(pkey, der_pub_key, der_pub_key_len);
-+	memcpy(pkey, der_pub_key, der_pub_key_len + SETKEY_PARAMS_SIZE);
- 	ptr = pkey + der_pub_key_len;
--	ptr = tpm_pack_u32(ptr, 0); /* algo */
--	ptr = tpm_pack_u32(ptr, 0); /* parameter length */
- 
- 	ret = crypto_akcipher_set_pub_key(tfm, pkey, der_pub_key_len);
- 	if (ret < 0)
--- 
-2.11.0
+Side note: we could (should?) also make the default maxpid just be
+larger. It needs to fit in an 'int', but MAXINT instead of 65535 would
+likely alreadt make a lot of these attacks harder.
 
+There was some really old legacy reason why we actually limited it to
+65535 originally.  It was old and crufty even back when..
+
+               Linus
+
+              Linus
