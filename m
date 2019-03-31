@@ -2,182 +2,98 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBE0C10F06
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0DEC10F06
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F25A21773
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554025572;
-	bh=mvatAZ8EMowd44cb0Yyla/0+OwnoQ3rNaVBn3xAnz4c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fBJJja0ui8jjToo9gVzBpSf5envAHjDUNnQ3C99NKSr18aJPFPtAsKk+tyxThKM3t
-	 F5bGWm6eXIyww0ywY6JaRksCufeum6HnsMRCEkdxJ2Y3qLsKoja7++wMmNSDzSAX+l
-	 sstTqpP+z7vMKrceC8uFyQMxvE4eA1qxvS8s2URU=
+	by mail.kernel.org (Postfix) with ESMTP id 2CC5220850
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfCaJqL (ORCPT
+        id S1731084AbfCaJrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 05:46:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55260 "EHLO mail.kernel.org"
+        Sun, 31 Mar 2019 05:47:24 -0400
+Received: from ozlabs.org ([203.11.71.1]:35805 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbfCaJqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 05:46:11 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726994AbfCaJrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 05:47:23 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D6AE20850;
-        Sun, 31 Mar 2019 09:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554025569;
-        bh=mvatAZ8EMowd44cb0Yyla/0+OwnoQ3rNaVBn3xAnz4c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wbu3ASz6Loab3F9fmV43p9D6pUTLuvgNJ/qs4QrwEiAS1luQCMlC4O46HG7gxLVSa
-         ElGtUTUSQu9DAtfrTii8e2MU5pvtrjB7Drbptmoc48ke2U6TiD6htUQAd6O4y9J0rK
-         CzCmEig2wHjUKH6tgQm4fLEKsL3JrTj4bX+cRvFA=
-Date:   Sun, 31 Mar 2019 10:46:02 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
-        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <arnaud.pouliquen@st.com>, <olivier.moysan@st.com>
-Subject: Re: [PATCH] iio: adc: stm32-dfsdm: improve sampling frequency
- accuracy
-Message-ID: <20190331104602.209cb9a0@archlinux>
-In-Reply-To: <1553523841-16315-1-git-send-email-fabrice.gasnier@st.com>
-References: <1553523841-16315-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44X9cH2D9zz9sQr;
+        Sun, 31 Mar 2019 20:47:10 +1100 (AEDT)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] arch: add pidfd and io_uring syscalls everywhere
+In-Reply-To: <20190325144737.703921-1-arnd@arndb.de>
+References: <20190325143521.34928-1-arnd@arndb.de> <20190325144737.703921-1-arnd@arndb.de>
+Date:   Sun, 31 Mar 2019 20:47:13 +1100
+Message-ID: <87y34vl6ji.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Mar 2019 15:24:01 +0100
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
-
-> The sample frequency is driven using the oversampling ratio depending
-> on the SPI bus frequency.
-> Currently, oversampling ratio is computed by an entire division:
-> - spi_freq / sample_freq. This may result in inaccurate value.
-> Using DIV_ROUND_CLOSEST improves resulting sample frequency, which is
-> useful for audio that requests fixed rates (such as: 8, 16 or 32 kHz).
-> BTW, introduce new routine to re-factor sample frequency setting, and
-> move frequency accuracy message from warning to debug level.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-
-Would have preferred this as two patches as it would have made review easier
-by making it clear what the functional change is.
-
-Still that is mostly me just wanting an easy life ;)
-
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
+Arnd Bergmann <arnd@arndb.de> writes:
+> Add the io_uring and pidfd_send_signal system calls to all architectures.
+>
+> These system calls are designed to handle both native and compat tasks,
+> so all entries are the same across architectures, only arm-compat and
+> the generic tale still use an old format.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/iio/adc/stm32-dfsdm-adc.c | 56 +++++++++++++++++++++------------------
->  1 file changed, 30 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> index 531ca7e..051561c 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> @@ -558,13 +558,38 @@ static ssize_t dfsdm_adc_audio_get_spiclk(struct iio_dev *indio_dev,
->  	return snprintf(buf, PAGE_SIZE, "%d\n", adc->spi_freq);
->  }
->  
-> +static int dfsdm_adc_set_samp_freq(struct iio_dev *indio_dev,
-> +				   unsigned int sample_freq,
-> +				   unsigned int spi_freq)
-> +{
-> +	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-> +	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
-> +	unsigned int oversamp;
-> +	int ret;
-> +
-> +	oversamp = DIV_ROUND_CLOSEST(spi_freq, sample_freq);
-> +	if (spi_freq % sample_freq)
-> +		dev_dbg(&indio_dev->dev,
-> +			"Rate not accurate. requested (%u), actual (%u)\n",
-> +			sample_freq, spi_freq / oversamp);
-> +
-> +	ret = stm32_dfsdm_set_osrs(fl, 0, oversamp);
-> +	if (ret < 0) {
-> +		dev_err(&indio_dev->dev, "No filter parameters that match!\n");
-> +		return ret;
-> +	}
-> +	adc->sample_freq = spi_freq / oversamp;
-> +	adc->oversamp = oversamp;
-> +
-> +	return 0;
-> +}
-> +
->  static ssize_t dfsdm_adc_audio_set_spiclk(struct iio_dev *indio_dev,
->  					  uintptr_t priv,
->  					  const struct iio_chan_spec *chan,
->  					  const char *buf, size_t len)
->  {
->  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-> -	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
->  	struct stm32_dfsdm_channel *ch = &adc->dfsdm->ch_list[chan->channel];
->  	unsigned int sample_freq = adc->sample_freq;
->  	unsigned int spi_freq;
-> @@ -583,17 +608,9 @@ static ssize_t dfsdm_adc_audio_set_spiclk(struct iio_dev *indio_dev,
->  		return -EINVAL;
->  
->  	if (sample_freq) {
-> -		if (spi_freq % sample_freq)
-> -			dev_warn(&indio_dev->dev,
-> -				 "Sampling rate not accurate (%d)\n",
-> -				 spi_freq / (spi_freq / sample_freq));
-> -
-> -		ret = stm32_dfsdm_set_osrs(fl, 0, (spi_freq / sample_freq));
-> -		if (ret < 0) {
-> -			dev_err(&indio_dev->dev,
-> -				"No filter parameters that match!\n");
-> +		ret = dfsdm_adc_set_samp_freq(indio_dev, sample_freq, spi_freq);
-> +		if (ret < 0)
->  			return ret;
-> -		}
->  	}
->  	adc->spi_freq = spi_freq;
->  
-> @@ -1068,22 +1085,9 @@ static int stm32_dfsdm_write_raw(struct iio_dev *indio_dev,
->  			spi_freq = adc->spi_freq;
->  		}
->  
-> -		if (spi_freq % val)
-> -			dev_warn(&indio_dev->dev,
-> -				 "Sampling rate not accurate (%d)\n",
-> -				 spi_freq / (spi_freq / val));
-> -
-> -		ret = stm32_dfsdm_set_osrs(fl, 0, (spi_freq / val));
-> -		if (ret < 0) {
-> -			dev_err(&indio_dev->dev,
-> -				"Not able to find parameter that match!\n");
-> -			iio_device_release_direct_mode(indio_dev);
-> -			return ret;
-> -		}
-> -		adc->sample_freq = val;
-> +		ret = dfsdm_adc_set_samp_freq(indio_dev, val, spi_freq);
->  		iio_device_release_direct_mode(indio_dev);
-> -
-> -		return 0;
-> +		return ret;
->  	}
->  
->  	return -EINVAL;
+>  arch/alpha/kernel/syscalls/syscall.tbl      | 4 ++++
+>  arch/arm/tools/syscall.tbl                  | 4 ++++
+>  arch/arm64/include/asm/unistd.h             | 2 +-
+>  arch/arm64/include/asm/unistd32.h           | 8 ++++++++
+>  arch/ia64/kernel/syscalls/syscall.tbl       | 4 ++++
+>  arch/m68k/kernel/syscalls/syscall.tbl       | 4 ++++
+>  arch/microblaze/kernel/syscalls/syscall.tbl | 4 ++++
+>  arch/mips/kernel/syscalls/syscall_n32.tbl   | 4 ++++
+>  arch/mips/kernel/syscalls/syscall_n64.tbl   | 4 ++++
+>  arch/mips/kernel/syscalls/syscall_o32.tbl   | 4 ++++
+>  arch/parisc/kernel/syscalls/syscall.tbl     | 4 ++++
+>  arch/powerpc/kernel/syscalls/syscall.tbl    | 4 ++++
 
+Have you done any testing?
+
+I'd rather not wire up syscalls that have never been tested at all on
+powerpc.
+
+cheers
