@@ -6,55 +6,55 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7907C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5604DC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A409521841
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2532721874
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554014474;
-	bh=5AWBjoXVkY5mv1rS6MQyAMNT8QUdmbj8uHbUCB4mT9k=;
+	s=default; t=1554014478;
+	bh=hGKF3L2njiKxfELHeY0fQbZ+SxxO4ZQulkfhpRz9jfA=;
 	h=Date:From:Subject:References:In-Reply-To:Cc:Cc:To:List-ID:From;
-	b=l2uZ57NKif7PWyu0c3TnzgU8Hw5rSHWS1Yj1shpP/40BYaP0CtXm7Xo3DsZSBSWU/
-	 b4EOQMxuf68rDbslYryhw3eS3RxnKTwhcYSqD3pj/dNtOSlQtM8P8Wtlk0ngLosFOb
-	 472EtPfkPOdN4dxUiL0mMJ9LjVcVdLHj5b+aYh5w=
+	b=gnCMGmjZeNzRc+4jAMcQIX3J5aHO/QUutKotf7KWkIeheEFmulAGnX+9CbAkpfgU+
+	 b1Lmy6zsB2JAh4PadNlLAjoX7ls83a19znShS8Lp2XQn+GuWbL+o3bhR9vjKmadbEg
+	 XZRWWE+yz7Cp8vnYBa+QsJ9wE5YN5UH9OdGhZL0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731105AbfCaGlN (ORCPT
+        id S1731129AbfCaGlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 02:41:13 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43913 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731065AbfCaGlK (ORCPT
+        Sun, 31 Mar 2019 02:41:17 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42827 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731100AbfCaGlN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 02:41:10 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c8so2969898pfd.10;
-        Sat, 30 Mar 2019 23:41:10 -0700 (PDT)
+        Sun, 31 Mar 2019 02:41:13 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r15so2972716pfn.9;
+        Sat, 30 Mar 2019 23:41:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:subject:references
          :in-reply-to:cc:cc:to;
-        bh=CPqUPTdNgEcRoZ3wIRsuNUZ898kksJJ5er6ojLvDhuU=;
-        b=sswaWge+3fCbn92EgxtmSmjhAZDxsEvevs3Bi5/ynBidfEgy7Em4ncpZjpVVhLVcn6
-         zCWCeMuJCRHVHIwcKcq5PCeJlPDygHN9ZdFlCL45626loqXl6ALNbVc7XfCM5r9TTKso
-         jJXnmi/y1rKOeDs/9EKVFBKKuzpLaN/fgohcAMsQ2rAP4aTF8tB8bILdeX16H4uBi4Oq
-         CFl+rRcjftUurECbvF2f3b13QWIXaubLyEubN/uXcVw6Dx3Kzb6a/tRdvL7sVvTl2EEw
-         YDCUbxBUChj/6/3ExByPe7CiuD2TANgQ1qQWgneABbrY1ihH6c4Mee1RGsn1Q0WPbPOZ
-         j/iQ==
-X-Gm-Message-State: APjAAAU15BCFqKGUsdFJEQJnwFkV6nIgKdKaTvX5RsOp11RWYCp9/IR9
-        dzgNxkB1I4GeYtY7cn4JlQ==
-X-Google-Smtp-Source: APXvYqweSMhiKbtyvu7/T8SUeEBNWFPOA/cV2kaiAMCt2UVFfGaCu78V3qxutq3ch8QKgQYzsrmcGA==
-X-Received: by 2002:a63:4750:: with SMTP id w16mr55542337pgk.256.1554014469909;
-        Sat, 30 Mar 2019 23:41:09 -0700 (PDT)
+        bh=JqJntnEGEtPz/2wcv2/iCRiArcAZqCM+5OWezMXCJxg=;
+        b=huKOO20Fc6/VPLm6xa5ltwzf9X+LZ44vaQWf1DbIABcjvVRKOgjNc2s4y+q55LM9fi
+         f94OqfpnoIIolInaIy3tyus1D3IfEvRFMP9M9BL4k4HqPdNi8cZ1VIDEzCLkjlXWTvkq
+         /rN6bMrRxr1/lY6kB+FxpwxGP9gPusjmK4mdoNdPlB2oamH1K6B3mAQfQTGWp5me2bDW
+         avgRrzCqScf54iWkB+BlyY1Ic99qmnElNcFV13OLsXYAAXu2rqwUP3wWmXsl9T67KcyQ
+         1SNLzy0CNIsryBtVy0tHDuYKpyuaKb3eM+cVLACI2zWmqsv76/7OR9Q3oshAz3g3aaMN
+         L4YA==
+X-Gm-Message-State: APjAAAVyfFjfhsP3GOnYrIa9Xku9fw4bDOIqILeRmd1NXOjdJShKjQDz
+        TR3c/TfQseiDzdoPHAeJvA==
+X-Google-Smtp-Source: APXvYqxcWng4OUsvQ8nlHZf2XrKFxlYRH1MekRs+sMyjM9jLhWAlhlhds0U6jNUdOtYzK34nxgo3YQ==
+X-Received: by 2002:a63:530e:: with SMTP id h14mr30584761pgb.136.1554014472449;
+        Sat, 30 Mar 2019 23:41:12 -0700 (PDT)
 Received: from localhost ([210.160.217.68])
-        by smtp.gmail.com with ESMTPSA id a17sm10219672pfj.123.2019.03.30.23.41.09
+        by smtp.gmail.com with ESMTPSA id k72sm15101286pfb.122.2019.03.30.23.41.11
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 30 Mar 2019 23:41:09 -0700 (PDT)
-Message-ID: <5ca06105.1c69fb81.8e827.7f26@mx.google.com>
-Date:   Sun, 31 Mar 2019 01:41:07 -0500
+        Sat, 30 Mar 2019 23:41:11 -0700 (PDT)
+Message-ID: <5ca06107.1c69fb81.ab31f.38e4@mx.google.com>
+Date:   Sun, 31 Mar 2019 01:41:10 -0500
 From:   Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: Add vendor prefix for novatek
-References: <20190321135955.25661-1-jagan@amarulasolutions.com> <20190321135955.25661-2-jagan@amarulasolutions.com>
-In-Reply-To: <20190321135955.25661-2-jagan@amarulasolutions.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: Add vendor prefix for microtech
+References: <20190321135955.25661-1-jagan@amarulasolutions.com> <20190321135955.25661-3-jagan@amarulasolutions.com>
+In-Reply-To: <20190321135955.25661-3-jagan@amarulasolutions.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
@@ -70,12 +70,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Mar 2019 19:29:52 +0530, Jagan Teki wrote:
-> Add vendor prefix for novatek.
-> 
-> Novatek Microelectronics Corp. is a leading fabless chip design
-> company specializing in the design, development and sales of a
-> wide range of display driver ICs & SoC solutions.
+On Thu, 21 Mar 2019 19:29:53 +0530, Jagan Teki wrote:
+> Add vendor prefix for microtech, known as
+> Microtech Technology Company Limited. a known producer for
+> Liquid Crytal Display modules and Touch Panels.
 > 
 > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > ---
