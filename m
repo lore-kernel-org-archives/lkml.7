@@ -6,134 +6,132 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD76C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49134C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCF9B2183F
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151482183F
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554014498;
-	bh=pcHHa3o+CByJzVJrATlOv3lUPlCjMjgE5k0d9h8lKvU=;
+	s=default; t=1554014501;
+	bh=S3iwlw+f7aQap6TYWLtp8ipTZUVLbhNVYpsYOkOkKI0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B9cOGLqJQctfo1r7PVvnLcsS8gkdmgGrX+JaMpUBSkIytH13CBoc3hd7yPolcbMqF
-	 XFlpKgpyEozKh443eMw59KJdhyNUHa4/dWkd5Dug9Vpbb+I2aOQPYaN2qMmFGtNcsz
-	 9cBGjetiwDPerIgLMhrIv8DbuRqfV7BPvR+iq78E=
+	b=yPVmuw8JbqRqx2fHXoXpo+V7mIIATllUdq28s/0XGy+FU9qE/Q9IVb1la2uAM93/e
+	 FiWXAiG249DEF2pyFGUE2wuY/9Ta718SxtkIvcI4mbcUg9dMTh+pC6Q8Vv9ssem3DJ
+	 ZJI6BeqNGLNPyjy63x58x6HFKyGGgrDuGTedPBfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731220AbfCaGlh (ORCPT
+        id S1731234AbfCaGlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 02:41:37 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43968 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731185AbfCaGle (ORCPT
+        Sun, 31 Mar 2019 02:41:39 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37007 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731218AbfCaGlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 02:41:34 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m10so2925646plt.10;
-        Sat, 30 Mar 2019 23:41:33 -0700 (PDT)
+        Sun, 31 Mar 2019 02:41:37 -0400
+Received: by mail-pl1-f193.google.com with SMTP id q6so2934495pll.4;
+        Sat, 30 Mar 2019 23:41:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
          :mime-version:content-disposition:in-reply-to;
-        bh=nrmxwv21i7rt7ROgEeilOGd2Mpbqnp4HuFs65A3bhlk=;
-        b=YkAKaNItLqE9QuoDWrlL4MhAX/E4A57vLV+tl44S+b0D36Yd+USlx61TkyvEp+Mtsj
-         4pxY75bBey3ncCtIHPYVcyBLG6io9/ffXyf4qP0UrLvz5wB15Q4SdrW0tCthTIEquNXX
-         mgCDJg2yiCSZs68eVqNR8quX2oeU1xtmRPwwQvCJ9LxALu3NOBs1Uyqi4zeDaS32ytEa
-         D9LaXtGrtliFv+SaYi8Ys9Xqys1HwcmAW/HPbCFrJ7+yBNncjicw4j8VEK+QYyVMx9kl
-         r4RHi+c2PaXiGBVWuBnKJId3rXfoQks30WO7owdMZdWPkYQXiLxQDS0ZKcR3LFhOPkLP
-         G2hg==
-X-Gm-Message-State: APjAAAV4pj4E6kUruV7BPRGkZQA2c2pysw87gC6nyw9vdFgd5aGYijxm
-        5mctmj7EBQTGr9z8qqwQ8PGUR72Nxw==
-X-Google-Smtp-Source: APXvYqwJDo8IkJGyU71xeLhyC9JIRmfOaEBxGh9mKSwJkpxcPM1KhWBn5p7L6Z9XenA3ltPnvxLIvA==
-X-Received: by 2002:a17:902:442:: with SMTP id 60mr59274243ple.107.1554014493296;
-        Sat, 30 Mar 2019 23:41:33 -0700 (PDT)
+        bh=bU4MgfG1WWHlRRgA/0eLpVSHSCS8LTESu+fxUu1mbCQ=;
+        b=UEhU6Q4Jz322z/RXW+R9OJ1km3tIWWut+e4Ev+eoSYT/pmrEvc1p6OmDgCIHHTGgJF
+         AmGh19DPu4bxC0ffMchiQodU6GEX1iuLLwWWY/sr4GnCjHFTsuTMiF8I5A3vTnhZTppa
+         NNOYrRxusW8shZhNPyjpQTN9nigUQVBsJqPyo/Dqu7II1MnBBnJ4fD0FKh9q/cODyN/C
+         YQqRF2A7MSK6Jf7D00fIGneq+Ula+lapnzyNLlvwMZ228ZzWCTmAxksenPDcxrehbExK
+         dZrQf8yT0POoLL5CEtoWWOgAtXRtBBZJRe9NgnjsM4g0q3qxfVk1rXvaptjgS8CQXKoD
+         nDTg==
+X-Gm-Message-State: APjAAAX/MSo1VqE+iB2nOTRABYUNpio2VkRNki8g4/46B6OZRzTDShrS
+        Fgq4F8nkeycXEesmAzPUnSFYboEBBg==
+X-Google-Smtp-Source: APXvYqwHnGx47HrYtQWau4kLqTvuh/LGWMCG1pB6GZZx6eeCVpIh5ol2bQJrkn4US84yI5rKHR+c/A==
+X-Received: by 2002:a17:902:6a89:: with SMTP id n9mr56367056plk.223.1554014496386;
+        Sat, 30 Mar 2019 23:41:36 -0700 (PDT)
 Received: from localhost ([210.160.217.68])
-        by smtp.gmail.com with ESMTPSA id z189sm9204870pfb.146.2019.03.30.23.41.32
+        by smtp.gmail.com with ESMTPSA id p81sm11941053pfi.186.2019.03.30.23.41.35
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 30 Mar 2019 23:41:32 -0700 (PDT)
-Date:   Sun, 31 Mar 2019 01:41:30 -0500
+        Sat, 30 Mar 2019 23:41:35 -0700 (PDT)
+Message-ID: <5ca0611f.1c69fb81.662b9.c6a0@mx.google.com>
+Date:   Sun, 31 Mar 2019 01:41:33 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     qiaozhou <qiaozhou@asrmicro.com>
 Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/7] dt-bindings: bus: add ASR8751C APB/AXI bindings
-Message-ID: <20190331011030.GA24804@bogus>
+Subject: Re: [PATCH 3/7] dt-bindings: clocks: add ASR8751C bindings
 References: <1553349688-1946-1-git-send-email-qiaozhou@asrmicro.com>
- <1553349688-1946-3-git-send-email-qiaozhou@asrmicro.com>
+ <1553349688-1946-4-git-send-email-qiaozhou@asrmicro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1553349688-1946-3-git-send-email-qiaozhou@asrmicro.com>
-X-Mutt-References: <1553349688-1946-3-git-send-email-qiaozhou@asrmicro.com>
+In-Reply-To: <1553349688-1946-4-git-send-email-qiaozhou@asrmicro.com>
+X-Mutt-References: <1553349688-1946-4-git-send-email-qiaozhou@asrmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 10:01:23PM +0800, qiaozhou wrote:
+On Sat, Mar 23, 2019 at 10:01:24PM +0800, qiaozhou wrote:
 > From: Qiao Zhou <qiaozhou@asrmicro.com>
 > 
-> Add binding documentation for ASR8751C AXI/APB bus that are used
-> to interface with peripherals. AXI/APB bus follow standard AXI/APB
-> protocols.
+> Add binding documentation for ASR8751C clocks, which are general gating
+> fixed rate and fixed ratio clocks derived from system PLL, external
+> oscillator. These clocks control registers are distributed on different
+> sub-controller-unit on SoCs, like APMU, MPMU, CIU etc.
 > 
 > Signed-off-by: qiaozhou <qiaozhou@asrmicro.com>
 > ---
->  Documentation/devicetree/bindings/bus/asr,bus.txt | 42 +++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/asr,bus.txt
+>  .../devicetree/bindings/clock/asr,clock.txt        | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/asr,clock.txt
+
+Patch 5 can be combined with this one. It is part of the binding.
+
 > 
-> diff --git a/Documentation/devicetree/bindings/bus/asr,bus.txt b/Documentation/devicetree/bindings/bus/asr,bus.txt
+> diff --git a/Documentation/devicetree/bindings/clock/asr,clock.txt b/Documentation/devicetree/bindings/clock/asr,clock.txt
 > new file mode 100644
-> index 0000000..cbb1b6e
+> index 0000000..93082a4
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/asr,bus.txt
-> @@ -0,0 +1,42 @@
-> +* ASR AXI/APB Simple Bus
+> +++ b/Documentation/devicetree/bindings/clock/asr,clock.txt
+> @@ -0,0 +1,31 @@
+> +* Clock Controller of ASR8751C SoCs
 > +
-> +This file documents core properties in ASR AXI and APB bus.
+> +clock subsystem generates and supplies clock to various controllers within the
+> +ASR8751C SoC.
 > +
-> +The ASR8751C SoC has APB and AXI buses for cores to access its
-> +controllers, suchas i2c, sdh, rtc, clock, power management registers
-
-s/suchas/such as/
-
-> +etc. Most ASR SoCs share the common architecture for buses.
-> +Generally APB and AXI bus have a source clock and power control, and
-> +clock rate can be changed and power can be shutdown in low power mode.
-
-Then where are the clocks?
-
+> +Required Properties:
 > +
-> +Required properties for AXI bus:
-> +- compatible: should be "asr,axi-bus", "simple-bus".
-> +- #address-cells: could be 1, or 2
-> +- #size-cells: could be 1, or 2
-> +- reg: iomem address of AXI bus registers
-> +- ranges: register ranges
+> +- compatible: should be "asr,8751c-clock"
+> +
+> +- reg: iomem address and length of the clock subsystem. There are 7 places in
+> +  SOC has clock control logic: "mpmu", "apmu", "apbc", "apbs", "ciu", "dciu",
+> +  "ddrc".
+
+You should probably have a node for each of these blocks if they are 
+separate blocks. DT nodes should match h/w blocks.
+
+> +- reg-names: register names of each sub control logic.
+> +- interrupts : Should be the interrupt number
+
+However, how do all the blocks have a single interrupt unless it's a 
+shared interrupt.
+
+> +- #clock-cells: should be 1.
+
+Clock controllers need some input clocks to have any output clocks.
+
 > +
 > +Example:
-> +	axi@d4200000 {	/* AXI */
-> +		compatible = "asr,axi-bus", "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0 0xd4200000 0 0x00200000>;
-> +		ranges = <0 0 0 0xffffffff>;
 > +
-> +	};
-> +
-> +Required properties for APB bus:
-> +- compatible: should be "asr,apb-bus", "simple-bus".
-> +- #address-cells: could be 1, or 2
-> +- #size-cells: could be 1, or 2
-> +- reg: iomem address of APB bus registers
-> +- ranges: register ranges
-> +
-> +Example:
-> +	apb@d4000000 {	/* APB */
-> +		compatible = "asr,apb-bus", "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0 0xd4000000 0 0x00200000>;
-> +		ranges = <0 0 0 0xffffffff>;
+> +	soc_clocks: clocks@d4050000{
+> +		compatible = "asr,8751c-clock";
+> +		reg = <0x0 0xd4050000 0x0 0x209c>,
+> +		      <0x0 0xd4282800 0x0 0x400>,
+> +		      <0x0 0xd4015000 0x0 0x1000>,
+> +		      <0x0 0xd4090000 0x0 0x1000>,
+> +		      <0x0 0xd4282c00 0x0 0x400>,
+> +		      <0x0 0xd8440000 0x0 0x98>,
+> +		      <0x0 0xd4200000 0x0 0x4280>;
+> +		reg-names = "mpmu", "apmu", "apbc", "apbs", "ciu", "dciu", "ddrc";
+> +		interrupts = <0 96 IRQ_TYPE_LEVEL_HIGH>;
+> +		#clock-cells = <1>;
 > +	};
 > -- 
 > 2.7.4
