@@ -2,117 +2,120 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16924C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 07:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67469C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 07:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF84321773
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 07:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318DC21773
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 07:05:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="Ew/4p59M"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tBO/I5yu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfCaHA2 (ORCPT
+        id S1726544AbfCaHEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 03:00:28 -0400
-Received: from forward103j.mail.yandex.net ([5.45.198.246]:52990 "EHLO
-        forward103j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725886AbfCaHA1 (ORCPT
+        Sun, 31 Mar 2019 03:04:12 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52310 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbfCaHEM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 03:00:27 -0400
-Received: from mxback1j.mail.yandex.net (mxback1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::10a])
-        by forward103j.mail.yandex.net (Yandex) with ESMTP id A162E674014F;
-        Sun, 31 Mar 2019 10:00:22 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id Rt4wCa2BxV-0IEq6xtR;
-        Sun, 31 Mar 2019 10:00:20 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1554015620;
-        bh=q8QLXGODLudj41ocQ19De3Mh7BhghNHmPdLkc9qJ9+A=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=Ew/4p59MkJHVLnmiq7z/V83sYjWuGYNBW9W7RtCYs8xY4Anbtnr+WtdH9fiNUapG0
-         n08oXJPak6SfriaY3r/4720v4X1BrbloVNLrmroTo8fqQLJsFKu0kBc5B4i22jg2r9
-         keeae2rfxM7gp+EpRSdcNWNbLDKV8ckv5SFNJhEw=
-Authentication-Results: mxback1j.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by myt1-cd60b8ae9bb9.qloud-c.yandex.net with HTTP;
-        Sun, 31 Mar 2019 10:00:18 +0300
-From:   Andrey Abramov <st5pub@yandex.ru>
-To:     George Spelvin <lkml@sdf.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
-        "dchinner@redhat.com" <dchinner@redhat.com>,
-        "dedekind1@gmail.com" <dedekind1@gmail.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "jlbec@evilplan.org" <jlbec@evilplan.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        "mark@fasheh.com" <mark@fasheh.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "naveen.n.rao@linux.vnet.ibm.com" <naveen.n.rao@linux.vnet.ibm.com>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "richard@nod.at" <richard@nod.at>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "vgupta@synopsys.com" <vgupta@synopsys.com>,
-        "x86@kernel.org" <x86@kernel.org>
-In-Reply-To: <201903302015.x2UKFnSL003850@sdf.org>
-References: <18626931553963861@sas1-b3ec53dbc12b.qloud-c.yandex.net>,
-            <20467491553964233@myt4-c0b480c282c8.qloud-c.yandex.net>,
-            <20190330183826.GB21828@kroah.com> <201903302015.x2UKFnSL003850@sdf.org>
-Subject: Re: [PATCH 5/5] Lib: sort.h: replace int size with size_t size in the swap function
+        Sun, 31 Mar 2019 03:04:12 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a184so6765017wma.2
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 00:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=sJmXGYZIR5w+oPY+YEjpX1bcjRyIcWNvy+pqs0iNf88=;
+        b=tBO/I5yubzj5k1eSiTFHhfTtJaSswf2naiXfD/hMWsFnvOuqERd4hr1WWS6mlyyRjW
+         ASDKSesJjIjxvVquIMfnlLUcTZwoyMViZDZPrR2O9Dc62beNez0nt7a0BkCkjat3Gi3i
+         i0J2kQjO2hK9Lty2+WfQkG8iYgRNjA3TuXnUu+uwUvb/LGstIFGpmgEVv7nnpre8E8tg
+         C4EkiinVnNh3zFJYNPmVnl0/LNV07tCpceZBtdlw8WQu5i0xaf9skh1beLZ1apVzvj8y
+         OFVXw3Iruk9MbxmbOawknW5G34IxIHf9dXK8QucfmGnp5EfbuNO1nT1HlryW6hyfaY1S
+         +9Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=sJmXGYZIR5w+oPY+YEjpX1bcjRyIcWNvy+pqs0iNf88=;
+        b=U9R2xEEi5P+tNCVHeXEweJpEl4QqkliM11UML3aN7H9sGFjWNGi8cR9Qi60QK4bInL
+         GJ7462A/EHa+rQVWLk8vd8d2eyUfHqqgLshkmIvwZoCDjx8aMsFeago0I4kRGns1MJ6n
+         BYyDBvmj0twgFCPWUujbCyrQXtpV8RnziuHGfGOTvc5NgvcK7DtT+UtVpAuS1CmcC4Zl
+         JBUXmT1igi8LfNpM0fMu//VbWE+G9h9h8BK2KIULRE52onsDzVWgGOwOxxWrNbrqWBLT
+         NqLFpRScJYFIi99372DVW/t1gKoGzUbBF/m6JxlQPOCww/Djjkk0TygAaCaRpNYZa/fL
+         D8qg==
+X-Gm-Message-State: APjAAAVwXf5NQFjGkDrXC6wX+gs6TQE8ceY/oNovDaTeH9eBzocmvYVQ
+        LMWyCUNUXNEmgsfzzkE4NjDatg==
+X-Google-Smtp-Source: APXvYqxd8udKADMK3DFmPsFOGWd+2yq7EPuJRXBfvhHbD9wh7lyZlzVTp8K07ALh1fGdK4X6qhSXyw==
+X-Received: by 2002:a1c:cb0e:: with SMTP id b14mr8626505wmg.149.1554015850615;
+        Sun, 31 Mar 2019 00:04:10 -0700 (PDT)
+Received: from boomer.baylibre.com (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id g12sm5236162wrw.40.2019.03.31.00.04.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 31 Mar 2019 00:04:09 -0700 (PDT)
+Message-ID: <722ef39685fb3b519d09c00a3444708abd685f9d.camel@baylibre.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: meson: Add drive-strength
+ property
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Date:   Sun, 31 Mar 2019 09:04:08 +0200
+In-Reply-To: <20190330212830.GA28281@bogus>
+References: <20190314163725.7918-1-jbrunet@baylibre.com>
+         <20190314163725.7918-2-jbrunet@baylibre.com> <20190330212830.GA28281@bogus>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Sun, 31 Mar 2019 10:00:18 +0300
-Message-Id: <20434561554015618@myt1-cd60b8ae9bb9.qloud-c.yandex.net>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.03.2019, 23:17, "George Spelvin" <lkml@sdf.org>:
-> On Sat, 30 Mar 2019 at 19:38:26 +0100 greh k-h wrote;
->>  On Sat, Mar 30, 2019 at 07:43:53PM +0300, Andrey Abramov wrote:
->>>  Replace int type with size_t type of the size argument
->>>  in the swap function, also affect all its dependencies.
->>
->>  This says _what_ the patch does, but it gives no clue as to _why_ you
->>  are doing this. Neither did your 0/5 patch :(
->>
->>  Why make this change? Nothing afterward depends on it from what I can
->>  tell, so why is it needed?
->
-> It's just a minor cleanup, making things less surprising for future
-> programmers. As I wrote in a comment in my patches, using a signed type
-> for an object size is definitely a wart; ever since C89 it's expected
-> you'd use size_t for the purpose.
->
-> The connection is that it's a natural consequence of doing a pass over
-> every call site.
->
-> You're right it could be dropped from the series harmlessly, but it
-> comes from the same work. But it's all of *three* call sites in the kernel
-> which are affected. Surely that's not an unreasonable amount of churn
-> to clean up a wart?
+On Sun, 2019-03-31 at 01:40 -0500, Rob Herring wrote:
+> On Thu, Mar 14, 2019 at 05:37:24PM +0100, Jerome Brunet wrote:
+> > From: Guillaume La Roque <glaroque@baylibre.com>
+> > 
+> > Add optional drive-strength property
+> > 
+> > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > ---
+> >  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> > index a47dd990a8d3..4e3d5a27c91c 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> > +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> > @@ -51,6 +51,9 @@ Configuration nodes support the generic properties "bias-disable",
+> >  "bias-pull-up" and "bias-pull-down", described in file
+> >  pinctrl-bindings.txt
+> >  
+> > +Optional properties :
+> > + - drive-strength: Drive strength for the specified pins in uA.
+> 
+> The standard definition says this is in mA.
 
-George Spelvin is absolutely right: "It's just a minor cleanup, making things less surprising for future programmers."
+Yes, the problem we have and the solutions we are thinking about are explained
+in detail in the cover letter of this patchset. Could you share your opinion
+on it ?
 
-31.03.2019, 00:51, "George Spelvin" <lkml@sdf.org>:
-> It was so obvious to me that I didn't question it, but you have a
-> good point and I'm sure Andrey can clarify. Thanks for the attention!
+Thx
 
-I thought that it is obvious enough (argument called "size" should be of type size_t in the 90% of cases).
-Should I resend this patch with better explanation "why"?
+> 
+> > +
+> >  === Example ===
+> >  
+> >  	pinctrl: pinctrl@c1109880 {
+> > -- 
+> > 2.20.1
+> > 
 
--- 
-With Best Regards,
-Andrey Abramov
+
