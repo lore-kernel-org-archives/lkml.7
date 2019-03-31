@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC885C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66CEC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819682085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D03C2085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554076145;
-	bh=YhEMJ7aEkbCuWq+dYZzEC2y6MWe+PZvx4ANaniT35/U=;
+	s=default; t=1554076154;
+	bh=AY9LwWVy9qsxNsGInicmtsogusByWl3DHQdLPQSAYJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=FYinD2xhXfdrE75cV/dHRu6ALqyhByeYt/t0b8J5HaSBktbEnJ8VbDHp7KB531ukz
-	 Lx77xxEQjd5LAkjEduuc0fZx2kVXJjliNK/1/ZRYPc1lvPqXfQpOxlf19iToRHCLFq
-	 T9xkIt/pC3vYCu4MHswC66BXA3il769XkDuiTHdM=
+	b=Zk09r3CXlczdv/WwJ3wp0/+ib3fXwgt3KusigY1pWvQO0qA03a0aVI2XTWSpA7O3S
+	 qXR9MKaZjbztbSAAWgSw5yzR2GhNRALOMSlEzFwqx38ml7wTT6/7uAxYklLUbVA9uC
+	 7Jk2bOC3JHdKN9XxM/ru3/V2WOZHt+CQNZFouhxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731851AbfCaXtE (ORCPT
+        id S1731868AbfCaXtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 19:49:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47608 "EHLO mail.kernel.org"
+        Sun, 31 Mar 2019 19:49:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731779AbfCaXst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 19:48:49 -0400
+        id S1731749AbfCaXsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 19:48:46 -0400
 Received: from tzanussi-mobl.hsd1.il.comcast.net (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2683C218FC;
-        Sun, 31 Mar 2019 23:48:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AADE218E2;
+        Sun, 31 Mar 2019 23:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554076128;
-        bh=YhEMJ7aEkbCuWq+dYZzEC2y6MWe+PZvx4ANaniT35/U=;
+        s=default; t=1554076125;
+        bh=AY9LwWVy9qsxNsGInicmtsogusByWl3DHQdLPQSAYJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=hmFe/5HBCl2q/CfvmV9OoLqhBq+aHakeMrVjqpgpYtnSNI3UEVZy3nHZ41k7c679k
-         afgsvKLPta8yQ4KzUnzzjmiF0Wwzoly3N3YTc7pwUFsO3PXCsqTUrkgxJaC+lTOayD
-         XgyVHLl594QJoHwdF2kSHfSFsVvsqG2xDZrkIAOk=
+        b=Nu1XsTyJqHDh8VaoV6qXmfSVXzsoQCsNH7DFvCaz5J2FeECIshA5K7StDXAgJm4CM
+         IeQ3Mh1ffAGOFzbFgPhqvIoiMmZmPbsVTYA/9FdRHPTGp4g8CZ2Nstavs6rVFTfqKi
+         /NqahskYNgLct/ABxFjxmqMf6mcD2piPz10n1bts=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     tglx@linutronix.de, mhiramat@kernel.org, namhyung@kernel.org,
         bigeasy@linutronix.de, joel@joelfernandes.org,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH v5 11/11] tracing: Add error_log to README
-Date:   Sun, 31 Mar 2019 18:48:25 -0500
-Message-Id: <c81e60f9aded495081231a32d2d1023c4d043a7a.1554072478.git.tom.zanussi@linux.intel.com>
+Subject: [PATCH v5 09/11] selftests/ftrace: Add tracing/error_log testcase
+Date:   Sun, 31 Mar 2019 18:48:23 -0500
+Message-Id: <bf1c0d47a24672df945331462682d96296d1ab28.1554072478.git.tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1554072478.git.tom.zanussi@linux.intel.com>
 References: <cover.1554072478.git.tom.zanussi@linux.intel.com>
@@ -60,26 +61,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-Add brief blurb about error_log to the 'Important files' section.
+Add a testcase verifying basic tracing/error_log functionality.
 
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- kernel/trace/trace.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../ftrace/test.d/ftrace/tracing-error-log.tc         | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index f9f9e7e2f0d9..ef5a2778ce3d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4700,6 +4700,7 @@ static const char readme_msg[] =
- 	"  trace_pipe\t\t- A consuming read to see the contents of the buffer\n"
- 	"  current_tracer\t- function and latency tracers\n"
- 	"  available_tracers\t- list of configured tracers for current_tracer\n"
-+	"  error_log\t- error log for failed commands (that support it)\n"
- 	"  buffer_size_kb\t- view and modify size of per cpu buffer\n"
- 	"  buffer_total_size_kb  - view total size of all cpu buffers\n\n"
- 	"  trace_clock\t\t-change the clock used to order events\n"
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc b/tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
+new file mode 100644
+index 000000000000..021c03fd885d
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
+@@ -0,0 +1,19 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: ftrace - test tracing error log support
++
++fail() { #msg
++    echo $1
++    exit_fail
++}
++
++# event tracing is currently the only ftrace tracer that uses the
++# tracing error_log, hence this check
++if [ ! -f set_event ]; then
++    echo "event tracing is not supported"
++    exit_unsupported
++fi
++
++ftrace_errlog_check 'event filter parse error' '((sig >= 10 && sig < 15) || dsig ^== 17) && comm != bash' 'events/signal/signal_generate/filter'
++
++exit 0
 -- 
 2.14.1
 
