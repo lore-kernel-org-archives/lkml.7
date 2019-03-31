@@ -2,102 +2,110 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6839C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1674EC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738E8206DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:31:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="juvyUCsg";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Bwl+eqmD"
+	by mail.kernel.org (Postfix) with ESMTP id D93872146F
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:33:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554024784;
+	bh=hL/t9/rbnTS3dcyc94ugZAmWA+NDU89tJApECKylftg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=NUbXJmkOM0HRqHGDEnzKHBgZAA/Ffj3oio0diB/gqG5AFKf2/MUdOcVx4aHPZaooT
+	 Br/IgeH3/Jc7g9ua6wG3joR8XdnwPnT7dcd68+jlSa5rZuywwX3vojS+n2GrWeHYZc
+	 qWle9yrB7PY9LB67lxynMGYquoez3z0i91XihG3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfCaJbk (ORCPT
+        id S1727021AbfCaJdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 05:31:40 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36828 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbfCaJbk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 05:31:40 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0A89C60850; Sun, 31 Mar 2019 09:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554024700;
-        bh=blDipizSjY9+clrmPwUDwYisBBSAVJrkaImCaAPzKPE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=juvyUCsgxSumXPRhvX3C228ZZlZ1cOTnzMpPRFw1CsvhhKPqNonNywolrRhD0ttkX
-         O1jFfVNLrjoDrgHNsoT80uF+ElbuLZhJPx1lZhaT8yP2KVkBmxctfLUyNC5YQ/JhcG
-         47dM1E1e5D93GvDysGNdsCAw3g12SyzJSatfrIQc=
-Received: from [10.79.166.22] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sun, 31 Mar 2019 05:33:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726772AbfCaJdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 05:33:02 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2CE4460779;
-        Sun, 31 Mar 2019 09:31:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554024699;
-        bh=blDipizSjY9+clrmPwUDwYisBBSAVJrkaImCaAPzKPE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Bwl+eqmDohl4IHQ2ESq36WXtygAUaDiDYbuQ5vLMuqoTJZPc87RaO1C27NE5wElyf
-         4yntvCZNsj3G1qLL3rxj4g3DkHshquv7YT1VYjZcv2fXGan13DtV0+8GtQ9ggtXORR
-         Yds9jJ2VP9B9Y3VCtqa/kswVA3j9SmckfSmbiYZ4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2CE4460779
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] i2c: isch: Remove unnecessary acpi.h include
-To:     helgaas@kernel.org, Jean Delvare <jdelvare@suse.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20190325183652.252175-1-helgaas@kernel.org>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <26166856-a177-ff92-a204-db7005a2aa05@codeaurora.org>
-Date:   Sun, 31 Mar 2019 15:01:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 05090206DD;
+        Sun, 31 Mar 2019 09:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554024782;
+        bh=hL/t9/rbnTS3dcyc94ugZAmWA+NDU89tJApECKylftg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=esYwa1HtVthRFFAmi47Xm/z2Rpc5Xvd870xeq5Li0mNmZWUGsPA/rbXwDyASunWc/
+         PpHZ66Aoo1fzuHBhi4yJUIvVFjfu4aMpiZTD82R8hjWxzM7aW4xnmzvXkfHbd93gQH
+         tqBDDw2Wm1VvDMHEWceFB4Ryo8SRFsv2XC5q64AU=
+Date:   Sun, 31 Mar 2019 10:32:56 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Cristian Sicilia <sicilia.cristian@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] staging: iio: adc: ad7192: Converted bool to
+ bitfield format
+Message-ID: <20190331103256.0b1e5e96@archlinux>
+In-Reply-To: <1d0e1d2c7011bfd2d20e8dd728256bf245861a8e.1553447138.git.sicilia.cristian@gmail.com>
+References: <cover.1553366098.git.sicilia.cristian@gmail.com>
+        <cover.1553447138.git.sicilia.cristian@gmail.com>
+        <1d0e1d2c7011bfd2d20e8dd728256bf245861a8e.1553447138.git.sicilia.cristian@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190325183652.252175-1-helgaas@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 24 Mar 2019 18:23:11 +0100
+Cristian Sicilia <sicilia.cristian@gmail.com> wrote:
 
-On 3/26/2019 12:06 AM, helgaas@kernel.org wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> 54fb4a05af0a ("i2c: Check for ACPI resource conflicts") included
-> <linux/acpi.h> so we could use acpi_check_region().  fd46a0064af1 ("i2c:
-> convert i2c-isch to platform_device") removed the use of
-> acpi_check_region() but not the include.
->
-> Remove the now-unnecessary include of <linux/acpi.h>.  No functional change
-> intended.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> Changed bool format to bitfield format to save space.
+> 
+> Signed-off-by: Cristian Sicilia <sicilia.cristian@gmail.com>
+This driver is undergoing active rework to move out of staging
+and in the meantime these fields have been dropped.
 
-Cheers,
--Mukesh
+So not applied as no longer relevant.
+
+Thanks,
+
+Jonathan
+
 > ---
->   drivers/i2c/busses/i2c-isch.c | 1 -
->   1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/i2c/busses/i2c-isch.c b/drivers/i2c/busses/i2c-isch.c
-> index 5c754bf659e2..f64c1d72f73f 100644
-> --- a/drivers/i2c/busses/i2c-isch.c
-> +++ b/drivers/i2c/busses/i2c-isch.c
-> @@ -30,7 +30,6 @@
->   #include <linux/ioport.h>
->   #include <linux/i2c.h>
->   #include <linux/io.h>
-> -#include <linux/acpi.h>
->   
->   /* SCH SMBus address offsets */
->   #define SMBHSTCNT	(0 + sch_smba)
+>  drivers/staging/iio/adc/ad7192.h | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/adc/ad7192.h b/drivers/staging/iio/adc/ad7192.h
+> index 7433a43..9c1d223 100644
+> --- a/drivers/staging/iio/adc/ad7192.h
+> +++ b/drivers/staging/iio/adc/ad7192.h
+> @@ -35,13 +35,13 @@ struct ad7192_platform_data {
+>  	u16		vref_mv;
+>  	u8		clock_source_sel;
+>  	u32		ext_clk_hz;
+> -	bool		refin2_en;
+> -	bool		rej60_en;
+> -	bool		sinc3_en;
+> -	bool		chop_en;
+> -	bool		buf_en;
+> -	bool		unipolar_en;
+> -	bool		burnout_curr_en;
+> +	u8		refin2_en:1;
+> +	u8		rej60_en:1;
+> +	u8		sinc3_en:1;
+> +	u8		chop_en:1;
+> +	u8		buf_en:1;
+> +	u8		unipolar_en:1;
+> +	u8		burnout_curr_en:1;
+>  };
+>  
+>  #endif /* IIO_ADC_AD7192_H_ */
+
