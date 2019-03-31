@@ -6,55 +6,52 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20469C4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBE0C10F06
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F3E2146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F25A21773
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554025049;
-	bh=Kr5TyAW8oUsN+4Otq0Rx8ylgkzyzvKZ0ddxyrdh72pA=;
+	s=default; t=1554025572;
+	bh=mvatAZ8EMowd44cb0Yyla/0+OwnoQ3rNaVBn3xAnz4c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aA/16wu7x49A2IVlQQTYNeN/QJIQfc7n1NWlLXsMynNBB5C+Tg3W5A+bU37FFR/l8
-	 +L1Nfazaapkxm6WXQ3P4xxFUeUXCr6hwBUpzrG1DSHx6W/wYYvn7+1fxHYsAR1iaR6
-	 dh8qPXC4A5pasNA0sjqBOoqhf06vvIiEadWKpvhI=
+	b=fBJJja0ui8jjToo9gVzBpSf5envAHjDUNnQ3C99NKSr18aJPFPtAsKk+tyxThKM3t
+	 F5bGWm6eXIyww0ywY6JaRksCufeum6HnsMRCEkdxJ2Y3qLsKoja7++wMmNSDzSAX+l
+	 sstTqpP+z7vMKrceC8uFyQMxvE4eA1qxvS8s2URU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731114AbfCaJh1 (ORCPT
+        id S1726950AbfCaJqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 05:37:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52888 "EHLO mail.kernel.org"
+        Sun, 31 Mar 2019 05:46:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726931AbfCaJh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 05:37:27 -0400
+        id S1726490AbfCaJqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 05:46:11 -0400
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BAA6206DD;
-        Sun, 31 Mar 2019 09:37:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D6AE20850;
+        Sun, 31 Mar 2019 09:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554025046;
-        bh=Kr5TyAW8oUsN+4Otq0Rx8ylgkzyzvKZ0ddxyrdh72pA=;
+        s=default; t=1554025569;
+        bh=mvatAZ8EMowd44cb0Yyla/0+OwnoQ3rNaVBn3xAnz4c=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vHQfYbFZ28SVW54f0INkWw0zER+g7ZryMfVxUFac/b/cvr6wafUeZd/F1SBoond94
-         6enhcks7VZb2KS1sNsz4zbhHQrxoCiKUUzyj9+EpIJ6Nh8fNHoL27M/Pos9+7XuD8z
-         speLzXSCExR9jANAMUYch0B9yQm+RvvSk6F48WMU=
-Date:   Sun, 31 Mar 2019 10:37:20 +0100
+        b=wbu3ASz6Loab3F9fmV43p9D6pUTLuvgNJ/qs4QrwEiAS1luQCMlC4O46HG7gxLVSa
+         ElGtUTUSQu9DAtfrTii8e2MU5pvtrjB7Drbptmoc48ke2U6TiD6htUQAd6O4y9J0rK
+         CzCmEig2wHjUKH6tgQm4fLEKsL3JrTj4bX+cRvFA=
+Date:   Sun, 31 Mar 2019 10:46:02 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Cristian Sicilia <sicilia.cristian@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] staging: iio: adc: ad7280a: Remove CamelCase
- notation
-Message-ID: <20190331103720.257ac35b@archlinux>
-In-Reply-To: <e1f26b39dd421d848d5579bd5540644e71416edb.1553447138.git.sicilia.cristian@gmail.com>
-References: <cover.1553366098.git.sicilia.cristian@gmail.com>
-        <cover.1553447138.git.sicilia.cristian@gmail.com>
-        <e1f26b39dd421d848d5579bd5540644e71416edb.1553447138.git.sicilia.cristian@gmail.com>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <arnaud.pouliquen@st.com>, <olivier.moysan@st.com>
+Subject: Re: [PATCH] iio: adc: stm32-dfsdm: improve sampling frequency
+ accuracy
+Message-ID: <20190331104602.209cb9a0@archlinux>
+In-Reply-To: <1553523841-16315-1-git-send-email-fabrice.gasnier@st.com>
+References: <1553523841-16315-1-git-send-email-fabrice.gasnier@st.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -64,51 +61,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 Mar 2019 18:23:16 +0100
-Cristian Sicilia <sicilia.cristian@gmail.com> wrote:
+On Mon, 25 Mar 2019 15:24:01 +0100
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-> Fix CamelCase naming.
+> The sample frequency is driven using the oversampling ratio depending
+> on the SPI bus frequency.
+> Currently, oversampling ratio is computed by an entire division:
+> - spi_freq / sample_freq. This may result in inaccurate value.
+> Using DIV_ROUND_CLOSEST improves resulting sample frequency, which is
+> useful for audio that requests fixed rates (such as: 8, 16 or 32 kHz).
+> BTW, introduce new routine to re-factor sample frequency setting, and
+> move frequency accuracy message from warning to debug level.
 > 
-> Signed-off-by: Cristian Sicilia <sicilia.cristian@gmail.com>
-Already applied this one as well.
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-So whole set has been applied.
+Would have preferred this as two patches as it would have made review easier
+by making it clear what the functional change is.
+
+Still that is mostly me just wanting an easy life ;)
+
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
 Thanks,
 
 Jonathan
 
 > ---
->  drivers/staging/iio/adc/ad7280a.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
+>  drivers/iio/adc/stm32-dfsdm-adc.c | 56 +++++++++++++++++++++------------------
+>  1 file changed, 30 insertions(+), 26 deletions(-)
 > 
-> diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
-> index 4ff28f1..229dcad 100644
-> --- a/drivers/staging/iio/adc/ad7280a.c
-> +++ b/drivers/staging/iio/adc/ad7280a.c
-> @@ -917,8 +917,8 @@ static int ad7280_probe(struct spi_device *spi)
->  	const struct ad7280_platform_data *pdata = dev_get_platdata(&spi->dev);
->  	struct ad7280_state *st;
->  	int ret;
-> -	const unsigned short tACQ_ns[4] = {465, 1010, 1460, 1890};
-> -	const unsigned short nAVG[4] = {1, 2, 4, 8};
-> +	const unsigned short t_acq_ns[4] = {465, 1010, 1460, 1890};
-> +	const unsigned short n_avg[4] = {1, 2, 4, 8};
->  	struct iio_dev *indio_dev;
+> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+> index 531ca7e..051561c 100644
+> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
+> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+> @@ -558,13 +558,38 @@ static ssize_t dfsdm_adc_audio_get_spiclk(struct iio_dev *indio_dev,
+>  	return snprintf(buf, PAGE_SIZE, "%d\n", adc->spi_freq);
+>  }
 >  
->  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-> @@ -966,10 +966,9 @@ static int ad7280_probe(struct spi_device *spi)
->  	 */
+> +static int dfsdm_adc_set_samp_freq(struct iio_dev *indio_dev,
+> +				   unsigned int sample_freq,
+> +				   unsigned int spi_freq)
+> +{
+> +	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+> +	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
+> +	unsigned int oversamp;
+> +	int ret;
+> +
+> +	oversamp = DIV_ROUND_CLOSEST(spi_freq, sample_freq);
+> +	if (spi_freq % sample_freq)
+> +		dev_dbg(&indio_dev->dev,
+> +			"Rate not accurate. requested (%u), actual (%u)\n",
+> +			sample_freq, spi_freq / oversamp);
+> +
+> +	ret = stm32_dfsdm_set_osrs(fl, 0, oversamp);
+> +	if (ret < 0) {
+> +		dev_err(&indio_dev->dev, "No filter parameters that match!\n");
+> +		return ret;
+> +	}
+> +	adc->sample_freq = spi_freq / oversamp;
+> +	adc->oversamp = oversamp;
+> +
+> +	return 0;
+> +}
+> +
+>  static ssize_t dfsdm_adc_audio_set_spiclk(struct iio_dev *indio_dev,
+>  					  uintptr_t priv,
+>  					  const struct iio_chan_spec *chan,
+>  					  const char *buf, size_t len)
+>  {
+>  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+> -	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
+>  	struct stm32_dfsdm_channel *ch = &adc->dfsdm->ch_list[chan->channel];
+>  	unsigned int sample_freq = adc->sample_freq;
+>  	unsigned int spi_freq;
+> @@ -583,17 +608,9 @@ static ssize_t dfsdm_adc_audio_set_spiclk(struct iio_dev *indio_dev,
+>  		return -EINVAL;
 >  
->  	st->readback_delay_us =
-> -		((tACQ_ns[pdata->acquisition_time & 0x3] + 695) *
-> -		(AD7280A_NUM_CH * nAVG[pdata->conversion_averaging & 0x3]))
-> -		- tACQ_ns[pdata->acquisition_time & 0x3] +
-> -		st->slave_num * 250;
-> +		((t_acq_ns[pdata->acquisition_time & 0x3] + 695) *
-> +		 (AD7280A_NUM_CH * n_avg[pdata->conversion_averaging & 0x3])) -
-> +		t_acq_ns[pdata->acquisition_time & 0x3] + st->slave_num * 250;
+>  	if (sample_freq) {
+> -		if (spi_freq % sample_freq)
+> -			dev_warn(&indio_dev->dev,
+> -				 "Sampling rate not accurate (%d)\n",
+> -				 spi_freq / (spi_freq / sample_freq));
+> -
+> -		ret = stm32_dfsdm_set_osrs(fl, 0, (spi_freq / sample_freq));
+> -		if (ret < 0) {
+> -			dev_err(&indio_dev->dev,
+> -				"No filter parameters that match!\n");
+> +		ret = dfsdm_adc_set_samp_freq(indio_dev, sample_freq, spi_freq);
+> +		if (ret < 0)
+>  			return ret;
+> -		}
+>  	}
+>  	adc->spi_freq = spi_freq;
 >  
->  	/* Convert to usecs */
->  	st->readback_delay_us = DIV_ROUND_UP(st->readback_delay_us, 1000);
+> @@ -1068,22 +1085,9 @@ static int stm32_dfsdm_write_raw(struct iio_dev *indio_dev,
+>  			spi_freq = adc->spi_freq;
+>  		}
+>  
+> -		if (spi_freq % val)
+> -			dev_warn(&indio_dev->dev,
+> -				 "Sampling rate not accurate (%d)\n",
+> -				 spi_freq / (spi_freq / val));
+> -
+> -		ret = stm32_dfsdm_set_osrs(fl, 0, (spi_freq / val));
+> -		if (ret < 0) {
+> -			dev_err(&indio_dev->dev,
+> -				"Not able to find parameter that match!\n");
+> -			iio_device_release_direct_mode(indio_dev);
+> -			return ret;
+> -		}
+> -		adc->sample_freq = val;
+> +		ret = dfsdm_adc_set_samp_freq(indio_dev, val, spi_freq);
+>  		iio_device_release_direct_mode(indio_dev);
+> -
+> -		return 0;
+> +		return ret;
+>  	}
+>  
+>  	return -EINVAL;
 
