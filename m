@@ -2,213 +2,99 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2DCC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 14:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5E9C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 14:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8171C20870
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 14:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F15420870
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 14:33:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fphAf0+Q"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EpZPQGHB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731235AbfCaObi (ORCPT
+        id S1731266AbfCaOdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 10:31:38 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51018 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731192AbfCaObi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 10:31:38 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z11so7530272wmi.0;
-        Sun, 31 Mar 2019 07:31:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=CQnBC4nxJ7fjCs4QyYoGVpuj1aSeGk16yfxIxm0N1E8=;
-        b=fphAf0+Qh1GnQTquHhZHrluuduz8wuQhP72i2pNJWoXMHAPN3t0TQhnweIBG3RtUOX
-         wSRVWPojsV+F4reireZEPgFRv9Ncgx3NJ4PxZ81qwSy/P/ADCRvkU2yeE7iBRhhFSwX2
-         sGbW3meWid2Kn9AgfImVkxQtW4keZsd7WqNl+ccjT8Ohfr79AOi1J1XmjBGBnlpK5NV3
-         BYP+ktAVhuLMVVXprBZ9K7vHt9Rt9RCO4/nD2+qzDBgD8rLua0leAGwAULxbxHamHqXo
-         iAPsC3LUSvjA9NwY4jVraSZP/q/YcOu2Ev9vsDf5l0q2pjst09gS4lQfux2PANzWDNC8
-         pS0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=CQnBC4nxJ7fjCs4QyYoGVpuj1aSeGk16yfxIxm0N1E8=;
-        b=J8SaALmWL7gUOvNsv+5y2WeiYTBCa2o4/P+rcW5YIXRG+688l0RF21FkdaAafE5Zse
-         L9idEXJPJbeb1/B2ZaWNS2Tvj97FAUDVUIf4z4JVGuJC2AvDcy/raGr1S9JeCX3h9Wbn
-         eJY6lZtbluDDDaqf7+64sceT0igr08niu5Ps8+iUnMme5Ss6LzsVdcl7fff4ogGbK2os
-         2yyQJjTBdxEmfe8HuipGzI/xil1hmQ3sVtGbbTU20pcAt9m2SGvEwr8PeF7HuMLZcoAB
-         XicY2/b2nuMtXXPJ5nE5TMgsoWf4IedpKm2tXxGDb6Zl0XvyCS/kneeURo6UHJk2rFjd
-         Y4Qw==
-X-Gm-Message-State: APjAAAVd9+OsxP9GtuWXHPlhdo31b8gsgPVevKGrtiQSDgtr40zcEYYc
-        gOqPxjKAPkbemZjyOD6+JmVQi1j9
-X-Google-Smtp-Source: APXvYqwkAKtTa2TtoQ8//EPLcUCYCVGclLXZnnoqbyvsGnmjJrAbCcr9XKK66Srwo1WgaF7EcwJfEg==
-X-Received: by 2002:a1c:bd8b:: with SMTP id n133mr9905816wmf.73.1554042694636;
-        Sun, 31 Mar 2019 07:31:34 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id w16sm8771687wrt.84.2019.03.31.07.31.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 31 Mar 2019 07:31:33 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
-        kvm@vger.kernel.org
-Subject: [GIT PULL] KVM fixes for Linux 5.1-rc3
-Date:   Sun, 31 Mar 2019 16:31:31 +0200
-Message-Id: <1554042691-30532-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sun, 31 Mar 2019 10:33:21 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:44563 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731210AbfCaOdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 10:33:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=tSXTLWkNBwQ+7OxDnCw3ne+xa4SgHozyZ+1qD8tiba0=; b=EpZPQGHBGNDQdLDT5NDCd03FOO
+        trleJG4YHqN1dZL8dcnKnsJSueB442TC05tDCcDs2W61Xz/IIEma++ODmgVe69hOvdxxpbXBEV9q7
+        vhlIhQAGWcmNiQ13A6xkdAMighyL31qdI5aVtBt6VSTNJu18Aom682lfKcgDqrRi4jmo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hAbWM-0005lI-2G; Sun, 31 Mar 2019 16:33:14 +0200
+Date:   Sun, 31 Mar 2019 16:33:14 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Mukesh Ojha <mojha@codeaurora.org>
+Cc:     Colin King <colin.king@canonical.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: dsa: fix negative loop bound error on for loop
+Message-ID: <20190331143314.GA20636@lunn.ch>
+References: <20190330214241.15311-1-colin.king@canonical.com>
+ <3723042a-88db-fa87-02ec-4ff231bbaff2@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3723042a-88db-fa87-02ec-4ff231bbaff2@codeaurora.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Sun, Mar 31, 2019 at 03:25:47PM +0530, Mukesh Ojha wrote:
+> 
+> On 3/31/2019 3:12 AM, Colin King wrote:
+> >From: Colin Ian King <colin.king@canonical.com>
+> >
+> >Currently the for-loop using an unsigned int for the loop counter
+> >which is problematic when comparing it to the signed int count
+> >This is an issue because if the signed int is negative then
+> >the negative loop bound is implicitly cast to an unsigned int on
+> >the comparison to loop counter i and will yield a very large value,
+> >eventually causing an error when memmove/memcpy'ing outside the
+> >allocated region pointed to by ndata.
+> >
+> >Fix this by simply making the loop counter i a signed int;
+> >
+> >Fixes: f2f2356685bc ("net: dsa: move master ethtool code")
+> >Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> >---
+> >  net/dsa/master.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> >diff --git a/net/dsa/master.c b/net/dsa/master.c
+> >index c58f33931be1..1b659647a303 100644
+> >--- a/net/dsa/master.c
+> >+++ b/net/dsa/master.c
+> >@@ -87,8 +87,7 @@ static void dsa_master_get_strings(struct net_device *dev, uint32_t stringset,
+> >  	struct dsa_switch *ds = cpu_dp->ds;
+> >  	int port = cpu_dp->index;
+> >  	int len = ETH_GSTRING_LEN;
+> >-	int mcount = 0, count;
+> >-	unsigned int i;
+> >+	int mcount = 0, count, i;
+> 
+> This looks fine but why the return value checking for the negative will not
+> be good here ?
+>  count = ds->ops->get_sset_count(ds, port, stringset);
 
-The following changes since commit 8c2ffd9174779014c3fe1f96d9dc3641d9175f00:
+Hi Mukesh
 
-  Linux 5.1-rc2 (2019-03-24 14:02:26 -0700)
+Is there a return value check for negative?
 
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to 690edec54cbaa0e98dc592aae6864272f48f3c84:
-
-  Merge tag 'kvmarm-fixes-for-5.1' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into kvm-master (2019-03-28 19:07:30 +0100)
-
-----------------------------------------------------------------
-
-A collection of x86 and ARM bugfixes, and some improvements to documentation.
-
-On top of this, a cleanup of kvm_para.h headers, which were exported by
-some architectures even though they not support KVM at all.  This is
-responsible for all the Kbuild changes in the diffstat.
-
-----------------------------------------------------------------
-Ben Gardon (1):
-      kvm: mmu: Used range based flushing in slot_handle_level_range
-
-Krish Sadhukhan (1):
-      kvm: nVMX: Add a vmentry check for HOST_SYSENTER_ESP and HOST_SYSENTER_EIP fields
-
-Marc Zyngier (4):
-      KVM: arm64: Reset the PMU in preemptible context
-      arm64: KVM: Always set ICH_HCR_EL2.EN if GICv4 is enabled
-      KVM: arm/arm64: vgic-its: Take the srcu lock when writing to guest memory
-      KVM: arm/arm64: vgic-its: Take the srcu lock when parsing the memslots
-
-Masahiro Yamada (1):
-      KVM: export <linux/kvm_para.h> and <asm/kvm_para.h> iif KVM is supported
-
-Paolo Bonzini (2):
-      Documentation: kvm: clarify KVM_SET_USER_MEMORY_REGION
-      Merge tag 'kvmarm-fixes-for-5.1' of git://git.kernel.org/.../kvmarm/kvmarm into kvm-master
-
-Sean Christopherson (11):
-      KVM: nVMX: Do not inherit quadrant and invalid for the root shadow EPT
-      KVM: x86: fix handling of role.cr4_pae and rename it to 'gpte_size'
-      KVM: doc: Fix incorrect word ordering regarding supported use of APIs
-      KVM: Reject device ioctls from processes other than the VM's creator
-      KVM: x86: Emulate MSR_IA32_ARCH_CAPABILITIES on AMD hosts
-      KVM: x86: update %rip after emulating IO
-      KVM: selftests: assert on exit reason in CR4/cpuid sync test
-      KVM: selftests: explicitly disable PIE for tests
-      KVM: selftests: disable stack protector for all KVM tests
-      KVM: selftests: complete IO before migrating guest state
-      KVM: doc: Document the life cycle of a VM and its resources
-
-Sebastian Andrzej Siewior (1):
-      kvm: don't redefine flags as something else
-
-Singh, Brijesh (1):
-      KVM: SVM: Workaround errata#1096 (insn_len maybe zero on SMAP violation)
-
-Suzuki K Poulose (2):
-      KVM: arm/arm64: Enforce PTE mappings at stage2 when needed
-      KVM: arm/arm64: Fix handling of stage2 huge mappings
-
-Vitaly Kuznetsov (1):
-      x86/kvm/hyper-v: avoid spurious pending stimer on vCPU init
-
-Wei Yang (1):
-      KVM: x86: remove check on nr_mmu_pages in kvm_arch_commit_memory_region()
-
-Xiaoyao Li (1):
-      kvm/x86: Move MSR_IA32_ARCH_CAPABILITIES to array emulated_msrs
-
-YueHaibing (1):
-      KVM: arm/arm64: vgic-its: Make attribute accessors static
-
-Zenghui Yu (1):
-      KVM: arm/arm64: Comments cleanup in mmu.c
-
- Documentation/virtual/kvm/api.txt                  |  77 +++++++++----
- Documentation/virtual/kvm/mmu.txt                  |  11 +-
- arch/alpha/include/asm/Kbuild                      |   1 +
- arch/alpha/include/uapi/asm/kvm_para.h             |   2 -
- arch/arc/include/asm/Kbuild                        |   1 +
- arch/arc/include/uapi/asm/Kbuild                   |   1 -
- arch/arm/include/asm/kvm_mmu.h                     |  11 ++
- arch/arm/include/asm/stage2_pgtable.h              |   2 +
- arch/arm/include/uapi/asm/Kbuild                   |   1 +
- arch/arm/include/uapi/asm/kvm_para.h               |   2 -
- arch/arm64/include/asm/kvm_mmu.h                   |  11 ++
- arch/arm64/kvm/reset.c                             |   6 +-
- arch/c6x/include/asm/Kbuild                        |   1 +
- arch/c6x/include/uapi/asm/Kbuild                   |   1 -
- arch/h8300/include/asm/Kbuild                      |   1 +
- arch/h8300/include/uapi/asm/Kbuild                 |   1 -
- arch/hexagon/include/asm/Kbuild                    |   1 +
- arch/hexagon/include/uapi/asm/kvm_para.h           |   2 -
- arch/ia64/include/asm/Kbuild                       |   1 +
- arch/ia64/include/uapi/asm/Kbuild                  |   1 -
- arch/m68k/include/asm/Kbuild                       |   1 +
- arch/m68k/include/uapi/asm/Kbuild                  |   1 -
- arch/microblaze/include/asm/Kbuild                 |   1 +
- arch/microblaze/include/uapi/asm/Kbuild            |   1 -
- arch/nios2/include/asm/Kbuild                      |   1 +
- arch/nios2/include/uapi/asm/Kbuild                 |   1 -
- arch/openrisc/include/asm/Kbuild                   |   1 +
- arch/openrisc/include/uapi/asm/Kbuild              |   1 -
- arch/parisc/include/asm/Kbuild                     |   1 +
- arch/parisc/include/uapi/asm/Kbuild                |   1 -
- arch/sh/include/asm/Kbuild                         |   1 +
- arch/sh/include/uapi/asm/Kbuild                    |   1 -
- arch/sparc/include/asm/Kbuild                      |   1 +
- arch/sparc/include/uapi/asm/kvm_para.h             |   2 -
- arch/unicore32/include/asm/Kbuild                  |   1 +
- arch/unicore32/include/uapi/asm/Kbuild             |   1 -
- arch/x86/include/asm/kvm_host.h                    |  10 +-
- arch/x86/kvm/hyperv.c                              |   9 +-
- arch/x86/kvm/mmu.c                                 |  54 ++++++---
- arch/x86/kvm/mmutrace.h                            |   4 +-
- arch/x86/kvm/svm.c                                 |  32 ++++++
- arch/x86/kvm/vmx/nested.c                          |   5 +
- arch/x86/kvm/vmx/vmx.c                             |  19 +---
- arch/x86/kvm/vmx/vmx.h                             |   1 -
- arch/x86/kvm/x86.c                                 |  59 +++++++---
- arch/xtensa/include/asm/Kbuild                     |   1 +
- arch/xtensa/include/uapi/asm/Kbuild                |   1 -
- include/uapi/linux/Kbuild                          |   2 +
- tools/testing/selftests/kvm/Makefile               |   4 +-
- tools/testing/selftests/kvm/include/kvm_util.h     |   1 +
- tools/testing/selftests/kvm/lib/kvm_util.c         |  16 +++
- .../selftests/kvm/x86_64/cr4_cpuid_sync_test.c     |  35 +++---
- tools/testing/selftests/kvm/x86_64/state_test.c    |  18 ++-
- virt/kvm/arm/hyp/vgic-v3-sr.c                      |   4 +-
- virt/kvm/arm/mmu.c                                 | 125 ++++++++++++---------
- virt/kvm/arm/vgic/vgic-its.c                       |  31 +++--
- virt/kvm/arm/vgic/vgic-v3.c                        |   4 +-
- virt/kvm/arm/vgic/vgic.c                           |  14 ++-
- virt/kvm/eventfd.c                                 |   6 +-
- virt/kvm/kvm_main.c                                |   3 +
- 60 files changed, 409 insertions(+), 201 deletions(-)
- delete mode 100644 arch/alpha/include/uapi/asm/kvm_para.h
- delete mode 100644 arch/arm/include/uapi/asm/kvm_para.h
- delete mode 100644 arch/hexagon/include/uapi/asm/kvm_para.h
- delete mode 100644 arch/sparc/include/uapi/asm/kvm_para.h
+   Andrew
