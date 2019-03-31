@@ -2,148 +2,80 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3342BC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 08:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB8BC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 08:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92D92146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 08:08:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HfCSW14F";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Fo/cpGft"
+	by mail.kernel.org (Postfix) with ESMTP id B906E20882
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 08:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbfCaIII (ORCPT
+        id S1726672AbfCaIg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 04:08:08 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58516 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfCaIII (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 04:08:08 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 26A1B60790; Sun, 31 Mar 2019 08:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554019687;
-        bh=pYoka4C0tMmi8FoqANEVgvqpYyifIDHM/jG2c5vVgBQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HfCSW14F/DhX2rhOWv2gldVUnnUfu5M1FMYCPc95svmf4tvx8OUxO39mo4UHdSX27
-         F+6MXq74V+eXp4dZUiOr8rG34D1kaIxEmmXi/SlyeFkzhTpA7qaxjEhe0Xdxkqdnhs
-         SJO2tfnTjvQAnsXmu0B1pKy5VL/btU8AYhARcb9s=
-Received: from [10.79.166.22] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C198960712;
-        Sun, 31 Mar 2019 08:07:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554019686;
-        bh=pYoka4C0tMmi8FoqANEVgvqpYyifIDHM/jG2c5vVgBQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Fo/cpGft3C3a7zgWhkAwBdV81PdtlgP4tZCRR8ENHadjlXNBTpPiNlT5NyKJgkYgh
-         Zl+/UDfkaevYAN9U3PC/rps1ql48M7UkwKhisSt+j2EE+4Srq6ZPZhdG+T195QS4/u
-         O5UK8F5XeFxlHo0RzA1ZWGSEY/4M0JpFxXRu5bbI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C198960712
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH v2] tty: rocket: Fix a kernel address leak in rp_ioctl
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
-References: <20190331053207.17337-1-huangfq.daxian@gmail.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <84f8695e-eb0a-6fe3-eb5c-f7c0af6c4644@codeaurora.org>
-Date:   Sun, 31 Mar 2019 13:37:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 31 Mar 2019 04:36:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37018 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726405AbfCaIg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 04:36:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 057A4AC3B;
+        Sun, 31 Mar 2019 08:36:25 +0000 (UTC)
+Date:   Sun, 31 Mar 2019 10:36:24 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     helgaas@kernel.org
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] i2c: isch: Remove unnecessary acpi.h include
+Message-ID: <20190331103624.4a13c5ee@endymion>
+In-Reply-To: <20190325183652.252175-1-helgaas@kernel.org>
+References: <20190325183652.252175-1-helgaas@kernel.org>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190331053207.17337-1-huangfq.daxian@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/31/2019 11:02 AM, Fuqian Huang wrote:
-> If the cmd is RCPK_GET_STRUCT, copy_to_user will copy
-> info to user space. As info->port.ops is the address of
-> a constant object rocket_port_ops (assigned in init_r_port),
-> a kernel address leakage happens.
->
-> This patch sets all the pointer fields to NULL before copy the
-> object to user space to avoid kernel address leakage.
-
-
-Should not this be done like provide userspace the stuff they want?
-
->
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+On Mon, 25 Mar 2019 13:36:52 -0500, helgaas@kernel.org wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> 54fb4a05af0a ("i2c: Check for ACPI resource conflicts") included
+> <linux/acpi.h> so we could use acpi_check_region().  fd46a0064af1 ("i2c:
+> convert i2c-isch to platform_device") removed the use of
+> acpi_check_region() but not the include.
+> 
+> Remove the now-unnecessary include of <linux/acpi.h>.  No functional change
+> intended.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->   drivers/tty/rocket.c | 31 +++++++++++++++++++++++++++++--
->   1 file changed, 29 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/tty/rocket.c b/drivers/tty/rocket.c
-> index b121d8f8f3d7..a7bcf44b61bd 100644
-> --- a/drivers/tty/rocket.c
-> +++ b/drivers/tty/rocket.c
-> @@ -1271,6 +1271,34 @@ static int get_version(struct r_port *info, struct rocket_version __user *retver
->   	return 0;
->   }
->   
-> +static int get_struct(struct r_port *info, void *argp)
-Should not this void * argp be struct r_port __user ?
-> +{
-> +	struct r_port *new;
-> +	int ret = 0;
-> +
-> +	new = kzalloc(sizeof (struct r_port), GFP_KERNEL)
+>  drivers/i2c/busses/i2c-isch.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-isch.c b/drivers/i2c/busses/i2c-isch.c
+> index 5c754bf659e2..f64c1d72f73f 100644
+> --- a/drivers/i2c/busses/i2c-isch.c
+> +++ b/drivers/i2c/busses/i2c-isch.c
+> @@ -30,7 +30,6 @@
+>  #include <linux/ioport.h>
+>  #include <linux/i2c.h>
+>  #include <linux/io.h>
+> -#include <linux/acpi.h>
+>  
+>  /* SCH SMBus address offsets */
+>  #define SMBHSTCNT	(0 + sch_smba)
 
-why there is space before sizeof everywhere ?
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
 
-> ;
-> +	if (!new)
-> +		return -ENOMEM;
-> +	memcpy(new, info, sizeof (struct r_port));
-> +	new->port.tty = NULL;
-> +	new->port.itty = NULL;
-> +	new->port.ops = NULL;
-> +	new->port.client_ops = NULL;
-> +	memset(&new->port.open_wait.head, 0, sizeof (struct list_head));
-> +	memset(&new->port.delta_msr_wait.head, 0, sizeof (struct list_head));
-> +	memset(&new->port.mutex.wait_list, 0, sizeof (struct list_head));
-> +	memset(&new->port.buf_mutex.wait_list, 0, sizeof (struct list_head));
-> +	new->port.xmit_buf = NULL;
-> +	new->port.client_data = NULL;
-> +	new->ctlp = NULL;
-> +	new->xmit_buf = NULL;
-> +	memset(&new->write_mtx.wait_list, 0, sizeof (struct list_head));
+(I would add a Fixes tag but maybe that's just me.)
 
-Are we sure nothing is missed ?
-
-Are the other information use by userspace ?
-
-
-> +	if (copy_to_user(argp, new, sizeof (struct r_port)))
-> +		ret = -EFAULT;
-> +	kfree(new);
-> +	return ret;
-> +}
-> +
->   /*  IOCTL call handler into the driver */
->   static int rp_ioctl(struct tty_struct *tty,
->   		    unsigned int cmd, unsigned long arg)
-> @@ -1284,8 +1312,7 @@ static int rp_ioctl(struct tty_struct *tty,
->   
->   	switch (cmd) {
->   	case RCKP_GET_STRUCT:
-> -		if (copy_to_user(argp, info, sizeof (struct r_port)))
-> -			ret = -EFAULT;
-> +		ret = get_struct(info, argp);
->   		break;
->   	case RCKP_GET_CONFIG:
->   		ret = get_config(info, argp);
+Thanks,
+-- 
+Jean Delvare
+SUSE L3 Support
