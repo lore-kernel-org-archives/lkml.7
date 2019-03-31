@@ -2,99 +2,131 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5E9C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 14:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 981CBC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 14:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F15420870
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 14:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6786820870
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 14:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EpZPQGHB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BeOtk0my"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731266AbfCaOdV (ORCPT
+        id S1731248AbfCaOkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 10:33:21 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:44563 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731210AbfCaOdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 10:33:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=tSXTLWkNBwQ+7OxDnCw3ne+xa4SgHozyZ+1qD8tiba0=; b=EpZPQGHBGNDQdLDT5NDCd03FOO
-        trleJG4YHqN1dZL8dcnKnsJSueB442TC05tDCcDs2W61Xz/IIEma++ODmgVe69hOvdxxpbXBEV9q7
-        vhlIhQAGWcmNiQ13A6xkdAMighyL31qdI5aVtBt6VSTNJu18Aom682lfKcgDqrRi4jmo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hAbWM-0005lI-2G; Sun, 31 Mar 2019 16:33:14 +0200
-Date:   Sun, 31 Mar 2019 16:33:14 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Mukesh Ojha <mojha@codeaurora.org>
-Cc:     Colin King <colin.king@canonical.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: fix negative loop bound error on for loop
-Message-ID: <20190331143314.GA20636@lunn.ch>
-References: <20190330214241.15311-1-colin.king@canonical.com>
- <3723042a-88db-fa87-02ec-4ff231bbaff2@codeaurora.org>
+        Sun, 31 Mar 2019 10:40:49 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:52494 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726863AbfCaOks (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 10:40:48 -0400
+Received: by mail-it1-f194.google.com with SMTP id g17so10724923ita.2;
+        Sun, 31 Mar 2019 07:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kP40pwhes3z+V/FQcEriWr3dXl37/tkssjSAFxgoicg=;
+        b=BeOtk0myR2QvCTVMq95f9ZLIH7sP/u9zAnascKVRy4Zcmld4wolJKKsYdCI9qdnfCR
+         cG1eoSHHLF/5OWp2mPm4OUO7fMUgNCNu1Gcl5L2KXSDmx/nRFapTHeycjRHRbFWyJco8
+         ng7FC+zQ6Y2iTUdFqvmnfTmEFuKMLSQMs07Xpzqea/ZMI3KUxKFNN3/ryRVRNnmgFgcE
+         FUts0kNH5PjztbXNLmuroPrx2QpWrVSFlm9+9DYAHvjfLemcpUtpSpahpE0R00Vmmey/
+         rNdcaqxFsX0iGWgTJ4tkTOJmegcvJTD79BOlvAuXYbpZ1rXKW9GfTIHyoU9Ym/72enJX
+         tKLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kP40pwhes3z+V/FQcEriWr3dXl37/tkssjSAFxgoicg=;
+        b=HH8loItn0J7khhAquEuvhTQJM73OGKd5Lqh8xKj6k/72LojrwB4t3CIgyVHJotozXs
+         fPCdbDyMrcI03zHZxWOkS/b0xftB5joZBQDM/1vgY+2UslNV5MBJTr3rrcYWzSFqCKmL
+         oLHpXwPku/coipOC0yqkJRxWkw04GOYYQ3lIGNfNy+IQd1vg6izuReX4DtXd3SKnNfLU
+         06QX5tgEpfUrSJtbN0x4dudU9JWw0vz1RevUshPK/DPAmq9slQOhyp0GmdGHZw+QYSIZ
+         FBtHeCVyzJD0MX5hcQVl+fAUlVaA3d2D/aJsCISQLtlMDZDn/0wDO9zKsEXC6lWqEoqQ
+         f1bg==
+X-Gm-Message-State: APjAAAWAtViFhoaFf4Rv+C5pOc+SIYhZVB1WxllNTfryWDrXjFfBjWzT
+        Yyc5Oix1BsYIJVf/tdYIBTftGtiZM6kCORA4hT0=
+X-Google-Smtp-Source: APXvYqxs3XuyY0ScEg/z+OlkdvWNspKSrPq/onkqZNMWIvGI1XzD3EBDC80Df/jotYhMXFqDiQR967tyHvePtAfla70=
+X-Received: by 2002:a24:5493:: with SMTP id t141mr10511008ita.10.1554043247456;
+ Sun, 31 Mar 2019 07:40:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3723042a-88db-fa87-02ec-4ff231bbaff2@codeaurora.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <1549572447-45456-1-git-send-email-justinpopo6@gmail.com>
+In-Reply-To: <1549572447-45456-1-git-send-email-justinpopo6@gmail.com>
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+Date:   Sun, 31 Mar 2019 10:40:35 -0400
+Message-ID: <CAC=U0a3iidc1UyvXfedVBrPPU2qL9SomWu6yJwiMKpoXHwok=g@mail.gmail.com>
+Subject: Re: [PATCH] spi: bcm-qspi: when tx/rx buffer is NULL set to 0
+To:     justinpopo6@gmail.com
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Mark Brown <broonie@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 31, 2019 at 03:25:47PM +0530, Mukesh Ojha wrote:
-> 
-> On 3/31/2019 3:12 AM, Colin King wrote:
-> >From: Colin Ian King <colin.king@canonical.com>
-> >
-> >Currently the for-loop using an unsigned int for the loop counter
-> >which is problematic when comparing it to the signed int count
-> >This is an issue because if the signed int is negative then
-> >the negative loop bound is implicitly cast to an unsigned int on
-> >the comparison to loop counter i and will yield a very large value,
-> >eventually causing an error when memmove/memcpy'ing outside the
-> >allocated region pointed to by ndata.
-> >
-> >Fix this by simply making the loop counter i a signed int;
-> >
-> >Fixes: f2f2356685bc ("net: dsa: move master ethtool code")
-> >Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> >---
-> >  net/dsa/master.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> >diff --git a/net/dsa/master.c b/net/dsa/master.c
-> >index c58f33931be1..1b659647a303 100644
-> >--- a/net/dsa/master.c
-> >+++ b/net/dsa/master.c
-> >@@ -87,8 +87,7 @@ static void dsa_master_get_strings(struct net_device *dev, uint32_t stringset,
-> >  	struct dsa_switch *ds = cpu_dp->ds;
-> >  	int port = cpu_dp->index;
-> >  	int len = ETH_GSTRING_LEN;
-> >-	int mcount = 0, count;
-> >-	unsigned int i;
-> >+	int mcount = 0, count, i;
-> 
-> This looks fine but why the return value checking for the negative will not
-> be good here ?
->  count = ds->ops->get_sset_count(ds, port, stringset);
+On Thu, Feb 7, 2019 at 3:47 PM <justinpopo6@gmail.com> wrote:
+>
+> From: Justin Chen <justinpopo6@gmail.com>
+>
+> Currently we set the tx/rx buffer to 0xff when NULL. This causes
+> problems with some spi slaves where 0xff is a valid command. Looking
+> at other drivers, the tx/rx buffer is usually set to 0x00 when NULL.
+> Following this convention solves the issue.
+>
+> Fixes: fa236a7ef240 ("spi: bcm-qspi: Add Broadcom MSPI driver")
+> Signed-off-by: Justin Chen <justinpopo6@gmail.com>
 
-Hi Mukesh
+ Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 
-Is there a return value check for negative?
-
-   Andrew
+> ---
+>  drivers/spi/spi-bcm-qspi.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
+> index 584bcb0..79456aa 100644
+> --- a/drivers/spi/spi-bcm-qspi.c
+> +++ b/drivers/spi/spi-bcm-qspi.c
+> @@ -681,7 +681,7 @@ static void read_from_hw(struct bcm_qspi *qspi, int slots)
+>                         if (buf)
+>                                 buf[tp.byte] = read_rxram_slot_u8(qspi, slot);
+>                         dev_dbg(&qspi->pdev->dev, "RD %02x\n",
+> -                               buf ? buf[tp.byte] : 0xff);
+> +                               buf ? buf[tp.byte] : 0x00);
+>                 } else {
+>                         u16 *buf = tp.trans->rx_buf;
+>
+> @@ -689,7 +689,7 @@ static void read_from_hw(struct bcm_qspi *qspi, int slots)
+>                                 buf[tp.byte / 2] = read_rxram_slot_u16(qspi,
+>                                                                       slot);
+>                         dev_dbg(&qspi->pdev->dev, "RD %04x\n",
+> -                               buf ? buf[tp.byte] : 0xffff);
+> +                               buf ? buf[tp.byte] : 0x0000);
+>                 }
+>
+>                 update_qspi_trans_byte_count(qspi, &tp,
+> @@ -744,13 +744,13 @@ static int write_to_hw(struct bcm_qspi *qspi, struct spi_device *spi)
+>         while (!tstatus && slot < MSPI_NUM_CDRAM) {
+>                 if (tp.trans->bits_per_word <= 8) {
+>                         const u8 *buf = tp.trans->tx_buf;
+> -                       u8 val = buf ? buf[tp.byte] : 0xff;
+> +                       u8 val = buf ? buf[tp.byte] : 0x00;
+>
+>                         write_txram_slot_u8(qspi, slot, val);
+>                         dev_dbg(&qspi->pdev->dev, "WR %02x\n", val);
+>                 } else {
+>                         const u16 *buf = tp.trans->tx_buf;
+> -                       u16 val = buf ? buf[tp.byte / 2] : 0xffff;
+> +                       u16 val = buf ? buf[tp.byte / 2] : 0x0000;
+>
+>                         write_txram_slot_u16(qspi, slot, val);
+>                         dev_dbg(&qspi->pdev->dev, "WR %04x\n", val);
+> --
+> 2.7.4
+>
