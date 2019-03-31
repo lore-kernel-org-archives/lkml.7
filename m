@@ -2,95 +2,253 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459BAC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 12:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2275DC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 12:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01B8D20870
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 12:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDB820882
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 12:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9IF1x83"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LzIWyT1I";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="b5T8pTgL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731236AbfCaMTu (ORCPT
+        id S1731252AbfCaMT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 08:19:50 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40300 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfCaMTt (ORCPT
+        Sun, 31 Mar 2019 08:19:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34106 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfCaMT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 08:19:49 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z24so8063991wmi.5;
-        Sun, 31 Mar 2019 05:19:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xSybAyrdLw33vq1UDxnMPu9wvEFTX4RtzrE5Btn6TvY=;
-        b=h9IF1x83Fwjt+Vi0OjRqFq0xysg94YuVtk8OaJ8D/X9jcJ0f0e8983EqqKIGxTMIWE
-         gX1IxoACzbbIWSAxTcbBgY8kRg57jeANYJnq510AAdouSqTTPuIbKyxQJi5sTmjIr4xV
-         M9GkmPF1EfSgW549y5Z/JH06JP7teT0T4zaQJSEiFI7ZFfrI6G8rkYGma9ZKWewmbw8z
-         mGmcQi+6MExP+9oyhM0jCSRMH/jndLRYsk5GEK+YLSI5z8BWwnxP9wqJ5AmNBlxin8oK
-         zj361V4S0ElvqLNzk8RVWo8yVsxJnZQD7hh3IlEW5+z91PTMrK/OcEDnCjTDyXHYFRwU
-         ChAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xSybAyrdLw33vq1UDxnMPu9wvEFTX4RtzrE5Btn6TvY=;
-        b=NiHGjOSSvzPq9GU3O98jXwYPq2vFQHkyjZJziE9oVrTUK6SiPxQvXIEkNI7fGABOPZ
-         2cOPkdJtCoINPETBodPdi4alTyBQQRta6QXjg81HcVZtAnb4OIpqvX4N12OGFjiOEyQW
-         O6pJaO/JEqJF9j3p7Q1+NRtgq6Fs2sznns3PwyA4CmF//pUsP8tOGwBGqqxErQI3Zm3K
-         rh9YmPDA493r+FXkr/ECYO7ZUfbm5T2k2l0LWo4V7JOv7X2l0MMs6O1NzVA0KqRB29ja
-         yorIyjQ+9ShUMgt6N/g/TQG3FRuXdw3fbwDXNe0eHZV6E1rUfL2iPfvIkZc0wiMKvPDU
-         W6Ww==
-X-Gm-Message-State: APjAAAXvXYZSGfaC1IDj7WuYR/qZpmBA+zsKrjpbE6luTT0NJPhC3or4
-        zCsska0lF4DXLlnxHMhdP6xUhkMRf0w=
-X-Google-Smtp-Source: APXvYqyJ2ya3e8KyEEgOZQYGyDc2MFFP2bpt426bbaFcOst/EsmzLhJgN6KnRJl0ueGkrtCHWSINGw==
-X-Received: by 2002:a1c:808c:: with SMTP id b134mr9586016wmd.16.1554034787556;
-        Sun, 31 Mar 2019 05:19:47 -0700 (PDT)
-Received: from debian (cpc101300-bagu16-2-0-cust362.1-3.cable.virginm.net. [86.21.41.107])
-        by smtp.gmail.com with ESMTPSA id i28sm24179166wrc.32.2019.03.31.05.19.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 31 Mar 2019 05:19:46 -0700 (PDT)
-Date:   Sun, 31 Mar 2019 13:19:44 +0100
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Yifeng Li <tomli@tomli.me>
-Cc:     Teddy Wang <teddy.wang@siliconmotion.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4/8] fbdev: sm712fb: fix boot screen glitch when sm712fb
- replaces VGA.
-Message-ID: <20190331121944.s67z7seyrgl5xnrw@debian>
-References: <20190316222504.27170-1-tomli@tomli.me>
- <20190316222504.27170-5-tomli@tomli.me>
+        Sun, 31 Mar 2019 08:19:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2E3AB60850; Sun, 31 Mar 2019 12:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554034795;
+        bh=jT28kXzzrIc4IQQjQ4XVE/MpRwWK0aWcYzcQ34tC3jI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LzIWyT1Ih0lPal7HKpMQm/p9hvZjGFpV5Ouwi3pxwfjhngCoXKCqCMwOjvOrwjJ0N
+         gx6n4LG2WoEoyPv/JRU2l+t65ptkLywFOkghkkzyywv6vVsRKIRo/UNrWlz107Lhuf
+         rSCtINljonovhijadBeweT6bEeZIKm03sHj7W9vk=
+Received: from [10.79.164.251] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67836602F8;
+        Sun, 31 Mar 2019 12:19:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554034793;
+        bh=jT28kXzzrIc4IQQjQ4XVE/MpRwWK0aWcYzcQ34tC3jI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=b5T8pTgLj6SNA93xb59iKmgjJdXd5OuhjTfuebQZRl0/hfgWjvZZyGUEg2a15Gbbi
+         gebSB3My+eK861ZZS4eXZ0/Da4JF3y1cfMgzQwPsB/9KKd5qzn23i9Ww1Zh4v1R6ZM
+         jMIA7/5zS9DWy7lLq2c5zF2tmyxAVCAOyTYbFv74=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 67836602F8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH v2] drivers/staging: Fix styling of the comment related to
+ SPDX-License-Identifier in vt6656/*.h
+To:     Ojaswin Mujoo <ojaswin25111998@gmail.com>
+Cc:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20190331073825.GA9087@gmail.com>
+ <1554023786-12066-1-git-send-email-ojaswin25111998@gmail.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <c99d1c58-f4c0-d83f-7a09-18272c11aa9c@codeaurora.org>
+Date:   Sun, 31 Mar 2019 17:49:45 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190316222504.27170-5-tomli@tomli.me>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1554023786-12066-1-git-send-email-ojaswin25111998@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 06:25:00AM +0800, Yifeng Li wrote:
-> When the machine is booted in VGA mode, loading sm712fb would cause
-> a glitch of random pixels shown on the screen. To prevent it from
-> happening, we first clear the entire framebuffer, and we also need
-> to stop calling smtcfb_setmode() during initialization, the fbdev
-> layer will call it for us later when it's ready.
-> 
-> Signed-off-by: Yifeng Li <tomli@tomli.me>
-> Cc: stable@vger.kernel.org  # v4.4+
 
-Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+On 3/31/2019 2:44 PM, Ojaswin Mujoo wrote:
+> Fix checkpatch.pl styling error related to SPDX-License-Identifier
+> comment in vt6656/*.h
+> * v2: fix patch styling
+Above line should be after ---.
+>
+> Signed-off-by: Ojaswin Mujoo <ojaswin25111998@gmail.com>
 
---
-Regards
-Sudip
+Although, it looks ok to me. but this is spread through out the tree and 
+a result of a copy paste.
+
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+But, i would want other to comment on this, whether we really want this 
+kind of effort coming forward.
+
+or can it  be not done by some scripting?
+
+
+Cheers,
+-Mukesh
+
+
+> ---
+>   drivers/staging/vt6656/baseband.h | 2 +-
+>   drivers/staging/vt6656/card.h     | 2 +-
+>   drivers/staging/vt6656/channel.h  | 2 +-
+>   drivers/staging/vt6656/desc.h     | 2 +-
+>   drivers/staging/vt6656/device.h   | 2 +-
+>   drivers/staging/vt6656/dpc.h      | 2 +-
+>   drivers/staging/vt6656/firmware.h | 2 +-
+>   drivers/staging/vt6656/int.h      | 2 +-
+>   drivers/staging/vt6656/key.h      | 2 +-
+>   drivers/staging/vt6656/power.h    | 2 +-
+>   drivers/staging/vt6656/rf.h       | 2 +-
+>   drivers/staging/vt6656/rxtx.h     | 2 +-
+>   drivers/staging/vt6656/usbpipe.h  | 2 +-
+>   drivers/staging/vt6656/wcmd.h     | 2 +-
+>   14 files changed, 14 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/staging/vt6656/baseband.h b/drivers/staging/vt6656/baseband.h
+> index a907e30..c3b8bbd 100644
+> --- a/drivers/staging/vt6656/baseband.h
+> +++ b/drivers/staging/vt6656/baseband.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/card.h b/drivers/staging/vt6656/card.h
+> index 0a91d9b..75cd340 100644
+> --- a/drivers/staging/vt6656/card.h
+> +++ b/drivers/staging/vt6656/card.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/channel.h b/drivers/staging/vt6656/channel.h
+> index 6d0d282..cca330f 100644
+> --- a/drivers/staging/vt6656/channel.h
+> +++ b/drivers/staging/vt6656/channel.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/desc.h b/drivers/staging/vt6656/desc.h
+> index ac45ebb..3a83a9e 100644
+> --- a/drivers/staging/vt6656/desc.h
+> +++ b/drivers/staging/vt6656/desc.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/device.h b/drivers/staging/vt6656/device.h
+> index a2feeb9..6074ced 100644
+> --- a/drivers/staging/vt6656/device.h
+> +++ b/drivers/staging/vt6656/device.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/dpc.h b/drivers/staging/vt6656/dpc.h
+> index ddd0cb7..e080add 100644
+> --- a/drivers/staging/vt6656/dpc.h
+> +++ b/drivers/staging/vt6656/dpc.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/firmware.h b/drivers/staging/vt6656/firmware.h
+> index f30ae90..161126f 100644
+> --- a/drivers/staging/vt6656/firmware.h
+> +++ b/drivers/staging/vt6656/firmware.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/int.h b/drivers/staging/vt6656/int.h
+> index 1e6ff92..987c454e9 100644
+> --- a/drivers/staging/vt6656/int.h
+> +++ b/drivers/staging/vt6656/int.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/key.h b/drivers/staging/vt6656/key.h
+> index 1306ff4..918c07c 100644
+> --- a/drivers/staging/vt6656/key.h
+> +++ b/drivers/staging/vt6656/key.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/power.h b/drivers/staging/vt6656/power.h
+> index d5a3198..58755ae 100644
+> --- a/drivers/staging/vt6656/power.h
+> +++ b/drivers/staging/vt6656/power.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/rf.h b/drivers/staging/vt6656/rf.h
+> index f77866a..6103117 100644
+> --- a/drivers/staging/vt6656/rf.h
+> +++ b/drivers/staging/vt6656/rf.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/rxtx.h b/drivers/staging/vt6656/rxtx.h
+> index 44698f4..d528607 100644
+> --- a/drivers/staging/vt6656/rxtx.h
+> +++ b/drivers/staging/vt6656/rxtx.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/usbpipe.h b/drivers/staging/vt6656/usbpipe.h
+> index 5d7708f..2910ca5 100644
+> --- a/drivers/staging/vt6656/usbpipe.h
+> +++ b/drivers/staging/vt6656/usbpipe.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
+> diff --git a/drivers/staging/vt6656/wcmd.h b/drivers/staging/vt6656/wcmd.h
+> index 4a96f4d..a0d98cf 100644
+> --- a/drivers/staging/vt6656/wcmd.h
+> +++ b/drivers/staging/vt6656/wcmd.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>   /*
+>    * Copyright (c) 1996, 2003 VIA Networking Technologies, Inc.
+>    * All rights reserved.
