@@ -2,132 +2,140 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EE1C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B40EC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C462085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:15:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="c2kIbGdS"
+	by mail.kernel.org (Postfix) with ESMTP id 6080E2085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:17:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554070630;
+	bh=WBd1j6vshmBObrJwHSeDz3eFp7u4ZjaJ80OgzjPD0rI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=opWPnCSV8FeNyJJEiFLCjAx2pg8ythikU0+eW277m3tCbwlyO+WM16AHxHl/nYvC3
+	 gtYMlgD24zEOGQJqobbV7LQTSwejvS89CHsQ9QLZQ9OL0L0SLwlfWiFvlo6yfVJPPR
+	 WVCPNQRmVPZuki3KhGSsWM97GqcnITz/WnEgBQwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731481AbfCaWPC (ORCPT
+        id S1731506AbfCaWRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 18:15:02 -0400
-Received: from mout.gmx.net ([212.227.17.22]:47657 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731326AbfCaWPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 18:15:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1554070496;
-        bh=HHvs9uqx8QYaZFKoKrmmeCrfLmR1vDbZqrxg6Mjlo24=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=c2kIbGdS1/gQsfzSFOIto+cAk+YTWCHGEbh4e6UyKbnVRi7MZGloOErvKTDzO4Enj
-         20SjVUyCumV9LlOAsq1Fqok86wyzgeee5poq/Y54CGwYifHKNg6lMDDtEz6MLD3ZHT
-         ByubWUpLGpEuNgIdDXbJvdrmLwhLcAMaKuZKPS0I=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx102
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0Mb31L-1hUqoV15Lf-00KiXQ; Mon, 01
- Apr 2019 00:14:56 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-doc@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Martin Kepplinger <martink@posteo.de>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation: kernel-docs: Move vfs.txt under "Docs at the Linux Kernel tree"
-Date:   Mon,  1 Apr 2019 00:14:37 +0200
-Message-Id: <20190331221439.22892-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        Sun, 31 Mar 2019 18:17:09 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33753 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731326AbfCaWRI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 18:17:08 -0400
+Received: by mail-lf1-f67.google.com with SMTP id v14so4865723lfi.0
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 15:17:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7iWaNGazU86TlQXdHpzXsf+daDCF3+iOIFXb6JN254A=;
+        b=RxVcOUq+sSCNkmtuhzEZW0gzLmPC5ePL721nNOv0uNjtVOxFK5s2+qSYnxal6L7Eos
+         6t4cDvAGjDeteyR9ZA6OJ0T9YsX6pbfBaxK8C/ItD7wDLZxdPCxorteJxbjEuQZJ6+L6
+         EuN5Jbg4HNSiGTmM9KAKtUzy6labYD708MKAs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7iWaNGazU86TlQXdHpzXsf+daDCF3+iOIFXb6JN254A=;
+        b=sOOBetie+cWjdYPNB4zJQA1M9WgsagldWxDi7AtBGdNV/v8F89tBhm+k2svCnMzNZd
+         Ov8sd+oavQldd++ZcZtfanuVwJqD+lWwDEZMsbJevQbuU5//e4WRuE5awJv4D3KRrl8H
+         q616JB3WAtyI/wufKyRP4MlvVZgnKZzLIeT3WNaP9hQPuhlRroOF6rjsowow/HrpsA/w
+         Qd2wu1hI2n13TcEEXtDTNyeLUEK9g4JL0/JApIS1wm4ikZT37pO59lc5h5zQExBfnxjZ
+         wh0xhosCJyfUx3QqiUiZJKbD+cvi2AclJWl9yvCbQI820QJ6GyCm8S9/IHONUMEuBMIS
+         P0NA==
+X-Gm-Message-State: APjAAAXRG8bQRBcTKPOvqdDdQg4s4o4Ebln6sky5QFVNWs9SOd2dY7RZ
+        Z4aGxtWyq+bNIyW212qJGgvmu16b8jg=
+X-Google-Smtp-Source: APXvYqwMccykl8XLOYg3XtL7izqjZQ4hypUWJx63btHk8vJtj4Ofp5P8vZ7ww/M8EbJ0nqoQ+ZODfA==
+X-Received: by 2002:ac2:4561:: with SMTP id k1mr25933360lfm.95.1554070625630;
+        Sun, 31 Mar 2019 15:17:05 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id u11sm1707800ljh.80.2019.03.31.15.17.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 31 Mar 2019 15:17:04 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id v71so33321lfa.11
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 15:17:03 -0700 (PDT)
+X-Received: by 2002:a19:ca02:: with SMTP id a2mr30531508lfg.88.1554070623650;
+ Sun, 31 Mar 2019 15:17:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:O7KTsPp0xlclYLPwAx6k/3FXWHdDBaLXdvujS7atYdGU4twfpWM
- MquGgtNEo6lSTUCV0ZeNoyuRTtXb735cNwdo09XDiJPFcdliy+JvHZesFzgwqu4Zge2tJ9W
- 0L0yGfNdDpCkLBf2C6bJaCyO7Rp5z9c7RbvJOofo+eKXe3IT4jkObQM7ytGS5bzZbzLcI9S
- wzIQroQmwf1scp5e1mWrw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:G6eYhcGZFLY=:PFRJacDhlpjBsVdbWk6L/f
- 7zRapPTdVWTuzCbJ4k97vvRrN6jYOLpC+ehaNi3H7QvkunGBcLb8esbyaWG1+d+qNVVF9Dx4S
- kxQK/Y+2P74m+2GccrGZtDVukX7UvBtXkfZmNucb9vdxIxuY4M9YOSkSWQ/jKDm0Qj2xUhZwz
- pqk1trvhOBptVA5xDdBcfH8/aQTAcl9zfOniBCnVQcZ/xIQtczIXhqUPeaV9MkmIWWdndr+7l
- Kb0sYw9aW2hMJDw/5E0CmcDsyXeJIWXRIP541MQkaXd9sI6brSkTCQT1QWzuFUm76IS3ORm73
- Rr9g04dEEwExd9jyWbWGUUc2HtmiZP9jJ9lrE5eoKgBi9u/YaYhm9pcUHyFspMhurYXC6oO0e
- i/P6mizw5VvWVA6gjSxGW12hmLajY2cp7sReVp8EHsmM0Pn6c/Dm0K6RI1owyJNTlWjGprqnw
- nOuCBWwxFKLZqZel2fRHl0nGxwksPSL1XdvvUbaPsnubbtvb5TDvvWkbmy/W6+7WT68JfIiR1
- Jcq8oKj2tHR39mi2Isbn11K/oUdg90Scn0D6ltczqP3VrRAw1kU4O7DwZqvj+7WxRSDlDMZLE
- OnfbTEXGrU2671wGx7s6JzgHSJhNWgbgd+qbg7DiCd1L4d/yTJ9FFoxhgEmkwk1Xfu/l1YGmt
- gZflE1ygia4FEkE6f0t46vFIAGcfTgELJ3dL3gbXLRHrx2ecM/vgcqzh20/IG/RaMw85McZmL
- MHVdCzML+jYKEelx2cdnrlrjETjfYLS7/D/2Czrtcq/Pl3xfJ0R+y3IasHh+C9kGZwYoDp6Iv
- KF2gZCJD5dD4KeSa+iuCWCEMp9sT/V0n0aeYx6y9vJxIHLszEw1NpdMwBRx2QzwYJ36kEW7fQ
- 3Ezgi3ySudOKg35IIw9R7cVjPLHSO6T5AReO+bMxACo0hajqJLLrJ1WUOlowNrx4tTNeM5Kw2
- m8R3fnHPpUQ==
+References: <BCD99947-5F55-4116-8F74-D6832E50340B@brauner.io>
+ <CAHk-=whcA0kAWGqet9oJdyttjhP7J4PcU2Ly=n_Qyo6rMJNxRg@mail.gmail.com>
+ <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com>
+ <CAHk-=wj0o8BiUrYiM5ZcTS6JxBh1M60O36Ms8-EqLQ139=1L4g@mail.gmail.com>
+ <20190330171215.3yrfxwodstmgzmxy@brauner.io> <CAHk-=whF6gnRVbJaArZna4e=tejfrzmNQtRbWjnuSSKpBn+jQg@mail.gmail.com>
+ <132107F4-F56B-4D6E-9E00-A6F7C092E6BD@amacapital.net> <CAHk-=wiaLtH41Mc5qAjOeCWavPqV0DhS581KYa0QBt8uraTK1Q@mail.gmail.com>
+ <20190331211041.vht7dnqg4e4bilr2@brauner.io> <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
+ <20190331220259.qntxynluk765hpnt@brauner.io>
+In-Reply-To: <20190331220259.qntxynluk765hpnt@brauner.io>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 31 Mar 2019 15:16:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh0jgRkZiNdFD96Zpjx+_G+NVSHieAt+QgWCQBJ2A-5Aw@mail.gmail.com>
+Message-ID: <CAHk-=wh0jgRkZiNdFD96Zpjx+_G+NVSHieAt+QgWCQBJ2A-5Aw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Joel Fernandes <joel@joelfernandes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's unnecessary to point to an external mirror of the Documentation
-directory. Also, drop the date field, because in-kernel documentation is
-continually updated.
+On Sun, Mar 31, 2019 at 3:03 PM Christian Brauner <christian@brauner.io> wrote:
+>
+> Thanks for the input. The problem Jann and I saw with this is that it
+> would be awkward to have the kernel open a file in some procfs instance,
+> since then userspace would have to specify which procfs instance the fd
+> should come from.
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
+I would actually suggest we just make the rules be that the
+pidfd_open() always return the internal /proc entry regardless of any
+mount-point (or any "hidepid") but also suggest that exactly *because*
+it gives you visibility into the target pid, you'd basically require
+the strictest kind of control of the process you're trying to get the
+pidfd of.
 
-Alternatively, we might drop this entry of the list entirely, because
-Documentation/ is already covered.
-=2D--
- Documentation/process/kernel-docs.rst | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+Ie likely something along the lines of
 
-diff --git a/Documentation/process/kernel-docs.rst b/Documentation/process=
-/kernel-docs.rst
-index ab12dddc773e..92488e59943d 100644
-=2D-- a/Documentation/process/kernel-docs.rst
-+++ b/Documentation/process/kernel-docs.rst
-@@ -52,6 +52,17 @@ The Sphinx books should be built with ``make {htmldocs =
-| pdfdocs | epubdocs}``.
-         (including this document itself) have been moved there, and might
-         be more up to date than the web version.
+        ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS)
 
-+    * Title: **Overview of the Virtual File System**
-+
-+      :Author: Richard Gooch.
-+      :Location: Documentation/filesystems/vfs.txt
-+      :Keywords: VFS, File System, mounting filesystems, opening files,
-+        dentries, dcache.
-+      :Description: Brief introduction to the Linux Virtual File System.
-+        What is it, how it works, operations taken when opening a file or
-+        mounting a file system and description of important data
-+        structures explaining the purpose of each of their entries.
-+
- On-line docs
- ------------
+kind of requirements.
 
-@@ -95,18 +106,6 @@ On-line docs
-         [...]. This paper examines some common problems for
-         submitting larger changes and some strategies to avoid problems.
+But honestly, just how much do you need pidfd_open()? If this is
+purely because somebody goes "oh, ASCII is expensive", then just stop
+doing it entirely. It's not. It's fine. Going throuigh a filesystem is
+a *good* thing, exactly because it allows MIS to control it.
 
--    * Title: **Overview of the Virtual File System**
--
--      :Author: Richard Gooch.
--      :URL: http://www.mjmwired.net/kernel/Documentation/filesystems/vfs.=
-txt
--      :Date: 2007
--      :Keywords: VFS, File System, mounting filesystems, opening files,
--        dentries, dcache.
--      :Description: Brief introduction to the Linux Virtual File System.
--        What is it, how it works, operations taken when opening a file or
--        mounting a file system and description of important data
--        structures explaining the purpose of each of their entries.
--
-     * Title: **Linux Device Drivers, Third Edition**
+So it's entirely possible that the right answer is: "just open
+/proc/<pid>/", and accept the fact that everybody has it anyway, and
+people who don't have it don't get the new functionality (with the
+possible exception of clone(CLONE_PIDFD), which only gives you access
+to a child you created yourself.
 
-       :Author: Jonathan Corbet, Alessandro Rubini, Greg Kroah-Hartman
-=2D-
-2.20.1
-
+          Linus
