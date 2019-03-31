@@ -2,94 +2,112 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B890DC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 03:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EBBC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 04:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89FF121726
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 03:16:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="qBvMAxNw"
+	by mail.kernel.org (Postfix) with ESMTP id E4B5F21726
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 04:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731209AbfCaDQK (ORCPT
+        id S1725870AbfCaEAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 23:16:10 -0400
-Received: from mail.nic.cz ([217.31.204.67]:37859 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731073AbfCaDPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 23:15:42 -0400
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id EE1DE63521;
-        Sun, 31 Mar 2019 05:15:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1554002139; bh=B/TpvfHvTFNpjJx5rPCicAY3K4ayOqi1nl+RinKdt/c=;
-        h=From:To:Date;
-        b=qBvMAxNwiyTXYOSuGx4V+2qFuDjYwBt78d+vApTKcq1ZuFZVzuXlsqdl5XiOKw/8y
-         T2+xcyVRHgyzyeIx5YssXi7Tngq7BpFbWEQcWDQGzEA7Gsrae4v/0647fx0q7Ybj5t
-         W8bX/9WERKph68kpwDKmkBJWbHuT4HervFLRSYg8=
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, arm@kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH v3 crypto+mailbox+firmware RESEND 1/6] dt-bindings: mailbox: Document armada-3700-rwtm-mailbox binding
-Date:   Sun, 31 Mar 2019 05:15:32 +0200
-Message-Id: <20190331031537.10626-2-marek.behun@nic.cz>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190331031537.10626-1-marek.behun@nic.cz>
-References: <20190331031537.10626-1-marek.behun@nic.cz>
+        Sun, 31 Mar 2019 00:00:36 -0400
+Received: from hurricane.elijah.cs.cmu.edu ([128.2.209.191]:35948 "EHLO
+        hurricane.elijah.cs.cmu.edu" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725773AbfCaEAg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 00:00:36 -0400
+Received: from [127.0.0.1] (helo=cs.cmu.edu)
+        by hurricane.elijah.cs.cmu.edu with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <jaharkes@cs.cmu.edu>)
+        id 1hARe1-00027a-8N; Sun, 31 Mar 2019 00:00:29 -0400
+Date:   Sun, 31 Mar 2019 00:00:24 -0400
+From:   Jan Harkes <jaharkes@cs.cmu.edu>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Pedro Cuadra Chamorro <pcuadrac@cs.cmu.edu>,
+        linux-kernel@vger.kernel.org
+Subject: Re: fs/coda oops bisected to (925b9cd1b8) "locking/rwsem: Make owner
+ store task pointer of last owni
+Message-ID: <20190331040023.qbx52lwzufkxg3kw@cs.cmu.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.99.2 at mail
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds device tree binding documentation for the rWTM BIU mailbox
-driver on the Armada 37xx SOC (EspressoBin, Turris Mox).
+On Fri, Mar 29, 2019 at 05:53:22PM +0000, Waiman Long wrote:
+> On 03/29/2019 12:10 PM, Jan Harkes wrote:
+> > I knew I definitely had never seen this problem with the stable kernel
+> > on Ubuntu xenial (4.4) so I bisected between v4.4 and v5.1-rc2 and ended
+> > up at
+> >
+> >     # first bad commit: [925b9cd1b89a94b7124d128c80dfc48f78a63098]
+> >     # locking/rwsem: Make owner store task pointer of last owning reader
+> >
+> > When I revert this particular commit on 5.1-rc2, I am not able to
+> > reproduce the problem anymore.
+> 
+> Without CONFIG_DEBUG_RWSEMS, the only behavioral change of this patch is
+> to do an unconditional write of task_structure pointer into sem->owner
+> after acquiring the read lock in down_read(). Before this patch, it does
 
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../mailbox/marvell,armada-3700-rwtm-mailbox.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/marvell,armada-3700-rwtm-mailbox.txt
+I tried with just that change, but that is not at fault. It is also hard
+to believe we have a use-after-free issue, because we are using a
+spinlock on the inode that is held in place by the file we are releasing.
 
-diff --git a/Documentation/devicetree/bindings/mailbox/marvell,armada-3700-rwtm-mailbox.txt b/Documentation/devicetree/bindings/mailbox/marvell,armada-3700-rwtm-mailbox.txt
-new file mode 100644
-index 000000000000..282ab81a4ea6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/marvell,armada-3700-rwtm-mailbox.txt
-@@ -0,0 +1,16 @@
-+* rWTM BIU Mailbox driver for Armada 37xx
-+
-+Required properties:
-+- compatible:	must be "marvell,armada-3700-rwtm-mailbox"
-+- reg:		physical base address of the mailbox and length of memory mapped
-+		region
-+- interrupts:	the IRQ line for the mailbox
-+- #mbox-cells:	must be 1
-+
-+Example:
-+	rwtm: mailbox@b0000 {
-+		compatible = "marvell,armada-3700-rwtm-mailbox";
-+		reg = <0xb0000 0x100>;
-+		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+		#mbox-cells = <1>;
-+	};
--- 
-2.19.2
+After trying various variations the minimal change that fixes the soft
+lockup is as follows. Without this patch I get a reliable lockup, with
+the patch everything works as expected.
 
+
+    diff --git a/kernel/locking/rwsem.h b/kernel/locking/rwsem.h
+    index bad2bca..0cc437d 100644
+    --- a/kernel/locking/rwsem.h
+    +++ b/kernel/locking/rwsem.h
+    @@ -61,8 +61,7 @@ static inline void rwsem_clear_owner(struct rw_semaphore *sem)
+     static inline void __rwsem_set_reader_owned(struct rw_semaphore *sem,
+                                                struct task_struct *owner)
+     {
+    -	unsigned long val = (unsigned long)owner | RWSEM_READER_OWNED
+    -						 | RWSEM_ANONYMOUSLY_OWNED;
+    +	unsigned long val = RWSEM_READER_OWNED | RWSEM_ANONYMOUSLY_OWNED;
+     
+            WRITE_ONCE(sem->owner, (struct task_struct *)val);
+     }
+
+
+I'll continue digging if I can find a reason why. So far I've only found
+one place where rwsem->owner is modified while not holding a lock, but
+changing that doesn't make a difference for my particular case.
+
+
+    diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
+    index 03cb4b6f842e..fe696a8b57f3 100644
+    --- a/include/linux/percpu-rwsem.h
+    +++ b/include/linux/percpu-rwsem.h
+    @@ -114,11 +114,11 @@ extern void percpu_free_rwsem(struct percpu_rw_semaphore *);
+     static inline void percpu_rwsem_release(struct percpu_rw_semaphore *sem,
+                                            bool read, unsigned long ip)
+     {
+    -	lock_release(&sem->rw_sem.dep_map, 1, ip);
+     #ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+            if (!read)
+                    sem->rw_sem.owner = RWSEM_OWNER_UNKNOWN;
+     #endif
+    +	lock_release(&sem->rw_sem.dep_map, 1, ip);
+     }
+     
+     static inline void percpu_rwsem_acquire(struct percpu_rw_semaphore *sem,
+
+
+Jan
