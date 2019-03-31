@@ -2,90 +2,59 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF10C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 20:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AE0C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 21:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678C32086C
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 20:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bN/9a2Ic"
+	by mail.kernel.org (Postfix) with ESMTP id 0F6D4206B8
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 21:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731496AbfCaUkI (ORCPT
+        id S1731469AbfCaVBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 16:40:08 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34083 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbfCaUkH (ORCPT
+        Sun, 31 Mar 2019 17:01:17 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:42686 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbfCaVBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 16:40:07 -0400
-Received: by mail-ot1-f67.google.com with SMTP id k21so6802635otf.1;
-        Sun, 31 Mar 2019 13:40:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tuOXAbv3J8MIItCcPhrIAhsPpVIiIOHz9DlA2MhFrvU=;
-        b=bN/9a2Icb8kTa8BTFjyJnjT9+QkuhDJiyZkwUBEI41Yf6Cp46OzTZ6Rqmty+cSrWF3
-         LCy6O5Gk71eM5tiZ6QFstzXEgRHu6TdpyYU3uwBP7LHsjlZEsNIBssNuaW8wHyHVbA13
-         Swcng2LUtQ17AyJp3W4o2CaFKCk+ESnTQpVim7S8NXilOFPFNdyPTsjro9g/ExNtuPFk
-         UBFLA1AaTlLdQYWuyoBN1kxX/j7XllEP9tI7V9fccIr5B24xm/aippHzdoMY1nC7NeCk
-         Pcte0gapIm5tyq2Iz8SSKcUWt16qeI4RoONTgRGuNuvDnGolbMTB4FYcQaf0Ly+3qsTV
-         J2pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tuOXAbv3J8MIItCcPhrIAhsPpVIiIOHz9DlA2MhFrvU=;
-        b=X9lrRABmeRXrkUbiagb/RWewslC+7BsJl7ZSv4g9dwv4jEBD49reV+WhN+3kooqlez
-         F3FknP2jEap34T23cxnmQgF99boerjT3ljvknELOkjL5+Rx2Dx77ZxILO8g78sm5er18
-         SPErQb2l/N6SkR+qw0x88cSK3Q6B3nBrIt0bLQu04UjuMVPuClbIBq+FLy3x2/sXVHGd
-         bl6w/eBdlkFLSY0YPrzJDS6oLVsGGdQA1HESfIMBlZVXA3HCZqVGkQzq+mkxeJNXqE60
-         U1XhKpioabdHQJ0ppQ0gy3a1Rv8G8imvYqsdH1yJAsABY4JF+OvdU49tUD8lEob3WD3Q
-         ffiw==
-X-Gm-Message-State: APjAAAU0YDDCwFDAT4OttJLZrxltR4JhntOyf4IgIoZYeH7/wFacFMjn
-        wp96icOTW3z7iUD/ujRH69iIKYTYWeTIKLkXQO8=
-X-Google-Smtp-Source: APXvYqz7vwnAicuK0j8AB+0BTgjMdFbNCYY1OyUChZCo3VH210NS3/ytS9lexvsbiOvNTToenmiS3lo48nCo67UWJ0g=
-X-Received: by 2002:a9d:5906:: with SMTP id t6mr41923482oth.308.1554064806858;
- Sun, 31 Mar 2019 13:40:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <a8539bcf66065380069676fbea99a51254309803.1553914418.git.chunfeng.yun@mediatek.com>
- <c0d6e2a75efc26eb1af49506e6c2cead394abecb.1553914418.git.chunfeng.yun@mediatek.com>
-In-Reply-To: <c0d6e2a75efc26eb1af49506e6c2cead394abecb.1553914418.git.chunfeng.yun@mediatek.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sun, 31 Mar 2019 22:39:56 +0200
-Message-ID: <CAFBinCA3L650-9s0-y_hAP=pS2n=E_YTxn3LnRL_CTs76u2H9A@mail.gmail.com>
-Subject: Re: [PATCH 4/4] phy: phy-meson-gxl-usb2: get optional clock by devm_clk_get_optional()
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 31 Mar 2019 17:01:16 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D4FB21070EFE9;
+        Sun, 31 Mar 2019 14:01:15 -0700 (PDT)
+Date:   Sun, 31 Mar 2019 14:01:15 -0700 (PDT)
+Message-Id: <20190331.140115.123759088780666820.davem@davemloft.net>
+To:     aaro.koskinen@iki.fi
+Cc:     joabreu@synopsys.com, alexandre.torgue@st.com,
+        peppe.cavallaro@st.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, aaro.koskinen@nokia.com
+Subject: Re: [PATCH 0/6] net: stmmac: fix handling of oversized frames
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190327203540.1884-1-aaro.koskinen@iki.fi>
+References: <20190327203540.1884-1-aaro.koskinen@iki.fi>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 31 Mar 2019 14:01:16 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 10:12 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
->
-> Use devm_clk_get_optional() to get optional clock
->
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Acked-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Date: Wed, 27 Mar 2019 22:35:34 +0200
 
-thank you for this cleanup!
+> I accidentally had MTU size mismatch (9000 vs. 1500) in my network,
+> and I noticed I could kill a system using stmmac & 1500 MTU simply
+> by pinging it with "ping -s 2000 ...".
+> 
+> While testing a fix I encountered also some other issues that need fixing.
+> 
+> I have tested these only with enhanced descriptors, so the normal
+> descriptor changes need a careful review.
 
-if you also want a Tested-by then please give me a few days (until I
-have time to boot with this patch applied on my Khadas VIM or VIM2)
-
-
-Regards
-
-Martin
+Series applied, thanks Aaro.
