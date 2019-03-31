@@ -2,110 +2,91 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0071C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE66C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D2E20881
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C4D20881
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:27:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="tfc5zil1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731101AbfCaCRO (ORCPT
+        id S1731094AbfCaC0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 22:17:14 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39771 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731056AbfCaCRO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 22:17:14 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i17so2835060pfo.6;
-        Sat, 30 Mar 2019 19:17:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o5pIJAmR+NlZr3xNA0ww47lgwBmrJL95RImLVOx7RsU=;
-        b=D5ti0qYGmaszJHFeQdgS2Y5JCulYxCeQMcnedmqYhNL2CSLCcWJQYQbA/r/2Vi0KOe
-         GXZU+7gQA4Um+Ldxm0uqPDxuAHzsH/seFEbwwIJwkkrII2Z8F6VqO+9PmuCcz83AO3zx
-         WR9LkxC8nMCyYCZC2XCJZo7NCFnjYfg+dtiO28DfYvmFDiNYKOB7a/3ZtXrybcifEdRF
-         7YiEZ7p4D9pWqMin2r88W/zXZk4JOcp+xckbHVmI2jQJDM9FMsaPSxi7tnXjDd7fZ09b
-         +3kmU2IKMmfGeRnL/lTjlOEL0RIJn5K5W+jKdHIejZow0gvY4RJr5dJ5s/5wovwtqloe
-         Jtyw==
-X-Gm-Message-State: APjAAAUZUytqkmeeJNr4lQ9CBItVNgoScRuQ/LeipYD0TunKMN6AD54n
-        DUAfMsCGmkuotEf/Q4fq0sI=
-X-Google-Smtp-Source: APXvYqyhMHuYINmBljhmnl61h8hamyffthGOmM6sEzAGki3F3bK1JyYEyK6j+kcAQRVQPGCK7yCx5w==
-X-Received: by 2002:a65:5202:: with SMTP id o2mr32904749pgp.402.1553998633172;
-        Sat, 30 Mar 2019 19:17:13 -0700 (PDT)
-Received: from asus.site ([2601:647:4000:5dd1:a41e:80b4:deb3:fb66])
-        by smtp.gmail.com with ESMTPSA id e23sm8878231pfd.11.2019.03.30.19.17.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 Mar 2019 19:17:11 -0700 (PDT)
-Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
-To:     syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, danitg@mellanox.com,
-        darrick.wong@oracle.com, dledford@redhat.com,
-        gustavo@embeddedor.com, jannh@google.com, jgg@ziepe.ca,
-        johannes.berg@intel.com, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-xfs@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
-        paulmck@linux.vnet.ibm.com, peterz@infradead.org,
-        roland@purestorage.com, shamir.rabinovitch@oracle.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, tj@kernel.org,
-        torvalds@linux-foundation.org, will.deacon@arm.com,
-        xiyou.wangcong@gmail.com, Dmitry Vyukov <dvyukov@google.com>
-References: <00000000000089a718058556e1d8@google.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <f71aaffa-ecf4-1def-fe50-91f37c677537@acm.org>
-Date:   Sat, 30 Mar 2019 19:17:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        Sat, 30 Mar 2019 22:26:55 -0400
+Received: from onstation.org ([52.200.56.107]:34310 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731058AbfCaC0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 22:26:55 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 29ABD456C5;
+        Sun, 31 Mar 2019 02:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1553999214;
+        bh=K/PCJWYiucYgdku+Wj5YPzuNDDtA/AtjdJ9NC89KHtA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=tfc5zil1VaPHZulSbYQwoCKyAVsbcAqlk3TKTp2mbgXlvRnxG8/xdl6k27O7f9jnx
+         vlu5k3h2MVlsMjMBp2KvY4Ffib0Ot3axNUGR49J++2i3SF3FfV/yIby3jhviSipQ9y
+         Ha7CvD+bUVQAOz2/Klsn4Mg4eJVVZYxGNkIvn3ZA=
+Date:   Sat, 30 Mar 2019 22:26:53 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: 'reg: property has invalid length' with new JSON-schema bindings
+Message-ID: <20190331022653.GA8727@basecamp>
 MIME-Version: 1.0
-In-Reply-To: <00000000000089a718058556e1d8@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/30/19 2:58 PM, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit 669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
-> Author: Bart Van Assche <bvanassche@acm.org>
-> Date:   Thu Feb 14 23:00:54 2019 +0000
-> 
->      kernel/workqueue: Use dynamic lockdep keys for workqueues
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17f1bacd200000
-> start commit:   0e40da3e Merge tag 'kbuild-fixes-v5.1' of 
-> git://git.kernel..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1409bacd200000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1009bacd200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
-> dashboard link: 
-> https://syzkaller.appspot.com/bug?extid=6f39a9deb697359fe520
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e1bacd200000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1120fe0f200000
-> 
-> Reported-by: syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com
-> Fixes: 669de8bda87b ("kernel/workqueue: Use dynamic lockdep keys for 
-> workqueues")
-> 
-> For information about bisection process see: 
-> https://goo.gl/tpsmEJ#bisection
+Hi Rob,
 
-Hi Dmitry,
+I'm finishing up a patch series that adds device tree support for a
+backlight driver and I made the bindings use the new JSON schema. I'm
+running into a problem with the reg property in the examples and I can
+reproduce the issue by adding an example to the trivial bindings:
 
-This bisection result doesn't make sense to me. As one can see, the 
-message "BUG: MAX_STACK_TRACE_ENTRIES too low!" does not occur in the 
-console output the above console output URL points at.
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml
+b/Documentation/devicetree/bindings/trivial-devices.yaml
+index d79fb22bde39..bdab6a015db4 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -341,4 +341,10 @@ required:
+   - compatible
+   - reg
+ 
++examples:
++  - |
++    isl29028@38 {
++        compatible = "isil,isl29028";
++        reg = <0x38>;
++    };
+ ...
 
-Bart.
+'make dt_binding_check' fails with the following error:
 
+  Documentation/devicetree/bindings/trivial-devices.example.dts:11.5-18:
+    Warning (reg_format): /isl29028@38:reg: property has invalid length
+    (4 bytes) (#address-cells == 1, #size-cells == 1)
+  ...
+  Documentation/devicetree/bindings/trivial-devices.example.dtb:
+    Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
 
+I see that dt-extract-example hard codes those two cell values to 1:
+https://github.com/robherring/yaml-bindings/blob/master/tools/dt-extract-example
+
+The I2C buses for my board (qcom-msm8974) sets #size-cells to 0. Do you
+have any suggestions for how I can correct this issue? I can make the
+binding check happy by adding a length (reg = <0x38 0x4>;) but I assume
+that we shouldn't do that for I2C addresses like this.
+
+Brian
