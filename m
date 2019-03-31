@@ -2,329 +2,167 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC58C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 11:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A69C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 11:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF4020870
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 11:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554030356;
-	bh=V2gjzo5qisFRUiXcNybqVoNr8zk87r0pPbf3OaQnyY4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ra+3vNecu80KEIp70BwpDdFVecT2K2J4jQYA6xDWvDp6YwIa9GbfVPfz0ACFFueJP
-	 A0oLjRZyvhXIW5VKCON87m6P/PEMz6yVdElnKTtPX6R66Xs2twtX7mzH0Ko1QdMgUI
-	 K9P5YmYSq+UqH//vG78oBdRlu4C+kLv2JM5MuDp0=
+	by mail.kernel.org (Postfix) with ESMTP id B9F772086C
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 11:20:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="b0zbtKQR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfCaLFw (ORCPT
+        id S1731078AbfCaLUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 07:05:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbfCaLFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 07:05:52 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A9BE2085A;
-        Sun, 31 Mar 2019 11:05:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554030350;
-        bh=V2gjzo5qisFRUiXcNybqVoNr8zk87r0pPbf3OaQnyY4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=r4mBrtgNXO413qI9GG7m9O2AushiAx+CsbRem6pLDqfinegYsOMKoG54bWlAhYDtM
-         PX9Mu/Gei4ovAZs6UYxJqVeLl7lbogx/HfvkFs/H56Uc2weWVR4NgIeirxTDzVUOPW
-         d7hguOiLmBdCzpvMTUQhy5FvF8t0AHD2v8C5heNQ=
-Date:   Sun, 31 Mar 2019 12:05:45 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [RFC 0/4] iio-input-bridge so that accelerometers which only
- have an iio driver can still present evdev input events
-Message-ID: <20190331120545.78192269@archlinux>
-In-Reply-To: <890047F6-E288-41F0-A8D0-B91CC5A3A0A4@goldelico.com>
-References: <cover.1552941573.git.hns@goldelico.com>
-        <20190324182920.66242add@archlinux>
-        <890047F6-E288-41F0-A8D0-B91CC5A3A0A4@goldelico.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 31 Mar 2019 07:20:52 -0400
+Received: from mail-eopbgr10085.outbound.protection.outlook.com ([40.107.1.85]:44964
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726586AbfCaLUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 07:20:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z7gbwben0hH1TzvLULMbh9GHizTWXU3atfbgia4GUR4=;
+ b=b0zbtKQRN+qfbDP3Vv6i4f8jHWP8wolaGmf2gnZxk2C6pGKXzSBfjD89/naMVskOUk1WiSuepOCA+zAXHj2AQFxEh0yxaoG+MqPejQHoz931SLURaOJfeRdUPNaZJOiFQCOyUFkfC+d1gSamQJLmNNjod9zieXemRwwRc6x6PQY=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB5106.eurprd04.prod.outlook.com (20.177.40.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.17; Sun, 31 Mar 2019 11:20:47 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::4514:91e2:16b7:ee2b]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::4514:91e2:16b7:ee2b%4]) with mapi id 15.20.1750.014; Sun, 31 Mar 2019
+ 11:20:47 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Daniel Baluta <daniel.baluta@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>, Teo Hall <teo.hall@nxp.com>
+Subject: RE: [PATCH] arm64: dts: imx8qxp: Add lpuart1/lpuart2/lpuart3 nodes
+Thread-Topic: [PATCH] arm64: dts: imx8qxp: Add lpuart1/lpuart2/lpuart3 nodes
+Thread-Index: AQHU5xsXTkClBElNYkSLBv/JPYYQCqYll/1w
+Date:   Sun, 31 Mar 2019 11:20:47 +0000
+Message-ID: <AM0PR04MB42113D53B7B178BED58B6AB180540@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190330170725.24360-1-daniel.baluta@nxp.com>
+In-Reply-To: <20190330170725.24360-1-daniel.baluta@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: eb87f774-b11d-41cd-c864-08d6b5caeca7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB5106;
+x-ms-traffictypediagnostic: AM0PR04MB5106:
+x-ms-exchange-purlcount: 1
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-microsoft-antispam-prvs: <AM0PR04MB51069B984DA28B7F37F7D66E80540@AM0PR04MB5106.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0993689CD1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(39860400002)(396003)(136003)(189003)(199004)(8676002)(2501003)(14444005)(86362001)(2906002)(256004)(55016002)(9686003)(6116002)(3846002)(6306002)(229853002)(4326008)(110136005)(74316002)(6506007)(14454004)(7736002)(486006)(476003)(102836004)(54906003)(106356001)(966005)(478600001)(52536014)(26005)(53936002)(25786009)(316002)(71190400001)(71200400001)(6436002)(7696005)(33656002)(446003)(68736007)(105586002)(11346002)(81156014)(186003)(76176011)(66066001)(6246003)(8936002)(44832011)(305945005)(97736004)(99286004)(81166006)(5660300002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5106;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +Y6wQcSBiSaQMM/njtJUZllzOJbGNBSsleyWhxADNlSzJSv1YApqQ85SGbNTt0iz8JABnCh0xIOZ92xSDj4KyqFDPwSUQM2JD6Is8luJmIIoLDjZ3Iou62BOgh7rBFvJg0uKkeWA4tk5Z9wYt0k+QybUi8KrqDA/4Ba8x5L7CQqkhYflTyW+UAzYEEj9WCAU7cLr6DprpNtOYfzzRyOld3TMSa1+9CiWwt44BIps2V+ZGLYFx0cu9Wzt8kD6p40zn1OQOAYmwzNzQ67NTmu5qd5zX7eNhi5Oo2HkngMPpP/gFw/ISbhQvXEKAgZEFV8vRZ6ZlVGMqoTFp4T5D/xyKmTKj1sp/XdQQ7B/zOkv9kgr+j2eYd26MEST1VisX2GqPK5OxMaqxlsM3fbkTTbM4rSpSZiPJDJUCI8A3Dzg2RE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb87f774-b11d-41cd-c864-08d6b5caeca7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2019 11:20:47.7473
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Mar 2019 18:42:44 +0100
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+> From: Daniel Baluta
+> Sent: Sunday, March 31, 2019 1:08 AM
+>=20
+> lpuart nodes are part of the ADMA subsystem. See Audio DMA memory map in
+> iMX8 QXP RM [1]
+>=20
+> This patch is based on the dtsi file initially submitted by Teo Hall in i=
+.MX NXP
+> internal tree.
+>=20
+> [1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
+>=20
+> Signed-off-by: Teo Hall <teo.hall@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-> Hi Jonathan,
-> 
-> > Am 24.03.2019 um 19:29 schrieb Jonathan Cameron <jic23@kernel.org>:
-> > 
-> > On Mon, 18 Mar 2019 21:39:30 +0100
-> > "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
-> > 
-> > 	  
-> >> Some user spaces (e.g. some Android) use /dev/input/event* for handling the 3D
-> >> position of the device with respect to the center of gravity (earth). This can
-> >> be used for gaming input, rotation of screens etc.
-> >> 
-> >> This should be the standard because this interface is an abstraction of how
-> >> this data is acquired from sensor chips. Sensor chips may be connected through
-> >> different interfaces and in different positions. They may also have different
-> >> parameters. And, if a chip is replaced by a different one, the values reported
-> >> by the device position interface should remain the same.
-> >> 
-> >> But nowadays, new accelerometer chips usually just get iio drivers and rarely
-> >> an evdev input driver.
-> >> 
-> >> Therefore we need something like a protocol stack: input device vs. raw data.
-> >> It can be seen as a similar layering like TCP/IP vs. bare Ethernet. Or keyboard
-> >> input events vs. raw gpio or raw USB access.
-> >> 
-> >> This patch set bridges the gap between raw iio data and the input device abstraction
-> >> so that accelerometer measurements can also be presented as X/Y/Z accelerometer
-> >> channels (INPUT_PROP_ACCELEROMETER) through /dev/input/event*.
-> >>   
-> > Hi,
-> > 
-> > I've kind of run out of time today and want to give this a detailed look.  
-> 
-> No problem, please take the time it needs.
-> 
-> > 
-> > In the meantime a few initial comments.
-> > 
-> > 1. Resend the whole series cc'ing the linux-input list and maintainer.  
-> 
-> Ok!
-> 
-> > 2. In the vast majority of devices the interrupt pin is connected for an
-> >   accelerometer. and they support data ready signals.  My gut feeling is
-> >   that should be the preferred mode.  
-> 
-> Mine too, and the commit message 1/4 describes this by 
-> 
-> "If it runs, the driver polls the device(s) once every 100 ms. A mode where the
-> iio device defines the update rate is not implemented and for further study."
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-Absolutely, I saw that, just wanted to encourage this avenue ;) It's particularly
-good if we have a controllable frequency device and can have it self clock
-at a rather that makes sense for human input.  Also lets the gamers run at
-2kHz if they really want to ;)
+Regards
+Dong Aisheng
 
-> 
-> But I didn't manage to get this correctly set up for in-kernel iio on demand
-> (start/stop when a process does an open/close - it was simpler to start/stop
-> polling).
-> 
-> Here I am lacking some understanding of details of the subsystems and their
-> capabilities.
-> 
-> Therefore I focussed on the polling case to leave the interrupt driven case
-> for later improvements. Also, since 100ms doesn't seem to be a big resource
-> burden.
-
-One thing the IIO consumer interfaces have always lacked is nice fallback
-between the buffered / interrupt mode and polled read_raw modes.  In theory
-if should be possible to elegantly assume that we have a self clocking sensor
-but if it doesn't actually support that, fall back to polling and still have
-it come out of the buffered interface.  The snag has always been that we
-currently end up adding, non-trivial, code to the IIO drivers to support
-buffered modes and we don't want to put that burden on all drivers.
-
-> 
-> I am also not sure if we really want to process every fidget detected by the
-> raw sensor to the input subsystem. This could require more resources than
-> polling with 100ms distance.
-
-Agreed. Thankfully most such sensors also have frequency controls so we
-can normally get to a sensible level.  Input gets to do all the filtering
-etc beyond that.
-
-> 
-> >  It was for that use case that we originally
-> >   put all the demux and multiple buffer code in IIO. The original series for
-> >   that actually had an input bridge.
-> > https://lore.kernel.org/linux-iio/1351679431-7963-5-git-send-email-jic23@kernel.org/  
-> 
-> Oh, nice! I wasn't aware of that. If I had known, we might have based our
-> code on it.
-
-You probably noticed in the comments, it was never finished!  The problem is that
-all my boards are headless so I never cared ;)  Good to have someone looking
-at this problem who does.
-
-> 
-> It seems to be a good blueprint to understand how to set up the callbacks.
-> 
-> What I do not understand is where the "iio map" comes from in your approach.
-> 
-> From device tree? That would IMHO be against the rule that DTS should describe
-> hardware but bridging data to a different user-space interface is not related
-> to hardware description.
-
-This has long been an 'argument' on what exactly makes up hardware description.
-The problem is that usecases really are hardware description.  There has to
-be some means fo knowing what the thing is for, to dictate what software
-support we supply.  Whether that is in userspace or kernel or as you have
-done is assumed "if plausible" is an open question.
-
-Back when this was originally proposed, there weren't clear rules on this in
-DT.  It's hard to argue this is any different from hwmon, though Mark in
-particular really dislikes the iio-hwmon interface.  It has the problem that
-no one has ever come up with a better one.  Only potential option is to create
-abstract devices to represent the fact a given ADC channel is used for
-measuring a 'board voltage' or something like that.  They provide no useful
-meaning that is actually different from putting them in the iio-hwmon bindings.
-
-The same is kind of true here with the reality being we need to know what
-the 'driver' of the acceleration is.  
-
-Could have a binding for 'human' vs 'bridge' vs 'car' :)
-
-> 
-> So our approach does not need a specific mapping.
-> 
-> > 
-> > 3. It's going to be a hard sell to have it 'always' map an accelerometer in IIO
-> >   to an input device when configured.  There are lots of other accelerometer use
-> >   cases where this would be crazy.  In the repost, give some comentary perhaps on
-> >   the following options:
-> >   a) Explicit binding - like the iio-hwmon bridge.
-> >   b) A userspace bridge (I even wrote one of those years ago using uevent)
-> >   c) Some sort of userspace triggered way of creating these on demand.  
-> 
-> Basically, if you have one of these many other use cases, one can just keep this
-> bridge unconfigured. Then, it does not eat up memory or code space or processor
-> cycles.
-
-That's a non starter.   Lots of people aren't going to tune their kernel to
-'unconfigure' some support because they want to turn a feature off.  Take
-a raspberry pi for instance. If it has an accelerometer, the question of whether
-anyone wants to use it is down to whether there is a screen attached or not.
-
-> 
-> Its only use case is to map iio accelerometers to input devices which are
-> really used as input devices, i.e. gaming, device orientation etc. Other use
-> cases (e.g. industrial sensor grid data aggregator) should not consider this as
-> an alternative interface and use e.g. libiio of course.
-> 
-> Those (handheld) devices in mind usually have only a single accelerometer chip, but
-> there are exceptions like the GTA04 and the Pyra which can have two of them (with
-> different precision, mounting orientation and functions). Maybe there are some
-> devices with more than two. So these iio devices should be reported separately
-> but the data (X,Y,Z) should mainly agree on input device level.
-
-There are lots of two sensor cases where the sensors don't agree, mainly because
-they are connected by a hinge (screen and keyboard on laptops for example).
-Doesn't matter really though.
-
-> 
-> In the two-sensor case, our proposed driver simply creates two distinct /dev/input/event
-> files which can be given fixed file names by udev instead of inventing a new trigger
-> to create these on demand. IMHO it should not be handled differently from plugging in
-> multiple mice or joysticks or other gaming devices to USB.
-
-Alternative UDEV can pick up on a new IIO device and poke an interface to register
-an input device from it.  We've talked about allowing iio_maps to be instantiated
-via configfs and it may be that is the modern choice for how to do this.
-
-> 
-> And, this driver converts "raw" accelerometer data into a higher abstraction level
-> input event in a way that user-space becomes independent of the specific chip set
-> and its orientation. This is like hiding different flash hardware interfaces
-> by MTD or file systems. All the hardware details are hidden and shielded. Or it
-> is like mapping gpios or alternatively an i2c scanner chio into standardized key codes.
-> 
-> Finally, there is no polling (in this polling setup) if no process opens the input device.
-> So the only waste of 'always' mapping 'all' accelerometers but not using them are some
-> data structure allocations in the kernel and duration of probe().
-Sure, it's not a heavy burden - but it is conceptually dubious to register an
-interface because 'it might' be wanted.  I'd like Dmitry and the input lists
-view on this (plus others in IIO!)
-
-> 
-> > 4. Input has polled modes. Don't reinvent them.  
-> 
-> Haven't heard of, but that is what a RFC is good for.
-> 
-> Anyways, if we use iio interrupts we don't need it, because the information flow
-> should go from the chip to the iio driver to the input bridge to the input subsystem
-> and only then notify user space (wake up the process running a select on the event
-> device file).
-> 
-> Now, there is something I have learned from studying your comment and struct input_dev.
-> 
-> Although I did not find polled modes, I can simplify our approach significantly
-> since we do not have to count open/close ourselves and define a mutex for that.
-> 
-> This is already done by the input_dev. So I should improve this part of our patches
-> before resending to input list. Thanks for inpsiring this.
-> 
-I see from the next mail you found the polled code.  Dmitry would have kicked back
-on that if you hadn't (we have had this a few times before ;)
-
-> > 5. The patch break up is very very random.  Just have one patch :)  
-> 
-> Well, it tries to have small pieces in a specific order that you can bisect and
-> do not run into compile problems (e.g. adding Makefile before code).
-> 
-> But I can squash it. Seems to make sense since it is not really useful to know
-> which of these pieces breaks other things. It can only be the driver
-> and bisect will still pin-point it.
-
-Quite. It's really one new function so keeping it in one patch is fine.
-
-Patch break up of large new changes is always an interesting one.  Sometimes
-it's much easier to review a 2000 line patch than 5 smaller ones, but
-conversely a 2000 line patch doesn't always fit into lunch time ;)
-> 
-> > 
-> > Anyhow, I'll take a look in detail but may be a little while.  
-> 
-> No reason to hurry. We can wait.
-> 
-> > 
-> > Thanks,
-> > 
-> > Jonathan  
-> 
-> Thanks and BR,
-> Nikolaus
-Great to have this 'hole' filled at last. I've been moaning about it for
-years but never actually got interested enough to do it myself!
-
-Jonathan
-
-> 
-> > 
-> >   
-> >> 
-> >> H. Nikolaus Schaller (4):
-> >>  iio: input-bridge: optionally bridge iio acceleometers to create a
-> >>    /dev/input
-> >>  iio: input-bridge: add iio-input-bridge to Makefile
-> >>  iio: input-bridge: add IIO_INPUT_BRIDGE kernel config option
-> >>  iio: input-bridge: make the iio-input-bridge driver called by iio-core
-> >> 
-> >> drivers/iio/Kconfig                    |   7 +
-> >> drivers/iio/Makefile                   |   1 +
-> >> drivers/iio/industrialio-core.c        |  12 +
-> >> drivers/iio/industrialio-inputbridge.c | 420 +++++++++++++++++++++++++
-> >> drivers/iio/industrialio-inputbridge.h |  28 ++
-> >> 5 files changed, 468 insertions(+)
-> >> create mode 100644 drivers/iio/industrialio-inputbridge.c
-> >> create mode 100644 drivers/iio/industrialio-inputbridge.h
-> >>   
-> >   
-> 
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 33
+> ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index 0cb939861a60..1adfe15c2ea5 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -193,6 +193,39 @@
+>  			status =3D "disabled";
+>  		};
+>=20
+> +		adma_lpuart1: serial@5a070000 {
+> +			compatible =3D "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+> +			reg =3D <0x5a070000 0x1000>;
+> +			interrupts =3D <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-parent =3D <&gic>;
+> +			clocks =3D <&adma_lpcg IMX_ADMA_LPCG_UART1_BAUD_CLK>;
+> +			clock-names =3D "ipg";
+> +			power-domains =3D <&pd IMX_SC_R_UART_1>;
+> +			status =3D "disabled";
+> +		};
+> +
+> +		adma_lpuart2: serial@5a080000 {
+> +			compatible =3D "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+> +			reg =3D <0x5a080000 0x1000>;
+> +			interrupts =3D <GIC_SPI 227 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-parent =3D <&gic>;
+> +			clocks =3D <&adma_lpcg IMX_ADMA_LPCG_UART2_BAUD_CLK>;
+> +			clock-names =3D "ipg";
+> +			power-domains =3D <&pd IMX_SC_R_UART_2>;
+> +			status =3D "disabled";
+> +		}
+> +
+> +		adma_lpuart3: serial@5a090000 {
+> +			compatible =3D "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+> +			reg =3D <0x5a090000 0x1000>;
+> +			interrupts =3D <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-parent =3D <&gic>;
+> +			clocks =3D <&adma_lpcg IMX_ADMA_LPCG_UART3_BAUD_CLK>;
+> +			clock-names =3D "ipg";
+> +			power-domains =3D <&pd IMX_SC_R_UART_3>;
+> +			status =3D "disabled";
+> +		}
+> +
+>  		adma_i2c0: i2c@5a800000 {
+>  			compatible =3D "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+>  			reg =3D <0x5a800000 0x4000>;
+> --
+> 2.17.1
 
