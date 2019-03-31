@@ -2,181 +2,110 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DF5C10F00
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0071C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C742085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D2E20881
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbfCaCMm (ORCPT
+        id S1731101AbfCaCRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 22:12:42 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:60375 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731063AbfCaCMm (ORCPT
+        Sat, 30 Mar 2019 22:17:14 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39771 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731056AbfCaCRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 22:12:42 -0400
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hAPxQ-0004uU-D9; Sat, 30 Mar 2019 22:12:32 -0400
-Date:   Sat, 30 Mar 2019 22:11:56 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Richard Guy Briggs <rgb@redhat.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Simo Sorce <simo@redhat.com>, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V5 09/10] audit: add support for containerid to
- network namespaces
-Message-ID: <20190330125748.GA2869@hmswarspite.think-freely.org>
-References: <cover.1552665316.git.rgb@redhat.com>
- <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
- <CAFqZXNskwTub5Bm_HZqr02VPB4s79CcgAVX8VE2vQYP07-qssg@mail.gmail.com>
- <20190328011202.6raixwzdimn5b4zk@madcap2.tricolour.ca>
- <CAHC9VhQYVSrX1Ng7hZejkGSq6ZXtqi+SKmpARASJ4P2_2i3-4w@mail.gmail.com>
- <20190328214023.qpszfvxbrjlldmmt@madcap2.tricolour.ca>
- <CAHC9VhQiFw32s9QNK4WQDM6rbWHqOhm1AVa2JvY=19V4S+=YhA@mail.gmail.com>
+        Sat, 30 Mar 2019 22:17:14 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i17so2835060pfo.6;
+        Sat, 30 Mar 2019 19:17:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o5pIJAmR+NlZr3xNA0ww47lgwBmrJL95RImLVOx7RsU=;
+        b=D5ti0qYGmaszJHFeQdgS2Y5JCulYxCeQMcnedmqYhNL2CSLCcWJQYQbA/r/2Vi0KOe
+         GXZU+7gQA4Um+Ldxm0uqPDxuAHzsH/seFEbwwIJwkkrII2Z8F6VqO+9PmuCcz83AO3zx
+         WR9LkxC8nMCyYCZC2XCJZo7NCFnjYfg+dtiO28DfYvmFDiNYKOB7a/3ZtXrybcifEdRF
+         7YiEZ7p4D9pWqMin2r88W/zXZk4JOcp+xckbHVmI2jQJDM9FMsaPSxi7tnXjDd7fZ09b
+         +3kmU2IKMmfGeRnL/lTjlOEL0RIJn5K5W+jKdHIejZow0gvY4RJr5dJ5s/5wovwtqloe
+         Jtyw==
+X-Gm-Message-State: APjAAAUZUytqkmeeJNr4lQ9CBItVNgoScRuQ/LeipYD0TunKMN6AD54n
+        DUAfMsCGmkuotEf/Q4fq0sI=
+X-Google-Smtp-Source: APXvYqyhMHuYINmBljhmnl61h8hamyffthGOmM6sEzAGki3F3bK1JyYEyK6j+kcAQRVQPGCK7yCx5w==
+X-Received: by 2002:a65:5202:: with SMTP id o2mr32904749pgp.402.1553998633172;
+        Sat, 30 Mar 2019 19:17:13 -0700 (PDT)
+Received: from asus.site ([2601:647:4000:5dd1:a41e:80b4:deb3:fb66])
+        by smtp.gmail.com with ESMTPSA id e23sm8878231pfd.11.2019.03.30.19.17.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 30 Mar 2019 19:17:11 -0700 (PDT)
+Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
+To:     syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, danitg@mellanox.com,
+        darrick.wong@oracle.com, dledford@redhat.com,
+        gustavo@embeddedor.com, jannh@google.com, jgg@ziepe.ca,
+        johannes.berg@intel.com, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-xfs@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
+        paulmck@linux.vnet.ibm.com, peterz@infradead.org,
+        roland@purestorage.com, shamir.rabinovitch@oracle.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, tj@kernel.org,
+        torvalds@linux-foundation.org, will.deacon@arm.com,
+        xiyou.wangcong@gmail.com, Dmitry Vyukov <dvyukov@google.com>
+References: <00000000000089a718058556e1d8@google.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <f71aaffa-ecf4-1def-fe50-91f37c677537@acm.org>
+Date:   Sat, 30 Mar 2019 19:17:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhQiFw32s9QNK4WQDM6rbWHqOhm1AVa2JvY=19V4S+=YhA@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <00000000000089a718058556e1d8@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 06:00:21PM -0400, Paul Moore wrote:
-> On Thu, Mar 28, 2019 at 5:40 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2019-03-28 11:46, Paul Moore wrote:
-> > > On Wed, Mar 27, 2019 at 9:12 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > >
-> > > > On 2019-03-27 23:42, Ondrej Mosnacek wrote:
-> > > > > On Fri, Mar 15, 2019 at 7:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > > Audit events could happen in a network namespace outside of a task
-> > > > > > context due to packets received from the net that trigger an auditing
-> > > > > > rule prior to being associated with a running task.  The network
-> > > > > > namespace could be in use by multiple containers by association to the
-> > > > > > tasks in that network namespace.  We still want a way to attribute
-> > > > > > these events to any potential containers.  Keep a list per network
-> > > > > > namespace to track these audit container identifiiers.
-> > > > > >
-> > > > > > Add/increment the audit container identifier on:
-> > > > > > - initial setting of the audit container identifier via /proc
-> > > > > > - clone/fork call that inherits an audit container identifier
-> > > > > > - unshare call that inherits an audit container identifier
-> > > > > > - setns call that inherits an audit container identifier
-> > > > > > Delete/decrement the audit container identifier on:
-> > > > > > - an inherited audit container identifier dropped when child set
-> > > > > > - process exit
-> > > > > > - unshare call that drops a net namespace
-> > > > > > - setns call that drops a net namespace
-> > > > > >
-> > > > > > See: https://github.com/linux-audit/audit-kernel/issues/92
-> > > > > > See: https://github.com/linux-audit/audit-testsuite/issues/64
-> > > > > > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> > > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > > > ---
-> > > > > >  include/linux/audit.h | 19 ++++++++++++
-> > > > > >  kernel/audit.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++++++--
-> > > > > >  kernel/nsproxy.c      |  4 +++
-> > > > > >  3 files changed, 106 insertions(+), 3 deletions(-)
-> > > > > >
-> > > > > > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > > > > > index fa19fa408931..70255c2dfb9f 100644
-> > > > > > --- a/include/linux/audit.h
-> > > > > > +++ b/include/linux/audit.h
-> > > > > > @@ -27,6 +27,7 @@
-> > > > > >  #include <linux/ptrace.h>
-> > > > > >  #include <linux/namei.h>  /* LOOKUP_* */
-> > > > > >  #include <uapi/linux/audit.h>
-> > > > > > +#include <linux/refcount.h>
-> > > > > >
-> > > > > >  #define AUDIT_INO_UNSET ((unsigned long)-1)
-> > > > > >  #define AUDIT_DEV_UNSET ((dev_t)-1)
-> > > > > > @@ -99,6 +100,13 @@ struct audit_task_info {
-> > > > > >
-> > > > > >  extern struct audit_task_info init_struct_audit;
-> > > > > >
-> > > > > > +struct audit_contid {
-> > > > > > +       struct list_head        list;
-> > > > > > +       u64                     id;
-> > > > > > +       refcount_t              refcount;
-> > > > >
-> > > > > Hm, since we only ever touch the refcount under a spinlock, I wonder
-> > > > > if we could just make it a regular unsigned int (we don't need the
-> > > > > atomicity guarantees). OTOH, refcount_t comes with some extra overflow
-> > > > > checking, so it's probably better to leave it as is...
-> > > >
-> > > > Since the update is done using rcu-safe methods, do we even need the
-> > > > spin_lock?  Neil?  Paul?
-> > >
-> > > As discussed, the refcount field is protected against simultaneous
-> > > writes by the spinlock that protects additions/removals from the list
-> > > as a whole so I don't believe the refcount_t atomicity is critical in
-> > > this regard.
-> > >
-> > > Where it gets tricky, and I can't say I'm 100% confident on my answer
-> > > here, is if refcount was a regular int and we wanted to access it
-> > > outside of a spinlock (to be clear, it doesn't look like this patch
-> > > currently does this).  With RCU, if refcount was a regular int
-> > > (unsigned or otherwise), I believe it would be possible for different
-> > > threads of execution to potentially see different values of refcount
-> > > (assuming one thread was adding/removing from the list).  Using a
-> > > refcount_t would protect against this, alternatively, taking the
-> > > spinlock should also protect against this.
-> >
-> > Ok, from the above it isn't clear to me if you are happy with the
-> > current code or would prefer any changes, or from below that you still
-> > need to work it through to make a pronouncement.  It sounds to me you
-> > would be ok with *either* spinlock *or* refcount_t, but don't see the
-> > need for both.
+On 3/30/19 2:58 PM, syzbot wrote:
+> syzbot has bisected this bug to:
 > 
-> To be fair you didn't ask if I was "happy" with the approach above,
-> you asked if we needed the spinlock/refcount_t.  I believe I answered
-> that question as comprehensively as I could, but perhaps you wanted a
-> hard yes or no?  In that case, since refcount_t is obviously safer, I
-> would stick with that for now just to limit the number of possible
-> failures.  If someone smarter than you or I comes along and
-> definitively says you are 100% safe to use an int, then go ahead and
-> use an int.
+> commit 669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
+> Author: Bart Van Assche <bvanassche@acm.org>
+> Date:   Thu Feb 14 23:00:54 2019 +0000
 > 
-> Beyond that, I'm still in the process of reviewing your patches, but I
-> haven't finished yet, so no "pronouncement" or whatever you want to
-> call it.
+>      kernel/workqueue: Use dynamic lockdep keys for workqueues
 > 
-
-We definately need the spinlock, as its not meant to protect the refcount
-alterations, its meant to protect parallel modifications to the list pointers.
-Without the spinlock, the list can become corrupted (protecting the refcount is
-just a byproduct).
-
-Because of that byproduct, the atomicity of the refcount isn't required, and so
-we could modify it to be an int or some other non-atomic ordinal type, but as I
-noted, I don't think thats a good idea.  The refcount type helps denote clearly
-what the variable is used for, making it more readable, and given the relative
-non-performance critical path that the reference count is read/written in, and
-the relatively more expensive locking we are already doing there, I think there
-is more value in using the refcount to make the code legible than making
-marginally more performant by altering it to be an int type.
-
-Neil
-
-> -- 
-> paul moore
-> www.paul-moore.com
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17f1bacd200000
+> start commit:   0e40da3e Merge tag 'kbuild-fixes-v5.1' of 
+> git://git.kernel..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1409bacd200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1009bacd200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
+> dashboard link: 
+> https://syzkaller.appspot.com/bug?extid=6f39a9deb697359fe520
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e1bacd200000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1120fe0f200000
 > 
+> Reported-by: syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com
+> Fixes: 669de8bda87b ("kernel/workqueue: Use dynamic lockdep keys for 
+> workqueues")
+> 
+> For information about bisection process see: 
+> https://goo.gl/tpsmEJ#bisection
+
+Hi Dmitry,
+
+This bisection result doesn't make sense to me. As one can see, the 
+message "BUG: MAX_STACK_TRACE_ENTRIES too low!" does not occur in the 
+console output the above console output URL points at.
+
+Bart.
+
+
