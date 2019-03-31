@@ -2,151 +2,90 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3221FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 20:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF10C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 20:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D102086C
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 20:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678C32086C
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 20:40:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="AGnN356U"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bN/9a2Ic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731466AbfCaUib (ORCPT
+        id S1731496AbfCaUkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 16:38:31 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45483 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726931AbfCaUib (ORCPT
+        Sun, 31 Mar 2019 16:40:08 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34083 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbfCaUkH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 16:38:31 -0400
-Received: by mail-pf1-f195.google.com with SMTP id e24so3466026pfi.12
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 13:38:31 -0700 (PDT)
+        Sun, 31 Mar 2019 16:40:07 -0400
+Received: by mail-ot1-f67.google.com with SMTP id k21so6802635otf.1;
+        Sun, 31 Mar 2019 13:40:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=GYOZQm4vYbyUdQFi8rHe4bvj6vFGTwbbXOBuIqEShGI=;
-        b=AGnN356UX2DjQrmYSKwgx9TPPQS0bvawlmliOoIfJ9L27/IL8K/jPrRpTiOTJRxZ/v
-         jgcXHVUoVwODzclaD/vEPfn2ToceLDNoioESQt1q9+ieoBNvM31E+mmut7/PKNO/DRq4
-         WjxNNB5GiEJgOHUGrvL2Q4FhU9NUOAV2ZH5hTnqRGG8X+9Ve/7P17f3kvYsxKTMj7viG
-         Lam8aJ1GtgnMuf3mQq2eaaOh++tfEvNocMoGFemMBSali/vvUGd+nZo6J77q1WKdej0I
-         aiJum73DsBIcszEekomHceFcwDXiXFGmbeV5712qwLVpZzrat+eDbBApCBouBUJ+lwQN
-         fBPA==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tuOXAbv3J8MIItCcPhrIAhsPpVIiIOHz9DlA2MhFrvU=;
+        b=bN/9a2Icb8kTa8BTFjyJnjT9+QkuhDJiyZkwUBEI41Yf6Cp46OzTZ6Rqmty+cSrWF3
+         LCy6O5Gk71eM5tiZ6QFstzXEgRHu6TdpyYU3uwBP7LHsjlZEsNIBssNuaW8wHyHVbA13
+         Swcng2LUtQ17AyJp3W4o2CaFKCk+ESnTQpVim7S8NXilOFPFNdyPTsjro9g/ExNtuPFk
+         UBFLA1AaTlLdQYWuyoBN1kxX/j7XllEP9tI7V9fccIr5B24xm/aippHzdoMY1nC7NeCk
+         Pcte0gapIm5tyq2Iz8SSKcUWt16qeI4RoONTgRGuNuvDnGolbMTB4FYcQaf0Ly+3qsTV
+         J2pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=GYOZQm4vYbyUdQFi8rHe4bvj6vFGTwbbXOBuIqEShGI=;
-        b=lCKFnSeQF8lMYXgnNsE6DJbDw/WcjuenJskjkmbfYNpV5Ok0gZHxYXFmYXR24x8FBw
-         zY0GeQfi9AXXzzyWWd6IpnaQvMJBPcIxRmjKen1Jt70mX+OL2J8qUAqsLRcGnaTl39qM
-         RbwJn+vdTIAmENUPr7O/RpLhHMia4fUhxDO9MSi2fBp4ta6mtvUrerh2RiP0CEtbP65k
-         TrF1VlEjNXC5EFoR7Tuk4NsoJMgCfUZm3gn5jK1gRZOJNIg1nbtq5Ug2ONwHFNTbhJZW
-         ImTbIQ6RSfgGrxmSftpuqcISo2F4vG5t587o0+YHT2CRzUyxFT6zS3ejO/RDNfO6EtFV
-         6gOA==
-X-Gm-Message-State: APjAAAWFb8P0x1OY1PYRczZCmKdJlmH78xfWPeHZ3lrb5wk/NstLRYTG
-        S9tdk9YQ3yP4880K59QbSbS5Vg==
-X-Google-Smtp-Source: APXvYqzT7OiKsSypY5pHqL4u0+JGt2a3wi3D0yhJLZWuMJZMrvoIOIg0qw+wRiZNkZJoBX/DkG4Q4Q==
-X-Received: by 2002:a63:145f:: with SMTP id 31mr7981828pgu.16.1554064710590;
-        Sun, 31 Mar 2019 13:38:30 -0700 (PDT)
-Received: from ?IPv6:2600:100e:b13e:a3af:389b:29a:6d03:f8bf? ([2600:100e:b13e:a3af:389b:29a:6d03:f8bf])
-        by smtp.gmail.com with ESMTPSA id g73sm15291060pfd.185.2019.03.31.13.38.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 31 Mar 2019 13:38:28 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
-Date:   Sun, 31 Mar 2019 14:09:03 -0600
-Message-Id: <132107F4-F56B-4D6E-9E00-A6F7C092E6BD@amacapital.net>
-References: <20190329155425.26059-1-christian@brauner.io> <CAHk-=wjq4dTPcz-qsvhpm5F42SDHCoqEWv1V=rs_kt6MC=ZThA@mail.gmail.com> <BCD99947-5F55-4116-8F74-D6832E50340B@brauner.io> <CAHk-=whcA0kAWGqet9oJdyttjhP7J4PcU2Ly=n_Qyo6rMJNxRg@mail.gmail.com> <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com> <CAHk-=wj0o8BiUrYiM5ZcTS6JxBh1M60O36Ms8-EqLQ139=1L4g@mail.gmail.com> <20190330171215.3yrfxwodstmgzmxy@brauner.io> <CAHk-=whF6gnRVbJaArZna4e=tejfrzmNQtRbWjnuSSKpBn+jQg@mail.gmail.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Joel Fernandes <joel@joelfernandes.org>
-In-Reply-To: <CAHk-=whF6gnRVbJaArZna4e=tejfrzmNQtRbWjnuSSKpBn+jQg@mail.gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-X-Mailer: iPhone Mail (16D57)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tuOXAbv3J8MIItCcPhrIAhsPpVIiIOHz9DlA2MhFrvU=;
+        b=X9lrRABmeRXrkUbiagb/RWewslC+7BsJl7ZSv4g9dwv4jEBD49reV+WhN+3kooqlez
+         F3FknP2jEap34T23cxnmQgF99boerjT3ljvknELOkjL5+Rx2Dx77ZxILO8g78sm5er18
+         SPErQb2l/N6SkR+qw0x88cSK3Q6B3nBrIt0bLQu04UjuMVPuClbIBq+FLy3x2/sXVHGd
+         bl6w/eBdlkFLSY0YPrzJDS6oLVsGGdQA1HESfIMBlZVXA3HCZqVGkQzq+mkxeJNXqE60
+         U1XhKpioabdHQJ0ppQ0gy3a1Rv8G8imvYqsdH1yJAsABY4JF+OvdU49tUD8lEob3WD3Q
+         ffiw==
+X-Gm-Message-State: APjAAAU0YDDCwFDAT4OttJLZrxltR4JhntOyf4IgIoZYeH7/wFacFMjn
+        wp96icOTW3z7iUD/ujRH69iIKYTYWeTIKLkXQO8=
+X-Google-Smtp-Source: APXvYqz7vwnAicuK0j8AB+0BTgjMdFbNCYY1OyUChZCo3VH210NS3/ytS9lexvsbiOvNTToenmiS3lo48nCo67UWJ0g=
+X-Received: by 2002:a9d:5906:: with SMTP id t6mr41923482oth.308.1554064806858;
+ Sun, 31 Mar 2019 13:40:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <a8539bcf66065380069676fbea99a51254309803.1553914418.git.chunfeng.yun@mediatek.com>
+ <c0d6e2a75efc26eb1af49506e6c2cead394abecb.1553914418.git.chunfeng.yun@mediatek.com>
+In-Reply-To: <c0d6e2a75efc26eb1af49506e6c2cead394abecb.1553914418.git.chunfeng.yun@mediatek.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sun, 31 Mar 2019 22:39:56 +0200
+Message-ID: <CAFBinCA3L650-9s0-y_hAP=pS2n=E_YTxn3LnRL_CTs76u2H9A@mail.gmail.com>
+Subject: Re: [PATCH 4/4] phy: phy-meson-gxl-usb2: get optional clock by devm_clk_get_optional()
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Mar 30, 2019 at 10:12 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+>
+> Use devm_clk_get_optional() to get optional clock
+>
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Acked-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
+
+thank you for this cleanup!
+
+if you also want a Tested-by then please give me a few days (until I
+have time to boot with this patch applied on my Khadas VIM or VIM2)
 
 
-> On Mar 30, 2019, at 11:24 AM, Linus Torvalds <torvalds@linux-foundation.or=
-g> wrote:
->=20
->> On Sat, Mar 30, 2019 at 10:12 AM Christian Brauner <christian@brauner.io>=
- wrote:
->>=20
->>=20
->> To clarify, what the Android guys really wanted to be part of the api is
->> a way to get race-free access to metadata associated with a given pidfd.
->> And the idea was that *if and only if procfs is mounted* you could do:
->>=20
->> int pidfd =3D pidfd_open(1234, 0);
->>=20
->> int procfd =3D open("/proc", O_RDONLY | O_CLOEXEC);
->> int procpidfd =3D ioctl(pidfd, PIDFD_TO_PROCFD, procfd);
->=20
-> And my claim is that this is three system calls - one of them very
-> hacky - to just do
->=20
->    int pidfd =3D open("/proc/%d", O_PATH);
+Regards
 
-Hi Linus-
-
-I want to re-check this because I think Christian=E2=80=99s example was bad.=
-  I proposed these ioctls, but that wasn=E2=80=99t the intended use.  The re=
-al point is:
-
-int pidfd =3D new_improved_clone(...);
-
-To be useful, this type of API *must* work without proc mounted.
-
-And, later:
-
-openat(fd to pidfd=E2=80=99s proc directory, =E2=80=9Cstatus=E2=80=9D, ...);=
-
-
-And we want a non-utterly-crappy way to do this.  The ioctl is certainly ugl=
-y, but it *works*.
-
-Another approach is:
-
-pid_t pid =3D pidfd_get_pid(pidfd);
-sprintf(buf, =E2=80=9C/proc/%d=E2=80=9D, pid);
-int procfd =3D open(buf, O_PATH);
-if (pidfd_get_pid(pidfd) !=3D pid) {
-  we lose;
-}
-
-But this is clunky.
-
-Do you think the clunky version is okay, or do you have a suggestion for mak=
-ing it better?
-
-=E2=80=94Andy
+Martin
