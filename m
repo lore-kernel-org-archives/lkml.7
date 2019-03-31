@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3191C4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAFEC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E4F218FE
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F95C218FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554076133;
-	bh=R0W0focsIoxW/WHIp3uIrtSIpv6tYexml1HUaZt32AY=;
+	s=default; t=1554076137;
+	bh=1sghl0iriX1Cf7j2sUdMTGLEcn2RRoLaMdAsb45m0BA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=QQ1gNhJAVuOmrgbTDCAK+kxM7IAKVhDVdFtFgRhU8mMBCHwWptJwFSrdUzvI3sUYm
-	 b2AhY52GtRxk+jJnZvdcooVOWWdHjZduTMyp6S2Rk/qQsDdrzR8ENkeEwQ/X/Vu7BW
-	 W50a8U/rnNCienUHFYhXFtn92/Pz38Rt/iy7ga5Y=
+	b=JXRq/PTJnyJa2BZSzPU94+wGt9CBJSllMG4/TgAd2kWEYzL74wLKjpg8JwkJ4SgJo
+	 43+4YYUNOqH1pGKetcRwbBIrtV2ibX9CaHCjD3RPeR5ZjbVyWVO5oaaFiCNi5wa/qo
+	 w4aTNvY0fz1UVCmQ3zsdgOpR0BB9c/b8hU6FePeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731830AbfCaXsw (ORCPT
+        id S1731812AbfCaXsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 19:48:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47592 "EHLO mail.kernel.org"
+        Sun, 31 Mar 2019 19:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731761AbfCaXss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 19:48:48 -0400
+        id S1731742AbfCaXso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 19:48:44 -0400
 Received: from tzanussi-mobl.hsd1.il.comcast.net (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2779218A1;
-        Sun, 31 Mar 2019 23:48:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EE1521841;
+        Sun, 31 Mar 2019 23:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554076127;
-        bh=R0W0focsIoxW/WHIp3uIrtSIpv6tYexml1HUaZt32AY=;
+        s=default; t=1554076124;
+        bh=1sghl0iriX1Cf7j2sUdMTGLEcn2RRoLaMdAsb45m0BA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=pidBD7K3tKFMtHiQVvsiNVniMMytgQDIYOeqKd8w9qCOrwwIu5ZHL4DIaFUeDX2Oc
-         CO7TF4mbe3UTX6cchz/7F0S94lze/nQD12s1+2Jm1bMj5UyVWNqcT5Py5wg6RUYNkt
-         OWkyCLDoQsNoukvN9UUo8AY0tJiJzrDFJz6U1jJg=
+        b=QJUbTqKDS9h9D25iwW8/ZKXFTT+HIUtCDrWt2cLRKvSyM0+r6/ULbBtRHP08uOFYi
+         vYdJfeQYKblQYsmnx5a9R3PaMeIeDlKs+dB9r4LdeXmYgSkkw0fd38L/24HVP+WUJT
+         EPu2XR97plPvAVQVZmdjcrfPvhIeea8CCOdGORFk=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     tglx@linutronix.de, mhiramat@kernel.org, namhyung@kernel.org,
         bigeasy@linutronix.de, joel@joelfernandes.org,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH v5 10/11] tracing: Add tracing/error_log Documentation
-Date:   Sun, 31 Mar 2019 18:48:24 -0500
-Message-Id: <c5d53c8f643ef6844d6ad8d0200c116936730b01.1554072478.git.tom.zanussi@linux.intel.com>
+Subject: [PATCH v5 08/11] selftests/ftrace: Remove trigger-extended-error-support testcase
+Date:   Sun, 31 Mar 2019 18:48:22 -0500
+Message-Id: <876a98b21018814cbf46f0a3605ae0906c51d53c.1554072478.git.tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1554072478.git.tom.zanussi@linux.intel.com>
 References: <cover.1554072478.git.tom.zanussi@linux.intel.com>
@@ -60,85 +60,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-Move most of the hist trigger extended error documentation to
-ftrace.rst and expand on it to fully document tracing/error_log.
+Error handling has been moved to the common tracing/error_log, so this
+test is no longer valid.
 
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- Documentation/trace/ftrace.rst    | 31 +++++++++++++++++++++++++++++++
- Documentation/trace/histogram.rst | 16 ++--------------
- 2 files changed, 33 insertions(+), 14 deletions(-)
+ .../inter-event/trigger-extended-error-support.tc  | 28 ----------------------
+ 1 file changed, 28 deletions(-)
+ delete mode 100644 tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-extended-error-support.tc
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index 7c5e6d6ab5d1..809b39d066ee 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -765,6 +765,37 @@ Here is the list of current tracers that may be configured.
- 	tracers from tracing simply echo "nop" into
- 	current_tracer.
- 
-+Error conditions
-+----------------
-+
-+  For most ftrace commands, failure modes are obvious and communicated
-+  using standard return codes.
-+
-+  For other more involved commands, extended error information may be
-+  available via the tracing/error_log file.  For the commands that
-+  support it, reading the tracing/error_log file after an error will
-+  display more detailed information about what went wrong, if
-+  information is available.  The tracing/error_log file is a circular
-+  error log displaying a small number (currently, 8) of ftrace errors
-+  for the last (8) failed commands.
-+
-+  The extended error information and usage takes the form shown in
-+  this example::
-+
-+    # echo xxx > /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
-+    echo: write error: Invalid argument
-+
-+    # cat /sys/kernel/debug/tracing/error_log
-+    [ 5348.887237] location: error: Couldn't yyy: zzz
-+      Command: xxx
-+               ^
-+    [ 7517.023364] location: error: Bad rrr: sss
-+      Command: ppp qqq
-+                   ^
-+
-+  To clear the error log, echo the empty string into it::
-+
-+    # echo > /sys/kernel/debug/tracing/error_log
- 
- Examples of using the tracer
- ----------------------------
-diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
-index 0ea59d45aef1..7612c7ad5715 100644
---- a/Documentation/trace/histogram.rst
-+++ b/Documentation/trace/histogram.rst
-@@ -199,20 +199,8 @@ Extended error information
- 
-   For some error conditions encountered when invoking a hist trigger
-   command, extended error information is available via the
--  corresponding event's 'hist' file.  Reading the hist file after an
--  error will display more detailed information about what went wrong,
--  if information is available.  This extended error information will
--  be available until the next hist trigger command for that event.
+diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-extended-error-support.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-extended-error-support.tc
+deleted file mode 100644
+index 9912616a8672..000000000000
+--- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-extended-error-support.tc
++++ /dev/null
+@@ -1,28 +0,0 @@
+-#!/bin/sh
+-# SPDX-License-Identifier: GPL-2.0
+-# description: event trigger - test extended error support
 -
--  If available for a given error condition, the extended error
--  information and usage takes the following form::
 -
--    # echo xxx > /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
--    echo: write error: Invalid argument
+-fail() { #msg
+-    echo $1
+-    exit_fail
+-}
 -
--    # cat /sys/kernel/debug/tracing/events/sched/sched_wakeup/hist
--    ERROR: Couldn't yyy: zzz
--      Last command: xxx
-+  tracing/error_log file.  See Error Conditions in
-+  :file:`Documentation/trace/ftrace.rst` for details.
- 
- 6.2 'hist' trigger examples
- ---------------------------
+-if [ ! -f set_event ]; then
+-    echo "event tracing is not supported"
+-    exit_unsupported
+-fi
+-
+-if [ ! -f synthetic_events ]; then
+-    echo "synthetic event is not supported"
+-    exit_unsupported
+-fi
+-
+-echo "Test extended error support"
+-echo 'hist:keys=pid:ts0=common_timestamp.usecs if comm=="ping"' > events/sched/sched_wakeup/trigger
+-! echo 'hist:keys=pid:ts0=common_timestamp.usecs if comm=="ping"' >> events/sched/sched_wakeup/trigger 2> /dev/null
+-if ! grep -q "ERROR:" events/sched/sched_wakeup/hist; then
+-    fail "Failed to generate extended error in histogram"
+-fi
+-
+-exit 0
 -- 
 2.14.1
 
