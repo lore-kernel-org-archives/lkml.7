@@ -2,108 +2,71 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5323C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4EAC4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A39A2146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7172146F
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfCaJFb (ORCPT
+        id S1726979AbfCaJFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 05:05:31 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59738 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726710AbfCaJFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 05:05:30 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 556E12B0468991598D8D;
-        Sun, 31 Mar 2019 17:05:28 +0800 (CST)
-Received: from [127.0.0.1] (10.184.191.73) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Sun, 31 Mar 2019
- 17:05:19 +0800
-Subject: [PATCH v2 net] ipv6: Fix dangling pointer when ipv6 fragment
-From:   hujunwei <hujunwei4@huawei.com>
-To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <mingfangsen@huawei.com>, <liuzhiqiang26@huawei.com>,
-        <zhangwenhao8@huawei.com>, <wangxiaogang3@huawei.com>
-References: <cbbedd1f-3e99-85f7-86d7-d02a86d59c29@huawei.com>
-Message-ID: <9104f44b-2ce0-7be9-2fca-8b6c12abbb86@huawei.com>
-Date:   Sun, 31 Mar 2019 17:04:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 31 Mar 2019 05:05:35 -0400
+Received: from trent.utfs.org ([94.185.90.103]:50074 "EHLO trent.utfs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726710AbfCaJFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 05:05:32 -0400
+Received: from localhost (localhost [IPv6:::1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by trent.utfs.org (Postfix) with ESMTPS id 5531D5FB40;
+        Sun, 31 Mar 2019 11:05:28 +0200 (CEST)
+Date:   Sun, 31 Mar 2019 02:05:28 -0700 (PDT)
+From:   Christian Kujau <lists@nerdbynature.de>
+To:     David Howells <dhowells@redhat.com>
+cc:     linux-kernel@vger.kernel.org,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve Dickson <steved@redhat.com>
+Subject: Re: FS-Cache: Duplicate cookie detected
+In-Reply-To: <8939.1552374108@warthog.procyon.org.uk>
+Message-ID: <alpine.DEB.2.21.999.1903310203520.21644@trent.utfs.org>
+References: <alpine.DEB.2.21.999.1903112235120.21644@trent.utfs.org> <alpine.DEB.2.21.999.1903080954040.21644@trent.utfs.org> <alpine.DEB.2.21.999.1903060943320.1662@trent.utfs.org> <22096.1551878195@warthog.procyon.org.uk> <alpine.DEB.2.21.999.1903051616350.4505@trent.utfs.org>
+ <10106.1551892803@warthog.procyon.org.uk> <17155.1552056554@warthog.procyon.org.uk> <2827.1552315718@warthog.procyon.org.uk> <8939.1552374108@warthog.procyon.org.uk>
+User-Agent: Alpine 2.21.999 (DEB 277 2018-05-20)
 MIME-Version: 1.0
-In-Reply-To: <cbbedd1f-3e99-85f7-86d7-d02a86d59c29@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.184.191.73]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junwei Hu <hujunwei4@huawei.com>
+Hi David,
 
-At the beginning of ip6_fragment func, the prevhdr pointer is
-obtained in the ip6_find_1stfragopt func.
-However, all the pointers pointing into skb header may change
-when calling skb_checksum_help func with
-skb->ip_summed = CHECKSUM_PARTIAL condition.
-The prevhdr pointe will be dangling if it is not reloaded after
-calling __skb_linearize func in skb_checksum_help func.
+On Tue, 12 Mar 2019, David Howells wrote:
+> > My /usr/local/src mount was mounted with vers=4.2 (default), while 
+> > nfstest_cache was mounting its test-mount with vers=4.1! Apart from the 
+> > different rsize/wsize values, the version number stood out. And indeed, 
+> > when I mount my regular NFS mount /usr/local/src with vers=4.1, the 
+> > "duplicate cookie" is no longer printed.
+> 
+> Yeah - NFS superblocks are differentiated by a whole host of parameters,
+> including protocol version number, and caches aren't shared between
+> superblocks because this introduces a tricky coherency problem.
+> 
+> The issue is that NFS superblocks to the same place do not currently manage
+> coherency (inode attributes, data) between themselves, except via the server.
+> 
+> However, if "fsc" isn't given on the mount commandline, the superblock
+> probably shouldn't get a server-level cookie if we can avoid it.
 
-Here, I add a variable, nexthdr_offset, to evaluate the offset,
-which does not changes even after calling __skb_linearize func.
+Just checking - are you waiting for new results from me, should I test 
+something that I missed? Or are new patches in the works? :-D
 
-Fixes: 405c92f7a541 ("ipv6: add defensive check for CHECKSUM_PARTIAL skbs in ip_fragment")
-Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
-Reported-by: Wenhao Zhang <zhangwenhao8@huawei.com>
-Reported-by: syzbot+e8ce541d095e486074fc@syzkaller.appspotmail.com
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
----
-V1->V2:
-- change nexthdr_offset to unsigned int
-- add Reported-by: syzbot+e8ce541d095e486074fc@syzkaller.appspotmail.com
-
- net/ipv6/ip6_output.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
-index edbd12067170..e51f3c648b09 100644
---- a/net/ipv6/ip6_output.c
-+++ b/net/ipv6/ip6_output.c
-@@ -601,7 +601,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
-                 inet6_sk(skb->sk) : NULL;
-     struct ipv6hdr *tmp_hdr;
-     struct frag_hdr *fh;
--    unsigned int mtu, hlen, left, len;
-+    unsigned int mtu, hlen, left, len, nexthdr_offset;
-     int hroom, troom;
-     __be32 frag_id;
-     int ptr, offset = 0, err = 0;
-@@ -612,6 +612,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
-         goto fail;
-     hlen = err;
-     nexthdr = *prevhdr;
-+    nexthdr_offset = prevhdr - skb_network_header(skb);
- 
-     mtu = ip6_skb_dst_mtu(skb);
- 
-@@ -646,6 +647,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
-         (err = skb_checksum_help(skb)))
-         goto fail;
- 
-+    prevhdr = skb_network_header(skb) + nexthdr_offset;
-     hroom = LL_RESERVED_SPACE(rt->dst.dev);
-     if (skb_has_frag_list(skb)) {
-         unsigned int first_len = skb_pagelen(skb);
+Thanks,
+Christian.
 -- 
-2.19.1
+BOFH excuse #139:
 
+UBNC (user brain not connected)
