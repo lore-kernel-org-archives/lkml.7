@@ -4,80 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87451C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398B3C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55ED520882
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB3FF20882
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554014447;
-	bh=2SAUjQbpVOWY1VoWkBzeM9WdFRnNpKTxbQDlHdJbcJQ=;
+	s=default; t=1554014451;
+	bh=PEl1NvFkPcYFBPtApmYZblvoZN+tncC8Sij1b+mDtg0=;
 	h=Date:From:Subject:References:In-Reply-To:Cc:Cc:To:List-ID:From;
-	b=NTiemBar3MSenQKTy8AKXI+vWBBdiNGyI4OpLFfwDYdRKeLxozTpAVkNSuB09JWTK
-	 PnnhPh8Nfu0W49wIoZeU+JWXqCf/ALz30c7lnZfSsUTk1PSPFwC7HuFIljez1r03Ph
-	 mHVRP+jmTA3Ko/Q9kkf0gp7kbfxmr6ZXLMT5c9ys=
+	b=eLKKVUKS7H9ad3mcZnurt5LCJ0eyDMdweyGQr2W08odqXxHTspaW6JfdMeRMERZYA
+	 fLyIcL/2YSBm7dqcwjkRsALH8qFe6X61aC6C5kWwKVZ48t9MQCZktCXNmnngWIMwsf
+	 vAuWhjSxpIdAiMfxphhKUbZfop2IlNkvE8FUQaw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfCaGkq (ORCPT
+        id S1726862AbfCaGkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 02:40:46 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33797 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfCaGko (ORCPT
+        Sun, 31 Mar 2019 02:40:49 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38138 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbfCaGkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 02:40:44 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v12so3173108pgq.1;
-        Sat, 30 Mar 2019 23:40:43 -0700 (PDT)
+        Sun, 31 Mar 2019 02:40:46 -0400
+Received: by mail-pg1-f193.google.com with SMTP id j26so3161800pgl.5;
+        Sat, 30 Mar 2019 23:40:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:subject:references
          :in-reply-to:cc:cc:to;
-        bh=xZTMUV5RCmijUMDZ0Ud0T7Ku5dtiOSk5cu61BHT3sas=;
-        b=HH5Gd8Q+eC11mJAoStcmJd/nEGGynW8vg/vn0gGeklc8oGjU234kCykI0aeSbXEzgu
-         F9JTml1mm4AmeHE6u6KNRr5didMdY6FORngbzoXCpbsAPmf+SpJw8gF6IRbNfux5UDR7
-         N7D4JwpnKX3wQ4ZIFkUsjlapoc/k5GE0Qi56bv71p/JV8UAEHaXHkaFI7HVZbJNTUvJs
-         xP8lD4lT+K/cbZaMBmwaH2mME4NFtfCm4yGng8jJiTFjwVK/5KNRQqbUh8Nicz1QcCEy
-         8bTFYaErvPC1a/eSNCZuXZYxV1q/bTwf2uDPe3ApmRKn+pb8uufkF2HQmd5hNeHf0c0E
-         VW2A==
-X-Gm-Message-State: APjAAAUFoD3dKa9YuG0aYlliTrx5s3fBDR5klUtHfEsWZax+nhdjaXyU
-        I2Ha/3gp51lxOawaZ/HeV/GC7AJBZA==
-X-Google-Smtp-Source: APXvYqzvZF9IH+1Ea6A+T6u55/jLckxgGFhoKOAW2e/UXImIkYRkpmlP7injVXDXLqJZZFj35X+D6A==
-X-Received: by 2002:a63:c34a:: with SMTP id e10mr54266510pgd.194.1554014443052;
-        Sat, 30 Mar 2019 23:40:43 -0700 (PDT)
+        bh=41Zqk7TrCmg2eU2nhcgiSZ1EhWAs70uu4WuG+aQfBBw=;
+        b=H4xmklojAyavDvXnkkDlUAbvI2brs0n3Kg6VkkUxkkUGbLh3KMxsxJ7PHGCAAzOF3G
+         38R4O/5MM1O4hegaPnE8pFXM3XSyMID/znVu69TmzfOjPLFvuVH2IJGQKoEQx1wbyUPX
+         Poy6kOxkLcsTZg0Rj9B6J35fLhBSjPDxJ5mlloI7tFw8bzsRJhH/UsYnqEXoKroVua7D
+         PWyoTblXYDaDR+7iNXE44bwAnByWipqZQiKMzl8xtC6qFyW8S8Ji7jerooB+w0nHOL1T
+         j6mwUKuMcQYBhp4ECnYYi7i9jxRlyB/gZeoTksx8GLSGxBF6EhxAV+aoJy3ErfQRuUaZ
+         oPMA==
+X-Gm-Message-State: APjAAAWxLQR30LPQAa1VXAgbfI/tsXQyiVY/lprbhsiOayppUVPG3LEg
+        gNYJBuw7WQmDh70Sn5DF1w==
+X-Google-Smtp-Source: APXvYqzSY0qFQ1TOms8oNWPBc3GxJKGwwXltqnaU1JTnIz/sukYYeUQ0qUoopZCf+ROiflXeJQNG3w==
+X-Received: by 2002:a63:bd52:: with SMTP id d18mr30291735pgp.52.1554014445380;
+        Sat, 30 Mar 2019 23:40:45 -0700 (PDT)
 Received: from localhost ([210.160.217.68])
-        by smtp.gmail.com with ESMTPSA id e4sm5266886pgd.32.2019.03.30.23.40.42
+        by smtp.gmail.com with ESMTPSA id p17sm9693873pfn.157.2019.03.30.23.40.44
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 30 Mar 2019 23:40:42 -0700 (PDT)
-Message-ID: <5ca060ea.1c69fb81.4ef19.df63@mx.google.com>
-Date:   Sun, 31 Mar 2019 01:40:40 -0500
+        Sat, 30 Mar 2019 23:40:44 -0700 (PDT)
+Message-ID: <5ca060ec.1c69fb81.fbdbb.9da4@mx.google.com>
+Date:   Sun, 31 Mar 2019 01:40:43 -0500
 From:   Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: add Bosch BMG160 gyroscope sensor
-References: <cover.1552922054.git.hns@goldelico.com> <1664da2e7a9cb687eece1f27501d275219bcc4ed.1552922054.git.hns@goldelico.com>
-In-Reply-To: <1664da2e7a9cb687eece1f27501d275219bcc4ed.1552922054.git.hns@goldelico.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v1 1/6] dt-bindings: gpu: mali-utgard: add hisilicon,hi6220-mali compatible
+References: <1552937931-23050-1-git-send-email-peter.griffin@linaro.org> <1552937931-23050-2-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <1552937931-23050-2-git-send-email-peter.griffin@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
+        mark.rutland@arm.com, p.zabel@pengutronix.de, xuwei5@hisilicon.com,
+        mturquette@baylibre.com, sboyd@kernel.org
+Cc:     john.stultz@linaro.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        yuq825@gmail.com
+To:     Peter Griffin <peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Mar 2019 16:14:15 +0100, "H. Nikolaus Schaller" wrote:
-> Define bindings for "bosch,bmg160" and "bosch,bmi055_gyro".
+On Mon, 18 Mar 2019 19:38:46 +0000, Peter Griffin wrote:
+> The Hisilicon hi6220 uses a Mali-450MP4 with 4 PPs, so add
+> a compatible for it.
 > 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 > ---
->  .../bindings/iio/gyroscope/bmg160.txt         | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/bmg160.txt
+>  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
