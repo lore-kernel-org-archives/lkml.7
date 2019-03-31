@@ -2,98 +2,101 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610E3C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E39C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F35B21841
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4E820882
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554014492;
-	bh=P7rjMHyHlPwbvTbBBn2fhd+DbJuJ/kpbufGLdxPvjKk=;
+	s=default; t=1554014494;
+	bh=LZ7v6q8hbB1t5gFhuXZjXviCp5mwNprFfYPQvqorlvI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Uau9lkfWzbg5kFZxuS8Wun3RtGknU5k6H4gGtpbQzJFyaNMIFXVCCC1KwHlPJHH6s
-	 ulm3R/evBN0K6EkzYmEZI3t0eWDpvMvKecx5gXjpL5+zjOKByZMTpjUKkIhaVoRbxh
-	 77eX8X9KFfa2nMGl9/FBNFud/WpCDBzywuFBYdNw=
+	b=VtGPzUJov78IATS3WQcKjK8o5USX+Hrbm0AAqCGC7+L/SgtB95e2OFg/eBDad87w7
+	 Zq+KUlX7ngDuoscbZVLK6Qfj138ssNJMNWgKZyjrYVufar91EOZl8BlFkx9AaOMZyP
+	 4/NogwAUCmkAWHtM8s0lOvndX4z71F7uJTM8mZBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731188AbfCaGlb (ORCPT
+        id S1731204AbfCaGld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 02:41:31 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37055 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731100AbfCaGl3 (ORCPT
+        Sun, 31 Mar 2019 02:41:33 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33360 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731185AbfCaGlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 02:41:29 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 8so2986604pfr.4;
-        Sat, 30 Mar 2019 23:41:28 -0700 (PDT)
+        Sun, 31 Mar 2019 02:41:31 -0400
+Received: by mail-pg1-f196.google.com with SMTP id b12so3177669pgk.0;
+        Sat, 30 Mar 2019 23:41:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
          :mime-version:content-disposition:in-reply-to;
-        bh=c85HpS10ISxSK8yWSCeGY9XrNSVk7P/VB+8tyjiP2zc=;
-        b=XLcGolYJPn48YrsgLhkhwrko1/w2iLh/LRnzGviLcBcqAaluIUUpCq/8taLAYdoRfB
-         9wzKAisMTlSugeTnSubD0nkUg8Sh0Z3vAU3yBG1kijGRR92VuYZkoQ23qRVmM7It1v2V
-         UqM7FTzO43VJSaOzj94JUdQ/O507ZRPIcaO2GX055COUdQu3nMvBol1jce0K8DnwyTta
-         UxsFFhc330M0Xn/pQ7wtPeaDHU3wVQt2kvzXhWKepXDoJ1xcBpW9bRSsb3M1MzhzODwU
-         Bd2i6OWB/zP2BaorF12kpHlApCxS22966YtWl6WznF3zQFBLRuLDJBN5TjWQeZ2mLk7Y
-         pvgQ==
-X-Gm-Message-State: APjAAAUwfDCU1svrvjaqXA5aCykCEr0LZEGKmNK8cacOt0zoD7LA4pgS
-        bL5QztGzNpTewYFjViY0LA==
-X-Google-Smtp-Source: APXvYqws/hOawpr66DDI8ZW/uAgEYgtPiprG3ri7DMZ86Pvn/DWj+0llaRqH6SuxDsFVWQqpnRQ4sg==
-X-Received: by 2002:a63:f541:: with SMTP id e1mr54047867pgk.388.1554014488428;
-        Sat, 30 Mar 2019 23:41:28 -0700 (PDT)
+        bh=oSUDpwDqXbPPLt2qmZ1aUiXr43+viRL39hEeY48Ljm8=;
+        b=fcIQilalORQ2i46DOGiSoWr1TFLhyGG4do5RBhejHi/sMy/N4vuUre8HI9/bW5ZKOl
+         wCNqJe2XocDBj+/Pf5uWaqUXbtw9I955IyRDV3XBE5jfZJdctLqPfRIP77hpAOO3IQZy
+         Oo4lESnzcWYFbBIIleN9DtawiDWT1gblnKlBGaFn8sjjQZjuGMCrktTe6zzzmZsfUI+0
+         6d0QyUFtE0HfvIpZlr8r89rAWopi4zvL82mhXXDIhkyU0e9Ne4LNmJralbqx7+Gq1h8e
+         sdmSfHeQSJnPxCNSGz5dAb0pI+0YAve4eme5uoCaizoZLmVzTstjK+4MaN1hU8Jj4djd
+         ymtg==
+X-Gm-Message-State: APjAAAWY9nUwyj20XBJXKbkgCDKm9jLK9a9P52vHcGCKLcQgIsfE9s1L
+        Vo1DuQEGDvRQMN54bpkTfQ==
+X-Google-Smtp-Source: APXvYqzQY1spc/D0xCejEM5DYM97jxK9mQgvuBxYld/FqusldbMmb6wtra0lPIxJ8fZuoplIdwOUxQ==
+X-Received: by 2002:a63:7d03:: with SMTP id y3mr41431496pgc.8.1554014490664;
+        Sat, 30 Mar 2019 23:41:30 -0700 (PDT)
 Received: from localhost ([210.160.217.68])
-        by smtp.gmail.com with ESMTPSA id p3sm14469640pfp.136.2019.03.30.23.41.27
+        by smtp.gmail.com with ESMTPSA id d11sm7914211pgq.6.2019.03.30.23.41.29
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 30 Mar 2019 23:41:27 -0700 (PDT)
-Date:   Sun, 31 Mar 2019 01:41:26 -0500
+        Sat, 30 Mar 2019 23:41:30 -0700 (PDT)
+Message-ID: <5ca0611a.1c69fb81.1c8ee.5878@mx.google.com>
+Date:   Sun, 31 Mar 2019 01:41:28 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Nishad Kamdar <nishadkamdar@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+To:     qiaozhou <qiaozhou@asrmicro.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARCH: Use the correct style for SPDX License Identifier
-Message-ID: <20190331010549.GA17669@bogus>
-References: <20190323132808.GA10547@nishad>
+Subject: Re: [PATCH 1/7] dt-bindings: arm: asr: add ASR8751C bindings
+References: <1553349688-1946-1-git-send-email-qiaozhou@asrmicro.com>
+ <1553349688-1946-2-git-send-email-qiaozhou@asrmicro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190323132808.GA10547@nishad>
-X-Mutt-References: <20190323132808.GA10547@nishad>
+In-Reply-To: <1553349688-1946-2-git-send-email-qiaozhou@asrmicro.com>
+X-Mutt-References: <1553349688-1946-2-git-send-email-qiaozhou@asrmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 06:58:14PM +0530, Nishad Kamdar wrote:
-> This patch corrects the SPDX License Identifier style
-> in the Hardware Architecture subsystem.
+On Sat, Mar 23, 2019 at 10:01:22PM +0800, qiaozhou wrote:
+> From: Qiao Zhou <qiaozhou@asrmicro.com>
 > 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46
-> and making some manual changes.
+> Add new vendor for ASR and add binding document for ASR8751C SoC and initial
+> board: aquilac-evb
 > 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> Signed-off-by: qiaozhou <qiaozhou@asrmicro.com>
 > ---
->  arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h     | 2 +-
->  arch/arm64/include/asm/pointer_auth.h             | 2 +-
->  arch/arm64/include/asm/sdei.h                     | 2 +-
->  arch/arm64/include/asm/vmap_stack.h               | 2 +-
->  arch/nds32/include/asm/assembler.h                | 2 +-
+>  Documentation/devicetree/bindings/arm/asr/asr-8751c.txt | 9 +++++++++
+>  Documentation/devicetree/bindings/vendor-prefixes.txt   | 1 +
+>  2 files changed, 10 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/asr/asr-8751c.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/asr/asr-8751c.txt b/Documentation/devicetree/bindings/arm/asr/asr-8751c.txt
+> new file mode 100644
+> index 0000000..af7f816
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/asr/asr-8751c.txt
+> @@ -0,0 +1,9 @@
+> +ASR 8751C Platforms Device Tree Bindings
+> +----------------------------------------------------
+> +ASR 8751C SoC
+> +Required root node properties:
+> +	- compatible = ""asr,8751c";
+> +
+> +ASR 8751C AquilaC EVB Board
+> +Required root node properties:
+> +	- compatible = "asr,aquilac-evb", "asr,8751c";
 
-No reason to put all arches in one patch. Please split by arch for 
-maintainers to take.
-
-Rob
+Please convert this to DT schema (yaml) format. Most other SoC families 
+are converted already.
 
