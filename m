@@ -2,156 +2,181 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C230C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DF5C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C622B2173C
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:08:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ck53Mqst"
+	by mail.kernel.org (Postfix) with ESMTP id 92C742085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbfCaCIr (ORCPT
+        id S1731108AbfCaCMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 22:08:47 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46569 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730061AbfCaCIq (ORCPT
+        Sat, 30 Mar 2019 22:12:42 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:60375 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731063AbfCaCMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 22:08:46 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y6so2772897pll.13;
-        Sat, 30 Mar 2019 19:08:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eBg7yjpPulHi/p5KAdz0Pv/mUoivmVreFy+xMokiC04=;
-        b=ck53MqstrDUTmLmBxOpa32PKbRBt0UFxlI3AfZ87S6G1PmUJG+ny4tWRee8Ely3wJ/
-         ov268GZQGKxXXXYa3v+VK4DTACsF1eH1J+iiNhhed//L0QS0tHNKNtRuuvrL0Nv/FZw2
-         eyvNZ/v1TfUmLMJkjo1HM40YeeOw6mHj5/chvydPp/KrmT8BBxMnC9dSSHnPHnQ3FF67
-         /QewidiRiIesC4hO5YJenSr9x75uqBTOEcWgJiXdg/uqHL5AliuKPzkjqXUL5IdIY4dt
-         K63n0mARNkJpfnQx1+y50hA8J7zfP4EdhXx1XnDOZKdNTIkY4kmH3as7NmviYA8M6xZH
-         8H7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eBg7yjpPulHi/p5KAdz0Pv/mUoivmVreFy+xMokiC04=;
-        b=nmN0zmzmlWjxAnXNVvYdu8qe4LyFHZtY0okniJMrLoX2Nw8kSvuqt5JEbmSextrE0w
-         nsnmrg/cwt51AhBqBAaCoSTWC9hEhWrGHBpXGOt3LYPSWF2PEO5oNxXO1D9hWrpTAvu4
-         6YLx6ktxC8PGIVk5RHlNI+AHGE0Gk3h4zkkkVBD+3PEP2tTpqcJ67y+ed2xQz2sRW00w
-         NtkUs7R97an8/I53oL+SElMM6DDV1LDYm57e8nndu/GXTOLAnf8BdHVWToOlTvCsJdto
-         YsTTwVG+NL2m5E17CYiZgrM5bwhuD/i70hTHzqYNPcQJNjOCHYAfP/KgNyk4Ix3rGGYX
-         iynA==
-X-Gm-Message-State: APjAAAX03CCP+zhFHd6xx9iSgrf6bcUsa/7vzLpe12sItQt0TpE9M8jt
-        +hxyzBUWiv502V22nPyjdtU=
-X-Google-Smtp-Source: APXvYqxUL26r00oo7Vxc/vOv+0an/xCkMYkaZ852jsCUxT1QBxg15Snoks3Tyzf85jzSM08WgFEw7w==
-X-Received: by 2002:a17:902:2c01:: with SMTP id m1mr57217743plb.186.1553998126062;
-        Sat, 30 Mar 2019 19:08:46 -0700 (PDT)
-Received: from icarus ([2001:268:c0a5:7955:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id g2sm8238003pfd.134.2019.03.30.19.08.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 30 Mar 2019 19:08:45 -0700 (PDT)
-Date:   Sun, 31 Mar 2019 11:09:32 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Shinji Kanematsu <kanematsu.shinji@socionext.com>,
-        Jonathan Cameron <jic23@kernel.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org,
-        orito.takao@socionext.com, sugaya.taichi@socionext.com,
-        kasai.kazuhiro@socionext.com
-Subject: Re: [PATCH 0/2] Add Updown Counter support for Milbeaut M10V SoC
-Message-ID: <20190331020932.GA4108@icarus>
-References: <1553581954-13487-1-git-send-email-kanematsu.shinji@socionext.com>
- <20190330183603.55886d4f@archlinux>
+        Sat, 30 Mar 2019 22:12:42 -0400
+Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hAPxQ-0004uU-D9; Sat, 30 Mar 2019 22:12:32 -0400
+Date:   Sat, 30 Mar 2019 22:11:56 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Simo Sorce <simo@redhat.com>, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V5 09/10] audit: add support for containerid to
+ network namespaces
+Message-ID: <20190330125748.GA2869@hmswarspite.think-freely.org>
+References: <cover.1552665316.git.rgb@redhat.com>
+ <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
+ <CAFqZXNskwTub5Bm_HZqr02VPB4s79CcgAVX8VE2vQYP07-qssg@mail.gmail.com>
+ <20190328011202.6raixwzdimn5b4zk@madcap2.tricolour.ca>
+ <CAHC9VhQYVSrX1Ng7hZejkGSq6ZXtqi+SKmpARASJ4P2_2i3-4w@mail.gmail.com>
+ <20190328214023.qpszfvxbrjlldmmt@madcap2.tricolour.ca>
+ <CAHC9VhQiFw32s9QNK4WQDM6rbWHqOhm1AVa2JvY=19V4S+=YhA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190330183603.55886d4f@archlinux>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAHC9VhQiFw32s9QNK4WQDM6rbWHqOhm1AVa2JvY=19V4S+=YhA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 06:36:03PM +0000, Jonathan Cameron wrote:
-> On Tue, 26 Mar 2019 15:32:34 +0900
-> Shinji Kanematsu <kanematsu.shinji@socionext.com> wrote:
+On Thu, Mar 28, 2019 at 06:00:21PM -0400, Paul Moore wrote:
+> On Thu, Mar 28, 2019 at 5:40 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2019-03-28 11:46, Paul Moore wrote:
+> > > On Wed, Mar 27, 2019 at 9:12 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > >
+> > > > On 2019-03-27 23:42, Ondrej Mosnacek wrote:
+> > > > > On Fri, Mar 15, 2019 at 7:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > > Audit events could happen in a network namespace outside of a task
+> > > > > > context due to packets received from the net that trigger an auditing
+> > > > > > rule prior to being associated with a running task.  The network
+> > > > > > namespace could be in use by multiple containers by association to the
+> > > > > > tasks in that network namespace.  We still want a way to attribute
+> > > > > > these events to any potential containers.  Keep a list per network
+> > > > > > namespace to track these audit container identifiiers.
+> > > > > >
+> > > > > > Add/increment the audit container identifier on:
+> > > > > > - initial setting of the audit container identifier via /proc
+> > > > > > - clone/fork call that inherits an audit container identifier
+> > > > > > - unshare call that inherits an audit container identifier
+> > > > > > - setns call that inherits an audit container identifier
+> > > > > > Delete/decrement the audit container identifier on:
+> > > > > > - an inherited audit container identifier dropped when child set
+> > > > > > - process exit
+> > > > > > - unshare call that drops a net namespace
+> > > > > > - setns call that drops a net namespace
+> > > > > >
+> > > > > > See: https://github.com/linux-audit/audit-kernel/issues/92
+> > > > > > See: https://github.com/linux-audit/audit-testsuite/issues/64
+> > > > > > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > > > ---
+> > > > > >  include/linux/audit.h | 19 ++++++++++++
+> > > > > >  kernel/audit.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++++++--
+> > > > > >  kernel/nsproxy.c      |  4 +++
+> > > > > >  3 files changed, 106 insertions(+), 3 deletions(-)
+> > > > > >
+> > > > > > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > > > > > index fa19fa408931..70255c2dfb9f 100644
+> > > > > > --- a/include/linux/audit.h
+> > > > > > +++ b/include/linux/audit.h
+> > > > > > @@ -27,6 +27,7 @@
+> > > > > >  #include <linux/ptrace.h>
+> > > > > >  #include <linux/namei.h>  /* LOOKUP_* */
+> > > > > >  #include <uapi/linux/audit.h>
+> > > > > > +#include <linux/refcount.h>
+> > > > > >
+> > > > > >  #define AUDIT_INO_UNSET ((unsigned long)-1)
+> > > > > >  #define AUDIT_DEV_UNSET ((dev_t)-1)
+> > > > > > @@ -99,6 +100,13 @@ struct audit_task_info {
+> > > > > >
+> > > > > >  extern struct audit_task_info init_struct_audit;
+> > > > > >
+> > > > > > +struct audit_contid {
+> > > > > > +       struct list_head        list;
+> > > > > > +       u64                     id;
+> > > > > > +       refcount_t              refcount;
+> > > > >
+> > > > > Hm, since we only ever touch the refcount under a spinlock, I wonder
+> > > > > if we could just make it a regular unsigned int (we don't need the
+> > > > > atomicity guarantees). OTOH, refcount_t comes with some extra overflow
+> > > > > checking, so it's probably better to leave it as is...
+> > > >
+> > > > Since the update is done using rcu-safe methods, do we even need the
+> > > > spin_lock?  Neil?  Paul?
+> > >
+> > > As discussed, the refcount field is protected against simultaneous
+> > > writes by the spinlock that protects additions/removals from the list
+> > > as a whole so I don't believe the refcount_t atomicity is critical in
+> > > this regard.
+> > >
+> > > Where it gets tricky, and I can't say I'm 100% confident on my answer
+> > > here, is if refcount was a regular int and we wanted to access it
+> > > outside of a spinlock (to be clear, it doesn't look like this patch
+> > > currently does this).  With RCU, if refcount was a regular int
+> > > (unsigned or otherwise), I believe it would be possible for different
+> > > threads of execution to potentially see different values of refcount
+> > > (assuming one thread was adding/removing from the list).  Using a
+> > > refcount_t would protect against this, alternatively, taking the
+> > > spinlock should also protect against this.
+> >
+> > Ok, from the above it isn't clear to me if you are happy with the
+> > current code or would prefer any changes, or from below that you still
+> > need to work it through to make a pronouncement.  It sounds to me you
+> > would be ok with *either* spinlock *or* refcount_t, but don't see the
+> > need for both.
 > 
-> > This is a series of patch which adds Updown Counter support on
-> > Milbeaut M10V SoC.
-> > 
-> > The Updown Counter counts input pulse signal from external quadrature encoder.
-> > It also has input pulse signal counter function.
-> Hi Shinji,
+> To be fair you didn't ask if I was "happy" with the approach above,
+> you asked if we needed the spinlock/refcount_t.  I believe I answered
+> that question as comprehensively as I could, but perhaps you wanted a
+> hard yes or no?  In that case, since refcount_t is obviously safer, I
+> would stick with that for now just to limit the number of possible
+> failures.  If someone smarter than you or I comes along and
+> definitively says you are 100% safe to use an int, then go ahead and
+> use an int.
 > 
-> Are you aware of the counter subsystem that has been proposed (and
-> as far as I am concerned is ready to be merged)?
+> Beyond that, I'm still in the process of reviewing your patches, but I
+> haven't finished yet, so no "pronouncement" or whatever you want to
+> call it.
 > 
-> https://patchwork.kernel.org/project/linux-iio/list/?series=147
-> (I think that's the latest version posted)..
-> William, perhaps you could give an update?
-> 
-> (bad luck, you are getting popular ;)
-> 
-> I'll take a quick review as it stands, as some issues may carry over.
-> I appreciate that it's always unfortunate to try to upstream stuff at the
-> same time as a new framework is being developed / upstreamed, but I don't
-> intend to take any additional counter drivers into IIO.  We just
-> end up having to maintain old interfaces in more and more drivers.
-> 
-> Thanks,
-> 
-> Jonathan
 
-Shinji,
+We definately need the spinlock, as its not meant to protect the refcount
+alterations, its meant to protect parallel modifications to the list pointers.
+Without the spinlock, the list can become corrupted (protecting the refcount is
+just a byproduct).
 
-If you reimplement this driver to use the new Generic Counter API, I can
-pick it up and include it with my next patchset submission. Please base
-your patches ontop of the "generic_counter_v10" branch from my personal
-repository:
+Because of that byproduct, the atomicity of the refcount isn't required, and so
+we could modify it to be an int or some other non-atomic ordinal type, but as I
+noted, I don't think thats a good idea.  The refcount type helps denote clearly
+what the variable is used for, making it more readable, and given the relative
+non-performance critical path that the reference count is read/written in, and
+the relatively more expensive locking we are already doing there, I think there
+is more value in using the refcount to make the code legible than making
+marginally more performant by altering it to be an int type.
 
-https://gitlab.com/vilhelmgray/iio/commits/generic_counter_v10
+Neil
 
-Documentation can be found at:
-
-	Documentation/driver-api/generic-counter.rst
-	Documentation/ABI/testing/sysfs-bus-counter
-
-Look at the existing drivers inside the drivers/counter directory to
-serve as references:
-
-	drivers/counter/ftm-quaddec.c
-	drivers/counter/stm32-timer-cnt.c
-
-If you have any troubles or difficulties with the API, send me a message
-and I will be happy to help. :-)
-
-Thank you,
-
-William Breathitt Gray
-
-> 
-> > 
-> > Shinji Kanematsu (2):
-> >   dt-bindings: iio: counter: Add Milbeaut Updown Counter
-> >   iio: counter: Add support for Milbeaut Updown Counter
-> > 
-> >  .../bindings/iio/counter/milbeaut-updown_cnt.txt   |  22 ++
-> >  drivers/iio/counter/Kconfig                        |  12 +
-> >  drivers/iio/counter/Makefile                       |   1 +
-> >  drivers/iio/counter/milbeaut-updown.h              |  38 ++
-> >  drivers/iio/counter/milbeaut-updown_cnt.c          | 385 +++++++++++++++++++++
-> >  5 files changed, 458 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
-> >  create mode 100644 drivers/iio/counter/milbeaut-updown.h
-> >  create mode 100644 drivers/iio/counter/milbeaut-updown_cnt.c
-> > 
+> -- 
+> paul moore
+> www.paul-moore.com
 > 
