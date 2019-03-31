@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0052AC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 03:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F352EC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 03:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C386621726
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 03:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB0B21726
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 03:16:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="QXjsJu6e"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="Se/2+3er"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731194AbfCaDP4 (ORCPT
+        id S1731121AbfCaDPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 23:15:56 -0400
-Received: from mail.nic.cz ([217.31.204.67]:37895 "EHLO mail.nic.cz"
+        Sat, 30 Mar 2019 23:15:41 -0400
+Received: from mail.nic.cz ([217.31.204.67]:37873 "EHLO mail.nic.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731135AbfCaDPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 23:15:44 -0400
+        id S1731078AbfCaDPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 23:15:41 -0400
 Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 6F5B5635F5;
+        by mail.nic.cz (Postfix) with ESMTP id 2215D635D4;
         Sun, 31 Mar 2019 05:15:39 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1554002139; bh=kaKbvPrh06oT00xDZyUk9wq+ZqUPUkEk6HDMmKKZYqo=;
+        t=1554002139; bh=K8ZClC8lq/LMOr9HmDpgfWCKd0LITZAPiREs/Lcu0XI=;
         h=From:To:Date;
-        b=QXjsJu6e1SPp6H435XhuyKsQ1VxBtZVje+3wTcWLXdCcw5TJXdHpiKbc8h+Sf3PEc
-         u1feEY7iFDbHPaumNRY9qoIm01oI0+R3r4M87TIufqV1YnwmUzZmXs1OZNbhEOLmVu
-         JNOVsSgo4wWna6KArOokiIzeerQ9O7TOQVAhB9Nk=
+        b=Se/2+3erFBeXUaFXUlh7LhSvYSJSFmd55TBQKppGgNX4lt+MUPmC3xlH2fm+DYAbl
+         abWeXME8QvsKYEyPzJJ87BTQLy5SGWdXSfVpAAaYmiI5dh7t4JGnQBqXbOv0YRHxPk
+         Z5ntKBl5qlnfC7vJrPbbpH0oqOsBY5JCAaKtq6J8=
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
 To:     Jassi Brar <jassisinghbrar@gmail.com>
 Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
@@ -42,9 +42,9 @@ Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
         Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH v3 crypto+mailbox+firmware RESEND 6/6] firmware: turris-mox-rwtm: Add sysfs documentation
-Date:   Sun, 31 Mar 2019 05:15:37 +0200
-Message-Id: <20190331031537.10626-7-marek.behun@nic.cz>
+Subject: [PATCH v3 crypto+mailbox+firmware RESEND 3/6] arm64: dts: marvell: armada-37xx: add mailbox node
+Date:   Sun, 31 Mar 2019 05:15:34 +0200
+Message-Id: <20190331031537.10626-4-marek.behun@nic.cz>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20190331031537.10626-1-marek.behun@nic.cz>
 References: <20190331031537.10626-1-marek.behun@nic.cz>
@@ -58,81 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add sysfs ABI documentation for the sysfs files created by the
-turris-mox-rwtm driver.
+This adds the rWTM BIU mailbox node for communication with the secure
+processor.
 
 Signed-off-by: Marek Behún <marek.behun@nic.cz>
 ---
- .../testing/sysfs-firmware-turris-mox-rwtm    | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-firmware-turris-mox-rwtm
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-firmware-turris-mox-rwtm b/Documentation/ABI/testing/sysfs-firmware-turris-mox-rwtm
-new file mode 100644
-index 000000000000..ff6cd30f0cf2
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-firmware-turris-mox-rwtm
-@@ -0,0 +1,60 @@
-+What:		/sys/firmware/turris-mox-rwtm/board_version
-+Date:		March 2019
-+KernelVersion:	5.2
-+Contact:	Marek Behún <marek.behun@nic.cz>
-+Description:	(R) Board version burned into eFuses of this Turris Mox board.
-+		Format: %i
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index f43c43168b00..7f69e3dfcb13 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -419,6 +419,13 @@
+ 				clocks = <&nb_periph_clk 15>;
+ 			};
+ 
++			rwtm: mailbox@b0000 {
++				compatible = "marvell,armada-3700-rwtm-mailbox";
++				reg = <0xb0000 0x100>;
++				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++				#mbox-cells = <1>;
++			};
 +
-+What:		/sys/firmware/turris-mox-rwtm/do_sign
-+Date:		March 2019
-+KernelVersion:	5.2
-+Contact:	Marek Behún <marek.behun@nic.cz>
-+Description:	(RW) Gate for writing requests for signature with the ECDSA
-+		private key burned into eFuses during the manufacturing process,
-+		and also for reading the resulting signature.
-+
-+		When requesting for signature, a SHA-512 hash of the message to
-+		be signed should be written in binary form to this file. This
-+		means that a write() operation into this file shall write
-+		exactly 64 bytes, buffers of other size are ignored.
-+
-+		When the signature is done or the rWTM firmware responded with
-+		an error, this file is notified via poll, and the result can
-+		then be read. On error, the read() operation fails with errno
-+		corresponding with the error. On success, 136 bytes are copied
-+		to the buffer - 68 bytes for the R value and 68 for the S value
-+		of the ECDSA signature, in binary form. These are 2 arrays of 17
-+		32-bit words, in big-endian form, most significat word first.
-+
-+		Format: binary
-+
-+What:		/sys/firmware/turris-mox-rwtm/mac_address*
-+Date:		March 2019
-+KernelVersion:	5.2
-+Contact:	Marek Behún <marek.behun@nic.cz>
-+Description:	(R) MAC addresses burned into eFuses of this Turris Mox board.
-+		Format: %pM
-+
-+What:		/sys/firmware/turris-mox-rwtm/pubkey
-+Date:		March 2019
-+KernelVersion:	5.2
-+Contact:	Marek Behún <marek.behun@nic.cz>
-+Description:	(R) ECDSA public key (in pubkey hex compressed form) computed
-+		as pair to the ECDSA private key burned into eFuses of this
-+		Turris Mox Board.
-+		Format: string
-+
-+What:		/sys/firmware/turris-mox-rwtm/ram_size
-+Date:		March 2019
-+KernelVersion:	5.2
-+Contact:	Marek Behún <marek.behun@nic.cz>
-+Description:	(R) RAM size in MiB of this Turris Mox board as was detected
-+		during manufacturing and burned into eFuses. Can be 512 or 1024.
-+		Format: %i
-+
-+What:		/sys/firmware/turris-mox-rwtm/serial_number
-+Date:		March 2019
-+KernelVersion:	5.2
-+Contact:	Marek Behún <marek.behun@nic.cz>
-+Description:	(R) Serial number burned into eFuses of this Turris Mox device.
-+		Format: %016X
+ 			sdhci1: sdhci@d0000 {
+ 				compatible = "marvell,armada-3700-sdhci",
+ 					     "marvell,sdhci-xenon";
 -- 
 2.19.2
 
