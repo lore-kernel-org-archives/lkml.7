@@ -6,100 +6,116 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537BAC43381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914F7C10F06
 	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23CBE20882
+	by mail.kernel.org (Postfix) with ESMTP id 5CDD42183F
 	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1554014439;
-	bh=oyqeBNdpgNKbH6q+l+o7pwgrY//SkJ8CZPSkWYwrJOg=;
+	bh=4MxzBQCZd54qBUmB6fIAOkPgvdfBdw/uiUUcqyv4cDw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0AymmPRQe/G6dZiZg37kPKTdCPyjmAeL9idbJX3NO67v2ly7WxUrM76vtJNkArrzM
-	 xBS1/391AifDpwoBeYOakd9MyJhHpZYv80uUJ+syDtCBQkXS5Ba//GCR3dlycbdg7V
-	 i55gZs6Sket08QfDZ4z9c2FEuqX8ftZylIWOos1o=
+	b=MigKsE//NCfnt4cAAM0E6RqRri9T5BqnD1l3mPNURhjW1R2seDxpnBkcEXNWyl1PO
+	 z6JC9EMf9TA7XjUdrsof4CaijGonksUD1/ckf2zCwuPi9D+8280kV09Tpla4rxVclR
+	 iAqDpGyaKtmbsDk2tJ9PI7qUkLYOMwj7SNiv8q3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfCaGka (ORCPT
+        id S1726588AbfCaGke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 02:40:30 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35357 "EHLO
+        Sun, 31 Mar 2019 02:40:34 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41569 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfCaGk3 (ORCPT
+        with ESMTP id S1725832AbfCaGkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 02:40:29 -0400
-Received: by mail-pl1-f193.google.com with SMTP id p19so2940630plo.2;
-        Sat, 30 Mar 2019 23:40:28 -0700 (PDT)
+        Sun, 31 Mar 2019 02:40:32 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d1so1241650plj.8;
+        Sat, 30 Mar 2019 23:40:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
          :mime-version:content-disposition:in-reply-to;
-        bh=gyVTZ1PkbobqjcKxa3+GkPj//34KKTZhu8/15Zm/dJI=;
-        b=HJK4IXH8iD0ROcOS2h4KFsPIHvoMc8umhY4oHMEL8EJf4ohMDaP3YPX1aF2cQ5WnHA
-         PPnNhDHC6OBnDOAdZOnviOgvcD4LVK3OVvZz938CKs94IpYO0xdX+63EHtftjwCfrn/N
-         MkmSyHUnA7M9+VxwyWT1CtMwHgDL19LqB61ezEdA4sEUP7fJ+XWR45lvTb9KzgOuIdqM
-         lClz2TAr16Wp3BZoi90+heuG9GYn3SB4YJjD80vlebgPFne1rkPWWD4JxyjuAmsCS0K2
-         06/QJaS1/3Cv4Z8a8BY9Mojw382ugsEVqm0WQqKbXQRKe4Ek5uFN4ndr7C73YJT7efkc
-         b55g==
-X-Gm-Message-State: APjAAAXXB4YJzSWAGgN3DgXoDV5uruxma7PX57CL/AWdMynf+fg7n4cT
-        IDAdNonFDWI7KsEhqv4gVuLeLj7SFA==
-X-Google-Smtp-Source: APXvYqx3vnn7NYGkPVv+gCcn4vQ1asfhLQuOQU06fUnG8zxikzEIX43j/85iEIXVvS2phfDDujia8g==
-X-Received: by 2002:a17:902:864a:: with SMTP id y10mr58263982plt.76.1554014428444;
-        Sat, 30 Mar 2019 23:40:28 -0700 (PDT)
+        bh=5r5p5HTKaVnE2US3BbxPTv0o0QN770MkCqEBOFeSBMs=;
+        b=jSPFP17DbrwaLreMyXMKraTYMrUOMRfz6/pT1F/38X2uSPM8bx/7HVvJZLF3uaYVpd
+         SPs6MQcCp+1X4n9k6xpsgh5norNveF8akQaEYQQWzz5bw2XygnGHXbNADPfYlSypEkcD
+         UzTke+lsvZmOeMR2lLbgADq68YpCVZEKxN2EedqMC0wkshUtcAJoa+9v9QOxRVax9nC/
+         3YYTPD8R8wwv9PWEQdQhpSaf7LY4tItvgXHg+Fmk9CAtzlfftRSJqQsTyzw3mPYz8+Na
+         S+0GYG0Dyw0OlsHrTUUlCMZxVn5ZRG5+oDJgj7i3fIWQMwmDJlMYBGJKIcsbbAXDR9bR
+         +pUQ==
+X-Gm-Message-State: APjAAAVAzxshWnlbA0sjCGGu69ANnM3pEVIRMXrhFgsLQuxOyRDY64fG
+        M7JIXOdcYZHtBWmJrpGQPPPQo9pgsQ==
+X-Google-Smtp-Source: APXvYqwxIN4vP9CRnFHPd8UKHSIkQr7mp2/1AsDk6UHcW0yU2RXoUAB0QbVQTJbQ4qMnwZzherU3yA==
+X-Received: by 2002:a17:902:2d01:: with SMTP id o1mr58485816plb.155.1554014431272;
+        Sat, 30 Mar 2019 23:40:31 -0700 (PDT)
 Received: from localhost ([210.160.217.68])
-        by smtp.gmail.com with ESMTPSA id 13sm8170123pfi.172.2019.03.30.23.40.27
+        by smtp.gmail.com with ESMTPSA id d20sm11117204pfo.77.2019.03.30.23.40.30
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 30 Mar 2019 23:40:27 -0700 (PDT)
-Date:   Sun, 31 Mar 2019 01:40:26 -0500
+        Sat, 30 Mar 2019 23:40:30 -0700 (PDT)
+Message-ID: <5ca060de.1c69fb81.12138.c73c@mx.google.com>
+Date:   Sun, 31 Mar 2019 01:40:28 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: meson: Add drive-strength
- property
-Message-ID: <20190330212830.GA28281@bogus>
-References: <20190314163725.7918-1-jbrunet@baylibre.com>
- <20190314163725.7918-2-jbrunet@baylibre.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 1/6] dt-bindings: connector: add optional properties
+ for Type-B
+References: <1552635513-2378-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1552635513-2378-2-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190314163725.7918-2-jbrunet@baylibre.com>
-X-Mutt-References: <20190314163725.7918-2-jbrunet@baylibre.com>
+In-Reply-To: <1552635513-2378-2-git-send-email-chunfeng.yun@mediatek.com>
+X-Mutt-References: <1552635513-2378-2-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 14, 2019 at 05:37:24PM +0100, Jerome Brunet wrote:
-> From: Guillaume La Roque <glaroque@baylibre.com>
+On Fri, Mar 15, 2019 at 03:38:28PM +0800, Chunfeng Yun wrote:
+> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+> usb-b-connector
 > 
-> Add optional drive-strength property
-> 
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> v2 changes:
+>   1. describe more clear for vbus-gpios and vbus-supply suggested by Hans
+> ---
+>  .../devicetree/bindings/connector/usb-connector.txt      | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> index a47dd990a8d3..4e3d5a27c91c 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> @@ -51,6 +51,9 @@ Configuration nodes support the generic properties "bias-disable",
->  "bias-pull-up" and "bias-pull-down", described in file
->  pinctrl-bindings.txt
+> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> index a9a2f2fc44f2..1c4ed6c9afa8 100644
+> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> @@ -17,6 +17,15 @@ Optional properties:
+>  - self-powered: Set this property if the usb device that has its own power
+>    source.
 >  
-> +Optional properties :
-> + - drive-strength: Drive strength for the specified pins in uA.
+> +Optional properties for usb-b-connector:
+> +- id-gpios: gpio for USB ID pin.
+> +- vbus-gpios: gpio for USB VBUS pin, used to detect presence of VBUS 5V.
+> +  see gpio/gpio.txt.
 
-The standard definition says this is in mA.
+Please make it explicit that this is an input gpio. An output GPIO 
+controlling a Vbus regulator should be modelled as a regulator.
 
+> +- vbus-supply: a phandle to the regulator for USB VBUS if needed.
+> +- pinctrl-names : a pinctrl state named "default" is optional
+> +- pinctrl-0 : pin control group
+> +  see pinctrl/pinctrl-bindings.txt
 > +
->  === Example ===
->  
->  	pinctrl: pinctrl@c1109880 {
+>  Optional properties for usb-c-connector:
+>  - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
+>    connector has power support.
 > -- 
 > 2.20.1
 > 
