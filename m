@@ -2,148 +2,182 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DC2C10F06
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 16:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC96C4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 16:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAACD20857
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 16:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA0B420856
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 16:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731343AbfCaQ2h (ORCPT
+        id S1731357AbfCaQsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 12:28:37 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36460 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731294AbfCaQ2g (ORCPT
+        Sun, 31 Mar 2019 12:48:24 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:47837 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731231AbfCaQsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 12:28:36 -0400
-Received: by mail-qt1-f194.google.com with SMTP id s15so8128673qtn.3;
-        Sun, 31 Mar 2019 09:28:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oSXHQsG3KOPg9vd5T+GCmFoc7Xf14JcZz1oGhypQBKw=;
-        b=FywmAgQKw8GKWCgfqRIOXVZiz+XCIScercJxXlt4V7CB/ckYPgspOvIZBnestkgAoZ
-         tlQ7eLDopNYdD2G3QKldeEvAsOTVXjVyI2s64F4k66jMI5vUPDt0olqTnFTN8jnKVy66
-         bi2eEg09BDzOBI5fD1LNSU6CgP/6ApsIl5BJy6XDbHsKWR94xBf/4sURAmJ/Rszqj+Cl
-         8ZJrnv7J7y0cVaB1HqzeBiswcBrU5tb0PuEGecjS8Ljdx+c3z/06cyxJ5wDe72s5U5H1
-         3FyTly8wXfx4Y02tsEHmRozyFLQRQ0l0nKd877n73gx//Eo9Tb+OBEzU3vPLmBG/4Xp+
-         o2fA==
-X-Gm-Message-State: APjAAAWGv29s3F0kbEr0MwXsrM6rHTiI4Ki8dw55BD/8AuVGXDlpLSmi
-        AJQ0C5Itoq8vq15EICHRjOkPaUtT+JsTegKIfjM=
-X-Google-Smtp-Source: APXvYqx9e26flj4/DTUwCkm0QQZHO1TUNf4JZ4/rpFLAqXfyYImpebNZG5l1ed+kmdDk9YVAA0+XVhAQPMiHPduAVUU=
-X-Received: by 2002:ac8:3fbc:: with SMTP id d57mr47482205qtk.96.1554049715359;
- Sun, 31 Mar 2019 09:28:35 -0700 (PDT)
+        Sun, 31 Mar 2019 12:48:24 -0400
+Received: from localhost ([46.183.103.17]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1My2pz-1h1MKf3SZD-00zVQB; Sun, 31 Mar 2019 18:47:59 +0200
+Date:   Sun, 31 Mar 2019 18:47:56 +0200
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        masneyb@onstation.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] bmp085.yaml: transform DT documentation of iio sensor into
+ YAML
+Message-ID: <20190331164753.xifw6kkiwdg4xpzo@arbad>
 MIME-Version: 1.0
-References: <20190325143521.34928-1-arnd@arndb.de> <20190325144737.703921-1-arnd@arndb.de>
- <87y34vl6ji.fsf@concordia.ellerman.id.au>
-In-Reply-To: <87y34vl6ji.fsf@concordia.ellerman.id.au>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 1 Apr 2019 00:28:18 +0800
-Message-ID: <CAK8P3a14of-jJA2q7rki3gHk6gwE-0TCkzHuXZ1+TkemopgfRA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arch: add pidfd and io_uring syscalls everywhere
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-ia64@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:o5hHlLfo4Vhe5StMsrjxDDrbkijgYfhiSS5BdSANv6Nehq72DTo
+ pM0SOxCeDRAIAbDipMHo2oIhHgPeDKsIhdj8vbHJob2oS0B/IwHAjNMJUjjMV7UD3JWudEr
+ wxQiYYgBbpDgWq+UsXsBQvYfipRbiW2oUZuMu+xEw6Mtnvd3/uWxHZfBjYmM1bu5WRpuXRO
+ i+vUMdbVyoWMfEgtt4Y4g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hxXyqtuNJ3E=:xCegxalvBYAtEB6NrDeq5I
+ WTl+2wljvqYUE08zBqFiY1mKMaQWIbrBzDH+88KQzyhl1OZX6uPhwuwEekoy+woCEvfLujyJd
+ 5dyvEBk8A3DwEVQzoXvkV6diCbvxT77biycbT1wcsu5ohgrvc1pdGL0PkuGq3jZSc1KRH7Lhb
+ xT1QgK0yxbpiFfm13x70hFqAl3ZtU+fXZyPPoLZ48YyObMP+ZXmqx696CkTTtIOfRVWaw7225
+ IA91uOLOS0z534ZKbAyaiL0pYmc79BJk3xK5kU4rDwDyzL5eBlcKd2ztm2JNOCQpjN617hxur
+ Dfc9AaK+GY00pGpS1y4Tp79g0JuIsdgFTI/s7TU6pcHu7Oznz33BLhkZGl4sKYvURIBh7C/6/
+ /RlWgHhfkskPX1k340zJKi08Xd7hh7hdOAe2CarbC6MAJvjkCzsdfTJWZJZYfZHfnesaXv5JV
+ EqwQjNgCwfLu5jpqPFwycJ3Mpsq3o3lDwQ9xKaYjW5KY3+0hDvGa0Dxu2VljQ072z91PXHARw
+ DgvwVL5fuO7uBOJTQSGbEeqpeQd3PcBMknomtQNpFGHi/5VY+0HTPEDk5CXaCLBcZKg9HG2Kd
+ QKBkB1NtL7UcoKMVM5ate447hzZxwDqZYFpA194H9Vvtaxuhhq1vBlpbU3DHc+vusoDxYosnr
+ DAyvKNiq92wwyW7zZLvEwbWUMRpwLPjgOzME2WYr7WKppafShkRakFB8wNs9F7X7CpON9orOk
+ BLCNpp5q1DGTIM1Pz4W0veomuJcPa21U3guimTjEukp1ElwKiJd1QHJ5ElE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 31, 2019 at 5:47 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
->
-> Arnd Bergmann <arnd@arndb.de> writes:
-> > Add the io_uring and pidfd_send_signal system calls to all architectures.
-> >
-> > These system calls are designed to handle both native and compat tasks,
-> > so all entries are the same across architectures, only arm-compat and
-> > the generic tale still use an old format.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  arch/alpha/kernel/syscalls/syscall.tbl      | 4 ++++
-> >  arch/arm/tools/syscall.tbl                  | 4 ++++
-> >  arch/arm64/include/asm/unistd.h             | 2 +-
-> >  arch/arm64/include/asm/unistd32.h           | 8 ++++++++
-> >  arch/ia64/kernel/syscalls/syscall.tbl       | 4 ++++
-> >  arch/m68k/kernel/syscalls/syscall.tbl       | 4 ++++
-> >  arch/microblaze/kernel/syscalls/syscall.tbl | 4 ++++
-> >  arch/mips/kernel/syscalls/syscall_n32.tbl   | 4 ++++
-> >  arch/mips/kernel/syscalls/syscall_n64.tbl   | 4 ++++
-> >  arch/mips/kernel/syscalls/syscall_o32.tbl   | 4 ++++
-> >  arch/parisc/kernel/syscalls/syscall.tbl     | 4 ++++
-> >  arch/powerpc/kernel/syscalls/syscall.tbl    | 4 ++++
->
-> Have you done any testing?
->
-> I'd rather not wire up syscalls that have never been tested at all on
-> powerpc.
+use bmp085.txt and change it into yaml format
 
-No, I have not. I did review the system calls carefully and added the first
-patch to fix the bug on x86 compat mode before adding the same bug
-on the other compat architectures though ;-)
+fix links to datasheets in replaced documentation
 
-Generally, my feeling is that adding system calls is not fundamentally
-different from adding other ABIs, and we should really do it at
-the same time across all architectures, rather than waiting for each
-maintainer to get around to reviewing and testing the new calls
-first. This is not a problem on powerpc, but a lot of other architectures
-are less active, which is how we have always ended up with
-different sets of system calls across architectures.
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ .../devicetree/bindings/iio/pressure/bmp085.txt    | 27 --------
+ .../devicetree/bindings/iio/pressure/bmp085.yaml   | 71 ++++++++++++++++++++++
+ 2 files changed, 71 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
 
-The problem here is that this makes it harder for the C library to
-know when a system call is guaranteed to be available. glibc
-still needs a feature test for newly added syscalls to see if they
-are working (they might be backported to an older kernel, or
-disabled), but whenever the minimum kernel version is increased,
-it makes sense to drop those checks and assume non-optional
-system calls will work if they were part of that minimum version.
-
-In the future, I'd hope that any new system calls get added
-right away on all architectures when they land (it was a bit
-tricky this time, because I still did a bunch of reworks that
-conflicted with the new calls). Bugs will happen of course, but
-I think adding them sooner makes it more likely to catch those
-bugs early on so we have a chance to fix them properly,
-and need fewer arch specific workarounds (ideally none)
-for system calls.
-
-       Arnd
+diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+deleted file mode 100644
+index 61c72e63c584..000000000000
+--- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-BMP085/BMP18x/BMP28x digital pressure sensors
+-
+-Required properties:
+-- compatible: must be one of:
+-  "bosch,bmp085"
+-  "bosch,bmp180"
+-  "bosch,bmp280"
+-  "bosch,bme280"
+-
+-Optional properties:
+-- interrupts: interrupt mapping for IRQ
+-- reset-gpios: a GPIO line handling reset of the sensor: as the line is
+-  active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
+-- vddd-supply: digital voltage regulator (see regulator/regulator.txt)
+-- vdda-supply: analog voltage regulator (see regulator/regulator.txt)
+-
+-Example:
+-
+-pressure@77 {
+-	compatible = "bosch,bmp085";
+-	reg = <0x77>;
+-	interrupt-parent = <&gpio0>;
+-	interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+-	reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
+-	vddd-supply = <&foo>;
+-	vdda-supply = <&bar>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+new file mode 100644
+index 000000000000..884f889c1ca5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/pressure/bmp085.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: BMP085/BMP180/BMP280/BME280 pressure iio sensors
++
++maintainers:
++  - Andreas Klinger <ak@it-klinger.de>
++
++description: |
++  Pressure, temperature and humidity iio sensors with i2c and spi interfaces
++
++  Specifications about the sensor can be found at:
++    https://www.bosch-sensortec.com/bst/products/all_products/bmp180
++    https://www.bosch-sensortec.com/bst/products/all_products/bmp280
++    https://www.bosch-sensortec.com/bst/products/all_products/bme280
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++        - enum:
++          - bosch,bmp085
++          - bosch,bmp180
++          - bosch,bmp280
++          - bosch,bme280
++
++  vddd-supply:
++    description:
++      digital voltage regulator (see regulator/regulator.txt)
++    maxItems: 1
++
++  vdda-supply:
++    description:
++      analog voltage regulator (see regulator/regulator.txt)
++    maxItems: 1
++
++  reset-gpios:
++    description:
++      A GPIO line handling reset of the sensor. As the line is active low,
++      it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
++    maxItems: 1
++
++  interrupts:
++    description:
++      interrupt mapping for IRQ (BMP085 only)
++
++required:
++  - compatible
++  - vddd-supply
++  - vdda-supply
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      pressure@77 {
++          compatible = "bosch,bmp085";
++          reg = <0x77>;
++          interrupt-parent = <&gpio0>;
++          interrupts = <25 IRQ_TYPE_EDGE_RISING>;
++          reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
++          vddd-supply = <&foo>;
++          vdda-supply = <&bar>;
++      };
++    };
+-- 
+2.11.0
