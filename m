@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AAFC4360F
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C23C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A08E20870
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 586D320870
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:43:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEyk3mpx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKF55fPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731661AbfCaRnZ (ORCPT
+        id S1731683AbfCaRng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 13:43:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36950 "EHLO
+        Sun, 31 Mar 2019 13:43:36 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40656 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731527AbfCaRnO (ORCPT
+        with ESMTP id S1731561AbfCaRnM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 13:43:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w10so8874389wrm.4;
-        Sun, 31 Mar 2019 10:43:12 -0700 (PDT)
+        Sun, 31 Mar 2019 13:43:12 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h4so8856440wre.7;
+        Sun, 31 Mar 2019 10:43:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CqmTfCF4w8icXJrHPaHYdiHwdbMqFe36GBb/xp+4jlw=;
-        b=SEyk3mpxuN/d1ccaADmZ5o1fZhu5eALSJM6USXUsc3UnisEuS5NTPtw0yPOL0F7OtB
-         7j8Gg2wc5DmvmWKMAQitojSpjGKseD7jTNzMIdao2XeakpqGkVlunfifYAoOfgZQYqOC
-         BBtDbolMTOIO9ltVLdzBh8/ScOt+Td+6rpsHFLEnXLGZ9Ry176PQs8mJzFAK2LzwkRwe
-         8cKUj7gZD9Xf+2YkKrUG2/l+pE5HbIP8HazCMtM2Wp6w5Qcv7AlfwZ9EeHcicBv5niE5
-         wJT2iOfZGgPQ0jlhimTC3wOeBqTJ8ZzruR0UcVw1clk+x1kpM+lORdKznn8KSDiyctaK
-         7How==
+        bh=2NOd0rY8GD+t3XQWJH4hDxRXVOIknhUQcuniG9Z/lBE=;
+        b=JKF55fPF0Nx96qoVtwvelfPmzuSPmyULCxSgPqQSH+9lnHKJ4S5y6CUi2VPqqB4NGN
+         C/BIghdb/i8seBciwvsx34TftEqirTxnyJ1cB9usRyyX+EG+I0N/jln50pxZLyB7JNnc
+         sKMdsRrU/q8zmEH2uHCI58t83u9PZqY7GVeCWM440bTEO0tWBNGbW4gXR8J7Gk40pALT
+         kn/JfDg+8y/VG27FRv/r8coGq+U6cTPpzPLtlzSjy+JwsKzoqH8Lz+GGsoxPwlpPxqLQ
+         AaAOVBmdl9rUlgos8voMNi8hEx9Mq484aMEfR5bA0V51Z1w5zRgyZ1DZApmZpgbSC1xm
+         F+/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=CqmTfCF4w8icXJrHPaHYdiHwdbMqFe36GBb/xp+4jlw=;
-        b=fSwaMl94r3+Hrg2M9d32gKyJxAkzaxinCd3LzCttT3v2BRIR7qYGlntNE5j/bG9kDD
-         7sklDvJtzLjbbM08dGyvU34br9NRxG0OK41PQYMHYx2XuImN7VRbBeWz+GgykeeRxxWQ
-         NtmAZjUU0gieC03wdZhDhbAUCt/KjngzwkShkhjTzw3euNvU2ivzjDJX9c2UnpOq3No/
-         g4qmC+Iy7nz3cpYR1SVlnBXXd7o0O2Au4l5imlO3JrugPCJbZoQtqGOD0fvkHGiZonUX
-         CI3HUtfdq8dHAu1FyDZKgA7Ek6XcYjdhIF8ImUQM4BZ7+vUiiyQkClLZwEAZHvIjniqp
-         mjJQ==
-X-Gm-Message-State: APjAAAX2crur+3JF5C474O5IL/DLhBShksSusnZsN/5h06OilvWa9/PU
-        L5YUU7FhZt0yWU/Iv61V0D8=
-X-Google-Smtp-Source: APXvYqzooV3dDaW4Ss9tr2zcsynUZEDQTzhaxMrd3Ok6Jn2AvDibYL0M60uRuDTpP5+WFHVPeoYHHQ==
-X-Received: by 2002:a5d:53d0:: with SMTP id a16mr17211972wrw.309.1554054191442;
-        Sun, 31 Mar 2019 10:43:11 -0700 (PDT)
-Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id v192sm10892354wme.24.2019.03.31.10.43.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=2NOd0rY8GD+t3XQWJH4hDxRXVOIknhUQcuniG9Z/lBE=;
+        b=t4Cox8IrICO3LBALLLjZhYWqnO1mfKQ+tG63UBMNglOfovR9DnRzQerF/HnWiOga6s
+         7NeEz6kUO1WGDfdzB6raW6ZkSzxmIFjCWDL5VaRSNJsGVNgG+5ijI2krVlImkOFpF3Tv
+         wOFkLiHZtvsNzq2aVki85ErGLOs9M6THYy1HBRBIHiy5IUl0TZIK12Ae4l4r/B8qxSU/
+         UGe1kWVAdG4MAdQ9+T2PbTWsE0HVOE5AU3ZsIt6cgXi8BMlH7dJYjzYE7v3bFByTyJhS
+         3xUtH2wL9q5w/5mcuKnNh4dxy/S/UXSBSVWTpv5qUveZ4Sf0sWREiwEZz19ncZnc/5eP
+         rahg==
+X-Gm-Message-State: APjAAAXRCCi5jFP8ORNPTkG+98JbCNdBJlyBQ2bU05hVWtyQbrUwNPZ2
+        bmU9fXWpYu/YZJft0g0JWUc=
+X-Google-Smtp-Source: APXvYqxV1M520sS++QGB3wO9fRaeNDDJ/nt5xqrw10lox4a+lfVNfkkx3AMdXyfrVSycGWIwTIcCSw==
+X-Received: by 2002:a5d:4907:: with SMTP id x7mr40930690wrq.133.1554054190157;
         Sun, 31 Mar 2019 10:43:10 -0700 (PDT)
+Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
+        by smtp.gmail.com with ESMTPSA id v192sm10892354wme.24.2019.03.31.10.43.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 31 Mar 2019 10:43:09 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linus.walleij@linaro.org, georg.waibel@sensor-technik.de,
         Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH net-next 16/17] Documentation: networking: dsa: Add details about NXP SJA1105 driver
-Date:   Sun, 31 Mar 2019 20:42:31 +0300
-Message-Id: <20190331174232.22060-17-olteanv@gmail.com>
+Subject: [PATCH net-next 15/17] net: dsa: sja1105: Add support for Spanning Tree Protocol
+Date:   Sun, 31 Mar 2019 20:42:30 +0300
+Message-Id: <20190331174232.22060-16-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190331174232.22060-1-olteanv@gmail.com>
 References: <20190331174232.22060-1-olteanv@gmail.com>
@@ -73,101 +73,202 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- Documentation/networking/dsa/sja1105.txt | 83 ++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
- create mode 100644 Documentation/networking/dsa/sja1105.txt
+ drivers/net/dsa/sja1105/sja1105_main.c | 108 ++++++++++++++++++++++---
+ 1 file changed, 99 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/networking/dsa/sja1105.txt b/Documentation/networking/dsa/sja1105.txt
-new file mode 100644
-index 000000000000..b6f2c1bedd02
---- /dev/null
-+++ b/Documentation/networking/dsa/sja1105.txt
-@@ -0,0 +1,83 @@
-+NXP SJA1105 switch driver
-+=========================
+diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+index adf79b1caf55..4064abc46f48 100644
+--- a/drivers/net/dsa/sja1105/sja1105_main.c
++++ b/drivers/net/dsa/sja1105/sja1105_main.c
+@@ -93,8 +93,10 @@ static int sja1105_init_mac_settings(struct sja1105_private *priv)
+ 		.drpuntag = false,
+ 		/* Don't retag 802.1p (VID 0) traffic with the pvid */
+ 		.retag = false,
+-		/* Enable learning and I/O on user ports by default. */
+-		.dyn_learn = true,
++		/* Disable learning and I/O on user ports by default -
++		 * STP will enable it.
++		 */
++		.dyn_learn = false,
+ 		.egress = false,
+ 		.ingress = false,
+ 		.mirrcie = 0,
+@@ -125,8 +127,17 @@ static int sja1105_init_mac_settings(struct sja1105_private *priv)
+ 
+ 	mac = table->entries;
+ 
+-	for (i = 0; i < SJA1105_NUM_PORTS; i++)
++	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
+ 		mac[i] = default_mac;
++		if (i == dsa_upstream_port(priv->ds, i)) {
++			/* STP doesn't get called for CPU port, so we need to
++			 * set the I/O parameters statically.
++			 */
++			mac[i].dyn_learn = true;
++			mac[i].ingress = true;
++			mac[i].egress = true;
++		}
++	}
+ 
+ 	return 0;
+ }
+@@ -636,12 +647,14 @@ static sja1105_speed_t sja1105_get_speed_cfg(unsigned int speed_mbps)
+  * for a specific port.
+  *
+  * @speed_mbps: If 0, leave the speed unchanged, else adapt MAC to PHY speed.
+- * @enabled: Manage Rx and Tx settings for this port. Overrides the static
+- *	     configuration settings.
++ * @enabled: Manage Rx and Tx settings for this port. If false, overrides the
++ *	     settings from the STP state, but not persistently (does not
++ *	     overwrite the static MAC info for this port).
+  */
+ static int sja1105_adjust_port_config(struct sja1105_private *priv, int port,
+ 				      int speed_mbps, bool enabled)
+ {
++	struct sja1105_mac_config_entry dyn_mac;
+ 	struct sja1105_xmii_params_entry *mii;
+ 	struct sja1105_mac_config_entry *mac;
+ 	struct device *dev = priv->ds->dev;
+@@ -674,12 +687,13 @@ static int sja1105_adjust_port_config(struct sja1105_private *priv, int port,
+ 	 * the code common, we'll use the static configuration tables as a
+ 	 * reasonable approximation for both E/T and P/Q/R/S.
+ 	 */
+-	mac[port].ingress = enabled;
+-	mac[port].egress  = enabled;
++	dyn_mac = mac[port];
++	dyn_mac.ingress = enabled && mac[port].ingress;
++	dyn_mac.egress  = enabled && mac[port].egress;
+ 
+ 	/* Write to the dynamic reconfiguration tables */
+ 	rc = sja1105_dynamic_config_write(priv, BLK_IDX_MAC_CONFIG,
+-					  port, &mac[port], true);
++					  port, &dyn_mac, true);
+ 	if (rc < 0) {
+ 		dev_err(dev, "Failed to write MAC config: %d\n", rc);
+ 		return rc;
+@@ -928,6 +942,50 @@ static int sja1105_bridge_member(struct dsa_switch *ds, int port,
+ 					    port, &l2_fwd[port], true);
+ }
+ 
++static void sja1105_bridge_stp_state_set(struct dsa_switch *ds, int port,
++					 u8 state)
++{
++	struct sja1105_private *priv = ds->priv;
++	struct sja1105_mac_config_entry *mac;
 +
-+The NXP SJA1105 is a family of 6 devices:
-+* SJA1105E: First generation, no TTEthernet
-+* SJA1105T: First generation, TTEthernet
-+* SJA1105P: Second generation, no TTEthernet, no SGMII
-+* SJA1105Q: Second generation, TTEthernet, no SGMII
-+* SJA1105R: Second generation, no TTEthernet, SGMII
-+* SJA1105S: Second generation, TTEthernet, SGMII
++	mac = priv->static_config.tables[BLK_IDX_MAC_CONFIG].entries;
 +
-+These are SPI-managed automotive switches, with all ports being gigabit
-+capable, and supporting MII/RMII/RGMII and optionally SGMII on one port.
++	switch (state) {
++	case BR_STATE_DISABLED:
++	case BR_STATE_BLOCKING:
++		/* From UM10944 description of DRPDTAG (why put this there?):
++		 * "Management traffic flows to the port regardless of the state
++		 * of the INGRESS flag". So BPDUs are still be allowed to pass.
++		 * At the moment no difference between DISABLED and BLOCKING.
++		 */
++		mac[port].ingress   = false;
++		mac[port].egress    = false;
++		mac[port].dyn_learn = false;
++		break;
++	case BR_STATE_LISTENING:
++		mac[port].ingress   = true;
++		mac[port].egress    = false;
++		mac[port].dyn_learn = false;
++		break;
++	case BR_STATE_LEARNING:
++		mac[port].ingress   = true;
++		mac[port].egress    = false;
++		mac[port].dyn_learn = true;
++		break;
++	case BR_STATE_FORWARDING:
++		mac[port].ingress   = true;
++		mac[port].egress    = true;
++		mac[port].dyn_learn = true;
++		break;
++	default:
++		dev_err(ds->dev, "invalid STP state: %d\n", state);
++		return;
++	}
 +
-+The switches do not have an MDIO bus of their own and do not support
-+in-band autonegotiation, so for proper PHY management, the host's MDIO
-+bus controller needs to be used.
++	sja1105_dynamic_config_write(priv, BLK_IDX_MAC_CONFIG, port,
++				     &mac[port], true);
++}
 +
-+Being automotive parts, their configuration interface is geared towards
-+set-and-forget use, with minimal dynamic interaction at runtime. They
-+require a static configuration to be composed by software and packed
-+with CRC and table headers, and sent over SPI.
+ static int sja1105_bridge_join(struct dsa_switch *ds, int port,
+ 			       struct net_device *br)
+ {
+@@ -940,6 +998,23 @@ static void sja1105_bridge_leave(struct dsa_switch *ds, int port,
+ 	sja1105_bridge_member(ds, port, br, false);
+ }
+ 
++static u8 sja1105_stp_state_get(struct sja1105_private *priv, int port)
++{
++	struct sja1105_mac_config_entry *mac;
 +
-+The static configuration is composed of several configuration tables. Each
-+table takes a number of entries. Some configuration tables can be (partially)
-+reconfigured at runtime, some not. Some tables are mandatory, some not.
++	mac = priv->static_config.tables[BLK_IDX_MAC_CONFIG].entries;
 +
-+Table                        | Mandatory        | Reconfigurable
-+-----------------------------+------------------+-----------------------------
-+Schedule                     | no               | no
-+Schedule entry points        | if Scheduling    | no
-+VL Lookup                    | no               | no
-+VL Policing                  | if VL Lookup     | no
-+VL Forwarding                | if VL Lookup     | no
-+L2 Lookup                    | no               | no
-+L2 Policing                  | yes              | no
-+VLAN Lookup                  | yes              | yes
-+L2 Forwarding                | yes              | partially (fully on P/Q/R/S)
-+MAC Config                   | yes              | partially (fully on P/Q/R/S)
-+Schedule Params              | if Scheduling    | no
-+Schedule Entry Points Params | if Scheduling    | no
-+VL Forwarding Params         | if VL Forwarding | no
-+L2 Lookup Params             | no               | partially (fully on P/Q/R/S)
-+L2 Forwarding Params         | yes              | no
-+Clock Sync Params            | no               | no
-+AVB Params                   | no               | no
-+General Params               | yes              | partially
-+Retagging                    | no               | yes
-+xMII Params                  | yes              | no
-+SGMII                        | no               | yes
++	if (!mac[port].ingress && !mac[port].egress && !mac[port].dyn_learn)
++		return BR_STATE_BLOCKING;
++	if (mac[port].ingress && !mac[port].egress && !mac[port].dyn_learn)
++		return BR_STATE_LISTENING;
++	if (mac[port].ingress && !mac[port].egress && mac[port].dyn_learn)
++		return BR_STATE_LEARNING;
++	if (mac[port].ingress && mac[port].egress && mac[port].dyn_learn)
++		return BR_STATE_FORWARDING;
++	return -EINVAL;
++}
 +
-+Also the configuration is write-only (software cannot read it back from the
-+switch except for very few exceptions).
+ /* For situations where we need to change a setting at runtime that is only
+  * available through the static configuration, resetting the switch in order
+  * to upload the new static config is unavoidable. Back up the settings we
+@@ -950,16 +1025,27 @@ static int sja1105_static_config_reload(struct sja1105_private *priv)
+ {
+ 	struct sja1105_mac_config_entry *mac;
+ 	int speed_mbps[SJA1105_NUM_PORTS];
++	u8 stp_state[SJA1105_NUM_PORTS];
+ 	int rc, i;
+ 
+ 	mac = priv->static_config.tables[BLK_IDX_MAC_CONFIG].entries;
+ 
+ 	/* Back up settings changed by sja1105_adjust_port_config and
+-	 * and restore their defaults.
++	 * sja1105_bridge_stp_state_set and restore their defaults.
+ 	 */
+ 	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
+ 		speed_mbps[i] = sja1105_speed[mac[i].speed];
+ 		mac[i].speed = SJA1105_SPEED_AUTO;
++		if (i == dsa_upstream_port(priv->ds, i)) {
++			mac[i].ingress = true;
++			mac[i].egress = true;
++			mac[i].dyn_learn = true;
++		} else {
++			stp_state[i] = sja1105_stp_state_get(priv, i);
++			mac[i].ingress = false;
++			mac[i].egress = false;
++			mac[i].dyn_learn = false;
++		}
+ 	}
+ 
+ 	/* Reset switch and send updated static configuration */
+@@ -978,6 +1064,9 @@ static int sja1105_static_config_reload(struct sja1105_private *priv)
+ 	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
+ 		bool enabled = (speed_mbps[i] != 0);
+ 
++		if (i != dsa_upstream_port(priv->ds, i))
++			sja1105_bridge_stp_state_set(priv->ds, i, stp_state[i]);
 +
-+So the driver creates the static configuration at probe time, and keeps it at
-+all times in memory, as a shadow for the hardware state. When required to
-+change a hardware setting, the static configuration is also updated.
-+If that changed setting can be transmitted to the switch through the dynamic
-+reconfiguration interface, it is; otherwise the switch is reset and
-+reprogrammed with the updated static configuration.
-+
-+The switches do not support switch tagging in hardware. But they do support
-+customizing the TPID by which VLAN traffic is identified as such. The switch
-+driver is leveraging CONFIG_NET_DSA_TAG_8021Q by requesting that special VLANs
-+(with a custom TPID of ETH_P_EDSA instead of ETH_P_8021Q) are installed on its
-+ports when not in vlan_filtering mode. This does not interfere with the
-+reception and transmission of real 802.1Q-tagged traffic, because the switch
-+does no longer parse those packets as VLAN after the TPID change.
-+The TPID is restored when vlan_filtering is requested, and IP termination
-+becomes no longer possible through the switch netdevices in this mode.
-+
-+The switches have two programmable filters for link-local destination MACs.
-+These are used to trap BPDUs and PTP traffic to the master netdevice, and are
-+further used to support STP and 1588 ordinary clock/boundary clock
-+functionality.
-+
-+Among other notable features, the switches have a PTP Hardware Clock that can
-+be steered through SPI and used for timestamping on ingress and egress.
-+Also, the T, Q and S devices support TTEthernet (an implementation of
-+SAE AS6802 from TTTech), which is a set of Ethernet QoS enhancements similar in
-+behavior to IEEE TSN. Configuring these features is currently not supported in
-+the driver.
-+
+ 		rc = sja1105_adjust_port_config(priv, i, speed_mbps[i],
+ 						enabled);
+ 		if (rc < 0)
+@@ -1352,6 +1441,7 @@ static const struct dsa_switch_ops sja1105_switch_ops = {
+ 	.port_fdb_del		= sja1105_fdb_del,
+ 	.port_bridge_join	= sja1105_bridge_join,
+ 	.port_bridge_leave	= sja1105_bridge_leave,
++	.port_stp_state_set	= sja1105_bridge_stp_state_set,
+ 	.port_vlan_prepare	= sja1105_vlan_prepare,
+ 	.port_vlan_filtering	= sja1105_vlan_filtering,
+ 	.port_vlan_add		= sja1105_vlan_add,
 -- 
 2.17.1
 
