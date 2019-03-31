@@ -2,128 +2,172 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56FEC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB54FC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866C820866
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75AEA20866
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:35:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="ZoX/Sfis"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="PaXDlKly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731467AbfCaWeA (ORCPT
+        id S1731553AbfCaWes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 18:34:00 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40104 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731172AbfCaWd7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 18:33:59 -0400
-Received: by mail-ed1-f67.google.com with SMTP id h22so6503987edw.7
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 15:33:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LGHPCkilx8rq8Do6cGLs4RYJVLdG3bSlxpBgseCpd8I=;
-        b=ZoX/SfisD4/HKwjammMPZCDtCXxAdSknWeCk8cMTqiAAejMReVW01NWZ7QLMvqydM0
-         NGX4JQsqT4JJ+1dvro2NM6z2UD1p/Is9yuLy/xHw5cs5W4hU8UZWl4MhdidXJbGLkUbV
-         DEbbAX95j1wY8fT73Rh/5u3gD5lFkSQwzo5f19m87IhMd2FaHVT41O85kIH/LVRGSm6k
-         pQ6uiqFi5I55Sd9wQFY8J3dVSnVFRJMzrjG9BUE5/F8AD5B/yLSXyDZoK72h95SlCFQ9
-         t6wF9PMzCchmV76fzZ14CXa0rNm1HzQ9gkXnx9dc9STPbt/wKxH2SlRN+5VA+ne+2eN7
-         h/Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LGHPCkilx8rq8Do6cGLs4RYJVLdG3bSlxpBgseCpd8I=;
-        b=iCfE6ayKyjszOEU6C4okZlz5+Wk88i8Xz3WDoy2Hf3N1JJfEkvvQgRPNTf0huMMyYR
-         SuMwjTb1fi3NWtYUPVtOvaiWbhNuJ5zomu6wCIgqyA+rCm5JDP7bkMnCY+EgG/BbMlNR
-         23z2MxId7uL+ZYEv7uypfZpHi26HV7P8IaaYxcAvhaI+OuiggX6NXePc8E2+Qw9QPWqK
-         e/ub16ZB1RYQXrSsQZ8YGm35HHzDCk8yI2oXROIZQMthAotLoleTAfaVsIE4TYdBfDIs
-         1u7iVYdCVzO0dTefRXz4jDQz7xff2Or1gYCdLIaUlYfRKDtO7qczjmvILoell+mlUQvE
-         6Enw==
-X-Gm-Message-State: APjAAAUuCoGPA1QEBe/Xy4l1cr+wcpvgxfknPhV6yAnwctYSqBahG5+l
-        KlKC5B7K7NoNLG4ffqJyuK4igg==
-X-Google-Smtp-Source: APXvYqzDgWzYgF1ebT6UG1AEuDKKKqAbxUDeOOzDJ8423IbPc3/YtAYbRqMUWzR5ME6xaAeSZPHgbg==
-X-Received: by 2002:a50:a704:: with SMTP id h4mr30969652edc.7.1554071637990;
-        Sun, 31 Mar 2019 15:33:57 -0700 (PDT)
-Received: from brauner.io ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
-        by smtp.gmail.com with ESMTPSA id 21sm1532774ejj.75.2019.03.31.15.33.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 31 Mar 2019 15:33:57 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 00:33:56 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
-Message-ID: <20190331223355.vfbnnkmevl63etvv@brauner.io>
-References: <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com>
- <CAHk-=wj0o8BiUrYiM5ZcTS6JxBh1M60O36Ms8-EqLQ139=1L4g@mail.gmail.com>
- <20190330171215.3yrfxwodstmgzmxy@brauner.io>
- <CAHk-=whF6gnRVbJaArZna4e=tejfrzmNQtRbWjnuSSKpBn+jQg@mail.gmail.com>
- <132107F4-F56B-4D6E-9E00-A6F7C092E6BD@amacapital.net>
- <CAHk-=wiaLtH41Mc5qAjOeCWavPqV0DhS581KYa0QBt8uraTK1Q@mail.gmail.com>
- <20190331211041.vht7dnqg4e4bilr2@brauner.io>
- <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
- <20190331220259.qntxynluk765hpnt@brauner.io>
- <CAHk-=wh0jgRkZiNdFD96Zpjx+_G+NVSHieAt+QgWCQBJ2A-5Aw@mail.gmail.com>
+        Sun, 31 Mar 2019 18:34:48 -0400
+Received: from mout.gmx.net ([212.227.17.20]:47471 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731172AbfCaWer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 18:34:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1554071670;
+        bh=AOZTrA/Ra1bCUHk9C5awQmJrazYS0r5o29tb8AngkvQ=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=PaXDlKlyeLww7YJ6fouk2QhWOp+KQwRYnEZAp+ZbC7G4c+DF27pzBxlUvwRSZzE2K
+         hh0F0Vsv85L0SUYUlZ7WG9m7eb8ygrbFcEsJYqWOlIh42614mV40lzUbmUAiIPtYpI
+         B0zQpZXGyHZS3zFieOU69IcgcEu9WQKve2V4CQNY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx103
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0M6B6s-1h0NBM2lbu-00y8Dv; Mon, 01
+ Apr 2019 00:34:30 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Vinod Koul <vkoul@kernel.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation: soundwire: Ensure that code is inside the code blocks
+Date:   Mon,  1 Apr 2019 00:34:22 +0200
+Message-Id: <20190331223423.29855-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh0jgRkZiNdFD96Zpjx+_G+NVSHieAt+QgWCQBJ2A-5Aw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:AveavH69cVp1MMTdK81kxQBsjNX1ivILo0rksVwpODdcZeL+vOh
+ 0sX0n0XNpur9NK8JOqDTWbtQdK3/tlB2fzJd5jwWs1kZA3PmBDICYNtj5/v5M63Y0e0lGyV
+ +oR9dKaetOHUSpn27LzklaJsP9cZdhjBXxo8/8Mtw4frZVypGvnaQ1ww/E/mlCAJDel173h
+ paBRAFKuo0PAtnO2TNzzw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ML9JIszmFd0=:MP7NUANoU0o94iYSueA1CY
+ JQMtAZ0ekovN7jg0FdV1AvKve10mLbBcl1cZrw8x/2nilixJc3yhmo5ctFCfZYULRjSTet6h4
+ 0gBlfsfiVKPE+nRVCd5u7QkhGVojck6wID4jE34I3lKio5cB3WF3zrtPMhdHk8rK9TLyzCsup
+ hAUNa/PG7zSAalYxMDwmNLdR+WcaJ7W4/QhpUwP89RduYGEn7+sEM84pssGfzTj4rkSZVN5L0
+ 4g/i81/abGmBsnVx98rA6jwTP2gawGv823jzqf6CQjzcWpUPkLljPQeVXb+VvFNOQcmH3VBrT
+ D2EPJLvl2MyzuLoCLglOfPOA/E6Lxbkb7k+j9ar2nms7PynIUwd99DDTQGN5Nr7w0dqe1Zrqt
+ BQknvLjtf4+tqWQ47GKfiUUQi5+yZwVRfxSfX2KSDlZlmDYXp1UB6bKo2q6EMw2giPsoPHRUf
+ T7wM5OC2TFX9AeVRWlPp2nRClRHcewtdTHjh61lGOqA4I39+g1E/U2HYn37K+jbuqKV0ShsTE
+ iuEaABIKo0Mgw/ePaSAuE/eWrAT1I3iOvq7Y09+1bzE9ZV4iy65TA1k8CI5sWH4jYCiROD4ol
+ l3IbvIZ/Ua484ZmP+tjmmRW+2slk9+8YOVNq8G24dcn2YQB4aoEunh9eG6kuo+O2yG7ighMIe
+ I0sTeokS7c6A3BwijXGQY2b+NFzFAeN+jKnP5VxvjM7Me6dCXB8n0KPVQ9PmhrjwCyrQ7f42v
+ 6UrYZI7CQUnyKN0NCKs7VFpsBgx6m/+i9SJxrbLqYeWQrm/zujm4Ie1GPYT1Q73nE0v1lO1Vg
+ Om0/GUpxN/o7gaklebQkccKiuxsDrx/jyD0tR1z1fE0RsLBdY/F/mwNM4a6NeJN7HGNxr/eDP
+ RmL13GWGBGdehilHjV4EO4QEagaqA/Xm2A1+i0rGYlz9xKpNxoV+rjPEE8N03/LSiRxyWOe43
+ rgj28bL3Ulw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 31, 2019 at 03:16:47PM -0700, Linus Torvalds wrote:
-> On Sun, Mar 31, 2019 at 3:03 PM Christian Brauner <christian@brauner.io> wrote:
-> >
-> > Thanks for the input. The problem Jann and I saw with this is that it
-> > would be awkward to have the kernel open a file in some procfs instance,
-> > since then userspace would have to specify which procfs instance the fd
-> > should come from.
-> 
-> I would actually suggest we just make the rules be that the
-> pidfd_open() always return the internal /proc entry regardless of any
-> mount-point (or any "hidepid") but also suggest that exactly *because*
-> it gives you visibility into the target pid, you'd basically require
-> the strictest kind of control of the process you're trying to get the
-> pidfd of.
-> 
-> Ie likely something along the lines of
-> 
->         ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS)
+The way the document is written now, Sphinx renders empty code blocks
+followed by the lines that should be inside them.
 
-I can live with that but I would like to hear what Jann thinks too if
-that's ok.
+Unindent the code-block directives to fix this.
 
-Christian
+Fixes: 502c00d9c315 ("Documentation: soundwire: fix stream.rst markup warn=
+ings")
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/driver-api/soundwire/stream.rst | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/driver-api/soundwire/stream.rst b/Documentation=
+/driver-api/soundwire/stream.rst
+index 26a6064503fd..5351bd2f34a8 100644
+=2D-- a/Documentation/driver-api/soundwire/stream.rst
++++ b/Documentation/driver-api/soundwire/stream.rst
+@@ -201,7 +201,7 @@ Bus implements below API for allocate a stream which n=
+eeds to be called once
+ per stream. From ASoC DPCM framework, this stream state maybe linked to
+ .startup() operation.
+
+-  .. code-block:: c
++.. code-block:: c
+
+   int sdw_alloc_stream(char * stream_name);
+
+@@ -228,7 +228,7 @@ the respective Master(s) and Slave(s) associated with =
+stream. These APIs can
+ only be invoked once by respective Master(s) and Slave(s). From ASoC DPCM
+ framework, this stream state is linked to .hw_params() operation.
+
+-  .. code-block:: c
++.. code-block:: c
+
+   int sdw_stream_add_master(struct sdw_bus * bus,
+ 		struct sdw_stream_config * stream_config,
+@@ -274,7 +274,7 @@ Bus implements below API for PREPARE state which needs=
+ to be called once per
+ stream. From ASoC DPCM framework, this stream state is linked to
+ .prepare() operation.
+
+-  .. code-block:: c
++.. code-block:: c
+
+   int sdw_prepare_stream(struct sdw_stream_runtime * stream);
+
+@@ -304,7 +304,7 @@ Bus implements below API for ENABLE state which needs =
+to be called once per
+ stream. From ASoC DPCM framework, this stream state is linked to
+ .trigger() start operation.
+
+-  .. code-block:: c
++.. code-block:: c
+
+   int sdw_enable_stream(struct sdw_stream_runtime * stream);
+
+@@ -332,7 +332,7 @@ Bus implements below API for DISABLED state which need=
+s to be called once
+ per stream. From ASoC DPCM framework, this stream state is linked to
+ .trigger() stop operation.
+
+-  .. code-block:: c
++.. code-block:: c
+
+   int sdw_disable_stream(struct sdw_stream_runtime * stream);
+
+@@ -357,7 +357,7 @@ Bus implements below API for DEPREPARED state which ne=
+eds to be called once
+ per stream. From ASoC DPCM framework, this stream state is linked to
+ .trigger() stop operation.
+
+-  .. code-block:: c
++.. code-block:: c
+
+   int sdw_deprepare_stream(struct sdw_stream_runtime * stream);
+
+@@ -382,7 +382,7 @@ Bus implements below APIs for RELEASE state which need=
+s to be called by
+ all the Master(s) and Slave(s) associated with stream. From ASoC DPCM
+ framework, this stream state is linked to .hw_free() operation.
+
+-  .. code-block:: c
++.. code-block:: c
+
+   int sdw_stream_remove_master(struct sdw_bus * bus,
+ 		struct sdw_stream_runtime * stream);
+@@ -395,7 +395,7 @@ stream assigned as part of ALLOCATED state.
+
+ In .shutdown() the data structure maintaining stream state are freed up.
+
+-  .. code-block:: c
++.. code-block:: c
+
+   void sdw_release_stream(struct sdw_stream_runtime * stream);
+
+=2D-
+2.20.1
+
