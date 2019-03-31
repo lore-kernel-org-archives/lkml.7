@@ -2,172 +2,120 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB54FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B02C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75AEA20866
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC4372086C
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:53:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="PaXDlKly"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1wXYKlI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731553AbfCaWes (ORCPT
+        id S1731525AbfCaWxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 18:34:48 -0400
-Received: from mout.gmx.net ([212.227.17.20]:47471 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731172AbfCaWer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 18:34:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1554071670;
-        bh=AOZTrA/Ra1bCUHk9C5awQmJrazYS0r5o29tb8AngkvQ=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=PaXDlKlyeLww7YJ6fouk2QhWOp+KQwRYnEZAp+ZbC7G4c+DF27pzBxlUvwRSZzE2K
-         hh0F0Vsv85L0SUYUlZ7WG9m7eb8ygrbFcEsJYqWOlIh42614mV40lzUbmUAiIPtYpI
-         B0zQpZXGyHZS3zFieOU69IcgcEu9WQKve2V4CQNY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx103
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0M6B6s-1h0NBM2lbu-00y8Dv; Mon, 01
- Apr 2019 00:34:30 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-doc@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Vinod Koul <vkoul@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation: soundwire: Ensure that code is inside the code blocks
-Date:   Mon,  1 Apr 2019 00:34:22 +0200
-Message-Id: <20190331223423.29855-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        Sun, 31 Mar 2019 18:53:35 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:38334 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731172AbfCaWxf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 18:53:35 -0400
+Received: by mail-it1-f193.google.com with SMTP id f22so12313263ita.3
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 15:53:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=lTauicTMEqMJS78ZlwpBuBYgtWUWU6M0fSz7GOUy13M=;
+        b=e1wXYKlIHbHwmS1TJTVmLcggPt6wsBouBabc0U01QkYyw6whwxGxHzo6xOAdqNWArT
+         QBEUEmr4HPAKQzIW4WPEMSbXt93znhg85deA4XncNzNtpKwyQVLfq03nDyR7GDQbD0VX
+         BW0lXTw8OygNe6jDVSzLYo+WKiC7h3pIy2T6NRiaA+sTDxWhmkUJZvmsqr7LBSgyC4oy
+         XnYQXJ+De+94tAnt9kGQI+gERXkGzU+fwe8FuIdn12wbQWZnMkMudF7BQOs99qCy9zqs
+         QIc5ASqShs3a2Vk4B8PMZfZhwMln9X9/mCDseAQ89ZP3pfhkXWWtTKX5PmiIkp/mhbVW
+         Gfmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=lTauicTMEqMJS78ZlwpBuBYgtWUWU6M0fSz7GOUy13M=;
+        b=XpDjmEkcOEpeCO45Pk4PUgSljsjVsODpWu8Ipp3qrQJ7vp5iBWMsPNMXZLdTZJ93ZG
+         UTiFtzIzJ46rdjPwrH08lmFOU01FQGaMEHz7JdMJIGbJ2T6Xq4t67acUi0Pr6mouE86Z
+         FH8CG/5LWZuV1ByuikLAbSyM9dq5LC6KHVBDVRJgHaQejADNXe8Gxgtf4PBqaeAPlncK
+         1ubSwL4ebaug4HcrduQtfOb0b6gfq/3dwa5Br4TM742F4jEi6i3nLTTjEuIHFijmR50C
+         YDoGqf/GT9r1Byd513uZQligeRtqJ+l/c01VfSMyLARTXJr95FN+clhhEJFNeRSi9zJn
+         voWw==
+X-Gm-Message-State: APjAAAUgptIo5hMGHhsjlfFFVnVzXm4tjJs6Kw5K7w3a/RXhsrMbXXEK
+        aK4Fe4njwUSaiLtRrnheWfgj4eejZhd6xw==
+X-Google-Smtp-Source: APXvYqwIPWkSQTG26BnMFDKiCmERRtGhPjWmG/bINHfLLZhLqeq8Dyi61cHMAGebvlwZM2HzuYU7UQ==
+X-Received: by 2002:a24:205:: with SMTP id 5mr13461645itu.150.1554072814053;
+        Sun, 31 Mar 2019 15:53:34 -0700 (PDT)
+Received: from titus.pi.local ([66.97.27.10])
+        by smtp.gmail.com with ESMTPSA id 136sm4878616itu.35.2019.03.31.15.53.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 31 Mar 2019 15:53:33 -0700 (PDT)
+Date:   Sun, 31 Mar 2019 18:53:36 -0400
+From:   Will Cunningham <wjcunningham7@gmail.com>
+To:     abbotti@mev.co.uk
+Cc:     hsweeten@visionengravers.com, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Staging: comedi: drivers: pcl818: Fixed a coding style error.
+Message-ID: <20190331225336.GA26547@titus.pi.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:AveavH69cVp1MMTdK81kxQBsjNX1ivILo0rksVwpODdcZeL+vOh
- 0sX0n0XNpur9NK8JOqDTWbtQdK3/tlB2fzJd5jwWs1kZA3PmBDICYNtj5/v5M63Y0e0lGyV
- +oR9dKaetOHUSpn27LzklaJsP9cZdhjBXxo8/8Mtw4frZVypGvnaQ1ww/E/mlCAJDel173h
- paBRAFKuo0PAtnO2TNzzw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ML9JIszmFd0=:MP7NUANoU0o94iYSueA1CY
- JQMtAZ0ekovN7jg0FdV1AvKve10mLbBcl1cZrw8x/2nilixJc3yhmo5ctFCfZYULRjSTet6h4
- 0gBlfsfiVKPE+nRVCd5u7QkhGVojck6wID4jE34I3lKio5cB3WF3zrtPMhdHk8rK9TLyzCsup
- hAUNa/PG7zSAalYxMDwmNLdR+WcaJ7W4/QhpUwP89RduYGEn7+sEM84pssGfzTj4rkSZVN5L0
- 4g/i81/abGmBsnVx98rA6jwTP2gawGv823jzqf6CQjzcWpUPkLljPQeVXb+VvFNOQcmH3VBrT
- D2EPJLvl2MyzuLoCLglOfPOA/E6Lxbkb7k+j9ar2nms7PynIUwd99DDTQGN5Nr7w0dqe1Zrqt
- BQknvLjtf4+tqWQ47GKfiUUQi5+yZwVRfxSfX2KSDlZlmDYXp1UB6bKo2q6EMw2giPsoPHRUf
- T7wM5OC2TFX9AeVRWlPp2nRClRHcewtdTHjh61lGOqA4I39+g1E/U2HYn37K+jbuqKV0ShsTE
- iuEaABIKo0Mgw/ePaSAuE/eWrAT1I3iOvq7Y09+1bzE9ZV4iy65TA1k8CI5sWH4jYCiROD4ol
- l3IbvIZ/Ua484ZmP+tjmmRW+2slk9+8YOVNq8G24dcn2YQB4aoEunh9eG6kuo+O2yG7ighMIe
- I0sTeokS7c6A3BwijXGQY2b+NFzFAeN+jKnP5VxvjM7Me6dCXB8n0KPVQ9PmhrjwCyrQ7f42v
- 6UrYZI7CQUnyKN0NCKs7VFpsBgx6m/+i9SJxrbLqYeWQrm/zujm4Ie1GPYT1Q73nE0v1lO1Vg
- Om0/GUpxN/o7gaklebQkccKiuxsDrx/jyD0tR1z1fE0RsLBdY/F/mwNM4a6NeJN7HGNxr/eDP
- RmL13GWGBGdehilHjV4EO4QEagaqA/Xm2A1+i0rGYlz9xKpNxoV+rjPEE8N03/LSiRxyWOe43
- rgj28bL3Ulw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The way the document is written now, Sphinx renders empty code blocks
-followed by the lines that should be inside them.
+Removed unnecessary parentheses.`
 
-Unindent the code-block directives to fix this.
+Signed-off-by: Will Cunningham <wjcunningham7@gmail.com>
+---
+ drivers/staging/comedi/drivers/pcl818.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Fixes: 502c00d9c315 ("Documentation: soundwire: fix stream.rst markup warn=
-ings")
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/driver-api/soundwire/stream.rst | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/driver-api/soundwire/stream.rst b/Documentation=
-/driver-api/soundwire/stream.rst
-index 26a6064503fd..5351bd2f34a8 100644
-=2D-- a/Documentation/driver-api/soundwire/stream.rst
-+++ b/Documentation/driver-api/soundwire/stream.rst
-@@ -201,7 +201,7 @@ Bus implements below API for allocate a stream which n=
-eeds to be called once
- per stream. From ASoC DPCM framework, this stream state maybe linked to
- .startup() operation.
-
--  .. code-block:: c
-+.. code-block:: c
-
-   int sdw_alloc_stream(char * stream_name);
-
-@@ -228,7 +228,7 @@ the respective Master(s) and Slave(s) associated with =
-stream. These APIs can
- only be invoked once by respective Master(s) and Slave(s). From ASoC DPCM
- framework, this stream state is linked to .hw_params() operation.
-
--  .. code-block:: c
-+.. code-block:: c
-
-   int sdw_stream_add_master(struct sdw_bus * bus,
- 		struct sdw_stream_config * stream_config,
-@@ -274,7 +274,7 @@ Bus implements below API for PREPARE state which needs=
- to be called once per
- stream. From ASoC DPCM framework, this stream state is linked to
- .prepare() operation.
-
--  .. code-block:: c
-+.. code-block:: c
-
-   int sdw_prepare_stream(struct sdw_stream_runtime * stream);
-
-@@ -304,7 +304,7 @@ Bus implements below API for ENABLE state which needs =
-to be called once per
- stream. From ASoC DPCM framework, this stream state is linked to
- .trigger() start operation.
-
--  .. code-block:: c
-+.. code-block:: c
-
-   int sdw_enable_stream(struct sdw_stream_runtime * stream);
-
-@@ -332,7 +332,7 @@ Bus implements below API for DISABLED state which need=
-s to be called once
- per stream. From ASoC DPCM framework, this stream state is linked to
- .trigger() stop operation.
-
--  .. code-block:: c
-+.. code-block:: c
-
-   int sdw_disable_stream(struct sdw_stream_runtime * stream);
-
-@@ -357,7 +357,7 @@ Bus implements below API for DEPREPARED state which ne=
-eds to be called once
- per stream. From ASoC DPCM framework, this stream state is linked to
- .trigger() stop operation.
-
--  .. code-block:: c
-+.. code-block:: c
-
-   int sdw_deprepare_stream(struct sdw_stream_runtime * stream);
-
-@@ -382,7 +382,7 @@ Bus implements below APIs for RELEASE state which need=
-s to be called by
- all the Master(s) and Slave(s) associated with stream. From ASoC DPCM
- framework, this stream state is linked to .hw_free() operation.
-
--  .. code-block:: c
-+.. code-block:: c
-
-   int sdw_stream_remove_master(struct sdw_bus * bus,
- 		struct sdw_stream_runtime * stream);
-@@ -395,7 +395,7 @@ stream assigned as part of ALLOCATED state.
-
- In .shutdown() the data structure maintaining stream state are freed up.
-
--  .. code-block:: c
-+.. code-block:: c
-
-   void sdw_release_stream(struct sdw_stream_runtime * stream);
-
-=2D-
-2.20.1
+diff --git a/drivers/staging/comedi/drivers/pcl818.c b/drivers/staging/comedi/drivers/pcl818.c
+index 0af5315d4357..da5d53a288f7 100644
+--- a/drivers/staging/comedi/drivers/pcl818.c
++++ b/drivers/staging/comedi/drivers/pcl818.c
+@@ -1012,7 +1012,7 @@ static int pcl818_attach(struct comedi_device *dev, struct comedi_devconfig *it)
+ 		pcl818_alloc_dma(dev, it->options[2]);
+ 
+ 	/* use 1MHz or 10MHz oscilator */
+-	if ((it->options[3] == 0) || (it->options[3] == 10))
++	if (it->options[3] == 0 || it->options[3] == 10)
+ 		osc_base = I8254_OSC_BASE_10MHZ;
+ 	else
+ 		osc_base = I8254_OSC_BASE_1MHZ;
+@@ -1026,7 +1026,7 @@ static int pcl818_attach(struct comedi_device *dev, struct comedi_devconfig *it)
+ 	devpriv->ns_min = board->ns_min;
+ 	if (!board->is_818) {
+ 		/* extended PCL718 to 100kHz DAC */
+-		if ((it->options[6] == 1) || (it->options[6] == 100))
++		if (it->options[6] == 1 || it->options[6] == 100)
+ 			devpriv->ns_min = 10000;
+ 	}
+ 
+@@ -1067,12 +1067,12 @@ static int pcl818_attach(struct comedi_device *dev, struct comedi_devconfig *it)
+ 		s->maxdata	= 0x0fff;
+ 		s->range_table	= &range_unipolar5;
+ 		if (board->is_818) {
+-			if ((it->options[4] == 1) || (it->options[4] == 10))
++			if (it->options[4] == 1 || it->options[4] == 10)
+ 				s->range_table = &range_unipolar10;
+ 			if (it->options[4] == 2)
+ 				s->range_table = &range_unknown;
+ 		} else {
+-			if ((it->options[5] == 1) || (it->options[5] == 10))
++			if (it->options[5] == 1 || it->options[5] == 10)
+ 				s->range_table = &range_unipolar10;
+ 			if (it->options[5] == 2)
+ 				s->range_table = &range_unknown;
+-- 
+2.19.2
 
