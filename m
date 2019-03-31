@@ -2,117 +2,79 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FB9C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA82C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B3720882
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:43:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iTlrkwhX"
+	by mail.kernel.org (Postfix) with ESMTP id 2A42220882
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:43:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554014628;
+	bh=LDOAMkCDQzCABJY+q0dZ0XFTSULwIwiUkJcDbggiLDE=;
+	h=Date:From:Subject:References:In-Reply-To:Cc:Cc:To:List-ID:From;
+	b=c6ZUeQ1GPYx4Bi+DAp3oPGE3KS/X8E5yMAUnRLaWzS0dea8aMHBi1JDx3AYFHPtRr
+	 9w0swIiD3890Qvd5woiQaqO1D8FZCS4nHu8wZwSjQM9385BtKelQ9zg77WMtOq5z8N
+	 ThTeBgsvJYP0j9I3uuulIa7Td1vXHuaZkRsLD3PQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfCaGnZ (ORCPT
+        id S1727025AbfCaGnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 02:43:25 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35727 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbfCaGnX (ORCPT
+        Sun, 31 Mar 2019 02:43:46 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38037 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731265AbfCaGls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 02:43:23 -0400
-Received: by mail-pg1-f196.google.com with SMTP id g8so3168593pgf.2
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 23:43:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/n4niWVQi8jTBY6ilEtFcT+UjcEGI3MHmo1ftQPG2DY=;
-        b=iTlrkwhXeC2mCKfqCscakW+Z89avQzGqRnkxt9kP5PzlFkonDew+mM8Wl4cKLVrK0O
-         iEWT4qX5VC7VV/wpZncYjsXeqVBEd3GGb6k4j3rYtWEUPcxgL52gBz+QJ8t8B/wPZFV+
-         E/xBWjHLEdr4nTUKyNYuXQuc4cTZ7w/ljqPvAd9sLo7+IP/OKqr8wHtfDCxTpJOflpEZ
-         vWVZa9ufh9qNU+aBoXqy72jSP3vfrNNfzLJlINd2qwdSY9On7xlT0e5lrp9XFlCUlT9l
-         E4wvBZkxeMhURzqBa/W68LOv5YWTTBY5iVmmTEw//sT6LoGc8JkxyQY+1YyiYltMcSa+
-         QVvA==
+        Sun, 31 Mar 2019 02:41:48 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g37so2931137plb.5;
+        Sat, 30 Mar 2019 23:41:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/n4niWVQi8jTBY6ilEtFcT+UjcEGI3MHmo1ftQPG2DY=;
-        b=TFam0H3oE4dRxnJM3ZMGlpnoMrjDdPwFdE1eeSQmF38ICEbB4+9pzVMftwGS6IAI4E
-         BnMYEgivycrIhhF1m0z2Z4Kbb+BE00YuPQ9GwfDRN4C0UEN7NT+wRkzS2WQoRLhKEaBX
-         e8V0sHRsI8Z8A2tXIA5ZtXNHqq0gRqGKA7wlnNrkYXYbsgYeUGG9TxZdDGAeU5aAV1SU
-         HW6+9YQyrgEfc3RwdzdlXw88b+/FDEWpVOeD7r0CnWIAo6lFyZtQbAg9ISIZl+my30s9
-         ryZ7jZvS0Ms7oc4s+h+oGyIif4fjH2JysVv9ypjDQgkb1y3nQ9yzi2jC0WoBIR+B+HkQ
-         GSSA==
-X-Gm-Message-State: APjAAAWcdX3Pj+dZtCxBiznE24aZaoRatZ6K7xn639nK2hMH17HcAJuS
-        LUwWQaKwr9GSehM5eCETAQd3wQ==
-X-Google-Smtp-Source: APXvYqydfW5dvS0ONN522kI06NlMKm3Ha5qMXZ8ZqKIM2MXwFXtQhOLPtiLv83XcXSOpV3OCjtMIgQ==
-X-Received: by 2002:a63:530e:: with SMTP id h14mr30589531pgb.136.1554014603264;
-        Sat, 30 Mar 2019 23:43:23 -0700 (PDT)
-Received: from [10.71.10.192] ([147.50.13.10])
-        by smtp.googlemail.com with ESMTPSA id p17sm9701480pfn.157.2019.03.30.23.43.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 Mar 2019 23:43:22 -0700 (PDT)
-Subject: Re: [greybus-dev] [PATCH] Staging: greybus: usb: Fixed a coding style
- error
-To:     Joe Perches <joe@perches.com>,
-        Will Cunningham <wjcunningham7@gmail.com>, johan@kernel.org
-Cc:     devel@driverdev.osuosl.org, elder@kernel.org,
-        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org
-References: <20190331053040.GA12974@titus.pi.local>
- <41750e16d14a967529d7cb5e315110ee5ccd313c.camel@perches.com>
- <5c95c177-b8fe-ab0b-eb7a-d270e35a7ce6@linaro.org>
- <8b6afee25fe6d2248353015fe2303d793b2a1d49.camel@perches.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <65efe8c2-3091-61d5-3eb6-fcc505727394@linaro.org>
-Date:   Sun, 31 Mar 2019 01:43:19 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <8b6afee25fe6d2248353015fe2303d793b2a1d49.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:message-id:date:from:subject:references
+         :in-reply-to:cc:cc:to;
+        bh=8stkG2HqfVF6xNg5tRXaJQ0/Dizn3Nd32xCs772cOZM=;
+        b=OonOzbOW0GPqxD5xPXeAjSkowrmSOY9YAAybcDExW82Ab91nM3FeKl1Swux2FbGIK8
+         Gzi8biqxzdPN18j+R+RUIw/xKHAY1bYrMhfTw+i1ZB+oCraf9cyPWvz5uyEtq4PiQk1k
+         Tdl9pQaXTIk4VR8zvGOWekvmZ9ERDGXDdD83qayvnxi3p+mx46eYlvYs9RS0/EDe3dJM
+         FQjs2x7Igok52kX0gjPePGJUY7sBnVugOs8IA4ggcVOCEAUclOOSUyqOUwkaceAT1OUL
+         bcPK26sAQBri6q6urdO9TN7TuXXtyIM3Hr+WcOBXYUmPD8ck8rzaXp8F5fpTAgiCHkj/
+         G0GQ==
+X-Gm-Message-State: APjAAAUyse21Fo20FUoBpVaqW+W+8hCUdz+AutCgCET/C+tu8NxbL4ih
+        we85tFuZEcdLY2yl+YFK1A==
+X-Google-Smtp-Source: APXvYqwozQYVPk8Fkon4b0p7OOBNRJwyFfHtg+jtrtreLRfwY6SYj9oAyrmTrA4+ZgN6aDWZfE+d8w==
+X-Received: by 2002:a17:902:2947:: with SMTP id g65mr57595543plb.258.1554014507452;
+        Sat, 30 Mar 2019 23:41:47 -0700 (PDT)
+Received: from localhost ([210.160.217.68])
+        by smtp.gmail.com with ESMTPSA id j6sm8593798pfe.107.2019.03.30.23.41.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 30 Mar 2019 23:41:46 -0700 (PDT)
+Message-ID: <5ca0612a.1c69fb81.9bbef.7249@mx.google.com>
+Date:   Sun, 31 Mar 2019 01:41:45 -0500
+From:   Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: clock: meson8b: export the VPU clock
+References: <20190324151104.18397-1-martin.blumenstingl@googlemail.com> <20190324151104.18397-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190324151104.18397-2-martin.blumenstingl@googlemail.com>
+Cc:     narmstrong@baylibre.com, jbrunet@baylibre.com,
+        linux-amlogic@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/31/19 1:40 AM, Joe Perches wrote:
-> On Sun, 2019-03-31 at 01:20 -0500, Alex Elder wrote:
->> On 3/31/19 1:04 AM, Joe Perches wrote:
->>> Blind adherence to 80 column limits leads to poor looking
->>> code.  Especially with longish identifier lengths.
->> I agree.  If it were me, I'd use a local variable.  For example:
->>
->> 	struct greybus_descriptor_cport *cport_desc = gbphy_dev->cport_desc;
->> 	...
->> 	connection = gb_connection_create(gbphy_dev->bundle,
->> 					  le16_to_cpu(cport_desc->id), NULL);
->>
->> Or maybe better:
->>
->> 	u16 cport_id = le16_to_cpu(gbphy_dev->cport_desc->id);
->> 	...
->> 	connection = gb_connection_create(gbphy_dev->bundle, cport_id, NULL);
+On Sun, 24 Mar 2019 16:11:01 +0100, Martin Blumenstingl wrote:
+> The VPU clock is an input the the "VPU" (Video Processing Unit), which is
+> one of the components of the display controller.
 > 
-> True.
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  include/dt-bindings/clock/meson8b-clkc.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> A possible negative though:
-> 
-> Temporaries that are only used once are sometimes
-> less readable as the declaration is supposed to be
-> done at an open brace and that could be relatively
-> far away from the set and use.
 
-Then assign it where it's used.  The point is we're talking about
-a readability issue (long lines), and no matter how you try to fix
-it there are tradeoffs, and it's subjective.  In any case, I prefer
-the use of the local variable to solve this readability problem over
-splitting the line.
-
-					-Alex
+Reviewed-by: Rob Herring <robh@kernel.org>
 
