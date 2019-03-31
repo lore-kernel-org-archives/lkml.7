@@ -2,79 +2,132 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA10C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 04:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA91C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 05:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E36521726
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 04:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974D820872
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 05:13:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nqk3WRq0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfCaExC (ORCPT
+        id S1725893AbfCaFND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 00:53:02 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:52778 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfCaExB (ORCPT
+        Sun, 31 Mar 2019 01:13:03 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35622 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbfCaFND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 00:53:01 -0400
-Received: by mail-io1-f69.google.com with SMTP id p143so5316179iod.19
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 21:53:01 -0700 (PDT)
+        Sun, 31 Mar 2019 01:13:03 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t21so2938842pfe.2;
+        Sat, 30 Mar 2019 22:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0PYqYNJCRo47buFqpEFm5jSGLOOSre7sIa2ON3PXgE8=;
+        b=Nqk3WRq0ezPyTpDtpiWvysU7mal4pr36rLw1JnjX1ypBa3vkkG3zLQnWhUpwY7qJaP
+         iZeFz4BiHY6cAJJUMZ0VgFJHSJ/iKpWNH+8tRgD46CSSCqpNpDdHvGxWjzY8SerZjo4V
+         rLqM6BtgTe0Xabm6wplUj/dz7ssCJqJ7UPN50Lhc35a0z2oCpBpJQFWzKJ8vXrNsr/5N
+         uPsDOKA11ALxDXczuY8UB8D1bWD+qpnQlXE9tD1W6fex3F9v7Iyqf3LHUcwxvhIdqaXP
+         DIaqEgQDwc5QstusEIgzsf8Ma1iDzodo/D+UbTgZbBdbLv+BNrAaHTWfAIHqXkEoAhHB
+         whJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Z67mpu4tEpxV36iCPVLfT3t/z3ZTLgxfFfuo1ocJAXY=;
-        b=IocGotpegg3u6vMivyNC5VhRqkL6v5q22V5BoCRlZ6kehtOiRHF3kpqBW31mZhJTGr
-         WU1l2lbCHFT2dLmuakcPbmv5MkajUVLr8kQfAcnuev2hbyiqOhdRRtfGNHufaDsNqF0J
-         3HnKsn91RSTD9WL7dKyE/KhlZ/En8HwXLeWQzNfmFbs2TpSL3XLBh/Ux+EM5FATia1Yy
-         FHqRVMApfIEm5KdYiJZPaa3cOiBSlxUydfUqT/8PvjF0k4CsnvNjWprR3ZZxmQ2T7DfW
-         AUmF1Wz1MT8vGbhV3BWERyLfWBUEOBYZRfSGsMe77ZY3FWL1aeWqWG7HG9fmzIiLqUK2
-         wX+Q==
-X-Gm-Message-State: APjAAAU17/USZmb57OiDFfvw5qWXZJYKIkueMfMjEsYQ6FkkVfZM+o+H
-        GgVGLN327mTcEuYzwXoj6SsGKBzRFX7NGWcFcajh+T1FVqq9
-X-Google-Smtp-Source: APXvYqwEA628FBlca0dGEPjIDQ2a4ByT8B+b2V7tikVoBJpvlh0rDQXWRFX1G2Ph74UxOodxWyiVFsWef62dWrNU7jviQMGNFNpE
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0PYqYNJCRo47buFqpEFm5jSGLOOSre7sIa2ON3PXgE8=;
+        b=fo4ekuj0PxxAo7Mm/sT37w12yNg+QSnqt9KNVtf1fk30JQK0Wv2gmfEvdA5Dg+DtlM
+         od2i2uLynOGvVbixFEpBnZtTj7vtWVgaURLMqNA4IGGYu63AYP6BIt8Wnb6nLthbwRBy
+         8lM1nBc01HDWNHOiTrJ8kCL8cTiQcVGnrcpzm27Bh893D5PLyUkEpq3eYyS6oJ5T7bNG
+         WQdqXHWwRBWP/LQh3M59+Kjrb+JrPu52iVNFvWpGe0Lu0ylipW+upuV8O6QrJZ+UnQ/N
+         3zsiCge/cKLCXrmM7GdgK3lok/FeDLdQG0WySF/9FS7tfhoIO78O1SOHkZTAPwAowgob
+         vq6g==
+X-Gm-Message-State: APjAAAVBERYbdv4834Rz/Py5ZhFjiymPsJ1dp8ZA16NpRR60eDaeARUP
+        1SvQE0hlgLqOhajVUSwoKjwR4v2cQm0=
+X-Google-Smtp-Source: APXvYqwX/22NqGNoCQ0/bSrH0pbcBdfRRUUXnfm/3RPZP7YgMJSjQXcHT6X/z15jd2R/u3dR/uVhhA==
+X-Received: by 2002:aa7:884b:: with SMTP id k11mr20835616pfo.49.1554009182739;
+        Sat, 30 Mar 2019 22:13:02 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id l5sm14021398pfi.97.2019.03.30.22.13.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 30 Mar 2019 22:13:01 -0700 (PDT)
+Date:   Sun, 31 Mar 2019 05:13:00 +0000
+From:   Changbin Du <changbin.du@gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v2 01/24] Documentation: add Linux ACPI to Sphinx TOC tree
+Message-ID: <20190331051258.7f4una2eh7eeyctb@mail.google.com>
+References: <20190329001135.15847-1-changbin.du@gmail.com>
+ <20190329001135.15847-2-changbin.du@gmail.com>
+ <CAJZ5v0h=tpzWJrt02ET28EG9hn6eSusLV68FZCV8nnXHDBxHEQ@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a24:9884:: with SMTP id n126mr4488087itd.30.1554007981084;
- Sat, 30 Mar 2019 21:53:01 -0700 (PDT)
-Date:   Sat, 30 Mar 2019 21:53:01 -0700
-In-Reply-To: <000000000000b239d705736497a3@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b0ddb205855cad54@google.com>
-Subject: Re: WARNING in free_loaded_vmcs (2)
-From:   syzbot <syzbot+01bc9e7a8a3f138b71cf@syzkaller.appspotmail.com>
-To:     dvyukov@google.com, hpa@zytor.com, jmattson@google.com,
-        karahmed@amazon.de, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0h=tpzWJrt02ET28EG9hn6eSusLV68FZCV8nnXHDBxHEQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716-508-7c9a6d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Sat, Mar 30, 2019 at 10:51:50AM +0100, Rafael J. Wysocki wrote:
+> On Fri, Mar 29, 2019 at 1:12 AM Changbin Du <changbin.du@gmail.com> wrote:
+> >
+> > Add a index.rst for trace subsystem. More docs will be added later.
+> >
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  Documentation/acpi/index.rst | 8 ++++++++
+> >  Documentation/index.rst      | 1 +
+> >  2 files changed, 9 insertions(+)
+> >  create mode 100644 Documentation/acpi/index.rst
+> >
+> > diff --git a/Documentation/acpi/index.rst b/Documentation/acpi/index.rst
+> > new file mode 100644
+> > index 000000000000..7241ceb1673c
+> > --- /dev/null
+> > +++ b/Documentation/acpi/index.rst
+> > @@ -0,0 +1,8 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=======================================================
+> > +Linux ACPI (Advanced Configuration and Power Interface)
+> 
+> "Linux ACPI Support", please.
+> 
+sure.
 
-commit 8fcc4b5923af5de58b80b53a069453b135693304
-Author: Jim Mattson <jmattson@google.com>
-Date:   Tue Jul 10 09:27:20 2018 +0000
+> > +=======================================================
+> > +
+> > +.. toctree::
+> > +   :maxdepth: 2
+> > diff --git a/Documentation/index.rst b/Documentation/index.rst
+> > index 80a421cb935e..e3aa28275894 100644
+> > --- a/Documentation/index.rst
+> > +++ b/Documentation/index.rst
+> > @@ -90,6 +90,7 @@ needed).
+> >     filesystems/index
+> >     vm/index
+> >     bpf/index
+> > +   acpi/index
+> >     misc-devices/index
+> >
+> >  Architecture-specific documentation
+> > --
+> > 2.20.1
+> >
 
-     kvm: nVMX: Introduce KVM_CAP_NESTED_STATE
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17fba63f200000
-start commit:   60c1f892 Merge tag 'dma-mapping-4.19-2' of git://git.infra..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1407a63f200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1007a63f200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4c7e83258d6e0156
-dashboard link: https://syzkaller.appspot.com/bug?extid=01bc9e7a8a3f138b71cf
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a6513e400000
-
-Reported-by: syzbot+01bc9e7a8a3f138b71cf@syzkaller.appspotmail.com
-Fixes: 8fcc4b5923af ("kvm: nVMX: Introduce KVM_CAP_NESTED_STATE")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+Cheers,
+Changbin Du
