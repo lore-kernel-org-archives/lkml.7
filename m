@@ -2,80 +2,84 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A416DC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 18:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDA8C4360F
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 18:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77ECA20872
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 18:18:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Sj++ggZX"
+	by mail.kernel.org (Postfix) with ESMTP id 5B49620872
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 18:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731390AbfCaSSb (ORCPT
+        id S1731412AbfCaSUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 14:18:31 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:54851 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfCaSSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 14:18:30 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 609fb3c8;
-        Sun, 31 Mar 2019 17:55:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=Ti4V61HDeZDVBAG3CXQ/8uid5S0=; b=Sj++gg
-        ZXXI0knSqB2hbxyWvqVtiqIBIGzUoaAEMsdKrME55Gd269XxAhJE/lRxpfNSsCk7
-        jLUehyHGNHjcgxGSn5F50yT9YoFcEPxVjkoo/iAWnaBoCOlmG8zalOAqkWJpb/y1
-        BX2XMlHE7nEhjEGyFzoL7q4pDNFqgvo/XAlKvJIQJ7pOc0RgQlAO8vcljJRsv0TR
-        1EGUbQndd9mcpfkLueFFoq01407l8cfYJdF3/Q9goJTGhIpo5cwpYufMkCb3qYKV
-        PDj/KSNCpQt30EKEjUjjDEFevRvczt8Hu+ifERHb0kkUkUM5FLAbxiKR7ajrIUwD
-        1zlWLJinGk3E2IPw==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f2b473e4 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Sun, 31 Mar 2019 17:55:30 +0000 (UTC)
-Received: by mail-ot1-f43.google.com with SMTP id e5so6475957otk.12;
-        Sun, 31 Mar 2019 11:18:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAXotfLyoGy4FPSOYV+zNz9b6OUKNvkTPa1JXGdJE2PO3B8XzLWu
-        HUBwO9ufsW2oAUcQRQ4dyV/QZ12C99nOowAXpe4=
-X-Google-Smtp-Source: APXvYqzgait/TmLmBd7A84YuraR+WSdurvyDju0SbIiZUO/LBlMjbcRUtDA+lqqNLtm5mm7RFs0bEWLHg9fG5N1sWrc=
-X-Received: by 2002:a9d:7d0e:: with SMTP id v14mr2355535otn.225.1554056305103;
- Sun, 31 Mar 2019 11:18:25 -0700 (PDT)
+        Sun, 31 Mar 2019 14:20:02 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:46405 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfCaSUB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 14:20:01 -0400
+Received: by mail-io1-f69.google.com with SMTP id k5so6415291ioh.13
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 11:20:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=64lyVqrAmSNqgnvvXOQw41LdifBrv+S+PiTwaiesBnk=;
+        b=SjOybrblRsCPXJU02j1HSwKHyMOYQAFVQE+orXskzgzAGfj8Zi3l2todAxwKfFjm6Z
+         T6GXBaPypB17Ur5/bTO3YHm7ZnrLRI8nZO7JrZuuJqvcvmoYP7rjqNDgGaUBYtrMnBER
+         ehSd1k38PonXeFj4fadmEWkq47PngBC5mLF68KpSqlmAG5g+a1c7mPdVHfEcuYtPYhFA
+         7FZyesRuGE4UR6lUsXQopvYCe3SA3jdfmmaYnjDliN+QPoV3Ks72BUiLtjAYyoKLw20v
+         U3u6qPxbI5YpNEQ4QihzrUNNOxgRey6HhWsZHeweHeErmNaoumjmrEylUH79J/YnXSQf
+         ij2A==
+X-Gm-Message-State: APjAAAUHg/31q1jLkEwJ+bpFQenoQVM8GwEZZZe2OuFJQpKT48iaj+Td
+        xbUO65R6u2zuymjohQadULFjIS/r+ig/uvZhQ0lMABHQfshq
+X-Google-Smtp-Source: APXvYqwYc7YT95rQW3y3YkH0IjCUzv6zgypejJek1mPQFMyraQ3qD0wYSln+d2ySQbcyidRmMyizHd9+5gHqDAuEqkVUFpX78+wy
 MIME-Version: 1.0
-References: <20190322071122.6677-1-Jason@zx2c4.com> <20190325115156.wj4verbfdd2rspo5@gondor.apana.org.au>
- <CAHmME9pAgi=Li_C5xEq7EfmNq5p4BRc3rDxXjiz+xz0rSYikXA@mail.gmail.com> <20190330055307.GA8001@sol.localdomain>
-In-Reply-To: <20190330055307.GA8001@sol.localdomain>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Sun, 31 Mar 2019 20:18:13 +0200
-X-Gmail-Original-Message-ID: <CAHmME9o+HqyrXX403bSXJX4Xs0dsZ9Qo=owiu7QGzBbaLQWZag@mail.gmail.com>
-Message-ID: <CAHmME9o+HqyrXX403bSXJX4Xs0dsZ9Qo=owiu7QGzBbaLQWZag@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 00/19] WireGuard: Secure Network Tunnel
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Samuel Neves <samuel.c.p.neves@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a5d:8c8f:: with SMTP id g15mr8814847ion.36.1554056400848;
+ Sun, 31 Mar 2019 11:20:00 -0700 (PDT)
+Date:   Sun, 31 Mar 2019 11:20:00 -0700
+In-Reply-To: <000000000000e92d1805711f5552@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bbcb82058567f37d@google.com>
+Subject: Re: WARNING in bpf_jit_free
+From:   syzbot <syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com>
+To:     airlied@linux.ie, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@ffwll.ch, daniel@iogearbox.net, davem@davemloft.net,
+        dri-devel@lists.freedesktop.org, hawk@kernel.org,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
+        kafai@fb.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, maxime.ripard@bootlin.com,
+        netdev@vger.kernel.org, paul.kocialkowski@bootlin.com,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        wens@csie.org, xdp-newbies@vger.kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 6:53 AM Eric Biggers <ebiggers@kernel.org> wrote:
-> poly1305-simd is among the failing algorithms because it loses carry bits when
-> handling long "all 0xff bytes" inputs.  poly1305-avx2-x86_64.S is definitely
-> broken, and poly1305-sse2-x86_64.S *might* be too.  I am working on a patch...
+syzbot has bisected this bug to:
 
-Yea.... yikes. I'm kind of souring on this plan of having to deal with
-that code in Zinc, versus the extensively studied, fuzzed, and
-scrutinized code from Andy. Subtle carry bugs like that are kind of a
-testament to my overall plan of preferring formally verified or
-heavily used implementations to bespoke ones. This stuff is hard to
-get right.
+commit 0fff724a33917ac581b5825375d0b57affedee76
+Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Fri Jan 18 14:51:13 2019 +0000
 
-Jason
+     drm/sun4i: backend: Use explicit fourcc helpers for packed YUV422 check
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1467550f200000
+start commit:   0e40da3e Merge tag 'kbuild-fixes-v5.1' of git://git.kernel..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1667550f200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1267550f200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
+dashboard link: https://syzkaller.appspot.com/bug?extid=2ff1e7cb738fd3c41113
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16973653200000
+
+Reported-by: syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com
+Fixes: 0fff724a3391 ("drm/sun4i: backend: Use explicit fourcc helpers for  
+packed YUV422 check")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
