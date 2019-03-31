@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A913C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 19:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778B6C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 19:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0C020870
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 19:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457A020882
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 19:16:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="gGRGMmS4"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ekKuPid3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731547AbfCaTQk (ORCPT
+        id S1731520AbfCaTQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 15:16:40 -0400
-Received: from mout.gmx.net ([212.227.17.22]:38817 "EHLO mout.gmx.net"
+        Sun, 31 Mar 2019 15:16:39 -0400
+Received: from mout.gmx.net ([212.227.17.22]:42017 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbfCaTQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731476AbfCaTQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 31 Mar 2019 15:16:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1554059782;
-        bh=tHp/iiULCkqVhT1KsH1OFdlDiFqOPn6BCSydpzxcZQU=;
+        s=badeba3b8450; t=1554059777;
+        bh=4kjV2qohI5s4Okw4s8UDDiR2ogODeNDc9QTkPa88sT8=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=gGRGMmS4tAcT+jKC4qXMAMN+o7o/nEqw6w9RQ36D8w+8kq739SavWd2zhJgqjmLJD
-         iBa9f1qRL0uvGKScTxGftiV3G/yYN89EHQ4t1+OkFnoTOZD532Xqvby5S7fMESPOZJ
-         i2+s8MhcqtKhWBMEmuDTwy8Eun2K2dcnQDUTk6LI=
+        b=ekKuPid3WLVvk9gVI9oOhwDxEZOIMc3NUOnlA84DQ7YfY6cujLslhP0o6S14bLg6B
+         nKSmmfVx6JcqOcqrBRNgTx9J8j+xz4Gf8Z/UPECbrNScEL5MFR6DtdkswTSqQLm43y
+         9uku/mBIPWi6hzUBcY2aP1SfqPQfSIRF3iPd2PT4=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx102
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0M4TgW-1h0yks2Pts-00yiWL; Sun, 31
- Mar 2019 21:16:22 +0200
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0LaaVn-1gWRBO0rBn-00mKKT; Sun, 31
+ Mar 2019 21:16:17 +0200
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -52,70 +52,71 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Jagan Teki <jagan@amarulasolutions.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] dt-bindings: arm: fsl: Add i.MX50 based boards
-Date:   Sun, 31 Mar 2019 21:16:01 +0200
-Message-Id: <20190331191602.3921-3-j.neuschaefer@gmx.net>
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Rakuten Kobo, Inc.
+Date:   Sun, 31 Mar 2019 21:16:00 +0200
+Message-Id: <20190331191602.3921-2-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190331191602.3921-1-j.neuschaefer@gmx.net>
 References: <20190331191602.3921-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HiKdOgWDIJBVCocyEytuPzB891gYwIzeTQ8HarNtoxzJ/R6lN0H
- uv6NimwE7V1RlQOGsbGE1rIrgBqFnS6pl8wzsQWfEWAaAjQoPJPz/K1dMu0nlrTeWOHH/4Q
- f1X3ayHK1jM62tybJrDAcjLyJ2ef0jCu/3T+BqD3djpBJCrpFpswPMe4wyMOtwrguWkL6uN
- vnhgDGiBbJkJvkM07sjMQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dHp7NG5GJLw=:HVqb4wd07sLQIz6lNsejL5
- 9uyAOtiXvhfyeVn5WoXdfgebgNEY5FKRwfDcZqOUoZgl64K/FG587YelQmfniAwvojdRyedKT
- Fovx5KnZE0maY1fLcGbK1Pe/ck/Ec0u/L4rEfISYr9JUMtoNDmLXOLcqHKud1SwFFuZvwaJB6
- fUg9s6NZDJYOHWbw4TfjSAkrKzYML9qgSzvP+YhoGw6zCSDJhUD/u5/zw2MxWrj+2nPp67ixD
- oyY0Oj3ys72h4RJ2rSQ0OKRyQCWMUXWr/8kZM09bcx7X0VykGhlh+xZTpBmnZQM74zC5b/M59
- +xwZFhyRPU0h9LjlNdo/HLGCrQtBkIPg5x8KNdhohQBPPLqMNXrsvNh6k0etHxnjLhwf6FHtM
- y5A9Mh7WHAKmJCkOttnHXTyBb3hwm6mfIA4KtSccqgePP3qbREGPQ7W3CNhCO4qMzbcOlOceb
- QFFiyMC/Wkk9gXgFSVIBkxe9A6YZDzM6YHDBjH2sO8qne3FJADxjFxQ5h2Y9DX+bqhKbGxy/e
- Bom9YgDQbNnGu+kWs24MVuYPOZgo0xK01VdTkeNBUrdGlWL0SScnwI8lCP3u1RLXZA6AalJIh
- fsEpdgurPUWsZosGTX73sc/NDu+yJc9VHJgbLmfYqHZAVxSV1H/4P9bv4uGB9hNUvE5laGVQa
- s1efLUJsY5hRyU9LY7yxg4msPE5Wxky1qWilpuYJm4EXpeolhvYUAQkcfviXUxEB7EElzeeL9
- ERjMAEyNnv9tFZX8lWiCUlc8+89Bh9dyxuExgMTrnLN9mv17rLLndrU1W6aL7oRAofz0+9k8L
- z7R+Ad0yO8il50acINyyrgh8QUly/yAfxYKOUBgTPwflQ/PU93cFQv5fjDzoWvw/y4qrHeUWI
- U6olcMiJAzVsMR2/Y51eJsDAefm4/NtOQvu0nr2raqEFNIbJZQGoZcVWj27OtAvUdkhlggBe7
- VDHRfOUKy0g==
+X-Provags-ID: V03:K1:Fb20ANVqUJwa5temuk6zgGS8Ux1VRfWD06s9LFliq93DCFs+iHl
+ ZCAn4deMKS3aFh8exN088dFWtXUGUE9JNq1bWPgGKg5zpQboOGifJ00vPKDbiOjpyOsoWqa
+ N8pSp0P34BcHZ5e7C9VH/x9aPMCnmxsRmSLannHIiBmcGpGElXN0WatlhFe+W9MHCLd2gWB
+ RUmTzVN+PAuusJpWf2EwA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HsOJBwEvQYo=:lFGqpJhi6cRsRd5xAHKFd4
+ URGWMwBrz2nnMm59L96wU+WpQ+or24helNM73bx8I6JH0/KEqsaGrFWgJJQsrapaWPInv2fHz
+ 6OFYJvaIe6hHimjgLMfR+Ut5OF2a1gEyqsLX5h+XRg1ScJJkqoD2fzgmC4E5LsIhA47snMbGb
+ hS6M6Ocx8V/6OqqG8o3jmsIbi1ZGu4Y+1s9XnyPSsBJgZOH8ds1WNuRbG29oxPrbfQJ8ZTZvM
+ 0n3TRb7RKFVMAuL0RtP3Df4yHahidvK6YSOQHPq5eKi8dLt6/rmq6tstIEMtclGrHd4u3rDs6
+ hDjjBOljd/sTO+evDpH/MfGMcX0cdeVThSYOSsAP7lc7TapqOLaBvrLDlh/drtcDqHjPNZJfO
+ HoF0hvh8YZBWxS17gsdNllkL8gzmPcCiZOqzr58TnXfLZelDfLhaZ7ug6wbj6GxTZu2VvOYC0
+ idvm4aC0sYs/CXP+wGoSBeml+TK6s2eHmegUzww7LKkcLQfvMxxHx/MowY/M5+t2bcey3+RrC
+ +tymMHuQD4/N6RXKWrfEjGf9K80BxjnRaw8WL9RCEETJsqihk26qoxxyn4e6tWtQTzsRU5W47
+ QjIm89qTJZcN7HaOk/Vt4X0zAnXMyCSL5DmNNsvCsO0LIL/vZkBycX/wq2Fh8u7sZFJnANuey
+ vZGGQMWRLtpU41m02SFASvABTDicBDuUMk0PCI3guGLD0ImmetyvOzfhwhVzBAJQ/hXsnbadF
+ UFYlcFQpmEcaddfnJ+RJpd4cDa9eYA+eEuVTBROAoS8tnaHQWoan7ne5YwlMdLINzsrYsvl3+
+ VzWiHGBx2bjzSVn344vcpbe45lXpVHZaEoA1lh2nmGB15q5/t6QEZ8Is9bJ3AQT3YObBxidJg
+ CLS7ONoDm/r3Ajm+PnaWo5NIiGdV0aqD3KmEBXE5diutedADE+Q19hZjNf0DWP/bSGWQWulCH
+ EG0uINcH28w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fsl,imx50-evk has been used in a devicetree for a while. kobo,aura will
-be used soon.
+Rakuten Kobo, Inc. (formerly Kobo, Inc.) is a company that sells e-book
+readers and related products. More information is available at:
+
+- https://en.wikipedia.org/wiki/Kobo_Inc.
+- https://www.kobo.com/
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
 =2D--
+v2:
+- Add Rob Herring's R-b
 
-v2: New patch, as suggested by Shawn Guo
+v1:
+https://lore.kernel.org/lkml/20190319152421.16179-2-j.neuschaefer@gmx.net/
 =2D--
- Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentatio=
-n/devicetree/bindings/arm/fsl.yaml
-index 7e2cd6ad26bd..618bf58796eb 100644
-=2D-- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -51,6 +51,13 @@ properties:
-           - const: i2se,duckbill-2
-           - const: fsl,imx28
-
-+      - description: i.MX50 based Boards
-+        items:
-+          - enum:
-+              - fsl,imx50-evk
-+              - kobo,aura
-+          - const: fsl,imx50
-+
-       - description: i.MX51 Babbage Board
-         items:
-           - enum:
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Docum=
+entation/devicetree/bindings/vendor-prefixes.txt
+index 8162b0eb4b50..6cc50f1fac1c 100644
+=2D-- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -210,6 +210,7 @@ kiebackpeter    Kieback & Peter GmbH
+ kinetic Kinetic Technologies
+ kingdisplay	King & Display Technology Co., Ltd.
+ kingnovel	Kingnovel Technology Co., Ltd.
++kobo	Rakuten Kobo Inc.
+ koe	Kaohsiung Opto-Electronics Inc.
+ kosagi	Sutajio Ko-Usagi PTE Ltd.
+ kyo	Kyocera Corporation
 =2D-
 2.20.1
 
