@@ -5,64 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978CCC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F168BC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B1C220872
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C742321873
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 17:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAah8uBe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHJz9RpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731748AbfCaRz6 (ORCPT
+        id S1731783AbfCaR4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 13:55:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43565 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731672AbfCaRzy (ORCPT
+        Sun, 31 Mar 2019 13:56:12 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45681 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731499AbfCaRzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 13:55:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k17so8883671wrx.10;
-        Sun, 31 Mar 2019 10:55:53 -0700 (PDT)
+        Sun, 31 Mar 2019 13:55:51 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s15so8883040wra.12;
+        Sun, 31 Mar 2019 10:55:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0b42a5FAmbnwfJQAnJRwbC3L/GSGJl/BJQZRv2jC7kY=;
-        b=gAah8uBevMa+InJSjBHUhzrS6dtuJcsetUKxGkuuYoCa0dz0fzE3JQZR/khy83JNlF
-         dxJez2cwq7wmo8vM61wZR9H48BmzVGdH4KwRYJxTjtvjz/Uu73nFRJB0OWukpfQtt2Es
-         XGMwEmp55qxeryvzCuhOjiYi7YSH2HTkpZ86fDDPtLTjUG/45aJGbgsaPoDGEieRnA2r
-         RaDfgTj7YvE94s+XbbCLsFCWdjqFX3xkqgn3FJYpLRskRHsbjlZgiA3MHM5SsMQO27Op
-         2sutpu9ZOL/Dz/itXXjhJqzhpIiM4IVAk6u7oIE2BRHTgK8n7DBWfvNu6RjxeLTP3GJ8
-         QcXg==
+        bh=cS1I+tAxnly/9j/g9qsRZheti1vjpbbj6KNsU8oMHJE=;
+        b=IHJz9RpVvKBGSmLFm/ZtO9WtYXd4IKaKLFgKZPva1gHLppzbWm6BSQyjkYMZL0kPnt
+         MRQ6xZ35JRpH8n7qyaYxjSP9jVIbpI1wUhWiREqNBcHvoAsKoUJc5auYv5kLVBSQaXyA
+         yVk8ivW0gsZDXk1Kd5CSirwmjzAN8MCquj9rhA6X2C2OkHE+U0g6OW1js3MEEE7bIv8x
+         xRABPhCV/VPFkj10CWXxbSXmnzaxwBKTrpSarrHMkA1DD1XIj35o1FHTabP1SSk2lgU6
+         i5l9COVsaqidtxahMelavPxrH1ySQPRb+gUqWa0GM3i5ijXuFxZTA6uR5Jd4V62r+1TQ
+         Clnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0b42a5FAmbnwfJQAnJRwbC3L/GSGJl/BJQZRv2jC7kY=;
-        b=Zamfsx4sbshn4USfiXUGPB7ZjKN24K739CBe7kvwd4n9dgyHUbOk+6oUzsh4hGHvBH
-         t/3icDq864k8utlfmHLSivb3g1DOGc5qnK78pEjnxLHMML+ErTdsQx2aKe8eCc3cjqJo
-         4fghDf5GbEkXT6ybQzde+cszMwI4qIJ40pfTUjvduGIcM2FLYWJda1Gh+ChmSLR8DLbL
-         iQU18HqxUV/xFZfH5XrxMCYDEgqZTewk11sY8ZHP5BN1ytwPQmYuSik+XJXC6epe9HmY
-         TAf1lodAJzY04rf+juuJ4t5ClTa1WOMt+5vcB0AOgBE51kMCa5SmgsIqUFsdAH8PlK1Y
-         BnMw==
-X-Gm-Message-State: APjAAAUalpj+RgHGTCGPnrkPAPNQ5/9iQvDvr9TJO67dEJf5eLh/oxVt
-        7L2swWI133jMLKUTQDaGMcfUdB0guBQ=
-X-Google-Smtp-Source: APXvYqzQx3C+fHHebFL/pzOKpvDQBryOMjzxaXPVxmQT/WDrLQ/e7drUbtEercqLEyy1Ge/wQztHvg==
-X-Received: by 2002:a5d:684e:: with SMTP id o14mr40121045wrw.138.1554054952384;
-        Sun, 31 Mar 2019 10:55:52 -0700 (PDT)
+        bh=cS1I+tAxnly/9j/g9qsRZheti1vjpbbj6KNsU8oMHJE=;
+        b=BJUTSGRBnFJelR2BOQdtod2U5dZpo17n2rWmvJnLBlyilk5UJQa8MQFjWRPHzd2zvk
+         m2BRCUVdtP6+HzipzAu+dPdoBekHtw8jF9hM9eU8dHvnT4n+bC5NuJITusVkKqoHQb8X
+         OxEOyaVTswZgzSHOHYP1fKdYE8TwlXhySZ0DLIz4iUiEjRc9kyzYT6rFT9ehM12K1SM0
+         hNuFoyWs9dTqH5K8MN1guoy4YrjdjRVMUgVMH5xxKMaKoIFCOhiYeFlOHGKVpy+1iio7
+         RlETbr/QajRY2Jo/jR/+ivJG04hr/DtU1EgOsHToFi7XX7l35MVYm0qXebqi6S/6xjAA
+         qpTw==
+X-Gm-Message-State: APjAAAWKTr1+Ze+1BJjNAfGJ4YxaNh8ecW91IZCsbR/SLNNsGL/8imw5
+        2bESoV2pu+ygtr3HS1A9PBpBMHAbU8c=
+X-Google-Smtp-Source: APXvYqxaJ7kE//V5BWanr2tf7ID+LWXfhO54F2NYH+AV7Nd/x6Mk0KkDwP3dHCvKhfMwgwCOK8/NRw==
+X-Received: by 2002:adf:e683:: with SMTP id r3mr22327564wrm.286.1554054949228;
+        Sun, 31 Mar 2019 10:55:49 -0700 (PDT)
 Received: from myhost.home (bds153.neoplus.adsl.tpnet.pl. [83.28.4.153])
-        by smtp.gmail.com with ESMTPSA id d7sm7473688wmf.31.2019.03.31.10.55.50
+        by smtp.gmail.com with ESMTPSA id d7sm7473688wmf.31.2019.03.31.10.55.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 31 Mar 2019 10:55:51 -0700 (PDT)
+        Sun, 31 Mar 2019 10:55:48 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         pavel@ucw.cz, robh@kernel.org, jacek.anaszewski@gmail.com,
-        Simon Shields <simon@lineageos.org>
-Subject: [PATCH v3 24/25] dt-bindings: an30259a: Add function and color properties
-Date:   Sun, 31 Mar 2019 19:55:00 +0200
-Message-Id: <20190331175501.23471-25-jacek.anaszewski@gmail.com>
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v3 22/25] dt-bindings: leds-gpio: Add function and color properties
+Date:   Sun, 31 Mar 2019 19:54:58 +0200
+Message-Id: <20190331175501.23471-23-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
 References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
@@ -75,58 +76,79 @@ Refer to new "function" and "color" properties and mark "label"
 as deprecated.
 
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Simon Shields <simon@lineageos.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 ---
- .../devicetree/bindings/leds/leds-an30259a.txt     | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/leds/leds-gpio.txt         | 23 +++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-an30259a.txt b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
-index 6ffb861083c0..cbd833906b2b 100644
---- a/Documentation/devicetree/bindings/leds/leds-an30259a.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
-@@ -15,10 +15,19 @@ Required sub-node properties:
- 	- reg: Pin that the LED is connected to. Must be 1, 2, or 3.
+diff --git a/Documentation/devicetree/bindings/leds/leds-gpio.txt b/Documentation/devicetree/bindings/leds/leds-gpio.txt
+index a48dda268f81..d21281b63d38 100644
+--- a/Documentation/devicetree/bindings/leds/leds-gpio.txt
++++ b/Documentation/devicetree/bindings/leds/leds-gpio.txt
+@@ -10,8 +10,12 @@ LED sub-node properties:
+ - gpios :  Should specify the LED's GPIO, see "gpios property" in
+   Documentation/devicetree/bindings/gpio/gpio.txt.  Active low LEDs should be
+   indicated using flags in the GPIO specifier.
+-- label :  (optional)
++- function :  (optional)
++  see Documentation/devicetree/bindings/leds/common.txt
++- color :  (optional)
+   see Documentation/devicetree/bindings/leds/common.txt
++- label :  (optional)
++  see Documentation/devicetree/bindings/leds/common.txt (deprecated)
+ - linux,default-trigger :  (optional)
+   see Documentation/devicetree/bindings/leds/common.txt
+ - default-state:  (optional) The initial state of the LED.
+@@ -27,30 +31,34 @@ LED sub-node properties:
+ Examples:
  
- Optional sub-node properties:
--	- label: see Documentation/devicetree/bindings/leds/common.txt
--	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
-+	- function :
-+		see Documentation/devicetree/bindings/leds/common.txt
-+	- color :
-+		see Documentation/devicetree/bindings/leds/common.txt
-+	- label :
-+		see Documentation/devicetree/bindings/leds/common.txt (deprecated)
-+	- linux,default-trigger :
-+		see Documentation/devicetree/bindings/leds/common.txt
- 
- Example:
-+
+ #include <dt-bindings/gpio/gpio.h>
 +#include <dt-bindings/leds/common.h>
-+
- led-controller@30 {
- 	compatible = "panasonic,an30259a";
- 	reg = <0x30>;
-@@ -28,16 +37,19 @@ led-controller@30 {
- 	led@1 {
- 		reg = <1>;
- 		linux,default-trigger = "heartbeat";
--		label = "red:indicator";
-+		function = LED_FUNCTION_INDICATOR;
+ 
+ leds {
+ 	compatible = "gpio-leds";
+-	hdd {
+-		label = "Disk Activity";
++	led0 {
+ 		gpios = <&mcu_pio 0 GPIO_ACTIVE_LOW>;
+ 		linux,default-trigger = "disk-activity";
++		function = LED_FUNCTION_DISK;
+ 	};
+ 
+-	fault {
++	led1 {
+ 		gpios = <&mcu_pio 1 GPIO_ACTIVE_HIGH>;
+ 		/* Keep LED on if BIOS detected hardware fault */
+ 		default-state = "keep";
++		function = LED_FUNCTION_FAULT;
+ 	};
+ };
+ 
+ run-control {
+ 	compatible = "gpio-leds";
+-	red {
++	led0 {
+ 		gpios = <&mpc8572 6 GPIO_ACTIVE_HIGH>;
 +		color = <LED_COLOR_ID_RED>;
+ 		default-state = "off";
  	};
- 
- 	led@2 {
- 		reg = <2>;
--		label = "green:indicator";
-+		function = LED_FUNCTION_INDICATOR;
+-	green {
++	led1 {
+ 		gpios = <&mpc8572 7 GPIO_ACTIVE_HIGH>;
 +		color = <LED_COLOR_ID_GREEN>;
+ 		default-state = "on";
  	};
+ };
+@@ -58,9 +66,10 @@ run-control {
+ leds {
+ 	compatible = "gpio-leds";
  
- 	led@3 {
- 		reg = <3>;
--		label = "blue:indicator";
-+		function = LED_FUNCTION_INDICATOR;
-+		color = <LED_COLOR_ID_BLUE>;
+-	charger-led {
++	led0 {
+ 		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+ 		linux,default-trigger = "max8903-charger-charging";
+ 		retain-state-suspended;
++		function = LED_FUNCTION_CHARGE;
  	};
  };
 -- 
