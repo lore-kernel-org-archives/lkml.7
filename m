@@ -1,104 +1,175 @@
-Return-Path: <SRS0=yJb2=SB=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3464CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 23:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570E0C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 00:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E977B2184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 30 Mar 2019 23:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECC62184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 00:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="ozHEe23W"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FOUfsm5I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731026AbfC3X5m (ORCPT
+        id S1731031AbfCaAHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 19:57:42 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39227 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730666AbfC3X5m (ORCPT
+        Sat, 30 Mar 2019 20:07:12 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43359 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730968AbfCaAHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 19:57:42 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f10so5350071otb.6
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 16:57:42 -0700 (PDT)
+        Sat, 30 Mar 2019 20:07:12 -0400
+Received: by mail-qt1-f194.google.com with SMTP id v32so6585745qtc.10
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 17:07:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/mTXQwEHp25jsXXs0xOppcW45YpPe1sGxWOzazKsAao=;
-        b=ozHEe23WHi2UdztToyVId1Kmaiop+mLWTewhTDgRtxN41uC3SZ+Jbdhy7Cp+IWvbQR
-         zFzOQex+qr+RrVTlm1knBbHOjWMcA1YsbxtMW1VuqFurEgBnOCmy10L9vPNaHP3VRML8
-         kUsXQIQHEPgmDaxjgax3Cn+vjBGL2oAoSg6qnZCpsIMVXxVVXHeoKUIAxmUf+reY9ggj
-         XfucD1OxCplzwT/Z4+VEndIs7+cGtpLxSI1f+G0TwuBZ6H03v/C5zUHlNgnOas4iWMfl
-         +J5W/v0JS1VRmMtu89cD2R8Jngi+gyjyElfBo4GSqfYu4/c4S8sjVF95aclfsOKQvnnz
-         MDQQ==
+        bh=7bk9PKS0LUF/VXYjndR8WWxMJuOaeyMXD3n2lNQIHcU=;
+        b=FOUfsm5Igumwg0YHx9wwFUl07awKVRnklSgyGdQRIN1bGq7peNIBiIfekx7ph77iwJ
+         NHv0hSqC0siJdjXYovPodLpqHV8SwwE8q/Hoini8SAzoaJ8Jnjz2/pUSpp5rGag+8avy
+         Yc1yBPYnUUhki1ucZEZ3Z0VpYy8ICnXF5NSVg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/mTXQwEHp25jsXXs0xOppcW45YpPe1sGxWOzazKsAao=;
-        b=sX0yT2AbJXDz4GiQssxUGFNyxg2nYp2u3VYvsI3aybU7bnhvK1ap0eDIpS5nySTaaH
-         AhYrEh6enpQG3ocKvjvlHdJGHnL+PhAKY900dYPIWI3NcYa2/uoxsx84LdCzr6NpNMLx
-         qYWdp+LTyPDpoxemal1pFtCi1+q65N4AxoNUDgNaimQYFxEMK1sFX+W64oc4lSlduew7
-         pV/owCgx0SBERPlxhRkkeyRx3ziqzB2wN/OZkMrV7SM1MePCcKdwAVadfmeAoPbxMmMB
-         kTBiOv2eHQknCjuOXJOVN8rU4cDpKfNGSsfUUFNuPI0PQS/AyEk4JPW0xSJZ13YggEkQ
-         ZDXQ==
-X-Gm-Message-State: APjAAAUM6O5AQv7uPIsDogIgGlvgpliX+HvVxM2/6HixCdFRD+zXiGtw
-        fs7tqCLYt/+vMwz0yCZkoAiicjN3JTFQC7hsykZePA==
-X-Google-Smtp-Source: APXvYqxHD39w1ZNGQhKRDXhJxSes4mrfXcPcv4gwie55Uu1wRRS/LRNC7hDRdRwMbzqNi05PsdH8148aAAI3q6j3C9Y=
-X-Received: by 2002:a9d:3e11:: with SMTP id a17mr38746422otd.185.1553990261575;
- Sat, 30 Mar 2019 16:57:41 -0700 (PDT)
+        bh=7bk9PKS0LUF/VXYjndR8WWxMJuOaeyMXD3n2lNQIHcU=;
+        b=M5wmhGAav9XeCBk/b2vJv4jVYmCcb6sV+kLo87rrkqdDEGyWFP3XF7TXzPA6DdBekI
+         lp8QJRHJEgGWc6dfmzdxG7kA2jg7UIToB8S6W7uqu+YYp7cf0gv1O3JYPkIJMesx2yOB
+         vG16LILZ2flSD4ZxfqocmFgC/8XSV/WmDdTzqWpddXTte7nTx2F9clW58igo0J+D3RdM
+         2CqUYBJCWX+x8nhmJzP7ajNWi0EZ9q+sF08+9xf8axkn5s3gWMUM+yJkBQuJE0WUrNL1
+         vRxYdFWEGXaXonbc3dUNZTSNjSpY91Ti3ICMv9vR9yGEn/zsC0PbG3N7KBqyjWdVmqmm
+         +PAw==
+X-Gm-Message-State: APjAAAVB3Ts09waKZOfWoovltX2AYzid4ERaKw+YB/WurCR8GQ60yIvm
+        fgHG0pqcV4HxOEWicZ1L1lawxt0FYWErWgKlMubszA==
+X-Google-Smtp-Source: APXvYqz6Z/DGEGsEyaa9qGn+2yYqelpKYUGdH1lxYhnbq3lvI7+b9MoUcvdxPgfBnolddNg3F1SCS2bCZU7/iYJ6Ti8=
+X-Received: by 2002:aed:35f7:: with SMTP id d52mr47105986qte.335.1553990831296;
+ Sat, 30 Mar 2019 17:07:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <eea3ce6a-732b-5c1d-9975-eddaeee21cf5@infradead.org>
- <20190329181839.139301-1-ndesaulniers@google.com> <83226cfb-afa7-0174-896c-d9f7a6193cf4@infradead.org>
-In-Reply-To: <83226cfb-afa7-0174-896c-d9f7a6193cf4@infradead.org>
-From:   Tri Vo <trong@android.com>
-Date:   Sat, 30 Mar 2019 16:57:30 -0700
-Message-ID: <CANA+-vAcW0VfAZmZWi84s1pQQ+tFx8VyzYsWi5_gj7vHT3Ao6Q@mail.gmail.com>
-Subject: Re: [PATCH v2] gcov: fix when CONFIG_MODULES is not set
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Hackmann <ghackmann@android.com>, linux-mm@kvack.org,
-        kbuild-all@01.org, kbuild test robot <lkp@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <1553841972-19737-1-git-send-email-andrew-sh.cheng@mediatek.com> <1553841972-19737-2-git-send-email-andrew-sh.cheng@mediatek.com>
+In-Reply-To: <1553841972-19737-2-git-send-email-andrew-sh.cheng@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Sat, 30 Mar 2019 17:06:58 -0700
+Message-ID: <CANMq1KBX1NTfv1OYV3aq4B8hfrOnSEJRX1g6JOYzMws1ZNQgjg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] cpufreq: mediatek: add mt8183 cpufreq support
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        devicetree@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        linux-pm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        Fan Chen <fan.chen@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 1:53 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+On Thu, Mar 28, 2019 at 11:46 PM Andrew-sh.Cheng
+<andrew-sh.cheng@mediatek.com> wrote:
 >
-> On 3/29/19 11:18 AM, Nick Desaulniers wrote:
-> > Fixes commit 8c3d220cb6b5 ("gcov: clang support")
+> For new mediatek chip mt8183,
+> cci and little cluster share the same buck,
+> so need to modify the attribute of regulator from exclusive to optional
 >
-> There is a certain format for Fixes: and that's not quite it. :(
->
-> > Cc: Greg Hackmann <ghackmann@android.com>
-> > Cc: Tri Vo <trong@android.com>
-> > Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-> > Cc: linux-mm@kvack.org
-> > Cc: kbuild-all@01.org
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
->
-> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
->
-> Thanks.
->
-> > ---
-> >  kernel/gcov/gcc_3_4.c | 4 ++++
-> >  kernel/gcov/gcc_4_7.c | 4 ++++
-> >  2 files changed, 8 insertions(+)
+> Intermediate clock is not always enabled by ccf in different projects,
+> so cpufreq should always enable it by itself.
 
-Thanks for taking a look at this Nick! I believe same fix should be
-applied to kernel/gcov/clang.c. I'll send out an updated version later
-today.
+One comment, otherwise the changes look good. However, I feel that
+this patch should be split in 3:
+ 1. Change to regulator_get_optional
+ 2. Enable inter_clk
+ 3. Add support for 8183
+
+> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+> ---
+>  drivers/cpufreq/cpufreq-dt-platdev.c |  1 +
+>  drivers/cpufreq/mediatek-cpufreq.c   | 12 ++++++++++--
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+> index 47729a2..53ea52b 100644
+> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+> @@ -117,6 +117,7 @@
+>         { .compatible = "mediatek,mt817x", },
+>         { .compatible = "mediatek,mt8173", },
+>         { .compatible = "mediatek,mt8176", },
+> +       { .compatible = "mediatek,mt8183", },
+>
+>         { .compatible = "nvidia,tegra124", },
+>         { .compatible = "nvidia,tegra210", },
+> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
+> index 48e9829..7cd01d3 100644
+> --- a/drivers/cpufreq/mediatek-cpufreq.c
+> +++ b/drivers/cpufreq/mediatek-cpufreq.c
+> @@ -346,7 +346,7 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
+>                 goto out_free_resources;
+>         }
+>
+> -       proc_reg = regulator_get_exclusive(cpu_dev, "proc");
+> +       proc_reg = regulator_get_optional(cpu_dev, "proc");
+>         if (IS_ERR(proc_reg)) {
+>                 if (PTR_ERR(proc_reg) == -EPROBE_DEFER)
+>                         pr_warn("proc regulator for cpu%d not ready, retry.\n",
+> @@ -376,13 +376,17 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
+>                 goto out_free_resources;
+>         }
+>
+> +       ret = clk_prepare_enable(inter_clk);
+
+Should you disable the clock in mtk_cpu_dvfs_info_release?
+
+> +       if (ret)
+> +               goto out_free_opp_table;
+> +
+>         /* Search a safe voltage for intermediate frequency. */
+>         rate = clk_get_rate(inter_clk);
+>         opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
+>         if (IS_ERR(opp)) {
+>                 pr_err("failed to get intermediate opp for cpu%d\n", cpu);
+>                 ret = PTR_ERR(opp);
+> -               goto out_free_opp_table;
+> +               goto out_disable_clock;
+>         }
+>         info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
+>         dev_pm_opp_put(opp);
+> @@ -401,6 +405,9 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
+>
+>         return 0;
+>
+> +out_disable_clock:
+> +       clk_disable_unprepare(inter_clk);
+> +
+>  out_free_opp_table:
+>         dev_pm_opp_of_cpumask_remove_table(&info->cpus);
+>
+> @@ -543,6 +550,7 @@ static int mtk_cpufreq_probe(struct platform_device *pdev)
+>         { .compatible = "mediatek,mt817x", },
+>         { .compatible = "mediatek,mt8173", },
+>         { .compatible = "mediatek,mt8176", },
+> +       { .compatible = "mediatek,mt8183", },
+>
+>         { }
+>  };
+> --
+> 1.8.1.1.dirty
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
