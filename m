@@ -2,139 +2,85 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A110C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD4CC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA6521726
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:21:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kyVI902L"
+	by mail.kernel.org (Postfix) with ESMTP id 5033C20882
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554014429;
+	bh=tuG+tde7UcSiBDxh394cf1kmuMpcx4Av/q+YGetcar8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CYQdqmc+b0/AdkesNgzwBPyxL9H0kcXSp5ozgT19uDMCWLuMqQvK2/WyzTtZS7v1q
+	 1ADhXdVo/A5rXARFHJAyKXnflmXGQqJV2CPFm4XVgLavW8bWCkEJZ/u+t1Olj5poBp
+	 hNXPTr4B2aJjFs3H4iSTyBJfSL0US45xmCEmx/A0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbfCaGUW (ORCPT
+        id S1726192AbfCaGk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 02:20:22 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44503 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfCaGUV (ORCPT
+        Sun, 31 Mar 2019 02:40:27 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41665 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfCaGk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 02:20:21 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g12so2913052pll.11
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 23:20:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5iSzvmBZ185g3r5prUMNlBUrqHP2e0lRMJA3YXzhNds=;
-        b=kyVI902LMHqMjqSL+r/7CQKA6B64zwqVF9Xo/6BMNdkXRN/27UnpFE+v+bAgF8Jjmx
-         Ka8Xc2dtp4r0c76bpKaIjcgoC52bM1X55KmbzZ6YCUKI9aHH6kn0Dtd7TyB6ek2dbE8+
-         NLKo2GTIPKgF9q6N8yJb2RmflypK6MoDHbMhEmob84FvX2bTKvvz2A5U4ITd7W5ECkwr
-         AyKXOaGWL+5ixyTBNGe4fRWxWqwzarZUZi+o9LHEN3LzEqDN8NNLUWHbv1nbFVcRzEEc
-         +620avVJiC2v9OLdv4Gh3Kg5LBTGN6qFv44SdKBwD5Twrvbqg9WekfiUSejQCmBwe/Gp
-         0o7g==
+        Sun, 31 Mar 2019 02:40:27 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 188so2980525pfd.8;
+        Sat, 30 Mar 2019 23:40:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5iSzvmBZ185g3r5prUMNlBUrqHP2e0lRMJA3YXzhNds=;
-        b=A4t3BJuGnqt2UCmQBP0m2CAtnC1NKVhc34M7h/5qgMDvTFEwjYK/BIoekUaMRxtHNq
-         CDaXalfkYxxLleCoREsRvmJGxHFkDtVZ8Jqw8mLXkUdkn+DyFEZFPE4hNpLvEorLpD8J
-         26uF3XZvOcs4rj5vW15fKuuKJuH2yw6zzbn8XfprOQDfpTf/nOW54wYzAtyC3Y4dbeAT
-         /F/KcPi/Hs4ESydm7N4M7NUXFObfo5bWpDWFS2gf/BMQcOudSNhHUqIN/bQTbZBSa4HT
-         LsyCndK3EoLt/jfCzR0x3Kj52ovVuV+N626UZu0gybf2Wi0SBbPCSW6AzI4yELQNCJav
-         m3JQ==
-X-Gm-Message-State: APjAAAUG+crsaV9maHMRj+2zG892crhBTGwJ7fsZvbu6T1jVp1VB08lc
-        5Pg1emWJhpFZhG14M8TVbu+itA==
-X-Google-Smtp-Source: APXvYqwGWH5dGvXdBCSJB0SFbUIFnZAP/fwd5hXcR4+wY5LkQT9IYxGUUHcse1Z2TUIdbiVym4tvZA==
-X-Received: by 2002:a17:902:8f92:: with SMTP id z18mr5361997plo.123.1554013221039;
-        Sat, 30 Mar 2019 23:20:21 -0700 (PDT)
-Received: from [10.71.10.192] ([147.50.13.10])
-        by smtp.googlemail.com with ESMTPSA id p2sm22948796pfi.73.2019.03.30.23.20.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 30 Mar 2019 23:20:20 -0700 (PDT)
-Subject: Re: [greybus-dev] [PATCH] Staging: greybus: usb: Fixed a coding style
- error
-To:     Joe Perches <joe@perches.com>,
-        Will Cunningham <wjcunningham7@gmail.com>, johan@kernel.org
-Cc:     devel@driverdev.osuosl.org, elder@kernel.org,
-        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org
-References: <20190331053040.GA12974@titus.pi.local>
- <41750e16d14a967529d7cb5e315110ee5ccd313c.camel@perches.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <5c95c177-b8fe-ab0b-eb7a-d270e35a7ce6@linaro.org>
-Date:   Sun, 31 Mar 2019 01:20:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uBm8Vnx1AYs7Q5eJhNxPBF1vBH4iPjIvKHMwRRO7NBA=;
+        b=HgS+lTJhtdUpPRFX61ZOce5u2aOs/nr5qqEyVHaKCZEFmr4DZnaF+kApMtrtTz0sO2
+         97XdKoeQKsXxpHQgZJ5WwWy/4iBW3KIQUISBymEcW0IQae5zeysBnTxHMX/VPJNWLvsJ
+         OJ+V5v/+pOIX9jy0HmjqctOFK8/9h71vzmIvCuIpuAsukKMTBGfi5xbWnO6XwQsnwwX4
+         D+9/+qqE7sNBUVGE+lQczpKk/senc4pIbevKF9hia3r5HKUkUpG6h/8vW/uasPEsgr5P
+         5mF2qkZLFgrMLZvEtTy3QNyDoW7tJwU84R33/BQ6s1TQI0S5zhLdV4ctx6BPU4XX/pzW
+         KPgQ==
+X-Gm-Message-State: APjAAAVkC+SFuDuJtD4eze94HIWYReZW5PjCrygS+CF473j0EpddUyWr
+        T5ANo8k8cDNckBLIjjx8kydSP3CB7A==
+X-Google-Smtp-Source: APXvYqz8Xao6zy4OEXpuKucVwnc2XTw+gFf3WAN+92JlXv4/zIsTCeWvw0LTDTpYp0YP+qI7ky3QFw==
+X-Received: by 2002:a62:6086:: with SMTP id u128mr30968375pfb.148.1554014425963;
+        Sat, 30 Mar 2019 23:40:25 -0700 (PDT)
+Received: from localhost ([210.160.217.68])
+        by smtp.gmail.com with ESMTPSA id c3sm12783968pfg.88.2019.03.30.23.40.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 30 Mar 2019 23:40:25 -0700 (PDT)
+Message-ID: <5ca060d9.1c69fb81.b8ed9.b975@mx.google.com>
+Date:   Sun, 31 Mar 2019 01:40:23 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Claudiu.Beznea@microchip.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, daniel.lezcano@linaro.org,
+        tglx@linutronix.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Claudiu.Beznea@microchip.com
+Subject: Re: [PATCH 1/5] dt-bindings: arm: atmel: add bindings for PIT64B
+References: <1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com>
+ <1552580772-8499-2-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <41750e16d14a967529d7cb5e315110ee5ccd313c.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1552580772-8499-2-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/31/19 1:04 AM, Joe Perches wrote:
-> On Sun, 2019-03-31 at 01:30 -0400, Will Cunningham wrote:
->> Line was >80 characters.
-> []
->> diff --git a/drivers/staging/greybus/usb.c b/drivers/staging/greybus/usb.c
-> []
->> @@ -169,8 +169,8 @@ static int gb_usb_probe(struct gbphy_device *gbphy_dev,
->>  		return -ENOMEM;
->>  
->>  	connection = gb_connection_create(gbphy_dev->bundle,
->> -					  le16_to_cpu(gbphy_dev->cport_desc->id),
->> -					  NULL);
->> +				le16_to_cpu(gbphy_dev->cport_desc->id),
->> +				NULL);
+On Thu, 14 Mar 2019 16:26:35 +0000, <Claudiu.Beznea@microchip.com> wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
 > 
-> Blind adherence to 80 column limits leads to poor looking
-> code.  Especially with longish identifier lengths.
-
-I agree.  If it were me, I'd use a local variable.  For example:
-
-        struct greybus_descriptor_cport *cport_desc = gbphy_dev->cport_desc;
-
-	...
-
-        connection = gb_connection_create(gbphy_dev->bundle,
-                                          le16_to_cpu(cport_desc->id), NULL);
-
-Or maybe better:
-
-	u16 cport_id = le16_to_cpu(gbphy_dev->cport_desc->id);
-
-	...
-
-        connection = gb_connection_create(gbphy_dev->bundle, cport_id, NULL);
-
-					-Alex
-
-
-
-
+> Add device tree bindings for PIT64B timer.
 > 
-> Another way to do this, which is not necessarily actually
-> better is to position the left side of the assignment on a
-> separate line like:
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> 	connection =
-> 		 gb_connection_create(gbphy_dev->bundle,
-> 				      le16_to_cpu(gbphy_dev->cport_desc->id),
-> 
-> Is that better?  <shrug>  I prefer the original.
-> It was better before as it was aligned to open parenthesis.
-> 
-> 
-> _______________________________________________
-> greybus-dev mailing list
-> greybus-dev@lists.linaro.org
-> https://lists.linaro.org/mailman/listinfo/greybus-dev
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
 
