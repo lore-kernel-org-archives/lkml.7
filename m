@@ -7,92 +7,90 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB1AC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 12:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396B7C10F06
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 12:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5045D20870
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 12:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02B1E20870
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 12:19:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ABCm/x8D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gIZgDebU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731191AbfCaMS5 (ORCPT
+        id S1731205AbfCaMTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 08:18:57 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53819 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727011AbfCaMS4 (ORCPT
+        Sun, 31 Mar 2019 08:19:12 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53832 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726863AbfCaMTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 08:18:56 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q16so7237517wmj.3;
-        Sun, 31 Mar 2019 05:18:54 -0700 (PDT)
+        Sun, 31 Mar 2019 08:19:12 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q16so7237919wmj.3;
+        Sun, 31 Mar 2019 05:19:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=1TvPgJgdAqjN0RPKxN+C/tRXajhzKUiElOZVOUrfgMM=;
-        b=ABCm/x8DP6SbinEcOdM5oPy9botOYe15MMBRroEU1PAbYmIiQGeOJmEGg6wFbkjVtR
-         xm0kWMd7Mio135qu7rQFA47RMn73FILCxiITr8BA8uNLBQ8+98HtrvyHPITr6O3aA8yn
-         qclKGDvyYGLdKzyg4FtJ43obff0/S9PbRIr8o6/6r/WaEFLQJQetF2HVdpLm59G6xL/y
-         Z3knbJJnjQPMBpe2NqhDSFRhSqJZSjmYY4n25P9ZzbmpOWUzwR2PQYQNJowQPIWMjRZ9
-         tECnynxGOZNILQPeNwm1shZlTZ/mKY8jwaMV8zVdi31TygGpOD+TPX5LG8RLEhrLI+XP
-         ydXw==
+        bh=BDf0GcN8eemQB0L/8K+hBKesr4IMYa5WWt4sIPWiNeI=;
+        b=gIZgDebUhq6UNsaHpK0sPaIoffoojQAgBakLCKSj0bBTHGA8Om4r/dIPo8qmE6yCvj
+         pW5jWQu+nPsdWB+E3+nPiDdKNsT2lV95WuhSwsyLsoxGAKs59vNQ7Q0612hG53SOFXPW
+         OUaWWKUFK8zJ5VaqJ02q5WfOG9GKhgtJxWlIB1wQ+v3P2sDYDe2tmpNHF6ZMZSfE5sDC
+         CM8OW1uhV65A3NG+9twpgq/vjzCrTueNe2/GyiIulL2bMfNlxbPTQNtO1Y2fDkGGJMIl
+         n5IkIahoeSSyjBVcyi/172S3TdsYBMREWohlgWfEIMgrkKsyLLmqoBdx2Xxm1IScpH1w
+         qG7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1TvPgJgdAqjN0RPKxN+C/tRXajhzKUiElOZVOUrfgMM=;
-        b=ECw78NLdqnlVF72FWlja7sHNF/zMqjOtPK4c2U0VL0LSCilEJvDtT2zZqiAGVObtf7
-         w+/bT7LipcbAhipLE0LmEuUH0GyJo1VDehGgP18BwPeL6N9CxG4Ow3PfMZ0p0ob8v6nG
-         poGi8T+jYuk0dlhYVTPLjA1x2lbeczLOUnpnWoyk32qBzlY7YqBiu2O/SJbLUj0dBvhI
-         9VnCEvcYR7cQQ/0mPWJqVR8sDpLmWXnYJiuLn7RFw9G4XSrGIqtDB1VL5W7MlbX8Fz8j
-         3EVxOYVJVRDhbiq/aPIn6kTPpQSSOaGGliUnrdYYtk553v+I8/Ub3uQ4zzVByvJhQO17
-         6WDg==
-X-Gm-Message-State: APjAAAUrwK7Ig9fip2jcQ4KVI8BzPa6z3e9kvE+EQhgk7R4LecogmKNS
-        u9zVxOK66n/QS7bqZseqhiw=
-X-Google-Smtp-Source: APXvYqx4kCVbwMYfJsSxk+NYD0NgFV8+RZOQ1mV36mZqaVZ0g7xn7nVxMekXjrwk7RGwrxcWNAlzuw==
-X-Received: by 2002:a7b:cf2b:: with SMTP id m11mr6924649wmg.56.1554034734285;
-        Sun, 31 Mar 2019 05:18:54 -0700 (PDT)
+        bh=BDf0GcN8eemQB0L/8K+hBKesr4IMYa5WWt4sIPWiNeI=;
+        b=EcQvEMCP1SuFuupBeEqsRD5yGq3K0+TKyuu6D4VI4SR8G681FJqLWzJznXCbSKfbJU
+         qYs+t3GeXKGFzLU124N/G7YpvfGtXkIlN8zoo0rh/F8PE9bqwS8uUNbAvlxg0nAUMFOK
+         ZVU29bBtiE8+ZAujKEphvP457WnAX0+eQW4zafZYHxEWcJyXVJliN4BbTVBkOV5+IWaL
+         L/LZTZiWqfiK/oOtnSQGPwd+IMTApV384QXC60KIg4IyWq7fhmsHeAv11VxwQf75KzJh
+         eZHfb2E6yUecNdHr9PPHvD8wuKLQcy/5L4eZKKDVucQuF6qWCj8SSsV4tljbL9j/wJzt
+         lEQw==
+X-Gm-Message-State: APjAAAW39iupme9qgpQEH8OP+N/x5JQXmi2Uwpy6tp1GfUNsfVOH7sfg
+        eKvNn/Or0/v76aXdZdtKxp4=
+X-Google-Smtp-Source: APXvYqzt0ZdNhofhgtc3NQ7fTymcguNyCyfWoRy9sahlPeQZTp2zQPoTZNWcSpBT55g3sTVF6xK+sw==
+X-Received: by 2002:a1c:4844:: with SMTP id v65mr9405546wma.139.1554034750525;
+        Sun, 31 Mar 2019 05:19:10 -0700 (PDT)
 Received: from debian (cpc101300-bagu16-2-0-cust362.1-3.cable.virginm.net. [86.21.41.107])
-        by smtp.gmail.com with ESMTPSA id x205sm3322953wmg.9.2019.03.31.05.18.53
+        by smtp.gmail.com with ESMTPSA id v16sm11473602wru.76.2019.03.31.05.19.09
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 31 Mar 2019 05:18:53 -0700 (PDT)
-Date:   Sun, 31 Mar 2019 13:18:51 +0100
+        Sun, 31 Mar 2019 05:19:09 -0700 (PDT)
+Date:   Sun, 31 Mar 2019 13:19:07 +0100
 From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 To:     Yifeng Li <tomli@tomli.me>
 Cc:     Teddy Wang <teddy.wang@siliconmotion.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/8] fbdev: sm712fb: fix white screen of death on reboot,
- don't set CR3B-CR3F.
-Message-ID: <20190331121851.h3j2pud6yhelsknr@debian>
+Subject: Re: [PATCH 2/8] fbdev: sm712fb: fix brightness control on reboot,
+ don't set SR30.
+Message-ID: <20190331121907.npu4kehmgxmmf44j@debian>
 References: <20190316222504.27170-1-tomli@tomli.me>
- <20190316222504.27170-2-tomli@tomli.me>
+ <20190316222504.27170-3-tomli@tomli.me>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190316222504.27170-2-tomli@tomli.me>
+In-Reply-To: <20190316222504.27170-3-tomli@tomli.me>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 06:24:57AM +0800, Yifeng Li wrote:
+On Sun, Mar 17, 2019 at 06:24:58AM +0800, Yifeng Li wrote:
 > On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), rebooting with
-> sm712fb framebuffer driver would cause a white screen of death on
-> the next POST, presumably the proper timings for the LCD panel was
-> not reprogrammed properly by the BIOS.
+> sm712fb framebuffer driver would cause the role of brightness up/down
+> button to swap.
 > 
-> Experiments showed a few CRTC Scratch Registers, including CRT3D,
-> CRT3E and CRT3F may be used internally by BIOS as some flags. CRT3B is
-> a hardware testing register, we shouldn't mess with it. CRT3C has
-> blanking signal and line compare control, which is not needed for this
-> driver.
+> Experiments showed the FPR30 register caused this behavior. Moreover,
+> even if this register don't have side-effect on other systems, over-
+> writing it is also highly questionable, since it was originally
+> configurated by the motherboard manufacturer by hardwiring pull-down
+> resistors to indicate the type of LCD panel. We should not mess with
+> it.
 > 
-> Stop writing to CR3B-CR3F (a.k.a CRT3B-CRT3F) registers. Even if these
-> registers don't have side-effect on other systems, writing to them is
-> also highly questionable.
+> Stop writing to the SR30 (a.k.a FPR30) register.
 > 
 > Signed-off-by: Yifeng Li <tomli@tomli.me>
 > Cc: stable@vger.kernel.org  # v4.4+
