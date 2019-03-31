@@ -2,85 +2,105 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD4CC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537BAC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5033C20882
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23CBE20882
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554014429;
-	bh=tuG+tde7UcSiBDxh394cf1kmuMpcx4Av/q+YGetcar8=;
+	s=default; t=1554014439;
+	bh=oyqeBNdpgNKbH6q+l+o7pwgrY//SkJ8CZPSkWYwrJOg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CYQdqmc+b0/AdkesNgzwBPyxL9H0kcXSp5ozgT19uDMCWLuMqQvK2/WyzTtZS7v1q
-	 1ADhXdVo/A5rXARFHJAyKXnflmXGQqJV2CPFm4XVgLavW8bWCkEJZ/u+t1Olj5poBp
-	 hNXPTr4B2aJjFs3H4iSTyBJfSL0US45xmCEmx/A0=
+	b=0AymmPRQe/G6dZiZg37kPKTdCPyjmAeL9idbJX3NO67v2ly7WxUrM76vtJNkArrzM
+	 xBS1/391AifDpwoBeYOakd9MyJhHpZYv80uUJ+syDtCBQkXS5Ba//GCR3dlycbdg7V
+	 i55gZs6Sket08QfDZ4z9c2FEuqX8ftZylIWOos1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbfCaGk1 (ORCPT
+        id S1726473AbfCaGka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 02:40:27 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41665 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfCaGk1 (ORCPT
+        Sun, 31 Mar 2019 02:40:30 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35357 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfCaGk3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 02:40:27 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 188so2980525pfd.8;
-        Sat, 30 Mar 2019 23:40:26 -0700 (PDT)
+        Sun, 31 Mar 2019 02:40:29 -0400
+Received: by mail-pl1-f193.google.com with SMTP id p19so2940630plo.2;
+        Sat, 30 Mar 2019 23:40:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=uBm8Vnx1AYs7Q5eJhNxPBF1vBH4iPjIvKHMwRRO7NBA=;
-        b=HgS+lTJhtdUpPRFX61ZOce5u2aOs/nr5qqEyVHaKCZEFmr4DZnaF+kApMtrtTz0sO2
-         97XdKoeQKsXxpHQgZJ5WwWy/4iBW3KIQUISBymEcW0IQae5zeysBnTxHMX/VPJNWLvsJ
-         OJ+V5v/+pOIX9jy0HmjqctOFK8/9h71vzmIvCuIpuAsukKMTBGfi5xbWnO6XwQsnwwX4
-         D+9/+qqE7sNBUVGE+lQczpKk/senc4pIbevKF9hia3r5HKUkUpG6h/8vW/uasPEsgr5P
-         5mF2qkZLFgrMLZvEtTy3QNyDoW7tJwU84R33/BQ6s1TQI0S5zhLdV4ctx6BPU4XX/pzW
-         KPgQ==
-X-Gm-Message-State: APjAAAVkC+SFuDuJtD4eze94HIWYReZW5PjCrygS+CF473j0EpddUyWr
-        T5ANo8k8cDNckBLIjjx8kydSP3CB7A==
-X-Google-Smtp-Source: APXvYqz8Xao6zy4OEXpuKucVwnc2XTw+gFf3WAN+92JlXv4/zIsTCeWvw0LTDTpYp0YP+qI7ky3QFw==
-X-Received: by 2002:a62:6086:: with SMTP id u128mr30968375pfb.148.1554014425963;
-        Sat, 30 Mar 2019 23:40:25 -0700 (PDT)
+        bh=gyVTZ1PkbobqjcKxa3+GkPj//34KKTZhu8/15Zm/dJI=;
+        b=HJK4IXH8iD0ROcOS2h4KFsPIHvoMc8umhY4oHMEL8EJf4ohMDaP3YPX1aF2cQ5WnHA
+         PPnNhDHC6OBnDOAdZOnviOgvcD4LVK3OVvZz938CKs94IpYO0xdX+63EHtftjwCfrn/N
+         MkmSyHUnA7M9+VxwyWT1CtMwHgDL19LqB61ezEdA4sEUP7fJ+XWR45lvTb9KzgOuIdqM
+         lClz2TAr16Wp3BZoi90+heuG9GYn3SB4YJjD80vlebgPFne1rkPWWD4JxyjuAmsCS0K2
+         06/QJaS1/3Cv4Z8a8BY9Mojw382ugsEVqm0WQqKbXQRKe4Ek5uFN4ndr7C73YJT7efkc
+         b55g==
+X-Gm-Message-State: APjAAAXXB4YJzSWAGgN3DgXoDV5uruxma7PX57CL/AWdMynf+fg7n4cT
+        IDAdNonFDWI7KsEhqv4gVuLeLj7SFA==
+X-Google-Smtp-Source: APXvYqx3vnn7NYGkPVv+gCcn4vQ1asfhLQuOQU06fUnG8zxikzEIX43j/85iEIXVvS2phfDDujia8g==
+X-Received: by 2002:a17:902:864a:: with SMTP id y10mr58263982plt.76.1554014428444;
+        Sat, 30 Mar 2019 23:40:28 -0700 (PDT)
 Received: from localhost ([210.160.217.68])
-        by smtp.gmail.com with ESMTPSA id c3sm12783968pfg.88.2019.03.30.23.40.24
+        by smtp.gmail.com with ESMTPSA id 13sm8170123pfi.172.2019.03.30.23.40.27
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 30 Mar 2019 23:40:25 -0700 (PDT)
-Message-ID: <5ca060d9.1c69fb81.b8ed9.b975@mx.google.com>
-Date:   Sun, 31 Mar 2019 01:40:23 -0500
+        Sat, 30 Mar 2019 23:40:27 -0700 (PDT)
+Date:   Sun, 31 Mar 2019 01:40:26 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Claudiu.Beznea@microchip.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        Ludovic.Desroches@microchip.com, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Claudiu.Beznea@microchip.com
-Subject: Re: [PATCH 1/5] dt-bindings: arm: atmel: add bindings for PIT64B
-References: <1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com>
- <1552580772-8499-2-git-send-email-claudiu.beznea@microchip.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: meson: Add drive-strength
+ property
+Message-ID: <20190330212830.GA28281@bogus>
+References: <20190314163725.7918-1-jbrunet@baylibre.com>
+ <20190314163725.7918-2-jbrunet@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1552580772-8499-2-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <20190314163725.7918-2-jbrunet@baylibre.com>
+X-Mutt-References: <20190314163725.7918-2-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Mar 2019 16:26:35 +0000, <Claudiu.Beznea@microchip.com> wrote:
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+On Thu, Mar 14, 2019 at 05:37:24PM +0100, Jerome Brunet wrote:
+> From: Guillaume La Roque <glaroque@baylibre.com>
 > 
-> Add device tree bindings for PIT64B timer.
+> Add optional drive-strength property
 > 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> index a47dd990a8d3..4e3d5a27c91c 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> @@ -51,6 +51,9 @@ Configuration nodes support the generic properties "bias-disable",
+>  "bias-pull-up" and "bias-pull-down", described in file
+>  pinctrl-bindings.txt
+>  
+> +Optional properties :
+> + - drive-strength: Drive strength for the specified pins in uA.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The standard definition says this is in mA.
+
+> +
+>  === Example ===
+>  
+>  	pinctrl: pinctrl@c1109880 {
+> -- 
+> 2.20.1
+> 
 
