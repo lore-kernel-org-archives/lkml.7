@@ -2,134 +2,146 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F4CC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD9DC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ECAE20866
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C562085A
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554076049;
+	bh=GXrUT6ELa2i48gFESZQ1P1esBol6+VafK8QvsCtOfqw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mrIgMmxyijaK38qRV4mlYr7dutFeOtizUcg+TTQssIo0UhaPNN3Qpd5K3RGf49mLP
+	 ttjmDpFvU9SljO6Sr0tiBoKOEL4k7oYk2OCJJzld4Vr+7bHeTbKQHPAWifuYaaecdz
+	 K2JZbApEffcBDxa6YE3DsOPW2cMKv34It2qrFUeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731580AbfCaXRN (ORCPT
+        id S1731561AbfCaXr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 19:17:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57864 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731347AbfCaXRN (ORCPT
+        Sun, 31 Mar 2019 19:47:28 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33038 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731324AbfCaXr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 19:17:13 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2VNDbF9123384
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 19:17:11 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rk2gsfm0n-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 19:17:11 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <andrew.donnellan@au1.ibm.com>;
-        Mon, 1 Apr 2019 00:17:10 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Apr 2019 00:17:06 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2VNH5qG49742042
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 31 Mar 2019 23:17:05 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7CCB311C04C;
-        Sun, 31 Mar 2019 23:17:05 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28AE011C050;
-        Sun, 31 Mar 2019 23:17:05 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 31 Mar 2019 23:17:05 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 00F9CA01D7;
-        Mon,  1 Apr 2019 10:17:01 +1100 (AEDT)
-Subject: Re: [PATCH -next] ocxl: remove set but not used variables 'tid' and
- 'lpid'
-To:     Yue Haibing <yuehaibing@huawei.com>, fbarrat@linux.ibm.com,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190329154456.27152-1-yuehaibing@huawei.com>
-From:   Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Date:   Mon, 1 Apr 2019 10:16:58 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 31 Mar 2019 19:47:27 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f23so6451083ljc.0
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 16:47:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WBTeo2qxUB9ieNEd8dfLth/F+dGxSavIKp4cc9JjaeI=;
+        b=g6hw4WyiuNavWvkqNS46pi8KkrNLZlpvOL/MBNgMVbho0MGtcLOU/j0/yssaxlv7n0
+         UOVFSP3OyBBtbtN36UUQTGd4pILdChm2JDYF2yB3xIIwylDnRdOdr7JDoOMlHCqbRp8J
+         j2PsKeUM6jghTEfPCtPU1gdGeDSksvjYsLyIA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WBTeo2qxUB9ieNEd8dfLth/F+dGxSavIKp4cc9JjaeI=;
+        b=WUQC5g9HmXwZRwHlAEBfvE856jnXCXKOL/fxbcbboTT7/5xwrcNe9oS4PxnFDfwk7j
+         ZTOrtimUJpN9iq4itSH6V+xoImVN6LsVWfYh4PuviFcPWM0sq8o6jjm9H0ZKzpHulOKc
+         hrxidnD5xkhOHzsYrteUfZMKE8WbiEM5TRDcWrPW6f0qli549wX1Hs2qRD4aTk7seSJ/
+         C0qu94F3eBZSeP1KCcvBfsoCTHPVW5mgMc18oLli+PvstsG5w7XKSbaaGn4819tOvJta
+         7uF5lCnpCSQ9ZiBD4+NjCT9TIqKmfD6vLxElVgejs4LJP7QFV2hlEZUBZTZz6aWyV3jC
+         V2rQ==
+X-Gm-Message-State: APjAAAVu1O48VL6KMHUt/czDz0M1l1rBBsmi6rrv98utEt+09GnB2Yd0
+        H3KatbUcOg9MF7fLXvWw4nLBqH1L3XY=
+X-Google-Smtp-Source: APXvYqzbThRxg3Hz92fN/GTxfRzWI0clzjImuFK14jZVvWxy/TBomk99ehqvY9lhwW9JpCK+2AaB2w==
+X-Received: by 2002:a2e:8e96:: with SMTP id z22mr32708089ljk.123.1554076045095;
+        Sun, 31 Mar 2019 16:47:25 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id s67sm1714526lja.57.2019.03.31.16.47.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 31 Mar 2019 16:47:24 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id f23so6451069ljc.0
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 16:47:24 -0700 (PDT)
+X-Received: by 2002:a2e:960b:: with SMTP id v11mr23033871ljh.135.1554075631490;
+ Sun, 31 Mar 2019 16:40:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190329154456.27152-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19033123-0012-0000-0000-000003098669
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19033123-0013-0000-0000-00002140C189
-Message-Id: <481699cc-ffc8-4322-31c2-8a18b0b36da7@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-31_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=932 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903310176
+References: <BCD99947-5F55-4116-8F74-D6832E50340B@brauner.io>
+ <CAHk-=whcA0kAWGqet9oJdyttjhP7J4PcU2Ly=n_Qyo6rMJNxRg@mail.gmail.com>
+ <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com>
+ <CAHk-=wj0o8BiUrYiM5ZcTS6JxBh1M60O36Ms8-EqLQ139=1L4g@mail.gmail.com>
+ <20190330171215.3yrfxwodstmgzmxy@brauner.io> <CAHk-=whF6gnRVbJaArZna4e=tejfrzmNQtRbWjnuSSKpBn+jQg@mail.gmail.com>
+ <132107F4-F56B-4D6E-9E00-A6F7C092E6BD@amacapital.net> <CAHk-=wiaLtH41Mc5qAjOeCWavPqV0DhS581KYa0QBt8uraTK1Q@mail.gmail.com>
+ <20190331211041.vht7dnqg4e4bilr2@brauner.io> <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
+ <20190331220259.qntxynluk765hpnt@brauner.io> <CAHk-=wh0jgRkZiNdFD96Zpjx+_G+NVSHieAt+QgWCQBJ2A-5Aw@mail.gmail.com>
+In-Reply-To: <CAHk-=wh0jgRkZiNdFD96Zpjx+_G+NVSHieAt+QgWCQBJ2A-5Aw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 31 Mar 2019 16:40:15 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whw1cnWPSWw1tHXT5xTMbnJFbCtx9_re6U1RZ_7LE9gXA@mail.gmail.com>
+Message-ID: <CAHk-=whw1cnWPSWw1tHXT5xTMbnJFbCtx9_re6U1RZ_7LE9gXA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Joel Fernandes <joel@joelfernandes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/3/19 2:44 am, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/misc/ocxl/link.c: In function 'xsl_fault_handler':
-> drivers/misc/ocxl/link.c:187:17: warning: variable 'tid' set but not used [-Wunused-but-set-variable]
-> drivers/misc/ocxl/link.c:187:6: warning: variable 'lpid' set but not used [-Wunused-but-set-variable]
-> 
-> They are never used and can be removed.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Sun, Mar 31, 2019 at 3:16 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> I would actually suggest we just make the rules be that the
+> pidfd_open() always return the internal /proc entry regardless of any
+> mount-point (or any "hidepid")
 
-Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+The clever alternative, which might be the RightWay(tm) is to just
+create a completely unattached dentry, and basically tie it into the
+actual /proc filesystem hierarchy at lookup() time when somebody does
+the openat() using it for the first time. You'd get a very simple
+callback: since the dentry would be unattached, you'd be guaranteed to
+get a "lookup()" from the VFS layer, and that lookup would then do the
+"hook into the actual /proc filesystem".
 
-> ---
->   drivers/misc/ocxl/link.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-> index d50b861..3be07e9 100644
-> --- a/drivers/misc/ocxl/link.c
-> +++ b/drivers/misc/ocxl/link.c
-> @@ -184,7 +184,7 @@ static irqreturn_t xsl_fault_handler(int irq, void *data)
->   	u64 dsisr, dar, pe_handle;
->   	struct pe_data *pe_data;
->   	struct ocxl_process_element *pe;
-> -	int lpid, pid, tid;
-> +	int pid;
->   	bool schedule = false;
->   
->   	read_irq(spa, &dsisr, &dar, &pe_handle);
-> @@ -192,9 +192,7 @@ static irqreturn_t xsl_fault_handler(int irq, void *data)
->   
->   	WARN_ON(pe_handle > SPA_PE_MASK);
->   	pe = spa->spa_mem + pe_handle;
-> -	lpid = be32_to_cpu(pe->lpid);
->   	pid = be32_to_cpu(pe->pid);
-> -	tid = be32_to_cpu(pe->tid);
->   	/* We could be reading all null values here if the PE is being
->   	 * removed while an interrupt kicks in. It's not supposed to
->   	 * happen if the driver notified the AFU to terminate the
-> 
+We already kind of do things like that in the VFS layer when we have
+unattached dentries (because of "look up by filehandle" etc). In many
+ways the "pidfd_open()" really is exactly a "look up by file handle"
+operation, it just so happens that the "file handle" is just the
+pid/namespace combination.
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-andrew.donnellan@au1.ibm.com  IBM Australia Limited
+And if the splice alias (which is what the VFS layer calls that "tie
+aliased dentry to the parent" operation) fails, because the /proc
+filesystem isn't mounted or whatever, then trying to look up names off
+the thing will also fail.
 
+It's a tiny bit too clever for my taste, and it's not *exactly* the
+same thing as our normal inode alias handling, but it's pretty close
+conceptually (and even practically).
+
+So it would basically do something very similar to the ioctl, but it
+would do it implicitly and automatically at that first lookup.
+
+That would also mean that you'd not actually pay the cost of doing any
+of this *unless* you also end up trying to open things in /proc using
+that pidfd.
+
+                    Linus
