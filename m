@@ -2,136 +2,134 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C482DC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F4CC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974D12085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ECAE20866
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 23:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731563AbfCaXJs (ORCPT
+        id S1731580AbfCaXRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 19:09:48 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:41879 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731324AbfCaXJs (ORCPT
+        Sun, 31 Mar 2019 19:17:13 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57864 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731347AbfCaXRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 19:09:48 -0400
-Received: from callcc.thunk.org ([70.42.157.37])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x2VN9e27016916
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 31 Mar 2019 19:09:42 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 86446421A03; Sun, 31 Mar 2019 19:09:40 -0400 (EDT)
-Date:   Sun, 31 Mar 2019 19:09:40 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: How to add Unicode character tables to the kernel?
-Message-ID: <20190331230940.GA30957@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
+        Sun, 31 Mar 2019 19:17:13 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2VNDbF9123384
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 19:17:11 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rk2gsfm0n-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 19:17:11 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <andrew.donnellan@au1.ibm.com>;
+        Mon, 1 Apr 2019 00:17:10 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 1 Apr 2019 00:17:06 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2VNH5qG49742042
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 31 Mar 2019 23:17:05 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7CCB311C04C;
+        Sun, 31 Mar 2019 23:17:05 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 28AE011C050;
+        Sun, 31 Mar 2019 23:17:05 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 31 Mar 2019 23:17:05 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 00F9CA01D7;
+        Mon,  1 Apr 2019 10:17:01 +1100 (AEDT)
+Subject: Re: [PATCH -next] ocxl: remove set but not used variables 'tid' and
+ 'lpid'
+To:     Yue Haibing <yuehaibing@huawei.com>, fbarrat@linux.ibm.com,
+        arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190329154456.27152-1-yuehaibing@huawei.com>
+From:   Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Date:   Mon, 1 Apr 2019 10:16:58 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190329154456.27152-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19033123-0012-0000-0000-000003098669
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19033123-0013-0000-0000-00002140C189
+Message-Id: <481699cc-ffc8-4322-31c2-8a18b0b36da7@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-31_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=932 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903310176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 30/3/19 2:44 am, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+> 
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/misc/ocxl/link.c: In function 'xsl_fault_handler':
+> drivers/misc/ocxl/link.c:187:17: warning: variable 'tid' set but not used [-Wunused-but-set-variable]
+> drivers/misc/ocxl/link.c:187:6: warning: variable 'lpid' set but not used [-Wunused-but-set-variable]
+> 
+> They are never used and can be removed.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-I'm currently looking to integrate Unicode case-folding and
-normalization support into ext4.  In order to do this, we need to
-include some Unicode table data into the kernel sources.  Per your
-suggestion, the plan is to put them in fs/unicode and not fs/nls.
+Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
 
-The question is how to do this, with different tradeoffs.  One is to
-simply include a utf8data.h file, which will be 320k.  That might
-sound large, but in fs/nls there are 3544k worth of similar files.
-Some are relatively small --- only 16k.  But others are quite large
---- 480k to 856k.  The table for Chinese character set is such an
-example.  So in comparison, the 320k size of utf8data.h is quite
-compact.
+> ---
+>   drivers/misc/ocxl/link.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+> index d50b861..3be07e9 100644
+> --- a/drivers/misc/ocxl/link.c
+> +++ b/drivers/misc/ocxl/link.c
+> @@ -184,7 +184,7 @@ static irqreturn_t xsl_fault_handler(int irq, void *data)
+>   	u64 dsisr, dar, pe_handle;
+>   	struct pe_data *pe_data;
+>   	struct ocxl_process_element *pe;
+> -	int lpid, pid, tid;
+> +	int pid;
+>   	bool schedule = false;
+>   
+>   	read_irq(spa, &dsisr, &dar, &pe_handle);
+> @@ -192,9 +192,7 @@ static irqreturn_t xsl_fault_handler(int irq, void *data)
+>   
+>   	WARN_ON(pe_handle > SPA_PE_MASK);
+>   	pe = spa->spa_mem + pe_handle;
+> -	lpid = be32_to_cpu(pe->lpid);
+>   	pid = be32_to_cpu(pe->pid);
+> -	tid = be32_to_cpu(pe->tid);
+>   	/* We could be reading all null values here if the PE is being
+>   	 * removed while an interrupt kicks in. It's not supposed to
+>   	 * happen if the driver notified the AFU to terminate the
+> 
 
-The problem with this solution is that the files in fs/nls, and the
-proposed utf8data.h, are generated files.  For example:
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+andrew.donnellan@au1.ibm.com  IBM Australia Limited
 
-/*
- * linux/fs/nls/nls_cp850.c
- *
- * Charset cp850 translation tables.
- * Generated automatically from the Unicode and charset
- * tables from the Unicode Organization (www.unicode.org).
- * The Unicode to charset table has only exact mappings.
- */
-	....
-static const wchar_t charset2uni[256] = {
-	/* 0x00*/
-	0x0000, 0x0001, 0x0002, 0x0003,
-	0x0004, 0x0005, 0x0006, 0x0007,
-	....
-
-Now, one could argue that these tables are not the preferred form of
-modification, per the definition in the GPL.  So alternatively we
-could include the underlying Unicode data files from unicode.org, and
-a program that generates utf8data.h from those data files.  The
-downside of this approach is that it will increase the size of the
-kernel tree by over 5 megabytes:
-
-<tytso@lambda> {/usr/projects/linux/ext4}   (unicode)
-1395% ls fs/unicode/ucd
-total 5544
-  84 CaseFolding-11.0.0.txt	          4 NormalizationCorrections-11.0.0.txt
- 112 DerivedAge-11.0.0.txt	       2492 NormalizationTest-11.0.0.txt
- 160 DerivedCombiningClass-11.0.0.txt     4 README
- 960 DerivedCoreProperties-11.0.0.txt  1728 UnicodeData-11.0.0.txt
-
-Generation of the utf8data.h is fast; so this is basically a disk
-space question.  The files *are* compressible; and if we compressed
-them all, it would be about 932k.  This won't help the increase in the
-size of the git pack files, and we'll still need to decompress the
-files when building the kernel, so some might still not be excited
-about this.
-
-So Linus, do you have a preference between:
-
-* Just drop the 320k utf8data.h file into fs/unicode.  The file is
-  basically much like the fils in fs/nls, so there is precedence for
-  this.  Similarly, the files in lib/font are also data files, and
-  we've historically not been worried about whether or not this would
-  cause objections from people who would argue that these are not the
-  "preferred form of modification".  Of course, I very much doubt
-  anyone has ever *wanted* to modify these files, but....
-
-* Drop the uncompressed 5544k worth of fs/unicode/ucd/*.txt files into
-  the kernel sources.
-
-* Drop the compressed fs/unicode/ucd/*.txt.gz into the kernl sources.
-  This will increase the kernel sources by 932k.
-
-If we go down the first path, we will include the progam to generate
-the utf8data.h, and instructions for how to download the
-fs/unicode/ucd/*.txt from unicode.org.  I don't forsee any kernel
-developers actually wanting to modify these files, since if we do this
-we break compatibility with everyone else using Unicode.  The only
-reason to include them is people who are nit-picky with respect to the
-GPL.
-
-Personally, I don't care.  I just want direction of which path you
-would prefer, since I predict that no matter which path gets chosen,
-there will be some people who will be kvetching and registering
-objections.
-
-Thanks,
-
-					- Ted
