@@ -2,140 +2,97 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27502C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528BFC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E078421726
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:35:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lMGtnVyH"
+	by mail.kernel.org (Postfix) with ESMTP id 0949A21726
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 02:41:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554000104;
+	bh=xX/nxM2m7yJul6QP/aZ0lxQpVnzqLRjcdsb5ygM1v7E=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=h8IdlrhaZ+QDlgC5oDsSTQ1CAafUB1HNXgBCd3eFW7ZYr5EpqTJEzvafiV+ny+Osq
+	 aC9yH8bwKDUFsqv/QsXL4vd9t83Qz+5hskOo+6QZNE4/+xVk3bz4sVXQrmxFN6OpJB
+	 HbnPbrRcpLZD6PfgCG+UiyDbOXERk3BMro9il7Ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731090AbfCaCfZ (ORCPT
+        id S1731107AbfCaCll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 30 Mar 2019 22:35:25 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45705 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730061AbfCaCfZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 30 Mar 2019 22:35:25 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y84so4598580oia.12
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 19:35:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XlMJg4yWnpLZFMd4RJOv7kwwDZAwp1zKNiaOdaLll+E=;
-        b=lMGtnVyHrRJMnsz0kWbg3+dRaRE8wZ7N0nWFFfAoJdE4JGHcK01QX+fu/7vPo5DC30
-         68qJgS64pLys3QUaKf5Lu9ZR01iQ8pNdLpgfB3fFFSC567Zi0mPkZF0NAsqZzd1KlrQb
-         LqtkEf9Ct+bzMLNUlY13uVKJ/yp0qlqshdxtxYlnSY8IbXxcjpZ/JTgIFpNF38S3undD
-         0hCogXcaOQKd6pghv1YLzatLgWCmj46aIsoCkjQRrWO21L8yrIVWZU0kwWEsCLgxI0+3
-         ZR/6YUDX77GCz8Cxfb8KKSSTurpY4HfgNnDapZNGupbnQ+VOM2nE+z2d9wsDYM07KvIS
-         ooGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XlMJg4yWnpLZFMd4RJOv7kwwDZAwp1zKNiaOdaLll+E=;
-        b=Nol4kd6W6ZUzrT8J7PiZtB3nsTNncBAS/YU4X5zxMTNrjE75anLojonhsL2VAQ8k96
-         u5Y4hurZJucNsV+2kiU2mnP8uCztvVOlbdJtnsXUeO4TuqdKulqpztEwVpQL/U0BG/xD
-         o4ccydvatJPyM0l/J/vIujSLn8t1awMy9EaNBdb1+jBg6+mlHuy4GDp8ruXbBcYe5WsV
-         fqaPvbQhABKa/j0pvO1DG2nVbTT93HwhAwe3nX8mEP+oQ2n71ifzw49fGgQo3zvr8ESN
-         8jPpZgp4OTJtzNXzrzeeX6mpz2O7l+PqyJ5HimhsAu9rBFgkmRIA4S+SzNipcICgdzr9
-         bmRQ==
-X-Gm-Message-State: APjAAAW6bkFHTzXHe7H+5XuWWTzm+MwPcGHp8HsAOpj94JyfcQEnzJTp
-        nUXisd+w/QyLkpLhhbJfte5qCxzpGAUc5zDaaW6o2g==
-X-Google-Smtp-Source: APXvYqynrUNepmojanfwL2zpam+LqOjOgoVfeO9K1e1QqshIi5J2tXyEKonrPnq21TPv74C5s+BlLCHm6GiS6IVOBz0=
-X-Received: by 2002:aca:e4cc:: with SMTP id b195mr8790357oih.39.1553999724637;
- Sat, 30 Mar 2019 19:35:24 -0700 (PDT)
+        Sat, 30 Mar 2019 22:41:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731062AbfCaCll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 30 Mar 2019 22:41:41 -0400
+Received: from localhost (unknown [49.248.228.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 487A521726;
+        Sun, 31 Mar 2019 02:41:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554000100;
+        bh=xX/nxM2m7yJul6QP/aZ0lxQpVnzqLRjcdsb5ygM1v7E=;
+        h=Date:From:To:Cc:Subject:From;
+        b=b4D/0iBwKMLGMxQHexVFdoEtpMl0Ust3yQt55MU7V0Ny6HU7pMojsa6AWRxAgdZwk
+         aEC43Zcn3NgkrEf6tiZ1Kjs/a3c/rijKVrjKZjcbZtx50sTOr1l4nxqm1CPzvcqCkP
+         u3loZjfQUZi2ARgiVqdl2KeEPLh2E+cX7kEajvmU=
+Date:   Sun, 31 Mar 2019 08:11:35 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes v5.1-rc3
+Message-ID: <20190331024135.GA2937@vkoul-mobl>
 MIME-Version: 1.0
-References: <20190329155425.26059-1-christian@brauner.io> <CAHk-=wjq4dTPcz-qsvhpm5F42SDHCoqEWv1V=rs_kt6MC=ZThA@mail.gmail.com>
- <CAKOZueuDWWYtg9gUpUgTG2k-gVPE1KBEkstr5eP=FC2EzdmaoA@mail.gmail.com>
- <CAHk-=wjka0W1g3asQp2H=5ot=kkS-Mp+Cx6KHr0rNkGFfCOLYA@mail.gmail.com>
- <CAHk-=wi1kQDVN22qv7M=bWU+CngZZXcPAMKCsDZMeuY3k2tkyg@mail.gmail.com> <20190331010716.GA189578@google.com>
-In-Reply-To: <20190331010716.GA189578@google.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Sun, 31 Mar 2019 04:34:57 +0200
-Message-ID: <CAG48ez387kGbD_dLqEbZ1U9rKFbfP0EF9cMVjQT6nwc9=Y9CNw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Colascione <dancol@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Andrew Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 31, 2019 at 3:07 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> As I said I don't really care about "pidfd" solving any racing issues with
-> /proc/<pid>/* accesses - because I still find it hard to imagine that the pid
-> number can be reused easily from the time you know which <pid> to deal with,
-> to the time when you want to read, say, the /proc/<pid>/status file.
+Hi Linus,
 
-There have been several Android security bugs related to PID reuse.
+Here is the pull request fro v5.1-rc3. This includes revery of patch due
+to reported regression and fix on MAINTAINER file for uniphier-mdmac.c
+file path.
 
-> I am yet
-> to see any real data to show that such overflow happens - you literally need
-> 32k process deaths and forks in such a short time frame
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
-This seems very inaccurate to me.
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
 
-The time frame in which the PID has to wrap around is not the time
-between process death and use of the PID. It is the time between *the
-creation* of the old process and the use of the PID. Consider the
-following sequence of events:
+are available in the Git repository at:
 
- - process A starts with PID 1000
- - some time passes in which some process repeatedly forks, with PIDs
-wrapping around to 999
- - process B starts an attempt to access process A (using PID 1000)
- - process A dies
- - process C spawns with PID 1000
- - process B accidentally accesses process C
+  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.1-rc3
 
-Also, it's probably worth clarifying that here, "processes" means "threads".
+for you to fetch changes up to d498bc0ce8acb4a1bb80d6089d1932d919dc2532:
 
-If there are a lot of active processes, that reduces the number of
-times you have to clone() to get the PID to wrap around.
+  MAINTAINERS: Fix uniphier-mdmac.c file path (2019-03-26 10:55:47 +0530)
 
-> and on 64-bit, that
-> number is really high
+----------------------------------------------------------------
+dmaengine-5.10-rc3
 
-Which number is really high on 64-bit? Checking on a walleye phone,
-pid_max is still only 32768:
+dmaengine fixes for v5.10-rc3
 
-walleye:/ # cat /proc/sys/kernel/pid_max
-32768
-walleye:/ #
+ - Revert dmaengine: stm32-mdma: Add a check on read_u32_array as that
+   caused regression
+ - Fix MAINTAINER file uniphier-mdmac.c file path
 
-> that its not even an issue. And if this is really an
-> issue, then you can just open a handle to /proc/<pid> at process creation
-> time and keep it around. If the <pid> is reused, you can still use openat(2)
-> on that handle without any races.
+----------------------------------------------------------------
+Pierre-Yves MORDRET (1):
+      dmaengine: stm32-mdma: Revert "dmaengine: stm32-mdma: Add a check on read_u32_array"
 
-But not if you want to implement something like killall in a
-race-free way, for example.
+Vinod Koul (1):
+      MAINTAINERS: Fix uniphier-mdmac.c file path
+
+ MAINTAINERS              | 2 +-
+ drivers/dma/stm32-mdma.c | 4 +---
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+Thanks
+-- 
+~Vinod
