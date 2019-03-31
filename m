@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 734EDC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3026BC10F06
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48D7D2084B
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075A020882
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731674AbfCaWKc (ORCPT
+        id S1731693AbfCaWKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 18:10:32 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:57613 "EHLO
+        Sun, 31 Mar 2019 18:10:33 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:57623 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731601AbfCaWKb (ORCPT
+        with ESMTP id S1731620AbfCaWKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 18:10:31 -0400
+        Sun, 31 Mar 2019 18:10:33 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hAier-0004r8-8P; Mon, 01 Apr 2019 00:10:29 +0200
-Message-Id: <20190331215135.579172813@linutronix.de>
+        id 1hAies-0004rM-PY; Mon, 01 Apr 2019 00:10:30 +0200
+Message-Id: <20190331215135.770217379@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 31 Mar 2019 23:40:29 +0200
+Date:   Sun, 31 Mar 2019 23:40:31 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [patch 09/14] x86/traps: Use cpu_entry_area instead of orig_ist
+Subject: [patch 11/14] x86/dumpstack/64: Use cpu_entry_area instead of orig_ist
 References: <20190331214020.836098943@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -52,28 +52,84 @@ offsets of the various exception stacks.
 No functional change. Preparation for removing orig_ist.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- arch/x86/mm/fault.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/dumpstack_64.c |   39 +++++++++++++++++++++++++++------------
+ 1 file changed, 27 insertions(+), 12 deletions(-)
 
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -28,6 +28,7 @@
- #include <asm/mmu_context.h>		/* vma_pkey()			*/
- #include <asm/efi.h>			/* efi_recover_from_page_fault()*/
- #include <asm/desc.h>			/* store_idt(), ...		*/
-+#include <asm/cpu_entry_area.h>		/* exception stack		*/
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -16,6 +16,7 @@
+ #include <linux/bug.h>
+ #include <linux/nmi.h>
  
- #define CREATE_TRACE_POINTS
- #include <asm/trace/exceptions.h>
-@@ -793,7 +794,7 @@ no_context(struct pt_regs *regs, unsigne
- 	if (is_vmalloc_addr((void *)address) &&
- 	    (((unsigned long)tsk->stack - 1 - address < PAGE_SIZE) ||
- 	     address - ((unsigned long)tsk->stack + THREAD_SIZE) < PAGE_SIZE)) {
--		unsigned long stack = this_cpu_read(orig_ist.ist[DOUBLEFAULT_STACK]) - sizeof(void *);
-+		unsigned long stack = __this_cpu_ist_top_va(DF) - sizeof(void *);
- 		/*
- 		 * We're likely to be running with very little stack space
- 		 * left.  It's plausible that we'd hit this condition but
++#include <asm/cpu_entry_area.h>
+ #include <asm/stacktrace.h>
+ 
+ static const char *exception_stack_names[N_EXCEPTION_STACKS] = {
+@@ -25,11 +26,6 @@ static const char *exception_stack_names
+ 		[ MCE_IST		]	= "#MC",
+ };
+ 
+-static const unsigned long exception_stack_sizes[N_EXCEPTION_STACKS] = {
+-	[0 ... N_EXCEPTION_STACKS - 1]		= EXCEPTION_STKSZ,
+-	[DEBUG_IST]				= DEBUG_STKSZ
+-};
+-
+ const char *stack_type_name(enum stack_type type)
+ {
+ 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
+@@ -52,25 +48,44 @@ const char *stack_type_name(enum stack_t
+ 	return NULL;
+ }
+ 
++struct estack_layout {
++	unsigned int	begin;
++	unsigned int	end;
++};
++
++#define	ESTACK_ENTRY(x)	{						  \
++	.begin	= offsetof(struct cea_exception_stacks, x## _stack),	  \
++	.end	= offsetof(struct cea_exception_stacks, x## _stack_guard) \
++	}
++
++static const struct estack_layout layout[N_EXCEPTION_STACKS] = {
++	[ DOUBLEFAULT_IST	]	= ESTACK_ENTRY(DF),
++	[ NMI_IST		]	= ESTACK_ENTRY(NMI),
++	[ DEBUG_IST		]	= ESTACK_ENTRY(DB),
++	[ MCE_IST		]	= ESTACK_ENTRY(MCE),
++};
++
+ static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
+ {
+-	unsigned long *begin, *end;
++	unsigned long estacks, begin, end, stk = (unsigned long)stack;
+ 	struct pt_regs *regs;
+-	unsigned k;
++	unsigned int k;
+ 
+ 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
+ 
++	estacks = (unsigned long)__this_cpu_read(cea_exception_stacks);
++
+ 	for (k = 0; k < N_EXCEPTION_STACKS; k++) {
+-		end   = (unsigned long *)raw_cpu_ptr(&orig_ist)->ist[k];
+-		begin = end - (exception_stack_sizes[k] / sizeof(long));
++		begin = estacks + layout[k].begin;
++		end   = estacks + layout[k].end;
+ 		regs  = (struct pt_regs *)end - 1;
+ 
+-		if (stack <= begin || stack >= end)
++		if (stk <= begin || stk >= end)
+ 			continue;
+ 
+ 		info->type	= STACK_TYPE_EXCEPTION + k;
+-		info->begin	= begin;
+-		info->end	= end;
++		info->begin	= (unsigned long *)begin;
++		info->end	= (unsigned long *)end;
+ 		info->next_sp	= (unsigned long *)regs->sp;
+ 
+ 		return true;
 
 
