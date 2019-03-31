@@ -2,95 +2,102 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,T_HK_NAME_DR,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229FFC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 08:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F35C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB97F2146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 08:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AFC52146F
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 09:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfCaIxD (ORCPT
+        id S1726854AbfCaJEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 04:53:03 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:26983 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725888AbfCaIxD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 04:53:03 -0400
-X-UUID: 8d69f16f37b741ecb85afd0828595b67-20190331
-X-UUID: 8d69f16f37b741ecb85afd0828595b67-20190331
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1985671103; Sun, 31 Mar 2019 16:52:52 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 31 Mar 2019 16:52:51 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 31 Mar 2019 16:52:51 +0800
-Message-ID: <1554022371.17453.0.camel@mtkswgap22>
-Subject: Re: [PATCH 1/4] mt76: add mac80211 driver for MT7615 PCIe-based
- chipsets
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-CC:     Sean Wang <sean.wang@mediatek.com>,
-        Miller Shen <miller.shen@mediatek.com>,
-        Nelson Chang <nelson.chang@mediatek.com>,
-        "YF Luo" <yf.luo@mediatek.com>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Haipin Liang <haipin.liang@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>, Roy Luo <royluo@google.com>,
-        Kyle Lee <kyle.lee@mediatek.com>,
-        Rorscha Yang <rorscha.yang@mediatek.com>,
-        "Lorenzo Bianconi" <lorenzo.bianconi@redhat.com>,
-        Kai Lin <kai.lin@mediatek.com>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>
-Date:   Sun, 31 Mar 2019 16:52:51 +0800
-In-Reply-To: <87lg0wyjvj.fsf@purkki.adurom.net>
-References: <cover.1553607739.git.ryder.lee@mediatek.com>
-         <2849359e0b0ede6c13ae9f142aff77a016fd0a80.1553607739.git.ryder.lee@mediatek.com>
-         <87lg0wyjvj.fsf@purkki.adurom.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
-MIME-Version: 1.0
-X-MTK:  N
+        Sun, 31 Mar 2019 05:04:02 -0400
+Received: from wind.enjellic.com ([76.10.64.91]:56710 "EHLO wind.enjellic.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbfCaJEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 05:04:02 -0400
+X-Greylist: delayed 1215 seconds by postgrey-1.27 at vger.kernel.org; Sun, 31 Mar 2019 05:04:02 EDT
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x2V8hBd4031679;
+        Sun, 31 Mar 2019 03:43:11 -0500
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x2V8h9ki031678;
+        Sun, 31 Mar 2019 03:43:09 -0500
+Date:   Sun, 31 Mar 2019 03:43:09 -0500
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Dr . Greg Wettstein" <greg@enjellic.com>
+Subject: Re: [PATCH v19,RESEND 24/27] x86/vdso: Add __vdso_sgx_enter_enclave() to wrap SGX enclave transitions
+Message-ID: <20190331084309.GA31645@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <CALCETrV589POrG3RaPHBWOFuytkWjeJgJgLHk4OKbizOgJVKZQ@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F4E85E989@ORSMSX116.amr.corp.intel.com> <20190325180349.GF31069@linux.intel.com> <CALCETrXqb3CHefN-RLudC61jwdbLFS8cXuS4V5OJ6HTuf_arYw@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F4E85FABF@ORSMSX116.amr.corp.intel.com> <CALCETrVcR_etAHSVZxvCz7CcPnF4ajpcWiRCtFrOckVWVJByHA@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F4E860C69@ORSMSX116.amr.corp.intel.com> <CALCETrUUv3WSX7uL22DnWg8FOJqVyB=tknxbGDWb9wpx7zY2CQ@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F4E8617BF@ORSMSX116.amr.corp.intel.com> <20190329094814.GE21379@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329094814.GE21379@linux.intel.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Sun, 31 Mar 2019 03:43:11 -0500 (CDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-03-30 at 08:08 +0200, Kalle Valo wrote:
-> Ryder Lee <ryder.lee@mediatek.com> writes:
-> 
-> > This driver is for a newer generation of MediaTek MT7615 4x4 802.11ac
-> > PCIe-based chipsets, which support wave2 MU-MIMO up to 4 users/group
-> > and also support up to 160MHz bandwidth.
-> >
-> > The driver fully supports AP, station and monitor mode.
-> >
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > Signed-off-by: Roy Luo <royluo@google.com>
-> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> 
-> [...]
-> 
-> > --- /dev/null
-> > +++ b/drivers/net/wireless/mediatek/mt76/mt7615/dma.c
-> > @@ -0,0 +1,204 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> 
-> mt76 is under ISC so why did you choose GPLv2 here? I don't think it's a
-> good idea to use different licenses within the same driver.
-> 
-> Also mt76 does not use SPDX tags yet. I would prefer that the whole
-> driver is converted in one go to have consistent licensing information.
-> 
+On Fri, Mar 29, 2019 at 11:48:14AM +0200, Jarkko Sakkinen wrote:
 
-OK. I will modify it.
+Good morning to everyone, I hope the weekend is going well.
 
+> Not gonna make it to v20. I'm aiming to send it early next week and have
+> already closed the content.
+
+What is the status of your jarkko-sgx/next and jarkko-sgx/master
+branches with respect to all of this?
+
+We have our SFLC patch series currently staged on top of
+jarkko-sgx/next and we will re-stage them on top of whatever you are
+pushing upstream from.
+
+> /Jarkko
+
+Have a good remainder of the weekend.
+
+Dr. Greg
+
+As always,
+Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
+4206 N. 19th Ave.           Specializing in information infra-structure
+Fargo, ND  58102            development.
+PH: 701-281-1686
+FAX: 701-281-3949           EMAIL: greg@enjellic.com
+------------------------------------------------------------------------------
+"Can't they?
+
+ A 64bit number incremented every millisecond can grow for half a
+ billion years.  As far as I'm concerned, that is forever."
+                                -- Neil Brown
+                                   linux-raid
