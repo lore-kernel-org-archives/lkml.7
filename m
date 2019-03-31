@@ -2,156 +2,99 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EE3C10F06
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 05:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A46AC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 05:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59F11218A1
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 05:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E355D21726
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 05:30:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="er+Ud9Ii"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gx/xRliL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfCaFSv (ORCPT
+        id S1726142AbfCaFaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 01:18:51 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38389 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfCaFSu (ORCPT
+        Sun, 31 Mar 2019 01:30:39 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45182 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfCaFaj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 01:18:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id j26so3115655pgl.5;
-        Sat, 30 Mar 2019 22:18:50 -0700 (PDT)
+        Sun, 31 Mar 2019 01:30:39 -0400
+Received: by mail-io1-f66.google.com with SMTP id s7so4990446iom.12
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2019 22:30:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7yCHN/dP49k1XA/WvpBMtocSjKIdauF79STUzpbwTvE=;
-        b=er+Ud9IiAB9TSUyqZG16FVg+kZTAbl7Xkj6wF12ttMAiLqStF0b1vVktv47Htf6wFI
-         IBsK8bom9+gK17NsvHxdFIXzlIJltjswRfiBpHjqrzTXtquNwyEW6Si1uYNxcgwVJvwf
-         Fvu8btEN7iT9rScfabpHWEFKZ6xlCx8EoBIp7LQbEzphEmXjjDNAatpXooStjFUsg5dq
-         71XaIwA9c6N7l680N21XqvyAGweXlmkuMSiYOtW8Sdb/T1D+iH+WFudFY8egBhFLcf35
-         Rzld9FlK0zoC4YqYibGn2+ptVETO4IgBTdTqo/tJQc24WX3I6BMnOZq+hFUcBL6FqRDp
-         ihew==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=z8tehaPDZ+lVU2VLM/ERk0u1K1dfp0io7lPmlULBcUI=;
+        b=gx/xRliLQH9rGI9Jp+DGmT5p5XEiGAZDWenSptd/K7iExbOnB+p+v76WrKBj+cuWuv
+         egKax8fUMa96HH3kMtABMXI83K3AeFyqAseK/q026UuasKPijHUqApkmO7pHiESC9CsU
+         FbvtjnmpAb/AI9eBoBlbiraD8CeZU9bN0lPd+jPiG/SbBwBNcP4gKQCfID0Egt4Ql4CE
+         0gGHeSIKsZAmciOoChP/XuS5rp7zuBQ9LyeGDy+odys6zHDnNIJaYBPhm0A2Vh+aIVxc
+         tnOH2aInsmo8FUpoxjseN78HNGbagFCA8NkGUgpU8e+zLGOWkVPgmrldSXMTavJ8/hsY
+         5Rgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7yCHN/dP49k1XA/WvpBMtocSjKIdauF79STUzpbwTvE=;
-        b=DA3bM3NOxFLtrsic7UMwrBWw/azI8BpbiF2OTYM96bE2iGdtcIUfuHlofi0Cg2wIEa
-         bZ4ytvbV8ObkeQshYHJlJO8pOIQBYtzRG+7dcWrCl8knrQWav+2nL9mBP1iE4rYDKAWJ
-         RnaoDQcJ2zJvqkX5Xy9CXLNsZdsw24NIZYL5KDfILnZ5Sk1ixfRsxqbIDxLkUn+WqDCT
-         hAPvDqwrvwyIrnGMhW8HgtDy+cmLKWmgsGJfJrlQQvzblqs2PoMp3Dvj8zDQaHxLzFnM
-         hwq4a5bTVCCAAqSw+yfcStj11HvcslYP1Z+r6A9vwOWOJHc6bLjFAmqAr8bMjQjMbVco
-         1gag==
-X-Gm-Message-State: APjAAAXIyP/zt/YUwhJAHcQRnILnveNd9hEgj25+i200JkJzdxnzcFCe
-        /MR0pm2exABWm6OL09m6XZ4=
-X-Google-Smtp-Source: APXvYqwMRIrGrt+S6wMHa2XEqWy/iRguehCnxDCdQuYs+pidhnp31c1bepV25Wl6zoGSyxtX+6jGzQ==
-X-Received: by 2002:a65:63c2:: with SMTP id n2mr18341384pgv.439.1554009529999;
-        Sat, 30 Mar 2019 22:18:49 -0700 (PDT)
-Received: from mail.google.com ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id b15sm8948103pgg.90.2019.03.30.22.18.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 30 Mar 2019 22:18:49 -0700 (PDT)
-Date:   Sun, 31 Mar 2019 05:18:47 +0000
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/12] pci doc: convert PCI/MSI-HOWTO.txt to rst format
-Message-ID: <20190331051846.nrjvqjkp7ocdbycv@mail.google.com>
-References: <20190329160413.4293-1-changbin.du@gmail.com>
- <20190329160413.4293-6-changbin.du@gmail.com>
- <20190330040009.GY10344@bombadil.infradead.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=z8tehaPDZ+lVU2VLM/ERk0u1K1dfp0io7lPmlULBcUI=;
+        b=PWrX2m+3maiZXHKID148vagkR38uQNu7SKK3OxjL3rnhKnc1Tk3dQ3Cc78hFrkDNNR
+         UGQrovLlnlHPDhR4HOvDL4NS+ocv+0SmWyVDUkBx3GkzNY0QbNQCUakhZT3XuBAwGkFe
+         UjECoCoPiQj/+bji5O/vt7LWPwS3FZRT3HBy6LxivpvGZrO2KWtflAYUYn/vF9CFohte
+         yTBCjjPB2ss/OdxPVX2NEYSA8TMYDDtOhvITWVikwAA4wPOeYz50mh8aNmxOyKLq7AeF
+         9Sqg6SnREwR/vGozKK+7gfmVaoFASLPdaco3RGvgBjfLj1ea5ARdVBbp0aVR2axVU9ep
+         Yi9Q==
+X-Gm-Message-State: APjAAAXM/0Cg8Z4PFnOfexjwcLVuSIlMpQ3wfBDf0Q1Qu5JJ72/8U72I
+        CQpKHYcMRrGFLtEBas7gm5WdZVMJzsjVuw==
+X-Google-Smtp-Source: APXvYqxQixP7SJVyB29FzO8fdvKRL3wHEtXawKkJkJ1XFHW0LfZqe4a9epLXOHU45pjGC+V13N4sgw==
+X-Received: by 2002:a6b:e50d:: with SMTP id y13mr36084397ioc.142.1554010238146;
+        Sat, 30 Mar 2019 22:30:38 -0700 (PDT)
+Received: from titus.pi.local ([66.97.27.10])
+        by smtp.gmail.com with ESMTPSA id q17sm3104876ior.5.2019.03.30.22.30.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 30 Mar 2019 22:30:37 -0700 (PDT)
+Date:   Sun, 31 Mar 2019 01:30:40 -0400
+From:   Will Cunningham <wjcunningham7@gmail.com>
+To:     johan@kernel.org
+Cc:     elder@kernel.org, gregkh@linuxfoundation.org,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Staging: greybus: usb: Fixed a coding style error
+Message-ID: <20190331053040.GA12974@titus.pi.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190330040009.GY10344@bombadil.infradead.org>
-User-Agent: NeoMutt/20180716-508-7c9a6d
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 09:00:09PM -0700, Matthew Wilcox wrote:
-> On Sat, Mar 30, 2019 at 12:04:06AM +0800, Changbin Du wrote:
-> > @@ -1,13 +1,18 @@
-> > -		The MSI Driver Guide HOWTO
-> > -	Tom L Nguyen tom.l.nguyen@intel.com
-> > -			10/03/2003
-> > -	Revised Feb 12, 2004 by Martine Silbermann
-> > -		email: Martine.Silbermann@hp.com
-> > -	Revised Jun 25, 2004 by Tom L Nguyen
-> > -	Revised Jul  9, 2008 by Matthew Wilcox <willy@linux.intel.com>
-> > -		Copyright 2003, 2008 Intel Corporation
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +.. include:: <isonum.txt>
-> > +
-> > +==========================
-> > +The MSI Driver Guide HOWTO
-> > +==========================
-> > +
-> > +:Authors: - Tom L Nguyen <tom.l.nguyen@intel.com> 10/03/2003
-> > +          - Revised Feb 12, 2004 by Martine Silbermann <Martine.Silbermann@hp.com>
-> > +	  - Revised Jun 25, 2004 by Tom L Nguyen
-> > +	  - Revised Jul  9, 2008 by Matthew Wilcox <willy@linux.intel.com>
-> > +	    Copyright 2003, 2008 Intel Corporation
-> 
-> The copyright line doesn't work quite the way it should in the rendered HTML.
-> 
-> It seems to me it should be:
-> 
-> :Copyright: 2003, 2008 Intel Corporation
-> 
-> Tom has used an ambiguous date format; given it appeared in the tree
-> in December 2003, I suspect he's used middle-endian format.  It doesn't
-> really seem relevant to have the dates here any more, so we could skip
-> including them.  Also, none of these email addresses work, so perhaps
-> just drop those too.
-> 
-> :Authors: Tom L Nguyen; Martine Silbermann; Matthew Wilcox
->
-yeah, looks better. Thanks.
+Line was >80 characters.
 
-> >  1. About this guide
-> > +===================
-> 
-> Should we drop the numbering of sections as part of this conversion?
-> I'd be inclined to.
->
-yes, sphix can generate the numbering.
+Signed-off-by: Will Cunningham <wjcunningham7@gmail.com>
+---
+ drivers/staging/greybus/usb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> >  4.2 Using MSI
-> > +-------------
-> >  
-> >  Most of the hard work is done for the driver in the PCI layer.  The driver
-> >  simply has to request that the PCI layer set up the MSI capability for this
-> >  device.
-> >  
-> >  To automatically use MSI or MSI-X interrupt vectors, use the following
-> > -function:
-> > +function::
-> >  
-> >    int pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
-> >  		unsigned int max_vecs, unsigned int flags);
-> 
-> This should really be turned into kernel-doc and moved to pci.h, but
-> that seems like an awfully large amount of work to ask you to do when
-> you're already doing so much to improve the situation.
-> 
-> This is also a really bad document.  It has three audiences; people
-> configuring their kernel, people writing device drivers and people trying
-> to debug why their kernel doesn't work.  Again, that's not on you to
-> fix, but it's pretty frustrating to see so much good information so
-> badly organised.
-I agree. But content improvment is out of this topic. So I will just
-do the conversion in this serias.
-
+diff --git a/drivers/staging/greybus/usb.c b/drivers/staging/greybus/usb.c
+index 1c246c73a085..5b4cbec88159 100644
+--- a/drivers/staging/greybus/usb.c
++++ b/drivers/staging/greybus/usb.c
+@@ -169,8 +169,8 @@ static int gb_usb_probe(struct gbphy_device *gbphy_dev,
+ 		return -ENOMEM;
+ 
+ 	connection = gb_connection_create(gbphy_dev->bundle,
+-					  le16_to_cpu(gbphy_dev->cport_desc->id),
+-					  NULL);
++				le16_to_cpu(gbphy_dev->cport_desc->id),
++				NULL);
+ 	if (IS_ERR(connection)) {
+ 		retval = PTR_ERR(connection);
+ 		goto exit_usb_put;
 -- 
-Cheers,
-Changbin Du
+2.19.2
+
