@@ -5,90 +5,86 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE93C43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 12:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459BAC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 12:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0F320870
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 12:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01B8D20870
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 12:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nR3bAymV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9IF1x83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbfCaMT3 (ORCPT
+        id S1731236AbfCaMTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 08:19:29 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37248 "EHLO
+        Sun, 31 Mar 2019 08:19:50 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40300 "EHLO
         mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfCaMT3 (ORCPT
+        with ESMTP id S1726734AbfCaMTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 08:19:29 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v14so8025447wmf.2;
-        Sun, 31 Mar 2019 05:19:28 -0700 (PDT)
+        Sun, 31 Mar 2019 08:19:49 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z24so8063991wmi.5;
+        Sun, 31 Mar 2019 05:19:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=/DZE/2EGuiaVLm+bRyE9gV/EUNvDMXyHbxd6dVVKrW4=;
-        b=nR3bAymVMeabgrfL3MxP504LAKNsEF77MmwHvQCOV+9cPHTSDR1Etdm4Xf72PcQM6b
-         JKg6OAWrNoYCB1Cc2fj2Uheg+66ePVwYx3jDXLExzxz5Aq6mdU/dQESJleaySEDh2F2f
-         S5nPxSlcDOHf+9lJqhXQGlKa2xUt0k2bqBYJxZ8UNyupY+nbZNLDhV5hIEtmENzZ9LwB
-         zkySqi4xNRfDA92Tl2kEO/B3FO6Z+bbg/3TVno5zQhtMjU7P7wnEW6riiHTLmQFDYzaj
-         LjCRgN5EeiKXqG+De+B4C/zZkBAMlD6PUGTWStCWC5cm9zFbvebCiyJnhZaoEhX1cPOs
-         oJbg==
+        bh=xSybAyrdLw33vq1UDxnMPu9wvEFTX4RtzrE5Btn6TvY=;
+        b=h9IF1x83Fwjt+Vi0OjRqFq0xysg94YuVtk8OaJ8D/X9jcJ0f0e8983EqqKIGxTMIWE
+         gX1IxoACzbbIWSAxTcbBgY8kRg57jeANYJnq510AAdouSqTTPuIbKyxQJi5sTmjIr4xV
+         M9GkmPF1EfSgW549y5Z/JH06JP7teT0T4zaQJSEiFI7ZFfrI6G8rkYGma9ZKWewmbw8z
+         mGmcQi+6MExP+9oyhM0jCSRMH/jndLRYsk5GEK+YLSI5z8BWwnxP9wqJ5AmNBlxin8oK
+         zj361V4S0ElvqLNzk8RVWo8yVsxJnZQD7hh3IlEW5+z91PTMrK/OcEDnCjTDyXHYFRwU
+         ChAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/DZE/2EGuiaVLm+bRyE9gV/EUNvDMXyHbxd6dVVKrW4=;
-        b=r1XlHseAA3S2j/fbX+2ZXl0BSvyE/enMtUQPwgt5numCOqCxmHaKf52wkGWc5uvXFI
-         ieYFFuOjxzV0AZiEo+N62Asvvm8FJy0UrMkWDHr1Q+qylF4pjd4Uhvn9Fos/7orEOd1d
-         jtuCbMUyAxHrv9pVTdfvE2MI0gPRMokGTb1yvs1DU0fOVTOU+Cmp+d8JhXkE6S7ipyIN
-         wingt8quc20/6Dz8H4RwtVqGRLty7xkHYPO3zoHDb8zQ5aOGHaxSa57SyCMW4U3ngluW
-         vCPyz1wU5saGq7rND/4iScwJw7tEYeAyYVBldKovCzElpGsKHEgHDAqMh/8PxLjxJFkw
-         QnEA==
-X-Gm-Message-State: APjAAAUidXKh2/28Et20PdwFPI7Uc7fw4Vva+mT0gSQAin14msC1fcVz
-        X3wyh3T/4OgE4B2kDtJUra8=
-X-Google-Smtp-Source: APXvYqwjg64iB0wTJeSRH/N0wMWAJRHCd+Q8lPmY0ok/5jmf+RQXozt5lqsR5VOK/SrcHidg5+ohMw==
-X-Received: by 2002:a1c:2407:: with SMTP id k7mr9308785wmk.137.1554034767631;
-        Sun, 31 Mar 2019 05:19:27 -0700 (PDT)
+        bh=xSybAyrdLw33vq1UDxnMPu9wvEFTX4RtzrE5Btn6TvY=;
+        b=NiHGjOSSvzPq9GU3O98jXwYPq2vFQHkyjZJziE9oVrTUK6SiPxQvXIEkNI7fGABOPZ
+         2cOPkdJtCoINPETBodPdi4alTyBQQRta6QXjg81HcVZtAnb4OIpqvX4N12OGFjiOEyQW
+         O6pJaO/JEqJF9j3p7Q1+NRtgq6Fs2sznns3PwyA4CmF//pUsP8tOGwBGqqxErQI3Zm3K
+         rh9YmPDA493r+FXkr/ECYO7ZUfbm5T2k2l0LWo4V7JOv7X2l0MMs6O1NzVA0KqRB29ja
+         yorIyjQ+9ShUMgt6N/g/TQG3FRuXdw3fbwDXNe0eHZV6E1rUfL2iPfvIkZc0wiMKvPDU
+         W6Ww==
+X-Gm-Message-State: APjAAAXvXYZSGfaC1IDj7WuYR/qZpmBA+zsKrjpbE6luTT0NJPhC3or4
+        zCsska0lF4DXLlnxHMhdP6xUhkMRf0w=
+X-Google-Smtp-Source: APXvYqyJ2ya3e8KyEEgOZQYGyDc2MFFP2bpt426bbaFcOst/EsmzLhJgN6KnRJl0ueGkrtCHWSINGw==
+X-Received: by 2002:a1c:808c:: with SMTP id b134mr9586016wmd.16.1554034787556;
+        Sun, 31 Mar 2019 05:19:47 -0700 (PDT)
 Received: from debian (cpc101300-bagu16-2-0-cust362.1-3.cable.virginm.net. [86.21.41.107])
-        by smtp.gmail.com with ESMTPSA id v184sm18635897wma.6.2019.03.31.05.19.26
+        by smtp.gmail.com with ESMTPSA id i28sm24179166wrc.32.2019.03.31.05.19.46
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 31 Mar 2019 05:19:26 -0700 (PDT)
-Date:   Sun, 31 Mar 2019 13:19:24 +0100
+        Sun, 31 Mar 2019 05:19:46 -0700 (PDT)
+Date:   Sun, 31 Mar 2019 13:19:44 +0100
 From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 To:     Yifeng Li <tomli@tomli.me>
 Cc:     Teddy Wang <teddy.wang@siliconmotion.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 3/8] fbdev: sm712fb: fix VRAM detection, don't set
- SR70/71/74/75.
-Message-ID: <20190331121924.5wjhhjp2j2gom7zp@debian>
+Subject: Re: [PATCH 4/8] fbdev: sm712fb: fix boot screen glitch when sm712fb
+ replaces VGA.
+Message-ID: <20190331121944.s67z7seyrgl5xnrw@debian>
 References: <20190316222504.27170-1-tomli@tomli.me>
- <20190316222504.27170-4-tomli@tomli.me>
+ <20190316222504.27170-5-tomli@tomli.me>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190316222504.27170-4-tomli@tomli.me>
+In-Reply-To: <20190316222504.27170-5-tomli@tomli.me>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 06:24:59AM +0800, Yifeng Li wrote:
-> On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), the amount of Video
-> RAM is not detected correctly by the xf86-video-siliconmotion driver.
-> This is because sm712fb overwrites the GPR71 Scratch Pad Register, which
-> is set by BIOS on x86 and used to indicate amount of VRAM.
-> 
-> Other Scratch Pad Registers, including GPR70/74/75, don't have the same
-> side-effect, but overwriting to them is still questionable, as they are
-> not related to modesetting.
-> 
-> Stop writing to SR70/71/74/75 (a.k.a GPR70/71/74/75).
+On Sun, Mar 17, 2019 at 06:25:00AM +0800, Yifeng Li wrote:
+> When the machine is booted in VGA mode, loading sm712fb would cause
+> a glitch of random pixels shown on the screen. To prevent it from
+> happening, we first clear the entire framebuffer, and we also need
+> to stop calling smtcfb_setmode() during initialization, the fbdev
+> layer will call it for us later when it's ready.
 > 
 > Signed-off-by: Yifeng Li <tomli@tomli.me>
 > Cc: stable@vger.kernel.org  # v4.4+
