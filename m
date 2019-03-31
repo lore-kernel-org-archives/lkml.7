@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7709AC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE66C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484D82086C
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBAE020870
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 22:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731786AbfCaWLD (ORCPT
+        id S1731831AbfCaWLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 18:11:03 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:57619 "EHLO
+        Sun, 31 Mar 2019 18:11:13 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:57595 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731610AbfCaWKc (ORCPT
+        with ESMTP id S1731580AbfCaWK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 18:10:32 -0400
+        Sun, 31 Mar 2019 18:10:29 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hAier-0004rF-VP; Mon, 01 Apr 2019 00:10:30 +0200
-Message-Id: <20190331215135.667707146@linutronix.de>
+        id 1hAieo-0004qa-Hr; Mon, 01 Apr 2019 00:10:26 +0200
+Message-Id: <20190331215135.223645571@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 31 Mar 2019 23:40:30 +0200
+Date:   Sun, 31 Mar 2019 23:40:25 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [patch 10/14] x86/irq/64: Use cpu entry area instead of orig_ist
+Subject: [patch 05/14] x86/cpu_entry_area: Cleanup setup functions
 References: <20190331214020.836098943@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -40,61 +40,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The orig_ist[] array is a shadow copy of the IST array in the TSS. The
-reason why it exists is that older kernels used two TSS variants with
-different pointers into the debug stack. orig_ist[] contains the real
-starting points.
-
-There is no point anymore to do so because the same information can be
-retrieved using the base address of the cpu entry area mapping and the
-offsets of the various exception stacks.
-
-No functional change. Preparation for removing orig_ist.
+No point in retrieving the entry area pointer over and over. Do it once and
+use unsigned int for 'cpu' consistently.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/kernel/irq_64.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -18,6 +18,8 @@
- #include <linux/uaccess.h>
- #include <linux/smp.h>
- #include <linux/sched/task_stack.h>
-+
-+#include <asm/cpu_entry_area.h>
- #include <asm/io_apic.h>
- #include <asm/apic.h>
+ arch/x86/mm/cpu_entry_area.c |   19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+--- a/arch/x86/mm/cpu_entry_area.c
++++ b/arch/x86/mm/cpu_entry_area.c
+@@ -52,10 +52,10 @@ cea_map_percpu_pages(void *cea_vaddr, vo
+ 		cea_set_pte(cea_vaddr, per_cpu_ptr_to_phys(ptr), prot);
+ }
  
-@@ -42,11 +44,12 @@ int sysctl_panic_on_stackoverflow;
- static inline void stack_overflow_check(struct pt_regs *regs)
+-static void __init percpu_setup_debug_store(int cpu)
++static void __init percpu_setup_debug_store(unsigned int cpu)
  {
- #ifdef CONFIG_DEBUG_STACKOVERFLOW
-+
- #define STACK_TOP_MARGIN	128
--	struct orig_ist *oist;
--	u64 irq_stack_top, irq_stack_bottom;
--	u64 estack_top, estack_bottom;
-+
-+	u64 irq_stack_top, irq_stack_bottom, estack_top, estack_bottom;
- 	u64 curbase = (u64)task_stack_page(current);
-+	struct cea_exception_stacks *estacks;
+ #ifdef CONFIG_CPU_SUP_INTEL
+-	int npages;
++	unsigned int npages;
+ 	void *cea;
  
- 	if (user_mode(regs))
- 		return;
-@@ -61,9 +64,10 @@ static inline void stack_overflow_check(
- 	if (regs->sp >= irq_stack_top && regs->sp <= irq_stack_bottom)
- 		return;
+ 	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+@@ -79,8 +79,9 @@ static void __init percpu_setup_debug_st
+ }
  
--	oist = this_cpu_ptr(&orig_ist);
--	estack_bottom = (u64)oist->ist[DEBUG_STACK];
--	estack_top = estack_bottom - DEBUG_STKSZ + STACK_TOP_MARGIN;
-+	estacks = __this_cpu_read(cea_exception_stacks);
-+	estack_top = (u64)estacks->DB_stack;
-+	estack_bottom = estack_top + sizeof(estacks->DB_stack);
-+	estack_top += STACK_TOP_MARGIN;
- 	if (regs->sp >= estack_top && regs->sp <= estack_bottom)
- 		return;
+ /* Setup the fixmap mappings only once per-processor */
+-static void __init setup_cpu_entry_area(int cpu)
++static void __init setup_cpu_entry_area(unsigned int cpu)
+ {
++	struct cpu_entry_area *cea = get_cpu_entry_area(cpu);
+ #ifdef CONFIG_X86_64
+ 	/* On 64-bit systems, we use a read-only fixmap GDT and TSS. */
+ 	pgprot_t gdt_prot = PAGE_KERNEL_RO;
+@@ -101,10 +102,9 @@ static void __init setup_cpu_entry_area(
+ 	pgprot_t tss_prot = PAGE_KERNEL;
+ #endif
  
+-	cea_set_pte(&get_cpu_entry_area(cpu)->gdt, get_cpu_gdt_paddr(cpu),
+-		    gdt_prot);
++	cea_set_pte(&cea->gdt, get_cpu_gdt_paddr(cpu), gdt_prot);
+ 
+-	cea_map_percpu_pages(&get_cpu_entry_area(cpu)->entry_stack_page,
++	cea_map_percpu_pages(&cea->entry_stack_page,
+ 			     per_cpu_ptr(&entry_stack_storage, cpu), 1,
+ 			     PAGE_KERNEL);
+ 
+@@ -128,19 +128,18 @@ static void __init setup_cpu_entry_area(
+ 	BUILD_BUG_ON((offsetof(struct tss_struct, x86_tss) ^
+ 		      offsetofend(struct tss_struct, x86_tss)) & PAGE_MASK);
+ 	BUILD_BUG_ON(sizeof(struct tss_struct) % PAGE_SIZE != 0);
+-	cea_map_percpu_pages(&get_cpu_entry_area(cpu)->tss,
+-			     &per_cpu(cpu_tss_rw, cpu),
++	cea_map_percpu_pages(&cea->tss, &per_cpu(cpu_tss_rw, cpu),
+ 			     sizeof(struct tss_struct) / PAGE_SIZE, tss_prot);
+ 
+ #ifdef CONFIG_X86_32
+-	per_cpu(cpu_entry_area, cpu) = get_cpu_entry_area(cpu);
++	per_cpu(cpu_entry_area, cpu) = cea;
+ #endif
+ 
+ #ifdef CONFIG_X86_64
+ 	BUILD_BUG_ON(sizeof(exception_stacks) % PAGE_SIZE != 0);
+ 	BUILD_BUG_ON(sizeof(exception_stacks) !=
+ 		     sizeof(((struct cpu_entry_area *)0)->exception_stacks));
+-	cea_map_percpu_pages(&get_cpu_entry_area(cpu)->exception_stacks,
++	cea_map_percpu_pages(&cea->exception_stacks,
+ 			     &per_cpu(exception_stacks, cpu),
+ 			     sizeof(exception_stacks) / PAGE_SIZE, PAGE_KERNEL);
+ #endif
 
 
