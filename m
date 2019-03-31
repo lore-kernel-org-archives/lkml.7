@@ -6,78 +6,76 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63FCC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A2BC43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA03A21873
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5D721873
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 06:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554014515;
-	bh=3gItHPBr1si87K2467kpGscCl11mz+rRRp4XV1ES+5g=;
+	s=default; t=1554014518;
+	bh=KUh9Ix85xujGaKNAHASI58sGI/kaT+Fgy4TB+ZXR3FY=;
 	h=Date:From:Subject:References:In-Reply-To:Cc:Cc:To:List-ID:From;
-	b=wgGqJw1sEK3/wuioRtEIKQPxqKKxyQPyKz5h234jr+OQ6sf09NJKN4I1eqLMieD60
-	 8Ba3UOFIGoEYE8U03krgA3R2vPrcWfLhqvQbtnKdugntIofjoPN+yUDmE9jRdb0SlP
-	 jvQ4Tvwieb4Ornmg/cDqSSZL5rhSJ69+568RVp9I=
+	b=TycaP8b4weDaTQn1PgL7FaQu8WyUzH25KYmhytgkaw/X6J10IXUU/clOYAdrRrEio
+	 RH1wgBz+Fk9a4nXPlI1l13Kw1ATOiVfpClq+72dbMw0FHMmj2AMIngf0bVI93ESEoK
+	 tioqjSU7f5foH/ejFZMVahv/+GOiIxm/vMg5e888=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731300AbfCaGly (ORCPT
+        id S1731315AbfCaGl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 02:41:54 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38040 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfCaGlu (ORCPT
+        Sun, 31 Mar 2019 02:41:57 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38040 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731290AbfCaGlx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 02:41:50 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g37so2931158plb.5;
-        Sat, 30 Mar 2019 23:41:50 -0700 (PDT)
+        Sun, 31 Mar 2019 02:41:53 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g37so2931183plb.5;
+        Sat, 30 Mar 2019 23:41:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:subject:references
          :in-reply-to:cc:cc:to;
-        bh=sgFc6uE0XsqlrZed6OMYcuIFTo1ZGmRUyoxq+EubJfs=;
-        b=RRVc0GtMbksOXxqCh2PNnBOUoN7VuZFhFxdGuejKzhiuqjIai8B8dO6+FJYEwNbftN
-         3dQ8UZRFlfFs5/zZjaUpYmt+ZJcRSw2BMNKcnh1mY4V0TqIa3iIpPQxQOH3zZRbEriHo
-         ZVn9S+6jepilqlGE+WDNKZ2ErjMnCeB3dqYkIK9sxS4kC2zPCRBl8ONAPevYrkt/E14L
-         pdghHVOvwqXQnwE39dXQEfQ/SWzMjPUt0pq+cdvoMKtL2mQKq9JJay4Frg1JS86M74Pa
-         +aGfbq4icVgiz86P/gIgoTaYC+kRq+EzdXWxjWRLNsMShUuAFIRhPZPU/w4Hsed7mY7d
-         nppQ==
-X-Gm-Message-State: APjAAAUZeS14LEL5nHxDumpP8YYV9H4RTBkP5WXrOdqQM0jEiIEfYUzb
-        MTyO5awv0/1TsZKw7n0h4w==
-X-Google-Smtp-Source: APXvYqzrEThhPbhnirOCnsgTPqKYfsebpjhFZ4QUuZGzWxOV3nBokcR0YgqsQf5VD5iTgqN0lr4zfw==
-X-Received: by 2002:a17:902:d211:: with SMTP id t17mr22652332ply.214.1554014509967;
-        Sat, 30 Mar 2019 23:41:49 -0700 (PDT)
+        bh=oqxqJs1X3uE4BtLPo5eHOzxBzvO8FT3UM7Tz6He21fI=;
+        b=t0jdL9yQft5QnwbhtTQg05cBU1J7ShbsrSVHcMhsjipIvdG3NRkzjr1SBcKe4Wf5kk
+         UrRixMdl3IE9vEPvhZDhZ8nP9mE7QBnIAu+Ngkin2EqJI8n47rZ2RofiT0JzSZZAQutn
+         gjmH7lIZf8XGIFAKFtu9MDZXmvtU0uMVQ074VEGh6AOf1Ux21eJZLuaZpWYCy2Za9iKe
+         FIvx65vQbNSAEBKTc3USknLk8VxOdbV0xrJao6JY19c9IPWf2xZEU8LQsB4OFLQipH3B
+         c9ovkWFlEK5497EI6wHMQoXIq6l03WUoset9eg9b07EY30CtusXS6XPibMkyd2Im3E+1
+         4k6A==
+X-Gm-Message-State: APjAAAVno7o1R9d38+RHXicTqaKuTIJ00SlIRgxMYj2QCB10vHd4z4w8
+        0Qf4JZUR7M1OaPBgVdKfNg==
+X-Google-Smtp-Source: APXvYqztzt1BfHdpon6Y2Ez+5jI03aLlOq7ZHEuQpDX0rlk4Wy/2clhGyA06d3adVq5eKE6tvLkFqQ==
+X-Received: by 2002:a17:902:b94a:: with SMTP id h10mr30055560pls.82.1554014513023;
+        Sat, 30 Mar 2019 23:41:53 -0700 (PDT)
 Received: from localhost ([210.160.217.68])
-        by smtp.gmail.com with ESMTPSA id k26sm8759588pfo.111.2019.03.30.23.41.48
+        by smtp.gmail.com with ESMTPSA id d3sm9812499pfn.113.2019.03.30.23.41.52
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 30 Mar 2019 23:41:49 -0700 (PDT)
-Message-ID: <5ca0612d.1c69fb81.96e6a.76a9@mx.google.com>
-Date:   Sun, 31 Mar 2019 01:41:47 -0500
+        Sat, 30 Mar 2019 23:41:52 -0700 (PDT)
+Message-ID: <5ca06130.1c69fb81.75bda.974a@mx.google.com>
+Date:   Sun, 31 Mar 2019 01:41:50 -0500
 From:   Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: meson8b: export the video decoder clocks
-References: <20190324151423.19063-1-martin.blumenstingl@googlemail.com> <20190324151423.19063-2-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20190324151423.19063-2-martin.blumenstingl@googlemail.com>
-Cc:     narmstrong@baylibre.com, jbrunet@baylibre.com,
-        linux-amlogic@lists.infradead.org, mjourdan@baylibre.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: Add Milbeaut AXI DMA controller bindings
+References: <1553487314-9185-1-git-send-email-kasai.kazuhiro@socionext.com> <1553487314-9185-2-git-send-email-kasai.kazuhiro@socionext.com>
+In-Reply-To: <1553487314-9185-2-git-send-email-kasai.kazuhiro@socionext.com>
+Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        orito.takao@socionext.com, sugaya.taichi@socionext.com,
+        kanematsu.shinji@socionext.com, jaswinder.singh@linaro.org,
+        masami.hiramatsu@linaro.org, linux-kernel@vger.kernel.org,
+        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
+To:     Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 Mar 2019 16:14:22 +0100, Martin Blumenstingl wrote:
-> Export the four video decoder clocks so they can be used by the video
-> decoder driver:
-> - VDEC_1
-> - VDEC_HCODEC
-> - VDEC_2
-> - VDEC_HEVC
+On Mon, 25 Mar 2019 13:15:13 +0900, Kazuhiro Kasai wrote:
+> Add Milbeaut AXI DMA controller bindings. This DMA controller has
+> only capable of memory to memory transfer.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
 > ---
->  include/dt-bindings/clock/meson8b-clkc.h | 4 ++++
->  1 file changed, 4 insertions(+)
+>  .../devicetree/bindings/dma/xdmac-milbeaut.txt     | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/xdmac-milbeaut.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
