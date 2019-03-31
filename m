@@ -2,405 +2,150 @@ Return-Path: <SRS0=KwB+=SC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4793FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 19:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051A8C43381
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 19:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 030F121841
-	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 19:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEBD320870
+	for <linux-kernel@archiver.kernel.org>; Sun, 31 Mar 2019 19:21:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JcVDaqT2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Us8FORhm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731567AbfCaTQt (ORCPT
+        id S1731420AbfCaTVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 15:16:49 -0400
-Received: from mout.gmx.net ([212.227.15.15]:54665 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbfCaTQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 15:16:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1554059787;
-        bh=slFTgdTS5niuK69PbeWMdLEuEgYvvSywveCWXAP4rUc=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=JcVDaqT29gUCZucGBUwLJ/0RTFcmEG3jwD9iLOMzHr4U8W/vg6ml0t6sB0gWKshWh
-         u0MA7vnHwPuBpPoGogoZS8PqPEhzmja1WUV1YCQZec3IpHJwtNHNff9xFuUI4y6Er9
-         zJ7x0wfhOZ/mLs5EqXPLKoZRYdEe0ORuaSVouGlg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx003
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0LZhoi-1gWACM41Jk-00lXwq; Sun, 31
- Mar 2019 21:16:27 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        =?UTF-8?q?Vok=C3=A1=C4=8D=20Michal?= <Michal.Vokac@ysoft.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] ARM: dts: imx50: Add Kobo Aura DTS
-Date:   Sun, 31 Mar 2019 21:16:02 +0200
-Message-Id: <20190331191602.3921-4-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190331191602.3921-1-j.neuschaefer@gmx.net>
-References: <20190331191602.3921-1-j.neuschaefer@gmx.net>
+        Sun, 31 Mar 2019 15:21:38 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43741 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbfCaTVh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 15:21:37 -0400
+Received: by mail-oi1-f196.google.com with SMTP id t81so5505322oig.10
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 12:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=4yDtqtEgAp/LWVi4nPGb0Lvky010NJosRkxeKByHLt8=;
+        b=Us8FORhmCR72lg0QlwJAtR8yhm/5UwSNt/znsLErlS+afM+kcangpnQDZnOqrlDPz8
+         hdQesJkG3pQvPFeDD4FbkAKKUbomjBhNZ8myzhNdGn66YHrE97YEUBJiKix6l8scVh3w
+         TtHECwTMNRvk0MwW1VZYJWIKGVUhxLlBPSFNCF7BZppy0ubCTmxQFOcNpzwxDX41/4bw
+         ge4y3o+ha5xaSm/3WHmU8q6ZH+vK1D3hRma/iaz8G4G5sN48eF6CKiDB5YznnmbeUggN
+         P89sJwK7HFqb8d8Cy5qMSFD4xIBq0n/k451jK2Ywr3uDCcBTao1hIO7GrAFuhUd9yT20
+         WzhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=4yDtqtEgAp/LWVi4nPGb0Lvky010NJosRkxeKByHLt8=;
+        b=okQcLD9pvl6wGGNuOvRP4Mt7S46g+OAeUkzXUeRu2bIuuFw4qlMGpTgh74I/zdsjr7
+         nY1nF2eBou8IC+p0LOKkFvx6f0YkrUXi9pzbDNXW4/7XGVA32n8A34DbXPOXOT4V7x2o
+         8ScExLKp0PC1ME7rhcj98yg7i5jNIQRsbv9DdnDe2JZR1FryqqtAxzaxP1Z/uA1ZcUjv
+         GXtkpybMdNy1N604nvNiP1dbacexU98vh00+XwjckQ3Vs305BOlCEbmLWzSKJ+SvdsWY
+         e2Eb39341mYmxYP0GnRHjg3wZhG4Chrw8bYCQLcGYSSgCmdlysIh9fcaNt08O2QE/Z4X
+         8GeQ==
+X-Gm-Message-State: APjAAAUuOGl+BRP/QAt4Zj1eUaj4mYOCOA6/6Otr8WTvBRZFWaLZbJfh
+        0PZI1jgfgqkxjyW+Dxtjzppk3w==
+X-Google-Smtp-Source: APXvYqzXJvQZMUNwegdIOLr2gkKsgtKnU57/PRrJJMa73WSU6Chpwhxlpk8tOgK2cHSakrAurOAvLw==
+X-Received: by 2002:a54:4f85:: with SMTP id g5mr10144271oiy.35.1554060096864;
+        Sun, 31 Mar 2019 12:21:36 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id q25sm486885otl.60.2019.03.31.12.21.34
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 31 Mar 2019 12:21:35 -0700 (PDT)
+Date:   Sun, 31 Mar 2019 12:21:15 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+cc:     Vineeth Pillai <vpillai@digitalocean.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Kelley Nielsen <kelleynnn@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Rik van Riel <riel@surriel.com>,
+        Huang Ying <ying.huang@intel.com>
+Subject: Re: shmem_recalc_inode: unable to handle kernel NULL pointer
+ dereference
+In-Reply-To: <1554048843.jjmwlalntd.astroid@alex-desktop.none>
+Message-ID: <alpine.LSU.2.11.1903311146040.2667@eggly.anvils>
+References: <1553440122.7s759munpm.astroid@alex-desktop.none> <CANaguZB8szw13MkaiT9kcN8Fux6hYZnuD-p6_OPve6n2fOTuoQ@mail.gmail.com> <1554048843.jjmwlalntd.astroid@alex-desktop.none>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IB0ZlZS+bVe3DOTmNoXV+0fp32uxH0KeKfIRvIS7Nz1gVF+MpxO
- g+SvAIzyQMkQypy7tM5hPJ6Gqd8iZK7ODW7uC4DF6JDbQjaV1XvO+tayPnHCKK7y/K1lKtD
- 7mAjjjClWpr7JYqQCNXu69D3QXstSvjdp7+dPD5R04SZjbEBzej/kKUzwoDATVsuH+C+EtP
- ncetSxOl541xJfxePbIlg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SF+Es+fXZA4=:qwRrPdvWS6j4oDxvFBm+Np
- QgEBM7bKUk4+tblDZJ/1rI4F6gAHqIidVKIbpCdDqNEA3YR3BOIWXIfuFS+ulNYi8SXsuTcU6
- N7+K7XTdWx8oiZsJRE2rcqWKYfwQEBbBo6BBDaDjxTM8AmI56FUam7jtwAcmFIR5wUdKKyGoF
- /afdDFdad0zoBGebyddnIPWaN6fGUDQNC5Q6Vo8K2ktv3lTkJdGqe9VaWQ4WKhvf0xgwow06f
- Tr2p3q/joaiSvSxuscFwYAG0XNaZ+3HI/wQSCQWM4Prf7DHB2naVojoU5DK0zXCxk3nOONIJE
- Mbx0Iwdo1HAVGEEg1wAz8d/hCvmvK9Gyn95JUNq0w25z108JJsiTDU4GyZbbvqjHF3Mj5Tskg
- Z64McLqFZtMqbjfncSNYi+MH148PL3US1A2Tzj5DrOEL14pcWZqx53xF7QtzKNViEneXZB7vw
- Szbl5CJMN7qeSr+vagFH0CejYklVhCUSTvyIGdNhH8gNwmsCZ32imGU+mC6Zi0iEUBvh//tsN
- zqOl+WWQF+z+fnmAQ7acSyCKoMh8KJ9e9QT9waukw6hYZqw4xjWuucfbwQfNt+kN3y0L31GSm
- KikNMlVmaJsMa8oewX4gOsg+xRTRDkCBI9mQrOx6Cp9lsWtUSqgPZZ1uot1Kh3bs3QVmRANrT
- xbKlX4aFMbXk7tnerfQSLFPiQfB2BIRn0gh5EKZYAWln4BnJXsY+MLzjsmg4Y9+KceXc8uIC4
- wRxzIdbUVIKMHT/+72ONDyrwDBgjrP7IatmJD1gG3CNh09c8mP8laDh8n+GVCx5AYadJfBHV3
- mm+E7DOZWaimkkp2Bc4vbMLKCgNClSzm6qbpGKJ5JQenVsxW/w/JUjz7RMv/J5frd2TgLaDQZ
- 8z7i7YZJmyrOVtQKwdEGlTviTL/R9D/MyOaJEdw9BCmwPrsxwq1EOIARdb1J9NOpUZzHn8SmJ
- qig+Pe6A+yA==
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Kobo Aura is an e-book reader released in 2013.
+On Sun, 31 Mar 2019, Alex Xu (Hello71) wrote:
+> Excerpts from Vineeth Pillai's message of March 25, 2019 6:08 pm:
+> > On Sun, Mar 24, 2019 at 11:30 AM Alex Xu (Hello71) <alex_y_xu@yahoo.ca> wrote:
+> >>
+> >> I get this BUG in 5.1-rc1 sometimes when powering off the machine. I
+> >> suspect my setup erroneously executes two swapoff+cryptsetup close
+> >> operations simultaneously, so a race condition is triggered.
+> >>
+> >> I am using a single swap on a plain dm-crypt device on a MBR partition
+> >> on a SATA drive.
+> >>
+> >> I think the problem is probably related to
+> >> b56a2d8af9147a4efe4011b60d93779c0461ca97, so CCing the related people.
+> >>
+> > Could you please provide more information on this - stack trace, dmesg etc?
+> > Is it easily reproducible? If yes, please detail the steps so that I
+> > can try it inhouse.
+> > 
+> > Thanks,
+> > Vineeth
+> > 
+> 
+> Some info from the BUG entry (I didn't bother to type it all, 
+> low-quality image available upon request):
+> 
+> BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+> #PF error: [normal kernel read fault]
+> PGD 0 P4D 0
+> Oops: 0000 [#1] SMP
+> CPU: 0 Comm: swapoff Not tainted 5.1.0-rc1+ #2
+> RIP: 0010:shmem_recalc_inode+0x41/0x90
+> 
+> Call Trace:
+> ? shmem_undo_range
+> ? rb_erase_cached
+> ? set_next_entity
+> ? __inode_wait_for_writeback
+> ? shmem_truncate_range
+> ? shmem_evict_inode
+> ? evict
+> ? shmem_unuse
+> ? try_to_unuse
+> ? swapcache_free_entries
+> ? _cond_resched
+> ? __se_sys_swapoff
+> ? do_syscall_64
+> ? entry_SYSCALL_64_after_hwframe
+> 
+> As I said, it only occurs occasionally on shutdown. I think it is a safe 
+> guess that it can only occur when the swap is not empty, but possibly 
+> other conditions are necessary, so I will test further.
 
-With the devicetree in its current state, the kernel will boot and run
-for about ten seconds. To solve this, the embedded controller needs to
-be told that the system should stay powered on. This will be done in a
-later patchset.
+Thanks for the update, Alex. I'm looking into a couple of bugs with the
+5.1-rc swapoff, but this one doesn't look like anything I know so far.
+shmem_recalc_inode() is a surprising place to crash: it's as if the
+igrab() in shmem_unuse() were not working. 
 
-- The IOMUXC mode bits for the SD interfaces were taken from the
-  vendor's U-Boot fork.
-- The bus width of the eMMC is 4 bits in the vendor kernel, but I
-  achieved better performance with 8 bits.
-- The SDIO clock frequency for the WiFi chip is 25MHz in the vendor
-  kernel, but the WiFi chip (BCM43362) supports 50MHz, which works
-  reliably on this board and gives slightly better performance.
-- The I2C pins' IOMUXC settings come from the vendor's U-Boot fork.
+Yes, please do send Vineeth and me (or the lists) your low-quality image,
+in case we can extract any more info from it; and also please the
+disassembly of your kernel's shmem_recalc_inode(), so we can be sure of
+exactly what it's crashing on (though I expect that will leave me as
+puzzled as before).
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
+If you want to experiment with one of my fixes, not yet written up and
+posted, just try changing SWAP_UNUSE_MAX_TRIES in mm/swapfile.c from
+3 to INT_MAX: I don't see how that issue could manifest as crashing in
+shmem_recalc_inode(), but I may just be too stupid to see it.
 
-v2:
-- Squash patch 4 ("ARM: dts: imx50-kobo-aura: Enable USB support")
-- Sort pinctrl nodes alphabetically, as suggested by Shawn Guo
-- Sort labeled nodes alphabetically, as suggested by Shawn Guo
-- Make "status" the last property, as suggested by Shawn Guo
-- Use KEY_RESERVED and EV_SW, as suggested by Shawn Guo
-- Remove newlines between properties, as suggested by Shawn Guo
-
-v1:
-https://lore.kernel.org/lkml/20190319152421.16179-3-j.neuschaefer@gmx.net/
-=2D--
- arch/arm/boot/dts/Makefile            |   3 +-
- arch/arm/boot/dts/imx50-kobo-aura.dts | 258 ++++++++++++++++++++++++++
- 2 files changed, 260 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/imx50-kobo-aura.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f4f5aeaf3298..0c85156c552b 100644
-=2D-- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -363,7 +363,8 @@ dtb-$(CONFIG_SOC_IMX35) +=3D \
- 	imx35-eukrea-mbimxsd35-baseboard.dtb \
- 	imx35-pdk.dtb
- dtb-$(CONFIG_SOC_IMX50) +=3D \
--	imx50-evk.dtb
-+	imx50-evk.dtb \
-+	imx50-kobo-aura.dtb
- dtb-$(CONFIG_SOC_IMX51) +=3D \
- 	imx51-apf51.dtb \
- 	imx51-apf51dev.dtb \
-diff --git a/arch/arm/boot/dts/imx50-kobo-aura.dts b/arch/arm/boot/dts/imx=
-50-kobo-aura.dts
-new file mode 100644
-index 000000000000..a0eaf869b913
-=2D-- /dev/null
-+++ b/arch/arm/boot/dts/imx50-kobo-aura.dts
-@@ -0,0 +1,258 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright 2019 Jonathan Neusch=C3=A4fer
-+//
-+// The Kobo Aura e-book reader, model N514. The mainboard is marked as E6=
-06F0B.
-+
-+/dts-v1/;
-+#include "imx50.dtsi"
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model =3D "Kobo Aura (N514)";
-+	compatible =3D "kobo,aura", "fsl,imx50";
-+
-+	chosen {
-+		stdout-path =3D "serial1:115200n8";
-+	};
-+
-+	memory@70000000 {
-+		device_type =3D "memory";
-+		reg =3D <0x70000000 0x10000000>;
-+	};
-+
-+	gpio-leds {
-+		compatible =3D "gpio-leds";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_leds>;
-+
-+		on {
-+			label =3D "kobo_aura:orange:on";
-+			gpios =3D <&gpio6 24 GPIO_ACTIVE_LOW>;
-+			panic-indicator;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible =3D "gpio-keys";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpiokeys>;
-+
-+		power {
-+			label =3D "Power Button";
-+			gpios =3D <&gpio4 10 GPIO_ACTIVE_LOW>;
-+			linux,code =3D <KEY_POWER>;
-+		};
-+
-+		hallsensor {
-+			label =3D "Hallsensor";
-+			gpios =3D <&gpio5 15 GPIO_ACTIVE_LOW>;
-+			linux,code =3D <KEY_RESERVED>;
-+			linux,input-type =3D <EV_SW>;
-+		};
-+
-+		frontlight {
-+			label =3D "Frontlight";
-+			gpios =3D <&gpio4 1 GPIO_ACTIVE_LOW>;
-+			linux,code =3D <KEY_DISPLAYTOGGLE>;
-+		};
-+	};
-+
-+	sd2_pwrseq: pwrseq {
-+		compatible =3D "mmc-pwrseq-simple";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_sd2_reset>;
-+		reset-gpios =3D <&gpio4 17 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	sd2_vmmc: gpio-regulator {
-+		compatible =3D "regulator-gpio";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_sd2_vmmc>;
-+		regulator-name =3D "vmmc";
-+		states =3D <3300000 0>;
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		enable-gpio =3D <&gpio4 12 GPIO_ACTIVE_LOW>;
-+		startup-delay-us =3D <100000>;
-+	};
-+};
-+
-+&esdhc1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_sd1>;
-+	max-frequency =3D <50000000>;
-+	bus-width =3D <4>;
-+	cd-gpios =3D <&gpio5 17 GPIO_ACTIVE_LOW>;
-+	disable-wp;
-+	status =3D "okay";
-+
-+	/* External =C2=B5SD card */
-+};
-+
-+&esdhc2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_sd2>;
-+	bus-width =3D <4>;
-+	max-frequency =3D <50000000>;
-+	disable-wp;
-+	mmc-pwrseq =3D <&sd2_pwrseq>;
-+	vmmc-supply =3D <&sd2_vmmc>;
-+	status =3D "okay";
-+
-+	/* CyberTan WC121 SDIO WiFi (BCM43362) */
-+};
-+
-+&esdhc3 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_sd3>;
-+	bus-width =3D <8>;
-+	non-removable;
-+	max-frequency =3D <50000000>;
-+	disable-wp;
-+	status =3D "okay";
-+
-+	/* Internal eMMC */
-+};
-+
-+&i2c1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c1>;
-+	status =3D "okay";
-+
-+	/* TODO: ektf2132 touch controller at 0x15 */
-+};
-+
-+&i2c2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c2>;
-+	status =3D "okay";
-+
-+	/* TODO: TPS65185 PMIC for E Ink at 0x68 */
-+};
-+
-+&i2c3 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c3>;
-+	status =3D "okay";
-+
-+	/* TODO: embedded controller at 0x43 */
-+};
-+
-+&iomuxc {
-+	pinctrl_gpiokeys: gpiokeys {
-+		fsl,pins =3D <
-+			MX50_PAD_CSPI_MISO__GPIO4_10		0x0
-+			MX50_PAD_SD2_D7__GPIO5_15		0x0
-+			MX50_PAD_KEY_ROW0__GPIO4_1		0x0
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1 {
-+		fsl,pins =3D <
-+			MX50_PAD_I2C1_SCL__I2C1_SCL		0x400001fd
-+			MX50_PAD_I2C1_SDA__I2C1_SDA		0x400001fd
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2 {
-+		fsl,pins =3D <
-+			MX50_PAD_I2C2_SCL__I2C2_SCL		0x400001fd
-+			MX50_PAD_I2C2_SDA__I2C2_SDA		0x400001fd
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3 {
-+		fsl,pins =3D <
-+			MX50_PAD_I2C3_SCL__I2C3_SCL		0x400001fd
-+			MX50_PAD_I2C3_SDA__I2C3_SDA		0x400001fd
-+		>;
-+	};
-+
-+	pinctrl_leds: leds {
-+		fsl,pins =3D <
-+			MX50_PAD_PWM1__GPIO6_24			0x0
-+		>;
-+	};
-+
-+	pinctrl_sd1: sd1 {
-+		fsl,pins =3D <
-+			MX50_PAD_SD1_CMD__ESDHC1_CMD		0x1e4
-+			MX50_PAD_SD1_CLK__ESDHC1_CLK		0xd4
-+			MX50_PAD_SD1_D0__ESDHC1_DAT0		0x1d4
-+			MX50_PAD_SD1_D1__ESDHC1_DAT1		0x1d4
-+			MX50_PAD_SD1_D2__ESDHC1_DAT2		0x1d4
-+			MX50_PAD_SD1_D3__ESDHC1_DAT3		0x1d4
-+
-+			MX50_PAD_SD2_CD__GPIO5_17		0x0
-+		>;
-+	};
-+
-+	pinctrl_sd2: sd2 {
-+		fsl,pins =3D <
-+			MX50_PAD_SD2_CMD__ESDHC2_CMD		0x1e4
-+			MX50_PAD_SD2_CLK__ESDHC2_CLK		0xd4
-+			MX50_PAD_SD2_D0__ESDHC2_DAT0		0x1d4
-+			MX50_PAD_SD2_D1__ESDHC2_DAT1		0x1d4
-+			MX50_PAD_SD2_D2__ESDHC2_DAT2		0x1d4
-+			MX50_PAD_SD2_D3__ESDHC2_DAT3		0x1d4
-+		>;
-+	};
-+
-+	pinctrl_sd2_reset: sd2-reset {
-+		fsl,pins =3D <
-+			MX50_PAD_ECSPI2_MOSI__GPIO4_17		0x0
-+		>;
-+	};
-+
-+	pinctrl_sd2_vmmc: sd2-vmmc {
-+		fsl,pins =3D <
-+			MX50_PAD_ECSPI1_SCLK__GPIO4_12		0x0
-+		>;
-+	};
-+
-+	pinctrl_sd3: sd3 {
-+		fsl,pins =3D <
-+			MX50_PAD_SD3_CMD__ESDHC3_CMD		0x1e4
-+			MX50_PAD_SD3_CLK__ESDHC3_CLK		0xd4
-+			MX50_PAD_SD3_D0__ESDHC3_DAT0		0x1d4
-+			MX50_PAD_SD3_D1__ESDHC3_DAT1		0x1d4
-+			MX50_PAD_SD3_D2__ESDHC3_DAT2		0x1d4
-+			MX50_PAD_SD3_D3__ESDHC3_DAT3		0x1d4
-+			MX50_PAD_SD3_D4__ESDHC3_DAT4		0x1d4
-+			MX50_PAD_SD3_D5__ESDHC3_DAT5		0x1d4
-+			MX50_PAD_SD3_D6__ESDHC3_DAT6		0x1d4
-+			MX50_PAD_SD3_D7__ESDHC3_DAT7		0x1d4
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2 {
-+		fsl,pins =3D <
-+			MX50_PAD_UART2_TXD__UART2_TXD_MUX	0x1e4
-+			MX50_PAD_UART2_RXD__UART2_RXD_MUX	0x1e4
-+		>;
-+	};
-+
-+	pinctrl_usbphy: usbphy {
-+		fsl,pins =3D <
-+			MX50_PAD_ECSPI2_SS0__GPIO4_19		0x0
-+		>;
-+	};
-+};
-+
-+&uart2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart2>;
-+	status =3D "okay";
-+};
-+
-+&usbotg {
-+	phy_type =3D "utmi_wide";
-+	dr_mode =3D "peripheral";
-+	status =3D "okay";
-+};
-+
-+&usbphy0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_usbphy>;
-+	vbus-detect-gpio =3D <&gpio4 19 GPIO_ACTIVE_LOW>;
-+};
-=2D-
-2.20.1
-
+Thanks,
+Hugh
