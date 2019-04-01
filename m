@@ -2,91 +2,137 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A76CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97403C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0515120883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D6E2133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:20:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYU6vlIc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbfDASU1 (ORCPT
+        id S1729209AbfDASUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:20:27 -0400
-Received: from mga07.intel.com ([134.134.136.100]:2122 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728670AbfDASU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:20:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 11:20:26 -0700
-X-IronPort-AV: E=Sophos;i="5.60,297,1549958400"; 
-   d="scan'208";a="287784534"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Apr 2019 11:20:26 -0700
-Message-ID: <cbbdf9e2cf6a64e749ec889cc946e2a10c793ba2.camel@linux.intel.com>
-Subject: Re: [RFC 3/4] net/fib: Check budget before should_{inflate,halve}()
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
-Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Ido Schimmel <idosch@mellanox.com>, netdev@vger.kernel.org
-Date:   Mon, 01 Apr 2019 11:20:26 -0700
-In-Reply-To: <20190326153026.24493-4-dima@arista.com>
-References: <20190326153026.24493-1-dima@arista.com>
-         <20190326153026.24493-4-dima@arista.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 1 Apr 2019 14:20:45 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40930 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728670AbfDASUo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 14:20:44 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z24so452213wmi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 11:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rSh5VVkG9WipijbhAmyfU9722WPS5gvQw5koNSuFkG0=;
+        b=GYU6vlIcs5FpHcGpqJxeul7ekQGSiEZ7VXOdwyXb0idZrG2JOVbgtju4qj6U1sDp87
+         95cjAv3oUhfC8aw1Ae8UacYGOOoSMBLiw50ppzcLVU+Igslr0j0dPRYGzwmTnv+WXpAA
+         BdI/kRI+4nPdg/a3A6w6f7EPcn8vgmVdhbTmdzI1WPqxd03FD+0rS7XavIWzmhphlH50
+         fgronN4aYU3U+9RjF5HH1jYL4Fh7iPJWiUyX+4iN/4hHHEV80TjRfSS4S3lPRk/jlWsI
+         AFVr85takNEhloZPPgU3IdYvfi9SFEkg/Ghkbpm41twdkPzlKDzUigD9/9w59XzZjDbC
+         raWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rSh5VVkG9WipijbhAmyfU9722WPS5gvQw5koNSuFkG0=;
+        b=Qx+xIcViYWKMKgW42lYDGv9TpCiLvfuARrxxWFSG3o6+d3dX/hY5u/gB2GCok8aYzm
+         nCuNVcMFNxvT/u2C+kfcZ6dB7hZm3smQJYfE6CsWzibHxVLstXrzFkAg8Wcr2nvCQrmW
+         Qb8SViWHD9O9/c/kUd0S+0cB6NhbSqQy1C/ZzQoD/KChl1yEps112+l0x/BbeZNMOMMf
+         0MKEzcV2z35c/9n+6RjHjleyO8yslyJOBWdr+NFs/Lw/vouMeUUwmQ3xnxM7J9xETwCn
+         MG5H2T7w1sISGimrBxGd9iIlOll02k4m3PW2sHeiiVpkMSsAaDWO1mbWdv8cXkCb0+BX
+         GUvg==
+X-Gm-Message-State: APjAAAUFOMlLwC4MbKeFn2dJJrDM1sY7AeATk0+WNmJl/xdDnnplY1B5
+        f9260nQR2keUzuuB4uq0xBA=
+X-Google-Smtp-Source: APXvYqwqYh96HPZKMNxmRjyjD/n4AOfKDED/5Q2kVgud1+sGD68OWaS1ARWKzIACEEh9OYFpK6mK3w==
+X-Received: by 2002:a1c:a8d3:: with SMTP id r202mr670490wme.106.1554142843173;
+        Mon, 01 Apr 2019 11:20:43 -0700 (PDT)
+Received: from X555LD.home ([2a02:85f:510:b900:c095:2934:58ba:cfa6])
+        by smtp.gmail.com with ESMTPSA id t15sm16353558wmt.2.2019.04.01.11.20.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 11:20:42 -0700 (PDT)
+From:   "Leonidas P. Papadakos" <papadakospan@gmail.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Leonidas P. Papadakos" <papadakospan@gmail.com>
+Subject: [PATCH 2/2] arm64: dts: rockchip: disable TX offload for mtu bigger than 1498 for some SoCs
+Date:   Mon,  1 Apr 2019 21:20:29 +0300
+Message-Id: <20190401182029.31362-1-papadakospan@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-26 at 15:30 +0000, Dmitry Safonov wrote:
-> Those functions are compute-costly, if we're out of budget - better
-> omit additional computations.
-> 
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
-> ---
->  net/ipv4/fib_trie.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
-> index d90cf9dfd443..2ce2739e7693 100644
-> --- a/net/ipv4/fib_trie.c
-> +++ b/net/ipv4/fib_trie.c
-> @@ -868,7 +868,7 @@ static struct key_vector *resize(struct trie *t, struct key_vector *tn,
->  	/* Double as long as the resulting node has a number of
->  	 * nonempty nodes that are above the threshold.
->  	 */
-> -	while (should_inflate(tp, tn) && *budget) {
-> +	while (*budget && should_inflate(tp, tn)) {
->  		tp = inflate(t, tn, budget);
->  		if (!tp) {
->  #ifdef CONFIG_IP_FIB_TRIE_STATS
-> @@ -894,7 +894,7 @@ static struct key_vector *resize(struct trie *t, struct key_vector *tn,
->  	/* Halve as long as the number of empty children in this
->  	 * node is above threshold.
->  	 */
-> -	while (should_halve(tp, tn) && *budget) {
-> +	while (*budget && should_halve(tp, tn)) {
->  		tp = halve(t, tn, budget);
->  		if (!tp) {
->  #ifdef CONFIG_IP_FIB_TRIE_STATS
+From: =?UTF-8?q?Kamil=20Trzci=C5=84ski?= <ayufan@ayufan.eu>
 
-Based on my comments in the other patches I would say this is a bad
-idea.
+Some rockchip boards (like the rock64, and the renegade) exhibit an issue where
+tx checksuming does not work with packets larger than 1498.
 
-Really the budget should allow at least 1 pass through the trie to
-attempt to either inflate or deflate the node and all children. This
-logic is optimizing for the case where *budget is 0 and that should not
-occur that often.
+This is bad for network stability.
+
+The previous approach was using force_thresh_dma_mode, which does more than
+disable TX offload, something we do not need
+
+this patch depends on patch:
+stmmac: introduce flag to dynamically disable TX offload for rockchip devices
+
+Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts    | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts    | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 1 +
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index c213ad74d..16ced107d 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -136,7 +136,7 @@
+ 	phy-mode = "rgmii";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&rgmiim1_pins>;
+-	snps,force_thresh_dma_mode;
++	rockchip,bugged_tx_coe;
+ 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index 7cfd5ca6c..cab2e1da6 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -150,7 +150,7 @@
+ 	phy-mode = "rgmii";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&rgmiim1_pins>;
+-	snps,force_thresh_dma_mode;
++	rockchip,bugged_tx_coe;
+ 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+index 791fb0ee9..a1221dca1 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+@@ -207,6 +207,7 @@
+ 	phy-mode = "rgmii";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&rgmii_pins>;
++	rockchip,bugged_tx_coe;
+ 	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+-- 
+2.21.0
 
