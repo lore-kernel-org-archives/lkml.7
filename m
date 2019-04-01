@@ -4,48 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8460C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2F8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 890E1218FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E4B21903
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139118;
-	bh=aCs+YMqqCjKCWBTOdHxcBj9YdgKsJRkw+C8tgdM0xOg=;
+	s=default; t=1554139124;
+	bh=uQVtPtytSgfQ/BPTEqJ0cjyGGNb0l8qcXbmePt3Ustc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DISvd+sXfHebnkpIlNGCWtpjCA7+vRpRRu7uFTw9hVi6A8TDc6Bay+9xtn7RZMahJ
-	 rCuEwU4Mgts74lViyAouQuXRNZjOAH4LNEUCwJXjI29MfYeWw+ilbKGJF7qTJZHSAa
-	 Q4ow0PqLSmu61F81ebsSWG7P83zMazoyY3NXQi+g=
+	b=oqUjkcN1WZJ4e2GTnMTSYEUnSESKt5R/HWTXS/302LOrjHgaZTXXiydLQhSDyPKm5
+	 Z6GbNP/x/pGwP+Z2TgaJlgroBq1MvETjwErBquZbeop+NTgKwLKkR7XcbumeKkBT/O
+	 MUrQ1S6QJ2rSwBX1g7a8lc5wGcH1Xv13ixxDeJyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbfDARSh (ORCPT
+        id S1731403AbfDARSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:18:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45924 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730945AbfDARSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:18:34 -0400
+        id S1730959AbfDARSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:18:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F15C1218FE;
-        Mon,  1 Apr 2019 17:18:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C99622171F;
+        Mon,  1 Apr 2019 17:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139113;
-        bh=aCs+YMqqCjKCWBTOdHxcBj9YdgKsJRkw+C8tgdM0xOg=;
+        s=default; t=1554139117;
+        bh=uQVtPtytSgfQ/BPTEqJ0cjyGGNb0l8qcXbmePt3Ustc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ung8mHz6LwcceIx8lXnh7HF28laR91HsQDeytDRP5R3wlf2+yslDTEGaRF2Ov0Wvc
-         JH9ZABo73oIyfDlf/MZmjTnMraLZn19Rh8M7QVclPHBF0rw57ubX3C3MyErAh+/Ssq
-         jQe2dUWYgeQ2djAPJgFlH8uet+IvCYVmlBFQRpzQ=
+        b=qyakZ2adBT6UgoCcWQfoHULW+HxHcqwe1SbytZuFpUhjzdVdncU6wxHl2gDa4jmFj
+         bNkvX58YxeiHUh42qSRjQUCtIo2mUWQwzAuhjycmnNbukTJ6E7qHieL1tDf/Drytsy
+         kjtHoadLegChuLK5qy2NwHIuNAdNycyq5Vm92AvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fredrik Noring <noring@nocrew.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 4.19 070/134] kbuild: modversions: Fix relative CRC byte order interpretation
-Date:   Mon,  1 Apr 2019 19:01:46 +0200
-Message-Id: <20190401170051.016293263@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Huaisheng Ye <yehs1@lenovo.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Yong Wu <yong.wu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomasz Figa <tfiga@google.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 111/134] mm: add support for kmem caches in DMA32 zone
+Date:   Mon,  1 Apr 2019 19:02:27 +0200
+Message-Id: <20190401170054.591754683@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -64,49 +86,169 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Fredrik Noring <noring@nocrew.org>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-commit 54a7151b1496cddbb7a83546b7998103e98edc88 upstream.
+commit 6d6ea1e967a246f12cfe2f5fb743b70b2e608d4a upstream.
 
-Fix commit 56067812d5b0 ("kbuild: modversions: add infrastructure for
-emitting relative CRCs") where CRCs are interpreted in host byte order
-rather than proper kernel byte order. The bug is conditional on
-CONFIG_MODULE_REL_CRCS.
+Patch series "iommu/io-pgtable-arm-v7s: Use DMA32 zone for page tables",
+v6.
 
-For example, when loading a BE module into a BE kernel compiled with a LE
-system, the error "disagrees about version of symbol module_layout" is
-produced. A message such as "Found checksum D7FA6856 vs module 5668FAD7"
-will be given with debug enabled, which indicates an obvious endian
-problem within __kcrctab within the kernel image.
+This is a followup to the discussion in [1], [2].
 
-The general solution is to use the macro TO_NATIVE, as is done in
-similar cases throughout modpost.c. With this correction it has been
-verified that a BE kernel compiled with a LE system accepts BE modules.
+IOMMUs using ARMv7 short-descriptor format require page tables (level 1
+and 2) to be allocated within the first 4GB of RAM, even on 64-bit
+systems.
 
-This change has also been verified with a LE kernel compiled with a LE
-system, in which case TO_NATIVE returns its value unmodified since the
-byte orders match. This is by far the common case.
+For L1 tables that are bigger than a page, we can just use
+__get_free_pages with GFP_DMA32 (on arm64 systems only, arm would still
+use GFP_DMA).
 
-Fixes: 56067812d5b0 ("kbuild: modversions: add infrastructure for emitting relative CRCs")
-Signed-off-by: Fredrik Noring <noring@nocrew.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+For L2 tables that only take 1KB, it would be a waste to allocate a full
+page, so we considered 3 approaches:
+ 1. This series, adding support for GFP_DMA32 slab caches.
+ 2. genalloc, which requires pre-allocating the maximum number of L2 page
+    tables (4096, so 4MB of memory).
+ 3. page_frag, which is not very memory-efficient as it is unable to reuse
+    freed fragments until the whole page is freed. [3]
+
+This series is the most memory-efficient approach.
+
+stable@ note:
+  We confirmed that this is a regression, and IOMMU errors happen on 4.19
+  and linux-next/master on MT8173 (elm, Acer Chromebook R13). The issue
+  most likely starts from commit ad67f5a6545f ("arm64: replace ZONE_DMA
+  with ZONE_DMA32"), i.e. 4.15, and presumably breaks a number of Mediatek
+  platforms (and maybe others?).
+
+[1] https://lists.linuxfoundation.org/pipermail/iommu/2018-November/030876.html
+[2] https://lists.linuxfoundation.org/pipermail/iommu/2018-December/031696.html
+[3] https://patchwork.codeaurora.org/patch/671639/
+
+This patch (of 3):
+
+IOMMUs using ARMv7 short-descriptor format require page tables to be
+allocated within the first 4GB of RAM, even on 64-bit systems.  On arm64,
+this is done by passing GFP_DMA32 flag to memory allocation functions.
+
+For IOMMU L2 tables that only take 1KB, it would be a waste to allocate
+a full page using get_free_pages, so we considered 3 approaches:
+ 1. This patch, adding support for GFP_DMA32 slab caches.
+ 2. genalloc, which requires pre-allocating the maximum number of L2
+    page tables (4096, so 4MB of memory).
+ 3. page_frag, which is not very memory-efficient as it is unable
+    to reuse freed fragments until the whole page is freed.
+
+This change makes it possible to create a custom cache in DMA32 zone using
+kmem_cache_create, then allocate memory using kmem_cache_alloc.
+
+We do not create a DMA32 kmalloc cache array, as there are currently no
+users of kmalloc(..., GFP_DMA32).  These calls will continue to trigger a
+warning, as we keep GFP_DMA32 in GFP_SLAB_BUG_MASK.
+
+This implies that calls to kmem_cache_*alloc on a SLAB_CACHE_DMA32
+kmem_cache must _not_ use GFP_DMA32 (it is anyway redundant and
+unnecessary).
+
+Link: http://lkml.kernel.org/r/20181210011504.122604-2-drinkcat@chromium.org
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Sasha Levin <Alexander.Levin@microsoft.com>
+Cc: Huaisheng Ye <yehs1@lenovo.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Yong Wu <yong.wu@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Tomasz Figa <tfiga@google.com>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/mod/modpost.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/slab.h |    2 ++
+ mm/slab.c            |    2 ++
+ mm/slab.h            |    3 ++-
+ mm/slab_common.c     |    2 +-
+ mm/slub.c            |    5 +++++
+ 5 files changed, 12 insertions(+), 2 deletions(-)
 
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -640,7 +640,7 @@ static void handle_modversions(struct mo
- 			       info->sechdrs[sym->st_shndx].sh_offset -
- 			       (info->hdr->e_type != ET_REL ?
- 				info->sechdrs[sym->st_shndx].sh_addr : 0);
--			crc = *crcp;
-+			crc = TO_NATIVE(*crcp);
- 		}
- 		sym_update_crc(symname + strlen("__crc_"), mod, crc,
- 				export);
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -32,6 +32,8 @@
+ #define SLAB_HWCACHE_ALIGN	((slab_flags_t __force)0x00002000U)
+ /* Use GFP_DMA memory */
+ #define SLAB_CACHE_DMA		((slab_flags_t __force)0x00004000U)
++/* Use GFP_DMA32 memory */
++#define SLAB_CACHE_DMA32	((slab_flags_t __force)0x00008000U)
+ /* DEBUG: Store the last owner for bug hunting */
+ #define SLAB_STORE_USER		((slab_flags_t __force)0x00010000U)
+ /* Panic if kmem_cache_create() fails */
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -2124,6 +2124,8 @@ done:
+ 	cachep->allocflags = __GFP_COMP;
+ 	if (flags & SLAB_CACHE_DMA)
+ 		cachep->allocflags |= GFP_DMA;
++	if (flags & SLAB_CACHE_DMA32)
++		cachep->allocflags |= GFP_DMA32;
+ 	if (flags & SLAB_RECLAIM_ACCOUNT)
+ 		cachep->allocflags |= __GFP_RECLAIMABLE;
+ 	cachep->size = size;
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -127,7 +127,8 @@ static inline slab_flags_t kmem_cache_fl
+ 
+ 
+ /* Legal flag mask for kmem_cache_create(), for various configurations */
+-#define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | SLAB_PANIC | \
++#define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | \
++			 SLAB_CACHE_DMA32 | SLAB_PANIC | \
+ 			 SLAB_TYPESAFE_BY_RCU | SLAB_DEBUG_OBJECTS )
+ 
+ #if defined(CONFIG_DEBUG_SLAB)
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -53,7 +53,7 @@ static DECLARE_WORK(slab_caches_to_rcu_d
+ 		SLAB_FAILSLAB | SLAB_KASAN)
+ 
+ #define SLAB_MERGE_SAME (SLAB_RECLAIM_ACCOUNT | SLAB_CACHE_DMA | \
+-			 SLAB_ACCOUNT)
++			 SLAB_CACHE_DMA32 | SLAB_ACCOUNT)
+ 
+ /*
+  * Merge control. If this is set then no merging of slab caches will occur.
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -3539,6 +3539,9 @@ static int calculate_sizes(struct kmem_c
+ 	if (s->flags & SLAB_CACHE_DMA)
+ 		s->allocflags |= GFP_DMA;
+ 
++	if (s->flags & SLAB_CACHE_DMA32)
++		s->allocflags |= GFP_DMA32;
++
+ 	if (s->flags & SLAB_RECLAIM_ACCOUNT)
+ 		s->allocflags |= __GFP_RECLAIMABLE;
+ 
+@@ -5633,6 +5636,8 @@ static char *create_unique_id(struct kme
+ 	 */
+ 	if (s->flags & SLAB_CACHE_DMA)
+ 		*p++ = 'd';
++	if (s->flags & SLAB_CACHE_DMA32)
++		*p++ = 'D';
+ 	if (s->flags & SLAB_RECLAIM_ACCOUNT)
+ 		*p++ = 'a';
+ 	if (s->flags & SLAB_CONSISTENCY_CHECKS)
 
 
