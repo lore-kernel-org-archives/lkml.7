@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12567C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE08C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBEB021473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4F02133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139397;
-	bh=BCGl/x8UFrj8ipibmht3WTy3It4/HmiliqKHeFTe+xU=;
+	s=default; t=1554139401;
+	bh=FvWegZhdWF7huz5UHrfwxgNXlvWWKDP7e+8RAIxe4qY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kBsxsO+CulLtxi7Rnkl92PnmlsUA7TzFnt58PCNgX8XzRyEhah6taiCCk6rs0GseK
-	 xFwpTRwSu59D8j2a50H9nTO9qgCqC+TUpBZ+pyZ7HlSOJ4yqBA3im/W5c0g/S6dETn
-	 cgKCu22Wml8i6yAS3TDAsBW1WuGMKnwm+jmHakC8=
+	b=vJUHlrtkkn36NTvzZTleP5BxJH5BAQO/Bnszb7mj1z4Nd2GeFWZHBl46JmPY7tCB3
+	 Lbyy2Pswh6NL/6MU43jNfaddjwypQx7PpMxSt6OHZbbmDtWe2kZCJUKIzVqFl7dmmU
+	 cUSBtIXKd2/NBaVMuh9myibDYB7lAg9Pn+hIWFf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732086AbfDARXQ (ORCPT
+        id S1731868AbfDARXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:23:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52922 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:23:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbfDARXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:23:13 -0400
+        id S1732079AbfDARXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:23:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C80B7206C0;
-        Mon,  1 Apr 2019 17:23:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E63E206C0;
+        Mon,  1 Apr 2019 17:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139392;
-        bh=BCGl/x8UFrj8ipibmht3WTy3It4/HmiliqKHeFTe+xU=;
+        s=default; t=1554139395;
+        bh=FvWegZhdWF7huz5UHrfwxgNXlvWWKDP7e+8RAIxe4qY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kJRDVQV5bHjMy/F8UXOnofOTXPGnzYMGXMB/5oMV1iJMAIVMfooHBYk0u42V27zSl
-         aPgvINshB7OkVwHCgZwDEitQTa117UOX6pa2kQUgWrZdaDnJu/hVe2TB0yxsO39RN+
-         YZx2Q63o2GvQiCL9bTDGs7+shelxjrCs5YktRoiU=
+        b=f2lXgoEbunLCb1Pyn37pXV28NxOkEn0eExRT2YFdg5uzRfrSBw2krgloy2hCFSXAp
+         YQ53Pnq0zsHcd7WIgRmlrJaM3Tuy7nmvXOt8YN5p0vy04MKhhJsHtHqPECcGKGeer6
+         PNyLhe7nssRnn/7SmgUJbRcR81qsG2yAovBs2c5k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 062/107] net: dsa: qca8k: remove leftover phy accessors
-Date:   Mon,  1 Apr 2019 19:02:17 +0200
-Message-Id: <20190401170051.361750875@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 063/107] ALSA: rawmidi: Fix potential Spectre v1 vulnerability
+Date:   Mon,  1 Apr 2019 19:02:18 +0200
+Message-Id: <20190401170051.429128315@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,64 +66,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 1eec7151ae0e134bd42e3f128066b2ff8da21393 upstream.
+commit 2b1d9c8f87235f593826b9cf46ec10247741fff9 upstream.
 
-This belated patch implements Andrew Lunn's request of
-"remove the phy_read() and phy_write() functions."
-<https://lore.kernel.org/patchwork/comment/902734/>
+info->stream is indirectly controlled by user-space, hence leading to
+a potential exploitation of the Spectre variant 1 vulnerability.
 
-While seemingly harmless, this causes the switch's user
-port PHYs to get registered twice. This is because the
-DSA subsystem will create a slave mdio-bus not knowing
-that the qca8k_phy_(read|write) accessors operate on
-the external mdio-bus. So the same "bus" gets effectively
-duplicated.
+This issue was detected with the help of Smatch:
+
+sound/core/rawmidi.c:604 __snd_rawmidi_info_select() warn: potential spectre issue 'rmidi->streams' [r] (local cap)
+
+Fix this by sanitizing info->stream before using it to index
+rmidi->streams.
+
+Notice that given that speculation windows are large, the policy is
+to kill the speculation on the first load and not worry if it can be
+completed with a dependent load/store [1].
+
+[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
 
 Cc: stable@vger.kernel.org
-Fixes: 6b93fb46480a ("net-next: dsa: add new driver for qca8xxx family")
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/dsa/qca8k.c |   18 ------------------
- 1 file changed, 18 deletions(-)
+ sound/core/rawmidi.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/dsa/qca8k.c
-+++ b/drivers/net/dsa/qca8k.c
-@@ -629,22 +629,6 @@ qca8k_adjust_link(struct dsa_switch *ds,
- 	qca8k_port_set_status(priv, port, 1);
- }
- 
--static int
--qca8k_phy_read(struct dsa_switch *ds, int phy, int regnum)
--{
--	struct qca8k_priv *priv = (struct qca8k_priv *)ds->priv;
--
--	return mdiobus_read(priv->bus, phy, regnum);
--}
--
--static int
--qca8k_phy_write(struct dsa_switch *ds, int phy, int regnum, u16 val)
--{
--	struct qca8k_priv *priv = (struct qca8k_priv *)ds->priv;
--
--	return mdiobus_write(priv->bus, phy, regnum, val);
--}
--
- static void
- qca8k_get_strings(struct dsa_switch *ds, int port, uint8_t *data)
- {
-@@ -879,8 +863,6 @@ static const struct dsa_switch_ops qca8k
- 	.setup			= qca8k_setup,
- 	.adjust_link            = qca8k_adjust_link,
- 	.get_strings		= qca8k_get_strings,
--	.phy_read		= qca8k_phy_read,
--	.phy_write		= qca8k_phy_write,
- 	.get_ethtool_stats	= qca8k_get_ethtool_stats,
- 	.get_sset_count		= qca8k_get_sset_count,
- 	.get_mac_eee		= qca8k_get_mac_eee,
+--- a/sound/core/rawmidi.c
++++ b/sound/core/rawmidi.c
+@@ -29,6 +29,7 @@
+ #include <linux/mutex.h>
+ #include <linux/module.h>
+ #include <linux/delay.h>
++#include <linux/nospec.h>
+ #include <sound/rawmidi.h>
+ #include <sound/info.h>
+ #include <sound/control.h>
+@@ -591,6 +592,7 @@ static int __snd_rawmidi_info_select(str
+ 		return -ENXIO;
+ 	if (info->stream < 0 || info->stream > 1)
+ 		return -EINVAL;
++	info->stream = array_index_nospec(info->stream, 2);
+ 	pstr = &rmidi->streams[info->stream];
+ 	if (pstr->substream_count == 0)
+ 		return -ENOENT;
 
 
