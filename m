@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC79C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE931C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E76620856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6AFA2171F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139836;
-	bh=YKrF8HsqFixDd71eOLAmxLe+ICN442VSNKKpH2ueAC4=;
+	s=default; t=1554139845;
+	bh=yQb2NK5lzLzpbsQdb7FnXLvG2WS+4nHq8EhJ1bLLPWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q75f6WwLMnibYY2W0t2k/5kCqvHJRFBoQMFpo7rAXSMkflznTf7593u3Gfj27AiUG
-	 wtCnzmIndP4xGuGghYeU/+4XeQxPi5wwvdx4JwRD3nEqZpt7WWAr3mrqBtg0OSnap4
-	 SL+AjlNhISfZ8xdjx44f5vthAqXMTNL881BU1eVw=
+	b=sIcXZJcJESsbckGEdMKwJzvHojG10tLhGcIGJGRbD51NPfgLUwx08yalNFXITLrsV
+	 zER5jBrYnG7jjFlUD/Q69zUAveVlVVlTW0Et4x0aXTLkIgKI/yIZeX0sKwno6h9aPt
+	 8u0RPff7fqTC3q4r7lCvFUiPcGS1Hvwg4HjbRn5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733118AbfDARaf (ORCPT
+        id S1732932AbfDARao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:30:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37616 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:30:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728698AbfDARac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:30:32 -0400
+        id S1733130AbfDARaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:30:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D26922070B;
-        Mon,  1 Apr 2019 17:30:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFADE20856;
+        Mon,  1 Apr 2019 17:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139832;
-        bh=YKrF8HsqFixDd71eOLAmxLe+ICN442VSNKKpH2ueAC4=;
+        s=default; t=1554139839;
+        bh=yQb2NK5lzLzpbsQdb7FnXLvG2WS+4nHq8EhJ1bLLPWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ulIp7TgFWmgpEH2WHexNa3Dnrwaf32a5qzWZY97bnjokyB+CYvqF5kH71HrX9llU3
-         GHRZNurKb6IP644QM1jVTPlX4mQ6T/boXX7ix+HS5tEWVg51JZ1FNYqQhaKpLoefS/
-         7h83qahs55Rig3OAR7nu+smeX357nk4wEs2V2aRM=
+        b=EJPe64sdes8Nt92wjMpcY3BdzEyhNPgi2JenejlefAKHV6kOMPM3+uU0ihyjHNWyM
+         /4XuSDOa1wGm/uh3E8dspwW8YhE74rAK0jq397sy+QSZUDkeZOr+w7qDx+Wmj9JTs+
+         /p5wVkSW+YOZCnAjpN6lmZO3MiCQek1EM7ToJwM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Wei Qiao <wei.qiao@spreadtrum.com>,
+        Chunyan Zhang <chunyan.zhang@spreadtrum.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.4 027/131] usb: gadget: Add the gserial port checking in gs_start_tx()
-Date:   Mon,  1 Apr 2019 19:01:37 +0200
-Message-Id: <20190401170054.338704490@linuxfoundation.org>
+Subject: [PATCH 4.4 029/131] serial: sprd: adjust TIMEOUT to a big value
+Date:   Mon,  1 Apr 2019 19:01:39 +0200
+Message-Id: <20190401170054.525814625@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -66,49 +66,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Baolin Wang <baolin.wang@linaro.org>
+From: Wei Qiao <wei.qiao@spreadtrum.com>
 
-commit 511a36d2f357724312bb3776d2f6eed3890928b2 upstream.
+commit e1dc9b08051a2c2e694edf48d1e704f07c7c143c upstream.
 
-When usb gadget is set gadget serial function, it will be crash in below
-situation.
+SPRD_TIMEOUT was 256, which is too small to wait until the status
+switched to workable in a while loop, so that the earlycon could
+not work correctly.
 
-It will clean the 'port->port_usb' pointer in gserial_disconnect() function
-when usb link is inactive, but it will release lock for disabling the endpoints
-in this function. Druing the lock release period, it maybe complete one request
-to issue gs_write_complete()--->gs_start_tx() function, but the 'port->port_usb'
-pointer had been set NULL, thus it will be crash in gs_start_tx() function.
-
-This patch adds the 'port->port_usb' pointer checking in gs_start_tx() function
-to avoid this situation.
-
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Wei Qiao <wei.qiao@spreadtrum.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/function/u_serial.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/tty/serial/sprd_serial.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/gadget/function/u_serial.c
-+++ b/drivers/usb/gadget/function/u_serial.c
-@@ -361,10 +361,15 @@ __acquires(&port->port_lock)
- */
- {
- 	struct list_head	*pool = &port->write_pool;
--	struct usb_ep		*in = port->port_usb->in;
-+	struct usb_ep		*in;
- 	int			status = 0;
- 	bool			do_tty_wake = false;
+--- a/drivers/tty/serial/sprd_serial.c
++++ b/drivers/tty/serial/sprd_serial.c
+@@ -36,7 +36,7 @@
+ #define SPRD_FIFO_SIZE		128
+ #define SPRD_DEF_RATE		26000000
+ #define SPRD_BAUD_IO_LIMIT	3000000
+-#define SPRD_TIMEOUT		256
++#define SPRD_TIMEOUT		256000
  
-+	if (!port->port_usb)
-+		return status;
-+
-+	in = port->port_usb->in;
-+
- 	while (!port->write_busy && !list_empty(pool)) {
- 		struct usb_request	*req;
- 		int			len;
+ /* the offset of serial registers and BITs for them */
+ /* data registers */
 
 
