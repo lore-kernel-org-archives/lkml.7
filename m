@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9293C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA75C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A829206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF41A213A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554108891;
-	bh=sufVEP/ZEsFu9Bj0Vhh2yh/rUwLNRMrB/ZuwxQrvLI8=;
+	s=default; t=1554108895;
+	bh=7At76DaSPBKLHr08ax7CX4cUQxLVVPz2lvyG+ZcfH2E=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=I5UrQnldni4iO41QhxCo1YdEyJgIKw1sdIBU7VZXpeN2SqIjN/smocl0ITcIDvkr8
-	 bM67AdJ+aBx72u6zdA1tEZltdQkSmj/1GHtZEpK15iRNF+uAw+nzgPTMoSoIqEgqB7
-	 jmO9OQMEkSr+FjGEBHkVaLESWJSBieVKJAfgHN8s=
+	b=UcHbZKJPvGntfAR10ahWjsaV5jAbdZTxh7CI/nu5Y4aIhMWnLpYf+lgQ+3zySOYEF
+	 ik3t7/l4eX/XBWnnk0X/AxHXufmJGbg6Ks/7XGuvZKheOwMYO3vmmIoaCPbq9WXm6d
+	 +ktFa5mERVqMgQIF13Gct5uaTnBqUb/y4P3GRM2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbfDAIyu (ORCPT
+        id S1728913AbfDAIyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:54:50 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33828 "EHLO
+        Mon, 1 Apr 2019 04:54:54 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33930 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbfDAIys (ORCPT
+        with ESMTP id S1728891AbfDAIyv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:54:48 -0400
+        Mon, 1 Apr 2019 04:54:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=8c/z35CyCXqj2pAO7MW46R5AmKz/R2NXTNYG7r9iNpo=; b=Af2E5v3Rp5kS
-        seCjCR+GvTk8xsdxWt3eh1ej46qx12iJhGAR9bAADQHI1yG6lNmAxaQiHL/9OewUCdOPdu1beD3PN
-        ujqzVGHTag1O2d1eyq9qtmNY65T385RWU/y45vdBgjZW/ck0ALAMniVYFB+xd74Hec0rsM2jNE8oZ
-        g9w7g=;
+        List-Archive; bh=Ab47Iqz5QIBWf+PqAhTNnXG1qJt6PMJd9hr9Re2f8JU=; b=OPufvJIKva3t
+        HEBRdPvfTUnTlYI7j1k2C5WwE/5E12nW2PCClX/i0EjIv3/b0JFxF51DZ7dnOfTS63XgZC9jWB3zX
+        cgUVVU05Fe/V37lTPCYQS83naIIUtM7MRIyQwe8UFIotaINVhyGrFzXCG53Q2UTefyoGPKjzAgcdR
+        euCH0=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hAsiJ-0008QT-DE; Mon, 01 Apr 2019 08:54:43 +0000
+        id 1hAsiM-0008QW-HS; Mon, 01 Apr 2019 08:54:47 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id B8359440082; Mon,  1 Apr 2019 09:54:40 +0100 (BST)
+        id 75F74440083; Mon,  1 Apr 2019 09:54:43 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>
 Cc:     Mark Brown <broonie@kernel.org>, thierry.reding@gmail.com,
@@ -54,11 +54,11 @@ Cc:     Mark Brown <broonie@kernel.org>, thierry.reding@gmail.com,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
         linux-spi@vger.kernel.org
-Subject: Applied "spi: tegra114: fix for unpacked mode transfers" to the spi tree
-In-Reply-To:  <1553666207-11414-3-git-send-email-skomatineni@nvidia.com>
+Subject: Applied "spi: tegra114: clear packed bit for unpacked mode" to the spi tree
+In-Reply-To:  <1553666207-11414-2-git-send-email-skomatineni@nvidia.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190401085440.B8359440082@finisterre.ee.mobilebroadband>
-Date:   Mon,  1 Apr 2019 09:54:40 +0100 (BST)
+Message-Id: <20190401085443.75F74440083@finisterre.ee.mobilebroadband>
+Date:   Mon,  1 Apr 2019 09:54:43 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: tegra114: fix for unpacked mode transfers
+   spi: tegra114: clear packed bit for unpacked mode
 
 has been applied to the spi tree at
 
@@ -91,162 +91,36 @@ to this mail.
 Thanks,
 Mark
 
-From 1a89ac5b91895127f7c586ec5075c3753ca25501 Mon Sep 17 00:00:00 2001
+From 7b3d10cdf54b8bc1dc0da21faed9789ac4da3684 Mon Sep 17 00:00:00 2001
 From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Date: Tue, 26 Mar 2019 22:56:24 -0700
-Subject: [PATCH] spi: tegra114: fix for unpacked mode transfers
+Date: Tue, 26 Mar 2019 22:56:23 -0700
+Subject: [PATCH] spi: tegra114: clear packed bit for unpacked mode
 
-Fixes: computation of actual bytes to fill/receive in/from FIFO in unpacked
-mode when transfer length is not a multiple of requested bits per word.
+Fixes: Clear packed bit when not using packed mode.
 
-unpacked mode transfers fails when the transfer includes partial bytes in
-the last word.
-
-Total words to be written/read to/from FIFO is computed based on transfer
-length and bits per word. Unpacked mode includes 0 padding bytes for partial
-words to align with bits per word and these extra bytes are also accounted
-for calculating bytes left to transfer in the current driver.
-
-This causes extra bytes access of tx/rx buffers along with buffer index
-position crossing actual length where remain_len becomes negative and due to
-unsigned type, negative value is a 32 bit representation of signed value
-and transferred bytes never meets the actual transfer length resulting in
-transfer timeout and a hang.
-
-This patch fixes this with proper computation of the actual bytes to fill in
-FIFO during transmit and the actual bytes to read from FIFO during receive
-ignoring 0 padded bytes.
+Packed bit is not cleared when not using packed mode. This results
+in transfer timeouts for the unpacked mode transfers followed by the
+packed mode transfers.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 43 +++++++++++++++++++++++++++++++-------
- 1 file changed, 36 insertions(+), 7 deletions(-)
+ drivers/spi/spi-tegra114.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 1435792944c4..876eb2acdef1 100644
+index a76acedd7e2f..1435792944c4 100644
 --- a/drivers/spi/spi-tegra114.c
 +++ b/drivers/spi/spi-tegra114.c
-@@ -307,10 +307,16 @@ static unsigned tegra_spi_fill_tx_fifo_from_client_txbuf(
- 				x |= (u32)(*tx_buf++) << (i * 8);
- 			tegra_spi_writel(tspi, x, SPI_TX_FIFO);
- 		}
-+
-+		tspi->cur_tx_pos += written_words * tspi->bytes_per_word;
- 	} else {
-+		unsigned int write_bytes;
- 		max_n_32bit = min(tspi->curr_dma_words,  tx_empty_count);
- 		written_words = max_n_32bit;
- 		nbytes = written_words * tspi->bytes_per_word;
-+		if (nbytes > t->len - tspi->cur_pos)
-+			nbytes = t->len - tspi->cur_pos;
-+		write_bytes = nbytes;
- 		for (count = 0; count < max_n_32bit; count++) {
- 			u32 x = 0;
+@@ -730,6 +730,8 @@ static int tegra_spi_start_transfer_one(struct spi_device *spi,
  
-@@ -319,8 +325,10 @@ static unsigned tegra_spi_fill_tx_fifo_from_client_txbuf(
- 				x |= (u32)(*tx_buf++) << (i * 8);
- 			tegra_spi_writel(tspi, x, SPI_TX_FIFO);
- 		}
-+
-+		tspi->cur_tx_pos += write_bytes;
- 	}
--	tspi->cur_tx_pos += written_words * tspi->bytes_per_word;
-+
- 	return written_words;
- }
+ 	if (tspi->is_packed)
+ 		command1 |= SPI_PACKED;
++	else
++		command1 &= ~SPI_PACKED;
  
-@@ -344,20 +352,27 @@ static unsigned int tegra_spi_read_rx_fifo_to_client_rxbuf(
- 			for (i = 0; len && (i < 4); i++, len--)
- 				*rx_buf++ = (x >> i*8) & 0xFF;
- 		}
--		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 		read_words += tspi->curr_dma_words;
-+		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 	} else {
- 		u32 rx_mask = ((u32)1 << t->bits_per_word) - 1;
-+		u8 bytes_per_word = tspi->bytes_per_word;
-+		unsigned int read_bytes;
- 
-+		len = rx_full_count * bytes_per_word;
-+		if (len > t->len - tspi->cur_pos)
-+			len = t->len - tspi->cur_pos;
-+		read_bytes = len;
- 		for (count = 0; count < rx_full_count; count++) {
- 			u32 x = tegra_spi_readl(tspi, SPI_RX_FIFO) & rx_mask;
- 
--			for (i = 0; (i < tspi->bytes_per_word); i++)
-+			for (i = 0; len && (i < bytes_per_word); i++, len--)
- 				*rx_buf++ = (x >> (i*8)) & 0xFF;
- 		}
--		tspi->cur_rx_pos += rx_full_count * tspi->bytes_per_word;
- 		read_words += rx_full_count;
-+		tspi->cur_rx_pos += read_bytes;
- 	}
-+
- 	return read_words;
- }
- 
-@@ -372,12 +387,17 @@ static void tegra_spi_copy_client_txbuf_to_spi_txbuf(
- 		unsigned len = tspi->curr_dma_words * tspi->bytes_per_word;
- 
- 		memcpy(tspi->tx_dma_buf, t->tx_buf + tspi->cur_pos, len);
-+		tspi->cur_tx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 	} else {
- 		unsigned int i;
- 		unsigned int count;
- 		u8 *tx_buf = (u8 *)t->tx_buf + tspi->cur_tx_pos;
- 		unsigned consume = tspi->curr_dma_words * tspi->bytes_per_word;
-+		unsigned int write_bytes;
- 
-+		if (consume > t->len - tspi->cur_pos)
-+			consume = t->len - tspi->cur_pos;
-+		write_bytes = consume;
- 		for (count = 0; count < tspi->curr_dma_words; count++) {
- 			u32 x = 0;
- 
-@@ -386,8 +406,9 @@ static void tegra_spi_copy_client_txbuf_to_spi_txbuf(
- 				x |= (u32)(*tx_buf++) << (i * 8);
- 			tspi->tx_dma_buf[count] = x;
- 		}
-+
-+		tspi->cur_tx_pos += write_bytes;
- 	}
--	tspi->cur_tx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 
- 	/* Make the dma buffer to read by dma */
- 	dma_sync_single_for_device(tspi->dev, tspi->tx_dma_phys,
-@@ -405,20 +426,28 @@ static void tegra_spi_copy_spi_rxbuf_to_client_rxbuf(
- 		unsigned len = tspi->curr_dma_words * tspi->bytes_per_word;
- 
- 		memcpy(t->rx_buf + tspi->cur_rx_pos, tspi->rx_dma_buf, len);
-+		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 	} else {
- 		unsigned int i;
- 		unsigned int count;
- 		unsigned char *rx_buf = t->rx_buf + tspi->cur_rx_pos;
- 		u32 rx_mask = ((u32)1 << t->bits_per_word) - 1;
-+		unsigned consume = tspi->curr_dma_words * tspi->bytes_per_word;
-+		unsigned int read_bytes;
- 
-+		if (consume > t->len - tspi->cur_pos)
-+			consume = t->len - tspi->cur_pos;
-+		read_bytes = consume;
- 		for (count = 0; count < tspi->curr_dma_words; count++) {
- 			u32 x = tspi->rx_dma_buf[count] & rx_mask;
- 
--			for (i = 0; (i < tspi->bytes_per_word); i++)
-+			for (i = 0; consume && (i < tspi->bytes_per_word);
-+							i++, consume--)
- 				*rx_buf++ = (x >> (i*8)) & 0xFF;
- 		}
-+
-+		tspi->cur_rx_pos += read_bytes;
- 	}
--	tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
- 
- 	/* Make the dma buffer to read by dma */
- 	dma_sync_single_for_device(tspi->dev, tspi->rx_dma_phys,
+ 	command1 &= ~(SPI_CS_SEL_MASK | SPI_TX_EN | SPI_RX_EN);
+ 	tspi->cur_direction = 0;
 -- 
 2.20.1
 
