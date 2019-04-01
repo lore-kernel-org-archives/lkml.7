@@ -2,106 +2,108 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21884C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7019EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA8020857
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:43:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yGnhFVFp"
+	by mail.kernel.org (Postfix) with ESMTP id 486F620857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfDAPnu (ORCPT
+        id S1728626AbfDAPny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 11:43:50 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49448 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbfDAPnu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 11:43:50 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x31FhXkd096405;
-        Mon, 1 Apr 2019 10:43:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554133413;
-        bh=rytgBPIQQhnYKnd1jlb2WOCdTasvmI3/5RejPyun8ds=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=yGnhFVFp8V6VHc2tKU+o9E67HBJr6OuXHbmto2PNKo0HurEm6VDXtrXSpQSmQVHLQ
-         fRQl1dIdHB/5dkhjvmiDqoZs5iT6yHoMGoGYrGIjMbBpQ27isH7AMaDT7+um3oj6p2
-         R+FMy8X2T5ejn7TSdXY1+8EoiCF5vxfcHgZkd61Q=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x31FhXmN069612
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 1 Apr 2019 10:43:33 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Apr
- 2019 10:43:33 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 1 Apr 2019 10:43:33 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x31FhXdB076337;
-        Mon, 1 Apr 2019 10:43:33 -0500
-Date:   Mon, 1 Apr 2019 10:43:33 -0500
-From:   Bin Liu <b-liu@ti.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: musb: Silence error about blacklisting hubs if
- !CONFIG_USB
-Message-ID: <20190401154333.GJ25852@uda0271908>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>,
-        Paul Cercueil <paul@crapouillou.net>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190319135146.25995-1-paul@crapouillou.net>
+        Mon, 1 Apr 2019 11:43:54 -0400
+Received: from anholt.net ([50.246.234.109]:44994 "EHLO anholt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726887AbfDAPnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 11:43:51 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id 3F85B10A280A;
+        Mon,  1 Apr 2019 08:43:50 -0700 (PDT)
+X-Virus-Scanned: Debian amavisd-new at anholt.net
+Received: from anholt.net ([127.0.0.1])
+        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id o7B0OpqILtge; Mon,  1 Apr 2019 08:43:49 -0700 (PDT)
+Received: from eliezer.anholt.net (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id F361310A0220;
+        Mon,  1 Apr 2019 08:43:48 -0700 (PDT)
+Received: by eliezer.anholt.net (Postfix, from userid 1000)
+        id 76A912FE2F72; Mon,  1 Apr 2019 08:43:48 -0700 (PDT)
+From:   Eric Anholt <eric@anholt.net>
+To:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        "list\@263.net\:IOMMU DRIVERS \<iommu\@lists.linux-foundation.org\>\, 
+        Joerg Roedel \<joro\@8bytes.org\>\, " 
+        <iommu@lists.linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sean Paul <sean@poorly.run>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Subject: Re: [PATCH v2 2/3] drm: Add a drm_gem_objects_lookup helper
+In-Reply-To: <155412649586.24691.809508732198367112@skylake-alporthouse-com>
+References: <20190401074730.12241-1-robh@kernel.org> <20190401074730.12241-3-robh@kernel.org> <CAKMK7uE7-XV3cZxS8GT_EDa7yojOLPQi+LqkF85h_0z_JL6gYw@mail.gmail.com> <155412649586.24691.809508732198367112@skylake-alporthouse-com>
+User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/25.2.2 (x86_64-pc-linux-gnu)
+Date:   Mon, 01 Apr 2019 08:43:47 -0700
+Message-ID: <8736n120jw.fsf@anholt.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190319135146.25995-1-paul@crapouillou.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 02:51:46PM +0100, Paul Cercueil wrote:
-> Some drivers, like jz4740-musb, don't depend on CONFIG_USB.
+--=-=-=
+Content-Type: text/plain
 
-CONFIG_USB_OTG_BLACKLIST_HUB is about hub, so should it depend on
-CONFIG_USB instead in drivers/usb/core/Kconfig?
+Chris Wilson <chris@chris-wilson.co.uk> writes:
 
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/usb/musb/musb_core.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
-> index b7d56272f9d1..9f5a4819a744 100644
-> --- a/drivers/usb/musb/musb_core.c
-> +++ b/drivers/usb/musb/musb_core.c
-> @@ -1497,10 +1497,11 @@ static int musb_core_init(u16 musb_type, struct musb *musb)
->  	} else {
->  		musb->is_multipoint = 0;
->  		type = "";
-> -#ifndef	CONFIG_USB_OTG_BLACKLIST_HUB
-> -		pr_err("%s: kernel must blacklist external hubs\n",
-> -		       musb_driver_name);
-> -#endif
-> +		if (IS_ENABLED(CONFIG_USB) &&
-> +		    !IS_ENABLED(CONFIG_USB_OTG_BLACKLIST_HUB)) {
-> +			pr_err("%s: kernel must blacklist external hubs\n",
-> +			       musb_driver_name);
-> +		}
->  	}
->  
->  	/* log release info */
+> Quoting Daniel Vetter (2019-04-01 14:06:48)
+>> On Mon, Apr 1, 2019 at 9:47 AM Rob Herring <robh@kernel.org> wrote:
+>> > +{
+>> > +       int i, ret = 0;
+>> > +       struct drm_gem_object *obj;
+>> > +
+>> > +       spin_lock(&filp->table_lock);
+>> > +
+>> > +       for (i = 0; i < count; i++) {
+>> > +               /* Check if we currently have a reference on the object */
+>> > +               obj = idr_find(&filp->object_idr, handle[i]);
+>> > +               if (!obj) {
+>> > +                       ret = -ENOENT;
+>
+> Unwind previous drm_gem_object_get(), the caller has no idea how many
+> were processed before the error.
 
-Regards,
--Bin.
+I had the same thought, but the pattern we have is that you're loading
+into a refcounted struct that will free the BOs when you're done,
+anyway.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlyiMbMACgkQtdYpNtH8
+nujFuRAAtd7ggD7Y+nzWpAGHGpCEBgf6La2B4uHi5SYwMJ1ayMSjxnkx31DyQ4el
+ehc1zitZ8lNeJs3RkeIQTlBcLvVmCvkiKRftEIHihA+hbPl9Y8+sadcEbSln2kHT
+vjGZyEQ9anQjQIOSaiSmUMVO2MzbbjS9VNsRP87jHDiqu40WSA9R8lP0yFnbjTkJ
+4Fc4wnoduR+Z+o5DxhknFRhBfivIswXI25LnB+gG/cCJ4i8N6QjoY/qbQnnQHcwK
+hbDTWkqeN2lyzZkTW/fvvksDRY+ODAj1J5kyQohhe9O3qtTRxawtHcRWqjPRDXfY
+LC4bKRjRk9184JJQxnwW8KqsuYsqciHDPjWY8U6ezoTrHQ2QnRguC4IiUSICLrhT
+Ova551wK9xbKIfhVd1M1NWx5QgOn7KWoy7Oiv+DMHGGN7+ohHzo5kABb3OLQA36o
+DRMTk0Ot3KsTFCskbHR0mkGTCEFjyC96R9VmkSToi1QCW8enDwe4jdskXcX5An8h
+59dZvFgCn641x08E6mG1j2PkyuzezV7puE5CbJWlJWlaVRXP+QGngydTS29AaJip
+GOT2fIabzQ8fQ3eCmaD9Wtpx7xY8p6HAIwmk95fk/XjtTLs4iS9ZGc8+vM+ISdWv
+Qaw7BpiSXNPLGi3/C1rGpLTCaDVcEWafWJkEDf9puOnci7aSwjM=
+=jMdG
+-----END PGP SIGNATURE-----
+--=-=-=--
