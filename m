@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3A3C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BF9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F098206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F06F921473
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138876;
-	bh=BWZHSDq+fteNM14pWLBv+L9HmWzg6Kx9g7A4YrbVTwM=;
+	s=default; t=1554138878;
+	bh=5e7UMT3mPRevpvlJWDGqCX3mO2oHXzMPIJ1+Yx0UYu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R6BZae7wPMYXkfTlrjS/t/JtJsGsZd8NWem38SdbdtUJQS1bfvmYQFAfX9cTCZpQd
-	 2iDK6UM7s/hT5dc6ENAve2F3JfdpxTXDIxy/RnjINh5D1AY9yOqm+HQgksuuFF3TY6
-	 rAPGuWg4nQx1zdkTNTYn2Bw43KN9xoMzp1m1WDaw=
+	b=phxXUafyZd35A6ifpahzkfGmTK6B3YaLpuNnmXSDP/+YOSuB8B0W77t0p27NBE/hA
+	 sfyIUt2VkUToD88ljCew/ug2nW40Ho3XsC4PtEc+t786Y26tTkJXxvobY5vn0cDA08
+	 pAsmNF92AvsihsVqk9dc6iV99Uw2ocp3K5/Q1uX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730766AbfDAROe (ORCPT
+        id S1730775AbfDAROg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:14:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37894 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:14:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728813AbfDAROc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:14:32 -0400
+        id S1730765AbfDAROe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:14:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E3F521473;
-        Mon,  1 Apr 2019 17:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A46FC21473;
+        Mon,  1 Apr 2019 17:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138871;
-        bh=BWZHSDq+fteNM14pWLBv+L9HmWzg6Kx9g7A4YrbVTwM=;
+        s=default; t=1554138874;
+        bh=5e7UMT3mPRevpvlJWDGqCX3mO2oHXzMPIJ1+Yx0UYu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qpknGuLkfRChwEDyvNFMPZPhZayG5VrsSWiaUtYjNgv4tncKPZXco+ph1zrJ1Bbv5
-         oGHJa8y2jkfoDtDSIHVHiKQH/HtSQGhdnkT4jk/6ZuRPIUp7nGis5dSSazvmYJhL3r
-         k9E5H3NhcP/fcsIPIxqcs/XdBw7FCjvhrA+GVJLk=
+        b=T1EhowBrrbMaTkzsj4e5YLMjbAD5EnZ5ofbSmUmKlIztVpGk6BcGyfQ8GQ7RX9lxl
+         FXtSbqbe9HrG3+YOD49M6aKzqYgq6aQHShErdlZ5K4RJVvMVaEsox9VU7t+/HtPXmj
+         uVGN5eUGyfdA0QjAxBgJJFwDNnkwgYrHq5qU27uc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
+        stable@vger.kernel.org, LimeTech <tomm@lime-technology.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 046/134] btrfs: remove WARN_ON in log_dir_items
-Date:   Mon,  1 Apr 2019 19:01:22 +0200
-Message-Id: <20190401170048.899722291@linuxfoundation.org>
+Subject: [PATCH 4.19 047/134] btrfs: dont report readahead errors and dont update statistics
+Date:   Mon,  1 Apr 2019 19:01:23 +0200
+Message-Id: <20190401170048.978032345@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,50 +65,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: David Sterba <dsterba@suse.com>
 
-commit 2cc8334270e281815c3850c3adea363c51f21e0d upstream.
+commit 0cc068e6ee59c1fffbfa977d8bf868b7551d80ac upstream.
 
-When Filipe added the recursive directory logging stuff in
-2f2ff0ee5e430 ("Btrfs: fix metadata inconsistencies after directory
-fsync") he specifically didn't take the directory i_mutex for the
-children directories that we need to log because of lockdep.  This is
-generally fine, but can lead to this WARN_ON() tripping if we happen to
-run delayed deletion's in between our first search and our second search
-of dir_item/dir_indexes for this directory.  We expect this to happen,
-so the WARN_ON() isn't necessary.  Drop the WARN_ON() and add a comment
-so we know why this case can happen.
+As readahead is an optimization, all errors are usually filtered out,
+but still properly handled when the real read call is done. The commit
+5e9d398240b2 ("btrfs: readpages() should submit IO as read-ahead") added
+REQ_RAHEAD to readpages() because that's only used for readahead
+(despite what one would expect from the callback name).
 
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+This causes a flood of messages and inflated read error stats, so skip
+reporting in case it's readahead.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202403
+Reported-by: LimeTech <tomm@lime-technology.com>
+Fixes: 5e9d398240b2 ("btrfs: readpages() should submit IO as read-ahead")
+CC: stable@vger.kernel.org # 4.19+
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/tree-log.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ fs/btrfs/volumes.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -3532,9 +3532,16 @@ static noinline int log_dir_items(struct
- 	}
- 	btrfs_release_path(path);
- 
--	/* find the first key from this transaction again */
-+	/*
-+	 * Find the first key from this transaction again.  See the note for
-+	 * log_new_dir_dentries, if we're logging a directory recursively we
-+	 * won't be holding its i_mutex, which means we can modify the directory
-+	 * while we're logging it.  If we remove an entry between our first
-+	 * search and this search we'll not find the key again and can just
-+	 * bail.
-+	 */
- 	ret = btrfs_search_slot(NULL, root, &min_key, path, 0, 0);
--	if (WARN_ON(ret != 0))
-+	if (ret != 0)
- 		goto done;
- 
- 	/*
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -6051,7 +6051,7 @@ static void btrfs_end_bio(struct bio *bi
+ 				if (bio_op(bio) == REQ_OP_WRITE)
+ 					btrfs_dev_stat_inc_and_print(dev,
+ 						BTRFS_DEV_STAT_WRITE_ERRS);
+-				else
++				else if (!(bio->bi_opf & REQ_RAHEAD))
+ 					btrfs_dev_stat_inc_and_print(dev,
+ 						BTRFS_DEV_STAT_READ_ERRS);
+ 				if (bio->bi_opf & REQ_PREFLUSH)
 
 
