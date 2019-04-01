@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F77C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85790C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1BE221934
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5695221925
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138824;
-	bh=3WDZpvBryUxFJC29Qlk2FELZ8U5MiYJRCQnyP3YjoyY=;
+	s=default; t=1554138830;
+	bh=B18fq4sMOSbs6Zt0ofq9mIxZinCq/uD4gW5S6vOSRiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WDYAO5fm0rTXET2HYv8OqhxZMuE5k20akpI7BLET/J9NNwrXsttfJRQUH/hxp4zM2
-	 bZRgxp5WmxVreMUwe6/1lpoR8avTeCVYQ8PZ6ezZtQ5XZ7F2kdeB7N73n+ZRVjpEdO
-	 Xm7hbB574+GLE3HP9KAQOxMBqxMqr56Z8n11Y6cw=
+	b=RRzITsq+z7RedPw1yPiJJq7suIGgSI+IyqJF5UwU9f5omOaSFSfS09M3wuLQHx4Q5
+	 6e+1m9NCzb54Eofhyfsy5FnXS5X7RNChBP9GsaJDE/CS8rbqXPP5eYgTWlmAOPqDHy
+	 88zhJNrqmeInFH9cXqJcqClWqif3QoAg11PQX86g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbfDARNn (ORCPT
+        id S1728830AbfDARNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:13:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36416 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:13:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730601AbfDARNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:13:40 -0400
+        id S1730601AbfDARNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:13:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 685C321934;
-        Mon,  1 Apr 2019 17:13:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5912B21B18;
+        Mon,  1 Apr 2019 17:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138819;
-        bh=3WDZpvBryUxFJC29Qlk2FELZ8U5MiYJRCQnyP3YjoyY=;
+        s=default; t=1554138823;
+        bh=B18fq4sMOSbs6Zt0ofq9mIxZinCq/uD4gW5S6vOSRiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pqlMPKPpWmfr4IwH6rfvbVNrkUXqhyDffPIVw1eu4sRRK4mvdtEXsKPi/d4V1tZ+w
-         eSZvSLTVPo9tK2mpQH5sliedUSjIVTEfZ8GVcdI9T9T07NMnZoSzvQniaMU/XlksRL
-         GdkGK1PZxUVmMb6oUyrTLbCvlBWkrAW3GAIYGD1k=
+        b=EufLKMYkrY21akQonmxhx3IC82pTReWnJYN4a0paRvmC7PHvLyGMViCTFDO5lptAM
+         +tHax3PYmSTQ40VGgrRwDhiQrsEJkcVvFduwjL8FhRJ+L5abdVMMsYsMpcgPG0nDex
+         N3MAnpNnQlEb/ZJh9cfllrUizf9tzljR38PJBwc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 004/134] dccp: do not use ipv6 header for ipv4 flow
-Date:   Mon,  1 Apr 2019 19:00:40 +0200
-Message-Id: <20190401170044.628952403@linuxfoundation.org>
+Subject: [PATCH 4.19 005/134] genetlink: Fix a memory leak on error path
+Date:   Mon,  1 Apr 2019 19:00:41 +0200
+Message-Id: <20190401170044.721229666@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -64,34 +67,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit e0aa67709f89d08c8d8e5bdd9e0b649df61d0090 ]
+[ Upstream commit ceabee6c59943bdd5e1da1a6a20dc7ee5f8113a2 ]
 
-When a dual stack dccp listener accepts an ipv4 flow,
-it should not attempt to use an ipv6 header or
-inet6_iif() helper.
+In genl_register_family(), when idr_alloc() fails,
+we forget to free the memory we possibly allocate for
+family->attrbuf.
 
-Fixes: 3df80d9320bc ("[DCCP]: Introduce DCCPv6")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 2ae0f17df1cd ("genetlink: use idr to track families")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dccp/ipv6.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/netlink/genetlink.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/dccp/ipv6.c
-+++ b/net/dccp/ipv6.c
-@@ -433,8 +433,8 @@ static struct sock *dccp_v6_request_recv
- 		newnp->ipv6_mc_list = NULL;
- 		newnp->ipv6_ac_list = NULL;
- 		newnp->ipv6_fl_list = NULL;
--		newnp->mcast_oif   = inet6_iif(skb);
--		newnp->mcast_hops  = ipv6_hdr(skb)->hop_limit;
-+		newnp->mcast_oif   = inet_iif(skb);
-+		newnp->mcast_hops  = ip_hdr(skb)->ttl;
+--- a/net/netlink/genetlink.c
++++ b/net/netlink/genetlink.c
+@@ -366,7 +366,7 @@ int genl_register_family(struct genl_fam
+ 			       start, end + 1, GFP_KERNEL);
+ 	if (family->id < 0) {
+ 		err = family->id;
+-		goto errout_locked;
++		goto errout_free;
+ 	}
  
- 		/*
- 		 * No need to charge this sock to the relevant IPv6 refcnt debug socks count
+ 	err = genl_validate_assign_mc_groups(family);
+@@ -385,6 +385,7 @@ int genl_register_family(struct genl_fam
+ 
+ errout_remove:
+ 	idr_remove(&genl_fam_idr, family->id);
++errout_free:
+ 	kfree(family->attrbuf);
+ errout_locked:
+ 	genl_unlock_all();
 
 
