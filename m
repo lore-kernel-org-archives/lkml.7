@@ -2,164 +2,302 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B812EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88C1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDB621473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972B5208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:44:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbfDAQo3 (ORCPT
+        id S1728861AbfDAQoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 12:44:29 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37610 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728734AbfDAQo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 12:44:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F248AA78;
-        Mon,  1 Apr 2019 09:44:27 -0700 (PDT)
-Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B13C3F690;
-        Mon,  1 Apr 2019 09:44:26 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 17:44:17 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abhishek Shah <abhishek.shah@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v4 2/2] PCI: iproc: Add outbound configuration for 32-bit
- I/O region
-Message-ID: <20190401164416.GA8616@e107981-ln.cambridge.arm.com>
-References: <1551415936-30174-1-git-send-email-srinath.mannam@broadcom.com>
- <1551415936-30174-3-git-send-email-srinath.mannam@broadcom.com>
- <20190329173515.GA10367@e107981-ln.cambridge.arm.com>
- <CABe79T7LwFLST0dwwswv8sdqHcn0T4ked5WtcNpM78XUDUN3Jw@mail.gmail.com>
+        Mon, 1 Apr 2019 12:44:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728706AbfDAQnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 12:43:46 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E14D0214AF;
+        Mon,  1 Apr 2019 16:43:44 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1hB02C-0004uK-2f; Mon, 01 Apr 2019 12:43:44 -0400
+Message-Id: <20190401164343.968458918@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Mon, 01 Apr 2019 12:43:14 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Subject: [PATCH 09/15] tools/lib/traceevent: Remove tep filter trivial APIs
+References: <20190401164305.359125441@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABe79T7LwFLST0dwwswv8sdqHcn0T4ked5WtcNpM78XUDUN3Jw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 11:04:48AM +0530, Srinath Mannam wrote:
-> Hi Lorenzo,
-> 
-> Please see my reply below,
-> 
-> On Fri, Mar 29, 2019 at 11:06 PM Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com> wrote:
-> >
-> > On Fri, Mar 01, 2019 at 10:22:16AM +0530, Srinath Mannam wrote:
-> > > In the present driver outbound window configuration is done to map above
-> > > 32-bit address I/O regions with corresponding PCI memory range given in
-> > > ranges DT property.
-> > >
-> > > This patch add outbound window configuration to map below 32-bit I/O range
-> > > with corresponding PCI memory, which helps to access I/O region in ARM
-> > > 32-bit and one to one mapping of I/O region to PCI memory.
-> > >
-> > > Ex:
-> > > 1. ranges DT property given for current driver is,
-> > >     ranges = <0x83000000 0x0 0x40000000 0x4 0x00000000 0 0x40000000>;
-> > >     I/O region address is 0x400000000
-> > > 2. ranges DT property can be given after this patch,
-> > >     ranges = <0x83000000 0x0 0x42000000 0x0 0x42000000 0 0x2000000>;
-> > >     I/O region address is 0x42000000
-> >
-> > I was applying this patch but I don't understand the commit log and
-> > how it matches the code, please explain it to me and I will reword
-> > it.
-> Iproc PCIe host controller supports outbound address translation
-> feature to translate AXI address to PCI bus address.
-> IO address ranges (AXI and PCI) given through ranges DT property have
-> to program to controller outbound window registers.
-> Present driver has the support for only 64bit AXI address. so that
-> ranges DT property has given as 64bit AXI address and 32 bit
-> PCI bus address.
-> But with this patch 32-bit AXI address also could be programmed to
-> Iproc host controller outbound window registers. so that ranges
-> DT property can have 32bit AXI address which can map to 32-bit PCI bus address.
+From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-The code change seems to add a check for the window size, I see no
-notion of 64 vs 32 bit addressing there so I am pretty sure there is
-something you are not telling me that is implicit in the IProc outbound
-window configuration, for instance why is the lowest index window
-considered for 32-bit.
+This patch removes trivial filter tep APIs:
+ enum tep_filter_trivial_type
+ tep_filter_event_has_trivial()
+ tep_update_trivial()
+ tep_filter_clear_trivial()
 
-AFAICS you are adding code to allow a window whose size is < than
-the lowest index in the ob_map array. How this relates to 64 vs
-32 bit addresses is not clear but it should be.
+Trivial filters is an optimization, used only in the first
+version of KernelShark. The API is deprecated, the next KernelShark
+release does not use it.
 
-When I read your commit log it is impossible to understand how it
-correlates to the code you are changing - I still have not figured it
-out myself.
+Link: http://lkml.kernel.org/r/20190326154328.28718-4-tstoyanov@vmware.com
 
-Please explain in detail to me how this works, forget DT changes I
-want to understand how HW works.
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ tools/lib/traceevent/event-parse.h  |  16 ---
+ tools/lib/traceevent/parse-filter.c | 169 ----------------------------
+ 2 files changed, 185 deletions(-)
 
-Lorenzo
+diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
+index be082f9692f1..3833d1384599 100644
+--- a/tools/lib/traceevent/event-parse.h
++++ b/tools/lib/traceevent/event-parse.h
+@@ -732,12 +732,6 @@ struct tep_event_filter *tep_filter_alloc(struct tep_handle *pevent);
+ #define FILTER_MISS		TEP_ERRNO__FILTER_MISS
+ #define FILTER_MATCH		TEP_ERRNO__FILTER_MATCH
+ 
+-enum tep_filter_trivial_type {
+-	TEP_FILTER_TRIVIAL_FALSE,
+-	TEP_FILTER_TRIVIAL_TRUE,
+-	TEP_FILTER_TRIVIAL_BOTH,
+-};
+-
+ enum tep_errno tep_filter_add_filter_str(struct tep_event_filter *filter,
+ 					 const char *filter_str);
+ 
+@@ -752,9 +746,6 @@ int tep_event_filtered(struct tep_event_filter *filter,
+ 
+ void tep_filter_reset(struct tep_event_filter *filter);
+ 
+-int tep_filter_clear_trivial(struct tep_event_filter *filter,
+-			     enum tep_filter_trivial_type type);
+-
+ void tep_filter_free(struct tep_event_filter *filter);
+ 
+ char *tep_filter_make_string(struct tep_event_filter *filter, int event_id);
+@@ -762,15 +753,8 @@ char *tep_filter_make_string(struct tep_event_filter *filter, int event_id);
+ int tep_filter_remove_event(struct tep_event_filter *filter,
+ 			    int event_id);
+ 
+-int tep_filter_event_has_trivial(struct tep_event_filter *filter,
+-				 int event_id,
+-				 enum tep_filter_trivial_type type);
+-
+ int tep_filter_copy(struct tep_event_filter *dest, struct tep_event_filter *source);
+ 
+-int tep_update_trivial(struct tep_event_filter *dest, struct tep_event_filter *source,
+-			enum tep_filter_trivial_type type);
+-
+ int tep_filter_compare(struct tep_event_filter *filter1, struct tep_event_filter *filter2);
+ 
+ #endif /* _PARSE_EVENTS_H */
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index cb5ce66dab6e..4ffd8b25a852 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1522,167 +1522,6 @@ int tep_filter_copy(struct tep_event_filter *dest, struct tep_event_filter *sour
+ 	return ret;
+ }
+ 
+-
+-/**
+- * tep_update_trivial - update the trivial filters with the given filter
+- * @dest - the filter to update
+- * @source - the filter as the source of the update
+- * @type - the type of trivial filter to update.
+- *
+- * Scan dest for trivial events matching @type to replace with the source.
+- *
+- * Returns 0 on success and -1 if there was a problem updating, but
+- *   events may have still been updated on error.
+- */
+-int tep_update_trivial(struct tep_event_filter *dest, struct tep_event_filter *source,
+-		       enum tep_filter_trivial_type type)
+-{
+-	struct tep_handle *src_pevent;
+-	struct tep_handle *dest_pevent;
+-	struct tep_event *event;
+-	struct tep_filter_type *filter_type;
+-	struct tep_filter_arg *arg;
+-	char *str;
+-	int i;
+-
+-	src_pevent = source->pevent;
+-	dest_pevent = dest->pevent;
+-
+-	/* Do nothing if either of the filters has nothing to filter */
+-	if (!dest->filters || !source->filters)
+-		return 0;
+-
+-	for (i = 0; i < dest->filters; i++) {
+-		filter_type = &dest->event_filters[i];
+-		arg = filter_type->filter;
+-		if (arg->type != TEP_FILTER_ARG_BOOLEAN)
+-			continue;
+-		if ((arg->boolean.value && type == TEP_FILTER_TRIVIAL_FALSE) ||
+-		    (!arg->boolean.value && type == TEP_FILTER_TRIVIAL_TRUE))
+-			continue;
+-
+-		event = filter_type->event;
+-
+-		if (src_pevent != dest_pevent) {
+-			/* do a look up */
+-			event = tep_find_event_by_name(src_pevent,
+-						       event->system,
+-						       event->name);
+-			if (!event)
+-				return -1;
+-		}
+-
+-		str = tep_filter_make_string(source, event->id);
+-		if (!str)
+-			continue;
+-
+-		/* Don't bother if the filter is trivial too */
+-		if (strcmp(str, "TRUE") != 0 && strcmp(str, "FALSE") != 0)
+-			filter_event(dest, event, str, NULL);
+-		free(str);
+-	}
+-	return 0;
+-}
+-
+-/**
+- * tep_filter_clear_trivial - clear TRUE and FALSE filters
+- * @filter: the filter to remove trivial filters from
+- * @type: remove only true, false, or both
+- *
+- * Removes filters that only contain a TRUE or FALES boolean arg.
+- *
+- * Returns 0 on success and -1 if there was a problem.
+- */
+-int tep_filter_clear_trivial(struct tep_event_filter *filter,
+-			     enum tep_filter_trivial_type type)
+-{
+-	struct tep_filter_type *filter_type;
+-	int count = 0;
+-	int *ids = NULL;
+-	int i;
+-
+-	if (!filter->filters)
+-		return 0;
+-
+-	/*
+-	 * Two steps, first get all ids with trivial filters.
+-	 *  then remove those ids.
+-	 */
+-	for (i = 0; i < filter->filters; i++) {
+-		int *new_ids;
+-
+-		filter_type = &filter->event_filters[i];
+-		if (filter_type->filter->type != TEP_FILTER_ARG_BOOLEAN)
+-			continue;
+-		switch (type) {
+-		case TEP_FILTER_TRIVIAL_FALSE:
+-			if (filter_type->filter->boolean.value)
+-				continue;
+-			break;
+-		case TEP_FILTER_TRIVIAL_TRUE:
+-			if (!filter_type->filter->boolean.value)
+-				continue;
+-		default:
+-			break;
+-		}
+-
+-		new_ids = realloc(ids, sizeof(*ids) * (count + 1));
+-		if (!new_ids) {
+-			free(ids);
+-			return -1;
+-		}
+-
+-		ids = new_ids;
+-		ids[count++] = filter_type->event_id;
+-	}
+-
+-	if (!count)
+-		return 0;
+-
+-	for (i = 0; i < count; i++)
+-		tep_filter_remove_event(filter, ids[i]);
+-
+-	free(ids);
+-	return 0;
+-}
+-
+-/**
+- * tep_filter_event_has_trivial - return true event contains trivial filter
+- * @filter: the filter with the information
+- * @event_id: the id of the event to test
+- * @type: trivial type to test for (TRUE, FALSE, EITHER)
+- *
+- * Returns 1 if the event contains a matching trivial type
+- *  otherwise 0.
+- */
+-int tep_filter_event_has_trivial(struct tep_event_filter *filter,
+-				 int event_id,
+-				 enum tep_filter_trivial_type type)
+-{
+-	struct tep_filter_type *filter_type;
+-
+-	if (!filter->filters)
+-		return 0;
+-
+-	filter_type = find_filter_type(filter, event_id);
+-
+-	if (!filter_type)
+-		return 0;
+-
+-	if (filter_type->filter->type != TEP_FILTER_ARG_BOOLEAN)
+-		return 0;
+-
+-	switch (type) {
+-	case TEP_FILTER_TRIVIAL_FALSE:
+-		return !filter_type->filter->boolean.value;
+-
+-	case TEP_FILTER_TRIVIAL_TRUE:
+-		return filter_type->filter->boolean.value;
+-	default:
+-		return 1;
+-	}
+-}
+-
+ static int test_filter(struct tep_event *event, struct tep_filter_arg *arg,
+ 		       struct tep_record *record, enum tep_errno *err);
+ 
+@@ -2409,14 +2248,6 @@ int tep_filter_compare(struct tep_event_filter *filter1, struct tep_event_filter
+ 			break;
+ 		if (filter_type1->filter->type != filter_type2->filter->type)
+ 			break;
+-		switch (filter_type1->filter->type) {
+-		case TEP_FILTER_TRIVIAL_FALSE:
+-		case TEP_FILTER_TRIVIAL_TRUE:
+-			/* trivial types just need the type compared */
+-			continue;
+-		default:
+-			break;
+-		}
+ 		/* The best way to compare complex filters is with strings */
+ 		str1 = arg_to_str(filter1, filter_type1->filter);
+ 		str2 = arg_to_str(filter2, filter_type2->filter);
+-- 
+2.20.1
 
-> Example given in commit log is describing ranges DT property changes
-> with and without this patch.
-> In the case, without this patch AXI address is more than 32bit
-> "0x400000000". and with this patch AXI address is 32-bit "0x42000000".
-> PCI bus address is 32 bit address in both the cases "0x40000000" and 0x42000000.
-> 
-> Regards,
-> Srinath.
-> > Thanks,
-> > Lorenzo
-> >
-> > > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > > Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
-> > > Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> > > ---
-> > >  drivers/pci/controller/pcie-iproc.c | 21 +++++++++++++++++++--
-> > >  1 file changed, 19 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> > > index b882255..080f142 100644
-> > > --- a/drivers/pci/controller/pcie-iproc.c
-> > > +++ b/drivers/pci/controller/pcie-iproc.c
-> > > @@ -955,8 +955,25 @@ static int iproc_pcie_setup_ob(struct iproc_pcie *pcie, u64 axi_addr,
-> > >                       resource_size_t window_size =
-> > >                               ob_map->window_sizes[size_idx] * SZ_1M;
-> > >
-> > > -                     if (size < window_size)
-> > > -                             continue;
-> > > +                     /*
-> > > +                      * Keep iterating until we reach the last window and
-> > > +                      * with the minimal window size at index zero. In this
-> > > +                      * case, we take a compromise by mapping it using the
-> > > +                      * minimum window size that can be supported
-> > > +                      */
-> > > +                     if (size < window_size) {
-> > > +                             if (size_idx > 0 || window_idx > 0)
-> > > +                                     continue;
-> > > +
-> > > +                             /*
-> > > +                              * For the corner case of reaching the minimal
-> > > +                              * window size that can be supported on the
-> > > +                              * last window
-> > > +                              */
-> > > +                             axi_addr = ALIGN_DOWN(axi_addr, window_size);
-> > > +                             pci_addr = ALIGN_DOWN(pci_addr, window_size);
-> > > +                             size = window_size;
-> > > +                     }
-> > >
-> > >                       if (!IS_ALIGNED(axi_addr, window_size) ||
-> > >                           !IS_ALIGNED(pci_addr, window_size)) {
-> > > --
-> > > 2.7.4
-> > >
+
