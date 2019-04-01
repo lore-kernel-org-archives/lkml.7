@@ -2,113 +2,92 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E03C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DD3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1694920896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C626213A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731841AbfDAGmC (ORCPT
+        id S1731864AbfDAGmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 02:42:02 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:49110 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbfDAGmB (ORCPT
+        Mon, 1 Apr 2019 02:42:14 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39022 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfDAGmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 02:42:01 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hAqdl-0000No-Sq; Mon, 01 Apr 2019 06:41:53 +0000
-Date:   Mon, 1 Apr 2019 07:41:53 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        Mon, 1 Apr 2019 02:42:13 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n25so9850295wmk.4
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 23:42:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R2dwsEXJpe+ePQvKT4N+lP1t3+ZzfzBs9BAuUJxE/t4=;
+        b=d0EiO/hce2iOnlRZWnhum4Lg17OIl33oK1M7A3J9UZjZsVlOsE18vCM8y2AgSlUJe/
+         SYNuR//DqR2ITvKK65eOXZc7HJ3ZJikJIUC7Z2KyIEMU8qv3ID2dO5/1esJKm67gg6kE
+         AMtKtmdvMeYafYLN9rdIub5xV7STGztkM5nbguLG7maSve+fPgQiY36XJTU+Oq7nvM37
+         IPoA45upasRhcwu6I+kMLCxjZh2OaT/srg71TB6VTOYkJccvISyM6p5LaEi6ETL+tEAK
+         sTwl204mxhUcNQF3zWbDayZK+8cBYUY8Lc9ptKvdoHJy/9vCjFN5Uz/cW09luoSw1vKP
+         gUqg==
+X-Gm-Message-State: APjAAAXbqktrL90ap+WDB60oItxNJXAA2fB/nNsE7Qv5/TyW+M28kV8p
+        95PzF3Wv0eHauklvcwGi/XraDA==
+X-Google-Smtp-Source: APXvYqwmQ7JS3qfRxQ4UZSyjWyfNBLkswP0YF1vBIHdNIFCORYIDqhTFznsabIodpJW3LyCYwTbGQg==
+X-Received: by 2002:a7b:cb04:: with SMTP id u4mr11389348wmj.0.1554100931823;
+        Sun, 31 Mar 2019 23:42:11 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.174.33])
+        by smtp.gmail.com with ESMTPSA id q16sm7777411wmc.39.2019.03.31.23.42.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 31 Mar 2019 23:42:11 -0700 (PDT)
+Date:   Mon, 1 Apr 2019 08:42:08 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
-Message-ID: <20190401064153.GI2217@ZenIV.linux.org.uk>
-References: <132107F4-F56B-4D6E-9E00-A6F7C092E6BD@amacapital.net>
- <CAHk-=wiaLtH41Mc5qAjOeCWavPqV0DhS581KYa0QBt8uraTK1Q@mail.gmail.com>
- <20190331211041.vht7dnqg4e4bilr2@brauner.io>
- <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
- <20190331220259.qntxynluk765hpnt@brauner.io>
- <CAHk-=wh0jgRkZiNdFD96Zpjx+_G+NVSHieAt+QgWCQBJ2A-5Aw@mail.gmail.com>
- <CAHk-=whw1cnWPSWw1tHXT5xTMbnJFbCtx9_re6U1RZ_7LE9gXA@mail.gmail.com>
- <20190401000937.GG2217@ZenIV.linux.org.uk>
- <CAHk-=wi39-Ozq5zb22s7ZB4J_Nd6nTwE_9A3+qjp5nCY4iTSEg@mail.gmail.com>
- <20190401063741.GH2217@ZenIV.linux.org.uk>
+        syzbot <syzbot+65cecdd27b726c261799@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com, "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, mingo@redhat.com,
+        x86@kernel.org, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: INFO: rcu detected stall in corrupted (3)
+Message-ID: <20190401064208.GH29508@localhost.localdomain>
+References: <000000000000b08190058543449f@google.com>
+ <8ecb5bc9-5761-64d0-64b2-1310300a64ec@I-love.SAKURA.ne.jp>
+ <alpine.DEB.2.21.1903300843230.2476@nanos.tec.linutronix.de>
+ <daec0343-b905-f483-602b-9c0b9e9b1379@i-love.sakura.ne.jp>
+ <20190330104529.GB5935@zn.tnic>
+ <77650d72-e2ec-e084-c929-210b16b8afb9@i-love.sakura.ne.jp>
+ <20190330110933.GC5935@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190401063741.GH2217@ZenIV.linux.org.uk>
+In-Reply-To: <20190330110933.GC5935@zn.tnic>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 07:37:42AM +0100, Al Viro wrote:
-> On Sun, Mar 31, 2019 at 05:18:10PM -0700, Linus Torvalds wrote:
+Hi,
+
+On 30/03/19 12:09, Borislav Petkov wrote:
+> On Sat, Mar 30, 2019 at 07:57:50PM +0900, Tetsuo Handa wrote:
+> > Yes. But what such threshold be? 0.1 second? 1 second? 10 seconds?
+> > Can we find a threshold where everyone can agree on?
 > 
-> > Yeah, I would like to see the actual aio.c pull request and the
-> > use-after-free fixes. All the patches look fine, I just don't have the
-> > final end result..
-> 
-> use-after-free fixes: ceph is already in mainline, Daniel's bpf fix is in
-> bpf tree (1da6c4d9140c "bpf: fix use after free in bpf_evict_inode"),
-> the rest is in vfs.git#fixes.
+> This is what we do all day on lkml: discussing changes so that (almost)
+> everyone is happy with them.
 
-... and aio stuff is
+Looks like this is the same problem we discussed a while ago [1], but
+couldn't reach an agreement on what's best to do about it.
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+I'll need to go back and refresh memory.
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+Thanks,
 
-are available in the git repository at:
+- Juri
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.aio
-
-for you to fetch changes up to 7316b49c2a117ca0611bc9af779d2108b764a7f9:
-
-  aio: move sanity checks and request allocation to io_submit_one() (2019-03-17 20:52:32 -0400)
-
-----------------------------------------------------------------
-Al Viro (8):
-      aio: fold lookup_kiocb() into its sole caller
-      aio: keep io_event in aio_kiocb
-      aio: store event at final iocb_put()
-      Fix aio_poll() races
-      make aio_read()/aio_write() return int
-      aio: move dropping ->ki_eventfd into iocb_destroy()
-      deal with get_reqs_available() in aio_get_req() itself
-      aio: move sanity checks and request allocation to io_submit_one()
-
-Linus Torvalds (1):
-      pin iocb through aio.
-
- fs/aio.c | 338 ++++++++++++++++++++++++++++-----------------------------------
- 1 file changed, 150 insertions(+), 188 deletions(-)
+1 - https://lore.kernel.org/lkml/000000000000a4ee200578172fde@google.com/
