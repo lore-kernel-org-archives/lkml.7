@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE50C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1A5C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6DE2192C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E40521929
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138415;
-	bh=0LLvCzSM1HZr6MkupSvWfqSgFvgAaSoSfdB6ISePh/M=;
+	s=default; t=1554138416;
+	bh=Hn6PtcT9P0aL7lOayV4Ju+f9UKnwMwf5On3UYwU+Y0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z3VojhlWEICcQVt5WkxB/1yn3HKZ6u3t2cF6L7INXGLKdu0d5E0NhX/6x/f6jAPkl
-	 Bfwh5yEoDEZU8x/IS3AhRy+m6kagmrStoKWngawMHNANnrBfO/oBF2kEEANASWKyzR
-	 BDkmmBoDHkBER1dMgXXFHT5wZpLrVYo6rsC46scM=
+	b=mzHapZKOsVRgLGJTftUqVVflDlS2NJ0OrSGpLmFfNO2f7CJy15yfJ/Cq3M0eYuVzA
+	 8Rb063VgdQNohOZydfM9IU44qK7gd9TNY4/TNFOH7HlJHP5NRQJkg9KcyHDjUV4ESd
+	 LpsEUCNOuIMex/CFGv7CWQPK+BRhRoEpRUYaXRDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfDARGy (ORCPT
+        id S1729381AbfDARGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52578 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:06:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729308AbfDARGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:06:52 -0400
+        id S1728889AbfDARGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:06:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AEC621925;
-        Mon,  1 Apr 2019 17:06:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBF8E21929;
+        Mon,  1 Apr 2019 17:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138411;
-        bh=0LLvCzSM1HZr6MkupSvWfqSgFvgAaSoSfdB6ISePh/M=;
+        s=default; t=1554138414;
+        bh=Hn6PtcT9P0aL7lOayV4Ju+f9UKnwMwf5On3UYwU+Y0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=upUpYUN2SNk4Actr/HOIRKAovzc/2dSnpTqXi1N6zjGuUOgMO70V6ougTMlsAA6Bc
-         Zej1ny5eH2CvgD0Oy95KBHhLel5gD7JnbJ+oQ0Wct7VLRTG78jtZ06GypdqAC+sDYS
-         EOuhxeQ11L0KPx5L4XDkZrgikSYefvOlJMiHyK1k=
+        b=HuLG20tfMXecCTPF28Uk0QU8rr7oc1Ye5bRkd+E/xrt/rl/ACoFAjt/gm/r8mGhE3
+         Y+tT4rfA9WMHk0CFV9+cc6IaQT6S/NcSq5jjuxOWpi2KlLBIDR0VpiRkUzPlql7246
+         3zxKhRDWR9uqwBbgSuPZSI5fulpN8HsOOFw+IYJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 059/146] ALSA: hda/realtek: merge alc_fixup_headset_jack to alc295_fixup_chromebook
-Date:   Mon,  1 Apr 2019 19:01:11 +0200
-Message-Id: <20190401170053.665334054@linuxfoundation.org>
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.0 060/146] ALSA: hda/realtek - Add support headset mode for DELL WYSE AIO
+Date:   Mon,  1 Apr 2019 19:01:12 +0200
+Message-Id: <20190401170053.744468207@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -65,111 +65,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jaroslav Kysela <perex@perex.cz>
+From: Kailang Yang <kailang@realtek.com>
 
-commit c8a9afa632f0fd45731d3353525faf1fdb362c89 upstream.
+commit 136824efaab2c095fc911048f7c7ddeda258c965 upstream.
 
-The ALC225_FIXUP_HEADSET_JACK fixup can be merged to alc295_fixup_chromebook.
-There are no other users for ALC225_FIXUP_HEADSET_JACK other than
-the chromebook hardware.
+This patch will enable WYSE AIO for Headset mode.
 
-Fixes: 10f5b1b85ed1 ("ALSA: hda/realtek - Fixed Headset Mic JD not stable")
-Cc: Kailang Yang <kailang@realtek.com>
-Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   43 ++++++++++++------------------------------
- 1 file changed, 13 insertions(+), 30 deletions(-)
+ sound/pci/hda/patch_realtek.c |   26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -5489,7 +5489,7 @@ static void alc_headset_btn_callback(str
- 	jack->jack->button_state = report;
- }
- 
--static void alc_fixup_headset_jack(struct hda_codec *codec,
-+static void alc295_fixup_chromebook(struct hda_codec *codec,
- 				    const struct hda_fixup *fix, int action)
- {
- 
-@@ -5499,6 +5499,16 @@ static void alc_fixup_headset_jack(struc
- 						    alc_headset_btn_callback);
- 		snd_hda_jack_add_kctl(codec, 0x55, "Headset Jack", false,
- 				      SND_JACK_HEADSET, alc_headset_btn_keymap);
-+		switch (codec->core.vendor_id) {
-+		case 0x10ec0295:
-+			alc_update_coef_idx(codec, 0x4a, 0x8000, 1 << 15); /* Reset HP JD */
-+			alc_update_coef_idx(codec, 0x4a, 0x8000, 0 << 15);
-+			break;
-+		case 0x10ec0236:
-+			alc_update_coef_idx(codec, 0x1b, 0x8000, 1 << 15); /* Reset HP JD */
-+			alc_update_coef_idx(codec, 0x1b, 0x8000, 0 << 15);
-+			break;
-+		}
- 		break;
- 	case HDA_FIXUP_ACT_INIT:
- 		switch (codec->core.vendor_id) {
-@@ -5519,26 +5529,6 @@ static void alc_fixup_headset_jack(struc
- 	}
- }
- 
--static void alc295_fixup_chromebook(struct hda_codec *codec,
--				    const struct hda_fixup *fix, int action)
--{
--
--	switch (action) {
--	case HDA_FIXUP_ACT_PRE_PROBE:
--		switch (codec->core.vendor_id) {
--		case 0x10ec0295:
--			alc_update_coef_idx(codec, 0x4a, 0x8000, 1 << 15); /* Reset HP JD */
--			alc_update_coef_idx(codec, 0x4a, 0x8000, 0 << 15);
--			break;
--		case 0x10ec0236:
--			alc_update_coef_idx(codec, 0x1b, 0x8000, 1 << 15); /* Reset HP JD */
--			alc_update_coef_idx(codec, 0x1b, 0x8000, 0 << 15);
--			break;
--		}
--		break;
--	}
--}
--
- static void alc_fixup_disable_mic_vref(struct hda_codec *codec,
- 				  const struct hda_fixup *fix, int action)
- {
-@@ -5688,7 +5678,6 @@ enum {
- 	ALC294_FIXUP_ASUS_MIC,
- 	ALC294_FIXUP_ASUS_HEADSET_MIC,
- 	ALC294_FIXUP_ASUS_SPK,
--	ALC225_FIXUP_HEADSET_JACK,
- 	ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE,
+@@ -5682,6 +5682,9 @@ enum {
  	ALC285_FIXUP_LENOVO_PC_BEEP_IN_NOISE,
  	ALC255_FIXUP_ACER_HEADSET_MIC,
-@@ -6635,9 +6624,9 @@ static const struct hda_fixup alc269_fix
- 		.chained = true,
- 		.chain_id = ALC294_FIXUP_ASUS_HEADSET_MIC
- 	},
--	[ALC225_FIXUP_HEADSET_JACK] = {
-+	[ALC295_FIXUP_CHROME_BOOK] = {
- 		.type = HDA_FIXUP_FUNC,
--		.v.func = alc_fixup_headset_jack,
-+		.v.func = alc295_fixup_chromebook,
- 	},
- 	[ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE] = {
- 		.type = HDA_FIXUP_PINS,
-@@ -6669,12 +6658,6 @@ static const struct hda_fixup alc269_fix
+ 	ALC295_FIXUP_CHROME_BOOK,
++	ALC225_FIXUP_DELL_WYSE_AIO_MIC_NO_PRESENCE,
++	ALC225_FIXUP_WYSE_AUTO_MUTE,
++	ALC225_FIXUP_WYSE_DISABLE_MIC_VREF,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6658,6 +6661,28 @@ static const struct hda_fixup alc269_fix
  		.chained = true,
  		.chain_id = ALC255_FIXUP_HEADSET_MODE_NO_HP_MIC
  	},
--	[ALC295_FIXUP_CHROME_BOOK] = {
--		.type = HDA_FIXUP_FUNC,
--		.v.func = alc295_fixup_chromebook,
--		.chained = true,
--		.chain_id = ALC225_FIXUP_HEADSET_JACK
--	},
++	[ALC225_FIXUP_DELL_WYSE_AIO_MIC_NO_PRESENCE] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x16, 0x01011020 }, /* Rear Line out */
++			{ 0x19, 0x01a1913c }, /* use as Front headset mic, without its own jack detect */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC225_FIXUP_WYSE_AUTO_MUTE
++	},
++	[ALC225_FIXUP_WYSE_AUTO_MUTE] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc_fixup_auto_mute_via_amp,
++		.chained = true,
++		.chain_id = ALC225_FIXUP_WYSE_DISABLE_MIC_VREF
++	},
++	[ALC225_FIXUP_WYSE_DISABLE_MIC_VREF] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc_fixup_disable_mic_vref,
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
++	},
  };
  
  static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -6722,6 +6747,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1028, 0x0871, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1028, 0x0872, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1028, 0x0873, "Dell Precision 3930", ALC255_FIXUP_DUMMY_LINEOUT_VERB),
++	SND_PCI_QUIRK(0x1028, 0x08ad, "Dell WYSE AIO", ALC225_FIXUP_DELL_WYSE_AIO_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1028, 0x0935, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x164a, "Dell", ALC293_FIXUP_DELL1_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1028, 0x164b, "Dell", ALC293_FIXUP_DELL1_MIC_NO_PRESENCE),
 
 
