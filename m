@@ -2,81 +2,112 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C9CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452E7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296902087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AECF20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbfDAKKp (ORCPT
+        id S1726421AbfDAKNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 06:10:45 -0400
-Received: from foss.arm.com ([217.140.101.70]:59896 "EHLO foss.arm.com"
+        Mon, 1 Apr 2019 06:13:43 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:34686 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbfDAKKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 06:10:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE09D15AD;
-        Mon,  1 Apr 2019 03:10:44 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 652433F557;
-        Mon,  1 Apr 2019 03:10:43 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v2 1/1] iommu: Bind process address spaces to devices
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     kevin.tian@intel.com, alex.williamson@redhat.com,
-        ashok.raj@intel.com, zhangfei.gao@foxmail.com,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        christian.koenig@amd.com
-References: <20190320150258.3240-1-jean-philippe.brucker@arm.com>
- <20190320150258.3240-2-jean-philippe.brucker@arm.com>
- <20190325144241.GC25350@8bytes.org>
-Message-ID: <31f7cee6-730c-7ca1-5107-358b8aa8f7b9@arm.com>
-Date:   Mon, 1 Apr 2019 11:10:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        id S1725867AbfDAKNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 06:13:42 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 9C4CCFB06;
+        Mon,  1 Apr 2019 12:13:38 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id nyyQ0-4Xc3El; Mon,  1 Apr 2019 12:13:36 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 575B743FA9; Mon,  1 Apr 2019 12:13:36 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Thierry Reding <treding@nvidia.com>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Johan Hovold <johan@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v8 1/2] dt-bindings: phy: Add documentation for mixel dphy
+Date:   Mon,  1 Apr 2019 12:13:35 +0200
+Message-Id: <15b5adaeae3d5ab9020f98d067394a581522f6f4.1554113192.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1554113192.git.agx@sigxcpu.org>
+References: <cover.1554113192.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-In-Reply-To: <20190325144241.GC25350@8bytes.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+Add support for the MIXEL DPHY IP as found on NXP's i.MX8MQ SoCs.
 
-On 25/03/2019 14:44, Joerg Roedel wrote:
-> Hey Jean-Philippe,
-> 
-> thanks for the patch, I think we are on the finish line with this
-> interface. Just one small question below.
-> 
-> On Wed, Mar 20, 2019 at 03:02:58PM +0000, Jean-Philippe Brucker wrote:
->> +int iommu_sva_set_ops(struct iommu_sva *handle,
->> +		      const struct iommu_sva_ops *sva_ops)
->> +{
->> +	const struct iommu_ops *ops = handle->dev->bus->iommu_ops;
->> +
->> +	if (!ops || !ops->sva_set_ops)
->> +		return -ENODEV;
->> +
->> +	return ops->sva_set_ops(handle, sva_ops);
->> +}
-> 
-> What is the purpose of the sva_set_ops call-back in iommu-ops? Is the
-> IOMMU driver supposed to do some extra setup work with the provided ops?
-> Otherwise we can just store the pointer in 'struct iommu_sva' without
-> calling into the iommu driver.
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+---
+ .../bindings/phy/mixel,mipi-dsi-phy.txt       | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
 
-Right that would be simpler. I added the sva_set_ops callback so that
-IOMMU driver can use the same lock in unbind() and sva_set_ops(). But I
-think it's safe to assume that device drivers don't call unbind() before
-setting the ops.
+diff --git a/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+new file mode 100644
+index 000000000000..9b23407233c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+@@ -0,0 +1,29 @@
++Mixel DSI PHY for i.MX8
++
++The Mixel MIPI-DSI PHY IP block is e.g. found on i.MX8 platforms (along the
++MIPI-DSI IP from Northwest Logic). It represents the physical layer for the
++electrical signals for DSI.
++
++Required properties:
++- compatible: Must be:
++  - "fsl,imx8mq-mipi-dphy"
++- clocks: Must contain an entry for each entry in clock-names.
++- clock-names: Must contain the following entries:
++  - "phy_ref": phandle and specifier referring to the DPHY ref clock
++- reg: the register range of the PHY controller
++- #phy-cells: number of cells in PHY, as defined in
++  Documentation/devicetree/bindings/phy/phy-bindings.txt
++  this must be <0>
++
++Optional properties:
++- power-domains: phandle to power domain
++
++Example:
++	dphy: dphy@30a0030 {
++		compatible = "fsl,imx8mq-mipi-dphy";
++		clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
++		clock-names = "phy_ref";
++		reg = <0x30a00300 0x100>;
++		power-domains = <&pd_mipi0>;
++		#phy-cells = <0>;
++        };
+-- 
+2.20.1
 
-Thanks,
-Jean
