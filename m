@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F9FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88537C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45391206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B095206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139217;
-	bh=sezBIpU3p3Ml9kWP4F2aNdlJCxIbGHXYcE2S+TXMH+s=;
+	s=default; t=1554139220;
+	bh=e2BVyA5PDxmhUn1VaEYTtdQdd/vxLBBXQxeSGHTnG0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iJMi3NaEvWljrLpDoKllZgmNSkkJsePk05YxT1zQe9HvfFaodM0tiwhZGvkyViUN6
-	 sbPyQDXm+zJmSCJONtTTKCowBSZS1JegtX+A09oOoXog5jtQfnQLD1J5UGIcvvxRE7
-	 R/ezG1XpjAr9PUZ/w0swXL2UPhRTytHaAZPowXMo=
+	b=E5SSkvfOkpsj7MHWfQA+OawYR6mC92UAhyuzSJAArTSw23yJzT7vBEBBLx9UxniVf
+	 v2F7D/v72PXB7ce8Unp//tFoQZbtYWeIiX3FRHSyrg0IJiMUEOFqHLOuJL7CnqSd1z
+	 rVjQuUcyFSY5fs5HwSWV/CuprWzPRz7/4KL3s1+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731590AbfDARTu (ORCPT
+        id S1731408AbfDARUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:19:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47812 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:20:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731139AbfDARTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:19:46 -0400
+        id S1729490AbfDARUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:20:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A209206DD;
-        Mon,  1 Apr 2019 17:19:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED004218FF;
+        Mon,  1 Apr 2019 17:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139186;
-        bh=sezBIpU3p3Ml9kWP4F2aNdlJCxIbGHXYcE2S+TXMH+s=;
+        s=default; t=1554139215;
+        bh=e2BVyA5PDxmhUn1VaEYTtdQdd/vxLBBXQxeSGHTnG0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z0WPbmjil53qqElUA1IOboIh+bu//rAAsHfKFgNnRQ79LMfJ1fFXushAKn/LStsQh
-         zn+lIqdPxFzlyGSULh1cKZFoDrdgiQ2OwJEVAZn57nARKvcu+rW37uBlKdUqzop5GG
-         vpqg1bv0YJsplaXrrSMILOIsfxRD0UfMg45Kj1VE=
+        b=v/WPx5ubCPB40ebbQyVI7s8YYJKpjXiuoy0wBAjJJDz5ALNNCtqiKWgubpaIJkgmd
+         aO63rYX84t9aFN2KTQpB7hPn1jbwns9Dgen+T1po+qVHqWKoe/qJlB+9QZYYUhQvRU
+         LDsgpGXc67el5pYF5rnPJpJN8VorG26lP47aYRqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rolf Eike Beer <eb@emlix.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 117/134] objtool: Query pkg-config for libelf location
-Date:   Mon,  1 Apr 2019 19:02:33 +0200
-Message-Id: <20190401170055.264355252@linuxfoundation.org>
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 011/107] net: stmmac: fix memory corruption with large MTUs
+Date:   Mon,  1 Apr 2019 19:01:26 +0200
+Message-Id: <20190401170046.571814054@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
-References: <20190401170044.243719205@linuxfoundation.org>
+In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
+References: <20190401170045.246405031@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -62,64 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Rolf Eike Beer <eb@emlix.com>
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-commit 056d28d135bca0b1d0908990338e00e9dadaf057 upstream.
+[ Upstream commit 223a960c01227e4dbcb6f9fa06b47d73bda21274 ]
 
-If it is not in the default location, compilation fails at several points.
+When using 16K DMA buffers and ring mode, the DES3 refill is not working
+correctly as the function is using a bogus pointer for checking the
+private data. As a result stale pointers will remain in the RX descriptor
+ring, so DMA will now likely overwrite/corrupt some already freed memory.
 
-Signed-off-by: Rolf Eike Beer <eb@emlix.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/91a25e992566a7968fedc89ec80e7f4c83ad0548.1553622500.git.jpoimboe@redhat.com
+As simple reproducer, just receive some UDP traffic:
+
+	# ifconfig eth0 down; ifconfig eth0 mtu 9000; ifconfig eth0 up
+	# iperf3 -c 192.168.253.40 -u -b 0 -R
+
+If you didn't crash by now check the RX descriptors to find non-contiguous
+RX buffers:
+
+	cat /sys/kernel/debug/stmmaceth/eth0/descriptors_status
+	[...]
+	1 [0x2be5020]: 0xa3220321 0x9ffc1ffc 0x72d70082 0x130e207e
+					     ^^^^^^^^^^^^^^^^^^^^^
+	2 [0x2be5040]: 0xa3220321 0x9ffc1ffc 0x72998082 0x1311a07e
+					     ^^^^^^^^^^^^^^^^^^^^^
+
+A simple ping test will now report bad data:
+
+	# ping -s 8200 192.168.253.40
+	PING 192.168.253.40 (192.168.253.40) 8200(8228) bytes of data.
+	8208 bytes from 192.168.253.40: icmp_seq=1 ttl=64 time=1.00 ms
+	wrong data byte #8144 should be 0xd0 but was 0x88
+
+Fix the wrong pointer. Also we must refill DES3 only if the DMA buffer
+size is 16K.
+
+Fixes: 54139cf3bb33 ("net: stmmac: adding multiple buffers for rx")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Acked-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- Makefile               |    4 +++-
- tools/objtool/Makefile |    7 +++++--
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/ring_mode.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -948,9 +948,11 @@ mod_sign_cmd = true
- endif
- export mod_sign_cmd
+--- a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
++++ b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
+@@ -114,10 +114,11 @@ static unsigned int stmmac_is_jumbo_frm(
  
-+HOST_LIBELF_LIBS = $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
-+
- ifdef CONFIG_STACK_VALIDATION
-   has_libelf := $(call try-run,\
--		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null -lelf -,1,0)
-+		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null $(HOST_LIBELF_LIBS) -,1,0)
-   ifeq ($(has_libelf),1)
-     objtool_target := tools/objtool FORCE
-   else
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -25,14 +25,17 @@ LIBSUBCMD		= $(LIBSUBCMD_OUTPUT)libsubcm
- OBJTOOL    := $(OUTPUT)objtool
- OBJTOOL_IN := $(OBJTOOL)-in.o
+ static void stmmac_refill_desc3(void *priv_ptr, struct dma_desc *p)
+ {
+-	struct stmmac_priv *priv = (struct stmmac_priv *)priv_ptr;
++	struct stmmac_rx_queue *rx_q = priv_ptr;
++	struct stmmac_priv *priv = rx_q->priv_data;
  
-+LIBELF_FLAGS := $(shell pkg-config libelf --cflags 2>/dev/null)
-+LIBELF_LIBS  := $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
-+
- all: $(OBJTOOL)
+ 	/* Fill DES3 in case of RING mode */
+-	if (priv->dma_buf_sz >= BUF_SIZE_8KiB)
++	if (priv->dma_buf_sz == BUF_SIZE_16KiB)
+ 		p->des3 = cpu_to_le32(le32_to_cpu(p->des2) + BUF_SIZE_8KiB);
+ }
  
- INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
- 	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
--CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES)
--LDFLAGS  += -lelf $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
-+CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
-+LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
- 
- # Allow old libelf to be used:
- elfshdr := $(shell echo '$(pound)include <libelf.h>' | $(CC) $(CFLAGS) -x c -E - | grep elf_getshdr)
 
 
