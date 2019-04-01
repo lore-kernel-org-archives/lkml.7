@@ -2,126 +2,117 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F2FC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFE5C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB9DE20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:46:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554119167;
-	bh=R1DiDEmWN34Eu6wGHStCK95swdQT6eCvuFfPOAqtQXI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ylhjc0/ztWC25MTUDRtrD21gU9TKnqQumUltXGBm9etngnUGh5fnyBtyFPeifOHM8
-	 C7CSBRgdgdG5t4UuWuI9jRvjrhIvJuyOCpj2cfEQ8CuTdzfEDG76Oj5fBh4deBayXY
-	 YvnltyBgAN7Y5vAVJtOppFFL4XlqOv1wlD+j2dd8=
+	by mail.kernel.org (Postfix) with ESMTP id 89EA921019
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:47:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XVVNWVro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfDALqF (ORCPT
+        id S1726761AbfDALrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 07:46:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbfDALqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 07:46:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF42A20880;
-        Mon,  1 Apr 2019 11:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554119164;
-        bh=R1DiDEmWN34Eu6wGHStCK95swdQT6eCvuFfPOAqtQXI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dTiXbUyrq0MLpZ0eTxZnshLsiW393LFThvvqHnOeEwBcHjE7pEKOq8LtOoeLa7jVf
-         2YjfvJto1+mX37ALbDZ2OIYkbLVPaNWcG+xH2jeYlQBbj7+Ulxn/ovFbP8cAa2sr1f
-         j5cUt7Yk8Obfg+pDV0sgt2l3I858QHm5GJJjmQC8=
-Date:   Mon, 1 Apr 2019 13:46:00 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 4.9 25/30] USB: core: only clean up what we allocated
-Message-ID: <20190401114600.GE8156@kroah.com>
-References: <20190326042607.558087893@linuxfoundation.org>
- <20190326042608.413616958@linuxfoundation.org>
- <20190330171838.GA2150@archlinux-ryzen>
+        Mon, 1 Apr 2019 07:47:13 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:12849 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfDALrN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 07:47:13 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ca1fa440000>; Mon, 01 Apr 2019 04:47:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 01 Apr 2019 04:47:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 01 Apr 2019 04:47:12 -0700
+Received: from [192.168.1.18] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Apr
+ 2019 11:47:02 +0000
+Subject: Re: [PATCH 03/10] PCI: dwc: Move config space capability search API
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <jonathanh@nvidia.com>, <kishon@ti.com>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <tiwai@suse.de>, <spujar@nvidia.com>, <skomatineni@nvidia.com>,
+        <liviu.dudau@arm.com>, <krzk@kernel.org>, <heiko@sntech.de>,
+        <horms+renesas@verge.net.au>, <olof@lixom.net>,
+        <maxime.ripard@bootlin.com>, <andy.gross@linaro.org>,
+        <bjorn.andersson@linaro.org>, <jagan@amarulasolutions.com>,
+        <enric.balletbo@collabora.com>, <ezequiel@collabora.com>,
+        <stefan.wahren@i2se.com>, <marc.w.gonzalez@free.fr>,
+        <l.stach@pengutronix.de>, <tpiepho@impinj.com>,
+        <hayashi.kunihiko@socionext.com>, <yue.wang@amlogic.com>,
+        <shawn.lin@rock-chips.com>, <xiaowei.bao@nxp.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-4-git-send-email-vidyas@nvidia.com>
+ <20190328123320.GA5518@ulmo>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <5a438b16-53bc-dee3-ea9d-14048547dc29@nvidia.com>
+Date:   Mon, 1 Apr 2019 17:16:59 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190330171838.GA2150@archlinux-ryzen>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190328123320.GA5518@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1554119236; bh=v1JD+STom8fL4glHLi1HSJ+yKx1+y+JyNPeRuB8G3Ps=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=XVVNWVroU9AcROAlzSaxbS3ewExuiB2f8pllCY3H57mefaKlQNJe2u5/2wYTgR+Nc
+         jiBETP5Vne8wb+BhGzx663hyjZ0LbsS1rkb76swrD0J2H0JIBzPPamoUOHiao/rzEZ
+         4nJPUPUE4IJt5cCgj/PkzxYwo8r7HWMzNauC8P93Gtzt2mXLkeyGop7hbF/5lrB5C1
+         XwJTWNV/pgTGl2hP5usm+tEk0udld+puft560F9fVz6GlGPYV4Y9yWcFFitHkIdJkL
+         8EyGr7q+cjBSyLiwHsY9RWZRXfchHRibZSH04eVGM0SOISlsHI3L2704Gr0C7shAp3
+         7YSwiWTWhfexQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 10:18:38AM -0700, Nathan Chancellor wrote:
-> On Tue, Mar 26, 2019 at 03:30:04PM +0900, Greg Kroah-Hartman wrote:
-> > 4.9-stable review patch.  If anyone has any objections, please let me know.
-> > 
-> > ------------------
-> > 
-> > From: Andrey Konovalov <andreyknvl@google.com>
-> > 
-> > commit 32fd87b3bbf5f7a045546401dfe2894dbbf4d8c3 upstream.
-> > 
-> > When cleaning up the configurations, make sure we only free the number
-> > of configurations and interfaces that we could have allocated.
-> > 
-> > Reported-by: Andrey Konovalov <andreyknvl@google.com>
-> > Cc: stable <stable@vger.kernel.org>
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > ---
-> >  drivers/usb/core/config.c |    9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > 
-> > --- a/drivers/usb/core/config.c
-> > +++ b/drivers/usb/core/config.c
-> > @@ -763,18 +763,21 @@ void usb_destroy_configuration(struct us
-> >  		return;
-> >  
-> >  	if (dev->rawdescriptors) {
-> > -		for (i = 0; i < dev->descriptor.bNumConfigurations; i++)
-> > +		for (i = 0; i < dev->descriptor.bNumConfigurations &&
-> > +				i < USB_MAXCONFIG; i++)
-> >  			kfree(dev->rawdescriptors[i]);
-> >  
-> >  		kfree(dev->rawdescriptors);
-> >  		dev->rawdescriptors = NULL;
-> >  	}
-> >  
-> > -	for (c = 0; c < dev->descriptor.bNumConfigurations; c++) {
-> > +	for (c = 0; c < dev->descriptor.bNumConfigurations &&
-> > +			c < USB_MAXCONFIG; c++) {
-> >  		struct usb_host_config *cf = &dev->config[c];
-> >  
-> >  		kfree(cf->string);
-> > -		for (i = 0; i < cf->desc.bNumInterfaces; i++) {
-> > +		for (i = 0; i < cf->desc.bNumInterfaces &&
-> > +				i < USB_MAXINTERFACES; i++) {
-> >  			if (cf->intf_cache[i])
-> >  				kref_put(&cf->intf_cache[i]->ref,
-> >  					  usb_release_interface_cache);
-> > 
-> > 
+On 3/28/2019 6:03 PM, Thierry Reding wrote:
+> On Tue, Mar 26, 2019 at 08:43:20PM +0530, Vidya Sagar wrote:
+>> move PCIe config space capability search API to common designware file
+>> as this can be used by both host and ep mode codes.
+>> It also adds extended capability search APIs.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-designware-ep.c | 37 +------------
+>>   drivers/pci/controller/dwc/pcie-designware.c    | 73 +++++++++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-designware.h    |  3 +
+>>   3 files changed, 78 insertions(+), 35 deletions(-)
 > 
-> You reverted this upstream in commit cf4df407e0d7 ("Revert "USB: core:
-> only clean up what we allocated"") in favor of commit 48a4ff1c7bb5
-> ("USB: core: prevent malicious bNumInterfaces overflow"), which has been
-> in this tree since 4.9.71.
+> Just out of curiosity: is there any reason why this driver needs to
+> reimplement this? Couldn't this be made to work using the standard
+> pci_find_next_capability() function?
 > 
-> Sorry for not catching this earlier,
+> Other than that it might be a good idea to split this into two patches,
+> one that moves the existing functionality to the common code and another
+> that adds the extra functionality.
+> 
+> Thierry
+> 
+pci_find_next_capability() API expects struct pci_dev * pointer and this can only
+be used after PCIe devices got enumerated. APIs added in this patch solves the issue
+of getting capability offsets before PCIe enumeration. FWIW, APIs in this patch
+take struct dw_pcie * pointer as input.
+As you suggested, I'll split this into two patches in my next series.
 
-Not a problem, thanks for letting me know, I've now queued up the fix
-everywhere.
-
-thanks,
-
-greg k-h
