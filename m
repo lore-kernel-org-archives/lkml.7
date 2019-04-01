@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376CFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED9CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C8B20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFFE52063F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139564;
-	bh=xBz3dkujLF083TltlPJLUzRGS2vCXjnQB28aLy/mAlE=;
+	s=default; t=1554139569;
+	bh=voUh+XBpg17hM1RMMOHt7Sc4hF3gIdkUSu+1XWIQVQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FcdxsRdud2JC9XY1ZRjIouccmA+JLLbisdOi6F5xXukGt7pyNb1d8mGj0dXkpJukV
-	 jj+PHoVMC2PNCBnXoB0OhXFAfpqpAcTdfDXMsE7fYcFc8S++nkELp678R8D77WSPUg
-	 2WRzOmTkHCwEsIiDY6Giv07+vFIgOweRdHlz4kF8=
+	b=JRWMw3qz2TOuG0488utDdUd8WoyS08YiOABESxSjdYJGY4KZ3tDsWr3b7PoLIlPug
+	 slpdppG+oY5AAtfw00LG1y/rOm53GQr7Q8UDc5zpJmETcEpt5emJW2n3V5PcSvptRv
+	 IBwikt2t2Qic53ZlUXk7Y426+dJGmNh2Fz3DBqVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732312AbfDAR0C (ORCPT
+        id S1732501AbfDAR0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:26:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57690 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:26:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732480AbfDARZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:25:57 -0400
+        id S1731930AbfDAR0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:26:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CA4A20856;
-        Mon,  1 Apr 2019 17:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0982F20830;
+        Mon,  1 Apr 2019 17:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139557;
-        bh=xBz3dkujLF083TltlPJLUzRGS2vCXjnQB28aLy/mAlE=;
+        s=default; t=1554139563;
+        bh=voUh+XBpg17hM1RMMOHt7Sc4hF3gIdkUSu+1XWIQVQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVI/ewfFvvYEItHMsgVBbDZbqqnH81T/HBRsTjWZmGt7bCi+Hi5c5+VZLu7j4wN06
-         0s8VLzmh2Uzwz0F4LvIeXHgf87zAHsYxW6D92z5Er2LPEELL8Vq+ddPDrER4TKQNfv
-         7qSx2zOiIMoSgTH0bT4OocGLsDxN8zApVmgZorGc=
+        b=1XXQdsuMH48K7JXqMjVvjqSSTQi8XSoqGjhVaa+duz6Pbm6eellZSeCrAipbswLxr
+         YATuO6GsEjoyathc3aUJVoyrFrie3v3z+VUMq4yC2Lrlsa+/UmQVQQSpolZd/1IsXh
+         JKKkt6vFni+YE+xzOpNwAJbqpZjcbs+Hll/5RKAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 085/107] USB: serial: option: set driver_info for SIM5218 and compatibles
-Date:   Mon,  1 Apr 2019 19:02:40 +0200
-Message-Id: <20190401170053.362719466@linuxfoundation.org>
+Subject: [PATCH 4.14 087/107] USB: serial: option: add Olicard 600
+Date:   Mon,  1 Apr 2019 19:02:42 +0200
+Message-Id: <20190401170053.639265100@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -64,36 +65,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mans Rullgard <mans@mansr.com>
+From: Bjørn Mork <bjorn@mork.no>
 
-commit f8df5c2c3e2df5ffaf9fb5503da93d477a8c7db4 upstream.
+commit 84f3b43f7378b98b7e3096d5499de75183d4347c upstream.
 
-The SIMCom SIM5218 and compatible devices have 5 USB interfaces, only 4
-of which are serial ports.  The fifth is a network interface supported
-by the qmi-wwan driver.  Furthermore, the serial ports do not support
-modem control signals.  Add driver_info flags to reflect this.
+This is a Qualcomm based device with a QMI function on interface 4.
+It is mode switched from 2020:2030 using a standard eject message.
 
-Signed-off-by: Mans Rullgard <mans@mansr.com>
-Fixes: ec0cd94d881c ("usb: option: add SIMCom SIM5218")
-Cc: stable <stable@vger.kernel.org>	# 3.2
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  6 Spd=480  MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=2020 ProdID=2031 Rev= 2.32
+S:  Manufacturer=Mobile Connect
+S:  Product=Mobile Connect
+S:  SerialNumber=0123456789ABCDEF
+C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
+E:  Ad=8a(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+[ johan: use tabs to align comments in adjacent lines ]
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/serial/option.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 --- a/drivers/usb/serial/option.c
 +++ b/drivers/usb/serial/option.c
-@@ -1069,7 +1069,8 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(3) },
- 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x6613)}, /* Onda H600/ZTE MF330 */
- 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x0023)}, /* ONYX 3G device */
--	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000)}, /* SIMCom SIM5218 */
-+	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000), /* SIMCom SIM5218 */
-+	  .driver_info = NCTRL(0) | NCTRL(1) | NCTRL(2) | NCTRL(3) | RSVD(4) },
- 	/* Quectel products using Qualcomm vendor ID */
- 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC15)},
- 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC20),
+@@ -1947,10 +1947,12 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2001, 0x7e35, 0xff),			/* D-Link DWM-222 */
+ 	  .driver_info = RSVD(4) },
+-	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) }, /* D-Link DWM-152/C1 */
+-	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) }, /* D-Link DWM-156/C1 */
+-	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) }, /* D-Link DWM-156/A3 */
+-	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x4000, 0xff) },                /* OLICARD300 - MT6225 */
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) },	/* D-Link DWM-152/C1 */
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/C1 */
++	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
++	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
++	  .driver_info = RSVD(4) },
++	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x4000, 0xff) },			/* OLICARD300 - MT6225 */
+ 	{ USB_DEVICE(INOVIA_VENDOR_ID, INOVIA_SEW858) },
+ 	{ USB_DEVICE(VIATELECOM_VENDOR_ID, VIATELECOM_PRODUCT_CDS7) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(WETELECOM_VENDOR_ID, WETELECOM_PRODUCT_WMD200, 0xff, 0xff, 0xff) },
 
 
