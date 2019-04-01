@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A0FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B429CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B355520856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C39A206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139375;
-	bh=LSrU1hhl2bvY4QjfwcmskCaDdGsX5kWruaQBSfIY/ac=;
+	s=default; t=1554139379;
+	bh=2G+SDTKPVFBPqUW85TAcIXVW2B0fg/p6mqZbmaQnHXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLXusWG8tndDat+W6llD9Jf/fZsqV1jtPt8fAGn/STDW9FdAhumd3Ewyf8JYyzHrz
-	 ZtR4eNC8iFW/GNuu5wtjJQAesZBNe2jnzAHXjo8CMbI/SxWdKam7GOAinZ1FHsaFNV
-	 lcC6cvo30HQPHZl8H7P5HsqcpzaQ85zjTRnj6OMo=
+	b=0iY4dLXcfVSmqpsaesvJjQmWoEf2bFCyyrgWGS3/hZdnPRCVSPFvl3acK7bMR6sav
+	 Gv30yFIsTR/CK++hGo5N6GEn5YD+X3BlMNj66bwTjGoTCLnlfpFB3o81w0Zrtwo6mU
+	 MMPgE0OECWPOvWOd5ybXGLxgc0k2FDlOCB8RF6GU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732031AbfDARWy (ORCPT
+        id S1732038AbfDARW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:22:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52370 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:22:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731591AbfDARWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:22:52 -0400
+        id S1732028AbfDARWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:22:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42B58206C0;
-        Mon,  1 Apr 2019 17:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7981206C0;
+        Mon,  1 Apr 2019 17:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139371;
-        bh=LSrU1hhl2bvY4QjfwcmskCaDdGsX5kWruaQBSfIY/ac=;
+        s=default; t=1554139374;
+        bh=2G+SDTKPVFBPqUW85TAcIXVW2B0fg/p6mqZbmaQnHXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/UMcqmfcf62fU01+8b3HdwkcSQI9jtLFLA6jM+RtpiVyEWacVNMWwjNCPgRzcO35
-         U9P3vA1ThwBtlTC0gFv7moqumwx24ei86NC22v4K9BOFeUlKkr5cV18FOcT8Y4Frvi
-         PUe5pvzE+1evw7rZdcBgQoOm861UYzmDv+ojuOjs=
+        b=uJYTNdxRVELpXhRRb9C51YYmWJIOzq7bA7EKSH5NLykgc7Qm1ZRPo4b4TERjmEQHd
+         9hC4uicCfwUKoGwEyiEUryCXdOOxlnwOYufMsd6/lBRwve0EQY/dGsQToYnG1s1MQ/
+         G6wyxndd0q2/fY9Gtiu1aGNszg9ESTUarz7adHOI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Andrea Righi <andrea.righi@canonical.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 057/107] btrfs: remove WARN_ON in log_dir_items
-Date:   Mon,  1 Apr 2019 19:02:12 +0200
-Message-Id: <20190401170050.958157155@linuxfoundation.org>
+Subject: [PATCH 4.14 058/107] btrfs: raid56: properly unmap parity page in finish_parity_scrub()
+Date:   Mon,  1 Apr 2019 19:02:13 +0200
+Message-Id: <20190401170051.031044069@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -66,50 +66,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Andrea Righi <andrea.righi@canonical.com>
 
-commit 2cc8334270e281815c3850c3adea363c51f21e0d upstream.
+commit 3897b6f0a859288c22fb793fad11ec2327e60fcd upstream.
 
-When Filipe added the recursive directory logging stuff in
-2f2ff0ee5e430 ("Btrfs: fix metadata inconsistencies after directory
-fsync") he specifically didn't take the directory i_mutex for the
-children directories that we need to log because of lockdep.  This is
-generally fine, but can lead to this WARN_ON() tripping if we happen to
-run delayed deletion's in between our first search and our second search
-of dir_item/dir_indexes for this directory.  We expect this to happen,
-so the WARN_ON() isn't necessary.  Drop the WARN_ON() and add a comment
-so we know why this case can happen.
+Parity page is incorrectly unmapped in finish_parity_scrub(), triggering
+a reference counter bug on i386, i.e.:
 
+ [ 157.662401] kernel BUG at mm/highmem.c:349!
+ [ 157.666725] invalid opcode: 0000 [#1] SMP PTI
+
+The reason is that kunmap(p_page) was completely left out, so we never
+did an unmap for the p_page and the loop unmapping the rbio page was
+iterating over the wrong number of stripes: unmapping should be done
+with nr_data instead of rbio->real_stripes.
+
+Test case to reproduce the bug:
+
+ - create a raid5 btrfs filesystem:
+   # mkfs.btrfs -m raid5 -d raid5 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+
+ - mount it:
+   # mount /dev/sdb /mnt
+
+ - run btrfs scrub in a loop:
+   # while :; do btrfs scrub start -BR /mnt; done
+
+BugLink: https://bugs.launchpad.net/bugs/1812845
+Fixes: 5a6ac9eacb49 ("Btrfs, raid56: support parity scrub on raid56")
 CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/tree-log.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ fs/btrfs/raid56.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -3422,9 +3422,16 @@ static noinline int log_dir_items(struct
+--- a/fs/btrfs/raid56.c
++++ b/fs/btrfs/raid56.c
+@@ -2414,8 +2414,9 @@ static noinline void finish_parity_scrub
+ 			bitmap_clear(rbio->dbitmap, pagenr, 1);
+ 		kunmap(p);
+ 
+-		for (stripe = 0; stripe < rbio->real_stripes; stripe++)
++		for (stripe = 0; stripe < nr_data; stripe++)
+ 			kunmap(page_in_rbio(rbio, stripe, pagenr, 0));
++		kunmap(p_page);
  	}
- 	btrfs_release_path(path);
  
--	/* find the first key from this transaction again */
-+	/*
-+	 * Find the first key from this transaction again.  See the note for
-+	 * log_new_dir_dentries, if we're logging a directory recursively we
-+	 * won't be holding its i_mutex, which means we can modify the directory
-+	 * while we're logging it.  If we remove an entry between our first
-+	 * search and this search we'll not find the key again and can just
-+	 * bail.
-+	 */
- 	ret = btrfs_search_slot(NULL, root, &min_key, path, 0, 0);
--	if (WARN_ON(ret != 0))
-+	if (ret != 0)
- 		goto done;
- 
- 	/*
+ 	__free_page(p_page);
 
 
