@@ -2,101 +2,123 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC8FC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6BEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D62520857
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554104992;
-	bh=3pU95i7q7PU2lCLcalusXRsqYipduxfSR93YFICNWWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WMU9DYiYmW7HPwDQkPNEqgZEVUkv4hYEAm8tdOkhZhgUFKo50FTw7L6xV6s2fEUc0
-	 C+fGVgU8EvJh7SgLfefPcKLrKOfOTmCi+WTZSCxRDbvei9DwJnmh5sykpFWxOn/JUq
-	 68QBkxoGNWXWQ0PBBXSaxOPH4l8xMRUOQAoeegII=
+	by mail.kernel.org (Postfix) with ESMTP id 3567220857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732159AbfDAHtu (ORCPT
+        id S1732172AbfDAHuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:49:50 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37420 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731972AbfDAHts (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:49:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3pU95i7q7PU2lCLcalusXRsqYipduxfSR93YFICNWWc=; b=SymJcD6AvRrWMVWnOQ4Zlix/+
-        dfZ9L+xKQRwO4MtB6n1idP9JT1VwjOLMseFUTtrBUxbWkXGMT4oGjr+c5V4fK/6SjBolpX0WLlAAz
-        C3xebMRazmW4Ku8lqBiwQwHHoFkKOiJg4+S9+c4mNESsRw6oi9ipTDfoKIJLhBeYIVahw=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hArhP-00088S-KF; Mon, 01 Apr 2019 07:49:44 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 3F63F440082; Mon,  1 Apr 2019 08:49:40 +0100 (BST)
-Date:   Mon, 1 Apr 2019 14:49:40 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, kyarlagadda@nvidia.com,
-        ldewangan@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V1 24/26] spi: tegra114: de-assert CS before SPI mode is
- reset to its default
-Message-ID: <20190401074940.GL2059@sirena.org.uk>
-References: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
- <1553666207-11414-24-git-send-email-skomatineni@nvidia.com>
+        Mon, 1 Apr 2019 03:50:00 -0400
+Received: from mga02.intel.com ([134.134.136.20]:37327 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731972AbfDAHt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 03:49:59 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 00:49:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,295,1549958400"; 
+   d="scan'208";a="138936786"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by orsmga003.jf.intel.com with SMTP; 01 Apr 2019 00:49:54 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 01 Apr 2019 10:49:53 +0300
+Date:   Mon, 1 Apr 2019 10:49:53 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Daniel Drake <drake@endlessm.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Subject: Re: [PATCH] pinctrl: intel: save HOSTSW_OWN register over
+ suspend/resume
+Message-ID: <20190401074953.GQ3622@lahna.fi.intel.com>
+References: <20171121105205.GP22431@lahna.fi.intel.com>
+ <CAB4CAwcjXi=YX+0PEC6wBdfAZ=am+BceB4HCFzTXzdts_FE2vQ@mail.gmail.com>
+ <20171121120422.GR22431@lahna.fi.intel.com>
+ <CAD8Lp444FNHZh6fLUfhfp1i_UBpMbS5QuvJ4FuZn7PKH1Ucy=A@mail.gmail.com>
+ <20190327172940.GR3622@lahna.fi.intel.com>
+ <20190328091729.GV9224@smile.fi.intel.com>
+ <CAD8Lp44xuzHj4uu3a-Y9wscSyEmuG6=nbww6T9-9FaYZT_qYsw@mail.gmail.com>
+ <CAB4CAwfH237-EUgfyR8-KWKo0HJOf=QkxiNjkBRg+gBpbKiM7g@mail.gmail.com>
+ <20190328123444.GX3622@lahna.fi.intel.com>
+ <CAB4CAwcQTH5BiDDbzfFXTDDuYQ_fuDd_1tKkecf6vwygGQmn5w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iAzLNm1y1mIRgolD"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1553666207-11414-24-git-send-email-skomatineni@nvidia.com>
-X-Cookie: Use extra care when cleaning on stairs.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAB4CAwcQTH5BiDDbzfFXTDDuYQ_fuDd_1tKkecf6vwygGQmn5w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 29, 2019 at 04:38:20PM +0800, Chris Chiu wrote:
+> On Thu, Mar 28, 2019 at 8:34 PM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > On Thu, Mar 28, 2019 at 08:19:59PM +0800, Chris Chiu wrote:
+> > > On Thu, Mar 28, 2019 at 5:38 PM Daniel Drake <drake@endlessm.com> wrote:
+> > > >
+> > > > On Thu, Mar 28, 2019 at 5:17 PM Andy Shevchenko
+> > > > <andriy.shevchenko@intel.com> wrote:
+> > > > > Hmm... Can you confirm that laptop you declared as a fixed case and the
+> > > > > mentioned here is the same one?
+> > > >
+> > > > They are definitely not the same exact unit - originally we had a
+> > > > pre-production sample, and now we briefly diagnosed a real production
+> > > > unit that was sold to a customer. There could be subtle motherboard
+> > > > variations as you mention.
+> > > >
+> > > > > If it's the case, I recommend to ping Asus again and make them check and fix.
+> > > >
+> > > > We'll keep an eye open for any opportunities to go deeper here.
+> > > > However further investigation on both our side and theirs is blocked
+> > > > by not having any of the affected hardware (since the models are now
+> > > > so old), so I'm not very optimistic that we'll be able to make
+> > > > progress there.
+> > > >
+> > > > > Meanwhile, Mika's proposal sounds feasible and not so intrusive. We may
+> > > > > implement this later on.
+> > > >
+> > > > Chris will work on implementing this for your consideration.
+> > > >
+> > > > Thanks for the quick feedback!
+> > > > Daniel
+> > >
+> > > What if I modify the patch as follows? It doesn't save HOSTSW_OWN register.
+> > > It just toggles the bit specifically for the IRQ GPIO pin after resume when DMI
+> > > matches.
+> >
+> > I don't really like having quirks like this if we can avoid it and in
+> > this case I think we can. Just always save HOSTSW_OWN and then restore
+> > it if there is a GPIO requested and the value differs (and log a warning
+> > or something like that).
+> 
+> You mean save the content of hostsw_own register on padgroup based ex.
+>     communities[i].hostown[gpp] = readl(base + gpp * 4);
+> 
+> And then check the hostown bit for the GPIO requested pin in
+> intel_pinctrl_resume(),
+> differs the hostsw_own bit on pin base (like padcfg), then restore the
+> hostsw_own
+> value of the padgroug which the GPIO pin is belonging to?
 
---iAzLNm1y1mIRgolD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes.
 
-On Tue, Mar 26, 2019 at 10:56:45PM -0700, Sowjanya Komatineni wrote:
-> With SW CS, during transfer completion CS is de-asserted by writing the
-> default command1 register value to SPI_COMMAND1 register. With this both
-> mode and CS state are set at the same time and if current transfer mode
-> is different to default SPI mode and if mode change happens prior to CS
-> de-assert, clock polarity can change while CS is active before transfer
-> finishes.
+> I think what you mean should be a much more straightforward solution
+> for this. Could
+> you implement this in your way and we can try to help verification. Thanks.
 
-This is a bug fix so I'd expect it to be much earlier in the series
-before any of the new features.
-
---iAzLNm1y1mIRgolD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyhwpMACgkQJNaLcl1U
-h9Bpygf/TbdkEy6Q+FfZhGR0lmQSqgaXu3RXuS1Vlv74EsyVNGbcjCDMLRaWVi0z
-AEEsy31rNjVe/kqIctYJDlpKWiAo3s/e2PmVOK5AwWBGT6T63WyP4D8Q3zwC4JRI
-UuTXIr9aTHD3CLMkfXfRMAmXXHawTabaOReaKwTMqqhNgYdpg1zpmiBM7YvDX3IX
-PlE0tAGaRklxIDFdge9wXtHYbCpUC4VbZx4NICsTpF+g2n8iw9CoaimIACa7qRud
-hVIzF2eRa80ID4zeltfxlcu4o6YaaE9go/uqQcxknFGDwLKZihiVn8698gANNOFm
-hldnv/vWlSWtWsxDuhrwyKvf4usQfw==
-=2SUy
------END PGP SIGNATURE-----
-
---iAzLNm1y1mIRgolD--
+Sure I can but it probably does not happen until end of the week because
+I'm currently busy with something else.
