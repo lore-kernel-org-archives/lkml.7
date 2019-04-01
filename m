@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE53C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1783C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A7920856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8BA21900
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138907;
-	bh=AAzHgASu+m41a6XvwQKiIo/B9ccdbDL3WolEEIULuHI=;
+	s=default; t=1554138911;
+	bh=Bs7DGrdFYxjIPnTxbrXZn3BYH7IPmZaU1ZaxO0iYO+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZTd7UhqMqNxrxAp6d/O+ji8wr1B5T0Lnhd7fsUpTzfG4y7KuxB57Cfd9LbR4n2qpu
-	 yUdAXBRMzLygPKFbrjW27Smd0/lHczaxtKpAmL+rWssiIqcybHgaC77cVC/QOhDSep
-	 jAdlhVMnLzw/THCk9/eV3bEB+XbQDPLNI9zcAse0=
+	b=PnFoIgJT/sJrI3xFkZR8Ev5uw5cPg+g7iXcfktLjiSk5REGReJ6FOU6M8rvXOBMCh
+	 Qec16EzPDWxkKz5fERicwiuDJT7xiolx/DH5HCQruSBNCrMtxGBdHRJKpHqIMS84Tu
+	 2g4JwReNx863rSS9OyA8lXyRkaqJd/7dp3urQRUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730853AbfDARPG (ORCPT
+        id S1730620AbfDARPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:15:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38818 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:15:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729892AbfDARPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:15:02 -0400
+        id S1730338AbfDARPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:15:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C29620856;
-        Mon,  1 Apr 2019 17:15:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C5A62133D;
+        Mon,  1 Apr 2019 17:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138901;
-        bh=AAzHgASu+m41a6XvwQKiIo/B9ccdbDL3WolEEIULuHI=;
+        s=default; t=1554138905;
+        bh=Bs7DGrdFYxjIPnTxbrXZn3BYH7IPmZaU1ZaxO0iYO+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lJCH2RmOEaFTTFi4M7eBWuVfTr5DTfwOIJu1AC2y7StMwJvzA3BoqDvmBtca8q8Rv
-         EgqenKMoCP3zpU9+68myr819Q7ueuNwHv2yUcN0GJ03b1BYAGd3xUh9IqzzpZNunMP
-         CCDSvxeLkrJ9XUZyu3IaPSHB+3KoVkE8sCV94gnM=
+        b=hHX1/ZMZ7nuskCZH6DhVHC9NNiGtU28AqzTQ7BfRXJ38XHD0v8LL8H9/OwTZo2pQN
+         6MGOlMRRcpnquWxKgEdlRS2V+iHddQWdGhNcOY1/CvBg9qqafHViN6jdmursSABx34
+         FuagwL/3F31+dsmdm0psaFAMhOAcaWOV+WtLlwsg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.19 054/134] NFS: fix mount/umount race in nlmclnt.
-Date:   Mon,  1 Apr 2019 19:01:30 +0200
-Message-Id: <20190401170049.576428430@linuxfoundation.org>
+Subject: [PATCH 4.19 055/134] NFSv4.1 dont free interrupted slot on open
+Date:   Mon,  1 Apr 2019 19:01:31 +0200
+Message-Id: <20190401170049.658711304@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -65,48 +65,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: NeilBrown <neilb@suse.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-commit 4a9be28c45bf02fa0436808bb6c0baeba30e120e upstream.
+commit 0cb98abb5bd13b9a636bde603d952d722688b428 upstream.
 
-If the last NFSv3 unmount from a given host races with a mount from the
-same host, we can destroy an nlm_host that is still in use.
+Allow the async rpc task for finish and update the open state if needed,
+then free the slot. Otherwise, the async rpc unable to decode the reply.
 
-Specifically nlmclnt_lookup_host() can increment h_count on
-an nlm_host that nlmclnt_release_host() has just successfully called
-refcount_dec_and_test() on.
-Once nlmclnt_lookup_host() drops the mutex, nlm_destroy_host_lock()
-will be called to destroy the nlmclnt which is now in use again.
-
-The cause of the problem is that the dec_and_test happens outside the
-locked region.  This is easily fixed by using
-refcount_dec_and_mutex_lock().
-
-Fixes: 8ea6ecc8b075 ("lockd: Create client-side nlm_host cache")
-Cc: stable@vger.kernel.org (v2.6.38+)
-Signed-off-by: NeilBrown <neilb@suse.com>
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Fixes: ae55e59da0e4 ("pnfs: Don't release the sequence slot...")
+Cc: stable@vger.kernel.org # v4.18+
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/lockd/host.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/nfs/nfs4proc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/lockd/host.c
-+++ b/fs/lockd/host.c
-@@ -290,12 +290,11 @@ void nlmclnt_release_host(struct nlm_hos
- 
- 	WARN_ON_ONCE(host->h_server);
- 
--	if (refcount_dec_and_test(&host->h_count)) {
-+	if (refcount_dec_and_mutex_lock(&host->h_count, &nlm_host_mutex)) {
- 		WARN_ON_ONCE(!list_empty(&host->h_lockowners));
- 		WARN_ON_ONCE(!list_empty(&host->h_granted));
- 		WARN_ON_ONCE(!list_empty(&host->h_reclaim));
- 
--		mutex_lock(&nlm_host_mutex);
- 		nlm_destroy_host_locked(host);
- 		mutex_unlock(&nlm_host_mutex);
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -2909,7 +2909,8 @@ static int _nfs4_open_and_get_state(stru
  	}
+ 
+ out:
+-	nfs4_sequence_free_slot(&opendata->o_res.seq_res);
++	if (!opendata->cancelled)
++		nfs4_sequence_free_slot(&opendata->o_res.seq_res);
+ 	return ret;
+ }
+ 
 
 
