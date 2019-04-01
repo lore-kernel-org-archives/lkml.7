@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B89F8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB45C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 872E6206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C4321473
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139240;
-	bh=oegOK+2NbcsPCK/XnFVpp7o/4T1vFqZUoSvTIoqu6gs=;
+	s=default; t=1554139243;
+	bh=FtRNiNVAak0xHUHlBUo8c+1cOCT1wA4EzX+v2iyP6H8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m6oZuuFQ7JmBGhF18hYT+r+NkCYnxotHUB7EmRWbbA7gtKHWt+MCpSioDK0srfpLm
-	 mYXZMBuaSkBeB05cpbH4+clW1Uf2m09QPJ+8hM5+jzLmceSInc7sX18nLW98/Bqr9T
-	 tdQV50hCQDu7dVRJ916a9qnu9GDr1NlrMECRGx9w=
+	b=q0NSd/xdkKxXRIkLVBnrlm4n9bYkO083eHyIFpGmwvXiCLa9mC0ZhEzP69oJCgl/X
+	 riTcjlTak/6bCRjQtEXWRiMEgBmHhpQTDofyyDNmi1k+LeSv7feCoZyxDzwb2BxjEe
+	 cHE154DzqU7ZM/guLvjzmB0OUJcyNASVUHBDBkAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731683AbfDARUj (ORCPT
+        id S1731697AbfDARUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:20:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48846 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:20:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731667AbfDARUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:20:35 -0400
+        id S1731315AbfDARUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:20:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13769206C0;
-        Mon,  1 Apr 2019 17:20:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D871A206C0;
+        Mon,  1 Apr 2019 17:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139234;
-        bh=oegOK+2NbcsPCK/XnFVpp7o/4T1vFqZUoSvTIoqu6gs=;
+        s=default; t=1554139237;
+        bh=FtRNiNVAak0xHUHlBUo8c+1cOCT1wA4EzX+v2iyP6H8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0cRVueU7+xAl1LBouVq1V0uD/0JMmEpcsseuy5zIpusALGjPnB3c1474luQTAIvts
-         gmBa5dYTD1qZH5GUUsvCfBBOZ76vQwo+espYaSf/eXqEawSA8brS6gHQMs8EFeOXXo
-         3hFITgtVwPMPInc3ea4rI0IJyirIIVRqzer3VfVc=
+        b=Uind9dmK4+4noGKNT5miicXa42uA3ODZzOsP/0m3w9XX1t5u4E+0gsaShvQvqtjMs
+         Mtr2HGN/oMTMtCd2TruyWIHy9t4mMjHJgs+LExJuAxb0Wi5dwSVh9qOSFbM2kcwAdQ
+         3GbRLMksD3YyqR4BT99U90rdz/7QE9bLNttrLHpg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dean Nelson <dnelson@redhat.com>,
+        stable@vger.kernel.org, "Suanming.Mou" <mousuanming@huawei.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 017/107] thunderx: eliminate extra calls to put_page() for pages held for recycling
-Date:   Mon,  1 Apr 2019 19:01:32 +0200
-Message-Id: <20190401170047.064445862@linuxfoundation.org>
+Subject: [PATCH 4.14 018/107] vxlan: Dont call gro_cells_destroy() before device is unregistered
+Date:   Mon,  1 Apr 2019 19:01:33 +0200
+Message-Id: <20190401170047.208793962@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,58 +68,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dean Nelson <dnelson@redhat.com>
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-[ Upstream commit cd35ef91490ad8049dd180bb060aff7ee192eda9 ]
+[ Upstream commit cc4807bb609230d8959fd732b0bf3bd4c2de8eac ]
 
-For the non-XDP case, commit 773225388dae15e72790 ("net: thunderx: Optimize
-page recycling for XDP") added code to nicvf_free_rbdr() that, when releasing
-the additional receive buffer page reference held for recycling, repeatedly
-calls put_page() until the page's _refcount goes to zero. Which results in
-the page being freed.
+Commit ad6c9986bcb62 ("vxlan: Fix GRO cells race condition between
+receive and link delete") fixed a race condition for the typical case a vxlan
+device is dismantled from the current netns. But if a netns is dismantled,
+vxlan_destroy_tunnels() is called to schedule a unregister_netdevice_queue()
+of all the vxlan tunnels that are related to this netns.
 
-This is not okay if the page's _refcount was greater than 1 (in the non-XDP
-case), because nicvf_free_rbdr() should not be subtracting more than what
-nicvf_alloc_page() had previously added to the page's _refcount, which was
-only 1 (in the non-XDP case).
+In vxlan_destroy_tunnels(), gro_cells_destroy() is called and finished before
+unregister_netdevice_queue(). This means that the gro_cells_destroy() call is
+done too soon, for the same reasons explained in above commit.
 
-This can arise if a received packet is still being processed and the receive
-buffer (i.e., skb->head) has not yet been freed via skb_free_head() when
-nicvf_free_rbdr() is spinning through the aforementioned put_page() loop.
+So we need to fully respect the RCU rules, and thus must remove the
+gro_cells_destroy() call or risk use after-free.
 
-If this should occur, when the received packet finishes processing and
-skb_free_head() is called, various problems can ensue. Exactly what, depends on
-whether the page has already been reallocated or not, anything from "BUG: Bad
-page state ... ", to "Unable to handle kernel NULL pointer dereference ..." or
-"Unable to handle kernel paging request...".
-
-So this patch changes nicvf_free_rbdr() to only call put_page() once for pages
-held for recycling (in the non-XDP case).
-
-Fixes: 773225388dae ("net: thunderx: Optimize page recycling for XDP")
-Signed-off-by: Dean Nelson <dnelson@redhat.com>
+Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")
+Signed-off-by: Suanming.Mou <mousuanming@huawei.com>
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cavium/thunder/nicvf_queues.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/vxlan.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
-@@ -364,11 +364,10 @@ static void nicvf_free_rbdr(struct nicvf
- 	while (head < rbdr->pgcnt) {
- 		pgcache = &rbdr->pgcache[head];
- 		if (pgcache->page && page_ref_count(pgcache->page) != 0) {
--			if (!rbdr->is_xdp) {
--				put_page(pgcache->page);
--				continue;
-+			if (rbdr->is_xdp) {
-+				page_ref_sub(pgcache->page,
-+					     pgcache->ref_count - 1);
- 			}
--			page_ref_sub(pgcache->page, pgcache->ref_count - 1);
- 			put_page(pgcache->page);
- 		}
- 		head++;
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -3793,10 +3793,8 @@ static void __net_exit vxlan_exit_net(st
+ 		/* If vxlan->dev is in the same netns, it has already been added
+ 		 * to the list by the previous loop.
+ 		 */
+-		if (!net_eq(dev_net(vxlan->dev), net)) {
+-			gro_cells_destroy(&vxlan->gro_cells);
++		if (!net_eq(dev_net(vxlan->dev), net))
+ 			unregister_netdevice_queue(vxlan->dev, &list);
+-		}
+ 	}
+ 
+ 	unregister_netdevice_many(&list);
 
 
