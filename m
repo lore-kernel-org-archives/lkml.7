@@ -7,55 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49108C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2944EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B699208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF5682146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139783;
-	bh=jgQLKCGqSY4d178ujtZ7TVP224+saaWtlwNFi7ZzRkA=;
+	s=default; t=1554139786;
+	bh=hPVoQPsI1P/paeHhttkbAgzdV4kElc84plX2XKZhAmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lmViQ2+P7Hc2imAG/v6MGL9qpDZZG0UHipzpLNNb/cC1afsIKRqdxAxVBJ6j2Xexu
-	 Y4iAOe95NJr/rHXy3Q/yjoAzgIadT+oWo4ndwwz6FLSPI7vqnwPqTbfUSCdBsw4Jxp
-	 VHFBqr2VM9GJmDAmnpsvAq8z3IMZ/py6kwKj1dAs=
+	b=CPVhlOiworN16E1zOOp7LIgztZniy06CzLbl/MfG6+/S2XYnCanewECmc2hE8Coda
+	 E5OFx/iVxZ5r7qhIJ78L+fIUgl327k5s4MoFNlmAK0YxX5sPFWBCQ7+SwpU88AIxww
+	 kS6CveZDGhQ7UTbwInXN435tuPzSTrE6lmgYufcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732984AbfDAR3l (ORCPT
+        id S1732270AbfDAR3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:29:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36104 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:29:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732621AbfDAR3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:29:38 -0400
+        id S1732621AbfDAR3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:29:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99DFF20856;
-        Mon,  1 Apr 2019 17:29:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E30C02146E;
+        Mon,  1 Apr 2019 17:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139778;
-        bh=jgQLKCGqSY4d178ujtZ7TVP224+saaWtlwNFi7ZzRkA=;
+        s=default; t=1554139782;
+        bh=hPVoQPsI1P/paeHhttkbAgzdV4kElc84plX2XKZhAmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HP/saE43DpoO66xrlxrPVUERRhSKaOMhwZhni6V6WvAHt8fLvtO0b6JZgLTLfryPI
-         5P2b1VA+KnjvB3MTvP0/2UMCX16SJ2/uMKMxVSGhtemPS1AfvA9WqHp6HuFgmoKmfo
-         1V/4z1O1yrwL8I9BX1enE3P+n798gaFMJo/wbv2g=
+        b=O3zcdgv4bi12hoY1osk/jZdPC0sTWbXTQFnUHZK+rJ0AF4IGreJBjJx+ElxXAUKCF
+         lknqAvEAaK6r+D0/6bSZGpfwBiZBbev6UshZag28SN3pBfIMueW6CQ9JPTRDSNs2n4
+         SlkU6qKxZ+9rXNMFdpaANkAVMH7UgISFMjl39ah4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
-        Waiman Long <longman@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.4 012/131] locking/lockdep: Add debug_locks check in __lock_downgrade()
-Date:   Mon,  1 Apr 2019 19:01:22 +0200
-Message-Id: <20190401170052.846107532@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 013/131] ALSA: hda - Record the current power state before suspend/resume calls
+Date:   Mon,  1 Apr 2019 19:01:23 +0200
+Message-Id: <20190401170052.954277499@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -74,48 +64,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Waiman Long <longman@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 71492580571467fb7177aade19c18ce7486267f5 upstream.
+commit 98081ca62cbac31fb0f7efaf90b2e7384ce22257 upstream.
 
-Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
-warning right after a previous lockdep warning. It is likely that the
-previous warning turned off lock debugging causing the lockdep to have
-inconsistency states leading to the lock downgrade warning.
+Currently we deal with single codec and suspend codec callbacks for
+all S3, S4 and runtime PM handling.  But it turned out that we want
+distinguish the call patterns sometimes, e.g. for applying some init
+sequence only at probing and restoring from hibernate.
 
-Fix that by add a check for debug_locks at the beginning of
-__lock_downgrade().
+This patch slightly modifies the common PM callbacks for HD-audio
+codec and stores the currently processed PM event in power_state of
+the codec's device.power field, which is currently unused.  The codec
+callback can take a look at this event value and judges which purpose
+it's being called.
 
-Debugged-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/locking/lockdep.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/pci/hda/hda_codec.c |   43 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 41 insertions(+), 2 deletions(-)
 
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3314,6 +3314,9 @@ __lock_set_class(struct lockdep_map *loc
- 	unsigned int depth;
- 	int i;
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -3004,6 +3004,7 @@ static void hda_call_codec_resume(struct
+ 		hda_jackpoll_work(&codec->jackpoll_work.work);
+ 	else
+ 		snd_hda_jack_report_sync(codec);
++	codec->core.dev.power.power_state = PMSG_ON;
+ 	atomic_dec(&codec->core.in_pm);
+ }
  
-+	if (unlikely(!debug_locks))
-+		return 0;
+@@ -3036,10 +3037,48 @@ static int hda_codec_runtime_resume(stru
+ }
+ #endif /* CONFIG_PM */
+ 
++#ifdef CONFIG_PM_SLEEP
++static int hda_codec_pm_suspend(struct device *dev)
++{
++	dev->power.power_state = PMSG_SUSPEND;
++	return pm_runtime_force_suspend(dev);
++}
 +
- 	depth = curr->lockdep_depth;
- 	/*
- 	 * This function is about (re)setting the class of a held lock,
++static int hda_codec_pm_resume(struct device *dev)
++{
++	dev->power.power_state = PMSG_RESUME;
++	return pm_runtime_force_resume(dev);
++}
++
++static int hda_codec_pm_freeze(struct device *dev)
++{
++	dev->power.power_state = PMSG_FREEZE;
++	return pm_runtime_force_suspend(dev);
++}
++
++static int hda_codec_pm_thaw(struct device *dev)
++{
++	dev->power.power_state = PMSG_THAW;
++	return pm_runtime_force_resume(dev);
++}
++
++static int hda_codec_pm_restore(struct device *dev)
++{
++	dev->power.power_state = PMSG_RESTORE;
++	return pm_runtime_force_resume(dev);
++}
++#endif /* CONFIG_PM_SLEEP */
++
+ /* referred in hda_bind.c */
+ const struct dev_pm_ops hda_codec_driver_pm = {
+-	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+-				pm_runtime_force_resume)
++#ifdef CONFIG_PM_SLEEP
++	.suspend = hda_codec_pm_suspend,
++	.resume = hda_codec_pm_resume,
++	.freeze = hda_codec_pm_freeze,
++	.thaw = hda_codec_pm_thaw,
++	.poweroff = hda_codec_pm_suspend,
++	.restore = hda_codec_pm_restore,
++#endif /* CONFIG_PM_SLEEP */
+ 	SET_RUNTIME_PM_OPS(hda_codec_runtime_suspend, hda_codec_runtime_resume,
+ 			   NULL)
+ };
 
 
