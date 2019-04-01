@@ -2,115 +2,125 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1886C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98018C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED0F2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:18:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ePKf8xtG"
+	by mail.kernel.org (Postfix) with ESMTP id 6EE8A20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbfDASSa (ORCPT
+        id S1729019AbfDASTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:18:30 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38450 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728798AbfDASS1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:18:27 -0400
-Received: by mail-wr1-f67.google.com with SMTP id k11so13312092wro.5;
-        Mon, 01 Apr 2019 11:18:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9ye1/MyKDhSO/ewzuKmbDnyUwPW1RDGDapSOkV4cGL0=;
-        b=ePKf8xtGlM3Xw4gBPq6inPPXkjh+VtlbGbMXaQ+Rt6akR6bHQpjYcIcpHHQUMKgpiO
-         ftMv3MYpzPta4C8/QU4lCE9u0aFmb88VfFSJRI3xNrOnOyFjmwBFYlBGHCdf6NF5uhHO
-         0ZhOtjVUFyHqkFP2qydw4IjkjlcWeUA7yBxX7NhsCryLncF2+EkEX0+EqQJRa6DgYC4h
-         RljSZcgokxPGRUI3wu6t+KhSqfz/MlV2LNWLMa2rksEeTCG3UyH835eFf/o0U+lULHAQ
-         e8xdATQiAtrKEtH5JWgW0vAvuU2iQzEVBXPHAg/SGVoG0Dy8QX5a8fveEtnkuhgk/xSI
-         fsRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9ye1/MyKDhSO/ewzuKmbDnyUwPW1RDGDapSOkV4cGL0=;
-        b=k9SaVSOOsXeHiOmD3+WLQjmaObDaqZm4DJ9vmrX9gbJ936+jgEQ86WvmwOwJB417af
-         Ktrj9E2s8oo7y0h0l6JDoXDC1jVPlToMZlj50biW7aJgPgVkN+wkLTimGwvSYq7O41Jn
-         oW1rJ1W60cEP3c1CFj5nF17BPJW0XALfAZyutGgz8RmlsyWG8EvmEwXggUOSKvu6iYhn
-         2ealbdEdYNeGFnUJpBPB0Yrk6bwi63trJ2OGfL3yapZNtISZWJ9GAydeyxbcTd6XyYZQ
-         8SB105FeVVokde127cYhZmR8HhLPUfD+OmWSLpF4nrZcjlNd9uqyv5OquRM+ZmpQV1Z9
-         l6cA==
-X-Gm-Message-State: APjAAAVjOtrGZpwqzrWNo+mTI/MpL3HoWi9HwunIWsDG2cRsf+i/oxs9
-        rNEUrzKp8rssRAwyuCs2N1E=
-X-Google-Smtp-Source: APXvYqwQGTK6gmoLZn1yNvDpn8+7wW3OyahHbaWJL+s5vbSRarD51UwEVgNOFPyHgLHmZfrS8WXk9w==
-X-Received: by 2002:a5d:4d42:: with SMTP id a2mr44948400wru.130.1554142705035;
-        Mon, 01 Apr 2019 11:18:25 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300DCD73A0800C9C8A7BE25478D36.dip0.t-ipconnect.de. [2003:dc:d73a:800:c9c8:a7be:2547:8d36])
-        by smtp.googlemail.com with ESMTPSA id h10sm18131127wrs.27.2019.04.01.11.18.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 11:18:24 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Cc:     narmstrong@baylibre.com, jbrunet@baylibre.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        u.kleine-koenig@pengutronix.de, bichao.zheng@amlogic.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/2] pwm: meson: consider 128 a valid pre-divider
-Date:   Mon,  1 Apr 2019 20:18:16 +0200
-Message-Id: <20190401181817.11999-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401181817.11999-1-martin.blumenstingl@googlemail.com>
-References: <20190401181817.11999-1-martin.blumenstingl@googlemail.com>
+        Mon, 1 Apr 2019 14:19:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51326 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728663AbfDAST3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 14:19:29 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4F75C5944D;
+        Mon,  1 Apr 2019 18:19:29 +0000 (UTC)
+Received: from localhost.default (ovpn-116-31.phx2.redhat.com [10.3.116.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8B68E5D6A6;
+        Mon,  1 Apr 2019 18:19:27 +0000 (UTC)
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Clark Williams <williams@redhat.com>, x86@kernel.org
+Subject: [PATCH V2 1/2] trace,x86: Add external_interrupts to the irq_vectors class
+Date:   Mon,  1 Apr 2019 20:19:24 +0200
+Message-Id: <833f2a192b491649e4d46cec51028d07c96bbf5e.1554142415.git.bristot@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 01 Apr 2019 18:19:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pre-divider allows configuring longer PWM periods compared to using
-the input clock directly. The pre-divider is 7 bit wide, meaning it's
-maximum value is 128 (the register value is off-by-one: 0x7f or 127).
+Currently, the irq_vectors is showing the entry and exit events for
+the interrupts of the architecture, but not for external interrupts.
 
-Change the loop to also allow for the maximum possible value to be
-considered valid.
+Adds the tracepoints for external interrupts.
 
-Fixes: 211ed630753d2f ("pwm: Add support for Meson PWM Controller")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Example of output:
+ <idle>-0     [000] d.h.   102.890935: external_interrupt_entry: vector=35
+ <idle>-0     [000] d.h.   102.890960: external_interrupt_exit: vector=35
+
+Changes from V1:
+  - Fix a compilation problem when CONFIG_X86_LOCAL_APIC is not set (kbuild test)
+
+Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Clark Williams <williams@redhat.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org
 ---
- drivers/pwm/pwm-meson.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/trace/irq_vectors.h | 10 +++++++++-
+ arch/x86/kernel/irq.c                    |  2 ++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index f6e738ad7bd9..4b708c1fcb1d 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -188,7 +188,7 @@ static int meson_pwm_calc(struct meson_pwm *meson,
- 	do_div(fin_ps, fin_freq);
+diff --git a/arch/x86/include/asm/trace/irq_vectors.h b/arch/x86/include/asm/trace/irq_vectors.h
+index 33b9d0f0aafe..38e73d56db70 100644
+--- a/arch/x86/include/asm/trace/irq_vectors.h
++++ b/arch/x86/include/asm/trace/irq_vectors.h
+@@ -138,6 +138,12 @@ DEFINE_IRQ_VECTOR_EVENT(deferred_error_apic);
+ DEFINE_IRQ_VECTOR_EVENT(thermal_apic);
+ #endif
  
- 	/* Calc pre_div with the period */
--	for (pre_div = 0; pre_div < MISC_CLK_DIV_MASK; pre_div++) {
-+	for (pre_div = 0; pre_div <= MISC_CLK_DIV_MASK; pre_div++) {
- 		cnt = DIV_ROUND_CLOSEST_ULL((u64)period * 1000,
- 					    fin_ps * (pre_div + 1));
- 		dev_dbg(meson->chip.dev, "fin_ps=%llu pre_div=%u cnt=%u\n",
-@@ -197,7 +197,7 @@ static int meson_pwm_calc(struct meson_pwm *meson,
- 			break;
++/*
++ * external_interrupt - called when entering/exiting from regular device
++ * interrupt vector handler.
++ */
++DEFINE_IRQ_VECTOR_EVENT(external_interrupt);
++
+ TRACE_EVENT(vector_config,
+ 
+ 	TP_PROTO(unsigned int irq, unsigned int vector,
+@@ -385,7 +391,9 @@ TRACE_EVENT(vector_free_moved,
+ 		  __entry->is_managed)
+ );
+ 
+-
++#else /* CONFIG_X86_LOCAL_APIC */
++#define trace_external_interrupt_entry(vector) do {} while(0)
++#define trace_external_interrupt_exit(vector) do {} while(0)
+ #endif /* CONFIG_X86_LOCAL_APIC */
+ 
+ #undef TRACE_INCLUDE_PATH
+diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+index 59b5f2ea7c2f..715afe3a4f24 100644
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -237,6 +237,7 @@ __visible unsigned int __irq_entry do_IRQ(struct pt_regs *regs)
+ 	unsigned vector = ~regs->orig_ax;
+ 
+ 	entering_irq();
++	trace_external_interrupt_entry(vector);
+ 
+ 	/* entering_irq() tells RCU that we're not quiescent.  Check it. */
+ 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up RCU");
+@@ -255,6 +256,7 @@ __visible unsigned int __irq_entry do_IRQ(struct pt_regs *regs)
+ 		}
  	}
  
--	if (pre_div == MISC_CLK_DIV_MASK) {
-+	if (pre_div > MISC_CLK_DIV_MASK) {
- 		dev_err(meson->chip.dev, "unable to get period pre_div\n");
- 		return -EINVAL;
- 	}
++	trace_external_interrupt_exit(vector);
+ 	exiting_irq();
+ 
+ 	set_irq_regs(old_regs);
 -- 
-2.21.0
+2.19.0
 
