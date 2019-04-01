@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DADC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752D6C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 654C6218FE
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A6C21900
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139170;
-	bh=rFjbOwInaCRtIEqp2+vlNlmhK2N4L0DteTaakIvjVyY=;
+	s=default; t=1554139174;
+	bh=9wuw0+rjy7zF/MSnnIXbwfb1FaWshWKZUmWCmLJgIeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LzmR+/KCsnKj+iS5dcKXnJhK+BoBmOVSGsxAv/HK1yq6tUO+g3czpDsl+fcOqBlWf
-	 UaUZH/sSDbVhr/AAjwgW1PTvwSFTpJNgh1hz6fEfXLJ2HOkH+cVquWwJT7u9wUTNbB
-	 fX+Wxzzn/IGBelnOTxGN7zWO/aO8H7MSzbOD34SU=
+	b=h2tCTjKIvib6SONSdBENxSEy07BxOJFvmmoxmh2uwgZ2phmk+mfU8vXh+K7/cF4HB
+	 LfStRkpbvQgSHaqZie7cp8u8G0jrQUUvz3QrCOKzdwFKf2JnkIvMUFfrfD0ijx68nn
+	 +A/AVmYXQaxyZZdAZhf/MoAHniqf1DGC7FiHPsRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731533AbfDART3 (ORCPT
+        id S1731542AbfDARTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:19:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47306 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:19:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730737AbfDART1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:19:27 -0400
+        id S1730737AbfDARTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:19:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A29A2133D;
-        Mon,  1 Apr 2019 17:19:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D39F321852;
+        Mon,  1 Apr 2019 17:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139165;
-        bh=rFjbOwInaCRtIEqp2+vlNlmhK2N4L0DteTaakIvjVyY=;
+        s=default; t=1554139169;
+        bh=9wuw0+rjy7zF/MSnnIXbwfb1FaWshWKZUmWCmLJgIeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A3HG6HUquNsNJrzxEp7nJMCahe6+gDS0N4LfcDoc/BHA+cTZEkUk/5C4ZNp068pJ4
-         LlRdzU2ak3lSH5V4M/IEqpabnOscaY5bz8NltU25iR46XG/yyxN0dncvVy4FmWY8q/
-         RlB/PMwF050TTBQlmI8wHqLkUqY3NNwvrycputEA=
+        b=WUGkC0yIVZna3sCYafDIquIPy6ohtNDQEx2UlmcMrF7icdpWU5+/VeydzyA7BYFe7
+         6L82PP5c4M1kOinPUJQVbMzutEzLfKKvyeuGc1t2jP8+sE5FcWvYiKAKkmsHSvQavB
+         Rhbpd29JbeKvC5pUg909AofP4dYHOFHns+jcSBSA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 4.19 133/134] usb: typec: class: Dont use port parent for getting mux handles
-Date:   Mon,  1 Apr 2019 19:02:49 +0200
-Message-Id: <20190401170056.600655791@linuxfoundation.org>
+Subject: [PATCH 4.19 134/134] platform: x86: intel_cht_int33fe: Remove the old connections for the muxes
+Date:   Mon,  1 Apr 2019 19:02:50 +0200
+Message-Id: <20190401170056.674658826@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -67,99 +69,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit 23481121c81d984193edf1532f5e123637e50903 upstream.
+commit 148b0aa78e4e1077e38f928124bbc9c2d2d24006 upstream.
 
-It is not possible to use the parent of the port device when
-requesting mux handles as the parent may be a multiport USB
-Type-C or PD controller. The muxes must be assigned to the
-ports, not the controllers.
+USB Type-C class driver now expects the muxes to be always
+assigned to the ports and not controllers, so the
+connections for the mux and fusb302 can be removed.
 
-This will also move the requesting of the muxes after the
-port device is initialized.
-
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Acked-by: Hans de Goede <hdegoede@redhat.com>
 Tested-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/usb/typec/class.c |   38 +++++++++++++++-----------------------
- 1 file changed, 15 insertions(+), 23 deletions(-)
+ drivers/platform/x86/intel_cht_int33fe.c |   18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -1500,7 +1500,7 @@ typec_port_register_altmode(struct typec
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -34,7 +34,7 @@ struct cht_int33fe_data {
+ 	struct i2c_client *fusb302;
+ 	struct i2c_client *pi3usb30532;
+ 	/* Contain a list-head must be per device */
+-	struct device_connection connections[8];
++	struct device_connection connections[5];
+ };
  
- 	sprintf(id, "id%04xm%02x", desc->svid, desc->mode);
- 
--	mux = typec_mux_get(port->dev.parent, id);
-+	mux = typec_mux_get(&port->dev, id);
- 	if (IS_ERR(mux))
- 		return ERR_CAST(mux);
- 
-@@ -1540,18 +1540,6 @@ struct typec_port *typec_register_port(s
- 		return ERR_PTR(id);
+ /*
+@@ -174,29 +174,19 @@ static int cht_int33fe_probe(struct i2c_
+ 			return -EPROBE_DEFER; /* Wait for i2c-adapter to load */
  	}
  
--	port->sw = typec_switch_get(cap->fwnode ? &port->dev : parent);
--	if (IS_ERR(port->sw)) {
--		ret = PTR_ERR(port->sw);
--		goto err_switch;
--	}
--
--	port->mux = typec_mux_get(parent, "typec-mux");
--	if (IS_ERR(port->mux)) {
--		ret = PTR_ERR(port->mux);
--		goto err_mux;
--	}
--
- 	switch (cap->type) {
- 	case TYPEC_PORT_SRC:
- 		port->pwr_role = TYPEC_SOURCE;
-@@ -1592,13 +1580,26 @@ struct typec_port *typec_register_port(s
- 	port->port_type = cap->type;
- 	port->prefer_role = cap->prefer_role;
+-	data->connections[0].endpoint[0] = "i2c-fusb302";
++	data->connections[0].endpoint[0] = "port0";
+ 	data->connections[0].endpoint[1] = "i2c-pi3usb30532";
+ 	data->connections[0].id = "typec-switch";
+-	data->connections[1].endpoint[0] = "i2c-fusb302";
++	data->connections[1].endpoint[0] = "port0";
+ 	data->connections[1].endpoint[1] = "i2c-pi3usb30532";
+ 	data->connections[1].id = "typec-mux";
+-	data->connections[2].endpoint[0] = "i2c-fusb302";
++	data->connections[2].endpoint[0] = "port0";
+ 	data->connections[2].endpoint[1] = "i2c-pi3usb30532";
+ 	data->connections[2].id = "idff01m01";
+ 	data->connections[3].endpoint[0] = "i2c-fusb302";
+ 	data->connections[3].endpoint[1] = "intel_xhci_usb_sw-role-switch";
+ 	data->connections[3].id = "usb-role-switch";
  
-+	device_initialize(&port->dev);
- 	port->dev.class = typec_class;
- 	port->dev.parent = parent;
- 	port->dev.fwnode = cap->fwnode;
- 	port->dev.type = &typec_port_dev_type;
- 	dev_set_name(&port->dev, "port%d", id);
- 
--	ret = device_register(&port->dev);
-+	port->sw = typec_switch_get(&port->dev);
-+	if (IS_ERR(port->sw)) {
-+		put_device(&port->dev);
-+		return ERR_CAST(port->sw);
-+	}
-+
-+	port->mux = typec_mux_get(&port->dev, "typec-mux");
-+	if (IS_ERR(port->mux)) {
-+		put_device(&port->dev);
-+		return ERR_CAST(port->mux);
-+	}
-+
-+	ret = device_add(&port->dev);
- 	if (ret) {
- 		dev_err(parent, "failed to register port (%d)\n", ret);
- 		put_device(&port->dev);
-@@ -1606,15 +1607,6 @@ struct typec_port *typec_register_port(s
- 	}
- 
- 	return port;
+-	data->connections[4].endpoint[0] = "port0";
+-	data->connections[4].endpoint[1] = "i2c-pi3usb30532";
+-	data->connections[4].id = "typec-switch";
+-	data->connections[5].endpoint[0] = "port0";
+-	data->connections[5].endpoint[1] = "i2c-pi3usb30532";
+-	data->connections[5].id = "typec-mux";
+-	data->connections[6].endpoint[0] = "port0";
+-	data->connections[6].endpoint[1] = "i2c-pi3usb30532";
+-	data->connections[6].id = "idff01m01";
 -
--err_mux:
--	typec_switch_put(port->sw);
--
--err_switch:
--	ida_simple_remove(&typec_index_ida, port->id);
--	kfree(port);
--
--	return ERR_PTR(ret);
- }
- EXPORT_SYMBOL_GPL(typec_register_port);
+ 	device_connections_add(data->connections);
  
+ 	memset(&board_info, 0, sizeof(board_info));
 
 
