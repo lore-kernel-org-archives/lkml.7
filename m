@@ -2,364 +2,164 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39CFC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B812EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1DEA208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CDB621473
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbfDAQoS (ORCPT
+        id S1728917AbfDAQo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 12:44:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728758AbfDAQnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 12:43:46 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55D3021852;
-        Mon,  1 Apr 2019 16:43:45 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1hB02C-0004vI-Ct; Mon, 01 Apr 2019 12:43:44 -0400
-Message-Id: <20190401164344.288624897@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Mon, 01 Apr 2019 12:43:16 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Subject: [PATCH 11/15] tools/perf,tools/lib/traceevent: Make traceevent APIs more consistent
-References: <20190401164305.359125441@goodmis.org>
+        Mon, 1 Apr 2019 12:44:29 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37610 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728734AbfDAQo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 12:44:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F248AA78;
+        Mon,  1 Apr 2019 09:44:27 -0700 (PDT)
+Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B13C3F690;
+        Mon,  1 Apr 2019 09:44:26 -0700 (PDT)
+Date:   Mon, 1 Apr 2019 17:44:17 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abhishek Shah <abhishek.shah@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v4 2/2] PCI: iproc: Add outbound configuration for 32-bit
+ I/O region
+Message-ID: <20190401164416.GA8616@e107981-ln.cambridge.arm.com>
+References: <1551415936-30174-1-git-send-email-srinath.mannam@broadcom.com>
+ <1551415936-30174-3-git-send-email-srinath.mannam@broadcom.com>
+ <20190329173515.GA10367@e107981-ln.cambridge.arm.com>
+ <CABe79T7LwFLST0dwwswv8sdqHcn0T4ked5WtcNpM78XUDUN3Jw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABe79T7LwFLST0dwwswv8sdqHcn0T4ked5WtcNpM78XUDUN3Jw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+On Mon, Apr 01, 2019 at 11:04:48AM +0530, Srinath Mannam wrote:
+> Hi Lorenzo,
+> 
+> Please see my reply below,
+> 
+> On Fri, Mar 29, 2019 at 11:06 PM Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
+> >
+> > On Fri, Mar 01, 2019 at 10:22:16AM +0530, Srinath Mannam wrote:
+> > > In the present driver outbound window configuration is done to map above
+> > > 32-bit address I/O regions with corresponding PCI memory range given in
+> > > ranges DT property.
+> > >
+> > > This patch add outbound window configuration to map below 32-bit I/O range
+> > > with corresponding PCI memory, which helps to access I/O region in ARM
+> > > 32-bit and one to one mapping of I/O region to PCI memory.
+> > >
+> > > Ex:
+> > > 1. ranges DT property given for current driver is,
+> > >     ranges = <0x83000000 0x0 0x40000000 0x4 0x00000000 0 0x40000000>;
+> > >     I/O region address is 0x400000000
+> > > 2. ranges DT property can be given after this patch,
+> > >     ranges = <0x83000000 0x0 0x42000000 0x0 0x42000000 0 0x2000000>;
+> > >     I/O region address is 0x42000000
+> >
+> > I was applying this patch but I don't understand the commit log and
+> > how it matches the code, please explain it to me and I will reword
+> > it.
+> Iproc PCIe host controller supports outbound address translation
+> feature to translate AXI address to PCI bus address.
+> IO address ranges (AXI and PCI) given through ranges DT property have
+> to program to controller outbound window registers.
+> Present driver has the support for only 64bit AXI address. so that
+> ranges DT property has given as 64bit AXI address and 32 bit
+> PCI bus address.
+> But with this patch 32-bit AXI address also could be programmed to
+> Iproc host controller outbound window registers. so that ranges
+> DT property can have 32bit AXI address which can map to 32-bit PCI bus address.
 
-Rename some traceevent APIs for consistency:
+The code change seems to add a check for the window size, I see no
+notion of 64 vs 32 bit addressing there so I am pretty sure there is
+something you are not telling me that is implicit in the IProc outbound
+window configuration, for instance why is the lowest index window
+considered for 32-bit.
 
-tep_pid_is_registered() to tep_is_pid_registered()
-tep_file_bigendian() to tep_is_file_bigendian()
-  to make the names and return values consistent with other tep_is_... APIs
+AFAICS you are adding code to allow a window whose size is < than
+the lowest index in the ob_map array. How this relates to 64 vs
+32 bit addresses is not clear but it should be.
 
-tep_data_lat_fmt() to tep_data_latency_format()
-  to make the name more descriptive
+When I read your commit log it is impossible to understand how it
+correlates to the code you are changing - I still have not figured it
+out myself.
 
-tep_host_bigendian() to tep_is_bigendian()
-tep_set_host_bigendian() to tep_set_local_bigendian()
-tep_is_host_bigendian() to tep_is_local_bigendian()
-  "host" can be confused with VMs, and "local" is about the local
-  machine. All tep_is_..._bigendian(struct tep_handle *tep) APIs return
-  the saved data in the tep handle, while tep_is_bigendian() returns
-  the running machine's endianness.
+Please explain in detail to me how this works, forget DT changes I
+want to understand how HW works.
 
-All tep_is_... functions are modified to return bool value, instead of int.
+Lorenzo
 
-Link: http://lkml.kernel.org/r/20190327141946.4353-2-tstoyanov@vmware.com
-
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-[ Removed some extra parenthesis around return statements ]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- tools/lib/traceevent/event-parse-api.c | 40 +++++++++++++-------------
- tools/lib/traceevent/event-parse.c     | 26 ++++++++---------
- tools/lib/traceevent/event-parse.h     | 16 +++++------
- tools/lib/traceevent/plugin_kvm.c      |  4 +--
- tools/perf/util/trace-event-read.c     |  2 +-
- tools/perf/util/trace-event.c          |  4 +--
- 6 files changed, 46 insertions(+), 46 deletions(-)
-
-diff --git a/tools/lib/traceevent/event-parse-api.c b/tools/lib/traceevent/event-parse-api.c
-index 002b3f73862b..f7184575f0d9 100644
---- a/tools/lib/traceevent/event-parse-api.c
-+++ b/tools/lib/traceevent/event-parse-api.c
-@@ -155,10 +155,10 @@ int tep_get_header_page_size(struct tep_handle *pevent)
- }
- 
- /**
-- * tep_get_header_timestamp_size - get size of the time stamp in the header page
-+ * tep_get_header_timestamp_size - get size of the timestamp in the header page
-  * @tep: a handle to the tep_handle
-  *
-- * This returns size of the time stamp in the header page
-+ * This returns size of the timestamp in the header page
-  * If @tep is NULL, 0 is returned.
-  */
- int tep_get_header_timestamp_size(struct tep_handle *tep)
-@@ -249,17 +249,17 @@ void tep_set_page_size(struct tep_handle *pevent, int _page_size)
- }
- 
- /**
-- * tep_file_bigendian - get if the file is in big endian order
-+ * tep_is_file_bigendian - return the endian of the file
-  * @pevent: a handle to the tep_handle
-  *
-- * This returns if the file is in big endian order
-- * If @pevent is NULL, 0 is returned.
-+ * This returns true if the file is in big endian order
-+ * If @pevent is NULL, false is returned.
-  */
--int tep_file_bigendian(struct tep_handle *pevent)
-+bool tep_is_file_bigendian(struct tep_handle *pevent)
- {
- 	if (pevent)
--		return pevent->file_bigendian;
--	return 0;
-+		return pevent->file_bigendian == TEP_BIG_ENDIAN;
-+	return false;
- }
- 
- /**
-@@ -276,27 +276,27 @@ void tep_set_file_bigendian(struct tep_handle *pevent, enum tep_endian endian)
- }
- 
- /**
-- * tep_is_host_bigendian - get if the order of the current host is big endian
-+ * tep_is_local_bigendian - return the endian of the saved local machine
-  * @pevent: a handle to the tep_handle
-  *
-- * This gets if the order of the current host is big endian
-- * If @pevent is NULL, 0 is returned.
-+ * This returns true if the saved local machine in @pevent is big endian.
-+ * If @pevent is NULL, false is returned.
-  */
--int tep_is_host_bigendian(struct tep_handle *pevent)
-+bool tep_is_local_bigendian(struct tep_handle *pevent)
- {
- 	if (pevent)
--		return pevent->host_bigendian;
-+		return pevent->host_bigendian == TEP_BIG_ENDIAN;
- 	return 0;
- }
- 
- /**
-- * tep_set_host_bigendian - set the order of the local host
-+ * tep_set_local_bigendian - set the stored local machine endian order
-  * @pevent: a handle to the tep_handle
-  * @endian: non zero, if the local host has big endian order
-  *
-- * This sets the order of the local host
-+ * This sets the endian order for the local machine.
-  */
--void tep_set_host_bigendian(struct tep_handle *pevent, enum tep_endian endian)
-+void tep_set_local_bigendian(struct tep_handle *pevent, enum tep_endian endian)
- {
- 	if (pevent)
- 		pevent->host_bigendian = endian;
-@@ -306,14 +306,14 @@ void tep_set_host_bigendian(struct tep_handle *pevent, enum tep_endian endian)
-  * tep_is_latency_format - get if the latency output format is configured
-  * @pevent: a handle to the tep_handle
-  *
-- * This gets if the latency output format is configured
-- * If @pevent is NULL, 0 is returned.
-+ * This returns true if the latency output format is configured
-+ * If @pevent is NULL, false is returned.
-  */
--int tep_is_latency_format(struct tep_handle *pevent)
-+bool tep_is_latency_format(struct tep_handle *pevent)
- {
- 	if (pevent)
- 		return pevent->latency_format;
--	return 0;
-+	return false;
- }
- 
- /**
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 000ab7514be7..8836702122be 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -199,23 +199,23 @@ static const char *find_cmdline(struct tep_handle *pevent, int pid)
- }
- 
- /**
-- * tep_pid_is_registered - return if a pid has a cmdline registered
-+ * tep_is_pid_registered - return if a pid has a cmdline registered
-  * @pevent: handle for the pevent
-  * @pid: The pid to check if it has a cmdline registered with.
-  *
-- * Returns 1 if the pid has a cmdline mapped to it
-- * 0 otherwise.
-+ * Returns true if the pid has a cmdline mapped to it
-+ * false otherwise.
-  */
--int tep_pid_is_registered(struct tep_handle *pevent, int pid)
-+bool tep_is_pid_registered(struct tep_handle *pevent, int pid)
- {
- 	const struct tep_cmdline *comm;
- 	struct tep_cmdline key;
- 
- 	if (!pid)
--		return 1;
-+		return true;
- 
- 	if (!pevent->cmdlines && cmdline_init(pevent))
--		return 0;
-+		return false;
- 
- 	key.pid = pid;
- 
-@@ -223,8 +223,8 @@ int tep_pid_is_registered(struct tep_handle *pevent, int pid)
- 		       sizeof(*pevent->cmdlines), cmdline_cmp);
- 
- 	if (comm)
--		return 1;
--	return 0;
-+		return true;
-+	return false;
- }
- 
- /*
-@@ -5172,7 +5172,7 @@ static void pretty_print(struct trace_seq *s, void *data, int size, struct tep_e
- }
- 
- /**
-- * tep_data_lat_fmt - parse the data for the latency format
-+ * tep_data_latency_format - parse the data for the latency format
-  * @pevent: a handle to the pevent
-  * @s: the trace_seq to write to
-  * @record: the record to read from
-@@ -5181,8 +5181,8 @@ static void pretty_print(struct trace_seq *s, void *data, int size, struct tep_e
-  * need rescheduling, in hard/soft interrupt, preempt count
-  * and lock depth) and places it into the trace_seq.
-  */
--void tep_data_lat_fmt(struct tep_handle *pevent,
--		      struct trace_seq *s, struct tep_record *record)
-+void tep_data_latency_format(struct tep_handle *pevent,
-+			     struct trace_seq *s, struct tep_record *record)
- {
- 	static int check_lock_depth = 1;
- 	static int check_migrate_disable = 1;
-@@ -5532,7 +5532,7 @@ void tep_print_event_time(struct tep_handle *pevent, struct trace_seq *s,
- 	}
- 
- 	if (pevent->latency_format) {
--		tep_data_lat_fmt(pevent, s, record);
-+		tep_data_latency_format(pevent, s, record);
- 	}
- 
- 	if (use_usec_format) {
-@@ -6827,7 +6827,7 @@ struct tep_handle *tep_alloc(void)
- 
- 	if (pevent) {
- 		pevent->ref_count = 1;
--		pevent->host_bigendian = tep_host_bigendian();
-+		pevent->host_bigendian = tep_is_bigendian();
- 	}
- 
- 	return pevent;
-diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
-index 3833d1384599..d473dc557978 100644
---- a/tools/lib/traceevent/event-parse.h
-+++ b/tools/lib/traceevent/event-parse.h
-@@ -412,7 +412,7 @@ void tep_set_flag(struct tep_handle *tep, int flag);
- void tep_clear_flag(struct tep_handle *tep, enum tep_flag flag);
- bool tep_check_flags(struct tep_handle *tep, enum tep_flag flags);
- 
--static inline int tep_host_bigendian(void)
-+static inline int tep_is_bigendian(void)
- {
- 	unsigned char str[] = { 0x1, 0x2, 0x3, 0x4 };
- 	unsigned int val;
-@@ -440,7 +440,7 @@ int tep_register_function(struct tep_handle *pevent, char *name,
- 			  unsigned long long addr, char *mod);
- int tep_register_print_string(struct tep_handle *pevent, const char *fmt,
- 			      unsigned long long addr);
--int tep_pid_is_registered(struct tep_handle *pevent, int pid);
-+bool tep_is_pid_registered(struct tep_handle *pevent, int pid);
- 
- void tep_print_event_task(struct tep_handle *pevent, struct trace_seq *s,
- 			  struct tep_event *event,
-@@ -525,8 +525,8 @@ tep_find_event_by_name(struct tep_handle *pevent, const char *sys, const char *n
- struct tep_event *
- tep_find_event_by_record(struct tep_handle *pevent, struct tep_record *record);
- 
--void tep_data_lat_fmt(struct tep_handle *pevent,
--		      struct trace_seq *s, struct tep_record *record);
-+void tep_data_latency_format(struct tep_handle *pevent,
-+			     struct trace_seq *s, struct tep_record *record);
- int tep_data_type(struct tep_handle *pevent, struct tep_record *rec);
- int tep_data_pid(struct tep_handle *pevent, struct tep_record *rec);
- int tep_data_preempt_count(struct tep_handle *pevent, struct tep_record *rec);
-@@ -563,11 +563,11 @@ int tep_get_long_size(struct tep_handle *pevent);
- void tep_set_long_size(struct tep_handle *pevent, int long_size);
- int tep_get_page_size(struct tep_handle *pevent);
- void tep_set_page_size(struct tep_handle *pevent, int _page_size);
--int tep_file_bigendian(struct tep_handle *pevent);
-+bool tep_is_file_bigendian(struct tep_handle *pevent);
- void tep_set_file_bigendian(struct tep_handle *pevent, enum tep_endian endian);
--int tep_is_host_bigendian(struct tep_handle *pevent);
--void tep_set_host_bigendian(struct tep_handle *pevent, enum tep_endian endian);
--int tep_is_latency_format(struct tep_handle *pevent);
-+bool tep_is_local_bigendian(struct tep_handle *pevent);
-+void tep_set_local_bigendian(struct tep_handle *pevent, enum tep_endian endian);
-+bool tep_is_latency_format(struct tep_handle *pevent);
- void tep_set_latency_format(struct tep_handle *pevent, int lat);
- int tep_get_header_page_size(struct tep_handle *pevent);
- int tep_get_header_timestamp_size(struct tep_handle *tep);
-diff --git a/tools/lib/traceevent/plugin_kvm.c b/tools/lib/traceevent/plugin_kvm.c
-index 64b9c25a1fd3..688e5d97d7a7 100644
---- a/tools/lib/traceevent/plugin_kvm.c
-+++ b/tools/lib/traceevent/plugin_kvm.c
-@@ -389,8 +389,8 @@ static int kvm_mmu_print_role(struct trace_seq *s, struct tep_record *record,
- 	 * We can only use the structure if file is of the same
- 	 * endianness.
- 	 */
--	if (tep_file_bigendian(event->pevent) ==
--	    tep_is_host_bigendian(event->pevent)) {
-+	if (tep_is_file_bigendian(event->pevent) ==
-+	    tep_is_local_bigendian(event->pevent)) {
- 
- 		trace_seq_printf(s, "%u q%u%s %s%s %spae %snxe %swp%s%s%s",
- 				 role.level,
-diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
-index efe2f58cff4e..48d53d8e3e16 100644
---- a/tools/perf/util/trace-event-read.c
-+++ b/tools/perf/util/trace-event-read.c
-@@ -442,7 +442,7 @@ ssize_t trace_report(int fd, struct trace_event *tevent, bool __repipe)
- 
- 	tep_set_flag(pevent, TEP_NSEC_OUTPUT);
- 	tep_set_file_bigendian(pevent, file_bigendian);
--	tep_set_host_bigendian(pevent, host_bigendian);
-+	tep_set_local_bigendian(pevent, host_bigendian);
- 
- 	if (do_read(buf, 1) < 0)
- 		goto out;
-diff --git a/tools/perf/util/trace-event.c b/tools/perf/util/trace-event.c
-index cbe0dd758e3a..01b9d89bf5bf 100644
---- a/tools/perf/util/trace-event.c
-+++ b/tools/perf/util/trace-event.c
-@@ -40,7 +40,7 @@ int trace_event__init(struct trace_event *t)
- 
- static int trace_event__init2(void)
- {
--	int be = tep_host_bigendian();
-+	int be = tep_is_bigendian();
- 	struct tep_handle *pevent;
- 
- 	if (trace_event__init(&tevent))
-@@ -49,7 +49,7 @@ static int trace_event__init2(void)
- 	pevent = tevent.pevent;
- 	tep_set_flag(pevent, TEP_NSEC_OUTPUT);
- 	tep_set_file_bigendian(pevent, be);
--	tep_set_host_bigendian(pevent, be);
-+	tep_set_local_bigendian(pevent, be);
- 	tevent_initialized = true;
- 	return 0;
- }
--- 
-2.20.1
-
-
+> Example given in commit log is describing ranges DT property changes
+> with and without this patch.
+> In the case, without this patch AXI address is more than 32bit
+> "0x400000000". and with this patch AXI address is 32-bit "0x42000000".
+> PCI bus address is 32 bit address in both the cases "0x40000000" and 0x42000000.
+> 
+> Regards,
+> Srinath.
+> > Thanks,
+> > Lorenzo
+> >
+> > > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > > Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
+> > > Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> > > ---
+> > >  drivers/pci/controller/pcie-iproc.c | 21 +++++++++++++++++++--
+> > >  1 file changed, 19 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> > > index b882255..080f142 100644
+> > > --- a/drivers/pci/controller/pcie-iproc.c
+> > > +++ b/drivers/pci/controller/pcie-iproc.c
+> > > @@ -955,8 +955,25 @@ static int iproc_pcie_setup_ob(struct iproc_pcie *pcie, u64 axi_addr,
+> > >                       resource_size_t window_size =
+> > >                               ob_map->window_sizes[size_idx] * SZ_1M;
+> > >
+> > > -                     if (size < window_size)
+> > > -                             continue;
+> > > +                     /*
+> > > +                      * Keep iterating until we reach the last window and
+> > > +                      * with the minimal window size at index zero. In this
+> > > +                      * case, we take a compromise by mapping it using the
+> > > +                      * minimum window size that can be supported
+> > > +                      */
+> > > +                     if (size < window_size) {
+> > > +                             if (size_idx > 0 || window_idx > 0)
+> > > +                                     continue;
+> > > +
+> > > +                             /*
+> > > +                              * For the corner case of reaching the minimal
+> > > +                              * window size that can be supported on the
+> > > +                              * last window
+> > > +                              */
+> > > +                             axi_addr = ALIGN_DOWN(axi_addr, window_size);
+> > > +                             pci_addr = ALIGN_DOWN(pci_addr, window_size);
+> > > +                             size = window_size;
+> > > +                     }
+> > >
+> > >                       if (!IS_ALIGNED(axi_addr, window_size) ||
+> > >                           !IS_ALIGNED(pci_addr, window_size)) {
+> > > --
+> > > 2.7.4
+> > >
