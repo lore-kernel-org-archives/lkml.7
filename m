@@ -2,137 +2,85 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68589C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D7EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C3A20857
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2640720857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:45:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="g+JRh6/9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbfDAUn0 (ORCPT
+        id S1726978AbfDAUpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 16:43:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48184 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbfDAUnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 16:43:22 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8FE237D7D8;
-        Mon,  1 Apr 2019 20:43:21 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 112B01001DC1;
-        Mon,  1 Apr 2019 20:43:04 +0000 (UTC)
-Date:   Mon, 1 Apr 2019 16:43:02 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V5 06/10] audit: add support for non-syscall
- auxiliary records
-Message-ID: <20190401204302.bgykrqirgnw6xz37@madcap2.tricolour.ca>
-References: <cover.1552665316.git.rgb@redhat.com>
- <700e4313571f86cc0cdcb7310fbe060f02c7c2db.1552665316.git.rgb@redhat.com>
- <CAHC9VhRWUvG6DwiPn4o+vt=fgGfY+JmG8m78M8CeyGYxF2yRXQ@mail.gmail.com>
- <20190401174432.fjnvotpvdrfujoy7@madcap2.tricolour.ca>
- <CAHC9VhTL=zSQ2tO440w+vvX3TPsGtwqL6dWwUHVe0WnHVKqVpA@mail.gmail.com>
+        Mon, 1 Apr 2019 16:45:40 -0400
+Received: from mail-pl1-f175.google.com ([209.85.214.175]:38601 "EHLO
+        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfDAUpk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 16:45:40 -0400
+Received: by mail-pl1-f175.google.com with SMTP id g37so5064274plb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 13:45:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oZ34b0B1GYi0tgWrDIATuw87bWrj6Cc1yyDNDTdEAw8=;
+        b=g+JRh6/9x7QV4GsRQzMo4oKRgIeYtlcvXNuzSlmUGs+hi/l7g8AA+U+6IPPAIODSmr
+         BsMzj23+G1shcEvyY4N/2CXgIW/OPTFpppQdAwDMo7EeNnNIvl8NWnwPmvn+Pl6YqAbe
+         QiIdtXS2Q2WlmRcmllatwUBpxAgvh7xMv2egNAHOJUT4ll7OglIp7YzYCrOSTPYNVXPk
+         ockfZ4wmbLDVHWV5P3p+3Ta4/dRTrTwjd5swL3ZJ8F/fzb8HzTRNmhGCSrDlQI//U2HH
+         1kO4Cb6flgvYaR9hPyrFPIgK4Ov6wG42r1zyGc6MpJ79bBsk/pvIOsbNCayLwURoIqYH
+         bTpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oZ34b0B1GYi0tgWrDIATuw87bWrj6Cc1yyDNDTdEAw8=;
+        b=KoU88kmxFML74b7sCcbs3sxtzvCONcweKOzeykHbubDbpXJJbU3MuGdFAHGLwS5CeX
+         AR++bkxfjf0dcTXpy0IT4k2QzgAQiy584DE+BdKpsuSFXSD9yTHnrrlclwV5wUAzMlDs
+         KyZ7xmEaqBUx9Dwh05A3VV2VYllHzGxcrlhH88p6pf5gM98OUPgjw5/QAt5xymZX0/OT
+         Pvho0NOYa7Yt5l8tww1mGG2C8lBZnPBYBGkhUZyu3tGsRZgsYakp3F64TZKRGyUMuyQM
+         MMvjIZ2KTdEGFc37PywzZdy/PCRXqRVUOpgt5NmVQ7vsfI6SS1Vjvm5BFUnz1RDWuNzq
+         8giw==
+X-Gm-Message-State: APjAAAVTJTW+yqyEvBMzECJx0ZNFniELFw9NvW+NYOSRJ8UzDmPkXChp
+        4e7PqUXniWdXlRJ9ZUkKHNH6waFV2V5Cirk9zgEN7w==
+X-Google-Smtp-Source: APXvYqxtlqdJS24yI9pyYHNiNrSTAaHO3WaIZWRswhaf/0pPkOBeNOJJMRDQg67af/jksBmhtspLWXH9msBeonRdg0g=
+X-Received: by 2002:a17:902:1a9:: with SMTP id b38mr66099071plb.37.1554151539052;
+ Mon, 01 Apr 2019 13:45:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhTL=zSQ2tO440w+vvX3TPsGtwqL6dWwUHVe0WnHVKqVpA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 01 Apr 2019 20:43:21 +0000 (UTC)
+References: <CAG=yYw=VMJ5vK9aXcZ7AgC7f_dx+5ebKgwz68mV3=m6pOA_syA@mail.gmail.com>
+ <20190401201607.ruzxt33qbxxn56ic@breakpoint.cc>
+In-Reply-To: <20190401201607.ruzxt33qbxxn56ic@breakpoint.cc>
+From:   Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+Date:   Tue, 2 Apr 2019 02:15:02 +0530
+Message-ID: <CAG=yYw=oZFeQDWZkxyZuGYWzyw8eMkzSKVcKYj_XD7vj=E8L0A@mail.gmail.com>
+Subject: Re: about selftests/netfilter test related issue
+To:     Florian Westphal <fw@strlen.de>
+Cc:     Shuah Khan <shuah@kernel.org>, pablo@netfilter.org,
+        linux-kselftest@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-01 14:57, Paul Moore wrote:
-> On Mon, Apr 1, 2019 at 1:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2019-04-01 10:49, Paul Moore wrote:
-> > > On Fri, Mar 15, 2019 at 2:34 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > Standalone audit records have the timestamp and serial number generated
-> > > > on the fly and as such are unique, making them standalone.  This new
-> > > > function audit_alloc_local() generates a local audit context that will
-> > > > be used only for a standalone record and its auxiliary record(s).  The
-> > > > context is discarded immediately after the local associated records are
-> > > > produced.
-> > > >
-> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > Acked-by: Serge Hallyn <serge@hallyn.com>
-> > > > ---
-> > > >  include/linux/audit.h |  8 ++++++++
-> > > >  kernel/audit.h        |  1 +
-> > > >  kernel/auditsc.c      | 35 ++++++++++++++++++++++++++++++-----
-> > > >  3 files changed, 39 insertions(+), 5 deletions(-)
-> > >
-> > > ...
-> > >
-> > > > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > > > index ebd6625ca80e..6db5aba7cc01 100644
-> > > > --- a/include/linux/audit.h
-> > > > +++ b/include/linux/audit.h
-> > > > @@ -285,6 +285,8 @@ static inline void audit_log_contid(struct audit_context *context, u64 contid)
-> > > >
-> > > >  /* These are defined in auditsc.c */
-> > > >                                 /* Public API */
-> > > > +extern struct audit_context *audit_alloc_local(gfp_t gfpflags);
-> > > > +extern void audit_free_context(struct audit_context *context);
-> > > >  extern void __audit_syscall_entry(int major, unsigned long a0, unsigned long a1,
-> > > >                                   unsigned long a2, unsigned long a3);
-> > > >  extern void __audit_syscall_exit(int ret_success, long ret_value);
-> > > > @@ -512,6 +514,12 @@ static inline void audit_fanotify(unsigned int response)
-> > > >  extern int audit_n_rules;
-> > > >  extern int audit_signals;
-> > > >  #else /* CONFIG_AUDITSYSCALL */
-> > > > +static inline struct audit_context *audit_alloc_local(gfp_t gfpflags)
-> > > > +{
-> > > > +       return NULL;
-> > > > +}
-> > > > +static inline void audit_free_context(struct audit_context *context)
-> > > > +{ }
-> > > >  static inline void audit_syscall_entry(int major, unsigned long a0,
-> > > >                                        unsigned long a1, unsigned long a2,
-> > > >                                        unsigned long a3)
-> > > > diff --git a/kernel/audit.h b/kernel/audit.h
-> > > > index c5ac6436317e..2a1a8b8a8019 100644
-> > > > --- a/kernel/audit.h
-> > > > +++ b/kernel/audit.h
-> > > > @@ -111,6 +111,7 @@ struct audit_proctitle {
-> > > >  struct audit_context {
-> > > >         int                 dummy;      /* must be the first element */
-> > > >         int                 in_syscall; /* 1 if task is in a syscall */
-> > > > +       bool                local;      /* local context needed */
-> > >
-> > > It's very possible I've missed it, but "local" never gets used in any
-> > > meaningful way in this patchset does it?
-> >
-> > It is used in audit_alloc_local() to signal to audit_get_stamp() that in
-> > absence of a syscall flag, check for a local flag to continue rather
-> > than return.
-> 
-> I'm guessing you meant auditsc_get_stamp()?  If so, okay.
+let me also work on that too. anyway thanks
 
-Yes.  (I thought I remembered typing "auditsc...".)
+On Tue, Apr 2, 2019 at 1:46 AM Florian Westphal <fw@strlen.de> wrote:
+>
+> Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in> wrote:
+> > Error: Unknown device type.
+>
+> Feel free to send a patch that makes it display a more reasonable
+> exit+error here.
 
-> paul moore
 
-- RGB
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+-- 
+software engineer
+rajagiri school of engineering and technology
