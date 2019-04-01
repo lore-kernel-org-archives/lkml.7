@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A2EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11FFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241FA218FE
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94FF20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138968;
-	bh=sl3yInsOSfGs0C6ydbuAmL/T5RO5dhFVwkIH51u0EiI=;
+	s=default; t=1554138970;
+	bh=P3xw/PoBaxx0gliOLqBic5NXaK135RaKWxRNJQdb/1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wQ++skZaLANaobDpGnVEwbO8bhFl9rtC1hAodjcZJboyymX1mz4TbNELDic9aWRg+
-	 /O4MDq1TRf79Kf2fafgHDXpSwdtaoD8RSzHDPA4JiHQdeXsrAqxDQevznkxXuBn3tJ
-	 R9jRyXHl33lzTp/20fmV+A/Sv5AzDmWBn3EqyIL8=
+	b=LGKxOlwdaAMQHR35iXTjKyWeNptgFKK9etx1r0iSmgNrABeU1QnVzr6BkER33AqGa
+	 Y6JpFFWrrUBC3vsV2LuA1l4wyd17+UZzmZN0p2XNB0IhZDIg4v0vI7QeAwIXC9Z8Cb
+	 ReSS1EAyNY0TmR0SurLBfQwVYjdqBsr0JjW8Fhps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbfDARQG (ORCPT
+        id S1730989AbfDARQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:16:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40776 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:16:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730962AbfDARQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:16:00 -0400
+        id S1730975AbfDARQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:16:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 662EE206C0;
-        Mon,  1 Apr 2019 17:15:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F38F420856;
+        Mon,  1 Apr 2019 17:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138959;
-        bh=sl3yInsOSfGs0C6ydbuAmL/T5RO5dhFVwkIH51u0EiI=;
+        s=default; t=1554138966;
+        bh=P3xw/PoBaxx0gliOLqBic5NXaK135RaKWxRNJQdb/1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rDrfdJjvHHBmwvX31SWZeGWIV9Y4bwkDZnGHLctOi7ZNSw/UZjpfLeqCVHolPUsuC
-         liYKz0McerTwE/ew+MiGT0ybFpCjx/2qnTEpnuClS0wUIkk1xCb4dk6d2/piWpYR/1
-         FGTqUJHe6N7cueFIpO8RuZITC9Goki/3Re+tpHM8=
+        b=iVGXLaYakhtM5ZzFW3DQ6mkhVCtmtxe2ZW4OQp+auS/6V8eLitWWVi989NZ4mX9XT
+         wRuTCBQMUe8NzudOstODFYdkZ5UfRWa+tg8qGimI6N0YtORyYE2COhEQuKZMIIVhRk
+         FbEWAasCcnDm0Z5pRzrbpfEpY6cpJiCDOaR0oWyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bernhard Rosenkraenzer <bero@lindev.ch>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 069/134] ALSA: hda/realtek - Fix speakers on Acer Predator Helios 500 Ryzen laptops
-Date:   Mon,  1 Apr 2019 19:01:45 +0200
-Message-Id: <20190401170050.912818366@linuxfoundation.org>
+        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 035/134] powerpc/fsl: Emulate SPRN_BUCSR register
+Date:   Mon,  1 Apr 2019 19:01:11 +0200
+Message-Id: <20190401170048.002495239@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -65,68 +65,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bernhard Rosenkraenzer <bero@lindev.ch>
+From: Diana Craciun <diana.craciun@nxp.com>
 
-commit e2a829b3da01b9b32c4d0291d042b8a6e2a98ca3 upstream.
+commit 98518c4d8728656db349f875fcbbc7c126d4c973 upstream.
 
-On an Acer Predator Helios 500 (Ryzen version), the laptop's speakers
-don't work out of the box.
+In order to flush the branch predictor the guest kernel performs
+writes to the BUCSR register which is hypervisor privilleged. However,
+the branch predictor is flushed at each KVM entry, so the branch
+predictor has been already flushed, so just return as soon as possible
+to guest.
 
-The problem can be worked around with hdajackretask, remapping the
-"Black Headphone, Right side" pin (0x21) to the Internal speaker.
-
-This patch adds a quirk to change this mapping by default.
-
-[ corrected ALC299_FIXUP_PREDATOR_SPK definition and adapted for the
-  latest tree by tiwai ]
-
-Signed-off-by: Bernhard Rosenkraenzer <bero@lindev.ch>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
+[mpe: Tweak comment formatting]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/pci/hda/patch_realtek.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/powerpc/kvm/e500_emulate.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5618,6 +5618,7 @@ enum {
- 	ALC225_FIXUP_WYSE_DISABLE_MIC_VREF,
- 	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
- 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
-+	ALC299_FIXUP_PREDATOR_SPK,
- };
+--- a/arch/powerpc/kvm/e500_emulate.c
++++ b/arch/powerpc/kvm/e500_emulate.c
+@@ -277,6 +277,13 @@ int kvmppc_core_emulate_mtspr_e500(struc
+ 		vcpu->arch.pwrmgtcr0 = spr_val;
+ 		break;
  
- static const struct hda_fixup alc269_fixups[] = {
-@@ -6613,6 +6614,13 @@ static const struct hda_fixup alc269_fix
- 		.chained = true,
- 		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
- 	},
-+	[ALC299_FIXUP_PREDATOR_SPK] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x21, 0x90170150 }, /* use as headset mic, without its own jack detect */
-+			{ }
-+		}
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -6631,6 +6639,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1025, 0x106d, "Acer Cloudbook 14", ALC283_FIXUP_CHROME_BOOK),
- 	SND_PCI_QUIRK(0x1025, 0x1099, "Acer Aspire E5-523G", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1025, 0x110e, "Acer Aspire ES1-432", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1025, 0x1246, "Acer Predator Helios 500", ALC299_FIXUP_PREDATOR_SPK),
- 	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
-@@ -7027,6 +7036,7 @@ static const struct hda_model_fixup alc2
- 	{.id = ALC255_FIXUP_DUMMY_LINEOUT_VERB, .name = "alc255-dummy-lineout"},
- 	{.id = ALC255_FIXUP_DELL_HEADSET_MIC, .name = "alc255-dell-headset"},
- 	{.id = ALC295_FIXUP_HP_X360, .name = "alc295-hp-x360"},
-+	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
- 	{}
- };
- #define ALC225_STANDARD_PINS \
++	case SPRN_BUCSR:
++		/*
++		 * If we are here, it means that we have already flushed the
++		 * branch predictor, so just return to guest.
++		 */
++		break;
++
+ 	/* extra exceptions */
+ #ifdef CONFIG_SPE_POSSIBLE
+ 	case SPRN_IVOR32:
 
 
