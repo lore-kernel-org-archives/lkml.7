@@ -2,121 +2,105 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCF0C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CF1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE2320896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140671;
-	bh=DbPEVyd3jUQx2ssPm/5HJNfCLOu6X8RvkLcmmTr/sxc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CpC6M/qC6ROGkMZjvykKBmSJnpVaFo0NjXqeMUPMsn2kay3P6FSeN+dTGgWVt+2hX
-	 0OffvHkgl7rh70KLtSeAOQHTkKCDhokOBVWK2toW1QzB7TgBrBoydui0JgFDKf3pNp
-	 ZtaCozh0/HFlNkK6n27WSnGNYq+oeZ1trEPMfYzI=
+	by mail.kernel.org (Postfix) with ESMTP id 421F620896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ah9q799H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387823AbfDARer (ORCPT
+        id S2388032AbfDARog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:34:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730156AbfDAReo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:34:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0ADB20880;
-        Mon,  1 Apr 2019 17:34:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140084;
-        bh=DbPEVyd3jUQx2ssPm/5HJNfCLOu6X8RvkLcmmTr/sxc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iXKMWxLvkoeJ8XSol3D4rkX5dpDbALkyhrLFJFoZdPjg8hzZ5stOm+k85KIjbvqdf
-         l4Mn+gmwAhleEecsekcaR9Qge78DQCeyA5ZZ98AF1TCzBIlZiDDqVphdalUQCKQR4G
-         Uvz+E+vcFyg1b1rgJf65EZmtHwCk8ec4V2LAuYGg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Mon, 1 Apr 2019 13:44:36 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53813 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731020AbfDARof (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:44:35 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q16so305566wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 10:44:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=C5Z+ZbojR8u61jx7QLYGdsSJ+zSY1pyusZunuxUJras=;
+        b=ah9q799HTT/VJZJ8zvV566ZT6PUgJYQMQwE8h68d4sTIAUnefzPba0JUl87JIiqIak
+         oBX1jooenbUF1gcB9Qq2ahtNaahlRHjVvLqr8Zr3VZKPpdRBQ2aG7v+qfLrWoIEsKLcZ
+         ZzH8LZlP2Ii4Dawmm+YlE/fG4vHN9yYtAxy9k0CzWaUsxbF7kyH6zXC7KvobdrYC4Oxz
+         zYYz0F/0WCkNK5FuFstFdtdZXHvH0/lKXC6N25q6vcDguxl1H06RniqtQ4q3aQjZea2S
+         9YGeIfBy7saDfYhuruGoO+ZejEdVOsiXU66g1VNEHhShbqWKSW6DaXukmcg9W+9uwJc0
+         oqlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=C5Z+ZbojR8u61jx7QLYGdsSJ+zSY1pyusZunuxUJras=;
+        b=tqwDH56LLbfBQzeidRWwYu6Cs6HdaDiJYRv3GIFAcHTrBE0y7/yO/LItjFivUhbCDu
+         oXSZTQaNC/7jFbWJtAMsB1oFJ8Sh23bhZTAAeX0cDOTdyvYfjMG9LYTHAHkm6O9s91h+
+         wpAEVay7SWG36pPdNzazr1tLOeebq7m+hb9VKApnbXqD6j00GtMvO8HMZrqYNfip1qq4
+         y0Srcr/JglFCpktLqkJG1Cnvtsa9jeqAqUvbSoXYs7+oBwc1utY7HPmlrhSk+VBNyQWL
+         LlatyszUTE+cPpwTfcI5aYRIDqwFVBOIkCsos3zB6hyTM1RnNigO+hhR6eCoYThAnfLp
+         wQ8g==
+X-Gm-Message-State: APjAAAUqck/JAMkOV4w9GzNQFzJBfbKfweQ/0rHyb1RVRoBZJXryxQho
+        AwPjljcRoE9swMMoUcRDfIS4oIgm
+X-Google-Smtp-Source: APXvYqyl1xk+uTWD92DIZ/fp2+5o3L455tD6kTSkPIyfzSVFDrmFQAm2daMUL7Te6sV14vdtNHTVTA==
+X-Received: by 2002:a1c:f312:: with SMTP id q18mr500833wmq.96.1554140672843;
+        Mon, 01 Apr 2019 10:44:32 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id i18sm11892955wrm.7.2019.04.01.10.44.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 10:44:32 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
-        Andrea Righi <andrea.righi@canonical.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.4 101/131] btrfs: raid56: properly unmap parity page in finish_parity_scrub()
-Date:   Mon,  1 Apr 2019 19:02:51 +0200
-Message-Id: <20190401170100.346600148@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
-References: <20190401170051.645954551@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH] habanalabs: prevent CPU soft lockup on Palladium
+Date:   Mon,  1 Apr 2019 20:44:30 +0300
+Message-Id: <20190401174430.15553-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.4-stable review patch.  If anyone has any objections, please let me know.
+Unmapping ptes in the device MMU on Palladium can take a long time, which
+can cause a kernel BUG of CPU soft lockup.
 
-------------------
+This patch minimize the chances for this bug by sleeping a little between
+unmapping ptes.
 
-From: Andrea Righi <andrea.righi@canonical.com>
-
-commit 3897b6f0a859288c22fb793fad11ec2327e60fcd upstream.
-
-Parity page is incorrectly unmapped in finish_parity_scrub(), triggering
-a reference counter bug on i386, i.e.:
-
- [ 157.662401] kernel BUG at mm/highmem.c:349!
- [ 157.666725] invalid opcode: 0000 [#1] SMP PTI
-
-The reason is that kunmap(p_page) was completely left out, so we never
-did an unmap for the p_page and the loop unmapping the rbio page was
-iterating over the wrong number of stripes: unmapping should be done
-with nr_data instead of rbio->real_stripes.
-
-Test case to reproduce the bug:
-
- - create a raid5 btrfs filesystem:
-   # mkfs.btrfs -m raid5 -d raid5 /dev/sdb /dev/sdc /dev/sdd /dev/sde
-
- - mount it:
-   # mount /dev/sdb /mnt
-
- - run btrfs scrub in a loop:
-   # while :; do btrfs scrub start -BR /mnt; done
-
-BugLink: https://bugs.launchpad.net/bugs/1812845
-Fixes: 5a6ac9eacb49 ("Btrfs, raid56: support parity scrub on raid56")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- fs/btrfs/raid56.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/misc/habanalabs/memory.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/raid56.c
-+++ b/fs/btrfs/raid56.c
-@@ -2420,8 +2420,9 @@ static noinline void finish_parity_scrub
- 			bitmap_clear(rbio->dbitmap, pagenr, 1);
- 		kunmap(p);
+diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
+index 39788b1cf8d0..e9e163545584 100644
+--- a/drivers/misc/habanalabs/memory.c
++++ b/drivers/misc/habanalabs/memory.c
+@@ -1046,10 +1046,17 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
  
--		for (stripe = 0; stripe < rbio->real_stripes; stripe++)
-+		for (stripe = 0; stripe < nr_data; stripe++)
- 			kunmap(page_in_rbio(rbio, stripe, pagenr, 0));
-+		kunmap(p_page);
- 	}
+ 	mutex_lock(&ctx->mmu_lock);
  
- 	__free_page(p_page);
-
+-	for (i = 0 ; i < phys_pg_pack->npages ; i++, next_vaddr += page_size)
++	for (i = 0 ; i < phys_pg_pack->npages ; i++, next_vaddr += page_size) {
+ 		if (hl_mmu_unmap(ctx, next_vaddr, page_size))
+ 			dev_warn_ratelimited(hdev->dev,
+-				"unmap failed for vaddr: 0x%llx\n", next_vaddr);
++			"unmap failed for vaddr: 0x%llx\n", next_vaddr);
++
++		/* unmapping on Palladium can be really long, so avoid a CPU
++		 * soft lockup bug by sleeping a little between unmapping pages
++		 */
++		if (hdev->pldm)
++			usleep_range(500, 1000);
++	}
+ 
+ 	hdev->asic_funcs->mmu_invalidate_cache(hdev, true);
+ 
+-- 
+2.17.1
 
