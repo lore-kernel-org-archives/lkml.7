@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0CFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AD1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 102732146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926A82084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PuwiY+gD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FANOS7G6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731607AbfDAR7T (ORCPT
+        id S1731608AbfDAR7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:59:19 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41224 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731298AbfDARSB (ORCPT
+        Mon, 1 Apr 2019 13:59:25 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46201 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731286AbfDARSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Apr 2019 13:18:01 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d1so3118009plj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 10:18:01 -0700 (PDT)
+Received: by mail-pl1-f195.google.com with SMTP id y6so4800643pll.13
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 10:17:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=92at8vUta2fC2XN1pKFFPCkHFJWYYJixqtIuh16qRd8=;
-        b=PuwiY+gDlXPS2BRq9eoaWfWDB2j1H9/9kFlbWKpKuyv8x775CHcSkF9PtohFS4L/AN
-         MebDQWa6TzOmQI9Eube6euAXCCKTMrw6qMGxcM5K/N5P4sbK1MUGLtfvv7yQniVwylxv
-         55ROovHraJqtpI0gXazttyeJFmpeBD8bAjIVo=
+        bh=9+yEi+eZPRH+2tNF2bctolAJluO+BQKUE1OpVezDcSA=;
+        b=FANOS7G6CCChbVSnGdD6PqovmIGZ5ltUFFDuywuZ2bdpjSSJT3VhotXLReNuTaLw2K
+         +NKAbyURPQWK9gsM2c2SGXPzRt3EU8Qft3BusLKHsE9aScBUEp5c9mFhTZ1e7nu7xJDA
+         N9HLmmLT97DnMSXBYZJ+aKX46+tc/3+CwDoDk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=92at8vUta2fC2XN1pKFFPCkHFJWYYJixqtIuh16qRd8=;
-        b=AjJIGyRHitOEFkrewY/KjmjfRsaXL4+cRkAZDlM+YwKYB2S4gmjr+mGsKSq5fbZYQY
-         hd/pT2gmd1lvN9fed30D6e93f0zsi3JqtYXUoSeaw2I7yPQpEcj7zeorJk53gjIjDo8T
-         FxuVKMOYWzdt/teJ8yY4chA7cbzaK4WUKDTz365dSYlgwCqyx3nPWFGYwcCLPAAd1tsm
-         Sj6Vel2vY0a8x/tejcEmqGPKyePYS+LbtM9Nl48XdTvKz+Mn3+8mRc8no8uFZeE417pi
-         pJ81bnPm43GHV5UOpRAVsp6ImXnkAbWV44itwK3hv2ifwV9RDIUgV9rW5t1ltP+LjgTy
-         8/nQ==
-X-Gm-Message-State: APjAAAUNn9vG05XQLGuqfvii+cGOMTVQUwGs0suvgCArgE0TbLqsf9FA
-        YGmy4Xb5ciu9a0pEMYxOu9JV4Q==
-X-Google-Smtp-Source: APXvYqwXPIDZF3EjTK+apAxCXhBFSTWfuVlSfZa4zc0Zr6UCqPiw0E8+9YtFgMTzXnmJco5r2/Nunw==
-X-Received: by 2002:a17:902:b217:: with SMTP id t23mr66226168plr.184.1554139081162;
-        Mon, 01 Apr 2019 10:18:01 -0700 (PDT)
+        bh=9+yEi+eZPRH+2tNF2bctolAJluO+BQKUE1OpVezDcSA=;
+        b=TlI/Vb3/gOz6CAGpug43sYyDFH+5IU0Y/CvCPeQSeTI/zjJyQkLX7rNnuaiXayRKZs
+         myVagjbwLx9vWuodtcOhWOS0A5S6UV+BLHOVjZX9pOqPzZBGclLglCoovHCxu8Km9TKe
+         7DgJfcgdrVz/g55w8z8MEJrJx7eNbqKdpqPGU5tVnUgMODOkqdCaPIzr5DyPvNxryAHG
+         LrPbKyU9eKNXqbX/ok9EAWhJlFYaxBxqR4r/MakrpRlWvi/5zPBfybsPLZuZjz5SKcMF
+         DAperxDO5SkgWK3U/Rp6fSczb0TvQhvkEntwEDx3D2fBLiVSyif+TAiv4s3KlhgDyGUr
+         LLNA==
+X-Gm-Message-State: APjAAAWY3DugES+zl2HHMev3FqT8hWOs39bInFMT1OiVUJfCYJCYEWKJ
+        WJFcQhPBXKq10lNBX/k9EPaCPw==
+X-Google-Smtp-Source: APXvYqwsrsnX3TgFBk+xfMZJH+DRvLR+ODZiYbrm5+sGoWgrtImzbHOLY9s9TrJ/xiwEuUv4+b+nUw==
+X-Received: by 2002:a17:902:b281:: with SMTP id u1mr13101656plr.30.1554139078791;
+        Mon, 01 Apr 2019 10:17:58 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id y12sm31370112pgq.64.2019.04.01.10.17.59
+        by smtp.gmail.com with ESMTPSA id y12sm31370112pgq.64.2019.04.01.10.17.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 10:18:00 -0700 (PDT)
+        Mon, 01 Apr 2019 10:17:58 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Heiko Stuebner <heiko@sntech.de>,
@@ -65,92 +65,81 @@ Cc:     linux-rockchip@lists.infradead.org,
         =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>,
         Rob Herring <robh+dt@kernel.org>, mka@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 7/7] ARM: dts: rockchip: Specify rk3288-veyron-minnie's display timings
-Date:   Mon,  1 Apr 2019 10:17:24 -0700
-Message-Id: <20190401171724.215780-8-dianders@chromium.org>
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v5 5/7] drm/panel: simple: Use display_timing for AUO b101ean01
+Date:   Mon,  1 Apr 2019 10:17:22 -0700
+Message-Id: <20190401171724.215780-6-dianders@chromium.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 In-Reply-To: <20190401171724.215780-1-dianders@chromium.org>
 References: <20190401171724.215780-1-dianders@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just like we did for rk3288-veyron-chromebook, we want to be able to
-use one of the fixed PLLs in the system to make the pixel clock for
-minnie.
+Convert the AUO b101ean01 from using a fixed mode to specifying a
+display timing with min/typ/max values.
 
-Specifying these timings matches us with how the display is used on
-the downstream Chrome OS kernel.  See https://crrev.com/c/323211.
+The AUO b101ean01's datasheet says:
+* Vertical blanking min is 12
+* Horizontal blanking min is 60
+* Pixel clock is between 65.3 MHz and 75 MHz
 
-Unlike what we did for rk3288-veyron-chromebook, this CL actually
-changes the timings (though not the pixel clock) that is used when
-using the upstream kernel.  Booting up a minnie shows that it ended up
-with a 66.67 MHz pixel clock but it was still using the
-porches/blankings it would have wanted for a 72.5 MHz pixel clock.
+The goal here is to be able to specify the proper timing in device
+tree to use on rk3288-veyron-minnie to match what the downstream
+kernel is using so that it can used the fixed PLL.
 
-NOTE: compared to the downstream kernel, this seems to cause a
-slightly different result reported in the 'modetest' command on a
-Chromebook.  The downstream kernel shows:
-  1280x800 60 1280 1298 1330 1351 800 804 822 830 66667
-
-With this patch we have:
-  1280x800 59 1280 1298 1330 1351 800 804 822 830 66666
-
-Specifically modetest was reporting 60 Hz on the downstream kernel but
-the upstream kernel does the math and comesup with 59 (because we
-actually achieve 59.45 Hz).  Also upstream doesn't round the Hz up
-when converting to kHz--it seems to truncate.
-
-ALSO NOTE: when I look at the EDID from the datasheet, I see:
-  -hsync -vsync
-...but it seems like we've never actually run with that so I've
-continued leaving that out.
+Changes in v4:
+ - display_timing for AUO b101ean01 new for v4.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
-Changes in v5:
-- It's not just jerry, it's most rk3288 Chromebooks (Heiko)
+ drivers/gpu/drm/panel/panel-simple.c | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
-Changes in v4:
-- rk3288-veyron-minnie patch new for v4.
-
-Changes in v3: None
-Changes in v2: None
-
- arch/arm/boot/dts/rk3288-veyron-minnie.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-index ca7512ade222..8179cf9f6e98 100644
---- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-@@ -144,6 +144,18 @@
- 	power-supply= <&panel_regulator>;
- 
- 	/delete-node/ panel-timing;
-+
-+	panel-timing {
-+		clock-frequency = <66666667>;
-+		hactive = <1280>;
-+		hfront-porch = <18>;
-+		hback-porch = <21>;
-+		hsync-len = <32>;
-+		vactive = <800>;
-+		vfront-porch = <4>;
-+		vback-porch = <8>;
-+		vsync-len = <18>;
-+	};
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 7d407fab3628..c6c0625e1684 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -568,22 +568,21 @@ static const struct panel_desc auo_b101aw03 = {
+ 	},
  };
  
- &rk808 {
+-static const struct drm_display_mode auo_b101ean01_mode = {
+-	.clock = 72500,
+-	.hdisplay = 1280,
+-	.hsync_start = 1280 + 119,
+-	.hsync_end = 1280 + 119 + 32,
+-	.htotal = 1280 + 119 + 32 + 21,
+-	.vdisplay = 800,
+-	.vsync_start = 800 + 4,
+-	.vsync_end = 800 + 4 + 20,
+-	.vtotal = 800 + 4 + 20 + 8,
+-	.vrefresh = 60,
++static const struct display_timing auo_b101ean01_timing = {
++	.pixelclock = { 65300000, 72500000, 75000000 },
++	.hactive = { 1280, 1280, 1280 },
++	.hfront_porch = { 18, 119, 119 },
++	.hback_porch = { 21, 21, 21 },
++	.hsync_len = { 32, 32, 32 },
++	.vactive = { 800, 800, 800 },
++	.vfront_porch = { 4, 4, 4 },
++	.vback_porch = { 8, 8, 8 },
++	.vsync_len = { 18, 20, 20 },
+ };
+ 
+ static const struct panel_desc auo_b101ean01 = {
+-	.modes = &auo_b101ean01_mode,
+-	.num_modes = 1,
++	.timings = &auo_b101ean01_timing,
++	.num_timings = 1,
+ 	.bpc = 6,
+ 	.size = {
+ 		.width = 217,
 -- 
 2.21.0.392.gf8f6787159e-goog
 
