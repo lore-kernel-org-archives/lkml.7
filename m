@@ -2,138 +2,142 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A20C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF335C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE3520830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0F620830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:50:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554141042;
+	bh=I41k6Je2khc1B3dGm27CxHf4+91bZEnGAl/KLrgV4uk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eVoh8Dlog7+5cPKRjoSSc5UQbj+YV02BlZ+vtYg9SDQgiMVUIesT56pua3Sl6rpN9
+	 ZFkwMR7B+vB1Eo8PTWPakFhyIUyWv1+M+4lRnEJBna1igzfg/cmUbUJ4VaVBktLGGt
+	 8EalRAA72d4G9uXbKKwIlkHc4dQcOmPPR9geWqp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733025AbfDARub (ORCPT
+        id S1732827AbfDAR2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:50:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42988 "EHLO mx1.redhat.com"
+        Mon, 1 Apr 2019 13:28:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732698AbfDARu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:50:27 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1732813AbfDAR2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:28:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 04D613087931;
-        Mon,  1 Apr 2019 17:50:27 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 71C2E5C206;
-        Mon,  1 Apr 2019 17:50:16 +0000 (UTC)
-Date:   Mon, 1 Apr 2019 13:50:13 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com
-Subject: Re: [PATCH ghak90 V5 10/10] audit: NETFILTER_PKT: record each
- container ID associated with a netNS
-Message-ID: <20190401175013.it2xwndd62svycwl@madcap2.tricolour.ca>
-References: <cover.1552665316.git.rgb@redhat.com>
- <56127b2a5b82f15cb0d0f040502c2e3bb6945f30.1552665316.git.rgb@redhat.com>
- <CAHC9VhQpNGaWeb7dY4ooPKXRoGBd9Ri_Z_ZPpoKun4gUhXDOGA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C8A8208E4;
+        Mon,  1 Apr 2019 17:28:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554139718;
+        bh=I41k6Je2khc1B3dGm27CxHf4+91bZEnGAl/KLrgV4uk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RhkX2AUUd8M6PXYYgPonncGoEKf2jGsGJVICmSPHV2LFUKzOFPywRi+X3c3cWYbzN
+         DEHpsaExiulhGk9MFrRJtvHHQ6fo/fYqC/mBBN/5iYrN4mDaFMs3z4muGdRABhfRSc
+         3lARvyaIYLKV7kD/EPTyPKPfhHjC+SrPEJQyWCNo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.9 51/56] KVM: Reject device ioctls from processes other than the VMs creator
+Date:   Mon,  1 Apr 2019 19:03:07 +0200
+Message-Id: <20190401170106.670609391@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
+References: <20190401170103.398401360@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhQpNGaWeb7dY4ooPKXRoGBd9Ri_Z_ZPpoKun4gUhXDOGA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 01 Apr 2019 17:50:27 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-01 10:50, Paul Moore wrote:
-> On Fri, Mar 15, 2019 at 2:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > Add audit container identifier auxiliary record(s) to NETFILTER_PKT
-> > event standalone records.  Iterate through all potential audit container
-> > identifiers associated with a network namespace.
-> >
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> >  include/linux/audit.h    |  5 +++++
-> >  kernel/audit.c           | 41 +++++++++++++++++++++++++++++++++++++++++
-> >  net/netfilter/nft_log.c  | 11 +++++++++--
-> >  net/netfilter/xt_AUDIT.c | 11 +++++++++--
-> >  4 files changed, 64 insertions(+), 4 deletions(-)
-> 
-> ...
-> 
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index 7fa3194f5342..80ed323feeb5 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -451,6 +451,47 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
-> >                 audit_netns_contid_add(new->net_ns, contid);
-> >  }
-> >
-> > +/**
-> > + * audit_log_netns_contid_list - List contids for the given network namespace
-> > + * @net: the network namespace of interest
-> > + * @context: the audit context to use
-> > + *
-> > + * Description:
-> > + * Issues a CONTAINER_ID record with a CSV list of contids associated
-> > + * with a network namespace to accompany a NETFILTER_PKT record.
-> > + */
-> > +void audit_log_netns_contid_list(struct net *net, struct audit_context *context)
-> > +{
-> > +       struct audit_buffer *ab = NULL;
-> > +       struct audit_contid *cont;
-> > +       bool first = true;
-> > +       struct audit_net *aunet;
-> > +
-> > +       /* Generate AUDIT_CONTAINER_ID record with container ID CSV list */
-> > +       rcu_read_lock();
-> > +       aunet = net_generic(net, audit_net_id);
-> > +       if (!aunet)
-> > +               goto out;
-> > +       list_for_each_entry_rcu(cont, &aunet->contid_list, list) {
-> > +               if (first) {
-> 
-> This is borderline nit-picky, but it seems like we could get rid of
-> "first" and just check to see if "ab" is still NULL.
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
-Yes, this is a better way, thank you.
+------------------
 
-> > +                       ab = audit_log_start(context, GFP_ATOMIC,
-> > +                                            AUDIT_CONTAINER_ID);
-> > +                       if (!ab) {
-> > +                               audit_log_lost("out of memory in audit_log_netns_contid_list");
-> > +                               goto out;
-> > +                       }
-> > +                       audit_log_format(ab, "contid=");
-> > +               } else
-> > +                       audit_log_format(ab, ",");
-> > +               audit_log_format(ab, "%llu", cont->id);
-> > +               first = false;
-> > +       }
-> > +       audit_log_end(ab);
-> > +out:
-> > +       rcu_read_unlock();
-> > +}
-> > +EXPORT_SYMBOL(audit_log_netns_contid_list);
-> 
-> paul moore
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-- RGB
+commit ddba91801aeb5c160b660caed1800eb3aef403f8 upstream.
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+KVM's API requires thats ioctls must be issued from the same process
+that created the VM.  In other words, userspace can play games with a
+VM's file descriptors, e.g. fork(), SCM_RIGHTS, etc..., but only the
+creator can do anything useful.  Explicitly reject device ioctls that
+are issued by a process other than the VM's creator, and update KVM's
+API documentation to extend its requirements to device ioctls.
+
+Fixes: 852b6d57dc7f ("kvm: add device control API")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ Documentation/virtual/kvm/api.txt |   16 +++++++++++-----
+ virt/kvm/kvm_main.c               |    3 +++
+ 2 files changed, 14 insertions(+), 5 deletions(-)
+
+--- a/Documentation/virtual/kvm/api.txt
++++ b/Documentation/virtual/kvm/api.txt
+@@ -13,7 +13,7 @@ of a virtual machine.  The ioctls belong
+ 
+  - VM ioctls: These query and set attributes that affect an entire virtual
+    machine, for example memory layout.  In addition a VM ioctl is used to
+-   create virtual cpus (vcpus).
++   create virtual cpus (vcpus) and devices.
+ 
+    Only run VM ioctls from the same process (address space) that was used
+    to create the VM.
+@@ -24,6 +24,11 @@ of a virtual machine.  The ioctls belong
+    Only run vcpu ioctls from the same thread that was used to create the
+    vcpu.
+ 
++ - device ioctls: These query and set attributes that control the operation
++   of a single device.
++
++   device ioctls must be issued from the same process (address space) that
++   was used to create the VM.
+ 
+ 2. File descriptors
+ -------------------
+@@ -32,10 +37,11 @@ The kvm API is centered around file desc
+ open("/dev/kvm") obtains a handle to the kvm subsystem; this handle
+ can be used to issue system ioctls.  A KVM_CREATE_VM ioctl on this
+ handle will create a VM file descriptor which can be used to issue VM
+-ioctls.  A KVM_CREATE_VCPU ioctl on a VM fd will create a virtual cpu
+-and return a file descriptor pointing to it.  Finally, ioctls on a vcpu
+-fd can be used to control the vcpu, including the important task of
+-actually running guest code.
++ioctls.  A KVM_CREATE_VCPU or KVM_CREATE_DEVICE ioctl on a VM fd will
++create a virtual cpu or device and return a file descriptor pointing to
++the new resource.  Finally, ioctls on a vcpu or device fd can be used
++to control the vcpu or device.  For vcpus, this includes the important
++task of actually running guest code.
+ 
+ In general file descriptors can be migrated among processes by means
+ of fork() and the SCM_RIGHTS facility of unix domain socket.  These
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2793,6 +2793,9 @@ static long kvm_device_ioctl(struct file
+ {
+ 	struct kvm_device *dev = filp->private_data;
+ 
++	if (dev->kvm->mm != current->mm)
++		return -EIO;
++
+ 	switch (ioctl) {
+ 	case KVM_SET_DEVICE_ATTR:
+ 		return kvm_device_ioctl_attr(dev, dev->ops->set_attr, arg);
+
+
