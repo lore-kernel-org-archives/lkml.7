@@ -4,51 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71472C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE9FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7FD20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DB4D20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554142016;
-	bh=YvUgUt5pc8y92KmBXjD614wVqyqxin7tMyalzY4GodA=;
+	s=default; t=1554142026;
+	bh=LW/2QxVuGiHS6B6Kj6U25r0wcM1B1ocPE+i6bxYnHZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fKbMenixH6K9hPoM2GCTVgVLFm64pYWHe3S7JltXw4BO7uQQbamDQ4YhVBmMGV4CG
-	 njhOC94tD6oNIdOH664RDNZz0zBKm+wdxSZhxCtFGGKYskUq5mDhzL0wzJrK3UQDlZ
-	 ScWFKTU6PET5LfIWrlcj2V6Sc9Nqhv2DUrL+w408=
+	b=nHxRFGlHxroQ6o5RU0TML6QKbKxGb5w7mnZvP8/v/HGlBivb7Vsl+AoZ/jEmIT13C
+	 b69MIzLFRS1ANmasgRzFYRgbOy1PBySWintPen8eflmFhuRgSk9hjN0p5yBJzJq8Q3
+	 z7Ce34+2OPYj2yRWwedi1u9IEqMl4EI2YfT6xjSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbfDASGz (ORCPT
+        id S1730707AbfDASHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:06:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33332 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 14:07:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730329AbfDARMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:12:08 -0400
+        id S1730284AbfDARL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:11:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 580FC21924;
-        Mon,  1 Apr 2019 17:12:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16F3C21925;
+        Mon,  1 Apr 2019 17:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138727;
-        bh=YvUgUt5pc8y92KmBXjD614wVqyqxin7tMyalzY4GodA=;
+        s=default; t=1554138716;
+        bh=LW/2QxVuGiHS6B6Kj6U25r0wcM1B1ocPE+i6bxYnHZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vBIHVWnyeOyViy1ozcQqrNRg5lkiJIs2wAnJ4jw4Ejln7WIMzeUt218ssYeX/vzgN
-         3j8DIQREEfSR8EwwE99AjH0Tlxrm0FwuAsfGBi2dYzONswHc2kGRbB2lmAyIbPTI2d
-         LxQLbmXI+T6PQyz1BZvzmpUoD3VLRADFmfo+4nRs=
+        b=hdD834FiXH6TyUVxH1veKY1R7KG7ZP+xcA3l2LhVVJIrUdzVkWzdFJi1nY7cOxQ6P
+         dn5tOkDewUIzio799hJ67S5N7UBsIa3SfLcx2O8DSUM55SmwDFXpy2Mmmn7EvgTiuT
+         Y3CYWy58KzHumyqk5w5DZUtInhQeEWK0G7JPSWWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>, Qian Cai <cai@lca.pw>,
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Huaisheng Ye <yehs1@lenovo.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Tomasz Figa <tfiga@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Yong Wu <yong.wu@mediatek.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 130/146] mm/memory_hotplug.c: fix notification in offline error path
-Date:   Mon,  1 Apr 2019 19:02:22 +0200
-Message-Id: <20190401170059.227328158@linuxfoundation.org>
+Subject: [PATCH 5.0 127/146] iommu/io-pgtable-arm-v7s: request DMA32 memory, and improve debugging
+Date:   Mon,  1 Apr 2019 19:02:19 +0200
+Message-Id: <20190401170059.016458892@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -67,93 +86,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Qian Cai <cai@lca.pw>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-commit c4efe484b5f0d768e23c9731082fec827723e738 upstream.
+commit 0a352554da69b02f75ca3389c885c741f1f63235 upstream.
 
-When start_isolate_page_range() returned -EBUSY in __offline_pages(), it
-calls memory_notify(MEM_CANCEL_OFFLINE, &arg) with an uninitialized
-"arg".  As the result, it triggers warnings below.  Also, it is only
-necessary to notify MEM_CANCEL_OFFLINE after MEM_GOING_OFFLINE.
+IOMMUs using ARMv7 short-descriptor format require page tables (level 1
+and 2) to be allocated within the first 4GB of RAM, even on 64-bit
+systems.
 
-  page:ffffea0001200000 count:1 mapcount:0 mapping:0000000000000000
-  index:0x0
-  flags: 0x3fffe000001000(reserved)
-  raw: 003fffe000001000 ffffea0001200008 ffffea0001200008 0000000000000000
-  raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
-  page dumped because: unmovable page
-  WARNING: CPU: 25 PID: 1665 at mm/kasan/common.c:665
-  kasan_mem_notifier+0x34/0x23b
-  CPU: 25 PID: 1665 Comm: bash Tainted: G        W         5.0.0+ #94
-  Hardware name: HP ProLiant DL180 Gen9/ProLiant DL180 Gen9, BIOS U20
-  10/25/2017
-  RIP: 0010:kasan_mem_notifier+0x34/0x23b
-  RSP: 0018:ffff8883ec737890 EFLAGS: 00010206
-  RAX: 0000000000000246 RBX: ff10f0f4435f1000 RCX: f887a7a21af88000
-  RDX: dffffc0000000000 RSI: 0000000000000020 RDI: ffff8881f221af88
-  RBP: ffff8883ec737898 R08: ffff888000000000 R09: ffffffffb0bddcd0
-  R10: ffffed103e857088 R11: ffff8881f42b8443 R12: dffffc0000000000
-  R13: 00000000fffffff9 R14: dffffc0000000000 R15: 0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000560fbd31d730 CR3: 00000004049c6003 CR4: 00000000001606a0
-  Call Trace:
-   notifier_call_chain+0xbf/0x130
-   __blocking_notifier_call_chain+0x76/0xc0
-   blocking_notifier_call_chain+0x16/0x20
-   memory_notify+0x1b/0x20
-   __offline_pages+0x3e2/0x1210
-   offline_pages+0x11/0x20
-   memory_block_action+0x144/0x300
-   memory_subsys_offline+0xe5/0x170
-   device_offline+0x13f/0x1e0
-   state_store+0xeb/0x110
-   dev_attr_store+0x3f/0x70
-   sysfs_kf_write+0x104/0x150
-   kernfs_fop_write+0x25c/0x410
-   __vfs_write+0x66/0x120
-   vfs_write+0x15a/0x4f0
-   ksys_write+0xd2/0x1b0
-   __x64_sys_write+0x73/0xb0
-   do_syscall_64+0xeb/0xb78
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f14f75cc3b8
-  RSP: 002b:00007ffe84d01d68 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-  RAX: ffffffffffffffda RBX: 0000000000000008 RCX: 00007f14f75cc3b8
-  RDX: 0000000000000008 RSI: 0000563f8e433d70 RDI: 0000000000000001
-  RBP: 0000563f8e433d70 R08: 000000000000000a R09: 00007ffe84d018f0
-  R10: 000000000000000a R11: 0000000000000246 R12: 00007f14f789e780
-  R13: 0000000000000008 R14: 00007f14f7899740 R15: 0000000000000008
+For level 1/2 pages, ensure GFP_DMA32 is used if CONFIG_ZONE_DMA32 is
+defined (e.g.  on arm64 platforms).
 
-Link: http://lkml.kernel.org/r/20190320204255.53571-1-cai@lca.pw
-Fixes: 7960509329c2 ("mm, memory_hotplug: print reason for the offlining failure")
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: <stable@vger.kernel.org>	[5.0.x]
+For level 2 pages, allocate a slab cache in SLAB_CACHE_DMA32.  Note that
+we do not explicitly pass GFP_DMA[32] to kmem_cache_zalloc, as this is
+not strictly necessary, and would cause a warning in mm/sl*b.c, as we
+did not update GFP_SLAB_BUG_MASK.
+
+Also, print an error when the physical address does not fit in
+32-bit, to make debugging easier in the future.
+
+Link: http://lkml.kernel.org/r/20181210011504.122604-3-drinkcat@chromium.org
+Fixes: ad67f5a6545f ("arm64: replace ZONE_DMA with ZONE_DMA32")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: Huaisheng Ye <yehs1@lenovo.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Sasha Levin <Alexander.Levin@microsoft.com>
+Cc: Tomasz Figa <tfiga@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Yong Wu <yong.wu@mediatek.com>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memory_hotplug.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/io-pgtable-arm-v7s.c |   19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1684,12 +1684,12 @@ static int __ref __offline_pages(unsigne
+--- a/drivers/iommu/io-pgtable-arm-v7s.c
++++ b/drivers/iommu/io-pgtable-arm-v7s.c
+@@ -161,6 +161,14 @@
  
- failed_removal_isolated:
- 	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
-+	memory_notify(MEM_CANCEL_OFFLINE, &arg);
- failed_removal:
- 	pr_debug("memory offlining [mem %#010llx-%#010llx] failed due to %s\n",
- 		 (unsigned long long) start_pfn << PAGE_SHIFT,
- 		 ((unsigned long long) end_pfn << PAGE_SHIFT) - 1,
- 		 reason);
--	memory_notify(MEM_CANCEL_OFFLINE, &arg);
- 	/* pushback to free area */
- 	mem_hotplug_done();
- 	return ret;
+ #define ARM_V7S_TCR_PD1			BIT(5)
+ 
++#ifdef CONFIG_ZONE_DMA32
++#define ARM_V7S_TABLE_GFP_DMA GFP_DMA32
++#define ARM_V7S_TABLE_SLAB_FLAGS SLAB_CACHE_DMA32
++#else
++#define ARM_V7S_TABLE_GFP_DMA GFP_DMA
++#define ARM_V7S_TABLE_SLAB_FLAGS SLAB_CACHE_DMA
++#endif
++
+ typedef u32 arm_v7s_iopte;
+ 
+ static bool selftest_running;
+@@ -198,13 +206,16 @@ static void *__arm_v7s_alloc_table(int l
+ 	void *table = NULL;
+ 
+ 	if (lvl == 1)
+-		table = (void *)__get_dma_pages(__GFP_ZERO, get_order(size));
++		table = (void *)__get_free_pages(
++			__GFP_ZERO | ARM_V7S_TABLE_GFP_DMA, get_order(size));
+ 	else if (lvl == 2)
+-		table = kmem_cache_zalloc(data->l2_tables, gfp | GFP_DMA);
++		table = kmem_cache_zalloc(data->l2_tables, gfp);
+ 	phys = virt_to_phys(table);
+-	if (phys != (arm_v7s_iopte)phys)
++	if (phys != (arm_v7s_iopte)phys) {
+ 		/* Doesn't fit in PTE */
++		dev_err(dev, "Page table does not fit in PTE: %pa", &phys);
+ 		goto out_free;
++	}
+ 	if (table && !(cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA)) {
+ 		dma = dma_map_single(dev, table, size, DMA_TO_DEVICE);
+ 		if (dma_mapping_error(dev, dma))
+@@ -733,7 +744,7 @@ static struct io_pgtable *arm_v7s_alloc_
+ 	data->l2_tables = kmem_cache_create("io-pgtable_armv7s_l2",
+ 					    ARM_V7S_TABLE_SIZE(2),
+ 					    ARM_V7S_TABLE_SIZE(2),
+-					    SLAB_CACHE_DMA, NULL);
++					    ARM_V7S_TABLE_SLAB_FLAGS, NULL);
+ 	if (!data->l2_tables)
+ 		goto out_free_data;
+ 
 
 
