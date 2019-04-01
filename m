@@ -2,168 +2,119 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E4FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE637C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 702F620830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F05420857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554140372;
+	bh=+1oksBOizrkmnGsProq/jM/xtKtaaX4m95XH5K2xL8w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NKm0YciDVNDO2GDSTVZZoYEJf2awwXorRfbyKYTFj28acpTDeu2BVKDm1q1TEGqAo
+	 KE2ZGZUsLp+C+T2CCLKPtGuqRC0/Oi6PtykI1+VnQi+GKz2HQqJ1FnUVfFRLdKbrHd
+	 6qoMkY80U29H5eapF5gCFLTMY4C6IIg30yUzspuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387915AbfDARj0 (ORCPT
+        id S2388461AbfDARjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:39:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:1026 "EHLO mx1.redhat.com"
+        Mon, 1 Apr 2019 13:39:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388274AbfDARjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:39:23 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2388448AbfDARjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:39:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F1E4630833C4;
-        Mon,  1 Apr 2019 17:39:22 +0000 (UTC)
-Received: from gondolin (ovpn-117-29.ams2.redhat.com [10.36.117.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3FAD1600D4;
-        Mon,  1 Apr 2019 17:39:19 +0000 (UTC)
-Date:   Mon, 1 Apr 2019 19:39:16 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kwankhede@nvidia.com, alex.williamson@redhat.com, cjia@nvidia.com
-Subject: Re: [PATCHv1 6/7] vfio/mdev: Fix aborting mdev child device removal
- if one fails
-Message-ID: <20190401193916.3d2c6552.cohuck@redhat.com>
-In-Reply-To: <1553658345-43995-7-git-send-email-parav@mellanox.com>
-References: <1553658345-43995-1-git-send-email-parav@mellanox.com>
-        <1553658345-43995-7-git-send-email-parav@mellanox.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id E7B69205C9;
+        Mon,  1 Apr 2019 17:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554140365;
+        bh=+1oksBOizrkmnGsProq/jM/xtKtaaX4m95XH5K2xL8w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UsXmrcOpmfuzFrv4C2jVhCciZ9pEZxLzUrjNLVqPfFVNTdOGd28vHhvluy/FWeXeY
+         LR6rIFfubHqE5klfloLZxjos0tu+ddKPuZDg965jDC8DbzHNUJ49H2YlxFlmXcHU0K
+         936A2fTnDlShNxf0aPLF+U4ggGQbNe01eFaTQeOQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 14/50] asm-generic: Fix local variable shadow in __set_fixmap_offset
+Date:   Mon,  1 Apr 2019 19:02:57 +0200
+Message-Id: <20190401170042.765941449@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
+References: <20190401170041.257273804@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 01 Apr 2019 17:39:23 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019 22:45:44 -0500
-Parav Pandit <parav@mellanox.com> wrote:
+3.18-stable review patch.  If anyone has any objections, please let me know.
 
-> device_for_each_child() stops executing callback function for remaining
-> child devices, if callback hits an error.
-> Each child mdev device is independent of each other.
-> While unregistering parent device, mdev core must remove all child mdev
-> devices.
-> Therefore, mdev_device_remove_cb() always returns success so that
+------------------
 
-s/always returns/must always return/ ?
+[ Upstream commit 3694bd76781b76c4f8d2ecd85018feeb1609f0e5 ]
 
-> device_for_each_child doesn't abort if one child removal hits error.
-> 
-> While at it, improve remove and unregister functions for below simplicity.
-> 
-> There isn't need to pass forced flag pointer during mdev parent
-> removal which invokes mdev_device_remove(). So simplify the flow.
-> 
-> mdev_device_remove() is called from two paths.
-> 1. mdev_unregister_driver()
->      mdev_device_remove_cb()
->        mdev_device_remove()
-> 2. remove_store()
->      mdev_device_remove()
-> 
-> When device is removed by user using remote_store(), device under
-> removal is mdev device.
-> When device is removed during parent device removal using generic child
-> iterator, mdev check is already done using dev_is_mdev().
+Currently __set_fixmap_offset is a macro function which has a local
+variable called 'addr'. If a caller passes a 'phys' parameter which is
+derived from a variable also called 'addr', the local variable will
+shadow this, and the compiler will complain about the use of an
+uninitialized variable. To avoid the issue with namespace clashes,
+'addr' is prefixed with a liberal sprinkling of underscores.
 
-Isn't there still a possible race condition (which you seem to address
-with the following patch)? IOW, you cannot remove that loop-under-mutex
-yet?
+Turning __set_fixmap_offset into a static inline breaks the build for
+several architectures. Fixing this properly requires updates to a number
+of architectures to make them agree on the prototype of __set_fixmap (it
+could be done as a subsequent patch series).
 
-> 
-> Hence, remove the unnecessary loop in mdev_device_remove().
-> 
-> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  drivers/vfio/mdev/mdev_core.c | 23 +++++------------------
->  1 file changed, 5 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index 836d319..aefcf34 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -149,10 +149,10 @@ static int mdev_device_remove_ops(struct mdev_device *mdev, bool force_remove)
->  
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+[catalin.marinas@arm.com: squashed the original function patch and macro fixup]
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/asm-generic/fixmap.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Maybe add
+diff --git a/include/asm-generic/fixmap.h b/include/asm-generic/fixmap.h
+index f23174fb9ec4..10889b63af8f 100644
+--- a/include/asm-generic/fixmap.h
++++ b/include/asm-generic/fixmap.h
+@@ -67,12 +67,12 @@ static inline unsigned long virt_to_fix(const unsigned long vaddr)
+ #endif
+ 
+ /* Return a pointer with offset calculated */
+-#define __set_fixmap_offset(idx, phys, flags)		      \
+-({							      \
+-	unsigned long addr;				      \
+-	__set_fixmap(idx, phys, flags);			      \
+-	addr = fix_to_virt(idx) + ((phys) & (PAGE_SIZE - 1)); \
+-	addr;						      \
++#define __set_fixmap_offset(idx, phys, flags)				\
++({									\
++	unsigned long ________addr;					\
++	__set_fixmap(idx, phys, flags);					\
++	________addr = fix_to_virt(idx) + ((phys) & (PAGE_SIZE - 1));	\
++	________addr;							\
+ })
+ 
+ #define set_fixmap_offset(idx, phys) \
+-- 
+2.19.1
 
-/* only called during parent device unregistration */
 
-to avoid headscratching in the future?
-
->  static int mdev_device_remove_cb(struct device *dev, void *data)
->  {
-> -	if (!dev_is_mdev(dev))
-> -		return 0;
-> +	if (dev_is_mdev(dev))
-> +		mdev_device_remove(dev, true);
->  
-> -	return mdev_device_remove(dev, data ? *(bool *)data : true);
-> +	return 0;
->  }
->  
->  /*
-> @@ -240,7 +240,6 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
->  void mdev_unregister_device(struct device *dev)
->  {
->  	struct mdev_parent *parent;
-> -	bool force_remove = true;
->  
->  	mutex_lock(&parent_list_lock);
->  	parent = __find_parent_device(dev);
-> @@ -254,8 +253,7 @@ void mdev_unregister_device(struct device *dev)
->  	list_del(&parent->next);
->  	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
->  
-> -	device_for_each_child(dev, (void *)&force_remove,
-> -			      mdev_device_remove_cb);
-> +	device_for_each_child(dev, NULL, mdev_device_remove_cb);
->  
->  	parent_remove_sysfs_files(parent);
->  
-
-Up to this chunk, the patch looks good to me.
-
-> @@ -348,24 +346,13 @@ int mdev_device_create(struct kobject *kobj,
->  
->  int mdev_device_remove(struct device *dev, bool force_remove)
->  {
-> -	struct mdev_device *mdev, *tmp;
-> +	struct mdev_device *mdev;
->  	struct mdev_parent *parent;
->  	struct mdev_type *type;
->  	int ret;
->  
->  	mdev = to_mdev_device(dev);
-> -
->  	mutex_lock(&mdev_list_lock);
-> -	list_for_each_entry(tmp, &mdev_list, next) {
-> -		if (tmp == mdev)
-> -			break;
-> -	}
-> -
-> -	if (tmp != mdev) {
-> -		mutex_unlock(&mdev_list_lock);
-> -		return -ENODEV;
-> -	}
-> -
->  	if (!mdev->active) {
->  		mutex_unlock(&mdev_list_lock);
->  		return -EAGAIN;
 
