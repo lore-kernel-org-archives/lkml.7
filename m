@@ -2,126 +2,145 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 946FEC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C23C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6004220880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C98E206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:57:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jkX95TEs"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="VmoLYqOd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbfDASy5 (ORCPT
+        id S1729103AbfDAS5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:54:57 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:36673 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728690AbfDASyz (ORCPT
+        Mon, 1 Apr 2019 14:57:52 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35974 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728760AbfDAS5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:54:55 -0400
-Received: by mail-vs1-f66.google.com with SMTP id n4so6206586vsm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 11:54:55 -0700 (PDT)
+        Mon, 1 Apr 2019 14:57:52 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r24so9238191ljg.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 11:57:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vThWi9g5/qJmdB4uS99oEI6x0u1DMV7y38c2bqYqBlY=;
-        b=jkX95TEsaEzXy/QmyrssEXYhAVvQ7DMF+8pCwbBZOKrnLihi9zA+8wZSSLDp6px59B
-         f3Z9GQPnIkNMJi4m8m6bLoc/LZ8STZbethSPuKYk4SYbxavQc8QBsBggPbubmBARnA9X
-         yZS34AYj506J+NkPdzAiudLenVm0F7wl9Ki4Q=
+        bh=OG3K/weV3XtavI0+FRqMauSdv1yTiVdKp7cI8yqJMVI=;
+        b=VmoLYqOd9sBOa4qVc2Cv+v3SS9L2pZl7L12WgBXrhIoQb1aTyxkfrpGy+r8R01SHxs
+         u+g7rMqwp6TxxoKZ6XtBADWzBw9O7IMCTeSuFnvhHOcPkM4pWJg8kbJVssXLPx1zgP8p
+         Zxks+WxnpFjUiJgsLTYoU2/e2ZtgaMxYc65XLh4rq+7zRkfMC7xYa6mLIInd6NKA90VK
+         vGr98dRfked97bwGv4K+HF/bupiA6ZKklTfx6mpoiwEHAH1uAMBpcCBjt15ty/BjqeJT
+         M1ehNf+gSoo7PIr0N5uLwEmwyi3KkkFSr0Y8JllO41ZMahAnJv0hmOqd19lqtw5s60Qr
+         Cu2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vThWi9g5/qJmdB4uS99oEI6x0u1DMV7y38c2bqYqBlY=;
-        b=q5Elt/zmucRjZj/seCEvW8z1wqNqJUhzEopaL5XrzDq4ZRoqgzFyXPNWNrTSJNqPjs
-         F4WmTbMHTzGeVgu0I3pXB+8UE87hGw3a4r90TWVmrNwiq7MXCz2GKRp4NkTVAR83wKAI
-         cHR1jRDkECxOkM9PwtKG0Ps1J04jus6PiVr6YmmPimI/8XcEoy4YDJr7dE7Cxt9akrK/
-         F6Iikpd78VLkWgjEv/5jPupAeM9o2hGMgppZ0wMdbugOgGLTaFUZa5VfF4r0T9ctrqT6
-         EEAncWqoUbAbeqMXpaAZZZiKt2vVkm6WdrEvMBEhje+m9qJ2OjAwBIWQyMR8tTycsRDY
-         eTtw==
-X-Gm-Message-State: APjAAAWhB3nqUqoqFLzjoUNq4PuEQXx6eYhLeOb3JOnyDdtO/xqtlyaa
-        bDSiinuaON9V0T//S8HP7Ie/8rIxlkY=
-X-Google-Smtp-Source: APXvYqz1KIINKf3llcnKGb/mc00cupDluR2Xs6KQGPiwSEN/0aIykH5S1qGJPz1ZDyOxCrJNw5gSfg==
-X-Received: by 2002:a67:82c8:: with SMTP id e191mr39347818vsd.24.1554144893643;
-        Mon, 01 Apr 2019 11:54:53 -0700 (PDT)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id 190sm10533161vsz.0.2019.04.01.11.54.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 11:54:52 -0700 (PDT)
-Received: by mail-vk1-f178.google.com with SMTP id e131so2350555vkf.10
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 11:54:52 -0700 (PDT)
-X-Received: by 2002:a1f:6bcb:: with SMTP id k72mr7359745vki.80.1554144891661;
- Mon, 01 Apr 2019 11:54:51 -0700 (PDT)
+        bh=OG3K/weV3XtavI0+FRqMauSdv1yTiVdKp7cI8yqJMVI=;
+        b=T3v1ZqTjbrvYZ7eVJgYbjuAEi2fAbmBOFXs0DIXXhkc6NcHI4TB7x5VCGxAX9TAiJ+
+         l/nnUCMPkXgTuEE85/TMkWd6ofkJODW86PeXEFwSV/pMbIjotO4K0vOdr7hvbDbkefAN
+         ujKmqptH9WILj1B0DxQsW6zKqDWaQ0vamBUMBEdFe3u5lnbS7rCIdFNcu+n7lxsJ6hlJ
+         yQqUMZAail9OAQWfJ+8awAEF3KwwmfynpI1GaAuKiwrKmb0lG7FIJEsEOCDELjPFVhFG
+         m0I2gbOEN/wcGDLdAsQWBVN1vXqcvKFQPa4hhfMAqDXYiiXJubECxvIReC868b3nRalP
+         VAWA==
+X-Gm-Message-State: APjAAAUH4NAG9rgv8HyeZkO0B6PV5OQvs+8WBY78T6W/0jmOFUn21ay+
+        Lebl1NKjAVn955hcULoMw9BZZHKEgsI7w/fFu4jG
+X-Google-Smtp-Source: APXvYqzZTCmYYMmiZzBrxg5Ye2yEkEkTVeBsjiuhi46ic7qvkKj57eiftzomk3wmRubyS/f37cBTe/S79dQ8UA9Nlag=
+X-Received: by 2002:a2e:7114:: with SMTP id m20mr4729758ljc.120.1554145070271;
+ Mon, 01 Apr 2019 11:57:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190401183211.GA21228@beast> <1554144741.3029.18.camel@HansenPartnership.com>
-In-Reply-To: <1554144741.3029.18.camel@HansenPartnership.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Mon, 1 Apr 2019 11:54:40 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jLuPTvcQbhEXKfh0fgWkA4g__kET=tbY8njraXXQYug+Q@mail.gmail.com>
-Message-ID: <CAGXu5jLuPTvcQbhEXKfh0fgWkA4g__kET=tbY8njraXXQYug+Q@mail.gmail.com>
-Subject: Re: [PATCH] tpm: Actually fail on TPM errors during "get random"
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Phil Baker <baker1tex@gmail.com>,
-        Craig Robson <craig@zhatt.com>,
-        Laura Abbott <labbott@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        linux-integrity <linux-integrity@vger.kernel.org>
+References: <cover.1552665316.git.rgb@redhat.com> <700e4313571f86cc0cdcb7310fbe060f02c7c2db.1552665316.git.rgb@redhat.com>
+ <CAHC9VhRWUvG6DwiPn4o+vt=fgGfY+JmG8m78M8CeyGYxF2yRXQ@mail.gmail.com> <20190401174432.fjnvotpvdrfujoy7@madcap2.tricolour.ca>
+In-Reply-To: <20190401174432.fjnvotpvdrfujoy7@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 1 Apr 2019 14:57:39 -0400
+Message-ID: <CAHC9VhTL=zSQ2tO440w+vvX3TPsGtwqL6dWwUHVe0WnHVKqVpA@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V5 06/10] audit: add support for non-syscall
+ auxiliary records
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 11:52 AM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> On Mon, 2019-04-01 at 11:32 -0700, Kees Cook wrote:
-> [...]
-> > --- a/drivers/char/tpm/tpm1-cmd.c
-> > +++ b/drivers/char/tpm/tpm1-cmd.c
-> > @@ -510,7 +510,7 @@ struct tpm1_get_random_out {
-> >   *
-> >   * Return:
-> >   * *  number of bytes read
-> > - * * -errno or a TPM return code otherwise
-> > + * * -errno (positive TPM return codes are masked to -EIO)
-> >   */
-> >  int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
-> >  {
-> > @@ -524,7 +524,7 @@ int tpm1_get_random(struct tpm_chip *chip, u8
-> > *dest, size_t max)
+On Mon, Apr 1, 2019 at 1:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-04-01 10:49, Paul Moore wrote:
+> > On Fri, Mar 15, 2019 at 2:34 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > Standalone audit records have the timestamp and serial number generated
+> > > on the fly and as such are unique, making them standalone.  This new
+> > > function audit_alloc_local() generates a local audit context that will
+> > > be used only for a standalone record and its auxiliary record(s).  The
+> > > context is discarded immediately after the local associated records are
+> > > produced.
+> > >
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > Acked-by: Serge Hallyn <serge@hallyn.com>
+> > > ---
+> > >  include/linux/audit.h |  8 ++++++++
+> > >  kernel/audit.h        |  1 +
+> > >  kernel/auditsc.c      | 35 ++++++++++++++++++++++++++++++-----
+> > >  3 files changed, 39 insertions(+), 5 deletions(-)
 > >
-> >       rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND,
-> > TPM_ORD_GET_RANDOM);
-> >       if (rc)
-> > -             return rc;
-> > +             goto fail;
+> > ...
 > >
-> >       do {
-> >               tpm_buf_append_u32(&buf, num_bytes);
-> > @@ -559,7 +559,10 @@ int tpm1_get_random(struct tpm_chip *chip, u8
-> > *dest, size_t max)
-> >       rc = total ? (int)total : -EIO;
-> >  out:
-> >       tpm_buf_destroy(&buf);
-> > -     return rc;
+> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > > index ebd6625ca80e..6db5aba7cc01 100644
+> > > --- a/include/linux/audit.h
+> > > +++ b/include/linux/audit.h
+> > > @@ -285,6 +285,8 @@ static inline void audit_log_contid(struct audit_context *context, u64 contid)
+> > >
+> > >  /* These are defined in auditsc.c */
+> > >                                 /* Public API */
+> > > +extern struct audit_context *audit_alloc_local(gfp_t gfpflags);
+> > > +extern void audit_free_context(struct audit_context *context);
+> > >  extern void __audit_syscall_entry(int major, unsigned long a0, unsigned long a1,
+> > >                                   unsigned long a2, unsigned long a3);
+> > >  extern void __audit_syscall_exit(int ret_success, long ret_value);
+> > > @@ -512,6 +514,12 @@ static inline void audit_fanotify(unsigned int response)
+> > >  extern int audit_n_rules;
+> > >  extern int audit_signals;
+> > >  #else /* CONFIG_AUDITSYSCALL */
+> > > +static inline struct audit_context *audit_alloc_local(gfp_t gfpflags)
+> > > +{
+> > > +       return NULL;
+> > > +}
+> > > +static inline void audit_free_context(struct audit_context *context)
+> > > +{ }
+> > >  static inline void audit_syscall_entry(int major, unsigned long a0,
+> > >                                        unsigned long a1, unsigned long a2,
+> > >                                        unsigned long a3)
+> > > diff --git a/kernel/audit.h b/kernel/audit.h
+> > > index c5ac6436317e..2a1a8b8a8019 100644
+> > > --- a/kernel/audit.h
+> > > +++ b/kernel/audit.h
+> > > @@ -111,6 +111,7 @@ struct audit_proctitle {
+> > >  struct audit_context {
+> > >         int                 dummy;      /* must be the first element */
+> > >         int                 in_syscall; /* 1 if task is in a syscall */
+> > > +       bool                local;      /* local context needed */
+> >
+> > It's very possible I've missed it, but "local" never gets used in any
+> > meaningful way in this patchset does it?
 >
-> You can't remove this otherwise the only return will ever be a failure.
->
-> I think what you're trying to catch is tpm_transmit_cmd returning a
-> positive failure, So you need to check the output of tpm_transmit_cmd
-> as well and goto failure leaving the above return in place.
+> It is used in audit_alloc_local() to signal to audit_get_stamp() that in
+> absence of a syscall flag, check for a local flag to continue rather
+> than return.
 
-eek, yes. I double-checked this in tpm2, but tpm1 is different...
+I'm guessing you meant auditsc_get_stamp()?  If so, okay.
 
 -- 
-Kees Cook
+paul moore
+www.paul-moore.com
