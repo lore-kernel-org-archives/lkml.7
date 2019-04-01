@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B96C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E497DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3715421934
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A737A2192C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138645;
-	bh=RjexhMKHY/sxgM6EwuxeBUkbArXgXBXdRE0CvJXpUDI=;
+	s=default; t=1554138651;
+	bh=RBKjI2e9mB0gL351BDQXEksrvxoiTHvA98RqtlJKikQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P4su0Rf1foLZ2z9/q27PfWdunNbNuKNqXADrVoGYOqMrSwQ778iNp++5+FItb/kD1
-	 VqVkEVu3I09MhEmIVRA234gRUKwb1mV971wcvJt1AsxARgsiNYNWqM7ogf2ENhoG4U
-	 sW+P6LICpWIvyYIXorsmApLuJA41UkbEVsCdlJDM=
+	b=LPulgN5ExeQ/s6gNXYDaoiod+YUlSm2rWWD+vOhr3KVsBa6IuCkXC5CFQ/gE6UviD
+	 dQcHQ2BM3AS/AXk1Qz3aPsLo73ocxzrjyAJzYStNhfFWcGUXQpmSFsAeH9qmWuFTtp
+	 T/Bo7qqONRzYK7odoM74EawkCWRyjZNrQGoXKIE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbfDARKn (ORCPT
+        id S1730048AbfDARKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:10:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58520 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729455AbfDARKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:10:41 -0400
+        id S1730023AbfDARKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:10:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73D37206B8;
-        Mon,  1 Apr 2019 17:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 312A021924;
+        Mon,  1 Apr 2019 17:10:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138639;
-        bh=RjexhMKHY/sxgM6EwuxeBUkbArXgXBXdRE0CvJXpUDI=;
+        s=default; t=1554138643;
+        bh=RBKjI2e9mB0gL351BDQXEksrvxoiTHvA98RqtlJKikQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jaueCgdgsvCK5sqAGlU9HpUXJb9Jwi1TbnTDRHG9CMbiyNOjPK7Y8+Pw5cPO6tucO
-         j/Ie705MCUmMZbEZpNMN9iUMulOkMmRuk05cQJgj9KfWEC6fYlP05ii6PJ6rxFm5af
-         ZcFibeLZLGHpGuHtpFcZQ0ERmpqIiqNi9PG34wfc=
+        b=uQPjPUxWh0+a92YYgDkAMZ1XUhKyKizedERVrMbj8U8m0Qt48L6BCWib8MzE5vYQZ
+         WTODh1ZwAImfWCw3YJc2SEfDWddpbctBF8UAOm88Bxftdb7PV7W6eFg8d/CerTci+I
+         6+egILiNHXSuwPJomhful1NyKDMZvHYJPVKW2WP8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.0 123/146] usb: typec: tcpm: Try PD-2.0 if sink does not respond to 3.0 source-caps
-Date:   Mon,  1 Apr 2019 19:02:15 +0200
-Message-Id: <20190401170058.723014657@linuxfoundation.org>
+        stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 5.0 087/146] staging: erofs: fix to handle error path of erofs_vmap()
+Date:   Mon,  1 Apr 2019 19:01:39 +0200
+Message-Id: <20190401170056.177888153@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -65,75 +65,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-commit 976daf9d1199932df80e7b04546d1a1bd4ed5ece upstream.
+commit 8bce6dcede65139a087ff240127e3f3c01363eed upstream.
 
-PD 2.0 sinks are supposed to accept src-capabilities with a 3.0 header and
-simply ignore any src PDOs which the sink does not understand such as PPS
-but some 2.0 sinks instead ignore the entire PD_DATA_SOURCE_CAP message,
-causing contract negotiation to fail.
+erofs_vmap() wrapped vmap() and vm_map_ram() to return virtual
+continuous memory, but both of them can failed due to a lot of
+reason, previously, erofs_vmap()'s callers didn't handle them,
+which can potentially cause NULL pointer access, fix it.
 
-This commit fixes such sinks not working by re-trying the contract
-negotiation with PD-2.0 source-caps messages if we don't have a contract
-after PD_N_HARD_RESET_COUNT hard-reset attempts.
-
-The problem fixed by this commit was noticed with a Type-C to VGA dongle.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Cc: stable <stable@vger.kernel.org>
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Fixes: 0d40d6e399c1 ("staging: erofs: add a generic z_erofs VLE decompressor")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/typec/tcpm/tcpm.c |   27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ drivers/staging/erofs/unzip_vle.c     |    4 ++++
+ drivers/staging/erofs/unzip_vle_lz4.c |    7 +++++--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -37,6 +37,7 @@
- 	S(SRC_ATTACHED),			\
- 	S(SRC_STARTUP),				\
- 	S(SRC_SEND_CAPABILITIES),		\
-+	S(SRC_SEND_CAPABILITIES_TIMEOUT),	\
- 	S(SRC_NEGOTIATE_CAPABILITIES),		\
- 	S(SRC_TRANSITION_SUPPLY),		\
- 	S(SRC_READY),				\
-@@ -2966,10 +2967,34 @@ static void run_state_machine(struct tcp
- 			/* port->hard_reset_count = 0; */
- 			port->caps_count = 0;
- 			port->pd_capable = true;
--			tcpm_set_state_cond(port, hard_reset_state(port),
-+			tcpm_set_state_cond(port, SRC_SEND_CAPABILITIES_TIMEOUT,
- 					    PD_T_SEND_SOURCE_CAP);
- 		}
- 		break;
-+	case SRC_SEND_CAPABILITIES_TIMEOUT:
-+		/*
-+		 * Error recovery for a PD_DATA_SOURCE_CAP reply timeout.
-+		 *
-+		 * PD 2.0 sinks are supposed to accept src-capabilities with a
-+		 * 3.0 header and simply ignore any src PDOs which the sink does
-+		 * not understand such as PPS but some 2.0 sinks instead ignore
-+		 * the entire PD_DATA_SOURCE_CAP message, causing contract
-+		 * negotiation to fail.
-+		 *
-+		 * After PD_N_HARD_RESET_COUNT hard-reset attempts, we try
-+		 * sending src-capabilities with a lower PD revision to
-+		 * make these broken sinks work.
-+		 */
-+		if (port->hard_reset_count < PD_N_HARD_RESET_COUNT) {
-+			tcpm_set_state(port, HARD_RESET_SEND, 0);
-+		} else if (port->negotiated_rev > PD_REV20) {
-+			port->negotiated_rev--;
-+			port->hard_reset_count = 0;
-+			tcpm_set_state(port, SRC_SEND_CAPABILITIES, 0);
-+		} else {
-+			tcpm_set_state(port, hard_reset_state(port), 0);
-+		}
-+		break;
- 	case SRC_NEGOTIATE_CAPABILITIES:
- 		ret = tcpm_pd_check_request(port);
- 		if (ret < 0) {
+--- a/drivers/staging/erofs/unzip_vle.c
++++ b/drivers/staging/erofs/unzip_vle.c
+@@ -1034,6 +1034,10 @@ repeat:
+ 
+ skip_allocpage:
+ 	vout = erofs_vmap(pages, nr_pages);
++	if (!vout) {
++		err = -ENOMEM;
++		goto out;
++	}
+ 
+ 	err = z_erofs_vle_unzip_vmap(compressed_pages,
+ 		clusterpages, vout, llen, work->pageofs, overlapped);
+--- a/drivers/staging/erofs/unzip_vle_lz4.c
++++ b/drivers/staging/erofs/unzip_vle_lz4.c
+@@ -136,10 +136,13 @@ int z_erofs_vle_unzip_fast_percpu(struct
+ 
+ 	nr_pages = DIV_ROUND_UP(outlen + pageofs, PAGE_SIZE);
+ 
+-	if (clusterpages == 1)
++	if (clusterpages == 1) {
+ 		vin = kmap_atomic(compressed_pages[0]);
+-	else
++	} else {
+ 		vin = erofs_vmap(compressed_pages, clusterpages);
++		if (!vin)
++			return -ENOMEM;
++	}
+ 
+ 	preempt_disable();
+ 	vout = erofs_pcpubuf[smp_processor_id()].data;
 
 
