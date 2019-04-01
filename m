@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8549CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAAFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54AD121929
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64CFC21A4A
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138735;
-	bh=Dj7nbLfnVf2kgzOfFsbQ1sfR9+9TPzkzWMayEfTtw90=;
+	s=default; t=1554138740;
+	bh=mor+tQ2a3gGRhBUzPBSyzEvENSF/4wZJGYyhaWjRyj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CgWx8oHEQK7o4MuoRCnsj2AV2nr321q2GN4U4W27922n95VJ0yUGhi2VcJTtYYpdu
-	 wHkuzKNUJSTdO7OOPH8Vk54viwxVv8lEEk3j0u3ZBW9KxAw8Q7nM4NQWMk75Gj+Apf
-	 IhgeThPztepXq21didxeUJ8c3hs/TlUa8FI32a8k=
+	b=dOoy7ZUF8REMOEfIl5KZUyYn278L3CQ5zYHcX8DRTooG/O9chpGJA0BDjjBOPMkMA
+	 vRb7aG+UEf7WL1CmjbSv//O5VpXp/XHtKJf3Pmvwxn6M/Y9rs4rRVyq6Q9h0Hol9nL
+	 mBjL3koqz76+K4wkPqcikiamgwRrNA8GTo7Ny4Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbfDARMO (ORCPT
+        id S1730361AbfDARMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33438 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:12:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729110AbfDARML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:12:11 -0400
+        id S1729110AbfDARMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:12:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BE5A21924;
-        Mon,  1 Apr 2019 17:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9246321924;
+        Mon,  1 Apr 2019 17:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138730;
-        bh=Dj7nbLfnVf2kgzOfFsbQ1sfR9+9TPzkzWMayEfTtw90=;
+        s=default; t=1554138735;
+        bh=mor+tQ2a3gGRhBUzPBSyzEvENSF/4wZJGYyhaWjRyj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QJYC3dl/X1OSM63tFkkKyjpuoybYhfg/50qvbwRjf45X66B7QKu5DVww4L00Zo5Km
-         T9ydNhIVGpkuz6Q6Dc5kXbVLEBI6x/iQmb6sHYwCe53VdOk1fpQU1+imwnq2TwJ8Mj
-         uHvy8XrXC4edS/Cj29MIf7UYTFqGbiZPGwj/RAoM=
+        b=P8w2eaJFDkhwRIeSoP2H8KohN8qTbG6pPr11vUC3HAFErqTJND5y26FFfmhYi0Zi8
+         D/nNBz+USFT4L7Mv0eFyM/4bvPgM9dS5kVNVgSjq4TvU+vXJYgwRJs6KZoi/ZgItFI
+         5x7ukoizeM+/ssHMKDdc6dSMc5TmiIxTFsReNXGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>, Qian Cai <cai@lca.pw>,
+        stable@vger.kernel.org, Lars Persson <larper@axis.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 131/146] mm/page_isolation.c: fix a wrong flag in set_migratetype_isolate()
-Date:   Mon,  1 Apr 2019 19:02:23 +0200
-Message-Id: <20190401170059.296051562@linuxfoundation.org>
+Subject: [PATCH 5.0 132/146] mm/migrate.c: add missing flush_dcache_page for non-mapped page migrate
+Date:   Mon,  1 Apr 2019 19:02:24 +0200
+Message-Id: <20190401170059.352045974@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -67,40 +69,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Qian Cai <cai@lca.pw>
+From: Lars Persson <lars.persson@axis.com>
 
-commit f5777bc2d9cf0712554228b1a7927b6f13f5c1f0 upstream.
+commit d2b2c6dd227ba5b8a802858748ec9a780cb75b47 upstream.
 
-Due to has_unmovable_pages() taking an incorrect irqsave flag instead of
-the isolation flag in set_migratetype_isolate(), there are issues with
-HWPOSION and error reporting where dump_page() is not called when there
-is an unmovable page.
+Our MIPS 1004Kc SoCs were seeing random userspace crashes with SIGILL
+and SIGSEGV that could not be traced back to a userspace code bug.  They
+had all the magic signs of an I/D cache coherency issue.
 
-Link: http://lkml.kernel.org/r/20190320204941.53731-1-cai@lca.pw
-Fixes: d381c54760dc ("mm: only report isolation failures when offlining memory")
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Cc: <stable@vger.kernel.org>	[5.0.x]
+Now recently we noticed that the /proc/sys/vm/compact_memory interface
+was quite efficient at provoking this class of userspace crashes.
+
+Studying the code in mm/migrate.c there is a distinction made between
+migrating a page that is mapped at the instant of migration and one that
+is not mapped.  Our problem turned out to be the non-mapped pages.
+
+For the non-mapped page the code performs a copy of the page content and
+all relevant meta-data of the page without doing the required D-cache
+maintenance.  This leaves dirty data in the D-cache of the CPU and on
+the 1004K cores this data is not visible to the I-cache.  A subsequent
+page-fault that triggers a mapping of the page will happily serve the
+process with potentially stale code.
+
+What about ARM then, this bug should have seen greater exposure? Well
+ARM became immune to this flaw back in 2010, see commit c01778001a4f
+("ARM: 6379/1: Assume new page cache pages have dirty D-cache").
+
+My proposed fix moves the D-cache maintenance inside move_to_new_page to
+make it common for both cases.
+
+Link: http://lkml.kernel.org/r/20190315083502.11849-1-larper@axis.com
+Fixes: 97ee0524614 ("flush cache before installing new page at migraton")
+Signed-off-by: Lars Persson <larper@axis.com>
+Reviewed-by: Paul Burton <paul.burton@mips.com>
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_isolation.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/migrate.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -59,7 +59,8 @@ static int set_migratetype_isolate(struc
- 	 * FIXME: Now, memory hotplug doesn't call shrink_slab() by itself.
- 	 * We just check MOVABLE pages.
- 	 */
--	if (!has_unmovable_pages(zone, page, arg.pages_found, migratetype, flags))
-+	if (!has_unmovable_pages(zone, page, arg.pages_found, migratetype,
-+				 isol_flags))
- 		ret = 0;
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -248,10 +248,8 @@ static bool remove_migration_pte(struct
+ 				pte = swp_entry_to_pte(entry);
+ 			} else if (is_device_public_page(new)) {
+ 				pte = pte_mkdevmap(pte);
+-				flush_dcache_page(new);
+ 			}
+-		} else
+-			flush_dcache_page(new);
++		}
  
- 	/*
+ #ifdef CONFIG_HUGETLB_PAGE
+ 		if (PageHuge(new)) {
+@@ -995,6 +993,13 @@ static int move_to_new_page(struct page
+ 		 */
+ 		if (!PageMappingFlags(page))
+ 			page->mapping = NULL;
++
++		if (unlikely(is_zone_device_page(newpage))) {
++			if (is_device_public_page(newpage))
++				flush_dcache_page(newpage);
++		} else
++			flush_dcache_page(newpage);
++
+ 	}
+ out:
+ 	return rc;
 
 
