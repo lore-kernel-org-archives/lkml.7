@@ -2,107 +2,323 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13757C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF64C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D493620883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:22:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="i6oJsyOi"
+	by mail.kernel.org (Postfix) with ESMTP id 7B33B2133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:29:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554143369;
+	bh=PjR3wtlXn2O3FDBcXk+vDRVMVGXpRpmosV3trTeXAlw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LUrnBMeHQTjpf0fzJGL7ssnIMb645ac9/PzAWNy6qWmHxxhv3VR4PYjBYjcQYPsHU
+	 NKlNXLmpiG+5V2wxxd5bYo4yBSuaA3VDlKEuTxlpEGLgMgxk4ow7j8zOH8JC2Ab7AJ
+	 ULMqQ9xjl8Wz9m14GH6xeX0mm+oKXxyitF6bfzZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbfDASWk (ORCPT
+        id S1728864AbfDAS31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:22:40 -0400
-Received: from smtprelay.synopsys.com ([198.182.60.111]:60806 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728007AbfDASWj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:22:39 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        Mon, 1 Apr 2019 14:29:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728007AbfDAS31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 14:29:27 -0400
+Received: from localhost (unknown [77.138.135.184])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id 5477810C1B85;
-        Mon,  1 Apr 2019 11:22:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1554142959; bh=4CowC1Hdjl591QX/XesyJ4nl8xOerbBk0B2ONZVaw6E=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=i6oJsyOi9n/sxRivSiEHOiVJeEATmu5fKRN9CweuaSEcnzF+eU6SSWCwf2z2NQd2M
-         M2e5hPKTqZ3Gu/oCGEO8jJgg2Xk93j8x6ttKZEpqDySxxPdJy6j+vZMaqW7gvGRlkp
-         UqkMAZIDkn5okWgnVFGsSWljOmvDr/szixx2L17pHtsdvFqQOrh8oKwFrSsLBSYGrY
-         o0gu1uNM/vjGGo1WzPza4llA5wa7Ne+4HDJwFMZO3O+tDD2koYvCMi3SApPvGnrWeU
-         Qlz/R131E4QuvjxArq+BVpCuE7m66BDxn8BKJbDsh3pA9nzdlZIPCx8DdPe/ozM33c
-         O0nq1lUg7t5Xg==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 3128DA0090;
-        Mon,  1 Apr 2019 18:22:31 +0000 (UTC)
-Received: from US01WEMBX2.internal.synopsys.com ([fe80::e4b6:5520:9c0d:250b])
- by US01WXQAHTC1.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000;
- Mon, 1 Apr 2019 11:22:31 -0700
-From:   Vineet Gupta <vineet.gupta1@synopsys.com>
-To:     Andrey Abramov <st5pub@yandex.ru>,
-        David Laight <david.laight@aculab.com>,
-        "'gregkh@linuxfoundation.org'" <gregkh@linuxfoundation.org>
-CC:     George Spelvin <lkml@sdf.org>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
-        "dchinner@redhat.com" <dchinner@redhat.com>,
-        "dedekind1@gmail.com" <dedekind1@gmail.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "jlbec@evilplan.org" <jlbec@evilplan.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        "mark@fasheh.com" <mark@fasheh.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "naveen.n.rao@linux.vnet.ibm.com" <naveen.n.rao@linux.vnet.ibm.com>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "richard@nod.at" <richard@nod.at>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 5/5] Lib: sort.h: replace int size with size_t size in
- the swap function
-Thread-Topic: [PATCH 5/5] Lib: sort.h: replace int size with size_t size in
- the swap function
-Thread-Index: AQHU6JnBsi9jfaw2oEibJh5UEx7dnA==
-Date:   Mon, 1 Apr 2019 18:22:29 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA23075014643FA6C@US01WEMBX2.internal.synopsys.com>
-References: <18626931553963861@sas1-b3ec53dbc12b.qloud-c.yandex.net>
- <20467491553964233@myt4-c0b480c282c8.qloud-c.yandex.net>
- <20190330183826.GB21828@kroah.com> <201903302015.x2UKFnSL003850@sdf.org>
- <20434561554015618@myt1-cd60b8ae9bb9.qloud-c.yandex.net>
- <20190331105412.GA9393@kroah.com>
- <cd57af9a2c1e494cbc8631a0347831dc@AcuMS.aculab.com>
- <C2D7FE5348E1B147BCA15975FBA23075014643F9DF@US01WEMBX2.internal.synopsys.com>
- <440631554142479@myt6-23299ba78d64.qloud-c.yandex.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.144.199.106]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        by mail.kernel.org (Postfix) with ESMTPSA id C669320896;
+        Mon,  1 Apr 2019 18:29:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554143365;
+        bh=PjR3wtlXn2O3FDBcXk+vDRVMVGXpRpmosV3trTeXAlw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2HGZOX0nw/ZztmsdvB8xbY5zZ2QoVw/VM4ZCWfWtrRjuxWlmUP09k/MP2XxfN8CEK
+         4gUFGRtfmj3eNISyso0WRq4YRAOtnl9AzOcs0g6eWqpEHdc+Ihyv72pyNiK39YEzae
+         HKTZgMBn05H797s0lEEk/e0FfKYYolss9cd1Bl+g=
+Date:   Mon, 1 Apr 2019 21:29:23 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     syzbot <syzbot+2e3e485d5697ea610460@syzkaller.appspotmail.com>,
+        Matthew Wilcox <willy@infradead.org>, danielj@mellanox.com,
+        danitg@mellanox.com, dledford@redhat.com,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        parav@mellanox.com, swise@opengridcomputing.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING in cma_exit_net
+Message-ID: <20190401182923.GK3201@mtr-leonro.mtl.com>
+References: <0000000000008096f305857b74d1@google.com>
+ <20190401174554.GE6209@ziepe.ca>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="5cSRzy0VGBWAML+b"
+Content-Disposition: inline
+In-Reply-To: <20190401174554.GE6209@ziepe.ca>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/19 11:14 AM, Andrey Abramov wrote:=0A=
-> George Spelvin wrote "So how about *deleting* the parameter instead?=0A=
-> That simplifies everything.", and he is right,=0A=
-> so I am just going to completely remove it.=0A=
->=0A=
-> Any objections?=0A=
-=0A=
-LGTM.=0A=
+
+--5cSRzy0VGBWAML+b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Apr 01, 2019 at 02:45:54PM -0300, Jason Gunthorpe wrote:
+> On Mon, Apr 01, 2019 at 10:36:05AM -0700, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    e3ecb83e Add linux-next specific files for 20190401
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=13bc36cd200000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=db6c9f2bfeb91a99
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=2e3e485d5697ea610460
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+2e3e485d5697ea610460@syzkaller.appspotmail.com
+> >
+> > WARNING: CPU: 1 PID: 7 at drivers/infiniband/core/cma.c:4674
+> > cma_exit_net+0x327/0x390 drivers/infiniband/core/cma.c:4674
+> > Kernel panic - not syncing: panic_on_warn set ...
+>
+> Matt: This is why the WARN_ON(!xa_empty()) is so valuable. Magically
+> syzkaller can find something in this code is buggy.
+>
+> Mellanox is also showing a different testing failure over the weekend
+> (use after free or something) from your 'cma: Convert portspace IDRs
+> to XArray'
+
+This is what I see in my environment.
+
+[   72.725596]
+==================================================================
+[   72.726017] BUG: KASAN: use-after-free in cma_check_port+0x86a/0xa20 [rdma_cm]
+[   72.726263] Read of size 8 at addr ffff888069fde998 by task ucmatose/387
+[   72.726460]
+[   72.726550] CPU: 3 PID: 387 Comm: ucmatose Not tainted 5.1.0-rc2+ #253
+[   72.726751] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
+rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+[   72.727119] Call Trace:
+[   72.727210]  dump_stack+0x7c/0xc0
+[   72.727342]  print_address_description+0x6c/0x23c
+[   72.727505]  ? cma_check_port+0x86a/0xa20 [rdma_cm]
+[   72.727666]  kasan_report.cold.3+0x1c/0x35
+[   72.727805]  ? cma_check_port+0x86a/0xa20 [rdma_cm]
+[   72.727977]  ? cma_check_port+0x86a/0xa20 [rdma_cm]
+[   72.728138]  cma_check_port+0x86a/0xa20 [rdma_cm]
+[   72.728306]  rdma_bind_addr+0x11bc/0x1b00 [rdma_cm]
+[   72.728465]  ? find_held_lock+0x33/0x1c0
+[   72.728597]  ? cma_ndev_work_handler+0x180/0x180 [rdma_cm]
+[   72.728756]  ? wait_for_completion+0x3d0/0x3d0
+[   72.728928]  ucma_bind+0x120/0x160 [rdma_ucm]
+[   72.729089]  ? ucma_resolve_addr+0x1a0/0x1a0 [rdma_ucm]
+[   72.729256]  ucma_write+0x1f8/0x2b0 [rdma_ucm]
+[   72.729409]  ? ucma_open+0x260/0x260 [rdma_ucm]
+[   72.729571]  vfs_write+0x157/0x460
+[   72.729688]  ksys_write+0xb8/0x170
+[   72.729828]  ? __ia32_sys_read+0xb0/0xb0
+[   72.729954]  ? trace_hardirqs_off_caller+0x5b/0x160
+[   72.730107]  ? do_syscall_64+0x18/0x3c0
+[   72.730243]  do_syscall_64+0x95/0x3c0
+[   72.730363]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   72.730508] RIP: 0033:0x7f6f1758fff8
+[   72.730624] Code: 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00
+00 f3 0f 1e fa 48 8d 05 25 77 0d 00 8b 00 85 c0 75 17 b8 01 00 00 00 0f
+05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 41 54 49 89 d4
+ 55
+ [   72.731146] RSP: 002b:00007fff99f99088 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+ [   72.731365] RAX: ffffffffffffffda RBX: 00007fff99f99090 RCX: 00007f6f1758fff8
+ [   72.731579] RDX: 0000000000000090 RSI: 00007fff99f99090 RDI: 0000000000000003
+ [   72.731814] RBP: 0000564942bd8ec0 R08: 0000564942bd9180 R09: 0000000000000000
+ [   72.732043] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+ [   72.732262] R13: 0000000000000001 R14: 0000000000000000 R15: 00005649413cc470
+ [   72.732494]
+ [   72.732572] Allocated by task 381:
+ [   72.732692]  __kasan_kmalloc.constprop.5+0xc1/0xd0
+ [   72.732857]  cma_alloc_port+0x4d/0x160 [rdma_cm]
+ [   72.733006]  rdma_bind_addr+0x14e7/0x1b00 [rdma_cm]
+ [   72.733153]  ucma_bind+0x120/0x160 [rdma_ucm]
+ [   72.733299]  ucma_write+0x1f8/0x2b0 [rdma_ucm]
+ [   72.733452]  vfs_write+0x157/0x460
+ [   72.733569]  ksys_write+0xb8/0x170
+ [   72.733675]  do_syscall_64+0x95/0x3c0
+ [   72.733800]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+ [   72.733956]
+ [   72.734029] Freed by task 381:
+ [   72.734133]  __kasan_slab_free+0x12e/0x180
+ [   72.734284]  kfree+0xed/0x290
+ [   72.734399]  rdma_destroy_id+0x6b6/0x9e0 [rdma_cm]
+ [   72.734559]  ucma_close+0x110/0x300 [rdma_ucm]
+ [   72.734701]  __fput+0x25a/0x740
+ [   72.734832]  task_work_run+0x10e/0x190
+ [   72.734959]  do_exit+0x85e/0x29e0
+ [   72.735071]  do_group_exit+0xf0/0x2e0
+ [   72.735182]  get_signal+0x2e0/0x17e0
+ [   72.735304]  do_signal+0x94/0x1570
+ [   72.735424]  exit_to_usermode_loop+0xfa/0x130
+ [   72.735612]  do_syscall_64+0x327/0x3c0
+ [   72.735756]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+ [   72.735941]
+ [   72.736033] The buggy address belongs to the object at ffff888069fde990
+ [   72.736033]  which belongs to the cache kmalloc-32 of size 32
+ [   72.736414] The buggy address is located 8 bytes inside of
+ [   72.736414]  32-byte region [ffff888069fde990, ffff888069fde9b0)
+ [   72.736777] The buggy address belongs to the page:
+ [   72.736940] page:ffffea0001a7f780 count:1 mapcount:0 mapping:ffff88806bc03980 index:0x0
+ [   72.737171] flags: 0x4000000000000200(slab)
+ [   72.737295] raw: 4000000000000200 dead000000000100 dead000000000200 ffff88806bc03980
+ [   72.737525] raw: 0000000000000000 0000000000550055 00000001ffffffff 0000000000000000
+ [   72.737786] page dumped because: kasan: bad access detected
+ [   72.737948]
+ [   72.738019] Memory state around the buggy address:
+ [   72.738164]  ffff888069fde880: fb fb fc fc fb fb fb fb fc fc fb fb  fb fb fc fc
+ [   72.738396]  ffff888069fde900: fb fb fb fb fc fc fb fb fb fb fc fc  fb fb fb fb
+ [   72.738627] >ffff888069fde980: fc fc fb fb fb fb fc fc fb fb fb fb  fc fc fb fb
+ [   72.738869]                             ^
+ [   72.738999]  ffff888069fdea00: fb fb fc fc fb fb fb fb fc fc fb fb  fb fb fc fc
+ [   72.739213]  ffff888069fdea80: fb fb fb fb fc fc fb fb fb fb fc fc fb fb fb fb
+ [   72.739431]
+ ==================================================================
+ [   72.739667] Disabling lock debugging due to kernel taint
+
+
+
+
+>
+> If you seem something obvious wrong in that patch please speak
+> up.. Below is what I applied.
+>
+> Thanks,
+> Jason
+>
+> diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+> index 68c997be242930..a8b9c66c85252b 100644
+> --- a/drivers/infiniband/core/cma.c
+> +++ b/drivers/infiniband/core/cma.c
+> @@ -39,7 +39,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/random.h>
+>  #include <linux/igmp.h>
+> -#include <linux/idr.h>
+> +#include <linux/xarray.h>
+>  #include <linux/inetdevice.h>
+>  #include <linux/slab.h>
+>  #include <linux/module.h>
+> @@ -191,10 +191,10 @@ static struct workqueue_struct *cma_wq;
+>  static unsigned int cma_pernet_id;
+>
+>  struct cma_pernet {
+> -	struct idr tcp_ps;
+> -	struct idr udp_ps;
+> -	struct idr ipoib_ps;
+> -	struct idr ib_ps;
+> +	struct xarray tcp_ps;
+> +	struct xarray udp_ps;
+> +	struct xarray ipoib_ps;
+> +	struct xarray ib_ps;
+>  };
+>
+>  static struct cma_pernet *cma_pernet(struct net *net)
+> @@ -202,7 +202,8 @@ static struct cma_pernet *cma_pernet(struct net *net)
+>  	return net_generic(net, cma_pernet_id);
+>  }
+>
+> -static struct idr *cma_pernet_idr(struct net *net, enum rdma_ucm_port_space ps)
+> +static
+> +struct xarray *cma_pernet_xa(struct net *net, enum rdma_ucm_port_space ps)
+>  {
+>  	struct cma_pernet *pernet = cma_pernet(net);
+>
+> @@ -247,25 +248,25 @@ struct class_port_info_context {
+>  static int cma_ps_alloc(struct net *net, enum rdma_ucm_port_space ps,
+>  			struct rdma_bind_list *bind_list, int snum)
+>  {
+> -	struct idr *idr = cma_pernet_idr(net, ps);
+> +	struct xarray *xa = cma_pernet_xa(net, ps);
+>
+> -	return idr_alloc(idr, bind_list, snum, snum + 1, GFP_KERNEL);
+> +	return xa_insert(xa, snum, bind_list, GFP_KERNEL);
+>  }
+>
+>  static struct rdma_bind_list *cma_ps_find(struct net *net,
+>  					  enum rdma_ucm_port_space ps, int snum)
+>  {
+> -	struct idr *idr = cma_pernet_idr(net, ps);
+> +	struct xarray *xa = cma_pernet_xa(net, ps);
+>
+> -	return idr_find(idr, snum);
+> +	return xa_load(xa, snum);
+>  }
+>
+>  static void cma_ps_remove(struct net *net, enum rdma_ucm_port_space ps,
+>  			  int snum)
+>  {
+> -	struct idr *idr = cma_pernet_idr(net, ps);
+> +	struct xarray *xa = cma_pernet_xa(net, ps);
+>
+> -	idr_remove(idr, snum);
+> +	xa_erase(xa, snum);
+>  }
+>
+>  enum {
+> @@ -4655,10 +4656,10 @@ static int cma_init_net(struct net *net)
+>  {
+>  	struct cma_pernet *pernet = cma_pernet(net);
+>
+> -	idr_init(&pernet->tcp_ps);
+> -	idr_init(&pernet->udp_ps);
+> -	idr_init(&pernet->ipoib_ps);
+> -	idr_init(&pernet->ib_ps);
+> +	xa_init(&pernet->tcp_ps);
+> +	xa_init(&pernet->udp_ps);
+> +	xa_init(&pernet->ipoib_ps);
+> +	xa_init(&pernet->ib_ps);
+>
+>  	return 0;
+>  }
+> @@ -4667,10 +4668,10 @@ static void cma_exit_net(struct net *net)
+>  {
+>  	struct cma_pernet *pernet = cma_pernet(net);
+>
+> -	idr_destroy(&pernet->tcp_ps);
+> -	idr_destroy(&pernet->udp_ps);
+> -	idr_destroy(&pernet->ipoib_ps);
+> -	idr_destroy(&pernet->ib_ps);
+> +	WARN_ON(!xa_empty(&pernet->tcp_ps));
+> +	WARN_ON(!xa_empty(&pernet->udp_ps));
+> +	WARN_ON(!xa_empty(&pernet->ipoib_ps));
+> +	WARN_ON(!xa_empty(&pernet->ib_ps));
+>  }
+>
+>  static struct pernet_operations cma_pernet_operations = {
+>
+
+--5cSRzy0VGBWAML+b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJcoliDAAoJEORje4g2clin/roQAIL59bkz48T0sQK8KVHutFi7
+qt8jGpMHhigxP2Ujis+4F9fXYJihVwPZZLV/8BogCS6GtL2UJJZo3ww+c8AIjCcA
+LnMNtdtDQoVjeS0wdjqVhE8TigCxIzHq5akpTOvnKmc2Hlt/JdOrG14LSg7elbRJ
+5wW79AevJ3/VuSYpkreBOsqDOrW/vmU5uOS0sb8KS+Ln+9pZ0J6db1tJP5NVfghw
+B8e1dWmcqQ6Zkl9nGGwmnGUHfXmtIulL3yC7ZCx05oY0r9SMQd02CsLrlDea1h3F
+FPic91/Hg3F4tZAf8FHsykA0rE5Tr/akQTAEY9PfSF9Ghjefy4Qj0eBqojyuh6wd
+/5XVzsJMm3AQJ7L2jb2FTUJ5M2Hq0I+uRmDfo9fYQ3gRGdK2ZG2BJwUCFlFItDP5
+/3QnEmC2RV65wTepFt9UtrA4r5wl8czz67YF+0CE88lLE5tQqvu9SCpZT/MOgh84
+cXJnxIa3fRJK4CAeY9ya/z1rMaZ4hjHJANhvi/OVUGDQy314iCLGFOKct8t12/0L
+sppZeq0gNt2BZ/6k8Qgs8XSuvqdi2gC5u//hm2NeJvGliEO/1ozHJO7zv0p8u9nr
+mmr16idaF538jBaotADEkB1zqvnqJK8lgmtywM5vyPQLDd2uQK/oox4iNdqiFpcz
+06alg/h/D9wM/DZL9yR+
+=TmCW
+-----END PGP SIGNATURE-----
+
+--5cSRzy0VGBWAML+b--
