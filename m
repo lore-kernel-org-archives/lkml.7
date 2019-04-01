@@ -6,80 +6,64 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8566C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5A1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981E3208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D32213F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbfDAQIc (ORCPT
+        id S1728729AbfDAQIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 12:08:32 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:55227 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727403AbfDAQIc (ORCPT
+        Mon, 1 Apr 2019 12:08:35 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:37249 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726854AbfDAQId (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 12:08:32 -0400
+        Mon, 1 Apr 2019 12:08:33 -0400
 X-Originating-IP: 109.213.83.19
 Received: from localhost (alyon-652-1-60-19.w109-213.abo.wanadoo.fr [109.213.83.19])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 11CF0C000D;
-        Mon,  1 Apr 2019 16:08:29 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 0D98B240005;
+        Mon,  1 Apr 2019 16:08:30 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 02/12] rtc: pcf85063: convert to SPDX identifier
-Date:   Mon,  1 Apr 2019 18:08:06 +0200
-Message-Id: <20190401160816.17859-2-alexandre.belloni@bootlin.com>
+Subject: [PATCH 03/12] rtc: pcf85063: remove bogus i2c functionality check
+Date:   Mon,  1 Apr 2019 18:08:07 +0200
+Message-Id: <20190401160816.17859-3-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190401160816.17859-1-alexandre.belloni@bootlin.com>
 References: <20190401160816.17859-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use SPDX-License-Identifier instead of a verbose license text.
-
-The original text refers to version 2 so also update MODULE_LICENSE() to
-"GPL v2" instead of "GPL".
+Only smbus reads and write are done in the driver, plain i2c functionality
+is not required.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-pcf85063.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/rtc/rtc-pcf85063.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
-index 14a81fa916ca..95aae84f7dc3 100644
+index 95aae84f7dc3..c4cc0abe37cb 100644
 --- a/drivers/rtc/rtc-pcf85063.c
 +++ b/drivers/rtc/rtc-pcf85063.c
-@@ -1,15 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * An I2C driver for the PCF85063 RTC
-  * Copyright 2014 Rose Technology
-  *
-  * Author: Søren Andersen <san@rosetechnology.dk>
-  * Maintainers: http://www.nslu2-linux.org/
-- *
-- * based on the other drivers in this same directory.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
- #include <linux/i2c.h>
- #include <linux/bcd.h>
-@@ -255,4 +250,4 @@ module_i2c_driver(pcf85063_driver);
+@@ -209,9 +209,6 @@ static int pcf85063_probe(struct i2c_client *client)
  
- MODULE_AUTHOR("Søren Andersen <san@rosetechnology.dk>");
- MODULE_DESCRIPTION("PCF85063 RTC driver");
--MODULE_LICENSE("GPL");
-+MODULE_LICENSE("GPL v2");
+ 	dev_dbg(&client->dev, "%s\n", __func__);
+ 
+-	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
+-		return -ENODEV;
+-
+ 	err = i2c_smbus_read_byte_data(client, PCF85063_REG_CTRL1);
+ 	if (err < 0) {
+ 		dev_err(&client->dev, "RTC chip is not present\n");
 -- 
 2.20.1
 
