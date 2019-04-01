@@ -2,137 +2,155 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC86C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B504C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811732070D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:27:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EjgaTeME"
+	by mail.kernel.org (Postfix) with ESMTP id 373F72070D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfDAN1q (ORCPT
+        id S1727491AbfDAN2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 09:27:46 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58010 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbfDAN1p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 09:27:45 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x31DRhQG064665;
-        Mon, 1 Apr 2019 08:27:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554125263;
-        bh=48E4JXp1M9qjd+wRdCA8aF8TMqR18Fseo759ihfXIUc=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=EjgaTeMEAukGUL/We3a2AmuoNUX+v4V4vI+jgDm6YK+n5PUR8HM3jUqWfeoP2KYXM
-         m+W2oeOVr5aGCUsdjx4hY/Av1SKskWN38w6x9H4aFGJItW5N1I+AcnDhs9uxDmoqOC
-         92BN+lQeQgZACKSFhpNK/Mnxkq0y7Oz90Zsho2/k=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x31DRh9R103255
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 1 Apr 2019 08:27:43 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Apr
- 2019 08:27:43 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 1 Apr 2019 08:27:43 -0500
-Received: from [10.250.67.168] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x31DRh89038496;
-        Mon, 1 Apr 2019 08:27:43 -0500
-Subject: Re: [PATCH] dma-buf: Make mmap callback actually optional
-To:     Sumit Semwal <sumit.semwal@linaro.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>
-References: <20190329165201.16233-1-afd@ti.com>
- <20190401071346.GR2665@phenom.ffwll.local>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <5d206b28-a8fc-4a3e-a75b-c91106b1f232@ti.com>
-Date:   Mon, 1 Apr 2019 08:27:44 -0500
+        Mon, 1 Apr 2019 09:28:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60980 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727296AbfDAN2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 09:28:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 19F49AF1A;
+        Mon,  1 Apr 2019 13:28:15 +0000 (UTC)
+Subject: Re: [btrfs] 70d28b0e4f:
+ BUG:kernel_reboot-without-warning_in_early-boot_stage,last_printk:Probing_EDD(edd=off_to_disable)...ok
+To:     kernel test robot <rong.a.chen@intel.com>, Qu Wenruo <wqu@suse.com>
+Cc:     David Sterba <dsterba@suse.com>,
+        Yoon Jungyeon <jungyeon@gatech.edu>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@01.org
+References: <20190401132427.GC9217@shao2-debian>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f3cef716-a1e3-2e84-0133-9a9c3fad2a74@suse.com>
+Date:   Mon, 1 Apr 2019 16:28:12 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190401071346.GR2665@phenom.ffwll.local>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190401132427.GC9217@shao2-debian>
+Content-Type: text/plain; charset=UTF-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/19 2:13 AM, Daniel Vetter wrote:
-> On Fri, Mar 29, 2019 at 11:52:01AM -0500, Andrew F. Davis wrote:
->> The docs state the callback is optional but it is not, make it optional.
->>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> 
-> There's a bunch of dummy mmap implementations we could remove with this,
-> would be nice to follow up.
-> 
-
-Was cleaning up some dummy kmap implementations when I found that many
-had dummy mmap also, so plan was if this goes in I'll be able to zap
-them both in one go. That or actually add valid kmap where appropriate.
-Either way will be following up.
-
-Andrew
-
-> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> 
->> ---
->>  drivers/dma-buf/dma-buf.c | 11 +++++++++--
->>  1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
->> index 7c858020d14b..4d4ae9fe9ac8 100644
->> --- a/drivers/dma-buf/dma-buf.c
->> +++ b/drivers/dma-buf/dma-buf.c
->> @@ -90,6 +90,10 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
->>  
->>  	dmabuf = file->private_data;
->>  
->> +	/* check if buffer supports mmap */
->> +	if (!dmabuf->ops->mmap)
->> +		return -EINVAL;
->> +
->>  	/* check for overflowing the buffer's size */
->>  	if (vma->vm_pgoff + vma_pages(vma) >
->>  	    dmabuf->size >> PAGE_SHIFT)
->> @@ -404,8 +408,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
->>  			  || !exp_info->ops
->>  			  || !exp_info->ops->map_dma_buf
->>  			  || !exp_info->ops->unmap_dma_buf
->> -			  || !exp_info->ops->release
->> -			  || !exp_info->ops->mmap)) {
->> +			  || !exp_info->ops->release)) {
->>  		return ERR_PTR(-EINVAL);
->>  	}
->>  
->> @@ -906,6 +909,10 @@ int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
->>  	if (WARN_ON(!dmabuf || !vma))
->>  		return -EINVAL;
->>  
->> +	/* check if buffer supports mmap */
->> +	if (!dmabuf->ops->mmap)
->> +		return -EINVAL;
->> +
->>  	/* check for offset overflow */
->>  	if (pgoff + vma_pages(vma) < pgoff)
->>  		return -EOVERFLOW;
->> -- 
->> 2.21.0
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
+DQoNCk9uIDEuMDQuMTkg0LMuIDE2OjI0INGHLiwga2VybmVsIHRlc3Qgcm9ib3Qgd3JvdGU6
+DQo+IEZZSSwgd2Ugbm90aWNlZCB0aGUgZm9sbG93aW5nIGNvbW1pdCAoYnVpbHQgd2l0aCBn
+Y2MtNyk6DQo+IA0KPiBjb21taXQ6IDcwZDI4YjBlNGY4ZWQyZDM4NTcxZTdiMWY5YmVjN2Yz
+MjFhNTMxMDIgKCJidHJmczogdHJlZS1jaGVja2VyOiBWZXJpZnkgZGV2IGl0ZW0iKQ0KPiBo
+dHRwczovL2dpdC5rZXJuZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dpdC9uZXh0L2xpbnV4
+LW5leHQuZ2l0IG1hc3Rlcg0KPiANCj4gaW4gdGVzdGNhc2U6IHRyaW5pdHkNCj4gd2l0aCBm
+b2xsb3dpbmcgcGFyYW1ldGVyczoNCj4gDQo+IAlydW50aW1lOiAzMDBzDQo+IA0KPiB0ZXN0
+LWRlc2NyaXB0aW9uOiBUcmluaXR5IGlzIGEgbGludXggc3lzdGVtIGNhbGwgZnV6eiB0ZXN0
+ZXIuDQo+IHRlc3QtdXJsOiBodHRwOi8vY29kZW1vbmtleS5vcmcudWsvcHJvamVjdHMvdHJp
+bml0eS8NCj4gDQo+IA0KPiBvbiB0ZXN0IG1hY2hpbmU6IHFlbXUtc3lzdGVtLXg4Nl82NCAt
+ZW5hYmxlLWt2bSAtY3B1IFNhbmR5QnJpZGdlIC1zbXAgMiAtbSAyRw0KPiANCj4gY2F1c2Vk
+IGJlbG93IGNoYW5nZXMgKHBsZWFzZSByZWZlciB0byBhdHRhY2hlZCBkbWVzZy9rbXNnIGZv
+ciBlbnRpcmUgbG9nL2JhY2t0cmFjZSk6DQo+IA0KPiANCj4gKy0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLSstLS0tLS0t
+LS0tLS0rDQo+IHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgMzZiOWQyYmM2OSB8IDcwZDI4YjBlNGYgfA0KPiArLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tKy0tLS0t
+LS0tLS0tLSsNCj4gfCBib290X3N1Y2Nlc3NlcyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfCAxNCAgICAgICAgIHwgMCAgICAgICAgICB8DQo+IHwgYm9vdF9mYWlsdXJl
+cyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMiAgICAgICAgICB8IDE0
+ICAgICAgICAgfA0KPiB8IElQLUNvbmZpZzpBdXRvLWNvbmZpZ3VyYXRpb25fb2ZfbmV0d29y
+a19mYWlsZWQgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8IDIgICAgICAgICAgfCAgICAgICAgICAgIHwNCj4gfCBCVUc6a2VybmVs
+X3JlYm9vdC13aXRob3V0LXdhcm5pbmdfaW5fZWFybHktYm9vdF9zdGFnZSxsYXN0X3ByaW50
+azpQcm9iaW5nX0VERChlZGQ9b2ZmX3RvX2Rpc2FibGUpLi4ub2sgfCAwICAgICAgICAgIHwg
+MTQgICAgICAgICB8DQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tKw0KPiANCj4gDQo+IA0K
+PiBlYXJseSBjb25zb2xlIGluIHNldHVwIGNvZGUNCj4gUHJvYmluZyBFREQgKGVkZD1vZmYg
+dG8gZGlzYWJsZSkuLi4gb2sNCj4gQlVHOiBrZXJuZWwgcmVib290LXdpdGhvdXQtd2Fybmlu
+ZyBpbiBlYXJseS1ib290IHN0YWdlLCBsYXN0IHByaW50azogUHJvYmluZyBFREQgKGVkZD1v
+ZmYgdG8gZGlzYWJsZSkuLi4gb2sNCj4gTGludXggdmVyc2lvbiA1LjAuMC1yYzgtMDAxOTYt
+ZzcwZDI4YjAgIzENCj4gQ29tbWFuZCBsaW5lOiBpcD06Ojo6dm0tc25iLXF1YW50YWwteDg2
+XzY0LTE0MTU6OmRoY3Agcm9vdD0vZGV2L3JhbTAgdXNlcj1sa3Agam9iPS9sa3Avam9icy9z
+Y2hlZHVsZWQvdm0tc25iLXF1YW50YWwteDg2XzY0LTE0MTUvdHJpbml0eS0zMDBzLXF1YW50
+YWwtY29yZS14ODZfNjQtMjAxOC0xMS0wOS5jZ3otNzBkMjhiMC0yMDE5MDMzMC0yOTM2Mi0x
+eTZnMHFiLTIueWFtbCBBUkNIPXg4Nl82NCBrY29uZmlnPXg4Nl82NC1yYW5kY29uZmlnLXM1
+LTAzMjMxOTI4IGJyYW5jaD1saW51eC1kZXZlbC9kZXZlbC1ob3VybHktMjAxOTAzMjMxNyBj
+b21taXQ9NzBkMjhiMGU0ZjhlZDJkMzg1NzFlN2IxZjliZWM3ZjMyMWE1MzEwMiBCT09UX0lN
+QUdFPS9wa2cvbGludXgveDg2XzY0LXJhbmRjb25maWctczUtMDMyMzE5MjgvZ2NjLTcvNzBk
+MjhiMGU0ZjhlZDJkMzg1NzFlN2IxZjliZWM3ZjMyMWE1MzEwMi92bWxpbnV6LTUuMC4wLXJj
+OC0wMDE5Ni1nNzBkMjhiMCBtYXhfdXB0aW1lPTE1MDAgUkVTVUxUX1JPT1Q9L3Jlc3VsdC90
+cmluaXR5LzMwMHMvdm0tc25iLXF1YW50YWwteDg2XzY0L3F1YW50YWwtY29yZS14ODZfNjQt
+MjAxOC0xMS0wOS5jZ3oveDg2XzY0LXJhbmRjb25maWctczUtMDMyMzE5MjgvZ2NjLTcvNzBk
+MjhiMGU0ZjhlZDJkMzg1NzFlN2IxZjliZWM3ZjMyMWE1MzEwMi84IExLUF9TRVJWRVI9aW5u
+IGRlYnVnIGFwaWM9ZGVidWcgc3lzcnFfYWx3YXlzX2VuYWJsZWQgcmN1cGRhdGUucmN1X2Nw
+dV9zdGFsbF90aW1lb3V0PTEwMCBuZXQuaWZuYW1lcz0wIHByaW50ay5kZXZrbXNnPW9uIHBh
+bmljPS0xIHNvZnRsb2NrdXBfcGFuaWM9MSBubWlfd2F0Y2hkb2c9cGFuaWMgb29wcz1wYW5p
+YyBsb2FkX3JhbWRpc2s9MiBwcm9tcHRfcmFtZGlzaz0wIGRyYmQubWlub3JfY291bnQ9OCBz
+eXN0ZW1kLmxvZ19sZXZlbD1lcnIgaWdub3JlX2xvZ2xldmVsIGNvbnNvbGU9dHR5MCBlYXJs
+eXByaW50az10dHlTMCwxMTUyMDAgY29uc29sZT10dHlTMCwxMTUyMDAgdmdhPW5vcm1hbCBy
+dyByY3VwZXJmLnNodXRkb3duPTANCj4gDQoNCkNhbiB0aGlzIHJlcG9ydCBiZSBtYWRlIHVz
+ZWZ1bCBieSBhY3R1YWxseSBpbmNsdWRpbmcgb3V0cHV0IGZyb20gc2VyaWFsDQpjb25zb2xl
+PyBGb3IgZXhhbXBsZSBwb3NzaWJsZSBidWctb25zIG9yIHdoYXRub3Q/IGRtZXNnLnh6IGp1
+c3QgY29udGFpbnMNCnFlbXUncyBjb21tYW5kIGxpbmUgKyBzb21lIG1ldGFkYXRhIGFib3V0
+IHRoZSB0ZXN0IGFuZCA6DQoNCiJCVUc6IGtlcm5lbCByZWJvb3Qtd2l0aG91dC13YXJuaW5n
+IGluIGVhcmx5LWJvb3Qgc3RhZ2UsIGxhc3QgcHJpbnRrOg0KUHJvYmluZyBFREQgKGVkZD1v
+ZmYgdG8gZGlzYWJsZSkuLi4gb2siDQoNCkF0IGxlYXN0IGEgc3RhY2sgdHJhY2Ugd291bGQg
+aGF2ZSBiZWVuIHVzZWZ1bC4NCg0KPHNuaXA+DQo=
