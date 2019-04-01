@@ -2,125 +2,163 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B053BC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3264C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB3120879
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4C52086C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:35:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Xl9Iyv9w"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Vv59NeIB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfDAF3S (ORCPT
+        id S1726558AbfDAFfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 01:29:18 -0400
-Received: from mail-eopbgr80044.outbound.protection.outlook.com ([40.107.8.44]:49320
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725771AbfDAF3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 01:29:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LoboX1Dj7qzCQVNU9UcOdTLOWtM+dUjYOHGjVBr3r8Q=;
- b=Xl9Iyv9waKIoIlCx+km7bzp/+VkMuhMnLT0xG++yMxYQWojuaUjEXL7D1Ifg4AoBvPgUztYMXRJ7Gnzx/vNf/Y8H4vUWH6CHEtAno0M/aTWlrApX52JxhqYJAuBA4fc7zdrPfr4fyDTQMiQ8/iQkXIt+8LlfEmiBb6Wq7+VR7y4=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3867.eurprd04.prod.outlook.com (52.134.65.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.19; Mon, 1 Apr 2019 05:29:13 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1750.017; Mon, 1 Apr 2019
- 05:29:13 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH] rtc: snvs: use devm_platform_ioremap_resource() to simplify
- code
-Thread-Topic: [PATCH] rtc: snvs: use devm_platform_ioremap_resource() to
- simplify code
-Thread-Index: AQHU6EvXUmyLyX8+gkyzEz/7Ulxs5g==
-Date:   Mon, 1 Apr 2019 05:29:13 +0000
-Message-ID: <1554096271-17921-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR02CA0140.apcprd02.prod.outlook.com
- (2603:1096:202:16::24) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a5f5852f-f7b1-440f-6418-08d6b662f955
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3867;
-x-ms-traffictypediagnostic: DB3PR0402MB3867:
-x-microsoft-antispam-prvs: <DB3PR0402MB386715770E266CE726A8D340F5550@DB3PR0402MB3867.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(396003)(39860400002)(136003)(366004)(199004)(189003)(81156014)(8936002)(6116002)(7736002)(6506007)(386003)(25786009)(102836004)(316002)(3846002)(52116002)(5660300002)(81166006)(26005)(186003)(68736007)(110136005)(97736004)(14444005)(2906002)(486006)(53936002)(106356001)(105586002)(8676002)(86362001)(2616005)(476003)(4326008)(50226002)(6436002)(305945005)(256004)(14454004)(99286004)(2501003)(71190400001)(71200400001)(6512007)(2201001)(66066001)(6486002)(36756003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3867;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fJfRv/98iWsUGGryLDKFUhVHehJ9XhzZflvrrKlUfx/jllwAjAbPkYqzks3k8cYMrSNz4Y+wWX+VIMFQOHr5bi+oVkz/drJZ65olCGV15Fr/mHUZ0a3h/LdYtjew15mhdy55HfGSgF5vCjRuWoYzyP9fTRDvPL1Mcn1yuOnKEjHijdxeSIXdfoqolH+Gdrgeuv064jamiOEbx3XLxtwncv+cnK1NcMJ0csawsMmCJNAb2A6o2s9cu658nX7UebDb2qg5EBMFuCV6CXiAz+m0vpxFzZUwZebV5d+U14c2KtreHNbutMTOJS+w0kJbO5pq6a3nfo5eoBIzH9tDuHIZcgfg+sEe0m4ujYOwAx4M7BU/deNCawyBR/g5pPuUTGiOt1bL60dFEfSIByc15AHlGTgcvUPA7Sm50qv9kfQnRJY=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 1 Apr 2019 01:35:02 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34128 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfDAFfC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 01:35:02 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r186so651547wmf.1
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 22:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dRAuIUGaFSr94uLgX3ADRQgsKDLwcK6arp5c8ahQ7tI=;
+        b=Vv59NeIBeEp83M0BZWfWvqmR8TEkMmChusc9f5XndlRn315QeUrMxgNi2zj1PRkb6M
+         SI4THy5zTGQ3L5tw1DTVNxIpcy36+EQQ8gL8bsKLaGOXcSBaGZXFanPV3ZwUNJ+sv+Bf
+         jNh67vUqRSk0rn3gPObBiyrJNXrDq4oYiL/pY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dRAuIUGaFSr94uLgX3ADRQgsKDLwcK6arp5c8ahQ7tI=;
+        b=Z8MW8Z998FePZcunO8UA8i0YMjZPlD9GkyzNsWWLOTi8jtxkX+KF3utZvY4/EbuwnY
+         jTmlt0zGngZwGCuYi+2AqQWBd5IQeCDaDAcmC7KMe6foP+GIpa2F3TxliN1XpxF6GG7N
+         ofBC2Pj9AnaLf0KdF8ktQCyfaoz7Y1Dg+F6APZUraHNySEXxoe7R2Duf1gkiNNVGu9vQ
+         C1aZLbsWVO//3g9/SE8YQAnZLsloQwm1RvuluyBBFkhmj622gZPeduGHLLS/byMrx3Bx
+         OsGjNL5cra5PlwEq2x88THgtFKOQ8v96gcKi1B/xGaP5WO2fdi1d9Ac/1rhSQ8UBpg/8
+         21Ww==
+X-Gm-Message-State: APjAAAVx0bu79FUVQSIovy7ViqBdJNBdxiD8iqr5l08Q0afoasEjLXQm
+        Oi0oO7BX90DqGwQudtpGcCP68PE6bmzwtqvlnm6cwQ==
+X-Google-Smtp-Source: APXvYqw4f7wZn7qVGFgSxyjPeUCcSfix6LKXp1qFUIoEKrzbLLyupFqbsq40Cj1S1fWQKwdDkhhrg89sFr4DoPcKuJw=
+X-Received: by 2002:a1c:4844:: with SMTP id v65mr11119819wma.139.1554096899482;
+ Sun, 31 Mar 2019 22:34:59 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5f5852f-f7b1-440f-6418-08d6b662f955
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 05:29:13.0230
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3867
+References: <1551415936-30174-1-git-send-email-srinath.mannam@broadcom.com>
+ <1551415936-30174-3-git-send-email-srinath.mannam@broadcom.com> <20190329173515.GA10367@e107981-ln.cambridge.arm.com>
+In-Reply-To: <20190329173515.GA10367@e107981-ln.cambridge.arm.com>
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+Date:   Mon, 1 Apr 2019 11:04:48 +0530
+Message-ID: <CABe79T7LwFLST0dwwswv8sdqHcn0T4ked5WtcNpM78XUDUN3Jw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] PCI: iproc: Add outbound configuration for 32-bit
+ I/O region
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abhishek Shah <abhishek.shah@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new helper devm_platform_ioremap_resource() which wraps the
-platform_get_resource() and devm_ioremap_resource() together, to
-simplify the code.
+Hi Lorenzo,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/rtc/rtc-snvs.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Please see my reply below,
 
-diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
-index ce73eab..e0edd594 100644
---- a/drivers/rtc/rtc-snvs.c
-+++ b/drivers/rtc/rtc-snvs.c
-@@ -272,7 +272,6 @@ static const struct regmap_config snvs_rtc_config =3D {
- static int snvs_rtc_probe(struct platform_device *pdev)
- {
- 	struct snvs_rtc_data *data;
--	struct resource *res;
- 	int ret;
- 	void __iomem *mmio;
-=20
-@@ -284,9 +283,8 @@ static int snvs_rtc_probe(struct platform_device *pdev)
-=20
- 	if (IS_ERR(data->regmap)) {
- 		dev_warn(&pdev->dev, "snvs rtc: you use old dts file, please update it\n=
-");
--		res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-=20
--		mmio =3D devm_ioremap_resource(&pdev->dev, res);
-+		mmio =3D devm_platform_ioremap_resource(pdev, 0);
- 		if (IS_ERR(mmio))
- 			return PTR_ERR(mmio);
-=20
---=20
-2.7.4
+On Fri, Mar 29, 2019 at 11:06 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Fri, Mar 01, 2019 at 10:22:16AM +0530, Srinath Mannam wrote:
+> > In the present driver outbound window configuration is done to map above
+> > 32-bit address I/O regions with corresponding PCI memory range given in
+> > ranges DT property.
+> >
+> > This patch add outbound window configuration to map below 32-bit I/O range
+> > with corresponding PCI memory, which helps to access I/O region in ARM
+> > 32-bit and one to one mapping of I/O region to PCI memory.
+> >
+> > Ex:
+> > 1. ranges DT property given for current driver is,
+> >     ranges = <0x83000000 0x0 0x40000000 0x4 0x00000000 0 0x40000000>;
+> >     I/O region address is 0x400000000
+> > 2. ranges DT property can be given after this patch,
+> >     ranges = <0x83000000 0x0 0x42000000 0x0 0x42000000 0 0x2000000>;
+> >     I/O region address is 0x42000000
+>
+> I was applying this patch but I don't understand the commit log and
+> how it matches the code, please explain it to me and I will reword
+> it.
+Iproc PCIe host controller supports outbound address translation
+feature to translate AXI address to PCI bus address.
+IO address ranges (AXI and PCI) given through ranges DT property have
+to program to controller outbound window registers.
+Present driver has the support for only 64bit AXI address. so that
+ranges DT property has given as 64bit AXI address and 32 bit
+PCI bus address.
+But with this patch 32-bit AXI address also could be programmed to
+Iproc host controller outbound window registers. so that ranges
+DT property can have 32bit AXI address which can map to 32-bit PCI bus address.
+Example given in commit log is describing ranges DT property changes
+with and without this patch.
+In the case, without this patch AXI address is more than 32bit
+"0x400000000". and with this patch AXI address is 32-bit "0x42000000".
+PCI bus address is 32 bit address in both the cases "0x40000000" and 0x42000000.
 
+Regards,
+Srinath.
+> Thanks,
+> Lorenzo
+>
+> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
+> > Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-iproc.c | 21 +++++++++++++++++++--
+> >  1 file changed, 19 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> > index b882255..080f142 100644
+> > --- a/drivers/pci/controller/pcie-iproc.c
+> > +++ b/drivers/pci/controller/pcie-iproc.c
+> > @@ -955,8 +955,25 @@ static int iproc_pcie_setup_ob(struct iproc_pcie *pcie, u64 axi_addr,
+> >                       resource_size_t window_size =
+> >                               ob_map->window_sizes[size_idx] * SZ_1M;
+> >
+> > -                     if (size < window_size)
+> > -                             continue;
+> > +                     /*
+> > +                      * Keep iterating until we reach the last window and
+> > +                      * with the minimal window size at index zero. In this
+> > +                      * case, we take a compromise by mapping it using the
+> > +                      * minimum window size that can be supported
+> > +                      */
+> > +                     if (size < window_size) {
+> > +                             if (size_idx > 0 || window_idx > 0)
+> > +                                     continue;
+> > +
+> > +                             /*
+> > +                              * For the corner case of reaching the minimal
+> > +                              * window size that can be supported on the
+> > +                              * last window
+> > +                              */
+> > +                             axi_addr = ALIGN_DOWN(axi_addr, window_size);
+> > +                             pci_addr = ALIGN_DOWN(pci_addr, window_size);
+> > +                             size = window_size;
+> > +                     }
+> >
+> >                       if (!IS_ALIGNED(axi_addr, window_size) ||
+> >                           !IS_ALIGNED(pci_addr, window_size)) {
+> > --
+> > 2.7.4
+> >
