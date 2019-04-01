@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EB8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3311AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0323B2171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038E02171F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139066;
-	bh=wC8IcihcJwZC3B+eiQbLdi748nEqFNhKG5VkAgvRRWI=;
+	s=default; t=1554139069;
+	bh=UM0x0+t2Jr7lj2A0kqd3wbVqhYQWYIP/anG/jcRP/bQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vy1xdaC3jjl3ASb1br5rMI6zoEh6Kzniy37WeX6+A2CuQ/xsM01W7fQDvVb9xc33s
-	 zfZeOmyOUkgMV39gjlkaBFEhEYj+xK6GS0TQEMwj1sDbDCubvBYlkfjdybkADwtzfH
-	 R9rbjniXIQtUCnXO6uOLAK/JZ+SZyAFyyDTLNbMw=
+	b=rJXUXX0o2NShJ+oqlrJiDrCkq38QuWiQSPL3SZEfDWvxxL4BBnZ2jqqEOpffyQ34d
+	 b7BUhjjgdE/2i12urFYBZA+l4BJh4xDSNgmqFA05V2JK4sIzs7PLVkujGP2nw4/Jjs
+	 hwEDp8/SquAL0nLpryfm+DP4P1R4FUubuAPp9Onk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731236AbfDARRo (ORCPT
+        id S1731246AbfDARRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:17:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44046 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:17:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730825AbfDARRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:17:41 -0400
+        id S1731222AbfDARRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:17:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E88C42171F;
-        Mon,  1 Apr 2019 17:17:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96DB52171F;
+        Mon,  1 Apr 2019 17:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139060;
-        bh=wC8IcihcJwZC3B+eiQbLdi748nEqFNhKG5VkAgvRRWI=;
+        s=default; t=1554139063;
+        bh=UM0x0+t2Jr7lj2A0kqd3wbVqhYQWYIP/anG/jcRP/bQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f0jwVD0duJYTfcXtwiOl+gUgeu2fKcLdyy5EouW9hpUoKkIRxa0PlNS2Wnlc0TVt5
-         YdXW8jACUx1uZDhZJHVDmEGd8cM7YYnhn2ljUAd4QywtjKSiBc5JtvNfrcLugCkxqo
-         749bRGot3ooNLNEDrirm9t87bI6/UTyC1aS4D0+A=
+        b=fz2pet1YcaiGMlNFPKMLjfyAl96TccZM9Bb/EgpQPVymvvGqz3WPBjqHCv1pR6O4S
+         Qj1B5PhJF9VaAp5YG/MicIOJWKz8ZOtJDLk7Ua9pOj5Tu4eDCJBREVZeRqNy9OJxsn
+         WE8jcCR4EdjjNylvDyc/g9bNUnZ5o8HYUupkL+GU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4.19 100/134] gpio: exar: add a check for the return value of ida_simple_get fails
-Date:   Mon,  1 Apr 2019 19:02:16 +0200
-Message-Id: <20190401170053.592098804@linuxfoundation.org>
+Subject: [PATCH 4.19 101/134] gpio: adnp: Fix testing wrong value in adnp_gpio_direction_input
+Date:   Mon,  1 Apr 2019 19:02:17 +0200
+Message-Id: <20190401170053.674073447@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -65,32 +66,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Axel Lin <axel.lin@ingics.com>
 
-commit 7ecced0934e574b528a1ba6c237731e682216a74 upstream.
+commit c5bc6e526d3f217ed2cc3681d256dc4a2af4cc2b upstream.
 
-ida_simple_get may fail and return a negative error number.
-The fix checks its return value; if it fails, go to err_destroy.
+Current code test wrong value so it does not verify if the written
+data is correctly read back. Fix it.
+Also make it return -EPERM if read value does not match written bit,
+just like it done for adnp_gpio_direction_output().
 
+Fixes: 5e969a401a01 ("gpio: Add Avionic Design N-bit GPIO expander support")
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Reviewed-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-exar.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpio/gpio-adnp.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/gpio/gpio-exar.c
-+++ b/drivers/gpio/gpio-exar.c
-@@ -148,6 +148,8 @@ static int gpio_exar_probe(struct platfo
- 	mutex_init(&exar_gpio->lock);
+--- a/drivers/gpio/gpio-adnp.c
++++ b/drivers/gpio/gpio-adnp.c
+@@ -132,8 +132,10 @@ static int adnp_gpio_direction_input(str
+ 	if (err < 0)
+ 		goto out;
  
- 	index = ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
-+	if (index < 0)
-+		goto err_destroy;
+-	if (err & BIT(pos))
+-		err = -EACCES;
++	if (value & BIT(pos)) {
++		err = -EPERM;
++		goto out;
++	}
  
- 	sprintf(exar_gpio->name, "exar_gpio%d", index);
- 	exar_gpio->gpio_chip.label = exar_gpio->name;
+ 	err = 0;
+ 
 
 
