@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93884C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E252C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615B620872
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3487520872
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:24:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cfs4cUC5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S5TVLLba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731736AbfDACYj (ORCPT
+        id S1731760AbfDACYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 22:24:39 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45790 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731629AbfDACYd (ORCPT
+        Sun, 31 Mar 2019 22:24:42 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43634 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731631AbfDACYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 22:24:33 -0400
-Received: by mail-pf1-f194.google.com with SMTP id e24so3734532pfi.12
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 19:24:32 -0700 (PDT)
+        Sun, 31 Mar 2019 22:24:35 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z9so3927353pgu.10
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 19:24:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Dp+KAOig4MbV+uJnwASkViJP+U3MnsD8F6PLsh9jNDk=;
-        b=Cfs4cUC57AzT6qfOgV5uyJwIhzXkHn1HpUJZ2oYsCNL0IxnDJ5CcvarcEQLoHG0iZ9
-         fxzocSPX+87tFRwgXIbL4f2LSPHXnsFBb8DDm9qgm+G8pGMAq8+fN47CwSlCp44SWObT
-         aeHpjhUTC0IL5TucCvDhJ5gNi9OfxMHQYjzJEMOq02BFIvmXzAYNgCv4Ynlpgy6SgHit
-         bT0wn/eBz03l8DOEBcMBsQbATVW/jeY8r2WTi6oSBhXc8D4Bf5HmNG+HtNX5hCd5yCqx
-         5xcKgvN4g/dE3ZpxT69ewdtE7JhgopVte9tgNDZzqg5cja9bMuO+Wu7qxO7C1pNWhq8U
-         6p1w==
+        bh=SmQOOVvgLMWbSWgCt0M5k9ym33hTKyNZA4aTEsfiuGk=;
+        b=S5TVLLbarES8x9Xs5O+xjJrF/ZNFZ+2+ONcZYDpt6NnCRDX5Eqi41K0w2cwUnsPBdn
+         fkm4+yh2OkhmQ490+mU786ao7oe9QSrSzxcO5BTsWNTfBY6FL9XoJth0C8GNDaJ/NU8K
+         poU1RvJRi1zAUxMirxVF72l3hLDQYSbJimTG00PokvJ+cw/Dxgg3NRu0OQ7SnlpQDsY6
+         Cyipt0SvlqZKfo3mlo8I9oWKT9fEp5i2K2J9MMhStDIsJ/SKZh0SccIQvh46ORTnyOjN
+         29H4XZ2eqv2itBBBtQgBAX4H6eirnhxrOoTXWP8piY0X75BN8F//Evpp0ehKI2TIm0jM
+         LA7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Dp+KAOig4MbV+uJnwASkViJP+U3MnsD8F6PLsh9jNDk=;
-        b=VXVauOFrstrjqQxktF2A9SpUrV6eU1JZiscsGQQ5xvAGbzgSLljj5rXtsqQlL2gb+0
-         G/gDK1tT4Tw70zuoMCK6PLpZWMXO+4E8ddBR5GdZlYpFHZz+Bsy3QBhDGC9087ndMWd0
-         w8h3GNjQ2IY15WqJMNe0LsOqbCcG1TPnpv0ulHmjnSvHx6V8SxmUmfyEhk9p4I4RC79h
-         tsbpp7i6qaxYczTDp9VeQPUxSDbly5VuOsYi8jgqH3zoXVujWlqBaturQrHpxZ/2V0Sj
-         fqu2yU2TjOTHDZvTd7V1ksMlMNVjmNG6aLMpilHyG6In7XYhERVH978izTu1Q8mvr2/V
-         WWhg==
-X-Gm-Message-State: APjAAAU6bJ4IiRoXbkGYf1sjBqOQqdGkmhxV8dtNqwt8H9ByZ6MgHSRz
-        fSVkfzx4XsEwyUn3WFgpZZY=
-X-Google-Smtp-Source: APXvYqx/gJOTqXTew+v5QYd4wK3uMpnMTTNnjlDP9Tjx5sIrztjRYlPDjTBGwI9HS3ygaFEz/G6ikw==
-X-Received: by 2002:a63:945:: with SMTP id 66mr25690827pgj.128.1554085472375;
-        Sun, 31 Mar 2019 19:24:32 -0700 (PDT)
+        bh=SmQOOVvgLMWbSWgCt0M5k9ym33hTKyNZA4aTEsfiuGk=;
+        b=bBgu2E8G+gcCNY+WSIFiqo8hCUs0o6Iy9ikdJwyJ69Ds9eHGitjJl+cFjbHiDsfbKw
+         jFxozAcruvol4oFN7P15WP1NyhsVcPTNmt4PN86YoZ207FJB1qfXTRFXlzoZDTUDu40L
+         MgwX/iQ/A/swc6yYwEp6Qfdb+7It6pMMY2mq77iwDL0IQyGwt0+Be+ciNj64zv8gG2BA
+         8CJgyaRsNl06+2aIULPA9L7p6+t6IZhV9jFk7ZnqWaDJBmX92SEJ7qHDAVwwx15GsNpJ
+         Wtj6GOCibKL+0dFtx6j23gFchzJGWfUnNAuCuQeC8W8jbwAFu0HkRppMj69xh4xW1Aan
+         gskA==
+X-Gm-Message-State: APjAAAXZa1iovfJ7hNdH/8Y7Qb23X+tvLtmuvuBnXu7crY6E/WK7VERA
+        1F76B5w1YCztPvc8B7uCv/0=
+X-Google-Smtp-Source: APXvYqxx7EvXn1mJoxxIFB4tcO8ISP1u9FAoMJKihielcs4Du6Hdjkz9Etx7UqrxWZ3PIuU/q5y6qg==
+X-Received: by 2002:a63:7e10:: with SMTP id z16mr5076727pgc.40.1554085474037;
+        Sun, 31 Mar 2019 19:24:34 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id n82sm13597289pfi.63.2019.03.31.19.24.30
+        by smtp.gmail.com with ESMTPSA id n82sm13597289pfi.63.2019.03.31.19.24.32
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 31 Mar 2019 19:24:31 -0700 (PDT)
+        Sun, 31 Mar 2019 19:24:33 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     Shawn Guo <shawnguo@kernel.org>
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -67,9 +67,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         "A.s. Dong" <aisheng.dong@nxp.com>,
         Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/5] arm64: dts: imx8mq: Combine PCIE power domains
-Date:   Sun, 31 Mar 2019 19:24:11 -0700
-Message-Id: <20190401022413.6682-4-andrew.smirnov@gmail.com>
+Subject: [PATCH v4 4/5] arm64: dts: imx8mq: Add nodes for PCIe IP blocks
+Date:   Sun, 31 Mar 2019 19:24:12 -0700
+Message-Id: <20190401022413.6682-5-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190401022413.6682-1-andrew.smirnov@gmail.com>
 References: <20190401022413.6682-1-andrew.smirnov@gmail.com>
@@ -80,11 +80,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to NXP's FAE feedback and a comment in ATF firmware, PCIE1
-and PCIE2 power domains can't really be used independently. Due to
-shared reset line both power domains have to be turned on at the same
-time. Account for that quirk by combining PCIE power domains into a
-single 'pgc_pcie' power domain.
+Add nodes for two PCIe controllers found on i.MX8MQ.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
@@ -99,40 +95,88 @@ Cc: linux-imx@nxp.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 61 +++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 656f7cb97703..d7b564501fa4 100644
+index d7b564501fa4..7c3ee8657f26 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -472,9 +472,25 @@
- 						reg = <IMX8M_POWER_DOMAIN_MIPI>;
- 					};
+@@ -6,6 +6,7 @@
  
--					pgc_pcie1: power-domain@1 {
-+					/*
-+					 * As per comment in ATF source code:
-+					 *
-+					 * PCIE1 and PCIE2 share the
-+					 * same reset signal, if we
-+					 * power down PCIE2, PCIE1
-+					 * will be held in reset too.
-+					 *
-+					 * So instead of creating two
-+					 * separate power domains for
-+					 * PCIE1 and PCIE2 we create a
-+					 * link between both and use
-+					 * it as a shared PCIE power
-+					 * domain.
-+					 */
-+					pgc_pcie: power-domain@1 {
- 						#power-domain-cells = <0>;
- 						reg = <IMX8M_POWER_DOMAIN_PCIE1>;
-+						power-domains = <&pgc_pcie2>;
- 					};
+ #include <dt-bindings/clock/imx8mq-clock.h>
+ #include <dt-bindings/power/imx8mq-power.h>
++#include <dt-bindings/reset/imx8mq-reset.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/thermal/thermal.h>
+@@ -878,6 +879,66 @@
+ 			status = "disabled";
+ 		};
  
- 					pgc_otg1: power-domain@2 {
++
++		pcie0: pcie@33800000 {
++			compatible = "fsl,imx8mq-pcie";
++			reg = <0x33800000 0x400000>,
++			      <0x1ff00000 0x80000>;
++			reg-names = "dbi", "config";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			device_type = "pci";
++			bus-range = <0x00 0xff>;
++			ranges = <0x81000000 0 0x00000000 0x1ff80000 0 0x00010000 /* downstream I/O 64KB */
++			          0x82000000 0 0x18000000 0x18000000 0 0x07f00000>; /* non-prefetchable memory */
++			num-lanes = <1>;
++			num-viewport = <4>;
++			interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &gic GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++			                <0 0 0 2 &gic GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
++			                <0 0 0 3 &gic GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++			                <0 0 0 4 &gic GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++			fsl,max-link-speed = <2>;
++			power-domains = <&pgc_pcie>;
++			resets = <&src IMX8MQ_RESET_PCIEPHY>,
++			         <&src IMX8MQ_RESET_PCIE_CTRL_APPS_EN>,
++			         <&src IMX8MQ_RESET_PCIE_CTRL_APPS_TURNOFF>;
++			reset-names = "pciephy", "apps", "turnoff";
++			status = "disabled";
++		};
++
++		pcie1: pcie@33c00000 {
++			compatible = "fsl,imx8mq-pcie";
++			reg = <0x33c00000 0x400000>,
++			      <0x27f00000 0x80000>;
++			reg-names = "dbi", "config";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			device_type = "pci";
++			ranges =  <0x81000000 0 0x00000000 0x27f80000 0 0x00010000 /* downstream I/O 64KB */
++				   0x82000000 0 0x20000000 0x20000000 0 0x07f00000>; /* non-prefetchable memory */
++			num-lanes = <1>;
++			num-viewport = <4>;
++			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &gic GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 2 &gic GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 3 &gic GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 4 &gic GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
++			fsl,max-link-speed = <2>;
++			power-domains = <&pgc_pcie>;
++			resets = <&src IMX8MQ_RESET_PCIEPHY2>,
++			         <&src IMX8MQ_RESET_PCIE2_CTRL_APPS_EN>,
++			         <&src IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF>;
++			reset-names = "pciephy", "apps", "turnoff";
++			status = "disabled";
++		};
++
+ 		gic: interrupt-controller@38800000 {
+ 			compatible = "arm,gic-v3";
+ 			reg = <0x38800000 0x10000>,	/* GIC Dist */
 -- 
 2.20.1
 
