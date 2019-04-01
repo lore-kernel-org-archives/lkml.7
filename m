@@ -2,138 +2,198 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7EDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E80C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818B9208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:13:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EhmbDfHD"
+	by mail.kernel.org (Postfix) with ESMTP id 763842133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfDAPNN (ORCPT
+        id S1728410AbfDAPNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 11:13:13 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:34635 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfDAPNN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 11:13:13 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190401151311euoutp01c6894502e74590c2b50fd05bb9c36040~RYnK0HGgL2193121931euoutp01e
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2019 15:13:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190401151311euoutp01c6894502e74590c2b50fd05bb9c36040~RYnK0HGgL2193121931euoutp01e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1554131591;
-        bh=vLjTj7IfmtAikEV5INg7kQMt4IZUPmPXDriZXui4ahg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=EhmbDfHDO1xhJrI7KESvYX/JjuE/BLdghYphepiofS4PHjXcu1+nhZjlRejakTwO/
-         yljXiDPxxG4NFfE2wP/NQ9EA9usAlJL9g9CESJIPqhv+wv69k4wFa1pcd4xLmiJ+p/
-         tqDB7lw9G3Ao767NR4RaoT91iE7/Cu9OUvOd58ig=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190401151310eucas1p2e2f044984e6c5f4130b053e3af140aa4~RYnKK5Fza0656606566eucas1p2a;
-        Mon,  1 Apr 2019 15:13:10 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 80.9A.04377.68A22AC5; Mon,  1
-        Apr 2019 16:13:10 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190401151309eucas1p17f6efc5a469cdadb76bad77a83e947b4~RYnJbHg_H1665416654eucas1p1f;
-        Mon,  1 Apr 2019 15:13:09 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190401151309eusmtrp260f2edc3b77c7cc58d86a7bc012cd5ac~RYnJNEZ_u3205632056eusmtrp2y;
-        Mon,  1 Apr 2019 15:13:09 +0000 (GMT)
-X-AuditID: cbfec7f4-113ff70000001119-6b-5ca22a8693d9
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id D4.E5.04140.58A22AC5; Mon,  1
-        Apr 2019 16:13:09 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190401151309eusmtip2d70b7f6a3ee702d0c30b77fc831b988c~RYnI2pSuD3126631266eusmtip2a;
-        Mon,  1 Apr 2019 15:13:09 +0000 (GMT)
-Subject: Re: [PATCH 0/8] fbdev: sm712fb: fix a series of lockups, crashes
- and gliches.
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Yifeng Li <tomli@tomli.me>
-Cc:     Teddy Wang <teddy.wang@siliconmotion.com>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <e381bda9-e681-5ded-1c2e-f045ad689674@samsung.com>
-Date:   Mon, 1 Apr 2019 17:13:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-        Thunderbird/45.3.0
+        Mon, 1 Apr 2019 11:13:31 -0400
+Received: from foss.arm.com ([217.140.101.70]:36350 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726617AbfDAPNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 11:13:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3653BA78;
+        Mon,  1 Apr 2019 08:13:30 -0700 (PDT)
+Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AAB813F690;
+        Mon,  1 Apr 2019 08:13:27 -0700 (PDT)
+Date:   Mon, 1 Apr 2019 16:13:24 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 6/7] PCI: qcom: Add QCS404 PCIe controller support
+Message-ID: <20190401151324.GB6234@e107981-ln.cambridge.arm.com>
+References: <20190219060407.15263-1-bjorn.andersson@linaro.org>
+ <20190219060407.15263-7-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190331121801.ftwwm4dw2iev3xzf@debian>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJKsWRmVeSWpSXmKPExsWy7djPc7ptWotiDNZu4bG48vU9m8WJvg+s
-        Fpd3zWGzOHB6CrPFmiV7GC2mzcxxYPPYOesuu8f97uNMHs/vP2XzmL27l9Xj8ya5ANYoLpuU
-        1JzMstQifbsEroy/u7+yFmxnq/h1iquBcTZrFyMnh4SAicT+893MXYxcHEICKxglbu7fyQjh
-        fGGUeLj8PRuE85lR4ufTxUAtHGAts/6LQMSXM0oc6bnHDuG8ZZSY8noHI0iRsECExO65cSAr
-        RAR8JP783coCUsMs0M0osW3yJjaQBJuAlcTE9lWMIDavgJ3EmZ1N7CA2i4CKxPEbz8GWiQLN
-        6T+jDlEiKHFy5hMWEJtTwFRi6slPTCA2s4CBxJFFc1ghbHmJ7W/ngL0jITCPXWLO/onMEH+6
-        SHReXghlC0u8Or6FHcKWkfi/cz4TRMM6Rom/HS+gurczSiyf/I8Nospa4vDxi9AQc5To7p3L
-        DgkKPokbbwUhNvNJTNo2nRkizCvR0SYEUa0msWHZBjaYXV07V0Ld4CHx6udKpgmMirOQ/DYL
-        yT+zkPyzgJF5FaN4amlxbnpqsVFearlecWJucWleul5yfu4mRmCCOf3v+JcdjLv+JB1iFOBg
-        VOLh5RBfFCPEmlhWXJl7iFGCg1lJhPdM/4IYId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzVDA+i
-        hQTSE0tSs1NTC1KLYLJMHJxSDYzdExpud6QaxfEbpr1dc17osTnvKfFlti/miHtKLAvfNreq
-        /fQ1yaUntc6yt9QypP1v8FNo+R48p2PJmppFiYqeP7icG3req9/l/1/16l+TfHh4jUzhiUwV
-        /yZfXrO1mpXL06adf7R/DseJpAVbdmYfEJ3man3wyt+XD894/dmgGLvqXpvws1AlluKMREMt
-        5qLiRAAaX78SLAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsVy+t/xe7qtWotiDJ7+krS48vU9m8WJvg+s
-        Fpd3zWGzOHB6CrPFmiV7GC2mzcxxYPPYOesuu8f97uNMHs/vP2XzmL27l9Xj8ya5ANYoPZui
-        /NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYy/u7+yFmxn
-        q/h1iquBcTZrFyMHh4SAicSs/yJdjFwcQgJLGSW6l35mgYjLSBxfX9bFyAlkCkv8udbFBlHz
-        mlHiyr1VbCA1wgIRElcOSYLUiAj4SPz5u5UFomYTo8S3K5vAGpgFuhkl3u58ygZSxSZgJTGx
-        fRUjiM0rYCdxZmcTO4jNIqAicfzGc1YQWxRo6K2HHSwQNYISJ2c+AbM5BUwlpp78xARiMwvo
-        Sey4/osVwpaX2P52DvMERsFZSFpmISmbhaRsASPzKkaR1NLi3PTcYiO94sTc4tK8dL3k/NxN
-        jMCo2Xbs55YdjF3vgg8xCnAwKvHwRggtihFiTSwrrsw9xCjBwawkwnumf0GMEG9KYmVValF+
-        fFFpTmrxIUZToCcmMkuJJucDIzqvJN7Q1NDcwtLQ3Njc2MxCSZz3vEFllJBAemJJanZqakFq
-        EUwfEwenVANje4/H4snLqlfWCiSniCf9+LPrbtnUmQIXQmokmbiXah8OXF0wd+G8ogdOf8N+
-        Oz3qPDuDUzCWrUHz/9HzP2ft/Wskc+motaZ/1+MpM1OMmp3CJ2oyP75jc7bbw1NCSe72tEXl
-        DKuPB7yRrCyKvZd53apfyz161jY/J8U18d8meuS0tny95suhxFKckWioxVxUnAgAcFlkZrAC
-        AAA=
-X-CMS-MailID: 20190401151309eucas1p17f6efc5a469cdadb76bad77a83e947b4
-X-Msg-Generator: CA
-X-RootMTR: 20190331121809epcas3p382bda421f972cd516bb7010700bc8a3d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190331121809epcas3p382bda421f972cd516bb7010700bc8a3d
-References: <20190316222504.27170-1-tomli@tomli.me>
-        <CGME20190331121809epcas3p382bda421f972cd516bb7010700bc8a3d@epcas3p3.samsung.com>
-        <20190331121801.ftwwm4dw2iev3xzf@debian>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190219060407.15263-7-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 03/31/2019 02:18 PM, Sudip Mukherjee wrote:
-> On Sun, Mar 17, 2019 at 06:24:56AM +0800, Yifeng Li wrote:
->> Hi all,
->>
->> This patchset contains a series of important fixes to various problems,
->> including lockups, crashes, screen gliches, and missing video modes.
->> These patches are crucial to the correct operation to the hardware,
->> especially Lynx3DM+ (SM720). I have tested and verified them on x86.
->>
->> Please review and queue them for linux-stable.
+On Mon, Feb 18, 2019 at 10:04:06PM -0800, Bjorn Andersson wrote:
+> The QCS404 platform contains a PCIe controller of version 2.4.0 and a
+> Qualcomm PCIe2 PHY. The driver already supports version 2.4.0, for the
+> IPQ4019, but this support touches clocks and resets related to the PHY
+> as well, and there's no upstream driver for the PHY.
 > 
-> Thanks for the changes.
-> Verified the register changes from the datasheet and also tested the full
-> series (separate test for individual patches) with SM712 on little endian
-> for any regression.
+> On QCS404 we must initialize the PHY, so a separate PHY driver is
+> implemented to take care of this and the controller driver is updated to
+> not require the PHY related resources. This is done by relying on the
+> fact that operations in both the clock and reset framework are nops when
+> passed NULL, so we can isolate this change to only the get_resource
+> function.
+> 
+> For QCS404 we also need to enable the AHB (iface) clock, in order to
+> access the register space of the controller, but as this is not part of
+> the IPQ4019 DT binding this is only added for new users of the 2.4.0
+> controller.
+> 
+> Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 64 +++++++++++++++-----------
+>  1 file changed, 38 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index b4d8bcf6eb77..3724ab5de956 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -113,7 +113,7 @@ struct qcom_pcie_resources_2_3_2 {
+>  };
+>  
+>  struct qcom_pcie_resources_2_4_0 {
+> -	struct clk_bulk_data clks[3];
+> +	struct clk_bulk_data clks[4];
+>  	int num_clks;
+>  	struct reset_control *axi_m_reset;
+>  	struct reset_control *axi_s_reset;
+> @@ -637,13 +637,16 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+>  	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+>  	struct dw_pcie *pci = pcie->pci;
+>  	struct device *dev = pci->dev;
+> +	bool is_ipq = of_device_is_compatible(dev->of_node, "qcom,pcie-ipq4019");
 
-Patches #1-8 queued for v5.2, thanks.
+Just a question: other host controller drivers resorted to .data
+structures (ie struct of_device_id.data) to sort out per-SOC
+parameters I was wondering if you want to do the same, maybe
+not just yet but I noticed so I am asking.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Lorenzo
+
+>  	int ret;
+>  
+>  	res->clks[0].id = "aux";
+>  	res->clks[1].id = "master_bus";
+>  	res->clks[2].id = "slave_bus";
+> +	res->clks[3].id = "iface";
+>  
+> -	res->num_clks = 3;
+> +	/* qcom,pcie-ipq4019 is defined without "iface" */
+> +	res->num_clks = is_ipq ? 3 : 4;
+>  
+>  	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
+>  	if (ret < 0)
+> @@ -657,27 +660,33 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+>  	if (IS_ERR(res->axi_s_reset))
+>  		return PTR_ERR(res->axi_s_reset);
+>  
+> -	res->pipe_reset = devm_reset_control_get_exclusive(dev, "pipe");
+> -	if (IS_ERR(res->pipe_reset))
+> -		return PTR_ERR(res->pipe_reset);
+> -
+> -	res->axi_m_vmid_reset = devm_reset_control_get_exclusive(dev,
+> -								 "axi_m_vmid");
+> -	if (IS_ERR(res->axi_m_vmid_reset))
+> -		return PTR_ERR(res->axi_m_vmid_reset);
+> -
+> -	res->axi_s_xpu_reset = devm_reset_control_get_exclusive(dev,
+> -								"axi_s_xpu");
+> -	if (IS_ERR(res->axi_s_xpu_reset))
+> -		return PTR_ERR(res->axi_s_xpu_reset);
+> -
+> -	res->parf_reset = devm_reset_control_get_exclusive(dev, "parf");
+> -	if (IS_ERR(res->parf_reset))
+> -		return PTR_ERR(res->parf_reset);
+> -
+> -	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
+> -	if (IS_ERR(res->phy_reset))
+> -		return PTR_ERR(res->phy_reset);
+> +	if (is_ipq) {
+> +		/*
+> +		 * These resources relates to the PHY or are secure clocks, but
+> +		 * are controlled here for IPQ4019
+> +		 */
+> +		res->pipe_reset = devm_reset_control_get_exclusive(dev, "pipe");
+> +		if (IS_ERR(res->pipe_reset))
+> +			return PTR_ERR(res->pipe_reset);
+> +
+> +		res->axi_m_vmid_reset = devm_reset_control_get_exclusive(dev,
+> +									 "axi_m_vmid");
+> +		if (IS_ERR(res->axi_m_vmid_reset))
+> +			return PTR_ERR(res->axi_m_vmid_reset);
+> +
+> +		res->axi_s_xpu_reset = devm_reset_control_get_exclusive(dev,
+> +									"axi_s_xpu");
+> +		if (IS_ERR(res->axi_s_xpu_reset))
+> +			return PTR_ERR(res->axi_s_xpu_reset);
+> +
+> +		res->parf_reset = devm_reset_control_get_exclusive(dev, "parf");
+> +		if (IS_ERR(res->parf_reset))
+> +			return PTR_ERR(res->parf_reset);
+> +
+> +		res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
+> +		if (IS_ERR(res->phy_reset))
+> +			return PTR_ERR(res->phy_reset);
+> +	}
+>  
+>  	res->axi_m_sticky_reset = devm_reset_control_get_exclusive(dev,
+>  								   "axi_m_sticky");
+> @@ -697,9 +706,11 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+>  	if (IS_ERR(res->ahb_reset))
+>  		return PTR_ERR(res->ahb_reset);
+>  
+> -	res->phy_ahb_reset = devm_reset_control_get_exclusive(dev, "phy_ahb");
+> -	if (IS_ERR(res->phy_ahb_reset))
+> -		return PTR_ERR(res->phy_ahb_reset);
+> +	if (is_ipq) {
+> +		res->phy_ahb_reset = devm_reset_control_get_exclusive(dev, "phy_ahb");
+> +		if (IS_ERR(res->phy_ahb_reset))
+> +			return PTR_ERR(res->phy_ahb_reset);
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -1284,6 +1295,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-msm8996", .data = &ops_2_3_2 },
+>  	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
+>  	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_2_4_0 },
+> +	{ .compatible = "qcom,pcie-qcs404", .data = &ops_2_4_0 },
+>  	{ }
+>  };
+>  
+> -- 
+> 2.18.0
+> 
