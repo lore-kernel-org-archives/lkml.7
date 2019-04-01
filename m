@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B23C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DB4C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C8020830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B9BF20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139824;
-	bh=BRM0vHzAXwu6TbIYlpvLys6KhjT+03YGEl0QGcq5ogk=;
+	s=default; t=1554139827;
+	bh=BWjjC4zWRdvzKt76zuRuIpyET9A2mPjV75DpMQsUn3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WCG3xlFypKc1hUdlgr+Pr+Wl8ghVmfLmFr9ddYtzmr9qTT827vDWnytbSRzigzatE
-	 2awDNQFOg6dFPsBcqnLbR3Pp771zdMQgd1x6kpoP5EkxTL4VCcBojG0HDgBVJnMUi8
-	 Mdn19dFy3wT8d6cGub1OI+Gi/4kn1+Imk+CbTCIA=
+	b=2O06DV5YsyHVOB5btS/0xwGTNH+95mHtfj7HRe5Eoa8FuafkzyrnaBpnHWffOVzoe
+	 wp4eKW16PQvDlFXba6cngq9ddWefb94e5t99TFYzNNUysQA/by0sK0TBXNVJe4FUGS
+	 EtWFsGXfsVGSjxKCUeJjMT9IOBsdrMggeesBzQME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733081AbfDARaX (ORCPT
+        id S1733090AbfDARa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:30:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37254 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:30:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733069AbfDARaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:30:20 -0400
+        id S1732727AbfDARaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:30:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 082862146E;
-        Mon,  1 Apr 2019 17:30:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C08C2070B;
+        Mon,  1 Apr 2019 17:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139819;
-        bh=BRM0vHzAXwu6TbIYlpvLys6KhjT+03YGEl0QGcq5ogk=;
+        s=default; t=1554139822;
+        bh=BWjjC4zWRdvzKt76zuRuIpyET9A2mPjV75DpMQsUn3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OKw219nEIo4rEy7M+fk4uIozRIsSqZah50MUhDlGYVKL/O1mEVz22dS1xGDbuOPDj
-         aPUuLSAo4FFt1n95XcEQb0Jx0DgsaxqqllDISGhBi1LPy4vpuyJoFOf23vB50jO7sp
-         J4bt5jtbN1Vy9yWr6DzXtCCtbyj2j6wQAvxczG38=
+        b=IETYHxpz+NroYDxonG6jEX/AT9FN25EYXTudwU/28AsmbCsZmnmbr/PcuOXFZnmUd
+         TZEjzacE5hnIDluqKj2Jwp6h1UHsebFnPne147XhIjT49Z4qOn3wCxitmMecb4a+Gb
+         NiYSIUz7G9voaWufeXswT+2pZts/zEIdHt0k4gHM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Vasily Averin <vvs@virtuozzo.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.4 023/131] mm/rmap: replace BUG_ON(anon_vma->degree) with VM_WARN_ON
-Date:   Mon,  1 Apr 2019 19:01:33 +0200
-Message-Id: <20190401170053.954755814@linuxfoundation.org>
+Subject: [PATCH 4.4 024/131] extcon: usb-gpio: Dont miss event during suspend/resume
+Date:   Mon,  1 Apr 2019 19:01:34 +0200
+Message-Id: <20190401170054.044149101@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -70,37 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Roger Quadros <rogerq@ti.com>
 
-commit e4c5800a3991f0c6a766983535dfc10d51802cf6 upstream.
+commit 04c080080855ce84dcd490a2e04805608a21085d upstream.
 
-This check effectively catches anon vma hierarchy inconsistence and some
-vma corruptions.  It was effective for catching corner cases in anon vma
-reusing logic.  For now this code seems stable so check could be hidden
-under CONFIG_DEBUG_VM and replaced with WARN because it's not so fatal.
+Pin state might have changed during suspend/resume while
+our interrupts were disabled and if device doesn't support wakeup.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Suggested-by: Vasily Averin <vvs@virtuozzo.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Scan for change during resume for such case.
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/rmap.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/extcon/extcon-usb-gpio.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -408,7 +408,7 @@ void unlink_anon_vmas(struct vm_area_str
- 	list_for_each_entry_safe(avc, next, &vma->anon_vma_chain, same_vma) {
- 		struct anon_vma *anon_vma = avc->anon_vma;
+--- a/drivers/extcon/extcon-usb-gpio.c
++++ b/drivers/extcon/extcon-usb-gpio.c
+@@ -192,6 +192,9 @@ static int usb_extcon_resume(struct devi
+ 	}
  
--		BUG_ON(anon_vma->degree);
-+		VM_WARN_ON(anon_vma->degree);
- 		put_anon_vma(anon_vma);
+ 	enable_irq(info->id_irq);
++	if (!device_may_wakeup(dev))
++		queue_delayed_work(system_power_efficient_wq,
++				   &info->wq_detcable, 0);
  
- 		list_del(&avc->same_vma);
+ 	return ret;
+ }
 
 
