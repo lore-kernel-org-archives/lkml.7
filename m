@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0BAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD944C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2259F20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C38B20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141995;
-	bh=LGGbfAid9jhEODok4WEPxEkTgUVGMtLhncNSSaTBKdI=;
+	s=default; t=1554142002;
+	bh=w322egl+h8BVgbKQ0qmzqpz6sqZyhe0qIvbcwY3yMeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D1PEMbSvLsTqJsjjm4au8d0d8IP+d2g0nspOECCkNzHLFFBrGle3T5+g39Ls7qBiQ
-	 OTcmUGsFXj2AJ9P+CIEtluFh+iAfi16GfrPWEzAVlmV01iZH1VzQEgBkRWQz1uTPBW
-	 Xo6MNljFtq1weLPbSEfCvo0Js8TsY/hLPPlt7nJY=
+	b=CsCBVpyKf99X9GTxtXML5IVEyJaNpFs6RzplCjYUIh/YI6jj8snzrQIy8puoyYymt
+	 A97Q2WP47uRR5s9bMA3aYntUMFZc+rmTgJe7m652aYXJwf9zxtuQmVG94n2DdjzTXL
+	 elN3a4O0ZXS5+gWnoE3VY/TrTJD1dcL4oZ1AP9kM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730497AbfDASGe (ORCPT
+        id S1730600AbfDASGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:06:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34404 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 14:06:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729777AbfDARMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:12:39 -0400
+        id S1729564AbfDARM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:12:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4565121925;
-        Mon,  1 Apr 2019 17:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E54E21924;
+        Mon,  1 Apr 2019 17:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138758;
-        bh=LGGbfAid9jhEODok4WEPxEkTgUVGMtLhncNSSaTBKdI=;
+        s=default; t=1554138745;
+        bh=w322egl+h8BVgbKQ0qmzqpz6sqZyhe0qIvbcwY3yMeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TsAkQD1MOHCDsWs56HwHkSyKE46sJ9Y94QaCdI6XXt9RadIrDd6+EB7HjHVB7y7OQ
-         QyTvfivFTWD8V92wn7ANY/QXcbWv59e95FghBmnmeZ35P11dPCiWlLj0ZguZHcQZWW
-         RwCRodnroJuCd/2QPzhPSWtps8VxUFYpwHgUvbVM=
+        b=OGEcWLyl5N/Ifa1QCO0HlzN+dRQUYhwV55qzs01D+wkyAHC/FZs+sKXpZH1dAmHPS
+         VPE+Y+m4pV5oH2LIaVdc9LDVgkL5I9qvEfVrS7Lk332N315cn9ReePdcOU1lVHULZx
+         4hlzJMWSyLmEfSQVMy4+UxI3pcracgDGGkzftdRw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 013/134] net: phy: meson-gxl: fix interrupt support
-Date:   Mon,  1 Apr 2019 19:00:49 +0200
-Message-Id: <20190401170045.539543922@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>
+Subject: [PATCH 4.19 001/134] Bluetooth: Check L2CAP option sizes returned from l2cap_get_conf_opt
+Date:   Mon,  1 Apr 2019 19:00:37 +0200
+Message-Id: <20190401170044.359538620@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -64,45 +65,196 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-[ Upstream commit daa5c4d0167a308306525fd5ab9a5e18e21f4f74 ]
+commit af3d5d1c87664a4f150fcf3534c6567cb19909b0 upstream.
 
-If an interrupt is already pending when the interrupt is enabled on the
-GXL phy, no IRQ will ever be triggered.
+When doing option parsing for standard type values of 1, 2 or 4 octets,
+the value is converted directly into a variable instead of a pointer. To
+avoid being tricked into being a pointer, check that for these option
+types that sizes actually match. In L2CAP every option is fixed size and
+thus it is prudent anyway to ensure that the remote side sends us the
+right option size along with option paramters.
 
-The fix is simply to make sure pending IRQs are cleared before setting
-up the irq mask.
+If the option size is not matching the option type, then that option is
+silently ignored. It is a protocol violation and instead of trying to
+give the remote attacker any further hints just pretend that option is
+not present and proceed with the default values. Implementation
+following the specification and its qualification procedures will always
+use the correct size and thus not being impacted here.
 
-Fixes: cf127ff20af1 ("net: phy: meson-gxl: add interrupt support")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+To keep the code readable and consistent accross all options, a few
+cosmetic changes were also required.
+
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/phy/meson-gxl.c |    6 ++++++
- 1 file changed, 6 insertions(+)
 
---- a/drivers/net/phy/meson-gxl.c
-+++ b/drivers/net/phy/meson-gxl.c
-@@ -211,6 +211,7 @@ static int meson_gxl_ack_interrupt(struc
- static int meson_gxl_config_intr(struct phy_device *phydev)
- {
- 	u16 val;
-+	int ret;
+---
+ net/bluetooth/l2cap_core.c |   77 ++++++++++++++++++++++++++-------------------
+ 1 file changed, 46 insertions(+), 31 deletions(-)
+
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -3342,10 +3342,14 @@ static int l2cap_parse_conf_req(struct l
  
- 	if (phydev->interrupts == PHY_INTERRUPT_ENABLED) {
- 		val = INTSRC_ANEG_PR
-@@ -223,6 +224,11 @@ static int meson_gxl_config_intr(struct
- 		val = 0;
- 	}
+ 		switch (type) {
+ 		case L2CAP_CONF_MTU:
++			if (olen != 2)
++				break;
+ 			mtu = val;
+ 			break;
  
-+	/* Ack any pending IRQ */
-+	ret = meson_gxl_ack_interrupt(phydev);
-+	if (ret)
-+		return ret;
-+
- 	return phy_write(phydev, INTSRC_MASK, val);
- }
+ 		case L2CAP_CONF_FLUSH_TO:
++			if (olen != 2)
++				break;
+ 			chan->flush_to = val;
+ 			break;
  
+@@ -3353,26 +3357,30 @@ static int l2cap_parse_conf_req(struct l
+ 			break;
+ 
+ 		case L2CAP_CONF_RFC:
+-			if (olen == sizeof(rfc))
+-				memcpy(&rfc, (void *) val, olen);
++			if (olen != sizeof(rfc))
++				break;
++			memcpy(&rfc, (void *) val, olen);
+ 			break;
+ 
+ 		case L2CAP_CONF_FCS:
++			if (olen != 1)
++				break;
+ 			if (val == L2CAP_FCS_NONE)
+ 				set_bit(CONF_RECV_NO_FCS, &chan->conf_state);
+ 			break;
+ 
+ 		case L2CAP_CONF_EFS:
+-			if (olen == sizeof(efs)) {
+-				remote_efs = 1;
+-				memcpy(&efs, (void *) val, olen);
+-			}
++			if (olen != sizeof(efs))
++				break;
++			remote_efs = 1;
++			memcpy(&efs, (void *) val, olen);
+ 			break;
+ 
+ 		case L2CAP_CONF_EWS:
++			if (olen != 2)
++				break;
+ 			if (!(chan->conn->local_fixed_chan & L2CAP_FC_A2MP))
+ 				return -ECONNREFUSED;
+-
+ 			set_bit(FLAG_EXT_CTRL, &chan->flags);
+ 			set_bit(CONF_EWS_RECV, &chan->conf_state);
+ 			chan->tx_win_max = L2CAP_DEFAULT_EXT_WINDOW;
+@@ -3382,7 +3390,6 @@ static int l2cap_parse_conf_req(struct l
+ 		default:
+ 			if (hint)
+ 				break;
+-
+ 			result = L2CAP_CONF_UNKNOWN;
+ 			*((u8 *) ptr++) = type;
+ 			break;
+@@ -3550,55 +3557,60 @@ static int l2cap_parse_conf_rsp(struct l
+ 
+ 		switch (type) {
+ 		case L2CAP_CONF_MTU:
++			if (olen != 2)
++				break;
+ 			if (val < L2CAP_DEFAULT_MIN_MTU) {
+ 				*result = L2CAP_CONF_UNACCEPT;
+ 				chan->imtu = L2CAP_DEFAULT_MIN_MTU;
+ 			} else
+ 				chan->imtu = val;
+-			l2cap_add_conf_opt(&ptr, L2CAP_CONF_MTU, 2, chan->imtu, endptr - ptr);
++			l2cap_add_conf_opt(&ptr, L2CAP_CONF_MTU, 2, chan->imtu,
++					   endptr - ptr);
+ 			break;
+ 
+ 		case L2CAP_CONF_FLUSH_TO:
++			if (olen != 2)
++				break;
+ 			chan->flush_to = val;
+-			l2cap_add_conf_opt(&ptr, L2CAP_CONF_FLUSH_TO,
+-					   2, chan->flush_to, endptr - ptr);
++			l2cap_add_conf_opt(&ptr, L2CAP_CONF_FLUSH_TO, 2,
++					   chan->flush_to, endptr - ptr);
+ 			break;
+ 
+ 		case L2CAP_CONF_RFC:
+-			if (olen == sizeof(rfc))
+-				memcpy(&rfc, (void *)val, olen);
+-
++			if (olen != sizeof(rfc))
++				break;
++			memcpy(&rfc, (void *)val, olen);
+ 			if (test_bit(CONF_STATE2_DEVICE, &chan->conf_state) &&
+ 			    rfc.mode != chan->mode)
+ 				return -ECONNREFUSED;
+-
+ 			chan->fcs = 0;
+-
+-			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC,
+-					   sizeof(rfc), (unsigned long) &rfc, endptr - ptr);
++			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
++					   (unsigned long) &rfc, endptr - ptr);
+ 			break;
+ 
+ 		case L2CAP_CONF_EWS:
++			if (olen != 2)
++				break;
+ 			chan->ack_win = min_t(u16, val, chan->ack_win);
+ 			l2cap_add_conf_opt(&ptr, L2CAP_CONF_EWS, 2,
+ 					   chan->tx_win, endptr - ptr);
+ 			break;
+ 
+ 		case L2CAP_CONF_EFS:
+-			if (olen == sizeof(efs)) {
+-				memcpy(&efs, (void *)val, olen);
+-
+-				if (chan->local_stype != L2CAP_SERV_NOTRAFIC &&
+-				    efs.stype != L2CAP_SERV_NOTRAFIC &&
+-				    efs.stype != chan->local_stype)
+-					return -ECONNREFUSED;
+-
+-				l2cap_add_conf_opt(&ptr, L2CAP_CONF_EFS, sizeof(efs),
+-						   (unsigned long) &efs, endptr - ptr);
+-			}
++			if (olen != sizeof(efs))
++				break;
++			memcpy(&efs, (void *)val, olen);
++			if (chan->local_stype != L2CAP_SERV_NOTRAFIC &&
++			    efs.stype != L2CAP_SERV_NOTRAFIC &&
++			    efs.stype != chan->local_stype)
++				return -ECONNREFUSED;
++			l2cap_add_conf_opt(&ptr, L2CAP_CONF_EFS, sizeof(efs),
++					   (unsigned long) &efs, endptr - ptr);
+ 			break;
+ 
+ 		case L2CAP_CONF_FCS:
++			if (olen != 1)
++				break;
+ 			if (*result == L2CAP_CONF_PENDING)
+ 				if (val == L2CAP_FCS_NONE)
+ 					set_bit(CONF_RECV_NO_FCS,
+@@ -3730,10 +3742,13 @@ static void l2cap_conf_rfc_get(struct l2
+ 
+ 		switch (type) {
+ 		case L2CAP_CONF_RFC:
+-			if (olen == sizeof(rfc))
+-				memcpy(&rfc, (void *)val, olen);
++			if (olen != sizeof(rfc))
++				break;
++			memcpy(&rfc, (void *)val, olen);
+ 			break;
+ 		case L2CAP_CONF_EWS:
++			if (olen != 2)
++				break;
+ 			txwin_ext = val;
+ 			break;
+ 		}
 
 
