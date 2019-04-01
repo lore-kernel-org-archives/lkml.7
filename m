@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A5CC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC852C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D5A21924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE83621939
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138713;
-	bh=qIAfZISwMn3Bb6JtXYs2yGmrIv8aKVk4ca/YmhR8qUE=;
+	s=default; t=1554138718;
+	bh=NNHA15Yp2x39Dm5RvBMAdY6liFXRG2p/8DRcwxLU37E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K9uE47ldPQsaukesW7s8KwGPvyhF3xYMyPSUlsSnQbekKPuacftBLHsC08qfuHDKu
-	 v0M8V62Z6s4o3IFB/q3+uQ8Xo0WwOMugqvTaiYZSH0akEElMFkJa+fhTVV8Cb4lo+j
-	 SD8tVoeAOiiPvgMin4Z4vLhlmB4C8/fqSwgfSQ/I=
+	b=OXKwhsGp37nzPJRC7oLn0Wf0FIKfnanvxc5PSZpD3GPX4IFzuFn5YXuQCEQFUvkyG
+	 lgBIp8kjOLI+5TOI/wCs9kDiVQmjs0oG8yq6R75Wpwp5eqhxeiJlNHJ71wROS2o3AH
+	 4tQIanEoQLQsNbGGS6inCqOqHmPTQ7Jg7P1Wi3xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbfDARLw (ORCPT
+        id S1729703AbfDARL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:11:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60834 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:11:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730265AbfDARLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:11:48 -0400
+        id S1730268AbfDARLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:11:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BC9F21939;
-        Mon,  1 Apr 2019 17:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BB6E21929;
+        Mon,  1 Apr 2019 17:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138707;
-        bh=qIAfZISwMn3Bb6JtXYs2yGmrIv8aKVk4ca/YmhR8qUE=;
+        s=default; t=1554138709;
+        bh=NNHA15Yp2x39Dm5RvBMAdY6liFXRG2p/8DRcwxLU37E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLRS8nHBQloc7gyS1mJSkmL7//0/srGbyRw6+2z0sgi8B4fT7DyhsQ1RRLZ4zJaW7
-         rnZLkVyNiCNQoVRe2Aqd6fHuy1T1pz1gIawqderZQpeSsgZjj8CIp+di2dv7Wg8Fum
-         hCN+23R2Aaq03hwQELJ+5uT/ZvwfaZOHyqXASCpc=
+        b=FSXzz/Kus599IytwC2I8p8DYN3uFgbdAdlVQRywERztB+Vdy63io+jqa90U88fa9e
+         hFBWuQIqiB67XOBjGB1I/99JCjrDu7iBqhJHPp+y8rol+kfAZeuOhwJTN3nhIS+0x4
+         Zt80MHWgjC8M7qDF8VXR81cbrujWJPLV/M9h5a2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.0 144/146] KVM: x86: update %rip after emulating IO
-Date:   Mon,  1 Apr 2019 19:02:36 +0200
-Message-Id: <20190401170100.201797277@linuxfoundation.org>
+        stable@vger.kernel.org, Xu Yu <xuyu@linux.alibaba.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.0 145/146] bpf: do not restore dst_reg when cur_state is freed
+Date:   Mon,  1 Apr 2019 19:02:37 +0200
+Message-Id: <20190401170100.264392053@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -66,156 +65,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Xu Yu <xuyu@linux.alibaba.com>
 
-commit 45def77ebf79e2e8942b89ed79294d97ce914fa0 upstream.
+commit 0803278b0b4d8eeb2b461fb698785df65a725d9e upstream.
 
-Most (all?) x86 platforms provide a port IO based reset mechanism, e.g.
-OUT 92h or CF9h.  Userspace may emulate said mechanism, i.e. reset a
-vCPU in response to KVM_EXIT_IO, without explicitly announcing to KVM
-that it is doing a reset, e.g. Qemu jams vCPU state and resumes running.
+Syzkaller hit 'KASAN: use-after-free Write in sanitize_ptr_alu' bug.
 
-To avoid corruping %rip after such a reset, commit 0967b7bf1c22 ("KVM:
-Skip pio instruction when it is emulated, not executed") changed the
-behavior of PIO handlers, i.e. today's "fast" PIO handling to skip the
-instruction prior to exiting to userspace.  Full emulation doesn't need
-such tricks becase re-emulating the instruction will naturally handle
-%rip being changed to point at the reset vector.
+Call trace:
 
-Updating %rip prior to executing to userspace has several drawbacks:
+  dump_stack+0xbf/0x12e
+  print_address_description+0x6a/0x280
+  kasan_report+0x237/0x360
+  sanitize_ptr_alu+0x85a/0x8d0
+  adjust_ptr_min_max_vals+0x8f2/0x1ca0
+  adjust_reg_min_max_vals+0x8ed/0x22e0
+  do_check+0x1ca6/0x5d00
+  bpf_check+0x9ca/0x2570
+  bpf_prog_load+0xc91/0x1030
+  __se_sys_bpf+0x61e/0x1f00
+  do_syscall_64+0xc8/0x550
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-  - Userspace sees the wrong %rip on the exit, e.g. if PIO emulation
-    fails it will likely yell about the wrong address.
-  - Single step exits to userspace for are effectively dropped as
-    KVM_EXIT_DEBUG is overwritten with KVM_EXIT_IO.
-  - Behavior of PIO emulation is different depending on whether it
-    goes down the fast path or the slow path.
+Fault injection trace:
 
-Rather than skip the PIO instruction before exiting to userspace,
-snapshot the linear %rip and cancel PIO completion if the current
-value does not match the snapshot.  For a 64-bit vCPU, i.e. the most
-common scenario, the snapshot and comparison has negligible overhead
-as VMCS.GUEST_RIP will be cached regardless, i.e. there is no extra
-VMREAD in this case.
+  kfree+0xea/0x290
+  free_func_state+0x4a/0x60
+  free_verifier_state+0x61/0xe0
+  push_stack+0x216/0x2f0	          <- inject failslab
+  sanitize_ptr_alu+0x2b1/0x8d0
+  adjust_ptr_min_max_vals+0x8f2/0x1ca0
+  adjust_reg_min_max_vals+0x8ed/0x22e0
+  do_check+0x1ca6/0x5d00
+  bpf_check+0x9ca/0x2570
+  bpf_prog_load+0xc91/0x1030
+  __se_sys_bpf+0x61e/0x1f00
+  do_syscall_64+0xc8/0x550
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-All other alternatives to snapshotting the linear %rip that don't
-rely on an explicit reset announcenment suffer from one corner case
-or another.  For example, canceling PIO completion on any write to
-%rip fails if userspace does a save/restore of %rip, and attempting to
-avoid that issue by canceling PIO only if %rip changed then fails if PIO
-collides with the reset %rip.  Attempting to zero in on the exact reset
-vector won't work for APs, which means adding more hooks such as the
-vCPU's MP_STATE, and so on and so forth.
+When kzalloc() fails in push_stack(), free_verifier_state() will free
+current verifier state. As push_stack() returns, dst_reg was restored
+if ptr_is_dst_reg is false. However, as member of the cur_state,
+dst_reg is also freed, and error occurs when dereferencing dst_reg.
+Simply fix it by testing ret of push_stack() before restoring dst_reg.
 
-Checking for a linear %rip match technically suffers from corner cases,
-e.g. userspace could theoretically rewrite the underlying code page and
-expect a different instruction to execute, or the guest hardcodes a PIO
-reset at 0xfffffff0, but those are far, far outside of what can be
-considered normal operation.
-
-Fixes: 432baf60eee3 ("KVM: VMX: use kvm_fast_pio_in for handling IN I/O")
-Cc: <stable@vger.kernel.org>
-Reported-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 979d63d50c0c ("bpf: prevent out of bounds speculation on pointer arithmetic")
+Signed-off-by: Xu Yu <xuyu@linux.alibaba.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/kvm_host.h |    1 +
- arch/x86/kvm/x86.c              |   36 ++++++++++++++++++++++++++----------
- 2 files changed, 27 insertions(+), 10 deletions(-)
+ kernel/bpf/verifier.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -352,6 +352,7 @@ struct kvm_mmu_page {
- };
- 
- struct kvm_pio_request {
-+	unsigned long linear_rip;
- 	unsigned long count;
- 	int in;
- 	int port;
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6533,14 +6533,27 @@ int kvm_emulate_instruction_from_buffer(
- }
- EXPORT_SYMBOL_GPL(kvm_emulate_instruction_from_buffer);
- 
-+static int complete_fast_pio_out(struct kvm_vcpu *vcpu)
-+{
-+	vcpu->arch.pio.count = 0;
-+
-+	if (unlikely(!kvm_is_linear_rip(vcpu, vcpu->arch.pio.linear_rip)))
-+		return 1;
-+
-+	return kvm_skip_emulated_instruction(vcpu);
-+}
-+
- static int kvm_fast_pio_out(struct kvm_vcpu *vcpu, int size,
- 			    unsigned short port)
- {
- 	unsigned long val = kvm_register_read(vcpu, VCPU_REGS_RAX);
- 	int ret = emulator_pio_out_emulated(&vcpu->arch.emulate_ctxt,
- 					    size, port, &val, 1);
--	/* do not return to emulator after return from userspace */
--	vcpu->arch.pio.count = 0;
-+
-+	if (!ret) {
-+		vcpu->arch.pio.linear_rip = kvm_get_linear_rip(vcpu);
-+		vcpu->arch.complete_userspace_io = complete_fast_pio_out;
-+	}
- 	return ret;
- }
- 
-@@ -6551,6 +6564,11 @@ static int complete_fast_pio_in(struct k
- 	/* We should only ever be called with arch.pio.count equal to 1 */
- 	BUG_ON(vcpu->arch.pio.count != 1);
- 
-+	if (unlikely(!kvm_is_linear_rip(vcpu, vcpu->arch.pio.linear_rip))) {
-+		vcpu->arch.pio.count = 0;
-+		return 1;
-+	}
-+
- 	/* For size less than 4 we merge, else we zero extend */
- 	val = (vcpu->arch.pio.size < 4) ? kvm_register_read(vcpu, VCPU_REGS_RAX)
- 					: 0;
-@@ -6563,7 +6581,7 @@ static int complete_fast_pio_in(struct k
- 				 vcpu->arch.pio.port, &val, 1);
- 	kvm_register_write(vcpu, VCPU_REGS_RAX, val);
- 
--	return 1;
-+	return kvm_skip_emulated_instruction(vcpu);
- }
- 
- static int kvm_fast_pio_in(struct kvm_vcpu *vcpu, int size,
-@@ -6582,6 +6600,7 @@ static int kvm_fast_pio_in(struct kvm_vc
- 		return ret;
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -3187,7 +3187,7 @@ do_sim:
+ 		*dst_reg = *ptr_reg;
  	}
- 
-+	vcpu->arch.pio.linear_rip = kvm_get_linear_rip(vcpu);
- 	vcpu->arch.complete_userspace_io = complete_fast_pio_in;
- 
- 	return 0;
-@@ -6589,16 +6608,13 @@ static int kvm_fast_pio_in(struct kvm_vc
- 
- int kvm_fast_pio(struct kvm_vcpu *vcpu, int size, unsigned short port, int in)
- {
--	int ret = kvm_skip_emulated_instruction(vcpu);
-+	int ret;
- 
--	/*
--	 * TODO: we might be squashing a KVM_GUESTDBG_SINGLESTEP-triggered
--	 * KVM_EXIT_DEBUG here.
--	 */
- 	if (in)
--		return kvm_fast_pio_in(vcpu, size, port) && ret;
-+		ret = kvm_fast_pio_in(vcpu, size, port);
- 	else
--		return kvm_fast_pio_out(vcpu, size, port) && ret;
-+		ret = kvm_fast_pio_out(vcpu, size, port);
-+	return ret && kvm_skip_emulated_instruction(vcpu);
+ 	ret = push_stack(env, env->insn_idx + 1, env->insn_idx, true);
+-	if (!ptr_is_dst_reg)
++	if (!ptr_is_dst_reg && ret)
+ 		*dst_reg = tmp;
+ 	return !ret ? -EFAULT : 0;
  }
- EXPORT_SYMBOL_GPL(kvm_fast_pio);
- 
 
 
