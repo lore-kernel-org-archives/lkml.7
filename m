@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B18C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D807C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 652FF20896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B3E20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140339;
-	bh=WXWwGTtM5vR7HyMiqAler82wzus61PtCJhX6U8HwfdA=;
+	s=default; t=1554140346;
+	bh=wn10Z1dWGI3w37thhYW66m7eIO3/bC55vCJA+99sZ0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IR4dTs3S4630Gj0jtlNblB0HyrkxHRss5iaDTRz1ssyH1NQ+BJDQetbgIoJUHJ8uF
-	 PAgbhwiFjgyVobNiSpwjmCiOxGVOT6gZK8fLdjJPfkKX/5tqEPKF1hznuzhly0Bfgl
-	 Pm8fpSN+GOOTUFbmG/4Xi+ioRiEnvGUwqu272G+o=
+	b=OmgyxyxsvxU0oLDJLcAouXaIhQmboOI4Sceqp7Ikdj1ZeSaHH3jgqAP8CSUWS4VRJ
+	 wz+23Gf7K53eq0mT87OQEhznMK8sM5Cd12droISg7vB9XLJMM2sfK6XyXfxl1WinDK
+	 F+p8vrWBmA1tgg58b8yG3htqx+4zDXEIkhyEVl4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388377AbfDARi4 (ORCPT
+        id S2388396AbfDARjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:38:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52324 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:39:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388364AbfDARis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:38:48 -0400
+        id S2388189AbfDARi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:38:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 981A72070B;
-        Mon,  1 Apr 2019 17:38:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E195B2070B;
+        Mon,  1 Apr 2019 17:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140328;
-        bh=WXWwGTtM5vR7HyMiqAler82wzus61PtCJhX6U8HwfdA=;
+        s=default; t=1554140336;
+        bh=wn10Z1dWGI3w37thhYW66m7eIO3/bC55vCJA+99sZ0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZJ0SoYY73AbPrYfYmR/YFq9xKF19R+2mZRxYmq0hnmKV7gPF/2nbPMTjFvD1a7Rz5
-         WsU4oj/8Rcn20zJzosG1btlTbf7s21m+6bIaVheH9ne15jmiMVBNk6Ujvvlps8ODoi
-         5uy4CFRYCjdlw2+F3kgxc7MlONq6kLcoHFWd5A9g=
+        b=0FUNnjlnVcL0mrB/QblY6MQ0ZLDfYTdLB3xKqqQDS/FzkCIzKnklBkjcUTBz/6k4X
+         JAAUapDdOhc5jXNLmCtUuTM5t7p9Drzb6CNNVeAJJf48cmMSkAFXSTOA4NLJmi+ccB
+         mteVi6M30WqYJHsCavQ1ituRvfUOAoig8rffaXog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>
-Subject: [PATCH 3.18 40/50] serial: max310x: Fix to avoid potential NULL pointer dereference
-Date:   Mon,  1 Apr 2019 19:03:23 +0200
-Message-Id: <20190401170045.499690828@linuxfoundation.org>
+        stable@vger.kernel.org,
+        George McCollister <george.mccollister@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 3.18 42/50] USB: serial: ftdi_sio: add additional NovaTech products
+Date:   Mon,  1 Apr 2019 19:03:25 +0200
+Message-Id: <20190401170045.713869498@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -63,31 +65,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: George McCollister <george.mccollister@gmail.com>
 
-commit 3a10e3dd52e80b9a97a3346020024d17b2c272d6 upstream.
+commit 422c2537ba9d42320f8ab6573940269f87095320 upstream.
 
-of_match_device can return a NULL pointer when matching device is not
-found. This patch avoids a scenario causing NULL pointer derefernce.
+Add PIDs for the NovaTech OrionLX+ and Orion I/O so they can be
+automatically detected.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: George McCollister <george.mccollister@gmail.com>
 Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/max310x.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/serial/ftdi_sio.c     |    2 ++
+ drivers/usb/serial/ftdi_sio_ids.h |    4 +++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -1321,6 +1321,8 @@ static int max310x_spi_probe(struct spi_
- 	if (spi->dev.of_node) {
- 		const struct of_device_id *of_id =
- 			of_match_device(max310x_dt_ids, &spi->dev);
-+		if (!of_id)
-+			return -ENODEV;
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -604,6 +604,8 @@ static const struct usb_device_id id_tab
+ 		.driver_info = (kernel_ulong_t)&ftdi_jtag_quirk },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_NT_ORIONLXM_PID),
+ 		.driver_info = (kernel_ulong_t)&ftdi_jtag_quirk },
++	{ USB_DEVICE(FTDI_VID, FTDI_NT_ORIONLX_PLUS_PID) },
++	{ USB_DEVICE(FTDI_VID, FTDI_NT_ORION_IO_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_SYNAPSE_SS200_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_CUSTOMWARE_MINIPLEX_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_CUSTOMWARE_MINIPLEX2_PID) },
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -566,7 +566,9 @@
+ /*
+  * NovaTech product ids (FTDI_VID)
+  */
+-#define FTDI_NT_ORIONLXM_PID	0x7c90	/* OrionLXm Substation Automation Platform */
++#define FTDI_NT_ORIONLXM_PID		0x7c90	/* OrionLXm Substation Automation Platform */
++#define FTDI_NT_ORIONLX_PLUS_PID	0x7c91	/* OrionLX+ Substation Automation Platform */
++#define FTDI_NT_ORION_IO_PID		0x7c92	/* Orion I/O */
  
- 		devtype = (struct max310x_devtype *)of_id->data;
- 	} else {
+ /*
+  * Synapse Wireless product ids (FTDI_VID)
 
 
