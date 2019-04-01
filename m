@@ -4,69 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9864C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4447AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877DB2084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0850F20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141473;
-	bh=1I0KrdIFuhdLcJ0W+Po+mCzsnR1LxKEI8cEh50WkE9I=;
+	s=default; t=1554141479;
+	bh=aQOcQB68RMuopv+/nSY9IeAMC1/30fLt51ONVGePQHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Egwz+cx0srZqiRm8rZ7z6OF+bfb06UQ+Fw4KIr7u4Q7wO+lR8YpEz5ORCRD8kHztr
-	 SDyLGwuU8xMOs5tV7nEjxYzZ/O9tJAMoc9uqJ3QRf0SfzeekrroAlvy0vqGq8WUDc3
-	 z07HSkf170LZnxqFS2o7GvBw5AjDCifud4+Qbx5M=
+	b=rIKKBhchO99pg37krftN4U7KoTmaWwJvLdZHtSzY/lLphj6r5pEq8PMbTLK6G+yBC
+	 i108b+svFegnyLVVE8Zgt8T5Q7bjyDqwiSKpiR4O/8NMaO+liRc6k+nBx8ehhnvtZo
+	 JCZ2DqHN/CCYGaR0Q+MDu0SUpEeL+qL/ZXxBEvSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731501AbfDARTV (ORCPT
+        id S1731449AbfDAR55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:19:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47000 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:57:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730887AbfDARTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:19:15 -0400
+        id S1731264AbfDARTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:19:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15A1620856;
-        Mon,  1 Apr 2019 17:19:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC08621852;
+        Mon,  1 Apr 2019 17:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139153;
-        bh=1I0KrdIFuhdLcJ0W+Po+mCzsnR1LxKEI8cEh50WkE9I=;
+        s=default; t=1554139156;
+        bh=aQOcQB68RMuopv+/nSY9IeAMC1/30fLt51ONVGePQHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPlxGihNCBUmBy9QNxVpr3OFOHVXTqNyvX8Zqjz+yWUyrVZfBSTriT4F/nPNRCu7m
-         gxCZ7XNUvvVhhmg21/x3Qz8Wt85SwPAae2y+eCljW1c2M6zkYCZtAK7wwN8sE2iA4j
-         ehd2P32x1ycWnBsAEX8gYwUOrX66Ru4ghzkH2S0U=
+        b=IXBB2OPYw7ZMFsTWVilacpou7AM4YQ7dZ/s3l2IDx7/3nXKaOnG2uFFBiyKBdFP9Q
+         G2rYcjl8VQecpPD/jxcYwB8MW32ICr2bkdqPGDn7L288uvh6WG6YTUeeMK1f3wxo6s
+         rUjuxPRgXd3CljZAYpcopg3xuDVJ8oUKJgKgB1TI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Huaisheng Ye <yehs1@lenovo.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Tomasz Figa <tfiga@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Yong Wu <yong.wu@mediatek.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 112/134] iommu/io-pgtable-arm-v7s: request DMA32 memory, and improve debugging
-Date:   Mon,  1 Apr 2019 19:02:28 +0200
-Message-Id: <20190401170054.692774778@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH 4.19 130/134] platform: x86: intel_cht_int33fe: Register all connections at once
+Date:   Mon,  1 Apr 2019 19:02:46 +0200
+Message-Id: <20190401170056.358791374@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -85,102 +66,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit 0a352554da69b02f75ca3389c885c741f1f63235 upstream.
+commit 140a4ec4adddda615b4e8e8055ca37a30c7fe5e8 upstream.
 
-IOMMUs using ARMv7 short-descriptor format require page tables (level 1
-and 2) to be allocated within the first 4GB of RAM, even on 64-bit
-systems.
+We can register all device connection descriptors with a
+single call to device_connections_add().
 
-For level 1/2 pages, ensure GFP_DMA32 is used if CONFIG_ZONE_DMA32 is
-defined (e.g.  on arm64 platforms).
-
-For level 2 pages, allocate a slab cache in SLAB_CACHE_DMA32.  Note that
-we do not explicitly pass GFP_DMA[32] to kmem_cache_zalloc, as this is
-not strictly necessary, and would cause a warning in mm/sl*b.c, as we
-did not update GFP_SLAB_BUG_MASK.
-
-Also, print an error when the physical address does not fit in
-32-bit, to make debugging easier in the future.
-
-Link: http://lkml.kernel.org/r/20181210011504.122604-3-drinkcat@chromium.org
-Fixes: ad67f5a6545f ("arm64: replace ZONE_DMA with ZONE_DMA32")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Huaisheng Ye <yehs1@lenovo.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Sasha Levin <Alexander.Levin@microsoft.com>
-Cc: Tomasz Figa <tfiga@google.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Yong Wu <yong.wu@mediatek.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/io-pgtable-arm-v7s.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel_cht_int33fe.c |   14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
---- a/drivers/iommu/io-pgtable-arm-v7s.c
-+++ b/drivers/iommu/io-pgtable-arm-v7s.c
-@@ -161,6 +161,14 @@
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -34,7 +34,7 @@ struct cht_int33fe_data {
+ 	struct i2c_client *fusb302;
+ 	struct i2c_client *pi3usb30532;
+ 	/* Contain a list-head must be per device */
+-	struct device_connection connections[3];
++	struct device_connection connections[4];
+ };
  
- #define ARM_V7S_TCR_PD1			BIT(5)
+ /*
+@@ -184,9 +184,7 @@ static int cht_int33fe_probe(struct i2c_
+ 	data->connections[2].endpoint[1] = "intel_xhci_usb_sw-role-switch";
+ 	data->connections[2].id = "usb-role-switch";
  
-+#ifdef CONFIG_ZONE_DMA32
-+#define ARM_V7S_TABLE_GFP_DMA GFP_DMA32
-+#define ARM_V7S_TABLE_SLAB_FLAGS SLAB_CACHE_DMA32
-+#else
-+#define ARM_V7S_TABLE_GFP_DMA GFP_DMA
-+#define ARM_V7S_TABLE_SLAB_FLAGS SLAB_CACHE_DMA
-+#endif
-+
- typedef u32 arm_v7s_iopte;
+-	device_connection_add(&data->connections[0]);
+-	device_connection_add(&data->connections[1]);
+-	device_connection_add(&data->connections[2]);
++	device_connections_add(data->connections);
  
- static bool selftest_running;
-@@ -198,13 +206,16 @@ static void *__arm_v7s_alloc_table(int l
- 	void *table = NULL;
+ 	memset(&board_info, 0, sizeof(board_info));
+ 	strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
+@@ -217,9 +215,7 @@ out_unregister_max17047:
+ 	if (data->max17047)
+ 		i2c_unregister_device(data->max17047);
  
- 	if (lvl == 1)
--		table = (void *)__get_dma_pages(__GFP_ZERO, get_order(size));
-+		table = (void *)__get_free_pages(
-+			__GFP_ZERO | ARM_V7S_TABLE_GFP_DMA, get_order(size));
- 	else if (lvl == 2)
--		table = kmem_cache_zalloc(data->l2_tables, gfp | GFP_DMA);
-+		table = kmem_cache_zalloc(data->l2_tables, gfp);
- 	phys = virt_to_phys(table);
--	if (phys != (arm_v7s_iopte)phys)
-+	if (phys != (arm_v7s_iopte)phys) {
- 		/* Doesn't fit in PTE */
-+		dev_err(dev, "Page table does not fit in PTE: %pa", &phys);
- 		goto out_free;
-+	}
- 	if (table && !(cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA)) {
- 		dma = dma_map_single(dev, table, size, DMA_TO_DEVICE);
- 		if (dma_mapping_error(dev, dma))
-@@ -728,7 +739,7 @@ static struct io_pgtable *arm_v7s_alloc_
- 	data->l2_tables = kmem_cache_create("io-pgtable_armv7s_l2",
- 					    ARM_V7S_TABLE_SIZE(2),
- 					    ARM_V7S_TABLE_SIZE(2),
--					    SLAB_CACHE_DMA, NULL);
-+					    ARM_V7S_TABLE_SLAB_FLAGS, NULL);
- 	if (!data->l2_tables)
- 		goto out_free_data;
+-	device_connection_remove(&data->connections[2]);
+-	device_connection_remove(&data->connections[1]);
+-	device_connection_remove(&data->connections[0]);
++	device_connections_remove(data->connections);
  
+ 	return -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
+ }
+@@ -233,9 +229,7 @@ static int cht_int33fe_remove(struct i2c
+ 	if (data->max17047)
+ 		i2c_unregister_device(data->max17047);
+ 
+-	device_connection_remove(&data->connections[2]);
+-	device_connection_remove(&data->connections[1]);
+-	device_connection_remove(&data->connections[0]);
++	device_connections_remove(data->connections);
+ 
+ 	return 0;
+ }
 
 
