@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F9FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC74C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D32720856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1B62070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139907;
-	bh=TcJGiK/14Nxwj+qaIVKcpNBi8zgouqjN1Nd0xz9Mqhc=;
+	s=default; t=1554139914;
+	bh=OF4dM8P3MVzxC/xfOACHe4gewX+htnhSCLrfdsPUH0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2rErj7X5cHaf7KClWOKwVjd8hETVdyjP1inqC0nr4mal5Ie3vTAGs/1xk6LwqNPtP
-	 oxHwLWdGhXiyONLnSesmSIhY08tSkeYtHMjSkSLXnhNzrHr9rT5XQGtcXDp9U3Qd4Y
-	 wEjbcv+YIozxzBJLkyabMeAlan7h4raqY7+LyN6s=
+	b=s8XUGpvDjYwp8K7O9Q4UYpwenAtitLbHGrTV6bOtxhlhTi8Hk+Cwv2/wx/HqHLAEa
+	 fnYI7K+ecpV1H+63Tem8X8OIDuYucq5SoqkLx8Oko1RVSsTFEAJvhjXhuTpPvRTzL4
+	 1aJ6Fw8isjtjmwQw043fPhP9n0r3kc9f/KBl2KF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733296AbfDARbp (ORCPT
+        id S1733098AbfDARbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:31:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39284 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:31:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733281AbfDARbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:31:41 -0400
+        id S1733298AbfDARbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:31:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB36A2070B;
-        Mon,  1 Apr 2019 17:31:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 470772171F;
+        Mon,  1 Apr 2019 17:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139900;
-        bh=TcJGiK/14Nxwj+qaIVKcpNBi8zgouqjN1Nd0xz9Mqhc=;
+        s=default; t=1554139906;
+        bh=OF4dM8P3MVzxC/xfOACHe4gewX+htnhSCLrfdsPUH0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oV+knyusEtDkAOyVn+YQ7FSXRP/bVt13bJLEcA+9DLZXmfN0UFSjearKtoh2IZdIL
-         VHw0O8N+9U1dm5M/aQsyjPc3u4ZZ222+N1wZc6g0063OldzoX4bzxHsLEuqWL6QOId
-         kcoeZjGtewNmRw1/VdhK5e9mY2n7VyPdAiK2kK7s=
+        b=2KrujjA7DfybqBHdeBAd1zd3tQNgjdAYHt3h3a8iouyBjl146T8BbJJdFYcGoMwr3
+         kDTZ+iE2tFhrLjHp1HokdVS7lBGCLQy3AqtUcGVUyMs9lkSbwUYWzVkIH1VvtF2Ibg
+         Yj/gQgSgVRheRxwiB9sPIdH2mJdciqSrD9ubw+Mc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Muckle <steve.muckle@linaro.org>,
-        Yuyang Du <yuyang.du@intel.com>,
+        stable@vger.kernel.org,
+        Markus Metzger <markus.t.metzger@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <Juri.Lelli@arm.com>,
+        Arnaldo Carvalho de Melo <acme@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Galbraith <efault@gmx.de>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
+        Vince Weaver <vincent.weaver@maine.edu>, vince@deater.net,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 040/131] sched/fair: Fix new tasks load avg removed from source CPU in wake_up_new_task()
-Date:   Mon,  1 Apr 2019 19:01:50 +0200
-Message-Id: <20190401170055.666989726@linuxfoundation.org>
+Subject: [PATCH 4.4 050/131] perf: Synchronously free aux pages in case of allocation failure
+Date:   Mon,  1 Apr 2019 19:02:00 +0200
+Message-Id: <20190401170056.493312319@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -75,98 +76,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0905f04eb21fc1c2e690bed5d0418a061d56c225 ]
+[ Upstream commit 45c815f06b80031659c63d7b93e580015d6024dd ]
 
-If a newly created task is selected to go to a different CPU in fork
-balance when it wakes up the first time, its load averages should
-not be removed from the source CPU since they are never added to
-it before. The same is also applicable to a never used group entity.
+We are currently using asynchronous deallocation in the error path in
+AUX mmap code, which is unnecessary and also presents a problem for users
+that wish to probe for the biggest possible buffer size they can get:
+they'll get -EINVAL on all subsequent attemts to allocate a smaller
+buffer before the asynchronous deallocation callback frees up the pages
+from the previous unsuccessful attempt.
 
-Fix it in remove_entity_load_avg(): when entity's last_update_time
-is 0, simply return. This should precisely identify the case in
-question, because in other migrations, the last_update_time is set
-to 0 after remove_entity_load_avg().
+Currently, gdb does that for allocating AUX buffers for Intel PT traces.
+More specifically, overwrite mode of AUX pmus that don't support hardware
+sg (some implementations of Intel PT, for instance) is limited to only
+one contiguous high order allocation for its buffer and there is no way
+of knowing its size without trying.
 
-Reported-by: Steve Muckle <steve.muckle@linaro.org>
-Signed-off-by: Yuyang Du <yuyang.du@intel.com>
-[peterz: cfs_rq_last_update_time]
+This patch changes error path freeing to be synchronous as there won't
+be any contenders for the AUX pages at that point.
+
+Reported-by: Markus Metzger <markus.t.metzger@intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Juri Lelli <Juri.Lelli@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Morten Rasmussen <morten.rasmussen@arm.com>
-Cc: Patrick Bellasi <patrick.bellasi@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Link: http://lkml.kernel.org/r/20151216233427.GJ28098@intel.com
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: vince@deater.net
+Link: http://lkml.kernel.org/r/1453216469-9509-1-git-send-email-alexander.shishkin@linux.intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 38 ++++++++++++++++++++++++++++----------
- 1 file changed, 28 insertions(+), 10 deletions(-)
+ kernel/events/ring_buffer.c | 40 ++++++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index c2af250547bb..6051007918ad 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2841,27 +2841,45 @@ dequeue_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se)
- 		max_t(s64,  cfs_rq->runnable_load_sum - se->avg.load_sum, 0);
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 358bb53c1e74..94dc6b0763ab 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -468,6 +468,25 @@ static void rb_free_aux_page(struct ring_buffer *rb, int idx)
+ 	__free_page(page);
  }
  
--/*
-- * Task first catches up with cfs_rq, and then subtract
-- * itself from the cfs_rq (task must be off the queue now).
-- */
--void remove_entity_load_avg(struct sched_entity *se)
++static void __rb_free_aux(struct ring_buffer *rb)
++{
++	int pg;
++
++	if (rb->aux_priv) {
++		rb->free_aux(rb->aux_priv);
++		rb->free_aux = NULL;
++		rb->aux_priv = NULL;
++	}
++
++	if (rb->aux_nr_pages) {
++		for (pg = 0; pg < rb->aux_nr_pages; pg++)
++			rb_free_aux_page(rb, pg);
++
++		kfree(rb->aux_pages);
++		rb->aux_nr_pages = 0;
++	}
++}
++
+ int rb_alloc_aux(struct ring_buffer *rb, struct perf_event *event,
+ 		 pgoff_t pgoff, int nr_pages, long watermark, int flags)
+ {
+@@ -556,30 +575,11 @@ int rb_alloc_aux(struct ring_buffer *rb, struct perf_event *event,
+ 	if (!ret)
+ 		rb->aux_pgoff = pgoff;
+ 	else
+-		rb_free_aux(rb);
++		__rb_free_aux(rb);
+ 
+ 	return ret;
+ }
+ 
+-static void __rb_free_aux(struct ring_buffer *rb)
 -{
--	struct cfs_rq *cfs_rq = cfs_rq_of(se);
--	u64 last_update_time;
+-	int pg;
 -
- #ifndef CONFIG_64BIT
-+static inline u64 cfs_rq_last_update_time(struct cfs_rq *cfs_rq)
-+{
- 	u64 last_update_time_copy;
-+	u64 last_update_time;
- 
- 	do {
- 		last_update_time_copy = cfs_rq->load_last_update_time_copy;
- 		smp_rmb();
- 		last_update_time = cfs_rq->avg.last_update_time;
- 	} while (last_update_time != last_update_time_copy);
-+
-+	return last_update_time;
-+}
- #else
--	last_update_time = cfs_rq->avg.last_update_time;
-+static inline u64 cfs_rq_last_update_time(struct cfs_rq *cfs_rq)
-+{
-+	return cfs_rq->avg.last_update_time;
-+}
- #endif
- 
-+/*
-+ * Task first catches up with cfs_rq, and then subtract
-+ * itself from the cfs_rq (task must be off the queue now).
-+ */
-+void remove_entity_load_avg(struct sched_entity *se)
-+{
-+	struct cfs_rq *cfs_rq = cfs_rq_of(se);
-+	u64 last_update_time;
-+
-+	/*
-+	 * Newly created task or never used group entity should not be removed
-+	 * from its (source) cfs_rq
-+	 */
-+	if (se->avg.last_update_time == 0)
-+		return;
-+
-+	last_update_time = cfs_rq_last_update_time(cfs_rq);
-+
- 	__update_load_avg(last_update_time, cpu_of(rq_of(cfs_rq)), &se->avg, 0, 0, NULL);
- 	atomic_long_add(se->avg.load_avg, &cfs_rq->removed_load_avg);
- 	atomic_long_add(se->avg.util_avg, &cfs_rq->removed_util_avg);
+-	if (rb->aux_priv) {
+-		rb->free_aux(rb->aux_priv);
+-		rb->free_aux = NULL;
+-		rb->aux_priv = NULL;
+-	}
+-
+-	if (rb->aux_nr_pages) {
+-		for (pg = 0; pg < rb->aux_nr_pages; pg++)
+-			rb_free_aux_page(rb, pg);
+-
+-		kfree(rb->aux_pages);
+-		rb->aux_nr_pages = 0;
+-	}
+-}
+-
+ void rb_free_aux(struct ring_buffer *rb)
+ {
+ 	if (atomic_dec_and_test(&rb->aux_refcount))
 -- 
 2.19.1
 
