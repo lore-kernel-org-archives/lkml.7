@@ -2,116 +2,237 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6658C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5EAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF9C20651
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B144C20651
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z6mprssQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=dell.com header.i=@dell.com header.b="p+/PG8xr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbfDAVfm (ORCPT
+        id S1726789AbfDAViH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 17:35:42 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33784 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfDAVfm (ORCPT
+        Mon, 1 Apr 2019 17:38:07 -0400
+Received: from esa7.dell-outbound.iphmx.com ([68.232.153.96]:40994 "EHLO
+        esa7.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725869AbfDAViH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 17:35:42 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t16so3245339plo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 14:35:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=H2BWpsf3eguvBn3XgFLe8zv3fkMLRcZ0jw/2QokUZA4=;
-        b=Z6mprssQVG5eQFdr5Y5zngC4TRp+VUYA8LiKYING+NTddEKOlPbm/DBw9UBdvW781g
-         MFgO6ykBbPXfBOs+vcbxqix00VZAjDCbHluDWSJYiBxqrN17+dbTSiCpKJKspQ9pqBgf
-         U41BWOyBXIuhVkGO70iyrTPAxoqJbLf/gKK0s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H2BWpsf3eguvBn3XgFLe8zv3fkMLRcZ0jw/2QokUZA4=;
-        b=ntWZAFTmmPgG/82nxkUE6kuuszZHLl41Q0WuGec74KKtuId9cTx5boXjVGxz70/wez
-         ysf6k4Kc+68nnhNAo0dVr8hOaaO8SKt2l7ipXZWpF1jVdDXC0wvsebM8/1boaJWmg/kf
-         oGlpuYLeW3wnAwhWsu0UhOu9Wy+Mtlo8SJDLDNwmMGtXMH3/02NAK/YtNa0TUphb2Nmv
-         bdktr6aBgXKVVPxSWEy6z7SCLGVf4azNb2bnAVYFMHkHELVFPDb4cb4hR/qTngacQVsg
-         H0naJLOepboDfUGWTBaIpFm2LgWcqm5HzjKFzr+fegJbLpFhrl2xbtztDsUX3rbYt6Be
-         TOMg==
-X-Gm-Message-State: APjAAAX+MUgfTDXDl8JSHn+3COL8HKFvvikW3WgE7WQscH/vODv7n8dr
-        O2wib15vPl93SKByIUjuGO6AUQ==
-X-Google-Smtp-Source: APXvYqzDeNkCwOMbFz+GH/L3JaCuanMzQzgaPMp6QsJsyld950NGSadH/U95WTU33Se2cVfYKUgf1w==
-X-Received: by 2002:a17:902:241:: with SMTP id 59mr31361252plc.79.1554154541312;
-        Mon, 01 Apr 2019 14:35:41 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id f65sm16923236pff.21.2019.04.01.14.35.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 14:35:40 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 14:35:40 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Hemantg <hemantg@codeaurora.org>,
-        Rocky Liao <rjliao@codeaurora.org>
-Subject: Re: [PATCH] Bluetooth: hci_qca: Fix crash with non-serdev devices
-Message-ID: <20190401213540.GJ112750@google.com>
-References: <CAG5bF+TCPc=m_O33RHXHrt34T1Dz1zHLSkXfpxAoOTmrffGJ7w@mail.gmail.com>
+        Mon, 1 Apr 2019 17:38:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=dell.com; i=@dell.com; q=dns/txt; s=smtpout;
+  t=1554154680; x=1585690680;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=/8UOVTZorypD84ZIa2S8SSYn5R/O3U/R2Zdr3m3YJIw=;
+  b=p+/PG8xrQls4lo477pyxfBSlCt3PRw3oNVWNqDvJ5nRsQvFolDvWeXkx
+   +IIgJzo+orS5ElCHQDxE0cVfzQIBcl8+rXrFfw484RIazFhWdNFFDZ4/a
+   1cjpJq/ObYYr1fbohvJ8vSvdqgGet8npJFZ/M3gcuexXAf98h11SMcar8
+   4=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2E0AACtg6JchyeV50NkGgEBAQEBAgE?=
+ =?us-ascii?q?BAQEHAgEBAQGBZYJogRQnCoQEiHuMWYF/hzmPGYFnDgEBhGwCF4UuIjgSAQE?=
+ =?us-ascii?q?DAQEJAQMCAQECEAEBARUJCCkvgjoigm8BAQEBAgESERFFDAQCAQgRBAEBAQI?=
+ =?us-ascii?q?CJgICAh8mCAgCBAENBQgagwCBXgMNCKIMPQJvgQGJBwEBAW+BL4gFDYIfgQs?=
+ =?us-ascii?q?kizOCFoERgxI+ghqBdwESAYMpglcDjFQshEGTUzYHApAggzgilCwtixKHTYw?=
+ =?us-ascii?q?BAgQCBAUCFYFkIGdxcFCCbIIWDgmOHj8BATEBjXiBH4EfAQE?=
+X-IPAS-Result: =?us-ascii?q?A2E0AACtg6JchyeV50NkGgEBAQEBAgEBAQEHAgEBAQGBZ?=
+ =?us-ascii?q?YJogRQnCoQEiHuMWYF/hzmPGYFnDgEBhGwCF4UuIjgSAQEDAQEJAQMCAQECE?=
+ =?us-ascii?q?AEBARUJCCkvgjoigm8BAQEBAgESERFFDAQCAQgRBAEBAQICJgICAh8mCAgCB?=
+ =?us-ascii?q?AENBQgagwCBXgMNCKIMPQJvgQGJBwEBAW+BL4gFDYIfgQskizOCFoERgxI+g?=
+ =?us-ascii?q?hqBdwESAYMpglcDjFQshEGTUzYHApAggzgilCwtixKHTYwBAgQCBAUCFYFkI?=
+ =?us-ascii?q?GdxcFCCbIIWDgmOHj8BATEBjXiBH4EfAQE?=
+Received: from mx0a-00154901.pphosted.com ([67.231.149.39])
+  by esa7.dell-outbound.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Apr 2019 16:38:00 -0500
+Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x31LX4Qw078550;
+        Mon, 1 Apr 2019 17:38:05 -0400
+Received: from ausxipps301.us.dell.com (ausxipps301.us.dell.com [143.166.148.223])
+        by mx0a-00154901.pphosted.com with ESMTP id 2rkpn6sjj4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Apr 2019 17:38:05 -0400
+X-LoopCount0: from 10.166.132.189
+X-IronPort-AV: E=Sophos;i="5.60,298,1549951200"; 
+   d="scan'208";a="316112066"
+From:   <Mario.Limonciello@dell.com>
+To:     <andy.shevchenko@gmail.com>, <kai.heng.feng@canonical.com>
+CC:     <hdegoede@redhat.com>, <benjamin.tissoires@redhat.com>,
+        <hotwater438@tutanota.com>, <jikos@kernel.org>,
+        <swboyd@chromium.org>, <bigeasy@linutronix.de>,
+        <dtor@chromium.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] ELAN touchpad i2c_hid bugs fix
+Thread-Topic: [PATCH] ELAN touchpad i2c_hid bugs fix
+Thread-Index: AQHU38tKLmjUymjes0i7kAL1Jj1zi6Yn4/bg
+Date:   Mon, 1 Apr 2019 21:37:49 +0000
+Message-ID: <d813fe02035b481b8f3a55aa4dffbb22@ausx13mpc120.AMER.DELL.COM>
+References: <LaQHUFs--3-1@tutanota.com>
+ <CAO-hwJLGABHATo-fOc_jgc8uNeLDv7cemsHuQMj7zRJWmfyp4g@mail.gmail.com>
+ <9151d116-958c-9298-9427-fe803a163e9f@redhat.com>
+ <F03846A5-6C42-4290-AF72-F644C809A50A@canonical.com>
+ <CAHp75VcOG9H8u+tZyNN682r7+jsRZi8VoPPZ2uJPch1gNyFgmQ@mail.gmail.com>
+ <220FEDBD-9A71-4C14-A7D6-3850D515865F@canonical.com>
+ <CAHp75VdTMn_v8ag11jo6aYtuiWL4bhvSzCnhaUBtuqSQxxnT_w@mail.gmail.com>
+In-Reply-To: <CAHp75VdTMn_v8ag11jo6aYtuiWL4bhvSzCnhaUBtuqSQxxnT_w@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.242.75]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAG5bF+TCPc=m_O33RHXHrt34T1Dz1zHLSkXfpxAoOTmrffGJ7w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-01_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=968 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904010139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marcel,
-
-do you have any comments or can this fix be landed?
-
-Thanks
-
-Matthias
-
-On Wed, Mar 13, 2019 at 04:52:19PM -0700, Matthias Kaehlcke wrote:
-> qca_set_baudrate() calls serdev_device_wait_until_sent() assuming that
-> the HCI is always associated with a serdev device. This isn't true for
-> ROME controllers instantiated through ldisc, where the call causes a
-> crash due to a NULL pointer dereferentiation. Only call the function
-> when we have a serdev device. The timeout for ROME devices at the end
-> of qca_set_baudrate() is long enough to be reasonably sure that the
-> command was sent.
-> 
-> Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm
-> Bluetooth chip wcn3990")
-> Reported-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> Reported-by: Rocky Liao <rjliao@codeaurora.org>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  drivers/bluetooth/hci_qca.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 4ea995d610d2..714a6a16f9d5 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -1004,7 +1004,8 @@ static int qca_set_baudrate(struct hci_dev
-> *hdev, uint8_t baudrate)
->  	while (!skb_queue_empty(&qca->txq))
->  		usleep_range(100, 200);
-> 
-> -	serdev_device_wait_until_sent(hu->serdev,
-> +	if (hu->serdev)
-> +		serdev_device_wait_until_sent(hu->serdev,
->  		      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
-> 
->  	/* Give the controller time to process the request */
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gPGFu
+ZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+DQo+IFNlbnQ6IFRodXJzZGF5LCBNYXJjaCAyMSwgMjAx
+OSA0OjQ4IEFNDQo+IFRvOiBLYWktSGVuZyBGZW5nOyBMaW1vbmNpZWxsbywgTWFyaW8NCj4gQ2M6
+IEhhbnMgZGUgR29lZGU7IEJlbmphbWluIFRpc3NvaXJlczsgaG90d2F0ZXI0MzhAdHV0YW5vdGEu
+Y29tOyBKaXJpIEtvc2luYTsNCj4gU3RlcGhlbiBCb3lkOyBTZWJhc3RpYW4gQW5kcnplaiBTaWV3
+aW9yOyBEbWl0cnkgVG9yb2tob3Y7IG9wZW4gbGlzdDpISUQgQ09SRQ0KPiBMQVlFUjsgbGttbA0K
+PiBTdWJqZWN0OiBSZTogW1BBVENIXSBFTEFOIHRvdWNocGFkIGkyY19oaWQgYnVncyBmaXgNCj4g
+DQo+IA0KPiBbRVhURVJOQUwgRU1BSUxdDQo+IA0KPiArQ2M6IE1hcmlvDQo+IA0KPiBNYXJpbywg
+ZG8geW91IGhhdmUgYW55IGluc2lnaHRzIGFib3V0IHRoZSBpc3N1ZSB3aXRoIHRvdWNocGFkIG9u
+IERlbGwNCj4gc3lzdGVtIGRlc2NyaWJlZCBiZWxvdz8NCg0KTXkgYXBvbG9naWVzLCB0aGlzIGdv
+dCBsb3N0IHdoaWxlIEkgd2FzIG9uIHZhY2F0aW9uLg0KDQo+IA0KPiBPbiBUaHUsIE1hciAyMSwg
+MjAxOSBhdCA2OjA4IEFNIEthaS1IZW5nIEZlbmcNCj4gPGthaS5oZW5nLmZlbmdAY2Fub25pY2Fs
+LmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBhdCAwMToxOCwgQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNo
+ZXZjaGVua29AZ21haWwuY29tPiB3cm90ZToNCj4gPg0KPiA+ID4gT24gV2VkLCBNYXIgMjAsIDIw
+MTkgYXQgNjo1NSBQTSBLYWktSGVuZyBGZW5nDQo+ID4gPiA8a2FpLmhlbmcuZmVuZ0BjYW5vbmlj
+YWwuY29tPiB3cm90ZToNCj4gPiA+PiBhdCAyMzozOSwgSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVA
+cmVkaGF0LmNvbT4gd3JvdGU6DQo+ID4gPj4+IE9uIDMvMjAvMTkgMzozNyBQTSwgQmVuamFtaW4g
+VGlzc29pcmVzIHdyb3RlOg0KPiA+ID4NCj4gPiA+Pj4gQmVuamFtaW4sIHdoYXQgSSBmaW5kIGlu
+dGVyZXN0aW5nIGhlcmUgaXMgdGhhdCB0aGUgQk9HVVNfSVJRIHF1aXJrDQo+ID4gPj4+IGlzIGFs
+c28gdXNlZCBvbiBFbGFuIGRldmljZXMsIEkgc3VzcGVjdCB0aGF0IHRoZXNlIEVsYW4gZGV2aWNl
+cw0KPiA+ID4+PiBsaWtlbHkgYWxzbyBuZWVkIHRoZSBJMkNfSElEX1FVSVJLX0ZPUkNFX1RSSUdH
+RVJfRkFMTElORyBxdWlyaw0KPiA+ID4+PiBhbmQgdGhlbiB0aGV5IHByb2JhYmx5IHdpbGwgbm8g
+bG9uZ2VyIG5lZWQgdGhlIGJvZ3VzIElSUSBmbGFnLA0KPiA+ID4+PiBpZiB5b3Uga25vdyBhYm91
+dCBidWdyZXBvcnRzIHdpdGggYW4gYWNwaWR1bXAgZm9yIGFueSBvZiB0aGUgZGV2aWNlcw0KPiA+
+ID4+PiBuZWVkaW5nIHRoZSBib2d1cyBJUlEgcXVpcmssIHRoZW4gSSAob3IgeW91KSBjYW4gY2hl
+Y2sgaG93IHRoZSBJUlEgaXMNCj4gPiA+Pj4gZGVjbGFyZWQgdGhlcmUsIEkgc3VzcGVjdCBpdCB3
+aWxsIGJlIGRlY2xhcmVkIGFzIGxldmVsLWxvdywganVzdCBsaWtlDQo+ID4gPj4+IHdpdGggdGhl
+IGxhcHRvcCB0aGlzIHBhdGNoIHdhcyB3cml0dGVuIGZvci4gQW5kIGl0IHByb2JhYmx5IG5lZWQg
+dG8NCj4gPiA+Pj4gYmUgZWRnZS1mYWxsaW5nIGluc3RlYWQgb2YgbGV2ZWwtbG93IGp1c3QgbGlr
+ZSB0aGlzIGNhc2UuDQo+ID4gPj4NCj4gPiA+PiBGaXJzdCwgSeKAmXZlIGFscmVhZHkgdHJpZWQg
+dXNpbmcgSVJRRl9UUklHR0VSX0ZBTExJTkcsIHVuZm9ydHVuYXRlbHkgaXQNCj4gPiA+PiBkb2Vz
+buKAmXQgc29sdmUgdGhlIGlzc3VlIGZvciBtZS4NCj4gPiA+Pg0KPiA+ID4+IEkgdGFsa2VkIHRv
+IEVsYW4gb25jZSwgYW5kIHRoZXkgY29uZmlybSB0aGUgY29ycmVjdCBJUlEgdHJpZ2dlciBpcyBs
+ZXZlbA0KPiA+ID4+IGxvdy4gU28gZm9yY2luZyBmYWxsaW5nIHRyaWdnZXIgbWF5IGJyZWFrIG90
+aGVyIHBsYXRmb3Jtcy4NCj4gPiA+DQo+ID4gPiBBcyBmYXIgYXMgSSB1bmRlcnN0b29kIFZsYWRp
+c2xhdiB0aGUgcXVpcmsgaGUgZ290IGZyb20gRWxhbiBhcyB3ZWxsLg0KPiA+DQo+ID4gT2ssIHRo
+ZW4gdGhpcyBpcyByZWFsbHkgd2VpcmQuDQo+ID4NCj4gPiA+DQo+ID4gPj4gUmVjZW50bHkgd2Ug
+Zm91bmQgdGhhdCBFbGFuIHRvdWNocGFkIGRvZXNu4oCZdCBsaWtlIEdwaW9JbnQoKSBmcm9tIGl0
+cyBfQ1JTLg0KPiA+ID4+IE9uY2UgdGhlIEludGVycnVwdCgpIGlzIHVzZWQgaW5zdGVhZCwgdGhl
+IGlzc3VlIGdvZXMgYXdheS4NCj4gPiA+DQo+ID4gPiBJSVJDIGkyYyBjb3JlIHRyaWVzIHRvIGdl
+dCBpbnRlcnJ1cHQgZnJvbSBJbnRlcnJ1cHQoKSByZXNvdXJjZSBhbmQNCj4gPiA+IHRoZW4gZmFs
+bHMgYmFjayB0byBHcGlvSW50KCkuDQo+ID4gPiBTZWUgaTJjX2FjcGlfZ2V0X2luZm8oKSBhbmQg
+aTJjX2RldmljZV9wcm9iZSgpLg0KPiA+DQo+ID4gSGVyZeKAmXMgaXRzIEFTTDoNCj4gPg0KPiA+
+ICAgICAgU2NvcGUgKFxfU0IuUENJMC5JMkM0KQ0KPiA+ICAgICAgew0KPiA+ICAgICAgICAgIERl
+dmljZSAoVFBEMCkNCj4gPiAgICAgICAgICB7DQo+ID4gICAgICAgICAgICAgIE5hbWUgKF9BRFIs
+IE9uZSkgIC8vIF9BRFI6IEFkZHJlc3MNCj4gPiAgICAgICAgICAgICAgTmFtZSAoX0hJRCwgIkRF
+TEwwOEFFIikgIC8vIF9ISUQ6IEhhcmR3YXJlIElEDQo+ID4gICAgICAgICAgICAgIE5hbWUgKF9D
+SUQsICJQTlAwQzUwIiAvKiBISUQgUHJvdG9jb2wgRGV2aWNlIChJMkMgYnVzKSAqLykgIC8vIF9D
+SUQ6DQo+IENvbXBhdGlibGUgSUQNCj4gPiAgICAgICAgICAgICAgTmFtZSAoX1VJRCwgT25lKSAg
+Ly8gX1VJRDogVW5pcXVlIElEDQo+ID4gICAgICAgICAgICAgIE5hbWUgKF9TMFcsIDB4MDQpICAv
+LyBfUzBXOiBTMCBEZXZpY2UgV2FrZSBTdGF0ZQ0KPiA+ICAgICAgICAgICAgICBOYW1lIChTQkZC
+LCBSZXNvdXJjZVRlbXBsYXRlICgpDQo+ID4gICAgICAgICAgICAgIHsNCj4gPiAgICAgICAgICAg
+ICAgICAgIEkyY1NlcmlhbEJ1c1YyICgweDAwMkMsIENvbnRyb2xsZXJJbml0aWF0ZWQsIDB4MDAw
+NjFBODAsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgQWRkcmVzc2luZ01vZGU3Qml0LCAiXFxf
+U0IuUENJMC5JMkM0IiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAweDAwLCBSZXNvdXJjZUNv
+bnN1bWVyLCAsIEV4Y2x1c2l2ZSwNCj4gPiAgICAgICAgICAgICAgICAgICAgICApDQo+ID4gICAg
+ICAgICAgICAgIH0pDQo+ID4gICAgICAgICAgICAgIE5hbWUgKFNCRkcsIFJlc291cmNlVGVtcGxh
+dGUgKCkNCj4gPiAgICAgICAgICAgICAgew0KPiA+ICAgICAgICAgICAgICAgICAgR3Bpb0ludCAo
+TGV2ZWwsIEFjdGl2ZUxvdywgRXhjbHVzaXZlQW5kV2FrZSwgUHVsbFVwLCAweDAwMDAsDQo+ID4g
+ICAgICAgICAgICAgICAgICAgICAgIlxcX1NCLkdQTzEiLCAweDAwLCBSZXNvdXJjZUNvbnN1bWVy
+LCAsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgKQ0KPiA+ICAgICAgICAgICAgICAgICAgICAg
+IHsgICAvLyBQaW4gbGlzdA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMTINCj4g
+PiAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4gICAgICAgICAgICAgIH0pDQo+ID4gICAgICAg
+ICAgICAgIE5hbWUgKFNCRkksIFJlc291cmNlVGVtcGxhdGUgKCkNCj4gPiAgICAgICAgICAgICAg
+ew0KPiA+ICAgICAgICAgICAgICAgICAgSW50ZXJydXB0IChSZXNvdXJjZUNvbnN1bWVyLCBMZXZl
+bCwgQWN0aXZlTG93LCBFeGNsdXNpdmVBbmRXYWtlLCAsLCApDQo+ID4gICAgICAgICAgICAgICAg
+ICB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAzQywNCj4gPiAgICAgICAgICAg
+ICAgICAgIH0NCj4gPiAgICAgICAgICAgICAgfSkNCj4gPiAgICAgICAgICAgICAgTWV0aG9kIChf
+SU5JLCAwLCBOb3RTZXJpYWxpemVkKSAgLy8gX0lOSTogSW5pdGlhbGl6ZQ0KPiA+ICAgICAgICAg
+ICAgICB7DQo+ID4gICAgICAgICAgICAgIH0NCj4gPiAgICAgICAgICAgICAgTWV0aG9kIChfU1RB
+LCAwLCBOb3RTZXJpYWxpemVkKSAgLy8gX1NUQTogU3RhdHVzDQo+ID4gICAgICAgICAgICAgIHsN
+Cj4gPiAgICAgICAgICAgICAgICAgIElmICgoVENQRCA9PSBPbmUpKQ0KPiA+ICAgICAgICAgICAg
+ICAgICAgew0KPiA+ICAgICAgICAgICAgICAgICAgICAgIFJldHVybiAoMHgwRikNCj4gPiAgICAg
+ICAgICAgICAgICAgIH0NCj4gPg0KPiA+ICAgICAgICAgICAgICAgICAgUmV0dXJuIChaZXJvKQ0K
+PiA+ICAgICAgICAgICAgICB9DQo+ID4gICAgICAgICAgICAgIE1ldGhvZCAoX0NSUywgMCwgTm90
+U2VyaWFsaXplZCkgIC8vIF9DUlM6IEN1cnJlbnQgUmVzb3VyY2UgU2V0dGluZ3MNCj4gPiAgICAg
+ICAgICAgICAgew0KPiA+ICAgICAgICAgICAgICAgICAgSWYgKChPU1lTIDwgMHgwN0RDKSkNCj4g
+PiAgICAgICAgICAgICAgICAgIHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICBSZXR1cm4gKFNC
+RkkpIC8qIFxfU0JfLlBDSTAuSTJDNC5UUEQwLlNCRkkgKi8NCj4gPiAgICAgICAgICAgICAgICAg
+IH0NCj4gPg0KPiA+ICAgICAgICAgICAgICAgICAgUmV0dXJuIChDb25jYXRlbmF0ZVJlc1RlbXBs
+YXRlIChTQkZCLCBTQkZHKSkNCj4gPiAgICAgICAgICAgICAgfQ0KPiA+ICAgICAgICAgICAgICBN
+ZXRob2QgKF9EU00sIDQsIE5vdFNlcmlhbGl6ZWQpICAvLyBfRFNNOiBEZXZpY2UtU3BlY2lmaWMg
+TWV0aG9kDQo+ID4gICAgICAgICAgICAgIHsNCj4gPiAgICAgICAgICAgICAgICAgIElmICgoQXJn
+MCA9PSBUb1VVSUQgKCIzY2RmZjZmNy00MjY3LTQ1NTUtYWQwNS1iMzBhM2Q4OTM4ZGUiKSAvKiBI
+SUQNCj4gSTJDIERldmljZSAqLykpDQo+ID4gICAgICAgICAgICAgICAgICB7DQo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgSWYgKChBcmcyID09IFplcm8pKQ0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgIHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgSWYgKChBcmcxID09IE9uZSkpDQo+
+ID4gICAgICAgICAgICAgICAgICAgICAgICAgIHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIFJldHVybiAoQnVmZmVyIChPbmUpDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDMgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvLyAuDQo+ID4gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB9KQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICB9DQo+
+ID4gICAgICAgICAgICAgICAgICAgICAgICAgIEVsc2UNCj4gPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgew0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUmV0dXJuIChCdWZmZXIg
+KE9uZSkNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHsNCj4gPiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgMHgwMCAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIC8vIC4NCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0p
+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgIH0NCj4gPiAgICAgICAgICAgICAgICAgICAg
+ICB9DQo+ID4gICAgICAgICAgICAgICAgICAgICAgRWxzZUlmICgoQXJnMiA9PSBPbmUpKQ0KPiA+
+ICAgICAgICAgICAgICAgICAgICAgIHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgUmV0
+dXJuICgweDIwKQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgIH0NCj4gPiAgICAgICAgICAgICAg
+ICAgICAgICBFbHNlDQo+ID4gICAgICAgICAgICAgICAgICAgICAgew0KPiA+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICBSZXR1cm4gKEJ1ZmZlciAoT25lKQ0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8vIC4NCj4gPiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfSkNCj4gPiAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4gICAgICAg
+ICAgICAgICAgICB9DQo+ID4gICAgICAgICAgICAgICAgICBFbHNlSWYgKChBcmcwID09IFRvVVVJ
+RCAoImVmODdlYjgyLWY5NTEtNDZkYS04NGVjLTE0ODcxYWM2Zjg0YiIpKSkNCj4gPiAgICAgICAg
+ICAgICAgICAgIHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICBJZiAoKEFyZzIgPT0gWmVybykp
+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgew0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICBJZiAoKEFyZzEgPT0gT25lKSkNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgew0KPiA+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUmV0dXJuIChCdWZmZXIgKE9uZSkNCj4gPiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgMHgwMyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIC8vIC4NCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0pDQo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgIH0NCj4gPiAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4NCj4g
+PiAgICAgICAgICAgICAgICAgICAgICBJZiAoKEFyZzIgPT0gT25lKSkNCj4gPiAgICAgICAgICAg
+ICAgICAgICAgICB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgIFJldHVybiAoQ29uY2F0
+ZW5hdGVSZXNUZW1wbGF0ZSAoU0JGQiwgU0JGRykpDQo+ID4gICAgICAgICAgICAgICAgICAgICAg
+fQ0KPiA+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgUmV0dXJuIChCdWZmZXIgKE9uZSkNCj4g
+PiAgICAgICAgICAgICAgICAgICAgICB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAw
+eDAwICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLy8gLg0KPiA+
+ICAgICAgICAgICAgICAgICAgICAgIH0pDQo+ID4gICAgICAgICAgICAgICAgICB9DQo+ID4gICAg
+ICAgICAgICAgICAgICB9DQo+ID4gICAgICAgICAgICAgICAgICBFbHNlDQo+ID4gICAgICAgICAg
+ICAgICAgICB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgUmV0dXJuIChCdWZmZXIgKE9uZSkN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAweDAwICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLy8gLg0K
+PiA+ICAgICAgICAgICAgICAgICAgICAgIH0pDQo+ID4gICAgICAgICAgICAgICAgICB9DQo+ID4g
+ICAgICAgICAgICAgIH0NCj4gPiAgICAgICAgICB9DQo+ID4gICAgICB9DQo+ID4NCj4gPiBDaGFu
+Z2UgU0JGRyB0byBTQkZJIGluIGl0cyBfQ1JTIGNhbiB3b3JrYXJvdW5kIHRoZSBpc3N1ZS4NCj4g
+PiBJcyBBU0wgaW4gdGhpcyBmb3JtIHBvc3NpYmxlIHRvIGRvIHRoZSBmbG93IHlvdSBkZXNjcmli
+ZWQ/DQo+ID4NCj4gPiBLYWktSGVuZw0KPiA+DQo+ID4gPg0KPiA+ID4+IEJ1dCBJIGFtIG5vdCBz
+dXJlIGhvdyB0byBwYXRjaCBpdHMgRFNEVC9TU0RUIGluIGkyYy1oaWQuDQoNCklzIHRoaXMgcHJl
+LXByb2R1Y3Rpb24gSFc/ICBJZiBzbywgbWF5YmUgdGhpcyBpcyBhIGNhc2UgdGhhdCB3ZSBzaG91
+bGQgdGFsaw0KYWJvdXQgY3VzdG9tIE9TSSBzdHJpbmcgdG8gcnVuIHRoZSBBU0wgZGlmZmVyZW50
+bHkuDQoNClRoZSBvdGhlciBvcHRpb24gd291bGQgYmUgdG8gY3JlYXRlIGEgbmV3IEFTTCBtZXRo
+b2QgaW4gRlcgYW5kIGZyb20gTGludXgNCnNpZGUgYSBxdWlyayB0aGF0IGNhbGxzIHRoaXMgbmV3
+IEFTTCBtZXRob2QuDQoNCg==
