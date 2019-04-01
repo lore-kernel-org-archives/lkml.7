@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F441C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A57CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69FC720663
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D425C20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554142107;
-	bh=E9fmi8uohOoAuSJcQtPMnP04Lmmj4ilHKbaARpbZvoM=;
+	s=default; t=1554142120;
+	bh=VOiIhMR3gVI/G9pAu2U1jRjwFSJ+aR2+bQ1N342htU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z8aNy37ZlcjZ68j2QbPcFOn+MjTc/0kkRQP+k0cLsHa1LdHIWjs5t1xDmFT5dIWDJ
-	 kmmsoVm8CvT5Rilk779TFzDG/MFLNVxkPLRiInReKgfIb3dqxKtshC4yVlDt062v1f
-	 hTvEllVB+MR1qtX8y9ZBkh8EJCqHm0zRNVcttUpI=
+	b=O0nQEdI8cS+ffUAMRPIBIMRu8dXm3RH5+t/I9EEAUsKNl08JYVeAWpLTw7WnA2KWR
+	 ZBbAysa3fnOt2a+jie42z4i8l/h2jmVjZPGFE2gusryZ3dN/UAAIg9ax7VOTmH2jQx
+	 uGnQfOKrkA278YrYD2p8X9j4ASNJRthuQ7iATnQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbfDARKS (ORCPT
+        id S1729868AbfDARJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:10:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57684 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:09:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729366AbfDARKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:10:13 -0400
+        id S1729850AbfDARJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:09:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C2D5206B8;
-        Mon,  1 Apr 2019 17:10:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A8A721929;
+        Mon,  1 Apr 2019 17:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138612;
-        bh=E9fmi8uohOoAuSJcQtPMnP04Lmmj4ilHKbaARpbZvoM=;
+        s=default; t=1554138592;
+        bh=VOiIhMR3gVI/G9pAu2U1jRjwFSJ+aR2+bQ1N342htU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L8KitvLBR9PIo/q1IekC0NZgrw7q0okG3S6OygFEQaRLiHATR7ewThUeLPCxX7klL
-         OxtvbNPZa2V713tHTP74JYGxiGZ8Ft2S7NocTBBrSVaCC3wZ6rc9T8JiB/rBgtIGpH
-         J/0cm+Oj8XtCoAX9DkQaXPvZVNRhZf50dySLhb3E=
+        b=zmCuUtgyuLo1ny9qA9/EHvpU10EiRfLgnMjXSuSDgU9jrk3CEGmr/fY3KWepbnkqI
+         FETzwCixyAKeIUcyY56FjYkWfvZAPtU0LxAlttC9OKOck7PwDbOgo24WlDSCA4NKvG
+         7v89DFSV3qkiuExJGiv11r8zVO7oj78+nt/mgSCc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 5.0 116/146] usb: common: Consider only available nodes for dr_mode
-Date:   Mon,  1 Apr 2019 19:02:08 +0200
-Message-Id: <20190401170058.236425802@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 5.0 111/146] gpio: exar: add a check for the return value of ida_simple_get fails
+Date:   Mon,  1 Apr 2019 19:02:03 +0200
+Message-Id: <20190401170057.902887213@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -65,34 +65,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-commit 238e0268c82789e4c107a37045d529a6dbce51a9 upstream.
+commit 7ecced0934e574b528a1ba6c237731e682216a74 upstream.
 
-There are cases where multiple device tree nodes point to the
-same phy node by means of the "phys" property, but we should
-only consider those nodes that are marked as available rather
-than just any node.
+ida_simple_get may fail and return a negative error number.
+The fix checks its return value; if it fails, go to err_destroy.
 
-Fixes: 98bfb3946695 ("usb: of: add an api to get dr_mode by the phy node")
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/common/common.c |    2 ++
+ drivers/gpio/gpio-exar.c |    2 ++
  1 file changed, 2 insertions(+)
 
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -145,6 +145,8 @@ enum usb_dr_mode of_usb_get_dr_mode_by_p
+--- a/drivers/gpio/gpio-exar.c
++++ b/drivers/gpio/gpio-exar.c
+@@ -148,6 +148,8 @@ static int gpio_exar_probe(struct platfo
+ 	mutex_init(&exar_gpio->lock);
  
- 	do {
- 		controller = of_find_node_with_property(controller, "phys");
-+		if (!of_device_is_available(controller))
-+			continue;
- 		index = 0;
- 		do {
- 			if (arg0 == -1) {
+ 	index = ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
++	if (index < 0)
++		goto err_destroy;
+ 
+ 	sprintf(exar_gpio->name, "exar_gpio%d", index);
+ 	exar_gpio->gpio_chip.label = exar_gpio->name;
 
 
