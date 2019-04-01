@@ -4,61 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28725C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD43C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E032086C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E6A2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554099239;
-	bh=LCqdFB722rt9ET0SZqdXzeglVUMGIIAgBansj7hQHq4=;
+	s=default; t=1554099452;
+	bh=qAxsK83Y1E8BjJeMAKQuophDBP/wZFhiTPSMxBrviBg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DHMB5svjeZ89utsjUb5yrq++aUGO04fBHgqW4/P38ZDAsPzA26KhLrROQSdnVMoaU
-	 67Phr+nZ8QD6Nn3Ziy+0I1a1nbGHmrVkohADOuSh1c+ObYB1e0gN6COfvn1qVm9JFL
-	 RQLxm2FMD0pjO3fSEStF5UXXRu/IK+/HmJ+aP/zA=
+	b=mqlOqyuV0H6XdN1R9jcrGmr+7AgtBEn+A8+0y1FuSXZQP3CAB/h8sHtswacldV+q2
+	 BbG2pPQA3Xv4K7eL9cmrqAOtS9JX4m9CN6ALjkf6Gemck8Wy5zoBf8kOPfdKdGxxYz
+	 BJtgEdTYkRi/jCXlJs1jFzBkiXDn9TKQipse1CuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731659AbfDAGN6 (ORCPT
+        id S1728109AbfDAGRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 02:13:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57600 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 02:17:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfDAGN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 02:13:57 -0400
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        id S1725784AbfDAGRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 02:17:30 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B00B21841;
-        Mon,  1 Apr 2019 06:13:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E5520896;
+        Mon,  1 Apr 2019 06:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554099236;
-        bh=LCqdFB722rt9ET0SZqdXzeglVUMGIIAgBansj7hQHq4=;
+        s=default; t=1554099449;
+        bh=qAxsK83Y1E8BjJeMAKQuophDBP/wZFhiTPSMxBrviBg=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Uyq1dgPELcGqLbNFjKDDZmPh6eGjhgNt6scuO8cM/ONyvAI0Fw6Z+DKrqdXsBoopc
-         b+jeGuB4ltJM0R+KURrdkPIm1KJsFYKsn7TGPLChk6yi9qZ6AIbQJD38RbzB5YWnX5
-         bidzuPZd2m5aRoEBOoECWk0XLCZBbm4fIP4iqkfk=
-Received: by mail-qk1-f181.google.com with SMTP id c20so4896023qkc.10;
-        Sun, 31 Mar 2019 23:13:56 -0700 (PDT)
-X-Gm-Message-State: APjAAAWfSBcCWBUC9I4TgM9IR6NZlrAnTFVretX0f3oBV03ZyBlUFnLv
-        CfmFG0KJUAix4EP0m54x0IZkNLzH/7JWn83R5A==
-X-Google-Smtp-Source: APXvYqy9OcArgA5LYVM2Q3OwfhGdghCywxRy13DUvQHPfRw1Xx97eTBOfLxSz8hip1m1xRHd6x72O4H1bIE/I+Xk+QE=
-X-Received: by 2002:a37:d285:: with SMTP id f127mr49230127qkj.147.1554099235271;
- Sun, 31 Mar 2019 23:13:55 -0700 (PDT)
+        b=SfxMmEZNQNoX+06pp66GrG5dw838/zsOmLP83bFOt4qnkjZx75B1fb4hH/3ra5WUR
+         BwpXFw1ttdy78ziDlyO9jfRpCbnq1A7hMMtu18uBG8c0r1htdmDw1dM1EfiSwOVCB0
+         JAQuFqLJG5rPbKo12pr+eh/pN4ZNA189wVpSXSnA=
+Received: by mail-qt1-f174.google.com with SMTP id z16so9496321qtn.4;
+        Sun, 31 Mar 2019 23:17:28 -0700 (PDT)
+X-Gm-Message-State: APjAAAXslC+jv9CcxgE5d4i2BC8R6uD02541akvvEk5JZ2eqNlH04/+W
+        fKGCQmP2p5U0Cw5kv5nzAGCNqlFwSsLu8Mlt2g==
+X-Google-Smtp-Source: APXvYqxeeYo6Cmd+D0paXHCY6OGLFuvNxYN7v0qdPyDO/7InSYef8iOe5yGB0KdF6alvXQM88Cqy4doEJV3IvW8d4ls=
+X-Received: by 2002:aed:35b0:: with SMTP id c45mr52888123qte.144.1554099448033;
+ Sun, 31 Mar 2019 23:17:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190331152717.j3b3aggx674zrcko@arbad>
-In-Reply-To: <20190331152717.j3b3aggx674zrcko@arbad>
+References: <20190331164753.xifw6kkiwdg4xpzo@arbad>
+In-Reply-To: <20190331164753.xifw6kkiwdg4xpzo@arbad>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 1 Apr 2019 01:13:44 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLvXu3rmeekZ+rXUMB6Mw8yBSi8B3mdjga5N0GwrM7n+Q@mail.gmail.com>
-Message-ID: <CAL_JsqLvXu3rmeekZ+rXUMB6Mw8yBSi8B3mdjga5N0GwrM7n+Q@mail.gmail.com>
-Subject: Re: [PATCH] avia-hx711.yaml: transform DT binding to YAML
+Date:   Mon, 1 Apr 2019 01:17:16 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJuu1hgmRm0Vom4Q8aXFXBJoReTzGz6UEv6bQ+QHnQLtQ@mail.gmail.com>
+Message-ID: <CAL_JsqJuu1hgmRm0Vom4Q8aXFXBJoReTzGz6UEv6bQ+QHnQLtQ@mail.gmail.com>
+Subject: Re: [PATCH] bmp085.yaml: transform DT documentation of iio sensor
+ into YAML
 To:     Andreas Klinger <ak@it-klinger.de>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald <pmeerw@pmeerw.net>,
+        Brian Masney <masneyb@onstation.org>,
         "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
         devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -68,128 +70,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 31, 2019 at 10:27 AM Andreas Klinger <ak@it-klinger.de> wrote:
+On Sun, Mar 31, 2019 at 11:48 AM Andreas Klinger <ak@it-klinger.de> wrote:
 >
-> replace avia-hx711.txt by avia-hx711.yaml as yaml devicetree documentation
-> for avia hx711 iio adc sensor
+> use bmp085.txt and change it into yaml format
+>
+> fix links to datasheets in replaced documentation
 >
 > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 > ---
->  .../devicetree/bindings/iio/adc/avia-hx711.txt     | 24 --------
->  .../devicetree/bindings/iio/adc/avia-hx711.yaml    | 67 ++++++++++++++++++++++
->  2 files changed, 67 insertions(+), 24 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+>  .../devicetree/bindings/iio/pressure/bmp085.txt    | 27 --------
+>  .../devicetree/bindings/iio/pressure/bmp085.yaml   | 71 ++++++++++++++++++++++
+>  2 files changed, 71 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
 >
-> diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
 > deleted file mode 100644
-> index 7222328a3d0d..000000000000
-> --- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
+> index 61c72e63c584..000000000000
+> --- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
 > +++ /dev/null
-> @@ -1,24 +0,0 @@
-> -* AVIA HX711 ADC chip for weight cells
-> -  Bit-banging driver
+> @@ -1,27 +0,0 @@
+> -BMP085/BMP18x/BMP28x digital pressure sensors
 > -
 > -Required properties:
-> - - compatible: Should be "avia,hx711"
-> - - sck-gpios:  Definition of the GPIO for the clock
-> - - dout-gpios: Definition of the GPIO for data-out
-> -               See Documentation/devicetree/bindings/gpio/gpio.txt
-> - - avdd-supply:        Definition of the regulator used as analog supply
+> -- compatible: must be one of:
+> -  "bosch,bmp085"
+> -  "bosch,bmp180"
+> -  "bosch,bmp280"
+> -  "bosch,bme280"
 > -
 > -Optional properties:
-> - - clock-frequency:    Frequency of PD_SCK in Hz
-> -                       Minimum value allowed is 10 kHz because of maximum
-> -                       high time of 50 microseconds.
+> -- interrupts: interrupt mapping for IRQ
+> -- reset-gpios: a GPIO line handling reset of the sensor: as the line is
+> -  active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
+> -- vddd-supply: digital voltage regulator (see regulator/regulator.txt)
+> -- vdda-supply: analog voltage regulator (see regulator/regulator.txt)
 > -
 > -Example:
-> -weight {
-> -       compatible = "avia,hx711";
-> -       sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
-> -       dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
-> -       avdd-suppy = <&avdd>;
-> -       clock-frequency = <100000>;
-> -};
 > -
-> diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+> -pressure@77 {
+> -       compatible = "bosch,bmp085";
+> -       reg = <0x77>;
+> -       interrupt-parent = <&gpio0>;
+> -       interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+> -       reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
+> -       vddd-supply = <&foo>;
+> -       vdda-supply = <&bar>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
 > new file mode 100644
-> index 000000000000..e4fee0f877ee
+> index 000000000000..884f889c1ca5
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
-> @@ -0,0 +1,67 @@
+> +++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.yaml
+> @@ -0,0 +1,71 @@
 > +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: "http://devicetree.org/schemas/iio/adc/avia-hx711.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +$id: http://devicetree.org/schemas/iio/pressure/bmp085.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: AVIA HX711 ADC chip for weight cells
+> +title: BMP085/BMP180/BMP280/BME280 pressure iio sensors
 > +
 > +maintainers:
 > +  - Andreas Klinger <ak@it-klinger.de>
 > +
 > +description: |
-> +  Bit-banging driver using two GPIOs:
-> +  - sck-gpio gives a clock to the sensor with 24 cycles for data retrieval
-> +    and up to 3 cycles for selection of the input channel and gain for the
-> +    next measurement
-> +  - dout-gpio is the sensor data the sensor responds to the clock
+> +  Pressure, temperature and humidity iio sensors with i2c and spi interfaces
 > +
-> +  Specifications about the driver can be found at:
-> +  http://www.aviaic.com/ENProducts.aspx
+> +  Specifications about the sensor can be found at:
+> +    https://www.bosch-sensortec.com/bst/products/all_products/bmp180
+> +    https://www.bosch-sensortec.com/bst/products/all_products/bmp280
+> +    https://www.bosch-sensortec.com/bst/products/all_products/bme280
 > +
 > +properties:
 > +  compatible:
 > +    oneOf:
 > +      - items:
-> +        - const: avia,hx711
+> +        - enum:
+> +          - bosch,bmp085
+> +          - bosch,bmp180
+> +          - bosch,bmp280
+> +          - bosch,bme280
 
-You don't need oneOf here unless you expect to have compatible with a
-variable number of compatible strings. If there are other similar
-chips which could be added, then using enum will be more future proof
-(So is 'oneOf' arguably, but it makes for more cryptic error
-messages).
+This too can be just:
 
-> +
-> +  sck-gpios:
+compatible:
+  enum:
+    - bosch,bmp085
+    - bosch,bmp180
+    - bosch,bmp280
+    - bosch,bme280
+
+> +  vddd-supply:
 > +    description:
-> +      Definition of the GPIO for the clock (output). In the datasheet it is
-> +      named PD_SCK
+> +      digital voltage regulator (see regulator/regulator.txt)
 > +    maxItems: 1
 > +
-> +  dout-gpios:
+> +  vdda-supply:
 > +    description:
-> +      Definition of the GPIO for the data-out sent by the sensor in
-> +      response to the clock (input).
-> +      See Documentation/devicetree/bindings/gpio/gpio.txt for information
-> +      on how to specify a consumer gpio.
+> +      analog voltage regulator (see regulator/regulator.txt)
 > +    maxItems: 1
 > +
-> +  avdd-supply:
+> +  reset-gpios:
 > +    description:
-> +      Definition of the regulator used as analog supply
+> +      A GPIO line handling reset of the sensor. As the line is active low,
+> +      it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
 > +    maxItems: 1
 > +
-> +  clock-frequency:
-> +    minimum: 20000
-> +    maximum: 2500000
-> +    default: 400000
+> +  interrupts:
+> +    description:
+> +      interrupt mapping for IRQ (BMP085 only)
+
+Needs a 'maxItems: 1'
+
 > +
 > +required:
 > +  - compatible
-> +  - sck-gpios
-> +  - dout-gpios
-> +  - avdd-supply
+> +  - vddd-supply
+> +  - vdda-supply
 > +
 > +examples:
 > +  - |
 > +    #include <dt-bindings/gpio/gpio.h>
-> +    weight {
-> +        compatible = "avia,hx711";
-> +        sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
-> +        dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
-> +        avdd-suppy = <&avdd>;
-> +        clock-frequency = <100000>;
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      pressure@77 {
+> +          compatible = "bosch,bmp085";
+> +          reg = <0x77>;
+> +          interrupt-parent = <&gpio0>;
+> +          interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+> +          reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
+> +          vddd-supply = <&foo>;
+> +          vdda-supply = <&bar>;
+> +      };
 > +    };
 > --
 > 2.11.0
