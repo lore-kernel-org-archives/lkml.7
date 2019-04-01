@@ -2,129 +2,101 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAD6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80335C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1593D20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46E5320830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554140516;
+	bh=F7fZD7FVqjgqGjAxvr1Fr2kI32mJf0li+kjC8B3fAoc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ww7ll5RV/LHLDZeiy3UATnkX5usEbt1a+jO7XdbBqJ3XULcrG3NKIXq4y4g5BOjKV
+	 zKGRMlia6v6haQm3RcWjLYfZcklOFGQ6cdGx5NJzElEf01V52Ts0CpejFwwXptjn1C
+	 Ht1fh/f0DwyPCtSbTD8KCN168UIKBS5eGJUy1hAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388258AbfDARh4 (ORCPT
+        id S2388199AbfDARly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:37:56 -0400
-Received: from mga01.intel.com ([192.55.52.88]:9814 "EHLO mga01.intel.com"
+        Mon, 1 Apr 2019 13:41:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387914AbfDARhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:37:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 10:37:53 -0700
-X-IronPort-AV: E=Sophos;i="5.60,297,1549958400"; 
-   d="scan'208";a="130525269"
-Received: from unknown (HELO [10.232.112.189]) ([10.232.112.189])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 01 Apr 2019 10:37:53 -0700
-Subject: Re: [PATCH AUTOSEL 4.14 18/37] nvme-pci: fix conflicting p2p resource
- adds
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org
-References: <20190330013020.379-1-sashal@kernel.org>
- <20190330013020.379-18-sashal@kernel.org>
-From:   "Heitke, Kenneth" <kenneth.heitke@intel.com>
-Message-ID: <225c0c91-dd78-9cd9-7b16-5ef3bf394895@intel.com>
-Date:   Mon, 1 Apr 2019 11:37:52 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1733231AbfDARhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:37:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76E632070B;
+        Mon,  1 Apr 2019 17:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554140260;
+        bh=F7fZD7FVqjgqGjAxvr1Fr2kI32mJf0li+kjC8B3fAoc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cUJ4o4AHNZwV+xP1nC0DwxOT0d47+SECsIaYJ1GPF6q9gLClz8MAKndPtEA3O13rZ
+         afNnvjzFb6U3MrweGhu8Jsfhu9KAvaa7yAga8kxw3SQNzmkFiRjxjTZKixk2IXsKyq
+         n1EpScadsSWac4KVn7KRKuP2XWtJbjPfDJu3YT3Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lorenzo Colitti <lorenzo@google.com>,
+        Hannes Frederic Sowa <hannes@stressinduktion.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 22/50] ipv6: fix endianness error in icmpv6_err
+Date:   Mon,  1 Apr 2019 19:03:05 +0200
+Message-Id: <20190401170043.926929460@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
+References: <20190401170041.257273804@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20190330013020.379-18-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+3.18-stable review patch.  If anyone has any objections, please let me know.
+
+------------------
+
+[ Upstream commit dcb94b88c09ce82a80e188d49bcffdc83ba215a6 ]
+
+IPv6 ping socket error handler doesn't correctly convert the new 32 bit
+mtu to host endianness before using.
+
+Cc: Lorenzo Colitti <lorenzo@google.com>
+Fixes: 6d0bfe22611602f ("net: ipv6: Add IPv6 support to the ping socket.")
+Signed-off-by: Hannes Frederic Sowa <hannes@stressinduktion.org>
+Acked-by: Lorenzo Colitti <lorenzo@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/ipv6/icmp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/ipv6/icmp.c b/net/ipv6/icmp.c
+index 97ae70077a4f..3b5c265dcb1d 100644
+--- a/net/ipv6/icmp.c
++++ b/net/ipv6/icmp.c
+@@ -97,7 +97,7 @@ static void icmpv6_err(struct sk_buff *skb, struct inet6_skb_parm *opt,
+ 
+ 	if (!(type & ICMPV6_INFOMSG_MASK))
+ 		if (icmp6->icmp6_type == ICMPV6_ECHO_REQUEST)
+-			ping_err(skb, offset, info);
++			ping_err(skb, offset, ntohl(info));
+ }
+ 
+ static int icmpv6_rcv(struct sk_buff *skb);
+-- 
+2.19.1
 
 
-On 3/29/2019 7:30 PM, Sasha Levin wrote:
-> From: Keith Busch <keith.busch@intel.com>
-> 
-> [ Upstream commit 9fe5c59ff6a1e5e26a39b75489a1420e7eaaf0b1 ]
-> 
-> The nvme pci driver had been adding its CMB resource to the P2P DMA
-> subsystem everytime on on a controller reset. This results in the
-> following warning:
-> 
->      ------------[ cut here ]------------
->      nvme 0000:00:03.0: Conflicting mapping in same section
->      WARNING: CPU: 7 PID: 81 at kernel/memremap.c:155 devm_memremap_pages+0xa6/0x380
->      ...
->      Call Trace:
->       pci_p2pdma_add_resource+0x153/0x370
->       nvme_reset_work+0x28c/0x17b1 [nvme]
->       ? add_timer+0x107/0x1e0
->       ? dequeue_entity+0x81/0x660
->       ? dequeue_entity+0x3b0/0x660
->       ? pick_next_task_fair+0xaf/0x610
->       ? __switch_to+0xbc/0x410
->       process_one_work+0x1cf/0x350
->       worker_thread+0x215/0x3d0
->       ? process_one_work+0x350/0x350
->       kthread+0x107/0x120
->       ? kthread_park+0x80/0x80
->       ret_from_fork+0x1f/0x30
->      ---[ end trace f7ea76ac6ee72727 ]---
->      nvme nvme0: failed to register the CMB
-> 
-> This patch fixes this by registering the CMB with P2P only once.
-> 
-> Signed-off-by: Keith Busch <keith.busch@intel.com>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   drivers/nvme/host/pci.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> index 06355ca832db..ae03a5b70324 100644
-> --- a/drivers/nvme/host/pci.c
-> +++ b/drivers/nvme/host/pci.c
-> @@ -1546,6 +1546,9 @@ static void __iomem *nvme_map_cmb(struct nvme_dev *dev)
->   	void __iomem *cmb;
->   	int bar;
->   
-> +	if (dev->cmb_size)
-> +		return;
-> +
->   	dev->cmbsz = readl(dev->bar + NVME_REG_CMBSZ);
->   	if (!(NVME_CMB_SZ(dev->cmbsz)))
->   		return NULL;
-> @@ -2034,7 +2037,6 @@ static void nvme_pci_disable(struct nvme_dev *dev)
->   {
->   	struct pci_dev *pdev = to_pci_dev(dev->dev);
->   
-> -	nvme_release_cmb(dev);
->   	pci_free_irq_vectors(pdev);
->   
->   	if (pci_is_enabled(pdev)) {
-> @@ -2434,6 +2436,7 @@ static void nvme_remove(struct pci_dev *pdev)
->   	nvme_stop_ctrl(&dev->ctrl);
->   	nvme_remove_namespaces(&dev->ctrl);
->   	nvme_dev_disable(dev, true);
-> +	nvme_release_cmb(dev);
->   	nvme_free_host_mem(dev);
->   	nvme_dev_remove_admin(dev);
->   	nvme_free_queues(dev, 0);
-> 
 
-There is no P2P support in the 4.14 kernel so I'm not sure this change
-is necessary. I would also worry that it might break things if the BARs
-need to be remapped after a controller reset.
