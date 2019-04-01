@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E2FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7340C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E583721934
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789FE21939
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138834;
-	bh=iad/hsVUp40k6l2KtdOJoAbfj/kXj9mfZrUqnrtBiaw=;
+	s=default; t=1554138837;
+	bh=/DIohRK2a3JnBnsq8W4dt5/2cFjsCj7V9iB3mR8uBw4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U5LcctJc8ct73DPvYufOmycqH98Zyu32cI1tB0A0YhPjV6UXjQHqcG75QBcelrH51
-	 vMqqovFMjaOdrSI4Cgi1S/XtvxL1jbHcfEkUj4B6SXfQEoXYy9ObpkscgISeQq5A+g
-	 V1pVHGgF8sIRpItZiA/LaXqW9srE6BCnuf1fwYXM=
+	b=DuD+fRDpHeRj8vNsK5XBEqxrXH2fSOz/Ke9TUpH9rlF1WFKZ6Fd+iB5CqOeB50A4q
+	 6t9AY5Nd2nFYN7Z55dXUlsU/nDyUULZtJYIMr8T7+jgqPNrn8eLKdBHt8b0Ib/WsB8
+	 CW1kxAmOOOI0zkZ+bUq/zqap5AM2UcXbIfAQ3f0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730337AbfDARNw (ORCPT
+        id S1730639AbfDARN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:13:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36720 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:13:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729872AbfDARNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:13:51 -0400
+        id S1729872AbfDARNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:13:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DBCB21934;
-        Mon,  1 Apr 2019 17:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D59CC21925;
+        Mon,  1 Apr 2019 17:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138830;
-        bh=iad/hsVUp40k6l2KtdOJoAbfj/kXj9mfZrUqnrtBiaw=;
+        s=default; t=1554138833;
+        bh=/DIohRK2a3JnBnsq8W4dt5/2cFjsCj7V9iB3mR8uBw4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D7v3i+ZraS5axaDg91pIyFElTBk07nNxo/RXR3LcrSLGBV71qlc7l2MkL3m3FtgFL
-         CD36QU3sMQegaU1eb8Q8Njte2urc7GWUOC7p3k9R29MsSda/Q1xserdqrTK9VAwpnU
-         Zd+pQVmvflKVLAqKZFSvVv6HUyyDcz7lzo2evgBo=
+        b=SOO9qj3q0sMSJyRxeXgZouXJwPii0gCZZX4jNUyOMsp+jaNJV5XMX8iHv9LsNcelv
+         41CuRa7sx8K5vDXFSP5yn9ee+gLi9Rq4nt+nMYBzJ+4IO0Sh2TJJ4rreeKsZtWWoq0
+         Qo0XHhlkBgVv7UjNgHZwY4EMmxe7bMiTIDP9cP94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        David Ahern <dsahern@gmail.com>, Wei Wang <weiwan@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 007/134] ipv6: make ip6_create_rt_rcu return ip6_null_entry instead of NULL
-Date:   Mon,  1 Apr 2019 19:00:43 +0200
-Message-Id: <20190401170044.994164524@linuxfoundation.org>
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Stan Johnson <userm57@yahoo.com>
+Subject: [PATCH 4.19 008/134] mac8390: Fix mmio access size probe
+Date:   Mon,  1 Apr 2019 19:00:44 +0200
+Message-Id: <20190401170045.082371612@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -68,84 +66,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 1c87e79a002f6a159396138cd3f3ab554a2a8887 ]
+[ Upstream commit bb9e5c5bcd76f4474eac3baf643d7a39f7bac7bb ]
 
-Jianlin reported a crash:
+The bug that Stan reported is as follows. After a restart, a 16-bit NIC
+may be incorrectly identified as a 32-bit NIC and stop working.
 
-  [  381.484332] BUG: unable to handle kernel NULL pointer dereference at 0000000000000068
-  [  381.619802] RIP: 0010:fib6_rule_lookup+0xa3/0x160
-  [  382.009615] Call Trace:
-  [  382.020762]  <IRQ>
-  [  382.030174]  ip6_route_redirect.isra.52+0xc9/0xf0
-  [  382.050984]  ip6_redirect+0xb6/0xf0
-  [  382.066731]  icmpv6_notify+0xca/0x190
-  [  382.083185]  ndisc_redirect_rcv+0x10f/0x160
-  [  382.102569]  ndisc_rcv+0xfb/0x100
-  [  382.117725]  icmpv6_rcv+0x3f2/0x520
-  [  382.133637]  ip6_input_finish+0xbf/0x460
-  [  382.151634]  ip6_input+0x3b/0xb0
-  [  382.166097]  ipv6_rcv+0x378/0x4e0
+mac8390 slot.E: Memory length resource not found, probing
+mac8390 slot.E: Farallon EtherMac II-C (type farallon)
+mac8390 slot.E: MAC 00:00:c5:30:c2:99, IRQ 61, 32 KB shared memory at 0xfeed0000, 32-bit access.
 
-It was caused by the lookup function __ip6_route_redirect() returns NULL in
-fib6_rule_lookup() when ip6_create_rt_rcu() returns NULL.
+The bug never arises after a cold start and only intermittently after a
+warm start. (I didn't investigate why the bug is intermittent.)
 
-So we fix it by simply making ip6_create_rt_rcu() return ip6_null_entry
-instead of NULL.
+It turns out that memcpy_toio() is deprecated and memcmp_withio() also
+has issues. Replacing these calls with mmio accessors fixes the problem.
 
-v1->v2:
-  - move down 'fallback:' to make it more readable.
-
-Fixes: e873e4b9cc7e ("ipv6: use fib6_info_hold_safe() when necessary")
-Reported-by: Jianlin Shi <jishi@redhat.com>
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Acked-by: Wei Wang <weiwan@google.com>
+Reported-and-tested-by: Stan Johnson <userm57@yahoo.com>
+Fixes: 2964db0f5904 ("m68k: Mac DP8390 update")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/route.c |   18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/8390/mac8390.c |   19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -1048,14 +1048,20 @@ static struct rt6_info *ip6_create_rt_rc
- 	struct rt6_info *nrt;
+--- a/drivers/net/ethernet/8390/mac8390.c
++++ b/drivers/net/ethernet/8390/mac8390.c
+@@ -153,8 +153,6 @@ static void dayna_block_input(struct net
+ static void dayna_block_output(struct net_device *dev, int count,
+ 			       const unsigned char *buf, int start_page);
  
- 	if (!fib6_info_hold_safe(rt))
--		return NULL;
-+		goto fallback;
+-#define memcmp_withio(a, b, c)	memcmp((a), (void *)(b), (c))
+-
+ /* Slow Sane (16-bit chunk memory read/write) Cabletron uses this */
+ static void slow_sane_get_8390_hdr(struct net_device *dev,
+ 				   struct e8390_pkt_hdr *hdr, int ring_page);
+@@ -233,19 +231,26 @@ static enum mac8390_type mac8390_ident(s
  
- 	nrt = ip6_dst_alloc(dev_net(dev), dev, flags);
--	if (nrt)
--		ip6_rt_copy_init(nrt, rt);
--	else
-+	if (!nrt) {
- 		fib6_info_release(rt);
-+		goto fallback;
-+	}
+ static enum mac8390_access mac8390_testio(unsigned long membase)
+ {
+-	unsigned long outdata = 0xA5A0B5B0;
+-	unsigned long indata =  0x00000000;
++	u32 outdata = 0xA5A0B5B0;
++	u32 indata = 0;
 +
-+	ip6_rt_copy_init(nrt, rt);
-+	return nrt;
- 
-+fallback:
-+	nrt = dev_net(dev)->ipv6.ip6_null_entry;
-+	dst_hold(&nrt->dst);
- 	return nrt;
+ 	/* Try writing 32 bits */
+-	memcpy_toio((void __iomem *)membase, &outdata, 4);
+-	/* Now compare them */
+-	if (memcmp_withio(&outdata, membase, 4) == 0)
++	nubus_writel(outdata, membase);
++	/* Now read it back */
++	indata = nubus_readl(membase);
++	if (outdata == indata)
+ 		return ACCESS_32;
++
++	outdata = 0xC5C0D5D0;
++	indata = 0;
++
+ 	/* Write 16 bit output */
+ 	word_memcpy_tocard(membase, &outdata, 4);
+ 	/* Now read it back */
+ 	word_memcpy_fromcard(&indata, membase, 4);
+ 	if (outdata == indata)
+ 		return ACCESS_16;
++
+ 	return ACCESS_UNKNOWN;
  }
  
-@@ -1104,10 +1110,6 @@ restart:
- 		dst_hold(&rt->dst);
- 	} else {
- 		rt = ip6_create_rt_rcu(f6i);
--		if (!rt) {
--			rt = net->ipv6.ip6_null_entry;
--			dst_hold(&rt->dst);
--		}
- 	}
- 
- 	rcu_read_unlock();
 
 
