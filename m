@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714EDC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADDDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41597214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99CF20643
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:01:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PoQ9OMzC";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WMqwFLFF"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EezxuOvg";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hK9xPeML"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732273AbfDAIAn (ORCPT
+        id S1732117AbfDAIBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:00:43 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54382 "EHLO
+        Mon, 1 Apr 2019 04:01:20 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57080 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731932AbfDAIAm (ORCPT
+        with ESMTP id S1731835AbfDAIBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:00:42 -0400
+        Mon, 1 Apr 2019 04:01:20 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id DCF746177C; Mon,  1 Apr 2019 08:00:29 +0000 (UTC)
+        id 0B062611FA; Mon,  1 Apr 2019 08:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554105641;
-        bh=zZaH69SjJucQsrQOpi6i2XzK4ey3yx7Zs6Fjpp6p1vs=;
+        s=default; t=1554105679;
+        bh=pWSrvV+/J97gFvn3dXEV1V4mmotcnZqelBsZoybQjvE=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PoQ9OMzChuVCiMlR5WTDYr/+maWXA5MOCBAykf5cqw4Pgzi7Dkmf7sgytzU77WW1O
-         GNSS0hEWmBbQTEVF+obx7TPWVejfMtkd9qwQRAxNWmZFdcCpLM5JzZtciJpXdIIkHe
-         KHalesC0JZVvIOeDZNWi6MNGYec6L9uKETZEaOew=
+        b=EezxuOvgRcNHwJesO0JPEgQSPXCThB1eB86dc+i3axvTcSkKhYrHq1ztEgZJ3jCs3
+         2VNB3HGDwoZeUk31ZYyK59RrivlToBpneTESmDaeiKRcVSstxFoQooF3yuiRpp1wff
+         nUc2rsFIl18u3sPGQzyNu/NZ2ANQdRuu5HlttQxs=
 Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A9726079C;
-        Mon,  1 Apr 2019 08:00:21 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F799619F9;
+        Mon,  1 Apr 2019 08:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554105628;
-        bh=zZaH69SjJucQsrQOpi6i2XzK4ey3yx7Zs6Fjpp6p1vs=;
+        s=default; t=1554105672;
+        bh=pWSrvV+/J97gFvn3dXEV1V4mmotcnZqelBsZoybQjvE=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WMqwFLFFq0p4Pv02DYVvvjmeThibtD+phkYrEdDVAqbhH+8c9MbOHMLCbxgSWzsns
-         2aqjGyWWTUyiYNoIY5Tl40y5GXXqNhK/Wx2f+s+qURdVxGfpM6I3j+oPnZAkZcYRET
-         1Gdp5s/YdmxhiCgieGldiu65d2co7l706wvPIoOU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A9726079C
+        b=hK9xPeMLHGWjlSjdQSQPpXHz2qBkU0mimp6tWhNhhZp4UqoSxxg863qLGx97Apara
+         FoInfe6ur1fAPzEGuT3DXVHU7JqEq08tWfMVHY6VW8kH7umPqhxR6QHa8Z+fWfQI/1
+         olIV9V3EVJjm3AKaThL7VghTbToSeS8wJzg6HkJQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F799619F9
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
 Subject: Re: [PATCH] pwm: imx27: use devm_platform_ioremap_resource() to
@@ -63,8 +63,8 @@ To:     Anson Huang <anson.huang@nxp.com>,
 Cc:     dl-linux-imx <linux-imx@nxp.com>
 References: <1554095960-15638-1-git-send-email-Anson.Huang@nxp.com>
 From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <4d10cb49-baf0-dc59-6df2-62174bb06931@codeaurora.org>
-Date:   Mon, 1 Apr 2019 13:30:19 +0530
+Message-ID: <1fae9beb-1dbc-5e62-a39e-57ae5d8e7671@codeaurora.org>
+Date:   Mon, 1 Apr 2019 13:31:05 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
@@ -84,6 +84,8 @@ On 4/1/2019 10:54 AM, Anson Huang wrote:
 > simplify the code.
 >
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+
+
 Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
 Cheers,
