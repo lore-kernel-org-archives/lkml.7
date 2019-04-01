@@ -2,72 +2,51 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED39C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575D4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D10D21019
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:02:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eEIn3lE0";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="F0u35ap6"
+	by mail.kernel.org (Postfix) with ESMTP id 1CBE220857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfDAPCK (ORCPT
+        id S1728678AbfDAPDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 11:02:10 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38858 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728565AbfDAPCJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 11:02:09 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EEC7D60712; Mon,  1 Apr 2019 15:02:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554130929;
-        bh=aGsk7hKJOHIKA67xAJTC/YBHMPJYHRKYAdsm/hdvdk0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=eEIn3lE0RMrL8w3Lq5qm6KlBTXwb7TVVeoTcD/inV1HWsmWunabxhlrbYyW2bTxkI
-         caqpmaAsyxmFzdoevOhCNTF0evyVlp9WyOw0UblCwqJvE+5fYyoZnL8JuIXiKj2xcd
-         xMITtsGQTC2mlwNeGnuEDRCaia8wRjOoMXX0ANes=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04ACC60712;
-        Mon,  1 Apr 2019 15:01:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554130927;
-        bh=aGsk7hKJOHIKA67xAJTC/YBHMPJYHRKYAdsm/hdvdk0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=F0u35ap6MELfM017+9JyhVGET0uuHnicZ+c4FEuYfzdbaQwgpIaOUvL6DzEL3XOAm
-         v7B0XQA1ORECJIO0DgnDE89sOkjqPGYMMwcopvJL6nvcJtxDa01gCQ9dRiZiecHriL
-         qwCpSCECwvSjNsFp1qZENkAw+8xkvff89AA5APoM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04ACC60712
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] MAINTAINERS: Fix Hyperv vIOMMU driver file name
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     lantianyu1986@gmail.com, davem@davemloft.net,
-        mchehab+samsung@kernel.org, gregkh@linuxfoundation.org,
-        nicolas.ferre@microchip.com, tglx@linutronix.de, mingo@kernel.org,
-        konrad.wilk@oracle.com, jpoimboe@redhat.com, peterz@infradead.org,
-        jkosina@suse.cz, riel@surriel.com, peterz@infraded.org,
-        Tianyu.Lan@microsoft.com, luto@kernel.org,
-        michael.h.kelley@microsoft.com, kys@microsoft.com, joe@perches.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-References: <1553581701-25250-1-git-send-email-Tianyu.Lan@microsoft.com>
- <58c16b52-5833-ede0-c4b0-8b8839ef06b2@codeaurora.org>
- <20190401142026.GA2792@sasha-vm>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <9d91ee81-f1ec-3326-1c7e-eb0546273249@codeaurora.org>
-Date:   Mon, 1 Apr 2019 20:31:56 +0530
+        Mon, 1 Apr 2019 11:03:13 -0400
+Received: from mga17.intel.com ([192.55.52.151]:9558 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728565AbfDAPDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 11:03:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 08:02:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,297,1549958400"; 
+   d="scan'208";a="160309258"
+Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.249.171.234]) ([10.249.171.234])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Apr 2019 08:02:38 -0700
+Subject: Re: [btrfs] 70d28b0e4f:
+ BUG:kernel_reboot-without-warning_in_early-boot_stage,last_printk:Probing_EDD(edd=off_to_disable)...ok
+To:     Qu Wenruo <wqu@suse.de>, Nikolay Borisov <nborisov@suse.com>
+Cc:     lkp@01.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Yoon Jungyeon <jungyeon@gatech.edu>,
+        David Sterba <DSterba@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190401132427.GC9217@shao2-debian>
+ <f3cef716-a1e3-2e84-0133-9a9c3fad2a74@suse.com>
+ <7a6c000e-c523-382a-d13c-790809260e4e@intel.com>
+ <5b82b026-bdd7-f781-e661-f1afdc9cb97b@suse.de>
+From:   "Chen, Rong A" <rong.a.chen@intel.com>
+Message-ID: <23823210-1951-0492-1755-6263ccf388fa@intel.com>
+Date:   Mon, 1 Apr 2019 23:02:37 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-In-Reply-To: <20190401142026.GA2792@sasha-vm>
+In-Reply-To: <5b82b026-bdd7-f781-e661-f1afdc9cb97b@suse.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
@@ -77,28 +56,143 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/1/2019 7:50 PM, Sasha Levin wrote:
-> On Tue, Mar 26, 2019 at 02:57:09PM +0530, Mukesh Ojha wrote:
->>
->> On 3/26/2019 11:58 AM, lantianyu1986@gmail.com wrote:
->>> From: Lan Tianyu <Tianyu.Lan@microsoft.com>
+On 4/1/2019 10:29 PM, Qu Wenruo wrote:
+>
+> On 2019/4/1 下午10:02,  Chen, Rong A  wrote:
+>> On 4/1/2019 9:28 PM, Nikolay Borisov wrote:
+>>> On 1.04.19 г. 16:24 ч., kernel test robot wrote:
+>>>> FYI, we noticed the following commit (built with gcc-7):
+>>>>
+>>>> commit: 70d28b0e4f8ed2d38571e7b1f9bec7f321a53102 ("btrfs:
+>>>> tree-checker: Verify dev item")
+>>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+>>>>
+>>>> in testcase: trinity
+>>>> with following parameters:
+>>>>
+>>>>      runtime: 300s
+>>>>
+>>>> test-description: Trinity is a linux system call fuzz tester.
+>>>> test-url: http://codemonkey.org.uk/projects/trinity/
+>>>>
+>>>>
+>>>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp
+>>>> 2 -m 2G
+>>>>
+>>>> caused below changes (please refer to attached dmesg/kmsg for entire
+>>>> log/backtrace):
+>>>>
+>>>>
+>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
+>>>>
+>>>> |
+>>>> | 36b9d2bc69 | 70d28b0e4f |
+>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
+>>>>
+>>>> |
+>>>> boot_successes
+>>>> | 14         | 0          |
+>>>> |
+>>>> boot_failures
+>>>> | 2          | 14         |
+>>>> |
+>>>> IP-Config:Auto-configuration_of_network_failed
+>>>> | 2          |            |
+>>>> |
+>>>> BUG:kernel_reboot-without-warning_in_early-boot_stage,last_printk:Probing_EDD(edd=off_to_disable)...ok
+>>>> | 0          | 14         |
+>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
+>>>>
+>>>>
+>>>>
+>>>>
+>>>> early console in setup code
+>>>> Probing EDD (edd=off to disable)... ok
+>>>> BUG: kernel reboot-without-warning in early-boot stage, last printk:
+>>>> Probing EDD (edd=off to disable)... ok
+>>>> Linux version 5.0.0-rc8-00196-g70d28b0 #1
+>>>> Command line: ip=::::vm-snb-quantal-x86_64-1415::dhcp root=/dev/ram0
+>>>> user=lkp
+>>>> job=/lkp/jobs/scheduled/vm-snb-quantal-x86_64-1415/trinity-300s-quantal-core-x86_64-2018-11-09.cgz-70d28b0-20190330-29362-1y6g0qb-2.yaml
+>>>> ARCH=x86_64 kconfig=x86_64-randconfig-s5-03231928
+>>>> branch=linux-devel/devel-hourly-2019032317
+>>>> commit=70d28b0e4f8ed2d38571e7b1f9bec7f321a53102
+>>>> BOOT_IMAGE=/pkg/linux/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/vmlinuz-5.0.0-rc8-00196-g70d28b0
+>>>> max_uptime=1500
+>>>> RESULT_ROOT=/result/trinity/300s/vm-snb-quantal-x86_64/quantal-core-x86_64-2018-11-09.cgz/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/8
+>>>> LKP_SERVER=inn debug apic=debug sysrq_always_enabled
+>>>> rcupdate.rcu_cpu_stall_timeout=100 net.ifnames=0 printk.devkmsg=on
+>>>> panic=-1 softlockup_panic=1 nmi_watchdog=panic oops=panic
+>>>> load_ramdisk=2 prompt_ramdisk=0 drbd.minor_count=8
+>>>> systemd.log_level=err ignore_loglevel console=tty0
+>>>> earlyprintk=ttyS0,115200 console=ttyS0,115200 vga=normal rw
+>>>> rcuperf.shutdown=0
+>>>>
+>>> Can this report be made useful by actually including output from serial
+>>> console? For example possible bug-ons or whatnot? dmesg.xz just contains
+>>> qemu's command line + some metadata about the test and :
 >>>
->>> The Hyperv vIOMMU file name should be "hyperv-iommu.c" rather
+>>> "BUG: kernel reboot-without-warning in early-boot stage, last printk:
+>>> Probing EDD (edd=off to disable)... ok"
+>>>
+>>> At least a stack trace would have been useful.
+>>>
+>>> <snip>
 >>
->> s/vIOMMU/IOMMU
+>> Hi,
+>>
+>> We usually use the tool ("bin/lkp qemu -k <bzImage> job-script") to
+>> reproduce it.  It seems no stack trace in the result:
+> So there is no regression at that commit right?
 >
-> What's wrong with vIOMMU? There's no hardware involved (afaik).
+> Just some false alert?
 
 
-What is that extra `v`, v=>virtual
+Hi,
 
-To be precise , it should be  s/Hyperv vIOMMU file name/Hyper-V stub 
-IOMMU driver file name.
+I think there's a regression, it stopped in the early-boot stage .
 
-Thanks,
-Mukesh
+Best Regards,
+Rong Chen
 
->
-> -- 
+
 > Thanks,
-> Sasha
+> Qu
+>
+>> $ lkp qemu -k vmlinuz-5.0.0-rc8-00196-g70d28b0 job-script
+>> ...
+>> Formatting '/tmp/vdisk-nfs/disk-vm-snb-quantal-x86_64-1415-0', fmt=qcow2
+>> size=274877906944 cluster_size=65536 lazy_refcounts=off refcount_bits=16
+>> Formatting '/tmp/vdisk-nfs/disk-vm-snb-quantal-x86_64-1415-1', fmt=qcow2
+>> size=274877906944 cluster_size=65536 lazy_refcounts=off refcount_bits=16
+>> exec command: qemu-system-x86_64 -enable-kvm -fsdev
+>> local,id=test_dev,path=/home/nfs/.lkp//result/trinity/300s/vm-snb-quantal-x86_64/quantal-core-x86_64-2018-11-09.cgz/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/2,security_model=none
+>> -device virtio-9p-pci,fsdev=test_dev,mount_tag=9p/virtfs_mount -kernel
+>> vmlinuz-5.0.0-rc8-00196-g70d28b0 -append root=/dev/ram0 user=lkp
+>> job=/lkp/jobs/scheduled/vm-snb-quantal-x86_64-1415/trinity-300s-quantal-core-x86_64-2018-11-09.cgz-70d28b0-20190330-29362-1y6g0qb-2.yaml
+>> ARCH=x86_64 kconfig=x86_64-randconfig-s5-03231928
+>> branch=linux-devel/devel-hourly-2019032317
+>> commit=70d28b0e4f8ed2d38571e7b1f9bec7f321a53102
+>> BOOT_IMAGE=/pkg/linux/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/vmlinuz-5.0.0-rc8-00196-g70d28b0
+>> max_uptime=1500
+>> RESULT_ROOT=/result/trinity/300s/vm-snb-quantal-x86_64/quantal-core-x86_64-2018-11-09.cgz/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/8
+>> LKP_LOCAL_RUN=1 debug apic=debug sysrq_always_enabled
+>> rcupdate.rcu_cpu_stall_timeout=100 net.ifnames=0 printk.devkmsg=on
+>> panic=-1 softlockup_panic=1 nmi_watchdog=panic oops=panic load_ramdisk=2
+>> prompt_ramdisk=0 drbd.minor_count=8 systemd.log_level=err
+>> ignore_loglevel console=tty0 earlyprintk=ttyS0,115200
+>> console=ttyS0,115200 vga=normal rw ip=dhcp
+>> result_service=9p/virtfs_mount -initrd /home/nfs/.lkp/cache/final_initrd
+>> -smp 2 -m 2048M -no-reboot -watchdog i6300esb -rtc base=localtime
+>> -device e1000,netdev=net0 -netdev user,id=net0 -display none -monitor
+>> null -serial stdio -drive
+>> file=/tmp/vdisk-nfs/disk-vm-snb-quantal-x86_64-1415-0,media=disk,if=virtio
+>> -drive
+>> file=/tmp/vdisk-nfs/disk-vm-snb-quantal-x86_64-1415-1,media=disk,if=virtio
+>> early console in setup code
+>> Probing EDD (edd=off to disable)... ok
+>>
+>> Best Regards,
+>> Rong Chen
+>>
+>>
