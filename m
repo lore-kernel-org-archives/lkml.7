@@ -2,376 +2,348 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D196EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56C9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5932082C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54A720870
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554125473;
+	bh=JaA1TB5hQt5x1RJjBjnD1lILDLfWncsKwTzSkdlYrWg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=rsMrOP+idQt3B66CjmoOTZAdwThuWwpuyWfS7loqzsM8m5Ozesi36gNqEvMhLvDkz
+	 bT6A6e12WZPVLOp3t0VJnlA9xCjVtjNZsQW/nEo9bIGMbiSPiokpdIfN3WETB6+TuZ
+	 zBybFUcD3IHV2vl4iSq8aWC/GL2lpBtt4kC1FcCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfDANaJ (ORCPT
+        id S1728012AbfDANbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 09:30:09 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:50120 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726821AbfDANaI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 09:30:08 -0400
-Received: from [192.168.2.10] ([212.251.195.8])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id Ax0jhtRcaiLOmAx0nhcKO4; Mon, 01 Apr 2019 15:30:06 +0200
-Subject: Re: [PATCH 0/2] DCMI bridge support
-To:     Hugues FRUCHET <hugues.fruchet@st.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Mickael GUENE <mickael.guene@st.com>
-References: <1554111076-31471-1-git-send-email-hugues.fruchet@st.com>
- <158aa8b9-e607-3630-0e13-ad10759d3468@xs4all.nl>
- <2ff6b4cb-dd57-e982-a839-00c50037d2a4@st.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <80572a34-a79c-862b-6040-668e8a79568b@xs4all.nl>
-Date:   Mon, 1 Apr 2019 15:30:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <2ff6b4cb-dd57-e982-a839-00c50037d2a4@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 1 Apr 2019 09:31:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726608AbfDANbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 09:31:11 -0400
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E8B82082C;
+        Mon,  1 Apr 2019 13:31:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554125470;
+        bh=JaA1TB5hQt5x1RJjBjnD1lILDLfWncsKwTzSkdlYrWg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=z7N/0x7n37IcbK5pALgcarh9YJFWqmoSVR1Un+RGhyZO2EoNgXhaW8lvEJJChXTL8
+         mAFLStJJSgBbBXk9OR26+N2qbuSxtRNqRkN6MeQAh2Pn2nL49PhPSZuyYdJ7HXh1IN
+         BZ5/7rT8UKecoHfk+kC4FoBr6+s5c7w/WeagK9qg=
+Message-ID: <1554125468.8693.4.camel@kernel.org>
+Subject: Re: [PATCH v5 00/11] tracing: common error_log for ftrace
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     rostedt@goodmis.org, tglx@linutronix.de, namhyung@kernel.org,
+        bigeasy@linutronix.de, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Date:   Mon, 01 Apr 2019 08:31:08 -0500
+In-Reply-To: <20190401091948.0963e7cc4b0116c5d95c4c9c@kernel.org>
+References: <cover.1554072478.git.tom.zanussi@linux.intel.com>
+         <20190401091948.0963e7cc4b0116c5d95c4c9c@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfDxE8dmK+vCBLLcKLSS8/Uk+sjdNtt/uv7QYz8Gtf4YBBiKCKpzbaou3h4T2KbEUsn2DM1G7KgurPzbPldSELal1f5QbzNnFFO5S3TbQmwld3U/0r30p
- p5uTUqQ6SE1lh1Md+DL8Y98TR6KLaS3bhWZcb0FhRqtF0fqSmjGVkCXRiugQF0qd9GFB+ioiFRtxz1cRweL9Qsi0YQMtlEveLc33IDsITVyUWrSNvJ68MJbo
- 7MjwmVTXS0NnEKMsNf/ogZLDRtoucGXDX9RPPXw04JeWRzcg+8xrk+yBV0hfCBO/9h8MkssxEV7ggtAug4u67c1iZWXT3p1UrPdl2Z6tTmdNDaGDMbJY7+g4
- 2eXJKmRNoileQtmQVgoYH9wi5zofwMDZmo0bGe/jIqTTu+t0rcdw2t1g6svWwYZCoe6OGC0osnGUiA1ZExt/xlIvHvf0dLj3RxylrrOabV4WZeQmjmUTDkMy
- /JVuzYewTxwN2USQaj7E/b7+mPlJObd6MbKwA+pD+UxJNzCle5FnjA2CQzbAM5SZrCCKTP4Z34fcLjyAe1gtULXIdJPDlRDtTAuXEQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/19 3:08 PM, Hugues FRUCHET wrote:
-> Hi Hans,
-> 
-> Here it is.
-> 
-> SHA1 is aa371c995ec2ad70323db00c47b3132002b060b7:
-> 
-> Author: Hans Verkuil <hverkuil-cisco@xs4all.nl>  2019-02-08 16:21:23
-> Committer: Hans Verkuil <hverkuil-cisco@xs4all.nl>  2019-02-08 16:21:23
-> Parent: 98d5622551eb6b9a0397464fb52378949f33c364 (v4l2-compliance: 
-> support m2m devices with -f)
-> Child:  59f9840781aab464c1331dcdb82e63dd0544b5c6 (v4l2-compliance: 
-> remove duplicate MEDIA_IOC_DEVICE_INFO ioctl call)
-> Branches: master, master2, remotes/origin/master
-> Follows: v4l-utils-1.16.0
-> Precedes:
-> 
->      v4l2-compliance: -f bug fixes
-> 
-> 
-> Result is below:
-> 
-> root@stm32mp1:~# v4l2-compliance -m /dev/media0
-> v4l2-compliance SHA: eb8e3b07c9249ff56091ae4bc3ae9b76779db4cd, 32 bits
-> 
-> Compliance test for stm32-dcmi device /dev/media0:
-> 
-> Media Driver Info:
->          Driver name      : stm32-dcmi
->          Model            : stm32-dcmi
->          Serial           :
->          Bus info         : platform:stm32-dcmi
->          Media version    : 5.0.0
->          Hardware revision: 0x00000000 (0)
->          Driver version   : 5.0.0
-> 
-> Required ioctls:
->          test MEDIA_IOC_DEVICE_INFO: OK
-> 
-> Allow for multiple opens:
->          test second /dev/media0 open: OK
->          test MEDIA_IOC_DEVICE_INFO: OK
->          test for unlimited opens: OK
-> 
-> Media Controller ioctls:
->          test MEDIA_IOC_G_TOPOLOGY: OK
->          Entities: 3 Interfaces: 2 Pads: 4 Links: 4
->          test MEDIA_IOC_ENUM_ENTITIES/LINKS: OK
->          test MEDIA_IOC_SETUP_LINK: OK
-> 
-> Total for stm32-dcmi device /dev/media0: 7, Succeeded: 7, Failed: 0, 
-> Warnings: 0
-> --------------------------------------------------------------------------------
-> Compliance test for stm32-dcmi device /dev/video0:
-> 
-> Driver Info:
->          Driver name      : stm32-dcmi
->          Card type        : STM32 Camera Memory Interface
->          Bus info         : platform:dcmi
->          Driver version   : 5.0.0
->          Capabilities     : 0x85200001
->                  Video Capture
->                  Read/Write
->                  Streaming
->                  [ 2117.336477] stm32-dcmi 4c006000.dcmi: 
-> =================  START STATUS  =================
-> E[ 2117.344647] stm32-dcmi 4c006000.dcmi: White Balance, Automatic: true
-> [ 2117.350990] stm32-dcmi 4c006000.dcmi: Blue Balance: 0 inactive
-> x[ 2117.356853] stm32-dcmi 4c006000.dcmi: Red Balance: 0 inactive
-> [ 2117.362645] stm32-dcmi 4c006000.dcmi: Auto Exposure: Auto Mode
-> [ 2117.368438] stm32-dcmi 4c006000.dcmi: Exposure: 0 inactive volatile
-> t[ 2117.374729] stm32-dcmi 4c006000.dcmi: Gain, Automatic: true
-> [ 2117.380335] stm32-dcmi 4c006000.dcmi: Gain: 0 inactive volatile
-> e[ 2117.386305] stm32-dcmi 4c006000.dcmi: Saturation: 64
-> [ 2117.391275] stm32-dcmi 4c006000.dcmi: Hue: 0
-> n[ 2117.395572] stm32-dcmi 4c006000.dcmi: Contrast: 0
-> [ 2117.400305] stm32-dcmi 4c006000.dcmi: Test Pattern: Disabled
-> d[ 2117.405988] stm32-dcmi 4c006000.dcmi: Horizontal Flip: false
-> [ 2117.411721] stm32-dcmi 4c006000.dcmi: Vertical Flip: false
-> [ 2117.417148] stm32-dcmi 4c006000.dcmi: Power Line Frequency: 50 Hz
-> [ 2117.423265] stm32-dcmi 4c006000.dcmi: ==================  END STATUS 
-> ==================
-> ed Pix Format
->                  Device Capabilities
->          Device Caps      : 0x05200001
->                  Video Capture
->                  Read/Write
->                  Streaming
->                  Extended Pix Format
-> Media Driver Info:
->          Driver name      : stm32-dcmi
->          Model            : stm32-dcmi
->          Serial           :
->          Bus info         : platform:stm32-dcmi
->          Media version    : 5.0.0
->          Hardware revision: 0x00000000 (0)
->          Driver version   : 5.0.0
-> Interface Info:
->          ID               : 0x03000003
->          Type             : V4L Video
-> Entity Info:
->          ID               : 0x00000001 (1)
->          Name             : stm32_dcmi
->          Function         : V4L2 I/O
->          Flags         : default
->          Pad 0x01000002   : 0: Sink
->            Link 0x02000008: from remote pad 0x1000007 of entity 'mipid02 
-> 0-0014': Data, Enabled, Immutable
-> 
-> Required ioctls:
->          test MC information (see 'Media Driver Info' above): OK
->                  warn: 
-> ../../../../../../../../../sources/v4l-utils/utils/v4l2-compliance/v4l2-compliance.cpp(621): 
-> media bus_info 'platform:stm32-dcmi
-> ' differs from V4L2 bus_info 'platform:dcmi'
->          test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
->          test second /dev/video0 open: OK
->                  warn: 
-> ../../../../../../../../../sources/v4l-utils/utils/v4l2-compliance/v4l2-compliance.cpp(621): 
-> media bus_info 'platform:stm32-dcmi
-> ' differs from V4L2 bus_info 'platform:dcmi'
->          test VIDIOC_QUERYCAP: OK
->          test VIDIOC_G/S_PRIORITY: OK
->          test for unlimited opens: OK
-> 
-> Debug ioctls:
->          test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->          test VIDIOC_LOG_STATUS: OK
-> 
-> Input ioctls:
->          test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->          test VIDIOC_G/S_FRE[ 2117.564770] mipid02 0-0014: 
-> =================  START STATUS  =================
-> Q[ 2117.572042] mipid02 0-0014: ==================  END STATUS 
-> ==================
-> UENCY: OK (Not Supported)
->          test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->          test VIDIOC_ENUMAUDIO: OK (Not Supported)
->          test VIDIOC_G/S/ENUMINPUT: OK
->          test VIDIOC_G/S_AUDIO: OK (Not Supported)
->          Inputs: 1 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
->          test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->          test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->          test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->          test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->          test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->          Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
->          test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->          test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->          test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->          test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls (Input 0):
->          test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->          test VIDIOC_QUERYCTRL: OK
->          test VIDIOC_G/S_CTRL: OK
->          test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->          test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->          test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->          Standard Controls: 17 Private Controls: 0
-> 
-> Format ioctls (Input 0):
->          test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->          test VIDIOC_G/S_PARM: OK
->          test VIDIOC_G_FBUF: OK (Not Supported)
->          test VIDIOC_G_FMT: OK
->          test VIDIOC_TRY_FMT: OK
->          test VIDIOC_S_FMT: OK
->          test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->                  fail: 
-> ../../../../../../../../../sources/v4l-utils/utils/v4l2-compliance/v4l2-test-formats.cpp(1338): 
-> node->frmsizes_count[pixfmt] > 1
->          test Cropping: FAIL
->          test Composing: OK (Not Supported)
->          test Scaling: OK (Not Supported)
-> 
-> Codec ioctls (Input 0):
->          test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->          test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->          test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
-> Buffer ioctls (Input 0):
->          test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->          test VIDIOC_EXPBUF: OK
->          test Requests: OK (Not Supported)
-> 
-> Total for stm32-dcmi device /dev/video0: 45, Succeeded: 44, Failed: 1, 
-> Warnings: 2
-> --------------------------------------------------------------------------------
-> Compliance test for device /dev/v4l-subdev0:
-> 
-> 
-> Required ioctls:
-> 
-> Allow for multiple opens:
->          test second /dev/v4l-subdev0 open: OK
->          test for unlimited opens: OK
-> 
-> Debug ioctls:
->          test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
->          test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->          test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->          test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->          test VIDIOC_ENUMAUDIO: OK (Not Supported)
->          test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
->          test VIDIOC_G/S_AUDIO: OK (Not Supported)
->          Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
->          test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->          test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->          test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->          test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->          test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->          Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
->          test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->          test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->          test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->          test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls:
->          test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
->          test VIDIOC_QUERYCTRL: OK (Not Supported)
->          test VIDIOC_G/S_CTRL: OK (Not Supported)
->          test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
->          test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
->          test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->          Standard Controls: 0 Private Controls: 0
-> 
-> Format ioctls:
->          test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
->          test VIDIOC_G/S_PARM: OK (Not Supported)
->          test VIDIOC_G_FBUF: OK (Not Supported)
->          test VIDIOC_G_FMT: OK (Not Supported)
->          test VIDIOC_TRY_FMT: OK (Not Supported)
->          test VIDIOC_S_FMT: OK (Not Supported)
->          test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->          test Cropping: OK (Not Supported)
->          test Composing: OK (Not Supported)
->          test Scaling: OK (Not Supported)
-> 
-> Codec ioctls:
->          test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->          test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->          test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
-> Buffer ioctls:
->          test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
->          test VIDIOC_EXPBUF: OK (Not Supported)
->          test Requests: OK (Not Supported)
-> 
-> Total for device /dev/v4l-subdev0: 40, Succeeded: 40, Failed: 0, Warnings: 0
-> 
-> Grand Total for stm32-dcmi device /dev/media0: 92, Succeeded: 91, 
-> Failed: 1, Warnings: 2
+Hi Masami,
 
-The warnings should be fixed (both warnings refer to the same problem).
+On Mon, 2019-04-01 at 09:19 +0700, Masami Hiramatsu wrote:
+> Hi Tom,
+> 
+> On Sun, 31 Mar 2019 18:48:14 -0500
+> Tom Zanussi <zanussi@kernel.org> wrote:
+> 
+> > From: Tom Zanussi <tom.zanussi@linux.intel.com>
+> > 
+> > Hi,
+> > 
+> > This is v5 of the frace error_log patchset.  This version updates
+> > the
+> > patches according to suggestions from Masami and Namhyung and moves
+> > some of the selftest code from the kprobe/uprobe testcases to a
+> > common
+> > function that can be reused by multiple testcases, including the
+> > new
+> > error_log testcase.
+> 
+> Thanks for updating!
+> 
+> This series looks good to me.
+> 
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> 
 
-The fail was present before this patch series.
+Thanks!
 
-The core problem there is that if there are multiple possible framesizes,
-then crop support is ambiguous: against which framesize do you crop?
+> BTW, could you also add a testcase which tests all (or most of)
+> error cases of hist_err() ?
+> That will be good to find regressions in future changes.
+> 
 
-I see that dcmi_try_fmt() has a heuristic for that. We really need to fix
-this in the API, but this situation rarely occurs.
+I was going to, but there are a lot of error cases and a lot of them
+aren't simple one-liners and require some more involved setup to
+trigger.  I'll submit a follow-on patch to add them as soon as I get
+the chance.
 
-So for now I don't think there is a need to fix the fail.
+Thanks,
 
-Regards,
+Tom
 
-	Hans
-
+> Thanks,
+> 
+> > 
+> > Changes from v4:
+> > 
+> >   - Merged in the >& -> 2> redirection patch into '[PATCH v5 06/11]
+> >     selftests/ftrace: Add error_log testcase for probe errors'
+> >   - Added new patch, '[PATCH v5 07/11] selftests/ftrace: Move
+> >     kprobe/uprobe check_error() to test.d/functions' that adds a
+> > new
+> >     ftrace_errlog_check() to test.d/functions, which is based on
+> >     check_error() from '[PATCH v5 06/11] selftests/ftrace: Add
+> >     error_log testcase for probe errors'
+> >   - Modified the kprobe/uprobe test cases to use the common
+> >     ftrace_errlog_check()
+> >   - Modified the error_log test cases to display the error position
+> >     using the common ftrace_errlog_check()
+> >   - Updated subject for '[PATCH v5 08/11] selftests/ftrace: Remove
+> >     trigger-extended-error-support testcase
+> >   - Streamlined the error_log open and write file operations as
+> >     suggested by Masami
+> >   - Fixed the long lines in '[PATCH v4 04/11] tracing: Use tracing
+> >     error_log with trace event filters' as suggested by Namhyung
+> > 
+> > Changes from v3:
+> > 
+> >   - Added Masami's [PATCH 05/11] tracing: Use tracing error_log
+> > with probe events
+> >   - Added Masami's [PATCH 06/11] selftests/ftrace: Add error_log
+> > testcase for probe
+> >   - Added [PATCH 11/11] to fix [PATCH 06/11]
+> >   - Removed [RFC PATCH v3 4/5] tracing: Use tracing error_log with
+> > kprobe events
+> >   - Added [PATCH 08/11] selftests/ftrace: Add tracing/error_log
+> > testcase
+> >   - Removed trigger-extended-error-support testcase
+> >   - Changed [n] numbering to [timestamp] numbering as suggested by
+> > Masami
+> >   - Updated Documentation and README
+> > 
+> > Changes from v2:
+> > 
+> >   - Added [n] numbering as suggested by Masami
+> > 
+> > 
+> > Text from original post:
+> > 
+> > Last April, I posted an RFC patchset [1] implementing a common
+> > error_log interface as suggested by Masami [2].  We were supposed
+> > to
+> > discuss it at Plumbers but that never happened, and Steve recently
+> > asked about patches for a follow-on discussion [3], so here they
+> > are.
+> > 
+> > I incorporated comments from the previous discussion, the most
+> > important of which are:
+> > 
+> >  - Incorporated Steve's suggestion of using static strings as in
+> > the
+> >    existing trace event filter code, along with err_info indexing
+> > into
+> >    the string arrays and a position for the error caret.
+> > 
+> >  - Converted all the hist trigger errors and the existing trace
+> > event
+> >    filter parse errors to use the new interface.
+> > 
+> >  - Converted a few kprobe_event errors to the new interface as
+> >    examples, but these will require more work - I didn't spend much
+> >    time figuring out how to get the full kprobe command into the
+> > error
+> >    info, for instance.
+> > 
+> >  - Got rid of the custom single-page ring buffer and used standard
+> >    lists instead.
+> > 
+> > For now, this is implemented on top of the latest 'hist trigger
+> > snapshot and onchange additions' patchset [4].
+> > 
+> > Below is an example session of a few failed commands and the
+> > corresponding error_log contents:
+> > 
+> >   # echo > /sys/kernel/debug/tracing/error_log
+> > 
+> >   # echo 'hist:keys=pid:ts0=common_timestamp.usecs if
+> > comm=="cyclictest"' >>
+> > /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
+> >   # echo 'hist:keys=pid:ts0=common_timestamp.usecs if
+> > comm=="cyclictest"' >>
+> > /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
+> >   -su: echo: write error: Invalid argument
+> > 
+> >   #  cat /sys/kernel/debug/tracing/error_log
+> >   [  217.431858] hist:sched:sched_wakeup: error: Variable already
+> > defined
+> >     Command: keys=pid:ts0=common_timestamp.usecs if
+> > comm=="cyclictest"
+> >                       ^
+> > 
+> >   # echo 'hist:key=comm:p=prio:onchange($q).snapshot()' >
+> > /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
+> >   -su: echo: write error: Invalid argument
+> > 
+> >   # cat /sys/kernel/debug/tracing/error_log
+> >   [  217.431858] hist:sched:sched_wakeup: error: Variable already
+> > defined
+> >     Command: keys=pid:ts0=common_timestamp.usecs if
+> > comm=="cyclictest"
+> >                       ^
+> >   [  311.554978] hist:sched:sched_waking: error: Couldn't find
+> > onmax or onchange variable
+> >     Command: key=comm:p=prio:onchange($q).snapshot()
+> >                                        ^
+> > 
+> >   # echo 'hist:keys=pid' >>
+> > /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
+> >   # echo 'hist:keys=pid' >>
+> > /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
+> >   -su: echo: write error: File exists
+> >   # echo 'comm="cyclictest"' >
+> > /sys/kernel/debug/tracing/events/sched/sched_wakeup/filter
+> >   -su: echo: write error: Invalid argument
+> > 
+> >   # cat /sys/kernel/debug/tracing/error_log
+> >   [  217.431858] hist:sched:sched_wakeup: error: Variable already
+> > defined
+> >     Command: keys=pid:ts0=common_timestamp.usecs if
+> > comm=="cyclictest"
+> >                       ^
+> >   [  311.554978] hist:sched:sched_waking: error: Couldn't find
+> > onmax or onchange variable
+> >     Command: key=comm:p=prio:onchange($q).snapshot()
+> >                                        ^
+> >   [  715.626153] hist:sched:sched_wakeup: error: Hist trigger
+> > already exists
+> >     Command: keys=pid
+> >              ^
+> >   [  730.480310] event filter parse error: error: Invalid operator
+> >     Command: comm="cyclictest"
+> >                   ^
+> > 
+> >   # echo "((sig >= 10 && sig < 15) || dsig == 17) && comm != bash"
+> > > /sys/kernel/debug/tracing/events/signal/signal_generate/filter
+> >   -su: echo: write error: Invalid argument
+> > 
+> >   # cat /sys/kernel/debug/tracing/error_log
+> >   [  217.431858] hist:sched:sched_wakeup: error: Variable already
+> > defined
+> >     Command: keys=pid:ts0=common_timestamp.usecs if
+> > comm=="cyclictest"
+> >                       ^
+> >   [  311.554978] hist:sched:sched_waking: error: Couldn't find
+> > onmax or onchange variable
+> >     Command: key=comm:p=prio:onchange($q).snapshot()
+> >                                        ^
+> >   [  715.626153] hist:sched:sched_wakeup: error: Hist trigger
+> > already exists
+> >     Command: keys=pid
+> >              ^
+> >   [  730.480310] event filter parse error: error: Invalid operator
+> >     Command: comm="cyclictest"
+> >                   ^
+> >   [  800.548673] event filter parse error: error: Field not found
+> >     Command: ((sig >= 10 && sig < 15) || dsig == 17) && comm !=
+> > bash
+> >                                               ^
+> > 
+> > 
+> > Thanks,
+> > 
+> > Tom
+> > 
+> > [1] https://lore.kernel.org/lkml/cover.1523545519.git.tom.zanussi@l
+> > inux.intel.com/
+> > [2] https://lore.kernel.org/lkml/20180406105309.b50ea1a21d2cbd9b0e3
+> > 9dbfd@kernel.org/
+> > [3] https://lore.kernel.org/lkml/e885d1fd02e76f121d6cc2bb28e58b523e
+> > 2434a7.camel@linux.intel.com/
+> > [4] https://lore.kernel.org/lkml/cover.1549403369.git.tom.zanussi@l
+> > inux.intel.com/
+> > 
+> > 
+> > The following changes since commit
+> > 01c4e8042fc949018b70ded769f959bc3d80e8b6:
+> > 
+> >   tracing: initialize variable in create_dyn_event() (2019-03-22
+> > 15:19:34 -0400)
+> > 
+> > are available in the git repository at:
+> > 
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-
+> > trace.git ftrace/error_log_v5
+> > 
+> > Masami Hiramatsu (2):
+> >   tracing: Use tracing error_log with probe events
+> >   selftests/ftrace: Add error_log testcase for probe errors
+> > 
+> > Tom Zanussi (9):
+> >   tracing: Add tracing error log
+> >   tracing: Save the last hist command's associated event name
+> >   tracing: Use tracing error_log with hist triggers
+> >   tracing: Use tracing error_log with trace event filters
+> >   selftests/ftrace: Move kprobe/uprobe check_error() to
+> > test.d/functions
+> >   selftests/ftrace: Remove trigger-extended-error-support testcase
+> >   selftests/ftrace: Add tracing/error_log testcase
+> >   tracing: Add tracing/error_log Documentation
+> >   tracing: Add error_log to README
+> > 
+> >  Documentation/trace/ftrace.rst                     |  31 +++
+> >  Documentation/trace/histogram.rst                  |  16 +-
+> >  kernel/trace/trace.c                               | 219
+> > ++++++++++++++++
+> >  kernel/trace/trace.h                               |   4 +
+> >  kernel/trace/trace_events_filter.c                 |  11 +-
+> >  kernel/trace/trace_events_hist.c                   | 221
+> > +++++++++--------
+> >  kernel/trace/trace_kprobe.c                        |  77 +++---
+> >  kernel/trace/trace_probe.c                         | 274
+> > +++++++++++++++------
+> >  kernel/trace/trace_probe.h                         |  77 +++++-
+> >  kernel/trace/trace_uprobe.c                        |  44 +++-
+> >  .../ftrace/test.d/ftrace/tracing-error-log.tc      |  19 ++
+> >  tools/testing/selftests/ftrace/test.d/functions    |  12 +
+> >  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |  85 +++++++
+> >  .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |  23 ++
+> >  .../inter-event/trigger-extended-error-support.tc  |  28 ---
+> >  15 files changed, 874 insertions(+), 267 deletions(-)
+> >  create mode 100644
+> > tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
+> >  create mode 100644
+> > tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.t
+> > c
+> >  create mode 100644
+> > tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.t
+> > c
+> >  delete mode 100644
+> > tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-
+> > extended-error-support.tc
+> > 
+> > -- 
+> > 2.14.1
+> > 
 > 
 > 
-> BR,
-> Hugues.
-> 
-> On 4/1/19 1:10 PM, Hans Verkuil wrote:
->> Hi Hugues,
->>
->> On 4/1/19 11:31 AM, Hugues Fruchet wrote:
->>> This patch serie allows to connect non-parallel camera sensor to
->>> DCMI thanks to a bridge connected in between such as STMIPID02 [1].
->>>
->>> Media controller support is introduced first, then support of
->>> several sub-devices within pipeline with dynamic linking
->>> between them.
->>
->> Can you post the output of v4l2-compliance -m /dev/mediaX ?
->>
->> Thanks!
->>
->> 	Hans
->>
->>>
->>> [1] https://www.spinics.net/lists/devicetree/msg278002.html
->>>
->>> Hugues Fruchet (2):
->>>    media: stm32-dcmi: add media controller support
->>>    media: stm32-dcmi: add support of several sub-devices
->>>
->>>   drivers/media/platform/Kconfig            |   2 +-
->>>   drivers/media/platform/stm32/stm32-dcmi.c | 213 ++++++++++++++++++++++++------
->>>   2 files changed, 177 insertions(+), 38 deletions(-)
->>>
-
