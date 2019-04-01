@@ -2,136 +2,122 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E72DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E294C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4C22133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB3D20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:20:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tEzUwYCu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RcLnIFoM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbfDASTg (ORCPT
+        id S1728984AbfDASUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:19:36 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40747 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729038AbfDASTe (ORCPT
+        Mon, 1 Apr 2019 14:20:14 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39606 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728670AbfDASUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:19:34 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z24so448541wmi.5;
-        Mon, 01 Apr 2019 11:19:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aWRNFvdzR7jDiIT2oYZIFzK8jYDZLuJ0sBRZxtB4YxY=;
-        b=tEzUwYCuS8uIZZNlgV4lnDKQNisl8dgfXFS7zYDCaCsyH/WcrVcg1Pq2ZvjCYXikeO
-         7q8aAwJonlPzarUye6caYFZWeALhy0i0lZsDGjjgp+uaprcbb79QeTIjFkzaz7G2kOiS
-         ThBjA+VdeOaoWdxkXOQ+0MqzAUzzHTlxILyN3LcvT32VB+qK++FxN+fFtCB+YErEmiCV
-         IepHI+O76qE+1rhf09UuR7HuquuidKStd1jdHoqYwyyFMkM+VhnSnT0JSzl+or/wdG4P
-         su8FLUFjyzlaG2uqTUYAVWj+1I//4QMV4SJ0O5+OQXG6+WqLvGhdpggQb3eHOv5kjRZe
-         0Qyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aWRNFvdzR7jDiIT2oYZIFzK8jYDZLuJ0sBRZxtB4YxY=;
-        b=fxT88j1up2g8iQTWBhbGnVpKLyfWdNjM5+ZX/Dx8pBHbSPXpRfyq/IFTBlFNCUke1i
-         eIZCTOIoL8QMjNb4o1BWMBvfuHwTeyzpMaD5yOimJ9BYi4Mr/4LuXsDAroql4/G5Gjzn
-         gq4xou0wgvrcytqw0uq3DGreU4pVUSAikIeshLRkEvLM5Q9UUPSqvFoERz7DQJToKbmy
-         TjnMsYj4CJL2PxCq8+TgcKrG6arJbrszO8vz6kmYEx6ppoNeFV7EBKIcDUl9tWPNTkEx
-         gcMHTUYWndKIpCNuMaUBKW9RqOpesGAwNtJNKHPJeBE6bs34/bq+vTKmKR8kJxepiQba
-         4uIg==
-X-Gm-Message-State: APjAAAWq+X48mEvNxx4sn5VMgObHeMTtA9nYLnCbw3lmV3ujxNzVySEg
-        vWFD9uLPGo8qQnV6z7up+uQ=
-X-Google-Smtp-Source: APXvYqwmPPda028Rtjix9L9ptrWnnsTLQOL1dbrEgs1B3+9qwPZW/P0csJHRUpUD6HKXgxNOPeaL1Q==
-X-Received: by 2002:a1c:2087:: with SMTP id g129mr633929wmg.114.1554142772066;
-        Mon, 01 Apr 2019 11:19:32 -0700 (PDT)
-Received: from X555LD.home ([2a02:85f:510:b900:c095:2934:58ba:cfa6])
-        by smtp.gmail.com with ESMTPSA id c20sm17876240wre.28.2019.04.01.11.19.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 11:19:31 -0700 (PDT)
-From:   "Leonidas P. Papadakos" <papadakospan@gmail.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Subject: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX offload for rockchip devices
-Date:   Mon,  1 Apr 2019 21:18:40 +0300
-Message-Id: <20190401181840.31255-1-papadakospan@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 1 Apr 2019 14:20:14 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x31IK9O5011727;
+        Mon, 1 Apr 2019 13:20:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554142809;
+        bh=hKLKhAj1bb69DV25Byjd5WkAHfiQxIydUOjBsP+D5yE=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=RcLnIFoMJL5iuG5m+Y/pv149AbYi9ngvSCwzLAIycxNCTaQ7IAP2MA0WQlozH/4Va
+         9wAnMxZHxGtxwiWhnwuHT/dhSZkKt/0NuRSfY0IRmgmGIJMxuPYHZjxXXm/qMOA9UU
+         WGhEviQrTbSsZzvSlR2RyzbP21aIhBTzGvreBTTE=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x31IK9hJ041243
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 1 Apr 2019 13:20:09 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Apr
+ 2019 13:20:08 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 1 Apr 2019 13:20:08 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x31IK85n048717;
+        Mon, 1 Apr 2019 13:20:08 -0500
+Date:   Mon, 1 Apr 2019 13:20:08 -0500
+From:   Bin Liu <b-liu@ti.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <od@zcrc.me>
+Subject: Re: [PATCH] usb: musb: Force-disable pullup on shutdown
+Message-ID: <20190401182008.GL25852@uda0271908>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>,
+        Paul Cercueil <paul@crapouillou.net>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, od@zcrc.me
+References: <20190321144246.3547-1-paul@crapouillou.net>
+ <20190401171725.GK25852@uda0271908>
+ <1554140782.10471.0@crapouillou.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1554140782.10471.0@crapouillou.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: =?UTF-8?q?Kamil=20Trzci=C5=84ski?= <ayufan@ayufan.eu>
+On Mon, Apr 01, 2019 at 07:46:22PM +0200, Paul Cercueil wrote:
+> 
+> 
+> Le lun. 1 avril 2019 à 19:17, Bin Liu <b-liu@ti.com> a écrit :
+> >On Thu, Mar 21, 2019 at 03:42:46PM +0100, Paul Cercueil wrote:
+> >> When the musb is shutdown, for instance when the driver is unloaded,
+> >> force-disable the pullup. Otherwise, the host will still see
+> >>the gadget
+> >> device even after the shutdown.
+> >
+> >how would this happen?
+> >
+> >when musb-hdrc driver is unloaded, udc core removes the bound gadget
+> >driver which calls musb_gadget_pullup() to disable the pullup.
+> 
+> I'm testing with the jz4740-musb driver. I don't unload the module (it's
+> built-in) but unbind it from sysfs.
 
-Some rockchip boards exhibit an issue where tx checksumming does not work with
-packets larger than 1498.
+I did unbind too.
 
-This is bad for network stability.
+root@am335x-evm:/sys/bus/platform/drivers/musb-hdrc# echo musb-hdrc.0 > unbind
 
-The previous approach was using force_thresh_dma_mode in the board dts, which
-does more than we need.
+or unbind the glue driver:
 
-Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     | 4 ++++
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 2 ++
- include/linux/stmmac.h                                | 1 +
- 3 files changed, 7 insertions(+)
+root@am335x-evm:/sys/bus/platform/drivers/musb-dsps# echo 47401400.usb > unbind
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 6a2e1031a..4552147e9 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3660,6 +3660,10 @@ static netdev_features_t stmmac_fix_features(struct net_device *dev,
- 	if (priv->plat->bugged_jumbo && (dev->mtu > ETH_DATA_LEN))
- 		features &= ~NETIF_F_CSUM_MASK;
- 
-+	/* Including very small MTUs of 1498 for Rockchip devices */
-+	if (priv->plat->bugged_tx_coe && (dev->mtu > ETH_DATA_LEN - 2))
-+		features &= ~NETIF_F_CSUM_MASK;
-+
- 	/* Disable tso if asked by ethtool */
- 	if ((priv->plat->tso_en) && (priv->dma_cap.tsoen)) {
- 		if (features & NETIF_F_TSO)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 3031f2bf1..807cf5826 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -519,6 +519,8 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
- 		pr_warn("force_sf_dma_mode is ignored if force_thresh_dma_mode is set.");
- 	}
- 
-+	plat->bugged_tx_coe = of_property_read_bool(np, "rockchip,bugged_tx_coe");
-+
- 	of_property_read_u32(np, "snps,ps-speed", &plat->mac_port_sel_speed);
- 
- 	plat->axi = stmmac_axi_setup(pdev);
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index 4335bd771..60c411f43 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -162,6 +162,7 @@ struct plat_stmmacenet_data {
- 	int pmt;
- 	int force_sf_dma_mode;
- 	int force_thresh_dma_mode;
-+	int bugged_tx_coe;
- 	int riwt_off;
- 	int max_speed;
- 	int maxmtu;
--- 
-2.21.0
+musb_gadget_pullup() is called in both cases.
+
+[ 3880.597014] [<bf444ab0>] (musb_gadget_pullup [musb_hdrc]) from [<bf402cbc>] (usb_gadget_disconnect+0x3c/0xf4 [udc_core])
+[ 3880.607959] [<bf402cbc>] (usb_gadget_disconnect [udc_core]) from [<bf403b28>] (usb_gadget_remove_driver+0x4c/0x90 [udc_core])
+[ 3880.619338] [<bf403b28>] (usb_gadget_remove_driver [udc_core]) from [<bf403d20>] (usb_del_gadget_udc+0x5c/0xc0 [udc_core])
+[ 3880.630471] [<bf403d20>] (usb_del_gadget_udc [udc_core]) from [<bf439ff8>] (musb_remove+0x50/0x134 [musb_hdrc])
+[ 3880.640648] [<bf439ff8>] (musb_remove [musb_hdrc]) from [<c05668cc>] (platform_drv_remove+0x28/0x48)
+[ 3880.649831] [<c05668cc>] (platform_drv_remove) from [<c0564e3c>] (device_release_driver_internal+0xe4/0x1b4)
+[ 3880.659708] [<c0564e3c>] (device_release_driver_internal) from [<c05633e4>] (bus_remove_device+0xe0/0x140)
+[ 3880.669409] [<c05633e4>] (bus_remove_device) from [<c055f358>] (device_del+0x140/0x374)
+[ 3880.677455] [<c055f358>] (device_del) from [<c0566ff0>] (platform_device_del.part.3+0x18/0x80)
+[ 3880.686110] [<c0566ff0>] (platform_device_del.part.3) from [<c0567098>] (platform_device_unregister+0x24/0x30)
+[ 3880.696170] [<c0567098>] (platform_device_unregister) from [<bf48c3e0>] (dsps_remove+0x1c/0x38 [musb_dsps])
+[ 3880.706010] [<bf48c3e0>] (dsps_remove [musb_dsps]) from [<c05668cc>] (platform_drv_remove+0x28/0x48)
+[ 3880.715190] [<c05668cc>] (platform_drv_remove) from [<c0564e3c>] (device_release_driver_internal+0xe4/0x1b4)
+[ 3880.725065] [<c0564e3c>] (device_release_driver_internal) from [<c0562b2c>] (unbind_store+0x64/0xd8)
+[ 3880.734253] [<c0562b2c>] (unbind_store) from [<c0350c58>] (kernfs_fop_write+0xf4/0x1cc)
+
+Regards,
+-Bin.
+
 
