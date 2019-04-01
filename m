@@ -2,53 +2,58 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752D6C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D29C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A6C21900
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9186D2133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139174;
-	bh=9wuw0+rjy7zF/MSnnIXbwfb1FaWshWKZUmWCmLJgIeg=;
+	s=default; t=1554139176;
+	bh=cu/+J9DGJzA2jYc9Cv3+n/UaEuOmuvjm61zSjwZiMnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h2tCTjKIvib6SONSdBENxSEy07BxOJFvmmoxmh2uwgZ2phmk+mfU8vXh+K7/cF4HB
-	 LfStRkpbvQgSHaqZie7cp8u8G0jrQUUvz3QrCOKzdwFKf2JnkIvMUFfrfD0ijx68nn
-	 +A/AVmYXQaxyZZdAZhf/MoAHniqf1DGC7FiHPsRw=
+	b=GD87LhzEkDzbV9ydckKyNFJd9f5+gdDAyrYBf1WWn/OQyDzYGHIRAMoLbBGEcU2Xw
+	 1UpV+EM6f+FI+7EFXhGP0vCLT0Y3eKmJOFpPvirqR8BokF68vHgynuJ80s8ZWQfE8R
+	 ufz7Q4LyYzO3JyPic4W/ww83oY0v0PWxGlqa/biI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731542AbfDARTc (ORCPT
+        id S1731113AbfDARTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:19:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47378 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:19:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730737AbfDARTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:19:30 -0400
+        id S1731539AbfDARTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:19:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D39F321852;
-        Mon,  1 Apr 2019 17:19:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0DA2218FE;
+        Mon,  1 Apr 2019 17:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139169;
-        bh=9wuw0+rjy7zF/MSnnIXbwfb1FaWshWKZUmWCmLJgIeg=;
+        s=default; t=1554139172;
+        bh=cu/+J9DGJzA2jYc9Cv3+n/UaEuOmuvjm61zSjwZiMnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WUGkC0yIVZna3sCYafDIquIPy6ohtNDQEx2UlmcMrF7icdpWU5+/VeydzyA7BYFe7
-         6L82PP5c4M1kOinPUJQVbMzutEzLfKKvyeuGc1t2jP8+sE5FcWvYiKAKkmsHSvQavB
-         Rhbpd29JbeKvC5pUg909AofP4dYHOFHns+jcSBSA=
+        b=b84RQdEprIKgg8X4haFo0zqlfI6KpKG/dPoj22keLbPbtgw3GcuAGcYD9K/+ZxOkU
+         DRxPB8PIPzeeP9npJ0EKUmeilL+BLNpSkVuc1izgyvTzfpM3GlwSFGFaCAgufLTC6l
+         lwDfpv8fHj9TxSn+sie6n4P8MA89d+3GE628jdBI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 4.19 134/134] platform: x86: intel_cht_int33fe: Remove the old connections for the muxes
-Date:   Mon,  1 Apr 2019 19:02:50 +0200
-Message-Id: <20190401170056.674658826@linuxfoundation.org>
+        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Cyril Hrubis <chrubis@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rafael Aquini <aquini@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 113/134] mm: mempolicy: make mbind() return -EIO when MPOL_MF_STRICT is specified
+Date:   Mon,  1 Apr 2019 19:02:29 +0200
+Message-Id: <20190401170054.785055116@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -67,67 +72,141 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From: Yang Shi <yang.shi@linux.alibaba.com>
 
-commit 148b0aa78e4e1077e38f928124bbc9c2d2d24006 upstream.
+commit a7f40cfe3b7ada57af9b62fd28430eeb4a7cfcb7 upstream.
 
-USB Type-C class driver now expects the muxes to be always
-assigned to the ports and not controllers, so the
-connections for the mux and fusb302 can be removed.
+When MPOL_MF_STRICT was specified and an existing page was already on a
+node that does not follow the policy, mbind() should return -EIO.  But
+commit 6f4576e3687b ("mempolicy: apply page table walker on
+queue_pages_range()") broke the rule.
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+And commit c8633798497c ("mm: mempolicy: mbind and migrate_pages support
+thp migration") didn't return the correct value for THP mbind() too.
+
+If MPOL_MF_STRICT is set, ignore vma_migratable() to make sure it
+reaches queue_pages_to_pte_range() or queue_pages_pmd() to check if an
+existing page was already on a node that does not follow the policy.
+And, non-migratable vma may be used, return -EIO too if MPOL_MF_MOVE or
+MPOL_MF_MOVE_ALL was specified.
+
+Tested with https://github.com/metan-ucw/ltp/blob/master/testcases/kernel/syscalls/mbind/mbind02.c
+
+[akpm@linux-foundation.org: tweak code comment]
+Link: http://lkml.kernel.org/r/1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com
+Fixes: 6f4576e3687b ("mempolicy: apply page table walker on queue_pages_range()")
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Reported-by: Cyril Hrubis <chrubis@suse.cz>
+Suggested-by: Kirill A. Shutemov <kirill@shutemov.name>
+Acked-by: Rafael Aquini <aquini@redhat.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Acked-by: David Rientjes <rientjes@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/intel_cht_int33fe.c |   18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+ mm/mempolicy.c |   40 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 33 insertions(+), 7 deletions(-)
 
---- a/drivers/platform/x86/intel_cht_int33fe.c
-+++ b/drivers/platform/x86/intel_cht_int33fe.c
-@@ -34,7 +34,7 @@ struct cht_int33fe_data {
- 	struct i2c_client *fusb302;
- 	struct i2c_client *pi3usb30532;
- 	/* Contain a list-head must be per device */
--	struct device_connection connections[8];
-+	struct device_connection connections[5];
- };
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -428,6 +428,13 @@ static inline bool queue_pages_required(
+ 	return node_isset(nid, *qp->nmask) == !(flags & MPOL_MF_INVERT);
+ }
  
- /*
-@@ -174,29 +174,19 @@ static int cht_int33fe_probe(struct i2c_
- 			return -EPROBE_DEFER; /* Wait for i2c-adapter to load */
++/*
++ * queue_pages_pmd() has three possible return values:
++ * 1 - pages are placed on the right node or queued successfully.
++ * 0 - THP was split.
++ * -EIO - is migration entry or MPOL_MF_STRICT was specified and an existing
++ *        page was already on a node that does not follow the policy.
++ */
+ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
+ 				unsigned long end, struct mm_walk *walk)
+ {
+@@ -437,7 +444,7 @@ static int queue_pages_pmd(pmd_t *pmd, s
+ 	unsigned long flags;
+ 
+ 	if (unlikely(is_pmd_migration_entry(*pmd))) {
+-		ret = 1;
++		ret = -EIO;
+ 		goto unlock;
+ 	}
+ 	page = pmd_page(*pmd);
+@@ -454,8 +461,15 @@ static int queue_pages_pmd(pmd_t *pmd, s
+ 	ret = 1;
+ 	flags = qp->flags;
+ 	/* go to thp migration */
+-	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
++	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
++		if (!vma_migratable(walk->vma)) {
++			ret = -EIO;
++			goto unlock;
++		}
++
+ 		migrate_page_add(page, qp->pagelist, flags);
++	} else
++		ret = -EIO;
+ unlock:
+ 	spin_unlock(ptl);
+ out:
+@@ -480,8 +494,10 @@ static int queue_pages_pte_range(pmd_t *
+ 	ptl = pmd_trans_huge_lock(pmd, vma);
+ 	if (ptl) {
+ 		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
+-		if (ret)
++		if (ret > 0)
+ 			return 0;
++		else if (ret < 0)
++			return ret;
  	}
  
--	data->connections[0].endpoint[0] = "i2c-fusb302";
-+	data->connections[0].endpoint[0] = "port0";
- 	data->connections[0].endpoint[1] = "i2c-pi3usb30532";
- 	data->connections[0].id = "typec-switch";
--	data->connections[1].endpoint[0] = "i2c-fusb302";
-+	data->connections[1].endpoint[0] = "port0";
- 	data->connections[1].endpoint[1] = "i2c-pi3usb30532";
- 	data->connections[1].id = "typec-mux";
--	data->connections[2].endpoint[0] = "i2c-fusb302";
-+	data->connections[2].endpoint[0] = "port0";
- 	data->connections[2].endpoint[1] = "i2c-pi3usb30532";
- 	data->connections[2].id = "idff01m01";
- 	data->connections[3].endpoint[0] = "i2c-fusb302";
- 	data->connections[3].endpoint[1] = "intel_xhci_usb_sw-role-switch";
- 	data->connections[3].id = "usb-role-switch";
+ 	if (pmd_trans_unstable(pmd))
+@@ -502,11 +518,16 @@ static int queue_pages_pte_range(pmd_t *
+ 			continue;
+ 		if (!queue_pages_required(page, qp))
+ 			continue;
+-		migrate_page_add(page, qp->pagelist, flags);
++		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
++			if (!vma_migratable(vma))
++				break;
++			migrate_page_add(page, qp->pagelist, flags);
++		} else
++			break;
+ 	}
+ 	pte_unmap_unlock(pte - 1, ptl);
+ 	cond_resched();
+-	return 0;
++	return addr != end ? -EIO : 0;
+ }
  
--	data->connections[4].endpoint[0] = "port0";
--	data->connections[4].endpoint[1] = "i2c-pi3usb30532";
--	data->connections[4].id = "typec-switch";
--	data->connections[5].endpoint[0] = "port0";
--	data->connections[5].endpoint[1] = "i2c-pi3usb30532";
--	data->connections[5].id = "typec-mux";
--	data->connections[6].endpoint[0] = "port0";
--	data->connections[6].endpoint[1] = "i2c-pi3usb30532";
--	data->connections[6].id = "idff01m01";
--
- 	device_connections_add(data->connections);
+ static int queue_pages_hugetlb(pte_t *pte, unsigned long hmask,
+@@ -576,7 +597,12 @@ static int queue_pages_test_walk(unsigne
+ 	unsigned long endvma = vma->vm_end;
+ 	unsigned long flags = qp->flags;
  
- 	memset(&board_info, 0, sizeof(board_info));
+-	if (!vma_migratable(vma))
++	/*
++	 * Need check MPOL_MF_STRICT to return -EIO if possible
++	 * regardless of vma_migratable
++	 */
++	if (!vma_migratable(vma) &&
++	    !(flags & MPOL_MF_STRICT))
+ 		return 1;
+ 
+ 	if (endvma > end)
+@@ -603,7 +629,7 @@ static int queue_pages_test_walk(unsigne
+ 	}
+ 
+ 	/* queue pages from current vma */
+-	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
++	if (flags & MPOL_MF_VALID)
+ 		return 0;
+ 	return 1;
+ }
 
 
