@@ -2,138 +2,99 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53595C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C32C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAB22084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:34:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nSZr6qEf"
+	by mail.kernel.org (Postfix) with ESMTP id F01FF2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:34:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554104099;
+	bh=iYe97ap4MhMwQS3oQbVDOxFtzgZeIAewYMNaOik5q00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lYSTTAGIlGW3SIMe1K8GhYPzX/PrEk8nY+F2+u07asmIswDS9PMENEuNk/3MPZEdR
+	 XQzMng6WM5E2oQYNghQDLzBSP+GvSOXkZLlpJTa8su/+aPHDNKiXcCq4eCINXiqPcO
+	 s07t3Rzaxuhe1odPpou4YBMT0OJcMf4vto55zuIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731978AbfDAHee (ORCPT
+        id S1731992AbfDAHe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:34:34 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41304 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731956AbfDAHed (ORCPT
+        Mon, 1 Apr 2019 03:34:58 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40710 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731833AbfDAHe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:34:33 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r4so10521690wrq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 00:34:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=HgnHH4QMhZeNy0jkJL3AsgW14xC+spIstOkNXOY1fIY=;
-        b=nSZr6qEf2qDavdnD1eR79hTtwBpzcjbxzxgAZJdrgm+QkYH/8wFxtFraHxbVCxqXUj
-         1QrPKARECSzpdEHyx2iLgHZ0j8gNOQLYFsp1OWP8k5DvoXKVieQwFsRGxzr2QiLcBS6T
-         qPpgAEZZEB0FihwwwgfTblInDdTQdnSfZtPqykIUDhKL09MaP/Db4gCkRpb3Ot0IUM/6
-         KEUWIXXBhKcIlMMSkxD6cy79ekPDVOXXgGAiNfV2llPHE/pA+eVT4Sft8ThFBtO+SICi
-         mEssdQ+JdFhLmSll4fqqVL+hsRaKwRnZtMUiACh5IEGeIC1dhC7XLcveTlDYY/Bc0yKB
-         MogA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=HgnHH4QMhZeNy0jkJL3AsgW14xC+spIstOkNXOY1fIY=;
-        b=V0cEBsAL3axKMTV9pGv/zwu4qgnsoAQpdvqbJynZ76pU3QUyGiVCY+ljQJ9ZF6U1Bm
-         1L0NsJeWmmjcvENn/ZzDx7zy1GnX374rCgElmvUbZOvAHXf6gLD7OvmTdfzbEoViOvxz
-         CK+yRtN3UG+xxV9a+QYyC349upO5XkFVx4Sk5v95FemkDjdRjnkSFqkT7TXVMBRrZtIv
-         TARwf5t8a6o7Yz7fbJziiyPoJJplHvGspwFnApfHUByPum1NZXbY+LUjEa39n3Hx8bSP
-         mg6xLoVLpS4bbazWHTEdDq+0fXbi+OwLzFEQJg0LoAQZgW3jzmvrjsuq4sRMmNBVMWXl
-         1uog==
-X-Gm-Message-State: APjAAAUUlV3XkEvOtEEiWQrDClRBI77y5569XMCiBXLFf9QhucqQM3Kc
-        y6y7EPk9NsxX6Xo7DHK6L5W7kw==
-X-Google-Smtp-Source: APXvYqwLAOy/7T7G8vHHZPRdC8QSdMLFhUxzD6u+BeFxGFOwk8ICMooCZW+SkMBG9wO3djGTy1GN+Q==
-X-Received: by 2002:adf:f088:: with SMTP id n8mr42740299wro.112.1554104071779;
-        Mon, 01 Apr 2019 00:34:31 -0700 (PDT)
-Received: from [192.168.0.101] ([88.147.53.253])
-        by smtp.gmail.com with ESMTPSA id o10sm12424799wru.54.2019.04.01.00.34.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 00:34:31 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH] block/bfq: fix ifdef for CONFIG_BFQ_GROUP_IOSCHED=y
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <3c87a84f-9fb2-2407-a5a3-723b314d8e58@applied-asynchrony.com>
-Date:   Mon, 1 Apr 2019 09:34:30 +0200
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <319AA9FF-48BD-40D9-A272-17C6BAFE917F@linaro.org>
-References: <155386807826.3190.16175453392005064129.stgit@buzz>
- <c40b8d4a-c504-fdf4-0b96-64aaeb167435@applied-asynchrony.com>
- <5234a971-2b6a-47b1-0071-8f3bd07d9fc3@kernel.dk>
- <cf0dc6b2-6ecf-c895-6c21-8746700bdae4@applied-asynchrony.com>
- <6be15f08-dbb4-6b43-3d95-44044f1acdbc@kernel.dk>
- <3c87a84f-9fb2-2407-a5a3-723b314d8e58@applied-asynchrony.com>
-To:     =?utf-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>
-X-Mailer: Apple Mail (2.3445.102.3)
+        Mon, 1 Apr 2019 03:34:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WQweUZODqds6vmyYGDRjUL8zoohkSyfOS1mPC4wQzdE=; b=WhyULKPeLL+ZFpJKYZRQxaFgt
+        TeOq19mLR+cATp+I63neAYn5A01USmexsHdFCB42zZ2G09WzhkAhXVfxA2IoKQn3l7eQR4RpGi5GV
+        0fURsHC0vjEC6AKCSycVeLjwI/3ylAFLnmvYPD0U7dLdb3f4VzgPoD/u/UesWS3oizBU4=;
+Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hArT4-00084i-9f; Mon, 01 Apr 2019 07:34:54 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id AA1D1440082; Mon,  1 Apr 2019 08:34:50 +0100 (BST)
+Date:   Mon, 1 Apr 2019 14:34:50 +0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: Re: [RFC PATCH 0/4] spi: spi-fsl-spi: try to make cpu-mode transfers
+ faster
+Message-ID: <20190401073450.GG2059@sirena.org.uk>
+References: <20190327143040.16013-1-rasmus.villemoes@prevas.dk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="f5QefDQHtn8hx44O"
+Content-Disposition: inline
+In-Reply-To: <20190327143040.16013-1-rasmus.villemoes@prevas.dk>
+X-Cookie: Use extra care when cleaning on stairs.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--f5QefDQHtn8hx44O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Il giorno 29 mar 2019, alle ore 17:44, Holger Hoffst=C3=A4tte =
-<holger@applied-asynchrony.com> ha scritto:
->=20
-> On 3/29/19 5:15 PM, Jens Axboe wrote:
->>>>> Good catch! I run without group scheduling and therefore didn't =
-notice these
->>>>> stray defines earlier. For 5.1 it should merge cleanly; adding =
-this on top of
->>>>> the pending 5.2 BFQ patches required a small context fixup in hunk =
-#1 due to
->>>>> "block, bfq: do not idle for lowest-weight queues".
->>>>=20
->>>> I'm hesitant to apply this, since the group scheduling stuff has =
-obviously never
->>>> been tested.
->>>=20
->>> This is simply a regression in 5.1 caused by 73d58118498b - nothing =
-else,
->>> and as such this fix needs to go into 5.1 as well. I'm sure Paolo =
-will agree.
->>> What you so ominously  call "the group scheduling stuff" has been =
-there and
->>> shipping in mainline since day 1 of the BFQ merge, and it works fine =
-in 5.0.
->> If that's the case (I didn't check how far back it went), then yes, =
-it should
->> of course go into 5.1.
->=20
-> Yay.
->=20
->> The ominous nature of my reply I'll chalk up to your interpretation
->=20
-> Fair enough ;)
->=20
-> A more interesting question is why upstream uses undefined defines
-> for patches. That's a first-rate self-grenade if I've ever seen one,
-> and obviously something that is easily missed. Paolo?
->=20
+On Wed, Mar 27, 2019 at 02:30:48PM +0000, Rasmus Villemoes wrote:
+> I doubt patches 3 and 4 are acceptable, but I'd still like to get
+> comments and/or alternative suggestions for making large transfers
+> faster.
 
-Paolo feels a little bit ashamed for this mistake :)
+I see no problem with this from a framework point of view FWIW, it's
+going to be a question of if there's any glitches like you say.  I'm not
+sure how we can get wider testing/review unless the patches actually get
+merged though...  I'll leave them for a bit longer but unless someone
+sees a problem I'll probably go ahead and apply them.
 
-This horrible typo may also be the cause of the crashes recently
-reported on this list.  I've just asked to try this fix:
-=
-https://lore.kernel.org/linux-block/626EAE58-63C1-4ABA-9040-9D9A61F74A0D@l=
-inaro.org/T/
+--f5QefDQHtn8hx44O
+Content-Type: application/pgp-signature; name="signature.asc"
 
-And yes, I agree that this fix should be applied to 5.1.  Thank you
-Konstantin for spotting and removing this bomb.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Paolo
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyhvxkACgkQJNaLcl1U
+h9Bx5Af+Pr+rC/ITZQNvboGisfJgfLe37cO8q2ux6OZmZI5qpu2NXsA3yDk7hhQ+
+4ypTq2IA0Bvr5VX0E56/45Tr6Cq5SNkRytaOyzcIXAPkqz+loW6JVn55Fu9Ht7au
+wEv3BTnRKvbQjm10RU5xG9ZM5MUwSfdi3xQBMCdCBzhX338HhlEFbEuwgty3FFh/
+jMXDT9BacGSZsY4avjFPeKGenqsGZcvnHVite2uDC7HWfM2M8RGgnvPReZdMpLTz
+5e6VWfzF+GMu6iFermaykdGnmrpL2sbHR0WAQrzaRNRI27eehlMFSz/plt7Pz+oX
+XpHu1evnNw0mwApNQ0waqvvVnxmiqA==
+=VaAm
+-----END PGP SIGNATURE-----
 
-> -h
-
+--f5QefDQHtn8hx44O--
