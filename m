@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7340C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74587C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789FE21939
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37CAC206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138837;
-	bh=/DIohRK2a3JnBnsq8W4dt5/2cFjsCj7V9iB3mR8uBw4=;
+	s=default; t=1554138842;
+	bh=BCVQIym5xgrQxawIBzie0j8swrcRTot7fGfMy4XOqU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DuD+fRDpHeRj8vNsK5XBEqxrXH2fSOz/Ke9TUpH9rlF1WFKZ6Fd+iB5CqOeB50A4q
-	 6t9AY5Nd2nFYN7Z55dXUlsU/nDyUULZtJYIMr8T7+jgqPNrn8eLKdBHt8b0Ib/WsB8
-	 CW1kxAmOOOI0zkZ+bUq/zqap5AM2UcXbIfAQ3f0w=
+	b=vr5zqrPTkniIZFgpbWdcHiSVgQT3kxvLQKGjbMAaDUh7OWFqPMP4InblzYtld19R0
+	 /J5cYJw9hhgd+rkkSR3lzkhYJM/+A+953GvPkCAYXysXEAAWuHGekDbJo4FRRleqvV
+	 8LfcxYFIxIYMdE3RdoD3WEPZtmgn/kkTWNzxplHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbfDARN4 (ORCPT
+        id S1730654AbfDAROA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:13:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36778 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:14:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729872AbfDARNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:13:53 -0400
+        id S1729872AbfDARN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:13:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D59CC21925;
-        Mon,  1 Apr 2019 17:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8B9C21925;
+        Mon,  1 Apr 2019 17:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138833;
-        bh=/DIohRK2a3JnBnsq8W4dt5/2cFjsCj7V9iB3mR8uBw4=;
+        s=default; t=1554138837;
+        bh=BCVQIym5xgrQxawIBzie0j8swrcRTot7fGfMy4XOqU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SOO9qj3q0sMSJyRxeXgZouXJwPii0gCZZX4jNUyOMsp+jaNJV5XMX8iHv9LsNcelv
-         41CuRa7sx8K5vDXFSP5yn9ee+gLi9Rq4nt+nMYBzJ+4IO0Sh2TJJ4rreeKsZtWWoq0
-         Qo0XHhlkBgVv7UjNgHZwY4EMmxe7bMiTIDP9cP94=
+        b=bJRJbeivfwteEkGZYu2cc6JB70C5UhIIemD6c1rI9kES+XZNNlu2mEM/EPpTH8O6M
+         Ip+QAnEJFaTauI3Y1e78iUjwO0KTPo0DIKHF+q21WO8KoUXuHBu3qirwRr4w7TxgV0
+         q3KWUr+Zx0xDblgORfull52QBfpq3gw9w6O1ecdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stan Johnson <userm57@yahoo.com>
-Subject: [PATCH 4.19 008/134] mac8390: Fix mmio access size probe
-Date:   Mon,  1 Apr 2019 19:00:44 +0200
-Message-Id: <20190401170045.082371612@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 009/134] mISDN: hfcpci: Test both vendor & device ID for Digium HFC4S
+Date:   Mon,  1 Apr 2019 19:00:45 +0200
+Message-Id: <20190401170045.166027956@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,74 +64,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit bb9e5c5bcd76f4474eac3baf643d7a39f7bac7bb ]
+[ Upstream commit fae846e2b7124d4b076ef17791c73addf3b26350 ]
 
-The bug that Stan reported is as follows. After a restart, a 16-bit NIC
-may be incorrectly identified as a 32-bit NIC and stop working.
+The device ID alone does not uniquely identify a device.  Test both the
+vendor and device ID to make sure we don't mistakenly think some other
+vendor's 0xB410 device is a Digium HFC4S.  Also, instead of the bare hex
+ID, use the same constant (PCI_DEVICE_ID_DIGIUM_HFC4S) used in the device
+ID table.
 
-mac8390 slot.E: Memory length resource not found, probing
-mac8390 slot.E: Farallon EtherMac II-C (type farallon)
-mac8390 slot.E: MAC 00:00:c5:30:c2:99, IRQ 61, 32 KB shared memory at 0xfeed0000, 32-bit access.
+No functional change intended.
 
-The bug never arises after a cold start and only intermittently after a
-warm start. (I didn't investigate why the bug is intermittent.)
-
-It turns out that memcpy_toio() is deprecated and memcmp_withio() also
-has issues. Replacing these calls with mmio accessors fixes the problem.
-
-Reported-and-tested-by: Stan Johnson <userm57@yahoo.com>
-Fixes: 2964db0f5904 ("m68k: Mac DP8390 update")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/8390/mac8390.c |   19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ drivers/isdn/hardware/mISDN/hfcmulti.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/8390/mac8390.c
-+++ b/drivers/net/ethernet/8390/mac8390.c
-@@ -153,8 +153,6 @@ static void dayna_block_input(struct net
- static void dayna_block_output(struct net_device *dev, int count,
- 			       const unsigned char *buf, int start_page);
+--- a/drivers/isdn/hardware/mISDN/hfcmulti.c
++++ b/drivers/isdn/hardware/mISDN/hfcmulti.c
+@@ -4365,7 +4365,8 @@ setup_pci(struct hfc_multi *hc, struct p
+ 	if (m->clock2)
+ 		test_and_set_bit(HFC_CHIP_CLOCK2, &hc->chip);
  
--#define memcmp_withio(a, b, c)	memcmp((a), (void *)(b), (c))
--
- /* Slow Sane (16-bit chunk memory read/write) Cabletron uses this */
- static void slow_sane_get_8390_hdr(struct net_device *dev,
- 				   struct e8390_pkt_hdr *hdr, int ring_page);
-@@ -233,19 +231,26 @@ static enum mac8390_type mac8390_ident(s
- 
- static enum mac8390_access mac8390_testio(unsigned long membase)
- {
--	unsigned long outdata = 0xA5A0B5B0;
--	unsigned long indata =  0x00000000;
-+	u32 outdata = 0xA5A0B5B0;
-+	u32 indata = 0;
-+
- 	/* Try writing 32 bits */
--	memcpy_toio((void __iomem *)membase, &outdata, 4);
--	/* Now compare them */
--	if (memcmp_withio(&outdata, membase, 4) == 0)
-+	nubus_writel(outdata, membase);
-+	/* Now read it back */
-+	indata = nubus_readl(membase);
-+	if (outdata == indata)
- 		return ACCESS_32;
-+
-+	outdata = 0xC5C0D5D0;
-+	indata = 0;
-+
- 	/* Write 16 bit output */
- 	word_memcpy_tocard(membase, &outdata, 4);
- 	/* Now read it back */
- 	word_memcpy_fromcard(&indata, membase, 4);
- 	if (outdata == indata)
- 		return ACCESS_16;
-+
- 	return ACCESS_UNKNOWN;
- }
- 
+-	if (ent->device == 0xB410) {
++	if (ent->vendor == PCI_VENDOR_ID_DIGIUM &&
++	    ent->device == PCI_DEVICE_ID_DIGIUM_HFC4S) {
+ 		test_and_set_bit(HFC_CHIP_B410P, &hc->chip);
+ 		test_and_set_bit(HFC_CHIP_PCM_MASTER, &hc->chip);
+ 		test_and_clear_bit(HFC_CHIP_PCM_SLAVE, &hc->chip);
 
 
