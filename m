@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49611C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A89CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A51220856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7FE206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139421;
-	bh=dj4GYV9KiUCsjjzvD0DF79GP+tplh2pZcDnta4hLL+A=;
+	s=default; t=1554139425;
+	bh=+9d5ZseOoMwxFiOAdxZ6Bo362qgmjPjxpclEmQX6md0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lm6DHO3VqtQhYvY4pqlOV9CytU3NvENUjp1iIdTuxNKBKgJCQ0RYr+TdjAycVKNgV
-	 40mNtIVeiSMXGf6Zk/n60pg1hi+0TqC3K40v0HBGbYyvPWQWjimObJCsCIDYwdcftA
-	 /poQbtzCBOFqE1CWpqzPYhUurj3aoVMhT0NxCikI=
+	b=WPV+Hpo5rmX+Zw74VMkyB0bF+v60FfO7jh41XtVZIsucqRDwVE0bJYfI6C3S77kFY
+	 sA42iX4suSDzmiFr9vB0IPnMNoysceaD6izQl2IQ1Zs9J6as3EMgNK4O7iouhGz1S+
+	 j7kGWI2BL6BHi75fnpkwIeja/goax9b9tn+4Pdms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731716AbfDARXj (ORCPT
+        id S1732160AbfDARXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:23:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53508 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:23:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732140AbfDARXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:23:36 -0400
+        id S1732140AbfDARXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:23:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A8D1206C0;
-        Mon,  1 Apr 2019 17:23:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AABF206DD;
+        Mon,  1 Apr 2019 17:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139415;
-        bh=dj4GYV9KiUCsjjzvD0DF79GP+tplh2pZcDnta4hLL+A=;
+        s=default; t=1554139419;
+        bh=+9d5ZseOoMwxFiOAdxZ6Bo362qgmjPjxpclEmQX6md0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMH5oiPDpK3s+oeQqHcZdiSIhKeEEjlaNou/hzYU8aUpoXYv8rwTJWtnA7jYx4xb/
-         vulWOOdkyWwc0xJDJhPUzwq24ldzAYYHAn+SGsA5VlZyZoCCYd5JJ0pHlgvBh9UKk2
-         eGjEXZLD5fxXcfx7tL4aqYmiU4RtTBGZnx8/xvKs=
+        b=s+qBl1QVxFvoR1HK+wvbp04yBFuMBE7wnrlF4Cn26XYyyBqxWWlDVxpG0BgTvEJ4i
+         znCt0UMYUaAfMV1dZxR9d4aTavyBBXKdv6gR2uRZPo5EDq0gPUZbHBQdhX7ggXHtQ9
+         aO6cm8MWLiKRZXkGoZ7I4DWKl7C1HCY6DJ7HEnKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fredrik Noring <noring@nocrew.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 4.14 069/107] kbuild: modversions: Fix relative CRC byte order interpretation
-Date:   Mon,  1 Apr 2019 19:02:24 +0200
-Message-Id: <20190401170051.913118478@linuxfoundation.org>
+        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 043/107] powerpc/fsl: Add infrastructure to fixup branch predictor flush
+Date:   Mon,  1 Apr 2019 19:01:58 +0200
+Message-Id: <20190401170049.547049830@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,49 +65,115 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Fredrik Noring <noring@nocrew.org>
+From: Diana Craciun <diana.craciun@nxp.com>
 
-commit 54a7151b1496cddbb7a83546b7998103e98edc88 upstream.
+commit 76a5eaa38b15dda92cd6964248c39b5a6f3a4e9d upstream.
 
-Fix commit 56067812d5b0 ("kbuild: modversions: add infrastructure for
-emitting relative CRCs") where CRCs are interpreted in host byte order
-rather than proper kernel byte order. The bug is conditional on
-CONFIG_MODULE_REL_CRCS.
+In order to protect against speculation attacks (Spectre
+variant 2) on NXP PowerPC platforms, the branch predictor
+should be flushed when the privillege level is changed.
+This patch is adding the infrastructure to fixup at runtime
+the code sections that are performing the branch predictor flush
+depending on a boot arg parameter which is added later in a
+separate patch.
 
-For example, when loading a BE module into a BE kernel compiled with a LE
-system, the error "disagrees about version of symbol module_layout" is
-produced. A message such as "Found checksum D7FA6856 vs module 5668FAD7"
-will be given with debug enabled, which indicates an obvious endian
-problem within __kcrctab within the kernel image.
-
-The general solution is to use the macro TO_NATIVE, as is done in
-similar cases throughout modpost.c. With this correction it has been
-verified that a BE kernel compiled with a LE system accepts BE modules.
-
-This change has also been verified with a LE kernel compiled with a LE
-system, in which case TO_NATIVE returns its value unmodified since the
-byte orders match. This is by far the common case.
-
-Fixes: 56067812d5b0 ("kbuild: modversions: add infrastructure for emitting relative CRCs")
-Signed-off-by: Fredrik Noring <noring@nocrew.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- scripts/mod/modpost.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/include/asm/feature-fixups.h |   12 ++++++++++++
+ arch/powerpc/include/asm/setup.h          |    2 ++
+ arch/powerpc/kernel/vmlinux.lds.S         |    8 ++++++++
+ arch/powerpc/lib/feature-fixups.c         |   23 +++++++++++++++++++++++
+ 4 files changed, 45 insertions(+)
 
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -645,7 +645,7 @@ static void handle_modversions(struct mo
- 			       info->sechdrs[sym->st_shndx].sh_offset -
- 			       (info->hdr->e_type != ET_REL ?
- 				info->sechdrs[sym->st_shndx].sh_addr : 0);
--			crc = *crcp;
-+			crc = TO_NATIVE(*crcp);
- 		}
- 		sym_update_crc(symname + strlen(CRC_PFX), mod, crc,
- 				export);
+--- a/arch/powerpc/include/asm/feature-fixups.h
++++ b/arch/powerpc/include/asm/feature-fixups.h
+@@ -219,6 +219,17 @@ label##3:					       	\
+ 	FTR_ENTRY_OFFSET 953b-954b;			\
+ 	.popsection;
+ 
++#define START_BTB_FLUSH_SECTION			\
++955:							\
++
++#define END_BTB_FLUSH_SECTION			\
++956:							\
++	.pushsection __btb_flush_fixup,"a";	\
++	.align 2;							\
++957:						\
++	FTR_ENTRY_OFFSET 955b-957b;			\
++	FTR_ENTRY_OFFSET 956b-957b;			\
++	.popsection;
+ 
+ #ifndef __ASSEMBLY__
+ #include <linux/types.h>
+@@ -228,6 +239,7 @@ extern long __start___stf_entry_barrier_
+ extern long __start___stf_exit_barrier_fixup, __stop___stf_exit_barrier_fixup;
+ extern long __start___rfi_flush_fixup, __stop___rfi_flush_fixup;
+ extern long __start___barrier_nospec_fixup, __stop___barrier_nospec_fixup;
++extern long __start__btb_flush_fixup, __stop__btb_flush_fixup;
+ 
+ void apply_feature_fixups(void);
+ void setup_feature_keys(void);
+--- a/arch/powerpc/include/asm/setup.h
++++ b/arch/powerpc/include/asm/setup.h
+@@ -66,6 +66,8 @@ void do_barrier_nospec_fixups_range(bool
+ static inline void do_barrier_nospec_fixups_range(bool enable, void *start, void *end) { };
+ #endif
+ 
++void do_btb_flush_fixups(void);
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ #endif	/* _ASM_POWERPC_SETUP_H */
+--- a/arch/powerpc/kernel/vmlinux.lds.S
++++ b/arch/powerpc/kernel/vmlinux.lds.S
+@@ -164,6 +164,14 @@ SECTIONS
+ 	}
+ #endif /* CONFIG_PPC_BARRIER_NOSPEC */
+ 
++#ifdef CONFIG_PPC_FSL_BOOK3E
++	. = ALIGN(8);
++	__spec_btb_flush_fixup : AT(ADDR(__spec_btb_flush_fixup) - LOAD_OFFSET) {
++		__start__btb_flush_fixup = .;
++		*(__btb_flush_fixup)
++		__stop__btb_flush_fixup = .;
++	}
++#endif
+ 	EXCEPTION_TABLE(0)
+ 
+ 	NOTES :kernel :notes
+--- a/arch/powerpc/lib/feature-fixups.c
++++ b/arch/powerpc/lib/feature-fixups.c
+@@ -347,6 +347,29 @@ void do_barrier_nospec_fixups_range(bool
+ 
+ 	printk(KERN_DEBUG "barrier-nospec: patched %d locations\n", i);
+ }
++
++static void patch_btb_flush_section(long *curr)
++{
++	unsigned int *start, *end;
++
++	start = (void *)curr + *curr;
++	end = (void *)curr + *(curr + 1);
++	for (; start < end; start++) {
++		pr_devel("patching dest %lx\n", (unsigned long)start);
++		patch_instruction(start, PPC_INST_NOP);
++	}
++}
++
++void do_btb_flush_fixups(void)
++{
++	long *start, *end;
++
++	start = PTRRELOC(&__start__btb_flush_fixup);
++	end = PTRRELOC(&__stop__btb_flush_fixup);
++
++	for (; start < end; start += 2)
++		patch_btb_flush_section(start);
++}
+ #endif /* CONFIG_PPC_FSL_BOOK3E */
+ 
+ void do_lwsync_fixups(unsigned long value, void *fixup_start, void *fixup_end)
 
 
