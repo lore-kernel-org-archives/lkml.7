@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 047E2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D548AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C89E820896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E2E720830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140239;
-	bh=6/mc2BIe2Q5/PJ8ncuqevamgTJpAqc2qX+N5lKQGt2Q=;
+	s=default; t=1554140244;
+	bh=Ib5Z/S3ESjEb1A3v8r93JyFqL4biEPC9KJUI9vOuBJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EpEnXyYymGotZNTaQCp28oixmEMgx2E8xQ98PjvzgjU5FP3TGZg0+RWmlqcTW3VB6
-	 DUpmETANi27Nw4puD/IxZxlyt99MzyBlJgoyTtXnsVU9PTlif6w4yOB2z8sZRPpDKg
-	 RmxsNr8gHbcy4IHNptQZJ1CxYrtGnTNGAim/PXQY=
+	b=CUQy1r2YWp8M7SM7Zzh6vzkU8wgJq2+ijbujuTVY2/cvcFbXtGaIYaM9ZF8yJnWfV
+	 k9CjXgJDLMplZDdtZDR93GYatfhR/aLQIKftmAbgX5EfAU1g8vngXxdFskb+4g9ClN
+	 WZqxCMBqbftnA5F3+9WEp8Um8rF0W51dV0ISiVZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388158AbfDARhS (ORCPT
+        id S2388169AbfDARhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:37:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49628 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387448AbfDARhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:37:15 -0400
+        id S2388159AbfDARhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:37:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C5D920830;
-        Mon,  1 Apr 2019 17:37:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8BB32070B;
+        Mon,  1 Apr 2019 17:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140234;
-        bh=6/mc2BIe2Q5/PJ8ncuqevamgTJpAqc2qX+N5lKQGt2Q=;
+        s=default; t=1554140238;
+        bh=Ib5Z/S3ESjEb1A3v8r93JyFqL4biEPC9KJUI9vOuBJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sZChewAxaLp6nJDWOZ3Rk1LkqfIw8yIuwJCzYJlHB28PiY/qxM7gZnwd9DOPTYWGA
-         z/tjBbFlkLB4ChUIBGhmV+fUI9ICF6B1mvbBWH6rsAypF+pwCFs+9q12uyIc1nIyIB
-         N+0lDueZsg7sOnciFIixIxzbGD2oO6Nhwm0Oqgik=
+        b=eQOqL5XLYQSmW+kGLhkXixRkGAs2ZSFHLuPBn+MDaL0UFUFd++x5ror6Lqq+vR3P3
+         Y6gA7bJ/EFhE0DSJTkgO9Qf8ruuoaSiX9FIPUG+wfXdU2vPFCK73cCuKin1HiOZm9G
+         xskSKp6WDszvgxEsVxQA/Vtn+P1KVpnhTc7tGp2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 3.18 06/50] mmc: tmio_mmc_core: dont claim spurious interrupts
-Date:   Mon,  1 Apr 2019 19:02:49 +0200
-Message-Id: <20190401170041.809745055@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        syzbot+4f021cf3697781dbd9fb@syzkaller.appspotmail.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 3.18 07/50] media: v4l2-ctrls.c/uvc: zero v4l2_event
+Date:   Mon,  1 Apr 2019 19:02:50 +0200
+Message-Id: <20190401170041.894948963@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -68,62 +67,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-commit 5c27ff5db1491a947264d6d4e4cbe43ae6535bae upstream.
+commit f45f3f753b0a3d739acda8e311b4f744d82dc52a upstream.
 
-I have encountered an interrupt storm during the eMMC chip probing (and
-the chip finally didn't get detected).  It turned out that U-Boot left
-the DMAC interrupts enabled while the Linux driver  didn't use those.
-The SDHI driver's interrupt handler somehow assumes that, even if an
-SDIO interrupt didn't happen, it should return IRQ_HANDLED.  I think
-that if none of the enabled interrupts happened and got handled, we
-should return IRQ_NONE -- that way the kernel IRQ code recoginizes
-a spurious interrupt and masks it off pretty quickly...
+Control events can leak kernel memory since they do not fully zero the
+event. The same code is present in both v4l2-ctrls.c and uvc_ctrl.c, so
+fix both.
 
-Fixes: 7729c7a232a9 ("mmc: tmio: Provide separate interrupt handlers")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+It appears that all other event code is properly zeroing the structure,
+it's these two places.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Reported-by: syzbot+4f021cf3697781dbd9fb@syzkaller.appspotmail.com
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/tmio_mmc_pio.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/media/usb/uvc/uvc_ctrl.c     |    2 +-
+ drivers/media/v4l2-core/v4l2-ctrls.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/host/tmio_mmc_pio.c
-+++ b/drivers/mmc/host/tmio_mmc_pio.c
-@@ -714,7 +714,7 @@ irqreturn_t tmio_mmc_sdio_irq(int irq, v
- 	unsigned int sdio_status;
+--- a/drivers/media/usb/uvc/uvc_ctrl.c
++++ b/drivers/media/usb/uvc/uvc_ctrl.c
+@@ -1202,7 +1202,7 @@ static void uvc_ctrl_fill_event(struct u
  
- 	if (!(pdata->flags & TMIO_MMC_SDIO_IRQ))
--		return IRQ_HANDLED;
-+		return IRQ_NONE;
+ 	__uvc_query_v4l2_ctrl(chain, ctrl, mapping, &v4l2_ctrl);
  
- 	status = sd_ctrl_read16(host, CTL_SDIO_STATUS);
- 	ireg = status & TMIO_SDIO_MASK_ALL & ~host->sdcard_irq_mask;
-@@ -728,7 +728,7 @@ irqreturn_t tmio_mmc_sdio_irq(int irq, v
- 	if (mmc->caps & MMC_CAP_SDIO_IRQ && ireg & TMIO_SDIO_STAT_IOIRQ)
- 		mmc_signal_sdio_irq(mmc);
+-	memset(ev->reserved, 0, sizeof(ev->reserved));
++	memset(ev, 0, sizeof(*ev));
+ 	ev->type = V4L2_EVENT_CTRL;
+ 	ev->id = v4l2_ctrl.id;
+ 	ev->u.ctrl.value = value;
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -1208,7 +1208,7 @@ static u32 user_flags(const struct v4l2_
  
--	return IRQ_HANDLED;
-+	return IRQ_RETVAL(ireg);
- }
- EXPORT_SYMBOL(tmio_mmc_sdio_irq);
- 
-@@ -745,9 +745,7 @@ irqreturn_t tmio_mmc_irq(int irq, void *
- 	if (__tmio_mmc_sdcard_irq(host, ireg, status))
- 		return IRQ_HANDLED;
- 
--	tmio_mmc_sdio_irq(irq, devid);
--
--	return IRQ_HANDLED;
-+	return tmio_mmc_sdio_irq(irq, devid);
- }
- EXPORT_SYMBOL(tmio_mmc_irq);
- 
+ static void fill_event(struct v4l2_event *ev, struct v4l2_ctrl *ctrl, u32 changes)
+ {
+-	memset(ev->reserved, 0, sizeof(ev->reserved));
++	memset(ev, 0, sizeof(*ev));
+ 	ev->type = V4L2_EVENT_CTRL;
+ 	ev->id = ctrl->id;
+ 	ev->u.ctrl.changes = changes;
 
 
