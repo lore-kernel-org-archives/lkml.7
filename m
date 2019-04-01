@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9FAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1B7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA66B2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B15921473
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139752;
-	bh=oe8wFuglIvi1Rb/YGKSoMLyYiIUZ4ca9rJ3lMnT01zY=;
+	s=default; t=1554139758;
+	bh=sNgt0Ks+JyUU5FJ76cCMus7lUmr3VL9VFB59I3RCMy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UqocFlv9ozA95qwA8+uQf2V2utH5w9/DkI2/CVAmPLS1pW+QOWeUiAwBo4f42fpTR
-	 RYXhJ7YEtls+G6/ekwfCBJjM4PRLtmbiJgvXn5gHPEfMstFo1U03HEbLEdALI+/NPj
-	 xyW5cSsMElX4SAb2/nqz9CN7yLOYOfCIz36vr6WA=
+	b=1TMZTD7eY+IBgZ77gVFgd1mY2HUeEpvGJ2ZZUOSh5rE7696oey057SRVI2z7318AH
+	 cpQEoze6ZPcjWhgnK36Zvth/DJrWFo5WuShlQGo2gXPWFeSFUOvUQ+q1iXARyzz/cZ
+	 dCrbvccSb7hAqXHEP123Rf4c8zdCRNHBiQH7h050=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732909AbfDAR3L (ORCPT
+        id S1732733AbfDAR3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:29:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35374 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:29:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732901AbfDAR3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:29:08 -0400
+        id S1728720AbfDAR3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:29:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A046B2070B;
-        Mon,  1 Apr 2019 17:29:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DDCD21473;
+        Mon,  1 Apr 2019 17:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139748;
-        bh=oe8wFuglIvi1Rb/YGKSoMLyYiIUZ4ca9rJ3lMnT01zY=;
+        s=default; t=1554139750;
+        bh=sNgt0Ks+JyUU5FJ76cCMus7lUmr3VL9VFB59I3RCMy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ajRjrbiF4PexQ00wkbHmloAlbyPEGHu4/hOGdm/VJUyhqSz+3UmSYoEsZyIB4bp7a
-         khnqiQf3Z1oGNxcHjdMR8vbG9HTHPnMOfxlI5UlIEDM7sDnWjQ2/ePKx+4f8RXFBTY
-         wmoT0HRhpg528pTsrlm6fmDCf5O5N6irER6UCLfs=
+        b=APWbRCG/Fmo7uYw7oPhu9xqRdZzwvbOAEendN06FkFQMT7j5ajtsD42qFWoWKMQsK
+         IynztRKbWbqCnyXNTktVpXscpsaFVorhn0cXggXvqXFQ+zNfYwfrpjAelgnDwzJ5Vw
+         NQPaMBspJ3gDbTuUXOzDJrQ3rdgild7J05xzTRbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hoan Nguyen An <na-hoan@jinso.co.jp>
-Subject: [PATCH 4.9 37/56] serial: sh-sci: Fix setting SCSCR_TIE while transferring data
-Date:   Mon,  1 Apr 2019 19:02:53 +0200
-Message-Id: <20190401170105.961151751@linuxfoundation.org>
+        stable@vger.kernel.org, Uli <t9cpu@web.de>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 38/56] USB: serial: cp210x: add new device id
+Date:   Mon,  1 Apr 2019 19:02:54 +0200
+Message-Id: <20190401170106.013707551@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -64,46 +64,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hoan Nguyen An <na-hoan@jinso.co.jp>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 93bcefd4c6bad4c69dbc4edcd3fbf774b24d930d upstream.
+commit a595ecdd5f60b2d93863cebb07eec7f935839b54 upstream.
 
-We disable transmission interrupt (clear SCSCR_TIE) after all data has been transmitted
-(if uart_circ_empty(xmit)). While transmitting, if the data is still in the tty buffer,
-re-enable the SCSCR_TIE bit, which was done at sci_start_tx().
-This is unnecessary processing, wasting CPU operation if the data transmission length is large.
-And further, transmit end, FIFO empty bits disabling have also been performed in the step above.
+Lorenz Messtechnik has a device that is controlled by the cp210x driver,
+so add the device id to the driver.  The device id was provided by
+Silicon-Labs for the devices from this vendor.
 
-Signed-off-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
+Reported-by: Uli <t9cpu@web.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/sh-sci.c |   12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ drivers/usb/serial/cp210x.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -834,19 +834,9 @@ static void sci_transmit_chars(struct ua
- 
- 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
- 		uart_write_wakeup(port);
--	if (uart_circ_empty(xmit)) {
-+	if (uart_circ_empty(xmit))
- 		sci_stop_tx(port);
--	} else {
--		ctrl = serial_port_in(port, SCSCR);
- 
--		if (port->type != PORT_SCI) {
--			serial_port_in(port, SCxSR); /* Dummy read */
--			sci_clear_SCxSR(port, SCxSR_TDxE_CLEAR(port));
--		}
--
--		ctrl |= SCSCR_TIE;
--		serial_port_out(port, SCSCR, ctrl);
--	}
- }
- 
- /* On SH3, SCIF may read end-of-break as a space->mark char */
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -77,6 +77,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(0x10C4, 0x804E) }, /* Software Bisque Paramount ME build-in converter */
+ 	{ USB_DEVICE(0x10C4, 0x8053) }, /* Enfora EDG1228 */
+ 	{ USB_DEVICE(0x10C4, 0x8054) }, /* Enfora GSM2228 */
++	{ USB_DEVICE(0x10C4, 0x8056) }, /* Lorenz Messtechnik devices */
+ 	{ USB_DEVICE(0x10C4, 0x8066) }, /* Argussoft In-System Programmer */
+ 	{ USB_DEVICE(0x10C4, 0x806F) }, /* IMS USB to RS422 Converter Cable */
+ 	{ USB_DEVICE(0x10C4, 0x807A) }, /* Crumb128 board */
 
 
