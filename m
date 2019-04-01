@@ -2,136 +2,167 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEA4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90623C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1228F2086C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573E8213A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:40:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LaoAhTRY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732195AbfDAIjo (ORCPT
+        id S1732216AbfDAIkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:39:44 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33216 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731953AbfDAIjn (ORCPT
+        Mon, 1 Apr 2019 04:40:06 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51622 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732074AbfDAIkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:39:43 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z6so14937549wmi.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 01:39:42 -0700 (PDT)
+        Mon, 1 Apr 2019 04:40:05 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 4so9394269wmf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 01:40:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=E5VcndyE9TqCRQgdnGN/jHSlqq6013r5vJaAecmzCaQ=;
+        b=LaoAhTRY0+Q+/WLlhlqs/ll95uq0+bqksOo6E53NpJuG4ccs+IIRSPdfUKvY9PuObL
+         ZmyCNirU6CxsEEHnjpdWmDUblI9vh/ftuqAM8Wtnwg0fVTtYEtxHZEMALinLIl/lXNEZ
+         D1iYQzI115OPugTFqAcpE3o3R9b2htW7K7X02hfZR/B4ubDdNuOV/Qy1yCZUSNlLinBa
+         5K61KHI1Yk/nL+dVJ+XTDCZoqRUkgd+ZYzTtc4I6oLQw8DuP1PEx56QX4MgpNeN1NM8M
+         Rilf80FMtFhzjX9WzHdmu2oR/KgYCzyyxtkKgKzcx6guoVeKXr3OfwPnaav66D2vpA7Y
+         /LVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=ajJgSj05Q75RJs4Hi7V5gRMHUWOx6wWW82KZDOFsVTg=;
-        b=cIKM5GiIELNl6wQpMNBWLqo5bqGw1qS8EBzSS/82FCkjzBVxEiWca0xcamGmBcsxiv
-         ILyc7wGUC5XRA2V/WAQC6lz2nskN+hnncyBdTb2RcAR8R83ZBiWyB3DOGK1WIRDqEAjA
-         CUAcnMqTeYNzyOj3yjwW8RBPvksqzMRZn1u2j4UdKK+aVuL1xToYqSiGaGr/np2USJ71
-         srfZyg+VU3PbLhtpHK4I5IeW24/n80dtyOBvI2/lKEjNdlP/+vPLA9An/W2wUvmB5twb
-         jZElJM4kPnoQlhv2FgnR2cIc/LMsLG9bY08/X8QYhquIx474OHgmiZdemqw63LswXKpF
-         2FLg==
-X-Gm-Message-State: APjAAAVkBabE9znkEyhzIzA+tZ9349FM8WbH15fI+hhWDJ0D65sjSKoS
-        SUpYZxKGoVolpOf5TZeq1tTEiONaDSY=
-X-Google-Smtp-Source: APXvYqzohFaEJphuWynYv12yVtcuvMKS30w85qOtk5VbHwP8pzbMOqRSyQTM0WrrBTztOxGmK7i/eQ==
-X-Received: by 2002:a1c:720a:: with SMTP id n10mr11286733wmc.107.1554107981073;
-        Mon, 01 Apr 2019 01:39:41 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id i18sm9847458wrm.7.2019.04.01.01.39.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 01:39:40 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
-Cc:     kvm@vger.kernel.org,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] KVM: x86: vmx: throttle immediate exit through preemtion timer to assist buggy guests
-In-Reply-To: <32296de3-8ce0-c20a-5948-a7eef267a328@redhat.com>
-References: <20190328203110.20655-1-vkuznets@redhat.com> <f64742ef-c67d-db0f-d812-2b6f5048d7ee@redhat.com> <87d0m93frp.fsf@vitty.brq.redhat.com> <89d4189b-de6a-7634-de8b-29a044a86e12@redhat.com> <63F1B6AE-F7A0-40D9-9582-558723800682@oracle.com> <32296de3-8ce0-c20a-5948-a7eef267a328@redhat.com>
-Date:   Mon, 01 Apr 2019 10:39:39 +0200
-Message-ID: <87v9zy15mc.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=E5VcndyE9TqCRQgdnGN/jHSlqq6013r5vJaAecmzCaQ=;
+        b=FpcOLGjKNqApHkTMEn5fyjXJiWhJFauvmj6PLYuXOsryWP7/226Ho0ZMFXT/p9GEQ2
+         u3i59KGtPKYuVV/Lu9tHPoiLWJhSmU2pHrUv66IMWLux7WoqGGmUDmCQ28ZScZ8mptOB
+         WScZ0sEw9HKKXfwXsrNEFzRS+vkMHJfXlxDCInzo7e7wmS/dOjI4oFPqm5XP3qcRn7NJ
+         h9BSyQQUJOEWcmZuDGYZS+mWvx88YxAOrpPyGsKR8nui/DIPLj9me52PhZmT6dVFHIWU
+         /eZ5Z4eEWuX/hC7/Hgo7n58AxyHMkE6DB+wxNIqtUrmc5NJuG7pvNFWhqwMGeZ9orAd2
+         X8Vg==
+X-Gm-Message-State: APjAAAX21dnqc8k3acN3g8ZMoN9Vj+6HrIXexkrL7txVl6o2am4jAh93
+        +EsZy3bxZXWsg1CwuTOy9Lkx6OEXznu30g==
+X-Google-Smtp-Source: APXvYqwXMm5weYt9BwiMMxK1CpvX/8i3Dk8bjb/9vsnipICJBUVUf1MfKQDuLxXViKuB/UxFug+xyA==
+X-Received: by 2002:a1c:1a46:: with SMTP id a67mr10993963wma.21.1554108002857;
+        Mon, 01 Apr 2019 01:40:02 -0700 (PDT)
+Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id h2sm21446689wro.11.2019.04.01.01.40.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 01:40:02 -0700 (PDT)
+Subject: Re: [PATCH v2 0/4] clk: meson8b: add the VPU clock tree
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        jbrunet@baylibre.com, linux-amlogic@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190324151104.18397-1-martin.blumenstingl@googlemail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <cff5425f-d6f0-8ed4-2c11-c9bb57e22307@baylibre.com>
+Date:   Mon, 1 Apr 2019 10:40:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190324151104.18397-1-martin.blumenstingl@googlemail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+On 24/03/2019 16:11, Martin Blumenstingl wrote:
+> This adds the VPU clock tree for Meson8, Meson8b and Meson8m2.
+> The VPU clock tree is slightly different on all three SoCs. The details
+> are explained in patch #4.
+> 
+> Meson8m2 requires the previously unsupported "gp_pll" PLL. This PLL only
+> exists on Meson8m2 - Meson8 and Meson8b don't have it.
+> A separate clk_hw_onecell_data is introduced for Meson8m2 (using the
+> compatible string which is already available) to account for this SoC
+> specific clock setup.
+> 
+> dependencies:
+> This series is meant to be applied on top of my other patch from [0]:
+>   dt-bindings: clock: meson8b: drop the "ABP" clock definition
+> 
+> changes since v1 at [1]:
+> - fixed typo in the subject of patch #2 (spotted by Neil)
+> - collected Reviewed-by tags from Neil (thank you!)
+> 
+> 
+> [0] https://patchwork.kernel.org/patch/10860387/
+> [1] https://patchwork.kernel.org/cover/10860401/
+> 
+> 
+> Martin Blumenstingl (4):
+>   dt-bindings: clock: meson8b: export the VPU clock
+>   clk: meson: meson8b: use a separate clock table for Meson8m2
+>   clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2
+>   clk: meson: meson8b: add the VPU clock trees
+> 
+>  drivers/clk/meson/meson8b.c              | 422 ++++++++++++++++++++++-
+>  drivers/clk/meson/meson8b.h              |  12 +-
+>  include/dt-bindings/clock/meson8b-clkc.h |   1 +
+>  3 files changed, 433 insertions(+), 2 deletions(-)
+> 
 
-> On 29/03/19 16:32, Liran Alon wrote:
->> Paolo I am not sure this is the case here. Please read my other
->> replies in this email thread.
->> 
->> I think this is just a standard issue of a level-triggered interrupt
->> handler in L1 (Hyper-V) that performs EOI before it lowers the
->> irq-line. I don’t think vector 96 is even related to the issue at
->> hand here. This is why after it was already handled, the loop of
->> EXTERNAL_INTERRUPT happens on vector 80 and not vector 96.
->
-> Hmm... Vitaly, what machine were you testing on---does it have APIC-v?
-> If not, then you should have seen either an EOI for irq 96 or a TPR
-> below threshold vmexit.  However, if it has APIC-v then you wouldn't
-> have seen any of this (you only see the EOI for irq 80 because it's
-> level triggered) and Liran is probably right.
->
-
-It does, however, the issue is reproducible with and without
-it. Moreover, I think the second simultaneous IRQ is just a red herring;
-Here is another trace (enable_apicv). Posting it non-stripped and hope
-your eyes will catch something I'm missing:
-
-[001] 513675.736316: kvm_exit:             reason VMRESUME rip 0xfffff80002cae115 info 0 0
-[001] 513675.736321: kvm_entry:            vcpu 0
-[001] 513675.736565: kvm_exit:             reason EXTERNAL_INTERRUPT rip 0xfffff80362dcd26d info 0 800000ec
-[001] 513675.736566: kvm_nested_vmexit:    rip fffff80362dcd26d reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 800000ec int_info_err 0
-[001] 513675.736568: kvm_entry:            vcpu 0
-[001] 513675.736650: kvm_exit:             reason EPT_VIOLATION rip 0xfffff80362dcd230 info 182 0
-[001] 513675.736651: kvm_nested_vmexit:    rip fffff80362dcd230 reason EPT_VIOLATION info1 182 info2 0 int_info 0 int_info_err 0
-[001] 513675.736651: kvm_page_fault:       address 261200000 error_code 182
-
--> injecting
-
-[008] 513675.737059: kvm_set_irq:          gsi 23 level 1 source 0
-[008] 513675.737061: kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
-[008] 513675.737062: kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
-[001] 513675.737233: kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000050 int_info_err 0
-[001] 513675.737239: kvm_entry:            vcpu 0
-[001] 513675.737243: kvm_exit:             reason EOI_INDUCED rip 0xfffff80002c85e1a info 50 0
-
--> immediate EOI causing re-injection (even preemption timer is not
-involved here).
-
-[001] 513675.737244: kvm_eoi:              apicid 0 vector 80
-[001] 513675.737245: kvm_fpu:              unload
-[001] 513675.737246: kvm_userspace_exit:   reason KVM_EXIT_IOAPIC_EOI (26)
-[001] 513675.737256: kvm_set_irq:          gsi 23 level 1 source 0
-[001] 513675.737259: kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
-[001] 513675.737260: kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
-[001] 513675.737264: kvm_fpu:              load
-[001] 513675.737265: kvm_entry:            vcpu 0
-[001] 513675.737271: kvm_exit:             reason VMRESUME rip 0xfffff80002cae115 info 0 0
-[001] 513675.737278: kvm_entry:            vcpu 0
-[001] 513675.737282: kvm_exit:             reason PREEMPTION_TIMER rip 0xfffff80362dcc2d0 info 0 0
-[001] 513675.737283: kvm_nested_vmexit:    rip fffff80362dcc2d0 reason PREEMPTION_TIMER info1 0 info2 0 int_info 0 int_info_err 0
-[001] 513675.737285: kvm_nested_vmexit_inject: reason EXTERNAL_INTERRUPT info1 0 info2 0 int_info 80000050 int_info_err 0
-[001] 513675.737289: kvm_entry:            vcpu 0
-[001] 513675.737293: kvm_exit:             reason EOI_INDUCED rip 0xfffff80002c85e1a info 50 0
-[001] 513675.737293: kvm_eoi:              apicid 0 vector 80
-[001] 513675.737294: kvm_fpu:              unload
-[001] 513675.737295: kvm_userspace_exit:   reason KVM_EXIT_IOAPIC_EOI (26)
-[001] 513675.737299: kvm_set_irq:          gsi 23 level 1 source 0
-[001] 513675.737299: kvm_msi_set_irq:      dst 0 vec 80 (Fixed|physical|level)
-[001] 513675.737300: kvm_apic_accept_irq:  apicid 0 vec 80 (Fixed|edge)
-[001] 513675.737302: kvm_fpu:              load
-[001] 513675.737303: kvm_entry:            vcpu 0
-[001] 513675.737307: kvm_exit:             reason VMRESUME rip 0xfffff80002cae115 info 0 0
-
-...
-
--- 
-Vitaly
+Applied [1] to next/headers the [2,3,4] to next/drivers for Linux 5.2-rc1
