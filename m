@@ -2,92 +2,118 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08714C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABA8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C24E420830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554111192;
-	bh=KoLf12P/3akoOcOl92930vTedsno1qa4W37ItMjpWP0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kjmGIhhQio9fWjnWy8kbmKoJ/EQ9zbFWkSKnI+zY10G1ftAgRpfXmKvIOhKcKhiAx
-	 beJ+cWt6eC04yCD+qLJ+5agvwTzxrLWD7dryleqnX0yyoyy2tThe4+lq7CHjVp62ze
-	 gSz25lkPeaEKV88O3JW6PmPcKkKmAjownCu0PStc=
+	by mail.kernel.org (Postfix) with ESMTP id 3B971213A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:34:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hXlpHWX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbfDAJdL (ORCPT
+        id S1726534AbfDAJeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 05:33:11 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42010 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfDAJdL (ORCPT
+        Mon, 1 Apr 2019 05:34:10 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:36952 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfDAJeJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 05:33:11 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 103so7888205otd.9;
-        Mon, 01 Apr 2019 02:33:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KoLf12P/3akoOcOl92930vTedsno1qa4W37ItMjpWP0=;
-        b=QfHMtIrfAiFNJAvfk/esYrLjv8SOtgKnkdDZV3ZrXK/3ojpvJ1c1fN776A+e1myDEg
-         Xsl81bp1P5VxXefRP+2SU2mqxwhR4eMWm0LmG6cJewo8OadqSH4yTz2SRHpn6mmLEEPg
-         7n4nPYLqIK8RFb9jq68/t/2R/aYCvagohBR0GscBCxzRbjJyxfrYx9F5zAtfju1XoiVy
-         G/eXEp89WWiYURSqzuD3KK9nADAfdZqMvrjhWZvP/v02pper41y8RjXcfvNMDQRvw5Nf
-         DYV+jP48GeAcKf/Mj00jLY/yXjW5Bp3tqRZVehEFJ0XaUahCSZ9I7CU7wkNfRLLUfxiU
-         cEug==
-X-Gm-Message-State: APjAAAVgs9HyJYoNKmz8+xeDmBNh3usRPcxRs1Q3XvxVOiA9r9+pFXZe
-        uGHS1iHDOSwIUN8YfTYVzRmIXxPUp8lkEuHAB20=
-X-Google-Smtp-Source: APXvYqydZvSb6ju6YfJ6+GXYiaGGlYUFzEPI/6kdI5KuPWKCePAibw6cqRUojuE9w1gBMlKI7cmehP4K5Ri1rcDkP6w=
-X-Received: by 2002:a05:6830:13cd:: with SMTP id e13mr46038615otq.139.1554111190363;
- Mon, 01 Apr 2019 02:33:10 -0700 (PDT)
+        Mon, 1 Apr 2019 05:34:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AYMDSvhbnsbqhnhLpWaIkl1vWRlzxF1dhoJu98rOPYQ=; b=hXlpHWX9PJxQ6IOQGPiPGVNAo
+        gWfhNZ1sXkF3fJYtFZdb++0l7NjjxN/zHMfBCBGW4TVwylzDdnx0nZBwM2Vi+wd+uadahNB8TC77X
+        0VoBa8SD5DbUmdPrqotODUib/5XBFtZDUHDV4Si0Q1+x5srdf+i94qOdhe5gwRtHMmZsbf7L7aQww
+        G6yBNI+g6hBjIugEs77iN6OicnNwJQW/9p7jNNyEP6dYb5YoiPTjUP1RHKJPhAGZ+03BazMwBvPUe
+        5zoi3fYkK9kk+wxPFESEodyFdESJXXoGcTPTliMgNBHNbi/kHTXBHCRjmbncMCq8EhuAvPkZBBKIa
+        2aAQKyyNQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hAtK8-0007w6-0u; Mon, 01 Apr 2019 09:33:48 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B5E4C2026BE95; Mon,  1 Apr 2019 11:33:45 +0200 (CEST)
+Date:   Mon, 1 Apr 2019 11:33:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com, rahul.x.yadav@oracle.com
+Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+Message-ID: <20190401093345.GA14281@hirez.programming.kicks-ass.net>
+References: <20190329152006.110370-1-alex.kogan@oracle.com>
+ <20190329152006.110370-4-alex.kogan@oracle.com>
+ <20190401090653.GF11158@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190330112022.28888-1-bp@alien8.de> <20190330112022.28888-6-bp@alien8.de>
- <CAJZ5v0hDyx6t8UXj=tO78YUTMBqmdnNWEjs4SVwBoJya9pHu4A@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hDyx6t8UXj=tO78YUTMBqmdnNWEjs4SVwBoJya9pHu4A@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 1 Apr 2019 11:32:59 +0200
-Message-ID: <CAJZ5v0gfqOB8r0dvTf3uRSkJCNOLYPe9qLaUV1BLGjTanmMbvg@mail.gmail.com>
-Subject: Re: [PATCH 5/5] drivers/cpufreq: Convert some slow-path
- static_cpu_has() callers to boot_cpu_has()
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190401090653.GF11158@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 11:31 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Sat, Mar 30, 2019 at 12:20 PM Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > From: Borislav Petkov <bp@suse.de>
-> >
-> > Using static_cpu_has() is pointless on those paths, convert them to the
-> > boot_cpu_has() variant.
-> >
-> > No functional changes.
-> >
-> > Signed-off-by: Borislav Petkov <bp@suse.de>
-> > Cc: Len Brown <lenb@kernel.org>
-> > Cc: linux-pm@vger.kernel.org
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
->
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Mon, Apr 01, 2019 at 11:06:53AM +0200, Peter Zijlstra wrote:
+> On Fri, Mar 29, 2019 at 11:20:04AM -0400, Alex Kogan wrote:
+> > diff --git a/kernel/locking/mcs_spinlock.h b/kernel/locking/mcs_spinlock.h
+> > index bc6d3244e1af..71ee4b64c5d4 100644
+> > --- a/kernel/locking/mcs_spinlock.h
+> > +++ b/kernel/locking/mcs_spinlock.h
+> > @@ -17,8 +17,18 @@
+> >  
+> >  struct mcs_spinlock {
+> >  	struct mcs_spinlock *next;
+> > +#ifndef CONFIG_NUMA_AWARE_SPINLOCKS
+> >  	int locked; /* 1 if lock acquired */
+> >  	int count;  /* nesting count, see qspinlock.c */
+> > +#else /* CONFIG_NUMA_AWARE_SPINLOCKS */
+> > +	uintptr_t locked; /* 1 if lock acquired, 0 if not, other values */
+> > +			  /* represent a pointer to the secondary queue head */
+> > +	u32 node_and_count;	/* node id on which this thread is running */
+> > +				/* with two lower bits reserved for nesting */
+> > +				/* count, see qspinlock.c */
+> > +	u32 encoded_tail; /* encoding of this node as the main queue tail */
+> > +	struct mcs_spinlock *tail;    /* points to the secondary queue tail */
+> > +#endif /* CONFIG_NUMA_AWARE_SPINLOCKS */
+> >  };
+> 
+> Please, have another look at the paravirt code, in particular at struct
+> pv_node and its usage. This is horrible.
 
-Or I can queue it up if you prefer.
+Thing is, this turns into a right mess when you also have PV spinlocks
+on.
+
+One thing we could maybe do is change locked and count to u8, then your
+overlay structure could be something like:
+
+struct mcs_spinlock {
+	struct mcs_spinlock *next;
+	u8 locked;
+	u8 count;
+};
+
+struct cna_node {
+	/* struct mcs_spinlock overlay */
+	struct mcs_spinlock *next;
+	u8 locked;
+	u8 count;
+
+	/* our CNA bits, consuming the slack and PV space */
+	u16 node;
+	u32 encoded_tail;
+	struct mcs_spinlock *head;
+	struct mcs_spinlock *tail;
+};
+
+Then you also don't need the first two patches.
