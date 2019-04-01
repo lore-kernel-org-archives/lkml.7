@@ -6,48 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024FEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3450FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C106521924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98C421924
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138378;
-	bh=psbA7uOFQNjH2BHm7ly5TTucK8PBatg+YmnWcXLVprk=;
+	s=default; t=1554138382;
+	bh=KpmqzIT/vwP6YYVO50fRE8ZBbuorZot0H0YpCqueWrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GBYVQbj6RgBGEEOo7o0Mh0uZs55fyveTJbG+kInc4+ryGkOYl7UJJm1HD2Y4OGZBm
-	 u3jS2VNQIMvpxJHyydlTAdHknA2H8dVtxNgXDqsA3B0OgOHTwppwG6s2xL0b7CMZ6O
-	 C6F9DMaO4FyxXze9pTWd6TWTy2B1bzoKeh4Kd0dg=
+	b=DwtrlVaORw7gA1V3O5rr6Uzrq0u0ChbNysAOut0X7E74bXWU09uZItsVAcswKp6o6
+	 0bXoJY07qwxvaWZ73Zej8Lj0Jk0pQOSizP8Iiy73u4A6UVkGdeLTyEbAUgRBYr+mfc
+	 sex0Erzg0hxj6ivegwxI1N1hIQvh+HKc3bbFc/fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbfDARGR (ORCPT
+        id S1728802AbfDARGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:06:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51716 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:06:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbfDARGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:06:15 -0400
+        id S1728710AbfDARGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:06:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9187B21924;
-        Mon,  1 Apr 2019 17:06:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D851721924;
+        Mon,  1 Apr 2019 17:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138374;
-        bh=psbA7uOFQNjH2BHm7ly5TTucK8PBatg+YmnWcXLVprk=;
+        s=default; t=1554138377;
+        bh=KpmqzIT/vwP6YYVO50fRE8ZBbuorZot0H0YpCqueWrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OrCLcI91eyXi5Y4lgExMNiLxCVXXLBW9JcgwSEED+zogAipi55r85W+rgqAs2z0kN
-         L1YFwYKqHETpGWSg10PHKZfmDVdOH5/fZDNRPJsNXm7m26MJ24QGjaN8M9q3+W/E1m
-         JaBMjIcyzvts7/cm4HgqmgEwL29HHHhKAd+iuXo0=
+        b=a66mPSG9rFDWj4IKEn9UBf7ry42JFxOZoZ8Ekn4tumOjR8D1DBklPAeqQK93iupKd
+         O9cu1yNT7RkU1grPz+hgYG4C3H9sbTbbj/bbuXeGPPdODbFqwGD+5G7DTUXIlneVZw
+         6VoXXWBQXte5Qa4qxkA+SSXiA0cTK46wBfYeip7U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kal Conley <kal.conley@dectris.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 012/146] net/packet: Set __GFP_NOWARN upon allocation in alloc_pg_vec
-Date:   Mon,  1 Apr 2019 19:00:24 +0200
-Message-Id: <20190401170049.474553173@linuxfoundation.org>
+Subject: [PATCH 5.0 013/146] net: phy: meson-gxl: fix interrupt support
+Date:   Mon,  1 Apr 2019 19:00:25 +0200
+Message-Id: <20190401170049.548261025@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -66,81 +64,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christoph Paasch <cpaasch@apple.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 398f0132c14754fcd03c1c4f8e7176d001ce8ea1 ]
+[ Upstream commit daa5c4d0167a308306525fd5ab9a5e18e21f4f74 ]
 
-Since commit fc62814d690c ("net/packet: fix 4gb buffer limit due to overflow check")
-one can now allocate packet ring buffers >= UINT_MAX. However, syzkaller
-found that that triggers a warning:
+If an interrupt is already pending when the interrupt is enabled on the
+GXL phy, no IRQ will ever be triggered.
 
-[   21.100000] WARNING: CPU: 2 PID: 2075 at mm/page_alloc.c:4584 __alloc_pages_nod0
-[   21.101490] Modules linked in:
-[   21.101921] CPU: 2 PID: 2075 Comm: syz-executor.0 Not tainted 5.0.0 #146
-[   21.102784] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.5.1 01/01/2011
-[   21.103887] RIP: 0010:__alloc_pages_nodemask+0x2a0/0x630
-[   21.104640] Code: fe ff ff 65 48 8b 04 25 c0 de 01 00 48 05 90 0f 00 00 41 bd 01 00 00 00 48 89 44 24 48 e9 9c fe 3
-[   21.107121] RSP: 0018:ffff88805e1cf920 EFLAGS: 00010246
-[   21.107819] RAX: 0000000000000000 RBX: ffffffff85a488a0 RCX: 0000000000000000
-[   21.108753] RDX: 0000000000000000 RSI: dffffc0000000000 RDI: 0000000000000000
-[   21.109699] RBP: 1ffff1100bc39f28 R08: ffffed100bcefb67 R09: ffffed100bcefb67
-[   21.110646] R10: 0000000000000001 R11: ffffed100bcefb66 R12: 000000000000000d
-[   21.111623] R13: 0000000000000000 R14: ffff88805e77d888 R15: 000000000000000d
-[   21.112552] FS:  00007f7c7de05700(0000) GS:ffff88806d100000(0000) knlGS:0000000000000000
-[   21.113612] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   21.114405] CR2: 000000000065c000 CR3: 000000005e58e006 CR4: 00000000001606e0
-[   21.115367] Call Trace:
-[   21.115705]  ? __alloc_pages_slowpath+0x21c0/0x21c0
-[   21.116362]  alloc_pages_current+0xac/0x1e0
-[   21.116923]  kmalloc_order+0x18/0x70
-[   21.117393]  kmalloc_order_trace+0x18/0x110
-[   21.117949]  packet_set_ring+0x9d5/0x1770
-[   21.118524]  ? packet_rcv_spkt+0x440/0x440
-[   21.119094]  ? lock_downgrade+0x620/0x620
-[   21.119646]  ? __might_fault+0x177/0x1b0
-[   21.120177]  packet_setsockopt+0x981/0x2940
-[   21.120753]  ? __fget+0x2fb/0x4b0
-[   21.121209]  ? packet_release+0xab0/0xab0
-[   21.121740]  ? sock_has_perm+0x1cd/0x260
-[   21.122297]  ? selinux_secmark_relabel_packet+0xd0/0xd0
-[   21.123013]  ? __fget+0x324/0x4b0
-[   21.123451]  ? selinux_netlbl_socket_setsockopt+0x101/0x320
-[   21.124186]  ? selinux_netlbl_sock_rcv_skb+0x3a0/0x3a0
-[   21.124908]  ? __lock_acquire+0x529/0x3200
-[   21.125453]  ? selinux_socket_setsockopt+0x5d/0x70
-[   21.126075]  ? __sys_setsockopt+0x131/0x210
-[   21.126533]  ? packet_release+0xab0/0xab0
-[   21.127004]  __sys_setsockopt+0x131/0x210
-[   21.127449]  ? kernel_accept+0x2f0/0x2f0
-[   21.127911]  ? ret_from_fork+0x8/0x50
-[   21.128313]  ? do_raw_spin_lock+0x11b/0x280
-[   21.128800]  __x64_sys_setsockopt+0xba/0x150
-[   21.129271]  ? lockdep_hardirqs_on+0x37f/0x560
-[   21.129769]  do_syscall_64+0x9f/0x450
-[   21.130182]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+The fix is simply to make sure pending IRQs are cleared before setting
+up the irq mask.
 
-We should allocate with __GFP_NOWARN to handle this.
-
-Cc: Kal Conley <kal.conley@dectris.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Fixes: fc62814d690c ("net/packet: fix 4gb buffer limit due to overflow check")
-Signed-off-by: Christoph Paasch <cpaasch@apple.com>
+Fixes: cf127ff20af1 ("net: phy: meson-gxl: add interrupt support")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/packet/af_packet.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/meson-gxl.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -4211,7 +4211,7 @@ static struct pgv *alloc_pg_vec(struct t
- 	struct pgv *pg_vec;
- 	int i;
+--- a/drivers/net/phy/meson-gxl.c
++++ b/drivers/net/phy/meson-gxl.c
+@@ -211,6 +211,7 @@ static int meson_gxl_ack_interrupt(struc
+ static int meson_gxl_config_intr(struct phy_device *phydev)
+ {
+ 	u16 val;
++	int ret;
  
--	pg_vec = kcalloc(block_nr, sizeof(struct pgv), GFP_KERNEL);
-+	pg_vec = kcalloc(block_nr, sizeof(struct pgv), GFP_KERNEL | __GFP_NOWARN);
- 	if (unlikely(!pg_vec))
- 		goto out;
+ 	if (phydev->interrupts == PHY_INTERRUPT_ENABLED) {
+ 		val = INTSRC_ANEG_PR
+@@ -223,6 +224,11 @@ static int meson_gxl_config_intr(struct
+ 		val = 0;
+ 	}
+ 
++	/* Ack any pending IRQ */
++	ret = meson_gxl_ack_interrupt(phydev);
++	if (ret)
++		return ret;
++
+ 	return phy_write(phydev, INTSRC_MASK, val);
+ }
  
 
 
