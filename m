@@ -6,111 +6,156 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120F7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17A4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2FE720700
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A6320700
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:46:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hlRSgdo9";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y2KbD3S5"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Br56PKj8";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RYHwUSgW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731989AbfDAHpc (ORCPT
+        id S1732012AbfDAHqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:45:32 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33256 "EHLO
+        Mon, 1 Apr 2019 03:46:11 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34732 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731769AbfDAHpc (ORCPT
+        with ESMTP id S1731769AbfDAHqK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:45:32 -0400
+        Mon, 1 Apr 2019 03:46:10 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3401D602F2; Mon,  1 Apr 2019 07:45:30 +0000 (UTC)
+        id 91B67602FC; Mon,  1 Apr 2019 07:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554104731;
-        bh=s9Kti+v0yTdvXYN/pIRSLo5ad9A4sanNBOxqpc5FGHI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hlRSgdo9EnRFi6xduAQnQBOH1ZVkyoPSVZlDSm/+U8hAYKc39EeeTX9BX7+KbYpMx
-         sjxnhO+xdBrW6DxkT9vn48dLoW7FpcIl6FOnkEhHHtq7Q4EvRj1/R9jbr7w7tkDV22
-         xQIrqbiH2jM2KMrt0wzmRkovDBKo4GpsV4CWpmh4=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86E41602FC;
-        Mon,  1 Apr 2019 07:45:26 +0000 (UTC)
+        s=default; t=1554104769;
+        bh=j7gP3v5TDkA5/TAThLFoL4MLuggLyY1xxFTs/TISDXU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Br56PKj82aY7zseeeQHJLzvcpLx7tijEFXTvY6Y292WAfGNonOwE7Cb2qWRzpHgaz
+         +fBY2pwofkczip+VAfjSIvgq6brXN7tUi3DbXGeAjbWn1KwwHEbjv0q/NuEWeVP9FU
+         su8IcIePDOBrrCiyuSonQ4m9lMleortWb7PsXmgo=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 7F209602F2;
+        Mon,  1 Apr 2019 07:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554104730;
-        bh=s9Kti+v0yTdvXYN/pIRSLo5ad9A4sanNBOxqpc5FGHI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Y2KbD3S5SJPbnXNn4BkHPdjEKovEIkhqbu0GO7JMVXhOMMaAyrRGeJ8Q9PH0WGeBN
-         TDtUVgRz2j22aRtRwkXS7A/IZuRu2mi+kulb0tQxxhqODnvBcjCuDzoHDzmtwLEZX0
-         +vZS4Ku/vJoS+amK2JebmcrE1j/Xq1pouYDZt2UE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86E41602FC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] pwm: imx27: use devm_platform_ioremap_resource() to
- simplify code
-To:     Anson Huang <anson.huang@nxp.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1554095960-15638-1-git-send-email-Anson.Huang@nxp.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <3379a7a9-64d4-7892-0f40-3d437a24e0f6@codeaurora.org>
-Date:   Mon, 1 Apr 2019 13:15:23 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        s=default; t=1554104768;
+        bh=j7gP3v5TDkA5/TAThLFoL4MLuggLyY1xxFTs/TISDXU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RYHwUSgWDCokRPazfp5P3SnQSInfcEjCqFYZ970IK3ivcWXUHdWesJ5jY9+DX3SnE
+         FCZ/bbkvxaZETmsTvvAlZxpPaC/XsjjdapE6z6m3Mzq4spqKuVPw8qQa3zb4A/FlWX
+         jhw45VPmAr7MCCpYcjSoHmKnD23LxjaTQpFpeXpg=
 MIME-Version: 1.0
-In-Reply-To: <1554095960-15638-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Date:   Mon, 01 Apr 2019 13:16:07 +0530
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hemantg <hemantg@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Harish Bandi <c-hbandi@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] Bluetooth: hci_qca: Rename STATE_<flags> to
+ QCA_<flags>
+In-Reply-To: <CAG5bF+RLTaYbrn8uSpoU+W=PBmNawR6Ov0EOEcfuSymzuini5w@mail.gmail.com>
+References: <20190312204217.73296-1-mka@chromium.org>
+ <CAG5bF+RLTaYbrn8uSpoU+W=PBmNawR6Ov0EOEcfuSymzuini5w@mail.gmail.com>
+Message-ID: <96ea2aaad3d9ff631a621498a6c12a35@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Matthias,
 
-On 4/1/2019 10:54 AM, Anson Huang wrote:
-> Use the new helper devm_platform_ioremap_resource() which wraps the
-> platform_get_resource() and devm_ioremap_resource() together, to
-> simplify the code.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
-Cheers,
--Mukesh
+On 2019-03-13 02:12, Matthias Kaehlcke wrote:
+> Rename STATE_IN_BAND_SLEEP_ENABLED to QCA_IN_BAND_SLEEP_ENABLED.
+> The constant represents a flag (multiple flags can be set at once),
+> not a unique state of the controller or driver.
+> 
+> Also make the flag an enum value instead of a pre-processor constant
+> (more flags will be added to the enum group by another patch).
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
->   drivers/pwm/pwm-imx27.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-> index 8061306..434a351 100644
-> --- a/drivers/pwm/pwm-imx27.c
-> +++ b/drivers/pwm/pwm-imx27.c
-> @@ -291,7 +291,6 @@ MODULE_DEVICE_TABLE(of, pwm_imx27_dt_ids);
->   static int pwm_imx27_probe(struct platform_device *pdev)
->   {
->   	struct pwm_imx27_chip *imx;
-> -	struct resource *r;
->   
->   	imx = devm_kzalloc(&pdev->dev, sizeof(*imx), GFP_KERNEL);
->   	if (imx == NULL)
-> @@ -326,8 +325,7 @@ static int pwm_imx27_probe(struct platform_device *pdev)
->   	imx->chip.of_xlate = of_pwm_xlate_with_flags;
->   	imx->chip.of_pwm_n_cells = 3;
->   
-> -	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	imx->mmio_base = devm_ioremap_resource(&pdev->dev, r);
-> +	imx->mmio_base = devm_platform_ioremap_resource(pdev, 0);
->   	if (IS_ERR(imx->mmio_base))
->   		return PTR_ERR(imx->mmio_base);
->   
+> Changes in v2:
+> - don't use BIT()
+> - change to enum type
+> - updated commit message
+> ---
+>  drivers/bluetooth/hci_qca.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 237aea34b69f..1b7ba9e9e08a 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -54,9 +54,6 @@
+>  #define HCI_IBS_WAKE_ACK	0xFC
+>  #define HCI_MAX_IBS_SIZE	10
+> 
+> -/* Controller states */
+> -#define STATE_IN_BAND_SLEEP_ENABLED	1
+> -
+>  #define IBS_WAKE_RETRANS_TIMEOUT_MS	100
+>  #define IBS_TX_IDLE_TIMEOUT_MS		2000
+>  #define CMD_TRANS_TIMEOUT_MS		100
+> @@ -67,6 +64,10 @@
+>  /* Controller debug log header */
+>  #define QCA_DEBUG_HANDLE	0x2EDC
+> 
+> +enum qca_flags {
+> +	QCA_IN_BAND_SLEEP_ENABLED,
+> +};
+> +
+
+[Bala]: I would recommend to go with QCA_IBS_ENABLED as IBS is 
+abbreviated as In band sleep.
+
+>  /* HCI_IBS transmit side sleep protocol states */
+>  enum tx_ibs_states {
+>  	HCI_IBS_TX_ASLEEP,
+> @@ -775,7 +776,7 @@ static int qca_enqueue(struct hci_uart *hu, struct
+> sk_buff *skb)
+>  	/* Don't go to sleep in middle of patch download or
+>  	 * Out-Of-Band(GPIOs control) sleep is selected.
+>  	 */
+> -	if (!test_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags)) {
+> +	if (!test_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags)) {
+>  		skb_queue_tail(&qca->txq, skb);
+>  		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+>  		return 0;
+> @@ -1192,7 +1193,7 @@ static int qca_setup(struct hci_uart *hu)
+>  		return ret;
+> 
+>  	/* Patch downloading has to be done without IBS mode */
+> -	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+> +	clear_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags);
+> 
+>  	if (qcadev->btsoc_type == QCA_WCN3990) {
+>  		bt_dev_info(hdev, "setting up wcn3990");
+> @@ -1236,7 +1237,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	/* Setup patch / NVM configurations */
+>  	ret = qca_uart_setup(hdev, qca_baudrate, qcadev->btsoc_type, 
+> soc_ver);
+>  	if (!ret) {
+> -		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+> +		set_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags);
+>  		qca_debugfs_init(hdev);
+>  	} else if (ret == -ENOENT) {
+>  		/* No patch/nvm-config found, run with original fw/config */
+> @@ -1294,7 +1295,7 @@ static void qca_power_shutdown(struct hci_uart 
+> *hu)
+>  	 * data in skb's.
+>  	 */
+>  	spin_lock_irqsave(&qca->hci_ibs_lock, flags);
+> -	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+> +	clear_bit(QCA_IN_BAND_SLEEP_ENABLED, &qca->flags);
+>  	qca_flush(hu);
+>  	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+
+-- 
+Regards
+Balakrishna.
