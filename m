@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E39C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48611C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C02F208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1E12084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141544;
-	bh=+V/kBv2FT4LMrr6EzmLacGwQdRe5eI7eaEhFZBRsZCs=;
+	s=default; t=1554141553;
+	bh=hk9qZc9ScoNa154aFYHFblnRewOJP7e6Bxz6USbBByg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W6BIW9Qv21G3EYgPJSPq5A/PBPFqGXbZp4CCabesTmQW8pf+Q/tJ6znkJpnYji+5+
-	 jhzJUzELKWOx+BMD/88qGlxE0uGbJXhYVhc8E7e1qu8EQIQC89bdknv6r35TaLKEuK
-	 oArd6ky1aMMFXIrkYWNxn/gpy+2CE4semX59d0n0=
+	b=OdPk1GXqdzi6su8iuIbJI6ntDoAlMk71lK4Na4WFGddIizCzON5rSUne3fOCIzChs
+	 kgSj0yi1pP9dBghw2uh3YvTIffKCGry01VGcl1AMBYDOmLFGXtVhI+geCLsv3xqrWb
+	 HhuUJoaWCIlyi9Q9N8w3MgkBh1pn1ee0QdZ2WelE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729807AbfDAR7C (ORCPT
+        id S1731535AbfDAR7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:59:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44972 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:59:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731318AbfDARSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:18:06 -0400
+        id S1731304AbfDARSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:18:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2800521473;
-        Mon,  1 Apr 2019 17:18:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88205206C0;
+        Mon,  1 Apr 2019 17:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139085;
-        bh=+V/kBv2FT4LMrr6EzmLacGwQdRe5eI7eaEhFZBRsZCs=;
+        s=default; t=1554139083;
+        bh=hk9qZc9ScoNa154aFYHFblnRewOJP7e6Bxz6USbBByg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0vAEa6E+t6iTxfQoikKoa8q0YCb3Wrqp6IC1673H2fRGLHqokfctrRzocp9X8wL5t
-         hEEuE7hSVOnpxnDlKFGsHyeAEqwl/6YWxkzcSiACXJueIfto5uReRtIRU3mkdMXM6W
-         tQhKEZVvDPWDhHIfoM7SO8SZiUbxvT+HX63FNB/k=
+        b=Pn+Koog6FzG9SiodsX4zc2k3wBju9sS45rdwuJtbDgXWyEhz3PiDzKBnE5wvBu0QV
+         Thp0vQ4Lgfq/O4RhaF9Wcxj0gjmrqrTobIAc4V5KJDQKuwD1hY2D7ssz5k2ORLdSh7
+         /rJT92QDv1QAMeJOlEltJs95xCmZcMpJdhhL9EdQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 108/134] usb: xhci: dbc: Dont free all memory with spinlock held
-Date:   Mon,  1 Apr 2019 19:02:24 +0200
-Message-Id: <20190401170054.310737307@linuxfoundation.org>
+Subject: [PATCH 4.19 107/134] xhci: Fix port resume done detection for SS ports with LPM enabled
+Date:   Mon,  1 Apr 2019 19:02:23 +0200
+Message-Id: <20190401170054.221630835@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -67,43 +67,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 8867ea262196a6945c24a0fb739575af646ec0e9 upstream.
+commit 6cbcf596934c8e16d6288c7cc62dfb7ad8eadf15 upstream.
 
-The xhci debug capability (DbC) feature did its memory cleanup with
-spinlock held. dma_free_coherent() warns if called with interrupts
-disabled
+A suspended SS port in U3 link state will go to U0 when resumed, but
+can almost immediately after that enter U1 or U2 link power save
+states before host controller driver reads the port status.
 
-move the memory cleanup outside the spinlock
+Host controller driver only checks for U0 state, and might miss
+the finished resume, leaving flags unclear and skip notifying usb
+code of the wake.
+
+Add U1 and U2 to the possible link states when checking for finished
+port resume.
 
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-dbgcap.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-ring.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/host/xhci-dbgcap.c
-+++ b/drivers/usb/host/xhci-dbgcap.c
-@@ -516,7 +516,6 @@ static int xhci_do_dbc_stop(struct xhci_
- 		return -1;
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1643,10 +1643,13 @@ static void handle_port_status(struct xh
+ 		}
+ 	}
  
- 	writel(0, &dbc->regs->control);
--	xhci_dbc_mem_cleanup(xhci);
- 	dbc->state = DS_DISABLED;
- 
- 	return 0;
-@@ -562,8 +561,10 @@ static void xhci_dbc_stop(struct xhci_hc
- 	ret = xhci_do_dbc_stop(xhci);
- 	spin_unlock_irqrestore(&dbc->lock, flags);
- 
--	if (!ret)
-+	if (!ret) {
-+		xhci_dbc_mem_cleanup(xhci);
- 		pm_runtime_put_sync(xhci_to_hcd(xhci)->self.controller);
-+	}
- }
- 
- static void
+-	if ((portsc & PORT_PLC) && (portsc & PORT_PLS_MASK) == XDEV_U0 &&
+-			DEV_SUPERSPEED_ANY(portsc)) {
++	if ((portsc & PORT_PLC) &&
++	    DEV_SUPERSPEED_ANY(portsc) &&
++	    ((portsc & PORT_PLS_MASK) == XDEV_U0 ||
++	     (portsc & PORT_PLS_MASK) == XDEV_U1 ||
++	     (portsc & PORT_PLS_MASK) == XDEV_U2)) {
+ 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
+-		/* We've just brought the device into U0 through either the
++		/* We've just brought the device into U0/1/2 through either the
+ 		 * Resume state after a device remote wakeup, or through the
+ 		 * U3Exit state after a host-initiated resume.  If it's a device
+ 		 * initiated remote wake, don't pass up the link state change,
 
 
