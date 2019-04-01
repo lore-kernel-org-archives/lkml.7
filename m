@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9B4C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FF5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347E9206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968DD206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139368;
-	bh=PxKClepdb8GpNSQd+Yk1xt7SsewWNy0fd4Od0lFr2J4=;
+	s=default; t=1554139372;
+	bh=EeLiKeyasPTnJtvs+o3NG8YvkitM+GWen6JX2rK4zIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CsJpJHkcrWLamO2pokFDDoEvGBBjlaNzTiDay4PMPJzH6AucQeVSuBWrRjRZh3bQ1
-	 qUGbBVVa3sdMbEt7Zh/8BWqC3UC5UwqiiVc8NAkZG7k6D7/uwWybtQSjQzm8eowJSk
-	 QokJl2VFuNAv7aWpilTyTpryNSd0wWs8zbSgvMDM=
+	b=DFIuq2EdSk2NCV33AfMc47mkUe5e0m5JCvUCqGCNPi+dW+bFxfVYl5C85+NMeKyb+
+	 ylMn+4gWrJWNCHwDevyr5P7nsyRbNavEuwv+3p5GNi9h6VsP7bDiIhWaAUbfZCPnog
+	 QN/O1uORqgUkEfmej2uGJpKjrH/oPEF4Icvla8Nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732016AbfDARWq (ORCPT
+        id S1732024AbfDARWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:22:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52116 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:22:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731611AbfDARWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:22:41 -0400
+        id S1731595AbfDARWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:22:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0757206C0;
-        Mon,  1 Apr 2019 17:22:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87074206C0;
+        Mon,  1 Apr 2019 17:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139361;
-        bh=PxKClepdb8GpNSQd+Yk1xt7SsewWNy0fd4Od0lFr2J4=;
+        s=default; t=1554139365;
+        bh=EeLiKeyasPTnJtvs+o3NG8YvkitM+GWen6JX2rK4zIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f7Kv1B9jy/97LOzPJGPxuMa9M/ZIDCwk/NRV+6fHk8N7cxQNfSz6IPuQNfesdF9Gv
-         dPma5vEnze8+Uyn5dlSGLmfxAlLH1SgJZGGb/YKekq5eQV054sn2j0wsCq9gBcBR4M
-         BOrMr2VZcDavItg3loLWIXaeMYlToJ0sRDJgAAh4=
+        b=MI1lBmpYV7Pms3Pl8Ts6oFwTw/c/f+QP/U6hioDggj9E30IuEdhg/dxnYms+2Eh/w
+         D+A/NVTx61JvKuLp3rfBIq619YMVzWocm2Q5RBtwKdTrOMFQFxgVRYRDj2IALi+l6k
+         kgvGyO4O9yBewny6cnDl7ik7/GkOXniWYd9z1pWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 054/107] powerpc/fsl: Fix the flush of branch predictor.
-Date:   Mon,  1 Apr 2019 19:02:09 +0200
-Message-Id: <20190401170050.693830867@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Neuling <mikey@neuling.org>,
+        Diana Craciun <diana.craciun@nxp.com>
+Subject: [PATCH 4.14 055/107] powerpc/security: Fix spectre_v2 reporting
+Date:   Mon,  1 Apr 2019 19:02:10 +0200
+Message-Id: <20190401170050.774995185@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -67,42 +66,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 27da80719ef132cf8c80eb406d5aeb37dddf78cc upstream.
+commit 92edf8df0ff2ae86cc632eeca0e651fd8431d40d upstream.
 
-The commit identified below adds MC_BTB_FLUSH macro only when
-CONFIG_PPC_FSL_BOOK3E is defined. This results in the following error
-on some configs (seen several times with kisskb randconfig_defconfig)
+When I updated the spectre_v2 reporting to handle software count cache
+flush I got the logic wrong when there's no software count cache
+enabled at all.
 
-arch/powerpc/kernel/exceptions-64e.S:576: Error: Unrecognized opcode: `mc_btb_flush'
-make[3]: *** [scripts/Makefile.build:367: arch/powerpc/kernel/exceptions-64e.o] Error 1
-make[2]: *** [scripts/Makefile.build:492: arch/powerpc/kernel] Error 2
-make[1]: *** [Makefile:1043: arch/powerpc] Error 2
-make: *** [Makefile:152: sub-make] Error 2
+The result is that on systems with the software count cache flush
+disabled we print:
 
-This patch adds a blank definition of MC_BTB_FLUSH for other cases.
+  Mitigation: Indirect branch cache disabled, Software count cache flush
 
-Fixes: 10c5e83afd4a ("powerpc/fsl: Flush the branch predictor at each kernel entry (64bit)")
-Cc: Diana Craciun <diana.craciun@nxp.com>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Daniel Axtens <dja@axtens.net>
+Which correctly indicates that the count cache is disabled, but
+incorrectly says the software count cache flush is enabled.
+
+The root of the problem is that we are trying to handle all
+combinations of options. But we know now that we only expect to see
+the software count cache flush enabled if the other options are false.
+
+So split the two cases, which simplifies the logic and fixes the bug.
+We were also missing a space before "(hardware accelerated)".
+
+The result is we see one of:
+
+  Mitigation: Indirect branch serialisation (kernel only)
+  Mitigation: Indirect branch cache disabled
+  Mitigation: Software count cache flush
+  Mitigation: Software count cache flush (hardware accelerated)
+
+Fixes: ee13cb249fab ("powerpc/64s: Add support for software count cache flush")
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Michael Neuling <mikey@neuling.org>
 Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/kernel/exceptions-64e.S |    1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/kernel/security.c |   23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
 
---- a/arch/powerpc/kernel/exceptions-64e.S
-+++ b/arch/powerpc/kernel/exceptions-64e.S
-@@ -348,6 +348,7 @@ ret_from_mc_except:
- #define GEN_BTB_FLUSH
- #define CRIT_BTB_FLUSH
- #define DBG_BTB_FLUSH
-+#define MC_BTB_FLUSH
- #define GDBELL_BTB_FLUSH
- #endif
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -189,29 +189,22 @@ ssize_t cpu_show_spectre_v2(struct devic
+ 	bcs = security_ftr_enabled(SEC_FTR_BCCTRL_SERIALISED);
+ 	ccd = security_ftr_enabled(SEC_FTR_COUNT_CACHE_DISABLED);
  
+-	if (bcs || ccd || count_cache_flush_type != COUNT_CACHE_FLUSH_NONE) {
+-		bool comma = false;
++	if (bcs || ccd) {
+ 		seq_buf_printf(&s, "Mitigation: ");
+ 
+-		if (bcs) {
++		if (bcs)
+ 			seq_buf_printf(&s, "Indirect branch serialisation (kernel only)");
+-			comma = true;
+-		}
+ 
+-		if (ccd) {
+-			if (comma)
+-				seq_buf_printf(&s, ", ");
+-			seq_buf_printf(&s, "Indirect branch cache disabled");
+-			comma = true;
+-		}
+-
+-		if (comma)
++		if (bcs && ccd)
+ 			seq_buf_printf(&s, ", ");
+ 
+-		seq_buf_printf(&s, "Software count cache flush");
++		if (ccd)
++			seq_buf_printf(&s, "Indirect branch cache disabled");
++	} else if (count_cache_flush_type != COUNT_CACHE_FLUSH_NONE) {
++		seq_buf_printf(&s, "Mitigation: Software count cache flush");
+ 
+ 		if (count_cache_flush_type == COUNT_CACHE_FLUSH_HW)
+-			seq_buf_printf(&s, "(hardware accelerated)");
++			seq_buf_printf(&s, " (hardware accelerated)");
+ 	} else if (btb_flush_enabled) {
+ 		seq_buf_printf(&s, "Mitigation: Branch predictor state flush");
+ 	} else {
 
 
