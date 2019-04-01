@@ -2,115 +2,103 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.8 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F24C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8FAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097F620833
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9202120643
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554179137;
+	bh=+vSgYABV/ew6RMpnSop/p2u+RbTsJ6Oli3qTtLNorrM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mRQqBzFglzI08I/zNCcB00tLKt5J1MSazCRarIucZwfmJfzIOf/E1JhcVBd9LGAX1
+	 M4tI0QZRCfuFrfSja+YWXjYuGHaTNPGVt/p2ms6kBAZVMWC/2lBMkNOOJHw3cOhl2g
+	 feSQlP1kT9Cz3CfhrlF0y8uRNiVDQIkzUUz3hg7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfDBEWm (ORCPT
+        id S1728625AbfDBEZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 00:22:42 -0400
-Received: from mga09.intel.com ([134.134.136.24]:64466 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfDBEWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 00:22:42 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 21:22:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,298,1549958400"; 
-   d="scan'208";a="219697975"
-Received: from rajeev-desktop.iind.intel.com (HELO intel.com) ([10.223.84.39])
-  by orsmga001.jf.intel.com with ESMTP; 01 Apr 2019 21:22:38 -0700
-Date:   Tue, 2 Apr 2019 09:52:32 +0530
-From:   Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-To:     Nick Crews <ncrews@chromium.org>
-Cc:     Joe Perches <joe@perches.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        benjamin.tissoires@redhat.com, jikos@kernel.org,
-        jettrink@chromium.org, Gwendal Grignou <gwendal@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v3] HID: intel-ish-hid: ISH firmware loader client driver
-Message-ID: <20190402042232.GA2736@intel.com>
-References: <1553889813-17677-1-git-send-email-rushikesh.s.kadam@intel.com>
- <CAHX4x85jFVYhOpRCKfvhYEqhXFwpKaK3_5gEit1EMaXY3L4Z4g@mail.gmail.com>
- <20190330102230.GB19202@intel.com>
- <e2d8ab93c97acf1254830e6f51edb8f19c8767d6.camel@perches.com>
- <CAHX4x85=Sot62T=DtGPLkyFhudyp=jvxcU_W-oShg8iKTach+Q@mail.gmail.com>
+        Tue, 2 Apr 2019 00:25:36 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50944 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfDBEZf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 00:25:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KwXc7XHefa4E4ENOaLDa8Tie/RfoRX9wV6MkrGF00Go=; b=fwG2wuP38r33B8bq2KcmH88i0
+        waPmyxaRL06YBE+HI2PD5iMiZOU5Xz7ogCViD7g0aR/ANroBcY8bYZIwaty5lNMR44wsCKUuRmOyP
+        DkeH1H5E4hsBg5oByJomfS9iJhqxnKdEwfcLHw+YrQvuqZiW9EjVNM2s8r21YweOaac4A=;
+Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hBAzK-0005hZ-0k; Tue, 02 Apr 2019 04:25:30 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id BE1F5440082; Mon,  1 Apr 2019 10:17:53 +0100 (BST)
+Date:   Mon, 1 Apr 2019 16:17:53 +0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Randolph =?iso-8859-1?Q?Maa=DFen?= <gaireg@gaireg.de>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] spi: tegra20-slink: change chip select action order
+Message-ID: <20190401091753.GP2059@sirena.org.uk>
+References: <20190329174411.13832-1-gaireg@gaireg.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QKpLca3blcvhMJ0W"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHX4x85=Sot62T=DtGPLkyFhudyp=jvxcU_W-oShg8iKTach+Q@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190329174411.13832-1-gaireg@gaireg.de>
+X-Cookie: Use extra care when cleaning on stairs.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick, Joe
 
-thanks for your comments
+--QKpLca3blcvhMJ0W
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards
+On Fri, Mar 29, 2019 at 06:44:11PM +0100, Randolph Maa=DFen wrote:
+> To transfer via SPI the tegra20-slink driver first sets the command
+> register, which contains the chip select value, and after that the
+> command2 register, which contains the chip select line. This leads to a
+> small spike in the chip selct 0 line between the set of the value and
+> the selection of the chip select line.
 
-Rushikesh
+Please do not submit new versions of already applied patches, please
+submit incremental updates to the existing code.  Modifying existing
+commits creates problems for other users building on top of those
+commits so it's best practice to only change pubished git commits if
+absolutely essential.
 
-On Mon, Apr 01, 2019 at 03:17:13PM -0600, Nick Crews wrote:
-> I tried to send the last message from my phone, and surprise it wasn't
-> formatted correctly, so it may have been marked as spam. repeating
-> myself again...
-> 
-> Ah, I guess I was wrong about logging OOM. I hadn’t hear about the
-> recommendations against it, but they make sense. Thanks for the
-> clarifications!
-> 
-> On Sat, Mar 30, 2019 at 10:27 AM Joe Perches <joe@perches.com> wrote:
-> >
-> > On Sat, 2019-03-30 at 15:52 +0530, Rushikesh S Kadam wrote:
-> > > On Fri, Mar 29, 2019 at 04:30:18PM -0700, Nick Crews wrote:
-> > > > On Fri, Mar 29, 2019 at 1:03 PM Rushikesh S Kadam
-> > > > <rushikesh.s.kadam@intel.com> wrote:
-> > > > > +       ldr_xfer_ipc_frag = kzalloc(LOADER_SHIM_IPC_BUF_SIZE, GFP_KERNEL);
-> > > > > +       if (!ldr_xfer_ipc_frag) {
-> > > > Log error here.
-> > > The error code is logged in calling function
-> > > load_fw_from_host(). Is that good enough?
-> > >
-> > > I believe the checkpatch script too, would
-> > > recommend against adding debug print for ENOMEM
-> > > error.
-> >
-> > The generic kernel allocation functions already do
-> > a dump_stack() on OOM conditions when called without
-> > __GFP_NOWARN so any additional OOM message isn't
-> > particularly useful.
-> >
-> > > Again, I thought it was against practise to log
-> > > "out of memory" debug prints in probe()
-> >
-> > Or anywhere else given the generic OOM stack dump.
-> >
-> > > But will add if you tell me this is the right way.
-> > >
-> > > > > +               return -ENOMEM;
-> > > > > +
-> > > > > +       loader_ishtp_cl = ishtp_cl_allocate(cl_device);
-> > > > > +       if (!loader_ishtp_cl)
-> > > >
-> > > > log error here
-> >
-> > The ishtp_cl_allocate function just calls kmalloc then
-> > initializes the struct so an additional OOM message
-> > isn't useful here either.
-> >
-> >
+--QKpLca3blcvhMJ0W
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyh1z4ACgkQJNaLcl1U
+h9BDYgf/YxJE2IHgyTgkto9LXOZqZugnVydpvQUWbP2oMfH2WkmNmnGlkfheNMCX
+CG7QiiEJ1ynANmzUkhSa7TZ6dVYDKc2Jrd58Bth540GSOhL9ceRsueaHtcH/glYs
+qDuha+hrPYhrQT3x9YcgS1lr6fzTO62aypzjX0cc/CcNcPzURQL9FOuMHtFyElG3
+SVHWVIBJnrMGac4te496gGdZe2oXBOv5QN9jcViRvRGQSYCJX2NJpyfpQmWj9sbZ
+H3d1N1gfc53ailiOM9JVKmjTQgOR8r9XADjukWUw/NUwDyJw7RgAcWEj3VGo7Sen
+6pEk4fP6z+P8lYmEX1OD3zTnNz9Bcw==
+=406+
+-----END PGP SIGNATURE-----
+
+--QKpLca3blcvhMJ0W--
