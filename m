@@ -2,131 +2,109 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30A7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EB7C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C0A20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:07:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KImIXjOe"
+	by mail.kernel.org (Postfix) with ESMTP id 0252E20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:08:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfDAFHy (ORCPT
+        id S1731406AbfDAFI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 01:07:54 -0400
-Received: from mail-eopbgr130083.outbound.protection.outlook.com ([40.107.13.83]:9454
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726424AbfDAFHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 01:07:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DcFyNDqLG3r4x4CfWKKcfyeasMKFRGMorQGU+S9Jhyg=;
- b=KImIXjOeIRdfBfPMZIFSwe8yhTGWjlEes11aZ5OpMYOgBSdXH4X9/06EdEEdE6neAsWOYjBF18Cky5g+OINdXAowWBC4Tjr2ENSiQnf9RMd/4p4PJyteUVKTugWmOCs1aYCMIzl/h/ES5Dgn3qD5TCsa/KACHIbiaygnzkhQHsA=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3946.eurprd04.prod.outlook.com (52.134.72.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.22; Mon, 1 Apr 2019 05:07:49 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1750.017; Mon, 1 Apr 2019
- 05:07:49 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH] pinctrl: freescale: use devm_platform_ioremap_resource() to
- simplify code
-Thread-Topic: [PATCH] pinctrl: freescale: use devm_platform_ioremap_resource()
- to simplify code
-Thread-Index: AQHU6EjaALQm1oR+wkWuBa/l4GPnkA==
-Date:   Mon, 1 Apr 2019 05:07:49 +0000
-Message-ID: <1554094986-14897-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR04CA0090.apcprd04.prod.outlook.com
- (2603:1096:202:15::34) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3c70870c-2768-48ea-f420-08d6b65ffc4e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3946;
-x-ms-traffictypediagnostic: DB3PR0402MB3946:
-x-microsoft-antispam-prvs: <DB3PR0402MB3946F822690E1CB7AD34FCA4F5550@DB3PR0402MB3946.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(39860400002)(136003)(376002)(396003)(199004)(189003)(105586002)(36756003)(6116002)(7736002)(478600001)(106356001)(68736007)(97736004)(2501003)(81166006)(8936002)(256004)(81156014)(2906002)(305945005)(25786009)(4326008)(8676002)(3846002)(5660300002)(26005)(6512007)(50226002)(6486002)(6506007)(53936002)(102836004)(316002)(386003)(14454004)(476003)(2616005)(86362001)(71200400001)(66066001)(186003)(110136005)(99286004)(2201001)(486006)(52116002)(6436002)(71190400001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3946;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /wa2RoUpXC1oYcMTTv1YOCHVnExU9EHxSf2qIbOnwIik3USPUow+jQ0xGMLBIVceNMd5nVMPD3BmITW0lS2Adr84Y5FGGuh/ca5eVhOVZU7UPCr8TdsbpFLl4wbv627mrerqgW0Od2Ij53i/k1Z0x6R+1cLj0n45vT1nx/HEINka2pXR6yBxPIiGR3My4GXLXz0EIkqKSlolwzw1Df++imQnmUEmBkk/T94cdzm4XWasq8z8I389AEXAApsTCWZl1/jRmR4GlKTl8p8Iza86a/Wz4r3eWYvdzFd4ZVOPb4028rYBxHfIQcytGcUjXZ76qgOIZc3osZsQ69K5daCPFbQVt3dl49XF9MWPAuAUmwCIoP8pk1ltL7p+086O77vZ3NAhy+XUeZDF3/2WkPTeHlihznIYiJVmCM79pLtT7m4=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 1 Apr 2019 01:08:26 -0400
+Received: from ipmail03.adl6.internode.on.net ([150.101.137.143]:29795 "EHLO
+        ipmail03.adl6.internode.on.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725784AbfDAFI0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 01:08:26 -0400
+Received: from ppp59-167-129-252.static.internode.on.net (HELO dastard) ([59.167.129.252])
+  by ipmail03.adl6.internode.on.net with ESMTP; 01 Apr 2019 15:38:23 +1030
+Received: from dave by dastard with local (Exim 4.80)
+        (envelope-from <david@fromorbit.com>)
+        id 1hApBF-0004N7-IS; Mon, 01 Apr 2019 16:08:21 +1100
+Date:   Mon, 1 Apr 2019 16:08:21 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Kanchan Joshi <joshi.k@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, axboe@fb.com, prakash.v@samsung.com,
+        anshul@samsung.com, joshiiitr@gmail.com
+Subject: Re: [PATCH v3 3/7] block: add write-hint to stream-id conversion
+Message-ID: <20190401050821.GQ23020@dastard>
+References: <1553846032-4451-1-git-send-email-joshi.k@samsung.com>
+ <CGME20190329075749epcas2p22b85cbdbb7ccb4f7f3ecf69b84f75dc9@epcas2p2.samsung.com>
+ <1553846032-4451-4-git-send-email-joshi.k@samsung.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c70870c-2768-48ea-f420-08d6b65ffc4e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 05:07:49.5038
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3946
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553846032-4451-4-git-send-email-joshi.k@samsung.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new helper devm_platform_ioremap_resource() which wraps the
-platform_get_resource() and devm_ioremap_resource() together, to
-simplify the code.
+On Fri, Mar 29, 2019 at 01:23:48PM +0530, Kanchan Joshi wrote:
+> Earlier this conversion was done by driver (nvme). Current conversion
+> is of the form "streamid = write-hint - 1", for both user and kernel
+> streams (note that existing infra takes care that user-streams do not
+> bump into kernel ones).
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/pinctrl/freescale/pinctrl-imx.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Unless we add new user streams, then all the kernel streams change
+ID. I'll deal with this in more detail in a later patch.
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/free=
-scale/pinctrl-imx.c
-index 188001b..cc6f5cc 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -785,7 +785,6 @@ int imx_pinctrl_probe(struct platform_device *pdev,
- 	struct pinctrl_desc *imx_pinctrl_desc;
- 	struct device_node *np;
- 	struct imx_pinctrl *ipctl;
--	struct resource *res;
- 	struct regmap *gpr;
- 	int ret, i;
-=20
-@@ -817,8 +816,7 @@ int imx_pinctrl_probe(struct platform_device *pdev,
- 			ipctl->pin_regs[i].conf_reg =3D -1;
- 		}
-=20
--		res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--		ipctl->base =3D devm_ioremap_resource(&pdev->dev, res);
-+		ipctl->base =3D devm_platform_ioremap_resource(pdev, 0);
- 		if (IS_ERR(ipctl->base))
- 			return PTR_ERR(ipctl->base);
-=20
---=20
-2.7.4
+> Conversion takes stream limit (maintained in
+> request queue) into account. Write-hints beyond the queue-limit turn
+> to 0.
+> New field 'streamid' has been added in request. While 'write-hint' field
+> continues to exist. It keeps original value passed from upper layer, and
+> used during merging checks.
+> 
+> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+> ---
+>  block/blk-core.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index 3c5f61c..c86daed 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -727,6 +727,25 @@ bool blk_attempt_plug_merge(struct request_queue *q, struct bio *bio,
+>  	return false;
+>  }
+>  
+> +enum rw_hint blk_write_hint_to_streamid(struct request *req,
+> +				        struct bio *bio)
+> +{
+> +	enum rw_hint streamid, nr_streams;
+> +	struct request_queue *q = req->q;
+> +	nr_streams = q->limits.nr_streams;
+> +
+> +	streamid = bio->bi_write_hint;
+> +	if (!nr_streams || streamid == WRITE_LIFE_NOT_SET ||
+> +	    streamid == WRITE_LIFE_NONE)
+> +		streamid = 0;
+> +	else {
+> +		--streamid;
 
+What's this magic thing do?
+
+> +		if(streamid > nr_streams)
+> +			streamid = 0;
+
+So, basically, we'll compress all the kernel hints down to "no hint"
+if there are more user streams than the device supports?
+
+Surely we should be reserving a stream for the kernel hints separate
+from the user and "none" streams when we have limited device streams
+available...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
