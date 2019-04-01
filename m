@@ -2,123 +2,122 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E44C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292FEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E3A208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD9720883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+uL0HiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfDASPQ (ORCPT
+        id S1728797AbfDASRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:15:16 -0400
-Received: from emh07.mail.saunalahti.fi ([62.142.5.117]:40478 "EHLO
-        emh07.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728638AbfDASPP (ORCPT
+        Mon, 1 Apr 2019 14:17:52 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35182 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728638AbfDASRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:15:15 -0400
-Received: from localhost.localdomain (85-76-9-223-nat.elisa-mobile.fi [85.76.9.223])
-        by emh07.mail.saunalahti.fi (Postfix) with ESMTP id ABA4CB00A4;
-        Mon,  1 Apr 2019 21:15:13 +0300 (EEST)
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Aaro Koskinen <aaro.koskinen@nokia.com>
-Subject: [PATCH] drivers: firmware: psci: add support for warm reset
-Date:   Mon,  1 Apr 2019 21:14:43 +0300
-Message-Id: <20190401181443.6459-1-aaro.koskinen@iki.fi>
-X-Mailer: git-send-email 2.17.0
+        Mon, 1 Apr 2019 14:17:52 -0400
+Received: by mail-qt1-f194.google.com with SMTP id h39so12067131qte.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 11:17:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=izVDaH+1b216ceZ2OmicIrSjyGMtf2binyuIcjY9p4c=;
+        b=W+uL0HiSuIzmTeXaToqKPOmC0kRIKNfRIAnXgPynqZao+sXs22SOmOTyKuTfiNI3kU
+         N9txtHFTr7iauFhpsG9glvxRdFZxLN28VhK1Z9B7v7DRhhDV38I6ZlElgj6wzbC/rheb
+         XLr6GR1lmOhdkyngykkDj93CQM04Fg/Wd+asCWO0svirpktFtd8YiIzdsMUEzyueYnIP
+         VPRh0b14aGKUrpjJatp1O3toYNo29ZFMDZnVdDfe9qZXjkvEWSCRnFoDetvY3VmyUN4D
+         7yKoXbE59t2ymoEzGQrsbssjs+i+OKbleBlUOBwNjVfmYwf0FFDimhh07/zPeHH+9Xc4
+         9dIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=izVDaH+1b216ceZ2OmicIrSjyGMtf2binyuIcjY9p4c=;
+        b=ZcRga1ztPU2mg3FnD44g5YMRR0Hc4RwDpt8OBjRvvR1H/KKKdcn9foNqwjo+wisn0o
+         OMoFU5qm3HXy8lh+lUnDJ+5a5awToQGlNR5E3QTMJH965FkZ8+Q7qt6lagsSSKoRxJW2
+         u7cI7RV2qseWZE2Ze79O9gIoS68Vzs8qXHG/TFPwXALkHn4TiY+OhMWkl6EuXuhuzlGa
+         DBk5v01gc0wTVyqrXFN+zTdl2KOEwr3PHWRldsQENCGDK3iZip4egV7dfqadd1nFAQaK
+         cU28dOgT+IgrgwzHZwuQF4/Llv1awN2+ivrTaS+DDlIC3T5DhCFDirK+VSbks11J1e85
+         Isiw==
+X-Gm-Message-State: APjAAAV2Rpx+enSmo4ollMbM/9S5NzpXTdWEp/P2auc6N2YRzvnxKbtL
+        8WEk/n3PCAGhQltXoQ3lz1Mp/iqk
+X-Google-Smtp-Source: APXvYqy3GdZzCJuOactD7Jkt3aKBmS4mPq4BDPtR0/5KzyBjgxmJqHXjDNMAFXsQzcwIOleR8yCTPg==
+X-Received: by 2002:a0c:81fa:: with SMTP id 55mr53323682qve.91.1554142671050;
+        Mon, 01 Apr 2019 11:17:51 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id r15sm5878741qte.65.2019.04.01.11.17.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 01 Apr 2019 11:17:49 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 87ACB4039C; Mon,  1 Apr 2019 15:17:45 -0300 (-03)
+Date:   Mon, 1 Apr 2019 15:17:45 -0300
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Subject: Re: [PATCH 00/15] tools/lib/traceevent: Continuing on the path to a
+ stand alone library
+Message-ID: <20190401181745.GG30617@kernel.org>
+References: <20190401164305.359125441@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190401164305.359125441@goodmis.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@nokia.com>
+Em Mon, Apr 01, 2019 at 12:43:05PM -0400, Steven Rostedt escreveu:
+> 
+> Arnaldo,
+> 
+> These contain more patches to make libtraceevent a stand alone library.
+> It also brings in some changes that are in the trace-cmd library.
+> 
+> There's a few name changes to the API function names to be more
+> descriptive as well as closer to what they actually do.
+> 
+> The "pevent" has been renamed to "tep" as we no longer use "pevent"
+> to represent the handle to the libtraceevent library descriptor.
+> "tep" now stands for "Trace Event Parser".
+> 
+> The reason for the "(Red Hat)" in one of my patches is that the code
+> was written when I was working for Red Hat, but added when working
+> for VMware (which is in the Signed-off-by).
 
-Add support for warm reset using SYSTEM_RESET2 introduced in PSCI
-1.1 specification.
+Thanks, applied.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
----
- drivers/firmware/psci.c   | 25 +++++++++++++++++++++++++
- include/uapi/linux/psci.h |  3 +++
- 2 files changed, 28 insertions(+)
+  $ git log | grep Author | head -15
+  Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+  Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+  Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+  Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+  Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+  Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+  Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+  Author: Steven Rostedt (VMware) <rostedt@goodmis.org>
+  Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+  Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+  Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+  Author: Steven Rostedt (Red Hat) <rostedt@goodmis.org>
+  Author: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+  Author: Steven Rostedt (VMware) <rostedt@goodmis.org>
+  Author: Steven Rostedt (VMware) <rostedt@goodmis.org>
+  $
 
-diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
-index c80ec1d03274..1d95b5f6d403 100644
---- a/drivers/firmware/psci.c
-+++ b/drivers/firmware/psci.c
-@@ -73,6 +73,7 @@ enum psci_function {
- 	PSCI_FN_CPU_ON,
- 	PSCI_FN_CPU_OFF,
- 	PSCI_FN_MIGRATE,
-+	PSCI_FN_SYSTEM_RESET2,
- 	PSCI_FN_MAX,
- };
- 
-@@ -256,6 +257,14 @@ static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
- 	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
- }
- 
-+static void psci_sys_reset2(enum reboot_mode reboot_mode, const char *cmd)
-+{
-+	if (reboot_mode == REBOOT_WARM)
-+		invoke_psci_fn(psci_function_id[PSCI_FN_SYSTEM_RESET2], 0, 0, 0);
-+	else
-+		psci_sys_reset(reboot_mode, cmd);
-+}
-+
- static void psci_sys_poweroff(void)
- {
- 	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_OFF, 0, 0, 0);
-@@ -564,6 +573,20 @@ static void __init psci_0_2_set_functions(void)
- 	pm_power_off = psci_sys_poweroff;
- }
- 
-+static void __init psci_1_1_set_functions(void)
-+{
-+	int sys_reset2;
-+	int feature;
-+
-+	sys_reset2 = PSCI_FN_NATIVE(1_1, SYSTEM_RESET2);
-+	feature	= psci_features(sys_reset2);
-+
-+	if (feature != PSCI_RET_NOT_SUPPORTED) {
-+		psci_function_id[PSCI_FN_SYSTEM_RESET2] = sys_reset2;
-+		arm_pm_restart = psci_sys_reset2;
-+	}
-+}
-+
- /*
-  * Probe function for PSCI firmware versions >= 0.2
-  */
-@@ -588,6 +611,8 @@ static int __init psci_probe(void)
- 		psci_init_smccc();
- 		psci_init_cpu_suspend();
- 		psci_init_system_suspend();
-+		if (PSCI_VERSION_MINOR(ver) >= 1)
-+			psci_1_1_set_functions();
- 	}
- 
- 	return 0;
-diff --git a/include/uapi/linux/psci.h b/include/uapi/linux/psci.h
-index b3bcabe380da..f36e616c3b3f 100644
---- a/include/uapi/linux/psci.h
-+++ b/include/uapi/linux/psci.h
-@@ -52,6 +52,9 @@
- 
- #define PSCI_1_0_FN64_SYSTEM_SUSPEND		PSCI_0_2_FN64(14)
- 
-+#define PSCI_1_1_FN_SYSTEM_RESET2		PSCI_0_2_FN(18)
-+#define PSCI_1_1_FN64_SYSTEM_RESET2		PSCI_0_2_FN64(18)
-+
- /* PSCI v0.2 power state encoding for CPU_SUSPEND function */
- #define PSCI_0_2_POWER_STATE_ID_MASK		0xffff
- #define PSCI_0_2_POWER_STATE_ID_SHIFT		0
--- 
-2.17.0
-
+- Arnaldo
