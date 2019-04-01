@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D9FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C56BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1360120880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2B721852
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139856;
-	bh=WJ4IdmD/ee7c8tvgcLCc8//t8XYXhdkyz7fkjZ7xkMQ=;
+	s=default; t=1554139862;
+	bh=e7tM6KpXWVA7sxsm42uH/FbqIyOrc2da6vRWNVwmr80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z0mp+0CxoKWMWqNeCaloR0puu2Y4A52dwK9etV76na720obeCz8SXiSf+OYGe/4nC
-	 4a4avFp7qlKTaZUFSVvtv4RlyQ9VWmS2l0QNLDpb1kz/40nUWkbA0EUXOm+RCNZtUM
-	 VMbiboONYpVNeqK0OGDu4c48OhOg0JIAZDEsQiJA=
+	b=gr6m910sqPPoXtZmcZRstv2mt3l9Vvq7o31pEBCLzkRhsyBROueY0XRExFy+LNpEg
+	 jxe6EzeqGbj+hJKybRP+EiQqQM19Mk7FoM5VyNq2fNT+2bjG9w1gPgjHu7OCQy3NBQ
+	 52ykle7YUNl4k2r7hvgLRr8c4/LEimUNL8pZcgQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733177AbfDARaz (ORCPT
+        id S1733201AbfDARbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:30:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38002 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:31:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733163AbfDARav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:30:51 -0400
+        id S1733181AbfDARa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:30:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCE7B2070B;
-        Mon,  1 Apr 2019 17:30:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7711120880;
+        Mon,  1 Apr 2019 17:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139850;
-        bh=WJ4IdmD/ee7c8tvgcLCc8//t8XYXhdkyz7fkjZ7xkMQ=;
+        s=default; t=1554139857;
+        bh=e7tM6KpXWVA7sxsm42uH/FbqIyOrc2da6vRWNVwmr80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bs+luqT2MLS8g7dYFMMPtU7uFnpBLeo73dxbjK1oIZ3TOeNz6yYmLBHg5zd2bZ1cL
-         xs2hJ9DtG+Nj507ix2y1E5eoUHPJTeeW0KtD7e0H+T8vVYAXho69qs6AjkpjqiDFcp
-         TlukWEN5XBjMADW9I046axAcDtNARggxUjoxqAos=
+        b=rskGYGVfccHNI/dTcBymmqWIBm2zULsqs13cNTRWjMaZfgCZmsmY4DUXbXZ+jMYkc
+         ldfylI4ED6S5L32zoz1aTxpopaSWeru0s6NYL53i8B6om4XT/Q0sDevgT98WCS32ri
+         Q2msKZ/HAuzsgi9lVvFa1cEjgnU23IKAVsGd2wvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Archer Yan <ayan@wavecomp.com>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org
-Subject: [PATCH 4.4 005/131] MIPS: Fix kernel crash for R6 in jump label branch function
-Date:   Mon,  1 Apr 2019 19:01:15 +0200
-Message-Id: <20190401170052.155960886@linuxfoundation.org>
+        stable@vger.kernel.org, Lanqing Liu <lanqing.liu@spreadtrum.com>,
+        Chunyan Zhang <chunyan.zhang@spreadtrum.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.4 033/131] serial: sprd: clear timeout interrupt only rather than all interrupts
+Date:   Mon,  1 Apr 2019 19:01:43 +0200
+Message-Id: <20190401170054.888536517@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -65,51 +66,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Archer Yan <ayan@wavecomp.com>
+From: Lanqing Liu <lanqing.liu@spreadtrum.com>
 
-commit 47c25036b60f27b86ab44b66a8861bcf81cde39b upstream.
+commit 4350782570b919f254c1e083261a21c19fcaee90 upstream.
 
-Insert Branch instruction instead of NOP to make sure assembler don't
-patch code in forbidden slot. In jump label function, it might
-be possible to patch Control Transfer Instructions(CTIs) into
-forbidden slot, which will generate Reserved Instruction exception
-in MIPS release 6.
+On Spreadtrum's serial device, nearly all of interrupts would be cleared
+by hardware except timeout interrupt.  This patch removed the operation
+of clearing all interrupt in irq handler, instead added an if statement
+to check if the timeout interrupt is supposed to be cleared.
 
-Signed-off-by: Archer Yan <ayan@wavecomp.com>
-Reviewed-by: Paul Burton <paul.burton@mips.com>
-[paul.burton@mips.com:
-  - Add MIPS prefix to subject.
-  - Mark for stable from v4.0, which introduced r6 support, onwards.]
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: stable@vger.kernel.org # v4.0+
+Wrongly clearing timeout interrupt would lead to uart data stay in rx
+fifo, that means the driver cannot read them out anymore.
+
+Signed-off-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/asm/jump_label.h |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/tty/serial/sprd_serial.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/mips/include/asm/jump_label.h
-+++ b/arch/mips/include/asm/jump_label.h
-@@ -21,15 +21,15 @@
- #endif
+--- a/drivers/tty/serial/sprd_serial.c
++++ b/drivers/tty/serial/sprd_serial.c
+@@ -63,6 +63,7 @@
  
- #ifdef CONFIG_CPU_MICROMIPS
--#define NOP_INSN "nop32"
-+#define B_INSN "b32"
- #else
--#define NOP_INSN "nop"
-+#define B_INSN "b"
- #endif
+ /* interrupt clear register */
+ #define SPRD_ICLR		0x0014
++#define SPRD_ICLR_TIMEOUT	BIT(13)
  
- static __always_inline bool arch_static_branch(struct static_key *key, bool branch)
- {
--	asm_volatile_goto("1:\t" NOP_INSN "\n\t"
--		"nop\n\t"
-+	asm_volatile_goto("1:\t" B_INSN " 2f\n\t"
-+		"2:\tnop\n\t"
- 		".pushsection __jump_table,  \"aw\"\n\t"
- 		WORD_INSN " 1b, %l[l_yes], %0\n\t"
- 		".popsection\n\t"
+ /* line control register */
+ #define SPRD_LCR		0x0018
+@@ -298,7 +299,8 @@ static irqreturn_t sprd_handle_irq(int i
+ 		return IRQ_NONE;
+ 	}
+ 
+-	serial_out(port, SPRD_ICLR, ~0);
++	if (ims & SPRD_IMSR_TIMEOUT)
++		serial_out(port, SPRD_ICLR, SPRD_ICLR_TIMEOUT);
+ 
+ 	if (ims & (SPRD_IMSR_RX_FIFO_FULL |
+ 		SPRD_IMSR_BREAK_DETECT | SPRD_IMSR_TIMEOUT))
 
 
