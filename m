@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EB0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FB3C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3303F2171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9FA2171F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139113;
-	bh=O5tSQfWr6Z4h+jEvQgBiUsdbN+cx0pYnpOIEtd1bWnc=;
+	s=default; t=1554139116;
+	bh=7T2Sfc2bVo2sDyoNs1dkH0I5r3VbtwKpQDDCv9RhW0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VFsHE48xQfvs9lkqbvPlBDdv7n4EaMYdDRkxvYE5mM2eWh2CON0gh2B6mleRhBu4l
-	 1uWCsSWgEX4/AS9je0nNkTpwq5Bo8wTggHwQTHjljI2hM5ed1Lvdm2rJL02REyJVdC
-	 AqzIZYEle44fvlOhPSeXX0iJO3plnDAoh5khFci0=
+	b=TR52yURP6o4vkq59DOMd/x0rnvL+QZDOj4McBa8V8mNkkhPhSkYWm65bBQ7vaocIW
+	 Dt/mM7njy4A3n5PI/yol6EU2SDKAQrKCAsuoOorvNznF73mgP5l/oQGuLawU12B45Q
+	 313wSLmAW9iNTvbRHCnT93lh4xBM3uRV729s+iiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731379AbfDARSb (ORCPT
+        id S1731388AbfDARSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:18:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45708 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:18:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731121AbfDARS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:18:26 -0400
+        id S1731373AbfDARSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:18:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A818206C0;
-        Mon,  1 Apr 2019 17:18:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CF19206C0;
+        Mon,  1 Apr 2019 17:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139106;
-        bh=O5tSQfWr6Z4h+jEvQgBiUsdbN+cx0pYnpOIEtd1bWnc=;
+        s=default; t=1554139110;
+        bh=7T2Sfc2bVo2sDyoNs1dkH0I5r3VbtwKpQDDCv9RhW0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oYk6fwKqnH2Nk8sGJ6D8d64FLUuzVrjyWTNH93uoUU4x1wu3sdQB6doP00Mr1GF/3
-         hZI+lFusX6uB0+iqM7LzEHB5hCS2VWtEBl+Vm296yqq+oIE9ZMx4y0BSgVQo/MDmUG
-         UemhXC3MrRn/5ccZxRyoPoo5GDz4DfXSTxnm7YbQ=
+        b=Gofr25D5gFOgFF7kBgwFZ1LYvEX1clzo24NorPlqrmHlYSUYMIED5btxW7F176YcW
+         cc/fZJ/k4+pew79K7f4wIbWRBtk3KYLPSbTGugurl6tUuHMYYobTCPfbi2Py2UJJ3Q
+         9ha0mnTsFWS6b3853HETqN7ZFOw/E0lGjZSlAgNw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>
-Subject: [PATCH 4.19 078/134] tty: mxs-auart: fix a potential NULL pointer dereference
-Date:   Mon,  1 Apr 2019 19:01:54 +0200
-Message-Id: <20190401170051.688270055@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH 4.19 079/134] tty: atmel_serial: fix a potential NULL pointer dereference
+Date:   Mon,  1 Apr 2019 19:01:55 +0200
+Message-Id: <20190401170051.754416589@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,32 +66,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kangjie Lu <kjlu@umn.edu>
 
-commit 6734330654dac550f12e932996b868c6d0dcb421 upstream.
+commit c85be041065c0be8bc48eda4c45e0319caf1d0e5 upstream.
 
-In case ioremap fails, the fix returns -ENOMEM to avoid NULL
-pointer dereferences.
-Multiple places use port.membase.
+In case dmaengine_prep_dma_cyclic fails, the fix returns a proper
+error code to avoid NULL pointer dereference.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Fixes: 34df42f59a60 ("serial: at91: add rx dma support")
+Acked-by: Richard Genoud <richard.genoud@gmail.com>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/mxs-auart.c |    4 ++++
+ drivers/tty/serial/atmel_serial.c |    4 ++++
  1 file changed, 4 insertions(+)
 
---- a/drivers/tty/serial/mxs-auart.c
-+++ b/drivers/tty/serial/mxs-auart.c
-@@ -1685,6 +1685,10 @@ static int mxs_auart_probe(struct platfo
- 
- 	s->port.mapbase = r->start;
- 	s->port.membase = ioremap(r->start, resource_size(r));
-+	if (!s->port.membase) {
-+		ret = -ENOMEM;
-+		goto out_disable_clks;
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -1156,6 +1156,10 @@ static int atmel_prepare_rx_dma(struct u
+ 					 sg_dma_len(&atmel_port->sg_rx)/2,
+ 					 DMA_DEV_TO_MEM,
+ 					 DMA_PREP_INTERRUPT);
++	if (!desc) {
++		dev_err(port->dev, "Preparing DMA cyclic failed\n");
++		goto chan_err;
 +	}
- 	s->port.ops = &mxs_auart_ops;
- 	s->port.iotype = UPIO_MEM;
- 	s->port.fifosize = MXS_AUART_FIFO_SIZE;
+ 	desc->callback = atmel_complete_rx_dma;
+ 	desc->callback_param = port;
+ 	atmel_port->desc_rx = desc;
 
 
