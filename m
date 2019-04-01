@@ -2,105 +2,124 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615FBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 03:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC45C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 03:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B43E2086C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 03:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554089104;
-	bh=mIti3NJP5HePOZKpxwXKG4pijkoMnU/zdCS+Q0bDww0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RXBIbKKkqO9SKiGAhCpSfeUoAzcKaDQpkshIxvEGCVcIzpCnTFLh6TKVkCuwgH0t9
-	 Wrs8zEtzdtS/qMK1sV1SNA37e6AM5O9fJvioXtJGgtLgSIq/AIc3ZyzkvgtebIji6M
-	 U+xSUkM68gL8UvnNq8hJV6Wbr3HsUFtgwohXK1Gw=
+	by mail.kernel.org (Postfix) with ESMTP id D56522086C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 03:26:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="lTZP0Fqa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731791AbfDADZB (ORCPT
+        id S1731794AbfDAD0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 23:25:01 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44454 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731593AbfDADZB (ORCPT
+        Sun, 31 Mar 2019 23:26:25 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37528 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731383AbfDAD0Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 23:25:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=B/u91fJg9z6pdyQb8tyJO8Tr8lJ3BHtHYPy/ezmTlkQ=; b=u7enVTOKDDjDon0TGvh0mqnLx
-        W4Xr5ndRsmLHwXf4FRKT9DzWfoGk2Gi8YxkzuQf9V4u9Wg7F3aizEl/hDiAaRrZtbQ5XHV1qr/nlL
-        hsyu2Ke/8NFDbnMVW6LWlaxH2dtVQjEG+55lwgug5DJtV9P27xVKVas58vcuUaSxaW1RQ=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hAnZ4-0006b5-3S; Mon, 01 Apr 2019 03:24:50 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 3E56A440082; Mon,  1 Apr 2019 04:24:46 +0100 (BST)
-Date:   Mon, 1 Apr 2019 10:24:46 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     tony.zou.hq@gmail.com
-Cc:     alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, linux-kernel@vger.kernel.org,
-        dbasehore@chromium.org,
-        Tony Zou <zoutao@huaqin.corp-partner.google.com>
-Subject: Re: [PATCH] max98357a:add dai without triggered by pcm
-Message-ID: <20190401032446.GC2059@sirena.org.uk>
-References: <1553824319-2155-1-git-send-email-tony.zou.hq@gmail.com>
+        Sun, 31 Mar 2019 23:26:25 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 8so3820697pfr.4
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 20:26:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=npgKgNSdlqU8Z2V5vLurv1Xl/iA4tNfvDxH6hPU2Mv4=;
+        b=lTZP0FqalV4SK1qnidbw9uQVQU8KDz3MDrBNZW+YSnT30QHVgDV5N9URMmIGeLpRV5
+         Z5IrLVKhDSEvzQ6JsuIjjnfCvjMlrUd+eXu9xjvVl22LXuhMiNMLx0YayBE9T8Rzeqci
+         RW3Suqt7Z/sD2iMWAZ4y64kjmNp5BCsQAEWWrX2G713mZsz1Fr8zuFDjEX+bWnSz/VFl
+         xZQjJmNdxFFfLKLElj5F+4RGdwdLIoBfrqNo/rhLuFN8cEkWT4Gt3MrTstR7FxIIUzrO
+         XlTRZAziJIt4iVVluq//62/LG5FpUwpER7PEzY7P8ZDawgn9oZFJvPnMiQeo8tyoY1Jv
+         fOmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=npgKgNSdlqU8Z2V5vLurv1Xl/iA4tNfvDxH6hPU2Mv4=;
+        b=huZBLXRgR2kSUl4IBFpt6fp3xco/LSz5ofEpdjYAihyf2cmwYEV6pbJoTzDNXrj5Dp
+         EgC6btxYVm/Fz8dBmN8TgrEv9GnzC8pD1eCPM3zIZ4nuy4FE81jKtYdyuepXPDwvwHsa
+         hnYVAXXIu/iiOUVewtcsgw+xSq30cP56zSrfV2q0sQT33MnkfduAOifnrGb8v1Hm5wiD
+         bRsq2HKATNEwoCTJJDFHU5vGwcsgawfyNfO8OFo9cnse8i6G99GHVT2IK/QWqXdbFnHq
+         c5shuyrebg2jLy3ps2PrDdZzPxINplsIVq1nqQpi0TQYpW+M0R9/xfMbZTfN+JACbRAw
+         /0kg==
+X-Gm-Message-State: APjAAAXfmmFJjYUyMwko4OXI4AwFgwVp2/V6TPt6oq58KNADKlZHWgMB
+        7/xGO/ppeJG0F+sYFMoPBN6FwA==
+X-Google-Smtp-Source: APXvYqxPuTtVXXqI5A+y4KPpVcKC4LKwf629McjG3avFIxJlT2DAlETxz5wU2l0jdMYLB8X8hSI48A==
+X-Received: by 2002:a63:29c8:: with SMTP id p191mr50763617pgp.197.1554089184009;
+        Sun, 31 Mar 2019 20:26:24 -0700 (PDT)
+Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id l19sm10745312pff.1.2019.03.31.20.26.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 31 Mar 2019 20:26:23 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Takashi Iwai <tiwai@suse.com>
+Cc:     Kailang Yang <kailang@realtek.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>
+Subject: [PATCH] ALSA: hda/realtek: Enable headset MIC of Acer TravelMate B114-21 with ALC233
+Date:   Mon,  1 Apr 2019 11:25:05 +0800
+Message-Id: <20190401032503.2821-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NKoe5XOeduwbEQHU"
-Content-Disposition: inline
-In-Reply-To: <1553824319-2155-1-git-send-email-tony.zou.hq@gmail.com>
-X-Cookie: Use extra care when cleaning on stairs.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The Acer TravelMate B114-21 laptop cannot detect and record sound from
+headset MIC.  This patch adds the ALC233_FIXUP_ACER_HEADSET_MIC HDA verb
+quirk chained with ALC233_FIXUP_ASUS_MIC_NO_PRESENCE pin quirk to fix
+this issue.
 
---NKoe5XOeduwbEQHU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+---
+ sound/pci/hda/patch_realtek.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-On Fri, Mar 29, 2019 at 09:51:59AM +0800, tony.zou.hq@gmail.com wrote:
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index a3fb3d4c5730..bdb2227be4eb 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5690,6 +5690,7 @@ enum {
+ 	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
+ 	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 	ALC299_FIXUP_PREDATOR_SPK,
++	ALC233_FIXUP_ACER_HEADSET_MIC,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6713,6 +6714,15 @@ static const struct hda_fixup alc269_fixups[] = {
+ 			{ 0x21, 0x90170150 }, /* use as headset mic, without its own jack detect */
+ 			{ }
+ 		}
++	[ALC233_FIXUP_ACER_HEADSET_MIC] = {
++		.type = HDA_FIXUP_VERBS,
++		.v.verbs = (const struct hda_verb[]) {
++			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x45 },
++			{ 0x20, AC_VERB_SET_PROC_COEF, 0x5089 },
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC233_FIXUP_ASUS_MIC_NO_PRESENCE
+ 	},
+ };
+ 
+@@ -6737,6 +6747,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1308, "Acer Aspire Z24-890", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
++	SND_PCI_QUIRK(0x1025, 0x132a, "Acer TravelMate B114-21", ALC233_FIXUP_ACER_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_FIXUP_ACER_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M101Z),
+ 	SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", ALC275_FIXUP_DELL_XPS),
+-- 
+2.20.1
 
-> max98357a's enable pin need setting independently
-> when max98357a is shared I2S with other codec.
-
-> add dai "max98357a-hifi" without pcm trigger,
-> and use "Spk PA Switch" to set the enable pin.
-
-This sounds like a really bad idea - if you have multiple CODECs on a
-single DAI link tell the core about it, don't try to bodge around it.
-There's support for multiple CODECs on a DAI link already.
-
-> +static const char * const ext_spk_text[] = {
-> +	"Off", "On"
-> +};
-
-Simple on/off switches should be normal switch controls, not enums.
-
---NKoe5XOeduwbEQHU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyhhH0ACgkQJNaLcl1U
-h9A7fQf/TGuwFPOLhzC1e1gDmXDsj0NA96/Oa+cFlvnMd17vFxuOQGPBwlzy99hN
-khhn6GBVGwfLdyuclW9mnF5lYJ32j16ldn+dIo2mYqadACyJO+S5S//LdqnMytry
-nxRvZSBxgKRf0WMXRaU9IdujR9zn8Ioc0EnfjCPuoFjIYrpoipBEqwqBQH9/ZQZN
-/A8SeMiEKyViTrKEY5OHFbEkypoBcJ7vaxRSymE69AOZSBzeFWaLSFk8paIdGhLE
-xpt6ueKQQco6+NBCkAnzwcIG7ClZdCCOjpNo3Z89LIlUNh6TH9jmgGzlK/l5/K7C
-lZLorfIPFx8P+9o/RmGE6iu6xx6PHQ==
-=t5bB
------END PGP SIGNATURE-----
-
---NKoe5XOeduwbEQHU--
