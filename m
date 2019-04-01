@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B179C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE069C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4CB20856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8036C20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139731;
-	bh=lxqNWmtCEWwxbT8z65OMDeOYqqTkUNoXwIjwqMJtuVM=;
+	s=default; t=1554139735;
+	bh=MwtwoPKpEjKk072iGT4cVRmiLWgJugAvYNJp+akxuC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LYlbGBTwNsN/Z08i6J95w3IAFK3qkOIUgtZB2/0Zid649dbvJcKfoQ9rxHf2Rha+v
-	 mIRp0upaPvGvuzts9cYNANsKCL1INm5jXri1+xrmmYNOKRBnBhLQHEM8iFSlDnKoGU
-	 d0Gp1JDLisFhYDQUsD07fe2TqIJIFDKsh0vNADbM=
+	b=m7RRaT++te1Fgdt2L8xp6xFOet0SSQGKiGFU/R2m0Ck4uvlp/tNrLp63roueQWLko
+	 PLJAjPNNf2Ry+vggsFYM2pwpzakfJ+PViK3kKuaduEo1jqfwy868w1y0pZTM/XV+Bi
+	 wttFAxc3U1i8jKAsw0AqoLUTglw0T1kxg5HzQwtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732853AbfDAR2u (ORCPT
+        id S1732617AbfDAR2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:28:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34862 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:28:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732507AbfDAR2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:28:48 -0400
+        id S1732507AbfDAR2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:28:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12A302063F;
-        Mon,  1 Apr 2019 17:28:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC09C20830;
+        Mon,  1 Apr 2019 17:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139727;
-        bh=lxqNWmtCEWwxbT8z65OMDeOYqqTkUNoXwIjwqMJtuVM=;
+        s=default; t=1554139730;
+        bh=MwtwoPKpEjKk072iGT4cVRmiLWgJugAvYNJp+akxuC4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uvICA7wr+yo6/1aVsC3Cf9RDqKWcu82uoVcHV5b42HfJizngDLMvTAhkIkfWGMptZ
-         e0ciADnTZAX/9AsBbpE2VPicCvJ+t2iIqmwzRfIukLVenDXCXx6TMNLY+Ju/8ZW+ac
-         VoQSNbNGHDYmWBLkrmzIT99FKVbHymsbOmYjbDB8=
+        b=fQWYCy0K03wkVEMX8UKZEylHqJ7qJPpORbTpbtfj3geibuv6yfxtEEHMTihbISsWA
+         JbIcWje+ZKqtp8trenR10viTKdR2hIK/NW08NkT3oMUTEb7gDNAUdaWqQGJUpefe1l
+         DB3rvpR+GubmlzFhOGHlm0Uf0i0p0ur7DON2YDNA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Radoslav Gerganov <rgerganov@vmware.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 4.9 53/56] USB: gadget: f_hid: fix deadlock in f_hidg_write()
-Date:   Mon,  1 Apr 2019 19:03:09 +0200
-Message-Id: <20190401170106.784441663@linuxfoundation.org>
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.9 54/56] xhci: Fix port resume done detection for SS ports with LPM enabled
+Date:   Mon,  1 Apr 2019 19:03:10 +0200
+Message-Id: <20190401170106.832778548@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -67,64 +65,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Radoslav Gerganov <rgerganov@vmware.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 072684e8c58d17e853f8e8b9f6d9ce2e58d2b036 upstream.
+commit 6cbcf596934c8e16d6288c7cc62dfb7ad8eadf15 upstream.
 
-In f_hidg_write() the write_spinlock is acquired before calling
-usb_ep_queue() which causes a deadlock when dummy_hcd is being used.
-This is because dummy_queue() callbacks into f_hidg_req_complete() which
-tries to acquire the same spinlock. This is (part of) the backtrace when
-the deadlock occurs:
+A suspended SS port in U3 link state will go to U0 when resumed, but
+can almost immediately after that enter U1 or U2 link power save
+states before host controller driver reads the port status.
 
-  0xffffffffc06b1410 in f_hidg_req_complete
-  0xffffffffc06a590a in usb_gadget_giveback_request
-  0xffffffffc06cfff2 in dummy_queue
-  0xffffffffc06a4b96 in usb_ep_queue
-  0xffffffffc06b1eb6 in f_hidg_write
-  0xffffffff8127730b in __vfs_write
-  0xffffffff812774d1 in vfs_write
-  0xffffffff81277725 in SYSC_write
+Host controller driver only checks for U0 state, and might miss
+the finished resume, leaving flags unclear and skip notifying usb
+code of the wake.
 
-Fix this by releasing the write_spinlock before calling usb_ep_queue()
+Add U1 and U2 to the possible link states when checking for finished
+port resume.
 
-Reviewed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Tested-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: stable@vger.kernel.org # 4.11+
-Fixes: 749494b6bdbb ("usb: gadget: f_hid: fix: Move IN request allocation to set_alt()")
-Signed-off-by: Radoslav Gerganov <rgerganov@vmware.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/function/f_hid.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-ring.c |    9 ++++++---
+ drivers/usb/host/xhci.h      |    1 +
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/gadget/function/f_hid.c
-+++ b/drivers/usb/gadget/function/f_hid.c
-@@ -340,20 +340,20 @@ try_again:
- 	req->complete = f_hidg_req_complete;
- 	req->context  = hidg;
- 
-+	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
-+
- 	status = usb_ep_queue(hidg->in_ep, hidg->req, GFP_ATOMIC);
- 	if (status < 0) {
- 		ERROR(hidg->func.config->cdev,
- 			"usb_ep_queue error on int endpoint %zd\n", status);
--		goto release_write_pending_unlocked;
-+		goto release_write_pending;
- 	} else {
- 		status = count;
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1645,10 +1645,13 @@ static void handle_port_status(struct xh
+ 		}
  	}
--	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
  
- 	return status;
- release_write_pending:
- 	spin_lock_irqsave(&hidg->write_spinlock, flags);
--release_write_pending_unlocked:
- 	hidg->write_pending = 0;
- 	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
- 
+-	if ((temp & PORT_PLC) && (temp & PORT_PLS_MASK) == XDEV_U0 &&
+-			DEV_SUPERSPEED_ANY(temp)) {
++	if ((temp & PORT_PLC) &&
++	    DEV_SUPERSPEED_ANY(temp) &&
++	    ((temp & PORT_PLS_MASK) == XDEV_U0 ||
++	     (temp & PORT_PLS_MASK) == XDEV_U1 ||
++	     (temp & PORT_PLS_MASK) == XDEV_U2)) {
+ 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
+-		/* We've just brought the device into U0 through either the
++		/* We've just brought the device into U0/1/2 through either the
+ 		 * Resume state after a device remote wakeup, or through the
+ 		 * U3Exit state after a host-initiated resume.  If it's a device
+ 		 * initiated remote wake, don't pass up the link state change,
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -311,6 +311,7 @@ struct xhci_op_regs {
+  */
+ #define PORT_PLS_MASK	(0xf << 5)
+ #define XDEV_U0		(0x0 << 5)
++#define XDEV_U1		(0x1 << 5)
+ #define XDEV_U2		(0x2 << 5)
+ #define XDEV_U3		(0x3 << 5)
+ #define XDEV_INACTIVE	(0x6 << 5)
 
 
