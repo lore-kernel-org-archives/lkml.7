@@ -4,47 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A18C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68136C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDB121929
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E0A4206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138609;
-	bh=89a0K0uxiqHAsv3pc9WD2GQyBnCslsKIW2O7fSpYCrA=;
+	s=default; t=1554138615;
+	bh=SCemueBFeRFKmp5tSRLSfwxpcC8+aXNHqYcUTOWE8dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RWaz+GYmj9oSHChI6xMLLLf3rhZuBjS/VdHEVXLCUbSdKP3X0F+gC8BFoUtOJbQuJ
-	 czNMWe/X2x8Kofa7tN1BR2qAKKUE3sZCxX/1ZOIJN3+xv5B5WZrfxWx2YvBaNg0m+y
-	 FsAB2rzyOSMhW0p3pJANVHFQ3FVF/SrGa+vODpyU=
+	b=fK5orPWMKT4cJu/RNT6L232nlvr6K3yPlsV6TojJ/xi0mTfADTfhvyiKxPBqMUD4I
+	 gcCBXO4bsYjgqPgQYcgzV+GNhz14294h10K6wMY8ea1pDp1ipZDoyzdZSTQhjXzvN5
+	 HfzdtZ22yFUuyPCyxBeFkmiDvWLN924pPx75/XFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbfDARKI (ORCPT
+        id S1729912AbfDARKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:10:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57476 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:10:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729121AbfDARKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:10:06 -0400
+        id S1729121AbfDARKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:10:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5A7A206B8;
-        Mon,  1 Apr 2019 17:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 585DF206B8;
+        Mon,  1 Apr 2019 17:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138605;
-        bh=89a0K0uxiqHAsv3pc9WD2GQyBnCslsKIW2O7fSpYCrA=;
+        s=default; t=1554138609;
+        bh=SCemueBFeRFKmp5tSRLSfwxpcC8+aXNHqYcUTOWE8dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ku9GgZlkHVpjN7QtBVJCWC7XX58tF7urJYXBLZX3sL7k3WHvkQMyFhUZzV0oLiD0+
-         +Dn26ZG4dt2C4NUyu5lHdVR48zqC1vjJ2tDtp1pcINAdciiRzuWKXAsNKqXZh6rxxO
-         8lNyGyJq2osK3EeqxOZyb+1/31ZpEwC2eCSPwVI0=
+        b=Zq/1bJOE7PWzaPs12wg3m70zsEd3SQJiYLfaBXzXoqNAexAeWxe/wcmxpzJenuzjn
+         Sxb5Sp1ZdWfleIfTi6cSP4onhj5ONBXZq5VPbufvP+GV1aO8ZAx4ed5Xb8GFrKxu8b
+         3URqMMiDuw6hH0h0KK/rGw4O6tFRMKl5aP/3QH8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 5.0 114/146] usb: mtu3: fix EXTCON dependency
-Date:   Mon,  1 Apr 2019 19:02:06 +0200
-Message-Id: <20190401170058.109012069@linuxfoundation.org>
+        stable@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Radoslav Gerganov <rgerganov@vmware.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 5.0 115/146] USB: gadget: f_hid: fix deadlock in f_hidg_write()
+Date:   Mon,  1 Apr 2019 19:02:07 +0200
+Message-Id: <20190401170058.177452697@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -63,36 +67,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Radoslav Gerganov <rgerganov@vmware.com>
 
-commit 3d54d10c6afed34fd45b852bf76f55e8da31d8ef upstream.
+commit 072684e8c58d17e853f8e8b9f6d9ce2e58d2b036 upstream.
 
-When EXTCON is a loadable module, mtu3 fails to link as built-in:
+In f_hidg_write() the write_spinlock is acquired before calling
+usb_ep_queue() which causes a deadlock when dummy_hcd is being used.
+This is because dummy_queue() callbacks into f_hidg_req_complete() which
+tries to acquire the same spinlock. This is (part of) the backtrace when
+the deadlock occurs:
 
-drivers/usb/mtu3/mtu3_plat.o: In function `mtu3_probe':
-mtu3_plat.c:(.text+0x690): undefined reference to `extcon_get_edev_by_phandle'
+  0xffffffffc06b1410 in f_hidg_req_complete
+  0xffffffffc06a590a in usb_gadget_giveback_request
+  0xffffffffc06cfff2 in dummy_queue
+  0xffffffffc06a4b96 in usb_ep_queue
+  0xffffffffc06b1eb6 in f_hidg_write
+  0xffffffff8127730b in __vfs_write
+  0xffffffff812774d1 in vfs_write
+  0xffffffff81277725 in SYSC_write
 
-Add a Kconfig dependency to force mtu3 also to be a loadable module
-if extconn is, but still allow it to be built without extcon.
+Fix this by releasing the write_spinlock before calling usb_ep_queue()
 
-Fixes: d0ed062a8b75 ("usb: mtu3: dual-role mode support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Cc: stable <stable@vger.kernel.org>
+Reviewed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Tested-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: stable@vger.kernel.org # 4.11+
+Fixes: 749494b6bdbb ("usb: gadget: f_hid: fix: Move IN request allocation to set_alt()")
+Signed-off-by: Radoslav Gerganov <rgerganov@vmware.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/mtu3/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/function/f_hid.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/mtu3/Kconfig
-+++ b/drivers/usb/mtu3/Kconfig
-@@ -4,6 +4,7 @@ config USB_MTU3
- 	tristate "MediaTek USB3 Dual Role controller"
- 	depends on USB || USB_GADGET
- 	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	depends on EXTCON || !EXTCON
- 	select USB_XHCI_MTK if USB_SUPPORT && USB_XHCI_HCD
- 	help
- 	  Say Y or M here if your system runs on MediaTek SoCs with
+--- a/drivers/usb/gadget/function/f_hid.c
++++ b/drivers/usb/gadget/function/f_hid.c
+@@ -391,20 +391,20 @@ try_again:
+ 	req->complete = f_hidg_req_complete;
+ 	req->context  = hidg;
+ 
++	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
++
+ 	status = usb_ep_queue(hidg->in_ep, req, GFP_ATOMIC);
+ 	if (status < 0) {
+ 		ERROR(hidg->func.config->cdev,
+ 			"usb_ep_queue error on int endpoint %zd\n", status);
+-		goto release_write_pending_unlocked;
++		goto release_write_pending;
+ 	} else {
+ 		status = count;
+ 	}
+-	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
+ 
+ 	return status;
+ release_write_pending:
+ 	spin_lock_irqsave(&hidg->write_spinlock, flags);
+-release_write_pending_unlocked:
+ 	hidg->write_pending = 0;
+ 	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
+ 
 
 
