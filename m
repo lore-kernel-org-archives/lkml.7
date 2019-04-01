@@ -2,181 +2,135 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B896CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC4CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8825F20872
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FEB20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:31:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uxxkJGz9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="F+VcR4+D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731782AbfDACYo (ORCPT
+        id S1731669AbfDACbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 22:24:44 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33514 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731692AbfDACYg (ORCPT
+        Sun, 31 Mar 2019 22:31:09 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:56940 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731529AbfDACbI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 22:24:36 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t16so1810978plo.0
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 19:24:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xHMP4rCUzzpWtWj8JgBXHEt54oo0bcr1bpWR5iBfCNs=;
-        b=uxxkJGz9CDZucQMOITlIEG57bISuU86xctje5mNRKeCVX/WazKJvo0KzpO4aejBsY/
-         Ec0eBzgHnMFCnecJTIJD71uJE9ukWcZ6+sVaFvehGIAYo9nVqxWKnjhbpNjwzmEL3lxg
-         m+ITD5Swc0MYvPepN0PVdulaDZ8KzDK11+vTL22rwBETC2eZUpkU2ur0h98vSAsE/sRy
-         1fHXdYkyae1hJWq0wmcI0V8Hq394drgFFBmD/04qMSEM2NwdPjNgdKqPwGEpBieEz48f
-         Lq/2EL3DRR+xPdFromAAmcLxx0iBi1BOPfZBNYu+ZtmQLmGvmwtG3aDGppMHFoXTWgGu
-         Rleg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xHMP4rCUzzpWtWj8JgBXHEt54oo0bcr1bpWR5iBfCNs=;
-        b=jc+7B9IwXY+kafKe3R6vwl8zol/zpAx17DywcqSGMS0itfk1kf9PU7F7nk0pwM/4i6
-         cwNt+2jHR5C2xPDrJo5//QB5bjAht0XwmVAgC8wKuu5oNtdMGTtY4zSiF72dsruqqZ78
-         69HyCYR4pDYbamYAtFCNnY1Jz8c5TCD6hm0bN5CMOzJBqnpZrLlrDj1YCkxOzu1tRTBM
-         ADTDR1zNatsUHKO3fEq3+zyy0v4Git+3OEduzDfbuvaaa1Mwe4A424THt8/sqFEZ3f1c
-         t+2hek/LHu6p/30KXU+4S3o68A/zPukvwPGirmSJUseI039xj/Tdtf70BNPZqAClnSoF
-         xUUA==
-X-Gm-Message-State: APjAAAUIC90AFS/omGHlvxPPIAMWGr0GY3yPXwSzZl0XSPYGPmLfpQNk
-        BbrojslTDPnAMZn9f0IJESo=
-X-Google-Smtp-Source: APXvYqwHoHPD7zL1rJEgRRBMcshKlLSyU/ZyTEiHg3AD8HRWNwUgZxXzLUZVBm17mx+D6c+aryvZ1Q==
-X-Received: by 2002:a17:902:bd82:: with SMTP id q2mr32025583pls.201.1554085475460;
-        Sun, 31 Mar 2019 19:24:35 -0700 (PDT)
-Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id n82sm13597289pfi.63.2019.03.31.19.24.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 31 Mar 2019 19:24:34 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "A.s. Dong" <aisheng.dong@nxp.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 5/5] arm64: dts: imx8mq-evk: Enable PCIE0 interface
-Date:   Sun, 31 Mar 2019 19:24:13 -0700
-Message-Id: <20190401022413.6682-6-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190401022413.6682-1-andrew.smirnov@gmail.com>
-References: <20190401022413.6682-1-andrew.smirnov@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 31 Mar 2019 22:31:08 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190401023104epoutp04da2fa56f566bb9e431c3a560bd995478~RONwnpBmJ0977309773epoutp04u
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2019 02:31:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190401023104epoutp04da2fa56f566bb9e431c3a560bd995478~RONwnpBmJ0977309773epoutp04u
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1554085864;
+        bh=p215Nw9ojHoHyStauLGQUl59d9hLA/l+1GdV84x/O9A=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=F+VcR4+Dgxn7DU+UpL282c0J5W0381jxM/RWis0DpE4iF34rm+X/cpLU5NvHuFsxz
+         kHINVbNgMv3kCB9XHbzn7z1wtwLjvIHOm5+QatOBq0099Q5w051Vfo7lnPFxU4CQ9M
+         CkscZaWIP4iyMyjh75i1leJRSgm8xR2XIbSkyoTo=
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.155]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190401023056epcas1p1ec2fe7f2d7af9adf14a5c61743c95b68~RONpUMv870160301603epcas1p1h;
+        Mon,  1 Apr 2019 02:30:56 +0000 (GMT)
+X-AuditID: b6c32a36-ce1ff7000000102e-e6-5ca177d72ad0
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8D.67.04142.7D771AC5; Mon,  1 Apr 2019 11:30:47 +0900 (KST)
+Mime-Version: 1.0
+Subject: RE: [PATCH v2 2/4] opp: add API which get max freq by voltage
+Reply-To: myungjoo.ham@samsung.com
+From:   MyungJoo Ham <myungjoo.ham@samsung.com>
+To:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+CC:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>,
+        "fan.chen@mediatek.com" <fan.chen@mediatek.com>,
+        "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <1553841972-19737-3-git-send-email-andrew-sh.cheng@mediatek.com>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20190401023047epcms1p888e2dba45fcbc1de98d71d8a37acb976@epcms1p8>
+Date:   Mon, 01 Apr 2019 11:30:47 +0900
+X-CMS-MailID: 20190401023047epcms1p888e2dba45fcbc1de98d71d8a37acb976
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+CMS-TYPE: 101P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIJsWRmVeSWpSXmKPExsWy7bCmnu718oUxBtMuK1hsX/+C1eLlIU2L
+        61+es1rMP3KO1eLbnd9MFmeb3rBbbHp8jdXi8q45bBaXmy8yWnzuPcJosfT6RSaLphZjizOn
+        L7FatO49wm4x/a6QxcavHg4CHmvmrWH02DnrLrvHplWdbB53ru1h89i8pN6j5eR+Fo8tV9tZ
+        PPq2rGL0+LxJLoAzKtsmIzUxJbVIITUvOT8lMy/dVsk7ON453tTMwFDX0NLCXEkhLzE31VbJ
+        xSdA1y0zB+gFJYWyxJxSoFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6BZYFecWJucWleul5y
+        fq6VoYGBkSlQYUJ2xqpPO9kL7rNXzP/XxdjAuIeti5GDQ0LAROLzlIouRi4OIYEdjBLNF9aw
+        gMR5BQQl/u4Q7mLk5BAWcJO4MeMTC4gtJKAk0XBzHzNEXF+i48E2RhCbTUBXYuuGuywgc0QE
+        5jBJnDi0AsxhFvjNLNH+5QA7SJWEAK/EjPanLBC2tMT25VvBujkFfCV+HPkJVSMqcXP1Wzj7
+        /bH5jBC2iETrvbPMELagxIOfuxlh5syY8h9qZrXEtemL2UEWSwi0MEr0rp4CVaQvcWbuSTYQ
+        mxdo2dkVM8EWsAioSny9t4YJosZFonfFObAaZgF5ie1v5zCDQoJZQFNi/S59mPsbNv5mR2cz
+        C/BJvPvawwoT3zHvCdRINYlDu5dA1ctInJ6+EOp+D4m+FR9YJzAqzkKE9Swki2chLF7AyLyK
+        USy1oDg3PbXYsMAIOXY3MYKTs5bZDsZF53wOMQpwMCrx8CowLIwRYk0sK67MPcQowcGsJMJ7
+        pn9BjBBvSmJlVWpRfnxRaU5q8SFGU6D/JzJLiSbnAzNHXkm8oamRsbGxhYmhmamhoZI473oH
+        5xghgfTEktTs1NSC1CKYPiYOTqkGxvoFJSK+fDmKwa8u9/1K39NtfMH5r8+y7mCpKXP5xFjD
+        hVu71a98KG02ELEuPtw6uyJ7Ztyt2THeXBk2UQ5xuVyW1xK1dC2dl89xzeWJVP0bUrnk74mZ
+        8TZfzoZuiXiffGiTXyKXjezJIOmXbq93vbf/P69N5tzt267XLQpmOZiu2XS+Y0aEEktxRqKh
+        FnNRcSIAKOOq9+QDAAA=
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190329064632epcas2p4d10ea099bfea4ad682d7312a75bfbe68
+References: <1553841972-19737-3-git-send-email-andrew-sh.cheng@mediatek.com>
+        <1553841972-19737-1-git-send-email-andrew-sh.cheng@mediatek.com>
+        <CGME20190329064632epcas2p4d10ea099bfea4ad682d7312a75bfbe68@epcms1p8>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable PCIE0 interface connected to BCM4356 WiFi/Bluetooth module.
+>This API will get voltage as input parameter.
+>Search all opp items for the item which with max frequency,
+>and the voltae is smaller than provided voltage.
+>
+>Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+>---
+> drivers/opp/core.c     | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++
+> include/linux/pm_opp.h |  8 ++++++++
+> 2 files changed, 63 insertions(+)
+>
+>diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+>index 24c757a..57deef9 100644
+>--- a/include/linux/pm_opp.h
+>+++ b/include/linux/pm_opp.h
+>@@ -102,6 +102,8 @@ struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
+> 
+> struct dev_pm_opp *dev_pm_opp_find_freq_floor(struct device *dev,
+> 					      unsigned long *freq);
+>+struct dev_pm_opp *dev_pm_opp_find_max_freq_by_volt(struct device *dev,
+>+					      unsigned long u_volt);
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: linux-imx@nxp.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 42 ++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+For the symmetricity, wouldn't it be better to name it
+dev_pm_opp_find_volt_ceiling(dev, u_volt); ?
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-index 304c28034ddf..b25f775e8889 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -21,6 +21,12 @@
- 		reg = <0x00000000 0x40000000 0 0xc0000000>;
- 	};
- 
-+	pcie0_refclk: pcie0-refclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <100000000>;
-+	};
-+
- 	reg_usdhc2_vmmc: regulator-vsd-3v3 {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_reg_usdhc2>;
-@@ -118,6 +124,17 @@
- 	status = "okay";
- };
- 
-+&gpio5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wifi_reset>;
-+
-+ 	wl-reg-on {
-+		gpio-hog;
-+		gpios = <29 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+	};
-+};
-+
- &i2c1 {
- 	clock-frequency = <100000>;
- 	pinctrl-names = "default";
-@@ -209,6 +226,18 @@
- 	};
- };
- 
-+&pcie0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie0>;
-+	reset-gpio = <&gpio5 28 GPIO_ACTIVE_LOW>;
-+	clocks = <&clk IMX8MQ_CLK_PCIE1_ROOT>,
-+		 <&clk IMX8MQ_CLK_PCIE1_AUX>,
-+		 <&clk IMX8MQ_CLK_PCIE1_PHY>,
-+		 <&pcie0_refclk>;
-+	clock-names = "pcie", "pcie_aux", "pcie_phy", "pcie_bus";
-+	status = "okay";
-+};
-+
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
-@@ -303,6 +332,13 @@
- 		>;
- 	};
- 
-+	pinctrl_pcie0: pcie0grp {
-+		fsl,pins = <
-+			MX8MQ_IOMUXC_I2C4_SCL_PCIE1_CLKREQ_B		0x76
-+			MX8MQ_IOMUXC_UART4_RXD_GPIO5_IO28		0x16
-+		>;
-+	};
-+
- 	pinctrl_qspi: qspigrp {
- 		fsl,pins = <
- 			MX8MQ_IOMUXC_NAND_ALE_QSPI_A_SCLK	0x82
-@@ -430,4 +466,10 @@
- 			MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B		0xc6
- 		>;
- 	};
-+
-+	pinctrl_wifi_reset: wifiresetgrp {
-+		fsl,pins = <
-+			MX8MQ_IOMUXC_UART4_TXD_GPIO5_IO29		0x16
-+		>;
-+	};
- };
--- 
-2.20.1
+Cheers,
+MyungJoo
+
 
