@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E316C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6754C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F46620663
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6B620663
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141892;
-	bh=XagOtcspmkQexmAhkHRXzJ0YXauiKwGU8dwBxSy2Tdk=;
+	s=default; t=1554141903;
+	bh=aVDAKpKMtYU6XDXnAuO6ah9ym975p3qTie7u45JKtXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eH0zOyxsjmltr6fp3rjeduJ0L8yrYryuNpZUPac2Mbd1OKJnYpakHajEAjD1sDiTg
-	 Is4yeg+CVE8q/4uu1gKDt3XMG90tTlPYgRZYCIEBr9arwLNmZMzMxX6xqC+WzCLi5R
-	 to7Dvjgu9/cqW3bQyy3yd42+IhsUq1fmPO7WAoXA=
+	b=ezGY5XDFgHc5uiY5Io582iZTwJQNn53iD41clfCunhLkOQzjTgNbJWSkV9ZZrPxdC
+	 TOym/yemHDyVztZXY5z31tY7dWtnVmr3hS3kV7GaEGYCFPqudYpSCC29kGcm0pCBvh
+	 zepYtGotm7uKlxKNZ8l2qmF76T0RauIHdQSvvi+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbfDARNk (ORCPT
+        id S1729878AbfDARNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:13:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36334 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730588AbfDARNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:13:38 -0400
+        id S1729241AbfDARNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:13:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9EE321924;
-        Mon,  1 Apr 2019 17:13:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25FEF21929;
+        Mon,  1 Apr 2019 17:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138817;
-        bh=XagOtcspmkQexmAhkHRXzJ0YXauiKwGU8dwBxSy2Tdk=;
+        s=default; t=1554138799;
+        bh=aVDAKpKMtYU6XDXnAuO6ah9ym975p3qTie7u45JKtXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jGb4AgXCRRxzyZgQB+VFigx9LRF3dADa6TW3EpXwFT3Zd4P40Dk8RvjLMEhU1cBpP
-         MmOoBT/VEAzdyPc4oeylkKXVnpCzDdRWvBDkvLucmT26VPaeuuunFswrUwe8U3wbte
-         SrA04Jkiwpptadx79/gV49zRYr76dY0xilmzHL9w=
+        b=FNOA4/Hcs/Yt/BKm8xi5tm4Jjv8wb3PIdvEv65XM6o5UylGlbePpFUm663JBfhzr6
+         9M5KFhoAxlyuPA4sfUqQ7+lpO3pdayAhWC1v7iL6+KG7knlnuiPS/n5PKAL2Mk/H0r
+         JStDfhxm4LMOt96EfiT4NwgqmpjBSYm4oVFIkLow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
-        Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 003/134] ipmi_si: Fix crash when using hard-coded device
-Date:   Mon,  1 Apr 2019 19:00:39 +0200
-Message-Id: <20190401170044.546368137@linuxfoundation.org>
+        stable@vger.kernel.org, Erik Hugne <erik.hugne@gmail.com>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 024/134] tipc: fix cancellation of topology subscriptions
+Date:   Mon,  1 Apr 2019 19:01:00 +0200
+Message-Id: <20190401170046.816167363@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,485 +66,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-Backport from 41b766d661bf94a364960862cfc248a78313dbd3
+From: Erik Hugne <erik.hugne@gmail.com>
 
-When excuting a command like:
-  modprobe ipmi_si ports=0xffc0e3 type=bt
-The system would get an oops.
+[ Upstream commit 33872d79f5d1cbedaaab79669cc38f16097a9450 ]
 
-The trouble here is that ipmi_si_hardcode_find_bmc() is called before
-ipmi_si_platform_init(), but initialization of the hard-coded device
-creates an IPMI platform device, which won't be initialized yet.
+When cancelling a subscription, we have to clear the cancel bit in the
+request before iterating over any established subscriptions with memcmp.
+Otherwise no subscription will ever be found, and it will not be
+possible to explicitly unsubscribe individual subscriptions.
 
-The real trouble is that hard-coded devices aren't created with
-any device, and the fixup is done later.  So do it right, create the
-hard-coded devices as normal platform devices.
-
-This required adding some new resource types to the IPMI platform
-code for passing information required by the hard-coded device
-and adding some code to remove the hard-coded platform devices
-on module removal.
-
-To enforce the "hard-coded devices passed by the user take priority
-over firmware devices" rule, some special code was added to check
-and see if a hard-coded device already exists.
-
-The backport required some minor fixups and adding the device
-id table that had been added in another change and was used
-in this one.
-
-Reported-by: Yang Yingliang <yangyingliang@huawei.com>
-Cc: stable@vger.kernel.org # v4.15+
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Tested-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 8985ecc7c1e0 ("tipc: simplify endianness handling in topology subscriber")
+Signed-off-by: Erik Hugne <erik.hugne@gmail.com>
+Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/char/ipmi/ipmi_si.h          |    4 
- drivers/char/ipmi/ipmi_si_hardcode.c |  232 +++++++++++++++++++++++++----------
- drivers/char/ipmi/ipmi_si_intf.c     |   22 ++-
- drivers/char/ipmi/ipmi_si_platform.c |   30 +++-
- 4 files changed, 216 insertions(+), 72 deletions(-)
+ net/tipc/topsrv.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/char/ipmi/ipmi_si.h
-+++ b/drivers/char/ipmi/ipmi_si.h
-@@ -25,7 +25,9 @@ void ipmi_irq_finish_setup(struct si_sm_
- int ipmi_si_remove_by_dev(struct device *dev);
- void ipmi_si_remove_by_data(int addr_space, enum si_type si_type,
- 			    unsigned long addr);
--int ipmi_si_hardcode_find_bmc(void);
-+void ipmi_hardcode_init(void);
-+void ipmi_si_hardcode_exit(void);
-+int ipmi_si_hardcode_match(int addr_type, unsigned long addr);
- void ipmi_si_platform_init(void);
- void ipmi_si_platform_shutdown(void);
+--- a/net/tipc/topsrv.c
++++ b/net/tipc/topsrv.c
+@@ -371,6 +371,7 @@ static int tipc_conn_rcv_sub(struct tipc
+ 	struct tipc_subscription *sub;
  
---- a/drivers/char/ipmi/ipmi_si_hardcode.c
-+++ b/drivers/char/ipmi/ipmi_si_hardcode.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0+
- 
- #include <linux/moduleparam.h>
-+#include <linux/platform_device.h>
- #include "ipmi_si.h"
- 
- #define PFX "ipmi_hardcode: "
-@@ -11,23 +12,22 @@
- 
- #define SI_MAX_PARMS 4
- 
--static char          *si_type[SI_MAX_PARMS];
- #define MAX_SI_TYPE_STR 30
--static char          si_type_str[MAX_SI_TYPE_STR];
-+static char          si_type_str[MAX_SI_TYPE_STR] __initdata;
- static unsigned long addrs[SI_MAX_PARMS];
- static unsigned int num_addrs;
- static unsigned int  ports[SI_MAX_PARMS];
- static unsigned int num_ports;
--static int           irqs[SI_MAX_PARMS];
--static unsigned int num_irqs;
--static int           regspacings[SI_MAX_PARMS];
--static unsigned int num_regspacings;
--static int           regsizes[SI_MAX_PARMS];
--static unsigned int num_regsizes;
--static int           regshifts[SI_MAX_PARMS];
--static unsigned int num_regshifts;
--static int slave_addrs[SI_MAX_PARMS]; /* Leaving 0 chooses the default value */
--static unsigned int num_slave_addrs;
-+static int           irqs[SI_MAX_PARMS] __initdata;
-+static unsigned int num_irqs __initdata;
-+static int           regspacings[SI_MAX_PARMS] __initdata;
-+static unsigned int num_regspacings __initdata;
-+static int           regsizes[SI_MAX_PARMS] __initdata;
-+static unsigned int num_regsizes __initdata;
-+static int           regshifts[SI_MAX_PARMS] __initdata;
-+static unsigned int num_regshifts __initdata;
-+static int slave_addrs[SI_MAX_PARMS] __initdata;
-+static unsigned int num_slave_addrs __initdata;
- 
- module_param_string(type, si_type_str, MAX_SI_TYPE_STR, 0);
- MODULE_PARM_DESC(type, "Defines the type of each interface, each"
-@@ -72,12 +72,133 @@ MODULE_PARM_DESC(slave_addrs, "Set the d
- 		 " overridden by this parm.  This is an array indexed"
- 		 " by interface number.");
- 
--int ipmi_si_hardcode_find_bmc(void)
-+static struct platform_device *ipmi_hc_pdevs[SI_MAX_PARMS];
-+
-+static void __init ipmi_hardcode_init_one(const char *si_type_str,
-+					  unsigned int i,
-+					  unsigned long addr,
-+					  unsigned int flags)
-+{
-+	struct platform_device *pdev;
-+	unsigned int num_r = 1, size;
-+	struct resource r[4];
-+	struct property_entry p[6];
-+	enum si_type si_type;
-+	unsigned int regspacing, regsize;
-+	int rv;
-+
-+	memset(p, 0, sizeof(p));
-+	memset(r, 0, sizeof(r));
-+
-+	if (!si_type_str || !*si_type_str || strcmp(si_type_str, "kcs") == 0) {
-+		size = 2;
-+		si_type = SI_KCS;
-+	} else if (strcmp(si_type_str, "smic") == 0) {
-+		size = 2;
-+		si_type = SI_SMIC;
-+	} else if (strcmp(si_type_str, "bt") == 0) {
-+		size = 3;
-+		si_type = SI_BT;
-+	} else if (strcmp(si_type_str, "invalid") == 0) {
-+		/*
-+		 * Allow a firmware-specified interface to be
-+		 * disabled.
-+		 */
-+		size = 1;
-+		si_type = SI_TYPE_INVALID;
-+	} else {
-+		pr_warn("Interface type specified for interface %d, was invalid: %s\n",
-+			i, si_type_str);
-+		return;
-+	}
-+
-+	regsize = regsizes[i];
-+	if (regsize == 0)
-+		regsize = DEFAULT_REGSIZE;
-+
-+	p[0] = PROPERTY_ENTRY_U8("ipmi-type", si_type);
-+	p[1] = PROPERTY_ENTRY_U8("slave-addr", slave_addrs[i]);
-+	p[2] = PROPERTY_ENTRY_U8("addr-source", SI_HARDCODED);
-+	p[3] = PROPERTY_ENTRY_U8("reg-shift", regshifts[i]);
-+	p[4] = PROPERTY_ENTRY_U8("reg-size", regsize);
-+	/* Last entry must be left NULL to terminate it. */
-+
-+	/*
-+	 * Register spacing is derived from the resources in
-+	 * the IPMI platform code.
-+	 */
-+	regspacing = regspacings[i];
-+	if (regspacing == 0)
-+		regspacing = regsize;
-+
-+	r[0].start = addr;
-+	r[0].end = r[0].start + regsize - 1;
-+	r[0].name = "IPMI Address 1";
-+	r[0].flags = flags;
-+
-+	if (size > 1) {
-+		r[1].start = r[0].start + regspacing;
-+		r[1].end = r[1].start + regsize - 1;
-+		r[1].name = "IPMI Address 2";
-+		r[1].flags = flags;
-+		num_r++;
-+	}
-+
-+	if (size > 2) {
-+		r[2].start = r[1].start + regspacing;
-+		r[2].end = r[2].start + regsize - 1;
-+		r[2].name = "IPMI Address 3";
-+		r[2].flags = flags;
-+		num_r++;
-+	}
-+
-+	if (irqs[i]) {
-+		r[num_r].start = irqs[i];
-+		r[num_r].end = irqs[i];
-+		r[num_r].name = "IPMI IRQ";
-+		r[num_r].flags = IORESOURCE_IRQ;
-+		num_r++;
-+	}
-+
-+	pdev = platform_device_alloc("hardcode-ipmi-si", i);
-+	if (!pdev) {
-+		pr_err("Error allocating IPMI platform device %d\n", i);
-+		return;
-+	}
-+
-+	rv = platform_device_add_resources(pdev, r, num_r);
-+	if (rv) {
-+		dev_err(&pdev->dev,
-+			"Unable to add hard-code resources: %d\n", rv);
-+		goto err;
-+	}
-+
-+	rv = platform_device_add_properties(pdev, p);
-+	if (rv) {
-+		dev_err(&pdev->dev,
-+			"Unable to add hard-code properties: %d\n", rv);
-+		goto err;
-+	}
-+
-+	rv = platform_device_add(pdev);
-+	if (rv) {
-+		dev_err(&pdev->dev,
-+			"Unable to add hard-code device: %d\n", rv);
-+		goto err;
-+	}
-+
-+	ipmi_hc_pdevs[i] = pdev;
-+	return;
-+
-+err:
-+	platform_device_put(pdev);
-+}
-+
-+void __init ipmi_hardcode_init(void)
- {
--	int ret = -ENODEV;
--	int             i;
--	struct si_sm_io io;
-+	unsigned int i;
- 	char *str;
-+	char *si_type[SI_MAX_PARMS];
- 
- 	/* Parse out the si_type string into its components. */
- 	str = si_type_str;
-@@ -94,54 +215,45 @@ int ipmi_si_hardcode_find_bmc(void)
- 		}
- 	}
- 
--	memset(&io, 0, sizeof(io));
- 	for (i = 0; i < SI_MAX_PARMS; i++) {
--		if (!ports[i] && !addrs[i])
--			continue;
--
--		io.addr_source = SI_HARDCODED;
--		pr_info(PFX "probing via hardcoded address\n");
-+		if (i < num_ports && ports[i])
-+			ipmi_hardcode_init_one(si_type[i], i, ports[i],
-+					       IORESOURCE_IO);
-+		if (i < num_addrs && addrs[i])
-+			ipmi_hardcode_init_one(si_type[i], i, addrs[i],
-+					       IORESOURCE_MEM);
-+	}
-+}
- 
--		if (!si_type[i] || strcmp(si_type[i], "kcs") == 0) {
--			io.si_type = SI_KCS;
--		} else if (strcmp(si_type[i], "smic") == 0) {
--			io.si_type = SI_SMIC;
--		} else if (strcmp(si_type[i], "bt") == 0) {
--			io.si_type = SI_BT;
--		} else {
--			pr_warn(PFX "Interface type specified for interface %d, was invalid: %s\n",
--				i, si_type[i]);
--			continue;
--		}
-+void ipmi_si_hardcode_exit(void)
-+{
-+	unsigned int i;
- 
--		if (ports[i]) {
--			/* An I/O port */
--			io.addr_data = ports[i];
--			io.addr_type = IPMI_IO_ADDR_SPACE;
--		} else if (addrs[i]) {
--			/* A memory port */
--			io.addr_data = addrs[i];
--			io.addr_type = IPMI_MEM_ADDR_SPACE;
--		} else {
--			pr_warn(PFX "Interface type specified for interface %d, but port and address were not set or set to zero.\n",
--				i);
--			continue;
--		}
-+	for (i = 0; i < SI_MAX_PARMS; i++) {
-+		if (ipmi_hc_pdevs[i])
-+			platform_device_unregister(ipmi_hc_pdevs[i]);
-+	}
-+}
- 
--		io.addr = NULL;
--		io.regspacing = regspacings[i];
--		if (!io.regspacing)
--			io.regspacing = DEFAULT_REGSPACING;
--		io.regsize = regsizes[i];
--		if (!io.regsize)
--			io.regsize = DEFAULT_REGSIZE;
--		io.regshift = regshifts[i];
--		io.irq = irqs[i];
--		if (io.irq)
--			io.irq_setup = ipmi_std_irq_setup;
--		io.slave_addr = slave_addrs[i];
-+/*
-+ * Returns true of the given address exists as a hardcoded address,
-+ * false if not.
-+ */
-+int ipmi_si_hardcode_match(int addr_type, unsigned long addr)
-+{
-+	unsigned int i;
- 
--		ret = ipmi_si_add_smi(&io);
-+	if (addr_type == IPMI_IO_ADDR_SPACE) {
-+		for (i = 0; i < num_ports; i++) {
-+			if (ports[i] == addr)
-+				return 1;
-+		}
-+	} else {
-+		for (i = 0; i < num_addrs; i++) {
-+			if (addrs[i] == addr)
-+				return 1;
-+		}
- 	}
--	return ret;
-+
-+	return 0;
- }
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -1862,6 +1862,18 @@ int ipmi_si_add_smi(struct si_sm_io *io)
- 	int rv = 0;
- 	struct smi_info *new_smi, *dup;
- 
-+	/*
-+	 * If the user gave us a hard-coded device at the same
-+	 * address, they presumably want us to use it and not what is
-+	 * in the firmware.
-+	 */
-+	if (io->addr_source != SI_HARDCODED &&
-+	    ipmi_si_hardcode_match(io->addr_type, io->addr_data)) {
-+		dev_info(io->dev,
-+			 "Hard-coded device at this address already exists");
-+		return -ENODEV;
-+	}
-+
- 	if (!io->io_setup) {
- 		if (io->addr_type == IPMI_IO_ADDR_SPACE) {
- 			io->io_setup = ipmi_si_port_setup;
-@@ -2094,7 +2106,7 @@ static int try_smi_init(struct smi_info
- 	return rv;
- }
- 
--static int init_ipmi_si(void)
-+static int __init init_ipmi_si(void)
- {
- 	struct smi_info *e;
- 	enum ipmi_addr_src type = SI_INVALID;
-@@ -2102,12 +2114,9 @@ static int init_ipmi_si(void)
- 	if (initialized)
+ 	if (tipc_sub_read(s, filter) & TIPC_SUB_CANCEL) {
++		s->filter &= __constant_ntohl(~TIPC_SUB_CANCEL);
+ 		tipc_conn_delete_sub(con, s);
  		return 0;
- 
-+	ipmi_hardcode_init();
- 	pr_info("IPMI System Interface driver.\n");
- 
--	/* If the user gave us a device, they presumably want us to use it */
--	if (!ipmi_si_hardcode_find_bmc())
--		goto do_scan;
--
- 	ipmi_si_platform_init();
- 
- 	ipmi_si_pci_init();
-@@ -2118,7 +2127,6 @@ static int init_ipmi_si(void)
- 	   with multiple BMCs we assume that there will be several instances
- 	   of a given type so if we succeed in registering a type then also
- 	   try to register everything else of the same type */
--do_scan:
- 	mutex_lock(&smi_infos_lock);
- 	list_for_each_entry(e, &smi_infos, link) {
- 		/* Try to register a device if it has an IRQ and we either
-@@ -2304,6 +2312,8 @@ static void cleanup_ipmi_si(void)
- 	list_for_each_entry_safe(e, tmp_e, &smi_infos, link)
- 		cleanup_one_si(e);
- 	mutex_unlock(&smi_infos_lock);
-+
-+	ipmi_si_hardcode_exit();
- }
- module_exit(cleanup_ipmi_si);
- 
---- a/drivers/char/ipmi/ipmi_si_platform.c
-+++ b/drivers/char/ipmi/ipmi_si_platform.c
-@@ -126,8 +126,6 @@ ipmi_get_info_from_resources(struct plat
- 		if (res_second->start > io->addr_data)
- 			io->regspacing = res_second->start - io->addr_data;
  	}
--	io->regsize = DEFAULT_REGSIZE;
--	io->regshift = 0;
- 
- 	return res;
- }
-@@ -135,7 +133,7 @@ ipmi_get_info_from_resources(struct plat
- static int platform_ipmi_probe(struct platform_device *pdev)
- {
- 	struct si_sm_io io;
--	u8 type, slave_addr, addr_source;
-+	u8 type, slave_addr, addr_source, regsize, regshift;
- 	int rv;
- 
- 	rv = device_property_read_u8(&pdev->dev, "addr-source", &addr_source);
-@@ -147,7 +145,7 @@ static int platform_ipmi_probe(struct pl
- 	if (addr_source == SI_SMBIOS) {
- 		if (!si_trydmi)
- 			return -ENODEV;
--	} else {
-+	} else if (addr_source != SI_HARDCODED) {
- 		if (!si_tryplatform)
- 			return -ENODEV;
- 	}
-@@ -167,11 +165,23 @@ static int platform_ipmi_probe(struct pl
- 	case SI_BT:
- 		io.si_type = type;
- 		break;
-+	case SI_TYPE_INVALID: /* User disabled this in hardcode. */
-+		return -ENODEV;
- 	default:
- 		dev_err(&pdev->dev, "ipmi-type property is invalid\n");
- 		return -EINVAL;
- 	}
- 
-+	io.regsize = DEFAULT_REGSIZE;
-+	rv = device_property_read_u8(&pdev->dev, "reg-size", &regsize);
-+	if (!rv)
-+		io.regsize = regsize;
-+
-+	io.regshift = 0;
-+	rv = device_property_read_u8(&pdev->dev, "reg-shift", &regshift);
-+	if (!rv)
-+		io.regshift = regshift;
-+
- 	if (!ipmi_get_info_from_resources(pdev, &io))
- 		return -EINVAL;
- 
-@@ -191,7 +201,8 @@ static int platform_ipmi_probe(struct pl
- 
- 	io.dev = &pdev->dev;
- 
--	pr_info("ipmi_si: SMBIOS: %s %#lx regsize %d spacing %d irq %d\n",
-+	pr_info("ipmi_si: %s: %s %#lx regsize %d spacing %d irq %d\n",
-+		ipmi_addr_src_to_str(addr_source),
- 		(io.addr_type == IPMI_IO_ADDR_SPACE) ? "io" : "mem",
- 		io.addr_data, io.regsize, io.regspacing, io.irq);
- 
-@@ -356,6 +367,9 @@ static int acpi_ipmi_probe(struct platfo
- 		goto err_free;
- 	}
- 
-+	io.regsize = DEFAULT_REGSIZE;
-+	io.regshift = 0;
-+
- 	res = ipmi_get_info_from_resources(pdev, &io);
- 	if (!res) {
- 		rv = -EINVAL;
-@@ -417,6 +431,11 @@ static int ipmi_remove(struct platform_d
- 	return ipmi_si_remove_by_dev(&pdev->dev);
- }
- 
-+static const struct platform_device_id si_plat_ids[] = {
-+    { "hardcode-ipmi-si", 0 },
-+    { }
-+};
-+
- struct platform_driver ipmi_platform_driver = {
- 	.driver = {
- 		.name = DEVICE_NAME,
-@@ -425,6 +444,7 @@ struct platform_driver ipmi_platform_dri
- 	},
- 	.probe		= ipmi_probe,
- 	.remove		= ipmi_remove,
-+	.id_table       = si_plat_ids
- };
- 
- void ipmi_si_platform_init(void)
 
 
