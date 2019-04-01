@@ -2,149 +2,133 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE520C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F876C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 779C620857
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E4820857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c125njDp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W10vcUCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfDAUzn (ORCPT
+        id S1728415AbfDAU4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 16:55:43 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:38338 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfDAUzm (ORCPT
+        Mon, 1 Apr 2019 16:56:43 -0400
+Received: from mail-it1-f169.google.com ([209.85.166.169]:51747 "EHLO
+        mail-it1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbfDAU4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 16:55:42 -0400
-Received: by mail-it1-f195.google.com with SMTP id f22so1532506ita.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 13:55:42 -0700 (PDT)
+        Mon, 1 Apr 2019 16:56:42 -0400
+Received: by mail-it1-f169.google.com with SMTP id s3so1524745itk.1;
+        Mon, 01 Apr 2019 13:56:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Xrpr7Hq7dqaYL2Eo6DwUdVyXfie7eGeQXHVNyEFIVsc=;
-        b=c125njDpcb+GViLFb7oVcDNQe5ZLS36m3H9L16x9knOSqaFwlnxDs+rGkawwSxJbev
-         wzsTkjX3Y24BpRuyMM2PCZy92/gdYSpJwe6icQto/kqdVd40+EGD10UN9tvr2k3M8eOQ
-         CSTTzL1rJRZkv/p3B9Xk++JR9RnhbLzOnsg4U=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AT3+Y+13K2Cpfxn61ywWivlGpkV37QTXmmh6edUQOcE=;
+        b=W10vcUCUuNW1SvLmkUv5TN0rM6YlxTZNQHJlOVFW6lFlV6+7A7UiFbLhHsCF3kunLF
+         sGG53Tf/H/Ug1a3d4q44Ic7BoAgN1iw2sEeeMjNaB7QdSagIUpwzc/3Pc1o+X2/CuFBD
+         migPFwxO+q0sQAUSL9GNPgyok5+pfEYxGPZq0AotXywWvFhm/25T6S10XepBLJHr7vcb
+         wZBCW/RvB8GVAVVzQ4UehYd535fsDGlaKBv+JFU3wzBEQvA0wuccZZPpFAHFxmFsAYkJ
+         wHkSkJ1K3WAZ3l3S40zRQV3EtZdwF/Uh9qBSXZHmpCgzpph9XbQ0CqKWsd48lqZrd/dW
+         /z4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Xrpr7Hq7dqaYL2Eo6DwUdVyXfie7eGeQXHVNyEFIVsc=;
-        b=hu4sFpg2ItqHBpqvkY1a44TU9aZWAXQkMELY/LXWFdK4tDIghmz944KVK3mr0+Nwk9
-         /pHCRaGj4nHePOwp9xzRFwFCSzdl8t0RQ4V996w1p7VMm9aaMMElTwByhI8lDnSc+Ojo
-         oSqAvQbboe/zwUmrfUV4XJPBeuM2fL3fpoo15/tbz/1TV6XhP0B3GjV6hjuVw0N7gtpW
-         RTZyDGnhfkrHVSVsGu5uQEi67VTh5Bhb3PhOoW0cnEZejJPFwKIZlIqHp/ec5YP+WIra
-         h5/OPRBQUk2A/q0s3YtAJBb+fBxBGb4PpLej5O19jjl7FFOAmxuncdb1V1tnTmv887xb
-         j8AA==
-X-Gm-Message-State: APjAAAVv+JHGJc3wE/MouVyrK+49Ko7xRnCk2K0VGcUeLaTn8mAH7KKW
-        JHpSSrZCF6bDDAeLLU9QJWwOsrsBH0VKjQ==
-X-Google-Smtp-Source: APXvYqxavNwBue4MkZ+KYHPxCUQFuW4/4QT/57VY6ql1jxwXoUaGRP9EICN0VkNK2m9QSLigHVZSgQ==
-X-Received: by 2002:a24:7014:: with SMTP id f20mr1286036itc.44.1554152141676;
-        Mon, 01 Apr 2019 13:55:41 -0700 (PDT)
-Received: from fletcherw.bld.corp.google.com ([2620:15c:183:200:70a8:812a:cdeb:6e0])
-        by smtp.gmail.com with ESMTPSA id v133sm6688570ita.19.2019.04.01.13.55.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 13:55:41 -0700 (PDT)
-From:   Fletcher Woodruff <fletcherw@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Fletcher Woodruff <fletcherw@chromium.org>,
-        Bard Liao <bardliao@realtek.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Ross Zwisler <zwisler@google.org>, alsa-devel@alsa-project.org
-Subject: [PATCH 2/2] ASoC: rt5677: make ACPI property names match _DSD
-Date:   Mon,  1 Apr 2019 14:55:19 -0600
-Message-Id: <20190401205519.34023-2-fletcherw@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-In-Reply-To: <20190401205519.34023-1-fletcherw@chromium.org>
-References: <20190401205519.34023-1-fletcherw@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AT3+Y+13K2Cpfxn61ywWivlGpkV37QTXmmh6edUQOcE=;
+        b=Ghly8ELXDru8GUpKtqHroNPnjF0AwdJWzrI7U4G/rjE1ITtuf7xxlHCSO5BHT7BTm1
+         yas7pobEX0InlriR4NqprvuM41cHpYnG1R9S/zitAURE+aEB5uaUVFC89W0ePURF6Ne+
+         EBmSo5KGE2MBYgAmss0ifLZNSTBdXUaKPUxuQQdRyUeaFMHPR1LV2rnhbqtGHrI85qks
+         0nl1E8BameoM6bW4z+VU4hBylcZOVatrG7uptLBM6T7VEZ+4zEj8AjbpJs0O5y1x8WTz
+         mEmL8zpmecKk9PXNqUZFdJ/UmpTD8pRil6mjaPSgolWx5SAjrlhQO/g3qFD31HmuMAyF
+         0Ysw==
+X-Gm-Message-State: APjAAAUV85wqgGRNCiN/6wGtuvgsvYPm5NbAnDiZ2R0eis2SOgsSWfo9
+        o88Ys3JYrkbSLbTi/kGWgXO60eqdJmjqy5dcJmM=
+X-Google-Smtp-Source: APXvYqxPdFADHjAK+0CFde23ZbwoLf1eXIIt4cdtDXo08VhKkesuIbGveqz+tqbUfBYlEaVHfcg+WTsTVB9Qcl5JDSk=
+X-Received: by 2002:a24:7c52:: with SMTP id a79mr1507399itd.51.1554152201716;
+ Mon, 01 Apr 2019 13:56:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190329084058-mutt-send-email-mst@kernel.org>
+ <f6332928-d6a4-7a75-245d-2c534cf6e710@redhat.com> <20190329104311-mutt-send-email-mst@kernel.org>
+ <7a3baa90-5963-e6e2-c862-9cd9cc1b5f60@redhat.com> <f0ee075d-3e99-efd5-8c82-98d53b9f204f@redhat.com>
+ <20190329125034-mutt-send-email-mst@kernel.org> <fb23fd70-4f1b-26a8-5ecc-4c14014ef29d@redhat.com>
+ <20190401073007-mutt-send-email-mst@kernel.org> <29e11829-c9ac-a21b-b2f1-ed833e4ca449@redhat.com>
+ <dc14a711-a306-d00b-c4ce-c308598ee386@redhat.com> <20190401104608-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190401104608-mutt-send-email-mst@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 1 Apr 2019 13:56:30 -0700
+Message-ID: <CAKgT0UcJuD-t+MqeS9geiGE1zsUiYUgZzeRrOJOJbOzn2C-KOw@mail.gmail.com>
+Subject: Re: On guest free page hinting and OOM
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rt5677 driver is using the wrong property names to read from ACPI.
-Update the property names to match those from _DSD, so that the correct
-GPIO pin numbers are read and that plug-detection works.
+On Mon, Apr 1, 2019 at 7:47 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Mon, Apr 01, 2019 at 04:11:42PM +0200, David Hildenbrand wrote:
+> > > The interesting thing is most probably: Will the hinting size usually be
+> > > reasonable small? At least I guess a guest with 4TB of RAM will not
+> > > suddenly get a hinting size of hundreds of GB. Most probably also only
+> > > something in the range of 1GB. But this is an interesting question to
+> > > look into.
+> > >
+> > > Also, if the admin does not care about performance implications when
+> > > already close to hinting, no need to add the additional 1Gb to the ram size.
+> >
+> > "close to OOM" is what I meant.
+>
+> Problem is, host admin is the one adding memory. Guest admin is
+> the one that knows about performance.
 
-With this patch, plugging and unplugging the headphone jack switches
-between headphones and speakers automatically.
+The thing we have to keep in mind with this is that we are not dealing
+with the same behavior as the balloon driver. We don't need to inflate
+a massive hint and hand that off. Instead we can focus on performing
+the hints on much smaller amounts and do it incrementally over time
+with the idea being as the system sits idle it frees up more and more
+of the inactive memory on the system.
 
-Signed-off-by: Fletcher Woodruff <fletcherw@chromium.org>
----
- sound/soc/codecs/rt5677.c | 27 ++++++---------------------
- 1 file changed, 6 insertions(+), 21 deletions(-)
+With that said, I still don't like the idea of us even trying to
+target 1GB of RAM for hinting. I think it would be much better if we
+stuck to smaller sizes and kept things down to a single digit multiple
+of THP or higher order pages. Maybe something like 64MB of total
+memory out for hinting.
 
-diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
-index 33380f82b7008f..1f725086cee39c 100644
---- a/sound/soc/codecs/rt5677.c
-+++ b/sound/soc/codecs/rt5677.c
-@@ -4998,25 +4998,6 @@ static const struct acpi_device_id rt5677_acpi_match[] = {
- };
- MODULE_DEVICE_TABLE(acpi, rt5677_acpi_match);
- 
--static void rt5677_read_acpi_properties(struct rt5677_priv *rt5677,
--		struct device *dev)
--{
--	u32 val;
--
--	if (!device_property_read_u32(dev, "DCLK", &val))
--		rt5677->pdata.dmic2_clk_pin = val;
--
--	rt5677->pdata.in1_diff = device_property_read_bool(dev, "IN1");
--	rt5677->pdata.in2_diff = device_property_read_bool(dev, "IN2");
--	rt5677->pdata.lout1_diff = device_property_read_bool(dev, "OUT1");
--	rt5677->pdata.lout2_diff = device_property_read_bool(dev, "OUT2");
--	rt5677->pdata.lout3_diff = device_property_read_bool(dev, "OUT3");
--
--	device_property_read_u32(dev, "JD1", &rt5677->pdata.jd1_gpio);
--	device_property_read_u32(dev, "JD2", &rt5677->pdata.jd2_gpio);
--	device_property_read_u32(dev, "JD3", &rt5677->pdata.jd3_gpio);
--}
--
- static void rt5677_read_device_properties(struct rt5677_priv *rt5677,
- 		struct device *dev)
- {
-@@ -5273,19 +5254,23 @@ static int rt5677_i2c_probe(struct i2c_client *i2c)
- 		if (match_id)
- 			rt5677->type = (enum rt5677_type)match_id->data;
- 
--		rt5677_read_device_properties(rt5677, &i2c->dev);
- 	} else if (ACPI_HANDLE(&i2c->dev)) {
- 		const struct acpi_device_id *acpi_id;
-+		u32 val;
- 
- 		acpi_id = acpi_match_device(rt5677_acpi_match, &i2c->dev);
- 		if (acpi_id)
- 			rt5677->type = (enum rt5677_type)acpi_id->driver_data;
- 
--		rt5677_read_acpi_properties(rt5677, &i2c->dev);
-+		if (!device_property_read_u32(&i2c->dev,
-+					"realtek,dmic2_clk_pin", &val))
-+			rt5677->pdata.dmic2_clk_pin = val;
- 	} else {
- 		return -EINVAL;
- 	}
- 
-+	rt5677_read_device_properties(rt5677, &i2c->dev);
-+
- 	/* pow-ldo2 and reset are optional. The codec pins may be statically
- 	 * connected on the board without gpios. If the gpio device property
- 	 * isn't specified, devm_gpiod_get_optional returns NULL.
--- 
-2.21.0.392.gf8f6787159e-goog
+All we really would need to make it work would be to possibly look at
+seeing if we can combine PageType values. Specifically what I would be
+looking at is a transition that looks something like Buddy -> Offline
+-> (Buddy | Offline). We would have to hold the zone lock at each
+transition, but that shouldn't be too big of an issue. If we are okay
+with possibly combining the Offline and Buddy types we would have a
+way of tracking which pages have been hinted and which have not. Then
+we would just have to have a thread running in the background on the
+guest that is looking at the higher order pages and pulling 64MB at a
+time offline, and when the hinting is done put them back in the "Buddy
+| Offline" state.
 
+I view this all as working not too dissimilar to how a standard Rx
+ring in a network device works. Only we would want to allocate from
+the pool of "Buddy" pages, flag the pages as "Offline", and then when
+the hint has been processed we would place them back in the "Buddy"
+list with the "Offline" value still set. The only real changes needed
+to the buddy allocator would be to add some logic for clearing/merging
+the "Offline" setting as necessary, and to provide an allocator that
+only works with non-"Offline" pages.
