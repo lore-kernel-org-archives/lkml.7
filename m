@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D04C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF015C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4569521924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9115421924
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138590;
-	bh=mY/HMRPAFU1ZNO58Pu02+ULGdtdLiQA4aC5tAel4x6Y=;
+	s=default; t=1554138594;
+	bh=FPEQc0NoK2Gu22YGzx6DZI1D2fRRXboz2qQ4ywVyfnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MFaBQcNQctGmk85f0onB0wp61Sqhnp+PohKF59oc51UAes6wt6+jXVzAe2g0AcnXQ
-	 mKiU6aMxqx06xv0jbhZnNi9pXrpO9mNXf57W5/acMNIL2hgTC+g80dcxCJN06GmP/q
-	 LUDbz8Q2cX4hZgFY5ArsWhhWjcF39xxATKuxPuXw=
+	b=UKwgs1+T64iVkKItzwNoWqo3a/4psHbpi10pwrpCT4EyZLbK+U7ub6TzidhZXIfjR
+	 mKBLtFxrqTFvFbM4ZHkh2U/gVTky2oNZDx87hkrBPNNpDWt/Hsueldv33TxlwDE+Ah
+	 2vJgT6B2xEWI5lwtMPMiQydr0mFaqmB1RPiCQo00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbfDARJt (ORCPT
+        id S1729863AbfDARJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56900 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729025AbfDARJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:09:45 -0400
+        id S1729025AbfDARJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:09:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4770321924;
-        Mon,  1 Apr 2019 17:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2FBC21924;
+        Mon,  1 Apr 2019 17:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138584;
-        bh=mY/HMRPAFU1ZNO58Pu02+ULGdtdLiQA4aC5tAel4x6Y=;
+        s=default; t=1554138589;
+        bh=FPEQc0NoK2Gu22YGzx6DZI1D2fRRXboz2qQ4ywVyfnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vI3zK0MubBcWKWyNJgQnM09s7q4CZjLRZpIK1xaBYpwpOuvrP9iaBLJquSM/nU7Wt
-         nuFU9P+V3N+amomUVvBg6YSKp5LuaS+AsO5T+J6X/z5wrwnwprOP0JQq0JQWRQuX91
-         ZchDA67rAFGxnOW4hTX0DaLrzuC0tCkz7vz86H4U=
+        b=2VxjFU74AeMxTSsrZsBkKh9PPTn7cvHDudD/XZJcxTc8RaZfsRBUe6ZEI3O4ONrZM
+         lva5vc0es4QwrdXJE8l3ahNv5GmVj875zLFlfIuB30Erzrm2eBzN+uGg8ZpUzYyp64
+         F9PH9zbK7IGEInwEDPpFVMSmtJzKXw3tV/vD1MoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Zhao, Yan Y" <yan.y.zhao@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH 5.0 109/146] drm/i915/gvt: Fix MI_FLUSH_DW parsing with correct index check
-Date:   Mon,  1 Apr 2019 19:02:01 +0200
-Message-Id: <20190401170057.766937322@linuxfoundation.org>
+        stable@vger.kernel.org, Madhav Chauhan <madhav.chauhan@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.0 110/146] drm/i915/icl: Fix the TRANS_DDI_FUNC_CTL2 bitfield macro
+Date:   Mon,  1 Apr 2019 19:02:02 +0200
+Message-Id: <20190401170057.835589838@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -65,41 +67,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zhenyu Wang <zhenyuw@linux.intel.com>
+From: Manasi Navare <manasi.d.navare@intel.com>
 
-commit 13bcb80b7ee79431fce361e060611134cb19e209 upstream.
+commit 69903dfae0310afe8a15f5cd4e376ebb7c6da1d2 upstream.
 
-When MI_FLUSH_DW post write hw status page in index mode, the index
-value is in dword step and turned into address offset in cmd dword1.
-As status page size is 4K, so can't exceed that.
+This patch fixes the PORT_SYNC_MODE_MASTER_SELECT macro
+to correctly do the left shifting to set the port sync
+master select correctly.
+I have tested this fix on ICL.
 
-This fixed upper bound check in cmd parser code which incorrectly
-stopped VM for reason of invalid MI_FLUSH_DW write index.
-
-v2:
-- Fix upper bound as 4K page size because index value is address offset.
-
-Fixes: be1da7070aea ("drm/i915/gvt: vGPU command scanner")
-Cc: stable@vger.kernel.org # v4.10+
-Cc: "Zhao, Yan Y" <yan.y.zhao@intel.com>
-Reviewed-by: Yan Zhao <yan.y.zhao@intel.com>
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Fixes: 49edbd49786e ("drm/i915/icl: Define TRANS_DDI_FUNC_CTL DSI registers")
+Cc: Madhav Chauhan <madhav.chauhan@intel.com>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: <stable@vger.kernel.org> # v5.0+
+Signed-off-by: Manasi Navare <manasi.d.navare@intel.com>
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190319221847.21311-1-manasi.d.navare@intel.com
+(cherry picked from commit 7264aebb81d15aa6bbed650c816bba90f026bc35)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gvt/cmd_parser.c |    2 +-
+ drivers/gpu/drm/i915/i915_reg.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/gvt/cmd_parser.c
-+++ b/drivers/gpu/drm/i915/gvt/cmd_parser.c
-@@ -1446,7 +1446,7 @@ static inline int cmd_address_audit(stru
- 	}
+--- a/drivers/gpu/drm/i915/i915_reg.h
++++ b/drivers/gpu/drm/i915/i915_reg.h
+@@ -9205,7 +9205,7 @@ enum skl_power_gate {
+ #define TRANS_DDI_FUNC_CTL2(tran)	_MMIO_TRANS2(tran, \
+ 						     _TRANS_DDI_FUNC_CTL2_A)
+ #define  PORT_SYNC_MODE_ENABLE			(1 << 4)
+-#define  PORT_SYNC_MODE_MASTER_SELECT(x)	((x) < 0)
++#define  PORT_SYNC_MODE_MASTER_SELECT(x)	((x) << 0)
+ #define  PORT_SYNC_MODE_MASTER_SELECT_MASK	(0x7 << 0)
+ #define  PORT_SYNC_MODE_MASTER_SELECT_SHIFT	0
  
- 	if (index_mode)	{
--		if (guest_gma >= I915_GTT_PAGE_SIZE / sizeof(u64)) {
-+		if (guest_gma >= I915_GTT_PAGE_SIZE) {
- 			ret = -EFAULT;
- 			goto err;
- 		}
 
 
