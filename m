@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CEFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376CFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A311B20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C8B20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139558;
-	bh=kHvRU99CrPMdott//G4nREZrARNUVwh3ZYZ14y0YuwE=;
+	s=default; t=1554139564;
+	bh=xBz3dkujLF083TltlPJLUzRGS2vCXjnQB28aLy/mAlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ykvyzkaiCJs4jm0UaOc0CsFquf7bBWDWYzOJ6yRKJPfMnTUU+Isf9kChqdZFb6yw7
-	 z6PYAywsso0qhnMV19skpH1HQzhbtNe4iC9030NBDapZOiiykEjHeu8DCECzNQUMnn
-	 BK2b538d0ifYKgdOCpEUiLVYI5YCyEvTetNydSyI=
+	b=FcdxsRdud2JC9XY1ZRjIouccmA+JLLbisdOi6F5xXukGt7pyNb1d8mGj0dXkpJukV
+	 jj+PHoVMC2PNCBnXoB0OhXFAfpqpAcTdfDXMsE7fYcFc8S++nkELp678R8D77WSPUg
+	 2WRzOmTkHCwEsIiDY6Giv07+vFIgOweRdHlz4kF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732481AbfDARZ5 (ORCPT
+        id S1732312AbfDAR0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57534 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:26:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732280AbfDARZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:25:52 -0400
+        id S1732480AbfDARZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:25:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C01220830;
-        Mon,  1 Apr 2019 17:25:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CA4A20856;
+        Mon,  1 Apr 2019 17:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139551;
-        bh=kHvRU99CrPMdott//G4nREZrARNUVwh3ZYZ14y0YuwE=;
+        s=default; t=1554139557;
+        bh=xBz3dkujLF083TltlPJLUzRGS2vCXjnQB28aLy/mAlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RG7T2L/sz/j1vHqyXGC0XvpFz8fkS9ArScJ5acFXTgCqZJDey9Ze9BDMIj/ZNKo8G
-         zH7P6R1nZxx13hmD5cpGxeu3xt+FHGYdb+/hDjDIforLR9mwnyWAtRSVkXarU/if1L
-         UBrteUAzaGsO0jzs55Ya4LqWkkoiOtNpIJpCJ/qs=
+        b=hVI/ewfFvvYEItHMsgVBbDZbqqnH81T/HBRsTjWZmGt7bCi+Hi5c5+VZLu7j4wN06
+         0s8VLzmh2Uzwz0F4LvIeXHgf87zAHsYxW6D92z5Er2LPEELL8Vq+ddPDrER4TKQNfv
+         7qSx2zOiIMoSgTH0bT4OocGLsDxN8zApVmgZorGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        George McCollister <george.mccollister@gmail.com>,
+        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 083/107] USB: serial: ftdi_sio: add additional NovaTech products
-Date:   Mon,  1 Apr 2019 19:02:38 +0200
-Message-Id: <20190401170053.168584530@linuxfoundation.org>
+Subject: [PATCH 4.14 085/107] USB: serial: option: set driver_info for SIM5218 and compatibles
+Date:   Mon,  1 Apr 2019 19:02:40 +0200
+Message-Id: <20190401170053.362719466@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -66,46 +64,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: George McCollister <george.mccollister@gmail.com>
+From: Mans Rullgard <mans@mansr.com>
 
-commit 422c2537ba9d42320f8ab6573940269f87095320 upstream.
+commit f8df5c2c3e2df5ffaf9fb5503da93d477a8c7db4 upstream.
 
-Add PIDs for the NovaTech OrionLX+ and Orion I/O so they can be
-automatically detected.
+The SIMCom SIM5218 and compatible devices have 5 USB interfaces, only 4
+of which are serial ports.  The fifth is a network interface supported
+by the qmi-wwan driver.  Furthermore, the serial ports do not support
+modem control signals.  Add driver_info flags to reflect this.
 
-Signed-off-by: George McCollister <george.mccollister@gmail.com>
-Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Fixes: ec0cd94d881c ("usb: option: add SIMCom SIM5218")
+Cc: stable <stable@vger.kernel.org>	# 3.2
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ftdi_sio.c     |    2 ++
- drivers/usb/serial/ftdi_sio_ids.h |    4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/usb/serial/option.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -604,6 +604,8 @@ static const struct usb_device_id id_tab
- 		.driver_info = (kernel_ulong_t)&ftdi_jtag_quirk },
- 	{ USB_DEVICE(FTDI_VID, FTDI_NT_ORIONLXM_PID),
- 		.driver_info = (kernel_ulong_t)&ftdi_jtag_quirk },
-+	{ USB_DEVICE(FTDI_VID, FTDI_NT_ORIONLX_PLUS_PID) },
-+	{ USB_DEVICE(FTDI_VID, FTDI_NT_ORION_IO_PID) },
- 	{ USB_DEVICE(FTDI_VID, FTDI_SYNAPSE_SS200_PID) },
- 	{ USB_DEVICE(FTDI_VID, FTDI_CUSTOMWARE_MINIPLEX_PID) },
- 	{ USB_DEVICE(FTDI_VID, FTDI_CUSTOMWARE_MINIPLEX2_PID) },
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -567,7 +567,9 @@
- /*
-  * NovaTech product ids (FTDI_VID)
-  */
--#define FTDI_NT_ORIONLXM_PID	0x7c90	/* OrionLXm Substation Automation Platform */
-+#define FTDI_NT_ORIONLXM_PID		0x7c90	/* OrionLXm Substation Automation Platform */
-+#define FTDI_NT_ORIONLX_PLUS_PID	0x7c91	/* OrionLX+ Substation Automation Platform */
-+#define FTDI_NT_ORION_IO_PID		0x7c92	/* Orion I/O */
- 
- /*
-  * Synapse Wireless product ids (FTDI_VID)
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1069,7 +1069,8 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(3) },
+ 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x6613)}, /* Onda H600/ZTE MF330 */
+ 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x0023)}, /* ONYX 3G device */
+-	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000)}, /* SIMCom SIM5218 */
++	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000), /* SIMCom SIM5218 */
++	  .driver_info = NCTRL(0) | NCTRL(1) | NCTRL(2) | NCTRL(3) | RSVD(4) },
+ 	/* Quectel products using Qualcomm vendor ID */
+ 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC15)},
+ 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC20),
 
 
