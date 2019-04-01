@@ -2,113 +2,146 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0396FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC18DC10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C6F213A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554104948;
-	bh=HnJVqeAnj6MgPtswtZD3Y3xZp+N1KhSwSehy96KOHNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ikmFBXlaQRXr3ToL5zr6Ki1KfbWp2/xjgfHNblFRvnzbpGC3+t1NWCafZHjSFINfD
-	 g+cI2azmo+MZpoQqLmyhQsapKawJhD9Cqw7GxmNpxQ3bgmf/GmQhTCEIsjuQxvltCA
-	 6z5e/8l1IGYtEjwYx3nhdnrjF3PxRtcEIq+Xxgc4=
+	by mail.kernel.org (Postfix) with ESMTP id 8239E213A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="UQowoQFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732107AbfDAHtH (ORCPT
+        id S1732111AbfDAHtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:49:07 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36178 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731769AbfDAHtH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:49:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XrBOJXE/K1TNMPytR5nrymtuh7ciNGGdQE216nZJFK4=; b=UcZBzWjamHgV/bNP8w8eBbU52
-        75Eu9HTDsR0IgA+9BjeQbshPX91B1yj4GhXSby64PkCG8f9CMbJALLIACTc8mKHmeqRrqEYPJ53J2
-        aVf3uys+yqp/Ij2EqKu1QDaz9+x0DL9rGulItCDZuv/OibF1A6OPDFrzEg/bflM7BXLL0=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hArgj-00088C-Bs; Mon, 01 Apr 2019 07:49:01 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 90F3A440082; Mon,  1 Apr 2019 08:48:57 +0100 (BST)
-Date:   Mon, 1 Apr 2019 14:48:57 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, kyarlagadda@nvidia.com,
-        ldewangan@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V1 18/26] spi: tegra114: add support for hw based cs
-Message-ID: <20190401074857.GK2059@sirena.org.uk>
-References: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
- <1553666207-11414-18-git-send-email-skomatineni@nvidia.com>
+        Mon, 1 Apr 2019 03:49:19 -0400
+Received: from mail-eopbgr1300079.outbound.protection.outlook.com ([40.107.130.79]:65122
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731769AbfDAHtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 03:49:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YzDRcL5HGApuuS9OTyrFpea3LHxiQCjmBLdxl0rre0Q=;
+ b=UQowoQFxNN21liy4W9yXqRiN8MAwdTA7wVTjyQ5X1OllOaIcSLRU0YX+GuhQ9DzZ2OUZcexN189yy/0kR/KJ8udJr/rtJrW7ec0hkb9fSWfVIGqq4Jq5czj46HmsZWWI7BvJz/1J55zoW9HQ3CXRMhdhsEnp+mLjJX/n1/ZNYUk=
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
+ SG2PR02MB3372.apcprd02.prod.outlook.com (20.177.82.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.20; Mon, 1 Apr 2019 07:49:14 +0000
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1750.017; Mon, 1 Apr 2019
+ 07:49:14 +0000
+From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [External] Re: Print map for total physical and virtual memory
+Thread-Topic: [External] Re: Print map for total physical and virtual memory
+Thread-Index: AQHU46nCeD1YOwMRP0e9ea2iKxtjwaYdyRyAgAAQFrWAAAJjAIAEO9QagATeRQE=
+Date:   Mon, 1 Apr 2019 07:49:14 +0000
+Message-ID: <SG2PR02MB3098608C52BFEA600BDD7DD7E8550@SG2PR02MB3098.apcprd02.prod.outlook.com>
+References: <SG2PR02MB3098F980E1EB299853AC46E6E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <20190326113657.GL10344@bombadil.infradead.org>
+ <SG2PR02MB3098B0C0CD27969FB7C9ECD7E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>,<20190326124304.GN10344@bombadil.infradead.org>,<SG2PR02MB3098156002F7CCC46078B57AE85A0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+In-Reply-To: <SG2PR02MB3098156002F7CCC46078B57AE85A0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
+x-originating-ip: [14.98.130.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b6b2a6f9-2a74-4cdc-6148-08d6b676892a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB3372;
+x-ms-traffictypediagnostic: SG2PR02MB3372:
+x-microsoft-antispam-prvs: <SG2PR02MB33723B015B64A815A7BB4407E8550@SG2PR02MB3372.apcprd02.prod.outlook.com>
+x-forefront-prvs: 0994F5E0C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39840400004)(376002)(346002)(136003)(189003)(199004)(76176011)(33656002)(6436002)(14454004)(4326008)(25786009)(316002)(78486014)(54906003)(105586002)(6246003)(8936002)(8676002)(5660300002)(106356001)(74316002)(7736002)(68736007)(305945005)(6916009)(53936002)(7696005)(478600001)(99286004)(93886005)(97736004)(55016002)(52536014)(86362001)(81166006)(81156014)(6116002)(229853002)(71190400001)(71200400001)(186003)(3846002)(9686003)(66574012)(44832011)(476003)(486006)(256004)(14444005)(5024004)(446003)(11346002)(6506007)(53546011)(2906002)(66066001)(55236004)(102836004)(26005)(586874002)(98474002);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB3372;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: einfochips.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: zl0/ULvVuidhS4fZZKlJtGB5xFxp+kRQXiiVdMwLgl1VXVERplEKVnmPMFT18vDwMvyf+HAwqDlFqt0Gz44WwoFumEUx73G7tBA8NNeKm14+QZZLuWze7zU13ekWqaQM2VhdVi/xzWWGIP9WPvC0xwGPV2GM5YrGdjsMUp1fX5zsX/hWmRhBX1J8bDTFU/kXf18glLUjAsVm870HYX7hF4F3G6FNrq9pzdGR6nIN1R+Clz1thc0KnDZbXUuzY+O/Mz2QzHEo54LYOSr4fQuyErJVhsyG4xl4RnNHpKGCZAe5U6UJbNE5K92lC55nGoPJhRBTnQ09Xnk+klKGzaS5SYvDWG3zh/zUi92rxQL5aGL2/0Px5VOs78BaFBvnI7q7nRXiJqbakVpsBKDn8Hec+I3IiJDFtyvnbRIzCb1X4+M=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="W/+CTqSGWdiRg+8j"
-Content-Disposition: inline
-In-Reply-To: <1553666207-11414-18-git-send-email-skomatineni@nvidia.com>
-X-Cookie: Use extra care when cleaning on stairs.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: einfochips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6b2a6f9-2a74-4cdc-6148-08d6b676892a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 07:49:14.2725
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB3372
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---W/+CTqSGWdiRg+8j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+________________________________________
+From: Pankaj Suryawanshi
+Sent: 29 March 2019 10:52
+To: Matthew Wilcox
+Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org
+Subject: Re: [External] Re: Print map for total physical and virtual memory
 
-On Tue, Mar 26, 2019 at 10:56:39PM -0700, Sowjanya Komatineni wrote:
 
-> Tegra SPI driver default uses SW CS control for transfers and HW CS
-> control can be enabled through SPI client device node DT property
-> nvidia,enable-hw-based-cs and is used only for single transfers.
+________________________________________
+From: Matthew Wilcox <willy@infradead.org>
+Sent: 26 March 2019 18:13
+To: Pankaj Suryawanshi
+Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org
+Subject: Re: [External] Re: Print map for total physical and virtual memory
 
-Why have a property - if this feature works and is useful why would a
-system ever not want to use it?
+On Tue, Mar 26, 2019 at 12:35:25PM +0000, Pankaj Suryawanshi wrote:
+> From: Matthew Wilcox <willy@infradead.org>
+> Sent: 26 March 2019 17:06
+> To: Pankaj Suryawanshi
+> Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org
+> Subject: [External] Re: Print map for total physical and virtual memory
+>
+> CAUTION: This email originated from outside of the organization. Do not c=
+lick links or open attachments unless you recognize the sender and know the=
+ content is safe.
 
-> +	single_xfer =3D list_is_singular(&msg->transfers);
->  	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
->  		u32 cmd1;
-> =20
->  		reinit_completion(&tspi->xfer_completion);
-> =20
-> -		cmd1 =3D tegra_spi_setup_transfer_one(spi, xfer, is_first_msg);
-> +		cmd1 =3D tegra_spi_setup_transfer_one(spi, xfer, is_first_msg,
-> +						    single_xfer);
+... you should probably use gmail or something.  Whatever broken email
+system your employer provides makes it really hard for you to participate
+in any meaningful way.
 
-It's not sufficient to check if there's only one transfer, you also need
-to make sure that the driver isn't using cs_change to use non-standard
-chip select handling.
+Okay i will use gmail.
 
---W/+CTqSGWdiRg+8j
-Content-Type: application/pgp-signature; name="signature.asc"
+> Can you please elaborate about tools/vm/page-types.c ?
 
------BEGIN PGP SIGNATURE-----
+cd tools/vm/
+make
+sudo ./page-types
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyhwmgACgkQJNaLcl1U
-h9Cd2gf+IZg5c+h4154oTSypXNSKODiicQai//JHZ+vsyi8kNDmkDif8XKvC8xLJ
-osqeztdDZ6jhaIM4G2ar4A7kLWqnA/s5iLl/vOCUgmKj6r9qhHh1BvWOli9GFpnz
-9KCXQOQRaXUY6Fja4oF0z7fk52xPIWoh2XrJPuUy18sfla52jMFxIQWu7p7WItd4
-Wq57omDJVMJ6gxHYhmD4ED3cGQo3pWI1aRQPvbdMopRCGI5YSAtToZjrnbFByYRg
-q6RCcD7BcWoihdUKPeXpeq4oM0MZXrZYfISZe8/7VYgI6b5WpXZC/4sgUfTFVzbq
-E/8rSGhA1a2xURQV/0bgEK5cKMzpHg==
-=iU8U
------END PGP SIGNATURE-----
+If that doesn't do exactly what you need, you can use the source code to
+make a program which does.
 
---W/+CTqSGWdiRg+8j--
+Is there any other way to print only cma area pages ? because i am interest=
+ed for cma area pages only.
+
+Thanks Matthew.
+***************************************************************************=
+***************************************************************************=
+******* eInfochips Business Disclaimer: This e-mail message and all attachm=
+ents transmitted with it are intended solely for the use of the addressee a=
+nd may contain legally privileged and confidential information. If the read=
+er of this message is not the intended recipient, or an employee or agent r=
+esponsible for delivering this message to the intended recipient, you are h=
+ereby notified that any dissemination, distribution, copying, or other use =
+of this message or its attachments is strictly prohibited. If you have rece=
+ived this message in error, please notify the sender immediately by replyin=
+g to this message and please delete it from your computer. Any views expres=
+sed in this message are those of the individual sender unless otherwise sta=
+ted. Company has taken enough precautions to prevent the spread of viruses.=
+ However the company accepts no liability for any damage caused by any viru=
+s transmitted by this email. **********************************************=
+***************************************************************************=
+************************************
