@@ -2,116 +2,130 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD2AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D1EC10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964F82084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:14:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jfPp0FtT";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xzy4MC3q"
+	by mail.kernel.org (Postfix) with ESMTP id 4DDCA2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732148AbfDAIOl (ORCPT
+        id S1732101AbfDAIPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:14:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49068 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbfDAIOk (ORCPT
+        Mon, 1 Apr 2019 04:15:32 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:32819 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726206AbfDAIPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:14:40 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E586B61AC0; Mon,  1 Apr 2019 08:14:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554106480;
-        bh=2X/bKbyJUsjiDc+LPAlQvGsZ1hkI2RjvUggvFdaDbKw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=jfPp0FtTR2eCtlaU8/+5rmeX9/aE4L8k5XhJpQlXfOJabnQS7r112MMqhqB4zWGlE
-         GxtEG1hUCEhSHW4iVt3V4S70sl9z9op3YTURok3ovmm9Ju9IADo35CcPXO7koHiBVB
-         puI4IG1agjpY5Bcy2pwSIupkeV0sba1aqLKcqbnc=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 379D061ABB;
-        Mon,  1 Apr 2019 08:14:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554106472;
-        bh=2X/bKbyJUsjiDc+LPAlQvGsZ1hkI2RjvUggvFdaDbKw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Xzy4MC3qRAvdiYOxSrMITBqQ6TDn3nHS2NIZe0/s3NHkr6ZXvNImzmYN3bbzeQzi/
-         iapmmfCsiPKyWkBVYWa0o1ezCajc6eH2YpHSIrBNhaF5borgduGAHAcySTsinlBxIZ
-         +tArmYZQVAlX7mH6E1X+oY19+TnNEHtixpp9TXUs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 379D061ABB
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH 3/3] nvmem: imx-iim: use devm_platform_ioremap_resource()
- to simplify code
-To:     Anson Huang <anson.huang@nxp.com>,
-        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1554094479-14596-1-git-send-email-Anson.Huang@nxp.com>
- <1554094479-14596-3-git-send-email-Anson.Huang@nxp.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <38642905-7084-0395-54a6-f76507badfcf@codeaurora.org>
-Date:   Mon, 1 Apr 2019 13:44:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 1 Apr 2019 04:15:32 -0400
+X-Originating-IP: 90.88.32.136
+Received: from localhost (aaubervilliers-681-1-91-136.w90-88.abo.wanadoo.fr [90.88.32.136])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id C5E8924000F;
+        Mon,  1 Apr 2019 08:15:24 +0000 (UTC)
+Date:   Mon, 1 Apr 2019 10:15:24 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Icenowy Zheng <icenowy@aosc.io>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 08/14] clk: sunxi-ng: v3s: add Allwinner V3 support
+Message-ID: <20190401081524.bickdv7kr4kcnsgm@flea>
+References: <20190312152256.35574-1-icenowy@aosc.io>
+ <20190312152256.35574-9-icenowy@aosc.io>
+ <20190328132721.GA32178@bogus>
 MIME-Version: 1.0
-In-Reply-To: <1554094479-14596-3-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jc3kve7lqqq7wqjx"
+Content-Disposition: inline
+In-Reply-To: <20190328132721.GA32178@bogus>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/1/2019 10:29 AM, Anson Huang wrote:
-> Use the new helper devm_platform_ioremap_resource() which wraps the
-> platform_get_resource() and devm_ioremap_resource() together, to
-> simplify the code.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+--jc3kve7lqqq7wqjx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cheers,
--Mukesh
-
-> ---
->   drivers/nvmem/imx-iim.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
+On Thu, Mar 28, 2019 at 08:27:21AM -0500, Rob Herring wrote:
+> On Tue, Mar 12, 2019 at 11:22:50PM +0800, Icenowy Zheng wrote:
+> > Allwinner V3 has the same main die with V3s, but with more pins wired.
+> > There's a I2S bus on V3 that is not available on V3s.
+> >
+> > Add the V3-only peripheral's clocks and reset to the V3s CCU driver,
+> > bound to a new V3 compatible string. The driver name is not changed
+> > because it's part of the device tree binding (the header file name).
+> >
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > ---
+> >  drivers/clk/sunxi-ng/ccu-sun8i-v3s.c      | 225 +++++++++++++++++++++-
+> >  drivers/clk/sunxi-ng/ccu-sun8i-v3s.h      |   2 +-
+> >  include/dt-bindings/clock/sun8i-v3s-ccu.h |   4 +
+> >  include/dt-bindings/reset/sun8i-v3s-ccu.h |   3 +
+> >  4 files changed, 231 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> > index cbba04f5f761..81450ea8faa2 100644
+> > --- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> > +++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+> > @@ -242,6 +242,8 @@ static SUNXI_CCU_GATE(bus_codec_clk,	"bus-codec",	"apb1",
+> >  		      0x068, BIT(0), 0);
+> >  static SUNXI_CCU_GATE(bus_pio_clk,	"bus-pio",	"apb1",
+> >  		      0x068, BIT(5), 0);
+> > +static SUNXI_CCU_GATE(bus_i2s0_clk,	"bus-i2s0",	"apb1",
+> > +		      0x068, BIT(12), 0);
+> >
+> >  static SUNXI_CCU_GATE(bus_i2c0_clk,	"bus-i2c0",	"apb2",
+> >  		      0x06c, BIT(0), 0);
+> > @@ -313,6 +315,11 @@ static SUNXI_CCU_MP_WITH_MUX_GATE(spi0_clk, "spi0", mod0_default_parents, 0x0a0,
+> >  				  BIT(31),	/* gate */
+> >  				  0);
+> >
+> > +static const char * const i2s_parents[] = { "pll-audio-8x", "pll-audio-4x",
+> > +					    "pll-audio-2x", "pll-audio" };
+> > +static SUNXI_CCU_MUX_WITH_GATE(i2s0_clk, "i2s0", i2s_parents,
+> > +			       0x0b0, 16, 2, BIT(31), CLK_SET_RATE_PARENT);
+> > +
+> >  static SUNXI_CCU_GATE(usb_phy0_clk,	"usb-phy0",	"osc24M",
+> >  		      0x0cc, BIT(8), 0);
+> >  static SUNXI_CCU_GATE(usb_ohci0_clk,	"usb-ohci0",	"osc24M",
+> > @@ -445,6 +452,80 @@ static struct ccu_common *sun8i_v3s_ccu_clks[] = {
+> >  	&mipi_csi_clk.common,
+> >  };
+> >
+> > +static struct ccu_common *sun8i_v3_ccu_clks[] = {
 >
-> diff --git a/drivers/nvmem/imx-iim.c b/drivers/nvmem/imx-iim.c
-> index 6651e4c..3458229 100644
-> --- a/drivers/nvmem/imx-iim.c
-> +++ b/drivers/nvmem/imx-iim.c
-> @@ -104,7 +104,6 @@ static int imx_iim_probe(struct platform_device *pdev)
->   {
->   	const struct of_device_id *of_id;
->   	struct device *dev = &pdev->dev;
-> -	struct resource *res;
->   	struct iim_priv *iim;
->   	struct nvmem_device *nvmem;
->   	struct nvmem_config cfg = {};
-> @@ -114,8 +113,7 @@ static int imx_iim_probe(struct platform_device *pdev)
->   	if (!iim)
->   		return -ENOMEM;
->   
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	iim->base = devm_ioremap_resource(dev, res);
-> +	iim->base = devm_platform_ioremap_resource(pdev, 0);
->   	if (IS_ERR(iim->base))
->   		return PTR_ERR(iim->base);
->   
+> Seems like a bunch of duplication for just 2 differences in clocks.
+> Can't you keep the definitions the same and just skip registering the
+> clocks not present?
+
+I'd rather not, this can lead to access to registers that might not be
+there when the CCF will read / write that clock
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--jc3kve7lqqq7wqjx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKHInAAKCRDj7w1vZxhR
+xZ+WAP92QhUeKofhCPBW2R6w+MmaHaURTZ1S7Q0dQwrc7GzGIwEAnITh/XSIMAU7
+l1W4aXbf1ct2/M9dDexttVTYemsRmwc=
+=QvxI
+-----END PGP SIGNATURE-----
+
+--jc3kve7lqqq7wqjx--
