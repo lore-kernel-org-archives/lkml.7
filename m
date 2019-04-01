@@ -2,108 +2,84 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B2DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F0EC10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655FA20857
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3423920857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:30:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TZkl/vHm";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Yxuw4Pur"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Xoq5hUeQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731982AbfDAI3x (ORCPT
+        id S1732138AbfDAIa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:29:53 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47288 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbfDAI3w (ORCPT
+        Mon, 1 Apr 2019 04:30:28 -0400
+Received: from forwardcorp1g.cmail.yandex.net ([87.250.241.190]:43223 "EHLO
+        forwardcorp1g.cmail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726206AbfDAIa2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:29:52 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4FB856086B; Mon,  1 Apr 2019 08:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554107391;
-        bh=j3ubdfca/muWHCAPL/bJN3HLJlnlDPi6lDSgbcnrF3Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=TZkl/vHmfHEBIw02++Mq1AZvymE0EFL4u43t88WtQlIvoq/Us7waoXqBAyMPf0A+j
-         CrBnWkLzXG5vVpvZCR2XDh+zQZV7X2VlawAE19nlWKLoR6wq8hM3iY0U9QSO309jd/
-         uo6mQ6PkKqCJM2DbrpDqYCGKTJiUAjx04U2wmxZE=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        Mon, 1 Apr 2019 04:30:28 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1g.cmail.yandex.net (Yandex) with ESMTP id 92C3920F1F;
+        Mon,  1 Apr 2019 11:30:24 +0300 (MSK)
+Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 2FHU7Vb8GG-UOLuEYR3;
+        Mon, 01 Apr 2019 11:30:24 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1554107424; bh=Jf0jVNGeLRlmm74eSStV0tqfbbEcCYjzm+rMl+ttSlA=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=Xoq5hUeQep1OW7DOzQTHZ/7Ch14s57J9Y2Sy6hMGNQvZn0EPV5bcjc1ylIh6Rb4EW
+         KmPle+Q7PymVPMSvi9a/bLXXIxIUfbGGQnkoLZzL+97/ybYhpBkU7XJqFajz+7nJJ4
+         XJb8EDp/9D6UQ2ZGRDal7KJ+DP55yPlIIDEgDx04=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:d4bb:795:9728:5f59])
+        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id AXLWN893C9-UNsmffam;
+        Mon, 01 Apr 2019 11:30:24 +0300
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 745BC608FF;
-        Mon,  1 Apr 2019 08:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554107389;
-        bh=j3ubdfca/muWHCAPL/bJN3HLJlnlDPi6lDSgbcnrF3Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Yxuw4Purg3zJqBn2s11aaBB4ja3GUcrycxbLq+hqwXMkepQZ1gDvf1xkjIFLmQePz
-         8xa3Gjf1QOpyNqZbWyJp14L12lzGk7H7ploirR+vrfNm22MUDHnLTVaVJGfgeq6iPN
-         UIuBkbp6K0cnzgwMGcZqsvRBG6BrUyuNfp8qskfA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 745BC608FF
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] docs: core-api: Drop reference to flexible-arrays
-To:     =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        linux-doc@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
+        (Client certificate not present)
+Subject: [PATCH] null_blk: fix race and oops at removing device with
+ bandwidth limit
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         linux-kernel@vger.kernel.org
-References: <20190331214159.13987-1-j.neuschaefer@gmx.net>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <2c0c0001-0d7e-8dbc-2f38-c469ff57d508@codeaurora.org>
-Date:   Mon, 1 Apr 2019 13:59:37 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Cc:     Shaohua Li <shli@fb.com>
+Date:   Mon, 01 Apr 2019 11:30:23 +0300
+Message-ID: <155410742366.3063.14505657567265604512.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <20190331214159.13987-1-j.neuschaefer@gmx.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Function null_del_dev should disable throttling before canceling timer,
+otherwise timer could be restarted by null_handle_cmd().
 
-On 4/1/2019 3:11 AM, Jonathan Neuschäfer wrote:
-> This file doesn't exist anymore.
->
-> Fixes: 586187d7de71 ("Drop flex_arrays")
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Remove bump of cur_bytes - without NULLB_DEV_FL_THROTTLED it has no effect.
 
-Cheers,
--Mukesh
+Fixes: eff2c4f10873 ("nullb: bandwidth control")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ drivers/block/null_blk_main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->   Documentation/core-api/index.rst | 1 -
->   1 file changed, 1 deletion(-)
->
-> diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
-> index 6870baffef82..ee1bb8983a88 100644
-> --- a/Documentation/core-api/index.rst
-> +++ b/Documentation/core-api/index.rst
-> @@ -22,7 +22,6 @@ Core utilities
->      workqueue
->      genericirq
->      xarray
-> -   flexible-arrays
->      librs
->      genalloc
->      errseq
-> --
-> 2.20.1
->
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 417a9f15c116..757b58e0fec7 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -1383,8 +1383,8 @@ static void null_del_dev(struct nullb *nullb)
+ 	del_gendisk(nullb->disk);
+ 
+ 	if (test_bit(NULLB_DEV_FL_THROTTLED, &nullb->dev->flags)) {
++		clear_bit(NULLB_DEV_FL_THROTTLED, &nullb->dev->flags);
+ 		hrtimer_cancel(&nullb->bw_timer);
+-		atomic_long_set(&nullb->cur_bytes, LONG_MAX);
+ 		null_restart_queue_async(nullb);
+ 	}
+ 
+
