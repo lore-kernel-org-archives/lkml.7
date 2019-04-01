@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA87AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F53C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1A921924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C4F21925
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138744;
-	bh=JMNqm357la7us7UcNH/gdHJzbz2W4h3XBflp8onhrmc=;
+	s=default; t=1554138750;
+	bh=Tf2VrvhyR/oTnKy4NmaC7NBiB660Qn4CozKkMQMbhvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kqshkf/I7c5LtzH/gkevR8a7GYuDQuEdlu3t9Bz8EIwWtreepgA2NR/3a27W79GOL
-	 HJV4lTCDh0zzX9hLRYJRm3UPE0fuAYiXFw7zPkUjq4nETvP5I6Ra5YRosaMn3R4onX
-	 2fqWsmCwjxk4SgMJhTAsJGKjrB2l8OscNKs8bN+Q=
+	b=jDyV83wMUoyhco7HF2wDzKOgcNwd12wQx8Fawoc/0PNugRMCL9DLKe2QZATbgpS1Z
+	 yWw8JH1c6tIYPsB/eydzrzeEA2kUBDCXLkfdcKEPaZBzkQd+xZDRg7DSZ37QfkF2/s
+	 NqDddCk1Sr6mp/rkHvH0sOB8KOJ74XIAzU+bhKIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbfDARMX (ORCPT
+        id S1730376AbfDARM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:12:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33694 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730358AbfDARMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:12:18 -0400
+        id S1729817AbfDARMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:12:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5495221934;
-        Mon,  1 Apr 2019 17:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6742D21939;
+        Mon,  1 Apr 2019 17:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138737;
-        bh=JMNqm357la7us7UcNH/gdHJzbz2W4h3XBflp8onhrmc=;
+        s=default; t=1554138741;
+        bh=Tf2VrvhyR/oTnKy4NmaC7NBiB660Qn4CozKkMQMbhvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPmDrto4BP72FINpYAHjtKZrYSbyePRjnGUaFhLojFUBywqEpMPnJgEZYHrjbww1X
-         vOCR6B0U3J0cpl2XJ4g+yfmuNZfLS/qN/euB+hej8rtCjxIQ5C0KeGsCw4Tuy0sahl
-         Dhknh+DsEGsFrSgpnbkteG8U7pS9RinrvIBFIXak=
+        b=jrRDbezSD4pqpqw8G4LICbl7lSqtxma0I+lMEut7nHeIAuKCPyf7Hrg79gTt/POaB
+         VfU3jXVM+VYlwhcis3/6XjISrNmfUQiT0zPnBeDri4im88R8r6dy0m92qDdJkbjD13
+         l1f4wdFakBw2SWzn28RQCDJC/qtupbXcC62zkGt4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.0 133/146] perf pmu: Fix parser error for uncore event alias
-Date:   Mon,  1 Apr 2019 19:02:25 +0200
-Message-Id: <20190401170059.418214846@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH 5.0 124/146] usb: typec: Fix unchecked return value
+Date:   Mon,  1 Apr 2019 19:02:16 +0200
+Message-Id: <20190401170058.789474145@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -67,83 +67,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit e94d6b7f615e6dfbaf9fba7db6011db561461d0c upstream.
+commit e82adc1074a7356f1158233551df9e86b7ebfb82 upstream.
 
-Perf fails to parse uncore event alias, for example:
+Currently there is no check on platform_get_irq() return value
+in case it fails, hence never actually reporting any errors and
+causing unexpected behavior when using such value as argument
+for function regmap_irq_get_virq().
 
-  # perf stat -e unc_m_clockticks -a --no-merge sleep 1
-  event syntax error: 'unc_m_clockticks'
-                       \___ parser error
+Fix this by adding a proper check, a message error and return
+*irq* in case platform_get_irq() fails.
 
-Current code assumes that the event alias is from one specific PMU.
-
-To find the PMU, perf strcmps the PMU name of event alias with the real
-PMU name on the system.
-
-However, the uncore event alias may be from multiple PMUs with common
-prefix. The PMU name of uncore event alias is the common prefix.
-
-For example, UNC_M_CLOCKTICKS is clock event for iMC, which include 6
-PMUs with the same prefix "uncore_imc" on a skylake server.
-
-The real PMU names on the system for iMC are uncore_imc_0 ...
-uncore_imc_5.
-
-The strncmp is used to only check the common prefix for uncore event
-alias.
-
-With the patch:
-
-  # perf stat -e unc_m_clockticks -a --no-merge sleep 1
-  Performance counter stats for 'system wide':
-
-       723,594,722      unc_m_clockticks [uncore_imc_5]
-       724,001,954      unc_m_clockticks [uncore_imc_3]
-       724,042,655      unc_m_clockticks [uncore_imc_1]
-       724,161,001      unc_m_clockticks [uncore_imc_4]
-       724,293,713      unc_m_clockticks [uncore_imc_2]
-       724,340,901      unc_m_clockticks [uncore_imc_0]
-
-       1.002090060 seconds time elapsed
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
+Addresses-Coverity-ID: 1443899 ("Improper use of negative value")
+Fixes: d2061f9cc32d ("usb: typec: add driver for Intel Whiskey Cove PMIC USB Type-C PHY")
 Cc: stable@vger.kernel.org
-Fixes: ea1fa48c055f ("perf stat: Handle different PMU names with common prefix")
-Link: http://lkml.kernel.org/r/1552672814-156173-1-git-send-email-kan.liang@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/pmu.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/usb/typec/tcpm/wcove.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -734,10 +734,20 @@ static void pmu_add_cpu_aliases(struct l
+--- a/drivers/usb/typec/tcpm/wcove.c
++++ b/drivers/usb/typec/tcpm/wcove.c
+@@ -615,8 +615,13 @@ static int wcove_typec_probe(struct plat
+ 	wcove->dev = &pdev->dev;
+ 	wcove->regmap = pmic->regmap;
  
- 		if (!is_arm_pmu_core(name)) {
- 			pname = pe->pmu ? pe->pmu : "cpu";
+-	irq = regmap_irq_get_virq(pmic->irq_chip_data_chgr,
+-				  platform_get_irq(pdev, 0));
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", irq);
++		return irq;
++	}
 +
-+			/*
-+			 * uncore alias may be from different PMU
-+			 * with common prefix
-+			 */
-+			if (pmu_is_uncore(name) &&
-+			    !strncmp(pname, name, strlen(pname)))
-+				goto new_alias;
-+
- 			if (strcmp(pname, name))
- 				continue;
- 		}
++	irq = regmap_irq_get_virq(pmic->irq_chip_data_chgr, irq);
+ 	if (irq < 0)
+ 		return irq;
  
-+new_alias:
- 		/* need type casts to override 'const' */
- 		__perf_pmu__new_alias(head, NULL, (char *)pe->name,
- 				(char *)pe->desc, (char *)pe->event,
 
 
