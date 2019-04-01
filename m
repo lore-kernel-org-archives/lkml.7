@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED14CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1399FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9CB620830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C802120830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141099;
-	bh=o6x2mj/rbjsGf5WNDcbNjeRE/U9FTuXTJlQxV5OU3/4=;
+	s=default; t=1554141119;
+	bh=/yEl2zJkA8hZwBh1HoKYsN/qc7clQQQfLCMS5XC5PaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zV3M325tHMC+lyVgS/V6lnjbHLaRmTqtEVMKEtXQxs6c04A8bu8jQDzXf/vKtwpnp
-	 Zftf2VR19W6c2QPDPQlcDOqVFtCt4Pd4XZhJouk9KsfLt1k0Tm59uve18NuZ/LgzSz
-	 oqvCEwOvie9rMYd8GMzqztWolkhR3ElfHQ98RoUc=
+	b=d6IWwXiR/ivswxU3YGX1tsODncHUd29y5Evu3x0Yi7i4FvjCi53zsGXUE0lcw48/N
+	 TTVqKWXP0LFLKcZ53HAnCucD2iCM9VvVRHZKbJ9Ai164a9/W430Ozc4uBkqZBMqz7e
+	 7T03vt5ZvJQECswATG3/uqS4YSunoN+cFVY63Eqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732675AbfDARvj (ORCPT
+        id S1732262AbfDAR1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:51:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32924 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:27:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731930AbfDAR1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:27:36 -0400
+        id S1728780AbfDAR07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:26:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41CD620830;
-        Mon,  1 Apr 2019 17:27:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A106420856;
+        Mon,  1 Apr 2019 17:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139654;
-        bh=o6x2mj/rbjsGf5WNDcbNjeRE/U9FTuXTJlQxV5OU3/4=;
+        s=default; t=1554139618;
+        bh=/yEl2zJkA8hZwBh1HoKYsN/qc7clQQQfLCMS5XC5PaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+CmP/2oA/F5SjAz+802OgEq8powNUty2FMpMftmkJQ+Ki4vMqPltTXql3QjVOCBy
-         9OIjqDqe8UBZuvUN6zsLJJVPWL+DYMxAYYO8jaVp8Df96to56ImAAT78Nx1mGPVYKk
-         I1hJ8l3bPdBerOKlZ5SMZXHo4FCZ33iEWp7DFH/0=
+        b=J8dvaerf242dbYEU1b9Td8s4mVaS+Ui3jdhtrzAFZvlCGZl2hCkz1pKPuYZ3UVMwi
+         QLn6MROcUeWlmk/W2dcN+EJ5bp2McAsD+aW7MC9WHrVQAZDjjbZiTBpkaAWEsgBAAJ
+         X3t80VI85cqH8Dj/LUYdRR1feM9ytn2CHMQOE26I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 30/56] scsi: zfcp: fix rport unblock if deleted SCSI devices on Scsi_Host
-Date:   Mon,  1 Apr 2019 19:02:46 +0200
-Message-Id: <20190401170105.585503424@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 4.9 20/56] powerpc: bpf: Fix generation of load/store DW instructions
+Date:   Mon,  1 Apr 2019 19:02:36 +0200
+Message-Id: <20190401170104.899554770@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -67,83 +66,200 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
-commit fe67888fc007a76b81e37da23ce5bd8fb95890b0 upstream.
+commit 86be36f6502c52ddb4b85938145324fd07332da1 upstream.
 
-An already deleted SCSI device can exist on the Scsi_Host and remain there
-because something still holds a reference.  A new SCSI device with the same
-H:C:T:L and FCP device, target port WWPN, and FCP LUN can be created.  When
-we try to unblock an rport, we still find the deleted SCSI device and
-return early because the zfcp_scsi_dev of that SCSI device is not
-ZFCP_STATUS_COMMON_UNBLOCKED. Hence we miss to unblock the rport, even if
-the new proper SCSI device would be in good state.
+Yauheni Kaliuta pointed out that PTR_TO_STACK store/load verifier test
+was failing on powerpc64 BE, and rightfully indicated that the PPC_LD()
+macro is not masking away the last two bits of the offset per the ISA,
+resulting in the generation of 'lwa' instruction instead of the intended
+'ld' instruction.
 
-Therefore, skip deleted SCSI devices when iterating the sdevs of the shost.
-[cf. __scsi_device_lookup{_by_target}() or scsi_device_get()]
+Segher also pointed out that we can't simply mask away the last two bits
+as that will result in loading/storing from/to a memory location that
+was not intended.
 
-The following abbreviated trace sequence can indicate such problem:
+This patch addresses this by using ldx/stdx if the offset is not
+word-aligned. We load the offset into a temporary register (TMP_REG_2)
+and use that as the index register in a subsequent ldx/stdx. We fix
+PPC_LD() macro to mask off the last two bits, but enhance PPC_BPF_LL()
+and PPC_BPF_STL() to factor in the offset value and generate the proper
+instruction sequence. We also convert all existing users of PPC_LD() and
+PPC_STD() to use these macros. All existing uses of these macros have
+been audited to ensure that TMP_REG_2 can be clobbered.
 
-Area           : REC
-Tag            : ersfs_3
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x40000000     not ZFCP_STATUS_COMMON_UNBLOCKED
-Ready count    : n		not incremented yet
-Running count  : 0x00000000
-ERP want       : 0x01
-ERP need       : 0xc1		ZFCP_ERP_ACTION_NONE
+Fixes: 156d0e290e96 ("powerpc/ebpf/jit: Implement JIT compiler for extended BPF")
+Cc: stable@vger.kernel.org # v4.9+
 
-Area           : REC
-Tag            : ersfs_3
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x41000000
-Ready count    : n+1
-Running count  : 0x00000000
-ERP want       : 0x01
-ERP need       : 0x01
-
-...
-
-Area           : REC
-Level          : 4		only with increased trace level
-Tag            : ertru_l
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x40000000
-Request ID     : 0x0000000000000000
-ERP status     : 0x01800000
-ERP step       : 0x1000
-ERP action     : 0x01
-ERP count      : 0x00
-
-NOT followed by a trace record with tag "scpaddy"
-for WWPN 0x50050763031bd327.
-
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Fixes: 6f2ce1c6af37 ("scsi: zfcp: fix rport unblock race with LUN recovery")
-Cc: <stable@vger.kernel.org> #2.6.32+
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/scsi/zfcp_erp.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/include/asm/ppc-opcode.h |    2 ++
+ arch/powerpc/net/bpf_jit.h            |   17 +++++------------
+ arch/powerpc/net/bpf_jit32.h          |    4 ++++
+ arch/powerpc/net/bpf_jit64.h          |   20 ++++++++++++++++++++
+ arch/powerpc/net/bpf_jit_comp64.c     |   12 ++++++------
+ 5 files changed, 37 insertions(+), 18 deletions(-)
 
---- a/drivers/s390/scsi/zfcp_erp.c
-+++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -1306,6 +1306,9 @@ static void zfcp_erp_try_rport_unblock(s
- 		struct zfcp_scsi_dev *zsdev = sdev_to_zfcp(sdev);
- 		int lun_status;
+--- a/arch/powerpc/include/asm/ppc-opcode.h
++++ b/arch/powerpc/include/asm/ppc-opcode.h
+@@ -225,6 +225,7 @@
+ /* Misc instructions for BPF compiler */
+ #define PPC_INST_LBZ			0x88000000
+ #define PPC_INST_LD			0xe8000000
++#define PPC_INST_LDX			0x7c00002a
+ #define PPC_INST_LHZ			0xa0000000
+ #define PPC_INST_LWZ			0x80000000
+ #define PPC_INST_LHBRX			0x7c00062c
+@@ -232,6 +233,7 @@
+ #define PPC_INST_STB			0x98000000
+ #define PPC_INST_STH			0xb0000000
+ #define PPC_INST_STD			0xf8000000
++#define PPC_INST_STDX			0x7c00012a
+ #define PPC_INST_STDU			0xf8000001
+ #define PPC_INST_STW			0x90000000
+ #define PPC_INST_STWU			0x94000000
+--- a/arch/powerpc/net/bpf_jit.h
++++ b/arch/powerpc/net/bpf_jit.h
+@@ -51,6 +51,8 @@
+ #define PPC_LIS(r, i)		PPC_ADDIS(r, 0, i)
+ #define PPC_STD(r, base, i)	EMIT(PPC_INST_STD | ___PPC_RS(r) |	      \
+ 				     ___PPC_RA(base) | ((i) & 0xfffc))
++#define PPC_STDX(r, base, b)	EMIT(PPC_INST_STDX | ___PPC_RS(r) |	      \
++				     ___PPC_RA(base) | ___PPC_RB(b))
+ #define PPC_STDU(r, base, i)	EMIT(PPC_INST_STDU | ___PPC_RS(r) |	      \
+ 				     ___PPC_RA(base) | ((i) & 0xfffc))
+ #define PPC_STW(r, base, i)	EMIT(PPC_INST_STW | ___PPC_RS(r) |	      \
+@@ -65,7 +67,9 @@
+ #define PPC_LBZ(r, base, i)	EMIT(PPC_INST_LBZ | ___PPC_RT(r) |	      \
+ 				     ___PPC_RA(base) | IMM_L(i))
+ #define PPC_LD(r, base, i)	EMIT(PPC_INST_LD | ___PPC_RT(r) |	      \
+-				     ___PPC_RA(base) | IMM_L(i))
++				     ___PPC_RA(base) | ((i) & 0xfffc))
++#define PPC_LDX(r, base, b)	EMIT(PPC_INST_LDX | ___PPC_RT(r) |	      \
++				     ___PPC_RA(base) | ___PPC_RB(b))
+ #define PPC_LWZ(r, base, i)	EMIT(PPC_INST_LWZ | ___PPC_RT(r) |	      \
+ 				     ___PPC_RA(base) | IMM_L(i))
+ #define PPC_LHZ(r, base, i)	EMIT(PPC_INST_LHZ | ___PPC_RT(r) |	      \
+@@ -85,17 +89,6 @@
+ 					___PPC_RA(a) | ___PPC_RB(b))
+ #define PPC_BPF_STDCX(s, a, b)	EMIT(PPC_INST_STDCX | ___PPC_RS(s) |	      \
+ 					___PPC_RA(a) | ___PPC_RB(b))
+-
+-#ifdef CONFIG_PPC64
+-#define PPC_BPF_LL(r, base, i) do { PPC_LD(r, base, i); } while(0)
+-#define PPC_BPF_STL(r, base, i) do { PPC_STD(r, base, i); } while(0)
+-#define PPC_BPF_STLU(r, base, i) do { PPC_STDU(r, base, i); } while(0)
+-#else
+-#define PPC_BPF_LL(r, base, i) do { PPC_LWZ(r, base, i); } while(0)
+-#define PPC_BPF_STL(r, base, i) do { PPC_STW(r, base, i); } while(0)
+-#define PPC_BPF_STLU(r, base, i) do { PPC_STWU(r, base, i); } while(0)
+-#endif
+-
+ #define PPC_CMPWI(a, i)		EMIT(PPC_INST_CMPWI | ___PPC_RA(a) | IMM_L(i))
+ #define PPC_CMPDI(a, i)		EMIT(PPC_INST_CMPDI | ___PPC_RA(a) | IMM_L(i))
+ #define PPC_CMPW(a, b)		EMIT(PPC_INST_CMPW | ___PPC_RA(a) |	      \
+--- a/arch/powerpc/net/bpf_jit32.h
++++ b/arch/powerpc/net/bpf_jit32.h
+@@ -122,6 +122,10 @@ DECLARE_LOAD_FUNC(sk_load_byte_msh);
+ #define PPC_NTOHS_OFFS(r, base, i)	PPC_LHZ_OFFS(r, base, i)
+ #endif
  
-+		if (sdev->sdev_state == SDEV_DEL ||
-+		    sdev->sdev_state == SDEV_CANCEL)
-+			continue;
- 		if (zsdev->port != port)
- 			continue;
- 		/* LUN under port of interest */
++#define PPC_BPF_LL(r, base, i) do { PPC_LWZ(r, base, i); } while(0)
++#define PPC_BPF_STL(r, base, i) do { PPC_STW(r, base, i); } while(0)
++#define PPC_BPF_STLU(r, base, i) do { PPC_STWU(r, base, i); } while(0)
++
+ #define SEEN_DATAREF 0x10000 /* might call external helpers */
+ #define SEEN_XREG    0x20000 /* X reg is used */
+ #define SEEN_MEM     0x40000 /* SEEN_MEM+(1<<n) = use mem[n] for temporary
+--- a/arch/powerpc/net/bpf_jit64.h
++++ b/arch/powerpc/net/bpf_jit64.h
+@@ -86,6 +86,26 @@ DECLARE_LOAD_FUNC(sk_load_byte);
+ 			(imm >= SKF_LL_OFF ? func##_negative_offset : func) :	\
+ 			func##_positive_offset)
+ 
++/*
++ * WARNING: These can use TMP_REG_2 if the offset is not at word boundary,
++ * so ensure that it isn't in use already.
++ */
++#define PPC_BPF_LL(r, base, i) do {					      \
++				if ((i) % 4) {				      \
++					PPC_LI(b2p[TMP_REG_2], (i));	      \
++					PPC_LDX(r, base, b2p[TMP_REG_2]);     \
++				} else					      \
++					PPC_LD(r, base, i);		      \
++				} while(0)
++#define PPC_BPF_STL(r, base, i) do {					      \
++				if ((i) % 4) {				      \
++					PPC_LI(b2p[TMP_REG_2], (i));	      \
++					PPC_STDX(r, base, b2p[TMP_REG_2]);    \
++				} else					      \
++					PPC_STD(r, base, i);		      \
++				} while(0)
++#define PPC_BPF_STLU(r, base, i) do { PPC_STDU(r, base, i); } while(0)
++
+ #define SEEN_FUNC	0x1000 /* might call external helpers */
+ #define SEEN_STACK	0x2000 /* uses BPF stack */
+ #define SEEN_SKB	0x4000 /* uses sk_buff */
+--- a/arch/powerpc/net/bpf_jit_comp64.c
++++ b/arch/powerpc/net/bpf_jit_comp64.c
+@@ -265,7 +265,7 @@ static void bpf_jit_emit_tail_call(u32 *
+ 	 * if (tail_call_cnt > MAX_TAIL_CALL_CNT)
+ 	 *   goto out;
+ 	 */
+-	PPC_LD(b2p[TMP_REG_1], 1, bpf_jit_stack_tailcallcnt(ctx));
++	PPC_BPF_LL(b2p[TMP_REG_1], 1, bpf_jit_stack_tailcallcnt(ctx));
+ 	PPC_CMPLWI(b2p[TMP_REG_1], MAX_TAIL_CALL_CNT);
+ 	PPC_BCC(COND_GT, out);
+ 
+@@ -278,7 +278,7 @@ static void bpf_jit_emit_tail_call(u32 *
+ 	/* prog = array->ptrs[index]; */
+ 	PPC_MULI(b2p[TMP_REG_1], b2p_index, 8);
+ 	PPC_ADD(b2p[TMP_REG_1], b2p[TMP_REG_1], b2p_bpf_array);
+-	PPC_LD(b2p[TMP_REG_1], b2p[TMP_REG_1], offsetof(struct bpf_array, ptrs));
++	PPC_BPF_LL(b2p[TMP_REG_1], b2p[TMP_REG_1], offsetof(struct bpf_array, ptrs));
+ 
+ 	/*
+ 	 * if (prog == NULL)
+@@ -288,7 +288,7 @@ static void bpf_jit_emit_tail_call(u32 *
+ 	PPC_BCC(COND_EQ, out);
+ 
+ 	/* goto *(prog->bpf_func + prologue_size); */
+-	PPC_LD(b2p[TMP_REG_1], b2p[TMP_REG_1], offsetof(struct bpf_prog, bpf_func));
++	PPC_BPF_LL(b2p[TMP_REG_1], b2p[TMP_REG_1], offsetof(struct bpf_prog, bpf_func));
+ #ifdef PPC64_ELF_ABI_v1
+ 	/* skip past the function descriptor */
+ 	PPC_ADDI(b2p[TMP_REG_1], b2p[TMP_REG_1],
+@@ -620,7 +620,7 @@ bpf_alu32_trunc:
+ 				 * the instructions generated will remain the
+ 				 * same across all passes
+ 				 */
+-				PPC_STD(dst_reg, 1, bpf_jit_stack_local(ctx));
++				PPC_BPF_STL(dst_reg, 1, bpf_jit_stack_local(ctx));
+ 				PPC_ADDI(b2p[TMP_REG_1], 1, bpf_jit_stack_local(ctx));
+ 				PPC_LDBRX(dst_reg, 0, b2p[TMP_REG_1]);
+ 				break;
+@@ -676,7 +676,7 @@ emit_clear:
+ 				PPC_LI32(b2p[TMP_REG_1], imm);
+ 				src_reg = b2p[TMP_REG_1];
+ 			}
+-			PPC_STD(src_reg, dst_reg, off);
++			PPC_BPF_STL(src_reg, dst_reg, off);
+ 			break;
+ 
+ 		/*
+@@ -723,7 +723,7 @@ emit_clear:
+ 			break;
+ 		/* dst = *(u64 *)(ul) (src + off) */
+ 		case BPF_LDX | BPF_MEM | BPF_DW:
+-			PPC_LD(dst_reg, src_reg, off);
++			PPC_BPF_LL(dst_reg, src_reg, off);
+ 			break;
+ 
+ 		/*
 
 
