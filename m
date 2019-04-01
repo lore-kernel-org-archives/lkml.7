@@ -2,109 +2,126 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AD9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C948C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8401A2082C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F292082C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="usfbQ3i/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJs+UgGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbfDAOWG (ORCPT
+        id S1728587AbfDAOWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 10:22:06 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:55157 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbfDAOWG (ORCPT
+        Mon, 1 Apr 2019 10:22:09 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37160 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbfDAOWG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Apr 2019 10:22:06 -0400
-Received: by mail-it1-f194.google.com with SMTP id n78so4500191itb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 07:22:05 -0700 (PDT)
+Received: by mail-qk1-f194.google.com with SMTP id c1so5718834qkk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 07:22:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=mp2FODHPtsPr+xXlREXn/JBUMHiessxnoejS51YsnzE=;
-        b=usfbQ3i/Xml5mYi4h3lCr9MRt+04E+MQn+5aOYcOkmypKgcA6SUIgms+siFtr5MhUB
-         OWXO97sWD0jNbUGeM/EzjzJKC0ianel+QiZLygasCXqwCbTfZ7MjvJ0dHCx86XsOc+Mo
-         OqyrPRSxyTm1NSMXfmtmCV5VF2rOoqNP2BGNU1mxnWIlFeXs4yNuET0f68jGa/CLJwha
-         yJ37dMI9WcSy4uVIzpVVP0rblJ122lAmkx1zCQPlZa7vm63rnBGVB9zmNMnK4Bp7nG0k
-         LipNWvSBffHYcVA823FAeHxNSUnvp5dh1WCSFPkH+5r5eQ59MNkyd9EHKU1OaQ6XCaRy
-         gzxw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yynG3rTDs2gDqeJdVb4ntcI7Gi13+HlcUmvdxrRDzWs=;
+        b=IJs+UgGdnyhTmsBzquw+JnHS53NHMITGpQKYU0Bn2els5FlaUkUdru/1tfRt0Kx9kF
+         nUKIzLSCsfhsR/NtGflymjCWEs3u602CxaMsP7KDVV9uzTPo+TMvgDOjaPr7lF2E1e1R
+         VnSqnWERaFSXEVS9f/snPa/C9ymanNjbH2JvzuhBMx5vh8xg09zLuU3sVW+UESBR8KtI
+         IzydSlb9i/025V7cyEOWza3APbWEIdKf3jIXZzpyFrVZcofZQHSLAg5QwE6SJuBrBDzT
+         lJjoIS9LvnAVK9hKGK+OEnYBxeMxKGbg3AfbDL59YUXcnjyZOD2XKkIdhbuFSXr1gARh
+         z1pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=mp2FODHPtsPr+xXlREXn/JBUMHiessxnoejS51YsnzE=;
-        b=XeBLyuJj3Ardx1xKmfs79jmGafY5KIY16W/BII4w/hX3guRmR6oso+27JWFG2Zo83S
-         2gdjktSlMDUQ1vMdJUcum2Eh+jOahmPA7dYKfgUaURCAdyzE9BG5pgIh8TgVfmqWiwQz
-         gTgPCwOVs5vo3tO7KfdYjJ6Swp7GWXRs966/tISJ7dTwnYUQ8qL/+bq5VtsO2iUY4fa4
-         ZCRCC0OQTyJ0+4PlE4MYo0RI/RQueIW54YQDyg05x1Cpgq1MaOnrHiWqjLS8nSr57+Vh
-         nnJGIarC+LrmqeNy34h5FtS/xMehjPmIxwDIOwHH8iwdd7Cp8Rx3NsnKvhUYZH94qywE
-         gVEg==
-X-Gm-Message-State: APjAAAVVhTt4i8np+Dnnok1M44YgoRGkZ1Nice89b67a5xyB5obMGQSU
-        NJ4/JXhnGJEe6sU6rWTbQLZkLyyPW7N3f0v1
-X-Google-Smtp-Source: APXvYqyPnHyBGuJoh+NJ+3pT6ASbBj6PtoxndENiQzIgCCr3QXFJ79RIQGRTD/vhecBrvTaC6VhV8Q==
-X-Received: by 2002:a24:454e:: with SMTP id y75mr5624571ita.5.1554128525415;
-        Mon, 01 Apr 2019 07:22:05 -0700 (PDT)
-Received: from titus.pi.local ([66.97.27.10])
-        by smtp.gmail.com with ESMTPSA id m137sm5466730itb.27.2019.04.01.07.22.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 07:22:04 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 10:22:08 -0400
-From:   Will Cunningham <wjcunningham7@gmail.com>
-To:     johan@kernel.org
-Cc:     elder@kernel.org, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        joe@perches.com, elder@linaro.org
-Subject: [PATCH v2] Staging: greybus: usb: Fixed a coding style error
-Message-ID: <20190401142208.GA12744@titus.pi.local>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yynG3rTDs2gDqeJdVb4ntcI7Gi13+HlcUmvdxrRDzWs=;
+        b=FpTq4ml4M6sDVJ0NfsqpBF2twLoH6XnXb8pM1h26AdrziPZLUfrPmlER16xegPtLsU
+         9uJQ94GCYW/dGxLKFM01Tb7GR6gKAuDueKJhPP6EZuPmkur7XLrndy4V4Ao6UE+seYCg
+         DrrzxoaA/bX36dhOuJwH2NUl5L88NlmoPDqBTNr3Lc43LIX/VYej0z2wxv7A9iQBVU+Q
+         fE+AMlES0iPTEAP69JxFlBeCYBYkJoGJ0ySzKNJCNQhSWyl4JBUY1MwU92oZAAytbKqP
+         8Y1u3RGLNj6FtAliYx6Mq8ipSPGQ2DTGCLx6b5bBYx5HcOj2TeAQc9br/gFLiOkIhzqM
+         ep9A==
+X-Gm-Message-State: APjAAAWp8jZX918tIAGfF2Cu20zAb3YrrdyAqRHUboPmm9wxcgG/dSsS
+        8X8TujeWSVhLCU5JJ3hMBjP2ot3jSutcx9ysstU=
+X-Google-Smtp-Source: APXvYqy79Q+yHjorbIVgMmpduAy9fyc9tXLFRFjT04yPQ9pcQyhYBZafmnmL8Lsg3hafAGxDJrw365QfTgoXE11d+cw=
+X-Received: by 2002:ae9:eb0b:: with SMTP id b11mr23728295qkg.214.1554128525831;
+ Mon, 01 Apr 2019 07:22:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190330131346.40289-1-smuchun@gmail.com> <20190401104432.GB14874@arrakis.emea.arm.com>
+In-Reply-To: <20190401104432.GB14874@arrakis.emea.arm.com>
+From:   Muchun Song <smuchun@gmail.com>
+Date:   Mon, 1 Apr 2019 22:21:58 +0800
+Message-ID: <CAPSr9jHmx8unVN3rsQzGSSc4hYL2wafw20D8QKf8NG65dX7ErQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: mm: fix max_mapnr is assigned the wrong value
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     will.deacon@arm.com, akpm@linux-foundation.org,
+        rppt@linux.vnet.ibm.com,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>, logang@deltatee.com,
+        robin.murphy@arm.com, ghackmann@android.com, hannes@cmpxchg.org,
+        stefan@agner.ch, david@redhat.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Line was >80 characters.
+Hi Catalin,
 
-Signed-off-by: Will Cunningham <wjcunningham7@gmail.com>
----
-Changes in v2:
- - Created a tmp variable to shorten line length.
----
- drivers/staging/greybus/usb.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thanks for your reply.  In fact, I didn't hit any problem.  I just read the=
+ code
+and found the problem. I see max_mapnr is to only be used in the
+generic pfn_valid().
+As you said, we do not use it on arm64.  So in a sense, the patch is
+meaningless.
 
-diff --git a/drivers/staging/greybus/usb.c b/drivers/staging/greybus/usb.c
-index 1c246c73a085..c09793b48850 100644
---- a/drivers/staging/greybus/usb.c
-+++ b/drivers/staging/greybus/usb.c
-@@ -163,14 +163,14 @@ static int gb_usb_probe(struct gbphy_device *gbphy_dev,
- 	struct gb_usb_device *gb_usb_dev;
- 	struct usb_hcd *hcd;
- 	int retval;
-+	u16 tmp;
- 
- 	hcd = usb_create_hcd(&usb_gb_hc_driver, dev, dev_name(dev));
- 	if (!hcd)
- 		return -ENOMEM;
- 
--	connection = gb_connection_create(gbphy_dev->bundle,
--					  le16_to_cpu(gbphy_dev->cport_desc->id),
--					  NULL);
-+	tmp = le16_to_cpu(gbphy_dev->cport_desc->id);
-+	connection = gb_connection_create(gbphy_dev->bundle, tmp, NULL);
- 	if (IS_ERR(connection)) {
- 		retval = PTR_ERR(connection);
- 		goto exit_usb_put;
--- 
-2.19.2
+But I think since it is a problem, why not fix it (Even if max_mapnr
+is not be used)?
+What is your opinion?
 
+Catalin Marinas <catalin.marinas@arm.com> =E4=BA=8E2019=E5=B9=B44=E6=9C=881=
+=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=886:44=E5=86=99=E9=81=93=EF=BC=
+=9A
+>
+> On Sat, Mar 30, 2019 at 09:13:46PM +0800, Muchun Song wrote:
+> > When we not use flat memory, the mem_map will be NULL and
+> > pfn_to_page(max_pfn) is a pointer which is located in kernel space. So
+> > max_mapnr is assigned a very large number(e.g., 0xffffxxxx_xxxxxxxx) - =
+fix
+> > it.
+> >
+> > Signed-off-by: Muchun Song <smuchun@gmail.com>
+> > ---
+> >  arch/arm64/mm/init.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> > index bc02818fa48b..e86c21a44c88 100644
+> > --- a/arch/arm64/mm/init.c
+> > +++ b/arch/arm64/mm/init.c
+> > @@ -535,7 +535,7 @@ void __init mem_init(void)
+> >       else
+> >               swiotlb_force =3D SWIOTLB_NO_FORCE;
+> >
+> > -     set_max_mapnr(pfn_to_page(max_pfn) - mem_map);
+> > +     set_max_mapnr(max_pfn - PHYS_PFN_OFFSET);
+> >
+> >  #ifndef CONFIG_SPARSEMEM_VMEMMAP
+> >       free_unused_memmap();
+>
+> The patch looks fine but did you actually hit any problem? max_mapnr
+> seems to only be used in the generic pfn_valid() which we do not use on
+> arm64 (just wondering if it needs a cc stable; it doesn't look like as
+> it's not a regression).
+>
+> --
+> Catalin
