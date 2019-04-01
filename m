@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD944C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71472C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C38B20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7FD20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554142002;
-	bh=w322egl+h8BVgbKQ0qmzqpz6sqZyhe0qIvbcwY3yMeg=;
+	s=default; t=1554142016;
+	bh=YvUgUt5pc8y92KmBXjD614wVqyqxin7tMyalzY4GodA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CsCBVpyKf99X9GTxtXML5IVEyJaNpFs6RzplCjYUIh/YI6jj8snzrQIy8puoyYymt
-	 A97Q2WP47uRR5s9bMA3aYntUMFZc+rmTgJe7m652aYXJwf9zxtuQmVG94n2DdjzTXL
-	 elN3a4O0ZXS5+gWnoE3VY/TrTJD1dcL4oZ1AP9kM=
+	b=fKbMenixH6K9hPoM2GCTVgVLFm64pYWHe3S7JltXw4BO7uQQbamDQ4YhVBmMGV4CG
+	 njhOC94tD6oNIdOH664RDNZz0zBKm+wdxSZhxCtFGGKYskUq5mDhzL0wzJrK3UQDlZ
+	 ScWFKTU6PET5LfIWrlcj2V6Sc9Nqhv2DUrL+w408=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbfDASGl (ORCPT
+        id S1730711AbfDASGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:06:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33950 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 14:06:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729564AbfDARM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:12:26 -0400
+        id S1730329AbfDARMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:12:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E54E21924;
-        Mon,  1 Apr 2019 17:12:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 580FC21924;
+        Mon,  1 Apr 2019 17:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138745;
-        bh=w322egl+h8BVgbKQ0qmzqpz6sqZyhe0qIvbcwY3yMeg=;
+        s=default; t=1554138727;
+        bh=YvUgUt5pc8y92KmBXjD614wVqyqxin7tMyalzY4GodA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OGEcWLyl5N/Ifa1QCO0HlzN+dRQUYhwV55qzs01D+wkyAHC/FZs+sKXpZH1dAmHPS
-         VPE+Y+m4pV5oH2LIaVdc9LDVgkL5I9qvEfVrS7Lk332N315cn9ReePdcOU1lVHULZx
-         4hlzJMWSyLmEfSQVMy4+UxI3pcracgDGGkzftdRw=
+        b=vBIHVWnyeOyViy1ozcQqrNRg5lkiJIs2wAnJ4jw4Ejln7WIMzeUt218ssYeX/vzgN
+         3j8DIQREEfSR8EwwE99AjH0Tlxrm0FwuAsfGBi2dYzONswHc2kGRbB2lmAyIbPTI2d
+         LxQLbmXI+T6PQyz1BZvzmpUoD3VLRADFmfo+4nRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 4.19 001/134] Bluetooth: Check L2CAP option sizes returned from l2cap_get_conf_opt
-Date:   Mon,  1 Apr 2019 19:00:37 +0200
-Message-Id: <20190401170044.359538620@linuxfoundation.org>
+        stable@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.0 130/146] mm/memory_hotplug.c: fix notification in offline error path
+Date:   Mon,  1 Apr 2019 19:02:22 +0200
+Message-Id: <20190401170059.227328158@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
-References: <20190401170044.243719205@linuxfoundation.org>
+In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
+References: <20190401170048.449559024@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,200 +63,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Qian Cai <cai@lca.pw>
 
-commit af3d5d1c87664a4f150fcf3534c6567cb19909b0 upstream.
+commit c4efe484b5f0d768e23c9731082fec827723e738 upstream.
 
-When doing option parsing for standard type values of 1, 2 or 4 octets,
-the value is converted directly into a variable instead of a pointer. To
-avoid being tricked into being a pointer, check that for these option
-types that sizes actually match. In L2CAP every option is fixed size and
-thus it is prudent anyway to ensure that the remote side sends us the
-right option size along with option paramters.
+When start_isolate_page_range() returned -EBUSY in __offline_pages(), it
+calls memory_notify(MEM_CANCEL_OFFLINE, &arg) with an uninitialized
+"arg".  As the result, it triggers warnings below.  Also, it is only
+necessary to notify MEM_CANCEL_OFFLINE after MEM_GOING_OFFLINE.
 
-If the option size is not matching the option type, then that option is
-silently ignored. It is a protocol violation and instead of trying to
-give the remote attacker any further hints just pretend that option is
-not present and proceed with the default values. Implementation
-following the specification and its qualification procedures will always
-use the correct size and thus not being impacted here.
+  page:ffffea0001200000 count:1 mapcount:0 mapping:0000000000000000
+  index:0x0
+  flags: 0x3fffe000001000(reserved)
+  raw: 003fffe000001000 ffffea0001200008 ffffea0001200008 0000000000000000
+  raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+  page dumped because: unmovable page
+  WARNING: CPU: 25 PID: 1665 at mm/kasan/common.c:665
+  kasan_mem_notifier+0x34/0x23b
+  CPU: 25 PID: 1665 Comm: bash Tainted: G        W         5.0.0+ #94
+  Hardware name: HP ProLiant DL180 Gen9/ProLiant DL180 Gen9, BIOS U20
+  10/25/2017
+  RIP: 0010:kasan_mem_notifier+0x34/0x23b
+  RSP: 0018:ffff8883ec737890 EFLAGS: 00010206
+  RAX: 0000000000000246 RBX: ff10f0f4435f1000 RCX: f887a7a21af88000
+  RDX: dffffc0000000000 RSI: 0000000000000020 RDI: ffff8881f221af88
+  RBP: ffff8883ec737898 R08: ffff888000000000 R09: ffffffffb0bddcd0
+  R10: ffffed103e857088 R11: ffff8881f42b8443 R12: dffffc0000000000
+  R13: 00000000fffffff9 R14: dffffc0000000000 R15: 0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000560fbd31d730 CR3: 00000004049c6003 CR4: 00000000001606a0
+  Call Trace:
+   notifier_call_chain+0xbf/0x130
+   __blocking_notifier_call_chain+0x76/0xc0
+   blocking_notifier_call_chain+0x16/0x20
+   memory_notify+0x1b/0x20
+   __offline_pages+0x3e2/0x1210
+   offline_pages+0x11/0x20
+   memory_block_action+0x144/0x300
+   memory_subsys_offline+0xe5/0x170
+   device_offline+0x13f/0x1e0
+   state_store+0xeb/0x110
+   dev_attr_store+0x3f/0x70
+   sysfs_kf_write+0x104/0x150
+   kernfs_fop_write+0x25c/0x410
+   __vfs_write+0x66/0x120
+   vfs_write+0x15a/0x4f0
+   ksys_write+0xd2/0x1b0
+   __x64_sys_write+0x73/0xb0
+   do_syscall_64+0xeb/0xb78
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f14f75cc3b8
+  RSP: 002b:00007ffe84d01d68 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+  RAX: ffffffffffffffda RBX: 0000000000000008 RCX: 00007f14f75cc3b8
+  RDX: 0000000000000008 RSI: 0000563f8e433d70 RDI: 0000000000000001
+  RBP: 0000563f8e433d70 R08: 000000000000000a R09: 00007ffe84d018f0
+  R10: 000000000000000a R11: 0000000000000246 R12: 00007f14f789e780
+  R13: 0000000000000008 R14: 00007f14f7899740 R15: 0000000000000008
 
-To keep the code readable and consistent accross all options, a few
-cosmetic changes were also required.
-
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Link: http://lkml.kernel.org/r/20190320204255.53571-1-cai@lca.pw
+Fixes: 7960509329c2 ("mm, memory_hotplug: print reason for the offlining failure")
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: <stable@vger.kernel.org>	[5.0.x]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/l2cap_core.c |   77 ++++++++++++++++++++++++++-------------------
- 1 file changed, 46 insertions(+), 31 deletions(-)
+ mm/memory_hotplug.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -3342,10 +3342,14 @@ static int l2cap_parse_conf_req(struct l
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1684,12 +1684,12 @@ static int __ref __offline_pages(unsigne
  
- 		switch (type) {
- 		case L2CAP_CONF_MTU:
-+			if (olen != 2)
-+				break;
- 			mtu = val;
- 			break;
- 
- 		case L2CAP_CONF_FLUSH_TO:
-+			if (olen != 2)
-+				break;
- 			chan->flush_to = val;
- 			break;
- 
-@@ -3353,26 +3357,30 @@ static int l2cap_parse_conf_req(struct l
- 			break;
- 
- 		case L2CAP_CONF_RFC:
--			if (olen == sizeof(rfc))
--				memcpy(&rfc, (void *) val, olen);
-+			if (olen != sizeof(rfc))
-+				break;
-+			memcpy(&rfc, (void *) val, olen);
- 			break;
- 
- 		case L2CAP_CONF_FCS:
-+			if (olen != 1)
-+				break;
- 			if (val == L2CAP_FCS_NONE)
- 				set_bit(CONF_RECV_NO_FCS, &chan->conf_state);
- 			break;
- 
- 		case L2CAP_CONF_EFS:
--			if (olen == sizeof(efs)) {
--				remote_efs = 1;
--				memcpy(&efs, (void *) val, olen);
--			}
-+			if (olen != sizeof(efs))
-+				break;
-+			remote_efs = 1;
-+			memcpy(&efs, (void *) val, olen);
- 			break;
- 
- 		case L2CAP_CONF_EWS:
-+			if (olen != 2)
-+				break;
- 			if (!(chan->conn->local_fixed_chan & L2CAP_FC_A2MP))
- 				return -ECONNREFUSED;
--
- 			set_bit(FLAG_EXT_CTRL, &chan->flags);
- 			set_bit(CONF_EWS_RECV, &chan->conf_state);
- 			chan->tx_win_max = L2CAP_DEFAULT_EXT_WINDOW;
-@@ -3382,7 +3390,6 @@ static int l2cap_parse_conf_req(struct l
- 		default:
- 			if (hint)
- 				break;
--
- 			result = L2CAP_CONF_UNKNOWN;
- 			*((u8 *) ptr++) = type;
- 			break;
-@@ -3550,55 +3557,60 @@ static int l2cap_parse_conf_rsp(struct l
- 
- 		switch (type) {
- 		case L2CAP_CONF_MTU:
-+			if (olen != 2)
-+				break;
- 			if (val < L2CAP_DEFAULT_MIN_MTU) {
- 				*result = L2CAP_CONF_UNACCEPT;
- 				chan->imtu = L2CAP_DEFAULT_MIN_MTU;
- 			} else
- 				chan->imtu = val;
--			l2cap_add_conf_opt(&ptr, L2CAP_CONF_MTU, 2, chan->imtu, endptr - ptr);
-+			l2cap_add_conf_opt(&ptr, L2CAP_CONF_MTU, 2, chan->imtu,
-+					   endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_FLUSH_TO:
-+			if (olen != 2)
-+				break;
- 			chan->flush_to = val;
--			l2cap_add_conf_opt(&ptr, L2CAP_CONF_FLUSH_TO,
--					   2, chan->flush_to, endptr - ptr);
-+			l2cap_add_conf_opt(&ptr, L2CAP_CONF_FLUSH_TO, 2,
-+					   chan->flush_to, endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_RFC:
--			if (olen == sizeof(rfc))
--				memcpy(&rfc, (void *)val, olen);
--
-+			if (olen != sizeof(rfc))
-+				break;
-+			memcpy(&rfc, (void *)val, olen);
- 			if (test_bit(CONF_STATE2_DEVICE, &chan->conf_state) &&
- 			    rfc.mode != chan->mode)
- 				return -ECONNREFUSED;
--
- 			chan->fcs = 0;
--
--			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC,
--					   sizeof(rfc), (unsigned long) &rfc, endptr - ptr);
-+			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-+					   (unsigned long) &rfc, endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_EWS:
-+			if (olen != 2)
-+				break;
- 			chan->ack_win = min_t(u16, val, chan->ack_win);
- 			l2cap_add_conf_opt(&ptr, L2CAP_CONF_EWS, 2,
- 					   chan->tx_win, endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_EFS:
--			if (olen == sizeof(efs)) {
--				memcpy(&efs, (void *)val, olen);
--
--				if (chan->local_stype != L2CAP_SERV_NOTRAFIC &&
--				    efs.stype != L2CAP_SERV_NOTRAFIC &&
--				    efs.stype != chan->local_stype)
--					return -ECONNREFUSED;
--
--				l2cap_add_conf_opt(&ptr, L2CAP_CONF_EFS, sizeof(efs),
--						   (unsigned long) &efs, endptr - ptr);
--			}
-+			if (olen != sizeof(efs))
-+				break;
-+			memcpy(&efs, (void *)val, olen);
-+			if (chan->local_stype != L2CAP_SERV_NOTRAFIC &&
-+			    efs.stype != L2CAP_SERV_NOTRAFIC &&
-+			    efs.stype != chan->local_stype)
-+				return -ECONNREFUSED;
-+			l2cap_add_conf_opt(&ptr, L2CAP_CONF_EFS, sizeof(efs),
-+					   (unsigned long) &efs, endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_FCS:
-+			if (olen != 1)
-+				break;
- 			if (*result == L2CAP_CONF_PENDING)
- 				if (val == L2CAP_FCS_NONE)
- 					set_bit(CONF_RECV_NO_FCS,
-@@ -3730,10 +3742,13 @@ static void l2cap_conf_rfc_get(struct l2
- 
- 		switch (type) {
- 		case L2CAP_CONF_RFC:
--			if (olen == sizeof(rfc))
--				memcpy(&rfc, (void *)val, olen);
-+			if (olen != sizeof(rfc))
-+				break;
-+			memcpy(&rfc, (void *)val, olen);
- 			break;
- 		case L2CAP_CONF_EWS:
-+			if (olen != 2)
-+				break;
- 			txwin_ext = val;
- 			break;
- 		}
+ failed_removal_isolated:
+ 	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
++	memory_notify(MEM_CANCEL_OFFLINE, &arg);
+ failed_removal:
+ 	pr_debug("memory offlining [mem %#010llx-%#010llx] failed due to %s\n",
+ 		 (unsigned long long) start_pfn << PAGE_SHIFT,
+ 		 ((unsigned long long) end_pfn << PAGE_SHIFT) - 1,
+ 		 reason);
+-	memory_notify(MEM_CANCEL_OFFLINE, &arg);
+ 	/* pushback to free area */
+ 	mem_hotplug_done();
+ 	return ret;
 
 
