@@ -2,138 +2,164 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A0FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B26C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605522133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:35:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iqrW8vgH"
+	by mail.kernel.org (Postfix) with ESMTP id ED3262086C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:39:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfDAUfY (ORCPT
+        id S1726966AbfDAUjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 16:35:24 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41070 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfDAUfX (ORCPT
+        Mon, 1 Apr 2019 16:39:21 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:49934 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfDAUjU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 16:35:23 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x31KYbHi112171;
-        Mon, 1 Apr 2019 20:35:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=Oz2lBXpFOO7Uhfmu91wpRbUCZwJBC1fFr2TeZERUG6E=;
- b=iqrW8vgHRwoW85biQdhRJl+cEn03OGd8nzgyym/QkFNtfTZw9qHDzJQj8dL3QhwhLy6H
- uAY5xGz2YxXWYfG7085EHCFsBUyYYFEe2yWW22YFNGmmB7DYTLULRBH6m5DsfkIyN9yw
- qc4uUDhqj+pqHYgvFhHzA+5sjreDMwmgWARBKLuZaQZe+5S+Uqf8lssLkx/GfZRLPm/R
- 72IakgpBIJ4DwmY6AolpOdwQrjsvqA9g8vmpWocW6EgRH89pZJqiAZLPzkNm6nZnESIz
- 8ldZpVZXa8bhouOWfUoS618HstzYeNxPEloqyKmbhKs/8upj3fYNe6jlDRbA6OAAJM3B qA== 
-Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
-        by userp2130.oracle.com with ESMTP id 2rhyvt1d96-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Apr 2019 20:35:18 +0000
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x31KZHNa010081
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Apr 2019 20:35:18 GMT
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x31KZHkw009985;
-        Mon, 1 Apr 2019 20:35:17 GMT
-Received: from localhost (/67.161.8.12)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 01 Apr 2019 13:35:15 -0700
-Date:   Mon, 1 Apr 2019 13:35:14 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Johannes Thumshirn <jthumshirn@suse.de>
-Cc:     Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
-        Linux FSDEVEL Mailinglist <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] fs/open: Fix most outstanding security bugs
-Message-ID: <20190401203514.GC1177@magnolia>
-References: <20190401090113.22946-1-jthumshirn@suse.de>
+        Mon, 1 Apr 2019 16:39:20 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 91A83808A7; Mon,  1 Apr 2019 22:39:08 +0200 (CEST)
+Date:   Mon, 1 Apr 2019 22:39:18 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        James Morse <james.morse@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.4 078/131] PM / Hibernate: Call flush_icache_range() on
+ pages restored in-place
+Message-ID: <20190401203918.GA26671@amd>
+References: <20190401170051.645954551@linuxfoundation.org>
+ <20190401170058.681712612@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
 Content-Disposition: inline
-In-Reply-To: <20190401090113.22946-1-jthumshirn@suse.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9214 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904010133
+In-Reply-To: <20190401170058.681712612@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 11:01:13AM +0200, Johannes Thumshirn wrote:
-> Over the last 20 years, the Linux kernel has accumulated hundreds if not
-> thousands of security vulnerabilities.
-> 
-> One common pattern in most of these security related reports is processes
-> called "syzkaller", "trinity" or "syz-executor" opening files and then
-> abuse kernel interfaces causing kernel crashes or even worse threats using
-> memory overwrites or by exploiting race conditions.
-> 
-> Hunting down these bugs has become time consuming and very expensive, so
-> I've decided to put an end to it.
-> 
-> If one of the above mentioned processes tries opening a file, return -EPERM
-> indicating this process does not have the permission to open files on Linux
-> anymore.
-> 
-> Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
-> ---
->  fs/open.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/fs/open.c b/fs/open.c
-> index f1c2f855fd43..3a3b460beccd 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -1056,6 +1056,20 @@ long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
->  	struct open_flags op;
->  	int fd = build_open_flags(flags, mode, &op);
->  	struct filename *tmp;
-> +	char comm[TASK_COMM_LEN];
-> +	int i;
-> +	static const char * const list[] = {
-> +		"syzkaller",
-> +		"syz-executor,"
-> +		"trinity",
-> +		NULL
-> +	};
 
-This makes no sense, why would you gate on "syz-executor,trinity"?
+--7JfCtLOvnd9MIVvH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Mon 2019-04-01 19:02:28, Greg Kroah-Hartman wrote:
+> 4.4-stable review patch.  If anyone has any objections, please let me kno=
+w.
+>=20
+> ------------------
+>=20
+> [ Upstream commit f6cf0545ec697ddc278b7457b7d0c0d86a2ea88e ]
+>=20
+> Some architectures require code written to memory as if it were data to be
+> 'cleaned' from any data caches before the processor can fetch them as new
+> instructions.
+>=20
+> During resume from hibernate, the snapshot code copies some pages directl=
+y,
+> meaning these architectures do not get a chance to perform their cache
+> maintenance. Modify the read and decompress code to call
+> flush_icache_range() on all pages that are restored, so that the restored
+> in-place pages are guaranteed to be executable on these architectures.
+>=20
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Acked-by: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> [will: make clean_pages_on_* static and remove initialisers]
+> Signed-off-by: Will Deacon <will.deacon@arm.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+I don't think this is suitable for stable.
+
+Catalin: Are there platforms that a) need this and b) support
+hibernation in 4.4.X?
+
+Thanks
+								Pavel
+
+> @@ -36,6 +36,14 @@
+> =20
+>  #define HIBERNATE_SIG	"S1SUSPEND"
+> =20
+> +/*
+> + * When reading an {un,}compressed image, we may restore pages in place,
+> + * in which case some architectures need these pages cleaning before they
+> + * can be executed. We don't know which pages these may be, so clean the=
+ lot.
+> + */
+> +static bool clean_pages_on_read;
+> +static bool clean_pages_on_decompress;
 > +
-> +	get_task_comm(comm, current);
+>  /*
+>   *	The swap map is a data structure used for keeping track of each page
+>   *	written to a swap partition.  It consists of many swap_map_page
+> @@ -241,6 +249,9 @@ static void hib_end_io(struct bio *bio)
+> =20
+>  	if (bio_data_dir(bio) =3D=3D WRITE)
+>  		put_page(page);
+> +	else if (clean_pages_on_read)
+> +		flush_icache_range((unsigned long)page_address(page),
+> +				   (unsigned long)page_address(page) + PAGE_SIZE);
+> =20
+>  	if (bio->bi_error && !hb->error)
+>  		hb->error =3D bio->bi_error;
+> @@ -1049,6 +1060,7 @@ static int load_image(struct swap_map_handle *handl=
+e,
+> =20
+>  	hib_init_batch(&hb);
+> =20
+> +	clean_pages_on_read =3D true;
+>  	printk(KERN_INFO "PM: Loading image data pages (%u pages)...\n",
+>  		nr_to_read);
+>  	m =3D nr_to_read / 10;
+> @@ -1124,6 +1136,10 @@ static int lzo_decompress_threadfn(void *data)
+>  		d->unc_len =3D LZO_UNC_SIZE;
+>  		d->ret =3D lzo1x_decompress_safe(d->cmp + LZO_HEADER, d->cmp_len,
+>  		                               d->unc, &d->unc_len);
+> +		if (clean_pages_on_decompress)
+> +			flush_icache_range((unsigned long)d->unc,
+> +					   (unsigned long)d->unc + d->unc_len);
 > +
-> +	for (i = 0; i < ARRAY_SIZE(list); i++)
-> +		if (!strncmp(comm, list[i], strlen(list[i])))
-> +			return -EPERM;
+>  		atomic_set(&d->stop, 1);
+>  		wake_up(&d->done);
+>  	}
+> @@ -1189,6 +1205,8 @@ static int load_image_lzo(struct swap_map_handle *h=
+andle,
+>  	}
+>  	memset(crc, 0, offsetof(struct crc_data, go));
+> =20
+> +	clean_pages_on_decompress =3D true;
+> +
+>  	/*
+>  	 * Start the decompression threads.
+>  	 */
 
-This is insufficient, because this isn't the only way to open a file.
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Wouldn't it be far more effective to use copy_to_user to inject
-shellcode into the syzkaller image and change the return address, to
-find all the places where syzbot doesn't validate itself sufficiently?
-In Soviet Russia, the kernel syzkallz you.
+--7JfCtLOvnd9MIVvH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-NAK.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
---D
+iEYEARECAAYFAlyidvYACgkQMOfwapXb+vKE7ACfcdklTuz+ZcPICFYEK3GEvntW
+RFwAoMRfcRBZtzz1IZM5ob3r9ZjfESip
+=yiNi
+-----END PGP SIGNATURE-----
 
->  
->  	if (fd)
->  		return fd;
-> -- 
-> 2.16.4
-> 
+--7JfCtLOvnd9MIVvH--
