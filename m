@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0CFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A64FAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25AB2084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCA520651
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141836;
-	bh=g5S571D0XlVs5waVO/adpfUT/DT0KW+uhR6SOWklHA0=;
+	s=default; t=1554141843;
+	bh=WY1mMhFBOSl7JMpC2ZuCtak5i6avj8lCn8VjUsdzV9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CYJ7exDG2XwqN1gMV7yTqVzhYUU+CxyPPcFkyNEamHDsptGRoTAaWdePcxk1teeG/
-	 AbmYXn0VB+oi/ifDPldtUhE6obSXdWWFKzhpf95qChyJG4qkeyFSI2fvOCZvsdiMlB
-	 Wh8i1De2rXsZda2Ak926jmCVNMOI0rx//E8pr7AQ=
+	b=V/4M3bHtcqq+Jld4X1TaD+L1i833vRXxKR0Wtl7eiUwnPaEXBTMdBU1S/6sIIQr+G
+	 huoVBamBlA4iZELS/L0WjwyOJ6vmF5CIu/aKDJ4QgTqMFYuFfrrYTB2OmWq4dZjszg
+	 xQ008udggni6fq+3LLyDQvHgwOMXQDuskodk5uIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731126AbfDASDz (ORCPT
+        id S1731151AbfDASEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:03:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37004 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 14:04:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730657AbfDAROC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730664AbfDAROC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Apr 2019 13:14:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0611B205F4;
-        Mon,  1 Apr 2019 17:03:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8460521917;
+        Mon,  1 Apr 2019 17:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138240;
-        bh=g5S571D0XlVs5waVO/adpfUT/DT0KW+uhR6SOWklHA0=;
+        s=default; t=1554138277;
+        bh=WY1mMhFBOSl7JMpC2ZuCtak5i6avj8lCn8VjUsdzV9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I89jHeCGY6+hyztAn5DFtvd2BSqnIMfde63jdJ4AB4YQvn9sBcJ5z7zkKmQV7NsNQ
-         sW0QXsw4j8gRNY5oikYrvoFOQqEFe9FLqTfcRXkT43Rm3FAxqJGsmuWUKKOl1pJlqO
-         ANMKaAqyY7zjQU658nyK5SVOUcrC41EFNo5viwDg=
+        b=EcIpZFqDzKErk/7Rx24df3ZT0aFpy/iFApImtCFrzeaOgYx/VsImiLk9D9Jef+D53
+         X/TWNG9gKrgqIFRuVJ2szxsdhXW8IDkLiz/MOqIZGI7sMvdLT3MrrB0ELklyWj1spa
+         Ui4tJjUb9JjilYAkO2xtwmuPs3sQ+p45VrKKozoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 5.0 001/146] Bluetooth: Check L2CAP option sizes returned from l2cap_get_conf_opt
-Date:   Mon,  1 Apr 2019 19:00:13 +0200
-Message-Id: <20190401170048.558277980@linuxfoundation.org>
+        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 020/146] sctp: get sctphdr by offset in sctp_compute_cksum
+Date:   Mon,  1 Apr 2019 19:00:32 +0200
+Message-Id: <20190401170050.286267912@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -65,196 +66,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit af3d5d1c87664a4f150fcf3534c6567cb19909b0 upstream.
+[ Upstream commit 273160ffc6b993c7c91627f5a84799c66dfe4dee ]
 
-When doing option parsing for standard type values of 1, 2 or 4 octets,
-the value is converted directly into a variable instead of a pointer. To
-avoid being tricked into being a pointer, check that for these option
-types that sizes actually match. In L2CAP every option is fixed size and
-thus it is prudent anyway to ensure that the remote side sends us the
-right option size along with option paramters.
+sctp_hdr(skb) only works when skb->transport_header is set properly.
 
-If the option size is not matching the option type, then that option is
-silently ignored. It is a protocol violation and instead of trying to
-give the remote attacker any further hints just pretend that option is
-not present and proceed with the default values. Implementation
-following the specification and its qualification procedures will always
-use the correct size and thus not being impacted here.
+But in Netfilter, skb->transport_header for ipv6 is not guaranteed
+to be right value for sctphdr. It would cause to fail to check the
+checksum for sctp packets.
 
-To keep the code readable and consistent accross all options, a few
-cosmetic changes were also required.
+So fix it by using offset, which is always right in all places.
 
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+v1->v2:
+  - Fix the changelog.
+
+Fixes: e6d8b64b34aa ("net: sctp: fix and consolidate SCTP checksumming code")
+Reported-by: Li Shuang <shuali@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/bluetooth/l2cap_core.c |   77 ++++++++++++++++++++++++++-------------------
- 1 file changed, 46 insertions(+), 31 deletions(-)
+ include/net/sctp/checksum.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -3343,10 +3343,14 @@ static int l2cap_parse_conf_req(struct l
- 
- 		switch (type) {
- 		case L2CAP_CONF_MTU:
-+			if (olen != 2)
-+				break;
- 			mtu = val;
- 			break;
- 
- 		case L2CAP_CONF_FLUSH_TO:
-+			if (olen != 2)
-+				break;
- 			chan->flush_to = val;
- 			break;
- 
-@@ -3354,26 +3358,30 @@ static int l2cap_parse_conf_req(struct l
- 			break;
- 
- 		case L2CAP_CONF_RFC:
--			if (olen == sizeof(rfc))
--				memcpy(&rfc, (void *) val, olen);
-+			if (olen != sizeof(rfc))
-+				break;
-+			memcpy(&rfc, (void *) val, olen);
- 			break;
- 
- 		case L2CAP_CONF_FCS:
-+			if (olen != 1)
-+				break;
- 			if (val == L2CAP_FCS_NONE)
- 				set_bit(CONF_RECV_NO_FCS, &chan->conf_state);
- 			break;
- 
- 		case L2CAP_CONF_EFS:
--			if (olen == sizeof(efs)) {
--				remote_efs = 1;
--				memcpy(&efs, (void *) val, olen);
--			}
-+			if (olen != sizeof(efs))
-+				break;
-+			remote_efs = 1;
-+			memcpy(&efs, (void *) val, olen);
- 			break;
- 
- 		case L2CAP_CONF_EWS:
-+			if (olen != 2)
-+				break;
- 			if (!(chan->conn->local_fixed_chan & L2CAP_FC_A2MP))
- 				return -ECONNREFUSED;
--
- 			set_bit(FLAG_EXT_CTRL, &chan->flags);
- 			set_bit(CONF_EWS_RECV, &chan->conf_state);
- 			chan->tx_win_max = L2CAP_DEFAULT_EXT_WINDOW;
-@@ -3383,7 +3391,6 @@ static int l2cap_parse_conf_req(struct l
- 		default:
- 			if (hint)
- 				break;
--
- 			result = L2CAP_CONF_UNKNOWN;
- 			*((u8 *) ptr++) = type;
- 			break;
-@@ -3551,55 +3558,60 @@ static int l2cap_parse_conf_rsp(struct l
- 
- 		switch (type) {
- 		case L2CAP_CONF_MTU:
-+			if (olen != 2)
-+				break;
- 			if (val < L2CAP_DEFAULT_MIN_MTU) {
- 				*result = L2CAP_CONF_UNACCEPT;
- 				chan->imtu = L2CAP_DEFAULT_MIN_MTU;
- 			} else
- 				chan->imtu = val;
--			l2cap_add_conf_opt(&ptr, L2CAP_CONF_MTU, 2, chan->imtu, endptr - ptr);
-+			l2cap_add_conf_opt(&ptr, L2CAP_CONF_MTU, 2, chan->imtu,
-+					   endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_FLUSH_TO:
-+			if (olen != 2)
-+				break;
- 			chan->flush_to = val;
--			l2cap_add_conf_opt(&ptr, L2CAP_CONF_FLUSH_TO,
--					   2, chan->flush_to, endptr - ptr);
-+			l2cap_add_conf_opt(&ptr, L2CAP_CONF_FLUSH_TO, 2,
-+					   chan->flush_to, endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_RFC:
--			if (olen == sizeof(rfc))
--				memcpy(&rfc, (void *)val, olen);
--
-+			if (olen != sizeof(rfc))
-+				break;
-+			memcpy(&rfc, (void *)val, olen);
- 			if (test_bit(CONF_STATE2_DEVICE, &chan->conf_state) &&
- 			    rfc.mode != chan->mode)
- 				return -ECONNREFUSED;
--
- 			chan->fcs = 0;
--
--			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC,
--					   sizeof(rfc), (unsigned long) &rfc, endptr - ptr);
-+			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-+					   (unsigned long) &rfc, endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_EWS:
-+			if (olen != 2)
-+				break;
- 			chan->ack_win = min_t(u16, val, chan->ack_win);
- 			l2cap_add_conf_opt(&ptr, L2CAP_CONF_EWS, 2,
- 					   chan->tx_win, endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_EFS:
--			if (olen == sizeof(efs)) {
--				memcpy(&efs, (void *)val, olen);
--
--				if (chan->local_stype != L2CAP_SERV_NOTRAFIC &&
--				    efs.stype != L2CAP_SERV_NOTRAFIC &&
--				    efs.stype != chan->local_stype)
--					return -ECONNREFUSED;
--
--				l2cap_add_conf_opt(&ptr, L2CAP_CONF_EFS, sizeof(efs),
--						   (unsigned long) &efs, endptr - ptr);
--			}
-+			if (olen != sizeof(efs))
-+				break;
-+			memcpy(&efs, (void *)val, olen);
-+			if (chan->local_stype != L2CAP_SERV_NOTRAFIC &&
-+			    efs.stype != L2CAP_SERV_NOTRAFIC &&
-+			    efs.stype != chan->local_stype)
-+				return -ECONNREFUSED;
-+			l2cap_add_conf_opt(&ptr, L2CAP_CONF_EFS, sizeof(efs),
-+					   (unsigned long) &efs, endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_FCS:
-+			if (olen != 1)
-+				break;
- 			if (*result == L2CAP_CONF_PENDING)
- 				if (val == L2CAP_FCS_NONE)
- 					set_bit(CONF_RECV_NO_FCS,
-@@ -3731,10 +3743,13 @@ static void l2cap_conf_rfc_get(struct l2
- 
- 		switch (type) {
- 		case L2CAP_CONF_RFC:
--			if (olen == sizeof(rfc))
--				memcpy(&rfc, (void *)val, olen);
-+			if (olen != sizeof(rfc))
-+				break;
-+			memcpy(&rfc, (void *)val, olen);
- 			break;
- 		case L2CAP_CONF_EWS:
-+			if (olen != 2)
-+				break;
- 			txwin_ext = val;
- 			break;
- 		}
+--- a/include/net/sctp/checksum.h
++++ b/include/net/sctp/checksum.h
+@@ -61,7 +61,7 @@ static inline __wsum sctp_csum_combine(_
+ static inline __le32 sctp_compute_cksum(const struct sk_buff *skb,
+ 					unsigned int offset)
+ {
+-	struct sctphdr *sh = sctp_hdr(skb);
++	struct sctphdr *sh = (struct sctphdr *)(skb->data + offset);
+ 	const struct skb_checksum_ops ops = {
+ 		.update  = sctp_csum_update,
+ 		.combine = sctp_csum_combine,
 
 
