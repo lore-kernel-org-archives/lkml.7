@@ -6,45 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CF5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32467C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4464D20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C2B20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139002;
-	bh=KA2QMYhbIAwOeGmj6uOEwYoc068wcXEbZ/RmEMk2VJY=;
+	s=default; t=1554139012;
+	bh=9QjQF9i06KEdEvToiN9mkyWVjZGQlFSTh8Fj8NgzD9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sRk9r3MpAdlkU82rAsochTl+eFiE3c88X9crrIbFFmDx+VhLT5eh9IBa9duQhUBar
-	 Qaq5GAFVeKsZHTGBCiSwl5e+0grEFb/GmoGJP2ytLLSrHvk5500KvoWtNQJaWbb/EK
-	 3Ha1VbsiLFeRn6g6TmzuqC2MFAnChleVpgIYulws=
+	b=jfsNX03D9QbWpItD7UthJHXl6ntnt7tLE5ado/AGhKRVOMhTgg4qD3xCMchSRUJwW
+	 5k9HKNYMmIMfwpz+vB7TRD0sF0YZfmhmlOEhzbvg9LHdfOK7/+c0AUTfmugWK5OxKW
+	 kYTj5W9Nhd8hl623C0BXbfS2s48uIGlpEdtKvtRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731071AbfDARQk (ORCPT
+        id S1730719AbfDARQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:16:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42020 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730650AbfDARQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:16:37 -0400
+        id S1730894AbfDARQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:16:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 259B62133D;
-        Mon,  1 Apr 2019 17:16:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1497720856;
+        Mon,  1 Apr 2019 17:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138996;
-        bh=KA2QMYhbIAwOeGmj6uOEwYoc068wcXEbZ/RmEMk2VJY=;
+        s=default; t=1554139004;
+        bh=9QjQF9i06KEdEvToiN9mkyWVjZGQlFSTh8Fj8NgzD9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mWb1dSE47QsVFTVvnHyWoWXtsS85Q/EpFHMyo9Nlg/mOwlZoL86S3mimuqgeMTn2u
-         wNMkIw+N6lpmUcAuXvcl5LMLY85KcctS/XVxgQgUnMf9ZOzC3q/4tTSc6x/ae8qa/F
-         usDZR1pR4avqFRaqv5cU/5PHqA90CQLXLkQfZ/EY=
+        b=hG8HGwVBi8/JrcQ2sqlrAHgDUDTHfsq3YmWj3sapoZQFFDLTfCC3b+uNcQmc1zvBq
+         neQ0BRIPDL49vMqtGIk/r447M5R6lG9tgtorjsU2Li4tmeO/dYxakmWg25oAMuVgTe
+         zDoM9XdgzVtdD08B08QUDcTS8qQ1k+jCOOPbeDV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.19 083/134] staging: vt6655: Remove vif check from vnt_interrupt
-Date:   Mon,  1 Apr 2019 19:01:59 +0200
-Message-Id: <20190401170052.076350155@linuxfoundation.org>
+        stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 4.19 085/134] staging: erofs: fix to handle error path of erofs_vmap()
+Date:   Mon,  1 Apr 2019 19:02:01 +0200
+Message-Id: <20190401170052.245368699@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -63,34 +64,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-commit cc26358f89c3e493b54766b1ca56cfc6b14db78a upstream.
+commit 8bce6dcede65139a087ff240127e3f3c01363eed upstream.
 
-A check for vif is made in vnt_interrupt_work.
+erofs_vmap() wrapped vmap() and vm_map_ram() to return virtual
+continuous memory, but both of them can failed due to a lot of
+reason, previously, erofs_vmap()'s callers didn't handle them,
+which can potentially cause NULL pointer access, fix it.
 
-There is a small chance of leaving interrupt disabled while vif
-is NULL and the work hasn't been scheduled.
-
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-CC: stable@vger.kernel.org # v4.2+
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Fixes: 0d40d6e399c1 ("staging: erofs: add a generic z_erofs VLE decompressor")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6655/device_main.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/staging/erofs/unzip_vle.c     |    4 ++++
+ drivers/staging/erofs/unzip_vle_lz4.c |    7 +++++--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/vt6655/device_main.c
-+++ b/drivers/staging/vt6655/device_main.c
-@@ -1146,8 +1146,7 @@ static irqreturn_t vnt_interrupt(int irq
- {
- 	struct vnt_private *priv = arg;
+--- a/drivers/staging/erofs/unzip_vle.c
++++ b/drivers/staging/erofs/unzip_vle.c
+@@ -942,6 +942,10 @@ repeat:
  
--	if (priv->vif)
--		schedule_work(&priv->interrupt_work);
-+	schedule_work(&priv->interrupt_work);
+ skip_allocpage:
+ 	vout = erofs_vmap(pages, nr_pages);
++	if (!vout) {
++		err = -ENOMEM;
++		goto out;
++	}
  
- 	return IRQ_HANDLED;
- }
+ 	err = z_erofs_vle_unzip_vmap(compressed_pages,
+ 		clusterpages, vout, llen, work->pageofs, overlapped);
+--- a/drivers/staging/erofs/unzip_vle_lz4.c
++++ b/drivers/staging/erofs/unzip_vle_lz4.c
+@@ -116,10 +116,13 @@ int z_erofs_vle_unzip_fast_percpu(struct
+ 
+ 	nr_pages = DIV_ROUND_UP(outlen + pageofs, PAGE_SIZE);
+ 
+-	if (clusterpages == 1)
++	if (clusterpages == 1) {
+ 		vin = kmap_atomic(compressed_pages[0]);
+-	else
++	} else {
+ 		vin = erofs_vmap(compressed_pages, clusterpages);
++		if (!vin)
++			return -ENOMEM;
++	}
+ 
+ 	preempt_disable();
+ 	vout = erofs_pcpubuf[smp_processor_id()].data;
 
 
