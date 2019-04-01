@@ -4,49 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A89CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BA0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC7FE206DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B0F20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139425;
-	bh=+9d5ZseOoMwxFiOAdxZ6Bo362qgmjPjxpclEmQX6md0=;
+	s=default; t=1554139428;
+	bh=hr1b5qS0aHCcG8f0FAIdonxUpYumESkXqliFnsNqukc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WPV+Hpo5rmX+Zw74VMkyB0bF+v60FfO7jh41XtVZIsucqRDwVE0bJYfI6C3S77kFY
-	 sA42iX4suSDzmiFr9vB0IPnMNoysceaD6izQl2IQ1Zs9J6as3EMgNK4O7iouhGz1S+
-	 j7kGWI2BL6BHi75fnpkwIeja/goax9b9tn+4Pdms=
+	b=zTGgcYVYzNQ3C6RJ4uSUY1UpAuWfW/T8AIllNFyEPoBOfPVGH2eZpMrUjgUpl0hp+
+	 JUHBIWo1d0xiE3vKsVsMeH49x/08AyAl81dnfkgrqEpDTW3v8cyxxnxuU90V+olD7m
+	 qZCO0tNIaLjUj1IF1XgHH665bPSVc1fQC9hlEw54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732160AbfDARXn (ORCPT
+        id S1732169AbfDARXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53598 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732140AbfDARXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:23:40 -0400
+        id S1732156AbfDARXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:23:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AABF206DD;
-        Mon,  1 Apr 2019 17:23:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5FA0206C0;
+        Mon,  1 Apr 2019 17:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139419;
-        bh=+9d5ZseOoMwxFiOAdxZ6Bo362qgmjPjxpclEmQX6md0=;
+        s=default; t=1554139422;
+        bh=hr1b5qS0aHCcG8f0FAIdonxUpYumESkXqliFnsNqukc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+qBl1QVxFvoR1HK+wvbp04yBFuMBE7wnrlF4Cn26XYyyBqxWWlDVxpG0BgTvEJ4i
-         znCt0UMYUaAfMV1dZxR9d4aTavyBBXKdv6gR2uRZPo5EDq0gPUZbHBQdhX7ggXHtQ9
-         aO6cm8MWLiKRZXkGoZ7I4DWKl7C1HCY6DJ7HEnKU=
+        b=zqpASgRHm+k58XQg+YuAW0SoHUHQOQJY/1VYpQaPum2RV8wK5lZhWgRZbt+cf8nu/
+         yNwrrc6FkRMVxk0+9CWdBQEaqomtlu9+02kEWuhH7Fi91bnfCgA54Eqrd1xeULsV1/
+         8BjYU3ywllHyheCRuSqzgAB9KanJOPZbfzNuRZcM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 043/107] powerpc/fsl: Add infrastructure to fixup branch predictor flush
-Date:   Mon,  1 Apr 2019 19:01:58 +0200
-Message-Id: <20190401170049.547049830@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot 
+        <syzbot+e93a80c1bb7c5c56e522461c149f8bf55eab1b2b@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 070/107] fs/open.c: allow opening only regular files during execve()
+Date:   Mon,  1 Apr 2019 19:02:25 +0200
+Message-Id: <20190401170051.998892202@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,115 +73,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Diana Craciun <diana.craciun@nxp.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit 76a5eaa38b15dda92cd6964248c39b5a6f3a4e9d upstream.
+commit 73601ea5b7b18eb234219ae2adf77530f389da79 upstream.
 
-In order to protect against speculation attacks (Spectre
-variant 2) on NXP PowerPC platforms, the branch predictor
-should be flushed when the privillege level is changed.
-This patch is adding the infrastructure to fixup at runtime
-the code sections that are performing the branch predictor flush
-depending on a boot arg parameter which is added later in a
-separate patch.
+syzbot is hitting lockdep warning [1] due to trying to open a fifo
+during an execve() operation.  But we don't need to open non regular
+files during an execve() operation, for all files which we will need are
+the executable file itself and the interpreter programs like /bin/sh and
+ld-linux.so.2 .
 
-Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Since the manpage for execve(2) says that execve() returns EACCES when
+the file or a script interpreter is not a regular file, and the manpage
+for uselib(2) says that uselib() can return EACCES, and we use
+FMODE_EXEC when opening for execve()/uselib(), we can bail out if a non
+regular file is requested with FMODE_EXEC set.
+
+Since this deadlock followed by khungtaskd warnings is trivially
+reproducible by a local unprivileged user, and syzbot's frequent crash
+due to this deadlock defers finding other bugs, let's workaround this
+deadlock until we get a chance to find a better solution.
+
+[1] https://syzkaller.appspot.com/bug?id=b5095bfec44ec84213bac54742a82483aad578ce
+
+Link: http://lkml.kernel.org/r/1552044017-7890-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
+Reported-by: syzbot <syzbot+e93a80c1bb7c5c56e522461c149f8bf55eab1b2b@syzkaller.appspotmail.com>
+Fixes: 8924feff66f35fe2 ("splice: lift pipe_lock out of splice_to_pipe()")
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Eric Biggers <ebiggers3@gmail.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: <stable@vger.kernel.org>	[4.9+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/powerpc/include/asm/feature-fixups.h |   12 ++++++++++++
- arch/powerpc/include/asm/setup.h          |    2 ++
- arch/powerpc/kernel/vmlinux.lds.S         |    8 ++++++++
- arch/powerpc/lib/feature-fixups.c         |   23 +++++++++++++++++++++++
- 4 files changed, 45 insertions(+)
 
---- a/arch/powerpc/include/asm/feature-fixups.h
-+++ b/arch/powerpc/include/asm/feature-fixups.h
-@@ -219,6 +219,17 @@ label##3:					       	\
- 	FTR_ENTRY_OFFSET 953b-954b;			\
- 	.popsection;
- 
-+#define START_BTB_FLUSH_SECTION			\
-+955:							\
-+
-+#define END_BTB_FLUSH_SECTION			\
-+956:							\
-+	.pushsection __btb_flush_fixup,"a";	\
-+	.align 2;							\
-+957:						\
-+	FTR_ENTRY_OFFSET 955b-957b;			\
-+	FTR_ENTRY_OFFSET 956b-957b;			\
-+	.popsection;
- 
- #ifndef __ASSEMBLY__
- #include <linux/types.h>
-@@ -228,6 +239,7 @@ extern long __start___stf_entry_barrier_
- extern long __start___stf_exit_barrier_fixup, __stop___stf_exit_barrier_fixup;
- extern long __start___rfi_flush_fixup, __stop___rfi_flush_fixup;
- extern long __start___barrier_nospec_fixup, __stop___barrier_nospec_fixup;
-+extern long __start__btb_flush_fixup, __stop__btb_flush_fixup;
- 
- void apply_feature_fixups(void);
- void setup_feature_keys(void);
---- a/arch/powerpc/include/asm/setup.h
-+++ b/arch/powerpc/include/asm/setup.h
-@@ -66,6 +66,8 @@ void do_barrier_nospec_fixups_range(bool
- static inline void do_barrier_nospec_fixups_range(bool enable, void *start, void *end) { };
- #endif
- 
-+void do_btb_flush_fixups(void);
-+
- #endif /* !__ASSEMBLY__ */
- 
- #endif	/* _ASM_POWERPC_SETUP_H */
---- a/arch/powerpc/kernel/vmlinux.lds.S
-+++ b/arch/powerpc/kernel/vmlinux.lds.S
-@@ -164,6 +164,14 @@ SECTIONS
+---
+ fs/open.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -716,6 +716,12 @@ static int do_dentry_open(struct file *f
+ 		return 0;
  	}
- #endif /* CONFIG_PPC_BARRIER_NOSPEC */
  
-+#ifdef CONFIG_PPC_FSL_BOOK3E
-+	. = ALIGN(8);
-+	__spec_btb_flush_fixup : AT(ADDR(__spec_btb_flush_fixup) - LOAD_OFFSET) {
-+		__start__btb_flush_fixup = .;
-+		*(__btb_flush_fixup)
-+		__stop__btb_flush_fixup = .;
++	/* Any file opened for execve()/uselib() has to be a regular file. */
++	if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) {
++		error = -EACCES;
++		goto cleanup_file;
 +	}
-+#endif
- 	EXCEPTION_TABLE(0)
- 
- 	NOTES :kernel :notes
---- a/arch/powerpc/lib/feature-fixups.c
-+++ b/arch/powerpc/lib/feature-fixups.c
-@@ -347,6 +347,29 @@ void do_barrier_nospec_fixups_range(bool
- 
- 	printk(KERN_DEBUG "barrier-nospec: patched %d locations\n", i);
- }
 +
-+static void patch_btb_flush_section(long *curr)
-+{
-+	unsigned int *start, *end;
-+
-+	start = (void *)curr + *curr;
-+	end = (void *)curr + *(curr + 1);
-+	for (; start < end; start++) {
-+		pr_devel("patching dest %lx\n", (unsigned long)start);
-+		patch_instruction(start, PPC_INST_NOP);
-+	}
-+}
-+
-+void do_btb_flush_fixups(void)
-+{
-+	long *start, *end;
-+
-+	start = PTRRELOC(&__start__btb_flush_fixup);
-+	end = PTRRELOC(&__stop__btb_flush_fixup);
-+
-+	for (; start < end; start += 2)
-+		patch_btb_flush_section(start);
-+}
- #endif /* CONFIG_PPC_FSL_BOOK3E */
- 
- void do_lwsync_fixups(unsigned long value, void *fixup_start, void *fixup_end)
+ 	if (f->f_mode & FMODE_WRITE && !special_file(inode->i_mode)) {
+ 		error = get_write_access(inode);
+ 		if (unlikely(error))
 
 
