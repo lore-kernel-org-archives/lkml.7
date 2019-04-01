@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AB9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6736EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F953205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5E420883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138850;
-	bh=6csHI2ZBLxGF1xEOAoo+CcO9gN+uU4CjjrjU0WEEeeU=;
+	s=default; t=1554138855;
+	bh=5gRmf+G+hm/T0+o6hzR/d0ZVGt6lESvhrEr+RfBd0CE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qi6mXxCPzWO8RmPo4V0xaClISENXp2b+3hVgJne4tahHVVkHRZpEAVVrtQ5nxn7Rf
-	 tR0mQ3CHPt2V29c1aqIcR/+ST6SOMuseIqTu+7hjglNIASFUUAahKGIz0edVlyb0Aa
-	 NgMud9QvdH3Qxk2avVB9EQhcZfZ8iRUwMIOR7H+0=
+	b=V5OwGzyZEUY7qlTADXWTMtqJsfiwAdyAnl9tQhmYAv3qTS+itQ3I7nMN7a2AeEiwV
+	 KYvf/N+OlXWqw0QH5JYt/AMYHb3vLE62/Hqoz/7WMGhE1YfZt1L5X5tzfyIj0DQQ5D
+	 TxmMhTVpevt3sh7x3ctNRoyu22F3q7TTOX21ZYXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbfDAROJ (ORCPT
+        id S1730724AbfDARON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:14:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36962 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:14:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730648AbfDAROB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:14:01 -0400
+        id S1730684AbfDAROH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:14:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 112CA2190B;
-        Mon,  1 Apr 2019 17:04:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4C48205F4;
+        Mon,  1 Apr 2019 17:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138270;
-        bh=6csHI2ZBLxGF1xEOAoo+CcO9gN+uU4CjjrjU0WEEeeU=;
+        s=default; t=1554138847;
+        bh=5gRmf+G+hm/T0+o6hzR/d0ZVGt6lESvhrEr+RfBd0CE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TAe1QzZjAKCcrvFaii9HE5GJC573vEg+n00dKRF8snliQ7E4Cq6S9rdHRezjk8OhQ
-         WYTtQD6Y4Ht6pOUPxv7WvWkMsH4y0wmsonnzRrPvwwSfNS5oS0fhCdx0R2BXlK1vsw
-         NgPSDNaVWIB/quQNR5JIsBfMps3rOIUctmhxEfM0=
+        b=oXapc+AwcYtJg1ZJaV1d4GNd1AiE4EGa2k4UFLXXM3DZNf4bsxjVtrcjHmTukwDaX
+         G0KDFAQFIo9f7ej75oMWC3GY63VlpEiR9MODF2FhwQJYG+ZrA+bCcJb4gEipD2dbdP
+         w31nVb5FFwxeOrQffJRZVnv2FXvJm1DskHQG8mMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 018/146] packets: Always register packet sk in the same order
-Date:   Mon,  1 Apr 2019 19:00:30 +0200
-Message-Id: <20190401170050.132845349@linuxfoundation.org>
+        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 039/134] powerpc/fsl: Flush branch predictor when entering KVM
+Date:   Mon,  1 Apr 2019 19:01:15 +0200
+Message-Id: <20190401170048.353184178@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
-References: <20190401170048.449559024@linuxfoundation.org>
+In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
+References: <20190401170044.243719205@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -63,75 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+From: Diana Craciun <diana.craciun@nxp.com>
 
-[ Upstream commit a4dc6a49156b1f8d6e17251ffda17c9e6a5db78a ]
+commit e7aa61f47b23afbec41031bc47ca8d6cb6516abc upstream.
 
-When using fanouts with AF_PACKET, the demux functions such as
-fanout_demux_cpu will return an index in the fanout socket array, which
-corresponds to the selected socket.
+Switching from the guest to host is another place
+where the speculative accesses can be exploited.
+Flush the branch predictor when entering KVM.
 
-The ordering of this array depends on the order the sockets were added
-to a given fanout group, so for FANOUT_CPU this means sockets are bound
-to cpus in the order they are configured, which is OK.
-
-However, when stopping then restarting the interface these sockets are
-bound to, the sockets are reassigned to the fanout group in the reverse
-order, due to the fact that they were inserted at the head of the
-interface's AF_PACKET socket list.
-
-This means that traffic that was directed to the first socket in the
-fanout group is now directed to the last one after an interface restart.
-
-In the case of FANOUT_CPU, traffic from CPU0 will be directed to the
-socket that used to receive traffic from the last CPU after an interface
-restart.
-
-This commit introduces a helper to add a socket at the tail of a list,
-then uses it to register AF_PACKET sockets.
-
-Note that this changes the order in which sockets are listed in /proc and
-with sock_diag.
-
-Fixes: dc99f600698d ("packet: Add fanout support")
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/sock.h     |    6 ++++++
- net/packet/af_packet.c |    2 +-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ arch/powerpc/kvm/bookehv_interrupts.S |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -710,6 +710,12 @@ static inline void sk_add_node_rcu(struc
- 		hlist_add_head_rcu(&sk->sk_node, list);
- }
+--- a/arch/powerpc/kvm/bookehv_interrupts.S
++++ b/arch/powerpc/kvm/bookehv_interrupts.S
+@@ -75,6 +75,10 @@
+ 	PPC_LL	r1, VCPU_HOST_STACK(r4)
+ 	PPC_LL	r2, HOST_R2(r1)
  
-+static inline void sk_add_node_tail_rcu(struct sock *sk, struct hlist_head *list)
-+{
-+	sock_hold(sk);
-+	hlist_add_tail_rcu(&sk->sk_node, list);
-+}
++START_BTB_FLUSH_SECTION
++	BTB_FLUSH(r10)
++END_BTB_FLUSH_SECTION
 +
- static inline void __sk_nulls_add_node_rcu(struct sock *sk, struct hlist_nulls_head *list)
- {
- 	hlist_nulls_add_head_rcu(&sk->sk_nulls_node, list);
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -3245,7 +3245,7 @@ static int packet_create(struct net *net
- 	}
- 
- 	mutex_lock(&net->packet.sklist_lock);
--	sk_add_node_rcu(sk, &net->packet.sklist);
-+	sk_add_node_tail_rcu(sk, &net->packet.sklist);
- 	mutex_unlock(&net->packet.sklist_lock);
- 
- 	preempt_disable();
+ 	mfspr	r10, SPRN_PID
+ 	lwz	r8, VCPU_HOST_PID(r4)
+ 	PPC_LL	r11, VCPU_SHARED(r4)
 
 
