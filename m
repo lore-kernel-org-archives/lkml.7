@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A81EBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17A7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3B920883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18AB2133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139159;
-	bh=qiMdIuAX3nUN7iUbKCYtoZAHtGw2AkMeIy9DCjLm8RQ=;
+	s=default; t=1554139164;
+	bh=sBY9z37+jY0bPHI88jjPSabwlrYysRq2AhoSZJ2KNYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q5ObloQ6VZP1DUIDE7CVmIvUaQu/ZL7udcveni3lw6CI2rFE2cMcOmS+DqQYJ3z2z
-	 730wNbmyyW1qd/LVzGUzyLbuy+zWpkBIQzl4A9OP0pHaPlXR1e11ck7Ia69q2a2+xf
-	 1eytcCiHrYQ4Bgty1jMoP0FvHfI2aINisKCTTNOg=
+	b=Q1LOyAZRI0R3i/FUNav04TCcugGpSV9fTW8tTn4RZJEIAOL1VZqyRU1Ln2yKz0+5h
+	 gzH7D8NPxl79uV9y939Qhh3ko+9cd6sf0SvwrsKwaVHtYsImz6DULC3gHDn1BBX5RJ
+	 OAY36IuZ6RMiZPU6yv3M1amFkQRZNMN1zPINsJrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731493AbfDARTS (ORCPT
+        id S1731511AbfDARTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:19:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46862 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:19:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731475AbfDARTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:19:09 -0400
+        id S1731302AbfDARTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:19:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13ADC206C0;
-        Mon,  1 Apr 2019 17:19:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7774E21852;
+        Mon,  1 Apr 2019 17:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139147;
-        bh=qiMdIuAX3nUN7iUbKCYtoZAHtGw2AkMeIy9DCjLm8RQ=;
+        s=default; t=1554139159;
+        bh=sBY9z37+jY0bPHI88jjPSabwlrYysRq2AhoSZJ2KNYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LHVK7I8NaTPpsLdn7G7OpjLE91CMCkCP/dQUrmmw/l+sK9uVX1vlujQ81QMeBjRBg
-         DYiM3oANR6kfV5DrAFyQuSQ4HWS/g0Pm/qD8UmuKfofnYcsvN3tptnZB2+BxQd6Uh8
-         IUdSg6Z7e89FZWQmV/xMBMJTaTG0KZDjLwOGblD4=
+        b=szp+pDF0D0E3z1rUnMIbc94OPGk0qoxbHvTELTSwdtaZcX4qp1kBS79BHD3oN9079
+         Px4NyL4XBpPEz2kp8n/LnA/74Cl1eX094TVGko0asJyNd/HWNyTkRFZHkxhiIVMdVW
+         H3OR8Io59/HNQiZ9sfLzKzj7oQJJ/aFcw7XdXeA0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xu Yu <xuyu@linux.alibaba.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 4.19 128/134] bpf: do not restore dst_reg when cur_state is freed
-Date:   Mon,  1 Apr 2019 19:02:44 +0200
-Message-Id: <20190401170056.199327011@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH 4.19 131/134] platform: x86: intel_cht_int33fe: Add connection for the DP alt mode
+Date:   Mon,  1 Apr 2019 19:02:47 +0200
+Message-Id: <20190401170056.448072463@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -65,68 +67,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xu Yu <xuyu@linux.alibaba.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit 0803278b0b4d8eeb2b461fb698785df65a725d9e upstream.
+commit 78d2b54b134ea6059e2b1554ad53fab2300a4cc6 upstream.
 
-Syzkaller hit 'KASAN: use-after-free Write in sanitize_ptr_alu' bug.
+Adding a connection for the DisplayPort alternate mode.
+PI3USB30532 is used for muxing the port to DisplayPort on
+CHT platforms. The connection allows the alternate mode
+device to get handle to the mux, and therefore make it
+possible to use the USB Type-C connector as DisplayPort.
 
-Call trace:
-
-  dump_stack+0xbf/0x12e
-  print_address_description+0x6a/0x280
-  kasan_report+0x237/0x360
-  sanitize_ptr_alu+0x85a/0x8d0
-  adjust_ptr_min_max_vals+0x8f2/0x1ca0
-  adjust_reg_min_max_vals+0x8ed/0x22e0
-  do_check+0x1ca6/0x5d00
-  bpf_check+0x9ca/0x2570
-  bpf_prog_load+0xc91/0x1030
-  __se_sys_bpf+0x61e/0x1f00
-  do_syscall_64+0xc8/0x550
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fault injection trace:
-
-  kfree+0xea/0x290
-  free_func_state+0x4a/0x60
-  free_verifier_state+0x61/0xe0
-  push_stack+0x216/0x2f0	          <- inject failslab
-  sanitize_ptr_alu+0x2b1/0x8d0
-  adjust_ptr_min_max_vals+0x8f2/0x1ca0
-  adjust_reg_min_max_vals+0x8ed/0x22e0
-  do_check+0x1ca6/0x5d00
-  bpf_check+0x9ca/0x2570
-  bpf_prog_load+0xc91/0x1030
-  __se_sys_bpf+0x61e/0x1f00
-  do_syscall_64+0xc8/0x550
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-When kzalloc() fails in push_stack(), free_verifier_state() will free
-current verifier state. As push_stack() returns, dst_reg was restored
-if ptr_is_dst_reg is false. However, as member of the cur_state,
-dst_reg is also freed, and error occurs when dereferencing dst_reg.
-Simply fix it by testing ret of push_stack() before restoring dst_reg.
-
-Fixes: 979d63d50c0c ("bpf: prevent out of bounds speculation on pointer arithmetic")
-Signed-off-by: Xu Yu <xuyu@linux.alibaba.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/verifier.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/intel_cht_int33fe.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -2815,7 +2815,7 @@ do_sim:
- 		*dst_reg = *ptr_reg;
- 	}
- 	ret = push_stack(env, env->insn_idx + 1, env->insn_idx, true);
--	if (!ptr_is_dst_reg)
-+	if (!ptr_is_dst_reg && ret)
- 		*dst_reg = tmp;
- 	return !ret ? -EFAULT : 0;
- }
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -34,7 +34,7 @@ struct cht_int33fe_data {
+ 	struct i2c_client *fusb302;
+ 	struct i2c_client *pi3usb30532;
+ 	/* Contain a list-head must be per device */
+-	struct device_connection connections[4];
++	struct device_connection connections[5];
+ };
+ 
+ /*
+@@ -181,8 +181,11 @@ static int cht_int33fe_probe(struct i2c_
+ 	data->connections[1].endpoint[1] = "i2c-pi3usb30532";
+ 	data->connections[1].id = "typec-mux";
+ 	data->connections[2].endpoint[0] = "i2c-fusb302";
+-	data->connections[2].endpoint[1] = "intel_xhci_usb_sw-role-switch";
+-	data->connections[2].id = "usb-role-switch";
++	data->connections[2].endpoint[1] = "i2c-pi3usb30532";
++	data->connections[2].id = "idff01m01";
++	data->connections[3].endpoint[0] = "i2c-fusb302";
++	data->connections[3].endpoint[1] = "intel_xhci_usb_sw-role-switch";
++	data->connections[3].id = "usb-role-switch";
+ 
+ 	device_connections_add(data->connections);
+ 
 
 
