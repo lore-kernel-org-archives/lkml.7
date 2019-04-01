@@ -2,168 +2,77 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25848C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88DDC10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD4CF20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:50:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="k3VSDY+i"
+	by mail.kernel.org (Postfix) with ESMTP id 8313B20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfDAXuN (ORCPT
+        id S1728553AbfDAXwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 19:50:13 -0400
-Received: from ozlabs.org ([203.11.71.1]:51635 "EHLO ozlabs.org"
+        Mon, 1 Apr 2019 19:52:53 -0400
+Received: from mga11.intel.com ([192.55.52.93]:16849 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbfDAXuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 19:50:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44Y8GR0SKRz9sRk;
-        Tue,  2 Apr 2019 10:50:06 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554162609;
-        bh=3KuGHfxYoRQI4+fxh4dETcyKaRGfVPKxqivvckEsH7g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=k3VSDY+ijIYCs6u1CIFASkhthjWNVnIUpojhTK9cCBw4RaqGcUxkmAgiPZckwMU5H
-         /YjNSyf/BhRlLhfPL8h3NKR4Q9wmgXsm7hi3PT4hvLP5j+Pic1447MHGtvZHihHZG9
-         CLiZLRM+8dTi+N38Di4Lm6TieIO5Q5/8iyQpSebtV+1742dgjKQuJWpFIQd6/7o0W3
-         LyDh51nBKKq7o4lktqpmnDqkALGN73eO0RP5qVOr7d30rmafi/lUkFSOJ9YJQ0xOyM
-         RQH1bBxGzo9bYuZM0wfeH/dLWJuINjPBZmcc0EJ4kNAJxShBiR+nTnvWGg/GY4k2Mi
-         nndf8hi3LX4Pg==
-Date:   Tue, 2 Apr 2019 10:50:06 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qiang Yu <yuq825@gmail.com>, Eric Anholt <eric@anholt.net>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20190402105006.48f93e53@canb.auug.org.au>
+        id S1725897AbfDAXwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 19:52:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 16:52:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,298,1549958400"; 
+   d="scan'208";a="145740064"
+Received: from unknown (HELO localhost) ([10.249.254.142])
+  by FMSMGA003.fm.intel.com with ESMTP; 01 Apr 2019 16:52:47 -0700
+Date:   Tue, 2 Apr 2019 02:52:45 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Matthew Garrett <matthewgarrett@google.com>,
+        tomas.winkler@intel.com
+Cc:     linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+        roberto.sassu@huawei.com, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tweek@google.com
+Subject: Re: Add support for TCG2 log format on UEFI systems
+Message-ID: <20190401235245.GA29282@linux.intel.com>
+References: <20190227202658.197113-1-matthewgarrett@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/SZEXJadgHBuvyUe/0V=B28w"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190227202658.197113-1-matthewgarrett@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SZEXJadgHBuvyUe/0V=B28w
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Feb 27, 2019 at 12:26:54PM -0800, Matthew Garrett wrote:
+> Identical to V4, but based on tpmdd-next
 
-Hi all,
+OK, so on my GLK NUC I get valid final log and invalid event log
+after adding some extra klogs.
 
-After merging the drm-misc tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+I.e.
 
-In file included from include/linux/kernel.h:7,
-                 from include/asm-generic/bug.h:18,
-                 from arch/x86/include/asm/bug.h:83,
-                 from include/linux/bug.h:5,
-                 from include/linux/mmdebug.h:5,
-                 from include/linux/gfp.h:5,
-                 from include/linux/slab.h:15,
-                 from drivers/gpu/drm/lima/lima_ctx.c:4:
-drivers/gpu/drm/lima/lima_ctx.c: In function 'lima_ctx_create':
-include/linux/limits.h:13:18: warning: passing argument 3 of 'xa_alloc' mak=
-es pointer from integer without a cast [-Wint-conversion]
- #define UINT_MAX (~0U)
-                  ^~~~~
-drivers/gpu/drm/lima/lima_ctx.c:26:36: note: in expansion of macro 'UINT_MA=
-X'
-  err =3D xa_alloc(&mgr->handles, id, UINT_MAX, ctx, GFP_KERNEL);
-                                    ^~~~~~~~
-In file included from include/linux/radix-tree.h:31,
-                 from include/linux/idr.h:15,
-                 from include/drm/drm_device.h:7,
-                 from drivers/gpu/drm/lima/lima_device.h:7,
-                 from drivers/gpu/drm/lima/lima_ctx.c:6:
-include/linux/xarray.h:817:9: note: expected 'void *' but argument is of ty=
-pe 'unsigned int'
-   void *entry, struct xa_limit limit, gfp_t gfp)
-   ~~~~~~^~~~~
-drivers/gpu/drm/lima/lima_ctx.c:26:46: error: incompatible type for argumen=
-t 4 of 'xa_alloc'
-  err =3D xa_alloc(&mgr->handles, id, UINT_MAX, ctx, GFP_KERNEL);
-                                              ^~~
-In file included from include/linux/radix-tree.h:31,
-                 from include/linux/idr.h:15,
-                 from include/drm/drm_device.h:7,
-                 from drivers/gpu/drm/lima/lima_device.h:7,
-                 from drivers/gpu/drm/lima/lima_ctx.c:6:
-include/linux/xarray.h:817:32: note: expected 'struct xa_limit' but argumen=
-t is of type 'struct lima_ctx *'
-   void *entry, struct xa_limit limit, gfp_t gfp)
-                ~~~~~~~~~~~~~~~~^~~~~
+-       if (efi.tpm_log == EFI_INVALID_TABLE_ADDR)
++       if (efi.tpm_log == EFI_INVALID_TABLE_ADDR) {
++               pr_err("No event log\n");
+                return -ENODEV;
++       }
 
-Caused by commit
+will result
 
-  a1d2a6339961 ("drm/lima: driver for ARM Mali4xx GPUs")
+[    2.654392] No event log 
 
-interacting with commit
+but still
 
-  a3e4d3f97ec8 ("XArray: Redesign xa_alloc API")
+[    0.000000] efi:  ACPI 2.0=0x69ca2000  ACPI=0x69ca2000  TPMFinalLog=0x69ce4000  SMBIOS=0x69f63000  SMBIOS 3.0=0x69f62000  ESRT=0x69f3e818  MEMATTR=0x63475118
 
-from Linus' tree (v5.1-rc1).
+Tomas, I wonder if you are able to get the log out with some machine?
 
-I have applied the following patch for today.  It could be applied as
-part of a merge of v5.1-rc1 into drm-misc.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 2 Apr 2019 10:45:32 +1100
-Subject: [PATCH] drm/lima: update for xa_alloc API change
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/gpu/drm/lima/lima_ctx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/lima/lima_ctx.c b/drivers/gpu/drm/lima/lima_ct=
-x.c
-index c8d12f7c6894..bafa00d74cc5 100644
---- a/drivers/gpu/drm/lima/lima_ctx.c
-+++ b/drivers/gpu/drm/lima/lima_ctx.c
-@@ -23,7 +23,7 @@ int lima_ctx_create(struct lima_device *dev, struct lima_=
-ctx_mgr *mgr, u32 *id)
- 			goto err_out0;
- 	}
-=20
--	err =3D xa_alloc(&mgr->handles, id, UINT_MAX, ctx, GFP_KERNEL);
-+	err =3D xa_alloc(&mgr->handles, id, ctx, XA_LIMIT(*id, UINT_MAX), GFP_KER=
-NEL);
- 	if (err < 0)
- 		goto err_out0;
-=20
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/SZEXJadgHBuvyUe/0V=B28w
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyio64ACgkQAVBC80lX
-0Gyxmwf7BUUcO3jO4XZMNB1v76C3+C8HGbIcponmP/SqlaVSm0ERkTwh5rpHCQJ6
-ckz2pUVtQOKWoRyzU9PkE061Qg5piQjIfW6aFGvVba8uyW/jXNXN9SgSDs9ldin5
-9HoQAW/5hcV/wiK/0kSd3lzcJUZw12PaVozlEGsp7M4hnnO5MXsxzvzWhJE3dwqK
-Ptj2T+XJu++rg8M4JacRlrq2AOuiydUC2M8EHbzqYek/ouNVj9QqPrGvAtCHzSrz
-AvAunWUXF/nmSbs+xvYUtyZ8rGN1iokwqEZeVZLqskWffnfsHVzBU+08czc5tkRI
-DijfB9yTtCwQvAD/PxNcM/p2WBAUhw==
-=OqG1
------END PGP SIGNATURE-----
-
---Sig_/SZEXJadgHBuvyUe/0V=B28w--
+/Jarkko
