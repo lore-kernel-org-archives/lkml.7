@@ -2,61 +2,61 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369ADC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 04:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E991C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 04:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0702E20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 04:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7C920879
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 04:26:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OffdOUSa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vLKrtTIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731856AbfDAE0U (ORCPT
+        id S1731779AbfDAE0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 00:26:20 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34792 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731700AbfDAE0O (ORCPT
+        Mon, 1 Apr 2019 00:26:16 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39805 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfDAE0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 00:26:14 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v12so4084316pgq.1;
-        Sun, 31 Mar 2019 21:26:13 -0700 (PDT)
+        Mon, 1 Apr 2019 00:26:08 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k3so4068582pga.6;
+        Sun, 31 Mar 2019 21:26:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zo7YY9RlZFhjrvNNH/TAsWEOA9xZ2TYMIrq7kVWYlhI=;
-        b=OffdOUSanEiUxIJd7PSU2U6oXzGltjOS8gf7Dtzb6CuutkuQRCwje9coS7rXJcFSyn
-         QObonRcDyhfvI3OxeMm1/kcWC7/xfd8Y4gWoUqfR6oX/WZs4KuJuD214QfvDpitlrdM5
-         acPi92z28qSAxUmrxnVXLAUGbXYaqRmF42UOWalxNaxr5ytElLkaFGBD4xGRKm/EXMEX
-         1Jwwkl9b/IjtO6pP/gbhhaoGwci9XCUxjiaWpVsSAFbymhYQHBcvymmePAIvR8S2OawN
-         2cj8vEqzf99MK7O3IpvJW/LVRNHayf8gc7zXZpS6COqJMR/o6yRgy19kFCxqva0cm1HY
-         /ncg==
+        bh=8whUmPYH8KsqvkwsmrRZwN7fZI8OQ9E54/C8jqSTYVM=;
+        b=vLKrtTIXy4SD7SlQWtGDn/Rm38iDuIjIeGocg0oZARQHvW0QgDXqxpGBaC/CIBXIaa
+         tlug3ab3KQuyxMKo5ALEcNQEbFmlkV7L8LxOVpkzWotBEPydQ5ux9nm38/xk+lzeft4q
+         VFmeJX8EW/Dk8hI6Oex4a0wnZxY2ES3brJT5OVhz0Nd59Jp+WlviyRxWCYJ2DdeXALSD
+         0eQFYNM36x/bApzkmP3NAPd5t8WQh58vSBhGyaDe4ujIbjuOzhkku9ACLXBmU9Rke9ob
+         7fLWHk/JiElZpT5pw/MTxL1oXe/R92NYcFfB21qr6CpfVVq7LRjr6gxvvUM/dg0ihPSr
+         5Csw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zo7YY9RlZFhjrvNNH/TAsWEOA9xZ2TYMIrq7kVWYlhI=;
-        b=cmF8DOpb39r1I2+wEp+Cn2Vv2fZvLT63pJ10FcYmFflexMVJY92MkMlq1xqIz76hBR
-         uXpJ4FGjdTdQAozYRbnaMFam1rSpdrX1RFXcBOMyzI2j6NcCSisVnOVETphcnY0Q5tvg
-         c25LfqZ+PjZc9yIeFEV4vkfbJufz5y37a5j6l/ddVumgQGmxAxkGEuZBR9vt3Y8yXtdE
-         iFpOBbrDWqA6hJouoZAJ4E62Y5AVOxrLpJh+DxmoF2GLTX45eJXNS4sSvyfe2/6B4qRc
-         jZhf2BU6A4WSh21oUwelLeuqbR+f7y7ZWkBurYs3IgvgLf7suCh4GTRbmQC/0gzPzKIU
-         SXBg==
-X-Gm-Message-State: APjAAAU/46196+6pj4WihWPxCi/3x0pvQbP5s85HRsfyaMwnRDJZF2vW
-        Me7WjiCNoIZAySkW4DQa6T9b9Ooi
-X-Google-Smtp-Source: APXvYqwMa6Q4rl8JVXlTJS0o6bbwUSeH9MZAjfNv6K8hbtJj8Zr9NyuFIgHFImzQhkbieODuBeKwLQ==
-X-Received: by 2002:a62:ed08:: with SMTP id u8mr60360752pfh.200.1554092773027;
-        Sun, 31 Mar 2019 21:26:13 -0700 (PDT)
+        bh=8whUmPYH8KsqvkwsmrRZwN7fZI8OQ9E54/C8jqSTYVM=;
+        b=VkF5B7Gs+sP0slQfSTdST0+oM9R/4Go9CYrDLLXboe5ysjgtoGWwmFFJj7kYjQ5+CG
+         OC58NDMMsMTd9SyXv/d1Fw0GL1dF4XikJHgg0fJ4EkPGfKGQdHLU+kk8A3YsVeE+Vq+5
+         qsNWElBxdeJPN3SSWmAiTkuzTfepJt02AqRAaT08eOwazDrEGyQTieu4YKR3VJxM/6FB
+         FVqvfHd+rHfAEH/6TrBpCCkuqGSEn9/5PIQb/xLWamrjXh2QaA4Qm6zKS9+TznoafYPa
+         UHQjw+WEARbygUyqNGrpiOyVQtwg6BVrPraB0+plLfZ9VvxXZRGGbPBahpuI3c4/KoJe
+         EgNA==
+X-Gm-Message-State: APjAAAVXiH9hirvP02mUJxTqYQSyChC0RRN8woqF9a43toX7PMQ2er36
+        PYw+Vvcx6nwb2smimGj+uT3T4vrZ
+X-Google-Smtp-Source: APXvYqyglTsuRlhl/0izWWPDsxD4hoX3JRd6WuETqcXR6P2heRnmooiXnKqhRPv23Ruocf8sZyxL/w==
+X-Received: by 2002:a63:fa54:: with SMTP id g20mr4043801pgk.242.1554092767129;
+        Sun, 31 Mar 2019 21:26:07 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id t22sm10996829pgu.45.2019.03.31.21.26.11
+        by smtp.gmail.com with ESMTPSA id t22sm10996829pgu.45.2019.03.31.21.26.05
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 31 Mar 2019 21:26:12 -0700 (PDT)
+        Sun, 31 Mar 2019 21:26:06 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-pci@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -69,9 +69,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         "A.s. Dong" <aisheng.dong@nxp.com>,
         Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 09/11] PCI: imx6: Restrict PHY register data to 16-bit
-Date:   Sun, 31 Mar 2019 21:25:45 -0700
-Message-Id: <20190401042547.14067-10-andrew.smirnov@gmail.com>
+Subject: [PATCH v3 05/11] PCI: dwc: imx6: Share PHY debug register definitions
+Date:   Sun, 31 Mar 2019 21:25:41 -0700
+Message-Id: <20190401042547.14067-6-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190401042547.14067-1-andrew.smirnov@gmail.com>
 References: <20190401042547.14067-1-andrew.smirnov@gmail.com>
@@ -82,9 +82,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PHY registers on i.MX6 are 16-bit wide, so we can get rid of explicit
-masking if we restrict pcie_phy_read/pcie_phy_write to use 'u16'
-instead of 'int'. No functional change intended.
+Both pcie-designware.c and pci-imx6.c contain custom definitions for
+PHY debug registers R0/R1 and on top of that there's already a
+definition for R0 in pcie-designware.h. Move all of the definitions to
+pcie-designware.h. No functional change intended.
 
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
@@ -100,63 +101,79 @@ Cc: linux-kernel@vger.kernel.org
 Cc: linux-pci@vger.kernel.org
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c        |  6 ++----
+ drivers/pci/controller/dwc/pcie-designware.c | 12 +++---------
+ drivers/pci/controller/dwc/pcie-designware.h |  3 +++
+ 3 files changed, 8 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 7c3ffb751002..9c658ef55aa4 100644
+index 92c40c250a34..bb95a3273ca2 100644
 --- a/drivers/pci/controller/dwc/pci-imx6.c
 +++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -195,10 +195,10 @@ static int pcie_phy_wait_ack(struct imx6_pcie *imx6_pcie, int addr)
+@@ -103,8 +103,6 @@ struct imx6_pcie {
+ 
+ /* PCIe Port Logic registers (memory-mapped) */
+ #define PL_OFFSET 0x700
+-#define PCIE_PHY_DEBUG_R0 (PL_OFFSET + 0x28)
+-#define PCIE_PHY_DEBUG_R1 (PL_OFFSET + 0x2c)
+ 
+ #define PCIE_PHY_CTRL (PL_OFFSET + 0x114)
+ #define PCIE_PHY_CTRL_DATA_LOC 0
+@@ -839,8 +837,8 @@ static int imx6_pcie_establish_link(struct imx6_pcie *imx6_pcie)
+ 
+ err_reset_phy:
+ 	dev_dbg(dev, "PHY DEBUG_R0=0x%08x DEBUG_R1=0x%08x\n",
+-		dw_pcie_readl_dbi(pci, PCIE_PHY_DEBUG_R0),
+-		dw_pcie_readl_dbi(pci, PCIE_PHY_DEBUG_R1));
++		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0),
++		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1));
+ 	imx6_pcie_reset_phy(imx6_pcie);
+ 	return ret;
+ }
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 31f6331ca46f..086e87a40316 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -14,12 +14,6 @@
+ 
+ #include "pcie-designware.h"
+ 
+-/* PCIe Port Logic registers */
+-#define PLR_OFFSET			0x700
+-#define PCIE_PHY_DEBUG_R1		(PLR_OFFSET + 0x2c)
+-#define PCIE_PHY_DEBUG_R1_LINK_UP	(0x1 << 4)
+-#define PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING	(0x1 << 29)
+-
+ int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+ {
+ 	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+@@ -334,9 +328,9 @@ int dw_pcie_link_up(struct dw_pcie *pci)
+ 	if (pci->ops->link_up)
+ 		return pci->ops->link_up(pci);
+ 
+-	val = readl(pci->dbi_base + PCIE_PHY_DEBUG_R1);
+-	return ((val & PCIE_PHY_DEBUG_R1_LINK_UP) &&
+-		(!(val & PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING)));
++	val = readl(pci->dbi_base + PCIE_PORT_DEBUG1);
++	return ((val & PCIE_PORT_DEBUG1_LINK_UP) &&
++		(!(val & PCIE_PORT_DEBUG1_LINK_IN_TRAINING)));
  }
  
- /* Read from the 16-bit PCIe PHY control registers (not memory-mapped) */
--static int pcie_phy_read(struct imx6_pcie *imx6_pcie, int addr, int *data)
-+static int pcie_phy_read(struct imx6_pcie *imx6_pcie, int addr, u16 *data)
- {
- 	struct dw_pcie *pci = imx6_pcie->pci;
--	u32 val, phy_ctl;
-+	u32 phy_ctl;
- 	int ret;
+ void dw_pcie_setup(struct dw_pcie *pci)
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 377f4c0b52da..662bb9082c76 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -41,6 +41,9 @@
+ #define PCIE_PORT_DEBUG0		0x728
+ #define PORT_LOGIC_LTSSM_STATE_MASK	0x1f
+ #define PORT_LOGIC_LTSSM_STATE_L0	0x11
++#define PCIE_PORT_DEBUG1		0x72C
++#define PCIE_PORT_DEBUG1_LINK_UP		(0x1 << 4)
++#define PCIE_PORT_DEBUG1_LINK_IN_TRAINING	(0x1 << 29)
  
- 	ret = pcie_phy_wait_ack(imx6_pcie, addr);
-@@ -213,8 +213,7 @@ static int pcie_phy_read(struct imx6_pcie *imx6_pcie, int addr, int *data)
- 	if (ret)
- 		return ret;
- 
--	val = dw_pcie_readl_dbi(pci, PCIE_PHY_STAT);
--	*data = val & 0xffff;
-+	*data = dw_pcie_readl_dbi(pci, PCIE_PHY_STAT);
- 
- 	/* deassert Read signal */
- 	dw_pcie_writel_dbi(pci, PCIE_PHY_CTRL, 0x00);
-@@ -222,7 +221,7 @@ static int pcie_phy_read(struct imx6_pcie *imx6_pcie, int addr, int *data)
- 	return pcie_phy_poll_ack(imx6_pcie, 0);
- }
- 
--static int pcie_phy_write(struct imx6_pcie *imx6_pcie, int addr, int data)
-+static int pcie_phy_write(struct imx6_pcie *imx6_pcie, int addr, u16 data)
- {
- 	struct dw_pcie *pci = imx6_pcie->pci;
- 	u32 var;
-@@ -279,7 +278,7 @@ static int pcie_phy_write(struct imx6_pcie *imx6_pcie, int addr, int data)
- 
- static void imx6_pcie_reset_phy(struct imx6_pcie *imx6_pcie)
- {
--	u32 tmp;
-+	u16 tmp;
- 
- 	if (!(imx6_pcie->drvdata->flags & IMX6_PCIE_FLAG_IMX6_PHY))
- 		return;
-@@ -675,7 +674,7 @@ static int imx6_setup_phy_mpll(struct imx6_pcie *imx6_pcie)
- {
- 	unsigned long phy_rate = clk_get_rate(imx6_pcie->pcie_phy);
- 	int mult, div;
--	u32 val;
-+	u16 val;
- 
- 	if (!(imx6_pcie->drvdata->flags & IMX6_PCIE_FLAG_IMX6_PHY))
- 		return 0;
+ #define PCIE_LINK_WIDTH_SPEED_CONTROL	0x80C
+ #define PORT_LOGIC_SPEED_CHANGE		BIT(17)
 -- 
 2.20.1
 
