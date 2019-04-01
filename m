@@ -7,114 +7,116 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0EBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792F0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7B420883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AAD320896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:04:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qAPVPvYe"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="X5ieFSrL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfDAMEL (ORCPT
+        id S1727005AbfDAMEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 08:04:11 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:34114 "EHLO
+        Mon, 1 Apr 2019 08:04:30 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:34280 "EHLO
         mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfDAMEL (ORCPT
+        with ESMTP id S1726945AbfDAME3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 08:04:11 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190401120409euoutp028fb3d76c95107498ee16313890a26bd7~RWCH4Izag1585215852euoutp02e
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2019 12:04:09 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190401120409euoutp028fb3d76c95107498ee16313890a26bd7~RWCH4Izag1585215852euoutp02e
+        Mon, 1 Apr 2019 08:04:29 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190401120427euoutp025dad645ad3e9f7129519407a735c58c1~RWCZGrP5I1590015900euoutp02d
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2019 12:04:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190401120427euoutp025dad645ad3e9f7129519407a735c58c1~RWCZGrP5I1590015900euoutp02d
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1554120249;
-        bh=LxtegCOtH4r5Z5D9tUIWf/cS9tqpuytPJ8jdh2bo+Tk=;
+        s=mail20170921; t=1554120267;
+        bh=GUCinh58f0fmdGROh1Z32/WkaaVB5G010l2lKMQ2JDs=;
         h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=qAPVPvYemr+ShO8LTWJD+wwh2ty9hjkVeM/GN96unk33/Irj1Duz9leOLqNQyCqSC
-         TnjdFioFnglTCPWAB6fq4t2Zq0VgnEVjYNQCqkm2PRs4G1aeogAajC+bbHDYxHGL0f
-         GL9s4CzCyx2/WRLiXbKlZVeS1A+U2f28X7e2lfP4=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        b=X5ieFSrLvuPjlZrKU3LK/X5Sb6wBJSU8HafWFURfTICY8x7cior6FIz+RWkmOfBca
+         sGBG9h51tu1zYfnBUqYJLgAkDiJlRaQp1I/9RopOslLOJ68JHKowv1H1POC1w73MMg
+         wVIUNG8L5MWUsRidXS2Ch+ZgTHr0Sa4+JH4RsQJQ=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190401120408eucas1p2ebcc1e87ff51e23e95b8ec65b931ce8a~RWCHSl2QW1820618206eucas1p2l;
-        Mon,  1 Apr 2019 12:04:08 +0000 (GMT)
+        20190401120427eucas1p2f8b08fceeed6faf02a1214b7392a5f70~RWCYz-iKi1988919889eucas1p2V;
+        Mon,  1 Apr 2019 12:04:27 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 57.31.04298.83EF1AC5; Mon,  1
-        Apr 2019 13:04:08 +0100 (BST)
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 11.92.04325.B4EF1AC5; Mon,  1
+        Apr 2019 13:04:27 +0100 (BST)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190401120407eucas1p1ed00d5715c2db886a8c5724d3c1472c1~RWCGjhIka1978419784eucas1p1c;
-        Mon,  1 Apr 2019 12:04:07 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        20190401120426eucas1p19b20d555750c540a84198cfe3ca77926~RWCYFq78y2799727997eucas1p1q;
+        Mon,  1 Apr 2019 12:04:26 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190401120407eusmtrp2bcfcaebece528a9de0fdc2a5e9b84e38~RWCGViCmp2054720547eusmtrp2g;
-        Mon,  1 Apr 2019 12:04:07 +0000 (GMT)
-X-AuditID: cbfec7f2-f2dff700000010ca-bb-5ca1fe38fa3b
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 50.1A.04146.73EF1AC5; Mon,  1
-        Apr 2019 13:04:07 +0100 (BST)
+        20190401120426eusmtrp2853613df0412079f20c293b7c2b9c048~RWCX3qede2087820878eusmtrp2Y;
+        Mon,  1 Apr 2019 12:04:26 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-75-5ca1fe4bd553
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 44.D9.04140.A4EF1AC5; Mon,  1
+        Apr 2019 13:04:26 +0100 (BST)
 Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190401120407eusmtip20d56fc4157d99f8ce14fb4c59f013f5c~RWCF4TPjj2113821138eusmtip2b;
-        Mon,  1 Apr 2019 12:04:07 +0000 (GMT)
-Subject: Re: [PATCH] video/macfb: Call fb_invert_cmaps()
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190401120426eusmtip11124b370a89e76a6a552702e4fece1de~RWCXlshrw2544725447eusmtip1n;
+        Mon,  1 Apr 2019 12:04:26 +0000 (GMT)
+Subject: Re: [PATCH] video/macfb: Always initialize DAFB colour table
+ pointer register
 To:     Finn Thain <fthain@telegraphics.com.au>
 Cc:     linux-m68k@lists.linux-m68k.org, dri-devel@lists.freedesktop.org,
         linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <eaaa9e82-8194-17c3-6106-16a34a36a194@samsung.com>
-Date:   Mon, 1 Apr 2019 14:04:06 +0200
+Message-ID: <aed176be-adce-dd80-8f54-55a1ca33a65b@samsung.com>
+Date:   Mon, 1 Apr 2019 14:04:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
         Thunderbird/45.3.0
 MIME-Version: 1.0
-In-Reply-To: <80cf1394f099ced17bd5075be88cf33c1232086a.1550445927.git.fthain@telegraphics.com.au>
+In-Reply-To: <7396d7b11366fe9ee362cb140e74dd391e66e2d6.1550529894.git.fthain@telegraphics.com.au>
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMKsWRmVeSWpSXmKPExsWy7djPc7oW/xbGGJxtFLe48vU9m8XE3qUs
-        Fif6PrBaXN41h81i+ZO1zA6sHve7jzN5nGz9xuLx7OBDVo/Pm+QCWKK4bFJSczLLUov07RK4
-        Mn7Ne8tc8Iap4s3OI0wNjOuZuhg5OSQETCTW79vA2sXIxSEksIJR4mbHAijnC6PE8ek/2SGc
-        z4wS7Qv64Vq6n65mgkgsZ5SYdH8dVNVbRonmhjZWkCphAQuJV6fvsoDYIgLaEhPf7GADKWIW
-        aGSUWL50EVgRm4CVxMT2VYwgNq+AncT8i6fAGlgEVCT+n7oK1MDBISoQIdF/Rh2iRFDi5Mwn
-        YCWcAokSvdv/gl3ELGAgcWTRHFYIW15i+9s5zCC7JAS62SXufFzHCnG2i8Std1vYIGxhiVfH
-        t7BD2DIS/3fOZ4JoWMco8bfjBVT3dqBLJ/+D6rCWOHz8ItQkR4n3L+4xg1wnIcAnceOtIMRm
-        PolJ26ZDhXklOtqEIKrVJDYs28AGs6tr50pmCNtDYt7rn6wTGBVnIfltFpJ/ZiH5ZwEj8ypG
-        8dTS4tz01GLDvNRyveLE3OLSvHS95PzcTYzApHL63/FPOxi/Xko6xCjAwajEw6vAsDBGiDWx
-        rLgy9xCjBAezkgjvmf4FMUK8KYmVValF+fFFpTmpxYcYpTlYlMR5qxkeRAsJpCeWpGanphak
-        FsFkmTg4pRoYJV/P75trtbdln3astOuv4NOlk8+r2V7vqjB3yhaZJWXDuTiD74MHe+z/9cXl
-        /+JuJU7Oe6C07Oi6wm22WS0xiyXj7i2R35Dm2pAT5Bi9ac/qu6nee51sI5++72EumJm0tPLo
-        vntrKl8+rNvUlsYupOKSoLnO7Z/jlCf3zq/RW94s0e3gmCCjxFKckWioxVxUnAgA8nRcIyYD
-        AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsVy+t/xe7rm/xbGGHybJW1x5et7NouJvUtZ
-        LE70fWC1uLxrDpvF8idrmR1YPe53H2fyONn6jcXj2cGHrB6fN8kFsETp2RTll5akKmTkF5fY
-        KkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZfya95a54A1TxZudR5gaGNcz
-        dTFyckgImEh0P10NZHNxCAksZZT4M+8ycxcjB1BCRuL4+jKIGmGJP9e62CBqXjNKTPs2lxEk
-        ISxgIfHq9F0WEFtEQFti4psdUEVbgAbtXsQM4jALNDJKnGpdD9bBJmAlMbF9FZjNK2AnMf/i
-        KbBuFgEVif+nrrKB2KICERK3HnawQNQISpyc+QTM5hRIlOjd/hfsbGYBPYkd13+xQtjyEtvf
-        zmGewCg4C0nLLCRls5CULWBkXsUoklpanJueW2yoV5yYW1yal66XnJ+7iREYKduO/dy8g/HS
-        xuBDjAIcjEo8vBVMC2OEWBPLiitzDzFKcDArifCe6V8QI8SbklhZlVqUH19UmpNafIjRFOiJ
-        icxSosn5wCjOK4k3NDU0t7A0NDc2NzazUBLnPW9QGSUkkJ5YkpqdmlqQWgTTx8TBKdXAyH+O
-        RTn39J7N1q+dPe+u5i0RO7uI+fHvmrWR87SnLrSpn7jb3vmx19HDPBafQ+RED6wTmtMlvU1F
-        9Za8a1rNWvu7d5fM2N/HfHF2gWlT+76WVU9eL+ezDLPaFM5aNPG28mrZLdP7018ptPdMr/GR
-        terRKrCvsnxU9lKrrdXgwuQFxtMfrVAuUWIpzkg01GIuKk4EADQqBa2qAgAA
-X-CMS-MailID: 20190401120407eucas1p1ed00d5715c2db886a8c5724d3c1472c1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIKsWRmVeSWpSXmKPExsWy7djPc7re/xbGGCyZJWBx5et7NouJvUtZ
+        LE70fWC1uLxrDpvF8idrmR1YPe53H2fyONn6jcXj2cGHrB6fN8kFsERx2aSk5mSWpRbp2yVw
+        ZWxf0s1WcJu54szzdtYGxgnMXYycHBICJhL9X56zdTFycQgJrGCUONT1Esr5wihx4tl9Zgjn
+        M6PEnNnLWLoYOcBals0Sg4gvZ5Q4PekhI8goIYG3jBJv34SB2MICERKblzxgAbFFBLQlJr7Z
+        ATaVWaCRUWL50kWsIAk2ASuJie2rwJp5BewkNvz8B9bAIqAiMe3BelaQZaJAg/rPqEOUCEqc
+        nPkErIRTIFFix7a3TCA2s4CBxJFFc1ghbHmJ7W/ngB0tIdDNLnH84gwmiD9dJG4+2MYCYQtL
+        vDq+hR3ClpH4v3M+E0TDOkaJvx0voLq3A106+R8bRJW1xOHjF1khbEeJ90cmM0OCgk/ixltB
+        iM18EpO2TYcK80p0tAlBVKtJbFi2gQ1mV9fOldBw95BYveYfywRGxVlIfpuF5J9ZSP5ZwMi8
+        ilE8tbQ4Nz212DgvtVyvODG3uDQvXS85P3cTIzChnP53/OsOxn1/kg4xCnAwKvHwVjAtjBFi
+        TSwrrsw9xCjBwawkwnumf0GMEG9KYmVValF+fFFpTmrxIUZpDhYlcd5qhgfRQgLpiSWp2amp
+        BalFMFkmDk6pBsbr607If6qvXHLHc6vS46MRJWnrDnS+fR7OfzJT2O2Re7rF53bd2l7dsz9/
+        5W51Xb1sX6/XBY5sxrauSR82p7l13d7JkOdkefBY7eIuxcrdXrYTBBe1+JkIbpwVzN26fxZf
+        w0WlM3VLYj+IVF9erRC16+/zZr5Xn42fTVGawHz9jGsem822+l1KLMUZiYZazEXFiQCaPD0J
+        JAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGIsWRmVeSWpSXmKPExsVy+t/xu7pe/xbGGEztkbG48vU9m8XE3qUs
+        Fif6PrBaXN41h81i+ZO1zA6sHve7jzN5nGz9xuLx7OBDVo/Pm+QCWKL0bIryS0tSFTLyi0ts
+        laINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0MrYv6WYruM1cceZ5O2sD4wTm
+        LkYODgkBE4lls8S6GLk4hASWMkos7XjLBBGXkTi+vqyLkRPIFJb4c62LDaLmNaPE4avvGUES
+        wgIREv8OvmUHsUUEtCUmvtkBVbSFUeL0uz4WEIdZoJFR4lTrerAONgEriYntq8BsXgE7iQ0/
+        /7GA2CwCKhLTHqxnBbFFgabeetjBAlEjKHFy5hMwm1MgUWLHNpDrOIGG6knsuP6LFcKWl9j+
+        dg7zBEbBWUhaZiEpm4WkbAEj8ypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzAONl27OeWHYxd
+        74IPMQpwMCrx8FYwLYwRYk0sK67MPcQowcGsJMJ7pn9BjBBvSmJlVWpRfnxRaU5q8SFGU6An
+        JjJLiSbnA2M4ryTe0NTQ3MLS0NzY3NjMQkmc97xBZZSQQHpiSWp2ampBahFMHxMHp1QD44Ia
+        P1fXh23cMo1SKyr5Qr5eX/RosXuZufOar/NWzvz/JXXX00udIXEqf1wdV5s+TX7iuPXjF7s+
+        1xQpKbWszkfVwf4NKoEHH21PmPbF484UD1HrhHvnp7A1Fu98opuUVPPSV+68SWL5nykzL+eI
+        v++9J7MnRr/+UeJdLd1g+cv9zdHKicxLlViKMxINtZiLihMBs0Hfe6kCAAA=
+X-CMS-MailID: 20190401120426eucas1p19b20d555750c540a84198cfe3ca77926
 X-Msg-Generator: CA
-X-RootMTR: 20190217233037epcas5p1f527f485e504ee424a1a26f47dc1ea51
+X-RootMTR: 20190218224758epcas5p21d3d13ec8323a3ff3c04d45081b4cfff
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190217233037epcas5p1f527f485e504ee424a1a26f47dc1ea51
-References: <CGME20190217233037epcas5p1f527f485e504ee424a1a26f47dc1ea51@epcas5p1.samsung.com>
-        <80cf1394f099ced17bd5075be88cf33c1232086a.1550445927.git.fthain@telegraphics.com.au>
+X-CMS-RootMailID: 20190218224758epcas5p21d3d13ec8323a3ff3c04d45081b4cfff
+References: <CGME20190218224758epcas5p21d3d13ec8323a3ff3c04d45081b4cfff@epcas5p2.samsung.com>
+        <7396d7b11366fe9ee362cb140e74dd391e66e2d6.1550529894.git.fthain@telegraphics.com.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 02/18/2019 12:25 AM, Finn Thain wrote:
-> The 'inverse' parameter has no effect otherwise. Remove set-but-unused
-> variable.
+On 02/18/2019 11:44 PM, Finn Thain wrote:
+> Don't skip the framebuffer CLUT pointer register initialization when
+> the first dafb_setpalette() invocation has regno equal to zero.
 > 
 > Cc: linux-m68k@lists.linux-m68k.org
+> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 
 Patch queued for v5.2, thanks.
