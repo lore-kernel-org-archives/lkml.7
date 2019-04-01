@@ -2,115 +2,332 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NORMAL_HTTP_TO_IP,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7949C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E197C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798EC20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED09320828
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="f4NaQd19"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IhRahJvR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbfDAImB (ORCPT
+        id S1728355AbfDAInG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:42:01 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:42250 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfDAImA (ORCPT
+        Mon, 1 Apr 2019 04:43:06 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:46272 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfDAInG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:42:00 -0400
-X-IronPort-AV: E=Sophos;i="5.60,295,1549954800"; 
-   d="scan'208";a="30561806"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 01 Apr 2019 01:41:59 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.108) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Mon, 1 Apr 2019 01:41:59 -0700
+        Mon, 1 Apr 2019 04:43:06 -0400
+Received: by mail-vs1-f66.google.com with SMTP id e2so4287804vsc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 01:43:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AyUuvLvX+IN9qOv5WvUzjhXF+ZmeYQRabUnO447x1+M=;
- b=f4NaQd19IRQLbnRfCyheI2ZkVbzyv77D6+b6T337M9lHPxIN1CVEtFntFuGLxmo9xuj9FD02RzC+xKFI7oKl2CwV9nal11vskC9/0eCeImf0wRvN32GhnE/dcAF/oEW6fdQZlDqGGvifNT+VwRm5qFd7HZeB0JZZ9Kt8U3DejR4=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB1615.namprd11.prod.outlook.com (10.172.54.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.15; Mon, 1 Apr 2019 08:41:57 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::65cd:b698:41:54d6]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::65cd:b698:41:54d6%2]) with mapi id 15.20.1750.017; Mon, 1 Apr 2019
- 08:41:57 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <Claudiu.Beznea@microchip.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>, <daniel.lezcano@linaro.org>,
-        <tglx@linutronix.de>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/5] MAINTAINERS: add timer-microchip-pit64c.c
-Thread-Topic: [PATCH 5/5] MAINTAINERS: add timer-microchip-pit64c.c
-Thread-Index: AQHU6GbDZ0tN4hXmz0O/oJjCEua+ig==
-Date:   Mon, 1 Apr 2019 08:41:57 +0000
-Message-ID: <e069e024-1295-76d0-ba24-25937499e641@microchip.com>
-References: <1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com>
- <1552580772-8499-6-git-send-email-claudiu.beznea@microchip.com>
-In-Reply-To: <1552580772-8499-6-git-send-email-claudiu.beznea@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0106.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:c::22) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Nicolas.Ferre@microchip.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [195.6.168.232]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8f4ff1d4-ce44-48cd-41ec-08d6b67de625
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:MWHPR11MB1615;
-x-ms-traffictypediagnostic: MWHPR11MB1615:
-x-microsoft-antispam-prvs: <MWHPR11MB1615319DE5B78164975BF4B7E0550@MWHPR11MB1615.namprd11.prod.outlook.com>
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(39850400004)(346002)(136003)(366004)(199004)(189003)(386003)(53936002)(6512007)(110136005)(52116002)(72206003)(106356001)(4744005)(54906003)(2616005)(81156014)(31696002)(2906002)(6486002)(478600001)(71200400001)(36756003)(31686004)(305945005)(76176011)(229853002)(25786009)(8676002)(6246003)(8936002)(7736002)(256004)(71190400001)(81166006)(99286004)(2201001)(476003)(446003)(2501003)(68736007)(11346002)(6436002)(5660300002)(4326008)(186003)(14454004)(6506007)(97736004)(26005)(6116002)(316002)(3846002)(486006)(53546011)(86362001)(102836004)(66066001)(105586002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1615;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ECrArHMxWZSkQvgUgC0um3ekLtD+1K/LFvfjSk98eJOFmHjkCM5cEfjprFptaXIAL2yGM2vernTqHF1spYHGTrG0gKk6eEgB90wZVtHc1y3YP4y+roF6AWwlau8vGYaIKEDTMWYLj+clXYZEdTNsT9Q5k0fXiOqExGfLBtjCgUM0BAs6ZYOSDKd/oMzaxL7WwQh32KyN+VITFZHYKQFB4lSXOMElhTm3dUZpr0AA4XMZt+ymWOYOVqkqe8tnxgALws2lDFCkP7DVrjTh9s96GvVwjc9ApkUdO/drn5Qcpb14VhCWsKJCvDA/Mx3qe9OflvUuo2uIxPdbPQblJLC1GuQ2ln+ifT5zjLzEVE0/JRMV+9uyL7E6JZs5yq456YJfyKE4OZJushv+fyzlBBF5P9+jw/nSLKxXz57l/uXQi3w=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <53848906608B764D86069D656426F903@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=i31bIjmsR8JurCh7b3Z4AdQYs8QkrJ1Jx8ZFX4T3qYY=;
+        b=IhRahJvRfbOnkQl+EjGtgxFRI/ABd6NFmGyUfBlhjOdJMtKGvVbcNdvLoSR7Avw9LM
+         HdO7gh2GmFIPcVqcbdKhNcqBuHGeioLU22QLxfFvXQ6KoydbxfSfZMqWYAvJrtUtgOxe
+         J8RfWIYITEZyUihza9ssOuKIvqGVqdgfVyBePrVpM3kHc+c5PmU0seMsSr9UToW0JWr1
+         pW5ZoFuoIP5kBPqyocJ2poB6wEB7n/6xZpWooyHhbudMDzH+9hcJ6vMqs3zLROMjG1jI
+         hl2EQfteeYcjhBB5m5BdDXE+svSiS9vLWQ2JzYypZVblMBfqJjEVpy8Z7gN+trwWunT8
+         5iNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=i31bIjmsR8JurCh7b3Z4AdQYs8QkrJ1Jx8ZFX4T3qYY=;
+        b=WaQOiL0WWeGWM8mrcew6gru6UlbNTwGg05CixjYUv9GOUzkdpBxxnPqn6dDFdUqy+o
+         LluBRuf8RD5k/DWS9ighl6Ox5DpfnttZiJ6hO4Gce+l8B7oAELShXttJuLSIRaWJrKOl
+         fVjczeNpvRfwSYKKcqN4fZqU6GFTHqO7lUvJeNLOQXbTCOLFVJI3u4kfdYLFHLTli/nN
+         GBqYtAA57LXhPkFGFCjOqiaBOGfHXp4Hzu/1u+Cch2mUwu3h2V4d2Mu6rW3LU7KWnysl
+         ArAislqt484xHsqjVADbhcz6ZUCJpRMpJTCzZ1aY5CEIC/0WmU95Y+uF5FeZTIbdy3Ui
+         HUXw==
+X-Gm-Message-State: APjAAAVLH2gPhCu2lX3RTZZUaTLO4887NfiZr2l6hbAFh0c9B88baxgE
+        uJrfPie8H6gB09DuGBU5vj3FHwQnORQXHfe8sTeOkg==
+X-Google-Smtp-Source: APXvYqzCJ6LCaqH7jBCKC86mQe+dhBy8VNYDRUM3b1k0hp39xmTd7vlyDEjLbGJZAfY/HX0aQhJqnDjoMmHEsSgVv5E=
+X-Received: by 2002:a67:eb57:: with SMTP id x23mr18022056vso.39.1554108184165;
+ Mon, 01 Apr 2019 01:43:04 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f4ff1d4-ce44-48cd-41ec-08d6b67de625
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 08:41:57.1155
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1615
-X-OriginatorOrg: microchip.com
+References: <000000000000407080058529ff40@google.com> <20190329123025.GB30213@hmswarspite.think-freely.org>
+ <CAG_fn=XiNEhWiswHUschD2dma9SfS+eLRU8gXVJnbo7AozomPg@mail.gmail.com>
+ <20190329183039.GC30213@hmswarspite.think-freely.org> <CACT4Y+YFjn2bMrd6xpuYV1au-nOnascKy1NXsqKwZr7m5CYHrQ@mail.gmail.com>
+ <CADvbK_dckWR9o4497Reh7MONX_XBO7XZgJ9oEb-hsAH4Hjhw0Q@mail.gmail.com>
+In-Reply-To: <CADvbK_dckWR9o4497Reh7MONX_XBO7XZgJ9oEb-hsAH4Hjhw0Q@mail.gmail.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Mon, 1 Apr 2019 10:42:52 +0200
+Message-ID: <CAG_fn=XZpEOeJLyEuAEC9MjWrj+j3VYYan+98bMvQ+LOUJrMaA@mail.gmail.com>
+Subject: Re: KMSAN: kernel-infoleak in sctp_getsockopt (3)
+To:     Xin Long <lucien.xin@gmail.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        syzbot <syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>, linux-sctp@vger.kernel.org,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Networking <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladislav Yasevich <vyasevich@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTQvMDMvMjAxOSBhdCAxNzoyNiwgQ2xhdWRpdSBCZXpuZWEgLSBNMTgwNjMgd3JvdGU6DQo+
-IEZyb206IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KPiAN
-Cj4gQWRkIHRpbWVyLW1pY3JvY2hpcC1waXQ2NGIuYyBhcyBtYWludGFpbmVkIGZpbGUuDQo+IA0K
-PiBTaWduZWQtb2ZmLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlw
-LmNvbT4NCg0KQWNrZWQtYnk6IE5pY29sYXMgRmVycmUgPG5pY29sYXMuZmVycmVAbWljcm9jaGlw
-LmNvbT4NCg0KPiAtLS0NCj4gICBNQUlOVEFJTkVSUyB8IDEgKw0KPiAgIDEgZmlsZSBjaGFuZ2Vk
-LCAxIGluc2VydGlvbigrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRB
-SU5FUlMNCj4gaW5kZXggODViYzgxOTg2N2RhLi41YWY5NDdjOWYzNTAgMTAwNjQ0DQo+IC0tLSBh
-L01BSU5UQUlORVJTDQo+ICsrKyBiL01BSU5UQUlORVJTDQo+IEBAIC0xMDAyMyw2ICsxMDAyMyw3
-IEBAIEw6CWxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZyAobW9kZXJhdGVkIGZv
-ciBub24tc3Vic2NyaWJlcnMpDQo+ICAgUzoJU3VwcG9ydGVkDQo+ICAgRjoJZHJpdmVycy9taXNj
-L2F0bWVsX3RjbGliLmMNCj4gICBGOglkcml2ZXJzL2Nsb2Nrc291cmNlL3RjYl9jbGtzcmMuYw0K
-PiArRjoJZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1taWNyb2NoaXAtcGl0NjRiLmMNCj4gICAN
-Cj4gICBNSUNST0NISVAgVVNCQSBVREMgRFJJVkVSDQo+ICAgTToJQ3Jpc3RpYW4gQmlyc2FuIDxj
-cmlzdGlhbi5iaXJzYW5AbWljcm9jaGlwLmNvbT4NCj4gDQoNCg0KLS0gDQpOaWNvbGFzIEZlcnJl
-DQo=
+On Sat, Mar 30, 2019 at 8:20 AM Xin Long <lucien.xin@gmail.com> wrote:
+>
+> On Sat, Mar 30, 2019 at 2:52 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Fri, Mar 29, 2019 at 7:31 PM Neil Horman <nhorman@tuxdriver.com> wro=
+te:
+> > >
+> > > On Fri, Mar 29, 2019 at 06:35:40PM +0100, Alexander Potapenko wrote:
+> > > > On Fri, Mar 29, 2019 at 3:51 PM Neil Horman <nhorman@tuxdriver.com>=
+ wrote:
+> > > > >
+> > > > > On Thu, Mar 28, 2019 at 09:25:06AM -0700, syzbot wrote:
+> > > > > > Hello,
+> > > > > >
+> > > > > > syzbot found the following crash on:
+> > > > > >
+> > > > > > HEAD commit:    c10a026b kmsan: use __free_pages() in kmsan_iou=
+nmap_page_r..
+> > > > > > git tree:       kmsan
+> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D107=
+d3c7d200000
+> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Da56=
+75814e8eae69e
+> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=3D86b5c=
+7c236a22616a72f
+> > > > > > compiler:       clang version 8.0.0 (trunk 350509)
+> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D1=
+252834d200000
+> > > > > >
+> > > > > > IMPORTANT: if you fix the bug, please add the following tag to =
+the commit:
+> > > > > > Reported-by: syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.=
+com
+> > > > > >
+> > > > > > IPv6: ADDRCONF(NETDEV_CHANGE): veth1_to_hsr: link becomes ready
+> > > > > > IPv6: ADDRCONF(NETDEV_CHANGE): hsr_slave_1: link becomes ready
+> > > > > > 8021q: adding VLAN 0 to HW filter on device batadv0
+> > > > > > 8021q: adding VLAN 0 to HW filter on device batadv0
+> > > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > > > BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/us=
+ercopy.c:32
+> > > > > > CPU: 0 PID: 10131 Comm: syz-executor.4 Not tainted 5.0.0+ #16
+> > > > > > Hardware name: Google Google Compute Engine/Google Compute Engi=
+ne, BIOS
+> > > > > > Google 01/01/2011
+> > > > > > Call Trace:
+> > > > > >  __dump_stack lib/dump_stack.c:77 [inline]
+> > > > > >  dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+> > > > > >  kmsan_report+0x131/0x2a0 mm/kmsan/kmsan.c:636
+> > > > > >  kmsan_internal_check_memory+0xaa1/0xbb0 mm/kmsan/kmsan.c:730
+> > > > > >  kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:485
+> > > > > >  _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+> > > > > >  copy_to_user include/linux/uaccess.h:174 [inline]
+> > > > > >  sctp_getsockopt_peer_addrs net/sctp/socket.c:5911 [inline]
+> > > > > >  sctp_getsockopt+0x1668e/0x17f70 net/sctp/socket.c:7562
+> > > > > >  sock_common_getsockopt+0x13f/0x180 net/core/sock.c:2950
+> > > > > >  __sys_getsockopt+0x489/0x550 net/socket.c:1938
+> > > > > >  __do_sys_getsockopt net/socket.c:1949 [inline]
+> > > > > >  __se_sys_getsockopt+0xe1/0x100 net/socket.c:1946
+> > > > > >  __x64_sys_getsockopt+0x62/0x80 net/socket.c:1946
+> > > > > >  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+> > > > > >  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> > > > > > RIP: 0033:0x458209
+> > > > > > Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 =
+f8 48 89 f7
+> > > > > > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3=
+d 01 f0 ff ff
+> > > > > > 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> > > > > > RSP: 002b:00007fdbef191c78 EFLAGS: 00000246 ORIG_RAX: 000000000=
+0000037
+> > > > > > RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00000000004582=
+09
+> > > > > > RDX: 000000000000006c RSI: 0000000000000084 RDI: 00000000000000=
+04
+> > > > > > RBP: 000000000073bf00 R08: 0000000020000300 R09: 00000000000000=
+00
+> > > > > > R10: 0000000020000280 R11: 0000000000000246 R12: 00007fdbef1926=
+d4
+> > > > > > R13: 00000000004c96c8 R14: 00000000004d0310 R15: 00000000ffffff=
+ff
+> > > > > >
+> > > > > > Uninit was stored to memory at:
+> > > > > >  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
+> > > > > >  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
+> > > > > >  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
+> > > > > >  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
+> > > > > >  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
+> > > > > >  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
+> > > > > >  sctp_getsockopt_peer_addrs net/sctp/socket.c:5906 [inline]
+> > > > > >  sctp_getsockopt+0x16556/0x17f70 net/sctp/socket.c:7562
+> > > > > >  sock_common_getsockopt+0x13f/0x180 net/core/sock.c:2950
+> > > > > >  __sys_getsockopt+0x489/0x550 net/socket.c:1938
+> > > > > >  __do_sys_getsockopt net/socket.c:1949 [inline]
+> > > > > >  __se_sys_getsockopt+0xe1/0x100 net/socket.c:1946
+> > > > > >  __x64_sys_getsockopt+0x62/0x80 net/socket.c:1946
+> > > > > >  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+> > > > > >  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> > > > > >
+> > > > > > Uninit was stored to memory at:
+> > > > > >  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
+> > > > > >  kmsan_save_stack mm/kmsan/kmsan.c:220 [inline]
+> > > > > >  kmsan_internal_chain_origin+0x134/0x230 mm/kmsan/kmsan.c:426
+> > > > > >  kmsan_memcpy_memmove_metadata+0xb5b/0xfe0 mm/kmsan/kmsan.c:304
+> > > > > >  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:324
+> > > > > >  __msan_memcpy+0x58/0x70 mm/kmsan/kmsan_instr.c:139
+> > > > > >  sctp_transport_init net/sctp/transport.c:61 [inline]
+> > > > > >  sctp_transport_new+0x16d/0x9a0 net/sctp/transport.c:115
+> > > > > >  sctp_assoc_add_peer+0x532/0x1f70 net/sctp/associola.c:637
+> > > > > >  sctp_process_param net/sctp/sm_make_chunk.c:2548 [inline]
+> > > > > >  sctp_process_init+0x1a1b/0x3ed0 net/sctp/sm_make_chunk.c:2361
+> > > > > >  sctp_cmd_process_init net/sctp/sm_sideeffect.c:682 [inline]
+> > > > > >  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1410 [inline]
+> > > > > >  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
+> > > > > >  sctp_do_sm+0x3cfc/0x9af0 net/sctp/sm_sideeffect.c:1191
+> > > > > >  sctp_assoc_bh_rcv+0x65a/0xd80 net/sctp/associola.c:1074
+> > > > > >  sctp_inq_push+0x300/0x420 net/sctp/inqueue.c:95
+> > > > > >  sctp_backlog_rcv+0x20a/0xaf0 net/sctp/input.c:354
+> > > > > >  sk_backlog_rcv include/net/sock.h:936 [inline]
+> > > > > >  __release_sock+0x281/0x5f0 net/core/sock.c:2284
+> > > > > >  release_sock+0x99/0x2a0 net/core/sock.c:2800
+> > > > > >  sctp_wait_for_connect+0x3ee/0x860 net/sctp/socket.c:8751
+> > > > > >  sctp_sendmsg_to_asoc+0x2167/0x21a0 net/sctp/socket.c:1967
+> > > > > >  sctp_sendmsg+0x3fd7/0x6700 net/sctp/socket.c:2113
+> > > > > >  inet_sendmsg+0x54a/0x720 net/ipv4/af_inet.c:798
+> > > > > >  sock_sendmsg_nosec net/socket.c:622 [inline]
+> > > > > >  sock_sendmsg net/socket.c:632 [inline]
+> > > > > >  ___sys_sendmsg+0xdb9/0x11b0 net/socket.c:2115
+> > > > > >  __sys_sendmsg net/socket.c:2153 [inline]
+> > > > > >  __do_sys_sendmsg net/socket.c:2162 [inline]
+> > > > > >  __se_sys_sendmsg+0x305/0x460 net/socket.c:2160
+> > > > > >  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2160
+> > > > > >  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+> > > > > >  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+> > > > > >
+> > > > > > Local variable description: ----addr.i@sctp_process_init
+> > > > > > Variable was created at:
+> > > > > >  sctp_process_init+0xb5/0x3ed0 net/sctp/sm_make_chunk.c:2324
+> > > > > >  sctp_cmd_process_init net/sctp/sm_sideeffect.c:682 [inline]
+> > > > > >  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1410 [inline]
+> > > > > >  sctp_side_effects net/sctp/sm_sideeffect.c:1220 [inline]
+> > > > > >  sctp_do_sm+0x3cfc/0x9af0 net/sctp/sm_sideeffect.c:1191
+> > > > > >
+> > > > > > Bytes 8-15 of 16 are uninitialized
+> > > > > > Memory access of size 16 starts at ffff88809511fc28
+> > > > > > Data copied to user address 0000000020000298
+> > > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > > >
+> > > > > >
+> > > > > > ---
+> > > > > > This bug is generated by a bot. It may contain errors.
+> > > > > > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > > > > > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > > > > >
+> > > > > > syzbot will keep track of this bug report. See:
+> > > > > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot=
+.
+> > > > > > syzbot can test patches for this bug, for details see:
+> > > > > > https://goo.gl/tpsmEJ#testing-patches
+> > > > > >
+> > > > > >
+> > > > >
+> > > > >
+> > > > > Hmm, odd.  I see where we are doing the copy_to_user call in
+> > > > > getsockopt_peer_addrs, but the length we copy should always be eq=
+ual to or less
+> > > > > than what was memcopied to the temp variable.  False positive?
+> > > > I'll take a closer look next week.
+> > > > The bug is reproducible with the following syzkaller program:
+> > > >
+> > > > r0 =3D socket$inet(0x2, 0x80001, 0x84)
+> > > > bind$inet(r0, &(0x7f0000000080)=3D{0x2, 0x4e20, @empty}, 0x10)
+> > > > sendmsg(r0, &(0x7f0000000100)=3D{&(0x7f0000006000)=3D@in=3D{0x2, 0x=
+4e20,
+> > > > @loopback}, 0x80, &(0x7f0000007f80)=3D[{&(0x7f00000001c0)=3D"de", 0=
+x1}],
+> > > > 0x1}, 0x0)
+> > > > getsockopt$inet_sctp_SCTP_GET_PEER_ADDRS(r0, 0x84, 0x6c,
+> > > > &(0x7f0000000000)=3D{<r5=3D>0x0, 0x38,
+> > > > "41925f90e4121fadc9c1296dd22ae19d0b1b0942e46fc79e2ecec1056b23199f0c=
+a008915d8dba1b3896c154f2244bbe859fe3423a4b437a"},
+> > > > &(0x7f0000000040)=3D0x40)
+> > > >
+> > > > Just need to check where the uninitializedness comes from.
+> > > my only guess would be if we somehow copied an ipv4 address worth of =
+data to the
+> > > buffer (which contains an enum for both ipv4 and ipv6 addresses), and=
+ then
+> > > copied an ipv6 address worth of data to userspace,
+> >
+> > This seems to partially confirm this:
+> >
+> > > Bytes 8-15 of 16 are uninitialized
+> From the call trace, Uninit memory was stored in 'addr' when processing
+> SCTP_PARAM_IPV4_ADDRESS in sctp_process_param() by
+> af->from_addr_param/sctp_v4_from_addr_param, in which
+> addr->v4.sin_family/port/sin_addr was set, but not addr->v4._pad,
+> which maches, 8-15 of 16 are uninitialized.
+>
+> Then it went to sctp_transport_init(), and set the addr directly to
+> peer->ipaddr and added the new transport into asoc->peer.transport_addr_l=
+ist.
+Thanks for the analysis!
+> When dumping peer_addrs in sctp_getsockopt_peer_addrs():
+>
+>   memcpy(&temp, &from->ipaddr, sizeof(temp));
+>   copy_to_user(to, &temp, addrlen),
+>
+> addrlen is sizeof(struct sockaddr_in), 16 bytes, but only the first 8
+> bytes were inited.
+>
+> So we should fix it by setting addr->v4._pad in sctp_v4_addr_to_user as
+> sctp_v6_addr_to_user does:
+>
+> @@ -600,6 +600,7 @@ static struct sock
+> *sctp_v4_create_accept_sk(struct sock *sk,
+>  static int sctp_v4_addr_to_user(struct sctp_sock *sp, union sctp_addr *a=
+ddr)
+>  {
+>         /* No address mapping for V4 sockets */
+> +       memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
+>         return sizeof(struct sockaddr_in);
+>  }
+I can confirm this is a valid fix.
+>
+> >
+> > Not 4 bytes are initialized, but still half of the ipv6 addr.
+> >
+> >
+> > > but I don't yet see how that
+> > > can happen.
+> >
+> > The repro says "#{"threaded":true,"collide":true,"repeat":true,"procs":=
+6".
+> > So I would assume there is a race somewhere.
+
+
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
