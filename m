@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89986C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34150C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5919121925
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032C021924
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138637;
-	bh=Eazvj+OMa9NIT2D7gbKfQjRsgo1sz/Rfubq0XNy6OdI=;
+	s=default; t=1554138641;
+	bh=Nm2OMvfi99GsJmOGU+7MASJ26ev43I0cXZ0qgu2spgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CLRAiPTgNBetIeYNNjFmISafvOM79Z7g70tz5vZo3sCnmfl17AcMOn6fVxf43KmHt
-	 d6Evm+0vsUj38gJFe6Kv6IYWIgOEEbBt+ATKk10UbEfA1urVgYCnjKyqtcX5Rvw71G
-	 Xh73Ufnq1WSgIT9xNTC66NYEfI7+c4ibqHKEpaY8=
+	b=JGNKxmHyu7DI6LUaWaiMp18sXB615NuuUqB6kwoWbmlLz6mXUsNGX/uW/sXsF+23x
+	 hmZXJyfWAN4HwObhoL0n+HL0mC7x/4A4WJbNPhXKmzFK8rsv43QV4rwyxqeu/gTzgW
+	 GtqXcWcV5FY8/xhThyMQYlkRW75Wl9qITTcfa1fY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbfDARKg (ORCPT
+        id S1730009AbfDARKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58314 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:10:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729980AbfDARKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:10:33 -0400
+        id S1729650AbfDARKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:10:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34571206B8;
-        Mon,  1 Apr 2019 17:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC54A206B8;
+        Mon,  1 Apr 2019 17:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138632;
-        bh=Eazvj+OMa9NIT2D7gbKfQjRsgo1sz/Rfubq0XNy6OdI=;
+        s=default; t=1554138637;
+        bh=Nm2OMvfi99GsJmOGU+7MASJ26ev43I0cXZ0qgu2spgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mzPlx6VRFeWt9qjxvjPqkRK1g1emo4TDiRi7TG6ZUxbAKeMJLFJXZGnhdiJsbnpjr
-         EkiitHh8GYsxyBf0YXfBQ3WxN/Fh+ANPfEEFbIvsj6rxa6vOFw9lXM6LCQImQa4ZvD
-         xrv2cUMXb7ADWDStDGGD9YQ+3SKO5i/rLLkHDz1Q=
+        b=G8RJuugyD6oqA1gB1eiuGvDv6WKyfyIxQ6r5gddBJJNnvA8ddz4A0ArzOREupYBIj
+         UtZOl2S+ycJSY/f79bi/8+m/7pLSGfQVXABLTbEBBect7+YkCrqJbmilgEsPtFwM8L
+         InpYmpJEz+Vulu5du4l1C9t2b1tB3usnjMHg4Pg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 5.0 086/146] staging: vt6655: Fix interrupt race condition on device start up.
-Date:   Mon,  1 Apr 2019 19:01:38 +0200
-Message-Id: <20190401170056.107007569@linuxfoundation.org>
+        stable@vger.kernel.org, Romain Izard <romain.izard.pro@gmail.com>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 5.0 122/146] usb: cdc-acm: fix race during wakeup blocking TX traffic
+Date:   Mon,  1 Apr 2019 19:02:14 +0200
+Message-Id: <20190401170058.669057070@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -64,65 +65,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Romain Izard <romain.izard.pro@gmail.com>
 
-commit 3b9c2f2e0e99bb67c96abcb659b3465efe3bee1f upstream.
+commit 93e1c8a638308980309e009cc40b5a57ef87caf1 upstream.
 
-It appears on some slower systems that the driver can find its way
-out of the workqueue while the interrupt is disabled by continuous polling
-by it.
+When the kernel is compiled with preemption enabled, the URB completion
+handler can run in parallel with the work responsible for waking up the
+tty layer. If the URB handler sets the EVENT_TTY_WAKEUP bit during the
+call to tty_port_tty_wakeup() to signal that there is room for additional
+input, it will be cleared at the end of this call. As a result, TX traffic
+on the upper layer will be blocked.
 
-Move MACvIntEnable to vnt_interrupt_work so that it is always enabled
-on all routes out of vnt_interrupt_process.
+This can be seen with a kernel configured with CONFIG_PREEMPT, and a fast
+modem connected with PPP running over a USB CDC-ACM port.
 
-Move MACvIntDisable so that the device doesn't keep polling the system
-while the workqueue is being processed.
+Use test_and_clear_bit() instead, which ensures that each wakeup requested
+by the URB completion code will trigger a call to tty_port_tty_wakeup().
 
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-CC: stable@vger.kernel.org # v4.2+
+Fixes: 1aba579f3cf5 cdc-acm: handle read pipe errors
+Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Oliver Neukum <oneukum@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6655/device_main.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/class/cdc-acm.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/staging/vt6655/device_main.c
-+++ b/drivers/staging/vt6655/device_main.c
-@@ -1033,8 +1033,6 @@ static void vnt_interrupt_process(struct
- 		return;
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -558,10 +558,8 @@ static void acm_softint(struct work_stru
+ 		clear_bit(EVENT_RX_STALL, &acm->flags);
  	}
  
--	MACvIntDisable(priv->PortOffset);
--
- 	spin_lock_irqsave(&priv->lock, flags);
- 
- 	/* Read low level stats */
-@@ -1122,8 +1120,6 @@ static void vnt_interrupt_process(struct
- 	}
- 
- 	spin_unlock_irqrestore(&priv->lock, flags);
--
--	MACvIntEnable(priv->PortOffset, IMR_MASK_VALUE);
+-	if (test_bit(EVENT_TTY_WAKEUP, &acm->flags)) {
++	if (test_and_clear_bit(EVENT_TTY_WAKEUP, &acm->flags))
+ 		tty_port_tty_wakeup(&acm->port);
+-		clear_bit(EVENT_TTY_WAKEUP, &acm->flags);
+-	}
  }
  
- static void vnt_interrupt_work(struct work_struct *work)
-@@ -1133,6 +1129,8 @@ static void vnt_interrupt_work(struct wo
- 
- 	if (priv->vif)
- 		vnt_interrupt_process(priv);
-+
-+	MACvIntEnable(priv->PortOffset, IMR_MASK_VALUE);
- }
- 
- static irqreturn_t vnt_interrupt(int irq,  void *arg)
-@@ -1141,6 +1139,8 @@ static irqreturn_t vnt_interrupt(int irq
- 
- 	schedule_work(&priv->interrupt_work);
- 
-+	MACvIntDisable(priv->PortOffset);
-+
- 	return IRQ_HANDLED;
- }
- 
+ /*
 
 
