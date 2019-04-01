@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70644C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54285C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A1D21924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C107206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138665;
-	bh=LSA/hsaLcRQRFb4PCXEBCEN+ensGeAjtVNhTvGDwyi4=;
+	s=default; t=1554138670;
+	bh=fsg/7RqCgASI01202yrL2VV+4xPt6e8J4U605tcOrgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WICnufa1YMVhgSh/2YIdSuloIPrCVTVf6j9oxTfFNjpVexgWhXFqRnIKYjSy2wsA+
-	 90erT+4BhSa1unfdy/ApzIP8ZZzBv9/CFHN9PXGAh1fEuNu1WCoTf9nzRHphTTEb0P
-	 JkKrsEJwr8mMgq0UeDNbA35UusUY8x55O7VZpvHg=
+	b=oClgrd52hGKic9UiNT882SuquvY3Xs2P21rp55zZqhLXpXNvERQwirGvRrRJFWE98
+	 b4cqP1gC+wTnmeTjVHm2+dg2A7o4nj2tFhH/coOJiyrts1Zd0uHVwGRP+KTo4IyulZ
+	 VixHXszr6vUfSIGiTb4gAEwvbipMNAcaUzfnEU/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730110AbfDARLE (ORCPT
+        id S1730131AbfDARLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:11:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59192 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:11:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730089AbfDARLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:11:01 -0400
+        id S1730089AbfDARLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:11:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 608D9206B8;
-        Mon,  1 Apr 2019 17:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C2B3206B8;
+        Mon,  1 Apr 2019 17:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138659;
-        bh=LSA/hsaLcRQRFb4PCXEBCEN+ensGeAjtVNhTvGDwyi4=;
+        s=default; t=1554138663;
+        bh=fsg/7RqCgASI01202yrL2VV+4xPt6e8J4U605tcOrgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DxrLRBM/Kdlak/0nUrmHJ9m6Bdr8D07cE7BNGSnjTvVVbXvtpZ9OJz8OFGjmhfGil
-         iPyBrML2qt5GG7mLG3jsHYlEXsod2/KyE0BprrXKZzeWiHoLn3/ork+Y4vPMHZC0zs
-         AFS2H3YMDr5G71s9n/RloiVDRKg1Y/9VraBMa2Xk=
+        b=DuT6DR9vvTLoKC/0g8W9fllGXCBZnx6uwpMm2BKz4qmRbwqHhdmvSRnje+yC0Vi+z
+         iXF5UFzq5gYTXFni9J3DHS/gVbBCST6lc73sAftBmt5yU/cD3DlvgeHo7xwrcA9KQu
+         pPqy2P+a7VQStsJ1GL7ERByJNJCO7CyumWUyGSas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Vasilyev <grabesstimme@gmail.com>,
-        "Spencer E. Olson" <olsonse@umich.edu>,
-        Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 5.0 082/146] staging: comedi: ni_mio_common: Fix divide-by-zero for DIO cmdtest
-Date:   Mon,  1 Apr 2019 19:01:34 +0200
-Message-Id: <20190401170055.792356615@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.0 125/146] mm/hotplug: fix offline undo_isolate_page_range()
+Date:   Mon,  1 Apr 2019 19:02:17 +0200
+Message-Id: <20190401170058.866105463@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -66,153 +69,221 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Qian Cai <cai@lca.pw>
 
-commit bafd9c64056cd034a1174dcadb65cd3b294ff8f6 upstream.
+commit 9b7ea46a82b31c74a37e6ff1c2a1df7d53e392ab upstream.
 
-`ni_cdio_cmdtest()` validates Comedi asynchronous commands for the DIO
-subdevice (subdevice 2) of supported National Instruments M-series
-cards.  It is called when handling the `COMEDI_CMD` and `COMEDI_CMDTEST`
-ioctls for this subdevice.  There are two causes for a possible
-divide-by-zero error when validating that the `stop_arg` member of the
-passed-in command is not too large.
+Commit f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded
+memory to zones until online") introduced move_pfn_range_to_zone() which
+calls memmap_init_zone() during onlining a memory block.
+memmap_init_zone() will reset pagetype flags and makes migrate type to
+be MOVABLE.
 
-The first cause for the divide-by-zero is that calls to
-`comedi_bytes_per_scan()` are only valid once the command has been
-copied to `s->async->cmd`, but that copy is only done for the
-`COMEDI_CMD` ioctl.  For the `COMEDI_CMDTEST` ioctl, it will use
-whatever was left there by the previous `COMEDI_CMD` ioctl, if any.
-(This is very likely, as it is usual for the application to use
-`COMEDI_CMDTEST` before `COMEDI_CMD`.) If there has been no previous,
-valid `COMEDI_CMD` for this subdevice, then `comedi_bytes_per_scan()`
-will return 0, so the subsequent division in `ni_cdio_cmdtest()` of
-`s->async->prealloc_bufsz / comedi_bytes_per_scan(s)` will be a
-divide-by-zero error.  To fix this error, call a new function
-`comedi_bytes_per_scan_cmd(s, cmd)`, based on the existing
-`comedi_bytes_per_scan(s)` but using a specified `struct comedi_cmd` for
-its calculations.  (Also refactor `comedi_bytes_per_scan()` to call the
-new function.)
+However, in __offline_pages(), it also call undo_isolate_page_range()
+after offline_isolated_pages() to do the same thing.  Due to commit
+2ce13640b3f4 ("mm: __first_valid_page skip over offline pages") changed
+__first_valid_page() to skip offline pages, undo_isolate_page_range()
+here just waste CPU cycles looping around the offlining PFN range while
+doing nothing, because __first_valid_page() will return NULL as
+offline_isolated_pages() has already marked all memory sections within
+the pfn range as offline via offline_mem_sections().
 
-Once the first cause for the divide-by-zero has been fixed, the second
-cause is that `comedi_bytes_per_scan_cmd()` can legitimately return 0 if
-the `scan_end_arg` member of the `struct comedi_cmd` being tested is 0.
-Fix it by only performing the division (and validating that `stop_arg`
-is no more than the maximum value) if `comedi_bytes_per_scan_cmd()`
-returns a non-zero value.
+Also, after calling the "useless" undo_isolate_page_range() here, it
+reaches the point of no returning by notifying MEM_OFFLINE.  Those pages
+will be marked as MIGRATE_MOVABLE again once onlining.  The only thing
+left to do is to decrease the number of isolated pageblocks zone counter
+which would make some paths of the page allocation slower that the above
+commit introduced.
 
-The problem was reported on the COMEDI mailing list here:
-https://groups.google.com/forum/#!topic/comedi_list/4t9WlHzMhKM
+Even if alloc_contig_range() can be used to isolate 16GB-hugetlb pages
+on ppc64, an "int" should still be enough to represent the number of
+pageblocks there.  Fix an incorrect comment along the way.
 
-Reported-by: Ivan Vasilyev <grabesstimme@gmail.com>
-Tested-by: Ivan Vasilyev <grabesstimme@gmail.com>
-Fixes: f164cbf98fa8 ("staging: comedi: ni_mio_common: add finite regeneration to dio output")
-Cc: <stable@vger.kernel.org> # 4.6+
-Cc: Spencer E. Olson <olsonse@umich.edu>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+[cai@lca.pw: v4]
+  Link: http://lkml.kernel.org/r/20190314150641.59358-1-cai@lca.pw
+Link: http://lkml.kernel.org/r/20190313143133.46200-1-cai@lca.pw
+Fixes: 2ce13640b3f4 ("mm: __first_valid_page skip over offline pages")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: <stable@vger.kernel.org>	[4.13+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/comedidev.h             |    2 +
- drivers/staging/comedi/drivers.c               |   33 +++++++++++++++++++++----
- drivers/staging/comedi/drivers/ni_mio_common.c |   10 +++++--
- 3 files changed, 38 insertions(+), 7 deletions(-)
+ include/linux/page-isolation.h |   10 --------
+ mm/memory_hotplug.c            |   17 +++++++++++---
+ mm/page_alloc.c                |    2 -
+ mm/page_isolation.c            |   48 +++++++++++++++++++++++++----------------
+ mm/sparse.c                    |    2 -
+ 5 files changed, 45 insertions(+), 34 deletions(-)
 
---- a/drivers/staging/comedi/comedidev.h
-+++ b/drivers/staging/comedi/comedidev.h
-@@ -1001,6 +1001,8 @@ int comedi_dio_insn_config(struct comedi
- 			   unsigned int mask);
- unsigned int comedi_dio_update_state(struct comedi_subdevice *s,
- 				     unsigned int *data);
-+unsigned int comedi_bytes_per_scan_cmd(struct comedi_subdevice *s,
-+				       struct comedi_cmd *cmd);
- unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s);
- unsigned int comedi_nscans_left(struct comedi_subdevice *s,
- 				unsigned int nscans);
---- a/drivers/staging/comedi/drivers.c
-+++ b/drivers/staging/comedi/drivers.c
-@@ -394,11 +394,13 @@ unsigned int comedi_dio_update_state(str
- EXPORT_SYMBOL_GPL(comedi_dio_update_state);
+--- a/include/linux/page-isolation.h
++++ b/include/linux/page-isolation.h
+@@ -41,16 +41,6 @@ int move_freepages_block(struct zone *zo
  
- /**
-- * comedi_bytes_per_scan() - Get length of asynchronous command "scan" in bytes
-+ * comedi_bytes_per_scan_cmd() - Get length of asynchronous command "scan" in
-+ * bytes
-  * @s: COMEDI subdevice.
-+ * @cmd: COMEDI command.
-  *
-  * Determines the overall scan length according to the subdevice type and the
-- * number of channels in the scan.
-+ * number of channels in the scan for the specified command.
-  *
-  * For digital input, output or input/output subdevices, samples for
-  * multiple channels are assumed to be packed into one or more unsigned
-@@ -408,9 +410,9 @@ EXPORT_SYMBOL_GPL(comedi_dio_update_stat
-  *
-  * Returns the overall scan length in bytes.
+ /*
+  * Changes migrate type in [start_pfn, end_pfn) to be MIGRATE_ISOLATE.
+- * If specified range includes migrate types other than MOVABLE or CMA,
+- * this will fail with -EBUSY.
+- *
+- * For isolating all pages in the range finally, the caller have to
+- * free all pages in the range. test_page_isolated() can be used for
+- * test it.
+- *
+- * The following flags are allowed (they can be combined in a bit mask)
+- * SKIP_HWPOISON - ignore hwpoison pages
+- * REPORT_FAILURE - report details about the failure to isolate the range
   */
--unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s)
-+unsigned int comedi_bytes_per_scan_cmd(struct comedi_subdevice *s,
-+				       struct comedi_cmd *cmd)
+ int
+ start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1560,7 +1560,7 @@ static int __ref __offline_pages(unsigne
  {
--	struct comedi_cmd *cmd = &s->async->cmd;
- 	unsigned int num_samples;
- 	unsigned int bits_per_sample;
- 
-@@ -427,6 +429,29 @@ unsigned int comedi_bytes_per_scan(struc
+ 	unsigned long pfn, nr_pages;
+ 	long offlined_pages;
+-	int ret, node;
++	int ret, node, nr_isolate_pageblock;
+ 	unsigned long flags;
+ 	unsigned long valid_start, valid_end;
+ 	struct zone *zone;
+@@ -1586,10 +1586,11 @@ static int __ref __offline_pages(unsigne
+ 	ret = start_isolate_page_range(start_pfn, end_pfn,
+ 				       MIGRATE_MOVABLE,
+ 				       SKIP_HWPOISON | REPORT_FAILURE);
+-	if (ret) {
++	if (ret < 0) {
+ 		reason = "failure to isolate range";
+ 		goto failed_removal;
  	}
- 	return comedi_samples_to_bytes(s, num_samples);
++	nr_isolate_pageblock = ret;
+ 
+ 	arg.start_pfn = start_pfn;
+ 	arg.nr_pages = nr_pages;
+@@ -1642,8 +1643,16 @@ static int __ref __offline_pages(unsigne
+ 	/* Ok, all of our target is isolated.
+ 	   We cannot do rollback at this point. */
+ 	offline_isolated_pages(start_pfn, end_pfn);
+-	/* reset pagetype flags and makes migrate type to be MOVABLE */
+-	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
++
++	/*
++	 * Onlining will reset pagetype flags and makes migrate type
++	 * MOVABLE, so just need to decrease the number of isolated
++	 * pageblocks zone counter here.
++	 */
++	spin_lock_irqsave(&zone->lock, flags);
++	zone->nr_isolate_pageblock -= nr_isolate_pageblock;
++	spin_unlock_irqrestore(&zone->lock, flags);
++
+ 	/* removal success */
+ 	adjust_managed_page_count(pfn_to_page(start_pfn), -offlined_pages);
+ 	zone->present_pages -= offlined_pages;
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8160,7 +8160,7 @@ int alloc_contig_range(unsigned long sta
+ 
+ 	ret = start_isolate_page_range(pfn_max_align_down(start),
+ 				       pfn_max_align_up(end), migratetype, 0);
+-	if (ret)
++	if (ret < 0)
+ 		return ret;
+ 
+ 	/*
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -160,27 +160,36 @@ __first_valid_page(unsigned long pfn, un
+ 	return NULL;
  }
-+EXPORT_SYMBOL_GPL(comedi_bytes_per_scan_cmd);
-+
+ 
+-/*
+- * start_isolate_page_range() -- make page-allocation-type of range of pages
+- * to be MIGRATE_ISOLATE.
+- * @start_pfn: The lower PFN of the range to be isolated.
+- * @end_pfn: The upper PFN of the range to be isolated.
+- * @migratetype: migrate type to set in error recovery.
 +/**
-+ * comedi_bytes_per_scan() - Get length of asynchronous command "scan" in bytes
-+ * @s: COMEDI subdevice.
++ * start_isolate_page_range() - make page-allocation-type of range of pages to
++ * be MIGRATE_ISOLATE.
++ * @start_pfn:		The lower PFN of the range to be isolated.
++ * @end_pfn:		The upper PFN of the range to be isolated.
++ *			start_pfn/end_pfn must be aligned to pageblock_order.
++ * @migratetype:	Migrate type to set in error recovery.
++ * @flags:		The following flags are allowed (they can be combined in
++ *			a bit mask)
++ *			SKIP_HWPOISON - ignore hwpoison pages
++ *			REPORT_FAILURE - report details about the failure to
++ *			isolate the range
+  *
+  * Making page-allocation-type to be MIGRATE_ISOLATE means free pages in
+  * the range will never be allocated. Any free pages and pages freed in the
+- * future will not be allocated again.
+- *
+- * start_pfn/end_pfn must be aligned to pageblock_order.
+- * Return 0 on success and -EBUSY if any part of range cannot be isolated.
++ * future will not be allocated again. If specified range includes migrate types
++ * other than MOVABLE or CMA, this will fail with -EBUSY. For isolating all
++ * pages in the range finally, the caller have to free all pages in the range.
++ * test_page_isolated() can be used for test it.
+  *
+  * There is no high level synchronization mechanism that prevents two threads
+- * from trying to isolate overlapping ranges.  If this happens, one thread
++ * from trying to isolate overlapping ranges. If this happens, one thread
+  * will notice pageblocks in the overlapping range already set to isolate.
+  * This happens in set_migratetype_isolate, and set_migratetype_isolate
+- * returns an error.  We then clean up by restoring the migration type on
+- * pageblocks we may have modified and return -EBUSY to caller.  This
++ * returns an error. We then clean up by restoring the migration type on
++ * pageblocks we may have modified and return -EBUSY to caller. This
+  * prevents two threads from simultaneously working on overlapping ranges.
 + *
-+ * Determines the overall scan length according to the subdevice type and the
-+ * number of channels in the scan for the current command.
-+ *
-+ * For digital input, output or input/output subdevices, samples for
-+ * multiple channels are assumed to be packed into one or more unsigned
-+ * short or unsigned int values according to the subdevice's %SDF_LSAMPL
-+ * flag.  For other types of subdevice, samples are assumed to occupy a
-+ * whole unsigned short or unsigned int according to the %SDF_LSAMPL flag.
-+ *
-+ * Returns the overall scan length in bytes.
-+ */
-+unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s)
-+{
-+	struct comedi_cmd *cmd = &s->async->cmd;
-+
-+	return comedi_bytes_per_scan_cmd(s, cmd);
-+}
- EXPORT_SYMBOL_GPL(comedi_bytes_per_scan);
++ * Return: the number of isolated pageblocks on success and -EBUSY if any part
++ * of range cannot be isolated.
+  */
+ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+ 			     unsigned migratetype, int flags)
+@@ -188,6 +197,7 @@ int start_isolate_page_range(unsigned lo
+ 	unsigned long pfn;
+ 	unsigned long undo_pfn;
+ 	struct page *page;
++	int nr_isolate_pageblock = 0;
  
- static unsigned int __comedi_nscans_left(struct comedi_subdevice *s,
---- a/drivers/staging/comedi/drivers/ni_mio_common.c
-+++ b/drivers/staging/comedi/drivers/ni_mio_common.c
-@@ -3545,6 +3545,7 @@ static int ni_cdio_cmdtest(struct comedi
- 			   struct comedi_subdevice *s, struct comedi_cmd *cmd)
+ 	BUG_ON(!IS_ALIGNED(start_pfn, pageblock_nr_pages));
+ 	BUG_ON(!IS_ALIGNED(end_pfn, pageblock_nr_pages));
+@@ -196,13 +206,15 @@ int start_isolate_page_range(unsigned lo
+ 	     pfn < end_pfn;
+ 	     pfn += pageblock_nr_pages) {
+ 		page = __first_valid_page(pfn, pageblock_nr_pages);
+-		if (page &&
+-		    set_migratetype_isolate(page, migratetype, flags)) {
+-			undo_pfn = pfn;
+-			goto undo;
++		if (page) {
++			if (set_migratetype_isolate(page, migratetype, flags)) {
++				undo_pfn = pfn;
++				goto undo;
++			}
++			nr_isolate_pageblock++;
+ 		}
+ 	}
+-	return 0;
++	return nr_isolate_pageblock;
+ undo:
+ 	for (pfn = start_pfn;
+ 	     pfn < undo_pfn;
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -556,7 +556,7 @@ void online_mem_sections(unsigned long s
+ }
+ 
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+-/* Mark all memory sections within the pfn range as online */
++/* Mark all memory sections within the pfn range as offline */
+ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
  {
- 	struct ni_private *devpriv = dev->private;
-+	unsigned int bytes_per_scan;
- 	int err = 0;
- 
- 	/* Step 1 : check if triggers are trivially valid */
-@@ -3579,9 +3580,12 @@ static int ni_cdio_cmdtest(struct comedi
- 	err |= comedi_check_trigger_arg_is(&cmd->convert_arg, 0);
- 	err |= comedi_check_trigger_arg_is(&cmd->scan_end_arg,
- 					   cmd->chanlist_len);
--	err |= comedi_check_trigger_arg_max(&cmd->stop_arg,
--					    s->async->prealloc_bufsz /
--					    comedi_bytes_per_scan(s));
-+	bytes_per_scan = comedi_bytes_per_scan_cmd(s, cmd);
-+	if (bytes_per_scan) {
-+		err |= comedi_check_trigger_arg_max(&cmd->stop_arg,
-+						    s->async->prealloc_bufsz /
-+						    bytes_per_scan);
-+	}
- 
- 	if (err)
- 		return 3;
+ 	unsigned long pfn;
 
 
