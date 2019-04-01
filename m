@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C95C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71856C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F8E20651
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3E02084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141864;
-	bh=XCKwkhL/dH4zF/9+nTKITiL16Vs2LOeHeyYXZbhoozQ=;
+	s=default; t=1554141873;
+	bh=Da7c/PE30662eWsNcrbPIAeWA4PxHjW5yKJRrx/yJV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E3gVt/9HZ/TeXgbUSmZDaqtrZqz0UCh5dlpeP5nLueZLna81U1Z2Hll/UP7yrxkIZ
-	 HD8FxnFxQzxwBiiKSywmwPnTOTRVUoM57CSaJAxKXe0XHKB2N0honlQh5TojozhSD2
-	 gCs7oguALQ6X+FMD7RHGF1Ym+SBX8gfA9Nq6lhu4=
+	b=t0FhcFEHnN/OhbHxOvN/4CujeI5LL8cxzUevn51qbKqajSPeapMko2E68rjj9Paq6
+	 hghzTOp18rViQhJwWrmSdNmVmmlD7q7nkmzM6jugG5PJWr88TznCN5hA6dV+ijzE0+
+	 C4NyD10TBfwvt6rtCqg+mkdRyVlDjbKLVNUeambE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbfDASEW (ORCPT
+        id S1730936AbfDASEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:04:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37012 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 14:04:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730663AbfDAROB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:14:01 -0400
+        id S1730649AbfDAROA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:14:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A12A8218FE;
-        Mon,  1 Apr 2019 17:04:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9759321473;
+        Mon,  1 Apr 2019 17:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138254;
-        bh=XCKwkhL/dH4zF/9+nTKITiL16Vs2LOeHeyYXZbhoozQ=;
+        s=default; t=1554138243;
+        bh=Da7c/PE30662eWsNcrbPIAeWA4PxHjW5yKJRrx/yJV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ddJ/BP+JbH+vMtGQzIoMbyCO0n4uuSdojp1Lh/EnY8LvpreVBejeVBG0ZdUt6B0wB
-         gWe1Na1m4j7cCVilbINk6nabbgHXsAvO4/nza3ZgtM3KUoNMAGmMHccs31xhMyjTo1
-         Y+6F8iU9KFITHJpk2RJkZQJtV8D74cNfCGgR/1Dw=
+        b=GxxeHMt+OG3sWbAjEmBXLjhTauRqbCn0hWQaaddWe/OX5qGhlpfgLMGAhAqbLYR/L
+         TSRSlu4HKdVv1Z+4NxtjwGH2w8zRy1e1itTgEa77/dgPpEunrvdmGupi2XHWueGsOV
+         15BptokuDk8FCTEiF8BqIwC+W06u1Psv/cMmBoJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 005/146] genetlink: Fix a memory leak on error path
-Date:   Mon,  1 Apr 2019 19:00:17 +0200
-Message-Id: <20190401170048.879279309@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>
+Subject: [PATCH 5.0 002/146] Bluetooth: Verify that l2cap_get_conf_opt provides large enough buffer
+Date:   Mon,  1 Apr 2019 19:00:14 +0200
+Message-Id: <20190401170048.645388006@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -67,42 +65,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-[ Upstream commit ceabee6c59943bdd5e1da1a6a20dc7ee5f8113a2 ]
+commit 7c9cbd0b5e38a1672fcd137894ace3b042dfbf69 upstream.
 
-In genl_register_family(), when idr_alloc() fails,
-we forget to free the memory we possibly allocate for
-family->attrbuf.
+The function l2cap_get_conf_opt will return L2CAP_CONF_OPT_SIZE + opt->len
+as length value. The opt->len however is in control over the remote user
+and can be used by an attacker to gain access beyond the bounds of the
+actual packet.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 2ae0f17df1cd ("genetlink: use idr to track families")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+To prevent any potential leak of heap memory, it is enough to check that
+the resulting len calculation after calling l2cap_get_conf_opt is not
+below zero. A well formed packet will always return >= 0 here and will
+end with the length value being zero after the last option has been
+parsed. In case of malformed packets messing with the opt->len field the
+length value will become negative. If that is the case, then just abort
+and ignore the option.
+
+In case an attacker uses a too short opt->len value, then garbage will
+be parsed, but that is protected by the unknown option handling and also
+the option parameter size checks.
+
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/netlink/genetlink.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/netlink/genetlink.c
-+++ b/net/netlink/genetlink.c
-@@ -366,7 +366,7 @@ int genl_register_family(struct genl_fam
- 			       start, end + 1, GFP_KERNEL);
- 	if (family->id < 0) {
- 		err = family->id;
--		goto errout_locked;
-+		goto errout_free;
- 	}
+---
+ net/bluetooth/l2cap_core.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -3337,6 +3337,8 @@ static int l2cap_parse_conf_req(struct l
  
- 	err = genl_validate_assign_mc_groups(family);
-@@ -385,6 +385,7 @@ int genl_register_family(struct genl_fam
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&req, &type, &olen, &val);
++		if (len < 0)
++			break;
  
- errout_remove:
- 	idr_remove(&genl_fam_idr, family->id);
-+errout_free:
- 	kfree(family->attrbuf);
- errout_locked:
- 	genl_unlock_all();
+ 		hint  = type & L2CAP_CONF_HINT;
+ 		type &= L2CAP_CONF_MASK;
+@@ -3555,6 +3557,8 @@ static int l2cap_parse_conf_rsp(struct l
+ 
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
++		if (len < 0)
++			break;
+ 
+ 		switch (type) {
+ 		case L2CAP_CONF_MTU:
+@@ -3740,6 +3744,8 @@ static void l2cap_conf_rfc_get(struct l2
+ 
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
++		if (len < 0)
++			break;
+ 
+ 		switch (type) {
+ 		case L2CAP_CONF_RFC:
 
 
