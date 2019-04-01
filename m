@@ -2,87 +2,155 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2A8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB07EC10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD7D20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:00:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZntR16Fy"
+	by mail.kernel.org (Postfix) with ESMTP id BB9E02084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:01:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554141665;
+	bh=amFmY2QgCsQjhksCSXw5n/G8VWsY0QpeM4VwtuHpIzU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YGERoJf09CmeEONzOc/ac6vps8pE8Vo7eJ/kNy1fsLaPHSjWAvRbFfSDNhYLrYu7X
+	 m1rii2XYtn1gDf/a+iXirdBynhVoOiDF+ESaOUbWKAjk0g7a0yFAoi+Q6UMQBeyq3B
+	 RG7rSSZP/NGd90nOqHVFimSv+oKsi8PzoXbuwHs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731465AbfDASAy (ORCPT
+        id S1731057AbfDARQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:00:54 -0400
-Received: from ozlabs.org ([203.11.71.1]:43787 "EHLO ozlabs.org"
+        Mon, 1 Apr 2019 13:16:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731346AbfDASAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:00:51 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1730587AbfDARQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:16:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44Y0WN3PMhz9sPn;
-        Tue,  2 Apr 2019 05:00:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554141648;
-        bh=zhPP62BbpyltEcY13lsn4VmMzaxKQY0xzWQ+I+0bVO0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZntR16FymnDwutMge8ZPzP9fWs54j3M0g7VSiGQQJW3CqsbYzv2vWRlF1ImY9bfvG
-         y1YszBYyp+abQOp0pnbhS9fGRgkPRCeSFtVa6lXq6OOXRZ46SCGAZo5Mu394Jfvs2J
-         dPpka1YEA3waEFKmmhJQ//T2XTQsQyBAReMjfuLAmVIsO1fj2bp7O/D3aC3aP2OEWv
-         +yVfwEpJzZSsJdhCeqQTR1uQ6ZyBP6t5Ju5Mm4K7X0bVMFxGdvDU29NlUYYOHg593W
-         uMcd80xampPsHJ2c7H+B+HMGPOm06puWUjseKaQRinHDSkLPOxhjEMIJT+y6icOiHo
-         jZpV4JHh4RS7g==
-Date:   Tue, 2 Apr 2019 05:00:48 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the phy tree
-Message-ID: <20190402050048.0686d21b@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 438B520856;
+        Mon,  1 Apr 2019 17:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554138993;
+        bh=amFmY2QgCsQjhksCSXw5n/G8VWsY0QpeM4VwtuHpIzU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pWSsdOfibCf0JhpYQ2V/VO8fEAvzmK5kf1TTUUOo8RiHQCocQydx7C6403tvxRSyG
+         HHyo3mZVrrhB1/QmmyZYgdN3oM3ujsDbglpwVZeWaHDkiodlZuLT6AVHwgkSQ1oVf8
+         16sWpIARKXBHOEIL8gfRkBlpYRteCnC1eChy/YvE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Samuel Thibault <samuel.thibault@ens-lyon.org>
+Subject: [PATCH 4.19 082/134] staging: speakup_soft: Fix alternate speech with other synths
+Date:   Mon,  1 Apr 2019 19:01:58 +0200
+Message-Id: <20190401170052.020946605@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
+References: <20190401170044.243719205@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/sElZDQsZbtFXZVahKKZwkGP"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/sElZDQsZbtFXZVahKKZwkGP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-Hi Kishon,
+------------------
 
-Commit
+From: Samuel Thibault <samuel.thibault@ens-lyon.org>
 
-  b6e13b9c9482 ("phy: ti-pipe3: fix missing bit-wise or operator when assig=
-ning val")
+commit 45ac7b31bc6c4af885cc5b5d6c534c15bcbe7643 upstream.
 
-is missing a Signed-off-by from its committer.
+When switching from speakup_soft to another synth, speakup_soft would
+keep calling synth_buffer_getc() from softsynthx_read.
 
---=20
-Cheers,
-Stephen Rothwell
+Let's thus make synth.c export the knowledge of the current synth, so
+that speakup_soft can determine whether it should be running.
 
---Sig_/sElZDQsZbtFXZVahKKZwkGP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+speakup_soft also needs to set itself alive, otherwise the switch would
+let it remain silent.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyiUdAACgkQAVBC80lX
-0GwyhQf7BNaVB10IQERl6TIvNmwyzg8i0aU8Za5nGYVIA5qzLapvG3L/qJ//TtQ9
-ub+tz0qKiEufmd587vJflGyb5K3samVsJKz4wTyll8T8YSn0nLI6ybSHm9Ew0J89
-R+tug6HejGmXogbfaXvYs8i4FL+9iBbpCjgIcFYiqovFtOLKSZGdWOE2Qr3SzmaA
-a4x0rVse7r0B9bJjnbcwQuGLxcVen4RwKdBhNg0l8Rsqc4ZYRVklJ95FJgVdEj3h
-xs44NGc6Ea0tGAdM/RLNqOVRy1U2q1hY1/XpoU4syeCAYZ+L8C6wfiLee3u5A0F8
-Pckoa7li+N3+gqx5IC0B7NLLE8ooQg==
-=Dzux
------END PGP SIGNATURE-----
+---
+ drivers/staging/speakup/speakup_soft.c |   16 +++++++++++-----
+ drivers/staging/speakup/spk_priv.h     |    1 +
+ drivers/staging/speakup/synth.c        |    6 ++++++
+ 3 files changed, 18 insertions(+), 5 deletions(-)
 
---Sig_/sElZDQsZbtFXZVahKKZwkGP--
+--- a/drivers/staging/speakup/speakup_soft.c
++++ b/drivers/staging/speakup/speakup_soft.c
+@@ -208,12 +208,15 @@ static ssize_t softsynthx_read(struct fi
+ 		return -EINVAL;
+ 
+ 	spin_lock_irqsave(&speakup_info.spinlock, flags);
++	synth_soft.alive = 1;
+ 	while (1) {
+ 		prepare_to_wait(&speakup_event, &wait, TASK_INTERRUPTIBLE);
+-		if (!unicode)
+-			synth_buffer_skip_nonlatin1();
+-		if (!synth_buffer_empty() || speakup_info.flushing)
+-			break;
++		if (synth_current() == &synth_soft) {
++			if (!unicode)
++				synth_buffer_skip_nonlatin1();
++			if (!synth_buffer_empty() || speakup_info.flushing)
++				break;
++		}
+ 		spin_unlock_irqrestore(&speakup_info.spinlock, flags);
+ 		if (fp->f_flags & O_NONBLOCK) {
+ 			finish_wait(&speakup_event, &wait);
+@@ -233,6 +236,8 @@ static ssize_t softsynthx_read(struct fi
+ 
+ 	/* Keep 3 bytes available for a 16bit UTF-8-encoded character */
+ 	while (chars_sent <= count - bytes_per_ch) {
++		if (synth_current() != &synth_soft)
++			break;
+ 		if (speakup_info.flushing) {
+ 			speakup_info.flushing = 0;
+ 			ch = '\x18';
+@@ -329,7 +334,8 @@ static __poll_t softsynth_poll(struct fi
+ 	poll_wait(fp, &speakup_event, wait);
+ 
+ 	spin_lock_irqsave(&speakup_info.spinlock, flags);
+-	if (!synth_buffer_empty() || speakup_info.flushing)
++	if (synth_current() == &synth_soft &&
++	    (!synth_buffer_empty() || speakup_info.flushing))
+ 		ret = EPOLLIN | EPOLLRDNORM;
+ 	spin_unlock_irqrestore(&speakup_info.spinlock, flags);
+ 	return ret;
+--- a/drivers/staging/speakup/spk_priv.h
++++ b/drivers/staging/speakup/spk_priv.h
+@@ -72,6 +72,7 @@ int synth_request_region(unsigned long s
+ int synth_release_region(unsigned long start, unsigned long n);
+ int synth_add(struct spk_synth *in_synth);
+ void synth_remove(struct spk_synth *in_synth);
++struct spk_synth *synth_current(void);
+ 
+ extern struct speakup_info_t speakup_info;
+ 
+--- a/drivers/staging/speakup/synth.c
++++ b/drivers/staging/speakup/synth.c
+@@ -481,4 +481,10 @@ void synth_remove(struct spk_synth *in_s
+ }
+ EXPORT_SYMBOL_GPL(synth_remove);
+ 
++struct spk_synth *synth_current(void)
++{
++	return synth;
++}
++EXPORT_SYMBOL_GPL(synth_current);
++
+ short spk_punc_masks[] = { 0, SOME, MOST, PUNC, PUNC | B_SYM };
+
+
