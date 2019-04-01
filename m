@@ -2,178 +2,122 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9798EC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540F2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F60620830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:19:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GlM2Khll";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aPZd9qK5"
+	by mail.kernel.org (Postfix) with ESMTP id 2A88D20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732142AbfDAITC (ORCPT
+        id S1732180AbfDAITF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:19:02 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54474 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731919AbfDAITB (ORCPT
+        Mon, 1 Apr 2019 04:19:05 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:21695 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731802AbfDAITD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:19:01 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 83E9C611BE; Mon,  1 Apr 2019 08:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554106740;
-        bh=IFqV9cJsn6EXiiv4KICZogj/+1WSre0bJ66q0Fl80Kc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GlM2KhllDReIarOwkvdSUgBaFUso/FUHzqElsE37m64gIoozNZUk/lsDkooRuqSIa
-         58lVv6aKaoxMyW4jpzo+042F2RwzE+AoWvRzFYLlDIFCroiJSOU2J2gFYvB+rXF//v
-         gsBsvw9DgM8c78bBx6IbjJOvxGpybPMmPezOwTpY=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 44B26608FF;
-        Mon,  1 Apr 2019 08:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554106726;
-        bh=IFqV9cJsn6EXiiv4KICZogj/+1WSre0bJ66q0Fl80Kc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aPZd9qK5JmeDIuzBScsSYDW901d6/r7Sg6SehK5whojtxd1Kfep5ioxXucy8YcXYB
-         UE1qoFFEAZgf2NVsFCLcyxuBQ2++5E5fwWPHpA7cNEuezCDm++nFGxNgr80XXZqkAV
-         A4AlW5o9XQ+hVNoYWeKTs5Xt3KG772KqDqinbFso=
+        Mon, 1 Apr 2019 04:19:03 -0400
+X-UUID: e959a15f1d2a4210b80322792f393526-20190401
+X-UUID: e959a15f1d2a4210b80322792f393526-20190401
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <maoguang.meng@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1607990482; Mon, 01 Apr 2019 16:18:47 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 1 Apr 2019 16:18:45 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 1 Apr 2019 16:18:43 +0800
+From:   <maoguang.meng@mediatek.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Tiffany Lin <tiffany.lin@mediatek.com>
+CC:     Longfei Wang <longfei.wang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        <gtk_ruiwang@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Maoguang Meng <maoguang.meng@mediatek.com>
+Subject: [PATCH,v1] media: mtk-vcodec: fix vp9 content playback error with show exist frame
+Date:   Mon, 1 Apr 2019 16:18:38 +0800
+Message-ID: <1554106718-23107-1-git-send-email-maoguang.meng@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 01 Apr 2019 13:48:23 +0530
-From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hemantg <hemantg@codeaurora.org>
-Subject: Re: [PATCH 2/2] Bluetooth: hci_qca: wcn3990: Drop baudrate change
- vendor event
-In-Reply-To: <c985a6712f91930d7c710ca4abb42e80@codeaurora.org>
-References: <20190307004041.38059-1-mka@chromium.org>
- <20190307004041.38059-3-mka@chromium.org>
- <ff905fac1e57bcca78c74f1bc3349645@codeaurora.org>
- <20190307182009.GB138592@google.com> <20190307233039.GA69116@google.com>
- <c985a6712f91930d7c710ca4abb42e80@codeaurora.org>
-Message-ID: <a03acbdc6bfad172fdd65f428ffbe4cf@codeaurora.org>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+From: Maoguang Meng <maoguang.meng@mediatek.com>
 
-On 2019-04-01 13:29, Balakrishna Godavarthi wrote:
-> Hi Matthias,
-> 
-> Sorry for the late reply i was on vacation.
-> 
-> On 2019-03-08 05:00, Matthias Kaehlcke wrote:
->> On Thu, Mar 07, 2019 at 10:20:09AM -0800, Matthias Kaehlcke wrote:
->>> Hi Balakrishna,
->>> 
->>> On Thu, Mar 07, 2019 at 10:35:08AM +0530, Balakrishna Godavarthi 
->>> wrote:
->>> > hi Matthias,
->>> >
->>> > On 2019-03-07 06:10, Matthias Kaehlcke wrote:
->>> > > Firmware download to the WCN3990 often fails with a 'TLV response size
->>> > > mismatch' error:
->>> > >
->>> > > [  133.064659] Bluetooth: hci0: setting up wcn3990
->>> > > [  133.489150] Bluetooth: hci0: QCA controller version 0x02140201
->>> > > [  133.495245] Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
->>> > > [  133.507214] Bluetooth: hci0: QCA TLV response size mismatch
->>> > > [  133.513265] Bluetooth: hci0: QCA Failed to download patch (-84)
->>> > >
->>> > > This is caused by a vendor event that corresponds to an earlier command
->>> > > to change the baudrate. The event is not processed in the context of the
->>> > > baudrate change and later interpreted as response to the firmware
->>> > > download command (which is also a vendor command), but the driver
->>> > > detects
->>> > > that the event doesn't have the expected amount of associated data.
->>> > >
->>> > > More details:
->>> > >
->>> > > For the WCN3990 the vendor command for a baudrate change isn't sent as
->>> > > synchronous HCI command, because the controller sends the corresponding
->>> > > vendor event with the new baudrate. The event is received and decoded
->>> > > after the baudrate change of the host port.
->>> > >
->>> > > Identify the 'unused' event when it is received and don't add it to
->>> > > the queue of RX frames.
->>> > >
->>> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->>> > > ---
->>> >
->>> > ...
->>> >
->>> > Can you test by reverting this change "94d6671473924".
->>> 
->>> The issue is still reproducible.
->>> 
->>> > We need at least 15ms minimum delay for the soc to change its baud rate and
->>> > respond to the with command complete event.
->>> 
->>> The baudrate change has clearly been successful when the problem is
->>> observed, since the host receives the vendor event with the new
->>> baudrate.
->> 
->> I forgot to mention this earlier: the controller doesn't send a
->> command complete event for the command, or at least not a correct
->> one.
->> 
->> That's the data that is received:
->> 
->> 04 0e 04 01 00 00 00
->>             ~~ ~~
->> 
-> [Bala]: can you share me the command sent and event recevied.
->  I see that we receive a command complete event for the baud rate
-> change command.
-> 
-> command sent: 01 48 fc 01 11
-> vendor specific event: 04 ff 02 92 01
-> command complete event: 04 0e 04 01 00 00 00.
-> 
-> 
-> 
->> This is *a* command complete event, but the opcode is 0x0000 instead
->> of the earlier command. The same happens for the firmware
->> download/read version command, which is the reason why the command
->> complete injection mess
->> (https://lore.kernel.org/patchwork/patch/1027955/) is needed in one
->> way or another.
->> 
-> [Bala]: fw download approach is different where we use
-> __hci_cmd_sync() where as here we use hci_uart_tx_wakeup()
->         which directly calls the hci_uart_write_work(). so even we
-> send an valid opcode or not for baudrate change will bot matter.
-> 
-[Bala]: i miss understood the comment. Yes your true. in the all vendor 
-commands SoC responds with an 0x0000 opcode.
+Update referenced frame buffer's reference count when playing vp9
+content which has show_existing_frame flag, and copy enough buffer
+data to current shown frame.
 
->> I wished Qualcomm FW developers would get their act together and:
->> 
->> - send actual command complete events :
->> - acknowledge a baudrate change request using the current baudrate
->>   like Broadcom and Intel chips apparently do
->> 
->> this would have saved countless hours of debugging and implementing
->> quirky workarounds ...
->> 
->> Maybe there is hope for future chips (hint, hint)?
-> 
-> [Bala]: will take this forward to the SoC teams.
+Signed-off-by: Maoguang Meng <maoguang.meng@mediatek.com>
+---
+ .../media/platform/mtk-vcodec/vdec/vdec_vp9_if.c   |   16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+index bc8349b..d950837 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+@@ -481,15 +481,15 @@ static void vp9_swap_frm_bufs(struct vdec_vp9_inst *inst)
+ 		 */
+ 		if ((frm_to_show->fb != NULL) &&
+ 			(inst->cur_fb->base_y.size >=
+-			frm_to_show->fb->base_y.size)) {
++			frm_to_show->fb->base_y.size) &&
++			(inst->cur_fb->base_c.size >=
++			frm_to_show->fb->base_c.size)) {
+ 			memcpy((void *)inst->cur_fb->base_y.va,
+ 				(void *)frm_to_show->fb->base_y.va,
+-				vsi->buf_w *
+-				vsi->buf_h);
++				frm_to_show->fb->base_y.size);
+ 			memcpy((void *)inst->cur_fb->base_c.va,
+ 				(void *)frm_to_show->fb->base_c.va,
+-				vsi->buf_w *
+-				vsi->buf_h / 2);
++				frm_to_show->fb->base_c.size);
+ 		} else {
+ 			/* After resolution change case, current CAPTURE buffer
+ 			 * may have less buffer size than frm_to_show buffer
+@@ -895,7 +895,7 @@ static int vdec_vp9_decode(unsigned long h_vdec, struct mtk_vcodec_mem *bs,
+ 
+ 		if (vsi->resolution_changed) {
+ 			if (!vp9_alloc_work_buf(inst)) {
+-				ret = -EINVAL;
++				ret = -EIO;
+ 				goto DECODE_ERROR;
+ 			}
+ 		}
+@@ -924,14 +924,12 @@ static int vdec_vp9_decode(unsigned long h_vdec, struct mtk_vcodec_mem *bs,
+ 
+ 		if (vsi->show_existing_frame && (vsi->frm_to_show_idx <
+ 					VP9_MAX_FRM_BUF_NUM)) {
+-			mtk_vcodec_err(inst,
++			mtk_vcodec_debug(inst,
+ 				"Skip Decode drv->new_fb_idx=%d, drv->frm_to_show_idx=%d",
+ 				vsi->new_fb_idx, vsi->frm_to_show_idx);
+ 
+ 			vp9_ref_cnt_fb(inst, &vsi->new_fb_idx,
+ 					vsi->frm_to_show_idx);
+-			ret = -EINVAL;
+-			goto DECODE_ERROR;
+ 		}
+ 
+ 		/* VPU assign the buffer pointer in its address space,
 -- 
-Regards
-Balakrishna.
+1.7.9.5
+
