@@ -2,79 +2,103 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F1FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7388CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC0321473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D6D2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:17:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbfDATQw (ORCPT
+        id S1728660AbfDATRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 15:16:52 -0400
-Received: from mga04.intel.com ([192.55.52.120]:51418 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbfDATQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 15:16:51 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 12:16:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,297,1549958400"; 
-   d="scan'208";a="127737922"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga007.jf.intel.com with ESMTP; 01 Apr 2019 12:16:50 -0700
-Date:   Mon, 1 Apr 2019 12:16:50 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     syzbot <syzbot+01bc9e7a8a3f138b71cf@syzkaller.appspotmail.com>
-Cc:     dvyukov@google.com, hpa@zytor.com, jmattson@google.com,
-        karahmed@amazon.de, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Subject: Re: WARNING in free_loaded_vmcs (2)
-Message-ID: <20190401191650.GB24070@linux.intel.com>
-References: <000000000000b239d705736497a3@google.com>
- <000000000000b0ddb205855cad54@google.com>
+        Mon, 1 Apr 2019 15:17:30 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41020 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbfDATRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 15:17:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 667F915AB;
+        Mon,  1 Apr 2019 12:17:29 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81E623F59C;
+        Mon,  1 Apr 2019 12:17:26 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] drm/panfrost: Add initial panfrost driver
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Lyude Paul <lyude@redhat.com>, Eric Anholt <eric@anholt.net>,
+        "Marty E . Plummer" <hanetzer@startmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+References: <20190401074730.12241-1-robh@kernel.org>
+ <20190401074730.12241-4-robh@kernel.org>
+ <40a521b3-a99c-2cd3-f3ac-cfec873fc934@baylibre.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <8cc9ab56-3c50-9081-7276-a918ab23c924@arm.com>
+Date:   Mon, 1 Apr 2019 20:17:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000b0ddb205855cad54@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <40a521b3-a99c-2cd3-f3ac-cfec873fc934@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 09:53:01PM -0700, syzbot wrote:
-> syzbot has bisected this bug to:
+On 01/04/2019 09:24, Neil Armstrong wrote:
+> On 01/04/2019 09:47, Rob Herring wrote:
+>> This adds the initial driver for panfrost which supports Arm Mali
+>> Midgard and Bifrost family of GPUs. Currently, only the T860 and
+>> T760 Midgard GPUs have been tested.
+>>
+>> v2:
+>> - Add GPU reset on job hangs (Tomeu)
+>> - Add RuntimePM and devfreq support (Tomeu)
+>> - Fix T760 support (Tomeu)
+>> - Add a TODO file (Rob, Tomeu)
+>> - Support multiple in fences (Tomeu)
+>> - Drop support for shared fences (Tomeu)
+>> - Fill in MMU de-init (Rob)
+>> - Move register definitions back to single header (Rob)
+>> - Clean-up hardcoded job submit todos (Rob)
+>> - Implement feature setup based on features/issues (Rob)
+>> - Add remaining Midgard DT compatible strings (Rob)
+>>
+>> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+>> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+>> Cc: Sean Paul <sean@poorly.run>
+>> Cc: David Airlie <airlied@linux.ie>
+>> Cc: Daniel Vetter <daniel@ffwll.ch>
+>> Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+>> Cc: Lyude Paul <lyude@redhat.com>
+>> Cc: Eric Anholt <eric@anholt.net>
+>> Signed-off-by: Marty E. Plummer <hanetzer@startmail.com>
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>> Neil, I've kept your reset support separate for now. Let me know if you
+>> prefer me to squash it or keep it separate.
 > 
-> commit 8fcc4b5923af5de58b80b53a069453b135693304
-> Author: Jim Mattson <jmattson@google.com>
-> Date:   Tue Jul 10 09:27:20 2018 +0000
-> 
->     kvm: nVMX: Introduce KVM_CAP_NESTED_STATE
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17fba63f200000
-> start commit:   60c1f892 Merge tag 'dma-mapping-4.19-2' of git://git.infra..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1407a63f200000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1007a63f200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=4c7e83258d6e0156
-> dashboard link: https://syzkaller.appspot.com/bug?extid=01bc9e7a8a3f138b71cf
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a6513e400000
-> 
-> Reported-by: syzbot+01bc9e7a8a3f138b71cf@syzkaller.appspotmail.com
-> Fixes: 8fcc4b5923af ("kvm: nVMX: Introduce KVM_CAP_NESTED_STATE")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> You can squash all my changes and add my sign-off.
 
-Blech, this is horribly stale.  Fixed by commit 5bea5123cbf0 ("KVM: VMX:
-check nested state and CR4.VMXE against SMM").
+FWIW, looking at Rob's branch there's a little bug in panfrost_reset_init():
 
-#syz fix: KVM: VMX: check nested state and CR4.VMXE against SMM
++	if (IS_ERR(pfdev->rstc)) {
++		dev_err(pfdev->dev, "get reset failed %ld\n", PTR_ERR(pfdev->clock));
+
+Looks like that "pfdev->clock" should be "pfdev->rstc".
+
+Robin.
