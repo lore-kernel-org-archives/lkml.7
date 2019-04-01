@@ -2,127 +2,146 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792F0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE0BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAD320896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D4020883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="X5ieFSrL"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Ewyn7Gn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfDAMEa (ORCPT
+        id S1727023AbfDAME7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 08:04:30 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:34280 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726945AbfDAME3 (ORCPT
+        Mon, 1 Apr 2019 08:04:59 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34783 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfDAME4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 08:04:29 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190401120427euoutp025dad645ad3e9f7129519407a735c58c1~RWCZGrP5I1590015900euoutp02d
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2019 12:04:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190401120427euoutp025dad645ad3e9f7129519407a735c58c1~RWCZGrP5I1590015900euoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1554120267;
-        bh=GUCinh58f0fmdGROh1Z32/WkaaVB5G010l2lKMQ2JDs=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=X5ieFSrLvuPjlZrKU3LK/X5Sb6wBJSU8HafWFURfTICY8x7cior6FIz+RWkmOfBca
-         sGBG9h51tu1zYfnBUqYJLgAkDiJlRaQp1I/9RopOslLOJ68JHKowv1H1POC1w73MMg
-         wVIUNG8L5MWUsRidXS2Ch+ZgTHr0Sa4+JH4RsQJQ=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190401120427eucas1p2f8b08fceeed6faf02a1214b7392a5f70~RWCYz-iKi1988919889eucas1p2V;
-        Mon,  1 Apr 2019 12:04:27 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 11.92.04325.B4EF1AC5; Mon,  1
-        Apr 2019 13:04:27 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190401120426eucas1p19b20d555750c540a84198cfe3ca77926~RWCYFq78y2799727997eucas1p1q;
-        Mon,  1 Apr 2019 12:04:26 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190401120426eusmtrp2853613df0412079f20c293b7c2b9c048~RWCX3qede2087820878eusmtrp2Y;
-        Mon,  1 Apr 2019 12:04:26 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-75-5ca1fe4bd553
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 44.D9.04140.A4EF1AC5; Mon,  1
-        Apr 2019 13:04:26 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190401120426eusmtip11124b370a89e76a6a552702e4fece1de~RWCXlshrw2544725447eusmtip1n;
-        Mon,  1 Apr 2019 12:04:26 +0000 (GMT)
-Subject: Re: [PATCH] video/macfb: Always initialize DAFB colour table
- pointer register
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     linux-m68k@lists.linux-m68k.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <aed176be-adce-dd80-8f54-55a1ca33a65b@samsung.com>
-Date:   Mon, 1 Apr 2019 14:04:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-        Thunderbird/45.3.0
+        Mon, 1 Apr 2019 08:04:56 -0400
+Received: by mail-ed1-f66.google.com with SMTP id x14so7986349eds.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 05:04:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=VPDCx0qpmBzfdZBBNDfIB9KlTh+K+UcwTE8iRSsK86c=;
+        b=Ewyn7Gn5/OUE26WIXS4Zpu8bX43a/BAmveKqDubexEMOO1Tq63e7ZdjOI66/ccWXAS
+         oRYxPhvCQoDKeej8+ze8TLXWj0mlRsyiNy2/Lv9pgQ6TlT2MLZ3/3uGtHowj9FxAG6tJ
+         iroJfx8nsINJDvvbSRuwZM+Vgk36ntm70O5BZJb8mm0ScPQwb6GAITQcq/N4MD2aWi+n
+         qltmuja/sjah1GwpjIWrCMzz8JX5LuUVgobnkJjl5eL746NoImvh5/yEDENssf2KikS3
+         YGj89hwhLY2h2L+5Vdm/Utn279eYrQYgvnnPb7MC7e5tzdqcESZ0pNkio5fcVFWeQvZj
+         BhgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=VPDCx0qpmBzfdZBBNDfIB9KlTh+K+UcwTE8iRSsK86c=;
+        b=L6rNDf9V3T5Y/Cp0Cfhkd2l7EXvFNFI2sLXgEasvyUahFw9CbUD+XYRKKhH7cz93j2
+         YpXkmz1yNOZDDnumoSi76jhAhhVkJRXUqluLJVVy6sZW1P0hGr59UjKSieQwa1PF6ESp
+         /R7W19t2Ioml/sRjXwEOCbYgSlDJqoYcDs2IgAg/N7XiqghjyGruJ0zpa8aI78Zj81Y0
+         VzkcAZQ+JLGMxLCqfHVScPWjPvdlhxb1C0G25qiKU/hY90PkpcsbkwkB/9eZeIvqOyRW
+         v0gu/uhFcCZrHn/cIN6NqL0lkPVEg6XTCnIut/6FOkgapfLD8fHoYMTFZHS3VKBPZsbD
+         A8ig==
+X-Gm-Message-State: APjAAAW/GXYHMpxo82Tv9DxTI3Zs5AXhV2GfQQGLG0rkxSPF2N3TuEbV
+        xb/gX39ZdjfDovWxMo4jwzb4uA==
+X-Google-Smtp-Source: APXvYqwV2VwPm7cSloA/4XtPEubPwQBiAfKcqabj9rtLWJ+BqSORejh2CL5BHNCUp/RayIrU2T/r6A==
+X-Received: by 2002:a50:86dc:: with SMTP id 28mr43468797edu.258.1554120294737;
+        Mon, 01 Apr 2019 05:04:54 -0700 (PDT)
+Received: from brauner.io (x59cc8b8e.dyn.telefonica.de. [89.204.139.142])
+        by smtp.gmail.com with ESMTPSA id a25sm3170218edc.55.2019.04.01.05.04.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Apr 2019 05:04:54 -0700 (PDT)
+Date:   Mon, 1 Apr 2019 14:04:52 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
+Message-ID: <20190401120450.e4k2m434qyqj4yrn@brauner.io>
+References: <CAHk-=whcA0kAWGqet9oJdyttjhP7J4PcU2Ly=n_Qyo6rMJNxRg@mail.gmail.com>
+ <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com>
+ <CAHk-=wj0o8BiUrYiM5ZcTS6JxBh1M60O36Ms8-EqLQ139=1L4g@mail.gmail.com>
+ <20190330171215.3yrfxwodstmgzmxy@brauner.io>
+ <CAHk-=whF6gnRVbJaArZna4e=tejfrzmNQtRbWjnuSSKpBn+jQg@mail.gmail.com>
+ <132107F4-F56B-4D6E-9E00-A6F7C092E6BD@amacapital.net>
+ <CAHk-=wiaLtH41Mc5qAjOeCWavPqV0DhS581KYa0QBt8uraTK1Q@mail.gmail.com>
+ <20190331211041.vht7dnqg4e4bilr2@brauner.io>
+ <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
+ <18C7FCB9-2CBA-4237-94BB-9C4395A2106B@amacapital.net>
 MIME-Version: 1.0
-In-Reply-To: <7396d7b11366fe9ee362cb140e74dd391e66e2d6.1550529894.git.fthain@telegraphics.com.au>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIKsWRmVeSWpSXmKPExsWy7djPc7re/xbGGCyZJWBx5et7NouJvUtZ
-        LE70fWC1uLxrDpvF8idrmR1YPe53H2fyONn6jcXj2cGHrB6fN8kFsERx2aSk5mSWpRbp2yVw
-        ZWxf0s1WcJu54szzdtYGxgnMXYycHBICJhL9X56zdTFycQgJrGCUONT1Esr5wihx4tl9Zgjn
-        M6PEnNnLWLoYOcBals0Sg4gvZ5Q4PekhI8goIYG3jBJv34SB2MICERKblzxgAbFFBLQlJr7Z
-        ATaVWaCRUWL50kWsIAk2ASuJie2rwJp5BewkNvz8B9bAIqAiMe3BelaQZaJAg/rPqEOUCEqc
-        nPkErIRTIFFix7a3TCA2s4CBxJFFc1ghbHmJ7W/ngB0tIdDNLnH84gwmiD9dJG4+2MYCYQtL
-        vDq+hR3ClpH4v3M+E0TDOkaJvx0voLq3A106+R8bRJW1xOHjF1khbEeJ90cmM0OCgk/ixltB
-        iM18EpO2TYcK80p0tAlBVKtJbFi2gQ1mV9fOldBw95BYveYfywRGxVlIfpuF5J9ZSP5ZwMi8
-        ilE8tbQ4Nz212DgvtVyvODG3uDQvXS85P3cTIzChnP53/OsOxn1/kg4xCnAwKvHwVjAtjBFi
-        TSwrrsw9xCjBwawkwnumf0GMEG9KYmVValF+fFFpTmrxIUZpDhYlcd5qhgfRQgLpiSWp2amp
-        BalFMFkmDk6pBsbr607If6qvXHLHc6vS46MRJWnrDnS+fR7OfzJT2O2Re7rF53bd2l7dsz9/
-        5W51Xb1sX6/XBY5sxrauSR82p7l13d7JkOdkefBY7eIuxcrdXrYTBBe1+JkIbpwVzN26fxZf
-        w0WlM3VLYj+IVF9erRC16+/zZr5Xn42fTVGawHz9jGsem822+l1KLMUZiYZazEXFiQCaPD0J
-        JAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGIsWRmVeSWpSXmKPExsVy+t/xu7pe/xbGGEztkbG48vU9m8XE3qUs
-        Fif6PrBaXN41h81i+ZO1zA6sHve7jzN5nGz9xuLx7OBDVo/Pm+QCWKL0bIryS0tSFTLyi0ts
-        laINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0MrYv6WYruM1cceZ5O2sD4wTm
-        LkYODgkBE4lls8S6GLk4hASWMkos7XjLBBGXkTi+vqyLkRPIFJb4c62LDaLmNaPE4avvGUES
-        wgIREv8OvmUHsUUEtCUmvtkBVbSFUeL0uz4WEIdZoJFR4lTrerAONgEriYntq8BsXgE7iQ0/
-        /7GA2CwCKhLTHqxnBbFFgabeetjBAlEjKHFy5hMwm1MgUWLHNpDrOIGG6knsuP6LFcKWl9j+
-        dg7zBEbBWUhaZiEpm4WkbAEj8ypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzAONl27OeWHYxd
-        74IPMQpwMCrx8FYwLYwRYk0sK67MPcQowcGsJMJ7pn9BjBBvSmJlVWpRfnxRaU5q8SFGU6An
-        JjJLiSbnA2M4ryTe0NTQ3MLS0NzY3NjMQkmc97xBZZSQQHpiSWp2ampBahFMHxMHp1QD44Ia
-        P1fXh23cMo1SKyr5Qr5eX/RosXuZufOar/NWzvz/JXXX00udIXEqf1wdV5s+TX7iuPXjF7s+
-        1xQpKbWszkfVwf4NKoEHH21PmPbF484UD1HrhHvnp7A1Fu98opuUVPPSV+68SWL5nykzL+eI
-        v++9J7MnRr/+UeJdLd1g+cv9zdHKicxLlViKMxINtZiLihMBs0Hfe6kCAAA=
-X-CMS-MailID: 20190401120426eucas1p19b20d555750c540a84198cfe3ca77926
-X-Msg-Generator: CA
-X-RootMTR: 20190218224758epcas5p21d3d13ec8323a3ff3c04d45081b4cfff
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190218224758epcas5p21d3d13ec8323a3ff3c04d45081b4cfff
-References: <CGME20190218224758epcas5p21d3d13ec8323a3ff3c04d45081b4cfff@epcas5p2.samsung.com>
-        <7396d7b11366fe9ee362cb140e74dd391e66e2d6.1550529894.git.fthain@telegraphics.com.au>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <18C7FCB9-2CBA-4237-94BB-9C4395A2106B@amacapital.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 02/18/2019 11:44 PM, Finn Thain wrote:
-> Don't skip the framebuffer CLUT pointer register initialization when
-> the first dafb_setpalette() invocation has regno equal to zero.
+On Sun, Mar 31, 2019 at 08:13:38PM -0600, Andy Lutomirski wrote:
 > 
-> Cc: linux-m68k@lists.linux-m68k.org
-> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+> 
+> > On Mar 31, 2019, at 3:17 PM, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > 
+> >> On Sun, Mar 31, 2019 at 2:10 PM Christian Brauner <christian@brauner.io> wrote:
+> >> 
+> >> I don't think that we want or can make them equivalent since that would
+> >> mean we depend on procfs.
+> > 
+> > Sure we can.
+> > 
+> > If /proc is enabled, then you always do that dance YOU ALREADY WROTE
+> > THE CODE FOR to do the stupid ioctl.
+> > 
+> > And if /procfs isn't enabled, then you don't do that.
+> > 
+> > Ta-daa. Done. No stupid ioctl, and now /proc and pidfd_open() return
+> > the same damn thing.
+> > 
+> > And guess what? If /proc isn't enabled, then obviously pidfd_open()
+> > gives you the /proc-less thing, but at least there is no crazy "two
+> > different file descriptors for the same thing" situation, because then
+> > the /proc one doesn't exist.
+> > 
+> 
+> I wish we could do this, and, in a clean design, it would be a no-brainer.  But /proc has too much baggage.  Just to mention two such things, there’s “net” and “../sys”.  This crud is why we have all kinds of crazy rules that prevent programs in sandboxes from making a new mounts and mounting /proc in it.  If we make it possible to clone a new process and this access /proc without having /proc mounted, we’ll open up a big can of worms.
+> 
+> Maybe we could have a sanitized view of /proc and make a pidfd be a directory fd pointing at that.
 
-Patch queued for v5.2, thanks.
+We can also just create something like an internal bind-mount without a
+parent, i.e. similar to
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+open_tree(<internal-procfs-mount>, "<pid>", OPEN_TREE_CLONE);
+
+on a clone(CLONE_PIDFD);
+
+that would block any openat(fd, "..");
