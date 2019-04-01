@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81B9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF81C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986A521903
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C97D2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140000;
-	bh=sZ1rHugOwgqtbB7Tni5fpC9vgRRPhKUX6+kzlFEqizY=;
+	s=default; t=1554140005;
+	bh=166qu/xeeVH92fpZznbg53wP6GYMbcSGIFMZQ6XsR5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aZzsrjMHIjQpcSMMbmwlokvLg1mf0ryinq8GDqZsYZJUJSew1x0g9xkLzvsne/mhR
-	 VlFdcObXYGUBh7NXK/nX7KHezN1qMmMtPGL8yM1GKzThwjy7AVDRW7WHRRtJ/jhkh+
-	 Vw1IugXekZ50EE/Ny4U4msTJmYBh1buw0o5fGGPI=
+	b=c0S7OZLb63klihiGfykyUrvHBUtrRSo2cEgkZBgUWRcN014PHCMSsAovqZJMbFWr1
+	 Bq4tncfumP+VaHQNSWj8L01vkPw0+CEZDF4KuJsWbOOy6ipnP2tMNTWid0hQitP9So
+	 7QeYBd0/pexXNyyfjru8AIPHRzENS8AgaGUPleN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732743AbfDARdT (ORCPT
+        id S2387620AbfDARdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:33:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42030 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:33:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387602AbfDARdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:33:16 -0400
+        id S1732780AbfDARdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:33:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FF042171F;
-        Mon,  1 Apr 2019 17:33:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5A6121473;
+        Mon,  1 Apr 2019 17:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139995;
-        bh=sZ1rHugOwgqtbB7Tni5fpC9vgRRPhKUX6+kzlFEqizY=;
+        s=default; t=1554140000;
+        bh=166qu/xeeVH92fpZznbg53wP6GYMbcSGIFMZQ6XsR5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HWBBO9Bughjt3Zd8X/LDMH92N/j61U0r1JVFzVqoGXarhk0VELEMFCYL4OnLpGTse
-         o8sf32nCjgaHLh0dTrVUTolVLucR+FC4yecLG54I82bvh1QxI5kJ78uSN70uiTjlRM
-         4QPUgFftrCyNupL5RBFAqSppyYPIZ5Dp0oqtyh1c=
+        b=PrkUvQRDDwxJGW72hJt2SdVqj4RaVEp2csmrCWRb8LlUKBxGAeZJd4DVZninswflS
+         XdJmYK6o2GPRYRauMwAkMDlOCe1rbtlhzi+S0buF2pXXoB/orKNebbWWCDnL78hzxv
+         XPdSN3w2+SjcTfSCunZ1++6v6ZgOwFni4v5bkmzY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Jeff Mahoney <jeffm@suse.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 074/131] arm64/kernel: fix incorrect EL0 check in inv_entry macro
-Date:   Mon,  1 Apr 2019 19:02:24 +0200
-Message-Id: <20190401170058.301826706@linuxfoundation.org>
+Subject: =?UTF-8?q?=5BPATCH=204=2E4=20075/131=5D=20=3D=3FUTF-8=3Fq=3Fmac80211=3A=3D20fix=3D20=22warning=3A=3D20=3DE2=3D80=3D98target=3D5Fmetric=3F=3D=20=3D=3FUTF-8=3Fq=3F=3DE2=3D80=3D99=3D20may=3D20be=3D20used=3D20uninitialized=22=3F=3D?=
+Date:   Mon,  1 Apr 2019 19:02:25 +0200
+Message-Id: <20190401170058.365659273@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -66,48 +66,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit b660950c60a7278f9d8deb7c32a162031207c758 ]
+[ Upstream commit b4201cc4fc6e1c57d6d306b1f787865043d60129 ]
 
-The implementation of macro inv_entry refers to its 'el' argument without
-the required leading backslash, which results in an undefined symbol
-'el' to be passed into the kernel_entry macro rather than the index of
-the exception level as intended.
+This fixes:
 
-This undefined symbol strangely enough does not result in build failures,
-although it is visible in vmlinux:
+net/mac80211/mesh_hwmp.c:603:26: warning: ‘target_metric’ may be used uninitialized in this function
 
-     $ nm -n vmlinux |head
-                      U el
-     0000000000000000 A _kernel_flags_le_hi32
-     0000000000000000 A _kernel_offset_le_hi32
-     0000000000000000 A _kernel_size_le_hi32
-     000000000000000a A _kernel_flags_le_lo32
-     .....
+target_metric is only consumed when reply = true so no bug exists here,
+but not all versions of gcc realize it.  Initialize to 0 to remove the
+warning.
 
-However, it does result in incorrect code being generated for invalid
-exceptions taken from EL0, since the argument check in kernel_entry
-assumes EL1 if its argument does not equal '0'.
-
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Jeff Mahoney <jeffm@suse.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/entry.S | 2 +-
+ net/mac80211/mesh_hwmp.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 3028d9b028c7..586326981769 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -243,7 +243,7 @@ END(vectors)
-  * Invalid mode handlers
-  */
- 	.macro	inv_entry, el, reason, regsize = 64
--	kernel_entry el, \regsize
-+	kernel_entry \el, \regsize
- 	mov	x0, sp
- 	mov	x1, #\reason
- 	mrs	x2, esr_el1
+diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
+index 33d5271a9e32..466922f09d04 100644
+--- a/net/mac80211/mesh_hwmp.c
++++ b/net/mac80211/mesh_hwmp.c
+@@ -530,7 +530,7 @@ static void hwmp_preq_frame_process(struct ieee80211_sub_if_data *sdata,
+ 	const u8 *target_addr, *orig_addr;
+ 	const u8 *da;
+ 	u8 target_flags, ttl, flags;
+-	u32 orig_sn, target_sn, lifetime, target_metric;
++	u32 orig_sn, target_sn, lifetime, target_metric = 0;
+ 	bool reply = false;
+ 	bool forward = true;
+ 	bool root_is_gate;
 -- 
 2.19.1
 
