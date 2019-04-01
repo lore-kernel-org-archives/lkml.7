@@ -2,111 +2,115 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 771CEC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A95C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4875820883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:48:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FMYkmme4"
+	by mail.kernel.org (Postfix) with ESMTP id 48A2020883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:49:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554140956;
+	bh=ypDZLm/OD4et0aUlj8/hWV8vPL6MC6k0a2u6dx9Vja0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v/hm0AntByV5tl+LdzDJc4NxKakxl0mzsf0xT9KYk7st1zuBCzWrNMZmHgn0gAAiK
+	 DJX0SaWlYgkcqb4DbfsMkcWYSBY3qdqIw792M0E9xa+qKqftC0SLmLArgpNUP3uY6O
+	 nD1bolHWtRSGhxnURWhVqUEpgzPhgBs1SfxTKp/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733133AbfDARak (ORCPT
+        id S1732906AbfDARtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:30:40 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52828 "EHLO mail.skyhub.de"
+        Mon, 1 Apr 2019 13:49:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728698AbfDARah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:30:37 -0400
-Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
+        id S1733050AbfDARaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:30:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8F1A81EC05A6;
-        Mon,  1 Apr 2019 19:30:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554139835;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=j/WS3lJjsV+M5Fg2UK2oZqlqiN9cIoFUxP3NKl6nmRs=;
-        b=FMYkmme4Z4SedqJSUCT/YKAGR4rK4c2eXXgQHMXDXwDe3fx2Rbf4Q8HK4vJGpNtOsXNV4+
-        MO/09j4+y5y/LgDO0KnWgarYss5Fk0cW4m/sWCcFl5SihRWNqFbnbfq9xnG7vsYn2KGYkG
-        YZH1r36HVJgbsk6AZu7apeUBA1VZYOQ=
-Date:   Mon, 1 Apr 2019 19:30:31 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jann Horn <jannh@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Qiaowei Ren <qiaowei.ren@intel.com>,
-        Mukesh Ojha <mojha@codeaurora.org>
-Subject: Re: [PATCH v3 2/4] x86/microcode: Fix __user annotations around
- generic_load_microcode()
-Message-ID: <20190401173031.GK28264@zn.tnic>
-References: <20190329214652.258477-1-jannh@google.com>
- <20190329214652.258477-2-jannh@google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id AD96320830;
+        Mon,  1 Apr 2019 17:30:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554139812;
+        bh=ypDZLm/OD4et0aUlj8/hWV8vPL6MC6k0a2u6dx9Vja0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R4c2M0XOSyXu/t2OhBjn8qkwvVyM3Jc8vS0YIciaGe36L+J4adft19JcC2ZBXvMxM
+         meHOOCLHPDwY9NAlOS/XZQ3okAWQLnZYMcsBha1Sp76hzuaHiOpy3wkSuA9Uq/NLDq
+         vcx0t2zac21YI4IlNMO9tRHAPT/VteL7id77qT3E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>
+Subject: [PATCH 4.4 004/131] mips: loongson64: lemote-2f: Add IRQF_NO_SUSPEND to "cascade" irqaction.
+Date:   Mon,  1 Apr 2019 19:01:14 +0200
+Message-Id: <20190401170052.064881644@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
+References: <20190401170051.645954551@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190329214652.258477-2-jannh@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 10:46:50PM +0100, Jann Horn wrote:
-> generic_load_microcode() deals with a pointer that can be either a kernel
-> pointer or a user pointer. Pass it around as a __user pointer so that it
-> can't be dereferenced accidentally while its address space is unknown.
-> Use explicit casts to convert between __user and __kernel to inform the
-> checker that these address space conversions are intentional.
-> 
-> Signed-off-by: Jann Horn <jannh@google.com>
-> ---
->  arch/x86/kernel/cpu/microcode/intel.c | 20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
-> index 16936a24795c..e8ef65c275c7 100644
-> --- a/arch/x86/kernel/cpu/microcode/intel.c
-> +++ b/arch/x86/kernel/cpu/microcode/intel.c
-> @@ -861,11 +861,13 @@ static enum ucode_state apply_microcode_intel(int cpu)
->  	return ret;
->  }
->  
-> -static enum ucode_state generic_load_microcode(int cpu, void *data, size_t size,
-> -				int (*get_ucode_data)(void *, const void *, size_t))
-> +static enum ucode_state generic_load_microcode(int cpu,
-> +		const void __user *data, size_t size,
-> +		int (*get_ucode_data)(void *, const void __user *, size_t))
+4.4-stable review patch.  If anyone has any objections, please let me know.
 
-Ok, how about something completely different?
+------------------
 
-This ->get_ucode_data() BIOS-code-like contraption has always bugged me
-for being too ugly to live.
+From: Yifeng Li <tomli@tomli.me>
 
-How about we vmalloc() a properly sized buffer - both
-generic_load_microcode() callers have the size - and then hand that
-buffer into generic_load_microcode() ?
+commit 5f5f67da9781770df0403269bc57d7aae608fecd upstream.
 
-That solves the __user annotation fun immediately and would simplify
-generic_load_microcode() additionally.
+Timekeeping IRQs from CS5536 MFGPT are routed to i8259, which then
+triggers the "cascade" IRQ on MIPS CPU. Without IRQF_NO_SUSPEND in
+cascade_irqaction, MFGPT interrupts will be masked in suspend mode,
+and the machine would be unable to resume once suspended.
 
-The disadvantage would be having to vmalloc() a couple of... , I think
-it is megabytes, with that old loading method request_microcode_user()
-but then if vmalloc() fails, then it was clearly too big. I don't think
-the blob can ever be that big though, to fail vmalloc(), but I'm not
-going to bet on it...
+Previously, MIPS IRQs were not disabled properly, so the original
+code appeared to work. Commit a3e6c1eff5 ("MIPS: IRQ: Fix disable_irq on
+CPU IRQs") uncovers the bug. To fix it, add IRQF_NO_SUSPEND to
+cascade_irqaction.
 
-Hmmm...
+This commit is functionally identical to 0add9c2f1cff ("MIPS:
+Loongson-3: Add IRQF_NO_SUSPEND to Cascade irqaction"), but it forgot
+to apply the same fix to Loongson2.
 
--- 
-Regards/Gruss,
-    Boris.
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # v3.19+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+---
+ arch/mips/loongson64/lemote-2f/irq.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/mips/loongson64/lemote-2f/irq.c
++++ b/arch/mips/loongson64/lemote-2f/irq.c
+@@ -102,7 +102,7 @@ static struct irqaction ip6_irqaction =
+ static struct irqaction cascade_irqaction = {
+ 	.handler = no_action,
+ 	.name = "cascade",
+-	.flags = IRQF_NO_THREAD,
++	.flags = IRQF_NO_THREAD | IRQF_NO_SUSPEND,
+ };
+ 
+ void __init mach_init_irq(void)
+
+
