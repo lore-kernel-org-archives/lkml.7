@@ -7,67 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7F0C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A5CC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022BD21924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D5A21924
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138709;
-	bh=PLDQT4y8Ok+PPycMt4IPH0fAGMv5s5eeqfv1GzWGZ5Y=;
+	s=default; t=1554138713;
+	bh=qIAfZISwMn3Bb6JtXYs2yGmrIv8aKVk4ca/YmhR8qUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AUNfjj/dDlaueQ6kfccROuN7BQBL/WdBP49/zjwcrhmmrNzLngIZkUG+knKAeDIuk
-	 Huw22WMeRfIN2kyljYS/IBxQrBOzA0UU1QnGaUoiWfOCZRB+TPauitmfS7uugBkNBr
-	 TUXfgeURShWPW6swKmAD3WQVvgmHB7d1R5HNJjIY=
+	b=K9uE47ldPQsaukesW7s8KwGPvyhF3xYMyPSUlsSnQbekKPuacftBLHsC08qfuHDKu
+	 v0M8V62Z6s4o3IFB/q3+uQ8Xo0WwOMugqvTaiYZSH0akEElMFkJa+fhTVV8Cb4lo+j
+	 SD8tVoeAOiiPvgMin4Z4vLhlmB4C8/fqSwgfSQ/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730266AbfDARLr (ORCPT
+        id S1730275AbfDARLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:11:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60596 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:11:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730242AbfDARLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:11:42 -0400
+        id S1730265AbfDARLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:11:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2617421924;
-        Mon,  1 Apr 2019 17:11:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BC9F21939;
+        Mon,  1 Apr 2019 17:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138700;
-        bh=PLDQT4y8Ok+PPycMt4IPH0fAGMv5s5eeqfv1GzWGZ5Y=;
+        s=default; t=1554138707;
+        bh=qIAfZISwMn3Bb6JtXYs2yGmrIv8aKVk4ca/YmhR8qUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nCFMOVYco5JKXD5SCa7onJQdnJ/R4xPGcxthIc2rRMH45efHQMTaz/5953299qSRl
-         o9+iHUiJoGsigXj8ZMaiYbmWSjbTZj8a64TzFoXd0yYlcgeJmkwO4ZFyu4P5waoktS
-         I/7sq9etpMPcdcDNTYbsE3s3Ms5ynapA/jp0VhQU=
+        b=eLRS8nHBQloc7gyS1mJSkmL7//0/srGbyRw6+2z0sgi8B4fT7DyhsQ1RRLZ4zJaW7
+         rnZLkVyNiCNQoVRe2Aqd6fHuy1T1pz1gIawqderZQpeSsgZjj8CIp+di2dv7Wg8Fum
+         hCN+23R2Aaq03hwQELJ+5uT/ZvwfaZOHyqXASCpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Huaisheng Ye <yehs1@lenovo.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Yong Wu <yong.wu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomasz Figa <tfiga@google.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 126/146] mm: add support for kmem caches in DMA32 zone
-Date:   Mon,  1 Apr 2019 19:02:18 +0200
-Message-Id: <20190401170058.948183193@linuxfoundation.org>
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.0 144/146] KVM: x86: update %rip after emulating IO
+Date:   Mon,  1 Apr 2019 19:02:36 +0200
+Message-Id: <20190401170100.201797277@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -86,169 +66,156 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 6d6ea1e967a246f12cfe2f5fb743b70b2e608d4a upstream.
+commit 45def77ebf79e2e8942b89ed79294d97ce914fa0 upstream.
 
-Patch series "iommu/io-pgtable-arm-v7s: Use DMA32 zone for page tables",
-v6.
+Most (all?) x86 platforms provide a port IO based reset mechanism, e.g.
+OUT 92h or CF9h.  Userspace may emulate said mechanism, i.e. reset a
+vCPU in response to KVM_EXIT_IO, without explicitly announcing to KVM
+that it is doing a reset, e.g. Qemu jams vCPU state and resumes running.
 
-This is a followup to the discussion in [1], [2].
+To avoid corruping %rip after such a reset, commit 0967b7bf1c22 ("KVM:
+Skip pio instruction when it is emulated, not executed") changed the
+behavior of PIO handlers, i.e. today's "fast" PIO handling to skip the
+instruction prior to exiting to userspace.  Full emulation doesn't need
+such tricks becase re-emulating the instruction will naturally handle
+%rip being changed to point at the reset vector.
 
-IOMMUs using ARMv7 short-descriptor format require page tables (level 1
-and 2) to be allocated within the first 4GB of RAM, even on 64-bit
-systems.
+Updating %rip prior to executing to userspace has several drawbacks:
 
-For L1 tables that are bigger than a page, we can just use
-__get_free_pages with GFP_DMA32 (on arm64 systems only, arm would still
-use GFP_DMA).
+  - Userspace sees the wrong %rip on the exit, e.g. if PIO emulation
+    fails it will likely yell about the wrong address.
+  - Single step exits to userspace for are effectively dropped as
+    KVM_EXIT_DEBUG is overwritten with KVM_EXIT_IO.
+  - Behavior of PIO emulation is different depending on whether it
+    goes down the fast path or the slow path.
 
-For L2 tables that only take 1KB, it would be a waste to allocate a full
-page, so we considered 3 approaches:
- 1. This series, adding support for GFP_DMA32 slab caches.
- 2. genalloc, which requires pre-allocating the maximum number of L2 page
-    tables (4096, so 4MB of memory).
- 3. page_frag, which is not very memory-efficient as it is unable to reuse
-    freed fragments until the whole page is freed. [3]
+Rather than skip the PIO instruction before exiting to userspace,
+snapshot the linear %rip and cancel PIO completion if the current
+value does not match the snapshot.  For a 64-bit vCPU, i.e. the most
+common scenario, the snapshot and comparison has negligible overhead
+as VMCS.GUEST_RIP will be cached regardless, i.e. there is no extra
+VMREAD in this case.
 
-This series is the most memory-efficient approach.
+All other alternatives to snapshotting the linear %rip that don't
+rely on an explicit reset announcenment suffer from one corner case
+or another.  For example, canceling PIO completion on any write to
+%rip fails if userspace does a save/restore of %rip, and attempting to
+avoid that issue by canceling PIO only if %rip changed then fails if PIO
+collides with the reset %rip.  Attempting to zero in on the exact reset
+vector won't work for APs, which means adding more hooks such as the
+vCPU's MP_STATE, and so on and so forth.
 
-stable@ note:
-  We confirmed that this is a regression, and IOMMU errors happen on 4.19
-  and linux-next/master on MT8173 (elm, Acer Chromebook R13). The issue
-  most likely starts from commit ad67f5a6545f ("arm64: replace ZONE_DMA
-  with ZONE_DMA32"), i.e. 4.15, and presumably breaks a number of Mediatek
-  platforms (and maybe others?).
+Checking for a linear %rip match technically suffers from corner cases,
+e.g. userspace could theoretically rewrite the underlying code page and
+expect a different instruction to execute, or the guest hardcodes a PIO
+reset at 0xfffffff0, but those are far, far outside of what can be
+considered normal operation.
 
-[1] https://lists.linuxfoundation.org/pipermail/iommu/2018-November/030876.html
-[2] https://lists.linuxfoundation.org/pipermail/iommu/2018-December/031696.html
-[3] https://patchwork.codeaurora.org/patch/671639/
-
-This patch (of 3):
-
-IOMMUs using ARMv7 short-descriptor format require page tables to be
-allocated within the first 4GB of RAM, even on 64-bit systems.  On arm64,
-this is done by passing GFP_DMA32 flag to memory allocation functions.
-
-For IOMMU L2 tables that only take 1KB, it would be a waste to allocate
-a full page using get_free_pages, so we considered 3 approaches:
- 1. This patch, adding support for GFP_DMA32 slab caches.
- 2. genalloc, which requires pre-allocating the maximum number of L2
-    page tables (4096, so 4MB of memory).
- 3. page_frag, which is not very memory-efficient as it is unable
-    to reuse freed fragments until the whole page is freed.
-
-This change makes it possible to create a custom cache in DMA32 zone using
-kmem_cache_create, then allocate memory using kmem_cache_alloc.
-
-We do not create a DMA32 kmalloc cache array, as there are currently no
-users of kmalloc(..., GFP_DMA32).  These calls will continue to trigger a
-warning, as we keep GFP_DMA32 in GFP_SLAB_BUG_MASK.
-
-This implies that calls to kmem_cache_*alloc on a SLAB_CACHE_DMA32
-kmem_cache must _not_ use GFP_DMA32 (it is anyway redundant and
-unnecessary).
-
-Link: http://lkml.kernel.org/r/20181210011504.122604-2-drinkcat@chromium.org
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Sasha Levin <Alexander.Levin@microsoft.com>
-Cc: Huaisheng Ye <yehs1@lenovo.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Yong Wu <yong.wu@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Tomasz Figa <tfiga@google.com>
-Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+Fixes: 432baf60eee3 ("KVM: VMX: use kvm_fast_pio_in for handling IN I/O")
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/slab.h |    2 ++
- mm/slab.c            |    2 ++
- mm/slab.h            |    3 ++-
- mm/slab_common.c     |    2 +-
- mm/slub.c            |    5 +++++
- 5 files changed, 12 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/kvm_host.h |    1 +
+ arch/x86/kvm/x86.c              |   36 ++++++++++++++++++++++++++----------
+ 2 files changed, 27 insertions(+), 10 deletions(-)
 
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -32,6 +32,8 @@
- #define SLAB_HWCACHE_ALIGN	((slab_flags_t __force)0x00002000U)
- /* Use GFP_DMA memory */
- #define SLAB_CACHE_DMA		((slab_flags_t __force)0x00004000U)
-+/* Use GFP_DMA32 memory */
-+#define SLAB_CACHE_DMA32	((slab_flags_t __force)0x00008000U)
- /* DEBUG: Store the last owner for bug hunting */
- #define SLAB_STORE_USER		((slab_flags_t __force)0x00010000U)
- /* Panic if kmem_cache_create() fails */
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -2111,6 +2111,8 @@ done:
- 	cachep->allocflags = __GFP_COMP;
- 	if (flags & SLAB_CACHE_DMA)
- 		cachep->allocflags |= GFP_DMA;
-+	if (flags & SLAB_CACHE_DMA32)
-+		cachep->allocflags |= GFP_DMA32;
- 	if (flags & SLAB_RECLAIM_ACCOUNT)
- 		cachep->allocflags |= __GFP_RECLAIMABLE;
- 	cachep->size = size;
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -127,7 +127,8 @@ static inline slab_flags_t kmem_cache_fl
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -352,6 +352,7 @@ struct kvm_mmu_page {
+ };
  
+ struct kvm_pio_request {
++	unsigned long linear_rip;
+ 	unsigned long count;
+ 	int in;
+ 	int port;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6533,14 +6533,27 @@ int kvm_emulate_instruction_from_buffer(
+ }
+ EXPORT_SYMBOL_GPL(kvm_emulate_instruction_from_buffer);
  
- /* Legal flag mask for kmem_cache_create(), for various configurations */
--#define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | SLAB_PANIC | \
-+#define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | \
-+			 SLAB_CACHE_DMA32 | SLAB_PANIC | \
- 			 SLAB_TYPESAFE_BY_RCU | SLAB_DEBUG_OBJECTS )
- 
- #if defined(CONFIG_DEBUG_SLAB)
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -53,7 +53,7 @@ static DECLARE_WORK(slab_caches_to_rcu_d
- 		SLAB_FAILSLAB | SLAB_KASAN)
- 
- #define SLAB_MERGE_SAME (SLAB_RECLAIM_ACCOUNT | SLAB_CACHE_DMA | \
--			 SLAB_ACCOUNT)
-+			 SLAB_CACHE_DMA32 | SLAB_ACCOUNT)
- 
- /*
-  * Merge control. If this is set then no merging of slab caches will occur.
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -3591,6 +3591,9 @@ static int calculate_sizes(struct kmem_c
- 	if (s->flags & SLAB_CACHE_DMA)
- 		s->allocflags |= GFP_DMA;
- 
-+	if (s->flags & SLAB_CACHE_DMA32)
-+		s->allocflags |= GFP_DMA32;
++static int complete_fast_pio_out(struct kvm_vcpu *vcpu)
++{
++	vcpu->arch.pio.count = 0;
 +
- 	if (s->flags & SLAB_RECLAIM_ACCOUNT)
- 		s->allocflags |= __GFP_RECLAIMABLE;
++	if (unlikely(!kvm_is_linear_rip(vcpu, vcpu->arch.pio.linear_rip)))
++		return 1;
++
++	return kvm_skip_emulated_instruction(vcpu);
++}
++
+ static int kvm_fast_pio_out(struct kvm_vcpu *vcpu, int size,
+ 			    unsigned short port)
+ {
+ 	unsigned long val = kvm_register_read(vcpu, VCPU_REGS_RAX);
+ 	int ret = emulator_pio_out_emulated(&vcpu->arch.emulate_ctxt,
+ 					    size, port, &val, 1);
+-	/* do not return to emulator after return from userspace */
+-	vcpu->arch.pio.count = 0;
++
++	if (!ret) {
++		vcpu->arch.pio.linear_rip = kvm_get_linear_rip(vcpu);
++		vcpu->arch.complete_userspace_io = complete_fast_pio_out;
++	}
+ 	return ret;
+ }
  
-@@ -5681,6 +5684,8 @@ static char *create_unique_id(struct kme
- 	 */
- 	if (s->flags & SLAB_CACHE_DMA)
- 		*p++ = 'd';
-+	if (s->flags & SLAB_CACHE_DMA32)
-+		*p++ = 'D';
- 	if (s->flags & SLAB_RECLAIM_ACCOUNT)
- 		*p++ = 'a';
- 	if (s->flags & SLAB_CONSISTENCY_CHECKS)
+@@ -6551,6 +6564,11 @@ static int complete_fast_pio_in(struct k
+ 	/* We should only ever be called with arch.pio.count equal to 1 */
+ 	BUG_ON(vcpu->arch.pio.count != 1);
+ 
++	if (unlikely(!kvm_is_linear_rip(vcpu, vcpu->arch.pio.linear_rip))) {
++		vcpu->arch.pio.count = 0;
++		return 1;
++	}
++
+ 	/* For size less than 4 we merge, else we zero extend */
+ 	val = (vcpu->arch.pio.size < 4) ? kvm_register_read(vcpu, VCPU_REGS_RAX)
+ 					: 0;
+@@ -6563,7 +6581,7 @@ static int complete_fast_pio_in(struct k
+ 				 vcpu->arch.pio.port, &val, 1);
+ 	kvm_register_write(vcpu, VCPU_REGS_RAX, val);
+ 
+-	return 1;
++	return kvm_skip_emulated_instruction(vcpu);
+ }
+ 
+ static int kvm_fast_pio_in(struct kvm_vcpu *vcpu, int size,
+@@ -6582,6 +6600,7 @@ static int kvm_fast_pio_in(struct kvm_vc
+ 		return ret;
+ 	}
+ 
++	vcpu->arch.pio.linear_rip = kvm_get_linear_rip(vcpu);
+ 	vcpu->arch.complete_userspace_io = complete_fast_pio_in;
+ 
+ 	return 0;
+@@ -6589,16 +6608,13 @@ static int kvm_fast_pio_in(struct kvm_vc
+ 
+ int kvm_fast_pio(struct kvm_vcpu *vcpu, int size, unsigned short port, int in)
+ {
+-	int ret = kvm_skip_emulated_instruction(vcpu);
++	int ret;
+ 
+-	/*
+-	 * TODO: we might be squashing a KVM_GUESTDBG_SINGLESTEP-triggered
+-	 * KVM_EXIT_DEBUG here.
+-	 */
+ 	if (in)
+-		return kvm_fast_pio_in(vcpu, size, port) && ret;
++		ret = kvm_fast_pio_in(vcpu, size, port);
+ 	else
+-		return kvm_fast_pio_out(vcpu, size, port) && ret;
++		ret = kvm_fast_pio_out(vcpu, size, port);
++	return ret && kvm_skip_emulated_instruction(vcpu);
+ }
+ EXPORT_SYMBOL_GPL(kvm_fast_pio);
+ 
 
 
