@@ -2,121 +2,122 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB69C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6356EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E174020880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:03:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="laHYie1S"
+	by mail.kernel.org (Postfix) with ESMTP id 3013220880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554141818;
+	bh=54B001u6rROE46SoLESUGsGX0M5KOxoroYXQQ49jFwM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VzG0mSRZoBUTgG/SagduwqmNJrZV0FOxzoKPG5w2ABwPT01+nTpydIduN2fiBymmA
+	 weHO+nTuodyHBO5eyGvQUw3xpaZfqCWiFikkND3zxisb59J/xBbQHl5J4ZtyWbbY0N
+	 MnM7991eYyQLAKAFZczoNk0FB5Rk+vNH6bXoVzk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbfDASDb (ORCPT
+        id S1730904AbfDASDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:03:31 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:59198 "EHLO mail.skyhub.de"
+        Mon, 1 Apr 2019 14:03:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730002AbfDASD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:03:27 -0400
-Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
+        id S1729455AbfDAROF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:14:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 92B991EC0669;
-        Mon,  1 Apr 2019 20:03:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554141805;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=S5WyqxgBrRQQRZEH27Xmbh+w+LW4QU1L3IU4n9f/qXo=;
-        b=laHYie1SobobPInYVeUFQTOjSjHxMkSero/qU4oQfyNEm+sjz59kXD3hWXnmRWUhsWm6sQ
-        tB485mO0ifDKQPsXOZHt+Bf4PN6ORX/rSV6IX6CPFHKyjM+iY7yVnRYzjl+BcDeSDQzE6i
-        89JdMt+bs+rwMsAdSnaa9O73oAk/77k=
-Date:   Mon, 1 Apr 2019 20:03:22 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>
-Subject: Re: [patch 01/14] x86/irq/64: Limit IST stack overflow check to #DB
- stack
-Message-ID: <20190401175549.GL28264@zn.tnic>
-References: <20190331214020.836098943@linutronix.de>
- <20190331215134.837052834@linutronix.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C53A205F4;
+        Mon,  1 Apr 2019 17:14:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554138844;
+        bh=54B001u6rROE46SoLESUGsGX0M5KOxoroYXQQ49jFwM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kU1YmIQahdZwz2QnM64qy0lr6p95O2txtyiFN1pBAuWf6gSCB+mjCImA05bwX6xWX
+         +5q6+ijSgrGGCU1/yIFtze/+OXaqWPWPZDbwbzOCEdQT6PY2BqnGSqIWb6ln6mUq8p
+         BXygJ8rM0sWb+F4hR3PWzUjhJH3pACBqrbPtd8vw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dean Nelson <dnelson@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 030/134] thunderx: enable page recycling for non-XDP case
+Date:   Mon,  1 Apr 2019 19:01:06 +0200
+Message-Id: <20190401170047.388375129@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
+References: <20190401170044.243719205@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190331215134.837052834@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 31, 2019 at 11:40:21PM +0200, Thomas Gleixner wrote:
-> 37fe6a42b343 ("x86: Check stack overflow in detail") added a broad check
-> for the full exception stack area, i.e. it considers the full exception
-> stack are as valid.
-> 
-> That's wrong in two aspects:
-> 
->  1) It does not check the individual areas one by one
-> 
->  2) #DF, NMI and #MCE are not enabling interrupts which means that a
->     regular device interrupt cannot happen in their context. In fact if a
->     device interrupt hits one of those IST stacks that's a bug because some
->     code path enabled interrupts while handling the exception.
-> 
-> Limit the check to the #DB stack and consider all other IST stacks as
-> 'overflow' or invalid.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>
-> ---
->  arch/x86/kernel/irq_64.c |   19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
-> 
-> --- a/arch/x86/kernel/irq_64.c
-> +++ b/arch/x86/kernel/irq_64.c
-> @@ -26,9 +26,18 @@ int sysctl_panic_on_stackoverflow;
->  /*
->   * Probabilistic stack overflow check:
->   *
-> - * Only check the stack in process context, because everything else
-> - * runs on the big interrupt stacks. Checking reliably is too expensive,
-> - * so we just check from interrupts.
-> + * Regular device interrupts can enter on the following stacks:
-> + *
-> + * - User stack
-> + *
-> + * - Kernel task stack
-> + *
-> + * - Interrupt stack if a device driver reenables interrupt
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-						     "interrupts"
+------------------
 
-> + *   which should only happen in really old drivers.
-> + *
-> + * - Debug IST stack
-> + *
-> + * All other contexts are invalid.
+From: Dean Nelson <dnelson@redhat.com>
 
-<---
+[ Upstream commit b3e208069477588c06f4d5d986164b435bb06e6d ]
 
-I could use the above blurb here too, explaining why we're checking the
-#DB stack only.
+Commit 773225388dae15e72790 ("net: thunderx: Optimize page recycling for XDP")
+added code to nicvf_alloc_page() that inadvertently disables receive buffer
+page recycling for the non-XDP case by always NULL'ng the page pointer.
 
-Otherwise:
+This patch corrects two if-conditionals to allow for the recycling of non-XDP
+mode pages by only setting the page pointer to NULL when the page is not ready
+for recycling.
 
-Reviewed-by: Borislav Petkov <bp@suse.de>
+Fixes: 773225388dae ("net: thunderx: Optimize page recycling for XDP")
+Signed-off-by: Dean Nelson <dnelson@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/cavium/thunder/nicvf_queues.c |   23 ++++++++++-----------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
--- 
-Regards/Gruss,
-    Boris.
+--- a/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
++++ b/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
+@@ -105,20 +105,19 @@ static inline struct pgcache *nicvf_allo
+ 	/* Check if page can be recycled */
+ 	if (page) {
+ 		ref_count = page_ref_count(page);
+-		/* Check if this page has been used once i.e 'put_page'
+-		 * called after packet transmission i.e internal ref_count
+-		 * and page's ref_count are equal i.e page can be recycled.
++		/* This page can be recycled if internal ref_count and page's
++		 * ref_count are equal, indicating that the page has been used
++		 * once for packet transmission. For non-XDP mode, internal
++		 * ref_count is always '1'.
+ 		 */
+-		if (rbdr->is_xdp && (ref_count == pgcache->ref_count))
+-			pgcache->ref_count--;
+-		else
+-			page = NULL;
+-
+-		/* In non-XDP mode, page's ref_count needs to be '1' for it
+-		 * to be recycled.
+-		 */
+-		if (!rbdr->is_xdp && (ref_count != 1))
++		if (rbdr->is_xdp) {
++			if (ref_count == pgcache->ref_count)
++				pgcache->ref_count--;
++			else
++				page = NULL;
++		} else if (ref_count != 1) {
+ 			page = NULL;
++		}
+ 	}
+ 
+ 	if (!page) {
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+
