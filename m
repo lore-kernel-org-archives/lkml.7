@@ -2,93 +2,79 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C12DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B923C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC62206DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:56:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="iuPg2zX7"
+	by mail.kernel.org (Postfix) with ESMTP id 2BD2820870
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfDAL4W (ORCPT
+        id S1726852AbfDAL6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 07:56:22 -0400
-Received: from vps.xff.cz ([195.181.215.36]:57728 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfDAL4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 07:56:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554119779; bh=bxuBeVnSIfMTqGV0TMQjmEOwQOQrwjdZKZV67XXxtdY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iuPg2zX7OgrINVFdEA30/QaqmzyTI4XKk9qwgW3NnZGwaJxFyIiu/LxCeBbv4+sks
-         LpQZVoiww2jxijttx3Oc9U/mpvZ0hu6nP1zeHxz5GwHS9CXRe/GDrbOXu/OoZTdy66
-         IrxhkVxRgdMUypNxd6kvYdjJxCaaT96In0gCxTZU=
-From:   megous@megous.com
-To:     maxime.ripard@free-electrons.com, wens@csie.org, robh@kernel.org,
-        johan@kernel.org, mark.rutland@arm.com
-Cc:     Ondrej Jirman <megous@megous.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: [PATCH v2 0/5] Add bluetooth, gps and accelerometer to TBS A711
-Date:   Mon,  1 Apr 2019 13:56:11 +0200
-Message-Id: <20190401115616.21337-1-megous@megous.com>
+        Mon, 1 Apr 2019 07:58:33 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:33449 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfDAL6c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 07:58:32 -0400
+X-Originating-IP: 90.88.32.136
+Received: from localhost (aaubervilliers-681-1-91-136.w90-88.abo.wanadoo.fr [90.88.32.136])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 0CAACFF808;
+        Mon,  1 Apr 2019 11:58:29 +0000 (UTC)
+Date:   Mon, 1 Apr 2019 13:58:29 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Mans Rullgard <mans@mansr.com>
+Cc:     David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/sun4i: hdmi: add support for ddc-i2c-bus property
+Message-ID: <20190401115829.n52yna5c43i6w7yy@flea>
+References: <20190326194907.6lekrewcdiuteomp@flea>
+ <20190328130249.19356-1-mans@mansr.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kt2o7lx2aymd4u4n"
+Content-Disposition: inline
+In-Reply-To: <20190328130249.19356-1-mans@mansr.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
 
-This series enables some peripherals on TBS A711 tablet that already
-have mainline drivers:
+--kt2o7lx2aymd4u4n
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-- GPS u-blox neo-6m (via gnss u-blox driver)
-- Bluetooth (via recently added OF support in the Broadcom
-  bluetooth driver)
-- Accelermomter BMA-250 (hooked to the I2C bus)
+On Thu, Mar 28, 2019 at 01:02:49PM +0000, Mans Rullgard wrote:
+> Sometimes it is desirabled to use a separate i2c controller for ddc
+> access.  This adds support for the ddc-i2c-bus property of the
+> hdmi-connector node, using the specified controller if provided.
+>
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
 
-It also modifies A83T DTSI and adds missing UART interfaces.
+Applied to drm-misc-next, thanks!
+Maxime
 
-I've added additional compatible to the gnss/u-blox driver for NEO-6M,
-because this board uses this module, and I don't think I can use
-the existing compatible for u-blox,neo-m8, even as a fallback.
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Please take a look, and apply the patches if you have no objections.
+--kt2o7lx2aymd4u4n
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Many of the patches will go through the sunxi tree, but I'm not
-sure who will want to take the GPS patches.
+-----BEGIN PGP SIGNATURE-----
 
-regards,
-  Ondrej Jirman
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKH85QAKCRDj7w1vZxhR
+xbXaAQCGK31yUk1DBfUh/T87sMiTXy4iJq4WOr7YmCYjwsCcnQEAztujDc4uy4fE
+sIzsrKLwxnwZtrYRo4L+XnPRyZRbGQ4=
+=Ka+e
+-----END PGP SIGNATURE-----
 
-
-Changes in v2:
-- dropped already applied patches from the series (bluetooth,
-  a83t uarts)
-- added /omit-if-no-ref/ to "uart2-pb-pins"
-- renamed node "bma250" to "accelerometer"
-- removed pinctrl properties that are already in base dtsi
-  (i2c1_pins)
-
-Ondrej Jirman (5):
-  ARM: dts: sun8i: tbs-a711: Add node for BMA250 accelerometer
-  ARM: dts: sun8i: a83t: Add UART2 PB pins
-  gnss: Add u-blox,neo-6m compatible
-  dt-bindings: gnss: Add u-blox,neo-6m compatible
-  ARM: dts: sun8i: tbs-a711: Enable UART2 (for NEO-6M GPS module)
-
- .../devicetree/bindings/gnss/u-blox.txt       |  1 +
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts     | 34 +++++++++++++++++++
- arch/arm/boot/dts/sun8i-a83t.dtsi             |  6 ++++
- drivers/gnss/ubx.c                            |  1 +
- 4 files changed, 42 insertions(+)
-
--- 
-2.21.0
-
+--kt2o7lx2aymd4u4n--
