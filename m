@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8B5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA65AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2CE21925
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F26121924
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138764;
-	bh=ZPyXtIaO+nAxHno+XC1zP+hCrakaVr0T3uFhSnat54s=;
+	s=default; t=1554138767;
+	bh=GH7E+f7KY76MDmFEHeMb1svKjBSzWy6/hgutzLKMiJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wujm1YvvSidHDUrlqTzjqXNSu5VEcd1bde/r1rw3ERfRYuLER9Mga3TDmVBhwUFBJ
-	 ywWy62nd79qwFJwu450D59D//LOisXi1Li+f99X8hvermgUZQQGPlDu0YBUdWgiYkJ
-	 gqoyEG3ZvJAwmlVGaroS0V5WVkM1jrh3PX09ISXk=
+	b=xmb5yKbIeLxhyalbAP5PhC9qbEHMvpgwiKze4Vwjh1PtYjVMbu7loJ9rAYQfUz1Zg
+	 +gbmuwzUYEjkDtq3KdHvFH/fLhGXA2LDT4Gd9nejfbV0K8LMkwBubOKR5nvO340DeC
+	 SYZwtKGO315G03hxNM3dWuuu6b1LTcxeG6HloApg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730394AbfDARMm (ORCPT
+        id S1730403AbfDARMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:12:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34152 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729731AbfDARMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:12:31 -0400
+        id S1730397AbfDARMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:12:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBED621929;
-        Mon,  1 Apr 2019 17:12:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 447CF21924;
+        Mon,  1 Apr 2019 17:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138751;
-        bh=ZPyXtIaO+nAxHno+XC1zP+hCrakaVr0T3uFhSnat54s=;
+        s=default; t=1554138762;
+        bh=GH7E+f7KY76MDmFEHeMb1svKjBSzWy6/hgutzLKMiJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q0aSTvv4T/7UOsMqZpHTqPn02YyrEHVpdHEa3Ra/ebqk5eTA1300qjIL0FkG8SEuQ
-         fVLLAm8q1vWVHt4owNltYDiHpMCcpZcvh8fyB9mwbx/eyZF/f+dQNP5EqrXWja7R+V
-         UqIvN9Og/5+RaiQ4I/vWHmfMwd37Onv/ZcK8lJYQ=
+        b=QVE2CpPCmL6H1swbUGHa5PIakTQ6yJQinl12zgeqcGZI0SoXiaxHk6NBXb5ThfBpW
+         /RcZPmKnd84GwORdZXaU+TLwIXQDH1y4UKJJb1jh7zBpF7NbsSQWzuTnmJ292qP04a
+         jKKJmka5Ln849fLnIjZ6ZO9bZH8W6mh1cCxhZYC8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Paasch <cpaasch@apple.com>
-Subject: [PATCH 4.19 011/134] net: datagram: fix unbounded loop in __skb_try_recv_datagram()
-Date:   Mon,  1 Apr 2019 19:00:47 +0200
-Message-Id: <20190401170045.348959518@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 014/134] net: rose: fix a possible stack overflow
+Date:   Mon,  1 Apr 2019 19:00:50 +0200
+Message-Id: <20190401170045.643085777@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,37 +66,131 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 0b91bce1ebfc797ff3de60c8f4a1e6219a8a3187 ]
+[ Upstream commit e5dcc0c3223c45c94100f05f28d8ef814db3d82c ]
 
-Christoph reported a stall while peeking datagram with an offset when
-busy polling is enabled. __skb_try_recv_datagram() uses as the loop
-termination condition 'queue empty'. When peeking, the socket
-queue can be not empty, even when no additional packets are received.
+rose_write_internal() uses a temp buffer of 100 bytes, but a manual
+inspection showed that given arbitrary input, rose_create_facilities()
+can fill up to 110 bytes.
 
-Address the issue explicitly checking for receive queue changes,
-as currently done by __skb_wait_for_more_packets().
+Lets use a tailroom of 256 bytes for peace of mind, and remove
+the bounce buffer : we can simply allocate a big enough skb
+and adjust its length as needed.
 
-Fixes: 2b5cd0dfa384 ("net: Change return type of sk_busy_loop from bool to void")
-Reported-and-tested-by: Christoph Paasch <cpaasch@apple.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+syzbot report :
+
+BUG: KASAN: stack-out-of-bounds in memcpy include/linux/string.h:352 [inline]
+BUG: KASAN: stack-out-of-bounds in rose_create_facilities net/rose/rose_subr.c:521 [inline]
+BUG: KASAN: stack-out-of-bounds in rose_write_internal+0x597/0x15d0 net/rose/rose_subr.c:116
+Write of size 7 at addr ffff88808b1ffbef by task syz-executor.0/24854
+
+CPU: 0 PID: 24854 Comm: syz-executor.0 Not tainted 5.0.0+ #97
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+ kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x123/0x190 mm/kasan/generic.c:191
+ memcpy+0x38/0x50 mm/kasan/common.c:131
+ memcpy include/linux/string.h:352 [inline]
+ rose_create_facilities net/rose/rose_subr.c:521 [inline]
+ rose_write_internal+0x597/0x15d0 net/rose/rose_subr.c:116
+ rose_connect+0x7cb/0x1510 net/rose/af_rose.c:826
+ __sys_connect+0x266/0x330 net/socket.c:1685
+ __do_sys_connect net/socket.c:1696 [inline]
+ __se_sys_connect net/socket.c:1693 [inline]
+ __x64_sys_connect+0x73/0xb0 net/socket.c:1693
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458079
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f47b8d9dc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458079
+RDX: 000000000000001c RSI: 0000000020000040 RDI: 0000000000000004
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f47b8d9e6d4
+R13: 00000000004be4a4 R14: 00000000004ceca8 R15: 00000000ffffffff
+
+The buggy address belongs to the page:
+page:ffffea00022c7fc0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0x1fffc0000000000()
+raw: 01fffc0000000000 0000000000000000 ffffffff022c0101 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88808b1ffa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88808b1ffb00: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 00 00 00 03
+>ffff88808b1ffb80: f2 f2 00 00 00 00 00 00 00 00 00 00 00 00 04 f3
+                                                             ^
+ ffff88808b1ffc00: f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88808b1ffc80: 00 00 00 00 00 00 00 f1 f1 f1 f1 f1 f1 01 f2 01
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/datagram.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/rose/rose_subr.c |   21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -279,7 +279,7 @@ struct sk_buff *__skb_try_recv_datagram(
- 			break;
+--- a/net/rose/rose_subr.c
++++ b/net/rose/rose_subr.c
+@@ -105,16 +105,17 @@ void rose_write_internal(struct sock *sk
+ 	struct sk_buff *skb;
+ 	unsigned char  *dptr;
+ 	unsigned char  lci1, lci2;
+-	char buffer[100];
+-	int len, faclen = 0;
++	int maxfaclen = 0;
++	int len, faclen;
++	int reserve;
  
- 		sk_busy_loop(sk, flags & MSG_DONTWAIT);
--	} while (!skb_queue_empty(&sk->sk_receive_queue));
-+	} while (sk->sk_receive_queue.prev != *last);
+-	len = AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + ROSE_MIN_LEN + 1;
++	reserve = AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + 1;
++	len = ROSE_MIN_LEN;
  
- 	error = -EAGAIN;
+ 	switch (frametype) {
+ 	case ROSE_CALL_REQUEST:
+ 		len   += 1 + ROSE_ADDR_LEN + ROSE_ADDR_LEN;
+-		faclen = rose_create_facilities(buffer, rose);
+-		len   += faclen;
++		maxfaclen = 256;
+ 		break;
+ 	case ROSE_CALL_ACCEPTED:
+ 	case ROSE_CLEAR_REQUEST:
+@@ -123,15 +124,16 @@ void rose_write_internal(struct sock *sk
+ 		break;
+ 	}
+ 
+-	if ((skb = alloc_skb(len, GFP_ATOMIC)) == NULL)
++	skb = alloc_skb(reserve + len + maxfaclen, GFP_ATOMIC);
++	if (!skb)
+ 		return;
+ 
+ 	/*
+ 	 *	Space for AX.25 header and PID.
+ 	 */
+-	skb_reserve(skb, AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + 1);
++	skb_reserve(skb, reserve);
+ 
+-	dptr = skb_put(skb, skb_tailroom(skb));
++	dptr = skb_put(skb, len);
+ 
+ 	lci1 = (rose->lci >> 8) & 0x0F;
+ 	lci2 = (rose->lci >> 0) & 0xFF;
+@@ -146,7 +148,8 @@ void rose_write_internal(struct sock *sk
+ 		dptr   += ROSE_ADDR_LEN;
+ 		memcpy(dptr, &rose->source_addr, ROSE_ADDR_LEN);
+ 		dptr   += ROSE_ADDR_LEN;
+-		memcpy(dptr, buffer, faclen);
++		faclen = rose_create_facilities(dptr, rose);
++		skb_put(skb, faclen);
+ 		dptr   += faclen;
+ 		break;
  
 
 
