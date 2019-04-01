@@ -2,231 +2,160 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A090C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AADC10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE45420828
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1555820830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:06:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oLCd5m4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfDATDK (ORCPT
+        id S1728826AbfDATGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 15:03:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58210 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728678AbfDATDK (ORCPT
+        Mon, 1 Apr 2019 15:06:11 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41506 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728686AbfDATGK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 15:03:10 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x31Iox7t012164
-        for <linux-kernel@vger.kernel.org>; Mon, 1 Apr 2019 15:03:08 -0400
-Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rkqt5tbax-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 15:03:08 -0400
-Received: from localhost
-        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 1 Apr 2019 20:03:06 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Apr 2019 20:03:01 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x31J303p17498276
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Apr 2019 19:03:00 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 59D2EB2066;
-        Mon,  1 Apr 2019 19:03:00 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A20CB205F;
-        Mon,  1 Apr 2019 19:03:00 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Apr 2019 19:03:00 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 7B62B16C34EA; Mon,  1 Apr 2019 12:03:04 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 12:03:04 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH tip/core/rcu 2/2] rcu: Check for wakeup-safe conditions
- in rcu_read_unlock_special()
-Reply-To: paulmck@linux.ibm.com
-References: <20190329182608.GA23877@linux.ibm.com>
- <20190329182634.24994-2-paulmck@linux.ibm.com>
- <20190401083211.GD11158@hirez.programming.kicks-ass.net>
- <20190401172257.GN4102@linux.ibm.com>
+        Mon, 1 Apr 2019 15:06:10 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f6so5231204pgs.8
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 12:06:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=A5zCJPVV0Q3tfgwssyIvV6XXb4+UfBWxjT0gfi9Y8ck=;
+        b=oLCd5m4Vdq+/Othv8/hqM+4FN4ESeX27RYF7lzPokIxpV1PSa/zIhq+HOm2aOGEc7t
+         kSzNjpTBe+RdfZXLXCYky3c2eWYJlINdmzlwDkkUmZt49qw2e9R5Wr5XV6+dt7+jSsab
+         B1aNKuUSt9+C+XMb7Y7zm81Scnyox09Sjc87I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=A5zCJPVV0Q3tfgwssyIvV6XXb4+UfBWxjT0gfi9Y8ck=;
+        b=Uzm3pJhyV38b6FMm7WOkT7cygOgr5jIyyQVu3T9igUDIt8sSZeCB9cwE96zhbYnZ2P
+         525sNuSR3GEn9PKYqd1IqBkScL1puYO8RWs/Msp+akaEZP/T+Jjl6BPTdUDzIttDyFzd
+         WAfZauHmOOKw3tsYvMh89f0n1s67bETvd/pE66hcvSDRp6DqzsscWpNZRqcIWOWLwUrN
+         skAEzFhPziV0YW5lqtDCeKZ//uFR1hY30G1GnRxdo2PfVCMglQamPxDStEDB/owC6vBl
+         yAMI3gp84a9RU/yOZTT8iNPAG6QwlFAS11bf9vpFWjSKIXdqlaYc0LjKI4Moz1ANkGTd
+         +qUA==
+X-Gm-Message-State: APjAAAXSfZnmZoZ3Bn1+bKjs3/lKhEuGS6UzZhKqIw4JuhyfiLBTANJ3
+        TX9Xu0O132o51oQJGJvlv3829w==
+X-Google-Smtp-Source: APXvYqyuiH00xOIE26hiHfas8Cmorh8zwv8SPi22i4niL8IMm6N5Jxi3TSYwkbKD/XjJ0bsFxQwGbg==
+X-Received: by 2002:a62:76c1:: with SMTP id r184mr29866883pfc.229.1554145569747;
+        Mon, 01 Apr 2019 12:06:09 -0700 (PDT)
+Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
+        by smtp.gmail.com with ESMTPSA id v1sm15664781pff.81.2019.04.01.12.06.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 01 Apr 2019 12:06:08 -0700 (PDT)
+Date:   Mon, 1 Apr 2019 12:06:07 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Phil Baker <baker1tex@gmail.com>,
+        Craig Robson <craig@zhatt.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Arnd Bergmann <arnd@arndb.de>, linux-integrity@vger.kernel.org
+Subject: [PATCH v3] tpm: Actually fail on TPM errors during "get random"
+Message-ID: <20190401190607.GA23795@beast>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190401172257.GN4102@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19040119-0068-0000-0000-000003AF10F9
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010856; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000283; SDB=6.01182901; UDB=6.00619245; IPR=6.00963644;
- MB=3.00026248; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-01 19:03:05
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040119-0069-0000-0000-000048025A0C
-Message-Id: <20190401190304.GA20804@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-01_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904010121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 10:22:57AM -0700, Paul E. McKenney wrote:
-> On Mon, Apr 01, 2019 at 10:32:11AM +0200, Peter Zijlstra wrote:
-> > On Fri, Mar 29, 2019 at 11:26:34AM -0700, Paul E. McKenney wrote:
-> > > When RCU core processing is offloaded from RCU_SOFTIRQ to the rcuc
-> > > kthreads, a full and unconditional wakeup is required to initiate RCU
-> > > core processing.  In contrast, when RCU core processing is carried
-> > > out by RCU_SOFTIRQ, a raise_softirq() suffices.  Of course, there are
-> > > situations where raise_softirq() does a full wakeup, but these do not
-> > > occur with normal usage of rcu_read_unlock().
-> > 
-> > Do we have a comment somewhere explaining why?
-> 
-> First, thank you for reviewing this!
-> 
-> The "why" is because people normally don't do things like the code
-> sequence shown below, but where the scheduler holds locks across the
-> second RCU read-side critical section.  (If they did, lockdep would
-> complain.  Nevertheless, it is good to avoid this potential problem.)
-> 
-> > > The initial solution to this problem was to use set_tsk_need_resched() and
-> > > set_preempt_need_resched() to force a future context switch, which allows
-> > > rcu_preempt_note_context_switch() to report the deferred quiescent state
-> > > to RCU's core processing.  Unfortunately for expedited grace periods,
-> > > there can be a significant delay between the call for a context switch
-> > > and the actual context switch.
-> > 
-> > This is all PREEMPT=y kernels, right? Where is the latency coming from?
-> > Because PREEMPT=y _should_ react quite quickly.
-> 
-> Yes, PREEMPT=y.  It happens like this:
-> 
-> 1.	rcu_read_lock() with everything enabled.
-> 
-> 2.	Preemption then resumption.
-> 
-> 3.	local_irq_disable().
-> 
-> 4.	rcu_read_unlock().
-> 
-> 5.	local_irq_enable().
-> 
-> From what I know, the scheduler doesn't see anything until the next
-> interrupt, local_bh_enable(), return to userspace, etc.  Because this
-> is PREEMPT=y, preempt_enable() and cond_resched() do nothing.  So
-> it could be some time (milliseconds, depending on HZ, NO_HZ_FULL, and
-> so on) until the scheduler responds.  With NO_HZ_FULL, last I knew,
-> the delay can be extremely long.
-> 
-> Or am I missing something that gets the scheduler on the job faster?
-> 
-> Hmmm...  If your point is that this amount of delay matters only for
-> expedited grace periods, you are quite right.  So perhaps I shouldn't be
-> doing any of the expensive stuff unless there is an expedited grace period
-> in flight.  Or if NO_HZ_FULL.  See below for an updated (and untested)
-> patch to this effect.
-> 
-> > > This commit therefore introduces a ->deferred_qs flag to the task_struct
-> > > structure's rcu_special structure.  This flag is initially false, and
-> > > is set to true by the first call to rcu_read_unlock() requiring special
-> > > attention, then finally reset back to false when the quiescent state is
-> > > finally reported.  Then rcu_read_unlock() attempts full wakeups only when
-> > > ->deferred_qs is false, that is, on the first rcu_read_unlock() requiring
-> > > special attention.  Note that a chain of RCU readers linked by some other
-> > > sort of reader may find that a later rcu_read_unlock() is once again able
-> > > to do a full wakeup, courtesy of an intervening preemption:
-> > > 
-> > > 	rcu_read_lock();
-> > > 	/* preempted */
-> > > 	local_irq_disable();
-> > > 	rcu_read_unlock(); /* Can do full wakeup, sets ->deferred_qs. */
-> > > 	rcu_read_lock();
-> > > 	local_irq_enable();
-> > > 	preempt_disable()
-> > > 	rcu_read_unlock(); /* Cannot do full wakeup, ->deferred_qs set. */
-> > > 	rcu_read_lock();
-> > > 	preempt_enable();
-> > > 	/* preempted, >deferred_qs reset. */
-> > 
-> > As it would have without ->deferred_sq and just having done the above
-> > which was deemed insufficient.
-> > 
-> > So I'm really puzzled by the need for all this.
-> 
-> On the first round, without the ->deferred_qs, we know the scheduler
-> cannot be holding any of its pi or rq locks because if it did, it would
-> have disabled interrupts across the entire RCU read-side critical section.
-> Wakeups are therefore safe in this case, whether via softirq or wakeup.
-> Afterwards, we don't have that guarantee because an earlier critical
-> section might have been preempted and the scheduler might have held one
-> of its locks across the entire just-ended critical section.
-> 
-> And I believe you are right that we should avoid the wakeups unless
-> there is an expedited grace period in flight or in a NO_HZ_FULL kernel.
-> Hence the patch shown below.
+A "get random" may fail with a TPM error, but those codes were returned
+as-is to the caller, which assumed the result was the number of bytes
+that had been written to the target buffer, which could lead to a kernel
+heap memory exposure and over-read.
 
-Which is a stupid patch.  It assumes ancient times when expedited grace
-periods were guaranteed to preempted pre-existing RCU read-side critical
-sections.  Back to the drawing board...
+This fixes tpm1_get_random() to mask positive TPM errors into -EIO, as
+before.
 
-							Thanx, Paul
+[   18.092103] tpm tpm0: A TPM error (379) occurred attempting get random
+[   18.092106] usercopy: Kernel memory exposure attempt detected from SLUB object 'kmalloc-64' (offset 0, size 379)!
 
-> -----------------------------------------------------------------------
-> 
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 2e52a77af6be..582c6d88aaa0 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -606,20 +606,26 @@ static void rcu_read_unlock_special(struct task_struct *t)
->  	local_irq_save(flags);
->  	irqs_were_disabled = irqs_disabled_flags(flags);
->  	if (preempt_bh_were_disabled || irqs_were_disabled) {
-> +		bool exp;
-> +
->  		t->rcu_read_unlock_special.b.exp_hint = false;
-> +		exp = !!READ_ONCE(this_cpu_ptr(&rcu_data)->mynode->exp_tasks);
->  		// Need to defer quiescent state until everything is enabled.
-> -		if (irqs_were_disabled && use_softirq &&
-> +		if ((exp || IS_ENABLED(CONFIG_NO_HZ_FULL)) &&
-> +		    irqs_were_disabled && use_softirq &&
->  		    (in_irq() || !t->rcu_read_unlock_special.b.deferred_qs)) {
->  			// Using softirq, safe to awaken, and we get
->  			// no help from enabling irqs, unlike bh/preempt.
->  			raise_softirq_irqoff(RCU_SOFTIRQ);
-> -		} else if (irqs_were_disabled && !use_softirq &&
-> +		} else if ((exp || IS_ENABLED(CONFIG_NO_HZ_FULL)) &&
-> +			   irqs_were_disabled && !use_softirq &&
->  			   !t->rcu_read_unlock_special.b.deferred_qs) {
->  			// Safe to awaken and we get no help from enabling
->  			// irqs, unlike bh/preempt.
->  			invoke_rcu_core();
->  		} else {
->  			// Enabling BH or preempt does reschedule, so...
-> +			// Also if no expediting or NO_HZ_FULL, slow is OK.
->  			set_tsk_need_resched(current);
->  			set_preempt_need_resched();
->  		}
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1650989
+Reported-by: Phil Baker <baker1tex@gmail.com>
+Reported-by: Craig Robson <craig@zhatt.com>
+Fixes: 7aee9c52d7ac ("tpm: tpm1: rewrite tpm1_get_random() using tpm_buf structure")
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Tomas Winkler <tomas.winkler@intel.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v3: fix never-succeed, limit checks to tpm cmd return (James, Jason)
+v2: also fix tpm2 implementation (Jason Gunthorpe)
+---
+ drivers/char/tpm/tpm1-cmd.c | 7 +++++--
+ drivers/char/tpm/tpm2-cmd.c | 7 +++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
+index 85dcf2654d11..faacbe1ffa1a 100644
+--- a/drivers/char/tpm/tpm1-cmd.c
++++ b/drivers/char/tpm/tpm1-cmd.c
+@@ -510,7 +510,7 @@ struct tpm1_get_random_out {
+  *
+  * Return:
+  * *  number of bytes read
+- * * -errno or a TPM return code otherwise
++ * * -errno (positive TPM return codes are masked to -EIO)
+  */
+ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+ {
+@@ -531,8 +531,11 @@ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+ 
+ 		rc = tpm_transmit_cmd(chip, &buf, sizeof(out->rng_data_len),
+ 				      "attempting get random");
+-		if (rc)
++		if (rc) {
++			if (rc > 0)
++				rc = -EIO;
+ 			goto out;
++		}
+ 
+ 		out = (struct tpm1_get_random_out *)&buf.data[TPM_HEADER_SIZE];
+ 
+diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+index e74c5b7b64bf..8ffa6af61580 100644
+--- a/drivers/char/tpm/tpm2-cmd.c
++++ b/drivers/char/tpm/tpm2-cmd.c
+@@ -301,7 +301,7 @@ struct tpm2_get_random_out {
+  *
+  * Return:
+  *   size of the buffer on success,
+- *   -errno otherwise
++ *   -errno otherwise ((positive TPM return codes are masked to -EIO)
+  */
+ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+ {
+@@ -328,8 +328,11 @@ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+ 				       offsetof(struct tpm2_get_random_out,
+ 						buffer),
+ 				       "attempting get random");
+-		if (err)
++		if (err) {
++			if (err > 0)
++				err = -EIO;
+ 			goto out;
++		}
+ 
+ 		out = (struct tpm2_get_random_out *)
+ 			&buf.data[TPM_HEADER_SIZE];
+-- 
+2.17.1
+
+
+-- 
+Kees Cook
