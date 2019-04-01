@@ -2,72 +2,123 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA6CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AF5C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBA020693
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273AF20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZWnpKISp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vcHrIGg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfDAKcU (ORCPT
+        id S1726486AbfDAKfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 06:32:20 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37618 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfDAKcU (ORCPT
+        Mon, 1 Apr 2019 06:35:16 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:39298 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfDAKfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 06:32:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ie0lAOSZLlL9G+yYP8lv6B6/abvf+grl900kYhywh/g=; b=ZWnpKISpu7Qo0yy7xkDR/pUcu
-        kFUShCPUI2X5JWQHkOtzdiyV8IgY1aOLaxepa7lo/5LVzxpMpGIz0r4UreBeo+W+IGfw2cGbv8p5U
-        F7q/fDtMRM35qbZsvC7J9ggyi7eD+igN2NubwMK629Pq7qX3tQlkdyPTn0JJy5f0vlr71S+Wb6dwG
-        G6bn5dGAhgH0Ux7jV5TBbbpz/F4YGJJUoIx/Ja60ps1veU/m8a5UbPsSjt2it8HCPWW/Jx/ugGO3A
-        /WnWRwxiEX4loevsP4h5OPnZHScVfioNioU6SADN9zkFYWnE7eBl9PeH3GC7aTEhOLGx2V0nUqlA+
-        sjhmkfkNg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hAuEL-0008DK-VN; Mon, 01 Apr 2019 10:31:54 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 221C92026BE97; Mon,  1 Apr 2019 12:31:52 +0200 (CEST)
-Date:   Mon, 1 Apr 2019 12:31:52 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Yafang Shao <laoar.shao@gmail.com>, mingo@redhat.com,
-        paulmck@linux.ibm.com, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        shaoyafang@didiglobal.com
-Subject: Re: [PATCH v2 2/3] sched/fair: do not expose some tracepoints to
- user if CONFIG_SCHEDSTATS is not set
-Message-ID: <20190401103152.GJ11158@hirez.programming.kicks-ass.net>
-References: <1553602391-11926-1-git-send-email-laoar.shao@gmail.com>
- <1553602391-11926-3-git-send-email-laoar.shao@gmail.com>
- <20190326082157.1d0c01cb@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326082157.1d0c01cb@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 1 Apr 2019 06:35:16 -0400
+Received: by mail-wm1-f54.google.com with SMTP id n25so10746254wmk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 03:35:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=/7C0IohzWXZjJ0NwALGrigsjy1qcIqbbTdWC7cBS0ec=;
+        b=vcHrIGg8pzTEVDL0AHs61OuehOaz89tFFQwMAt+tsUkaKM9HzbbOebKSDqaKjS36/I
+         JOWCgNStPFE5LVE5vfwfS0DDbOllr4sIACDJ7xMOH3Bo3ht/55RK60gtnMrYxCf5piin
+         qkeRgHNIcyKhYIeEj27NLUAKHl6hm/WZjGHpRBrU90PEi8o8k/br/BI789ITNOUE9Y7S
+         M1HviizIeKfCYmcJ45SHa6Zs+PszIkFQIWW72IL/Mh10xlnbbLkgHxtieUfNcfbsh8by
+         VMD2BTdrIX46/6rqz7dr9mZ/+Ua8d+FvkVpCqVry67q4QejG2hVJoJYwvMmE1QXBnO7t
+         EQ3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=/7C0IohzWXZjJ0NwALGrigsjy1qcIqbbTdWC7cBS0ec=;
+        b=hY4Ib+PFqNu3uK0VLzkLWNYE3dBV4pYT98hdk+IP3ds4AMe18jJDIXUWl4KjK5bNfl
+         v+lcZdPfdoSk69DsczPsV4P7XzJLn7dqDc6dp8yyMd4BxqDlmH8RtJGeUQH1nSFVATlO
+         5qphuGAl9vDInTL0X9GLV2sFacXbp2gnWYyjPdtEAM/ON9ON5I6DEFcAaraj+b8Cr4iY
+         vNnP3Io43zLQXsXLDbnygu6CUYXweaRgCPjQ4MY0eY2bsHWp8V0WwbBQQk+UoHlOHJMg
+         trztvGuzk8eZkhrGe+y2S12HqXiqUgA6Q5GNRTkRgdVstA8TZOVrLclc1iwsWJhsbCUh
+         zDUA==
+X-Gm-Message-State: APjAAAUYd44VCgkLtRiZRZV59YYDYiZVCf2wPMwvtFrmDm4ZQoIDANY6
+        Nxki/ft7y3e0aq6oOJZed3gE/vpNgfE=
+X-Google-Smtp-Source: APXvYqxe8cBXs9KW4FBO1JvlixbVQDo7hBigrf6i0aqh1naWo0jmLgb2GDVFmsfPEjAVonIM8wj2kA==
+X-Received: by 2002:a1c:d084:: with SMTP id h126mr9551034wmg.110.1554114914005;
+        Mon, 01 Apr 2019 03:35:14 -0700 (PDT)
+Received: from [192.168.0.101] ([88.147.53.253])
+        by smtp.gmail.com with ESMTPSA id f9sm10631222wmb.36.2019.04.01.03.35.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 03:35:13 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: Bisected GFP in bfq_bfqq_expire on v5.1-rc1
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190401122233.3e861312@fire.localdomain>
+Date:   Mon, 1 Apr 2019 12:35:11 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EBC090F1-72C0-4794-91CC-37F9A2A1DEFB@linaro.org>
+References: <20190329160227.7d55c8dd@fire.localdomain>
+ <0e203a26-b941-cef4-dff1-013999d4b041@kernel.dk>
+ <626EAE58-63C1-4ABA-9040-9D9A61F74A0D@linaro.org>
+ <20190401115509.76310e03@fire.localdomain>
+ <84B0CA50-0ED8-4171-8007-19EA43951735@linaro.org>
+ <20190401122233.3e861312@fire.localdomain>
+To:     Dmitrii Tcvetkov <demfloro@demfloro.ru>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 08:21:57AM -0400, Steven Rostedt wrote:
-> Peter, Ingo,
-> 
-> Are you OK with this patch? If you ack it, I'll pull it in through my
 
-Sure,
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Il giorno 1 apr 2019, alle ore 11:22, Dmitrii Tcvetkov =
+<demfloro@demfloro.ru> ha scritto:
+>=20
+> On Mon, 1 Apr 2019 11:01:27 +0200
+> Paolo Valente <paolo.valente@linaro.org> wrote:
+>> Ok, thank you. Could you please do a
+>>=20
+>> list *(bfq_bfqq_expire+0x1f3)
+>>=20
+>> for me?
+>>=20
+>> Thanks,
+>> Paolo
+>>=20
+>>>=20
+>>> <gpf.txt><gpf-w-bfq-group-iosched.txt><config.txt>
+>=20
+> Reading symbols from vmlinux...done.
+> (gdb) list *(bfq_bfqq_expire+0x1f3)
+> 0xffffffff813d02c3 is in bfq_bfqq_expire (block/bfq-iosched.c:3390).
+> 3385             * even in case bfqq and thus parent entities go on =
+receiving=20
+> 3386             * service with the same budget.
+> 3387             */
+> 3388            entity =3D entity->parent;
+> 3389            for_each_entity(entity)
+> 3390                    entity->service =3D 0;
+> 3391    }
+> 3392
+> 3393    /*
+> 3394     * Budget timeout is not implemented through a dedicated =
+timer, but
+
+Thank you very much.  Unfortunately this doesn't ring any bell.  I'm
+trying to reproduce the failure.  It will probably take a little
+time.  If I don't make it, I'll ask you to kindly retry after applying
+some instrumentation patch.
+
+Thanks,
+Paolo=
