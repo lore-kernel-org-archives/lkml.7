@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CABC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF716C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E3D2133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39812171F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138916;
-	bh=rwuz49IjaP+mQZNQyy8xdDAXeEaI4CkIizylPBb760w=;
+	s=default; t=1554138919;
+	bh=+nXd50clnepF6RQyo8ZArmXVXGCmvgi0rEAHokRAIj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Gpq6fWG6fltpCXjaSL4BaSW4cMw+fdllDbHtiBklzBewIfYaJwEDa5H1ymZS83rE
-	 2Zpik23izpPTot1yxr4WiDpd/cgf++u5oozDCuprr8IgGNPQqN1RnzxC5C0sNeXt8L
-	 uMK7PSTbdh/UN0LtZtvjOy2tXcXrsnC4pRbcBvsI=
+	b=RAMLW5Wwff2SfQTlUGglpOuQ5qGaoUKx1yy00XXF/LXFiLPhxvALrRxuUVXQyEPVe
+	 No3yR0dbdgoNS0XMNbIMIn+MowoYuoE52tkXK5RzbGS7dP2nofokNjtCa4Yh4hP20p
+	 yND1QK9gXojHEl03YWawqKkqUAqrUAXRAavaRyBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729929AbfDARPP (ORCPT
+        id S1730882AbfDARPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39198 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730864AbfDARPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:15:13 -0400
+        id S1730501AbfDARPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:15:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A93920856;
-        Mon,  1 Apr 2019 17:15:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B05AD206C0;
+        Mon,  1 Apr 2019 17:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138912;
-        bh=rwuz49IjaP+mQZNQyy8xdDAXeEaI4CkIizylPBb760w=;
+        s=default; t=1554138915;
+        bh=+nXd50clnepF6RQyo8ZArmXVXGCmvgi0rEAHokRAIj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WgMitgKABq/neB2d9nXAv3zUP3zl2IZKZyJdUMnHy5YPaRLS9lAy/t1ESVjI87XRU
-         +yBpqeBDobLUxaizNR8Yn/8yBvzdLwADcqRo+3CC1kat2Qe8L/DtL6uIoYB4h2SxkQ
-         3EoQWXGXKWKY3rSNUmyW7eoopTQmuCnHoOotTQwI=
+        b=al+fc/MhMqstizbGG990HkUXWfKUePq39rKGRfPFDtz4tidFFaCkv74+/R8QH5Osv
+         YbsVqUamaD2z3GNNefJdmEUJ3gA4aGm73+691qF6wFeW8dWnY1gb26Y8SoA8v90Mmz
+         sQALv/lJ8+7WpuNxHBg2VkyLrzR7iAZbueHzCiRA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 057/134] ALSA: rawmidi: Fix potential Spectre v1 vulnerability
-Date:   Mon,  1 Apr 2019 19:01:33 +0200
-Message-Id: <20190401170049.967599412@linuxfoundation.org>
+Subject: [PATCH 4.19 058/134] ALSA: seq: oss: Fix Spectre v1 vulnerability
+Date:   Mon,  1 Apr 2019 19:01:34 +0200
+Message-Id: <20190401170050.044388578@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -67,17 +68,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 2b1d9c8f87235f593826b9cf46ec10247741fff9 upstream.
+commit c709f14f0616482b67f9fbcb965e1493a03ff30b upstream.
 
-info->stream is indirectly controlled by user-space, hence leading to
+dev is indirectly controlled by user-space, hence leading to
 a potential exploitation of the Spectre variant 1 vulnerability.
 
 This issue was detected with the help of Smatch:
 
-sound/core/rawmidi.c:604 __snd_rawmidi_info_select() warn: potential spectre issue 'rmidi->streams' [r] (local cap)
+sound/core/seq/oss/seq_oss_synth.c:626 snd_seq_oss_synth_make_info() warn: potential spectre issue 'dp->synths' [w] (local cap)
 
-Fix this by sanitizing info->stream before using it to index
-rmidi->streams.
+Fix this by sanitizing dev before using it to index dp->synths.
 
 Notice that given that speculation windows are large, the policy is
 to kill the speculation on the first load and not worry if it can be
@@ -91,26 +91,28 @@ Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/rawmidi.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/core/seq/oss/seq_oss_synth.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/sound/core/rawmidi.c
-+++ b/sound/core/rawmidi.c
-@@ -30,6 +30,7 @@
- #include <linux/module.h>
- #include <linux/delay.h>
- #include <linux/mm.h>
-+#include <linux/nospec.h>
- #include <sound/rawmidi.h>
- #include <sound/info.h>
- #include <sound/control.h>
-@@ -601,6 +602,7 @@ static int __snd_rawmidi_info_select(str
+--- a/sound/core/seq/oss/seq_oss_synth.c
++++ b/sound/core/seq/oss/seq_oss_synth.c
+@@ -617,13 +617,14 @@ int
+ snd_seq_oss_synth_make_info(struct seq_oss_devinfo *dp, int dev, struct synth_info *inf)
+ {
+ 	struct seq_oss_synth *rec;
++	struct seq_oss_synthinfo *info = get_synthinfo_nospec(dp, dev);
+ 
+-	if (dev < 0 || dev >= dp->max_synthdev)
++	if (!info)
  		return -ENXIO;
- 	if (info->stream < 0 || info->stream > 1)
- 		return -EINVAL;
-+	info->stream = array_index_nospec(info->stream, 2);
- 	pstr = &rmidi->streams[info->stream];
- 	if (pstr->substream_count == 0)
- 		return -ENOENT;
+ 
+-	if (dp->synths[dev].is_midi) {
++	if (info->is_midi) {
+ 		struct midi_info minf;
+-		snd_seq_oss_midi_make_info(dp, dp->synths[dev].midi_mapped, &minf);
++		snd_seq_oss_midi_make_info(dp, info->midi_mapped, &minf);
+ 		inf->synth_type = SYNTH_TYPE_MIDI;
+ 		inf->synth_subtype = 0;
+ 		inf->nr_voices = 16;
 
 
