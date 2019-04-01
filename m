@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7FCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26EEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C2521929
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7FD82196E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138811;
-	bh=ULPrIft/jH73DkDREv25YbkYFGfySPDqvMEPeJKhlSg=;
+	s=default; t=1554138814;
+	bh=vENPIQeql5/qRoFrdYhqghzLrqSl1eO4CVpALkEp8kc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yW9WHfFxqkoGfAmy20rpvtKeXsakM8i6EbAOaDWOaSgi9uVxs2Vo0BbLhVbCFVUqH
-	 3XIipJ42wh9O1QyZ39qkTBWrGpwB0+PU2dMUl7bSTscVeAKo3mCqoX3foSzIuEa/J4
-	 D2KxueKrPHhNOVpSngYK6/8vK/QRTp8kNS8eHMvg=
+	b=XBu6xQ9t5o8ZBcy9yJB/btim1GRrWtvs0h/LVMGJnF5mLj6NHiS9mEFlk0LVakbAF
+	 toxQe51K8U3db5NZ6qAWFFkqWsHJx+RFfiXx9ZVcuvhX86MC4XNt8PsofxbJE/0oDC
+	 mdee/zcMsCPr5WKMiMQlNsahcI0wxO0Kf670t1Bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730569AbfDARN3 (ORCPT
+        id S1730584AbfDARNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:13:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35982 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:13:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730559AbfDARN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:13:26 -0400
+        id S1730559AbfDARNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:13:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 974A021929;
-        Mon,  1 Apr 2019 17:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B911521924;
+        Mon,  1 Apr 2019 17:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138806;
-        bh=ULPrIft/jH73DkDREv25YbkYFGfySPDqvMEPeJKhlSg=;
+        s=default; t=1554138810;
+        bh=vENPIQeql5/qRoFrdYhqghzLrqSl1eO4CVpALkEp8kc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pfH+WsBXskVsvqeFVBujQlgsE3okhW8eXDkuPj0U9s3g9TUvNtKFh+Ia43NuPQI87
-         vP69LRDq5yIR7t0qaMjiAcxg0d9939coC1a8/ez1vjQPTlpq2HUV9zCD51TyiPPdsd
-         NczJUbvCY2bNYVsPK+WV3Q53OsJbgi4syjwPDSAk=
+        b=RNmRN5TY3fi+eaVCW94p/lOx7XzkBZU8wUXuBBBVSOj8vwxmIpwDnCoEhAdMjEssu
+         z17vj6kQe8VQ9BZI7ePKzEXLdK1p42icLCJR2mVc8vi7yPgsWPYG9xP3XaHGB1UMuU
+         PnmKmRujR1E+F+CWU0ZAfaVUZdydgc5vBK6reGLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
+        stable@vger.kernel.org, "Suanming.Mou" <mousuanming@huawei.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 026/134] vrf: prevent adding upper devices
-Date:   Mon,  1 Apr 2019 19:01:02 +0200
-Message-Id: <20190401170046.988482453@linuxfoundation.org>
+Subject: [PATCH 4.19 027/134] vxlan: Dont call gro_cells_destroy() before device is unregistered
+Date:   Mon,  1 Apr 2019 19:01:03 +0200
+Message-Id: <20190401170047.066601027@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,38 +68,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-[ Upstream commit 1017e0987117c32783ba7c10fe2e7ff1456ba1dc ]
+[ Upstream commit cc4807bb609230d8959fd732b0bf3bd4c2de8eac ]
 
-VRF devices don't work with upper devices. Currently, it's possible to
-add a VRF device to a bridge or team, and to create macvlan, macsec, or
-ipvlan devices on top of a VRF (bond and vlan are prevented respectively
-by the lack of an ndo_set_mac_address op and the NETIF_F_VLAN_CHALLENGED
-feature flag).
+Commit ad6c9986bcb62 ("vxlan: Fix GRO cells race condition between
+receive and link delete") fixed a race condition for the typical case a vxlan
+device is dismantled from the current netns. But if a netns is dismantled,
+vxlan_destroy_tunnels() is called to schedule a unregister_netdevice_queue()
+of all the vxlan tunnels that are related to this netns.
 
-Fix this by setting the IFF_NO_RX_HANDLER flag (introduced in commit
-f5426250a6ec ("net: introduce IFF_NO_RX_HANDLER")).
+In vxlan_destroy_tunnels(), gro_cells_destroy() is called and finished before
+unregister_netdevice_queue(). This means that the gro_cells_destroy() call is
+done too soon, for the same reasons explained in above commit.
 
-Cc: David Ahern <dsahern@gmail.com>
-Fixes: 193125dbd8eb ("net: Introduce VRF device driver")
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Acked-by: David Ahern <dsahern@gmail.com>
+So we need to fully respect the RCU rules, and thus must remove the
+gro_cells_destroy() call or risk use after-free.
+
+Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")
+Signed-off-by: Suanming.Mou <mousuanming@huawei.com>
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vrf.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/vxlan.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -1262,6 +1262,7 @@ static void vrf_setup(struct net_device
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -3798,10 +3798,8 @@ static void vxlan_destroy_tunnels(struct
+ 		/* If vxlan->dev is in the same netns, it has already been added
+ 		 * to the list by the previous loop.
+ 		 */
+-		if (!net_eq(dev_net(vxlan->dev), net)) {
+-			gro_cells_destroy(&vxlan->gro_cells);
++		if (!net_eq(dev_net(vxlan->dev), net))
+ 			unregister_netdevice_queue(vxlan->dev, head);
+-		}
+ 	}
  
- 	/* default to no qdisc; user can add if desired */
- 	dev->priv_flags |= IFF_NO_QUEUE;
-+	dev->priv_flags |= IFF_NO_RX_HANDLER;
- }
- 
- static int vrf_validate(struct nlattr *tb[], struct nlattr *data[],
+ 	for (h = 0; h < PORT_HASH_SIZE; ++h)
 
 
