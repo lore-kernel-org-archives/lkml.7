@@ -3,30 +3,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8094C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996CCC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6278720840
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64992218FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbfDAOJx (ORCPT
+        id S1727190AbfDAOL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 10:09:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53726 "EHLO mx1.redhat.com"
+        Mon, 1 Apr 2019 10:11:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42404 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbfDAOJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 10:09:53 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        id S1726542AbfDAOL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 10:11:57 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B53F99F742;
-        Mon,  1 Apr 2019 14:09:47 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5FB7230832F4;
+        Mon,  1 Apr 2019 14:11:56 +0000 (UTC)
 Received: from [10.36.118.81] (unknown [10.36.118.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 70F005C25A;
-        Mon,  1 Apr 2019 14:09:33 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DC96A5D70E;
+        Mon,  1 Apr 2019 14:11:42 +0000 (UTC)
 Subject: Re: On guest free page hinting and OOM
+From:   David Hildenbrand <david@redhat.com>
 To:     "Michael S. Tsirkin" <mst@redhat.com>
 Cc:     Nitesh Narayan Lal <nitesh@redhat.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
@@ -42,7 +44,7 @@ References: <20190329084058-mutt-send-email-mst@kernel.org>
  <20190329125034-mutt-send-email-mst@kernel.org>
  <fb23fd70-4f1b-26a8-5ecc-4c14014ef29d@redhat.com>
  <20190401073007-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
+ <29e11829-c9ac-a21b-b2f1-ed833e4ca449@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -88,198 +90,156 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
  SE+xAvmumFBY
 Organization: Red Hat GmbH
-Message-ID: <29e11829-c9ac-a21b-b2f1-ed833e4ca449@redhat.com>
-Date:   Mon, 1 Apr 2019 16:09:32 +0200
+Message-ID: <dc14a711-a306-d00b-c4ce-c308598ee386@redhat.com>
+Date:   Mon, 1 Apr 2019 16:11:42 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190401073007-mutt-send-email-mst@kernel.org>
+In-Reply-To: <29e11829-c9ac-a21b-b2f1-ed833e4ca449@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 01 Apr 2019 14:09:52 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 01 Apr 2019 14:11:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Thinking about your approach, there is one elementary thing to notice:
+On 01.04.19 16:09, David Hildenbrand wrote:
+>>> Thinking about your approach, there is one elementary thing to notice:
+>>>
+>>> Giving the guest pages from the buffer while hinting requests are being
+>>> processed means that the guest can and will temporarily make use of more
+>>> memory than desired. Essentially up to the point where MADV_FREE is
+>>> finally called for the hinted pages.
 >>
->> Giving the guest pages from the buffer while hinting requests are being
->> processed means that the guest can and will temporarily make use of more
->> memory than desired. Essentially up to the point where MADV_FREE is
->> finally called for the hinted pages.
-> 
-> Right - but that seems like exactly the reverse of the issue with the current
-> approach which is guest can temporarily use less memory than desired.
-> 
->> Even then the guest will logicall
->> make use of more memory than desired until core MM takes pages away.
-> 
-> That sounds more like a host issue though. If it wants to
-> it can use e.g. MAD_DONTNEED.
-
-Indeed. But MADV_DONTNEED is somewhat undesired for performance reasons.
-You want to do the work when swapping not when hinting.
-
-But what I wanted to say here: Looking at the pure size of your guest
-will at least not help you to identify if more memory than desired will
-be used.
-
-> 
->> So:
->> 1) Unmodified guests will make use of more memory than desired.
-> 
-> One interesting possibility for this is to add the buffer memory
-> by hotplug after the feature has been negotiated.
-> I agree this sounds complex.
-
-Yes it is, and it goes into the direction of virtio-mem that essentially
-does that. But bad news: memory hotplug is complicated stuff, both on
-the hypervisor and guest side. And things like NUMA make it more involved.
-
-But even then, malicious guest can simply fake feature negotiation and
-make use of all hotplugged memory. Won't work, at least not for
-malicious guests.
-
-> 
-> But I have an idea: how about we include the hint size in the
-> num_pages counter? Then unmodified guests put
-> it in the balloon and don't use it. Modified ones
-> will know to use it just for hinting.
-
-These are the nightmares I was talking about. I would like to decouple
-this feature as far as possible from balloon inflation/deflation.
-Ballooning is 4k based and might have other undesirable side effect.
-Just because somebody wants to use page hinting does not mean he wants
-to use ballooning. Effectively, many people will want to avoid
-ballooning completely by using page hinting for their use case.
-
-> 
-> 
->> 2) Malicious guests will make use of more memory than desired.
-> 
-> Well this limitation is fundamental to balloon right?
-
-Yep, it is the fundamental issue of ballooning. If memory is available
-right from the boot, the system is free to do with it whatever it wants.
-(one of the main things virtio-mem will do differently/better)
-
-> If host wants to add tracking of balloon memory, it
-> can enforce the limits. So far no one bothered,
-> but maybe with this feature we should start to do that.
-
-I think I already had endless rants about why this is not possible.
-Ballooning as it is currently implemented by virtio-balloon is broken by
-design. Period. You can and never will be able to distinguish unmodified
-guests from malicious guests. Please don't design new approaches based
-on broken design.
-
-> 
->> 3) Sane, modified guests will make use of more memory than desired.
+>> Right - but that seems like exactly the reverse of the issue with the current
+>> approach which is guest can temporarily use less memory than desired.
 >>
->> Instead, we could make our life much easier by doing the following:
+>>> Even then the guest will logicall
+>>> make use of more memory than desired until core MM takes pages away.
 >>
->> 1) Introduce a parameter to cap the amount of memory concurrently hinted
->> similar like you suggested, just don't consider it a buffer value.
->> "-device virtio-balloon,hinting_size=1G". This gives us control over the
->> hinting proceess.
+>> That sounds more like a host issue though. If it wants to
+>> it can use e.g. MAD_DONTNEED.
+> 
+> Indeed. But MADV_DONTNEED is somewhat undesired for performance reasons.
+> You want to do the work when swapping not when hinting.
+> 
+> But what I wanted to say here: Looking at the pure size of your guest
+> will at least not help you to identify if more memory than desired will
+> be used.
+> 
 >>
->> hinting_size=0 (default) disables hinting
+>>> So:
+>>> 1) Unmodified guests will make use of more memory than desired.
 >>
->> The admin can tweak the number along with memory requirements of the
->> guest. We can make suggestions (e.g. calculate depending on #cores,#size
->> of memory, or simply "1GB")
+>> One interesting possibility for this is to add the buffer memory
+>> by hotplug after the feature has been negotiated.
+>> I agree this sounds complex.
 > 
-> So if it's all up to the guest and for the benefit of the guest, and
-> with no cost/benefit to the host, then why are we supplying this value
-> from the host?
-
-See 3), the admin has to be aware of hinting behavior.
-
+> Yes it is, and it goes into the direction of virtio-mem that essentially
+> does that. But bad news: memory hotplug is complicated stuff, both on
+> the hypervisor and guest side. And things like NUMA make it more involved.
 > 
->> 2) In the guest, track the size of hints in progress, cap at the
->> hinting_size.
+> But even then, malicious guest can simply fake feature negotiation and
+> make use of all hotplugged memory. Won't work, at least not for
+> malicious guests.
+> 
 >>
->> 3) Document hinting behavior
+>> But I have an idea: how about we include the hint size in the
+>> num_pages counter? Then unmodified guests put
+>> it in the balloon and don't use it. Modified ones
+>> will know to use it just for hinting.
+> 
+> These are the nightmares I was talking about. I would like to decouple
+> this feature as far as possible from balloon inflation/deflation.
+> Ballooning is 4k based and might have other undesirable side effect.
+> Just because somebody wants to use page hinting does not mean he wants
+> to use ballooning. Effectively, many people will want to avoid
+> ballooning completely by using page hinting for their use case.
+> 
 >>
->> "When hinting is enabled, memory up to hinting_size might temporarily be
->> removed from your guest in order to be hinted to the hypervisor. This is
->> only for a very short time, but might affect applications. Consider the
->> hinting_size when sizing your guest. If your application was tested with
->> XGB and a hinting size of 1G is used, please configure X+1GB for the
->> guest. Otherwise, performance degradation might be possible."
+>>
+>>> 2) Malicious guests will make use of more memory than desired.
+>>
+>> Well this limitation is fundamental to balloon right?
 > 
-> OK, so let's start with this. Now let us assume that guest follows
-> the advice.  We thus know that 1GB is not needed for guest applications.
-> So why do we want to allow applications to still use this extra memory?
-
-If the application does not need the 1GB, the 1GB will be hinted to the
-hypervisor and are effectively only a buffer for the OOM scenario.
-(ignoring page cache discussions for now).
-
-"So why do we want to allow applications to still use this extra memory"
-is the EXACT same issue you have with your buffer approach. Any guest
-can make use of the buffer and you won't be able to detect it. Very same
-problem. Only in your approach, the guest might agree to play nicely by
-not making use of the 1G you provided. Just as if the application does
-not need/use the additional 1GB.
-
-The interesting thing is most probably: Will the hinting size usually be
-reasonable small? At least I guess a guest with 4TB of RAM will not
-suddenly get a hinting size of hundreds of GB. Most probably also only
-something in the range of 1GB. But this is an interesting question to
-look into.
-
-Also, if the admin does not care about performance implications when
-already close to hinting, no need to add the additional 1Gb to the ram size.
-
+> Yep, it is the fundamental issue of ballooning. If memory is available
+> right from the boot, the system is free to do with it whatever it wants.
+> (one of the main things virtio-mem will do differently/better)
 > 
->> 4) Do the loop/yield on OOM as discussed to improve performance when OOM
->> and avoid false OOM triggers just to be sure.
+>> If host wants to add tracking of balloon memory, it
+>> can enforce the limits. So far no one bothered,
+>> but maybe with this feature we should start to do that.
 > 
-> Yes, I'm not against trying the simpler approach as a first step.  But
-> then we need this path actually tested so see whether hinting introduced
-> unreasonable overhead on this path.  And it is tricky to test oom as you
-> are skating close to system's limits. That's one reason I prefer
-> avoiding oom handler if possible.
-
-The issue with the actual issue we are chasing is that it can only
-happen if (as far as I see)
-
-1) Application uses X MAX_ORDER - 1 pages
-2) Application frees X MAX_ORDER - 1 pages
-3) Application reallocates X MAX_ORDER - 1 pages
-
-AND
-
-a) There are not enough MAX_ORDER - 1 pages remaining while hinting
-b) The allocation request cannot be satisfied from other free pages of
-smaller order
-c) We actually trigger hinting with the X freed pages
-d) Time between 2 and 3 is not enough to complete hinting
-
-Only then the OOM handler will get active. If between 2) and 3)
-reasonable time has passed, it is not an issue.
-
-And as I said right from the beginning, reproducing this might be
-difficult. And especially for this reason, I prefer simpler approaches
-if possible. Document it for applications that might be affected, let
-the admin enable the feature explicitly, avoid complexity.
-
+> I think I already had endless rants about why this is not possible.
+> Ballooning as it is currently implemented by virtio-balloon is broken by
+> design. Period. You can and never will be able to distinguish unmodified
+> guests from malicious guests. Please don't design new approaches based
+> on broken design.
 > 
-> When you say yield, I would guess that would involve config space access
-> to the balloon to flush out outstanding hints?
+>>
+>>> 3) Sane, modified guests will make use of more memory than desired.
+>>>
+>>> Instead, we could make our life much easier by doing the following:
+>>>
+>>> 1) Introduce a parameter to cap the amount of memory concurrently hinted
+>>> similar like you suggested, just don't consider it a buffer value.
+>>> "-device virtio-balloon,hinting_size=1G". This gives us control over the
+>>> hinting proceess.
+>>>
+>>> hinting_size=0 (default) disables hinting
+>>>
+>>> The admin can tweak the number along with memory requirements of the
+>>> guest. We can make suggestions (e.g. calculate depending on #cores,#size
+>>> of memory, or simply "1GB")
+>>
+>> So if it's all up to the guest and for the benefit of the guest, and
+>> with no cost/benefit to the host, then why are we supplying this value
+>> from the host?
+> 
+> See 3), the admin has to be aware of hinting behavior.
+> 
+>>
+>>> 2) In the guest, track the size of hints in progress, cap at the
+>>> hinting_size.
+>>>
+>>> 3) Document hinting behavior
+>>>
+>>> "When hinting is enabled, memory up to hinting_size might temporarily be
+>>> removed from your guest in order to be hinted to the hypervisor. This is
+>>> only for a very short time, but might affect applications. Consider the
+>>> hinting_size when sizing your guest. If your application was tested with
+>>> XGB and a hinting size of 1G is used, please configure X+1GB for the
+>>> guest. Otherwise, performance degradation might be possible."
+>>
+>> OK, so let's start with this. Now let us assume that guest follows
+>> the advice.  We thus know that 1GB is not needed for guest applications.
+>> So why do we want to allow applications to still use this extra memory?
+> 
+> If the application does not need the 1GB, the 1GB will be hinted to the
+> hypervisor and are effectively only a buffer for the OOM scenario.
+> (ignoring page cache discussions for now).
+> 
+> "So why do we want to allow applications to still use this extra memory"
+> is the EXACT same issue you have with your buffer approach. Any guest
+> can make use of the buffer and you won't be able to detect it. Very same
+> problem. Only in your approach, the guest might agree to play nicely by
+> not making use of the 1G you provided. Just as if the application does
+> not need/use the additional 1GB.
+> 
+> The interesting thing is most probably: Will the hinting size usually be
+> reasonable small? At least I guess a guest with 4TB of RAM will not
+> suddenly get a hinting size of hundreds of GB. Most probably also only
+> something in the range of 1GB. But this is an interesting question to
+> look into.
+> 
+> Also, if the admin does not care about performance implications when
+> already close to hinting, no need to add the additional 1Gb to the ram size.
 
-I rather meant yield your CPU to the hypervisor, so it can process
-hinting requests faster (like waiting for a spinlock). This is the
-simple case. More involved approaches might somehow indicate to the
-hypervisor to not process queued requests but simply return them to the
-guest so the guest can add the isolated pages to the buddy. If this is
-"config space access to the balloon to flush out outstanding hints" then
-yes, something like that might be a good idea if it doesn't harm
-performance.
+"close to OOM" is what I meant.
+
 
 -- 
 
