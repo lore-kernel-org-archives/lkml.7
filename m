@@ -4,50 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF81C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674A1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C97D2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F182070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140005;
-	bh=166qu/xeeVH92fpZznbg53wP6GYMbcSGIFMZQ6XsR5c=;
+	s=default; t=1554140009;
+	bh=AZZmrHyeLP9V+hKISCkPEYCYz3uXYeKNMK8LvDw59cM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c0S7OZLb63klihiGfykyUrvHBUtrRSo2cEgkZBgUWRcN014PHCMSsAovqZJMbFWr1
-	 Bq4tncfumP+VaHQNSWj8L01vkPw0+CEZDF4KuJsWbOOy6ipnP2tMNTWid0hQitP9So
-	 7QeYBd0/pexXNyyfjru8AIPHRzENS8AgaGUPleN8=
+	b=V6x1PUm/pRZgkLaOcibX7KBgduMoyNQTHOZntTTjwfQIBzNJvpe9sHJH4jMb/qJOM
+	 elJohlZmnApe7+DLcoycPT9+A5vhnwwtfwZu9h6OYjD+tC2hDqF7e/nvzAYISoaFNg
+	 NYlEOuQIe0U+h/zTHssiVqIt549I1u0zbuYFJuas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387620AbfDARdY (ORCPT
+        id S2387628AbfDARd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:33:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42182 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:33:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732780AbfDARdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:33:20 -0400
+        id S2387616AbfDARdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:33:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5A6121473;
-        Mon,  1 Apr 2019 17:33:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B0C820830;
+        Mon,  1 Apr 2019 17:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140000;
-        bh=166qu/xeeVH92fpZznbg53wP6GYMbcSGIFMZQ6XsR5c=;
+        s=default; t=1554140002;
+        bh=AZZmrHyeLP9V+hKISCkPEYCYz3uXYeKNMK8LvDw59cM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PrkUvQRDDwxJGW72hJt2SdVqj4RaVEp2csmrCWRb8LlUKBxGAeZJd4DVZninswflS
-         XdJmYK6o2GPRYRauMwAkMDlOCe1rbtlhzi+S0buF2pXXoB/orKNebbWWCDnL78hzxv
-         XPdSN3w2+SjcTfSCunZ1++6v6ZgOwFni4v5bkmzY=
+        b=q5oRfqwQiLIQ/GHDi9ag58TFzqrdMQEXtBs9VLCay/1xQpOx2pn+mJANePliytFvw
+         Rau9vA8q6pkH0VFAzwSjbfcDtenguDmyjZxF7ry+KwVAc9rP7H/2/LPSZa3TyMSvBe
+         7n9XlEXKMFtPV4/UOazdpbGnKvx04bPEmtQ4Uef0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Mahoney <jeffm@suse.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: =?UTF-8?q?=5BPATCH=204=2E4=20075/131=5D=20=3D=3FUTF-8=3Fq=3Fmac80211=3A=3D20fix=3D20=22warning=3A=3D20=3DE2=3D80=3D98target=3D5Fmetric=3F=3D=20=3D=3FUTF-8=3Fq=3F=3DE2=3D80=3D99=3D20may=3D20be=3D20used=3D20uninitialized=22=3F=3D?=
-Date:   Mon,  1 Apr 2019 19:02:25 +0200
-Message-Id: <20190401170058.365659273@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, vince@deater.net,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 076/131] perf/ring_buffer: Refuse to begin AUX transaction after rb->aux_mmap_count drops
+Date:   Mon,  1 Apr 2019 19:02:26 +0200
+Message-Id: <20190401170058.429119601@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -66,36 +74,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit b4201cc4fc6e1c57d6d306b1f787865043d60129 ]
+[ Upstream commit dcb10a967ce82d5ad20570693091139ae716ff76 ]
 
-This fixes:
+When ring buffer's AUX area is unmapped and rb->aux_mmap_count drops to
+zero, new AUX transactions into this buffer can still be started,
+even though the buffer in en route to deallocation.
 
-net/mac80211/mesh_hwmp.c:603:26: warning: ‘target_metric’ may be used uninitialized in this function
+This patch adds a check to perf_aux_output_begin() for rb->aux_mmap_count
+being zero, in which case there is no point starting new transactions,
+in other words, the ring buffers that pass a certain point in
+perf_mmap_close will not have their events sending new data, which
+clears path for freeing those buffers' pages right there and then,
+provided that no active transactions are holding the AUX reference.
 
-target_metric is only consumed when reply = true so no bug exists here,
-but not all versions of gcc realize it.  Initialize to 0 to remove the
-warning.
-
-Signed-off-by: Jeff Mahoney <jeffm@suse.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: vince@deater.net
+Link: http://lkml.kernel.org/r/1457098969-21595-2-git-send-email-alexander.shishkin@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_hwmp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/events/ring_buffer.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
-index 33d5271a9e32..466922f09d04 100644
---- a/net/mac80211/mesh_hwmp.c
-+++ b/net/mac80211/mesh_hwmp.c
-@@ -530,7 +530,7 @@ static void hwmp_preq_frame_process(struct ieee80211_sub_if_data *sdata,
- 	const u8 *target_addr, *orig_addr;
- 	const u8 *da;
- 	u8 target_flags, ttl, flags;
--	u32 orig_sn, target_sn, lifetime, target_metric;
-+	u32 orig_sn, target_sn, lifetime, target_metric = 0;
- 	bool reply = false;
- 	bool forward = true;
- 	bool root_is_gate;
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 94dc6b0763ab..7324d83d6bd8 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -288,6 +288,13 @@ void *perf_aux_output_begin(struct perf_output_handle *handle,
+ 	if (!rb_has_aux(rb) || !atomic_inc_not_zero(&rb->aux_refcount))
+ 		goto err;
+ 
++	/*
++	 * If rb::aux_mmap_count is zero (and rb_has_aux() above went through),
++	 * the aux buffer is in perf_mmap_close(), about to get freed.
++	 */
++	if (!atomic_read(&rb->aux_mmap_count))
++		goto err;
++
+ 	/*
+ 	 * Nesting is not supported for AUX area, make sure nested
+ 	 * writers are caught early
 -- 
 2.19.1
 
