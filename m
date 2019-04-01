@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 462EFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1D6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1759E21929
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C2321925
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138322;
-	bh=h86hAaKA0Ah6pwhQnxgq6BJ17E0czsx2sp3TXFDJr3A=;
+	s=default; t=1554138325;
+	bh=TxwP5QpPqwckR7PXtDVN7Oj1+LgCbLU/0ESAyaPK37Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xvCfFE0SkB+0okwVvX0gGRVjVkMgfBQQgenEPjdkCCiMFCidREvLo488cE1NYrfMG
-	 rs4UE5LLxuqQVT+xR6uDDAUIgiNqob8B97vTXkEVmJi0V2m4ZcNwlhWuvmESvOQun8
-	 K1Bx/C5xR42Rm9UrdDZfUPRQJe79ZrrretNTf9R0=
+	b=H3EFyXPvILleaRt1qbgnLVTjcKpbuOd7UsqBxzosnopOzCH2P0UXMCF0pnt2ANQaZ
+	 6ihLDdiDoUaPq4F3Ce+2yW0ASuXeZgxVdsWG3FJp6l7jeHG9UFRxygZL8BuVKO87R6
+	 xOsvrLm0Txzu4DXYPIMdajO2jw2O3C3O3rBCXhM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbfDARFV (ORCPT
+        id S1728945AbfDARFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:05:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50378 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:05:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728917AbfDARFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:05:20 -0400
+        id S1727074AbfDARFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:05:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57D3E21925;
-        Mon,  1 Apr 2019 17:05:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3DBB21925;
+        Mon,  1 Apr 2019 17:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138318;
-        bh=h86hAaKA0Ah6pwhQnxgq6BJ17E0czsx2sp3TXFDJr3A=;
+        s=default; t=1554138322;
+        bh=TxwP5QpPqwckR7PXtDVN7Oj1+LgCbLU/0ESAyaPK37Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LrAlQ1vAUuTtT8fUDKDruAB3wZSZAJfjDoML/a/qhaHqhfylmYMngURltx2E2C1yJ
-         o8kK+IDkbfgZDiFJWybk6v0NcY6DRbK62qUFThu22OStCPmBTKHgRYrAd7McGuG/nD
-         ADawq93/qANmE8xYQIGnoAjqzPoYNHBG+3IA5P/E=
+        b=vF6rZKE41ufQzlNl1pTT8F5IqgywRprM2yrCzoLvuZp4Qa/xS+NJmTkItotXhKd5X
+         5P1mLUYXcz3UpHG3gb5kBTQ+zK+yO5egyJDgwfdK1JWyi95jPavzv4yYLLwSgducUg
+         JJesZmJoHm3XEzOkFbzh56VMS9F6H5+d/bIdPAOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Claudiu Manoil <claudiu.manoil@nxp.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 031/146] net: dsa: mv88e6xxx: fix few issues in mv88e6390x_port_set_cmode
-Date:   Mon,  1 Apr 2019 19:00:43 +0200
-Message-Id: <20190401170051.178861898@linuxfoundation.org>
+Subject: [PATCH 5.0 032/146] net: mii: Fix PAUSE cap advertisement from linkmode_adv_to_lcl_adv_t() helper
+Date:   Mon,  1 Apr 2019 19:00:44 +0200
+Message-Id: <20190401170051.243261394@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -66,95 +65,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-[ Upstream commit 5ceaeb99ffb4dc002d20f6ac243c19a85e2c7a76 ]
+[ Upstream commit 7f07e5f1f778605e98cf2156d4db1ff3a3a1a74a ]
 
-This patches fixes few issues in mv88e6390x_port_set_cmode().
+With a recent link mode advertisement code update this helper
+providing local pause capability translation used for flow
+control link mode negotiation got broken.
+For eth drivers using this helper, the issue is apparent only
+if either PAUSE or ASYM_PAUSE is being advertised.
 
-1. When entering the function the old cmode may be 0, in this case
-   mv88e6390x_serdes_get_lane() returns -ENODEV. As result we bail
-   out and have no chance to set a new mode. Therefore deal properly
-   with -ENODEV.
-
-2. Once we have disabled power and irq, let's set the cached cmode to 0.
-   This reflects the actual status and is cleaner if we bail out with an
-   error in the following function calls.
-
-3. The cached cmode is used by mv88e6390x_serdes_get_lane(),
-   mv88e6390_serdes_power_lane() and mv88e6390_serdes_irq_enable().
-   Currently we set the cached mode to the new one at the very end of
-   the function only, means until then we use the old one what may be
-   wrong.
-
-4. When calling mv88e6390_serdes_irq_enable() we use the lane value
-   belonging to the old cmode. Get the lane belonging to the new cmode
-   before calling this function.
-
-It's hard to provide a good "Fixes" tag because quite a few smaller
-changes have been done to the code in question recently.
-
-Fixes: d235c48b40d3 ("net: dsa: mv88e6xxx: power serdes on/off for 10G interfaces on 6390X")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 3c1bcc8614db ("net: ethernet: Convert phydev advertize and supported from u32 to link mode")
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mv88e6xxx/port.c |   24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ include/linux/mii.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/dsa/mv88e6xxx/port.c
-+++ b/drivers/net/dsa/mv88e6xxx/port.c
-@@ -427,18 +427,22 @@ int mv88e6390x_port_set_cmode(struct mv8
- 		return 0;
- 
- 	lane = mv88e6390x_serdes_get_lane(chip, port);
--	if (lane < 0)
-+	if (lane < 0 && lane != -ENODEV)
- 		return lane;
- 
--	if (chip->ports[port].serdes_irq) {
--		err = mv88e6390_serdes_irq_disable(chip, port, lane);
-+	if (lane >= 0) {
-+		if (chip->ports[port].serdes_irq) {
-+			err = mv88e6390_serdes_irq_disable(chip, port, lane);
-+			if (err)
-+				return err;
-+		}
-+
-+		err = mv88e6390x_serdes_power(chip, port, false);
- 		if (err)
- 			return err;
- 	}
- 
--	err = mv88e6390x_serdes_power(chip, port, false);
--	if (err)
--		return err;
-+	chip->ports[port].cmode = 0;
- 
- 	if (cmode) {
- 		err = mv88e6xxx_port_read(chip, port, MV88E6XXX_PORT_STS, &reg);
-@@ -452,6 +456,12 @@ int mv88e6390x_port_set_cmode(struct mv8
- 		if (err)
- 			return err;
- 
-+		chip->ports[port].cmode = cmode;
-+
-+		lane = mv88e6390x_serdes_get_lane(chip, port);
-+		if (lane < 0)
-+			return lane;
-+
- 		err = mv88e6390x_serdes_power(chip, port, true);
- 		if (err)
- 			return err;
-@@ -463,8 +473,6 @@ int mv88e6390x_port_set_cmode(struct mv8
- 		}
- 	}
- 
--	chip->ports[port].cmode = cmode;
--
- 	return 0;
- }
+--- a/include/linux/mii.h
++++ b/include/linux/mii.h
+@@ -469,7 +469,7 @@ static inline u32 linkmode_adv_to_lcl_ad
+ 	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
+ 			      advertising))
+ 		lcl_adv |= ADVERTISE_PAUSE_CAP;
+-	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
++	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
+ 			      advertising))
+ 		lcl_adv |= ADVERTISE_PAUSE_ASYM;
  
 
 
