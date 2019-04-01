@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDA4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AC4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55412192B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE7E21939
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138568;
-	bh=Fnf6UQyeAfzbE5jn/6R56bXVUC3rMjUzT2FTJYsH4Uo=;
+	s=default; t=1554138571;
+	bh=53zGgi1ILFiW6vvRVzFjf/VVR+zGQ2I+AQZQcO07nx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PefcF7F/qgC2l7mtRZq1nFOuGsbe7L0aVx/8u0Ev1JQlb5DTjWY8VCtnW3UDQHflW
-	 4mAr0qZyni8DfnjNytv1eZQbxWXkjhjf4EYvtbFAd7wtv9pV39zZvjn48aNiGNNM7T
-	 vX//AaIRHCW+cBOrdHiish5t+qYeHkL3S+nkc4FA=
+	b=BefBPtKAclMs/1SCjjsugRoHCsHOrE8AuqbAa9gQqg8gdGIKC1Evqh9KUnxr0lSj2
+	 6W/Hc/dbA2NPgxqVOMDhWJNHnUua298v5rKNTmu4LwjCmrCfuBO58kfaEc1l+igW1J
+	 rn7J7Ajr7nEMVJv0NuYPkFKBS+JAiyj7BaeC/d7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbfDARJ1 (ORCPT
+        id S1729797AbfDARJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:09:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56386 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:09:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729181AbfDARJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:09:25 -0400
+        id S1729181AbfDARJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:09:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7A6421925;
-        Mon,  1 Apr 2019 17:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB277206B8;
+        Mon,  1 Apr 2019 17:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138564;
-        bh=Fnf6UQyeAfzbE5jn/6R56bXVUC3rMjUzT2FTJYsH4Uo=;
+        s=default; t=1554138568;
+        bh=53zGgi1ILFiW6vvRVzFjf/VVR+zGQ2I+AQZQcO07nx0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XIZVKmdtcVMndRf91+WTipe4nrfnCY2LQ6Aj52GvNJHpFIdOhOciKpejYre1Imgwc
-         eKuu8hMtauCR60d6xgLwFjyXYu2LhV5zuD5H3UyKuJ0Wec3SfoSJZpi8JiFa1ecd6a
-         xml4TMllW/8Y9WocGaNJ8HjyTKzJztgxCLyaeiZY=
+        b=tE+NVSwdj2wXM5Buia54rWZg+uyRCjb85MMaIilYNCNIYp22E6SYmRLl7fYrvDx/g
+         nZWcZIhPdERozKoWNYdmyC5Vp0TFVHCgFOF6d1nHnNyQje1ECtCuzLDyZSQ4tvMEYk
+         5ONul2pRqJCSb0Mh3sCX2/VmkEsTMQ5O8tu25ydg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Leun <kbug@newton.leun.net>,
-        Omar Sandoval <osandov@fb.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.0 103/146] blk-mq: fix sbitmap ws_active for shared tags
-Date:   Mon,  1 Apr 2019 19:01:55 +0200
-Message-Id: <20190401170057.386300794@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 5.0 104/146] cpufreq: intel_pstate: Also use CPPC nominal_perf for base_frequency
+Date:   Mon,  1 Apr 2019 19:01:56 +0200
+Message-Id: <20190401170057.447743455@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -64,81 +65,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-commit e861857545567adec8da3bdff728efdf7db12285 upstream.
+commit 92a3e426ec06e72b1c363179c79d30712447ff76 upstream.
 
-We now wrap sbitmap waitqueues in an active counter, so we can avoid
-iterating wakeups unless we have waiters there. This works as long as
-everyone that's manipulating the waitqueues use the proper helpers. For
-the tag wait case for shared tags, however, we add ourselves to the
-waitqueue without incrementing/decrementing the ->ws_active count. This
-means that wakeups can take a long time to happen.
+The ACPI specification states that if the "Guaranteed Performance
+Register" is not implemented, the OSPM assumes guaranteed performance
+to always be equal to nominal performance.
 
-Fix this by manually doing the inc/dec as needed for the wait queue
-handling.
+So for invalid or unimplemented guaranteed performance register, use
+nominal performance as guaranteed performance.
 
-Reported-by: Michael Leun <kbug@newton.leun.net>
-Tested-by: Michael Leun <kbug@newton.leun.net>
-Cc: stable@vger.kernel.org
-Reviewed-by: Omar Sandoval <osandov@fb.com>
-Fixes: 5d2ee7122c73 ("sbitmap: optimize wakeup check")
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This change will fall back to nominal_perf when guranteed_perf is
+invalid.  If nominal_perf is also invalid or not present, fall back
+to the existing implementation, which is to read from HWP Capabilities
+MSR.
+
+Fixes: 86d333a8cc7f ("cpufreq: intel_pstate: Add base_frequency attribute")
+Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-mq.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/cpufreq/intel_pstate.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1076,7 +1076,13 @@ static int blk_mq_dispatch_wake(wait_que
- 	hctx = container_of(wait, struct blk_mq_hw_ctx, dispatch_wait);
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -383,7 +383,10 @@ static int intel_pstate_get_cppc_gurante
+ 	if (ret)
+ 		return ret;
  
- 	spin_lock(&hctx->dispatch_wait_lock);
--	list_del_init(&wait->entry);
-+	if (!list_empty(&wait->entry)) {
-+		struct sbitmap_queue *sbq;
+-	return cppc_perf.guaranteed_perf;
++	if (cppc_perf.guaranteed_perf)
++		return cppc_perf.guaranteed_perf;
 +
-+		list_del_init(&wait->entry);
-+		sbq = &hctx->tags->bitmap_tags;
-+		atomic_dec(&sbq->ws_active);
-+	}
- 	spin_unlock(&hctx->dispatch_wait_lock);
++	return cppc_perf.nominal_perf;
+ }
  
- 	blk_mq_run_hw_queue(hctx, true);
-@@ -1092,6 +1098,7 @@ static int blk_mq_dispatch_wake(wait_que
- static bool blk_mq_mark_tag_wait(struct blk_mq_hw_ctx *hctx,
- 				 struct request *rq)
- {
-+	struct sbitmap_queue *sbq = &hctx->tags->bitmap_tags;
- 	struct wait_queue_head *wq;
- 	wait_queue_entry_t *wait;
- 	bool ret;
-@@ -1115,7 +1122,7 @@ static bool blk_mq_mark_tag_wait(struct
- 	if (!list_empty_careful(&wait->entry))
- 		return false;
- 
--	wq = &bt_wait_ptr(&hctx->tags->bitmap_tags, hctx)->wait;
-+	wq = &bt_wait_ptr(sbq, hctx)->wait;
- 
- 	spin_lock_irq(&wq->lock);
- 	spin_lock(&hctx->dispatch_wait_lock);
-@@ -1125,6 +1132,7 @@ static bool blk_mq_mark_tag_wait(struct
- 		return false;
- 	}
- 
-+	atomic_inc(&sbq->ws_active);
- 	wait->flags &= ~WQ_FLAG_EXCLUSIVE;
- 	__add_wait_queue(wq, wait);
- 
-@@ -1145,6 +1153,7 @@ static bool blk_mq_mark_tag_wait(struct
- 	 * someone else gets the wakeup.
- 	 */
- 	list_del_init(&wait->entry);
-+	atomic_dec(&sbq->ws_active);
- 	spin_unlock(&hctx->dispatch_wait_lock);
- 	spin_unlock_irq(&wq->lock);
- 
+ #else /* CONFIG_ACPI_CPPC_LIB */
 
 
