@@ -2,127 +2,142 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CDBC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D1DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 409E120883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:02:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141725;
-	bh=S6oPNnxI6cvI6MZrDndtJ3r8BgiTKgY3WYvbdwW8k6M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vhRy/vAzz8czy6D8vkmvhGOpFik7PoPmU8EJdaSF5tszxJ/rjCXNH3ZIGTGTXUP3e
-	 IdlscmmEhwvdCIEAvd20gLjWLdb4TSVW/aJAUYOgbl+BkARoibb1zMx7a4uARjds4n
-	 TsYdEBqbajfrtSWyTN7FfE0z2w9CTH+fTn3OtBos=
+	by mail.kernel.org (Postfix) with ESMTP id CE74E2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbfDARPN (ORCPT
+        id S1731000AbfDASCx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:15:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730580AbfDARPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:15:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06DDC20856;
-        Mon,  1 Apr 2019 17:15:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138908;
-        bh=S6oPNnxI6cvI6MZrDndtJ3r8BgiTKgY3WYvbdwW8k6M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LAJlIz+UThidkirJZ0lbSJe2OYVOYTEZMwpxdqFpjXw0v3UMbczXqHAhZ8Eyxd8Fw
-         FB9/2ZKnGwYWScCEIkjHWtFm7njz0g4HroD8gRQ3xEb/jyZuzsv9p6JzfnUqS2ltSt
-         +UY8FbI5+uAF4HyKWbw8zu5eP4+g45H/f5g5W6VM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 056/134] net: dsa: qca8k: remove leftover phy accessors
-Date:   Mon,  1 Apr 2019 19:01:32 +0200
-Message-Id: <20190401170049.837321467@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
-References: <20190401170044.243719205@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Mon, 1 Apr 2019 14:02:53 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:50505 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730106AbfDARO0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:14:26 -0400
+Received: from xps13 (178.163.185.81.rev.sfr.net [81.185.163.178])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id E9D4B240002;
+        Mon,  1 Apr 2019 17:14:20 +0000 (UTC)
+Date:   Mon, 1 Apr 2019 19:14:19 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-mtd@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Boris Brezillon <bbrezillon@kernel.org>
+Subject: Re: [PATCH v4 1/9] mtd: rawnand: denali: use nand_chip pointer more
+ for internal functions
+Message-ID: <20190401191419.0431882e@xps13>
+In-Reply-To: <20190330152323.71734cb8@collabora.com>
+References: <1553844501-7119-1-git-send-email-yamada.masahiro@socionext.com>
+        <1553844501-7119-2-git-send-email-yamada.masahiro@socionext.com>
+        <20190330152323.71734cb8@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+Hi Masahiro,
 
-------------------
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Sat, 30 Mar
+2019 15:23:23 +0100:
 
-From: Christian Lamparter <chunkeey@gmail.com>
+> On Fri, 29 Mar 2019 16:28:13 +0900
+> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> 
+> > With the recent refactoring, the NAND driver hooks now take a pointer
+> > to nand_chip. Add to_denali() in order to convert (struct nand_chip *)
+> > to (struct denali_nand_info *) directly. It is more useful than the
+> > current mtd_to_denali().
+> > 
+> > I changed some helper functions to take (struct nand_chip *). This will
+> > avoid pointer conversion back and forth, and ease further development.
+> > 
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> > 
+> > Changes in v4: None
+> > Changes in v3: None
+> > Changes in v2: None
+> > 
+> >  drivers/mtd/nand/raw/denali.c | 57 ++++++++++++++++++++++++-------------------
+> >  1 file changed, 32 insertions(+), 25 deletions(-)
+> > 
+> > diff --git a/drivers/mtd/nand/raw/denali.c b/drivers/mtd/nand/raw/denali.c
+> > index 24aeafc..4ac1314 100644
+> > --- a/drivers/mtd/nand/raw/denali.c
+> > +++ b/drivers/mtd/nand/raw/denali.c
+> > @@ -47,6 +47,11 @@ static inline struct denali_nand_info *mtd_to_denali(struct mtd_info *mtd)
+> >  	return container_of(mtd_to_nand(mtd), struct denali_nand_info, nand);
+> >  }
+> >  
+> > +static struct denali_nand_info *to_denali(struct nand_chip *chip)
+> > +{
+> > +	return container_of(chip, struct denali_nand_info, nand);
+> > +}
+> > +
+> >  /*
+> >   * Direct Addressing - the slave address forms the control information (command
+> >   * type, bank, block, and page address).  The slave data is the actual data to
+> > @@ -282,12 +287,12 @@ static void denali_cmd_ctrl(struct nand_chip *chip, int dat, unsigned int ctrl)
+> >  	denali->host_write(denali, DENALI_BANK(denali) | type, dat);
+> >  }
+> >  
+> > -static int denali_check_erased_page(struct mtd_info *mtd,
+> > -				    struct nand_chip *chip, uint8_t *buf,
+> > +static int denali_check_erased_page(struct nand_chip *chip,
+> > +				    struct denali_nand_info *denali, u8 *buf,  
+> 
+> You don't need to pass both chip and denali, as one can be extracted
+> from the other.
+> 
+> >  				    unsigned long uncor_ecc_flags,
+> >  				    unsigned int max_bitflips)
+> >  {
+> > -	struct denali_nand_info *denali = mtd_to_denali(mtd);
+> > +	struct mtd_ecc_stats *ecc_stats = &nand_to_mtd(chip)->ecc_stats;
+> >  	uint8_t *ecc_code = chip->oob_poi + denali->oob_skip_bytes;
+> >  	int ecc_steps = chip->ecc.steps;
+> >  	int ecc_size = chip->ecc.size;
+> > @@ -303,9 +308,9 @@ static int denali_check_erased_page(struct mtd_info *mtd,
+> >  						  NULL, 0,
+> >  						  chip->ecc.strength);
+> >  		if (stat < 0) {
+> > -			mtd->ecc_stats.failed++;
+> > +			ecc_stats->failed++;
+> >  		} else {
+> > -			mtd->ecc_stats.corrected += stat;
+> > +			ecc_stats->corrected += stat;
+> >  			max_bitflips = max_t(unsigned int, max_bitflips, stat);
+> >  		}
+> >  
+> > @@ -316,11 +321,11 @@ static int denali_check_erased_page(struct mtd_info *mtd,
+> >  	return max_bitflips;
+> >  }
+> >  
+> > -static int denali_hw_ecc_fixup(struct mtd_info *mtd,
+> > +static int denali_hw_ecc_fixup(struct nand_chip *chip,
+> >  			       struct denali_nand_info *denali,  
+> 
+> Ditto.
+> 
 
-commit 1eec7151ae0e134bd42e3f128066b2ff8da21393 upstream.
+I am fine with the series in its current state, please submit a v5
+with Boris comment's addressed and I'll queue it right away to next.
 
-This belated patch implements Andrew Lunn's request of
-"remove the phy_read() and phy_write() functions."
-<https://lore.kernel.org/patchwork/comment/902734/>
-
-While seemingly harmless, this causes the switch's user
-port PHYs to get registered twice. This is because the
-DSA subsystem will create a slave mdio-bus not knowing
-that the qca8k_phy_(read|write) accessors operate on
-the external mdio-bus. So the same "bus" gets effectively
-duplicated.
-
-Cc: stable@vger.kernel.org
-Fixes: 6b93fb46480a ("net-next: dsa: add new driver for qca8xxx family")
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/net/dsa/qca8k.c |   18 ------------------
- 1 file changed, 18 deletions(-)
-
---- a/drivers/net/dsa/qca8k.c
-+++ b/drivers/net/dsa/qca8k.c
-@@ -620,22 +620,6 @@ qca8k_adjust_link(struct dsa_switch *ds,
- 	qca8k_port_set_status(priv, port, 1);
- }
- 
--static int
--qca8k_phy_read(struct dsa_switch *ds, int phy, int regnum)
--{
--	struct qca8k_priv *priv = (struct qca8k_priv *)ds->priv;
--
--	return mdiobus_read(priv->bus, phy, regnum);
--}
--
--static int
--qca8k_phy_write(struct dsa_switch *ds, int phy, int regnum, u16 val)
--{
--	struct qca8k_priv *priv = (struct qca8k_priv *)ds->priv;
--
--	return mdiobus_write(priv->bus, phy, regnum, val);
--}
--
- static void
- qca8k_get_strings(struct dsa_switch *ds, int port, u32 stringset, uint8_t *data)
- {
-@@ -876,8 +860,6 @@ static const struct dsa_switch_ops qca8k
- 	.setup			= qca8k_setup,
- 	.adjust_link            = qca8k_adjust_link,
- 	.get_strings		= qca8k_get_strings,
--	.phy_read		= qca8k_phy_read,
--	.phy_write		= qca8k_phy_write,
- 	.get_ethtool_stats	= qca8k_get_ethtool_stats,
- 	.get_sset_count		= qca8k_get_sset_count,
- 	.get_mac_eee		= qca8k_get_mac_eee,
-
-
+Thanks,
+Miquèl
