@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA82AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C379C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C48A2133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7E32133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139612;
-	bh=127i2qRjuxPwBrdEWVO2YYjlsTeOsJtU4N8HuapuBl8=;
+	s=default; t=1554139615;
+	bh=91Q69tv/y/KTKzi/Yhn2f6ZmuBZZ6TSTkqo4L+xxjPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mw6fd/v/m+Tao39uYAH3P+cv7VgfTnVPehIxKgjD2KIOBUKwZNn0A0NDY4Qlpadua
-	 wRJzs9k/C/saWX/yqqj2kivESBfMnqYv8HN696UoGmk/b/4M5SmMYkB89ZDDPiculf
-	 vK+BY9GXAZmcnfaXS1fZnIm52D6t6OO/lwFYCTUo=
+	b=vHaa7dFD88hNRkRtW1cFTAnlMuim8nS/1KdRI1tDcXpagYYsXcnlxjR7adkhYWKMh
+	 /klsKs0UwLXBcFOptT1ZJpHtLGbQy2vk2N+pwqRZU42k4j9Yk11CuU6qvHnpU84TcO
+	 QWJ2RQ8zbgyzfUbtEXeyHtCUU40ufNRnJwysZ/G8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732435AbfDAR0v (ORCPT
+        id S1732601AbfDAR0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:26:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59064 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:26:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732587AbfDAR0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:26:44 -0400
+        id S1728810AbfDAR0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:26:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98CFF20830;
-        Mon,  1 Apr 2019 17:26:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 961BC20856;
+        Mon,  1 Apr 2019 17:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139604;
-        bh=127i2qRjuxPwBrdEWVO2YYjlsTeOsJtU4N8HuapuBl8=;
+        s=default; t=1554139611;
+        bh=91Q69tv/y/KTKzi/Yhn2f6ZmuBZZ6TSTkqo4L+xxjPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gcYDazYUZjDQv58K0EKkWh0T954NxCutq2BxnFwjmEpJLu9fqm0WoKLr8j/FLlMH5
-         vAJe9uOYCgKoB6Xe/jZHf0f6WI5I19Fn91qlpGbKOlYtxdtWp66SLsNehsrqYMwTDk
-         dyzXBy1yywJ3GUqKSRWG5xlQaXq3SRmy+z9F3pCs=
+        b=z2qIENlfFXN9ujq++ieiig7YXZRBff4WOSeeVvIZRlZZ7ZqK/YPmnb35goj3IBSG+
+         ARfAomdYN/xd2OVucEXc+AeMorTM0PvSFqOaZs3k9ejrUnZIcU0RStnOs2Pj1b1sBo
+         yZUrB7m6QnFz0shT7LDfaHf+zibO15IC1B0Dqp10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.9 17/56] btrfs: remove WARN_ON in log_dir_items
-Date:   Mon,  1 Apr 2019 19:02:33 +0200
-Message-Id: <20190401170104.789956446@linuxfoundation.org>
+        stable@vger.kernel.org, Kohji Okuno <okuno.kohji@jp.panasonic.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 4.9 19/56] ARM: imx6q: cpuidle: fix bug that CPU might not wake up at expected time
+Date:   Mon,  1 Apr 2019 19:02:35 +0200
+Message-Id: <20190401170104.859505425@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -65,50 +64,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Kohji Okuno <okuno.kohji@jp.panasonic.com>
 
-commit 2cc8334270e281815c3850c3adea363c51f21e0d upstream.
+commit 91740fc8242b4f260cfa4d4536d8551804777fae upstream.
 
-When Filipe added the recursive directory logging stuff in
-2f2ff0ee5e430 ("Btrfs: fix metadata inconsistencies after directory
-fsync") he specifically didn't take the directory i_mutex for the
-children directories that we need to log because of lockdep.  This is
-generally fine, but can lead to this WARN_ON() tripping if we happen to
-run delayed deletion's in between our first search and our second search
-of dir_item/dir_indexes for this directory.  We expect this to happen,
-so the WARN_ON() isn't necessary.  Drop the WARN_ON() and add a comment
-so we know why this case can happen.
+In the current cpuidle implementation for i.MX6q, the CPU that sets
+'WAIT_UNCLOCKED' and the CPU that returns to 'WAIT_CLOCKED' are always
+the same. While the CPU that sets 'WAIT_UNCLOCKED' is in IDLE state of
+"WAIT", if the other CPU wakes up and enters IDLE state of "WFI"
+istead of "WAIT", this CPU can not wake up at expired time.
+ Because, in the case of "WFI", the CPU must be waked up by the local
+timer interrupt. But, while 'WAIT_UNCLOCKED' is set, the local timer
+is stopped, when all CPUs execute "wfi" instruction. As a result, the
+local timer interrupt is not fired.
+ In this situation, this CPU will wake up by IRQ different from local
+timer. (e.g. broacast timer)
 
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+So, this fix changes CPU to return to 'WAIT_CLOCKED'.
+
+Signed-off-by: Kohji Okuno <okuno.kohji@jp.panasonic.com>
+Fixes: e5f9dec8ff5f ("ARM: imx6q: support WAIT mode using cpuidle")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/tree-log.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/arm/mach-imx/cpuidle-imx6q.c |   27 ++++++++++-----------------
+ 1 file changed, 10 insertions(+), 17 deletions(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -3343,9 +3343,16 @@ static noinline int log_dir_items(struct
- 	}
- 	btrfs_release_path(path);
+--- a/arch/arm/mach-imx/cpuidle-imx6q.c
++++ b/arch/arm/mach-imx/cpuidle-imx6q.c
+@@ -16,30 +16,23 @@
+ #include "cpuidle.h"
+ #include "hardware.h"
  
--	/* find the first key from this transaction again */
-+	/*
-+	 * Find the first key from this transaction again.  See the note for
-+	 * log_new_dir_dentries, if we're logging a directory recursively we
-+	 * won't be holding its i_mutex, which means we can modify the directory
-+	 * while we're logging it.  If we remove an entry between our first
-+	 * search and this search we'll not find the key again and can just
-+	 * bail.
-+	 */
- 	ret = btrfs_search_slot(NULL, root, &min_key, path, 0, 0);
--	if (WARN_ON(ret != 0))
-+	if (ret != 0)
- 		goto done;
+-static atomic_t master = ATOMIC_INIT(0);
+-static DEFINE_SPINLOCK(master_lock);
++static int num_idle_cpus = 0;
++static DEFINE_SPINLOCK(cpuidle_lock);
  
- 	/*
+ static int imx6q_enter_wait(struct cpuidle_device *dev,
+ 			    struct cpuidle_driver *drv, int index)
+ {
+-	if (atomic_inc_return(&master) == num_online_cpus()) {
+-		/*
+-		 * With this lock, we prevent other cpu to exit and enter
+-		 * this function again and become the master.
+-		 */
+-		if (!spin_trylock(&master_lock))
+-			goto idle;
++	spin_lock(&cpuidle_lock);
++	if (++num_idle_cpus == num_online_cpus())
+ 		imx6_set_lpm(WAIT_UNCLOCKED);
+-		cpu_do_idle();
+-		imx6_set_lpm(WAIT_CLOCKED);
+-		spin_unlock(&master_lock);
+-		goto done;
+-	}
++	spin_unlock(&cpuidle_lock);
+ 
+-idle:
+ 	cpu_do_idle();
+-done:
+-	atomic_dec(&master);
++
++	spin_lock(&cpuidle_lock);
++	if (num_idle_cpus-- == num_online_cpus())
++		imx6_set_lpm(WAIT_CLOCKED);
++	spin_unlock(&cpuidle_lock);
+ 
+ 	return index;
+ }
 
 
