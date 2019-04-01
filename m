@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF72EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B811C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E43B206DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C76D20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139321;
-	bh=jlrBK+Pue9ERHn9s0J/+tQCvb8N+1nBSZTZtba+auKw=;
+	s=default; t=1554139324;
+	bh=DDuZ0qL+9QEf6SwPen8oRW4b/S5xhkA7XAftBf8LOPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lTD/iXlQAQvsEZXzDl2RiqhD6t1wADnXejSmZUZXSD5UP/MKh9KbYjaabJZUovyXI
-	 sr4KGrQJEXKYWxCk+O3toDns3631aPSNvRWvb/mhwDq0wZsCtpi32m5+rGvkJUfx49
-	 sEyP6GrGaAzJXo60nUixbBQgt2rs+3Soq2lPKT6E=
+	b=jnwd9qHglhL9JeL1KcG+jdlUuZYHvlVd6O5kG3IU8vFBumozo0erEvBa7OwAXiafm
+	 vylzYYxlBuKi+twl09kUFjcUD4I99hLlkdUNKFLuMiVhQ1trv6Wl9aBv15MXG5Es13
+	 6n4sf4xw7ig1hI48YDJ5L/WDTKcvninz2URcf5F4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731916AbfDARWA (ORCPT
+        id S1731923AbfDARWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:22:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50908 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:22:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731197AbfDARV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:21:57 -0400
+        id S1731655AbfDARWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:22:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8193D206C0;
-        Mon,  1 Apr 2019 17:21:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29075206DD;
+        Mon,  1 Apr 2019 17:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139317;
-        bh=jlrBK+Pue9ERHn9s0J/+tQCvb8N+1nBSZTZtba+auKw=;
+        s=default; t=1554139319;
+        bh=DDuZ0qL+9QEf6SwPen8oRW4b/S5xhkA7XAftBf8LOPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tzZnziZ4ae2c9A+j8anKecBPpxp3E1c2jwuBl0SbZXIOPjozMhVrk+XP9jPQv9VEJ
-         XLklXcnCubHpyiRlPx8pCEomDLAiwXQv2eSvoo7F7I1sceIphvtFZTfry0qLti/hDE
-         sKQMtbNpq2fg0ArvvmxJjc4zd3EJuFDoiRkQ9NsA=
+        b=N6EuRsoFtbAaNgU5QevK9/UB2kLgb1tB/WbUiEexroQIbiIa7guE41abR56SFn3+Y
+         MMkoGyzeBe9zHam+hU/i7NaZ4CFt7TqzyLe5cC+Z4cRX9C0uWmQ/oG8tO0z0zAco4A
+         QbTgWdhIfPlkHYgdTnXOsbh98qrTTq5libwGr6Y4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 039/107] powerpc/64s: Add new security feature flags for count cache flush
-Date:   Mon,  1 Apr 2019 19:01:54 +0200
-Message-Id: <20190401170049.185070236@linuxfoundation.org>
+        stable@vger.kernel.org, Bhadram Varka <vbhadram@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 004/107] stmmac: copy unicast mac address to MAC registers
+Date:   Mon,  1 Apr 2019 19:01:19 +0200
+Message-Id: <20190401170045.694697570@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -64,41 +66,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+[ Upstream commit a830405ee452ddc4101c3c9334e6fedd42c6b357 ]
 
-commit dc8c6cce9a26a51fc19961accb978217a3ba8c75 upstream.
+Currently stmmac driver not copying the valid ethernet
+MAC address to MAC registers. This patch takes care
+of updating the MAC register with MAC address.
 
-Add security feature flags to indicate the need for software to flush
-the count cache on context switch, and for the presence of a hardware
-assisted count cache flush.
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Bhadram Varka <vbhadram@nvidia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/include/asm/security_features.h |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/include/asm/security_features.h
-+++ b/arch/powerpc/include/asm/security_features.h
-@@ -59,6 +59,9 @@ static inline bool security_ftr_enabled(
- // Indirect branch prediction cache disabled
- #define SEC_FTR_COUNT_CACHE_DISABLED	0x0000000000000020ull
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3787,6 +3787,20 @@ static int stmmac_ioctl(struct net_devic
+ 	return ret;
+ }
  
-+// bcctr 2,0,0 triggers a hardware assisted count cache flush
-+#define SEC_FTR_BCCTR_FLUSH_ASSIST	0x0000000000000800ull
++static int stmmac_set_mac_address(struct net_device *ndev, void *addr)
++{
++	struct stmmac_priv *priv = netdev_priv(ndev);
++	int ret = 0;
 +
- 
- // Features indicating need for Spectre/Meltdown mitigations
- 
-@@ -74,6 +77,9 @@ static inline bool security_ftr_enabled(
- // Firmware configuration indicates user favours security over performance
- #define SEC_FTR_FAVOUR_SECURITY		0x0000000000000200ull
- 
-+// Software required to flush count cache on context switch
-+#define SEC_FTR_FLUSH_COUNT_CACHE	0x0000000000000400ull
++	ret = eth_mac_addr(ndev, addr);
++	if (ret)
++		return ret;
 +
++	priv->hw->mac->set_umac_addr(priv->hw, ndev->dev_addr, 0);
++
++	return ret;
++}
++
+ #ifdef CONFIG_DEBUG_FS
+ static struct dentry *stmmac_fs_dir;
  
- // Features enabled by default
- #define SEC_FTR_DEFAULT \
+@@ -4014,7 +4028,7 @@ static const struct net_device_ops stmma
+ #ifdef CONFIG_NET_POLL_CONTROLLER
+ 	.ndo_poll_controller = stmmac_poll_controller,
+ #endif
+-	.ndo_set_mac_address = eth_mac_addr,
++	.ndo_set_mac_address = stmmac_set_mac_address,
+ };
+ 
+ /**
 
 
