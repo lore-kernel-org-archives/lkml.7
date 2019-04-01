@@ -2,78 +2,138 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4405C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53595C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9116C2084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CAB22084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:34:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="onhSgohJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nSZr6qEf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731954AbfDAHd5 (ORCPT
+        id S1731978AbfDAHee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:33:57 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:43622 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731769AbfDAHd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:33:57 -0400
-Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3FBC51EC0513;
-        Mon,  1 Apr 2019 09:33:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554104036;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=hP9z8VlxNzLS3/m2BPGouN7sjj0YetwZbwiqw5sawM0=;
-        b=onhSgohJfJAw4CFGo4egXt1hw1mJ0XJDLTTj1AWE5SaFWfvk+Re66fEWgF7KGGR3bDO/d2
-        GZjoy4N6EFp6NG5Ad6TxjI99CIIT8aDJGKMXx5evfbsxbqHI4OMqBQGPvh5cacdlrvV1lj
-        IBdScFWEuxC8buPXz0Htp4FbVnIzUuk=
-Date:   Mon, 1 Apr 2019 09:33:52 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Subject: Re: [PATCH 3/5] x86/kvm: Convert some slow-path static_cpu_has()
- callers to boot_cpu_has()
-Message-ID: <20190401073352.GB28264@zn.tnic>
-References: <20190330112022.28888-1-bp@alien8.de>
- <20190330112022.28888-4-bp@alien8.de>
- <2f71cb35-46b2-9ed5-28b3-c6eb5e647b46@redhat.com>
- <20190331151248.GB15073@zn.tnic>
- <86dc0d5c-88af-dddc-4618-1a0a5a545e5f@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <86dc0d5c-88af-dddc-4618-1a0a5a545e5f@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 1 Apr 2019 03:34:34 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41304 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731956AbfDAHed (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 03:34:33 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r4so10521690wrq.8
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 00:34:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=HgnHH4QMhZeNy0jkJL3AsgW14xC+spIstOkNXOY1fIY=;
+        b=nSZr6qEf2qDavdnD1eR79hTtwBpzcjbxzxgAZJdrgm+QkYH/8wFxtFraHxbVCxqXUj
+         1QrPKARECSzpdEHyx2iLgHZ0j8gNOQLYFsp1OWP8k5DvoXKVieQwFsRGxzr2QiLcBS6T
+         qPpgAEZZEB0FihwwwgfTblInDdTQdnSfZtPqykIUDhKL09MaP/Db4gCkRpb3Ot0IUM/6
+         KEUWIXXBhKcIlMMSkxD6cy79ekPDVOXXgGAiNfV2llPHE/pA+eVT4Sft8ThFBtO+SICi
+         mEssdQ+JdFhLmSll4fqqVL+hsRaKwRnZtMUiACh5IEGeIC1dhC7XLcveTlDYY/Bc0yKB
+         MogA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=HgnHH4QMhZeNy0jkJL3AsgW14xC+spIstOkNXOY1fIY=;
+        b=V0cEBsAL3axKMTV9pGv/zwu4qgnsoAQpdvqbJynZ76pU3QUyGiVCY+ljQJ9ZF6U1Bm
+         1L0NsJeWmmjcvENn/ZzDx7zy1GnX374rCgElmvUbZOvAHXf6gLD7OvmTdfzbEoViOvxz
+         CK+yRtN3UG+xxV9a+QYyC349upO5XkFVx4Sk5v95FemkDjdRjnkSFqkT7TXVMBRrZtIv
+         TARwf5t8a6o7Yz7fbJziiyPoJJplHvGspwFnApfHUByPum1NZXbY+LUjEa39n3Hx8bSP
+         mg6xLoVLpS4bbazWHTEdDq+0fXbi+OwLzFEQJg0LoAQZgW3jzmvrjsuq4sRMmNBVMWXl
+         1uog==
+X-Gm-Message-State: APjAAAUUlV3XkEvOtEEiWQrDClRBI77y5569XMCiBXLFf9QhucqQM3Kc
+        y6y7EPk9NsxX6Xo7DHK6L5W7kw==
+X-Google-Smtp-Source: APXvYqwLAOy/7T7G8vHHZPRdC8QSdMLFhUxzD6u+BeFxGFOwk8ICMooCZW+SkMBG9wO3djGTy1GN+Q==
+X-Received: by 2002:adf:f088:: with SMTP id n8mr42740299wro.112.1554104071779;
+        Mon, 01 Apr 2019 00:34:31 -0700 (PDT)
+Received: from [192.168.0.101] ([88.147.53.253])
+        by smtp.gmail.com with ESMTPSA id o10sm12424799wru.54.2019.04.01.00.34.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 00:34:31 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH] block/bfq: fix ifdef for CONFIG_BFQ_GROUP_IOSCHED=y
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <3c87a84f-9fb2-2407-a5a3-723b314d8e58@applied-asynchrony.com>
+Date:   Mon, 1 Apr 2019 09:34:30 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <319AA9FF-48BD-40D9-A272-17C6BAFE917F@linaro.org>
+References: <155386807826.3190.16175453392005064129.stgit@buzz>
+ <c40b8d4a-c504-fdf4-0b96-64aaeb167435@applied-asynchrony.com>
+ <5234a971-2b6a-47b1-0071-8f3bd07d9fc3@kernel.dk>
+ <cf0dc6b2-6ecf-c895-6c21-8746700bdae4@applied-asynchrony.com>
+ <6be15f08-dbb4-6b43-3d95-44044f1acdbc@kernel.dk>
+ <3c87a84f-9fb2-2407-a5a3-723b314d8e58@applied-asynchrony.com>
+To:     =?utf-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 09:24:06AM +0200, Paolo Bonzini wrote:
-> The MSR reads and writes are not done in the common case.  Also, you
-> cannot really expect boot_cpu_data to be in L1 in these functions since
-> they run after the guest---or if they do, each L1 line you fill in with
-> host data is one line you "steal" from the guest.
 
-Ok, fair enough. I'll drop this patch.
 
--- 
-Regards/Gruss,
-    Boris.
+> Il giorno 29 mar 2019, alle ore 17:44, Holger Hoffst=C3=A4tte =
+<holger@applied-asynchrony.com> ha scritto:
+>=20
+> On 3/29/19 5:15 PM, Jens Axboe wrote:
+>>>>> Good catch! I run without group scheduling and therefore didn't =
+notice these
+>>>>> stray defines earlier. For 5.1 it should merge cleanly; adding =
+this on top of
+>>>>> the pending 5.2 BFQ patches required a small context fixup in hunk =
+#1 due to
+>>>>> "block, bfq: do not idle for lowest-weight queues".
+>>>>=20
+>>>> I'm hesitant to apply this, since the group scheduling stuff has =
+obviously never
+>>>> been tested.
+>>>=20
+>>> This is simply a regression in 5.1 caused by 73d58118498b - nothing =
+else,
+>>> and as such this fix needs to go into 5.1 as well. I'm sure Paolo =
+will agree.
+>>> What you so ominously  call "the group scheduling stuff" has been =
+there and
+>>> shipping in mainline since day 1 of the BFQ merge, and it works fine =
+in 5.0.
+>> If that's the case (I didn't check how far back it went), then yes, =
+it should
+>> of course go into 5.1.
+>=20
+> Yay.
+>=20
+>> The ominous nature of my reply I'll chalk up to your interpretation
+>=20
+> Fair enough ;)
+>=20
+> A more interesting question is why upstream uses undefined defines
+> for patches. That's a first-rate self-grenade if I've ever seen one,
+> and obviously something that is easily missed. Paolo?
+>=20
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Paolo feels a little bit ashamed for this mistake :)
+
+This horrible typo may also be the cause of the crashes recently
+reported on this list.  I've just asked to try this fix:
+=
+https://lore.kernel.org/linux-block/626EAE58-63C1-4ABA-9040-9D9A61F74A0D@l=
+inaro.org/T/
+
+And yes, I agree that this fix should be applied to 5.1.  Thank you
+Konstantin for spotting and removing this bomb.
+
+Thanks,
+Paolo
+
+> -h
+
