@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A656C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFF1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C93B20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A4020830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139493;
-	bh=qWusleb1uBZSJIpwMbpvYnOvvfg8rIi5ifQWj1ezM0A=;
+	s=default; t=1554139499;
+	bh=yAmgXM3EGQp5oG6ydysiZ5QkYvOcZDFqki/YVArSfQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aw9QtQDTMM1ymoXyTKBxHS2ecNLcqB/AmTlbsFkzvgHAZfVgudCYTwFGNElj5cNvc
-	 cUu2X14UzV4Ae7Az5XtSaA6fUKI3JdzIrypZU/L4HQ9aepqVa0xPx+h6DoMWlHF/O4
-	 PgqHUlljQjc6QSFP7xCrsX4Fzr1G0FcEYrtswvBY=
+	b=2t0SPCbu1GAGQXeSUg+gk79vx6TxXPIQxolCXCnhW0k/Z879FEKeUUne9SXLC9nAK
+	 7pdWcqer2EmnG24gtFDtovKlq0uVZzlHplNf4/IWeZPEMR81G/ryABM8Z0vJlxtYQ9
+	 6B2GnzdtI8jVp5hEDHQhgVAT4HjSecP0pQ6nQ3PU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732340AbfDARYv (ORCPT
+        id S1732157AbfDARY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:24:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55608 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:24:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731889AbfDARYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:24:48 -0400
+        id S1731693AbfDARYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:24:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D26C2063F;
-        Mon,  1 Apr 2019 17:24:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19C602063F;
+        Mon,  1 Apr 2019 17:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139487;
-        bh=qWusleb1uBZSJIpwMbpvYnOvvfg8rIi5ifQWj1ezM0A=;
+        s=default; t=1554139494;
+        bh=yAmgXM3EGQp5oG6ydysiZ5QkYvOcZDFqki/YVArSfQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kfnXMTUMhDtqM+2FrlvFjyobqJ9XkGOCOzvKFYyBn93yXUDD8+/eiTm8IAj/u3U1j
-         C1poyG5P+Xg+Mz8S8fqcCaB1fTPVP28TgMXwyQX4zg7GrcboIFkw2sGB/ML2zfquPB
-         DLSgKqpNet5Qbau5K6EZuaZnM/a9lwxZhSuXLOP8=
+        b=QVA0dg04RZ6gHw9UwmIXpccNdgOnt31ml2BOq+AvMUVTHTO1u6+WNgG4lRoQBncCp
+         f/LjTy3Qv5FXZWsrppZWlcL4OYG/YqGhKEuGG3LrvEKkWDBHWXZVE4v+SoC7krMREJ
+         TmNBuH45d+eKTiGHXW/rLwYZtV7O1rMXA7VEHBgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4.14 091/107] gpio: exar: add a check for the return value of ida_simple_get fails
-Date:   Mon,  1 Apr 2019 19:02:46 +0200
-Message-Id: <20190401170053.961895928@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 4.14 093/107] phy: sun4i-usb: Support set_mode to USB_HOST for non-OTG PHYs
+Date:   Mon,  1 Apr 2019 19:02:48 +0200
+Message-Id: <20190401170054.126730563@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,32 +64,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit 7ecced0934e574b528a1ba6c237731e682216a74 upstream.
+commit 1396929e8a903db80425343cacca766a18ad6409 upstream.
 
-ida_simple_get may fail and return a negative error number.
-The fix checks its return value; if it fails, go to err_destroy.
+While only the first PHY supports mode switching, the remaining PHYs
+work in USB host mode. They should support set_mode with mode=USB_HOST
+instead of failing. This is especially needed now that the USB core does
+set_mode for all USB ports, which was added in commit b97a31348379 ("usb:
+core: comply to PHY framework").
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Make set_mode with mode=USB_HOST a no-op instead of failing for the
+non-OTG USB PHYs.
+
+Fixes: 6ba43c291961 ("phy-sun4i-usb: Add support for phy_set_mode")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-exar.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/phy/allwinner/phy-sun4i-usb.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/gpio/gpio-exar.c
-+++ b/drivers/gpio/gpio-exar.c
-@@ -148,6 +148,8 @@ static int gpio_exar_probe(struct platfo
- 	mutex_init(&exar_gpio->lock);
+--- a/drivers/phy/allwinner/phy-sun4i-usb.c
++++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+@@ -480,8 +480,11 @@ static int sun4i_usb_phy_set_mode(struct
+ 	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+ 	int new_mode;
  
- 	index = ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
-+	if (index < 0)
-+		goto err_destroy;
+-	if (phy->index != 0)
++	if (phy->index != 0) {
++		if (mode == PHY_MODE_USB_HOST)
++			return 0;
+ 		return -EINVAL;
++	}
  
- 	sprintf(exar_gpio->name, "exar_gpio%d", index);
- 	exar_gpio->gpio_chip.label = exar_gpio->name;
+ 	switch (mode) {
+ 	case PHY_MODE_USB_HOST:
 
 
