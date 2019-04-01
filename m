@@ -2,110 +2,195 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EBFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01113C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D2F20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:45:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dadz98qR"
+	by mail.kernel.org (Postfix) with ESMTP id B806920830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:45:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554140738;
+	bh=HV3pfycMBL3PYKEBIPfMC4LtSH6XfWgO+e0mkdXrnAo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=brR+mM4oUr0c60xp6vIcXkEF+U2UwRkcdaSgriH7iUajzrVc7hBhO9MMa9Ih39j/k
+	 rwI9GBheYzphPgOk8KEWz3ueGBjWHAckpEC8B9iN0A54+l+1cGSMsWmULYpDX/Ors5
+	 hZUJ1PAdY0moAEPNpEqanPDoqZnaP2N/K0WufywM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388130AbfDARp3 (ORCPT
+        id S2388132AbfDARph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:45:29 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34218 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387736AbfDAReR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:34:17 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x31HY513129032;
-        Mon, 1 Apr 2019 12:34:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554140045;
-        bh=NRAX1bmUD/a5vpTS0wktfjeVShF+ASYaJwyo80uQPIU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=dadz98qRycyCc38L7Pl/A6M5ZbZcYBByuYZd8vwVY+5LYSkVS6VhyNyo+MgN8VPnc
-         6hLbNCueKf12cjYrPjl/hwX0ye2jjmZJlWRJzTNKaNeaLJ3/sPdYsr/p/MxX9qUX6g
-         3wM4ic0f88jrZ7g2kMfixpTLbAlIdbgC7vRx+iKw=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x31HY50N110657
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 1 Apr 2019 12:34:05 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Apr
- 2019 12:34:05 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 1 Apr 2019 12:34:05 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x31HY5Ep101354;
-        Mon, 1 Apr 2019 12:34:05 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <marek.behun@nic.cz>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [RFC PATCH 4/5] dt-bindings: leds: Add LED_COLOR_ID and COLOR_NAME definitions
-Date:   Mon, 1 Apr 2019 12:33:59 -0500
-Message-ID: <20190401173400.14238-5-dmurphy@ti.com>
-X-Mailer: git-send-email 2.12.2
-In-Reply-To: <20190401173400.14238-1-dmurphy@ti.com>
-References: <20190401173400.14238-1-dmurphy@ti.com>
+        Mon, 1 Apr 2019 13:45:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387559AbfDAReP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:34:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB0F620856;
+        Mon,  1 Apr 2019 17:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554140054;
+        bh=HV3pfycMBL3PYKEBIPfMC4LtSH6XfWgO+e0mkdXrnAo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zKzXQJVcP38C4X5XO3w+ymCox35IDecQE+pea73UUdi4/IhUGdjMhPtFcIKniAqpX
+         7YMFFLr2XaoD5mToCDdhLHQiXFqcvWeq0wXungIgoV/DEBS3csTmfY2k7N0is3Fr23
+         +DvZbFnmaFVPkzchEl8DTD12bYxjsywIK6s+A9mk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 093/131] net: rose: fix a possible stack overflow
+Date:   Mon,  1 Apr 2019 19:02:43 +0200
+Message-Id: <20190401170059.746874029@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
+References: <20190401170051.645954551@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is being added to demonstrate reuse of Jacek's patch
-https://lore.kernel.org/patchwork/patch/1056726/
+4.4-stable review patch.  If anyone has any objections, please let me know.
 
-I have added color name definitions to the above patch.
-I do not claim authorship and the intent of this patch to strictly
-for demonstration.
+------------------
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+From: Eric Dumazet <edumazet@google.com>
+
+[ Upstream commit e5dcc0c3223c45c94100f05f28d8ef814db3d82c ]
+
+rose_write_internal() uses a temp buffer of 100 bytes, but a manual
+inspection showed that given arbitrary input, rose_create_facilities()
+can fill up to 110 bytes.
+
+Lets use a tailroom of 256 bytes for peace of mind, and remove
+the bounce buffer : we can simply allocate a big enough skb
+and adjust its length as needed.
+
+syzbot report :
+
+BUG: KASAN: stack-out-of-bounds in memcpy include/linux/string.h:352 [inline]
+BUG: KASAN: stack-out-of-bounds in rose_create_facilities net/rose/rose_subr.c:521 [inline]
+BUG: KASAN: stack-out-of-bounds in rose_write_internal+0x597/0x15d0 net/rose/rose_subr.c:116
+Write of size 7 at addr ffff88808b1ffbef by task syz-executor.0/24854
+
+CPU: 0 PID: 24854 Comm: syz-executor.0 Not tainted 5.0.0+ #97
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+ kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x123/0x190 mm/kasan/generic.c:191
+ memcpy+0x38/0x50 mm/kasan/common.c:131
+ memcpy include/linux/string.h:352 [inline]
+ rose_create_facilities net/rose/rose_subr.c:521 [inline]
+ rose_write_internal+0x597/0x15d0 net/rose/rose_subr.c:116
+ rose_connect+0x7cb/0x1510 net/rose/af_rose.c:826
+ __sys_connect+0x266/0x330 net/socket.c:1685
+ __do_sys_connect net/socket.c:1696 [inline]
+ __se_sys_connect net/socket.c:1693 [inline]
+ __x64_sys_connect+0x73/0xb0 net/socket.c:1693
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458079
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f47b8d9dc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458079
+RDX: 000000000000001c RSI: 0000000020000040 RDI: 0000000000000004
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f47b8d9e6d4
+R13: 00000000004be4a4 R14: 00000000004ceca8 R15: 00000000ffffffff
+
+The buggy address belongs to the page:
+page:ffffea00022c7fc0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0x1fffc0000000000()
+raw: 01fffc0000000000 0000000000000000 ffffffff022c0101 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88808b1ffa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88808b1ffb00: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 00 00 00 03
+>ffff88808b1ffb80: f2 f2 00 00 00 00 00 00 00 00 00 00 00 00 04 f3
+                                                             ^
+ ffff88808b1ffc00: f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88808b1ffc80: 00 00 00 00 00 00 00 f1 f1 f1 f1 f1 f1 01 f2 01
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/dt-bindings/leds/common.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ net/rose/rose_subr.c |   21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
-index e171d0a6beb2..7e1279d761e4 100644
---- a/include/dt-bindings/leds/common.h
-+++ b/include/dt-bindings/leds/common.h
-@@ -19,4 +19,23 @@
- #define LEDS_BOOST_ADAPTIVE	1
- #define LEDS_BOOST_FIXED	2
+--- a/net/rose/rose_subr.c
++++ b/net/rose/rose_subr.c
+@@ -105,16 +105,17 @@ void rose_write_internal(struct sock *sk
+ 	struct sk_buff *skb;
+ 	unsigned char  *dptr;
+ 	unsigned char  lci1, lci2;
+-	char buffer[100];
+-	int len, faclen = 0;
++	int maxfaclen = 0;
++	int len, faclen;
++	int reserve;
  
-+#define LED_COLOR_ID_WHITE	 0
-+#define LED_COLOR_ID_RED	 1
-+#define LED_COLOR_ID_GREEN	 2
-+#define LED_COLOR_ID_BLUE	 3
-+#define LED_COLOR_ID_AMBER	 4
-+#define LED_COLOR_ID_VIOLET	 5
-+#define LED_COLOR_ID_YELLOW	 6
-+#define LED_COLOR_ID_MAX	 LED_COLOR_ID_YELLOW
-+
-+#define LED_COLOR_NAME_WHITE	"white"
-+#define LED_COLOR_NAME_RED	"red"
-+#define LED_COLOR_NAME_GREEN	"green"
-+#define LED_COLOR_NAME_BLUE	"blue"
-+#define LED_COLOR_NAME_AMBER	"amber"
-+#define LED_COLOR_NAME_VIOLET	"violet"
-+#define LED_COLOR_NAME_YELLOW	"yellow"
-+
-+#define LED_COLOR_NAME_MAX_SZ	6
-+
- #endif /* __DT_BINDINGS_LEDS_H */
--- 
-2.19.0
+-	len = AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + ROSE_MIN_LEN + 1;
++	reserve = AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + 1;
++	len = ROSE_MIN_LEN;
+ 
+ 	switch (frametype) {
+ 	case ROSE_CALL_REQUEST:
+ 		len   += 1 + ROSE_ADDR_LEN + ROSE_ADDR_LEN;
+-		faclen = rose_create_facilities(buffer, rose);
+-		len   += faclen;
++		maxfaclen = 256;
+ 		break;
+ 	case ROSE_CALL_ACCEPTED:
+ 	case ROSE_CLEAR_REQUEST:
+@@ -123,15 +124,16 @@ void rose_write_internal(struct sock *sk
+ 		break;
+ 	}
+ 
+-	if ((skb = alloc_skb(len, GFP_ATOMIC)) == NULL)
++	skb = alloc_skb(reserve + len + maxfaclen, GFP_ATOMIC);
++	if (!skb)
+ 		return;
+ 
+ 	/*
+ 	 *	Space for AX.25 header and PID.
+ 	 */
+-	skb_reserve(skb, AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + 1);
++	skb_reserve(skb, reserve);
+ 
+-	dptr = skb_put(skb, skb_tailroom(skb));
++	dptr = skb_put(skb, len);
+ 
+ 	lci1 = (rose->lci >> 8) & 0x0F;
+ 	lci2 = (rose->lci >> 0) & 0xFF;
+@@ -146,7 +148,8 @@ void rose_write_internal(struct sock *sk
+ 		dptr   += ROSE_ADDR_LEN;
+ 		memcpy(dptr, &rose->source_addr, ROSE_ADDR_LEN);
+ 		dptr   += ROSE_ADDR_LEN;
+-		memcpy(dptr, buffer, faclen);
++		faclen = rose_create_facilities(dptr, rose);
++		skb_put(skb, faclen);
+ 		dptr   += faclen;
+ 		break;
+ 
+
 
