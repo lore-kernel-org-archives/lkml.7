@@ -2,129 +2,177 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4015C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB2FC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA7B5206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497DC20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:26:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="axVpS9Io"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GSMfenxK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfDAFYH (ORCPT
+        id S1726789AbfDAF0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 01:24:07 -0400
-Received: from mail-eopbgr30086.outbound.protection.outlook.com ([40.107.3.86]:14804
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725771AbfDAFYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 01:24:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+rcdJMz4YKsRpyHy3QGgMtbJqgMW4j+I/K9NWUuqgAs=;
- b=axVpS9IoKm7f7diu8j8B4OwmyHf/BMzrESg2jzI1HxsOH2eP5yAUWTU8CeqXUk/Pmn+PGB9aB98hKFZhFCxr0Z99sCyAvkk9yDW4eqVVbeJMw5ZnmG/QvJhhoZZ0VwiCslWCJGHWBM42chQaDQW7EpgSVnzV3BBdrJ4NGelMFq4=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3673.eurprd04.prod.outlook.com (52.134.70.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.16; Mon, 1 Apr 2019 05:24:02 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1750.017; Mon, 1 Apr 2019
- 05:24:02 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH] pwm: imx27: use devm_platform_ioremap_resource() to simplify
- code
-Thread-Topic: [PATCH] pwm: imx27: use devm_platform_ioremap_resource() to
- simplify code
-Thread-Index: AQHU6Eses7WpkEQM7UuKKaAl029asQ==
-Date:   Mon, 1 Apr 2019 05:24:02 +0000
-Message-ID: <1554095960-15638-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0P153CA0005.APCP153.PROD.OUTLOOK.COM
- (2603:1096:203:18::17) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 29804db0-d157-4da4-e99f-08d6b6624069
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3673;
-x-ms-traffictypediagnostic: DB3PR0402MB3673:
-x-microsoft-antispam-prvs: <DB3PR0402MB3673A91FEEFF89B1CC054891F5550@DB3PR0402MB3673.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(136003)(376002)(366004)(39860400002)(199004)(189003)(186003)(97736004)(86362001)(3846002)(8676002)(68736007)(99286004)(478600001)(2616005)(8936002)(2501003)(7736002)(386003)(50226002)(81166006)(81156014)(316002)(71200400001)(6486002)(25786009)(256004)(4326008)(476003)(53936002)(110136005)(52116002)(6506007)(26005)(71190400001)(14454004)(305945005)(36756003)(66066001)(5660300002)(6512007)(106356001)(2201001)(6436002)(6116002)(486006)(102836004)(2906002)(105586002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3673;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Y3UJDpYSfi4eZx6D36DgCqNldZ3QQ4M7Wel2TieNap3lBLCMRid/0WyZiyjbWBrquYtdsGuuuV5m3LwfCgp0pqsYt3KlitZ2EN/zfkJAnc/l1z0D7QCVlZywGnSv8lcchL/JurROmlhy90L6VLa9BZzV/RPARMSxPK1JGvq2/szoGtROZVlev40YOTn7lzW3TFvL5x06t+xJ6aAIsOC7rYsgzTnCadmVR4T2Tb2vr1uBXwUBKUiMklRJzBPNg3rzP4y6nFVdAFx+qSRGBjXDmsb3IGjsiTvWdyFgzqCQluf6fFKO/UE3wBBMD4Lwu2cWedKOi6LNeRgbqX2YQFP9aISVg8687DcCSNEjsc8vfDc3+1WTV0SruFmeo1of4cr9/cIqItN9EjC7HbcdwKhL1PkJGnVvsc66jbSbRzpI1j8=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 1 Apr 2019 01:26:17 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33076 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725771AbfDAF0R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 01:26:17 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f23so6888317ljc.0;
+        Sun, 31 Mar 2019 22:26:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bIVPtU/6p+7QNpj3MFhNlKtXKn4Iq452QD8npHz+GbM=;
+        b=GSMfenxKmemWULo792hWOfy/Tlep6WqOO9L/jJR2e5gnB7dWER5LBXqu5dxALEN2tm
+         inGtCLH8AGdUkulnrqLgYPflDKpirpF5+cHZAQ3XbB15xMH3nX22akA/pJVbyaAKZX85
+         xvv8tvFX+ASSgFa7HJDqm0nA/zF6CKx+YjZJOYw4CYVXVz6IXPrmsRrnCO/I4IuXa9Ls
+         vqGoW3074MgmcMmyS+MuUEhIbWdCqV8WxAafH2eVkIAnmnHDsOkbNTf28jHZj7mSs13i
+         Yh6dW2t3w6dwsYv6iQ5J9TiAx/ermCxDUS4HhW8hxE8MVqmYyKd6GYwrESF9RaJ25eb+
+         l02w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bIVPtU/6p+7QNpj3MFhNlKtXKn4Iq452QD8npHz+GbM=;
+        b=JiC6f2rsZ6sPHstWX5IIovHUXjtu9g6Ab5M35kSv3VsqH8YSR5hBD0Ko07rZOXT+64
+         dCpZ5lJPO32oB24UQpvbeLQI+sbLRYtVfdkXMXZWpDe56U9DqzXoVvZAVj4eQfi4OiQ0
+         Q1skwng24R50lRWcNwMDyI64OlapM2uoH3P3sX4WcQSXidZIOSYs0PID/XMTdnHLnLNX
+         Okz4hBulezcn5h2gwDoGBw2XJYQN+i8NA0dodE7SxMYgE5aDD7k7DVDhMSFFviH6NW5I
+         RoKLQbrIh0QR8RuqjdvHiaS2wy1fRS1xOlky8WUROluLCbMnTPAsPJIkZs9seRgylKTg
+         xAvQ==
+X-Gm-Message-State: APjAAAXHiTtDIQL9xMPbWgmJkV+GACUiuN9s52eKL8y2nf6Zyz/rENHW
+        Ce6qmwFkuuMecmZFfII1hzx1c60bzulhdehdKmU=
+X-Google-Smtp-Source: APXvYqzAIbEvWsJKCr8Si4qji6vpGtPpgJ9t/2hq0YVPrFKEma2+t934Gmkq9NVJTNcsivtQulGbZiMEOTK9cecCE6g=
+X-Received: by 2002:a2e:3e18:: with SMTP id l24mr23912301lja.68.1554096373899;
+ Sun, 31 Mar 2019 22:26:13 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29804db0-d157-4da4-e99f-08d6b6624069
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 05:24:02.7820
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3673
+References: <cover.1552921225.git.jrdr.linux@gmail.com>
+In-Reply-To: <cover.1552921225.git.jrdr.linux@gmail.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Mon, 1 Apr 2019 10:56:02 +0530
+Message-ID: <CAFqt6zaV5zcc495BBk1Wi7p+zOF8y=P5KRfKkvwY=stagUFKWQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH v4 0/9] mm: Use vm_map_pages() and
+ vm_map_pages_zero() API
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Rik van Riel <riel@surriel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        rppt@linux.vnet.ibm.com, Peter Zijlstra <peterz@infradead.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        robin.murphy@arm.com, iamjoonsoo.kim@lge.com, treding@nvidia.com,
+        Kees Cook <keescook@chromium.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        stefanr@s5r6.in-berlin.de, hjc@rock-chips.com,
+        Heiko Stuebner <heiko@sntech.de>, airlied@linux.ie,
+        oleksandr_andrushchenko@epam.com, joro@8bytes.org,
+        pawel@osciak.com, Kyungmin Park <kyungmin.park@samsung.com>,
+        mchehab@kernel.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>
+Cc:     linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux1394-devel@lists.sourceforge.net,
+        dri-devel@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, xen-devel@lists.xen.org,
+        iommu@lists.linux-foundation.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new helper devm_platform_ioremap_resource() which wraps the
-platform_get_resource() and devm_ioremap_resource() together, to
-simplify the code.
+Hi Andrew,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/pwm/pwm-imx27.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+On Tue, Mar 19, 2019 at 7:47 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+>
+> Previouly drivers have their own way of mapping range of
+> kernel pages/memory into user vma and this was done by
+> invoking vm_insert_page() within a loop.
+>
+> As this pattern is common across different drivers, it can
+> be generalized by creating new functions and use it across
+> the drivers.
+>
+> vm_map_pages() is the API which could be used to map
+> kernel memory/pages in drivers which has considered vm_pgoff.
+>
+> vm_map_pages_zero() is the API which could be used to map
+> range of kernel memory/pages in drivers which has not considered
+> vm_pgoff. vm_pgoff is passed default as 0 for those drivers.
+>
+> We _could_ then at a later "fix" these drivers which are using
+> vm_map_pages_zero() to behave according to the normal vm_pgoff
+> offsetting simply by removing the _zero suffix on the function
+> name and if that causes regressions, it gives us an easy way to revert.
+>
+> Tested on Rockchip hardware and display is working fine, including talking
+> to Lima via prime.
+>
+> v1 -> v2:
+>         Few Reviewed-by.
+>
+>         Updated the change log in [8/9]
+>
+>         In [7/9], vm_pgoff is treated in V4L2 API as a 'cookie'
+>         to select a buffer, not as a in-buffer offset by design
+>         and it always want to mmap a whole buffer from its beginning.
+>         Added additional changes after discussing with Marek and
+>         vm_map_pages() could be used instead of vm_map_pages_zero().
+>
+> v2 -> v3:
+>         Corrected the documentation as per review comment.
+>
+>         As suggested in v2, renaming the interfaces to -
+>         *vm_insert_range() -> vm_map_pages()* and
+>         *vm_insert_range_buggy() -> vm_map_pages_zero()*.
+>         As the interface is renamed, modified the code accordingly,
+>         updated the change logs and modified the subject lines to use the
+>         new interfaces. There is no other change apart from renaming and
+>         using the new interface.
+>
+>         Patch[1/9] & [4/9], Tested on Rockchip hardware.
+>
+> v3 -> v4:
+>         Fixed build warnings on patch [8/9] reported by kbuild test robot.
+>
+> Souptick Joarder (9):
+>   mm: Introduce new vm_map_pages() and vm_map_pages_zero() API
+>   arm: mm: dma-mapping: Convert to use vm_map_pages()
+>   drivers/firewire/core-iso.c: Convert to use vm_map_pages_zero()
+>   drm/rockchip/rockchip_drm_gem.c: Convert to use vm_map_pages()
+>   drm/xen/xen_drm_front_gem.c: Convert to use vm_map_pages()
+>   iommu/dma-iommu.c: Convert to use vm_map_pages()
+>   videobuf2/videobuf2-dma-sg.c: Convert to use vm_map_pages()
+>   xen/gntdev.c: Convert to use vm_map_pages()
+>   xen/privcmd-buf.c: Convert to use vm_map_pages_zero()
 
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 8061306..434a351 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -291,7 +291,6 @@ MODULE_DEVICE_TABLE(of, pwm_imx27_dt_ids);
- static int pwm_imx27_probe(struct platform_device *pdev)
- {
- 	struct pwm_imx27_chip *imx;
--	struct resource *r;
-=20
- 	imx =3D devm_kzalloc(&pdev->dev, sizeof(*imx), GFP_KERNEL);
- 	if (imx =3D=3D NULL)
-@@ -326,8 +325,7 @@ static int pwm_imx27_probe(struct platform_device *pdev=
-)
- 	imx->chip.of_xlate =3D of_pwm_xlate_with_flags;
- 	imx->chip.of_pwm_n_cells =3D 3;
-=20
--	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	imx->mmio_base =3D devm_ioremap_resource(&pdev->dev, r);
-+	imx->mmio_base =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(imx->mmio_base))
- 		return PTR_ERR(imx->mmio_base);
-=20
---=20
-2.7.4
+Is it fine to take these patches into mm tree for regression ?
 
+>
+>  arch/arm/mm/dma-mapping.c                          | 22 ++----
+>  drivers/firewire/core-iso.c                        | 15 +---
+>  drivers/gpu/drm/rockchip/rockchip_drm_gem.c        | 17 +----
+>  drivers/gpu/drm/xen/xen_drm_front_gem.c            | 18 ++---
+>  drivers/iommu/dma-iommu.c                          | 12 +---
+>  drivers/media/common/videobuf2/videobuf2-core.c    |  7 ++
+>  .../media/common/videobuf2/videobuf2-dma-contig.c  |  6 --
+>  drivers/media/common/videobuf2/videobuf2-dma-sg.c  | 22 ++----
+>  drivers/xen/gntdev.c                               | 11 ++-
+>  drivers/xen/privcmd-buf.c                          |  8 +--
+>  include/linux/mm.h                                 |  4 ++
+>  mm/memory.c                                        | 81 ++++++++++++++++++++++
+>  mm/nommu.c                                         | 14 ++++
+>  13 files changed, 134 insertions(+), 103 deletions(-)
+>
+> --
+> 1.9.1
+>
