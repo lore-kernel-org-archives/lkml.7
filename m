@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5BBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65FDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C34A20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B002720830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140415;
-	bh=bEfHUW01l4PuGfoZLFQnzokEjN9dBSRWxfh/NBHQHZI=;
+	s=default; t=1554140423;
+	bh=z+6z17SYTm1dRqLg9n06i8TPvbYwlWKeYLhTQkowt8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o9GoB940UmkO5C3/2kzey36tk6u2AwAdlKAIpNrZegazvWdjeiJokqab3uEe7rItL
-	 F0NJY2tGL6t9VX09lDw80ZvuObuCgIWwCW7YqLManyJ4zi+Hfmi7vvIMnT21tLYVWm
-	 X0jI/QqZwE59niEYGe5yVE94dZOBr5SfNTS9SXrw=
+	b=EchadL+wf0IV+iyxocacoxv5z0CHCPaUI5SQeVfsoDaZF4CjYluEdAq/pyqKmmrC3
+	 4pkPCIbWgPKdC7G2fcGgIE5VJnsdFfo6rik6v3A5iY68FLoBcPQLBrfX3B3224rJJN
+	 c4LUUA4fmRloEdLB96n6JYTLBLG0wY3ybC2755vQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388444AbfDARjY (ORCPT
+        id S2388073AbfDARjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:39:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53102 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:39:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730909AbfDARjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:39:23 -0400
+        id S2388416AbfDARjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:39:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2148B20830;
-        Mon,  1 Apr 2019 17:39:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B72E20830;
+        Mon,  1 Apr 2019 17:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140362;
-        bh=bEfHUW01l4PuGfoZLFQnzokEjN9dBSRWxfh/NBHQHZI=;
+        s=default; t=1554140355;
+        bh=z+6z17SYTm1dRqLg9n06i8TPvbYwlWKeYLhTQkowt8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WrOJB7C7Q71vXLvKnSQ4v0iNawkQo+6A12ATGsboJvk1ozav3hZmS1/BfICxXTYPb
-         1gb97MjRPY0cGd4++Y8Vlwsrxt4D3d2ZlCPbkcSaPE3WtDxENtb14UMWHFX38PEeU9
-         5pEIujjGHGCg/p7W/HFxlSvIXSOj4JKD6U4yryHM=
+        b=DANpM8ERGpIx/7OHTQapmj3VJcXhG5I6p16qthxvfSXLqGv8105CelelE3RtE24N4
+         SRnyu9IDkeWPiUi3fRVPRupfglAbgasxmY0DPmwICg4jvvL8ghX/MVbG+QvLfHTCJi
+         A4vI2hZ/CNaPV0nh19ch6rtm31oIGJRdHo7pB1wo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nicolas Pitre <nico@linaro.org>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 13/50] android: unconditionally remove callbacks in sync_fence_free()
-Date:   Mon,  1 Apr 2019 19:02:56 +0200
-Message-Id: <20190401170042.635903004@linuxfoundation.org>
+Subject: [PATCH 3.18 12/50] ARM: 8458/1: bL_switcher: add GIC dependency
+Date:   Mon,  1 Apr 2019 19:02:55 +0200
+Message-Id: <20190401170042.398401589@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -66,43 +67,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 699f685569434510d944e419f4048c4e3ba8d631 ]
+[ Upstream commit 6c044fecdf78be3fda159a5036bb33700cdd5e59 ]
 
-Using fence->status to determine whether or not there are callbacks
-remaining on the sync_fence is racy since fence->status may have been
-decremented to 0 on another CPU before fence_check_cb_func() has
-completed.  By unconditionally calling fence_remove_callback() for each
-fence in the sync_fence, we guarantee that each callback has either
-completed (since fence_remove_callback() grabs the fence lock) or been
-removed.
+It is not possible to build the bL_switcher code if the GIC
+driver is disabled, because it relies on calling into some
+gic specific interfaces, and that would result in this build
+error:
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+arch/arm/common/built-in.o: In function `bL_switch_to':
+:(.text+0x1230): undefined reference to `gic_get_sgir_physaddr'
+:(.text+0x1244): undefined reference to `gic_send_sgi'
+:(.text+0x1268): undefined reference to `gic_migrate_target'
+arch/arm/common/built-in.o: In function `bL_switcher_enable.part.4':
+:(.text.unlikely+0x2f8): undefined reference to `gic_get_cpu_id'
+
+This adds a Kconfig dependency to ensure we only build the big-little
+switcher if the GIC driver is present as well.
+
+Almost all ARMv7 platforms come with a GIC anyway, but it is possible
+to build a kernel that disables all platforms.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Nicolas Pitre <nico@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/android/sync.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/arm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/android/sync.c b/drivers/staging/android/sync.c
-index f83e00c78051..50a9945da27e 100644
---- a/drivers/staging/android/sync.c
-+++ b/drivers/staging/android/sync.c
-@@ -519,12 +519,10 @@ static const struct fence_ops android_fence_ops = {
- static void sync_fence_free(struct kref *kref)
- {
- 	struct sync_fence *fence = container_of(kref, struct sync_fence, kref);
--	int i, status = atomic_read(&fence->status);
-+	int i;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 89c4b5ccc68d..bd3a806df001 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1432,7 +1432,7 @@ config BIG_LITTLE
  
- 	for (i = 0; i < fence->num_fences; ++i) {
--		if (status)
--			fence_remove_callback(fence->cbs[i].sync_pt,
--					      &fence->cbs[i].cb);
-+		fence_remove_callback(fence->cbs[i].sync_pt, &fence->cbs[i].cb);
- 		fence_put(fence->cbs[i].sync_pt);
- 	}
- 
+ config BL_SWITCHER
+ 	bool "big.LITTLE switcher support"
+-	depends on BIG_LITTLE && MCPM && HOTPLUG_CPU
++	depends on BIG_LITTLE && MCPM && HOTPLUG_CPU && ARM_GIC
+ 	select ARM_CPU_SUSPEND
+ 	select CPU_PM
+ 	help
 -- 
 2.19.1
 
