@@ -4,50 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3311AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A16C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 038E02171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8326C2171F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139069;
-	bh=UM0x0+t2Jr7lj2A0kqd3wbVqhYQWYIP/anG/jcRP/bQ=;
+	s=default; t=1554139072;
+	bh=B5OI9nQ/CdQLZnF1LjiBA4ZvbpFBayu0VVnLUg6dP+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rJXUXX0o2NShJ+oqlrJiDrCkq38QuWiQSPL3SZEfDWvxxL4BBnZ2jqqEOpffyQ34d
-	 b7BUhjjgdE/2i12urFYBZA+l4BJh4xDSNgmqFA05V2JK4sIzs7PLVkujGP2nw4/Jjs
-	 hwEDp8/SquAL0nLpryfm+DP4P1R4FUubuAPp9Onk=
+	b=b4IEMSQ6E0mDii/+8SBfUYZJI0wGSVXMboucriiT+9nV6wOtDIJYQNGMNwvs+obAx
+	 N3fhyw60RLvrt/e4z2YHm7VVwZrHafiXWXrGvqX3mjXy1key6NAHwO7leKS+rJIFI0
+	 G/GSdoBIVLvUy2wo0ydSNwWpz0ArgeqY0+pMV9is=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731246AbfDARRr (ORCPT
+        id S1731258AbfDARRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:17:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44110 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:17:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731222AbfDARRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:17:43 -0400
+        id S1730991AbfDARRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:17:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96DB52171F;
-        Mon,  1 Apr 2019 17:17:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99EA620883;
+        Mon,  1 Apr 2019 17:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139063;
-        bh=UM0x0+t2Jr7lj2A0kqd3wbVqhYQWYIP/anG/jcRP/bQ=;
+        s=default; t=1554139069;
+        bh=B5OI9nQ/CdQLZnF1LjiBA4ZvbpFBayu0VVnLUg6dP+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fz2pet1YcaiGMlNFPKMLjfyAl96TccZM9Bb/EgpQPVymvvGqz3WPBjqHCv1pR6O4S
-         Qj1B5PhJF9VaAp5YG/MicIOJWKz8ZOtJDLk7Ua9pOj5Tu4eDCJBREVZeRqNy9OJxsn
-         WE8jcCR4EdjjNylvDyc/g9bNUnZ5o8HYUupkL+GU=
+        b=LWV1MdciLgbJAFe302e+/hfkCrWThp4wlV62sy2Cn44nTn7MkrBMi8dKvuWYEYFsT
+         VnFFgbdDqG0qny1EBxlTcqiOJX4v/94FHvIXx/CQXxT0rhpkg+zFZX1wvW1euV9QtO
+         cDD0sjOgIv3U9+wZNU7S/VxKGWmw7/Tw/LjcHeOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4.19 101/134] gpio: adnp: Fix testing wrong value in adnp_gpio_direction_input
-Date:   Mon,  1 Apr 2019 19:02:17 +0200
-Message-Id: <20190401170053.674073447@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.19 103/134] usb: mtu3: fix EXTCON dependency
+Date:   Mon,  1 Apr 2019 19:02:19 +0200
+Message-Id: <20190401170053.855561642@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,40 +63,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit c5bc6e526d3f217ed2cc3681d256dc4a2af4cc2b upstream.
+commit 3d54d10c6afed34fd45b852bf76f55e8da31d8ef upstream.
 
-Current code test wrong value so it does not verify if the written
-data is correctly read back. Fix it.
-Also make it return -EPERM if read value does not match written bit,
-just like it done for adnp_gpio_direction_output().
+When EXTCON is a loadable module, mtu3 fails to link as built-in:
 
-Fixes: 5e969a401a01 ("gpio: Add Avionic Design N-bit GPIO expander support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+drivers/usb/mtu3/mtu3_plat.o: In function `mtu3_probe':
+mtu3_plat.c:(.text+0x690): undefined reference to `extcon_get_edev_by_phandle'
+
+Add a Kconfig dependency to force mtu3 also to be a loadable module
+if extconn is, but still allow it to be built without extcon.
+
+Fixes: d0ed062a8b75 ("usb: mtu3: dual-role mode support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-adnp.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/mtu3/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/gpio/gpio-adnp.c
-+++ b/drivers/gpio/gpio-adnp.c
-@@ -132,8 +132,10 @@ static int adnp_gpio_direction_input(str
- 	if (err < 0)
- 		goto out;
- 
--	if (err & BIT(pos))
--		err = -EACCES;
-+	if (value & BIT(pos)) {
-+		err = -EPERM;
-+		goto out;
-+	}
- 
- 	err = 0;
- 
+--- a/drivers/usb/mtu3/Kconfig
++++ b/drivers/usb/mtu3/Kconfig
+@@ -4,6 +4,7 @@ config USB_MTU3
+ 	tristate "MediaTek USB3 Dual Role controller"
+ 	depends on USB || USB_GADGET
+ 	depends on ARCH_MEDIATEK || COMPILE_TEST
++	depends on EXTCON || !EXTCON
+ 	select USB_XHCI_MTK if USB_SUPPORT && USB_XHCI_HCD
+ 	help
+ 	  Say Y or M here if your system runs on MediaTek SoCs with
 
 
