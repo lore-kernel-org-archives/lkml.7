@@ -3,451 +3,260 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB79C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997ACC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360D2208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6763D213F2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:03:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbfDAQCP (ORCPT
+        id S1728665AbfDAQDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 12:02:15 -0400
-Received: from anholt.net ([50.246.234.109]:45148 "EHLO anholt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbfDAQCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 12:02:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 23FB510A278C;
-        Mon,  1 Apr 2019 09:02:14 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id wBRyWKkkxT8e; Mon,  1 Apr 2019 09:02:10 -0700 (PDT)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 9D68B10A2230;
-        Mon,  1 Apr 2019 09:02:10 -0700 (PDT)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id 370C62FE2F72; Mon,  1 Apr 2019 09:02:10 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Lyude Paul <lyude@redhat.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "Marty E . Plummer" <hanetzer@startmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v2 3/3] drm/panfrost: Add initial panfrost driver
-In-Reply-To: <20190401074730.12241-4-robh@kernel.org>
-References: <20190401074730.12241-1-robh@kernel.org> <20190401074730.12241-4-robh@kernel.org>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/25.2.2 (x86_64-pc-linux-gnu)
-Date:   Mon, 01 Apr 2019 09:02:09 -0700
-Message-ID: <87zhp9zpby.fsf@anholt.net>
+        Mon, 1 Apr 2019 12:03:12 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35601 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727190AbfDAQDM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 12:03:12 -0400
+Received: by mail-qk1-f193.google.com with SMTP id a71so5967330qkg.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 09:03:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UReHT3oq3rSq44Jr2SDibP3RCioNSCsqZcLVVWzyaMY=;
+        b=SOvAY9nM7/FLtY0BEdoJFP3RrEmaT9e3xcu37R+XT3Ec/Joz+K9idrwAjJ7eO3ByzM
+         wxcAjSJWWbq97KU6j9ipWEt7ykb9lm+j4QB0zmGe5BH1W4FZBCxGQbJ7ggHTCTI3k50J
+         fjU3lFpDm4XaViANyDqLmBT3slYb/+DR2p7A+h5sJCWSb0pZCk5bcOH8fioozyd+E32V
+         3GOBAFo0tQcB85AmqoasupGqMWLM3qOKhbXr0CbnEKhTyO+x9foilEKnHYyD7boW1YKO
+         GyGYM5VEwu1borHFnuMEErTN/CEEDKIM7vsOVIeEtJLqXHq/LLuuaVGPi9kUBXiEniEQ
+         ucYA==
+X-Gm-Message-State: APjAAAU1Xn2j/u2cvECQBsFhLtjV8jT2+/cp6KuvXy4PsALmPX653Yw8
+        VRJnN4yHjvFEYdY/ZA/k0to0VKSbBZo=
+X-Google-Smtp-Source: APXvYqzgumu6RrKD3up0odNFHgdqf2BZ3LvDnucsxVvUQGSaRrMawYkNkAYL60JaQkaEJS9EH0c4Bg==
+X-Received: by 2002:a05:620a:1315:: with SMTP id o21mr30842463qkj.228.1554134591150;
+        Mon, 01 Apr 2019 09:03:11 -0700 (PDT)
+Received: from ?IPv6:2601:602:9800:dae6::fa4a? ([2601:602:9800:dae6::fa4a])
+        by smtp.gmail.com with ESMTPSA id z20sm5669520qkb.52.2019.04.01.09.03.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 09:03:10 -0700 (PDT)
+Subject: Re: [PATCH] staging: android: ion: refactory ion_alloc for kernel
+ driver use
+To:     "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Arve_Hj=c3=b8nnev=c3=a5g?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1553884816-37850-1-git-send-email-prime.zeng@hisilicon.com>
+ <e8c45ba1-dfe9-a929-acf5-2e7c61ab7b1c@redhat.com>
+ <678F3D1BB717D949B966B68EAEB446ED24EBCE09@DGGEMM506-MBS.china.huawei.com>
+From:   Laura Abbott <labbott@redhat.com>
+Message-ID: <9c28dcbb-0c9d-ec00-97cd-bec66116a5fd@redhat.com>
+Date:   Mon, 1 Apr 2019 09:03:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED24EBCE09@DGGEMM506-MBS.china.huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On 3/29/19 7:26 PM, Zengtao (B) wrote:
+> Hi laura:
+> 
+>> -----Original Message-----
+>> From: Laura Abbott [mailto:labbott@redhat.com]
+>> Sent: Friday, March 29, 2019 9:27 PM
+>> To: Zengtao (B) <prime.zeng@hisilicon.com>; sumit.semwal@linaro.org
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Arve Hjønnevåg
+>> <arve@android.com>; Todd Kjos <tkjos@android.com>; Martijn Coenen
+>> <maco@android.com>; Joel Fernandes <joel@joelfernandes.org>;
+>> Christian Brauner <christian@brauner.io>; devel@driverdev.osuosl.org;
+>> dri-devel@lists.freedesktop.org; linaro-mm-sig@lists.linaro.org;
+>> linux-kernel@vger.kernel.org
+>> Subject: Re: [PATCH] staging: android: ion: refactory ion_alloc for kernel
+>> driver use
+>>
+>> On 3/29/19 11:40 AM, Zeng Tao wrote:
+>>> There are two reasons for this patch:
+>>> 1. There are some potential requirements for ion_alloc in kernel
+>>> space, some media drivers need to allocate media buffers from ion
+>>> instead of buddy or dma framework, this is more convient and clean
+>>> very for media drivers. And In that case, ion is the only media buffer
+>>> provider, it's more easier to maintain.
+>>> 2. Fd is only needed by user processes, not the kernel space, so
+>>> dma_buf should be returned instead of fd for kernel space, and
+>>> dma_buf_fd should be called only for userspace api.
+>>>
+>>
+>> I really want to just NAK this because it doesn't seem like something
+>> that's necessary. The purpose of Ion is to provide buffers to userspace
+>> because there's no other way for userspace to get access to the memory.
+>> The kernel already has other APIs to access the memory. This also
+>> complicates the re-work that's been happening where the requirement is
+>> only userspace.
+>>
+>> Can you be more detailed about which media drivers you are referring to
+>> and why they can't just use other APIs?
+>>
+> 
+> I think I 've got your point, the ION is designed for usespace, but for kernel
+>   space, we are really lacking of someone which plays the same role,(allocate
+> media memory, share the memory using dma_buf, provide debug and statistics
+> for media memory).
+> 
+> In fact, for kernel space, we have the dma framework, dma-buf, etc..
+> And we can work on top of such apis, but some duplicate jobs(everyone has
+>   to maintain its own buffer sharing, debug and statistics).
+> So we need to have some to do the common things(ION's the best choice now)
+> 
 
-Rob Herring <robh@kernel.org> writes:
+Keep in mind that Ion is a thin shell of what it was as most of the
+debugging and statistics was removed because it was buggy. Most of that
+should end up going at the dma_buf layer since it's really a dma_buf allocation
+API.
 
-> This adds the initial driver for panfrost which supports Arm Mali
-> Midgard and Bifrost family of GPUs. Currently, only the T860 and
-> T760 Midgard GPUs have been tested.
->
-> v2:
-> - Add GPU reset on job hangs (Tomeu)
-> - Add RuntimePM and devfreq support (Tomeu)
-> - Fix T760 support (Tomeu)
-> - Add a TODO file (Rob, Tomeu)
-> - Support multiple in fences (Tomeu)
-> - Drop support for shared fences (Tomeu)
-> - Fill in MMU de-init (Rob)
-> - Move register definitions back to single header (Rob)
-> - Clean-up hardcoded job submit todos (Rob)
-> - Implement feature setup based on features/issues (Rob)
-> - Add remaining Midgard DT compatible strings (Rob)
->
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Sean Paul <sean@poorly.run>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> Cc: Lyude Paul <lyude@redhat.com>
-> Cc: Eric Anholt <eric@anholt.net>
-> Signed-off-by: Marty E. Plummer <hanetzer@startmail.com>
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Neil, I've kept your reset support separate for now. Let me know if you
-> prefer me to squash it or keep it separate.
+> When the ION was introduced, a lot of media memory frameworks existed, the
+> dma framework was not so good, so ION heaps, integrated buffer sharing, statistics
+> and usespace api were the required features, but now dma framework is more powerful,
+> we don't even need ION heaps now, but the userspace api, buffer sharing, statistics are
+> still needed, and the buffer sharing, statistics can be re-worked and export to kernel space,
+> not only used by userspace, , and that is my point.
+> 
 
+I see what you are getting at but I don't think the same thing
+applies to the kernel as it does userspace. We can enforce a
+single way of using the dma_buf fd in userspace but the kernel
+has a variety of ways to use dma_buf because each driver and
+framework has its own needs. I'm still not convinced that adding
+Ion APIs in the kernel is the right option since as you point out
+we don't really need the heaps. That mostly leaves Ion as a wrapper
+to handle doing the export. Maybe we could benefit from that
+but I think it might require more thought.
 
-> +static void panfrost_job_hw_submit(struct panfrost_job *job, int js)
-> +{
-> +	struct panfrost_device *pfdev =3D job->pfdev;
-> +	unsigned long flags;
-> +	u32 cfg;
-> +	u64 jc_head =3D job->jc;
-> +	int ret;
-> +
-> +	panfrost_devfreq_update_utilization(pfdev, js, false);
-> +
-> +	ret =3D pm_runtime_get_sync(pfdev->dev);
-> +	if (ret < 0)
-> +		return;
-> +
-> +	if (WARN_ON(job_read(pfdev, JS_COMMAND_NEXT(js))))
-> +		goto end;
-> +
-> +	spin_lock_irqsave(&pfdev->hwaccess_lock, flags);
-> +
-> +	job_write(pfdev, JS_HEAD_NEXT_LO(js), jc_head & 0xFFFFFFFF);
-> +	job_write(pfdev, JS_HEAD_NEXT_HI(js), jc_head >> 32);
-> +
-> +	panfrost_job_write_affinity(pfdev, job->requirements, js);
-> +
-> +	/* start MMU, medium priority, cache clean/flush on end, clean/flush on
-> +	 * start */
-> +	// TODO: different address spaces
-> +	cfg =3D JS_CONFIG_THREAD_PRI(8) |
-> +		JS_CONFIG_START_FLUSH_CLEAN_INVALIDATE |
-> +		JS_CONFIG_END_FLUSH_CLEAN_INVALIDATE;
-> +
-> +	if (panfrost_has_hw_feature(pfdev, HW_FEATURE_FLUSH_REDUCTION))
-> +		cfg |=3D JS_CONFIG_ENABLE_FLUSH_REDUCTION;
-> +
-> +	if (panfrost_has_hw_issue(pfdev, HW_ISSUE_10649))
-> +		cfg |=3D JS_CONFIG_START_MMU;
-> +
-> +	job_write(pfdev, JS_CONFIG_NEXT(js), cfg);
-> +
-> +	if (panfrost_has_hw_feature(pfdev, HW_FEATURE_FLUSH_REDUCTION))
-> +		job_write(pfdev, JS_FLUSH_ID_NEXT(js), job->flush_id);
-> +
-> +	/* GO ! */
-> +	dev_dbg(pfdev->dev, "JS: Submitting atom %p to js[%d] with head=3D0x%ll=
-x",
-> +				job, js, jc_head);
-> +
-> +	job_write(pfdev, JS_COMMAND_NEXT(js), JS_COMMAND_START);
-> +
-> +	spin_unlock_irqrestore(&pfdev->hwaccess_lock, flags);
-> +
-> +end:
-> +	pm_runtime_mark_last_busy(pfdev->dev);
-> +	pm_runtime_put_autosuspend(pfdev->dev);
-> +}
-> +
-> +static void panfrost_acquire_object_fences(struct drm_gem_object **bos,
-> +					   int bo_count,
-> +					   struct dma_fence **implicit_fences)
-> +{
-> +	int i;
-> +
-> +	for (i =3D 0; i < bo_count; i++)
-> +		implicit_fences[i] =3D reservation_object_get_excl_rcu(bos[i]->resv);
-> +}
+I'd rather see a proposal in the media API itself showing what
+you think is necessary but without using Ion. That would be
+a good start so we could fully review what might make sense to
+pull out of Ion into something common.
 
-This is a little bit dodgy for implicit sync if the BOs are shared as
-dma-bufs to some other device that distinguishes between shared vs excl
-reservations.  (A distinction I think is not worth it, but it's the
-interface we have).  If the other device has a read-only job, and you
-submit a new job updating it, the other device may get the new contents
-when it shouldn't.
+Thanks,
+Laura
 
-However, this is a very minor bug and I don't think it should block
-things.
+>>
+>>> Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+>>> ---
+>>>    drivers/staging/android/ion/ion.c | 32
+>> +++++++++++++++++---------------
+>>>    1 file changed, 17 insertions(+), 15 deletions(-)
+>>>
+>>> diff --git a/drivers/staging/android/ion/ion.c
+>>> b/drivers/staging/android/ion/ion.c
+>>> index 92c2914..e93fb49 100644
+>>> --- a/drivers/staging/android/ion/ion.c
+>>> +++ b/drivers/staging/android/ion/ion.c
+>>> @@ -387,13 +387,13 @@ static const struct dma_buf_ops
+>> dma_buf_ops = {
+>>>    	.unmap = ion_dma_buf_kunmap,
+>>>    };
+>>>
+>>> -static int ion_alloc(size_t len, unsigned int heap_id_mask, unsigned
+>>> int flags)
+>>> +struct dma_buf *ion_alloc(size_t len, unsigned int heap_id_mask,
+>>> +			  unsigned int flags)
+>>>    {
+>>>    	struct ion_device *dev = internal_dev;
+>>>    	struct ion_buffer *buffer = NULL;
+>>>    	struct ion_heap *heap;
+>>>    	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
+>>> -	int fd;
+>>>    	struct dma_buf *dmabuf;
+>>>
+>>>    	pr_debug("%s: len %zu heap_id_mask %u flags %x\n", __func__,
+>> @@
+>>> -407,7 +407,7 @@ static int ion_alloc(size_t len, unsigned int
+>> heap_id_mask, unsigned int flags)
+>>>    	len = PAGE_ALIGN(len);
+>>>
+>>>    	if (!len)
+>>> -		return -EINVAL;
+>>> +		return ERR_PTR(-EINVAL);
+>>>
+>>>    	down_read(&dev->lock);
+>>>    	plist_for_each_entry(heap, &dev->heaps, node) { @@ -421,10
+>> +421,10
+>>> @@ static int ion_alloc(size_t len, unsigned int heap_id_mask,
+>> unsigned int flags)
+>>>    	up_read(&dev->lock);
+>>>
+>>>    	if (!buffer)
+>>> -		return -ENODEV;
+>>> +		return ERR_PTR(-ENODEV);
+>>>
+>>>    	if (IS_ERR(buffer))
+>>> -		return PTR_ERR(buffer);
+>>> +		return ERR_PTR(PTR_ERR(buffer));
+>>>
+>>>    	exp_info.ops = &dma_buf_ops;
+>>>    	exp_info.size = buffer->size;
+>>> @@ -432,17 +432,12 @@ static int ion_alloc(size_t len, unsigned int
+>> heap_id_mask, unsigned int flags)
+>>>    	exp_info.priv = buffer;
+>>>
+>>>    	dmabuf = dma_buf_export(&exp_info);
+>>> -	if (IS_ERR(dmabuf)) {
+>>> +	if (IS_ERR(dmabuf))
+>>>    		_ion_buffer_destroy(buffer);
+>>> -		return PTR_ERR(dmabuf);
+>>> -	}
+>>>
+>>> -	fd = dma_buf_fd(dmabuf, O_CLOEXEC);
+>>> -	if (fd < 0)
+>>> -		dma_buf_put(dmabuf);
+>>> -
+>>> -	return fd;
+>>> +	return dmabuf;
+>>>    }
+>>> +EXPORT_SYMBOL(ion_alloc);
+>>>
+>>>    static int ion_query_heaps(struct ion_heap_query *query)
+>>>    {
+>>> @@ -539,12 +534,19 @@ static long ion_ioctl(struct file *filp, unsigned
+>> int cmd, unsigned long arg)
+>>>    	case ION_IOC_ALLOC:
+>>>    	{
+>>>    		int fd;
+>>> +		struct dma_buf *dmabuf;
+>>>
+>>> -		fd = ion_alloc(data.allocation.len,
+>>> +		dmabuf = ion_alloc(data.allocation.len,
+>>>    			       data.allocation.heap_id_mask,
+>>>    			       data.allocation.flags);
+>>> -		if (fd < 0)
+>>> +		if (IS_ERR(dmabuf))
+>>> +			return PTR_ERR(dmabuf);
+>>> +
+>>> +		fd = dma_buf_fd(dmabuf, O_CLOEXEC);
+>>> +		if (fd < 0) {
+>>> +			dma_buf_put(dmabuf);
+>>>    			return fd;
+>>> +		}
+>>>
+>>>    		data.allocation.fd = fd;
+>>>
+>>>
+> 
 
-> +int panfrost_job_push(struct panfrost_job *job)
-> +{
-> +	struct panfrost_device *pfdev =3D job->pfdev;
-> +	int slot =3D panfrost_job_get_slot(job);
-> +	struct drm_sched_entity *entity =3D &job->file_priv->sched_entity[slot];
-> +	struct ww_acquire_ctx acquire_ctx;
-> +	int ret =3D 0;
-> +
-> +	mutex_lock(&pfdev->sched_lock);
-> +
-> +	ret =3D drm_gem_lock_reservations(job->bos, job->bo_count,
-> +					    &acquire_ctx);
-> +	if (ret) {
-> +		mutex_unlock(&pfdev->sched_lock);
-> +		return ret;
-> +	}
-> +
-> +	ret =3D drm_sched_job_init(&job->base, entity, NULL);
-> +	if (ret) {
-> +		mutex_unlock(&pfdev->sched_lock);
-> +		goto unlock;
-> +	}
-> +
-> +	job->render_done_fence =3D dma_fence_get(&job->base.s_fence->finished);
-> +
-> +	kref_get(&job->refcount); /* put by scheduler job completion */
-> +
-> +	drm_sched_entity_push_job(&job->base, entity);
-> +
-> +	mutex_unlock(&pfdev->sched_lock);
-> +
-> +	panfrost_acquire_object_fences(job->bos, job->bo_count,
-> +				       job->implicit_fences);
-
-I think your implicit fences need to be up above
-drm_sched_entity_push_job(), since they might get referenced by the
-scheduler any time after push_job.
-
-> +	panfrost_attach_object_fences(job->bos, job->bo_count,
-> +				      job->render_done_fence);
-> +
-> +unlock:
-> +	drm_gem_unlock_reservations(job->bos, job->bo_count, &acquire_ctx);
-> +
-> +	return ret;
-> +}
-
-> +static void panfrost_job_timedout(struct drm_sched_job *sched_job)
-> +{
-> +	struct panfrost_job *job =3D to_panfrost_job(sched_job);
-> +	struct panfrost_device *pfdev =3D job->pfdev;
-> +	int js =3D panfrost_job_get_slot(job);
-> +	int i;
-> +
-> +	/*
-> +	 * If the GPU managed to complete this jobs fence, the timeout is
-> +	 * spurious. Bail out.
-> +	 */
-> +	if (dma_fence_is_signaled(job->done_fence))
-> +		return;
-> +
-> +	dev_err(pfdev->dev, "gpu sched timeout, js=3D%d, status=3D0x%x, head=3D=
-0x%x, tail=3D0x%x, sched_job=3D%p",
-> +		js,
-> +		job_read(pfdev, JS_STATUS(js)),
-> +		job_read(pfdev, JS_HEAD_LO(js)),
-> +		job_read(pfdev, JS_TAIL_LO(js)),
-> +		sched_job);
-> +
-> +	for (i =3D 0; i < NUM_JOB_SLOTS; i++)
-> +		drm_sched_stop(&pfdev->js->queue[i].sched);
-> +
-> +	if(sched_job)
-> +		drm_sched_increase_karma(sched_job);
-
-whitespace
-
-> +
-> +	//panfrost_core_dump(pfdev);
-
-Might want to go over the driver for // comments that should be removed?
-
-
-> diff --git a/include/uapi/drm/panfrost_drm.h b/include/uapi/drm/panfrost_=
-drm.h
-> new file mode 100644
-> index 000000000000..508b9621d9db
-> --- /dev/null
-> +++ b/include/uapi/drm/panfrost_drm.h
-> @@ -0,0 +1,140 @@
-> +/* SPDX-License-Identifier: MIT */
-> +/*
-> + * Copyright =C2=A9 2014-2018 Broadcom
-> + * Copyright =C2=A9 2019 Collabora ltd.
-> + */
-> +#ifndef _PANFROST_DRM_H_
-> +#define _PANFROST_DRM_H_
-> +
-> +#include "drm.h"
-> +
-> +#if defined(__cplusplus)
-> +extern "C" {
-> +#endif
-> +
-> +#define DRM_PANFROST_SUBMIT			0x00
-> +#define DRM_PANFROST_WAIT_BO			0x01
-> +#define DRM_PANFROST_CREATE_BO			0x02
-> +#define DRM_PANFROST_MMAP_BO			0x03
-> +#define DRM_PANFROST_GET_PARAM			0x04
-> +#define DRM_PANFROST_GET_BO_OFFSET		0x05
-> +
-> +#define DRM_IOCTL_PANFROST_SUBMIT		DRM_IOW(DRM_COMMAND_BASE + DRM_PANFRO=
-ST_SUBMIT, struct drm_panfrost_submit)
-> +#define DRM_IOCTL_PANFROST_WAIT_BO		DRM_IOW(DRM_COMMAND_BASE + DRM_PANFR=
-OST_WAIT_BO, struct drm_panfrost_wait_bo)
-> +#define DRM_IOCTL_PANFROST_CREATE_BO		DRM_IOWR(DRM_COMMAND_BASE + DRM_PA=
-NFROST_CREATE_BO, struct drm_panfrost_create_bo)
-> +#define DRM_IOCTL_PANFROST_MMAP_BO		DRM_IOWR(DRM_COMMAND_BASE + DRM_PANF=
-ROST_MMAP_BO, struct drm_panfrost_mmap_bo)
-> +#define DRM_IOCTL_PANFROST_GET_PARAM		DRM_IOWR(DRM_COMMAND_BASE + DRM_PA=
-NFROST_GET_PARAM, struct drm_panfrost_get_param)
-> +#define DRM_IOCTL_PANFROST_GET_BO_OFFSET	DRM_IOWR(DRM_COMMAND_BASE + DRM=
-_PANFROST_GET_BO_OFFSET, struct drm_panfrost_get_bo_offset)
-> +
-> +#define PANFROST_JD_REQ_FS (1 << 0)
-> +/**
-> + * struct drm_panfrost_submit - ioctl argument for submitting commands t=
-o the 3D
-> + * engine.
-> + *
-> + * This asks the kernel to have the GPU execute a render command list.
-> + */
-> +struct drm_panfrost_submit {
-> +
-> +	/** Address to GPU mapping of job descriptor */
-> +	__u64 jc;
-> +
-> +	/** An optional array of sync objects to wait on before starting this j=
-ob. */
-> +	__u64 in_syncs;
-> +
-> +	/** Number of sync objects to wait on before starting this job. */
-> +	__u32 in_sync_count;
-> +
-> +	/** An optional sync object to place the completion fence in. */
-> +	__u32 out_sync;
-> +
-> +	/** Pointer to a u32 array of the BOs that are referenced by the job. */
-> +	__u64 bo_handles;
-> +
-> +	/** Number of BO handles passed in (size is that times 4). */
-> +	__u32 bo_handle_count;
-> +
-> +	/** A combination of PANFROST_JD_REQ_* */
-> +	__u32 requirements;
-> +};
-> +
-> +/**
-> + * struct drm_panfrost_wait_bo - ioctl argument for waiting for
-> + * completion of the last DRM_PANFROST_SUBMIT_CL on a BO.
-> + *
-> + * This is useful for cases where multiple processes might be
-> + * rendering to a BO and you want to wait for all rendering to be
-> + * completed.
-> + */
-> +struct drm_panfrost_wait_bo {
-> +	__u32 handle;
-> +	__u32 pad;
-> +	__s64 timeout_ns;	/* absolute */
-> +};
-> +
-> +/**
-> + * struct drm_panfrost_create_bo - ioctl argument for creating Panfrost =
-BOs.
-> + *
-> + * There are currently no values for the flags argument, but it may be
-> + * used in a future extension.
-> + */
-> +struct drm_panfrost_create_bo {
-> +	__u32 size;
-> +	__u32 flags;
-> +	/** Returned GEM handle for the BO. */
-> +	__u32 handle;
-> +	/**
-> +	 * Returned offset for the BO in the GPU address space.  This offset
-> +	 * is private to the DRM fd and is valid for the lifetime of the GEM
-> +	 * handle.
-> +	 *
-> +	 * This offset value will always be nonzero, since various HW
-> +	 * units treat 0 specially.
-> +	 */
-> +	__u64 offset;
-> +};
-
-I think you've got a u64 alignment issue here that needs explicit
-padding so that you don't end up needing 32-vs-64 ioctl wrappers..
-
-This and the implicit fence acquisition race are the two things I think
-need fixing, then you can add:
-
-Reviewed-by: Eric Anholt <eric@anholt.net>
-
-The rest is just suggestions for later.
-
-> +
-> +/**
-> + * struct drm_panfrost_mmap_bo - ioctl argument for mapping Panfrost BOs.
-> + *
-> + * This doesn't actually perform an mmap.  Instead, it returns the
-> + * offset you need to use in an mmap on the DRM device node.  This
-> + * means that tools like valgrind end up knowing about the mapped
-> + * memory.
-> + *
-> + * There are currently no values for the flags argument, but it may be
-> + * used in a future extension.
-> + */
-> +struct drm_panfrost_mmap_bo {
-> +	/** Handle for the object being mapped. */
-> +	__u32 handle;
-> +	__u32 flags;
-> +	/** offset into the drm node to use for subsequent mmap call. */
-> +	__u64 offset;
-> +};
-> +
-> +enum drm_panfrost_param {
-> +	DRM_PANFROST_PARAM_GPU_ID,
-> +};
-> +
-> +struct drm_panfrost_get_param {
-> +	__u32 param;
-> +	__u32 pad;
-> +	__u64 value;
-> +};
-> +
-> +/**
-> + * Returns the offset for the BO in the GPU address space for this DRM f=
-d.
-> + * This is the same value returned by drm_panfrost_create_bo, if that wa=
-s called
-> + * from this DRM fd.
-> + */
-> +struct drm_panfrost_get_bo_offset {
-> +	__u32 handle;
-> +	__u32 pad;
-> +	__u64 offset;
-> +};
-> +
-> +#if defined(__cplusplus)
-> +}
-> +#endif
-> +
-> +#endif /* _PANFROST_DRM_H_ */
-> --
-> 2.19.1
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlyiNgEACgkQtdYpNtH8
-nuhFyRAAhgTD2s3f21NPiQdmQCytCzfDoaM07Ag4q6OlxjojRi+c8crgOzwTSdZ2
-53HPjDglQaaMYCfcG0/C1JxcLnH9BkmDh1aCJH4bBxWmOTt9G1GiidsIwe1wvshV
-Jr351aIzScqNLnrP1H53zwvF0DDqbmRtgT4z4IUFSKywUlJO0H09+BYAuOFbbapY
-fAntQlcEQzJyrlQR4kuJPr7C3vlfP36wONDsV5enuMYrYpZWZUjnEyiL4Le9GF7Q
-Qtzwmqy6E5pTGvKGC37sjnxn7HiWzB14dVXNBuBV6NDlECdKE0PbmetQAOftY3MY
-PLwVLqRp/Zl/LG8DhakOszlvnklh+mXnQHRYgqVdblQeC/P2J/It/kKlcssMRr/P
-p+gceoGitBXegaY1v+w8itAhVlvuYiRBLtpsVKiQ72+NvdPPlV6ypOr/x+emRZ2v
-zAmKFMZTQXFh3SFHh7d9RQBGqDF0hD+2PLIR2PEqsq1zg8WUllStJ7oylVJh5oA7
-2hxuD2YJx3iylEsWkOSn1SQYcrqJPqiTvegfdK3KfSbxoH3xROPC7YdzmWDjfHXW
-ksToXgeokPP0auR1CsjjhsznhYTNL67mDymWbqWtAIo0YGu0+0ZTsRnve/3aEIiF
-9eFNACK5v15z+jDrGEg5CMRteJKs2AAWV0cpX+08N5cGsc6UcRU=
-=B8sg
------END PGP SIGNATURE-----
---=-=-=--
