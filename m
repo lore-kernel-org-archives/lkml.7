@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37240C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 712CEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0855B2192D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40E422192C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138517;
-	bh=lNrv1STKj0RSHNKKD/VzvhY82ZwRYCBaCSXePyQ641Y=;
+	s=default; t=1554138520;
+	bh=mBUODOQfe0hLpDZ4iVbEHDzmNwaDLTTkXeixK94KC0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YnxIM+/NMfSV4PRtJ0e3RbkR8g64t540ABz+9iPzOcI5fXraQcL1q6e8x9VDoGOVK
-	 b3UTPd/d1wNmUuNYlElSAovCFoPa5u03liqUgIR44OEjMIhfBSXuhJljdsuEI6u5U/
-	 7ldYuGyuur0VJTj7aJTlU84YRAuhPcu616kZB8l8=
+	b=BtXm5t6NneGvDkwrWl+DjssLtCCXNI31eUjId69gYVXu19MfIuMkHBnstHe46BpLG
+	 /oxU1YQKRV7MmvNslFcuCJjf0SKOEfrsbEvpDhyu8pA2A14SlJD2M6EJKU9A1lhP59
+	 jiuZ20octSbGWIi16unTckcWbZSmYDhyJvaaE150=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbfDARIf (ORCPT
+        id S1729670AbfDARIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:08:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:08:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728947AbfDARIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:08:31 -0400
+        id S1728947AbfDARIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:08:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A4622192C;
-        Mon,  1 Apr 2019 17:08:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B8A82192C;
+        Mon,  1 Apr 2019 17:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138510;
-        bh=lNrv1STKj0RSHNKKD/VzvhY82ZwRYCBaCSXePyQ641Y=;
+        s=default; t=1554138516;
+        bh=mBUODOQfe0hLpDZ4iVbEHDzmNwaDLTTkXeixK94KC0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=symeqP7ewEYaCQmIa/5ac1Bl5GoMBbt8lMMC8RbbPer7w18SxssuAR2vQh5YrgFIz
-         qtmJQzNRkYaP1aWhVsqPmVyCxWWMqRUnetNePEX8ub6R3atP17hIAeAiMbl1et6QYH
-         PYkJpppHJZQzRKjSi17pdlHfHxZYYIAYAb/y7tyI=
+        b=tbrG3pXTy0mvYbe4UDi4FjjXfdQ8Em3KyKY1yBIWhtm7GOu93O0yPe4Y5EcEf1cZH
+         eBKWeM3t/ngP/yujd/TZ+YXCJSVmDF2kM80/O3ck4Hoo1roWwvD3kX5Dhl0M66lR9g
+         x6sHSWWFkJuc+IuT2wENmpoEqeq9WRowOULlaQcQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.0 050/146] NFS: Fix nfs4_lock_state refcounting in nfs4_alloc_{lock,unlock}data()
-Date:   Mon,  1 Apr 2019 19:01:02 +0200
-Message-Id: <20190401170052.835539169@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.0 042/146] btrfs: Fix bound checking in qgroup_trace_new_subtree_blocks
+Date:   Mon,  1 Apr 2019 19:00:54 +0200
+Message-Id: <20190401170052.086443431@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -66,70 +66,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+From: Nikolay Borisov <nborisov@suse.com>
 
-commit 3028efe03be9c8c4cd7923f0f3c39b2871cc8a8f upstream.
+commit 7ff2c2a1a71e83f74574b8001ea88deb3c166ad7 upstream.
 
-Commit 7b587e1a5a6c ("NFS: use locks_copy_lock() to copy locks.")
-changed the lock copying from memcpy() to the dedicated
-locks_copy_lock() function. The latter correctly increments the
-nfs4_lock_state.ls_count via nfs4_fl_copy_lock(), however, this refcount
-has already been incremented in the nfs4_alloc_{lock,unlock}data().
-Kmemleak subsequently reports an unreferenced nfs4_lock_state object as
-below (arm64 platform):
+If 'cur_level' is 7  then the bound checking at the top of the function
+will actually pass. Later on, it's possible to dereference
+ds_path->nodes[cur_level+1] which will be an out of bounds.
 
-unreferenced object 0xffff8000fce0b000 (size 256):
-  comm "systemd-sysuser", pid 1608, jiffies 4294892825 (age 32.348s)
-  hex dump (first 32 bytes):
-    20 57 4c fb 00 80 ff ff 20 57 4c fb 00 80 ff ff   WL..... WL.....
-    00 57 4c fb 00 80 ff ff 01 00 00 00 00 00 00 00  .WL.............
-  backtrace:
-    [<000000000d15010d>] kmem_cache_alloc+0x178/0x208
-    [<00000000d7c1d264>] nfs4_set_lock_state+0x124/0x1f0
-    [<000000009c867628>] nfs4_proc_lock+0x90/0x478
-    [<000000001686bd74>] do_setlk+0x64/0xe8
-    [<00000000e01500d4>] nfs_lock+0xe8/0x1f0
-    [<000000004f387d8d>] vfs_lock_file+0x18/0x40
-    [<00000000656ab79b>] do_lock_file_wait+0x68/0xf8
-    [<00000000f17c4a4b>] fcntl_setlk+0x224/0x280
-    [<0000000052a242c6>] do_fcntl+0x418/0x730
-    [<000000004f47291a>] __arm64_sys_fcntl+0x84/0xd0
-    [<00000000d6856e01>] el0_svc_common+0x80/0xf0
-    [<000000009c4bd1df>] el0_svc_handler+0x2c/0x80
-    [<00000000b1a0d479>] el0_svc+0x8/0xc
-    [<0000000056c62a0f>] 0xffffffffffffffff
+The correct check will be cur_level >= BTRFS_MAX_LEVEL - 1 .
 
-This patch removes the original refcount_inc(&lsp->ls_count) that was
-paired with the memcpy() lock copying.
-
-Fixes: 7b587e1a5a6c ("NFS: use locks_copy_lock() to copy locks.")
-Cc: <stable@vger.kernel.org> # 5.0.x-
-Cc: NeilBrown <neilb@suse.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes-coverty-id: 1440918
+Fixes-coverty-id: 1440911
+Fixes: ea49f3e73c4b ("btrfs: qgroup: Introduce function to find all new tree blocks of reloc tree")
+CC: stable@vger.kernel.org # 4.20+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |    2 --
- 1 file changed, 2 deletions(-)
+ fs/btrfs/qgroup.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -6306,7 +6306,6 @@ static struct nfs4_unlockdata *nfs4_allo
- 	p->arg.seqid = seqid;
- 	p->res.seqid = seqid;
- 	p->lsp = lsp;
--	refcount_inc(&lsp->ls_count);
- 	/* Ensure we don't close file until we're done freeing locks! */
- 	p->ctx = get_nfs_open_context(ctx);
- 	p->l_ctx = nfs_get_lock_context(ctx);
-@@ -6531,7 +6530,6 @@ static struct nfs4_lockdata *nfs4_alloc_
- 	p->res.lock_seqid = p->arg.lock_seqid;
- 	p->lsp = lsp;
- 	p->server = server;
--	refcount_inc(&lsp->ls_count);
- 	p->ctx = get_nfs_open_context(ctx);
- 	locks_init_lock(&p->fl);
- 	locks_copy_lock(&p->fl, fl);
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -1917,8 +1917,8 @@ static int qgroup_trace_new_subtree_bloc
+ 	int i;
+ 
+ 	/* Level sanity check */
+-	if (cur_level < 0 || cur_level >= BTRFS_MAX_LEVEL ||
+-	    root_level < 0 || root_level >= BTRFS_MAX_LEVEL ||
++	if (cur_level < 0 || cur_level >= BTRFS_MAX_LEVEL - 1 ||
++	    root_level < 0 || root_level >= BTRFS_MAX_LEVEL - 1 ||
+ 	    root_level < cur_level) {
+ 		btrfs_err_rl(fs_info,
+ 			"%s: bad levels, cur_level=%d root_level=%d",
 
 
