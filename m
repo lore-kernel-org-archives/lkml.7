@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BF4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4713EC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54492070D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187E820880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554142241;
-	bh=us4Nj+9dtFwj9PlRB3x0nW0aBqmZvsSlbgRM/Pbvgyo=;
+	s=default; t=1554142269;
+	bh=5h314WCyHcdstThku8LdZsHBQz4uThCvfemPwtTbhOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cYaumfeCIHlcC4/VO2RClu8geuIG9VeDfK56Gl7x6bAQgjpBu8fdL0KK5MBNRPvQm
-	 YfgsEIxbUUjycGXyhlD+GuaTMw/pg+9weIeOQpi/U1lkQplCaFISZdkcaHq0KxHhlg
-	 AlyMNzgJ3L9DZ6yFw/8Vi5fOe2yh9htYTAMpCAPw=
+	b=UwBomXHN6lHJTg76hoZfTRHxSvdFac11Jq0/5C20YqOmCEdamemR2K6HJd7+AOn5/
+	 12ITt29939Pi+P3pQm/hzZw+UlmkmXsm9j9eyoULKYFPMifs/Y8dn+juBCG71hA9kc
+	 pplrAKk8J6uN88rmr7Iy76STZTEPnUHNTObbpNXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729536AbfDARHp (ORCPT
+        id S1729306AbfDARGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:07:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53954 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:06:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729511AbfDARHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:07:40 -0400
+        id S1729254AbfDARGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:06:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1102321934;
-        Mon,  1 Apr 2019 17:07:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 305892192C;
+        Mon,  1 Apr 2019 17:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138459;
-        bh=us4Nj+9dtFwj9PlRB3x0nW0aBqmZvsSlbgRM/Pbvgyo=;
+        s=default; t=1554138400;
+        bh=5h314WCyHcdstThku8LdZsHBQz4uThCvfemPwtTbhOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dcQcuLt801kEZSHTPDU2ZihWY8SSvGGoooQd6FB8WNnxahTwIFfemHQW/NALhDzat
-         EXZaiW0nu2aTDitqx6ugSzSKZpZIV1rrH4nEzEEoOHgdoUMiSrriwcfHsxoG1jcm+A
-         dwU5BZxmtzoZULsAEbz2AYibYBHo/qlzCO9m2udU=
+        b=uMnmo41QyYWIo7EOuYAD/IBTI3sm8PAEylVU1noeS5C2utDSd+sD/lEWu58qUzCw6
+         Iuriaq/H9tvK8zjLOZBEh5V7OJIa4TWwP77+nuDw/GsNRMDeCPgFl/G1sVRIxBD6gq
+         6+KJ4f9Nd5PKTVEbPRzoWdlSk4vzAspaAJtC+epE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Schneider <asn@redhat.com>,
-        Neil Brown <neilb@suse.com>, Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 5.0 045/146] locks: wake any locks blocked on request before deadlock check
-Date:   Mon,  1 Apr 2019 19:00:57 +0200
-Message-Id: <20190401170052.385151385@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.0 056/146] ALSA: pcm: Fix possible OOB access in PCM oss plugins
+Date:   Mon,  1 Apr 2019 19:01:08 +0200
+Message-Id: <20190401170053.373762751@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -65,54 +66,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 945ab8f6de94430c23a82f3cf2e3f6d6f2945ff7 upstream.
+commit ca0214ee2802dd47239a4e39fb21c5b00ef61b22 upstream.
 
-Andreas reported that he was seeing the tdbtorture test fail in some
-cases with -EDEADLCK when it wasn't before. Some debugging showed that
-deadlock detection was sometimes discovering the caller's lock request
-itself in a dependency chain.
+The PCM OSS emulation converts and transfers the data on the fly via
+"plugins".  The data is converted over the dynamically allocated
+buffer for each plugin, and recently syzkaller caught OOB in this
+flow.
 
-While we remove the request from the blocked_lock_hash prior to
-reattempting to acquire it, any locks that are blocked on that request
-will still be present in the hash and will still have their fl_blocker
-pointer set to the current request.
+Although the bisection by syzbot pointed out to the commit
+65766ee0bf7f ("ALSA: oss: Use kvzalloc() for local buffer
+allocations"), this is merely a commit to replace vmalloc() with
+kvmalloc(), hence it can't be the cause.  The further debug action
+revealed that this happens in the case where a slave PCM doesn't
+support only the stereo channels while the OSS stream is set up for a
+mono channel.  Below is a brief explanation:
 
-This causes posix_locks_deadlock to find a deadlock dependency chain
-when it shouldn't, as a lock request cannot block itself.
+At each OSS parameter change, the driver sets up the PCM hw_params
+again in snd_pcm_oss_change_params_lock().  This is also the place
+where plugins are created and local buffers are allocated.  The
+problem is that the plugins are created before the final hw_params is
+determined.  Namely, two snd_pcm_hw_param_near() calls for setting the
+period size and periods may influence on the final result of channels,
+rates, etc, too, while the current code has already created plugins
+beforehand with the premature values.  So, the plugin believes that
+channels=1, while the actual I/O is with channels=2, which makes the
+driver reading/writing over the allocated buffer size.
 
-We are going to end up waking all of those blocked locks anyway when we
-go to reinsert the request back into the blocked_lock_hash, so just do
-it prior to checking for deadlocks. This ensures that any lock blocked
-on the current request will no longer be part of any blocked request
-chain.
+The fix is simply to move the plugin allocation code after the final
+hw_params call.
 
-URL: https://bugzilla.kernel.org/show_bug.cgi?id=202975
-Fixes: 5946c4319ebb ("fs/locks: allow a lock request to block other requests.")
-Cc: stable@vger.kernel.org
-Reported-by: Andreas Schneider <asn@redhat.com>
-Signed-off-by: Neil Brown <neilb@suse.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reported-by: syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/locks.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ sound/core/oss/pcm_oss.c |   43 ++++++++++++++++++++++---------------------
+ 1 file changed, 22 insertions(+), 21 deletions(-)
 
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -1160,6 +1160,11 @@ static int posix_lock_inode(struct inode
- 			 */
- 			error = -EDEADLK;
- 			spin_lock(&blocked_lock_lock);
-+			/*
-+			 * Ensure that we don't find any locks blocked on this
-+			 * request during deadlock detection.
-+			 */
-+			__locks_wake_up_blocks(request);
- 			if (likely(!posix_locks_deadlock(request, fl))) {
- 				error = FILE_LOCK_DEFERRED;
- 				__locks_insert_block(fl, request,
+--- a/sound/core/oss/pcm_oss.c
++++ b/sound/core/oss/pcm_oss.c
+@@ -940,6 +940,28 @@ static int snd_pcm_oss_change_params_loc
+ 	oss_frame_size = snd_pcm_format_physical_width(params_format(params)) *
+ 			 params_channels(params) / 8;
+ 
++	err = snd_pcm_oss_period_size(substream, params, sparams);
++	if (err < 0)
++		goto failure;
++
++	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
++	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
++	if (err < 0)
++		goto failure;
++
++	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
++				     runtime->oss.periods, NULL);
++	if (err < 0)
++		goto failure;
++
++	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
++
++	err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams);
++	if (err < 0) {
++		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
++		goto failure;
++	}
++
+ #ifdef CONFIG_SND_PCM_OSS_PLUGINS
+ 	snd_pcm_oss_plugin_clear(substream);
+ 	if (!direct) {
+@@ -974,27 +996,6 @@ static int snd_pcm_oss_change_params_loc
+ 	}
+ #endif
+ 
+-	err = snd_pcm_oss_period_size(substream, params, sparams);
+-	if (err < 0)
+-		goto failure;
+-
+-	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
+-	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
+-	if (err < 0)
+-		goto failure;
+-
+-	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
+-				     runtime->oss.periods, NULL);
+-	if (err < 0)
+-		goto failure;
+-
+-	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
+-
+-	if ((err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams)) < 0) {
+-		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
+-		goto failure;
+-	}
+-
+ 	if (runtime->oss.trigger) {
+ 		sw_params->start_threshold = 1;
+ 	} else {
 
 
