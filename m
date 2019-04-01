@@ -2,118 +2,257 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211FAC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BADDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99A420880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6AD8205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:34:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="Le32u+UX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbfDATdT (ORCPT
+        id S1726388AbfDATeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 15:33:19 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:45386 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbfDATdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 15:33:19 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hB2gH-00005u-Iu; Mon, 01 Apr 2019 13:33:18 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hB2gG-0003LN-Qq; Mon, 01 Apr 2019 13:33:16 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Andrew Maier <andrew.maier@eideticom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Date:   Mon,  1 Apr 2019 13:33:02 -0600
-Message-Id: <20190401193302.12813-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 1 Apr 2019 15:34:21 -0400
+Received: from mail-pf1-f179.google.com ([209.85.210.179]:45040 "EHLO
+        mail-pf1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfDATeV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 15:34:21 -0400
+Received: by mail-pf1-f179.google.com with SMTP id y13so5056470pfm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 12:34:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=V1rh7iUH6qOqDSjpQ4WwPpBg+gftkDnfN2ZT6J4yGp0=;
+        b=Le32u+UXshREdABtjhcIvyRxdxFjRBlwD88l1n7TTBB1gvVaQsCBHjkuUJJO3419cY
+         m/xDwG4eXmvmMPIDSCto5/tsqgD/4W6mJBBVEFB9+E1TVn9/TAyz5ZF+o4gMJR2VTUB+
+         /hBUBTDG/xYUreDosWz+YzEIiFlKeZxM9H7xcdUx2h8b5uBtlphO18OGbbJl4+7C36Ik
+         AhFrWL7my0NbVUwZ31+xlwKTBaKXGCR6lsz7PLkBhTaU/qDwVIh881yHPMj6BZxFdu5h
+         NUWh3R/bxUYJWuKlFY23tdBPj61UWhpql9yDNpfsXHq3lU5ktzfPfTqEHpwq2HIISTsY
+         23vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=V1rh7iUH6qOqDSjpQ4WwPpBg+gftkDnfN2ZT6J4yGp0=;
+        b=uK1D87/uvpTFpBV5k0JUDgj4CCBIT3HIZyEBkdf7cLDROx1vhw9bSRlI23xrv9lx57
+         YPaxedudyyQhJMUiApWee/zFXje9jhIm9IHIVCMxKj/kyv/AZz0JAIksYqBYXAaeEc6G
+         CC2OXglfK/Ykf8VbE4TywQM2aWr8N2U+3jFi1//NRkUFbuUONqj+sggu+D9C6exS6Gne
+         nNUtv89M8f4PrnETyBrOp6t9nH6DBaPBFvpnps+IN+7U7HI9PRZpegA27XXIUiWBIrE8
+         /CMpmlCupbzpxDR19cDl8gvNSFyQ7k276hO2kHuzCqdZPSD9vMpx8xHl+UEBa3txQVNp
+         wnnQ==
+X-Gm-Message-State: APjAAAWuVBgRk93t/RDkcY9sCxtxtvlCihsTX0RzVs0Dj/DNh+oegJ9E
+        3oSERieT0SSk1+RG3+sW+T5fgDOBHL7H55yUW6KCuYRS72Q=
+X-Google-Smtp-Source: APXvYqzGe2teaI2PF3iMIEaA99+vRsBVHqk6SNBXSbYrG0DTqbd/rKB3na/JkzxRMKAhjPYx7HH4fuJMQdIC0BmfSZg=
+X-Received: by 2002:a62:e112:: with SMTP id q18mr13657424pfh.116.1554147259710;
+ Mon, 01 Apr 2019 12:34:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, sbates@raithlin.com, logang@deltatee.com, andrew.maier@eideticom.com, bhelgaas@google.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH] PCI: Fix issue with "pci=disable_acs_redir" parameter being ignored
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+From:   Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+Date:   Tue, 2 Apr 2019 01:03:42 +0530
+Message-ID: <CAG=yYw=VMJ5vK9aXcZ7AgC7f_dx+5ebKgwz68mV3=m6pOA_syA@mail.gmail.com>
+Subject: about selftests/netfilter test related issue
+To:     Shuah Khan <shuah@kernel.org>, pablo@netfilter.org, fw@strlen.de
+Cc:     linux-kselftest@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="00000000000058390b05857d1bea"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In most cases, kmalloc will not be available early in boot when
-pci_setup() is called. Thus, the kstrdup call that was added to fix the
-__initdata bug with the disable_acs_redir parameter usually returns
-NULL. Thus the parameter is discarded and it does not take into effect.
+--00000000000058390b05857d1bea
+Content-Type: text/plain; charset="UTF-8"
 
-To fix this we have to do what we originally did with the
-resource_alignment parameter: allocate a static buffer and copy the
-string from the command line to it.
+hello
+i think the script nft_nat.sh  is assuming devices eth0 and eth1
+which may not be the case always. my suggestion is why not give the needed
+network devices as arguments to the script. iam showing related
+command line sessions below and error related file is attached.
+---------------------------x-------------x----------------------------
+$ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN
+mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast
+state DOWN mode DEFAULT group default qlen 1000
+    link/ether 70:5a:0f:b9:d8:5c brd ff:ff:ff:ff:ff:ff
+3: wlp2s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state
+UP mode DORMANT group default qlen 1000
+    link/ether 68:14:01:07:36:1f brd ff:ff:ff:ff:ff:ff
+$
+------------------------x-----------x---------------------------------------
+$sudo ./nft_nat.sh 2> error-related.txt
+ERROR: ping failed
+SKIP: Could not add add ip6 dnat hook
+ERROR: canot ping ns1 from ns2
+ERROR: cannot ping ns1 from ns2 with active ip masquerading
+ERROR: cannot ping ns1 from ns2 via ipv6
+ERROR: cannot ping ns1 from ns2
+ERROR: cannot ping ns1 from ns2 with active ip redirect
+ERROR: cannnot ping ns1 from ns2 via ipv6
+ERROR: cannot ping ns1 from ns2 with active ip6 redirect
+-------------------------x---------------------------x------------------------------------
 
-Fixes: d2fd6e81912a ("PCI: Fix __initdata issue with "pci=disable_acs_redir" parameter")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Tested-by: Andrew Maier <andrew.maier@eideticom.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
----
+a file is attached which shows the contents of error-related.txt
 
-Sorry, it seems I didn't test the previous patch in this area properly
-and I actually made disable_acs_redir ineffective in most cases.
+/Jeffrin
+-- 
+software engineer
+rajagiri school of engineering and technology
 
-This change should fix it and I got a colleague to test it fully
-on his system as well.
+--00000000000058390b05857d1bea
+Content-Type: text/plain; charset="US-ASCII"; name="error-related.txt"
+Content-Disposition: attachment; filename="error-related.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jtyqkzy70>
+X-Attachment-Id: f_jtyqkzy70
 
-drivers/pci/pci.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 7c1b362f599a..537395dfd0df 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3125,7 +3125,17 @@ void pci_request_acs(void)
- 	pci_acs_enable = 1;
- }
-
--static const char *disable_acs_redir_param;
-+static char disable_acs_redir_param[COMMAND_LINE_SIZE];
-+
-+static void pci_set_disable_acs_redir_param(const char *param)
-+{
-+	if (strlen(param) >= sizeof(disable_acs_redir_param)) {
-+		pr_err("PCI: disable_acs_redir parameter is too long and has been ignored!\n");
-+		return;
-+	}
-+
-+	strcpy(disable_acs_redir_param, param);
-+}
-
- /**
-  * pci_disable_acs_redir - disable ACS redirect capabilities
-@@ -3140,7 +3150,7 @@ static void pci_disable_acs_redir(struct pci_dev *dev)
- 	int pos;
- 	u16 ctrl;
-
--	if (!disable_acs_redir_param)
-+	if (!disable_acs_redir_param[0])
- 		return;
-
- 	p = disable_acs_redir_param;
-@@ -6262,8 +6272,7 @@ static int __init pci_setup(char *str)
- 			} else if (!strncmp(str, "pcie_scan_all", 13)) {
- 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
- 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
--				disable_acs_redir_param =
--					kstrdup(str + 18, GFP_KERNEL);
-+				pci_set_disable_acs_redir_param(str + 18);
- 			} else {
- 				printk(KERN_ERR "PCI: Unknown option `%s'\n",
- 						str);
---
-2.20.1
+RXJyb3I6IFVua25vd24gZGV2aWNlIHR5cGUuCkVycm9yOiBVbmtub3duIGRldmljZSB0eXBlLgpD
+YW5ub3QgZmluZCBkZXZpY2UgInZldGgwIgpDYW5ub3QgZmluZCBkZXZpY2UgInZldGgwIgpDYW5u
+b3QgZmluZCBkZXZpY2UgInZldGgwIgpDYW5ub3QgZmluZCBkZXZpY2UgInZldGgxIgpDYW5ub3Qg
+ZmluZCBkZXZpY2UgInZldGgxIgpDYW5ub3QgZmluZCBkZXZpY2UgInZldGgxIgpDYW5ub3QgZmlu
+ZCBkZXZpY2UgImV0aDAiCkNhbm5vdCBmaW5kIGRldmljZSAiZXRoMCIKRXJyb3I6IE5leHRob3Ag
+aGFzIGludmFsaWQgZ2F0ZXdheS4KQ2Fubm90IGZpbmQgZGV2aWNlICJldGgwIgpSVE5FVExJTksg
+YW5zd2VyczogTm8gcm91dGUgdG8gaG9zdApDYW5ub3QgZmluZCBkZXZpY2UgImV0aDAiCkNhbm5v
+dCBmaW5kIGRldmljZSAiZXRoMCIKRXJyb3I6IE5leHRob3AgaGFzIGludmFsaWQgZ2F0ZXdheS4K
+Q2Fubm90IGZpbmQgZGV2aWNlICJldGgwIgpSVE5FVExJTksgYW5zd2VyczogTm8gcm91dGUgdG8g
+aG9zdApjb25uZWN0OiBOZXR3b3JrIGlzIHVucmVhY2hhYmxlCkVSUk9SOiBDb3VsZCBub3QgcmVh
+Y2ggb3RoZXIgbmFtZXNwYWNlKHMpCmNvbm5lY3Q6IE5ldHdvcmsgaXMgdW5yZWFjaGFibGUKRVJS
+T1I6IENvdWxkIG5vdCByZWFjaCBvdGhlciBuYW1lc3BhY2UocykgdmlhIGlwdjYKRVJST1I6IG5z
+MGluIGNvdW50ZXIgaW4gbnMxIGhhcyB1bmV4cGVjdGVkIHZhbHVlIChleHBlY3RlZCBwYWNrZXRz
+IDEgYnl0ZXMgODQpCnRhYmxlIGluZXQgZmlsdGVyIHsKCWNvdW50ZXIgbnMwaW4gewoJCXBhY2tl
+dHMgMCBieXRlcyAwCgl9Cn0KRVJST1I6IG5zMG91dCBjb3VudGVyIGluIG5zMSBoYXMgdW5leHBl
+Y3RlZCB2YWx1ZSAoZXhwZWN0ZWQgcGFja2V0cyAxIGJ5dGVzIDg0KQp0YWJsZSBpbmV0IGZpbHRl
+ciB7Cgljb3VudGVyIG5zMG91dCB7CgkJcGFja2V0cyAwIGJ5dGVzIDAKCX0KfQpFUlJPUjogbnMw
+aW42IGNvdW50ZXIgaW4gbnMxIGhhcyB1bmV4cGVjdGVkIHZhbHVlIChleHBlY3RlZCBwYWNrZXRz
+IDEgYnl0ZXMgMTA0KQp0YWJsZSBpbmV0IGZpbHRlciB7Cgljb3VudGVyIG5zMGluNiB7CgkJcGFj
+a2V0cyAwIGJ5dGVzIDAKCX0KfQpFUlJPUjogbnMwb3V0NiBjb3VudGVyIGluIG5zMSBoYXMgdW5l
+eHBlY3RlZCB2YWx1ZSAoZXhwZWN0ZWQgcGFja2V0cyAxIGJ5dGVzIDEwNCkKdGFibGUgaW5ldCBm
+aWx0ZXIgewoJY291bnRlciBuczBvdXQ2IHsKCQlwYWNrZXRzIDAgYnl0ZXMgMAoJfQp9CkVSUk9S
+OiBuczFpbiBjb3VudGVyIGluIG5zMCBoYXMgdW5leHBlY3RlZCB2YWx1ZSAoZXhwZWN0ZWQgcGFj
+a2V0cyAxIGJ5dGVzIDg0KQp0YWJsZSBpbmV0IGZpbHRlciB7Cgljb3VudGVyIG5zMWluIHsKCQlw
+YWNrZXRzIDAgYnl0ZXMgMAoJfQp9CkVSUk9SOiBuczEgY291bnRlciBpbiBuczAgaGFzIHVuZXhw
+ZWN0ZWQgdmFsdWUgKGV4cGVjdGVkIHBhY2tldHMgMSBieXRlcyAxMDQpCkVycm9yOiBDb3VsZCBu
+b3QgcHJvY2VzcyBydWxlOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5Cmxpc3QgY291bnRlciBp
+bmV0IGZpbHRlciBuczEKICAgICAgICAgICAgICAgICAgICAgICAgIF5eXgpFUlJPUjogbnMxb3V0
+IGNvdW50ZXIgaW4gbnMwIGhhcyB1bmV4cGVjdGVkIHZhbHVlIChleHBlY3RlZCBwYWNrZXRzIDEg
+Ynl0ZXMgODQpCnRhYmxlIGluZXQgZmlsdGVyIHsKCWNvdW50ZXIgbnMxb3V0IHsKCQlwYWNrZXRz
+IDAgYnl0ZXMgMAoJfQp9CkVSUk9SOiBuczEgY291bnRlciBpbiBuczAgaGFzIHVuZXhwZWN0ZWQg
+dmFsdWUgKGV4cGVjdGVkIHBhY2tldHMgMSBieXRlcyAxMDQpCkVycm9yOiBDb3VsZCBub3QgcHJv
+Y2VzcyBydWxlOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5Cmxpc3QgY291bnRlciBpbmV0IGZp
+bHRlciBuczEKICAgICAgICAgICAgICAgICAgICAgICAgIF5eXgpjb25uZWN0OiBOZXR3b3JrIGlz
+IHVucmVhY2hhYmxlCkVSUk9SOiBDb3VsZCBub3QgcmVhY2ggb3RoZXIgbmFtZXNwYWNlKHMpCmNv
+bm5lY3Q6IE5ldHdvcmsgaXMgdW5yZWFjaGFibGUKRVJST1I6IENvdWxkIG5vdCByZWFjaCBvdGhl
+ciBuYW1lc3BhY2UocykgdmlhIGlwdjYKRVJST1I6IG5zMGluIGNvdW50ZXIgaW4gbnMyIGhhcyB1
+bmV4cGVjdGVkIHZhbHVlIChleHBlY3RlZCBwYWNrZXRzIDEgYnl0ZXMgODQpCnRhYmxlIGluZXQg
+ZmlsdGVyIHsKCWNvdW50ZXIgbnMwaW4gewoJCXBhY2tldHMgMCBieXRlcyAwCgl9Cn0KRVJST1I6
+IG5zMG91dCBjb3VudGVyIGluIG5zMiBoYXMgdW5leHBlY3RlZCB2YWx1ZSAoZXhwZWN0ZWQgcGFj
+a2V0cyAxIGJ5dGVzIDg0KQp0YWJsZSBpbmV0IGZpbHRlciB7Cgljb3VudGVyIG5zMG91dCB7CgkJ
+cGFja2V0cyAwIGJ5dGVzIDAKCX0KfQpFUlJPUjogbnMwaW42IGNvdW50ZXIgaW4gbnMyIGhhcyB1
+bmV4cGVjdGVkIHZhbHVlIChleHBlY3RlZCBwYWNrZXRzIDEgYnl0ZXMgMTA0KQp0YWJsZSBpbmV0
+IGZpbHRlciB7Cgljb3VudGVyIG5zMGluNiB7CgkJcGFja2V0cyAwIGJ5dGVzIDAKCX0KfQpFUlJP
+UjogbnMwb3V0NiBjb3VudGVyIGluIG5zMiBoYXMgdW5leHBlY3RlZCB2YWx1ZSAoZXhwZWN0ZWQg
+cGFja2V0cyAxIGJ5dGVzIDEwNCkKdGFibGUgaW5ldCBmaWx0ZXIgewoJY291bnRlciBuczBvdXQ2
+IHsKCQlwYWNrZXRzIDAgYnl0ZXMgMAoJfQp9CkVSUk9SOiBuczJpbiBjb3VudGVyIGluIG5zMCBo
+YXMgdW5leHBlY3RlZCB2YWx1ZSAoZXhwZWN0ZWQgcGFja2V0cyAxIGJ5dGVzIDg0KQp0YWJsZSBp
+bmV0IGZpbHRlciB7Cgljb3VudGVyIG5zMmluIHsKCQlwYWNrZXRzIDAgYnl0ZXMgMAoJfQp9CkVS
+Uk9SOiBuczIgY291bnRlciBpbiBuczAgaGFzIHVuZXhwZWN0ZWQgdmFsdWUgKGV4cGVjdGVkIHBh
+Y2tldHMgMSBieXRlcyAxMDQpCkVycm9yOiBDb3VsZCBub3QgcHJvY2VzcyBydWxlOiBObyBzdWNo
+IGZpbGUgb3IgZGlyZWN0b3J5Cmxpc3QgY291bnRlciBpbmV0IGZpbHRlciBuczIKICAgICAgICAg
+ICAgICAgICAgICAgICAgIF5eXgpFUlJPUjogbnMyb3V0IGNvdW50ZXIgaW4gbnMwIGhhcyB1bmV4
+cGVjdGVkIHZhbHVlIChleHBlY3RlZCBwYWNrZXRzIDEgYnl0ZXMgODQpCnRhYmxlIGluZXQgZmls
+dGVyIHsKCWNvdW50ZXIgbnMyb3V0IHsKCQlwYWNrZXRzIDAgYnl0ZXMgMAoJfQp9CkVSUk9SOiBu
+czIgY291bnRlciBpbiBuczAgaGFzIHVuZXhwZWN0ZWQgdmFsdWUgKGV4cGVjdGVkIHBhY2tldHMg
+MSBieXRlcyAxMDQpCkVycm9yOiBDb3VsZCBub3QgcHJvY2VzcyBydWxlOiBObyBzdWNoIGZpbGUg
+b3IgZGlyZWN0b3J5Cmxpc3QgY291bnRlciBpbmV0IGZpbHRlciBuczIKICAgICAgICAgICAgICAg
+ICAgICAgICAgIF5eXgovZGV2L3N0ZGluOjI6MTUtMjA6IEVycm9yOiBDb3VsZCBub3QgcHJvY2Vz
+cyBydWxlOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5CgljaGFpbiBvdXRwdXQgewoJICAgICAg
+ICAgICAgIF5eXl5eXgovZGV2L3N0ZGluOjQ6MTctNTI6IEVycm9yOiBDb3VsZCBub3QgcHJvY2Vz
+cyBydWxlOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5CgkJaXAgZGFkZHIgMTAuMC4xLjk5IGRu
+YXQgdG8gMTAuMC4yLjk5CgkJICAgICAgICAgICAgICBeXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5e
+Xl5eXl5eXl5eXl4KY29ubmVjdDogTmV0d29yayBpcyB1bnJlYWNoYWJsZQovZGV2L3N0ZGluOjI6
+MTUtMjA6IEVycm9yOiBDb3VsZCBub3QgcHJvY2VzcyBydWxlOiBObyBzdWNoIGZpbGUgb3IgZGly
+ZWN0b3J5CgljaGFpbiBvdXRwdXQgewoJICAgICAgICAgICAgIF5eXl5eXgovZGV2L3N0ZGluOjQ6
+MTctNTU6IEVycm9yOiBDb3VsZCBub3QgcHJvY2VzcyBydWxlOiBObyBzdWNoIGZpbGUgb3IgZGly
+ZWN0b3J5CgkJaXA2IGRhZGRyIGRlYWQ6MTo6OTkgZG5hdCB0byBkZWFkOjI6Ojk5CgkJICAgICAg
+ICAgICAgICBeXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl4Kc3lzY3RsOiBj
+YW5ub3Qgc3RhdCAvcHJvYy9zeXMvbmV0L2lwdjQvY29uZi92ZXRoMC9mb3J3YXJkaW5nOiBObyBz
+dWNoIGZpbGUgb3IgZGlyZWN0b3J5CnN5c2N0bDogY2Fubm90IHN0YXQgL3Byb2Mvc3lzL25ldC9p
+cHY0L2NvbmYvdmV0aDEvZm9yd2FyZGluZzogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeQpjb25u
+ZWN0OiBOZXR3b3JrIGlzIHVucmVhY2hhYmxlCkVSUk9SOiBuczJpbiBjb3VudGVyIGluIG5zMSBo
+YXMgdW5leHBlY3RlZCB2YWx1ZSAoZXhwZWN0ZWQgcGFja2V0cyAxIGJ5dGVzIDg0KQp0YWJsZSBp
+bmV0IGZpbHRlciB7Cgljb3VudGVyIG5zMmluIHsKCQlwYWNrZXRzIDAgYnl0ZXMgMAoJfQp9CkVS
+Uk9SOiBuczFpbiBjb3VudGVyIGluIG5zMiBoYXMgdW5leHBlY3RlZCB2YWx1ZSAoZXhwZWN0ZWQg
+cGFja2V0cyAxIGJ5dGVzIDg0KQp0YWJsZSBpbmV0IGZpbHRlciB7Cgljb3VudGVyIG5zMWluIHsK
+CQlwYWNrZXRzIDAgYnl0ZXMgMAoJfQp9CkVSUk9SOiBuczJvdXQgY291bnRlciBpbiBuczEgaGFz
+IHVuZXhwZWN0ZWQgdmFsdWUgKGV4cGVjdGVkIHBhY2tldHMgMSBieXRlcyA4NCkKdGFibGUgaW5l
+dCBmaWx0ZXIgewoJY291bnRlciBuczJvdXQgewoJCXBhY2tldHMgMCBieXRlcyAwCgl9Cn0KRVJS
+T1I6IG5zMW91dCBjb3VudGVyIGluIG5zMiBoYXMgdW5leHBlY3RlZCB2YWx1ZSAoZXhwZWN0ZWQg
+cGFja2V0cyAxIGJ5dGVzIDg0KQp0YWJsZSBpbmV0IGZpbHRlciB7Cgljb3VudGVyIG5zMW91dCB7
+CgkJcGFja2V0cyAwIGJ5dGVzIDAKCX0KfQovZGV2L3N0ZGluOjQ6MjYtMzA6IEVycm9yOiBJbnRl
+cmZhY2UgZG9lcyBub3QgZXhpc3QKCQltZXRhIG9pZiB2ZXRoMCBtYXNxdWVyYWRlCgkJICAgICAg
+ICAgICAgICAgICAgICAgICBeXl5eXgpjb25uZWN0OiBOZXR3b3JrIGlzIHVucmVhY2hhYmxlCkVS
+Uk9SOiBuczBpbiBjb3VudGVyIGluIG5zMSBoYXMgdW5leHBlY3RlZCB2YWx1ZSAoZXhwZWN0ZWQg
+cGFja2V0cyAxIGJ5dGVzIDg0KQp0YWJsZSBpbmV0IGZpbHRlciB7Cgljb3VudGVyIG5zMGluIHsK
+CQlwYWNrZXRzIDAgYnl0ZXMgMAoJfQp9CkVSUk9SOiBuczFpbiBjb3VudGVyIGluIG5zMiBoYXMg
+dW5leHBlY3RlZCB2YWx1ZSAoZXhwZWN0ZWQgcGFja2V0cyAxIGJ5dGVzIDg0KQp0YWJsZSBpbmV0
+IGZpbHRlciB7Cgljb3VudGVyIG5zMWluIHsKCQlwYWNrZXRzIDAgYnl0ZXMgMAoJfQp9CkVSUk9S
+OiBuczBvdXQgY291bnRlciBpbiBuczEgaGFzIHVuZXhwZWN0ZWQgdmFsdWUgKGV4cGVjdGVkIHBh
+Y2tldHMgMSBieXRlcyA4NCkKdGFibGUgaW5ldCBmaWx0ZXIgewoJY291bnRlciBuczBvdXQgewoJ
+CXBhY2tldHMgMCBieXRlcyAwCgl9Cn0KRVJST1I6IG5zMW91dCBjb3VudGVyIGluIG5zMiBoYXMg
+dW5leHBlY3RlZCB2YWx1ZSAoZXhwZWN0ZWQgcGFja2V0cyAxIGJ5dGVzIDg0KQp0YWJsZSBpbmV0
+IGZpbHRlciB7Cgljb3VudGVyIG5zMW91dCB7CgkJcGFja2V0cyAwIGJ5dGVzIDAKCX0KfQpFcnJv
+cjogQ291bGQgbm90IHByb2Nlc3MgcnVsZTogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeQpmbHVz
+aCBjaGFpbiBpcCBuYXQgcG9zdHJvdXRpbmcKXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5e
+XgpFUlJPUjogQ291bGQgbm90IGZsdXNoIG5hdCBwb3N0cm91dGluZwpjb25uZWN0OiBOZXR3b3Jr
+IGlzIHVucmVhY2hhYmxlCnN5c2N0bDogY2Fubm90IHN0YXQgL3Byb2Mvc3lzL25ldC9pcHY0L2Nv
+bmYvdmV0aDAvZm9yd2FyZGluZzogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeQpzeXNjdGw6IGNh
+bm5vdCBzdGF0IC9wcm9jL3N5cy9uZXQvaXB2NC9jb25mL3ZldGgxL2ZvcndhcmRpbmc6IE5vIHN1
+Y2ggZmlsZSBvciBkaXJlY3RvcnkKY29ubmVjdDogTmV0d29yayBpcyB1bnJlYWNoYWJsZQpFUlJP
+UjogbnMyaW4gY291bnRlciBpbiBuczEgaGFzIHVuZXhwZWN0ZWQgdmFsdWUgKGV4cGVjdGVkIHBh
+Y2tldHMgMSBieXRlcyA4NCkKdGFibGUgaW5ldCBmaWx0ZXIgewoJY291bnRlciBuczJpbiB7CgkJ
+cGFja2V0cyAwIGJ5dGVzIDAKCX0KfQpFUlJPUjogbnMxaW4gY291bnRlciBpbiBuczIgaGFzIHVu
+ZXhwZWN0ZWQgdmFsdWUgKGV4cGVjdGVkIHBhY2tldHMgMSBieXRlcyA4NCkKdGFibGUgaW5ldCBm
+aWx0ZXIgewoJY291bnRlciBuczFpbiB7CgkJcGFja2V0cyAwIGJ5dGVzIDAKCX0KfQpFUlJPUjog
+bnMyb3V0IGNvdW50ZXIgaW4gbnMxIGhhcyB1bmV4cGVjdGVkIHZhbHVlIChleHBlY3RlZCBwYWNr
+ZXRzIDEgYnl0ZXMgODQpCnRhYmxlIGluZXQgZmlsdGVyIHsKCWNvdW50ZXIgbnMyb3V0IHsKCQlw
+YWNrZXRzIDAgYnl0ZXMgMAoJfQp9CkVSUk9SOiBuczFvdXQgY291bnRlciBpbiBuczIgaGFzIHVu
+ZXhwZWN0ZWQgdmFsdWUgKGV4cGVjdGVkIHBhY2tldHMgMSBieXRlcyA4NCkKdGFibGUgaW5ldCBm
+aWx0ZXIgewoJY291bnRlciBuczFvdXQgewoJCXBhY2tldHMgMCBieXRlcyAwCgl9Cn0KL2Rldi9z
+dGRpbjo0OjI2LTMwOiBFcnJvcjogSW50ZXJmYWNlIGRvZXMgbm90IGV4aXN0CgkJbWV0YSBpaWYg
+dmV0aDEgaXAgcHJvdG9jb2wgaWNtcCBpcCBzYWRkciAxMC4wLjIuOTkgaXAgZGFkZHIgMTAuMC4x
+Ljk5IHJlZGlyZWN0CgkJICAgICAgICAgICAgICAgICAgICAgICBeXl5eXgpjb25uZWN0OiBOZXR3
+b3JrIGlzIHVucmVhY2hhYmxlCkVSUk9SOiBuczBpbiBjb3VudGVyIGluIG5zMSBoYXMgdW5leHBl
+Y3RlZCB2YWx1ZSAoZXhwZWN0ZWQgcGFja2V0cyAxIGJ5dGVzIDg0KQp0YWJsZSBpbmV0IGZpbHRl
+ciB7Cgljb3VudGVyIG5zMGluIHsKCQlwYWNrZXRzIDAgYnl0ZXMgMAoJfQp9CkVSUk9SOiBuczBv
+dXQgY291bnRlciBpbiBuczEgaGFzIHVuZXhwZWN0ZWQgdmFsdWUgKGV4cGVjdGVkIHBhY2tldHMg
+MSBieXRlcyA4NCkKdGFibGUgaW5ldCBmaWx0ZXIgewoJY291bnRlciBuczBvdXQgewoJCXBhY2tl
+dHMgMCBieXRlcyAwCgl9Cn0KRXJyb3I6IENvdWxkIG5vdCBwcm9jZXNzIHJ1bGU6IE5vIHN1Y2gg
+ZmlsZSBvciBkaXJlY3RvcnkKZGVsZXRlIHRhYmxlIGlwIG5hdApeXl5eXl5eXl5eXl5eXl5eXl5e
+XgpFUlJPUjogQ291bGQgbm90IGRlbGV0ZSBuYXQgdGFibGUKY29ubmVjdDogTmV0d29yayBpcyB1
+bnJlYWNoYWJsZQpFUlJPUjogbnMyaW42IGNvdW50ZXIgaW4gbnMxIGhhcyB1bmV4cGVjdGVkIHZh
+bHVlIChleHBlY3RlZCBwYWNrZXRzIDEgYnl0ZXMgMTA0KQp0YWJsZSBpbmV0IGZpbHRlciB7Cglj
+b3VudGVyIG5zMmluNiB7CgkJcGFja2V0cyAwIGJ5dGVzIDAKCX0KfQpFUlJPUjogbnMxaW42IGNv
+dW50ZXIgaW4gbnMyIGhhcyB1bmV4cGVjdGVkIHZhbHVlIChleHBlY3RlZCBwYWNrZXRzIDEgYnl0
+ZXMgMTA0KQp0YWJsZSBpbmV0IGZpbHRlciB7Cgljb3VudGVyIG5zMWluNiB7CgkJcGFja2V0cyAw
+IGJ5dGVzIDAKCX0KfQpFUlJPUjogbnMyb3V0NiBjb3VudGVyIGluIG5zMSBoYXMgdW5leHBlY3Rl
+ZCB2YWx1ZSAoZXhwZWN0ZWQgcGFja2V0cyAxIGJ5dGVzIDEwNCkKdGFibGUgaW5ldCBmaWx0ZXIg
+ewoJY291bnRlciBuczJvdXQ2IHsKCQlwYWNrZXRzIDAgYnl0ZXMgMAoJfQp9CkVSUk9SOiBuczFv
+dXQ2IGNvdW50ZXIgaW4gbnMyIGhhcyB1bmV4cGVjdGVkIHZhbHVlIChleHBlY3RlZCBwYWNrZXRz
+IDEgYnl0ZXMgMTA0KQp0YWJsZSBpbmV0IGZpbHRlciB7Cgljb3VudGVyIG5zMW91dDYgewoJCXBh
+Y2tldHMgMCBieXRlcyAwCgl9Cn0KL2Rldi9zdGRpbjo0OjI2LTMwOiBFcnJvcjogSW50ZXJmYWNl
+IGRvZXMgbm90IGV4aXN0CgkJbWV0YSBpaWYgdmV0aDEgbWV0YSBsNHByb3RvIGljbXB2NiBpcDYg
+c2FkZHIgZGVhZDoyOjo5OSBpcDYgZGFkZHIgZGVhZDoxOjo5OSByZWRpcmVjdAoJCSAgICAgICAg
+ICAgICAgICAgICAgICAgXl5eXl4KY29ubmVjdDogTmV0d29yayBpcyB1bnJlYWNoYWJsZQpFUlJP
+UjogbnMwaW42IGNvdW50ZXIgaW4gbnMxIGhhcyB1bmV4cGVjdGVkIHZhbHVlIChleHBlY3RlZCBw
+YWNrZXRzIDEgYnl0ZXMgMTA0KQp0YWJsZSBpbmV0IGZpbHRlciB7Cgljb3VudGVyIG5zMGluNiB7
+CgkJcGFja2V0cyAwIGJ5dGVzIDAKCX0KfQpFUlJPUjogbnMwb3V0NiBjb3VudGVyIGluIG5zMSBo
+YXMgdW5leHBlY3RlZCB2YWx1ZSAoZXhwZWN0ZWQgcGFja2V0cyAxIGJ5dGVzIDEwNCkKdGFibGUg
+aW5ldCBmaWx0ZXIgewoJY291bnRlciBuczBvdXQ2IHsKCQlwYWNrZXRzIDAgYnl0ZXMgMAoJfQp9
+CkVycm9yOiBDb3VsZCBub3QgcHJvY2VzcyBydWxlOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5
+CmRlbGV0ZSB0YWJsZSBpcDYgbmF0Cl5eXl5eXl5eXl5eXl5eXl5eXl5eXgpFUlJPUjogQ291bGQg
+bm90IGRlbGV0ZSBpcDYgbmF0IHRhYmxlCg==
+--00000000000058390b05857d1bea--
