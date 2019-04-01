@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC852C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C93C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE83621939
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C234621939
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138718;
-	bh=NNHA15Yp2x39Dm5RvBMAdY6liFXRG2p/8DRcwxLU37E=;
+	s=default; t=1554138720;
+	bh=2vSYQeiR3+Q2z6Abom2boUDD5oI+wLPNDB1Vcwy0Iw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OXKwhsGp37nzPJRC7oLn0Wf0FIKfnanvxc5PSZpD3GPX4IFzuFn5YXuQCEQFUvkyG
-	 lgBIp8kjOLI+5TOI/wCs9kDiVQmjs0oG8yq6R75Wpwp5eqhxeiJlNHJ71wROS2o3AH
-	 4tQIanEoQLQsNbGGS6inCqOqHmPTQ7Jg7P1Wi3xg=
+	b=1KxY2KWugEvUXpL7bqFvyztdV5CnX5D6xSMCwGwSV+eH3idLto8AO8Xiyv6oQT+7C
+	 Yyi0/uJJKfDuyRvbQtvKdYBm7xKmn7hWylQJOkWoFQ4kPV3D+ufCb14xLmuIcM+Z3m
+	 EjjRHJdJYDcFh+ybrP7fbxhiycagkRkEfxunsUbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbfDARL5 (ORCPT
+        id S1730296AbfDARL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:11:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60940 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:11:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730268AbfDARLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:11:50 -0400
+        id S1729665AbfDARLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:11:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BB6E21929;
-        Mon,  1 Apr 2019 17:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CECE21924;
+        Mon,  1 Apr 2019 17:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138709;
-        bh=NNHA15Yp2x39Dm5RvBMAdY6liFXRG2p/8DRcwxLU37E=;
+        s=default; t=1554138713;
+        bh=2vSYQeiR3+Q2z6Abom2boUDD5oI+wLPNDB1Vcwy0Iw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FSXzz/Kus599IytwC2I8p8DYN3uFgbdAdlVQRywERztB+Vdy63io+jqa90U88fa9e
-         hFBWuQIqiB67XOBjGB1I/99JCjrDu7iBqhJHPp+y8rol+kfAZeuOhwJTN3nhIS+0x4
-         Zt80MHWgjC8M7qDF8VXR81cbrujWJPLV/M9h5a2o=
+        b=0vdsXgZsYQ5IhaopRDz1QDMwEe9RV8DauzLJVWDWejQbb4Q/sdcdmEWBN0HviEQqR
+         OeKNTpH7clqiEM50ibEOfmgYuweBywWGBEaWSA6T4xZMkoubgDcZWnR8PIsEpcvAO+
+         3a9QeJTOjKxy5CkAahfQSGs8fqk4aqs0YMny2v5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xu Yu <xuyu@linux.alibaba.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.0 145/146] bpf: do not restore dst_reg when cur_state is freed
-Date:   Mon,  1 Apr 2019 19:02:37 +0200
-Message-Id: <20190401170100.264392053@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Felix Fietkau <nbd@nbd.name>
+Subject: [PATCH 5.0 146/146] mt76x02u: use usb_bulk_msg to upload firmware
+Date:   Mon,  1 Apr 2019 19:02:38 +0200
+Message-Id: <20190401170100.331341674@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -65,68 +67,174 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xu Yu <xuyu@linux.alibaba.com>
+From: Stanislaw Gruszka <sgruszka@redhat.com>
 
-commit 0803278b0b4d8eeb2b461fb698785df65a725d9e upstream.
+commit 5de4db8fcb6d6fc7d9064c22841211790c0ab81b upstream.
 
-Syzkaller hit 'KASAN: use-after-free Write in sanitize_ptr_alu' bug.
+We don't need to send firmware data asynchronously, much simpler is just
+use synchronous usb_bulk_msg().
 
-Call trace:
+[ stable note: this patch was originally developed as cleanup, but it
+remove incorrect usage of page_frag_alloc(): alloc more than PAGE_SIZE
+and create not ARCH_DMA_MINALIGN dma buffers needed at least for
+performance reason. Was tested on 5.0 and 4.20, see
+https://bugzilla.kernel.org/show_bug.cgi?id=202673 and
+https://bugzilla.kernel.org/show_bug.cgi?id=202241 ]
 
-  dump_stack+0xbf/0x12e
-  print_address_description+0x6a/0x280
-  kasan_report+0x237/0x360
-  sanitize_ptr_alu+0x85a/0x8d0
-  adjust_ptr_min_max_vals+0x8f2/0x1ca0
-  adjust_reg_min_max_vals+0x8ed/0x22e0
-  do_check+0x1ca6/0x5d00
-  bpf_check+0x9ca/0x2570
-  bpf_prog_load+0xc91/0x1030
-  __se_sys_bpf+0x61e/0x1f00
-  do_syscall_64+0xc8/0x550
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fault injection trace:
-
-  kfree+0xea/0x290
-  free_func_state+0x4a/0x60
-  free_verifier_state+0x61/0xe0
-  push_stack+0x216/0x2f0	          <- inject failslab
-  sanitize_ptr_alu+0x2b1/0x8d0
-  adjust_ptr_min_max_vals+0x8f2/0x1ca0
-  adjust_reg_min_max_vals+0x8ed/0x22e0
-  do_check+0x1ca6/0x5d00
-  bpf_check+0x9ca/0x2570
-  bpf_prog_load+0xc91/0x1030
-  __se_sys_bpf+0x61e/0x1f00
-  do_syscall_64+0xc8/0x550
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-When kzalloc() fails in push_stack(), free_verifier_state() will free
-current verifier state. As push_stack() returns, dst_reg was restored
-if ptr_is_dst_reg is false. However, as member of the cur_state,
-dst_reg is also freed, and error occurs when dereferencing dst_reg.
-Simply fix it by testing ret of push_stack() before restoring dst_reg.
-
-Fixes: 979d63d50c0c ("bpf: prevent out of bounds speculation on pointer arithmetic")
-Signed-off-by: Xu Yu <xuyu@linux.alibaba.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Tested-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/verifier.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt76/mt76.h            |   13 ++++
+ drivers/net/wireless/mediatek/mt76/mt76x02_usb_mcu.c |   52 +++++--------------
+ drivers/net/wireless/mediatek/mt76/usb.c             |    1 
+ 3 files changed, 29 insertions(+), 37 deletions(-)
 
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -3187,7 +3187,7 @@ do_sim:
- 		*dst_reg = *ptr_reg;
- 	}
- 	ret = push_stack(env, env->insn_idx + 1, env->insn_idx, true);
--	if (!ptr_is_dst_reg)
-+	if (!ptr_is_dst_reg && ret)
- 		*dst_reg = tmp;
- 	return !ret ? -EFAULT : 0;
+--- a/drivers/net/wireless/mediatek/mt76/mt76.h
++++ b/drivers/net/wireless/mediatek/mt76/mt76.h
+@@ -713,6 +713,19 @@ static inline bool mt76u_check_sg(struct
+ 		 udev->speed == USB_SPEED_WIRELESS));
  }
+ 
++static inline int
++mt76u_bulk_msg(struct mt76_dev *dev, void *data, int len, int timeout)
++{
++	struct usb_interface *intf = to_usb_interface(dev->dev);
++	struct usb_device *udev = interface_to_usbdev(intf);
++	struct mt76_usb *usb = &dev->usb;
++	unsigned int pipe;
++	int sent;
++
++	pipe = usb_sndbulkpipe(udev, usb->out_ep[MT_EP_OUT_INBAND_CMD]);
++	return usb_bulk_msg(udev, pipe, data, len, &sent, timeout);
++}
++
+ int mt76u_vendor_request(struct mt76_dev *dev, u8 req,
+ 			 u8 req_type, u16 val, u16 offset,
+ 			 void *buf, size_t len);
+--- a/drivers/net/wireless/mediatek/mt76/mt76x02_usb_mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x02_usb_mcu.c
+@@ -121,18 +121,14 @@ static int
+ __mt76x02u_mcu_send_msg(struct mt76_dev *dev, struct sk_buff *skb,
+ 			int cmd, bool wait_resp)
+ {
+-	struct usb_interface *intf = to_usb_interface(dev->dev);
+-	struct usb_device *udev = interface_to_usbdev(intf);
+ 	struct mt76_usb *usb = &dev->usb;
+-	unsigned int pipe;
+-	int ret, sent;
++	int ret;
+ 	u8 seq = 0;
+ 	u32 info;
+ 
+ 	if (test_bit(MT76_REMOVED, &dev->state))
+ 		return 0;
+ 
+-	pipe = usb_sndbulkpipe(udev, usb->out_ep[MT_EP_OUT_INBAND_CMD]);
+ 	if (wait_resp) {
+ 		seq = ++usb->mcu.msg_seq & 0xf;
+ 		if (!seq)
+@@ -146,7 +142,7 @@ __mt76x02u_mcu_send_msg(struct mt76_dev
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = usb_bulk_msg(udev, pipe, skb->data, skb->len, &sent, 500);
++	ret = mt76u_bulk_msg(dev, skb->data, skb->len, 500);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -268,14 +264,12 @@ void mt76x02u_mcu_fw_reset(struct mt76x0
+ EXPORT_SYMBOL_GPL(mt76x02u_mcu_fw_reset);
+ 
+ static int
+-__mt76x02u_mcu_fw_send_data(struct mt76x02_dev *dev, struct mt76u_buf *buf,
++__mt76x02u_mcu_fw_send_data(struct mt76x02_dev *dev, u8 *data,
+ 			    const void *fw_data, int len, u32 dst_addr)
+ {
+-	u8 *data = sg_virt(&buf->urb->sg[0]);
+-	DECLARE_COMPLETION_ONSTACK(cmpl);
+ 	__le32 info;
+ 	u32 val;
+-	int err;
++	int err, data_len;
+ 
+ 	info = cpu_to_le32(FIELD_PREP(MT_MCU_MSG_PORT, CPU_TX_PORT) |
+ 			   FIELD_PREP(MT_MCU_MSG_LEN, len) |
+@@ -291,25 +285,12 @@ __mt76x02u_mcu_fw_send_data(struct mt76x
+ 	mt76u_single_wr(&dev->mt76, MT_VEND_WRITE_FCE,
+ 			MT_FCE_DMA_LEN, len << 16);
+ 
+-	buf->len = MT_CMD_HDR_LEN + len + sizeof(info);
+-	err = mt76u_submit_buf(&dev->mt76, USB_DIR_OUT,
+-			       MT_EP_OUT_INBAND_CMD,
+-			       buf, GFP_KERNEL,
+-			       mt76u_mcu_complete_urb, &cmpl);
+-	if (err < 0)
+-		return err;
+-
+-	if (!wait_for_completion_timeout(&cmpl,
+-					 msecs_to_jiffies(1000))) {
+-		dev_err(dev->mt76.dev, "firmware upload timed out\n");
+-		usb_kill_urb(buf->urb);
+-		return -ETIMEDOUT;
+-	}
++	data_len = MT_CMD_HDR_LEN + len + sizeof(info);
+ 
+-	if (mt76u_urb_error(buf->urb)) {
+-		dev_err(dev->mt76.dev, "firmware upload failed: %d\n",
+-			buf->urb->status);
+-		return buf->urb->status;
++	err = mt76u_bulk_msg(&dev->mt76, data, data_len, 1000);
++	if (err) {
++		dev_err(dev->mt76.dev, "firmware upload failed: %d\n", err);
++		return err;
+ 	}
+ 
+ 	val = mt76_rr(dev, MT_TX_CPU_FROM_FCE_CPU_DESC_IDX);
+@@ -322,17 +303,16 @@ __mt76x02u_mcu_fw_send_data(struct mt76x
+ int mt76x02u_mcu_fw_send_data(struct mt76x02_dev *dev, const void *data,
+ 			      int data_len, u32 max_payload, u32 offset)
+ {
+-	int err, len, pos = 0, max_len = max_payload - 8;
+-	struct mt76u_buf buf;
++	int len, err = 0, pos = 0, max_len = max_payload - 8;
++	u8 *buf;
+ 
+-	err = mt76u_buf_alloc(&dev->mt76, &buf, 1, max_payload, max_payload,
+-			      GFP_KERNEL);
+-	if (err < 0)
+-		return err;
++	buf = kmalloc(max_payload, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
+ 
+ 	while (data_len > 0) {
+ 		len = min_t(int, data_len, max_len);
+-		err = __mt76x02u_mcu_fw_send_data(dev, &buf, data + pos,
++		err = __mt76x02u_mcu_fw_send_data(dev, buf, data + pos,
+ 						  len, offset + pos);
+ 		if (err < 0)
+ 			break;
+@@ -341,7 +321,7 @@ int mt76x02u_mcu_fw_send_data(struct mt7
+ 		pos += len;
+ 		usleep_range(5000, 10000);
+ 	}
+-	mt76u_buf_free(&buf);
++	kfree(buf);
+ 
+ 	return err;
+ }
+--- a/drivers/net/wireless/mediatek/mt76/usb.c
++++ b/drivers/net/wireless/mediatek/mt76/usb.c
+@@ -326,7 +326,6 @@ int mt76u_buf_alloc(struct mt76_dev *dev
+ 
+ 	return mt76u_fill_rx_sg(dev, buf, nsgs, len, sglen);
+ }
+-EXPORT_SYMBOL_GPL(mt76u_buf_alloc);
+ 
+ void mt76u_buf_free(struct mt76u_buf *buf)
+ {
 
 
