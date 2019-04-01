@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D599C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1BBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E298B208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9472070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140102;
-	bh=QkXc4HHnzbKk5bLIbDOH/9Jc5CVJLYuxgDuK4mdhxUE=;
+	s=default; t=1554140107;
+	bh=gFdlinNVK36qTB2zcOBM0GUhcBqW/h6hJpDKiTuezk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BgjAu092eIBQlwysutRaIgEpjt+fNjPY/tJUcKHnE+mzVLEp6+dTqTN7/qJCWR7tL
-	 vx2BPgyC/VrgAdT0pjWRkkjlmWP52+7bKuDntNXQifF0ezOHDSVXhfVHxxx/T8hKd2
-	 PKz/sqtN3eE6YwUTRm/fraQqGSohgSkM/BOEL9W0=
+	b=PIEVwBJPHG4V6ziZtJHgMgS3Se7cCzxwVP3PCoNYCxXvG492FeA6KSbYHt4UVttew
+	 BkhMfnlNw2oXfK8XJN9jeBvfY+iQ0GDy1Gj6Kdk/8u1NP0CuADcTBfosyN/OADreXp
+	 CrHC2Ehzps3+Tz3VZ6cBJgrMSvz2BxUVo9Ouy8ZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733024AbfDARfA (ORCPT
+        id S2387860AbfDARfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:35:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45258 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:35:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387654AbfDARe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:34:58 -0400
+        id S1733209AbfDARfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:35:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3740520880;
-        Mon,  1 Apr 2019 17:34:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AF6E20896;
+        Mon,  1 Apr 2019 17:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140097;
-        bh=QkXc4HHnzbKk5bLIbDOH/9Jc5CVJLYuxgDuK4mdhxUE=;
+        s=default; t=1554140101;
+        bh=gFdlinNVK36qTB2zcOBM0GUhcBqW/h6hJpDKiTuezk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0JFOQy3I1+ULK0ET1S+OyDNFRsSHvugu5r5ztaKLYarzXneIQZ97rZvSyrTj3mnbu
-         b+3FcKd/FwnCf5W3rpDmcUuIDWMbjV1gqawCd17rqIBkzgyGA3vDk+PyG7m2r86Cbs
-         H53mnPtPJitaEFqYTtX1A4pq3m1bbElszXxjwYHA=
+        b=CGhnSMxXppLKZu2Y7oYic0d8CORcQnX5tTGg/m62iFZAhnh1gkdS0ys5tOOxJf5tN
+         Hp3vX/zctjn6dL6/5+d93KTCjUXRSe04PbHphV5806RRBW9AguSK1kWi5JYTT6p8Zx
+         qDkET/LTwtuAuO+exFViq+LbQeVUCh/sOthKz87k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 105/131] ALSA: seq: oss: Fix Spectre v1 vulnerability
-Date:   Mon,  1 Apr 2019 19:02:55 +0200
-Message-Id: <20190401170100.600710965@linuxfoundation.org>
+Subject: [PATCH 4.4 106/131] ALSA: pcm: Fix possible OOB access in PCM oss plugins
+Date:   Mon,  1 Apr 2019 19:02:56 +0200
+Message-Id: <20190401170100.667028180@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -66,53 +66,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit c709f14f0616482b67f9fbcb965e1493a03ff30b upstream.
+commit ca0214ee2802dd47239a4e39fb21c5b00ef61b22 upstream.
 
-dev is indirectly controlled by user-space, hence leading to
-a potential exploitation of the Spectre variant 1 vulnerability.
+The PCM OSS emulation converts and transfers the data on the fly via
+"plugins".  The data is converted over the dynamically allocated
+buffer for each plugin, and recently syzkaller caught OOB in this
+flow.
 
-This issue was detected with the help of Smatch:
+Although the bisection by syzbot pointed out to the commit
+65766ee0bf7f ("ALSA: oss: Use kvzalloc() for local buffer
+allocations"), this is merely a commit to replace vmalloc() with
+kvmalloc(), hence it can't be the cause.  The further debug action
+revealed that this happens in the case where a slave PCM doesn't
+support only the stereo channels while the OSS stream is set up for a
+mono channel.  Below is a brief explanation:
 
-sound/core/seq/oss/seq_oss_synth.c:626 snd_seq_oss_synth_make_info() warn: potential spectre issue 'dp->synths' [w] (local cap)
+At each OSS parameter change, the driver sets up the PCM hw_params
+again in snd_pcm_oss_change_params_lock().  This is also the place
+where plugins are created and local buffers are allocated.  The
+problem is that the plugins are created before the final hw_params is
+determined.  Namely, two snd_pcm_hw_param_near() calls for setting the
+period size and periods may influence on the final result of channels,
+rates, etc, too, while the current code has already created plugins
+beforehand with the premature values.  So, the plugin believes that
+channels=1, while the actual I/O is with channels=2, which makes the
+driver reading/writing over the allocated buffer size.
 
-Fix this by sanitizing dev before using it to index dp->synths.
+The fix is simply to move the plugin allocation code after the final
+hw_params call.
 
-Notice that given that speculation windows are large, the policy is
-to kill the speculation on the first load and not worry if it can be
-completed with a dependent load/store [1].
-
-[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reported-by: syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/oss/seq_oss_synth.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ sound/core/oss/pcm_oss.c |   43 ++++++++++++++++++++++---------------------
+ 1 file changed, 22 insertions(+), 21 deletions(-)
 
---- a/sound/core/seq/oss/seq_oss_synth.c
-+++ b/sound/core/seq/oss/seq_oss_synth.c
-@@ -617,13 +617,14 @@ int
- snd_seq_oss_synth_make_info(struct seq_oss_devinfo *dp, int dev, struct synth_info *inf)
- {
- 	struct seq_oss_synth *rec;
-+	struct seq_oss_synthinfo *info = get_synthinfo_nospec(dp, dev);
+--- a/sound/core/oss/pcm_oss.c
++++ b/sound/core/oss/pcm_oss.c
+@@ -950,6 +950,28 @@ static int snd_pcm_oss_change_params_loc
+ 	oss_frame_size = snd_pcm_format_physical_width(params_format(params)) *
+ 			 params_channels(params) / 8;
  
--	if (dev < 0 || dev >= dp->max_synthdev)
-+	if (!info)
- 		return -ENXIO;
++	err = snd_pcm_oss_period_size(substream, params, sparams);
++	if (err < 0)
++		goto failure;
++
++	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
++	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
++	if (err < 0)
++		goto failure;
++
++	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
++				     runtime->oss.periods, NULL);
++	if (err < 0)
++		goto failure;
++
++	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
++
++	err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams);
++	if (err < 0) {
++		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
++		goto failure;
++	}
++
+ #ifdef CONFIG_SND_PCM_OSS_PLUGINS
+ 	snd_pcm_oss_plugin_clear(substream);
+ 	if (!direct) {
+@@ -984,27 +1006,6 @@ static int snd_pcm_oss_change_params_loc
+ 	}
+ #endif
  
--	if (dp->synths[dev].is_midi) {
-+	if (info->is_midi) {
- 		struct midi_info minf;
--		snd_seq_oss_midi_make_info(dp, dp->synths[dev].midi_mapped, &minf);
-+		snd_seq_oss_midi_make_info(dp, info->midi_mapped, &minf);
- 		inf->synth_type = SYNTH_TYPE_MIDI;
- 		inf->synth_subtype = 0;
- 		inf->nr_voices = 16;
+-	err = snd_pcm_oss_period_size(substream, params, sparams);
+-	if (err < 0)
+-		goto failure;
+-
+-	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
+-	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
+-	if (err < 0)
+-		goto failure;
+-
+-	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
+-				     runtime->oss.periods, NULL);
+-	if (err < 0)
+-		goto failure;
+-
+-	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
+-
+-	if ((err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams)) < 0) {
+-		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
+-		goto failure;
+-	}
+-
+ 	if (runtime->oss.trigger) {
+ 		sw_params->start_threshold = 1;
+ 	} else {
 
 
