@@ -2,101 +2,98 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF4FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDA2C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F234B20857
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:56:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="fu257IWz"
+	by mail.kernel.org (Postfix) with ESMTP id DD63D213A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554105399;
+	bh=wLp/QB/bhEXwxZBKIvvDh3ZKXvdKifdGDNm3u97IV/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SKaZaPr6zOFbB4Vqyno0xQYnzRI+HQEHr37HpWuONiCZiMkNq/PoeHrK2sYhHrPTc
+	 PXp5RE8zOuVpzh1i0HKLhxQtKtopafOK39lnm9Yh+X+kv1azjJD6LG3mjrmX4EBLFq
+	 ovdgHjkRNMCFxzIGPb8hOXOcIeiXxKTiUjyxv3zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732050AbfDAH41 (ORCPT
+        id S1732079AbfDAH4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:56:27 -0400
-Received: from mail-eopbgr1310049.outbound.protection.outlook.com ([40.107.131.49]:17572
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731944AbfDAH41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:56:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LYzMQyAhasE0Q2EE9k+wuIbZo9QNt5Qwmj9eKemqg2Q=;
- b=fu257IWzaYjElFdZWx14YVvZCid8fR0BT0r50IOozhVKYWTEBBwwif2jgZL+3xbP6sly7BGutJL29dHbUavnCCO1PijxOCXKjmnAl8Bmn87lS+dF4gd6awyFBT2zH+NlptSefDDbhnzaZhAYX/1t25iiZ8trBHixx+8RzBXMkwQ=
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
- SG2PR02MB3800.apcprd02.prod.outlook.com (20.177.170.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.15; Mon, 1 Apr 2019 07:56:21 +0000
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1750.017; Mon, 1 Apr 2019
- 07:56:21 +0000
-From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: CMA area pages information
-Thread-Topic: CMA area pages information
-Thread-Index: AQHU6GA9RylraT4uwk+04/PdjD+qFg==
-Date:   Mon, 1 Apr 2019 07:56:21 +0000
-Message-ID: <SG2PR02MB30986806577CDA3F568553B6E8550@SG2PR02MB3098.apcprd02.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
-x-originating-ip: [14.98.130.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 577af18c-ac62-4bb6-b688-08d6b67787b8
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB3800;
-x-ms-traffictypediagnostic: SG2PR02MB3800:
-x-microsoft-antispam-prvs: <SG2PR02MB3800A83B5C0237FE40076143E8550@SG2PR02MB3800.apcprd02.prod.outlook.com>
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(366004)(136003)(39840400004)(376002)(189003)(199004)(25786009)(3480700005)(478600001)(14454004)(486006)(81156014)(81166006)(5660300002)(86362001)(8676002)(186003)(7736002)(6116002)(52536014)(66066001)(74316002)(33656002)(2906002)(6436002)(106356001)(55016002)(9686003)(476003)(55236004)(102836004)(68736007)(26005)(53936002)(3846002)(110136005)(7696005)(6506007)(8936002)(316002)(2501003)(305945005)(97736004)(105586002)(71190400001)(99286004)(71200400001)(256004)(14444005)(5024004)(44832011)(66574012)(78486014);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB3800;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: einfochips.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: apC02R6Y7AZkWJ+7rOENAjEqxNb041Yq7vW7Nyw9ihtrVE0DGBk/rGQjYToFai8iPPvp4Yv1Wx+8z4ux0d9WsYsq48YuaathoS0ZlMBTdUsscDaQTkBKdn/IMfE4FQIMUITTgPXFdrne5bfeIvguH/oKv8oR/vgtibdJg6FGQFOyjb6CEs1rgdT60p66clTFnZMRXY2HFzU8qz2JyRkcRFvmQsY1F58XjR509rIRkNh1N//+RbZbfjKDv5Lm7R40cS6cGR3iB5T81BzF56Jf3MvltTNGA+sscQxj4BX3sGW6wR6jm1DOlalMB8F78BWNzSazAD2XkMrHzyhtomXHFxlDW4nuziOWqBb9D5jyFtutA2wROjkZjL0AVElWQz3nj63zQcNcT6P20eDioTEBgrnKFMRYXaR2//AmpAqpkXw=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 1 Apr 2019 03:56:38 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48916 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731944AbfDAH4i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 03:56:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wLp/QB/bhEXwxZBKIvvDh3ZKXvdKifdGDNm3u97IV/E=; b=e5uk6IEgQj6sGPfrc6DX++YQo
+        HBdX2F4fJRZE+AaIjV6kgsIsdEqwH0AHEfIrTaxg45nQ2gs1fQQyi5VUy8QYBDsXNawdnz9AsNJu3
+        PUDEUPGYS6SmaIQ+jCoM0ldXwdmRPnhyqtis2eIYJ/pqFlG5RE4OHUgCKVZXujccxP2Xw=;
+Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hAro0-0008Eh-Ry; Mon, 01 Apr 2019 07:56:33 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 51C70440082; Mon,  1 Apr 2019 08:56:24 +0100 (BST)
+Date:   Mon, 1 Apr 2019 14:56:24 +0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     enric.balletbo@collabora.com, bleung@chromium.org,
+        groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH 1/3] ASoC: cros_ec_codec: Rename ec_response_codec_gain
+ into ec_codec_i2s_gain
+Message-ID: <20190401075624.GA25436@sirena.org.uk>
+References: <CAPUE2uti=fketJ4vJw34et_y9L_gsEUwXNDdjg0sG8Z27ir1Hg@mail.gmail.com>
+ <CAPUE2usk3unTTp+3mpL7TgZ02u9fJtB5gLTLBMfMwHErwyeOsw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: einfochips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 577af18c-ac62-4bb6-b688-08d6b67787b8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 07:56:21.2916
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB3800
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Content-Disposition: inline
+In-Reply-To: <CAPUE2usk3unTTp+3mpL7TgZ02u9fJtB5gLTLBMfMwHErwyeOsw@mail.gmail.com>
+X-Cookie: Oh, wow!  Look at the moon!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-Is there any way to get CMA area pages information (tool/application) ?
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Pankaj
-***************************************************************************=
-***************************************************************************=
-******* eInfochips Business Disclaimer: This e-mail message and all attachm=
-ents transmitted with it are intended solely for the use of the addressee a=
-nd may contain legally privileged and confidential information. If the read=
-er of this message is not the intended recipient, or an employee or agent r=
-esponsible for delivering this message to the intended recipient, you are h=
-ereby notified that any dissemination, distribution, copying, or other use =
-of this message or its attachments is strictly prohibited. If you have rece=
-ived this message in error, please notify the sender immediately by replyin=
-g to this message and please delete it from your computer. Any views expres=
-sed in this message are those of the individual sender unless otherwise sta=
-ted. Company has taken enough precautions to prevent the spread of viruses.=
- However the company accepts no liability for any damage caused by any viru=
-s transmitted by this email. **********************************************=
-***************************************************************************=
-************************************
+On Fri, Mar 29, 2019 at 10:56:36AM -0700, Gwendal Grignou wrote:
+> In preparation to update cros_ec_commands.h to match ChromeOS EC code
+> base, rename data structure that will be merged together.
+>=20
+> TEST=3Dcompile.
+
+This doesn't apply against current code, please check and resend.
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyhxCcACgkQJNaLcl1U
+h9DKaQf9HzlYgnF7SZmZfCJRlYEA5W6K00+Nk4R8ETSyXaf+6AawoKWbeQwAq3t4
+kmW/w1VWuQUQwGvjc7iEbsgFecj2U94GykVJkj01V4J8zEXfPhc/1sDrHqJ4KXzq
+e2SSoyeNZZ2L1bUYoevG3Of6NYdz0ji9AE4mObqrH4EjS/yHH1uNyWCgf+FZ+hqt
+XGggYTpagvtSZt1CvNcPDo9oeyOTYm4qJvdI7gSMlxTjtXDe2KnguJGDhT+aGW2j
+M5zDRgJY+GC3g+sAeyEd4JpK5/hsQfMfLv8QkwFr2eWo1fmgudcOILochdBSfcu3
+hrSduRHGWK9cqyU/drHx+hF3eH7tMw==
+=K0bZ
+-----END PGP SIGNATURE-----
+
+--Dxnq1zWXvFF0Q93v--
