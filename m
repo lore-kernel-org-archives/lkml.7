@@ -2,98 +2,199 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8D9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864F6C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF5EF20896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D0F20896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbfDAJqj (ORCPT
+        id S1726528AbfDAJrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 05:46:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34986 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbfDAJqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 05:46:39 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6B39981106;
-        Mon,  1 Apr 2019 09:46:38 +0000 (UTC)
-Received: from localhost (unknown [10.40.205.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E7BA1A7D4;
-        Mon,  1 Apr 2019 09:46:35 +0000 (UTC)
-Date:   Mon, 1 Apr 2019 11:46:34 +0200
-From:   Stanislaw Gruszka <sgruszka@redhat.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Ryder Lee <ryder.lee@mediatek.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Felix Fietkau <nbd@nbd.name>, Roy Luo <royluo@google.com>,
+        Mon, 1 Apr 2019 05:47:36 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:53332 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725820AbfDAJrg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 05:47:36 -0400
+X-UUID: 27493e00a4a5422ca3d5a35998cd6d66-20190401
+X-UUID: 27493e00a4a5422ca3d5a35998cd6d66-20190401
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 30432239; Mon, 01 Apr 2019 17:47:27 +0800
+Received: from MTKMBS01DR.mediatek.inc (172.21.101.111) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 1 Apr 2019 17:47:27 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01dr.mediatek.inc (172.21.101.111) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 1 Apr 2019 17:47:20 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 1 Apr 2019 17:47:20 +0800
+Message-ID: <1554112040.2011.25.camel@mtksdaap41>
+Subject: Re: [PATCH V7 6/6] drm/mediatek: fix the rate of parent for hdmi
+ phy in MT2701
+From:   CK Hu <ck.hu@mediatek.com>
+To:     wangyan wang <wangyan.wang@mediatek.com>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        "Colin Ian King" <colin.king@canonical.com>,
         Sean Wang <sean.wang@mediatek.com>,
-        Nelson Chang <nelson.chang@mediatek.com>,
-        YF Luo <yf.luo@mediatek.com>, Kai Lin <kai.lin@mediatek.com>,
-        Rorscha Yang <rorscha.yang@mediatek.com>,
-        Kyle Lee <kyle.lee@mediatek.com>,
-        Miller Shen <miller.shen@mediatek.com>,
-        Haipin Liang <haipin.liang@mediatek.com>,
-        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH 1/4] mt76: add mac80211 driver for MT7615 PCIe-based
- chipsets
-Message-ID: <20190401094633.GC19802@redhat.com>
-References: <cover.1553607739.git.ryder.lee@mediatek.com>
- <2849359e0b0ede6c13ae9f142aff77a016fd0a80.1553607739.git.ryder.lee@mediatek.com>
- <87lg0wyjvj.fsf@purkki.adurom.net>
+        "Ryder Lee" <ryder.lee@mediatek.com>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>, <srv_heupstream@mediatek.com>
+Date:   Mon, 1 Apr 2019 17:47:20 +0800
+In-Reply-To: <20190327091929.73162-7-wangyan.wang@mediatek.com>
+References: <20190327091929.73162-1-wangyan.wang@mediatek.com>
+         <20190327091929.73162-7-wangyan.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87lg0wyjvj.fsf@purkki.adurom.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 01 Apr 2019 09:46:38 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 30, 2019 at 08:08:32AM +0200, Kalle Valo wrote:
-> Ryder Lee <ryder.lee@mediatek.com> writes:
+Hi, Wangyan:
+
+I would like the title to more clear about what this patch do. For
+example:
+
+drm/mediatek: no change parent rate in round_rate() for MT2701 HDMI phy
+
+
+On Wed, 2019-03-27 at 17:19 +0800, wangyan wang wrote:
+> From: chunhui dai <chunhui.dai@mediatek.com>
 > 
-> > This driver is for a newer generation of MediaTek MT7615 4x4 802.11ac
-> > PCIe-based chipsets, which support wave2 MU-MIMO up to 4 users/group
-> > and also support up to 160MHz bandwidth.
-> >
-> > The driver fully supports AP, station and monitor mode.
-> >
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > Signed-off-by: Roy Luo <royluo@google.com>
-> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> We should not change the rate of parent for hdmi phy when
+> doing round_rate for this clock. The parent clock of hdmi
+> phy must be the same as it. We change it when doing set_rate
+> only.
 > 
-> [...]
+> Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
+> Signed-off-by: wangyan wang <wangyan.wang@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_hdmi_phy.c        | 19 -------------------
+>  drivers/gpu/drm/mediatek/mtk_hdmi_phy.h        |  4 ----
+>  drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c |  7 +++++++
+>  drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c | 14 ++++++++++++++
+>  4 files changed, 21 insertions(+), 23 deletions(-)
 > 
-> > --- /dev/null
-> > +++ b/drivers/net/wireless/mediatek/mt76/mt7615/dma.c
-> > @@ -0,0 +1,204 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> 
-> mt76 is under ISC so why did you choose GPLv2 here? I don't think it's a
-> good idea to use different licenses within the same driver.
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+> index 370309d684ec..f753ee72971e 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+> @@ -15,25 +15,6 @@ static const struct phy_ops mtk_hdmi_phy_dev_ops = {
+>  	.owner = THIS_MODULE,
+>  };
+>  
+> -long mtk_hdmi_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+> -			     unsigned long *parent_rate)
+> -{
+> -	struct mtk_hdmi_phy *hdmi_phy = to_mtk_hdmi_phy(hw);
+> -
+> -	hdmi_phy->pll_rate = rate;
+> -	if (rate <= 74250000)
+> -		*parent_rate = rate;
+> -	else
+> -		*parent_rate = rate / 2;
+> -
+> -	return rate;
+> -}
+> -
+> -u32 mtk_hdmi_phy_read(struct mtk_hdmi_phy *hdmi_phy, u32 offset)
+> -{
+> -	return readl(hdmi_phy->regs + offset);
+> -}
 
-mt76x0 is GPL only as some parts of it are modified copy of either out
-of tree Mediatek GPL driver or Jakub's mt7601u also realised under GPL.
+I think this function should already be removed by the patch
+"drm/mediatek: recalculate hdmi phy clock of MT2701 by querying
+hardware"
 
-Is ISC equal to "Dual BSD/GPL" what is marked by MODULE_LICENSE ?
-I think this should be clarified too.
+Regards,
+CK
 
-> Also mt76 does not use SPDX tags yet. I would prefer that the whole
-> driver is converted in one go to have consistent licensing information.
+> -
+>  void mtk_hdmi_phy_clear_bits(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
+>  			     u32 bits)
+>  {
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+> index 446e2acd1926..4d4de4de8977 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+> @@ -42,7 +42,6 @@ struct mtk_hdmi_phy {
+>  	unsigned int ibias_up;
+>  };
+>  
+> -u32 mtk_hdmi_phy_read(struct mtk_hdmi_phy *hdmi_phy, u32 offset);
+>  void mtk_hdmi_phy_clear_bits(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
+>  			     u32 bits);
+>  void mtk_hdmi_phy_set_bits(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
+> @@ -50,9 +49,6 @@ void mtk_hdmi_phy_set_bits(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
+>  void mtk_hdmi_phy_mask(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
+>  		       u32 val, u32 mask);
+>  struct mtk_hdmi_phy *to_mtk_hdmi_phy(struct clk_hw *hw);
+> -long mtk_hdmi_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+> -			     unsigned long *parent_rate);
+> -
+>  extern struct platform_driver mtk_hdmi_phy_driver;
+>  extern struct mtk_hdmi_phy_conf mtk_hdmi_phy_8173_conf;
+>  extern struct mtk_hdmi_phy_conf mtk_hdmi_phy_2701_conf;
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
+> index cb0c68c94013..6fb4ca943463 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
+> @@ -152,6 +152,13 @@ static int mtk_hdmi_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+>  			  RG_HDMITX_DRV_IBIAS_MASK);
+>  	return 0;
+>  }
+> +
+> +static long mtk_hdmi_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+> +			     unsigned long *parent_rate)
+> +{
+> +	return rate;
+> +}
+> +
+>  static unsigned long mtk_hdmi_pll_recalc_rate(struct clk_hw *hw,
+>  				       unsigned long parent_rate)
+>  {
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
+> index 63dde42521b8..3a339f516613 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
+> @@ -285,6 +285,20 @@ static int mtk_hdmi_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+>  	return 0;
+>  }
+>  
+> +static long mtk_hdmi_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+> +			     unsigned long *parent_rate)
+> +{
+> +	struct mtk_hdmi_phy *hdmi_phy = to_mtk_hdmi_phy(hw);
+> +
+> +	hdmi_phy->pll_rate = rate;
+> +	if (rate <= 74250000)
+> +		*parent_rate = rate;
+> +	else
+> +		*parent_rate = rate / 2;
+> +
+> +	return rate;
+> +}
+> +
+>  static unsigned long mtk_hdmi_pll_recalc_rate(struct clk_hw *hw,
+>  				       unsigned long parent_rate)
+>  {
 
-Agree. However not sure if we can unify of all mt76 code to the same
-license (and which one: GPL ?), but at least we can convert source 
-files to SPDX identifier.
 
-Stanislaw
