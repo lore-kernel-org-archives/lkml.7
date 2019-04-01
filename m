@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E91C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C942C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D8121473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E78B206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139138;
-	bh=JMUr0Uspdw55QzEQxgiYIjp+nIyJRkpc9Skb7+L8n2A=;
+	s=default; t=1554139142;
+	bh=kEseISCP+yGsX1LPRod45qFdiySK380oQZjyMx/2lrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rq7M+n2QwPKm2p2YQcxVdksk5LWkcxOL8YGCDc4emkZXxksJ9OuFCFsy5AjIKvH1D
-	 pGYdZwKNPNUqvqJDwn5UTf1iiI2SSSyj1APGPcxMMKUgyUmUFVaL3HN5tIAZmOMwOx
-	 WpFm9pEkPLCYVKdV4S5kC9YhwN8oCMwncveeWWXA=
+	b=Il/OT+wpFsoayFOiFdLt5g9LgSebuDe95oNoeVb2F9Xu5sszJLe62jsmvzr4rbjjS
+	 +dJwwXwUNo540087sPx7ZLPt8cssvpeMFxXYjG2fir6TkkunFUHeA7qQWgrwjJFzgu
+	 +eP7QTonY3PoNelIOly0NAUoNnCk+rlDWyaBZHXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731455AbfDARS5 (ORCPT
+        id S1731461AbfDARTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:18:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46574 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:19:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731197AbfDARSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:18:55 -0400
+        id S1730625AbfDARS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:18:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2384220883;
-        Mon,  1 Apr 2019 17:18:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA13020883;
+        Mon,  1 Apr 2019 17:18:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139134;
-        bh=JMUr0Uspdw55QzEQxgiYIjp+nIyJRkpc9Skb7+L8n2A=;
+        s=default; t=1554139138;
+        bh=kEseISCP+yGsX1LPRod45qFdiySK380oQZjyMx/2lrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VPljFMU4Qw5pZWu7lBf3JR3nAqdl5PYyQxAqtofG5CmbSVBDrfbmIJhyHjAkOTn9W
-         4GWdQd6zLz/yhegEFfi/6ylQ83+X2JjV7e0ZIOtuTrEbvsDqvgXj5YMl1jSfsNlBWe
-         GHfQ7ePgyG+0+z7+bJ6tRf2TBoP/3mS0/8dc97f4=
+        b=qfGbLkJf932Kv6u+nhmRyUk61BVUVfJeolbhKBwpV8eq1elUpPySfAgjkD5kM46iE
+         KtyC/4K6UwUoBrpyKc1QjH3/tO4HABizwU4+RpWG2oyxG3Rsbhs3idqkFvFD+xgy4I
+         7ZJYi3/NKUciegi/QQYghOe/fQBF/BQlN0lF971k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        stable@vger.kernel.org, Xiaoyao Li <xiaoyao.li@linux.intel.com>,
+        Jim Mattson <jmattson@google.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 124/134] KVM: x86: update %rip after emulating IO
-Date:   Mon,  1 Apr 2019 19:02:40 +0200
-Message-Id: <20190401170055.877090613@linuxfoundation.org>
+Subject: [PATCH 4.19 125/134] KVM: x86: Emulate MSR_IA32_ARCH_CAPABILITIES on AMD hosts
+Date:   Mon,  1 Apr 2019 19:02:41 +0200
+Message-Id: <20190401170055.958446457@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -68,154 +69,120 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 45def77ebf79e2e8942b89ed79294d97ce914fa0 upstream.
+commit 0cf9135b773bf32fba9dd8e6699c1b331ee4b749 upstream.
 
-Most (all?) x86 platforms provide a port IO based reset mechanism, e.g.
-OUT 92h or CF9h.  Userspace may emulate said mechanism, i.e. reset a
-vCPU in response to KVM_EXIT_IO, without explicitly announcing to KVM
-that it is doing a reset, e.g. Qemu jams vCPU state and resumes running.
+The CPUID flag ARCH_CAPABILITIES is unconditioinally exposed to host
+userspace for all x86 hosts, i.e. KVM advertises ARCH_CAPABILITIES
+regardless of hardware support under the pretense that KVM fully
+emulates MSR_IA32_ARCH_CAPABILITIES.  Unfortunately, only VMX hosts
+handle accesses to MSR_IA32_ARCH_CAPABILITIES (despite KVM_GET_MSRS
+also reporting MSR_IA32_ARCH_CAPABILITIES for all hosts).
 
-To avoid corruping %rip after such a reset, commit 0967b7bf1c22 ("KVM:
-Skip pio instruction when it is emulated, not executed") changed the
-behavior of PIO handlers, i.e. today's "fast" PIO handling to skip the
-instruction prior to exiting to userspace.  Full emulation doesn't need
-such tricks becase re-emulating the instruction will naturally handle
-%rip being changed to point at the reset vector.
+Move the MSR_IA32_ARCH_CAPABILITIES handling to common x86 code so
+that it's emulated on AMD hosts.
 
-Updating %rip prior to executing to userspace has several drawbacks:
-
-  - Userspace sees the wrong %rip on the exit, e.g. if PIO emulation
-    fails it will likely yell about the wrong address.
-  - Single step exits to userspace for are effectively dropped as
-    KVM_EXIT_DEBUG is overwritten with KVM_EXIT_IO.
-  - Behavior of PIO emulation is different depending on whether it
-    goes down the fast path or the slow path.
-
-Rather than skip the PIO instruction before exiting to userspace,
-snapshot the linear %rip and cancel PIO completion if the current
-value does not match the snapshot.  For a 64-bit vCPU, i.e. the most
-common scenario, the snapshot and comparison has negligible overhead
-as VMCS.GUEST_RIP will be cached regardless, i.e. there is no extra
-VMREAD in this case.
-
-All other alternatives to snapshotting the linear %rip that don't
-rely on an explicit reset announcenment suffer from one corner case
-or another.  For example, canceling PIO completion on any write to
-%rip fails if userspace does a save/restore of %rip, and attempting to
-avoid that issue by canceling PIO only if %rip changed then fails if PIO
-collides with the reset %rip.  Attempting to zero in on the exact reset
-vector won't work for APs, which means adding more hooks such as the
-vCPU's MP_STATE, and so on and so forth.
-
-Checking for a linear %rip match technically suffers from corner cases,
-e.g. userspace could theoretically rewrite the underlying code page and
-expect a different instruction to execute, or the guest hardcodes a PIO
-reset at 0xfffffff0, but those are far, far outside of what can be
-considered normal operation.
-
-Fixes: 432baf60eee3 ("KVM: VMX: use kvm_fast_pio_in for handling IN I/O")
-Cc: <stable@vger.kernel.org>
-Reported-by: Jim Mattson <jmattson@google.com>
+Fixes: 1eaafe91a0df4 ("kvm: x86: IA32_ARCH_CAPABILITIES is always supported")
+Cc: stable@vger.kernel.org
+Reported-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Cc: Jim Mattson <jmattson@google.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
  arch/x86/include/asm/kvm_host.h |    1 +
- arch/x86/kvm/x86.c              |   36 ++++++++++++++++++++++++++----------
- 2 files changed, 27 insertions(+), 10 deletions(-)
+ arch/x86/kvm/vmx.c              |   14 --------------
+ arch/x86/kvm/x86.c              |   12 ++++++++++++
+ 3 files changed, 13 insertions(+), 14 deletions(-)
 
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -315,6 +315,7 @@ struct kvm_mmu_page {
- };
+@@ -528,6 +528,7 @@ struct kvm_vcpu_arch {
+ 	bool tpr_access_reporting;
+ 	u64 ia32_xss;
+ 	u64 microcode_version;
++	u64 arch_capabilities;
  
- struct kvm_pio_request {
-+	unsigned long linear_rip;
- 	unsigned long count;
- 	int in;
- 	int port;
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6317,14 +6317,27 @@ int kvm_emulate_instruction_from_buffer(
- }
- EXPORT_SYMBOL_GPL(kvm_emulate_instruction_from_buffer);
+ 	/*
+ 	 * Paging state of the vcpu
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -970,7 +970,6 @@ struct vcpu_vmx {
+ 	u64 		      msr_guest_kernel_gs_base;
+ #endif
  
-+static int complete_fast_pio_out(struct kvm_vcpu *vcpu)
-+{
-+	vcpu->arch.pio.count = 0;
-+
-+	if (unlikely(!kvm_is_linear_rip(vcpu, vcpu->arch.pio.linear_rip)))
-+		return 1;
-+
-+	return kvm_skip_emulated_instruction(vcpu);
-+}
-+
- static int kvm_fast_pio_out(struct kvm_vcpu *vcpu, int size,
- 			    unsigned short port)
- {
- 	unsigned long val = kvm_register_read(vcpu, VCPU_REGS_RAX);
- 	int ret = emulator_pio_out_emulated(&vcpu->arch.emulate_ctxt,
- 					    size, port, &val, 1);
--	/* do not return to emulator after return from userspace */
--	vcpu->arch.pio.count = 0;
-+
-+	if (!ret) {
-+		vcpu->arch.pio.linear_rip = kvm_get_linear_rip(vcpu);
-+		vcpu->arch.complete_userspace_io = complete_fast_pio_out;
-+	}
- 	return ret;
- }
+-	u64 		      arch_capabilities;
+ 	u64 		      spec_ctrl;
  
-@@ -6335,6 +6348,11 @@ static int complete_fast_pio_in(struct k
- 	/* We should only ever be called with arch.pio.count equal to 1 */
- 	BUG_ON(vcpu->arch.pio.count != 1);
+ 	u32 vm_entry_controls_shadow;
+@@ -4104,12 +4103,6 @@ static int vmx_get_msr(struct kvm_vcpu *
  
-+	if (unlikely(!kvm_is_linear_rip(vcpu, vcpu->arch.pio.linear_rip))) {
-+		vcpu->arch.pio.count = 0;
-+		return 1;
-+	}
-+
- 	/* For size less than 4 we merge, else we zero extend */
- 	val = (vcpu->arch.pio.size < 4) ? kvm_register_read(vcpu, VCPU_REGS_RAX)
- 					: 0;
-@@ -6347,7 +6365,7 @@ static int complete_fast_pio_in(struct k
- 				 vcpu->arch.pio.port, &val, 1);
- 	kvm_register_write(vcpu, VCPU_REGS_RAX, val);
- 
--	return 1;
-+	return kvm_skip_emulated_instruction(vcpu);
- }
- 
- static int kvm_fast_pio_in(struct kvm_vcpu *vcpu, int size,
-@@ -6366,6 +6384,7 @@ static int kvm_fast_pio_in(struct kvm_vc
- 		return ret;
+ 		msr_info->data = to_vmx(vcpu)->spec_ctrl;
+ 		break;
+-	case MSR_IA32_ARCH_CAPABILITIES:
+-		if (!msr_info->host_initiated &&
+-		    !guest_cpuid_has(vcpu, X86_FEATURE_ARCH_CAPABILITIES))
+-			return 1;
+-		msr_info->data = to_vmx(vcpu)->arch_capabilities;
+-		break;
+ 	case MSR_IA32_SYSENTER_CS:
+ 		msr_info->data = vmcs_read32(GUEST_SYSENTER_CS);
+ 		break;
+@@ -4271,11 +4264,6 @@ static int vmx_set_msr(struct kvm_vcpu *
+ 		vmx_disable_intercept_for_msr(vmx->vmcs01.msr_bitmap, MSR_IA32_PRED_CMD,
+ 					      MSR_TYPE_W);
+ 		break;
+-	case MSR_IA32_ARCH_CAPABILITIES:
+-		if (!msr_info->host_initiated)
+-			return 1;
+-		vmx->arch_capabilities = data;
+-		break;
+ 	case MSR_IA32_CR_PAT:
+ 		if (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PAT) {
+ 			if (!kvm_mtrr_valid(vcpu, MSR_IA32_CR_PAT, data))
+@@ -6666,8 +6654,6 @@ static void vmx_vcpu_setup(struct vcpu_v
+ 		++vmx->nmsrs;
  	}
  
-+	vcpu->arch.pio.linear_rip = kvm_get_linear_rip(vcpu);
- 	vcpu->arch.complete_userspace_io = complete_fast_pio_in;
+-	vmx->arch_capabilities = kvm_get_arch_capabilities();
+-
+ 	vm_exit_controls_init(vmx, vmcs_config.vmexit_ctrl);
  
- 	return 0;
-@@ -6373,16 +6392,13 @@ static int kvm_fast_pio_in(struct kvm_vc
+ 	/* 22.2.1, 20.8.1 */
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2350,6 +2350,11 @@ int kvm_set_msr_common(struct kvm_vcpu *
+ 		if (msr_info->host_initiated)
+ 			vcpu->arch.microcode_version = data;
+ 		break;
++	case MSR_IA32_ARCH_CAPABILITIES:
++		if (!msr_info->host_initiated)
++			return 1;
++		vcpu->arch.arch_capabilities = data;
++		break;
+ 	case MSR_EFER:
+ 		return set_efer(vcpu, data);
+ 	case MSR_K7_HWCR:
+@@ -2654,6 +2659,12 @@ int kvm_get_msr_common(struct kvm_vcpu *
+ 	case MSR_IA32_UCODE_REV:
+ 		msr_info->data = vcpu->arch.microcode_version;
+ 		break;
++	case MSR_IA32_ARCH_CAPABILITIES:
++		if (!msr_info->host_initiated &&
++		    !guest_cpuid_has(vcpu, X86_FEATURE_ARCH_CAPABILITIES))
++			return 1;
++		msr_info->data = vcpu->arch.arch_capabilities;
++		break;
+ 	case MSR_IA32_TSC:
+ 		msr_info->data = kvm_scale_tsc(vcpu, rdtsc()) + vcpu->arch.tsc_offset;
+ 		break;
+@@ -8501,6 +8512,7 @@ struct kvm_vcpu *kvm_arch_vcpu_create(st
  
- int kvm_fast_pio(struct kvm_vcpu *vcpu, int size, unsigned short port, int in)
+ int kvm_arch_vcpu_setup(struct kvm_vcpu *vcpu)
  {
--	int ret = kvm_skip_emulated_instruction(vcpu);
-+	int ret;
- 
--	/*
--	 * TODO: we might be squashing a KVM_GUESTDBG_SINGLESTEP-triggered
--	 * KVM_EXIT_DEBUG here.
--	 */
- 	if (in)
--		return kvm_fast_pio_in(vcpu, size, port) && ret;
-+		ret = kvm_fast_pio_in(vcpu, size, port);
- 	else
--		return kvm_fast_pio_out(vcpu, size, port) && ret;
-+		ret = kvm_fast_pio_out(vcpu, size, port);
-+	return ret && kvm_skip_emulated_instruction(vcpu);
- }
- EXPORT_SYMBOL_GPL(kvm_fast_pio);
- 
++	vcpu->arch.arch_capabilities = kvm_get_arch_capabilities();
+ 	kvm_vcpu_mtrr_init(vcpu);
+ 	vcpu_load(vcpu);
+ 	kvm_vcpu_reset(vcpu, false);
 
 
