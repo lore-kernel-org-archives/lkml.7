@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A86C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 462EFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 348C821929
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1759E21929
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138319;
-	bh=x5BRezBiPtxQGQDUXshgssybnj4dcrJVEWmJ4nXCKMw=;
+	s=default; t=1554138322;
+	bh=h86hAaKA0Ah6pwhQnxgq6BJ17E0czsx2sp3TXFDJr3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A9wjMo2CtS+zhteECPQ+pn+yTylviVgxa3o4A0hzorMRwH5ekav7RXZxjue2POfk8
-	 lCDK87MjH5F37w7XxTgfvMX6k1D1KLLOQqYeNUzFsPXD8LdUXu8OZ0/R3g4VGijyi0
-	 cmqBFPYJ88SJ162NWaMln062+O2q8hQQzJ0x0aYs=
+	b=xvCfFE0SkB+0okwVvX0gGRVjVkMgfBQQgenEPjdkCCiMFCidREvLo488cE1NYrfMG
+	 rs4UE5LLxuqQVT+xR6uDDAUIgiNqob8B97vTXkEVmJi0V2m4ZcNwlhWuvmESvOQun8
+	 K1Bx/C5xR42Rm9UrdDZfUPRQJe79ZrrretNTf9R0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfDARFR (ORCPT
+        id S1728931AbfDARFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:05:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50332 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:05:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728731AbfDARFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:05:16 -0400
+        id S1728917AbfDARFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:05:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DC3A21925;
-        Mon,  1 Apr 2019 17:05:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57D3E21925;
+        Mon,  1 Apr 2019 17:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138316;
-        bh=x5BRezBiPtxQGQDUXshgssybnj4dcrJVEWmJ4nXCKMw=;
+        s=default; t=1554138318;
+        bh=h86hAaKA0Ah6pwhQnxgq6BJ17E0czsx2sp3TXFDJr3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=avu/D9QZL4bhzk62DkTc2V861I68tP/YhZvxsBfhRBrB78W2Y5MA86fN+t0ho6DOA
-         Eaz4G5q038awN26Tlb28Aoh1n+xIHamtR8+TlhEUWfBEJKWf3CENhenBp31XB9StsY
-         WYnMCi6G82HFGcKcx31EwsrxxLD5QvbOb1yJnJjM=
+        b=LrAlQ1vAUuTtT8fUDKDruAB3wZSZAJfjDoML/a/qhaHqhfylmYMngURltx2E2C1yJ
+         o8kK+IDkbfgZDiFJWybk6v0NcY6DRbK62qUFThu22OStCPmBTKHgRYrAd7McGuG/nD
+         ADawq93/qANmE8xYQIGnoAjqzPoYNHBG+3IA5P/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dean Nelson <dnelson@redhat.com>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 030/146] thunderx: eliminate extra calls to put_page() for pages held for recycling
-Date:   Mon,  1 Apr 2019 19:00:42 +0200
-Message-Id: <20190401170051.085412279@linuxfoundation.org>
+Subject: [PATCH 5.0 031/146] net: dsa: mv88e6xxx: fix few issues in mv88e6390x_port_set_cmode
+Date:   Mon,  1 Apr 2019 19:00:43 +0200
+Message-Id: <20190401170051.178861898@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -65,58 +66,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dean Nelson <dnelson@redhat.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit cd35ef91490ad8049dd180bb060aff7ee192eda9 ]
+[ Upstream commit 5ceaeb99ffb4dc002d20f6ac243c19a85e2c7a76 ]
 
-For the non-XDP case, commit 773225388dae15e72790 ("net: thunderx: Optimize
-page recycling for XDP") added code to nicvf_free_rbdr() that, when releasing
-the additional receive buffer page reference held for recycling, repeatedly
-calls put_page() until the page's _refcount goes to zero. Which results in
-the page being freed.
+This patches fixes few issues in mv88e6390x_port_set_cmode().
 
-This is not okay if the page's _refcount was greater than 1 (in the non-XDP
-case), because nicvf_free_rbdr() should not be subtracting more than what
-nicvf_alloc_page() had previously added to the page's _refcount, which was
-only 1 (in the non-XDP case).
+1. When entering the function the old cmode may be 0, in this case
+   mv88e6390x_serdes_get_lane() returns -ENODEV. As result we bail
+   out and have no chance to set a new mode. Therefore deal properly
+   with -ENODEV.
 
-This can arise if a received packet is still being processed and the receive
-buffer (i.e., skb->head) has not yet been freed via skb_free_head() when
-nicvf_free_rbdr() is spinning through the aforementioned put_page() loop.
+2. Once we have disabled power and irq, let's set the cached cmode to 0.
+   This reflects the actual status and is cleaner if we bail out with an
+   error in the following function calls.
 
-If this should occur, when the received packet finishes processing and
-skb_free_head() is called, various problems can ensue. Exactly what, depends on
-whether the page has already been reallocated or not, anything from "BUG: Bad
-page state ... ", to "Unable to handle kernel NULL pointer dereference ..." or
-"Unable to handle kernel paging request...".
+3. The cached cmode is used by mv88e6390x_serdes_get_lane(),
+   mv88e6390_serdes_power_lane() and mv88e6390_serdes_irq_enable().
+   Currently we set the cached mode to the new one at the very end of
+   the function only, means until then we use the old one what may be
+   wrong.
 
-So this patch changes nicvf_free_rbdr() to only call put_page() once for pages
-held for recycling (in the non-XDP case).
+4. When calling mv88e6390_serdes_irq_enable() we use the lane value
+   belonging to the old cmode. Get the lane belonging to the new cmode
+   before calling this function.
 
-Fixes: 773225388dae ("net: thunderx: Optimize page recycling for XDP")
-Signed-off-by: Dean Nelson <dnelson@redhat.com>
+It's hard to provide a good "Fixes" tag because quite a few smaller
+changes have been done to the code in question recently.
+
+Fixes: d235c48b40d3 ("net: dsa: mv88e6xxx: power serdes on/off for 10G interfaces on 6390X")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cavium/thunder/nicvf_queues.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/dsa/mv88e6xxx/port.c |   24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
---- a/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
-@@ -364,11 +364,10 @@ static void nicvf_free_rbdr(struct nicvf
- 	while (head < rbdr->pgcnt) {
- 		pgcache = &rbdr->pgcache[head];
- 		if (pgcache->page && page_ref_count(pgcache->page) != 0) {
--			if (!rbdr->is_xdp) {
--				put_page(pgcache->page);
--				continue;
-+			if (rbdr->is_xdp) {
-+				page_ref_sub(pgcache->page,
-+					     pgcache->ref_count - 1);
- 			}
--			page_ref_sub(pgcache->page, pgcache->ref_count - 1);
- 			put_page(pgcache->page);
+--- a/drivers/net/dsa/mv88e6xxx/port.c
++++ b/drivers/net/dsa/mv88e6xxx/port.c
+@@ -427,18 +427,22 @@ int mv88e6390x_port_set_cmode(struct mv8
+ 		return 0;
+ 
+ 	lane = mv88e6390x_serdes_get_lane(chip, port);
+-	if (lane < 0)
++	if (lane < 0 && lane != -ENODEV)
+ 		return lane;
+ 
+-	if (chip->ports[port].serdes_irq) {
+-		err = mv88e6390_serdes_irq_disable(chip, port, lane);
++	if (lane >= 0) {
++		if (chip->ports[port].serdes_irq) {
++			err = mv88e6390_serdes_irq_disable(chip, port, lane);
++			if (err)
++				return err;
++		}
++
++		err = mv88e6390x_serdes_power(chip, port, false);
+ 		if (err)
+ 			return err;
+ 	}
+ 
+-	err = mv88e6390x_serdes_power(chip, port, false);
+-	if (err)
+-		return err;
++	chip->ports[port].cmode = 0;
+ 
+ 	if (cmode) {
+ 		err = mv88e6xxx_port_read(chip, port, MV88E6XXX_PORT_STS, &reg);
+@@ -452,6 +456,12 @@ int mv88e6390x_port_set_cmode(struct mv8
+ 		if (err)
+ 			return err;
+ 
++		chip->ports[port].cmode = cmode;
++
++		lane = mv88e6390x_serdes_get_lane(chip, port);
++		if (lane < 0)
++			return lane;
++
+ 		err = mv88e6390x_serdes_power(chip, port, true);
+ 		if (err)
+ 			return err;
+@@ -463,8 +473,6 @@ int mv88e6390x_port_set_cmode(struct mv8
  		}
- 		head++;
+ 	}
+ 
+-	chip->ports[port].cmode = cmode;
+-
+ 	return 0;
+ }
+ 
 
 
