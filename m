@@ -2,162 +2,159 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5798C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9378C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A59C42084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B31213A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhqpuxI2"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bQlSsbhw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbfDAJBf (ORCPT
+        id S1728762AbfDAJCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 05:01:35 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42948 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbfDAJBd (ORCPT
+        Mon, 1 Apr 2019 05:02:09 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55410 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbfDAJCI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 05:01:33 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p6so4414715pgh.9;
-        Mon, 01 Apr 2019 02:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zRrI2gVcSPBOrRDl3Z3EFWOVjgSWQsnIxpjQ7VgJeec=;
-        b=jhqpuxI2W57TdZ98GoyXXh67S0yptz5ctASjZ/w9uNesNn1PUIscT5i4wClAi0MMrx
-         W2qrtWF8K7u0miclnNJjYFns4YAHSaeyv+dKP2t3CMcLykRZMyD7uB86FKV7dD5iQwJF
-         IZvmDdND7Pwgj2kKgi6jPxY8N4FCI9irQnvG8s3++DviXBdxHPP3NrOBRw+HaewJZHvH
-         DILcUwMEN8BbL8oHcYHEhFfDCygacbzR+9NDNVSUhNuwn89AkEWZNb1mzyRPWrxMgb1z
-         mJh+oAjDLn3MlUolxL1FEurQ6z/kQn0kyMpOzF6sMV3eiAcLjyyffx4S9dglxXylJmOe
-         2hog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zRrI2gVcSPBOrRDl3Z3EFWOVjgSWQsnIxpjQ7VgJeec=;
-        b=gWe+r9TqddKuPAvpdcTuoM9VUesuv6qN3hR5f7xpchJKmq82R3dt9fK0OfwJwogi46
-         u7DhtPi5Ph9G7eLZOPG1bq/DRdqsYP63iIqG8D/clcCgdOISTSN4WrVl7QL4UeOWwfP1
-         +VJ9sqBoqfShXKN1JhJQrJFzOPN9+ONr+LVa+OD33AHFBD7Z0m5bjoL5uisKWGs5bUzZ
-         6mrnLo9zBEVdcKxLzYHAgtkEPU8IrD81o2RwzlIJGrFDc9zaPSH/Taz9XEL8a2wGIjyJ
-         yg9/z0XM12iPgQmRSvK3dnAx8GRmEmXMfzBq0Um6AmpTClgShZoJWFGXegQQ5ZLspH6F
-         L0yg==
-X-Gm-Message-State: APjAAAWkWhQ0nbISq7b+xyWZ6s4vQkAqRTEPMBuFS783quBoK9DOG6W/
-        F9E0YjMLYmWpkX6a8pJqatfydGJK
-X-Google-Smtp-Source: APXvYqyItjWSMA88QzJlCTMvXrMJGWzJ8KSBdndHWLMzEpDJ4oIsQt3vEdcDbmu3YPn3hDngceBOvg==
-X-Received: by 2002:aa7:8615:: with SMTP id p21mr37410708pfn.98.1554109291698;
-        Mon, 01 Apr 2019 02:01:31 -0700 (PDT)
-Received: from [192.168.1.58] (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
-        by smtp.gmail.com with ESMTPSA id i3sm12825414pfa.90.2019.04.01.02.01.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 02:01:30 -0700 (PDT)
-Subject: Re: [RESEND PATCH V3 1/3] USB: serial: f81232: clear overrun flag
-To:     Oliver Neukum <oneukum@suse.com>, peter_hong@fintek.com.tw,
-        johan@kernel.org, gregkh@linuxfoundation.org
-Cc:     "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-References: <1554098453-31278-1-git-send-email-hpeter+linux_kernel@gmail.com>
- <1554107689.6310.17.camel@suse.com>
-From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Message-ID: <fa56bb5b-8945-29f1-8516-58ce0c8ebd39@gmail.com>
-Date:   Mon, 1 Apr 2019 17:01:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 1 Apr 2019 05:02:08 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x31925Mr103629;
+        Mon, 1 Apr 2019 04:02:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554109325;
+        bh=HIW70Qx6J8+bjUuQvic4vpqdTfDr90JC35N2wi9o+zs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=bQlSsbhwi+bC7CGiZNv21Gb562nK9hrxqkuku3C6B/g8RkPOyic/szb2ZR7MVLdf9
+         XTk0dviMFvp2nro7euv9xYpeZC20+S63tG+Ish5bgXG3KNQy+0H0uEh97jVU4SJxm3
+         /z8q7dn6whNLPvLmpENpjETLF/z2W22NasapFblA=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x31925G1107917
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 1 Apr 2019 04:02:05 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Apr
+ 2019 04:02:04 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 1 Apr 2019 04:02:04 -0500
+Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x319220F035548;
+        Mon, 1 Apr 2019 04:02:03 -0500
+Subject: Re: [PATCH 1/2] mmc: sdhci: Add Quirk for enabling HISPD under
+ special conditions
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+CC:     <ulf.hansson@linaro.org>
+References: <20190329142202.15000-1-faiz_abbas@ti.com>
+ <20190329142202.15000-2-faiz_abbas@ti.com>
+ <f1417015-0e78-6df5-7917-a33e235fa1a9@intel.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <350cd133-302f-4002-4b54-d95e7e5d3500@ti.com>
+Date:   Mon, 1 Apr 2019 14:31:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <1554107689.6310.17.camel@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <f1417015-0e78-6df5-7917-a33e235fa1a9@intel.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oliver Neukum 於 2019/4/1 下午 04:34 寫道:
-> On Mo, 2019-04-01 at 14:00 +0800,  Ji-Ze Hong (Peter Hong)  wrote:
-> 
-> Hi,
-> I am afraid there is a race condiion in this code.
-> 
-> 
->> @@ -315,6 +318,7 @@ static void f81232_process_read_urb(struct urb *urb)
->>   
->>   			if (lsr & UART_LSR_OE) {
->>   				port->icount.overrun++;
->> +				schedule_work(&priv->lsr_work);
-> 
-> Unconditionally scheduled
-> 
->>   				tty_insert_flip_char(&port->port, 0,
->>   						TTY_OVERRUN);
->>   			}
-> 
-> [..]
->> +static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
->> +{
->> +	struct f81232_private *port_priv;
->> +
->> +	port_priv = usb_get_serial_port_data(serial->port[0]);
->> +	flush_work(&port_priv->lsr_work);
->> +
->> +	return 0;
->> +}
->> +
->>   static struct usb_serial_driver f81232_device = {
->>   	.driver = {
->>   		.owner =	THIS_MODULE,
->> @@ -655,6 +688,7 @@ static struct usb_serial_driver f81232_device = {
->>   	.read_int_callback =	f81232_read_int_callback,
->>   	.port_probe =		f81232_port_probe,
->>   	.port_remove =		f81232_port_remove,
->> +	.suspend =		f81232_suspend,
-> 
-> Please have a look at:
-> int usb_serial_suspend(struct usb_interface *intf, pm_message_t message)
-> {
->          struct usb_serial *serial = usb_get_intfdata(intf);
->          int i, r = 0;
-> 
-> 
->          serial->suspending = 1;
-> 
-> 
->          /*
->           * serial->type->suspend() MUST return 0 in system sleep context,
->           * otherwise, the resume callback has to recover device from
->           * previous suspend failure.
->           */
->          if (serial->type->suspend) {
->                  r = serial->type->suspend(serial, message);
->                  if (r < 0) {
->                          serial->suspending = 0;
->                          goto err_out;
->                  }
->          }
-> 
-> 
->          for (i = 0; i < serial->num_ports; ++i)
->                  usb_serial_port_poison_urbs(serial->port[i]);
-> err_out:
->          return r;
-> }
-> EXPORT_SYMBOL(usb_serial_suspend);
-> 
-> As you can see, the suspend method is called first and then the URBs
-> are poisoned. That means that after you have flushed the work, it may
-> be submitted again. The fix would be to test the 'suspending' flag
-> before you schedule work (and recheck the need to schedule it
-> during resume)
+Hi Adrian,
 
-Thanks for report the race condition issue. It's seems the same bug
-in f81534.c. I'll try to fix it on f81232.c then fix f81534.c too.
+On 01/04/19 2:21 PM, Adrian Hunter wrote:
+> On 29/03/19 4:22 PM, Faiz Abbas wrote:
+>> Some controllers on TI devices requires the HISPD bit to be cleared
+>> even in some high speed modes. Add a quirk that facilitates this
+>> requirement.
+> 
+> Could you use sdhci I/O accessors for this?
 
--- 
-With Best Regards,
-Peter Hong
+Can you elaborate? Not sure how this would be solved with
+CONFIG_MMC_SDHCI_IO_ACCESSORS.
+
+Thanks,
+Faiz
+
+> 
+>>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>>  drivers/mmc/host/sdhci.c | 36 ++++++++++++++++++++++++------------
+>>  drivers/mmc/host/sdhci.h |  2 ++
+>>  2 files changed, 26 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>> index a8141ff9be03..ed4ed6054ddf 100644
+>> --- a/drivers/mmc/host/sdhci.c
+>> +++ b/drivers/mmc/host/sdhci.c
+>> @@ -1916,18 +1916,30 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+>>  	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
+>>  
+>>  	if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
+>> -		if (ios->timing == MMC_TIMING_SD_HS ||
+>> -		     ios->timing == MMC_TIMING_MMC_HS ||
+>> -		     ios->timing == MMC_TIMING_MMC_HS400 ||
+>> -		     ios->timing == MMC_TIMING_MMC_HS200 ||
+>> -		     ios->timing == MMC_TIMING_MMC_DDR52 ||
+>> -		     ios->timing == MMC_TIMING_UHS_SDR50 ||
+>> -		     ios->timing == MMC_TIMING_UHS_SDR104 ||
+>> -		     ios->timing == MMC_TIMING_UHS_DDR50 ||
+>> -		     ios->timing == MMC_TIMING_UHS_SDR25)
+>> -			ctrl |= SDHCI_CTRL_HISPD;
+>> -		else
+>> -			ctrl &= ~SDHCI_CTRL_HISPD;
+>> +		if ((host->quirks2 & SDHCI_QUIRK2_TI_HISPD_BIT)) {
+>> +			if (ios->timing == MMC_TIMING_MMC_HS400 ||
+>> +			    ios->timing == MMC_TIMING_MMC_HS200 ||
+>> +			    ios->timing == MMC_TIMING_MMC_DDR52 ||
+>> +			    ios->timing == MMC_TIMING_UHS_SDR50 ||
+>> +			    ios->timing == MMC_TIMING_UHS_SDR104 ||
+>> +			    ios->timing == MMC_TIMING_UHS_DDR50)
+>> +				ctrl |= SDHCI_CTRL_HISPD;
+>> +			else
+>> +				ctrl &= ~SDHCI_CTRL_HISPD;
+>> +		} else {
+>> +			if (ios->timing == MMC_TIMING_SD_HS ||
+>> +			    ios->timing == MMC_TIMING_MMC_HS ||
+>> +			    ios->timing == MMC_TIMING_MMC_HS400 ||
+>> +			    ios->timing == MMC_TIMING_MMC_HS200 ||
+>> +			    ios->timing == MMC_TIMING_MMC_DDR52 ||
+>> +			    ios->timing == MMC_TIMING_UHS_SDR50 ||
+>> +			    ios->timing == MMC_TIMING_UHS_SDR104 ||
+>> +			    ios->timing == MMC_TIMING_UHS_DDR50 ||
+>> +			    ios->timing == MMC_TIMING_UHS_SDR25)
+>> +				ctrl |= SDHCI_CTRL_HISPD;
+>> +			else
+>> +				ctrl &= ~SDHCI_CTRL_HISPD;
+>> +		}
+>>  	}
+>>  
+>>  	if (host->version >= SDHCI_SPEC_300) {
+>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+>> index 01002cba1359..aac026c5e184 100644
+>> --- a/drivers/mmc/host/sdhci.h
+>> +++ b/drivers/mmc/host/sdhci.h
+>> @@ -485,6 +485,8 @@ struct sdhci_host {
+>>   * block count.
+>>   */
+>>  #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
+>> +/* Some TI devices need the high speed bit disabled even in high speed modes */
+>> +#define SDHCI_QUIRK2_TI_HISPD_BIT			(1<<19)
+>>  
+>>  	int irq;		/* Device IRQ */
+>>  	void __iomem *ioaddr;	/* Mapped address */
+>>
+> 
