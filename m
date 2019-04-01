@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A60BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244C2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2875A206DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B9821473
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139224;
-	bh=Gnd5HL+iGQ4rnjdYYs5wxO8vDWvCevhTbPftlZcYh8Q=;
+	s=default; t=1554139227;
+	bh=GHOgPrGOYX1REIZw7wKq7EofzCvD+5eBOEjr6BbJnGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eEap8MNBJnTmNBEiPxkhig37s/GT0LQV37uFYlOtLwY+u55/ZAUOVxAJAptcYt7yp
-	 U0AEJgD69qn9ix94uNTmmv22HxD9g0+Ds/bLTOKPzaurwu6mmZkb1IzFGg4zRGraF/
-	 wDlsrHSah1L9sK6Dp3wEO3k+JxS2zYOWgVSPkcvE=
+	b=gUid6YdwNYBO1fC1byVxIPmkpOHOU+FU2sb9yOjVuBkR93s/OHgm7XJov4Dyv3RmK
+	 cFNEdpSq4I1ORcNQVutyNuLH3nvZJcOH7aBGf9leQ+SW/SM1E4SQe4C72unMJACrNj
+	 Xg+uzWvs1KFdoQNkOU2EB0QnhY9rQVmfTn+oRZU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731636AbfDARUX (ORCPT
+        id S1731646AbfDARUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:20:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48448 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:20:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729490AbfDARUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:20:19 -0400
+        id S1731630AbfDARUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:20:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03CF7206C0;
-        Mon,  1 Apr 2019 17:20:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3B60206DD;
+        Mon,  1 Apr 2019 17:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139218;
-        bh=Gnd5HL+iGQ4rnjdYYs5wxO8vDWvCevhTbPftlZcYh8Q=;
+        s=default; t=1554139221;
+        bh=GHOgPrGOYX1REIZw7wKq7EofzCvD+5eBOEjr6BbJnGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qe39G8+C63HOYE/ZLVfGarvNL07xcS3EK5v87CJSiLvL/wGPNYO2JTnJHfs+pQecP
-         JXduuoWnuFwViRvttBw/Yu7LzYcOjSTo/LHR30ivaE6GFMMtDmLNnfqL4yn2ehV4TN
-         D3CMfNLTlU39PLFjIrDtRbmHcUvcoO/5N2X0H6rw=
+        b=rLa8U5IpSXNbQhBbSfW4h65zr3YTnEWtiNKRTzba6vq3PRewaVCdQyx77IbiEg4rW
+         EWCZO1LB8w5DwFF62Ja3nSC5Lpm+OwP+FL61WHQhKv7Ey/LzaDElfnk9AJWi/1O0bS
+         TQo4/g+gUt1bUPiVrpgQw/FU2lQf2FrEumSuBprQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 012/107] net-sysfs: call dev_hold if kobject_init_and_add success
-Date:   Mon,  1 Apr 2019 19:01:27 +0200
-Message-Id: <20190401170046.650636106@linuxfoundation.org>
+Subject: [PATCH 4.14 013/107] packets: Always register packet sk in the same order
+Date:   Mon,  1 Apr 2019 19:01:28 +0200
+Message-Id: <20190401170046.733093336@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -66,62 +67,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-[ Upstream commit a3e23f719f5c4a38ffb3d30c8d7632a4ed8ccd9e ]
+[ Upstream commit a4dc6a49156b1f8d6e17251ffda17c9e6a5db78a ]
 
-In netdev_queue_add_kobject and rx_queue_add_kobject,
-if sysfs_create_group failed, kobject_put will call
-netdev_queue_release to decrease dev refcont, however
-dev_hold has not be called. So we will see this while
-unregistering dev:
+When using fanouts with AF_PACKET, the demux functions such as
+fanout_demux_cpu will return an index in the fanout socket array, which
+corresponds to the selected socket.
 
-unregister_netdevice: waiting for bcsh0 to become free. Usage count = -1
+The ordering of this array depends on the order the sockets were added
+to a given fanout group, so for FANOUT_CPU this means sockets are bound
+to cpus in the order they are configured, which is OK.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: d0d668371679 ("net: don't decrement kobj reference count on init failure")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+However, when stopping then restarting the interface these sockets are
+bound to, the sockets are reassigned to the fanout group in the reverse
+order, due to the fact that they were inserted at the head of the
+interface's AF_PACKET socket list.
+
+This means that traffic that was directed to the first socket in the
+fanout group is now directed to the last one after an interface restart.
+
+In the case of FANOUT_CPU, traffic from CPU0 will be directed to the
+socket that used to receive traffic from the last CPU after an interface
+restart.
+
+This commit introduces a helper to add a socket at the tail of a list,
+then uses it to register AF_PACKET sockets.
+
+Note that this changes the order in which sockets are listed in /proc and
+with sock_diag.
+
+Fixes: dc99f600698d ("packet: Add fanout support")
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/net-sysfs.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/net/sock.h     |    6 ++++++
+ net/packet/af_packet.c |    2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -917,6 +917,8 @@ static int rx_queue_add_kobject(struct n
- 	if (error)
- 		return error;
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -682,6 +682,12 @@ static inline void sk_add_node_rcu(struc
+ 		hlist_add_head_rcu(&sk->sk_node, list);
+ }
  
-+	dev_hold(queue->dev);
++static inline void sk_add_node_tail_rcu(struct sock *sk, struct hlist_head *list)
++{
++	sock_hold(sk);
++	hlist_add_tail_rcu(&sk->sk_node, list);
++}
 +
- 	if (dev->sysfs_rx_queue_group) {
- 		error = sysfs_create_group(kobj, dev->sysfs_rx_queue_group);
- 		if (error) {
-@@ -926,7 +928,6 @@ static int rx_queue_add_kobject(struct n
+ static inline void __sk_nulls_add_node_rcu(struct sock *sk, struct hlist_nulls_head *list)
+ {
+ 	hlist_nulls_add_head_rcu(&sk->sk_nulls_node, list);
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3281,7 +3281,7 @@ static int packet_create(struct net *net
  	}
  
- 	kobject_uevent(kobj, KOBJ_ADD);
--	dev_hold(queue->dev);
+ 	mutex_lock(&net->packet.sklist_lock);
+-	sk_add_node_rcu(sk, &net->packet.sklist);
++	sk_add_node_tail_rcu(sk, &net->packet.sklist);
+ 	mutex_unlock(&net->packet.sklist_lock);
  
- 	return error;
- }
-@@ -1327,6 +1328,8 @@ static int netdev_queue_add_kobject(stru
- 	if (error)
- 		return error;
- 
-+	dev_hold(queue->dev);
-+
- #ifdef CONFIG_BQL
- 	error = sysfs_create_group(kobj, &dql_group);
- 	if (error) {
-@@ -1336,7 +1339,6 @@ static int netdev_queue_add_kobject(stru
- #endif
- 
- 	kobject_uevent(kobj, KOBJ_ADD);
--	dev_hold(queue->dev);
- 
- 	return 0;
- }
+ 	preempt_disable();
 
 
