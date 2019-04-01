@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3625FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760E8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE17206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C92206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139105;
-	bh=ZFzL5zHuyVRfxBMdqpSjBGReIghrbIJ1BhglsRqoxzM=;
+	s=default; t=1554139109;
+	bh=191lzMHPkxWGmDTuymxtLjBtDXNxCLoZcSduJHGGDD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hw41/XYaA6Imvg+N7QB5QLJ8VqRz7NPFkr+lRhoLwwvj6GQH6dL99CcEDfG5qZQba
-	 /DmzfLJ1LSkywpUrQmFu5b4GavZfEDPKZCIXxx+NVOqfVwlBvSOW1B6JuMxSuz38Ni
-	 3HqJ34U5kdKDwEo98fzEQJMsuHp/B0spPdbjum0w=
+	b=jf+w0a4IUSIU+wJMGi8DKyJTZXsDGQqs/2rz85Jd2fpSIq3GEQBXHjkiF/KoI+IH6
+	 5UvVVen+PQtUegXz5eli9jGNSR00iY/hL2zQVQHgTnyKt5oorbWUAPvchQcgpjWCz5
+	 0Tr5veu5nn+LRv+FX6b/f5LlscARlsaYtc84AyZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731364AbfDARSY (ORCPT
+        id S1731370AbfDARS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:18:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45468 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:18:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730943AbfDARSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:18:20 -0400
+        id S1731365AbfDARSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:18:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7D4F20856;
-        Mon,  1 Apr 2019 17:18:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7AB120856;
+        Mon,  1 Apr 2019 17:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139099;
-        bh=ZFzL5zHuyVRfxBMdqpSjBGReIghrbIJ1BhglsRqoxzM=;
+        s=default; t=1554139103;
+        bh=191lzMHPkxWGmDTuymxtLjBtDXNxCLoZcSduJHGGDD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fxVWs3t+mE0WXGg86VTUXAEjv8QPEztqyqAeXupoveuuEeLp3XBHkagaQlN4/z7zO
-         JKdnbR56Gv75QfiOhLtfwyffmgjVStB1XGKVDa+YlFJ1SzmrxApufE/TfgHssnsZTv
-         frobXc0HHJARxoevzQyx2KE6a7AAjJXFf2QxqV84=
+        b=KrGHOVN89MWsh+ktMsZypI/lAB5z39LziZ6oYKtbcaTCBwxdFsPEucrTavCsZcFlN
+         1MedK1hz/78gNrd5on4FxjhnkqK/xOF3iw9UEdLQOLBLdgyTFpVeFycGLcnllXN7zs
+         7ufuF1YaolbdZ4994vfpG00I42KfcDsqP6f/vq1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 076/134] scsi: zfcp: fix scsi_eh host reset with port_forced ERP for non-NPIV FCP devices
-Date:   Mon,  1 Apr 2019 19:01:52 +0200
-Message-Id: <20190401170051.498356351@linuxfoundation.org>
+        stable@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 4.19 077/134] drm/rockchip: vop: reset scale mode when win is disabled
+Date:   Mon,  1 Apr 2019 19:01:53 +0200
+Message-Id: <20190401170051.606263072@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -67,94 +64,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Jonas Karlman <jonas@kwiboo.se>
 
-commit 242ec1455151267fe35a0834aa9038e4c4670884 upstream.
+commit e9abc611a941d4051cde1d94b2ab7473fdb50102 upstream.
 
-Suppose more than one non-NPIV FCP device is active on the same channel.
-Send I/O to storage and have some of the pending I/O run into a SCSI
-command timeout, e.g. due to bit errors on the fibre. Now the error
-situation stops. However, we saw FCP requests continue to timeout in the
-channel. The abort will be successful, but the subsequent TUR fails.
-Scsi_eh starts. The LUN reset fails. The target reset fails.  The host
-reset only did an FCP device recovery. However, for non-NPIV FCP devices,
-this does not close and reopen ports on the SAN-side if other non-NPIV FCP
-device(s) share the same open ports.
+NV12 framebuffers produced by the VPU shows distorted on RK3288
+after win has been disabled when scaling is active.
 
-In order to resolve the continuing FCP request timeouts, we need to
-explicitly close and reopen ports on the SAN-side.
+This issue can be reproduced using a 1080p modeset by:
+- Scale a 1280x720 NV12 framebuffer to 1920x1080 on win0
+- Disable win0
+- Display a 1920x1080 NV12 framebuffer without scaling on win0
+- Output will now show the framebuffer distorted
 
-This was missing since the beginning of zfcp in v2.6.0 history commit
-ea127f975424 ("[PATCH] s390 (7/7): zfcp host adapter.").
+And by:
+- Scale a 1280x720 NV12 framebuffer to 1920x1080
+- Change to a 720p modeset (win gets disabled and scaling reset to none)
+- Output will now show the framebuffer distorted
 
-Note: The FSF requests for forced port reopen could run into FSF request
-timeouts due to other reasons. This would trigger an internal FCP device
-recovery. Pending forced port reopen recoveries would get dismissed. So
-some ports might not get fully reopened during this host reset handler.
-However, subsequent I/O would trigger the above described escalation and
-eventually all ports would be forced reopen to resolve any continuing FCP
-request timeouts due to earlier bit errors.
+Fix this by setting scale mode to none when win is disabled.
 
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: <stable@vger.kernel.org> #3.0+
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 4c156c21c794 ("drm/rockchip: vop: support plane scale")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/AM3PR03MB0966DE3E19BACE07328CD637AC7D0@AM3PR03MB0966.eurprd03.prod.outlook.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/scsi/zfcp_erp.c  |   14 ++++++++++++++
- drivers/s390/scsi/zfcp_ext.h  |    2 ++
- drivers/s390/scsi/zfcp_scsi.c |    4 ++++
- 3 files changed, 20 insertions(+)
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c |   18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
---- a/drivers/s390/scsi/zfcp_erp.c
-+++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -643,6 +643,20 @@ static void zfcp_erp_strategy_memwait(st
- 	add_timer(&erp_action->timer);
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -505,6 +505,18 @@ static void vop_core_clks_disable(struct
+ 	clk_disable(vop->hclk);
  }
  
-+void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
-+				     int clear, char *dbftag)
++static void vop_win_disable(struct vop *vop, const struct vop_win_data *win)
 +{
-+	unsigned long flags;
-+	struct zfcp_port *port;
++	if (win->phy->scl && win->phy->scl->ext) {
++		VOP_SCL_SET_EXT(vop, win, yrgb_hor_scl_mode, SCALE_NONE);
++		VOP_SCL_SET_EXT(vop, win, yrgb_ver_scl_mode, SCALE_NONE);
++		VOP_SCL_SET_EXT(vop, win, cbcr_hor_scl_mode, SCALE_NONE);
++		VOP_SCL_SET_EXT(vop, win, cbcr_ver_scl_mode, SCALE_NONE);
++	}
 +
-+	write_lock_irqsave(&adapter->erp_lock, flags);
-+	read_lock(&adapter->port_list_lock);
-+	list_for_each_entry(port, &adapter->port_list, list)
-+		_zfcp_erp_port_forced_reopen(port, clear, dbftag);
-+	read_unlock(&adapter->port_list_lock);
-+	write_unlock_irqrestore(&adapter->erp_lock, flags);
++	VOP_WIN_SET(vop, win, enable, 0);
 +}
 +
- static void _zfcp_erp_port_reopen_all(struct zfcp_adapter *adapter,
- 				      int clear, char *id)
+ static int vop_enable(struct drm_crtc *crtc)
  {
---- a/drivers/s390/scsi/zfcp_ext.h
-+++ b/drivers/s390/scsi/zfcp_ext.h
-@@ -69,6 +69,8 @@ extern void zfcp_erp_clear_port_status(s
- extern void zfcp_erp_port_reopen(struct zfcp_port *port, int clear, char *id);
- extern void zfcp_erp_port_shutdown(struct zfcp_port *, int, char *);
- extern void zfcp_erp_port_forced_reopen(struct zfcp_port *, int, char *);
-+extern void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
-+					    int clear, char *dbftag);
- extern void zfcp_erp_set_lun_status(struct scsi_device *, u32);
- extern void zfcp_erp_clear_lun_status(struct scsi_device *, u32);
- extern void zfcp_erp_lun_reopen(struct scsi_device *, int, char *);
---- a/drivers/s390/scsi/zfcp_scsi.c
-+++ b/drivers/s390/scsi/zfcp_scsi.c
-@@ -362,6 +362,10 @@ static int zfcp_scsi_eh_host_reset_handl
- 	struct zfcp_adapter *adapter = zfcp_sdev->port->adapter;
- 	int ret = SUCCESS, fc_ret;
+ 	struct vop *vop = to_vop(crtc);
+@@ -550,7 +562,7 @@ static int vop_enable(struct drm_crtc *c
+ 		struct vop_win *vop_win = &vop->win[i];
+ 		const struct vop_win_data *win = vop_win->data;
  
-+	if (!(adapter->connection_features & FSF_FEATURE_NPIV_MODE)) {
-+		zfcp_erp_port_forced_reopen_all(adapter, 0, "schrh_p");
-+		zfcp_erp_wait(adapter);
-+	}
- 	zfcp_erp_adapter_reopen(adapter, 0, "schrh_1");
- 	zfcp_erp_wait(adapter);
- 	fc_ret = fc_block_scsi_eh(scpnt);
+-		VOP_WIN_SET(vop, win, enable, 0);
++		vop_win_disable(vop, win);
+ 	}
+ 	spin_unlock(&vop->reg_lock);
+ 
+@@ -694,7 +706,7 @@ static void vop_plane_atomic_disable(str
+ 
+ 	spin_lock(&vop->reg_lock);
+ 
+-	VOP_WIN_SET(vop, win, enable, 0);
++	vop_win_disable(vop, win);
+ 
+ 	spin_unlock(&vop->reg_lock);
+ }
+@@ -1449,7 +1461,7 @@ static int vop_initial(struct vop *vop)
+ 		int channel = i * 2 + 1;
+ 
+ 		VOP_WIN_SET(vop, win, channel, (channel + 1) << 4 | channel);
+-		VOP_WIN_SET(vop, win, enable, 0);
++		vop_win_disable(vop, win);
+ 		VOP_WIN_SET(vop, win, gate, 1);
+ 	}
+ 
 
 
