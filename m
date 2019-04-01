@@ -2,133 +2,229 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2003DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C23C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1E420872
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:13:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="lR7IiVPB"
+	by mail.kernel.org (Postfix) with ESMTP id 3B4B620872
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731527AbfDACNm (ORCPT
+        id S1731602AbfDACPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 22:13:42 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43844 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726985AbfDACNm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 22:13:42 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c8so3725309pfd.10
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 19:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=CxXB4SWfc6S3NBwSbbwXW5l/4r4k5EPDkipFxiKya6c=;
-        b=lR7IiVPBqeZIboLIDb6wST1HkE5i0AHVGX5X3AxyBf/JR4nAKUOcNtSxJKiGHwUKwI
-         UYbnSesKhpHZxWtHpBpoNBxyMHtKom3qvKSFKKOMlmNbpOx0V7KMVMWNXESo+4G1ocM8
-         S+Vp2F0Rv71KLGzD48YfXv5eUejz7TTULI19hlBjVbmfZ/cpP3AL5czn3R57h+881uwD
-         DzAAhaMCZNMdztkafjlQXH8MtrRakn9hwxxzCkZaZF2lmlN0TSqonA8pOeSvK+S0KYNq
-         sgQmGdr73b+Yi46HQXxVqBqKoVrQ498sLtVeKILmT94CRMHfHnjEMwYwyqsdhqaqqOo7
-         HKMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=CxXB4SWfc6S3NBwSbbwXW5l/4r4k5EPDkipFxiKya6c=;
-        b=U8LO8EotBGBAGtsElcIvHq8BxQJipX4WYyGAW/2Ho8MMiqAXcYennD1etdRcW8+qph
-         L8d+HY4QI5rcQp2KSc4Fk29/MfSzJMdT5Q+lfBamz3hIi+TDNLXEMZjJFjjiXs9h+/cf
-         30qhpyXmJ525L4w3cQYXwuFHhIERGrr2wyrBGf9h1GTEmrzYBOx3iv7pn5YXUOIjb+FX
-         VimWkH8Xw89U3FeS3RKjMrSKVsi4z274q1TcUUCet4YJdHw3TGj/YwK9ktwqGrHuEmJN
-         IVX2XxJxslwpsvC/Ryeokgu4QCXBrzClmBowBleEN+TICKpCKyDreafpOf5GjrWNrP53
-         eFBg==
-X-Gm-Message-State: APjAAAXTsUoSxk6crr4pTpmBKK8EM5AMkPqZd63S8tMwfGkuZ7Ad5A2C
-        P5SREnlo+KeAm6xZOEBa2MasQw==
-X-Google-Smtp-Source: APXvYqyBBV6lzEH6IBctB0Rojet327Vp8csFQGhlrYOzlqrrokEz3TqSc0x34ZwnXM4olCNWGluMsA==
-X-Received: by 2002:a63:3190:: with SMTP id x138mr51205623pgx.273.1554084821322;
-        Sun, 31 Mar 2019 19:13:41 -0700 (PDT)
-Received: from ?IPv6:2600:100e:b13e:a3af:389b:29a:6d03:f8bf? ([2600:100e:b13e:a3af:389b:29a:6d03:f8bf])
-        by smtp.gmail.com with ESMTPSA id 75sm14804796pfr.55.2019.03.31.19.13.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 31 Mar 2019 19:13:40 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16D57)
-In-Reply-To: <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
-Date:   Sun, 31 Mar 2019 20:13:38 -0600
-Cc:     Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Joel Fernandes <joel@joelfernandes.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <18C7FCB9-2CBA-4237-94BB-9C4395A2106B@amacapital.net>
-References: <20190329155425.26059-1-christian@brauner.io> <CAHk-=wjq4dTPcz-qsvhpm5F42SDHCoqEWv1V=rs_kt6MC=ZThA@mail.gmail.com> <BCD99947-5F55-4116-8F74-D6832E50340B@brauner.io> <CAHk-=whcA0kAWGqet9oJdyttjhP7J4PcU2Ly=n_Qyo6rMJNxRg@mail.gmail.com> <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com> <CAHk-=wj0o8BiUrYiM5ZcTS6JxBh1M60O36Ms8-EqLQ139=1L4g@mail.gmail.com> <20190330171215.3yrfxwodstmgzmxy@brauner.io> <CAHk-=whF6gnRVbJaArZna4e=tejfrzmNQtRbWjnuSSKpBn+jQg@mail.gmail.com> <132107F4-F56B-4D6E-9E00-A6F7C092E6BD@amacapital.net> <CAHk-=wiaLtH41Mc5qAjOeCWavPqV0DhS581KYa0QBt8uraTK1Q@mail.gmail.com> <20190331211041.vht7dnqg4e4bilr2@brauner.io> <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        Sun, 31 Mar 2019 22:15:32 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54056 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726985AbfDACPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 22:15:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB0DA374;
+        Sun, 31 Mar 2019 19:15:30 -0700 (PDT)
+Received: from big-swifty.misterjones.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2658D3F690;
+        Sun, 31 Mar 2019 19:15:22 -0700 (PDT)
+Date:   Mon, 01 Apr 2019 03:15:19 +0100
+Message-ID: <86pnq65v48.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     <tsahee@annapurnalabs.com>, <antoine.tenart@bootlin.com>,
+        <linux@armlinux.org.uk>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <rjw@rjwysocki.net>, <lenb@kernel.org>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>, <ronenk@amazon.com>,
+        <dwmw@amazon.co.uk>, <vaerov@amazon.com>, <zeev@amazon.com>,
+        <alisaidi@amazon.com>, <talel@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <barakw@amazon.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 7/7] irqchip/al-msi: Add ACPI support
+In-Reply-To: <1554035733-11827-3-git-send-email-hhhawa@amazon.com>
+References: <1554035733-11827-1-git-send-email-hhhawa@amazon.com>
+        <1554035733-11827-3-git-send-email-hhhawa@amazon.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 31 Mar 2019 13:35:33 +0100,
+Hanna Hawa <hhhawa@amazon.com> wrote:
+> 
+> This patch adds ACPI support for AL-MSIx driver.
+> 
+> The AL-MSIx controller is not standard, is not included in the UEFI
+> specification, and will not be added. The driver ACPI binding is
+> performed when the following conditions are true:
+> - OEM ID is AMAZON
+> - MADT table type is 0x80 (part of the OEM reserved range).
+> 
+> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+> Co-developed-by: Vladimir Aerov <vaerov@amazon.com>
+> Signed-off-by: Vladimir Aerov <vaerov@amazon.com>
+> ---
+>  drivers/irqchip/irq-al-msi.c | 118 ++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 111 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-al-msi.c b/drivers/irqchip/irq-al-msi.c
+> index ec27455..cb80c1e 100644
+> --- a/drivers/irqchip/irq-al-msi.c
+> +++ b/drivers/irqchip/irq-al-msi.c
+> @@ -9,6 +9,7 @@
+>  
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+> +#include <linux/acpi.h>
+>  #include <linux/dma-iommu.h>
+>  #include <linux/irqchip.h>
+>  #include <linux/irqchip/arm-gic.h>
+> @@ -126,14 +127,20 @@ static int al_msix_gic_domain_alloc(struct irq_domain *domain,
+>  	struct irq_data *d;
+>  	int ret;
+>  
+> -	if (!is_of_node(domain->parent->fwnode))
+> +	if (is_of_node(domain->parent->fwnode)) {
+> +		fwspec.fwnode = domain->parent->fwnode;
+> +		fwspec.param_count = 3;
+> +		fwspec.param[0] = 0;
+> +		fwspec.param[1] = spi;
+> +		fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
+> +	} else if (is_fwnode_irqchip(domain->parent->fwnode)) {
+> +		fwspec.fwnode = domain->parent->fwnode;
+> +		fwspec.param_count = 2;
+> +		fwspec.param[0] = spi + 32;
+> +		fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+> +	} else {
+>  		return -EINVAL;
+> -
+> -	fwspec.fwnode = domain->parent->fwnode;
+> -	fwspec.param_count = 3;
+> -	fwspec.param[0] = 0;
+> -	fwspec.param[1] = spi;
+> -	fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
+> +	}
+>  
+>  	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
+>  	if (ret)
+> @@ -304,3 +311,100 @@ static int al_msix_init(struct device_node *node, struct device_node *parent)
+>  }
+>  IRQCHIP_DECLARE(alpine_msix, "al,alpine-msix", al_msix_init);
+>  IRQCHIP_DECLARE(al_msix, "amazon,al-msix", al_msix_init);
+> +
+> +#ifdef CONFIG_ACPI
+> +static struct al_msix_data *priv;
+> +
+> +#define ACPI_AMZN_MADT_OEM_TYPE		0x80
+> +#define ACPI_AMZN_OEM_ID		"AMAZON"
+> +
+> +struct acpi_madt_msix_oem_frame {
+> +	struct acpi_subtable_header header;
+> +	u64 base_address;
+> +	u32 base_address_len;
+> +	u16 spi_count;
+> +	u16 spi_base;
+> +};
+> +
+> +static struct fwnode_handle *al_msi_get_fwnode(struct device *dev)
+> +{
+> +	return priv->msi_domain_handle;
+> +}
+> +
+> +static int __init al_msix_acpi_probe(struct acpi_subtable_header *header,
+> +				     const unsigned long end)
+> +{
+> +	struct irq_domain *gic_domain;
+> +	struct fwnode_handle *gic_domain_handle;
+> +	struct acpi_madt_msix_oem_frame *m;
+> +	int ret;
+> +
+> +	m = container_of(header, struct acpi_madt_msix_oem_frame, header);
+> +	if (BAD_MADT_ENTRY(m, end))
+> +		return -EINVAL;
+> +
+> +	gic_domain_handle = acpi_get_gsi_domain_id();
+> +	if (!gic_domain_handle) {
+> +		pr_err("Failed to find the GIC domain handle\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	gic_domain = irq_find_matching_fwnode(gic_domain_handle,
+> +					      DOMAIN_BUS_ANY);
+> +	if (!gic_domain) {
+> +		pr_err("Failed to find the GIC domain\n");
+> +		return -ENXIO;
+> +	}
 
+Why do you do this in the iterator? It won't change over time, right?
 
-> On Mar 31, 2019, at 3:17 PM, Linus Torvalds <torvalds@linux-foundation.org=
-> wrote:
->=20
->> On Sun, Mar 31, 2019 at 2:10 PM Christian Brauner <christian@brauner.io> w=
-rote:
->>=20
->> I don't think that we want or can make them equivalent since that would
->> mean we depend on procfs.
->=20
-> Sure we can.
->=20
-> If /proc is enabled, then you always do that dance YOU ALREADY WROTE
-> THE CODE FOR to do the stupid ioctl.
->=20
-> And if /procfs isn't enabled, then you don't do that.
->=20
-> Ta-daa. Done. No stupid ioctl, and now /proc and pidfd_open() return
-> the same damn thing.
->=20
-> And guess what? If /proc isn't enabled, then obviously pidfd_open()
-> gives you the /proc-less thing, but at least there is no crazy "two
-> different file descriptors for the same thing" situation, because then
-> the /proc one doesn't exist.
->=20
+> +
+> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->spi_first = m->spi_base;
+> +	priv->num_spis = m->spi_count;
+> +
+> +	priv->msi_domain_handle = irq_domain_alloc_fwnode((void *)
+> +							  m->base_address);
+> +	if (!priv->msi_domain_handle) {
+> +		pr_err("Unable to allocate msi domain token\n");
+> +		ret = -EINVAL;
+> +		goto err_acpi_priv;
+> +	}
+> +
+> +	ret = al_msix_init_common(priv, m->base_address);
+> +	if (ret)
+> +		goto err_acpi_priv;
+> +
+> +	ret = al_msix_init_domains(priv, gic_domain);
+> +	if (ret)
+> +		goto err_acpi_map;
+> +
+> +	pci_msi_register_fwnode_provider(&al_msi_get_fwnode);
+> +
+> +	return 0;
+> +
+> +err_acpi_map:
+> +	kfree(priv->msi_map);
+> +err_acpi_priv:
+> +	kfree(priv);
+> +	return ret;
+> +}
+> +
+> +static int __init al_msix_acpi_init(void)
+> +{
+> +	static struct acpi_table_madt *madt;
+> +	acpi_status status;
+> +
+> +	/* if ACPI MADT table is not Amazon defined return */
+> +	status = acpi_get_table(ACPI_SIG_MADT, 0,
+> +				(struct acpi_table_header **)&madt);
+> +	if (ACPI_FAILURE(status) || (madt && memcmp(madt->header.oem_id,
+> +						    ACPI_AMZN_OEM_ID,
+> +						    ACPI_OEM_ID_SIZE)))
+> +		return -ENODEV;
+> +
+> +	return acpi_table_parse_madt(ACPI_AMZN_MADT_OEM_TYPE,
+> +				     al_msix_acpi_probe, 0);
+> +}
+> +early_initcall(al_msix_acpi_init);
 
-I wish we could do this, and, in a clean design, it would be a no-brainer.  B=
-ut /proc has too much baggage.  Just to mention two such things, there=E2=80=
-=99s =E2=80=9Cnet=E2=80=9D and =E2=80=9C../sys=E2=80=9D.  This crud is why w=
-e have all kinds of crazy rules that prevent programs in sandboxes from maki=
-ng a new mounts and mounting /proc in it.  If we make it possible to clone a=
- new process and this access /proc without having /proc mounted, we=E2=80=99=
-ll open up a big can of worms.
+These initcalls are not maintainable in the long run. Either this is
+part of the core ACPI discovery (IRQCHIP_ACPI_DECLARE), or it should
+use another probing method. If you need to express dependencies, make
+it an actual device driver (I suspect you're in complete control of
+the FW anyway), which would make a lot more sense.
 
-Maybe we could have a sanitized view of /proc and make a pidfd be a director=
-y fd pointing at that.=
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smell funny.
