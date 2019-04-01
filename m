@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115F2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9AEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D64DB20896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C8020880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140111;
-	bh=YFzDX4g1YLadfTz40ZqaBTeeD0Fl18NddYg30awzy9Q=;
+	s=default; t=1554140115;
+	bh=wsP+D3owxejks0dTtpyhKlaNKgKGstPEcA4gvo5O50A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UoQGGlgpQ1h21tQJFu5mzttsBu2FlJ6pILmFwKaX2no4aQXrUFhxEI2zI1CRzLjFA
-	 O4XHMHOcWKnEGS5aK7dFkYXGxWimWddudaLC4O2uoHaChcAS7vB16vv6QK6RqyuZOY
-	 LdGRux826WAH8WDJYfALHwmyme6g+JYv0Qx+Ix/s=
+	b=VetXuKr+LDPz4Ac1IsJxW7gI3itxKDcCsvZ3KkpkmfLLKReTr9IR1Cen3Mkada45j
+	 XYxIClSxTdjC5N1YVLIRZFCkJIr7pOWWrulzSuWLgDCiAD6HzBiC+/l5M2+jZ1Skv0
+	 yXKgR6sP5xcY8KrJXI85Hg/KQp6mrHpFxKhTdZxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733148AbfDARfJ (ORCPT
+        id S2387880AbfDARfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:35:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45464 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:35:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387654AbfDARfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:35:05 -0400
+        id S2387870AbfDARfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:35:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0187C20896;
-        Mon,  1 Apr 2019 17:35:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4338E2070B;
+        Mon,  1 Apr 2019 17:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140104;
-        bh=YFzDX4g1YLadfTz40ZqaBTeeD0Fl18NddYg30awzy9Q=;
+        s=default; t=1554140108;
+        bh=wsP+D3owxejks0dTtpyhKlaNKgKGstPEcA4gvo5O50A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T0uTZLaM55vuxn3BKX4mXi5JdJYAjNzmJ47jg5e+QiFPIiqnBilywYmoYxr22rjWU
-         3bzurI1+xJcKyfB3x8cxww1BS3XNCet+6hM4rX2PGVqzOjq42+nu1ihO6dN/R28GjA
-         t/Pc3ZTLx2anFPIHdLTpUY4OLVXFmGKjjc99AsZM=
+        b=FSLi18Lj21Pi1LavgNuhGSjBF5dgATP56BTSntd6G72vw08gL6s17tNzv9ywh4P07
+         Rh4dRXsTqS/idtFe70s9TfzbmHCSBTc3zU+jwjElKqtuIJ2k4yNpKc67qY9pmYsyOJ
+         wioipkfg2ixCTs3UB4aca8vZU6K31XJSwIKNJO3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH 4.4 107/131] ALSA: pcm: Dont suspend stream in unrecoverable PCM state
-Date:   Mon,  1 Apr 2019 19:02:57 +0200
-Message-Id: <20190401170100.724860365@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Jason Yan <yanaijie@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 108/131] scsi: sd: Fix a race between closing an sd device and sd I/O
+Date:   Mon,  1 Apr 2019 19:02:58 +0200
+Message-Id: <20190401170100.786950601@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -65,70 +70,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 113ce08109f8e3b091399e7cc32486df1cff48e7 upstream.
+commit c14a57264399efd39514a2329c591a4b954246d8 upstream.
 
-Currently PCM core sets each opened stream forcibly to SUSPENDED state
-via snd_pcm_suspend_all() call, and the user-space is responsible for
-re-triggering the resume manually either via snd_pcm_resume() or
-prepare call.  The scheme works fine usually, but there are corner
-cases where the stream can't be resumed by that call: the streams
-still in OPEN state before finishing hw_params.  When they are
-suspended, user-space cannot perform resume or prepare because they
-haven't been set up yet.  The only possible recovery is to re-open the
-device, which isn't nice at all.  Similarly, when a stream is in
-DISCONNECTED state, it makes no sense to change it to SUSPENDED
-state.  Ditto for in SETUP state; which you can re-prepare directly.
+The scsi_end_request() function calls scsi_cmd_to_driver() indirectly and
+hence needs the disk->private_data pointer. Avoid that that pointer is
+cleared before all affected I/O requests have finished. This patch avoids
+that the following crash occurs:
 
-So, this patch addresses these issues by filtering the PCM streams to
-be suspended by checking the PCM state.  When a stream is in either
-OPEN, SETUP or DISCONNECTED as well as already SUSPENDED, the suspend
-action is skipped.
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+Call trace:
+ scsi_mq_uninit_cmd+0x1c/0x30
+ scsi_end_request+0x7c/0x1b8
+ scsi_io_completion+0x464/0x668
+ scsi_finish_command+0xbc/0x160
+ scsi_eh_flush_done_q+0x10c/0x170
+ sas_scsi_recover_host+0x84c/0xa98 [libsas]
+ scsi_error_handler+0x140/0x5b0
+ kthread+0x100/0x12c
+ ret_from_fork+0x10/0x18
 
-To be noted, this problem was originally reported for the PCM runtime
-PM on HD-audio.  And, the runtime PM problem itself was already
-addressed (although not intended) by the code refactoring commits
-3d21ef0b49f8 ("ALSA: pcm: Suspend streams globally via device type PM
-ops") and 17bc4815de58 ("ALSA: pci: Remove superfluous
-snd_pcm_suspend*() calls").  These commits eliminated the
-snd_pcm_suspend*() calls from the runtime PM suspend callback code
-path, hence the racy OPEN state won't appear while runtime PM.
-(FWIW, the race window is between snd_pcm_open_substream() and the
-first power up in azx_pcm_open().)
-
-Although the runtime PM issue was already "fixed", the same problem is
-still present for the system PM, hence this patch is still needed.
-And for stable trees, this patch alone should suffice for fixing the
-runtime PM problem, too.
-
-Reported-and-tested-by: Jon Hunter <jonathanh@nvidia.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Johannes Thumshirn <jthumshirn@suse.de>
+Cc: Jason Yan <yanaijie@huawei.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reported-by: Jason Yan <yanaijie@huawei.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/pcm_native.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/scsi/sd.c |   19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -1254,8 +1254,15 @@ static int snd_pcm_pause(struct snd_pcm_
- static int snd_pcm_pre_suspend(struct snd_pcm_substream *substream, int state)
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
--	if (runtime->status->state == SNDRV_PCM_STATE_SUSPENDED)
-+	switch (runtime->status->state) {
-+	case SNDRV_PCM_STATE_SUSPENDED:
- 		return -EBUSY;
-+	/* unresumable PCM state; return -EBUSY for skipping suspend */
-+	case SNDRV_PCM_STATE_OPEN:
-+	case SNDRV_PCM_STATE_SETUP:
-+	case SNDRV_PCM_STATE_DISCONNECTED:
-+		return -EBUSY;
-+	}
- 	runtime->trigger_master = substream;
- 	return 0;
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -1276,11 +1276,6 @@ static void sd_release(struct gendisk *d
+ 			scsi_set_medium_removal(sdev, SCSI_REMOVAL_ALLOW);
+ 	}
+ 
+-	/*
+-	 * XXX and what if there are packets in flight and this close()
+-	 * XXX is followed by a "rmmod sd_mod"?
+-	 */
+-
+ 	scsi_disk_put(sdkp);
  }
+ 
+@@ -3227,11 +3222,23 @@ static void scsi_disk_release(struct dev
+ {
+ 	struct scsi_disk *sdkp = to_scsi_disk(dev);
+ 	struct gendisk *disk = sdkp->disk;
+-	
++	struct request_queue *q = disk->queue;
++
+ 	spin_lock(&sd_index_lock);
+ 	ida_remove(&sd_index_ida, sdkp->index);
+ 	spin_unlock(&sd_index_lock);
+ 
++	/*
++	 * Wait until all requests that are in progress have completed.
++	 * This is necessary to avoid that e.g. scsi_end_request() crashes
++	 * due to clearing the disk->private_data pointer. Wait from inside
++	 * scsi_disk_release() instead of from sd_release() to avoid that
++	 * freezing and unfreezing the request queue affects user space I/O
++	 * in case multiple processes open a /dev/sd... node concurrently.
++	 */
++	blk_mq_freeze_queue(q);
++	blk_mq_unfreeze_queue(q);
++
+ 	disk->private_data = NULL;
+ 	put_disk(disk);
+ 	put_device(&sdkp->device->sdev_gendev);
 
 
