@@ -2,408 +2,142 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E37AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7E3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E0F2133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9198E20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:15:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="vr0p3BNV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfDALOm (ORCPT
+        id S1726887AbfDALPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 07:14:42 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:43822 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725882AbfDALOm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 07:14:42 -0400
-Received: from [192.168.2.10] ([212.251.195.8])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id AutfhgiBGUjKfAutih4eY1; Mon, 01 Apr 2019 13:14:39 +0200
-Subject: Re: [PATCH v14 5/6] au0828: fix enable and disable source audio and
- video inconsistencies
-To:     Shuah Khan <shuah@kernel.org>, mchehab@kernel.org, perex@perex.cz,
-        tiwai@suse.com
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org
-References: <cover.1553909892.git.shuah@kernel.org>
- <a314cc4fbfa5ae928cd9f13b8e16046e38418273.1553909893.git.shuah@kernel.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <b67b2a75-ef2a-08df-c67c-c14bd9e33303@xs4all.nl>
-Date:   Mon, 1 Apr 2019 13:14:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <a314cc4fbfa5ae928cd9f13b8e16046e38418273.1553909893.git.shuah@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Mon, 1 Apr 2019 07:15:25 -0400
+Received: from mail-eopbgr60040.outbound.protection.outlook.com ([40.107.6.40]:12505
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725882AbfDALPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 07:15:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YDt5c24JPvCkZ8d3qoJs6NM2wV3q/Wis/3lE1GmNXRA=;
+ b=vr0p3BNV3dO/1bfIWJn7YcmzAki6fDFvxCQBCOi9qdC5J1tmRHMxVsvN2mcxV9A0fGOXu5XMq7DMtmLUrTQIqUzOX/RJpTYXi3fVZBdnuEBaX6oQunexi1A4tfNZ1v2aS8BRlSEO4muSXUnto13f4nCcEhwcy7Qs90E+gczjjzQ=
+Received: from DB7PR04MB5132.eurprd04.prod.outlook.com (20.176.235.28) by
+ DB7PR04MB4459.eurprd04.prod.outlook.com (52.135.137.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.19; Mon, 1 Apr 2019 11:15:21 +0000
+Received: from DB7PR04MB5132.eurprd04.prod.outlook.com
+ ([fe80::2cac:cc2f:6528:54f7]) by DB7PR04MB5132.eurprd04.prod.outlook.com
+ ([fe80::2cac:cc2f:6528:54f7%5]) with mapi id 15.20.1750.021; Mon, 1 Apr 2019
+ 11:15:21 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     Leo Li <leoyang.li@nxp.com>
+CC:     Netdev <netdev@vger.kernel.org>,
+        Madalin-cristian Bucur <madalin.bucur@nxp.com>,
+        Roy Pledge <roy.pledge@nxp.com>,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        David Miller <davem@davemloft.net>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 02/13] soc/fsl/bman: map FBPR area in the iommu
+Thread-Topic: [PATCH 02/13] soc/fsl/bman: map FBPR area in the iommu
+Thread-Index: AQHU5je+GYAdWERgxkCiU6HsMs84n6YjHN8AgAQMkqA=
+Date:   Mon, 1 Apr 2019 11:15:21 +0000
+Message-ID: <DB7PR04MB513214FB393EF3C514A26F21EC550@DB7PR04MB5132.eurprd04.prod.outlook.com>
+References: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
+ <20190329140014.8126-3-laurentiu.tudor@nxp.com>
+ <CADRPPNTPZ1xhYr_YKZvrXVJhVqhV9RNAu6ekVHDeOudXTZx3=g@mail.gmail.com>
+In-Reply-To: <CADRPPNTPZ1xhYr_YKZvrXVJhVqhV9RNAu6ekVHDeOudXTZx3=g@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNJ6fFKeRE6p8qq3Fos6jLxDQgCCF3eFz0lSPPpoN+RkhPI5L2m5QOejnsGJ6jSlNvqYqEh1dJDM4ZkSaC3NpReh4z9d66ks7gvwE4kFCPJ+nYOESp0W
- v4zJhF4FlIAqR6J+6FNgasNI8pKEidIddQYOgIiePsVFVnHmw0A/vPhk4ksfQoJcFHRuIhV6wztrKszPn0tgmHdmYXHb6YDTRRl3crzHIjlytCmL4l/RAWVl
- 1a9tplA/wxLXbh6/GSkA6Uw5JX5kYDrzQQiQaObUXtWrTz0b9vATLs6T9SKkmQNADyK5Fd914NQn9Nz3FOxbVufkipu4secF+1qj7lcerCA2u4v3AN6RIWo3
- YJYkuL4NerzK7gZSzddDNO1yS2hSZw==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-originating-ip: [192.88.166.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1d2e78c9-430d-416b-cea0-08d6b6935469
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB7PR04MB4459;
+x-ms-traffictypediagnostic: DB7PR04MB4459:
+x-microsoft-antispam-prvs: <DB7PR04MB4459B2A59B8B40169C7920E8EC550@DB7PR04MB4459.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0994F5E0C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(346002)(376002)(396003)(366004)(13464003)(199004)(189003)(86362001)(97736004)(44832011)(478600001)(81156014)(53936002)(4326008)(76176011)(55016002)(8936002)(9686003)(6246003)(6636002)(8676002)(81166006)(2906002)(71200400001)(71190400001)(68736007)(6862004)(6116002)(14454004)(3846002)(66066001)(6436002)(52536014)(7736002)(33656002)(74316002)(5660300002)(305945005)(54906003)(316002)(256004)(106356001)(26005)(105586002)(561944003)(7696005)(25786009)(6506007)(476003)(486006)(446003)(11346002)(102836004)(186003)(53546011)(229853002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4459;H:DB7PR04MB5132.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: EFS563r0UZW+l0OoMUvXUfcu1bXVamfwcbYSl4UXHyKhn5aZJ6lyzxPObrBmrFdv5GfgzwnbymxyzLTLgENTFlLjeus6hi/0ACv+5C5//db2+g/JDPJNGU9/3C9WKsgz1ZzDP7wMqXwvw+dOuBG6F8qKC+fROIaOhFxEvBY1m6Lmk+D2gvJOV2vLnvDBQTDQzErQ8bkN/LErLgSjpczQlvHqjoqQ3A1wrDPDv5YK1yhf6rZjAo0JLF6ffe362+BYtLPea7GpdHvlTmq4pFV1rVjsNz7hLh0C2seMQv4lIZNiOSvRhCWhMK/lGmUgARvftQBhpysspT1jJKeSaaJjm6KWqgfwWQZ3d/vNepX8aiMnhkVp62l/lUdr2zZtklWMpIQUgc6oQRC8TPbak8iB4vkG7g9fdFRvhmi2jptxxl8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d2e78c9-430d-416b-cea0-08d6b6935469
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 11:15:21.1151
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4459
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
-
-On 3/30/19 2:54 AM, Shuah Khan wrote:
-> Enable and disable source interfaces aren't consistent in enforcing
-> how video and audio share the tuner resource.
-> 
-> Fix these issues to enforce the following rules and allow
-> sharing between audio and video applications.
-> 
-> - When DVB is streaming, audio/video/vbi/s-video/composite
->   should find the resource busy. DVB holds the tuner in
->   exclusive mode.
-> - When video is streaming, audio can share the tuner and vice versa.
-> - v4l2 allows multiple applications to open video device.
-> - Video applications call enable source multiple times during their
->   run-time. Resource should stay locked until the last application
->   releases it.
-> - A shared resource should stay in shared state and locked when it is
->   in use by audio and video. More than one video application is allowed
->   to use the tuner as long as video streaming protocol allows such usage.
->   Resource is released when the last video/audio application releases it.
-> - S-Video and Composite hold the resource in exclusive mode.
-> - VBI allows more than vbi applications sharing and will not share
->   with another type. When resource is locked by VBI and in use by
->   multiple VBI applications, it should stay locked until the last
->   application disables it.
-
-This isn't correct: only one application at most can stream VBI, but
-VBI can be shared with video and audio streaming.
-
-All three come from the same source (analog TV), so as long as one of
-these is streaming the analog tuner resource is in use.
-
-With this patch it seems that streaming VBI blocks streaming audio/video
-and vice versa. That's wrong.
-
-Otherwise everything looks OK, except for a typo below.
-
-> 
-> Signed-off-by: Shuah Khan <shuah@kernel.org>
-> ---
->  drivers/media/usb/au0828/au0828-core.c | 182 +++++++++++++++++++------
->  drivers/media/usb/au0828/au0828.h      |   5 +-
->  2 files changed, 148 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/media/usb/au0828/au0828-core.c b/drivers/media/usb/au0828/au0828-core.c
-> index 4f8ba6f64d3c..b8bcab2fa1dc 100644
-> --- a/drivers/media/usb/au0828/au0828-core.c
-> +++ b/drivers/media/usb/au0828/au0828-core.c
-> @@ -272,6 +272,27 @@ static void au0828_media_graph_notify(struct media_entity *new,
->  	}
->  }
->  
-> +static bool au0828_is_link_sharable(struct media_entity *owner,
-> +				    struct media_entity *entity)
-> +{
-> +	bool sharable = false;
-
-typo: sharable -> shareable
-
-Also in the function name: do a search-and-replace for this.
-
-> +
-> +	/* Tuner link can be shared by audio and video */
-
-add: and VBI
-
-I think the core issue is here since VBI should be included with
-IO_V4L and AUDIO_CAPTURE.
-
-> +	switch (owner->function) {
-> +	case MEDIA_ENT_F_IO_V4L:
-> +	case MEDIA_ENT_F_AUDIO_CAPTURE:
-> +		if (entity->function == MEDIA_ENT_F_IO_V4L ||
-> +		    entity->function == MEDIA_ENT_F_AUDIO_CAPTURE)
-> +			sharable = true;
-> +		break;
-> +	case MEDIA_ENT_F_DTV_DEMOD:
-> +	case MEDIA_ENT_F_IO_VBI:
-> +	default:
-> +		break;
-> +	}
-> +	return sharable;
-
-I hacked this function so VBI is included with IO_V4L/AUDIO_CAPTURE
-and now it works.
-
-There is one remaining issue (but that was always a problem with au0828):
-when streaming is in progress from both video and vbi, and then you stop
-the video streaming, then vbi stops as well.
-
-au0828_stop_streaming() calls v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
-which it should only do when the last user disappears. I'll post a patch
-for au0828 to fix this.
-
-Regards,
-
-	Hans
-
-> +}
-> +
->  /* Callers should hold graph_mutex */
->  static int au0828_enable_source(struct media_entity *entity,
->  				struct media_pipeline *pipe)
-> @@ -314,18 +335,20 @@ static int au0828_enable_source(struct media_entity *entity,
->  		/*
->  		 * Default input is tuner and default input_type
->  		 * is AU0828_VMUX_TELEVISION.
-> -		 * FIXME:
-> +		 *
->  		 * There is a problem when s_input is called to
->  		 * change the default input. s_input will try to
->  		 * enable_source before attempting to change the
->  		 * input on the device, and will end up enabling
->  		 * default source which is tuner.
->  		 *
-> -		 * Additional logic is necessary in au0828
-> -		 * to detect that the input has changed and
-> -		 * enable the right source.
-> +		 * Additional logic is necessary in au0828 to detect
-> +		 * that the input has changed and enable the right
-> +		 * source. au0828 handles this case in its s_input.
-> +		 * It will disable the old source and enable the new
-> +		 * source.
-> +		 *
->  		*/
-> -
->  		if (dev->input_type == AU0828_VMUX_TELEVISION)
->  			find_source = dev->tuner;
->  		else if (dev->input_type == AU0828_VMUX_SVIDEO ||
-> @@ -338,27 +361,33 @@ static int au0828_enable_source(struct media_entity *entity,
->  		}
->  	}
->  
-> -	/* Is an active link between sink and source */
-> +	/* Is there an active link between sink and source */
->  	if (dev->active_link) {
-> -		/*
-> -		 * If DVB is using the tuner and calling entity is
-> -		 * audio/video, the following check will be false,
-> -		 * since sink is different. Result is Busy.
-> -		 */
-> -		if (dev->active_link->sink->entity == sink &&
-> -		    dev->active_link->source->entity == find_source) {
-> -			/*
-> -			 * Either ALSA or Video own tuner. sink is
-> -			 * the same for both. Prevent Video stepping
-> -			 * on ALSA when ALSA owns the source.
-> +		if (dev->active_link_owner == entity) {
-> +			/* This check is necessary to handle multiple
-> +			 * enable_source calls from v4l_ioctls during
-> +			 * the course of video/vbi application run-time.
->  			*/
-> -			if (dev->active_link_owner != entity &&
-> -			    dev->active_link_owner->function ==
-> -						MEDIA_ENT_F_AUDIO_CAPTURE) {
-> -				pr_debug("ALSA has the tuner\n");
-> -				ret = -EBUSY;
-> -				goto end;
-> -			}
-> +			pr_debug("%s already owns the tuner\n", entity->name);
-> +			ret = 0;
-> +			goto end;
-> +		} else if (au0828_is_link_sharable(dev->active_link_owner,
-> +			   entity)) {
-> +			/* Either ALSA or Video own tuner. Sink is the same
-> +			 * for both. Allow sharing the active link between
-> +			 * their common source (tuner) and sink (decoder).
-> +			 * Starting pipeline between sharing entity and sink
-> +			 * will fail with pipe mismatch, while owner has an
-> +			 * active pipeline. Switch pipeline ownership from
-> +			 * user to owner when owner disables the source.
-> +			 */
-> +			dev->active_link_shared = true;
-> +			/* save the user info to use from disable */
-> +			dev->active_link_user = entity;
-> +			dev->active_link_user_pipe = pipe;
-> +			pr_debug("%s owns the tuner %s can share!\n",
-> +				 dev->active_link_owner->name,
-> +				 entity->name);
->  			ret = 0;
->  			goto end;
->  		} else {
-> @@ -385,7 +414,7 @@ static int au0828_enable_source(struct media_entity *entity,
->  	source = found_link->source->entity;
->  	ret = __media_entity_setup_link(found_link, MEDIA_LNK_FL_ENABLED);
->  	if (ret) {
-> -		pr_err("Activate tuner link %s->%s. Error %d\n",
-> +		pr_err("Activate link from %s->%s. Error %d\n",
->  			source->name, sink->name, ret);
->  		goto end;
->  	}
-> @@ -395,25 +424,26 @@ static int au0828_enable_source(struct media_entity *entity,
->  		pr_err("Start Pipeline: %s->%s Error %d\n",
->  			source->name, entity->name, ret);
->  		ret = __media_entity_setup_link(found_link, 0);
-> -		pr_err("Deactivate link Error %d\n", ret);
-> +		if (ret)
-> +			pr_err("Deactivate link Error %d\n", ret);
->  		goto end;
->  	}
-> -	/*
-> -	 * save active link and active link owner to avoid audio
-> -	 * deactivating video owned link from disable_source and
-> -	 * vice versa
-> +
-> +	/* save link state to allow audio and video share the link
-> +	 * and not disable the link while the other is using it.
-> +	 * active_link_owner is used to deactivate the link.
->  	*/
->  	dev->active_link = found_link;
->  	dev->active_link_owner = entity;
->  	dev->active_source = source;
->  	dev->active_sink = sink;
->  
-> -	pr_debug("Enabled Source: %s->%s->%s Ret %d\n",
-> +	pr_info("Enabled Source: %s->%s->%s Ret %d\n",
->  		 dev->active_source->name, dev->active_sink->name,
->  		 dev->active_link_owner->name, ret);
->  end:
-> -	pr_debug("au0828_enable_source() end %s %d %d\n",
-> -		 entity->name, entity->function, ret);
-> +	pr_debug("%s end: ent:%s fnc:%d ret %d\n",
-> +		 __func__, entity->name, entity->function, ret);
->  	return ret;
->  }
->  
-> @@ -432,21 +462,95 @@ static void au0828_disable_source(struct media_entity *entity)
->  	if (!dev->active_link)
->  		return;
->  
-> -	/* link is active - stop pipeline from source (tuner) */
-> +	/* link is active - stop pipeline from source
-> +	 * (tuner/s-video/Composite) to the entity
-> +	 * When DVB/s-video/Composite owns tuner, it won't be in
-> +	 * shared state.
-> +	 */
->  	if (dev->active_link->sink->entity == dev->active_sink &&
->  	    dev->active_link->source->entity == dev->active_source) {
->  		/*
-> -		 * prevent video from deactivating link when audio
-> -		 * has active pipeline
-> +		 * Prevent video from deactivating link when audio
-> +		 * has active pipeline and vice versa. In addition
-> +		 * handle the case when more than one video/vbi
-> +		 * application is sharing the link.
->  		*/
-> +		bool owner_is_audio = false;
-> +
-> +		if (dev->active_link_owner->function ==
-> +		    MEDIA_ENT_F_AUDIO_CAPTURE)
-> +			owner_is_audio = true;
-> +
-> +		if (dev->active_link_shared) {
-> +			pr_debug("Shared link owner %s user %s %d\n",
-> +				 dev->active_link_owner->name,
-> +				 entity->name, dev->users);
-> +
-> +			/* Handle video device users > 1
-> +			 * When audio owns the shared link with
-> +			 * more than one video users, avoid
-> +			 * disabling the source and/or switching
-> +			 * the owner until the last disable_source
-> +			 * call from video _close(). Use dev->users to
-> +			 * determine when to switch/disable.
-> +			 */
-> +			if (dev->active_link_owner != entity) {
-> +				/* video device has users > 1 */
-> +				if (owner_is_audio && dev->users > 1)
-> +					return;
-> +
-> +				dev->active_link_user = NULL;
-> +				dev->active_link_user_pipe = NULL;
-> +				dev->active_link_shared = false;
-> +				return;
-> +			}
-> +
-> +			/* video owns the link and has users > 1 */
-> +			if (!owner_is_audio && dev->users > 1)
-> +				return;
-> +
-> +			/* stop pipeline */
-> +			__media_pipeline_stop(dev->active_link_owner);
-> +			pr_debug("Pipeline stop for %s\n",
-> +				dev->active_link_owner->name);
-> +
-> +			ret = __media_pipeline_start(
-> +					dev->active_link_user,
-> +					dev->active_link_user_pipe);
-> +			if (ret) {
-> +				pr_err("Start Pipeline: %s->%s %d\n",
-> +					dev->active_source->name,
-> +					dev->active_link_user->name,
-> +					ret);
-> +				goto deactivate_link;
-> +			}
-> +			/* link user is now the owner */
-> +			dev->active_link_owner = dev->active_link_user;
-> +			dev->active_link_user = NULL;
-> +			dev->active_link_user_pipe = NULL;
-> +			dev->active_link_shared = false;
-> +
-> +			pr_debug("Pipeline started for %s\n",
-> +				dev->active_link_owner->name);
-> +			return;
-> +		} else if (!owner_is_audio && dev->users > 1)
-> +			/* video/vbi owns the link and has users > 1 */
-> +			return;
-> +
->  		if (dev->active_link_owner != entity)
->  			return;
-> -		__media_pipeline_stop(entity);
-> +
-> +		/* stop pipeline */
-> +		__media_pipeline_stop(dev->active_link_owner);
-> +		pr_debug("Pipeline stop for %s\n",
-> +			dev->active_link_owner->name);
-> +
-> +deactivate_link:
->  		ret = __media_entity_setup_link(dev->active_link, 0);
->  		if (ret)
->  			pr_err("Deactivate link Error %d\n", ret);
->  
-> -		pr_debug("Disabled Source: %s->%s->%s Ret %d\n",
-> +		pr_info("Disabled Source: %s->%s->%s Ret %d\n",
->  			 dev->active_source->name, dev->active_sink->name,
->  			 dev->active_link_owner->name, ret);
->  
-> @@ -454,6 +558,8 @@ static void au0828_disable_source(struct media_entity *entity)
->  		dev->active_link_owner = NULL;
->  		dev->active_source = NULL;
->  		dev->active_sink = NULL;
-> +		dev->active_link_shared = false;
-> +		dev->active_link_user = NULL;
->  	}
->  }
->  #endif
-> diff --git a/drivers/media/usb/au0828/au0828.h b/drivers/media/usb/au0828/au0828.h
-> index 57b00de8d3f2..b47ecc9affd8 100644
-> --- a/drivers/media/usb/au0828/au0828.h
-> +++ b/drivers/media/usb/au0828/au0828.h
-> @@ -284,9 +284,12 @@ struct au0828_dev {
->  	struct media_entity_notify entity_notify;
->  	struct media_entity *tuner;
->  	struct media_link *active_link;
-> -	struct media_entity *active_link_owner;
->  	struct media_entity *active_source;
->  	struct media_entity *active_sink;
-> +	struct media_entity *active_link_owner;
-> +	struct media_entity *active_link_user;
-> +	struct media_pipeline *active_link_user_pipe;
-> +	bool active_link_shared;
->  #endif
->  };
->  
-> 
-
+SGkgTGVvLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExpIFlhbmcg
+W21haWx0bzpsZW95YW5nLmxpQG54cC5jb21dDQo+IFNlbnQ6IEZyaWRheSwgTWFyY2ggMjksIDIw
+MTkgMTE6MTYgUE0NCj4gDQo+IE9uIEZyaSwgTWFyIDI5LCAyMDE5IGF0IDk6MDMgQU0gPGxhdXJl
+bnRpdS50dWRvckBueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206IExhdXJlbnRpdSBUdWRv
+ciA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+DQo+ID4NCj4gPiBBZGQgYSBvbmUtdG8tb25lIGlv
+bW11IG1hcHBpbmcgZm9yIGJtYW4gcHJpdmF0ZSBkYXRhIG1lbW9yeSAoRkJQUikuDQo+ID4gVGhp
+cyBpcyByZXF1aXJlZCBmb3IgQk1BTiB0byB3b3JrIHdpdGhvdXQgZmF1bHRzIGJlaGluZCBhbiBp
+b21tdS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnRpdSBUdWRvciA8bGF1cmVudGl1
+LnR1ZG9yQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvc29jL2ZzbC9xYm1hbi9ibWFu
+X2Njc3IuYyB8IDExICsrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRp
+b25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvZnNsL3FibWFuL2JtYW5f
+Y2Nzci5jDQo+IGIvZHJpdmVycy9zb2MvZnNsL3FibWFuL2JtYW5fY2Nzci5jDQo+ID4gaW5kZXgg
+N2MzY2M5NjgwNTNjLi5iMjA5Yzc5NTExYmIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zb2Mv
+ZnNsL3FibWFuL2JtYW5fY2Nzci5jDQo+ID4gKysrIGIvZHJpdmVycy9zb2MvZnNsL3FibWFuL2Jt
+YW5fY2Nzci5jDQo+ID4gQEAgLTI5LDYgKzI5LDcgQEANCj4gPiAgICovDQo+ID4NCj4gPiAgI2lu
+Y2x1ZGUgImJtYW5fcHJpdi5oIg0KPiA+ICsjaW5jbHVkZSA8bGludXgvaW9tbXUuaD4NCj4gPg0K
+PiA+ICB1MTYgYm1hbl9pcF9yZXY7DQo+ID4gIEVYUE9SVF9TWU1CT0woYm1hbl9pcF9yZXYpOw0K
+PiA+IEBAIC0xNzgsNiArMTc5LDcgQEAgc3RhdGljIGludCBmc2xfYm1hbl9wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlDQo+ICpwZGV2KQ0KPiA+ICAgICAgICAgaW50IHJldCwgZXJyX2lycTsN
+Cj4gPiAgICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ID4gICAgICAg
+ICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBkZXYtPm9mX25vZGU7DQo+ID4gKyAgICAgICBz
+dHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW47DQo+ID4gICAgICAgICBzdHJ1Y3QgcmVzb3VyY2Ug
+KnJlczsNCj4gPiAgICAgICAgIHUxNiBpZCwgYm1fcG9vbF9jbnQ7DQo+ID4gICAgICAgICB1OCBt
+YWpvciwgbWlub3I7DQo+ID4gQEAgLTIyNSw2ICsyMjcsMTUgQEAgc3RhdGljIGludCBmc2xfYm1h
+bl9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ICpwZGV2KQ0KPiA+DQo+ID4gICAgICAg
+ICBkZXZfZGJnKGRldiwgIkFsbG9jYXRlZCBGQlBSIDB4JWxseCAweCV6eFxuIiwgZmJwcl9hLCBm
+YnByX3N6KTsNCj4gPg0KPiA+ICsgICAgICAgLyogQ3JlYXRlIGFuIDEtdG8tMSBpb21tdSBtYXBw
+aW5nIGZvciBGQlBSIGFyZWEgKi8NCj4gPiArICAgICAgIGRvbWFpbiA9IGlvbW11X2dldF9kb21h
+aW5fZm9yX2RldihkZXYpOw0KPiA+ICsgICAgICAgaWYgKGRvbWFpbikgew0KPiA+ICsgICAgICAg
+ICAgICAgICByZXQgPSBpb21tdV9tYXAoZG9tYWluLCBmYnByX2EsIGZicHJfYSwgZmJwcl9zeiwN
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIElPTU1VX1JFQUQgfCBJT01NVV9X
+UklURSB8IElPTU1VX0NBQ0hFKTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKHJldCkNCj4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICBkZXZfd2FybihkZXYsICJmYWlsZWQgdG8gaW9tbXVfbWFw
+KCkgJWRcbiIsDQo+IHJldCk7DQo+ID4gKyAgICAgICB9DQo+IA0KPiBMaWtlIFJvYmluIGhhcyBw
+b2ludGVkIG91dCwgY291bGQgeW91IGV4cGxhaW4gd2h5IHRoZSBtYXBwaW5nIGluIHRoaXMNCj4g
+cGF0Y2ggYW5kIG90aGVyIHNpbWlsYXIgcGF0Y2hlcyBjYW5ub3QgYmUgZGVhbHQgd2l0aCB0aGUg
+ZG1hIEFQSXMNCj4gYXV0b21hdGljYWxseT8gIElmIHRoZSBjdXJyZW50IGJxbWFuIGRyaXZlciBk
+b2Vzbid0IHVzZSB0aGUgZG1hIEFQSXMNCj4gY29ycmVjdGx5LCB3ZSBuZWVkIHRvIGZpeCB0aGF0
+IGluc3RlYWQgb2YgZG9pbmcgdGhlIG1hcHBpbmcNCj4gZXhwbGljaXRseS4NCg0KUGxlYXNlIHNl
+ZSBteSByZXBseSB0byBSb2Jpbi4NCkFzIGEgc2lkZSBjb21tZW50LCBpZiB3ZSB3YW50IHRvIGNv
+bnZlcnQgdG8gZG1hIGFwaSBpdCB3aWxsIGJlIGludGVyZXN0aW5nIHRvIHNlZSBob3cgd2UnbGwg
+ZGVhbCB3aXRoIHRoZSBxbWFuIHBvcnRhbCBkZXZpY2VzIGFzIHRoZXkgcmVxdWlyZSBhIHNtbXUg
+bWFwcGluZyBmb3IgYW4gYXJlYSBvZiB0aGVpciByZWdpc3RlciBibG9jayAod2hlcmUgc3Rhc2hp
+bmcgZ29lcykuIFByb2JsZW0gaXMgdGhleSB0cmVhdGVkIGFzIGRpc3RpbmN0IGRldmljZXMsIHRo
+ZSBhZGRyZXNzIHdoZXJlIHRoZXkgc2hvdWxkIGRtYSBjYW5ub3QgYmUgY29uZmlndXJlZCBpbmRl
+cGVuZGVudGx5IGZvciBlYWNoIG9uZSBvZiB0aGVtLiBJIHRoaW5rIEkgY2FuIGNhbWUgdXAgd2l0
+aCBhIHByb3Bvc2FsIGJ1dCBwcm9iYWJseSB3aWxsIG5vdCBsb29rIHZlcnkgcHJldHR5Lg0KDQot
+LS0NCkJlc3QgUmVnYXJkcywgTGF1cmVudGl1DQoNCj4gPiArDQo+ID4gICAgICAgICBibV9zZXRf
+bWVtb3J5KGZicHJfYSwgZmJwcl9zeik7DQo+ID4NCj4gPiAgICAgICAgIGVycl9pcnEgPSBwbGF0
+Zm9ybV9nZXRfaXJxKHBkZXYsIDApOw0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCg==
