@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F60C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682AEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C8D208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367DE2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141308;
-	bh=9tWqKUXkufHJK4AaeVQ3us0nJMNHEPZahbkT+WZ4GKU=;
+	s=default; t=1554141311;
+	bh=+fIh9Xe46i1kTfAoqVBz7SqCEOJZwnLGkX6g1A/bpsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uWrlWximAaoR8dsGEsrgoz2LOjsuZmsU2xut6wo4OndQU1VzuYBRAe0CKvY7lSWfi
-	 fqUeP1FmJ0DbyBjg3LsjmFJN5/fdZCa4ePC+x7mXN+F6FQH20Vt5M09KroD5fa5jm9
-	 0Py/7qum7531gF/QE3MzgrNQ+2zgs6TJjuH8Hxg0=
+	b=rYj0eEjqMUP4I7tlkxjvnp/zmHzW9E+uB6eicirNWM2y6qg1l67ZJPPE9pM3PiPW3
+	 kNaS4jld7iBhFp14qFU731yzsw0xgqbVu+7Pu5sW47MGwqjFOA1b61IzOdYZasF99B
+	 pDACZDTTIeeCIBytMSAr8LZwLgPul3Lw9jwGoJUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731932AbfDARXa (ORCPT
+        id S1732108AbfDARX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53278 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:23:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732106AbfDARX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:23:27 -0400
+        id S1732098AbfDARXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:23:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8399A20856;
-        Mon,  1 Apr 2019 17:23:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 871C32133D;
+        Mon,  1 Apr 2019 17:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139406;
-        bh=9tWqKUXkufHJK4AaeVQ3us0nJMNHEPZahbkT+WZ4GKU=;
+        s=default; t=1554139402;
+        bh=+fIh9Xe46i1kTfAoqVBz7SqCEOJZwnLGkX6g1A/bpsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kquIrBsm9eRJPmaRodKPGKPSvX/d+hZQh8JTujFaTVYcBtX20R/zmIb9YcjSTYdJF
-         ws8rlg65EFN4xEYpjcnJfSedvsVx+EKjDPYrjBPwsVcKzRoqh50vU7MYkIg31GpCrT
-         xLT7YDtUgLkbs/clpSRwkwmD3cL8+zllC96789TA=
+        b=jlFviOhe0iQs3UZe/f2uA5plmGXmVI6eVZkEYt9FfAJ9sbZpfGdL3GMO4zFV5vJ1M
+         moeQ1WiupiElTBTfB8Cz88Y8RSRkcmtBix5vBMpwJxpfDZjmFbAId5RWg2QRDdkGUj
+         97zK9A4wYCHJNVsyERFn0tRH4CjCUpmOR5rxiIIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH 4.14 066/107] ALSA: pcm: Dont suspend stream in unrecoverable PCM state
-Date:   Mon,  1 Apr 2019 19:02:21 +0200
-Message-Id: <20190401170051.669225727@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 065/107] ALSA: pcm: Fix possible OOB access in PCM oss plugins
+Date:   Mon,  1 Apr 2019 19:02:20 +0200
+Message-Id: <20190401170051.586892106@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -67,68 +68,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 113ce08109f8e3b091399e7cc32486df1cff48e7 upstream.
+commit ca0214ee2802dd47239a4e39fb21c5b00ef61b22 upstream.
 
-Currently PCM core sets each opened stream forcibly to SUSPENDED state
-via snd_pcm_suspend_all() call, and the user-space is responsible for
-re-triggering the resume manually either via snd_pcm_resume() or
-prepare call.  The scheme works fine usually, but there are corner
-cases where the stream can't be resumed by that call: the streams
-still in OPEN state before finishing hw_params.  When they are
-suspended, user-space cannot perform resume or prepare because they
-haven't been set up yet.  The only possible recovery is to re-open the
-device, which isn't nice at all.  Similarly, when a stream is in
-DISCONNECTED state, it makes no sense to change it to SUSPENDED
-state.  Ditto for in SETUP state; which you can re-prepare directly.
+The PCM OSS emulation converts and transfers the data on the fly via
+"plugins".  The data is converted over the dynamically allocated
+buffer for each plugin, and recently syzkaller caught OOB in this
+flow.
 
-So, this patch addresses these issues by filtering the PCM streams to
-be suspended by checking the PCM state.  When a stream is in either
-OPEN, SETUP or DISCONNECTED as well as already SUSPENDED, the suspend
-action is skipped.
+Although the bisection by syzbot pointed out to the commit
+65766ee0bf7f ("ALSA: oss: Use kvzalloc() for local buffer
+allocations"), this is merely a commit to replace vmalloc() with
+kvmalloc(), hence it can't be the cause.  The further debug action
+revealed that this happens in the case where a slave PCM doesn't
+support only the stereo channels while the OSS stream is set up for a
+mono channel.  Below is a brief explanation:
 
-To be noted, this problem was originally reported for the PCM runtime
-PM on HD-audio.  And, the runtime PM problem itself was already
-addressed (although not intended) by the code refactoring commits
-3d21ef0b49f8 ("ALSA: pcm: Suspend streams globally via device type PM
-ops") and 17bc4815de58 ("ALSA: pci: Remove superfluous
-snd_pcm_suspend*() calls").  These commits eliminated the
-snd_pcm_suspend*() calls from the runtime PM suspend callback code
-path, hence the racy OPEN state won't appear while runtime PM.
-(FWIW, the race window is between snd_pcm_open_substream() and the
-first power up in azx_pcm_open().)
+At each OSS parameter change, the driver sets up the PCM hw_params
+again in snd_pcm_oss_change_params_lock().  This is also the place
+where plugins are created and local buffers are allocated.  The
+problem is that the plugins are created before the final hw_params is
+determined.  Namely, two snd_pcm_hw_param_near() calls for setting the
+period size and periods may influence on the final result of channels,
+rates, etc, too, while the current code has already created plugins
+beforehand with the premature values.  So, the plugin believes that
+channels=1, while the actual I/O is with channels=2, which makes the
+driver reading/writing over the allocated buffer size.
 
-Although the runtime PM issue was already "fixed", the same problem is
-still present for the system PM, hence this patch is still needed.
-And for stable trees, this patch alone should suffice for fixing the
-runtime PM problem, too.
+The fix is simply to move the plugin allocation code after the final
+hw_params call.
 
-Reported-and-tested-by: Jon Hunter <jonathanh@nvidia.com>
+Reported-by: syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/pcm_native.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ sound/core/oss/pcm_oss.c |   43 ++++++++++++++++++++++---------------------
+ 1 file changed, 22 insertions(+), 21 deletions(-)
 
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -1395,8 +1395,15 @@ static int snd_pcm_pause(struct snd_pcm_
- static int snd_pcm_pre_suspend(struct snd_pcm_substream *substream, int state)
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
--	if (runtime->status->state == SNDRV_PCM_STATE_SUSPENDED)
-+	switch (runtime->status->state) {
-+	case SNDRV_PCM_STATE_SUSPENDED:
- 		return -EBUSY;
-+	/* unresumable PCM state; return -EBUSY for skipping suspend */
-+	case SNDRV_PCM_STATE_OPEN:
-+	case SNDRV_PCM_STATE_SETUP:
-+	case SNDRV_PCM_STATE_DISCONNECTED:
-+		return -EBUSY;
+--- a/sound/core/oss/pcm_oss.c
++++ b/sound/core/oss/pcm_oss.c
+@@ -940,6 +940,28 @@ static int snd_pcm_oss_change_params_loc
+ 	oss_frame_size = snd_pcm_format_physical_width(params_format(params)) *
+ 			 params_channels(params) / 8;
+ 
++	err = snd_pcm_oss_period_size(substream, params, sparams);
++	if (err < 0)
++		goto failure;
++
++	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
++	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
++	if (err < 0)
++		goto failure;
++
++	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
++				     runtime->oss.periods, NULL);
++	if (err < 0)
++		goto failure;
++
++	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
++
++	err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams);
++	if (err < 0) {
++		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
++		goto failure;
 +	}
- 	runtime->trigger_master = substream;
- 	return 0;
- }
++
+ #ifdef CONFIG_SND_PCM_OSS_PLUGINS
+ 	snd_pcm_oss_plugin_clear(substream);
+ 	if (!direct) {
+@@ -974,27 +996,6 @@ static int snd_pcm_oss_change_params_loc
+ 	}
+ #endif
+ 
+-	err = snd_pcm_oss_period_size(substream, params, sparams);
+-	if (err < 0)
+-		goto failure;
+-
+-	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
+-	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
+-	if (err < 0)
+-		goto failure;
+-
+-	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
+-				     runtime->oss.periods, NULL);
+-	if (err < 0)
+-		goto failure;
+-
+-	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
+-
+-	if ((err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams)) < 0) {
+-		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
+-		goto failure;
+-	}
+-
+ 	if (runtime->oss.trigger) {
+ 		sw_params->start_threshold = 1;
+ 	} else {
 
 
