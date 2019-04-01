@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4241C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D07C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20B02084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E282C2082C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cYJid7nz";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="H6FUDKWX"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e+3XTD13";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="N5WVvSlO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732143AbfDAINc (ORCPT
+        id S1732061AbfDAIOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:13:32 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45666 "EHLO
+        Mon, 1 Apr 2019 04:14:14 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46906 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731582AbfDAINb (ORCPT
+        with ESMTP id S1726206AbfDAIOO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:13:31 -0400
+        Mon, 1 Apr 2019 04:14:14 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 970966137E; Mon,  1 Apr 2019 08:13:29 +0000 (UTC)
+        id 585A4614B6; Mon,  1 Apr 2019 08:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554106410;
-        bh=IXze6x2h0YcJLm8pPvb+VJ8OR9Ee3n1XaCA+FChqARo=;
+        s=default; t=1554106453;
+        bh=vHMoLPkgshZnVLl43toZ5Kkh9nygPURntwVOi+03hB4=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cYJid7nz9yZOClmEm0sVXaXOw27qvNlWsD8yxUvHBOPadnBLqGERfBLIHtb2wuaEo
-         aIqF9Tq7fDSLKPiq11Db11RqmJil3zX9d22VzXhdWstubBapXFzsjBavqZdoDaiP5V
-         84koe8ioWtBrxHW4nKebAPl7nFf+dUHncjCAffnY=
+        b=e+3XTD13BbPJfK4fDbU95SYsm1Wcpdlsh7J6tBm2tNE142iocGAIntPHQqhP/yyOP
+         VAOPVRjn9W2INFsYvczrHVwi4pGlQsYpGy4qF22NiXWFS9KmhK9EKY+0t0qQLFssLM
+         ClhpxX0vsGnID+SsdUqI9/pRSYmPhg0iRv2mwyvg=
 Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D946C60FEB;
-        Mon,  1 Apr 2019 08:13:22 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9315614B6;
+        Mon,  1 Apr 2019 08:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554106407;
-        bh=IXze6x2h0YcJLm8pPvb+VJ8OR9Ee3n1XaCA+FChqARo=;
+        s=default; t=1554106451;
+        bh=vHMoLPkgshZnVLl43toZ5Kkh9nygPURntwVOi+03hB4=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=H6FUDKWXic3w14quR9oD06l/oX61A9sFa0IYot24Zht8JLKXRg2b1FX9fKX3a/z4N
-         vJ9syRnOU8mYKs4VVIUUb7NqUEEXH7JkN+WRrIXqBC7PHegBowxXnZg8b/JZolxoeX
-         rCcEfmWESgIfayKnSC/LYQeaDadeoh8qdR2R63o8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D946C60FEB
+        b=N5WVvSlOlworWohCz7pGWLG9iYRox6ACI91t5QBhrcZvVcrmCzZBZ/bLEMGEJxeyo
+         9yK5wzdV77Q4iEWSi6mFY9b392/vCAKx4f79YHW+0GUxWk0p38cYuocrmTe/yNgSSK
+         SGE5v+Mk8uYVi0D+4z42hZeVEyoHZ+kYn8Ug3z7o=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B9315614B6
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH 1/3] nvmem: imx-ocotp: use
+Subject: Re: [PATCH 2/3] nvmem: mxs-ocotp: use
  devm_platform_ioremap_resource() to simplify code
 To:     Anson Huang <anson.huang@nxp.com>,
         "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
@@ -61,13 +61,14 @@ To:     Anson Huang <anson.huang@nxp.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Cc:     dl-linux-imx <linux-imx@nxp.com>
 References: <1554094479-14596-1-git-send-email-Anson.Huang@nxp.com>
+ <1554094479-14596-2-git-send-email-Anson.Huang@nxp.com>
 From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <e81617c9-54f1-e5c9-4e9d-4ab04ca59799@codeaurora.org>
-Date:   Mon, 1 Apr 2019 13:43:20 +0530
+Message-ID: <200d80d9-84ee-1317-85e8-961c076a2a07@codeaurora.org>
+Date:   Mon, 1 Apr 2019 13:44:04 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1554094479-14596-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1554094479-14596-2-git-send-email-Anson.Huang@nxp.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -89,28 +90,28 @@ Cheers,
 -Mukesh
 
 > ---
->   drivers/nvmem/imx-ocotp.c | 4 +---
+>   drivers/nvmem/mxs-ocotp.c | 4 +---
 >   1 file changed, 1 insertion(+), 3 deletions(-)
 >
-> diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-> index e0b22b6..4cf7b61 100644
-> --- a/drivers/nvmem/imx-ocotp.c
-> +++ b/drivers/nvmem/imx-ocotp.c
-> @@ -467,7 +467,6 @@ MODULE_DEVICE_TABLE(of, imx_ocotp_dt_ids);
->   static int imx_ocotp_probe(struct platform_device *pdev)
->   {
+> diff --git a/drivers/nvmem/mxs-ocotp.c b/drivers/nvmem/mxs-ocotp.c
+> index 53122f5..fbb7db6 100644
+> --- a/drivers/nvmem/mxs-ocotp.c
+> +++ b/drivers/nvmem/mxs-ocotp.c
+> @@ -145,7 +145,6 @@ static int mxs_ocotp_probe(struct platform_device *pdev)
 >   	struct device *dev = &pdev->dev;
+>   	const struct mxs_data *data;
+>   	struct mxs_ocotp *otp;
 > -	struct resource *res;
->   	struct ocotp_priv *priv;
->   	struct nvmem_device *nvmem;
+>   	const struct of_device_id *match;
+>   	int ret;
 >   
-> @@ -477,8 +476,7 @@ static int imx_ocotp_probe(struct platform_device *pdev)
->   
->   	priv->dev = dev;
+> @@ -157,8 +156,7 @@ static int mxs_ocotp_probe(struct platform_device *pdev)
+>   	if (!otp)
+>   		return -ENOMEM;
 >   
 > -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	priv->base = devm_ioremap_resource(dev, res);
-> +	priv->base = devm_platform_ioremap_resource(pdev, 0);
->   	if (IS_ERR(priv->base))
->   		return PTR_ERR(priv->base);
+> -	otp->base = devm_ioremap_resource(dev, res);
+> +	otp->base = devm_platform_ioremap_resource(pdev, 0);
+>   	if (IS_ERR(otp->base))
+>   		return PTR_ERR(otp->base);
 >   
