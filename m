@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DCAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F9FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84E720830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB9F20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140486;
-	bh=KFsXn4+nh2YdtoFA7FzslTKhJ7Wyuk4NYgYHu4led9c=;
+	s=default; t=1554140491;
+	bh=1Rg7sBDpr3q9byJ3mW9VcLuWuVvKBg3YFFB/Z2PkCRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MbuEJWgD2eRBap/enJOchLWFGmw5pvQpuMLgBkfMZd8yRcZuZSMxfEEDLilF6E1xx
-	 ZnbTZlHdFG4jJeTK0uC/NtBl80i9EMfvMNndwUu67DLoTOiy1aXXNQSnzzsR8yTXww
-	 JJV5HKyGExourG4UJWSH6ZKe6YD9B9kaamp5gKJo=
+	b=09MPr1Q3thqCcv/QkLz7++oNsKfKfzu3iKCxCrofOEr+phCvhEL/lMXsic2OEhBCy
+	 vkl11OsxL2ky0Rfegmk0n+JGI3diAhptIT3aU5FnsZchkDpI0OCAL1Up6EZn3w4aJE
+	 O6XY+EnCHyo002RCg3Luq/5FMbd+ZgnytKRPQxQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388070AbfDARiL (ORCPT
+        id S2387907AbfDARiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:38:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51256 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:38:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388288AbfDARiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:38:07 -0400
+        id S2387699AbfDARiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:38:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AD862070B;
-        Mon,  1 Apr 2019 17:38:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA8072070B;
+        Mon,  1 Apr 2019 17:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140286;
-        bh=KFsXn4+nh2YdtoFA7FzslTKhJ7Wyuk4NYgYHu4led9c=;
+        s=default; t=1554140282;
+        bh=1Rg7sBDpr3q9byJ3mW9VcLuWuVvKBg3YFFB/Z2PkCRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BY+z0Naogq3rsIeH7AHH+qE6LBLlThpmFkkpmISwzRFwbAZ7SD7CuzIT2oNmtEWoc
-         sc9vvSKQ8ZiPtt341hPeDkyHaU5xzIW53ZMrpAvvDCMCmzbeMhzaN33kTJD4D8IqLR
-         CAliREKPfRMOnG9B5uBWIwswLl5nnuZ/tyOTj594=
+        b=B20obBR1I4eXOMqDx5YGQnM5xLsQ5tGJ1Cv8uepLy1Zfh4UzCRfQ1Z8AgGfpsqHPN
+         EmoPMmBxCpY+g4oHTjl/u5flm4uiUrsJ3TKwQFMY4shRB0GpExhxJB2y4Uhpql3eyr
+         cqYwA3hDqThZTw2AfDM94cSoiHbhIMG/wvcUPpJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 29/50] mISDN: hfcpci: Test both vendor & device ID for Digium HFC4S
-Date:   Mon,  1 Apr 2019 19:03:12 +0200
-Message-Id: <20190401170044.460157269@linuxfoundation.org>
+Subject: [PATCH 3.18 28/50] dccp: do not use ipv6 header for ipv4 flow
+Date:   Mon,  1 Apr 2019 19:03:11 +0200
+Message-Id: <20190401170044.375404521@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -64,36 +65,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit fae846e2b7124d4b076ef17791c73addf3b26350 ]
+[ Upstream commit e0aa67709f89d08c8d8e5bdd9e0b649df61d0090 ]
 
-The device ID alone does not uniquely identify a device.  Test both the
-vendor and device ID to make sure we don't mistakenly think some other
-vendor's 0xB410 device is a Digium HFC4S.  Also, instead of the bare hex
-ID, use the same constant (PCI_DEVICE_ID_DIGIUM_HFC4S) used in the device
-ID table.
+When a dual stack dccp listener accepts an ipv4 flow,
+it should not attempt to use an ipv6 header or
+inet6_iif() helper.
 
-No functional change intended.
-
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 3df80d9320bc ("[DCCP]: Introduce DCCPv6")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/isdn/hardware/mISDN/hfcmulti.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/dccp/ipv6.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/isdn/hardware/mISDN/hfcmulti.c
-+++ b/drivers/isdn/hardware/mISDN/hfcmulti.c
-@@ -4370,7 +4370,8 @@ setup_pci(struct hfc_multi *hc, struct p
- 	if (m->clock2)
- 		test_and_set_bit(HFC_CHIP_CLOCK2, &hc->chip);
+--- a/net/dccp/ipv6.c
++++ b/net/dccp/ipv6.c
+@@ -490,8 +490,8 @@ static struct sock *dccp_v6_request_recv
+ 		newnp->ipv6_mc_list = NULL;
+ 		newnp->ipv6_ac_list = NULL;
+ 		newnp->ipv6_fl_list = NULL;
+-		newnp->mcast_oif   = inet6_iif(skb);
+-		newnp->mcast_hops  = ipv6_hdr(skb)->hop_limit;
++		newnp->mcast_oif   = inet_iif(skb);
++		newnp->mcast_hops  = ip_hdr(skb)->ttl;
  
--	if (ent->device == 0xB410) {
-+	if (ent->vendor == PCI_VENDOR_ID_DIGIUM &&
-+	    ent->device == PCI_DEVICE_ID_DIGIUM_HFC4S) {
- 		test_and_set_bit(HFC_CHIP_B410P, &hc->chip);
- 		test_and_set_bit(HFC_CHIP_PCM_MASTER, &hc->chip);
- 		test_and_clear_bit(HFC_CHIP_PCM_SLAVE, &hc->chip);
+ 		/*
+ 		 * No need to charge this sock to the relevant IPv6 refcnt debug socks count
 
 
