@@ -2,111 +2,89 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEB7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F463C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA502084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:36:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tn/ECxD7"
+	by mail.kernel.org (Postfix) with ESMTP id 046022133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:40:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554118845;
+	bh=LDLVMlUNKStBigWemtht62j/hMd0pxWIk3S+zjMBFiQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DGoRPA99Pt0ujHp6+cXjTGQYdAJjhr1jtzswOTgWrWp1Rj1fj4ZteNi+Gl2eWxqBw
+	 dUU5DfD6LwTY+6sj0fXqUvtgD98suIBqGr7ejhoY5XHhpd3VLe2L8JoutSUa4Ay4iO
+	 n0mnhN2rRbCvbgIVz0sog6fvpsz5IlfFbIiTCbQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfDALgb (ORCPT
+        id S1726558AbfDALko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 07:36:31 -0400
-Received: from ozlabs.org ([203.11.71.1]:42921 "EHLO ozlabs.org"
+        Mon, 1 Apr 2019 07:40:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfDALgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 07:36:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725882AbfDALkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 07:40:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44Xqzv3TVmz9sQr;
-        Mon,  1 Apr 2019 22:36:27 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554118587;
-        bh=EbvZrga8PqS4dOHkrS2Qu0uC73Q5jzPRYW2pFQoC0X4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tn/ECxD7UxQqeG/05AZZv/HfpCHXzQkKKSRz9twuwJydocIx+iBImdNGwpGFBTc+l
-         mnwEqSrg4PRWHtl45L26DUtZs1npx4g6C7zzqqfUaE8l1EplzyPmtuFW0e+PYgR+Tn
-         ju5F9JivrAOVFJlkRSqjO3zwHZt6CjbL8kl5BKsmopSLcjqqUxk/BjPdGYibNPCtXA
-         NL9XrAtjVLMdY7GlCdvu5gGBXTG0+U9now8I3e/W0qkz+2KDdcMCQxj1vpOocrN/vV
-         JpzB2SItK90sWVZW+/D/NGeVy4rJoOiz1uiRsO7ZCYRfvI1sKU97SQXmiDrGQVt8I6
-         KiTlTMEuTWiJQ==
-Date:   Mon, 1 Apr 2019 22:36:24 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: linux-next: Tree for Mar 27 (sunxi clk & mfd)
-Message-ID: <20190401223624.6b4f8c42@canb.auug.org.au>
-In-Reply-To: <20190401102732.GD4187@dell>
-References: <20190327145020.2fff97b8@canb.auug.org.au>
-        <641a04ec-e2e6-4263-e77e-d272058c18c9@infradead.org>
-        <20190328095036.734adbba@canb.auug.org.au>
-        <20190401102732.GD4187@dell>
+        by mail.kernel.org (Postfix) with ESMTPSA id A2C0B20880;
+        Mon,  1 Apr 2019 11:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554118843;
+        bh=LDLVMlUNKStBigWemtht62j/hMd0pxWIk3S+zjMBFiQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VMf7ddR/57qNwcZ8gPViQ8TrKrSWtjDFsUhfNALRNSoLtPjV4RAC7C9rhRYwe8Jvc
+         XgBV8/3F7BhlpVBSLRFDRgsz3igJc1axFVTp7FZgKm4H0bUlnsr4rsSx4lT5XMMtHX
+         B37TcqroFP7bXCbYyRJroQ2JseC3axNDJucV40wM=
+Date:   Mon, 1 Apr 2019 13:40:40 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH for-4.19 1/2] staging: erofs: fix error handling when
+ failed to read compresssed data
+Message-ID: <20190401114040.GC8156@kroah.com>
+References: <20190401065309.68109-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/TQEStlbOBWCvct8AwL66QLQ"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190401065309.68109-1-gaoxiang25@huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TQEStlbOBWCvct8AwL66QLQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 01, 2019 at 02:53:08PM +0800, Gao Xiang wrote:
+> commit b6391ac73400eff38377a4a7364bd3df5efb5178 upstream.
+> 
+> Complete read error handling paths for all three kinds of
+> compressed pages:
+> 
+>  1) For cache-managed pages, PG_uptodate will be checked since
+>     read_endio will unlock and SetPageUptodate for these pages;
+> 
+>  2) For inplaced pages, read_endio cannot SetPageUptodate directly
+>     since it should be used to mark the final decompressed data,
+>     PG_error will be set with page locked for IO error instead;
+> 
+>  3) For staging pages, PG_error is used, which is similar to
+>     what we do for inplaced pages.
+> 
+> Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+> Cc: <stable@vger.kernel.org> # 4.19+
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> ---
+> This series resolves the following conflicts:
+> FAILED: patch "[PATCH] staging: erofs: fix error handling when failed to read" failed to apply to 4.19-stable tree
+> FAILED: patch "[PATCH] staging: erofs: keep corrupted fs from crashing kernel in" failed to apply to 4.19-stable tree
 
-Hi Lee,
+Thanks for both of these, now queued up.
 
-On Mon, 1 Apr 2019 11:27:32 +0100 Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Thu, 28 Mar 2019, Stephen Rothwell wrote:
->=20
-> > I reported that a while ago (x86_64 allmodconfig after the merge of the
-> > sunxi tree).  Apparently there is a fix out there but it hasn't been
-> > applied yet. =20
->=20
-> Where is the fix to be applied?  SUNXI or MFD?
-
-Well, I only see the problem after applying the sunxi tree (which
-happens before I merge the mfd tree).
-
-Maxime said:
-
-> I've just sent a patch fixing this:
-> https://lore.kernel.org/lkml/20190322091650.5189-1-maxime.ripard@bootlin.=
-com/
-
-So maybe if you (Lee) acked it, Maxime could apply it to the sunxi
-tree, so we keep the breakage and fix together?  Assuming that the fix
-is acceptable (and works :-)).
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/TQEStlbOBWCvct8AwL66QLQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyh97gACgkQAVBC80lX
-0GyxLAf/bFGw4fX8AubeNHrIvatp3/buMOEzbllGr7f9Fb6GNcEk5KrQZ41JrB86
-eMw0kKGbelqGGBE1Lq2T5LvdsWataFx2nQGLy4hyX/sIPgq7p7BF/Qj9kwcgAehF
-kgPfvpcmOZ1xYnbq6YG1CCKKDpTCnD3Nm5IOCFVO0FjHfuzQKUQ24S0Ua+Ieq4gk
-EHjLZIGdK99j0RZKM1Z1zzzw4mzQRJ3eL2FsSTjfMNj9X5DmPstlnoYi4ZmA8l+/
-4NxDc1htdOczmfG9cSxv/lqFUXIOIoa7HFElS71xBB81s9erFvRkw5v+DmdllGwh
-CaOI1qJZXmQFCpqOR6CUf9tUnwmuFw==
-=uXY6
------END PGP SIGNATURE-----
-
---Sig_/TQEStlbOBWCvct8AwL66QLQ--
+greg k-h
