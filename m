@@ -2,163 +2,130 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429E1C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0462FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9F320870
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FEC20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:14:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="i0+z0gOY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfDALN1 (ORCPT
+        id S1726800AbfDALOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 07:13:27 -0400
-Received: from sauhun.de ([88.99.104.3]:50452 "EHLO pokefinder.org"
+        Mon, 1 Apr 2019 07:14:18 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:35978 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfDALN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 07:13:27 -0400
-Received: from localhost (p54B331B1.dip0.t-ipconnect.de [84.179.49.177])
-        by pokefinder.org (Postfix) with ESMTPSA id 734F52C7BF4;
-        Mon,  1 Apr 2019 13:13:24 +0200 (CEST)
-Date:   Mon, 1 Apr 2019 13:13:24 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH] i2c: remove use of in_atomic()
-Message-ID: <20190401111323.ajvo4drongc6dtel@ninjato>
-References: <20190327211256.17232-1-wsa+renesas@sang-engineering.com>
- <20190401104756.GK11158@hirez.programming.kicks-ass.net>
+        id S1726409AbfDALOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 07:14:18 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44XqV96HgSz9tyfn;
+        Mon,  1 Apr 2019 13:14:09 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=i0+z0gOY; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id Xqopo6qslUS8; Mon,  1 Apr 2019 13:14:09 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44XqV955Zlz9tyfB;
+        Mon,  1 Apr 2019 13:14:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1554117249; bh=t8JxzHNnysGN5V5loKvGifZRjTCZPzfpZTeMykqXsHA=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=i0+z0gOYpUl3h8iC7LwW5M/BmSffYCp7liEXJ9anK06n2uppP8ZxTgKCXmGEHkATp
+         sO+KZaldbOvvfoMkZ3R/thcBdiUOXInX04nECgKC+9Pga3JsTxA5RzuTY0Vqe0zTLW
+         KY8fhRsa+Qmg6L3IFGR1DPIjd5PL2mTdAcXxomQs=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 716E08B8A7;
+        Mon,  1 Apr 2019 13:14:14 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id cjT4FUAP7nAG; Mon,  1 Apr 2019 13:14:14 +0200 (CEST)
+Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.2])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4D5418B841;
+        Mon,  1 Apr 2019 13:14:14 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/rtas: fix early boot failure.
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <aab41779cac995ebdc03e700a9dc7cfc30a28770.1553503163.git.christophe.leroy@c-s.fr>
+Message-ID: <558fbb7e-a454-055e-ca29-a2e4dfb6cf6a@c-s.fr>
+Date:   Mon, 1 Apr 2019 13:14:13 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7zuscjiz44miouqy"
-Content-Disposition: inline
-In-Reply-To: <20190401104756.GK11158@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <aab41779cac995ebdc03e700a9dc7cfc30a28770.1553503163.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Michael,
 
---7zuscjiz44miouqy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks like you missed this fix for rc3.
 
-Hi Peter,
+Christophe
 
-thanks for your answer!
-
-On Mon, Apr 01, 2019 at 12:47:56PM +0200, Peter Zijlstra wrote:
-> On Wed, Mar 27, 2019 at 10:12:56PM +0100, Wolfram Sang wrote:
-> > Commit cea443a81c9c ("i2c: Support i2c_transfer in atomic contexts")
-> > added in_atomic() to the I2C core. However, the use of in_atomic()
-> > outside of core kernel code is discouraged and was already[1] when this
-> > code was added in early 2008. The above commit was a preparation for
-> > b7a3670131c7 ("i2c-pxa: Add polling transfer"). Its commit message says
-> > explicitly it was added "for cases where I2C transactions have to occur
-> > at times interrups are disabled". So, the intention was 'disabled
-> > interrupts'. This matches the use cases for atomic I2C transfers I have
-> > seen so far: very late communication (mostly to a PMIC) to powerdown or
-> > reboot the system. For those cases, interrupts are disabled then. It
-> > doesn't seem that in_atomic() adds value.
-> >=20
-> > Note that only ~10 out of ~120 bus master drivers support atomic
-> > transfers, mostly by polling always when no irq is supplied. A generic
-> > I2C client driver cannot assume support for atomic transfers. This is
-> > currently a platform-dependent corner case.
-> >=20
-> > The I2C core will soon gain an extra callback into bus drivers
-> > especially for atomic transfers to make them more generic. The code
-> > deciding which transfer to use (atomic/non-atomic) should mimic the
-> > behaviour which locking to use (trylock/lock). Because I don't want to
-> > add more in_atomic() to the I2C core, this patch simply removes it.
-> >=20
-> > [1] https://lwn.net/Articles/274695/
-> >=20
-> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > ---
-> >=20
-> > So, I had to dive into this in_atomic() topic and this is what I
-> > concluded. I don't see any reasonable constellation where this could
-> > cause a regression, but I am all open for missing something and being
-> > pointed to it. This is why the patch is RFC. I'd really welcome
-> > comments. Thanks!
-> >=20
-> >=20
-> >  drivers/i2c/i2c-core-base.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> > index 38af18645133..943bebeec3ed 100644
-> > --- a/drivers/i2c/i2c-core-base.c
-> > +++ b/drivers/i2c/i2c-core-base.c
-> > @@ -1946,7 +1946,7 @@ int i2c_transfer(struct i2c_adapter *adap, struct=
- i2c_msg *msgs, int num)
-> >  	 *    one (discarding status on the second message) or errno
-> >  	 *    (discarding status on the first one).
-> >  	 */
-> > -	if (in_atomic() || irqs_disabled()) {
-> > +	if (irqs_disabled()) {
-> >  		ret =3D i2c_trylock_bus(adap, I2C_LOCK_SEGMENT);
-> >  		if (!ret)
-> >  			/* I2C activity is ongoing. */
->=20
-> So I know absolutely nothing about i2c, except that it is supposedly
-> fsck all slow.
->=20
-> In that context, busy-spinning for i2c completions seems like a terrible
-> idea, _esp_ in atomic contexts.
->=20
-> I did a quick grep for trylock_bus() and found i2c_mux_trylock_bus()
-> which uses rt_mutex_trylock and therefore the calling context must
-> already exclude IRQs and NMIs and the like.
->=20
-> That leaves task context with preemption/IRQs disabled. Of that, you
-> retain the IRQs disabled test, which is by far the worst possible
-> condition to spin-wait in.
->=20
-> Why must we allow i2c usage with IRQs disabled? Just say NO?
-
-I'd love to. But quoting my patch description:
-
-"This matches the use cases for atomic I2C transfers I have seen so far:
-very late communication (mostly to a PMIC) to powerdown or reboot the
-system."
-
-And yes, I would never recommend a HW design to use I2C for shutting
-down/rebooting. But such HW is out there.
-
-Regards,
-
-   Wolfram
-
-
---7zuscjiz44miouqy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyh8lAACgkQFA3kzBSg
-KbbviA//R8NBhHBg260+abMRGJ2BGtv6OWgYalU43gKQFY7e5HYVTcJ2n0z9ZkaL
-/qnqd/SXftlrBjb8zXFxnlDg820G2crGuN3YmzKAvv2wslSbgvwhWaRBZ3QaIUUO
-VCDLWN2bXPUKMisuA634S2pu4MlYaAvX3qezrLfuy0l73vsoqvZqAMAmekwiK2IK
-MKpKAVVFM/INy1Yl7aO2gqdai94YykIV1YaFKvelJmNDj0Vmuki6dyRu2XLVfj9+
-J+qAYo6XhNOrGpjiticV6OrKW/y8hE+i/D1g2ylenRiULHE/MdlWr9R5q6xM51oe
-NMsyULLDa87qirCwFBd2c6bbAYAcIFz4Yz5yQyERo/OtG7jtkL6LdbWpYtb/G/YZ
-88AP3998akGXV8nGhKO8zivwqE994o6jq7OmeJpCyk+A9+HBxZF/8+7pOpfHlME2
-EaCttoxLYsarqGYNaQf8O74gEHnfD5bG+wpxAuuzNXXMwFJYEgRqlVzZhtOgR185
-czkYAtks1jdzMdQi5TaSCxcMgJNchDi2YMrmpIzkfHo6y5egsgqyjSgc8y1Z9TwS
-jGgqFyCwr2lqbIAHV+K2enFf5IwQ+6/1MaUb+YFDQUmqGqTMhwo4JnPo1mpLbuNo
-z0lYpJeI+vwVoINxkL9kQaAd+LZGP5pb2SpZ3/maZHZviwUa11A=
-=QQJC
------END PGP SIGNATURE-----
-
---7zuscjiz44miouqy--
+Le 25/03/2019 à 09:43, Christophe Leroy a écrit :
+> Commit 0df977eafc79 ("powerpc/6xx: Don't use SPRN_SPRG2 for storing
+> stack pointer while in RTAS") changes the code to use a field in
+> thread struct to store the stack pointer while in RTAS instead of
+> using SPRN_SPRG2. It therefore converts all places which were
+> manipulating SPRN_SPRG2 to use that field. During early startup,
+> the zeroing of SPRN_SPRG2 has been replaced by a zeroing of that
+> field in thread struct. But at least in start_here, that's done
+> wrongly because it used the physical address of the fields while
+> MMU is on at that time.
+> 
+> So the virtual address of the field should be used instead, but in
+> the meantime, thread struct has already been zeroised and initialised
+> so we can just drop this initialisation.
+> 
+> Reported-by: Larry Finger <Larry.Finger@lwfinger.net>
+> Fixes: 0df977eafc79 ("powerpc/6xx: Don't use SPRN_SPRG2 for storing stack pointer while in RTAS")
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>   arch/powerpc/kernel/head_32.S | 8 --------
+>   1 file changed, 8 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
+> index 48051c8977c5..e25b615e9f9e 100644
+> --- a/arch/powerpc/kernel/head_32.S
+> +++ b/arch/powerpc/kernel/head_32.S
+> @@ -851,10 +851,6 @@ __secondary_start:
+>   	tophys(r4,r2)
+>   	addi	r4,r4,THREAD	/* phys address of our thread_struct */
+>   	mtspr	SPRN_SPRG_THREAD,r4
+> -#ifdef CONFIG_PPC_RTAS
+> -	li	r3,0
+> -	stw	r3, RTAS_SP(r4)		/* 0 => not in RTAS */
+> -#endif
+>   	lis	r4, (swapper_pg_dir - PAGE_OFFSET)@h
+>   	ori	r4, r4, (swapper_pg_dir - PAGE_OFFSET)@l
+>   	mtspr	SPRN_SPRG_PGDIR, r4
+> @@ -941,10 +937,6 @@ start_here:
+>   	tophys(r4,r2)
+>   	addi	r4,r4,THREAD	/* init task's THREAD */
+>   	mtspr	SPRN_SPRG_THREAD,r4
+> -#ifdef CONFIG_PPC_RTAS
+> -	li	r3,0
+> -	stw	r3, RTAS_SP(r4)		/* 0 => not in RTAS */
+> -#endif
+>   	lis	r4, (swapper_pg_dir - PAGE_OFFSET)@h
+>   	ori	r4, r4, (swapper_pg_dir - PAGE_OFFSET)@l
+>   	mtspr	SPRN_SPRG_PGDIR, r4
+> 
