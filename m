@@ -2,51 +2,61 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3D4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F9FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A071320830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D32720856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139902;
-	bh=nY9Tg0EwRZUB7q4YUmtswoKzuzRFM1oxQZVHDHNo0xs=;
+	s=default; t=1554139907;
+	bh=TcJGiK/14Nxwj+qaIVKcpNBi8zgouqjN1Nd0xz9Mqhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uZa5/gSUCUKMUZMeEYNPg9bxl2GQ4O+MLAK+UL8yfUCAZz6J+VQjj6xCUgTdS9BeG
-	 W5gfDu+KibnzOMMH63dY40+1sJCjY7F6WIFwX/nsIX34G5wyFap4NBAUzoVvEJamb1
-	 QTFbhv+lHevDwZVJncfmmZHQI2REcgssOh6iAFUs=
+	b=2rErj7X5cHaf7KClWOKwVjd8hETVdyjP1inqC0nr4mal5Ie3vTAGs/1xk6LwqNPtP
+	 oxHwLWdGhXiyONLnSesmSIhY08tSkeYtHMjSkSLXnhNzrHr9rT5XQGtcXDp9U3Qd4Y
+	 wEjbcv+YIozxzBJLkyabMeAlan7h4raqY7+LyN6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733288AbfDARbl (ORCPT
+        id S1733296AbfDARbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:31:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39236 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:31:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733078AbfDARbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:31:38 -0400
+        id S1733281AbfDARbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:31:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 269132070B;
-        Mon,  1 Apr 2019 17:31:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB36A2070B;
+        Mon,  1 Apr 2019 17:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139897;
-        bh=nY9Tg0EwRZUB7q4YUmtswoKzuzRFM1oxQZVHDHNo0xs=;
+        s=default; t=1554139900;
+        bh=TcJGiK/14Nxwj+qaIVKcpNBi8zgouqjN1Nd0xz9Mqhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LfBWlmFHuPBiMxQgv1yk0FHLCd2ZCr4i3QP1vZ1kTd9dffXW55Mx2ngEbuCvv+C5R
-         5hm12RBI1D9hbhcv0NZLAPZjv2Kj1s47IaYnBQJdaun+c5ajzTwIQB4rXUEaPAU4gz
-         Qkym+GM04vGHfvv/TY8f985IHCWxH6wKlHeJX2H8=
+        b=oV+knyusEtDkAOyVn+YQ7FSXRP/bVt13bJLEcA+9DLZXmfN0UFSjearKtoh2IZdIL
+         VHw0O8N+9U1dm5M/aQsyjPc3u4ZZ222+N1wZc6g0063OldzoX4bzxHsLEuqWL6QOId
+         kcoeZjGtewNmRw1/VdhK5e9mY2n7VyPdAiK2kK7s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
-        Deepak Rawat <drawat@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>
-Subject: [PATCH 4.4 002/131] drm/vmwgfx: Dont double-free the mode stored in par->set_mode
-Date:   Mon,  1 Apr 2019 19:01:12 +0200
-Message-Id: <20190401170051.875045312@linuxfoundation.org>
+        stable@vger.kernel.org, Steve Muckle <steve.muckle@linaro.org>,
+        Yuyang Du <yuyang.du@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <Juri.Lelli@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Galbraith <efault@gmx.de>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 040/131] sched/fair: Fix new tasks load avg removed from source CPU in wake_up_new_task()
+Date:   Mon,  1 Apr 2019 19:01:50 +0200
+Message-Id: <20190401170055.666989726@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -65,64 +75,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thomas Zimmermann <tzimmermann@suse.de>
+[ Upstream commit 0905f04eb21fc1c2e690bed5d0418a061d56c225 ]
 
-commit c2d311553855395764e2e5bf401d987ba65c2056 upstream.
+If a newly created task is selected to go to a different CPU in fork
+balance when it wakes up the first time, its load averages should
+not be removed from the source CPU since they are never added to
+it before. The same is also applicable to a never used group entity.
 
-When calling vmw_fb_set_par(), the mode stored in par->set_mode gets free'd
-twice. The first free is in vmw_fb_kms_detach(), the second is near the
-end of vmw_fb_set_par() under the name of 'old_mode'. The mode-setting code
-only works correctly if the mode doesn't actually change. Removing
-'old_mode' in favor of using par->set_mode directly fixes the problem.
+Fix it in remove_entity_load_avg(): when entity's last_update_time
+is 0, simply return. This should precisely identify the case in
+question, because in other migrations, the last_update_time is set
+to 0 after remove_entity_load_avg().
 
-Cc: <stable@vger.kernel.org>
-Fixes: a278724aa23c ("drm/vmwgfx: Implement fbdev on kms v2")
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Reviewed-by: Deepak Rawat <drawat@vmware.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Steve Muckle <steve.muckle@linaro.org>
+Signed-off-by: Yuyang Du <yuyang.du@intel.com>
+[peterz: cfs_rq_last_update_time]
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Juri Lelli <Juri.Lelli@arm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Morten Rasmussen <morten.rasmussen@arm.com>
+Cc: Patrick Bellasi <patrick.bellasi@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Link: http://lkml.kernel.org/r/20151216233427.GJ28098@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_fb.c |   12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ kernel/sched/fair.c | 38 ++++++++++++++++++++++++++++----------
+ 1 file changed, 28 insertions(+), 10 deletions(-)
 
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_fb.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_fb.c
-@@ -531,11 +531,9 @@ static int vmw_fb_set_par(struct fb_info
- 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 		DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_PVSYNC)
- 	};
--	struct drm_display_mode *old_mode;
- 	struct drm_display_mode *mode;
- 	int ret;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c2af250547bb..6051007918ad 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2841,27 +2841,45 @@ dequeue_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ 		max_t(s64,  cfs_rq->runnable_load_sum - se->avg.load_sum, 0);
+ }
  
--	old_mode = par->set_mode;
- 	mode = drm_mode_duplicate(vmw_priv->dev, &new_mode);
- 	if (!mode) {
- 		DRM_ERROR("Could not create new fb mode.\n");
-@@ -546,11 +544,7 @@ static int vmw_fb_set_par(struct fb_info
- 	mode->vdisplay = var->yres;
- 	vmw_guess_mode_timing(mode);
+-/*
+- * Task first catches up with cfs_rq, and then subtract
+- * itself from the cfs_rq (task must be off the queue now).
+- */
+-void remove_entity_load_avg(struct sched_entity *se)
+-{
+-	struct cfs_rq *cfs_rq = cfs_rq_of(se);
+-	u64 last_update_time;
+-
+ #ifndef CONFIG_64BIT
++static inline u64 cfs_rq_last_update_time(struct cfs_rq *cfs_rq)
++{
+ 	u64 last_update_time_copy;
++	u64 last_update_time;
  
--	if (old_mode && drm_mode_equal(old_mode, mode)) {
--		drm_mode_destroy(vmw_priv->dev, mode);
--		mode = old_mode;
--		old_mode = NULL;
--	} else if (!vmw_kms_validate_mode_vram(vmw_priv,
-+	if (!vmw_kms_validate_mode_vram(vmw_priv,
- 					mode->hdisplay *
- 					DIV_ROUND_UP(var->bits_per_pixel, 8),
- 					mode->vdisplay)) {
-@@ -613,8 +607,8 @@ static int vmw_fb_set_par(struct fb_info
- 	schedule_delayed_work(&par->local_work, 0);
+ 	do {
+ 		last_update_time_copy = cfs_rq->load_last_update_time_copy;
+ 		smp_rmb();
+ 		last_update_time = cfs_rq->avg.last_update_time;
+ 	} while (last_update_time != last_update_time_copy);
++
++	return last_update_time;
++}
+ #else
+-	last_update_time = cfs_rq->avg.last_update_time;
++static inline u64 cfs_rq_last_update_time(struct cfs_rq *cfs_rq)
++{
++	return cfs_rq->avg.last_update_time;
++}
+ #endif
  
- out_unlock:
--	if (old_mode)
--		drm_mode_destroy(vmw_priv->dev, old_mode);
-+	if (par->set_mode)
-+		drm_mode_destroy(vmw_priv->dev, par->set_mode);
- 	par->set_mode = mode;
- 
- 	drm_modeset_unlock_all(vmw_priv->dev);
++/*
++ * Task first catches up with cfs_rq, and then subtract
++ * itself from the cfs_rq (task must be off the queue now).
++ */
++void remove_entity_load_avg(struct sched_entity *se)
++{
++	struct cfs_rq *cfs_rq = cfs_rq_of(se);
++	u64 last_update_time;
++
++	/*
++	 * Newly created task or never used group entity should not be removed
++	 * from its (source) cfs_rq
++	 */
++	if (se->avg.last_update_time == 0)
++		return;
++
++	last_update_time = cfs_rq_last_update_time(cfs_rq);
++
+ 	__update_load_avg(last_update_time, cpu_of(rq_of(cfs_rq)), &se->avg, 0, 0, NULL);
+ 	atomic_long_add(se->avg.load_avg, &cfs_rq->removed_load_avg);
+ 	atomic_long_add(se->avg.util_avg, &cfs_rq->removed_util_avg);
+-- 
+2.19.1
+
 
 
