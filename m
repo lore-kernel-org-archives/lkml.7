@@ -2,123 +2,238 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117D9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930E3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB0020883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483A420896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:42:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gSE/pGCu"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="IdQBL1wI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbfDAKmB (ORCPT
+        id S1727074AbfDAKmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 06:42:01 -0400
-Received: from mail-eopbgr130043.outbound.protection.outlook.com ([40.107.13.43]:18792
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727014AbfDAKmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 06:42:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gYwCsOhjnHh41RLFO/hzyn8Be3hTzdZISSl4Xwn4K7A=;
- b=gSE/pGCudXKxozH2aFoKgPVNwDwBnI7e4qXKsEwK1iZUzbJaXswro+TlQIRA3igaBYO2yy6+Pw8mlQ0wHPN+NQ/zvSb8zp90ewLEATS/qkz492T3RRdrwwHuSGJG2yfV2pjB8SwHThHW6Vw4psTLgma4oYHipnE98X+hGOTJ2Kk=
-Received: from DB7PR04MB5132.eurprd04.prod.outlook.com (20.176.235.28) by
- DB7PR04MB5115.eurprd04.prod.outlook.com (20.176.235.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.15; Mon, 1 Apr 2019 10:41:57 +0000
-Received: from DB7PR04MB5132.eurprd04.prod.outlook.com
- ([fe80::2cac:cc2f:6528:54f7]) by DB7PR04MB5132.eurprd04.prod.outlook.com
- ([fe80::2cac:cc2f:6528:54f7%5]) with mapi id 15.20.1750.021; Mon, 1 Apr 2019
- 10:41:57 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     "jocke@infinera.com" <joakim.tjernlund@infinera.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Madalin-cristian Bucur <madalin.bucur@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>, Roy Pledge <roy.pledge@nxp.com>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: RE: [PATCH 13/13] dpaa_eth: fix SG frame cleanup
-Thread-Topic: [PATCH 13/13] dpaa_eth: fix SG frame cleanup
-Thread-Index: AQHU5jfD8H5a3yiJYkiA2xDu3oDM/KYiutAAgARnYHA=
-Date:   Mon, 1 Apr 2019 10:41:56 +0000
-Message-ID: <DB7PR04MB513254918C98E96E2E61E22CEC550@DB7PR04MB5132.eurprd04.prod.outlook.com>
-References: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
-         <20190329140014.8126-14-laurentiu.tudor@nxp.com>
- <702d2baba6c2c131c1ae59607943eb8f8813d250.camel@infinera.com>
-In-Reply-To: <702d2baba6c2c131c1ae59607943eb8f8813d250.camel@infinera.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [192.88.166.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5335750e-95b3-4ad0-ddb2-08d6b68ea9e3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB7PR04MB5115;
-x-ms-traffictypediagnostic: DB7PR04MB5115:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <DB7PR04MB51158851B91D99DA224A3EF6EC550@DB7PR04MB5115.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39860400002)(376002)(346002)(136003)(13464003)(189003)(199004)(97736004)(68736007)(14454004)(8936002)(33656002)(5660300002)(53936002)(55016002)(2501003)(9686003)(6636002)(25786009)(106356001)(81166006)(478600001)(8676002)(186003)(76176011)(7696005)(102836004)(6506007)(26005)(6246003)(7736002)(105586002)(305945005)(81156014)(3846002)(74316002)(476003)(6436002)(99286004)(44832011)(2906002)(486006)(66066001)(11346002)(6116002)(54906003)(110136005)(52536014)(4326008)(256004)(14444005)(71200400001)(71190400001)(316002)(86362001)(229853002)(446003)(491001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5115;H:DB7PR04MB5132.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hefFuGoIDSMMGDaCy2CuEyS2k4qWQchZavxn0Fp/kKOjrJ7NqpNs8NoC8QShLwDDzUhv55kSFL9kvv/lqgE8uv1s2eQk/rZpeKe+4WUAhOcxhhwAayChqDQ+ThwuMu845J36XFgu/mSejedmhk28/w5bGWXrJAQ41P5SuKg7cUwECz5cL0Hkkv+G4HA9rZVtKrWIZKSc2DpzGrv2p2hm9LZj/6MHGgmvPd8croH4HmvFcjoip9mqANSCxqi2f9I38J30l3QvDLjtwnlSoWvJp6DjjjqRp+01TfDWZThpZSuwUGENHT39mD0GnDDsTcjSNhBV73Qk7cGTnFrcMU/ZS8ehOqulhwI0vcwqgSHOTqXAjBGbiKsJ3mCD2MyzfCkkVot5M20XfmYRIlsTzgyZPAlvHAAJ9+wE3S+oGjUHtAM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 1 Apr 2019 06:42:11 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40735 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfDAKmK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 06:42:10 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w20so5245082qka.7
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 03:42:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=avix0l/4HnhJqGdPmgVFLMwJx5CoLVwVrAQP99HCOK4=;
+        b=IdQBL1wIvWO8LpI+5V9URYpVJ9HUj2Y0qtusZkSFca7O6RzeRbHB2zpWeq8M1lwlS9
+         vD0aoeQk4eqaXPMAhVt806a2wzSYo9yReI1PT+cAFAlU8EZB25KjFQCDfxwLzXMpnJ8X
+         CDV/U0+TuKyPk3k9hBtwqlGtY9sEhZQ48HHgfgbgw4IKG+Xn4VInQ/qQ5szMRhJc/Cr7
+         mba8FXrgiB0eNHhf7T2Jddy19P6TXC2QADkFdXwsI4wm0kloyHdDm1drxisxEobCzUGn
+         FAunLPALrWJgQDD+VejfNTLzM31kCl+H6XDs00yVvrZIWGsM8hFZ0RDn0LcEYFJ+0PDN
+         ROQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=avix0l/4HnhJqGdPmgVFLMwJx5CoLVwVrAQP99HCOK4=;
+        b=k+V4T0EQireeOIwQPQ6aiQwt4tmTWOlfJsw9ACoPtK1UM2E913eEIsV5Mf/qdXGDM6
+         GO3Aa32h7r/v8xgku0UdrR/A8KcSP4q50J5beq1FtFixjo3y+OJZU+xwg76Z83sz4i8l
+         QH/WwwucpXXhVDb3Sq2cH2FGjG8xjT5jrOcBQzKZAWFib/Zg9I3PVFIoELVf0jo39uk/
+         VERNYki1Lmu7lUeT6YwP1sgOJZZgZWb0lb/Y6A5KydjjFPD0JQV3DN8KDv3QKC5W32yd
+         mSGNLv7SF6DvP2D2/eahTdigloKgVFao4jcI/1gzt4Y+blXJImN+QTWgMT0tCHqPAKWV
+         kWgw==
+X-Gm-Message-State: APjAAAVi/QpgBSxfgZ/v9nSPh5506TdALEaaNCY83gvAzF774Ifexo8c
+        AFRMaxJXTJvebH6u6e6pVLf/N+Elhx8j5YqKvYtvPw==
+X-Google-Smtp-Source: APXvYqyp+b7qPzotOUPV0EqsIpVeJvtVn6qDuExt2PKy9xWra9XDRB2FDAeaC5GM7GNeW6MG1j2vB6aB8R0LMApxHc4=
+X-Received: by 2002:a37:451:: with SMTP id 78mr23292207qke.315.1554115329015;
+ Mon, 01 Apr 2019 03:42:09 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5335750e-95b3-4ad0-ddb2-08d6b68ea9e3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 10:41:56.9796
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5115
+References: <20171121105205.GP22431@lahna.fi.intel.com> <CAB4CAwcjXi=YX+0PEC6wBdfAZ=am+BceB4HCFzTXzdts_FE2vQ@mail.gmail.com>
+ <20171121120422.GR22431@lahna.fi.intel.com> <CAD8Lp444FNHZh6fLUfhfp1i_UBpMbS5QuvJ4FuZn7PKH1Ucy=A@mail.gmail.com>
+ <20190327172940.GR3622@lahna.fi.intel.com> <20190328091729.GV9224@smile.fi.intel.com>
+ <CAD8Lp44xuzHj4uu3a-Y9wscSyEmuG6=nbww6T9-9FaYZT_qYsw@mail.gmail.com>
+ <CAB4CAwfH237-EUgfyR8-KWKo0HJOf=QkxiNjkBRg+gBpbKiM7g@mail.gmail.com>
+ <20190328123444.GX3622@lahna.fi.intel.com> <CAB4CAwcQTH5BiDDbzfFXTDDuYQ_fuDd_1tKkecf6vwygGQmn5w@mail.gmail.com>
+ <20190401074953.GQ3622@lahna.fi.intel.com>
+In-Reply-To: <20190401074953.GQ3622@lahna.fi.intel.com>
+From:   Chris Chiu <chiu@endlessm.com>
+Date:   Mon, 1 Apr 2019 18:41:57 +0800
+Message-ID: <CAB4CAweW_3p4i_8ntscJyU9n55HwdLt3pxyT3Gf6SUSbZAJ8qA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: intel: save HOSTSW_OWN register over suspend/resume
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Daniel Drake <drake@endlessm.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSm9ha2ltLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEpvYWtp
-bSBUamVybmx1bmQgW21haWx0bzpKb2FraW0uVGplcm5sdW5kQGluZmluZXJhLmNvbV0NCj4gU2Vu
-dDogRnJpZGF5LCBNYXJjaCAyOSwgMjAxOSA1OjI1IFBNPiANCj4gDQo+IFNob3VsZCB0aGlzIG9u
-ZSBnbyBzdGFibGUgNC4xNC80LjE5IHRvbz8NCg0KR29vZCBwb2ludC4gSSBhbHNvIHRoaW5rIGl0
-IG1ha2VzIHNlbnNlIHRvIGNjOiBzdGFibGUuDQoNCi0tLQ0KQmVzdCBSZWdhcmRzLCBMYXVyZW50
-aXUNCg0KPiBPbiBGcmksIDIwMTktMDMtMjkgYXQgMTY6MDAgKzAyMDAsIGxhdXJlbnRpdS50dWRv
-ckBueHAuY29tIHdyb3RlOg0KPiA+DQo+ID4gRnJvbTogTGF1cmVudGl1IFR1ZG9yIDxsYXVyZW50
-aXUudHVkb3JAbnhwLmNvbT4NCj4gPg0KPiA+IEZpeCBpc3N1ZSB3aXRoIHRoZSBlbnRyeSBpbmRl
-eGluZyBpbiB0aGUgc2cgZnJhbWUgY2xlYW51cCBjb2RlIGJlaW5nDQo+ID4gb2ZmLWJ5LTEuIFRo
-aXMgcHJvYmxlbSBzaG93ZWQgdXAgd2hlbiBkb2luZyBzb21lIGJhc2ljIGlwZXJmIHRlc3RzIGFu
-ZA0KPiA+IG1hbmlmZXN0ZWQgaW4gdHJhZmZpYyBjb21pbmcgdG8gYSBoYWx0Lg0KPiA+DQo+ID4g
-U2lnbmVkLW9mZi1ieTogTGF1cmVudGl1IFR1ZG9yIDxsYXVyZW50aXUudHVkb3JAbnhwLmNvbT4N
-Cj4gPiBBY2tlZC1ieTogTWFkYWxpbiBCdWN1ciA8bWFkYWxpbi5idWN1ckBueHAuY29tPg0KPiA+
-IC0tLQ0KPiA+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZHBhYS9kcGFhX2V0aC5j
-IHwgMiArLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24o
-LSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUv
-ZHBhYS9kcGFhX2V0aC5jDQo+IGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2RwYWEv
-ZHBhYV9ldGguYw0KPiA+IGluZGV4IGRhZWRlNzI3Mjc2OC4uNDA0MjBlZGM5Y2U2IDEwMDY0NA0K
-PiA+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9kcGFhL2RwYWFfZXRoLmMN
-Cj4gPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZHBhYS9kcGFhX2V0aC5j
-DQo+ID4gQEAgLTE2NjMsNyArMTY2Myw3IEBAIHN0YXRpYyBzdHJ1Y3Qgc2tfYnVmZiAqZHBhYV9j
-bGVhbnVwX3R4X2ZkKGNvbnN0DQo+IHN0cnVjdCBkcGFhX3ByaXYgKnByaXYsDQo+ID4gICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgcW1fc2dfZW50cnlfZ2V0X2xlbigmc2d0WzBdKSwg
-ZG1hX2Rpcik7DQo+ID4NCj4gPiAgICAgICAgICAgICAgICAgLyogcmVtYWluaW5nIHBhZ2VzIHdl
-cmUgbWFwcGVkIHdpdGggc2tiX2ZyYWdfZG1hX21hcCgpDQo+ICovDQo+ID4gLSAgICAgICAgICAg
-ICAgIGZvciAoaSA9IDE7IGkgPCBucl9mcmFnczsgaSsrKSB7DQo+ID4gKyAgICAgICAgICAgICAg
-IGZvciAoaSA9IDE7IGkgPD0gbnJfZnJhZ3M7IGkrKykgew0KPiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgIFdBUk5fT04ocW1fc2dfZW50cnlfaXNfZXh0KCZzZ3RbaV0pKTsNCj4gPg0KPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICAgIGRtYV91bm1hcF9wYWdlKGRldiwgcW1fc2dfYWRkcigmc2d0
-W2ldKSwNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQoNCg==
+On Mon, Apr 1, 2019 at 3:49 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> On Fri, Mar 29, 2019 at 04:38:20PM +0800, Chris Chiu wrote:
+> > On Thu, Mar 28, 2019 at 8:34 PM Mika Westerberg
+> > <mika.westerberg@linux.intel.com> wrote:
+> > >
+> > > On Thu, Mar 28, 2019 at 08:19:59PM +0800, Chris Chiu wrote:
+> > > > On Thu, Mar 28, 2019 at 5:38 PM Daniel Drake <drake@endlessm.com> wrote:
+> > > > >
+> > > > > On Thu, Mar 28, 2019 at 5:17 PM Andy Shevchenko
+> > > > > <andriy.shevchenko@intel.com> wrote:
+> > > > > > Hmm... Can you confirm that laptop you declared as a fixed case and the
+> > > > > > mentioned here is the same one?
+> > > > >
+> > > > > They are definitely not the same exact unit - originally we had a
+> > > > > pre-production sample, and now we briefly diagnosed a real production
+> > > > > unit that was sold to a customer. There could be subtle motherboard
+> > > > > variations as you mention.
+> > > > >
+> > > > > > If it's the case, I recommend to ping Asus again and make them check and fix.
+> > > > >
+> > > > > We'll keep an eye open for any opportunities to go deeper here.
+> > > > > However further investigation on both our side and theirs is blocked
+> > > > > by not having any of the affected hardware (since the models are now
+> > > > > so old), so I'm not very optimistic that we'll be able to make
+> > > > > progress there.
+> > > > >
+> > > > > > Meanwhile, Mika's proposal sounds feasible and not so intrusive. We may
+> > > > > > implement this later on.
+> > > > >
+> > > > > Chris will work on implementing this for your consideration.
+> > > > >
+> > > > > Thanks for the quick feedback!
+> > > > > Daniel
+> > > >
+> > > > What if I modify the patch as follows? It doesn't save HOSTSW_OWN register.
+> > > > It just toggles the bit specifically for the IRQ GPIO pin after resume when DMI
+> > > > matches.
+> > >
+> > > I don't really like having quirks like this if we can avoid it and in
+> > > this case I think we can. Just always save HOSTSW_OWN and then restore
+> > > it if there is a GPIO requested and the value differs (and log a warning
+> > > or something like that).
+> >
+> > You mean save the content of hostsw_own register on padgroup based ex.
+> >     communities[i].hostown[gpp] = readl(base + gpp * 4);
+> >
+> > And then check the hostown bit for the GPIO requested pin in
+> > intel_pinctrl_resume(),
+> > differs the hostsw_own bit on pin base (like padcfg), then restore the
+> > hostsw_own
+> > value of the padgroug which the GPIO pin is belonging to?
+>
+> Yes.
+>
+> > I think what you mean should be a much more straightforward solution
+> > for this. Could
+> > you implement this in your way and we can try to help verification. Thanks.
+>
+> Sure I can but it probably does not happen until end of the week because
+> I'm currently busy with something else.
+
+Thanks for your attention. I don't want to distract you so I'll try to
+refine the
+patch. It would be a great help if you can help review and give comments.
+
+Don't know whether if the following patch still get the wrong idea about
+your thought.  It saves the hostsw_own when GPIO requested, check
+if the value differs in resume() and restore if necessary. Please kindly
+correct me if any. Thanks
+
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c
+b/drivers/pinctrl/intel/pinctrl-intel.c
+index 8cda7b535b02..d1cfa5adef9b 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -77,6 +77,7 @@ struct intel_pad_context {
+        u32 padcfg0;
+        u32 padcfg1;
+        u32 padcfg2;
++       u32 hostown;
+ };
+
+ struct intel_community_context {
+@@ -219,6 +220,24 @@ static bool intel_pad_acpi_mode(struct
+intel_pinctrl *pctrl, unsigned int pin)
+        return !(readl(hostown) & BIT(gpp_offset));
+ }
+
++static void __iomem *intel_get_hostown(struct intel_pinctrl *pctrl,
+unsigned int pin)
++{
++       const struct intel_community *community;
++       const struct intel_padgroup *padgrp;
++
++       community = intel_get_community(pctrl, pin);
++       if (!community)
++               return NULL;
++       if (!community->hostown_offset)
++               return NULL;
++
++       padgrp = intel_community_get_padgroup(community, pin);
++       if (!padgrp)
++               return NULL;
++
++       return community->regs + community->hostown_offset +
+padgrp->reg_num * 4;
++}
++
+ static bool intel_pad_locked(struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+        struct intel_community *community;
+@@ -442,7 +461,7 @@ static int intel_gpio_request_enable(struct
+pinctrl_dev *pctldev,
+                                     unsigned int pin)
+ {
+        struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+-       void __iomem *padcfg0;
++       void __iomem *padcfg0, *hostown;
+        unsigned long flags;
+
+        raw_spin_lock_irqsave(&pctrl->lock, flags);
+@@ -457,6 +476,10 @@ static int intel_gpio_request_enable(struct
+pinctrl_dev *pctldev,
+        /* Disable TX buffer and enable RX (this will be input) */
+        __intel_gpio_set_direction(padcfg0, true);
+
++       /* Save HOSTSW_OWN */
++       hostown = intel_get_hostown(pctrl, pin);
++       if (!pctrl->context.pads[pin].hostown)
++               pctrl->context.pads[pin].hostown = readl(hostown);
+        raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+
+        return 0;
+@@ -1543,12 +1566,22 @@ int intel_pinctrl_resume(struct device *dev)
+        pads = pctrl->context.pads;
+        for (i = 0; i < pctrl->soc->npins; i++) {
+                const struct pinctrl_pin_desc *desc = &pctrl->soc->pins[i];
+-               void __iomem *padcfg;
++               void __iomem *padcfg, *hostown;
+                u32 val;
+
+                if (!intel_pinctrl_should_save(pctrl, desc->number))
+                        continue;
+
++               hostown = intel_get_hostown(pctrl, desc->number);
++               val = readl(hostown);
++               if (!pads[i].hostown && val != pads[i].hostown) {
++                       writel(pads[i].hostown, hostown);
++                       dev_warn(dev, "pin %u not owned by host\n",
++                               desc->number);
++                       dev_dbg(dev, "restored pin %u hostsw_own %#08x\n",
++                               desc->number, readl(hostown));
++               }
++
+                padcfg = intel_get_padcfg(pctrl, desc->number, PADCFG0);
+                val = readl(padcfg) & ~PADCFG0_GPIORXSTATE;
+                if (val != pads[i].padcfg0) {
