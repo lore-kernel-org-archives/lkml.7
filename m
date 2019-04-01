@@ -6,266 +6,164 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AF0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 734B8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAECC2086C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6B820830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfDAJ0H (ORCPT
+        id S1726309AbfDAJ3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 05:26:07 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:34879 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfDAJ0G (ORCPT
+        Mon, 1 Apr 2019 05:29:34 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60421 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfDAJ3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 05:26:06 -0400
-Received: by mail-ua1-f67.google.com with SMTP id f88so2818305uaf.2;
-        Mon, 01 Apr 2019 02:26:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7/zrkTRHXZhK33NRMz6bOEjVF2oOULEfSZzLKWRdAtU=;
-        b=fcqSzgW/N8N7RiJaGw1lkxjYv3siRBXyY9VYc7Kf/rnR8wp8v+tF0nmu9aQCoQbF3p
-         eEZ6Umh87lqips0U2XaGQvhRIHXzYS10uBjux05mEMzZdTUQ+BrhJSRIAcOquwM1hHhl
-         Q48vfm9y/cWiyjJ0YP6mEhZqVFi6oIeIWffHqvs+cu/GBTKFj9jcHGruuMDZuN0Uvhop
-         PlCaF0n+YeaQWOZZcbS0Xk1Z7xOfvYeHAyl9g9eMMmO9vc8Q+eBLXyhAqW3cQga2qfDW
-         mjN0QeV8/Yh3IIYPmVhYhx2aQVtbsnx3A6DVBSPQPG2w2BKN0zp1BnzAsToSjn01ODgQ
-         YjTQ==
-X-Gm-Message-State: APjAAAVoC8RD8WnoOkTFI7vm/nCPFDkPYKjgxkbBrOOUzvbozaQwGwbh
-        oGpWqfGFdUygzoGNTrgfgvkYLo95wp2gEfN1GiU=
-X-Google-Smtp-Source: APXvYqyhPUcsgP0qm6qss9qbiWENl7RatHZMLZNNo1ni55c3ZwgdUjGmXlZmRmeaojRqlnPKboctCDUj4+UwOFwpsUI=
-X-Received: by 2002:ab0:6419:: with SMTP id x25mr31251001uao.86.1554110764857;
- Mon, 01 Apr 2019 02:26:04 -0700 (PDT)
+        Mon, 1 Apr 2019 05:29:33 -0400
+Received: from 79.184.254.219.ipv4.supernova.orange.pl (79.184.254.219) (HELO aspire.rjw.lan)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 461c259a51085973; Mon, 1 Apr 2019 11:29:29 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>,
+        Quentin Perret <quentin.perret@arm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [Update][PATCH v3 3/4] cpufreq: schedutil: Simplify iowait boosting
+Date:   Mon, 01 Apr 2019 11:27:25 +0200
+Message-ID: <388546350.6JbkPPd9ra@aspire.rjw.lan>
+In-Reply-To: <3714586.Xfz7sSM4fi@aspire.rjw.lan>
+References: <11953735.uMqeHy63Iu@aspire.rjw.lan> <2864116.v8IU97Resm@aspire.rjw.lan> <3714586.Xfz7sSM4fi@aspire.rjw.lan>
 MIME-Version: 1.0
-References: <20190330141637.22632-1-boris.brezillon@collabora.com>
-In-Reply-To: <20190330141637.22632-1-boris.brezillon@collabora.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 1 Apr 2019 11:25:53 +0200
-Message-ID: <CAMuHMdUEyBFLu0XRDHKoZgUHdA09FHNK5xCpS+PaBO5eWYo2iw@mail.gmail.com>
-Subject: Re: [PATCH] eeprom: at25: Convert the driver to the spi-mem interface
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
-
-On Sat, Mar 30, 2019 at 3:16 PM Boris Brezillon
-<boris.brezillon@collabora.com> wrote:
-> The AT25 protocol fits pretty well in the spi-mem model. Convert the
-> at25 spi driver to a spi-mem driver and use the dirmap API instead of
-> forging SPI messages manually.
-> This makes the driver compatible with spi-mem-only controllers
-> (controllers implementing only the spi_mem ops).
-
-Thanks for your patch!
-
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> --- a/drivers/misc/eeprom/at25.c
-> +++ b/drivers/misc/eeprom/at25.c
-
-> @@ -63,17 +68,89 @@ struct at25_data {
->
->  #define        io_limit        PAGE_SIZE       /* bytes */
->
-> +static int at25_create_dirmaps(struct at25_data *at25)
-> +{
-> +       struct spi_mem_dirmap_info info = {
-> +               .op_tmpl = SPI_MEM_OP(SPI_MEM_OP_CMD(AT25_READ, 1),
-> +                                     SPI_MEM_OP_ADDR(at25->addrlen, 0, 1),
-> +                                     SPI_MEM_OP_NO_DUMMY,
-> +                                     SPI_MEM_OP_DATA_IN(0, NULL, 1)),
-> +               .offset = 0,
-> +               .length = at25->chip.byte_len,
-> +       };
-> +       struct device *dev = &at25->spimem->spi->dev;
+On Thursday, March 28, 2019 11:33:21 AM CEST Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> There is not reason for the minimum iowait boost value in the
+> schedutil cpufreq governor to depend on the available range of CPU
+> frequencies.  In fact, that dependency is generally confusing,
+> because it causes the iowait boost to behave somewhat differently
+> on CPUs with the same maximum frequency and different minimum
+> frequencies, for example.
+> 
+> For this reason, replace the min field in struct sugov_cpu
+> with a constant and choose its values to be 1/8 of
+> SCHED_CAPACITY_SCALE (for consistency with the intel_pstate
+> driver's internal governor).
+> 
+> [Note that policy->cpuinfo.max_freq will not be a constant any more
+>  after a subsequent change, so this change is depended on by it.]
+> 
+> Link: https://lore.kernel.org/lkml/20190305083202.GU32494@hirez.programming.kicks-ass.net/T/#ee20bdc98b7d89f6110c0d00e5c3ee8c2ced93c3d
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> As pointed out by Quentin, the original patch overlooked two kerneldoc
+> comments that needed to be updated along with the code, so do that here.
+> 
+> No other changes with respect to the original.
+> 
+> ---
+>  kernel/sched/cpufreq_schedutil.c |   21 ++++++++++-----------
+>  1 file changed, 10 insertions(+), 11 deletions(-)
+> 
+> Index: linux-pm/kernel/sched/cpufreq_schedutil.c
+> ===================================================================
+> --- linux-pm.orig/kernel/sched/cpufreq_schedutil.c
+> +++ linux-pm/kernel/sched/cpufreq_schedutil.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/sched/cpufreq.h>
+>  #include <trace/events/power.h>
+>  
+> +#define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
 > +
-> +       if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR)
-> +               info.length = 256;
+>  struct sugov_tunables {
+>  	struct gov_attr_set	attr_set;
+>  	unsigned int		rate_limit_us;
+> @@ -51,7 +53,6 @@ struct sugov_cpu {
+>  	u64			last_update;
+>  
+>  	unsigned long		bw_dl;
+> -	unsigned long		min;
+>  	unsigned long		max;
+>  
+>  	/* The field below is for single-CPU policies only: */
+> @@ -291,8 +292,8 @@ static unsigned long sugov_get_util(stru
+>   *
+>   * The IO wait boost of a task is disabled after a tick since the last update
+>   * of a CPU. If a new IO wait boost is requested after more then a tick, then
+> - * we enable the boost starting from the minimum frequency, which improves
+> - * energy efficiency by ignoring sporadic wakeups from IO.
+> + * we enable the boost starting from IOWAIT_BOOST_MIN, which improves energy
+> + * efficiency by ignoring sporadic wakeups from IO.
+>   */
+>  static bool sugov_iowait_reset(struct sugov_cpu *sg_cpu, u64 time,
+>  			       bool set_iowait_boost)
+> @@ -303,7 +304,7 @@ static bool sugov_iowait_reset(struct su
+>  	if (delta_ns <= TICK_NSEC)
+>  		return false;
+>  
+> -	sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
+> +	sg_cpu->iowait_boost = set_iowait_boost ? IOWAIT_BOOST_MIN : 0;
+>  	sg_cpu->iowait_boost_pending = set_iowait_boost;
+>  
+>  	return true;
+> @@ -317,8 +318,9 @@ static bool sugov_iowait_reset(struct su
+>   *
+>   * Each time a task wakes up after an IO operation, the CPU utilization can be
+>   * boosted to a certain utilization which doubles at each "frequent and
+> - * successive" wakeup from IO, ranging from the utilization of the minimum
+> - * OPP to the utilization of the maximum OPP.
+> + * successive" wakeup from IO, ranging from IOWAIT_BOOST_MIN to the utilization
+> + * of the maximum OPP.
+> + *
+>   * To keep doubling, an IO boost has to be requested at least once per tick,
+>   * otherwise we restart from the utilization of the minimum OPP.
+>   */
+> @@ -349,7 +351,7 @@ static void sugov_iowait_boost(struct su
+>  	}
+>  
+>  	/* First wakeup after IO: start with minimum boost */
+> -	sg_cpu->iowait_boost = sg_cpu->min;
+> +	sg_cpu->iowait_boost = IOWAIT_BOOST_MIN;
+>  }
+>  
+>  /**
+> @@ -389,7 +391,7 @@ static unsigned long sugov_iowait_apply(
+>  		 * No boost pending; reduce the boost value.
+>  		 */
+>  		sg_cpu->iowait_boost >>= 1;
+> -		if (sg_cpu->iowait_boost < sg_cpu->min) {
+> +		if (sg_cpu->iowait_boost < IOWAIT_BOOST_MIN) {
+>  			sg_cpu->iowait_boost = 0;
+>  			return util;
+>  		}
+> @@ -826,9 +828,6 @@ static int sugov_start(struct cpufreq_po
+>  		memset(sg_cpu, 0, sizeof(*sg_cpu));
+>  		sg_cpu->cpu			= cpu;
+>  		sg_cpu->sg_policy		= sg_policy;
+> -		sg_cpu->min			=
+> -			(SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
+> -			policy->cpuinfo.max_freq;
+>  	}
+>  
+>  	for_each_cpu(cpu, policy->cpus) {
+> 
+> 
 
-Note that by hardcoding 256 you do loose the ability to support chips
-where EE_INSTR_BIT3_IS_ADDR is set, _and_ more than one address byte is
-used (i.e. extra bit is A16 or A24).
-While the code parsing "address-width" doesn't handle that, the comment
-for EE_INSTR_BIT3_IS_ADDR suggests such chips do exist (I doubt it,
-though, but you may know better), and the flag can be enabled through
-the "at25,addr-mode" property, or through platform_data.
+Any more comments on this patch?
 
-> @@ -82,38 +159,14 @@ static int at25_ee_read(void *priv, unsigned int offset,
->         if (unlikely(!count))
->                 return -EINVAL;
->
-> -       cp = command;
-> -
-> -       instr = AT25_READ;
-> -       if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR)
-> -               if (offset >= (1U << (at25->addrlen * 8)))
-> -                       instr |= AT25_INSTR_BIT3;
-> -       *cp++ = instr;
-> -
-> -       /* 8/16/24-bit address is written MSB first */
-> -       switch (at25->addrlen) {
-> -       default:        /* case 3 */
-> -               *cp++ = offset >> 16;
-> -               /* fall through */
-> -       case 2:
-> -               *cp++ = offset >> 8;
-> -               /* fall through */
-> -       case 1:
-> -       case 0: /* can't happen: for better codegen */
-> -               *cp++ = offset >> 0;
-> +       if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR && offset > 255) {
+If not, I'll queue it up along with the rest of the series.
 
-Loss of support for address bit A16/A24.
+Thanks!
 
-> +               desc = at25->dirmap.rdesc[1];
-> +               dirmap_offset = offset - 256;
-> +       } else {
-> +               desc = at25->dirmap.rdesc[0];
-> +               dirmap_offset = offset;
->         }
-
-> @@ -158,48 +211,37 @@ static int at25_ee_write(void *priv, unsigned int off, void *val, size_t count)
->          */
->         mutex_lock(&at25->lock);
->         do {
-> +               struct spi_mem_dirmap_desc *desc;
->                 unsigned long   timeout, retries;
->                 unsigned        segment;
-> -               unsigned        offset = (unsigned) off;
-> -               u8              *cp = bounce;
-> +               unsigned int    dirmap_offset;
->                 int             sr;
-> -               u8              instr;
->
-> -               *cp = AT25_WREN;
-> -               status = spi_write(at25->spi, cp, 1);
-> +               status = at25_wren(at25);
->                 if (status < 0) {
-> -                       dev_dbg(&at25->spi->dev, "WREN --> %d\n", status);
-> +                       dev_dbg(&at25->spimem->spi->dev, "WREN --> %d\n",
-> +                               status);
->                         break;
->                 }
->
-> -               instr = AT25_WRITE;
-> -               if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR)
-> -                       if (offset >= (1U << (at25->addrlen * 8)))
-> -                               instr |= AT25_INSTR_BIT3;
-> -               *cp++ = instr;
-> -
-> -               /* 8/16/24-bit address is written MSB first */
-> -               switch (at25->addrlen) {
-> -               default:        /* case 3 */
-> -                       *cp++ = offset >> 16;
-> -                       /* fall through */
-> -               case 2:
-> -                       *cp++ = offset >> 8;
-> -                       /* fall through */
-> -               case 1:
-> -               case 0: /* can't happen: for better codegen */
-> -                       *cp++ = offset >> 0;
-> +               if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR && off > 255) {
-
-Loss of support for address bit A16/A24.
-
-> +                       desc = at25->dirmap.wdesc[1];
-> +                       dirmap_offset = off -  256;
-
-Two spaces after minus sign.
-
-> +               } else {
-> +                       desc = at25->dirmap.wdesc[0];
-> +                       dirmap_offset = off;
->                 }
-
-> @@ -211,10 +253,9 @@ static int at25_ee_write(void *priv, unsigned int off, void *val, size_t count)
->                 timeout = jiffies + msecs_to_jiffies(EE_TIMEOUT);
->                 retries = 0;
->                 do {
-> -
-> -                       sr = spi_w8r8(at25->spi, AT25_RDSR);
-> +                       sr = at25_rdsr(at25);
->                         if (sr < 0 || (sr & AT25_SR_nRDY)) {
-> -                               dev_dbg(&at25->spi->dev,
-> +                               dev_dbg(&at25->spimem->spi->dev,
->                                         "rdsr --> %d (%02x)\n", sr, sr);
-
-You might want to move the debug print inside the new function
-at25_rdsr(), as there's another call plus debug print in at25_probe().
-
-> @@ -328,37 +369,49 @@ static int at25_probe(struct spi_device *spi)
->         else if (chip.flags & EE_ADDR3)
->                 addrlen = 3;
->         else {
-> -               dev_dbg(&spi->dev, "unsupported address type\n");
-> +               dev_dbg(&spimem->spi->dev, "unsupported address type\n");
->                 return -EINVAL;
->         }
->
-> -       /* Ping the chip ... the status register is pretty portable,
-> -        * unlike probing manufacturer IDs.  We do expect that system
-> -        * firmware didn't write it in the past few milliseconds!
-> -        */
-> -       sr = spi_w8r8(spi, AT25_RDSR);
-> -       if (sr < 0 || sr & AT25_SR_nRDY) {
-> -               dev_dbg(&spi->dev, "rdsr --> %d (%02x)\n", sr, sr);
-> -               return -ENXIO;
-> -       }
-> -
-> -       at25 = devm_kzalloc(&spi->dev, sizeof(struct at25_data), GFP_KERNEL);
-> +       at25 = devm_kzalloc(&spimem->spi->dev, sizeof(struct at25_data),
-> +                           GFP_KERNEL);
->         if (!at25)
->                 return -ENOMEM;
->
->         mutex_init(&at25->lock);
->         at25->chip = chip;
-> -       at25->spi = spi;
-> -       spi_set_drvdata(spi, at25);
-> +       at25->spimem = spimem;
-> +       spi_mem_set_drvdata(spimem, at25);
->         at25->addrlen = addrlen;
->
-> -       at25->nvmem_config.name = dev_name(&spi->dev);
-> -       at25->nvmem_config.dev = &spi->dev;
-> +       /*
-> +        * Can't be allocated with devm_kmalloc() because we need a DMA-safe
-> +        * buffer.
-> +        */
-
-That is no longer true as of commit a66d972465d15b1d ("devres: Align
-data[] to ARCH_KMALLOC_MINALIGN") in v4.20-rc5, right?
-
-> +       at25->scratchbuf = kmalloc(1, GFP_KERNEL);
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
