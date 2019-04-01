@@ -6,148 +6,140 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BF7C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81714C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E80320850
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3AE2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731896AbfDAGuL (ORCPT
+        id S1731817AbfDAGyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 02:50:11 -0400
-Received: from regular1.263xmail.com ([211.150.70.203]:44754 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDAGuH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 02:50:07 -0400
-Received: from zhangqing?rock-chips.com (unknown [192.168.167.242])
-        by regular1.263xmail.com (Postfix) with ESMTP id 5D2953E6;
-        Mon,  1 Apr 2019 14:43:20 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P3952T139731360794368S1554100987369530_;
-        Mon, 01 Apr 2019 14:43:14 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <9dd6579fc68f93d0ec5cf683c96f14dd>
-X-RL-SENDER: zhangqing@rock-chips.com
-X-SENDER: zhangqing@rock-chips.com
-X-LOGIN-NAME: zhangqing@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Elaine Zhang <zhangqing@rock-chips.com>
-To:     heiko@sntech.de
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
-        Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v1 3/3] thermal: rockchip: Support the PX30 SoC in thermal driver
-Date:   Mon,  1 Apr 2019 14:43:05 +0800
-Message-Id: <1554100985-11385-4-git-send-email-zhangqing@rock-chips.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1554100985-11385-1-git-send-email-zhangqing@rock-chips.com>
-References: <1554100985-11385-1-git-send-email-zhangqing@rock-chips.com>
+        Mon, 1 Apr 2019 02:54:04 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48612 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726900AbfDAGyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 02:54:04 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AB6802778B14DD5E2360;
+        Mon,  1 Apr 2019 14:54:00 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 1 Apr 2019
+ 14:53:52 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <yuchao0@huawei.com>,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH for-4.19 2/2] staging: erofs: keep corrupted fs from crashing kernel in erofs_readdir()
+Date:   Mon, 1 Apr 2019 14:53:09 +0800
+Message-ID: <20190401065309.68109-2-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190401065309.68109-1-gaoxiang25@huawei.com>
+References: <20190401065309.68109-1-gaoxiang25@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PX30 SOC has two Temperature Sensors for CPU and GPU.
+commit 33bac912840fe64dbc15556302537dc6a17cac63 upstream.
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+After commit 419d6efc50e9, kernel cannot be crashed in the namei
+path. However, corrupted nameoff can do harm in the process of
+readdir for scenerios without dm-verity as well. Fix it now.
+
+Fixes: 3aa8ec716e52 ("staging: erofs: add directory operations")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/thermal/rockchip_thermal.c | 39 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ drivers/staging/erofs/dir.c | 45 ++++++++++++++++++++-----------------
+ 1 file changed, 25 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
-index faa6c7792155..d5c161e63361 100644
---- a/drivers/thermal/rockchip_thermal.c
-+++ b/drivers/thermal/rockchip_thermal.c
-@@ -225,11 +225,15 @@ struct rockchip_thermal_data {
- #define GRF_TSADC_TESTBIT_L			0x0e648
- #define GRF_TSADC_TESTBIT_H			0x0e64c
- 
-+#define PX30_GRF_SOC_CON2			0x0408
-+
- #define GRF_SARADC_TESTBIT_ON			(0x10001 << 2)
- #define GRF_TSADC_TESTBIT_H_ON			(0x10001 << 2)
- #define GRF_TSADC_VCM_EN_L			(0x10001 << 7)
- #define GRF_TSADC_VCM_EN_H			(0x10001 << 7)
- 
-+#define GRF_CON_TSADC_CH_INV			(0x10001 << 1)
-+
- /**
-  * struct tsadc_table - code to temperature conversion table
-  * @code: the value of adc channel
-@@ -692,6 +696,14 @@ static void rk_tsadcv3_initialize(struct regmap *grf, void __iomem *regs,
- 			       regs + TSADCV2_AUTO_CON);
- }
- 
-+static void rk_tsadcv4_initialize(struct regmap *grf, void __iomem *regs,
-+				  enum tshut_polarity tshut_polarity)
-+{
-+	rk_tsadcv2_initialize(grf, regs, tshut_polarity);
-+	if (!IS_ERR(grf))
-+		regmap_write(grf, PX30_GRF_SOC_CON2, GRF_CON_TSADC_CH_INV);
-+}
-+
- static void rk_tsadcv2_irq_ack(void __iomem *regs)
- {
- 	u32 val;
-@@ -821,6 +833,30 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
- 	writel_relaxed(val, regs + TSADCV2_INT_EN);
- }
- 
-+static const struct rockchip_tsadc_chip px30_tsadc_data = {
-+	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
-+	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
-+	.chn_num = 2, /* 2 channels for tsadc */
-+
-+	.tshut_mode = TSHUT_MODE_CRU, /* default TSHUT via CRU */
-+	.tshut_temp = 95000,
-+
-+	.initialize = rk_tsadcv4_initialize,
-+	.irq_ack = rk_tsadcv3_irq_ack,
-+	.control = rk_tsadcv3_control,
-+	.get_temp = rk_tsadcv2_get_temp,
-+	.set_alarm_temp = rk_tsadcv2_alarm_temp,
-+	.set_tshut_temp = rk_tsadcv2_tshut_temp,
-+	.set_tshut_mode = rk_tsadcv2_tshut_mode,
-+
-+	.table = {
-+		.id = rk3328_code_table,
-+		.length = ARRAY_SIZE(rk3328_code_table),
-+		.data_mask = TSADCV2_DATA_MASK,
-+		.mode = ADC_INCREMENT,
-+	},
-+};
-+
- static const struct rockchip_tsadc_chip rv1108_tsadc_data = {
- 	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
- 	.chn_num = 1, /* one channel for tsadc */
-@@ -993,6 +1029,9 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
+index 04b84ff31d03..0a089cf5c78f 100644
+--- a/drivers/staging/erofs/dir.c
++++ b/drivers/staging/erofs/dir.c
+@@ -23,6 +23,21 @@ static const unsigned char erofs_filetype_table[EROFS_FT_MAX] = {
+ 	[EROFS_FT_SYMLINK]	= DT_LNK,
  };
  
- static const struct of_device_id of_rockchip_thermal_match[] = {
-+	{	.compatible = "rockchip,px30-tsadc",
-+		.data = (void *)&px30_tsadc_data,
-+	},
- 	{
- 		.compatible = "rockchip,rv1108-tsadc",
- 		.data = (void *)&rv1108_tsadc_data,
++static void debug_one_dentry(unsigned char d_type, const char *de_name,
++			     unsigned int de_namelen)
++{
++#ifdef CONFIG_EROFS_FS_DEBUG
++	/* since the on-disk name could not have the trailing '\0' */
++	unsigned char dbg_namebuf[EROFS_NAME_LEN + 1];
++
++	memcpy(dbg_namebuf, de_name, de_namelen);
++	dbg_namebuf[de_namelen] = '\0';
++
++	debugln("found dirent %s de_len %u d_type %d", dbg_namebuf,
++		de_namelen, d_type);
++#endif
++}
++
+ static int erofs_fill_dentries(struct dir_context *ctx,
+ 	void *dentry_blk, unsigned *ofs,
+ 	unsigned nameoff, unsigned maxsize)
+@@ -33,14 +48,10 @@ static int erofs_fill_dentries(struct dir_context *ctx,
+ 	de = dentry_blk + *ofs;
+ 	while (de < end) {
+ 		const char *de_name;
+-		int de_namelen;
++		unsigned int de_namelen;
+ 		unsigned char d_type;
+-#ifdef CONFIG_EROFS_FS_DEBUG
+-		unsigned dbg_namelen;
+-		unsigned char dbg_namebuf[EROFS_NAME_LEN];
+-#endif
+ 
+-		if (unlikely(de->file_type < EROFS_FT_MAX))
++		if (de->file_type < EROFS_FT_MAX)
+ 			d_type = erofs_filetype_table[de->file_type];
+ 		else
+ 			d_type = DT_UNKNOWN;
+@@ -48,26 +59,20 @@ static int erofs_fill_dentries(struct dir_context *ctx,
+ 		nameoff = le16_to_cpu(de->nameoff);
+ 		de_name = (char *)dentry_blk + nameoff;
+ 
+-		de_namelen = unlikely(de + 1 >= end) ?
+-			/* last directory entry */
+-			strnlen(de_name, maxsize - nameoff) :
+-			le16_to_cpu(de[1].nameoff) - nameoff;
++		/* the last dirent in the block? */
++		if (de + 1 >= end)
++			de_namelen = strnlen(de_name, maxsize - nameoff);
++		else
++			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
+ 
+ 		/* a corrupted entry is found */
+-		if (unlikely(de_namelen < 0)) {
++		if (unlikely(nameoff + de_namelen > maxsize ||
++			     de_namelen > EROFS_NAME_LEN)) {
+ 			DBG_BUGON(1);
+ 			return -EIO;
+ 		}
+ 
+-#ifdef CONFIG_EROFS_FS_DEBUG
+-		dbg_namelen = min(EROFS_NAME_LEN - 1, de_namelen);
+-		memcpy(dbg_namebuf, de_name, dbg_namelen);
+-		dbg_namebuf[dbg_namelen] = '\0';
+-
+-		debugln("%s, found de_name %s de_len %d d_type %d", __func__,
+-			dbg_namebuf, de_namelen, d_type);
+-#endif
+-
++		debug_one_dentry(d_type, de_name, de_namelen);
+ 		if (!dir_emit(ctx, de_name, de_namelen,
+ 					le64_to_cpu(de->nid), d_type))
+ 			/* stoped by some reason */
 -- 
-1.9.1
-
-
+2.17.1
 
