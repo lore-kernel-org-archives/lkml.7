@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C471C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0BAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0393620663
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2259F20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141981;
-	bh=t+Tlm/kpfL97NuEjXm2QbOfF7qXQgWgO46UA0YnYV80=;
+	s=default; t=1554141995;
+	bh=LGGbfAid9jhEODok4WEPxEkTgUVGMtLhncNSSaTBKdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xnbpHATuedzhOoLdElyKriSrZcHy9fCC7Q2WHe6ORo/DAdFUmwQl7bMy0NHCD/grq
-	 WYmoh73hysp8HAVYiOOib13Co871w4Rg2W2bXZCJ2Y/Uz5Vb9vfeMNQ5YLKK0J+ZGE
-	 AHT8Dfk5HYUInPd19332bIYBkmuTiAkhVtLifZjY=
+	b=D1PEMbSvLsTqJsjjm4au8d0d8IP+d2g0nspOECCkNzHLFFBrGle3T5+g39Ls7qBiQ
+	 OTcmUGsFXj2AJ9P+CIEtluFh+iAfi16GfrPWEzAVlmV01iZH1VzQEgBkRWQz1uTPBW
+	 Xo6MNljFtq1weLPbSEfCvo0Js8TsY/hLPPlt7nJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730667AbfDASGU (ORCPT
+        id S1730497AbfDASGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:06:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34990 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 14:06:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729542AbfDARM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:12:57 -0400
+        id S1729777AbfDARMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:12:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23AFA20883;
-        Mon,  1 Apr 2019 17:12:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4565121925;
+        Mon,  1 Apr 2019 17:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138776;
-        bh=t+Tlm/kpfL97NuEjXm2QbOfF7qXQgWgO46UA0YnYV80=;
+        s=default; t=1554138758;
+        bh=LGGbfAid9jhEODok4WEPxEkTgUVGMtLhncNSSaTBKdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a1bwrFJaCFZ2FLJkCqFTMXSjjTlao6C0T3gbTeQDcJzWqPxBH1qjdrUpgLgV5QN0u
-         jvQDOJTy5cwSvEFF5Me2aOUbXId4nh2AD/9rmW7nwmFJpy/vQT1sj9wV0CPSeWZIpG
-         B5PiM2M3GYv6igmOAvYeYvhTjIH1eIni2XYakxJo=
+        b=TsAkQD1MOHCDsWs56HwHkSyKE46sJ9Y94QaCdI6XXt9RadIrDd6+EB7HjHVB7y7OQ
+         QyTvfivFTWD8V92wn7ANY/QXcbWv59e95FghBmnmeZ35P11dPCiWlLj0ZguZHcQZWW
+         RwCRodnroJuCd/2QPzhPSWtps8VxUFYpwHgUvbVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Elsasser <jelsasser@appneta.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 018/134] rhashtable: Still do rehash when we get EEXIST
-Date:   Mon,  1 Apr 2019 19:00:54 +0200
-Message-Id: <20190401170046.285097671@linuxfoundation.org>
+Subject: [PATCH 4.19 013/134] net: phy: meson-gxl: fix interrupt support
+Date:   Mon,  1 Apr 2019 19:00:49 +0200
+Message-Id: <20190401170045.539543922@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,48 +64,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 408f13ef358aa5ad56dc6230c2c7deb92cf462b1 ]
+[ Upstream commit daa5c4d0167a308306525fd5ab9a5e18e21f4f74 ]
 
-As it stands if a shrink is delayed because of an outstanding
-rehash, we will go into a rescheduling loop without ever doing
-the rehash.
+If an interrupt is already pending when the interrupt is enabled on the
+GXL phy, no IRQ will ever be triggered.
 
-This patch fixes this by still carrying out the rehash and then
-rescheduling so that we can shrink after the completion of the
-rehash should it still be necessary.
+The fix is simply to make sure pending IRQs are cleared before setting
+up the irq mask.
 
-The return value of EEXIST captures this case and other cases
-(e.g., another thread expanded/rehashed the table at the same
-time) where we should still proceed with the rehash.
-
-Fixes: da20420f83ea ("rhashtable: Add nested tables")
-Reported-by: Josh Elsasser <jelsasser@appneta.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Tested-by: Josh Elsasser <jelsasser@appneta.com>
+Fixes: cf127ff20af1 ("net: phy: meson-gxl: add interrupt support")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- lib/rhashtable.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/phy/meson-gxl.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/lib/rhashtable.c
-+++ b/lib/rhashtable.c
-@@ -416,8 +416,12 @@ static void rht_deferred_worker(struct w
- 	else if (tbl->nest)
- 		err = rhashtable_rehash_alloc(ht, tbl, tbl->size);
+--- a/drivers/net/phy/meson-gxl.c
++++ b/drivers/net/phy/meson-gxl.c
+@@ -211,6 +211,7 @@ static int meson_gxl_ack_interrupt(struc
+ static int meson_gxl_config_intr(struct phy_device *phydev)
+ {
+ 	u16 val;
++	int ret;
  
--	if (!err)
--		err = rhashtable_rehash_table(ht);
-+	if (!err || err == -EEXIST) {
-+		int nerr;
+ 	if (phydev->interrupts == PHY_INTERRUPT_ENABLED) {
+ 		val = INTSRC_ANEG_PR
+@@ -223,6 +224,11 @@ static int meson_gxl_config_intr(struct
+ 		val = 0;
+ 	}
+ 
++	/* Ack any pending IRQ */
++	ret = meson_gxl_ack_interrupt(phydev);
++	if (ret)
++		return ret;
 +
-+		nerr = rhashtable_rehash_table(ht);
-+		err = err ?: nerr;
-+	}
- 
- 	mutex_unlock(&ht->mutex);
+ 	return phy_write(phydev, INTSRC_MASK, val);
+ }
  
 
 
