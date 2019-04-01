@@ -2,52 +2,53 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0D4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F037C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC7C920830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143A62070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140319;
-	bh=NHXF0X/COFBsN7JaQUKmZb3uAn4dk1o2Hj51cSwqjjk=;
+	s=default; t=1554140323;
+	bh=WtQiQSehLpYhfeDd2wUCc/vgTowyxSaJ5xX6rd/BBMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IDDeeTF/hPFV9mfNzQqO831+sORBDw8RfUPupweZv68RMPd9wOlUT0KTySOFx4L9m
-	 djqyw70MNeFC++S1zGNYkPSXKRaZ9fL4Bl9m9FSlWa9hfBLFKcBz+wJnb59bZd3Aks
-	 ia1xQ7gBL4B7uHOXWSuwUggWppkvszWw14SGwMoA=
+	b=x/zxk82qGorHiKKmgRufl9Ntq9+Hlc//U7NjQ0AVos10FTrvd7P6eArxmgtRMLoWc
+	 x2xEvNFNjjx0I0L2GbCYtdYsyrcumAlwldHAltT15ZUIWFyNeLFNXz8Ozl5gQUo7ji
+	 U2sWjZRo6OldY7rF4xwI88H/fBatjBbO/jSDDMmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388350AbfDARih (ORCPT
+        id S2387738AbfDARim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:38:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51968 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:38:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387937AbfDARif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:38:35 -0400
+        id S2388345AbfDARih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:38:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C791020830;
-        Mon,  1 Apr 2019 17:38:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 852AA20830;
+        Mon,  1 Apr 2019 17:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140314;
-        bh=NHXF0X/COFBsN7JaQUKmZb3uAn4dk1o2Hj51cSwqjjk=;
+        s=default; t=1554140317;
+        bh=WtQiQSehLpYhfeDd2wUCc/vgTowyxSaJ5xX6rd/BBMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Byn6lyvN28NX5qI3M3W63awc/A1DQoXfBHkptbpFbUBcBq0sdzjKZd8sCUv6T1KiP
-         ZaCHDLBdXdFaOH8gVd1Xx4vRced/RBj5rLFX8R5YsDwpBrD29mjh4Lv6/HaDtc+8CE
-         mRvvsNHnib39TSJ8HGfa2lZZTCoNDHQ7pbUnniJg=
+        b=fDkH2G6yYEdnSjmFITrYMPu9tgzSh6TFuTYyHDhVrL3fFC8DxwXGHhPUfB3TsSjap
+         wG6Jc0uzdTj3j3x2EnEicB/nOCD66hR5BQ8Itm+By2+dYemu/QCAcZJq4N2w09JQue
+         KayB+IEZvIwG+BMlYG43+gKHi682zKJSU/evsHyQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 3.18 37/50] ALSA: pcm: Fix possible OOB access in PCM oss plugins
-Date:   Mon,  1 Apr 2019 19:03:20 +0200
-Message-Id: <20190401170045.180589483@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 11/50] arm64: fix COMPAT_SHMLBA definition for large pages
+Date:   Mon,  1 Apr 2019 19:02:54 +0200
+Message-Id: <20190401170042.281303741@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -66,104 +67,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+[ Upstream commit b9b7aebb42d1b1392f3111de61136bb6cf3aae3f ]
 
-commit ca0214ee2802dd47239a4e39fb21c5b00ef61b22 upstream.
+ARM glibc uses (4 * __getpagesize()) for SHMLBA, which is correct for
+4KB pages and works fine for 64KB pages, but the kernel uses a hardcoded
+16KB that is too small for 64KB page based kernels. This changes the
+definition to what user space sees when using 64KB pages.
 
-The PCM OSS emulation converts and transfers the data on the fly via
-"plugins".  The data is converted over the dynamically allocated
-buffer for each plugin, and recently syzkaller caught OOB in this
-flow.
-
-Although the bisection by syzbot pointed out to the commit
-65766ee0bf7f ("ALSA: oss: Use kvzalloc() for local buffer
-allocations"), this is merely a commit to replace vmalloc() with
-kvmalloc(), hence it can't be the cause.  The further debug action
-revealed that this happens in the case where a slave PCM doesn't
-support only the stereo channels while the OSS stream is set up for a
-mono channel.  Below is a brief explanation:
-
-At each OSS parameter change, the driver sets up the PCM hw_params
-again in snd_pcm_oss_change_params_lock().  This is also the place
-where plugins are created and local buffers are allocated.  The
-problem is that the plugins are created before the final hw_params is
-determined.  Namely, two snd_pcm_hw_param_near() calls for setting the
-period size and periods may influence on the final result of channels,
-rates, etc, too, while the current code has already created plugins
-beforehand with the premature values.  So, the plugin believes that
-channels=1, while the actual I/O is with channels=2, which makes the
-driver reading/writing over the allocated buffer size.
-
-The fix is simply to move the plugin allocation code after the final
-hw_params call.
-
-Reported-by: syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Yury Norov <ynorov@caviumnetworks.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/oss/pcm_oss.c |   43 ++++++++++++++++++++++---------------------
- 1 file changed, 22 insertions(+), 21 deletions(-)
+ arch/arm64/include/asm/shmparam.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/core/oss/pcm_oss.c
-+++ b/sound/core/oss/pcm_oss.c
-@@ -951,6 +951,28 @@ static int snd_pcm_oss_change_params_loc
- 	oss_frame_size = snd_pcm_format_physical_width(params_format(params)) *
- 			 params_channels(params) / 8;
+diff --git a/arch/arm64/include/asm/shmparam.h b/arch/arm64/include/asm/shmparam.h
+index 4df608a8459e..e368a55ebd22 100644
+--- a/arch/arm64/include/asm/shmparam.h
++++ b/arch/arm64/include/asm/shmparam.h
+@@ -21,7 +21,7 @@
+  * alignment value. Since we don't have aliasing D-caches, the rest of
+  * the time we can safely use PAGE_SIZE.
+  */
+-#define COMPAT_SHMLBA	0x4000
++#define COMPAT_SHMLBA	(4 * PAGE_SIZE)
  
-+	err = snd_pcm_oss_period_size(substream, params, sparams);
-+	if (err < 0)
-+		goto failure;
-+
-+	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
-+	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
-+	if (err < 0)
-+		goto failure;
-+
-+	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
-+				     runtime->oss.periods, NULL);
-+	if (err < 0)
-+		goto failure;
-+
-+	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
-+
-+	err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams);
-+	if (err < 0) {
-+		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
-+		goto failure;
-+	}
-+
- #ifdef CONFIG_SND_PCM_OSS_PLUGINS
- 	snd_pcm_oss_plugin_clear(substream);
- 	if (!direct) {
-@@ -985,27 +1007,6 @@ static int snd_pcm_oss_change_params_loc
- 	}
- #endif
+ #include <asm-generic/shmparam.h>
  
--	err = snd_pcm_oss_period_size(substream, params, sparams);
--	if (err < 0)
--		goto failure;
--
--	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
--	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
--	if (err < 0)
--		goto failure;
--
--	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
--				     runtime->oss.periods, NULL);
--	if (err < 0)
--		goto failure;
--
--	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
--
--	if ((err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams)) < 0) {
--		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
--		goto failure;
--	}
--
- 	if (runtime->oss.trigger) {
- 		sw_params->start_threshold = 1;
- 	} else {
+-- 
+2.19.1
+
 
 
