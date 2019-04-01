@@ -2,77 +2,109 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563D4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063EBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25BB72084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E1F2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:24:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SPtpBXpf";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TEuBPB6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732045AbfDAIYb (ORCPT
+        id S1732158AbfDAIYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:24:31 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:58301 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731774AbfDAIYa (ORCPT
+        Mon, 1 Apr 2019 04:24:34 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42302 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731774AbfDAIYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:24:30 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hAsEy-0006Cj-L4; Mon, 01 Apr 2019 10:24:24 +0200
-Date:   Mon, 1 Apr 2019 10:24:24 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Rik van Riel <riel@surriel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH 18/24] x86/fpu: Prepare copy_fpstate_to_sigframe() for
- TIF_NEED_FPU_LOAD
-Message-ID: <20190401082424.uljjh5cejj33gb3r@linutronix.de>
-References: <20190321202632.16810-1-bigeasy@linutronix.de>
- <20190321202632.16810-19-bigeasy@linutronix.de>
- <alpine.DEB.2.21.1903312013390.2476@nanos.tec.linutronix.de>
+        Mon, 1 Apr 2019 04:24:32 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1CFB261A4A; Mon,  1 Apr 2019 08:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554107071;
+        bh=H32UIKPSQakTiun3Yb8bB1Pwk/cnLrrySxLefa1N1+Y=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SPtpBXpf4mRJdUUR3hbqCGpp25dEtCON1MEPckXEEctQEXaR5Zrkb35bw9iqIlbYf
+         fCc/yy2y2LauR0My+0L1tfGXz9voPD2lFGAuqhnRWKqPjT1pAngzHZl28/gqx0KHXL
+         2EjkDC1Ga/mhAOFA9GYF/U5ths/4JPivD4GGXsRE=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1427E61572;
+        Mon,  1 Apr 2019 08:24:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554107070;
+        bh=H32UIKPSQakTiun3Yb8bB1Pwk/cnLrrySxLefa1N1+Y=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=TEuBPB6SlyFkzILXJIUV4cpoKQw5Q2y1QNRZK1f5gxXLNuGknVdEkYu9piK+jdF17
+         aRz5eJCRFQzWEngjXguSJzpoled4BhWeVLOdTLc/6Ixk8TVN33sroItx50Eu/Q3a4/
+         O1Ja68YBVde9DiwaZDtkXC/vpqvn2+Kurw7Q/iZA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1427E61572
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] dccp: Fix memleak in __feat_register_sp
+To:     Yue Haibing <yuehaibing@huawei.com>, davem@davemloft.net,
+        gerrit@erg.abdn.ac.uk
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        dccp@vger.kernel.org
+References: <20190401013554.17488-1-yuehaibing@huawei.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <4ad301d4-7af2-87e4-9b52-9c4eee09b79c@codeaurora.org>
+Date:   Mon, 1 Apr 2019 13:54:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903312013390.2476@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190401013554.17488-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-31 20:20:25 [+0200], Thomas Gleixner wrote:
-> 
-> I think this should do the following:
-> 
-> 	fpregs_lock();
-> 	if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
-> 		pagefault_disable();
-> 		ret = copy_fpu_to_user(...);
-> 		pagefault_enable();
-> 		if (!res)
-> 			return 0;
-> 		copy_fpregs_to_fpstate(fpu); 
-> 	}
-> 	fpregs_unlock();
-> 
-> The point is that in most cases the direct store from the FPU registers to
-> user space will succeed simply because the stack is accessible and you only
-> do the store in kernel memory and copy when that fails.
 
-let me try that.
+On 4/1/2019 7:05 AM, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+>
+> If dccp_feat_push_change fails, we forget free the mem
+> which is alloced by kmemdup in dccp_feat_clone_sp_val.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: e8ef967a54f4 ("dccp: Registration routines for changing feature values")
+> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
 
-> Thanks,
-> 
-> 	tglx
-> 
 
-Sebastian
+I don't think it is the first version. Do keep in mind to put detail here .
+
+-Mukesh
+
+>   net/dccp/feat.c | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/dccp/feat.c b/net/dccp/feat.c
+> index f227f00..db87d9f 100644
+> --- a/net/dccp/feat.c
+> +++ b/net/dccp/feat.c
+> @@ -738,7 +738,12 @@ static int __feat_register_sp(struct list_head *fn, u8 feat, u8 is_local,
+>   	if (dccp_feat_clone_sp_val(&fval, sp_val, sp_len))
+>   		return -ENOMEM;
+>   
+> -	return dccp_feat_push_change(fn, feat, is_local, mandatory, &fval);
+> +	if (dccp_feat_push_change(fn, feat, is_local, mandatory, &fval)) {
+> +		kfree(fval.sp.vec);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+>   }
+>   
+>   /**
