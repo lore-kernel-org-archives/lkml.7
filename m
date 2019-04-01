@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A27BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE6DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFABB20896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A47E020896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140906;
-	bh=MQU1huIRTwizLcAd7W9erJ+rKdHKLdkaygxgCzXOPp4=;
+	s=default; t=1554140912;
+	bh=PNFazyxEjwb7Gdp52eZKFEcjJtDugp3KrofG+yv+/gs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rZ5p1sfszMmA2GCPggng9aCQCYxslvX2T7Xe1qFATVb1KdIopzTHrF8Tq1Df/DRl1
-	 yRZd2a54/chzT2z6US/fkODvIvR8GFeOdkxLulr7kvLBD61HCUWambwB/ubdjC5oNS
-	 cPPruDQ0BWlmaZcKrZqHAf9wZFDRRMCW2/bLIWE0=
+	b=UJpkv2pPP74vvLNosW8fk3XMEs/ExvNsKR/3cw94vOyA3ADaSdgRsRAl6M3Glhy0o
+	 zVa0ldd+PgC/QoiHwUeb+v3zqjkyEj6lqTa1VPR/2/omhpgvF32Qp/+0Jsg5ZsTkYu
+	 Fy5/DX/Cu6rKl0PiHCqZdmRpqjGr1r/ZsM3aQ3ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733217AbfDARbJ (ORCPT
+        id S1728811AbfDARa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38412 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:30:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733181AbfDARbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:31:04 -0400
+        id S1732784AbfDARay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:30:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 201AC2171F;
-        Mon,  1 Apr 2019 17:31:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 890AF2070B;
+        Mon,  1 Apr 2019 17:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139863;
-        bh=MQU1huIRTwizLcAd7W9erJ+rKdHKLdkaygxgCzXOPp4=;
+        s=default; t=1554139854;
+        bh=PNFazyxEjwb7Gdp52eZKFEcjJtDugp3KrofG+yv+/gs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IPt9SclqxWWz3eZMz+a7yQw5vz7ZW0GinB/aC3qm+vUbUjcEbW99Fe54ZismBZYNY
-         MHrXUsyhEJr3hbaGzjIuFmlxbeM+PsERTXMF4a1TtEHPY8BXo/raaN3UuceOyeXUi8
-         YDz24J/3I5oKFUaZR+YnOCBeB6r02TKn8/Bl9TkU=
+        b=2HqnSMcJZTzF9SS6K4ghJK2u4AVAaC4B36Y7rOtajtsMbbbiwgB9VM57oySFASqsD
+         CrLVyeGd6Ru2eAwmX8ba7SWlfR0G+RiebBX307qc5HXvHJFq9PCSXd2wsGijR04cyR
+         NXZcStq1TIFFYxzO2qFQFwbN9bcyMDgbxupwrzLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.4 035/131] USB: core: only clean up what we allocated
-Date:   Mon,  1 Apr 2019 19:01:45 +0200
-Message-Id: <20190401170055.175465457@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 4.4 032/131] usb: renesas_usbhs: gadget: fix unused-but-set-variable warning
+Date:   Mon,  1 Apr 2019 19:01:42 +0200
+Message-Id: <20190401170054.777398553@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -65,48 +66,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-commit 32fd87b3bbf5f7a045546401dfe2894dbbf4d8c3 upstream.
+commit b7d44c36a6f6d956e1539e0dd42f98b26e5a4684 upstream.
 
-When cleaning up the configurations, make sure we only free the number
-of configurations and interfaces that we could have allocated.
+The commit b8b9c974afee ("usb: renesas_usbhs: gadget: disable all eps
+when the driver stops") causes the unused-but-set-variable warning.
+But, if the usbhsg_ep_disable() will return non-zero value, udc/core.c
+doesn't clear the ep->enabled flag. So, this driver should not return
+non-zero value, if the pipe is zero because this means the pipe is
+already disabled. Otherwise, the ep->enabled flag is never cleared
+when the usbhsg_ep_disable() is called by the renesas_usbhs driver first.
 
-Reported-by: Andrey Konovalov <andreyknvl@google.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: b8b9c974afee ("usb: renesas_usbhs: gadget: disable all eps when the driver stops")
+Fixes: 11432050f070 ("usb: renesas_usbhs: gadget: fix NULL pointer dereference in ep_disable()")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/config.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/usb/renesas_usbhs/mod_gadget.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -734,18 +734,21 @@ void usb_destroy_configuration(struct us
- 		return;
+--- a/drivers/usb/renesas_usbhs/mod_gadget.c
++++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+@@ -641,14 +641,11 @@ static int usbhsg_ep_disable(struct usb_
+ 	struct usbhsg_uep *uep = usbhsg_ep_to_uep(ep);
+ 	struct usbhs_pipe *pipe;
+ 	unsigned long flags;
+-	int ret = 0;
  
- 	if (dev->rawdescriptors) {
--		for (i = 0; i < dev->descriptor.bNumConfigurations; i++)
-+		for (i = 0; i < dev->descriptor.bNumConfigurations &&
-+				i < USB_MAXCONFIG; i++)
- 			kfree(dev->rawdescriptors[i]);
+ 	spin_lock_irqsave(&uep->lock, flags);
+ 	pipe = usbhsg_uep_to_pipe(uep);
+-	if (!pipe) {
+-		ret = -EINVAL;
++	if (!pipe)
+ 		goto out;
+-	}
  
- 		kfree(dev->rawdescriptors);
- 		dev->rawdescriptors = NULL;
- 	}
- 
--	for (c = 0; c < dev->descriptor.bNumConfigurations; c++) {
-+	for (c = 0; c < dev->descriptor.bNumConfigurations &&
-+			c < USB_MAXCONFIG; c++) {
- 		struct usb_host_config *cf = &dev->config[c];
- 
- 		kfree(cf->string);
--		for (i = 0; i < cf->desc.bNumInterfaces; i++) {
-+		for (i = 0; i < cf->desc.bNumInterfaces &&
-+				i < USB_MAXINTERFACES; i++) {
- 			if (cf->intf_cache[i])
- 				kref_put(&cf->intf_cache[i]->ref,
- 					  usb_release_interface_cache);
+ 	usbhsg_pipe_disable(uep);
+ 	usbhs_pipe_free(pipe);
 
 
