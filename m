@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7524C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C662FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70946206DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B18206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139147;
-	bh=U/99LEtKOBrVUzBXZGmLjgVRCbt4xL98oiDgLg/IuZE=;
+	s=default; t=1554139152;
+	bh=37XO1tZ4EBKxbbQh4zXHlDTaVqR/TwT0RWN+WN1B5Cg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UDlDNRfCKmX2LFte7w8+CVuV2igMHlrovnqQZvjL1DFLwHwnsOsvgsGUtVLxiFPjH
-	 YURrnllVbplwkCcT4mDTjywGL2M2X3RA1sHoIZBV3RvT9ekvdMY+URjEhOqD0hPqYo
-	 zgA/w4BU+HUH9t7fuINHW8HFl99F2dsk2F4xnnhQ=
+	b=NhB3Ia+67M87B2/6Hjh1JTx2mhiRx6T1WY56XMse/+dmc27iDSB14L1jQhhBodzxU
+	 qhrrxZyDLnb9LTnWpMeSoCpBTPuquyPAtJIrOXNjOvNtDv/hm3Uft+eRfQnWdRbEjT
+	 1o/pZvus4DsSdNU+Iiii+9uC0f/q6WZQ9/6wfLS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731469AbfDARTF (ORCPT
+        id S1731474AbfDARTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:19:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46720 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:19:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731460AbfDARTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:19:02 -0400
+        id S1731465AbfDARTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:19:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A07CD206DD;
-        Mon,  1 Apr 2019 17:19:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D24820856;
+        Mon,  1 Apr 2019 17:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139141;
-        bh=U/99LEtKOBrVUzBXZGmLjgVRCbt4xL98oiDgLg/IuZE=;
+        s=default; t=1554139144;
+        bh=37XO1tZ4EBKxbbQh4zXHlDTaVqR/TwT0RWN+WN1B5Cg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T7uxSyM/P/iTcvXOdy1nFi3TBJhrRTP79G4uQHaEJaSG+CzF0jQNZ8cGl98wJB0GY
-         SXo8desvlAdl1vuPYIfYBNckNynjbMUQHDe0ttahPc7wtrmVNbDshNKznS5srCZjkR
-         /TLZAcgr4gmQX/i5MLm/2p1U4gHnNo/UlkLmAAt0=
+        b=Xlhkn9+2gWe3PW6+YlIs3Jyeo2qX4lnMds3prOfi2eQi56xOBjBH7UWXmPBLXP3Vv
+         /xnNC6FblonjY3uK3QSBiueFs/6+Sxau0mNH2i/uT4GzkdHKVrpvdRUHysqHBU8fLV
+         cV7qdXSqIk91mBXXrSPK6NGJXYTt83CilHysk74A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH 4.19 126/134] staging: erofs: fix error handling when failed to read compresssed data
-Date:   Mon,  1 Apr 2019 19:02:42 +0200
-Message-Id: <20190401170056.032273815@linuxfoundation.org>
+        stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 4.19 127/134] staging: erofs: keep corrupted fs from crashing kernel in erofs_readdir()
+Date:   Mon,  1 Apr 2019 19:02:43 +0200
+Message-Id: <20190401170056.123220291@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -67,103 +67,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit b6391ac73400eff38377a4a7364bd3df5efb5178 upstream.
+commit 33bac912840fe64dbc15556302537dc6a17cac63 upstream.
 
-Complete read error handling paths for all three kinds of
-compressed pages:
+After commit 419d6efc50e9, kernel cannot be crashed in the namei
+path. However, corrupted nameoff can do harm in the process of
+readdir for scenerios without dm-verity as well. Fix it now.
 
- 1) For cache-managed pages, PG_uptodate will be checked since
-    read_endio will unlock and SetPageUptodate for these pages;
-
- 2) For inplaced pages, read_endio cannot SetPageUptodate directly
-    since it should be used to mark the final decompressed data,
-    PG_error will be set with page locked for IO error instead;
-
- 3) For staging pages, PG_error is used, which is similar to
-    what we do for inplaced pages.
-
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Fixes: 3aa8ec716e52 ("staging: erofs: add directory operations")
 Cc: <stable@vger.kernel.org> # 4.19+
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 
 ---
- drivers/staging/erofs/unzip_vle.c |   42 ++++++++++++++++++++++++++------------
- 1 file changed, 29 insertions(+), 13 deletions(-)
+ drivers/staging/erofs/dir.c |   45 ++++++++++++++++++++++++--------------------
+ 1 file changed, 25 insertions(+), 20 deletions(-)
 
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -885,6 +885,7 @@ repeat:
- 	overlapped = false;
- 	compressed_pages = grp->compressed_pages;
+--- a/drivers/staging/erofs/dir.c
++++ b/drivers/staging/erofs/dir.c
+@@ -23,6 +23,21 @@ static const unsigned char erofs_filetyp
+ 	[EROFS_FT_SYMLINK]	= DT_LNK,
+ };
  
-+	err = 0;
- 	for (i = 0; i < clusterpages; ++i) {
- 		unsigned pagenr;
- 
-@@ -894,26 +895,39 @@ repeat:
- 		DBG_BUGON(page == NULL);
- 		DBG_BUGON(page->mapping == NULL);
- 
--		if (z_erofs_is_stagingpage(page))
--			continue;
-+		if (!z_erofs_is_stagingpage(page)) {
- #ifdef EROFS_FS_HAS_MANAGED_CACHE
--		if (page->mapping == mngda) {
--			DBG_BUGON(!PageUptodate(page));
--			continue;
--		}
-+			if (page->mapping == mngda) {
-+				if (unlikely(!PageUptodate(page)))
-+					err = -EIO;
-+				continue;
-+			}
- #endif
- 
--		/* only non-head page could be reused as a compressed page */
--		pagenr = z_erofs_onlinepage_index(page);
-+			/*
-+			 * only if non-head page can be selected
-+			 * for inplace decompression
-+			 */
-+			pagenr = z_erofs_onlinepage_index(page);
++static void debug_one_dentry(unsigned char d_type, const char *de_name,
++			     unsigned int de_namelen)
++{
++#ifdef CONFIG_EROFS_FS_DEBUG
++	/* since the on-disk name could not have the trailing '\0' */
++	unsigned char dbg_namebuf[EROFS_NAME_LEN + 1];
 +
-+			DBG_BUGON(pagenr >= nr_pages);
-+			DBG_BUGON(pages[pagenr]);
-+			++sparsemem_pages;
-+			pages[pagenr] = page;
- 
--		DBG_BUGON(pagenr >= nr_pages);
--		DBG_BUGON(pages[pagenr]);
--		++sparsemem_pages;
--		pages[pagenr] = page;
-+			overlapped = true;
-+		}
- 
--		overlapped = true;
-+		/* PG_error needs checking for inplaced and staging pages */
-+		if (unlikely(PageError(page))) {
-+			DBG_BUGON(PageUptodate(page));
-+			err = -EIO;
-+		}
- 	}
- 
-+	if (unlikely(err))
-+		goto out;
++	memcpy(dbg_namebuf, de_name, de_namelen);
++	dbg_namebuf[de_namelen] = '\0';
 +
- 	llen = (nr_pages << PAGE_SHIFT) - work->pageofs;
- 
- 	if (z_erofs_vle_workgrp_fmt(grp) == Z_EROFS_VLE_WORKGRP_FMT_PLAIN) {
-@@ -1082,6 +1096,8 @@ static inline bool recover_managed_page(
- 		return true;
- 
- 	lock_page(page);
-+	ClearPageError(page);
++	debugln("found dirent %s de_len %u d_type %d", dbg_namebuf,
++		de_namelen, d_type);
++#endif
++}
 +
- 	if (unlikely(!PagePrivate(page))) {
- 		set_page_private(page, (unsigned long)grp);
- 		SetPagePrivate(page);
+ static int erofs_fill_dentries(struct dir_context *ctx,
+ 	void *dentry_blk, unsigned *ofs,
+ 	unsigned nameoff, unsigned maxsize)
+@@ -33,14 +48,10 @@ static int erofs_fill_dentries(struct di
+ 	de = dentry_blk + *ofs;
+ 	while (de < end) {
+ 		const char *de_name;
+-		int de_namelen;
++		unsigned int de_namelen;
+ 		unsigned char d_type;
+-#ifdef CONFIG_EROFS_FS_DEBUG
+-		unsigned dbg_namelen;
+-		unsigned char dbg_namebuf[EROFS_NAME_LEN];
+-#endif
+ 
+-		if (unlikely(de->file_type < EROFS_FT_MAX))
++		if (de->file_type < EROFS_FT_MAX)
+ 			d_type = erofs_filetype_table[de->file_type];
+ 		else
+ 			d_type = DT_UNKNOWN;
+@@ -48,26 +59,20 @@ static int erofs_fill_dentries(struct di
+ 		nameoff = le16_to_cpu(de->nameoff);
+ 		de_name = (char *)dentry_blk + nameoff;
+ 
+-		de_namelen = unlikely(de + 1 >= end) ?
+-			/* last directory entry */
+-			strnlen(de_name, maxsize - nameoff) :
+-			le16_to_cpu(de[1].nameoff) - nameoff;
++		/* the last dirent in the block? */
++		if (de + 1 >= end)
++			de_namelen = strnlen(de_name, maxsize - nameoff);
++		else
++			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
+ 
+ 		/* a corrupted entry is found */
+-		if (unlikely(de_namelen < 0)) {
++		if (unlikely(nameoff + de_namelen > maxsize ||
++			     de_namelen > EROFS_NAME_LEN)) {
+ 			DBG_BUGON(1);
+ 			return -EIO;
+ 		}
+ 
+-#ifdef CONFIG_EROFS_FS_DEBUG
+-		dbg_namelen = min(EROFS_NAME_LEN - 1, de_namelen);
+-		memcpy(dbg_namebuf, de_name, dbg_namelen);
+-		dbg_namebuf[dbg_namelen] = '\0';
+-
+-		debugln("%s, found de_name %s de_len %d d_type %d", __func__,
+-			dbg_namebuf, de_namelen, d_type);
+-#endif
+-
++		debug_one_dentry(d_type, de_name, de_namelen);
+ 		if (!dir_emit(ctx, de_name, de_namelen,
+ 					le64_to_cpu(de->nid), d_type))
+ 			/* stoped by some reason */
 
 
