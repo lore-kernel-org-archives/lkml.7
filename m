@@ -2,123 +2,168 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7730C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B47C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90A1620828
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:09:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XPoS/+By"
+	by mail.kernel.org (Postfix) with ESMTP id 1D1BF20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 05:11:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfDAFJz (ORCPT
+        id S1727042AbfDAFLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 01:09:55 -0400
-Received: from mail-eopbgr140077.outbound.protection.outlook.com ([40.107.14.77]:61254
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725784AbfDAFJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 01:09:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W4qv/eO5sgZ7mo0kyQEAX/mFjghqEqm8kvawzkOybcA=;
- b=XPoS/+BymwH3wt6pjP22gqfC1QUNPGapgy59kZWtnzYxziSrHR0sbtQIpQNREZB2fYwPyDm0Kr6lMQ4FtqtRK2gKThDaoaDCfoM/mocdvMgZyWE838cF8gXejqL5EzSuJoFnejxhUTZ2mSEKcUPI5f0+Wt7/N0rwhleIydhFgtQ=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3883.eurprd04.prod.outlook.com (52.134.71.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.20; Mon, 1 Apr 2019 05:09:50 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1750.017; Mon, 1 Apr 2019
- 05:09:50 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH] gpio: mxc: use devm_platform_ioremap_resource() to simplify
- code
-Thread-Topic: [PATCH] gpio: mxc: use devm_platform_ioremap_resource() to
- simplify code
-Thread-Index: AQHU6Ekh3lwBw6UO20ek9Qw4M7JZeQ==
-Date:   Mon, 1 Apr 2019 05:09:50 +0000
-Message-ID: <1554095107-15003-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR0302CA0005.apcprd03.prod.outlook.com
- (2603:1096:202::15) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3fd3a25c-250c-4597-d57c-08d6b660442f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3883;
-x-ms-traffictypediagnostic: DB3PR0402MB3883:
-x-microsoft-antispam-prvs: <DB3PR0402MB388318483B8AFC6066F5BBEBF5550@DB3PR0402MB3883.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(366004)(376002)(346002)(199004)(189003)(2501003)(2201001)(25786009)(5660300002)(6116002)(8676002)(6512007)(105586002)(81166006)(4326008)(4744005)(53936002)(6436002)(71200400001)(486006)(71190400001)(26005)(81156014)(36756003)(86362001)(6486002)(476003)(50226002)(305945005)(7736002)(2616005)(6506007)(386003)(99286004)(52116002)(8936002)(2906002)(102836004)(14454004)(66066001)(97736004)(110136005)(106356001)(3846002)(478600001)(256004)(68736007)(316002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3883;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: f9cEO5zYrTIKAkZdFKfO3Fat1F1WYaGRI28mtALpy8qq8q7Vy6ykK/ObxgRqGxW6HZ0KllNM3wY48lEjIn/b+IMXLcu4w98Vo9Wad8sKRE8R6KotHrqzKF8Y5GYS/wqU6jjrL371STWkrwBekw0R1UL+iIrFuNVGL8CwbSnN+nqLjk0m3FR4oxW8lueSJR086eyiF0bGIFTOU5l2rin68KGk/ASw6Nptp7VuTww/k2QLJ4y5jBk8pTzPdx3RDRFm1sr4gk5/kueC1OZibyFdI682Wd2s/vFQObX67rrIHNBhbtcSO4Bz6OS99rAhCN7tW24ue8rDJEPy1O6xxaZg2yx/KoI1LWQA+JBF25Brs0vwlUcqo1uOtBS8dBAaWaHLY9fdVdr8XlNh2qrCi0oPjwm0cXd3DOHfMO4+ibbjY2o=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 1 Apr 2019 01:11:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55948 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725992AbfDAFLs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 01:11:48 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3159Bk1091011
+        for <linux-kernel@vger.kernel.org>; Mon, 1 Apr 2019 01:11:47 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rkbsd16vn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 01:11:46 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Mon, 1 Apr 2019 06:11:45 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 1 Apr 2019 06:11:42 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x315Bf5441746650
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 1 Apr 2019 05:11:41 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B31B0A405D;
+        Mon,  1 Apr 2019 05:11:41 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2052EA4053;
+        Mon,  1 Apr 2019 05:11:38 +0000 (GMT)
+Received: from oc0383214508.ibm.com (unknown [9.85.70.33])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  1 Apr 2019 05:11:37 +0000 (GMT)
+Subject: Re: [PATCH 1/2] cpuidle : auto-promotion for cpuidle states
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <20190322072942.8038-1-huntbag@linux.vnet.ibm.com>
+ <20190322072942.8038-2-huntbag@linux.vnet.ibm.com>
+ <CAJZ5v0gY-theHng=bQQpw-33jHGe++iEigEM5j6Ls7vEuewuSQ@mail.gmail.com>
+ <cfb0076f-0b56-f12c-a736-469a3d11ab83@linaro.org>
+From:   Abhishek <huntbag@linux.vnet.ibm.com>
+Date:   Mon, 1 Apr 2019 10:41:35 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3fd3a25c-250c-4597-d57c-08d6b660442f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 05:09:50.0928
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3883
+In-Reply-To: <cfb0076f-0b56-f12c-a736-469a3d11ab83@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19040105-0008-0000-0000-000002D4AD02
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040105-0009-0000-0000-00002240B281
+Message-Id: <50f62972-dfce-52bf-d26b-32e6d2a367e2@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-01_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904010038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new helper devm_platform_ioremap_resource() which wraps the
-platform_get_resource() and devm_ioremap_resource() together, to
-simplify the code.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/gpio/gpio-mxc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index e86e61d..b281358 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -411,7 +411,6 @@ static int mxc_gpio_probe(struct platform_device *pdev)
- {
- 	struct device_node *np =3D pdev->dev.of_node;
- 	struct mxc_gpio_port *port;
--	struct resource *iores;
- 	int irq_base;
- 	int err;
-=20
-@@ -423,8 +422,7 @@ static int mxc_gpio_probe(struct platform_device *pdev)
-=20
- 	port->dev =3D &pdev->dev;
-=20
--	iores =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	port->base =3D devm_ioremap_resource(&pdev->dev, iores);
-+	port->base =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(port->base))
- 		return PTR_ERR(port->base);
-=20
---=20
-2.7.4
+On 03/22/2019 06:56 PM, Daniel Lezcano wrote:
+> On 22/03/2019 10:45, Rafael J. Wysocki wrote:
+>> On Fri, Mar 22, 2019 at 8:31 AM Abhishek Goel
+>> <huntbag@linux.vnet.ibm.com> wrote:
+>>> Currently, the cpuidle governors (menu /ladder) determine what idle state
+>>> an idling CPU should enter into based on heuristics that depend on the
+>>> idle history on that CPU. Given that no predictive heuristic is perfect,
+>>> there are cases where the governor predicts a shallow idle state, hoping
+>>> that the CPU will be busy soon. However, if no new workload is scheduled
+>>> on that CPU in the near future, the CPU will end up in the shallow state.
+>>>
+>>> In case of POWER, this is problematic, when the predicted state in the
+>>> aforementioned scenario is a lite stop state, as such lite states will
+>>> inhibit SMT folding, thereby depriving the other threads in the core from
+>>> using the core resources.
+>>>
+>>> To address this, such lite states need to be autopromoted. The cpuidle-
+>>> core can queue timer to correspond with the residency value of the next
+>>> available state. Thus leading to auto-promotion to a deeper idle state as
+>>> soon as possible.
+>> Isn't the tick stopping avoidance sufficient for that?
+> I was about to ask the same :)
+>
+>
+>
+>
+Thanks for the review.
+I performed experiments for three scenarios to collect some data.
+
+case 1 :
+Without this patch and without tick retained, i.e. in a upstream kernel,
+It would spend more than even a second to get out of stop0_lite.
+
+case 2 : With tick retained(as suggested) -
+
+Generally, we have a sched tick at 4ms(CONF_HZ = 250). Ideally I expected
+it to take 8 sched tick to get out of stop0_lite. Experimentally, 
+observation was
+
+===================================
+min            max            99percentile
+4ms            12ms          4ms
+===================================
+*ms = milliseconds
+
+It would take atleast one sched tick to get out of stop0_lite.
+
+case 2 :  With this patch (not stopping tick, but explicitly queuing a 
+timer)
+
+min            max              99.5percentile
+===============================
+144us       192us              144us
+===============================
+*us = microseconds
+
+In this patch, we queue a timer just before entering into a stop0_lite
+state. The timer fires at (residency of next available state + exit
+latency of next available state * 2).
+Let's say if next state(stop0) is available which has residency of 20us, it
+should get out in as low as (20+2*2)*8 [Based on the forumla (residency +
+2xlatency)*history length] microseconds = 192us. Ideally we would expect 8
+iterations, it was observed to get out in 6-7 iterations.
+Even if let's say stop2 is next available state(stop0 and stop1 both are
+unavailable), it would take (100+2*10)*8 = 960us to get into stop2.
+
+So, We are able to get out of stop0_lite generally in 150us(with this 
+patch) as
+compared to 4ms(with tick retained). As stated earlier, we do not want 
+to get
+stuck into stop0_lite as it inhibits SMT folding for other sibling 
+threads, depriving
+them of core resources. Current patch is using auto-promotion only for 
+stop0_lite,
+as it gives performance benefit(primary reason) along with lowering down 
+power
+consumption. We may extend this model for other states in future.
+
+--Abhishek
 
