@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFC1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19413C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 490AA2192D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC70321925
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138473;
-	bh=zvTc5sA+VvsZ7XiulKDf7aag+8RPQ0JGo293Jq+KfuU=;
+	s=default; t=1554138479;
+	bh=yyAc1lNIyfWgZ9H1VW1Zm4AWyxAjFpd/uyEHtePBwsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DATRJMir/7ZETki5yOIBDgHUlS5nJ9u5r06FpsOAtj/SWwcTre2jeT/DF2KcGUfEG
-	 clFZ7mKp5E1ydVMR62XkfFEbTdRv9ZYZmWUssmDLx4nul0peaFH7er/aFAMnpqhYA7
-	 p7cljtWYB+jsRdFrr5JlQ/qQ2/jQVv0m5WMOFd08=
+	b=IIzXpPhU3mrijZO+/VanPAFUSU0sJiY6WGm3sYZd19v2yh956ndNeu/ydNGmMH72K
+	 70EB/ZwjjLUz1ArJl62Kdmuy7vZNTY4uPwUF8T9AA4ICR09BAQNw6xAKSJVAvHzxqH
+	 cDKincj1vpz+RGfCvdParm7ZMQR+bMgImgUMsZ50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfDARHv (ORCPT
+        id S1729574AbfDARH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:07:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54112 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:07:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728830AbfDARHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:07:47 -0400
+        id S1728814AbfDARHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:07:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE1172192C;
-        Mon,  1 Apr 2019 17:07:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A37021924;
+        Mon,  1 Apr 2019 17:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138466;
-        bh=zvTc5sA+VvsZ7XiulKDf7aag+8RPQ0JGo293Jq+KfuU=;
+        s=default; t=1554138473;
+        bh=yyAc1lNIyfWgZ9H1VW1Zm4AWyxAjFpd/uyEHtePBwsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oaQ6v6nOOuTcJwICc0bK2+U1BSTIO4tS5GHh6YhKUokwYEM5NPgdLS7uJw9ZUzQIK
-         aoyztB3VJG6iPl+Ji1MPXdRJXTWPNKC9NChtJvfFUZoRhFJBo/BWDK4NRB0ou4LkDU
-         Hhp/qoAm1pJDLPUyo8apPda2PN8zwSmZ9m2bhYn4=
+        b=dcIYrDXC7A0rXt1s6Eobs7IOe290Ij8pA2i5MaDzgd7zW8GkaWOUIs0GZ1TP2j5h7
+         4MGCHyKd9FR4SSlZkBzWcHYJXAVJ9Vvt+IEm3KunYntba3ohsjkGv+VxY1yOWPiTr7
+         wmGmneNzCsi6IH1oJnP9sTTVBH0dJRR6/HIfJLgw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Hussam Al-Tayeb <ht990332@gmx.com>,
-        Bart Van Assche <bvanassche@acm.org>,
+        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.0 073/146] scsi: sd: Quiesce warning if device does not report optimal I/O size
-Date:   Mon,  1 Apr 2019 19:01:25 +0200
-Message-Id: <20190401170054.902723017@linuxfoundation.org>
+Subject: [PATCH 5.0 075/146] scsi: zfcp: fix scsi_eh host reset with port_forced ERP for non-NPIV FCP devices
+Date:   Mon,  1 Apr 2019 19:01:27 +0200
+Message-Id: <20190401170055.120407433@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -67,44 +67,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Martin K. Petersen <martin.petersen@oracle.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit 1d5de5bd311be7cd54f02f7cd164f0349a75c876 upstream.
+commit 242ec1455151267fe35a0834aa9038e4c4670884 upstream.
 
-Commit a83da8a4509d ("scsi: sd: Optimal I/O size should be a multiple
-of physical block size") split one conditional into several separate
-statements in an effort to provide more accurate warning messages when
-a device reports a nonsensical value. However, this reorganization
-accidentally dropped the precondition of the reported value being
-larger than zero. This lead to a warning getting emitted on devices
-that do not report an optimal I/O size at all.
+Suppose more than one non-NPIV FCP device is active on the same channel.
+Send I/O to storage and have some of the pending I/O run into a SCSI
+command timeout, e.g. due to bit errors on the fibre. Now the error
+situation stops. However, we saw FCP requests continue to timeout in the
+channel. The abort will be successful, but the subsequent TUR fails.
+Scsi_eh starts. The LUN reset fails. The target reset fails.  The host
+reset only did an FCP device recovery. However, for non-NPIV FCP devices,
+this does not close and reopen ports on the SAN-side if other non-NPIV FCP
+device(s) share the same open ports.
 
-Remain silent if a device does not report an optimal I/O size.
+In order to resolve the continuing FCP request timeouts, we need to
+explicitly close and reopen ports on the SAN-side.
 
-Fixes: a83da8a4509d ("scsi: sd: Optimal I/O size should be a multiple of physical block size")
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: <stable@vger.kernel.org>
-Reported-by: Hussam Al-Tayeb <ht990332@gmx.com>
-Tested-by: Hussam Al-Tayeb <ht990332@gmx.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+This was missing since the beginning of zfcp in v2.6.0 history commit
+ea127f975424 ("[PATCH] s390 (7/7): zfcp host adapter.").
+
+Note: The FSF requests for forced port reopen could run into FSF request
+timeouts due to other reasons. This would trigger an internal FCP device
+recovery. Pending forced port reopen recoveries would get dismissed. So
+some ports might not get fully reopened during this host reset handler.
+However, subsequent I/O would trigger the above described escalation and
+eventually all ports would be forced reopen to resolve any continuing FCP
+request timeouts due to earlier bit errors.
+
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: <stable@vger.kernel.org> #3.0+
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/sd.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/s390/scsi/zfcp_erp.c  |   14 ++++++++++++++
+ drivers/s390/scsi/zfcp_ext.h  |    2 ++
+ drivers/s390/scsi/zfcp_scsi.c |    4 ++++
+ 3 files changed, 20 insertions(+)
 
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3054,6 +3054,9 @@ static bool sd_validate_opt_xfer_size(st
- 	unsigned int opt_xfer_bytes =
- 		logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -624,6 +624,20 @@ static void zfcp_erp_strategy_memwait(st
+ 	add_timer(&erp_action->timer);
+ }
  
-+	if (sdkp->opt_xfer_blocks == 0)
-+		return false;
++void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
++				     int clear, char *dbftag)
++{
++	unsigned long flags;
++	struct zfcp_port *port;
 +
- 	if (sdkp->opt_xfer_blocks > dev_max) {
- 		sd_first_printk(KERN_WARNING, sdkp,
- 				"Optimal transfer size %u logical blocks " \
++	write_lock_irqsave(&adapter->erp_lock, flags);
++	read_lock(&adapter->port_list_lock);
++	list_for_each_entry(port, &adapter->port_list, list)
++		_zfcp_erp_port_forced_reopen(port, clear, dbftag);
++	read_unlock(&adapter->port_list_lock);
++	write_unlock_irqrestore(&adapter->erp_lock, flags);
++}
++
+ static void _zfcp_erp_port_reopen_all(struct zfcp_adapter *adapter,
+ 				      int clear, char *dbftag)
+ {
+--- a/drivers/s390/scsi/zfcp_ext.h
++++ b/drivers/s390/scsi/zfcp_ext.h
+@@ -70,6 +70,8 @@ extern void zfcp_erp_port_reopen(struct
+ 				 char *dbftag);
+ extern void zfcp_erp_port_shutdown(struct zfcp_port *, int, char *);
+ extern void zfcp_erp_port_forced_reopen(struct zfcp_port *, int, char *);
++extern void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
++					    int clear, char *dbftag);
+ extern void zfcp_erp_set_lun_status(struct scsi_device *, u32);
+ extern void zfcp_erp_clear_lun_status(struct scsi_device *, u32);
+ extern void zfcp_erp_lun_reopen(struct scsi_device *, int, char *);
+--- a/drivers/s390/scsi/zfcp_scsi.c
++++ b/drivers/s390/scsi/zfcp_scsi.c
+@@ -368,6 +368,10 @@ static int zfcp_scsi_eh_host_reset_handl
+ 	struct zfcp_adapter *adapter = zfcp_sdev->port->adapter;
+ 	int ret = SUCCESS, fc_ret;
+ 
++	if (!(adapter->connection_features & FSF_FEATURE_NPIV_MODE)) {
++		zfcp_erp_port_forced_reopen_all(adapter, 0, "schrh_p");
++		zfcp_erp_wait(adapter);
++	}
+ 	zfcp_erp_adapter_reopen(adapter, 0, "schrh_1");
+ 	zfcp_erp_wait(adapter);
+ 	fc_ret = fc_block_scsi_eh(scpnt);
 
 
