@@ -2,85 +2,149 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3593C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8259AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937BA2084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E51F2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:01:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mBlHcfam"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbfDAJBW (ORCPT
+        id S1728677AbfDAJBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 05:01:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59108 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725880AbfDAJBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 05:01:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 97A2BAEC2;
-        Mon,  1 Apr 2019 09:01:20 +0000 (UTC)
-From:   Johannes Thumshirn <jthumshirn@suse.de>
-To:     Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
-        Linux FSDEVEL Mailinglist <linux-fsdevel@vger.kernel.org>
-Cc:     Johannes Thumshirn <jthumshirn@suse.de>
-Subject: [PATCH] fs/open: Fix most outstanding security bugs
-Date:   Mon,  1 Apr 2019 11:01:13 +0200
-Message-Id: <20190401090113.22946-1-jthumshirn@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Mon, 1 Apr 2019 05:01:32 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38356 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbfDAJBb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 05:01:31 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k11so10915080wro.5
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 02:01:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=sXk/RNe/QfIZJt2m4bkPTnI917e020gPuS2AXpdWHYA=;
+        b=mBlHcfambs1nqnYLFIU3kZmBlRvkbALXztXs2utLtWZKPiczYNbpPuBFwomLpiqbAD
+         aURjdY0B+L7a1AdoJgUQqT1pBO0pUq1S91W6YucYE8638ULy5QzRGTNdl/kKDgHXWULc
+         1uiOREBZdqST7T61yBtCR8bZHdQqLwpZfkuyCWrwAcgdm8m+9JyLk1BNrsKLNXSLg+YO
+         UN/nPldmK0bSEpddErfFUS9dJcfO5UeC7Zt8EhPD6WtoSsLvajthDr52O/XZwkE3T04T
+         re1fBmUxIqR4hRzrmayY/ISn9zN7EJ0hCthmrMLOe2x/phUK3yCr47KVooFjmEL7DcEF
+         tLbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=sXk/RNe/QfIZJt2m4bkPTnI917e020gPuS2AXpdWHYA=;
+        b=AR5PgDfv+4nOZnnDWtjo/H9bYV4IiLPicvSGsg4ajOv1swhAwE5OlqGFKBIOxX4I9X
+         9BO9Cs7zIBAvsUPV9thTq69UvDvKJqfzjaMaBJGhlFCxzoY1T7xrtXriUnAxIrNV8uFW
+         lN9xPqmaQIOFForcDDRd9HImjvfU1GNJOAHQymfuYs9y5BN7N3bJ9W4rFgQBIX0qvFyX
+         gSylgo9Sb/kVXx8824Te7GgtsjHFRRu0VxqbOHmy1njknnNqTGqT6hEkMPKJBLKpl+uf
+         +YdZyzQpVDqLl42looXWVuc/+lIJiZvz9USiyIodCuYylG31scjHchtv1YNTGFpq5DTe
+         aARw==
+X-Gm-Message-State: APjAAAW9/okmmBZzAMtQdLl98zLGaYPSRlLzD994iCRT3fB+NvWn5Whj
+        boMo3bttAkI2X2V4j1n9H26ZsizDoog=
+X-Google-Smtp-Source: APXvYqxeAyEFBlAuZQoHb8VHHtsmRwWrxfY7XYvNTiAEh9EidxkoUXqDezY7o8LJF9ENN2G6K5Ilvg==
+X-Received: by 2002:adf:fd04:: with SMTP id e4mr41844552wrr.190.1554109290099;
+        Mon, 01 Apr 2019 02:01:30 -0700 (PDT)
+Received: from [192.168.0.101] ([88.147.53.253])
+        by smtp.gmail.com with ESMTPSA id 13sm10146380wmf.23.2019.04.01.02.01.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 02:01:29 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: Bisected GFP in bfq_bfqq_expire on v5.1-rc1
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190401115509.76310e03@fire.localdomain>
+Date:   Mon, 1 Apr 2019 11:01:27 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <84B0CA50-0ED8-4171-8007-19EA43951735@linaro.org>
+References: <20190329160227.7d55c8dd@fire.localdomain>
+ <0e203a26-b941-cef4-dff1-013999d4b041@kernel.dk>
+ <626EAE58-63C1-4ABA-9040-9D9A61F74A0D@linaro.org>
+ <20190401115509.76310e03@fire.localdomain>
+To:     Dmitrii Tcvetkov <demfloro@demfloro.ru>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Over the last 20 years, the Linux kernel has accumulated hundreds if not
-thousands of security vulnerabilities.
 
-One common pattern in most of these security related reports is processes
-called "syzkaller", "trinity" or "syz-executor" opening files and then
-abuse kernel interfaces causing kernel crashes or even worse threats using
-memory overwrites or by exploiting race conditions.
 
-Hunting down these bugs has become time consuming and very expensive, so
-I've decided to put an end to it.
+> Il giorno 1 apr 2019, alle ore 10:55, Dmitrii Tcvetkov =
+<demfloro@demfloro.ru> ha scritto:
+>=20
+> On Mon, 1 Apr 2019 09:29:16 +0200
+> Paolo Valente <paolo.valente@linaro.org> wrote:
+>>=20
+>>=20
+>>> Il giorno 29 mar 2019, alle ore 15:10, Jens Axboe <axboe@kernel.dk>
+>>> ha scritto:
+>>>=20
+>>> On 3/29/19 7:02 AM, Dmitrii Tcvetkov wrote:
+>>>> Hi,
+>>>>=20
+>>>> I got kernel panic since v5.1-rc1 when working with files on block
+>>>> device with BFQ scheduler assigned. I didn't find trivial way to
+>>>> reproduce the panic but "git checkout origin/linux-5.0.y"
+>>>> on linux-stable-rc[1] git repo on btrfs filesystem reproduces the
+>>>> problem 100% of the time on my bare-metal machine and in a VM.
+>>>>=20
+>>>> Bisect led me to commit 9dee8b3b057e1 (block, bfq: fix queue
+>>>> removal from weights tree). After reverting this commit on top of
+>>>> current mainline master(9936328b41ce) I can't reproduce the
+>>>> problem.
+>>>>=20
+>>>> dmesg with the panic and bisect log attached.
+>>>>=20
+>>>> [1]
+>>>> =
+https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+>>>=20
+>>> Paolo, can you please take a look at this?
+>>>=20
+>>>=20
+>>=20
+>> Yep.
+>>=20
+>> That you very much Dmitrii for also bisecting.  I feel like this
+>> failure may be caused by the typo fixed by this patch:
+>> https://patchwork.kernel.org/patch/10877113/
+>>=20
+>> Could you please give this fix a try?
+>=20
+> Still reproduces with the patch on top of current mainline
+> master(v5.1-rc3).
+>=20
+> Crashes with and without CONFIG_BFQ_GROUP_IOSCHED look same to me.
+> Original dmesg was also from kernel with CONFIG_BFQ_GROUP_IOSCHED=3Dn.
+>=20
+> gpf.txt contains crash with the patch and CONFIG_BFQ_GROUP_IOSCHED=3Dn
+> gpf-w-bfq-group-iosched.txt - with the patch and =
+CONFIG_BFQ_GROUP_IOSCHED=3Dy
+> config.txt - kernel config for the VM with CONFIG_BFQ_GROUP_IOSCHED=3Dn
+>=20
+>=20
 
-If one of the above mentioned processes tries opening a file, return -EPERM
-indicating this process does not have the permission to open files on Linux
-anymore.
+Ok, thank you. Could you please do a
 
-Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
----
- fs/open.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+list *(bfq_bfqq_expire+0x1f3)
 
-diff --git a/fs/open.c b/fs/open.c
-index f1c2f855fd43..3a3b460beccd 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1056,6 +1056,20 @@ long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
- 	struct open_flags op;
- 	int fd = build_open_flags(flags, mode, &op);
- 	struct filename *tmp;
-+	char comm[TASK_COMM_LEN];
-+	int i;
-+	static const char * const list[] = {
-+		"syzkaller",
-+		"syz-executor,"
-+		"trinity",
-+		NULL
-+	};
-+
-+	get_task_comm(comm, current);
-+
-+	for (i = 0; i < ARRAY_SIZE(list); i++)
-+		if (!strncmp(comm, list[i], strlen(list[i])))
-+			return -EPERM;
- 
- 	if (fd)
- 		return fd;
--- 
-2.16.4
+for me?
+
+Thanks,
+Paolo
+
+>=20
+> <gpf.txt><gpf-w-bfq-group-iosched.txt><config.txt>
 
