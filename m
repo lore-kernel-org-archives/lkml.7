@@ -2,70 +2,83 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACC5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 019ABC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D74312133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6AA921473
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbfDAQ6G (ORCPT
+        id S1728743AbfDAQ6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 12:58:06 -0400
-Received: from muru.com ([72.249.23.125]:43778 "EHLO muru.com"
+        Mon, 1 Apr 2019 12:58:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41288 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728007AbfDAQ6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 12:58:06 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 85A2880C0;
-        Mon,  1 Apr 2019 16:58:19 +0000 (UTC)
-Date:   Mon, 1 Apr 2019 09:58:02 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        letux-kernel@openphoenux.org
-Subject: Re: [BUG/PATCH 1/4] DTS: GTA04: SPI / gpiolib: work around a
- regression that unhides a broken legacy handler, which makes the gta04
- display inoperable
-Message-ID: <20190401165802.GI49658@atomide.com>
-References: <cover.1554026842.git.hns@goldelico.com>
- <e8d784f7fb06fd3a6a92bc730f919352c4ad4411.1554026842.git.hns@goldelico.com>
- <20190401164617.GH49658@atomide.com>
- <06C7464E-FAF2-4AA6-9FF4-629E9C97F86A@goldelico.com>
+        id S1728007AbfDAQ6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 12:58:54 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8F79C51EE8;
+        Mon,  1 Apr 2019 16:58:54 +0000 (UTC)
+Received: from gondolin (ovpn-117-29.ams2.redhat.com [10.36.117.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BF50360260;
+        Mon,  1 Apr 2019 16:58:50 +0000 (UTC)
+Date:   Mon, 1 Apr 2019 18:58:47 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kwankhede@nvidia.com, alex.williamson@redhat.com, cjia@nvidia.com
+Subject: Re: [PATCHv1 1/7] vfio/mdev: Avoid release parent reference during
+ error path
+Message-ID: <20190401185847.0e45cad7.cohuck@redhat.com>
+In-Reply-To: <1553658345-43995-2-git-send-email-parav@mellanox.com>
+References: <1553658345-43995-1-git-send-email-parav@mellanox.com>
+        <1553658345-43995-2-git-send-email-parav@mellanox.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <06C7464E-FAF2-4AA6-9FF4-629E9C97F86A@goldelico.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 01 Apr 2019 16:58:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [190401 16:57]:
-> > Am 01.04.2019 um 18:46 schrieb Tony Lindgren <tony@atomide.com>:
-> > So what's the plan with this fix? Add this for v5.2-rc cycle,
-> > then revert it later? I'd probably go directly for the proper
-> > fix if possible.
-> 
-> Well, I learned just some minutes ago that a new patch for gpiolib
-> came through 5.1-rc3 which does fix this.
-> 
-> It seems to check for "cs-gpios" and then disable the legacy handling.
-> 
-> This means that we do not need to patch the DTS at all.
+On Tue, 26 Mar 2019 22:45:39 -0500
+Parav Pandit <parav@mellanox.com> wrote:
 
-OK good to hear, thanks for the update.
+> During mdev parent registration in mdev_register_device(),
+> if parent device is duplicate, it releases the reference of existing
+> parent device.
+> This is incorrect. Existing parent device should not be touched.
+> 
+> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+> Reviewed By: Kirti Wankhede <kwankhede@nvidia.com>
 
-Regards,
+Should probably be changed to the canonical Reviewed-by:.
 
-Tony
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Signed-off-by: Parav Pandit <parav@mellanox.com>
+> ---
+>  drivers/vfio/mdev/mdev_core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> index b96fedc..1299d2e 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -181,6 +181,7 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>  	/* Check for duplicate */
+>  	parent = __find_parent_device(dev);
+>  	if (parent) {
+> +		parent = NULL;
+>  		ret = -EEXIST;
+>  		goto add_dev_err;
+>  	}
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
