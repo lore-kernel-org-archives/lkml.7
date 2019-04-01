@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDB1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BD0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A37E21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C012171F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139234;
-	bh=MkmTcrxERynSMgkjrxgoeVpiJZHMIVGgKqg8HH9HO/U=;
+	s=default; t=1554139237;
+	bh=NPLgEuHha7/VlMwWA5jDN+EBURMAMCVXjJ2IuXDT0B0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RfGKv20IbTKvYKTWahJ9Ykhusg5tVHXTsfdAE4YMDpXHAxtP3T2yTTX4hy9u7p/ti
-	 yiOizOKxZ+jAcm3Bgoa9mQGIh5sg6Rc7KWFnU3fhileuasz62Ri38XspXehVgnVTHE
-	 wZV9jktewsvcqGKGYUfDb4JFGLH2+4+lL5aQewZE=
+	b=UWEGpZLlwRaxRHCAoPbzytAc26bm439A8WgOOITbbbxXVnspAUCj0bnmZal1Vb5Pd
+	 oF+WtWVv56hYQy5aore9JJZlqLqnJw57U6g4Kb5HlYbTq+NlsB7UNO0C4i+uIpV/Mq
+	 C3SFQUgjV3SGLSM8XhszHqnR2KRlJugUx419DkCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbfDARUc (ORCPT
+        id S1729121AbfDARUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:20:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48664 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:20:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731447AbfDARU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:20:27 -0400
+        id S1731450AbfDARUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:20:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 961D1206DD;
-        Mon,  1 Apr 2019 17:20:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C0C7206C0;
+        Mon,  1 Apr 2019 17:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139227;
-        bh=MkmTcrxERynSMgkjrxgoeVpiJZHMIVGgKqg8HH9HO/U=;
+        s=default; t=1554139229;
+        bh=NPLgEuHha7/VlMwWA5jDN+EBURMAMCVXjJ2IuXDT0B0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xTQjZjoNz/6TY5WczU2gByLTAgbC6qx1J5evlKpYrxXHDXBn7yGJuZHkWosjys5zs
-         X0BKhWw6veXe7dV+wK83ELJkhdne/y74Dej1qdYDimq2BhwD5m1iDA6+BtYyqGvyh+
-         /7AKP6KXxMWCN7omx2lyB07s6UT3jq+A0Lm0WI/g=
+        b=jQRt6ovDtbi7SfPXHkY2cX18O7m0zlpUvyoE2O7rGZ2NH/UOCSwS5L6H9dzS9B9z7
+         m/AZextxJEgnmRHXM1tk8BH0eAGENdmuI+LwkdI7YlxhVbk3uHvkLGkiJP3CdpatUO
+         K4YTbn8HkGNed7epV7KomCEsBkrlJE/8BLgpyHS8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Dean Nelson <dnelson@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 015/107] tcp: do not use ipv6 header for ipv4 flow
-Date:   Mon,  1 Apr 2019 19:01:30 +0200
-Message-Id: <20190401170046.906934940@linuxfoundation.org>
+Subject: [PATCH 4.14 016/107] thunderx: enable page recycling for non-XDP case
+Date:   Mon,  1 Apr 2019 19:01:31 +0200
+Message-Id: <20190401170046.976692195@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,40 +65,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Dean Nelson <dnelson@redhat.com>
 
-[ Upstream commit 89e4130939a20304f4059ab72179da81f5347528 ]
+[ Upstream commit b3e208069477588c06f4d5d986164b435bb06e6d ]
 
-When a dual stack tcp listener accepts an ipv4 flow,
-it should not attempt to use an ipv6 header or tcp_v6_iif() helper.
+Commit 773225388dae15e72790 ("net: thunderx: Optimize page recycling for XDP")
+added code to nicvf_alloc_page() that inadvertently disables receive buffer
+page recycling for the non-XDP case by always NULL'ng the page pointer.
 
-Fixes: 1397ed35f22d ("ipv6: add flowinfo for tcp6 pkt_options for all cases")
-Fixes: df3687ffc665 ("ipv6: add the IPV6_FL_F_REFLECT flag to IPV6_FL_A_GET")
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+This patch corrects two if-conditionals to allow for the recycling of non-XDP
+mode pages by only setting the page pointer to NULL when the page is not ready
+for recycling.
+
+Fixes: 773225388dae ("net: thunderx: Optimize page recycling for XDP")
+Signed-off-by: Dean Nelson <dnelson@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/tcp_ipv6.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/cavium/thunder/nicvf_queues.c |   23 ++++++++++-----------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1083,11 +1083,11 @@ static struct sock *tcp_v6_syn_recv_sock
- 		newnp->ipv6_fl_list = NULL;
- 		newnp->pktoptions  = NULL;
- 		newnp->opt	   = NULL;
--		newnp->mcast_oif   = tcp_v6_iif(skb);
--		newnp->mcast_hops  = ipv6_hdr(skb)->hop_limit;
--		newnp->rcv_flowinfo = ip6_flowinfo(ipv6_hdr(skb));
-+		newnp->mcast_oif   = inet_iif(skb);
-+		newnp->mcast_hops  = ip_hdr(skb)->ttl;
-+		newnp->rcv_flowinfo = 0;
- 		if (np->repflow)
--			newnp->flow_label = ip6_flowlabel(ipv6_hdr(skb));
-+			newnp->flow_label = 0;
+--- a/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
++++ b/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
+@@ -105,20 +105,19 @@ static inline struct pgcache *nicvf_allo
+ 	/* Check if page can be recycled */
+ 	if (page) {
+ 		ref_count = page_ref_count(page);
+-		/* Check if this page has been used once i.e 'put_page'
+-		 * called after packet transmission i.e internal ref_count
+-		 * and page's ref_count are equal i.e page can be recycled.
++		/* This page can be recycled if internal ref_count and page's
++		 * ref_count are equal, indicating that the page has been used
++		 * once for packet transmission. For non-XDP mode, internal
++		 * ref_count is always '1'.
+ 		 */
+-		if (rbdr->is_xdp && (ref_count == pgcache->ref_count))
+-			pgcache->ref_count--;
+-		else
+-			page = NULL;
+-
+-		/* In non-XDP mode, page's ref_count needs to be '1' for it
+-		 * to be recycled.
+-		 */
+-		if (!rbdr->is_xdp && (ref_count != 1))
++		if (rbdr->is_xdp) {
++			if (ref_count == pgcache->ref_count)
++				pgcache->ref_count--;
++			else
++				page = NULL;
++		} else if (ref_count != 1) {
+ 			page = NULL;
++		}
+ 	}
  
- 		/*
- 		 * No need to charge this sock to the relevant IPv6 refcnt debug socks count
+ 	if (!page) {
 
 
