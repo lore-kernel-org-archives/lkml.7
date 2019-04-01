@@ -2,51 +2,52 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 224C6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73131C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC46E208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441AC20896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140384;
-	bh=cQIQRUeGy5YafTnevGzgHbp9ESkA6N3smCJmmL28qZQ=;
+	s=default; t=1554140389;
+	bh=yHMU7kjTEr+vxQB8KMqdUMwESHOjOjoZDvV50YGdh8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YYH/UFPSxQlPbnAuXnDHPvMz+9Wd4ngS94sOzrJw3nhzIAnK+yix5YWoFH7F8MezI
-	 8BZf0PvwpEuGM/EFz9p2+sQYOLF8SdOmpLK/lQuzDHyg3CbUi4KK6LJ+/a+oUpN58i
-	 38fAslLJOXrmV0t16EjRsTU3tZOWlW1mlfxinWs4=
+	b=HfKcODRpa1807P+fXB0N1BE3txzPatxODNvlmlfiOdUy79oaxCnm9haR8j4N8TZ1x
+	 KFIgJwwMHBi90I/EMlmukVvy9vxyMuoNoVNyMFYbpGTELE+wOsuT9haXmUr+mNtbS9
+	 y2cuShjEjQKzW/eA3OxWT8M5S94pEnl8dc8hoFb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388487AbfDARjm (ORCPT
+        id S2388496AbfDARjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:39:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53496 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:39:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387934AbfDARjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:39:39 -0400
+        id S1729059AbfDARjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:39:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 151E4208E4;
-        Mon,  1 Apr 2019 17:39:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A40CE20880;
+        Mon,  1 Apr 2019 17:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140378;
-        bh=cQIQRUeGy5YafTnevGzgHbp9ESkA6N3smCJmmL28qZQ=;
+        s=default; t=1554140383;
+        bh=yHMU7kjTEr+vxQB8KMqdUMwESHOjOjoZDvV50YGdh8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aarQQxvuO057CtPNI7ciSSwZ1UVsIyx09gvW66ZpE/k3K2J2YYF1lTer6Ww4SSuyC
-         bCKooFFEz/NKx7dMuNcHiOP90tTGNDU5t1d4IUx/UTZ5NA/tjLYXIWrAvzEKUa4KYc
-         t4ipwMtfyQACPmhS4hnnLq1+kTXDx7uFy7eGoAgI=
+        b=ZUU09ZDV5E6GtBKqMq6Xeu+UO7djejWXxVaXP3dDlxG6XC7n+WAYTsFieCZEhZM5a
+         fGxDElHBCootig2WwBL3U+GmNbl1Uqj8B1CBrCpfQskYAgGqk+SkQaNZ+Dl73ah0N0
+         xyjRNweBmdUB147QxtXztBmiXeYvHfre9lEnx880=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 3.18 08/50] Bluetooth: Check L2CAP option sizes returned from l2cap_get_conf_opt
-Date:   Mon,  1 Apr 2019 19:02:51 +0200
-Message-Id: <20190401170041.970870927@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 50/50] arm64: support keyctl() system call in 32-bit mode
+Date:   Mon,  1 Apr 2019 19:03:33 +0200
+Message-Id: <20190401170046.691371018@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -65,196 +66,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marcel Holtmann <marcel@holtmann.org>
+[ Upstream commit 5c2a625937ba49bc691089370638223d310cda9a ]
 
-commit af3d5d1c87664a4f150fcf3534c6567cb19909b0 upstream.
+As is the case for a number of other architectures that have a 32-bit
+compat mode, enable KEYS_COMPAT if both COMPAT and KEYS are enabled.
+This allows AArch32 programs to use the keyctl() system call when
+running on an AArch64 kernel.
 
-When doing option parsing for standard type values of 1, 2 or 4 octets,
-the value is converted directly into a variable instead of a pointer. To
-avoid being tricked into being a pointer, check that for these option
-types that sizes actually match. In L2CAP every option is fixed size and
-thus it is prudent anyway to ensure that the remote side sends us the
-right option size along with option paramters.
-
-If the option size is not matching the option type, then that option is
-silently ignored. It is a protocol violation and instead of trying to
-give the remote attacker any further hints just pretend that option is
-not present and proceed with the default values. Implementation
-following the specification and its qualification procedures will always
-use the correct size and thus not being impacted here.
-
-To keep the code readable and consistent accross all options, a few
-cosmetic changes were also required.
-
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/l2cap_core.c |   77 ++++++++++++++++++++++++++-------------------
- 1 file changed, 46 insertions(+), 31 deletions(-)
+ arch/arm64/Kconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -3296,10 +3296,14 @@ static int l2cap_parse_conf_req(struct l
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index e8d81283c4fe..4ddf817f4a5c 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -558,6 +558,10 @@ config SYSVIPC_COMPAT
+ 	def_bool y
+ 	depends on COMPAT && SYSVIPC
  
- 		switch (type) {
- 		case L2CAP_CONF_MTU:
-+			if (olen != 2)
-+				break;
- 			mtu = val;
- 			break;
++config KEYS_COMPAT
++	def_bool y
++	depends on COMPAT && KEYS
++
+ endmenu
  
- 		case L2CAP_CONF_FLUSH_TO:
-+			if (olen != 2)
-+				break;
- 			chan->flush_to = val;
- 			break;
- 
-@@ -3307,26 +3311,30 @@ static int l2cap_parse_conf_req(struct l
- 			break;
- 
- 		case L2CAP_CONF_RFC:
--			if (olen == sizeof(rfc))
--				memcpy(&rfc, (void *) val, olen);
-+			if (olen != sizeof(rfc))
-+				break;
-+			memcpy(&rfc, (void *) val, olen);
- 			break;
- 
- 		case L2CAP_CONF_FCS:
-+			if (olen != 1)
-+				break;
- 			if (val == L2CAP_FCS_NONE)
- 				set_bit(CONF_RECV_NO_FCS, &chan->conf_state);
- 			break;
- 
- 		case L2CAP_CONF_EFS:
--			if (olen == sizeof(efs)) {
--				remote_efs = 1;
--				memcpy(&efs, (void *) val, olen);
--			}
-+			if (olen != sizeof(efs))
-+				break;
-+			remote_efs = 1;
-+			memcpy(&efs, (void *) val, olen);
- 			break;
- 
- 		case L2CAP_CONF_EWS:
-+			if (olen != 2)
-+				break;
- 			if (!chan->conn->hs_enabled)
- 				return -ECONNREFUSED;
--
- 			set_bit(FLAG_EXT_CTRL, &chan->flags);
- 			set_bit(CONF_EWS_RECV, &chan->conf_state);
- 			chan->tx_win_max = L2CAP_DEFAULT_EXT_WINDOW;
-@@ -3336,7 +3344,6 @@ static int l2cap_parse_conf_req(struct l
- 		default:
- 			if (hint)
- 				break;
--
- 			result = L2CAP_CONF_UNKNOWN;
- 			*((u8 *) ptr++) = type;
- 			break;
-@@ -3504,55 +3511,60 @@ static int l2cap_parse_conf_rsp(struct l
- 
- 		switch (type) {
- 		case L2CAP_CONF_MTU:
-+			if (olen != 2)
-+				break;
- 			if (val < L2CAP_DEFAULT_MIN_MTU) {
- 				*result = L2CAP_CONF_UNACCEPT;
- 				chan->imtu = L2CAP_DEFAULT_MIN_MTU;
- 			} else
- 				chan->imtu = val;
--			l2cap_add_conf_opt(&ptr, L2CAP_CONF_MTU, 2, chan->imtu, endptr - ptr);
-+			l2cap_add_conf_opt(&ptr, L2CAP_CONF_MTU, 2, chan->imtu,
-+					   endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_FLUSH_TO:
-+			if (olen != 2)
-+				break;
- 			chan->flush_to = val;
--			l2cap_add_conf_opt(&ptr, L2CAP_CONF_FLUSH_TO,
--					   2, chan->flush_to, endptr - ptr);
-+			l2cap_add_conf_opt(&ptr, L2CAP_CONF_FLUSH_TO, 2,
-+					   chan->flush_to, endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_RFC:
--			if (olen == sizeof(rfc))
--				memcpy(&rfc, (void *)val, olen);
--
-+			if (olen != sizeof(rfc))
-+				break;
-+			memcpy(&rfc, (void *)val, olen);
- 			if (test_bit(CONF_STATE2_DEVICE, &chan->conf_state) &&
- 			    rfc.mode != chan->mode)
- 				return -ECONNREFUSED;
--
- 			chan->fcs = 0;
--
--			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC,
--					   sizeof(rfc), (unsigned long) &rfc, endptr - ptr);
-+			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-+					   (unsigned long) &rfc, endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_EWS:
-+			if (olen != 2)
-+				break;
- 			chan->ack_win = min_t(u16, val, chan->ack_win);
- 			l2cap_add_conf_opt(&ptr, L2CAP_CONF_EWS, 2,
- 					   chan->tx_win, endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_EFS:
--			if (olen == sizeof(efs)) {
--				memcpy(&efs, (void *)val, olen);
--
--				if (chan->local_stype != L2CAP_SERV_NOTRAFIC &&
--				    efs.stype != L2CAP_SERV_NOTRAFIC &&
--				    efs.stype != chan->local_stype)
--					return -ECONNREFUSED;
--
--				l2cap_add_conf_opt(&ptr, L2CAP_CONF_EFS, sizeof(efs),
--						   (unsigned long) &efs, endptr - ptr);
--			}
-+			if (olen != sizeof(efs))
-+				break;
-+			memcpy(&efs, (void *)val, olen);
-+			if (chan->local_stype != L2CAP_SERV_NOTRAFIC &&
-+			    efs.stype != L2CAP_SERV_NOTRAFIC &&
-+			    efs.stype != chan->local_stype)
-+				return -ECONNREFUSED;
-+			l2cap_add_conf_opt(&ptr, L2CAP_CONF_EFS, sizeof(efs),
-+					   (unsigned long) &efs, endptr - ptr);
- 			break;
- 
- 		case L2CAP_CONF_FCS:
-+			if (olen != 1)
-+				break;
- 			if (*result == L2CAP_CONF_PENDING)
- 				if (val == L2CAP_FCS_NONE)
- 					set_bit(CONF_RECV_NO_FCS,
-@@ -3684,10 +3696,13 @@ static void l2cap_conf_rfc_get(struct l2
- 
- 		switch (type) {
- 		case L2CAP_CONF_RFC:
--			if (olen == sizeof(rfc))
--				memcpy(&rfc, (void *)val, olen);
-+			if (olen != sizeof(rfc))
-+				break;
-+			memcpy(&rfc, (void *)val, olen);
- 			break;
- 		case L2CAP_CONF_EWS:
-+			if (olen != 2)
-+				break;
- 			txwin_ext = val;
- 			break;
- 		}
+ menu "Power management options"
+-- 
+2.19.1
+
 
 
