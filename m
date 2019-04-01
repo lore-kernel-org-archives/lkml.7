@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF015C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCD2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9115421924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E50021924
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138594;
-	bh=FPEQc0NoK2Gu22YGzx6DZI1D2fRRXboz2qQ4ywVyfnY=;
+	s=default; t=1554138600;
+	bh=Zh2H0PR4BDDk+orn8PUR+JrIz72YhO7J3+Xq3nTdklU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UKwgs1+T64iVkKItzwNoWqo3a/4psHbpi10pwrpCT4EyZLbK+U7ub6TzidhZXIfjR
-	 mKBLtFxrqTFvFbM4ZHkh2U/gVTky2oNZDx87hkrBPNNpDWt/Hsueldv33TxlwDE+Ah
-	 2vJgT6B2xEWI5lwtMPMiQydr0mFaqmB1RPiCQo00=
+	b=J6/iJVx8br55XB0eTTrLG8yF8rP4BszNU9O0/I/vA39RXHIPgSR+S5qgnSidaZstD
+	 fIV51uCS0W039Cz9pNRk1yGYpjmnOAE4PoA+XeEbSMredcX1eeA2cCQP+a0K5mabrb
+	 9tDXceRs6GRLTAWHxI4xZE8tmr+9YdF4gm16DQBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbfDARJx (ORCPT
+        id S1729877AbfDARJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57008 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:09:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729025AbfDARJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:09:50 -0400
+        id S1729042AbfDARJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:09:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2FBC21924;
-        Mon,  1 Apr 2019 17:09:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9553D21924;
+        Mon,  1 Apr 2019 17:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138589;
-        bh=FPEQc0NoK2Gu22YGzx6DZI1D2fRRXboz2qQ4ywVyfnY=;
+        s=default; t=1554138596;
+        bh=Zh2H0PR4BDDk+orn8PUR+JrIz72YhO7J3+Xq3nTdklU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2VxjFU74AeMxTSsrZsBkKh9PPTn7cvHDudD/XZJcxTc8RaZfsRBUe6ZEI3O4ONrZM
-         lva5vc0es4QwrdXJE8l3ahNv5GmVj875zLFlfIuB30Erzrm2eBzN+uGg8ZpUzYyp64
-         F9PH9zbK7IGEInwEDPpFVMSmtJzKXw3tV/vD1MoE=
+        b=gSaaX6RnmviI4mdAtnhZ5b2fq9PNWYJCGxaj6NHomxjPq6D5/Ek/JAoE/tTFQ4Ubr
+         9V1xLl4ks41YVghmNQJBWfX6wWI/tzBtgPOb8HWYPrCj3nQU8TKzinZXskRexKpRbR
+         hzvwQth7NDgyuE5T/tD+ZOXdYlddwe51+HI8HgzI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Madhav Chauhan <madhav.chauhan@intel.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.0 110/146] drm/i915/icl: Fix the TRANS_DDI_FUNC_CTL2 bitfield macro
-Date:   Mon,  1 Apr 2019 19:02:02 +0200
-Message-Id: <20190401170057.835589838@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 5.0 085/146] staging: vt6655: Remove vif check from vnt_interrupt
+Date:   Mon,  1 Apr 2019 19:01:37 +0200
+Message-Id: <20190401170056.022744604@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -67,40 +64,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Manasi Navare <manasi.d.navare@intel.com>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit 69903dfae0310afe8a15f5cd4e376ebb7c6da1d2 upstream.
+commit cc26358f89c3e493b54766b1ca56cfc6b14db78a upstream.
 
-This patch fixes the PORT_SYNC_MODE_MASTER_SELECT macro
-to correctly do the left shifting to set the port sync
-master select correctly.
-I have tested this fix on ICL.
+A check for vif is made in vnt_interrupt_work.
 
-Fixes: 49edbd49786e ("drm/i915/icl: Define TRANS_DDI_FUNC_CTL DSI registers")
-Cc: Madhav Chauhan <madhav.chauhan@intel.com>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: <stable@vger.kernel.org> # v5.0+
-Signed-off-by: Manasi Navare <manasi.d.navare@intel.com>
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190319221847.21311-1-manasi.d.navare@intel.com
-(cherry picked from commit 7264aebb81d15aa6bbed650c816bba90f026bc35)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+There is a small chance of leaving interrupt disabled while vif
+is NULL and the work hasn't been scheduled.
+
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+CC: stable@vger.kernel.org # v4.2+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_reg.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/vt6655/device_main.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_reg.h
-+++ b/drivers/gpu/drm/i915/i915_reg.h
-@@ -9205,7 +9205,7 @@ enum skl_power_gate {
- #define TRANS_DDI_FUNC_CTL2(tran)	_MMIO_TRANS2(tran, \
- 						     _TRANS_DDI_FUNC_CTL2_A)
- #define  PORT_SYNC_MODE_ENABLE			(1 << 4)
--#define  PORT_SYNC_MODE_MASTER_SELECT(x)	((x) < 0)
-+#define  PORT_SYNC_MODE_MASTER_SELECT(x)	((x) << 0)
- #define  PORT_SYNC_MODE_MASTER_SELECT_MASK	(0x7 << 0)
- #define  PORT_SYNC_MODE_MASTER_SELECT_SHIFT	0
+--- a/drivers/staging/vt6655/device_main.c
++++ b/drivers/staging/vt6655/device_main.c
+@@ -1139,8 +1139,7 @@ static irqreturn_t vnt_interrupt(int irq
+ {
+ 	struct vnt_private *priv = arg;
  
+-	if (priv->vif)
+-		schedule_work(&priv->interrupt_work);
++	schedule_work(&priv->interrupt_work);
+ 
+ 	return IRQ_HANDLED;
+ }
 
 
