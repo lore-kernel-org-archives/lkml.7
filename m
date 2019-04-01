@@ -2,142 +2,410 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7E3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FDFC10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9198E20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D356620870
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:18:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="vr0p3BNV"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kNxFYmr8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfDALPZ (ORCPT
+        id S1726764AbfDALS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 07:15:25 -0400
-Received: from mail-eopbgr60040.outbound.protection.outlook.com ([40.107.6.40]:12505
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725882AbfDALPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 07:15:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YDt5c24JPvCkZ8d3qoJs6NM2wV3q/Wis/3lE1GmNXRA=;
- b=vr0p3BNV3dO/1bfIWJn7YcmzAki6fDFvxCQBCOi9qdC5J1tmRHMxVsvN2mcxV9A0fGOXu5XMq7DMtmLUrTQIqUzOX/RJpTYXi3fVZBdnuEBaX6oQunexi1A4tfNZ1v2aS8BRlSEO4muSXUnto13f4nCcEhwcy7Qs90E+gczjjzQ=
-Received: from DB7PR04MB5132.eurprd04.prod.outlook.com (20.176.235.28) by
- DB7PR04MB4459.eurprd04.prod.outlook.com (52.135.137.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.19; Mon, 1 Apr 2019 11:15:21 +0000
-Received: from DB7PR04MB5132.eurprd04.prod.outlook.com
- ([fe80::2cac:cc2f:6528:54f7]) by DB7PR04MB5132.eurprd04.prod.outlook.com
- ([fe80::2cac:cc2f:6528:54f7%5]) with mapi id 15.20.1750.021; Mon, 1 Apr 2019
- 11:15:21 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     Leo Li <leoyang.li@nxp.com>
-CC:     Netdev <netdev@vger.kernel.org>,
-        Madalin-cristian Bucur <madalin.bucur@nxp.com>,
-        Roy Pledge <roy.pledge@nxp.com>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        David Miller <davem@davemloft.net>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 02/13] soc/fsl/bman: map FBPR area in the iommu
-Thread-Topic: [PATCH 02/13] soc/fsl/bman: map FBPR area in the iommu
-Thread-Index: AQHU5je+GYAdWERgxkCiU6HsMs84n6YjHN8AgAQMkqA=
-Date:   Mon, 1 Apr 2019 11:15:21 +0000
-Message-ID: <DB7PR04MB513214FB393EF3C514A26F21EC550@DB7PR04MB5132.eurprd04.prod.outlook.com>
-References: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
- <20190329140014.8126-3-laurentiu.tudor@nxp.com>
- <CADRPPNTPZ1xhYr_YKZvrXVJhVqhV9RNAu6ekVHDeOudXTZx3=g@mail.gmail.com>
-In-Reply-To: <CADRPPNTPZ1xhYr_YKZvrXVJhVqhV9RNAu6ekVHDeOudXTZx3=g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [192.88.166.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1d2e78c9-430d-416b-cea0-08d6b6935469
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB7PR04MB4459;
-x-ms-traffictypediagnostic: DB7PR04MB4459:
-x-microsoft-antispam-prvs: <DB7PR04MB4459B2A59B8B40169C7920E8EC550@DB7PR04MB4459.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(346002)(376002)(396003)(366004)(13464003)(199004)(189003)(86362001)(97736004)(44832011)(478600001)(81156014)(53936002)(4326008)(76176011)(55016002)(8936002)(9686003)(6246003)(6636002)(8676002)(81166006)(2906002)(71200400001)(71190400001)(68736007)(6862004)(6116002)(14454004)(3846002)(66066001)(6436002)(52536014)(7736002)(33656002)(74316002)(5660300002)(305945005)(54906003)(316002)(256004)(106356001)(26005)(105586002)(561944003)(7696005)(25786009)(6506007)(476003)(486006)(446003)(11346002)(102836004)(186003)(53546011)(229853002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4459;H:DB7PR04MB5132.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EFS563r0UZW+l0OoMUvXUfcu1bXVamfwcbYSl4UXHyKhn5aZJ6lyzxPObrBmrFdv5GfgzwnbymxyzLTLgENTFlLjeus6hi/0ACv+5C5//db2+g/JDPJNGU9/3C9WKsgz1ZzDP7wMqXwvw+dOuBG6F8qKC+fROIaOhFxEvBY1m6Lmk+D2gvJOV2vLnvDBQTDQzErQ8bkN/LErLgSjpczQlvHqjoqQ3A1wrDPDv5YK1yhf6rZjAo0JLF6ffe362+BYtLPea7GpdHvlTmq4pFV1rVjsNz7hLh0C2seMQv4lIZNiOSvRhCWhMK/lGmUgARvftQBhpysspT1jJKeSaaJjm6KWqgfwWQZ3d/vNepX8aiMnhkVp62l/lUdr2zZtklWMpIQUgc6oQRC8TPbak8iB4vkG7g9fdFRvhmi2jptxxl8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 1 Apr 2019 07:18:57 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10406 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbfDALS5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 07:18:57 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ca1f39d0000>; Mon, 01 Apr 2019 04:18:54 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 01 Apr 2019 04:18:56 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 01 Apr 2019 04:18:56 -0700
+Received: from [192.168.1.18] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Apr
+ 2019 11:18:45 +0000
+Subject: Re: [PATCH 05/10] dt-bindings: PCI: tegra: Add device tree support
+ for T194
+To:     Rob Herring <robh@kernel.org>
+CC:     <bhelgaas@google.com>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <tiwai@suse.de>, <spujar@nvidia.com>, <skomatineni@nvidia.com>,
+        <liviu.dudau@arm.com>, <krzk@kernel.org>, <heiko@sntech.de>,
+        <horms+renesas@verge.net.au>, <olof@lixom.net>,
+        <maxime.ripard@bootlin.com>, <andy.gross@linaro.org>,
+        <bjorn.andersson@linaro.org>, <jagan@amarulasolutions.com>,
+        <enric.balletbo@collabora.com>, <ezequiel@collabora.com>,
+        <stefan.wahren@i2se.com>, <marc.w.gonzalez@free.fr>,
+        <l.stach@pengutronix.de>, <tpiepho@impinj.com>,
+        <hayashi.kunihiko@socionext.com>, <yue.wang@amlogic.com>,
+        <shawn.lin@rock-chips.com>, <xiaowei.bao@nxp.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-6-git-send-email-vidyas@nvidia.com>
+ <5ca06149.1c69fb81.720fd.79e1@mx.google.com>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <5ef50168-2476-1088-7156-8a4488d7a2e1@nvidia.com>
+Date:   Mon, 1 Apr 2019 16:48:42 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d2e78c9-430d-416b-cea0-08d6b6935469
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 11:15:21.1151
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4459
+In-Reply-To: <5ca06149.1c69fb81.720fd.79e1@mx.google.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1554117534; bh=R0m0iwxyrgrkIfS4QudPqN6nmzRBbGxzw3bJ2fWPWvs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=kNxFYmr8pPjtCQZrvvKL9MJ+o7yGaZSjURPfEOQwuOid8AjiDq6Bq4FTh+A+rwJVn
+         8cH5DpavjvwlHzf+Hh2+qibfEJU6CSBOtqCfRXjR8a8G6IN3V0dsSd/XvSiTMjzXam
+         /8QZ4VD1nJdX3IOX9Qs+GPhUtU6a4KbVtiNrP2XXBWrS7z0J/dUonEzjAR0RIoG2YE
+         9zOf6LB4w38TMNoogeVdluZ50xG+aLdYaTAtjU3hCsbXQL3sj1PgvUJG8r/ExiadYI
+         brUzL7Ez/QY6XR2JlABHHhDLjGywIm/FSMrgbGpNsc/7tj9Df6vHbqAXX2lEHwKJa1
+         fwRigAet5P3Pw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGVvLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExpIFlhbmcg
-W21haWx0bzpsZW95YW5nLmxpQG54cC5jb21dDQo+IFNlbnQ6IEZyaWRheSwgTWFyY2ggMjksIDIw
-MTkgMTE6MTYgUE0NCj4gDQo+IE9uIEZyaSwgTWFyIDI5LCAyMDE5IGF0IDk6MDMgQU0gPGxhdXJl
-bnRpdS50dWRvckBueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206IExhdXJlbnRpdSBUdWRv
-ciA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+DQo+ID4NCj4gPiBBZGQgYSBvbmUtdG8tb25lIGlv
-bW11IG1hcHBpbmcgZm9yIGJtYW4gcHJpdmF0ZSBkYXRhIG1lbW9yeSAoRkJQUikuDQo+ID4gVGhp
-cyBpcyByZXF1aXJlZCBmb3IgQk1BTiB0byB3b3JrIHdpdGhvdXQgZmF1bHRzIGJlaGluZCBhbiBp
-b21tdS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnRpdSBUdWRvciA8bGF1cmVudGl1
-LnR1ZG9yQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvc29jL2ZzbC9xYm1hbi9ibWFu
-X2Njc3IuYyB8IDExICsrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRp
-b25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvZnNsL3FibWFuL2JtYW5f
-Y2Nzci5jDQo+IGIvZHJpdmVycy9zb2MvZnNsL3FibWFuL2JtYW5fY2Nzci5jDQo+ID4gaW5kZXgg
-N2MzY2M5NjgwNTNjLi5iMjA5Yzc5NTExYmIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zb2Mv
-ZnNsL3FibWFuL2JtYW5fY2Nzci5jDQo+ID4gKysrIGIvZHJpdmVycy9zb2MvZnNsL3FibWFuL2Jt
-YW5fY2Nzci5jDQo+ID4gQEAgLTI5LDYgKzI5LDcgQEANCj4gPiAgICovDQo+ID4NCj4gPiAgI2lu
-Y2x1ZGUgImJtYW5fcHJpdi5oIg0KPiA+ICsjaW5jbHVkZSA8bGludXgvaW9tbXUuaD4NCj4gPg0K
-PiA+ICB1MTYgYm1hbl9pcF9yZXY7DQo+ID4gIEVYUE9SVF9TWU1CT0woYm1hbl9pcF9yZXYpOw0K
-PiA+IEBAIC0xNzgsNiArMTc5LDcgQEAgc3RhdGljIGludCBmc2xfYm1hbl9wcm9iZShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlDQo+ICpwZGV2KQ0KPiA+ICAgICAgICAgaW50IHJldCwgZXJyX2lycTsN
-Cj4gPiAgICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ID4gICAgICAg
-ICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBkZXYtPm9mX25vZGU7DQo+ID4gKyAgICAgICBz
-dHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW47DQo+ID4gICAgICAgICBzdHJ1Y3QgcmVzb3VyY2Ug
-KnJlczsNCj4gPiAgICAgICAgIHUxNiBpZCwgYm1fcG9vbF9jbnQ7DQo+ID4gICAgICAgICB1OCBt
-YWpvciwgbWlub3I7DQo+ID4gQEAgLTIyNSw2ICsyMjcsMTUgQEAgc3RhdGljIGludCBmc2xfYm1h
-bl9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ICpwZGV2KQ0KPiA+DQo+ID4gICAgICAg
-ICBkZXZfZGJnKGRldiwgIkFsbG9jYXRlZCBGQlBSIDB4JWxseCAweCV6eFxuIiwgZmJwcl9hLCBm
-YnByX3N6KTsNCj4gPg0KPiA+ICsgICAgICAgLyogQ3JlYXRlIGFuIDEtdG8tMSBpb21tdSBtYXBw
-aW5nIGZvciBGQlBSIGFyZWEgKi8NCj4gPiArICAgICAgIGRvbWFpbiA9IGlvbW11X2dldF9kb21h
-aW5fZm9yX2RldihkZXYpOw0KPiA+ICsgICAgICAgaWYgKGRvbWFpbikgew0KPiA+ICsgICAgICAg
-ICAgICAgICByZXQgPSBpb21tdV9tYXAoZG9tYWluLCBmYnByX2EsIGZicHJfYSwgZmJwcl9zeiwN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIElPTU1VX1JFQUQgfCBJT01NVV9X
-UklURSB8IElPTU1VX0NBQ0hFKTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKHJldCkNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICBkZXZfd2FybihkZXYsICJmYWlsZWQgdG8gaW9tbXVfbWFw
-KCkgJWRcbiIsDQo+IHJldCk7DQo+ID4gKyAgICAgICB9DQo+IA0KPiBMaWtlIFJvYmluIGhhcyBw
-b2ludGVkIG91dCwgY291bGQgeW91IGV4cGxhaW4gd2h5IHRoZSBtYXBwaW5nIGluIHRoaXMNCj4g
-cGF0Y2ggYW5kIG90aGVyIHNpbWlsYXIgcGF0Y2hlcyBjYW5ub3QgYmUgZGVhbHQgd2l0aCB0aGUg
-ZG1hIEFQSXMNCj4gYXV0b21hdGljYWxseT8gIElmIHRoZSBjdXJyZW50IGJxbWFuIGRyaXZlciBk
-b2Vzbid0IHVzZSB0aGUgZG1hIEFQSXMNCj4gY29ycmVjdGx5LCB3ZSBuZWVkIHRvIGZpeCB0aGF0
-IGluc3RlYWQgb2YgZG9pbmcgdGhlIG1hcHBpbmcNCj4gZXhwbGljaXRseS4NCg0KUGxlYXNlIHNl
-ZSBteSByZXBseSB0byBSb2Jpbi4NCkFzIGEgc2lkZSBjb21tZW50LCBpZiB3ZSB3YW50IHRvIGNv
-bnZlcnQgdG8gZG1hIGFwaSBpdCB3aWxsIGJlIGludGVyZXN0aW5nIHRvIHNlZSBob3cgd2UnbGwg
-ZGVhbCB3aXRoIHRoZSBxbWFuIHBvcnRhbCBkZXZpY2VzIGFzIHRoZXkgcmVxdWlyZSBhIHNtbXUg
-bWFwcGluZyBmb3IgYW4gYXJlYSBvZiB0aGVpciByZWdpc3RlciBibG9jayAod2hlcmUgc3Rhc2hp
-bmcgZ29lcykuIFByb2JsZW0gaXMgdGhleSB0cmVhdGVkIGFzIGRpc3RpbmN0IGRldmljZXMsIHRo
-ZSBhZGRyZXNzIHdoZXJlIHRoZXkgc2hvdWxkIGRtYSBjYW5ub3QgYmUgY29uZmlndXJlZCBpbmRl
-cGVuZGVudGx5IGZvciBlYWNoIG9uZSBvZiB0aGVtLiBJIHRoaW5rIEkgY2FuIGNhbWUgdXAgd2l0
-aCBhIHByb3Bvc2FsIGJ1dCBwcm9iYWJseSB3aWxsIG5vdCBsb29rIHZlcnkgcHJldHR5Lg0KDQot
-LS0NCkJlc3QgUmVnYXJkcywgTGF1cmVudGl1DQoNCj4gPiArDQo+ID4gICAgICAgICBibV9zZXRf
-bWVtb3J5KGZicHJfYSwgZmJwcl9zeik7DQo+ID4NCj4gPiAgICAgICAgIGVycl9pcnEgPSBwbGF0
-Zm9ybV9nZXRfaXJxKHBkZXYsIDApOw0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCg==
+On 3/31/2019 12:12 PM, Rob Herring wrote:
+> On Tue, Mar 26, 2019 at 08:43:22PM +0530, Vidya Sagar wrote:
+>> Add support for Tegra194 PCIe controllers. These controllers are based
+>> on Synopsys DesignWare core IP.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   .../bindings/pci/nvidia,tegra194-pcie.txt          | 209 +++++++++++++++++++++
+>>   .../devicetree/bindings/phy/phy-tegra194-p2u.txt   |  34 ++++
+>>   2 files changed, 243 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>>   create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>> new file mode 100644
+>> index 000000000000..31527283a0cd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>> @@ -0,0 +1,209 @@
+>> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
+>> +
+>> +This PCIe host controller is based on the Synopsis Designware PCIe IP
+>> +and thus inherits all the common properties defined in designware-pcie.txt.
+>> +
+>> +Required properties:
+>> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
+>> +- device_type: Must be "pci"
+>> +- reg: A list of physical base address and length for each set of controller
+>> +  registers. Must contain an entry for each entry in the reg-names property.
+>> +- reg-names: Must include the following entries:
+>> +  "appl": Controller's application logic registers
+>> +  "window1": This is the aperture of controller available under 4GB boundary
+>> +             (i.e. within 32-bit space). This aperture is typically used for
+>> +             accessing config space of root port itself and also the connected
+>> +             endpoints (by appropriately programming internal Address
+>> +             Translation Unit's (iATU) out bound region) and also to map
+>> +             prefetchable/non-prefetchable BARs.
+> 
+> This is usually represented in 'ranges' for BARs.
+I added window1 and window2 as the umbrella apertures that each PCIe controller has
+and gave a description of how each aperture *can* be used. This is an overview and as
+such these two entries are not directly used by the driver.
+'ranges' property gives us the information as to how exactly are window1 and window2
+apertures used.
+Thierry Reding also gave few comments about these entries. If this is confusing,
+I'm ok to remove them as well. Please let me know.
+
+> 
+>> +  "config": As per the definition in designware-pcie.txt
+>> +  "atu_dma": iATU and DMA register. This is where the iATU (internal Address
+>> +             Translation Unit) registers of the PCIe core are made available
+>> +             fow SW access.
+>> +  "dbi": The aperture where root port's own configuration registers are
+>> +         available
+>> +  "window2": This is the larger (compared to window1) aperture available above
+>> +             4GB boundary (i.e. in 64-bit space). This is typically used for
+>> +             mapping prefetchable/non-prefetchable BARs of endpoints
+>> +- interrupts: A list of interrupt outputs of the controller. Must contain an
+>> +  entry for each entry in the interrupt-names property.
+>> +- interrupt-names: Must include the following entries:
+>> +  "intr": The Tegra interrupt that is asserted for controller interrupts
+>> +  "msi": The Tegra interrupt that is asserted when an MSI is received
+>> +- bus-range: Range of bus numbers associated with this controller
+>> +- #address-cells: Address representation for root ports (must be 3)
+>> +  - cell 0 specifies the bus and device numbers of the root port:
+>> +    [23:16]: bus number
+>> +    [15:11]: device number
+>> +  - cell 1 denotes the upper 32 address bits and should be 0
+>> +  - cell 2 contains the lower 32 address bits and is used to translate to the
+>> +    CPU address space
+>> +- #size-cells: Size representation for root ports (must be 2)
+>> +- ranges: Describes the translation of addresses for root ports and standard
+>> +  PCI regions. The entries must be 7 cells each, where the first three cells
+>> +  correspond to the address as described for the #address-cells property
+>> +  above, the fourth and fifth cells are for the physical CPU address to
+>> +  translate to and the sixth and seventh cells are as described for the
+>> +  #size-cells property above.
+>> +  - Entries setup the mapping for the standard I/O, memory and
+>> +    prefetchable PCI regions. The first cell determines the type of region
+>> +    that is setup:
+>> +    - 0x81000000: I/O memory region
+>> +    - 0x82000000: non-prefetchable memory region
+>> +    - 0xc2000000: prefetchable memory region
+>> +  Please refer to the standard PCI bus binding document for a more detailed
+>> +  explanation.
+>> +- #interrupt-cells: Size representation for interrupts (must be 1)
+>> +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
+>> +  Please refer to the standard PCI bus binding document for a more detailed
+>> +  explanation.
+>> +- clocks: Must contain an entry for each entry in clock-names.
+>> +  See ../clocks/clock-bindings.txt for details.
+>> +- clock-names: Must include the following entries:
+>> +  - core_clk
+>> +- resets: Must contain an entry for each entry in reset-names.
+>> +  See ../reset/reset.txt for details.
+>> +- reset-names: Must include the following entries:
+>> +  - core_apb_rst
+>> +  - core_rst
+>> +- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
+>> +- phy-names: Must include an entry for each active lane.
+>> +  "pcie-p2u-N": where N ranges from 0 to one less than the total number of lanes
+>> +- Controller dependent register offsets
+>> +  - nvidia,event-cntr-ctrl: EVENT_COUNTER_CONTROL reg offset
+>> +      0x168 - FPGA
+>> +      0x1a8 - C1, C2 and C3
+>> +      0x1c4 - C4
+>> +      0x1d8 - C0 and C5
+>> +  - nvidia,event-cntr-data: EVENT_COUNTER_DATA reg offset
+>> +      0x16c - FPGA
+>> +      0x1ac - C1, C2 and C3
+>> +      0x1c8 - C4
+>> +      0x1dc - C0 and C5
+>> +- nvidia,controller-id : Controller specific ID
+>> +      0x0 - C0
+>> +      0x1 - C1
+>> +      0x2 - C2
+>> +      0x3 - C3
+>> +      0x4 - C4
+>> +      0x5 - C5
+>> +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
+>> +
+>> +Optional properties:
+>> +- nvidia,max-speed: limits controllers max speed to this value.
+>> +    1 - Gen-1 (2.5 GT/s)
+>> +    2 - Gen-2 (5 GT/s)
+>> +    3 - Gen-3 (8 GT/s)
+>> +    4 - Gen-4 (16 GT/s)
+>> +- nvidia,init-speed: limits controllers init speed to this value.
+>> +    1 - Gen-1 (2. 5 GT/s)
+>> +    2 - Gen-2 (5 GT/s)
+>> +    3 - Gen-3 (8 GT/s)
+>> +    4 - Gen-4 (16 GT/s)
+> 
+> Don't we have standard speed properties?
+Not that I'm aware of. If you come across any, please do let me know and
+I'll change these.
+
+> 
+> Why do we need 2 values?
+max-speed configures the controller to advertise the speed mentioned through
+this flag, whereas, init-speed gets the link up at this speed and software
+can further take the link speed to a different speed by retraining the link.
+This is to give flexibility to developers depending on the platform.
+
+> 
+>> +- nvidia,disable-aspm-states : controls advertisement of ASPM states
+>> +    bit-0 to '1' : disables advertisement of ASPM-L0s
+>> +    bit-1 to '1' : disables advertisement of ASPM-L1. This also disables
+>> +                 advertisement of ASPM-L1.1 and ASPM-L1.2
+>> +    bit-2 to '1' : disables advertisement of ASPM-L1.1
+>> +    bit-3 to '1' : disables advertisement of ASPM-L1.2
+> 
+> Seems like these too should be common.
+This flag controls the advertisement of different ASPM states by root port.
+Again, I'm not aware of any common method for this.
+  
+> 
+>> +- nvidia,disable-clock-request : gives a hint to driver that there is no
+>> +    CLKREQ signal routing on board
+>> +- nvidia,update-fc-fixup : needs it to improve perf when a platform is designed
+>> +    in such a way that it satisfies at least one of the following conditions
+>> +    1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed and MPS)
+>> +    2. If C0/C1/C2/C3/C4/C5 operate at their respective max link widths and
+> 
+> What is Cx?
+Cx is the Controller with its ID.
+
+> 
+>> +       a) speed is Gen-2 and MPS is 256B
+>> +       b) speed is >= Gen-3 with any MPS
+>> +- nvidia,cdm-check : Enables CDM checking. For more information, refer Synopsis
+>> +    DesignWare Cores  PCI Express Controller Databook r4.90a Chapter S.4
+>> +- nvidia,enable-power-down : Enables power down of respective controller and
+>> +    corresponding PLLs if they are not shared by any other entity
+>> +- "nvidia,pex-wake" : Add PEX_WAKE gpio number to provide wake support.
+>> +- "nvidia,plat-gpios" : Add gpio number that needs to be configured before
+>> +   system goes for enumeration. There could be platforms where enabling 3.3V and
+>> +   12V power supplies are done through GPIOs, in which case, list of all such
+>> +   GPIOs can be specified through this property.
+> 
+> These should be split out to their specific function.
+Enabling Power rails is just an example and depending on the platform, there could be
+some on-board muxes which are controlled through GPIOs and all such platform specific
+configuration can be handled through this flag.
+
+> 
+>> +- "nvidia,aspm-cmrt" : Common Mode Restore time for proper operation of ASPM to
+>> +   be specified in microseconds
+>> +- "nvidia,aspm-pwr-on-t" : Power On time for proper operation of ASPM to be
+>> +   specified in microseconds
+>> +- "nvidia,aspm-l0s-entrance-latency" : ASPM L0s entrance latency to be specified
+>> +   in microseconds
+> 
+> properties with units need unit suffixes as defined in
+> property-units.txt.
+Done. I'll take care of this in next patch series.
+
+> 
+>> +
+>> +Examples:
+>> +=========
+>> +
+>> +Tegra194:
+>> +--------
+>> +
+>> +SoC DTSI:
+>> +
+>> +	pcie@14180000 {
+>> +		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
+>> +		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
+>> +		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
+>> +		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
+>> +		       0x00 0x38040000 0x0 0x00040000>; /* iATU_DMA reg space (256K)  */
+>> +		reg-names = "appl", "config", "atu_dma";
+>> +
+>> +		status = "disabled";
+>> +
+>> +		#address-cells = <3>;
+>> +		#size-cells = <2>;
+>> +		device_type = "pci";
+>> +		num-lanes = <8>;
+>> +		linux,pci-domain = <0>;
+>> +
+>> +		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
+>> +		clock-names = "core_clk";
+>> +
+>> +		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
+>> +			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
+>> +		reset-names = "core_apb_rst", "core_rst";
+>> +
+>> +		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,	/* controller interrupt */
+>> +			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
+>> +		interrupt-names = "intr", "msi";
+>> +
+>> +		#interrupt-cells = <1>;
+>> +		interrupt-map-mask = <0 0 0 0>;
+>> +		interrupt-map = <0 0 0 0 &gic 0 72 0x04>;
+>> +
+>> +		nvidia,bpmp = <&bpmp>;
+>> +
+>> +		nvidia,max-speed = <4>;
+>> +		nvidia,disable-aspm-states = <0xf>;
+>> +		nvidia,controller-id = <&bpmp 0x0>;
+>> +		nvidia,aux-clk-freq = <0x13>;
+>> +		nvidia,preset-init = <0x5>;
+>> +		nvidia,aspm-cmrt = <0x3C>;
+>> +		nvidia,aspm-pwr-on-t = <0x14>;
+>> +		nvidia,aspm-l0s-entrance-latency = <0x3>;
+>> +
+>> +		bus-range = <0x0 0xff>;
+>> +		ranges = <0x81000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000      /* downstream I/O (1MB) */
+>> +			  0x82000000 0x0 0x38200000 0x0 0x38200000 0x0 0x01E00000      /* non-prefetchable memory (30MB) */
+>> +			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* prefetchable memory (16GB) */
+>> +
+>> +		nvidia,cfg-link-cap-l1sub = <0x1c4>;
+>> +		nvidia,cap-pl16g-status = <0x174>;
+>> +		nvidia,cap-pl16g-cap-off = <0x188>;
+>> +		nvidia,event-cntr-ctrl = <0x1d8>;
+>> +		nvidia,event-cntr-data = <0x1dc>;
+>> +		nvidia,dl-feature-cap = <0x30c>;
+>> +	};
+>> +
+>> +Board DTS:
+>> +
+>> +	pcie@14180000 {
+>> +		status = "okay";
+>> +
+>> +		vddio-pex-ctl-supply = <&vdd_1v8ao>;
+>> +
+>> +		phys = <&p2u_2>,
+>> +		       <&p2u_3>,
+>> +		       <&p2u_4>,
+>> +		       <&p2u_5>;
+>> +		phy-names = "pcie-p2u-0", "pcie-p2u-1", "pcie-p2u-2",
+>> +			    "pcie-p2u-3";
+>> +	};
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>> new file mode 100644
+>> index 000000000000..cc0de8e8e8db
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>> @@ -0,0 +1,34 @@
+>> +NVIDIA Tegra194 P2U binding
+>> +
+>> +Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVIDIA High
+>> +Speed) each interfacing with 12 and 8 P2U instances respectively.
+>> +A P2U instance is a glue logic between Synopsys DesignWare Core PCIe IP's PIPE
+>> +interface and PHY of HSIO/NVHS bricks. Each P2U instance represents one PCIe
+>> +lane.
+>> +
+>> +Required properties:
+>> +- compatible: For Tegra19x, must contain "nvidia,tegra194-phy-p2u".
+>> +- reg: Should be the physical address space and length of respective each P2U
+>> +       instance.
+>> +- reg-names: Must include the entry "base".
+>> +
+>> +Required properties for PHY port node:
+>> +- #phy-cells: Defined by generic PHY bindings.  Must be 0.
+>> +
+>> +Refer to phy/phy-bindings.txt for the generic PHY binding properties.
+>> +
+>> +Example:
+>> +
+>> +hsio-p2u {
+>> +	compatible = "simple-bus";
+>> +	#address-cells = <2>;
+>> +	#size-cells = <2>;
+>> +	ranges;
+>> +	p2u_0: p2u@03e10000 {
+>> +		compatible = "nvidia,tegra194-phy-p2u";
+>> +		reg = <0x0 0x03e10000 0x0 0x00010000>;
+>> +		reg-names = "base";
+>> +
+>> +		#phy-cells = <0>;
+>> +	};
+>> +}
+>> -- 
+>> 2.7.4
+>>
+> 
+
