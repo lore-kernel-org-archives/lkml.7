@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96021C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4116BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 669D821929
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46E1206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138675;
-	bh=F1BkfglgDVsVxT0z4JUTeYdXbeA3E8SGqUu6QhHatBo=;
+	s=default; t=1554138680;
+	bh=gnvx0E5d/E2X+/TEkUI2F88PTOy9EN1UFl5LY7WU5us=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MWuXb+6UYqALgbQwh0DNg/lbKA2Y5wCgF8lZLEmsZwzGlycYXntlyFb6vMo8TIuBP
-	 ZkInFMqKt7oBzUXwg2J0ht4ffbe9Qqe8X3KA48t0xZ4J65wDscxZEzVh9W3nU4kcl3
-	 f6/ENyi7qJU0u3a+Fp4QmapC/+iHz1kAu8EaIvEQ=
+	b=RX8n/G/BKW0eikkPmIKSMEy1EaTUWRF62oJJElVOfQrRKJqtUSvcxY7ABBO9PZomJ
+	 gHevv5uDjLlIgl7Wi8lEDRTzjtBZLw9iyrrK4BBfAxyyjjG0AXmTR+mkvEs0by+tXG
+	 lIRSGp870nGoZikEovtY5y1LlmGkMQmAKympQVAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730143AbfDARLN (ORCPT
+        id S1730169AbfDARLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:11:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59560 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:11:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729539AbfDARLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:11:11 -0400
+        id S1729526AbfDARLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:11:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5C4721925;
-        Mon,  1 Apr 2019 17:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4889D206B8;
+        Mon,  1 Apr 2019 17:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138671;
-        bh=F1BkfglgDVsVxT0z4JUTeYdXbeA3E8SGqUu6QhHatBo=;
+        s=default; t=1554138673;
+        bh=gnvx0E5d/E2X+/TEkUI2F88PTOy9EN1UFl5LY7WU5us=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GMzWs73cozjU9aR4AtRJb5D/PUpHIzSBxXYbKrAnwj3gpb3rUGBQlEkyyPdy7IJ83
-         nR2NlOaEnzGm5smS/tG6LQqpFWUgY1dNXEji1Cza6cvt+bSeo7quiTMgIQcszGDgyr
-         5XBBveqJ/J27Pz0tw89qpFh+WIbQbsEM/ofdTpZc=
+        b=Ayz/A0hThn1+DmdmZSo+QeyNicoUPwGoiGRw/Gvw5r1JlM5HIPlkkbvdxa/3Jo2tl
+         sWBJ7PWwt2YMwJdLDp/LYmOV4wBqL5Qw/YgXCq12LMCQWvR6Sj1hYmIYnSrerNuqbh
+         2hP1hmoOWJ4VSVRomaVzYQnYD7CszkUj9YQazhJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rolf Eike Beer <eb@emlix.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.0 135/146] objtool: Query pkg-config for libelf location
-Date:   Mon,  1 Apr 2019 19:02:27 +0200
-Message-Id: <20190401170059.547990055@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Pavithra R. Prakash" <pavrampu@in.ibm.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.0 136/146] powerpc/pseries/energy: Use OF accessor functions to read ibm,drc-indexes
+Date:   Mon,  1 Apr 2019 19:02:28 +0200
+Message-Id: <20190401170059.614669770@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -66,60 +68,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Rolf Eike Beer <eb@emlix.com>
+From: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 
-commit 056d28d135bca0b1d0908990338e00e9dadaf057 upstream.
+commit ce9afe08e71e3f7d64f337a6e932e50849230fc2 upstream.
 
-If it is not in the default location, compilation fails at several points.
+In cpu_to_drc_index() in the case when FW_FEATURE_DRC_INFO is absent,
+we currently use of_read_property() to obtain the pointer to the array
+corresponding to the property "ibm,drc-indexes". The elements of this
+array are of type __be32, but are accessed without any conversion to
+the OS-endianness, which is buggy on a Little Endian OS.
 
-Signed-off-by: Rolf Eike Beer <eb@emlix.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/91a25e992566a7968fedc89ec80e7f4c83ad0548.1553622500.git.jpoimboe@redhat.com
+Fix this by using of_property_read_u32_index() accessor function to
+safely read the elements of the array.
+
+Fixes: e83636ac3334 ("pseries/drc-info: Search DRC properties for CPU indexes")
+Cc: stable@vger.kernel.org # v4.16+
+Reported-by: Pavithra R. Prakash <pavrampu@in.ibm.com>
+Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Reviewed-by: Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
+[mpe: Make the WARN_ON a WARN_ON_ONCE so it's not retriggerable]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Makefile               |    4 +++-
- tools/objtool/Makefile |    7 +++++--
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ arch/powerpc/platforms/pseries/pseries_energy.c |   27 ++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -944,9 +944,11 @@ mod_sign_cmd = true
- endif
- export mod_sign_cmd
+--- a/arch/powerpc/platforms/pseries/pseries_energy.c
++++ b/arch/powerpc/platforms/pseries/pseries_energy.c
+@@ -77,18 +77,27 @@ static u32 cpu_to_drc_index(int cpu)
  
-+HOST_LIBELF_LIBS = $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
+ 		ret = drc.drc_index_start + (thread_index * drc.sequential_inc);
+ 	} else {
+-		const __be32 *indexes;
+-
+-		indexes = of_get_property(dn, "ibm,drc-indexes", NULL);
+-		if (indexes == NULL)
+-			goto err_of_node_put;
++		u32 nr_drc_indexes, thread_drc_index;
+ 
+ 		/*
+-		 * The first element indexes[0] is the number of drc_indexes
+-		 * returned in the list.  Hence thread_index+1 will get the
+-		 * drc_index corresponding to core number thread_index.
++		 * The first element of ibm,drc-indexes array is the
++		 * number of drc_indexes returned in the list.  Hence
++		 * thread_index+1 will get the drc_index corresponding
++		 * to core number thread_index.
+ 		 */
+-		ret = indexes[thread_index + 1];
++		rc = of_property_read_u32_index(dn, "ibm,drc-indexes",
++						0, &nr_drc_indexes);
++		if (rc)
++			goto err_of_node_put;
 +
- ifdef CONFIG_STACK_VALIDATION
-   has_libelf := $(call try-run,\
--		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null -lelf -,1,0)
-+		echo "int main() {}" | $(HOSTCC) -xc -o /dev/null $(HOST_LIBELF_LIBS) -,1,0)
-   ifeq ($(has_libelf),1)
-     objtool_target := tools/objtool FORCE
-   else
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -25,14 +25,17 @@ LIBSUBCMD		= $(LIBSUBCMD_OUTPUT)libsubcm
- OBJTOOL    := $(OUTPUT)objtool
- OBJTOOL_IN := $(OBJTOOL)-in.o
- 
-+LIBELF_FLAGS := $(shell pkg-config libelf --cflags 2>/dev/null)
-+LIBELF_LIBS  := $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
++		WARN_ON_ONCE(thread_index > nr_drc_indexes);
++		rc = of_property_read_u32_index(dn, "ibm,drc-indexes",
++						thread_index + 1,
++						&thread_drc_index);
++		if (rc)
++			goto err_of_node_put;
 +
- all: $(OBJTOOL)
++		ret = thread_drc_index;
+ 	}
  
- INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
- 	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
--CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES)
--LDFLAGS  += -lelf $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
-+CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
-+LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
- 
- # Allow old libelf to be used:
- elfshdr := $(shell echo '$(pound)include <libelf.h>' | $(CC) $(CFLAGS) -x c -E - | grep elf_getshdr)
+ 	rc = 0;
 
 
