@@ -2,52 +2,52 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A84C10F0B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34B6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF581208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836DE2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140120;
-	bh=Wkmjcgy4nUN0i65BuBCOoOOHKKjbqhGyr5XDgqHYlZM=;
+	s=default; t=1554140122;
+	bh=Qc/YWmpCF1Dbk1RP+inzlTpx0KA9qUujFFdilvRsbd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mhp5RVVaOagDMUcYJujqHzuKIwvKbKe+91QcUAutAxe87JJ9WZ4cNBG+Mlr8L9MB1
-	 pnwUhVff+vW+iAfAbrIhDXX/MppbPr2MBm6bjvRhDhk4hXxCD/1UpSR2Hyj3xjkiL9
-	 xsXy8yOilOpetNTfOYYRDPAHWIO1GO6W6uekMO3w=
+	b=zCR1Pdb8653FJOb77K42ZqvOpk9oTyfK9d1vA/CNWO/Q29IrUQBClf0D1h4n8SF/+
+	 DiR65BnWyg4My9S5/g2h7mIhs086mVdjUIy8ldd7k+iMXjn1XInD6Y/ozeqFuDtamH
+	 IpSwnuzc8SMqHYoT6NTZi2ASY+wa/Lq9vWCMZ6Fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387900AbfDARfS (ORCPT
+        id S2387910AbfDARfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:35:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45664 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387527AbfDARfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:35:12 -0400
+        id S2387894AbfDARfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:35:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFFE820880;
-        Mon,  1 Apr 2019 17:35:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5830320896;
+        Mon,  1 Apr 2019 17:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140111;
-        bh=Wkmjcgy4nUN0i65BuBCOoOOHKKjbqhGyr5XDgqHYlZM=;
+        s=default; t=1554140117;
+        bh=Qc/YWmpCF1Dbk1RP+inzlTpx0KA9qUujFFdilvRsbd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sUFpTxGpEqVPMXZPwAtOBSJZUGT3n0yOcxLYcMcOL9ObvyhCepe9QoUxkKyuYeK6P
-         186iqzafVaETtzM6WvWxcMpsZa1mijztPeMnfzOspo1SWov1gM9APGnkgky9ESTpFb
-         m9gI/9r7FxS0JDdFoac1ZvYeITbMwfdqFQJmY/b0=
+        b=opGISSPoqJ8eMpZ0Utl5kW6Jt83LQYu8n4v/Pq8Hqc8/qh1Bu8Rz/8G7BWHK5452A
+         tuK6LsSQCFmQZDDcd4p2yq0Ka6ONEmO+jPcducBNbiEJwyCv9WXIx1VahgPGwSXXJW
+         1TYSLI2fLYlONCP+207jsJA9Y06G1YGXP78ZEDek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Winter Wang <wente.wang@nxp.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 082/131] usb: gadget: configfs: add mutex lock before unregister gadget
-Date:   Mon,  1 Apr 2019 19:02:32 +0200
-Message-Id: <20190401170058.971706294@linuxfoundation.org>
+        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 110/131] scsi: zfcp: fix scsi_eh host reset with port_forced ERP for non-NPIV FCP devices
+Date:   Mon,  1 Apr 2019 19:03:00 +0200
+Message-Id: <20190401170100.913907494@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -66,65 +66,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cee51c33f52ebf673a088a428ac0fecc33ab77fa ]
+From: Steffen Maier <maier@linux.ibm.com>
 
-There may be a race condition if f_fs calls unregister_gadget_item in
-ffs_closed() when unregister_gadget is called by UDC store at the same time.
-this leads to a kernel NULL pointer dereference:
+commit 242ec1455151267fe35a0834aa9038e4c4670884 upstream.
 
-[  310.644928] Unable to handle kernel NULL pointer dereference at virtual address 00000004
-[  310.645053] init: Service 'adbd' is being killed...
-[  310.658938] pgd = c9528000
-[  310.662515] [00000004] *pgd=19451831, *pte=00000000, *ppte=00000000
-[  310.669702] Internal error: Oops: 817 [#1] PREEMPT SMP ARM
-[  310.675211] Modules linked in:
-[  310.678294] CPU: 0 PID: 1537 Comm: ->transport Not tainted 4.1.15-03725-g793404c #2
-[  310.685958] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-[  310.692493] task: c8e24200 ti: c945e000 task.ti: c945e000
-[  310.697911] PC is at usb_gadget_unregister_driver+0xb4/0xd0
-[  310.703502] LR is at __mutex_lock_slowpath+0x10c/0x16c
-[  310.708648] pc : [<c075efc0>]    lr : [<c0bfb0bc>]    psr: 600f0113
-<snip..>
-[  311.565585] [<c075efc0>] (usb_gadget_unregister_driver) from [<c075e2b8>] (unregister_gadget_item+0x1c/0x34)
-[  311.575426] [<c075e2b8>] (unregister_gadget_item) from [<c076fcc8>] (ffs_closed+0x8c/0x9c)
-[  311.583702] [<c076fcc8>] (ffs_closed) from [<c07736b8>] (ffs_data_reset+0xc/0xa0)
-[  311.591194] [<c07736b8>] (ffs_data_reset) from [<c07738ac>] (ffs_data_closed+0x90/0xd0)
-[  311.599208] [<c07738ac>] (ffs_data_closed) from [<c07738f8>] (ffs_ep0_release+0xc/0x14)
-[  311.607224] [<c07738f8>] (ffs_ep0_release) from [<c023e030>] (__fput+0x80/0x1d0)
-[  311.614635] [<c023e030>] (__fput) from [<c014e688>] (task_work_run+0xb0/0xe8)
-[  311.621788] [<c014e688>] (task_work_run) from [<c010afdc>] (do_work_pending+0x7c/0xa4)
-[  311.629718] [<c010afdc>] (do_work_pending) from [<c010770c>] (work_pending+0xc/0x20)
+Suppose more than one non-NPIV FCP device is active on the same channel.
+Send I/O to storage and have some of the pending I/O run into a SCSI
+command timeout, e.g. due to bit errors on the fibre. Now the error
+situation stops. However, we saw FCP requests continue to timeout in the
+channel. The abort will be successful, but the subsequent TUR fails.
+Scsi_eh starts. The LUN reset fails. The target reset fails.  The host
+reset only did an FCP device recovery. However, for non-NPIV FCP devices,
+this does not close and reopen ports on the SAN-side if other non-NPIV FCP
+device(s) share the same open ports.
 
-for functions using functionFS, i.e. android adbd will close /dev/usb-ffs/adb/ep0
-when usb IO thread fails, but switch adb from on to off also triggers write
-"none" > UDC. These 2 operations both call unregister_gadget, which will lead
-to the panic above.
+In order to resolve the continuing FCP request timeouts, we need to
+explicitly close and reopen ports on the SAN-side.
 
-add a mutex before calling unregister_gadget for api used in f_fs.
+This was missing since the beginning of zfcp in v2.6.0 history commit
+ea127f975424 ("[PATCH] s390 (7/7): zfcp host adapter.").
 
-Signed-off-by: Winter Wang <wente.wang@nxp.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Note: The FSF requests for forced port reopen could run into FSF request
+timeouts due to other reasons. This would trigger an internal FCP device
+recovery. Pending forced port reopen recoveries would get dismissed. So
+some ports might not get fully reopened during this host reset handler.
+However, subsequent I/O would trigger the above described escalation and
+eventually all ports would be forced reopen to resolve any continuing FCP
+request timeouts due to earlier bit errors.
+
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: <stable@vger.kernel.org> #3.0+
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/gadget/configfs.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/s390/scsi/zfcp_erp.c  |   14 ++++++++++++++
+ drivers/s390/scsi/zfcp_ext.h  |    2 ++
+ drivers/s390/scsi/zfcp_scsi.c |    4 ++++
+ 3 files changed, 20 insertions(+)
 
-diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
-index 6abb6a10ee82..d412e234f336 100644
---- a/drivers/usb/gadget/configfs.c
-+++ b/drivers/usb/gadget/configfs.c
-@@ -1496,7 +1496,9 @@ void unregister_gadget_item(struct config_item *item)
- {
- 	struct gadget_info *gi = to_gadget_info(item);
- 
-+	mutex_lock(&gi->lock);
- 	unregister_gadget(gi);
-+	mutex_unlock(&gi->lock);
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -652,6 +652,20 @@ static void zfcp_erp_strategy_memwait(st
+ 	add_timer(&erp_action->timer);
  }
- EXPORT_SYMBOL_GPL(unregister_gadget_item);
  
--- 
-2.19.1
-
++void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
++				     int clear, char *dbftag)
++{
++	unsigned long flags;
++	struct zfcp_port *port;
++
++	write_lock_irqsave(&adapter->erp_lock, flags);
++	read_lock(&adapter->port_list_lock);
++	list_for_each_entry(port, &adapter->port_list, list)
++		_zfcp_erp_port_forced_reopen(port, clear, dbftag);
++	read_unlock(&adapter->port_list_lock);
++	write_unlock_irqrestore(&adapter->erp_lock, flags);
++}
++
+ static void _zfcp_erp_port_reopen_all(struct zfcp_adapter *adapter,
+ 				      int clear, char *id)
+ {
+--- a/drivers/s390/scsi/zfcp_ext.h
++++ b/drivers/s390/scsi/zfcp_ext.h
+@@ -68,6 +68,8 @@ extern void zfcp_erp_clear_port_status(s
+ extern int  zfcp_erp_port_reopen(struct zfcp_port *, int, char *);
+ extern void zfcp_erp_port_shutdown(struct zfcp_port *, int, char *);
+ extern void zfcp_erp_port_forced_reopen(struct zfcp_port *, int, char *);
++extern void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
++					    int clear, char *dbftag);
+ extern void zfcp_erp_set_lun_status(struct scsi_device *, u32);
+ extern void zfcp_erp_clear_lun_status(struct scsi_device *, u32);
+ extern void zfcp_erp_lun_reopen(struct scsi_device *, int, char *);
+--- a/drivers/s390/scsi/zfcp_scsi.c
++++ b/drivers/s390/scsi/zfcp_scsi.c
+@@ -326,6 +326,10 @@ static int zfcp_scsi_eh_host_reset_handl
+ 	struct zfcp_adapter *adapter = zfcp_sdev->port->adapter;
+ 	int ret = SUCCESS, fc_ret;
+ 
++	if (!(adapter->connection_features & FSF_FEATURE_NPIV_MODE)) {
++		zfcp_erp_port_forced_reopen_all(adapter, 0, "schrh_p");
++		zfcp_erp_wait(adapter);
++	}
+ 	zfcp_erp_adapter_reopen(adapter, 0, "schrh_1");
+ 	zfcp_erp_wait(adapter);
+ 	fc_ret = fc_block_scsi_eh(scpnt);
 
 
