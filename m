@@ -2,106 +2,118 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD245C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5162FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB49A208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554148492;
-	bh=OOb/iIh1WevlZw+tSzoKk125izWcByw+Vj4BWbf0DJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=orwQyqNm99Uwr8u4vW87jSCqaL0zpy6dxfOYtD0Ac95PPhYgCswXmtc1A/Si+c8Rm
-	 FlrS++Dg/2AyI/h/O1rvxx6bnP+woCJHpJMOzZs8bb+PX/iT+tQ3vJf+vfm3dwTPSz
-	 2StjEmumuSsT1rXAo+2GDR5NpSRZEGJTrmHrqcUI=
+	by mail.kernel.org (Postfix) with ESMTP id 1CC45208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:55:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aH8oaMCS";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CxdkT4Ye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfDATyv (ORCPT
+        id S1726826AbfDATzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 15:54:51 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37585 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfDATyu (ORCPT
+        Mon, 1 Apr 2019 15:55:06 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57812 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfDATzG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 15:54:50 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v84so8405679oif.4
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 12:54:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AGDOzetaZYZ8LOd8b9oKz8TSRDQVr/+nYM3Gw/VJ2oQ=;
-        b=UW9igYgiZXQEjeJW99iUJnbvEvPS5zVaLqiwO4Q9KbxJ/JiWNvvEpRKmaUb1bjNfgC
-         AaYcSQw0YR8HWi0H3CP+jNzQZhxGmw0poyS4I0ObVXErYjyczzB25jPW/tEVScvpBvOu
-         j0CAzg+CigipLzaH2KY6Kp+SwqqRGa4fanMQ22XEKFhrGx81bdALT6NA/HztsnavMgkb
-         kt4/8zQeKt+3fAk+6baigvugYfIj7x+jZWUOhx+DdEzOOB6mAdNYz1fNprq6w6hcO4gS
-         NIEvAn/YJqt+SpNpoipcBpqGWrZdxna8iJKpOJEK0XNvrDZB5LoFMJAoad8aaZxb5FrK
-         hSsw==
-X-Gm-Message-State: APjAAAXfOTrARnRZ5fl0EH3zlCIeDrjIJ3S/Jvvm9GkMmrGv3Y7paDoT
-        zxboVu1wyQQz8cuNRLi4IN3nWQ==
-X-Google-Smtp-Source: APXvYqwidRajxwEJg1PJz1CIw9bg3E5GYXIkKPzMuZ7My/eiMpcN+XgiAAX5i5VgLiysIN9RV4fVQw==
-X-Received: by 2002:aca:355:: with SMTP id 82mr1877834oid.30.1554148489952;
-        Mon, 01 Apr 2019 12:54:49 -0700 (PDT)
-Received: from localhost ([130.164.62.212])
-        by smtp.gmail.com with ESMTPSA id j18sm4483486otq.68.2019.04.01.12.54.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 12:54:48 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 12:54:47 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     atull@kernel.org, mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH 01/17] fpga: dfl-fme-mgr: fix FME_PR_INTFC_ID register
- address.
-Message-ID: <20190401195447.GA1910@archbook>
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
- <1553483264-5379-2-git-send-email-hao.wu@intel.com>
+        Mon, 1 Apr 2019 15:55:06 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0B2AD608CC; Mon,  1 Apr 2019 19:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554148505;
+        bh=lg/WjPP7fSXj1sQ85Vza08p52bmkE+SZGn+BlcDkwJs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=aH8oaMCSbcZzy07RgKla9d8G7J3AbEJ2pekw7wljfOvmWkP82KNlvR/Jl6RGPKwCC
+         pMntGIKtuCX6os+v9/xT1Tn+/SWdGrIXpeQU/wLcsAYhhmic9RWjRWTPhcKRuK97+z
+         kTTkzrzBzA0RHIaiJCPCdjxLTj7yFvoV7P9Y3kAM=
+Received: from [10.79.170.163] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0976D60736;
+        Mon,  1 Apr 2019 19:54:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554148504;
+        bh=lg/WjPP7fSXj1sQ85Vza08p52bmkE+SZGn+BlcDkwJs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CxdkT4YeF7+he2AavZRwwNWysZWxrOr/wfWfurJFdZIfwKYXfQqDi4CApoaRf9pr5
+         Xss1m2YfD2bAMsDX9vb8SvKo2dk902ehKkQnSHmoxtyWpqdalNK/9Ul6GdkX9wlhI7
+         ZVrYO6yvD7AdNCHzoAcaIAhwC3T6LMlAOLuSr/O4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0976D60736
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH 2/4] staging: iio: ad9832: add SPDX identifier
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>, lars@metafoo.de,
+        Michael.Hennerich@analog.com, stefan.popa@analog.com,
+        jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+References: <20190401143724.mcn73jhdtq3zp3nk@smtp.gmail.com>
+ <ac167cc8-4236-2e15-d5f2-fa222d95da49@codeaurora.org>
+ <20190401171355.GA19716@kroah.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <0e1a0be4-e2f3-fb09-3d2b-e8a52b87f7e5@codeaurora.org>
+Date:   Tue, 2 Apr 2019 01:24:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553483264-5379-2-git-send-email-hao.wu@intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190401171355.GA19716@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wu,
 
-On Mon, Mar 25, 2019 at 11:07:28AM +0800, Wu Hao wrote:
-> FME_PR_INTFC_ID is used as compat_id for fpga manager and region,
-> but high 64 bits and low 64 bits of the compat_id are swapped by
-> mistake. This patch fixes this problem by fixing register address.
-> 
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> ---
->  drivers/fpga/dfl-fme-mgr.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/fpga/dfl-fme-mgr.c b/drivers/fpga/dfl-fme-mgr.c
-> index 76f3770..b3f7eee 100644
-> --- a/drivers/fpga/dfl-fme-mgr.c
-> +++ b/drivers/fpga/dfl-fme-mgr.c
-> @@ -30,8 +30,8 @@
->  #define FME_PR_STS		0x10
->  #define FME_PR_DATA		0x18
->  #define FME_PR_ERR		0x20
-> -#define FME_PR_INTFC_ID_H	0xA8
-> -#define FME_PR_INTFC_ID_L	0xB0
-> +#define FME_PR_INTFC_ID_L	0xA8
-> +#define FME_PR_INTFC_ID_H	0xB0
+On 4/1/2019 10:43 PM, Greg KH wrote:
+> On Mon, Apr 01, 2019 at 08:36:50PM +0530, Mukesh Ojha wrote:
+>> On 4/1/2019 8:07 PM, Marcelo Schmitt wrote:
+>>> Add SPDX identifier of GPL-2.0 for the ad9832 driver.
+>>>
+>>> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+>>> ---
+>>>    drivers/staging/iio/frequency/ad9832.c | 3 +--
+>>>    1 file changed, 1 insertion(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
+>>> index 50a583020072..d8d4a7936275 100644
+>>> --- a/drivers/staging/iio/frequency/ad9832.c
+>>> +++ b/drivers/staging/iio/frequency/ad9832.c
+>>> @@ -1,9 +1,8 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>> FYI
+>>
+>> Use C notations here as per https://lkml.org/lkml/2019/2/13/570.
+>>
+>> <https://lkml.org/lkml/2019/2/13/570>
+>>
+>> Once you fix it then you can take mine
+>> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> Did you read the documentation about how to put a proper SPDX line in
+> the kernel documentation?  For .c files, you have to use "//", not "/* */"
+>
+> Please read:
+> 	Documentation/process/license-rules.rst
+> and see the section "Style" for all of the details.
+Thanks for the detail Greg.
 
-Does this handle endianess correct?
->  
->  /* FME PR Control Register Bitfield */
->  #define FME_PR_CTRL_PR_RST	BIT_ULL(0)  /* Reset PR engine */
-> -- 
-> 2.7.4
-> 
+Missed the fact.
+
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
 Cheers,
-Moritz
+-Mukesh
+
+>
+> thanks,
+>
+> greg k-h
