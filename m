@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2AAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEF0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD9320830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6079420830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139509;
-	bh=EqXohSwUW3yVWgAkct3kJkCoHOGTJWq0r2BZqukaHrQ=;
+	s=default; t=1554139513;
+	bh=d87004y1trBUyv8dgxKMQNqMtiQxd2dzhNt4jWCgPak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tj0950Y4sMTHUwv3wnXQe2uDnLFyTVd2tnAlC1dPxMY3fGfxCbJagcMj1GKZqqm9q
-	 dPtlUifD1Qj1g38IkBaqloWkW/i5KwshJfM6L5nO03f1BPUDjLAUn6uiMv+3Izv9iO
-	 xGXEB3yui8I3DCnSQBc/Vj2QQr69tfpUJgafURX8=
+	b=uijjZ4uuYBKHDEAaRI9j/u83bJ2yyab9Yd/zAK1zmAVhdHbF5M2Qx0UuVX31uQdBm
+	 aiPtg56XfPoHRjZF+/G4Fs/7cOvozxAhLIK3Tg0BVEKIIWBt6dZgAX0nouKqbM+otP
+	 p4yiowleZSv5yHWu3gGRB6G/P2N1z6mms5ZsQJMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732372AbfDARZI (ORCPT
+        id S1732379AbfDARZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:25:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56104 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:25:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731767AbfDARZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:25:04 -0400
+        id S1731767AbfDARZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:25:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEEDA2063F;
-        Mon,  1 Apr 2019 17:25:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FBD32063F;
+        Mon,  1 Apr 2019 17:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139504;
-        bh=EqXohSwUW3yVWgAkct3kJkCoHOGTJWq0r2BZqukaHrQ=;
+        s=default; t=1554139508;
+        bh=d87004y1trBUyv8dgxKMQNqMtiQxd2dzhNt4jWCgPak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Orn5HNFg5zx158bZK4rFGlZ2zOrUjFwdWve87tEZiK8xkj0GgCaph5DGy/jTo3VCf
-         zQKLMeKRCXG7UGbuFzit1RGge8cFZys+kX8NcUD4DpSF4zTDCpiSAUCmNcWVXQ+YnW
-         yMCHk0aIfRi9QFmE3mkje2BbXhMYmlgkkIIHbtA8=
+        b=z6KXMwXQzLFnAV8iNdE0e131cJdbUBhQMY3bArzaBMpOrxQ9nUtyql1fiFtAm+vyF
+         djWp6tKJ18ms6JRJ/ceDSSq+AABvqVpzJOzqP+J8LkrSP4WknetwMv75ghW5jN0+PX
+         Su/kEbCNXpSEXSzEJtyOxhnTrDuXcJBNOyb2VXS4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 4.14 096/107] usb: common: Consider only available nodes for dr_mode
-Date:   Mon,  1 Apr 2019 19:02:51 +0200
-Message-Id: <20190401170054.406343177@linuxfoundation.org>
+        stable@vger.kernel.org, Yasushi Asano <yasano@jp.adit-jv.com>,
+        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 4.14 097/107] usb: host: xhci-rcar: Add XHCI_TRUST_TX_LENGTH quirk
+Date:   Mon,  1 Apr 2019 19:02:52 +0200
+Message-Id: <20190401170054.509944941@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,34 +66,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+From: Yasushi Asano <yasano@jp.adit-jv.com>
 
-commit 238e0268c82789e4c107a37045d529a6dbce51a9 upstream.
+commit 40fc165304f0faaae78b761f8ee30b5d216b1850 upstream.
 
-There are cases where multiple device tree nodes point to the
-same phy node by means of the "phys" property, but we should
-only consider those nodes that are marked as available rather
-than just any node.
+When plugging BUFFALO LUA4-U3-AGT USB3.0 to Gigabit Ethernet LAN
+Adapter, warning messages filled up dmesg.
 
-Fixes: 98bfb3946695 ("usb: of: add an api to get dr_mode by the phy node")
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+[  101.098287] xhci-hcd ee000000.usb: WARN Successful completion on short TX for slot 1 ep 4: needs XHCI_TRUST_TX_LENGTH quirk?
+[  101.117463] xhci-hcd ee000000.usb: WARN Successful completion on short TX for slot 1 ep 4: needs XHCI_TRUST_TX_LENGTH quirk?
+[  101.136513] xhci-hcd ee000000.usb: WARN Successful completion on short TX for slot 1 ep 4: needs XHCI_TRUST_TX_LENGTH quirk?
+
+Adding the XHCI_TRUST_TX_LENGTH quirk resolves the issue.
+
+Signed-off-by: Yasushi Asano <yasano@jp.adit-jv.com>
+Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
+Acked-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/common/common.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/host/xhci-rcar.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -148,6 +148,8 @@ enum usb_dr_mode of_usb_get_dr_mode_by_p
+--- a/drivers/usb/host/xhci-rcar.c
++++ b/drivers/usb/host/xhci-rcar.c
+@@ -236,6 +236,7 @@ int xhci_rcar_init_quirk(struct usb_hcd
+ 			xhci_rcar_is_gen3(hcd->self.controller))
+ 		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
  
- 	do {
- 		controller = of_find_node_with_property(controller, "phys");
-+		if (!of_device_is_available(controller))
-+			continue;
- 		index = 0;
- 		do {
- 			if (arg0 == -1) {
++	xhci->quirks |= XHCI_TRUST_TX_LENGTH;
+ 	return xhci_rcar_download_firmware(hcd);
+ }
+ 
 
 
