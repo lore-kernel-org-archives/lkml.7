@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD86C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3D4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5CE20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A071320830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139891;
-	bh=rKoe32QPkOLa3OYBvGvwVOD1qxwlIVxKxIo16pFIw3I=;
+	s=default; t=1554139902;
+	bh=nY9Tg0EwRZUB7q4YUmtswoKzuzRFM1oxQZVHDHNo0xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=InMhvQLGOD4+RweR0vLbXZ4DNHsSD8iSk+7DkRloPO9JTYwBGtbHFFIYbS8tWKjLd
-	 FipgAs/AefMxuf3NsSBlF7xYFhHBcMvhiCg6JTm1RQxfnKFbxXYf4A94xbWArwqt96
-	 IpvKeb10qlY7qzWE2p4Y/2GdVMsUxDxqKYn23+54=
+	b=uZa5/gSUCUKMUZMeEYNPg9bxl2GQ4O+MLAK+UL8yfUCAZz6J+VQjj6xCUgTdS9BeG
+	 W5gfDu+KibnzOMMH63dY40+1sJCjY7F6WIFwX/nsIX34G5wyFap4NBAUzoVvEJamb1
+	 QTFbhv+lHevDwZVJncfmmZHQI2REcgssOh6iAFUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733052AbfDARb3 (ORCPT
+        id S1733288AbfDARbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:31:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38990 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:31:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732850AbfDARb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:31:27 -0400
+        id S1733078AbfDARbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:31:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 811772070B;
-        Mon,  1 Apr 2019 17:31:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 269132070B;
+        Mon,  1 Apr 2019 17:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139886;
-        bh=rKoe32QPkOLa3OYBvGvwVOD1qxwlIVxKxIo16pFIw3I=;
+        s=default; t=1554139897;
+        bh=nY9Tg0EwRZUB7q4YUmtswoKzuzRFM1oxQZVHDHNo0xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hqMbjA1WgCZjSAJFgaf5fZGUpPzobR/R0VIhJT5fR5ZWaqfgrYRfGG/nI0vCV8Fzi
-         pwW2t8gLrkgxrMLZ1nhVAUOwQlvwPEty44Hz5RHqlVnDxIFvp7i2TOmU6y2iHiYDT5
-         N7dPbBHLNVvR+VfvRtq0TUWfbfrhqH0/qIzLnB4I=
+        b=LfBWlmFHuPBiMxQgv1yk0FHLCd2ZCr4i3QP1vZ1kTd9dffXW55Mx2ngEbuCvv+C5R
+         5hm12RBI1D9hbhcv0NZLAPZjv2Kj1s47IaYnBQJdaun+c5ajzTwIQB4rXUEaPAU4gz
+         Qkym+GM04vGHfvv/TY8f985IHCWxH6wKlHeJX2H8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>, stable@kernel.org
-Subject: [PATCH 4.4 009/131] ext4: brelse all indirect buffer in ext4_ind_remove_space()
-Date:   Mon,  1 Apr 2019 19:01:19 +0200
-Message-Id: <20190401170052.555833178@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
+        Deepak Rawat <drawat@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: [PATCH 4.4 002/131] drm/vmwgfx: Dont double-free the mode stored in par->set_mode
+Date:   Mon,  1 Apr 2019 19:01:12 +0200
+Message-Id: <20190401170051.875045312@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -65,70 +65,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Thomas Zimmermann <tzimmermann@suse.de>
 
-commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217 upstream.
+commit c2d311553855395764e2e5bf401d987ba65c2056 upstream.
 
-All indirect buffers get by ext4_find_shared() should be released no
-mater the branch should be freed or not. But now, we forget to release
-the lower depth indirect buffers when removing space from the same
-higher depth indirect block. It will lead to buffer leak and futher
-more, it may lead to quota information corruption when using old quota,
-consider the following case.
+When calling vmw_fb_set_par(), the mode stored in par->set_mode gets free'd
+twice. The first free is in vmw_fb_kms_detach(), the second is near the
+end of vmw_fb_set_par() under the name of 'old_mode'. The mode-setting code
+only works correctly if the mode doesn't actually change. Removing
+'old_mode' in favor of using par->set_mode directly fixes the problem.
 
- - Create and mount an empty ext4 filesystem without extent and quota
-   features,
- - quotacheck and enable the user & group quota,
- - Create some files and write some data to them, and then punch hole
-   to some files of them, it may trigger the buffer leak problem
-   mentioned above.
- - Disable quota and run quotacheck again, it will create two new
-   aquota files and write the checked quota information to them, which
-   probably may reuse the freed indirect block(the buffer and page
-   cache was not freed) as data block.
- - Enable quota again, it will invoke
-   vfs_load_quota_inode()->invalidate_bdev() to try to clean unused
-   buffers and pagecache. Unfortunately, because of the buffer of quota
-   data block is still referenced, quota code cannot read the up to date
-   quota info from the device and lead to quota information corruption.
-
-This problem can be reproduced by xfstests generic/231 on ext3 file
-system or ext4 file system without extent and quota features.
-
-This patch fix this problem by releasing the missing indirect buffers,
-in ext4_ind_remove_space().
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@kernel.org
+Cc: <stable@vger.kernel.org>
+Fixes: a278724aa23c ("drm/vmwgfx: Implement fbdev on kms v2")
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Reviewed-by: Deepak Rawat <drawat@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/indirect.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_fb.c |   12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
---- a/fs/ext4/indirect.c
-+++ b/fs/ext4/indirect.c
-@@ -1491,10 +1491,14 @@ end_range:
- 					   partial->p + 1,
- 					   partial2->p,
- 					   (chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
-+			while (partial > chain) {
-+				BUFFER_TRACE(partial->bh, "call brelse");
-+				brelse(partial->bh);
-+			}
-+			while (partial2 > chain2) {
-+				BUFFER_TRACE(partial2->bh, "call brelse");
-+				brelse(partial2->bh);
-+			}
- 			return 0;
- 		}
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_fb.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_fb.c
+@@ -531,11 +531,9 @@ static int vmw_fb_set_par(struct fb_info
+ 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 		DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_PVSYNC)
+ 	};
+-	struct drm_display_mode *old_mode;
+ 	struct drm_display_mode *mode;
+ 	int ret;
  
+-	old_mode = par->set_mode;
+ 	mode = drm_mode_duplicate(vmw_priv->dev, &new_mode);
+ 	if (!mode) {
+ 		DRM_ERROR("Could not create new fb mode.\n");
+@@ -546,11 +544,7 @@ static int vmw_fb_set_par(struct fb_info
+ 	mode->vdisplay = var->yres;
+ 	vmw_guess_mode_timing(mode);
+ 
+-	if (old_mode && drm_mode_equal(old_mode, mode)) {
+-		drm_mode_destroy(vmw_priv->dev, mode);
+-		mode = old_mode;
+-		old_mode = NULL;
+-	} else if (!vmw_kms_validate_mode_vram(vmw_priv,
++	if (!vmw_kms_validate_mode_vram(vmw_priv,
+ 					mode->hdisplay *
+ 					DIV_ROUND_UP(var->bits_per_pixel, 8),
+ 					mode->vdisplay)) {
+@@ -613,8 +607,8 @@ static int vmw_fb_set_par(struct fb_info
+ 	schedule_delayed_work(&par->local_work, 0);
+ 
+ out_unlock:
+-	if (old_mode)
+-		drm_mode_destroy(vmw_priv->dev, old_mode);
++	if (par->set_mode)
++		drm_mode_destroy(vmw_priv->dev, par->set_mode);
+ 	par->set_mode = mode;
+ 
+ 	drm_modeset_unlock_all(vmw_priv->dev);
 
 
