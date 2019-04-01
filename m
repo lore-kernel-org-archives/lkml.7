@@ -2,146 +2,116 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6503FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71129C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3291320857
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C53620857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Of5yDBo9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbfDAO7C (ORCPT
+        id S1728681AbfDAPAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 10:59:02 -0400
-Received: from foss.arm.com ([217.140.101.70]:36150 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfDAO7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 10:59:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE77EA78;
-        Mon,  1 Apr 2019 07:59:01 -0700 (PDT)
-Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E9153F690;
-        Mon,  1 Apr 2019 07:58:59 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 15:58:54 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] dt-bindings: phy: Add binding for Qualcomm PCIe2
- PHY
-Message-ID: <20190401145854.GA6234@e107981-ln.cambridge.arm.com>
-References: <20190219060407.15263-1-bjorn.andersson@linaro.org>
- <20190219060407.15263-3-bjorn.andersson@linaro.org>
- <20190222195758.GA26984@bogus>
- <20190227042545.GE5511@minitux>
+        Mon, 1 Apr 2019 11:00:07 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:34848 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfDAPAG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 11:00:06 -0400
+Received: by mail-ua1-f66.google.com with SMTP id f88so3179744uaf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 08:00:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CWyYXhuJcyFsk4pSTHQ+hyKA9Klg+sOQAa4AnF4CvfI=;
+        b=Of5yDBo9xHzmDeFYxaxm8uK08Et6pPLeZMYzGqbkj1LnCG9sG/HtamI3CbUdOQbHHN
+         889q3ld1g7Vw9LyeqGlgLlF1oMPlDQq/9qonuoaPvSug6NbAQyW2d5YJQaiAcqr/tkQk
+         OVObsM1Lfnap3dE6mYcAEJ9TWaaCtPu0ByEVIIvlzzGpe7Y9EzUaFLUcZzRMDTFXnDtv
+         ilJwfz31PR9CIk87XfxjDJmiRC60YBZSiCJHKaX+Q8EksTQ4C80yconrKI8jUyLL1pfs
+         UnELvBk7fB8uu98nVU1NUs3GOuqHRAWC6syZZzQdmd85Knizj4DzquBlz6B6CB52R3mY
+         x7fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CWyYXhuJcyFsk4pSTHQ+hyKA9Klg+sOQAa4AnF4CvfI=;
+        b=FFy+V2i3YhtMWp0GYxvKMSc1t+xFlCLGR92cYmbE4l3UqDCMtdJBm8bu9jj6gmQzyK
+         hqV11tnVQlyoDm9xtJCR4gm+w26dNLWkQnvPaVeTI+6SFB6b35hZZ2f6d8wmOdm1bCiI
+         xqfZWEmGsrf3tszsqu1FZg4r7rdKVhMXLtRdOKe+YxaJ4hKPkPOQxawNHyQdf8RXx0Jw
+         v6oCRcebYpM2iIpHwzNkZuoKfJ1qsQ8j+c325PeLK1d1Ul0ShXw+JMIQNhGfewXLSKfp
+         mqshl8HsZueRS3gsXQ4DZqGa34DYv1aMWDjF5PxxGSsMaVxC4qS9+2IHhCtmFG14oiMJ
+         l/9g==
+X-Gm-Message-State: APjAAAXwHGF1CLWikZpaO4NUtWsSRGEZyLzZ3wT+9swBVBBgwhb2OYkB
+        1YVSD4vHst12cisiKPMk+OsLC+PPJYiiM5hNde6ddBKRDcI=
+X-Google-Smtp-Source: APXvYqxxJVm3BhXz6/kR8UnUUGLlsxH1WR4QL0Gvwli8cNqzpZ7WQ99UhD8em8MUOyvKs7+hiA4OKR0ZXL6dp9stvfc=
+X-Received: by 2002:ab0:1ec6:: with SMTP id p6mr22542001uak.2.1554130805081;
+ Mon, 01 Apr 2019 08:00:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190227042545.GE5511@minitux>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190314032047.15790-1-vichy.kuo@gmail.com> <20190319153114.GI59586@arrakis.emea.arm.com>
+ <CAOVJa8HSB34ggku=96KAb6qju3G5-uGYFxCE6O2eQRMwU4bd1A@mail.gmail.com>
+In-Reply-To: <CAOVJa8HSB34ggku=96KAb6qju3G5-uGYFxCE6O2eQRMwU4bd1A@mail.gmail.com>
+From:   pierre kuo <vichy.kuo@gmail.com>
+Date:   Mon, 1 Apr 2019 22:59:53 +0800
+Message-ID: <CAOVJa8Eefs7cEneNwV0VCrr8GLVb0AweJEb0Qo4TucgXTNuNWg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] initrd: move initrd_start calculate within linear
+ mapping range check
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Steven Price <steven.price@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 08:25:45PM -0800, Bjorn Andersson wrote:
-> On Fri 22 Feb 11:57 PST 2019, Rob Herring wrote:
-> 
-> > On Mon, Feb 18, 2019 at 10:04:02PM -0800, Bjorn Andersson wrote:
-> > > The Qualcomm PCIe2 PHY is a Synopsys based PCIe PHY found in a number of
-> > > Qualcomm platforms, add a binding to describe this.
-> > > 
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > ---
-> > >  .../bindings/phy/qcom-pcie2-phy.txt           | 40 +++++++++++++++++++
-> > >  1 file changed, 40 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
-> > > new file mode 100644
-> > > index 000000000000..7da02f9d78c7
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
-> > > @@ -0,0 +1,40 @@
-> > > +Qualcomm PCIe2 PHY controller
-> > > +=============================
-> > > +
-> > > +The Qualcomm PCIe2 PHY is a Synopsys based phy found in a number of Qualcomm
-> > > +platforms.
-> > > +
-> > > +Required properties:
-> > > + - compatible: compatible list, should be:
-> > > +	       "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy"
-> > > +
-> > > + - reg: offset and length of the PHY register set.
-> > > + - #phy-cells: must be 0.
-> > > +
-> > > + - clocks: a clock-specifier pair for the "pipe" clock
-> > > +
-> > > + - vdda-vp-supply: phandle to low voltage regulator
-> > > + - vdda-vph-supply: phandle to high voltage regulator
-> > > +
-> > > + - resets: reset-specifier pairs for the "phy" and "pipe" resets
-> > > + - reset-names: list of resets, should contain:
-> > > +		"phy" and "pipe"
-> > > +
-> > > + - clock-output-names: name of the outgoing clock signal from the PHY PLL
-> > 
-> > Not valid to have this without '#clock-cells'.
-> > 
-> 
-> This happens to work today as we don't describe &gcc's dependency on
-> this, but just rely on the global clock namespace. But it should be
-> there, so I'll respin this.
+hi Catalin:
 
-Should I drop this series from the PCI queue waiting for v3 then ?
+> > With CONFIG_RANDOMIZE_BASE we can get a further change to memstart_addr
+> > after the place where you moved the initrd_{start,end} setting, which
+> > would result in a different value for __phys_to_virt(phys_initrd_start).
+>
+> I found what you mean, since __phys_to_virt will use PHYS_OFFSET
+> (memstart_addr) for calculating.
+> How about moving CONFIG_RANDOMIZE_BASE part of code ahead of
+> CONFIG_BLK_DEV_INITRD checking?
+>
+> That means below (d) moving ahead of (c)
+> prvious:
+> if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} ---(a)
+> if (memory_limit != PHYS_ADDR_MAX) {}            ---(b)
+> if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {} ---(c)
+> if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {} ---(d)
+>
+> now:
+> if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) { ---(a)
+> if (memory_limit != PHYS_ADDR_MAX) {}              ----------------(b)
+> if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}  --------------(d)
+> if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}  ---(c)
+>
 
-Thanks,
-Lorenzo
+After tracing the kernel code,
+is it even possible to move CONFIG_RANDOMIZE_BASE part of code ahead
+of memory_limit?
 
-> > Though I'm confused how this and the input clock name seem to match.
-> > 
-> 
-> The PHY generates the clock we call "pcie_0_pipe_clk" which is fed into
-> the global clock controller (gcc), where it can be gated (and divided)
-> and then fed back to both the PHY and the controller as
-> "gcc_pcie_0_pipe_clk".
-> 
-> 
-> Thanks for the review Rob.
-> 
-> Regards,
-> Bjorn
-> 
-> > > +
-> > > +Example:
-> > > + phy@7786000 {
-> > > +	compatible = "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy";
-> > > +	reg = <0x07786000 0xb8>;
-> > > +
-> > > +	clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
-> > > +	resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
-> > > +	         <&gcc GCC_PCIE_0_PIPE_ARES>;
-> > > +	reset-names = "phy", "pipe";
-> > > +
-> > > +	vdda-vp-supply = <&vreg_l3_1p05>;
-> > > +	vdda-vph-supply = <&vreg_l5_1p8>;
-> > > +
-> > > +	clock-output-names = "pcie_0_pipe_clk";
-> > > +	#phy-cells = <0>;
-> > > + };
-> > > -- 
-> > > 2.18.0
-> > > 
+that mean the flow may look like below:
+now2:
+if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} ---(a)
+if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {} ---(d)
+if (memory_limit != PHYS_ADDR_MAX) {}            ---(b)
+if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {} ---(c)
+
+in (b), the result of __pa_symbol(_text), memory_limit,
+memblock_mem_limit_remove_map and  memblock_add
+are not depended on memsart_addr.
+So the now2 flow can grouping modification of memstart_address, put
+(a) and (d) together.
+
+Sincerely Appreciate your comment.
