@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089F8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2614C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCAA220857
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8155820830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140356;
-	bh=U6skYGsxCTT7kmGz1s1mWH+HQlTWmUgBI+5VYh1Rxlg=;
+	s=default; t=1554140363;
+	bh=E5d57PCYI9pnt1WSNaN4EApnKc6tQcG17EIlRdlWeUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zEx8HDmjXAyYCl9IsgHMzzULkwLR5r81YOMPogynBCoTqjqik893v4WaDeirzhiPR
-	 LgLcuDf0dzpWyP7kelRRKgEGtGWFEuvpRq748dW+Z/p3fdkl+ko8j2O4Q53ib+rJsz
-	 Wil9EXuv32DovdxA+tJNobI3mYNMAxQ8jEDgXTT8=
+	b=GZ3p550YofLym5R9+/n5v1AQLzRB7n7/VqdTGKPxtdFWkVR4LNmV6rj8ti5dbdi1s
+	 BTqgTzdo/XIvgMtSzpWQSVEQ4APr+pmIgJmPCeJffJOvM21l8bvpAmJN9DDUdiHST/
+	 J4/8auXTGH13fqWc9tlsz0QpMSkeSJKRlyTbRQPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388415AbfDARjP (ORCPT
+        id S2388430AbfDARjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:39:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52886 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:39:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388408AbfDARjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:39:12 -0400
+        id S1730909AbfDARjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:39:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FF5320830;
-        Mon,  1 Apr 2019 17:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3A10208E4;
+        Mon,  1 Apr 2019 17:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140351;
-        bh=U6skYGsxCTT7kmGz1s1mWH+HQlTWmUgBI+5VYh1Rxlg=;
+        s=default; t=1554140358;
+        bh=E5d57PCYI9pnt1WSNaN4EApnKc6tQcG17EIlRdlWeUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pvinp6r+iJrLbwq7SCS7pFqj9tZ6fR2GutqdszqvNSJ3fvz9SYR9/kt5Pzrt40Ez4
-         p88XWo7qnj6/Jz5Y/dTb2grzE4y3ymmUdmeJlzU/gs1BOYcAQ+QyWLiK7V1RZV95XQ
-         URB6NKaJWlGU2ZAsisSx1Se0eBgwSERZ2pHyZagI=
+        b=V+nl6LuVcY2tJcwoc+p5ECaBUvDGRah5LuW2Y5PVNBL5raAMaJsZbjOcnV2Av5Q6F
+         zr9KIm9L874apNb/CmSYzMjUInrc8gmPtnaTl2M1TAJq/IAn8wIA9tHcZm9g9lXmXQ
+         d/G0pJsXDIewL+X9ilx36+nL+gIURJlTHCNQq2VA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 3.18 47/50] KVM: Reject device ioctls from processes other than the VMs creator
-Date:   Mon,  1 Apr 2019 19:03:30 +0200
-Message-Id: <20190401170046.436694749@linuxfoundation.org>
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 3.18 48/50] xhci: Fix port resume done detection for SS ports with LPM enabled
+Date:   Mon,  1 Apr 2019 19:03:31 +0200
+Message-Id: <20190401170046.523169240@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -66,78 +64,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit ddba91801aeb5c160b660caed1800eb3aef403f8 upstream.
+commit 6cbcf596934c8e16d6288c7cc62dfb7ad8eadf15 upstream.
 
-KVM's API requires thats ioctls must be issued from the same process
-that created the VM.  In other words, userspace can play games with a
-VM's file descriptors, e.g. fork(), SCM_RIGHTS, etc..., but only the
-creator can do anything useful.  Explicitly reject device ioctls that
-are issued by a process other than the VM's creator, and update KVM's
-API documentation to extend its requirements to device ioctls.
+A suspended SS port in U3 link state will go to U0 when resumed, but
+can almost immediately after that enter U1 or U2 link power save
+states before host controller driver reads the port status.
 
-Fixes: 852b6d57dc7f ("kvm: add device control API")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Host controller driver only checks for U0 state, and might miss
+the finished resume, leaving flags unclear and skip notifying usb
+code of the wake.
+
+Add U1 and U2 to the possible link states when checking for finished
+port resume.
+
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- Documentation/virtual/kvm/api.txt |   16 +++++++++++-----
- virt/kvm/kvm_main.c               |    3 +++
- 2 files changed, 14 insertions(+), 5 deletions(-)
 
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -13,7 +13,7 @@ of a virtual machine.  The ioctls belong
+---
+ drivers/usb/host/xhci-ring.c |    9 ++++++---
+ drivers/usb/host/xhci.h      |    1 +
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1599,10 +1599,13 @@ static void handle_port_status(struct xh
+ 		}
+ 	}
  
-  - VM ioctls: These query and set attributes that affect an entire virtual
-    machine, for example memory layout.  In addition a VM ioctl is used to
--   create virtual cpus (vcpus).
-+   create virtual cpus (vcpus) and devices.
- 
-    Only run VM ioctls from the same process (address space) that was used
-    to create the VM.
-@@ -24,6 +24,11 @@ of a virtual machine.  The ioctls belong
-    Only run vcpu ioctls from the same thread that was used to create the
-    vcpu.
- 
-+ - device ioctls: These query and set attributes that control the operation
-+   of a single device.
-+
-+   device ioctls must be issued from the same process (address space) that
-+   was used to create the VM.
- 
- 2. File descriptors
- -------------------
-@@ -32,10 +37,11 @@ The kvm API is centered around file desc
- open("/dev/kvm") obtains a handle to the kvm subsystem; this handle
- can be used to issue system ioctls.  A KVM_CREATE_VM ioctl on this
- handle will create a VM file descriptor which can be used to issue VM
--ioctls.  A KVM_CREATE_VCPU ioctl on a VM fd will create a virtual cpu
--and return a file descriptor pointing to it.  Finally, ioctls on a vcpu
--fd can be used to control the vcpu, including the important task of
--actually running guest code.
-+ioctls.  A KVM_CREATE_VCPU or KVM_CREATE_DEVICE ioctl on a VM fd will
-+create a virtual cpu or device and return a file descriptor pointing to
-+the new resource.  Finally, ioctls on a vcpu or device fd can be used
-+to control the vcpu or device.  For vcpus, this includes the important
-+task of actually running guest code.
- 
- In general file descriptors can be migrated among processes by means
- of fork() and the SCM_RIGHTS facility of unix domain socket.  These
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2298,6 +2298,9 @@ static long kvm_device_ioctl(struct file
- {
- 	struct kvm_device *dev = filp->private_data;
- 
-+	if (dev->kvm->mm != current->mm)
-+		return -EIO;
-+
- 	switch (ioctl) {
- 	case KVM_SET_DEVICE_ATTR:
- 		return kvm_device_ioctl_attr(dev, dev->ops->set_attr, arg);
+-	if ((temp & PORT_PLC) && (temp & PORT_PLS_MASK) == XDEV_U0 &&
+-			DEV_SUPERSPEED(temp)) {
++	if ((temp & PORT_PLC) &&
++	    DEV_SUPERSPEED(temp) &&
++	    ((temp & PORT_PLS_MASK) == XDEV_U0 ||
++	     (temp & PORT_PLS_MASK) == XDEV_U1 ||
++	     (temp & PORT_PLS_MASK) == XDEV_U2)) {
+ 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
+-		/* We've just brought the device into U0 through either the
++		/* We've just brought the device into U0/1/2 through either the
+ 		 * Resume state after a device remote wakeup, or through the
+ 		 * U3Exit state after a host-initiated resume.  If it's a device
+ 		 * initiated remote wake, don't pass up the link state change,
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -283,6 +283,7 @@ struct xhci_op_regs {
+  */
+ #define PORT_PLS_MASK	(0xf << 5)
+ #define XDEV_U0		(0x0 << 5)
++#define XDEV_U1		(0x1 << 5)
+ #define XDEV_U2		(0x2 << 5)
+ #define XDEV_U3		(0x3 << 5)
+ #define XDEV_RESUME	(0xf << 5)
 
 
