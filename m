@@ -2,31 +2,30 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E9AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 01:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7B8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6267206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 01:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E18020870
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731599AbfDABt2 (ORCPT
+        id S1731510AbfDACC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 21:49:28 -0400
-Received: from foss.arm.com ([217.140.101.70]:53896 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbfDABt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 21:49:28 -0400
+        Sun, 31 Mar 2019 22:02:29 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53974 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbfDACC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 31 Mar 2019 22:02:29 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87B69374;
-        Sun, 31 Mar 2019 18:49:27 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 542BD374;
+        Sun, 31 Mar 2019 19:02:28 -0700 (PDT)
 Received: from big-swifty.misterjones.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AC5C3F690;
-        Sun, 31 Mar 2019 18:49:19 -0700 (PDT)
-Date:   Mon, 01 Apr 2019 02:49:17 +0100
-Message-ID: <86sgv25wbm.wl-marc.zyngier@arm.com>
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 93EC43F690;
+        Sun, 31 Mar 2019 19:02:20 -0700 (PDT)
+Date:   Mon, 01 Apr 2019 03:02:17 +0100
+Message-ID: <86r2am5vpy.wl-marc.zyngier@arm.com>
 From:   Marc Zyngier <marc.zyngier@arm.com>
 To:     Hanna Hawa <hhhawa@amazon.com>
 Cc:     <tsahee@annapurnalabs.com>, <antoine.tenart@bootlin.com>,
@@ -37,11 +36,11 @@ Cc:     <tsahee@annapurnalabs.com>, <antoine.tenart@bootlin.com>,
         <alisaidi@amazon.com>, <talel@amazon.com>, <jonnyc@amazon.com>,
         <hanochu@amazon.com>, <barakw@amazon.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 3/7] irqchip/al-msi: Rename AL-MSIx driver
-In-Reply-To: <1554035655-11352-4-git-send-email-hhhawa@amazon.com>
+        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 0/7] al-msi: Rename driver and add support for ACPI
+In-Reply-To: <1554035655-11352-1-git-send-email-hhhawa@amazon.com>
 References: <1554035655-11352-1-git-send-email-hhhawa@amazon.com>
-        <1554035655-11352-4-git-send-email-hhhawa@amazon.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
  (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -53,28 +52,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 31 Mar 2019 13:34:11 +0100,
+On Sun, 31 Mar 2019 13:34:08 +0100,
 Hanna Hawa <hhhawa@amazon.com> wrote:
+> 
+> This series includes three major changes:
+> 1. IOMMU DMA mapping MSI message fix.
+> 2. Re-name the AL-MSIx driver to new name convention.
+> 3. Add ACPI support for the driver.
 > 
 > Alpine is the name of the SoC family, while AL stands for Annapurna
 > Labs. Rename to the latter since the driver will appear in other SoC
 > families other than Alpine.
 > 
-> Add device tree match for "amazon/al-msix".
-> 
-> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-> ---
->  arch/arm/mach-alpine/Kconfig                       |  2 +-
->  arch/arm64/Kconfig.platforms                       |  2 +-
->  drivers/irqchip/Kconfig                            |  2 +-
->  drivers/irqchip/Makefile                           |  2 +-
->  drivers/irqchip/{irq-alpine-msi.c => irq-al-msi.c} | 93 +++++++++++-----------
->  5 files changed, 49 insertions(+), 52 deletions(-)
->  rename drivers/irqchip/{irq-alpine-msi.c => irq-al-msi.c} (68%)
+> The AL-MSIx controller is not standard, is not included in the UEFI
+> specification, and will not be added. The driver ACPI binding is
+> performed when the following conditions are true:
+> - OEM ID is AMAZON
+> - MADT table type is 0x80 (part of the OEM reserved range).
 
-Why do we need this churn? It feels absolutely pointless. Adding your
-new compatibility string is absolutely fine; repainting the whole
-driver because you've found a "better" name for it isn't.
+[+Lorenzo, as the arm64 ACPI maintainer]
+
+So you're happy to explicitly violate the letter of the specification?
+That's not really going to fly. We've pushed back on such things in
+the past (MBIGEN, XGene MSI controller), and I don't see any
+compelling reason to change our tune.
+
+> GICv2m driver is called from context of parent interrupt controller,
+> which ensures that the parent interrupt domain exists and holds valid
+> information. As calling AL-MSIx driver from GICv3 driver would not make
+> sense, a new API was added, to get the GSI IRQ domain that was registered
+> by GICv3 driver in the ACPI framework.
+
+What does this mean? Either your system has a GICv2m or it has a
+GICv3. Please explain what this is all about.
 
 Thanks,
 
