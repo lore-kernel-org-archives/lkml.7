@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDAFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76873C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA3F21925
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D81E21929
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138333;
-	bh=G5lGvja1JpX5OZQOklbG98Ba2BynfZMvZo7cqaSG7Tg=;
+	s=default; t=1554138336;
+	bh=KjLzLBfuQ2nPaUjm5LYO5Yja9gtR3dXnjiZFOrhbc4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uDSw9HtmOreqGltzJX3apOr5QZ8Kd4peyB46PDiMVKD9njGzeIT9WyDR6KSuWtI9R
-	 isGJ/T4xT3DGubrVN97cqaim/bDYqvCf6Jko4vT66DPWdGwrIoIzV++h3RrpkL1t91
-	 L1dM/QjtwXB3Kf/lpq7VH2XCBWibgSraNIHMZqAw=
+	b=1onpNa6B2CwlWHXHm7HJleWCLfHCPYv3bArnfdmp/5lh5Ug5E4bd9+Qe9uKwxURaI
+	 uPPAmaiu2GM0wGHfxoYmyUKaT1sdV+/gPKx+2Shq3+kTNoCvrPY+V9uxu3gHqLjyxB
+	 TpcCBbAy9QntPQEi51/UmBm9VAyhhsk7xURUSyeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbfDARFc (ORCPT
+        id S1728998AbfDARFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:05:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50658 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727074AbfDARFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:05:31 -0400
+        id S1727074AbfDARFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:05:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CEEE21925;
-        Mon,  1 Apr 2019 17:05:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F89721929;
+        Mon,  1 Apr 2019 17:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138330;
-        bh=G5lGvja1JpX5OZQOklbG98Ba2BynfZMvZo7cqaSG7Tg=;
+        s=default; t=1554138333;
+        bh=KjLzLBfuQ2nPaUjm5LYO5Yja9gtR3dXnjiZFOrhbc4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f7o5CX6CISkuwajvObB4MWUSN5ovt22PgT9J3iIO8De5IYUpxcE5j5fJysKt8H6T0
-         gVLlt8l4xfoylKMKP0pjMJo8h7g644mkiHnIs3RUktShl5qmadcn6j46xNn82pJkTG
-         wBKT/0+rj+2uPX3t0rVUt/BlpvgAk+8Q2GP+DriI=
+        b=Qq43wv6+bNYfAl2M9pypwrRDwo8eKJGKZbL2T4sVnCg8FEnFn+Nhsroy1DTSuTqp+
+         V/X1usx62i/eNDyYg0rR8W8tSdC9sLkJZnSDMowWJXPVs5v6SGgM6NJpfg0bWAjwVs
+         eERIXGKgiafN/nCiZLCg7TOoM7j3iEXmfdUsDla4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        David Ahern <dsahern@gmail.com>, Wei Wang <weiwan@google.com>,
+        stable@vger.kernel.org, Bartosz Skrzypczak <barteks2x@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 007/146] ipv6: make ip6_create_rt_rcu return ip6_null_entry instead of NULL
-Date:   Mon,  1 Apr 2019 19:00:19 +0200
-Message-Id: <20190401170049.036887612@linuxfoundation.org>
+Subject: [PATCH 5.0 034/146] r8169: fix cable re-plugging issue
+Date:   Mon,  1 Apr 2019 19:00:46 +0200
+Message-Id: <20190401170051.392648960@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -68,84 +66,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 1c87e79a002f6a159396138cd3f3ab554a2a8887 ]
+[ Upstream commit 23c78343ec36990709b636a9e02bad814f4384ad ]
 
-Jianlin reported a crash:
+Bartek reported that after few cable unplug/replug cycles suddenly
+replug isn't detected any longer. His system uses a RTL8106, I wasn't
+able to reproduce the issue with RTL8168g. According to his bisect
+the referenced commit caused the regression. As Realtek doesn't
+release datasheets or errata it's hard to say what's the actual root
+cause, but this change was reported to fix the issue.
 
-  [  381.484332] BUG: unable to handle kernel NULL pointer dereference at 0000000000000068
-  [  381.619802] RIP: 0010:fib6_rule_lookup+0xa3/0x160
-  [  382.009615] Call Trace:
-  [  382.020762]  <IRQ>
-  [  382.030174]  ip6_route_redirect.isra.52+0xc9/0xf0
-  [  382.050984]  ip6_redirect+0xb6/0xf0
-  [  382.066731]  icmpv6_notify+0xca/0x190
-  [  382.083185]  ndisc_redirect_rcv+0x10f/0x160
-  [  382.102569]  ndisc_rcv+0xfb/0x100
-  [  382.117725]  icmpv6_rcv+0x3f2/0x520
-  [  382.133637]  ip6_input_finish+0xbf/0x460
-  [  382.151634]  ip6_input+0x3b/0xb0
-  [  382.166097]  ipv6_rcv+0x378/0x4e0
-
-It was caused by the lookup function __ip6_route_redirect() returns NULL in
-fib6_rule_lookup() when ip6_create_rt_rcu() returns NULL.
-
-So we fix it by simply making ip6_create_rt_rcu() return ip6_null_entry
-instead of NULL.
-
-v1->v2:
-  - move down 'fallback:' to make it more readable.
-
-Fixes: e873e4b9cc7e ("ipv6: use fib6_info_hold_safe() when necessary")
-Reported-by: Jianlin Shi <jishi@redhat.com>
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Acked-by: Wei Wang <weiwan@google.com>
+Fixes: 38caff5a445b ("r8169: handle all interrupt events in the hard irq handler")
+Reported-by: Bartosz Skrzypczak <barteks2x@gmail.com>
+Suggested-by: Bartosz Skrzypczak <barteks2x@gmail.com>
+Tested-by: Bartosz Skrzypczak <barteks2x@gmail.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/route.c |   18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/realtek/r8169.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -1040,14 +1040,20 @@ static struct rt6_info *ip6_create_rt_rc
- 	struct rt6_info *nrt;
- 
- 	if (!fib6_info_hold_safe(rt))
--		return NULL;
-+		goto fallback;
- 
- 	nrt = ip6_dst_alloc(dev_net(dev), dev, flags);
--	if (nrt)
--		ip6_rt_copy_init(nrt, rt);
--	else
-+	if (!nrt) {
- 		fib6_info_release(rt);
-+		goto fallback;
-+	}
-+
-+	ip6_rt_copy_init(nrt, rt);
-+	return nrt;
- 
-+fallback:
-+	nrt = dev_net(dev)->ipv6.ip6_null_entry;
-+	dst_hold(&nrt->dst);
- 	return nrt;
- }
- 
-@@ -1096,10 +1102,6 @@ restart:
- 		dst_hold(&rt->dst);
- 	} else {
- 		rt = ip6_create_rt_rcu(f6i);
--		if (!rt) {
--			rt = net->ipv6.ip6_null_entry;
--			dst_hold(&rt->dst);
--		}
+--- a/drivers/net/ethernet/realtek/r8169.c
++++ b/drivers/net/ethernet/realtek/r8169.c
+@@ -6435,7 +6435,7 @@ static irqreturn_t rtl8169_interrupt(int
+ 		set_bit(RTL_FLAG_TASK_RESET_PENDING, tp->wk.flags);
  	}
  
- 	rcu_read_unlock();
+-	if (status & RTL_EVENT_NAPI) {
++	if (status & (RTL_EVENT_NAPI | LinkChg)) {
+ 		rtl_irq_disable(tp);
+ 		napi_schedule_irqoff(&tp->napi);
+ 	}
 
 
