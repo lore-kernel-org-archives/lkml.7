@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D8DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2ABC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9466A20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED488206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138868;
-	bh=sMCTVvsTFapU2inGj55tEGgsAo2wS/AcB8E1TAqkiBo=;
+	s=default; t=1554138871;
+	bh=WlhoCMngBHbH85/IRcbtHgQvKSAl2Z1+M42fujHg2KU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mAkwWx6Gd345Yu7JrTz2aAW4Zkyfpowl2oufXgJ2nofOljliQHeiERAyAs8oUpxTX
-	 yYpumT6fU5KWZbaW1c/Yktvha9mOPL/5s/QnMsKZRpg6U+gLbMc5MHClO0Nfkd2kal
-	 IIbHChIY6DlHiGr2xYpuGB4E6ySa37aTQjZpoONI=
+	b=mA3Kp3oIXwOuigRgrf87M45aA3C43bTOkxW52kSYSKrucDUJuBZHT3JWJSIBZQM/s
+	 T/b8xBvWmO2sqf5gjG7d4jJtJO2NNzEpRayGY6NOYVtgvL87JA3jzkSFImSg7rGlJn
+	 Ab4UeI4sW5R1JaQWulU1PZxdjzdkzdzuUN5Z8Btw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbfDARO0 (ORCPT
+        id S1730757AbfDARO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:14:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37668 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:14:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729057AbfDAROZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:14:25 -0400
+        id S1729057AbfDARO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:14:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35A7220883;
-        Mon,  1 Apr 2019 17:14:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D05EF205F4;
+        Mon,  1 Apr 2019 17:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138864;
-        bh=sMCTVvsTFapU2inGj55tEGgsAo2wS/AcB8E1TAqkiBo=;
+        s=default; t=1554138867;
+        bh=WlhoCMngBHbH85/IRcbtHgQvKSAl2Z1+M42fujHg2KU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gp6qPZ2++PNZsoqnuhcmos2hqjphdT2yl3mIUZ7LoZ6nxFklfm8ACWUtaXjfomjlj
-         e/3o8a0lzFavUncbyZ81rVw8ZOUjNiNk96oYn8u1S41p1dHEX7iAxqBk3gqCNUOQFu
-         iAoXK4TvctEJ+T77vpY7xsxJJRG9TCe7h/154SSw=
+        b=y5ryTyV7jSMw3ofoxcPDbx0ATsPtqWow5tkeRAN6O3JnH8m/p3o7PIFChiI0RbkO4
+         zTX62Q9ecP9XidUguK8jTsEK0zKmj4qkzX9ZqacjXVZZk2A9co+lRtpyRb5mwFJxbA
+         48UoMVLJLhWYh2pOjywO0PiW6z18D07MxUbE4kqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Neuling <mikey@neuling.org>,
-        Diana Craciun <diana.craciun@nxp.com>
-Subject: [PATCH 4.19 044/134] powerpc/security: Fix spectre_v2 reporting
-Date:   Mon,  1 Apr 2019 19:01:20 +0200
-Message-Id: <20190401170048.733217781@linuxfoundation.org>
+        stable@vger.kernel.org, Seulbae Kim <seulbae@gatech.edu>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 045/134] Btrfs: fix incorrect file size after shrinking truncate and fsync
+Date:   Mon,  1 Apr 2019 19:01:21 +0200
+Message-Id: <20190401170048.810845404@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,86 +66,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 92edf8df0ff2ae86cc632eeca0e651fd8431d40d upstream.
+commit bf504110bc8aa05df48b0e5f0aa84bfb81e0574b upstream.
 
-When I updated the spectre_v2 reporting to handle software count cache
-flush I got the logic wrong when there's no software count cache
-enabled at all.
+If we do a shrinking truncate against an inode which is already present
+in the respective log tree and then rename it, as part of logging the new
+name we end up logging an inode item that reflects the old size of the
+file (the one which we previously logged) and not the new smaller size.
+The decision to preserve the size previously logged was added by commit
+1a4bcf470c886b ("Btrfs: fix fsync data loss after adding hard link to
+inode") in order to avoid data loss after replaying the log. However that
+decision is only needed for the case the logged inode size is smaller then
+the current size of the inode, as explained in that commit's change log.
+If the current size of the inode is smaller then the previously logged
+size, we know a shrinking truncate happened and therefore need to use
+that smaller size.
 
-The result is that on systems with the software count cache flush
-disabled we print:
+Example to trigger the problem:
 
-  Mitigation: Indirect branch cache disabled, Software count cache flush
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
 
-Which correctly indicates that the count cache is disabled, but
-incorrectly says the software count cache flush is enabled.
+  $ xfs_io -f -c "pwrite -S 0xab 0 8000" /mnt/foo
+  $ xfs_io -c "fsync" /mnt/foo
+  $ xfs_io -c "truncate 3000" /mnt/foo
 
-The root of the problem is that we are trying to handle all
-combinations of options. But we know now that we only expect to see
-the software count cache flush enabled if the other options are false.
+  $ mv /mnt/foo /mnt/bar
+  $ xfs_io -c "fsync" /mnt/bar
 
-So split the two cases, which simplifies the logic and fixes the bug.
-We were also missing a space before "(hardware accelerated)".
+  <power failure>
 
-The result is we see one of:
+  $ mount /dev/sdb /mnt
+  $ od -t x1 -A d /mnt/bar
+  0000000 ab ab ab ab ab ab ab ab ab ab ab ab ab ab ab ab
+  *
+  0008000
 
-  Mitigation: Indirect branch serialisation (kernel only)
-  Mitigation: Indirect branch cache disabled
-  Mitigation: Software count cache flush
-  Mitigation: Software count cache flush (hardware accelerated)
+Once we rename the file, we log its name (and inode item), and because
+the inode was already logged before in the current transaction, we log it
+with a size of 8000 bytes because that is the size we previously logged
+(with the first fsync). As part of the rename, besides logging the inode,
+we do also sync the log, which is done since commit d4682ba03ef618
+("Btrfs: sync log after logging new name"), so the next fsync against our
+inode is effectively a no-op, since no new changes happened since the
+rename operation. Even if did not sync the log during the rename
+operation, the same problem (fize size of 8000 bytes instead of 3000
+bytes) would be visible after replaying the log if the log ended up
+getting synced to disk through some other means, such as for example by
+fsyncing some other modified file. In the example above the fsync after
+the rename operation is there just because not every filesystem may
+guarantee logging/journalling the inode (and syncing the log/journal)
+during the rename operation, for example it is needed for f2fs, but not
+for ext4 and xfs.
 
-Fixes: ee13cb249fab ("powerpc/64s: Add support for software count cache flush")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Michael Neuling <mikey@neuling.org>
-Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fix this scenario by, when logging a new name (which is triggered by
+rename and link operations), using the current size of the inode instead
+of the previously logged inode size.
+
+A test case for fstests follows soon.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202695
+CC: stable@vger.kernel.org # 4.4+
+Reported-by: Seulbae Kim <seulbae@gatech.edu>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/powerpc/kernel/security.c |   23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
 
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -189,29 +189,22 @@ ssize_t cpu_show_spectre_v2(struct devic
- 	bcs = security_ftr_enabled(SEC_FTR_BCCTRL_SERIALISED);
- 	ccd = security_ftr_enabled(SEC_FTR_COUNT_CACHE_DISABLED);
+---
+ fs/btrfs/tree-log.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4504,6 +4504,19 @@ static int logged_inode_size(struct btrf
+ 		item = btrfs_item_ptr(path->nodes[0], path->slots[0],
+ 				      struct btrfs_inode_item);
+ 		*size_ret = btrfs_inode_size(path->nodes[0], item);
++		/*
++		 * If the in-memory inode's i_size is smaller then the inode
++		 * size stored in the btree, return the inode's i_size, so
++		 * that we get a correct inode size after replaying the log
++		 * when before a power failure we had a shrinking truncate
++		 * followed by addition of a new name (rename / new hard link).
++		 * Otherwise return the inode size from the btree, to avoid
++		 * data loss when replaying a log due to previously doing a
++		 * write that expands the inode's size and logging a new name
++		 * immediately after.
++		 */
++		if (*size_ret > inode->vfs_inode.i_size)
++			*size_ret = inode->vfs_inode.i_size;
+ 	}
  
--	if (bcs || ccd || count_cache_flush_type != COUNT_CACHE_FLUSH_NONE) {
--		bool comma = false;
-+	if (bcs || ccd) {
- 		seq_buf_printf(&s, "Mitigation: ");
- 
--		if (bcs) {
-+		if (bcs)
- 			seq_buf_printf(&s, "Indirect branch serialisation (kernel only)");
--			comma = true;
--		}
- 
--		if (ccd) {
--			if (comma)
--				seq_buf_printf(&s, ", ");
--			seq_buf_printf(&s, "Indirect branch cache disabled");
--			comma = true;
--		}
--
--		if (comma)
-+		if (bcs && ccd)
- 			seq_buf_printf(&s, ", ");
- 
--		seq_buf_printf(&s, "Software count cache flush");
-+		if (ccd)
-+			seq_buf_printf(&s, "Indirect branch cache disabled");
-+	} else if (count_cache_flush_type != COUNT_CACHE_FLUSH_NONE) {
-+		seq_buf_printf(&s, "Mitigation: Software count cache flush");
- 
- 		if (count_cache_flush_type == COUNT_CACHE_FLUSH_HW)
--			seq_buf_printf(&s, "(hardware accelerated)");
-+			seq_buf_printf(&s, " (hardware accelerated)");
- 	} else if (btb_flush_enabled) {
- 		seq_buf_printf(&s, "Mitigation: Branch predictor state flush");
- 	} else {
+ 	btrfs_release_path(path);
 
 
