@@ -2,116 +2,120 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71129C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBC9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C53620857
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B8B720857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:00:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Of5yDBo9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lYQtmjWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbfDAPAH (ORCPT
+        id S1728687AbfDAPAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 11:00:07 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:34848 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfDAPAG (ORCPT
+        Mon, 1 Apr 2019 11:00:53 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:44274 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfDAPAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 11:00:06 -0400
-Received: by mail-ua1-f66.google.com with SMTP id f88so3179744uaf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 08:00:05 -0700 (PDT)
+        Mon, 1 Apr 2019 11:00:52 -0400
+Received: by mail-vs1-f67.google.com with SMTP id j184so5683344vsd.11
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 08:00:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CWyYXhuJcyFsk4pSTHQ+hyKA9Klg+sOQAa4AnF4CvfI=;
-        b=Of5yDBo9xHzmDeFYxaxm8uK08Et6pPLeZMYzGqbkj1LnCG9sG/HtamI3CbUdOQbHHN
-         889q3ld1g7Vw9LyeqGlgLlF1oMPlDQq/9qonuoaPvSug6NbAQyW2d5YJQaiAcqr/tkQk
-         OVObsM1Lfnap3dE6mYcAEJ9TWaaCtPu0ByEVIIvlzzGpe7Y9EzUaFLUcZzRMDTFXnDtv
-         ilJwfz31PR9CIk87XfxjDJmiRC60YBZSiCJHKaX+Q8EksTQ4C80yconrKI8jUyLL1pfs
-         UnELvBk7fB8uu98nVU1NUs3GOuqHRAWC6syZZzQdmd85Knizj4DzquBlz6B6CB52R3mY
-         x7fw==
+         :cc:content-transfer-encoding;
+        bh=l7jNAnF6vluKh8XW+4HppBaLLV2wos1UJRlLQEOl/LA=;
+        b=lYQtmjWi4vlVPreI9e0sFX0A+Tu9l2DMboMenuDrnHS/U+LAdXHkOmoUVSE7//HYlT
+         tUhHdClFIEkrSvUHlgep1Se9IQCMBSXYUAW3eZHFGjDkicofjn/kg7AFIRVD9joupGmP
+         5WjMSY5P3JoVowHr1MlCd39+w2wlMv/NUQW7MWKHELxhuyP8aEktfdEi0ehq5ast8U8M
+         tSG2dDtBf3+QyTn9PCtdGmWuKWhb3NrPuYICCB5nxHsS2p0KSoeygo93VvZFNXfLNYWg
+         VLMFfonSpmS/hzqYNpQ9GTyqbUq6nyBaQ27MhALTGCrB2/f79YtBEYbUsqDmFGlMosXa
+         cJWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CWyYXhuJcyFsk4pSTHQ+hyKA9Klg+sOQAa4AnF4CvfI=;
-        b=FFy+V2i3YhtMWp0GYxvKMSc1t+xFlCLGR92cYmbE4l3UqDCMtdJBm8bu9jj6gmQzyK
-         hqV11tnVQlyoDm9xtJCR4gm+w26dNLWkQnvPaVeTI+6SFB6b35hZZ2f6d8wmOdm1bCiI
-         xqfZWEmGsrf3tszsqu1FZg4r7rdKVhMXLtRdOKe+YxaJ4hKPkPOQxawNHyQdf8RXx0Jw
-         v6oCRcebYpM2iIpHwzNkZuoKfJ1qsQ8j+c325PeLK1d1Ul0ShXw+JMIQNhGfewXLSKfp
-         mqshl8HsZueRS3gsXQ4DZqGa34DYv1aMWDjF5PxxGSsMaVxC4qS9+2IHhCtmFG14oiMJ
-         l/9g==
-X-Gm-Message-State: APjAAAXwHGF1CLWikZpaO4NUtWsSRGEZyLzZ3wT+9swBVBBgwhb2OYkB
-        1YVSD4vHst12cisiKPMk+OsLC+PPJYiiM5hNde6ddBKRDcI=
-X-Google-Smtp-Source: APXvYqxxJVm3BhXz6/kR8UnUUGLlsxH1WR4QL0Gvwli8cNqzpZ7WQ99UhD8em8MUOyvKs7+hiA4OKR0ZXL6dp9stvfc=
-X-Received: by 2002:ab0:1ec6:: with SMTP id p6mr22542001uak.2.1554130805081;
- Mon, 01 Apr 2019 08:00:05 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=l7jNAnF6vluKh8XW+4HppBaLLV2wos1UJRlLQEOl/LA=;
+        b=knUD87LEVser4ZZ5Ey6O/M1DHdkfW8vB7/8grBpAdEbTB/m6rFHAIap8jl4uZXNGHS
+         bKUjRU9beDGZutrNbB7i2rEUsIK3IteUvw8WKbVrOqLzdMEHsLYWVzDX/hl9b6ISpb7/
+         Q6yK6cbbdmh7vKrJOC11leKqNIi9vaeoJ2YraCkfPpK3Afti0J8hWeza3goEglibRfc/
+         2j8XEn8vOoAHGAXl4FAFHIH8ym3070FyuwsEmFYB6YUemy8kD5a90KCiV5Oi7m8cN6V1
+         rrc45sJqm/Ua8Nnc6Y0QKbXg11tXPb9Zzl6Sy8J1yjUqHwf1uRIJ5UiAtSeB+9tPywrN
+         DUiQ==
+X-Gm-Message-State: APjAAAVOwAuHU9Ahvxxa+wx93/80YwvM3Zfvzl6kG8QGTGn/xD0bHjWX
+        p22En9vXlItu1i6k6mGV8EUEFrVhOxKGNdjG4qoQeg==
+X-Google-Smtp-Source: APXvYqzolv8KvMYWm4u/u3IpyeXxWl03e2QcY+JyW+051te0JySzgvHU34WoAPlLfnM0m7OYrcf1mueXedcpx1sH06A=
+X-Received: by 2002:a67:83c5:: with SMTP id f188mr37949466vsd.163.1554130850762;
+ Mon, 01 Apr 2019 08:00:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190314032047.15790-1-vichy.kuo@gmail.com> <20190319153114.GI59586@arrakis.emea.arm.com>
- <CAOVJa8HSB34ggku=96KAb6qju3G5-uGYFxCE6O2eQRMwU4bd1A@mail.gmail.com>
-In-Reply-To: <CAOVJa8HSB34ggku=96KAb6qju3G5-uGYFxCE6O2eQRMwU4bd1A@mail.gmail.com>
-From:   pierre kuo <vichy.kuo@gmail.com>
-Date:   Mon, 1 Apr 2019 22:59:53 +0800
-Message-ID: <CAOVJa8Eefs7cEneNwV0VCrr8GLVb0AweJEb0Qo4TucgXTNuNWg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] initrd: move initrd_start calculate within linear
- mapping range check
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Florian Fainelli <f.fainelli@gmail.com>
+References: <CAG_fn=X9tpSW6jvJd_COk_RU8zvcr-cxSWuJ05qcV0LotTxEEQ@mail.gmail.com>
+ <20190328162222.GO4102@linux.ibm.com> <CAG_fn=WKA_4Vzsh6yH+=5TFv-EMrX87pr+2c_ANoH_MOVpbe1w@mail.gmail.com>
+ <8e32ab34-c14c-1ccb-76f9-0dcd729a0ef6@zytor.com>
+In-Reply-To: <8e32ab34-c14c-1ccb-76f9-0dcd729a0ef6@zytor.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Mon, 1 Apr 2019 17:00:39 +0200
+Message-ID: <CAG_fn=UWGqg-U=CciYKOv11X6xQiQrQX5wKaoieE1co9v0rdBQ@mail.gmail.com>
+Subject: Re: Potentially missing "memory" clobbers in bitops.h for x86
+To:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Paul McKenney <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        James Y Knight <jyknight@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Catalin:
-
-> > With CONFIG_RANDOMIZE_BASE we can get a further change to memstart_addr
-> > after the place where you moved the initrd_{start,end} setting, which
-> > would result in a different value for __phys_to_virt(phys_initrd_start).
+On Fri, Mar 29, 2019 at 9:52 PM H. Peter Anvin <hpa@zytor.com> wrote:
 >
-> I found what you mean, since __phys_to_virt will use PHYS_OFFSET
-> (memstart_addr) for calculating.
-> How about moving CONFIG_RANDOMIZE_BASE part of code ahead of
-> CONFIG_BLK_DEV_INITRD checking?
+> On 3/29/19 8:54 AM, Alexander Potapenko wrote:
+> >
+> >> Of course, this would force the compiler to actually compute the
+> >> offset, which would slow things down.  I have no idea whether this
+> >> would be better or worse than just using the "memory" clobber.
+> > Just adding the "memory" clobber to clear_bit() changes sizes of 5
+> > kernel functions (the three mentioned above, plus hub_activate() and
+> > native_send_call_func_ipi()) by a small margin.
+> > This probably means the performance impact of this clobber is
+> > negligible in this case.
 >
-> That means below (d) moving ahead of (c)
-> prvious:
-> if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} ---(a)
-> if (memory_limit != PHYS_ADDR_MAX) {}            ---(b)
-> if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {} ---(c)
-> if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {} ---(d)
+> I would agree with that.
 >
-> now:
-> if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) { ---(a)
-> if (memory_limit != PHYS_ADDR_MAX) {}              ----------------(b)
-> if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}  --------------(d)
-> if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}  ---(c)
+> Could you perhaps verify whether or not any of the above functions
+> contains a currently manifest bug?
+Yes, I've checked that none of the above functions contain the bug.
+For a patch adding 7 memory constraints to various functions in
+bitops.h there are already 258 functions that change their size.
+I've skimmed through those with the biggest diffs and didn't find any
+flaws, but that can be just pure luck.
+I would expect such bugs to be more likely with full program
+optimization kicking in.
+
+> Note: the atomic versions of these functions obviously need to have
+> "volatile" and the clobber anyway, as they are by definition barriers
+> and moving memory operations around them would be a very serious error.
 >
+>         -hpa
+>
+>
+>
+--
+Alexander Potapenko
+Software Engineer
 
-After tracing the kernel code,
-is it even possible to move CONFIG_RANDOMIZE_BASE part of code ahead
-of memory_limit?
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
 
-that mean the flow may look like below:
-now2:
-if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} ---(a)
-if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {} ---(d)
-if (memory_limit != PHYS_ADDR_MAX) {}            ---(b)
-if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {} ---(c)
-
-in (b), the result of __pa_symbol(_text), memory_limit,
-memblock_mem_limit_remove_map and  memblock_add
-are not depended on memsart_addr.
-So the now2 flow can grouping modification of memstart_address, put
-(a) and (d) together.
-
-Sincerely Appreciate your comment.
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
