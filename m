@@ -2,111 +2,127 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE9CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33C3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9EFF20857
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A9E208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:04:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Sownw1wD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EAycm5SK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfDAPDv (ORCPT
+        id S1727403AbfDAPE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 11:03:51 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58120 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbfDAPDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 11:03:51 -0400
-Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4F4091EC0354;
-        Mon,  1 Apr 2019 17:03:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554131029;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ID4grBT9wHWRYXPPSwvRThRgD8ziDtniErq38bMC/B4=;
-        b=Sownw1wDqHwxMCtpDZ/JpBApBrufD5+r2Xoo47aMyHExqGyDE207xkBQbL9C6wNBTbbqh9
-        xCLeAWnzyQApZXOWOUu9Ei6d3Ifw0vIpWcVmNlrW6R7bE8tN9BXofhqYu3iE/0nMmir3t0
-        n7dM2Qd6vAvqb+RqdAu0yvWgtxzq/nc=
-Date:   Mon, 1 Apr 2019 17:03:45 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Erwan Velu <e.velu@criteo.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH] cpufreq/intel_pstate: Load only on Intel hardware
-Message-ID: <20190401150345.GJ28264@zn.tnic>
-References: <20190330100225.14744-1-bp@alien8.de>
- <fa14666a-269c-249a-f603-b00f6301c1a6@criteo.com>
- <20190401083902.GC28264@zn.tnic>
+        Mon, 1 Apr 2019 11:04:29 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35158 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbfDAPE3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 11:04:29 -0400
+Received: by mail-ot1-f65.google.com with SMTP id m10so8979476otp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 08:04:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hh7tyO+RaWp7KSodMe7WKcK66rWlDGPe7rlXlqce7Lw=;
+        b=EAycm5SKzrsi+Kso9+g5FjPDDS7w6687Arv1NqpEY5RcerG/ftEtt74HkPMlxT3jol
+         kY0CE/0oXVYN1wQZSSkNGdafIJom1bfsV28gZVcMz+eZKa1jrPx7PU5wv3tJgZfs/GGg
+         WObfuKv0A2irYfpuX3OyVX/nsPej5Wwi6UJRY3J13/wd9oL7Ur38k8gwhBUJj0ggJqhQ
+         LFLPUPNIJVqPYVb2UztjUnuhyV/mj1yTHcM02QKPgYleRCgL37MLeuH/nD0ixzAVO8A1
+         2v+xJI97gwrNJe5HDzK5XoyK5lHPoZLe7VQBrN9b9eLG2E9U8UMx6yMpLfnfZAVWkO39
+         V13w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hh7tyO+RaWp7KSodMe7WKcK66rWlDGPe7rlXlqce7Lw=;
+        b=U17X1RhOZeRXw7zOGjMtdP1jSVHXM3m7LTyG2CkoTcaiysmEcqFeuKqJTuPDuzZWuy
+         oZRek/M+LZleKg5OPL06k3t183kxNVN6zUorGkli8qlKyUa9rDcuSunUqDRWQ12xHUFz
+         pUY+bkJ/9GOoMH5YzVyqyFDTsJUB40CM0XN1y6/dkckbzwkyjnVgoj2vYeTDq5YPc1XL
+         x8LEE62mQ7TOX29zJbe93y50n8a1/N48//2dJklDwKV9x0Gm0PrbDlPM3Gju98t0mvNh
+         FXc0IHh6j8nSh1mb1jxaXEX+Ylx9QgAuX/l6WcG9oII7rIwisDq2TujjgtLIAwuWIQVY
+         9Qeg==
+X-Gm-Message-State: APjAAAVnCvo+MQzvvs9yjjUwTJggatARe9GDowDiRXrWJy4zI1rkp589
+        a4BU2V/Eh0F973NnsP8teB0tyg/mOmMPAO6+u5VmLvd+Cqk=
+X-Google-Smtp-Source: APXvYqyiDtf0Hl7OW+Yo1Cz3hRakjUqkwwkViHuIVD5VIgLRZb/4owpy4lquA9GgVgp7JAzcMHXGTyvjiEHUHiMGpBQ=
+X-Received: by 2002:a9d:7095:: with SMTP id l21mr46673238otj.35.1554131067973;
+ Mon, 01 Apr 2019 08:04:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190401083902.GC28264@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190328212321.92463-1-jannh@google.com> <20190328212321.92463-2-jannh@google.com>
+ <ca2d792df2e9420090383f1a65a6d99f@AcuMS.aculab.com>
+In-Reply-To: <ca2d792df2e9420090383f1a65a6d99f@AcuMS.aculab.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 1 Apr 2019 17:04:00 +0200
+Message-ID: <CAG48ez05JxAAfen6DanFWigBDPLCOEKYZ4ZL2RQ1bRcRVTf13A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86: fix __user annotations
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qiaowei Ren <qiaowei.ren@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+On Mon, Apr 1, 2019 at 4:36 PM David Laight <David.Laight@aculab.com> wrote:
+>
+> From: Jann Horn
+> > Sent: 28 March 2019 21:23
+> > Fix __user annotations in various places across the x86 tree:
+> >
+> ...
+> >  - generic_load_microcode() deals with a pointer that can be either a
+> >    kernel pointer or a user pointer; change the code to pass it around as
+> >    a __user pointer, and add explicit casts to convert between __user and
+> >    __kernel
+> ...
+> > -static int get_ucode_fw(void *to, const void *from, size_t n)
+> > +static int get_ucode_fw(void *to, const void __user *from, size_t n)
+> >  {
+> > -     memcpy(to, from, n);
+> > +     /* cast paired with request_microcode_fw() */
+> > +     memcpy(to, (const void __force *)from, n);
+> >       return 0;
+> >  }
+> >
+> > @@ -993,7 +996,8 @@ static enum ucode_state request_microcode_fw(int cpu, struct device *device,
+> >               return UCODE_NFOUND;
+> >       }
+> >
+> > -     ret = generic_load_microcode(cpu, (void *)firmware->data,
+> > +     /* cast paired with get_ucode_fw() */
+> > +     ret = generic_load_microcode(cpu, (void __force __user *)firmware->data,
+> >                                    firmware->size, &get_ucode_fw);
+> >
+> >       release_firmware(firmware);
+> > @@ -1001,7 +1005,7 @@ static enum ucode_state request_microcode_fw(int cpu, struct device *device,
+> >       return ret;
+> >  }
+> >
+> > -static int get_ucode_user(void *to, const void *from, size_t n)
+> > +static int get_ucode_user(void *to, const void __user *from, size_t n)
+> >  {
+> >       return copy_from_user(to, from, n);
+> >  }
+> > @@ -1012,7 +1016,7 @@ request_microcode_user(int cpu, const void __user *buf, size_t size)
+> >       if (is_blacklisted(cpu))
+> >               return UCODE_NFOUND;
+> >
+> > -     return generic_load_microcode(cpu, (void *)buf, size, &get_ucode_user);
+> > +     return generic_load_microcode(cpu, buf, size, &get_ucode_user);
+>
+> That is all an 'accident waiting to happen' ...
 
-This driver is Intel-only so loading on anything which is not Intel is
-pointless. Prevent it from doing so.
-
-While at it, correct the "not supported" print statement to say CPU
-"model" which is what that test does.
-
-Suggested-by: Erwan Velu <e.velu@criteo.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Len Brown <lenb@kernel.org>
-Cc: linux-pm@vger.kernel.org
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-CC: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/cpufreq/intel_pstate.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index b599c7318aab..2986119dd31f 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -2596,6 +2596,9 @@ static int __init intel_pstate_init(void)
- 	const struct x86_cpu_id *id;
- 	int rc;
- 
-+	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
-+		return -ENODEV;
-+
- 	if (no_load)
- 		return -ENODEV;
- 
-@@ -2611,7 +2614,7 @@ static int __init intel_pstate_init(void)
- 	} else {
- 		id = x86_match_cpu(intel_pstate_cpu_ids);
- 		if (!id) {
--			pr_info("CPU ID not supported\n");
-+			pr_info("CPU model not supported\n");
- 			return -ENODEV;
- 		}
- 
--- 
-2.21.0
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+What's your suggestion? The code used to store user pointers in
+kernel-typed pointers. Now it only stores kernel pointers in
+user-typed pointers, which is much less hazardous.
