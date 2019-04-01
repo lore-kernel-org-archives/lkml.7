@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48611C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EF5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1E12084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009B92084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141553;
-	bh=hk9qZc9ScoNa154aFYHFblnRewOJP7e6Bxz6USbBByg=;
+	s=default; t=1554141558;
+	bh=/ZBwDFY3uqU3ZGsTlUC56ri+31jMg9in+LcOhpNpTzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OdPk1GXqdzi6su8iuIbJI6ntDoAlMk71lK4Na4WFGddIizCzON5rSUne3fOCIzChs
-	 kgSj0yi1pP9dBghw2uh3YvTIffKCGry01VGcl1AMBYDOmLFGXtVhI+geCLsv3xqrWb
-	 HhuUJoaWCIlyi9Q9N8w3MgkBh1pn1ee0QdZ2WelE=
+	b=sNQMF9zO1gdBm1auSdB8nKHpeJXdKO+VWAbkiqzToXTytWs546Q3ENRS+horBa2Oi
+	 qZ9RQFS/x1UzF8nnYHhSb+YA9vOSjUstn5KYX6R9yo/8PTsKpK2oo2z1yAbVlzx/Q4
+	 rCE2VNxmhYcoWCs52cIEcqIx1rX+sxAdJA0DbmNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731535AbfDAR7M (ORCPT
+        id S1731297AbfDARSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:59:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731304AbfDARSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:18:03 -0400
+        id S1730883AbfDARRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:17:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88205206C0;
-        Mon,  1 Apr 2019 17:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B10420883;
+        Mon,  1 Apr 2019 17:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139083;
-        bh=hk9qZc9ScoNa154aFYHFblnRewOJP7e6Bxz6USbBByg=;
+        s=default; t=1554139071;
+        bh=/ZBwDFY3uqU3ZGsTlUC56ri+31jMg9in+LcOhpNpTzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pn+Koog6FzG9SiodsX4zc2k3wBju9sS45rdwuJtbDgXWyEhz3PiDzKBnE5wvBu0QV
-         Thp0vQ4Lgfq/O4RhaF9Wcxj0gjmrqrTobIAc4V5KJDQKuwD1hY2D7ssz5k2ORLdSh7
-         /rJT92QDv1QAMeJOlEltJs95xCmZcMpJdhhL9EdQ=
+        b=juYBUQIoDDMFECvhnlttSDZIDvRTrYdQfgXt7PBx8DeKLbv8rsmwhnyRdDgPC2jfu
+         e+4INqiXHAYkZjMWF5VRml0GceRHDFRO2eLlE8k8RlJKNf8DVKR1qzyJQx9SypmuRE
+         NoyGVh7uPOrgajqW8krSqp1pJjoTr38DT9OdJugs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 107/134] xhci: Fix port resume done detection for SS ports with LPM enabled
-Date:   Mon,  1 Apr 2019 19:02:23 +0200
-Message-Id: <20190401170054.221630835@linuxfoundation.org>
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Radoslav Gerganov <rgerganov@vmware.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 4.19 104/134] USB: gadget: f_hid: fix deadlock in f_hidg_write()
+Date:   Mon,  1 Apr 2019 19:02:20 +0200
+Message-Id: <20190401170053.937252059@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -65,47 +67,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Radoslav Gerganov <rgerganov@vmware.com>
 
-commit 6cbcf596934c8e16d6288c7cc62dfb7ad8eadf15 upstream.
+commit 072684e8c58d17e853f8e8b9f6d9ce2e58d2b036 upstream.
 
-A suspended SS port in U3 link state will go to U0 when resumed, but
-can almost immediately after that enter U1 or U2 link power save
-states before host controller driver reads the port status.
+In f_hidg_write() the write_spinlock is acquired before calling
+usb_ep_queue() which causes a deadlock when dummy_hcd is being used.
+This is because dummy_queue() callbacks into f_hidg_req_complete() which
+tries to acquire the same spinlock. This is (part of) the backtrace when
+the deadlock occurs:
 
-Host controller driver only checks for U0 state, and might miss
-the finished resume, leaving flags unclear and skip notifying usb
-code of the wake.
+  0xffffffffc06b1410 in f_hidg_req_complete
+  0xffffffffc06a590a in usb_gadget_giveback_request
+  0xffffffffc06cfff2 in dummy_queue
+  0xffffffffc06a4b96 in usb_ep_queue
+  0xffffffffc06b1eb6 in f_hidg_write
+  0xffffffff8127730b in __vfs_write
+  0xffffffff812774d1 in vfs_write
+  0xffffffff81277725 in SYSC_write
 
-Add U1 and U2 to the possible link states when checking for finished
-port resume.
+Fix this by releasing the write_spinlock before calling usb_ep_queue()
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Reviewed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Tested-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: stable@vger.kernel.org # 4.11+
+Fixes: 749494b6bdbb ("usb: gadget: f_hid: fix: Move IN request allocation to set_alt()")
+Signed-off-by: Radoslav Gerganov <rgerganov@vmware.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-ring.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/function/f_hid.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1643,10 +1643,13 @@ static void handle_port_status(struct xh
- 		}
- 	}
+--- a/drivers/usb/gadget/function/f_hid.c
++++ b/drivers/usb/gadget/function/f_hid.c
+@@ -391,20 +391,20 @@ try_again:
+ 	req->complete = f_hidg_req_complete;
+ 	req->context  = hidg;
  
--	if ((portsc & PORT_PLC) && (portsc & PORT_PLS_MASK) == XDEV_U0 &&
--			DEV_SUPERSPEED_ANY(portsc)) {
-+	if ((portsc & PORT_PLC) &&
-+	    DEV_SUPERSPEED_ANY(portsc) &&
-+	    ((portsc & PORT_PLS_MASK) == XDEV_U0 ||
-+	     (portsc & PORT_PLS_MASK) == XDEV_U1 ||
-+	     (portsc & PORT_PLS_MASK) == XDEV_U2)) {
- 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
--		/* We've just brought the device into U0 through either the
-+		/* We've just brought the device into U0/1/2 through either the
- 		 * Resume state after a device remote wakeup, or through the
- 		 * U3Exit state after a host-initiated resume.  If it's a device
- 		 * initiated remote wake, don't pass up the link state change,
++	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
++
+ 	status = usb_ep_queue(hidg->in_ep, req, GFP_ATOMIC);
+ 	if (status < 0) {
+ 		ERROR(hidg->func.config->cdev,
+ 			"usb_ep_queue error on int endpoint %zd\n", status);
+-		goto release_write_pending_unlocked;
++		goto release_write_pending;
+ 	} else {
+ 		status = count;
+ 	}
+-	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
+ 
+ 	return status;
+ release_write_pending:
+ 	spin_lock_irqsave(&hidg->write_spinlock, flags);
+-release_write_pending_unlocked:
+ 	hidg->write_pending = 0;
+ 	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
+ 
 
 
