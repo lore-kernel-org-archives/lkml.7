@@ -2,125 +2,161 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37CFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BCCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAA5206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C03220896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 11:49:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Yj26GiEy"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VtBdbytP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfDALtB (ORCPT
+        id S1726865AbfDALtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 07:49:01 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:38630 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfDALtB (ORCPT
+        Mon, 1 Apr 2019 07:49:12 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:32873 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbfDALtL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 07:49:01 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190401114859euoutp011dd0390afaf0e06312b09efd33529d3c~RV04ngsmn0400004000euoutp01X
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2019 11:48:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190401114859euoutp011dd0390afaf0e06312b09efd33529d3c~RV04ngsmn0400004000euoutp01X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1554119339;
-        bh=nvTELAq9RUsQyYxN9ZlQrqxvYLQdXt1noep0alVVe0Y=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Yj26GiEytZjRoxcLPgTVvMXYARJDCeglgTp83FzIhjfGW+50EegmbGywclt+ahrv7
-         KYtlgy4mUplLz2ILRdGGnwblJvqqZjraqvOvIVoTKHxwRKLJ7fNwnQaEiucSE+ZUUt
-         dvye4sq0Dccuxprz7g8QukYxmXWFHVJwq7gPljfw=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190401114859eucas1p221ac4e813ce9d37cb6a2ef8ee53d191e~RV04PcchD0725707257eucas1p2N;
-        Mon,  1 Apr 2019 11:48:59 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 59.9E.04298.AAAF1AC5; Mon,  1
-        Apr 2019 12:48:58 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190401114858eucas1p2a9dc45c289d5a2368499ce5dd75a6777~RV03gPZT_3156731567eucas1p2g;
-        Mon,  1 Apr 2019 11:48:58 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190401114858eusmtrp26bdd95d086bb38af0ae6a6fa94fcc309~RV03STPKD1145111451eusmtrp2d;
-        Mon,  1 Apr 2019 11:48:58 +0000 (GMT)
-X-AuditID: cbfec7f2-f2dff700000010ca-bb-5ca1faaa4311
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9C.57.04140.AAAF1AC5; Mon,  1
-        Apr 2019 12:48:58 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190401114857eusmtip2c50c3d25bb4f4f1c9121cd8fda31cf93~RV029W-Vs1175211752eusmtip2U;
-        Mon,  1 Apr 2019 11:48:57 +0000 (GMT)
-Subject: Re: [PATCH] video: fbdev: vesafb: fix indentation issue
-To:     Colin King <colin.king@canonical.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <bc50205e-34f0-baee-a50f-7bb302327d21@samsung.com>
-Date:   Mon, 1 Apr 2019 13:48:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-        Thunderbird/45.3.0
+        Mon, 1 Apr 2019 07:49:11 -0400
+Received: by mail-wr1-f65.google.com with SMTP id q1so11625820wrp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 04:49:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=FOX8D+ot0T2l8OwFRFFMkAlDs7at7vgjbhf1hk4EjZk=;
+        b=VtBdbytPYYvJrhCQb3Kn+ei3CPPjNZ9CUwlbqSdtaR8S7LCMkNYmPrNAQSX6W760Xj
+         HgFcIPHZmpGR6IcTA73ItAA/lxUlTXA7R8j8EodOEulN0XCmjhUjxI157/e0qXYEMZil
+         BT32mTycsudukbdStlQnLMrlf7u6uMUyNUbCQwVm29AZpGkJlxwkEYA4KVeqx7MlMf62
+         z4CPzB+AAUUA/aGixuV8PxP5dE4oiDx5GD6Gpm6MFKHhTsgGw0DZjmo3kq/TCmML3zRG
+         BEaK1TLkajIqr4ReQDuh3xr5XONQCIukOpq8jyPbKm5I6hH4U1ogrmN0mMH+FrQgs83I
+         kz9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=FOX8D+ot0T2l8OwFRFFMkAlDs7at7vgjbhf1hk4EjZk=;
+        b=MZwL/6ELhMfbHJDI3LUWpywgCSXtNDi8V5YztnrBNlt84lfn99PtLNonSfiddNhQHI
+         b7BrZgVfNvDBNj3Jvk6PpDM6kz2Tw8A+Sps2mFwT8Gzla0RwlH+9w+RMKTmQlUXi/cD3
+         POA57RuiHNWzqR7/NMDAOPG0gd3j1fu6rWPlp88taxMRbErlrXYilLBjS7G8pE3FXr7O
+         632xaWI7N4OHT3b+BPmgvYCjQEldm5DCOGbNTlQeU7nSGq9dQvAFuUi8yIhUEgP+18ui
+         3gOYJXNZ2oadbhjxdbZAUMvAmpvrXzp5cMICiv0gZQZlSj0VvpAsMYQ5tZ0Kv9oQeKuj
+         851g==
+X-Gm-Message-State: APjAAAXPh3ski9dPS8XipDZ9hsz5C0dkisi1ORLWiFbF9laORneeE6cD
+        syou5QhhExs5iAbhEiydSy5M+D8dxr68/WfQ
+X-Google-Smtp-Source: APXvYqyF/idXt1uQI0kuncdH/PYXTEsIWM71ltHulIuInxV0NaMSzO3XEKjRc1uVUMEap25BNT2+GQ==
+X-Received: by 2002:adf:f011:: with SMTP id j17mr39619439wro.330.1554119348814;
+        Mon, 01 Apr 2019 04:49:08 -0700 (PDT)
+Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id b10sm13630862wrt.86.2019.04.01.04.49.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 04:49:08 -0700 (PDT)
+Subject: Re: [PATCH 0/5] arm64: dts: meson-g12a: Add support for Video Display
+To:     khilman@baylibre.com
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190325145914.32391-1-narmstrong@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <86a80b38-2456-d679-e203-cad4a4d9f8f0@baylibre.com>
+Date:   Mon, 1 Apr 2019 13:49:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190212132905.7307-1-colin.king@canonical.com>
+In-Reply-To: <20190325145914.32391-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjleLIzCtJLcpLzFFi42LZduzned1VvxbGGNz4aG7xe3Uvm8WVr+/Z
-        LLbekrY40feB1eLyrjlsDqwesxp62Tzudx9n8vi8SS6AOYrLJiU1J7MstUjfLoErY8qcCYwF
-        J5krGu+2szQwfmDqYuTgkBAwkeg+VN/FyMUhJLCCUeJDwxVWCOcLo8Ten0+BHE4g5zOjxNn9
-        piA2SMOK/kXsEEXLGSXae2cyQThvGSU+/m5gB6kSFnCQ2LOwgw1khYiApsT5c0UgNcwCjYwS
-        tyZuYwSpYROwkpjYvgrM5hWwk5i5thusl0VARaL1yV2wXlGBCIn+M+oQJYISJ2c+YQEJcwrY
-        Spx6UgcSZhaQl9j+dg4zxG3t7BLH2qohbBeJf783M0HYwhKvjm9hh7BlJP7vnA92soTAOkaJ
-        vx0vmCGc7YwSyyf/Y4OospY4fPwiK8gyZqD71+/Shwg7SrycspsNEnJ8EjfeCkLcwCcxadt0
-        Zogwr0RHmxBEtZrEhmUb2GDWdu1cCXWmh0TT371MExgVZyF5bBaSb2Yh7F3AyLyKUTy1tDg3
-        PbXYMC+1XK84Mbe4NC9dLzk/dxMjMHWc/nf80w7Gr5eSDjEKcDAq8fAqMCyMEWJNLCuuzD3E
-        KMHBrCTCe6Z/QYwQb0piZVVqUX58UWlOavEhRmkOFiVx3mqGB9FCAumJJanZqakFqUUwWSYO
-        TqkGRjb1GMZF9Z+X5i3ZVN6wSvbm5GrTRWKMXuLprKulvFe95Yz68Cfs54UjH1llNm13nC78
-        a++kwyFXZh2L8/q1fkv13xlBQe/dFhn31O37o3P/jv9Pl0V7/phd3FfqNWuz1pJD2h0z1jLd
-        6u/6J66/lakh8JxY2/ZUme5C1dUGJiG1innF7f/c5iixFGckGmoxFxUnAgCc16aDGQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjkeLIzCtJLcpLzFFi42I5/e/4Pd1VvxbGGLQeYbH4vbqXzeLK1/ds
-        FltvSVuc6PvAanF51xw2B1aPWQ29bB73u48zeXzeJBfAHKVnU5RfWpKqkJFfXGKrFG1oYaRn
-        aGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CXMWXOBMaCk8wVjXfbWRoYPzB1MXJySAiY
-        SKzoX8TexcjFISSwlFHiz/5vLF2MHEAJGYnj68sgaoQl/lzrYgOxhQReM0rMXV8KYgsLOEjs
-        WdjBBlIuIqApcf5cEcSYCYwSL2ZMYgZxmAUaGSWu/5zKCNLAJmAlMbF9FZjNK2AnMXNtNzuI
-        zSKgItH65C7YAlGBCIlbDztYIGoEJU7OfAJ2D6eArcSpJ3UgYWYBdYk/8y4xQ9jyEtvfzmGe
-        wCg4C0nHLCRls5CULWBkXsUoklpanJueW2ykV5yYW1yal66XnJ+7iREYF9uO/dyyg7HrXfAh
-        RgEORiUe3gqmhTFCrIllxZW5hxglOJiVRHjP9C+IEeJNSaysSi3Kjy8qzUktPsRoCvTDRGYp
-        0eR8YMzmlcQbmhqaW1gamhubG5tZKInznjeojBISSE8sSc1OTS1ILYLpY+LglGpgDP+VKyn3
-        rzfFg3eZ0nrBvOPFcXknm5O3rGMSqD458VeiT9SxEh21Iu+9U4u9ispO3V4vuuTUlg1pP2Ir
-        fq37VX++8MDnLXy9cw7zZ5aUc1pseSW6vtJprc/eddunsXI/5do4LWGSZ4BOQfTCxSwcNuml
-        ZVdL/1bockX5Ze/76HG/6Y4ml6eSEktxRqKhFnNRcSIApfmMUKECAAA=
-X-CMS-MailID: 20190401114858eucas1p2a9dc45c289d5a2368499ce5dd75a6777
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190212132918epcas1p4211cd6eb2d090c8ccd2996ee0d13ca78
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190212132918epcas1p4211cd6eb2d090c8ccd2996ee0d13ca78
-References: <CGME20190212132918epcas1p4211cd6eb2d090c8ccd2996ee0d13ca78@epcas1p4.samsung.com>
-        <20190212132905.7307-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 02/12/2019 02:29 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On 25/03/2019 15:59, Neil Armstrong wrote:
+> This patchset adds nodes for Video Display support.
 > 
-> There are a couple of statements that are indented too deeply, fix
-> this by removing tabs. Also add a space after a comma to clean up
-> a cppcheck warning.
+> Dependencies :
+> - patch 1: VPU, HDMI & Power Controller bindings still in reviewe at [1]
+> - patch 2: None
+> - patch 3, 4, 5: Patch 1
 > 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> [1] https://lkml.kernel.org/r/20190313141030.5958-1-narmstrong@baylibre.com
+> 
+> Neil Armstrong (5):
+>   arm64: dts: meson-g12a: Add VPU and HDMI related nodes
+>   arm64: dts: meson-g12a: Add AO-CEC-A nodes
+>   arm64: dts: meson-g12a-x96-max: Add support for Video Display
+>   arm64: dts: meson-g12a-sei510: Add support for Video Display
+>   arm64: dts: meson-g12a-u200: Add support for Video Display
+> 
+>  .../boot/dts/amlogic/meson-g12a-sei510.dts    |  46 ++++++
+>  .../boot/dts/amlogic/meson-g12a-u200.dts      |  47 ++++++
+>  .../boot/dts/amlogic/meson-g12a-x96-max.dts   |  47 ++++++
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 149 ++++++++++++++++++
+>  4 files changed, 289 insertions(+)
+> 
 
-Patch queued for v5.2, thanks.
+Hi Kevin,
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+The bindings has been reviewed, you can pick the VPU/HDMI bindings with these patches if
+you want.
+
+I'll apply the DRM driver patches on the drm-tree directly when reviewed.
+
+Neil
