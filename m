@@ -3,93 +3,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C269C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF56C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1185620856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD42E218FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbfDAOpb (ORCPT
+        id S1728587AbfDAOq5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 10:45:31 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38779 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfDAOpb (ORCPT
+        Mon, 1 Apr 2019 10:46:57 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:53099 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726514AbfDAOq4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 10:45:31 -0400
-Received: by mail-qt1-f196.google.com with SMTP id d13so11112798qth.5
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 07:45:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gMWFXOF84tirN8vJJaH4r/H0McFie5EFwhOH5jwK39Q=;
-        b=IT62E++lYX4tpa7y7X3WBotrhGqvSAEZUxKtXuhT7y6Y3pTeOcTOHzDdE/HX2WjLHR
-         fXMJfV177GuoppxZiVFc1uAqPdAcju4e0ynJ9LaJFyQXprKOrhSbJsPlOSHrfTfZxqy9
-         dwLCnxtibR+GR+p7O+1Q1W+nhZUBJQMVjy8E2WSB6sj8KH0GIOo8U9KASoSt00bqRKyJ
-         dbr0Y7tYcQ6QT2aCj84t9Gw6q8C0MlYpn9SBuXeFFJQBAIWbc+lzAwXJOiKXyI/qcIUJ
-         M7F4tJsJVxjPmeMeuIRqLe/4aFnhj7CVa4ayX0+ShL4a31KvtjDVaU34BRm4Aexv1YrA
-         vWpg==
-X-Gm-Message-State: APjAAAUrQ7tV8uHVUKow6HV0HouxpUqLAAUqWwWZ7XP4RQiAxcIiiEOL
-        CUlkHQsPtjc3sPd7PZrTp6EtAQ==
-X-Google-Smtp-Source: APXvYqzJBJY8DrD6iTliprqMc4U5/LFnbB2DPVMUWe0YjnKWLftbU9KgcgwpqYMeNv25dt8ev3bOFA==
-X-Received: by 2002:a0c:ae04:: with SMTP id y4mr46602243qvc.49.1554129930417;
-        Mon, 01 Apr 2019 07:45:30 -0700 (PDT)
-Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
-        by smtp.gmail.com with ESMTPSA id b46sm5053834qtk.77.2019.04.01.07.45.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 07:45:29 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 10:45:21 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
-        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
-        dodgen@google.com, konrad.wilk@oracle.com, dhildenb@redhat.com,
-        aarcange@redhat.com, alexander.duyck@gmail.com
-Subject: Re: On guest free page hinting and OOM
-Message-ID: <20190401104328-mutt-send-email-mst@kernel.org>
-References: <20190329084058-mutt-send-email-mst@kernel.org>
- <f6332928-d6a4-7a75-245d-2c534cf6e710@redhat.com>
- <20190329104311-mutt-send-email-mst@kernel.org>
- <7a3baa90-5963-e6e2-c862-9cd9cc1b5f60@redhat.com>
- <f0ee075d-3e99-efd5-8c82-98d53b9f204f@redhat.com>
- <20190329125034-mutt-send-email-mst@kernel.org>
- <fb23fd70-4f1b-26a8-5ecc-4c14014ef29d@redhat.com>
- <20190401073007-mutt-send-email-mst@kernel.org>
- <29e11829-c9ac-a21b-b2f1-ed833e4ca449@redhat.com>
+        Mon, 1 Apr 2019 10:46:56 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-209-_UCUwBC3ON-jk56l_yeMxw-1; Mon, 01 Apr 2019 15:46:50 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 1 Apr 2019 15:47:55 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 1 Apr 2019 15:47:55 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'gregkh@linuxfoundation.org'" <gregkh@linuxfoundation.org>,
+        "Andrey Abramov" <st5pub@yandex.ru>
+CC:     George Spelvin <lkml@sdf.org>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
+        "dchinner@redhat.com" <dchinner@redhat.com>,
+        "dedekind1@gmail.com" <dedekind1@gmail.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "jlbec@evilplan.org" <jlbec@evilplan.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        "mark@fasheh.com" <mark@fasheh.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "naveen.n.rao@linux.vnet.ibm.com" <naveen.n.rao@linux.vnet.ibm.com>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "richard@nod.at" <richard@nod.at>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "vgupta@synopsys.com" <vgupta@synopsys.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH 5/5] Lib: sort.h: replace int size with size_t size in the
+ swap function
+Thread-Topic: [PATCH 5/5] Lib: sort.h: replace int size with size_t size in
+ the swap function
+Thread-Index: AQHU57BB1hN4l4tmIUuL1+h9cp5f16YnYvDQ
+Date:   Mon, 1 Apr 2019 14:47:55 +0000
+Message-ID: <cd57af9a2c1e494cbc8631a0347831dc@AcuMS.aculab.com>
+References: <18626931553963861@sas1-b3ec53dbc12b.qloud-c.yandex.net>
+ <20467491553964233@myt4-c0b480c282c8.qloud-c.yandex.net>
+ <20190330183826.GB21828@kroah.com> <201903302015.x2UKFnSL003850@sdf.org>
+ <20434561554015618@myt1-cd60b8ae9bb9.qloud-c.yandex.net>
+ <20190331105412.GA9393@kroah.com>
+In-Reply-To: <20190331105412.GA9393@kroah.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <29e11829-c9ac-a21b-b2f1-ed833e4ca449@redhat.com>
+X-MC-Unique: _UCUwBC3ON-jk56l_yeMxw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 04:09:32PM +0200, David Hildenbrand wrote:
-> > 
-> > When you say yield, I would guess that would involve config space access
-> > to the balloon to flush out outstanding hints?
-> 
-> I rather meant yield your CPU to the hypervisor, so it can process
-> hinting requests faster (like waiting for a spinlock). This is the
-> simple case. More involved approaches might somehow indicate to the
-> hypervisor to not process queued requests but simply return them to the
-> guest so the guest can add the isolated pages to the buddy. If this is
-> "config space access to the balloon to flush out outstanding hints" then
-> yes, something like that might be a good idea if it doesn't harm
-> performance.
+From: gregkh@linuxfoundation.org
+> Sent: 31 March 2019 11:54
+...
+> Yes, "int" is a very nice variable for "size", you need to explain why
+> it is better to use size_t here please.
 
-The problem would be in testing this unfortunately. Same as any
-OOM hack, it is difficult to test well.
+Actually, on x86_64 you probably want 'unsigned int' to avoid the
+compiler having to generate a sign-extending register move if the
+value is ever used in a 64bit expression (eg an address calculation).
 
-> -- 
-> 
-> Thanks,
-> 
-> David / dhildenb
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
