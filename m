@@ -2,59 +2,78 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EF5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0CFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009B92084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141558;
-	bh=/ZBwDFY3uqU3ZGsTlUC56ri+31jMg9in+LcOhpNpTzg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sNQMF9zO1gdBm1auSdB8nKHpeJXdKO+VWAbkiqzToXTytWs546Q3ENRS+horBa2Oi
-	 qZ9RQFS/x1UzF8nnYHhSb+YA9vOSjUstn5KYX6R9yo/8PTsKpK2oo2z1yAbVlzx/Q4
-	 rCE2VNxmhYcoWCs52cIEcqIx1rX+sxAdJA0DbmNg=
+	by mail.kernel.org (Postfix) with ESMTP id 102732146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:59:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PuwiY+gD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731297AbfDARSB (ORCPT
+        id S1731607AbfDAR7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 1 Apr 2019 13:59:19 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41224 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731298AbfDARSB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Apr 2019 13:18:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730883AbfDARRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:17:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B10420883;
-        Mon,  1 Apr 2019 17:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139071;
-        bh=/ZBwDFY3uqU3ZGsTlUC56ri+31jMg9in+LcOhpNpTzg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=juYBUQIoDDMFECvhnlttSDZIDvRTrYdQfgXt7PBx8DeKLbv8rsmwhnyRdDgPC2jfu
-         e+4INqiXHAYkZjMWF5VRml0GceRHDFRO2eLlE8k8RlJKNf8DVKR1qzyJQx9SypmuRE
-         NoyGVh7uPOrgajqW8krSqp1pJjoTr38DT9OdJugs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Radoslav Gerganov <rgerganov@vmware.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 4.19 104/134] USB: gadget: f_hid: fix deadlock in f_hidg_write()
-Date:   Mon,  1 Apr 2019 19:02:20 +0200
-Message-Id: <20190401170053.937252059@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
-References: <20190401170044.243719205@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+Received: by mail-pl1-f194.google.com with SMTP id d1so3118009plj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 10:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=92at8vUta2fC2XN1pKFFPCkHFJWYYJixqtIuh16qRd8=;
+        b=PuwiY+gDlXPS2BRq9eoaWfWDB2j1H9/9kFlbWKpKuyv8x775CHcSkF9PtohFS4L/AN
+         MebDQWa6TzOmQI9Eube6euAXCCKTMrw6qMGxcM5K/N5P4sbK1MUGLtfvv7yQniVwylxv
+         55ROovHraJqtpI0gXazttyeJFmpeBD8bAjIVo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=92at8vUta2fC2XN1pKFFPCkHFJWYYJixqtIuh16qRd8=;
+        b=AjJIGyRHitOEFkrewY/KjmjfRsaXL4+cRkAZDlM+YwKYB2S4gmjr+mGsKSq5fbZYQY
+         hd/pT2gmd1lvN9fed30D6e93f0zsi3JqtYXUoSeaw2I7yPQpEcj7zeorJk53gjIjDo8T
+         FxuVKMOYWzdt/teJ8yY4chA7cbzaK4WUKDTz365dSYlgwCqyx3nPWFGYwcCLPAAd1tsm
+         Sj6Vel2vY0a8x/tejcEmqGPKyePYS+LbtM9Nl48XdTvKz+Mn3+8mRc8no8uFZeE417pi
+         pJ81bnPm43GHV5UOpRAVsp6ImXnkAbWV44itwK3hv2ifwV9RDIUgV9rW5t1ltP+LjgTy
+         8/nQ==
+X-Gm-Message-State: APjAAAUNn9vG05XQLGuqfvii+cGOMTVQUwGs0suvgCArgE0TbLqsf9FA
+        YGmy4Xb5ciu9a0pEMYxOu9JV4Q==
+X-Google-Smtp-Source: APXvYqwXPIDZF3EjTK+apAxCXhBFSTWfuVlSfZa4zc0Zr6UCqPiw0E8+9YtFgMTzXnmJco5r2/Nunw==
+X-Received: by 2002:a17:902:b217:: with SMTP id t23mr66226168plr.184.1554139081162;
+        Mon, 01 Apr 2019 10:18:01 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id y12sm31370112pgq.64.2019.04.01.10.17.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 10:18:00 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>
+Cc:     linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>,
+        Rob Herring <robh+dt@kernel.org>, mka@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v5 7/7] ARM: dts: rockchip: Specify rk3288-veyron-minnie's display timings
+Date:   Mon,  1 Apr 2019 10:17:24 -0700
+Message-Id: <20190401171724.215780-8-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+In-Reply-To: <20190401171724.215780-1-dianders@chromium.org>
+References: <20190401171724.215780-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,68 +82,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+Just like we did for rk3288-veyron-chromebook, we want to be able to
+use one of the fixed PLLs in the system to make the pixel clock for
+minnie.
 
-------------------
+Specifying these timings matches us with how the display is used on
+the downstream Chrome OS kernel.  See https://crrev.com/c/323211.
 
-From: Radoslav Gerganov <rgerganov@vmware.com>
+Unlike what we did for rk3288-veyron-chromebook, this CL actually
+changes the timings (though not the pixel clock) that is used when
+using the upstream kernel.  Booting up a minnie shows that it ended up
+with a 66.67 MHz pixel clock but it was still using the
+porches/blankings it would have wanted for a 72.5 MHz pixel clock.
 
-commit 072684e8c58d17e853f8e8b9f6d9ce2e58d2b036 upstream.
+NOTE: compared to the downstream kernel, this seems to cause a
+slightly different result reported in the 'modetest' command on a
+Chromebook.  The downstream kernel shows:
+  1280x800 60 1280 1298 1330 1351 800 804 822 830 66667
 
-In f_hidg_write() the write_spinlock is acquired before calling
-usb_ep_queue() which causes a deadlock when dummy_hcd is being used.
-This is because dummy_queue() callbacks into f_hidg_req_complete() which
-tries to acquire the same spinlock. This is (part of) the backtrace when
-the deadlock occurs:
+With this patch we have:
+  1280x800 59 1280 1298 1330 1351 800 804 822 830 66666
 
-  0xffffffffc06b1410 in f_hidg_req_complete
-  0xffffffffc06a590a in usb_gadget_giveback_request
-  0xffffffffc06cfff2 in dummy_queue
-  0xffffffffc06a4b96 in usb_ep_queue
-  0xffffffffc06b1eb6 in f_hidg_write
-  0xffffffff8127730b in __vfs_write
-  0xffffffff812774d1 in vfs_write
-  0xffffffff81277725 in SYSC_write
+Specifically modetest was reporting 60 Hz on the downstream kernel but
+the upstream kernel does the math and comesup with 59 (because we
+actually achieve 59.45 Hz).  Also upstream doesn't round the Hz up
+when converting to kHz--it seems to truncate.
 
-Fix this by releasing the write_spinlock before calling usb_ep_queue()
+ALSO NOTE: when I look at the EDID from the datasheet, I see:
+  -hsync -vsync
+...but it seems like we've never actually run with that so I've
+continued leaving that out.
 
-Reviewed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Tested-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: stable@vger.kernel.org # 4.11+
-Fixes: 749494b6bdbb ("usb: gadget: f_hid: fix: Move IN request allocation to set_alt()")
-Signed-off-by: Radoslav Gerganov <rgerganov@vmware.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- drivers/usb/gadget/function/f_hid.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/gadget/function/f_hid.c
-+++ b/drivers/usb/gadget/function/f_hid.c
-@@ -391,20 +391,20 @@ try_again:
- 	req->complete = f_hidg_req_complete;
- 	req->context  = hidg;
+Changes in v5:
+- It's not just jerry, it's most rk3288 Chromebooks (Heiko)
+
+Changes in v4:
+- rk3288-veyron-minnie patch new for v4.
+
+Changes in v3: None
+Changes in v2: None
+
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+index ca7512ade222..8179cf9f6e98 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+@@ -144,6 +144,18 @@
+ 	power-supply= <&panel_regulator>;
  
-+	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
+ 	/delete-node/ panel-timing;
 +
- 	status = usb_ep_queue(hidg->in_ep, req, GFP_ATOMIC);
- 	if (status < 0) {
- 		ERROR(hidg->func.config->cdev,
- 			"usb_ep_queue error on int endpoint %zd\n", status);
--		goto release_write_pending_unlocked;
-+		goto release_write_pending;
- 	} else {
- 		status = count;
- 	}
--	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
++	panel-timing {
++		clock-frequency = <66666667>;
++		hactive = <1280>;
++		hfront-porch = <18>;
++		hback-porch = <21>;
++		hsync-len = <32>;
++		vactive = <800>;
++		vfront-porch = <4>;
++		vback-porch = <8>;
++		vsync-len = <18>;
++	};
+ };
  
- 	return status;
- release_write_pending:
- 	spin_lock_irqsave(&hidg->write_spinlock, flags);
--release_write_pending_unlocked:
- 	hidg->write_pending = 0;
- 	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
- 
-
+ &rk808 {
+-- 
+2.21.0.392.gf8f6787159e-goog
 
