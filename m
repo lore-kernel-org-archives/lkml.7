@@ -6,71 +6,77 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCA7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F046C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20B6020896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1802086C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:58:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=synology.com header.i=@synology.com header.b="mtyddrmN"
+	dkim=pass (1024-bit key) header.d=sdf.org header.i=@sdf.org header.b="SVHocj+q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfDAJwg (ORCPT
+        id S1726072AbfDAJ60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 05:52:36 -0400
-Received: from mail.synology.com ([211.23.38.101]:42021 "EHLO synology.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725832AbfDAJwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 05:52:36 -0400
-Received: from _ (localhost [127.0.0.1])
-        by synology.com (Postfix) with ESMTPA id 8FE1D1AD5224D;
-        Mon,  1 Apr 2019 17:52:34 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synology.com; s=123;
-        t=1554112354; bh=CrMdoGx2JkX8mfpYswWFNYtA1gFxV7UNoCKEm5M1kpk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=mtyddrmNcRL6tbbYDpZOzaAN6+k1ChHwegz4cLvbMY+3kNN0/fe2vMUz8JjTJgNqb
-         Gye4bdmTXma6o7Zhm8ZqLjcyGBn3XHjrk3/aj4yDe1wP96sPzbQCSS1zgBry3roWv0
-         eGwFmSCoZu5FnRPL434dI6VPmjQdHlrvQWJo5ku8=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 01 Apr 2019 17:52:34 +0800
-From:   lifonghsu <lifonghsu@synology.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: net: fix routing encapsulated packets when binding a socket to a
- tunnel interface
-In-Reply-To: <20190331.230123.1312457672309077256.davem@davemloft.net>
-References: <6143cbeaab4f37bc2314caa3690063d4@synology.com>
- <20190329.104026.2135814725468775566.davem@davemloft.net>
- <e87a85a8c91d96951c4fa923d1563dcd@synology.com>
- <20190331.230123.1312457672309077256.davem@davemloft.net>
-Message-ID: <6c73524bdddc66f9959243a5a4ce2827@synology.com>
-X-Sender: lifonghsu@synology.com
-User-Agent: Roundcube Webmail/1.1.2
-X-Synology-MCP-Status: no
-X-Synology-Spam-Flag: no
-X-Synology-Spam-Status: score=0, required 6, WHITELIST_FROM_ADDRESS 0
-X-Synology-Virus-Status: no
+        Mon, 1 Apr 2019 05:58:26 -0400
+Received: from mx.sdf.org ([205.166.94.20]:56425 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725859AbfDAJ6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 05:58:25 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x319u8Fl017367
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
+        Mon, 1 Apr 2019 09:56:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sdf.org; s=default;
+        t=1554112582; bh=nfyrQ8GwYN1dR+36K+w2KJmeeTK++gvNmVw4hbCgtQ4=;
+        h=Date:From:To:Subject:Cc:In-Reply-To:References;
+        b=SVHocj+qYv7EIPnLIfPgOVaNlCkoSdLXLVw6GFrl9DCOnxhLWUjOM9vbGSgCCoGcp
+         D1nD66gIhO4CU+TNaRxHv3p9OlqQMQLiL6LH5yenIMo9bJvE6E7MQYstcxd8XbGkjb
+         GywuxAxfIpYFvEK00nepx2+Z/kokFUYZ+IxaQyMI=
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id x319u70q021113;
+        Mon, 1 Apr 2019 09:56:07 GMT
+Date:   Mon, 1 Apr 2019 09:56:07 GMT
+From:   George Spelvin <lkml@sdf.org>
+Message-Id: <201904010956.x319u70q021113@sdf.org>
+To:     andriy.shevchenko@linux.intel.com, st5pub@yandex.ru
+Subject: Re: [PATCH v2 5/5] Lib: sort.h: replace int size with size_t size in the swap function
+Cc:     adrian.hunter@intel.com, ard.biesheuvel@linaro.org,
+        benh@kernel.crashing.org, bp@alien8.de, darrick.wong@oracle.com,
+        dchinner@redhat.com, dedekind1@gmail.com,
+        gregkh@linuxfoundation.org, hpa@zytor.com, jannh@google.com,
+        jlbec@evilplan.org, jpoimboe@redhat.com, jslaby@suse.cz,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        lkml@sdf.org, mark@fasheh.com, mingo@redhat.com,
+        mpe@ellerman.id.au, naveen.n.rao@linux.vnet.ibm.com,
+        ocfs2-devel@oss.oracle.com, paulus@samba.org, peterz@infradead.org,
+        richard@nod.at, sfr@canb.auug.org.au, tglx@linutronix.de,
+        vgupta@synopsys.com, x86@kernel.org
+In-Reply-To: <20190401093555.GD9224@smile.fi.intel.com>
+References: <19606671554056883@myt3-1179f584969c.qloud-c.yandex.net>,
+    <23051461554058370@iva6-3ac3de5fcc31.qloud-c.yandex.net>,
+    <20190401093555.GD9224@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Miller 於 2019-04-01 14:01 寫到:
-> From: lifonghsu <lifonghsu@synology.com>
-> Date: Mon, 01 Apr 2019 11:00:22 +0800
+On Mon, 1 Apr 2019 at 12:35:55 +0300, Andy Shevchenko wrote:
+> Hmm... If (*swap)() is called recursively it means the change might increase
+> stack usage on 64-bit platforms.
 > 
->> Since we are not sure whether there is any code referring to the
->> value of skb_iff in transmit site or not, it is risky to set an
->> invalid interface
-> 
-> If you are no confident in how the value is used on TX, then I can't
-> consider your change with confidence either.
-> 
-> Think about what you are saying to me here.  You basically do not know
-> whether you are adding a bug or not.
+> Am I missing something?
 
-Indeed, we are not confident about the commit. Please drop it for now.
-Thank you for help review the commit.
+Under what conceivable circumstance would someone write a recursive
+(*swap)() function?
 
+You're technically right, but the precondition is more fantastical
+than "if the U.K.'s parliament get their shit together before the
+12th", so I have a hard time worrying about it.
+
+But you did make me think of something: the whole reason swap()
+takes a size argument is for the benefit of the (no longer existing)
+generic swap functions.  All of the custom swap functions ignore
+it.
+
+So how about *deleting* the parameter instead?  That simplifies
+everything.
