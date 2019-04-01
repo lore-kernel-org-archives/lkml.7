@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71856C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBC4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3E02084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F13720883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141873;
-	bh=Da7c/PE30662eWsNcrbPIAeWA4PxHjW5yKJRrx/yJV8=;
+	s=default; t=1554141886;
+	bh=/aI0XT5ZZJ1QiEWrwz/JwDd848hKTZRioVqDiI5Ntoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t0FhcFEHnN/OhbHxOvN/4CujeI5LL8cxzUevn51qbKqajSPeapMko2E68rjj9Paq6
-	 hghzTOp18rViQhJwWrmSdNmVmmlD7q7nkmzM6jugG5PJWr88TznCN5hA6dV+ijzE0+
-	 C4NyD10TBfwvt6rtCqg+mkdRyVlDjbKLVNUeambE=
+	b=pWyQgwbWMPP7q/FqQZp8ZV5ZFfwb2v2kRMtUhPh+Qa1uK4JiqAz1hvgHMh6LBUrJQ
+	 grgpOoUeB4wz5hL0TkOtFScNjREOPh9DOWeiFWNa6oa23Nr5O5A4IUuJ9xBIXYGdmi
+	 JUQBeiFGyOtIL/Vh1Cw14X0igTj0+8dZqWVvP8L0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730936AbfDASEb (ORCPT
+        id S1730686AbfDASEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:04:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36958 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 14:04:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730649AbfDAROA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:14:00 -0400
+        id S1729085AbfDARNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:13:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9759321473;
-        Mon,  1 Apr 2019 17:04:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0194321934;
+        Mon,  1 Apr 2019 17:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138243;
-        bh=Da7c/PE30662eWsNcrbPIAeWA4PxHjW5yKJRrx/yJV8=;
+        s=default; t=1554138826;
+        bh=/aI0XT5ZZJ1QiEWrwz/JwDd848hKTZRioVqDiI5Ntoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GxxeHMt+OG3sWbAjEmBXLjhTauRqbCn0hWQaaddWe/OX5qGhlpfgLMGAhAqbLYR/L
-         TSRSlu4HKdVv1Z+4NxtjwGH2w8zRy1e1itTgEa77/dgPpEunrvdmGupi2XHWueGsOV
-         15BptokuDk8FCTEiF8BqIwC+W06u1Psv/cMmBoJU=
+        b=uZDi/XVZKMEkj9ltjb93p+U7Tdg0qjLKL4tcmFnMqOXoUd0AOJrOSFqu3w03c6l8P
+         fcI+xipnZZpg5boiC+ivsh5iDmTc8i+7+y74vuj8hPxEaGqUhAO8k5+Lz7wxKMqye1
+         AJD3LEOep3ske/0oTXrw4U9LVLRFvFQnVvswLtUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 5.0 002/146] Bluetooth: Verify that l2cap_get_conf_opt provides large enough buffer
-Date:   Mon,  1 Apr 2019 19:00:14 +0200
-Message-Id: <20190401170048.645388006@linuxfoundation.org>
+        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 006/134] gtp: change NET_UDP_TUNNEL dependency to select
+Date:   Mon,  1 Apr 2019 19:00:42 +0200
+Message-Id: <20190401170044.911827118@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
-References: <20190401170048.449559024@linuxfoundation.org>
+In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
+References: <20190401170044.243719205@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,68 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Matteo Croce <mcroce@redhat.com>
 
-commit 7c9cbd0b5e38a1672fcd137894ace3b042dfbf69 upstream.
+[ Upstream commit c22da36688d6298f2e546dcc43fdc1ad35036467 ]
 
-The function l2cap_get_conf_opt will return L2CAP_CONF_OPT_SIZE + opt->len
-as length value. The opt->len however is in control over the remote user
-and can be used by an attacker to gain access beyond the bounds of the
-actual packet.
+Similarly to commit a7603ac1fc8c ("geneve: change NET_UDP_TUNNEL
+dependency to select"), GTP has a dependency on NET_UDP_TUNNEL which
+makes impossible to compile it if no other protocol depending on
+NET_UDP_TUNNEL is selected.
 
-To prevent any potential leak of heap memory, it is enough to check that
-the resulting len calculation after calling l2cap_get_conf_opt is not
-below zero. A well formed packet will always return >= 0 here and will
-end with the length value being zero after the last option has been
-parsed. In case of malformed packets messing with the opt->len field the
-length value will become negative. If that is the case, then just abort
-and ignore the option.
+Fix this by changing the depends to a select, and drop NET_IP_TUNNEL from
+the select list, as it already depends on NET_UDP_TUNNEL.
 
-In case an attacker uses a too short opt->len value, then garbage will
-be parsed, but that is protected by the unknown option handling and also
-the option parameter size checks.
-
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/bluetooth/l2cap_core.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/Kconfig |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -3337,6 +3337,8 @@ static int l2cap_parse_conf_req(struct l
+--- a/drivers/net/Kconfig
++++ b/drivers/net/Kconfig
+@@ -213,8 +213,8 @@ config GENEVE
  
- 	while (len >= L2CAP_CONF_OPT_SIZE) {
- 		len -= l2cap_get_conf_opt(&req, &type, &olen, &val);
-+		if (len < 0)
-+			break;
- 
- 		hint  = type & L2CAP_CONF_HINT;
- 		type &= L2CAP_CONF_MASK;
-@@ -3555,6 +3557,8 @@ static int l2cap_parse_conf_rsp(struct l
- 
- 	while (len >= L2CAP_CONF_OPT_SIZE) {
- 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
-+		if (len < 0)
-+			break;
- 
- 		switch (type) {
- 		case L2CAP_CONF_MTU:
-@@ -3740,6 +3744,8 @@ static void l2cap_conf_rfc_get(struct l2
- 
- 	while (len >= L2CAP_CONF_OPT_SIZE) {
- 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
-+		if (len < 0)
-+			break;
- 
- 		switch (type) {
- 		case L2CAP_CONF_RFC:
+ config GTP
+ 	tristate "GPRS Tunneling Protocol datapath (GTP-U)"
+-	depends on INET && NET_UDP_TUNNEL
+-	select NET_IP_TUNNEL
++	depends on INET
++	select NET_UDP_TUNNEL
+ 	---help---
+ 	  This allows one to create gtp virtual interfaces that provide
+ 	  the GPRS Tunneling Protocol datapath (GTP-U). This tunneling protocol
 
 
