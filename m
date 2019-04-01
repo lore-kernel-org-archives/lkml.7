@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81714C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B57C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3AE2084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC882084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731817AbfDAGyE (ORCPT
+        id S1731865AbfDAGyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 1 Apr 2019 02:54:04 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48612 "EHLO huawei.com"
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48606 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726900AbfDAGyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 02:54:04 -0400
+        id S1726865AbfDAGyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 02:54:03 -0400
 Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AB6802778B14DD5E2360;
+        by Forcepoint Email with ESMTP id B164A5F56F5ED09DAED5;
         Mon,  1 Apr 2019 14:54:00 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 1 Apr 2019
- 14:53:52 +0800
+ 14:53:50 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     <stable@vger.kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -33,12 +33,10 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH for-4.19 2/2] staging: erofs: keep corrupted fs from crashing kernel in erofs_readdir()
-Date:   Mon, 1 Apr 2019 14:53:09 +0800
-Message-ID: <20190401065309.68109-2-gaoxiang25@huawei.com>
+Subject: [PATCH for-4.19 1/2] staging: erofs: fix error handling when failed to read compresssed data
+Date:   Mon, 1 Apr 2019 14:53:08 +0800
+Message-ID: <20190401065309.68109-1-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190401065309.68109-1-gaoxiang25@huawei.com>
-References: <20190401065309.68109-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
@@ -48,98 +46,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 33bac912840fe64dbc15556302537dc6a17cac63 upstream.
+commit b6391ac73400eff38377a4a7364bd3df5efb5178 upstream.
 
-After commit 419d6efc50e9, kernel cannot be crashed in the namei
-path. However, corrupted nameoff can do harm in the process of
-readdir for scenerios without dm-verity as well. Fix it now.
+Complete read error handling paths for all three kinds of
+compressed pages:
 
-Fixes: 3aa8ec716e52 ("staging: erofs: add directory operations")
+ 1) For cache-managed pages, PG_uptodate will be checked since
+    read_endio will unlock and SetPageUptodate for these pages;
+
+ 2) For inplaced pages, read_endio cannot SetPageUptodate directly
+    since it should be used to mark the final decompressed data,
+    PG_error will be set with page locked for IO error instead;
+
+ 3) For staging pages, PG_error is used, which is similar to
+    what we do for inplaced pages.
+
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
 Cc: <stable@vger.kernel.org> # 4.19+
 Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/staging/erofs/dir.c | 45 ++++++++++++++++++++-----------------
- 1 file changed, 25 insertions(+), 20 deletions(-)
+This series resolves the following conflicts:
+FAILED: patch "[PATCH] staging: erofs: fix error handling when failed to read" failed to apply to 4.19-stable tree
+FAILED: patch "[PATCH] staging: erofs: keep corrupted fs from crashing kernel in" failed to apply to 4.19-stable tree
 
-diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
-index 04b84ff31d03..0a089cf5c78f 100644
---- a/drivers/staging/erofs/dir.c
-+++ b/drivers/staging/erofs/dir.c
-@@ -23,6 +23,21 @@ static const unsigned char erofs_filetype_table[EROFS_FT_MAX] = {
- 	[EROFS_FT_SYMLINK]	= DT_LNK,
- };
+Thanks,
+Gao Xiang
+
+ drivers/staging/erofs/unzip_vle.c | 42 +++++++++++++++++++++----------
+ 1 file changed, 29 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+index f44662dd795c..bb9a69158ba4 100644
+--- a/drivers/staging/erofs/unzip_vle.c
++++ b/drivers/staging/erofs/unzip_vle.c
+@@ -885,6 +885,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+ 	overlapped = false;
+ 	compressed_pages = grp->compressed_pages;
  
-+static void debug_one_dentry(unsigned char d_type, const char *de_name,
-+			     unsigned int de_namelen)
-+{
-+#ifdef CONFIG_EROFS_FS_DEBUG
-+	/* since the on-disk name could not have the trailing '\0' */
-+	unsigned char dbg_namebuf[EROFS_NAME_LEN + 1];
++	err = 0;
+ 	for (i = 0; i < clusterpages; ++i) {
+ 		unsigned pagenr;
+ 
+@@ -894,26 +895,39 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+ 		DBG_BUGON(page == NULL);
+ 		DBG_BUGON(page->mapping == NULL);
+ 
+-		if (z_erofs_is_stagingpage(page))
+-			continue;
++		if (!z_erofs_is_stagingpage(page)) {
+ #ifdef EROFS_FS_HAS_MANAGED_CACHE
+-		if (page->mapping == mngda) {
+-			DBG_BUGON(!PageUptodate(page));
+-			continue;
+-		}
++			if (page->mapping == mngda) {
++				if (unlikely(!PageUptodate(page)))
++					err = -EIO;
++				continue;
++			}
+ #endif
+ 
+-		/* only non-head page could be reused as a compressed page */
+-		pagenr = z_erofs_onlinepage_index(page);
++			/*
++			 * only if non-head page can be selected
++			 * for inplace decompression
++			 */
++			pagenr = z_erofs_onlinepage_index(page);
+ 
+-		DBG_BUGON(pagenr >= nr_pages);
+-		DBG_BUGON(pages[pagenr]);
+-		++sparsemem_pages;
+-		pages[pagenr] = page;
++			DBG_BUGON(pagenr >= nr_pages);
++			DBG_BUGON(pages[pagenr]);
++			++sparsemem_pages;
++			pages[pagenr] = page;
+ 
+-		overlapped = true;
++			overlapped = true;
++		}
 +
-+	memcpy(dbg_namebuf, de_name, de_namelen);
-+	dbg_namebuf[de_namelen] = '\0';
++		/* PG_error needs checking for inplaced and staging pages */
++		if (unlikely(PageError(page))) {
++			DBG_BUGON(PageUptodate(page));
++			err = -EIO;
++		}
+ 	}
+ 
++	if (unlikely(err))
++		goto out;
 +
-+	debugln("found dirent %s de_len %u d_type %d", dbg_namebuf,
-+		de_namelen, d_type);
-+#endif
-+}
+ 	llen = (nr_pages << PAGE_SHIFT) - work->pageofs;
+ 
+ 	if (z_erofs_vle_workgrp_fmt(grp) == Z_EROFS_VLE_WORKGRP_FMT_PLAIN) {
+@@ -1078,6 +1092,8 @@ static inline bool recover_managed_page(struct z_erofs_vle_workgroup *grp,
+ 		return true;
+ 
+ 	lock_page(page);
++	ClearPageError(page);
 +
- static int erofs_fill_dentries(struct dir_context *ctx,
- 	void *dentry_blk, unsigned *ofs,
- 	unsigned nameoff, unsigned maxsize)
-@@ -33,14 +48,10 @@ static int erofs_fill_dentries(struct dir_context *ctx,
- 	de = dentry_blk + *ofs;
- 	while (de < end) {
- 		const char *de_name;
--		int de_namelen;
-+		unsigned int de_namelen;
- 		unsigned char d_type;
--#ifdef CONFIG_EROFS_FS_DEBUG
--		unsigned dbg_namelen;
--		unsigned char dbg_namebuf[EROFS_NAME_LEN];
--#endif
- 
--		if (unlikely(de->file_type < EROFS_FT_MAX))
-+		if (de->file_type < EROFS_FT_MAX)
- 			d_type = erofs_filetype_table[de->file_type];
- 		else
- 			d_type = DT_UNKNOWN;
-@@ -48,26 +59,20 @@ static int erofs_fill_dentries(struct dir_context *ctx,
- 		nameoff = le16_to_cpu(de->nameoff);
- 		de_name = (char *)dentry_blk + nameoff;
- 
--		de_namelen = unlikely(de + 1 >= end) ?
--			/* last directory entry */
--			strnlen(de_name, maxsize - nameoff) :
--			le16_to_cpu(de[1].nameoff) - nameoff;
-+		/* the last dirent in the block? */
-+		if (de + 1 >= end)
-+			de_namelen = strnlen(de_name, maxsize - nameoff);
-+		else
-+			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
- 
- 		/* a corrupted entry is found */
--		if (unlikely(de_namelen < 0)) {
-+		if (unlikely(nameoff + de_namelen > maxsize ||
-+			     de_namelen > EROFS_NAME_LEN)) {
- 			DBG_BUGON(1);
- 			return -EIO;
- 		}
- 
--#ifdef CONFIG_EROFS_FS_DEBUG
--		dbg_namelen = min(EROFS_NAME_LEN - 1, de_namelen);
--		memcpy(dbg_namebuf, de_name, dbg_namelen);
--		dbg_namebuf[dbg_namelen] = '\0';
--
--		debugln("%s, found de_name %s de_len %d d_type %d", __func__,
--			dbg_namebuf, de_namelen, d_type);
--#endif
--
-+		debug_one_dentry(d_type, de_name, de_namelen);
- 		if (!dir_emit(ctx, de_name, de_namelen,
- 					le64_to_cpu(de->nid), d_type))
- 			/* stoped by some reason */
+ 	if (unlikely(!PagePrivate(page))) {
+ 		set_page_private(page, (unsigned long)grp);
+ 		SetPagePrivate(page);
 -- 
 2.17.1
 
