@@ -6,46 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB1EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A29C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C13F20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E21720830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139677;
-	bh=BtYHZP6elAMUo+IaWiKUcyvfQQ5tInYZYDZVgbHoyQg=;
+	s=default; t=1554139680;
+	bh=SprnGRjkIQrakb4/CE+EKH/3gzjWFFLHrfhVOEVWUN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZzBFRnB+fAEJPhNufAaKIK9Hny/g9LqqPJSZflbp8KsaJHDQZHBAxBB9dmh4PkolV
-	 keTSOvlcfgV1/CKvOWx3aPQVQMXonBYqz45w+wJvmjM4YdaMebU7LhrhaUpxfPakXP
-	 y2CkGhDlRNBQriVoK2VmFgli7K500RBJOr0jtSGU=
+	b=K6q6nJfd6daaLrFjpXeOfn1lTlZO1cCNyS8PXA/d73K04958S1SM90LbG9n67uvYC
+	 RVhlBqD1FzUxYNXjok8mR1cQwUcZ5+2VGc1rLMn5mMNftmFWPBOz4DACXZoDKvUUxq
+	 JJYBPK9Ga4pCGia5qM9CR/jHtF3EHLhWH/S5KB5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732730AbfDAR14 (ORCPT
+        id S1732739AbfDAR16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:27:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33416 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:27:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732718AbfDAR1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:27:53 -0400
+        id S1732728AbfDAR14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:27:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F203B20880;
-        Mon,  1 Apr 2019 17:27:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA9202063F;
+        Mon,  1 Apr 2019 17:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139672;
-        bh=BtYHZP6elAMUo+IaWiKUcyvfQQ5tInYZYDZVgbHoyQg=;
+        s=default; t=1554139675;
+        bh=SprnGRjkIQrakb4/CE+EKH/3gzjWFFLHrfhVOEVWUN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L4rN2f6a5M1J715bGTyB5rEmY00tWXBsRRKO0+EkdLUu2U18vC7EJCipRkAaNnAZG
-         FriIEaQI3Pp6slYmhXED1vdNoLYbHx2hVJMoN329AD/VC7JQ/Epb6MuSsYcWZXRFL8
-         kcW0+mL5MuYr1WLP1NskXU9JiT7TAQo+X/ZP6ZfU=
+        b=FZX7oKmE1ujeJkR1aYY28HhzK4bl+oov+5gbrKszpYHDXBQhYxTJuPxyq5foUyR5U
+         s1+GA/ErJAm97L7KQmJojh3ufdSrYn8QEAlUgieCyRDiQojAN7fDb3+8NSjAoR6+/W
+         Yf9GV+eUoNQIM2SMt1IZZqS7/yj9lk3+PHPOd0HU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Kal Conley <kal.conley@dectris.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 07/56] mISDN: hfcpci: Test both vendor & device ID for Digium HFC4S
-Date:   Mon,  1 Apr 2019 19:02:23 +0200
-Message-Id: <20190401170104.023063100@linuxfoundation.org>
+Subject: [PATCH 4.9 08/56] net/packet: Set __GFP_NOWARN upon allocation in alloc_pg_vec
+Date:   Mon,  1 Apr 2019 19:02:24 +0200
+Message-Id: <20190401170104.155060968@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -64,36 +66,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Christoph Paasch <cpaasch@apple.com>
 
-[ Upstream commit fae846e2b7124d4b076ef17791c73addf3b26350 ]
+[ Upstream commit 398f0132c14754fcd03c1c4f8e7176d001ce8ea1 ]
 
-The device ID alone does not uniquely identify a device.  Test both the
-vendor and device ID to make sure we don't mistakenly think some other
-vendor's 0xB410 device is a Digium HFC4S.  Also, instead of the bare hex
-ID, use the same constant (PCI_DEVICE_ID_DIGIUM_HFC4S) used in the device
-ID table.
+Since commit fc62814d690c ("net/packet: fix 4gb buffer limit due to overflow check")
+one can now allocate packet ring buffers >= UINT_MAX. However, syzkaller
+found that that triggers a warning:
 
-No functional change intended.
+[   21.100000] WARNING: CPU: 2 PID: 2075 at mm/page_alloc.c:4584 __alloc_pages_nod0
+[   21.101490] Modules linked in:
+[   21.101921] CPU: 2 PID: 2075 Comm: syz-executor.0 Not tainted 5.0.0 #146
+[   21.102784] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.5.1 01/01/2011
+[   21.103887] RIP: 0010:__alloc_pages_nodemask+0x2a0/0x630
+[   21.104640] Code: fe ff ff 65 48 8b 04 25 c0 de 01 00 48 05 90 0f 00 00 41 bd 01 00 00 00 48 89 44 24 48 e9 9c fe 3
+[   21.107121] RSP: 0018:ffff88805e1cf920 EFLAGS: 00010246
+[   21.107819] RAX: 0000000000000000 RBX: ffffffff85a488a0 RCX: 0000000000000000
+[   21.108753] RDX: 0000000000000000 RSI: dffffc0000000000 RDI: 0000000000000000
+[   21.109699] RBP: 1ffff1100bc39f28 R08: ffffed100bcefb67 R09: ffffed100bcefb67
+[   21.110646] R10: 0000000000000001 R11: ffffed100bcefb66 R12: 000000000000000d
+[   21.111623] R13: 0000000000000000 R14: ffff88805e77d888 R15: 000000000000000d
+[   21.112552] FS:  00007f7c7de05700(0000) GS:ffff88806d100000(0000) knlGS:0000000000000000
+[   21.113612] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   21.114405] CR2: 000000000065c000 CR3: 000000005e58e006 CR4: 00000000001606e0
+[   21.115367] Call Trace:
+[   21.115705]  ? __alloc_pages_slowpath+0x21c0/0x21c0
+[   21.116362]  alloc_pages_current+0xac/0x1e0
+[   21.116923]  kmalloc_order+0x18/0x70
+[   21.117393]  kmalloc_order_trace+0x18/0x110
+[   21.117949]  packet_set_ring+0x9d5/0x1770
+[   21.118524]  ? packet_rcv_spkt+0x440/0x440
+[   21.119094]  ? lock_downgrade+0x620/0x620
+[   21.119646]  ? __might_fault+0x177/0x1b0
+[   21.120177]  packet_setsockopt+0x981/0x2940
+[   21.120753]  ? __fget+0x2fb/0x4b0
+[   21.121209]  ? packet_release+0xab0/0xab0
+[   21.121740]  ? sock_has_perm+0x1cd/0x260
+[   21.122297]  ? selinux_secmark_relabel_packet+0xd0/0xd0
+[   21.123013]  ? __fget+0x324/0x4b0
+[   21.123451]  ? selinux_netlbl_socket_setsockopt+0x101/0x320
+[   21.124186]  ? selinux_netlbl_sock_rcv_skb+0x3a0/0x3a0
+[   21.124908]  ? __lock_acquire+0x529/0x3200
+[   21.125453]  ? selinux_socket_setsockopt+0x5d/0x70
+[   21.126075]  ? __sys_setsockopt+0x131/0x210
+[   21.126533]  ? packet_release+0xab0/0xab0
+[   21.127004]  __sys_setsockopt+0x131/0x210
+[   21.127449]  ? kernel_accept+0x2f0/0x2f0
+[   21.127911]  ? ret_from_fork+0x8/0x50
+[   21.128313]  ? do_raw_spin_lock+0x11b/0x280
+[   21.128800]  __x64_sys_setsockopt+0xba/0x150
+[   21.129271]  ? lockdep_hardirqs_on+0x37f/0x560
+[   21.129769]  do_syscall_64+0x9f/0x450
+[   21.130182]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+We should allocate with __GFP_NOWARN to handle this.
+
+Cc: Kal Conley <kal.conley@dectris.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Fixes: fc62814d690c ("net/packet: fix 4gb buffer limit due to overflow check")
+Signed-off-by: Christoph Paasch <cpaasch@apple.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/isdn/hardware/mISDN/hfcmulti.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/packet/af_packet.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/isdn/hardware/mISDN/hfcmulti.c
-+++ b/drivers/isdn/hardware/mISDN/hfcmulti.c
-@@ -4370,7 +4370,8 @@ setup_pci(struct hfc_multi *hc, struct p
- 	if (m->clock2)
- 		test_and_set_bit(HFC_CHIP_CLOCK2, &hc->chip);
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4229,7 +4229,7 @@ static struct pgv *alloc_pg_vec(struct t
+ 	struct pgv *pg_vec;
+ 	int i;
  
--	if (ent->device == 0xB410) {
-+	if (ent->vendor == PCI_VENDOR_ID_DIGIUM &&
-+	    ent->device == PCI_DEVICE_ID_DIGIUM_HFC4S) {
- 		test_and_set_bit(HFC_CHIP_B410P, &hc->chip);
- 		test_and_set_bit(HFC_CHIP_PCM_MASTER, &hc->chip);
- 		test_and_clear_bit(HFC_CHIP_PCM_SLAVE, &hc->chip);
+-	pg_vec = kcalloc(block_nr, sizeof(struct pgv), GFP_KERNEL);
++	pg_vec = kcalloc(block_nr, sizeof(struct pgv), GFP_KERNEL | __GFP_NOWARN);
+ 	if (unlikely(!pg_vec))
+ 		goto out;
+ 
 
 
