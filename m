@@ -2,70 +2,102 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08FEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 824A6C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A27520883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A38620896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:46:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554140807;
+	bh=EaXZq35JTF7iuAhc8W3RRYp1goaPaYIiDlVPxj8f7qw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jLOJtay50En6nu3+1I45HA5APKTlEkcYxGulwNGV4hiL0a3Es9/cDZh7obj7jDMeC
+	 JYEAHWZmOyLlKZKjwmCMM33pezLV/xleQXGlorcSXpuSRsKTsGb4QFi2b9hE5HzSIo
+	 AsHHnL+b7yg7TYSzUQwy5kTBKDrTwuulZIkghBIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387756AbfDARqb (ORCPT
+        id S2387582AbfDARdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:46:31 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:36606 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730448AbfDARqa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:46:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1554140786; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JpB3gNb95F/GGonib/43haMZjqG4EA7j6bKVwvf3yHw=;
-        b=FhcSGzqToDa+k+S2M2FyE0LdWj/2OO8k19XMV9rR2sZyU6oEOe3gxjcSzFNl5JuvvIq7RL
-        xYDfntTgSJH0dZmFS+vuyhVqQXRVOnYNMQgEGxNMYW4BFQBKzEmvRhB3U1gxGuY8NOlisW
-        LjMJS5RRlDd5++yc2W9ff6Dw87wqKzg=
-Date:   Mon, 01 Apr 2019 19:46:22 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] usb: musb: Force-disable pullup on shutdown
-To:     Bin Liu <b-liu@ti.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me
-Message-Id: <1554140782.10471.0@crapouillou.net>
-In-Reply-To: <20190401171725.GK25852@uda0271908>
-References: <20190321144246.3547-1-paul@crapouillou.net>
-        <20190401171725.GK25852@uda0271908>
+        Mon, 1 Apr 2019 13:33:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733115AbfDARdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:33:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75FF220830;
+        Mon,  1 Apr 2019 17:33:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554139981;
+        bh=EaXZq35JTF7iuAhc8W3RRYp1goaPaYIiDlVPxj8f7qw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lBTTuLnwJ3GJIUKJZQxc/rnvQqY9qCIZlzJ6wuXVh0Z06mB4oHLYocA8PSVQY1aPB
+         HM9hP6gJVCz9i79Hnjr9wJKXinhMDU3asvwJqvnlSTpj4oi1ngMNW3d8xPs5Bdbwgc
+         YB3ZQI34h8baOxvznr0TGPxXKXFxmFhHmaoWum4I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Android Kernel Team <kernel-team@android.com>,
+        Rom Lemarchand <romlem@android.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 070/131] staging: ashmem: Add missing include
+Date:   Mon,  1 Apr 2019 19:02:20 +0200
+Message-Id: <20190401170058.028709022@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
+References: <20190401170051.645954551@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+4.4-stable review patch.  If anyone has any objections, please let me know.
+
+------------------
+
+[ Upstream commit 90a2f171383b5ae43b33ab4d9d566b9765622ac7 ]
+
+Include <linux/types.h> into ashmem.h to ensure referenced types
+are defined
+
+Cc: Android Kernel Team <kernel-team@android.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Signed-off-by: Rom Lemarchand <romlem@android.com>
+[jstultz: Minor commit message tweaks]
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/staging/android/uapi/ashmem.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/staging/android/uapi/ashmem.h b/drivers/staging/android/uapi/ashmem.h
+index ba4743c71d6b..13df42d200b7 100644
+--- a/drivers/staging/android/uapi/ashmem.h
++++ b/drivers/staging/android/uapi/ashmem.h
+@@ -13,6 +13,7 @@
+ #define _UAPI_LINUX_ASHMEM_H
+ 
+ #include <linux/ioctl.h>
++#include <linux/types.h>
+ 
+ #define ASHMEM_NAME_LEN		256
+ 
+-- 
+2.19.1
 
 
-Le lun. 1 avril 2019 =E0 19:17, Bin Liu <b-liu@ti.com> a =E9crit :
-> On Thu, Mar 21, 2019 at 03:42:46PM +0100, Paul Cercueil wrote:
->>  When the musb is shutdown, for instance when the driver is unloaded,
->>  force-disable the pullup. Otherwise, the host will still see the=20
->> gadget
->>  device even after the shutdown.
->=20
-> how would this happen?
->=20
-> when musb-hdrc driver is unloaded, udc core removes the bound gadget
-> driver which calls musb_gadget_pullup() to disable the pullup.
-
-I'm testing with the jz4740-musb driver. I don't unload the module (it's
-built-in) but unbind it from sysfs.
-
-> Regards,
-> -Bin.
-
-=
 
