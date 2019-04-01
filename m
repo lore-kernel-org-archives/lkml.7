@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77332C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA9EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48E2720830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE77B20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141141;
-	bh=4PZrWirNAMBsE96chJdqVISjpI4SqRDJaPIRbfwIib8=;
+	s=default; t=1554141151;
+	bh=scHO8Hlt3p7MSGXsfkhENYV+d/8SBiW+x80bCdTfzeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jLcJEoVVGK5cLRFqslKEELzE8N6/5LHoBYZGe29VV0NTibSNFveBlrMkZfCcyUvBc
-	 n7qyzINVQZjDugbYSJ08L42C7C7ZirBROMEesqdQCyzZvHR2qs00wbzPaSgLJLbBJ3
-	 wSBVdRlSmdPXiLUV4IwvzDmtfakKKRfEZ6S2s1A0=
+	b=DSGQ67GmD2Wk7QWWE1zz7TyA578PCRSy3Uhe1j/Sa9ga1vP7y3N9XEx/E4RqhhnzN
+	 mL8oe+qe+wq8+FWo97pTtf5F+PhxfX9tsSzWUO5xjMz4MCXqn+mAO24DziqrH94Hfj
+	 zBlKn5dC3jceVkic+N3jOujEHBqwnq1zege5rLlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732763AbfDARwU (ORCPT
+        id S1732768AbfDARwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:52:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59156 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731559AbfDAR0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:26:47 -0400
+        id S1732377AbfDAR0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:26:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64F7720830;
-        Mon,  1 Apr 2019 17:26:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 629F42063F;
+        Mon,  1 Apr 2019 17:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139606;
-        bh=4PZrWirNAMBsE96chJdqVISjpI4SqRDJaPIRbfwIib8=;
+        s=default; t=1554139597;
+        bh=scHO8Hlt3p7MSGXsfkhENYV+d/8SBiW+x80bCdTfzeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S3U9YYZUR9F/bsyG+DdDqO9OxZ0unE/7D2asPuTQrfH/xN4FL9lEy6kwXvOSbVjow
-         5Yj1dhMZFxDDaeFKIgE8JRM9tB72hZe6fHZLd5pqRHHIq9QPwhaUl1zrQtwKRq0g7V
-         1CtWH69LnlEYD5QTTKcgtLnin1HAQ4YHllLteDio=
+        b=hsWYhc7ICJrdLyRIIGOSJDCD7yF2TObagMgKw0Uv0XHiKMimortYxY2/fqecnCTp5
+         pwwgTFJeaFRy12n4/fweqYDqB0J6n0fcS8zPkZI3xp42olkFeSJVwmJDoTD/A7vYG1
+         duZ+Vj7Nzs2LywT/PsYAwNdIRl+VHZoXGFYG/H/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
-        Andrea Righi <andrea.righi@canonical.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.9 18/56] btrfs: raid56: properly unmap parity page in finish_parity_scrub()
-Date:   Mon,  1 Apr 2019 19:02:34 +0200
-Message-Id: <20190401170104.821355837@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 15/56] tun: properly test for IFF_UP
+Date:   Mon,  1 Apr 2019 19:02:31 +0200
+Message-Id: <20190401170104.716838996@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -66,57 +66,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andrea Righi <andrea.righi@canonical.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 3897b6f0a859288c22fb793fad11ec2327e60fcd upstream.
+[ Upstream commit 4477138fa0ae4e1b699786ef0600863ea6e6c61c ]
 
-Parity page is incorrectly unmapped in finish_parity_scrub(), triggering
-a reference counter bug on i386, i.e.:
+Same reasons than the ones explained in commit 4179cb5a4c92
+("vxlan: test dev->flags & IFF_UP before calling netif_rx()")
 
- [ 157.662401] kernel BUG at mm/highmem.c:349!
- [ 157.666725] invalid opcode: 0000 [#1] SMP PTI
+netif_rx_ni() or napi_gro_frags() must be called under a strict contract.
 
-The reason is that kunmap(p_page) was completely left out, so we never
-did an unmap for the p_page and the loop unmapping the rbio page was
-iterating over the wrong number of stripes: unmapping should be done
-with nr_data instead of rbio->real_stripes.
+At device dismantle phase, core networking clears IFF_UP
+and flush_all_backlogs() is called after rcu grace period
+to make sure no incoming packet might be in a cpu backlog
+and still referencing the device.
 
-Test case to reproduce the bug:
+A similar protocol is used for gro layer.
 
- - create a raid5 btrfs filesystem:
-   # mkfs.btrfs -m raid5 -d raid5 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+Most drivers call netif_rx() from their interrupt handler,
+and since the interrupts are disabled at device dismantle,
+netif_rx() does not have to check dev->flags & IFF_UP
 
- - mount it:
-   # mount /dev/sdb /mnt
+Virtual drivers do not have this guarantee, and must
+therefore make the check themselves.
 
- - run btrfs scrub in a loop:
-   # while :; do btrfs scrub start -BR /mnt; done
-
-BugLink: https://bugs.launchpad.net/bugs/1812845
-Fixes: 5a6ac9eacb49 ("Btrfs, raid56: support parity scrub on raid56")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 1bd4978a88ac ("tun: honor IFF_UP in tun_get_user()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/btrfs/raid56.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/tun.c |   15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
---- a/fs/btrfs/raid56.c
-+++ b/fs/btrfs/raid56.c
-@@ -2395,8 +2395,9 @@ static noinline void finish_parity_scrub
- 			bitmap_clear(rbio->dbitmap, pagenr, 1);
- 		kunmap(p);
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1194,9 +1194,6 @@ static ssize_t tun_get_user(struct tun_s
+ 	u32 rxhash;
+ 	ssize_t n;
  
--		for (stripe = 0; stripe < rbio->real_stripes; stripe++)
-+		for (stripe = 0; stripe < nr_data; stripe++)
- 			kunmap(page_in_rbio(rbio, stripe, pagenr, 0));
-+		kunmap(p_page);
+-	if (!(tun->dev->flags & IFF_UP))
+-		return -EIO;
+-
+ 	if (!(tun->flags & IFF_NO_PI)) {
+ 		if (len < sizeof(pi))
+ 			return -EINVAL;
+@@ -1273,9 +1270,11 @@ static ssize_t tun_get_user(struct tun_s
+ 		err = skb_copy_datagram_from_iter(skb, 0, from, len);
+ 
+ 	if (err) {
++		err = -EFAULT;
++drop:
+ 		this_cpu_inc(tun->pcpu_stats->rx_dropped);
+ 		kfree_skb(skb);
+-		return -EFAULT;
++		return err;
  	}
  
- 	__free_page(p_page);
+ 	err = virtio_net_hdr_to_skb(skb, &gso, tun_is_little_endian(tun));
+@@ -1327,7 +1326,15 @@ static ssize_t tun_get_user(struct tun_s
+ 	skb_probe_transport_header(skb, 0);
+ 
+ 	rxhash = skb_get_hash(skb);
++
++	rcu_read_lock();
++	if (unlikely(!(tun->dev->flags & IFF_UP))) {
++		err = -EIO;
++		goto drop;
++	}
++
+ 	netif_rx_ni(skb);
++	rcu_read_unlock();
+ 
+ 	stats = get_cpu_ptr(tun->pcpu_stats);
+ 	u64_stats_update_begin(&stats->syncp);
 
 
