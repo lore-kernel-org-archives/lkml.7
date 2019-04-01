@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35ABCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBE0C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05B721939
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965252192C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138510;
-	bh=/ClcsQM+/88lFG0qSJiwnOWt+11ZcBGoOG5uSJBnoFA=;
+	s=default; t=1554138513;
+	bh=AZzLUGZaQdjv6OlmRoEnn5wXskCJGFRYlSbUU7I+aa0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r9NZWA3rXcChwtEV5v8IaEQXoDzAIdVgLLYpijSlA5CCJ57b7KPCmk51un3a28I8M
-	 crA6YEiy7rKnAPnXC4zxA/FbXZL8F+0RIFp7ZeZh4H9D+2NFA4lY6t/HicYZ07LX5y
-	 wFYnOSZIWhhu7id6A955aXEWvzr1UDpq7xovKnFk=
+	b=gS0CPQbBk0Nbv6/q0opiHHl40Zs5uc9VwjjLXuejh/pLO/7Rib4tyDb21HSIfNkH7
+	 zxATq6yu378yWL6fwJRIdZG/jZKgyr9n1i9qHQdFug7x7jS0tiIFEO7qxU/IR7o6t/
+	 OIg2GosrPHpCdC9+y1h/AYUy9Tth6cAO6NZRfjEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbfDARI2 (ORCPT
+        id S1729647AbfDARIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:08:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54978 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:08:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729626AbfDARIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:08:24 -0400
+        id S1729638AbfDARI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:08:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA79F21929;
-        Mon,  1 Apr 2019 17:08:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABFFE2192C;
+        Mon,  1 Apr 2019 17:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138503;
-        bh=/ClcsQM+/88lFG0qSJiwnOWt+11ZcBGoOG5uSJBnoFA=;
+        s=default; t=1554138507;
+        bh=AZzLUGZaQdjv6OlmRoEnn5wXskCJGFRYlSbUU7I+aa0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z3h3tc/+myNlJjQoGqBU+StJhbFARliHcV8h+568E0eAC29+ZLcxhYEKveTLKukDS
-         i7SArqNpYO3FAEYIunIUpUbLWZz/85vwabud3Ms+I+pqLDg+n90LCpzQiZrE+A5WgC
-         jx5vyjCDN8Wi5agv5RE/NMHOcLkMswdGKv/+64ek=
+        b=aXxE7xQ/Ndb01NS3knTDJ65iuuyPzY29jzhfva1fgE9jU0xn4+sHHQTlxUGt/+GCL
+         hpa93ip8YVEtAUTAFeOVeVvl9nRTcI+KSnJCrBSkyffN+XL1ivj8rvfYPDYf8m8atb
+         JnmlvqY80zDeWLc2qVKZa/UaLd/DnlKHmlRjQBuI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.0 048/146] powerpc: bpf: Fix generation of load/store DW instructions
-Date:   Mon,  1 Apr 2019 19:01:00 +0200
-Message-Id: <20190401170052.641250711@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [PATCH 5.0 049/146] vfio: ccw: only free cp on final interrupt
+Date:   Mon,  1 Apr 2019 19:01:01 +0200
+Message-Id: <20190401170052.732291329@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -67,200 +64,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+From: Cornelia Huck <cohuck@redhat.com>
 
-commit 86be36f6502c52ddb4b85938145324fd07332da1 upstream.
+commit 50b7f1b7236bab08ebbbecf90521e84b068d7a17 upstream.
 
-Yauheni Kaliuta pointed out that PTR_TO_STACK store/load verifier test
-was failing on powerpc64 BE, and rightfully indicated that the PPC_LD()
-macro is not masking away the last two bits of the offset per the ISA,
-resulting in the generation of 'lwa' instruction instead of the intended
-'ld' instruction.
+When we get an interrupt for a channel program, it is not
+necessarily the final interrupt; for example, the issuing
+guest may request an intermediate interrupt by specifying
+the program-controlled-interrupt flag on a ccw.
 
-Segher also pointed out that we can't simply mask away the last two bits
-as that will result in loading/storing from/to a memory location that
-was not intended.
+We must not switch the state to idle if the interrupt is not
+yet final; even more importantly, we must not free the translated
+channel program if the interrupt is not yet final, or the host
+can crash during cp rewind.
 
-This patch addresses this by using ldx/stdx if the offset is not
-word-aligned. We load the offset into a temporary register (TMP_REG_2)
-and use that as the index register in a subsequent ldx/stdx. We fix
-PPC_LD() macro to mask off the last two bits, but enhance PPC_BPF_LL()
-and PPC_BPF_STL() to factor in the offset value and generate the proper
-instruction sequence. We also convert all existing users of PPC_LD() and
-PPC_STD() to use these macros. All existing uses of these macros have
-been audited to ensure that TMP_REG_2 can be clobbered.
-
-Fixes: 156d0e290e96 ("powerpc/ebpf/jit: Implement JIT compiler for extended BPF")
-Cc: stable@vger.kernel.org # v4.9+
-
-Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: e5f84dbaea59 ("vfio: ccw: return I/O results asynchronously")
+Cc: stable@vger.kernel.org # v4.12+
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/ppc-opcode.h |    2 ++
- arch/powerpc/net/bpf_jit.h            |   17 +++++------------
- arch/powerpc/net/bpf_jit32.h          |    4 ++++
- arch/powerpc/net/bpf_jit64.h          |   20 ++++++++++++++++++++
- arch/powerpc/net/bpf_jit_comp64.c     |   12 ++++++------
- 5 files changed, 37 insertions(+), 18 deletions(-)
+ drivers/s390/cio/vfio_ccw_drv.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/include/asm/ppc-opcode.h
-+++ b/arch/powerpc/include/asm/ppc-opcode.h
-@@ -302,6 +302,7 @@
- /* Misc instructions for BPF compiler */
- #define PPC_INST_LBZ			0x88000000
- #define PPC_INST_LD			0xe8000000
-+#define PPC_INST_LDX			0x7c00002a
- #define PPC_INST_LHZ			0xa0000000
- #define PPC_INST_LWZ			0x80000000
- #define PPC_INST_LHBRX			0x7c00062c
-@@ -309,6 +310,7 @@
- #define PPC_INST_STB			0x98000000
- #define PPC_INST_STH			0xb0000000
- #define PPC_INST_STD			0xf8000000
-+#define PPC_INST_STDX			0x7c00012a
- #define PPC_INST_STDU			0xf8000001
- #define PPC_INST_STW			0x90000000
- #define PPC_INST_STWU			0x94000000
---- a/arch/powerpc/net/bpf_jit.h
-+++ b/arch/powerpc/net/bpf_jit.h
-@@ -51,6 +51,8 @@
- #define PPC_LIS(r, i)		PPC_ADDIS(r, 0, i)
- #define PPC_STD(r, base, i)	EMIT(PPC_INST_STD | ___PPC_RS(r) |	      \
- 				     ___PPC_RA(base) | ((i) & 0xfffc))
-+#define PPC_STDX(r, base, b)	EMIT(PPC_INST_STDX | ___PPC_RS(r) |	      \
-+				     ___PPC_RA(base) | ___PPC_RB(b))
- #define PPC_STDU(r, base, i)	EMIT(PPC_INST_STDU | ___PPC_RS(r) |	      \
- 				     ___PPC_RA(base) | ((i) & 0xfffc))
- #define PPC_STW(r, base, i)	EMIT(PPC_INST_STW | ___PPC_RS(r) |	      \
-@@ -65,7 +67,9 @@
- #define PPC_LBZ(r, base, i)	EMIT(PPC_INST_LBZ | ___PPC_RT(r) |	      \
- 				     ___PPC_RA(base) | IMM_L(i))
- #define PPC_LD(r, base, i)	EMIT(PPC_INST_LD | ___PPC_RT(r) |	      \
--				     ___PPC_RA(base) | IMM_L(i))
-+				     ___PPC_RA(base) | ((i) & 0xfffc))
-+#define PPC_LDX(r, base, b)	EMIT(PPC_INST_LDX | ___PPC_RT(r) |	      \
-+				     ___PPC_RA(base) | ___PPC_RB(b))
- #define PPC_LWZ(r, base, i)	EMIT(PPC_INST_LWZ | ___PPC_RT(r) |	      \
- 				     ___PPC_RA(base) | IMM_L(i))
- #define PPC_LHZ(r, base, i)	EMIT(PPC_INST_LHZ | ___PPC_RT(r) |	      \
-@@ -85,17 +89,6 @@
- 					___PPC_RA(a) | ___PPC_RB(b))
- #define PPC_BPF_STDCX(s, a, b)	EMIT(PPC_INST_STDCX | ___PPC_RS(s) |	      \
- 					___PPC_RA(a) | ___PPC_RB(b))
--
--#ifdef CONFIG_PPC64
--#define PPC_BPF_LL(r, base, i) do { PPC_LD(r, base, i); } while(0)
--#define PPC_BPF_STL(r, base, i) do { PPC_STD(r, base, i); } while(0)
--#define PPC_BPF_STLU(r, base, i) do { PPC_STDU(r, base, i); } while(0)
--#else
--#define PPC_BPF_LL(r, base, i) do { PPC_LWZ(r, base, i); } while(0)
--#define PPC_BPF_STL(r, base, i) do { PPC_STW(r, base, i); } while(0)
--#define PPC_BPF_STLU(r, base, i) do { PPC_STWU(r, base, i); } while(0)
--#endif
--
- #define PPC_CMPWI(a, i)		EMIT(PPC_INST_CMPWI | ___PPC_RA(a) | IMM_L(i))
- #define PPC_CMPDI(a, i)		EMIT(PPC_INST_CMPDI | ___PPC_RA(a) | IMM_L(i))
- #define PPC_CMPW(a, b)		EMIT(PPC_INST_CMPW | ___PPC_RA(a) |	      \
---- a/arch/powerpc/net/bpf_jit32.h
-+++ b/arch/powerpc/net/bpf_jit32.h
-@@ -123,6 +123,10 @@ DECLARE_LOAD_FUNC(sk_load_byte_msh);
- #define PPC_NTOHS_OFFS(r, base, i)	PPC_LHZ_OFFS(r, base, i)
- #endif
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -72,20 +72,24 @@ static void vfio_ccw_sch_io_todo(struct
+ {
+ 	struct vfio_ccw_private *private;
+ 	struct irb *irb;
++	bool is_final;
  
-+#define PPC_BPF_LL(r, base, i) do { PPC_LWZ(r, base, i); } while(0)
-+#define PPC_BPF_STL(r, base, i) do { PPC_STW(r, base, i); } while(0)
-+#define PPC_BPF_STLU(r, base, i) do { PPC_STWU(r, base, i); } while(0)
-+
- #define SEEN_DATAREF 0x10000 /* might call external helpers */
- #define SEEN_XREG    0x20000 /* X reg is used */
- #define SEEN_MEM     0x40000 /* SEEN_MEM+(1<<n) = use mem[n] for temporary
---- a/arch/powerpc/net/bpf_jit64.h
-+++ b/arch/powerpc/net/bpf_jit64.h
-@@ -68,6 +68,26 @@ static const int b2p[] = {
- /* PPC NVR range -- update this if we ever use NVRs below r27 */
- #define BPF_PPC_NVR_MIN		27
+ 	private = container_of(work, struct vfio_ccw_private, io_work);
+ 	irb = &private->irb;
  
-+/*
-+ * WARNING: These can use TMP_REG_2 if the offset is not at word boundary,
-+ * so ensure that it isn't in use already.
-+ */
-+#define PPC_BPF_LL(r, base, i) do {					      \
-+				if ((i) % 4) {				      \
-+					PPC_LI(b2p[TMP_REG_2], (i));	      \
-+					PPC_LDX(r, base, b2p[TMP_REG_2]);     \
-+				} else					      \
-+					PPC_LD(r, base, i);		      \
-+				} while(0)
-+#define PPC_BPF_STL(r, base, i) do {					      \
-+				if ((i) % 4) {				      \
-+					PPC_LI(b2p[TMP_REG_2], (i));	      \
-+					PPC_STDX(r, base, b2p[TMP_REG_2]);    \
-+				} else					      \
-+					PPC_STD(r, base, i);		      \
-+				} while(0)
-+#define PPC_BPF_STLU(r, base, i) do { PPC_STDU(r, base, i); } while(0)
-+
- #define SEEN_FUNC	0x1000 /* might call external helpers */
- #define SEEN_STACK	0x2000 /* uses BPF stack */
- #define SEEN_TAILCALL	0x4000 /* uses tail calls */
---- a/arch/powerpc/net/bpf_jit_comp64.c
-+++ b/arch/powerpc/net/bpf_jit_comp64.c
-@@ -252,7 +252,7 @@ static void bpf_jit_emit_tail_call(u32 *
- 	 * if (tail_call_cnt > MAX_TAIL_CALL_CNT)
- 	 *   goto out;
- 	 */
--	PPC_LD(b2p[TMP_REG_1], 1, bpf_jit_stack_tailcallcnt(ctx));
-+	PPC_BPF_LL(b2p[TMP_REG_1], 1, bpf_jit_stack_tailcallcnt(ctx));
- 	PPC_CMPLWI(b2p[TMP_REG_1], MAX_TAIL_CALL_CNT);
- 	PPC_BCC(COND_GT, out);
++	is_final = !(scsw_actl(&irb->scsw) &
++		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
+ 	if (scsw_is_solicited(&irb->scsw)) {
+ 		cp_update_scsw(&private->cp, &irb->scsw);
+-		cp_free(&private->cp);
++		if (is_final)
++			cp_free(&private->cp);
+ 	}
+ 	memcpy(private->io_region->irb_area, irb, sizeof(*irb));
  
-@@ -265,7 +265,7 @@ static void bpf_jit_emit_tail_call(u32 *
- 	/* prog = array->ptrs[index]; */
- 	PPC_MULI(b2p[TMP_REG_1], b2p_index, 8);
- 	PPC_ADD(b2p[TMP_REG_1], b2p[TMP_REG_1], b2p_bpf_array);
--	PPC_LD(b2p[TMP_REG_1], b2p[TMP_REG_1], offsetof(struct bpf_array, ptrs));
-+	PPC_BPF_LL(b2p[TMP_REG_1], b2p[TMP_REG_1], offsetof(struct bpf_array, ptrs));
+ 	if (private->io_trigger)
+ 		eventfd_signal(private->io_trigger, 1);
  
- 	/*
- 	 * if (prog == NULL)
-@@ -275,7 +275,7 @@ static void bpf_jit_emit_tail_call(u32 *
- 	PPC_BCC(COND_EQ, out);
+-	if (private->mdev)
++	if (private->mdev && is_final)
+ 		private->state = VFIO_CCW_STATE_IDLE;
+ }
  
- 	/* goto *(prog->bpf_func + prologue_size); */
--	PPC_LD(b2p[TMP_REG_1], b2p[TMP_REG_1], offsetof(struct bpf_prog, bpf_func));
-+	PPC_BPF_LL(b2p[TMP_REG_1], b2p[TMP_REG_1], offsetof(struct bpf_prog, bpf_func));
- #ifdef PPC64_ELF_ABI_v1
- 	/* skip past the function descriptor */
- 	PPC_ADDI(b2p[TMP_REG_1], b2p[TMP_REG_1],
-@@ -606,7 +606,7 @@ bpf_alu32_trunc:
- 				 * the instructions generated will remain the
- 				 * same across all passes
- 				 */
--				PPC_STD(dst_reg, 1, bpf_jit_stack_local(ctx));
-+				PPC_BPF_STL(dst_reg, 1, bpf_jit_stack_local(ctx));
- 				PPC_ADDI(b2p[TMP_REG_1], 1, bpf_jit_stack_local(ctx));
- 				PPC_LDBRX(dst_reg, 0, b2p[TMP_REG_1]);
- 				break;
-@@ -662,7 +662,7 @@ emit_clear:
- 				PPC_LI32(b2p[TMP_REG_1], imm);
- 				src_reg = b2p[TMP_REG_1];
- 			}
--			PPC_STD(src_reg, dst_reg, off);
-+			PPC_BPF_STL(src_reg, dst_reg, off);
- 			break;
- 
- 		/*
-@@ -709,7 +709,7 @@ emit_clear:
- 			break;
- 		/* dst = *(u64 *)(ul) (src + off) */
- 		case BPF_LDX | BPF_MEM | BPF_DW:
--			PPC_LD(dst_reg, src_reg, off);
-+			PPC_BPF_LL(dst_reg, src_reg, off);
- 			break;
- 
- 		/*
 
 
