@@ -2,122 +2,80 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4237AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83241C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 130F22084C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE322086C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554163170;
+	bh=YZRcFYhEWBkLgDehzmgeUo0fhIZsW9YwoNRnvs1zKtI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AwYKEKiez6a/L28EP8dBLdJiWv02UChqCS5D9089/nmFNluK4g50//CynLb+/y1KD
+	 CcBotn60GeLuubOerl3ozyClsZ+oxc7NyGp35OYgh/3+9B8skDAPyB5heOeFoLlvhh
+	 H4neZbFLeFhvfVkDyhRwNc5m6Ug/67aRCsGEbL9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfDAXzk (ORCPT
+        id S1726755AbfDAX72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 19:55:40 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43073 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfDAXzk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 19:55:40 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m10so5269317plt.10
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 16:55:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=53C+UAYBW94xvPX0bSE+X4pak3bywZ/H7OEveLLLrVc=;
-        b=nQbgstZCU+rjmjMdiU5T4393+SoGi1lKKeWERVBM0Vw0IlkdzW8wZBlCSLPC7UwLTC
-         ud8oTTfIY6gzv9h0pGu3tRjuEyFi0u44m1rSd6pKAlT75K1Cntb96oN6qRQ+iQY+pKAD
-         Amhc4WCFiZ3ozXXVnaSEy5dnJ2rC7NDezf3i81DR7EXgahBYPYzhcujpMVV4OMY46mn1
-         99wlS6EbACQYr3198KmMkfTAgTpX10FCaMuV1Ivr0OSgWILrqpppxepnFCoOhtcGhFoN
-         sy25/hR1O1CMligTybnx6EYkHQENtj8eQ6cu8fCwkJ/0FZHeH4w4dRPJ/sKQkf3ZNKeS
-         MPWg==
-X-Gm-Message-State: APjAAAUN+S2qw1ODVsZoJe/le/CG8ODSyQIfdAIOfA2BA04XdGNFLhNg
-        ly5votsOR/wuZh6FlkBDPGAfezd6
-X-Google-Smtp-Source: APXvYqy2SfyFgVJ0tBcIA5d/AG0rEf8qMGEdVpI4YGPy77yvJPh7am3H3T7wMrFSFcW7I0ykhNSZlA==
-X-Received: by 2002:a17:902:2e83:: with SMTP id r3mr49558255plb.153.1554162939659;
-        Mon, 01 Apr 2019 16:55:39 -0700 (PDT)
-Received: from sultan-box.localdomain ([2601:200:c001:5f40:f27:f07b:c72c:45e3])
-        by smtp.gmail.com with ESMTPSA id i79sm22625237pfj.28.2019.04.01.16.55.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 16:55:38 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 16:55:36 -0700
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [RFCv2] string: Use faster alternatives when constant arguments
- are used
-Message-ID: <20190401235536.GA874@sultan-box.localdomain>
-References: <20190324014445.28688-1-sultan@kerneltoast.com>
- <20190324022406.GA18988@sultan-box.localdomain>
- <2293c54f-40b1-1e59-665a-bd8f2cb957d2@rasmusvillemoes.dk>
- <20190324223202.GA875@sultan-box.localdomain>
- <8672b98c-bf71-7b5b-625e-2f241807d46c@rasmusvillemoes.dk>
- <20190330225941.GA7456@sultan-box.localdomain>
- <ec88d9a2-272e-973e-55ce-f3d411aafcd1@rasmusvillemoes.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec88d9a2-272e-973e-55ce-f3d411aafcd1@rasmusvillemoes.dk>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Mon, 1 Apr 2019 19:59:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725897AbfDAX72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 19:59:28 -0400
+Received: from devnote2 (unknown [147.50.13.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 264B9206B6;
+        Mon,  1 Apr 2019 23:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554163167;
+        bh=YZRcFYhEWBkLgDehzmgeUo0fhIZsW9YwoNRnvs1zKtI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zaLsZI0KQFLAnn1IJ9SbEEpM4EsGyvIloN3Uu/nZJ2GERQsE7KqlAT1ys3PFvNbkG
+         zsLJ8LWAfnZj+ZhfDkixYndFOXU9CgS7p+iAeYHG1ylIMEf2HZsyEalff1oN2FEA0L
+         20oIVn7co7JrXKaFhDJyLk4bsWm4BuZhWoBWwPJ0=
+Date:   Tue, 2 Apr 2019 06:59:21 +0700
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     rostedt@goodmis.org, tglx@linutronix.de, namhyung@kernel.org,
+        bigeasy@linutronix.de, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH v5 00/11] tracing: common error_log for ftrace
+Message-Id: <20190402065921.de4831e2bd2f25f6c0587420@kernel.org>
+In-Reply-To: <1554125468.8693.4.camel@kernel.org>
+References: <cover.1554072478.git.tom.zanussi@linux.intel.com>
+        <20190401091948.0963e7cc4b0116c5d95c4c9c@kernel.org>
+        <1554125468.8693.4.camel@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 10:43:13PM +0200, Rasmus Villemoes wrote:
-> Consider your patch replacing !strcmp(buf, "123") by !memcmp(buf, "123",
-> 4). buf is known to point to a nul-terminated string. But it may point
-> at, say, the second-last byte in a page, with the last byte in that page
-> being a nul byte, and the following page being MMIO or unmapped or all
-> kinds of bad things. On e.g. x86 where unaligned accesses are cheap, and
-> seeing that you're only comparing for equality, gcc is likely to compile
-> the memcmp version into
+On Mon, 01 Apr 2019 08:31:08 -0500
+Tom Zanussi <zanussi@kernel.org> wrote:
+
 > 
->   *(u32*)buf == 0x00333231
+> > BTW, could you also add a testcase which tests all (or most of)
+> > error cases of hist_err() ?
+> > That will be good to find regressions in future changes.
+> > 
 > 
-> because you've told the compiler that there's no problem accessing four
-> bytes starting at buf. Boom. Even without unaligned access being cheap
-> this can happen; suppose the length is 8 instead, and gcc somehow knows
-> that buf is four-byte aligned (and in this case it happens to point four
-> bytes before a page boundary), so it could compile the memcmp(,,8) into
-> 
->   *(u32*)(buf+4) == secondword && *(u32*)buf == firstword
-> 
-> (or do the comparisons in the "natural" order, but it might still do
-> both loads first).
+> I was going to, but there are a lot of error cases and a lot of them
+> aren't simple one-liners and require some more involved setup to
+> trigger.  I'll submit a follow-on patch to add them as soon as I get
+> the chance.
 
-Ok, this is the first solid counter I've seen against my patch. I hadn't
-considered unaligned word-sized accesses. Thanks.
+Agreed, I look forward your testcase :)
 
-> > And if there are concerns for some arches but not others, then couldn't this be
-> > a feasible optimization for those which would work well with it?
-> 
-> No. First, these are concerns for all arches. Second, if you can find
-> some particular place where string parsing/matching is in any way
-> performance relevant and not just done once during driver init or
-> whatnot, maybe the maintainers of that file would take a patch
-> hand-optimizing some strcmps to memcmps, or, depending on what the code
-> does, perhaps replacing the whole *cmp logic with a custom hash table.
+Thank you,
 
-FWIW, I didn't have a specific place in the kernel in mind that heavily relied
-on str* operations and needed optimization. I just thought it could be a "free"
-optimization, but apparently not.
-
-> But a patch implicitly and silently touching thousands of lines of code,
-> without an analysis of why none of the above is a problem for any of
-> those lines, for any .config, arch, compiler version? No.
-
-Well, I thought it could be proven to be correct regardless of the context,
-which would imply that making such a global change touching thousands lof lines
-of code would be safe. But sadly it isn't.
-
-This does bring into question a greater problem though: usage of memcmp
-throughout the kernel where the size provided is not the size of the smaller
-container being compared. This usage of memcmp (which is quite easy to find all
-across the kernel) could run into the unaligned memory access across a page
-boundary that you gave as an example, no?
-
-Sultan
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
