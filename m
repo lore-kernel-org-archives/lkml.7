@@ -2,317 +2,146 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF47C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 22:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ADFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 22:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A5B206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 22:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6FE206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 22:13:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554156827;
+	bh=ZiU1P9EmPonvwt1DvQsS/U8iVcOs614R8IuRu1Qz7XY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0O+w9Ae177j0yucHm2w6q/oduTpluJMmPfiWgJWoR4lF0oqq9Xe7Fmh2rlEDVmoiX
+	 um/4iY2WCes0jNrbkMPO4UF3/NSwpiPclakYF6ClGd3rqLo7vK4sy0CJ/YnG/U5dqg
+	 dCU4fzAtNeclIlN7S85yeb3zS0MiK6t6CTD28eLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbfDAWMV (ORCPT
+        id S1726879AbfDAWNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 18:12:21 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35882 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfDAWMV (ORCPT
+        Mon, 1 Apr 2019 18:13:45 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45056 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725891AbfDAWNp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 18:12:21 -0400
-Received: by mail-oi1-f196.google.com with SMTP id l203so8080514oia.3;
-        Mon, 01 Apr 2019 15:12:20 -0700 (PDT)
+        Mon, 1 Apr 2019 18:13:45 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 5so7432510lft.12
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 15:13:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qyR+k49lcmz90Oo2ydMeShomW51EpxrQc9r10unpFSI=;
+        b=WU0ohB8e7Zo5RCQUfpiq49pnyDsfOfwARf6PWjaZaT+X6PBo4Ww1o7K1g48oYa/6iv
+         s4xKFot1JmEmQ90EPRzPlhh/mlQKMOz3W5Uo409GDUGqPexm0ccpfXo4B9j/JPDx/O+d
+         DbRTOmvrayyRV1twNB3AClrxuOr4V/pNemEqE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MuVGX2jjm0nWqvcUdPFL6/Kf5uXYGMPModplisJCpd0=;
-        b=m4rvNkOVD6sfGZQIsgoS0bcHwDHP2T3fVpkBH2CSDDRkfUldM3EnzUYrOahMCFkd+o
-         tbVTTK4T16667aDXQjvMdSUCvNxanvLv7L/GetHGj3ltNhKdMi0uJnDW71lrO7MKzcdW
-         +aqy/Bkgm2R2wNpYbBm0HMQYEdh1QIXom+OzBQ7O/6z3AwLUH4CyzF6P2FWjEAzzdywC
-         AcDziSOdBIzjv+7ExhjuyLgSNWX93t9ve/WNxjOMeYDbMwEqg22SfQS4XLUHFbS1zMfp
-         5WN6wjfkER+z/rDwWX28nAZkATKFbmV5MwyTtuXhi9JVTjOzoLEk50ITyY5FcfUVwymY
-         XegA==
-X-Gm-Message-State: APjAAAWkBLM+klFYa7DvBvAt2np5iO1iLoRP4OFLnPJLWnJoZnNe6kFY
-        y6YfFA+VbwHn8ldH/HCAL2RjE1aAivo=
-X-Google-Smtp-Source: APXvYqzZFnttYZ8BrE0jQsvu/ZshoIUjO6W3EEDGgOkRcKXcseh8nciFJ9rYN/3s0GYv5CUojYjVbw==
-X-Received: by 2002:aca:f44a:: with SMTP id s71mr8093104oih.151.1554156740182;
-        Mon, 01 Apr 2019 15:12:20 -0700 (PDT)
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com. [209.85.167.178])
-        by smtp.gmail.com with ESMTPSA id h26sm3865958oih.22.2019.04.01.15.12.19
+        bh=qyR+k49lcmz90Oo2ydMeShomW51EpxrQc9r10unpFSI=;
+        b=HL2mYDOPuHjHRK9Lh3Yj0TQqs8veiXPku4z9XgsjWJ9nLwwFCBu9SoDAuSKEfBFDgR
+         0oFwukFtKWou2fq5ko/h4Z+8oKwNtqEksbOe0K2boHMxp0HR2IoFuMcbcNTRKvLzPzxd
+         mfox/8O1wuy56vP93NTNYXEwN/iQH8RbJW16XIgUer6OFBflK4ZnRM54ghUtSABYHgez
+         ACxFR9KxeW3+Y0o+EVb5sw7vLwQhXAYGwrxpMBfv9L5yqgjDUjWCoSOKyPcbk9fG/MyV
+         p9i70lup7bCRMy1nNjXamgmD/KaTMAGnQZs64GfN4+Tr2VlFKL55WlQpQIxqJRWFTQf2
+         6qQQ==
+X-Gm-Message-State: APjAAAXY8t7Jc/aHDQ/SFIgSZxs8HCAHqsd0n4WUfq8MmxiYJR6UqUyX
+        cYWEyBC8VA4EpaFMF4nbKGMb/HsiyiY=
+X-Google-Smtp-Source: APXvYqwtB9jwnxhn6XCvd2UKc4o1ihUlIQfPaGdcXxK+6Dvb24d++hme/fLr1a3PhWaTCUeDCYk9Ew==
+X-Received: by 2002:ac2:51a1:: with SMTP id f1mr35786308lfk.25.1554156821837;
+        Mon, 01 Apr 2019 15:13:41 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id k25sm2410867ljc.14.2019.04.01.15.13.40
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 15:12:19 -0700 (PDT)
-Received: by mail-oi1-f178.google.com with SMTP id y84so8708151oia.12;
-        Mon, 01 Apr 2019 15:12:19 -0700 (PDT)
-X-Received: by 2002:aca:48d0:: with SMTP id v199mr4315301oia.51.1554156739290;
- Mon, 01 Apr 2019 15:12:19 -0700 (PDT)
+        Mon, 01 Apr 2019 15:13:40 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id l7so9673911ljg.6
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 15:13:40 -0700 (PDT)
+X-Received: by 2002:a2e:8108:: with SMTP id d8mr10332578ljg.57.1554156819972;
+ Mon, 01 Apr 2019 15:13:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190329140014.8126-1-laurentiu.tudor@nxp.com> <20190329140014.8126-7-laurentiu.tudor@nxp.com>
-In-Reply-To: <20190329140014.8126-7-laurentiu.tudor@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Mon, 1 Apr 2019 17:12:07 -0500
-X-Gmail-Original-Message-ID: <CADRPPNT6=TOPfR9J3QtEaRPHx8cVOizWt1yneafghr46adNjBg@mail.gmail.com>
-Message-ID: <CADRPPNT6=TOPfR9J3QtEaRPHx8cVOizWt1yneafghr46adNjBg@mail.gmail.com>
-Subject: Re: [PATCH 06/13] soc/fsl/qbman_portals: add APIs to retrieve the
- probing status
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     Netdev <netdev@vger.kernel.org>, madalin.bucur@nxp.com,
-        Roy Pledge <roy.pledge@nxp.com>, camelia.groza@nxp.com,
-        David Miller <davem@davemloft.net>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        lkml <linux-kernel@vger.kernel.org>
+References: <CAHk-=whF6gnRVbJaArZna4e=tejfrzmNQtRbWjnuSSKpBn+jQg@mail.gmail.com>
+ <132107F4-F56B-4D6E-9E00-A6F7C092E6BD@amacapital.net> <CAHk-=wiaLtH41Mc5qAjOeCWavPqV0DhS581KYa0QBt8uraTK1Q@mail.gmail.com>
+ <20190331211041.vht7dnqg4e4bilr2@brauner.io> <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
+ <18C7FCB9-2CBA-4237-94BB-9C4395A2106B@amacapital.net> <20190401114059.7gdsvcqyoz2o5bbz@yavin>
+ <CAHk-=wgKqBQznZdTQaM6yQ+_5dcz-+q8=2sbQsAoDh55hQTLMA@mail.gmail.com>
+ <CAKOZuev4Q4CY0-2rUpTujSKMVJ9L9Exv=_divFC0G0_OaQHaGw@mail.gmail.com>
+ <CAHk-=wgKOJTdN9TqyjW6FngEZvgUTmCDzJPRrtekW_1SD0gfhw@mail.gmail.com>
+ <20190401194214.4rbvmwogpke3cjcx@brauner.io> <CAHk-=wgjndAqzMBxgXZxbSRXLRqdXtNM3aHc9X-xj+Px1fsG-Q@mail.gmail.com>
+ <CAGLj2rFvWE6ENFyKSbZMrhqSrLjkm0YrRh2+O0LC04HmJuEY5g@mail.gmail.com>
+In-Reply-To: <CAGLj2rFvWE6ENFyKSbZMrhqSrLjkm0YrRh2+O0LC04HmJuEY5g@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 1 Apr 2019 15:13:23 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiDjdoS4erUTjWaHMY+ZT28omwA24pPMRoQEE-rtNcRpw@mail.gmail.com>
+Message-ID: <CAHk-=wiDjdoS4erUTjWaHMY+ZT28omwA24pPMRoQEE-rtNcRpw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
+To:     Jonathan Kowalski <bl0pbl33p@gmail.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Joel Fernandes <joel@joelfernandes.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 9:03 AM <laurentiu.tudor@nxp.com> wrote:
+On Mon, Apr 1, 2019 at 2:58 PM Jonathan Kowalski <bl0pbl33p@gmail.com> wrote:
 >
-> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> You mention the race about learning the PID, PID being recycled, and
+> pidfd_open getting the wrong reference.
 >
-> Add a couple of new APIs to check the probing status of the required
-> cpu bound qman and bman portals:
->  'int bman_portals_probed()' and 'int qman_portals_probed()'.
-> They return the following values.
->  *  1 if qman/bman portals were all probed correctly
->  *  0 if qman/bman portals were not yet probed
->  * -1 if probing of qman/bman portals failed
-> Portals are considered successful probed if no error occurred during
-> the probing of any of the portals and if enough portals were probed
-> to have one available for each cpu.
-> The error handling paths were slightly rearranged in order to fit this
-> new functionality without being too intrusive.
-> Drivers that use qman/bman portal driver services are required to use
-> these APIs before calling any functions exported by these drivers or
-> otherwise they will crash the kernel.
-> First user will be the dpaa1 ethernet driver, coming in a subsequent
-> patch.
->
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> ---
->  drivers/soc/fsl/qbman/bman_portal.c | 22 ++++++++++++++++++----
->  drivers/soc/fsl/qbman/qman_portal.c | 23 +++++++++++++++++++----
->  include/soc/fsl/bman.h              |  8 ++++++++
->  include/soc/fsl/qman.h              |  9 +++++++++
->  4 files changed, 54 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bman_portal.c
-> index 2c95cf59f3e7..7819bc29936d 100644
-> --- a/drivers/soc/fsl/qbman/bman_portal.c
-> +++ b/drivers/soc/fsl/qbman/bman_portal.c
-> @@ -32,6 +32,7 @@
->
->  static struct bman_portal *affine_bportals[NR_CPUS];
->  static struct cpumask portal_cpus;
-> +static int __bman_portals_probed;
->  /* protect bman global registers and global data shared among portals */
->  static DEFINE_SPINLOCK(bman_lock);
->
-> @@ -87,6 +88,12 @@ static int bman_online_cpu(unsigned int cpu)
->         return 0;
->  }
->
-> +int bman_portals_probed(void)
-> +{
-> +       return __bman_portals_probed;
-> +}
-> +EXPORT_SYMBOL_GPL(bman_portals_probed);
-> +
->  static int bman_portal_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
-> @@ -104,8 +111,10 @@ static int bman_portal_probe(struct platform_device *pdev)
->         }
->
->         pcfg = devm_kmalloc(dev, sizeof(*pcfg), GFP_KERNEL);
-> -       if (!pcfg)
-> +       if (!pcfg) {
-> +               __bman_portals_probed = -1;
->                 return -ENOMEM;
-> +       }
->
->         pcfg->dev = dev;
->
-> @@ -113,14 +122,14 @@ static int bman_portal_probe(struct platform_device *pdev)
->                                              DPAA_PORTAL_CE);
->         if (!addr_phys[0]) {
->                 dev_err(dev, "Can't get %pOF property 'reg::CE'\n", node);
-> -               return -ENXIO;
-> +               goto err_ioremap1;
->         }
->
->         addr_phys[1] = platform_get_resource(pdev, IORESOURCE_MEM,
->                                              DPAA_PORTAL_CI);
->         if (!addr_phys[1]) {
->                 dev_err(dev, "Can't get %pOF property 'reg::CI'\n", node);
-> -               return -ENXIO;
-> +               goto err_ioremap1;
->         }
->
->         pcfg->cpu = -1;
-> @@ -128,7 +137,7 @@ static int bman_portal_probe(struct platform_device *pdev)
->         irq = platform_get_irq(pdev, 0);
->         if (irq <= 0) {
->                 dev_err(dev, "Can't get %pOF IRQ'\n", node);
-> -               return -ENXIO;
-> +               goto err_ioremap1;
->         }
->         pcfg->irq = irq;
->
-> @@ -156,6 +165,9 @@ static int bman_portal_probe(struct platform_device *pdev)
->         }
->
->         cpumask_set_cpu(cpu, &portal_cpus);
-> +       if (!__bman_portals_probed &&
-> +           cpumask_weight(&portal_cpus) == num_online_cpus())
-> +               __bman_portals_probed = 1;
+> This exists with the /proc model to way. How do you propose to address this?
 
-Given the fact that the portal_cpus bit will get set even for offline
-cpus, this is not correct either.  Probably the previous code for
-checking cpu >= nr_cpu_ids is actually the right way to do it.
+Note that that race exists _regardless_ of any interfaces.
+pidfd_open() has the same race: any time you have a pid, the lifetime
+of it is only as long as the process existing.
 
->         spin_unlock(&bman_lock);
->         pcfg->cpu = cpu;
->
-> @@ -175,6 +187,8 @@ static int bman_portal_probe(struct platform_device *pdev)
->  err_ioremap2:
->         memunmap(pcfg->addr_virt_ce);
->  err_ioremap1:
-> +        __bman_portals_probed = -1;
-> +
->         return -ENXIO;
->  }
->
-> diff --git a/drivers/soc/fsl/qbman/qman_portal.c b/drivers/soc/fsl/qbman/qman_portal.c
-> index bce56da2b01f..11ba6c77c0d6 100644
-> --- a/drivers/soc/fsl/qbman/qman_portal.c
-> +++ b/drivers/soc/fsl/qbman/qman_portal.c
-> @@ -39,6 +39,7 @@ EXPORT_SYMBOL(qman_dma_portal);
->  #define CONFIG_FSL_DPA_PIRQ_FAST  1
->
->  static struct cpumask portal_cpus;
-> +static int __qman_portals_probed;
->  /* protect qman global registers and global data shared among portals */
->  static DEFINE_SPINLOCK(qman_lock);
->
-> @@ -221,6 +222,12 @@ static int qman_online_cpu(unsigned int cpu)
->         return 0;
->  }
->
-> +int qman_portals_probed(void)
-> +{
-> +       return __qman_portals_probed;
-> +}
-> +EXPORT_SYMBOL_GPL(qman_portals_probed);
-> +
->  static int qman_portal_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
-> @@ -240,8 +247,10 @@ static int qman_portal_probe(struct platform_device *pdev)
->         }
->
->         pcfg = devm_kmalloc(dev, sizeof(*pcfg), GFP_KERNEL);
-> -       if (!pcfg)
-> +       if (!pcfg) {
-> +               __qman_portals_probed = -1;
->                 return -ENOMEM;
-> +       }
->
->         pcfg->dev = dev;
->
-> @@ -249,19 +258,20 @@ static int qman_portal_probe(struct platform_device *pdev)
->                                              DPAA_PORTAL_CE);
->         if (!addr_phys[0]) {
->                 dev_err(dev, "Can't get %pOF property 'reg::CE'\n", node);
-> -               return -ENXIO;
-> +               goto err_ioremap1;
->         }
->
->         addr_phys[1] = platform_get_resource(pdev, IORESOURCE_MEM,
->                                              DPAA_PORTAL_CI);
->         if (!addr_phys[1]) {
->                 dev_err(dev, "Can't get %pOF property 'reg::CI'\n", node);
-> -               return -ENXIO;
-> +               goto err_ioremap1;
->         }
->
->         err = of_property_read_u32(node, "cell-index", &val);
->         if (err) {
->                 dev_err(dev, "Can't get %pOF property 'cell-index'\n", node);
-> +               __qman_portals_probed = -1;
->                 return err;
->         }
->         pcfg->channel = val;
-> @@ -269,7 +279,7 @@ static int qman_portal_probe(struct platform_device *pdev)
->         irq = platform_get_irq(pdev, 0);
->         if (irq <= 0) {
->                 dev_err(dev, "Can't get %pOF IRQ\n", node);
-> -               return -ENXIO;
-> +               goto err_ioremap1;
->         }
->         pcfg->irq = irq;
->
-> @@ -314,6 +324,9 @@ static int qman_portal_probe(struct platform_device *pdev)
->         }
->
->         cpumask_set_cpu(cpu, &portal_cpus);
-> +       if (!__qman_portals_probed &&
-> +           cpumask_weight(&portal_cpus) == num_online_cpus())
-> +               __qman_portals_probed = 1;
->         spin_unlock(&qman_lock);
->         pcfg->cpu = cpu;
->
-> @@ -338,6 +351,8 @@ static int qman_portal_probe(struct platform_device *pdev)
->  err_ioremap2:
->         memunmap(pcfg->addr_virt_ce);
->  err_ioremap1:
-> +       __qman_portals_probed = -1;
-> +
->         return -ENXIO;
->  }
->
-> diff --git a/include/soc/fsl/bman.h b/include/soc/fsl/bman.h
-> index 5b99cb2ea5ef..173e4049d963 100644
-> --- a/include/soc/fsl/bman.h
-> +++ b/include/soc/fsl/bman.h
-> @@ -133,5 +133,13 @@ int bman_acquire(struct bman_pool *pool, struct bm_buffer *bufs, u8 num);
->   * failed to probe or 0 if the bman driver did not probed yet.
->   */
->  int bman_is_probed(void);
-> +/**
-> + * bman_portals_probed - Check if all cpu bound bman portals are probed
-> + *
-> + * Returns 1 if all the required cpu bound bman portals successfully probed,
-> + * -1 if probe errors appeared or 0 if the bman portals did not yet finished
-> + * probing.
-> + */
-> +int bman_portals_probed(void);
->
->  #endif /* __FSL_BMAN_H */
-> diff --git a/include/soc/fsl/qman.h b/include/soc/fsl/qman.h
-> index 5cc7af06c1ba..aa31c05a103a 100644
-> --- a/include/soc/fsl/qman.h
-> +++ b/include/soc/fsl/qman.h
-> @@ -1194,6 +1194,15 @@ int qman_release_cgrid(u32 id);
->   */
->  int qman_is_probed(void);
->
-> +/**
-> + * qman_portals_probed - Check if all cpu bound qman portals are probed
-> + *
-> + * Returns 1 if all the required cpu bound qman portals successfully probed,
-> + * -1 if probe errors appeared or 0 if the qman portals did not yet finished
-> + * probing.
-> + */
-> +int qman_portals_probed(void);
-> +
->  /**
->   * qman_dqrr_get_ithresh - Get coalesce interrupt threshold
->   * @portal: portal to get the value for
-> --
-> 2.17.1
->
+That's why we talked about the CLONE_PIDFD flag, which would return
+the pidfd itself when creating a new process. That's one truly
+race-free way to handle it.
+
+Or just do the fork(), and know that the pid won't be re-used until
+you've done the wait() for it, and block SIGCHLD until you've done the
+lookup.
+
+That said, in *practice*, you can probably use any of the racy "look
+up pidfd using pid" models, as long as you just verify the end result
+after you've opened it.
+
+That verification could be as simple as "look up the parent pid of the
+pidfd I got", if you know you created it with fork() (and you can
+obviously track what _other_ thread you yourself created, so you can
+verify whether it is yours or not).
+
+For example, using "openat(pidfd, "status", ..)", but also by just
+tracking what you've done waitpid() on (but you need to look out for
+subtle races with another thread being in the process of doing so).
+
+Or you can just say that as long as you got the pidfd quickly after
+the fork(), any pid wrapping attack is practically not possible even
+if it might be racy in theory.
+
+                         Linus
