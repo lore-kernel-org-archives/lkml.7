@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13ADC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB779C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B40BC20896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AEDB20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140232;
-	bh=KvJGOXNkqUeEJ+FNtt4bRCBcA3Y1p9KJvuQz1VXooGc=;
+	s=default; t=1554140229;
+	bh=k/D0NZ8CY8odIaq61C1ju3e48lWYFRqeEzJ/oKsGZgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=osn/4sgyg4a8sPO9qYi6OYG4wCncoBvAT1aF3+Tx8VzLyWPScMeXFZ8EUHmXkYbe3
-	 4cTMnYCn3e48GQJwZvMit74gatq5Lco9pQtMbUZ5nntLnX5a5AHiQ6eKRj9HttRKA1
-	 CXY/OGkMYugfBjALv5zXlPEq5CTelktosp5c6H3M=
+	b=GeDrEgWRHLOp7lxabEz/p1BLhmuBshLnMPXrT54NTtEddm22BRbz93V0e2l3mdZTu
+	 GaRD7H1ckkw5t/2Ip9mr3HQphEuTLYhN8rI1D5rmiaaF+iqBjDHrgMLs0PXpavl+gt
+	 7vtgxJASl1D4+wcFyBQfL+ztFVdsDBCjJKhXcnII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388143AbfDARhL (ORCPT
+        id S2388134AbfDARhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:37:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49420 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:37:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388124AbfDARhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:37:09 -0400
+        id S2388124AbfDARhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:37:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9D0420896;
-        Mon,  1 Apr 2019 17:37:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F13BC2070B;
+        Mon,  1 Apr 2019 17:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140228;
-        bh=KvJGOXNkqUeEJ+FNtt4bRCBcA3Y1p9KJvuQz1VXooGc=;
+        s=default; t=1554140225;
+        bh=k/D0NZ8CY8odIaq61C1ju3e48lWYFRqeEzJ/oKsGZgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RmCO0q+niSTUOJXFAqMEdwBl0nzrmtzGMBrxdHAm34ilfpxY9shHah2QqY94dz4tB
-         LC06oNJS9tbdtIM7OvQdgVFPXB84z+DsAQ2mPe5gSyhNW/g5lK37KCuPQyH27/M71H
-         UgkPd+5vvYgTlqDZFh5/Sq8RYBBoHEuQdHbbQ9BQ=
+        b=NnCYisgCTf3adG07+nkSLencbMFelaz5y6YPy451TtGyPFeh7fq9nccCvUeLmf3Ow
+         VustsiJpJOeioX5Mu3TpreP2gaWRrxLYOQAODK0xrSmv7gbDTs8Y6i93EumF7dNu3E
+         aw1H5jggRWafeVnwk5NTNijyT4dgD7XgQO/Wze20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank Sorenson <fsorenso@redhat.com>,
-        Lukas Czerner <lczerner@redhat.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 3.18 04/50] ext4: fix data corruption caused by unaligned direct AIO
-Date:   Mon,  1 Apr 2019 19:02:47 +0200
-Message-Id: <20190401170041.634242694@linuxfoundation.org>
+        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Theodore Tso <tytso@mit.edu>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>, stable@kernel.org
+Subject: [PATCH 3.18 03/50] ext4: fix NULL pointer dereference while journal is aborted
+Date:   Mon,  1 Apr 2019 19:02:46 +0200
+Message-Id: <20190401170041.553807549@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -65,79 +65,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 
-commit 372a03e01853f860560eade508794dd274e9b390 upstream.
+commit fa30dde38aa8628c73a6dded7cb0bba38c27b576 upstream.
 
-Ext4 needs to serialize unaligned direct AIO because the zeroing of
-partial blocks of two competing unaligned AIOs can result in data
-corruption.
+We see the following NULL pointer dereference while running xfstests
+generic/475:
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+PGD 8000000c84bad067 P4D 8000000c84bad067 PUD c84e62067 PMD 0
+Oops: 0000 [#1] SMP PTI
+CPU: 7 PID: 9886 Comm: fsstress Kdump: loaded Not tainted 5.0.0-rc8 #10
+RIP: 0010:ext4_do_update_inode+0x4ec/0x760
+...
+Call Trace:
+? jbd2_journal_get_write_access+0x42/0x50
+? __ext4_journal_get_write_access+0x2c/0x70
+? ext4_truncate+0x186/0x3f0
+ext4_mark_iloc_dirty+0x61/0x80
+ext4_mark_inode_dirty+0x62/0x1b0
+ext4_truncate+0x186/0x3f0
+? unmap_mapping_pages+0x56/0x100
+ext4_setattr+0x817/0x8b0
+notify_change+0x1df/0x430
+do_truncate+0x5e/0x90
+? generic_permission+0x12b/0x1a0
 
-However it decides not to serialize if the potentially unaligned aio is
-past i_size with the rationale that no pending writes are possible past
-i_size. Unfortunately if the i_size is not block aligned and the second
-unaligned write lands past i_size, but still into the same block, it has
-the potential of corrupting the previous unaligned write to the same
-block.
+This is triggered because the NULL pointer handle->h_transaction was
+dereferenced in function ext4_update_inode_fsync_trans().
+I found that the h_transaction was set to NULL in jbd2__journal_restart
+but failed to attached to a new transaction while the journal is aborted.
 
-This is (very simplified) reproducer from Frank
+Fix this by checking the handle before updating the inode.
 
-    // 41472 = (10 * 4096) + 512
-    // 37376 = 41472 - 4096
-
-    ftruncate(fd, 41472);
-    io_prep_pwrite(iocbs[0], fd, buf[0], 4096, 37376);
-    io_prep_pwrite(iocbs[1], fd, buf[1], 4096, 41472);
-
-    io_submit(io_ctx, 1, &iocbs[1]);
-    io_submit(io_ctx, 1, &iocbs[2]);
-
-    io_getevents(io_ctx, 2, 2, events, NULL);
-
-Without this patch the 512B range from 40960 up to the start of the
-second unaligned write (41472) is going to be zeroed overwriting the data
-written by the first write. This is a data corruption.
-
-00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-*
-00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
-*
-0000a000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-*
-0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
-
-With this patch the data corruption is avoided because we will recognize
-the unaligned_aio and wait for the unwritten extent conversion.
-
-00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-*
-00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
-*
-0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
-*
-0000b200
-
-Reported-by: Frank Sorenson <fsorenso@redhat.com>
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Fixes: b436b9bef84d ("ext4: Wait for proper transaction commit on fsync")
+Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Fixes: e9e3bcecf44c ("ext4: serialize unaligned asynchronous DIO")
-Cc: stable@vger.kernel.org
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/file.c |    2 +-
+ fs/ext4/ext4_jbd2.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -79,7 +79,7 @@ ext4_unaligned_aio(struct inode *inode,
- 	struct super_block *sb = inode->i_sb;
- 	int blockmask = sb->s_blocksize - 1;
+--- a/fs/ext4/ext4_jbd2.h
++++ b/fs/ext4/ext4_jbd2.h
+@@ -374,7 +374,7 @@ static inline void ext4_update_inode_fsy
+ {
+ 	struct ext4_inode_info *ei = EXT4_I(inode);
  
--	if (pos >= i_size_read(inode))
-+	if (pos >= ALIGN(i_size_read(inode), sb->s_blocksize))
- 		return 0;
- 
- 	if ((pos | iov_iter_alignment(from)) & blockmask)
+-	if (ext4_handle_valid(handle)) {
++	if (ext4_handle_valid(handle) && !is_handle_aborted(handle)) {
+ 		ei->i_sync_tid = handle->h_transaction->t_tid;
+ 		if (datasync)
+ 			ei->i_datasync_tid = handle->h_transaction->t_tid;
 
 
