@@ -7,59 +7,67 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5396DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9349FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3B9218FE
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F42B217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554108802;
-	bh=tOlYa0ocF52nbJpqYoB5vmW19cgbgyjLLwbxSXGwuis=;
+	s=default; t=1554108811;
+	bh=9oDeEmGNdt7Rin+oU5YY/vfowK0dcqtgrFScr7klsMA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=J6SfUZq182lMC1CbAexzJC5DQMQVn8PwhxdnNha8meRrm2I78o/IuLjxGDIsvXLR6
-	 fSvipau2jf3MkU6qn5GJECHXL1DDhCC0kFep1NP9IakXvbCDrqEYA1HONoc88ZaDGR
-	 aC6Y1Ie0TOf/+eYc7+RQBSILK9IGz08U62kDBE9c=
+	b=VxX4MnrIOOAxlT5vrFOGDaWAwieZbOrl9p/txeF2vv3697iYmpxc4G745MsWm8QJu
+	 vHKptqoDk4Hq5Br7srjX5VTRYq7jSGokVW1dyG+ZKl5TCLEDvfdLcqdVCKl5USc43a
+	 M/IlvRfYSL+GSa9L0FGGOYPx0f2ra9iXQUz0pBJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfDAIxU (ORCPT
+        id S1728645AbfDAIxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:53:20 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59374 "EHLO
+        Mon, 1 Apr 2019 04:53:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59692 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726471AbfDAIxU (ORCPT
+        with ESMTP id S1726471AbfDAIx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:53:20 -0400
+        Mon, 1 Apr 2019 04:53:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=MBFhKP8rDyLhY1H79JCM+A4HDAUVRivmK2vDZm1q4S0=; b=dQLmXDI4IHso
-        S9wy6+Kh7yvor1yu6yo3l+X7gzV273jUb7YOOknw3OpWAeRqEdL+xhoIBWYryftvmXUrBM6mJKSR/
-        8gf6tdtBwCarzxQspSMOtDfXQsPiWZhGlWDprCuM6dRWHhkHF9z9gseVRCnQOOlgbhp0D5PeSaxZp
-        cwIrA=;
+        List-Archive; bh=t+lRs5pjKJsRfFn3KKh0+7500TT4TVYHBCkpK4BQglA=; b=vFrklQZQof7s
+        NwECopsPvhoVn1SZIxABHa8yivhuh1WAESqjJhtZq6pxYwCUiDLv5/z+kZ3ss/OFZ50S1rM2gaoAn
+        SgcD0FalkgNpGRC2wyrOcaqDdLiYS6ftNWazkgui94YcwNyuDKoDbEXZhnd82Y+b5y0akqeZfYqmN
+        VeZuI=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hAsgk-0008N5-4b; Mon, 01 Apr 2019 08:53:06 +0000
+        id 1hAsgo-0008NI-K2; Mon, 01 Apr 2019 08:53:11 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 20BE0440083; Mon,  1 Apr 2019 09:52:58 +0100 (BST)
+        id A2D25440082; Mon,  1 Apr 2019 09:53:07 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Mark Brown <broonie@kernel.org>,
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Viorel Suman <viorel.suman@nxp.com>,
+        Mark Brown <broonie@kernel.org>, Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: es8316: Add support for inverted jack detect" to the asoc tree
-In-Reply-To:  <20190329215045.6254-1-paul@crapouillou.net>
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Applied "ASoC: fsl: fix spelling mistake: "missign" -> "missing"" to the asoc tree
+In-Reply-To:  <20190328092816.12883-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190401085258.20BE0440083@finisterre.ee.mobilebroadband>
-Date:   Mon,  1 Apr 2019 09:52:58 +0100 (BST)
+Message-Id: <20190401085307.A2D25440082@finisterre.ee.mobilebroadband>
+Date:   Mon,  1 Apr 2019 09:53:07 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,7 +75,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: es8316: Add support for inverted jack detect
+   ASoC: fsl: fix spelling mistake: "missign" -> "missing"
 
 has been applied to the asoc tree at
 
@@ -92,70 +100,34 @@ to this mail.
 Thanks,
 Mark
 
-From 0bbcedd6bb41b82b77115fc001441ff34e7c4ea7 Mon Sep 17 00:00:00 2001
-From: Paul Cercueil <paul@crapouillou.net>
-Date: Fri, 29 Mar 2019 22:50:43 +0100
-Subject: [PATCH] ASoC: es8316: Add support for inverted jack detect
+From de70b2a581125a8a627db6fdc1d7f9c05536fe84 Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Thu, 28 Mar 2019 09:28:16 +0000
+Subject: [PATCH] ASoC: fsl: fix spelling mistake: "missign" -> "missing"
 
-On some devices (Teclast X98+ II tablet, maybe others), the jack
-detection has been wired backwards, so when the ES8316 reports
-headphones being present it means they are actually not plugged.
+There is a spelling mistake in a dev_err message. Fix this.
 
-Use a quirk around this incorrect behaviour, which can be enabled
-through the 'everest,jack-detect-inverted' boolean device property.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Acked-by: Viorel Suman <viorel.suman@nxp.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/es8316.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ sound/soc/fsl/imx-audmix.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/es8316.c b/sound/soc/codecs/es8316.c
-index 6d4a323f786b..ec2770b3f77d 100644
---- a/sound/soc/codecs/es8316.c
-+++ b/sound/soc/codecs/es8316.c
-@@ -43,6 +43,7 @@ struct es8316_priv {
- 	unsigned int sysclk;
- 	unsigned int allowed_rates[NR_SUPPORTED_MCLK_LRCK_RATIOS];
- 	struct snd_pcm_hw_constraint_list sysclk_constraints;
-+	bool jd_inverted;
- };
+diff --git a/sound/soc/fsl/imx-audmix.c b/sound/soc/fsl/imx-audmix.c
+index 72e37ca6cfbb..7983bd339c01 100644
+--- a/sound/soc/fsl/imx-audmix.c
++++ b/sound/soc/fsl/imx-audmix.c
+@@ -161,7 +161,7 @@ static int imx_audmix_probe(struct platform_device *pdev)
+ 	}
  
- /*
-@@ -577,6 +578,9 @@ static irqreturn_t es8316_irq(int irq, void *data)
- 	if (!es8316->jack)
- 		goto out;
+ 	if (!audmix_np) {
+-		dev_err(&pdev->dev, "Missign DT node for parent device.\n");
++		dev_err(&pdev->dev, "Missing DT node for parent device.\n");
+ 		return -EINVAL;
+ 	}
  
-+	if (es8316->jd_inverted)
-+		flags ^= ES8316_GPIO_FLAG_HP_NOT_INSERTED;
-+
- 	dev_dbg(comp->dev, "gpio flags %#04x\n", flags);
- 	if (flags & ES8316_GPIO_FLAG_HP_NOT_INSERTED) {
- 		/* Jack removed, or spurious IRQ? */
-@@ -592,6 +596,8 @@ static irqreturn_t es8316_irq(int irq, void *data)
- 		/* Jack inserted, determine type */
- 		es8316_enable_micbias_for_mic_gnd_short_detect(comp);
- 		regmap_read(es8316->regmap, ES8316_GPIO_FLAG, &flags);
-+		if (es8316->jd_inverted)
-+			flags ^= ES8316_GPIO_FLAG_HP_NOT_INSERTED;
- 		dev_dbg(comp->dev, "gpio flags %#04x\n", flags);
- 		if (flags & ES8316_GPIO_FLAG_HP_NOT_INSERTED) {
- 			/* Jack unplugged underneath us */
-@@ -633,6 +639,14 @@ static void es8316_enable_jack_detect(struct snd_soc_component *component,
- {
- 	struct es8316_priv *es8316 = snd_soc_component_get_drvdata(component);
- 
-+	/*
-+	 * Init es8316->jd_inverted here and not in the probe, as we cannot
-+	 * guarantee that the bytchr-es8316 driver, which might set this
-+	 * property, will probe before us.
-+	 */
-+	es8316->jd_inverted = device_property_read_bool(component->dev,
-+							"everest,jack-detect-inverted");
-+
- 	mutex_lock(&es8316->lock);
- 
- 	es8316->jack = jack;
 -- 
 2.20.1
 
