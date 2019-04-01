@@ -2,136 +2,123 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3216DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6132EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECCBF20896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF72206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nqGC2Lb4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HtLX2uu4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbfDAScQ (ORCPT
+        id S1728875AbfDASes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:32:16 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45633 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbfDAScO (ORCPT
+        Mon, 1 Apr 2019 14:34:48 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41428 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728690AbfDASer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:32:14 -0400
-Received: by mail-pf1-f196.google.com with SMTP id e24so4976262pfi.12
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 11:32:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=MQ0O1mmB+oNGhDova//RYIhWLAO6da/Vm26gjBguPdg=;
-        b=nqGC2Lb4Pu4vnyS8A2Wzh7NqHsmc/DUcZ+y6kRoiUsBeB+qNJI33YSr8nUlHRfz3+5
-         l3Bu1m5E4j+Aqs8rxoWBjpTBiVnWAe6NnqlPv5BBUhvKALIIzOeklfg4UHQ5KtBMId89
-         ohOFs13LMOn3R/dXFxH5lFrBMbswBaN++jSvc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=MQ0O1mmB+oNGhDova//RYIhWLAO6da/Vm26gjBguPdg=;
-        b=ZFDUp5dGZk61SI85MFaPyVUuOkxR46KuWNsG/ZHiC1wYoP3NlEg6lgQtvEUS7yjb2g
-         PI6dhm7o9WS38l88r1ZtrP4ODs0CJ0RS/yQzzh87EsdgSoWl7jk+O31F530uFtGK9LLz
-         cSjcaU99QiWyqj1RUJc94KVWsuJ6aSaTpg+q5ow6Y+19IW1f7s/2GgxlWag9pNMMw41h
-         Uokcgur0TvTs3Un9A6bQ6qEfkDL/DJQaI/FqHCRJu3lZspWjJPOpIhtQQW0tHzI4+lzg
-         qUxwLJAnp/JGjjDSwWUdfRfqDe79rF3svwihmzNY2dRMjqiEXU7qUkdNIp7nEvBVCMUP
-         +9/A==
-X-Gm-Message-State: APjAAAUPsydnNX/0myBqq2zkNrvOVkHtahrg9dX6SFHIU6aC+4jsOOmE
-        +U3tsJKsf1Qru9WwCTTq1muu2Q==
-X-Google-Smtp-Source: APXvYqyQss9q65Nw3XQCSKUkIvnQVl9B/POraABeJVAzzMtJVZmdBEpNbaoevBPbOFPCMjRJzWeiKA==
-X-Received: by 2002:a63:6786:: with SMTP id b128mr52832993pgc.318.1554143534143;
-        Mon, 01 Apr 2019 11:32:14 -0700 (PDT)
-Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
-        by smtp.gmail.com with ESMTPSA id 71sm22703762pgc.23.2019.04.01.11.32.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 11:32:12 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 11:32:11 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Cc:     Phil Baker <baker1tex@gmail.com>, Craig Robson <craig@zhatt.com>,
-        Laura Abbott <labbott@redhat.com>,
-        linux-kernel@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        linux-integrity@vger.kernel.org
-Subject: [PATCH] tpm: Actually fail on TPM errors during "get random"
-Message-ID: <20190401183211.GA21228@beast>
+        Mon, 1 Apr 2019 14:34:47 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x31IYgKl016321;
+        Mon, 1 Apr 2019 13:34:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554143682;
+        bh=0CF+Wt30WQRhwNj1PdNd4iu0m3tHVMrz/H7WnFT4LHI=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=HtLX2uu4YPYTpCqR05nzbSnJkGsjDBsuR8gKak8dshGg1p6CgDCwE+ruY4XEpCX91
+         xVHy1Sm+0FxKXzLX2pb5TETP07cwWhfvJ8s6JyLiP+kCmNo7yhFbT0oxB/Or1QnDt/
+         DlBQqQqTGXbCLbtIM/15QUbFuMITqeyctJ6oXMgo=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x31IYg3Y058565
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 1 Apr 2019 13:34:42 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Apr
+ 2019 13:34:42 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 1 Apr 2019 13:34:42 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x31IYgtn053754;
+        Mon, 1 Apr 2019 13:34:42 -0500
+Date:   Mon, 1 Apr 2019 13:34:42 -0500
+From:   Bin Liu <b-liu@ti.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: musb: Silence error about blacklisting hubs if
+ !CONFIG_USB
+Message-ID: <20190401183442.GM25852@uda0271908>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>,
+        Paul Cercueil <paul@crapouillou.net>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190319135146.25995-1-paul@crapouillou.net>
+ <20190401154333.GJ25852@uda0271908>
+ <1554141119.10471.1@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1554141119.10471.1@crapouillou.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A "get random" may fail with a TPM error, but those codes were returned
-as-is to the caller, which assumed the result was the number of bytes
-that had been written to the target buffer, which could lead to an kernel
-heap memory exposure and over-read.
+On Mon, Apr 01, 2019 at 07:51:59PM +0200, Paul Cercueil wrote:
+> 
+> 
+> Le lun. 1 avril 2019 à 17:43, Bin Liu <b-liu@ti.com> a écrit :
+> >On Tue, Mar 19, 2019 at 02:51:46PM +0100, Paul Cercueil wrote:
+> >> Some drivers, like jz4740-musb, don't depend on CONFIG_USB.
+> >
+> >CONFIG_USB_OTG_BLACKLIST_HUB is about hub, so should it depend on
+> >CONFIG_USB instead in drivers/usb/core/Kconfig?
+> 
+> It's already the case, indirectly - it depends on CONFIG_USB_OTG,
+> which only exists if CONFIG_USB is set.
 
-This fixes tpm1_get_random() to mask positive TPM errors into -EIO, as
-before.
+Never mind, my bad, I misunderstood the logic.
 
-[   18.092103] tpm tpm0: A TPM error (379) occurred attempting get random
-[   18.092106] usercopy: Kernel memory exposure attempt detected from SLUB object 'kmalloc-64' (offset 0, size 379)!
+> >>
+> >> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> >> ---
+> >>  drivers/usb/musb/musb_core.c | 9 +++++----
+> >>  1 file changed, 5 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/usb/musb/musb_core.c
+> >>b/drivers/usb/musb/musb_core.c
+> >> index b7d56272f9d1..9f5a4819a744 100644
+> >> --- a/drivers/usb/musb/musb_core.c
+> >> +++ b/drivers/usb/musb/musb_core.c
+> >> @@ -1497,10 +1497,11 @@ static int musb_core_init(u16
+> >>musb_type, struct musb *musb)
+> >>  	} else {
+> >>  		musb->is_multipoint = 0;
+> >>  		type = "";
+> >> -#ifndef	CONFIG_USB_OTG_BLACKLIST_HUB
+> >> -		pr_err("%s: kernel must blacklist external hubs\n",
+> >> -		       musb_driver_name);
+> >> -#endif
+> >> +		if (IS_ENABLED(CONFIG_USB) &&
+> >> +		    !IS_ENABLED(CONFIG_USB_OTG_BLACKLIST_HUB)) {
+> >> +			pr_err("%s: kernel must blacklist external hubs\n",
+> >> +			       musb_driver_name);
+> >> +		}
+> >>  	}
+> >>
+> >>  	/* log release info */
 
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=1650989
-Reported-by: Phil Baker <baker1tex@gmail.com>
-Reported-by: Craig Robson <craig@zhatt.com>
-Fixes: 7aee9c52d7ac ("tpm: tpm1: rewrite tpm1_get_random() using tpm_buf structure")
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Tomas Winkler <tomas.winkler@intel.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/char/tpm/tpm1-cmd.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+The patch is applied.
 
-diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
-index 85dcf2654d11..faeb78ecf960 100644
---- a/drivers/char/tpm/tpm1-cmd.c
-+++ b/drivers/char/tpm/tpm1-cmd.c
-@@ -510,7 +510,7 @@ struct tpm1_get_random_out {
-  *
-  * Return:
-  * *  number of bytes read
-- * * -errno or a TPM return code otherwise
-+ * * -errno (positive TPM return codes are masked to -EIO)
-  */
- int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
- {
-@@ -524,7 +524,7 @@ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
- 
- 	rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_GET_RANDOM);
- 	if (rc)
--		return rc;
-+		goto fail;
- 
- 	do {
- 		tpm_buf_append_u32(&buf, num_bytes);
-@@ -559,7 +559,10 @@ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
- 	rc = total ? (int)total : -EIO;
- out:
- 	tpm_buf_destroy(&buf);
--	return rc;
-+fail:
-+	if (rc < 0)
-+		return rc;
-+	return -EIO;
- }
- 
- #define TPM_ORD_PCRREAD 21
--- 
-2.17.1
+Thanks,
+-Bin.
 
-
--- 
-Kees Cook
