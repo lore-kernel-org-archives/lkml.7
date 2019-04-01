@@ -2,119 +2,98 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F364C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB12C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD7820880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:12:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j488x6ti"
+	by mail.kernel.org (Postfix) with ESMTP id 51A2D2133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554153238;
+	bh=Lgdt0twy1g6qL1tYqpgMpCFN6e0QKzGNoBPyYjZknQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X2L6Sd+3Osuyqcu6KLOg7Du6AD2NsQ7U9iKWPpD1+LvHRMdW0Nl1doeHr7hKPLPmw
+	 gME3hmJSprXxI9Q29xYTzhsansEEUXY2klAr7obA/s0OBcYryT2XWdsX+HMGEyrFt4
+	 g9ubTSZtCHodWORIl41JMcLI3zhFCymCEnrcYHkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbfDAVMg (ORCPT
+        id S1728642AbfDAVN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 17:12:36 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39925 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfDAVMg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 17:12:36 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f10so2425778otb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 14:12:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=my+8kMrogBOyXJrCZPeMJC88daxVsQMYdE+rBltktwg=;
-        b=j488x6tiM97EhXQc/V0QqchABBaTyH78NFyaCmrkFem7gAtMk15wihd5zSYn+QTzWL
-         jCP8ef69w+NtciWMP0rB++VuHdApxi4cByB8/wn71c8/SOi+m57mLTVLF4UhqYGDLvwd
-         4FBtacF/J8ZJlR2ykZ7YF+FMN2YqPd/Pm7ZCs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=my+8kMrogBOyXJrCZPeMJC88daxVsQMYdE+rBltktwg=;
-        b=i0qgvmVKh/n13dV0E4YLVUXXlAQrdOqL2jmIYQyLU0/qoKzuv1oCz2OkKmW9DaroZ8
-         chVVe1Sijk4Adu1L2ojRfFCdKWeert/3Hs69/quGV0i/03HUjdIbO/TblAiGTzlnuWPG
-         LdVCT7D7YzD/7xV0DaABodXnSgT0zNgHdRYlIaPzwbfXG6EjZAlRh706ShI134v1v+1m
-         xOFdO11+ofDs7hymHylP6gl3M4HkjpDdYLOm4HO3oVgFimYmW8Yarlo5OvozeNiHX1kW
-         Wkp92UwMpq6Qnkq9ckOARCYrgI2n//G2fg1DbVJtSjJkZRJ4vVsJ+deqZGvFoQdufl66
-         S8IA==
-X-Gm-Message-State: APjAAAX4TrFXkVf6ZYPmOF5KKOWzaLoi1UjlDlS9oAYs6Kuj2E7Hvec4
-        p4Ohxb6mFxZ2daoEWvraIXAxZyiQu3s=
-X-Google-Smtp-Source: APXvYqzmNm3y1SMwVQ2SI8KCfHpIrD4oEmQFizfxd2lvg/L8+L9nPHR4rDEBMmLgosEfrgruGd6aaw==
-X-Received: by 2002:a9d:694e:: with SMTP id p14mr21956201oto.193.1554153155426;
-        Mon, 01 Apr 2019 14:12:35 -0700 (PDT)
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com. [209.85.167.172])
-        by smtp.gmail.com with ESMTPSA id i17sm4505438otc.67.2019.04.01.14.12.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 14:12:35 -0700 (PDT)
-Received: by mail-oi1-f172.google.com with SMTP id 3so8600687oir.7
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 14:12:34 -0700 (PDT)
-X-Received: by 2002:aca:3905:: with SMTP id g5mr9847863oia.49.1554153154276;
- Mon, 01 Apr 2019 14:12:34 -0700 (PDT)
+        Mon, 1 Apr 2019 17:13:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726501AbfDAVN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 17:13:56 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 566CA20880;
+        Mon,  1 Apr 2019 21:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554153235;
+        bh=Lgdt0twy1g6qL1tYqpgMpCFN6e0QKzGNoBPyYjZknQM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NWrCTEmnN/wgWiDVSzXoWa0p0mBy43IyCJFbjJSgEfGhRsSLtrUmDnqkuuFqmUZw8
+         +GcNScO5mB51EukXQ4X9cXeEH5zeoVtelLtMIFhKJn7vvpPnzT1xQjq2Y2jrEApKwj
+         XAPhWQXGdwtp3pRrHkgYh/7DVdlb6F/vYFIAHMy4=
+Date:   Mon, 1 Apr 2019 16:13:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jesse Hathaway <jesse@mbuki-mvuki.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-usb@vger.kernel.org
+Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
+Message-ID: <20190401211353.GA7263@google.com>
+References: <CANSNSoWiKd98Dt1N2sSjP9Af8zk1NPV-=3P4VLtFs_cSQG4RUg@mail.gmail.com>
+ <20190313232112.GC210027@google.com>
+ <CANSNSoXPFDu9RQAUA6dUCUrSCAj68q-Nj2W7ECz3fKpFtSNU+Q@mail.gmail.com>
+ <20190321232310.GL251185@google.com>
+ <CANSNSoXhiYP4Ad3hO1v03aMOX1VtUao2yCLgj_J0z9fCNwWo5w@mail.gmail.com>
 MIME-Version: 1.0
-References: <5d7229de06286b4ec06daee3411e39e9b638d66c.camel@perches.com>
-In-Reply-To: <5d7229de06286b4ec06daee3411e39e9b638d66c.camel@perches.com>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Mon, 1 Apr 2019 15:12:23 -0600
-X-Gmail-Original-Message-ID: <CAHX4x85RUfLG8caUY0fvN11qSNWiuzDjud_3Do8mUwM69M1OCg@mail.gmail.com>
-Message-ID: <CAHX4x85RUfLG8caUY0fvN11qSNWiuzDjud_3Do8mUwM69M1OCg@mail.gmail.com>
-Subject: Re: [PATCH] coding-style.rst: Generic alloc functions do not need OOM logging
-To:     Joe Perches <joe@perches.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANSNSoXhiYP4Ad3hO1v03aMOX1VtUao2yCLgj_J0z9fCNwWo5w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Joe, this is a great detail to add.
+[+cc Mathias, Greg, Alan, linux-usb]
 
-On Sat, Mar 30, 2019 at 11:25 AM Joe Perches <joe@perches.com> wrote:
->
-> Generic allocation functions already emit a dump_stack()
-> so additional error logging isn't useful.
->
-> Document it as such and add a reference to the allocation
-> API.
->
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  Documentation/process/coding-style.rst | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-> index 8ea913e99fa1..fa864a51e6ea 100644
-> --- a/Documentation/process/coding-style.rst
-> +++ b/Documentation/process/coding-style.rst
-> @@ -843,7 +843,8 @@ used.
->  The kernel provides the following general purpose memory allocators:
->  kmalloc(), kzalloc(), kmalloc_array(), kcalloc(), vmalloc(), and
->  vzalloc().  Please refer to the API documentation for further information
-> -about them.
-> +about them.  :ref:`Documentation/core-api/memory-allocation.rst
-> +<memory_allocation>`
->
->  The preferred form for passing a size of a struct is the following:
->
-> @@ -874,6 +875,9 @@ The preferred form for allocating a zeroed array is the following:
->  Both forms check for overflow on the allocation size n * sizeof(...),
->  and return NULL if that occurred.
->
-> +These generic allocation functions all emit a stack dump on failure when used
-> +without __GFP_NOWARN so there is no use in emitting an additional failure
-> +message when NULL is returned.
->
->  15) The inline disease
->  ----------------------
->
+Beginning of thread: https://lore.kernel.org/linux-pci/CANSNSoWiKd98Dt1N2sSjP9Af8zk1NPV-=3P4VLtFs_cSQG4RUg@mail.gmail.com
 
-Acked-by: Nick Crews <ncrews@chromium.org>
+Synopsis: v5.0 hangs at boot unless the following commits are reverted:
+
+  1302fcf0d03e ("PCI: Configure *all* devices, not just hot-added ones")
+  1c3c5eab1715 ("sched/core: Enable might_sleep() and smp_processor_id() checks early")
+
+The hang appears to be in quirk_usb_early_handoff().  With
+"initcall_debug", we see the call but not the completion:
+
+On Fri, Mar 22, 2019 at 03:02:11PM -0500, Jesse Hathaway wrote:
+> > So apparently the hang happens while we're running the "final" PCI
+> > fixups.  This happens after all the rest of PCI is initialized.
+> >
+> > Can you boot v5.0 vanilla with "initcall_debug"?  Maybe we can narrow
+> > it down to a specific quirk.
+> 
+> yup, added the "initcall_debug" output to the ticket:
+> https://bugzilla.kernel.org/show_bug.cgi?id=202927, here is the tail end
+> 
+> [   14.896337] NET: Registered protocol family 1
+> [   14.901314] initcall af_unix_init+0x0/0x4e returned 0 after 4866 usecs
+> [   14.908694] calling  ipv6_offload_init+0x0/0x7f @ 1
+> [   14.914238] initcall ipv6_offload_init+0x0/0x7f returned 0 after 1 usecs
+> [   14.921821] calling  vlan_offload_init+0x0/0x20 @ 1
+> [   14.927365] initcall vlan_offload_init+0x0/0x20 returned 0 after 0 usecs
+> [   14.934948] calling  pci_apply_final_quirks+0x0/0x126 @ 1
+> [   14.941106] pci 0000:00:1a.0: calling  quirk_usb_early_handoff+0x0/0x6a0 @ 1
+> 
+> thanks, Jesse Hathaway
