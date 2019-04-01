@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04280C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AA5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91192192C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8492192C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138428;
-	bh=9b6wRgHIBqOwL5eGj35lcu+K9b6mJRejPrStTRFdQrM=;
+	s=default; t=1554138432;
+	bh=48H3pI0O7BhHpkLaCoVqY4NbtXlHw7+BkoNOxWFXUoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qoqewYIPuAcnpLcZwapfjhAtz3isoI+Hl3O4ZdLQNSsnNptcBGjrCQIhC2XTNYg3t
-	 bsDFQTJk/8ADlD5qFDESr3fQCotNor5wj0fuZdSj94y46GMkoBOog3bJpJhPwW8IHZ
-	 DCfBkZKbFm5H3vNQLTgGl4clY88oUW9I85/3sI9U=
+	b=1w5ymMSJYxucQxvG817wh+C0fjaOIUxf0Kog6DVuOly1aqSXEnI4UoNXs7MeYKoi5
+	 naHkBwy2XgZO7FHnas/pOy9q3Vr4hIs5d1cYNT2QPJT6bnBDzfTfMhuobYPGDRLlO7
+	 LvIbfUVgY8DNbkFQMbXS1n4akUu3qyF1VCUuj0yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbfDARHI (ORCPT
+        id S1729434AbfDARHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:07:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52994 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:07:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728889AbfDARHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:07:07 -0400
+        id S1728889AbfDARHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:07:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0BA321924;
-        Mon,  1 Apr 2019 17:07:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87DC021924;
+        Mon,  1 Apr 2019 17:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138426;
-        bh=9b6wRgHIBqOwL5eGj35lcu+K9b6mJRejPrStTRFdQrM=;
+        s=default; t=1554138428;
+        bh=48H3pI0O7BhHpkLaCoVqY4NbtXlHw7+BkoNOxWFXUoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xk6x04IJA0LF9EPXZV4Rab9Uzfc7yTAoUnSUKaV7hy8NSBEq1CuA46lYswhHdYz5b
-         xVadpOX+hR06yPUvj3AfKmmJh5LcrGs/cRy72czfEr9U2T/8KmNlPVNc6d33Rbsqpy
-         Oi77KlxcIA7WzCO8P7GBNAmxaNBQiVQT+zWVfKSo=
+        b=Kq2FQb6tym+H6H0qzAjoi/p9v5NjhKpvVZQznm3bayzVZoy/vY5QeG1idFkYWCVas
+         +DcZG7qi9qZju3S8y7x5Ovwm22SDBYuN2QJszmaZE5Jsig3oY34uxXenkwznc/LEpS
+         RpDyHpETDS/oWtZa2NQoJZuY5juGFSwraujJfBNw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 062/146] ALSA: hda/realtek: Enable headset MIC of Acer AIO with ALC286
-Date:   Mon,  1 Apr 2019 19:01:14 +0200
-Message-Id: <20190401170053.909167964@linuxfoundation.org>
+        Daniel Drake <drake@endlessm.com>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.0 063/146] ALSA: hda/realtek: Enable headset MIC of Acer Aspire Z24-890 with ALC286
+Date:   Mon,  1 Apr 2019 19:01:15 +0200
+Message-Id: <20190401170053.989215290@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -68,61 +67,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit 667a8f73753908c4d0171e52b71774f9be5d6713 upstream.
+commit 2733ccebf4a937a0858e7d05a4a003b89715033f upstream.
 
-Some Acer AIO desktops like Veriton Z6860G, Z4860G and Z4660G cannot
-record sound from headset MIC.  This patch adds the
-ALC286_FIXUP_ACER_AIO_HEADSET_MIC quirk to fix this issue.
+The Acer Aspire Z24-890 cannot detect the headset MIC until
+ALC286_FIXUP_ACER_AIO_HEADSET_MIC quirk applied.
 
-Fixes: 9f8aefed9623 ("ALSA: hda/realtek: Fix mic issue on Acer AIO Veriton Z4660G")
-Fixes: b72f936f6b32 ("ALSA: hda/realtek: Fix mic issue on Acer AIO Veriton Z4860G/Z6860G")
 Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Reviewed-by: Kailang Yang <kailang@realtek.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -5685,6 +5685,7 @@ enum {
- 	ALC225_FIXUP_DELL_WYSE_AIO_MIC_NO_PRESENCE,
- 	ALC225_FIXUP_WYSE_AUTO_MUTE,
- 	ALC225_FIXUP_WYSE_DISABLE_MIC_VREF,
-+	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
- };
- 
- static const struct hda_fixup alc269_fixups[] = {
-@@ -6683,6 +6684,16 @@ static const struct hda_fixup alc269_fix
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
- 	},
-+	[ALC286_FIXUP_ACER_AIO_HEADSET_MIC] = {
-+		.type = HDA_FIXUP_VERBS,
-+		.v.verbs = (const struct hda_verb[]) {
-+			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x4f },
-+			{ 0x20, AC_VERB_SET_PROC_COEF, 0x5029 },
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -6699,9 +6710,9 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1025, 0x079b, "Acer Aspire V5-573G", ALC282_FIXUP_ASPIRE_V5_PINS),
- 	SND_PCI_QUIRK(0x1025, 0x102b, "Acer Aspire C24-860", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1025, 0x106d, "Acer Cloudbook 14", ALC283_FIXUP_CHROME_BOOK),
--	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
--	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
--	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
-+	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
-+	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+@@ -6713,6 +6713,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
++	SND_PCI_QUIRK(0x1025, 0x1308, "Acer Aspire Z24-890", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
  	SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_FIXUP_ACER_HEADSET_MIC),
  	SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M101Z),
  	SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", ALC275_FIXUP_DELL_XPS),
