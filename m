@@ -2,155 +2,251 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6B8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF12FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 161B6213A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1172086C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfDAJN0 (ORCPT
+        id S1726561AbfDAJNg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 05:13:26 -0400
-Received: from mga04.intel.com ([192.55.52.120]:48351 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbfDAJN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 05:13:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 02:13:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,296,1549958400"; 
-   d="scan'208";a="127576383"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
-  by orsmga007.jf.intel.com with ESMTP; 01 Apr 2019 02:13:20 -0700
-Subject: Re: [PATCH 1/2] mmc: sdhci: Add Quirk for enabling HISPD under
- special conditions
-To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Cc:     ulf.hansson@linaro.org
-References: <20190329142202.15000-1-faiz_abbas@ti.com>
- <20190329142202.15000-2-faiz_abbas@ti.com>
- <f1417015-0e78-6df5-7917-a33e235fa1a9@intel.com>
- <350cd133-302f-4002-4b54-d95e7e5d3500@ti.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <6d8f9b8c-dd5c-a091-7a82-10e5f6606b4e@intel.com>
-Date:   Mon, 1 Apr 2019 12:12:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 1 Apr 2019 05:13:36 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43731 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfDAJNf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 05:13:35 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t81so6608780oig.10
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 02:13:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4s4Yomw9BuDg6a9e//IEwzLl7T+Fra+SK55D5AJXvrM=;
+        b=bU2SMhfhosMa7pCq0dNJpUMqKhrh+U1LfR7UTxMvqYrIOef1De+J2+l/BVk2m1wYDN
+         z6fl1oSJ4LnaWg5yEu6AEg32IM8z+TlAhHCf65vy88InWigowoyyRAJoU83IzXRKr2RK
+         NyiejIPcJ19ZO/p0UmU+hnTCFjaQdD38jaR34b/QNiqUNExIcv97AwuTKIVdbiHAzrDF
+         C6crwo02FM9lXWSUS6496LCQh5lv/Zpo7MOwPkBgBsDMnx40XwCXF3FiF0HNUbehXA7w
+         bU5AqrFl57Qvd1sr5oLwa3psirNPw4TxdU2w6Pi1GOECLXdSPHwkI3A8U9ZWOkJEdDXp
+         hysg==
+X-Gm-Message-State: APjAAAVcNMMVXNfojOolJur5e+le/ycsij8VMny12atyH+LYmMGr0CG+
+        wrnR79UbL9jQ34HRhI46lZQdFQx7j6FgKm73dTfjFQ==
+X-Google-Smtp-Source: APXvYqwhhIBnE0BWrpGrS8WAAO+WG3MVQUgOQJyPmgiprET7MHR+FNcnRkGLhMqsW74iv+e64jRkCpZ9f9g7ex/A1vo=
+X-Received: by 2002:aca:c4d6:: with SMTP id u205mr12350139oif.26.1554110014864;
+ Mon, 01 Apr 2019 02:13:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <350cd133-302f-4002-4b54-d95e7e5d3500@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190307123254.348-1-omosnace@redhat.com> <20190307123254.348-3-omosnace@redhat.com>
+ <alpine.DEB.2.21.1903280039530.1789@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1903280039530.1789@nanos.tec.linutronix.de>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Mon, 1 Apr 2019 11:13:23 +0200
+Message-ID: <CAFqZXNvQioPGUiU0q5R4nQLW7pQDsViNH-DR=SF4Fec+-CwksA@mail.gmail.com>
+Subject: Re: [RFC PATCH ghak10 v6 2/2] ntp: Audit NTP parameters adjustment
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/04/19 12:01 PM, Faiz Abbas wrote:
-> Hi Adrian,
-> 
-> On 01/04/19 2:21 PM, Adrian Hunter wrote:
->> On 29/03/19 4:22 PM, Faiz Abbas wrote:
->>> Some controllers on TI devices requires the HISPD bit to be cleared
->>> even in some high speed modes. Add a quirk that facilitates this
->>> requirement.
->>
->> Could you use sdhci I/O accessors for this?
-> 
-> Can you elaborate? Not sure how this would be solved with
-> CONFIG_MMC_SDHCI_IO_ACCESSORS.
+On Thu, Mar 28, 2019 at 1:02 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> On Thu, 7 Mar 2019, Ondrej Mosnacek wrote:
+>
+> > Emit an audit record every time selected NTP parameters are modified
+> > from userspace (via adjtimex(2) or clock_adjtime(2)).
+> >
+> > Such events will now generate records of type AUDIT_TIME_ADJNTPVAL
+> > containing the following fields:
+> >   - op -- which value was adjusted:
+> >     - offset -- corresponding to the time_offset variable
+> >     - freq   -- corresponding to the time_freq variable
+> >     - status -- corresponding to the time_status variable
+> >     - adjust -- corresponding to the time_adjust variable
+> >     - tick   -- corresponding to the tick_usec variable
+> >     - tai    -- corresponding to the timekeeping's TAI offset
+> >   - old -- the old value
+> >   - new -- the new value
+> >
+> > For reference, running the following commands:
+> >
+> >     auditctl -D
+> >     auditctl -a exit,always -F arch=b64 -S adjtimex
+> >     chronyd -q
+> >
+> > produces audit records like this:
+> >
+> > type=SYSCALL msg=audit(1530616044.507:5): arch=c000003e syscall=159 success=yes exit=5 a0=7fff57e78c00 a1=0 a2=4 a3=7f754ae28c0a items=0 ppid=626 pid=629 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=1 comm="chronyd" exe="/usr/sbin/chronyd" subj=system_u:system_r:kernel_t:s0 key=(null)
+>
+> <SNIP gazillions of lines of unparseable garbage>
+>
+> Is it really necessary to put this into the changelog?
 
-In ->writeb()
+Yeah, sorry, I went a bit overboard with the record examples... I'll
+try to provide simpler and less verbose examples in the next version.
 
-if (reg == SDHCI_HOST_CONTROL) {
-	if (host->mmc->ios->timing == whatever)
-		val &= ~SDHCI_CTRL_HISPD;
-}
+>
+> >
+> > +void __audit_ntp_adjust(const char *type, s64 oldval, s64 newval)
+> > +{
+> > +     audit_log(audit_context(), GFP_ATOMIC, AUDIT_TIME_ADJNTPVAL,
+>
+> No.
+>
+> > +               "op=%s old=%lli new=%lli", type,
+> > +               (long long)oldval, (long long)newval);
+> > +}
+> > +
+> >  static void audit_log_task(struct audit_buffer *ab)
+> >  {
+> >       kuid_t auid, uid;
+> > diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+> > index 36a2bef00125..5f456a84151a 100644
+> > --- a/kernel/time/ntp.c
+> > +++ b/kernel/time/ntp.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/mm.h>
+> >  #include <linux/module.h>
+> >  #include <linux/rtc.h>
+> > +#include <linux/audit.h>
+> >
+> >  #include "ntp_internal.h"
+> >  #include "timekeeping_internal.h"
+> > @@ -293,6 +294,8 @@ static inline s64 ntp_update_offset_fll(s64 offset64, long secs)
+> >
+> >  static void ntp_update_offset(long offset)
+> >  {
+> > +     s64 old_offset = time_offset;
+> > +     s64 old_freq = time_freq;
+> >       s64 freq_adj;
+> >       s64 offset64;
+> >       long secs;
+> > @@ -341,6 +344,9 @@ static void ntp_update_offset(long offset)
+> >       time_freq   = max(freq_adj, -MAXFREQ_SCALED);
+> >
+> >       time_offset = div_s64(offset64 << NTP_SCALE_SHIFT, NTP_INTERVAL_FREQ);
+> > +
+> > +     audit_ntp_adjust("offset", old_offset, time_offset);
+> > +     audit_ntp_adjust("freq", old_freq, time_freq);
+> >  }
+> >
+> >  /**
+> > @@ -658,21 +664,31 @@ static inline void process_adj_status(const struct timex *txc)
+> >
+> >  static inline void process_adjtimex_modes(const struct timex *txc, s32 *time_tai)
+> >  {
+> > -     if (txc->modes & ADJ_STATUS)
+> > -             process_adj_status(txc);
+> > +     if (txc->modes & (ADJ_STATUS | ADJ_NANO | ADJ_MICRO)) {
+> > +             int old_status = time_status;
+> > +
+> > +             if (txc->modes & ADJ_STATUS)
+> > +                     process_adj_status(txc);
+> > -     if (txc->modes & ADJ_NANO)
+> > -             time_status |= STA_NANO;
+> > +             if (txc->modes & ADJ_NANO)
+> > +                     time_status |= STA_NANO;
+> >
+> > -     if (txc->modes & ADJ_MICRO)
+> > -             time_status &= ~STA_NANO;
+> > +             if (txc->modes & ADJ_MICRO)
+> > +                     time_status &= ~STA_NANO;
+> > +
+> > +             audit_ntp_adjust("status", old_status, time_status);
+> > +     }
+> >
+> >       if (txc->modes & ADJ_FREQUENCY) {
+> > +             s64 old_freq = time_freq;
+> > +
+> >               time_freq = txc->freq * PPM_SCALE;
+> >               time_freq = min(time_freq, MAXFREQ_SCALED);
+> >               time_freq = max(time_freq, -MAXFREQ_SCALED);
+> >               /* update pps_freq */
+> >               pps_set_freq(time_freq);
+> > +
+> > +             audit_ntp_adjust("freq", old_freq, time_freq);
+> >       }
+> >
+> >       if (txc->modes & ADJ_MAXERROR)
+> > @@ -689,14 +705,18 @@ static inline void process_adjtimex_modes(const struct timex *txc, s32 *time_tai
+> >               time_constant = max(time_constant, 0l);
+> >       }
+> >
+> > -     if (txc->modes & ADJ_TAI && txc->constant > 0)
+> > +     if (txc->modes & ADJ_TAI && txc->constant > 0) {
+> > +             audit_ntp_adjust("tai", *time_tai, txc->constant);
+> >               *time_tai = txc->constant;
+> > +     }
+> >
+> >       if (txc->modes & ADJ_OFFSET)
+> >               ntp_update_offset(txc->offset);
+> >
+> > -     if (txc->modes & ADJ_TICK)
+> > +     if (txc->modes & ADJ_TICK) {
+> > +             audit_ntp_adjust("tick", tick_usec, txc->tick);
+> >               tick_usec = txc->tick;
+> > +     }
+> >
+> >       if (txc->modes & (ADJ_TICK|ADJ_FREQUENCY|ADJ_OFFSET))
+> >               ntp_update_frequency();
+> > @@ -718,6 +738,8 @@ int __do_adjtimex(struct timex *txc, const struct timespec64 *ts, s32 *time_tai)
+> >                       /* adjtime() is independent from ntp_adjtime() */
+> >                       time_adjust = txc->offset;
+> >                       ntp_update_frequency();
+> > +
+> > +                     audit_ntp_adjust("adjust", save_adjust, txc->offset);
+> >               }
+> >               txc->offset = save_adjust;
+> >       } else {
+>
+> Not going to happen. We are not reshuffling all that code just to
+> accomodate random audit log invocations in a critical section plus having a
+> gazillion of GFP_ATOMIC allocation in the critical section just because.
 
-writeb(val, host->ioaddr + reg);
+OK, seems I underestimated the consequences of putting the logging
+calls directly in there. While I was offline over the weekend I
+already came up with a cleaner version that collects the changes in a
+structure and does the logging outside of the critical section. I
+currently does a few unnecessary writes into memory under
+CONFIG_AUDIT=n, but if that is an issue I can boost the abstraction or
+just add some #ifdefs to avoid that.
+
+>
+> The whole information can be reconstructed after the fact:
+>
+>    1) Copy the user space supplied struct timex to a buffer
+>
+>    2) Retrieve the current timex information _before_ invoking
+>       do_adjtimex().
+>
+>    3) Look at the ret value and the resulting struct timex which is going
+>       to be copied back to user space and figure out with the help of #1
+>       and #2 what you need to log.
+>
+> That does not even need a single line of change in the NTP code and almost
+> everything happens in fully preemptible context.
+
+I worry that extracting everything from the timex structures might get
+a little too complicated... Hopefully you'll be OK with the solution I
+am preparing for v8 - it still adds a bit of code to ntp.c, but it's
+much less intrusive.
+
+Thanks a lot for the review!
 
 
-> 
-> Thanks,
-> Faiz
-> 
->>
->>>
->>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>> ---
->>>  drivers/mmc/host/sdhci.c | 36 ++++++++++++++++++++++++------------
->>>  drivers/mmc/host/sdhci.h |  2 ++
->>>  2 files changed, 26 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->>> index a8141ff9be03..ed4ed6054ddf 100644
->>> --- a/drivers/mmc/host/sdhci.c
->>> +++ b/drivers/mmc/host/sdhci.c
->>> @@ -1916,18 +1916,30 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->>>  	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
->>>  
->>>  	if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
->>> -		if (ios->timing == MMC_TIMING_SD_HS ||
->>> -		     ios->timing == MMC_TIMING_MMC_HS ||
->>> -		     ios->timing == MMC_TIMING_MMC_HS400 ||
->>> -		     ios->timing == MMC_TIMING_MMC_HS200 ||
->>> -		     ios->timing == MMC_TIMING_MMC_DDR52 ||
->>> -		     ios->timing == MMC_TIMING_UHS_SDR50 ||
->>> -		     ios->timing == MMC_TIMING_UHS_SDR104 ||
->>> -		     ios->timing == MMC_TIMING_UHS_DDR50 ||
->>> -		     ios->timing == MMC_TIMING_UHS_SDR25)
->>> -			ctrl |= SDHCI_CTRL_HISPD;
->>> -		else
->>> -			ctrl &= ~SDHCI_CTRL_HISPD;
->>> +		if ((host->quirks2 & SDHCI_QUIRK2_TI_HISPD_BIT)) {
->>> +			if (ios->timing == MMC_TIMING_MMC_HS400 ||
->>> +			    ios->timing == MMC_TIMING_MMC_HS200 ||
->>> +			    ios->timing == MMC_TIMING_MMC_DDR52 ||
->>> +			    ios->timing == MMC_TIMING_UHS_SDR50 ||
->>> +			    ios->timing == MMC_TIMING_UHS_SDR104 ||
->>> +			    ios->timing == MMC_TIMING_UHS_DDR50)
->>> +				ctrl |= SDHCI_CTRL_HISPD;
->>> +			else
->>> +				ctrl &= ~SDHCI_CTRL_HISPD;
->>> +		} else {
->>> +			if (ios->timing == MMC_TIMING_SD_HS ||
->>> +			    ios->timing == MMC_TIMING_MMC_HS ||
->>> +			    ios->timing == MMC_TIMING_MMC_HS400 ||
->>> +			    ios->timing == MMC_TIMING_MMC_HS200 ||
->>> +			    ios->timing == MMC_TIMING_MMC_DDR52 ||
->>> +			    ios->timing == MMC_TIMING_UHS_SDR50 ||
->>> +			    ios->timing == MMC_TIMING_UHS_SDR104 ||
->>> +			    ios->timing == MMC_TIMING_UHS_DDR50 ||
->>> +			    ios->timing == MMC_TIMING_UHS_SDR25)
->>> +				ctrl |= SDHCI_CTRL_HISPD;
->>> +			else
->>> +				ctrl &= ~SDHCI_CTRL_HISPD;
->>> +		}
->>>  	}
->>>  
->>>  	if (host->version >= SDHCI_SPEC_300) {
->>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->>> index 01002cba1359..aac026c5e184 100644
->>> --- a/drivers/mmc/host/sdhci.h
->>> +++ b/drivers/mmc/host/sdhci.h
->>> @@ -485,6 +485,8 @@ struct sdhci_host {
->>>   * block count.
->>>   */
->>>  #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
->>> +/* Some TI devices need the high speed bit disabled even in high speed modes */
->>> +#define SDHCI_QUIRK2_TI_HISPD_BIT			(1<<19)
->>>  
->>>  	int irq;		/* Device IRQ */
->>>  	void __iomem *ioaddr;	/* Mapped address */
->>>
->>
-> 
-
+--
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
