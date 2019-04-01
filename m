@@ -3,136 +3,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169D9C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE6CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E480F2086C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4901D213A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:15:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfDAJO5 (ORCPT
+        id S1726515AbfDAJPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 05:14:57 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:39693 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725820AbfDAJO5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 05:14:57 -0400
-X-UUID: 02fcdf1d6d9047b48110ae53dddb3e78-20190401
-X-UUID: 02fcdf1d6d9047b48110ae53dddb3e78-20190401
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 343525915; Mon, 01 Apr 2019 17:14:36 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 1 Apr 2019 17:14:34 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 1 Apr 2019 17:14:34 +0800
-Message-ID: <1554110075.2011.4.camel@mtksdaap41>
-Subject: Re: [PATCH V7 2/6] drm/mediatek: move the setting of fixed divider
-From:   CK Hu <ck.hu@mediatek.com>
-To:     wangyan wang <wangyan.wang@mediatek.com>
-CC:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        Mon, 1 Apr 2019 05:15:23 -0400
+Received: from mx.socionext.com ([202.248.49.38]:27857 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbfDAJPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 05:15:22 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 01 Apr 2019 18:15:20 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id A3EBE611D6;
+        Mon,  1 Apr 2019 18:15:20 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Mon, 1 Apr 2019 18:15:20 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 5D5D740F06;
+        Mon,  1 Apr 2019 18:15:20 +0900 (JST)
+Received: from [127.0.0.1] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 3406C120499;
+        Mon,  1 Apr 2019 18:15:20 +0900 (JST)
+Date:   Mon, 01 Apr 2019 18:15:19 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 3/4] phy: socionext: get optional clock by devm_clk_get_optional()
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        "Daniel Vetter" <daniel@ffwll.ch>,
-        chunhui dai <chunhui.dai@mediatek.com>,
-        "Colin Ian King" <colin.king@canonical.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "Ryder Lee" <ryder.lee@mediatek.com>, <linux-clk@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
-        <dri-devel@lists.freedesktop.org>, <srv_heupstream@mediatek.com>
-Date:   Mon, 1 Apr 2019 17:14:35 +0800
-In-Reply-To: <20190327091929.73162-3-wangyan.wang@mediatek.com>
-References: <20190327091929.73162-1-wangyan.wang@mediatek.com>
-         <20190327091929.73162-3-wangyan.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        <linux-arm-msm@vger.kernel.org>
+In-Reply-To: <f3370a0619d40c40676ed029cc04a3ed1c12b991.1553914418.git.chunfeng.yun@mediatek.com>
+References: <a8539bcf66065380069676fbea99a51254309803.1553914418.git.chunfeng.yun@mediatek.com> <f3370a0619d40c40676ed029cc04a3ed1c12b991.1553914418.git.chunfeng.yun@mediatek.com>
+Message-Id: <20190401181519.2595.4A936039@socionext.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-MTK:  N
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Wangyan:
+Hi,
 
-On Wed, 2019-03-27 at 17:19 +0800, wangyan wang wrote:
-> From: chunhui dai <chunhui.dai@mediatek.com>
+This looks good to me.
+
+Reviewed-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+
+Thanks,
+
+On Sat, 30 Mar 2019 17:11:37 +0800
+Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+
+> Use devm_clk_get_optional() to get optional clock
 > 
-> move the setting of fixed divider from enable/disable
-> to the function of setting rate.
-> 
-> the patch is for hdmi pll divider, the divder should
-> be configured before clock calculation to ensure the
-> clock is right.
-
-I think this patch is introduced by the patch "drm/mediatek: recalculate
-hdmi phy clock of MT2701 by querying hardware", so I would like to
-squash this patch into that patch.
-
-Regards,
-CK
-
-> 
-> Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
-> Signed-off-by: wangyan wang <wangyan.wang@mediatek.com>
+> Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 > ---
->  drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+>  drivers/phy/socionext/phy-uniphier-usb3hs.c | 10 +++-------
+>  drivers/phy/socionext/phy-uniphier-usb3ss.c | 10 +++-------
+>  2 files changed, 6 insertions(+), 14 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> index 9dcf9c2ff37a..6f29e87eefd0 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> @@ -79,7 +79,6 @@ static int mtk_hdmi_pll_prepare(struct clk_hw *hw)
->  	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SLDO_MASK);
->  	usleep_range(80, 100);
->  	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_MBIAS_LPF_EN);
-> -	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_EN_TX_POSDIV);
->  	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SER_MASK);
->  	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_PRED_MASK);
->  	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_DRV_MASK);
-> @@ -94,7 +93,6 @@ static void mtk_hdmi_pll_unprepare(struct clk_hw *hw)
->  	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_DRV_MASK);
->  	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_PRED_MASK);
->  	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SER_MASK);
-> -	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_EN_TX_POSDIV);
->  	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_MBIAS_LPF_EN);
->  	usleep_range(80, 100);
->  	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SLDO_MASK);
-> @@ -123,6 +121,7 @@ static int mtk_hdmi_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+> diff --git a/drivers/phy/socionext/phy-uniphier-usb3hs.c b/drivers/phy/socionext/phy-uniphier-usb3hs.c
+> index b1b048be6166..50f379fc4e06 100644
+> --- a/drivers/phy/socionext/phy-uniphier-usb3hs.c
+> +++ b/drivers/phy/socionext/phy-uniphier-usb3hs.c
+> @@ -335,13 +335,9 @@ static int uniphier_u3hsphy_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv->clk_parent))
+>  		return PTR_ERR(priv->clk_parent);
 >  
->  	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON6, RG_HTPLL_PREDIV_MASK);
->  	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON6, RG_HTPLL_POSDIV_MASK);
-> +	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_EN_TX_POSDIV);
->  	mtk_hdmi_phy_mask(hdmi_phy, HDMI_CON6, (0x1 << RG_HTPLL_IC),
->  			  RG_HTPLL_IC_MASK);
->  	mtk_hdmi_phy_mask(hdmi_phy, HDMI_CON6, (0x1 << RG_HTPLL_IR),
-> @@ -207,7 +206,6 @@ static void mtk_hdmi_phy_enable_tmds(struct mtk_hdmi_phy *hdmi_phy)
->  	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SLDO_MASK);
->  	usleep_range(80, 100);
->  	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_MBIAS_LPF_EN);
-> -	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_EN_TX_POSDIV);
->  	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SER_MASK);
->  	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_PRED_MASK);
->  	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_DRV_MASK);
-> @@ -219,7 +217,6 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
->  	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_DRV_MASK);
->  	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_PRED_MASK);
->  	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SER_MASK);
-> -	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_EN_TX_POSDIV);
->  	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_MBIAS_LPF_EN);
->  	usleep_range(80, 100);
->  	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SLDO_MASK);
+> -	priv->clk_ext = devm_clk_get(dev, "phy-ext");
+> -	if (IS_ERR(priv->clk_ext)) {
+> -		if (PTR_ERR(priv->clk_ext) == -ENOENT)
+> -			priv->clk_ext = NULL;
+> -		else
+> -			return PTR_ERR(priv->clk_ext);
+> -	}
+> +	priv->clk_ext = devm_clk_get_optional(dev, "phy-ext");
+> +	if (IS_ERR(priv->clk_ext))
+> +		return PTR_ERR(priv->clk_ext);
+>  
+>  	priv->rst = devm_reset_control_get_shared(dev, "phy");
+>  	if (IS_ERR(priv->rst))
+> diff --git a/drivers/phy/socionext/phy-uniphier-usb3ss.c b/drivers/phy/socionext/phy-uniphier-usb3ss.c
+> index 4be95679c7d8..ec231e40ef2a 100644
+> --- a/drivers/phy/socionext/phy-uniphier-usb3ss.c
+> +++ b/drivers/phy/socionext/phy-uniphier-usb3ss.c
+> @@ -238,13 +238,9 @@ static int uniphier_u3ssphy_probe(struct platform_device *pdev)
+>  		if (IS_ERR(priv->clk))
+>  			return PTR_ERR(priv->clk);
+>  
+> -		priv->clk_ext = devm_clk_get(dev, "phy-ext");
+> -		if (IS_ERR(priv->clk_ext)) {
+> -			if (PTR_ERR(priv->clk_ext) == -ENOENT)
+> -				priv->clk_ext = NULL;
+> -			else
+> -				return PTR_ERR(priv->clk_ext);
+> -		}
+> +		priv->clk_ext = devm_clk_get_optional(dev, "phy-ext");
+> +		if (IS_ERR(priv->clk_ext))
+> +			return PTR_ERR(priv->clk_ext);
+>  
+>  		priv->rst = devm_reset_control_get_shared(dev, "phy");
+>  		if (IS_ERR(priv->rst))
+> -- 
+> 2.20.1
+
+---
+Best Regards,
+Kunihiko Hayashi
 
 
