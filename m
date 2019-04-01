@@ -6,47 +6,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E66C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752B3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257C22192D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B7921934
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138575;
-	bh=yPJyp/SFO84MXg1VYSYIzh+pLkjUbgne2WK2cW3Xy8A=;
+	s=default; t=1554138579;
+	bh=lx5MwcD6o7oWDjsu6TkDgschH4JAGAH64ZaMW/hg99U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ygMGBfjJvu5MdyuLnvb2YIUQZLLD2/zwQ4GVNQieyrYX02b1k2mLcPCKijXfrtVXJ
-	 wpIz5mCKW27Y5SS2aOh7FnWsG1Jogd0rajJ7t7DjqHwSGxxGZdGEhWGfkr0u0Hxkz3
-	 2vJ8QF+/4UmKDV/Y/XZ7R1ixlsJpsHVGJ+XPey/Q=
+	b=xYj3MZ4tVR1Gok32YmZJk+AkVfPMH+5V/Ag8OSL45GR3LmgkFawxsNTc3Fh9a+4n/
+	 rqTluOAyD4vZswyBFv5zIZSQWitEp/k1PdYkppPYGeSxczcE2/GeAevJgNaouFcq1D
+	 rDZDq24GuI+ST5J+ev5RV1XIlDkmZ6fAYuMuVrw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729807AbfDARJd (ORCPT
+        id S1728979AbfDARJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56538 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:09:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbfDARJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:09:31 -0400
+        id S1729170AbfDARJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:09:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93E192192C;
-        Mon,  1 Apr 2019 17:09:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4EA221925;
+        Mon,  1 Apr 2019 17:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138571;
-        bh=yPJyp/SFO84MXg1VYSYIzh+pLkjUbgne2WK2cW3Xy8A=;
+        s=default; t=1554138575;
+        bh=lx5MwcD6o7oWDjsu6TkDgschH4JAGAH64ZaMW/hg99U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a3Sy9RJQZleMGaYMQtAj5O1xeIZbKP1fxfSB90odgKL1XINVc/Awjg1aVuGLGtqeL
-         DJLTWzvpLdPFNG6SNsM4yWtGqXt219cGUYo2v1HLernt5z2nCtFN6q9kNEbcDvqAoA
-         Z+9wwqhcx9i9nChOEetwOQW+f8t4e65RL6IZ0C3k=
+        b=vxg22wZ/lHzL6Ee6nJBBJGaAY2Iy5IpD2NFJu5IRzCOpZM2WZIR2iyLP7yLNcatRs
+         qcait8aiG4eVx7ZjAEkFviFwGOM7vd/vbAsRYdkscw6QMj92gt+//9F91nQqKNaFC+
+         /BZ4Ul1dTA6JBNB0KgWtlqeter3uJRMq2/k9hh5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Vincent=20Stehl=C3=A9?= <vincent.stehle@laposte.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.0 105/146] cpufreq: scpi: Fix use after free
-Date:   Mon,  1 Apr 2019 19:01:57 +0200
-Message-Id: <20190401170057.515109461@linuxfoundation.org>
+        syzbot+e73f2fb5ed5a5df36d33@syzkaller.appspotmail.com,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Laura Abbott <labbott@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Eric Biggers <ebiggers@google.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH 5.0 106/146] drm/vgem: fix use-after-free when drm_gem_handle_create() fails
+Date:   Mon,  1 Apr 2019 19:01:58 +0200
+Message-Id: <20190401170057.583759798@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -65,33 +70,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vincent Stehlé <vincent.stehle@laposte.net>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 31d4c528cea4023cf36f6148c03bb960cedefeef upstream.
+commit 21d2b122732318b48c10b7262e15595ce54511d3 upstream.
 
-Free the priv structure only after we are done using it.
+If drm_gem_handle_create() fails in vgem_gem_create(), then the
+drm_vgem_gem_object is freed twice: once when the reference is dropped
+by drm_gem_object_put_unlocked(), and again by __vgem_gem_destroy().
 
-Fixes: 1690d8bb91e370ab ("cpufreq: scpi/scmi: Fix freeing of dynamic OPPs")
-Signed-off-by: Vincent Stehlé <vincent.stehle@laposte.net>
-Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This was hit by syzkaller using fault injection.
+
+Fix it by skipping the second free.
+
+Reported-by: syzbot+e73f2fb5ed5a5df36d33@syzkaller.appspotmail.com
+Fixes: af33a9190d02 ("drm/vgem: Enable dmabuf import interfaces")
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Acked-by: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190226214451.195123-1-ebiggers@kernel.org
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/scpi-cpufreq.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/vgem/vgem_drv.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/drivers/cpufreq/scpi-cpufreq.c
-+++ b/drivers/cpufreq/scpi-cpufreq.c
-@@ -189,8 +189,8 @@ static int scpi_cpufreq_exit(struct cpuf
- 	cpufreq_cooling_unregister(priv->cdev);
- 	clk_put(priv->clk);
- 	dev_pm_opp_free_cpufreq_table(priv->cpu_dev, &policy->freq_table);
--	kfree(priv);
- 	dev_pm_opp_remove_all_dynamic(priv->cpu_dev);
-+	kfree(priv);
+--- a/drivers/gpu/drm/vgem/vgem_drv.c
++++ b/drivers/gpu/drm/vgem/vgem_drv.c
+@@ -191,13 +191,9 @@ static struct drm_gem_object *vgem_gem_c
+ 	ret = drm_gem_handle_create(file, &obj->base, handle);
+ 	drm_gem_object_put_unlocked(&obj->base);
+ 	if (ret)
+-		goto err;
++		return ERR_PTR(ret);
  
- 	return 0;
+ 	return &obj->base;
+-
+-err:
+-	__vgem_gem_destroy(obj);
+-	return ERR_PTR(ret);
  }
+ 
+ static int vgem_gem_dumb_create(struct drm_file *file, struct drm_device *dev,
 
 
