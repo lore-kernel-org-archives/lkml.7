@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FD0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D01AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C90DA21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1344206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139358;
-	bh=8yEbENt3HIro9qgBd2wrVTaeMUAHRLsCxkQRUBzE2lI=;
+	s=default; t=1554139364;
+	bh=yp7g8FPGPINWHO+IQTiThTvlqhBjNoVf2KUfea9vIjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pW//6VNF5NsCDOlWq6vwsxbhoye8VguhWP5wdDq9T7o5J6CTRUXJZKcj+3aX0KMuc
-	 SDC/iRBKLeH+NpG1qpuW4jTX70F4oq5fHfFH0eoBuG9g0yuLrjVdek3vtuRobnbUas
-	 vQPCKr0+ESoW0QBrvJwMUoVC3Hvu+prFcmL1n1jM=
+	b=aepUPplJmBTqrj7HAdk2bwaYVpU/T1lzXI+63Iu4AsUeOp15KE27uECmhqfee3zrP
+	 Kdn9Xd5jP7Z9ClpIesIw7j7i5QHhwlbNsPuhoYLBYfOoVa40J0KUKUYAtFk6vV9VPl
+	 +hSD6VRmY0TqRnDFoiZxcmPAo6zYxT+O6mA9jYJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732003AbfDARWh (ORCPT
+        id S1732008AbfDARWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:22:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51852 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:22:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731336AbfDARWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:22:31 -0400
+        id S1731336AbfDARWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:22:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABE8A21903;
-        Mon,  1 Apr 2019 17:22:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F44F20883;
+        Mon,  1 Apr 2019 17:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139351;
-        bh=8yEbENt3HIro9qgBd2wrVTaeMUAHRLsCxkQRUBzE2lI=;
+        s=default; t=1554139358;
+        bh=yp7g8FPGPINWHO+IQTiThTvlqhBjNoVf2KUfea9vIjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1N9I32E0BwLkkxca5kFAz2dJOXU34KMkYVD/gAEbpZne3zI0nJjb6IAfG4srlcIqB
-         Yd7XP67FPfFj+rPDhbYBki4LKBq8bFZlum1mK7Aga8eRkJaRXFtpWVT1oCgdjYt7uF
-         ez+y4+AYsoNxO0OmHkXmpwrr4MkCpG0ixwUYnxN8=
+        b=eXMezdx9FKjy6Wt5+g0s7plsEa/cSZZvWTXjGBZq+5v/y82JvfON52maKthIRPbkI
+         gnbqMfn+/OTV9tkDa8yTdXlJJGhJ34qBeoO/MEowiBQSPx4NraSfiH6jJBA6P0eNsO
+         dafKfb1UC9RUJ5w1AWy2Ay8UobHG0gOJrVYyO9UE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 051/107] powerpc/fsl: Enable runtime patching if nospectre_v2 boot arg is used
-Date:   Mon,  1 Apr 2019 19:02:06 +0200
-Message-Id: <20190401170050.436223136@linuxfoundation.org>
+Subject: [PATCH 4.14 053/107] powerpc/fsl: Fixed warning: orphan section `__btb_flush_fixup
+Date:   Mon,  1 Apr 2019 19:02:08 +0200
+Message-Id: <20190401170050.599774744@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -67,27 +66,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Diana Craciun <diana.craciun@nxp.com>
 
-commit 3bc8ea8603ae4c1e09aca8de229ad38b8091fcb3 upstream.
+commit 039daac5526932ec731e4499613018d263af8b3e upstream.
 
-If the user choses not to use the mitigations, replace
-the code sequence with nops.
+Fixed the following build warning:
+powerpc-linux-gnu-ld: warning: orphan section `__btb_flush_fixup' from
+`arch/powerpc/kernel/head_44x.o' being placed in section
+`__btb_flush_fixup'.
 
 Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/kernel/setup-common.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/kernel/head_booke.h |   18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -938,6 +938,7 @@ void __init setup_arch(char **cmdline_p)
- 		ppc_md.setup_arch();
+--- a/arch/powerpc/kernel/head_booke.h
++++ b/arch/powerpc/kernel/head_booke.h
+@@ -32,6 +32,16 @@
+  */
+ #define THREAD_NORMSAVE(offset)	(THREAD_NORMSAVES + (offset * 4))
  
- 	setup_barrier_nospec();
-+	setup_spectre_v2();
- 
- 	paging_init();
- 
++#ifdef CONFIG_PPC_FSL_BOOK3E
++#define BOOKE_CLEAR_BTB(reg)									\
++START_BTB_FLUSH_SECTION								\
++	BTB_FLUSH(reg)									\
++END_BTB_FLUSH_SECTION
++#else
++#define BOOKE_CLEAR_BTB(reg)
++#endif
++
++
+ #define NORMAL_EXCEPTION_PROLOG(intno)						     \
+ 	mtspr	SPRN_SPRG_WSCRATCH0, r10;	/* save one register */	     \
+ 	mfspr	r10, SPRN_SPRG_THREAD;					     \
+@@ -43,9 +53,7 @@
+ 	andi.	r11, r11, MSR_PR;	/* check whether user or kernel    */\
+ 	mr	r11, r1;						     \
+ 	beq	1f;							     \
+-START_BTB_FLUSH_SECTION					\
+-	BTB_FLUSH(r11)						\
+-END_BTB_FLUSH_SECTION					\
++	BOOKE_CLEAR_BTB(r11)						\
+ 	/* if from user, start at top of this thread's kernel stack */       \
+ 	lwz	r11, THREAD_INFO-THREAD(r10);				     \
+ 	ALLOC_STACK_FRAME(r11, THREAD_SIZE);				     \
+@@ -131,9 +139,7 @@ END_BTB_FLUSH_SECTION					\
+ 	stw	r9,_CCR(r8);		/* save CR on stack		   */\
+ 	mfspr	r11,exc_level_srr1;	/* check whether user or kernel    */\
+ 	DO_KVM	BOOKE_INTERRUPT_##intno exc_level_srr1;		             \
+-START_BTB_FLUSH_SECTION								\
+-	BTB_FLUSH(r10)									\
+-END_BTB_FLUSH_SECTION								\
++	BOOKE_CLEAR_BTB(r10)						\
+ 	andi.	r11,r11,MSR_PR;						     \
+ 	mfspr	r11,SPRN_SPRG_THREAD;	/* if from user, start at top of   */\
+ 	lwz	r11,THREAD_INFO-THREAD(r11); /* this thread's kernel stack */\
 
 
