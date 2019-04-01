@@ -2,78 +2,133 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CFAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E484C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F867206B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E5A206B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:48:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YO0/HFc5"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YEhGFQ/3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="anz3SQkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfDAMsW (ORCPT
+        id S1726858AbfDAMso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 08:48:22 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:38464 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbfDAMsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 08:48:21 -0400
-Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 1 Apr 2019 08:48:44 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41534 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfDAMso (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 08:48:44 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8A8EB607C3; Mon,  1 Apr 2019 12:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554122923;
+        bh=Jtw4TZiLvR7Dkhwk9uCAI8XWMIxxfoEZoMXR0/MRUog=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YEhGFQ/3Kz45F7p2x63YldTZXI5BDqlCtLq2xzMcFUruFVwFnfnZrQ6GZaU0+9IIe
+         6rig5vZAcjCsxidbpHM4bmYr6xoxdnePs5h6Vuyo21DyZ5y4qWHcYP1UTCDEWaffD2
+         CQggibhP9TMbhmo33Wgqgaamp6FgBsQP3SlIPuIg=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1C98A1EC0310;
-        Mon,  1 Apr 2019 14:48:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554122900;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=0CSND4EDKrNHbb+ptwIFlKOpDBcIg0eteMtBzaS7M/w=;
-        b=YO0/HFc5gj/ULfJD35DPs8KvBE5mEwqI6okeh8zwI1MWtVNwbsHUNsESsvpmuSMIayeRSy
-        9mNUwRBpK33Kf1t0GbTcFXOyrUxm5abavM7a0kNDkbgP4aL4/0EGkG+1/KCwbVDLr3ZTxr
-        Xbr1i/XRLslhac4y8gplZFbmXfrwt4o=
-Date:   Mon, 1 Apr 2019 14:48:14 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 5/5] drivers/cpufreq: Convert some slow-path
- static_cpu_has() callers to boot_cpu_has()
-Message-ID: <20190401124814.GD28264@zn.tnic>
-References: <20190330112022.28888-1-bp@alien8.de>
- <20190330112022.28888-6-bp@alien8.de>
- <CAJZ5v0hDyx6t8UXj=tO78YUTMBqmdnNWEjs4SVwBoJya9pHu4A@mail.gmail.com>
- <CAJZ5v0gfqOB8r0dvTf3uRSkJCNOLYPe9qLaUV1BLGjTanmMbvg@mail.gmail.com>
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 369CF6049C;
+        Mon,  1 Apr 2019 12:48:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554122921;
+        bh=Jtw4TZiLvR7Dkhwk9uCAI8XWMIxxfoEZoMXR0/MRUog=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=anz3SQkfQ4ECvZxF8tBufFVKgmODggQ2E6prKW6676Xo6lUjT4yKWrDrqn9MUwjSC
+         LVSy4vjgZlqtyM/xjafm/FYTw0ya19KGTYDauoJg49HQPrT8yoo6CXBCVn3WruqPZo
+         glZ9NqKYfJx84eM/DphDDEQze2PMfwIF524GvyCQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 369CF6049C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH 01/12] arm-cci: add missing of_node_put after
+ of_device_is_available
+To:     Julia Lawall <Julia.Lawall@lip6.fr>, linux-kernel@vger.kernel.org,
+        linux@arm.linux.org.uk, robin.murphy@arm.com
+Cc:     kernel-janitors@vger.kernel.org
+References: <1550928043-14889-1-git-send-email-Julia.Lawall@lip6.fr>
+ <1550928043-14889-2-git-send-email-Julia.Lawall@lip6.fr>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <2be57c65-f94c-0a64-8fa6-385f60833bb6@codeaurora.org>
+Date:   Mon, 1 Apr 2019 18:18:35 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gfqOB8r0dvTf3uRSkJCNOLYPe9qLaUV1BLGjTanmMbvg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1550928043-14889-2-git-send-email-Julia.Lawall@lip6.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 11:32:59AM +0200, Rafael J. Wysocki wrote:
-> Or I can queue it up if you prefer.
 
-Doesn't matter to me - it doesn't have any dependencies to previous
-patches so however you like.
+On 2/23/2019 6:50 PM, Julia Lawall wrote:
+> Add an of_node_put when a tested device node is not available.
+>
+> The semantic patch that fixes this problem is as follows
+> (http://coccinelle.lip6.fr):
+>
+> // <smpl>
+> @@
+> identifier f;
+> local idexpression e;
+> expression x;
+> @@
+>
+> e = f(...);
+> ... when != of_node_put(e)
+>      when != x = e
+>      when != e = x
+>      when any
+> if (<+...of_device_is_available(e)...+>) {
+>    ... when != of_node_put(e)
+> (
+>    return e;
+> |
+> + of_node_put(e);
+>    return ...;
+> )
+> }
+> // </smpl>
+>
+> Fixes: 896ddd600ba4 ("drivers: bus: check cci device tree node status")
+> Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
 
-Thx.
 
--- 
-Regards/Gruss,
-    Boris.
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Cheers,
+-Mukesh
+
+>
+> ---
+> This file doesn't seem to have a maintainer.
+>
+>   drivers/bus/arm-cci.c |    4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff -u -p a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
+> --- a/drivers/bus/arm-cci.c
+> +++ b/drivers/bus/arm-cci.c
+> @@ -538,8 +538,10 @@ static int cci_probe(void)
+>   	struct resource res;
+>   
+>   	np = of_find_matching_node(NULL, arm_cci_matches);
+> -	if (!of_device_is_available(np))
+> +	if (!of_device_is_available(np)) {
+> +		of_node_put(np);
+>   		return -ENODEV;
+> +	}
+>   
+>   	ret = of_address_to_resource(np, 0, &res);
+>   	if (!ret) {
+>
