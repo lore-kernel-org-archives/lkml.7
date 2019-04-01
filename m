@@ -2,119 +2,82 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1017DC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC062C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A262084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728222084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:30:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hHwDUYqt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dOLHWvqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731921AbfDAH3U (ORCPT
+        id S1731947AbfDAHae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:29:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46156 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731844AbfDAH3U (ORCPT
+        Mon, 1 Apr 2019 03:30:34 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34932 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731844AbfDAHad (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:29:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t17so10469641wrw.13
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 00:29:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Gaqm0/7fomoSrPkoeDCPunTkVBxBVw4Yjb19GCrzBFU=;
-        b=hHwDUYqtOcTmur6++aAkbaDa1GL+TUaLtFX7r3vQkahbGlUqVrzKtl/tFdUbNTOK21
-         e8c9jn1kXiIGLOLTCr1E0E4o07McA+UFtzl0FmN6F7NyIykgTCHCbwbOq/J01agDY3n9
-         ps4zXtU9jfstlAekJqBkMnP8GSrz9T/rCVqWjWes7hOZWOKuBpN6wyx6gqgQ9NtRCZDi
-         TukHT2VdPU9YTYGRJhCgUV3FTFZQFbmFNFTueYoG6nnof2XTae5qce6KDO7VEj94YeRU
-         K4+3ewUT3ZDAdcCnzRuwaqa1waXp2l3ZS7Yk9WzY5aaCboRYdVIgd/7q6uKJJxH/OXxM
-         u5kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Gaqm0/7fomoSrPkoeDCPunTkVBxBVw4Yjb19GCrzBFU=;
-        b=ITFkXqlkU/T0HrBkpag2XbXZTtbCF8rl6vrId4fDYPxu02PeuQSR1E1W+H07WuVJGA
-         Y8soS78J9tug3nL4r7EIgmD3qrMbsAEvWrkpPS8M2GzbZKLOajp+vhLGE8hC3GQeaBs5
-         H5Qf0vyabwZJGuJ2+SCQt/Ixg3QhNyxyxLxoOI0+RuS3lrn87RG6B6F9l1wFfD6IXtl2
-         TbTm6O9qedoqQziVLWuPeTEDUS6MLSqm+YEFVmELVe8Zzfn+idp2XnjPvi6PhmuglOfn
-         dZeS5sMSM1/Kpc7eP3gS29rwlhWlfkU+I2qYh7MkGUrKXVnU6NI9JFoR4HBkxL3rMY76
-         eXSg==
-X-Gm-Message-State: APjAAAWLW+3dl5W3bLpDrH6Cd3k9VbBwPSpcTIOsYUkg5xe8ZegM6/t6
-        negi++J6doTNmZnvddfno9E4aw9BlpM=
-X-Google-Smtp-Source: APXvYqwFsvT4STd/ANqfu3EnN+qqKBKN2f1OUO8b0AdCjJrzj7dNvAwd5/ee4C97gibr5t3M13Ngmg==
-X-Received: by 2002:adf:c788:: with SMTP id l8mr30478343wrg.143.1554103758420;
-        Mon, 01 Apr 2019 00:29:18 -0700 (PDT)
-Received: from [192.168.0.101] ([88.147.53.253])
-        by smtp.gmail.com with ESMTPSA id n189sm13990976wmb.28.2019.04.01.00.29.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 00:29:17 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: Bisected GFP in bfq_bfqq_expire on v5.1-rc1
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <0e203a26-b941-cef4-dff1-013999d4b041@kernel.dk>
-Date:   Mon, 1 Apr 2019 09:29:16 +0200
-Cc:     Dmitrii Tcvetkov <demfloro@demfloro.ru>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <626EAE58-63C1-4ABA-9040-9D9A61F74A0D@linaro.org>
-References: <20190329160227.7d55c8dd@fire.localdomain>
- <0e203a26-b941-cef4-dff1-013999d4b041@kernel.dk>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.102.3)
+        Mon, 1 Apr 2019 03:30:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zlmRYHfrH8QLFcu62W2LRbXcqRcaCsgij+LfXxQree4=; b=dOLHWvqWXGsYKeS13csH9OXwr
+        mgaIce+1RCJBLhsF7Qa0DM3GJcMiA3g7NUj34LbRIN21RwsjPDv4t2SjR0E1rbJ3881S20qQ3mX0Q
+        0RccOCRMHpYVvTA1wKovU0vyZpukT29+cb5KDMdtkGQEFmVNfGJrUUMWdvhJwIxNpoMNZKcOgA6vE
+        Ip2tX+ReWWur5U0JI27ItoBzbROQQHC8QN1YuiXjm13RL8EkoeS99isGE429IiOLS5xy0ymocAWzT
+        wCIY/+zLp0qGCKnnj1pRtnfgkWYs4G4qhl2ZKb+KZ7ejeCiyWRZIsXi2AYWw7RqMEmtG40QvILd/w
+        DPiBye6dQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hArOm-00072e-6T; Mon, 01 Apr 2019 07:30:28 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D99EE202BC431; Mon,  1 Apr 2019 09:30:24 +0200 (CEST)
+Date:   Mon, 1 Apr 2019 09:30:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [patch 04/14] x86/exceptions: Make IST index zero based
+Message-ID: <20190401073024.GB11158@hirez.programming.kicks-ass.net>
+References: <20190331214020.836098943@linutronix.de>
+ <20190331215135.133741719@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190331215135.133741719@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Mar 31, 2019 at 11:40:24PM +0200, Thomas Gleixner wrote:
+> --- a/arch/x86/include/asm/page_64_types.h
+> +++ b/arch/x86/include/asm/page_64_types.h
+> @@ -25,11 +25,14 @@
+>  #define IRQ_STACK_ORDER (2 + KASAN_STACK_ORDER)
+>  #define IRQ_STACK_SIZE (PAGE_SIZE << IRQ_STACK_ORDER)
+>  
+> -#define DOUBLEFAULT_STACK 1
+> -#define NMI_STACK 2
+> -#define DEBUG_STACK 3
+> -#define MCE_STACK 4
+> -#define N_EXCEPTION_STACKS 4  /* hw limit: 7 */
+> +/*
+> + * The index for the tss.ist[] array. The hardware limit is 7 entries.
+> + */
+> +#define	DOUBLEFAULT_IST		0
+> +#define	NMI_IST			1
+> +#define	DEBUG_IST		2
+> +#define	MCE_IST			3
+> +#define	N_EXCEPTION_STACKS	4
 
-
-> Il giorno 29 mar 2019, alle ore 15:10, Jens Axboe <axboe@kernel.dk> ha =
-scritto:
->=20
-> On 3/29/19 7:02 AM, Dmitrii Tcvetkov wrote:
->> Hi,
->>=20
->> I got kernel panic since v5.1-rc1 when working with files on block
->> device with BFQ scheduler assigned. I didn't find trivial way to
->> reproduce the panic but "git checkout origin/linux-5.0.y"
->> on linux-stable-rc[1] git repo on btrfs filesystem reproduces the
->> problem 100% of the time on my bare-metal machine and in a VM.
->>=20
->> Bisect led me to commit 9dee8b3b057e1 (block, bfq: fix queue removal
->> from weights tree). After reverting this commit on top of current
->> mainline master(9936328b41ce) I can't reproduce the problem.
->>=20
->> dmesg with the panic and bisect log attached.
->>=20
->> [1] =
-https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
->=20
-> Paolo, can you please take a look at this?
->=20
->=20
-
-Yep.
-
-That you very much Dmitrii for also bisecting.  I feel like this
-failure may be caused by the typo fixed by this patch:
-https://patchwork.kernel.org/patch/10877113/
-
-Could you please give this fix a try?
-
-Thanks,
-Paolo
-
-
-> --=20
-> Jens Axboe
-
+Would it make sense to use an enum here?
