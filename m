@@ -2,156 +2,109 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9A6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB65C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D25620880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:58:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C45IB+Wp"
+	by mail.kernel.org (Postfix) with ESMTP id 128A42084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554141534;
+	bh=s3hwrAzw7WMzoDjmW8/pkI0eDLgAFpi9Fg0m5etaV/Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zUuitXbN42OZlAJVn1AFq6AwIlfgPb45+38X8s+bwigWzdzHbwYWmh5NPdxC221+V
+	 +0cfTlXfcLffFrtvKEkeEOriQNQ0Ed+F1M1INAD1na81xWEYO/KHnzVpVt37UpfTKY
+	 FFMdx1Cq3BYmJUBnAKVVw37w+s/Zn7kMqXtpQTfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbfDAR6k (ORCPT
+        id S1731581AbfDAR6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:58:40 -0400
-Received: from ozlabs.org ([203.11.71.1]:51359 "EHLO ozlabs.org"
+        Mon, 1 Apr 2019 13:58:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729485AbfDAR6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:58:38 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1730916AbfDARSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:18:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44Y0Sp62lPz9sPZ;
-        Tue,  2 Apr 2019 04:58:34 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554141515;
-        bh=Bi3Uu6Engo1xj316PMzRJX05F5/cCTIiYIkumGZnFDQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=C45IB+WpvYkbVqioqk4NtJ5sQ+tXrqpFH8vLriA4WHYULb18prFfqMRfyj4T8Ik02
-         kSsVXmcoq2QB3IRhguIVkpX5yMDK8TPOkEqRVuMblE9HbyH6do1VaLMt45DSq2Y/jO
-         VktPxnBUqD+Agbpbpm5erRO9sd+wIBVml+KkGDLBWyj7RaMEjHJq+yWWfqVgiIdEMg
-         eKj5pPVf5AyZJyIpf6PjfHzIkCjs2CMLI4r741Sm5GSlpRjh6fUpj/tUVnAGuCvKmk
-         jgLCxwp/WDvHciiE9GcJ+e9XLktSghPg0J4db8QIgWGx1/LX4Ok1EhbwN8yyPFZX3z
-         5SsDdU+IRbyNg==
-Date:   Tue, 2 Apr 2019 04:58:28 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: linux-next: Fixes tags need some work in the spi-fixes tree
-Message-ID: <20190402045828.699f5700@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 08128206C0;
+        Mon,  1 Apr 2019 17:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554139092;
+        bh=s3hwrAzw7WMzoDjmW8/pkI0eDLgAFpi9Fg0m5etaV/Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NcPPWWf2M/ceWbC+2LkkSFx7PHV+CfsrXfAnZlUk/zRfU7JGW7CLaTPgB5ukfYlqM
+         BeIxNbRM+dqxE61ACwbGPK2f/JTEmj6rg+CmRNLvzdwO17MozviwsDkP3dLz6Vuj2C
+         n9Z/xDGEW60+X/0HwRg/O+jvNgGJkPWQ37AhSTuY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Hussam Al-Tayeb <ht990332@gmx.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 074/134] scsi: sd: Quiesce warning if device does not report optimal I/O size
+Date:   Mon,  1 Apr 2019 19:01:50 +0200
+Message-Id: <20190401170051.331854265@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
+References: <20190401170044.243719205@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/YE/xY76rigPlK8m2vOrcty0"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/YE/xY76rigPlK8m2vOrcty0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-Hi Mark,
+------------------
 
-In commit
+From: Martin K. Petersen <martin.petersen@oracle.com>
 
-  019194933339 ("spi: tegra114: reset controller on probe")
+commit 1d5de5bd311be7cd54f02f7cd164f0349a75c876 upstream.
 
-Fixes tag
+Commit a83da8a4509d ("scsi: sd: Optimal I/O size should be a multiple
+of physical block size") split one conditional into several separate
+statements in an effort to provide more accurate warning messages when
+a device reports a nonsensical value. However, this reorganization
+accidentally dropped the precondition of the reported value being
+larger than zero. This lead to a warning getting emitted on devices
+that do not report an optimal I/O size at all.
 
-  Fixes: SPI driver can be built as module so perform SPI controller reset
+Remain silent if a device does not report an optimal I/O size.
 
-has these problem(s):
+Fixes: a83da8a4509d ("scsi: sd: Optimal I/O size should be a multiple of physical block size")
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: <stable@vger.kernel.org>
+Reported-by: Hussam Al-Tayeb <ht990332@gmx.com>
+Tested-by: Hussam Al-Tayeb <ht990332@gmx.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  - No SHA1 recognised
+---
+ drivers/scsi/sd.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-In commit
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3073,6 +3073,9 @@ static bool sd_validate_opt_xfer_size(st
+ 	unsigned int opt_xfer_bytes =
+ 		logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
+ 
++	if (sdkp->opt_xfer_blocks == 0)
++		return false;
++
+ 	if (sdkp->opt_xfer_blocks > dev_max) {
+ 		sd_first_printk(KERN_WARNING, sdkp,
+ 				"Optimal transfer size %u logical blocks " \
 
-  f4ce428c41fb ("spi: tegra114: configure dma burst size to fifo trig level=
-")
 
-Fixes tag
-
-  Fixes: Configure DMA burst size to be same as SPI TX/RX trigger levels
-
-has these problem(s):
-
-  - No SHA1 recognised
-
-In commit
-
-  c4fc9e5b28ff ("spi: tegra114: flush fifos")
-
-Fixes tag
-
-  Fixes: Flush TX and RX FIFOs before start of new transfer and on FIFO
-
-has these problem(s):
-
-  - No SHA1 recognised
-
-In commit
-
-  32bd1a9551ca ("spi: tegra114: terminate dma and reset on transfer timeout=
-")
-
-Fixes tag
-
-  Fixes: terminate DMA and perform controller reset on transfer timeout
-
-has these problem(s):
-
-  - No SHA1 recognised
-
-In commit
-
-  1a89ac5b9189 ("spi: tegra114: fix for unpacked mode transfers")
-
-Fixes tag
-
-  Fixes: computation of actual bytes to fill/receive in/from FIFO in unpack=
-ed
-
-has these problem(s):
-
-  - No SHA1 recognised
-
-In commit
-
-  7b3d10cdf54b ("spi: tegra114: clear packed bit for unpacked mode")
-
-Fixes tag
-
-  Fixes: Clear packed bit when not using packed mode.
-
-has these problem(s):
-
-  - No SHA1 recognised
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/YE/xY76rigPlK8m2vOrcty0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyiUUQACgkQAVBC80lX
-0Gwa0gf/Rmt3xgQGd6sDTjIszOYyPmFEMxd6BrbE/1XaCvnMytytW2G+0Sbk1RW2
-e+xhO2D6N8hQck1EsWEZ9d5VZdHONXMqqjiuwlkyK6KORREoX8ORmHm4HNOwdfK4
-KQZ+rskrfpylpj1JR1zE74F2XteAM9t+4XJj6wI26wwfkinTR7CISIr+FHt04XJe
-90h7MJtwBxVaBv0j4BhdyyCP4FBT5v9c6cSSa6JmctuoO1smkjD3dNeym068UJFP
-MFyOYVnjuqQS85I2lAIFtzeTtoIBqe6Zs8ul2Z497aM1h5oOl/mbTO173C4VATYI
-qss4uEx9aN8RXDiPTZAp7eyV3npcZw==
-=87um
------END PGP SIGNATURE-----
-
---Sig_/YE/xY76rigPlK8m2vOrcty0--
