@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE637C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CC3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F05420857
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D6020830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140372;
-	bh=+1oksBOizrkmnGsProq/jM/xtKtaaX4m95XH5K2xL8w=;
+	s=default; t=1554140373;
+	bh=QlinmCr1rDs33ojeH/oVCrGs4lWcvwW4ykcVfd/ILDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NKm0YciDVNDO2GDSTVZZoYEJf2awwXorRfbyKYTFj28acpTDeu2BVKDm1q1TEGqAo
-	 KE2ZGZUsLp+C+T2CCLKPtGuqRC0/Oi6PtykI1+VnQi+GKz2HQqJ1FnUVfFRLdKbrHd
-	 6qoMkY80U29H5eapF5gCFLTMY4C6IIg30yUzspuc=
+	b=cpYfHdhoiT1nawr1OkQT5UoHVmjvjQIcO69lit5vvsZQG9LvoOlZ5ldMJ/qQDYbbl
+	 drayux4c08aGqcN+WQJe2ggy/10ENkWcmMKl/uGJEQNGOjPYaZwz6gKH3EcejsMBA6
+	 iJ4CbLO5GXlbWs8f+lPr/cW+rdiZbEsrXXyYhKIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388461AbfDARjb (ORCPT
+        id S2388470AbfDARjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:39:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53170 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:39:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388448AbfDARjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:39:25 -0400
+        id S2388089AbfDARja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:39:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7B69205C9;
-        Mon,  1 Apr 2019 17:39:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B14EF20857;
+        Mon,  1 Apr 2019 17:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140365;
-        bh=+1oksBOizrkmnGsProq/jM/xtKtaaX4m95XH5K2xL8w=;
+        s=default; t=1554140369;
+        bh=QlinmCr1rDs33ojeH/oVCrGs4lWcvwW4ykcVfd/ILDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UsXmrcOpmfuzFrv4C2jVhCciZ9pEZxLzUrjNLVqPfFVNTdOGd28vHhvluy/FWeXeY
-         LR6rIFfubHqE5klfloLZxjos0tu+ddKPuZDg965jDC8DbzHNUJ49H2YlxFlmXcHU0K
-         936A2fTnDlShNxf0aPLF+U4ggGQbNe01eFaTQeOQ=
+        b=okDFAmihEJ//IYprAIOYeOgDXS3D0yP8TfeA5Gcr8GTVUrEii5CJXS3udXMHMUQ4n
+         bJLPpawqSBVzF/jrjVG2VhwJQ7DlMnvCk57QIWr2unWT0RSHUHLFokEmaD5EyJh1bC
+         n+Zgw0Wfs20hcvElk4m3pE2/LxW8Jhdg3khBamjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org,
+        Android Kernel Team <kernel-team@android.com>,
+        Matt Wagantall <mattw@codeaurora.org>,
+        Syed Rameez Mustafa <rameezmustafa@codeaurora.org>,
+        Osvaldo Banuelos <osvaldob@codeaurora.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        Laura Abbott <lauraa@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 14/50] asm-generic: Fix local variable shadow in __set_fixmap_offset
-Date:   Mon,  1 Apr 2019 19:02:57 +0200
-Message-Id: <20190401170042.765941449@linuxfoundation.org>
+Subject: [PATCH 3.18 15/50] staging: ashmem: Avoid deadlock with mmap/shrink
+Date:   Mon,  1 Apr 2019 19:02:58 +0200
+Message-Id: <20190401170042.880174233@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -67,52 +72,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 3694bd76781b76c4f8d2ecd85018feeb1609f0e5 ]
+[ Upstream commit 18e77054de741ef3ed2a2489bc9bf82a318b2d5e ]
 
-Currently __set_fixmap_offset is a macro function which has a local
-variable called 'addr'. If a caller passes a 'phys' parameter which is
-derived from a variable also called 'addr', the local variable will
-shadow this, and the compiler will complain about the use of an
-uninitialized variable. To avoid the issue with namespace clashes,
-'addr' is prefixed with a liberal sprinkling of underscores.
+Both ashmem_mmap and ashmem_shrink take the ashmem_lock. It may
+be possible for ashmem_mmap to invoke ashmem_shrink:
 
-Turning __set_fixmap_offset into a static inline breaks the build for
-several architectures. Fixing this properly requires updates to a number
-of architectures to make them agree on the prototype of __set_fixmap (it
-could be done as a subsequent patch series).
+-000|mutex_lock(lock = 0x0)
+-001|ashmem_shrink(?, sc = 0x0) <--- try to take ashmem_mutex again
+-002|shrink_slab(shrink = 0xDA5F1CC0, nr_pages_scanned = 0, lru_pages
+-002|=
+-002|124)
+-003|try_to_free_pages(zonelist = 0x0, ?, ?, ?)
+-004|__alloc_pages_nodemask(gfp_mask = 21200, order = 1, zonelist =
+-004|0xC11D0940,
+-005|new_slab(s = 0xE4841E80, ?, node = -1)
+-006|__slab_alloc.isra.43.constprop.50(s = 0xE4841E80, gfpflags =
+-006|2148925462, ad
+-007|kmem_cache_alloc(s = 0xE4841E80, gfpflags = 208)
+-008|shmem_alloc_inode(?)
+-009|alloc_inode(sb = 0xE480E800)
+-010|new_inode_pseudo(?)
+-011|new_inode(?)
+-012|shmem_get_inode(sb = 0xE480E800, dir = 0x0, ?, dev = 0, flags =
+-012|187)
+-013|shmem_file_setup(?, ?, flags = 187)
+-014|ashmem_mmap(?, vma = 0xC5D64210) <---- Acquire ashmem_mutex
+-015|mmap_region(file = 0xDF8E2C00, addr = 1772974080, len = 233472,
+-015|flags = 57,
+-016|sys_mmap_pgoff(addr = 0, len = 230400, prot = 3, flags = 1, fd =
+-016|157, pgoff
+-017|ret_fast_syscall(asm)
+-->|exception
+-018|NUR:0x40097508(asm)
+---|end of frame
 
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-[catalin.marinas@arm.com: squashed the original function patch and macro fixup]
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Avoid this deadlock by using mutex_trylock in ashmem_shrink; if the mutex
+is already held, do not attempt to shrink.
+
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Android Kernel Team <kernel-team@android.com>
+Reported-by: Matt Wagantall <mattw@codeaurora.org>
+Reported-by: Syed Rameez Mustafa <rameezmustafa@codeaurora.org>
+Reported-by: Osvaldo Banuelos <osvaldob@codeaurora.org>
+Reported-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
+[jstultz: Minor commit message tweaks]
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/asm-generic/fixmap.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/staging/android/ashmem.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/asm-generic/fixmap.h b/include/asm-generic/fixmap.h
-index f23174fb9ec4..10889b63af8f 100644
---- a/include/asm-generic/fixmap.h
-+++ b/include/asm-generic/fixmap.h
-@@ -67,12 +67,12 @@ static inline unsigned long virt_to_fix(const unsigned long vaddr)
- #endif
+diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
+index 22ddd4ce9dd6..5105fe5e6533 100644
+--- a/drivers/staging/android/ashmem.c
++++ b/drivers/staging/android/ashmem.c
+@@ -447,7 +447,9 @@ ashmem_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+ 	if (!(sc->gfp_mask & __GFP_FS))
+ 		return SHRINK_STOP;
  
- /* Return a pointer with offset calculated */
--#define __set_fixmap_offset(idx, phys, flags)		      \
--({							      \
--	unsigned long addr;				      \
--	__set_fixmap(idx, phys, flags);			      \
--	addr = fix_to_virt(idx) + ((phys) & (PAGE_SIZE - 1)); \
--	addr;						      \
-+#define __set_fixmap_offset(idx, phys, flags)				\
-+({									\
-+	unsigned long ________addr;					\
-+	__set_fixmap(idx, phys, flags);					\
-+	________addr = fix_to_virt(idx) + ((phys) & (PAGE_SIZE - 1));	\
-+	________addr;							\
- })
- 
- #define set_fixmap_offset(idx, phys) \
+-	mutex_lock(&ashmem_mutex);
++	if (!mutex_trylock(&ashmem_mutex))
++		return -1;
++
+ 	list_for_each_entry_safe(range, next, &ashmem_lru_list, lru) {
+ 		loff_t start = range->pgstart * PAGE_SIZE;
+ 		loff_t end = (range->pgend + 1) * PAGE_SIZE;
 -- 
 2.19.1
 
