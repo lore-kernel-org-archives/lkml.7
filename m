@@ -2,137 +2,138 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043CBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A20C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C87FC20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:50:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h1r2fqNF"
+	by mail.kernel.org (Postfix) with ESMTP id 2DE3520830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732671AbfDARuZ (ORCPT
+        id S1733025AbfDARub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:50:25 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:51986 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732839AbfDAR2r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:28:47 -0400
-Received: by mail-it1-f195.google.com with SMTP id s3so398434itk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 10:28:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oHdWIku2tclNcnAhH24FunEqUZ0tJdj8ojutztjoVos=;
-        b=h1r2fqNFjtQTUv3BLeWZy6f/x4WLCFv6JRUhw7kcovAVfAwisYIrDa2bt7p6HN4P50
-         AsbJlEqfpKWt1Dgmv7L222M7WmyNRR7oT6Fd/QOOPuAI/V/F/wrheO0GbAXYENGdo44O
-         4dsh8dkNBr2CSqff7p8TCNLjmEX69XZjuh0kkTiZpZ3vaHh25VoSJO2M+ZCI9nlMRAwe
-         qimKFHoD2f33783IWmMhuoDzx3A+syCwABbKZW8WZ6E34Z1KDd5zudqsZ6/16JgMbjcc
-         4ZZ72UzldRlks+WFLKmpvagTIj+iAlmxa3z38EW9VqdiqyelYH2rasZ5a8/UqcVNxNdZ
-         54UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oHdWIku2tclNcnAhH24FunEqUZ0tJdj8ojutztjoVos=;
-        b=jGujlo/BgN1M3DVh2pu2iQR4vQSeUg3FfMjUpmDxWnZCTD3XrKQwo5PRwWryoqLkny
-         cTRowm70Bys1V31EsavbBi6Daziy7a5W99Y4z08zACthBHjkSJwf2tPW9V1IxFfts/Rh
-         293KU+VPFRVpAgYAzXJmX3cTpPj7MtD+Zc10PRBxZhA/Rq5lIjL62+dtHig+VKByCiWb
-         V5rbdPK10veCvMINCo2A5FI4LkZ8sxxcsxDw/UwzgLguyx4pncQMY5JBhmiNZ7cJk3Sq
-         91jXPAVXc09Bzv21joDPMNvliMOASOFKm8SCMeFu7s25QUJLdoD7287ASycHH0nnxTLt
-         lCBw==
-X-Gm-Message-State: APjAAAWDTpEkih0sIOBgAn9OOPbjMxZ3zChMo/OZMMyyy7TqL3Q1kGSu
-        /ystXFtvikGjxBtPqU4uUDnZS6nfcFTXkhdmkR0Ajg==
-X-Google-Smtp-Source: APXvYqxq/7KCmG9iyhLJt6BWeJhzEXuLB3S0qV19XPm/NgXhH8pCZu/VETEEf4+QzVrIBneE6x/wxLg0A2NTw1aAlZA=
-X-Received: by 2002:a24:2f49:: with SMTP id j70mr506040itj.122.1554139725726;
- Mon, 01 Apr 2019 10:28:45 -0700 (PDT)
+        Mon, 1 Apr 2019 13:50:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42988 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732698AbfDARu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:50:27 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 04D613087931;
+        Mon,  1 Apr 2019 17:50:27 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 71C2E5C206;
+        Mon,  1 Apr 2019 17:50:16 +0000 (UTC)
+Date:   Mon, 1 Apr 2019 13:50:13 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com
+Subject: Re: [PATCH ghak90 V5 10/10] audit: NETFILTER_PKT: record each
+ container ID associated with a netNS
+Message-ID: <20190401175013.it2xwndd62svycwl@madcap2.tricolour.ca>
+References: <cover.1552665316.git.rgb@redhat.com>
+ <56127b2a5b82f15cb0d0f040502c2e3bb6945f30.1552665316.git.rgb@redhat.com>
+ <CAHC9VhQpNGaWeb7dY4ooPKXRoGBd9Ri_Z_ZPpoKun4gUhXDOGA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190401090113.22946-1-jthumshirn@suse.de> <d117fb1a-45e4-a553-082e-36112dfbbf8a@suse.com>
-In-Reply-To: <d117fb1a-45e4-a553-082e-36112dfbbf8a@suse.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 1 Apr 2019 19:28:33 +0200
-Message-ID: <CACT4Y+Yh-bbrn1x139gxo8B0MqR9NbMoZJeN6iJMTgAnDKp9EA@mail.gmail.com>
-Subject: Re: [PATCH] fs/open: Fix most outstanding security bugs
-To:     Nikolay Borisov <nborisov@suse.com>
-Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
-        Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
-        Linux FSDEVEL Mailinglist <linux-fsdevel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhQpNGaWeb7dY4ooPKXRoGBd9Ri_Z_ZPpoKun4gUhXDOGA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 01 Apr 2019 17:50:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 4:14 PM Nikolay Borisov <nborisov@suse.com> wrote:
-> On 1.04.19 =D0=B3. 12:01 =D1=87., Johannes Thumshirn wrote:
-> > Over the last 20 years, the Linux kernel has accumulated hundreds if no=
-t
-> > thousands of security vulnerabilities.
+On 2019-04-01 10:50, Paul Moore wrote:
+> On Fri, Mar 15, 2019 at 2:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > Add audit container identifier auxiliary record(s) to NETFILTER_PKT
+> > event standalone records.  Iterate through all potential audit container
+> > identifiers associated with a network namespace.
 > >
-> > One common pattern in most of these security related reports is process=
-es
-> > called "syzkaller", "trinity" or "syz-executor" opening files and then
-> > abuse kernel interfaces causing kernel crashes or even worse threats us=
-ing
-> > memory overwrites or by exploiting race conditions.
-> >
-> > Hunting down these bugs has become time consuming and very expensive, s=
-o
-> > I've decided to put an end to it.
-> >
-> > If one of the above mentioned processes tries opening a file, return -E=
-PERM
-> > indicating this process does not have the permission to open files on L=
-inux
-> > anymore.
-> >
-> > Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
->
-> Ack-by: Nikolay Borisov <nborisov@suse.com>
-
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: stable@vger.kernel.org # v1.0+
-
-Do we want to extend this to other subsystems?
-Should it be a default secomp filter?
-
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
 > > ---
-> >  fs/open.c | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
+> >  include/linux/audit.h    |  5 +++++
+> >  kernel/audit.c           | 41 +++++++++++++++++++++++++++++++++++++++++
+> >  net/netfilter/nft_log.c  | 11 +++++++++--
+> >  net/netfilter/xt_AUDIT.c | 11 +++++++++--
+> >  4 files changed, 64 insertions(+), 4 deletions(-)
+> 
+> ...
+> 
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index 7fa3194f5342..80ed323feeb5 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -451,6 +451,47 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
+> >                 audit_netns_contid_add(new->net_ns, contid);
+> >  }
 > >
-> > diff --git a/fs/open.c b/fs/open.c
-> > index f1c2f855fd43..3a3b460beccd 100644
-> > --- a/fs/open.c
-> > +++ b/fs/open.c
-> > @@ -1056,6 +1056,20 @@ long do_sys_open(int dfd, const char __user *fil=
-ename, int flags, umode_t mode)
-> >       struct open_flags op;
-> >       int fd =3D build_open_flags(flags, mode, &op);
-> >       struct filename *tmp;
-> > +     char comm[TASK_COMM_LEN];
-> > +     int i;
-> > +     static const char * const list[] =3D {
-> > +             "syzkaller",
-> > +             "syz-executor,"
-> > +             "trinity",
-> > +             NULL
-> > +     };
+> > +/**
+> > + * audit_log_netns_contid_list - List contids for the given network namespace
+> > + * @net: the network namespace of interest
+> > + * @context: the audit context to use
+> > + *
+> > + * Description:
+> > + * Issues a CONTAINER_ID record with a CSV list of contids associated
+> > + * with a network namespace to accompany a NETFILTER_PKT record.
+> > + */
+> > +void audit_log_netns_contid_list(struct net *net, struct audit_context *context)
+> > +{
+> > +       struct audit_buffer *ab = NULL;
+> > +       struct audit_contid *cont;
+> > +       bool first = true;
+> > +       struct audit_net *aunet;
 > > +
-> > +     get_task_comm(comm, current);
-> > +
-> > +     for (i =3D 0; i < ARRAY_SIZE(list); i++)
-> > +             if (!strncmp(comm, list[i], strlen(list[i])))
-> > +                     return -EPERM;
-> >
-> >       if (fd)
-> >               return fd;
-> >
+> > +       /* Generate AUDIT_CONTAINER_ID record with container ID CSV list */
+> > +       rcu_read_lock();
+> > +       aunet = net_generic(net, audit_net_id);
+> > +       if (!aunet)
+> > +               goto out;
+> > +       list_for_each_entry_rcu(cont, &aunet->contid_list, list) {
+> > +               if (first) {
+> 
+> This is borderline nit-picky, but it seems like we could get rid of
+> "first" and just check to see if "ab" is still NULL.
+
+Yes, this is a better way, thank you.
+
+> > +                       ab = audit_log_start(context, GFP_ATOMIC,
+> > +                                            AUDIT_CONTAINER_ID);
+> > +                       if (!ab) {
+> > +                               audit_log_lost("out of memory in audit_log_netns_contid_list");
+> > +                               goto out;
+> > +                       }
+> > +                       audit_log_format(ab, "contid=");
+> > +               } else
+> > +                       audit_log_format(ab, ",");
+> > +               audit_log_format(ab, "%llu", cont->id);
+> > +               first = false;
+> > +       }
+> > +       audit_log_end(ab);
+> > +out:
+> > +       rcu_read_unlock();
+> > +}
+> > +EXPORT_SYMBOL(audit_log_netns_contid_list);
+> 
+> paul moore
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
