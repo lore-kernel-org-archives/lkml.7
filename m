@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE814C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047E2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B035B2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89E820896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140235;
-	bh=EM4CYQH3GNGPr2/H0kdx/ZIwaeqcky9fbhvUMIFy9WQ=;
+	s=default; t=1554140239;
+	bh=6/mc2BIe2Q5/PJ8ncuqevamgTJpAqc2qX+N5lKQGt2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fo82aF3ODPfYkOHANTlzPHxj97BlzftUifuPWflhFxeOJux3Teje9Jwjcjee2wcsd
-	 qGHaa6Ve79AW4HL5qLI82eMcRWqVhOSEV4RCqJSem0AiqWD7IqRQz1gkqJtq4/eS5m
-	 p4fxHnrERqjLzQ6Vy3ETzK+sIt7BkN8HfjomByYE=
+	b=EpEnXyYymGotZNTaQCp28oixmEMgx2E8xQ98PjvzgjU5FP3TGZg0+RWmlqcTW3VB6
+	 DUpmETANi27Nw4puD/IxZxlyt99MzyBlJgoyTtXnsVU9PTlif6w4yOB2z8sZRPpDKg
+	 RmxsNr8gHbcy4IHNptQZJ1CxYrtGnTNGAim/PXQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388149AbfDARhO (ORCPT
+        id S2388158AbfDARhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:37:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49540 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:37:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387448AbfDARhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:37:13 -0400
+        id S2387448AbfDARhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:37:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 874B22070B;
-        Mon,  1 Apr 2019 17:37:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C5D920830;
+        Mon,  1 Apr 2019 17:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140232;
-        bh=EM4CYQH3GNGPr2/H0kdx/ZIwaeqcky9fbhvUMIFy9WQ=;
+        s=default; t=1554140234;
+        bh=6/mc2BIe2Q5/PJ8ncuqevamgTJpAqc2qX+N5lKQGt2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iAMcAI8uvkwFtxXcjTs3F4ZGXT1366ETX55CSp8r+GzMy2oWU43hwsW7vZIMcGJ34
-         sdjUHZz8+2OdS+3Nz/UvcPwAxZqC7HSixAxcy360EIECilPcWjOzJ4L0h3+p3KbiwJ
-         USmtzJvYhWFbvSJoAkQ9oUoc0ibmL02cPHdGz+uE=
+        b=sZChewAxaLp6nJDWOZ3Rk1LkqfIw8yIuwJCzYJlHB28PiY/qxM7gZnwd9DOPTYWGA
+         z/tjBbFlkLB4ChUIBGhmV+fUI9ICF6B1mvbBWH6rsAypF+pwCFs+9q12uyIc1nIyIB
+         N+0lDueZsg7sOnciFIixIxzbGD2oO6Nhwm0Oqgik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>, stable@kernel.org
-Subject: [PATCH 3.18 05/50] ext4: brelse all indirect buffer in ext4_ind_remove_space()
-Date:   Mon,  1 Apr 2019 19:02:48 +0200
-Message-Id: <20190401170041.715067137@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 3.18 06/50] mmc: tmio_mmc_core: dont claim spurious interrupts
+Date:   Mon,  1 Apr 2019 19:02:49 +0200
+Message-Id: <20190401170041.809745055@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -66,70 +68,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217 upstream.
+commit 5c27ff5db1491a947264d6d4e4cbe43ae6535bae upstream.
 
-All indirect buffers get by ext4_find_shared() should be released no
-mater the branch should be freed or not. But now, we forget to release
-the lower depth indirect buffers when removing space from the same
-higher depth indirect block. It will lead to buffer leak and futher
-more, it may lead to quota information corruption when using old quota,
-consider the following case.
+I have encountered an interrupt storm during the eMMC chip probing (and
+the chip finally didn't get detected).  It turned out that U-Boot left
+the DMAC interrupts enabled while the Linux driver  didn't use those.
+The SDHI driver's interrupt handler somehow assumes that, even if an
+SDIO interrupt didn't happen, it should return IRQ_HANDLED.  I think
+that if none of the enabled interrupts happened and got handled, we
+should return IRQ_NONE -- that way the kernel IRQ code recoginizes
+a spurious interrupt and masks it off pretty quickly...
 
- - Create and mount an empty ext4 filesystem without extent and quota
-   features,
- - quotacheck and enable the user & group quota,
- - Create some files and write some data to them, and then punch hole
-   to some files of them, it may trigger the buffer leak problem
-   mentioned above.
- - Disable quota and run quotacheck again, it will create two new
-   aquota files and write the checked quota information to them, which
-   probably may reuse the freed indirect block(the buffer and page
-   cache was not freed) as data block.
- - Enable quota again, it will invoke
-   vfs_load_quota_inode()->invalidate_bdev() to try to clean unused
-   buffers and pagecache. Unfortunately, because of the buffer of quota
-   data block is still referenced, quota code cannot read the up to date
-   quota info from the device and lead to quota information corruption.
-
-This problem can be reproduced by xfstests generic/231 on ext3 file
-system or ext4 file system without extent and quota features.
-
-This patch fix this problem by releasing the missing indirect buffers,
-in ext4_ind_remove_space().
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@kernel.org
+Fixes: 7729c7a232a9 ("mmc: tmio: Provide separate interrupt handlers")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/indirect.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/mmc/host/tmio_mmc_pio.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/fs/ext4/indirect.c
-+++ b/fs/ext4/indirect.c
-@@ -1480,10 +1480,14 @@ end_range:
- 					   partial->p + 1,
- 					   partial2->p,
- 					   (chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
-+			while (partial > chain) {
-+				BUFFER_TRACE(partial->bh, "call brelse");
-+				brelse(partial->bh);
-+			}
-+			while (partial2 > chain2) {
-+				BUFFER_TRACE(partial2->bh, "call brelse");
-+				brelse(partial2->bh);
-+			}
- 			return 0;
- 		}
+--- a/drivers/mmc/host/tmio_mmc_pio.c
++++ b/drivers/mmc/host/tmio_mmc_pio.c
+@@ -714,7 +714,7 @@ irqreturn_t tmio_mmc_sdio_irq(int irq, v
+ 	unsigned int sdio_status;
+ 
+ 	if (!(pdata->flags & TMIO_MMC_SDIO_IRQ))
+-		return IRQ_HANDLED;
++		return IRQ_NONE;
+ 
+ 	status = sd_ctrl_read16(host, CTL_SDIO_STATUS);
+ 	ireg = status & TMIO_SDIO_MASK_ALL & ~host->sdcard_irq_mask;
+@@ -728,7 +728,7 @@ irqreturn_t tmio_mmc_sdio_irq(int irq, v
+ 	if (mmc->caps & MMC_CAP_SDIO_IRQ && ireg & TMIO_SDIO_STAT_IOIRQ)
+ 		mmc_signal_sdio_irq(mmc);
+ 
+-	return IRQ_HANDLED;
++	return IRQ_RETVAL(ireg);
+ }
+ EXPORT_SYMBOL(tmio_mmc_sdio_irq);
+ 
+@@ -745,9 +745,7 @@ irqreturn_t tmio_mmc_irq(int irq, void *
+ 	if (__tmio_mmc_sdcard_irq(host, ireg, status))
+ 		return IRQ_HANDLED;
+ 
+-	tmio_mmc_sdio_irq(irq, devid);
+-
+-	return IRQ_HANDLED;
++	return tmio_mmc_sdio_irq(irq, devid);
+ }
+ EXPORT_SYMBOL(tmio_mmc_irq);
  
 
 
