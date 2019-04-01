@@ -2,97 +2,121 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9B6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77332C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7976220830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="C77j+YjI"
+	by mail.kernel.org (Postfix) with ESMTP id 48E2720830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554141141;
+	bh=4PZrWirNAMBsE96chJdqVISjpI4SqRDJaPIRbfwIib8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jLcJEoVVGK5cLRFqslKEELzE8N6/5LHoBYZGe29VV0NTibSNFveBlrMkZfCcyUvBc
+	 n7qyzINVQZjDugbYSJ08L42C7C7ZirBROMEesqdQCyzZvHR2qs00wbzPaSgLJLbBJ3
+	 wSBVdRlSmdPXiLUV4IwvzDmtfakKKRfEZ6S2s1A0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732812AbfDARwG (ORCPT
+        id S1732763AbfDARwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:52:06 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:41886 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729565AbfDARwF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:52:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1554141123; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9zNcHYMrA9NPNDv164IAAHOmVlnT57ChU1ex6cYItfs=;
-        b=C77j+YjIwrHuDMaL4pOfblUbXMzx9qB6+iV4rznBtPSgXDZNnyabMcjDa7r0scIwpXs+7s
-        b+w5JJCKWchlgnXhmEa+a42xKq8ubM2GwEg08jq4whdcrRbgTFnDyve7+UNGsbrMvIgaF6
-        ms5N2dv25zd5BGzudLmMAraGJ5Pw2ZA=
-Date:   Mon, 01 Apr 2019 19:51:59 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] usb: musb: Silence error about blacklisting hubs if
- !CONFIG_USB
-To:     Bin Liu <b-liu@ti.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <1554141119.10471.1@crapouillou.net>
-In-Reply-To: <20190401154333.GJ25852@uda0271908>
-References: <20190319135146.25995-1-paul@crapouillou.net>
-        <20190401154333.GJ25852@uda0271908>
+        Mon, 1 Apr 2019 13:52:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731559AbfDAR0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:26:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64F7720830;
+        Mon,  1 Apr 2019 17:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554139606;
+        bh=4PZrWirNAMBsE96chJdqVISjpI4SqRDJaPIRbfwIib8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S3U9YYZUR9F/bsyG+DdDqO9OxZ0unE/7D2asPuTQrfH/xN4FL9lEy6kwXvOSbVjow
+         5Yj1dhMZFxDDaeFKIgE8JRM9tB72hZe6fHZLd5pqRHHIq9QPwhaUl1zrQtwKRq0g7V
+         1CtWH69LnlEYD5QTTKcgtLnin1HAQ4YHllLteDio=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Andrea Righi <andrea.righi@canonical.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 18/56] btrfs: raid56: properly unmap parity page in finish_parity_scrub()
+Date:   Mon,  1 Apr 2019 19:02:34 +0200
+Message-Id: <20190401170104.821355837@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
+References: <20190401170103.398401360@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
+------------------
 
-Le lun. 1 avril 2019 =E0 17:43, Bin Liu <b-liu@ti.com> a =E9crit :
-> On Tue, Mar 19, 2019 at 02:51:46PM +0100, Paul Cercueil wrote:
->>  Some drivers, like jz4740-musb, don't depend on CONFIG_USB.
->=20
-> CONFIG_USB_OTG_BLACKLIST_HUB is about hub, so should it depend on
-> CONFIG_USB instead in drivers/usb/core/Kconfig?
+From: Andrea Righi <andrea.righi@canonical.com>
 
-It's already the case, indirectly - it depends on CONFIG_USB_OTG,
-which only exists if CONFIG_USB is set.
+commit 3897b6f0a859288c22fb793fad11ec2327e60fcd upstream.
 
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>   drivers/usb/musb/musb_core.c | 9 +++++----
->>   1 file changed, 5 insertions(+), 4 deletions(-)
->>=20
->>  diff --git a/drivers/usb/musb/musb_core.c=20
->> b/drivers/usb/musb/musb_core.c
->>  index b7d56272f9d1..9f5a4819a744 100644
->>  --- a/drivers/usb/musb/musb_core.c
->>  +++ b/drivers/usb/musb/musb_core.c
->>  @@ -1497,10 +1497,11 @@ static int musb_core_init(u16 musb_type,=20
->> struct musb *musb)
->>   	} else {
->>   		musb->is_multipoint =3D 0;
->>   		type =3D "";
->>  -#ifndef	CONFIG_USB_OTG_BLACKLIST_HUB
->>  -		pr_err("%s: kernel must blacklist external hubs\n",
->>  -		       musb_driver_name);
->>  -#endif
->>  +		if (IS_ENABLED(CONFIG_USB) &&
->>  +		    !IS_ENABLED(CONFIG_USB_OTG_BLACKLIST_HUB)) {
->>  +			pr_err("%s: kernel must blacklist external hubs\n",
->>  +			       musb_driver_name);
->>  +		}
->>   	}
->>=20
->>   	/* log release info */
->=20
-> Regards,
-> -Bin.
+Parity page is incorrectly unmapped in finish_parity_scrub(), triggering
+a reference counter bug on i386, i.e.:
 
-=
+ [ 157.662401] kernel BUG at mm/highmem.c:349!
+ [ 157.666725] invalid opcode: 0000 [#1] SMP PTI
+
+The reason is that kunmap(p_page) was completely left out, so we never
+did an unmap for the p_page and the loop unmapping the rbio page was
+iterating over the wrong number of stripes: unmapping should be done
+with nr_data instead of rbio->real_stripes.
+
+Test case to reproduce the bug:
+
+ - create a raid5 btrfs filesystem:
+   # mkfs.btrfs -m raid5 -d raid5 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+
+ - mount it:
+   # mount /dev/sdb /mnt
+
+ - run btrfs scrub in a loop:
+   # while :; do btrfs scrub start -BR /mnt; done
+
+BugLink: https://bugs.launchpad.net/bugs/1812845
+Fixes: 5a6ac9eacb49 ("Btrfs, raid56: support parity scrub on raid56")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/btrfs/raid56.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/fs/btrfs/raid56.c
++++ b/fs/btrfs/raid56.c
+@@ -2395,8 +2395,9 @@ static noinline void finish_parity_scrub
+ 			bitmap_clear(rbio->dbitmap, pagenr, 1);
+ 		kunmap(p);
+ 
+-		for (stripe = 0; stripe < rbio->real_stripes; stripe++)
++		for (stripe = 0; stripe < nr_data; stripe++)
+ 			kunmap(page_in_rbio(rbio, stripe, pagenr, 0));
++		kunmap(p_page);
+ 	}
+ 
+ 	__free_page(p_page);
+
 
