@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA02CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE1BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9942020830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A8C20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140217;
-	bh=AGfGg42N2mqFfQawR7HGaAim6cSnXooEswTwsv/aAJk=;
+	s=default; t=1554140223;
+	bh=Jx2R8CtTMQ8QtFpruMhzVFakK/a9HUJyQ9ElEgwOy8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fHrRzw4qCwLg6lP96zPnVi/iNu/17uCBogS3GUWTp7dUDvr0ZNbaD6gkRWInfna7w
-	 N94M+H1BNu/hPHa9HiDZ3r8WqtdDKxwubxWZ5j5Kf5WcdPUwwsO9jG7fjn+2tsLG9k
-	 EN1Sd47O7BeBIbqCR7iKjX/ciIWJLhGivusQY5bY=
+	b=HZIGxqcXqZ9p9DCEh7BPW3LI0OALOxxfAhlxHsa0kuBkOFp8r8V94x+L0gZBsQp42
+	 wZNNTDOyPFEDFPfNHPn2HqNeUXXzCqsZhFa1pLE5acOGR/pDmaSl3Bw5u5rLZ3YJly
+	 df7SSx9gIjcAk8q6Qn/pulhJrmnfmuicjksAOHT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388114AbfDARg4 (ORCPT
+        id S2388119AbfDARhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:36:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49016 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387572AbfDARgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:36:55 -0400
+        id S2387572AbfDARg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:36:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A89B20830;
-        Mon,  1 Apr 2019 17:36:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 392E320830;
+        Mon,  1 Apr 2019 17:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140214;
-        bh=AGfGg42N2mqFfQawR7HGaAim6cSnXooEswTwsv/aAJk=;
+        s=default; t=1554140218;
+        bh=Jx2R8CtTMQ8QtFpruMhzVFakK/a9HUJyQ9ElEgwOy8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vAdFx4YesnqZyFX0N4J42vIUx1RyKnW3BoIvvsU3Ykg32vKQYNI1T8AAmlf+9gSXx
-         p79S2mgjNL8lY/YnH/ryrXFPV11BqdXyUtmc6YzI2Ra5xXLZFpN8jWFjf4QPsccijG
-         OsJk+PZS5pWd9S0sBedM51MFseF1ZH8W+tJ2JWkM=
+        b=iXL+HF4s0bR6dmDq26oYmyE/X7I1qK7+PU3ykNlFUMWuD5K7nY85ed6Z2Nzk8PS8l
+         i6PCZYyVB2m7A//amrhLU719bSBtCK0+ZFU3j61inpVubH4gfjm4MSje9Ofj5nZvKp
+         RtUYXY4VVIPMJrbQZLpQZQohOYuqcJ/7HPYJ5/5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wentao Wang <witallwang@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Subject: [PATCH 4.4 121/131] Disable kgdboc failed by echo space to /sys/module/kgdboc/parameters/kgdboc
-Date:   Mon,  1 Apr 2019 19:03:11 +0200
-Message-Id: <20190401170101.655272460@linuxfoundation.org>
+        stable@vger.kernel.org, jean-luc malet <jeanluc.malet@gmail.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 3.18 01/50] udf: Fix crash on IO error during truncate
+Date:   Mon,  1 Apr 2019 19:02:44 +0200
+Message-Id: <20190401170041.400924310@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
-References: <20190401170051.645954551@linuxfoundation.org>
+In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
+References: <20190401170041.257273804@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -60,44 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.4-stable review patch.  If anyone has any objections, please let me know.
+3.18-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Wentao Wang <witallwang@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-commit 3ec8002951ea173e24b466df1ea98c56b7920e63 upstream.
+commit d3ca4651d05c0ff7259d087d8c949bcf3e14fb46 upstream.
 
-Echo "" to /sys/module/kgdboc/parameters/kgdboc will fail with "No such
-device” error.
+When truncate(2) hits IO error when reading indirect extent block the
+code just bugs with:
 
-This is caused by function "configure_kgdboc" who init err to ENODEV
-when the config is empty (legal input) the code go out with ENODEV
-returned.
+kernel BUG at linux-4.15.0/fs/udf/truncate.c:249!
+...
 
-Fixes: 2dd453168643 ("kgdboc: Fix restrict error")
-Signed-off-by: Wentao Wang <witallwang@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+Fix the problem by bailing out cleanly in case of IO error.
+
+CC: stable@vger.kernel.org
+Reported-by: jean-luc malet <jeanluc.malet@gmail.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/kgdboc.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/udf/truncate.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/tty/serial/kgdboc.c
-+++ b/drivers/tty/serial/kgdboc.c
-@@ -148,8 +148,10 @@ static int configure_kgdboc(void)
- 	char *cptr = config;
- 	struct console *cons;
- 
--	if (!strlen(config) || isspace(config[0]))
-+	if (!strlen(config) || isspace(config[0])) {
-+		err = 0;
- 		goto noconfig;
-+	}
- 
- 	kgdboc_io_ops.is_console = 0;
- 	kgdb_tty_driver = NULL;
+--- a/fs/udf/truncate.c
++++ b/fs/udf/truncate.c
+@@ -261,6 +261,9 @@ void udf_truncate_extents(struct inode *
+ 			epos.block = eloc;
+ 			epos.bh = udf_tread(sb,
+ 					udf_get_lb_pblock(sb, &eloc, 0));
++			/* Error reading indirect block? */
++			if (!epos.bh)
++				return;
+ 			if (elen)
+ 				indirect_ext_len =
+ 					(elen + sb->s_blocksize - 1) >>
 
 
