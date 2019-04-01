@@ -2,113 +2,153 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32070C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E67C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01AF320830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141167;
-	bh=SQdnGG2kIIjgpQLcM8gFqaAM4kojXkiOuzzGaJDzmrg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a+RNu7wlY7PL2r75BeVsgEuxsOKpMvhiPjBXqkvhIR4g2iYKkFywhXWbElMOzhGyv
-	 uqLcJQ4ASVtPred1YC0ttTjEK/YVYyNmUk/7Kl06iD02/dggx+qi/2aRxHb7tot+ww
-	 6hNWeRj+yfqc3zKNRvBlRVSFhlq1yv5lMOFzB5VE=
+	by mail.kernel.org (Postfix) with ESMTP id 45F5420883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732846AbfDARwp (ORCPT
+        id S1732860AbfDARwx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:52:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732545AbfDAR01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:26:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10DA821852;
-        Mon,  1 Apr 2019 17:26:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139586;
-        bh=SQdnGG2kIIjgpQLcM8gFqaAM4kojXkiOuzzGaJDzmrg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iVVYP4GtvPNl9meGIWSPKasQzhuv6ViBgam1qe25lmXLb7+I7gFS+OFpCQc9w7Off
-         LP9M223iz4/Gy/a6coXTRnpLcJOxI9jVZFxg1139nkirJwegAMGk0noP2XxwiBeedm
-         YDOsyH0g5tG2TNOhrfyH5CaEcGJCZwNLxsv994es=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Suanming.Mou" <mousuanming@huawei.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 12/56] vxlan: Dont call gro_cells_destroy() before device is unregistered
-Date:   Mon,  1 Apr 2019 19:02:28 +0200
-Message-Id: <20190401170104.595904744@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
-References: <20190401170103.398401360@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Mon, 1 Apr 2019 13:52:53 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:53315 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732545AbfDARww (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:52:52 -0400
+X-Originating-IP: 81.185.163.178
+Received: from xps13 (178.163.185.81.rev.sfr.net [81.185.163.178])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id BECECC000A;
+        Mon,  1 Apr 2019 17:52:40 +0000 (UTC)
+Date:   Mon, 1 Apr 2019 19:52:35 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     broonie@kernel.org, marek.vasut@gmail.com,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        bbrezillon@kernel.org, dwmw2@infradead.org, lee.jones@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        computersforpeace@gmail.com, paul.burton@mips.com, stefan@agner.ch,
+        christophe.kerello@st.com, liang.yang@amlogic.com,
+        geert@linux-m68k.org, devicetree@vger.kernel.org,
+        marcel.ziswiler@toradex.com, linux-mtd@lists.infradead.org,
+        richard@nod.at, juliensu@mxic.com.tw, zhengxunli@mxic.com.tw
+Subject: Re: [PATCH 4/7] dt-bindings: mfd: Document Macronix MX25F0A
+ controller bindings
+Message-ID: <20190401193431.3e8788a0@xps13>
+In-Reply-To: <1553768318-23149-5-git-send-email-masonccyang@mxic.com.tw>
+References: <1553768318-23149-1-git-send-email-masonccyang@mxic.com.tw>
+        <1553768318-23149-5-git-send-email-masonccyang@mxic.com.tw>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+Hi Mason,
 
-------------------
+Mason Yang <masonccyang@mxic.com.tw> wrote on Thu, 28 Mar 2019 18:18:35
++0800:
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+> Document the bindings used by the Macronix MX25F0A MFD controller.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> ---
+>  .../devicetree/bindings/mfd/mxic-mx25f0a.txt       | 66 ++++++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
+> new file mode 100644
+> index 0000000..53b4839
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
+> @@ -0,0 +1,66 @@
+> +Macronix MX25F0A Multi-Function Device Tree Bindings
+> +----------------------------------------------------
+> +
+> +MX25F0A is a MultiFunction Device with SPI and raw NAND, which
+> +supports either spi host controller or raw nand controller.
+> +
+> +Required properties:
+> +- compatible: should be "mxic,mx25f0a-mfd"
 
-[ Upstream commit cc4807bb609230d8959fd732b0bf3bd4c2de8eac ]
+Should probably be "mxic,mx25f0a"
 
-Commit ad6c9986bcb62 ("vxlan: Fix GRO cells race condition between
-receive and link delete") fixed a race condition for the typical case a vxlan
-device is dismantled from the current netns. But if a netns is dismantled,
-vxlan_destroy_tunnels() is called to schedule a unregister_netdevice_queue()
-of all the vxlan tunnels that are related to this netns.
+> +- #address-cells: should be 1
+> +- #size-cells: should be 0
+> +- reg: should contain 2 entries, one for the registers and one for the direct
+> +       mapping area in SPI mode.
+> +- reg-names: should contain "regs" and "dirmap"
+> +- interrupts: interrupt line connected to this MFD controller
+> +
+> +Required nodes:
+> + - spi :
+> +	Node for configuring the SPI controller driver.
+> +	Required properties:
+> +		- compatible = "mxicy,mx25f0a-spi";
+> +		- clock-names: should contain "ps_clk", "send_clk" and
+> +			       "send_dly_clk"
+> +		- clocks: should contain 3 entries for the "ps_clk", "send_clk"
+> +			  and "send_dly_clk" clocks
+> +
+> +- nand :
+> +	Node for configuring the raw nand controller driver.
+> +	Required properties:
+> +		- compatible = "mxicy,mx25f0a-nand-ctlr";
+> +		- nand-ecc-mode = "soft";
+> +		- nand-ecc-algo = "bch";
 
-In vxlan_destroy_tunnels(), gro_cells_destroy() is called and finished before
-unregister_netdevice_queue(). This means that the gro_cells_destroy() call is
-done too soon, for the same reasons explained in above commit.
+You can have only one node at a time. You can add a mxic,mode property
+being either "spi-controller" or "nand-controller".
 
-So we need to fully respect the RCU rules, and thus must remove the
-gro_cells_destroy() call or risk use after-free.
+> +
+> +Example:
+> +
+> +	mxic: mx25f0a-mfd@43c30000 {
+> +		compatible = "mxic,mx25f0a-mfd";
+> +		reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
+> +		reg-names = "regs", "dirmap";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		/* either spi or nand */
+> +		spi {
+> +			compatible = "mxicy,mx25f0a-spi";
+> +			clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
+> +			clock-names = "send_clk", "send_dly_clk", "ps_clk";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			flash@0 {
+> +				compatible = "jedec,spi-nor";
+> +				reg = <0>;
+> +				spi-max-frequency = <25000000>;
+> +				spi-tx-bus-width = <4>;
+> +				spi-rx-bus-width = <4>;
+> +			};
+> +		};
+> +
+> +		nand {
+> +			compatible = "mxicy,mx25f0a-nand-ctlr";
+> +			nand-ecc-mode = "soft";
+> +			nand-ecc-algo = "bch";
+> +			nand-ecc-step-size = <512>;
+> +			nand-ecc-strength = <8>;
 
-Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")
-Signed-off-by: Suanming.Mou <mousuanming@huawei.com>
-Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
-Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/vxlan.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -3375,10 +3375,8 @@ static void __net_exit vxlan_exit_net(st
- 		/* If vxlan->dev is in the same netns, it has already been added
- 		 * to the list by the previous loop.
- 		 */
--		if (!net_eq(dev_net(vxlan->dev), net)) {
--			gro_cells_destroy(&vxlan->gro_cells);
-+		if (!net_eq(dev_net(vxlan->dev), net))
- 			unregister_netdevice_queue(vxlan->dev, &list);
--		}
- 	}
- 
- 	unregister_netdevice_many(&list);
+Are you sure you want soft correction? (I have not checked the driver
+yet). For hw correction, I prefer to drop the two step-size/strength
+properties. These values will be derived depending on the chip's
+requirements.
 
 
+Thanks,
+Miquèl
