@@ -3,79 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E50AC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C97CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2622084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 603BE20857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:24:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfDATW6 (ORCPT
+        id S1726463AbfDATYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 15:22:58 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:45288 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbfDATW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 15:22:57 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hB2WE-0008JM-Qx; Mon, 01 Apr 2019 13:22:56 -0600
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>
-References: <20190214170028.27862-1-logang@deltatee.com>
- <20190304002351.GA26569@google.com>
- <3e45b4ab-e848-cf3b-624f-121ad58b0250@deltatee.com>
- <CAErSpo4U6Kys5OzPwfyFdbnJWfTZ-y0P830okf11BwfNv9Y82A@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <07af1407-7253-56a1-495e-2ef7c28737af@deltatee.com>
-Date:   Mon, 1 Apr 2019 13:22:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 1 Apr 2019 15:24:02 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41880 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfDATYC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 15:24:02 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id 9F4942822A0
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: How to add Unicode character tables to the kernel?
+In-Reply-To: <CAHk-=wg4OqHpbckCcan73TXkB-rxS1C2M53uLs27Gw2w4PzR5g@mail.gmail.com>
+        (Linus Torvalds's message of "Mon, 1 Apr 2019 10:51:39 -0700")
+Organization: Collabora
+References: <20190331230940.GA30957@mit.edu>
+        <CAHk-=wg4OqHpbckCcan73TXkB-rxS1C2M53uLs27Gw2w4PzR5g@mail.gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+Date:   Mon, 01 Apr 2019 15:23:57 -0400
+Message-ID: <857ecd5y2a.fsf@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <CAErSpo4U6Kys5OzPwfyFdbnJWfTZ-y0P830okf11BwfNv9Y82A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: yinghai@kernel.org, kchow@gigaio.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org, bhelgaas@google.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 1/2] PCI: Prevent 64-bit resources from being counted in
- 32-bit bridge region
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Bjorn,
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-On 2019-03-04 1:11 p.m., Bjorn Helgaas wrote:
-> On Mon, Mar 4, 2019 at 1:21 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->> On 2019-03-03 5:23 p.m., Bjorn Helgaas wrote:
->>> Sorry for the delay.  This code gives a headache.  I still remember
->>> my headache from the last time we touched it.  Help me understand
->>> what's going on here.
+> On Sun, Mar 31, 2019 at 4:09 PM Theodore Ts'o <tytso@mit.edu> wrote:
 >>
->> Yes, this code gave me a headache debugging it too. And it's not the
->> first time I've tried to figure out what's going on with it because it
->> often just prints noisy messages that look like errors. I think I
->> understand it better now but it's something that's a bit fleeting and
->> easy to forget the details of. There may also be other solutions to this
->> problem.
-> 
-> Thanks for the explanation below.  I haven't worked through it yet, but I will.
+>> The question is how to do this, with different tradeoffs.  One is to
+>> simply include a utf8data.h file, which will be 320k.  That might
+>> sound large, but in fs/nls there are 3544k worth of similar files.
+>> Some are relatively small --- only 16k.  But others are quite large
+>> --- 480k to 856k.  The table for Chinese character set is such an
+>> example.  So in comparison, the 320k size of utf8data.h is quite
+>> compact.
+>>
+>> The problem with this solution is that the files in fs/nls, and the
+>> proposed utf8data.h, are generated files.
+>
+> Oh, we definitely don't want to copy the original huge tables, and we
+> don't even *want* people to edit those things in the first place.
+>
+> So generated files are fine. It's not like the source data isn't
+> public, and yes, the commit message should have a pointer to it and
+> how to get the source and the generated files. But no, we shouldn't
+> feel like we should encourage people to be able to generate their own
+> modified unicode tables.
 
-Any chance you've had a chance to go through this issue yet? Is there
-anything I should do with it? Do you want me to try to improve the
-commit messages and resend the patches?
+Thanks!  Ted, as you know, the current patchset depends on the original
+tables, so I will adapt it to only include the generated files and
+submit a new version to the mailing list.
 
-Thanks,
-
-Logan
+-- 
+Gabriel Krisman Bertazi
