@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED69C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8549CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB7D20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54AD121929
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138732;
-	bh=0xeruuBJBUdy3uFD0FBfyGBgD4qwEx+T8UsGvLSsGaw=;
+	s=default; t=1554138735;
+	bh=Dj7nbLfnVf2kgzOfFsbQ1sfR9+9TPzkzWMayEfTtw90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qSH1o9+9aRNrTi0ihXFd8DQdU9/mGQVSXre8xQPVauTTtBsvKNGnyuHeH9gO3voR9
-	 OIGYjKGZK21+LF5ZsXgHq5HARQ7r8Vx69ftN8qxbT3W1zVh+alAPEMg6V3s7PYYblz
-	 b6UQ7shM3Y7TJXwoi+Z9enah/ZK/uNSNPy2GDEbI=
+	b=CgWx8oHEQK7o4MuoRCnsj2AV2nr321q2GN4U4W27922n95VJ0yUGhi2VcJTtYYpdu
+	 wHkuzKNUJSTdO7OOPH8Vk54viwxVv8lEEk3j0u3ZBW9KxAw8Q7nM4NQWMk75Gj+Apf
+	 IhgeThPztepXq21didxeUJ8c3hs/TlUa8FI32a8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbfDARMK (ORCPT
+        id S1730344AbfDARMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:12:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33214 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729110AbfDARME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:12:04 -0400
+        id S1729110AbfDARML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:12:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 601BE21925;
-        Mon,  1 Apr 2019 17:12:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BE5A21924;
+        Mon,  1 Apr 2019 17:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138723;
-        bh=0xeruuBJBUdy3uFD0FBfyGBgD4qwEx+T8UsGvLSsGaw=;
+        s=default; t=1554138730;
+        bh=Dj7nbLfnVf2kgzOfFsbQ1sfR9+9TPzkzWMayEfTtw90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tW7ySA+Im+fkWj6CpaX3zuSOybPaPtMLWTuvCQAhT1uV9t1PSZhd10lD/bby67mN4
-         S/cz48XBOJyJiy0OWdqbEd1gTBLiYWbrKVFCli0oVBxnJBVRqSOmz24w5bCMnxuJA2
-         Pn66T74FXCk2iRr7tGZhP45sVSIDgQ6mx+o09+3A=
+        b=QJYC3dl/X1OSM63tFkkKyjpuoybYhfg/50qvbwRjf45X66B7QKu5DVww4L00Zo5Km
+         T9ydNhIVGpkuz6Q6Dc5kXbVLEBI6x/iQmb6sHYwCe53VdOk1fpQU1+imwnq2TwJ8Mj
+         uHvy8XrXC4edS/Cj29MIf7UYTFqGbiZPGwj/RAoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
+        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>, Qian Cai <cai@lca.pw>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 129/146] mm/debug.c: fix __dump_page when mapping->host is not set
-Date:   Mon,  1 Apr 2019 19:02:21 +0200
-Message-Id: <20190401170059.158292132@linuxfoundation.org>
+Subject: [PATCH 5.0 131/146] mm/page_isolation.c: fix a wrong flag in set_migratetype_isolate()
+Date:   Mon,  1 Apr 2019 19:02:23 +0200
+Message-Id: <20190401170059.296051562@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -68,57 +67,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Oscar Salvador <osalvador@suse.de>
+From: Qian Cai <cai@lca.pw>
 
-commit 5ae2efb1dea9f537453e841714e3ee2757595aec upstream.
+commit f5777bc2d9cf0712554228b1a7927b6f13f5c1f0 upstream.
 
-While debugging something, I added a dump_page() into do_swap_page(),
-and I got the splat from below.  The issue happens when dereferencing
-mapping->host in __dump_page():
+Due to has_unmovable_pages() taking an incorrect irqsave flag instead of
+the isolation flag in set_migratetype_isolate(), there are issues with
+HWPOSION and error reporting where dump_page() is not called when there
+is an unmovable page.
 
-  ...
-  else if (mapping) {
-	pr_warn("%ps ", mapping->a_ops);
-	if (mapping->host->i_dentry.first) {
-		struct dentry *dentry;
-		dentry = container_of(mapping->host->i_dentry.first, struct dentry, d_u.d_alias);
-		pr_warn("name:\"%pd\" ", dentry);
-	}
-  }
-  ...
-
-Swap address space does not contain an inode information, and so
-mapping->host equals NULL.
-
-Although the dump_page() call was added artificially into
-do_swap_page(), I am not sure if we can hit this from any other path, so
-it looks worth fixing it.  We can easily do that by checking
-mapping->host first.
-
-Link: http://lkml.kernel.org/r/20190318072931.29094-1-osalvador@suse.de
-Fixes: 1c6fb1d89e73c ("mm: print more information about mapping in __dump_page")
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Link: http://lkml.kernel.org/r/20190320204941.53731-1-cai@lca.pw
+Fixes: d381c54760dc ("mm: only report isolation failures when offlining memory")
 Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Hugh Dickins <hughd@google.com>
-Cc: <stable@vger.kernel.org>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Cc: <stable@vger.kernel.org>	[5.0.x]
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/debug.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/page_isolation.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -79,7 +79,7 @@ void __dump_page(struct page *page, cons
- 		pr_warn("ksm ");
- 	else if (mapping) {
- 		pr_warn("%ps ", mapping->a_ops);
--		if (mapping->host->i_dentry.first) {
-+		if (mapping->host && mapping->host->i_dentry.first) {
- 			struct dentry *dentry;
- 			dentry = container_of(mapping->host->i_dentry.first, struct dentry, d_u.d_alias);
- 			pr_warn("name:\"%pd\" ", dentry);
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -59,7 +59,8 @@ static int set_migratetype_isolate(struc
+ 	 * FIXME: Now, memory hotplug doesn't call shrink_slab() by itself.
+ 	 * We just check MOVABLE pages.
+ 	 */
+-	if (!has_unmovable_pages(zone, page, arg.pages_found, migratetype, flags))
++	if (!has_unmovable_pages(zone, page, arg.pages_found, migratetype,
++				 isol_flags))
+ 		ret = 0;
+ 
+ 	/*
 
 
