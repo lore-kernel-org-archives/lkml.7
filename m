@@ -3,147 +3,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC67C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C91BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B11208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0E6208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbfDAQIo (ORCPT
+        id S1728828AbfDAQI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 12:08:44 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:41011 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728772AbfDAQIm (ORCPT
+        Mon, 1 Apr 2019 12:08:56 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:50095 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728739AbfDAQIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 12:08:42 -0400
+        Mon, 1 Apr 2019 12:08:40 -0400
 X-Originating-IP: 109.213.83.19
 Received: from localhost (alyon-652-1-60-19.w109-213.abo.wanadoo.fr [109.213.83.19])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id D60CD1BF20D;
-        Mon,  1 Apr 2019 16:08:39 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id C1484240005;
+        Mon,  1 Apr 2019 16:08:37 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 11/12] rtc: pcf85063: add offset correction support
-Date:   Mon,  1 Apr 2019 18:08:15 +0200
-Message-Id: <20190401160816.17859-11-alexandre.belloni@bootlin.com>
+Subject: [PATCH 09/12] rtc: pcf85063: Add Micro Crystal RV8263 support
+Date:   Mon,  1 Apr 2019 18:08:13 +0200
+Message-Id: <20190401160816.17859-9-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190401160816.17859-1-alexandre.belloni@bootlin.com>
 References: <20190401160816.17859-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PCF850363 has an offset correction with two modes:
-
-With mode 0, the correction is triggered once every two hours and then
-correction pulses are applied once per minute until the programmed
-correction values have been implemented. This gives a step of 4.34 ppm.
-
-With mode 1, the correction is triggered once every four minutes and then
-correction pulses are applied once per second up to a maximum of 60 pulses.
-When correction values greater than 60 pulses are used, additional
-correction pulses are made in the 59 th second. This gives a step of 4.069
-ppm.
-
-Use the correction closest to the requested value.
+The Micro Crystal RV8263 has the same IC as the pcf85063 but has an on
+board crystal. This means that the CAP_SEL bit has to be cleared so the
+correct capacitance is selected for the crystal.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-pcf85063.c | 58 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/rtc/nxp,pcf85063.txt  |  3 +-
+ drivers/rtc/rtc-pcf85063.c                    | 32 ++++++++++++++++---
+ 2 files changed, 30 insertions(+), 5 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
+index 1e31afbfffe9..627bb533eff7 100644
+--- a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
++++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
+@@ -4,7 +4,8 @@ Required properties:
+ - compatible: Should one of contain:
+ 	"nxp,pcf85063",
+ 	"nxp,pcf85063a",
+-	"nxp,pcf85063tp"
++	"nxp,pcf85063tp",
++	"microcrystal,rv8263"
+ - reg: I2C address for chip.
+ 
+ Optional property:
 diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
-index 04aaa83a5431..1bce53f8a7da 100644
+index 536db43c84ee..0ac763c10744 100644
 --- a/drivers/rtc/rtc-pcf85063.c
 +++ b/drivers/rtc/rtc-pcf85063.c
-@@ -38,6 +38,12 @@
- #define PCF85063_CTRL2_AF		BIT(6)
- #define PCF85063_CTRL2_AIE		BIT(7)
+@@ -5,6 +5,9 @@
+  *
+  * Author: Søren Andersen <san@rosetechnology.dk>
+  * Maintainers: http://www.nslu2-linux.org/
++ *
++ * Copyright (C) 2019 Micro Crystal AG
++ * Author: Alexandre Belloni <alexandre.belloni@bootlin.com>
+  */
+ #include <linux/i2c.h>
+ #include <linux/bcd.h>
+@@ -22,7 +25,10 @@
+  *
+  *  PCF85063A -- Rev. 6 — 18 November 2015
+  *  PCF85063TP -- Rev. 4 — 6 May 2015
+-*/
++ *
++ *  https://www.microcrystal.com/fileadmin/Media/Products/RTC/App.Manual/RV-8263-C7_App-Manual.pdf
++ *  RV8263 -- Rev. 1.0 — January 2019
++ */
  
-+#define PCF85063_REG_OFFSET		0x02
-+#define PCF85063_OFFSET_SIGN_BIT	6	/* 2's complement sign bit */
-+#define PCF85063_OFFSET_MODE		BIT(7)
-+#define PCF85063_OFFSET_STEP0		4340
-+#define PCF85063_OFFSET_STEP1		4069
-+
- #define PCF85063_REG_RAM		0x03
- 
- #define PCF85063_REG_SC			0x04 /* datetime */
-@@ -225,14 +231,64 @@ static irqreturn_t pcf85063_rtc_handle_irq(int irq, void *dev_id)
- 	return IRQ_NONE;
- }
- 
-+static int pcf85063_read_offset(struct device *dev, long *offset)
-+{
-+	struct pcf85063 *pcf85063 = dev_get_drvdata(dev);
-+	long val;
-+	u32 reg;
-+	int ret;
-+
-+	ret = regmap_read(pcf85063->regmap, PCF85063_REG_OFFSET, &reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	val = sign_extend32(reg & ~PCF85063_OFFSET_MODE,
-+			    PCF85063_OFFSET_SIGN_BIT);
-+
-+	if (reg & PCF85063_OFFSET_MODE)
-+		*offset = val * PCF85063_OFFSET_STEP1;
-+	else
-+		*offset = val * PCF85063_OFFSET_STEP0;
-+
-+	return 0;
-+}
-+
-+static int pcf85063_set_offset(struct device *dev, long offset)
-+{
-+	struct pcf85063 *pcf85063 = dev_get_drvdata(dev);
-+	s8 mode0, mode1, reg;
-+	unsigned int error0, error1;
-+
-+	if (offset > PCF85063_OFFSET_STEP0 * 63)
-+		return -ERANGE;
-+	if (offset < PCF85063_OFFSET_STEP0 * -64)
-+		return -ERANGE;
-+
-+	mode0 = DIV_ROUND_CLOSEST(offset, PCF85063_OFFSET_STEP0);
-+	mode1 = DIV_ROUND_CLOSEST(offset, PCF85063_OFFSET_STEP1);
-+
-+	error0 = abs(offset - (mode0 * PCF85063_OFFSET_STEP0));
-+	error1 = abs(offset - (mode1 * PCF85063_OFFSET_STEP1));
-+	if (mode1 > 63 || mode1 < -64 || error0 < error1)
-+		reg = mode0 & ~PCF85063_OFFSET_MODE;
-+	else
-+		reg = mode1 | PCF85063_OFFSET_MODE;
-+
-+	return regmap_write(pcf85063->regmap, PCF85063_REG_OFFSET, reg);
-+}
-+
- static const struct rtc_class_ops pcf85063_rtc_ops = {
- 	.read_time	= pcf85063_rtc_read_time,
--	.set_time	= pcf85063_rtc_set_time
-+	.set_time	= pcf85063_rtc_set_time,
-+	.read_offset	= pcf85063_read_offset,
-+	.set_offset	= pcf85063_set_offset,
+ #define PCF85063_REG_CTRL1		0x00 /* status */
+ #define PCF85063_REG_CTRL1_CAP_SEL	BIT(0)
+@@ -41,6 +47,7 @@
+ struct pcf85063_config {
+ 	struct regmap_config regmap;
+ 	unsigned has_alarms:1;
++	unsigned force_cap_7000:1;
  };
  
- static const struct rtc_class_ops pcf85063_rtc_ops_alarm = {
- 	.read_time	= pcf85063_rtc_read_time,
- 	.set_time	= pcf85063_rtc_set_time,
-+	.read_offset	= pcf85063_read_offset,
-+	.set_offset	= pcf85063_set_offset,
- 	.read_alarm	= pcf85063_rtc_read_alarm,
- 	.set_alarm	= pcf85063_rtc_set_alarm,
- 	.alarm_irq_enable = pcf85063_rtc_alarm_irq_enable,
+ struct pcf85063 {
+@@ -230,12 +237,17 @@ static const struct rtc_class_ops pcf85063_rtc_ops_alarm = {
+ };
+ 
+ static int pcf85063_load_capacitance(struct pcf85063 *pcf85063,
+-				     const struct device_node *np)
++				     const struct device_node *np,
++				     unsigned int force_cap)
+ {
+ 	u32 load = 7000;
+ 	u8 reg = 0;
+ 
+-	of_property_read_u32(np, "quartz-load-femtofarads", &load);
++	if (force_cap)
++		load = force_cap;
++	else
++		of_property_read_u32(np, "quartz-load-femtofarads", &load);
++
+ 	switch (load) {
+ 	default:
+ 		dev_warn(&pcf85063->rtc->dev, "Unknown quartz-load-femtofarads value: %d. Assuming 7000",
+@@ -269,6 +281,16 @@ static const struct pcf85063_config pcf85063tp_config = {
+ 	},
+ };
+ 
++static const struct pcf85063_config rv8263_config = {
++	.regmap = {
++		.reg_bits = 8,
++		.val_bits = 8,
++		.max_register = 0x11,
++	},
++	.has_alarms = 1,
++	.force_cap_7000 = 1,
++};
++
+ static int pcf85063_probe(struct i2c_client *client)
+ {
+ 	struct pcf85063 *pcf85063;
+@@ -303,7 +325,8 @@ static int pcf85063_probe(struct i2c_client *client)
+ 	if (IS_ERR(pcf85063->rtc))
+ 		return PTR_ERR(pcf85063->rtc);
+ 
+-	err = pcf85063_load_capacitance(pcf85063, client->dev.of_node);
++	err = pcf85063_load_capacitance(pcf85063, client->dev.of_node,
++					config->force_cap_7000 ? 7000 : 0);
+ 	if (err < 0)
+ 		dev_warn(&client->dev, "failed to set xtal load capacitance: %d",
+ 			 err);
+@@ -339,6 +362,7 @@ static const struct of_device_id pcf85063_of_match[] = {
+ 	{ .compatible = "nxp,pcf85063", .data = &pcf85063tp_config },
+ 	{ .compatible = "nxp,pcf85063tp", .data = &pcf85063tp_config },
+ 	{ .compatible = "nxp,pcf85063a", .data = &pcf85063a_config },
++	{ .compatible = "microcrystal,rv8263", .data = &rv8263_config },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, pcf85063_of_match);
 -- 
 2.20.1
 
