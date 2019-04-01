@@ -2,137 +2,114 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9807C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABD6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A39C21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:35:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Qdj7007h";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="PeYiW1J8"
+	by mail.kernel.org (Postfix) with ESMTP id B3E0420883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:36:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbfDAQf3 (ORCPT
+        id S1728700AbfDAQgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 12:35:29 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:35352 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727021AbfDAQf3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 12:35:29 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x31GKI3l017123;
-        Mon, 1 Apr 2019 09:34:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=tf1+Xpzd4dhwxj6UC6yDUVmv4QySBHRRsZiRK/lJBBw=;
- b=Qdj7007hFE2eN7OMvIAD4Wf/xbRnl7KLX+zyxAx1S2DsD3DaTLqi96HESNZaKJdAvs9d
- 7XZfW9DWbmvx2WZbvfWiI6h3FCWcc0zlsR88hYEt1DYnhTnpgs11TDNsDLEJb6RZFKPV
- 3RNiB1omW5iXk03MvXiQF6FODY+G/v6MXzQ= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2rkjdah0ww-12
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 01 Apr 2019 09:34:05 -0700
-Received: from frc-mbx06.TheFacebook.com (2620:10d:c0a1:f82::30) by
- frc-hub05.TheFacebook.com (2620:10d:c021:18::175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 1 Apr 2019 09:34:04 -0700
-Received: from frc-hub05.TheFacebook.com (2620:10d:c021:18::175) by
- frc-mbx06.TheFacebook.com (2620:10d:c0a1:f82::30) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 1 Apr 2019 09:34:03 -0700
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 1 Apr 2019 09:34:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tf1+Xpzd4dhwxj6UC6yDUVmv4QySBHRRsZiRK/lJBBw=;
- b=PeYiW1J8GMJWyLfUvm8V1lPp2h3RAQ4n8oSQidDsaVHdwhOMKkrqqc295kAIdZFX8nDAOygxFWEK2ZudJHaWmosWWsC+o3cQFhWyhIU6pscoGMwqgy2gzbC0JPXCA1/ZqVu6YcvxeNy2eM3Qto3fvmZXCA0OEc4UzsjGOZ+emX4=
-Received: from MWHPR15MB1790.namprd15.prod.outlook.com (10.174.255.19) by
- MWHPR15MB1565.namprd15.prod.outlook.com (10.173.235.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.20; Mon, 1 Apr 2019 16:34:02 +0000
-Received: from MWHPR15MB1790.namprd15.prod.outlook.com
- ([fe80::d13:8c3d:9110:b44a]) by MWHPR15MB1790.namprd15.prod.outlook.com
- ([fe80::d13:8c3d:9110:b44a%8]) with mapi id 15.20.1750.014; Mon, 1 Apr 2019
- 16:34:02 +0000
-From:   Martin Lau <kafai@fb.com>
-To:     hujunwei <hujunwei4@huawei.com>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Mon, 1 Apr 2019 12:36:05 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37522 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727021AbfDAQgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 12:36:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3C1CA78;
+        Mon,  1 Apr 2019 09:36:04 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDDB83F690;
+        Mon,  1 Apr 2019 09:36:02 -0700 (PDT)
+Subject: Re: [PATCH 1/2] edac: sifive: Add DT documentation for SiFive L2
+ cache Controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org,
+        linux-edac@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingfangsen@huawei.com" <mingfangsen@huawei.com>,
-        "liuzhiqiang26@huawei.com" <liuzhiqiang26@huawei.com>,
-        "zhangwenhao8@huawei.com" <zhangwenhao8@huawei.com>,
-        "wangxiaogang3@huawei.com" <wangxiaogang3@huawei.com>
-Subject: Re: [PATCH v2 net] ipv6: Fix dangling pointer when ipv6 fragment
-Thread-Topic: [PATCH v2 net] ipv6: Fix dangling pointer when ipv6 fragment
-Thread-Index: AQHU56DocPVqow9gSEq5XaL6cFBxjKYngiOA
-Date:   Mon, 1 Apr 2019 16:34:01 +0000
-Message-ID: <20190401163355.4fokjjbyv3ug7nl3@kafai-mbp.dhcp.thefacebook.com>
-References: <cbbedd1f-3e99-85f7-86d7-d02a86d59c29@huawei.com>
- <9104f44b-2ce0-7be9-2fca-8b6c12abbb86@huawei.com>
-In-Reply-To: <9104f44b-2ce0-7be9-2fca-8b6c12abbb86@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR19CA0088.namprd19.prod.outlook.com
- (2603:10b6:320:1f::26) To MWHPR15MB1790.namprd15.prod.outlook.com
- (2603:10b6:301:4e::19)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3005]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7886cc75-9c4d-4118-ef88-08d6b6bfd909
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:MWHPR15MB1565;
-x-ms-traffictypediagnostic: MWHPR15MB1565:
-x-microsoft-antispam-prvs: <MWHPR15MB1565756B0FFA613769A35BB5D5550@MWHPR15MB1565.namprd15.prod.outlook.com>
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(39860400002)(346002)(376002)(366004)(396003)(136003)(189003)(199004)(54906003)(446003)(6246003)(8676002)(316002)(25786009)(6512007)(9686003)(81156014)(5660300002)(81166006)(99286004)(7736002)(6506007)(1076003)(102836004)(305945005)(6916009)(11346002)(386003)(46003)(229853002)(6436002)(6486002)(4744005)(52116002)(6116002)(71190400001)(71200400001)(8936002)(105586002)(86362001)(186003)(256004)(478600001)(68736007)(76176011)(7416002)(4326008)(106356001)(53936002)(14454004)(476003)(2906002)(486006)(97736004)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1565;H:MWHPR15MB1790.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: eKlY9Dq2rqWokEoJQ9CRmTf4g7WtZaO+y35vYgcX5JXtSIgQh0vjSFZ7rKavWdIQx9oFGcnAoWCzk6X45A2xuMwPk3s0DFejLSi+D1NIOhxWsYBNjpBxruBTytGsdVVKmrAW8RnABlAjkUb8xHrJLLC6dA6uPSWKzxCFnqepodf+f5G+p4VUEBJYg/mbgsVKtreuMZ8bxP5WibmuyyGgK0K7sbmoFFmcw9A5QNtw/wn9aYg4U++e4SuCbFUBwtKQvysoKEdX/TKmVOoe5LBGTRQfAlrKFRto2QYh08K1ME1oOU2YiAhS0wN5pBXG4aFy7KHBGZguoJyBztLc9GCrwpo8aplMivw70Lbn62bVg6yEJE1MjAckDXJJJBbq9IcGINxB9O/PGUouDn+X8euo/QSesPvqZkTrChCcU8sRRS0=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <201CBE20217D8F42AC8DD9235FA65ABD@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mark Rutland <mark.rutland@arm.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        devicetree@vger.kernel.org
+References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
+ <1552382461-13051-2-git-send-email-yash.shah@sifive.com>
+ <20190328131657.GA9056@bogus> <be7246a0-2426-995d-0a24-f104c173d752@arm.com>
+ <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <8e574cfa-29d9-0f0a-d670-c4869bd262c4@arm.com>
+Date:   Mon, 1 Apr 2019 17:36:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7886cc75-9c4d-4118-ef88-08d6b6bfd909
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 16:34:02.0043
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1565
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-01_05:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+In-Reply-To: <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 31, 2019 at 05:04:29PM +0800, hujunwei wrote:
-> From: Junwei Hu <hujunwei4@huawei.com>
->=20
-> At the beginning of ip6_fragment func, the prevhdr pointer is
-> obtained in the ip6_find_1stfragopt func.
-> However, all the pointers pointing into skb header may change
-> when calling skb_checksum_help func with
-> skb->ip_summed =3D CHECKSUM_PARTIAL condition.
-> The prevhdr pointe will be dangling if it is not reloaded after
-> calling __skb_linearize func in skb_checksum_help func.
->=20
-> Here, I add a variable, nexthdr_offset, to evaluate the offset,
-> which does not changes even after calling __skb_linearize func.
-Acked-by: Martin KaFai Lau <kafai@fb.com>
+Hi Rob,
+
+On 29/03/2019 14:11, Rob Herring wrote:
+> On Thu, Mar 28, 2019 at 1:47 PM James Morse <james.morse@arm.com> wrote:
+>> On 28/03/2019 13:16, Rob Herring wrote:
+>>> On Tue, Mar 12, 2019 at 02:51:00PM +0530, Yash Shah wrote:
+>>>> DT documentation for L2 cache controller added.
+
+>>>> diff --git a/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt b/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt
+>>>> new file mode 100644
+>>>> index 0000000..abce09f
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt
+>>>> @@ -0,0 +1,31 @@
+>>>> +SiFive L2 Cache EDAC driver device tree bindings
+>>>> +-------------------------------------------------
+>>>> +This driver uses the EDAC framework to report L2 cache controller ECC errors.
+>>>
+>>> Bindings are for h/w blocks, not drivers. (And Boris may want a single
+>>> driver, but bindings should reflect the h/w, not what Linux (currently)
+>>> wants.
+>>
+>> For h/w block compatibles and edac, I think all we need now is to ensure the DT contains
+>> the three compatible strings: platform (if there is one), soc and ip-name (if its a
+>> re-usable thing).
+>> This is so that linux can pick the biggest of the three (usually platform) to probe the
+>> driver from, as this lets us capture platform properties we only find out about later.
+> 
+> DT is not the only what to instantiate drivers. If the OS really wants
+> to have a single driver for multiple h/w blocks, then it needs to
+> instantiate a driver itself (based on the top-level compatible
+> probably) and then that driver can find the DT nodes it needs itself.
+
+I think this is where we are heading. (but I need to get my head round this top-level thing).
+
+Can the OS do both, depending on the platform?
+e.g. on a system with one component the driver runs 'standalone', whereas on a bigger
+system with multiple components the same driver is used as a library by something else.
+
+I don't see how this would work if the common component's DT entry looks the same on both
+platforms. Wouldn't this depend on the order stuff is done in, or 'but not this one'
+checks in the driver?
+
+
+> In any case, it's all irrelevant to the DT binding. We don't design
+> bindings around what some particular OS wants.
+
+I agree.
+
+What we want to do is spot the problems on the horizon so we either have the right
+information in the DT today, or at least know what it looks like so we don't cause a
+regression when a new platform makes previous behaviour generic/a-library.
+
+
+Thanks,
+
+James
