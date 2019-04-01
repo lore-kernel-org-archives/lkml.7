@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA27DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2EEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE292070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3852120830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140268;
-	bh=f+kUwkDerJKLfTNronE7lSm8OKfSh09X4t36QieVL5Y=;
+	s=default; t=1554140270;
+	bh=tG0TyyQLQhaJWWLvYQZMUDS00QZ73abVZn9gJHlW+ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bAEkCRaXfOqMs9RxrHNIy1AIAMyfhbgLDqnFYTC6PjrHIvrfvHs2NTjRVmQJXPnVL
-	 QI+VtgdllsjDYDIQuWPas9VxzNnjSRthwnC6ZNN1yKX+TVOpy3lvVlx8H9oyRyxkt3
-	 u5vXC168eorv62Y/O6JZlNOUBAZ5MntD7uB6VU3o=
+	b=nvXqHQJ+MrlfpVm0DfOqofSR4U0zeeX/UBPyYanSh7TgKzDOJ+tKQcGbcApUIxJYN
+	 VZpSJ5CZkZbrlB6Jwi9HUEzbINx6pUsFch3WT9Qyxk06omx6nJAA5x07xhSSnWPiCO
+	 S1DXs/vrvMfiUycDC6zm4dOZgYSkK5K7oTXbKSDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388232AbfDARhr (ORCPT
+        id S2387864AbfDARht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:37:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50534 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:37:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387866AbfDARhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:37:43 -0400
+        id S2388227AbfDARhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:37:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 331BD20830;
-        Mon,  1 Apr 2019 17:37:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F47020830;
+        Mon,  1 Apr 2019 17:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140262;
-        bh=f+kUwkDerJKLfTNronE7lSm8OKfSh09X4t36QieVL5Y=;
+        s=default; t=1554140266;
+        bh=tG0TyyQLQhaJWWLvYQZMUDS00QZ73abVZn9gJHlW+ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cngHVLrZ/Zl3Jp/pAmcCZGhb3iPCzP326f2fOOz5c3qxwWW0ivsujgq5E94XyYzwe
-         8kF0SDEzEX+2ShAflBPkGMh+th+8j8C4eL281OWYt9T9U6Jv/d9hSaOht9AHzy4pdH
-         CCTkNBpcbbsvWyeQI+BqtozRwyyx0LpR2gh+KWNU=
+        b=li5w5Kq6WRIUd28x+kS2RvScO5WGPMQyt/UzXUPxdDgv1whUH7NWDl76iN4Q0F8Cd
+         0KxmkLCnVZcIcTO9uSeFQRdDL1+tUhqDIrE7GTDih6OEMT8DYv6YonXZUAqxn2l7mw
+         4D2VA6UKowBmIEeeqhU2tfA7btPl4aNchOvvZrCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Winter Wang <wente.wang@nxp.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Roman Kiryanov <rkir@google.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 23/50] usb: gadget: configfs: add mutex lock before unregister gadget
-Date:   Mon,  1 Apr 2019 19:03:06 +0200
-Message-Id: <20190401170043.999667768@linuxfoundation.org>
+Subject: [PATCH 3.18 24/50] video: fbdev: Set pixclock = 0 in goldfishfb
+Date:   Mon,  1 Apr 2019 19:03:07 +0200
+Message-Id: <20190401170044.055727500@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -66,63 +69,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cee51c33f52ebf673a088a428ac0fecc33ab77fa ]
+[ Upstream commit ace6033ec5c356615eaa3582fb1946e9eaff6662 ]
 
-There may be a race condition if f_fs calls unregister_gadget_item in
-ffs_closed() when unregister_gadget is called by UDC store at the same time.
-this leads to a kernel NULL pointer dereference:
+User space Android code identifies pixclock == 0 as a sign for emulation
+and will set the frame rate to 60 fps when reading this value, which is
+the desired outcome.
 
-[  310.644928] Unable to handle kernel NULL pointer dereference at virtual address 00000004
-[  310.645053] init: Service 'adbd' is being killed...
-[  310.658938] pgd = c9528000
-[  310.662515] [00000004] *pgd=19451831, *pte=00000000, *ppte=00000000
-[  310.669702] Internal error: Oops: 817 [#1] PREEMPT SMP ARM
-[  310.675211] Modules linked in:
-[  310.678294] CPU: 0 PID: 1537 Comm: ->transport Not tainted 4.1.15-03725-g793404c #2
-[  310.685958] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-[  310.692493] task: c8e24200 ti: c945e000 task.ti: c945e000
-[  310.697911] PC is at usb_gadget_unregister_driver+0xb4/0xd0
-[  310.703502] LR is at __mutex_lock_slowpath+0x10c/0x16c
-[  310.708648] pc : [<c075efc0>]    lr : [<c0bfb0bc>]    psr: 600f0113
-<snip..>
-[  311.565585] [<c075efc0>] (usb_gadget_unregister_driver) from [<c075e2b8>] (unregister_gadget_item+0x1c/0x34)
-[  311.575426] [<c075e2b8>] (unregister_gadget_item) from [<c076fcc8>] (ffs_closed+0x8c/0x9c)
-[  311.583702] [<c076fcc8>] (ffs_closed) from [<c07736b8>] (ffs_data_reset+0xc/0xa0)
-[  311.591194] [<c07736b8>] (ffs_data_reset) from [<c07738ac>] (ffs_data_closed+0x90/0xd0)
-[  311.599208] [<c07738ac>] (ffs_data_closed) from [<c07738f8>] (ffs_ep0_release+0xc/0x14)
-[  311.607224] [<c07738f8>] (ffs_ep0_release) from [<c023e030>] (__fput+0x80/0x1d0)
-[  311.614635] [<c023e030>] (__fput) from [<c014e688>] (task_work_run+0xb0/0xe8)
-[  311.621788] [<c014e688>] (task_work_run) from [<c010afdc>] (do_work_pending+0x7c/0xa4)
-[  311.629718] [<c010afdc>] (do_work_pending) from [<c010770c>] (work_pending+0xc/0x20)
-
-for functions using functionFS, i.e. android adbd will close /dev/usb-ffs/adb/ep0
-when usb IO thread fails, but switch adb from on to off also triggers write
-"none" > UDC. These 2 operations both call unregister_gadget, which will lead
-to the panic above.
-
-add a mutex before calling unregister_gadget for api used in f_fs.
-
-Signed-off-by: Winter Wang <wente.wang@nxp.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Christoffer Dall <christoffer.dall@linaro.org>
+Signed-off-by: Peter Maydell <peter.maydell@linaro.org>
+Signed-off-by: Roman Kiryanov <rkir@google.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/configfs.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/video/fbdev/goldfishfb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
-index 156c252c5aab..e5a67e9749f8 100644
---- a/drivers/usb/gadget/configfs.c
-+++ b/drivers/usb/gadget/configfs.c
-@@ -1551,7 +1551,9 @@ void unregister_gadget_item(struct config_item *item)
- {
- 	struct gadget_info *gi = to_gadget_info(item);
+diff --git a/drivers/video/fbdev/goldfishfb.c b/drivers/video/fbdev/goldfishfb.c
+index 14a93cb21310..66d58e93bc32 100644
+--- a/drivers/video/fbdev/goldfishfb.c
++++ b/drivers/video/fbdev/goldfishfb.c
+@@ -234,7 +234,7 @@ static int goldfish_fb_probe(struct platform_device *pdev)
+ 	fb->fb.var.activate	= FB_ACTIVATE_NOW;
+ 	fb->fb.var.height	= readl(fb->reg_base + FB_GET_PHYS_HEIGHT);
+ 	fb->fb.var.width	= readl(fb->reg_base + FB_GET_PHYS_WIDTH);
+-	fb->fb.var.pixclock	= 10000;
++	fb->fb.var.pixclock	= 0;
  
-+	mutex_lock(&gi->lock);
- 	unregister_gadget(gi);
-+	mutex_unlock(&gi->lock);
- }
- EXPORT_SYMBOL_GPL(unregister_gadget_item);
- 
+ 	fb->fb.var.red.offset = 11;
+ 	fb->fb.var.red.length = 5;
 -- 
 2.19.1
 
