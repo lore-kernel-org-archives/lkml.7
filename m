@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A6FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBABDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46002133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1B8206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139282;
-	bh=JJEyhfgsZDb2T9ZOumSdkfShZ6hu6ZJhMRpGMDGl3FM=;
+	s=default; t=1554139286;
+	bh=/OW+W3ddCbMnUJaVRRj9Gb8fJCQ5sJbAEbfb/tPxrzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O6ERQKTV+UCiPzOV5BD2Kq8BqmOyOAQQaB803P+kBecD8TX5Z9lhSaExci+tryLnc
-	 8oOPW/uC1rkPox5WjYLkSjuFq1zpi8caLa3Ku6AKj6xG0ui73atVOvPxfrS7tMKX4L
-	 W747w188l5dpBeFWD+nWLZ3N9bmb+m1ghQLUz2vI=
+	b=d8f3BTSrHxQ+Hoq9Cqh9JdYSlwsAI39wPrhmZXSOJSlPgQ/0TubetnkLQyzb9i6eT
+	 wdqpLA71Ah1lDmwj3S64CKz0wmcynzpEB78LBG9qj4lZ2GW+4q99pQ8Wq1YuXIioLO
+	 jIBoj4zHiY6ErODxGWBmOn8CzB75qPzvm8/aiqvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731599AbfDARVV (ORCPT
+        id S1731153AbfDARVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:21:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49896 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731546AbfDARVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:21:19 -0400
+        id S1731546AbfDARVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:21:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96AA120883;
-        Mon,  1 Apr 2019 17:21:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45C0320883;
+        Mon,  1 Apr 2019 17:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139279;
-        bh=JJEyhfgsZDb2T9ZOumSdkfShZ6hu6ZJhMRpGMDGl3FM=;
+        s=default; t=1554139282;
+        bh=/OW+W3ddCbMnUJaVRRj9Gb8fJCQ5sJbAEbfb/tPxrzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0PrdzLAe/byb69TGWRIBqkxXKI6uaEfTNm4yllnGFWnmKlEqo7ZWbggIx5tQ/vlbX
-         NVITU73LYVKZgePNYyl7m70Tq+ARsxgZNkzVs+qJkeNUks0rIRrYKMI7RUypFydy+m
-         oqRM4KsOIDIaG+PSwiyocNfEuHL1KiZYKo8RtTrg=
+        b=Mf8hv2uY0zwv+f4gNrb4MWCtyE88lkQOBOjItW5n1DiNI/+k2QiyFWcNIAWRVXTW3
+         TrjlPHcieL+07f6W9E8psRZ+t4no1xo9y1n6v+GQKefV3dCCdwblLSifhsmmp2HthD
+         IARqzSBajbn12jRJhtL7htJmKU0ipHamp8Lm0pQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Suchanek <msuchanek@suse.de>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 029/107] powerpc/64s: Enhance the information in cpu_show_spectre_v1()
-Date:   Mon,  1 Apr 2019 19:01:44 +0200
-Message-Id: <20190401170048.401661802@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Roman Kiryanov <rkir@google.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 003/107] video: fbdev: Set pixclock = 0 in goldfishfb
+Date:   Mon,  1 Apr 2019 19:01:18 +0200
+Message-Id: <20190401170045.595711650@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,31 +69,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michal Suchanek <msuchanek@suse.de>
+[ Upstream commit ace6033ec5c356615eaa3582fb1946e9eaff6662 ]
 
-commit a377514519b9a20fa1ea9adddbb4129573129cef upstream.
+User space Android code identifies pixclock == 0 as a sign for emulation
+and will set the frame rate to 60 fps when reading this value, which is
+the desired outcome.
 
-We now have barrier_nospec as mitigation so print it in
-cpu_show_spectre_v1() when enabled.
-
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Christoffer Dall <christoffer.dall@linaro.org>
+Signed-off-by: Peter Maydell <peter.maydell@linaro.org>
+Signed-off-by: Roman Kiryanov <rkir@google.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/kernel/security.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/video/fbdev/goldfishfb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -120,6 +120,9 @@ ssize_t cpu_show_spectre_v1(struct devic
- 	if (!security_ftr_enabled(SEC_FTR_BNDS_CHK_SPEC_BAR))
- 		return sprintf(buf, "Not affected\n");
+--- a/drivers/video/fbdev/goldfishfb.c
++++ b/drivers/video/fbdev/goldfishfb.c
+@@ -234,7 +234,7 @@ static int goldfish_fb_probe(struct plat
+ 	fb->fb.var.activate	= FB_ACTIVATE_NOW;
+ 	fb->fb.var.height	= readl(fb->reg_base + FB_GET_PHYS_HEIGHT);
+ 	fb->fb.var.width	= readl(fb->reg_base + FB_GET_PHYS_WIDTH);
+-	fb->fb.var.pixclock	= 10000;
++	fb->fb.var.pixclock	= 0;
  
-+	if (barrier_nospec_enabled)
-+		return sprintf(buf, "Mitigation: __user pointer sanitization\n");
-+
- 	return sprintf(buf, "Vulnerable\n");
- }
- 
+ 	fb->fb.var.red.offset = 11;
+ 	fb->fb.var.red.length = 5;
 
 
