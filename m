@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690C7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF72EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D2F206DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E43B206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139317;
-	bh=fwffPyjJMQvBJRDJNo15JY3dly8GjAKOrasSNvHipjg=;
+	s=default; t=1554139321;
+	bh=jlrBK+Pue9ERHn9s0J/+tQCvb8N+1nBSZTZtba+auKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JxoaETpJaiX8CH+GOTzeGD7LsyZM0w50lXmM7VKnss86ynifi2qxxl0UHEe5Zx1fn
-	 gJFU70weaYFBtZF+u2/LOPISL6AoiMw5HEO2wYHegM3RvtjmRSpMxBR9yfBbsHq2kK
-	 Rk+KNDW6h0d0ePYLYMhzp6tare1dd3JfKljwBSxA=
+	b=lTD/iXlQAQvsEZXzDl2RiqhD6t1wADnXejSmZUZXSD5UP/MKh9KbYjaabJZUovyXI
+	 sr4KGrQJEXKYWxCk+O3toDns3631aPSNvRWvb/mhwDq0wZsCtpi32m5+rGvkJUfx49
+	 sEyP6GrGaAzJXo60nUixbBQgt2rs+3Soq2lPKT6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731906AbfDARV4 (ORCPT
+        id S1731916AbfDARWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:21:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50820 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:22:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731248AbfDARVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:21:54 -0400
+        id S1731197AbfDARV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:21:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2A12206DD;
-        Mon,  1 Apr 2019 17:21:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8193D206C0;
+        Mon,  1 Apr 2019 17:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139313;
-        bh=fwffPyjJMQvBJRDJNo15JY3dly8GjAKOrasSNvHipjg=;
+        s=default; t=1554139317;
+        bh=jlrBK+Pue9ERHn9s0J/+tQCvb8N+1nBSZTZtba+auKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PtTo5+2i/fZnSOD2b1SRC3hfsYMj89/sFfegouNNh/Fgy2xCvnHyKJKcfrK/QNy+w
-         /XUdQ1A51Ku01ah6bi9uxrumE3pVmD08vnBuZg3gQSaevL+CLXfn1T9Mx2/EPqhY/r
-         Rgarli3LvOoneRrUwDxRgaqowVlRzXIFniCnfhRk=
+        b=tzZnziZ4ae2c9A+j8anKecBPpxp3E1c2jwuBl0SbZXIOPjozMhVrk+XP9jPQv9VEJ
+         XLklXcnCubHpyiRlPx8pCEomDLAiwXQv2eSvoo7F7I1sceIphvtFZTfry0qLti/hDE
+         sKQMtbNpq2fg0ArvvmxJjc4zd3EJuFDoiRkQ9NsA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 038/107] powerpc/asm: Add a patch_site macro & helpers for patching instructions
-Date:   Mon,  1 Apr 2019 19:01:53 +0200
-Message-Id: <20190401170049.100213074@linuxfoundation.org>
+Subject: [PATCH 4.14 039/107] powerpc/64s: Add new security feature flags for count cache flush
+Date:   Mon,  1 Apr 2019 19:01:54 +0200
+Message-Id: <20190401170049.185070236@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -66,88 +66,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 06d0bbc6d0f56dacac3a79900e9a9a0d5972d818 upstream.
+commit dc8c6cce9a26a51fc19961accb978217a3ba8c75 upstream.
 
-Add a macro and some helper C functions for patching single asm
-instructions.
-
-The gas macro means we can do something like:
-
-  1:	nop
-  	patch_site 1b, patch__foo
-
-Which is less visually distracting than defining a GLOBAL symbol at 1,
-and also doesn't pollute the symbol table which can confuse eg. perf.
-
-These are obviously similar to our existing feature sections, but are
-not automatically patched based on CPU/MMU features, rather they are
-designed to be manually patched by C code at some arbitrary point.
+Add security feature flags to indicate the need for software to flush
+the count cache on context switch, and for the presence of a hardware
+assisted count cache flush.
 
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/include/asm/code-patching-asm.h |   18 ++++++++++++++++++
- arch/powerpc/include/asm/code-patching.h     |    2 ++
- arch/powerpc/lib/code-patching.c             |   16 ++++++++++++++++
- 3 files changed, 36 insertions(+)
- create mode 100644 arch/powerpc/include/asm/code-patching-asm.h
+ arch/powerpc/include/asm/security_features.h |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- /dev/null
-+++ b/arch/powerpc/include/asm/code-patching-asm.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Copyright 2018, Michael Ellerman, IBM Corporation.
-+ */
-+#ifndef _ASM_POWERPC_CODE_PATCHING_ASM_H
-+#define _ASM_POWERPC_CODE_PATCHING_ASM_H
-+
-+/* Define a "site" that can be patched */
-+.macro patch_site label name
-+	.pushsection ".rodata"
-+	.balign 4
-+	.global \name
-+\name:
-+	.4byte	\label - .
-+	.popsection
-+.endm
-+
-+#endif /* _ASM_POWERPC_CODE_PATCHING_ASM_H */
---- a/arch/powerpc/include/asm/code-patching.h
-+++ b/arch/powerpc/include/asm/code-patching.h
-@@ -32,6 +32,8 @@ unsigned int create_cond_branch(const un
- int patch_branch(unsigned int *addr, unsigned long target, int flags);
- int patch_instruction(unsigned int *addr, unsigned int instr);
- int raw_patch_instruction(unsigned int *addr, unsigned int instr);
-+int patch_instruction_site(s32 *addr, unsigned int instr);
-+int patch_branch_site(s32 *site, unsigned long target, int flags);
+--- a/arch/powerpc/include/asm/security_features.h
++++ b/arch/powerpc/include/asm/security_features.h
+@@ -59,6 +59,9 @@ static inline bool security_ftr_enabled(
+ // Indirect branch prediction cache disabled
+ #define SEC_FTR_COUNT_CACHE_DISABLED	0x0000000000000020ull
  
- int instr_is_relative_branch(unsigned int instr);
- int instr_is_relative_link_branch(unsigned int instr);
---- a/arch/powerpc/lib/code-patching.c
-+++ b/arch/powerpc/lib/code-patching.c
-@@ -206,6 +206,22 @@ int patch_branch(unsigned int *addr, uns
- 	return patch_instruction(addr, create_branch(addr, target, flags));
- }
++// bcctr 2,0,0 triggers a hardware assisted count cache flush
++#define SEC_FTR_BCCTR_FLUSH_ASSIST	0x0000000000000800ull
++
  
-+int patch_branch_site(s32 *site, unsigned long target, int flags)
-+{
-+	unsigned int *addr;
+ // Features indicating need for Spectre/Meltdown mitigations
+ 
+@@ -74,6 +77,9 @@ static inline bool security_ftr_enabled(
+ // Firmware configuration indicates user favours security over performance
+ #define SEC_FTR_FAVOUR_SECURITY		0x0000000000000200ull
+ 
++// Software required to flush count cache on context switch
++#define SEC_FTR_FLUSH_COUNT_CACHE	0x0000000000000400ull
 +
-+	addr = (unsigned int *)((unsigned long)site + *site);
-+	return patch_instruction(addr, create_branch(addr, target, flags));
-+}
-+
-+int patch_instruction_site(s32 *site, unsigned int instr)
-+{
-+	unsigned int *addr;
-+
-+	addr = (unsigned int *)((unsigned long)site + *site);
-+	return patch_instruction(addr, instr);
-+}
-+
- bool is_offset_in_branch_range(long offset)
- {
- 	/*
+ 
+ // Features enabled by default
+ #define SEC_FTR_DEFAULT \
 
 
