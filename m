@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2ABC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3A3C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED488206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F098206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138871;
-	bh=WlhoCMngBHbH85/IRcbtHgQvKSAl2Z1+M42fujHg2KU=;
+	s=default; t=1554138876;
+	bh=BWZHSDq+fteNM14pWLBv+L9HmWzg6Kx9g7A4YrbVTwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mA3Kp3oIXwOuigRgrf87M45aA3C43bTOkxW52kSYSKrucDUJuBZHT3JWJSIBZQM/s
-	 T/b8xBvWmO2sqf5gjG7d4jJtJO2NNzEpRayGY6NOYVtgvL87JA3jzkSFImSg7rGlJn
-	 Ab4UeI4sW5R1JaQWulU1PZxdjzdkzdzuUN5Z8Btw=
+	b=R6BZae7wPMYXkfTlrjS/t/JtJsGsZd8NWem38SdbdtUJQS1bfvmYQFAfX9cTCZpQd
+	 2iDK6UM7s/hT5dc6ENAve2F3JfdpxTXDIxy/RnjINh5D1AY9yOqm+HQgksuuFF3TY6
+	 rAPGuWg4nQx1zdkTNTYn2Bw43KN9xoMzp1m1WDaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730757AbfDARO3 (ORCPT
+        id S1730766AbfDAROe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:14:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37736 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:14:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729057AbfDARO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:14:28 -0400
+        id S1728813AbfDAROc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:14:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D05EF205F4;
-        Mon,  1 Apr 2019 17:14:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E3F521473;
+        Mon,  1 Apr 2019 17:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138867;
-        bh=WlhoCMngBHbH85/IRcbtHgQvKSAl2Z1+M42fujHg2KU=;
+        s=default; t=1554138871;
+        bh=BWZHSDq+fteNM14pWLBv+L9HmWzg6Kx9g7A4YrbVTwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y5ryTyV7jSMw3ofoxcPDbx0ATsPtqWow5tkeRAN6O3JnH8m/p3o7PIFChiI0RbkO4
-         zTX62Q9ecP9XidUguK8jTsEK0zKmj4qkzX9ZqacjXVZZk2A9co+lRtpyRb5mwFJxbA
-         48UoMVLJLhWYh2pOjywO0PiW6z18D07MxUbE4kqk=
+        b=qpknGuLkfRChwEDyvNFMPZPhZayG5VrsSWiaUtYjNgv4tncKPZXco+ph1zrJ1Bbv5
+         oGHJa8y2jkfoDtDSIHVHiKQH/HtSQGhdnkT4jk/6ZuRPIUp7nGis5dSSazvmYJhL3r
+         k9E5H3NhcP/fcsIPIxqcs/XdBw7FCjvhrA+GVJLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Seulbae Kim <seulbae@gatech.edu>,
-        Filipe Manana <fdmanana@suse.com>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 045/134] Btrfs: fix incorrect file size after shrinking truncate and fsync
-Date:   Mon,  1 Apr 2019 19:01:21 +0200
-Message-Id: <20190401170048.810845404@linuxfoundation.org>
+Subject: [PATCH 4.19 046/134] btrfs: remove WARN_ON in log_dir_items
+Date:   Mon,  1 Apr 2019 19:01:22 +0200
+Message-Id: <20190401170048.899722291@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,98 +66,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit bf504110bc8aa05df48b0e5f0aa84bfb81e0574b upstream.
+commit 2cc8334270e281815c3850c3adea363c51f21e0d upstream.
 
-If we do a shrinking truncate against an inode which is already present
-in the respective log tree and then rename it, as part of logging the new
-name we end up logging an inode item that reflects the old size of the
-file (the one which we previously logged) and not the new smaller size.
-The decision to preserve the size previously logged was added by commit
-1a4bcf470c886b ("Btrfs: fix fsync data loss after adding hard link to
-inode") in order to avoid data loss after replaying the log. However that
-decision is only needed for the case the logged inode size is smaller then
-the current size of the inode, as explained in that commit's change log.
-If the current size of the inode is smaller then the previously logged
-size, we know a shrinking truncate happened and therefore need to use
-that smaller size.
+When Filipe added the recursive directory logging stuff in
+2f2ff0ee5e430 ("Btrfs: fix metadata inconsistencies after directory
+fsync") he specifically didn't take the directory i_mutex for the
+children directories that we need to log because of lockdep.  This is
+generally fine, but can lead to this WARN_ON() tripping if we happen to
+run delayed deletion's in between our first search and our second search
+of dir_item/dir_indexes for this directory.  We expect this to happen,
+so the WARN_ON() isn't necessary.  Drop the WARN_ON() and add a comment
+so we know why this case can happen.
 
-Example to trigger the problem:
-
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
-
-  $ xfs_io -f -c "pwrite -S 0xab 0 8000" /mnt/foo
-  $ xfs_io -c "fsync" /mnt/foo
-  $ xfs_io -c "truncate 3000" /mnt/foo
-
-  $ mv /mnt/foo /mnt/bar
-  $ xfs_io -c "fsync" /mnt/bar
-
-  <power failure>
-
-  $ mount /dev/sdb /mnt
-  $ od -t x1 -A d /mnt/bar
-  0000000 ab ab ab ab ab ab ab ab ab ab ab ab ab ab ab ab
-  *
-  0008000
-
-Once we rename the file, we log its name (and inode item), and because
-the inode was already logged before in the current transaction, we log it
-with a size of 8000 bytes because that is the size we previously logged
-(with the first fsync). As part of the rename, besides logging the inode,
-we do also sync the log, which is done since commit d4682ba03ef618
-("Btrfs: sync log after logging new name"), so the next fsync against our
-inode is effectively a no-op, since no new changes happened since the
-rename operation. Even if did not sync the log during the rename
-operation, the same problem (fize size of 8000 bytes instead of 3000
-bytes) would be visible after replaying the log if the log ended up
-getting synced to disk through some other means, such as for example by
-fsyncing some other modified file. In the example above the fsync after
-the rename operation is there just because not every filesystem may
-guarantee logging/journalling the inode (and syncing the log/journal)
-during the rename operation, for example it is needed for f2fs, but not
-for ext4 and xfs.
-
-Fix this scenario by, when logging a new name (which is triggered by
-rename and link operations), using the current size of the inode instead
-of the previously logged inode size.
-
-A test case for fstests follows soon.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202695
 CC: stable@vger.kernel.org # 4.4+
-Reported-by: Seulbae Kim <seulbae@gatech.edu>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/tree-log.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/btrfs/tree-log.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
 --- a/fs/btrfs/tree-log.c
 +++ b/fs/btrfs/tree-log.c
-@@ -4504,6 +4504,19 @@ static int logged_inode_size(struct btrf
- 		item = btrfs_item_ptr(path->nodes[0], path->slots[0],
- 				      struct btrfs_inode_item);
- 		*size_ret = btrfs_inode_size(path->nodes[0], item);
-+		/*
-+		 * If the in-memory inode's i_size is smaller then the inode
-+		 * size stored in the btree, return the inode's i_size, so
-+		 * that we get a correct inode size after replaying the log
-+		 * when before a power failure we had a shrinking truncate
-+		 * followed by addition of a new name (rename / new hard link).
-+		 * Otherwise return the inode size from the btree, to avoid
-+		 * data loss when replaying a log due to previously doing a
-+		 * write that expands the inode's size and logging a new name
-+		 * immediately after.
-+		 */
-+		if (*size_ret > inode->vfs_inode.i_size)
-+			*size_ret = inode->vfs_inode.i_size;
+@@ -3532,9 +3532,16 @@ static noinline int log_dir_items(struct
  	}
- 
  	btrfs_release_path(path);
+ 
+-	/* find the first key from this transaction again */
++	/*
++	 * Find the first key from this transaction again.  See the note for
++	 * log_new_dir_dentries, if we're logging a directory recursively we
++	 * won't be holding its i_mutex, which means we can modify the directory
++	 * while we're logging it.  If we remove an entry between our first
++	 * search and this search we'll not find the key again and can just
++	 * bail.
++	 */
+ 	ret = btrfs_search_slot(NULL, root, &min_key, path, 0, 0);
+-	if (WARN_ON(ret != 0))
++	if (ret != 0)
+ 		goto done;
+ 
+ 	/*
 
 
