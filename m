@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B72C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17859C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4AC820856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC0E2133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139096;
-	bh=WNExJ6DVnyJ7aRMm5PFRBQ/DlbP5nd0OZcrEhJO6UsM=;
+	s=default; t=1554139100;
+	bh=B6282QcvcZgLwAWL24ai6IIP92adM8eO1TB6SGv3vO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVLZaGzW2UOzEsstVc9AWxv8bZgFbm8KN1Z1e43y6WkuFkif9uN3eQgiCwScRj9AG
-	 PCDpxrj0OKrSaZFhJ/V2LPUNBOYDPNgD5ZsYDyOVqkal6nlvyKVwX+ZeLchOTGG7S/
-	 LcGH7rWIWjYQKrBthh2+1rwql4aDyacCJKYD2GFA=
+	b=Q5gxXlvZDDbgZLm8uclD5J4lftedhQTlINoXv1AurJ8uaB9ydWoFuQaAVBS1c/bJr
+	 po468+jTnNGSxQGLe/MK9VJxfd1pBHMZ8GyiN36UDTrZozl4QS9vAgs65pEk4/oaL8
+	 eCeFJSuH4beyWQRVLC3LnGd90mhRy2JqgoG+1AjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731344AbfDARSO (ORCPT
+        id S1731101AbfDARST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:18:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45132 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731331AbfDARSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:18:10 -0400
+        id S1731331AbfDARSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:18:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43F69206C0;
-        Mon,  1 Apr 2019 17:18:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39C47206C0;
+        Mon,  1 Apr 2019 17:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139089;
-        bh=WNExJ6DVnyJ7aRMm5PFRBQ/DlbP5nd0OZcrEhJO6UsM=;
+        s=default; t=1554139096;
+        bh=B6282QcvcZgLwAWL24ai6IIP92adM8eO1TB6SGv3vO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B5+i+5NTGYS4j6c/jJthGxYTaT6zVgcVCvMhUIAYfeQwkGIqXf6wIpXX7maUhAYzl
-         H//YZqRC2l0m4ZcCB8X8E36Q4jaTKNS7r9qJLFtD79vWRVTcAUiGmXtDnCZBiRBvtK
-         TAz6Yumzrs/KU7GzGXiIPhVz1GwwoqcQ/wP8Hstc=
+        b=oVJJGK2GkpTS6BCipdG4qRk2Q5ASKDtayadv8OigKGMaoxb43ekTxOFDYfNpYqFyK
+         sOSDxhrfnw1ZYYxpeEi7PH7UQOoAW53cJgIqwET6BGNIC4zM53ZbF24s22PoWBIrIZ
+         NmPGqVc+TkW9OxMeRMhe0Nk1tAvOb3/IomAMhoTU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 109/134] xhci: Dont let USB3 ports stuck in polling state prevent suspend
-Date:   Mon,  1 Apr 2019 19:02:25 +0200
-Message-Id: <20190401170054.407180774@linuxfoundation.org>
+        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 075/134] scsi: zfcp: fix rport unblock if deleted SCSI devices on Scsi_Host
+Date:   Mon,  1 Apr 2019 19:01:51 +0200
+Message-Id: <20190401170051.410419425@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -65,89 +66,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit d92f2c59cc2cbca6bfb2cc54882b58ba76b15fd4 upstream.
+commit fe67888fc007a76b81e37da23ce5bd8fb95890b0 upstream.
 
-Commit 2f31a67f01a8 ("usb: xhci: Prevent bus suspend if a port connect
-change or polling state is detected") was intended to prevent ports that
-were still link training from being forced to U3 suspend state mid
-enumeration.
-This solved enumeration issues for devices with slow link training.
+An already deleted SCSI device can exist on the Scsi_Host and remain there
+because something still holds a reference.  A new SCSI device with the same
+H:C:T:L and FCP device, target port WWPN, and FCP LUN can be created.  When
+we try to unblock an rport, we still find the deleted SCSI device and
+return early because the zfcp_scsi_dev of that SCSI device is not
+ZFCP_STATUS_COMMON_UNBLOCKED. Hence we miss to unblock the rport, even if
+the new proper SCSI device would be in good state.
 
-Turns out some devices are stuck in the link training/polling state,
-and thus that patch will prevent suspend completely for these devices.
-This is seen with USB3 card readers in some MacBooks.
+Therefore, skip deleted SCSI devices when iterating the sdevs of the shost.
+[cf. __scsi_device_lookup{_by_target}() or scsi_device_get()]
 
-Instead of preventing suspend, give some time to complete the link
-training. On successful training the port will end up as connected
-and enabled.
-If port instead is stuck in link training the bus suspend will continue
-suspending after 360ms (10 * 36ms) timeout (tPollingLFPSTimeout).
+The following abbreviated trace sequence can indicate such problem:
 
-Original patch was sent to stable, this one should go there as well
+Area           : REC
+Tag            : ersfs_3
+LUN            : 0x4045400300000000
+WWPN           : 0x50050763031bd327
+LUN status     : 0x40000000     not ZFCP_STATUS_COMMON_UNBLOCKED
+Ready count    : n		not incremented yet
+Running count  : 0x00000000
+ERP want       : 0x01
+ERP need       : 0xc1		ZFCP_ERP_ACTION_NONE
 
-Fixes: 2f31a67f01a8 ("usb: xhci: Prevent bus suspend if a port connect change or polling state is detected")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Area           : REC
+Tag            : ersfs_3
+LUN            : 0x4045400300000000
+WWPN           : 0x50050763031bd327
+LUN status     : 0x41000000
+Ready count    : n+1
+Running count  : 0x00000000
+ERP want       : 0x01
+ERP need       : 0x01
+
+...
+
+Area           : REC
+Level          : 4		only with increased trace level
+Tag            : ertru_l
+LUN            : 0x4045400300000000
+WWPN           : 0x50050763031bd327
+LUN status     : 0x40000000
+Request ID     : 0x0000000000000000
+ERP status     : 0x01800000
+ERP step       : 0x1000
+ERP action     : 0x01
+ERP count      : 0x00
+
+NOT followed by a trace record with tag "scpaddy"
+for WWPN 0x50050763031bd327.
+
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Fixes: 6f2ce1c6af37 ("scsi: zfcp: fix rport unblock race with LUN recovery")
+Cc: <stable@vger.kernel.org> #2.6.32+
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-hub.c |   19 ++++++++++++-------
- drivers/usb/host/xhci.h     |    8 ++++++++
- 2 files changed, 20 insertions(+), 7 deletions(-)
+ drivers/s390/scsi/zfcp_erp.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1501,20 +1501,25 @@ int xhci_bus_suspend(struct usb_hcd *hcd
- 	port_index = max_ports;
- 	while (port_index--) {
- 		u32 t1, t2;
--
-+		int retries = 10;
-+retry:
- 		t1 = readl(ports[port_index]->addr);
- 		t2 = xhci_port_state_to_neutral(t1);
- 		portsc_buf[port_index] = 0;
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -1297,6 +1297,9 @@ static void zfcp_erp_try_rport_unblock(s
+ 		struct zfcp_scsi_dev *zsdev = sdev_to_zfcp(sdev);
+ 		int lun_status;
  
--		/* Bail out if a USB3 port has a new device in link training */
--		if ((hcd->speed >= HCD_USB3) &&
-+		/*
-+		 * Give a USB3 port in link training time to finish, but don't
-+		 * prevent suspend as port might be stuck
-+		 */
-+		if ((hcd->speed >= HCD_USB3) && retries-- &&
- 		    (t1 & PORT_PLS_MASK) == XDEV_POLLING) {
--			bus_state->bus_suspended = 0;
- 			spin_unlock_irqrestore(&xhci->lock, flags);
--			xhci_dbg(xhci, "Bus suspend bailout, port in polling\n");
--			return -EBUSY;
-+			msleep(XHCI_PORT_POLLING_LFPS_TIME);
-+			spin_lock_irqsave(&xhci->lock, flags);
-+			xhci_dbg(xhci, "port %d polling in bus suspend, waiting\n",
-+				 port_index);
-+			goto retry;
- 		}
--
- 		/* suspend ports in U0, or bail out for new connect changes */
- 		if ((t1 & PORT_PE) && (t1 & PORT_PLS_MASK) == XDEV_U0) {
- 			if ((t1 & PORT_CSC) && wake_enabled) {
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -452,6 +452,14 @@ struct xhci_op_regs {
-  */
- #define XHCI_DEFAULT_BESL	4
- 
-+/*
-+ * USB3 specification define a 360ms tPollingLFPSTiemout for USB3 ports
-+ * to complete link training. usually link trainig completes much faster
-+ * so check status 10 times with 36ms sleep in places we need to wait for
-+ * polling to complete.
-+ */
-+#define XHCI_PORT_POLLING_LFPS_TIME  36
-+
- /**
-  * struct xhci_intr_reg - Interrupt Register Set
-  * @irq_pending:	IMAN - Interrupt Management Register.  Used to enable
++		if (sdev->sdev_state == SDEV_DEL ||
++		    sdev->sdev_state == SDEV_CANCEL)
++			continue;
+ 		if (zsdev->port != port)
+ 			continue;
+ 		/* LUN under port of interest */
 
 
