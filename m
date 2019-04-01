@@ -2,82 +2,108 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F719C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8040EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3141A206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:09:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GKcw0itE"
+	by mail.kernel.org (Postfix) with ESMTP id 561A2206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbfDASJS (ORCPT
+        id S1729713AbfDARI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:09:18 -0400
-Received: from us01smtprelay-2.synopsys.com ([198.182.60.111]:60068 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729152AbfDASJP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:09:15 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id AA22110C1B85;
-        Mon,  1 Apr 2019 11:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1554142154; bh=X2vEap8QyGsYOhHhNYstKy6P734YLI9dL8Q2H9Fdg9Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GKcw0itE12J2KY44wazEtjktpiBWEZoaHM1o270/tsIwPR9RYE/YAKJ9ZWpAoKlOA
-         yyEHwtIT3KI0/SzKpYLJ1Rw8hXmoRsudVjRpXT7kuWLvwaxuumENSwXex8rzUzR7Eb
-         UeDwqFC9IapwK4w4193saIn+xvsSgBTUop8Q2/0d5e3r2VmZEkqtv2bHiOvd4vHZ/Z
-         yoMfF+jze+fTm/maMIxn58HzVCJUq5UbxiqLshS9TFxtAeizcfoMIq7Qs3qMOg8mPw
-         NyKaHCITQw1FOC+jYtWb2JNGOk/mjn9N+p5iJX02/6FJsqRCIT0AQx3usTKC9WN1fv
-         fVkKN3Qkm8p4A==
-Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.8.106])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 32453A005A;
-        Mon,  1 Apr 2019 18:09:11 +0000 (UTC)
-From:   Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
-To:     Jiri Kosina <trivial@kernel.org>
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Joe Perches <joe@perches.com>, Vinod Koul <vkoul@kernel.org>,
-        Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
-Subject: [PATCH trivial v2] MAINTAINERS: fix bad file pattern in SYNOPSYS DESIGNWARE AXI DMAC DRIVER
-Date:   Mon,  1 Apr 2019 21:09:09 +0300
-Message-Id: <20190401180909.6288-1-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.14.5
+        Mon, 1 Apr 2019 13:08:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45284 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729323AbfDARIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:08:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7DF4AABF4;
+        Mon,  1 Apr 2019 17:08:50 +0000 (UTC)
+Date:   Mon, 01 Apr 2019 19:08:49 +0200
+Message-ID: <s5hmul9lkke.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Jian-Hong Pan" <jian-hong@endlessm.com>
+Cc:     <alsa-devel@alsa-project.org>, "Daniel Drake" <drake@endlessm.com>,
+        <linux@endlessm.com>, "Kailang Yang" <kailang@realtek.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda/realtek: Enable headset MIC of Acer TravelMate B114-21 with ALC233
+In-Reply-To: <20190401032503.2821-1-jian-hong@endlessm.com>
+References: <20190401032503.2821-1-jian-hong@endlessm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 1fe20f1b8454 ("dmaengine: Introduce DW AXI DMAC driver")
-added an incorrect file pattern. Fix it.
+On Mon, 01 Apr 2019 05:25:05 +0200,
+Jian-Hong Pan wrote:
+> 
+> The Acer TravelMate B114-21 laptop cannot detect and record sound from
+> headset MIC.  This patch adds the ALC233_FIXUP_ACER_HEADSET_MIC HDA verb
+> quirk chained with ALC233_FIXUP_ASUS_MIC_NO_PRESENCE pin quirk to fix
+> this issue.
+> 
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> Signed-off-by: Daniel Drake <drake@endlessm.com>
+> ---
+>  sound/pci/hda/patch_realtek.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+> index a3fb3d4c5730..bdb2227be4eb 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -5690,6 +5690,7 @@ enum {
+>  	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
+>  	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
+>  	ALC299_FIXUP_PREDATOR_SPK,
+> +	ALC233_FIXUP_ACER_HEADSET_MIC,
+>  };
+>  
+>  static const struct hda_fixup alc269_fixups[] = {
+> @@ -6713,6 +6714,15 @@ static const struct hda_fixup alc269_fixups[] = {
+>  			{ 0x21, 0x90170150 }, /* use as headset mic, without its own jack detect */
+>  			{ }
+>  		}
+> +	[ALC233_FIXUP_ACER_HEADSET_MIC] = {
+> +		.type = HDA_FIXUP_VERBS,
+> +		.v.verbs = (const struct hda_verb[]) {
+> +			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x45 },
+> +			{ 0x20, AC_VERB_SET_PROC_COEF, 0x5089 },
+> +			{ }
 
-Reported-by: Joe Perches <joe@perches.com>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For the additional COEF application, I'd like to hear ack from
+Kailang.  It's still a black magic from Realtek, so need some
+confirmation.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3e5a5d263f29..be8285e81b6a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14987,7 +14987,7 @@ F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
- SYNOPSYS DESIGNWARE AXI DMAC DRIVER
- M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
- S:	Maintained
--F:	drivers/dma/dwi-axi-dmac/
-+F:	drivers/dma/dw-axi-dmac/
- F:	Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
- 
- SYNOPSYS DESIGNWARE DMAC DRIVER
--- 
-2.14.5
 
+thanks,
+
+Takashi
+
+> +		},
+> +		.chained = true,
+> +		.chain_id = ALC233_FIXUP_ASUS_MIC_NO_PRESENCE
+>  	},
+>  };
+>  
+> @@ -6737,6 +6747,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+>  	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+>  	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+>  	SND_PCI_QUIRK(0x1025, 0x1308, "Acer Aspire Z24-890", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+> +	SND_PCI_QUIRK(0x1025, 0x132a, "Acer TravelMate B114-21", ALC233_FIXUP_ACER_HEADSET_MIC),
+>  	SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_FIXUP_ACER_HEADSET_MIC),
+>  	SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M101Z),
+>  	SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", ALC275_FIXUP_DELL_XPS),
+> -- 
+> 2.20.1
+> 
+> 
