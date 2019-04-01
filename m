@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244C2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3287EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B9821473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06FF4206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139227;
-	bh=GHOgPrGOYX1REIZw7wKq7EofzCvD+5eBOEjr6BbJnGM=;
+	s=default; t=1554139230;
+	bh=/Oa42ootfa3ePucnBBTmLbvfgR9umwGL0Djqk/EGRn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gUid6YdwNYBO1fC1byVxIPmkpOHOU+FU2sb9yOjVuBkR93s/OHgm7XJov4Dyv3RmK
-	 cFNEdpSq4I1ORcNQVutyNuLH3nvZJcOH7aBGf9leQ+SW/SM1E4SQe4C72unMJACrNj
-	 Xg+uzWvs1KFdoQNkOU2EB0QnhY9rQVmfTn+oRZU8=
+	b=nu130khn6HijhJiIp70/YCc3D0y6jHVCFhQUZE5YecNEM2QwQREE8k9ly/G4ns6ts
+	 2lT2QVQSf4lQYaxDVQJ2UNPRLHM+88O/Y+UeOlBmmW0x7dYzEnPwkusyuyMtOEFUur
+	 HKQyxanHma8oA1Efi8OpfCJsxEV4EHkTg7c+SfGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731646AbfDARUZ (ORCPT
+        id S1731654AbfDARU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:20:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48520 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:20:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731630AbfDARUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:20:22 -0400
+        id S1731638AbfDARUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:20:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3B60206DD;
-        Mon,  1 Apr 2019 17:20:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F076206C0;
+        Mon,  1 Apr 2019 17:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139221;
-        bh=GHOgPrGOYX1REIZw7wKq7EofzCvD+5eBOEjr6BbJnGM=;
+        s=default; t=1554139224;
+        bh=/Oa42ootfa3ePucnBBTmLbvfgR9umwGL0Djqk/EGRn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rLa8U5IpSXNbQhBbSfW4h65zr3YTnEWtiNKRTzba6vq3PRewaVCdQyx77IbiEg4rW
-         EWCZO1LB8w5DwFF62Ja3nSC5Lpm+OwP+FL61WHQhKv7Ey/LzaDElfnk9AJWi/1O0bS
-         TQo4/g+gUt1bUPiVrpgQw/FU2lQf2FrEumSuBprQ=
+        b=ji50ZanL5sdMgKiIGkwLqqSMrF4mlbsmuUthKMF5PQH3xW9XffRBUiOzoihl5eK9/
+         KwCrtk1p56p522r5XyeL64/xEfP2SUj4hrAq+ryJt0D5iNmd7hlIIM1shByk+xUwMG
+         AlO2BZDOwB9ZpCBPeRrT5KQwGXNSGPeW8oRKSkhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Josh Elsasser <jelsasser@appneta.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 013/107] packets: Always register packet sk in the same order
-Date:   Mon,  1 Apr 2019 19:01:28 +0200
-Message-Id: <20190401170046.733093336@linuxfoundation.org>
+Subject: [PATCH 4.14 014/107] rhashtable: Still do rehash when we get EEXIST
+Date:   Mon,  1 Apr 2019 19:01:29 +0200
+Message-Id: <20190401170046.831657502@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -67,71 +66,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit a4dc6a49156b1f8d6e17251ffda17c9e6a5db78a ]
+[ Upstream commit 408f13ef358aa5ad56dc6230c2c7deb92cf462b1 ]
 
-When using fanouts with AF_PACKET, the demux functions such as
-fanout_demux_cpu will return an index in the fanout socket array, which
-corresponds to the selected socket.
+As it stands if a shrink is delayed because of an outstanding
+rehash, we will go into a rescheduling loop without ever doing
+the rehash.
 
-The ordering of this array depends on the order the sockets were added
-to a given fanout group, so for FANOUT_CPU this means sockets are bound
-to cpus in the order they are configured, which is OK.
+This patch fixes this by still carrying out the rehash and then
+rescheduling so that we can shrink after the completion of the
+rehash should it still be necessary.
 
-However, when stopping then restarting the interface these sockets are
-bound to, the sockets are reassigned to the fanout group in the reverse
-order, due to the fact that they were inserted at the head of the
-interface's AF_PACKET socket list.
+The return value of EEXIST captures this case and other cases
+(e.g., another thread expanded/rehashed the table at the same
+time) where we should still proceed with the rehash.
 
-This means that traffic that was directed to the first socket in the
-fanout group is now directed to the last one after an interface restart.
-
-In the case of FANOUT_CPU, traffic from CPU0 will be directed to the
-socket that used to receive traffic from the last CPU after an interface
-restart.
-
-This commit introduces a helper to add a socket at the tail of a list,
-then uses it to register AF_PACKET sockets.
-
-Note that this changes the order in which sockets are listed in /proc and
-with sock_diag.
-
-Fixes: dc99f600698d ("packet: Add fanout support")
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
+Fixes: da20420f83ea ("rhashtable: Add nested tables")
+Reported-by: Josh Elsasser <jelsasser@appneta.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Tested-by: Josh Elsasser <jelsasser@appneta.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/sock.h     |    6 ++++++
- net/packet/af_packet.c |    2 +-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ lib/rhashtable.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -682,6 +682,12 @@ static inline void sk_add_node_rcu(struc
- 		hlist_add_head_rcu(&sk->sk_node, list);
- }
+--- a/lib/rhashtable.c
++++ b/lib/rhashtable.c
+@@ -459,8 +459,12 @@ static void rht_deferred_worker(struct w
+ 	else if (tbl->nest)
+ 		err = rhashtable_rehash_alloc(ht, tbl, tbl->size);
  
-+static inline void sk_add_node_tail_rcu(struct sock *sk, struct hlist_head *list)
-+{
-+	sock_hold(sk);
-+	hlist_add_tail_rcu(&sk->sk_node, list);
-+}
+-	if (!err)
+-		err = rhashtable_rehash_table(ht);
++	if (!err || err == -EEXIST) {
++		int nerr;
 +
- static inline void __sk_nulls_add_node_rcu(struct sock *sk, struct hlist_nulls_head *list)
- {
- 	hlist_nulls_add_head_rcu(&sk->sk_nulls_node, list);
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -3281,7 +3281,7 @@ static int packet_create(struct net *net
- 	}
++		nerr = rhashtable_rehash_table(ht);
++		err = err ?: nerr;
++	}
  
- 	mutex_lock(&net->packet.sklist_lock);
--	sk_add_node_rcu(sk, &net->packet.sklist);
-+	sk_add_node_tail_rcu(sk, &net->packet.sklist);
- 	mutex_unlock(&net->packet.sklist_lock);
+ 	mutex_unlock(&ht->mutex);
  
- 	preempt_disable();
 
 
