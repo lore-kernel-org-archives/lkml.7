@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68136C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7E1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0A4206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B8A21929
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138615;
-	bh=SCemueBFeRFKmp5tSRLSfwxpcC8+aXNHqYcUTOWE8dk=;
+	s=default; t=1554138621;
+	bh=Nx+B3wKVjIcMtPeFQWPDPc1Nk2eSA5xxRB/GuN5TZkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fK5orPWMKT4cJu/RNT6L232nlvr6K3yPlsV6TojJ/xi0mTfADTfhvyiKxPBqMUD4I
-	 gcCBXO4bsYjgqPgQYcgzV+GNhz14294h10K6wMY8ea1pDp1ipZDoyzdZSTQhjXzvN5
-	 HfzdtZ22yFUuyPCyxBeFkmiDvWLN924pPx75/XFc=
+	b=2ZTH16w3y2mZmAzYadWwnYBeYZvWuczbFt6YaFBCmzADMUS5fnOZypjacJCuZqhgQ
+	 a8EYKttidNpxoTMjJvH+Ubwwxz/nqVnPMx04HrRJXfVtTP7CuH2CtnHnYq7NcItURA
+	 Hrtr4YiDwW0d/FLUNFoR7a5Y7rynTvknAmTR0Coc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbfDARKO (ORCPT
+        id S1729936AbfDARKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57626 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:10:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729121AbfDARKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:10:10 -0400
+        id S1728836AbfDARKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:10:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 585DF206B8;
-        Mon,  1 Apr 2019 17:10:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFB70206B8;
+        Mon,  1 Apr 2019 17:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138609;
-        bh=SCemueBFeRFKmp5tSRLSfwxpcC8+aXNHqYcUTOWE8dk=;
+        s=default; t=1554138616;
+        bh=Nx+B3wKVjIcMtPeFQWPDPc1Nk2eSA5xxRB/GuN5TZkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zq/1bJOE7PWzaPs12wg3m70zsEd3SQJiYLfaBXzXoqNAexAeWxe/wcmxpzJenuzjn
-         Sxb5Sp1ZdWfleIfTi6cSP4onhj5ONBXZq5VPbufvP+GV1aO8ZAx4ed5Xb8GFrKxu8b
-         3URqMMiDuw6hH0h0KK/rGw4O6tFRMKl5aP/3QH8c=
+        b=hBiHRDV9CTZANlb/sFtjpJVmMCvwYRIFP3YtTv4iM8VG3xtPdhZgqRy1IIGnnMEKK
+         Exf1E6kJJnQxLJp17U6L0sgMQLOjUgRSUVHKuHKEqMbk+fyeJ5XQxhjdHbwbJaj46i
+         2CiTigjZRt50X7VZ9NgvwmfyqebuVYCw0DKNmCjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Radoslav Gerganov <rgerganov@vmware.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 5.0 115/146] USB: gadget: f_hid: fix deadlock in f_hidg_write()
-Date:   Mon,  1 Apr 2019 19:02:07 +0200
-Message-Id: <20190401170058.177452697@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.0 117/146] mm/memory.c: fix modifying of page protection by insert_pfn()
+Date:   Mon,  1 Apr 2019 19:02:09 +0200
+Message-Id: <20190401170058.299390654@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -67,64 +69,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Radoslav Gerganov <rgerganov@vmware.com>
+From: Jan Kara <jack@suse.cz>
 
-commit 072684e8c58d17e853f8e8b9f6d9ce2e58d2b036 upstream.
+commit cae85cb8add35f678cf487139d05e083ce2f570a upstream.
 
-In f_hidg_write() the write_spinlock is acquired before calling
-usb_ep_queue() which causes a deadlock when dummy_hcd is being used.
-This is because dummy_queue() callbacks into f_hidg_req_complete() which
-tries to acquire the same spinlock. This is (part of) the backtrace when
-the deadlock occurs:
+Aneesh has reported that PPC triggers the following warning when
+excercising DAX code:
 
-  0xffffffffc06b1410 in f_hidg_req_complete
-  0xffffffffc06a590a in usb_gadget_giveback_request
-  0xffffffffc06cfff2 in dummy_queue
-  0xffffffffc06a4b96 in usb_ep_queue
-  0xffffffffc06b1eb6 in f_hidg_write
-  0xffffffff8127730b in __vfs_write
-  0xffffffff812774d1 in vfs_write
-  0xffffffff81277725 in SYSC_write
+  IP set_pte_at+0x3c/0x190
+  LR insert_pfn+0x208/0x280
+  Call Trace:
+     insert_pfn+0x68/0x280
+     dax_iomap_pte_fault.isra.7+0x734/0xa40
+     __xfs_filemap_fault+0x280/0x2d0
+     do_wp_page+0x48c/0xa40
+     __handle_mm_fault+0x8d0/0x1fd0
+     handle_mm_fault+0x140/0x250
+     __do_page_fault+0x300/0xd60
+     handle_page_fault+0x18
 
-Fix this by releasing the write_spinlock before calling usb_ep_queue()
+Now that is WARN_ON in set_pte_at which is
 
-Reviewed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Tested-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: stable@vger.kernel.org # 4.11+
-Fixes: 749494b6bdbb ("usb: gadget: f_hid: fix: Move IN request allocation to set_alt()")
-Signed-off-by: Radoslav Gerganov <rgerganov@vmware.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+        VM_WARN_ON(pte_hw_valid(*ptep) && !pte_protnone(*ptep));
+
+The problem is that on some architectures set_pte_at() cannot cope with
+a situation where there is already some (different) valid entry present.
+
+Use ptep_set_access_flags() instead to modify the pfn which is built to
+deal with modifying existing PTE.
+
+Link: http://lkml.kernel.org/r/20190311084537.16029-1-jack@suse.cz
+Fixes: b2770da64254 "mm: add vm_insert_mixed_mkwrite()"
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reported-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Acked-by: Dan Williams <dan.j.williams@intel.com>
+Cc: Chandan Rajendra <chandan@linux.ibm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/function/f_hid.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ mm/memory.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/drivers/usb/gadget/function/f_hid.c
-+++ b/drivers/usb/gadget/function/f_hid.c
-@@ -391,20 +391,20 @@ try_again:
- 	req->complete = f_hidg_req_complete;
- 	req->context  = hidg;
- 
-+	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
-+
- 	status = usb_ep_queue(hidg->in_ep, req, GFP_ATOMIC);
- 	if (status < 0) {
- 		ERROR(hidg->func.config->cdev,
- 			"usb_ep_queue error on int endpoint %zd\n", status);
--		goto release_write_pending_unlocked;
-+		goto release_write_pending;
- 	} else {
- 		status = count;
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1546,10 +1546,12 @@ static vm_fault_t insert_pfn(struct vm_a
+ 				WARN_ON_ONCE(!is_zero_pfn(pte_pfn(*pte)));
+ 				goto out_unlock;
+ 			}
+-			entry = *pte;
+-			goto out_mkwrite;
+-		} else
+-			goto out_unlock;
++			entry = pte_mkyoung(*pte);
++			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
++			if (ptep_set_access_flags(vma, addr, pte, entry, 1))
++				update_mmu_cache(vma, addr, pte);
++		}
++		goto out_unlock;
  	}
--	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
  
- 	return status;
- release_write_pending:
- 	spin_lock_irqsave(&hidg->write_spinlock, flags);
--release_write_pending_unlocked:
- 	hidg->write_pending = 0;
- 	spin_unlock_irqrestore(&hidg->write_spinlock, flags);
+ 	/* Ok, finally just insert the thing.. */
+@@ -1558,7 +1560,6 @@ static vm_fault_t insert_pfn(struct vm_a
+ 	else
+ 		entry = pte_mkspecial(pfn_t_pte(pfn, prot));
  
+-out_mkwrite:
+ 	if (mkwrite) {
+ 		entry = pte_mkyoung(entry);
+ 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
 
 
