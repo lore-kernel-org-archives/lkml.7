@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E55C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D01C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6924921924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA0721924
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138488;
-	bh=E2uk0qeYjRXwXJsP4S5LM2xWmcrL+RL1KoagCYIAuTA=;
+	s=default; t=1554138492;
+	bh=ZzAkr4Vjac4rRM7jMtRJOEfuiJFFI09SuEMBmXzT3wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0tCetGUMs94nEaVzinev6fQBjy+8ZGla0OHgyerMFiRdCknd6l8wH3OCtcTq3uS3G
-	 HoFWIE1uj5YD2cwaOuYfYuZQ70gut/87x5GnUgYrSvpmPqvXTMKaExVKchcYw7NVJv
-	 iY5OKvmzGfbXA0eC9gSgT8czyUtMPtUmjree3fC0=
+	b=WlkxVGERNR3D+ZKSgjFzP+IhK4/0XGNLOccpnABR+q50NZF8W7wXrptIH7NIyM2PN
+	 M/yHiY/YqVPMnJCHu9mtOnxTK9vQk0qn1MhpMKD1aRUthsty3ReKN+BjSjzsa6/nrq
+	 7Kicm/+aunhXUAhjoqE0XeTrPnrXFXX4qJSwUTGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfDARIG (ORCPT
+        id S1729600AbfDARIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:08:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54438 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729138AbfDARID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:08:03 -0400
+        id S1729138AbfDARIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:08:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F23E21924;
-        Mon,  1 Apr 2019 17:08:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56F6521924;
+        Mon,  1 Apr 2019 17:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138482;
-        bh=E2uk0qeYjRXwXJsP4S5LM2xWmcrL+RL1KoagCYIAuTA=;
+        s=default; t=1554138486;
+        bh=ZzAkr4Vjac4rRM7jMtRJOEfuiJFFI09SuEMBmXzT3wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sgJCTNM8oQHG+JLbwJ5CRNFq8aa9Uq/BVgnPVQpMnNVyW4xPsGsQnO0238iPYkntO
-         rXFb1ccjCARzmzFm24ET9PqH1EgZuKQnBxvYsOXyhZQ8Z5EaHbaKIQJVbPra1MQuL7
-         5y27Jtd0p6oRRFs3RpKw8C1sJHjA1Jy7j5lT7+ds=
+        b=dYVay7Fkstpr0bSjUH6it8O//oB1lQdwDi/rYpsbGumb0xl5B7Oq8Sztv3PFUabTi
+         zrHf/T6RhQjLsvdarXH/tarmaIjAYiku9WfNsL98kSs7TYP3FKg5TEI/jNNIGs9rvz
+         xbcoBs7PpuV9ykauzgdQUmYckDquwPd2oHjxM/O0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
-        Richard Genoud <richard.genoud@gmail.com>
-Subject: [PATCH 5.0 078/146] tty/serial: atmel: RS485 HD w/DMA: enable RX after TX is stopped
-Date:   Mon,  1 Apr 2019 19:01:30 +0200
-Message-Id: <20190401170055.461692517@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>
+Subject: [PATCH 5.0 079/146] tty: mxs-auart: fix a potential NULL pointer dereference
+Date:   Mon,  1 Apr 2019 19:01:31 +0200
+Message-Id: <20190401170055.550937729@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -66,79 +64,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-commit 69646d7a3689fbe1a65ae90397d22ac3f1b8d40f upstream.
+commit 6734330654dac550f12e932996b868c6d0dcb421 upstream.
 
-In half-duplex operation, RX should be started after TX completes.
+In case ioremap fails, the fix returns -ENOMEM to avoid NULL
+pointer dereferences.
+Multiple places use port.membase.
 
-If DMA is used, there is a case when the DMA transfer completes but the
-TX FIFO is not emptied, so the RX cannot be restarted just yet.
-
-Use a boolean variable to store this state and rearm TX interrupt mask
-to be signaled again that the transfer finished. In interrupt transmit
-handler this variable is used to start RX. A warning message is generated
-if RX is activated before TX fifo is cleared.
-
-Fixes: b389f173aaa1 ("tty/serial: atmel: RS485 half duplex w/DMA: enable
-RX after TX is done")
-Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
-Acked-by: Richard Genoud <richard.genoud@gmail.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/atmel_serial.c |   24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/tty/serial/mxs-auart.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -166,6 +166,8 @@ struct atmel_uart_port {
- 	unsigned int		pending_status;
- 	spinlock_t		lock_suspended;
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -1686,6 +1686,10 @@ static int mxs_auart_probe(struct platfo
  
-+	bool			hd_start_rx;	/* can start RX during half-duplex operation */
-+
- 	/* ISO7816 */
- 	unsigned int		fidi_min;
- 	unsigned int		fidi_max;
-@@ -933,8 +935,13 @@ static void atmel_complete_tx_dma(void *
- 	if (!uart_circ_empty(xmit))
- 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
- 	else if (atmel_uart_is_half_duplex(port)) {
--		/* DMA done, stop TX, start RX for RS485 */
--		atmel_start_rx(port);
-+		/*
-+		 * DMA done, re-enable TXEMPTY and signal that we can stop
-+		 * TX and start RX for RS485
-+		 */
-+		atmel_port->hd_start_rx = true;
-+		atmel_uart_writel(port, ATMEL_US_IER,
-+				  atmel_port->tx_done_mask);
- 	}
- 
- 	spin_unlock_irqrestore(&port->lock, flags);
-@@ -1378,9 +1385,20 @@ atmel_handle_transmit(struct uart_port *
- 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
- 
- 	if (pending & atmel_port->tx_done_mask) {
--		/* Either PDC or interrupt transmission */
- 		atmel_uart_writel(port, ATMEL_US_IDR,
- 				  atmel_port->tx_done_mask);
-+
-+		/* Start RX if flag was set and FIFO is empty */
-+		if (atmel_port->hd_start_rx) {
-+			if (!(atmel_uart_readl(port, ATMEL_US_CSR)
-+					& ATMEL_US_TXEMPTY))
-+				dev_warn(port->dev, "Should start RX, but TX fifo is not empty\n");
-+
-+			atmel_port->hd_start_rx = false;
-+			atmel_start_rx(port);
-+			return;
-+		}
-+
- 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
- 	}
- }
+ 	s->port.mapbase = r->start;
+ 	s->port.membase = ioremap(r->start, resource_size(r));
++	if (!s->port.membase) {
++		ret = -ENOMEM;
++		goto out_disable_clks;
++	}
+ 	s->port.ops = &mxs_auart_ops;
+ 	s->port.iotype = UPIO_MEM;
+ 	s->port.fifosize = MXS_AUART_FIFO_SIZE;
 
 
