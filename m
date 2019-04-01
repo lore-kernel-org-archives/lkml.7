@@ -2,138 +2,78 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30CBC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 04:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5D6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 04:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE6520870
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 04:26:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqcaChFB"
+	by mail.kernel.org (Postfix) with ESMTP id 783CB20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 04:31:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfDAE0n (ORCPT
+        id S1726724AbfDAEbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 00:26:43 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40449 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731160AbfDAE0J (ORCPT
+        Mon, 1 Apr 2019 00:31:14 -0400
+Received: from bmailout2.hostsharing.net ([83.223.90.240]:46683 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbfDAEbN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 00:26:09 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c207so3879463pfc.7;
-        Sun, 31 Mar 2019 21:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CGjdSjCoRVjM4VFnkLgtsjJRQadXXrAea1wagTahPCc=;
-        b=UqcaChFBSFJ0SPaeuxtJBB1cSPnCZ2sEe3S1PPXX5rBeNvR8PwTB1ZsKtyObu88+QO
-         vvsRpyRFEB55r9hgoiffK/cF1vhWwSUYQ333HgUFhpNf1/qkdNoJx71EUQsRASAFjX4m
-         zjuuOy81iBVV5jPfQ5rFqaqMdjE+LvK9357jyb0I5ARhUhveiGfQjcEfzDLedUzhpjlj
-         p3To993VV/FtD5C+k9ig3o1UNZzHHMakfLpgyeDuhpmYDLfC37kCJEznCPFOPjeNUGpT
-         CejT0ehhqF3DIt3teTeBM7Kvg102eSmqMMAlhGzFNM7umWpm7t9UypSzg9JO9RlFUJCj
-         kdog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CGjdSjCoRVjM4VFnkLgtsjJRQadXXrAea1wagTahPCc=;
-        b=StoZ6WClIXMdvf6Rxmw01MpyUrRYhB/GqNmwF5AqgcLwNLSy7w0xE8QX0WpkFBF7Yc
-         5GZNEld/EE4uiK5BHEE1BZhXJZBFt+H2oKLgq9lf95s78r/9s2qMjcx5kiqP4IdcGuEM
-         rXGgxtjfMko2kYI6giT2EYkJzFzxrzpguFM6xQLUSb9i1c6kO9yqsyOTXoBhiHE4hn38
-         GwtYbya8s0yYWpKDBZ6pAHiz8w5dRiwjL6U8rCfIsEAspNlPrZISqjcNQjRf6iUiTfBs
-         F6ciMlAYEfsJwMY/x2OtMZBlKttJYRlDbFlbRFjWiK12kSo4RpWEkSPcKqj8D+/j6gMb
-         j87g==
-X-Gm-Message-State: APjAAAWjbDjX+d7TAzmlCq4wrqjFYPE1ByaP91xK+ezDt6bDfDpY5O1f
-        /iuRGKqJ9RMDRGVzv3rPy+lklC4Y
-X-Google-Smtp-Source: APXvYqzJ1deNkqroSYDhGhDcfZIBagXvLbOQeCE2B1UedaPnBWHx5yIpvdvCf3VWGPMNBiv/Qf9tkQ==
-X-Received: by 2002:a65:6150:: with SMTP id o16mr28828934pgv.285.1554092768571;
-        Sun, 31 Mar 2019 21:26:08 -0700 (PDT)
-Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id t22sm10996829pgu.45.2019.03.31.21.26.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 31 Mar 2019 21:26:07 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "A.s. Dong" <aisheng.dong@nxp.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 06/11] PCI: imx6: Make use of BIT() in constant definitions
-Date:   Sun, 31 Mar 2019 21:25:42 -0700
-Message-Id: <20190401042547.14067-7-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190401042547.14067-1-andrew.smirnov@gmail.com>
-References: <20190401042547.14067-1-andrew.smirnov@gmail.com>
+        Mon, 1 Apr 2019 00:31:13 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 1256D2800DC4D;
+        Mon,  1 Apr 2019 06:31:12 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id B64A917E50; Mon,  1 Apr 2019 06:31:11 +0200 (CEST)
+Date:   Mon, 1 Apr 2019 06:31:11 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Mario.Limonciello@dell.com, linux-kernel@vger.kernel.org,
+        michael.jamet@intel.com, YehezkelShB@gmail.com,
+        andreas.noever@gmail.com, andriy.shevchenko@linux.intel.com,
+        ckellner@redhat.com
+Subject: Re: [PATCH v3 00/36] thunderbolt: Software connection manager
+ improvements
+Message-ID: <20190401043111.smpqjn3dhgitmh3e@wunner.de>
+References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
+ <1aaab9baea4f46b481b5601dfb060104@ausx13mpc120.AMER.DELL.COM>
+ <20190328165621.GB3622@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328165621.GB3622@lahna.fi.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid using explicit left shifts and convert various definitions to
-use BIT() instead. No functional change intended.
+On Thu, Mar 28, 2019 at 06:56:21PM +0200, Mika Westerberg wrote:
+> On Thu, Mar 28, 2019 at 03:17:57PM +0000, Mario.Limonciello@dell.com wrote:
+> > > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > Sent: Thursday, March 28, 2019 7:36 AM
+> > >   * Do not automatically create PCIe tunnels. Instead we implement "user"
+> > >     security level in the software connection manager as well taking
+> > >     advantage of the existing sysfs interfaces. This allows user to disable
+> > >     PCIe tunneling completely or implement different white listing
+> > >     policies. Major distros include bolt system daemon that takes care of
+> > >     this.
+> > 
+> > This is a bit unfortunate.  Is this because of IOMMU limitations in working
+> > with devices down the chain?
+> 
+> No, it just makes it possible to do things such as "disable all PCIe
+> tunneling", like the master switch we have in GNOME UI.
 
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: linux-imx@nxp.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-pci@vger.kernel.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+It appears to be a change in behavior though as PCIe tunnels are
+currently established automatically on Macs which don't use ICM.
+The change might be considered breaking userspace, not sure.
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index bb95a3273ca2..b1f30b94fb30 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -118,14 +118,14 @@ struct imx6_pcie {
- 
- /* PHY registers (not memory-mapped) */
- #define PCIE_PHY_ATEOVRD			0x10
--#define  PCIE_PHY_ATEOVRD_EN			(0x1 << 2)
-+#define  PCIE_PHY_ATEOVRD_EN			BIT(2)
- #define  PCIE_PHY_ATEOVRD_REF_CLKDIV_SHIFT	0
- #define  PCIE_PHY_ATEOVRD_REF_CLKDIV_MASK	0x1
- 
- #define PCIE_PHY_MPLL_OVRD_IN_LO		0x11
- #define  PCIE_PHY_MPLL_MULTIPLIER_SHIFT		2
- #define  PCIE_PHY_MPLL_MULTIPLIER_MASK		0x7f
--#define  PCIE_PHY_MPLL_MULTIPLIER_OVRD		(0x1 << 9)
-+#define  PCIE_PHY_MPLL_MULTIPLIER_OVRD		BIT(9)
- 
- #define PCIE_PHY_RX_ASIC_OUT 0x100D
- #define PCIE_PHY_RX_ASIC_OUT_VALID	(1 << 0)
-@@ -148,8 +148,8 @@ struct imx6_pcie {
- #define PCIE_PHY_CMN_REG26_ATT_MODE	0xBC
- 
- #define PHY_RX_OVRD_IN_LO 0x1005
--#define PHY_RX_OVRD_IN_LO_RX_DATA_EN (1 << 5)
--#define PHY_RX_OVRD_IN_LO_RX_PLL_EN (1 << 3)
-+#define PHY_RX_OVRD_IN_LO_RX_DATA_EN		BIT(5)
-+#define PHY_RX_OVRD_IN_LO_RX_PLL_EN		BIT(3)
- 
- static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, int exp_val)
- {
--- 
-2.20.1
+Also on macOS it's just plug and play without any need to configure
+whitelists or anything.
 
+Thanks,
+
+Lukas
