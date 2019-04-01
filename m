@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E88C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE231C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BF521924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A1021925
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138370;
-	bh=GRRBHM7wfPZeNyQS1sUyaUM+bSWW64L009aIfds/6iI=;
+	s=default; t=1554138374;
+	bh=TvLMVXqghz13fm+3o3H0cfSCcDS5lBq+90pR/nBu3yU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IqLiqOKPGnuM/2TmeGwqJDXBDoBWhDUUeaFQwykVdNNvF48lbR6CX1NxRWW/FMnxB
-	 v6yPKM7CUv7TZHwr9uRcQiMVsL21xVO0ADPM+ZKVVV48/6SD59A0v2PKcqu9Mks+Ms
-	 /IFWcNAjGRCd3ylSymCfcYe8DLJcxQfYf3Gy1nbc=
+	b=MQktn/yKvFRQFNlKAM+eiaF7OT8aEZC71oiD4IpBh77Wr8VQO8GUXKIwMKacIA1Wc
+	 sDetT4y0YdVLrrYU2pwNQRnxdprqrHVf2khQ6iUbFaZMU2js4qR0r58GayUUPDTGpz
+	 /4NZvWzpoh7qaFNsDWn4VhRsfMS412JwXX5iIw4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbfDARGI (ORCPT
+        id S1729176AbfDARGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:06:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51548 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:06:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729068AbfDARGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:06:07 -0400
+        id S1728768AbfDARGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:06:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DB3B21925;
-        Mon,  1 Apr 2019 17:06:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCB5B21924;
+        Mon,  1 Apr 2019 17:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138366;
-        bh=GRRBHM7wfPZeNyQS1sUyaUM+bSWW64L009aIfds/6iI=;
+        s=default; t=1554138371;
+        bh=TvLMVXqghz13fm+3o3H0cfSCcDS5lBq+90pR/nBu3yU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nRuIwKctl4O3xg2ZxbgSMlrhkgwQypUrk2Y8qjXPti1Dt27lGSRuCYXzXvzTTgfQS
-         /PD9vRA67SQHynY3sGq0jCwzxoFSwxSk+jBLxeQJ/Mou+RYxpgdp0gn8gYtgwqTl8r
-         R4RHM2jToKi64dMOppFBvX3TyT6kox1YRfi7vZyg=
+        b=S7DO15IFlgwo6fc6HMXJjk7R1/Am7VT42nlMHjP97kTdZL37d/aOGbjXuLt0dAoz6
+         oetG73ghw3ZTdKQFhKailzgxiCTdnUH1/FInP0+ZIjn73qIa1NXmjcll7CJSQPHm8C
+         6lsnRnRIyCMxxW1ldmXiwPUNL2qdjQ4cmY0CxFqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Igor Russkikh <igor.russkikh@aquantia.com>,
-        Nikita Danilov <nikita.danilov@aquantia.com>,
-        Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 010/146] net: aquantia: fix rx checksum offload for UDP/TCP over IPv6
-Date:   Mon,  1 Apr 2019 19:00:22 +0200
-Message-Id: <20190401170049.307853928@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christoph Paasch <cpaasch@apple.com>
+Subject: [PATCH 5.0 011/146] net: datagram: fix unbounded loop in __skb_try_recv_datagram()
+Date:   Mon,  1 Apr 2019 19:00:23 +0200
+Message-Id: <20190401170049.392898639@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -66,41 +65,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit a7faaa0c5dc7d091cc9f72b870d7edcdd6f43f12 ]
+[ Upstream commit 0b91bce1ebfc797ff3de60c8f4a1e6219a8a3187 ]
 
-TCP/UDP checksum validity was propagated to skb
-only if IP checksum is valid.
-But for IPv6 there is no validity as there is no checksum in IPv6.
-This patch propagates TCP/UDP checksum validity regardless of IP checksum.
+Christoph reported a stall while peeking datagram with an offset when
+busy polling is enabled. __skb_try_recv_datagram() uses as the loop
+termination condition 'queue empty'. When peeking, the socket
+queue can be not empty, even when no additional packets are received.
 
-Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
-Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
-Signed-off-by: Nikita Danilov <nikita.danilov@aquantia.com>
-Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+Address the issue explicitly checking for receive queue changes,
+as currently done by __skb_wait_for_more_packets().
+
+Fixes: 2b5cd0dfa384 ("net: Change return type of sk_busy_loop from bool to void")
+Reported-and-tested-by: Christoph Paasch <cpaasch@apple.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_ring.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/core/datagram.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-@@ -186,11 +186,12 @@ static void aq_rx_checksum(struct aq_rin
- 	}
- 	if (buff->is_ip_cso) {
- 		__skb_incr_checksum_unnecessary(skb);
--		if (buff->is_udp_cso || buff->is_tcp_cso)
--			__skb_incr_checksum_unnecessary(skb);
- 	} else {
- 		skb->ip_summed = CHECKSUM_NONE;
- 	}
-+
-+	if (buff->is_udp_cso || buff->is_tcp_cso)
-+		__skb_incr_checksum_unnecessary(skb);
- }
+--- a/net/core/datagram.c
++++ b/net/core/datagram.c
+@@ -279,7 +279,7 @@ struct sk_buff *__skb_try_recv_datagram(
+ 			break;
  
- #define AQ_SKB_ALIGN SKB_DATA_ALIGN(sizeof(struct skb_shared_info))
+ 		sk_busy_loop(sk, flags & MSG_DONTWAIT);
+-	} while (!skb_queue_empty(&sk->sk_receive_queue));
++	} while (sk->sk_receive_queue.prev != *last);
+ 
+ 	error = -EAGAIN;
+ 
 
 
