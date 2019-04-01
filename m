@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B09A0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A86C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 823BF21925
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348C821929
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138314;
-	bh=5mP3b2kp+cqkPYAR54+7mfB7xtIHdYPhjA9ttitFgT8=;
+	s=default; t=1554138319;
+	bh=x5BRezBiPtxQGQDUXshgssybnj4dcrJVEWmJ4nXCKMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XgeAPp2W3YPpHtoyWTOUyVc9STGHHqC/35xGPNMKLOYUQbdOCgBKIijiXALtEY8Fy
-	 OnFr3i/76EoZqLm2fD6JHi/dw/ftLqlwGlbK4WmADmPC3mxW+GRriOFSpm7wkAJKPC
-	 WzG2K+IAn98ZEQncSf/d6X1cY16YGSNqrdRhdy5E=
+	b=A9wjMo2CtS+zhteECPQ+pn+yTylviVgxa3o4A0hzorMRwH5ekav7RXZxjue2POfk8
+	 lCDK87MjH5F37w7XxTgfvMX6k1D1KLLOQqYeNUzFsPXD8LdUXu8OZ0/R3g4VGijyi0
+	 cmqBFPYJ88SJ162NWaMln062+O2q8hQQzJ0x0aYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfDARFN (ORCPT
+        id S1728916AbfDARFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:05:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50230 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:05:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728870AbfDARFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:05:12 -0400
+        id S1728731AbfDARFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:05:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D659521929;
-        Mon,  1 Apr 2019 17:05:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DC3A21925;
+        Mon,  1 Apr 2019 17:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138312;
-        bh=5mP3b2kp+cqkPYAR54+7mfB7xtIHdYPhjA9ttitFgT8=;
+        s=default; t=1554138316;
+        bh=x5BRezBiPtxQGQDUXshgssybnj4dcrJVEWmJ4nXCKMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bYFh6dZ6Kmi/NnvbdeFdeG9Lql1AHHNW7b7UnNria3XKVTq2vxbAj1NiXELhaIOuF
-         M55xon3VBndEhgWszLc28QHIyupucnvHnKVr4NrN4HmLuSmXxmlPHH3Ovu1fesq6T3
-         q95DZ/vzfvhhDlGPR/Jn81DV5906gB71KolHX7VI=
+        b=avu/D9QZL4bhzk62DkTc2V861I68tP/YhZvxsBfhRBrB78W2Y5MA86fN+t0ho6DOA
+         Eaz4G5q038awN26Tlb28Aoh1n+xIHamtR8+TlhEUWfBEJKWf3CENhenBp31XB9StsY
+         WYnMCi6G82HFGcKcx31EwsrxxLD5QvbOb1yJnJjM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dean Nelson <dnelson@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 029/146] thunderx: enable page recycling for non-XDP case
-Date:   Mon,  1 Apr 2019 19:00:41 +0200
-Message-Id: <20190401170051.011312735@linuxfoundation.org>
+Subject: [PATCH 5.0 030/146] thunderx: eliminate extra calls to put_page() for pages held for recycling
+Date:   Mon,  1 Apr 2019 19:00:42 +0200
+Message-Id: <20190401170051.085412279@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -66,57 +67,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dean Nelson <dnelson@redhat.com>
 
-[ Upstream commit b3e208069477588c06f4d5d986164b435bb06e6d ]
+[ Upstream commit cd35ef91490ad8049dd180bb060aff7ee192eda9 ]
 
-Commit 773225388dae15e72790 ("net: thunderx: Optimize page recycling for XDP")
-added code to nicvf_alloc_page() that inadvertently disables receive buffer
-page recycling for the non-XDP case by always NULL'ng the page pointer.
+For the non-XDP case, commit 773225388dae15e72790 ("net: thunderx: Optimize
+page recycling for XDP") added code to nicvf_free_rbdr() that, when releasing
+the additional receive buffer page reference held for recycling, repeatedly
+calls put_page() until the page's _refcount goes to zero. Which results in
+the page being freed.
 
-This patch corrects two if-conditionals to allow for the recycling of non-XDP
-mode pages by only setting the page pointer to NULL when the page is not ready
-for recycling.
+This is not okay if the page's _refcount was greater than 1 (in the non-XDP
+case), because nicvf_free_rbdr() should not be subtracting more than what
+nicvf_alloc_page() had previously added to the page's _refcount, which was
+only 1 (in the non-XDP case).
+
+This can arise if a received packet is still being processed and the receive
+buffer (i.e., skb->head) has not yet been freed via skb_free_head() when
+nicvf_free_rbdr() is spinning through the aforementioned put_page() loop.
+
+If this should occur, when the received packet finishes processing and
+skb_free_head() is called, various problems can ensue. Exactly what, depends on
+whether the page has already been reallocated or not, anything from "BUG: Bad
+page state ... ", to "Unable to handle kernel NULL pointer dereference ..." or
+"Unable to handle kernel paging request...".
+
+So this patch changes nicvf_free_rbdr() to only call put_page() once for pages
+held for recycling (in the non-XDP case).
 
 Fixes: 773225388dae ("net: thunderx: Optimize page recycling for XDP")
 Signed-off-by: Dean Nelson <dnelson@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cavium/thunder/nicvf_queues.c |   23 ++++++++++-----------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/cavium/thunder/nicvf_queues.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 --- a/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
 +++ b/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
-@@ -105,20 +105,19 @@ static inline struct pgcache *nicvf_allo
- 	/* Check if page can be recycled */
- 	if (page) {
- 		ref_count = page_ref_count(page);
--		/* Check if this page has been used once i.e 'put_page'
--		 * called after packet transmission i.e internal ref_count
--		 * and page's ref_count are equal i.e page can be recycled.
-+		/* This page can be recycled if internal ref_count and page's
-+		 * ref_count are equal, indicating that the page has been used
-+		 * once for packet transmission. For non-XDP mode, internal
-+		 * ref_count is always '1'.
- 		 */
--		if (rbdr->is_xdp && (ref_count == pgcache->ref_count))
--			pgcache->ref_count--;
--		else
--			page = NULL;
--
--		/* In non-XDP mode, page's ref_count needs to be '1' for it
--		 * to be recycled.
--		 */
--		if (!rbdr->is_xdp && (ref_count != 1))
-+		if (rbdr->is_xdp) {
-+			if (ref_count == pgcache->ref_count)
-+				pgcache->ref_count--;
-+			else
-+				page = NULL;
-+		} else if (ref_count != 1) {
- 			page = NULL;
-+		}
- 	}
- 
- 	if (!page) {
+@@ -364,11 +364,10 @@ static void nicvf_free_rbdr(struct nicvf
+ 	while (head < rbdr->pgcnt) {
+ 		pgcache = &rbdr->pgcache[head];
+ 		if (pgcache->page && page_ref_count(pgcache->page) != 0) {
+-			if (!rbdr->is_xdp) {
+-				put_page(pgcache->page);
+-				continue;
++			if (rbdr->is_xdp) {
++				page_ref_sub(pgcache->page,
++					     pgcache->ref_count - 1);
+ 			}
+-			page_ref_sub(pgcache->page, pgcache->ref_count - 1);
+ 			put_page(pgcache->page);
+ 		}
+ 		head++;
 
 
