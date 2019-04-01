@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEF0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED91C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6079420830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008372063F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139513;
-	bh=d87004y1trBUyv8dgxKMQNqMtiQxd2dzhNt4jWCgPak=;
+	s=default; t=1554139517;
+	bh=8ebogR0Z3ID+Se4Pt6H+47iKyXH7mk/ZCLZWecyzYL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uijjZ4uuYBKHDEAaRI9j/u83bJ2yyab9Yd/zAK1zmAVhdHbF5M2Qx0UuVX31uQdBm
-	 aiPtg56XfPoHRjZF+/G4Fs/7cOvozxAhLIK3Tg0BVEKIIWBt6dZgAX0nouKqbM+otP
-	 p4yiowleZSv5yHWu3gGRB6G/P2N1z6mms5ZsQJMo=
+	b=BXvoCEICExV9woFHqd/0MbCgK00adRRefuDKV6Z3TezOwTmy/xkdJxoQ+VQbcY5iV
+	 3onY/DObzzKlaZJq22Hdu7aMpH70qr2gPLC0VcGtD+eIXcb40Sad7m3qJ4Vq1BYzJW
+	 65cNEVM/XblI9SZlul5dN1XJ1y0shGdtNFCIoT4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732379AbfDARZM (ORCPT
+        id S1732389AbfDARZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:25:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56204 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:25:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731767AbfDARZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:25:09 -0400
+        id S1732375AbfDARZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:25:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FBD32063F;
-        Mon,  1 Apr 2019 17:25:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B16EB2063F;
+        Mon,  1 Apr 2019 17:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139508;
-        bh=d87004y1trBUyv8dgxKMQNqMtiQxd2dzhNt4jWCgPak=;
+        s=default; t=1554139511;
+        bh=8ebogR0Z3ID+Se4Pt6H+47iKyXH7mk/ZCLZWecyzYL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z6KXMwXQzLFnAV8iNdE0e131cJdbUBhQMY3bArzaBMpOrxQ9nUtyql1fiFtAm+vyF
-         djWp6tKJ18ms6JRJ/ceDSSq+AABvqVpzJOzqP+J8LkrSP4WknetwMv75ghW5jN0+PX
-         Su/kEbCNXpSEXSzEJtyOxhnTrDuXcJBNOyb2VXS4=
+        b=Psyy67lFzNlLPw4lZ4t20xpmQzYgSB3Bei+oYKG4ILJaqnoZPDQTOElkALg1STEYn
+         rzgRpP8EE0ePBAqgPD7FvEQpBHKx4rdw2i52yg4/P2CPqaZD1RSJzBCEeZ1tLsc2+k
+         SifUop06rVeisp+u7NVkP3lq3FNZHboWXfKaidfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yasushi Asano <yasano@jp.adit-jv.com>,
-        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 4.14 097/107] usb: host: xhci-rcar: Add XHCI_TRUST_TX_LENGTH quirk
-Date:   Mon,  1 Apr 2019 19:02:52 +0200
-Message-Id: <20190401170054.509944941@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.14 098/107] xhci: Fix port resume done detection for SS ports with LPM enabled
+Date:   Mon,  1 Apr 2019 19:02:53 +0200
+Message-Id: <20190401170054.605540289@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -66,38 +64,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yasushi Asano <yasano@jp.adit-jv.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 40fc165304f0faaae78b761f8ee30b5d216b1850 upstream.
+commit 6cbcf596934c8e16d6288c7cc62dfb7ad8eadf15 upstream.
 
-When plugging BUFFALO LUA4-U3-AGT USB3.0 to Gigabit Ethernet LAN
-Adapter, warning messages filled up dmesg.
+A suspended SS port in U3 link state will go to U0 when resumed, but
+can almost immediately after that enter U1 or U2 link power save
+states before host controller driver reads the port status.
 
-[  101.098287] xhci-hcd ee000000.usb: WARN Successful completion on short TX for slot 1 ep 4: needs XHCI_TRUST_TX_LENGTH quirk?
-[  101.117463] xhci-hcd ee000000.usb: WARN Successful completion on short TX for slot 1 ep 4: needs XHCI_TRUST_TX_LENGTH quirk?
-[  101.136513] xhci-hcd ee000000.usb: WARN Successful completion on short TX for slot 1 ep 4: needs XHCI_TRUST_TX_LENGTH quirk?
+Host controller driver only checks for U0 state, and might miss
+the finished resume, leaving flags unclear and skip notifying usb
+code of the wake.
 
-Adding the XHCI_TRUST_TX_LENGTH quirk resolves the issue.
+Add U1 and U2 to the possible link states when checking for finished
+port resume.
 
-Signed-off-by: Yasushi Asano <yasano@jp.adit-jv.com>
-Signed-off-by: Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>
-Acked-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-rcar.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/host/xhci-ring.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/host/xhci-rcar.c
-+++ b/drivers/usb/host/xhci-rcar.c
-@@ -236,6 +236,7 @@ int xhci_rcar_init_quirk(struct usb_hcd
- 			xhci_rcar_is_gen3(hcd->self.controller))
- 		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1715,10 +1715,13 @@ static void handle_port_status(struct xh
+ 		}
+ 	}
  
-+	xhci->quirks |= XHCI_TRUST_TX_LENGTH;
- 	return xhci_rcar_download_firmware(hcd);
- }
- 
+-	if ((portsc & PORT_PLC) && (portsc & PORT_PLS_MASK) == XDEV_U0 &&
+-			DEV_SUPERSPEED_ANY(portsc)) {
++	if ((portsc & PORT_PLC) &&
++	    DEV_SUPERSPEED_ANY(portsc) &&
++	    ((portsc & PORT_PLS_MASK) == XDEV_U0 ||
++	     (portsc & PORT_PLS_MASK) == XDEV_U1 ||
++	     (portsc & PORT_PLS_MASK) == XDEV_U2)) {
+ 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
+-		/* We've just brought the device into U0 through either the
++		/* We've just brought the device into U0/1/2 through either the
+ 		 * Resume state after a device remote wakeup, or through the
+ 		 * U3Exit state after a host-initiated resume.  If it's a device
+ 		 * initiated remote wake, don't pass up the link state change,
 
 
