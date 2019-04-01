@@ -2,50 +2,97 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716CEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A64C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4322020830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E9020830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfDATsS (ORCPT
+        id S1726588AbfDATvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 15:48:18 -0400
-Received: from gateway21.websitewelcome.com ([192.185.46.113]:25931 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726109AbfDATsS (ORCPT
+        Mon, 1 Apr 2019 15:51:51 -0400
+Received: from gateway22.websitewelcome.com ([192.185.47.79]:33274 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726167AbfDATvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 15:48:18 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 4170A4345D5F5
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2019 14:39:35 -0500 (CDT)
+        Mon, 1 Apr 2019 15:51:50 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id D87F011542
+        for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2019 14:51:48 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id B2mNhhI4SdnCeB2mNhX1kQ; Mon, 01 Apr 2019 14:39:35 -0500
+        id B2yChOh4E90onB2yChcix8; Mon, 01 Apr 2019 14:51:48 -0500
 X-Authority-Reason: nr=8
-Received: from [189.250.114.183] (port=55370 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+Received: from [189.250.114.183] (port=52606 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1hB2mK-004KFV-93; Mon, 01 Apr 2019 14:39:34 -0500
-Date:   Mon, 1 Apr 2019 14:39:31 -0500
+        id 1hB2yC-0002cZ-HL; Mon, 01 Apr 2019 14:51:48 -0500
+Subject: Re: [PATCH] signal: annotate implicit fall through
+To:     Mathieu Malaterre <malat@debian.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190114203505.17875-1-malat@debian.org>
+ <CA+7wUswdVU=JuHPAVo9gxZJ8BYWhThnsLggVM5t9h--=AhCPPQ@mail.gmail.com>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-afs@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH net-next] rxrpc: Mark expected switch fall-through
-Message-ID: <20190401193931.GA1135@embeddedor>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ mQINBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
+ 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
+ tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
+ DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
+ 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
+ YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
+ m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
+ NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
+ qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
+ LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABtCxHdXN0YXZvIEEu
+ IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPokCPQQTAQgAJwUCWywcDAIbIwUJ
+ CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
+ l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
+ obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
+ cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
+ ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
+ JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
+ JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
+ PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
+ R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
+ 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
+ e5YnLxF8ctRAp7K4yVlvA7kCDQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
+ H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
+ DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
+ 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
+ otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
+ l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
+ jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
+ zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
+ I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
+ ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
+ EQEAAYkCJQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
+ UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
+ XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
+ WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
+ imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
+ fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
+ 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
+ ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
+ YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
+ GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <ba0a1ec8-b3d7-7214-ffcb-031304d463ee@embeddedor.com>
+Date:   Mon, 1 Apr 2019 14:51:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <CA+7wUswdVU=JuHPAVo9gxZJ8BYWhThnsLggVM5t9h--=AhCPPQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
 X-AntiAbuse: Original Domain - vger.kernel.org
@@ -54,13 +101,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.250.114.183
 X-Source-L: No
-X-Exim-ID: 1hB2mK-004KFV-93
+X-Exim-ID: 1hB2yC-0002cZ-HL
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.114.183]:55370
+X-Source-Sender: ([192.168.1.76]) [189.250.114.183]:52606
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
+X-Email-Count: 9
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,47 +115,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch cases
-where we are expecting to fall through.
+[+cc Andrew]
 
-This patch fixes the following warning:
+On 3/13/19 3:27 PM, Mathieu Malaterre wrote:
+> ping ?
+> 
 
-net/rxrpc/local_object.c: In function ‘rxrpc_open_socket’:
-net/rxrpc/local_object.c:175:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (ret < 0) {
-      ^
-net/rxrpc/local_object.c:184:2: note: here
-  case AF_INET:
-  ^~~~
+Acked-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Warning level 3 was used: -Wimplicit-fallthrough=3
+Maybe Andrew can take this?
 
-Currently, GCC is expecting to find the fall-through annotations
-at the very bottom of the case and on its own line. That's why
-I had to add the annotation, although the intentional fall-through
-is already mentioned in a few lines above.
+Thanks
+--
+Gustavo
 
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- net/rxrpc/local_object.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 15cf42d5b53a..9157fd00dce3 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -180,7 +180,7 @@ static int rxrpc_open_socket(struct rxrpc_local *local, struct net *net)
- 		/* Fall through and set IPv4 options too otherwise we don't get
- 		 * errors from IPv4 packets sent through the IPv6 socket.
- 		 */
--
-+		/* Fall through */
- 	case AF_INET:
- 		/* we want to receive ICMP errors */
- 		opt = 1;
--- 
-2.21.0
-
+> On Mon, Jan 14, 2019 at 9:35 PM Mathieu Malaterre <malat@debian.org> wrote:
+>>
+>> There is a plan to build the kernel with -Wimplicit-fallthrough and
+>> this place in the code produced a warning (W=1).
+>>
+>> This commit remove the following warning:
+>>
+>>   kernel/signal.c:795:13: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>
+>> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+>> ---
+>>  kernel/signal.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/kernel/signal.c b/kernel/signal.c
+>> index e1d7ad8e6ab1..aa7a507757d7 100644
+>> --- a/kernel/signal.c
+>> +++ b/kernel/signal.c
+>> @@ -794,6 +794,7 @@ static int check_kill_permission(int sig, struct kernel_siginfo *info,
+>>                          */
+>>                         if (!sid || sid == task_session(current))
+>>                                 break;
+>> +                       /* fall through */
+>>                 default:
+>>                         return -EPERM;
+>>                 }
+>> --
+>> 2.19.2
+>>
