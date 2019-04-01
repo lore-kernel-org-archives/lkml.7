@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11FFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EADC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94FF20856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31ED6206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138970;
-	bh=P3xw/PoBaxx0gliOLqBic5NXaK135RaKWxRNJQdb/1s=;
+	s=default; t=1554138974;
+	bh=1lB3FLe30N0v9DXbSzajaVOwvR6rPqurH+Q+V2Q0Lg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LGKxOlwdaAMQHR35iXTjKyWeNptgFKK9etx1r0iSmgNrABeU1QnVzr6BkER33AqGa
-	 Y6JpFFWrrUBC3vsV2LuA1l4wyd17+UZzmZN0p2XNB0IhZDIg4v0vI7QeAwIXC9Z8Cb
-	 ReSS1EAyNY0TmR0SurLBfQwVYjdqBsr0JjW8Fhps=
+	b=H/Jmr/zWnd1GaohH6FR5AX7xmbXkbq+SV94lldzj/JEGRTmnK266ov43c8vNrakE2
+	 Vy31zQLWmn1hf6Vom0fCtQ2OFkoFG4wP/Ev8yGwUpuxcTXvWF7vqI3DVVrIkjUoV9Q
+	 /QzQjzxrTSIXIho7QU3rc+vpxBadR8gCFPRA2KSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbfDARQJ (ORCPT
+        id S1730997AbfDARQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:16:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41008 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:16:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730975AbfDARQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:16:07 -0400
+        id S1730984AbfDARQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:16:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F38F420856;
-        Mon,  1 Apr 2019 17:16:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E2F620883;
+        Mon,  1 Apr 2019 17:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138966;
-        bh=P3xw/PoBaxx0gliOLqBic5NXaK135RaKWxRNJQdb/1s=;
+        s=default; t=1554138969;
+        bh=1lB3FLe30N0v9DXbSzajaVOwvR6rPqurH+Q+V2Q0Lg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iVGXLaYakhtM5ZzFW3DQ6mkhVCtmtxe2ZW4OQp+auS/6V8eLitWWVi989NZ4mX9XT
-         wRuTCBQMUe8NzudOstODFYdkZ5UfRWa+tg8qGimI6N0YtORyYE2COhEQuKZMIIVhRk
-         FbEWAasCcnDm0Z5pRzrbpfEpY6cpJiCDOaR0oWyA=
+        b=EZvKZRnk4XI1XgIcH8yU58D4grrwWFgniRMWho8yrAeMU2AIjnE3zYKyk/MEu+GVZ
+         pazcmNzRpOOu124y0m+DKwCR3iyvHwwL3vyct1Y8C6aX2kaK09u+OoM6XTqbf6w/vz
+         FBAdOJ7Q+6Vt8hKfZXw3PaFlXzAZAUrEpE0htKg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 035/134] powerpc/fsl: Emulate SPRN_BUCSR register
-Date:   Mon,  1 Apr 2019 19:01:11 +0200
-Message-Id: <20190401170048.002495239@linuxfoundation.org>
+Subject: [PATCH 4.19 036/134] powerpc/fsl: Add nospectre_v2 command line argument
+Date:   Mon,  1 Apr 2019 19:01:12 +0200
+Message-Id: <20190401170048.134484591@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -67,37 +67,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Diana Craciun <diana.craciun@nxp.com>
 
-commit 98518c4d8728656db349f875fcbbc7c126d4c973 upstream.
+commit f633a8ad636efb5d4bba1a047d4a0f1ef719aa06 upstream.
 
-In order to flush the branch predictor the guest kernel performs
-writes to the BUCSR register which is hypervisor privilleged. However,
-the branch predictor is flushed at each KVM entry, so the branch
-predictor has been already flushed, so just return as soon as possible
-to guest.
+When the command line argument is present, the Spectre variant 2
+mitigations are disabled.
 
 Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
-[mpe: Tweak comment formatting]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/kvm/e500_emulate.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/powerpc/include/asm/setup.h |    5 +++++
+ arch/powerpc/kernel/security.c   |   21 +++++++++++++++++++++
+ 2 files changed, 26 insertions(+)
 
---- a/arch/powerpc/kvm/e500_emulate.c
-+++ b/arch/powerpc/kvm/e500_emulate.c
-@@ -277,6 +277,13 @@ int kvmppc_core_emulate_mtspr_e500(struc
- 		vcpu->arch.pwrmgtcr0 = spr_val;
- 		break;
+--- a/arch/powerpc/include/asm/setup.h
++++ b/arch/powerpc/include/asm/setup.h
+@@ -67,6 +67,11 @@ void do_barrier_nospec_fixups_range(bool
+ static inline void do_barrier_nospec_fixups_range(bool enable, void *start, void *end) { };
+ #endif
  
-+	case SPRN_BUCSR:
-+		/*
-+		 * If we are here, it means that we have already flushed the
-+		 * branch predictor, so just return to guest.
-+		 */
-+		break;
++#ifdef CONFIG_PPC_FSL_BOOK3E
++void setup_spectre_v2(void);
++#else
++static inline void setup_spectre_v2(void) {};
++#endif
+ void do_btb_flush_fixups(void);
+ 
+ #endif /* !__ASSEMBLY__ */
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -26,6 +26,10 @@ static enum count_cache_flush_type count
+ 
+ bool barrier_nospec_enabled;
+ static bool no_nospec;
++static bool btb_flush_enabled;
++#ifdef CONFIG_PPC_FSL_BOOK3E
++static bool no_spectrev2;
++#endif
+ 
+ static void enable_barrier_nospec(bool enable)
+ {
+@@ -101,6 +105,23 @@ static __init int barrier_nospec_debugfs
+ device_initcall(barrier_nospec_debugfs_init);
+ #endif /* CONFIG_DEBUG_FS */
+ 
++#ifdef CONFIG_PPC_FSL_BOOK3E
++static int __init handle_nospectre_v2(char *p)
++{
++	no_spectrev2 = true;
 +
- 	/* extra exceptions */
- #ifdef CONFIG_SPE_POSSIBLE
- 	case SPRN_IVOR32:
++	return 0;
++}
++early_param("nospectre_v2", handle_nospectre_v2);
++void setup_spectre_v2(void)
++{
++	if (no_spectrev2)
++		do_btb_flush_fixups();
++	else
++		btb_flush_enabled = true;
++}
++#endif /* CONFIG_PPC_FSL_BOOK3E */
++
+ #ifdef CONFIG_PPC_BOOK3S_64
+ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, char *buf)
+ {
 
 
