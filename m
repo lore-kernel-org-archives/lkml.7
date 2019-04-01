@@ -4,40 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17859C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3625FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC0E2133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE17206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139100;
-	bh=B6282QcvcZgLwAWL24ai6IIP92adM8eO1TB6SGv3vO0=;
+	s=default; t=1554139105;
+	bh=ZFzL5zHuyVRfxBMdqpSjBGReIghrbIJ1BhglsRqoxzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q5gxXlvZDDbgZLm8uclD5J4lftedhQTlINoXv1AurJ8uaB9ydWoFuQaAVBS1c/bJr
-	 po468+jTnNGSxQGLe/MK9VJxfd1pBHMZ8GyiN36UDTrZozl4QS9vAgs65pEk4/oaL8
-	 eCeFJSuH4beyWQRVLC3LnGd90mhRy2JqgoG+1AjM=
+	b=hw41/XYaA6Imvg+N7QB5QLJ8VqRz7NPFkr+lRhoLwwvj6GQH6dL99CcEDfG5qZQba
+	 /DmzfLJ1LSkywpUrQmFu5b4GavZfEDPKZCIXxx+NVOqfVwlBvSOW1B6JuMxSuz38Ni
+	 3HqJ34U5kdKDwEo98fzEQJMsuHp/B0spPdbjum0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731101AbfDARST (ORCPT
+        id S1731364AbfDARSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45334 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:18:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731331AbfDARSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:18:17 -0400
+        id S1730943AbfDARSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:18:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39C47206C0;
-        Mon,  1 Apr 2019 17:18:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7D4F20856;
+        Mon,  1 Apr 2019 17:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139096;
-        bh=B6282QcvcZgLwAWL24ai6IIP92adM8eO1TB6SGv3vO0=;
+        s=default; t=1554139099;
+        bh=ZFzL5zHuyVRfxBMdqpSjBGReIghrbIJ1BhglsRqoxzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oVJJGK2GkpTS6BCipdG4qRk2Q5ASKDtayadv8OigKGMaoxb43ekTxOFDYfNpYqFyK
-         sOSDxhrfnw1ZYYxpeEi7PH7UQOoAW53cJgIqwET6BGNIC4zM53ZbF24s22PoWBIrIZ
-         NmPGqVc+TkW9OxMeRMhe0Nk1tAvOb3/IomAMhoTU=
+        b=fxVWs3t+mE0WXGg86VTUXAEjv8QPEztqyqAeXupoveuuEeLp3XBHkagaQlN4/z7zO
+         JKdnbR56Gv75QfiOhLtfwyffmgjVStB1XGKVDa+YlFJ1SzmrxApufE/TfgHssnsZTv
+         frobXc0HHJARxoevzQyx2KE6a7AAjJXFf2QxqV84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -45,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jens Remus <jremus@linux.ibm.com>,
         Benjamin Block <bblock@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 075/134] scsi: zfcp: fix rport unblock if deleted SCSI devices on Scsi_Host
-Date:   Mon,  1 Apr 2019 19:01:51 +0200
-Message-Id: <20190401170051.410419425@linuxfoundation.org>
+Subject: [PATCH 4.19 076/134] scsi: zfcp: fix scsi_eh host reset with port_forced ERP for non-NPIV FCP devices
+Date:   Mon,  1 Apr 2019 19:01:52 +0200
+Message-Id: <20190401170051.498356351@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -68,81 +69,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Steffen Maier <maier@linux.ibm.com>
 
-commit fe67888fc007a76b81e37da23ce5bd8fb95890b0 upstream.
+commit 242ec1455151267fe35a0834aa9038e4c4670884 upstream.
 
-An already deleted SCSI device can exist on the Scsi_Host and remain there
-because something still holds a reference.  A new SCSI device with the same
-H:C:T:L and FCP device, target port WWPN, and FCP LUN can be created.  When
-we try to unblock an rport, we still find the deleted SCSI device and
-return early because the zfcp_scsi_dev of that SCSI device is not
-ZFCP_STATUS_COMMON_UNBLOCKED. Hence we miss to unblock the rport, even if
-the new proper SCSI device would be in good state.
+Suppose more than one non-NPIV FCP device is active on the same channel.
+Send I/O to storage and have some of the pending I/O run into a SCSI
+command timeout, e.g. due to bit errors on the fibre. Now the error
+situation stops. However, we saw FCP requests continue to timeout in the
+channel. The abort will be successful, but the subsequent TUR fails.
+Scsi_eh starts. The LUN reset fails. The target reset fails.  The host
+reset only did an FCP device recovery. However, for non-NPIV FCP devices,
+this does not close and reopen ports on the SAN-side if other non-NPIV FCP
+device(s) share the same open ports.
 
-Therefore, skip deleted SCSI devices when iterating the sdevs of the shost.
-[cf. __scsi_device_lookup{_by_target}() or scsi_device_get()]
+In order to resolve the continuing FCP request timeouts, we need to
+explicitly close and reopen ports on the SAN-side.
 
-The following abbreviated trace sequence can indicate such problem:
+This was missing since the beginning of zfcp in v2.6.0 history commit
+ea127f975424 ("[PATCH] s390 (7/7): zfcp host adapter.").
 
-Area           : REC
-Tag            : ersfs_3
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x40000000     not ZFCP_STATUS_COMMON_UNBLOCKED
-Ready count    : n		not incremented yet
-Running count  : 0x00000000
-ERP want       : 0x01
-ERP need       : 0xc1		ZFCP_ERP_ACTION_NONE
-
-Area           : REC
-Tag            : ersfs_3
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x41000000
-Ready count    : n+1
-Running count  : 0x00000000
-ERP want       : 0x01
-ERP need       : 0x01
-
-...
-
-Area           : REC
-Level          : 4		only with increased trace level
-Tag            : ertru_l
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x40000000
-Request ID     : 0x0000000000000000
-ERP status     : 0x01800000
-ERP step       : 0x1000
-ERP action     : 0x01
-ERP count      : 0x00
-
-NOT followed by a trace record with tag "scpaddy"
-for WWPN 0x50050763031bd327.
+Note: The FSF requests for forced port reopen could run into FSF request
+timeouts due to other reasons. This would trigger an internal FCP device
+recovery. Pending forced port reopen recoveries would get dismissed. So
+some ports might not get fully reopened during this host reset handler.
+However, subsequent I/O would trigger the above described escalation and
+eventually all ports would be forced reopen to resolve any continuing FCP
+request timeouts due to earlier bit errors.
 
 Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Fixes: 6f2ce1c6af37 ("scsi: zfcp: fix rport unblock race with LUN recovery")
-Cc: <stable@vger.kernel.org> #2.6.32+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: <stable@vger.kernel.org> #3.0+
 Reviewed-by: Jens Remus <jremus@linux.ibm.com>
 Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/scsi/zfcp_erp.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/s390/scsi/zfcp_erp.c  |   14 ++++++++++++++
+ drivers/s390/scsi/zfcp_ext.h  |    2 ++
+ drivers/s390/scsi/zfcp_scsi.c |    4 ++++
+ 3 files changed, 20 insertions(+)
 
 --- a/drivers/s390/scsi/zfcp_erp.c
 +++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -1297,6 +1297,9 @@ static void zfcp_erp_try_rport_unblock(s
- 		struct zfcp_scsi_dev *zsdev = sdev_to_zfcp(sdev);
- 		int lun_status;
+@@ -643,6 +643,20 @@ static void zfcp_erp_strategy_memwait(st
+ 	add_timer(&erp_action->timer);
+ }
  
-+		if (sdev->sdev_state == SDEV_DEL ||
-+		    sdev->sdev_state == SDEV_CANCEL)
-+			continue;
- 		if (zsdev->port != port)
- 			continue;
- 		/* LUN under port of interest */
++void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
++				     int clear, char *dbftag)
++{
++	unsigned long flags;
++	struct zfcp_port *port;
++
++	write_lock_irqsave(&adapter->erp_lock, flags);
++	read_lock(&adapter->port_list_lock);
++	list_for_each_entry(port, &adapter->port_list, list)
++		_zfcp_erp_port_forced_reopen(port, clear, dbftag);
++	read_unlock(&adapter->port_list_lock);
++	write_unlock_irqrestore(&adapter->erp_lock, flags);
++}
++
+ static void _zfcp_erp_port_reopen_all(struct zfcp_adapter *adapter,
+ 				      int clear, char *id)
+ {
+--- a/drivers/s390/scsi/zfcp_ext.h
++++ b/drivers/s390/scsi/zfcp_ext.h
+@@ -69,6 +69,8 @@ extern void zfcp_erp_clear_port_status(s
+ extern void zfcp_erp_port_reopen(struct zfcp_port *port, int clear, char *id);
+ extern void zfcp_erp_port_shutdown(struct zfcp_port *, int, char *);
+ extern void zfcp_erp_port_forced_reopen(struct zfcp_port *, int, char *);
++extern void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
++					    int clear, char *dbftag);
+ extern void zfcp_erp_set_lun_status(struct scsi_device *, u32);
+ extern void zfcp_erp_clear_lun_status(struct scsi_device *, u32);
+ extern void zfcp_erp_lun_reopen(struct scsi_device *, int, char *);
+--- a/drivers/s390/scsi/zfcp_scsi.c
++++ b/drivers/s390/scsi/zfcp_scsi.c
+@@ -362,6 +362,10 @@ static int zfcp_scsi_eh_host_reset_handl
+ 	struct zfcp_adapter *adapter = zfcp_sdev->port->adapter;
+ 	int ret = SUCCESS, fc_ret;
+ 
++	if (!(adapter->connection_features & FSF_FEATURE_NPIV_MODE)) {
++		zfcp_erp_port_forced_reopen_all(adapter, 0, "schrh_p");
++		zfcp_erp_wait(adapter);
++	}
+ 	zfcp_erp_adapter_reopen(adapter, 0, "schrh_1");
+ 	zfcp_erp_wait(adapter);
+ 	fc_ret = fc_block_scsi_eh(scpnt);
 
 
