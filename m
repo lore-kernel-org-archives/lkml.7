@@ -2,93 +2,80 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE9AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D988C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB630213A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554105481;
-	bh=mApzT2GHRJImpLV2vAV+LBqD0PGlq4JWbRQ3dINZHV8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XEupYM36y3O31Iuh7ySf8NIaaPnzuq1lfNYI/TaFtU6m37tbAMmmc0cU65Ti19rc1
-	 gJjzNZ3zFrNkiLpjta9a6u50oCVPRWABlhTuVCUqstJW0paU6rAktpgojVJHJSUQfA
-	 pelYJT7KBHW/x4ZYWKWYtpmTo9s34RPMH8nZQiOI=
+	by mail.kernel.org (Postfix) with ESMTP id EBF9A20896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732039AbfDAH6A (ORCPT
+        id S1732126AbfDAH6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:58:00 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51220 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731944AbfDAH6A (ORCPT
+        Mon, 1 Apr 2019 03:58:04 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:55332 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731944AbfDAH6C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:58:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mApzT2GHRJImpLV2vAV+LBqD0PGlq4JWbRQ3dINZHV8=; b=WQe0GHb3GV3eiYaAmorPmUnA4
-        5nB6oOMSi+Ayo8Dno8s02sdYY6wzhxgIaVzHS3hRo6Yec+2Z2AlaEUVMnGWLZf7CvWOFKiP5dntb5
-        uQ+YHkaHIZQAMWMeWy0EREukYVxVz0qGOkGePIgsd2sckU49VwRdINBqkb1+RLAe4jWo8=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hArpL-0008Fw-Jp; Mon, 01 Apr 2019 07:57:55 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 8ABA6440082; Mon,  1 Apr 2019 08:57:52 +0100 (BST)
-Date:   Mon, 1 Apr 2019 14:57:52 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] ASoC: tlv320aic31xx: Add headphone/headset
- detection
-Message-ID: <20190401075752.GN2059@sirena.org.uk>
-References: <20190329154704.4922-1-afd@ti.com>
+        Mon, 1 Apr 2019 03:58:02 -0400
+Received: by mail-io1-f71.google.com with SMTP id z19so7436474ioc.22
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 00:58:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=7EKRemsi17Qp7W2SsJHAn5hK7JPxXirxunTpAg9x/9M=;
+        b=RwMBThtDJTz0lN3mFX89+pk7gWoKx2YSFxJHvDFSazhvlBTaY2jfHMZSBejQVNu+FU
+         prxzXZOfDNI5VszOHWPPgDwDJoNEhFHoa73nyy1QXjyOwoslcOKW6/PoGtIfED4TPw1D
+         NZzvOFERs00fjcq4u5ylYg9DcI8tveaDSpp07RHWNng50Oro0eZcnGg8uPq87glXFQFy
+         3kVzL+J1HH6WBS1Rk/n3bddjyR0QRVWIAjFT3wpuoSGBcs9jtjkJa5+M6SKWTVBqaBH8
+         JQ+yYHdihdnzR0NkgyM92KFuWherQSpUul4NJSdPoHgKjVPrAa1N8KLxUcxeU60F/I6s
+         I5lQ==
+X-Gm-Message-State: APjAAAU21WLBJb8hl4HfIllXN5ctBxq4cICQRMz3XvDv+KQFOW0S3ZBZ
+        5LCve/lPIrbxnEB2+Tyr3ZZXJ4xfq2FMidoKzFnhjupwrmA5
+X-Google-Smtp-Source: APXvYqztnrMIgOO7OA7/CaoNeTeMdhpTMn0H30n6IcO2ud1PkbQxL68lKuhdyzkQSodu1AG2z0DYY2zvFRJ32jtBYINRlPsJP9i8
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JLiXfqD9/Kt1b+Pq"
-Content-Disposition: inline
-In-Reply-To: <20190329154704.4922-1-afd@ti.com>
-X-Cookie: Use extra care when cleaning on stairs.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a24:7bd3:: with SMTP id q202mr5412604itc.32.1554105481033;
+ Mon, 01 Apr 2019 00:58:01 -0700 (PDT)
+Date:   Mon, 01 Apr 2019 00:58:01 -0700
+In-Reply-To: <0000000000004f7eb00570be9f92@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002402ed05857361e0@google.com>
+Subject: Re: WARNING in port_delete
+From:   syzbot <syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com>
+To:     alsa-devel-bounces@alsa-project.org, alsa-devel@alsa-project.org,
+        colin.king@canonical.com, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, paulmck@linux.vnet.ibm.com, perex@perex.cz,
+        rostedt@goodmis.org, syzkaller-bugs@googlegroups.com,
+        tiwai@suse.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has bisected this bug to:
 
---JLiXfqD9/Kt1b+Pq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+commit 63d86a7e85f84b8ac3b2f394570965aedbb03787
+Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Date:   Tue May 1 20:08:46 2018 +0000
 
-On Fri, Mar 29, 2019 at 10:47:03AM -0500, Andrew F. Davis wrote:
-> This device can detect the insertion/removal of headphones and headsets.
-> Enable reporting this status by enabling this interrupt and forwarding
-> this to upper-layers if a jack has been defined.
+     rcu: Convert rcu_grace_period_init tracepoint to gp_seq
 
-This doesn't apply against current code, please check and resend.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17f86d2f200000
+start commit:   091a1eaa Merge branch 'akpm'
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14046d2f200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10046d2f200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c0af03fe452b65fb
+dashboard link: https://syzkaller.appspot.com/bug?extid=e4c8abb920efa77bace9
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=102e2c91400000
 
---JLiXfqD9/Kt1b+Pq
-Content-Type: application/pgp-signature; name="signature.asc"
+Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
+Fixes: 63d86a7e85f8 ("rcu: Convert rcu_grace_period_init tracepoint to  
+gp_seq")
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyhxH8ACgkQJNaLcl1U
-h9C8ZAf/Yxn+/gAw6NllkxZh49h6GowFWW6/Qq16wkCb+1bPpkCAGn5uH/ge6xTo
-bTbz8j5zoW9QbvLN2LXVyzmW3gmXTcKzlKS0jogm/JUzbOf/RAbsdfUstmO6FF2Y
-Ewj93DcuKx8DscRxx/rbQbzDZmwj3UPNaWlgz56/at3ieOa72Io8eXpZJy2oaWKa
-ZBx1es7kgAg5FOdojs0oJMlB/xTykMe+kpZ6JdP0oVElkRhDxyOoByUeZzSgTgUG
-1MinmsbQmsnIxy1MNf+o/NaCpG31smi2i28ErXUNTMl0E11L+JRdgmIEEx5CfJDK
-COeZ5EkGZ6h2Zfp1gQuxr24QQvm7uA==
-=mAL8
------END PGP SIGNATURE-----
-
---JLiXfqD9/Kt1b+Pq--
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
