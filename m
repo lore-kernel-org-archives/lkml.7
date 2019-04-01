@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA73CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395E2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B38B21905
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0933421905
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139179;
-	bh=2BB3xFJWvVSgwh+08Mm2jfjKt40qR7mKS4nvdwNFbRQ=;
+	s=default; t=1554139184;
+	bh=gPqgbgAv43Z+pTS2eiVMCMgsWht366RsZO0rxJYAt3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=psIQuW3mI2DK3YP0jWlll4dAvgl3HNcNO72AqSR9kDLGhmLH1HA+vX1wMnQA+D2cd
-	 JC8l8iSjwFrZX6s+BsoZ8fNKs35cPpGNkMLi81bn3KsFMOmcQnp/PJApCwVs9Pr7/L
-	 mZUna920a1WkPh+OyEoP8/z1NUec/A6wPFRkRqMs=
+	b=jc/C1kGXo4gkF34TfXjX9A+8agnCSV4TWpe4hvM7+Jlc/ABJi8WeFH9YWj9xHHn3j
+	 Qj7KN46sYIcf7eqq3yyW1Dt9AYd0phE9aMGxVxYYuWzHPoZOf35icdevTCPeuvzpb3
+	 RnEKaqedjq0xlzqpTrtnQAxdoPS1hUlvVHaL5kPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731563AbfDARTi (ORCPT
+        id S1731568AbfDARTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:19:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47536 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:19:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730628AbfDARTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:19:36 -0400
+        id S1730628AbfDARTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:19:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7E4021900;
-        Mon,  1 Apr 2019 17:19:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C19402133D;
+        Mon,  1 Apr 2019 17:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139175;
-        bh=2BB3xFJWvVSgwh+08Mm2jfjKt40qR7mKS4nvdwNFbRQ=;
+        s=default; t=1554139179;
+        bh=gPqgbgAv43Z+pTS2eiVMCMgsWht366RsZO0rxJYAt3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I0r3EqbObzeRJpz3l4d8Awkw8CFfGnoDBHImNvnJNQAROxp5wYYFJ8GFa5196ZHSk
-         V0EP8oKZzpCUjoZbnbV6Tfh67H63iXPRvrZUnkRSYAcHmzucagRdTGUG2YbNndrfcQ
-         i95VT5GFMYoks+CS5WeKxS/Lduap/y9aZZHzORQU=
+        b=1YpBobFldiZVSfIUmgcv7tL0WTx6SqTegBF1CstSJHP9AsqcxUUTOkSpLDHcR6w1d
+         3kBvtaZVkvU54Z5HhE7c0wyE5rXIwfr3dTbozyEzftsKqMAyNtfEkrN30FEJCcLeaM
+         CEO2cBg6LcysN9Up9ULZpvrvHre8sxXt9R2/GNog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars Persson <larper@axis.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 114/134] mm/migrate.c: add missing flush_dcache_page for non-mapped page migrate
-Date:   Mon,  1 Apr 2019 19:02:30 +0200
-Message-Id: <20190401170054.876419534@linuxfoundation.org>
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 115/134] perf pmu: Fix parser error for uncore event alias
+Date:   Mon,  1 Apr 2019 19:02:31 +0200
+Message-Id: <20190401170055.017828410@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -69,77 +67,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lars Persson <lars.persson@axis.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-commit d2b2c6dd227ba5b8a802858748ec9a780cb75b47 upstream.
+commit e94d6b7f615e6dfbaf9fba7db6011db561461d0c upstream.
 
-Our MIPS 1004Kc SoCs were seeing random userspace crashes with SIGILL
-and SIGSEGV that could not be traced back to a userspace code bug.  They
-had all the magic signs of an I/D cache coherency issue.
+Perf fails to parse uncore event alias, for example:
 
-Now recently we noticed that the /proc/sys/vm/compact_memory interface
-was quite efficient at provoking this class of userspace crashes.
+  # perf stat -e unc_m_clockticks -a --no-merge sleep 1
+  event syntax error: 'unc_m_clockticks'
+                       \___ parser error
 
-Studying the code in mm/migrate.c there is a distinction made between
-migrating a page that is mapped at the instant of migration and one that
-is not mapped.  Our problem turned out to be the non-mapped pages.
+Current code assumes that the event alias is from one specific PMU.
 
-For the non-mapped page the code performs a copy of the page content and
-all relevant meta-data of the page without doing the required D-cache
-maintenance.  This leaves dirty data in the D-cache of the CPU and on
-the 1004K cores this data is not visible to the I-cache.  A subsequent
-page-fault that triggers a mapping of the page will happily serve the
-process with potentially stale code.
+To find the PMU, perf strcmps the PMU name of event alias with the real
+PMU name on the system.
 
-What about ARM then, this bug should have seen greater exposure? Well
-ARM became immune to this flaw back in 2010, see commit c01778001a4f
-("ARM: 6379/1: Assume new page cache pages have dirty D-cache").
+However, the uncore event alias may be from multiple PMUs with common
+prefix. The PMU name of uncore event alias is the common prefix.
 
-My proposed fix moves the D-cache maintenance inside move_to_new_page to
-make it common for both cases.
+For example, UNC_M_CLOCKTICKS is clock event for iMC, which include 6
+PMUs with the same prefix "uncore_imc" on a skylake server.
 
-Link: http://lkml.kernel.org/r/20190315083502.11849-1-larper@axis.com
-Fixes: 97ee0524614 ("flush cache before installing new page at migraton")
-Signed-off-by: Lars Persson <larper@axis.com>
-Reviewed-by: Paul Burton <paul.burton@mips.com>
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The real PMU names on the system for iMC are uncore_imc_0 ...
+uncore_imc_5.
+
+The strncmp is used to only check the common prefix for uncore event
+alias.
+
+With the patch:
+
+  # perf stat -e unc_m_clockticks -a --no-merge sleep 1
+  Performance counter stats for 'system wide':
+
+       723,594,722      unc_m_clockticks [uncore_imc_5]
+       724,001,954      unc_m_clockticks [uncore_imc_3]
+       724,042,655      unc_m_clockticks [uncore_imc_1]
+       724,161,001      unc_m_clockticks [uncore_imc_4]
+       724,293,713      unc_m_clockticks [uncore_imc_2]
+       724,340,901      unc_m_clockticks [uncore_imc_0]
+
+       1.002090060 seconds time elapsed
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Thomas Richter <tmricht@linux.ibm.com>
+Cc: stable@vger.kernel.org
+Fixes: ea1fa48c055f ("perf stat: Handle different PMU names with common prefix")
+Link: http://lkml.kernel.org/r/1552672814-156173-1-git-send-email-kan.liang@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/migrate.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ tools/perf/util/pmu.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -248,10 +248,8 @@ static bool remove_migration_pte(struct
- 				pte = swp_entry_to_pte(entry);
- 			} else if (is_device_public_page(new)) {
- 				pte = pte_mkdevmap(pte);
--				flush_dcache_page(new);
- 			}
--		} else
--			flush_dcache_page(new);
-+		}
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -773,10 +773,20 @@ static void pmu_add_cpu_aliases(struct l
  
- #ifdef CONFIG_HUGETLB_PAGE
- 		if (PageHuge(new)) {
-@@ -983,6 +981,13 @@ static int move_to_new_page(struct page
- 		 */
- 		if (!PageMappingFlags(page))
- 			page->mapping = NULL;
+ 		if (!is_arm_pmu_core(name)) {
+ 			pname = pe->pmu ? pe->pmu : "cpu";
 +
-+		if (unlikely(is_zone_device_page(newpage))) {
-+			if (is_device_public_page(newpage))
-+				flush_dcache_page(newpage);
-+		} else
-+			flush_dcache_page(newpage);
++			/*
++			 * uncore alias may be from different PMU
++			 * with common prefix
++			 */
++			if (pmu_is_uncore(name) &&
++			    !strncmp(pname, name, strlen(pname)))
++				goto new_alias;
 +
- 	}
- out:
- 	return rc;
+ 			if (strcmp(pname, name))
+ 				continue;
+ 		}
+ 
++new_alias:
+ 		/* need type casts to override 'const' */
+ 		__perf_pmu__new_alias(head, NULL, (char *)pe->name,
+ 				(char *)pe->desc, (char *)pe->event,
 
 
