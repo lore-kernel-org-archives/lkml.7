@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCF3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B66C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFDF206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1FBA21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139252;
-	bh=l2VSE0H0SLebqoqohbOSG64M2HA12vluLSOngFWDfK4=;
+	s=default; t=1554139257;
+	bh=qh9dSC56sTBbu3I7G7fC3iNgW0WaZfMsaVebcT9ZKZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TzzLFyRLYoRm/Y8hk91hEACo2pEutCDehio3YTLvdsfU1MBA+NyNG6uVyRmAEYfoa
-	 OdL7fWmQEjwYHmjEwaQOD37w+BXvZRCGJTzPeRyBP/mmH5jYyXIhV4T39msV9EMd2w
-	 0xfyn5dEJhUcxRXo9TQRMdxrplBx364BGZMSPVVI=
+	b=pvF9vTPEMo3rLpc3gCLLIjj3Y8FqmCMm1HIDWu55ks9yPwxsDvmD9ZXcaNJQtlron
+	 fFTa1VEPD4YD4R40DJW3ihvpjsPyyT3OlC/WCrs+ARa3MPkJrxJl+TgiljR3EDLoPQ
+	 Pj7/WroTxxmZg61GF4nH9eEsnGvdQyzumUpR9xXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731708AbfDARUv (ORCPT
+        id S1730201AbfDARU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:20:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49068 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:20:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731701AbfDARUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:20:44 -0400
+        id S1731476AbfDARUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:20:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C5E3206C0;
-        Mon,  1 Apr 2019 17:20:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B236206C0;
+        Mon,  1 Apr 2019 17:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139243;
-        bh=l2VSE0H0SLebqoqohbOSG64M2HA12vluLSOngFWDfK4=;
+        s=default; t=1554139248;
+        bh=qh9dSC56sTBbu3I7G7fC3iNgW0WaZfMsaVebcT9ZKZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sp8bLTkmgq+GaZeE/gSQVFq3yDOvSR59VoG2UntmOWI78ofDR6tgNr0Sdyx2uTd3y
-         36o3Zda/ZNNzqkevzashNmDapi1jbIdynl9QyOrED4jQz5PO54bMTlJk3ejcm0g7Km
-         l+pKdR8ym2F9kq/5cK6WmqRgkUUIZrgqA6+eHhUI=
+        b=bi40GqH26t2n2WKmK35jaW07xTBL8NCOvttp81LQEs3q5XtnFHVCBx4fj2EmFt/p8
+         xO03fu/O8LkfGwaVviHFBCRkUyXCHIPXKWCNWlcQSWE9l2GQkXGmi9vKQxz91xtTeF
+         is8O1/k+xTmGIWNPSZ3yWOQ75f/IKV/PA8bZbo1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 4.14 002/107] Bluetooth: Verify that l2cap_get_conf_opt provides large enough buffer
-Date:   Mon,  1 Apr 2019 19:01:17 +0200
-Message-Id: <20190401170045.488808547@linuxfoundation.org>
+        stable@vger.kernel.org, Igor Russkikh <igor.russkikh@aquantia.com>,
+        Nikita Danilov <nikita.danilov@aquantia.com>,
+        Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 020/107] net: aquantia: fix rx checksum offload for UDP/TCP over IPv6
+Date:   Mon,  1 Apr 2019 19:01:35 +0200
+Message-Id: <20190401170047.388409841@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,64 +67,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
 
-commit 7c9cbd0b5e38a1672fcd137894ace3b042dfbf69 upstream.
+[ Upstream commit a7faaa0c5dc7d091cc9f72b870d7edcdd6f43f12 ]
 
-The function l2cap_get_conf_opt will return L2CAP_CONF_OPT_SIZE + opt->len
-as length value. The opt->len however is in control over the remote user
-and can be used by an attacker to gain access beyond the bounds of the
-actual packet.
+TCP/UDP checksum validity was propagated to skb
+only if IP checksum is valid.
+But for IPv6 there is no validity as there is no checksum in IPv6.
+This patch propagates TCP/UDP checksum validity regardless of IP checksum.
 
-To prevent any potential leak of heap memory, it is enough to check that
-the resulting len calculation after calling l2cap_get_conf_opt is not
-below zero. A well formed packet will always return >= 0 here and will
-end with the length value being zero after the last option has been
-parsed. In case of malformed packets messing with the opt->len field the
-length value will become negative. If that is the case, then just abort
-and ignore the option.
-
-In case an attacker uses a too short opt->len value, then garbage will
-be parsed, but that is protected by the unknown option handling and also
-the option parameter size checks.
-
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: Nikita Danilov <nikita.danilov@aquantia.com>
+Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/bluetooth/l2cap_core.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/aquantia/atlantic/aq_ring.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -3336,6 +3336,8 @@ static int l2cap_parse_conf_req(struct l
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
+@@ -270,11 +270,12 @@ int aq_ring_rx_clean(struct aq_ring_s *s
+ 		} else {
+ 			if (buff->is_ip_cso) {
+ 				__skb_incr_checksum_unnecessary(skb);
+-				if (buff->is_udp_cso || buff->is_tcp_cso)
+-					__skb_incr_checksum_unnecessary(skb);
+ 			} else {
+ 				skb->ip_summed = CHECKSUM_NONE;
+ 			}
++
++			if (buff->is_udp_cso || buff->is_tcp_cso)
++				__skb_incr_checksum_unnecessary(skb);
+ 		}
  
- 	while (len >= L2CAP_CONF_OPT_SIZE) {
- 		len -= l2cap_get_conf_opt(&req, &type, &olen, &val);
-+		if (len < 0)
-+			break;
- 
- 		hint  = type & L2CAP_CONF_HINT;
- 		type &= L2CAP_CONF_MASK;
-@@ -3554,6 +3556,8 @@ static int l2cap_parse_conf_rsp(struct l
- 
- 	while (len >= L2CAP_CONF_OPT_SIZE) {
- 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
-+		if (len < 0)
-+			break;
- 
- 		switch (type) {
- 		case L2CAP_CONF_MTU:
-@@ -3739,6 +3743,8 @@ static void l2cap_conf_rfc_get(struct l2
- 
- 	while (len >= L2CAP_CONF_OPT_SIZE) {
- 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
-+		if (len < 0)
-+			break;
- 
- 		switch (type) {
- 		case L2CAP_CONF_RFC:
+ 		skb_set_hash(skb, buff->rss_hash,
 
 
