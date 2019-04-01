@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DB8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4994C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8259208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6D6208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbfDAQoq (ORCPT
+        id S1728953AbfDAQos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 12:44:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60092 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 12:44:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728255AbfDAQnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728648AbfDAQnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Apr 2019 12:43:45 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1480921905;
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D442218FF;
         Mon,  1 Apr 2019 16:43:44 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hB02B-0004rI-7Q; Mon, 01 Apr 2019 12:43:43 -0400
-Message-Id: <20190401164343.117437443@goodmis.org>
+        id 1hB02B-0004sO-GU; Mon, 01 Apr 2019 12:43:43 -0400
+Message-Id: <20190401164343.396759247@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Mon, 01 Apr 2019 12:43:08 -0400
+Date:   Mon, 01 Apr 2019 12:43:10 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -37,7 +37,7 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Subject: [PATCH 03/15] tools lib traceevent: Implement a new API, tep_list_events_copy()
+Subject: [PATCH 05/15] tools/lib/traceevent: Change description of few APIs
 References: <20190401164305.359125441@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -48,174 +48,122 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-Existing API tep_list_events() is not thread safe, it uses the internal
-array sort_events to keep cache of the sorted events and reuses it. This
-patch implements a new API, tep_list_events_copy(), which allocates new
-sorted array each time it is called. It could be used when a sorted events
-functionality is needed in thread safe use cases. It is up to the caller to
-free the array.
+APIs descriptions should describe the purpose of the function, its
+parameters and return value. While working  on man pages
+implementation, I noticed mismatches in the  descriptions of few APIs.
+This patch changes the description of these APIs, making them
+consistent with the man pages:
 
-Link: http://lore.kernel.org/linux-trace-devel/20181218133013.31094-1-tstoyanov@vmware.com
+ - tep_print_num_field()
+ - tep_print_func_field()
+ - tep_get_header_page_size()
+ - tep_get_long_size()
+ - tep_set_long_size()
+ - tep_get_page_size()
+ - tep_set_page_size()
+
+Link: http://lore.kernel.org/linux-trace-devel/20190325145017.30246-2-tstoyanov@vmware.com
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- tools/lib/traceevent/event-parse.c | 109 +++++++++++++++++++++++------
- tools/lib/traceevent/event-parse.h |   5 +-
- 2 files changed, 91 insertions(+), 23 deletions(-)
+ tools/lib/traceevent/event-parse-api.c | 20 ++++++++++----------
+ tools/lib/traceevent/event-parse.c     |  6 ++++--
+ 2 files changed, 14 insertions(+), 12 deletions(-)
 
+diff --git a/tools/lib/traceevent/event-parse-api.c b/tools/lib/traceevent/event-parse-api.c
+index d463761a58f4..3686a221e981 100644
+--- a/tools/lib/traceevent/event-parse-api.c
++++ b/tools/lib/traceevent/event-parse-api.c
+@@ -43,8 +43,8 @@ int tep_get_events_count(struct tep_handle *tep)
+  * @flag: flag, or combination of flags to be set
+  * can be any combination from enum tep_flag
+  *
+- * This sets a flag or mbination of flags  from enum tep_flag
+-  */
++ * This sets a flag or combination of flags from enum tep_flag
++ */
+ void tep_set_flag(struct tep_handle *tep, int flag)
+ {
+ 	if(tep)
+@@ -140,10 +140,10 @@ void tep_set_cpus(struct tep_handle *pevent, int cpus)
+ }
+ 
+ /**
+- * tep_get_long_size - get the size of a long integer on the current machine
++ * tep_get_long_size - get the size of a long integer on the traced machine
+  * @pevent: a handle to the tep_handle
+  *
+- * This returns the size of a long integer on the current machine
++ * This returns the size of a long integer on the traced machine
+  * If @pevent is NULL, 0 is returned.
+  */
+ int tep_get_long_size(struct tep_handle *pevent)
+@@ -154,11 +154,11 @@ int tep_get_long_size(struct tep_handle *pevent)
+ }
+ 
+ /**
+- * tep_set_long_size - set the size of a long integer on the current machine
++ * tep_set_long_size - set the size of a long integer on the traced machine
+  * @pevent: a handle to the tep_handle
+  * @size: size, in bytes, of a long integer
+  *
+- * This sets the size of a long integer on the current machine
++ * This sets the size of a long integer on the traced machine
+  */
+ void tep_set_long_size(struct tep_handle *pevent, int long_size)
+ {
+@@ -167,10 +167,10 @@ void tep_set_long_size(struct tep_handle *pevent, int long_size)
+ }
+ 
+ /**
+- * tep_get_page_size - get the size of a memory page on the current machine
++ * tep_get_page_size - get the size of a memory page on the traced machine
+  * @pevent: a handle to the tep_handle
+  *
+- * This returns the size of a memory page on the current machine
++ * This returns the size of a memory page on the traced machine
+  * If @pevent is NULL, 0 is returned.
+  */
+ int tep_get_page_size(struct tep_handle *pevent)
+@@ -181,11 +181,11 @@ int tep_get_page_size(struct tep_handle *pevent)
+ }
+ 
+ /**
+- * tep_set_page_size - set the size of a memory page on the current machine
++ * tep_set_page_size - set the size of a memory page on the traced machine
+  * @pevent: a handle to the tep_handle
+  * @_page_size: size of a memory page, in bytes
+  *
+- * This sets the size of a memory page on the current machine
++ * This sets the size of a memory page on the traced machine
+  */
+ void tep_set_page_size(struct tep_handle *pevent, int _page_size)
+ {
 diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 666e23ded6ed..c00aebab3c33 100644
+index c00aebab3c33..000ab7514be7 100644
 --- a/tools/lib/traceevent/event-parse.c
 +++ b/tools/lib/traceevent/event-parse.c
-@@ -5651,32 +5651,26 @@ static int events_system_cmp(const void *a, const void *b)
- 	return events_id_cmp(a, b);
- }
- 
--struct tep_event **tep_list_events(struct tep_handle *pevent, enum tep_event_sort_type sort_type)
-+static struct tep_event **list_events_copy(struct tep_handle *tep)
- {
- 	struct tep_event **events;
--	int (*sort)(const void *a, const void *b);
--
--	events = pevent->sort_events;
--
--	if (events && pevent->last_type == sort_type)
--		return events;
- 
--	if (!events) {
--		events = malloc(sizeof(*events) * (pevent->nr_events + 1));
--		if (!events)
--			return NULL;
-+	if (!tep)
-+		return NULL;
- 
--		memcpy(events, pevent->events, sizeof(*events) * pevent->nr_events);
--		events[pevent->nr_events] = NULL;
-+	events = malloc(sizeof(*events) * (tep->nr_events + 1));
-+	if (!events)
-+		return NULL;
- 
--		pevent->sort_events = events;
-+	memcpy(events, tep->events, sizeof(*events) * tep->nr_events);
-+	events[tep->nr_events] = NULL;
-+	return events;
-+}
- 
--		/* the internal events are sorted by id */
--		if (sort_type == TEP_EVENT_SORT_ID) {
--			pevent->last_type = sort_type;
--			return events;
--		}
--	}
-+static void list_events_sort(struct tep_event **events, int nr_events,
-+			     enum tep_event_sort_type sort_type)
-+{
-+	int (*sort)(const void *a, const void *b);
- 
- 	switch (sort_type) {
- 	case TEP_EVENT_SORT_ID:
-@@ -5689,11 +5683,82 @@ struct tep_event **tep_list_events(struct tep_handle *pevent, enum tep_event_sor
- 		sort = events_system_cmp;
- 		break;
- 	default:
-+		sort = NULL;
-+	}
-+
-+	if (sort)
-+		qsort(events, nr_events, sizeof(*events), sort);
-+}
-+
-+/**
-+ * tep_list_events - Get events, sorted by given criteria.
-+ * @tep: a handle to the tep context
-+ * @sort_type: desired sort order of the events in the array
-+ *
-+ * Returns an array of pointers to all events, sorted by the given
-+ * @sort_type criteria. The last element of the array is NULL. The returned
-+ * memory must not be freed, it is managed by the library.
-+ * The function is not thread safe.
-+ */
-+struct tep_event **tep_list_events(struct tep_handle *tep,
-+				   enum tep_event_sort_type sort_type)
-+{
-+	struct tep_event **events;
-+
-+	if (!tep)
-+		return NULL;
-+
-+	events = tep->sort_events;
-+	if (events && tep->last_type == sort_type)
- 		return events;
-+
-+	if (!events) {
-+		events = list_events_copy(tep);
-+		if (!events)
-+			return NULL;
-+
-+		tep->sort_events = events;
-+
-+		/* the internal events are sorted by id */
-+		if (sort_type == TEP_EVENT_SORT_ID) {
-+			tep->last_type = sort_type;
-+			return events;
-+		}
- 	}
- 
--	qsort(events, pevent->nr_events, sizeof(*events), sort);
--	pevent->last_type = sort_type;
-+	list_events_sort(events, tep->nr_events, sort_type);
-+	tep->last_type = sort_type;
-+
-+	return events;
-+}
-+
-+
-+/**
-+ * tep_list_events_copy - Thread safe version of tep_list_events()
-+ * @tep: a handle to the tep context
-+ * @sort_type: desired sort order of the events in the array
-+ *
-+ * Returns an array of pointers to all events, sorted by the given
-+ * @sort_type criteria. The last element of the array is NULL. The returned
-+ * array is newly allocated inside the function and must be freed by the caller
-+ */
-+struct tep_event **tep_list_events_copy(struct tep_handle *tep,
-+					enum tep_event_sort_type sort_type)
-+{
-+	struct tep_event **events;
-+
-+	if (!tep)
-+		return NULL;
-+
-+	events = list_events_copy(tep);
-+	if (!events)
-+		return NULL;
-+
-+	/* the internal events are sorted by id */
-+	if (sort_type == TEP_EVENT_SORT_ID)
-+		return events;
-+
-+	list_events_sort(events, tep->nr_events, sort_type);
- 
- 	return events;
- }
-diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
-index aec48f2aea8a..41159358abc2 100644
---- a/tools/lib/traceevent/event-parse.h
-+++ b/tools/lib/traceevent/event-parse.h
-@@ -544,7 +544,10 @@ void tep_event_info(struct trace_seq *s, struct tep_event *event,
- int tep_strerror(struct tep_handle *pevent, enum tep_errno errnum,
- 		 char *buf, size_t buflen);
- 
--struct tep_event **tep_list_events(struct tep_handle *pevent, enum tep_event_sort_type);
-+struct tep_event **tep_list_events(struct tep_handle *tep,
-+				   enum tep_event_sort_type);
-+struct tep_event **tep_list_events_copy(struct tep_handle *tep,
-+					enum tep_event_sort_type);
- struct tep_format_field **tep_event_common_fields(struct tep_event *event);
- struct tep_format_field **tep_event_fields(struct tep_event *event);
- 
+@@ -6453,7 +6453,8 @@ int tep_get_any_field_val(struct trace_seq *s, struct tep_event *event,
+  * @record: The record with the field name.
+  * @err: print default error if failed.
+  *
+- * Returns: 0 on success, -1 field not found, or 1 if buffer is full.
++ * Returns positive value on success, negative in case of an error,
++ * or 0 if buffer is full.
+  */
+ int tep_print_num_field(struct trace_seq *s, const char *fmt,
+ 			struct tep_event *event, const char *name,
+@@ -6485,7 +6486,8 @@ int tep_print_num_field(struct trace_seq *s, const char *fmt,
+  * @record: The record with the field name.
+  * @err: print default error if failed.
+  *
+- * Returns: 0 on success, -1 field not found, or 1 if buffer is full.
++ * Returns positive value on success, negative in case of an error,
++ * or 0 if buffer is full.
+  */
+ int tep_print_func_field(struct trace_seq *s, const char *fmt,
+ 			 struct tep_event *event, const char *name,
 -- 
 2.20.1
 
