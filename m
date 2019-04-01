@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72674C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EBFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3893420830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73D2F20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C6n7NqrE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dadz98qR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388030AbfDARp0 (ORCPT
+        id S2388130AbfDARp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:45:26 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34212 "EHLO
+        Mon, 1 Apr 2019 13:45:29 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34218 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387735AbfDAReR (ORCPT
+        with ESMTP id S2387736AbfDAReR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Apr 2019 13:34:17 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x31HY4sd129006;
-        Mon, 1 Apr 2019 12:34:04 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x31HY513129032;
+        Mon, 1 Apr 2019 12:34:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554140044;
-        bh=zZ2wiU8ugxRgUiXgVf/FA2eQuEbGUCruAFQYvaxb7Xw=;
+        s=ti-com-17Q1; t=1554140045;
+        bh=NRAX1bmUD/a5vpTS0wktfjeVShF+ASYaJwyo80uQPIU=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=C6n7NqrEhEnE78CGmbaEXRFvc4grvEiINAo7SAEFDEdrLw8aRwEDQzJQB1I+H9D7s
-         CLewi1V1MxPlQf8pmXTL8NV4Si5/q7yiDheZvI8WlkIivICxirPhWVy9/l8z/L4mJ6
-         Od+C/9V7LypeOKRurA0Rf+xmuGeN+evbdVI15D9g=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x31HY4eh119013
+        b=dadz98qRycyCc38L7Pl/A6M5ZbZcYBByuYZd8vwVY+5LYSkVS6VhyNyo+MgN8VPnc
+         6hLbNCueKf12cjYrPjl/hwX0ye2jjmZJlWRJzTNKaNeaLJ3/sPdYsr/p/MxX9qUX6g
+         3wM4ic0f88jrZ7g2kMfixpTLbAlIdbgC7vRx+iKw=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x31HY50N110657
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 1 Apr 2019 12:34:04 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 1 Apr 2019 12:34:05 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Apr
- 2019 12:34:03 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 12:34:05 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 1 Apr 2019 12:34:03 -0500
+ Frontend Transport; Mon, 1 Apr 2019 12:34:05 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x31HY3PC116797;
-        Mon, 1 Apr 2019 12:34:03 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x31HY5Ep101354;
+        Mon, 1 Apr 2019 12:34:05 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <marek.behun@nic.cz>, <linux-kernel@vger.kernel.org>,
         <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [RFC PATCH 1/5] leds: multicolor: Add sysfs interface definition
-Date:   Mon, 1 Apr 2019 12:33:56 -0500
-Message-ID: <20190401173400.14238-2-dmurphy@ti.com>
+Subject: [RFC PATCH 4/5] dt-bindings: leds: Add LED_COLOR_ID and COLOR_NAME definitions
+Date:   Mon, 1 Apr 2019 12:33:59 -0500
+Message-ID: <20190401173400.14238-5-dmurphy@ti.com>
 X-Mailer: git-send-email 2.12.2
 In-Reply-To: <20190401173400.14238-1-dmurphy@ti.com>
 References: <20190401173400.14238-1-dmurphy@ti.com>
@@ -66,112 +66,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a documentation of LED Multicolor LED class specific
-sysfs attributes.
+This patch is being added to demonstrate reuse of Jacek's patch
+https://lore.kernel.org/patchwork/patch/1056726/
+
+I have added color name definitions to the above patch.
+I do not claim authorship and the intent of this patch to strictly
+for demonstration.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- .../ABI/testing/sysfs-class-led-multicolor    | 91 +++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ include/dt-bindings/leds/common.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
-new file mode 100644
-index 000000000000..5583ecaa3170
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
-@@ -0,0 +1,91 @@
-+What:		/sys/class/leds/<led>/colors/sync_enable
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Dan Murphy <dmurphy@ti.com>
-+Description:	read/write
-+		Writing a 1 to this file will enable the synchronization of all
-+		the defined color LEDs within the LED node.  Brightness values
-+		for each LED will be stored and written when sync is set to 1.
-+		Writing a 0 to this file will disable syncing and allow
-+		individual control of the LEDs brightness settings.
+diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+index e171d0a6beb2..7e1279d761e4 100644
+--- a/include/dt-bindings/leds/common.h
++++ b/include/dt-bindings/leds/common.h
+@@ -19,4 +19,23 @@
+ #define LEDS_BOOST_ADAPTIVE	1
+ #define LEDS_BOOST_FIXED	2
+ 
++#define LED_COLOR_ID_WHITE	 0
++#define LED_COLOR_ID_RED	 1
++#define LED_COLOR_ID_GREEN	 2
++#define LED_COLOR_ID_BLUE	 3
++#define LED_COLOR_ID_AMBER	 4
++#define LED_COLOR_ID_VIOLET	 5
++#define LED_COLOR_ID_YELLOW	 6
++#define LED_COLOR_ID_MAX	 LED_COLOR_ID_YELLOW
 +
-+What:		/sys/class/leds/<led>/colors/sync
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Dan Murphy <dmurphy@ti.com>
-+Description:	write only
-+		Writing a 1 to this file while sync_enable is set to 1 will
-+		write the current brightness values to all defined LEDs within
-+		the LED node.  All LEDs defined will be configured based
-+		on the brightness that has been requested.
++#define LED_COLOR_NAME_WHITE	"white"
++#define LED_COLOR_NAME_RED	"red"
++#define LED_COLOR_NAME_GREEN	"green"
++#define LED_COLOR_NAME_BLUE	"blue"
++#define LED_COLOR_NAME_AMBER	"amber"
++#define LED_COLOR_NAME_VIOLET	"violet"
++#define LED_COLOR_NAME_YELLOW	"yellow"
 +
-+		If sync_enable is set to 0 then writing a 1 to sync has no
-+		affect on the LEDs.
++#define LED_COLOR_NAME_MAX_SZ	6
 +
-+What:		/sys/class/leds/<led>/colors/<led_color>/brightness
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Dan Murphy <dmurphy@ti.com>
-+Description:	read/write
-+		The led_color directory is dynamically created based on the
-+		colors defined by the registrar of the class.
-+		The led_color can be but not limited to red, green, blue,
-+		white, amber, yellow and violet.  Drivers can also declare a
-+		LED color for presentation.  There is one directory per color
-+		presented.  The brightness file is created under each
-+		led_color directory and controls the individual LED color
-+		setting.
-+
-+		If sync is enabled then	writing the brightness value of the LED
-+		is deferred until a 1 is written to
-+		/sys/class/leds/<led>/color/sync.  If syncing is
-+		disabled then the LED brightness value will be written
-+		immediately to the LED driver.
-+
-+		The value of the color is from 0 to
-+		/sys/class/leds/<led>/colors/<led_color>/max_brightness.
-+
-+What:		/sys/class/leds/<led>/colors/<led_color>/max_brightness
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Dan Murphy <dmurphy@ti.com>
-+Description:	read only
-+		Maximum brightness level for the LED color, default is
-+		255 (LED_FULL).
-+
-+		If the LED does not support different brightness levels, this
-+		should be 1.
-+
-+What:		/sys/class/leds/<led>/brightness_model/<model_color>
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
-+Description:	read/write
-+		This directory contains the defined color models that are read
-+		from the firmware node.  The model color will be the read from
-+		the firmware node.  The model names should be a color that the
-+		LED cluster can produce.
-+
-+What:		/sys/class/leds/<led>/brightness_model/<model_color>/brightness
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
-+Description:	read/write
-+		Writing this file will initiate a synchronized write to the LED
-+		cluster to produce the color output defined in the firmware node.
-+
-+		This value cannot exceed <model_color>/max_brightness.
-+		Writing a 0 to this file will cause the LED cluster to turn off.
-+
-+		The sync and sync_enable files do not have an affect on this as
-+		this is a real time update of the LED cluster.
-+
-+What:		/sys/class/leds/<led>/brightness_model/<model_color>/max_brightness
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
-+Description:	read
-+		Reading this file will return the maximum number of brightness
-+		levels that are defined in the firmware node for the model color.
-+		It should be assumed that the levels are from 1 -> max_brightness
-+		and the LED cluster brightness is increasing.
+ #endif /* __DT_BINDINGS_LEDS_H */
 -- 
 2.19.0
 
