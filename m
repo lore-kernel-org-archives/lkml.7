@@ -2,146 +2,121 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC18DC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B44BFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8239E213A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D46213A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="UQowoQFx"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="G+yZ2Gdw";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hsmom+Yw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732111AbfDAHtT (ORCPT
+        id S1732124AbfDAHtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:49:19 -0400
-Received: from mail-eopbgr1300079.outbound.protection.outlook.com ([40.107.130.79]:65122
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731769AbfDAHtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:49:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YzDRcL5HGApuuS9OTyrFpea3LHxiQCjmBLdxl0rre0Q=;
- b=UQowoQFxNN21liy4W9yXqRiN8MAwdTA7wVTjyQ5X1OllOaIcSLRU0YX+GuhQ9DzZ2OUZcexN189yy/0kR/KJ8udJr/rtJrW7ec0hkb9fSWfVIGqq4Jq5czj46HmsZWWI7BvJz/1J55zoW9HQ3CXRMhdhsEnp+mLjJX/n1/ZNYUk=
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
- SG2PR02MB3372.apcprd02.prod.outlook.com (20.177.82.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.20; Mon, 1 Apr 2019 07:49:14 +0000
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1750.017; Mon, 1 Apr 2019
- 07:49:14 +0000
-From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [External] Re: Print map for total physical and virtual memory
-Thread-Topic: [External] Re: Print map for total physical and virtual memory
-Thread-Index: AQHU46nCeD1YOwMRP0e9ea2iKxtjwaYdyRyAgAAQFrWAAAJjAIAEO9QagATeRQE=
-Date:   Mon, 1 Apr 2019 07:49:14 +0000
-Message-ID: <SG2PR02MB3098608C52BFEA600BDD7DD7E8550@SG2PR02MB3098.apcprd02.prod.outlook.com>
-References: <SG2PR02MB3098F980E1EB299853AC46E6E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <20190326113657.GL10344@bombadil.infradead.org>
- <SG2PR02MB3098B0C0CD27969FB7C9ECD7E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>,<20190326124304.GN10344@bombadil.infradead.org>,<SG2PR02MB3098156002F7CCC46078B57AE85A0@SG2PR02MB3098.apcprd02.prod.outlook.com>
-In-Reply-To: <SG2PR02MB3098156002F7CCC46078B57AE85A0@SG2PR02MB3098.apcprd02.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
-x-originating-ip: [14.98.130.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b6b2a6f9-2a74-4cdc-6148-08d6b676892a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB3372;
-x-ms-traffictypediagnostic: SG2PR02MB3372:
-x-microsoft-antispam-prvs: <SG2PR02MB33723B015B64A815A7BB4407E8550@SG2PR02MB3372.apcprd02.prod.outlook.com>
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39840400004)(376002)(346002)(136003)(189003)(199004)(76176011)(33656002)(6436002)(14454004)(4326008)(25786009)(316002)(78486014)(54906003)(105586002)(6246003)(8936002)(8676002)(5660300002)(106356001)(74316002)(7736002)(68736007)(305945005)(6916009)(53936002)(7696005)(478600001)(99286004)(93886005)(97736004)(55016002)(52536014)(86362001)(81166006)(81156014)(6116002)(229853002)(71190400001)(71200400001)(186003)(3846002)(9686003)(66574012)(44832011)(476003)(486006)(256004)(14444005)(5024004)(446003)(11346002)(6506007)(53546011)(2906002)(66066001)(55236004)(102836004)(26005)(586874002)(98474002);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB3372;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: einfochips.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: zl0/ULvVuidhS4fZZKlJtGB5xFxp+kRQXiiVdMwLgl1VXVERplEKVnmPMFT18vDwMvyf+HAwqDlFqt0Gz44WwoFumEUx73G7tBA8NNeKm14+QZZLuWze7zU13ekWqaQM2VhdVi/xzWWGIP9WPvC0xwGPV2GM5YrGdjsMUp1fX5zsX/hWmRhBX1J8bDTFU/kXf18glLUjAsVm870HYX7hF4F3G6FNrq9pzdGR6nIN1R+Clz1thc0KnDZbXUuzY+O/Mz2QzHEo54LYOSr4fQuyErJVhsyG4xl4RnNHpKGCZAe5U6UJbNE5K92lC55nGoPJhRBTnQ09Xnk+klKGzaS5SYvDWG3zh/zUi92rxQL5aGL2/0Px5VOs78BaFBvnI7q7nRXiJqbakVpsBKDn8Hec+I3IiJDFtyvnbRIzCb1X4+M=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 1 Apr 2019 03:49:23 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44014 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731769AbfDAHtW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 03:49:22 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 02860611CE; Mon,  1 Apr 2019 07:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554104961;
+        bh=gUstZ7fbGG7ynTYbBk1Rblh0RK+j6KCLDnxzoMeQyhg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=G+yZ2Gdw/eeKCrqp4x+KNM1nYutcquwpJOdxCWJKFWxybdMJAnDYNUubYXGTP9gXV
+         Pm8zc9tAP0fI/jtPXPpH64sf74tH9L/3nY5cEjBE21WAAtH2GSjSTMHyTWQoc64q5U
+         yvgUcGYuKV42IL0tROClkJQbAT5NyNLGFno1aynw=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 725E8609F3;
+        Mon,  1 Apr 2019 07:49:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554104956;
+        bh=gUstZ7fbGG7ynTYbBk1Rblh0RK+j6KCLDnxzoMeQyhg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=hsmom+YwnOzH6ma4OfpUzQIkUYWU111vdhgL+cgTPHUFbGokt3wyN0Q4sJKvJRUTD
+         o/IHqsluaeXLdtbhvgnd5wJ/rdwm4XB8Fk9qsYbE8WisQzcYX7FHD6i5a9BCjZtrMI
+         Kgh1c+Sz9POdaHhLfrUnyo4QESgyAoZgHKC2HZK8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 725E8609F3
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH 2/2] soc: imx: gpcv2: use devm_platform_ioremap_resource()
+ to simplify code
+To:     Anson Huang <anson.huang@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "Sven.Schmitt@mixed-mode.de" <Sven.Schmitt@mixed-mode.de>,
+        "vivek.gautam@codeaurora.org" <vivek.gautam@codeaurora.org>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+References: <1554098543-5036-1-git-send-email-Anson.Huang@nxp.com>
+ <1554098543-5036-2-git-send-email-Anson.Huang@nxp.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <9374e771-4132-6183-fdfa-e227aedfdbbd@codeaurora.org>
+Date:   Mon, 1 Apr 2019 13:19:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: einfochips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6b2a6f9-2a74-4cdc-6148-08d6b676892a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 07:49:14.2725
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB3372
+In-Reply-To: <1554098543-5036-2-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-________________________________________
-From: Pankaj Suryawanshi
-Sent: 29 March 2019 10:52
-To: Matthew Wilcox
-Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org
-Subject: Re: [External] Re: Print map for total physical and virtual memory
-
-
-________________________________________
-From: Matthew Wilcox <willy@infradead.org>
-Sent: 26 March 2019 18:13
-To: Pankaj Suryawanshi
-Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org
-Subject: Re: [External] Re: Print map for total physical and virtual memory
-
-On Tue, Mar 26, 2019 at 12:35:25PM +0000, Pankaj Suryawanshi wrote:
-> From: Matthew Wilcox <willy@infradead.org>
-> Sent: 26 March 2019 17:06
-> To: Pankaj Suryawanshi
-> Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org
-> Subject: [External] Re: Print map for total physical and virtual memory
+On 4/1/2019 11:37 AM, Anson Huang wrote:
+> Use the new helper devm_platform_ioremap_resource() which wraps the
+> platform_get_resource() and devm_ioremap_resource() together, to
+> simplify the code.
 >
-> CAUTION: This email originated from outside of the organization. Do not c=
-lick links or open attachments unless you recognize the sender and know the=
- content is safe.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-... you should probably use gmail or something.  Whatever broken email
-system your employer provides makes it really hard for you to participate
-in any meaningful way.
-
-Okay i will use gmail.
-
-> Can you please elaborate about tools/vm/page-types.c ?
-
-cd tools/vm/
-make
-sudo ./page-types
-
-If that doesn't do exactly what you need, you can use the source code to
-make a program which does.
-
-Is there any other way to print only cma area pages ? because i am interest=
-ed for cma area pages only.
-
-Thanks Matthew.
-***************************************************************************=
-***************************************************************************=
-******* eInfochips Business Disclaimer: This e-mail message and all attachm=
-ents transmitted with it are intended solely for the use of the addressee a=
-nd may contain legally privileged and confidential information. If the read=
-er of this message is not the intended recipient, or an employee or agent r=
-esponsible for delivering this message to the intended recipient, you are h=
-ereby notified that any dissemination, distribution, copying, or other use =
-of this message or its attachments is strictly prohibited. If you have rece=
-ived this message in error, please notify the sender immediately by replyin=
-g to this message and please delete it from your computer. Any views expres=
-sed in this message are those of the individual sender unless otherwise sta=
-ted. Company has taken enough precautions to prevent the spread of viruses.=
- However the company accepts no liability for any damage caused by any viru=
-s transmitted by this email. **********************************************=
-***************************************************************************=
-************************************
+Cheers,
+-Mukesh
+> ---
+>   drivers/soc/imx/gpcv2.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
+> index e06bf12..31b8d00 100644
+> --- a/drivers/soc/imx/gpcv2.c
+> +++ b/drivers/soc/imx/gpcv2.c
+> @@ -563,7 +563,6 @@ static int imx_gpcv2_probe(struct platform_device *pdev)
+>   	struct device *dev = &pdev->dev;
+>   	struct device_node *pgc_np, *np;
+>   	struct regmap *regmap;
+> -	struct resource *res;
+>   	void __iomem *base;
+>   	int ret;
+>   
+> @@ -573,8 +572,7 @@ static int imx_gpcv2_probe(struct platform_device *pdev)
+>   		return -EINVAL;
+>   	}
+>   
+> -	res  = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	base = devm_ioremap_resource(dev, res);
+> +	base = devm_platform_ioremap_resource(pdev, 0);
+>   	if (IS_ERR(base))
+>   		return PTR_ERR(base);
+>   
