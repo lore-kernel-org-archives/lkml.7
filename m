@@ -2,189 +2,111 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F032C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D71C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED2720830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:19:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OcVL5XQE";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="achtFmIZ"
+	by mail.kernel.org (Postfix) with ESMTP id E800720830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:19:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732202AbfDAITL (ORCPT
+        id S1732223AbfDAITY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:19:11 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54820 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731919AbfDAITF (ORCPT
+        Mon, 1 Apr 2019 04:19:24 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:44841 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732053AbfDAITX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:19:05 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D74BE611DC; Mon,  1 Apr 2019 08:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554106744;
-        bh=tFLZGrYRMPcsH/tOJ1eaVySRQZLGxL4Fsrh8g62h0tA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OcVL5XQEVO2kiOP51ILwVEIwlEHBLQd6agg53OEcKNWsDHQF2OOjR5CZwQaSH8DOn
-         40C8/Pa7ZXhBlNcSU/A8GLMRXW6/dYILUuCkc6Oz9bNINZNcDi3Vjl5+0Ef2YWG5u/
-         /9p2IZUqOZf55FS7o6HmckhWEvA4BB1WJPVlIhZQ=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51D4A607EB;
-        Mon,  1 Apr 2019 08:17:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554106725;
-        bh=tFLZGrYRMPcsH/tOJ1eaVySRQZLGxL4Fsrh8g62h0tA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=achtFmIZXdKs5GhzASPORspifIeOUxvvS1QfglDNKuPQXNZFppuovTTQDyniTpgr/
-         izTZeAbQtfNNZQj2hYPyyh8eS1y20qpW3066aaVozV1SNYEuKX5un3cciIk32U8teJ
-         LKPltTgB7XNlBLAQB3LJIF28P1shHmYy2AAh+C78=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51D4A607EB
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH v3] arch_topology: Make cpu_capacity sysfs node as
- ready-only
-To:     Lingutla Chandrasekhar <clingutla@codeaurora.org>,
-        gregkh@linuxfoundation.org, quentin.perret@arm.com,
-        sudeep.holla@arm.com, dietmar.eggemann@arm.com,
-        juri.lelli@gmail.com
-Cc:     linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
-        linux-kernel@vger.kernel.org, jeremy.linton@arm.com
-References: <20190401042441.21993-1-clingutla@codeaurora.org>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <a085b3ce-f34d-1263-10fd-afbc6a2eb6ce@codeaurora.org>
-Date:   Mon, 1 Apr 2019 13:47:52 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 1 Apr 2019 04:19:23 -0400
+Received: by mail-ua1-f65.google.com with SMTP id p13so2748673uaa.11;
+        Mon, 01 Apr 2019 01:19:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mi4VVhCnwzE7TGhfTNJ/QcHC5Ku4Q1slp8yXTNUFiDo=;
+        b=nHGKtOWVc/86wyxHKEKpvP6otb2jfpVxreXbhIloC9QN2m4QUIK5pRI77P9Gsa1XM7
+         /1MEKJ6emSmFzb0NxHX7BO0EpJyWdkOmQFNpLGmyjZgn15tozn5mSguDZaq/pH7mxxAk
+         z0VOd3MW7qP8tiU8ABWyldUGvoy+46ZIpnXeRSU4N9jBtqWFB20oQ3B714sLP7hgeorC
+         Fh4R/QbiYvL360GNNjvHYCCRUVDkjQ+snT7n3u/obqMQxcRf4q4HgZQ5/YEmSXibwMeS
+         keptmSiVmT0niMpdOeutVHuqAEvBuBrbBR2K7VtBG5Kcw27VKYB2+UMUusJbjhUT5z2y
+         FwVQ==
+X-Gm-Message-State: APjAAAUMep3ASKZesTnN8A5imBYn2qOmwQVwHzN+QNrUH90EUiqtYZIO
+        Ks/Tw5CqPgd38BUaKW5Bb6tD5aR17z/k72HKN+4=
+X-Google-Smtp-Source: APXvYqxJi/GXwr/J+Fh+LQC9u7TI2IurOQqD4suI2QB4uLRYdsz5ftciuB1c4tsA3iXfp/QYnZKnzwlks1pz6daiLf4=
+X-Received: by 2002:ab0:6419:: with SMTP id x25mr31137677uao.86.1554106761510;
+ Mon, 01 Apr 2019 01:19:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190401042441.21993-1-clingutla@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20190325143521.34928-1-arnd@arndb.de> <20190325144737.703921-1-arnd@arndb.de>
+In-Reply-To: <20190325144737.703921-1-arnd@arndb.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 1 Apr 2019 10:19:09 +0200
+Message-ID: <CAMuHMdXa1qvNzAOFNBs4s6uNvNU4PX8O17K-c12eLni698Lf_A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arch: add pidfd and io_uring syscalls everywhere
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-s/ready/read
+On Mon, Mar 25, 2019 at 3:48 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> Add the io_uring and pidfd_send_signal system calls to all architectures.
+>
+> These system calls are designed to handle both native and compat tasks,
+> so all entries are the same across architectures, only arm-compat and
+> the generic tale still use an old format.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-On 4/1/2019 9:54 AM, Lingutla Chandrasekhar wrote:
-> If user updates any cpu's cpu_capacity, then the new value is going to
-> be applied to all its online sibling cpus. But this need not to be correct
-> always, as sibling cpus (in ARM, same micro architecture cpus) would have
-> different cpu_capacity with different performance characteristics.
-> So, updating the user supplied cpu_capacity to all cpu siblings
-> is not correct.
->
-> And another problem is, current code assumes that 'all cpus in a cluster
-> or with same package_id (core_siblings), would have same cpu_capacity'.
-> But with commit '5bdd2b3f0f8 ("arm64: topology: add support to remove
-> cpu topology sibling masks")', when a cpu hotplugged out, the cpu
-> information gets cleared in its sibling cpus. So, user supplied
-> cpu_capacity would be applied to only online sibling cpus at the time.
-> After that, if any cpu hotplugged in, it would have different cpu_capacity
-> than its siblings, which breaks the above assumption.
->
-> So, instead of mucking around the core sibling mask for user supplied
-> value, use device-tree to set cpu capacity. And make the cpu_capacity
-> node as read-only to know the asymmetry between cpus in the system.
-> While at it, remove cpu_scale_mutex usage, which used for sysfs write
-> protection.
->
-> Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Tested-by: Quentin Perret <quentin.perret@arm.com>
-> Reviewed-by: Quentin Perret <quentin.perret@arm.com>
-> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-> Signed-off-by: Lingutla Chandrasekhar <clingutla@codeaurora.org>
->
-> ---
->
-> Changes from v2:
->     - Corrected spelling mistakes in commit text.
-> Changes from v1:
->     - Removed cpu_scale_mutex usage, suggested by Dietmar Eggemann.
-> Changes from v0:
->     - Instead of iterating all possible cpus to update cpu capacity,
->       removed write capability for the sysfs node.
->
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index edfcf8d982e4..1739d7e1952a 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-> @@ -7,7 +7,6 @@
->    */
->   
->   #include <linux/acpi.h>
-> -#include <linux/arch_topology.h>
->   #include <linux/cpu.h>
->   #include <linux/cpufreq.h>
->   #include <linux/device.h>
-> @@ -31,7 +30,6 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
->   		per_cpu(freq_scale, i) = scale;
->   }
->   
-> -static DEFINE_MUTEX(cpu_scale_mutex);
->   DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
->   
->   void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
-> @@ -51,37 +49,7 @@ static ssize_t cpu_capacity_show(struct device *dev,
->   static void update_topology_flags_workfn(struct work_struct *work);
->   static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
->   
-> -static ssize_t cpu_capacity_store(struct device *dev,
-> -				  struct device_attribute *attr,
-> -				  const char *buf,
-> -				  size_t count)
-> -{
-> -	struct cpu *cpu = container_of(dev, struct cpu, dev);
-> -	int this_cpu = cpu->dev.id;
-> -	int i;
-> -	unsigned long new_capacity;
-> -	ssize_t ret;
-> -
-> -	if (!count)
-> -		return 0;
-> -
-> -	ret = kstrtoul(buf, 0, &new_capacity);
-> -	if (ret)
-> -		return ret;
-> -	if (new_capacity > SCHED_CAPACITY_SCALE)
-> -		return -EINVAL;
-> -
-> -	mutex_lock(&cpu_scale_mutex);
-> -	for_each_cpu(i, &cpu_topology[this_cpu].core_sibling)
-> -		topology_set_cpu_scale(i, new_capacity);
-> -	mutex_unlock(&cpu_scale_mutex);
-> -
-> -	schedule_work(&update_topology_flags_work);
-> -
-> -	return count;
-> -}
-> -
-> -static DEVICE_ATTR_RW(cpu_capacity);
-> +static DEVICE_ATTR_RO(cpu_capacity);
->   
->   static int register_cpu_capacity_sysctl(void)
->   {
-> @@ -141,7 +109,6 @@ void topology_normalize_cpu_scale(void)
->   		return;
->   
->   	pr_debug("cpu_capacity: capacity_scale=%u\n", capacity_scale);
-> -	mutex_lock(&cpu_scale_mutex);
->   	for_each_possible_cpu(cpu) {
->   		pr_debug("cpu_capacity: cpu=%d raw_capacity=%u\n",
->   			 cpu, raw_capacity[cpu]);
-> @@ -151,7 +118,6 @@ void topology_normalize_cpu_scale(void)
->   		pr_debug("cpu_capacity: CPU%d cpu_capacity=%lu\n",
->   			cpu, topology_get_cpu_scale(NULL, cpu));
->   	}
-> -	mutex_unlock(&cpu_scale_mutex);
->   }
->   
->   bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
+>  arch/m68k/kernel/syscalls/syscall.tbl       | 4 ++++
+
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
