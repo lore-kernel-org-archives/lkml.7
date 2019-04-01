@@ -2,120 +2,113 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE81C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0396FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC71920700
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XjVFCalQ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P6ACo0cJ"
+	by mail.kernel.org (Postfix) with ESMTP id C8C6F213A2
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554104948;
+	bh=HnJVqeAnj6MgPtswtZD3Y3xZp+N1KhSwSehy96KOHNM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ikmFBXlaQRXr3ToL5zr6Ki1KfbWp2/xjgfHNblFRvnzbpGC3+t1NWCafZHjSFINfD
+	 g+cI2azmo+MZpoQqLmyhQsapKawJhD9Cqw7GxmNpxQ3bgmf/GmQhTCEIsjuQxvltCA
+	 6z5e/8l1IGYtEjwYx3nhdnrjF3PxRtcEIq+Xxgc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732001AbfDAHs7 (ORCPT
+        id S1732107AbfDAHtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:48:59 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42594 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731769AbfDAHs6 (ORCPT
+        Mon, 1 Apr 2019 03:49:07 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36178 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731769AbfDAHtH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:48:58 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7B9DF6194A; Mon,  1 Apr 2019 07:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554104937;
-        bh=VEiRkFYKeuBuggcZfhD7B/6RH6TnChw/zp1EwqsYi2k=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XjVFCalQI32xNg2ZrLGRGXmCCMLR4PgsD0Hx80nIxGg1osq0DSJgCsrRENquAhwE4
-         X0s/+XL7h3q9HwCOuH8V3d4NV7hE0gCyCwzV+IVU3//YgnMDzhbJWKWzvW3jDKELU9
-         /Zr+cJtv2HO2Tn8SlAs+WG9xbyRIxh46/jmy3PsU=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 449B2618DD;
-        Mon,  1 Apr 2019 07:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554104923;
-        bh=VEiRkFYKeuBuggcZfhD7B/6RH6TnChw/zp1EwqsYi2k=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=P6ACo0cJeqIT3XywqnvEug6f/fPt7G4yWj2avBgY6B2ez82sFrNyggsajHS6yJNst
-         fftNY31D3ZKe1ULmDsQZwYtEDxQa2R76Z82AK38gX4/DAgGoFnHEuT7GwpHD/YYSV/
-         gGnUrgFAR3vXEY/U1/d89/vOsluQyDdS4g2k0OJ8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 449B2618DD
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH 1/2] soc: imx: gpc: use devm_platform_ioremap_resource()
- to simplify code
-To:     Anson Huang <anson.huang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "Sven.Schmitt@mixed-mode.de" <Sven.Schmitt@mixed-mode.de>,
-        "vivek.gautam@codeaurora.org" <vivek.gautam@codeaurora.org>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1554098543-5036-1-git-send-email-Anson.Huang@nxp.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <7f50128c-2c8b-c7b5-8c93-eb86fa627e48@codeaurora.org>
-Date:   Mon, 1 Apr 2019 13:18:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 1 Apr 2019 03:49:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XrBOJXE/K1TNMPytR5nrymtuh7ciNGGdQE216nZJFK4=; b=UcZBzWjamHgV/bNP8w8eBbU52
+        75Eu9HTDsR0IgA+9BjeQbshPX91B1yj4GhXSby64PkCG8f9CMbJALLIACTc8mKHmeqRrqEYPJ53J2
+        aVf3uys+yqp/Ij2EqKu1QDaz9+x0DL9rGulItCDZuv/OibF1A6OPDFrzEg/bflM7BXLL0=;
+Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hArgj-00088C-Bs; Mon, 01 Apr 2019 07:49:01 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 90F3A440082; Mon,  1 Apr 2019 08:48:57 +0100 (BST)
+Date:   Mon, 1 Apr 2019 14:48:57 +0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, kyarlagadda@nvidia.com,
+        ldewangan@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V1 18/26] spi: tegra114: add support for hw based cs
+Message-ID: <20190401074857.GK2059@sirena.org.uk>
+References: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
+ <1553666207-11414-18-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <1554098543-5036-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="W/+CTqSGWdiRg+8j"
+Content-Disposition: inline
+In-Reply-To: <1553666207-11414-18-git-send-email-skomatineni@nvidia.com>
+X-Cookie: Use extra care when cleaning on stairs.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/1/2019 11:37 AM, Anson Huang wrote:
-> Use the new helper devm_platform_ioremap_resource() which wraps the
-> platform_get_resource() and devm_ioremap_resource() together, to
-> simplify the code.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+--W/+CTqSGWdiRg+8j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
--Mukesh
-> ---
->   drivers/soc/imx/gpc.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
-> index 7d14a4b..a8f1e47 100644
-> --- a/drivers/soc/imx/gpc.c
-> +++ b/drivers/soc/imx/gpc.c
-> @@ -406,7 +406,6 @@ static int imx_gpc_probe(struct platform_device *pdev)
->   	const struct imx_gpc_dt_data *of_id_data = of_id->data;
->   	struct device_node *pgc_node;
->   	struct regmap *regmap;
-> -	struct resource *res;
->   	void __iomem *base;
->   	int ret;
->   
-> @@ -417,8 +416,7 @@ static int imx_gpc_probe(struct platform_device *pdev)
->   	    !pgc_node)
->   		return 0;
->   
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	base = devm_ioremap_resource(&pdev->dev, res);
-> +	base = devm_platform_ioremap_resource(pdev, 0);
->   	if (IS_ERR(base))
->   		return PTR_ERR(base);
->   
+On Tue, Mar 26, 2019 at 10:56:39PM -0700, Sowjanya Komatineni wrote:
+
+> Tegra SPI driver default uses SW CS control for transfers and HW CS
+> control can be enabled through SPI client device node DT property
+> nvidia,enable-hw-based-cs and is used only for single transfers.
+
+Why have a property - if this feature works and is useful why would a
+system ever not want to use it?
+
+> +	single_xfer =3D list_is_singular(&msg->transfers);
+>  	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+>  		u32 cmd1;
+> =20
+>  		reinit_completion(&tspi->xfer_completion);
+> =20
+> -		cmd1 =3D tegra_spi_setup_transfer_one(spi, xfer, is_first_msg);
+> +		cmd1 =3D tegra_spi_setup_transfer_one(spi, xfer, is_first_msg,
+> +						    single_xfer);
+
+It's not sufficient to check if there's only one transfer, you also need
+to make sure that the driver isn't using cs_change to use non-standard
+chip select handling.
+
+--W/+CTqSGWdiRg+8j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyhwmgACgkQJNaLcl1U
+h9Cd2gf+IZg5c+h4154oTSypXNSKODiicQai//JHZ+vsyi8kNDmkDif8XKvC8xLJ
+osqeztdDZ6jhaIM4G2ar4A7kLWqnA/s5iLl/vOCUgmKj6r9qhHh1BvWOli9GFpnz
+9KCXQOQRaXUY6Fja4oF0z7fk52xPIWoh2XrJPuUy18sfla52jMFxIQWu7p7WItd4
+Wq57omDJVMJ6gxHYhmD4ED3cGQo3pWI1aRQPvbdMopRCGI5YSAtToZjrnbFByYRg
+q6RCcD7BcWoihdUKPeXpeq4oM0MZXrZYfISZe8/7VYgI6b5WpXZC/4sgUfTFVzbq
+E/8rSGhA1a2xURQV/0bgEK5cKMzpHg==
+=iU8U
+-----END PGP SIGNATURE-----
+
+--W/+CTqSGWdiRg+8j--
