@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA05C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C471C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A3D20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0393620663
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141968;
-	bh=bz2f2gXd8wwdd7kneO1h+wOTZuiU1KnNNODS+O/bV0A=;
+	s=default; t=1554141981;
+	bh=t+Tlm/kpfL97NuEjXm2QbOfF7qXQgWgO46UA0YnYV80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XNEQjm25vYb5mhSROXf6M4c9U9TjX32Q+NYPCAQENHrhiz8FqhJ+XCT52Ngv64E9m
-	 x4/cV4B+EUTkAbjkJC+NVRW8Ew/UWG3V12LjDmnZ+wWk19qMIO1rlkj1WiRUsiRsRo
-	 qfEJxo9PtV9jO/SarsaoZGgWA2n2cNBikjAI+tQk=
+	b=xnbpHATuedzhOoLdElyKriSrZcHy9fCC7Q2WHe6ORo/DAdFUmwQl7bMy0NHCD/grq
+	 WYmoh73hysp8HAVYiOOib13Co871w4Rg2W2bXZCJ2Y/Uz5Vb9vfeMNQ5YLKK0J+ZGE
+	 AHT8Dfk5HYUInPd19332bIYBkmuTiAkhVtLifZjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbfDARNC (ORCPT
+        id S1730667AbfDASGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:13:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35076 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 14:06:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729962AbfDARM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:12:59 -0400
+        id S1729542AbfDARM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:12:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C8721924;
-        Mon,  1 Apr 2019 17:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23AFA20883;
+        Mon,  1 Apr 2019 17:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138779;
-        bh=bz2f2gXd8wwdd7kneO1h+wOTZuiU1KnNNODS+O/bV0A=;
+        s=default; t=1554138776;
+        bh=t+Tlm/kpfL97NuEjXm2QbOfF7qXQgWgO46UA0YnYV80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rBlBZm6Oy62GqGgUi6JRnuZHYCCMm6Iju81FU0cgiszwJ2JgBV68X70dB2/yzbFst
-         xPNbPA4d7OR0rkmVIRc+ltqDw7H8LpWKxhOmxJ3khiU7aH3jSg+V8YGBKFIEf1laFf
-         AV5hZ+3NZ13kmZip6Kw+BVjHpWcHHIhio7fLMSrs=
+        b=a1bwrFJaCFZ2FLJkCqFTMXSjjTlao6C0T3gbTeQDcJzWqPxBH1qjdrUpgLgV5QN0u
+         jvQDOJTy5cwSvEFF5Me2aOUbXId4nh2AD/9rmW7nwmFJpy/vQT1sj9wV0CPSeWZIpG
+         B5PiM2M3GYv6igmOAvYeYvhTjIH1eIni2XYakxJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org, Josh Elsasser <jelsasser@appneta.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 019/134] sctp: get sctphdr by offset in sctp_compute_cksum
-Date:   Mon,  1 Apr 2019 19:00:55 +0200
-Message-Id: <20190401170046.372572653@linuxfoundation.org>
+Subject: [PATCH 4.19 018/134] rhashtable: Still do rehash when we get EEXIST
+Date:   Mon,  1 Apr 2019 19:00:54 +0200
+Message-Id: <20190401170046.285097671@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,40 +66,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 273160ffc6b993c7c91627f5a84799c66dfe4dee ]
+[ Upstream commit 408f13ef358aa5ad56dc6230c2c7deb92cf462b1 ]
 
-sctp_hdr(skb) only works when skb->transport_header is set properly.
+As it stands if a shrink is delayed because of an outstanding
+rehash, we will go into a rescheduling loop without ever doing
+the rehash.
 
-But in Netfilter, skb->transport_header for ipv6 is not guaranteed
-to be right value for sctphdr. It would cause to fail to check the
-checksum for sctp packets.
+This patch fixes this by still carrying out the rehash and then
+rescheduling so that we can shrink after the completion of the
+rehash should it still be necessary.
 
-So fix it by using offset, which is always right in all places.
+The return value of EEXIST captures this case and other cases
+(e.g., another thread expanded/rehashed the table at the same
+time) where we should still proceed with the rehash.
 
-v1->v2:
-  - Fix the changelog.
-
-Fixes: e6d8b64b34aa ("net: sctp: fix and consolidate SCTP checksumming code")
-Reported-by: Li Shuang <shuali@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Fixes: da20420f83ea ("rhashtable: Add nested tables")
+Reported-by: Josh Elsasser <jelsasser@appneta.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Tested-by: Josh Elsasser <jelsasser@appneta.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/sctp/checksum.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/rhashtable.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/include/net/sctp/checksum.h
-+++ b/include/net/sctp/checksum.h
-@@ -61,7 +61,7 @@ static inline __wsum sctp_csum_combine(_
- static inline __le32 sctp_compute_cksum(const struct sk_buff *skb,
- 					unsigned int offset)
- {
--	struct sctphdr *sh = sctp_hdr(skb);
-+	struct sctphdr *sh = (struct sctphdr *)(skb->data + offset);
- 	const struct skb_checksum_ops ops = {
- 		.update  = sctp_csum_update,
- 		.combine = sctp_csum_combine,
+--- a/lib/rhashtable.c
++++ b/lib/rhashtable.c
+@@ -416,8 +416,12 @@ static void rht_deferred_worker(struct w
+ 	else if (tbl->nest)
+ 		err = rhashtable_rehash_alloc(ht, tbl, tbl->size);
+ 
+-	if (!err)
+-		err = rhashtable_rehash_table(ht);
++	if (!err || err == -EEXIST) {
++		int nerr;
++
++		nerr = rhashtable_rehash_table(ht);
++		err = err ?: nerr;
++	}
+ 
+ 	mutex_unlock(&ht->mutex);
+ 
 
 
