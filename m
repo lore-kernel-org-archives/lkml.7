@@ -2,142 +2,117 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF335C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE317C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0F620830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:50:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141042;
-	bh=I41k6Je2khc1B3dGm27CxHf4+91bZEnGAl/KLrgV4uk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eVoh8Dlog7+5cPKRjoSSc5UQbj+YV02BlZ+vtYg9SDQgiMVUIesT56pua3Sl6rpN9
-	 ZFkwMR7B+vB1Eo8PTWPakFhyIUyWv1+M+4lRnEJBna1igzfg/cmUbUJ4VaVBktLGGt
-	 8EalRAA72d4G9uXbKKwIlkHc4dQcOmPPR9geWqp0=
+	by mail.kernel.org (Postfix) with ESMTP id C8DBB20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732827AbfDAR2l (ORCPT
+        id S1732859AbfDARuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:28:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:50:51 -0400
+Received: from mga04.intel.com ([192.55.52.120]:41710 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732813AbfDAR2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:28:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C8A8208E4;
-        Mon,  1 Apr 2019 17:28:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139718;
-        bh=I41k6Je2khc1B3dGm27CxHf4+91bZEnGAl/KLrgV4uk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RhkX2AUUd8M6PXYYgPonncGoEKf2jGsGJVICmSPHV2LFUKzOFPywRi+X3c3cWYbzN
-         DEHpsaExiulhGk9MFrRJtvHHQ6fo/fYqC/mBBN/5iYrN4mDaFMs3z4muGdRABhfRSc
-         3lARvyaIYLKV7kD/EPTyPKPfhHjC+SrPEJQyWCNo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 51/56] KVM: Reject device ioctls from processes other than the VMs creator
-Date:   Mon,  1 Apr 2019 19:03:07 +0200
-Message-Id: <20190401170106.670609391@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
-References: <20190401170103.398401360@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        id S1728775AbfDARut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:50:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 10:50:48 -0700
+X-IronPort-AV: E=Sophos;i="5.60,297,1549958400"; 
+   d="scan'208";a="130530628"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Apr 2019 10:50:48 -0700
+Message-ID: <b3540257a002b944a878096570bc927450662b9c.camel@linux.intel.com>
+Subject: Re: [RFC 1/4] net/ipv4/fib: Remove run-time check in tnode_alloc()
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Ido Schimmel <idosch@mellanox.com>, netdev@vger.kernel.org
+Date:   Mon, 01 Apr 2019 10:50:48 -0700
+In-Reply-To: <c82b92e9-9809-87d2-85dc-67044d4e7632@gmail.com>
+References: <20190326153026.24493-1-dima@arista.com>
+         <20190326153026.24493-2-dima@arista.com>
+         <5beb631cf0dcc03d5afad3a29671677bdbc7b931.camel@linux.intel.com>
+         <c82b92e9-9809-87d2-85dc-67044d4e7632@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+On Mon, 2019-04-01 at 16:55 +0100, Dmitry Safonov wrote:
+> Hi Alexander,
+> 
+> On 4/1/19 4:40 PM, Alexander Duyck wrote:
+> > > @@ -333,8 +328,7 @@ static struct tnode *tnode_alloc(int bits)
+> > >  {
+> > >  	size_t size;
+> > >  
+> > > -	/* verify bits is within bounds */
+> > > -	if (bits > TNODE_VMALLOC_MAX)
+> > > +	if ((BITS_PER_LONG <= KEYLENGTH) && unlikely(bits >= BITS_PER_LONG))
+> > >  		return NULL;
+> > >  
+> > >  	/* determine size and verify it is non-zero and didn't overflow */
+> > 
+> > I think it would be better if we left TNODE_VMALLOC_MAX instead of
+> > replacing it with BITS_PER_LONG. This way we know that we are limited
+> > by the size of the node on 32b systems, and by the KEYLENGTH on 64b
+> > systems. The basic idea is to maintain the logic as to why we are doing
+> > it this way instead of just burying things by using built in constants
+> > that are close enough to work.
+> > 
+> > So for example I believe TNODE_VMALLOC_MAX is 31 on a 32b system.
+> 
+> This is also true after the change: bits == 31 will *not* return.
 
-------------------
+Actually now that I think about it TNODE_VMALLOC_MAX is likely much
+less than 31. The logic that we have to be concerned with is:
+	size = TNODE_SIZE(1ul << bits);
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+If size is a 32b value, and the size of a pointer is 4 bytes, then our
+upper limit is roughly ilog2((4G - 28) / 4), which comes out to 29.
+What we are trying to avoid is overflowing the size variable, not
+actually limiting the vmalloc itself.
 
-commit ddba91801aeb5c160b660caed1800eb3aef403f8 upstream.
+> > The
+> > main reason for that is because we have to subtract the TNODE_SIZE from
+> > the upper limit for size. By replacing TNODE_VMALLOC_MAX with
+> > BITS_PER_LONG that becomes abstracted away and it becomes more likely
+> > that somebody will mishandle it later.
+> 
+> So, I wanted to remove run-time check here on x86_64..
+> I could do it by adding !CONFIG_64BIT around the check.
 
-KVM's API requires thats ioctls must be issued from the same process
-that created the VM.  In other words, userspace can play games with a
-VM's file descriptors, e.g. fork(), SCM_RIGHTS, etc..., but only the
-creator can do anything useful.  Explicitly reject device ioctls that
-are issued by a process other than the VM's creator, and update KVM's
-API documentation to extend its requirements to device ioctls.
+I have no problem with that. All I am suggesting is that if at all
+possible we should use TNODE_VMALLOC_MAX instead of BITS_PER_LONG.
 
-Fixes: 852b6d57dc7f ("kvm: add device control API")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> But, I thought about the value of the check:
+> I believe it's here not to limit maximum allocated size:
+> kzalloc()/vzalloc() will fail and we should be fine with that.
 
----
- Documentation/virtual/kvm/api.txt |   16 +++++++++++-----
- virt/kvm/kvm_main.c               |    3 +++
- 2 files changed, 14 insertions(+), 5 deletions(-)
+No, the problem is we don't want to overflow size. The allocation will
+succeed, but give us a much smaller allocation then we expected.
 
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -13,7 +13,7 @@ of a virtual machine.  The ioctls belong
- 
-  - VM ioctls: These query and set attributes that affect an entire virtual
-    machine, for example memory layout.  In addition a VM ioctl is used to
--   create virtual cpus (vcpus).
-+   create virtual cpus (vcpus) and devices.
- 
-    Only run VM ioctls from the same process (address space) that was used
-    to create the VM.
-@@ -24,6 +24,11 @@ of a virtual machine.  The ioctls belong
-    Only run vcpu ioctls from the same thread that was used to create the
-    vcpu.
- 
-+ - device ioctls: These query and set attributes that control the operation
-+   of a single device.
-+
-+   device ioctls must be issued from the same process (address space) that
-+   was used to create the VM.
- 
- 2. File descriptors
- -------------------
-@@ -32,10 +37,11 @@ The kvm API is centered around file desc
- open("/dev/kvm") obtains a handle to the kvm subsystem; this handle
- can be used to issue system ioctls.  A KVM_CREATE_VM ioctl on this
- handle will create a VM file descriptor which can be used to issue VM
--ioctls.  A KVM_CREATE_VCPU ioctl on a VM fd will create a virtual cpu
--and return a file descriptor pointing to it.  Finally, ioctls on a vcpu
--fd can be used to control the vcpu, including the important task of
--actually running guest code.
-+ioctls.  A KVM_CREATE_VCPU or KVM_CREATE_DEVICE ioctl on a VM fd will
-+create a virtual cpu or device and return a file descriptor pointing to
-+the new resource.  Finally, ioctls on a vcpu or device fd can be used
-+to control the vcpu or device.  For vcpus, this includes the important
-+task of actually running guest code.
- 
- In general file descriptors can be migrated among processes by means
- of fork() and the SCM_RIGHTS facility of unix domain socket.  These
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2793,6 +2793,9 @@ static long kvm_device_ioctl(struct file
- {
- 	struct kvm_device *dev = filp->private_data;
- 
-+	if (dev->kvm->mm != current->mm)
-+		return -EIO;
-+
- 	switch (ioctl) {
- 	case KVM_SET_DEVICE_ATTR:
- 		return kvm_device_ioctl_attr(dev, dev->ops->set_attr, arg);
+> In my opinion it's rather to check that (1UL << bits) wouldn't result in UB.
+
+Sort of, however we have to keep mind that 1ul << bits is an index so
+it is also increased by the size of a pointer. As such the logic might
+be better expressed as sizeof(void*) << bits.
+
+
 
 
