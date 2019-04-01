@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F0EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FBAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8824F2171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B29420856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139690;
-	bh=7mAANUpcLbPoBNGMy8EWqiY22MuJViivFacDDfzuU1U=;
+	s=default; t=1554139697;
+	bh=KgYFyBvk20Xl05NEd5Rz1OhA2gTheVJzpvQUUbj7qKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OpMmraX0bBjXenv4MV4KR0VOuFChSJjK3/EUFP9WXMzz+vOoRgOWnibastv72P3PI
-	 GNpPaSpo57kGhZWc2dzJLWCORzTIQ5TN5KyV7Nv/FaYrcREmEaUMlSHK1k98vSpW9h
-	 NT23m9Vfq70tw3Dt+FG8ZcDXJzaXSie22DrW7bUQ=
+	b=P2/8X5ghph/hQ3jrIw4+5eK1/WVtb6mA1vA7x07qVy/WonzJtdOFDpcVn2ip3Pfr6
+	 R7W/aXjOQ5rS+RMb54GjA5MVPZed15xkUhRL9qUU4QC86tP2LO17Dn07iqVFDK8UJM
+	 UVSxGUUi6Z1qcufjvkBUDooEIP5d5i8uvYHPWn9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732749AbfDAR2J (ORCPT
+        id S1732766AbfDAR2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:28:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33792 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:28:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732412AbfDAR2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:28:07 -0400
+        id S1732607AbfDAR2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:28:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84FE42063F;
-        Mon,  1 Apr 2019 17:28:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D00CE2063F;
+        Mon,  1 Apr 2019 17:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139686;
-        bh=7mAANUpcLbPoBNGMy8EWqiY22MuJViivFacDDfzuU1U=;
+        s=default; t=1554139693;
+        bh=KgYFyBvk20Xl05NEd5Rz1OhA2gTheVJzpvQUUbj7qKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tczpKEFjg7ngJkVqalJcMYYTstcQxRbgYuLZMjdCWLt7Iy9qxd9EWc23qYmpTr2Kj
-         XDtigs34NZlCiXT511HdLE1aydyelm8hq06Bt6n1OhTMdgCJCBmxfhSlz+L5YSes5f
-         0jrxr4AKkB7WQEKaVCxW2jwscaM4gLFEG5YlMeio=
+        b=0vyKpToEmIIqKsPUG3cU03OxjsCk3YdDL+x+D3aC9qe/CuQo+EYda4c1dx4yaHqrM
+         qwwUri92HbFlPRW4JudiBE/Qbas+VEB1zfoDG8+hl1h7HD9nCsvrN90M+IFj+6dmU6
+         GubZLcSAf1+c+0R7n0cHwr8Z8WjaFA77ThNJsQks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Vasilyev <grabesstimme@gmail.com>,
-        "Spencer E. Olson" <olsonse@umich.edu>,
-        Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.9 33/56] staging: comedi: ni_mio_common: Fix divide-by-zero for DIO cmdtest
-Date:   Mon,  1 Apr 2019 19:02:49 +0200
-Message-Id: <20190401170105.740851969@linuxfoundation.org>
+        stable@vger.kernel.org, Wentao Wang <witallwang@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Subject: [PATCH 4.9 43/56] Disable kgdboc failed by echo space to /sys/module/kgdboc/parameters/kgdboc
+Date:   Mon,  1 Apr 2019 19:02:59 +0200
+Message-Id: <20190401170106.265834309@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -66,153 +64,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Wentao Wang <witallwang@gmail.com>
 
-commit bafd9c64056cd034a1174dcadb65cd3b294ff8f6 upstream.
+commit 3ec8002951ea173e24b466df1ea98c56b7920e63 upstream.
 
-`ni_cdio_cmdtest()` validates Comedi asynchronous commands for the DIO
-subdevice (subdevice 2) of supported National Instruments M-series
-cards.  It is called when handling the `COMEDI_CMD` and `COMEDI_CMDTEST`
-ioctls for this subdevice.  There are two causes for a possible
-divide-by-zero error when validating that the `stop_arg` member of the
-passed-in command is not too large.
+Echo "" to /sys/module/kgdboc/parameters/kgdboc will fail with "No such
+device” error.
 
-The first cause for the divide-by-zero is that calls to
-`comedi_bytes_per_scan()` are only valid once the command has been
-copied to `s->async->cmd`, but that copy is only done for the
-`COMEDI_CMD` ioctl.  For the `COMEDI_CMDTEST` ioctl, it will use
-whatever was left there by the previous `COMEDI_CMD` ioctl, if any.
-(This is very likely, as it is usual for the application to use
-`COMEDI_CMDTEST` before `COMEDI_CMD`.) If there has been no previous,
-valid `COMEDI_CMD` for this subdevice, then `comedi_bytes_per_scan()`
-will return 0, so the subsequent division in `ni_cdio_cmdtest()` of
-`s->async->prealloc_bufsz / comedi_bytes_per_scan(s)` will be a
-divide-by-zero error.  To fix this error, call a new function
-`comedi_bytes_per_scan_cmd(s, cmd)`, based on the existing
-`comedi_bytes_per_scan(s)` but using a specified `struct comedi_cmd` for
-its calculations.  (Also refactor `comedi_bytes_per_scan()` to call the
-new function.)
+This is caused by function "configure_kgdboc" who init err to ENODEV
+when the config is empty (legal input) the code go out with ENODEV
+returned.
 
-Once the first cause for the divide-by-zero has been fixed, the second
-cause is that `comedi_bytes_per_scan_cmd()` can legitimately return 0 if
-the `scan_end_arg` member of the `struct comedi_cmd` being tested is 0.
-Fix it by only performing the division (and validating that `stop_arg`
-is no more than the maximum value) if `comedi_bytes_per_scan_cmd()`
-returns a non-zero value.
-
-The problem was reported on the COMEDI mailing list here:
-https://groups.google.com/forum/#!topic/comedi_list/4t9WlHzMhKM
-
-Reported-by: Ivan Vasilyev <grabesstimme@gmail.com>
-Tested-by: Ivan Vasilyev <grabesstimme@gmail.com>
-Fixes: f164cbf98fa8 ("staging: comedi: ni_mio_common: add finite regeneration to dio output")
-Cc: <stable@vger.kernel.org> # 4.6+
-Cc: Spencer E. Olson <olsonse@umich.edu>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Fixes: 2dd453168643 ("kgdboc: Fix restrict error")
+Signed-off-by: Wentao Wang <witallwang@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/comedidev.h             |    2 +
- drivers/staging/comedi/drivers.c               |   33 +++++++++++++++++++++----
- drivers/staging/comedi/drivers/ni_mio_common.c |   10 +++++--
- 3 files changed, 38 insertions(+), 7 deletions(-)
+ drivers/tty/serial/kgdboc.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/comedi/comedidev.h
-+++ b/drivers/staging/comedi/comedidev.h
-@@ -984,6 +984,8 @@ int comedi_dio_insn_config(struct comedi
- 			   unsigned int mask);
- unsigned int comedi_dio_update_state(struct comedi_subdevice *,
- 				     unsigned int *data);
-+unsigned int comedi_bytes_per_scan_cmd(struct comedi_subdevice *s,
-+				       struct comedi_cmd *cmd);
- unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s);
- unsigned int comedi_nscans_left(struct comedi_subdevice *s,
- 				unsigned int nscans);
---- a/drivers/staging/comedi/drivers.c
-+++ b/drivers/staging/comedi/drivers.c
-@@ -390,11 +390,13 @@ unsigned int comedi_dio_update_state(str
- EXPORT_SYMBOL_GPL(comedi_dio_update_state);
+--- a/drivers/tty/serial/kgdboc.c
++++ b/drivers/tty/serial/kgdboc.c
+@@ -148,8 +148,10 @@ static int configure_kgdboc(void)
+ 	char *cptr = config;
+ 	struct console *cons;
  
- /**
-- * comedi_bytes_per_scan() - Get length of asynchronous command "scan" in bytes
-+ * comedi_bytes_per_scan_cmd() - Get length of asynchronous command "scan" in
-+ * bytes
-  * @s: COMEDI subdevice.
-+ * @cmd: COMEDI command.
-  *
-  * Determines the overall scan length according to the subdevice type and the
-- * number of channels in the scan.
-+ * number of channels in the scan for the specified command.
-  *
-  * For digital input, output or input/output subdevices, samples for
-  * multiple channels are assumed to be packed into one or more unsigned
-@@ -404,9 +406,9 @@ EXPORT_SYMBOL_GPL(comedi_dio_update_stat
-  *
-  * Returns the overall scan length in bytes.
-  */
--unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s)
-+unsigned int comedi_bytes_per_scan_cmd(struct comedi_subdevice *s,
-+				       struct comedi_cmd *cmd)
- {
--	struct comedi_cmd *cmd = &s->async->cmd;
- 	unsigned int num_samples;
- 	unsigned int bits_per_sample;
- 
-@@ -423,6 +425,29 @@ unsigned int comedi_bytes_per_scan(struc
- 	}
- 	return comedi_samples_to_bytes(s, num_samples);
- }
-+EXPORT_SYMBOL_GPL(comedi_bytes_per_scan_cmd);
-+
-+/**
-+ * comedi_bytes_per_scan() - Get length of asynchronous command "scan" in bytes
-+ * @s: COMEDI subdevice.
-+ *
-+ * Determines the overall scan length according to the subdevice type and the
-+ * number of channels in the scan for the current command.
-+ *
-+ * For digital input, output or input/output subdevices, samples for
-+ * multiple channels are assumed to be packed into one or more unsigned
-+ * short or unsigned int values according to the subdevice's %SDF_LSAMPL
-+ * flag.  For other types of subdevice, samples are assumed to occupy a
-+ * whole unsigned short or unsigned int according to the %SDF_LSAMPL flag.
-+ *
-+ * Returns the overall scan length in bytes.
-+ */
-+unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s)
-+{
-+	struct comedi_cmd *cmd = &s->async->cmd;
-+
-+	return comedi_bytes_per_scan_cmd(s, cmd);
-+}
- EXPORT_SYMBOL_GPL(comedi_bytes_per_scan);
- 
- static unsigned int __comedi_nscans_left(struct comedi_subdevice *s,
---- a/drivers/staging/comedi/drivers/ni_mio_common.c
-+++ b/drivers/staging/comedi/drivers/ni_mio_common.c
-@@ -3477,6 +3477,7 @@ static int ni_cdio_check_chanlist(struct
- static int ni_cdio_cmdtest(struct comedi_device *dev,
- 			   struct comedi_subdevice *s, struct comedi_cmd *cmd)
- {
-+	unsigned int bytes_per_scan;
- 	int err = 0;
- 	int tmp;
- 
-@@ -3506,9 +3507,12 @@ static int ni_cdio_cmdtest(struct comedi
- 	err |= comedi_check_trigger_arg_is(&cmd->convert_arg, 0);
- 	err |= comedi_check_trigger_arg_is(&cmd->scan_end_arg,
- 					   cmd->chanlist_len);
--	err |= comedi_check_trigger_arg_max(&cmd->stop_arg,
--					    s->async->prealloc_bufsz /
--					    comedi_bytes_per_scan(s));
-+	bytes_per_scan = comedi_bytes_per_scan_cmd(s, cmd);
-+	if (bytes_per_scan) {
-+		err |= comedi_check_trigger_arg_max(&cmd->stop_arg,
-+						    s->async->prealloc_bufsz /
-+						    bytes_per_scan);
+-	if (!strlen(config) || isspace(config[0]))
++	if (!strlen(config) || isspace(config[0])) {
++		err = 0;
+ 		goto noconfig;
 +	}
  
- 	if (err)
- 		return 3;
+ 	kgdboc_io_ops.is_console = 0;
+ 	kgdb_tty_driver = NULL;
 
 
