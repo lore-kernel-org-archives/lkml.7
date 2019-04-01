@@ -2,121 +2,115 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C3FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CA1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A87206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67EFF206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbfDAVeK (ORCPT
+        id S1728648AbfDAVeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 17:34:10 -0400
-Received: from www62.your-server.de ([213.133.104.62]:42590 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfDAVeJ (ORCPT
+        Mon, 1 Apr 2019 17:34:14 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55106 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfDAVeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 17:34:09 -0400
-Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hB4Z7-0005Ex-2e; Mon, 01 Apr 2019 23:34:01 +0200
-Received: from [178.197.248.24] (helo=linux.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hB4Z6-0004Wj-Sw; Mon, 01 Apr 2019 23:34:00 +0200
-Subject: Re: [PATCH] bpf: do not start from first bucket if elem is not found
- on a htab
-To:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     =?UTF-8?Q?Maciej_=c5=bbenczykowski?= <maze@google.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20190331064129.31702-1-brianvv.kernel@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <74e3024f-6fde-a04d-4000-89c6e61acc26@iogearbox.net>
-Date:   Mon, 1 Apr 2019 23:34:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Mon, 1 Apr 2019 17:34:11 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 446DB804E3; Mon,  1 Apr 2019 23:34:00 +0200 (CEST)
+Date:   Mon, 1 Apr 2019 23:34:07 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     lee.jones@linaro.org, daniel.thompson@linaro.org,
+        jingoohan1@gmail.com, robh+dt@kernel.org,
+        jacek.anaszewski@gmail.com, mark.rutland@arm.com,
+        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        dmurphy@ti.com, jonathan@marek.ca
+Subject: Re: [PATCH v2 1/3] backlight: lm3630a: return 0 on success in
+ update_status functions
+Message-ID: <20190401213407.GC14681@amd>
+References: <20190401103034.21062-1-masneyb@onstation.org>
+ <20190401103034.21062-2-masneyb@onstation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190331064129.31702-1-brianvv.kernel@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25406/Mon Apr  1 09:55:53 2019)
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="1ccMZA6j1vT5UqiK"
+Content-Disposition: inline
+In-Reply-To: <20190401103034.21062-2-masneyb@onstation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/31/2019 08:41 AM, Brian Vazquez wrote:
-> From: Brian Vazquez <brianvv@google.com>
-> 
-> When you want to traverse an entire map using BPF_MAP_GET_NEXT_KEY and
-> key provided is not present due to a deletion you will start iterating the
-> map from the beginning without noticing it. This patch changes the
-> starting bucket in those situations to the bucket where key was
-> suppossed to be.
-> 
-> Note that you can still get stuck in the same bucket but it is less
-> likely than getting stuck in a loop restarting from the beginning of
-> the entire map.
-> 
-> Signed-off-by: Brian Vazquez <brianvv@google.com>
-> Signed-off-by: Maciej Żenczykowski <maze@google.com>
 
-This breaks BPF selftest suite unfortunately:
+--1ccMZA6j1vT5UqiK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-# ./test_maps
-test_maps: test_maps.c:114: test_hashmap: Assertion `bpf_map_get_next_key(fd, &key, &next_key) == 0 && (next_key == first_key)' failed.
-Aborted
+On Mon 2019-04-01 06:30:32, Brian Masney wrote:
+> lm3630a_bank_a_update_status() and lm3630a_bank_b_update_status()
+> both return the brightness value if the brightness was successfully
+> updated. Writing to these attributes via sysfs would cause a 'Bad
+> address' error to be returned. These functions should return 0 on
+> success, so let's change it to correct that error.
+>=20
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Fixes: 28e64a68a2ef ("backlight: lm3630: apply chip revision")
 
-Some more background, situation is a bit tricky: pre 8fe45924387b ("bpf:
-map_get_next_key to return first key on NULL") there was no reliable way
-of getting to the start of a hash table, meaning it needed an 'invalid'
-key to return the first element for starting traversal which commit fixed
-by being able to pass in NULL. So some applications might still just rely
-on e.g. key of zero bytes (if guaranteed to not be used otherwise) to do
-just that. With this patch, we'd start out from anywhere in the hash table.
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
 > ---
->  kernel/bpf/hashtab.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-> index fed15cf94dca6..eea046d269f51 100644
-> --- a/kernel/bpf/hashtab.c
-> +++ b/kernel/bpf/hashtab.c
-> @@ -611,11 +611,14 @@ static int htab_map_get_next_key(struct bpf_map *map, void *key, void *next_key)
->  
->  	hash = htab_map_hash(key, key_size, htab->hashrnd);
->  
-> -	head = select_bucket(htab, hash);
-> +	/* keep track of current bucket */
-> +	i = hash & (htab->n_buckets - 1);
-> +	head = select_bucket(htab, i);
->  
->  	/* lookup the key */
->  	l = lookup_nulls_elem_raw(head, hash, key, key_size, htab->n_buckets);
->  
-> +	/* this will start looking from bucket i */
->  	if (!l)
->  		goto find_first_elem;
->  
-> @@ -630,7 +633,6 @@ static int htab_map_get_next_key(struct bpf_map *map, void *key, void *next_key)
->  	}
->  
->  	/* no more elements in this hash list, go to the next bucket */
-> -	i = hash & (htab->n_buckets - 1);
->  	i++;
->  
->  find_first_elem:
-> 
+>  drivers/video/backlight/lm3630a_bl.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlig=
+ht/lm3630a_bl.c
+> index 2030a6b77a09..ef2553f452ca 100644
+> --- a/drivers/video/backlight/lm3630a_bl.c
+> +++ b/drivers/video/backlight/lm3630a_bl.c
+> @@ -201,7 +201,7 @@ static int lm3630a_bank_a_update_status(struct backli=
+ght_device *bl)
+>  				      LM3630A_LEDA_ENABLE, LM3630A_LEDA_ENABLE);
+>  	if (ret < 0)
+>  		goto out_i2c_err;
+> -	return bl->props.brightness;
+> +	return 0;
+> =20
+>  out_i2c_err:
+>  	dev_err(pchip->dev, "i2c failed to access\n");
+> @@ -278,7 +278,7 @@ static int lm3630a_bank_b_update_status(struct backli=
+ght_device *bl)
+>  				      LM3630A_LEDB_ENABLE, LM3630A_LEDB_ENABLE);
+>  	if (ret < 0)
+>  		goto out_i2c_err;
+> -	return bl->props.brightness;
+> +	return 0;
+> =20
+>  out_i2c_err:
+>  	dev_err(pchip->dev, "i2c failed to access REG_CTRL\n");
 
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--1ccMZA6j1vT5UqiK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyig88ACgkQMOfwapXb+vITaACdF82J0YVRKNAu08dGT2c58KU7
+iYAAnA5BrWUDZ425s2tdrFOD+Ls7mNhx
+=xORY
+-----END PGP SIGNATURE-----
+
+--1ccMZA6j1vT5UqiK--
