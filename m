@@ -6,45 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D522C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21177C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04D542084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E483B2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:54:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141277;
-	bh=zpIPinEcZQZvt83QWiKcwLX/oNZY2PYRi82VBsMcHb8=;
+	s=default; t=1554141292;
+	bh=o/E2o/2qM1LC6kXRj87P+jvq18TFrqj5659aQ5lRT2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nhQvHUfnK1AC/rQBBHeXa+XSyxR88sE0+u49p1g+sRXoabWuIes2qyBEC124oYd7k
-	 9sJhNOfKJ6igqCaEwIOlfqaaLePzoCMK9BOs14etcOWvHtTdUUYUfUBbr0DGbR34iO
-	 TADFHbQrDOxd0Efqqgukma2GWGKUQShyJjhAaMR4=
+	b=Hb9bzI+pSXwEkkHii+TXLXkHaQ1JYCnEF0fvMluqQMgrAXQ4NHPWsEtijStqLmLN8
+	 Q4EQrOxorj5WIcw5bH+JyR+TH56aRspfkeXBVlRaj2Pqn2QSW1Zm+ISAXsMiKpPUr3
+	 +2kFVXYb0FIMS+msr2t+F6YU5UqdDvy77wviLenQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732229AbfDARYP (ORCPT
+        id S1732081AbfDARyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:24:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54508 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:54:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729744AbfDARYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:24:10 -0400
+        id S1731756AbfDARX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:23:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E9D920856;
-        Mon,  1 Apr 2019 17:24:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D3ED206DD;
+        Mon,  1 Apr 2019 17:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139449;
-        bh=zpIPinEcZQZvt83QWiKcwLX/oNZY2PYRi82VBsMcHb8=;
+        s=default; t=1554139435;
+        bh=o/E2o/2qM1LC6kXRj87P+jvq18TFrqj5659aQ5lRT2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xLBhWWD2Nuu0HxSw9QR6rHHca6HbZrcafy5CIacjvPrGqwmS+W9eZdS1f6vc+CFrn
-         oyEhBk4savzpUgHpoMzOO/H1G96Ia6711Q1yF/FdwfVwdY+GOEpG+iogW2fU0UZtH2
-         ELHOia8NJ30S+VuETQqILs4doFV55/F2JkTdi98g=
+        b=zt5LbNuAACUv4eLYXho3DSE4xIQoikxXpU2XAqhq5Vf1YQSmzLkM81vPZLlZVQ6YM
+         v1VC7AqF0PraE/IDoAXXtb/lsbnugAQNUgM7EqpEdEQ4mSS5C6j1TNx7sl/qfIj6P5
+         2xhsMg52mgnux+ZLid/m/6xKHT0hC1CTjSx16hBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.14 078/107] staging: vt6655: Remove vif check from vnt_interrupt
-Date:   Mon,  1 Apr 2019 19:02:33 +0200
-Message-Id: <20190401170052.738038744@linuxfoundation.org>
+        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 074/107] scsi: zfcp: fix rport unblock if deleted SCSI devices on Scsi_Host
+Date:   Mon,  1 Apr 2019 19:02:29 +0200
+Message-Id: <20190401170052.369851851@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -63,34 +66,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit cc26358f89c3e493b54766b1ca56cfc6b14db78a upstream.
+commit fe67888fc007a76b81e37da23ce5bd8fb95890b0 upstream.
 
-A check for vif is made in vnt_interrupt_work.
+An already deleted SCSI device can exist on the Scsi_Host and remain there
+because something still holds a reference.  A new SCSI device with the same
+H:C:T:L and FCP device, target port WWPN, and FCP LUN can be created.  When
+we try to unblock an rport, we still find the deleted SCSI device and
+return early because the zfcp_scsi_dev of that SCSI device is not
+ZFCP_STATUS_COMMON_UNBLOCKED. Hence we miss to unblock the rport, even if
+the new proper SCSI device would be in good state.
 
-There is a small chance of leaving interrupt disabled while vif
-is NULL and the work hasn't been scheduled.
+Therefore, skip deleted SCSI devices when iterating the sdevs of the shost.
+[cf. __scsi_device_lookup{_by_target}() or scsi_device_get()]
 
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-CC: stable@vger.kernel.org # v4.2+
+The following abbreviated trace sequence can indicate such problem:
+
+Area           : REC
+Tag            : ersfs_3
+LUN            : 0x4045400300000000
+WWPN           : 0x50050763031bd327
+LUN status     : 0x40000000     not ZFCP_STATUS_COMMON_UNBLOCKED
+Ready count    : n		not incremented yet
+Running count  : 0x00000000
+ERP want       : 0x01
+ERP need       : 0xc1		ZFCP_ERP_ACTION_NONE
+
+Area           : REC
+Tag            : ersfs_3
+LUN            : 0x4045400300000000
+WWPN           : 0x50050763031bd327
+LUN status     : 0x41000000
+Ready count    : n+1
+Running count  : 0x00000000
+ERP want       : 0x01
+ERP need       : 0x01
+
+...
+
+Area           : REC
+Level          : 4		only with increased trace level
+Tag            : ertru_l
+LUN            : 0x4045400300000000
+WWPN           : 0x50050763031bd327
+LUN status     : 0x40000000
+Request ID     : 0x0000000000000000
+ERP status     : 0x01800000
+ERP step       : 0x1000
+ERP action     : 0x01
+ERP count      : 0x00
+
+NOT followed by a trace record with tag "scpaddy"
+for WWPN 0x50050763031bd327.
+
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Fixes: 6f2ce1c6af37 ("scsi: zfcp: fix rport unblock race with LUN recovery")
+Cc: <stable@vger.kernel.org> #2.6.32+
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6655/device_main.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/s390/scsi/zfcp_erp.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/staging/vt6655/device_main.c
-+++ b/drivers/staging/vt6655/device_main.c
-@@ -1079,8 +1079,7 @@ static irqreturn_t vnt_interrupt(int irq
- {
- 	struct vnt_private *priv = arg;
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -1306,6 +1306,9 @@ static void zfcp_erp_try_rport_unblock(s
+ 		struct zfcp_scsi_dev *zsdev = sdev_to_zfcp(sdev);
+ 		int lun_status;
  
--	if (priv->vif)
--		schedule_work(&priv->interrupt_work);
-+	schedule_work(&priv->interrupt_work);
- 
- 	return IRQ_HANDLED;
- }
++		if (sdev->sdev_state == SDEV_DEL ||
++		    sdev->sdev_state == SDEV_CANCEL)
++			continue;
+ 		if (zsdev->port != port)
+ 			continue;
+ 		/* LUN under port of interest */
 
 
