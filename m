@@ -2,36 +2,36 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D6BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4EFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB202084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14EA2084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731901AbfDAG4m (ORCPT
+        id S1731923AbfDAG4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 02:56:42 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:58966 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725867AbfDAG4l (ORCPT
+        Mon, 1 Apr 2019 02:56:46 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:53730 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731857AbfDAG4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 02:56:41 -0400
-X-UUID: 35783000b4d3496cb1de9309533c8d53-20190401
-X-UUID: 35783000b4d3496cb1de9309533c8d53-20190401
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        Mon, 1 Apr 2019 02:56:43 -0400
+X-UUID: f6a58cacde5a495bb2866a728437373f-20190401
+X-UUID: f6a58cacde5a495bb2866a728437373f-20190401
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
         (envelope-from <ryder.lee@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 658212782; Mon, 01 Apr 2019 14:56:28 +0800
+        with ESMTP id 116117551; Mon, 01 Apr 2019 14:56:30 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 1 Apr 2019 14:56:26 +0800
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 1 Apr 2019 14:56:29 +0800
 Received: from mtkslt306.mediatek.inc (10.21.14.136) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 1 Apr 2019 14:56:26 +0800
+ Transport; Mon, 1 Apr 2019 14:56:29 +0800
 From:   Ryder Lee <ryder.lee@mediatek.com>
 To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
         Felix Fietkau <nbd@nbd.name>
@@ -47,82 +47,40 @@ CC:     Roy Luo <royluo@google.com>, Sean Wang <sean.wang@mediatek.com>,
         <linux-wireless@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v2 0/4] Add support for MediaTek MT7615 wireless chipsets
-Date:   Mon, 1 Apr 2019 14:56:21 +0800
-Message-ID: <cover.1554100584.git.ryder.lee@mediatek.com>
+Subject: [PATCH v2 4/4] MAINTAINERS : update entry for mt76 wireless driver
+Date:   Mon, 1 Apr 2019 14:56:25 +0800
+Message-ID: <6159437c8ecff17629685e34d1c19f42e3a67573.1554100584.git.ryder.lee@mediatek.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1554100584.git.ryder.lee@mediatek.com>
+References: <cover.1554100584.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="y"
-Content-Transfer-Encoding: 8bit
-X-TM-SNTS-SMTP: A7CC6BE350C29360A0D56837C46B865FCD93FA37EF4D3E10CDA23FDC8CB260902000:8
+Content-Type: text/plain
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for MediaTek MT7615E 4x4 802.11ac PCIe-based chipsets.
+Roy and I actively join the development and review.
 
-In the legacy tx arch, we move and store the whole skb content to the
-on-device memory when we send packets via high speed interface. (e.g. PCIe)
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-However, MT7615 and the following generation use a new tx arch called
-“cut-through”, which only passes the physical address to the hardware,
-and the packet engine will fetch the packets before transmission.
-
-It saves on-chip memory for high throughput devices, and the token mechanism
-is used to manage the release of skb under this arch.
-
-And there might be other (existing or future) chips that use the same driver
-(e.g. mt7622/mt7663...), this is a starting point to unify MTK wireless chipsets.
-
-Detailed hardware information for this chip could be found on 
-https://wikidevi.com/wiki/MediaTek_MT7615
-
-Ryder Lee (4):
-  mt76: add mac80211 driver for MT7615 PCIe-based chipsets
-  mt76: add unlikely() for dma_mapping_error() check
-  mt76: use macro for sn and seq_ctrl conversion
-  MAINTAINERS : update entry for mt76 wireless driver
-
- MAINTAINERS                                        |    2 +
- drivers/net/wireless/mediatek/mt76/Kconfig         |    1 +
- drivers/net/wireless/mediatek/mt76/Makefile        |    1 +
- drivers/net/wireless/mediatek/mt76/agg-rx.c        |    2 +-
- drivers/net/wireless/mediatek/mt76/dma.c           |    8 +-
- drivers/net/wireless/mediatek/mt76/mt7603/mac.c    |    2 +-
- drivers/net/wireless/mediatek/mt76/mt7603/main.c   |    2 +-
- drivers/net/wireless/mediatek/mt76/mt7615/Kconfig  |    7 +
- drivers/net/wireless/mediatek/mt76/mt7615/Makefile |    5 +
- drivers/net/wireless/mediatek/mt76/mt7615/dma.c    |  205 +++
- drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c |   98 ++
- drivers/net/wireless/mediatek/mt76/mt7615/eeprom.h |   18 +
- drivers/net/wireless/mediatek/mt76/mt7615/init.c   |  229 +++
- drivers/net/wireless/mediatek/mt76/mt7615/mac.c    |  774 +++++++++
- drivers/net/wireless/mediatek/mt76/mt7615/mac.h    |  300 ++++
- drivers/net/wireless/mediatek/mt76/mt7615/main.c   |  499 ++++++
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.c    | 1656 ++++++++++++++++++++
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.h    |  520 ++++++
- drivers/net/wireless/mediatek/mt76/mt7615/mt7615.h |  195 +++
- drivers/net/wireless/mediatek/mt76/mt7615/pci.c    |  150 ++
- drivers/net/wireless/mediatek/mt76/mt7615/regs.h   |  203 +++
- drivers/net/wireless/mediatek/mt76/mt76x02_util.c  |    2 +-
- 22 files changed, 4871 insertions(+), 8 deletions(-)
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/Kconfig
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/Makefile
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/dma.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/eeprom.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/init.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mac.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mac.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/main.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mt7615.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/pci.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/regs.h
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e17ebf7..7d92a87 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9768,6 +9768,8 @@ F:	Documentation/devicetree/bindings/media/mediatek-vpu.txt
+ MEDIATEK MT76 WIRELESS LAN DRIVER
+ M:	Felix Fietkau <nbd@nbd.name>
+ M:	Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
++R:	Ryder Lee <ryder.lee@mediatek.com>
++R:	Roy Luo <royluo@google.com>
+ L:	linux-wireless@vger.kernel.org
+ S:	Maintained
+ F:	drivers/net/wireless/mediatek/mt76/
 -- 
 1.9.1
 
