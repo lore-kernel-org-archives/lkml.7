@@ -2,131 +2,202 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330E0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33328C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB8320880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20D1206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:19:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jK3Ul6IV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fLUYM5+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfDAVR1 (ORCPT
+        id S1728555AbfDAVTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 17:17:27 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43543 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbfDAVR0 (ORCPT
+        Mon, 1 Apr 2019 17:19:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45636 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbfDAVTA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 17:17:26 -0400
-Received: by mail-ot1-f68.google.com with SMTP id u15so9980807otq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 14:17:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NU/dwlFy06P3CY+Snl/xjOq1oiT4xOTpJ/q7qEv6+mc=;
-        b=jK3Ul6IVqM+e6MyG4Hha49qd0Ku9PjgOWY9QsuD3DNOyzYDX4dfQe5qfISFuZWeN07
-         IxMIbLCjKNOrifeFWQ20PAO89fAb+ABVzBB04Xr/bWAsTelYbrFh312wbmVRpAVbjifc
-         IHpe3TYUGV613jc6NDXKmrRIQgQKPCTPsZbr0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NU/dwlFy06P3CY+Snl/xjOq1oiT4xOTpJ/q7qEv6+mc=;
-        b=VAn+Z4hoI86NwCIZ8mQqBkI684mizcWNtFLVgSTsyUY2rh8LdEk2Enjd/Zjmxrta+4
-         Mnv6Cxdas5MUDGRZDCmzPOa1PHMTy0jzY+MZukp1Wz7/miIwtYkKFSujslVUHRKnWopG
-         +Z2ROoIyhTIvDgiqCMxMdyvEdK2Yidx/8Jhlrdg/OWJpy5tTbzCLwUfcLuss8IUmh68p
-         NiBGEe4uqhSjOzctdk5yFQdCfBWctZY2+IVAFRX93aJ23QtPonof5iuPw540aIh02Swc
-         DKZu7quZdUFUB/+cz12UQ1bg4KX3eLpgnMAiwZp4sJCZfJrdV+Swq+MNsy0MEebmfFsy
-         0KaQ==
-X-Gm-Message-State: APjAAAWWKMxgbCRo0ldF15BjO1kP2xf/pMG7qwSPD/u6T/n5DeNYyhad
-        7u34DA9JFl/cGaEcsoNQrMRWGmz9fL0=
-X-Google-Smtp-Source: APXvYqxlY4fN/uFf4D92cxQIdh3fS49V21zJTiziIwtuducdRm3nt0HGJ2hRQEzjtNjX9k+5NfMKDw==
-X-Received: by 2002:a9d:64c1:: with SMTP id n1mr14718328otl.259.1554153445771;
-        Mon, 01 Apr 2019 14:17:25 -0700 (PDT)
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com. [209.85.210.45])
-        by smtp.gmail.com with ESMTPSA id e186sm4610837oia.44.2019.04.01.14.17.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 14:17:25 -0700 (PDT)
-Received: by mail-ot1-f45.google.com with SMTP id e5so9985884otk.12
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 14:17:24 -0700 (PDT)
-X-Received: by 2002:a9d:645a:: with SMTP id m26mr2202525otl.304.1554153444460;
- Mon, 01 Apr 2019 14:17:24 -0700 (PDT)
+        Mon, 1 Apr 2019 17:19:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=b09SQqu4gW0o39qSgN8in3GDiqzA2ldz7j82KQba23U=; b=fLUYM5+6I909zwLveh/A5fVnt
+        mydDni6WMbt6YQh2Ks3+CUN874eM8Orjg136q9FAzll7OeyWvQ5zy5gtsdBMIyWI5NbJT0Uyzc9cq
+        m6R3JD30yUCDjSXgV4rqma2faYk2AH9eHaTi0LeoSQr1VwEMbHQRF3PpXvFMWxE4LHr9YRAWk1eDG
+        ZvZgJ+WbXer/eSoZR1qoREgUAQ+rkkqnqHUTKphZ0odjWpwxcSvTiL4jLxcPf1zKIYI3Apwmf2drR
+        /A16qTTPiCcALJHwPAhtFy9R4nxLCAqe7tZfK0RMvxCtiDQPG+1EYbLc99QYDKN3XrLvOmGpHlfZS
+        DOk/XDUmQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hB4KY-0005Fm-PW; Mon, 01 Apr 2019 21:18:58 +0000
+Subject: Re: [RFC PATCH 3/5] documention: leds: Add multicolor class
+ documentation
+To:     Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz
+Cc:     marek.behun@nic.cz, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+References: <20190401173400.14238-1-dmurphy@ti.com>
+ <20190401173400.14238-4-dmurphy@ti.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <42736498-c049-b93c-2666-4ed32ece8050@infradead.org>
+Date:   Mon, 1 Apr 2019 14:18:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1553889813-17677-1-git-send-email-rushikesh.s.kadam@intel.com>
- <CAHX4x85jFVYhOpRCKfvhYEqhXFwpKaK3_5gEit1EMaXY3L4Z4g@mail.gmail.com>
- <20190330102230.GB19202@intel.com> <e2d8ab93c97acf1254830e6f51edb8f19c8767d6.camel@perches.com>
-In-Reply-To: <e2d8ab93c97acf1254830e6f51edb8f19c8767d6.camel@perches.com>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Mon, 1 Apr 2019 15:17:13 -0600
-X-Gmail-Original-Message-ID: <CAHX4x85=Sot62T=DtGPLkyFhudyp=jvxcU_W-oShg8iKTach+Q@mail.gmail.com>
-Message-ID: <CAHX4x85=Sot62T=DtGPLkyFhudyp=jvxcU_W-oShg8iKTach+Q@mail.gmail.com>
-Subject: Re: [PATCH v3] HID: intel-ish-hid: ISH firmware loader client driver
-To:     Joe Perches <joe@perches.com>
-Cc:     Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        benjamin.tissoires@redhat.com, jikos@kernel.org,
-        jettrink@chromium.org, Gwendal Grignou <gwendal@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190401173400.14238-4-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I tried to send the last message from my phone, and surprise it wasn't
-formatted correctly, so it may have been marked as spam. repeating
-myself again...
+Hi,
 
-Ah, I guess I was wrong about logging OOM. I hadn=E2=80=99t hear about the
-recommendations against it, but they make sense. Thanks for the
-clarifications!
+On 4/1/19 10:33 AM, Dan Murphy wrote:
+> Add the support documentation on the multicolor LED framework.
+> This document defines the directores and file generated by the
 
-On Sat, Mar 30, 2019 at 10:27 AM Joe Perches <joe@perches.com> wrote:
->
-> On Sat, 2019-03-30 at 15:52 +0530, Rushikesh S Kadam wrote:
-> > On Fri, Mar 29, 2019 at 04:30:18PM -0700, Nick Crews wrote:
-> > > On Fri, Mar 29, 2019 at 1:03 PM Rushikesh S Kadam
-> > > <rushikesh.s.kadam@intel.com> wrote:
-> > > > +       ldr_xfer_ipc_frag =3D kzalloc(LOADER_SHIM_IPC_BUF_SIZE, GFP=
-_KERNEL);
-> > > > +       if (!ldr_xfer_ipc_frag) {
-> > > Log error here.
-> > The error code is logged in calling function
-> > load_fw_from_host(). Is that good enough?
-> >
-> > I believe the checkpatch script too, would
-> > recommend against adding debug print for ENOMEM
-> > error.
->
-> The generic kernel allocation functions already do
-> a dump_stack() on OOM conditions when called without
-> __GFP_NOWARN so any additional OOM message isn't
-> particularly useful.
->
-> > Again, I thought it was against practise to log
-> > "out of memory" debug prints in probe()
->
-> Or anywhere else given the generic OOM stack dump.
->
-> > But will add if you tell me this is the right way.
-> >
-> > > > +               return -ENOMEM;
-> > > > +
-> > > > +       loader_ishtp_cl =3D ishtp_cl_allocate(cl_device);
-> > > > +       if (!loader_ishtp_cl)
-> > >
-> > > log error here
->
-> The ishtp_cl_allocate function just calls kmalloc then
-> initializes the struct so an additional OOM message
-> isn't useful here either.
->
->
+                            directories and files
+
+> multicolor framework.  It also documents usage.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  Documentation/leds/leds-class-multicolor.txt | 99 ++++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+>  create mode 100644 Documentation/leds/leds-class-multicolor.txt
+> 
+> diff --git a/Documentation/leds/leds-class-multicolor.txt b/Documentation/leds/leds-class-multicolor.txt
+> new file mode 100644
+> index 000000000000..8112b99a7668
+> --- /dev/null
+> +++ b/Documentation/leds/leds-class-multicolor.txt
+> @@ -0,0 +1,99 @@
+> +
+> +Multi Color LED handling under Linux
+> +=================================================
+> +
+> +Authors: Dan Murphy <dmurphy@ti.com>
+
+or Author:
+
+> +
+> +Description
+> +-----------
+> +There are varying monochrome LED colors available for application.  These
+> +LEDs can be used as a single use case LED or can be mixed with other color
+> +LEDs to produce the full spectrum of color.  Color LEDs that are grouped
+> +can be presented under a single LED node with individual color control.
+> +The multicolor class groups these LEDs and allows dynamically setting the value
+> +of a single LED or setting the brightness values of the LEDs in the group and
+> +updating the LEDs virtually simultaneously.
+> +
+> +Multicolor Class Control
+> +-------------------------
+> +The multicolor class presents the LED groups under a directory called "colors".
+> +This directory is a child under the LED parent node created but the led_class
+
+                                                       created by
+
+> +framework.  The led_class framework is documented in led-class.txt within this
+> +documentation directory. 
+> +
+> +Each colored LED is given it's own directory.  These directories can be but not
+
+                             its                                    huh???????????
+
+> +limited to red, green, blue, white, amber, yellow and violet.  Under these
+> +directories the brightness and max_brightness files are presented for each LED.
+> +
+> +Under the "colors" directory there are two files created "sync" and
+
+                                                    created:
+
+> +"sync_enable". The sync_enable file controls whether the LED brightness
+> +value is set real time or if the LED brightness value setting is deferred until
+> +the "sync" file is written.  If sync_enable is set then writing to each LED
+> +"brightness" file will store the brightness value.  Once the "sync" file is
+> +written then each LED color defined in the node will write the brightness of
+> +the LED in the device driver.
+> +
+> +If "sync_enable" is not set then writing the brightness value of the LED to the
+> +device driver is done immediately.  Writing the "sync" file has no affect.
+> +
+> +Directory Layout Example
+> +------------------------
+> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
+> +colors/:
+> +drwxr-xr-x    2 root     root             0 Jun 28 20:21 blue
+> +drwxr-xr-x    2 root     root             0 Jun 28 20:21 green
+> +drwxr-xr-x    2 root     root             0 Jun 28 20:21 red
+> +--w-------    1 root     root          4096 Jun 28 20:21 sync
+> +-rw-------    1 root     root          4096 Jun 28 20:22 sync_enable
+> +
+> +colors/blue:
+> +-rw-------    1 root     root          4096 Jun 28 20:21 brightness
+> +-r--------    1 root     root          4096 Jun 28 20:27 max_brightness
+> +
+> +colors/green:
+> +-rw-------    1 root     root          4096 Jun 28 20:22 brightness
+> +-r--------    1 root     root          4096 Jun 28 20:27 max_brightness
+> +
+> +colors/red:
+> +-rw-------    1 root     root          4096 Jun 28 20:21 brightness
+> +-r--------    1 root     root          4096 Jun 28 20:27 max_brightness
+> +
+> +Example of Writing LEDs with Sync Enabled
+> +-----------------------------------------
+> +Below the red, green and blue LEDs are set to corresponding values.  These
+> +values are stored and not written until the sync file is written.
+> +
+> +cd /sys/class/leds/rgb:grouped_leds/colors
+> +
+> +echo 1 > sync_enable
+> +
+> +echo 100 > red/brightness
+> +echo 80 > green/brightness
+> +echo 180 > blue/brightness
+> +
+> +* LED device driver has not been updated and the LED states have not changed.
+> +* Writing the LED brightness files again will only change the stored value and
+> +* not the device driver value.
+> +
+> +echo 1 > sync
+> +
+> +* LED device driver has been updated the LEDs should present the brightness
+
+                                updated; the LEDs
+
+> +* levels that have been set.  Since sync_enable is still enabled writing to the
+> +* LED brightness files will not change the current brightnesses.
+> +
+> +Example of Writing LEDs with Sync Disabled
+> +------------------------------------------
+> +Below the values of each LED are written to the device driver immediately upon
+> +request.
+> +
+> +cd /sys/class/leds/rgb:grouped_leds/colors
+> +
+> +echo 0 > sync_enable
+> +
+> +echo 100 > red/brightness // Red LED should be on with the current brightness
+> +echo 80 > green/brightness // Green LED should be on with the current brightness
+> +echo 180 > blue/brightness // Blue LED should be on with the current brightness
+> +.
+> +.
+> +.
+> +echo 0 > green/brightness // Green LED should be off
+> 
+
+cheers.
+-- 
+~Randy
