@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986CDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F836C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540C220830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4064120830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140636;
-	bh=FQd+dJzdVd9FR0PYGKyMPgGgwte+wn4XVH65G49az3A=;
+	s=default; t=1554140648;
+	bh=XxTPfLrE2fzJODYTIXRDNtqenMePufyTHAdTxdahhXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y4w/MsSMLyfkWagTVd8Y2Ce7yUA1ZIb1uk4Uuk0hlwlNWqYU5oxL7IRU56gfxCpy+
-	 9kEvSWrt2dycgNqkQdIDe+BWKl5ndXGfKg3ChGEd8HzGmwCmQWUbrdy7NYwGgAjxEM
-	 i84qgufZBd7zT8Lzd4sOlxZUZqiI/mmnIeAIUN9Q=
+	b=XjTvNXCroJ5ujiGdim+ySoexSGdXqdfPRh/Ye7UVeyU6kUjfpRmCgG96K9PB2oAwq
+	 DP2XjlEJ+zflViSmNK0PnjBkNx0DCqJHzxcTi+Oh5T+oIhozzOn9QqI0akx5ZLuSrb
+	 iVqmFcHSYP/iwFDNXRphZUwz0q9R+eSI6D1ArZRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388093AbfDARny (ORCPT
+        id S2387964AbfDARoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:43:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46420 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:44:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387719AbfDARfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:35:32 -0400
+        id S1728851AbfDARfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:35:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB3022171F;
-        Mon,  1 Apr 2019 17:35:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6B9F20830;
+        Mon,  1 Apr 2019 17:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140132;
-        bh=FQd+dJzdVd9FR0PYGKyMPgGgwte+wn4XVH65G49az3A=;
+        s=default; t=1554140115;
+        bh=XxTPfLrE2fzJODYTIXRDNtqenMePufyTHAdTxdahhXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pxYT5dNU5kYHC5bDwUjPjZgAlvL5OUENEESiBwaZ7NdVPMdnZgbmTgpZ4u5Tmr9Nm
-         rQlfaj9xxxbuK67EsE4+qoR0QKtqtrfcggiKxjJyq7qxqmpoBZEF70xv+xgKD46kvO
-         oTHDoQldTswd/tkim9knpKl3iTsz0BXOyFu2vr4c=
+        b=flS+pcT2AWVFfX8aSOhKLrZTl4mepno0BI0ykgn6WcQqGIjm1nqHHrebWNLR/w/ei
+         Cj6i+qnnU5tQpRcxTkecSnAUWAKTKVsgRIzfzofEO+24Y0+1B8PsRV+5/Xo0o0Gs08
+         MLC9WhW0ZkP8jLYTKlCpuHkET8HHyqT04gFnPiyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>
-Subject: [PATCH 4.4 114/131] serial: max310x: Fix to avoid potential NULL pointer dereference
-Date:   Mon,  1 Apr 2019 19:03:04 +0200
-Message-Id: <20190401170101.207997696@linuxfoundation.org>
+        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 109/131] scsi: zfcp: fix rport unblock if deleted SCSI devices on Scsi_Host
+Date:   Mon,  1 Apr 2019 19:02:59 +0200
+Message-Id: <20190401170100.855743523@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -64,31 +67,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit 3a10e3dd52e80b9a97a3346020024d17b2c272d6 upstream.
+commit fe67888fc007a76b81e37da23ce5bd8fb95890b0 upstream.
 
-of_match_device can return a NULL pointer when matching device is not
-found. This patch avoids a scenario causing NULL pointer derefernce.
+An already deleted SCSI device can exist on the Scsi_Host and remain there
+because something still holds a reference.  A new SCSI device with the same
+H:C:T:L and FCP device, target port WWPN, and FCP LUN can be created.  When
+we try to unblock an rport, we still find the deleted SCSI device and
+return early because the zfcp_scsi_dev of that SCSI device is not
+ZFCP_STATUS_COMMON_UNBLOCKED. Hence we miss to unblock the rport, even if
+the new proper SCSI device would be in good state.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Cc: stable <stable@vger.kernel.org>
+Therefore, skip deleted SCSI devices when iterating the sdevs of the shost.
+[cf. __scsi_device_lookup{_by_target}() or scsi_device_get()]
+
+The following abbreviated trace sequence can indicate such problem:
+
+Area           : REC
+Tag            : ersfs_3
+LUN            : 0x4045400300000000
+WWPN           : 0x50050763031bd327
+LUN status     : 0x40000000     not ZFCP_STATUS_COMMON_UNBLOCKED
+Ready count    : n		not incremented yet
+Running count  : 0x00000000
+ERP want       : 0x01
+ERP need       : 0xc1		ZFCP_ERP_ACTION_NONE
+
+Area           : REC
+Tag            : ersfs_3
+LUN            : 0x4045400300000000
+WWPN           : 0x50050763031bd327
+LUN status     : 0x41000000
+Ready count    : n+1
+Running count  : 0x00000000
+ERP want       : 0x01
+ERP need       : 0x01
+
+...
+
+Area           : REC
+Level          : 4		only with increased trace level
+Tag            : ertru_l
+LUN            : 0x4045400300000000
+WWPN           : 0x50050763031bd327
+LUN status     : 0x40000000
+Request ID     : 0x0000000000000000
+ERP status     : 0x01800000
+ERP step       : 0x1000
+ERP action     : 0x01
+ERP count      : 0x00
+
+NOT followed by a trace record with tag "scpaddy"
+for WWPN 0x50050763031bd327.
+
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Fixes: 6f2ce1c6af37 ("scsi: zfcp: fix rport unblock race with LUN recovery")
+Cc: <stable@vger.kernel.org> #2.6.32+
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/max310x.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/s390/scsi/zfcp_erp.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -1306,6 +1306,8 @@ static int max310x_spi_probe(struct spi_
- 	if (spi->dev.of_node) {
- 		const struct of_device_id *of_id =
- 			of_match_device(max310x_dt_ids, &spi->dev);
-+		if (!of_id)
-+			return -ENODEV;
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -1306,6 +1306,9 @@ static void zfcp_erp_try_rport_unblock(s
+ 		struct zfcp_scsi_dev *zsdev = sdev_to_zfcp(sdev);
+ 		int lun_status;
  
- 		devtype = (struct max310x_devtype *)of_id->data;
- 	} else {
++		if (sdev->sdev_state == SDEV_DEL ||
++		    sdev->sdev_state == SDEV_CANCEL)
++			continue;
+ 		if (zsdev->port != port)
+ 			continue;
+ 		/* LUN under port of interest */
 
 
