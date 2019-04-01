@@ -2,143 +2,157 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AA9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 22:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D12C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 22:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB61D20856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 22:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01BB920700
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 22:43:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="eY8k+8gx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfDAWgN (ORCPT
+        id S1726968AbfDAWnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 18:36:13 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.129]:31465 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726255AbfDAWgN (ORCPT
+        Mon, 1 Apr 2019 18:43:47 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51919 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfDAWnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 18:36:13 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 25C614F762
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2019 17:36:11 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id B5XHhkG5HdnCeB5XHhZyIa; Mon, 01 Apr 2019 17:36:11 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.114.183] (port=55252 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hB5XG-001UuG-Oa; Mon, 01 Apr 2019 17:36:10 -0500
-Subject: Re: [PATCH 0/2 net-next] cxgb3/l2t: Fix undefined behaviour and use
- struct_size() helper
-To:     David Miller <davem@davemloft.net>
-Cc:     vishal@chelsio.com, nhorman@tuxdriver.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1553872521.git.gustavo@embeddedor.com>
- <20190401.150215.729449280275163138.davem@davemloft.net>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <a835d790-874b-1fdb-2497-2e5ebf5725eb@embeddedor.com>
-Date:   Mon, 1 Apr 2019 17:36:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 1 Apr 2019 18:43:46 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 4so1119078wmf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 15:43:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=C2VEMa/JsjF1gq2Nd6Z19qL0Vl4NGr2Rxx8XOOZsIg8=;
+        b=eY8k+8gxAXTlJpqhNULiFJKHnGwkf7H2aS92v5Zbhyk5vvbGELzudkou1ZMOo6vblt
+         lF0jXov5XovufJShfyDxC1jP85T5ir7Pl1DJL7ZL7gHYbx8gZ+ARzwWpnXaa5fHEicsD
+         b9bcrUDLObHR9MPQqpwdgDpda+gQceYTAkW1TAmxWWa0nj4ss+cY+fdgiMPqbr34spcM
+         VU13Mff1kHpYDonbJs0xdwmPJTNRtspQ4ojrUmHkJySNMM2sZ2G1pazw8bbAxrGP1fJG
+         uqDAFN1/3/AqY6Vc3C/VBg6gghO2GHO+XyTJ3CQp/gGKMiCIV8lyuXOlWKKd19Ol+cUz
+         brpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=C2VEMa/JsjF1gq2Nd6Z19qL0Vl4NGr2Rxx8XOOZsIg8=;
+        b=p/NfAzUWkwtNqPwufvnCtbg6gvbMzwWb246mkQqxaWNGQHo5MaUjk0/72TWObvybrR
+         8U2un48OtBTEDK0YfpFtda6snrSMF7ZlaRF5F19ApDFG9lxrqBsfZQkuGDhir2Abzade
+         yKToPueNfoq+4W8ZhA7O1ZTUi3E+GMW2xtvK7szjYDxG2RvSI1TwE7cXbUCX64390UQD
+         qc3vQZF/afKUT4uBY463iUVbaLJLq/cTSdLsrL9eRVYLgw/Yg2d9212VOlW8nvlVmEyc
+         qvsv+z9UfsmUUxlze89LnQ+seYLN9GtRE7vs5XPcswyLXVSsG10ADU1UzbwWHVnKaTy/
+         hapA==
+X-Gm-Message-State: APjAAAWly061iE4mXNE1qSQ4iqKxlJ03O8vht/Z0kgSse8UhlSN2RopE
+        Fijx0OiwPNM72iM0z71xR8+VRw==
+X-Google-Smtp-Source: APXvYqzAmMieOySJKvdoD3Ux1zf/kAGQXxjoLfROa8ZHdLH32Wz8P6FnDPXBmsLm3CKhCy6Vcd4AJw==
+X-Received: by 2002:a1c:5f06:: with SMTP id t6mr1273522wmb.7.1554158624955;
+        Mon, 01 Apr 2019 15:43:44 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id x5sm18556148wmi.37.2019.04.01.15.43.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 15:43:44 -0700 (PDT)
+Message-ID: <5ca29420.1c69fb81.eef62.16d2@mx.google.com>
+Date:   Mon, 01 Apr 2019 15:43:44 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190401.150215.729449280275163138.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.114.183
-X-Source-L: No
-X-Exim-ID: 1hB5XG-001UuG-Oa
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.114.183]:55252
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.4.177-132-gd83f26e3dc56
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-4.4.y
+In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
+References: <20190401170051.645954551@linuxfoundation.org>
+Subject: Re: [PATCH 4.4 000/131] 4.4.178-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+stable-rc/linux-4.4.y boot: 92 boots: 2 failed, 74 passed with 16 offline (=
+v4.4.177-132-gd83f26e3dc56)
 
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.4.y/kernel/v4.4.177-132-gd83f26e3dc56/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y=
+/kernel/v4.4.177-132-gd83f26e3dc56/
 
-On 4/1/19 5:02 PM, David Miller wrote:
-> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> Date: Fri, 29 Mar 2019 10:26:16 -0500
-> 
->> Hi all,
->>
->> This patchset aims to fix an undefined behaviour when using a zero-sized
->> array and, add the use of the struct_size() helper in kvzalloc().
->>
->> You might consider the first patch in this series for stable.
->>
->> More details in the commit logs.
-> 
-> Series applied, honestly I don't think this is -stable material.
-> 
+Tree: stable-rc
+Branch: linux-4.4.y
+Git Describe: v4.4.177-132-gd83f26e3dc56
+Git Commit: d83f26e3dc56e1998cf85b7d35bf5c5819f03215
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 44 unique boards, 21 SoC families, 14 builds out of 190
 
-Okay.
+Boot Failures Detected:
 
-> And if it was you should have targetted 'net' instead of 'net-next'.
-> 
+arm:
 
-Got it.
+    multi_v7_defconfig:
+        gcc-7:
+            stih410-b2120: 1 failed lab
 
-Thanks, Dave.
---
-Gustavo
+arm64:
+
+    defconfig:
+        gcc-7:
+            qcom-qdf2400: 1 failed lab
+
+Offline Platforms:
+
+arm:
+
+    bcm2835_defconfig:
+        gcc-7
+            bcm2835-rpi-b: 1 offline lab
+
+    multi_v7_defconfig:
+        gcc-7
+            alpine-db: 1 offline lab
+            at91-sama5d4_xplained: 1 offline lab
+            qcom-apq8064-cm-qs600: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
+            socfpga_cyclone5_de0_sockit: 1 offline lab
+            sun5i-r8-chip: 1 offline lab
+            tegra124-jetson-tk1: 1 offline lab
+            tegra20-iris-512: 1 offline lab
+
+    tegra_defconfig:
+        gcc-7
+            tegra124-jetson-tk1: 1 offline lab
+            tegra20-iris-512: 1 offline lab
+
+    sunxi_defconfig:
+        gcc-7
+            sun5i-r8-chip: 1 offline lab
+
+    sama5_defconfig:
+        gcc-7
+            at91-sama5d4_xplained: 1 offline lab
+
+    qcom_defconfig:
+        gcc-7
+            qcom-apq8064-cm-qs600: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
+
+arm64:
+
+    defconfig:
+        gcc-7
+            apq8016-sbc: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
