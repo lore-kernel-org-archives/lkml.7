@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EF7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BB8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B9A21929
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB11521929
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138350;
-	bh=O8hOAVnI5HL7Ri1DDuMphd1VyBppPCZF299wuTxLlkg=;
+	s=default; t=1554138356;
+	bh=58+fWRjX5jAoPvjEzDoD6LrfbrLnLHQ2LO3pw2wieJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epbXbv1pwIM2xYaAEf6+yKulpOTaF/FQXLM169e1nYF56CDQCQv3H+atZIUf5FOwg
-	 jy+RGSNPFhtCz9H4kEo7iU/8Dmy7oBirewV9CLN2AJm2hTvj5Xb3eexrBOC5pQeVCH
-	 I1LNTRTcc2dlSc5lEpsQe8WD9uteJIdNPuIFlD2I=
+	b=XmLD+sBrrVucBNuQXbzr60K42olztfLLA2two0qTa9Z9xOiJyktUWY8PUeIuQnksK
+	 jW/rNfkynvkCbkaFNJZTjicU2L3Ui4ZnmSOlvCNfE0eg22fl5uC2sgkGl+8CByCFqb
+	 fkJpKBxM+RoUaCaopdc7rBiiC+5qFkFXKQ19P+WA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfDARFt (ORCPT
+        id S1729094AbfDARFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:05:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51064 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:05:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727074AbfDARFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:05:47 -0400
+        id S1729068AbfDARFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:05:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1CC12192C;
-        Mon,  1 Apr 2019 17:05:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E1B021924;
+        Mon,  1 Apr 2019 17:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138346;
-        bh=O8hOAVnI5HL7Ri1DDuMphd1VyBppPCZF299wuTxLlkg=;
+        s=default; t=1554138352;
+        bh=58+fWRjX5jAoPvjEzDoD6LrfbrLnLHQ2LO3pw2wieJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2pg22ZE7xdZ/a70lFAjvdgDk26nChoGNAmtq0kfU3bzlWhaCUsdLvxrU8XVbo3iGY
-         9Ok3OOvrcu7IpF1ZZ+VFoxFo2Orz9iU7mpjIO/FJDKZ5BqtObX0xI+YLtXDMBXxkPq
-         aPOxjHqfjxRlYTAiv4UWH+kU+1bwP+pxSP5RX7X4=
+        b=XXIxmNKFLePNQ5MXumpnmQuKgkCAL47kt53kE09XFXrLPuEbXLZsabhSh4vwAAGB4
+         Zvp+USRzccKU+tdkY/bnm3b9LCcYk1R31ez+/4OuU4VZvBpKedVNL4eiaHk9075kqT
+         fb+sDXt0UTb7bJX8ktP/gY0vA+qMMF1fOu4vCqz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Seulbae Kim <seulbae@gatech.edu>,
-        Filipe Manana <fdmanana@suse.com>,
+        stable@vger.kernel.org, LimeTech <tomm@lime-technology.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 038/146] Btrfs: fix incorrect file size after shrinking truncate and fsync
-Date:   Mon,  1 Apr 2019 19:00:50 +0200
-Message-Id: <20190401170051.717578902@linuxfoundation.org>
+Subject: [PATCH 5.0 040/146] btrfs: dont report readahead errors and dont update statistics
+Date:   Mon,  1 Apr 2019 19:00:52 +0200
+Message-Id: <20190401170051.882717171@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -65,98 +64,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Filipe Manana <fdmanana@suse.com>
+From: David Sterba <dsterba@suse.com>
 
-commit bf504110bc8aa05df48b0e5f0aa84bfb81e0574b upstream.
+commit 0cc068e6ee59c1fffbfa977d8bf868b7551d80ac upstream.
 
-If we do a shrinking truncate against an inode which is already present
-in the respective log tree and then rename it, as part of logging the new
-name we end up logging an inode item that reflects the old size of the
-file (the one which we previously logged) and not the new smaller size.
-The decision to preserve the size previously logged was added by commit
-1a4bcf470c886b ("Btrfs: fix fsync data loss after adding hard link to
-inode") in order to avoid data loss after replaying the log. However that
-decision is only needed for the case the logged inode size is smaller then
-the current size of the inode, as explained in that commit's change log.
-If the current size of the inode is smaller then the previously logged
-size, we know a shrinking truncate happened and therefore need to use
-that smaller size.
+As readahead is an optimization, all errors are usually filtered out,
+but still properly handled when the real read call is done. The commit
+5e9d398240b2 ("btrfs: readpages() should submit IO as read-ahead") added
+REQ_RAHEAD to readpages() because that's only used for readahead
+(despite what one would expect from the callback name).
 
-Example to trigger the problem:
+This causes a flood of messages and inflated read error stats, so skip
+reporting in case it's readahead.
 
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
-
-  $ xfs_io -f -c "pwrite -S 0xab 0 8000" /mnt/foo
-  $ xfs_io -c "fsync" /mnt/foo
-  $ xfs_io -c "truncate 3000" /mnt/foo
-
-  $ mv /mnt/foo /mnt/bar
-  $ xfs_io -c "fsync" /mnt/bar
-
-  <power failure>
-
-  $ mount /dev/sdb /mnt
-  $ od -t x1 -A d /mnt/bar
-  0000000 ab ab ab ab ab ab ab ab ab ab ab ab ab ab ab ab
-  *
-  0008000
-
-Once we rename the file, we log its name (and inode item), and because
-the inode was already logged before in the current transaction, we log it
-with a size of 8000 bytes because that is the size we previously logged
-(with the first fsync). As part of the rename, besides logging the inode,
-we do also sync the log, which is done since commit d4682ba03ef618
-("Btrfs: sync log after logging new name"), so the next fsync against our
-inode is effectively a no-op, since no new changes happened since the
-rename operation. Even if did not sync the log during the rename
-operation, the same problem (fize size of 8000 bytes instead of 3000
-bytes) would be visible after replaying the log if the log ended up
-getting synced to disk through some other means, such as for example by
-fsyncing some other modified file. In the example above the fsync after
-the rename operation is there just because not every filesystem may
-guarantee logging/journalling the inode (and syncing the log/journal)
-during the rename operation, for example it is needed for f2fs, but not
-for ext4 and xfs.
-
-Fix this scenario by, when logging a new name (which is triggered by
-rename and link operations), using the current size of the inode instead
-of the previously logged inode size.
-
-A test case for fstests follows soon.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202695
-CC: stable@vger.kernel.org # 4.4+
-Reported-by: Seulbae Kim <seulbae@gatech.edu>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202403
+Reported-by: LimeTech <tomm@lime-technology.com>
+Fixes: 5e9d398240b2 ("btrfs: readpages() should submit IO as read-ahead")
+CC: stable@vger.kernel.org # 4.19+
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/tree-log.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/btrfs/volumes.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -4481,6 +4481,19 @@ static int logged_inode_size(struct btrf
- 		item = btrfs_item_ptr(path->nodes[0], path->slots[0],
- 				      struct btrfs_inode_item);
- 		*size_ret = btrfs_inode_size(path->nodes[0], item);
-+		/*
-+		 * If the in-memory inode's i_size is smaller then the inode
-+		 * size stored in the btree, return the inode's i_size, so
-+		 * that we get a correct inode size after replaying the log
-+		 * when before a power failure we had a shrinking truncate
-+		 * followed by addition of a new name (rename / new hard link).
-+		 * Otherwise return the inode size from the btree, to avoid
-+		 * data loss when replaying a log due to previously doing a
-+		 * write that expands the inode's size and logging a new name
-+		 * immediately after.
-+		 */
-+		if (*size_ret > inode->vfs_inode.i_size)
-+			*size_ret = inode->vfs_inode.i_size;
- 	}
- 
- 	btrfs_release_path(path);
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -6413,7 +6413,7 @@ static void btrfs_end_bio(struct bio *bi
+ 				if (bio_op(bio) == REQ_OP_WRITE)
+ 					btrfs_dev_stat_inc_and_print(dev,
+ 						BTRFS_DEV_STAT_WRITE_ERRS);
+-				else
++				else if (!(bio->bi_opf & REQ_RAHEAD))
+ 					btrfs_dev_stat_inc_and_print(dev,
+ 						BTRFS_DEV_STAT_READ_ERRS);
+ 				if (bio->bi_opf & REQ_PREFLUSH)
 
 
