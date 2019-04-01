@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4F3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB02C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA0D021924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF3F21924
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138602;
-	bh=tj8fF3jW+KfIGTrg6TdhOaic7dGAFeyuBXRHjqhAghk=;
+	s=default; t=1554138606;
+	bh=G0zWZOrLHjQgQ/Zb5hP09wHTSh2GXqYagcs7Z/bPMEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RO9R/tRGH2jGO/Ez46o3d1T5jQ5ULwSM2laaDj1BwNwY9SaOUY70zU2+TH4Zv9kIU
-	 PI/NbK9n3KHroUg6aePlPn3k4I3uFpuX1N9glN/vUFpXtQ1WIFNVsWAGxvj6NfuZ6H
-	 8AA7QWmjFtn8377Jy+OWc9hv2KgBbXqL9M6Lod04=
+	b=nDdSIZz6dDSV2uJpyBYZIFLn5XtzbQYmrSUB2rWmXUVuT6Uue7Ttw93z2ZpxSCC8C
+	 bkUMZ1JvKkijtpaQq09WJM5ebj0JJJz0KKzgndxQ80njqRsgUv/jdbi6rEam0V2Ecq
+	 JafjFQEdohoYqZFFjVWffwr/vaXHtBFlRrMM+2YM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729886AbfDARKB (ORCPT
+        id S1729565AbfDARKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:10:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57298 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729876AbfDARJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:09:59 -0400
+        id S1729121AbfDARKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:10:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70EC221924;
-        Mon,  1 Apr 2019 17:09:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E26A206B8;
+        Mon,  1 Apr 2019 17:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138599;
-        bh=tj8fF3jW+KfIGTrg6TdhOaic7dGAFeyuBXRHjqhAghk=;
+        s=default; t=1554138602;
+        bh=G0zWZOrLHjQgQ/Zb5hP09wHTSh2GXqYagcs7Z/bPMEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OkrlKWXLRzR5uaJQsWjwC5ecPxPx+k4vHchrXaSyU4SZPSwcHBdahuRxn1n/UV1pJ
-         HKgmfHMppeIwGxphBRmLCbYAXm1DeYwEh9nQ2qYRRyrL1XKyGLzbyFRCtpJbIyi5J5
-         9lAfg0kW5ZtMy26zPEtdTDnER5fdF9r9TeefaG5I=
+        b=csouvXCmxq6PS+UyT/EM1vECsI9nFK6mXCGnz/h5/sVYr9g4wYFBitWG1kZgk8hWi
+         p3ylnHoK2JcRqVH05+ycJysEPHmz9zDMWeqPds78FJdWpOY8w7S5eGXVa3+lnerKrW
+         O6wUlQpeYLnZyDtmzsYLZGGqHPqaoE2MWbkQTPOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 5.0 112/146] gpio: adnp: Fix testing wrong value in adnp_gpio_direction_input
-Date:   Mon,  1 Apr 2019 19:02:04 +0200
-Message-Id: <20190401170057.973161005@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 5.0 113/146] phy: sun4i-usb: Support set_mode to USB_HOST for non-OTG PHYs
+Date:   Mon,  1 Apr 2019 19:02:05 +0200
+Message-Id: <20190401170058.038873324@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -66,40 +64,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit c5bc6e526d3f217ed2cc3681d256dc4a2af4cc2b upstream.
+commit 1396929e8a903db80425343cacca766a18ad6409 upstream.
 
-Current code test wrong value so it does not verify if the written
-data is correctly read back. Fix it.
-Also make it return -EPERM if read value does not match written bit,
-just like it done for adnp_gpio_direction_output().
+While only the first PHY supports mode switching, the remaining PHYs
+work in USB host mode. They should support set_mode with mode=USB_HOST
+instead of failing. This is especially needed now that the USB core does
+set_mode for all USB ports, which was added in commit b97a31348379 ("usb:
+core: comply to PHY framework").
 
-Fixes: 5e969a401a01 ("gpio: Add Avionic Design N-bit GPIO expander support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Make set_mode with mode=USB_HOST a no-op instead of failing for the
+non-OTG USB PHYs.
+
+Fixes: 6ba43c291961 ("phy-sun4i-usb: Add support for phy_set_mode")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-adnp.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/phy/allwinner/phy-sun4i-usb.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/gpio/gpio-adnp.c
-+++ b/drivers/gpio/gpio-adnp.c
-@@ -132,8 +132,10 @@ static int adnp_gpio_direction_input(str
- 	if (err < 0)
- 		goto out;
+--- a/drivers/phy/allwinner/phy-sun4i-usb.c
++++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+@@ -485,8 +485,11 @@ static int sun4i_usb_phy_set_mode(struct
+ 	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+ 	int new_mode;
  
--	if (err & BIT(pos))
--		err = -EACCES;
-+	if (value & BIT(pos)) {
-+		err = -EPERM;
-+		goto out;
+-	if (phy->index != 0)
++	if (phy->index != 0) {
++		if (mode == PHY_MODE_USB_HOST)
++			return 0;
+ 		return -EINVAL;
 +	}
  
- 	err = 0;
- 
+ 	switch (mode) {
+ 	case PHY_MODE_USB_HOST:
 
 
