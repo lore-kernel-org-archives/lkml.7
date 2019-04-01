@@ -2,118 +2,139 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9A9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744F7C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26DC22082C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:13:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXWoUime"
+	by mail.kernel.org (Postfix) with ESMTP id 44C772082C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfDAONu (ORCPT
+        id S1728410AbfDAOOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 10:13:50 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:34165 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbfDAONu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 10:13:50 -0400
-Received: by mail-it1-f196.google.com with SMTP id z17so69468itc.1;
-        Mon, 01 Apr 2019 07:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kk8gJjjgTiuQN6noEMhdBN+ilV3LZQ/eWVYcGbNcTHY=;
-        b=bXWoUimeV/YpbrasL/DaQn0+nZluaJTiDCuO86T+2lKJ1rMnCvAqLmTGrX67jC7H8m
-         GLqKuOWa9ffrJS5ZsSFMio79fM9Rdtyjf+bdNVjj9UplI9/VwYwp2a8oajlPAwMgmh2Y
-         7Se7ht9Jxa6yO76dxO5w1Ha6MSIo/lLJTZNN33klSHH/wnNF2h0qvL0+MCye2wP2CvMa
-         GKzr5sivCLwFhfcbxub89y+UB5VT1zn73ncKdJjH9gDxtRCXHfhVYRE7GbOFc2eU6QDW
-         267YQnYw8F9bnQ4aj2V2Hqgnto0Yf02NgWXDogY2w8fM2kl9OZh/kf0RU0/c++pQU0MH
-         fRjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kk8gJjjgTiuQN6noEMhdBN+ilV3LZQ/eWVYcGbNcTHY=;
-        b=hcwiNGZfC1+qX9aosWdvSut7XoBtE5hiSu08Dhiz/X1d4J4Sb5uTHmotWlrTtaDUBI
-         CSXBrrucCxhb+fYC2S/zTPf1/S4jgHP3JGkYBqRTDhlU+3QuNukkJjf+nesmAkUeGVtG
-         vmIRz1QJoMnaQbvd1UuNZNIlEi5XtfzminAQ10N1FVDKnALyhTv/ixv5/Vu0eOw1kvep
-         24MquN8PXO5mXm3I1jrIkuvbLF4DCqV57MPdQiPcMmMRl04sbf/6YU25nse/RtMCWVfD
-         toAwMWtoxcsA0FSjz7b5Yh87Z8N8VMqhMo6CPXyBlNUjSDjEnvyFyPpLO2f9LnQKFSa2
-         lsJw==
-X-Gm-Message-State: APjAAAXkrHE71Tf0wwic01WrNUzDVrUVsR1rSmDRdbv94n7rQs1kIwMx
-        6FliJf88bRoNKvqQWNMi6rQBRXsx/t+LD+Ysa4Y=
-X-Google-Smtp-Source: APXvYqwd/mG3JAWrWqpy9DU3xiUov8OoJewgCBDH7BLH0kDCHDod1QF8/TTG6TH4wAn47K1XR5Kni2H5NQnoekxbHo4=
-X-Received: by 2002:a02:c643:: with SMTP id k3mr36288752jan.19.1554128029491;
- Mon, 01 Apr 2019 07:13:49 -0700 (PDT)
+        Mon, 1 Apr 2019 10:14:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40460 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726657AbfDAOOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 10:14:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 49B17AC89;
+        Mon,  1 Apr 2019 14:14:21 +0000 (UTC)
+Subject: Re: [PATCH] fs/open: Fix most outstanding security bugs
+To:     Johannes Thumshirn <jthumshirn@suse.de>,
+        Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
+        Linux FSDEVEL Mailinglist <linux-fsdevel@vger.kernel.org>
+References: <20190401090113.22946-1-jthumshirn@suse.de>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <d117fb1a-45e4-a553-082e-36112dfbbf8a@suse.com>
+Date:   Mon, 1 Apr 2019 17:14:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190326185525.20781-1-jeffrey.l.hugo@gmail.com> <20190401105153.GE4187@dell>
-In-Reply-To: <20190401105153.GE4187@dell>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 1 Apr 2019 08:13:38 -0600
-Message-ID: <CAOCk7Np53o69xQw83V1sfO2uv1-NFSGtbsTqH-5K1m1Rdaf-GA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: Add Lenovo Miix 630
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     bjorn.andersson@linaro.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190401090113.22946-1-jthumshirn@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee.
 
-On Mon, Apr 1, 2019 at 4:52 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Tue, 26 Mar 2019, Jeffrey Hugo wrote:
->
-> > This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
-> > functionality includes USB (host), microSD-card, keyboard, and trackpad=
-.
-> >
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/Makefile             |   1 +
-> >  arch/arm64/boot/dts/qcom/msm8998-cls.dtsi     | 278 ++++++++++++++++++
->
-> What is cls?
 
-Clamshell.  I left a comment in the file that is intended to clarify
-this.  If one does some digging, they should find a fair number of
-"cls" references within the firmware and windows.
+On 1.04.19 г. 12:01 ч., Johannes Thumshirn wrote:
+> Over the last 20 years, the Linux kernel has accumulated hundreds if not
+> thousands of security vulnerabilities.
+> 
+> One common pattern in most of these security related reports is processes
+> called "syzkaller", "trinity" or "syz-executor" opening files and then
+> abuse kernel interfaces causing kernel crashes or even worse threats using
+> memory overwrites or by exploiting race conditions.
+> 
+> Hunting down these bugs has become time consuming and very expensive, so
+> I've decided to put an end to it.
+> 
+> If one of the above mentioned processes tries opening a file, return -EPERM
+> indicating this process does not have the permission to open files on Linux
+> anymore.
+> 
+> Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
 
->
-> How much of this will be reusable with the other laptops?
+Ack-by: Nikolay Borisov <nborisov@suse.com>
 
-The intent is that all the common stuff, which I expect is >90%, is in
-the cls.dtsi so that we don't have multiple copies of it.  Variances,
-such as the SD detect GPIO stuff we've discovered would be in the
-individual dtb.  Or at-least, that is the idea.  I'm open to
-suggestions.
-
-I'm unable to post dts files based on the HP/Asus at this time, but
-hopefully that changes soon.  Otherwise, Its my goal that this
-provides a good framework for adding those devices.
-
->
-> >  .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  33 +++
-> >  3 files changed, 312 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-cls.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dt=
-s
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Linaro Services Technical Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> ---
+>  fs/open.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/fs/open.c b/fs/open.c
+> index f1c2f855fd43..3a3b460beccd 100644
+> --- a/fs/open.c
+> +++ b/fs/open.c
+> @@ -1056,6 +1056,20 @@ long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
+>  	struct open_flags op;
+>  	int fd = build_open_flags(flags, mode, &op);
+>  	struct filename *tmp;
+> +	char comm[TASK_COMM_LEN];
+> +	int i;
+> +	static const char * const list[] = {
+> +		"syzkaller",
+> +		"syz-executor,"
+> +		"trinity",
+> +		NULL
+> +	};
+> +
+> +	get_task_comm(comm, current);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(list); i++)
+> +		if (!strncmp(comm, list[i], strlen(list[i])))
+> +			return -EPERM;
+>  
+>  	if (fd)
+>  		return fd;
+> 
