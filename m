@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F836C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A798DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4064120830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DE020883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140648;
-	bh=XxTPfLrE2fzJODYTIXRDNtqenMePufyTHAdTxdahhXk=;
+	s=default; t=1554140666;
+	bh=Es9sY6x3GHYPEBMm9sEFlkxstnamJjzO5PQWVknp3oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XjTvNXCroJ5ujiGdim+ySoexSGdXqdfPRh/Ye7UVeyU6kUjfpRmCgG96K9PB2oAwq
-	 DP2XjlEJ+zflViSmNK0PnjBkNx0DCqJHzxcTi+Oh5T+oIhozzOn9QqI0akx5ZLuSrb
-	 iVqmFcHSYP/iwFDNXRphZUwz0q9R+eSI6D1ArZRk=
+	b=rBy95klt/vepyKfJouoGxNZTKcQCBNJv8cOikCRfhS2HyDejafp0f9qHgK9mOgVWu
+	 kMx3Fk14qh4vwmsAdFLbR2ESzo4NRBS5xah/3WV+rHWKl2ak3FcZOQr1n6VqiwSoRI
+	 Oxd+DMk4sf11m1Y1XtDRV/r5JQnokK5bise7MgN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387964AbfDARoH (ORCPT
+        id S2387992AbfDARoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:44:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45804 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:44:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728851AbfDARfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:35:16 -0400
+        id S1733290AbfDARev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:34:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6B9F20830;
-        Mon,  1 Apr 2019 17:35:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42A4F2070B;
+        Mon,  1 Apr 2019 17:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140115;
-        bh=XxTPfLrE2fzJODYTIXRDNtqenMePufyTHAdTxdahhXk=;
+        s=default; t=1554140090;
+        bh=Es9sY6x3GHYPEBMm9sEFlkxstnamJjzO5PQWVknp3oM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=flS+pcT2AWVFfX8aSOhKLrZTl4mepno0BI0ykgn6WcQqGIjm1nqHHrebWNLR/w/ei
-         Cj6i+qnnU5tQpRcxTkecSnAUWAKTKVsgRIzfzofEO+24Y0+1B8PsRV+5/Xo0o0Gs08
-         MLC9WhW0ZkP8jLYTKlCpuHkET8HHyqT04gFnPiyo=
+        b=sCt7xQtnQwn7hClzENko37MFjM2Btfum3bByeykoOmTGgc2nXIMEhbBZ3v7XPm6/f
+         sm7xG1FZAqQsDmYmBVYcwZ/Vy6sciVcIDiSHRU02BDX0BD/KR1TjiWeG3Ne1p8VCzY
+         wL/foUv8LcRhIZw8EenlX8iL5Pmj0RGJ4vIRN2Fk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 109/131] scsi: zfcp: fix rport unblock if deleted SCSI devices on Scsi_Host
-Date:   Mon,  1 Apr 2019 19:02:59 +0200
-Message-Id: <20190401170100.855743523@linuxfoundation.org>
+        stable@vger.kernel.org, Ravindra Lokhande <rlokhande@nvidia.com>,
+        Vinod Koul <vinod.koul@intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.4 103/131] ALSA: compress: add support for 32bit calls in a 64bit kernel
+Date:   Mon,  1 Apr 2019 19:02:53 +0200
+Message-Id: <20190401170100.467684472@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -67,83 +66,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Ravindra Lokhande <rlokhande@nvidia.com>
 
-commit fe67888fc007a76b81e37da23ce5bd8fb95890b0 upstream.
+commit c10368897e104c008c610915a218f0fe5fa4ec96 upstream.
 
-An already deleted SCSI device can exist on the Scsi_Host and remain there
-because something still holds a reference.  A new SCSI device with the same
-H:C:T:L and FCP device, target port WWPN, and FCP LUN can be created.  When
-we try to unblock an rport, we still find the deleted SCSI device and
-return early because the zfcp_scsi_dev of that SCSI device is not
-ZFCP_STATUS_COMMON_UNBLOCKED. Hence we miss to unblock the rport, even if
-the new proper SCSI device would be in good state.
+Compress offload does not support ioctl calls from a 32bit userspace
+in a 64 bit kernel. This patch adds support for ioctls from a 32bit
+userspace in a 64bit kernel
 
-Therefore, skip deleted SCSI devices when iterating the sdevs of the shost.
-[cf. __scsi_device_lookup{_by_target}() or scsi_device_get()]
-
-The following abbreviated trace sequence can indicate such problem:
-
-Area           : REC
-Tag            : ersfs_3
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x40000000     not ZFCP_STATUS_COMMON_UNBLOCKED
-Ready count    : n		not incremented yet
-Running count  : 0x00000000
-ERP want       : 0x01
-ERP need       : 0xc1		ZFCP_ERP_ACTION_NONE
-
-Area           : REC
-Tag            : ersfs_3
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x41000000
-Ready count    : n+1
-Running count  : 0x00000000
-ERP want       : 0x01
-ERP need       : 0x01
-
-...
-
-Area           : REC
-Level          : 4		only with increased trace level
-Tag            : ertru_l
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x40000000
-Request ID     : 0x0000000000000000
-ERP status     : 0x01800000
-ERP step       : 0x1000
-ERP action     : 0x01
-ERP count      : 0x00
-
-NOT followed by a trace record with tag "scpaddy"
-for WWPN 0x50050763031bd327.
-
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Fixes: 6f2ce1c6af37 ("scsi: zfcp: fix rport unblock race with LUN recovery")
-Cc: <stable@vger.kernel.org> #2.6.32+
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Ravindra Lokhande <rlokhande@nvidia.com>
+Acked-by: Vinod Koul <vinod.koul@intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/scsi/zfcp_erp.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/core/compress_offload.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/drivers/s390/scsi/zfcp_erp.c
-+++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -1306,6 +1306,9 @@ static void zfcp_erp_try_rport_unblock(s
- 		struct zfcp_scsi_dev *zsdev = sdev_to_zfcp(sdev);
- 		int lun_status;
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -38,6 +38,7 @@
+ #include <linux/uio.h>
+ #include <linux/uaccess.h>
+ #include <linux/module.h>
++#include <linux/compat.h>
+ #include <sound/core.h>
+ #include <sound/initval.h>
+ #include <sound/compress_params.h>
+@@ -859,6 +860,15 @@ static long snd_compr_ioctl(struct file
+ 	return retval;
+ }
  
-+		if (sdev->sdev_state == SDEV_DEL ||
-+		    sdev->sdev_state == SDEV_CANCEL)
-+			continue;
- 		if (zsdev->port != port)
- 			continue;
- 		/* LUN under port of interest */
++/* support of 32bit userspace on 64bit platforms */
++#ifdef CONFIG_COMPAT
++static long snd_compr_ioctl_compat(struct file *file, unsigned int cmd,
++						unsigned long arg)
++{
++	return snd_compr_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
++}
++#endif
++
+ static const struct file_operations snd_compr_file_ops = {
+ 		.owner =	THIS_MODULE,
+ 		.open =		snd_compr_open,
+@@ -866,6 +876,9 @@ static const struct file_operations snd_
+ 		.write =	snd_compr_write,
+ 		.read =		snd_compr_read,
+ 		.unlocked_ioctl = snd_compr_ioctl,
++#ifdef CONFIG_COMPAT
++		.compat_ioctl = snd_compr_ioctl_compat,
++#endif
+ 		.mmap =		snd_compr_mmap,
+ 		.poll =		snd_compr_poll,
+ };
 
 
