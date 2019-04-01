@@ -7,52 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B72C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CF8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A0220828
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09313206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554108858;
-	bh=q3A1g+ho7ft/p+qYvOptYZZRIIQT6TU2Qv/cuLBmwn8=;
+	s=default; t=1554108866;
+	bh=Kpdbi5VqQMDiN8Lgit7u20wiacmmaPrufRhvgdVCz2I=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=2u8R/x9FSbM1Hloc5ukS9SqWIk3vFjmfPA1RQjA7hDFQFUkv29Kdw6Dsx3umW6O2M
-	 DncRt7qPO5LhR5hvh27aVloQ+JhclQl8oxagCZM93WLLc5nZ4c38bmo9BzYc2yu3iV
-	 fxsJMz3uYD0SfsbAjvONPdpkNZ8j9Exn5K7B2TXs=
+	b=i4j9AwJAJiJQPEShcRzrORWnfEUdZkHPY3CXD9bI3DqgxkYibRsmNRjo7XdjcBWdX
+	 bKtywbNFnpYcEVMNVdhfIhaeklXBmM3TN2QfyY4jZ/BPRwYbfJ+ipkVxCOZSBNZZ/m
+	 ro7aEudvnv+weja3QktEHKqSNTCy9r/HqnqVkuJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbfDAIyD (ORCPT
+        id S1728783AbfDAIyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:54:03 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60620 "EHLO
+        Mon, 1 Apr 2019 04:54:24 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33042 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728690AbfDAIx7 (ORCPT
+        with ESMTP id S1726682AbfDAIyX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:53:59 -0400
+        Mon, 1 Apr 2019 04:54:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=S7gTevI13tyCqwjlIHG/2/0vYXhiTCJ+zYcRQOe33ZU=; b=ioWojXaNhADD
-        Z3U+uU4MN9nngfg+vAqZzM1Eqagdb6xKuZlds7MxdFI3LpBo6Sdzdsz9P/cRAe41Xh7iRxi6Q5DKS
-        bttf6IlHiDL8NKxetJ6e6nsxTvLbafI4rOAnuiBKaWzB4A3QAsziKBFujvTQP7DbHH+FJ7p+YwCcA
-        UWQZ0=;
+        List-Archive; bh=E6cLqoAWCFIceNVHqu8euOIjh6LoBBnwuT8NmlelZTY=; b=VMOBmixqHf5j
+        B/av0SM1Sg5AGP5KxTvX4/8sYwJDUSbVVK4iU7mNGYxSONs29j6ZBkyBMgV1VWBYA/3xDZlqenTPA
+        Kss29upcmqcbStAI8g1UTbFxlKrs1dQpSrdby3HyyQWbMYaGD7APmJQyzbnTLB2c3P9iVBl/x+/na
+        j07aw=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hAshZ-0008Oz-Hq; Mon, 01 Apr 2019 08:53:57 +0000
+        id 1hAshr-0008PW-Lf; Mon, 01 Apr 2019 08:54:16 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 9A6A0440083; Mon,  1 Apr 2019 09:53:54 +0100 (BST)
+        id D5F23440082; Mon,  1 Apr 2019 09:54:12 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: tps6507x: Remove unused *rdev[] from struct tps6507x_pmic" to the regulator tree
-In-Reply-To: 
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Mark Brown <broonie@kernel.org>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com,
+        broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        kyarlagadda@nvidia.com, ldewangan@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Applied "spi: tegra114: add SPI_LSB_FIRST support" to the spi tree
+In-Reply-To:  <1553666207-11414-12-git-send-email-skomatineni@nvidia.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190401085354.9A6A0440083@finisterre.ee.mobilebroadband>
-Date:   Mon,  1 Apr 2019 09:53:54 +0100 (BST)
+Message-Id: <20190401085412.D5F23440082@finisterre.ee.mobilebroadband>
+Date:   Mon,  1 Apr 2019 09:54:12 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,11 +66,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: tps6507x: Remove unused *rdev[] from struct tps6507x_pmic
+   spi: tegra114: add SPI_LSB_FIRST support
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -85,43 +91,49 @@ to this mail.
 Thanks,
 Mark
 
-From 69c57b97db9c4886b1f338613fccb0b8408b324b Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Thu, 28 Mar 2019 20:02:24 +0800
-Subject: [PATCH] regulator: tps6507x: Remove unused *rdev[] from struct
- tps6507x_pmic
+From 2b17a3c759e5e2ed3faafb69e243ec312e3bf0da Mon Sep 17 00:00:00 2001
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Date: Tue, 26 Mar 2019 22:56:33 -0700
+Subject: [PATCH] spi: tegra114: add SPI_LSB_FIRST support
 
-This driver is using devm_regulator_register so no need to save *rdev for
-clean up.
+Tegra SPI controller supports lsb first mode. Default is MSB bit first
+and on selection of SPI_LSB_FIRST through SPI mode transmission happens
+with LSB bit first.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+This patch adds SPI_LSB_FIRST flag to mode_bits and also configures it
+on request.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/tps6507x-regulator.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/spi/spi-tegra114.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/tps6507x-regulator.c b/drivers/regulator/tps6507x-regulator.c
-index 2b3064faaaf3..4dbb22685539 100644
---- a/drivers/regulator/tps6507x-regulator.c
-+++ b/drivers/regulator/tps6507x-regulator.c
-@@ -115,7 +115,6 @@ static struct tps_info tps6507x_pmic_regs[] = {
- struct tps6507x_pmic {
- 	struct regulator_desc desc[TPS6507X_NUM_REGULATOR];
- 	struct tps6507x_dev *mfd;
--	struct regulator_dev *rdev[TPS6507X_NUM_REGULATOR];
- 	struct tps_info *info[TPS6507X_NUM_REGULATOR];
- 	struct mutex io_lock;
- };
-@@ -505,9 +504,6 @@ static int tps6507x_pmic_probe(struct platform_device *pdev)
- 				pdev->name);
- 			return PTR_ERR(rdev);
- 		}
--
--		/* Save regulator for cleanup */
--		tps->rdev[i] = rdev;
- 	}
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index 929358e3487a..0c52aeeb1d4f 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -696,6 +696,11 @@ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
+ 		else if (req_mode == SPI_MODE_3)
+ 			command1 |= SPI_CONTROL_MODE_3;
  
- 	tps6507x_dev->pmic = tps;
++		if (spi->mode & SPI_LSB_FIRST)
++			command1 |= SPI_LSBIT_FE;
++		else
++			command1 &= ~SPI_LSBIT_FE;
++
+ 		if (tspi->cs_control) {
+ 			if (tspi->cs_control != spi)
+ 				tegra_spi_writel(tspi, command1, SPI_COMMAND1);
+@@ -1047,7 +1052,7 @@ static int tegra_spi_probe(struct platform_device *pdev)
+ 		master->max_speed_hz = 25000000; /* 25MHz */
+ 
+ 	/* the spi->mode bits understood by this driver: */
+-	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
++	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH | SPI_LSB_FIRST;
+ 	master->setup = tegra_spi_setup;
+ 	master->transfer_one_message = tegra_spi_transfer_one_message;
+ 	master->num_chipselect = MAX_CHIP_SELECT;
 -- 
 2.20.1
 
