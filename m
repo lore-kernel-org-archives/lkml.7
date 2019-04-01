@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB02C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A18C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF3F21924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EDB121929
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138606;
-	bh=G0zWZOrLHjQgQ/Zb5hP09wHTSh2GXqYagcs7Z/bPMEU=;
+	s=default; t=1554138609;
+	bh=89a0K0uxiqHAsv3pc9WD2GQyBnCslsKIW2O7fSpYCrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nDdSIZz6dDSV2uJpyBYZIFLn5XtzbQYmrSUB2rWmXUVuT6Uue7Ttw93z2ZpxSCC8C
-	 bkUMZ1JvKkijtpaQq09WJM5ebj0JJJz0KKzgndxQ80njqRsgUv/jdbi6rEam0V2Ecq
-	 JafjFQEdohoYqZFFjVWffwr/vaXHtBFlRrMM+2YM=
+	b=RWaz+GYmj9oSHChI6xMLLLf3rhZuBjS/VdHEVXLCUbSdKP3X0F+gC8BFoUtOJbQuJ
+	 czNMWe/X2x8Kofa7tN1BR2qAKKUE3sZCxX/1ZOIJN3+xv5B5WZrfxWx2YvBaNg0m+y
+	 FsAB2rzyOSMhW0p3pJANVHFQ3FVF/SrGa+vODpyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbfDARKE (ORCPT
+        id S1729907AbfDARKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:10:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57396 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729121AbfDARKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:10:03 -0400
+        id S1729121AbfDARKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:10:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E26A206B8;
-        Mon,  1 Apr 2019 17:10:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5A7A206B8;
+        Mon,  1 Apr 2019 17:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138602;
-        bh=G0zWZOrLHjQgQ/Zb5hP09wHTSh2GXqYagcs7Z/bPMEU=;
+        s=default; t=1554138605;
+        bh=89a0K0uxiqHAsv3pc9WD2GQyBnCslsKIW2O7fSpYCrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=csouvXCmxq6PS+UyT/EM1vECsI9nFK6mXCGnz/h5/sVYr9g4wYFBitWG1kZgk8hWi
-         p3ylnHoK2JcRqVH05+ycJysEPHmz9zDMWeqPds78FJdWpOY8w7S5eGXVa3+lnerKrW
-         O6wUlQpeYLnZyDtmzsYLZGGqHPqaoE2MWbkQTPOA=
+        b=ku9GgZlkHVpjN7QtBVJCWC7XX58tF7urJYXBLZX3sL7k3WHvkQMyFhUZzV0oLiD0+
+         +Dn26ZG4dt2C4NUyu5lHdVR48zqC1vjJ2tDtp1pcINAdciiRzuWKXAsNKqXZh6rxxO
+         8lNyGyJq2osK3EeqxOZyb+1/31ZpEwC2eCSPwVI0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 5.0 113/146] phy: sun4i-usb: Support set_mode to USB_HOST for non-OTG PHYs
-Date:   Mon,  1 Apr 2019 19:02:05 +0200
-Message-Id: <20190401170058.038873324@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 5.0 114/146] usb: mtu3: fix EXTCON dependency
+Date:   Mon,  1 Apr 2019 19:02:06 +0200
+Message-Id: <20190401170058.109012069@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -64,42 +63,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 1396929e8a903db80425343cacca766a18ad6409 upstream.
+commit 3d54d10c6afed34fd45b852bf76f55e8da31d8ef upstream.
 
-While only the first PHY supports mode switching, the remaining PHYs
-work in USB host mode. They should support set_mode with mode=USB_HOST
-instead of failing. This is especially needed now that the USB core does
-set_mode for all USB ports, which was added in commit b97a31348379 ("usb:
-core: comply to PHY framework").
+When EXTCON is a loadable module, mtu3 fails to link as built-in:
 
-Make set_mode with mode=USB_HOST a no-op instead of failing for the
-non-OTG USB PHYs.
+drivers/usb/mtu3/mtu3_plat.o: In function `mtu3_probe':
+mtu3_plat.c:(.text+0x690): undefined reference to `extcon_get_edev_by_phandle'
 
-Fixes: 6ba43c291961 ("phy-sun4i-usb: Add support for phy_set_mode")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Add a Kconfig dependency to force mtu3 also to be a loadable module
+if extconn is, but still allow it to be built without extcon.
+
+Fixes: d0ed062a8b75 ("usb: mtu3: dual-role mode support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/phy/allwinner/phy-sun4i-usb.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/mtu3/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -485,8 +485,11 @@ static int sun4i_usb_phy_set_mode(struct
- 	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
- 	int new_mode;
- 
--	if (phy->index != 0)
-+	if (phy->index != 0) {
-+		if (mode == PHY_MODE_USB_HOST)
-+			return 0;
- 		return -EINVAL;
-+	}
- 
- 	switch (mode) {
- 	case PHY_MODE_USB_HOST:
+--- a/drivers/usb/mtu3/Kconfig
++++ b/drivers/usb/mtu3/Kconfig
+@@ -4,6 +4,7 @@ config USB_MTU3
+ 	tristate "MediaTek USB3 Dual Role controller"
+ 	depends on USB || USB_GADGET
+ 	depends on ARCH_MEDIATEK || COMPILE_TEST
++	depends on EXTCON || !EXTCON
+ 	select USB_XHCI_MTK if USB_SUPPORT && USB_XHCI_HCD
+ 	help
+ 	  Say Y or M here if your system runs on MediaTek SoCs with
 
 
