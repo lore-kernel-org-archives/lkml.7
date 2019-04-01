@@ -2,124 +2,119 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCBAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5647DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C4F20896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 247B520856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 20:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfDAUQ5 (ORCPT
+        id S1726854AbfDAU1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 16:16:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52924 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbfDAUQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 16:16:57 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6BC20307D933;
-        Mon,  1 Apr 2019 20:16:57 +0000 (UTC)
-Received: from gimli.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AF2DC104C53F;
-        Mon,  1 Apr 2019 20:16:52 +0000 (UTC)
-Subject: [PATCH] vfio/type1: Limit DMA mappings per container
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     alex.williamson@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eric.auger@redhat.com, cohuck@redhat.com
-Date:   Mon, 01 Apr 2019 14:16:52 -0600
-Message-ID: <155414977872.12780.13728555131525362206.stgit@gimli.home>
-User-Agent: StGit/0.19-dirty
+        Mon, 1 Apr 2019 16:27:50 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:45174 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726628AbfDAU1u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 16:27:50 -0400
+Received: (qmail 8885 invoked by uid 2102); 1 Apr 2019 16:27:49 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 1 Apr 2019 16:27:49 -0400
+Date:   Mon, 1 Apr 2019 16:27:49 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     "Zengtao (B)" <prime.zeng@hisilicon.com>
+cc:     Martin Petersen <martin.petersen@oracle.com>,
+        "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "usb-storage@lists.one-eyed-alien.net" 
+        <usb-storage@lists.one-eyed-alien.net>
+Subject: RE: scsi_set_medium_removal timeout issue 
+In-Reply-To: <Pine.LNX.4.44L0.1812041135300.1537-100000@iolanthe.rowland.org>
+Message-ID: <Pine.LNX.4.44L0.1904011627120.1506-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 01 Apr 2019 20:16:57 +0000 (UTC)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Memory backed DMA mappings are accounted against a user's locked
-memory limit, including multiple mappings of the same memory.  This
-accounting bounds the number of such mappings that a user can create.
-However, DMA mappings that are not backed by memory, such as DMA
-mappings of device MMIO via mmaps, do not make use of page pinning
-and therefore do not count against the user's locked memory limit.
-These mappings still consume memory, but the memory is not well
-associated to the process for the purpose of oom killing a task.
+On Tue, 4 Dec 2018, Alan Stern wrote:
 
-To add bounding on this use case, we introduce a limit to the total
-number of concurrent DMA mappings that a user is allowed to create.
-This limit is exposed as a tunable module option where the default
-value of 64K is expected to be well in excess of any reasonable use
-case (a large virtual machine configuration would typically only make
-use of tens of concurrent mappings).
+> On Thu, 29 Nov 2018, Zengtao (B) wrote:
+> 
+> > Ping?
+> > 
+> > >-----Original Message-----
+> > >From: Alan Stern [mailto:stern@rowland.harvard.edu]
+> > >Sent: Wednesday, November 14, 2018 11:35 PM
+> > >To: Martin Petersen <martin.petersen@oracle.com>; Zengtao (B)
+> > ><prime.zeng@hisilicon.com>
+> > >Cc: jejb@linux.vnet.ibm.com; gregkh@linuxfoundation.org;
+> > >linux-scsi@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > >linux-usb@vger.kernel.org; usb-storage@lists.one-eyed-alien.net
+> > >Subject: RE: scsi_set_medium_removal timeout issue
+> > >
+> > >On Wed, 14 Nov 2018, Zengtao (B) wrote:
+> > >
+> > >> I just enabled the scsi log in the middle of the umount operation,
+> > >> otherwise I can't reproduce the issue when the scsi log is enabled.
+> > >>
+> > >> >from the beginning.  In any case, it wasn't what I wanted.  I asked
+> > >> >you to post the dmesg log, not the SCSI log.
+> > >>
+> > >> Please refer to the new attachment for dmesg log.
+> > >
+> > >Heh, yes, I see now.
+> > >
+> > >Martin, shouldn't sd_release() call sd_sync_cache() in the same way that
+> > >sd_shutdown() does, before it calls scsi_set_medium_removal()?
+> > >
+> > >Alan Stern
+> 
+> I don't know if this is the right thing to do, but you can try out the 
+> following patch to see if it helps.
+> 
+> Alan Stern
+> 
+> 
+> 
+> Index: usb-4.x/drivers/scsi/sd.c
+> ===================================================================
+> --- usb-4.x.orig/drivers/scsi/sd.c
+> +++ usb-4.x/drivers/scsi/sd.c
+> @@ -113,6 +113,7 @@ static void sd_shutdown(struct device *)
+>  static int sd_suspend_system(struct device *);
+>  static int sd_suspend_runtime(struct device *);
+>  static int sd_resume(struct device *);
+> +static int sd_sync_cache(struct scsi_disk *sdkp, struct scsi_sense_hdr *sshdr);
+>  static void sd_rescan(struct device *);
+>  static int sd_init_command(struct scsi_cmnd *SCpnt);
+>  static void sd_uninit_command(struct scsi_cmnd *SCpnt);
+> @@ -1393,8 +1394,14 @@ static void sd_release(struct gendisk *d
+>  	SCSI_LOG_HLQUEUE(3, sd_printk(KERN_INFO, sdkp, "sd_release\n"));
+>  
+>  	if (atomic_dec_return(&sdkp->openers) == 0 && sdev->removable) {
+> -		if (scsi_block_when_processing_errors(sdev))
+> +		if (scsi_block_when_processing_errors(sdev)) {
+> +			if (sdkp->WCE && sdkp->media_present) {
+> +				sd_printk(KERN_NOTICE, sdkp,
+> +						"Synchronizing SCSI cache\n");
+> +				sd_sync_cache(sdkp, NULL);
+> +			}
+>  			scsi_set_medium_removal(sdev, SCSI_REMOVAL_ALLOW);
+> +		}
+>  	}
+>  
+>  	/*
 
-This fixes CVE-2019-3882.
+Zengtao, did you ever try out this patch?  Did it fix your problem?
 
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
----
- drivers/vfio/vfio_iommu_type1.c |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 73652e21efec..7fc8fd7d4dc7 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -58,12 +58,18 @@ module_param_named(disable_hugepages,
- MODULE_PARM_DESC(disable_hugepages,
- 		 "Disable VFIO IOMMU support for IOMMU hugepages.");
- 
-+static int dma_entry_limit __read_mostly = U16_MAX;
-+module_param_named(dma_entry_limit, dma_entry_limit, int, 0644);
-+MODULE_PARM_DESC(dma_entry_limit,
-+		 "Maximum number of user DMA mappings per container (65535).");
-+
- struct vfio_iommu {
- 	struct list_head	domain_list;
- 	struct vfio_domain	*external_domain; /* domain for external user */
- 	struct mutex		lock;
- 	struct rb_root		dma_list;
- 	struct blocking_notifier_head notifier;
-+	atomic_t		dma_avail;
- 	bool			v2;
- 	bool			nesting;
- };
-@@ -836,6 +842,7 @@ static void vfio_remove_dma(struct vfio_iommu *iommu, struct vfio_dma *dma)
- 	vfio_unlink_dma(iommu, dma);
- 	put_task_struct(dma->task);
- 	kfree(dma);
-+	atomic_inc(&iommu->dma_avail);
- }
- 
- static unsigned long vfio_pgsize_bitmap(struct vfio_iommu *iommu)
-@@ -1081,8 +1088,14 @@ static int vfio_dma_do_map(struct vfio_iommu *iommu,
- 		goto out_unlock;
- 	}
- 
-+	if (!atomic_add_unless(&iommu->dma_avail, -1, 0)) {
-+		ret = -ENOSPC;
-+		goto out_unlock;
-+	}
-+
- 	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
- 	if (!dma) {
-+		atomic_inc(&iommu->dma_avail);
- 		ret = -ENOMEM;
- 		goto out_unlock;
- 	}
-@@ -1583,6 +1596,7 @@ static void *vfio_iommu_type1_open(unsigned long arg)
- 
- 	INIT_LIST_HEAD(&iommu->domain_list);
- 	iommu->dma_list = RB_ROOT;
-+	atomic_set(&iommu->dma_avail, dma_entry_limit);
- 	mutex_init(&iommu->lock);
- 	BLOCKING_INIT_NOTIFIER_HEAD(&iommu->notifier);
- 
+Alan Stern
 
