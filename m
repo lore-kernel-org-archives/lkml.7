@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AC4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E66C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE7E21939
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257C22192D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138571;
-	bh=53zGgi1ILFiW6vvRVzFjf/VVR+zGQ2I+AQZQcO07nx0=;
+	s=default; t=1554138575;
+	bh=yPJyp/SFO84MXg1VYSYIzh+pLkjUbgne2WK2cW3Xy8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BefBPtKAclMs/1SCjjsugRoHCsHOrE8AuqbAa9gQqg8gdGIKC1Evqh9KUnxr0lSj2
-	 6W/Hc/dbA2NPgxqVOMDhWJNHnUua298v5rKNTmu4LwjCmrCfuBO58kfaEc1l+igW1J
-	 rn7J7Ajr7nEMVJv0NuYPkFKBS+JAiyj7BaeC/d7Q=
+	b=ygMGBfjJvu5MdyuLnvb2YIUQZLLD2/zwQ4GVNQieyrYX02b1k2mLcPCKijXfrtVXJ
+	 wpIz5mCKW27Y5SS2aOh7FnWsG1Jogd0rajJ7t7DjqHwSGxxGZdGEhWGfkr0u0Hxkz3
+	 2vJ8QF+/4UmKDV/Y/XZ7R1ixlsJpsHVGJ+XPey/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbfDARJa (ORCPT
+        id S1729807AbfDARJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:09:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56472 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729181AbfDARJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:09:29 -0400
+        id S1729170AbfDARJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:09:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB277206B8;
-        Mon,  1 Apr 2019 17:09:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93E192192C;
+        Mon,  1 Apr 2019 17:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138568;
-        bh=53zGgi1ILFiW6vvRVzFjf/VVR+zGQ2I+AQZQcO07nx0=;
+        s=default; t=1554138571;
+        bh=yPJyp/SFO84MXg1VYSYIzh+pLkjUbgne2WK2cW3Xy8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tE+NVSwdj2wXM5Buia54rWZg+uyRCjb85MMaIilYNCNIYp22E6SYmRLl7fYrvDx/g
-         nZWcZIhPdERozKoWNYdmyC5Vp0TFVHCgFOF6d1nHnNyQje1ECtCuzLDyZSQ4tvMEYk
-         5ONul2pRqJCSb0Mh3sCX2/VmkEsTMQ5O8tu25ydg=
+        b=a3Sy9RJQZleMGaYMQtAj5O1xeIZbKP1fxfSB90odgKL1XINVc/Awjg1aVuGLGtqeL
+         DJLTWzvpLdPFNG6SNsM4yWtGqXt219cGUYo2v1HLernt5z2nCtFN6q9kNEbcDvqAoA
+         Z+9wwqhcx9i9nChOEetwOQW+f8t4e65RL6IZ0C3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 5.0 104/146] cpufreq: intel_pstate: Also use CPPC nominal_perf for base_frequency
-Date:   Mon,  1 Apr 2019 19:01:56 +0200
-Message-Id: <20190401170057.447743455@linuxfoundation.org>
+        =?UTF-8?q?Vincent=20Stehl=C3=A9?= <vincent.stehle@laposte.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.0 105/146] cpufreq: scpi: Fix use after free
+Date:   Mon,  1 Apr 2019 19:01:57 +0200
+Message-Id: <20190401170057.515109461@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -65,46 +65,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+From: Vincent Stehlé <vincent.stehle@laposte.net>
 
-commit 92a3e426ec06e72b1c363179c79d30712447ff76 upstream.
+commit 31d4c528cea4023cf36f6148c03bb960cedefeef upstream.
 
-The ACPI specification states that if the "Guaranteed Performance
-Register" is not implemented, the OSPM assumes guaranteed performance
-to always be equal to nominal performance.
+Free the priv structure only after we are done using it.
 
-So for invalid or unimplemented guaranteed performance register, use
-nominal performance as guaranteed performance.
-
-This change will fall back to nominal_perf when guranteed_perf is
-invalid.  If nominal_perf is also invalid or not present, fall back
-to the existing implementation, which is to read from HWP Capabilities
-MSR.
-
-Fixes: 86d333a8cc7f ("cpufreq: intel_pstate: Add base_frequency attribute")
-Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Fixes: 1690d8bb91e370ab ("cpufreq: scpi/scmi: Fix freeing of dynamic OPPs")
+Signed-off-by: Vincent Stehlé <vincent.stehle@laposte.net>
 Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/intel_pstate.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/cpufreq/scpi-cpufreq.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -383,7 +383,10 @@ static int intel_pstate_get_cppc_gurante
- 	if (ret)
- 		return ret;
+--- a/drivers/cpufreq/scpi-cpufreq.c
++++ b/drivers/cpufreq/scpi-cpufreq.c
+@@ -189,8 +189,8 @@ static int scpi_cpufreq_exit(struct cpuf
+ 	cpufreq_cooling_unregister(priv->cdev);
+ 	clk_put(priv->clk);
+ 	dev_pm_opp_free_cpufreq_table(priv->cpu_dev, &policy->freq_table);
+-	kfree(priv);
+ 	dev_pm_opp_remove_all_dynamic(priv->cpu_dev);
++	kfree(priv);
  
--	return cppc_perf.guaranteed_perf;
-+	if (cppc_perf.guaranteed_perf)
-+		return cppc_perf.guaranteed_perf;
-+
-+	return cppc_perf.nominal_perf;
+ 	return 0;
  }
- 
- #else /* CONFIG_ACPI_CPPC_LIB */
 
 
