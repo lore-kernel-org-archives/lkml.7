@@ -2,155 +2,376 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B504C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D196EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373F72070D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5932082C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfDAN2R (ORCPT
+        id S1727190AbfDANaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 09:28:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60980 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727296AbfDAN2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 09:28:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 19F49AF1A;
-        Mon,  1 Apr 2019 13:28:15 +0000 (UTC)
-Subject: Re: [btrfs] 70d28b0e4f:
- BUG:kernel_reboot-without-warning_in_early-boot_stage,last_printk:Probing_EDD(edd=off_to_disable)...ok
-To:     kernel test robot <rong.a.chen@intel.com>, Qu Wenruo <wqu@suse.com>
-Cc:     David Sterba <dsterba@suse.com>,
-        Yoon Jungyeon <jungyeon@gatech.edu>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@01.org
-References: <20190401132427.GC9217@shao2-debian>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <f3cef716-a1e3-2e84-0133-9a9c3fad2a74@suse.com>
-Date:   Mon, 1 Apr 2019 16:28:12 +0300
+        Mon, 1 Apr 2019 09:30:09 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:50120 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726821AbfDANaI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 09:30:08 -0400
+Received: from [192.168.2.10] ([212.251.195.8])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id Ax0jhtRcaiLOmAx0nhcKO4; Mon, 01 Apr 2019 15:30:06 +0200
+Subject: Re: [PATCH 0/2] DCMI bridge support
+To:     Hugues FRUCHET <hugues.fruchet@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Mickael GUENE <mickael.guene@st.com>
+References: <1554111076-31471-1-git-send-email-hugues.fruchet@st.com>
+ <158aa8b9-e607-3630-0e13-ad10759d3468@xs4all.nl>
+ <2ff6b4cb-dd57-e982-a839-00c50037d2a4@st.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <80572a34-a79c-862b-6040-668e8a79568b@xs4all.nl>
+Date:   Mon, 1 Apr 2019 15:30:01 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190401132427.GC9217@shao2-debian>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <2ff6b4cb-dd57-e982-a839-00c50037d2a4@st.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfDxE8dmK+vCBLLcKLSS8/Uk+sjdNtt/uv7QYz8Gtf4YBBiKCKpzbaou3h4T2KbEUsn2DM1G7KgurPzbPldSELal1f5QbzNnFFO5S3TbQmwld3U/0r30p
+ p5uTUqQ6SE1lh1Md+DL8Y98TR6KLaS3bhWZcb0FhRqtF0fqSmjGVkCXRiugQF0qd9GFB+ioiFRtxz1cRweL9Qsi0YQMtlEveLc33IDsITVyUWrSNvJ68MJbo
+ 7MjwmVTXS0NnEKMsNf/ogZLDRtoucGXDX9RPPXw04JeWRzcg+8xrk+yBV0hfCBO/9h8MkssxEV7ggtAug4u67c1iZWXT3p1UrPdl2Z6tTmdNDaGDMbJY7+g4
+ 2eXJKmRNoileQtmQVgoYH9wi5zofwMDZmo0bGe/jIqTTu+t0rcdw2t1g6svWwYZCoe6OGC0osnGUiA1ZExt/xlIvHvf0dLj3RxylrrOabV4WZeQmjmUTDkMy
+ /JVuzYewTxwN2USQaj7E/b7+mPlJObd6MbKwA+pD+UxJNzCle5FnjA2CQzbAM5SZrCCKTP4Z34fcLjyAe1gtULXIdJPDlRDtTAuXEQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDEuMDQuMTkg0LMuIDE2OjI0INGHLiwga2VybmVsIHRlc3Qgcm9ib3Qgd3JvdGU6
-DQo+IEZZSSwgd2Ugbm90aWNlZCB0aGUgZm9sbG93aW5nIGNvbW1pdCAoYnVpbHQgd2l0aCBn
-Y2MtNyk6DQo+IA0KPiBjb21taXQ6IDcwZDI4YjBlNGY4ZWQyZDM4NTcxZTdiMWY5YmVjN2Yz
-MjFhNTMxMDIgKCJidHJmczogdHJlZS1jaGVja2VyOiBWZXJpZnkgZGV2IGl0ZW0iKQ0KPiBo
-dHRwczovL2dpdC5rZXJuZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dpdC9uZXh0L2xpbnV4
-LW5leHQuZ2l0IG1hc3Rlcg0KPiANCj4gaW4gdGVzdGNhc2U6IHRyaW5pdHkNCj4gd2l0aCBm
-b2xsb3dpbmcgcGFyYW1ldGVyczoNCj4gDQo+IAlydW50aW1lOiAzMDBzDQo+IA0KPiB0ZXN0
-LWRlc2NyaXB0aW9uOiBUcmluaXR5IGlzIGEgbGludXggc3lzdGVtIGNhbGwgZnV6eiB0ZXN0
-ZXIuDQo+IHRlc3QtdXJsOiBodHRwOi8vY29kZW1vbmtleS5vcmcudWsvcHJvamVjdHMvdHJp
-bml0eS8NCj4gDQo+IA0KPiBvbiB0ZXN0IG1hY2hpbmU6IHFlbXUtc3lzdGVtLXg4Nl82NCAt
-ZW5hYmxlLWt2bSAtY3B1IFNhbmR5QnJpZGdlIC1zbXAgMiAtbSAyRw0KPiANCj4gY2F1c2Vk
-IGJlbG93IGNoYW5nZXMgKHBsZWFzZSByZWZlciB0byBhdHRhY2hlZCBkbWVzZy9rbXNnIGZv
-ciBlbnRpcmUgbG9nL2JhY2t0cmFjZSk6DQo+IA0KPiANCj4gKy0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLSstLS0tLS0t
-LS0tLS0rDQo+IHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHwgMzZiOWQyYmM2OSB8IDcwZDI4YjBlNGYgfA0KPiArLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tKy0tLS0t
-LS0tLS0tLSsNCj4gfCBib290X3N1Y2Nlc3NlcyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCAxNCAgICAgICAgIHwgMCAgICAgICAgICB8DQo+IHwgYm9vdF9mYWlsdXJl
-cyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMiAgICAgICAgICB8IDE0
-ICAgICAgICAgfA0KPiB8IElQLUNvbmZpZzpBdXRvLWNvbmZpZ3VyYXRpb25fb2ZfbmV0d29y
-a19mYWlsZWQgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8IDIgICAgICAgICAgfCAgICAgICAgICAgIHwNCj4gfCBCVUc6a2VybmVs
-X3JlYm9vdC13aXRob3V0LXdhcm5pbmdfaW5fZWFybHktYm9vdF9zdGFnZSxsYXN0X3ByaW50
-azpQcm9iaW5nX0VERChlZGQ9b2ZmX3RvX2Rpc2FibGUpLi4ub2sgfCAwICAgICAgICAgIHwg
-MTQgICAgICAgICB8DQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tKw0KPiANCj4gDQo+IA0K
-PiBlYXJseSBjb25zb2xlIGluIHNldHVwIGNvZGUNCj4gUHJvYmluZyBFREQgKGVkZD1vZmYg
-dG8gZGlzYWJsZSkuLi4gb2sNCj4gQlVHOiBrZXJuZWwgcmVib290LXdpdGhvdXQtd2Fybmlu
-ZyBpbiBlYXJseS1ib290IHN0YWdlLCBsYXN0IHByaW50azogUHJvYmluZyBFREQgKGVkZD1v
-ZmYgdG8gZGlzYWJsZSkuLi4gb2sNCj4gTGludXggdmVyc2lvbiA1LjAuMC1yYzgtMDAxOTYt
-ZzcwZDI4YjAgIzENCj4gQ29tbWFuZCBsaW5lOiBpcD06Ojo6dm0tc25iLXF1YW50YWwteDg2
-XzY0LTE0MTU6OmRoY3Agcm9vdD0vZGV2L3JhbTAgdXNlcj1sa3Agam9iPS9sa3Avam9icy9z
-Y2hlZHVsZWQvdm0tc25iLXF1YW50YWwteDg2XzY0LTE0MTUvdHJpbml0eS0zMDBzLXF1YW50
-YWwtY29yZS14ODZfNjQtMjAxOC0xMS0wOS5jZ3otNzBkMjhiMC0yMDE5MDMzMC0yOTM2Mi0x
-eTZnMHFiLTIueWFtbCBBUkNIPXg4Nl82NCBrY29uZmlnPXg4Nl82NC1yYW5kY29uZmlnLXM1
-LTAzMjMxOTI4IGJyYW5jaD1saW51eC1kZXZlbC9kZXZlbC1ob3VybHktMjAxOTAzMjMxNyBj
-b21taXQ9NzBkMjhiMGU0ZjhlZDJkMzg1NzFlN2IxZjliZWM3ZjMyMWE1MzEwMiBCT09UX0lN
-QUdFPS9wa2cvbGludXgveDg2XzY0LXJhbmRjb25maWctczUtMDMyMzE5MjgvZ2NjLTcvNzBk
-MjhiMGU0ZjhlZDJkMzg1NzFlN2IxZjliZWM3ZjMyMWE1MzEwMi92bWxpbnV6LTUuMC4wLXJj
-OC0wMDE5Ni1nNzBkMjhiMCBtYXhfdXB0aW1lPTE1MDAgUkVTVUxUX1JPT1Q9L3Jlc3VsdC90
-cmluaXR5LzMwMHMvdm0tc25iLXF1YW50YWwteDg2XzY0L3F1YW50YWwtY29yZS14ODZfNjQt
-MjAxOC0xMS0wOS5jZ3oveDg2XzY0LXJhbmRjb25maWctczUtMDMyMzE5MjgvZ2NjLTcvNzBk
-MjhiMGU0ZjhlZDJkMzg1NzFlN2IxZjliZWM3ZjMyMWE1MzEwMi84IExLUF9TRVJWRVI9aW5u
-IGRlYnVnIGFwaWM9ZGVidWcgc3lzcnFfYWx3YXlzX2VuYWJsZWQgcmN1cGRhdGUucmN1X2Nw
-dV9zdGFsbF90aW1lb3V0PTEwMCBuZXQuaWZuYW1lcz0wIHByaW50ay5kZXZrbXNnPW9uIHBh
-bmljPS0xIHNvZnRsb2NrdXBfcGFuaWM9MSBubWlfd2F0Y2hkb2c9cGFuaWMgb29wcz1wYW5p
-YyBsb2FkX3JhbWRpc2s9MiBwcm9tcHRfcmFtZGlzaz0wIGRyYmQubWlub3JfY291bnQ9OCBz
-eXN0ZW1kLmxvZ19sZXZlbD1lcnIgaWdub3JlX2xvZ2xldmVsIGNvbnNvbGU9dHR5MCBlYXJs
-eXByaW50az10dHlTMCwxMTUyMDAgY29uc29sZT10dHlTMCwxMTUyMDAgdmdhPW5vcm1hbCBy
-dyByY3VwZXJmLnNodXRkb3duPTANCj4gDQoNCkNhbiB0aGlzIHJlcG9ydCBiZSBtYWRlIHVz
-ZWZ1bCBieSBhY3R1YWxseSBpbmNsdWRpbmcgb3V0cHV0IGZyb20gc2VyaWFsDQpjb25zb2xl
-PyBGb3IgZXhhbXBsZSBwb3NzaWJsZSBidWctb25zIG9yIHdoYXRub3Q/IGRtZXNnLnh6IGp1
-c3QgY29udGFpbnMNCnFlbXUncyBjb21tYW5kIGxpbmUgKyBzb21lIG1ldGFkYXRhIGFib3V0
-IHRoZSB0ZXN0IGFuZCA6DQoNCiJCVUc6IGtlcm5lbCByZWJvb3Qtd2l0aG91dC13YXJuaW5n
-IGluIGVhcmx5LWJvb3Qgc3RhZ2UsIGxhc3QgcHJpbnRrOg0KUHJvYmluZyBFREQgKGVkZD1v
-ZmYgdG8gZGlzYWJsZSkuLi4gb2siDQoNCkF0IGxlYXN0IGEgc3RhY2sgdHJhY2Ugd291bGQg
-aGF2ZSBiZWVuIHVzZWZ1bC4NCg0KPHNuaXA+DQo=
+On 4/1/19 3:08 PM, Hugues FRUCHET wrote:
+> Hi Hans,
+> 
+> Here it is.
+> 
+> SHA1 is aa371c995ec2ad70323db00c47b3132002b060b7:
+> 
+> Author: Hans Verkuil <hverkuil-cisco@xs4all.nl>  2019-02-08 16:21:23
+> Committer: Hans Verkuil <hverkuil-cisco@xs4all.nl>  2019-02-08 16:21:23
+> Parent: 98d5622551eb6b9a0397464fb52378949f33c364 (v4l2-compliance: 
+> support m2m devices with -f)
+> Child:  59f9840781aab464c1331dcdb82e63dd0544b5c6 (v4l2-compliance: 
+> remove duplicate MEDIA_IOC_DEVICE_INFO ioctl call)
+> Branches: master, master2, remotes/origin/master
+> Follows: v4l-utils-1.16.0
+> Precedes:
+> 
+>      v4l2-compliance: -f bug fixes
+> 
+> 
+> Result is below:
+> 
+> root@stm32mp1:~# v4l2-compliance -m /dev/media0
+> v4l2-compliance SHA: eb8e3b07c9249ff56091ae4bc3ae9b76779db4cd, 32 bits
+> 
+> Compliance test for stm32-dcmi device /dev/media0:
+> 
+> Media Driver Info:
+>          Driver name      : stm32-dcmi
+>          Model            : stm32-dcmi
+>          Serial           :
+>          Bus info         : platform:stm32-dcmi
+>          Media version    : 5.0.0
+>          Hardware revision: 0x00000000 (0)
+>          Driver version   : 5.0.0
+> 
+> Required ioctls:
+>          test MEDIA_IOC_DEVICE_INFO: OK
+> 
+> Allow for multiple opens:
+>          test second /dev/media0 open: OK
+>          test MEDIA_IOC_DEVICE_INFO: OK
+>          test for unlimited opens: OK
+> 
+> Media Controller ioctls:
+>          test MEDIA_IOC_G_TOPOLOGY: OK
+>          Entities: 3 Interfaces: 2 Pads: 4 Links: 4
+>          test MEDIA_IOC_ENUM_ENTITIES/LINKS: OK
+>          test MEDIA_IOC_SETUP_LINK: OK
+> 
+> Total for stm32-dcmi device /dev/media0: 7, Succeeded: 7, Failed: 0, 
+> Warnings: 0
+> --------------------------------------------------------------------------------
+> Compliance test for stm32-dcmi device /dev/video0:
+> 
+> Driver Info:
+>          Driver name      : stm32-dcmi
+>          Card type        : STM32 Camera Memory Interface
+>          Bus info         : platform:dcmi
+>          Driver version   : 5.0.0
+>          Capabilities     : 0x85200001
+>                  Video Capture
+>                  Read/Write
+>                  Streaming
+>                  [ 2117.336477] stm32-dcmi 4c006000.dcmi: 
+> =================  START STATUS  =================
+> E[ 2117.344647] stm32-dcmi 4c006000.dcmi: White Balance, Automatic: true
+> [ 2117.350990] stm32-dcmi 4c006000.dcmi: Blue Balance: 0 inactive
+> x[ 2117.356853] stm32-dcmi 4c006000.dcmi: Red Balance: 0 inactive
+> [ 2117.362645] stm32-dcmi 4c006000.dcmi: Auto Exposure: Auto Mode
+> [ 2117.368438] stm32-dcmi 4c006000.dcmi: Exposure: 0 inactive volatile
+> t[ 2117.374729] stm32-dcmi 4c006000.dcmi: Gain, Automatic: true
+> [ 2117.380335] stm32-dcmi 4c006000.dcmi: Gain: 0 inactive volatile
+> e[ 2117.386305] stm32-dcmi 4c006000.dcmi: Saturation: 64
+> [ 2117.391275] stm32-dcmi 4c006000.dcmi: Hue: 0
+> n[ 2117.395572] stm32-dcmi 4c006000.dcmi: Contrast: 0
+> [ 2117.400305] stm32-dcmi 4c006000.dcmi: Test Pattern: Disabled
+> d[ 2117.405988] stm32-dcmi 4c006000.dcmi: Horizontal Flip: false
+> [ 2117.411721] stm32-dcmi 4c006000.dcmi: Vertical Flip: false
+> [ 2117.417148] stm32-dcmi 4c006000.dcmi: Power Line Frequency: 50 Hz
+> [ 2117.423265] stm32-dcmi 4c006000.dcmi: ==================  END STATUS 
+> ==================
+> ed Pix Format
+>                  Device Capabilities
+>          Device Caps      : 0x05200001
+>                  Video Capture
+>                  Read/Write
+>                  Streaming
+>                  Extended Pix Format
+> Media Driver Info:
+>          Driver name      : stm32-dcmi
+>          Model            : stm32-dcmi
+>          Serial           :
+>          Bus info         : platform:stm32-dcmi
+>          Media version    : 5.0.0
+>          Hardware revision: 0x00000000 (0)
+>          Driver version   : 5.0.0
+> Interface Info:
+>          ID               : 0x03000003
+>          Type             : V4L Video
+> Entity Info:
+>          ID               : 0x00000001 (1)
+>          Name             : stm32_dcmi
+>          Function         : V4L2 I/O
+>          Flags         : default
+>          Pad 0x01000002   : 0: Sink
+>            Link 0x02000008: from remote pad 0x1000007 of entity 'mipid02 
+> 0-0014': Data, Enabled, Immutable
+> 
+> Required ioctls:
+>          test MC information (see 'Media Driver Info' above): OK
+>                  warn: 
+> ../../../../../../../../../sources/v4l-utils/utils/v4l2-compliance/v4l2-compliance.cpp(621): 
+> media bus_info 'platform:stm32-dcmi
+> ' differs from V4L2 bus_info 'platform:dcmi'
+>          test VIDIOC_QUERYCAP: OK
+> 
+> Allow for multiple opens:
+>          test second /dev/video0 open: OK
+>                  warn: 
+> ../../../../../../../../../sources/v4l-utils/utils/v4l2-compliance/v4l2-compliance.cpp(621): 
+> media bus_info 'platform:stm32-dcmi
+> ' differs from V4L2 bus_info 'platform:dcmi'
+>          test VIDIOC_QUERYCAP: OK
+>          test VIDIOC_G/S_PRIORITY: OK
+>          test for unlimited opens: OK
+> 
+> Debug ioctls:
+>          test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+>          test VIDIOC_LOG_STATUS: OK
+> 
+> Input ioctls:
+>          test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+>          test VIDIOC_G/S_FRE[ 2117.564770] mipid02 0-0014: 
+> =================  START STATUS  =================
+> Q[ 2117.572042] mipid02 0-0014: ==================  END STATUS 
+> ==================
+> UENCY: OK (Not Supported)
+>          test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>          test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>          test VIDIOC_G/S/ENUMINPUT: OK
+>          test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>          Inputs: 1 Audio Inputs: 0 Tuners: 0
+> 
+> Output ioctls:
+>          test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>          test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>          test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>          test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>          test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>          Outputs: 0 Audio Outputs: 0 Modulators: 0
+> 
+> Input/Output configuration ioctls:
+>          test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>          test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>          test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>          test VIDIOC_G/S_EDID: OK (Not Supported)
+> 
+> Control ioctls (Input 0):
+>          test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+>          test VIDIOC_QUERYCTRL: OK
+>          test VIDIOC_G/S_CTRL: OK
+>          test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+>          test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+>          test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>          Standard Controls: 17 Private Controls: 0
+> 
+> Format ioctls (Input 0):
+>          test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>          test VIDIOC_G/S_PARM: OK
+>          test VIDIOC_G_FBUF: OK (Not Supported)
+>          test VIDIOC_G_FMT: OK
+>          test VIDIOC_TRY_FMT: OK
+>          test VIDIOC_S_FMT: OK
+>          test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+>                  fail: 
+> ../../../../../../../../../sources/v4l-utils/utils/v4l2-compliance/v4l2-test-formats.cpp(1338): 
+> node->frmsizes_count[pixfmt] > 1
+>          test Cropping: FAIL
+>          test Composing: OK (Not Supported)
+>          test Scaling: OK (Not Supported)
+> 
+> Codec ioctls (Input 0):
+>          test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+>          test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>          test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+> 
+> Buffer ioctls (Input 0):
+>          test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+>          test VIDIOC_EXPBUF: OK
+>          test Requests: OK (Not Supported)
+> 
+> Total for stm32-dcmi device /dev/video0: 45, Succeeded: 44, Failed: 1, 
+> Warnings: 2
+> --------------------------------------------------------------------------------
+> Compliance test for device /dev/v4l-subdev0:
+> 
+> 
+> Required ioctls:
+> 
+> Allow for multiple opens:
+>          test second /dev/v4l-subdev0 open: OK
+>          test for unlimited opens: OK
+> 
+> Debug ioctls:
+>          test VIDIOC_LOG_STATUS: OK (Not Supported)
+> 
+> Input ioctls:
+>          test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+>          test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>          test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>          test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>          test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+>          test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>          Inputs: 0 Audio Inputs: 0 Tuners: 0
+> 
+> Output ioctls:
+>          test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>          test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>          test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>          test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>          test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>          Outputs: 0 Audio Outputs: 0 Modulators: 0
+> 
+> Input/Output configuration ioctls:
+>          test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>          test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>          test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>          test VIDIOC_G/S_EDID: OK (Not Supported)
+> 
+> Control ioctls:
+>          test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+>          test VIDIOC_QUERYCTRL: OK (Not Supported)
+>          test VIDIOC_G/S_CTRL: OK (Not Supported)
+>          test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+>          test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+>          test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>          Standard Controls: 0 Private Controls: 0
+> 
+> Format ioctls:
+>          test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
+>          test VIDIOC_G/S_PARM: OK (Not Supported)
+>          test VIDIOC_G_FBUF: OK (Not Supported)
+>          test VIDIOC_G_FMT: OK (Not Supported)
+>          test VIDIOC_TRY_FMT: OK (Not Supported)
+>          test VIDIOC_S_FMT: OK (Not Supported)
+>          test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+>          test Cropping: OK (Not Supported)
+>          test Composing: OK (Not Supported)
+>          test Scaling: OK (Not Supported)
+> 
+> Codec ioctls:
+>          test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+>          test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>          test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+> 
+> Buffer ioctls:
+>          test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
+>          test VIDIOC_EXPBUF: OK (Not Supported)
+>          test Requests: OK (Not Supported)
+> 
+> Total for device /dev/v4l-subdev0: 40, Succeeded: 40, Failed: 0, Warnings: 0
+> 
+> Grand Total for stm32-dcmi device /dev/media0: 92, Succeeded: 91, 
+> Failed: 1, Warnings: 2
+
+The warnings should be fixed (both warnings refer to the same problem).
+
+The fail was present before this patch series.
+
+The core problem there is that if there are multiple possible framesizes,
+then crop support is ambiguous: against which framesize do you crop?
+
+I see that dcmi_try_fmt() has a heuristic for that. We really need to fix
+this in the API, but this situation rarely occurs.
+
+So for now I don't think there is a need to fix the fail.
+
+Regards,
+
+	Hans
+
+> 
+> 
+> BR,
+> Hugues.
+> 
+> On 4/1/19 1:10 PM, Hans Verkuil wrote:
+>> Hi Hugues,
+>>
+>> On 4/1/19 11:31 AM, Hugues Fruchet wrote:
+>>> This patch serie allows to connect non-parallel camera sensor to
+>>> DCMI thanks to a bridge connected in between such as STMIPID02 [1].
+>>>
+>>> Media controller support is introduced first, then support of
+>>> several sub-devices within pipeline with dynamic linking
+>>> between them.
+>>
+>> Can you post the output of v4l2-compliance -m /dev/mediaX ?
+>>
+>> Thanks!
+>>
+>> 	Hans
+>>
+>>>
+>>> [1] https://www.spinics.net/lists/devicetree/msg278002.html
+>>>
+>>> Hugues Fruchet (2):
+>>>    media: stm32-dcmi: add media controller support
+>>>    media: stm32-dcmi: add support of several sub-devices
+>>>
+>>>   drivers/media/platform/Kconfig            |   2 +-
+>>>   drivers/media/platform/stm32/stm32-dcmi.c | 213 ++++++++++++++++++++++++------
+>>>   2 files changed, 177 insertions(+), 38 deletions(-)
+>>>
+
