@@ -3,30 +3,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0FFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783F2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D0E217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50DCA21873
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfDAI6z (ORCPT
+        id S1728725AbfDAI6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:58:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47542 "EHLO mx1.redhat.com"
+        Mon, 1 Apr 2019 04:58:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40540 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728649AbfDAI6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:58:53 -0400
+        id S1727150AbfDAI6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 04:58:31 -0400
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 22FFE308622B;
-        Mon,  1 Apr 2019 08:58:53 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 250D83091783;
+        Mon,  1 Apr 2019 08:58:31 +0000 (UTC)
 Received: from localhost.default (ovpn-116-31.phx2.redhat.com [10.3.116.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 592335D71A;
-        Mon,  1 Apr 2019 08:58:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0404E5D706;
+        Mon,  1 Apr 2019 08:58:27 +0000 (UTC)
 From:   Daniel Bristot de Oliveira <bristot@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -42,46 +42,21 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Clark Williams <williams@redhat.com>, x86@kernel.org
-Subject: [PATCH V5 7/7] x86/jump_label: Batch jump label updates
-Date:   Mon,  1 Apr 2019 10:58:19 +0200
-Message-Id: <725010896650bc040743b0479b103f5f6d28b404.1554106794.git.bristot@redhat.com>
+Subject: [PATCH V5 2/7] jump_label: Add a jump_label_can_update() helper
+Date:   Mon,  1 Apr 2019 10:58:14 +0200
+Message-Id: <18e435c1a23d49638ed0d0eac8ecbe9ef274c04f.1554106794.git.bristot@redhat.com>
 In-Reply-To: <cover.1554106794.git.bristot@redhat.com>
 References: <cover.1554106794.git.bristot@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 01 Apr 2019 08:58:53 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 01 Apr 2019 08:58:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the jump label of a static key is transformed via the arch
-specific function:
-
-    void arch_jump_label_transform(struct jump_entry *entry,
-                                   enum jump_label_type type)
-
-The new approach (batch mode) uses two arch functions, the first has the
-same arguments of the arch_jump_label_transform(), and is the function:
-
-  int arch_jump_label_transform_queue(struct jump_entry *entry,
-                                      enum jump_label_type type)
-
-Rather than transforming the code, it adds the jump_entry in a queue of
-entries to be updated. This functions returns 0 in the case of a
-successful enqueue of an entry. If it returns !0, the caller must to
-apply the queue and then try to queue again, for instance, because the
-queue is full.
-
-This function expects the caller to sort the entries by the address before
-enqueueuing then. This is already done by the arch independent code, though.
-
-After queuing all jump_entries, the function:
-
-    void arch_jump_label_transform_apply(void)
-
-Applies the changes in the queue.
+Move the check if a jump_entry is valid to a function.
 
 Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -102,129 +77,54 @@ Cc: Clark Williams <williams@redhat.com>
 Cc: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/x86/include/asm/jump_label.h |  2 +
- arch/x86/kernel/jump_label.c      | 88 +++++++++++++++++++++++++++++++
- 2 files changed, 90 insertions(+)
+ kernel/jump_label.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
-index 65191ce8e1cf..06c3cc22a058 100644
---- a/arch/x86/include/asm/jump_label.h
-+++ b/arch/x86/include/asm/jump_label.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_X86_JUMP_LABEL_H
- #define _ASM_X86_JUMP_LABEL_H
- 
-+#define HAVE_JUMP_LABEL_BATCH
-+
- #define JUMP_LABEL_NOP_SIZE 5
- 
- #ifdef CONFIG_X86_64
-diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
-index 8aa65fbbd764..ab75b222a7e2 100644
---- a/arch/x86/kernel/jump_label.c
-+++ b/arch/x86/kernel/jump_label.c
-@@ -15,6 +15,7 @@
- #include <asm/kprobes.h>
- #include <asm/alternative.h>
- #include <asm/text-patching.h>
-+#include <linux/slab.h>
- 
- union jump_code_union {
- 	char code[JUMP_LABEL_NOP_SIZE];
-@@ -111,6 +112,93 @@ void arch_jump_label_transform(struct jump_entry *entry,
- 	mutex_unlock(&text_mutex);
+diff --git a/kernel/jump_label.c b/kernel/jump_label.c
+index 288d630da22d..e666a4d6642a 100644
+--- a/kernel/jump_label.c
++++ b/kernel/jump_label.c
+@@ -374,22 +374,30 @@ static enum jump_label_type jump_label_type(struct jump_entry *entry)
+ 	return enabled ^ branch;
  }
  
-+unsigned int entry_vector_max_elem __read_mostly;
-+struct text_patch_loc *entry_vector;
-+unsigned int entry_vector_nr_elem;
-+
-+void arch_jump_label_init(void)
++static bool jump_label_can_update(struct jump_entry *entry, bool init)
 +{
-+	entry_vector = (void *) __get_free_page(GFP_KERNEL);
-+
-+	if (WARN_ON_ONCE(!entry_vector))
-+		return;
-+
-+	entry_vector_max_elem = PAGE_SIZE / sizeof(struct text_patch_loc);
-+	return;
-+}
-+
-+int arch_jump_label_transform_queue(struct jump_entry *entry,
-+				     enum jump_label_type type)
-+{
-+	struct text_patch_loc *tp;
-+	void *entry_code;
-+
 +	/*
-+	 * Batch mode disabled before being able to allocate memory:
-+	 * Fallback to the non-batching mode.
++	 * Cannot update code that was in an init text area.
 +	 */
-+	if (unlikely(!entry_vector_max_elem)) {
-+		if (!slab_is_available() || early_boot_irqs_disabled)
-+			goto fallback;
++	if (!init && jump_entry_is_init(entry))
++		return false;
 +
-+		arch_jump_label_init();
++	if (!kernel_text_address(jump_entry_code(entry))) {
++		WARN_ONCE(1, "can't patch jump_label at %pS", (void *)jump_entry_code(entry));
++		return false;
 +	}
 +
-+	/*
-+	 * No more space in the vector, tell upper layer to apply
-+	 * the queue before continuing.
-+	 */
-+	if (entry_vector_nr_elem == entry_vector_max_elem)
-+		return -ENOSPC;
-+
-+	tp = &entry_vector[entry_vector_nr_elem];
-+
-+	entry_code = (void *)jump_entry_code(entry);
-+
-+	/*
-+	 * The int3 handler will do a bsearch in the queue, so we need entries
-+	 * to be sorted. We can survive an unsorted list by rejecting the entry,
-+	 * forcing the generic jump_label code to apply the queue. Warning once,
-+	 * to raise the attention to the case of an unsorted entry that is
-+	 * better not happen, because, in the worst case we will perform in the
-+	 * same way as we do without batching - with some more overhead.
-+	 */
-+	if (entry_vector_nr_elem > 0) {
-+		int prev_idx = entry_vector_nr_elem - 1;
-+		struct text_patch_loc *prev_tp = &entry_vector[prev_idx];
-+
-+		if (WARN_ON_ONCE(prev_tp->addr > entry_code))
-+			return -EINVAL;
-+	}
-+
-+	__jump_label_set_jump_code(entry, type,
-+				   (union jump_code_union *) &tp->opcode, 0);
-+
-+	tp->addr = entry_code;
-+	tp->detour = entry_code + JUMP_LABEL_NOP_SIZE;
-+	tp->len = JUMP_LABEL_NOP_SIZE;
-+
-+	entry_vector_nr_elem++;
-+
-+	return 0;
-+
-+fallback:
-+	arch_jump_label_transform(entry, type);
-+	return 0;
++	return true;
 +}
 +
-+void arch_jump_label_transform_apply(void)
-+{
-+	if (early_boot_irqs_disabled || !entry_vector_nr_elem)
-+		return;
-+
-+	mutex_lock(&text_mutex);
-+	text_poke_bp_batch(entry_vector, entry_vector_nr_elem);
-+	mutex_unlock(&text_mutex);
-+
-+	entry_vector_nr_elem = 0;
-+}
-+
- static enum {
- 	JL_STATE_START,
- 	JL_STATE_NO_UPDATE,
+ static void __jump_label_update(struct static_key *key,
+ 				struct jump_entry *entry,
+ 				struct jump_entry *stop,
+ 				bool init)
+ {
+ 	for_each_label_entry(key, entry, stop) {
+-		/*
+-		 * An entry->code of 0 indicates an entry which has been
+-		 * disabled because it was in an init text area.
+-		 */
+-		if (init || !jump_entry_is_init(entry)) {
+-			if (kernel_text_address(jump_entry_code(entry)))
+-				arch_jump_label_transform(entry, jump_label_type(entry));
+-			else
+-				WARN_ONCE(1, "can't patch jump_label at %pS",
+-					  (void *)jump_entry_code(entry));
++		if (jump_label_can_update(entry, init)) {
++			arch_jump_label_transform(entry, jump_label_type(entry));
+ 		}
+ 	}
+ }
 -- 
 2.20.1
 
