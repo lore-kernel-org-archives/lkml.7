@@ -3,131 +3,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675F4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084EFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40EC120896
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F9220896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731887AbfDAHUu (ORCPT
+        id S1731907AbfDAHYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:20:50 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:51750 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725867AbfDAHUu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:20:50 -0400
-X-UUID: 66fbbed3ba35464bb9d5ea9c1f3cca8b-20190401
-X-UUID: 66fbbed3ba35464bb9d5ea9c1f3cca8b-20190401
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2121804820; Mon, 01 Apr 2019 15:20:33 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 1 Apr 2019 15:20:31 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 1 Apr 2019 15:20:31 +0800
-Message-ID: <1554103231.10304.2.camel@mtkswgap22>
-Subject: Re: [PATCH v2 0/4] Add support for MediaTek MT7615 wireless chipsets
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Felix Fietkau <nbd@nbd.name>
-CC:     Roy Luo <royluo@google.com>, Sean Wang <sean.wang@mediatek.com>,
-        "Nelson Chang" <nelson.chang@mediatek.com>,
-        YF Luo <yf.luo@mediatek.com>, Kai Lin <kai.lin@mediatek.com>,
-        Rorscha Yang <rorscha.yang@mediatek.com>,
-        Kyle Lee <kyle.lee@mediatek.com>,
-        Miller Shen <miller.shen@mediatek.com>,
-        "Haipin Liang" <haipin.liang@mediatek.com>,
-        KL Huang <kl.huang@mediatek.com>,
-        "YH chen" <yh.chen@mediatek.com>, <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Mon, 1 Apr 2019 15:20:31 +0800
-In-Reply-To: <cover.1554100584.git.ryder.lee@mediatek.com>
-References: <cover.1554100584.git.ryder.lee@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 8bit
+        Mon, 1 Apr 2019 03:24:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33664 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbfDAHYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 03:24:15 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1CC573082208;
+        Mon,  1 Apr 2019 07:24:15 +0000 (UTC)
+Received: from [10.36.112.43] (ovpn-112-43.ams2.redhat.com [10.36.112.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D6AFE60DB7;
+        Mon,  1 Apr 2019 07:24:08 +0000 (UTC)
+Subject: Re: [PATCH 3/5] x86/kvm: Convert some slow-path static_cpu_has()
+ callers to boot_cpu_has()
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+References: <20190330112022.28888-1-bp@alien8.de>
+ <20190330112022.28888-4-bp@alien8.de>
+ <2f71cb35-46b2-9ed5-28b3-c6eb5e647b46@redhat.com>
+ <20190331151248.GB15073@zn.tnic>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <86dc0d5c-88af-dddc-4618-1a0a5a545e5f@redhat.com>
+Date:   Mon, 1 Apr 2019 09:24:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 008856975790149C2B70DC33F4597E803D571252FBCA9AD94225A4F487C4CFA52000:8
-X-MTK:  N
+In-Reply-To: <20190331151248.GB15073@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 01 Apr 2019 07:24:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-04-01 at 14:56 +0800, Ryder Lee wrote:
-> This adds support for MediaTek MT7615E 4x4 802.11ac PCIe-based chipsets.
+On 31/03/19 17:12, Borislav Petkov wrote:
+> On Sun, Mar 31, 2019 at 04:20:11PM +0200, Paolo Bonzini wrote:
+>> These are not slow path.
 > 
-> In the legacy tx arch, we move and store the whole skb content to the
-> on-device memory when we send packets via high speed interface. (e.g. PCIe)
-> 
-> However, MT7615 and the following generation use a new tx arch called
-> “cut-through”, which only passes the physical address to the hardware,
-> and the packet engine will fetch the packets before transmission.
-> 
-> It saves on-chip memory for high throughput devices, and the token mechanism
-> is used to manage the release of skb under this arch.
-> 
-> And there might be other (existing or future) chips that use the same driver
-> (e.g. mt7622/mt7663...), this is a starting point to unify MTK wireless chipsets.
-> 
-> Detailed hardware information for this chip could be found on 
-> https://wikidevi.com/wiki/MediaTek_MT7615
-> 
-> Ryder Lee (4):
->   mt76: add mac80211 driver for MT7615 PCIe-based chipsets
->   mt76: add unlikely() for dma_mapping_error() check
->   mt76: use macro for sn and seq_ctrl conversion
->   MAINTAINERS : update entry for mt76 wireless driver
-> 
->  MAINTAINERS                                        |    2 +
->  drivers/net/wireless/mediatek/mt76/Kconfig         |    1 +
->  drivers/net/wireless/mediatek/mt76/Makefile        |    1 +
->  drivers/net/wireless/mediatek/mt76/agg-rx.c        |    2 +-
->  drivers/net/wireless/mediatek/mt76/dma.c           |    8 +-
->  drivers/net/wireless/mediatek/mt76/mt7603/mac.c    |    2 +-
->  drivers/net/wireless/mediatek/mt76/mt7603/main.c   |    2 +-
->  drivers/net/wireless/mediatek/mt76/mt7615/Kconfig  |    7 +
->  drivers/net/wireless/mediatek/mt76/mt7615/Makefile |    5 +
->  drivers/net/wireless/mediatek/mt76/mt7615/dma.c    |  205 +++
->  drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c |   98 ++
->  drivers/net/wireless/mediatek/mt76/mt7615/eeprom.h |   18 +
->  drivers/net/wireless/mediatek/mt76/mt7615/init.c   |  229 +++
->  drivers/net/wireless/mediatek/mt76/mt7615/mac.c    |  774 +++++++++
->  drivers/net/wireless/mediatek/mt76/mt7615/mac.h    |  300 ++++
->  drivers/net/wireless/mediatek/mt76/mt7615/main.c   |  499 ++++++
->  drivers/net/wireless/mediatek/mt76/mt7615/mcu.c    | 1656 ++++++++++++++++++++
->  drivers/net/wireless/mediatek/mt76/mt7615/mcu.h    |  520 ++++++
->  drivers/net/wireless/mediatek/mt76/mt7615/mt7615.h |  195 +++
->  drivers/net/wireless/mediatek/mt76/mt7615/pci.c    |  150 ++
->  drivers/net/wireless/mediatek/mt76/mt7615/regs.h   |  203 +++
->  drivers/net/wireless/mediatek/mt76/mt76x02_util.c  |    2 +-
->  22 files changed, 4871 insertions(+), 8 deletions(-)
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/Kconfig
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/Makefile
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/dma.c
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/eeprom.h
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/init.c
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mac.c
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mac.h
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/main.c
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mt7615.h
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/pci.c
->  create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/regs.h
-> 
+> Those functions do a *lot* of stuff like a bunch of MSR reads which are
+> tens of cycles each at least.
 
-My bad. I fixed the compilation issue in V3.
+The MSR reads and writes are not done in the common case.  Also, you
+cannot really expect boot_cpu_data to be in L1 in these functions since
+they run after the guest---or if they do, each L1 line you fill in with
+host data is one line you "steal" from the guest.
 
-Sorry for the inconvenience.
-Ryder
+Paolo
+
+> I don't think a RIP-relative MOV and a BT:
+> 
+>         movq    boot_cpu_data+20(%rip), %rax    # MEM[(const long unsigned int *)&boot_cpu_data + 20B], _45
+>         btq     $59, %rax       #, _45
+> 
+> are at all noticeable.
+> 
+> On latest AMD and Intel uarch those are 2-4 cycles, according to
+> 
+> https://agner.org/optimize/instruction_tables.ods
+> 
 
