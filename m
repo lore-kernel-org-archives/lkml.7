@@ -2,145 +2,231 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C23C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A090C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C98E206DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:57:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="VmoLYqOd"
+	by mail.kernel.org (Postfix) with ESMTP id CE45420828
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbfDAS5w (ORCPT
+        id S1728766AbfDATDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:57:52 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35974 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728760AbfDAS5w (ORCPT
+        Mon, 1 Apr 2019 15:03:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58210 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728678AbfDATDK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:57:52 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r24so9238191ljg.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 11:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OG3K/weV3XtavI0+FRqMauSdv1yTiVdKp7cI8yqJMVI=;
-        b=VmoLYqOd9sBOa4qVc2Cv+v3SS9L2pZl7L12WgBXrhIoQb1aTyxkfrpGy+r8R01SHxs
-         u+g7rMqwp6TxxoKZ6XtBADWzBw9O7IMCTeSuFnvhHOcPkM4pWJg8kbJVssXLPx1zgP8p
-         Zxks+WxnpFjUiJgsLTYoU2/e2ZtgaMxYc65XLh4rq+7zRkfMC7xYa6mLIInd6NKA90VK
-         vGr98dRfked97bwGv4K+HF/bupiA6ZKklTfx6mpoiwEHAH1uAMBpcCBjt15ty/BjqeJT
-         M1ehNf+gSoo7PIr0N5uLwEmwyi3KkkFSr0Y8JllO41ZMahAnJv0hmOqd19lqtw5s60Qr
-         Cu2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OG3K/weV3XtavI0+FRqMauSdv1yTiVdKp7cI8yqJMVI=;
-        b=T3v1ZqTjbrvYZ7eVJgYbjuAEi2fAbmBOFXs0DIXXhkc6NcHI4TB7x5VCGxAX9TAiJ+
-         l/nnUCMPkXgTuEE85/TMkWd6ofkJODW86PeXEFwSV/pMbIjotO4K0vOdr7hvbDbkefAN
-         ujKmqptH9WILj1B0DxQsW6zKqDWaQ0vamBUMBEdFe3u5lnbS7rCIdFNcu+n7lxsJ6hlJ
-         yQqUMZAail9OAQWfJ+8awAEF3KwwmfynpI1GaAuKiwrKmb0lG7FIJEsEOCDELjPFVhFG
-         m0I2gbOEN/wcGDLdAsQWBVN1vXqcvKFQPa4hhfMAqDXYiiXJubECxvIReC868b3nRalP
-         VAWA==
-X-Gm-Message-State: APjAAAUH4NAG9rgv8HyeZkO0B6PV5OQvs+8WBY78T6W/0jmOFUn21ay+
-        Lebl1NKjAVn955hcULoMw9BZZHKEgsI7w/fFu4jG
-X-Google-Smtp-Source: APXvYqzZTCmYYMmiZzBrxg5Ye2yEkEkTVeBsjiuhi46ic7qvkKj57eiftzomk3wmRubyS/f37cBTe/S79dQ8UA9Nlag=
-X-Received: by 2002:a2e:7114:: with SMTP id m20mr4729758ljc.120.1554145070271;
- Mon, 01 Apr 2019 11:57:50 -0700 (PDT)
+        Mon, 1 Apr 2019 15:03:10 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x31Iox7t012164
+        for <linux-kernel@vger.kernel.org>; Mon, 1 Apr 2019 15:03:08 -0400
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rkqt5tbax-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 15:03:08 -0400
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 1 Apr 2019 20:03:06 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 1 Apr 2019 20:03:01 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x31J303p17498276
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 1 Apr 2019 19:03:00 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59D2EB2066;
+        Mon,  1 Apr 2019 19:03:00 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A20CB205F;
+        Mon,  1 Apr 2019 19:03:00 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  1 Apr 2019 19:03:00 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 7B62B16C34EA; Mon,  1 Apr 2019 12:03:04 -0700 (PDT)
+Date:   Mon, 1 Apr 2019 12:03:04 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH tip/core/rcu 2/2] rcu: Check for wakeup-safe conditions
+ in rcu_read_unlock_special()
+Reply-To: paulmck@linux.ibm.com
+References: <20190329182608.GA23877@linux.ibm.com>
+ <20190329182634.24994-2-paulmck@linux.ibm.com>
+ <20190401083211.GD11158@hirez.programming.kicks-ass.net>
+ <20190401172257.GN4102@linux.ibm.com>
 MIME-Version: 1.0
-References: <cover.1552665316.git.rgb@redhat.com> <700e4313571f86cc0cdcb7310fbe060f02c7c2db.1552665316.git.rgb@redhat.com>
- <CAHC9VhRWUvG6DwiPn4o+vt=fgGfY+JmG8m78M8CeyGYxF2yRXQ@mail.gmail.com> <20190401174432.fjnvotpvdrfujoy7@madcap2.tricolour.ca>
-In-Reply-To: <20190401174432.fjnvotpvdrfujoy7@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 1 Apr 2019 14:57:39 -0400
-Message-ID: <CAHC9VhTL=zSQ2tO440w+vvX3TPsGtwqL6dWwUHVe0WnHVKqVpA@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V5 06/10] audit: add support for non-syscall
- auxiliary records
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190401172257.GN4102@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19040119-0068-0000-0000-000003AF10F9
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010856; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000283; SDB=6.01182901; UDB=6.00619245; IPR=6.00963644;
+ MB=3.00026248; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-01 19:03:05
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040119-0069-0000-0000-000048025A0C
+Message-Id: <20190401190304.GA20804@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-01_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904010121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 1:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2019-04-01 10:49, Paul Moore wrote:
-> > On Fri, Mar 15, 2019 at 2:34 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > Standalone audit records have the timestamp and serial number generated
-> > > on the fly and as such are unique, making them standalone.  This new
-> > > function audit_alloc_local() generates a local audit context that will
-> > > be used only for a standalone record and its auxiliary record(s).  The
-> > > context is discarded immediately after the local associated records are
-> > > produced.
-> > >
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > Acked-by: Serge Hallyn <serge@hallyn.com>
-> > > ---
-> > >  include/linux/audit.h |  8 ++++++++
-> > >  kernel/audit.h        |  1 +
-> > >  kernel/auditsc.c      | 35 ++++++++++++++++++++++++++++++-----
-> > >  3 files changed, 39 insertions(+), 5 deletions(-)
-> >
-> > ...
-> >
-> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > > index ebd6625ca80e..6db5aba7cc01 100644
-> > > --- a/include/linux/audit.h
-> > > +++ b/include/linux/audit.h
-> > > @@ -285,6 +285,8 @@ static inline void audit_log_contid(struct audit_context *context, u64 contid)
-> > >
-> > >  /* These are defined in auditsc.c */
-> > >                                 /* Public API */
-> > > +extern struct audit_context *audit_alloc_local(gfp_t gfpflags);
-> > > +extern void audit_free_context(struct audit_context *context);
-> > >  extern void __audit_syscall_entry(int major, unsigned long a0, unsigned long a1,
-> > >                                   unsigned long a2, unsigned long a3);
-> > >  extern void __audit_syscall_exit(int ret_success, long ret_value);
-> > > @@ -512,6 +514,12 @@ static inline void audit_fanotify(unsigned int response)
-> > >  extern int audit_n_rules;
-> > >  extern int audit_signals;
-> > >  #else /* CONFIG_AUDITSYSCALL */
-> > > +static inline struct audit_context *audit_alloc_local(gfp_t gfpflags)
-> > > +{
-> > > +       return NULL;
-> > > +}
-> > > +static inline void audit_free_context(struct audit_context *context)
-> > > +{ }
-> > >  static inline void audit_syscall_entry(int major, unsigned long a0,
-> > >                                        unsigned long a1, unsigned long a2,
-> > >                                        unsigned long a3)
-> > > diff --git a/kernel/audit.h b/kernel/audit.h
-> > > index c5ac6436317e..2a1a8b8a8019 100644
-> > > --- a/kernel/audit.h
-> > > +++ b/kernel/audit.h
-> > > @@ -111,6 +111,7 @@ struct audit_proctitle {
-> > >  struct audit_context {
-> > >         int                 dummy;      /* must be the first element */
-> > >         int                 in_syscall; /* 1 if task is in a syscall */
-> > > +       bool                local;      /* local context needed */
-> >
-> > It's very possible I've missed it, but "local" never gets used in any
-> > meaningful way in this patchset does it?
->
-> It is used in audit_alloc_local() to signal to audit_get_stamp() that in
-> absence of a syscall flag, check for a local flag to continue rather
-> than return.
+On Mon, Apr 01, 2019 at 10:22:57AM -0700, Paul E. McKenney wrote:
+> On Mon, Apr 01, 2019 at 10:32:11AM +0200, Peter Zijlstra wrote:
+> > On Fri, Mar 29, 2019 at 11:26:34AM -0700, Paul E. McKenney wrote:
+> > > When RCU core processing is offloaded from RCU_SOFTIRQ to the rcuc
+> > > kthreads, a full and unconditional wakeup is required to initiate RCU
+> > > core processing.  In contrast, when RCU core processing is carried
+> > > out by RCU_SOFTIRQ, a raise_softirq() suffices.  Of course, there are
+> > > situations where raise_softirq() does a full wakeup, but these do not
+> > > occur with normal usage of rcu_read_unlock().
+> > 
+> > Do we have a comment somewhere explaining why?
+> 
+> First, thank you for reviewing this!
+> 
+> The "why" is because people normally don't do things like the code
+> sequence shown below, but where the scheduler holds locks across the
+> second RCU read-side critical section.  (If they did, lockdep would
+> complain.  Nevertheless, it is good to avoid this potential problem.)
+> 
+> > > The initial solution to this problem was to use set_tsk_need_resched() and
+> > > set_preempt_need_resched() to force a future context switch, which allows
+> > > rcu_preempt_note_context_switch() to report the deferred quiescent state
+> > > to RCU's core processing.  Unfortunately for expedited grace periods,
+> > > there can be a significant delay between the call for a context switch
+> > > and the actual context switch.
+> > 
+> > This is all PREEMPT=y kernels, right? Where is the latency coming from?
+> > Because PREEMPT=y _should_ react quite quickly.
+> 
+> Yes, PREEMPT=y.  It happens like this:
+> 
+> 1.	rcu_read_lock() with everything enabled.
+> 
+> 2.	Preemption then resumption.
+> 
+> 3.	local_irq_disable().
+> 
+> 4.	rcu_read_unlock().
+> 
+> 5.	local_irq_enable().
+> 
+> From what I know, the scheduler doesn't see anything until the next
+> interrupt, local_bh_enable(), return to userspace, etc.  Because this
+> is PREEMPT=y, preempt_enable() and cond_resched() do nothing.  So
+> it could be some time (milliseconds, depending on HZ, NO_HZ_FULL, and
+> so on) until the scheduler responds.  With NO_HZ_FULL, last I knew,
+> the delay can be extremely long.
+> 
+> Or am I missing something that gets the scheduler on the job faster?
+> 
+> Hmmm...  If your point is that this amount of delay matters only for
+> expedited grace periods, you are quite right.  So perhaps I shouldn't be
+> doing any of the expensive stuff unless there is an expedited grace period
+> in flight.  Or if NO_HZ_FULL.  See below for an updated (and untested)
+> patch to this effect.
+> 
+> > > This commit therefore introduces a ->deferred_qs flag to the task_struct
+> > > structure's rcu_special structure.  This flag is initially false, and
+> > > is set to true by the first call to rcu_read_unlock() requiring special
+> > > attention, then finally reset back to false when the quiescent state is
+> > > finally reported.  Then rcu_read_unlock() attempts full wakeups only when
+> > > ->deferred_qs is false, that is, on the first rcu_read_unlock() requiring
+> > > special attention.  Note that a chain of RCU readers linked by some other
+> > > sort of reader may find that a later rcu_read_unlock() is once again able
+> > > to do a full wakeup, courtesy of an intervening preemption:
+> > > 
+> > > 	rcu_read_lock();
+> > > 	/* preempted */
+> > > 	local_irq_disable();
+> > > 	rcu_read_unlock(); /* Can do full wakeup, sets ->deferred_qs. */
+> > > 	rcu_read_lock();
+> > > 	local_irq_enable();
+> > > 	preempt_disable()
+> > > 	rcu_read_unlock(); /* Cannot do full wakeup, ->deferred_qs set. */
+> > > 	rcu_read_lock();
+> > > 	preempt_enable();
+> > > 	/* preempted, >deferred_qs reset. */
+> > 
+> > As it would have without ->deferred_sq and just having done the above
+> > which was deemed insufficient.
+> > 
+> > So I'm really puzzled by the need for all this.
+> 
+> On the first round, without the ->deferred_qs, we know the scheduler
+> cannot be holding any of its pi or rq locks because if it did, it would
+> have disabled interrupts across the entire RCU read-side critical section.
+> Wakeups are therefore safe in this case, whether via softirq or wakeup.
+> Afterwards, we don't have that guarantee because an earlier critical
+> section might have been preempted and the scheduler might have held one
+> of its locks across the entire just-ended critical section.
+> 
+> And I believe you are right that we should avoid the wakeups unless
+> there is an expedited grace period in flight or in a NO_HZ_FULL kernel.
+> Hence the patch shown below.
 
-I'm guessing you meant auditsc_get_stamp()?  If so, okay.
+Which is a stupid patch.  It assumes ancient times when expedited grace
+periods were guaranteed to preempted pre-existing RCU read-side critical
+sections.  Back to the drawing board...
 
--- 
-paul moore
-www.paul-moore.com
+							Thanx, Paul
+
+> -----------------------------------------------------------------------
+> 
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index 2e52a77af6be..582c6d88aaa0 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -606,20 +606,26 @@ static void rcu_read_unlock_special(struct task_struct *t)
+>  	local_irq_save(flags);
+>  	irqs_were_disabled = irqs_disabled_flags(flags);
+>  	if (preempt_bh_were_disabled || irqs_were_disabled) {
+> +		bool exp;
+> +
+>  		t->rcu_read_unlock_special.b.exp_hint = false;
+> +		exp = !!READ_ONCE(this_cpu_ptr(&rcu_data)->mynode->exp_tasks);
+>  		// Need to defer quiescent state until everything is enabled.
+> -		if (irqs_were_disabled && use_softirq &&
+> +		if ((exp || IS_ENABLED(CONFIG_NO_HZ_FULL)) &&
+> +		    irqs_were_disabled && use_softirq &&
+>  		    (in_irq() || !t->rcu_read_unlock_special.b.deferred_qs)) {
+>  			// Using softirq, safe to awaken, and we get
+>  			// no help from enabling irqs, unlike bh/preempt.
+>  			raise_softirq_irqoff(RCU_SOFTIRQ);
+> -		} else if (irqs_were_disabled && !use_softirq &&
+> +		} else if ((exp || IS_ENABLED(CONFIG_NO_HZ_FULL)) &&
+> +			   irqs_were_disabled && !use_softirq &&
+>  			   !t->rcu_read_unlock_special.b.deferred_qs) {
+>  			// Safe to awaken and we get no help from enabling
+>  			// irqs, unlike bh/preempt.
+>  			invoke_rcu_core();
+>  		} else {
+>  			// Enabling BH or preempt does reschedule, so...
+> +			// Also if no expediting or NO_HZ_FULL, slow is OK.
+>  			set_tsk_need_resched(current);
+>  			set_preempt_need_resched();
+>  		}
+
