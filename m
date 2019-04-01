@@ -2,105 +2,87 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCBBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2A8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580262084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD7D20880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:00:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZntR16Fy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731337AbfDASAu (ORCPT
+        id S1731465AbfDASAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:00:50 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:44849 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731209AbfDASAr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:00:47 -0400
-Received: from [192.168.1.110] ([95.115.100.107]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N1M4p-1gmepq3q4x-012q0g; Mon, 01 Apr 2019 20:00:38 +0200
-Subject: Re: [PATCH] Respond:Patch 0004-Add-support-for-SUNIX-parallel-card
-To:     Morris Ku <saumah@gmail.com>, lee.jones@linaro.org
-Cc:     linux-kernel@vger.kernel.org, morris_ku@sunix.com
-References: <20190329112511.9087-1-saumah@gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <732b88dd-651b-6770-b1f1-956aa908d6e0@metux.net>
-Date:   Mon, 1 Apr 2019 20:00:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 1 Apr 2019 14:00:54 -0400
+Received: from ozlabs.org ([203.11.71.1]:43787 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731346AbfDASAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 14:00:51 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44Y0WN3PMhz9sPn;
+        Tue,  2 Apr 2019 05:00:48 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554141648;
+        bh=zhPP62BbpyltEcY13lsn4VmMzaxKQY0xzWQ+I+0bVO0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZntR16FymnDwutMge8ZPzP9fWs54j3M0g7VSiGQQJW3CqsbYzv2vWRlF1ImY9bfvG
+         y1YszBYyp+abQOp0pnbhS9fGRgkPRCeSFtVa6lXq6OOXRZ46SCGAZo5Mu394Jfvs2J
+         dPpka1YEA3waEFKmmhJQ//T2XTQsQyBAReMjfuLAmVIsO1fj2bp7O/D3aC3aP2OEWv
+         +yVfwEpJzZSsJdhCeqQTR1uQ6ZyBP6t5Ju5Mm4K7X0bVMFxGdvDU29NlUYYOHg593W
+         uMcd80xampPsHJ2c7H+B+HMGPOm06puWUjseKaQRinHDSkLPOxhjEMIJT+y6icOiHo
+         jZpV4JHh4RS7g==
+Date:   Tue, 2 Apr 2019 05:00:48 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the phy tree
+Message-ID: <20190402050048.0686d21b@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190329112511.9087-1-saumah@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:aFZLz0IqhrNKO2dQbiMl38nUCd+3QUOotXhDXwy2mGW+LC/8MoI
- CEwqE6yQXXyQTcfsoHDIclqrN2XL2Ay2FTPmqKuRavyWUjT3jhJcgOWpZJ2Mzv0oH2Rstq+
- fnp/gNwqVekex5KZeQLLmpHpMkg/lueCgItmiM2XTS93V9Ww+Y0oOr/78hNY9VV7oKkPgN8
- P38AqpOzVlhXI0kYnQMdA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UK3F9wGvpyM=:lzZGlNoB6n2qybIFLfXhnJ
- gK49UEvLMeQmdW7dfNPEtJ5+CJ0FAU3bREmEciX5pE+MHZy85H8qVnjMhx/hEp6WiRiB3BLWP
- 7x72d1osToe+hH+yNGfvgrDKZyGZDVeSX3jayt2Lg93FXPo1tg6fAOVGy/zzGijgmwj9bwiPX
- 0caUJkxrB5I8LeJq5ym/My7YYMzVf3Qa7uMDsucsHyMd3a0Ta+Licl5I3/CiJtEuOzeV1eINz
- tiR8Fykajp4G6QVEKrEI5hjB2JcsvhBBgUNPsxXa0pKv3XDV4E/2VcAu6EN7IMMZUwgiP2Rzr
- P8EHELIiOruoXkMEa+hW/O2EfQ3dWkEBbh+AD7EYr6RoM+SkDV6nCPwVE96hsA2WjtpFZyRb4
- AuoeL0ZI256T0HbHZdIaUI/LpY+C5r54yMaSZT+SawXansWWZAAxgB5KC+VqYA2WrlFjf8czC
- nFQu2067uWbTBN5jPa0XF2miuPqh02bPVFvP/feC2YfrrS1P1/47kMaomDzmy7GHxaiMlOPOD
- 1aHBExwAjMaDeQoJgeDDZ0Y+VejRKaydUQwZ4cIVCCVjGMchhN8kqP8V0xg+RJJag/b+RSz6/
- AR8ikBj6SKGKpok2uExAh7F8TBbVygm3b2u5q2vWMl/DccxhqHxTbJwU9afKpDx9W4JMV26bc
- FhhdTaNZPxTa5ZyP06CpE8lEdydPTdJGflSaz6Fe67kZAdTrRFEmbYClWrD39jz2OFEmlTrmP
- b9edS+iQVGeepQjppd+OqJkOhm4x6G9F3/KMLaBKfIWFBgwXE4jL3AbkUJA=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/sElZDQsZbtFXZVahKKZwkGP"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.03.19 12:25, Morris Ku wrote:
-> Hi,
-> Thanks for review, my replies are inline:
+--Sig_/sElZDQsZbtFXZVahKKZwkGP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-https://www.netmeister.org/news/learn2quote.html
+Hi Kishon,
 
-> +> +static struct snx_parport_driver snx_lp_driver = {
-> +> +     .name = "lx",
-> +> +     .attach = snx_lp_attach,
-> +> +     .detach = snx_lp_detach,
-> +> +};
-> +
-> +yet another case of duplication of some standard struct and hard-
-> +typecasting ? use struct parport_driver here.
-> +
-> i will use standard struct(struct lp_driver) ,
+Commit
 
-you mean struct parport_driver ?
+  b6e13b9c9482 ("phy: ti-pipe3: fix missing bit-wise or operator when assig=
+ning val")
 
-> about struct snx_parport driver,
-> i will keep current format , because add a list for store device informations. 
+is missing a Signed-off-by from its committer.
 
-No, your current approach breaks heavily (eg. as soon ans something in
-struct parport_driver changes). If you really need to extend it, do it
-by nested structs (same like struct parport_driver nests struct
-device_driver), and use the proper macros (eg. container_of(), etc)
-for typecasting.
+--=20
+Cheers,
+Stephen Rothwell
 
-Keep in mind: kernel-internal structures are NOT fixed, they can change
-anytime - this is a fundamental design decision.
+--Sig_/sElZDQsZbtFXZVahKKZwkGP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> +don't reimplement existing standard functionality. use the parport
-> +subsystem.
-> +
-> +can i drop it ? it seems that it has no effect when port gone away.
+-----BEGIN PGP SIGNATURE-----
 
-If it's not needed, remove it. We don't like dead code.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyiUdAACgkQAVBC80lX
+0GwyhQf7BNaVB10IQERl6TIvNmwyzg8i0aU8Za5nGYVIA5qzLapvG3L/qJ//TtQ9
+ub+tz0qKiEufmd587vJflGyb5K3samVsJKz4wTyll8T8YSn0nLI6ybSHm9Ew0J89
+R+tug6HejGmXogbfaXvYs8i4FL+9iBbpCjgIcFYiqovFtOLKSZGdWOE2Qr3SzmaA
+a4x0rVse7r0B9bJjnbcwQuGLxcVen4RwKdBhNg0l8Rsqc4ZYRVklJ95FJgVdEj3h
+xs44NGc6Ea0tGAdM/RLNqOVRy1U2q1hY1/XpoU4syeCAYZ+L8C6wfiLee3u5A0F8
+Pckoa7li+N3+gqx5IC0B7NLLE8ooQg==
+=Dzux
+-----END PGP SIGNATURE-----
 
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+--Sig_/sElZDQsZbtFXZVahKKZwkGP--
