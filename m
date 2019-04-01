@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A798DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCF0C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62DE020883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE2320896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140666;
-	bh=Es9sY6x3GHYPEBMm9sEFlkxstnamJjzO5PQWVknp3oM=;
+	s=default; t=1554140671;
+	bh=DbPEVyd3jUQx2ssPm/5HJNfCLOu6X8RvkLcmmTr/sxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rBy95klt/vepyKfJouoGxNZTKcQCBNJv8cOikCRfhS2HyDejafp0f9qHgK9mOgVWu
-	 kMx3Fk14qh4vwmsAdFLbR2ESzo4NRBS5xah/3WV+rHWKl2ak3FcZOQr1n6VqiwSoRI
-	 Oxd+DMk4sf11m1Y1XtDRV/r5JQnokK5bise7MgN0=
+	b=CpC6M/qC6ROGkMZjvykKBmSJnpVaFo0NjXqeMUPMsn2kay3P6FSeN+dTGgWVt+2hX
+	 0OffvHkgl7rh70KLtSeAOQHTkKCDhokOBVWK2toW1QzB7TgBrBoydui0JgFDKf3pNp
+	 ZtaCozh0/HFlNkK6n27WSnGNYq+oeZ1trEPMfYzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387992AbfDARoZ (ORCPT
+        id S2387823AbfDARer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:44:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45034 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:34:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733290AbfDARev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:34:51 -0400
+        id S1730156AbfDAReo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:34:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42A4F2070B;
-        Mon,  1 Apr 2019 17:34:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0ADB20880;
+        Mon,  1 Apr 2019 17:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140090;
-        bh=Es9sY6x3GHYPEBMm9sEFlkxstnamJjzO5PQWVknp3oM=;
+        s=default; t=1554140084;
+        bh=DbPEVyd3jUQx2ssPm/5HJNfCLOu6X8RvkLcmmTr/sxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sCt7xQtnQwn7hClzENko37MFjM2Btfum3bByeykoOmTGgc2nXIMEhbBZ3v7XPm6/f
-         sm7xG1FZAqQsDmYmBVYcwZ/Vy6sciVcIDiSHRU02BDX0BD/KR1TjiWeG3Ne1p8VCzY
-         wL/foUv8LcRhIZw8EenlX8iL5Pmj0RGJ4vIRN2Fk=
+        b=iXKMWxLvkoeJ8XSol3D4rkX5dpDbALkyhrLFJFoZdPjg8hzZ5stOm+k85KIjbvqdf
+         l4Mn+gmwAhleEecsekcaR9Qge78DQCeyA5ZZ98AF1TCzBIlZiDDqVphdalUQCKQR4G
+         Uvz+E+vcFyg1b1rgJf65EZmtHwCk8ec4V2LAuYGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ravindra Lokhande <rlokhande@nvidia.com>,
-        Vinod Koul <vinod.koul@intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.4 103/131] ALSA: compress: add support for 32bit calls in a 64bit kernel
-Date:   Mon,  1 Apr 2019 19:02:53 +0200
-Message-Id: <20190401170100.467684472@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Andrea Righi <andrea.righi@canonical.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.4 101/131] btrfs: raid56: properly unmap parity page in finish_parity_scrub()
+Date:   Mon,  1 Apr 2019 19:02:51 +0200
+Message-Id: <20190401170100.346600148@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -66,59 +66,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ravindra Lokhande <rlokhande@nvidia.com>
+From: Andrea Righi <andrea.righi@canonical.com>
 
-commit c10368897e104c008c610915a218f0fe5fa4ec96 upstream.
+commit 3897b6f0a859288c22fb793fad11ec2327e60fcd upstream.
 
-Compress offload does not support ioctl calls from a 32bit userspace
-in a 64 bit kernel. This patch adds support for ioctls from a 32bit
-userspace in a 64bit kernel
+Parity page is incorrectly unmapped in finish_parity_scrub(), triggering
+a reference counter bug on i386, i.e.:
 
-Signed-off-by: Ravindra Lokhande <rlokhande@nvidia.com>
-Acked-by: Vinod Koul <vinod.koul@intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+ [ 157.662401] kernel BUG at mm/highmem.c:349!
+ [ 157.666725] invalid opcode: 0000 [#1] SMP PTI
+
+The reason is that kunmap(p_page) was completely left out, so we never
+did an unmap for the p_page and the loop unmapping the rbio page was
+iterating over the wrong number of stripes: unmapping should be done
+with nr_data instead of rbio->real_stripes.
+
+Test case to reproduce the bug:
+
+ - create a raid5 btrfs filesystem:
+   # mkfs.btrfs -m raid5 -d raid5 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+
+ - mount it:
+   # mount /dev/sdb /mnt
+
+ - run btrfs scrub in a loop:
+   # while :; do btrfs scrub start -BR /mnt; done
+
+BugLink: https://bugs.launchpad.net/bugs/1812845
+Fixes: 5a6ac9eacb49 ("Btrfs, raid56: support parity scrub on raid56")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/compress_offload.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/btrfs/raid56.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -38,6 +38,7 @@
- #include <linux/uio.h>
- #include <linux/uaccess.h>
- #include <linux/module.h>
-+#include <linux/compat.h>
- #include <sound/core.h>
- #include <sound/initval.h>
- #include <sound/compress_params.h>
-@@ -859,6 +860,15 @@ static long snd_compr_ioctl(struct file
- 	return retval;
- }
+--- a/fs/btrfs/raid56.c
++++ b/fs/btrfs/raid56.c
+@@ -2420,8 +2420,9 @@ static noinline void finish_parity_scrub
+ 			bitmap_clear(rbio->dbitmap, pagenr, 1);
+ 		kunmap(p);
  
-+/* support of 32bit userspace on 64bit platforms */
-+#ifdef CONFIG_COMPAT
-+static long snd_compr_ioctl_compat(struct file *file, unsigned int cmd,
-+						unsigned long arg)
-+{
-+	return snd_compr_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
-+}
-+#endif
-+
- static const struct file_operations snd_compr_file_ops = {
- 		.owner =	THIS_MODULE,
- 		.open =		snd_compr_open,
-@@ -866,6 +876,9 @@ static const struct file_operations snd_
- 		.write =	snd_compr_write,
- 		.read =		snd_compr_read,
- 		.unlocked_ioctl = snd_compr_ioctl,
-+#ifdef CONFIG_COMPAT
-+		.compat_ioctl = snd_compr_ioctl_compat,
-+#endif
- 		.mmap =		snd_compr_mmap,
- 		.poll =		snd_compr_poll,
- };
+-		for (stripe = 0; stripe < rbio->real_stripes; stripe++)
++		for (stripe = 0; stripe < nr_data; stripe++)
+ 			kunmap(page_in_rbio(rbio, stripe, pagenr, 0));
++		kunmap(p_page);
+ 	}
+ 
+ 	__free_page(p_page);
 
 
