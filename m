@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EF7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583D7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2CE2171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DDDE20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139941;
-	bh=e21tnhzIBXTZ/hwcND+cZU1nzaTqWuPe/sQxrkgRaO4=;
+	s=default; t=1554139946;
+	bh=ZrYRu+KzVZ9sDLamHmf+86m8060dm5AcAEW+8GFR7kI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZirATBweS0Tie8SaUGpOYagImWQ7+cWwWyTeZaQdgfUi+sf6JCX3ZXwwf1t/32jOB
-	 mkPhxIoonOEyNZ9U/iCvmBFUSiE+bY7usLJcHAPs6WQUAe/VapQJZ+oVdIFem14gK6
-	 heHl4IOmuHJhk/PKDocHPBAZP/dcZx7OEUDjVYS8=
+	b=AxbAhT+h8SthQILZ1HMziMeliSKxlRcpNyLav9nFJ4f3BjAF22TKm+UjyJFF06VKL
+	 9mLwwTxX5ZLunlYDI20Xj1w+zxKnZpB2l/zSR+b2tOZHLxw8UcgmYGiZk74BDvpvOB
+	 nELCt3reFivsuoS1HOfyigGchkOS4wRZu2rA2AZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387477AbfDARcU (ORCPT
+        id S2387487AbfDARcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:32:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40232 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:32:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387467AbfDARcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:32:14 -0400
+        id S2387467AbfDARcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:32:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91BC12171F;
-        Mon,  1 Apr 2019 17:32:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84E9620880;
+        Mon,  1 Apr 2019 17:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139934;
-        bh=e21tnhzIBXTZ/hwcND+cZU1nzaTqWuPe/sQxrkgRaO4=;
+        s=default; t=1554139941;
+        bh=ZrYRu+KzVZ9sDLamHmf+86m8060dm5AcAEW+8GFR7kI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HDVPLMjgLwO55iyZTTBHQjzXZm2oLwOFRzxp70pecVkH+TIg/R0xzFg3yMK7ug3GH
-         Hefba2vHJ9CU2XFurCZ1Kf4KQ3jkTYtA4NtaY/hQfp3cbMYTg6/5Z3PGNYuuV7wbDW
-         LGywZaz481LkFopjLjFkeNJrEaZjQjKuxYsmCdTA=
+        b=qMMybO2ftffdkg++mAPpVZEqwJkOXzaKzh6Pinlk1hWo/GL9NHaGa71xtPwhVmguC
+         fin3cqn536Wq3cDHsuihfjL9kCzMi/r+hTpf9OnRo/baFC0LhaGHuDbNzSmGMczgYy
+         9zW9IlKMSEC04N4UYx6vPoflBUoyegMBGc/DwfWk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 058/131] stm class: Fix locking in unbinding policy path
-Date:   Mon,  1 Apr 2019 19:02:08 +0200
-Message-Id: <20190401170057.179898582@linuxfoundation.org>
+Subject: [PATCH 4.4 059/131] stm class: Fix link list locking
+Date:   Mon,  1 Apr 2019 19:02:09 +0200
+Message-Id: <20190401170057.249309376@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -66,66 +66,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4c127fd16e6b33ecb7badc091480c84ea9aebeb6 ]
+[ Upstream commit c74f7e8281add80bdfa0ad2998b8df287b13df73 ]
 
-Right now, if stm device removal has to unbind from a policy (that is,
-an stm device that has STP policy, gets removed), it will trigger a
-nested lock on the stm device's policy mutex.
+Currently, the list of stm_sources linked to an stm device is protected by
+a spinlock, which also means that sources' .unlink() method is called under
+this spinlock. However, this method may (and does) sleep, which means
+trouble.
 
-This patch fixes the problem by moving the locking from the policy
-unbinding to policy removal (configfs path), where it's actually needed;
-the other caller of the policy unbinding function already takes the
-mutex around the call.
+This patch slightly reworks locking around stm::link_list so that bits that
+might_sleep() are called with a mutex held instead. Modification of this
+list requires both mutex and spinlock to be held, while looking at the list
+can be done under either mutex or spinlock.
 
 Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/stm/policy.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/hwtracing/stm/core.c | 38 +++++++++++++++++++++++++++---------
+ drivers/hwtracing/stm/stm.h  |  1 +
+ 2 files changed, 30 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/hwtracing/stm/policy.c b/drivers/hwtracing/stm/policy.c
-index 11ab6d01adf6..94d3abfb737a 100644
---- a/drivers/hwtracing/stm/policy.c
-+++ b/drivers/hwtracing/stm/policy.c
-@@ -272,13 +272,17 @@ void stp_policy_unbind(struct stp_policy *policy)
- {
- 	struct stm_device *stm = policy->stm;
+diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
+index 92ab51aa8a74..f286de2e86af 100644
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -647,6 +647,7 @@ int stm_register_device(struct device *parent, struct stm_data *stm_data,
+ 	if (err)
+ 		goto err_device;
  
-+	/*
-+	 * stp_policy_release() will not call here if the policy is already
-+	 * unbound; other users should not either, as no link exists between
-+	 * this policy and anything else in that case
-+	 */
- 	if (WARN_ON_ONCE(!policy->stm))
- 		return;
++	mutex_init(&stm->link_mutex);
+ 	spin_lock_init(&stm->link_lock);
+ 	INIT_LIST_HEAD(&stm->link_list);
  
--	mutex_lock(&stm->policy_mutex);
--	stm->policy = NULL;
--	mutex_unlock(&stm->policy_mutex);
-+	lockdep_assert_held(&stm->policy_mutex);
+@@ -677,11 +678,11 @@ void stm_unregister_device(struct stm_data *stm_data)
+ 	struct stm_source_device *src, *iter;
+ 	int i;
  
-+	stm->policy = NULL;
- 	policy->stm = NULL;
+-	spin_lock(&stm->link_lock);
++	mutex_lock(&stm->link_mutex);
+ 	list_for_each_entry_safe(src, iter, &stm->link_list, link_entry) {
+ 		__stm_source_link_drop(src, stm);
+ 	}
+-	spin_unlock(&stm->link_lock);
++	mutex_unlock(&stm->link_mutex);
  
+ 	synchronize_srcu(&stm_source_srcu);
+ 
+@@ -700,6 +701,17 @@ void stm_unregister_device(struct stm_data *stm_data)
+ }
+ EXPORT_SYMBOL_GPL(stm_unregister_device);
+ 
++/*
++ * stm::link_list access serialization uses a spinlock and a mutex; holding
++ * either of them guarantees that the list is stable; modification requires
++ * holding both of them.
++ *
++ * Lock ordering is as follows:
++ *   stm::link_mutex
++ *     stm::link_lock
++ *       src::link_lock
++ */
++
+ /**
+  * stm_source_link_add() - connect an stm_source device to an stm device
+  * @src:	stm_source device
+@@ -716,6 +728,7 @@ static int stm_source_link_add(struct stm_source_device *src,
+ 	char *id;
+ 	int err;
+ 
++	mutex_lock(&stm->link_mutex);
+ 	spin_lock(&stm->link_lock);
+ 	spin_lock(&src->link_lock);
+ 
+@@ -725,6 +738,7 @@ static int stm_source_link_add(struct stm_source_device *src,
+ 
+ 	spin_unlock(&src->link_lock);
+ 	spin_unlock(&stm->link_lock);
++	mutex_unlock(&stm->link_mutex);
+ 
+ 	id = kstrdup(src->data->name, GFP_KERNEL);
+ 	if (id) {
+@@ -762,6 +776,7 @@ static int stm_source_link_add(struct stm_source_device *src,
  	stm_put_device(stm);
-@@ -287,8 +291,16 @@ void stp_policy_unbind(struct stp_policy *policy)
- static void stp_policy_release(struct config_item *item)
- {
- 	struct stp_policy *policy = to_stp_policy(item);
-+	struct stm_device *stm = policy->stm;
  
-+	/* a policy *can* be unbound and still exist in configfs tree */
-+	if (!stm)
-+		return;
+ fail_detach:
++	mutex_lock(&stm->link_mutex);
+ 	spin_lock(&stm->link_lock);
+ 	spin_lock(&src->link_lock);
+ 
+@@ -770,6 +785,7 @@ static int stm_source_link_add(struct stm_source_device *src,
+ 
+ 	spin_unlock(&src->link_lock);
+ 	spin_unlock(&stm->link_lock);
++	mutex_unlock(&stm->link_mutex);
+ 
+ 	return err;
+ }
+@@ -782,13 +798,20 @@ static int stm_source_link_add(struct stm_source_device *src,
+  * If @stm is @src::link, disconnect them from one another and put the
+  * reference on the @stm device.
+  *
+- * Caller must hold stm::link_lock.
++ * Caller must hold stm::link_mutex.
+  */
+ static void __stm_source_link_drop(struct stm_source_device *src,
+ 				   struct stm_device *stm)
+ {
+ 	struct stm_device *link;
+ 
++	lockdep_assert_held(&stm->link_mutex);
 +
-+	mutex_lock(&stm->policy_mutex);
- 	stp_policy_unbind(policy);
-+	mutex_unlock(&stm->policy_mutex);
++	if (src->data->unlink)
++		src->data->unlink(src->data);
 +
- 	kfree(policy);
++	/* for stm::link_list modification, we hold both mutex and spinlock */
++	spin_lock(&stm->link_lock);
+ 	spin_lock(&src->link_lock);
+ 	link = srcu_dereference_check(src->link, &stm_source_srcu, 1);
+ 	if (WARN_ON_ONCE(link != stm)) {
+@@ -797,13 +820,13 @@ static void __stm_source_link_drop(struct stm_source_device *src,
+ 	}
+ 
+ 	stm_output_free(link, &src->output);
+-	/* caller must hold stm::link_lock */
+ 	list_del_init(&src->link_entry);
+ 	/* matches stm_find_device() from stm_source_link_store() */
+ 	stm_put_device(link);
+ 	rcu_assign_pointer(src->link, NULL);
+ 
+ 	spin_unlock(&src->link_lock);
++	spin_unlock(&stm->link_lock);
  }
  
+ /**
+@@ -825,12 +848,9 @@ static void stm_source_link_drop(struct stm_source_device *src)
+ 	stm = srcu_dereference(src->link, &stm_source_srcu);
+ 
+ 	if (stm) {
+-		if (src->data->unlink)
+-			src->data->unlink(src->data);
+-
+-		spin_lock(&stm->link_lock);
++		mutex_lock(&stm->link_mutex);
+ 		__stm_source_link_drop(src, stm);
+-		spin_unlock(&stm->link_lock);
++		mutex_unlock(&stm->link_mutex);
+ 	}
+ 
+ 	srcu_read_unlock(&stm_source_srcu, idx);
+diff --git a/drivers/hwtracing/stm/stm.h b/drivers/hwtracing/stm/stm.h
+index 95ece0292c99..97ee02241440 100644
+--- a/drivers/hwtracing/stm/stm.h
++++ b/drivers/hwtracing/stm/stm.h
+@@ -45,6 +45,7 @@ struct stm_device {
+ 	int			major;
+ 	unsigned int		sw_nmasters;
+ 	struct stm_data		*data;
++	struct mutex		link_mutex;
+ 	spinlock_t		link_lock;
+ 	struct list_head	link_list;
+ 	/* master allocation */
 -- 
 2.19.1
 
