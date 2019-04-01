@@ -2,119 +2,133 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EB9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2003DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDEC20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1E420872
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 02:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="lR7IiVPB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731571AbfDACJ3 (ORCPT
+        id S1731527AbfDACNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 31 Mar 2019 22:09:29 -0400
-Received: from asrmicro.com ([210.13.118.86]:33668 "EHLO
-        barracuda.asrmicro.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726985AbfDACJ3 (ORCPT
+        Sun, 31 Mar 2019 22:13:42 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43844 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726985AbfDACNm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 31 Mar 2019 22:09:29 -0400
-X-ASG-Debug-ID: 1554084565-12329d17f794e70001-xx1T2L
-Received: from mail2012.asrmicro.com (mail2012.asrmicro.com [10.1.24.123]) by barracuda.asrmicro.com with ESMTP id 34GpxCfH6dTdF3Yg; Mon, 01 Apr 2019 10:09:25 +0800 (CST)
-X-Barracuda-Envelope-From: qiaozhou@asrmicro.com
-Received: from mail2012.asrmicro.com (10.1.24.123) by mail2012.asrmicro.com
- (10.1.24.123) with Microsoft SMTP Server (TLS) id 15.0.847.32; Mon, 1 Apr
- 2019 10:09:25 +0800
-Received: from mail2012.asrmicro.com ([fe80::7c1a:96dd:1a6b:c97b]) by
- mail2012.asrmicro.com ([fe80::7c1a:96dd:1a6b:c97b%16]) with mapi id
- 15.00.0847.030; Mon, 1 Apr 2019 10:09:25 +0800
-From:   =?gb2312?B?WmhvdSBRaWFvKNbcx8gp?= <qiaozhou@asrmicro.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] clk: asr: clock driver support for ASR AquilaC Soc
-Thread-Topic: [PATCH] clk: asr: clock driver support for ASR AquilaC Soc
-X-ASG-Orig-Subj: Re: [PATCH] clk: asr: clock driver support for ASR AquilaC Soc
-Thread-Index: AQHU4YHopz31FtWFAkiYszGyOOeFvQ==
-Date:   Mon, 1 Apr 2019 02:09:24 +0000
-Message-ID: <a652d858bd3d4c0a9670e03182d5fd8e@mail2012.asrmicro.com>
-References: <1553350115-2614-1-git-send-email-qiaozhou@asrmicro.com>
- <155389787963.20095.9145169286940814698@swboyd.mtv.corp.google.com>
-Accept-Language: en-US, zh-CN
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.1.6.250]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-Barracuda-Connect: mail2012.asrmicro.com[10.1.24.123]
-X-Barracuda-Start-Time: 1554084565
-X-Barracuda-URL: https://10.1.24.120:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at asrmicro.com
-X-Barracuda-Scan-Msg-Size: 2751
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Spam-Score: 0.00
-X-Barracuda-Spam-Status: No, SCORE=0.00 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.69254
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
+        Sun, 31 Mar 2019 22:13:42 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c8so3725309pfd.10
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2019 19:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CxXB4SWfc6S3NBwSbbwXW5l/4r4k5EPDkipFxiKya6c=;
+        b=lR7IiVPBqeZIboLIDb6wST1HkE5i0AHVGX5X3AxyBf/JR4nAKUOcNtSxJKiGHwUKwI
+         UYbnSesKhpHZxWtHpBpoNBxyMHtKom3qvKSFKKOMlmNbpOx0V7KMVMWNXESo+4G1ocM8
+         S+Vp2F0Rv71KLGzD48YfXv5eUejz7TTULI19hlBjVbmfZ/cpP3AL5czn3R57h+881uwD
+         DzAAhaMCZNMdztkafjlQXH8MtrRakn9hwxxzCkZaZF2lmlN0TSqonA8pOeSvK+S0KYNq
+         sgQmGdr73b+Yi46HQXxVqBqKoVrQ498sLtVeKILmT94CRMHfHnjEMwYwyqsdhqaqqOo7
+         HKMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CxXB4SWfc6S3NBwSbbwXW5l/4r4k5EPDkipFxiKya6c=;
+        b=U8LO8EotBGBAGtsElcIvHq8BxQJipX4WYyGAW/2Ho8MMiqAXcYennD1etdRcW8+qph
+         L8d+HY4QI5rcQp2KSc4Fk29/MfSzJMdT5Q+lfBamz3hIi+TDNLXEMZjJFjjiXs9h+/cf
+         30qhpyXmJ525L4w3cQYXwuFHhIERGrr2wyrBGf9h1GTEmrzYBOx3iv7pn5YXUOIjb+FX
+         VimWkH8Xw89U3FeS3RKjMrSKVsi4z274q1TcUUCet4YJdHw3TGj/YwK9ktwqGrHuEmJN
+         IVX2XxJxslwpsvC/Ryeokgu4QCXBrzClmBowBleEN+TICKpCKyDreafpOf5GjrWNrP53
+         eFBg==
+X-Gm-Message-State: APjAAAXTsUoSxk6crr4pTpmBKK8EM5AMkPqZd63S8tMwfGkuZ7Ad5A2C
+        P5SREnlo+KeAm6xZOEBa2MasQw==
+X-Google-Smtp-Source: APXvYqyBBV6lzEH6IBctB0Rojet327Vp8csFQGhlrYOzlqrrokEz3TqSc0x34ZwnXM4olCNWGluMsA==
+X-Received: by 2002:a63:3190:: with SMTP id x138mr51205623pgx.273.1554084821322;
+        Sun, 31 Mar 2019 19:13:41 -0700 (PDT)
+Received: from ?IPv6:2600:100e:b13e:a3af:389b:29a:6d03:f8bf? ([2600:100e:b13e:a3af:389b:29a:6d03:f8bf])
+        by smtp.gmail.com with ESMTPSA id 75sm14804796pfr.55.2019.03.31.19.13.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 31 Mar 2019 19:13:40 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16D57)
+In-Reply-To: <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
+Date:   Sun, 31 Mar 2019 20:13:38 -0600
+Cc:     Christian Brauner <christian@brauner.io>,
+        Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Joel Fernandes <joel@joelfernandes.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <18C7FCB9-2CBA-4237-94BB-9C4395A2106B@amacapital.net>
+References: <20190329155425.26059-1-christian@brauner.io> <CAHk-=wjq4dTPcz-qsvhpm5F42SDHCoqEWv1V=rs_kt6MC=ZThA@mail.gmail.com> <BCD99947-5F55-4116-8F74-D6832E50340B@brauner.io> <CAHk-=whcA0kAWGqet9oJdyttjhP7J4PcU2Ly=n_Qyo6rMJNxRg@mail.gmail.com> <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com> <CAHk-=wj0o8BiUrYiM5ZcTS6JxBh1M60O36Ms8-EqLQ139=1L4g@mail.gmail.com> <20190330171215.3yrfxwodstmgzmxy@brauner.io> <CAHk-=whF6gnRVbJaArZna4e=tejfrzmNQtRbWjnuSSKpBn+jQg@mail.gmail.com> <132107F4-F56B-4D6E-9E00-A6F7C092E6BD@amacapital.net> <CAHk-=wiaLtH41Mc5qAjOeCWavPqV0DhS581KYa0QBt8uraTK1Q@mail.gmail.com> <20190331211041.vht7dnqg4e4bilr2@brauner.io> <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS8zLzMwIMnPzuc2OjE4LCBTdGVwaGVuIEJveWQgd3JvdGU6Cj4gUXVvdGluZyBxaWFv
-emhvdSAoMjAxOS0wMy0yMyAwNzowODozNSkKPj4gRnJvbTogUWlhbyBaaG91IDxxaWFvemhvdUBh
-c3JtaWNyby5jb20+Cj4+Cj4+IGFkZCBjbG9jayBkcml2ZXIgc3VwcG9ydCBmb3IgQVNSIEFxdWls
-YUMgU29DLgo+Pgo+PiBXZSBhZGQgY2xrLWdhdGUsIGNsay1taXgsIGFuZCBjbGstcGxsIGRyaXZl
-cnM6Cj4+IDEuIGNsay1nYXRlIGRyaXZlciBpcyBmb3IgcmVnaXNlcnMgd2hpY2ggaGF2ZSBkaWZm
-ZXJlbnQgZW5hYmxlL2Rpc2FibGUgYml0cwo+PiB0byBjb250cm9sIGdhdGluZy4KPj4gMi4gY2xr
-LW1peCBkcml2ZXIgaXMgZm9yIHJlZ2lzdGVycyB3aGljaCByZXF1ZXN0IHRvIHNldCBkaXYgYW5k
-IG11eAo+PiBiaXRzIGF0IHRoZSBzYW1lIHRpbWUuCj4+IDMuIGNsay1wbGwgZHJpdmVyIGlzIGZv
-ciBwbGwgY29uZmlndXJhdGlvbi4KPj4KPj4gU2lnbmVkLW9mZi1ieTogcWlhb3pob3UgPHFpYW96
-aG91QGFzcm1pY3JvLmNvbT4KPiBQbGVhc2UgbWFrZSB0aGlzIG1hdGNoIHlvdXIgIkZyb20iIGxp
-bmUgYWJvdmUuCkknbGwgY2hhbmdlIGl0Lgo+Cj4+ICsKPj4gK3N0YXRpYyB2b2lkIF9faW5pdCBh
-cXVpbGFjX2Nsa19pbml0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApCj4+ICt7Cj4+ICsgICAgICAg
-aW50IHJldDsKPj4gKyAgICAgICBzdHJ1Y3QgYXNyX2Nsa19kYXRhICpjbG9ja19kYXRhOwo+PiAr
-Cj4+ICsgICAgICAgY2xvY2tfZGF0YSA9IGt6YWxsb2Moc2l6ZW9mKCpjbG9ja19kYXRhKSwgR0ZQ
-X0tFUk5FTCk7Cj4+ICsgICAgICAgaWYgKCFjbG9ja19kYXRhKQo+PiArICAgICAgICAgICAgICAg
-cmV0dXJuOwo+PiArCj4+ICsgICAgICAgcmV0ID0gYXF1aWxhY19jbGtfb2ZfaW9tYXAobnAsIGNs
-b2NrX2RhdGEpOwo+PiArICAgICAgIGlmIChyZXQgPCAwKQo+PiArICAgICAgICAgICAgICAgZ290
-byBvdXQ7Cj4+ICsKPj4gKyAgICAgICByZXQgPSBhc3JfY2xrX2luaXQobnAsICZjbG9ja19kYXRh
-LT51bml0LCBBU1JfTlJfQ0xLUyk7Cj4+ICsgICAgICAgaWYgKHJldCA8IDApCj4+ICsgICAgICAg
-ICAgICAgICBnb3RvIG91dDsKPj4gKwo+PiArICAgICAgIGFxdWlsYWNfZ2VuZXJhbF9jbGtfaW5p
-dChjbG9ja19kYXRhKTsKPj4gKwo+PiArICAgICAgIGFxdWlsYWNfcGxsX2luaXQoY2xvY2tfZGF0
-YSk7Cj4+ICsKPj4gKyAgICAgICBhcXVpbGFjX21peF9jbGtfaW5pdChjbG9ja19kYXRhKTsKPj4g
-Kwo+PiArICAgICAgIGFxdWlsYWNfcGVyaXBoX2Nsa19pbml0KGNsb2NrX2RhdGEpOwo+PiArCj4+
-ICsgICAgICAgYXNyX2Nsa3NfZW5hYmxlKChjb25zdCBjaGFyICoqKWtlZXBfb25fY2xvY2tzX3Ri
-bCwgQVJSQVlfU0laRShrZWVwX29uX2Nsb2Nrc190YmwpKTsKPj4gKwo+PiArICAgICAgIHJldHVy
-bjsKPj4gK291dDoKPj4gKyAgICAgICBrZnJlZShjbG9ja19kYXRhKTsKPj4gK30KPj4gK0NMS19P
-Rl9ERUNMQVJFKGFxdWlsYWNfY2xrLCAiYXNyLDg3NTFjLWNsb2NrIiwgYXF1aWxhY19jbGtfaW5p
-dCk7Cj4gQW55IHJlYXNvbiB0aGlzIGNhbid0IGJlIGEgcGxhdGZvcm0gZHJpdmVyPwpJdCBjb3Vs
-ZCBiZSBhIHBsYXRmb3JtIGRyaXZlci4gV2Ugd3JvdGUgdGhlIGNvZGUgYnkgdGFraW5nIGEgcmVm
-ZXJlbmNlCm9mIEhpc2ljb24vU2Ftc3VuZyBjbG9jayBkcml2ZXJzLCBhbmQgd3JvdGUgaXQgbGlr
-ZSB0aGlzLiBJIGNhbiBjaGFuZ2UKaXQgdG8gYSBwbGF0Zm9ybSBkcml2ZXIsIGp1c3QgdGhhdCBJ
-IGRvbid0IGtub3cgdGhlIGJlbmVmaXRzIHRoYXQgaXQncyBhCnBsYXRmb3JtIGRyaXZlciB0aG91
-Z2guIElzIHRoZXJlIGFueSBndWlkZT8gVGhhbmtzLgo+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2Nsay9hc3IvY2xrLWdhdGUuYyBiL2RyaXZlcnMvY2xrL2Fzci9jbGstZ2F0ZS5jCj4+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLjRiYTU1ODcKPj4gLS0tIC9kZXYvbnVs
-bAo+PiArKysgYi9kcml2ZXJzL2Nsay9hc3IvY2xrLWdhdGUuYwo+PiBAQCAtMCwwICsxLDE1MSBA
-QAo+PiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKPj4gKy8qCj4+ICsgKiBh
-c3IgZ2F0ZSBjbG9jayBvcGVyYXRpb24gc291cmNlIGZpbGUKPj4gKyAqCj4+ICsgKiBDb3B5cmln
-aHQgKEMpIDIwMTkgQVNSIE1pY3JvZWxlY3Ryb25pY3MoU2hhbmdoYWkpIENvLiwgTHRkLgo+PiAr
-ICogR2FuZyBXdSA8Z2FuZ3d1QGFzcm1pY3JvLmNvbT4KPj4gKyAqIFFpYW8gWmhvdSA8cWlhb3po
-b3VAYXNybWljcm8uY29tPgo+PiArICoKPj4gKyAqIFRoaXMgZmlsZSBpcyBsaWNlbnNlZCB1bmRl
-ciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYwo+PiArICogTGljZW5zZSB2ZXJz
-aW9uIDIuIFRoaXMgcHJvZ3JhbSBpcyBsaWNlbnNlZCAiYXMgaXMiIHdpdGhvdXQgYW55Cj4+ICsg
-KiB3YXJyYW50eSBvZiBhbnkga2luZCwgd2hldGhlciBleHByZXNzIG9yIGltcGxpZWQuCj4gUGxl
-YXNlIG9ubHkgaGF2ZSB0aGUgU1BEWCB0YWcgYW5kIG5vdCB0aGlzIGFib3ZlIHBhcmFncmFwaC4K
-SSdsbCBmaXggaXQuCj4KPj4gKyAqLwo+PiArCj4gSSdtIG5vdCBnb2luZyB0byByZXZpZXcgYW55
-bW9yZSBhcyBJJ2xsIHdhaXQgZm9yIGEgcmVzZW5kIGZvciBEYW4ncwo+IGNvbW1lbnRzLgpUaGFu
-a3MgYSBsb3QgZm9yIHlvdXIgcmV2aWV3aW5nLiBJJ2xsIHJlZmluZSBhbmQgcmVzZW5kIHRoZSBw
-YXRjaCBzZXQuCj4KPgoK
+
+
+> On Mar 31, 2019, at 3:17 PM, Linus Torvalds <torvalds@linux-foundation.org=
+> wrote:
+>=20
+>> On Sun, Mar 31, 2019 at 2:10 PM Christian Brauner <christian@brauner.io> w=
+rote:
+>>=20
+>> I don't think that we want or can make them equivalent since that would
+>> mean we depend on procfs.
+>=20
+> Sure we can.
+>=20
+> If /proc is enabled, then you always do that dance YOU ALREADY WROTE
+> THE CODE FOR to do the stupid ioctl.
+>=20
+> And if /procfs isn't enabled, then you don't do that.
+>=20
+> Ta-daa. Done. No stupid ioctl, and now /proc and pidfd_open() return
+> the same damn thing.
+>=20
+> And guess what? If /proc isn't enabled, then obviously pidfd_open()
+> gives you the /proc-less thing, but at least there is no crazy "two
+> different file descriptors for the same thing" situation, because then
+> the /proc one doesn't exist.
+>=20
+
+I wish we could do this, and, in a clean design, it would be a no-brainer.  B=
+ut /proc has too much baggage.  Just to mention two such things, there=E2=80=
+=99s =E2=80=9Cnet=E2=80=9D and =E2=80=9C../sys=E2=80=9D.  This crud is why w=
+e have all kinds of crazy rules that prevent programs in sandboxes from maki=
+ng a new mounts and mounting /proc in it.  If we make it possible to clone a=
+ new process and this access /proc without having /proc mounted, we=E2=80=99=
+ll open up a big can of worms.
+
+Maybe we could have a sanitized view of /proc and make a pidfd be a director=
+y fd pointing at that.=
