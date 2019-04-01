@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4495FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8E5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B34620880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D412520856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139454;
-	bh=Si8FEZuUUhmyfDNK09pKmydRGO7cxQTaEa1yqj2XY2c=;
+	s=default; t=1554139459;
+	bh=GyUE/v4EMr99R0Lr2eEkWN/SmCtLTR29Tp54oE6lVNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xNKqS2w/1iAemH2I/+1/l4R+7WpsiMYBmsKEOMjHxp6vXuNrZ/Gs0XTgF7eZAXSqT
-	 d8fdZm4TG2SphOa1H9h/2HKhe1lvox58uxXKMiJagMuA8sLzMFaJACY7AB/H9HSb+z
-	 xEE5PGJrzrDyzfyPUfWj2Iz8x+iTi2ohlQjrV3r8=
+	b=MyD2JX5zbiqrjG2EEJD6I8dv8uzS2GNXLzlacRMnO2Rjj/7+NgfzlLfpi6Dqhdiip
+	 yX4qhy7Ajr5bbsQsLmrL8cImnhRBZpKqwvXH5atCwFYKADGVbI2Olml7FSWihzDCcT
+	 jb6BLzcmM7NKvlv23Hl46pnn4K6PtPSMAqSVZCtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732218AbfDARYM (ORCPT
+        id S1731843AbfDARYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:24:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54412 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732211AbfDARYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:24:08 -0400
+        id S1731448AbfDARYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:24:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B04352063F;
-        Mon,  1 Apr 2019 17:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BB2C2063F;
+        Mon,  1 Apr 2019 17:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139447;
-        bh=Si8FEZuUUhmyfDNK09pKmydRGO7cxQTaEa1yqj2XY2c=;
+        s=default; t=1554139454;
+        bh=GyUE/v4EMr99R0Lr2eEkWN/SmCtLTR29Tp54oE6lVNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B5XF7CaV12qYurVI9kI7xIYbHAqOzngz11RbycYgSyYv8mdrBJpkx1hTQm3WydEin
-         bB529GIFpoOPFPvPpHVHVvHzBSNATdjVfUGYScTeaRMZRorBHtEkvbgOfn5gjkMGrD
-         +tt5xMMALZ2vRxO/FyK1QXg9EKOIF8Z2sL3zLB2A=
+        b=xd16/v8ur94BDe7bpjtUKwgrKYcvlDUzT0YcDjvsysomsQmmnGxfbQmb72xYvf+yj
+         FdGfcbG8/CbbVcsPJHPNQ0nr4415zNOFYhMWAiar9zJlX5y7v3kUJ7ktkn8BYHpq+8
+         8MSCFrZxJX2IQ6qsGBFRt1qzmv/xlTtEK2WNYG/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Vasilyev <grabesstimme@gmail.com>,
-        "Spencer E. Olson" <olsonse@umich.edu>,
-        Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.14 077/107] staging: comedi: ni_mio_common: Fix divide-by-zero for DIO cmdtest
-Date:   Mon,  1 Apr 2019 19:02:32 +0200
-Message-Id: <20190401170052.642133060@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 4.14 079/107] staging: vt6655: Fix interrupt race condition on device start up.
+Date:   Mon,  1 Apr 2019 19:02:34 +0200
+Message-Id: <20190401170052.824119728@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -66,153 +64,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit bafd9c64056cd034a1174dcadb65cd3b294ff8f6 upstream.
+commit 3b9c2f2e0e99bb67c96abcb659b3465efe3bee1f upstream.
 
-`ni_cdio_cmdtest()` validates Comedi asynchronous commands for the DIO
-subdevice (subdevice 2) of supported National Instruments M-series
-cards.  It is called when handling the `COMEDI_CMD` and `COMEDI_CMDTEST`
-ioctls for this subdevice.  There are two causes for a possible
-divide-by-zero error when validating that the `stop_arg` member of the
-passed-in command is not too large.
+It appears on some slower systems that the driver can find its way
+out of the workqueue while the interrupt is disabled by continuous polling
+by it.
 
-The first cause for the divide-by-zero is that calls to
-`comedi_bytes_per_scan()` are only valid once the command has been
-copied to `s->async->cmd`, but that copy is only done for the
-`COMEDI_CMD` ioctl.  For the `COMEDI_CMDTEST` ioctl, it will use
-whatever was left there by the previous `COMEDI_CMD` ioctl, if any.
-(This is very likely, as it is usual for the application to use
-`COMEDI_CMDTEST` before `COMEDI_CMD`.) If there has been no previous,
-valid `COMEDI_CMD` for this subdevice, then `comedi_bytes_per_scan()`
-will return 0, so the subsequent division in `ni_cdio_cmdtest()` of
-`s->async->prealloc_bufsz / comedi_bytes_per_scan(s)` will be a
-divide-by-zero error.  To fix this error, call a new function
-`comedi_bytes_per_scan_cmd(s, cmd)`, based on the existing
-`comedi_bytes_per_scan(s)` but using a specified `struct comedi_cmd` for
-its calculations.  (Also refactor `comedi_bytes_per_scan()` to call the
-new function.)
+Move MACvIntEnable to vnt_interrupt_work so that it is always enabled
+on all routes out of vnt_interrupt_process.
 
-Once the first cause for the divide-by-zero has been fixed, the second
-cause is that `comedi_bytes_per_scan_cmd()` can legitimately return 0 if
-the `scan_end_arg` member of the `struct comedi_cmd` being tested is 0.
-Fix it by only performing the division (and validating that `stop_arg`
-is no more than the maximum value) if `comedi_bytes_per_scan_cmd()`
-returns a non-zero value.
+Move MACvIntDisable so that the device doesn't keep polling the system
+while the workqueue is being processed.
 
-The problem was reported on the COMEDI mailing list here:
-https://groups.google.com/forum/#!topic/comedi_list/4t9WlHzMhKM
-
-Reported-by: Ivan Vasilyev <grabesstimme@gmail.com>
-Tested-by: Ivan Vasilyev <grabesstimme@gmail.com>
-Fixes: f164cbf98fa8 ("staging: comedi: ni_mio_common: add finite regeneration to dio output")
-Cc: <stable@vger.kernel.org> # 4.6+
-Cc: Spencer E. Olson <olsonse@umich.edu>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+CC: stable@vger.kernel.org # v4.2+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/comedidev.h             |    2 +
- drivers/staging/comedi/drivers.c               |   33 +++++++++++++++++++++----
- drivers/staging/comedi/drivers/ni_mio_common.c |   10 +++++--
- 3 files changed, 38 insertions(+), 7 deletions(-)
+ drivers/staging/vt6655/device_main.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/staging/comedi/comedidev.h
-+++ b/drivers/staging/comedi/comedidev.h
-@@ -992,6 +992,8 @@ int comedi_dio_insn_config(struct comedi
- 			   unsigned int mask);
- unsigned int comedi_dio_update_state(struct comedi_subdevice *s,
- 				     unsigned int *data);
-+unsigned int comedi_bytes_per_scan_cmd(struct comedi_subdevice *s,
-+				       struct comedi_cmd *cmd);
- unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s);
- unsigned int comedi_nscans_left(struct comedi_subdevice *s,
- 				unsigned int nscans);
---- a/drivers/staging/comedi/drivers.c
-+++ b/drivers/staging/comedi/drivers.c
-@@ -390,11 +390,13 @@ unsigned int comedi_dio_update_state(str
- EXPORT_SYMBOL_GPL(comedi_dio_update_state);
- 
- /**
-- * comedi_bytes_per_scan() - Get length of asynchronous command "scan" in bytes
-+ * comedi_bytes_per_scan_cmd() - Get length of asynchronous command "scan" in
-+ * bytes
-  * @s: COMEDI subdevice.
-+ * @cmd: COMEDI command.
-  *
-  * Determines the overall scan length according to the subdevice type and the
-- * number of channels in the scan.
-+ * number of channels in the scan for the specified command.
-  *
-  * For digital input, output or input/output subdevices, samples for
-  * multiple channels are assumed to be packed into one or more unsigned
-@@ -404,9 +406,9 @@ EXPORT_SYMBOL_GPL(comedi_dio_update_stat
-  *
-  * Returns the overall scan length in bytes.
-  */
--unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s)
-+unsigned int comedi_bytes_per_scan_cmd(struct comedi_subdevice *s,
-+				       struct comedi_cmd *cmd)
- {
--	struct comedi_cmd *cmd = &s->async->cmd;
- 	unsigned int num_samples;
- 	unsigned int bits_per_sample;
- 
-@@ -423,6 +425,29 @@ unsigned int comedi_bytes_per_scan(struc
+--- a/drivers/staging/vt6655/device_main.c
++++ b/drivers/staging/vt6655/device_main.c
+@@ -973,8 +973,6 @@ static void vnt_interrupt_process(struct
+ 		return;
  	}
- 	return comedi_samples_to_bytes(s, num_samples);
+ 
+-	MACvIntDisable(priv->PortOffset);
+-
+ 	spin_lock_irqsave(&priv->lock, flags);
+ 
+ 	/* Read low level stats */
+@@ -1062,8 +1060,6 @@ static void vnt_interrupt_process(struct
+ 	}
+ 
+ 	spin_unlock_irqrestore(&priv->lock, flags);
+-
+-	MACvIntEnable(priv->PortOffset, IMR_MASK_VALUE);
  }
-+EXPORT_SYMBOL_GPL(comedi_bytes_per_scan_cmd);
+ 
+ static void vnt_interrupt_work(struct work_struct *work)
+@@ -1073,6 +1069,8 @@ static void vnt_interrupt_work(struct wo
+ 
+ 	if (priv->vif)
+ 		vnt_interrupt_process(priv);
 +
-+/**
-+ * comedi_bytes_per_scan() - Get length of asynchronous command "scan" in bytes
-+ * @s: COMEDI subdevice.
-+ *
-+ * Determines the overall scan length according to the subdevice type and the
-+ * number of channels in the scan for the current command.
-+ *
-+ * For digital input, output or input/output subdevices, samples for
-+ * multiple channels are assumed to be packed into one or more unsigned
-+ * short or unsigned int values according to the subdevice's %SDF_LSAMPL
-+ * flag.  For other types of subdevice, samples are assumed to occupy a
-+ * whole unsigned short or unsigned int according to the %SDF_LSAMPL flag.
-+ *
-+ * Returns the overall scan length in bytes.
-+ */
-+unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s)
-+{
-+	struct comedi_cmd *cmd = &s->async->cmd;
++	MACvIntEnable(priv->PortOffset, IMR_MASK_VALUE);
+ }
+ 
+ static irqreturn_t vnt_interrupt(int irq,  void *arg)
+@@ -1081,6 +1079,8 @@ static irqreturn_t vnt_interrupt(int irq
+ 
+ 	schedule_work(&priv->interrupt_work);
+ 
++	MACvIntDisable(priv->PortOffset);
 +
-+	return comedi_bytes_per_scan_cmd(s, cmd);
-+}
- EXPORT_SYMBOL_GPL(comedi_bytes_per_scan);
+ 	return IRQ_HANDLED;
+ }
  
- static unsigned int __comedi_nscans_left(struct comedi_subdevice *s,
---- a/drivers/staging/comedi/drivers/ni_mio_common.c
-+++ b/drivers/staging/comedi/drivers/ni_mio_common.c
-@@ -3523,6 +3523,7 @@ static int ni_cdio_check_chanlist(struct
- static int ni_cdio_cmdtest(struct comedi_device *dev,
- 			   struct comedi_subdevice *s, struct comedi_cmd *cmd)
- {
-+	unsigned int bytes_per_scan;
- 	int err = 0;
- 	int tmp;
- 
-@@ -3552,9 +3553,12 @@ static int ni_cdio_cmdtest(struct comedi
- 	err |= comedi_check_trigger_arg_is(&cmd->convert_arg, 0);
- 	err |= comedi_check_trigger_arg_is(&cmd->scan_end_arg,
- 					   cmd->chanlist_len);
--	err |= comedi_check_trigger_arg_max(&cmd->stop_arg,
--					    s->async->prealloc_bufsz /
--					    comedi_bytes_per_scan(s));
-+	bytes_per_scan = comedi_bytes_per_scan_cmd(s, cmd);
-+	if (bytes_per_scan) {
-+		err |= comedi_check_trigger_arg_max(&cmd->stop_arg,
-+						    s->async->prealloc_bufsz /
-+						    bytes_per_scan);
-+	}
- 
- 	if (err)
- 		return 3;
 
 
