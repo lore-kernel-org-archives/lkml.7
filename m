@@ -2,264 +2,103 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1399FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539EBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C802120830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2118820830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141119;
-	bh=/yEl2zJkA8hZwBh1HoKYsN/qc7clQQQfLCMS5XC5PaI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d6IWwXiR/ivswxU3YGX1tsODncHUd29y5Evu3x0Yi7i4FvjCi53zsGXUE0lcw48/N
-	 TTVqKWXP0LFLKcZ53HAnCucD2iCM9VvVRHZKbJ9Ai164a9/W430Ozc4uBkqZBMqz7e
-	 7T03vt5ZvJQECswATG3/uqS4YSunoN+cFVY63Eqo=
+	s=default; t=1554141124;
+	bh=XRJGXhzu6hxZGMfSc7/r5ToGCpGK797KROFn4TK6XZQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
+	b=Z8QUOICRDZ4hOdOkMjV3fvuwq4c05BZpgLHlQczp1xiZpJkVLZ7SbLyN05srgf/Lr
+	 dCWDG1FRpFYML4qILHAsENuohPU/k2uxDqhWSY9DD3L3Bi2RnH7oaAmFuHu2ddG/jp
+	 A7v2SxrHJbkuH+aN/h7PK24n0ex+6G+gRYbHZWqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732262AbfDAR1B (ORCPT
+        id S1732376AbfDARwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:27:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728780AbfDAR07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:26:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A106420856;
-        Mon,  1 Apr 2019 17:26:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139618;
-        bh=/yEl2zJkA8hZwBh1HoKYsN/qc7clQQQfLCMS5XC5PaI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J8dvaerf242dbYEU1b9Td8s4mVaS+Ui3jdhtrzAFZvlCGZl2hCkz1pKPuYZ3UVMwi
-         QLn6MROcUeWlmk/W2dcN+EJ5bp2McAsD+aW7MC9WHrVQAZDjjbZiTBpkaAWEsgBAAJ
-         X3t80VI85cqH8Dj/LUYdRR1feM9ytn2CHMQOE26I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 4.9 20/56] powerpc: bpf: Fix generation of load/store DW instructions
-Date:   Mon,  1 Apr 2019 19:02:36 +0200
-Message-Id: <20190401170104.899554770@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
-References: <20190401170103.398401360@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Mon, 1 Apr 2019 13:52:03 -0400
+Received: from mail-lf1-f46.google.com ([209.85.167.46]:43212 "EHLO
+        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729565AbfDARv7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:51:59 -0400
+Received: by mail-lf1-f46.google.com with SMTP id g7so6931274lfh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 10:51:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=PHMeePNk5+WqIP9bn6Ly7V2tLpJ0ch+LgEkGb4MdyLk=;
+        b=BTqw7lO5Xbdw7L1gGrjWfzTyh1Ekkfz4Gc6wDzzinjrCDP1+luYqbVnMNflJqqnDtA
+         xcdigwvpgyhnqYJ/Klzenr7m04aoLdciK90EWH6zC8c4knB44hTOmuVt/cr0vAtCqJwh
+         BMYqYQa0HJwmXd0frGFAdPacmKjV2q+LYfSck=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=PHMeePNk5+WqIP9bn6Ly7V2tLpJ0ch+LgEkGb4MdyLk=;
+        b=pBsusxLpWlxFbmUuXbN5q2kQhAqmZFUsiTeX1MWUtR4h8++3VMwkGFjsGRFmF1Nr/E
+         a4gzEsihkqk+ChCFbK3FmJlzehuz3/Z0kirwNaFHDGhB5HjyVRCZ2YuXJRpmxpwSsQ5W
+         p6dFyj7wKvdQVwI3HGjimFXOYa+nm/AStvQf5OB2wu6h45uBoWCZyBDcgB6woU1qSOgR
+         7Sg6DkqqsOuURkilaI58YFUy2PYjNcylHG8b9fpHUfANRzl1U3u9ScVrz4zag6yDd0ek
+         hm1Hc4AoJQdI0+y37YdYLaphxG10wdM53MsniimKY2amsJ3a75+5osN9igCKsMZD644U
+         G8gA==
+X-Gm-Message-State: APjAAAXItNdO9k41ZQ157l1nbm6W3goWzoNB6pnNjgEhyX9Z1TgKvHPS
+        Ki87Kg0vQRTiQyoBTczaUfE2aBgvENg=
+X-Google-Smtp-Source: APXvYqyo7Od9uDeunc8CYDMvzS7telJNTgf6b4NqgnLhrBtfhxzSsI2t+N5PhP9FgWITq5BDgFphRQ==
+X-Received: by 2002:a19:ab1a:: with SMTP id u26mr34926138lfe.65.1554141116342;
+        Mon, 01 Apr 2019 10:51:56 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id f1sm2239261ljf.40.2019.04.01.10.51.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 10:51:55 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id v14so6961813lfi.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 10:51:55 -0700 (PDT)
+X-Received: by 2002:a19:9145:: with SMTP id y5mr35643508lfj.35.1554141115065;
+ Mon, 01 Apr 2019 10:51:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190331230940.GA30957@mit.edu>
+In-Reply-To: <20190331230940.GA30957@mit.edu>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 1 Apr 2019 10:51:39 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg4OqHpbckCcan73TXkB-rxS1C2M53uLs27Gw2w4PzR5g@mail.gmail.com>
+Message-ID: <CAHk-=wg4OqHpbckCcan73TXkB-rxS1C2M53uLs27Gw2w4PzR5g@mail.gmail.com>
+Subject: Re: How to add Unicode character tables to the kernel?
+To:     "Theodore Ts'o" <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+On Sun, Mar 31, 2019 at 4:09 PM Theodore Ts'o <tytso@mit.edu> wrote:
+>
+> The question is how to do this, with different tradeoffs.  One is to
+> simply include a utf8data.h file, which will be 320k.  That might
+> sound large, but in fs/nls there are 3544k worth of similar files.
+> Some are relatively small --- only 16k.  But others are quite large
+> --- 480k to 856k.  The table for Chinese character set is such an
+> example.  So in comparison, the 320k size of utf8data.h is quite
+> compact.
+>
+> The problem with this solution is that the files in fs/nls, and the
+> proposed utf8data.h, are generated files.
 
-------------------
+Oh, we definitely don't want to copy the original huge tables, and we
+don't even *want* people to edit those things in the first place.
 
-From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+So generated files are fine. It's not like the source data isn't
+public, and yes, the commit message should have a pointer to it and
+how to get the source and the generated files. But no, we shouldn't
+feel like we should encourage people to be able to generate their own
+modified unicode tables.
 
-commit 86be36f6502c52ddb4b85938145324fd07332da1 upstream.
-
-Yauheni Kaliuta pointed out that PTR_TO_STACK store/load verifier test
-was failing on powerpc64 BE, and rightfully indicated that the PPC_LD()
-macro is not masking away the last two bits of the offset per the ISA,
-resulting in the generation of 'lwa' instruction instead of the intended
-'ld' instruction.
-
-Segher also pointed out that we can't simply mask away the last two bits
-as that will result in loading/storing from/to a memory location that
-was not intended.
-
-This patch addresses this by using ldx/stdx if the offset is not
-word-aligned. We load the offset into a temporary register (TMP_REG_2)
-and use that as the index register in a subsequent ldx/stdx. We fix
-PPC_LD() macro to mask off the last two bits, but enhance PPC_BPF_LL()
-and PPC_BPF_STL() to factor in the offset value and generate the proper
-instruction sequence. We also convert all existing users of PPC_LD() and
-PPC_STD() to use these macros. All existing uses of these macros have
-been audited to ensure that TMP_REG_2 can be clobbered.
-
-Fixes: 156d0e290e96 ("powerpc/ebpf/jit: Implement JIT compiler for extended BPF")
-Cc: stable@vger.kernel.org # v4.9+
-
-Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/powerpc/include/asm/ppc-opcode.h |    2 ++
- arch/powerpc/net/bpf_jit.h            |   17 +++++------------
- arch/powerpc/net/bpf_jit32.h          |    4 ++++
- arch/powerpc/net/bpf_jit64.h          |   20 ++++++++++++++++++++
- arch/powerpc/net/bpf_jit_comp64.c     |   12 ++++++------
- 5 files changed, 37 insertions(+), 18 deletions(-)
-
---- a/arch/powerpc/include/asm/ppc-opcode.h
-+++ b/arch/powerpc/include/asm/ppc-opcode.h
-@@ -225,6 +225,7 @@
- /* Misc instructions for BPF compiler */
- #define PPC_INST_LBZ			0x88000000
- #define PPC_INST_LD			0xe8000000
-+#define PPC_INST_LDX			0x7c00002a
- #define PPC_INST_LHZ			0xa0000000
- #define PPC_INST_LWZ			0x80000000
- #define PPC_INST_LHBRX			0x7c00062c
-@@ -232,6 +233,7 @@
- #define PPC_INST_STB			0x98000000
- #define PPC_INST_STH			0xb0000000
- #define PPC_INST_STD			0xf8000000
-+#define PPC_INST_STDX			0x7c00012a
- #define PPC_INST_STDU			0xf8000001
- #define PPC_INST_STW			0x90000000
- #define PPC_INST_STWU			0x94000000
---- a/arch/powerpc/net/bpf_jit.h
-+++ b/arch/powerpc/net/bpf_jit.h
-@@ -51,6 +51,8 @@
- #define PPC_LIS(r, i)		PPC_ADDIS(r, 0, i)
- #define PPC_STD(r, base, i)	EMIT(PPC_INST_STD | ___PPC_RS(r) |	      \
- 				     ___PPC_RA(base) | ((i) & 0xfffc))
-+#define PPC_STDX(r, base, b)	EMIT(PPC_INST_STDX | ___PPC_RS(r) |	      \
-+				     ___PPC_RA(base) | ___PPC_RB(b))
- #define PPC_STDU(r, base, i)	EMIT(PPC_INST_STDU | ___PPC_RS(r) |	      \
- 				     ___PPC_RA(base) | ((i) & 0xfffc))
- #define PPC_STW(r, base, i)	EMIT(PPC_INST_STW | ___PPC_RS(r) |	      \
-@@ -65,7 +67,9 @@
- #define PPC_LBZ(r, base, i)	EMIT(PPC_INST_LBZ | ___PPC_RT(r) |	      \
- 				     ___PPC_RA(base) | IMM_L(i))
- #define PPC_LD(r, base, i)	EMIT(PPC_INST_LD | ___PPC_RT(r) |	      \
--				     ___PPC_RA(base) | IMM_L(i))
-+				     ___PPC_RA(base) | ((i) & 0xfffc))
-+#define PPC_LDX(r, base, b)	EMIT(PPC_INST_LDX | ___PPC_RT(r) |	      \
-+				     ___PPC_RA(base) | ___PPC_RB(b))
- #define PPC_LWZ(r, base, i)	EMIT(PPC_INST_LWZ | ___PPC_RT(r) |	      \
- 				     ___PPC_RA(base) | IMM_L(i))
- #define PPC_LHZ(r, base, i)	EMIT(PPC_INST_LHZ | ___PPC_RT(r) |	      \
-@@ -85,17 +89,6 @@
- 					___PPC_RA(a) | ___PPC_RB(b))
- #define PPC_BPF_STDCX(s, a, b)	EMIT(PPC_INST_STDCX | ___PPC_RS(s) |	      \
- 					___PPC_RA(a) | ___PPC_RB(b))
--
--#ifdef CONFIG_PPC64
--#define PPC_BPF_LL(r, base, i) do { PPC_LD(r, base, i); } while(0)
--#define PPC_BPF_STL(r, base, i) do { PPC_STD(r, base, i); } while(0)
--#define PPC_BPF_STLU(r, base, i) do { PPC_STDU(r, base, i); } while(0)
--#else
--#define PPC_BPF_LL(r, base, i) do { PPC_LWZ(r, base, i); } while(0)
--#define PPC_BPF_STL(r, base, i) do { PPC_STW(r, base, i); } while(0)
--#define PPC_BPF_STLU(r, base, i) do { PPC_STWU(r, base, i); } while(0)
--#endif
--
- #define PPC_CMPWI(a, i)		EMIT(PPC_INST_CMPWI | ___PPC_RA(a) | IMM_L(i))
- #define PPC_CMPDI(a, i)		EMIT(PPC_INST_CMPDI | ___PPC_RA(a) | IMM_L(i))
- #define PPC_CMPW(a, b)		EMIT(PPC_INST_CMPW | ___PPC_RA(a) |	      \
---- a/arch/powerpc/net/bpf_jit32.h
-+++ b/arch/powerpc/net/bpf_jit32.h
-@@ -122,6 +122,10 @@ DECLARE_LOAD_FUNC(sk_load_byte_msh);
- #define PPC_NTOHS_OFFS(r, base, i)	PPC_LHZ_OFFS(r, base, i)
- #endif
- 
-+#define PPC_BPF_LL(r, base, i) do { PPC_LWZ(r, base, i); } while(0)
-+#define PPC_BPF_STL(r, base, i) do { PPC_STW(r, base, i); } while(0)
-+#define PPC_BPF_STLU(r, base, i) do { PPC_STWU(r, base, i); } while(0)
-+
- #define SEEN_DATAREF 0x10000 /* might call external helpers */
- #define SEEN_XREG    0x20000 /* X reg is used */
- #define SEEN_MEM     0x40000 /* SEEN_MEM+(1<<n) = use mem[n] for temporary
---- a/arch/powerpc/net/bpf_jit64.h
-+++ b/arch/powerpc/net/bpf_jit64.h
-@@ -86,6 +86,26 @@ DECLARE_LOAD_FUNC(sk_load_byte);
- 			(imm >= SKF_LL_OFF ? func##_negative_offset : func) :	\
- 			func##_positive_offset)
- 
-+/*
-+ * WARNING: These can use TMP_REG_2 if the offset is not at word boundary,
-+ * so ensure that it isn't in use already.
-+ */
-+#define PPC_BPF_LL(r, base, i) do {					      \
-+				if ((i) % 4) {				      \
-+					PPC_LI(b2p[TMP_REG_2], (i));	      \
-+					PPC_LDX(r, base, b2p[TMP_REG_2]);     \
-+				} else					      \
-+					PPC_LD(r, base, i);		      \
-+				} while(0)
-+#define PPC_BPF_STL(r, base, i) do {					      \
-+				if ((i) % 4) {				      \
-+					PPC_LI(b2p[TMP_REG_2], (i));	      \
-+					PPC_STDX(r, base, b2p[TMP_REG_2]);    \
-+				} else					      \
-+					PPC_STD(r, base, i);		      \
-+				} while(0)
-+#define PPC_BPF_STLU(r, base, i) do { PPC_STDU(r, base, i); } while(0)
-+
- #define SEEN_FUNC	0x1000 /* might call external helpers */
- #define SEEN_STACK	0x2000 /* uses BPF stack */
- #define SEEN_SKB	0x4000 /* uses sk_buff */
---- a/arch/powerpc/net/bpf_jit_comp64.c
-+++ b/arch/powerpc/net/bpf_jit_comp64.c
-@@ -265,7 +265,7 @@ static void bpf_jit_emit_tail_call(u32 *
- 	 * if (tail_call_cnt > MAX_TAIL_CALL_CNT)
- 	 *   goto out;
- 	 */
--	PPC_LD(b2p[TMP_REG_1], 1, bpf_jit_stack_tailcallcnt(ctx));
-+	PPC_BPF_LL(b2p[TMP_REG_1], 1, bpf_jit_stack_tailcallcnt(ctx));
- 	PPC_CMPLWI(b2p[TMP_REG_1], MAX_TAIL_CALL_CNT);
- 	PPC_BCC(COND_GT, out);
- 
-@@ -278,7 +278,7 @@ static void bpf_jit_emit_tail_call(u32 *
- 	/* prog = array->ptrs[index]; */
- 	PPC_MULI(b2p[TMP_REG_1], b2p_index, 8);
- 	PPC_ADD(b2p[TMP_REG_1], b2p[TMP_REG_1], b2p_bpf_array);
--	PPC_LD(b2p[TMP_REG_1], b2p[TMP_REG_1], offsetof(struct bpf_array, ptrs));
-+	PPC_BPF_LL(b2p[TMP_REG_1], b2p[TMP_REG_1], offsetof(struct bpf_array, ptrs));
- 
- 	/*
- 	 * if (prog == NULL)
-@@ -288,7 +288,7 @@ static void bpf_jit_emit_tail_call(u32 *
- 	PPC_BCC(COND_EQ, out);
- 
- 	/* goto *(prog->bpf_func + prologue_size); */
--	PPC_LD(b2p[TMP_REG_1], b2p[TMP_REG_1], offsetof(struct bpf_prog, bpf_func));
-+	PPC_BPF_LL(b2p[TMP_REG_1], b2p[TMP_REG_1], offsetof(struct bpf_prog, bpf_func));
- #ifdef PPC64_ELF_ABI_v1
- 	/* skip past the function descriptor */
- 	PPC_ADDI(b2p[TMP_REG_1], b2p[TMP_REG_1],
-@@ -620,7 +620,7 @@ bpf_alu32_trunc:
- 				 * the instructions generated will remain the
- 				 * same across all passes
- 				 */
--				PPC_STD(dst_reg, 1, bpf_jit_stack_local(ctx));
-+				PPC_BPF_STL(dst_reg, 1, bpf_jit_stack_local(ctx));
- 				PPC_ADDI(b2p[TMP_REG_1], 1, bpf_jit_stack_local(ctx));
- 				PPC_LDBRX(dst_reg, 0, b2p[TMP_REG_1]);
- 				break;
-@@ -676,7 +676,7 @@ emit_clear:
- 				PPC_LI32(b2p[TMP_REG_1], imm);
- 				src_reg = b2p[TMP_REG_1];
- 			}
--			PPC_STD(src_reg, dst_reg, off);
-+			PPC_BPF_STL(src_reg, dst_reg, off);
- 			break;
- 
- 		/*
-@@ -723,7 +723,7 @@ emit_clear:
- 			break;
- 		/* dst = *(u64 *)(ul) (src + off) */
- 		case BPF_LDX | BPF_MEM | BPF_DW:
--			PPC_LD(dst_reg, src_reg, off);
-+			PPC_BPF_LL(dst_reg, src_reg, off);
- 			break;
- 
- 		/*
-
-
+                Linus
