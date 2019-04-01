@@ -2,177 +2,108 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41BFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BA4C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A161F20883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:30:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="LMynH7Dl"
+	by mail.kernel.org (Postfix) with ESMTP id 53FAD20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfDAKay (ORCPT
+        id S1726862AbfDAKbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 06:30:54 -0400
-Received: from onstation.org ([52.200.56.107]:36894 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbfDAKal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 06:30:41 -0400
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 613424571E;
-        Mon,  1 Apr 2019 10:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1554114640;
-        bh=LKI5QutWjmEa9X7MXO2InBl2G8mvzCmPoaPQ3bHxYAo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LMynH7DlcvOvu14NthY5tN6clcMCTcg0O7jv3CYS8OCNLJ+dIyPBsCkaNxqat5toQ
-         x5R93Dk8CNtHhH6oiZ4zmJWm3aHcTNKykJoxWVf1t2vixo7RYaC/2e3BlcDcRJ0wYs
-         anqbw5OjWEGd+3s01pqwwS4DS8R5UcBX0EHWyUpo=
-From:   Brian Masney <masneyb@onstation.org>
-To:     lee.jones@linaro.org, daniel.thompson@linaro.org,
-        jingoohan1@gmail.com, robh+dt@kernel.org
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dmurphy@ti.com, jonathan@marek.ca
-Subject: [PATCH v2 3/3] backlight: lm3630a: add device tree supprt
-Date:   Mon,  1 Apr 2019 06:30:34 -0400
-Message-Id: <20190401103034.21062-4-masneyb@onstation.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190401103034.21062-1-masneyb@onstation.org>
-References: <20190401103034.21062-1-masneyb@onstation.org>
+        Mon, 1 Apr 2019 06:31:38 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43927 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726409AbfDAKbh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 06:31:37 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x31AQODk003461;
+        Mon, 1 Apr 2019 12:31:15 +0200
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2rhy3xa0xq-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 01 Apr 2019 12:31:15 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1E04338;
+        Mon,  1 Apr 2019 10:31:15 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ED29C25E6;
+        Mon,  1 Apr 2019 10:31:14 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 1 Apr 2019
+ 12:31:14 +0200
+Received: from localhost (10.201.23.65) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 1 Apr 2019 12:31:11
+ +0200
+From:   Lionel Debieve <lionel.debieve@st.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <rob.herring@linaro.org>,
+        <linux-crypto@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH 1/2] hwrng: stm32 - fix unbalanced pm_runtime_enable
+Date:   Mon, 1 Apr 2019 12:30:45 +0200
+Message-ID: <1554114646-18791-2-git-send-email-lionel.debieve@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1554114646-18791-1-git-send-email-lionel.debieve@st.com>
+References: <1554114646-18791-1-git-send-email-lionel.debieve@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.65]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-01_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree support to the lm3630a driver and allow configuring
-independently on both banks the mapping mode (linear or exponential),
-initial and maximum LED brightness.
+No remove function implemented yet in the driver.
+Without remove function, the pm_runtime implementation
+complains when removing and probing again the driver.
 
-Driver was tested on a LG Nexus 5 (hammerhead) phone.
-
-Signed-off-by: Brian Masney <masneyb@onstation.org>
+Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
 ---
- drivers/video/backlight/lm3630a_bl.c | 69 ++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+ drivers/char/hw_random/stm32-rng.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index ef2553f452ca..96fbc1273dda 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -35,6 +35,9 @@
- #define REG_MAX		0x50
+diff --git a/drivers/char/hw_random/stm32-rng.c b/drivers/char/hw_random/stm32-rng.c
+index 042860d..37b338a 100644
+--- a/drivers/char/hw_random/stm32-rng.c
++++ b/drivers/char/hw_random/stm32-rng.c
+@@ -169,6 +169,13 @@ static int stm32_rng_probe(struct platform_device *ofdev)
+ 	return devm_hwrng_register(dev, &priv->rng);
+ }
  
- #define INT_DEBOUNCE_MSEC	10
-+
-+#define LM3630A_MAX_SOURCES	2
-+
- struct lm3630a_chip {
- 	struct device *dev;
- 	struct delayed_work work;
-@@ -364,6 +367,64 @@ static const struct regmap_config lm3630a_regmap = {
- 	.max_register = REG_MAX,
- };
- 
-+static void lm3630a_parse_dt(struct lm3630a_chip *pchip)
++static int stm32_rng_remove(struct platform_device *ofdev)
 +{
-+	u32 sources[LM3630A_MAX_SOURCES], val;
-+	struct device_node *child_node;
-+	int num_sources, ret, i;
-+	bool linear;
++	pm_runtime_disable(&ofdev->dev);
 +
-+	for_each_available_child_of_node(pchip->dev->of_node, child_node) {
-+		num_sources = of_property_count_u32_elems(child_node,
-+							  "led-sources");
-+		if (num_sources < 0)
-+			continue;
-+
-+		if (num_sources > LM3630A_MAX_SOURCES)
-+			num_sources = LM3630A_MAX_SOURCES;
-+
-+		ret = of_property_read_u32_array(child_node, "led-sources",
-+						 sources, num_sources);
-+		if (ret) {
-+			dev_err(pchip->dev,
-+				"Error parsing led-sources node: %d\n", ret);
-+			return;
-+		}
-+
-+		linear = of_property_read_bool(child_node,
-+					       "ti,linear-mapping-mode");
-+
-+		for (i = 0; i < num_sources; i++) {
-+			if (sources[i] == 0)
-+				pchip->pdata->leda_ctrl = linear ?
-+					LM3630A_LEDA_ENABLE_LINEAR :
-+					LM3630A_LEDA_ENABLE;
-+			else if (sources[i] == 1)
-+				pchip->pdata->ledb_ctrl = linear ?
-+					LM3630A_LEDB_ENABLE_LINEAR :
-+					LM3630A_LEDB_ENABLE;
-+
-+			ret = of_property_read_u32(child_node,
-+						   "default-brightness", &val);
-+			if (!ret) {
-+				if (sources[i] == 0)
-+					pchip->pdata->leda_init_brt = val;
-+				else if (sources[i] == 1)
-+					pchip->pdata->ledb_init_brt = val;
-+			}
-+
-+			ret = of_property_read_u32(child_node, "max-brightness",
-+						   &val);
-+			if (!ret) {
-+				if (sources[i] == 0)
-+					pchip->pdata->leda_max_brt = val;
-+				else if (sources[i] == 1)
-+					pchip->pdata->ledb_max_brt = val;
-+			}
-+		}
-+	};
++	return 0;
 +}
 +
- static int lm3630a_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
+ #ifdef CONFIG_PM
+ static int stm32_rng_runtime_suspend(struct device *dev)
  {
-@@ -405,6 +466,7 @@ static int lm3630a_probe(struct i2c_client *client,
- 		pdata->ledb_init_brt = LM3630A_MAX_BRIGHTNESS;
- 	}
- 	pchip->pdata = pdata;
-+	lm3630a_parse_dt(pchip);
- 
- 	/* chip initialize */
- 	rval = lm3630a_chip_init(pchip);
-@@ -470,11 +532,18 @@ static const struct i2c_device_id lm3630a_id[] = {
- 	{}
+@@ -210,6 +217,7 @@ static struct platform_driver stm32_rng_driver = {
+ 		.of_match_table = stm32_rng_match,
+ 	},
+ 	.probe = stm32_rng_probe,
++	.remove = stm32_rng_remove,
  };
  
-+static const struct of_device_id lm3630a_match_table[] = {
-+	{ .compatible = "ti,lm3630a", },
-+	{ },
-+};
-+
-+
- MODULE_DEVICE_TABLE(i2c, lm3630a_id);
- 
- static struct i2c_driver lm3630a_i2c_driver = {
- 	.driver = {
- 		   .name = LM3630A_NAME,
-+		   .of_match_table = lm3630a_match_table,
- 		   },
- 	.probe = lm3630a_probe,
- 	.remove = lm3630a_remove,
+ module_platform_driver(stm32_rng_driver);
 -- 
-2.20.1
+2.7.4
 
