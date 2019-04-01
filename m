@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1805C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C617C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91ABC20856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D24A20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138929;
-	bh=rTiFpj/8Qx5DZxlRkCe9k3kQ3xDE78/nJy61eI+Wkoc=;
+	s=default; t=1554138934;
+	bh=A6H/Q/UhgiEs9X3If5/pYebu355iuiHbuj0l+lCirL4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gDgGmTfo1rFGkxnZVxqVrTQcPClE4LqDyBd+BLjP5MT+pYspexlEpJT3qIbihaDYx
-	 9s+wgKIAnVvwg/rmn98KbzfwvrM1cy8FsT02U9Eq3PFklvWp1kTxchOyCQcSl3jByp
-	 fd5ofOMB7pdMnXb2FFuC/hhhHiPYX+g15KtNb6Io=
+	b=RPUqALkhaotnrvI4gR90i7Sz7LJCF1e8T96BLrM28Mfd1IBCaCgpx3g3A0QriHe+b
+	 GzzAbnDxwbT8jqrY2lNZwIw8sork3wwv7Qqa3ArpWf88JZ8wn4mdfndaDwx6kH5lT1
+	 A6LGxg1Sa48Dy7wAgqjihCAjNlj6niFwatSy7uPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730897AbfDARP2 (ORCPT
+        id S1730902AbfDARPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39542 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:15:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729969AbfDARPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:15:23 -0400
+        id S1728648AbfDARPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:15:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84D2121473;
-        Mon,  1 Apr 2019 17:15:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18FC9206C0;
+        Mon,  1 Apr 2019 17:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138922;
-        bh=rTiFpj/8Qx5DZxlRkCe9k3kQ3xDE78/nJy61eI+Wkoc=;
+        s=default; t=1554138929;
+        bh=A6H/Q/UhgiEs9X3If5/pYebu355iuiHbuj0l+lCirL4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vyuxr4M3/Im7QTkFMp8Y1XfQwolzc+u9/um8drZoQtVVRsDlqzAE139SZhWhrVcDL
-         p+vwaDiIczL3RGN0YBvhpZAp5Gf6jXUZwdPz3ic0nQxsSSnxILClHtEorcHRZIdDij
-         FwdToBHWJM719JSMIMdBmdd+wa6dvneiCvyf4YfY=
+        b=qATHdtYQfj6L6nzdUA7sl9q4jpLMLChNQq6C9zeFal3CzPKTA4359PMEjT5ay+XNA
+         T5MVRIV3iG+41wgmuPoT6iL8LrfWsHdApiDRWtlQkSUz6XgwBwZ/PkrHIQKIodp8fi
+         uLnrC1URCeuByl9fbAFoAKGMm3uxMGZzKaI9WgkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 059/134] ALSA: pcm: Fix possible OOB access in PCM oss plugins
-Date:   Mon,  1 Apr 2019 19:01:35 +0200
-Message-Id: <20190401170050.115818456@linuxfoundation.org>
+Subject: [PATCH 4.19 061/134] ALSA: hda/realtek - Add support headset mode for DELL WYSE AIO
+Date:   Mon,  1 Apr 2019 19:01:37 +0200
+Message-Id: <20190401170050.278038794@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,104 +65,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Kailang Yang <kailang@realtek.com>
 
-commit ca0214ee2802dd47239a4e39fb21c5b00ef61b22 upstream.
+commit 136824efaab2c095fc911048f7c7ddeda258c965 upstream.
 
-The PCM OSS emulation converts and transfers the data on the fly via
-"plugins".  The data is converted over the dynamically allocated
-buffer for each plugin, and recently syzkaller caught OOB in this
-flow.
+This patch will enable WYSE AIO for Headset mode.
 
-Although the bisection by syzbot pointed out to the commit
-65766ee0bf7f ("ALSA: oss: Use kvzalloc() for local buffer
-allocations"), this is merely a commit to replace vmalloc() with
-kvmalloc(), hence it can't be the cause.  The further debug action
-revealed that this happens in the case where a slave PCM doesn't
-support only the stereo channels while the OSS stream is set up for a
-mono channel.  Below is a brief explanation:
-
-At each OSS parameter change, the driver sets up the PCM hw_params
-again in snd_pcm_oss_change_params_lock().  This is also the place
-where plugins are created and local buffers are allocated.  The
-problem is that the plugins are created before the final hw_params is
-determined.  Namely, two snd_pcm_hw_param_near() calls for setting the
-period size and periods may influence on the final result of channels,
-rates, etc, too, while the current code has already created plugins
-beforehand with the premature values.  So, the plugin believes that
-channels=1, while the actual I/O is with channels=2, which makes the
-driver reading/writing over the allocated buffer size.
-
-The fix is simply to move the plugin allocation code after the final
-hw_params call.
-
-Reported-by: syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/oss/pcm_oss.c |   43 ++++++++++++++++++++++---------------------
- 1 file changed, 22 insertions(+), 21 deletions(-)
+ sound/pci/hda/patch_realtek.c |   26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
---- a/sound/core/oss/pcm_oss.c
-+++ b/sound/core/oss/pcm_oss.c
-@@ -940,6 +940,28 @@ static int snd_pcm_oss_change_params_loc
- 	oss_frame_size = snd_pcm_format_physical_width(params_format(params)) *
- 			 params_channels(params) / 8;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5613,6 +5613,9 @@ enum {
+ 	ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE,
+ 	ALC285_FIXUP_LENOVO_PC_BEEP_IN_NOISE,
+ 	ALC255_FIXUP_ACER_HEADSET_MIC,
++	ALC225_FIXUP_DELL_WYSE_AIO_MIC_NO_PRESENCE,
++	ALC225_FIXUP_WYSE_AUTO_MUTE,
++	ALC225_FIXUP_WYSE_DISABLE_MIC_VREF,
+ };
  
-+	err = snd_pcm_oss_period_size(substream, params, sparams);
-+	if (err < 0)
-+		goto failure;
-+
-+	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
-+	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
-+	if (err < 0)
-+		goto failure;
-+
-+	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
-+				     runtime->oss.periods, NULL);
-+	if (err < 0)
-+		goto failure;
-+
-+	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
-+
-+	err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams);
-+	if (err < 0) {
-+		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
-+		goto failure;
-+	}
-+
- #ifdef CONFIG_SND_PCM_OSS_PLUGINS
- 	snd_pcm_oss_plugin_clear(substream);
- 	if (!direct) {
-@@ -974,27 +996,6 @@ static int snd_pcm_oss_change_params_loc
- 	}
- #endif
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6567,6 +6570,28 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC255_FIXUP_HEADSET_MODE_NO_HP_MIC
+ 	},
++	[ALC225_FIXUP_DELL_WYSE_AIO_MIC_NO_PRESENCE] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x16, 0x01011020 }, /* Rear Line out */
++			{ 0x19, 0x01a1913c }, /* use as Front headset mic, without its own jack detect */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC225_FIXUP_WYSE_AUTO_MUTE
++	},
++	[ALC225_FIXUP_WYSE_AUTO_MUTE] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc_fixup_auto_mute_via_amp,
++		.chained = true,
++		.chain_id = ALC225_FIXUP_WYSE_DISABLE_MIC_VREF
++	},
++	[ALC225_FIXUP_WYSE_DISABLE_MIC_VREF] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc_fixup_disable_mic_vref,
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
++	},
+ };
  
--	err = snd_pcm_oss_period_size(substream, params, sparams);
--	if (err < 0)
--		goto failure;
--
--	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
--	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
--	if (err < 0)
--		goto failure;
--
--	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
--				     runtime->oss.periods, NULL);
--	if (err < 0)
--		goto failure;
--
--	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
--
--	if ((err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams)) < 0) {
--		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
--		goto failure;
--	}
--
- 	if (runtime->oss.trigger) {
- 		sw_params->start_threshold = 1;
- 	} else {
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -6631,6 +6656,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1028, 0x0871, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1028, 0x0872, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1028, 0x0873, "Dell Precision 3930", ALC255_FIXUP_DUMMY_LINEOUT_VERB),
++	SND_PCI_QUIRK(0x1028, 0x08ad, "Dell WYSE AIO", ALC225_FIXUP_DELL_WYSE_AIO_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1028, 0x0935, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x164a, "Dell", ALC293_FIXUP_DELL1_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1028, 0x164b, "Dell", ALC293_FIXUP_DELL1_MIC_NO_PRESENCE),
 
 
