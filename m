@@ -2,86 +2,115 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFDBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDFFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312FF2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554154953;
-	bh=+bI9lOnQ8yMBC/6vKeYZrlkKYkhlbuUbHoW5Wcph/3g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IbqQmI8ZtUHwKhRlYt3USe2+TIRBOsm8RunL/T20TuBsmCJob/cBFPN4o15ZqcUNK
-	 WF8X3klS24xS2nccDWKAY/9OGLi1uS/I8DT82A2CUlE6uropYrohnpdkplmyctmyeE
-	 O2m1tq4XBELo6Ezcw/ONGHAGlzlamNCgJ4zL67Gg=
+	by mail.kernel.org (Postfix) with ESMTP id E06E12070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 21:43:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Kr2gi4Um"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfDAVmc (ORCPT
+        id S1727773AbfDAVnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 17:42:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbfDAVmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 17:42:31 -0400
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B06652070B;
-        Mon,  1 Apr 2019 21:42:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554154951;
-        bh=+bI9lOnQ8yMBC/6vKeYZrlkKYkhlbuUbHoW5Wcph/3g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yxdG1g3cmgAnDjIr2Y0KWliJh1djO1NNwmJ2Dd9TBW9+PUGrpcsQ22RiAtyXJFkro
-         Y8R+K9DpxrpLR/p6bh6aF8WzzJ2Z9/ur4CD5nbsvxkLF5NXD+8YdUqHWn07rPPJ9bh
-         u19pPDe+cAwZEVDsE8RRuRiZFNPY0/oNqUSmW5wI=
-Received: by mail-ed1-f42.google.com with SMTP id h22so9749202edw.7;
-        Mon, 01 Apr 2019 14:42:30 -0700 (PDT)
-X-Gm-Message-State: APjAAAXmqgDto23JPzNvGBH/A/XMoIRhHPoNaTQlFtiY1/RjpxoDKtFc
-        wK8vg22GaTRtZUfxf27+StbtcOzsnP0zG/7dx54=
-X-Google-Smtp-Source: APXvYqywx/Bok50DHYF/OKcxvzLRanVE783UVfThE5i0pjDBz7Nx5x5qC4lu+7ae1J/ayvkIL0nBjvLlcVbeM3OrA+c=
-X-Received: by 2002:a50:a4db:: with SMTP id x27mr23669728edb.120.1554154948828;
- Mon, 01 Apr 2019 14:42:28 -0700 (PDT)
+        Mon, 1 Apr 2019 17:43:23 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36771 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbfDAVnX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 17:43:23 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 85so5427714pgc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 14:43:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mmqtOMVvscb+HQxFUwrIPhKliYEQlR+drfZoUODE5cw=;
+        b=Kr2gi4UmPseexza2lNrI5lAWb6eeHVzrzpiPdNzyxivyINGumWHm//CwtR9udn8zDV
+         hckm1c38RnVwrch2jSpFJqQ4VLUcrY4aPi5M6bky5Lvw47MRuCcx3QyQ29uQUE3y7mn6
+         VojRcDbw3KuFEYLRix5qNM84Hg0WTrcaPBkyQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mmqtOMVvscb+HQxFUwrIPhKliYEQlR+drfZoUODE5cw=;
+        b=CmXBpsbojMyX5Hb4waJiqNZ84171ERgrWXZCAqqo67dJvjbB2Y7D7gv54RrF3GftFt
+         DLQO/V7frD558HKloRFgCdPjd9J+BosSJV26rV1/PcQcgUQmIV3qoMhgW3m8dHODVbsc
+         CqnK+IeEbpTKxB54Lb7KGH79tQrD9qKXyCHye1/yTAgGO1585okRL0LmRWUCGk6WoQwT
+         O1FmFuqcIF8Y2NzdpsSTf2pAlE1ETK1SBj9TKEKPCniQD6JtsX0doZN/1nPReLWwqPn8
+         8FJQbWrn85soAWWzc4/HJAdW2V6kocL+P0refNsSJRWM645MwwlSsyJ+rwhxcAa8QfS4
+         Y+EQ==
+X-Gm-Message-State: APjAAAU++2uX2NYgn58EAvb86epEqYSFpFzVy7FOGjKf011n8HRsYvTf
+        fXen5saWYrVSgHPUtAWrpKlBDjzkxP95PA==
+X-Google-Smtp-Source: APXvYqxVksZDeqtoKHcY5c1W3H+yaf2/gWs21lQ6Y+aA10s7/9HUYc7h3/a8RF7sQ9REgBB8UX8xMQ==
+X-Received: by 2002:a65:6289:: with SMTP id f9mr50765840pgv.380.1554155002556;
+        Mon, 01 Apr 2019 14:43:22 -0700 (PDT)
+Received: from [10.136.8.252] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id q81sm19895229pfi.102.2019.04.01.14.43.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 14:43:21 -0700 (PDT)
+Subject: Re: [PATCH v5 6/8] dt-bindings: i2c: iproc: add "brcm,iproc-nic-i2c"
+ compatible string
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+References: <20190214175725.60462-1-ray.jui@broadcom.com>
+ <20190214175725.60462-7-ray.jui@broadcom.com> <20190327222439.GC15396@kunai>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <0b97cacd-9bf4-135a-b2ee-1d51ab380b1c@broadcom.com>
+Date:   Mon, 1 Apr 2019 14:43:17 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com> <1553483264-5379-9-git-send-email-hao.wu@intel.com>
-In-Reply-To: <1553483264-5379-9-git-send-email-hao.wu@intel.com>
-From:   Alan Tull <atull@kernel.org>
-Date:   Mon, 1 Apr 2019 16:41:52 -0500
-X-Gmail-Original-Message-ID: <CANk1AXR_sp-w0D7ftkdMn-_PrvV1h5Qvg-qSUEE6ZRm9BvYZ1g@mail.gmail.com>
-Message-ID: <CANk1AXR_sp-w0D7ftkdMn-_PrvV1h5Qvg-qSUEE6ZRm9BvYZ1g@mail.gmail.com>
-Subject: Re: [PATCH 08/17] fpga: dfl: afu: add userclock sysfs interfaces.
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Ananda Ravuri <ananda.ravuri@intel.com>,
-        Russ Weight <russell.h.weight@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190327222439.GC15396@kunai>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 10:24 PM Wu Hao <hao.wu@intel.com> wrote:
+Hi Wolfram,
 
-Hi Hao,
+On 3/27/2019 3:24 PM, Wolfram Sang wrote:
+> 
+>> Update iProc I2C binding document to add new compatible string
+>> "brcm,iproc-nic-i2c". Optional property "brcm,ape-hsls-addr-mask" is
+>> also added that allows configuration of the host view into the APE's
+>> address for "brcm,iproc-nic-i2c"
+> 
+> I don't know the platform, but wouldn't it be more DT-like to describe
+> the APE in DT and derive the mask from that information? Custom bindings
+> with values which are directly poked into a register usually raise my
+> eyebrow.
+> 
 
-Looks fine.
+Note APE is a co-processor that is not visible from the Linux running
+from the host processor.
 
->
-> This patch introduces userclock sysfs interfaces for AFU, user
-> could use these interfaces for clock setting to AFU.
->
-> Please note that, this is only working for port header feature
-> with revision 0, for later revisions, userclock setting is moved
-> to a separated private feature, so one revision sysfs interface
-> is exposed to userspace application for this purpose too.
->
-> Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
-> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-Acked-by: Alan Tull <atull@kernel.org>
+"brcm,iproc-nic-i2c" here is introduced to allow the I2C port from APE
+to be completely owned by the host CPU, to meet the requirement of
+certain use cases. At the same time, the control of the I2C port from
+APE will be disabled.
+
+The "brcm,ape-hsls-addr-mask" defines the address translation and be
+programmed into some configuration registers to allow the host to
+directly access the I2C registers of APE. Note those configuration
+registers are owned by the host, and that address is not APE's address
+space nor the host is intending to take over the control of APE.
+
+Therefore, I think it makes way more sense to use an address mask type
+of DT property here.
+
+Thanks,
+
+Ray
