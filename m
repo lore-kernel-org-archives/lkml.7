@@ -2,98 +2,114 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDA2C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF2DC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD63D213A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:56:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554105399;
-	bh=wLp/QB/bhEXwxZBKIvvDh3ZKXvdKifdGDNm3u97IV/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SKaZaPr6zOFbB4Vqyno0xQYnzRI+HQEHr37HpWuONiCZiMkNq/PoeHrK2sYhHrPTc
-	 PXp5RE8zOuVpzh1i0HKLhxQtKtopafOK39lnm9Yh+X+kv1azjJD6LG3mjrmX4EBLFq
-	 ovdgHjkRNMCFxzIGPb8hOXOcIeiXxKTiUjyxv3zc=
+	by mail.kernel.org (Postfix) with ESMTP id 6E8EE20896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:57:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mzVhXzRv";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jdT5AEeC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732079AbfDAH4i (ORCPT
+        id S1732106AbfDAH5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:56:38 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48916 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731944AbfDAH4i (ORCPT
+        Mon, 1 Apr 2019 03:57:30 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48914 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731944AbfDAH53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:56:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wLp/QB/bhEXwxZBKIvvDh3ZKXvdKifdGDNm3u97IV/E=; b=e5uk6IEgQj6sGPfrc6DX++YQo
-        HBdX2F4fJRZE+AaIjV6kgsIsdEqwH0AHEfIrTaxg45nQ2gs1fQQyi5VUy8QYBDsXNawdnz9AsNJu3
-        PUDEUPGYS6SmaIQ+jCoM0ldXwdmRPnhyqtis2eIYJ/pqFlG5RE4OHUgCKVZXujccxP2Xw=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hAro0-0008Eh-Ry; Mon, 01 Apr 2019 07:56:33 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 51C70440082; Mon,  1 Apr 2019 08:56:24 +0100 (BST)
-Date:   Mon, 1 Apr 2019 14:56:24 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     enric.balletbo@collabora.com, bleung@chromium.org,
-        groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH 1/3] ASoC: cros_ec_codec: Rename ec_response_codec_gain
- into ec_codec_i2s_gain
-Message-ID: <20190401075624.GA25436@sirena.org.uk>
-References: <CAPUE2uti=fketJ4vJw34et_y9L_gsEUwXNDdjg0sG8Z27ir1Hg@mail.gmail.com>
- <CAPUE2usk3unTTp+3mpL7TgZ02u9fJtB5gLTLBMfMwHErwyeOsw@mail.gmail.com>
+        Mon, 1 Apr 2019 03:57:29 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E7A426047C; Mon,  1 Apr 2019 07:57:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554105449;
+        bh=aZdnBPgm+ZLOTCF5PaXKNmR27i48RwuG6RbNlQ5UfgU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mzVhXzRvx9OjCf3KOlVPp9GoLYQgr9VKjKc7/orJ9qzJTyRW9Hs1AIaN3+ns2uYba
+         eNxiDahY5/3pUUhbJDToIRQNawrhLojFl7LsoX6322Wv+j3lQIOJHfzmjVDF2+7Pwe
+         fJb9Z5c9HOqSlrC9mgB+itWjICifgat+vbV6Ms4c=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7ED9C602FC;
+        Mon,  1 Apr 2019 07:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554105448;
+        bh=aZdnBPgm+ZLOTCF5PaXKNmR27i48RwuG6RbNlQ5UfgU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jdT5AEeC67ZRcgNjJIQvqQ8UhvDr4W8ou6LR2VFQTvhAPnH8/rPGurfJwbKSCzgTi
+         KxBPBhcofDtgpbZVW9qtcHelnTL8Z0nKAqbBWOLZOoI/t7Q86jm6xAD1QgYB0HI+HJ
+         oOeT+X/ZzqziFeYKeNCr9kQ6XGpFW9JjXUs6SIVM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7ED9C602FC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] rtc: snvs: use devm_platform_ioremap_resource() to
+ simplify code
+To:     Anson Huang <anson.huang@nxp.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+References: <1554096271-17921-1-git-send-email-Anson.Huang@nxp.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <8a485ab9-435f-4dfc-1e3d-4dc97e95376a@codeaurora.org>
+Date:   Mon, 1 Apr 2019 13:27:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
-Content-Disposition: inline
-In-Reply-To: <CAPUE2usk3unTTp+3mpL7TgZ02u9fJtB5gLTLBMfMwHErwyeOsw@mail.gmail.com>
-X-Cookie: Oh, wow!  Look at the moon!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1554096271-17921-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Dxnq1zWXvFF0Q93v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 4/1/2019 10:59 AM, Anson Huang wrote:
+> Use the new helper devm_platform_ioremap_resource() which wraps the
+> platform_get_resource() and devm_ioremap_resource() together, to
+> simplify the code.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>   drivers/rtc/rtc-snvs.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
+> index ce73eab..e0edd594 100644
+> --- a/drivers/rtc/rtc-snvs.c
+> +++ b/drivers/rtc/rtc-snvs.c
+> @@ -272,7 +272,6 @@ static const struct regmap_config snvs_rtc_config = {
+>   static int snvs_rtc_probe(struct platform_device *pdev)
+>   {
+>   	struct snvs_rtc_data *data;
+> -	struct resource *res;
+>   	int ret;
+>   	void __iomem *mmio;
+>   
+> @@ -284,9 +283,8 @@ static int snvs_rtc_probe(struct platform_device *pdev)
+>   
+>   	if (IS_ERR(data->regmap)) {
+>   		dev_warn(&pdev->dev, "snvs rtc: you use old dts file, please update it\n");
+> -		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   
+Remove this blank line.
 
-On Fri, Mar 29, 2019 at 10:56:36AM -0700, Gwendal Grignou wrote:
-> In preparation to update cros_ec_commands.h to match ChromeOS EC code
-> base, rename data structure that will be merged together.
->=20
-> TEST=3Dcompile.
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-This doesn't apply against current code, please check and resend.
+Cheers,
+-Mukesh
 
---Dxnq1zWXvFF0Q93v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyhxCcACgkQJNaLcl1U
-h9DKaQf9HzlYgnF7SZmZfCJRlYEA5W6K00+Nk4R8ETSyXaf+6AawoKWbeQwAq3t4
-kmW/w1VWuQUQwGvjc7iEbsgFecj2U94GykVJkj01V4J8zEXfPhc/1sDrHqJ4KXzq
-e2SSoyeNZZ2L1bUYoevG3Of6NYdz0ji9AE4mObqrH4EjS/yHH1uNyWCgf+FZ+hqt
-XGggYTpagvtSZt1CvNcPDo9oeyOTYm4qJvdI7gSMlxTjtXDe2KnguJGDhT+aGW2j
-M5zDRgJY+GC3g+sAeyEd4JpK5/hsQfMfLv8QkwFr2eWo1fmgudcOILochdBSfcu3
-hrSduRHGWK9cqyU/drHx+hF3eH7tMw==
-=K0bZ
------END PGP SIGNATURE-----
-
---Dxnq1zWXvFF0Q93v--
+> -		mmio = devm_ioremap_resource(&pdev->dev, res);
+> +		mmio = devm_platform_ioremap_resource(pdev, 0);
+>   		if (IS_ERR(mmio))
+>   			return PTR_ERR(mmio);
+>   
