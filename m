@@ -2,172 +2,113 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF56C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDC8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7AB20856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D72820830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:34:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554140072;
+	bh=62cm1nDvXuc3HevqN/F6dU6arBuiVKKo8Jk3GO4k7QE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I9CUvYXuKFmEEGzJtMbRzING0gAx/su3h3PMHNC93MRmWPt5Nqzss9ChR7DhNb4Vm
+	 raC9b9uGqc0baPBU8zjrufkFU/Uq4gXb27ASqvLaVQBK8LuKVGnHY5+iFJ7/ihfRWk
+	 DU1ED4IfidnyakcInTxB7E9jSQepsrqX3PmfTras=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387788AbfDARe0 (ORCPT
+        id S2387796AbfDARea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:34:26 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:58647 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387752AbfDAReV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:34:21 -0400
-Received: from localhost ([88.128.82.80]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MKuGD-1hW70Y3ITN-00LIAd; Mon, 01 Apr 2019 19:33:55 +0200
-Date:   Mon, 1 Apr 2019 19:33:54 +0200
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] avia-hx711.yaml: transform DT binding to YAML
-Message-ID: <20190401173353.g4k5vb6flsfgtaaj@arbad>
+        Mon, 1 Apr 2019 13:34:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732336AbfDARe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:34:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B3C52070B;
+        Mon,  1 Apr 2019 17:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554140067;
+        bh=62cm1nDvXuc3HevqN/F6dU6arBuiVKKo8Jk3GO4k7QE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=d7I6CcoPRJPO/AdHT+DRBYxqiUbzyMoICu7cpyhbgw7fj69ct8Ybedcx5IU8Gx1eN
+         Rf1VGdWS0QQkVpMFpIuSZtDoV0hXUS0GuRJWFqpD4IMwHbILRbP7SKdg+gEq6TlTlC
+         AM3uPNrMN9/CMpTM3SAPG0VXsVUDGgAwv3JTfz9o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "Suanming.Mou" <mousuanming@huawei.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 097/131] vxlan: Dont call gro_cells_destroy() before device is unregistered
+Date:   Mon,  1 Apr 2019 19:02:47 +0200
+Message-Id: <20190401170100.039377202@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
+References: <20190401170051.645954551@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:odTq/USEkEGP+Q1Tk6oBoKZrDHxcjAUBqDGKmMtL/ZZmclkQb7Q
- UA2F9DKUvL9hV4Hw6xhw1uXRDOQpAeFFieuvyHOS/LkNkbc28eSZBoBnSlj86xuth6VLJcg
- rmCt87awnZxfTY65+10kePM0Gg5wQ5/hmmCvyp6gOzcbGKTjjGumo4+kMDSQGHTnOMFauJO
- QTqln3vwtfAY0GfHQe6XA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6ASsM5JBLSA=:ukXYP21DobAT5m2PkBv1ev
- TtOF7BXYcslJ5IscOfiHohWp5km2N7NcAdSZXcECXebDGBvoZ6/qULKvIk1J/qMTLhwGJzn31
- iKfGtTFq5xb2Nrnxzb9GW9YYQJJ/3SLNeojDkfyDSkp/k4BgnHdIQIOO3f4yErB6w8LFyFOzw
- sV8dnJJxALAsXj76E8Lp7N1Pz5HU4pjFkJTn4PIjGKkzWX3JO3pke20Ovnqa/IzEI5I2c+QhT
- hvmvVC5rt7Vs0qIX9w3y/NLOzc9KsYtKL1yfIbbmG8BKpcsdW6MJuB7a95Ky2PkhTKi1SOUeG
- YF4V+VFCbQn/2YkaGeRiT6MpVOl8f688WZeGQ1LJZh8xAMYGHIHDqzmIYIicFAXFdZxQi2Gj5
- 8V/hxhBgu5TJaNett00yZK1qebC26OtkIYIcGJ4pt9+zQqKSvJ99wsNcgB5JIOU/mJAo5K3jH
- t6Jyoyt8dnRne3Uzeo5jEnjanaGkCngiYwtRJs13nid+u4jXjxVYJuPLxoqKWj+L24G/TGaot
- rM3mEX4duxhxvSH7nfziwWS7OjrTqf8IgtfDpBl0D8Tnj2YJEy1IWvLNykcihSHzCdagESqiA
- 4DAb4zVJhYqAUSqzbEkmhc6/itdUsj8G3yo8UIJIJcVO26ddy8Gqt3TwhvxnLwr6OxbEstndM
- 82MP61/UNwFmAp0/OKM0daYjYF/P2hb8INb9MlIdcABKGft2X6JU+byCB/0InSfkwqVXvWvLv
- SqXTszW082Nf8x75ExyE9Nxb+qgZn0It/ZXWQw==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-replace avia-hx711.txt by avia-hx711.yaml as yaml devicetree
-documentation for avia hx711 iio adc sensor
+4.4-stable review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+------------------
+
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+
+[ Upstream commit cc4807bb609230d8959fd732b0bf3bd4c2de8eac ]
+
+Commit ad6c9986bcb62 ("vxlan: Fix GRO cells race condition between
+receive and link delete") fixed a race condition for the typical case a vxlan
+device is dismantled from the current netns. But if a netns is dismantled,
+vxlan_destroy_tunnels() is called to schedule a unregister_netdevice_queue()
+of all the vxlan tunnels that are related to this netns.
+
+In vxlan_destroy_tunnels(), gro_cells_destroy() is called and finished before
+unregister_netdevice_queue(). This means that the gro_cells_destroy() call is
+done too soon, for the same reasons explained in above commit.
+
+So we need to fully respect the RCU rules, and thus must remove the
+gro_cells_destroy() call or risk use after-free.
+
+Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")
+Signed-off-by: Suanming.Mou <mousuanming@huawei.com>
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../devicetree/bindings/iio/adc/avia-hx711.txt     | 24 --------
- .../devicetree/bindings/iio/adc/avia-hx711.yaml    | 66 ++++++++++++++++++++++
- 2 files changed, 66 insertions(+), 24 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
- create mode 100644 Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
+ drivers/net/vxlan.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt b/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-deleted file mode 100644
-index 7222328a3d0d..000000000000
---- a/Documentation/devicetree/bindings/iio/adc/avia-hx711.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--* AVIA HX711 ADC chip for weight cells
--  Bit-banging driver
--
--Required properties:
-- - compatible:	Should be "avia,hx711"
-- - sck-gpios:	Definition of the GPIO for the clock
-- - dout-gpios:	Definition of the GPIO for data-out
--		See Documentation/devicetree/bindings/gpio/gpio.txt
-- - avdd-supply:	Definition of the regulator used as analog supply
--
--Optional properties:
-- - clock-frequency:	Frequency of PD_SCK in Hz
--			Minimum value allowed is 10 kHz because of maximum
--			high time of 50 microseconds.
--
--Example:
--weight {
--	compatible = "avia,hx711";
--	sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
--	dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
--	avdd-suppy = <&avdd>;
--	clock-frequency = <100000>;
--};
--
-diff --git a/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
-new file mode 100644
-index 000000000000..8a4100ceeaf2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/avia-hx711.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/iio/adc/avia-hx711.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: AVIA HX711 ADC chip for weight cells
-+
-+maintainers:
-+  - Andreas Klinger <ak@it-klinger.de>
-+
-+description: |
-+  Bit-banging driver using two GPIOs:
-+  - sck-gpio gives a clock to the sensor with 24 cycles for data retrieval
-+    and up to 3 cycles for selection of the input channel and gain for the
-+    next measurement
-+  - dout-gpio is the sensor data the sensor responds to the clock
-+
-+  Specifications about the driver can be found at:
-+  http://www.aviaic.com/ENProducts.aspx
-+
-+properties:
-+  compatible:
-+    enum:
-+      - avia,hx711
-+
-+  sck-gpios:
-+    description:
-+      Definition of the GPIO for the clock (output). In the datasheet it is
-+      named PD_SCK
-+    maxItems: 1
-+
-+  dout-gpios:
-+    description:
-+      Definition of the GPIO for the data-out sent by the sensor in
-+      response to the clock (input).
-+      See Documentation/devicetree/bindings/gpio/gpio.txt for information
-+      on how to specify a consumer gpio.
-+    maxItems: 1
-+
-+  avdd-supply:
-+    description:
-+      Definition of the regulator used as analog supply
-+    maxItems: 1
-+
-+  clock-frequency:
-+    minimum: 20000
-+    maximum: 2500000
-+    default: 400000
-+
-+required:
-+  - compatible
-+  - sck-gpios
-+  - dout-gpios
-+  - avdd-supply
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    weight {
-+        compatible = "avia,hx711";
-+        sck-gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
-+        dout-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
-+        avdd-suppy = <&avdd>;
-+        clock-frequency = <100000>;
-+    };
--- 
-2.11.0
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -3276,10 +3276,8 @@ static void __net_exit vxlan_exit_net(st
+ 		/* If vxlan->dev is in the same netns, it has already been added
+ 		 * to the list by the previous loop.
+ 		 */
+-		if (!net_eq(dev_net(vxlan->dev), net)) {
+-			gro_cells_destroy(&vxlan->gro_cells);
++		if (!net_eq(dev_net(vxlan->dev), net))
+ 			unregister_netdevice_queue(vxlan->dev, &list);
+-		}
+ 	}
+ 
+ 	unregister_netdevice_many(&list);
+
+
