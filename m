@@ -2,167 +2,125 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB53C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3570C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECEC920856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139815;
-	bh=zSrnYiL5OwQjDytkXpn8x3JAC1eugB9gO1N7jis0Qdo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0XhHhTN3z1V5EISLSRwA9nxornuTBi5E+9wMkB2J7uV/B/eCDT+wTKx/Iy+kXZOOg
-	 3Dh/KRcZQnkW12XmWvfU34GEiDwdXMtVc6OlI6qK3QhNIs/qLrW2+QK5WDrISpeH1o
-	 DAA0ZfDMJ03H3RztfiNhPfR+fuoUzCn4ga5kMigc=
+	by mail.kernel.org (Postfix) with ESMTP id 83D292146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tomli.me header.i=@tomli.me header.b="potIwON6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733056AbfDARaO (ORCPT
+        id S1733067AbfDARaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36968 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:30:15 -0400
+Received: from tomli.me ([153.92.126.73]:32924 "EHLO tomli.me"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732856AbfDARaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:30:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3C532146E;
-        Mon,  1 Apr 2019 17:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139809;
-        bh=zSrnYiL5OwQjDytkXpn8x3JAC1eugB9gO1N7jis0Qdo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w6q6yexNn1kw2VBgRoQ8uKzfVQeWCf1SQlkbAwAYAYKb/cVEAPF2gxvP6/vU95qCd
-         RKnf/bTmA1o99li+JxVLmBccNonzzAeMoHdi/TNFkRyHMEef0qmaJDL5SlbweF+lpR
-         kGGUtIQEYqX4t5YD2wn5D+wNk5JQbn9kVhcJeazM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.4 021/131] arm64: mm: Add trace_irqflags annotations to do_debug_exception()
-Date:   Mon,  1 Apr 2019 19:01:31 +0200
-Message-Id: <20190401170053.773108923@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
-References: <20190401170051.645954551@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        id S1732857AbfDARaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:30:12 -0400
+Received: from tomli.me (localhost [127.0.0.1])
+        by tomli.me (OpenSMTPD) with ESMTP id 43ce0b20;
+        Mon, 1 Apr 2019 17:30:09 +0000 (UTC)
+X-HELO: localhost.localdomain
+Authentication-Results: tomli.me; auth=pass (login) smtp.auth=tomli
+Received: from Unknown (HELO localhost.localdomain) (2402:f000:1:1501:200:5efe:ddd9:ae88)
+ by tomli.me (qpsmtpd/0.95) with ESMTPSA (DHE-RSA-CHACHA20-POLY1305 encrypted); Mon, 01 Apr 2019 17:30:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=tomli.me; h=date:from:to:cc:subject:message-id:references:mime-version:content-type:in-reply-to; s=1490979754; bh=7F9VIyfsvvRgVWBle54e3Kq6qZTmmRPbFDXFUOwwjdM=; b=potIwON6/1OF7V4SyEte7FZPA6NH2V0HrglQYm9f37Fp+18LZF0QK7n8RtFaiGjBE19LbH7ZMcxui0WrsPWC1o6oQQu0qSGynI7h/H9dHLL9X3XX3RpAMR44G/WFSGytUxoNca1pSQ58Ll5TSXkhDuvScXGQJD9FfyaRyVz+F/HvuK/6ubHSpeR7/b1G11toha/98ohma1WHnd44+Q2rIIH1PABi+1+jGfEwwTRV0rZK3PeGPCiBAWLnneBj9tB2OKaU50Q1qGSsuecGUoxblt5N4eTGgm6SkislNVS5ilovI2X4Tq+ZHnFwbz+FgAyfFkPVkH8mRA7FeAQMhJXoUQ==
+Date:   Tue, 2 Apr 2019 01:30:00 +0800
+From:   Tom Li <tomli@tomli.me>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Teddy Wang <teddy.wang@siliconmotion.com>,
+        linux-kernel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2 5/7] Documentation: fb: sm712fb: add information
+ mainly about 2D.
+Message-ID: <20190401172959.GD15736@localhost.localdomain>
+References: <20190322051759.15007-1-tomli@tomli.me>
+ <20190322051759.15007-6-tomli@tomli.me>
+ <20190331185428.mpqbaq32cmm7izfv@debian>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190331185428.mpqbaq32cmm7izfv@debian>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.4-stable review patch.  If anyone has any objections, please let me know.
+On Sun, Mar 31, 2019 at 07:54:28PM +0100, Sudip Mukherjee wrote:
+> On Fri, Mar 22, 2019 at 01:17:57PM +0800, Yifeng Li wrote:
+> > +video controllers. This series of video controller is a legacy from ~1998,
+> > +and was used on many classic, "prehistoric" laptops from 1998-2004, such as
+> > +IBM Thinkpad S30 and 240X. It was also used on some servers, industrial
+> > +computers, x86 and non-x86 embedded devices where only basic graphics was
+> > +needed.
+> 
+> I think this is wrong. Loongson 3A Notebook was released around 2011-2012
+> and had SM712.
 
-------------------
+"This series of video controller is a legacy from ~1998 and was used on many
+classic, prehistoric laptops from 1998-2004" is an objective fact. Even if
+they have been used on newer hardware, it doesn't automatically make the original
+statement false.
 
-From: James Morse <james.morse@arm.com>
+But I agree that the description gives incomplete information, I think this
+paragraph should be reworded for clarity.
 
-commit 6afedcd23cfd7ac56c011069e4a8db37b46e4623 upstream.
+I would change the description to,
 
-With CONFIG_PROVE_LOCKING, CONFIG_DEBUG_LOCKDEP and CONFIG_TRACE_IRQFLAGS
-enabled, lockdep will compare current->hardirqs_enabled with the flags from
-local_irq_save().
+> "sm712fb" is a graphics framebuffer driver for Silicon Motion SM710 (LynxEM),
+SM712 (LynxEM+), and SM720 (Lynx3DM, Lynx3DM+, aka. LynxEM4+) series of video
+controllers.
 
-When a debug exception occurs, interrupts are disabled in entry.S, but
-lockdep isn't told, resulting in:
-DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
-------------[ cut here ]------------
-WARNING: at ../kernel/locking/lockdep.c:3523
-Modules linked in:
-CPU: 3 PID: 1752 Comm: perf Not tainted 4.5.0-rc4+ #2204
-Hardware name: ARM Juno development board (r1) (DT)
-task: ffffffc974868000 ti: ffffffc975f40000 task.ti: ffffffc975f40000
-PC is at check_flags.part.35+0x17c/0x184
-LR is at check_flags.part.35+0x17c/0x184
-pc : [<ffffff80080fc93c>] lr : [<ffffff80080fc93c>] pstate: 600003c5
+> This series of video controllers is a legacy product from ~1998, they are
+designed to be primarily used on low-power mobile systems running Windows 95/
+98/NT/2000, some examples are HP OmniBook XE2 (2000), Panasonic TOUGHBook 28
+(2002), FLORA 210W NL3 (2003), Sony Vaio VGN-U50 (2004) OQO Model 01 (2004).
+
+> After 2004, they continued to be used on some non-x86 systems, including
+PowerPC and MIPS. It also saw applications on embedded devices, servers,
+industrial computers, embedded devices, where low-power operation and/or only
+basic graphics was needed.
+
+> Notably, Lemote YeeLoong 8089, a MIPS laptop based on the Chinese Loongson
 [...]
----[ end trace 74631f9305ef5020 ]---
-Call trace:
-[<ffffff80080fc93c>] check_flags.part.35+0x17c/0x184
-[<ffffff80080ffe30>] lock_acquire+0xa8/0xc4
-[<ffffff8008093038>] breakpoint_handler+0x118/0x288
-[<ffffff8008082434>] do_debug_exception+0x3c/0xa8
-[<ffffff80080854b4>] el1_dbg+0x18/0x6c
-[<ffffff80081e82f4>] do_filp_open+0x64/0xdc
-[<ffffff80081d6e60>] do_sys_open+0x140/0x204
-[<ffffff80081d6f58>] SyS_openat+0x10/0x18
-[<ffffff8008085d30>] el0_svc_naked+0x24/0x28
-possible reason: unannotated irqs-off.
-irq event stamp: 65857
-hardirqs last  enabled at (65857): [<ffffff80081fb1c0>] lookup_mnt+0xf4/0x1b4
-hardirqs last disabled at (65856): [<ffffff80081fb188>] lookup_mnt+0xbc/0x1b4
-softirqs last  enabled at (65790): [<ffffff80080bdca4>] __do_softirq+0x1f8/0x290
-softirqs last disabled at (65757): [<ffffff80080be038>] irq_exit+0x9c/0xd0
 
-This patch adds the annotations to do_debug_exception(), while trying not
-to call trace_hardirqs_off() if el1_dbg() interrupted a task that already
-had irqs disabled.
+I think it would be enough.
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+BTW, most Loongson 3A notebooks don't use SM712. I don't know that there are
+Loongson 3A notebooks that are still using SM712 graphics chip, do you have one?
+Could you tell me its model number?
 
----
- arch/arm64/mm/fault.c |   33 +++++++++++++++++++++++----------
- 1 file changed, 23 insertions(+), 10 deletions(-)
+> > +The first feature is planned to be implemented soon, but the maintainer
+> > +does not receive any monetary or hardware support from any company or OEMs,
+> > +and he has to purchase a test platform personally. The 1998's hardware
+> > +still costs 200 USD+, so don't expected an ETA. If you have a Big-Endian
+> > +platform and willing to help testing, please contact the maintainer, thanks!
+> 
+> I am not sure why will you want to mention about monetary or hardware
+> support. Maintainers are supposed to work voluntarily.
 
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -595,20 +595,33 @@ asmlinkage int __exception do_debug_exce
- {
- 	const struct fault_info *inf = debug_fault_info + DBG_ESR_EVT(esr);
- 	struct siginfo info;
-+	int rv;
- 
--	if (!inf->fn(addr, esr, regs))
--		return 1;
-+	/*
-+	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
-+	 * already disabled to preserve the last enabled/disabled addresses.
-+	 */
-+	if (interrupts_enabled(regs))
-+		trace_hardirqs_off();
- 
--	pr_alert("Unhandled debug exception: %s (0x%08x) at 0x%016lx\n",
--		 inf->name, esr, addr);
-+	if (!inf->fn(addr, esr, regs)) {
-+		rv = 1;
-+	} else {
-+		pr_alert("Unhandled debug exception: %s (0x%08x) at 0x%016lx\n",
-+			 inf->name, esr, addr);
- 
--	info.si_signo = inf->sig;
--	info.si_errno = 0;
--	info.si_code  = inf->code;
--	info.si_addr  = (void __user *)addr;
--	arm64_notify_die("", regs, &info, 0);
-+		info.si_signo = inf->sig;
-+		info.si_errno = 0;
-+		info.si_code  = inf->code;
-+		info.si_addr  = (void __user *)addr;
-+		arm64_notify_die("", regs, &info, 0);
-+		rv = 0;
-+	}
- 
--	return 0;
-+	if (interrupts_enabled(regs))
-+		trace_hardirqs_on();
-+
-+	return rv;
- }
- 
- #ifdef CONFIG_ARM64_PAN
+I agree, I will reword it.
 
+> > +Other VGA modes, dual-head, or hardware cursor support should be possible to
+> > +implement, but parts of the code must be rewritten, and there's little demand
+> > +for them on this legacy (retro?) platform, so there's no plan to implement them.
+> > +If you have a genuine need for them, please contact the maintainers.
+> 
+> If there is any need for new features then I think the plan should be to
+> make a drm driver.
 
+That's the plan. I will reword.
+
+> There is a MAINTAINERS file to list the maintainers. There is no need to
+> add that in documentation.
+
+I see.
+
+Thanks,
+Tom Li
