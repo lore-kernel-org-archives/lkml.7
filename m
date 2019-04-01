@@ -2,60 +2,64 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B447DC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132C0C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D0D21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DFF20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139344;
-	bh=ksAkeJN4Q2nGQDm/Uqyur0uk/vSyVmgVbV1XoXhBn9M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IXvK5ZI+ct/jZH3PfNz97YpmRtMD0OeQCxfZ9wLJTJEag4MnQeMrMXCvT6qFSYRYJ
-	 D+Bk3wMU/xGAYMyMjcRRCqHRnbJjM0dzhxjZurw4XRrqRhxDwpEh7pYK5bLrZfO3q+
-	 5Bf1ItUzKDQQ1G1Ku3VjABOg7v78BmTCwnrncExs=
+	s=default; t=1554139347;
+	bh=uRZcgp+Qi655ts605QujzP44VczMNl66qt0hN+xfZ1A=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rAkZLGljSfeApkVi43FEILVRa2GFrGG/cZqsGkidwnqCksPjD2fwMrLmhHa/t7okM
+	 25jcgncrAG4ghg+A4YZdPHxfVUJWyyTVk0N/9icnzxk/zdRZr8qa81GKOswZ12uzem
+	 OYCTV8UKYOgW28+J2rGuNK/O2MBrrDATi+1UaSyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731980AbfDARWW (ORCPT
+        id S1731970AbfDARW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:22:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731962AbfDARWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:22:18 -0400
+        id S1731495AbfDARWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:22:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DC62206C0;
-        Mon,  1 Apr 2019 17:22:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7B40206C0;
+        Mon,  1 Apr 2019 17:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139337;
-        bh=ksAkeJN4Q2nGQDm/Uqyur0uk/vSyVmgVbV1XoXhBn9M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=edzQE1O7kweslSQuKia+2lj9ozeOZNLW38gVeK9jcheYHIDqWwiKiOP4FnkeitRX9
-         +JuiVGmR1TVJyB9GXKgG1bElgq6y83zTU+/YuUm93LFXoKf7ppmxGz0r7KGEd0Vq3y
-         By66PE1pla+p7nvhM9GCZziIEvKPfUCKsTYG4HxM=
+        s=default; t=1554139341;
+        bh=uRZcgp+Qi655ts605QujzP44VczMNl66qt0hN+xfZ1A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FU45KtB1OF9SuCDyenCEKLptlXACANOLTTGoqPSfknLX4nE67idddcJx0BglDBThu
+         DS4qzTu14QO+pzNyjRTeaIUXDjCmsFEzbSM6CqkJ53rBTCNiqvFE4O/AtzAkSWep7M
+         nAoxc5v69HDVgsyGYNLTbTX5HBRZFToPDghzcHDE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kal Conley <kal.conley@dectris.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 009/107] net/packet: Set __GFP_NOWARN upon allocation in alloc_pg_vec
-Date:   Mon,  1 Apr 2019 19:01:24 +0200
-Message-Id: <20190401170046.401978369@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 000/107] 4.14.110-stable review
+Date:   Mon,  1 Apr 2019 19:01:15 +0200
+Message-Id: <20190401170045.246405031@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
-References: <20190401170045.246405031@linuxfoundation.org>
+MIME-Version: 1.0
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
-MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.110-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.110-rc1
+X-KernelTest-Deadline: 2019-04-03T17:00+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,85 +67,462 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+This is the start of the stable review cycle for the 4.14.110 release.
+There are 107 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-------------------
+Responses should be made by Wed Apr  3 16:59:25 UTC 2019.
+Anything received after that time might be too late.
 
-From: Christoph Paasch <cpaasch@apple.com>
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.110-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-[ Upstream commit 398f0132c14754fcd03c1c4f8e7176d001ce8ea1 ]
+thanks,
 
-Since commit fc62814d690c ("net/packet: fix 4gb buffer limit due to overflow check")
-one can now allocate packet ring buffers >= UINT_MAX. However, syzkaller
-found that that triggers a warning:
+greg k-h
 
-[   21.100000] WARNING: CPU: 2 PID: 2075 at mm/page_alloc.c:4584 __alloc_pages_nod0
-[   21.101490] Modules linked in:
-[   21.101921] CPU: 2 PID: 2075 Comm: syz-executor.0 Not tainted 5.0.0 #146
-[   21.102784] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.5.1 01/01/2011
-[   21.103887] RIP: 0010:__alloc_pages_nodemask+0x2a0/0x630
-[   21.104640] Code: fe ff ff 65 48 8b 04 25 c0 de 01 00 48 05 90 0f 00 00 41 bd 01 00 00 00 48 89 44 24 48 e9 9c fe 3
-[   21.107121] RSP: 0018:ffff88805e1cf920 EFLAGS: 00010246
-[   21.107819] RAX: 0000000000000000 RBX: ffffffff85a488a0 RCX: 0000000000000000
-[   21.108753] RDX: 0000000000000000 RSI: dffffc0000000000 RDI: 0000000000000000
-[   21.109699] RBP: 1ffff1100bc39f28 R08: ffffed100bcefb67 R09: ffffed100bcefb67
-[   21.110646] R10: 0000000000000001 R11: ffffed100bcefb66 R12: 000000000000000d
-[   21.111623] R13: 0000000000000000 R14: ffff88805e77d888 R15: 000000000000000d
-[   21.112552] FS:  00007f7c7de05700(0000) GS:ffff88806d100000(0000) knlGS:0000000000000000
-[   21.113612] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   21.114405] CR2: 000000000065c000 CR3: 000000005e58e006 CR4: 00000000001606e0
-[   21.115367] Call Trace:
-[   21.115705]  ? __alloc_pages_slowpath+0x21c0/0x21c0
-[   21.116362]  alloc_pages_current+0xac/0x1e0
-[   21.116923]  kmalloc_order+0x18/0x70
-[   21.117393]  kmalloc_order_trace+0x18/0x110
-[   21.117949]  packet_set_ring+0x9d5/0x1770
-[   21.118524]  ? packet_rcv_spkt+0x440/0x440
-[   21.119094]  ? lock_downgrade+0x620/0x620
-[   21.119646]  ? __might_fault+0x177/0x1b0
-[   21.120177]  packet_setsockopt+0x981/0x2940
-[   21.120753]  ? __fget+0x2fb/0x4b0
-[   21.121209]  ? packet_release+0xab0/0xab0
-[   21.121740]  ? sock_has_perm+0x1cd/0x260
-[   21.122297]  ? selinux_secmark_relabel_packet+0xd0/0xd0
-[   21.123013]  ? __fget+0x324/0x4b0
-[   21.123451]  ? selinux_netlbl_socket_setsockopt+0x101/0x320
-[   21.124186]  ? selinux_netlbl_sock_rcv_skb+0x3a0/0x3a0
-[   21.124908]  ? __lock_acquire+0x529/0x3200
-[   21.125453]  ? selinux_socket_setsockopt+0x5d/0x70
-[   21.126075]  ? __sys_setsockopt+0x131/0x210
-[   21.126533]  ? packet_release+0xab0/0xab0
-[   21.127004]  __sys_setsockopt+0x131/0x210
-[   21.127449]  ? kernel_accept+0x2f0/0x2f0
-[   21.127911]  ? ret_from_fork+0x8/0x50
-[   21.128313]  ? do_raw_spin_lock+0x11b/0x280
-[   21.128800]  __x64_sys_setsockopt+0xba/0x150
-[   21.129271]  ? lockdep_hardirqs_on+0x37f/0x560
-[   21.129769]  do_syscall_64+0x9f/0x450
-[   21.130182]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+-------------
+Pseudo-Shortlog of commits:
 
-We should allocate with __GFP_NOWARN to handle this.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.110-rc1
 
-Cc: Kal Conley <kal.conley@dectris.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Fixes: fc62814d690c ("net/packet: fix 4gb buffer limit due to overflow check")
-Signed-off-by: Christoph Paasch <cpaasch@apple.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/packet/af_packet.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Cornelia Huck <cohuck@redhat.com>
+    vfio: ccw: only free cp on final interrupt
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -4232,7 +4232,7 @@ static struct pgv *alloc_pg_vec(struct t
- 	struct pgv *pg_vec;
- 	int i;
- 
--	pg_vec = kcalloc(block_nr, sizeof(struct pgv), GFP_KERNEL);
-+	pg_vec = kcalloc(block_nr, sizeof(struct pgv), GFP_KERNEL | __GFP_NOWARN);
- 	if (unlikely(!pg_vec))
- 		goto out;
- 
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "USB: core: only clean up what we allocated"
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: x86: Emulate MSR_IA32_ARCH_CAPABILITIES on AMD hosts
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: Reject device ioctls from processes other than the VM's creator
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/smp: Enforce CONFIG_HOTPLUG_CPU when SMP=y
+
+Thomas Gleixner <tglx@linutronix.de>
+    cpu/hotplug: Prevent crash when CPU bringup fails on CONFIG_HOTPLUG_CPU=n
+
+Adrian Hunter <adrian.hunter@intel.com>
+    perf intel-pt: Fix TSC slip
+
+Lars Persson <lars.persson@axis.com>
+    mm/migrate.c: add missing flush_dcache_page for non-mapped page migrate
+
+Romain Izard <romain.izard.pro@gmail.com>
+    usb: cdc-acm: fix race during wakeup blocking TX traffic
+
+Mathias Nyman <mathias.nyman@linux.intel.com>
+    xhci: Fix port resume done detection for SS ports with LPM enabled
+
+Yasushi Asano <yasano@jp.adit-jv.com>
+    usb: host: xhci-rcar: Add XHCI_TRUST_TX_LENGTH quirk
+
+Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+    usb: common: Consider only available nodes for dr_mode
+
+Radoslav Gerganov <rgerganov@vmware.com>
+    USB: gadget: f_hid: fix deadlock in f_hidg_write()
+
+Arnd Bergmann <arnd@arndb.de>
+    usb: mtu3: fix EXTCON dependency
+
+Chen-Yu Tsai <wens@csie.org>
+    phy: sun4i-usb: Support set_mode to USB_HOST for non-OTG PHYs
+
+Axel Lin <axel.lin@ingics.com>
+    gpio: adnp: Fix testing wrong value in adnp_gpio_direction_input
+
+Kangjie Lu <kjlu@umn.edu>
+    gpio: exar: add a check for the return value of ida_simple_get fails
+
+Eric Biggers <ebiggers@google.com>
+    drm/vgem: fix use-after-free when drm_gem_handle_create() fails
+
+YueHaibing <yuehaibing@huawei.com>
+    fs/proc/proc_sysctl.c: fix NULL pointer dereference in put_links
+
+Wentao Wang <witallwang@gmail.com>
+    Disable kgdboc failed by echo space to /sys/module/kgdboc/parameters/kgdboc
+
+Bjørn Mork <bjorn@mork.no>
+    USB: serial: option: add Olicard 600
+
+Kristian Evensen <kristian.evensen@gmail.com>
+    USB: serial: option: add support for Quectel EM12
+
+Mans Rullgard <mans@mansr.com>
+    USB: serial: option: set driver_info for SIM5218 and compatibles
+
+Lin Yi <teroincn@163.com>
+    USB: serial: mos7720: fix mos_parport refcount imbalance on error path
+
+George McCollister <george.mccollister@gmail.com>
+    USB: serial: ftdi_sio: add additional NovaTech products
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    USB: serial: cp210x: add new device id
+
+Hoan Nguyen An <na-hoan@jinso.co.jp>
+    serial: sh-sci: Fix setting SCSCR_TIE while transferring data
+
+Aditya Pakki <pakki001@umn.edu>
+    serial: max310x: Fix to avoid potential NULL pointer dereference
+
+Malcolm Priestley <tvboxspy@gmail.com>
+    staging: vt6655: Fix interrupt race condition on device start up.
+
+Malcolm Priestley <tvboxspy@gmail.com>
+    staging: vt6655: Remove vif check from vnt_interrupt
+
+Ian Abbott <abbotti@mev.co.uk>
+    staging: comedi: ni_mio_common: Fix divide-by-zero for DIO cmdtest
+
+Kangjie Lu <kjlu@umn.edu>
+    tty: atmel_serial: fix a potential NULL pointer dereference
+
+Steffen Maier <maier@linux.ibm.com>
+    scsi: zfcp: fix scsi_eh host reset with port_forced ERP for non-NPIV FCP devices
+
+Steffen Maier <maier@linux.ibm.com>
+    scsi: zfcp: fix rport unblock if deleted SCSI devices on Scsi_Host
+
+Martin K. Petersen <martin.petersen@oracle.com>
+    scsi: sd: Quiesce warning if device does not report optimal I/O size
+
+Bart Van Assche <bvanassche@acm.org>
+    scsi: sd: Fix a race between closing an sd device and sd I/O
+
+Darrick J. Wong <darrick.wong@oracle.com>
+    ocfs2: fix inode bh swapping mixup in ocfs2_reflink_inodes_lock
+
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+    fs/open.c: allow opening only regular files during execve()
+
+Fredrik Noring <noring@nocrew.org>
+    kbuild: modversions: Fix relative CRC byte order interpretation
+
+Kailang Yang <kailang@realtek.com>
+    ALSA: hda/realtek - Add support headset mode for New DELL WYSE NB
+
+Kailang Yang <kailang@realtek.com>
+    ALSA: hda/realtek - Add support headset mode for DELL WYSE AIO
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: pcm: Don't suspend stream in unrecoverable PCM state
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: pcm: Fix possible OOB access in PCM oss plugins
+
+Gustavo A. R. Silva <gustavo@embeddedor.com>
+    ALSA: seq: oss: Fix Spectre v1 vulnerability
+
+Gustavo A. R. Silva <gustavo@embeddedor.com>
+    ALSA: rawmidi: Fix potential Spectre v1 vulnerability
+
+Christian Lamparter <chunkeey@gmail.com>
+    net: dsa: qca8k: remove leftover phy accessors
+
+Olga Kornievskaia <kolga@netapp.com>
+    NFSv4.1 don't free interrupted slot on open
+
+Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+    powerpc: bpf: Fix generation of load/store DW instructions
+
+Kohji Okuno <okuno.kohji@jp.panasonic.com>
+    ARM: imx6q: cpuidle: fix bug that CPU might not wake up at expected time
+
+Andrea Righi <andrea.righi@canonical.com>
+    btrfs: raid56: properly unmap parity page in finish_parity_scrub()
+
+Josef Bacik <josef@toxicpanda.com>
+    btrfs: remove WARN_ON in log_dir_items
+
+Filipe Manana <fdmanana@suse.com>
+    Btrfs: fix incorrect file size after shrinking truncate and fsync
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc/security: Fix spectre_v2 reporting
+
+Christophe Leroy <christophe.leroy@c-s.fr>
+    powerpc/fsl: Fix the flush of branch predictor.
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Fixed warning: orphan section `__btb_flush_fixup'
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Update Spectre v2 reporting
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Enable runtime patching if nospectre_v2 boot arg is used
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Flush branch predictor when entering KVM
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Flush the branch predictor at each kernel entry (32 bit)
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Flush the branch predictor at each kernel entry (64bit)
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Add nospectre_v2 command line argument
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Emulate SPRN_BUCSR register
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Fix spectre_v2 mitigations reporting
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Add macro to flush the branch predictor
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Add infrastructure to fixup branch predictor flush
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc/powernv: Query firmware for count cache flush settings
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc/pseries: Query hypervisor for count cache flush settings
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc/64s: Add support for software count cache flush
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc/64s: Add new security feature flags for count cache flush
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc/asm: Add a patch_site macro & helpers for patching instructions
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Sanitize the syscall table for NXP PowerPC 32 bit platforms
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/fsl: Add barrier_nospec implementation for NXP PowerPC Book3E
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/64: Make meltdown reporting Book3S 64 specific
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc/64: Call setup_barrier_nospec() from setup_arch()
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc/64: Add CONFIG_PPC_BARRIER_NOSPEC
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/64: Make stf barrier PPC_BOOK3S_64 specific.
+
+Diana Craciun <diana.craciun@nxp.com>
+    powerpc/64: Disable the speculation barrier from the command line
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc64s: Show ori31 availability in spectre_v1 sysfs file not v2
+
+Michal Suchanek <msuchanek@suse.de>
+    powerpc/64s: Enhance the information in cpu_show_spectre_v1()
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc/64: Use barrier_nospec in syscall entry
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc: Use barrier_nospec in copy_from_user()
+
+Michal Suchanek <msuchanek@suse.de>
+    powerpc/64s: Enable barrier_nospec based on firmware settings
+
+Michal Suchanek <msuchanek@suse.de>
+    powerpc/64s: Patch barrier_nospec in modules
+
+Michal Suchanek <msuchanek@suse.de>
+    powerpc/64s: Add support for ori barrier_nospec patching
+
+Eric Dumazet <edumazet@google.com>
+    tun: add a missing rcu_read_unlock() in error path
+
+Eric Dumazet <edumazet@google.com>
+    tun: properly test for IFF_UP
+
+Finn Thain <fthain@telegraphics.com.au>
+    mac8390: Fix mmio access size probe
+
+Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+    net: aquantia: fix rx checksum offload for UDP/TCP over IPv6
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: get sctphdr by offset in sctp_compute_cksum
+
+Zhiqiang Liu <liuzhiqiang26@huawei.com>
+    vxlan: Don't call gro_cells_destroy() before device is unregistered
+
+Dean Nelson <dnelson@redhat.com>
+    thunderx: eliminate extra calls to put_page() for pages held for recycling
+
+Dean Nelson <dnelson@redhat.com>
+    thunderx: enable page recycling for non-XDP case
+
+Eric Dumazet <edumazet@google.com>
+    tcp: do not use ipv6 header for ipv4 flow
+
+Herbert Xu <herbert@gondor.apana.org.au>
+    rhashtable: Still do rehash when we get EEXIST
+
+Maxime Chevallier <maxime.chevallier@bootlin.com>
+    packets: Always register packet sk in the same order
+
+YueHaibing <yuehaibing@huawei.com>
+    net-sysfs: call dev_hold if kobject_init_and_add success
+
+Aaro Koskinen <aaro.koskinen@nokia.com>
+    net: stmmac: fix memory corruption with large MTUs
+
+Eric Dumazet <edumazet@google.com>
+    net: rose: fix a possible stack overflow
+
+Christoph Paasch <cpaasch@apple.com>
+    net/packet: Set __GFP_NOWARN upon allocation in alloc_pg_vec
+
+Paolo Abeni <pabeni@redhat.com>
+    net: datagram: fix unbounded loop in __skb_try_recv_datagram()
+
+Bjorn Helgaas <bhelgaas@google.com>
+    mISDN: hfcpci: Test both vendor & device ID for Digium HFC4S
+
+YueHaibing <yuehaibing@huawei.com>
+    genetlink: Fix a memory leak on error path
+
+Eric Dumazet <edumazet@google.com>
+    dccp: do not use ipv6 header for ipv4 flow
+
+Bhadram Varka <vbhadram@nvidia.com>
+    stmmac: copy unicast mac address to MAC registers
+
+Christoffer Dall <christoffer.dall@linaro.org>
+    video: fbdev: Set pixclock = 0 in goldfishfb
+
+Marcel Holtmann <marcel@holtmann.org>
+    Bluetooth: Verify that l2cap_get_conf_opt provides large enough buffer
+
+Marcel Holtmann <marcel@holtmann.org>
+    Bluetooth: Check L2CAP option sizes returned from l2cap_get_conf_opt
+
+
+-------------
+
+Diffstat:
+
+ Documentation/virtual/kvm/api.txt                  |  16 +-
+ Makefile                                           |   4 +-
+ arch/arm/mach-imx/cpuidle-imx6q.c                  |  27 +--
+ arch/powerpc/Kconfig                               |   7 +-
+ arch/powerpc/include/asm/asm-prototypes.h          |   6 +
+ arch/powerpc/include/asm/barrier.h                 |  12 +-
+ arch/powerpc/include/asm/code-patching-asm.h       |  18 ++
+ arch/powerpc/include/asm/code-patching.h           |   2 +
+ arch/powerpc/include/asm/feature-fixups.h          |  21 ++
+ arch/powerpc/include/asm/hvcall.h                  |   2 +
+ arch/powerpc/include/asm/ppc-opcode.h              |   2 +
+ arch/powerpc/include/asm/ppc_asm.h                 |  10 +
+ arch/powerpc/include/asm/security_features.h       |   7 +
+ arch/powerpc/include/asm/setup.h                   |  20 ++
+ arch/powerpc/include/asm/uaccess.h                 |  11 +-
+ arch/powerpc/kernel/Makefile                       |   3 +-
+ arch/powerpc/kernel/entry_32.S                     |  10 +
+ arch/powerpc/kernel/entry_64.S                     |  69 +++++++
+ arch/powerpc/kernel/exceptions-64e.S               |  27 ++-
+ arch/powerpc/kernel/head_booke.h                   |  12 ++
+ arch/powerpc/kernel/head_fsl_booke.S               |  15 ++
+ arch/powerpc/kernel/module.c                       |  10 +-
+ arch/powerpc/kernel/security.c                     | 215 ++++++++++++++++++++-
+ arch/powerpc/kernel/setup-common.c                 |   3 +
+ arch/powerpc/kernel/vmlinux.lds.S                  |  19 +-
+ arch/powerpc/kvm/bookehv_interrupts.S              |   4 +
+ arch/powerpc/kvm/e500_emulate.c                    |   7 +
+ arch/powerpc/lib/code-patching.c                   |  16 ++
+ arch/powerpc/lib/feature-fixups.c                  |  93 +++++++++
+ arch/powerpc/mm/tlb_low_64e.S                      |   7 +
+ arch/powerpc/net/bpf_jit.h                         |  17 +-
+ arch/powerpc/net/bpf_jit32.h                       |   4 +
+ arch/powerpc/net/bpf_jit64.h                       |  20 ++
+ arch/powerpc/net/bpf_jit_comp64.c                  |  12 +-
+ arch/powerpc/platforms/powernv/setup.c             |   7 +
+ arch/powerpc/platforms/pseries/setup.c             |   7 +
+ arch/x86/Kconfig                                   |   8 +-
+ arch/x86/include/asm/kvm_host.h                    |   1 +
+ arch/x86/kvm/vmx.c                                 |  14 --
+ arch/x86/kvm/x86.c                                 |  12 ++
+ drivers/gpio/gpio-adnp.c                           |   6 +-
+ drivers/gpio/gpio-exar.c                           |   2 +
+ drivers/gpu/drm/vgem/vgem_drv.c                    |   6 +-
+ drivers/isdn/hardware/mISDN/hfcmulti.c             |   3 +-
+ drivers/net/dsa/qca8k.c                            |  18 --
+ drivers/net/ethernet/8390/mac8390.c                |  19 +-
+ drivers/net/ethernet/aquantia/atlantic/aq_ring.c   |   5 +-
+ drivers/net/ethernet/cavium/thunder/nicvf_queues.c |  30 ++-
+ drivers/net/ethernet/stmicro/stmmac/ring_mode.c    |   5 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  16 +-
+ drivers/net/tun.c                                  |  16 +-
+ drivers/net/vxlan.c                                |   4 +-
+ drivers/phy/allwinner/phy-sun4i-usb.c              |   5 +-
+ drivers/s390/cio/vfio_ccw_drv.c                    |   8 +-
+ drivers/s390/scsi/zfcp_erp.c                       |  17 ++
+ drivers/s390/scsi/zfcp_ext.h                       |   2 +
+ drivers/s390/scsi/zfcp_scsi.c                      |   4 +
+ drivers/scsi/sd.c                                  |  22 ++-
+ drivers/staging/comedi/comedidev.h                 |   2 +
+ drivers/staging/comedi/drivers.c                   |  33 +++-
+ drivers/staging/comedi/drivers/ni_mio_common.c     |  10 +-
+ drivers/staging/vt6655/device_main.c               |  11 +-
+ drivers/tty/serial/atmel_serial.c                  |   4 +
+ drivers/tty/serial/kgdboc.c                        |   4 +-
+ drivers/tty/serial/max310x.c                       |   2 +
+ drivers/tty/serial/sh-sci.c                        |  12 +-
+ drivers/usb/class/cdc-acm.c                        |   4 +-
+ drivers/usb/common/common.c                        |   2 +
+ drivers/usb/core/config.c                          |   9 +-
+ drivers/usb/gadget/function/f_hid.c                |   6 +-
+ drivers/usb/host/xhci-rcar.c                       |   1 +
+ drivers/usb/host/xhci-ring.c                       |   9 +-
+ drivers/usb/mtu3/Kconfig                           |   1 +
+ drivers/usb/serial/cp210x.c                        |   1 +
+ drivers/usb/serial/ftdi_sio.c                      |   2 +
+ drivers/usb/serial/ftdi_sio_ids.h                  |   4 +-
+ drivers/usb/serial/mos7720.c                       |   4 +-
+ drivers/usb/serial/option.c                        |  17 +-
+ drivers/video/fbdev/goldfishfb.c                   |   2 +-
+ fs/btrfs/raid56.c                                  |   3 +-
+ fs/btrfs/tree-log.c                                |  24 ++-
+ fs/nfs/nfs4proc.c                                  |   3 +-
+ fs/ocfs2/refcounttree.c                            |  42 ++--
+ fs/open.c                                          |   6 +
+ fs/proc/proc_sysctl.c                              |   3 +-
+ include/net/sctp/checksum.h                        |   2 +-
+ include/net/sock.h                                 |   6 +
+ kernel/cpu.c                                       |  20 +-
+ lib/rhashtable.c                                   |   8 +-
+ mm/migrate.c                                       |  11 +-
+ net/bluetooth/l2cap_core.c                         |  83 +++++---
+ net/core/datagram.c                                |   2 +-
+ net/core/net-sysfs.c                               |   6 +-
+ net/dccp/ipv6.c                                    |   4 +-
+ net/ipv6/tcp_ipv6.c                                |   8 +-
+ net/netlink/genetlink.c                            |   3 +-
+ net/packet/af_packet.c                             |   4 +-
+ net/rose/rose_subr.c                               |  21 +-
+ scripts/mod/modpost.c                              |   2 +-
+ sound/core/oss/pcm_oss.c                           |  43 +++--
+ sound/core/pcm_native.c                            |   9 +-
+ sound/core/rawmidi.c                               |   2 +
+ sound/core/seq/oss/seq_oss_synth.c                 |   7 +-
+ sound/pci/hda/patch_realtek.c                      |  27 +++
+ .../perf/util/intel-pt-decoder/intel-pt-decoder.c  |  20 +-
+ virt/kvm/kvm_main.c                                |   3 +
+ 106 files changed, 1156 insertions(+), 321 deletions(-)
 
 
