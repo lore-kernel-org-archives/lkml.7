@@ -7,52 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091C5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A656C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05BE20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C93B20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139487;
-	bh=oc4mGY9FeABI81VQ2F6/T6V+xpV2n54YYWjCJQvT8tE=;
+	s=default; t=1554139493;
+	bh=qWusleb1uBZSJIpwMbpvYnOvvfg8rIi5ifQWj1ezM0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tIVyNRSUeZprPTSkZ0MjmR8m2GJIHseWh1I00ExP+28UpJPJBZlkiMXRGvQmPGuZG
-	 y/H2lzJ4nFVHEX21WNB/3IMkw1NykwSQDcHzyFQXbMr848/F16nEmY00DP2ZFIgCSE
-	 JtBEu2w/+NY5FSWcPbymyvK1BUNi5eDLBgTOSpzM=
+	b=Aw9QtQDTMM1ymoXyTKBxHS2ecNLcqB/AmTlbsFkzvgHAZfVgudCYTwFGNElj5cNvc
+	 cUu2X14UzV4Ae7Az5XtSaA6fUKI3JdzIrypZU/L4HQ9aepqVa0xPx+h6DoMWlHF/O4
+	 PgqHUlljQjc6QSFP7xCrsX4Fzr1G0FcEYrtswvBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732318AbfDARYq (ORCPT
+        id S1732340AbfDARYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:24:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55478 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:24:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731889AbfDARYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:24:44 -0400
+        id S1731889AbfDARYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:24:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B78E2063F;
-        Mon,  1 Apr 2019 17:24:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D26C2063F;
+        Mon,  1 Apr 2019 17:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139483;
-        bh=oc4mGY9FeABI81VQ2F6/T6V+xpV2n54YYWjCJQvT8tE=;
+        s=default; t=1554139487;
+        bh=qWusleb1uBZSJIpwMbpvYnOvvfg8rIi5ifQWj1ezM0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bAT8Oy7nbi8ljcQta430n4+/yd2IEGu8FBLYEhDUyrf32TiEfFSsfIR85Lwewq5KB
-         6WEsGJ2fzqVuwqVtVy5uY+tnA2gOgzuvQzGrHtU6dBFFL9a6xvsEahX1Jlz6RKnHOp
-         85nE5rQoRxvuP7KvCrY7bYFDYoCmyb+iIwsyTo6g=
+        b=kfnXMTUMhDtqM+2FrlvFjyobqJ9XkGOCOzvKFYyBn93yXUDD8+/eiTm8IAj/u3U1j
+         C1poyG5P+Xg+Mz8S8fqcCaB1fTPVP28TgMXwyQX4zg7GrcboIFkw2sGB/ML2zfquPB
+         DLSgKqpNet5Qbau5K6EZuaZnM/a9lwxZhSuXLOP8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e73f2fb5ed5a5df36d33@syzkaller.appspotmail.com,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Laura Abbott <labbott@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Eric Biggers <ebiggers@google.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 4.14 090/107] drm/vgem: fix use-after-free when drm_gem_handle_create() fails
-Date:   Mon,  1 Apr 2019 19:02:45 +0200
-Message-Id: <20190401170053.879654244@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 4.14 091/107] gpio: exar: add a check for the return value of ida_simple_get fails
+Date:   Mon,  1 Apr 2019 19:02:46 +0200
+Message-Id: <20190401170053.961895928@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -71,51 +65,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-commit 21d2b122732318b48c10b7262e15595ce54511d3 upstream.
+commit 7ecced0934e574b528a1ba6c237731e682216a74 upstream.
 
-If drm_gem_handle_create() fails in vgem_gem_create(), then the
-drm_vgem_gem_object is freed twice: once when the reference is dropped
-by drm_gem_object_put_unlocked(), and again by __vgem_gem_destroy().
+ida_simple_get may fail and return a negative error number.
+The fix checks its return value; if it fails, go to err_destroy.
 
-This was hit by syzkaller using fault injection.
-
-Fix it by skipping the second free.
-
-Reported-by: syzbot+e73f2fb5ed5a5df36d33@syzkaller.appspotmail.com
-Fixes: af33a9190d02 ("drm/vgem: Enable dmabuf import interfaces")
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Acked-by: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190226214451.195123-1-ebiggers@kernel.org
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/vgem/vgem_drv.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/gpio/gpio-exar.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/gpu/drm/vgem/vgem_drv.c
-+++ b/drivers/gpu/drm/vgem/vgem_drv.c
-@@ -192,13 +192,9 @@ static struct drm_gem_object *vgem_gem_c
- 	ret = drm_gem_handle_create(file, &obj->base, handle);
- 	drm_gem_object_put_unlocked(&obj->base);
- 	if (ret)
--		goto err;
-+		return ERR_PTR(ret);
+--- a/drivers/gpio/gpio-exar.c
++++ b/drivers/gpio/gpio-exar.c
+@@ -148,6 +148,8 @@ static int gpio_exar_probe(struct platfo
+ 	mutex_init(&exar_gpio->lock);
  
- 	return &obj->base;
--
--err:
--	__vgem_gem_destroy(obj);
--	return ERR_PTR(ret);
- }
+ 	index = ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
++	if (index < 0)
++		goto err_destroy;
  
- static int vgem_gem_dumb_create(struct drm_file *file, struct drm_device *dev,
+ 	sprintf(exar_gpio->name, "exar_gpio%d", index);
+ 	exar_gpio->gpio_chip.label = exar_gpio->name;
 
 
