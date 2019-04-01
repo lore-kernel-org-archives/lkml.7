@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01D8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B07C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8192B2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD452063F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139469;
-	bh=NjepFHR5rOeDan/chGsjXZ+YYW2cvdAvOqWmUZgZCu8=;
+	s=default; t=1554139472;
+	bh=LzbjV7BJDJzLFAciqTX8xhq/ByfNivTI/fs3eLHowYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uhFvfPk6Sg88IzqMWBwLIVRsVo7dCeSLRGxUwEeB//jW2LD0RcfLuWbHsg9RegwnR
-	 O0zTsgvgjhmmMpdG2/uf96ttraeia7a1pKXji5WUpKerzeJqOEt/7mYc0DONByacbW
-	 2FUu56Dg7z75Jno67pk9g3nP7+M5zdSQY/22oRTY=
+	b=aLhAUvJMV9+YjaGKOBX+CQrlIBFPSIdlrQB4dHYV2pniJB5kl5dLsvjZ6rsddzQhE
+	 XdXDzv9EGwIL3kOqpQVFKhYGnROy0wz8Pm5txSjz/TIUGcoj9VBVUBWxtdIoZdGtHl
+	 Plxd4EVZX/mn1b4y8kLZ3bVkqtH0vA2YVe0nb2Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732067AbfDARY2 (ORCPT
+        id S1732276AbfDARYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:24:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54802 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:24:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732243AbfDARYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:24:21 -0400
+        id S1732264AbfDARY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:24:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71EAE2063F;
-        Mon,  1 Apr 2019 17:24:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B83832063F;
+        Mon,  1 Apr 2019 17:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139460;
-        bh=NjepFHR5rOeDan/chGsjXZ+YYW2cvdAvOqWmUZgZCu8=;
+        s=default; t=1554139467;
+        bh=LzbjV7BJDJzLFAciqTX8xhq/ByfNivTI/fs3eLHowYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SPQ0WT0Ur+Y8I2Mj3oqQ/2w4WSkv7vbk+ch1o9muVGh2sQUVbkAE83tzyFQ5i0M2n
-         SO2EuTJWIEVftErHWFJL0XtLkpPb7MqyDXvGydYp1KZVaWwE6t2bPUpN7BtXTnMME4
-         WlFr2H7VeeDin91PKfIhnmvBT7Ozsg8szi/2SjU8=
+        b=n11Rxdnbdfwlget4LyA7tmIMdtW9o2p9b3gdoJkJbN/5HskfqAxdfJittJVUytnO0
+         FY9ORj2+G1Rcvw6Xw6bGBwTtTOY2aBjHhI4Tkd/eDccREcOPAnsniOBJlHI++SQIHt
+         4svLtEFknTpbI5DCaw44hO//sexctc5vk2kIhjGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 045/107] powerpc/fsl: Fix spectre_v2 mitigations reporting
-Date:   Mon,  1 Apr 2019 19:02:00 +0200
-Message-Id: <20190401170049.845344748@linuxfoundation.org>
+Subject: [PATCH 4.14 047/107] powerpc/fsl: Add nospectre_v2 command line argument
+Date:   Mon,  1 Apr 2019 19:02:02 +0200
+Message-Id: <20190401170050.109407281@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -67,34 +67,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Diana Craciun <diana.craciun@nxp.com>
 
-commit 7d8bad99ba5a22892f0cad6881289fdc3875a930 upstream.
+commit f633a8ad636efb5d4bba1a047d4a0f1ef719aa06 upstream.
 
-Currently for CONFIG_PPC_FSL_BOOK3E the spectre_v2 file is incorrect:
+When the command line argument is present, the Spectre variant 2
+mitigations are disabled.
 
-  $ cat /sys/devices/system/cpu/vulnerabilities/spectre_v2
-  "Mitigation: Software count cache flush"
-
-Which is wrong. Fix it to report vulnerable for now.
-
-Fixes: ee13cb249fab ("powerpc/64s: Add support for software count cache flush")
-Cc: stable@vger.kernel.org # v4.19+
 Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/kernel/security.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/include/asm/setup.h |    5 +++++
+ arch/powerpc/kernel/security.c   |   21 +++++++++++++++++++++
+ 2 files changed, 26 insertions(+)
 
+--- a/arch/powerpc/include/asm/setup.h
++++ b/arch/powerpc/include/asm/setup.h
+@@ -66,6 +66,11 @@ void do_barrier_nospec_fixups_range(bool
+ static inline void do_barrier_nospec_fixups_range(bool enable, void *start, void *end) { };
+ #endif
+ 
++#ifdef CONFIG_PPC_FSL_BOOK3E
++void setup_spectre_v2(void);
++#else
++static inline void setup_spectre_v2(void) {};
++#endif
+ void do_btb_flush_fixups(void);
+ 
+ #endif /* !__ASSEMBLY__ */
 --- a/arch/powerpc/kernel/security.c
 +++ b/arch/powerpc/kernel/security.c
-@@ -22,7 +22,7 @@ enum count_cache_flush_type {
- 	COUNT_CACHE_FLUSH_SW	= 0x2,
- 	COUNT_CACHE_FLUSH_HW	= 0x4,
- };
--static enum count_cache_flush_type count_cache_flush_type;
-+static enum count_cache_flush_type count_cache_flush_type = COUNT_CACHE_FLUSH_NONE;
+@@ -26,6 +26,10 @@ static enum count_cache_flush_type count
  
  bool barrier_nospec_enabled;
  static bool no_nospec;
++static bool btb_flush_enabled;
++#ifdef CONFIG_PPC_FSL_BOOK3E
++static bool no_spectrev2;
++#endif
+ 
+ static void enable_barrier_nospec(bool enable)
+ {
+@@ -101,6 +105,23 @@ static __init int barrier_nospec_debugfs
+ device_initcall(barrier_nospec_debugfs_init);
+ #endif /* CONFIG_DEBUG_FS */
+ 
++#ifdef CONFIG_PPC_FSL_BOOK3E
++static int __init handle_nospectre_v2(char *p)
++{
++	no_spectrev2 = true;
++
++	return 0;
++}
++early_param("nospectre_v2", handle_nospectre_v2);
++void setup_spectre_v2(void)
++{
++	if (no_spectrev2)
++		do_btb_flush_fixups();
++	else
++		btb_flush_enabled = true;
++}
++#endif /* CONFIG_PPC_FSL_BOOK3E */
++
+ #ifdef CONFIG_PPC_BOOK3S_64
+ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, char *buf)
+ {
 
 
