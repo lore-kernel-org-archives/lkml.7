@@ -4,47 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DF8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C98C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E1B21925
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 175B521929
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138524;
-	bh=5OcE3JTx9uBHk7WR/W0LyqH4pdz4aTHZg5YrrGJ7DYs=;
+	s=default; t=1554138528;
+	bh=5s+SdU939CEFHBL9DJGV5bcNTYF0k2vk9/ct5u/0eyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jdt5MEUJJDPIz8lhDx2aU1Aspw03iARQpNvnKWwgoC8hbRJWHmR6WOHn7VfzaqsIP
-	 yH6qem+hZzjQlwDQxQeSbtKEUrIXXOtBf0YR/J1jp5NSZiTxvxK1Ec1K0IX5+e7wpr
-	 wqTvD+zJgGgHhPtf7/vwZ9O3RWJKQhxlobtUSnuc=
+	b=xDSMhKFWCnxd97h46fc3OhonI/0K5KjzYU/pZEl5E68cVIeWXnAvH9uYFY8WgiKni
+	 mzyadexVpoDR0Z7PI503EHKAvmcJNmWQ/JWQxrP+ZaSkmxfNDZNX87zOy3TJzURaPQ
+	 mbeFmglFTbu4rybI0e9t+1akka3EsLVvQKDlmNEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbfDARIn (ORCPT
+        id S1729687AbfDARIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:08:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55432 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbfDARIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:08:42 -0400
+        id S1728840AbfDARIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:08:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21F352192B;
-        Mon,  1 Apr 2019 17:08:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E059121A4A;
+        Mon,  1 Apr 2019 17:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138521;
-        bh=5OcE3JTx9uBHk7WR/W0LyqH4pdz4aTHZg5YrrGJ7DYs=;
+        s=default; t=1554138524;
+        bh=5s+SdU939CEFHBL9DJGV5bcNTYF0k2vk9/ct5u/0eyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pslp11ii6qsYog/JyLSBjXEZuaKNgWc2D/RzNkCOmMeCqfBwitsIzwuSys1TxokRn
-         4m4CNC7os0385si1yxvszcImOwRQ87IH9ootMG5+yvxMh+BykEKDOmKJQxdcD5Olzg
-         1SKIWMHS46IHXeGClRGbAQC8w0sbPp3fT6B82Bhc=
+        b=Ip4RWHgumEqciiEPubkUGmps3pq7Mz2l5eQON9/EUXNeLgg65Xq2LADGgERVubTUw
+         FHw2Z5DT+5A8RSObsVhoVxFOMQgU1Cy2zjfu238ALcxW/cVy516M3RMOZKL27wLlhw
+         8AnEWCrmPs0Z17UgGHv9mouaMZCkY1IjuFQ/vOcE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 5.0 083/146] staging: olpc_dcon_xo_1: add missing const qualifier
-Date:   Mon,  1 Apr 2019 19:01:35 +0200
-Message-Id: <20190401170055.875738511@linuxfoundation.org>
+        stable@vger.kernel.org, Hoan Nguyen An <na-hoan@jinso.co.jp>
+Subject: [PATCH 5.0 092/146] serial: sh-sci: Fix setting SCSCR_TIE while transferring data
+Date:   Mon,  1 Apr 2019 19:01:44 +0200
+Message-Id: <20190401170056.571924162@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -63,37 +64,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Hoan Nguyen An <na-hoan@jinso.co.jp>
 
-commit ae0a6d2017f733781dcc938a471ccc2d05f9bee6 upstream.
+commit 93bcefd4c6bad4c69dbc4edcd3fbf774b24d930d upstream.
 
-gcc noticed a mismatch between the type qualifiers after a recent
-cleanup:
+We disable transmission interrupt (clear SCSCR_TIE) after all data has been transmitted
+(if uart_circ_empty(xmit)). While transmitting, if the data is still in the tty buffer,
+re-enable the SCSCR_TIE bit, which was done at sci_start_tx().
+This is unnecessary processing, wasting CPU operation if the data transmission length is large.
+And further, transmit end, FIFO empty bits disabling have also been performed in the step above.
 
-drivers/staging/olpc_dcon/olpc_dcon_xo_1.c: In function 'dcon_init_xo_1':
-drivers/staging/olpc_dcon/olpc_dcon_xo_1.c:48:26: error: initialization discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
-
-Add the 'const' keyword that should have been there all along.
-
-Fixes: 2159fb372929 ("staging: olpc_dcon: olpc_dcon_xo_1.c: Switch to the gpio descriptor interface")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/olpc_dcon/olpc_dcon_xo_1.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/sh-sci.c |   12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
---- a/drivers/staging/olpc_dcon/olpc_dcon_xo_1.c
-+++ b/drivers/staging/olpc_dcon/olpc_dcon_xo_1.c
-@@ -45,7 +45,7 @@ static int dcon_init_xo_1(struct dcon_pr
- {
- 	unsigned char lob;
- 	int ret, i;
--	struct dcon_gpio *pin = &gpios_asis[0];
-+	const struct dcon_gpio *pin = &gpios_asis[0];
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -838,19 +838,9 @@ static void sci_transmit_chars(struct ua
  
- 	for (i = 0; i < ARRAY_SIZE(gpios_asis); i++) {
- 		gpios[i] = devm_gpiod_get(&dcon->client->dev, pin[i].name,
+ 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+ 		uart_write_wakeup(port);
+-	if (uart_circ_empty(xmit)) {
++	if (uart_circ_empty(xmit))
+ 		sci_stop_tx(port);
+-	} else {
+-		ctrl = serial_port_in(port, SCSCR);
+ 
+-		if (port->type != PORT_SCI) {
+-			serial_port_in(port, SCxSR); /* Dummy read */
+-			sci_clear_SCxSR(port, SCxSR_TDxE_CLEAR(port));
+-		}
+-
+-		ctrl |= SCSCR_TIE;
+-		serial_port_out(port, SCSCR, ctrl);
+-	}
+ }
+ 
+ /* On SH3, SCIF may read end-of-break as a space->mark char */
 
 
