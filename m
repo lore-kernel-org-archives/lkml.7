@@ -2,103 +2,97 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539EBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9B6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2118820830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141124;
-	bh=XRJGXhzu6hxZGMfSc7/r5ToGCpGK797KROFn4TK6XZQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
-	b=Z8QUOICRDZ4hOdOkMjV3fvuwq4c05BZpgLHlQczp1xiZpJkVLZ7SbLyN05srgf/Lr
-	 dCWDG1FRpFYML4qILHAsENuohPU/k2uxDqhWSY9DD3L3Bi2RnH7oaAmFuHu2ddG/jp
-	 A7v2SxrHJbkuH+aN/h7PK24n0ex+6G+gRYbHZWqw=
+	by mail.kernel.org (Postfix) with ESMTP id 7976220830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="C77j+YjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732376AbfDARwD (ORCPT
+        id S1732812AbfDARwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:52:03 -0400
-Received: from mail-lf1-f46.google.com ([209.85.167.46]:43212 "EHLO
-        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729565AbfDARv7 (ORCPT
+        Mon, 1 Apr 2019 13:52:06 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:41886 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729565AbfDARwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:51:59 -0400
-Received: by mail-lf1-f46.google.com with SMTP id g7so6931274lfh.10
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 10:51:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=PHMeePNk5+WqIP9bn6Ly7V2tLpJ0ch+LgEkGb4MdyLk=;
-        b=BTqw7lO5Xbdw7L1gGrjWfzTyh1Ekkfz4Gc6wDzzinjrCDP1+luYqbVnMNflJqqnDtA
-         xcdigwvpgyhnqYJ/Klzenr7m04aoLdciK90EWH6zC8c4knB44hTOmuVt/cr0vAtCqJwh
-         BMYqYQa0HJwmXd0frGFAdPacmKjV2q+LYfSck=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=PHMeePNk5+WqIP9bn6Ly7V2tLpJ0ch+LgEkGb4MdyLk=;
-        b=pBsusxLpWlxFbmUuXbN5q2kQhAqmZFUsiTeX1MWUtR4h8++3VMwkGFjsGRFmF1Nr/E
-         a4gzEsihkqk+ChCFbK3FmJlzehuz3/Z0kirwNaFHDGhB5HjyVRCZ2YuXJRpmxpwSsQ5W
-         p6dFyj7wKvdQVwI3HGjimFXOYa+nm/AStvQf5OB2wu6h45uBoWCZyBDcgB6woU1qSOgR
-         7Sg6DkqqsOuURkilaI58YFUy2PYjNcylHG8b9fpHUfANRzl1U3u9ScVrz4zag6yDd0ek
-         hm1Hc4AoJQdI0+y37YdYLaphxG10wdM53MsniimKY2amsJ3a75+5osN9igCKsMZD644U
-         G8gA==
-X-Gm-Message-State: APjAAAXItNdO9k41ZQ157l1nbm6W3goWzoNB6pnNjgEhyX9Z1TgKvHPS
-        Ki87Kg0vQRTiQyoBTczaUfE2aBgvENg=
-X-Google-Smtp-Source: APXvYqyo7Od9uDeunc8CYDMvzS7telJNTgf6b4NqgnLhrBtfhxzSsI2t+N5PhP9FgWITq5BDgFphRQ==
-X-Received: by 2002:a19:ab1a:: with SMTP id u26mr34926138lfe.65.1554141116342;
-        Mon, 01 Apr 2019 10:51:56 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id f1sm2239261ljf.40.2019.04.01.10.51.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 10:51:55 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id v14so6961813lfi.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 10:51:55 -0700 (PDT)
-X-Received: by 2002:a19:9145:: with SMTP id y5mr35643508lfj.35.1554141115065;
- Mon, 01 Apr 2019 10:51:55 -0700 (PDT)
+        Mon, 1 Apr 2019 13:52:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1554141123; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9zNcHYMrA9NPNDv164IAAHOmVlnT57ChU1ex6cYItfs=;
+        b=C77j+YjIwrHuDMaL4pOfblUbXMzx9qB6+iV4rznBtPSgXDZNnyabMcjDa7r0scIwpXs+7s
+        b+w5JJCKWchlgnXhmEa+a42xKq8ubM2GwEg08jq4whdcrRbgTFnDyve7+UNGsbrMvIgaF6
+        ms5N2dv25zd5BGzudLmMAraGJ5Pw2ZA=
+Date:   Mon, 01 Apr 2019 19:51:59 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] usb: musb: Silence error about blacklisting hubs if
+ !CONFIG_USB
+To:     Bin Liu <b-liu@ti.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <1554141119.10471.1@crapouillou.net>
+In-Reply-To: <20190401154333.GJ25852@uda0271908>
+References: <20190319135146.25995-1-paul@crapouillou.net>
+        <20190401154333.GJ25852@uda0271908>
 MIME-Version: 1.0
-References: <20190331230940.GA30957@mit.edu>
-In-Reply-To: <20190331230940.GA30957@mit.edu>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 1 Apr 2019 10:51:39 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg4OqHpbckCcan73TXkB-rxS1C2M53uLs27Gw2w4PzR5g@mail.gmail.com>
-Message-ID: <CAHk-=wg4OqHpbckCcan73TXkB-rxS1C2M53uLs27Gw2w4PzR5g@mail.gmail.com>
-Subject: Re: How to add Unicode character tables to the kernel?
-To:     "Theodore Ts'o" <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 31, 2019 at 4:09 PM Theodore Ts'o <tytso@mit.edu> wrote:
->
-> The question is how to do this, with different tradeoffs.  One is to
-> simply include a utf8data.h file, which will be 320k.  That might
-> sound large, but in fs/nls there are 3544k worth of similar files.
-> Some are relatively small --- only 16k.  But others are quite large
-> --- 480k to 856k.  The table for Chinese character set is such an
-> example.  So in comparison, the 320k size of utf8data.h is quite
-> compact.
->
-> The problem with this solution is that the files in fs/nls, and the
-> proposed utf8data.h, are generated files.
 
-Oh, we definitely don't want to copy the original huge tables, and we
-don't even *want* people to edit those things in the first place.
 
-So generated files are fine. It's not like the source data isn't
-public, and yes, the commit message should have a pointer to it and
-how to get the source and the generated files. But no, we shouldn't
-feel like we should encourage people to be able to generate their own
-modified unicode tables.
+Le lun. 1 avril 2019 =E0 17:43, Bin Liu <b-liu@ti.com> a =E9crit :
+> On Tue, Mar 19, 2019 at 02:51:46PM +0100, Paul Cercueil wrote:
+>>  Some drivers, like jz4740-musb, don't depend on CONFIG_USB.
+>=20
+> CONFIG_USB_OTG_BLACKLIST_HUB is about hub, so should it depend on
+> CONFIG_USB instead in drivers/usb/core/Kconfig?
 
-                Linus
+It's already the case, indirectly - it depends on CONFIG_USB_OTG,
+which only exists if CONFIG_USB is set.
+
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>   drivers/usb/musb/musb_core.c | 9 +++++----
+>>   1 file changed, 5 insertions(+), 4 deletions(-)
+>>=20
+>>  diff --git a/drivers/usb/musb/musb_core.c=20
+>> b/drivers/usb/musb/musb_core.c
+>>  index b7d56272f9d1..9f5a4819a744 100644
+>>  --- a/drivers/usb/musb/musb_core.c
+>>  +++ b/drivers/usb/musb/musb_core.c
+>>  @@ -1497,10 +1497,11 @@ static int musb_core_init(u16 musb_type,=20
+>> struct musb *musb)
+>>   	} else {
+>>   		musb->is_multipoint =3D 0;
+>>   		type =3D "";
+>>  -#ifndef	CONFIG_USB_OTG_BLACKLIST_HUB
+>>  -		pr_err("%s: kernel must blacklist external hubs\n",
+>>  -		       musb_driver_name);
+>>  -#endif
+>>  +		if (IS_ENABLED(CONFIG_USB) &&
+>>  +		    !IS_ENABLED(CONFIG_USB_OTG_BLACKLIST_HUB)) {
+>>  +			pr_err("%s: kernel must blacklist external hubs\n",
+>>  +			       musb_driver_name);
+>>  +		}
+>>   	}
+>>=20
+>>   	/* log release info */
+>=20
+> Regards,
+> -Bin.
+
+=
+
