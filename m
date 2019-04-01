@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D07C3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B88C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 961BF2063F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C829F20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139463;
-	bh=D8ijYwnWzFGAD/bHfhcF37FI/dvhKFxp6cVlK4Y+DvI=;
+	s=default; t=1554139467;
+	bh=bo2iXDrUqKVLWiBfTcV5ul7DpcsuaFgj2O6dnC7I6wM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OU5oFcGLPVGa1nKITZ9e/3/flAtHdilHepQRJhX6k4rHjie8Bc49SzA431lFlDAUM
-	 iL40iB3f3kqDdIzl3piEPyCMy8fzw1gEwfvuLLBWhB3lDmpXkiGizt/4NODp/XYNVZ
-	 +aPmn6ZAzgz5ca7uA9QVD9eUIh2WixA1lqlXxTq8=
+	b=TW22JjVtB6o1qyBxeEraIpi0uONU8NRDN5N3QgGf5GQ1SlGvlCt4SqMQTpCrIGsrE
+	 roCMiFwCyWndZvoCpI7mDGXIZZSOxpQnMg7a543+BqVyqmy/kLyPZb4Qb+Rz3/uUJg
+	 MAC6RgMP32BAXT//ThoiiVVVdZw+R5bC/Woh78A8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732248AbfDARYW (ORCPT
+        id S1732256AbfDARY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:24:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54688 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732236AbfDARYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:24:17 -0400
+        id S1731851AbfDARYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:24:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 320952063F;
-        Mon,  1 Apr 2019 17:24:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F3DE20856;
+        Mon,  1 Apr 2019 17:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139456;
-        bh=D8ijYwnWzFGAD/bHfhcF37FI/dvhKFxp6cVlK4Y+DvI=;
+        s=default; t=1554139463;
+        bh=bo2iXDrUqKVLWiBfTcV5ul7DpcsuaFgj2O6dnC7I6wM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2l7+nHu0Q9iwasIZQ2HtpNVe1ahyowsbdf3xyoF1uPPS5AwGpreHV6eossSiwNnH+
-         LLjxEfQmRXlsrZj5gmJZa/hd2iWwvThFxhUZnd8rxo6vDdbyK+ml+F822FlqjBBIug
-         XQCraAFPkI1b2Vg6IawhZXEb7TWGvqo6JmkvGnRs=
+        b=CHRWN0K/ReP+s3X5AzDAaWin9eNvHhtHU/shcqhMie8jkS0fV/162b9LIR7nvm6Un
+         rNLFPosrqwPGLVt++yfVb+Z3Mx9GnkTxP6W8TrWtnktNGi6384awrn7ULJfle77K2f
+         m4b6RAQ/Wv6GSPzW9VTQu9RKQuHPLO4Or61VuJvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 044/107] powerpc/fsl: Add macro to flush the branch predictor
-Date:   Mon,  1 Apr 2019 19:01:59 +0200
-Message-Id: <20190401170049.635913900@linuxfoundation.org>
+Subject: [PATCH 4.14 046/107] powerpc/fsl: Emulate SPRN_BUCSR register
+Date:   Mon,  1 Apr 2019 19:02:01 +0200
+Message-Id: <20190401170050.025388369@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -67,34 +67,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Diana Craciun <diana.craciun@nxp.com>
 
-commit 1cbf8990d79ff69da8ad09e8a3df014e1494462b upstream.
+commit 98518c4d8728656db349f875fcbbc7c126d4c973 upstream.
 
-The BUCSR register can be used to invalidate the entries in the
-branch prediction mechanisms.
+In order to flush the branch predictor the guest kernel performs
+writes to the BUCSR register which is hypervisor privilleged. However,
+the branch predictor is flushed at each KVM entry, so the branch
+predictor has been already flushed, so just return as soon as possible
+to guest.
 
 Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
+[mpe: Tweak comment formatting]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/include/asm/ppc_asm.h |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/powerpc/kvm/e500_emulate.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/arch/powerpc/include/asm/ppc_asm.h
-+++ b/arch/powerpc/include/asm/ppc_asm.h
-@@ -802,4 +802,14 @@ END_FTR_SECTION_IFCLR(CPU_FTR_601)
- 	stringify_in_c(.long (_target) - . ;)	\
- 	stringify_in_c(.previous)
+--- a/arch/powerpc/kvm/e500_emulate.c
++++ b/arch/powerpc/kvm/e500_emulate.c
+@@ -277,6 +277,13 @@ int kvmppc_core_emulate_mtspr_e500(struc
+ 		vcpu->arch.pwrmgtcr0 = spr_val;
+ 		break;
  
-+#ifdef CONFIG_PPC_FSL_BOOK3E
-+#define BTB_FLUSH(reg)			\
-+	lis reg,BUCSR_INIT@h;		\
-+	ori reg,reg,BUCSR_INIT@l;	\
-+	mtspr SPRN_BUCSR,reg;		\
-+	isync;
-+#else
-+#define BTB_FLUSH(reg)
-+#endif /* CONFIG_PPC_FSL_BOOK3E */
++	case SPRN_BUCSR:
++		/*
++		 * If we are here, it means that we have already flushed the
++		 * branch predictor, so just return to guest.
++		 */
++		break;
 +
- #endif /* _ASM_POWERPC_PPC_ASM_H */
+ 	/* extra exceptions */
+ #ifdef CONFIG_SPE_POSSIBLE
+ 	case SPRN_IVOR32:
 
 
