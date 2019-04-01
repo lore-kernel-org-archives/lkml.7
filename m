@@ -2,120 +2,146 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF69DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6503FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0D920857
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3291320857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbfDAO5J (ORCPT
+        id S1728660AbfDAO7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 10:57:09 -0400
-Received: from foss.arm.com ([217.140.101.70]:36136 "EHLO foss.arm.com"
+        Mon, 1 Apr 2019 10:59:02 -0400
+Received: from foss.arm.com ([217.140.101.70]:36150 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfDAO5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 10:57:08 -0400
+        id S1726514AbfDAO7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 10:59:02 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B7D4A78;
-        Mon,  1 Apr 2019 07:57:08 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61F993F690;
-        Mon,  1 Apr 2019 07:57:05 -0700 (PDT)
-Subject: Re: [PATCH v5 00/13] Add support for usb on Hikey960
-To:     Yu Chen <chenyu56@huawei.com>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     john.stultz@linaro.org, suzhuangluan@hisilicon.com,
-        kongfei@hisilicon.com, liuyu712@hisilicon.com,
-        wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com,
-        fangshengzhou@hisilicon.com, lipengcheng8@huawei.com,
-        songxiaowei@hisilicon.com, xuyiping@hisilicon.com,
-        xuyoujun4@huawei.com, yudongbin@hisilicon.com,
-        zangleigang@hisilicon.com
-References: <20190329041409.70138-1-chenyu56@huawei.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <867b3cd6-85d5-e87c-0973-ac48d13fb18b@arm.com>
-Date:   Mon, 1 Apr 2019 15:57:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE77EA78;
+        Mon,  1 Apr 2019 07:59:01 -0700 (PDT)
+Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E9153F690;
+        Mon,  1 Apr 2019 07:58:59 -0700 (PDT)
+Date:   Mon, 1 Apr 2019 15:58:54 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 2/7] dt-bindings: phy: Add binding for Qualcomm PCIe2
+ PHY
+Message-ID: <20190401145854.GA6234@e107981-ln.cambridge.arm.com>
+References: <20190219060407.15263-1-bjorn.andersson@linaro.org>
+ <20190219060407.15263-3-bjorn.andersson@linaro.org>
+ <20190222195758.GA26984@bogus>
+ <20190227042545.GE5511@minitux>
 MIME-Version: 1.0
-In-Reply-To: <20190329041409.70138-1-chenyu56@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190227042545.GE5511@minitux>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 29/03/2019 04:13, Yu Chen wrote:
-> The patchset adds support for usb functionality of Hikey960, includes:
-> - usb phy driver for Hisilicon Kirin Soc hi3660
-> - usb driver for HiKey960 board
-> - some adjustment in dwc3 and usb role driver
-> - dts for support usb of HiKey960
+On Tue, Feb 26, 2019 at 08:25:45PM -0800, Bjorn Andersson wrote:
+> On Fri 22 Feb 11:57 PST 2019, Rob Herring wrote:
 > 
-> ---
-> v5:
-> * Split modification of usb role into two patches, the first one introduces
-> stubs for the exiting functions, and the second adds notifier functions.
-> ---
+> > On Mon, Feb 18, 2019 at 10:04:02PM -0800, Bjorn Andersson wrote:
+> > > The Qualcomm PCIe2 PHY is a Synopsys based PCIe PHY found in a number of
+> > > Qualcomm platforms, add a binding to describe this.
+> > > 
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > ---
+> > >  .../bindings/phy/qcom-pcie2-phy.txt           | 40 +++++++++++++++++++
+> > >  1 file changed, 40 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> > > new file mode 100644
+> > > index 000000000000..7da02f9d78c7
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+> > > @@ -0,0 +1,40 @@
+> > > +Qualcomm PCIe2 PHY controller
+> > > +=============================
+> > > +
+> > > +The Qualcomm PCIe2 PHY is a Synopsys based phy found in a number of Qualcomm
+> > > +platforms.
+> > > +
+> > > +Required properties:
+> > > + - compatible: compatible list, should be:
+> > > +	       "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy"
+> > > +
+> > > + - reg: offset and length of the PHY register set.
+> > > + - #phy-cells: must be 0.
+> > > +
+> > > + - clocks: a clock-specifier pair for the "pipe" clock
+> > > +
+> > > + - vdda-vp-supply: phandle to low voltage regulator
+> > > + - vdda-vph-supply: phandle to high voltage regulator
+> > > +
+> > > + - resets: reset-specifier pairs for the "phy" and "pipe" resets
+> > > + - reset-names: list of resets, should contain:
+> > > +		"phy" and "pipe"
+> > > +
+> > > + - clock-output-names: name of the outgoing clock signal from the PHY PLL
+> > 
+> > Not valid to have this without '#clock-cells'.
+> > 
 > 
+> This happens to work today as we don't describe &gcc's dependency on
+> this, but just rely on the global clock namespace. But it should be
+> there, so I'll respin this.
 
-Ran the usual tests, still works fine for me.
-
-Tested-by: Valentin Schneider <valentin.schneider@arm.com>
+Should I drop this series from the PCI queue waiting for v3 then ?
 
 Thanks,
-Valentin
+Lorenzo
 
-> Yu Chen (13):
->   dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
->   dt-bindings: misc: Add bindings for HiSilicon usb hub and data role
->     switch functionality on HiKey960
->   usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc
->     Platform
->   usb: dwc3: Add splitdisable quirk for Hisilicon Kirin Soc
->   usb: dwc3: Execute GCTL Core Soft Reset while switch mdoe for
->     Hisilicon Kirin Soc
->   usb: dwc3: Increase timeout for CmdAct cleared by device controller
->   phy: Add usb phy support for hi3660 Soc of Hisilicon
->   usb: roles: Introduce stubs for the exiting functions in role.h.
->   usb: roles: Add usb role switch notifier.
->   usb: dwc3: Registering a role switch in the DRD code.
->   hikey960: Support usb functionality of Hikey960
->   usb: gadget: Add configfs attribuite for controling
->     match_existing_only
->   dts: hi3660: Add support for usb on Hikey960
+> > Though I'm confused how this and the input clock name seem to match.
+> > 
 > 
->  .../bindings/misc/hisilicon-hikey-usb.txt          |  52 +++++
->  .../devicetree/bindings/phy/phy-hi3660-usb3.txt    |  26 +++
->  MAINTAINERS                                        |   8 +
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |  53 +++++
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  73 +++++++
->  drivers/misc/Kconfig                               |   6 +
->  drivers/misc/Makefile                              |   1 +
->  drivers/misc/hisi_hikey_usb.c                      | 162 ++++++++++++++
->  drivers/phy/hisilicon/Kconfig                      |  10 +
->  drivers/phy/hisilicon/Makefile                     |   1 +
->  drivers/phy/hisilicon/phy-hi3660-usb3.c            | 233 +++++++++++++++++++++
->  drivers/usb/dwc3/Kconfig                           |   1 +
->  drivers/usb/dwc3/core.c                            |  45 ++++
->  drivers/usb/dwc3/core.h                            |  15 ++
->  drivers/usb/dwc3/drd.c                             |  63 +++++-
->  drivers/usb/dwc3/dwc3-of-simple.c                  |   4 +-
->  drivers/usb/dwc3/gadget.c                          |   2 +-
->  drivers/usb/gadget/configfs.c                      |  32 +++
->  drivers/usb/roles/class.c                          |  20 +-
->  include/linux/usb/role.h                           |  46 ++++
->  20 files changed, 849 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
->  create mode 100644 drivers/misc/hisi_hikey_usb.c
->  create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
+> The PHY generates the clock we call "pcie_0_pipe_clk" which is fed into
+> the global clock controller (gcc), where it can be gated (and divided)
+> and then fed back to both the PHY and the controller as
+> "gcc_pcie_0_pipe_clk".
 > 
+> 
+> Thanks for the review Rob.
+> 
+> Regards,
+> Bjorn
+> 
+> > > +
+> > > +Example:
+> > > + phy@7786000 {
+> > > +	compatible = "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy";
+> > > +	reg = <0x07786000 0xb8>;
+> > > +
+> > > +	clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
+> > > +	resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
+> > > +	         <&gcc GCC_PCIE_0_PIPE_ARES>;
+> > > +	reset-names = "phy", "pipe";
+> > > +
+> > > +	vdda-vp-supply = <&vreg_l3_1p05>;
+> > > +	vdda-vph-supply = <&vreg_l5_1p8>;
+> > > +
+> > > +	clock-output-names = "pcie_0_pipe_clk";
+> > > +	#phy-cells = <0>;
+> > > + };
+> > > -- 
+> > > 2.18.0
+> > > 
