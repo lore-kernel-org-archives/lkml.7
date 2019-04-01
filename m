@@ -2,100 +2,130 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3769EC10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3FCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B03213A2
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554102919;
-	bh=LyvHeAeP1djEbb49Sell3K+VoOHSA6z/zCyDGEs6RU4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yM2bWyRaduNpeH4jpE91mw9Mhw57dZXeK68Gj5w1t9YZoHdbPCfYMuH6dHGTbx61Z
-	 afnZDRi+qnwsXo52zxAde+Smiv+hZkDGGLuhIRwGPYHVqpB9k9HXAiwYm+VlV5vuzu
-	 DCIkTsQdsUVtfYta1c8DOX5z+lGbPDoQ3AHCBRIw=
+	by mail.kernel.org (Postfix) with ESMTP id A039720896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731881AbfDAHPS (ORCPT
+        id S1731895AbfDAHQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 03:15:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731160AbfDAHPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 03:15:17 -0400
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2592A218FE;
-        Mon,  1 Apr 2019 07:15:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554102916;
-        bh=LyvHeAeP1djEbb49Sell3K+VoOHSA6z/zCyDGEs6RU4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2Pxh3P6jVbIjibByxtUUFgI+JnUmzHETkxOfaxQfMC9UMsZAwKcm62lHWmUw5/zr0
-         EWLS3kVBKX51p+SoggWDlYr3sXCdUoQxdwQFnEn0kh+pgAcfy72tjQXOpuMEvIG8mS
-         whi4FZbKqoTq67qcR8OT4aVZ3UD1ioeTT6ujcMRE=
-Received: by mail-lf1-f50.google.com with SMTP id v14so5482283lfi.0;
-        Mon, 01 Apr 2019 00:15:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAXXqCUyFaLszmexZk3zSuygnGy/JYSLgLEJJ6YZ04CJEGIi9a7p
-        +QlVBxfwXq21im6eqIZrEllBhab4Y6OPIezIs14=
-X-Google-Smtp-Source: APXvYqw+YYiKb2sU1g9YqLcWIiPTVfznwQAzQL2ojBMiqnywM8UMiNpYcMcsFqxgE+GGLIwkE7Hbw7CsIBNkfladbFY=
-X-Received: by 2002:a19:6a02:: with SMTP id u2mr13696808lfu.20.1554102914230;
- Mon, 01 Apr 2019 00:15:14 -0700 (PDT)
+        Mon, 1 Apr 2019 03:16:51 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:38466 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731160AbfDAHQv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 03:16:51 -0400
+X-UUID: 1b39b71c2e2b4a9585e82c9916420132-20190401
+X-UUID: 1b39b71c2e2b4a9585e82c9916420132-20190401
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 491221066; Mon, 01 Apr 2019 15:16:46 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 1 Apr 2019 15:16:44 +0800
+Received: from mtkslt306.mediatek.inc (10.21.14.136) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 1 Apr 2019 15:16:44 +0800
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Felix Fietkau <nbd@nbd.name>
+CC:     Roy Luo <royluo@google.com>, Sean Wang <sean.wang@mediatek.com>,
+        Nelson Chang <nelson.chang@mediatek.com>,
+        YF Luo <yf.luo@mediatek.com>, Kai Lin <kai.lin@mediatek.com>,
+        Rorscha Yang <rorscha.yang@mediatek.com>,
+        Kyle Lee <kyle.lee@mediatek.com>,
+        Miller Shen <miller.shen@mediatek.com>,
+        Haipin Liang <haipin.liang@mediatek.com>,
+        KL Huang <kl.huang@mediatek.com>,
+        YH chen <yh.chen@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v3 0/4] Add support for MediaTek MT7615 wireless chipsets
+Date:   Mon, 1 Apr 2019 15:16:40 +0800
+Message-ID: <cover.1554102584.git.ryder.lee@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-References: <20190401032425.18647-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20190401032425.18647-1-daniel.lezcano@linaro.org>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 1 Apr 2019 09:15:03 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdF3s53noZs0oye=gW6Ap_pF=oomVL11KU9DLKYTFF1Tw@mail.gmail.com>
-Message-ID: <CAJKOXPdF3s53noZs0oye=gW6Ap_pF=oomVL11KU9DLKYTFF1Tw@mail.gmail.com>
-Subject: Re: [PATCH] thermal/drivers/core: Remove the module Kconfig's option
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, Guan Xuetao <gxt@pku.edu.cn>,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Guenter Roeck <groeck@chromium.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="y"
+Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: E8A4CF50DA19F1976EEEE6E6FA662AA7F053BB7732B1E5C15D66795DCEDAE7C72000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Apr 2019 at 05:24, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> The module support for the thermal subsystem does have a little sense:
->  - some subsystems relying on it are not modules, thus forcing the
->    framework to be compiled in
->  - it is compiled in for almost every configs, the remaining ones
->    are a few platforms where I don't see why we can not switch the thermal
->    to 'y'. The drivers can stay in tristate.
->  - platforms need the thermal to be ready as soon as possible at boot time
->    in order to mitigate
->
-> Usually the subsystems framework are compiled-in and the plugs are as module.
->
-> Remove the module option. The removal of the module related dead code will
-> come after this patch gets in or is acked.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  arch/arm/configs/mini2440_defconfig        | 2 +-
+This adds support for MediaTek MT7615E 4x4 802.11ac PCIe-based chipsets.
 
-For mini2440:
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+The series is based on the Lorenzo's patches:
+https://patchwork.kernel.org/project/linux-wireless/list/?series=95969
 
-Best regards,
-Krzysztof
+In the legacy tx arch, we move and store the whole skb content to the
+on-device memory when we send packets via high speed interface. (e.g. PCIe)
+
+However, MT7615 and the following generation use a new tx arch called
+“cut-through”, which only passes the physical address to the hardware,
+and the packet engine will fetch the packets before transmission.
+
+It saves on-chip memory for high throughput devices, and the token mechanism
+is used to manage the release of skb under this arch.
+
+And there might be other (existing or future) chips that use the same driver
+(e.g. mt7622/mt7663...), this is a starting point to unify MTK wireless chipsets.
+
+Detailed hardware information for this chip could be found on 
+https://wikidevi.com/wiki/MediaTek_MT7615
+
+Ryder Lee (4):
+  mt76: add mac80211 driver for MT7615 PCIe-based chipsets
+  mt76: add unlikely() for dma_mapping_error() check
+  mt76: use macro for sn and seq_ctrl conversion
+  MAINTAINERS : update entry for mt76 wireless driver
+
+ MAINTAINERS                                        |    2 +
+ drivers/net/wireless/mediatek/mt76/Kconfig         |    1 +
+ drivers/net/wireless/mediatek/mt76/Makefile        |    1 +
+ drivers/net/wireless/mediatek/mt76/agg-rx.c        |    2 +-
+ drivers/net/wireless/mediatek/mt76/dma.c           |    8 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/mac.c    |    2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/main.c   |    2 +-
+ drivers/net/wireless/mediatek/mt76/mt7615/Kconfig  |    7 +
+ drivers/net/wireless/mediatek/mt76/mt7615/Makefile |    5 +
+ drivers/net/wireless/mediatek/mt76/mt7615/dma.c    |  205 +++
+ drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c |   98 ++
+ drivers/net/wireless/mediatek/mt76/mt7615/eeprom.h |   18 +
+ drivers/net/wireless/mediatek/mt76/mt7615/init.c   |  229 +++
+ drivers/net/wireless/mediatek/mt76/mt7615/mac.c    |  775 +++++++++
+ drivers/net/wireless/mediatek/mt76/mt7615/mac.h    |  300 ++++
+ drivers/net/wireless/mediatek/mt76/mt7615/main.c   |  499 ++++++
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.c    | 1656 ++++++++++++++++++++
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.h    |  520 ++++++
+ drivers/net/wireless/mediatek/mt76/mt7615/mt7615.h |  195 +++
+ drivers/net/wireless/mediatek/mt76/mt7615/pci.c    |  150 ++
+ drivers/net/wireless/mediatek/mt76/mt7615/regs.h   |  203 +++
+ drivers/net/wireless/mediatek/mt76/mt76x02_util.c  |    2 +-
+ 22 files changed, 4872 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/Kconfig
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/Makefile
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/dma.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/eeprom.h
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/init.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mac.h
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/main.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mt7615.h
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/pci.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/regs.h
+
+-- 
+1.9.1
+
