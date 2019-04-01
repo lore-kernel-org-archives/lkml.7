@@ -2,108 +2,129 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFA1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 191F0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2A92086C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D501E2086C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:48:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rl2q3rns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfDAKr2 (ORCPT
+        id S1726834AbfDAKsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 06:47:28 -0400
-Received: from mga09.intel.com ([134.134.136.24]:14977 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfDAKr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 06:47:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 03:47:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,296,1549958400"; 
-   d="scan'208";a="146975627"
-Received: from shbuild999.sh.intel.com ([10.239.147.118])
-  by orsmga002.jf.intel.com with ESMTP; 01 Apr 2019 03:47:24 -0700
-From:   Feng Tang <feng.tang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>,
-        Feng Tang <feng.tang@intel.com>
-Subject: [PATCH 2/2] panic: Enable to print out all printk msg in buffer
-Date:   Mon,  1 Apr 2019 18:48:04 +0800
-Message-Id: <1554115684-26846-2-git-send-email-feng.tang@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554115684-26846-1-git-send-email-feng.tang@intel.com>
-References: <1554115684-26846-1-git-send-email-feng.tang@intel.com>
+        Mon, 1 Apr 2019 06:48:06 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38022 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfDAKsG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 06:48:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=H5dr0GGoJJsBhUrOqq0GjKEE5KuhA7ttsgAnFiV86UQ=; b=rl2q3rnsJk6vG6Kv6E1uB+MYb
+        8uc7b8CDr66KVAwnNks3oOuabeInbrn6anFwV5cbA4ojubXneqWU7q+34a/tx4vH0tQXRSlBeEpgi
+        QdGnOxp212Jz0tc5Bkk24Y9sFajFMSP0uScEG/Ti0tbGH7t7mcIfT0i3osPTuCkkDAg7q+DX0mLE6
+        e7Wn0AQ5FFt1bYOWP71DA4jnTqm6FNDh/VQb76fx1p7z+0k0KvAf8sdlNnEoMZ/bfQ0PoQHeFP9uS
+        c5XrUwSj/24odbB7WmvkdDIDVUJoElODeI8oiGOFywUee94uj1g8vpBikYog46tBEnosWTc4ljc+M
+        /GiUXN63Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hAuTv-0008Kh-JO; Mon, 01 Apr 2019 10:47:59 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D2EC3203CBE11; Mon,  1 Apr 2019 12:47:56 +0200 (CEST)
+Date:   Mon, 1 Apr 2019 12:47:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH] i2c: remove use of in_atomic()
+Message-ID: <20190401104756.GK11158@hirez.programming.kicks-ass.net>
+References: <20190327211256.17232-1-wsa+renesas@sang-engineering.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327211256.17232-1-wsa+renesas@sang-engineering.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently on panic, kernel will lower the loglevel and print out
-new printk msg only. With this patch, user can configure the
-"panic_print" to see all dmesg in buffer, some of which they may
-have never seen due to the loglevel setting.
+On Wed, Mar 27, 2019 at 10:12:56PM +0100, Wolfram Sang wrote:
+> Commit cea443a81c9c ("i2c: Support i2c_transfer in atomic contexts")
+> added in_atomic() to the I2C core. However, the use of in_atomic()
+> outside of core kernel code is discouraged and was already[1] when this
+> code was added in early 2008. The above commit was a preparation for
+> b7a3670131c7 ("i2c-pxa: Add polling transfer"). Its commit message says
+> explicitly it was added "for cases where I2C transactions have to occur
+> at times interrups are disabled". So, the intention was 'disabled
+> interrupts'. This matches the use cases for atomic I2C transfers I have
+> seen so far: very late communication (mostly to a PMIC) to powerdown or
+> reboot the system. For those cases, interrupts are disabled then. It
+> doesn't seem that in_atomic() adds value.
+> 
+> Note that only ~10 out of ~120 bus master drivers support atomic
+> transfers, mostly by polling always when no irq is supplied. A generic
+> I2C client driver cannot assume support for atomic transfers. This is
+> currently a platform-dependent corner case.
+> 
+> The I2C core will soon gain an extra callback into bus drivers
+> especially for atomic transfers to make them more generic. The code
+> deciding which transfer to use (atomic/non-atomic) should mimic the
+> behaviour which locking to use (trylock/lock). Because I don't want to
+> add more in_atomic() to the I2C core, this patch simply removes it.
+> 
+> [1] https://lwn.net/Articles/274695/
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+> 
+> So, I had to dive into this in_atomic() topic and this is what I
+> concluded. I don't see any reasonable constellation where this could
+> cause a regression, but I am all open for missing something and being
+> pointed to it. This is why the patch is RFC. I'd really welcome
+> comments. Thanks!
+> 
+> 
+>  drivers/i2c/i2c-core-base.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 38af18645133..943bebeec3ed 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -1946,7 +1946,7 @@ int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+>  	 *    one (discarding status on the second message) or errno
+>  	 *    (discarding status on the first one).
+>  	 */
+> -	if (in_atomic() || irqs_disabled()) {
+> +	if (irqs_disabled()) {
+>  		ret = i2c_trylock_bus(adap, I2C_LOCK_SEGMENT);
+>  		if (!ret)
+>  			/* I2C activity is ongoing. */
 
-Signed-off-by: Feng Tang <feng.tang@intel.com>
----
- Documentation/admin-guide/kernel-parameters.txt | 1 +
- kernel/panic.c                                  | 9 ++++++++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+So I know absolutely nothing about i2c, except that it is supposedly
+fsck all slow.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 2b8ee90..7b15c94 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3135,6 +3135,7 @@
- 			bit 2: print timer info
- 			bit 3: print locks info if CONFIG_LOCKDEP is on
- 			bit 4: print ftrace buffer
-+			bit 5: print all printk messages in buffer
- 
- 	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
- 			on a WARN().
-diff --git a/kernel/panic.c b/kernel/panic.c
-index fb77e01..afe023e 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -51,6 +51,7 @@ EXPORT_SYMBOL_GPL(panic_timeout);
- #define PANIC_PRINT_TIMER_INFO		0x00000004
- #define PANIC_PRINT_LOCK_INFO		0x00000008
- #define PANIC_PRINT_FTRACE_INFO		0x00000010
-+#define PANIC_PRINT_ALL_PRINTK_MSG	0x00000020
- unsigned long panic_print;
- 
- ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
-@@ -134,6 +135,13 @@ EXPORT_SYMBOL(nmi_panic);
- 
- static void panic_print_sys_info(void)
- {
-+	bool flush_all_dmesg = false;
-+
-+	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
-+		flush_all_dmesg = true;
-+
-+	console_flush_on_panic(flush_all_dmesg);
-+
- 	if (panic_print & PANIC_PRINT_TASK_INFO)
- 		show_state();
- 
-@@ -277,7 +285,6 @@ void panic(const char *fmt, ...)
- 	 * panic() is not being callled from OOPS.
- 	 */
- 	debug_locks_off();
--	console_flush_on_panic(false);
- 
- 	panic_print_sys_info();
- 
--- 
-2.7.4
+In that context, busy-spinning for i2c completions seems like a terrible
+idea, _esp_ in atomic contexts.
 
+I did a quick grep for trylock_bus() and found i2c_mux_trylock_bus()
+which uses rt_mutex_trylock and therefore the calling context must
+already exclude IRQs and NMIs and the like.
+
+That leaves task context with preemption/IRQs disabled. Of that, you
+retain the IRQs disabled test, which is by far the worst possible
+condition to spin-wait in.
+
+Why must we allow i2c usage with IRQs disabled? Just say NO?
