@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D4DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D24C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC552084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127C620880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141646;
-	bh=i0MOLalflgdPeaFn95YXeEKANDXfCrcf9PL9UEevIgw=;
+	s=default; t=1554141649;
+	bh=8xEFavklh9mHJYFUeuMKl9znebsYN+LJuax5VOVkffk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kHF8TbTx8StJn34Yk2jheZyiZnIyR7BwQCALHYSY0vtP2zP1K1e/5/DjU76BlARgp
-	 OR20+xiUvoKskQPLYigUKvWbsd0Qy971ympXzngxvC63p71ahalTuIYTOJpQuur2py
-	 gTg54GnXlgIA0yYu5EAdBb5WCUwgv3aVtERv0QCM=
+	b=oKgYcF9FXcAd8skEuKpfHYIVdU8v2ix79xJgimbQNdF47VquHRs08pmcU4434vor4
+	 eBa2PMY0Dm36/yo/r5xU/9TdlfovBRVqnQb2vmsZ/jOwhxEqsNYOebLaBO31bzHE+x
+	 cGxfyp2A/pK5MCOZWrnlTVTDkMciShkv/Lofgkak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730890AbfDARQq (ORCPT
+        id S1731277AbfDASAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42146 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 14:00:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730650AbfDARQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:16:42 -0400
+        id S1730899AbfDARQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:16:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AC2420856;
-        Mon,  1 Apr 2019 17:16:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 534E920883;
+        Mon,  1 Apr 2019 17:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139001;
-        bh=i0MOLalflgdPeaFn95YXeEKANDXfCrcf9PL9UEevIgw=;
+        s=default; t=1554139007;
+        bh=8xEFavklh9mHJYFUeuMKl9znebsYN+LJuax5VOVkffk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xDBfPBWqNve9wnc/ztpKIP1wWTaeoQY99iFZtEUzyK3GUazpy/zC7Jmn5lbfgP2zG
-         +/q/yncpvwMqVMW/psEkJMG1sMdlK2N4juBGrmx99cCD9P30vJICK/aG1cVoCSVEeA
-         iXbVoxosbpthWe2OQK4vHc0bEN6rTZs2i7ccKpEU=
+        b=11r1RGvg0f6YDwo0wFiIbcdLzUfKkoXvFtJF5LQa248yNXW3G4kH0WOR9hQp8mR4P
+         RxmJGm+wXwnhTILF4Xoc3KPfGsOHo8mvG7YRo4eNt1Z0nWjzc8/qlGGYSO1I+MwZzl
+         KIqtyrjfPHAWWipmWnf4rBkv/JTqUilNCfblj8bU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.19 084/134] staging: vt6655: Fix interrupt race condition on device start up.
-Date:   Mon,  1 Apr 2019 19:02:00 +0200
-Message-Id: <20190401170052.160457934@linuxfoundation.org>
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>
+Subject: [PATCH 4.19 086/134] serial: max310x: Fix to avoid potential NULL pointer dereference
+Date:   Mon,  1 Apr 2019 19:02:02 +0200
+Message-Id: <20190401170052.337390492@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -64,65 +64,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-commit 3b9c2f2e0e99bb67c96abcb659b3465efe3bee1f upstream.
+commit 3a10e3dd52e80b9a97a3346020024d17b2c272d6 upstream.
 
-It appears on some slower systems that the driver can find its way
-out of the workqueue while the interrupt is disabled by continuous polling
-by it.
+of_match_device can return a NULL pointer when matching device is not
+found. This patch avoids a scenario causing NULL pointer derefernce.
 
-Move MACvIntEnable to vnt_interrupt_work so that it is always enabled
-on all routes out of vnt_interrupt_process.
-
-Move MACvIntDisable so that the device doesn't keep polling the system
-while the workqueue is being processed.
-
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-CC: stable@vger.kernel.org # v4.2+
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6655/device_main.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/tty/serial/max310x.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/staging/vt6655/device_main.c
-+++ b/drivers/staging/vt6655/device_main.c
-@@ -1040,8 +1040,6 @@ static void vnt_interrupt_process(struct
- 		return;
- 	}
+--- a/drivers/tty/serial/max310x.c
++++ b/drivers/tty/serial/max310x.c
+@@ -1419,6 +1419,8 @@ static int max310x_spi_probe(struct spi_
+ 	if (spi->dev.of_node) {
+ 		const struct of_device_id *of_id =
+ 			of_match_device(max310x_dt_ids, &spi->dev);
++		if (!of_id)
++			return -ENODEV;
  
--	MACvIntDisable(priv->PortOffset);
--
- 	spin_lock_irqsave(&priv->lock, flags);
- 
- 	/* Read low level stats */
-@@ -1129,8 +1127,6 @@ static void vnt_interrupt_process(struct
- 	}
- 
- 	spin_unlock_irqrestore(&priv->lock, flags);
--
--	MACvIntEnable(priv->PortOffset, IMR_MASK_VALUE);
- }
- 
- static void vnt_interrupt_work(struct work_struct *work)
-@@ -1140,6 +1136,8 @@ static void vnt_interrupt_work(struct wo
- 
- 	if (priv->vif)
- 		vnt_interrupt_process(priv);
-+
-+	MACvIntEnable(priv->PortOffset, IMR_MASK_VALUE);
- }
- 
- static irqreturn_t vnt_interrupt(int irq,  void *arg)
-@@ -1148,6 +1146,8 @@ static irqreturn_t vnt_interrupt(int irq
- 
- 	schedule_work(&priv->interrupt_work);
- 
-+	MACvIntDisable(priv->PortOffset);
-+
- 	return IRQ_HANDLED;
- }
- 
+ 		devtype = (struct max310x_devtype *)of_id->data;
+ 	} else {
 
 
