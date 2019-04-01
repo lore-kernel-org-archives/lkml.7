@@ -2,134 +2,194 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D67C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60494C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6DA2084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:01:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="0lwzBIrp"
+	by mail.kernel.org (Postfix) with ESMTP id 262B420828
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 13:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfDANBB (ORCPT
+        id S1726979AbfDANBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 09:01:01 -0400
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.114]:50674 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726421AbfDANBA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 09:01:00 -0400
-Received: from [85.158.142.194] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-b.eu-central-1.aws.symcld.net id 17/BD-05904-88B02AC5; Mon, 01 Apr 2019 13:00:56 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WSa0hTYRjHfc9tZ+bJt6n4tLJo9UVr06XVgb4
-  UES1KMYUQWdRxntxgO+oupBVhfVFmRoUErcyyjFJLUYKwZssszbK8BJZ0wbKFpSYlUnShHY/d
-  vv3e5/9//u/zvjwsqelntKxY5BadkmDXMeGUNVHN68vm1JiT6isW8KUTF1V8cMhP8AOtpxn+2
-  ugEwd+rf8LwRx5t4i93+ch1KtOZhn2m9jtlyBQ810iZ7nePUKbPzYvS6WzaJuXkF+2irSem1h
-  YE1EVfOy6pSlCT2ovCWQo3klB2+DUhHzS4goDOwT7ai9Shw0sEx+7ZZWawEc6MfURexLLRWA+
-  nv874STxKwIu2RpXsicKJUNnyipA5GifB8/ZBlcJp8OzNBCMzhZdBz7fzMzkc3gHHJwuVex8Q
-  0BC8MeNR4wx4/PQlJTPCcTB1sJ6UmcSxMDRSPZMPGMOFm49JhWNg9M1PWvHvhNJb4yqlvgJ6B
-  keQwjq4+NRHKxwH/dXls/VUCFQOkPIQgIcQHH3rZxQhAcq//ZgN0kJX393ZZjs89DXR8gMAL4
-  S+qVSld5qGhokSRvk4C0xW9cz2LoK6imFKMfWSUHnsESk3kzgeGlsTj6J43z9v8/1VlPISqCw
-  fVsnM4Xlw/+QIdRZRdWhNjtOWZ3U7BJtdb0xK0huNyfoU/WqDsFefYxA9eosouZ1CSDMIe1wG
-  V7HDYs81SKK7GYU2K7eQYq4jvzevHc1nCV0MF2w+Z9bMzcnPLbYKLutOp8cuutrRQpbVAbclv
-  MasmecU88Si3TZ7aD1/y8BG6KI5iyxzrgLB4bLlKVI3SmYDNcNVJDt++10VqaGkfEnUxnIbZS
-  uWrVaP9Cfo96r3ozhtFIfCwsI0EQWi02Fz/6+/R7Es0kVx8XJKhE1y/7nvfWgUIjQK76mWR3E
-  LfyVtCUobGNu3+s7PTY7Ahz3+DdLy2sLowTZr4veezeMec+vDiOwvB4KHer2nYlKyOqbU2tqG
-  q2ElK8+mvpvmF0d+2G+6SdcWd19P0Sw4PJlc+KS0c31axsnMLenpa1vMq9oyp0s7DmQlf0q4w
-  ui2L7Wc6B3mW7YtBrKu6rs3UrX1cnCMGdVRLqtgTCCdLuEX7eTAo+UDAAA=
-X-Env-Sender: stwiss.opensource@diasemi.com
-X-Msg-Ref: server-5.tower-239.messagelabs.com!1554123656!3493767!1
-X-Originating-IP: [104.47.9.56]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 15077 invoked from network); 1 Apr 2019 13:00:56 -0000
-Received: from mail-ve1eur03lp2056.outbound.protection.outlook.com (HELO EUR03-VE1-obe.outbound.protection.outlook.com) (104.47.9.56)
-  by server-5.tower-239.messagelabs.com with AES256-SHA256 encrypted SMTP; 1 Apr 2019 13:00:56 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=76ftXICg/clCE6n4FUYk8ft9lb3koyjAi6gjBhwkSOo=;
- b=0lwzBIrpoWnJTddvV1qiBpKln7rNUpsxEoFnMb3PPUcKTJQ+lud+vQ5lxJ5/yftpEpCAiyub3fnG3daaG28bg3FWqnEGOWTKbqRKx5KwA9hD2loaZi9jvrL/bPz3nqrD/4g1IypQedbYFWeP3iptFgQnnvoH2ZmP/8RUaPsA6xU=
-Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM (20.177.62.92) by
- VI1PR10MB2256.EURPRD10.PROD.OUTLOOK.COM (20.177.62.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.17; Mon, 1 Apr 2019 13:00:54 +0000
-Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::e426:c8bc:d222:5cd7]) by VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::e426:c8bc:d222:5cd7%4]) with mapi id 15.20.1730.019; Mon, 1 Apr 2019
- 13:00:54 +0000
-From:   Steve Twiss <stwiss.opensource@diasemi.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Wolfram Sang <wsa@the-dreams.de>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH 1/2] rtc: da9063: set range
-Thread-Topic: [PATCH 1/2] rtc: da9063: set range
-Thread-Index: AQHU388srtB02IcKs0uFchLWhDDC3qYnDdiAgAAE+gCAAAkNIIAANSwAgAABgHA=
-Date:   Mon, 1 Apr 2019 13:00:54 +0000
-Message-ID: <VI1PR10MB2352ADB7AC634641DD6BAE0AFE550@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
-References: <20190321101557.26857-1-alexandre.belloni@bootlin.com>
- <20190401084143.uqbiktkt2vltgrxa@ninjato>
- <CAMuHMdW_Gz4qaRXFeW-h7vNxJ5RwjDXDP4oZZcUaYHcqEC75bA@mail.gmail.com>
- <VI1PR10MB235254A7A95F4045A5410D1EFE550@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
- <CAMuHMdVsp86n_1+c6NZpCG1MwcAzEH7rgaESHfYESb5YcLk6zw@mail.gmail.com>
-In-Reply-To: <CAMuHMdVsp86n_1+c6NZpCG1MwcAzEH7rgaESHfYESb5YcLk6zw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.240.73.196]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 07f6edd9-1979-418f-c6f7-08d6b6a2137c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:VI1PR10MB2256;
-x-ms-traffictypediagnostic: VI1PR10MB2256:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR10MB22561BE5B186DCBBC1F9E46FF5550@VI1PR10MB2256.EURPRD10.PROD.OUTLOOK.COM>
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39850400004)(366004)(346002)(376002)(396003)(40764003)(189003)(199004)(71190400001)(9686003)(74316002)(256004)(54906003)(33656002)(86362001)(81156014)(93886005)(8676002)(6116002)(97736004)(105586002)(106356001)(2906002)(229853002)(316002)(53936002)(52536014)(81166006)(99286004)(3846002)(486006)(55016002)(6306002)(6246003)(446003)(966005)(11346002)(6506007)(186003)(102836004)(6916009)(478600001)(5660300002)(476003)(66066001)(76176011)(4326008)(53546011)(68736007)(25786009)(6436002)(71200400001)(7736002)(7696005)(26005)(8936002)(305945005)(4744005)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB2256;H:VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: S99MPP8mWIbJXVr7xIQoyjQAFcRM57LkthLhQ/1gfWcrzzXB37iU66s1aBnq4YBc7aZ7KA5hbXvNhfFEieFa4H5YgyS1qq5c6pY1InwvSlF8X1GrMf8HTjjKmSSCejs9vi6AeqSCy4Scvl6nkitNBKyMipK5klLLWSmNu6pk8BpeLXvkAmSHgn9uln1BIEdXOCVTkYTVCjj8TRDuyEBA8PIvOh+XdkM8FAzQpnGIHviXn9qs6yocrd4JYAWBtP5eLDWa3pVMejz49CYhV3GBO3qNXTsHr/ioeJDCKra/7EZXlpLTqF9VmybVzP5kmSIA3ZSTjOz0xKe8KHrFaUaTp2F0zIO+Y2fQEuBjyZUDtrddE2rQeD3ueE8JB1xHjYOZePLo/oXWwyM5H+d2E8bzjfDKEU1VIRuTl6xeUukmJSE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 1 Apr 2019 09:01:39 -0400
+Received: from mga17.intel.com ([192.55.52.151]:60535 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbfDANBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 09:01:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 06:01:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,296,1549958400"; 
+   d="scan'208";a="147005075"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 01 Apr 2019 06:01:36 -0700
+Received: from [10.254.82.10] (kliang2-mobl.ccr.corp.intel.com [10.254.82.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 441F5580435;
+        Mon,  1 Apr 2019 06:01:35 -0700 (PDT)
+Subject: Re: [PATCH V4 00/23] perf: Add Icelake support
+To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de
+Cc:     jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+References: <20190326160901.4887-1-kan.liang@linux.intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <f8c734ff-43b7-894b-419f-6f2cda85e10d@linux.intel.com>
+Date:   Mon, 1 Apr 2019 09:01:33 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07f6edd9-1979-418f-c6f7-08d6b6a2137c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 13:00:54.5444
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2256
+In-Reply-To: <20190326160901.4887-1-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIDAxIEFwcmlsIDIwMTkgMTM6NDIsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3
-cm90ZQ0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSBydGM6IGRhOTA2Mzogc2V0IHJhbmdl
-DQo+IA0KPiBIaSBTdGV2ZSwNCj4gDQo+IE9uIE1vbiwgQXByIDEsIDIwMTkgYXQgMjozOSBQTSBT
-dGV2ZSBUd2lzcyB3cm90ZToNCj4gPiBBcyBmYXIgYXMgSSBjYW4gdGVsbCwgdGhlcmUgYXJlIG5v
-IFJUQyBhbGFybSByZWdyZXNzaW9ucy4NCj4gPiBJIGFtIHVzaW5nIGFuIGkuTVg2USBib2FyZCBh
-bmQgd2l0aCBhbiB1bm1vZGlmaWVkIHY1LjEtcmMxIGtlcm5lbCwgZm9yIHRoZQ0KPiA+IGFsYXJt
-cywgSSBzZWUgZXZlcnl0aGluZyB3b3JraW5nIG9rYXkgWy4uLl0NCj4gDQo+IFRoYW5rcyENCj4g
-DQo+IEkgd2FzIGp1c3Qgd29uZGVyaW5nIHdoZXRoZXIgdGhleSB3b3JrIGZvciBXb2xmcmFtLCB3
-aG8gaGFzIGEgc2ltaWxhcg0KPiBidXQgZGlmZmVyZW50IGJvYXJkIHRoYW4gSSBoYXZlLiBMYXN0
-IHRpbWUgSSB0cmllZCwgdGhleSBkaWRuJ3Qgd29yayBmb3IgbWUuDQoNCkkgdGhpbmsgSSByZW1l
-bWJlciwgLi4gd2FzIHRoaXMgaXQ/DQpodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzZFRDhF
-M0IyMjA4MUE0NDU5REFDNzY5OUYzNjk1RkI3MDIyMTc5RjIzNkBTVy1FWC1NQlgwMi5kaWFzZW1p
-LmNvbS8NCg0KSSByZW1lbWJlciBwcmV2aW91c2x5IEkgd2Fzbid0IGFibGUgdG8gcXVpY2tseSBw
-cm92aWRlIHlvdSB3aXRoIGEgcmVncmVzc2lvbg0KdGVzdCByZXN1bHQgYWZ0ZXIgeW91IGZpeGVk
-IGFuIElSUSBwcm9ibGVtIHRoYXQgYWZmZWN0ZWQgdGhlIERBOTA2MyBSVEMNCih0aGFua3MgZm9y
-IHlvdXIgaGVscCBvbiB0aGF0IGJ0dykuDQoNClJlZ2FyZHMsDQpTdGV2ZQ0K
+Hi Peter and Thomas,
+
+Have you got a chance to review this series?
+
+Any comments are very appreciated.
+
+Thanks,
+Kan
+
+On 3/26/2019 12:08 PM, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The patch series intends to add Icelake support for Linux perf.
+> 
+> PATCH 1-18: Kernel patches to support Icelake.
+>   - 1-5: Support adaptive PEBS feature
+>   - 6-7: Enable core support with some new features, e.g. 8 generic
+>     counters, new event constraints, a new fixed counter.
+>   - 8-11: Enable cstate, rapl, msr and uncore support on Icelake
+>   - 12-18: Support hardware Metrics counters and SLOT fixed counter for
+>     Topdown events.
+>   - 19: Support CPUID 10.ECX to disable fixed counters
+> 
+> PATCH 20-23: Perf tool patches to support XMM, Topdown and event list.
+> 
+> Changes since V3:
+> - Keep the old names for GPRs. Rename PERF_REG_X86_MAX to
+>    PERF_REG_X86_XMM_MAX
+> - Remove unnecessary REG_RESERVED
+> - Add REG_NOSUPPORT for 32bit
+> 
+> Changes since V2:
+> - Make the setup_pebs_sample_data() a function pointer argument
+> - Use cpuc->pebs_record_size unconditionally
+> - Add comments for EVENT_CONSTRAINT_RANGE
+> - Correct the Author of "perf/x86: Support constraint ranges"
+> 
+> Changes since V1:
+> - Avoid the interface changes for perf_reg_value() and
+>    perf_output_sample_regs().
+> - Remove the extra_regs in struct perf_sample_data.
+> - Add struct x86_perf_regs
+> - Add has_xmm_regs to indicate the specific platform which support XMM
+>    registers collection.
+> - Add check in x86_pmu_hw_config() to reject invalid config of regs_user
+>    and regs_intr.
+> - Rename intel_hsw_weight and intel_hsw_transaction
+> - Add missed inline for intel_get_tsx_transaction()
+> - Add new patch to extract code of event update in short period
+> - Code rebase on top of c634dc6bdede
+> - Rename @d to pebs_data_cfg
+> - Make pebs_update_adaptive_cfg readable
+> - Clear pebs_data_cfg and pebs_record_size for first PEBS in add
+> - Don't clear ICL_EVENTSEL_ADAPTIVE. Rely on MSR_PEBS_CFG settings
+> - Change PEBS record parsing order (bug fix)
+> - Support struct x86_perf_regs
+> - make get_pebs_status generic
+> - specific intel_pmu_drain_pebs_icl()
+> - Use cpuc->pebs_record_size to replace format_size
+> - Use 'size' to replace 'range_end' for constraint ranges
+> - Add x86_pmu.has_xmm_regs = true;
+> - Add more explanation in change log of REMOVE transaction
+> - Make perf_regs.h consistent between kernel and user space
+> 
+> Andi Kleen (11):
+>    perf/x86/intel: Extract memory code PEBS parser for reuse
+>    perf/x86/lbr: Avoid reading the LBRs when adaptive PEBS handles them
+>    perf/core: Support a REMOVE transaction
+>    perf/x86/intel: Basic support for metrics counters
+>    perf/x86/intel: Support overflows on SLOTS
+>    perf/x86/intel: Set correct weight for topdown subevent counters
+>    perf/x86/intel: Export new top down events for Icelake
+>    perf/x86/intel: Support CPUID 10.ECX to disable fixed counters
+>    perf, tools: Add support for recording and printing XMM registers
+>    perf, tools, stat: Support new per thread TopDown metrics
+>    perf, tools: Add documentation for topdown metrics
+> 
+> Kan Liang (11):
+>    perf/x86: Support outputting XMM registers
+>    perf/x86/intel/ds: Extract code of event update in short period
+>    perf/x86/intel: Support adaptive PEBSv4
+>    perf/x86/intel: Add Icelake support
+>    perf/x86/intel/cstate: Add Icelake support
+>    perf/x86/intel/rapl: Add Icelake support
+>    perf/x86/msr: Add Icelake support
+>    perf/x86/intel/uncore: Add Intel Icelake uncore support
+>    perf/x86/intel: Support hardware TopDown metrics
+>    perf/x86/intel: Disable sampling read slots and topdown
+>    perf vendor events intel: Add JSON files for Icelake
+> 
+> Peter Zijlstra (1):
+>    perf/x86: Support constraint ranges
+> 
+>   arch/x86/events/core.c                        |  81 +-
+>   arch/x86/events/intel/core.c                  | 422 ++++++++-
+>   arch/x86/events/intel/cstate.c                |   2 +
+>   arch/x86/events/intel/ds.c                    | 496 ++++++++--
+>   arch/x86/events/intel/lbr.c                   |  35 +-
+>   arch/x86/events/intel/rapl.c                  |   2 +
+>   arch/x86/events/intel/uncore.c                |   6 +
+>   arch/x86/events/intel/uncore.h                |   1 +
+>   arch/x86/events/intel/uncore_snb.c            |  91 ++
+>   arch/x86/events/msr.c                         |   1 +
+>   arch/x86/events/perf_event.h                  |  93 +-
+>   arch/x86/include/asm/intel_ds.h               |   2 +-
+>   arch/x86/include/asm/msr-index.h              |   4 +
+>   arch/x86/include/asm/perf_event.h             |  79 +-
+>   arch/x86/include/uapi/asm/perf_regs.h         |  23 +-
+>   arch/x86/kernel/perf_regs.c                   |  27 +-
+>   include/linux/perf_event.h                    |   7 +
+>   kernel/events/core.c                          |   5 +
+>   tools/arch/x86/include/uapi/asm/perf_regs.h   |  23 +-
+>   tools/perf/Documentation/perf-stat.txt        |   9 +-
+>   tools/perf/Documentation/topdown.txt          | 223 +++++
+>   tools/perf/arch/x86/include/perf_regs.h       |  25 +-
+>   tools/perf/arch/x86/util/perf_regs.c          |  16 +
+>   tools/perf/builtin-stat.c                     |  24 +
+>   .../pmu-events/arch/x86/icelake/cache.json    | 552 +++++++++++
+>   .../arch/x86/icelake/floating-point.json      |  90 ++
+>   .../pmu-events/arch/x86/icelake/frontend.json | 424 +++++++++
+>   .../pmu-events/arch/x86/icelake/memory.json   | 410 ++++++++
+>   .../pmu-events/arch/x86/icelake/other.json    | 133 +++
+>   .../pmu-events/arch/x86/icelake/pipeline.json | 892 ++++++++++++++++++
+>   .../arch/x86/icelake/virtual-memory.json      | 236 +++++
+>   tools/perf/pmu-events/arch/x86/mapfile.csv    |   1 +
+>   tools/perf/util/perf_regs.h                   |   1 +
+>   tools/perf/util/stat-shadow.c                 |  89 ++
+>   tools/perf/util/stat.c                        |   4 +
+>   tools/perf/util/stat.h                        |   8 +
+>   36 files changed, 4418 insertions(+), 119 deletions(-)
+>   create mode 100644 tools/perf/Documentation/topdown.txt
+>   create mode 100644 tools/perf/pmu-events/arch/x86/icelake/cache.json
+>   create mode 100644 tools/perf/pmu-events/arch/x86/icelake/floating-point.json
+>   create mode 100644 tools/perf/pmu-events/arch/x86/icelake/frontend.json
+>   create mode 100644 tools/perf/pmu-events/arch/x86/icelake/memory.json
+>   create mode 100644 tools/perf/pmu-events/arch/x86/icelake/other.json
+>   create mode 100644 tools/perf/pmu-events/arch/x86/icelake/pipeline.json
+>   create mode 100644 tools/perf/pmu-events/arch/x86/icelake/virtual-memory.json
+> 
