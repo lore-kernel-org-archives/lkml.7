@@ -2,78 +2,134 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B30C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 22:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4EAC10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9754B2084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 22:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD002084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554159583;
-	bh=HUIt/GMdMIfedRsCvcx60XvZMawRAJlZEzZJAl/WHbE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s75CMN4jz4qrlHNScXGIz8VTIMs4vCY92XJj17wpktG6ip6zxhxwxRJJUabjZWhTM
-	 U3R3otAjb5lmdYr1juReE/XQAEM13fA9RT1c6Os5xeSmV/n58ZDU/UvAnrdiQxgTuX
-	 fVc/+jVJDE5ndUe7fx8HBLaS/OnuJZ5BNrwq7jxo=
+	s=default; t=1554159806;
+	bh=3Mjx1vmB6gysLzxXmw82/5HSigtoJhMJSy+dfG3Uwq0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uFyIjEwLUrRyNKKGc50IB5CmQEGnDOxlI5YWfzbuHl9oizLLiRU+Kiw5EekQ55ow2
+	 FPVuyn58+FXciK3JHjomDnEvc4c5KAJx5vWiCPVbRW2JoTlPHaFT2DeNgv9bO62eKr
+	 53SBLIZej7zwzNa/HcD47iuRta0eqoUyS+hh9gLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfDAW7m (ORCPT
+        id S1726874AbfDAXDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 18:59:42 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:59800 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfDAW7l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 18:59:41 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id BEA3D1ACD;
-        Mon,  1 Apr 2019 22:59:40 +0000 (UTC)
-Date:   Mon, 1 Apr 2019 15:59:39 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
-Subject: Re: [RFC PATCH v2 0/1] improve vmap allocation
-Message-Id: <20190401155939.66ad1f8ad999fde514002e66@linux-foundation.org>
-In-Reply-To: <20190401110347.aby2v6tvqfvhyupf@pc636>
-References: <20190321190327.11813-1-urezki@gmail.com>
-        <20190321150106.198f70e1e949e2cb8cc06f1c@linux-foundation.org>
-        <20190401110347.aby2v6tvqfvhyupf@pc636>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 1 Apr 2019 19:03:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbfDAXDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 19:03:24 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDD432084B;
+        Mon,  1 Apr 2019 23:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554159803;
+        bh=3Mjx1vmB6gysLzxXmw82/5HSigtoJhMJSy+dfG3Uwq0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oFsC2s0dfEhVf90//G02A9XJeoKu+bxVXOAdVHEvFmmLl5pqA5RFOFC/2ZxJ/kuzU
+         9ARCmw326KgmP0i+ggW6zqb2x4wwWJXgKp7zo/FXlRJhRU3IVi6AZ4ubaYOLKbRn30
+         0GsQ+aWKHjbaodJ7o04wAr1+LAuJHzSi5NpHgito=
+Date:   Mon, 1 Apr 2019 18:03:21 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/12] Include linux PCI docs into Sphinx TOC tree
+Message-ID: <20190401230321.GB141706@google.com>
+References: <20190329160413.4293-1-changbin.du@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329160413.4293-1-changbin.du@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Apr 2019 13:03:47 +0200 Uladzislau Rezki <urezki@gmail.com> wrote:
+On Sat, Mar 30, 2019 at 12:04:01AM +0800, Changbin Du wrote:
+> Hi Corbet,
 
-> Hello, Andrew.
-> 
-> >
-> > It's a lot of new code. I t looks decent and I'll toss it in there for
-> > further testing.  Hopefully someone will be able to find the time for a
-> > detailed review.
-> > 
-> I have got some proposals and comments about simplifying the code a bit.
-> So i am about to upload the v3 for further review. I see that your commit
-> message includes whole details and explanation:
-> 
-> http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/commit/?id=b6ac5ca4c512094f217a8140edeea17e6621b2ad
-> 
-> Should i base on and keep it in v3?
-> 
+Conventional address would be "Hi Jonathan", just FYI.
 
-It's probably best to do a clean resend at this stage.  I'll take a
-look at the deltas and updating changelogs, etc.
+> I also did the conversion for PCI documentation. Please check, Thanks!
+> 
+> The kernel now uses Sphinx to generate intelligent and beautiful documentation
+> from reStructuredText files. I converted most of the Linux PCI docs to rst
+> format in this serias.
+> 
+> For you to preview, please visit below url:
+> http://104.238.181.70:8080/kernel-doc/PCI/index.html
+> 
+> Thank you!
+> 
+> Changbin Du (12):
+>   Documentation: add Linux PCI to Sphinx TOC tree
+>   pci doc: convert PCI/pci.txt to rst format
+>   pci doc: convert PCI/PCIEBUS-HOWTO.txt to rst format
+>   pci doc: convert PCI/pci-iov-howto.txt to rst format
+>   pci doc: convert PCI/MSI-HOWTO.txt to rst format
+>   pci doc: convert PCI/acpi-info.txt to rst format
+>   pci doc: convert PCI/pci-error-recovery.txt to rst format
+>   pci doc: convert PCI/pcieaer-howto.txt to rst format
+>   pci doc: convert PCI/endpoint/pci-endpoint.txt to rst format
+>   pci doc: convert PCI/endpoint/pci-endpoint-cfs.txt to rst format
+>   pci doc: convert PCI/endpoint/pci-test-function.txt to rst format
+>   pci doc: convert PCI/endpoint/pci-test-howto.txt to rst format
+
+Thanks for doing all this work!
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+There's not a real convention yet for subject lines in Documentation/,
+but I would propose:
+
+  Documentation: PCI: Convert pci.txt to reST
+  Documentation: PCI: Convert endpoint/pci-endpoint.txt to reST
+
+because that at least goes with some recent Documentation/PCI changes
+and it identifies "reST" as something other than a plain English word
+(RST or ReST would also work for me).
+
+>  .../PCI/{MSI-HOWTO.txt => MSI-HOWTO.rst}      |  56 +++--
+>  .../{PCIEBUS-HOWTO.txt => PCIEBUS-HOWTO.rst}  | 112 +++++----
+>  .../PCI/{acpi-info.txt => acpi-info.rst}      |  11 +-
+>  Documentation/PCI/endpoint/index.rst          |  13 ++
+>  ...-endpoint-cfs.txt => pci-endpoint-cfs.rst} |  99 ++++----
+>  .../{pci-endpoint.txt => pci-endpoint.rst}    |  74 +++---
+>  ...est-function.txt => pci-test-function.rst} |  32 +--
+>  ...{pci-test-howto.txt => pci-test-howto.rst} |  51 ++--
+>  Documentation/PCI/index.rst                   |  17 ++
+>  ...or-recovery.txt => pci-error-recovery.rst} | 180 ++++++++-------
+>  .../{pci-iov-howto.txt => pci-iov-howto.rst}  | 144 +++++++-----
+>  Documentation/PCI/{pci.txt => pci.rst}        | 218 +++++++++---------
+>  .../{pcieaer-howto.txt => pcieaer-howto.rst}  |  67 ++++--
+>  Documentation/index.rst                       |   1 +
+>  MAINTAINERS                                   |   2 +-
+>  15 files changed, 641 insertions(+), 436 deletions(-)
+>  rename Documentation/PCI/{MSI-HOWTO.txt => MSI-HOWTO.rst} (89%)
+>  rename Documentation/PCI/{PCIEBUS-HOWTO.txt => PCIEBUS-HOWTO.rst} (75%)
+>  rename Documentation/PCI/{acpi-info.txt => acpi-info.rst} (97%)
+>  create mode 100644 Documentation/PCI/endpoint/index.rst
+>  rename Documentation/PCI/endpoint/{pci-endpoint-cfs.txt => pci-endpoint-cfs.rst} (64%)
+>  rename Documentation/PCI/endpoint/{pci-endpoint.txt => pci-endpoint.rst} (86%)
+>  rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (84%)
+>  rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (83%)
+>  create mode 100644 Documentation/PCI/index.rst
+>  rename Documentation/PCI/{pci-error-recovery.txt => pci-error-recovery.rst} (80%)
+>  rename Documentation/PCI/{pci-iov-howto.txt => pci-iov-howto.rst} (65%)
+>  rename Documentation/PCI/{pci.txt => pci.rst} (80%)
+>  rename Documentation/PCI/{pcieaer-howto.txt => pcieaer-howto.rst} (83%)
+> 
+> -- 
+> 2.20.1
+> 
