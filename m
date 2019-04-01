@@ -2,102 +2,115 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2405DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B016C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB4CE20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79FD20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:47:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Zo3km8hR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbfDAIr0 (ORCPT
+        id S1728046AbfDAIrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:47:26 -0400
-Received: from ou.quest-ce.net ([195.154.187.82]:55638 "EHLO ou.quest-ce.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfDAIr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:47:26 -0400
-Received: from [2a01:e35:39f2:1220:98ae:65aa:acef:50cb] (helo=test.quest-ce.net)
-        by ou.quest-ce.net with esmtpsa (TLS1.1:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <ydroneaud@opteya.com>)
-        id 1hAsb3-0001DI-KJ; Mon, 01 Apr 2019 10:47:13 +0200
-Message-ID: <65440fd9977a2e1f0467b7ece38240e5dac2b736.camel@opteya.com>
-From:   Yann Droneaud <ydroneaud@opteya.com>
-To:     Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Daniel Colascione <dancol@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Joel Fernandes <joel@joelfernandes.org>
-Date:   Mon, 01 Apr 2019 10:47:11 +0200
-In-Reply-To: <CAG48ez0OnfkrEc5SmeaPpuv2aQ31kxkoFeaSVFwu7z1m=tN-9g@mail.gmail.com>
-References: <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com>
-         <CAHk-=wj0o8BiUrYiM5ZcTS6JxBh1M60O36Ms8-EqLQ139=1L4g@mail.gmail.com>
-         <20190330171215.3yrfxwodstmgzmxy@brauner.io>
-         <CAHk-=whF6gnRVbJaArZna4e=tejfrzmNQtRbWjnuSSKpBn+jQg@mail.gmail.com>
-         <132107F4-F56B-4D6E-9E00-A6F7C092E6BD@amacapital.net>
-         <CAHk-=wiaLtH41Mc5qAjOeCWavPqV0DhS581KYa0QBt8uraTK1Q@mail.gmail.com>
-         <20190331211041.vht7dnqg4e4bilr2@brauner.io>
-         <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
-         <20190331220259.qntxynluk765hpnt@brauner.io>
-         <CAHk-=wh0jgRkZiNdFD96Zpjx+_G+NVSHieAt+QgWCQBJ2A-5Aw@mail.gmail.com>
-         <20190331223355.vfbnnkmevl63etvv@brauner.io>
-         <CAG48ez0OnfkrEc5SmeaPpuv2aQ31kxkoFeaSVFwu7z1m=tN-9g@mail.gmail.com>
-Organization: OPTEYA
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 (3.32.0-1.fc30) 
+        Mon, 1 Apr 2019 04:47:52 -0400
+Received: from smtprelay.synopsys.com ([198.182.60.111]:35242 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfDAIrw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 04:47:52 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay.synopsys.com (Postfix) with ESMTPS id CBB2F10C2031;
+        Mon,  1 Apr 2019 01:47:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1554108471; bh=iGyhSxira3hBkj54USKjOk4Uq1baPC0mG3vO9jK49Dk=;
+        h=From:To:CC:Subject:Date:References:From;
+        b=Zo3km8hRX11N2SmBix7n0ti6q8BteT5NX3KqxbR+xQ1jOVSrpzHyL9maD9zQAcUnt
+         Sn8EcZ9Slag99pSCQidcUlfwYjTr6CwI2AWBF/DQDksGJaKyIaakpt1Q4uQOMIc7uO
+         FgUwsere6p3cp8FXHQke/MgjkS5LlOpVdxPh9BYbzff+5KkEyHSS4fFhB15MOv9l7H
+         8/C0kyHbOrbKwHzQEWCCHSK4QJg2VaPFCKtC7zqrXbfFRyVMXTOSSzcOE45ys33nER
+         OgWbHw7gZlYRBO4AlUrL1MjHPqAxQfqE8iVDC4kNJwKW90FKOiWVwCw5iE3G+AB2vf
+         v2rvAIsIrLHuQ==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 8EDB7A00A1;
+        Mon,  1 Apr 2019 08:47:51 +0000 (UTC)
+Received: from AM04WEHTCB.internal.synopsys.com (10.116.16.192) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 1 Apr 2019 01:47:51 -0700
+Received: from AM04WEMBXA.internal.synopsys.com ([fe80::79c3:55f2:1f20:5bf4])
+ by am04wehtcb.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
+ 1 Apr 2019 12:47:48 +0400
+From:   Minas Harutyunyan <minas.harutyunyan@synopsys.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Minas Harutyunyan <minas.harutyunyan@synopsys.com>
+Subject: Re: [PATCH 4/5] usb: dwc2: get optional clock by
+ devm_clk_get_optional()
+Thread-Topic: [PATCH 4/5] usb: dwc2: get optional clock by
+ devm_clk_get_optional()
+Thread-Index: AQHU5tr4DJmsFWRvUkOzwF22vwIhkQ==
+Date:   Mon, 1 Apr 2019 08:47:47 +0000
+Message-ID: <410670D7E743164D87FA6160E7907A56013A7FDF13@am04wembxa.internal.synopsys.com>
+References: <2ec86ffd7de45dabaa7257019a79f1e80751934c.1553937592.git.chunfeng.yun@mediatek.com>
+ <e14524a4e6b38140f41e55bb74aedb6599e963e1.1553937592.git.chunfeng.yun@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.116.70.132]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a01:e35:39f2:1220:98ae:65aa:acef:50cb
-X-SA-Exim-Mail-From: ydroneaud@opteya.com
-Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
-X-SA-Exim-Version: 4.2.1 (built Mon, 26 Dec 2011 16:24:06 +0000)
-X-SA-Exim-Scanned: Yes (on ou.quest-ce.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Le lundi 01 avril 2019 à 02:52 +0200, Jann Horn a écrit :
-
-> One minor detail to keep in mind for the future is that in a
-> straightforward implementation of this concept, if a non-capable
-> process is running in a mount namespace, but in the initial network
-> namespace, without any reachable /proc mount, it will be able to look
-> at information about other processes' network connections by first
-> using pidfd_open() on itself or by using clone(CLONE_PIDFD), then
-> looking at the "net" directory under the resulting file descriptor.
-
-I also think it would punch a hole in chroot() ... (but in 2019, nobody
-should rely on it for security purpose).
-
-Regards.
-
--- 
-Yann Droneaud
-OPTEYA
-
-
+On 3/30/2019 1:28 PM, Chunfeng Yun wrote:=0A=
+> Use devm_clk_get_optional() to get optional clock=0A=
+> =0A=
+> Cc: Minas Harutyunyan <hminas@synopsys.com>=0A=
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>=0A=
+=0A=
+Acked-by: Minas Harutyunyan <hminas@synopsys.com>=0A=
+=0A=
+> ---=0A=
+>   drivers/usb/dwc2/platform.c | 6 +++---=0A=
+>   1 file changed, 3 insertions(+), 3 deletions(-)=0A=
+> =0A=
+> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c=0A=
+> index c0b64d483552..9aa9682a5cd2 100644=0A=
+> --- a/drivers/usb/dwc2/platform.c=0A=
+> +++ b/drivers/usb/dwc2/platform.c=0A=
+> @@ -284,10 +284,10 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg =
+*hsotg)=0A=
+>   	}=0A=
+>   =0A=
+>   	/* Clock */=0A=
+> -	hsotg->clk =3D devm_clk_get(hsotg->dev, "otg");=0A=
+> +	hsotg->clk =3D devm_clk_get_optional(hsotg->dev, "otg");=0A=
+>   	if (IS_ERR(hsotg->clk)) {=0A=
+> -		hsotg->clk =3D NULL;=0A=
+> -		dev_dbg(hsotg->dev, "cannot get otg clock\n");=0A=
+> +		dev_err(hsotg->dev, "cannot get otg clock\n");=0A=
+> +		return PTR_ERR(hsotg->clk);=0A=
+>   	}=0A=
+>   =0A=
+>   	/* Regulators */=0A=
+> =0A=
+=0A=
