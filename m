@@ -2,121 +2,168 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2614C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E4FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8155820830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140363;
-	bh=E5d57PCYI9pnt1WSNaN4EApnKc6tQcG17EIlRdlWeUw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GZ3p550YofLym5R9+/n5v1AQLzRB7n7/VqdTGKPxtdFWkVR4LNmV6rj8ti5dbdi1s
-	 BTqgTzdo/XIvgMtSzpWQSVEQ4APr+pmIgJmPCeJffJOvM21l8bvpAmJN9DDUdiHST/
-	 J4/8auXTGH13fqWc9tlsz0QpMSkeSJKRlyTbRQPk=
+	by mail.kernel.org (Postfix) with ESMTP id 702F620830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388430AbfDARjW (ORCPT
+        id S2387915AbfDARj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:39:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53038 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:39:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:1026 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730909AbfDARjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:39:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2388274AbfDARjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:39:23 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3A10208E4;
-        Mon,  1 Apr 2019 17:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140358;
-        bh=E5d57PCYI9pnt1WSNaN4EApnKc6tQcG17EIlRdlWeUw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V+nl6LuVcY2tJcwoc+p5ECaBUvDGRah5LuW2Y5PVNBL5raAMaJsZbjOcnV2Av5Q6F
-         zr9KIm9L874apNb/CmSYzMjUInrc8gmPtnaTl2M1TAJq/IAn8wIA9tHcZm9g9lXmXQ
-         d/G0pJsXDIewL+X9ilx36+nL+gIURJlTHCNQq2VA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 3.18 48/50] xhci: Fix port resume done detection for SS ports with LPM enabled
-Date:   Mon,  1 Apr 2019 19:03:31 +0200
-Message-Id: <20190401170046.523169240@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
-References: <20190401170041.257273804@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        by mx1.redhat.com (Postfix) with ESMTPS id F1E4630833C4;
+        Mon,  1 Apr 2019 17:39:22 +0000 (UTC)
+Received: from gondolin (ovpn-117-29.ams2.redhat.com [10.36.117.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3FAD1600D4;
+        Mon,  1 Apr 2019 17:39:19 +0000 (UTC)
+Date:   Mon, 1 Apr 2019 19:39:16 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kwankhede@nvidia.com, alex.williamson@redhat.com, cjia@nvidia.com
+Subject: Re: [PATCHv1 6/7] vfio/mdev: Fix aborting mdev child device removal
+ if one fails
+Message-ID: <20190401193916.3d2c6552.cohuck@redhat.com>
+In-Reply-To: <1553658345-43995-7-git-send-email-parav@mellanox.com>
+References: <1553658345-43995-1-git-send-email-parav@mellanox.com>
+        <1553658345-43995-7-git-send-email-parav@mellanox.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 01 Apr 2019 17:39:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.18-stable review patch.  If anyone has any objections, please let me know.
+On Tue, 26 Mar 2019 22:45:44 -0500
+Parav Pandit <parav@mellanox.com> wrote:
 
-------------------
+> device_for_each_child() stops executing callback function for remaining
+> child devices, if callback hits an error.
+> Each child mdev device is independent of each other.
+> While unregistering parent device, mdev core must remove all child mdev
+> devices.
+> Therefore, mdev_device_remove_cb() always returns success so that
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+s/always returns/must always return/ ?
 
-commit 6cbcf596934c8e16d6288c7cc62dfb7ad8eadf15 upstream.
+> device_for_each_child doesn't abort if one child removal hits error.
+> 
+> While at it, improve remove and unregister functions for below simplicity.
+> 
+> There isn't need to pass forced flag pointer during mdev parent
+> removal which invokes mdev_device_remove(). So simplify the flow.
+> 
+> mdev_device_remove() is called from two paths.
+> 1. mdev_unregister_driver()
+>      mdev_device_remove_cb()
+>        mdev_device_remove()
+> 2. remove_store()
+>      mdev_device_remove()
+> 
+> When device is removed by user using remote_store(), device under
+> removal is mdev device.
+> When device is removed during parent device removal using generic child
+> iterator, mdev check is already done using dev_is_mdev().
 
-A suspended SS port in U3 link state will go to U0 when resumed, but
-can almost immediately after that enter U1 or U2 link power save
-states before host controller driver reads the port status.
+Isn't there still a possible race condition (which you seem to address
+with the following patch)? IOW, you cannot remove that loop-under-mutex
+yet?
 
-Host controller driver only checks for U0 state, and might miss
-the finished resume, leaving flags unclear and skip notifying usb
-code of the wake.
+> 
+> Hence, remove the unnecessary loop in mdev_device_remove().
+> 
+> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Signed-off-by: Parav Pandit <parav@mellanox.com>
+> ---
+>  drivers/vfio/mdev/mdev_core.c | 23 +++++------------------
+>  1 file changed, 5 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> index 836d319..aefcf34 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -149,10 +149,10 @@ static int mdev_device_remove_ops(struct mdev_device *mdev, bool force_remove)
+>  
 
-Add U1 and U2 to the possible link states when checking for finished
-port resume.
+Maybe add
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+/* only called during parent device unregistration */
 
+to avoid headscratching in the future?
 
----
- drivers/usb/host/xhci-ring.c |    9 ++++++---
- drivers/usb/host/xhci.h      |    1 +
- 2 files changed, 7 insertions(+), 3 deletions(-)
+>  static int mdev_device_remove_cb(struct device *dev, void *data)
+>  {
+> -	if (!dev_is_mdev(dev))
+> -		return 0;
+> +	if (dev_is_mdev(dev))
+> +		mdev_device_remove(dev, true);
+>  
+> -	return mdev_device_remove(dev, data ? *(bool *)data : true);
+> +	return 0;
+>  }
+>  
+>  /*
+> @@ -240,7 +240,6 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>  void mdev_unregister_device(struct device *dev)
+>  {
+>  	struct mdev_parent *parent;
+> -	bool force_remove = true;
+>  
+>  	mutex_lock(&parent_list_lock);
+>  	parent = __find_parent_device(dev);
+> @@ -254,8 +253,7 @@ void mdev_unregister_device(struct device *dev)
+>  	list_del(&parent->next);
+>  	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
+>  
+> -	device_for_each_child(dev, (void *)&force_remove,
+> -			      mdev_device_remove_cb);
+> +	device_for_each_child(dev, NULL, mdev_device_remove_cb);
+>  
+>  	parent_remove_sysfs_files(parent);
+>  
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1599,10 +1599,13 @@ static void handle_port_status(struct xh
- 		}
- 	}
- 
--	if ((temp & PORT_PLC) && (temp & PORT_PLS_MASK) == XDEV_U0 &&
--			DEV_SUPERSPEED(temp)) {
-+	if ((temp & PORT_PLC) &&
-+	    DEV_SUPERSPEED(temp) &&
-+	    ((temp & PORT_PLS_MASK) == XDEV_U0 ||
-+	     (temp & PORT_PLS_MASK) == XDEV_U1 ||
-+	     (temp & PORT_PLS_MASK) == XDEV_U2)) {
- 		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
--		/* We've just brought the device into U0 through either the
-+		/* We've just brought the device into U0/1/2 through either the
- 		 * Resume state after a device remote wakeup, or through the
- 		 * U3Exit state after a host-initiated resume.  If it's a device
- 		 * initiated remote wake, don't pass up the link state change,
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -283,6 +283,7 @@ struct xhci_op_regs {
-  */
- #define PORT_PLS_MASK	(0xf << 5)
- #define XDEV_U0		(0x0 << 5)
-+#define XDEV_U1		(0x1 << 5)
- #define XDEV_U2		(0x2 << 5)
- #define XDEV_U3		(0x3 << 5)
- #define XDEV_RESUME	(0xf << 5)
+Up to this chunk, the patch looks good to me.
 
+> @@ -348,24 +346,13 @@ int mdev_device_create(struct kobject *kobj,
+>  
+>  int mdev_device_remove(struct device *dev, bool force_remove)
+>  {
+> -	struct mdev_device *mdev, *tmp;
+> +	struct mdev_device *mdev;
+>  	struct mdev_parent *parent;
+>  	struct mdev_type *type;
+>  	int ret;
+>  
+>  	mdev = to_mdev_device(dev);
+> -
+>  	mutex_lock(&mdev_list_lock);
+> -	list_for_each_entry(tmp, &mdev_list, next) {
+> -		if (tmp == mdev)
+> -			break;
+> -	}
+> -
+> -	if (tmp != mdev) {
+> -		mutex_unlock(&mdev_list_lock);
+> -		return -ENODEV;
+> -	}
+> -
+>  	if (!mdev->active) {
+>  		mutex_unlock(&mdev_list_lock);
+>  		return -EAGAIN;
 
