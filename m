@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBEBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFC1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E97A21924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 490AA2192D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138467;
-	bh=ZOX4J2mID61podr8kEUJ9JLDrY0assIOA/I6AkWG7WI=;
+	s=default; t=1554138473;
+	bh=zvTc5sA+VvsZ7XiulKDf7aag+8RPQ0JGo293Jq+KfuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LYuj7tvHGk09Bxf2BfZDCfTpm/FwCxDOJ1NI1gXOvy8rLtMSThxSDkYrtA5CclsaV
-	 C+yC7G4/tGaHUenMS8nC62AIkRZAbESpj9k0/CFimETiFiPnL6iPl2MmV5sYnrwycO
-	 oGwU7OoLbeB7zeQiNckC+w1N60UUcJl82Ks8l8hM=
+	b=DATRJMir/7ZETki5yOIBDgHUlS5nJ9u5r06FpsOAtj/SWwcTre2jeT/DF2KcGUfEG
+	 clFZ7mKp5E1ydVMR62XkfFEbTdRv9ZYZmWUssmDLx4nul0peaFH7er/aFAMnpqhYA7
+	 p7cljtWYB+jsRdFrr5JlQ/qQ2/jQVv0m5WMOFd08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbfDARHq (ORCPT
+        id S1729553AbfDARHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:07:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54000 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:07:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728830AbfDARHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:07:43 -0400
+        id S1728830AbfDARHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:07:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4F3721925;
-        Mon,  1 Apr 2019 17:07:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE1172192C;
+        Mon,  1 Apr 2019 17:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138462;
-        bh=ZOX4J2mID61podr8kEUJ9JLDrY0assIOA/I6AkWG7WI=;
+        s=default; t=1554138466;
+        bh=zvTc5sA+VvsZ7XiulKDf7aag+8RPQ0JGo293Jq+KfuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ykODO98ZSE3srVUXkz/yzH9XQVJJnYQw2JIM2juLt30KHAC4pYaCUpkNHG2DY4TQ6
-         cAn+Bnjm7QhS+L0K6N3oLARluG9e1jWbd7HGAus8oQGXUu3ThtTmRAwXR24t/tZXkA
-         lX+2T5E4iWQ7aAKvYb2Npg9QtxQiyTNlQoz+0BvM=
+        b=oaQ6v6nOOuTcJwICc0bK2+U1BSTIO4tS5GHh6YhKUokwYEM5NPgdLS7uJw9ZUzQIK
+         aoyztB3VJG6iPl+Ji1MPXdRJXTWPNKC9NChtJvfFUZoRhFJBo/BWDK4NRB0ou4LkDU
+         Hhp/qoAm1pJDLPUyo8apPda2PN8zwSmZ9m2bhYn4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Jason Yan <yanaijie@huawei.com>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Hussam Al-Tayeb <ht990332@gmx.com>,
         Bart Van Assche <bvanassche@acm.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.0 072/146] scsi: sd: Fix a race between closing an sd device and sd I/O
-Date:   Mon,  1 Apr 2019 19:01:24 +0200
-Message-Id: <20190401170054.798366445@linuxfoundation.org>
+Subject: [PATCH 5.0 073/146] scsi: sd: Quiesce warning if device does not report optimal I/O size
+Date:   Mon,  1 Apr 2019 19:01:25 +0200
+Message-Id: <20190401170054.902723017@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -69,79 +67,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Martin K. Petersen <martin.petersen@oracle.com>
 
-commit c14a57264399efd39514a2329c591a4b954246d8 upstream.
+commit 1d5de5bd311be7cd54f02f7cd164f0349a75c876 upstream.
 
-The scsi_end_request() function calls scsi_cmd_to_driver() indirectly and
-hence needs the disk->private_data pointer. Avoid that that pointer is
-cleared before all affected I/O requests have finished. This patch avoids
-that the following crash occurs:
+Commit a83da8a4509d ("scsi: sd: Optimal I/O size should be a multiple
+of physical block size") split one conditional into several separate
+statements in an effort to provide more accurate warning messages when
+a device reports a nonsensical value. However, this reorganization
+accidentally dropped the precondition of the reported value being
+larger than zero. This lead to a warning getting emitted on devices
+that do not report an optimal I/O size at all.
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-Call trace:
- scsi_mq_uninit_cmd+0x1c/0x30
- scsi_end_request+0x7c/0x1b8
- scsi_io_completion+0x464/0x668
- scsi_finish_command+0xbc/0x160
- scsi_eh_flush_done_q+0x10c/0x170
- sas_scsi_recover_host+0x84c/0xa98 [libsas]
- scsi_error_handler+0x140/0x5b0
- kthread+0x100/0x12c
- ret_from_fork+0x10/0x18
+Remain silent if a device does not report an optimal I/O size.
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Cc: Jason Yan <yanaijie@huawei.com>
+Fixes: a83da8a4509d ("scsi: sd: Optimal I/O size should be a multiple of physical block size")
+Cc: Randy Dunlap <rdunlap@infradead.org>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reported-by: Jason Yan <yanaijie@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reported-by: Hussam Al-Tayeb <ht990332@gmx.com>
+Tested-by: Hussam Al-Tayeb <ht990332@gmx.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/sd.c |   19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ drivers/scsi/sd.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
 --- a/drivers/scsi/sd.c
 +++ b/drivers/scsi/sd.c
-@@ -1398,11 +1398,6 @@ static void sd_release(struct gendisk *d
- 			scsi_set_medium_removal(sdev, SCSI_REMOVAL_ALLOW);
- 	}
+@@ -3054,6 +3054,9 @@ static bool sd_validate_opt_xfer_size(st
+ 	unsigned int opt_xfer_bytes =
+ 		logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
  
--	/*
--	 * XXX and what if there are packets in flight and this close()
--	 * XXX is followed by a "rmmod sd_mod"?
--	 */
--
- 	scsi_disk_put(sdkp);
- }
- 
-@@ -3488,9 +3483,21 @@ static void scsi_disk_release(struct dev
- {
- 	struct scsi_disk *sdkp = to_scsi_disk(dev);
- 	struct gendisk *disk = sdkp->disk;
--	
-+	struct request_queue *q = disk->queue;
++	if (sdkp->opt_xfer_blocks == 0)
++		return false;
 +
- 	ida_free(&sd_index_ida, sdkp->index);
- 
-+	/*
-+	 * Wait until all requests that are in progress have completed.
-+	 * This is necessary to avoid that e.g. scsi_end_request() crashes
-+	 * due to clearing the disk->private_data pointer. Wait from inside
-+	 * scsi_disk_release() instead of from sd_release() to avoid that
-+	 * freezing and unfreezing the request queue affects user space I/O
-+	 * in case multiple processes open a /dev/sd... node concurrently.
-+	 */
-+	blk_mq_freeze_queue(q);
-+	blk_mq_unfreeze_queue(q);
-+
- 	disk->private_data = NULL;
- 	put_disk(disk);
- 	put_device(&sdkp->device->sdev_gendev);
+ 	if (sdkp->opt_xfer_blocks > dev_max) {
+ 		sd_first_printk(KERN_WARNING, sdkp,
+ 				"Optimal transfer size %u logical blocks " \
 
 
