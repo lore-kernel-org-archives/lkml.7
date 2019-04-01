@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABB1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B23C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF9D20856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C8020830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139822;
-	bh=+95QN+Vvo3g+LWVSnRpyJSONKHKwaR7AOQqpLnc2/Mk=;
+	s=default; t=1554139824;
+	bh=BRM0vHzAXwu6TbIYlpvLys6KhjT+03YGEl0QGcq5ogk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sROcySOY61Uqyzb6bEoIZcwTv8Ksa/RsGM6yn093J6wTewmDgbfVgTPk8afhUUmj2
-	 4nYe8Urx5FvljZjrsEED2ftJG627/7VWyO4PmCkuH9EJe0u3G2e/WoLejlMGzcVUHM
-	 +j1RysljaCHaXUwxfOs2Vx3o4wX2METVjC+ZCUwA=
+	b=WCG3xlFypKc1hUdlgr+Pr+Wl8ghVmfLmFr9ddYtzmr9qTT827vDWnytbSRzigzatE
+	 2awDNQFOg6dFPsBcqnLbR3Pp771zdMQgd1x6kpoP5EkxTL4VCcBojG0HDgBVJnMUi8
+	 Mdn19dFy3wT8d6cGub1OI+Gi/4kn1+Imk+CbTCIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733075AbfDARaU (ORCPT
+        id S1733081AbfDARaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37176 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:30:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732690AbfDARaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:30:17 -0400
+        id S1733069AbfDARaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:30:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 464F620856;
-        Mon,  1 Apr 2019 17:30:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 082862146E;
+        Mon,  1 Apr 2019 17:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139816;
-        bh=+95QN+Vvo3g+LWVSnRpyJSONKHKwaR7AOQqpLnc2/Mk=;
+        s=default; t=1554139819;
+        bh=BRM0vHzAXwu6TbIYlpvLys6KhjT+03YGEl0QGcq5ogk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U6RRroPlIRevQdYtnZNAmPFi1PAYXJh8b4yqHdz9kgFaBa5h6BfPahGhj6gflWPwY
-         /jusOH1LM8lpxFEKSQaGoUcw+JB7d1eFFMhDgO0BF1zrB1m3UJYwyKTdnuClHeADLk
-         x/g5D/smXxRqSf5R+Y8zQWKlZRUKXpt9iIK0rgeI=
+        b=OKw219nEIo4rEy7M+fk4uIozRIsSqZah50MUhDlGYVKL/O1mEVz22dS1xGDbuOPDj
+         aPUuLSAo4FFt1n95XcEQb0Jx0DgsaxqqllDISGhBi1LPy4vpuyJoFOf23vB50jO7sp
+         J4bt5jtbN1Vy9yWr6DzXtCCtbyj2j6wQAvxczG38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dong Aisheng <aisheng.dong@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Vasily Averin <vvs@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.4 022/131] mmc: core: fix using wrong io voltage if mmc_select_hs200 fails
-Date:   Mon,  1 Apr 2019 19:01:32 +0200
-Message-Id: <20190401170053.864928086@linuxfoundation.org>
+Subject: [PATCH 4.4 023/131] mm/rmap: replace BUG_ON(anon_vma->degree) with VM_WARN_ON
+Date:   Mon,  1 Apr 2019 19:01:33 +0200
+Message-Id: <20190401170053.954755814@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -66,68 +70,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dong Aisheng <aisheng.dong@nxp.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-commit e51534c806609c806d81bfb034f02737461f855c upstream.
+commit e4c5800a3991f0c6a766983535dfc10d51802cf6 upstream.
 
-Currently MMC core will keep going if HS200/HS timing switch failed
-with -EBADMSG error by the assumption that the old timing is still valid.
+This check effectively catches anon vma hierarchy inconsistence and some
+vma corruptions.  It was effective for catching corner cases in anon vma
+reusing logic.  For now this code seems stable so check could be hidden
+under CONFIG_DEBUG_VM and replaced with WARN because it's not so fatal.
 
-However, for mmc_select_hs200 case, the signal voltage may have already
-been switched. If the timing switch failed, we should fall back to
-the old voltage in case the card is continue run with legacy timing.
-
-If fall back signal voltage failed, we explicitly report an EIO error
-to force retry during the next power cycle.
-
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Suggested-by: Vasily Averin <vvs@virtuozzo.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/mmc.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ mm/rmap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -1251,10 +1251,11 @@ static int mmc_select_hs200(struct mmc_c
- {
- 	struct mmc_host *host = card->host;
- 	bool send_status = true;
--	unsigned int old_timing;
-+	unsigned int old_timing, old_signal_voltage;
- 	int err = -EINVAL;
- 	u8 val;
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -408,7 +408,7 @@ void unlink_anon_vmas(struct vm_area_str
+ 	list_for_each_entry_safe(avc, next, &vma->anon_vma_chain, same_vma) {
+ 		struct anon_vma *anon_vma = avc->anon_vma;
  
-+	old_signal_voltage = host->ios.signal_voltage;
- 	if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS200_1_2V)
- 		err = __mmc_set_signal_voltage(host, MMC_SIGNAL_VOLTAGE_120);
+-		BUG_ON(anon_vma->degree);
++		VM_WARN_ON(anon_vma->degree);
+ 		put_anon_vma(anon_vma);
  
-@@ -1263,7 +1264,7 @@ static int mmc_select_hs200(struct mmc_c
- 
- 	/* If fails try again during next card power cycle */
- 	if (err)
--		goto err;
-+		return err;
- 
- 	mmc_select_driver_type(card);
- 
-@@ -1297,9 +1298,14 @@ static int mmc_select_hs200(struct mmc_c
- 		}
- 	}
- err:
--	if (err)
-+	if (err) {
-+		/* fall back to the old signal voltage, if fails report error */
-+		if (__mmc_set_signal_voltage(host, old_signal_voltage))
-+			err = -EIO;
-+
- 		pr_err("%s: %s failed, error %d\n", mmc_hostname(card->host),
- 		       __func__, err);
-+	}
- 	return err;
- }
- 
+ 		list_del(&avc->same_vma);
 
 
