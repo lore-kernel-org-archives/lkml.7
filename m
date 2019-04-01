@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88791C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592FAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F3720883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 293DC20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139618;
-	bh=eyMgquA9nyXRX/LYd6Sd4VUypVoQZdJGNkuquS/AgTw=;
+	s=default; t=1554139624;
+	bh=LgxbULNNqkA797Cw9+3tRfhXSmGnCmjDLGN64ahgpYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5UxVOFUZ6C25b97PZXcQdS11olVseV6CEc6xVP+N5vZEzA1pOuEun5MLskFOKZkX
-	 fa3ZKeTrhpuJWFN8D910YQ3f7AM2b12Dh6CBuxxQ4hLPy16kb81k0Nx4vdP4sKm5xC
-	 AI/YgSsEhqbjl6faKwN1bG7MMD2P+v9Mk0SRL4Vg=
+	b=V1OZAEHJjUvzDwIvb6EP/C6ZpcU9UNJ0/EWoigxNT2DoQwKgs4tpjAxNZuOB7qFQe
+	 4JB6Cwv4fqZwTNpYq5b0XRMPjC9rdfecykLdNHQntEOyU63rKc9XXVGQyfb8pXh7QX
+	 JRSI3rQIChHT7QSbcaq6sDew4oxuWNJsVLdnxWb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732611AbfDAR04 (ORCPT
+        id S1732631AbfDAR1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:26:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59340 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:27:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728780AbfDAR0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:26:54 -0400
+        id S1732619AbfDAR1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:27:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40BC020856;
-        Mon,  1 Apr 2019 17:26:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48A9320883;
+        Mon,  1 Apr 2019 17:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139613;
-        bh=eyMgquA9nyXRX/LYd6Sd4VUypVoQZdJGNkuquS/AgTw=;
+        s=default; t=1554139620;
+        bh=LgxbULNNqkA797Cw9+3tRfhXSmGnCmjDLGN64ahgpYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dolit6qylASdaokPUbOnSTkdorl6c1NQ2imnPNdsF015G4wb+fewGHaYStCjPoSnO
-         TmlqvbXcKFC/jOG9Ux76GhDxnIBu6UZ+we5SbpVjds31qgtOz9HG8HEXR3xOabtV/0
-         y5bndCMOYrtPiAxq+EdRZ5Q+47E6tJqFS9e4SnGI=
+        b=0dwt/mJmTXcC8rMQitz/GkBs2HMUqYkglUtzcIjLA80ceNVbknhzuaJg8xbdxYTR3
+         h8ZY80H2SCGl4JHUUlYYSUP+F13du8DzVNEvWHzhef8ePwCtzd50yE7/UqnRCSaihD
+         yQqilrevvucYAsTZG/fkBHjCDReu7CiylDZufhLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 4.9 02/56] Bluetooth: Verify that l2cap_get_conf_opt provides large enough buffer
-Date:   Mon,  1 Apr 2019 19:02:18 +0200
-Message-Id: <20190401170103.571527923@linuxfoundation.org>
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 4.9 21/56] NFSv4.1 dont free interrupted slot on open
+Date:   Mon,  1 Apr 2019 19:02:37 +0200
+Message-Id: <20190401170105.133091652@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -65,64 +65,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-commit 7c9cbd0b5e38a1672fcd137894ace3b042dfbf69 upstream.
+commit 0cb98abb5bd13b9a636bde603d952d722688b428 upstream.
 
-The function l2cap_get_conf_opt will return L2CAP_CONF_OPT_SIZE + opt->len
-as length value. The opt->len however is in control over the remote user
-and can be used by an attacker to gain access beyond the bounds of the
-actual packet.
+Allow the async rpc task for finish and update the open state if needed,
+then free the slot. Otherwise, the async rpc unable to decode the reply.
 
-To prevent any potential leak of heap memory, it is enough to check that
-the resulting len calculation after calling l2cap_get_conf_opt is not
-below zero. A well formed packet will always return >= 0 here and will
-end with the length value being zero after the last option has been
-parsed. In case of malformed packets messing with the opt->len field the
-length value will become negative. If that is the case, then just abort
-and ignore the option.
-
-In case an attacker uses a too short opt->len value, then garbage will
-be parsed, but that is protected by the unknown option handling and also
-the option parameter size checks.
-
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Fixes: ae55e59da0e4 ("pnfs: Don't release the sequence slot...")
+Cc: stable@vger.kernel.org # v4.18+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/l2cap_core.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/nfs/nfs4proc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -3326,6 +3326,8 @@ static int l2cap_parse_conf_req(struct l
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -2748,7 +2748,8 @@ static int _nfs4_open_and_get_state(stru
+ 			nfs4_schedule_stateid_recovery(server, state);
+ 	}
+ out:
+-	nfs4_sequence_free_slot(&opendata->o_res.seq_res);
++	if (!opendata->cancelled)
++		nfs4_sequence_free_slot(&opendata->o_res.seq_res);
+ 	return ret;
+ }
  
- 	while (len >= L2CAP_CONF_OPT_SIZE) {
- 		len -= l2cap_get_conf_opt(&req, &type, &olen, &val);
-+		if (len < 0)
-+			break;
- 
- 		hint  = type & L2CAP_CONF_HINT;
- 		type &= L2CAP_CONF_MASK;
-@@ -3544,6 +3546,8 @@ static int l2cap_parse_conf_rsp(struct l
- 
- 	while (len >= L2CAP_CONF_OPT_SIZE) {
- 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
-+		if (len < 0)
-+			break;
- 
- 		switch (type) {
- 		case L2CAP_CONF_MTU:
-@@ -3729,6 +3733,8 @@ static void l2cap_conf_rfc_get(struct l2
- 
- 	while (len >= L2CAP_CONF_OPT_SIZE) {
- 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
-+		if (len < 0)
-+			break;
- 
- 		switch (type) {
- 		case L2CAP_CONF_RFC:
 
 
