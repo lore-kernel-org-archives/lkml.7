@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FE4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541EAC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE5920830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2417820830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140970;
-	bh=rEjGZ3diTpwT7/5FEQcwt4dWPkrVT0G1vtoKgymMUNk=;
+	s=default; t=1554140989;
+	bh=gcXop/B0Ku+RQivk01G+/HugZYTAMzdHTay98w5BtjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MvK+kCQBsTHDc4nNdQ0htErRQ1tozcw/nm4ffUYsniDGN4dI57FRZHovbN9Gt+sS+
-	 5Qzo4oWKJ14t00R6OBU+LV2Dyif90rsfFxI/C6p3868/YWmSZXI6UbmrHsdyovnBAn
-	 4lapu2FG0FkrFGymDFjJLFcXyCNxgnkZlCaNz4X8=
+	b=IPpKD1lKL8/VOA4s6LcmGw9PV/fLxbzXsvblInUMRc9831WHgpAlp5oG0kwm2i1qz
+	 VhKZsOmRhNJJXjHJfX7dDLBC00WIA1VnBmArWRYpLcCTG9jlJd8NynsDxPkb3Atl3/
+	 AWYSqGhJz02BVrt2oplK3dlBccZ8tC6A4TW/u/X4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732848AbfDARaF (ORCPT
+        id S1732605AbfDAR3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:30:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36670 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733021AbfDAR37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:29:59 -0400
+        id S1732945AbfDAR33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:29:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28C4320856;
-        Mon,  1 Apr 2019 17:29:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A087420856;
+        Mon,  1 Apr 2019 17:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139798;
-        bh=rEjGZ3diTpwT7/5FEQcwt4dWPkrVT0G1vtoKgymMUNk=;
+        s=default; t=1554139769;
+        bh=gcXop/B0Ku+RQivk01G+/HugZYTAMzdHTay98w5BtjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ykbRffrIbwWiQla/ysc6pnisRD5hLdiN6t6iUKq+NPo+gnUIZSuodEen86I6UcCWQ
-         YxdsbonXqBNXwrdohMtpVNzfcwEpe+hBQW2wUdq71S9eNquYAT55d+As0lWQqzmqzo
-         skQK1Tkr92aJTk4DbNQ4hUIiNmhHtplBwVSJjCe4=
+        b=KR6RWV3FDQf8yK2J71Hi+ajd4P9eQcoPAxpSIvfAiuRPaQ59CYxQUKIBRX0hXilYk
+         nQsOLTIo/h+Rqk9YTdgKS8a37bKpBwrSjwvz9ix02izcUUp8AMW4kwGlkisyqRoesg
+         6/LieHC5vtex5gUgRISUH9KoGs03UKMpTXyEaG4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.4 018/131] mmc: sanitize bus width in debug output
-Date:   Mon,  1 Apr 2019 19:01:28 +0200
-Message-Id: <20190401170053.508878566@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.4 001/131] mmc: pxamci: fix enum type confusion
+Date:   Mon,  1 Apr 2019 19:01:11 +0200
+Message-Id: <20190401170051.785356404@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -66,46 +67,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit ed9feec72fc1fa194ebfdb79e14561b35decce63 upstream.
+commit e60a582bcde01158a64ff948fb799f21f5d31a11 upstream.
 
-The bus width is sometimes the actual bus width, and sometimes indices
-to different arrays encoding the bus width. In my debugging case "2"
-could mean 8-bit as well as 4-bit, which was extremly confusing. Let's
-use the human-readable actual bus width in all places.
+clang points out several instances of mismatched types in this drivers,
+all coming from a single declaration:
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+drivers/mmc/host/pxamci.c:193:15: error: implicit conversion from enumeration type 'enum dma_transfer_direction' to
+      different enumeration type 'enum dma_data_direction' [-Werror,-Wenum-conversion]
+                direction = DMA_DEV_TO_MEM;
+                          ~ ^~~~~~~~~~~~~~
+drivers/mmc/host/pxamci.c:212:62: error: implicit conversion from enumeration type 'enum dma_data_direction' to
+      different enumeration type 'enum dma_transfer_direction' [-Werror,-Wenum-conversion]
+        tx = dmaengine_prep_slave_sg(chan, data->sg, host->dma_len, direction,
+
+The behavior is correct, so this must be a simply typo from
+dma_data_direction and dma_transfer_direction being similarly named
+types with a similar purpose.
+
+Fixes: 6464b7140951 ("mmc: pxamci: switch over to dmaengine use")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/core.c |    2 +-
- drivers/mmc/core/mmc.c  |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/mmc/host/pxamci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -1039,7 +1039,7 @@ static inline void mmc_set_ios(struct mm
- 		"width %u timing %u\n",
- 		 mmc_hostname(host), ios->clock, ios->bus_mode,
- 		 ios->power_mode, ios->chip_select, ios->vdd,
--		 ios->bus_width, ios->timing);
-+		 1 << ios->bus_width, ios->timing);
- 
- 	host->ops->set_ios(host, ios);
- }
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -952,7 +952,7 @@ static int mmc_select_bus_width(struct m
- 			break;
- 		} else {
- 			pr_warn("%s: switch to bus width %d failed\n",
--				mmc_hostname(host), ext_csd_bits[idx]);
-+				mmc_hostname(host), 1 << bus_width);
- 		}
- 	}
- 
+--- a/drivers/mmc/host/pxamci.c
++++ b/drivers/mmc/host/pxamci.c
+@@ -181,7 +181,7 @@ static void pxamci_dma_irq(void *param);
+ static void pxamci_setup_data(struct pxamci_host *host, struct mmc_data *data)
+ {
+ 	struct dma_async_tx_descriptor *tx;
+-	enum dma_data_direction direction;
++	enum dma_transfer_direction direction;
+ 	struct dma_slave_config	config;
+ 	struct dma_chan *chan;
+ 	unsigned int nob = data->blocks;
 
 
