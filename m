@@ -4,51 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197F3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7F0C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEFCD21929
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022BD21924
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138704;
-	bh=AYrrGb95n7yiVIrOSDQLUOtkrK8i5lgbqdvJokrf60U=;
+	s=default; t=1554138709;
+	bh=PLDQT4y8Ok+PPycMt4IPH0fAGMv5s5eeqfv1GzWGZ5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xSWZVDzLS0vMdsNdfI5maJfrRu8BI0ePDAuKYyWl4z2k3USEyAeTrJB5ccopzkrKy
-	 dG79OhEKjCA8V8h6eU2H8cE+npg3oeDgYzzH4Fgb91/NCVuzX0xbS4BuVNmw6ZljAb
-	 KB99DxJVa5QNGDAY/dcfrKGyFfXoFI8QE2Z4A0YU=
+	b=AUNfjj/dDlaueQ6kfccROuN7BQBL/WdBP49/zjwcrhmmrNzLngIZkUG+knKAeDIuk
+	 Huw22WMeRfIN2kyljYS/IBxQrBOzA0UU1QnGaUoiWfOCZRB+TPauitmfS7uugBkNBr
+	 TUXfgeURShWPW6swKmAD3WQVvgmHB7d1R5HNJjIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbfDARLn (ORCPT
+        id S1730266AbfDARLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:11:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60500 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:11:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730233AbfDARLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:11:39 -0400
+        id S1730242AbfDARLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:11:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BA7221925;
-        Mon,  1 Apr 2019 17:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2617421924;
+        Mon,  1 Apr 2019 17:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138698;
-        bh=AYrrGb95n7yiVIrOSDQLUOtkrK8i5lgbqdvJokrf60U=;
+        s=default; t=1554138700;
+        bh=PLDQT4y8Ok+PPycMt4IPH0fAGMv5s5eeqfv1GzWGZ5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qOvO1pgMc/iNNC5G0NU/FdC/DujU2L35okZAmjQ/IkFRgbIZrta4PAggB4dBYQx8R
-         8Fz3BNQOZiqSdN6gbiPftCduV5f57ZXA/GAvcK0my1NNB50ZHQKf0yl2cQRxGnsAUA
-         QD4POG6ZTKUChJKNjmhPKRltvfT3fiJfc7klDmAE=
+        b=nCFMOVYco5JKXD5SCa7onJQdnJ/R4xPGcxthIc2rRMH45efHQMTaz/5953299qSRl
+         o9+iHUiJoGsigXj8ZMaiYbmWSjbTZj8a64TzFoXd0yYlcgeJmkwO4ZFyu4P5waoktS
+         I/7sq9etpMPcdcDNTYbsE3s3Ms5ynapA/jp0VhQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaoyao Li <xiaoyao.li@linux.intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.0 143/146] KVM: x86: Emulate MSR_IA32_ARCH_CAPABILITIES on AMD hosts
-Date:   Mon,  1 Apr 2019 19:02:35 +0200
-Message-Id: <20190401170100.134243839@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Huaisheng Ye <yehs1@lenovo.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Yong Wu <yong.wu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomasz Figa <tfiga@google.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.0 126/146] mm: add support for kmem caches in DMA32 zone
+Date:   Mon,  1 Apr 2019 19:02:18 +0200
+Message-Id: <20190401170058.948183193@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -67,125 +86,169 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-commit 0cf9135b773bf32fba9dd8e6699c1b331ee4b749 upstream.
+commit 6d6ea1e967a246f12cfe2f5fb743b70b2e608d4a upstream.
 
-The CPUID flag ARCH_CAPABILITIES is unconditioinally exposed to host
-userspace for all x86 hosts, i.e. KVM advertises ARCH_CAPABILITIES
-regardless of hardware support under the pretense that KVM fully
-emulates MSR_IA32_ARCH_CAPABILITIES.  Unfortunately, only VMX hosts
-handle accesses to MSR_IA32_ARCH_CAPABILITIES (despite KVM_GET_MSRS
-also reporting MSR_IA32_ARCH_CAPABILITIES for all hosts).
+Patch series "iommu/io-pgtable-arm-v7s: Use DMA32 zone for page tables",
+v6.
 
-Move the MSR_IA32_ARCH_CAPABILITIES handling to common x86 code so
-that it's emulated on AMD hosts.
+This is a followup to the discussion in [1], [2].
 
-Fixes: 1eaafe91a0df4 ("kvm: x86: IA32_ARCH_CAPABILITIES is always supported")
-Cc: stable@vger.kernel.org
-Reported-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Cc: Jim Mattson <jmattson@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+IOMMUs using ARMv7 short-descriptor format require page tables (level 1
+and 2) to be allocated within the first 4GB of RAM, even on 64-bit
+systems.
+
+For L1 tables that are bigger than a page, we can just use
+__get_free_pages with GFP_DMA32 (on arm64 systems only, arm would still
+use GFP_DMA).
+
+For L2 tables that only take 1KB, it would be a waste to allocate a full
+page, so we considered 3 approaches:
+ 1. This series, adding support for GFP_DMA32 slab caches.
+ 2. genalloc, which requires pre-allocating the maximum number of L2 page
+    tables (4096, so 4MB of memory).
+ 3. page_frag, which is not very memory-efficient as it is unable to reuse
+    freed fragments until the whole page is freed. [3]
+
+This series is the most memory-efficient approach.
+
+stable@ note:
+  We confirmed that this is a regression, and IOMMU errors happen on 4.19
+  and linux-next/master on MT8173 (elm, Acer Chromebook R13). The issue
+  most likely starts from commit ad67f5a6545f ("arm64: replace ZONE_DMA
+  with ZONE_DMA32"), i.e. 4.15, and presumably breaks a number of Mediatek
+  platforms (and maybe others?).
+
+[1] https://lists.linuxfoundation.org/pipermail/iommu/2018-November/030876.html
+[2] https://lists.linuxfoundation.org/pipermail/iommu/2018-December/031696.html
+[3] https://patchwork.codeaurora.org/patch/671639/
+
+This patch (of 3):
+
+IOMMUs using ARMv7 short-descriptor format require page tables to be
+allocated within the first 4GB of RAM, even on 64-bit systems.  On arm64,
+this is done by passing GFP_DMA32 flag to memory allocation functions.
+
+For IOMMU L2 tables that only take 1KB, it would be a waste to allocate
+a full page using get_free_pages, so we considered 3 approaches:
+ 1. This patch, adding support for GFP_DMA32 slab caches.
+ 2. genalloc, which requires pre-allocating the maximum number of L2
+    page tables (4096, so 4MB of memory).
+ 3. page_frag, which is not very memory-efficient as it is unable
+    to reuse freed fragments until the whole page is freed.
+
+This change makes it possible to create a custom cache in DMA32 zone using
+kmem_cache_create, then allocate memory using kmem_cache_alloc.
+
+We do not create a DMA32 kmalloc cache array, as there are currently no
+users of kmalloc(..., GFP_DMA32).  These calls will continue to trigger a
+warning, as we keep GFP_DMA32 in GFP_SLAB_BUG_MASK.
+
+This implies that calls to kmem_cache_*alloc on a SLAB_CACHE_DMA32
+kmem_cache must _not_ use GFP_DMA32 (it is anyway redundant and
+unnecessary).
+
+Link: http://lkml.kernel.org/r/20181210011504.122604-2-drinkcat@chromium.org
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Sasha Levin <Alexander.Levin@microsoft.com>
+Cc: Huaisheng Ye <yehs1@lenovo.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Yong Wu <yong.wu@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Tomasz Figa <tfiga@google.com>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/kvm_host.h |    1 +
- arch/x86/kvm/vmx/vmx.c          |   13 -------------
- arch/x86/kvm/vmx/vmx.h          |    1 -
- arch/x86/kvm/x86.c              |   12 ++++++++++++
- 4 files changed, 13 insertions(+), 14 deletions(-)
+ include/linux/slab.h |    2 ++
+ mm/slab.c            |    2 ++
+ mm/slab.h            |    3 ++-
+ mm/slab_common.c     |    2 +-
+ mm/slub.c            |    5 +++++
+ 5 files changed, 12 insertions(+), 2 deletions(-)
 
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -570,6 +570,7 @@ struct kvm_vcpu_arch {
- 	bool tpr_access_reporting;
- 	u64 ia32_xss;
- 	u64 microcode_version;
-+	u64 arch_capabilities;
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -32,6 +32,8 @@
+ #define SLAB_HWCACHE_ALIGN	((slab_flags_t __force)0x00002000U)
+ /* Use GFP_DMA memory */
+ #define SLAB_CACHE_DMA		((slab_flags_t __force)0x00004000U)
++/* Use GFP_DMA32 memory */
++#define SLAB_CACHE_DMA32	((slab_flags_t __force)0x00008000U)
+ /* DEBUG: Store the last owner for bug hunting */
+ #define SLAB_STORE_USER		((slab_flags_t __force)0x00010000U)
+ /* Panic if kmem_cache_create() fails */
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -2111,6 +2111,8 @@ done:
+ 	cachep->allocflags = __GFP_COMP;
+ 	if (flags & SLAB_CACHE_DMA)
+ 		cachep->allocflags |= GFP_DMA;
++	if (flags & SLAB_CACHE_DMA32)
++		cachep->allocflags |= GFP_DMA32;
+ 	if (flags & SLAB_RECLAIM_ACCOUNT)
+ 		cachep->allocflags |= __GFP_RECLAIMABLE;
+ 	cachep->size = size;
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -127,7 +127,8 @@ static inline slab_flags_t kmem_cache_fl
  
- 	/*
- 	 * Paging state of the vcpu
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1679,12 +1679,6 @@ static int vmx_get_msr(struct kvm_vcpu *
  
- 		msr_info->data = to_vmx(vcpu)->spec_ctrl;
- 		break;
--	case MSR_IA32_ARCH_CAPABILITIES:
--		if (!msr_info->host_initiated &&
--		    !guest_cpuid_has(vcpu, X86_FEATURE_ARCH_CAPABILITIES))
--			return 1;
--		msr_info->data = to_vmx(vcpu)->arch_capabilities;
--		break;
- 	case MSR_IA32_SYSENTER_CS:
- 		msr_info->data = vmcs_read32(GUEST_SYSENTER_CS);
- 		break;
-@@ -1891,11 +1885,6 @@ static int vmx_set_msr(struct kvm_vcpu *
- 		vmx_disable_intercept_for_msr(vmx->vmcs01.msr_bitmap, MSR_IA32_PRED_CMD,
- 					      MSR_TYPE_W);
- 		break;
--	case MSR_IA32_ARCH_CAPABILITIES:
--		if (!msr_info->host_initiated)
--			return 1;
--		vmx->arch_capabilities = data;
--		break;
- 	case MSR_IA32_CR_PAT:
- 		if (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PAT) {
- 			if (!kvm_mtrr_valid(vcpu, MSR_IA32_CR_PAT, data))
-@@ -4083,8 +4072,6 @@ static void vmx_vcpu_setup(struct vcpu_v
- 		++vmx->nmsrs;
- 	}
+ /* Legal flag mask for kmem_cache_create(), for various configurations */
+-#define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | SLAB_PANIC | \
++#define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | \
++			 SLAB_CACHE_DMA32 | SLAB_PANIC | \
+ 			 SLAB_TYPESAFE_BY_RCU | SLAB_DEBUG_OBJECTS )
  
--	vmx->arch_capabilities = kvm_get_arch_capabilities();
--
- 	vm_exit_controls_init(vmx, vmx_vmexit_ctrl());
+ #if defined(CONFIG_DEBUG_SLAB)
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -53,7 +53,7 @@ static DECLARE_WORK(slab_caches_to_rcu_d
+ 		SLAB_FAILSLAB | SLAB_KASAN)
  
- 	/* 22.2.1, 20.8.1 */
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -191,7 +191,6 @@ struct vcpu_vmx {
- 	u64		      msr_guest_kernel_gs_base;
- #endif
+ #define SLAB_MERGE_SAME (SLAB_RECLAIM_ACCOUNT | SLAB_CACHE_DMA | \
+-			 SLAB_ACCOUNT)
++			 SLAB_CACHE_DMA32 | SLAB_ACCOUNT)
  
--	u64		      arch_capabilities;
- 	u64		      spec_ctrl;
+ /*
+  * Merge control. If this is set then no merging of slab caches will occur.
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -3591,6 +3591,9 @@ static int calculate_sizes(struct kmem_c
+ 	if (s->flags & SLAB_CACHE_DMA)
+ 		s->allocflags |= GFP_DMA;
  
- 	u32 vm_entry_controls_shadow;
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2443,6 +2443,11 @@ int kvm_set_msr_common(struct kvm_vcpu *
- 		if (msr_info->host_initiated)
- 			vcpu->arch.microcode_version = data;
- 		break;
-+	case MSR_IA32_ARCH_CAPABILITIES:
-+		if (!msr_info->host_initiated)
-+			return 1;
-+		vcpu->arch.arch_capabilities = data;
-+		break;
- 	case MSR_EFER:
- 		return set_efer(vcpu, data);
- 	case MSR_K7_HWCR:
-@@ -2747,6 +2752,12 @@ int kvm_get_msr_common(struct kvm_vcpu *
- 	case MSR_IA32_UCODE_REV:
- 		msr_info->data = vcpu->arch.microcode_version;
- 		break;
-+	case MSR_IA32_ARCH_CAPABILITIES:
-+		if (!msr_info->host_initiated &&
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_ARCH_CAPABILITIES))
-+			return 1;
-+		msr_info->data = vcpu->arch.arch_capabilities;
-+		break;
- 	case MSR_IA32_TSC:
- 		msr_info->data = kvm_scale_tsc(vcpu, rdtsc()) + vcpu->arch.tsc_offset;
- 		break;
-@@ -8725,6 +8736,7 @@ struct kvm_vcpu *kvm_arch_vcpu_create(st
++	if (s->flags & SLAB_CACHE_DMA32)
++		s->allocflags |= GFP_DMA32;
++
+ 	if (s->flags & SLAB_RECLAIM_ACCOUNT)
+ 		s->allocflags |= __GFP_RECLAIMABLE;
  
- int kvm_arch_vcpu_setup(struct kvm_vcpu *vcpu)
- {
-+	vcpu->arch.arch_capabilities = kvm_get_arch_capabilities();
- 	vcpu->arch.msr_platform_info = MSR_PLATFORM_INFO_CPUID_FAULT;
- 	kvm_vcpu_mtrr_init(vcpu);
- 	vcpu_load(vcpu);
+@@ -5681,6 +5684,8 @@ static char *create_unique_id(struct kme
+ 	 */
+ 	if (s->flags & SLAB_CACHE_DMA)
+ 		*p++ = 'd';
++	if (s->flags & SLAB_CACHE_DMA32)
++		*p++ = 'D';
+ 	if (s->flags & SLAB_RECLAIM_ACCOUNT)
+ 		*p++ = 'a';
+ 	if (s->flags & SLAB_CONSISTENCY_CHECKS)
 
 
