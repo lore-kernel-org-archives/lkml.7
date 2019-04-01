@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C662FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A81EBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B18206DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3B920883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139152;
-	bh=37XO1tZ4EBKxbbQh4zXHlDTaVqR/TwT0RWN+WN1B5Cg=;
+	s=default; t=1554139159;
+	bh=qiMdIuAX3nUN7iUbKCYtoZAHtGw2AkMeIy9DCjLm8RQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NhB3Ia+67M87B2/6Hjh1JTx2mhiRx6T1WY56XMse/+dmc27iDSB14L1jQhhBodzxU
-	 qhrrxZyDLnb9LTnWpMeSoCpBTPuquyPAtJIrOXNjOvNtDv/hm3Uft+eRfQnWdRbEjT
-	 1o/pZvus4DsSdNU+Iiii+9uC0f/q6WZQ9/6wfLS4=
+	b=Q5ObloQ6VZP1DUIDE7CVmIvUaQu/ZL7udcveni3lw6CI2rFE2cMcOmS+DqQYJ3z2z
+	 730wNbmyyW1qd/LVzGUzyLbuy+zWpkBIQzl4A9OP0pHaPlXR1e11ck7Ia69q2a2+xf
+	 1eytcCiHrYQ4Bgty1jMoP0FvHfI2aINisKCTTNOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731474AbfDARTK (ORCPT
+        id S1731493AbfDARTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:19:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46806 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:19:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731465AbfDARTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:19:06 -0400
+        id S1731475AbfDARTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:19:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D24820856;
-        Mon,  1 Apr 2019 17:19:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13ADC206C0;
+        Mon,  1 Apr 2019 17:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139144;
-        bh=37XO1tZ4EBKxbbQh4zXHlDTaVqR/TwT0RWN+WN1B5Cg=;
+        s=default; t=1554139147;
+        bh=qiMdIuAX3nUN7iUbKCYtoZAHtGw2AkMeIy9DCjLm8RQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xlhkn9+2gWe3PW6+YlIs3Jyeo2qX4lnMds3prOfi2eQi56xOBjBH7UWXmPBLXP3Vv
-         /xnNC6FblonjY3uK3QSBiueFs/6+Sxau0mNH2i/uT4GzkdHKVrpvdRUHysqHBU8fLV
-         cV7qdXSqIk91mBXXrSPK6NGJXYTt83CilHysk74A=
+        b=LHVK7I8NaTPpsLdn7G7OpjLE91CMCkCP/dQUrmmw/l+sK9uVX1vlujQ81QMeBjRBg
+         DYiM3oANR6kfV5DrAFyQuSQ4HWS/g0Pm/qD8UmuKfofnYcsvN3tptnZB2+BxQd6Uh8
+         IUdSg6Z7e89FZWQmV/xMBMJTaTG0KZDjLwOGblD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 4.19 127/134] staging: erofs: keep corrupted fs from crashing kernel in erofs_readdir()
-Date:   Mon,  1 Apr 2019 19:02:43 +0200
-Message-Id: <20190401170056.123220291@linuxfoundation.org>
+        stable@vger.kernel.org, Xu Yu <xuyu@linux.alibaba.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 4.19 128/134] bpf: do not restore dst_reg when cur_state is freed
+Date:   Mon,  1 Apr 2019 19:02:44 +0200
+Message-Id: <20190401170056.199327011@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -65,100 +65,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+From: Xu Yu <xuyu@linux.alibaba.com>
 
-commit 33bac912840fe64dbc15556302537dc6a17cac63 upstream.
+commit 0803278b0b4d8eeb2b461fb698785df65a725d9e upstream.
 
-After commit 419d6efc50e9, kernel cannot be crashed in the namei
-path. However, corrupted nameoff can do harm in the process of
-readdir for scenerios without dm-verity as well. Fix it now.
+Syzkaller hit 'KASAN: use-after-free Write in sanitize_ptr_alu' bug.
 
-Fixes: 3aa8ec716e52 ("staging: erofs: add directory operations")
-Cc: <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Call trace:
+
+  dump_stack+0xbf/0x12e
+  print_address_description+0x6a/0x280
+  kasan_report+0x237/0x360
+  sanitize_ptr_alu+0x85a/0x8d0
+  adjust_ptr_min_max_vals+0x8f2/0x1ca0
+  adjust_reg_min_max_vals+0x8ed/0x22e0
+  do_check+0x1ca6/0x5d00
+  bpf_check+0x9ca/0x2570
+  bpf_prog_load+0xc91/0x1030
+  __se_sys_bpf+0x61e/0x1f00
+  do_syscall_64+0xc8/0x550
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fault injection trace:
+
+  kfree+0xea/0x290
+  free_func_state+0x4a/0x60
+  free_verifier_state+0x61/0xe0
+  push_stack+0x216/0x2f0	          <- inject failslab
+  sanitize_ptr_alu+0x2b1/0x8d0
+  adjust_ptr_min_max_vals+0x8f2/0x1ca0
+  adjust_reg_min_max_vals+0x8ed/0x22e0
+  do_check+0x1ca6/0x5d00
+  bpf_check+0x9ca/0x2570
+  bpf_prog_load+0xc91/0x1030
+  __se_sys_bpf+0x61e/0x1f00
+  do_syscall_64+0xc8/0x550
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+When kzalloc() fails in push_stack(), free_verifier_state() will free
+current verifier state. As push_stack() returns, dst_reg was restored
+if ptr_is_dst_reg is false. However, as member of the cur_state,
+dst_reg is also freed, and error occurs when dereferencing dst_reg.
+Simply fix it by testing ret of push_stack() before restoring dst_reg.
+
+Fixes: 979d63d50c0c ("bpf: prevent out of bounds speculation on pointer arithmetic")
+Signed-off-by: Xu Yu <xuyu@linux.alibaba.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/staging/erofs/dir.c |   45 ++++++++++++++++++++++++--------------------
- 1 file changed, 25 insertions(+), 20 deletions(-)
+ kernel/bpf/verifier.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/erofs/dir.c
-+++ b/drivers/staging/erofs/dir.c
-@@ -23,6 +23,21 @@ static const unsigned char erofs_filetyp
- 	[EROFS_FT_SYMLINK]	= DT_LNK,
- };
- 
-+static void debug_one_dentry(unsigned char d_type, const char *de_name,
-+			     unsigned int de_namelen)
-+{
-+#ifdef CONFIG_EROFS_FS_DEBUG
-+	/* since the on-disk name could not have the trailing '\0' */
-+	unsigned char dbg_namebuf[EROFS_NAME_LEN + 1];
-+
-+	memcpy(dbg_namebuf, de_name, de_namelen);
-+	dbg_namebuf[de_namelen] = '\0';
-+
-+	debugln("found dirent %s de_len %u d_type %d", dbg_namebuf,
-+		de_namelen, d_type);
-+#endif
-+}
-+
- static int erofs_fill_dentries(struct dir_context *ctx,
- 	void *dentry_blk, unsigned *ofs,
- 	unsigned nameoff, unsigned maxsize)
-@@ -33,14 +48,10 @@ static int erofs_fill_dentries(struct di
- 	de = dentry_blk + *ofs;
- 	while (de < end) {
- 		const char *de_name;
--		int de_namelen;
-+		unsigned int de_namelen;
- 		unsigned char d_type;
--#ifdef CONFIG_EROFS_FS_DEBUG
--		unsigned dbg_namelen;
--		unsigned char dbg_namebuf[EROFS_NAME_LEN];
--#endif
- 
--		if (unlikely(de->file_type < EROFS_FT_MAX))
-+		if (de->file_type < EROFS_FT_MAX)
- 			d_type = erofs_filetype_table[de->file_type];
- 		else
- 			d_type = DT_UNKNOWN;
-@@ -48,26 +59,20 @@ static int erofs_fill_dentries(struct di
- 		nameoff = le16_to_cpu(de->nameoff);
- 		de_name = (char *)dentry_blk + nameoff;
- 
--		de_namelen = unlikely(de + 1 >= end) ?
--			/* last directory entry */
--			strnlen(de_name, maxsize - nameoff) :
--			le16_to_cpu(de[1].nameoff) - nameoff;
-+		/* the last dirent in the block? */
-+		if (de + 1 >= end)
-+			de_namelen = strnlen(de_name, maxsize - nameoff);
-+		else
-+			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
- 
- 		/* a corrupted entry is found */
--		if (unlikely(de_namelen < 0)) {
-+		if (unlikely(nameoff + de_namelen > maxsize ||
-+			     de_namelen > EROFS_NAME_LEN)) {
- 			DBG_BUGON(1);
- 			return -EIO;
- 		}
- 
--#ifdef CONFIG_EROFS_FS_DEBUG
--		dbg_namelen = min(EROFS_NAME_LEN - 1, de_namelen);
--		memcpy(dbg_namebuf, de_name, dbg_namelen);
--		dbg_namebuf[dbg_namelen] = '\0';
--
--		debugln("%s, found de_name %s de_len %d d_type %d", __func__,
--			dbg_namebuf, de_namelen, d_type);
--#endif
--
-+		debug_one_dentry(d_type, de_name, de_namelen);
- 		if (!dir_emit(ctx, de_name, de_namelen,
- 					le64_to_cpu(de->nid), d_type))
- 			/* stoped by some reason */
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -2815,7 +2815,7 @@ do_sim:
+ 		*dst_reg = *ptr_reg;
+ 	}
+ 	ret = push_stack(env, env->insn_idx + 1, env->insn_idx, true);
+-	if (!ptr_is_dst_reg)
++	if (!ptr_is_dst_reg && ret)
+ 		*dst_reg = tmp;
+ 	return !ret ? -EFAULT : 0;
+ }
 
 
