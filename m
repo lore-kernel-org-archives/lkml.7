@@ -2,81 +2,187 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F046C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A12C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1802086C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:58:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sdf.org header.i=@sdf.org header.b="SVHocj+q"
+	by mail.kernel.org (Postfix) with ESMTP id 29B3E2086C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbfDAJ60 (ORCPT
+        id S1726184AbfDAKBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 05:58:26 -0400
-Received: from mx.sdf.org ([205.166.94.20]:56425 "EHLO mx.sdf.org"
+        Mon, 1 Apr 2019 06:01:02 -0400
+Received: from foss.arm.com ([217.140.101.70]:59718 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725859AbfDAJ6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 05:58:25 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x319u8Fl017367
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Mon, 1 Apr 2019 09:56:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sdf.org; s=default;
-        t=1554112582; bh=nfyrQ8GwYN1dR+36K+w2KJmeeTK++gvNmVw4hbCgtQ4=;
-        h=Date:From:To:Subject:Cc:In-Reply-To:References;
-        b=SVHocj+qYv7EIPnLIfPgOVaNlCkoSdLXLVw6GFrl9DCOnxhLWUjOM9vbGSgCCoGcp
-         D1nD66gIhO4CU+TNaRxHv3p9OlqQMQLiL6LH5yenIMo9bJvE6E7MQYstcxd8XbGkjb
-         GywuxAxfIpYFvEK00nepx2+Z/kokFUYZ+IxaQyMI=
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id x319u70q021113;
-        Mon, 1 Apr 2019 09:56:07 GMT
-Date:   Mon, 1 Apr 2019 09:56:07 GMT
-From:   George Spelvin <lkml@sdf.org>
-Message-Id: <201904010956.x319u70q021113@sdf.org>
-To:     andriy.shevchenko@linux.intel.com, st5pub@yandex.ru
-Subject: Re: [PATCH v2 5/5] Lib: sort.h: replace int size with size_t size in the swap function
-Cc:     adrian.hunter@intel.com, ard.biesheuvel@linaro.org,
-        benh@kernel.crashing.org, bp@alien8.de, darrick.wong@oracle.com,
-        dchinner@redhat.com, dedekind1@gmail.com,
-        gregkh@linuxfoundation.org, hpa@zytor.com, jannh@google.com,
-        jlbec@evilplan.org, jpoimboe@redhat.com, jslaby@suse.cz,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        lkml@sdf.org, mark@fasheh.com, mingo@redhat.com,
-        mpe@ellerman.id.au, naveen.n.rao@linux.vnet.ibm.com,
-        ocfs2-devel@oss.oracle.com, paulus@samba.org, peterz@infradead.org,
-        richard@nod.at, sfr@canb.auug.org.au, tglx@linutronix.de,
-        vgupta@synopsys.com, x86@kernel.org
-In-Reply-To: <20190401093555.GD9224@smile.fi.intel.com>
-References: <19606671554056883@myt3-1179f584969c.qloud-c.yandex.net>,
-    <23051461554058370@iva6-3ac3de5fcc31.qloud-c.yandex.net>,
-    <20190401093555.GD9224@smile.fi.intel.com>
+        id S1725882AbfDAKBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 06:01:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D54F1A78;
+        Mon,  1 Apr 2019 03:01:00 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49BA23F690;
+        Mon,  1 Apr 2019 03:00:59 -0700 (PDT)
+Subject: Re: [PATCH v4] dt-bindings: gpu: add bindings for the ARM Mali
+ Bifrost GPU
+To:     Neil Armstrong <narmstrong@baylibre.com>, daniel@ffwll.ch,
+        robh@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190401080949.14550-1-narmstrong@baylibre.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <1640dd7b-3576-d9ce-0641-6b6a64a87275@arm.com>
+Date:   Mon, 1 Apr 2019 11:00:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190401080949.14550-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Apr 2019 at 12:35:55 +0300, Andy Shevchenko wrote:
-> Hmm... If (*swap)() is called recursively it means the change might increase
-> stack usage on 64-bit platforms.
+On 01/04/2019 09:09, Neil Armstrong wrote:
+> Add the bindings for the Bifrost family of ARM Mali GPUs.
 > 
-> Am I missing something?
+> The Bifrost GPU architecture is similar to the Midgard family,
+> but with a different Shader Core & Execution Engine structures.
+> 
+> Bindings are based on the Midgard family bindings, but the inner
+> architectural changes makes it a separate family needing separate
+> bindings.
+> 
+> The Bifrost GPUs are present in a number of recent SoCs, like the
+> Amlogic G12A Family, and many other vendors.
+> The Amlogic vendor specific compatible is added to handle the
+> specific IP integration differences and dependencies.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../bindings/gpu/arm,mali-bifrost.txt         | 92 +++++++++++++++++++
+>  1 file changed, 92 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+> 
+> Changes since v3:
+> - Added note about discoverable model/revision
+> - Enforced fixed defined irq order
+> - Fixed typo in accommodate
+> 
+> Changes since v2:
+> - moved to a single compatible since HW is fully discoverable
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+> new file mode 100644
+> index 000000000000..711c9ead17a2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+> @@ -0,0 +1,92 @@
+> +ARM Mali Bifrost GPU
+> +====================
+> +
+> +Required properties:
+> +
+> +- compatible :
+> +  * Since Mali Bifrost GPU model/revision if fully discoverable by reading
+                                             ^^
+s/if/is/
 
-Under what conceivable circumstance would someone write a recursive
-(*swap)() function?
+> +    some determined registers, must contain the following:
+> +    + "arm,mali-bifrost"
+> +  * which must be preceded by one of the following vendor specifics:
+> +    + "amlogic,meson-g12a-mali"
+> +
+> +- reg : Physical base address of the device and length of the register area.
+> +
+> +- interrupts : Contains the three IRQ lines required by Mali Bifrost devices,
+> +  in the following defined order.
+> +
+> +- interrupt-names : Contains the names of IRQ resources in this exact defined
+> +  order: "job", "mmu", "gpu".
 
-You're technically right, but the precondition is more fantastical
-than "if the U.K.'s parliament get their shit together before the
-12th", so I have a hard time worrying about it.
+Is there any point in having "interrupt-names" if we're fixing the
+order? Although I guess it helps match the Midgard bindings.
 
-But you did make me think of something: the whole reason swap()
-takes a size argument is for the benefit of the (no longer existing)
-generic swap functions.  All of the custom swap functions ignore
-it.
+Steve
 
-So how about *deleting* the parameter instead?  That simplifies
-everything.
+> +
+> +Optional properties:
+> +
+> +- clocks : Phandle to clock for the Mali Bifrost device.
+> +
+> +- mali-supply : Phandle to regulator for the Mali device. Refer to
+> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
+> +
+> +- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
+> +  for details.
+> +
+> +- resets : Phandle of the GPU reset line.
+> +
+> +Vendor-specific bindings
+> +------------------------
+> +
+> +The Mali GPU is integrated very differently from one SoC to
+> +another. In order to accommodate those differences, you have the option
+> +to specify one more vendor-specific compatible, among:
+> +
+> +- "amlogic,meson-g12a-mali"
+> +  Required properties:
+> +  - resets : Should contain phandles of :
+> +    + GPU reset line
+> +    + GPU APB glue reset line
+> +
+> +Example for a Mali-G31:
+> +
+> +gpu@ffa30000 {
+> +	compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
+> +	reg = <0xffe40000 0x10000>;
+> +	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
+> +	interrupt-names = "job", "mmu", "gpu";
+> +	clocks = <&clk CLKID_MALI>;
+> +	mali-supply = <&vdd_gpu>;
+> +	operating-points-v2 = <&gpu_opp_table>;
+> +	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
+> +};
+> +
+> +gpu_opp_table: opp_table0 {
+> +	compatible = "operating-points-v2";
+> +
+> +	opp@533000000 {
+> +		opp-hz = /bits/ 64 <533000000>;
+> +		opp-microvolt = <1250000>;
+> +	};
+> +	opp@450000000 {
+> +		opp-hz = /bits/ 64 <450000000>;
+> +		opp-microvolt = <1150000>;
+> +	};
+> +	opp@400000000 {
+> +		opp-hz = /bits/ 64 <400000000>;
+> +		opp-microvolt = <1125000>;
+> +	};
+> +	opp@350000000 {
+> +		opp-hz = /bits/ 64 <350000000>;
+> +		opp-microvolt = <1075000>;
+> +	};
+> +	opp@266000000 {
+> +		opp-hz = /bits/ 64 <266000000>;
+> +		opp-microvolt = <1025000>;
+> +	};
+> +	opp@160000000 {
+> +		opp-hz = /bits/ 64 <160000000>;
+> +		opp-microvolt = <925000>;
+> +	};
+> +	opp@100000000 {
+> +		opp-hz = /bits/ 64 <100000000>;
+> +		opp-microvolt = <912500>;
+> +	};
+> +};
+> 
+
