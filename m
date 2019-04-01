@@ -3,42 +3,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02B4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2563BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85CAD2086C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB62C2086C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 09:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbfDAJTF (ORCPT
+        id S1726419AbfDAJUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 05:19:05 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17616 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725821AbfDAJTF (ORCPT
+        Mon, 1 Apr 2019 05:20:37 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54512 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725821AbfDAJUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 05:19:05 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x31915xD032373;
-        Mon, 1 Apr 2019 11:18:55 +0200
+        Mon, 1 Apr 2019 05:20:37 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3191naZ018299;
+        Mon, 1 Apr 2019 11:20:28 +0200
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rhy3x9nd0-1
+        by mx08-00178001.pphosted.com with ESMTP id 2rjee2734y-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 01 Apr 2019 11:18:55 +0200
+        Mon, 01 Apr 2019 11:20:28 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6321A42;
-        Mon,  1 Apr 2019 09:18:54 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 39A4D23E2;
-        Mon,  1 Apr 2019 09:18:54 +0000 (GMT)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG5NODE1.st.com
- (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 1 Apr
- 2019 11:18:53 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 213BE3D;
+        Mon,  1 Apr 2019 09:20:20 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D0D3717F4;
+        Mon,  1 Apr 2019 09:20:19 +0000 (GMT)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 1 Apr
+ 2019 11:20:19 +0200
 Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
  SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1347.000; Mon, 1 Apr 2019 11:18:53 +0200
+ 15.00.1347.000; Mon, 1 Apr 2019 11:20:19 +0200
 From:   Philippe CORNU <philippe.cornu@st.com>
 To:     Yannick FERTRE <yannick.fertre@st.com>,
         Vincent ABRIOU <vincent.abriou@st.com>,
@@ -52,15 +52,15 @@ To:     Yannick FERTRE <yannick.fertre@st.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/stm: ltdc: disable hw interrupts before its handler
- init
-Thread-Topic: [PATCH] drm/stm: ltdc: disable hw interrupts before its handler
- init
-Thread-Index: AQHU5kbfiZFpMDEVSU6br4Pl5P9NMKYm6cSA
-Date:   Mon, 1 Apr 2019 09:18:53 +0000
-Message-ID: <d63b7a3e-3162-7823-fa42-81a1aeccb5ff@st.com>
-References: <1553874485-31259-1-git-send-email-yannick.fertre@st.com>
-In-Reply-To: <1553874485-31259-1-git-send-email-yannick.fertre@st.com>
+Subject: Re: [PATCH] drm/stm: ltdc: use DRM_WARN for fifo & transfer error
+ messages
+Thread-Topic: [PATCH] drm/stm: ltdc: use DRM_WARN for fifo & transfer error
+ messages
+Thread-Index: AQHU5kbzbCkOIQfYm0uqy0PLvRD2cqYm6ikA
+Date:   Mon, 1 Apr 2019 09:20:19 +0000
+Message-ID: <ef8aa4e8-ebf9-ea01-d8db-fbf7740bc765@st.com>
+References: <1553874548-31366-1-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1553874548-31366-1-git-send-email-yannick.fertre@st.com>
 Accept-Language: fr-FR, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -69,9 +69,9 @@ user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.51]
+x-originating-ip: [10.75.127.49]
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <E97CCE9AB40C2F4698FFAE03E95C1BB3@st.com>
+Content-ID: <4BE8B68090AAA843823458F06BFB8752@st.com>
 Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-01_04:,,
@@ -81,26 +81,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAzLzI5LzE5IDQ6NDggUE0sIFlhbm5pY2sgRmVydHLDqSB3cm90ZToNCj4gSW50ZXJydXB0
-IHJlZ2lzdGVyIG11c3QgYmUgZGlzYWJsZWQgYmVmb3JlIGNhbGwgb2YNCj4gZGV2bV9yZXF1ZXN0
-X3RocmVhZGVkX2lycSBmdW5jdGlvbiB0byBhdm9pZCBkdW1teSBpbnRlcnJ1cHRpb24uDQo+IA0K
-PiBTaWduZWQtb2ZmLWJ5OiBZYW5uaWNrIEZlcnRyw6kgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4N
-Cj4gLS0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmMgfCA4ICsrKystLS0tDQo+ICAg
-MSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9z
-dG0vbHRkYy5jDQo+IGluZGV4IGIxNzQxYTkuLmVmNWI0ZDYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS9zdG0vbHRkYy5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5j
-DQo+IEBAIC0xMTE4LDYgKzExMTgsMTAgQEAgaW50IGx0ZGNfbG9hZChzdHJ1Y3QgZHJtX2Rldmlj
-ZSAqZGRldikNCj4gICAJCWdvdG8gZXJyOw0KPiAgIAl9DQo+ICAgDQo+ICsJLyogRGlzYWJsZSBp
-bnRlcnJ1cHRzICovDQo+ICsJcmVnX2NsZWFyKGxkZXYtPnJlZ3MsIExURENfSUVSLA0KPiArCQkg
-IElFUl9MSUUgfCBJRVJfUlJJRSB8IElFUl9GVUlFIHwgSUVSX1RFUlJJRSk7DQo+ICsNCj4gICAJ
-Zm9yIChpID0gMDsgaSA8IE1BWF9JUlE7IGkrKykgew0KPiAgIAkJaXJxID0gcGxhdGZvcm1fZ2V0
-X2lycShwZGV2LCBpKTsNCj4gICAJCWlmIChpcnEgPCAwKQ0KPiBAQCAtMTEzOCwxMCArMTE0Miw2
-IEBAIGludCBsdGRjX2xvYWQoc3RydWN0IGRybV9kZXZpY2UgKmRkZXYpDQo+ICAgCQlyZXNldF9j
-b250cm9sX2RlYXNzZXJ0KHJzdGMpOw0KPiAgIAl9DQo+ICAgDQo+IC0JLyogRGlzYWJsZSBpbnRl
-cnJ1cHRzICovDQo+IC0JcmVnX2NsZWFyKGxkZXYtPnJlZ3MsIExURENfSUVSLA0KPiAtCQkgIElF
-Ul9MSUUgfCBJRVJfUlJJRSB8IElFUl9GVUlFIHwgSUVSX1RFUlJJRSk7DQo+IC0NCg0KRGVhciBZ
-YW5uaWNrLA0KVGhhbmsgeW91IGZvciB5b3VyIHBhdGNoLA0KDQpBY2tlZC1ieTogUGhpbGlwcGUg
-Q29ybnUgPHBoaWxpcHBlLmNvcm51QHN0LmNvbT4NCg0KUGhpbGlwcGUgOi0pDQoNCj4gICAJcmV0
-ID0gbHRkY19nZXRfY2FwcyhkZGV2KTsNCj4gICAJaWYgKHJldCkgew0KPiAgIAkJRFJNX0VSUk9S
-KCJoYXJkd2FyZSBpZGVudGlmaWVyICgweCUwOHgpIG5vdCBzdXBwb3J0ZWQhXG4iLA0KPiA=
+RGVhciBZYW5uaWNrLA0KRnVsbHkgYWdyZWUgd2l0aCB0aGlzIGFwcHJvYWNoLA0KDQpBY2tlZC1i
+eTogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNvcm51QHN0LmNvbT4NCg0KUGhpbGlwcGUgOi0p
+DQoNCk9uIDMvMjkvMTkgNDo0OSBQTSwgWWFubmljayBGZXJ0csOpIHdyb3RlOg0KPiBGcm9tOiBQ
+aGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KPiANCj4gVXNlIERSTV9XQVJO
+KCkgaW5zdGVhZCBvZiBEUk1fREVCVUdfRFJJVkVSKCkgdG8gYmV0dGVyDQo+IGluZm9ybSB0aGUg
+dXNlciBpbiBjYXNlIG9mIGZpZm8gdW5kZXJydW5zIG9yDQo+IHRyYW5zZmVyIGVycm9ycy4NCj4g
+DQo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3JudUBzdC5jb20+
+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jIHwgNCArKy0tDQo+ICAgMSBm
+aWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0v
+bHRkYy5jDQo+IGluZGV4IGIxNzQxYTkuLjE1ZDhhMDIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9zdG0vbHRkYy5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jDQo+
+IEBAIC04MjIsMTEgKzgyMiwxMSBAQCBzdGF0aWMgdm9pZCBsdGRjX3BsYW5lX2F0b21pY191cGRh
+dGUoc3RydWN0IGRybV9wbGFuZSAqcGxhbmUsDQo+ICAgDQo+ICAgCW11dGV4X2xvY2soJmxkZXYt
+PmVycl9sb2NrKTsNCj4gICAJaWYgKGxkZXYtPmVycm9yX3N0YXR1cyAmIElTUl9GVUlGKSB7DQo+
+IC0JCURSTV9ERUJVR19EUklWRVIoIkZpZm8gdW5kZXJydW5cbiIpOw0KPiArCQlEUk1fV0FSTigi
+bHRkYyBmaWZvIHVuZGVycnVuOiBwbGVhc2UgdmVyaWZ5IGRpc3BsYXkgbW9kZVxuIik7DQo+ICAg
+CQlsZGV2LT5lcnJvcl9zdGF0dXMgJj0gfklTUl9GVUlGOw0KPiAgIAl9DQo+ICAgCWlmIChsZGV2
+LT5lcnJvcl9zdGF0dXMgJiBJU1JfVEVSUklGKSB7DQo+IC0JCURSTV9ERUJVR19EUklWRVIoIlRy
+YW5zZmVyIGVycm9yXG4iKTsNCj4gKwkJRFJNX1dBUk4oImx0ZGMgdHJhbnNmZXIgZXJyb3JcbiIp
+Ow0KPiAgIAkJbGRldi0+ZXJyb3Jfc3RhdHVzICY9IH5JU1JfVEVSUklGOw0KPiAgIAl9DQo+ICAg
+CW11dGV4X3VubG9jaygmbGRldi0+ZXJyX2xvY2spOw0KPiA=
