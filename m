@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC34C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE39C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE8FF2084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99052084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141339;
-	bh=i5jEq9cExRRNWCNzTqoeygOE3SJcrAFODK7ey2Q3lto=;
+	s=default; t=1554141350;
+	bh=O4PCFXKEVmdqFN002EiJoRoFMVsV60/A78YAC8tx51s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O0CxSqebuG3sdkUdYlmUwgZb97UgUEeVbpPTnNW65KcHcQLFih3ZrKh8KgXxF6wrM
-	 JDBmaedXVPO04mI4g8wqiDdg+52n9gP3e7Y1Z2IuBb4HQZ1JlE9NibfmjZ/1LWkqP3
-	 ddL2GHLBq4WUgYvtHauL/8EeXpe5HMoFZ+2yrTuw=
+	b=wIAbGRYHqXJl14gtnraIX55H4PRGPpjxTnFeln9hhAr93tDT83q9phEu/n6I6wMp1
+	 jC359zFvgrH+kEl9XyD2tPsenHI2Kuc2gGhAhPKLFhm0wl1bsG21o34LVd8PjQMuAU
+	 YNy4jDz8+zxd1oLwu0BAjfKZYGmH75ChH6wnm50E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732180AbfDARzj (ORCPT
+        id S1732242AbfDARzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52282 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:55:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731381AbfDARWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:22:48 -0400
+        id S1731747AbfDARWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:22:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5342220883;
-        Mon,  1 Apr 2019 17:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DC3B21473;
+        Mon,  1 Apr 2019 17:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139367;
-        bh=i5jEq9cExRRNWCNzTqoeygOE3SJcrAFODK7ey2Q3lto=;
+        s=default; t=1554139353;
+        bh=O4PCFXKEVmdqFN002EiJoRoFMVsV60/A78YAC8tx51s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rGRf1LZYTod5yRghtd5S7OimwqmeZqyQ2d8GTbnAHc9gi6Nmc7jZbrsbp6qAUZrNu
-         tjgtLBhD5SJbSQTl/dYyoymkdTnJ9VKx6khzPDEQKQ8yK6hSB5FsbmOqLzyTxqaaTl
-         Zaf1n1xVmU7a6jvnGjN8SymgODIgUWsV8skO4YmE=
+        b=mUqJBVCIR9A5mC+pqVrTDgJDz9Xnn16m/83QIa2PCJogL+3C+X1GUGbxUhM2p+NqY
+         PKhftmd28THSIHAtTULKsYvjPhh3SYedgtRh2f4NaOsn8L6WH7Wod7uENTBbk/flpB
+         Dv0B9ZIlleM40WM8KXvdveQpvdV8QyLnURtRS1Fs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Seulbae Kim <seulbae@gatech.edu>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 056/107] Btrfs: fix incorrect file size after shrinking truncate and fsync
-Date:   Mon,  1 Apr 2019 19:02:11 +0200
-Message-Id: <20190401170050.862866177@linuxfoundation.org>
+        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 052/107] powerpc/fsl: Update Spectre v2 reporting
+Date:   Mon,  1 Apr 2019 19:02:07 +0200
+Message-Id: <20190401170050.514042017@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,98 +65,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Diana Craciun <diana.craciun@nxp.com>
 
-commit bf504110bc8aa05df48b0e5f0aa84bfb81e0574b upstream.
+commit dfa88658fb0583abb92e062c7a9cd5a5b94f2a46 upstream.
 
-If we do a shrinking truncate against an inode which is already present
-in the respective log tree and then rename it, as part of logging the new
-name we end up logging an inode item that reflects the old size of the
-file (the one which we previously logged) and not the new smaller size.
-The decision to preserve the size previously logged was added by commit
-1a4bcf470c886b ("Btrfs: fix fsync data loss after adding hard link to
-inode") in order to avoid data loss after replaying the log. However that
-decision is only needed for the case the logged inode size is smaller then
-the current size of the inode, as explained in that commit's change log.
-If the current size of the inode is smaller then the previously logged
-size, we know a shrinking truncate happened and therefore need to use
-that smaller size.
+Report branch predictor state flush as a mitigation for
+Spectre variant 2.
 
-Example to trigger the problem:
-
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
-
-  $ xfs_io -f -c "pwrite -S 0xab 0 8000" /mnt/foo
-  $ xfs_io -c "fsync" /mnt/foo
-  $ xfs_io -c "truncate 3000" /mnt/foo
-
-  $ mv /mnt/foo /mnt/bar
-  $ xfs_io -c "fsync" /mnt/bar
-
-  <power failure>
-
-  $ mount /dev/sdb /mnt
-  $ od -t x1 -A d /mnt/bar
-  0000000 ab ab ab ab ab ab ab ab ab ab ab ab ab ab ab ab
-  *
-  0008000
-
-Once we rename the file, we log its name (and inode item), and because
-the inode was already logged before in the current transaction, we log it
-with a size of 8000 bytes because that is the size we previously logged
-(with the first fsync). As part of the rename, besides logging the inode,
-we do also sync the log, which is done since commit d4682ba03ef618
-("Btrfs: sync log after logging new name"), so the next fsync against our
-inode is effectively a no-op, since no new changes happened since the
-rename operation. Even if did not sync the log during the rename
-operation, the same problem (fize size of 8000 bytes instead of 3000
-bytes) would be visible after replaying the log if the log ended up
-getting synced to disk through some other means, such as for example by
-fsyncing some other modified file. In the example above the fsync after
-the rename operation is there just because not every filesystem may
-guarantee logging/journalling the inode (and syncing the log/journal)
-during the rename operation, for example it is needed for f2fs, but not
-for ext4 and xfs.
-
-Fix this scenario by, when logging a new name (which is triggered by
-rename and link operations), using the current size of the inode instead
-of the previously logged inode size.
-
-A test case for fstests follows soon.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202695
-CC: stable@vger.kernel.org # 4.4+
-Reported-by: Seulbae Kim <seulbae@gatech.edu>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/btrfs/tree-log.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/powerpc/kernel/security.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -4501,6 +4501,19 @@ static int logged_inode_size(struct btrf
- 		item = btrfs_item_ptr(path->nodes[0], path->slots[0],
- 				      struct btrfs_inode_item);
- 		*size_ret = btrfs_inode_size(path->nodes[0], item);
-+		/*
-+		 * If the in-memory inode's i_size is smaller then the inode
-+		 * size stored in the btree, return the inode's i_size, so
-+		 * that we get a correct inode size after replaying the log
-+		 * when before a power failure we had a shrinking truncate
-+		 * followed by addition of a new name (rename / new hard link).
-+		 * Otherwise return the inode size from the btree, to avoid
-+		 * data loss when replaying a log due to previously doing a
-+		 * write that expands the inode's size and logging a new name
-+		 * immediately after.
-+		 */
-+		if (*size_ret > inode->vfs_inode.i_size)
-+			*size_ret = inode->vfs_inode.i_size;
- 	}
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -212,8 +212,11 @@ ssize_t cpu_show_spectre_v2(struct devic
  
- 	btrfs_release_path(path);
+ 		if (count_cache_flush_type == COUNT_CACHE_FLUSH_HW)
+ 			seq_buf_printf(&s, "(hardware accelerated)");
+-	} else
++	} else if (btb_flush_enabled) {
++		seq_buf_printf(&s, "Mitigation: Branch predictor state flush");
++	} else {
+ 		seq_buf_printf(&s, "Vulnerable");
++	}
+ 
+ 	seq_buf_printf(&s, "\n");
+ 
 
 
