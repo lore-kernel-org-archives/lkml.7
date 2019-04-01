@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD073C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5759EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD4F620830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A3E20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140327;
-	bh=DIIhsOx1Ff4caleebKOZNyJa1mTTbuQYWZbQyrebw3U=;
+	s=default; t=1554140331;
+	bh=/ZVef1+3I+DbCGjXoGUkADhtNeSOttB6OeEhX4YQXj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s7pGVYiw3Z8fjQIUVrALWN7zTy+tY2hEcWze6idIMFB8EXOXVUdbeIL0Ek1DI+GkM
-	 6b2frvYKfbtzKZ/KLP5TMoO7LFKY8SATkN/ymXWB6giHGkaYKHcKfumJwi3PaYPwrU
-	 qU1yXHFUo/Wmg3h0djlKaHvDO2b/ZEJN5CSXtASw=
+	b=v0w9oAP4/3jb7IzD24oNeh7areJ1KVhkyEOG7v4jJvaV6eDDjh82q3arGuwDBIEza
+	 XlbpIt6OFLLUg8oFFBqYgm8pyA56+fJ/iWfwpSgG+F3C6/KIcZlH+JITw36dgB2/+5
+	 7JNYRCaknTtqH6RjaHxRSUBVp7PCEKSCrH/dVx8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbfDARip (ORCPT
+        id S2388367AbfDARiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:38:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52154 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:38:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388356AbfDARim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:38:42 -0400
+        id S2388167AbfDARiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:38:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48C6820830;
-        Mon,  1 Apr 2019 17:38:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E7952070B;
+        Mon,  1 Apr 2019 17:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140321;
-        bh=DIIhsOx1Ff4caleebKOZNyJa1mTTbuQYWZbQyrebw3U=;
+        s=default; t=1554140324;
+        bh=/ZVef1+3I+DbCGjXoGUkADhtNeSOttB6OeEhX4YQXj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aA40y+3DTmDaOJ7AFRQEdzDYGO/wwlpsE3ORCwEgJMfTcx74nVK+YfOPetvrhs6dA
-         tc1+Og9MXplwJdULys9vabXp4Tc6STUYvElBbex0kaiotgZ6P6JY3OnYokovpucRd+
-         JiQ42caWt2w9GwVdYgcH2Rt6sOL5WiBpW8/koo40=
+        b=FUw6yXJ9XdyYHnR1YErNOsu6e5dxSbyipE97V7XZYebHLflWbDOLm3pBpPT4AWaQc
+         /9zGceFemUSEGy03V50DW8xwPYPlRRZb5mEYZyzuPTji8TlE0y7W0GC9IEb+BnZGUK
+         wR3OybjQby1mu6NlXDdPtRpNrbDD37D+M1TNLMdM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH 3.18 38/50] ALSA: pcm: Dont suspend stream in unrecoverable PCM state
-Date:   Mon,  1 Apr 2019 19:03:21 +0200
-Message-Id: <20190401170045.284589628@linuxfoundation.org>
+        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 3.18 39/50] scsi: zfcp: fix scsi_eh host reset with port_forced ERP for non-NPIV FCP devices
+Date:   Mon,  1 Apr 2019 19:03:22 +0200
+Message-Id: <20190401170045.385686701@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -65,70 +66,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit 113ce08109f8e3b091399e7cc32486df1cff48e7 upstream.
+commit 242ec1455151267fe35a0834aa9038e4c4670884 upstream.
 
-Currently PCM core sets each opened stream forcibly to SUSPENDED state
-via snd_pcm_suspend_all() call, and the user-space is responsible for
-re-triggering the resume manually either via snd_pcm_resume() or
-prepare call.  The scheme works fine usually, but there are corner
-cases where the stream can't be resumed by that call: the streams
-still in OPEN state before finishing hw_params.  When they are
-suspended, user-space cannot perform resume or prepare because they
-haven't been set up yet.  The only possible recovery is to re-open the
-device, which isn't nice at all.  Similarly, when a stream is in
-DISCONNECTED state, it makes no sense to change it to SUSPENDED
-state.  Ditto for in SETUP state; which you can re-prepare directly.
+Suppose more than one non-NPIV FCP device is active on the same channel.
+Send I/O to storage and have some of the pending I/O run into a SCSI
+command timeout, e.g. due to bit errors on the fibre. Now the error
+situation stops. However, we saw FCP requests continue to timeout in the
+channel. The abort will be successful, but the subsequent TUR fails.
+Scsi_eh starts. The LUN reset fails. The target reset fails.  The host
+reset only did an FCP device recovery. However, for non-NPIV FCP devices,
+this does not close and reopen ports on the SAN-side if other non-NPIV FCP
+device(s) share the same open ports.
 
-So, this patch addresses these issues by filtering the PCM streams to
-be suspended by checking the PCM state.  When a stream is in either
-OPEN, SETUP or DISCONNECTED as well as already SUSPENDED, the suspend
-action is skipped.
+In order to resolve the continuing FCP request timeouts, we need to
+explicitly close and reopen ports on the SAN-side.
 
-To be noted, this problem was originally reported for the PCM runtime
-PM on HD-audio.  And, the runtime PM problem itself was already
-addressed (although not intended) by the code refactoring commits
-3d21ef0b49f8 ("ALSA: pcm: Suspend streams globally via device type PM
-ops") and 17bc4815de58 ("ALSA: pci: Remove superfluous
-snd_pcm_suspend*() calls").  These commits eliminated the
-snd_pcm_suspend*() calls from the runtime PM suspend callback code
-path, hence the racy OPEN state won't appear while runtime PM.
-(FWIW, the race window is between snd_pcm_open_substream() and the
-first power up in azx_pcm_open().)
+This was missing since the beginning of zfcp in v2.6.0 history commit
+ea127f975424 ("[PATCH] s390 (7/7): zfcp host adapter.").
 
-Although the runtime PM issue was already "fixed", the same problem is
-still present for the system PM, hence this patch is still needed.
-And for stable trees, this patch alone should suffice for fixing the
-runtime PM problem, too.
+Note: The FSF requests for forced port reopen could run into FSF request
+timeouts due to other reasons. This would trigger an internal FCP device
+recovery. Pending forced port reopen recoveries would get dismissed. So
+some ports might not get fully reopened during this host reset handler.
+However, subsequent I/O would trigger the above described escalation and
+eventually all ports would be forced reopen to resolve any continuing FCP
+request timeouts due to earlier bit errors.
 
-Reported-and-tested-by: Jon Hunter <jonathanh@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: <stable@vger.kernel.org> #3.0+
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/pcm_native.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/s390/scsi/zfcp_erp.c  |   14 ++++++++++++++
+ drivers/s390/scsi/zfcp_ext.h  |    2 ++
+ drivers/s390/scsi/zfcp_scsi.c |    4 ++++
+ 3 files changed, 20 insertions(+)
 
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -1225,8 +1225,15 @@ static int snd_pcm_pause(struct snd_pcm_
- static int snd_pcm_pre_suspend(struct snd_pcm_substream *substream, int state)
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
--	if (runtime->status->state == SNDRV_PCM_STATE_SUSPENDED)
-+	switch (runtime->status->state) {
-+	case SNDRV_PCM_STATE_SUSPENDED:
- 		return -EBUSY;
-+	/* unresumable PCM state; return -EBUSY for skipping suspend */
-+	case SNDRV_PCM_STATE_OPEN:
-+	case SNDRV_PCM_STATE_SETUP:
-+	case SNDRV_PCM_STATE_DISCONNECTED:
-+		return -EBUSY;
-+	}
- 	runtime->trigger_master = substream;
- 	return 0;
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -583,6 +583,20 @@ static void zfcp_erp_strategy_memwait(st
+ 	add_timer(&erp_action->timer);
  }
+ 
++void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
++				     int clear, char *dbftag)
++{
++	unsigned long flags;
++	struct zfcp_port *port;
++
++	write_lock_irqsave(&adapter->erp_lock, flags);
++	read_lock(&adapter->port_list_lock);
++	list_for_each_entry(port, &adapter->port_list, list)
++		_zfcp_erp_port_forced_reopen(port, clear, dbftag);
++	read_unlock(&adapter->port_list_lock);
++	write_unlock_irqrestore(&adapter->erp_lock, flags);
++}
++
+ static void _zfcp_erp_port_reopen_all(struct zfcp_adapter *adapter,
+ 				      int clear, char *id)
+ {
+--- a/drivers/s390/scsi/zfcp_ext.h
++++ b/drivers/s390/scsi/zfcp_ext.h
+@@ -56,6 +56,8 @@ extern void zfcp_erp_clear_port_status(s
+ extern int  zfcp_erp_port_reopen(struct zfcp_port *, int, char *);
+ extern void zfcp_erp_port_shutdown(struct zfcp_port *, int, char *);
+ extern void zfcp_erp_port_forced_reopen(struct zfcp_port *, int, char *);
++extern void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
++					    int clear, char *dbftag);
+ extern void zfcp_erp_set_lun_status(struct scsi_device *, u32);
+ extern void zfcp_erp_clear_lun_status(struct scsi_device *, u32);
+ extern void zfcp_erp_lun_reopen(struct scsi_device *, int, char *);
+--- a/drivers/s390/scsi/zfcp_scsi.c
++++ b/drivers/s390/scsi/zfcp_scsi.c
+@@ -294,6 +294,10 @@ static int zfcp_scsi_eh_host_reset_handl
+ 	struct zfcp_adapter *adapter = zfcp_sdev->port->adapter;
+ 	int ret;
+ 
++	if (!(adapter->connection_features & FSF_FEATURE_NPIV_MODE)) {
++		zfcp_erp_port_forced_reopen_all(adapter, 0, "schrh_p");
++		zfcp_erp_wait(adapter);
++	}
+ 	zfcp_erp_adapter_reopen(adapter, 0, "schrh_1");
+ 	zfcp_erp_wait(adapter);
+ 	ret = fc_block_scsi_eh(scpnt);
 
 
