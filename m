@@ -2,114 +2,142 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABD6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 475AAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3E0420883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D23F20883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 16:37:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554136648;
+	bh=OhbAfona81QGQJw30n/rTcWHrk7OUcfavJvHPCmLDU4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=D6NR3lSgGDJPLzgk4hfNPVO3D0iWh707wLSrhl/gsv+/Imo7pJaAHkKrqVbSCLCbF
+	 OPQCP3EPyoS56sVfcB5t8S7uvORl2yhrKU2AM14LVsQx8VjL3+hfB7ZkePohsYpris
+	 OJAmWMJUqoutoHKWnEpAYHWEwnzeZN6vdDbfQYrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728700AbfDAQgF (ORCPT
+        id S1728676AbfDAQh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 12:36:05 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37522 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727021AbfDAQgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 12:36:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3C1CA78;
-        Mon,  1 Apr 2019 09:36:04 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDDB83F690;
-        Mon,  1 Apr 2019 09:36:02 -0700 (PDT)
-Subject: Re: [PATCH 1/2] edac: sifive: Add DT documentation for SiFive L2
- cache Controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     Yash Shah <yash.shah@sifive.com>, linux-riscv@lists.infradead.org,
-        linux-edac@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        devicetree@vger.kernel.org
-References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
- <1552382461-13051-2-git-send-email-yash.shah@sifive.com>
- <20190328131657.GA9056@bogus> <be7246a0-2426-995d-0a24-f104c173d752@arm.com>
- <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <8e574cfa-29d9-0f0a-d670-c4869bd262c4@arm.com>
-Date:   Mon, 1 Apr 2019 17:36:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 1 Apr 2019 12:37:26 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40714 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728007AbfDAQh0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 12:37:26 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q66so8798540ljq.7
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 09:37:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L2/hei+vgqKaKtTHjgY02R0PKIHdRQxpOxoHgedAK9E=;
+        b=ABfnGwP/pRA2TzpAMPGT68+v5gOV5AsgcMpu2qkb/KkfzfuZSWFRd4Vo38qjgI+Xcu
+         vsRyPeQt/6P0JIbssE3tupmndGvmtBdLbjuG/sbB2H1crfNf4Rqs24a7nMmyWBAto/ds
+         taZmLrriDkaFPX9iOqydhmqyPgoqNiUTFhrIs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L2/hei+vgqKaKtTHjgY02R0PKIHdRQxpOxoHgedAK9E=;
+        b=pQP9GIMUaqNPKGaVGBh+8qBN89PYN6WKmuHk+wuhEeSh+W8FKp1NOVKcwL1wO6vplk
+         zs2ZuNMwrTji9QbORzQnh30mMcXz6ZYyMQd6I6A/YS53f8CoocHv0h8j7XAJkQEep9f9
+         yN/nZ+PNX56Bqoe3V+9RnryXIY6S5Ndf5spVFz2sMLNImnRdT4EYNMO0N32f2K4UlFJO
+         9eT0a9tl0BRJCem5NCGVHlnEZrn312IVS7U8Po50o0ZP3t2TCZD8t8cLpjIG9AXk+uil
+         4FomzNLs+TDFs/9sWFK+uotzLuTNqBBfI4qOl7hFMYCeUmoH/DCQokU1AcoKw9/ZD3mg
+         ydzw==
+X-Gm-Message-State: APjAAAV1s1Z03IB7zmPEuDakMCU5tjSlcK6oBmc3PUMQjATm1TYxfYW1
+        jhKlUbYo41BJPD0ty3LaJxMUHREs0oc=
+X-Google-Smtp-Source: APXvYqw/RfjM374brSHl0mIndiZSwrMoftq3pebcuUrVEde0mCdeVH6EBgJWE30hwmeOMZFZ6bEhZw==
+X-Received: by 2002:a2e:8ece:: with SMTP id e14mr21562069ljl.66.1554136643938;
+        Mon, 01 Apr 2019 09:37:23 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id s16sm1017453lji.61.2019.04.01.09.37.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 09:37:23 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id a28so6780845lfo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 09:37:23 -0700 (PDT)
+X-Received: by 2002:a19:9107:: with SMTP id t7mr33401391lfd.48.1554136212826;
+ Mon, 01 Apr 2019 09:30:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+s77J=Bwiyow2d7Q=e+z+5d64i_cL6xaYn0xdvJDb4Vg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <CAHk-=whcA0kAWGqet9oJdyttjhP7J4PcU2Ly=n_Qyo6rMJNxRg@mail.gmail.com>
+ <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com>
+ <CAHk-=wj0o8BiUrYiM5ZcTS6JxBh1M60O36Ms8-EqLQ139=1L4g@mail.gmail.com>
+ <20190330171215.3yrfxwodstmgzmxy@brauner.io> <CAHk-=whF6gnRVbJaArZna4e=tejfrzmNQtRbWjnuSSKpBn+jQg@mail.gmail.com>
+ <132107F4-F56B-4D6E-9E00-A6F7C092E6BD@amacapital.net> <CAHk-=wiaLtH41Mc5qAjOeCWavPqV0DhS581KYa0QBt8uraTK1Q@mail.gmail.com>
+ <20190331211041.vht7dnqg4e4bilr2@brauner.io> <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
+ <18C7FCB9-2CBA-4237-94BB-9C4395A2106B@amacapital.net> <20190401114059.7gdsvcqyoz2o5bbz@yavin>
+ <CAHk-=wgKqBQznZdTQaM6yQ+_5dcz-+q8=2sbQsAoDh55hQTLMA@mail.gmail.com>
+ <CAKOZuev4Q4CY0-2rUpTujSKMVJ9L9Exv=_divFC0G0_OaQHaGw@mail.gmail.com>
+ <CAGLj2rF85hZLAR79oEA1dQARadw1OHr8bxqCLbvO6g9B6ou2Qw@mail.gmail.com> <CAKOZuetovU9NawSjUfGTAwXVfnmKC9GFtmS8FxAE5Hjmzq0HHA@mail.gmail.com>
+In-Reply-To: <CAKOZuetovU9NawSjUfGTAwXVfnmKC9GFtmS8FxAE5Hjmzq0HHA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 1 Apr 2019 09:29:56 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjgENV0pT8=MjB1UVBeWCrECCNXv15AKKX7Kfg7Eak7qw@mail.gmail.com>
+Message-ID: <CAHk-=wjgENV0pT8=MjB1UVBeWCrECCNXv15AKKX7Kfg7Eak7qw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Joel Fernandes <joel@joelfernandes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Mon, Apr 1, 2019 at 9:22 AM Daniel Colascione <dancol@google.com> wrote:
+>
+> There's a subtlety: suppose I'm a library and I want to create a
+> private subprocess. I use the new clone facility, whatever it is, and
+> get a pidfd back. I need to be able to read the child's exit status
+> even if the child exits before clone returns in the parent. Doesn't
+> this requirement imply that the pidfd, kernel-side, contain something
+> a bit more than a struct pid?
 
-On 29/03/2019 14:11, Rob Herring wrote:
-> On Thu, Mar 28, 2019 at 1:47 PM James Morse <james.morse@arm.com> wrote:
->> On 28/03/2019 13:16, Rob Herring wrote:
->>> On Tue, Mar 12, 2019 at 02:51:00PM +0530, Yash Shah wrote:
->>>> DT documentation for L2 cache controller added.
+Note that clone() has always supported this, but it has basically
+never been used.
 
->>>> diff --git a/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt b/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt
->>>> new file mode 100644
->>>> index 0000000..abce09f
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/edac/sifive-edac-l2.txt
->>>> @@ -0,0 +1,31 @@
->>>> +SiFive L2 Cache EDAC driver device tree bindings
->>>> +-------------------------------------------------
->>>> +This driver uses the EDAC framework to report L2 cache controller ECC errors.
->>>
->>> Bindings are for h/w blocks, not drivers. (And Boris may want a single
->>> driver, but bindings should reflect the h/w, not what Linux (currently)
->>> wants.
->>
->> For h/w block compatibles and edac, I think all we need now is to ensure the DT contains
->> the three compatible strings: platform (if there is one), soc and ip-name (if its a
->> re-usable thing).
->> This is so that linux can pick the biggest of the three (usually platform) to probe the
->> driver from, as this lets us capture platform properties we only find out about later.
-> 
-> DT is not the only what to instantiate drivers. If the OS really wants
-> to have a single driver for multiple h/w blocks, then it needs to
-> instantiate a driver itself (based on the top-level compatible
-> probably) and then that driver can find the DT nodes it needs itself.
+One of the early thinkings behind clone() was that it could be used
+for basically "AIO in user space", by having exactly these kinds of
+library-private internal subthreads that are hidden as real threads.
 
-I think this is where we are heading. (but I need to get my head round this top-level thing).
+It's why we have that special CSIGNAL mask for setting the exit
+signal. It doesn't *just* set the signal to be sent when the thread
+exits - setting the signal to something else than SIGCHLD actually
+changes behavior in other ways too.
 
-Can the OS do both, depending on the platform?
-e.g. on a system with one component the driver runs 'standalone', whereas on a bigger
-system with multiple components the same driver is used as a library by something else.
+In particular a non-SIGCHLD thread won't be found by a regular
+"waitpid()". You have to explicitly wait for it with __WCLONE (which
+in turn is supposed to be used with the explicit pid to be waited
+for).
 
-I don't see how this would work if the common component's DT entry looks the same on both
-platforms. Wouldn't this depend on the order stuff is done in, or 'but not this one'
-checks in the driver?
+Now, none of this was ever really used. The people who wanted AIO
+wanted the brain-damaged POSIX kind of AIO, not something cool and
+clever. So I suspect the whole exit-signal thing was just used for
+random small per-project things.
 
-
-> In any case, it's all irrelevant to the DT binding. We don't design
-> bindings around what some particular OS wants.
-
-I agree.
-
-What we want to do is spot the problems on the horizon so we either have the right
-information in the DT today, or at least know what it looks like so we don't cause a
-regression when a new platform makes previous behaviour generic/a-library.
-
-
-Thanks,
-
-James
+              Linus
