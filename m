@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3E8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA82AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E69120856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C48A2133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139606;
-	bh=bXYFpGS07iV4rHMz2s3AeJQouTiKYqQm43TsOmQd/Qg=;
+	s=default; t=1554139612;
+	bh=127i2qRjuxPwBrdEWVO2YYjlsTeOsJtU4N8HuapuBl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J7Hz0zoydVuBT2iN8mBWYUsYXLX98ZGCxVjHecHAyZlfoi0OB+iI48DXHVzROrD9Z
-	 d1NJQubc0rhZkxDedxQaZemkIsp1RzFtpWLTfmEzakKy47Ox+hahWrS2AWqwxBTeLm
-	 7HNECJNqxE4aZMdYazholABAvA2Q0R5aYyO3qUhM=
+	b=mw6fd/v/m+Tao39uYAH3P+cv7VgfTnVPehIxKgjD2KIOBUKwZNn0A0NDY4Qlpadua
+	 wRJzs9k/C/saWX/yqqj2kivESBfMnqYv8HN696UoGmk/b/4M5SmMYkB89ZDDPiculf
+	 vK+BY9GXAZmcnfaXS1fZnIm52D6t6OO/lwFYCTUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732591AbfDAR0o (ORCPT
+        id S1732435AbfDAR0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:26:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:26:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731559AbfDAR0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:26:41 -0400
+        id S1732587AbfDAR0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:26:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B88B20830;
-        Mon,  1 Apr 2019 17:26:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98CFF20830;
+        Mon,  1 Apr 2019 17:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139600;
-        bh=bXYFpGS07iV4rHMz2s3AeJQouTiKYqQm43TsOmQd/Qg=;
+        s=default; t=1554139604;
+        bh=127i2qRjuxPwBrdEWVO2YYjlsTeOsJtU4N8HuapuBl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vVmzdhumAq+7pIBEdG7FVo1g9Flk+DOIYjWpK46xcyI7NIOxjIz1FC1oANwpeL/Ld
-         gcHmme/vZ7P1tASHjtLfNn9b2eLeIQs4rzdNEKkoLd0S667YnIkompB2xz6Roroytz
-         hkMJm/e4mXVGM81OAh9OJSI3cmBzX72qJEJ31IX0=
+        b=gcYDazYUZjDQv58K0EKkWh0T954NxCutq2BxnFwjmEpJLu9fqm0WoKLr8j/FLlMH5
+         vAJe9uOYCgKoB6Xe/jZHf0f6WI5I19Fn91qlpGbKOlYtxdtWp66SLsNehsrqYMwTDk
+         dyzXBy1yywJ3GUqKSRWG5xlQaXq3SRmy+z9F3pCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 16/56] tun: add a missing rcu_read_unlock() in error path
-Date:   Mon,  1 Apr 2019 19:02:32 +0200
-Message-Id: <20190401170104.755009478@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 17/56] btrfs: remove WARN_ON in log_dir_items
+Date:   Mon,  1 Apr 2019 19:02:33 +0200
+Message-Id: <20190401170104.789956446@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -65,32 +65,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 9180bb4f046064dfa4541488102703b402bb04e1 upstream.
+commit 2cc8334270e281815c3850c3adea363c51f21e0d upstream.
 
-In my latest patch I missed one rcu_read_unlock(), in case
-device is down.
+When Filipe added the recursive directory logging stuff in
+2f2ff0ee5e430 ("Btrfs: fix metadata inconsistencies after directory
+fsync") he specifically didn't take the directory i_mutex for the
+children directories that we need to log because of lockdep.  This is
+generally fine, but can lead to this WARN_ON() tripping if we happen to
+run delayed deletion's in between our first search and our second search
+of dir_item/dir_indexes for this directory.  We expect this to happen,
+so the WARN_ON() isn't necessary.  Drop the WARN_ON() and add a comment
+so we know why this case can happen.
 
-Fixes: 4477138fa0ae ("tun: properly test for IFF_UP")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/tun.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/tree-log.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1330,6 +1330,7 @@ drop:
- 	rcu_read_lock();
- 	if (unlikely(!(tun->dev->flags & IFF_UP))) {
- 		err = -EIO;
-+		rcu_read_unlock();
- 		goto drop;
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -3343,9 +3343,16 @@ static noinline int log_dir_items(struct
  	}
+ 	btrfs_release_path(path);
  
+-	/* find the first key from this transaction again */
++	/*
++	 * Find the first key from this transaction again.  See the note for
++	 * log_new_dir_dentries, if we're logging a directory recursively we
++	 * won't be holding its i_mutex, which means we can modify the directory
++	 * while we're logging it.  If we remove an entry between our first
++	 * search and this search we'll not find the key again and can just
++	 * bail.
++	 */
+ 	ret = btrfs_search_slot(NULL, root, &min_key, path, 0, 0);
+-	if (WARN_ON(ret != 0))
++	if (ret != 0)
+ 		goto done;
+ 
+ 	/*
 
 
