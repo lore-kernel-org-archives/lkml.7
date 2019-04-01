@@ -2,68 +2,67 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E956C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C5FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D14D8214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC0520857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mxw7wJ0m"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UF0HA8Gr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732127AbfDAIb1 (ORCPT
+        id S1732177AbfDAIbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:31:27 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36950 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731861AbfDAIb1 (ORCPT
+        Mon, 1 Apr 2019 04:31:52 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39667 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732009AbfDAIbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:31:27 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w10so10765636wrm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 01:31:25 -0700 (PDT)
+        Mon, 1 Apr 2019 04:31:52 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j9so10772978wrn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 01:31:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=x2unXAsK07UQQFdXUKxEybeJF3/sJh/QWyczlPOFgsc=;
-        b=mxw7wJ0mvbusrbl9Enq2ij5GzsqLQNPu41WRWNuusAQFWrsGnMsNGXVKy2YUeiZ24V
-         LxpSFIblbO2SLp0mdmF4d27Ii+LREIwlOv0qVqCEnZuQkvxTmjDaYUIetprnhi6KMelv
-         +idsarP/B73IrANnGUctbomIB6sx5b2x2337c1FJ1PFMs2PYuYrCZdCVa/OFfSF/lFqt
-         BRt8prXfXzXxfWs290ZGsQv0KZSOsv8CTnpTg+fOQFV9JCBf2KTuy3vjWWmKwc850Ejz
-         YZocOenTjrvaO74zHQ1VXe9NceYFYavLR+PAMCIbZa8ZMjXaof6LRbm7eUAhlqxkt5gm
-         TB+A==
+        bh=UEFYIyW+Boh+Q8qRPYwnNMs8K2sfoZRZzSlmD/8BMIc=;
+        b=UF0HA8Grmk27Z04B4L2FsMo4uXm+UrWZIloe6cjJ9e/6vTovQqsr13a1HpZBMyTuv0
+         WAquKgEbR7qwqb64FewPKIkp9lx2UoiWrwBxakRZ3Ab0ajlzB5fW3hTOZvSpA3nKejx9
+         oHBGcGtnl+xAi/IKObgc8hIsa43Fe5rFY6UsEMYdDlXf4c2G7zCz9vNWPtIQX/yDBfLx
+         6VL+svZ1u2YSuLcW5Mk5ny7vPx2wrx0EE/N1UNv2HlOsS5j/bsXmf9HnMUgE1ozMxkzx
+         7F2u971e68eEFlqyvZQ2W4D+oTpmmDY/9gWfUU4YC0hLr+rP+IBls3o1GkksZiSvte/7
+         7wWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=x2unXAsK07UQQFdXUKxEybeJF3/sJh/QWyczlPOFgsc=;
-        b=HzjeXvItAP7updXVZVjRiquoWBiiGJTldhK88opIJ/CARNQiUn3vnYBn4vCSVdFNSD
-         aZoKdvqvITLSXBtTMftJwValXZ9tAvEj5zQfdBnx1pAIsQ51Jp0hXTAknvOYhAZnxlbb
-         3LRA9u9npDJzZah6W3DSRWLAoEH1G1GE48MUMGYq7KEhkJcnW728lAefnfmmaKLim8NS
-         7eqf/X/g5x0r4QfWJWHwXCVpXcoHd6sCBvCqkVgT3M+/9JaevgBFv1/IZJAacUqSbKzI
-         xS8FFS93BNFdRCFTxrgp1J4EToC7b3QULKWYc86mP275+HlFTJEfH+UFqe9vB3n0OnD9
-         07DQ==
-X-Gm-Message-State: APjAAAU0sHQoengDcpEoxpSxcQgFU/hwozciTSJridOQMq2u8hC4H9ce
-        YZV/Oyz9SQZ85caIMqt3hlDwuEVRxC3h8g==
-X-Google-Smtp-Source: APXvYqzN8N6sNtovIFxFGeFtNvmZkDrAM7fohb9wLfMVmJH2hyqT+uP912o87PyBR2UVnXbrLXhccA==
-X-Received: by 2002:a5d:6947:: with SMTP id r7mr38053060wrw.167.1554107484482;
-        Mon, 01 Apr 2019 01:31:24 -0700 (PDT)
+        bh=UEFYIyW+Boh+Q8qRPYwnNMs8K2sfoZRZzSlmD/8BMIc=;
+        b=bo2WvKmrpiCvcmIiKJ8aJSPzfiFreneC5EmjNPHZMe1hSCwZbm7P/TXp0eTkRdor0s
+         bFPsoE+RClPIRq6jquA4uDJlBYpcPy4LU6roEDV4pAUbf2PiE/ksJ0wf8tfYLE7ZBs1q
+         8hoPKuLki5g6mX2fE3zZdz9q+7vN8pU57S34fRn2TJfEdY+6RJ1zgPls2p8KkBF3sJKH
+         0IYJmVZVwfcexoWaQJK3AGw97/hXwS/eZPIokPC+LfidFI07viwJWnM5alFlj6pRcV+w
+         H2AezqyBphP1pUcca6W5URvCBDCSL8dR36iLRDYTpI8m/NHbazd+AZDtRHCTvo6+UKEs
+         Jxyg==
+X-Gm-Message-State: APjAAAV9FC4i2n4yiB4XygUuDu+1mUul7Y/YVmSrxj/YmYKEGe2GZUxU
+        2MdP51uArD/5thBUfgtkuo/QVOG0sgkOIw==
+X-Google-Smtp-Source: APXvYqzelv1XDMD/y/GPOavDy6DrL+vi2gVE0quFIhjmXLQshVQIZYfRloukcpo6bCvtMa4pR9i2LQ==
+X-Received: by 2002:adf:cd06:: with SMTP id w6mr41678334wrm.52.1554107509418;
+        Mon, 01 Apr 2019 01:31:49 -0700 (PDT)
 Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id w11sm30694983wre.15.2019.04.01.01.31.23
+        by smtp.gmail.com with ESMTPSA id n6sm6641362wmn.48.2019.04.01.01.31.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 01:31:23 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] clk: meson-g12a: add video decoder clocks
+        Mon, 01 Apr 2019 01:31:48 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] clk: meson: add video decoder clocks for G12A
 To:     Maxime Jourdan <mjourdan@baylibre.com>,
         Jerome Brunet <jbrunet@baylibre.com>
 Cc:     linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20190319101138.27520-1-mjourdan@baylibre.com>
- <20190319101138.27520-3-mjourdan@baylibre.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -116,12 +115,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <106e1a7e-9b0d-d071-5413-520a3b90034a@baylibre.com>
-Date:   Mon, 1 Apr 2019 10:31:21 +0200
+Message-ID: <5becd0fc-0cdf-12df-d7f0-35c83b3d2b2c@baylibre.com>
+Date:   Mon, 1 Apr 2019 10:31:48 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190319101138.27520-3-mjourdan@baylibre.com>
+In-Reply-To: <20190319101138.27520-1-mjourdan@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -131,229 +130,26 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 19/03/2019 11:11, Maxime Jourdan wrote:
-> Add the necessary clock parts for:
+> This patch series adds the clocks related to the video decoder on G12A:
+> VDEC_1, VDEC_HEVC and VDEC_HEVCF.
 > 
->  - VDEC_1: used to feed VDEC_1
->  - VDEC_HEVC: the "back" part of the VDEC_HEVC block
->  - VDEC_HEVCF: the "front" part of the VDEC_HEVC block
+> As to not conflict with the IDs, this patch series is based on Neil's
+> last unmerged patch series: "clk: meson: add support for PCIE PLL" [0]
 > 
-> In previous SoC generations (GXL, GXBB), there was only one VDEC_HEVC
-> clock, which got split in two parts for G12A.
+> Changes since v1 [1]:
+>  - Apply ROUND_CLOSEST to the dividers in addition to the muxes
 > 
-> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-> ---
->  drivers/clk/meson/g12a.c | 163 +++++++++++++++++++++++++++++++++++++++
->  drivers/clk/meson/g12a.h |   8 +-
->  2 files changed, 170 insertions(+), 1 deletion(-)
+> [0] https://patchwork.kernel.org/cover/10842969/
+> [1] https://patchwork.kernel.org/cover/10859115/
 > 
-> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-> index 3a3134976534..6c762a8b32b9 100644
-> --- a/drivers/clk/meson/g12a.c
-> +++ b/drivers/clk/meson/g12a.c
-> @@ -1495,6 +1495,151 @@ static struct clk_regmap g12a_vpu = {
->  	},
->  };
->  
-> +/* VDEC clocks */
-> +
-> +static const char * const g12a_vdec_parent_names[] = {
-> +	"fclk_div2p5", "fclk_div3", "fclk_div4", "fclk_div5", "fclk_div7",
-> +	"hifi_pll", "gp0_pll",
-> +};
-> +
-> +static struct clk_regmap g12a_vdec_1_sel = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VDEC_CLK_CNTL,
-> +		.mask = 0x7,
-> +		.shift = 9,
-> +		.flags = CLK_MUX_ROUND_CLOSEST,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vdec_1_sel",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = g12a_vdec_parent_names,
-> +		.num_parents = ARRAY_SIZE(g12a_vdec_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_vdec_1_div = {
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_VDEC_CLK_CNTL,
-> +		.shift = 0,
-> +		.width = 7,
-> +		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vdec_1_div",
-> +		.ops = &clk_regmap_divider_ops,
-> +		.parent_names = (const char *[]){ "vdec_1_sel" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_vdec_1 = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_VDEC_CLK_CNTL,
-> +		.bit_idx = 8,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "vdec_1",
-> +		.ops = &clk_regmap_gate_ops,
-> +		.parent_names = (const char *[]){ "vdec_1_div" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_vdec_hevcf_sel = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VDEC2_CLK_CNTL,
-> +		.mask = 0x7,
-> +		.shift = 9,
-> +		.flags = CLK_MUX_ROUND_CLOSEST,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vdec_hevcf_sel",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = g12a_vdec_parent_names,
-> +		.num_parents = ARRAY_SIZE(g12a_vdec_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_vdec_hevcf_div = {
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_VDEC2_CLK_CNTL,
-> +		.shift = 0,
-> +		.width = 7,
-> +		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vdec_hevcf_div",
-> +		.ops = &clk_regmap_divider_ops,
-> +		.parent_names = (const char *[]){ "vdec_hevcf_sel" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_vdec_hevcf = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_VDEC2_CLK_CNTL,
-> +		.bit_idx = 8,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "vdec_hevcf",
-> +		.ops = &clk_regmap_gate_ops,
-> +		.parent_names = (const char *[]){ "vdec_hevcf_div" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_vdec_hevc_sel = {
-> +	.data = &(struct clk_regmap_mux_data){
-> +		.offset = HHI_VDEC2_CLK_CNTL,
-> +		.mask = 0x7,
-> +		.shift = 25,
-> +		.flags = CLK_MUX_ROUND_CLOSEST,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vdec_hevc_sel",
-> +		.ops = &clk_regmap_mux_ops,
-> +		.parent_names = g12a_vdec_parent_names,
-> +		.num_parents = ARRAY_SIZE(g12a_vdec_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_vdec_hevc_div = {
-> +	.data = &(struct clk_regmap_div_data){
-> +		.offset = HHI_VDEC2_CLK_CNTL,
-> +		.shift = 16,
-> +		.width = 7,
-> +		.flags = CLK_DIVIDER_ROUND_CLOSEST,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "vdec_hevc_div",
-> +		.ops = &clk_regmap_divider_ops,
-> +		.parent_names = (const char *[]){ "vdec_hevc_sel" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_regmap g12a_vdec_hevc = {
-> +	.data = &(struct clk_regmap_gate_data){
-> +		.offset = HHI_VDEC2_CLK_CNTL,
-> +		.bit_idx = 24,
-> +	},
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "vdec_hevc",
-> +		.ops = &clk_regmap_gate_ops,
-> +		.parent_names = (const char *[]){ "vdec_hevc_div" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
->  /* VAPB Clock */
->  
->  static const char * const g12a_vapb_parent_names[] = {
-> @@ -2615,6 +2760,15 @@ static struct clk_hw_onecell_data g12a_hw_onecell_data = {
->  		[CLKID_PCIE_PLL_DCO_DIV2]	= &g12a_pcie_pll_dco_div2.hw,
->  		[CLKID_PCIE_PLL_OD]		= &g12a_pcie_pll_od.hw,
->  		[CLKID_PCIE_PLL]		= &g12a_pcie_pll.hw,
-> +		[CLKID_VDEC_1_SEL]		= &g12a_vdec_1_sel.hw,
-> +		[CLKID_VDEC_1_DIV]		= &g12a_vdec_1_div.hw,
-> +		[CLKID_VDEC_1]			= &g12a_vdec_1.hw,
-> +		[CLKID_VDEC_HEVC_SEL]		= &g12a_vdec_hevc_sel.hw,
-> +		[CLKID_VDEC_HEVC_DIV]		= &g12a_vdec_hevc_div.hw,
-> +		[CLKID_VDEC_HEVC]		= &g12a_vdec_hevc.hw,
-> +		[CLKID_VDEC_HEVCF_SEL]		= &g12a_vdec_hevcf_sel.hw,
-> +		[CLKID_VDEC_HEVCF_DIV]		= &g12a_vdec_hevcf_div.hw,
-> +		[CLKID_VDEC_HEVCF]		= &g12a_vdec_hevcf.hw,
->  		[NR_CLKS]			= NULL,
->  	},
->  	.num = NR_CLKS,
-> @@ -2803,6 +2957,15 @@ static struct clk_regmap *const g12a_clk_regmaps[] = {
->  	&g12a_cpu_clk_trace,
->  	&g12a_pcie_pll_od,
->  	&g12a_pcie_pll_dco,
-> +	&g12a_vdec_1_sel,
-> +	&g12a_vdec_1_div,
-> +	&g12a_vdec_1,
-> +	&g12a_vdec_hevc_sel,
-> +	&g12a_vdec_hevc_div,
-> +	&g12a_vdec_hevc,
-> +	&g12a_vdec_hevcf_sel,
-> +	&g12a_vdec_hevcf_div,
-> +	&g12a_vdec_hevcf,
->  };
->  
->  static const struct meson_eeclkc_data g12a_clkc_data = {
-> diff --git a/drivers/clk/meson/g12a.h b/drivers/clk/meson/g12a.h
-> index 1393a09730a6..39c41af70804 100644
-> --- a/drivers/clk/meson/g12a.h
-> +++ b/drivers/clk/meson/g12a.h
-> @@ -189,8 +189,14 @@
->  #define CLKID_PCIE_PLL_DCO			198
->  #define CLKID_PCIE_PLL_DCO_DIV2			199
->  #define CLKID_PCIE_PLL_OD			200
-> +#define CLKID_VDEC_1_SEL			202
-> +#define CLKID_VDEC_1_DIV			203
-> +#define CLKID_VDEC_HEVC_SEL			205
-> +#define CLKID_VDEC_HEVC_DIV			206
-> +#define CLKID_VDEC_HEVCF_SEL			208
-> +#define CLKID_VDEC_HEVCF_DIV			209
->  
-> -#define NR_CLKS					202
-> +#define NR_CLKS					211
->  
->  /* include the CLKIDs that have been made part of the DT binding */
->  #include <dt-bindings/clock/g12a-clkc.h>
+> Maxime Jourdan (2):
+>   dt-bindings: clk: g12a-clkc: add VDEC clock IDs
+>   clk: meson-g12a: add video decoder clocks
+> 
+>  drivers/clk/meson/g12a.c              | 163 ++++++++++++++++++++++++++
+>  drivers/clk/meson/g12a.h              |   8 +-
+>  include/dt-bindings/clock/g12a-clkc.h |   3 +
+>  3 files changed, 173 insertions(+), 1 deletion(-)
 > 
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Applied to next/drivers for Linux 5.2-rc1
