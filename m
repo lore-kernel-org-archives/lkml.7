@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB9CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1805C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1264A2133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91ABC20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138923;
-	bh=gK2b5IYpBZCUxJQmtaHHFYeHv8u/HINzICstOh8Gzqw=;
+	s=default; t=1554138929;
+	bh=rTiFpj/8Qx5DZxlRkCe9k3kQ3xDE78/nJy61eI+Wkoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cv4WNR2zBCJjyOT4EjaLinatxYmcJjiwSbsi627JxUJa4uVKJgrgCbu6M+XnUQ0Xf
-	 LhmFvW3KIhygd3J5/OgwAx/DmaBY3Numrcmq1UTZ/mcYXpiLGzrt6u6UipiFqLD1M+
-	 GWATAi1FXb6y7TVpyZ80LHftpFQcHvFmu1n3f+DU=
+	b=gDgGmTfo1rFGkxnZVxqVrTQcPClE4LqDyBd+BLjP5MT+pYspexlEpJT3qIbihaDYx
+	 9s+wgKIAnVvwg/rmn98KbzfwvrM1cy8FsT02U9Eq3PFklvWp1kTxchOyCQcSl3jByp
+	 fd5ofOMB7pdMnXb2FFuC/hhhHiPYX+g15KtNb6Io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730892AbfDARPV (ORCPT
+        id S1730897AbfDARP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:15:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39414 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:15:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730501AbfDARPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:15:19 -0400
+        id S1729969AbfDARPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:15:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFC612133D;
-        Mon,  1 Apr 2019 17:15:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84D2121473;
+        Mon,  1 Apr 2019 17:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138919;
-        bh=gK2b5IYpBZCUxJQmtaHHFYeHv8u/HINzICstOh8Gzqw=;
+        s=default; t=1554138922;
+        bh=rTiFpj/8Qx5DZxlRkCe9k3kQ3xDE78/nJy61eI+Wkoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M9UlOKPOSyNxaFAmtsN8WpMbZCGqayjr1owZEiNnJSH9KnWhvgNNX2TmYO00Mg1QZ
-         4npZFwjAGp0w4p+YJ0B9Jvnoy7j/RMws9ts6lMGhMUMX0yWeh0yPIUFjFeattCjjA0
-         gHwXtIrLpoBxK8zGM7jqFBxux2h8HeVMnIL3i2gA=
+        b=Vyuxr4M3/Im7QTkFMp8Y1XfQwolzc+u9/um8drZoQtVVRsDlqzAE139SZhWhrVcDL
+         p+vwaDiIczL3RGN0YBvhpZAp5Gf6jXUZwdPz3ic0nQxsSSnxILClHtEorcHRZIdDij
+         FwdToBHWJM719JSMIMdBmdd+wa6dvneiCvyf4YfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 032/134] tun: add a missing rcu_read_unlock() in error path
-Date:   Mon,  1 Apr 2019 19:01:08 +0200
-Message-Id: <20190401170047.773351904@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 059/134] ALSA: pcm: Fix possible OOB access in PCM oss plugins
+Date:   Mon,  1 Apr 2019 19:01:35 +0200
+Message-Id: <20190401170050.115818456@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,32 +66,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 9180bb4f046064dfa4541488102703b402bb04e1 upstream.
+commit ca0214ee2802dd47239a4e39fb21c5b00ef61b22 upstream.
 
-In my latest patch I missed one rcu_read_unlock(), in case
-device is down.
+The PCM OSS emulation converts and transfers the data on the fly via
+"plugins".  The data is converted over the dynamically allocated
+buffer for each plugin, and recently syzkaller caught OOB in this
+flow.
 
-Fixes: 4477138fa0ae ("tun: properly test for IFF_UP")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Although the bisection by syzbot pointed out to the commit
+65766ee0bf7f ("ALSA: oss: Use kvzalloc() for local buffer
+allocations"), this is merely a commit to replace vmalloc() with
+kvmalloc(), hence it can't be the cause.  The further debug action
+revealed that this happens in the case where a slave PCM doesn't
+support only the stereo channels while the OSS stream is set up for a
+mono channel.  Below is a brief explanation:
+
+At each OSS parameter change, the driver sets up the PCM hw_params
+again in snd_pcm_oss_change_params_lock().  This is also the place
+where plugins are created and local buffers are allocated.  The
+problem is that the plugins are created before the final hw_params is
+determined.  Namely, two snd_pcm_hw_param_near() calls for setting the
+period size and periods may influence on the final result of channels,
+rates, etc, too, while the current code has already created plugins
+beforehand with the premature values.  So, the plugin believes that
+channels=1, while the actual I/O is with channels=2, which makes the
+driver reading/writing over the allocated buffer size.
+
+The fix is simply to move the plugin allocation code after the final
+hw_params call.
+
+Reported-by: syzbot+d4503ae45b65c5bc1194@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/tun.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/core/oss/pcm_oss.c |   43 ++++++++++++++++++++++---------------------
+ 1 file changed, 22 insertions(+), 21 deletions(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1915,6 +1915,7 @@ drop:
- 	rcu_read_lock();
- 	if (unlikely(!(tun->dev->flags & IFF_UP))) {
- 		err = -EIO;
-+		rcu_read_unlock();
- 		goto drop;
- 	}
+--- a/sound/core/oss/pcm_oss.c
++++ b/sound/core/oss/pcm_oss.c
+@@ -940,6 +940,28 @@ static int snd_pcm_oss_change_params_loc
+ 	oss_frame_size = snd_pcm_format_physical_width(params_format(params)) *
+ 			 params_channels(params) / 8;
  
++	err = snd_pcm_oss_period_size(substream, params, sparams);
++	if (err < 0)
++		goto failure;
++
++	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
++	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
++	if (err < 0)
++		goto failure;
++
++	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
++				     runtime->oss.periods, NULL);
++	if (err < 0)
++		goto failure;
++
++	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
++
++	err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams);
++	if (err < 0) {
++		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
++		goto failure;
++	}
++
+ #ifdef CONFIG_SND_PCM_OSS_PLUGINS
+ 	snd_pcm_oss_plugin_clear(substream);
+ 	if (!direct) {
+@@ -974,27 +996,6 @@ static int snd_pcm_oss_change_params_loc
+ 	}
+ #endif
+ 
+-	err = snd_pcm_oss_period_size(substream, params, sparams);
+-	if (err < 0)
+-		goto failure;
+-
+-	n = snd_pcm_plug_slave_size(substream, runtime->oss.period_bytes / oss_frame_size);
+-	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, n, NULL);
+-	if (err < 0)
+-		goto failure;
+-
+-	err = snd_pcm_hw_param_near(substream, sparams, SNDRV_PCM_HW_PARAM_PERIODS,
+-				     runtime->oss.periods, NULL);
+-	if (err < 0)
+-		goto failure;
+-
+-	snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_DROP, NULL);
+-
+-	if ((err = snd_pcm_kernel_ioctl(substream, SNDRV_PCM_IOCTL_HW_PARAMS, sparams)) < 0) {
+-		pcm_dbg(substream->pcm, "HW_PARAMS failed: %i\n", err);
+-		goto failure;
+-	}
+-
+ 	if (runtime->oss.trigger) {
+ 		sw_params->start_threshold = 1;
+ 	} else {
 
 
