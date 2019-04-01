@@ -2,104 +2,134 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE97C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DABC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34222086C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:44:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qYW6Ho2C"
+	by mail.kernel.org (Postfix) with ESMTP id 59F4A2086C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 10:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfDAKop (ORCPT
+        id S1726656AbfDAKr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 06:44:45 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52580 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbfDAKoo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 06:44:44 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x31Aig5u067303;
-        Mon, 1 Apr 2019 05:44:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554115482;
-        bh=s77Ke2iQ9H0VvaFF6VK8wUjY4kw8zs9d4kiLLx66BUA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qYW6Ho2CssdMyCvHFcgwq0VCHQkvJg4KDso5nxl34LwPzj9iyV1ag+63Am6zphCOh
-         /e4g8qosSITuQEzyU33+thFmDzygIMYVezKI/W+PO9wDvU7tAzfEIsTSEnx3EVr0xL
-         TdnwShtxirjnyjgRyPaiyK9QuOp7xq40qdpxhHgM=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x31AifSY021034
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 1 Apr 2019 05:44:42 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Apr
- 2019 05:44:41 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 1 Apr 2019 05:44:41 -0500
-Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x31AicBp097064;
-        Mon, 1 Apr 2019 05:44:40 -0500
-Subject: Re: [PATCH 1/2] mmc: sdhci: Add Quirk for enabling HISPD under
- special conditions
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>
-References: <20190329142202.15000-1-faiz_abbas@ti.com>
- <20190329142202.15000-2-faiz_abbas@ti.com>
- <f1417015-0e78-6df5-7917-a33e235fa1a9@intel.com>
- <350cd133-302f-4002-4b54-d95e7e5d3500@ti.com>
- <6d8f9b8c-dd5c-a091-7a82-10e5f6606b4e@intel.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <51104203-068b-a25c-299b-ac9a2f720680@ti.com>
-Date:   Mon, 1 Apr 2019 16:14:21 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <6d8f9b8c-dd5c-a091-7a82-10e5f6606b4e@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 1 Apr 2019 06:47:26 -0400
+Received: from mga09.intel.com ([134.134.136.24]:14977 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbfDAKrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 06:47:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 03:47:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,296,1549958400"; 
+   d="scan'208";a="146975622"
+Received: from shbuild999.sh.intel.com ([10.239.147.118])
+  by orsmga002.jf.intel.com with ESMTP; 01 Apr 2019 03:47:22 -0700
+From:   Feng Tang <feng.tang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>,
+        Feng Tang <feng.tang@intel.com>
+Subject: [PATCH 1/2] printk: Add an option to flush all messages on panic
+Date:   Mon,  1 Apr 2019 18:48:03 +0800
+Message-Id: <1554115684-26846-1-git-send-email-feng.tang@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+Current console_flush_on_panic() will only dump the new messages
+in buffer, and users may need an opportunity to check all the
+messages on panic which could help debugging, as user may haven't
+seen the log before panic due to loglevel settings.
 
-On 01/04/19 2:42 PM, Adrian Hunter wrote:
-> On 1/04/19 12:01 PM, Faiz Abbas wrote:
->> Hi Adrian,
->>
->> On 01/04/19 2:21 PM, Adrian Hunter wrote:
->>> On 29/03/19 4:22 PM, Faiz Abbas wrote:
->>>> Some controllers on TI devices requires the HISPD bit to be cleared
->>>> even in some high speed modes. Add a quirk that facilitates this
->>>> requirement.
->>>
->>> Could you use sdhci I/O accessors for this?
->>
->> Can you elaborate? Not sure how this would be solved with
->> CONFIG_MMC_SDHCI_IO_ACCESSORS.
-> 
-> In ->writeb()
-> 
-> if (reg == SDHCI_HOST_CONTROL) {
-> 	if (host->mmc->ios->timing == whatever)
-> 		val &= ~SDHCI_CTRL_HISPD;
-> }
-> 
-> writeb(val, host->ioaddr + reg);
+Add a flag for console_flush_on_panic() to chose whether to
+dump all messages.
 
-This is a really good idea. Will use it in v2. Thanks.
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+---
+ arch/powerpc/kernel/traps.c | 2 +-
+ include/linux/console.h     | 2 +-
+ kernel/panic.c              | 2 +-
+ kernel/printk/printk.c      | 9 ++++++++-
+ 4 files changed, 11 insertions(+), 4 deletions(-)
 
-Regards,
-Faiz
+diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+index 1fd45a8..58d9580 100644
+--- a/arch/powerpc/kernel/traps.c
++++ b/arch/powerpc/kernel/traps.c
+@@ -179,7 +179,7 @@ extern void panic_flush_kmsg_end(void)
+ 	kmsg_dump(KMSG_DUMP_PANIC);
+ 	bust_spinlocks(0);
+ 	debug_locks_off();
+-	console_flush_on_panic();
++	console_flush_on_panic(false);
+ }
+ 
+ static unsigned long oops_begin(struct pt_regs *regs)
+diff --git a/include/linux/console.h b/include/linux/console.h
+index ec9bdb3..825ecf5 100644
+--- a/include/linux/console.h
++++ b/include/linux/console.h
+@@ -175,7 +175,7 @@ extern int console_trylock(void);
+ extern void console_unlock(void);
+ extern void console_conditional_schedule(void);
+ extern void console_unblank(void);
+-extern void console_flush_on_panic(void);
++extern void console_flush_on_panic(bool flush_all);
+ extern struct tty_driver *console_device(int *);
+ extern void console_stop(struct console *);
+ extern void console_start(struct console *);
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 0ae0d73..fb77e01 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -277,7 +277,7 @@ void panic(const char *fmt, ...)
+ 	 * panic() is not being callled from OOPS.
+ 	 */
+ 	debug_locks_off();
+-	console_flush_on_panic();
++	console_flush_on_panic(false);
+ 
+ 	panic_print_sys_info();
+ 
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 02ca827..8ff099b 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2525,10 +2525,11 @@ void console_unblank(void)
+ 
+ /**
+  * console_flush_on_panic - flush console content on panic
++ * @flush_all:	whether to print all messages in buffer
+  *
+  * Immediately output all pending messages no matter what.
+  */
+-void console_flush_on_panic(void)
++void console_flush_on_panic(bool flush_all)
+ {
+ 	/*
+ 	 * If someone else is holding the console lock, trylock will fail
+@@ -2539,6 +2540,12 @@ void console_flush_on_panic(void)
+ 	 */
+ 	console_trylock();
+ 	console_may_schedule = 0;
++
++	/* User may want to see all the printk messages on panic */
++	if (flush_all) {
++		console_seq = log_first_seq;
++		console_idx = log_first_idx;
++	}
+ 	console_unlock();
+ }
+ 
+-- 
+2.7.4
+
