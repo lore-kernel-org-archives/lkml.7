@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21177C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F60C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E483B2084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C8D208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141292;
-	bh=o/E2o/2qM1LC6kXRj87P+jvq18TFrqj5659aQ5lRT2A=;
+	s=default; t=1554141308;
+	bh=9tWqKUXkufHJK4AaeVQ3us0nJMNHEPZahbkT+WZ4GKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hb9bzI+pSXwEkkHii+TXLXkHaQ1JYCnEF0fvMluqQMgrAXQ4NHPWsEtijStqLmLN8
-	 Q4EQrOxorj5WIcw5bH+JyR+TH56aRspfkeXBVlRaj2Pqn2QSW1Zm+ISAXsMiKpPUr3
-	 +2kFVXYb0FIMS+msr2t+F6YU5UqdDvy77wviLenQ=
+	b=uWrlWximAaoR8dsGEsrgoz2LOjsuZmsU2xut6wo4OndQU1VzuYBRAe0CKvY7lSWfi
+	 fqUeP1FmJ0DbyBjg3LsjmFJN5/fdZCa4ePC+x7mXN+F6FQH20Vt5M09KroD5fa5jm9
+	 0Py/7qum7531gF/QE3MzgrNQ+2zgs6TJjuH8Hxg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732081AbfDARyu (ORCPT
+        id S1731932AbfDARXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:54:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54074 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:23:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731756AbfDARX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:23:56 -0400
+        id S1732106AbfDARX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:23:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D3ED206DD;
-        Mon,  1 Apr 2019 17:23:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8399A20856;
+        Mon,  1 Apr 2019 17:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139435;
-        bh=o/E2o/2qM1LC6kXRj87P+jvq18TFrqj5659aQ5lRT2A=;
+        s=default; t=1554139406;
+        bh=9tWqKUXkufHJK4AaeVQ3us0nJMNHEPZahbkT+WZ4GKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zt5LbNuAACUv4eLYXho3DSE4xIQoikxXpU2XAqhq5Vf1YQSmzLkM81vPZLlZVQ6YM
-         v1VC7AqF0PraE/IDoAXXtb/lsbnugAQNUgM7EqpEdEQ4mSS5C6j1TNx7sl/qfIj6P5
-         2xhsMg52mgnux+ZLid/m/6xKHT0hC1CTjSx16hBg=
+        b=kquIrBsm9eRJPmaRodKPGKPSvX/d+hZQh8JTujFaTVYcBtX20R/zmIb9YcjSTYdJF
+         ws8rlg65EFN4xEYpjcnJfSedvsVx+EKjDPYrjBPwsVcKzRoqh50vU7MYkIg31GpCrT
+         xLT7YDtUgLkbs/clpSRwkwmD3cL8+zllC96789TA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 074/107] scsi: zfcp: fix rport unblock if deleted SCSI devices on Scsi_Host
-Date:   Mon,  1 Apr 2019 19:02:29 +0200
-Message-Id: <20190401170052.369851851@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH 4.14 066/107] ALSA: pcm: Dont suspend stream in unrecoverable PCM state
+Date:   Mon,  1 Apr 2019 19:02:21 +0200
+Message-Id: <20190401170051.669225727@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -66,83 +65,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit fe67888fc007a76b81e37da23ce5bd8fb95890b0 upstream.
+commit 113ce08109f8e3b091399e7cc32486df1cff48e7 upstream.
 
-An already deleted SCSI device can exist on the Scsi_Host and remain there
-because something still holds a reference.  A new SCSI device with the same
-H:C:T:L and FCP device, target port WWPN, and FCP LUN can be created.  When
-we try to unblock an rport, we still find the deleted SCSI device and
-return early because the zfcp_scsi_dev of that SCSI device is not
-ZFCP_STATUS_COMMON_UNBLOCKED. Hence we miss to unblock the rport, even if
-the new proper SCSI device would be in good state.
+Currently PCM core sets each opened stream forcibly to SUSPENDED state
+via snd_pcm_suspend_all() call, and the user-space is responsible for
+re-triggering the resume manually either via snd_pcm_resume() or
+prepare call.  The scheme works fine usually, but there are corner
+cases where the stream can't be resumed by that call: the streams
+still in OPEN state before finishing hw_params.  When they are
+suspended, user-space cannot perform resume or prepare because they
+haven't been set up yet.  The only possible recovery is to re-open the
+device, which isn't nice at all.  Similarly, when a stream is in
+DISCONNECTED state, it makes no sense to change it to SUSPENDED
+state.  Ditto for in SETUP state; which you can re-prepare directly.
 
-Therefore, skip deleted SCSI devices when iterating the sdevs of the shost.
-[cf. __scsi_device_lookup{_by_target}() or scsi_device_get()]
+So, this patch addresses these issues by filtering the PCM streams to
+be suspended by checking the PCM state.  When a stream is in either
+OPEN, SETUP or DISCONNECTED as well as already SUSPENDED, the suspend
+action is skipped.
 
-The following abbreviated trace sequence can indicate such problem:
+To be noted, this problem was originally reported for the PCM runtime
+PM on HD-audio.  And, the runtime PM problem itself was already
+addressed (although not intended) by the code refactoring commits
+3d21ef0b49f8 ("ALSA: pcm: Suspend streams globally via device type PM
+ops") and 17bc4815de58 ("ALSA: pci: Remove superfluous
+snd_pcm_suspend*() calls").  These commits eliminated the
+snd_pcm_suspend*() calls from the runtime PM suspend callback code
+path, hence the racy OPEN state won't appear while runtime PM.
+(FWIW, the race window is between snd_pcm_open_substream() and the
+first power up in azx_pcm_open().)
 
-Area           : REC
-Tag            : ersfs_3
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x40000000     not ZFCP_STATUS_COMMON_UNBLOCKED
-Ready count    : n		not incremented yet
-Running count  : 0x00000000
-ERP want       : 0x01
-ERP need       : 0xc1		ZFCP_ERP_ACTION_NONE
+Although the runtime PM issue was already "fixed", the same problem is
+still present for the system PM, hence this patch is still needed.
+And for stable trees, this patch alone should suffice for fixing the
+runtime PM problem, too.
 
-Area           : REC
-Tag            : ersfs_3
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x41000000
-Ready count    : n+1
-Running count  : 0x00000000
-ERP want       : 0x01
-ERP need       : 0x01
-
-...
-
-Area           : REC
-Level          : 4		only with increased trace level
-Tag            : ertru_l
-LUN            : 0x4045400300000000
-WWPN           : 0x50050763031bd327
-LUN status     : 0x40000000
-Request ID     : 0x0000000000000000
-ERP status     : 0x01800000
-ERP step       : 0x1000
-ERP action     : 0x01
-ERP count      : 0x00
-
-NOT followed by a trace record with tag "scpaddy"
-for WWPN 0x50050763031bd327.
-
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Fixes: 6f2ce1c6af37 ("scsi: zfcp: fix rport unblock race with LUN recovery")
-Cc: <stable@vger.kernel.org> #2.6.32+
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-and-tested-by: Jon Hunter <jonathanh@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/scsi/zfcp_erp.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/core/pcm_native.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/s390/scsi/zfcp_erp.c
-+++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -1306,6 +1306,9 @@ static void zfcp_erp_try_rport_unblock(s
- 		struct zfcp_scsi_dev *zsdev = sdev_to_zfcp(sdev);
- 		int lun_status;
- 
-+		if (sdev->sdev_state == SDEV_DEL ||
-+		    sdev->sdev_state == SDEV_CANCEL)
-+			continue;
- 		if (zsdev->port != port)
- 			continue;
- 		/* LUN under port of interest */
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -1395,8 +1395,15 @@ static int snd_pcm_pause(struct snd_pcm_
+ static int snd_pcm_pre_suspend(struct snd_pcm_substream *substream, int state)
+ {
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+-	if (runtime->status->state == SNDRV_PCM_STATE_SUSPENDED)
++	switch (runtime->status->state) {
++	case SNDRV_PCM_STATE_SUSPENDED:
+ 		return -EBUSY;
++	/* unresumable PCM state; return -EBUSY for skipping suspend */
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_DISCONNECTED:
++		return -EBUSY;
++	}
+ 	runtime->trigger_master = substream;
+ 	return 0;
+ }
 
 
