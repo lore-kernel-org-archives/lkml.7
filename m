@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5384DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA5BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F4420856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB1A20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138961;
-	bh=KeDLZwanU8THHw/a6JeYRJI0S4Ii2HZkF0yIQUrnwPY=;
+	s=default; t=1554138965;
+	bh=W2fqSXnVRmop/WN+MzbD+gy/g5Ju+wGErG4iiaHzpMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBeGcSdAp0WAOC4FwdjUU78lO3lFKFfCQSLFEvVSkUSHTmBWUXh13hONADT1VjgKt
-	 VRwtJ+uq+hocFiOb1Ybg+cBHaoxOltG+1NpzHWegHTy0eH2LB/IWTsQacBNt4m72/f
-	 b/Ftk8ItyJgBJX5NVZVtTPNaKnxncUZd1dt6WGSA=
+	b=ZXo/zcLk2sRl0R74T06XGF4yfvbZYPiLcC8cW2QQhv9rLyIPYJIZ1YNIpcnxdyS5Q
+	 2vJ5MY4RmubwkfJ4/4hIsCgP1tFGTiaEpb4PPvq97BK+/f/nxhd8l0MK2VeXXIOtJc
+	 oolLfgYwUHKs5nGqo5wo26lWctSca6FQW/RntoSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730791AbfDARP7 (ORCPT
+        id S1730970AbfDARQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:15:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40470 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:16:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730419AbfDARPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:15:49 -0400
+        id S1730768AbfDARP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:15:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CD0320883;
-        Mon,  1 Apr 2019 17:15:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 465F6206C0;
+        Mon,  1 Apr 2019 17:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138949;
-        bh=KeDLZwanU8THHw/a6JeYRJI0S4Ii2HZkF0yIQUrnwPY=;
+        s=default; t=1554138955;
+        bh=W2fqSXnVRmop/WN+MzbD+gy/g5Ju+wGErG4iiaHzpMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=krOOzEWueLm0sZAh/p/ArdgMNH9oWExzRs1Qr1QHX+eIdftRri2viKtKE/99F7uJ3
-         35w/BEBpznbGvuPda98tJG4cZKIFOEkno7/uu1HFLgnQZpC8bkCEnqwi5AxzU3sLCX
-         JyB662vQU69gDFEEOTz9em3h4og/60ihvAZ/iY6Q=
+        b=uXZy9KAj3vwuSNtqYZpVBpBLr34vtO2e0ZuViRqNzlklhuFi6/1Kvc6Jo/zvf3a1H
+         3cKjoQiM3A39UQ2BNDU1q8IrEv7tGSEjuRV+vM20Yli8I2WF/ScPd1tysHEaugSj09
+         NCH905a72qnc0fVP4zo7mAFW7/n35HwxgQgBgBiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Chiu <chiu@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 067/134] ALSA: hda/realtek: Enable headset mic of ASUS P5440FF with ALC256
-Date:   Mon,  1 Apr 2019 19:01:43 +0200
-Message-Id: <20190401170050.762176727@linuxfoundation.org>
+        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 033/134] powerpc/fsl: Add infrastructure to fixup branch predictor flush
+Date:   Mon,  1 Apr 2019 19:01:09 +0200
+Message-Id: <20190401170047.862772098@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,36 +65,115 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Chris Chiu <chiu@endlessm.com>
+From: Diana Craciun <diana.craciun@nxp.com>
 
-commit a806ef1cf3bbc0baadc6cdeb11f12b5dd27e91c2 upstream.
+commit 76a5eaa38b15dda92cd6964248c39b5a6f3a4e9d upstream.
 
-The ASUS laptop P5440FF with ALC256 can't detect the headset microphone
-until ALC256_FIXUP_ASUS_MIC_NO_PRESENCE quirk applied.
+In order to protect against speculation attacks (Spectre
+variant 2) on NXP PowerPC platforms, the branch predictor
+should be flushed when the privillege level is changed.
+This patch is adding the infrastructure to fixup at runtime
+the code sections that are performing the branch predictor flush
+depending on a boot arg parameter which is added later in a
+separate patch.
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/pci/hda/patch_realtek.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/include/asm/feature-fixups.h |   12 ++++++++++++
+ arch/powerpc/include/asm/setup.h          |    2 ++
+ arch/powerpc/kernel/vmlinux.lds.S         |    8 ++++++++
+ arch/powerpc/lib/feature-fixups.c         |   23 +++++++++++++++++++++++
+ 4 files changed, 45 insertions(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7248,6 +7248,10 @@ static const struct snd_hda_pin_quirk al
- 		{0x1b, 0x90a70130},
- 		{0x21, 0x03211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0256, 0x1043, "ASUS", ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
-+		{0x12, 0x90a60130},
-+		{0x14, 0x90170110},
-+		{0x21, 0x03211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0256, 0x1043, "ASUS", ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
- 		{0x1a, 0x90a70130},
- 		{0x1b, 0x90170110},
- 		{0x21, 0x03211020}),
+--- a/arch/powerpc/include/asm/feature-fixups.h
++++ b/arch/powerpc/include/asm/feature-fixups.h
+@@ -221,6 +221,17 @@ label##3:					       	\
+ 	FTR_ENTRY_OFFSET 953b-954b;			\
+ 	.popsection;
+ 
++#define START_BTB_FLUSH_SECTION			\
++955:							\
++
++#define END_BTB_FLUSH_SECTION			\
++956:							\
++	.pushsection __btb_flush_fixup,"a";	\
++	.align 2;							\
++957:						\
++	FTR_ENTRY_OFFSET 955b-957b;			\
++	FTR_ENTRY_OFFSET 956b-957b;			\
++	.popsection;
+ 
+ #ifndef __ASSEMBLY__
+ #include <linux/types.h>
+@@ -230,6 +241,7 @@ extern long __start___stf_entry_barrier_
+ extern long __start___stf_exit_barrier_fixup, __stop___stf_exit_barrier_fixup;
+ extern long __start___rfi_flush_fixup, __stop___rfi_flush_fixup;
+ extern long __start___barrier_nospec_fixup, __stop___barrier_nospec_fixup;
++extern long __start__btb_flush_fixup, __stop__btb_flush_fixup;
+ 
+ void apply_feature_fixups(void);
+ void setup_feature_keys(void);
+--- a/arch/powerpc/include/asm/setup.h
++++ b/arch/powerpc/include/asm/setup.h
+@@ -67,6 +67,8 @@ void do_barrier_nospec_fixups_range(bool
+ static inline void do_barrier_nospec_fixups_range(bool enable, void *start, void *end) { };
+ #endif
+ 
++void do_btb_flush_fixups(void);
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ #endif	/* _ASM_POWERPC_SETUP_H */
+--- a/arch/powerpc/kernel/vmlinux.lds.S
++++ b/arch/powerpc/kernel/vmlinux.lds.S
+@@ -164,6 +164,14 @@ SECTIONS
+ 	}
+ #endif /* CONFIG_PPC_BARRIER_NOSPEC */
+ 
++#ifdef CONFIG_PPC_FSL_BOOK3E
++	. = ALIGN(8);
++	__spec_btb_flush_fixup : AT(ADDR(__spec_btb_flush_fixup) - LOAD_OFFSET) {
++		__start__btb_flush_fixup = .;
++		*(__btb_flush_fixup)
++		__stop__btb_flush_fixup = .;
++	}
++#endif
+ 	EXCEPTION_TABLE(0)
+ 
+ 	NOTES :kernel :notes
+--- a/arch/powerpc/lib/feature-fixups.c
++++ b/arch/powerpc/lib/feature-fixups.c
+@@ -347,6 +347,29 @@ void do_barrier_nospec_fixups_range(bool
+ 
+ 	printk(KERN_DEBUG "barrier-nospec: patched %d locations\n", i);
+ }
++
++static void patch_btb_flush_section(long *curr)
++{
++	unsigned int *start, *end;
++
++	start = (void *)curr + *curr;
++	end = (void *)curr + *(curr + 1);
++	for (; start < end; start++) {
++		pr_devel("patching dest %lx\n", (unsigned long)start);
++		patch_instruction(start, PPC_INST_NOP);
++	}
++}
++
++void do_btb_flush_fixups(void)
++{
++	long *start, *end;
++
++	start = PTRRELOC(&__start__btb_flush_fixup);
++	end = PTRRELOC(&__stop__btb_flush_fixup);
++
++	for (; start < end; start += 2)
++		patch_btb_flush_section(start);
++}
+ #endif /* CONFIG_PPC_FSL_BOOK3E */
+ 
+ void do_lwsync_fixups(unsigned long value, void *fixup_start, void *fixup_end)
 
 
