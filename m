@@ -2,148 +2,92 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84BDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF3EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A21352146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF2A2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:14:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MUcury/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfDATMa convert rfc822-to-8bit (ORCPT
+        id S1728901AbfDATOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 15:12:30 -0400
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:48621 "EHLO
-        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728716AbfDATM3 (ORCPT
+        Mon, 1 Apr 2019 15:14:32 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:41013 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728733AbfDATOc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 15:12:29 -0400
-Received: from 178-18-171-174.customer.bnet.at ([178.18.171.174]:54157 helo=[192.168.2.179])
-        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <philipp.tomsich@theobroma-systems.com>)
-        id 1hB2M2-0003dt-7r; Mon, 01 Apr 2019 21:12:22 +0200
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX
- offload for rockchip devices
-From:   Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-In-Reply-To: <2312344.mOsv7YkeBG@diego>
-Date:   Mon, 1 Apr 2019 21:12:21 +0200
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        "Leonidas P. Papadakos" <papadakospan@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        netdev@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
+        Mon, 1 Apr 2019 15:14:32 -0400
+Received: by mail-yb1-f195.google.com with SMTP id c15so1819401ybk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 12:14:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D7X0bSvolJDJPpVoArTx/EkG3ciEuleLeYJKoAOM3vs=;
+        b=MUcury/ZCmfLMJh1eYktYvrs/5QcYN044HhtaQXALVopSNd+/Zviezfcm7pu4n+YN2
+         L3GnmvPzRqLYdcCCFBbMvOWSbR4XW85owZaFYUvSwRHU/OU8Z2q+OiYmqx75acuMpGnz
+         P0QTlbdCWbAe0WXGrTLJlqNXf/QoT0m8XjSf8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D7X0bSvolJDJPpVoArTx/EkG3ciEuleLeYJKoAOM3vs=;
+        b=uCrMRLAjv89mhblIW/MUgz4dv2n5t5MphmyVHNIl9DX0cef7Hdy5i4ToDrYCeYNHx+
+         0vzDkU0ZO0sleGTFynraxAdmW6zgmKPIk3RqwZJtnrDtaICUMUls89Ocy4/MvnnEZboV
+         KJDmk1DG23GZpTOubvn1pxAkXgBTjLpA1C7pmmUlAeWTCaIS65aXpqHh1Jzcig2JO2hd
+         jHFubeQKKAakeMZfdr5fzO5PjvG9smhL4gsAqRXVqzr4xeHbBizrkFWY4fx7QXAebU7W
+         7+tvFoC1y0QgcgiMG+FSms2RoGcU6K8pyV7AbbryunFNhUUaY8JqZMtYFBYSepaxdrYo
+         KcCA==
+X-Gm-Message-State: APjAAAVmf5ijlY6hWuKrstdWWPhDi5AgUTagDVW0nKrDcIWQn9HFl8cJ
+        iZC+uZeWw/2R/feEzZDJ/mrz26e5oQo=
+X-Google-Smtp-Source: APXvYqxM95+l/gcrWhb9IkNQz7MTRzBN/80wJKorsKmNL/WiM76ACJGJP9dMaH/+gAU07Ht4q+nXsQ==
+X-Received: by 2002:a25:2f55:: with SMTP id v82mr6599183ybv.458.1554146070925;
+        Mon, 01 Apr 2019 12:14:30 -0700 (PDT)
+Received: from mail-yw1-f52.google.com (mail-yw1-f52.google.com. [209.85.161.52])
+        by smtp.gmail.com with ESMTPSA id x13sm6463712ywx.63.2019.04.01.12.14.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 12:14:28 -0700 (PDT)
+Received: by mail-yw1-f52.google.com with SMTP id e76so3672106ywa.9
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 12:14:27 -0700 (PDT)
+X-Received: by 2002:a81:4c13:: with SMTP id z19mr55177133ywa.57.1554146067104;
+ Mon, 01 Apr 2019 12:14:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190401190607.GA23795@beast> <20190401190955.GJ6209@ziepe.ca>
+In-Reply-To: <20190401190955.GJ6209@ziepe.ca>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Mon, 1 Apr 2019 12:14:14 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jKGwH2m1-z9mXeUJh-4GOFw4igPgEv7Z_K5oP4cr0wbYA@mail.gmail.com>
+Message-ID: <CAGXu5jKGwH2m1-z9mXeUJh-4GOFw4igPgEv7Z_K5oP4cr0wbYA@mail.gmail.com>
+Subject: Re: [PATCH v3] tpm: Actually fail on TPM errors during "get random"
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Phil Baker <baker1tex@gmail.com>,
+        Craig Robson <craig@zhatt.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <9EC67532-2D43-4AAD-BFA7-8B6797067427@theobroma-systems.com>
-References: <20190401181840.31255-1-papadakospan@gmail.com>
- <9d65a22a-2288-dc53-0059-ec4a31424dd8@arm.com> <2312344.mOsv7YkeBG@diego>
-To:     =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        =?utf-8?Q?Christoph_M=C3=BCllner?= 
-        <christoph.muellner@theobroma-systems.com>
-X-Mailer: Apple Mail (2.3445.9.1)
+        Peter Huewe <peterhuewe@gmx.de>, Arnd Bergmann <arnd@arndb.de>,
+        linux-integrity <linux-integrity@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Christoph.
+On Mon, Apr 1, 2019 at 12:09 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > + *   -errno otherwise ((positive TPM return codes are masked to -EIO)
+>
+> Extra bracket, but otherwise looks fine to me
 
-> On 01.04.2019, at 21:06, Heiko Stübner <heiko@sntech.de> wrote:
-> 
-> Am Montag, 1. April 2019, 20:54:45 CEST schrieb Robin Murphy:
->> On 01/04/2019 19:18, Leonidas P. Papadakos wrote:
->>> From: =?UTF-8?q?Kamil=20Trzci=C5=84ski?= <ayufan@ayufan.eu>
->>> 
->>> Some rockchip boards exhibit an issue where tx checksumming does not work with
->>> packets larger than 1498.
->> 
->> Is it really a board-level problem? I'm no networking expert, but the 
->> nature of the workaround suggests this is more likely to be some 
->> inherent limitation of the IP block in the SoC, rather than something to 
->> do with how the external pins get wired up. Does anyone have an RK3328 
->> or RK3399 board that provably *does* checksum large packets correctly?
-> 
-> I don't have that many rk3399-boards with actual ethernet and even only
-> the rock64 from rk3328-land, but at least my rk3399-firefly also seems
-> affected by this.
-> 
-> But so far the rk3399-puma board from Theobroma did not show that ethernet
-> issue for me, so I've added two Theobroma people who may or may not tell
-> if they've also seen that issue.
-> 
->> 
->>> This is bad for network stability.
->>> 
->>> The previous approach was using force_thresh_dma_mode in the board dts, which
->>> does more than we need.
->> 
->> If indeed it is a SoC-level thing (or at least we want to treat it as 
->> such), then couldn't we just hang it off the existing SoC-specific 
->> compatibles in dwmac-rk.c and avoid the need for a new DT property at 
->> all? After all, that's precisely why SoC-specific compatibles are a 
->> thing in the first place.
->> 
->> Robin.
->> 
->>> Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
->>> ---
->>>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     | 4 ++++
->>>  drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 2 ++
->>>  include/linux/stmmac.h                                | 1 +
->>>  3 files changed, 7 insertions(+)
->>> 
->>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->>> index 6a2e1031a..4552147e9 100644
->>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->>> @@ -3660,6 +3660,10 @@ static netdev_features_t stmmac_fix_features(struct net_device *dev,
->>>  	if (priv->plat->bugged_jumbo && (dev->mtu > ETH_DATA_LEN))
->>>  		features &= ~NETIF_F_CSUM_MASK;
->>> 
->>> +	/* Including very small MTUs of 1498 for Rockchip devices */
->>> +	if (priv->plat->bugged_tx_coe && (dev->mtu > ETH_DATA_LEN - 2))
->>> +		features &= ~NETIF_F_CSUM_MASK;
->>> +
->>>  	/* Disable tso if asked by ethtool */
->>>  	if ((priv->plat->tso_en) && (priv->dma_cap.tsoen)) {
->>>  		if (features & NETIF_F_TSO)
->>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
->>> index 3031f2bf1..807cf5826 100644
->>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
->>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
->>> @@ -519,6 +519,8 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
->>>  		pr_warn("force_sf_dma_mode is ignored if force_thresh_dma_mode is set.");
->>>  	}
->>> 
->>> +	plat->bugged_tx_coe = of_property_read_bool(np, "rockchip,bugged_tx_coe");
->>> +
->>>  	of_property_read_u32(np, "snps,ps-speed", &plat->mac_port_sel_speed);
->>> 
->>>  	plat->axi = stmmac_axi_setup(pdev);
->>> diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
->>> index 4335bd771..60c411f43 100644
->>> --- a/include/linux/stmmac.h
->>> +++ b/include/linux/stmmac.h
->>> @@ -162,6 +162,7 @@ struct plat_stmmacenet_data {
->>>  	int pmt;
->>>  	int force_sf_dma_mode;
->>>  	int force_thresh_dma_mode;
->>> +	int bugged_tx_coe;
->>>  	int riwt_off;
->>>  	int max_speed;
->>>  	int maxmtu;
->>> 
->> 
-> 
-> 
-> 
-> 
+Thanks! (And I guess it's time for lunch so I can take a break and
+learn how to type again...)
 
+-- 
+Kees Cook
