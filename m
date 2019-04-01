@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C379C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88791C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7E32133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F3720883
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139615;
-	bh=91Q69tv/y/KTKzi/Yhn2f6ZmuBZZ6TSTkqo4L+xxjPY=;
+	s=default; t=1554139618;
+	bh=eyMgquA9nyXRX/LYd6Sd4VUypVoQZdJGNkuquS/AgTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vHaa7dFD88hNRkRtW1cFTAnlMuim8nS/1KdRI1tDcXpagYYsXcnlxjR7adkhYWKMh
-	 /klsKs0UwLXBcFOptT1ZJpHtLGbQy2vk2N+pwqRZU42k4j9Yk11CuU6qvHnpU84TcO
-	 QWJ2RQ8zbgyzfUbtEXeyHtCUU40ufNRnJwysZ/G8=
+	b=Y5UxVOFUZ6C25b97PZXcQdS11olVseV6CEc6xVP+N5vZEzA1pOuEun5MLskFOKZkX
+	 fa3ZKeTrhpuJWFN8D910YQ3f7AM2b12Dh6CBuxxQ4hLPy16kb81k0Nx4vdP4sKm5xC
+	 AI/YgSsEhqbjl6faKwN1bG7MMD2P+v9Mk0SRL4Vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732601AbfDAR0x (ORCPT
+        id S1732611AbfDAR04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:26:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59260 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:26:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728810AbfDAR0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:26:51 -0400
+        id S1728780AbfDAR0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:26:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 961BC20856;
-        Mon,  1 Apr 2019 17:26:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40BC020856;
+        Mon,  1 Apr 2019 17:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139611;
-        bh=91Q69tv/y/KTKzi/Yhn2f6ZmuBZZ6TSTkqo4L+xxjPY=;
+        s=default; t=1554139613;
+        bh=eyMgquA9nyXRX/LYd6Sd4VUypVoQZdJGNkuquS/AgTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z2qIENlfFXN9ujq++ieiig7YXZRBff4WOSeeVvIZRlZZ7ZqK/YPmnb35goj3IBSG+
-         ARfAomdYN/xd2OVucEXc+AeMorTM0PvSFqOaZs3k9ejrUnZIcU0RStnOs2Pj1b1sBo
-         yZUrB7m6QnFz0shT7LDfaHf+zibO15IC1B0Dqp10=
+        b=dolit6qylASdaokPUbOnSTkdorl6c1NQ2imnPNdsF015G4wb+fewGHaYStCjPoSnO
+         TmlqvbXcKFC/jOG9Ux76GhDxnIBu6UZ+we5SbpVjds31qgtOz9HG8HEXR3xOabtV/0
+         y5bndCMOYrtPiAxq+EdRZ5Q+47E6tJqFS9e4SnGI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kohji Okuno <okuno.kohji@jp.panasonic.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 4.9 19/56] ARM: imx6q: cpuidle: fix bug that CPU might not wake up at expected time
-Date:   Mon,  1 Apr 2019 19:02:35 +0200
-Message-Id: <20190401170104.859505425@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>
+Subject: [PATCH 4.9 02/56] Bluetooth: Verify that l2cap_get_conf_opt provides large enough buffer
+Date:   Mon,  1 Apr 2019 19:02:18 +0200
+Message-Id: <20190401170103.571527923@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -64,76 +65,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kohji Okuno <okuno.kohji@jp.panasonic.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-commit 91740fc8242b4f260cfa4d4536d8551804777fae upstream.
+commit 7c9cbd0b5e38a1672fcd137894ace3b042dfbf69 upstream.
 
-In the current cpuidle implementation for i.MX6q, the CPU that sets
-'WAIT_UNCLOCKED' and the CPU that returns to 'WAIT_CLOCKED' are always
-the same. While the CPU that sets 'WAIT_UNCLOCKED' is in IDLE state of
-"WAIT", if the other CPU wakes up and enters IDLE state of "WFI"
-istead of "WAIT", this CPU can not wake up at expired time.
- Because, in the case of "WFI", the CPU must be waked up by the local
-timer interrupt. But, while 'WAIT_UNCLOCKED' is set, the local timer
-is stopped, when all CPUs execute "wfi" instruction. As a result, the
-local timer interrupt is not fired.
- In this situation, this CPU will wake up by IRQ different from local
-timer. (e.g. broacast timer)
+The function l2cap_get_conf_opt will return L2CAP_CONF_OPT_SIZE + opt->len
+as length value. The opt->len however is in control over the remote user
+and can be used by an attacker to gain access beyond the bounds of the
+actual packet.
 
-So, this fix changes CPU to return to 'WAIT_CLOCKED'.
+To prevent any potential leak of heap memory, it is enough to check that
+the resulting len calculation after calling l2cap_get_conf_opt is not
+below zero. A well formed packet will always return >= 0 here and will
+end with the length value being zero after the last option has been
+parsed. In case of malformed packets messing with the opt->len field the
+length value will become negative. If that is the case, then just abort
+and ignore the option.
 
-Signed-off-by: Kohji Okuno <okuno.kohji@jp.panasonic.com>
-Fixes: e5f9dec8ff5f ("ARM: imx6q: support WAIT mode using cpuidle")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+In case an attacker uses a too short opt->len value, then garbage will
+be parsed, but that is protected by the unknown option handling and also
+the option parameter size checks.
+
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-imx/cpuidle-imx6q.c |   27 ++++++++++-----------------
- 1 file changed, 10 insertions(+), 17 deletions(-)
+ net/bluetooth/l2cap_core.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/arm/mach-imx/cpuidle-imx6q.c
-+++ b/arch/arm/mach-imx/cpuidle-imx6q.c
-@@ -16,30 +16,23 @@
- #include "cpuidle.h"
- #include "hardware.h"
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -3326,6 +3326,8 @@ static int l2cap_parse_conf_req(struct l
  
--static atomic_t master = ATOMIC_INIT(0);
--static DEFINE_SPINLOCK(master_lock);
-+static int num_idle_cpus = 0;
-+static DEFINE_SPINLOCK(cpuidle_lock);
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&req, &type, &olen, &val);
++		if (len < 0)
++			break;
  
- static int imx6q_enter_wait(struct cpuidle_device *dev,
- 			    struct cpuidle_driver *drv, int index)
- {
--	if (atomic_inc_return(&master) == num_online_cpus()) {
--		/*
--		 * With this lock, we prevent other cpu to exit and enter
--		 * this function again and become the master.
--		 */
--		if (!spin_trylock(&master_lock))
--			goto idle;
-+	spin_lock(&cpuidle_lock);
-+	if (++num_idle_cpus == num_online_cpus())
- 		imx6_set_lpm(WAIT_UNCLOCKED);
--		cpu_do_idle();
--		imx6_set_lpm(WAIT_CLOCKED);
--		spin_unlock(&master_lock);
--		goto done;
--	}
-+	spin_unlock(&cpuidle_lock);
+ 		hint  = type & L2CAP_CONF_HINT;
+ 		type &= L2CAP_CONF_MASK;
+@@ -3544,6 +3546,8 @@ static int l2cap_parse_conf_rsp(struct l
  
--idle:
- 	cpu_do_idle();
--done:
--	atomic_dec(&master);
-+
-+	spin_lock(&cpuidle_lock);
-+	if (num_idle_cpus-- == num_online_cpus())
-+		imx6_set_lpm(WAIT_CLOCKED);
-+	spin_unlock(&cpuidle_lock);
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
++		if (len < 0)
++			break;
  
- 	return index;
- }
+ 		switch (type) {
+ 		case L2CAP_CONF_MTU:
+@@ -3729,6 +3733,8 @@ static void l2cap_conf_rfc_get(struct l2
+ 
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
++		if (len < 0)
++			break;
+ 
+ 		switch (type) {
+ 		case L2CAP_CONF_RFC:
 
 
