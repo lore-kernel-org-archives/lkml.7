@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FF5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A0FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968DD206DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B355520856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139372;
-	bh=EeLiKeyasPTnJtvs+o3NG8YvkitM+GWen6JX2rK4zIs=;
+	s=default; t=1554139375;
+	bh=LSrU1hhl2bvY4QjfwcmskCaDdGsX5kWruaQBSfIY/ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DFIuq2EdSk2NCV33AfMc47mkUe5e0m5JCvUCqGCNPi+dW+bFxfVYl5C85+NMeKyb+
-	 ylMn+4gWrJWNCHwDevyr5P7nsyRbNavEuwv+3p5GNi9h6VsP7bDiIhWaAUbfZCPnog
-	 QN/O1uORqgUkEfmej2uGJpKjrH/oPEF4Icvla8Nw=
+	b=JLXusWG8tndDat+W6llD9Jf/fZsqV1jtPt8fAGn/STDW9FdAhumd3Ewyf8JYyzHrz
+	 ZtR4eNC8iFW/GNuu5wtjJQAesZBNe2jnzAHXjo8CMbI/SxWdKam7GOAinZ1FHsaFNV
+	 lcC6cvo30HQPHZl8H7P5HsqcpzaQ85zjTRnj6OMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732024AbfDARWu (ORCPT
+        id S1732031AbfDARWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:22:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52214 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:22:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731595AbfDARWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:22:46 -0400
+        id S1731591AbfDARWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:22:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87074206C0;
-        Mon,  1 Apr 2019 17:22:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42B58206C0;
+        Mon,  1 Apr 2019 17:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139365;
-        bh=EeLiKeyasPTnJtvs+o3NG8YvkitM+GWen6JX2rK4zIs=;
+        s=default; t=1554139371;
+        bh=LSrU1hhl2bvY4QjfwcmskCaDdGsX5kWruaQBSfIY/ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MI1lBmpYV7Pms3Pl8Ts6oFwTw/c/f+QP/U6hioDggj9E30IuEdhg/dxnYms+2Eh/w
-         D+A/NVTx61JvKuLp3rfBIq619YMVzWocm2Q5RBtwKdTrOMFQFxgVRYRDj2IALi+l6k
-         kgvGyO4O9yBewny6cnDl7ik7/GkOXniWYd9z1pWM=
+        b=u/UMcqmfcf62fU01+8b3HdwkcSQI9jtLFLA6jM+RtpiVyEWacVNMWwjNCPgRzcO35
+         U9P3vA1ThwBtlTC0gFv7moqumwx24ei86NC22v4K9BOFeUlKkr5cV18FOcT8Y4Frvi
+         PUe5pvzE+1evw7rZdcBgQoOm861UYzmDv+ojuOjs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Neuling <mikey@neuling.org>,
-        Diana Craciun <diana.craciun@nxp.com>
-Subject: [PATCH 4.14 055/107] powerpc/security: Fix spectre_v2 reporting
-Date:   Mon,  1 Apr 2019 19:02:10 +0200
-Message-Id: <20190401170050.774995185@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 057/107] btrfs: remove WARN_ON in log_dir_items
+Date:   Mon,  1 Apr 2019 19:02:12 +0200
+Message-Id: <20190401170050.958157155@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -66,86 +66,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 92edf8df0ff2ae86cc632eeca0e651fd8431d40d upstream.
+commit 2cc8334270e281815c3850c3adea363c51f21e0d upstream.
 
-When I updated the spectre_v2 reporting to handle software count cache
-flush I got the logic wrong when there's no software count cache
-enabled at all.
+When Filipe added the recursive directory logging stuff in
+2f2ff0ee5e430 ("Btrfs: fix metadata inconsistencies after directory
+fsync") he specifically didn't take the directory i_mutex for the
+children directories that we need to log because of lockdep.  This is
+generally fine, but can lead to this WARN_ON() tripping if we happen to
+run delayed deletion's in between our first search and our second search
+of dir_item/dir_indexes for this directory.  We expect this to happen,
+so the WARN_ON() isn't necessary.  Drop the WARN_ON() and add a comment
+so we know why this case can happen.
 
-The result is that on systems with the software count cache flush
-disabled we print:
-
-  Mitigation: Indirect branch cache disabled, Software count cache flush
-
-Which correctly indicates that the count cache is disabled, but
-incorrectly says the software count cache flush is enabled.
-
-The root of the problem is that we are trying to handle all
-combinations of options. But we know now that we only expect to see
-the software count cache flush enabled if the other options are false.
-
-So split the two cases, which simplifies the logic and fixes the bug.
-We were also missing a space before "(hardware accelerated)".
-
-The result is we see one of:
-
-  Mitigation: Indirect branch serialisation (kernel only)
-  Mitigation: Indirect branch cache disabled
-  Mitigation: Software count cache flush
-  Mitigation: Software count cache flush (hardware accelerated)
-
-Fixes: ee13cb249fab ("powerpc/64s: Add support for software count cache flush")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Michael Neuling <mikey@neuling.org>
-Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/powerpc/kernel/security.c |   23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
 
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -189,29 +189,22 @@ ssize_t cpu_show_spectre_v2(struct devic
- 	bcs = security_ftr_enabled(SEC_FTR_BCCTRL_SERIALISED);
- 	ccd = security_ftr_enabled(SEC_FTR_COUNT_CACHE_DISABLED);
+---
+ fs/btrfs/tree-log.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -3422,9 +3422,16 @@ static noinline int log_dir_items(struct
+ 	}
+ 	btrfs_release_path(path);
  
--	if (bcs || ccd || count_cache_flush_type != COUNT_CACHE_FLUSH_NONE) {
--		bool comma = false;
-+	if (bcs || ccd) {
- 		seq_buf_printf(&s, "Mitigation: ");
+-	/* find the first key from this transaction again */
++	/*
++	 * Find the first key from this transaction again.  See the note for
++	 * log_new_dir_dentries, if we're logging a directory recursively we
++	 * won't be holding its i_mutex, which means we can modify the directory
++	 * while we're logging it.  If we remove an entry between our first
++	 * search and this search we'll not find the key again and can just
++	 * bail.
++	 */
+ 	ret = btrfs_search_slot(NULL, root, &min_key, path, 0, 0);
+-	if (WARN_ON(ret != 0))
++	if (ret != 0)
+ 		goto done;
  
--		if (bcs) {
-+		if (bcs)
- 			seq_buf_printf(&s, "Indirect branch serialisation (kernel only)");
--			comma = true;
--		}
- 
--		if (ccd) {
--			if (comma)
--				seq_buf_printf(&s, ", ");
--			seq_buf_printf(&s, "Indirect branch cache disabled");
--			comma = true;
--		}
--
--		if (comma)
-+		if (bcs && ccd)
- 			seq_buf_printf(&s, ", ");
- 
--		seq_buf_printf(&s, "Software count cache flush");
-+		if (ccd)
-+			seq_buf_printf(&s, "Indirect branch cache disabled");
-+	} else if (count_cache_flush_type != COUNT_CACHE_FLUSH_NONE) {
-+		seq_buf_printf(&s, "Mitigation: Software count cache flush");
- 
- 		if (count_cache_flush_type == COUNT_CACHE_FLUSH_HW)
--			seq_buf_printf(&s, "(hardware accelerated)");
-+			seq_buf_printf(&s, " (hardware accelerated)");
- 	} else if (btb_flush_enabled) {
- 		seq_buf_printf(&s, "Mitigation: Branch predictor state flush");
- 	} else {
+ 	/*
 
 
