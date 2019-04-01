@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA65AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2F7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F26121924
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCBE21924
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138767;
-	bh=GH7E+f7KY76MDmFEHeMb1svKjBSzWy6/hgutzLKMiJ4=;
+	s=default; t=1554138769;
+	bh=aNJBgrT22EzxzldeQm8oy/kNQC5qcWl+4F0MKwA2+Hg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xmb5yKbIeLxhyalbAP5PhC9qbEHMvpgwiKze4Vwjh1PtYjVMbu7loJ9rAYQfUz1Zg
-	 +gbmuwzUYEjkDtq3KdHvFH/fLhGXA2LDT4Gd9nejfbV0K8LMkwBubOKR5nvO340DeC
-	 SYZwtKGO315G03hxNM3dWuuu6b1LTcxeG6HloApg=
+	b=Lx+0uxpQczYMkK1OK4IJx58PhSRIxqw+UrM7EuizUWsp/rTFOs64sR9GjWmEgs/zg
+	 qywda4wgEW5VcFaZ/yqJaWutTtApXhM2KECIGlmQ1Ba7hmUX8bEFprp3NhMNAZi8rL
+	 sJvIOYRCcNGBvpB4nMX1EAU+67mqnjMEL4pU1ANk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbfDARMq (ORCPT
+        id S1729808AbfDARMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:12:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34524 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:12:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730397AbfDARMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:12:44 -0400
+        id S1730399AbfDARMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:12:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 447CF21924;
-        Mon,  1 Apr 2019 17:12:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 006BF21925;
+        Mon,  1 Apr 2019 17:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138762;
-        bh=GH7E+f7KY76MDmFEHeMb1svKjBSzWy6/hgutzLKMiJ4=;
+        s=default; t=1554138765;
+        bh=aNJBgrT22EzxzldeQm8oy/kNQC5qcWl+4F0MKwA2+Hg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QVE2CpPCmL6H1swbUGHa5PIakTQ6yJQinl12zgeqcGZI0SoXiaxHk6NBXb5ThfBpW
-         /RcZPmKnd84GwORdZXaU+TLwIXQDH1y4UKJJb1jh7zBpF7NbsSQWzuTnmJ292qP04a
-         jKKJmka5Ln849fLnIjZ6ZO9bZH8W6mh1cCxhZYC8=
+        b=m8+EejilYH8LcvDnigooaGOuwhG44EIRvOynBNM4ElSbbrLubsXtAJo9CYZ8CU3YY
+         gYGLzAz5FnntnSwFH40ujs0Aakvzb/kz23MO3bF/icPCih2vfUq/R5TgIE3rbJ2SQV
+         hO3l5JpOYZ5Ivmsq6Lq4OJfOYRwsOrd87Z6y4NmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Jose Abreu <joabreu@synopsys.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 014/134] net: rose: fix a possible stack overflow
-Date:   Mon,  1 Apr 2019 19:00:50 +0200
-Message-Id: <20190401170045.643085777@linuxfoundation.org>
+Subject: [PATCH 4.19 015/134] net: stmmac: fix memory corruption with large MTUs
+Date:   Mon,  1 Apr 2019 19:00:51 +0200
+Message-Id: <20190401170045.735745574@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,131 +66,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-[ Upstream commit e5dcc0c3223c45c94100f05f28d8ef814db3d82c ]
+[ Upstream commit 223a960c01227e4dbcb6f9fa06b47d73bda21274 ]
 
-rose_write_internal() uses a temp buffer of 100 bytes, but a manual
-inspection showed that given arbitrary input, rose_create_facilities()
-can fill up to 110 bytes.
+When using 16K DMA buffers and ring mode, the DES3 refill is not working
+correctly as the function is using a bogus pointer for checking the
+private data. As a result stale pointers will remain in the RX descriptor
+ring, so DMA will now likely overwrite/corrupt some already freed memory.
 
-Lets use a tailroom of 256 bytes for peace of mind, and remove
-the bounce buffer : we can simply allocate a big enough skb
-and adjust its length as needed.
+As simple reproducer, just receive some UDP traffic:
 
-syzbot report :
+	# ifconfig eth0 down; ifconfig eth0 mtu 9000; ifconfig eth0 up
+	# iperf3 -c 192.168.253.40 -u -b 0 -R
 
-BUG: KASAN: stack-out-of-bounds in memcpy include/linux/string.h:352 [inline]
-BUG: KASAN: stack-out-of-bounds in rose_create_facilities net/rose/rose_subr.c:521 [inline]
-BUG: KASAN: stack-out-of-bounds in rose_write_internal+0x597/0x15d0 net/rose/rose_subr.c:116
-Write of size 7 at addr ffff88808b1ffbef by task syz-executor.0/24854
+If you didn't crash by now check the RX descriptors to find non-contiguous
+RX buffers:
 
-CPU: 0 PID: 24854 Comm: syz-executor.0 Not tainted 5.0.0+ #97
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
- kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
- check_memory_region_inline mm/kasan/generic.c:185 [inline]
- check_memory_region+0x123/0x190 mm/kasan/generic.c:191
- memcpy+0x38/0x50 mm/kasan/common.c:131
- memcpy include/linux/string.h:352 [inline]
- rose_create_facilities net/rose/rose_subr.c:521 [inline]
- rose_write_internal+0x597/0x15d0 net/rose/rose_subr.c:116
- rose_connect+0x7cb/0x1510 net/rose/af_rose.c:826
- __sys_connect+0x266/0x330 net/socket.c:1685
- __do_sys_connect net/socket.c:1696 [inline]
- __se_sys_connect net/socket.c:1693 [inline]
- __x64_sys_connect+0x73/0xb0 net/socket.c:1693
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458079
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f47b8d9dc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458079
-RDX: 000000000000001c RSI: 0000000020000040 RDI: 0000000000000004
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f47b8d9e6d4
-R13: 00000000004be4a4 R14: 00000000004ceca8 R15: 00000000ffffffff
+	cat /sys/kernel/debug/stmmaceth/eth0/descriptors_status
+	[...]
+	1 [0x2be5020]: 0xa3220321 0x9ffc1ffc 0x72d70082 0x130e207e
+					     ^^^^^^^^^^^^^^^^^^^^^
+	2 [0x2be5040]: 0xa3220321 0x9ffc1ffc 0x72998082 0x1311a07e
+					     ^^^^^^^^^^^^^^^^^^^^^
 
-The buggy address belongs to the page:
-page:ffffea00022c7fc0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0x1fffc0000000000()
-raw: 01fffc0000000000 0000000000000000 ffffffff022c0101 0000000000000000
-raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+A simple ping test will now report bad data:
 
-Memory state around the buggy address:
- ffff88808b1ffa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88808b1ffb00: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 00 00 00 03
->ffff88808b1ffb80: f2 f2 00 00 00 00 00 00 00 00 00 00 00 00 04 f3
-                                                             ^
- ffff88808b1ffc00: f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88808b1ffc80: 00 00 00 00 00 00 00 f1 f1 f1 f1 f1 f1 01 f2 01
+	# ping -s 8200 192.168.253.40
+	PING 192.168.253.40 (192.168.253.40) 8200(8228) bytes of data.
+	8208 bytes from 192.168.253.40: icmp_seq=1 ttl=64 time=1.00 ms
+	wrong data byte #8144 should be 0xd0 but was 0x88
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fix the wrong pointer. Also we must refill DES3 only if the DMA buffer
+size is 16K.
+
+Fixes: 54139cf3bb33 ("net: stmmac: adding multiple buffers for rx")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Acked-by: Jose Abreu <joabreu@synopsys.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rose/rose_subr.c |   21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/ring_mode.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/rose/rose_subr.c
-+++ b/net/rose/rose_subr.c
-@@ -105,16 +105,17 @@ void rose_write_internal(struct sock *sk
- 	struct sk_buff *skb;
- 	unsigned char  *dptr;
- 	unsigned char  lci1, lci2;
--	char buffer[100];
--	int len, faclen = 0;
-+	int maxfaclen = 0;
-+	int len, faclen;
-+	int reserve;
+--- a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
++++ b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
+@@ -111,10 +111,11 @@ static unsigned int is_jumbo_frm(int len
  
--	len = AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + ROSE_MIN_LEN + 1;
-+	reserve = AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + 1;
-+	len = ROSE_MIN_LEN;
+ static void refill_desc3(void *priv_ptr, struct dma_desc *p)
+ {
+-	struct stmmac_priv *priv = (struct stmmac_priv *)priv_ptr;
++	struct stmmac_rx_queue *rx_q = priv_ptr;
++	struct stmmac_priv *priv = rx_q->priv_data;
  
- 	switch (frametype) {
- 	case ROSE_CALL_REQUEST:
- 		len   += 1 + ROSE_ADDR_LEN + ROSE_ADDR_LEN;
--		faclen = rose_create_facilities(buffer, rose);
--		len   += faclen;
-+		maxfaclen = 256;
- 		break;
- 	case ROSE_CALL_ACCEPTED:
- 	case ROSE_CLEAR_REQUEST:
-@@ -123,15 +124,16 @@ void rose_write_internal(struct sock *sk
- 		break;
- 	}
- 
--	if ((skb = alloc_skb(len, GFP_ATOMIC)) == NULL)
-+	skb = alloc_skb(reserve + len + maxfaclen, GFP_ATOMIC);
-+	if (!skb)
- 		return;
- 
- 	/*
- 	 *	Space for AX.25 header and PID.
- 	 */
--	skb_reserve(skb, AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + 1);
-+	skb_reserve(skb, reserve);
- 
--	dptr = skb_put(skb, skb_tailroom(skb));
-+	dptr = skb_put(skb, len);
- 
- 	lci1 = (rose->lci >> 8) & 0x0F;
- 	lci2 = (rose->lci >> 0) & 0xFF;
-@@ -146,7 +148,8 @@ void rose_write_internal(struct sock *sk
- 		dptr   += ROSE_ADDR_LEN;
- 		memcpy(dptr, &rose->source_addr, ROSE_ADDR_LEN);
- 		dptr   += ROSE_ADDR_LEN;
--		memcpy(dptr, buffer, faclen);
-+		faclen = rose_create_facilities(dptr, rose);
-+		skb_put(skb, faclen);
- 		dptr   += faclen;
- 		break;
+ 	/* Fill DES3 in case of RING mode */
+-	if (priv->dma_buf_sz >= BUF_SIZE_8KiB)
++	if (priv->dma_buf_sz == BUF_SIZE_16KiB)
+ 		p->des3 = cpu_to_le32(le32_to_cpu(p->des2) + BUF_SIZE_8KiB);
+ }
  
 
 
