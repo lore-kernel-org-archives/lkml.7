@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FE9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C778C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DED52190A
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194722070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140279;
-	bh=ufH+x/+dAcNOsHwkVNB/ZQfUcn5BVB3+ZJDKwsev3xo=;
+	s=default; t=1554140281;
+	bh=DE7BFBXdwc8kLsOo2gPx1/9Wfl0HiaSUcDV36wrhcsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SoUN3BBgFfzk7aNyIFkpdCATcw+DIfn0HkdwaZmtA9yUCd4rkPGcUr67MVd8f3edz
-	 u93WbViUHjzI79Fr03tQk2FsWfDf6KIVLDxdc3xBpXn7rkULX0rvLPKa1CrZNhIX6Q
-	 9OxvPS3qM6LwMXrZVylWhMAHfFkSCJvrl4VEPp84=
+	b=R3S2LENMKpVZlZH/QopIZMw+zMTI8HSmrRMv1RMIzlZx8kGcms1VZgMDymXTYaSvF
+	 5AsC2DODSp7nP0uXS5PA/dC64F8nmx8SN+20D5j4y0aODTpGi/qlvOuQ+nz6/mDST9
+	 hbZhzPjrU9XLQTm6O9/9JJQ9IMae2ATlMhBGitq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388269AbfDARh6 (ORCPT
+        id S2388276AbfDARh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50876 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:37:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388021AbfDARhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:37:53 -0400
+        id S2388252AbfDARh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:37:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C30582070B;
-        Mon,  1 Apr 2019 17:37:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73EB920896;
+        Mon,  1 Apr 2019 17:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140273;
-        bh=ufH+x/+dAcNOsHwkVNB/ZQfUcn5BVB3+ZJDKwsev3xo=;
+        s=default; t=1554140275;
+        bh=DE7BFBXdwc8kLsOo2gPx1/9Wfl0HiaSUcDV36wrhcsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vg1Nkdyq/HniTn76xjMNuInrizOXK2JwUUgPu80xzAE4mlCKhIMeLRgtP4lr1Xpqq
-         ZgEkUy7rqv0A9MJIKXGNRHtOEMdLwiB0nknEkZ8UTLX54+9qnnp1Z/LzT+i9PmhSw6
-         ncqhkGFPH9jF3TKSSDMT64PurPcZy6BfKJIQbEu0=
+        b=oYKL+6H74bc3HzIFlM4eZ6AS87o+FOddjv42lJHRnnxmmRN1VzCK2HkBX7gnU4CYr
+         RLi2MLfTXGvGHm54Z1KhLhvwoPOZ4OYk1dDbp4lRoLZ5yc67HBa6CuW3VCN4YFslMK
+         7Btvp107XE7bk/h54WyFJJpIwwTpV/WaeXQ/F6E0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 26/50] mmc: mmc: fix switch timeout issue caused by jiffies precision
-Date:   Mon,  1 Apr 2019 19:03:09 +0200
-Message-Id: <20190401170044.200076740@linuxfoundation.org>
+Subject: [PATCH 3.18 27/50] cfg80211: size various nl80211 messages correctly
+Date:   Mon,  1 Apr 2019 19:03:10 +0200
+Message-Id: <20190401170044.289549808@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -66,32 +65,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 987aa5f8059613bf85cbb6f64ffbd34f5cb7a9d1 ]
+[ Upstream commit 4ef8c1c93f848e360754f10eb2e7134c872b6597 ]
 
-with CONFIG_HZ=100, the precision of jiffies is 10ms, and the
-generic_cmd6_time of some card is also 10ms. then, may be current
-time is only 5ms, but already timed out caused by jiffies precision.
+Ilan reported that sometimes nl80211 messages weren't working if
+the frames being transported got very large, which was really a
+problem for userspace-to-kernel messages, but prompted me to look
+at the code.
 
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Upon review, I found various places where variable-length data is
+transported in an nl80211 message but the message isn't allocated
+taking that into account. This shouldn't cause any problems since
+the frames aren't really that long, apart in one place where two
+(possibly very long frames) might not fit.
+
+Fix all the places (that I found) that get variable length data
+from the driver and put it into a message to take the length of
+the variable data into account. The 100 there is just a safe
+constant for the remaining message overhead (it's usually around
+50 for most messages.)
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/mmc_ops.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/wireless/nl80211.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
-index 7911e0510a1d..16a39a8d2e7e 100644
---- a/drivers/mmc/core/mmc_ops.c
-+++ b/drivers/mmc/core/mmc_ops.c
-@@ -490,7 +490,7 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
- 		timeout_ms = MMC_OPS_TIMEOUT_MS;
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 2e1633ac93f7..800ef920b4f6 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -10586,7 +10586,7 @@ static void nl80211_send_mlme_event(struct cfg80211_registered_device *rdev,
+ 	struct sk_buff *msg;
+ 	void *hdr;
  
- 	/* Must check status to be sure of no errors. */
--	timeout = jiffies + msecs_to_jiffies(timeout_ms);
-+	timeout = jiffies + msecs_to_jiffies(timeout_ms) + 1;
- 	do {
- 		if (send_status) {
- 			err = __mmc_send_status(card, &status, ignore_crc);
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + len, gfp);
+ 	if (!msg)
+ 		return;
+ 
+@@ -10738,7 +10738,7 @@ void nl80211_send_connect_result(struct cfg80211_registered_device *rdev,
+ 	struct sk_buff *msg;
+ 	void *hdr;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + req_ie_len + resp_ie_len, gfp);
+ 	if (!msg)
+ 		return;
+ 
+@@ -10778,7 +10778,7 @@ void nl80211_send_roamed(struct cfg80211_registered_device *rdev,
+ 	struct sk_buff *msg;
+ 	void *hdr;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + req_ie_len + resp_ie_len, gfp);
+ 	if (!msg)
+ 		return;
+ 
+@@ -10816,7 +10816,7 @@ void nl80211_send_disconnected(struct cfg80211_registered_device *rdev,
+ 	struct sk_buff *msg;
+ 	void *hdr;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
++	msg = nlmsg_new(100 + ie_len, GFP_KERNEL);
+ 	if (!msg)
+ 		return;
+ 
+@@ -10893,7 +10893,7 @@ void cfg80211_notify_new_peer_candidate(struct net_device *dev, const u8 *addr,
+ 
+ 	trace_cfg80211_notify_new_peer_candidate(dev, addr);
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + ie_len, gfp);
+ 	if (!msg)
+ 		return;
+ 
+@@ -11269,7 +11269,7 @@ int nl80211_send_mgmt(struct cfg80211_registered_device *rdev,
+ 	struct sk_buff *msg;
+ 	void *hdr;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + len, gfp);
+ 	if (!msg)
+ 		return -ENOMEM;
+ 
+@@ -11312,7 +11312,7 @@ void cfg80211_mgmt_tx_status(struct wireless_dev *wdev, u64 cookie,
+ 
+ 	trace_cfg80211_mgmt_tx_status(wdev, cookie, ack);
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + len, gfp);
+ 	if (!msg)
+ 		return;
+ 
+@@ -12022,7 +12022,7 @@ void cfg80211_ft_event(struct net_device *netdev,
+ 	if (!ft_event->target_ap)
+ 		return;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
++	msg = nlmsg_new(100 + ft_event->ric_ies_len, GFP_KERNEL);
+ 	if (!msg)
+ 		return;
+ 
 -- 
 2.19.1
 
