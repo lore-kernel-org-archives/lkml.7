@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD05C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0956C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80FA20880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B783B20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140462;
-	bh=SnBNzHOKQuo0oxW5wCyDtQSNnJgPdJ14WIY/RbVw/g4=;
+	s=default; t=1554140467;
+	bh=dX2bB5lQZvnwJLR5PxLiWJ0eoWPOJCz9VYpYU2fm4HE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W8eWyE4dLnc6gsFAklgsD/o8GLNvo2f6mt9tY62cAMSqCuDdeYyg0m1oHgI1j2NhX
-	 WjpKDeLUsgTKw+HY3MKahm0jXvTV416NW6QZkznVbShowHQAwUSjh7+QKeL7MtYB/j
-	 XbyU1GeuaElDcO5Ei882W2XzhOjHNNj1ZiLkEvAM=
+	b=yb74Mhqedt6T6WsJgyPLweX8RP0A/sbIxtObKniBGqzfJOKOJ7ihV7IB+GzlNH8Cp
+	 8IZXuwFBJp0SN8RzEuz1Svpo4Mun4yUHma1/ZpWZvYrSQTgQLNqiWtvN27YZ7K69yP
+	 JKH71UztegWSyomYOIhBKO6Tj0Y8cnvdX2UPmgyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388244AbfDARlB (ORCPT
+        id S2387957AbfDARlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:41:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51848 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:41:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387468AbfDARib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:38:31 -0400
+        id S2387750AbfDARiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:38:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB14C20896;
-        Mon,  1 Apr 2019 17:38:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7D0120830;
+        Mon,  1 Apr 2019 17:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140310;
-        bh=SnBNzHOKQuo0oxW5wCyDtQSNnJgPdJ14WIY/RbVw/g4=;
+        s=default; t=1554140303;
+        bh=dX2bB5lQZvnwJLR5PxLiWJ0eoWPOJCz9VYpYU2fm4HE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wpdzZ2eqFUl1a5ORS9uJnazZbxMbA9VtgOw+i5vUbU5bk/sma6rJXhfydKQL9GHce
-         +6Ukz932f0vjFkgEDEze1ROcYBqiDRckCFF8Js99IIrOUhy/+HYo5Rt2fifrUAmNzv
-         k1Zb93m3AYEOK+d0c9Y1w+O6h468/zjxFH8KVTq8=
+        b=YG1PHxsN7HfJPiEC4Df98tci+bHC2Yoh6/vN0FO/E0wQE5X7bo0nxPo7BNO789BJo
+         gfh9w1qzyYONyotbjfuDDUgFUaVGzjt84gmliAGBiu+KEsbRE20ZVr8m/3mNQA0zaM
+         ejUt44RDQ0qh/XU4wxx64MTdkZXlvlUh2RzaN4rM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stan Johnson <userm57@yahoo.com>
-Subject: [PATCH 3.18 36/50] mac8390: Fix mmio access size probe
-Date:   Mon,  1 Apr 2019 19:03:19 +0200
-Message-Id: <20190401170045.108627526@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 3.18 34/50] tcp: do not use ipv6 header for ipv4 flow
+Date:   Mon,  1 Apr 2019 19:03:17 +0200
+Message-Id: <20190401170044.931641951@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -66,74 +65,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit bb9e5c5bcd76f4474eac3baf643d7a39f7bac7bb ]
+[ Upstream commit 89e4130939a20304f4059ab72179da81f5347528 ]
 
-The bug that Stan reported is as follows. After a restart, a 16-bit NIC
-may be incorrectly identified as a 32-bit NIC and stop working.
+When a dual stack tcp listener accepts an ipv4 flow,
+it should not attempt to use an ipv6 header or tcp_v6_iif() helper.
 
-mac8390 slot.E: Memory length resource not found, probing
-mac8390 slot.E: Farallon EtherMac II-C (type farallon)
-mac8390 slot.E: MAC 00:00:c5:30:c2:99, IRQ 61, 32 KB shared memory at 0xfeed0000, 32-bit access.
-
-The bug never arises after a cold start and only intermittently after a
-warm start. (I didn't investigate why the bug is intermittent.)
-
-It turns out that memcpy_toio() is deprecated and memcmp_withio() also
-has issues. Replacing these calls with mmio accessors fixes the problem.
-
-Reported-and-tested-by: Stan Johnson <userm57@yahoo.com>
-Fixes: 2964db0f5904 ("m68k: Mac DP8390 update")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Fixes: 1397ed35f22d ("ipv6: add flowinfo for tcp6 pkt_options for all cases")
+Fixes: df3687ffc665 ("ipv6: add the IPV6_FL_F_REFLECT flag to IPV6_FL_A_GET")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/8390/mac8390.c |   19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ net/ipv6/tcp_ipv6.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/8390/mac8390.c
-+++ b/drivers/net/ethernet/8390/mac8390.c
-@@ -156,8 +156,6 @@ static void dayna_block_output(struct ne
- #define memcpy_fromio(a, b, c)	memcpy((a), (void *)(b), (c))
- #define memcpy_toio(a, b, c)	memcpy((void *)(a), (b), (c))
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -1118,11 +1118,11 @@ static struct sock *tcp_v6_syn_recv_sock
+ 		newnp->ipv6_fl_list = NULL;
+ 		newnp->pktoptions  = NULL;
+ 		newnp->opt	   = NULL;
+-		newnp->mcast_oif   = tcp_v6_iif(skb);
+-		newnp->mcast_hops  = ipv6_hdr(skb)->hop_limit;
+-		newnp->rcv_flowinfo = ip6_flowinfo(ipv6_hdr(skb));
++		newnp->mcast_oif   = inet_iif(skb);
++		newnp->mcast_hops  = ip_hdr(skb)->ttl;
++		newnp->rcv_flowinfo = 0;
+ 		if (np->repflow)
+-			newnp->flow_label = ip6_flowlabel(ipv6_hdr(skb));
++			newnp->flow_label = 0;
  
--#define memcmp_withio(a, b, c)	memcmp((a), (void *)(b), (c))
--
- /* Slow Sane (16-bit chunk memory read/write) Cabletron uses this */
- static void slow_sane_get_8390_hdr(struct net_device *dev,
- 				   struct e8390_pkt_hdr *hdr, int ring_page);
-@@ -237,19 +235,26 @@ static enum mac8390_type __init mac8390_
- 
- static enum mac8390_access __init mac8390_testio(volatile unsigned long membase)
- {
--	unsigned long outdata = 0xA5A0B5B0;
--	unsigned long indata =  0x00000000;
-+	u32 outdata = 0xA5A0B5B0;
-+	u32 indata = 0;
-+
- 	/* Try writing 32 bits */
--	memcpy_toio(membase, &outdata, 4);
--	/* Now compare them */
--	if (memcmp_withio(&outdata, membase, 4) == 0)
-+	nubus_writel(outdata, membase);
-+	/* Now read it back */
-+	indata = nubus_readl(membase);
-+	if (outdata == indata)
- 		return ACCESS_32;
-+
-+	outdata = 0xC5C0D5D0;
-+	indata = 0;
-+
- 	/* Write 16 bit output */
- 	word_memcpy_tocard(membase, &outdata, 4);
- 	/* Now read it back */
- 	word_memcpy_fromcard(&indata, membase, 4);
- 	if (outdata == indata)
- 		return ACCESS_16;
-+
- 	return ACCESS_UNKNOWN;
- }
- 
+ 		/*
+ 		 * No need to charge this sock to the relevant IPv6 refcnt debug socks count
 
 
