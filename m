@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83DFC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13ADC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770F120880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40BC20896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140227;
-	bh=54NHRBTHi2mywtT3rC7+tDwXZiWp/CR5dG/JQf7aVHk=;
+	s=default; t=1554140232;
+	bh=KvJGOXNkqUeEJ+FNtt4bRCBcA3Y1p9KJvuQz1VXooGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1yckxQXwoeZMhCCI2rD252HcvVaOSFnnFPLyyjBzf2peR01zBWYtM8MBr52GErirN
-	 0naB4Nn1X01pW4r6kO7TX2ge8xGHRsPHVuX2etlwNgtR4z64OK4yoFDS1LXUR6Dv8b
-	 nAx+yebnWXLXcG4qdmWZIZPFwGrdVZ3OWhNoMNzw=
+	b=osn/4sgyg4a8sPO9qYi6OYG4wCncoBvAT1aF3+Tx8VzLyWPScMeXFZ8EUHmXkYbe3
+	 4cTMnYCn3e48GQJwZvMit74gatq5Lco9pQtMbUZ5nntLnX5a5AHiQ6eKRj9HttRKA1
+	 CXY/OGkMYugfBjALv5zXlPEq5CTelktosp5c6H3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388127AbfDARhG (ORCPT
+        id S2388143AbfDARhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:37:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49198 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:37:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388118AbfDARhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:37:02 -0400
+        id S2388124AbfDARhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:37:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0931620830;
-        Mon,  1 Apr 2019 17:37:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9D0420896;
+        Mon,  1 Apr 2019 17:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140221;
-        bh=54NHRBTHi2mywtT3rC7+tDwXZiWp/CR5dG/JQf7aVHk=;
+        s=default; t=1554140228;
+        bh=KvJGOXNkqUeEJ+FNtt4bRCBcA3Y1p9KJvuQz1VXooGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oxzjw62xThY2xEP2TMvy/7yh1un95F35lhuxmXqo0O1Oo5uemhtSiX7lv+faF/mjM
-         dIUEYJHiSDO0HtMX0tIL3ngFM0znXpJWcpdB5S0+pFIQRsKXAViMp9MkEHFxGALAGi
-         o71UQyuAvaAuKEv6PP32+9CaFOIMkYaVvQQjm87I=
+        b=RmCO0q+niSTUOJXFAqMEdwBl0nzrmtzGMBrxdHAm34ilfpxY9shHah2QqY94dz4tB
+         LC06oNJS9tbdtIM7OvQdgVFPXB84z+DsAQ2mPe5gSyhNW/g5lK37KCuPQyH27/M71H
+         UgkPd+5vvYgTlqDZFh5/Sq8RYBBoHEuQdHbbQ9BQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen Jie <chenjie6@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>, dvhart@infradead.org,
-        peterz@infradead.org, zengweilin@huawei.com
-Subject: [PATCH 3.18 02/50] futex: Ensure that futex address is aligned in handle_futex_death()
-Date:   Mon,  1 Apr 2019 19:02:45 +0200
-Message-Id: <20190401170041.474419222@linuxfoundation.org>
+        stable@vger.kernel.org, Frank Sorenson <fsorenso@redhat.com>,
+        Lukas Czerner <lczerner@redhat.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 3.18 04/50] ext4: fix data corruption caused by unaligned direct AIO
+Date:   Mon,  1 Apr 2019 19:02:47 +0200
+Message-Id: <20190401170041.634242694@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -65,47 +65,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Chen Jie <chenjie6@huawei.com>
+From: Lukas Czerner <lczerner@redhat.com>
 
-commit 5a07168d8d89b00fe1760120714378175b3ef992 upstream.
+commit 372a03e01853f860560eade508794dd274e9b390 upstream.
 
-The futex code requires that the user space addresses of futexes are 32bit
-aligned. sys_futex() checks this in futex_get_keys() but the robust list
-code has no alignment check in place.
+Ext4 needs to serialize unaligned direct AIO because the zeroing of
+partial blocks of two competing unaligned AIOs can result in data
+corruption.
 
-As a consequence the kernel crashes on architectures with strict alignment
-requirements in handle_futex_death() when trying to cmpxchg() on an
-unaligned futex address which was retrieved from the robust list.
+However it decides not to serialize if the potentially unaligned aio is
+past i_size with the rationale that no pending writes are possible past
+i_size. Unfortunately if the i_size is not block aligned and the second
+unaligned write lands past i_size, but still into the same block, it has
+the potential of corrupting the previous unaligned write to the same
+block.
 
-[ tglx: Rewrote changelog, proper sizeof() based alignement check and add
-  	comment ]
+This is (very simplified) reproducer from Frank
 
-Fixes: 0771dfefc9e5 ("[PATCH] lightweight robust futexes: core")
-Signed-off-by: Chen Jie <chenjie6@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: <dvhart@infradead.org>
-Cc: <peterz@infradead.org>
-Cc: <zengweilin@huawei.com>
+    // 41472 = (10 * 4096) + 512
+    // 37376 = 41472 - 4096
+
+    ftruncate(fd, 41472);
+    io_prep_pwrite(iocbs[0], fd, buf[0], 4096, 37376);
+    io_prep_pwrite(iocbs[1], fd, buf[1], 4096, 41472);
+
+    io_submit(io_ctx, 1, &iocbs[1]);
+    io_submit(io_ctx, 1, &iocbs[2]);
+
+    io_getevents(io_ctx, 2, 2, events, NULL);
+
+Without this patch the 512B range from 40960 up to the start of the
+second unaligned write (41472) is going to be zeroed overwriting the data
+written by the first write. This is a data corruption.
+
+00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+*
+00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
+*
+0000a000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+*
+0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
+
+With this patch the data corruption is avoided because we will recognize
+the unaligned_aio and wait for the unwritten extent conversion.
+
+00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+*
+00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
+*
+0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
+*
+0000b200
+
+Reported-by: Frank Sorenson <fsorenso@redhat.com>
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: e9e3bcecf44c ("ext4: serialize unaligned asynchronous DIO")
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1552621478-119787-1-git-send-email-chenjie6@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/futex.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/ext4/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -2897,6 +2897,10 @@ int handle_futex_death(u32 __user *uaddr
- {
- 	u32 uval, uninitialized_var(nval), mval;
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -79,7 +79,7 @@ ext4_unaligned_aio(struct inode *inode,
+ 	struct super_block *sb = inode->i_sb;
+ 	int blockmask = sb->s_blocksize - 1;
  
-+	/* Futex address must be 32bit aligned */
-+	if ((((unsigned long)uaddr) % sizeof(*uaddr)) != 0)
-+		return -1;
-+
- retry:
- 	if (get_user(uval, uaddr))
- 		return -1;
+-	if (pos >= i_size_read(inode))
++	if (pos >= ALIGN(i_size_read(inode), sb->s_blocksize))
+ 		return 0;
+ 
+ 	if ((pos | iov_iter_alignment(from)) & blockmask)
 
 
