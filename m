@@ -2,54 +2,52 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E4CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4769C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B48520880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B62421852
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140189;
-	bh=uFkmO86BwOND/pQlE8dErLGSIvdi/3eIka1E5dSLFcU=;
+	s=default; t=1554140193;
+	bh=+wlI0cjVRmdgViN4LMhf10l9tXbJ2VWvTTUUzVZNKmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iWntsBQS1SHiXeatXoMOsPC4iC1lDWXU23VM2dahgaRwOJ5K68JO6+YL05YiNZLeH
-	 USVbcxxHybpgbiZl0+1beGFQAXyRvT4JPFt4I+0qz9BLz+M1+sTKSXZBGdKpnZcMa9
-	 CZp6YeJWePxmQf3w3atChlXKnEkgKI8uDqGoKo6A=
+	b=Cv+FSRWULNX+o3rJxfL8Ei4TL7oofKxaehSyQUW8yFjRxAVkg+f06fFBZDg9iVrFI
+	 GoR5iMc5uMJ5QoC5O4q/2s/sND+KxlQaVzeWEW8594k6CM63OLmWjwTlbEei1g7q/S
+	 eq1g7J8/x5Tm+AfXTJE7gVhTkg+gmFkFMjhCp3PU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388044AbfDARg1 (ORCPT
+        id S2388053AbfDARgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:36:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48086 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:36:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730921AbfDARgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:36:24 -0400
+        id S1733008AbfDARg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:36:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AF5820880;
-        Mon,  1 Apr 2019 17:36:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0000D20896;
+        Mon,  1 Apr 2019 17:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140183;
-        bh=uFkmO86BwOND/pQlE8dErLGSIvdi/3eIka1E5dSLFcU=;
+        s=default; t=1554140186;
+        bh=+wlI0cjVRmdgViN4LMhf10l9tXbJ2VWvTTUUzVZNKmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bS7c5dC0QBfpoW2DuizFA/Y3L5Y+cxJBNxO+BNqBRM/g3YCGETe/EC5tpRyTW9LJ3
-         YNDErA/2gpU2x7aThRSNAfKLBUaMMX3HSrShAufQIgX5sJ9xABRE5ZRtZ5JPXRdeKM
-         8VD0UH8VN5wIK6A0RsijucaUgLzpLUaoGbjceN8w=
+        b=oyyKWTSb/9w1NJIUYRIVLsASIM+n21hdiS74R1S3IZXr7Kn0AQNpjhpHHAoblcPDK
+         Lya04MBQq7WNCQsTGgRPUTx6JRLhJzjQBmf19SL/dg/YKS/cTKclENrtgvAtigc1+G
+         7CAswOqpewuHGVeimhKHcXRP2L6nyE506xA1IFUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 131/131] stm class: Hide STM-specific options if STM is disabled
-Date:   Mon,  1 Apr 2019 19:03:21 +0200
-Message-Id: <20190401170102.337774778@linuxfoundation.org>
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 4.4 123/131] gpio: adnp: Fix testing wrong value in adnp_gpio_direction_input
+Date:   Mon,  1 Apr 2019 19:03:13 +0200
+Message-Id: <20190401170101.777486796@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -68,42 +66,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4a2e2b19f96acfc037a9773c7729d133ce1e7e3b ]
+From: Axel Lin <axel.lin@ingics.com>
 
-If STM=n, it doesn't make sense to ask about STM_DUMMY and
-STM_SOURCE_CONSOLE support, which are not even built when enabled
-anyway. Hence hide these options if STM=n.
+commit c5bc6e526d3f217ed2cc3681d256dc4a2af4cc2b upstream.
 
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Current code test wrong value so it does not verify if the written
+data is correctly read back. Fix it.
+Also make it return -EPERM if read value does not match written bit,
+just like it done for adnp_gpio_direction_output().
+
+Fixes: 5e969a401a01 ("gpio: Add Avionic Design N-bit GPIO expander support")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Reviewed-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/hwtracing/stm/Kconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpio/gpio-adnp.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwtracing/stm/Kconfig b/drivers/hwtracing/stm/Kconfig
-index e7a348807f0c..e0ac75395526 100644
---- a/drivers/hwtracing/stm/Kconfig
-+++ b/drivers/hwtracing/stm/Kconfig
-@@ -9,6 +9,8 @@ config STM
+--- a/drivers/gpio/gpio-adnp.c
++++ b/drivers/gpio/gpio-adnp.c
+@@ -137,8 +137,10 @@ static int adnp_gpio_direction_input(str
+ 	if (err < 0)
+ 		goto out;
  
- 	  Say Y here to enable System Trace Module device support.
+-	if (err & BIT(pos))
+-		err = -EACCES;
++	if (value & BIT(pos)) {
++		err = -EPERM;
++		goto out;
++	}
  
-+if STM
-+
- config STM_DUMMY
- 	tristate "Dummy STM driver"
- 	help
-@@ -25,3 +27,5 @@ config STM_SOURCE_CONSOLE
+ 	err = 0;
  
- 	  If you want to send kernel console messages over STM devices,
- 	  say Y.
-+
-+endif
--- 
-2.19.1
-
 
 
