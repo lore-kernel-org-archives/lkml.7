@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AC0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E88FAC10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB1752063F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4BA21900
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139664;
-	bh=DGP/tI4HlW8oxP54t/O7Jm/PBmgCrFoWHM+FrOMatn4=;
+	s=default; t=1554139668;
+	bh=9ho2BIPOAZ9w85tJgHiH9+fpSdRkJa5Jayxrw4tIlM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aAfg5qVhOWtOryEaOrwVztFrYtrfk3wWg9/Xx6XW72LiuapRvH7RYzdltwAAqctwL
-	 wUkIs7LRCh75lXzzPZYaq5iuBWEe7KtlFSxABRJqQ6Pkt2hloktIT0BbAUvclUTFcY
-	 T9nyfLqRp6ufKRD4x1aFsFgwpB/r6O5miGDZifyg=
+	b=a21Xd7FKQJfElEVK4cjg1cd63ZPvvBFhMqXL2ymu60v06lzWlqwvI7RmkcIcn0uL6
+	 JUwxfRfrVU2zN5RdcmumS4V/4E7C/SplPTs77/23up4lZmi6re/4zm4gYd4Oxjr9X4
+	 /jk8vrp7yvNFArDpeaHkyVM3/KkYKrmO1bgyhKy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732696AbfDAR1n (ORCPT
+        id S1732703AbfDAR1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:27:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33028 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:27:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732687AbfDAR1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:27:39 -0400
+        id S1732252AbfDAR1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:27:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 529372063F;
-        Mon,  1 Apr 2019 17:27:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C07F2063F;
+        Mon,  1 Apr 2019 17:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139658;
-        bh=DGP/tI4HlW8oxP54t/O7Jm/PBmgCrFoWHM+FrOMatn4=;
+        s=default; t=1554139661;
+        bh=9ho2BIPOAZ9w85tJgHiH9+fpSdRkJa5Jayxrw4tIlM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QWWMc9wq0ph/jiJAL+FPJbouyYLQlm7gFyTDVbeW7TbWXTvrFkskt0pT66sQlN+Cz
-         JXTvMTAshQxkmJxhgjixIbmLDZ+L5PvVYSzFNBKf40MXxXe68U11KWP+E9MONgUoU9
-         ClWlKgTPzNAk4Y5hkl6nsfIOHNak8LPoNrsBpPWY=
+        b=lkqNBZ6/awDYxM3MnSMmRa9Rwo2jYKcPixNCpaO9zUAXNncnHdaS4GjPeIt5AuXiG
+         vX/h526XRo/xHRA8h0LPEsBfrK3EzFQpPH/mwq53N+eh4xjywju3ECyeJvX0y6oZbL
+         Su2dlgUkrQxTPmkNZusOI0orSsSxAkgRyE0tmP4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 31/56] scsi: zfcp: fix scsi_eh host reset with port_forced ERP for non-NPIV FCP devices
-Date:   Mon,  1 Apr 2019 19:02:47 +0200
-Message-Id: <20190401170105.637062745@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 04/56] cfg80211: size various nl80211 messages correctly
+Date:   Mon,  1 Apr 2019 19:02:20 +0200
+Message-Id: <20190401170103.718175610@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -67,94 +64,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steffen Maier <maier@linux.ibm.com>
+[ Upstream commit 4ef8c1c93f848e360754f10eb2e7134c872b6597 ]
 
-commit 242ec1455151267fe35a0834aa9038e4c4670884 upstream.
+Ilan reported that sometimes nl80211 messages weren't working if
+the frames being transported got very large, which was really a
+problem for userspace-to-kernel messages, but prompted me to look
+at the code.
 
-Suppose more than one non-NPIV FCP device is active on the same channel.
-Send I/O to storage and have some of the pending I/O run into a SCSI
-command timeout, e.g. due to bit errors on the fibre. Now the error
-situation stops. However, we saw FCP requests continue to timeout in the
-channel. The abort will be successful, but the subsequent TUR fails.
-Scsi_eh starts. The LUN reset fails. The target reset fails.  The host
-reset only did an FCP device recovery. However, for non-NPIV FCP devices,
-this does not close and reopen ports on the SAN-side if other non-NPIV FCP
-device(s) share the same open ports.
+Upon review, I found various places where variable-length data is
+transported in an nl80211 message but the message isn't allocated
+taking that into account. This shouldn't cause any problems since
+the frames aren't really that long, apart in one place where two
+(possibly very long frames) might not fit.
 
-In order to resolve the continuing FCP request timeouts, we need to
-explicitly close and reopen ports on the SAN-side.
+Fix all the places (that I found) that get variable length data
+from the driver and put it into a message to take the length of
+the variable data into account. The 100 there is just a safe
+constant for the remaining message overhead (it's usually around
+50 for most messages.)
 
-This was missing since the beginning of zfcp in v2.6.0 history commit
-ea127f975424 ("[PATCH] s390 (7/7): zfcp host adapter.").
-
-Note: The FSF requests for forced port reopen could run into FSF request
-timeouts due to other reasons. This would trigger an internal FCP device
-recovery. Pending forced port reopen recoveries would get dismissed. So
-some ports might not get fully reopened during this host reset handler.
-However, subsequent I/O would trigger the above described escalation and
-eventually all ports would be forced reopen to resolve any continuing FCP
-request timeouts due to earlier bit errors.
-
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: <stable@vger.kernel.org> #3.0+
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/s390/scsi/zfcp_erp.c  |   14 ++++++++++++++
- drivers/s390/scsi/zfcp_ext.h  |    2 ++
- drivers/s390/scsi/zfcp_scsi.c |    4 ++++
- 3 files changed, 20 insertions(+)
+ net/wireless/nl80211.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/s390/scsi/zfcp_erp.c
-+++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -652,6 +652,20 @@ static void zfcp_erp_strategy_memwait(st
- 	add_timer(&erp_action->timer);
- }
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -12942,7 +12942,7 @@ static void nl80211_send_mlme_event(stru
+ 	struct sk_buff *msg;
+ 	void *hdr;
  
-+void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
-+				     int clear, char *dbftag)
-+{
-+	unsigned long flags;
-+	struct zfcp_port *port;
-+
-+	write_lock_irqsave(&adapter->erp_lock, flags);
-+	read_lock(&adapter->port_list_lock);
-+	list_for_each_entry(port, &adapter->port_list, list)
-+		_zfcp_erp_port_forced_reopen(port, clear, dbftag);
-+	read_unlock(&adapter->port_list_lock);
-+	write_unlock_irqrestore(&adapter->erp_lock, flags);
-+}
-+
- static void _zfcp_erp_port_reopen_all(struct zfcp_adapter *adapter,
- 				      int clear, char *id)
- {
---- a/drivers/s390/scsi/zfcp_ext.h
-+++ b/drivers/s390/scsi/zfcp_ext.h
-@@ -68,6 +68,8 @@ extern void zfcp_erp_clear_port_status(s
- extern int  zfcp_erp_port_reopen(struct zfcp_port *, int, char *);
- extern void zfcp_erp_port_shutdown(struct zfcp_port *, int, char *);
- extern void zfcp_erp_port_forced_reopen(struct zfcp_port *, int, char *);
-+extern void zfcp_erp_port_forced_reopen_all(struct zfcp_adapter *adapter,
-+					    int clear, char *dbftag);
- extern void zfcp_erp_set_lun_status(struct scsi_device *, u32);
- extern void zfcp_erp_clear_lun_status(struct scsi_device *, u32);
- extern void zfcp_erp_lun_reopen(struct scsi_device *, int, char *);
---- a/drivers/s390/scsi/zfcp_scsi.c
-+++ b/drivers/s390/scsi/zfcp_scsi.c
-@@ -326,6 +326,10 @@ static int zfcp_scsi_eh_host_reset_handl
- 	struct zfcp_adapter *adapter = zfcp_sdev->port->adapter;
- 	int ret = SUCCESS, fc_ret;
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + len, gfp);
+ 	if (!msg)
+ 		return;
  
-+	if (!(adapter->connection_features & FSF_FEATURE_NPIV_MODE)) {
-+		zfcp_erp_port_forced_reopen_all(adapter, 0, "schrh_p");
-+		zfcp_erp_wait(adapter);
-+	}
- 	zfcp_erp_adapter_reopen(adapter, 0, "schrh_1");
- 	zfcp_erp_wait(adapter);
- 	fc_ret = fc_block_scsi_eh(scpnt);
+@@ -13094,7 +13094,7 @@ void nl80211_send_connect_result(struct
+ 	struct sk_buff *msg;
+ 	void *hdr;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + req_ie_len + resp_ie_len, gfp);
+ 	if (!msg)
+ 		return;
+ 
+@@ -13136,7 +13136,7 @@ void nl80211_send_roamed(struct cfg80211
+ 	struct sk_buff *msg;
+ 	void *hdr;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + req_ie_len + resp_ie_len, gfp);
+ 	if (!msg)
+ 		return;
+ 
+@@ -13173,7 +13173,7 @@ void nl80211_send_disconnected(struct cf
+ 	struct sk_buff *msg;
+ 	void *hdr;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
++	msg = nlmsg_new(100 + ie_len, GFP_KERNEL);
+ 	if (!msg)
+ 		return;
+ 
+@@ -13249,7 +13249,7 @@ void cfg80211_notify_new_peer_candidate(
+ 
+ 	trace_cfg80211_notify_new_peer_candidate(dev, addr);
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + ie_len, gfp);
+ 	if (!msg)
+ 		return;
+ 
+@@ -13620,7 +13620,7 @@ int nl80211_send_mgmt(struct cfg80211_re
+ 	struct sk_buff *msg;
+ 	void *hdr;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + len, gfp);
+ 	if (!msg)
+ 		return -ENOMEM;
+ 
+@@ -13664,7 +13664,7 @@ void cfg80211_mgmt_tx_status(struct wire
+ 
+ 	trace_cfg80211_mgmt_tx_status(wdev, cookie, ack);
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	msg = nlmsg_new(100 + len, gfp);
+ 	if (!msg)
+ 		return;
+ 
+@@ -14473,7 +14473,7 @@ void cfg80211_ft_event(struct net_device
+ 	if (!ft_event->target_ap)
+ 		return;
+ 
+-	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
++	msg = nlmsg_new(100 + ft_event->ric_ies_len, GFP_KERNEL);
+ 	if (!msg)
+ 		return;
+ 
 
 
