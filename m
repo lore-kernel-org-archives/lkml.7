@@ -2,78 +2,109 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF41C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AD9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A61920883
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:20:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554128430;
-	bh=vHQMGRNUZk1EcNsloV1elZ3RHsCKrr/HuTo0oCJyBBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2qB9I8MZMnqj0Q69PTyQ71XF0Hy+jKlEh/mXjLBCgrR/V3oo66iLUb9PfmM0EXFpT
-	 BIxaDUK6urJm2OW0Wn4//GEM91XTjNyKH21XUSsLTfvI75ZIlC7x0/rstq+plmFac8
-	 hkSg6chL5NNuma9ux69bTrW3Cy9IvmzfFMFhyyyg=
+	by mail.kernel.org (Postfix) with ESMTP id 8401A2082C
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:22:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="usfbQ3i/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbfDAOU3 (ORCPT
+        id S1728551AbfDAOWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 10:20:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbfDAOU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 10:20:28 -0400
-Received: from localhost (unknown [173.13.115.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B29FE2082C;
-        Mon,  1 Apr 2019 14:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554128428;
-        bh=vHQMGRNUZk1EcNsloV1elZ3RHsCKrr/HuTo0oCJyBBs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=18R+X7xYA4c2/vg2eHrao7xPz5LgXWj2GdY/hMD0GU+L2pmJMh0VBsksYiXv9D8IO
-         NIDzova2wlOZB7WpylmEVislxoZ4vxfp+6TtLJJGFTUzngLaeq3LIY4YXbCl+1oFWU
-         jB+ngNPJGIr0M6kskgPXpojDfRw+Nt1vNaiPgwKg=
-Date:   Mon, 1 Apr 2019 10:20:26 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Mukesh Ojha <mojha@codeaurora.org>
-Cc:     lantianyu1986@gmail.com, davem@davemloft.net,
-        mchehab+samsung@kernel.org, gregkh@linuxfoundation.org,
-        nicolas.ferre@microchip.com, tglx@linutronix.de, mingo@kernel.org,
-        konrad.wilk@oracle.com, jpoimboe@redhat.com, peterz@infradead.org,
-        jkosina@suse.cz, riel@surriel.com, peterz@infraded.org,
-        Tianyu.Lan@microsoft.com, luto@kernel.org,
-        michael.h.kelley@microsoft.com, kys@microsoft.com, joe@perches.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Fix Hyperv vIOMMU driver file name
-Message-ID: <20190401142026.GA2792@sasha-vm>
-References: <1553581701-25250-1-git-send-email-Tianyu.Lan@microsoft.com>
- <58c16b52-5833-ede0-c4b0-8b8839ef06b2@codeaurora.org>
+        Mon, 1 Apr 2019 10:22:06 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:55157 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbfDAOWG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 10:22:06 -0400
+Received: by mail-it1-f194.google.com with SMTP id n78so4500191itb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 07:22:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=mp2FODHPtsPr+xXlREXn/JBUMHiessxnoejS51YsnzE=;
+        b=usfbQ3i/Xml5mYi4h3lCr9MRt+04E+MQn+5aOYcOkmypKgcA6SUIgms+siFtr5MhUB
+         OWXO97sWD0jNbUGeM/EzjzJKC0ianel+QiZLygasCXqwCbTfZ7MjvJ0dHCx86XsOc+Mo
+         OqyrPRSxyTm1NSMXfmtmCV5VF2rOoqNP2BGNU1mxnWIlFeXs4yNuET0f68jGa/CLJwha
+         yJ37dMI9WcSy4uVIzpVVP0rblJ122lAmkx1zCQPlZa7vm63rnBGVB9zmNMnK4Bp7nG0k
+         LipNWvSBffHYcVA823FAeHxNSUnvp5dh1WCSFPkH+5r5eQ59MNkyd9EHKU1OaQ6XCaRy
+         gzxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=mp2FODHPtsPr+xXlREXn/JBUMHiessxnoejS51YsnzE=;
+        b=XeBLyuJj3Ardx1xKmfs79jmGafY5KIY16W/BII4w/hX3guRmR6oso+27JWFG2Zo83S
+         2gdjktSlMDUQ1vMdJUcum2Eh+jOahmPA7dYKfgUaURCAdyzE9BG5pgIh8TgVfmqWiwQz
+         gTgPCwOVs5vo3tO7KfdYjJ6Swp7GWXRs966/tISJ7dTwnYUQ8qL/+bq5VtsO2iUY4fa4
+         ZCRCC0OQTyJ0+4PlE4MYo0RI/RQueIW54YQDyg05x1Cpgq1MaOnrHiWqjLS8nSr57+Vh
+         nnJGIarC+LrmqeNy34h5FtS/xMehjPmIxwDIOwHH8iwdd7Cp8Rx3NsnKvhUYZH94qywE
+         gVEg==
+X-Gm-Message-State: APjAAAVVhTt4i8np+Dnnok1M44YgoRGkZ1Nice89b67a5xyB5obMGQSU
+        NJ4/JXhnGJEe6sU6rWTbQLZkLyyPW7N3f0v1
+X-Google-Smtp-Source: APXvYqyPnHyBGuJoh+NJ+3pT6ASbBj6PtoxndENiQzIgCCr3QXFJ79RIQGRTD/vhecBrvTaC6VhV8Q==
+X-Received: by 2002:a24:454e:: with SMTP id y75mr5624571ita.5.1554128525415;
+        Mon, 01 Apr 2019 07:22:05 -0700 (PDT)
+Received: from titus.pi.local ([66.97.27.10])
+        by smtp.gmail.com with ESMTPSA id m137sm5466730itb.27.2019.04.01.07.22.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 07:22:04 -0700 (PDT)
+Date:   Mon, 1 Apr 2019 10:22:08 -0400
+From:   Will Cunningham <wjcunningham7@gmail.com>
+To:     johan@kernel.org
+Cc:     elder@kernel.org, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        joe@perches.com, elder@linaro.org
+Subject: [PATCH v2] Staging: greybus: usb: Fixed a coding style error
+Message-ID: <20190401142208.GA12744@titus.pi.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <58c16b52-5833-ede0-c4b0-8b8839ef06b2@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 02:57:09PM +0530, Mukesh Ojha wrote:
->
->On 3/26/2019 11:58 AM, lantianyu1986@gmail.com wrote:
->>From: Lan Tianyu <Tianyu.Lan@microsoft.com>
->>
->>The Hyperv vIOMMU file name should be "hyperv-iommu.c" rather
->
->s/vIOMMU/IOMMU
+Line was >80 characters.
 
-What's wrong with vIOMMU? There's no hardware involved (afaik).
+Signed-off-by: Will Cunningham <wjcunningham7@gmail.com>
+---
+Changes in v2:
+ - Created a tmp variable to shorten line length.
+---
+ drivers/staging/greybus/usb.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---
-Thanks,
-Sasha
+diff --git a/drivers/staging/greybus/usb.c b/drivers/staging/greybus/usb.c
+index 1c246c73a085..c09793b48850 100644
+--- a/drivers/staging/greybus/usb.c
++++ b/drivers/staging/greybus/usb.c
+@@ -163,14 +163,14 @@ static int gb_usb_probe(struct gbphy_device *gbphy_dev,
+ 	struct gb_usb_device *gb_usb_dev;
+ 	struct usb_hcd *hcd;
+ 	int retval;
++	u16 tmp;
+ 
+ 	hcd = usb_create_hcd(&usb_gb_hc_driver, dev, dev_name(dev));
+ 	if (!hcd)
+ 		return -ENOMEM;
+ 
+-	connection = gb_connection_create(gbphy_dev->bundle,
+-					  le16_to_cpu(gbphy_dev->cport_desc->id),
+-					  NULL);
++	tmp = le16_to_cpu(gbphy_dev->cport_desc->id);
++	connection = gb_connection_create(gbphy_dev->bundle, tmp, NULL);
+ 	if (IS_ERR(connection)) {
+ 		retval = PTR_ERR(connection);
+ 		goto exit_usb_put;
+-- 
+2.19.2
+
