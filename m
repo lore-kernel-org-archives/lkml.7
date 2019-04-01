@@ -2,107 +2,103 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD47C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45556C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE56E20856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7JLvmsW"
+	by mail.kernel.org (Postfix) with ESMTP id 158B620830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554139594;
+	bh=2tS9aKPuceuRwJGKin9gwgB9t/sdvi0b8/7Z4+taiqI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GIdzWaqAsIwwDfDSfqiXVD6GjpBB/JSb2tVLYrlCjMt/JyE+YkNPrUaa+F/s0lQ36
+	 03y8CMurRntWWb3u85Ws4++vKbDpEME1SDyhguuJAQT79OoeFjB3uJgipC66jpAHz5
+	 y3mEpUwYSYvj9bsSgLf1HweFL4FfGo1W9MuOGIok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732560AbfDAR02 (ORCPT
+        id S1732197AbfDAR0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:26:28 -0400
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:38684 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732173AbfDAR0W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:26:22 -0400
-Received: by mail-wm1-f47.google.com with SMTP id w15so281392wmc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 10:26:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=bv7UCjI+yNjcPMWEEp3IAWLYP8xT5TsLG2d0Pq5TfV8=;
-        b=K7JLvmsW0/eJ0djurBxHWJFNWUjXd9f4xD++B98nr7sBsuwKdEVUDMhcEkAnC0f/qH
-         aGm9Afv+2nOlQ+GlHFCxGbuaAuKJ0ulLK4YRibEhJm0ujl4QUNkYvqVNYc7jxAAoGOqF
-         F8AG5jkrebughhLvxZZ5QnR+8QwThHzD0MiOIe3UQapQoYdZ66jsu0VT8363zZ/LYeOQ
-         pFA/eHlshiJBr2XskoHtwFKKq/vD1JdFFPlOkr10hNkZgQo0gy2z0STchrtcEs3Y9QHy
-         wjAyq+5asyfkosZonoR0BU/7O3IsrC1Gox4Z754hNPbalbi3H0PK8Q5r20s6LaaVz+5H
-         uWFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=bv7UCjI+yNjcPMWEEp3IAWLYP8xT5TsLG2d0Pq5TfV8=;
-        b=RqFy+KtZfnFkIKzw2faPw9U00h+UTUjsrpHRMGS7psaYG2FuB44a0n0hJ2+p+LxwDR
-         sKk6DtJojoTIIn3GxTG+1GOjaPEz1GxRM1edodIUgE+zUR+R8/5z8NR6fK7N1RWUz7Wl
-         90tg/yCiHxM0+KCkzfk5P9/hzyPTIOKPuKneLRG+Pvh1Q+2i71O2H98pf68HO4wJqKSD
-         z3xOz7o8CL9L+2IKbjt46Mca2sQIhCWqjdonEjV50YqGvoZ1d8OdSEmHr+fbZUvPlAKx
-         uIQH3GkIqJOr5EdmoHuNKX7WiJsmXCW78FGB0xDi5cw1TzjajYQ0DM6rECWpcBB/k1C+
-         xWZQ==
-X-Gm-Message-State: APjAAAWVBf83XcReTPh6MA57jrLw3vxpY9J7DolbiHPK+aTwwLSnutPU
-        pmjYAJVH1eGJHV2zyryFTMc=
-X-Google-Smtp-Source: APXvYqzuLMEWk1bMnId9IBJQ2LiwWa+AfdqkAgztemNJn+gVYSnyrIes7NQzBJgYD758u4uuXRL+KQ==
-X-Received: by 2002:a1c:2394:: with SMTP id j142mr468562wmj.111.1554139580844;
-        Mon, 01 Apr 2019 10:26:20 -0700 (PDT)
-Received: from ogabbay-VM ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id 192sm6717035wme.13.2019.04.01.10.26.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 10:26:20 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 20:26:18 +0300
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [git pull] habanalabs fixes for 5.1-rc4
-Message-ID: <20190401172618.GA6090@ogabbay-VM>
+        Mon, 1 Apr 2019 13:26:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732018AbfDAR0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:26:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FEA720830;
+        Mon,  1 Apr 2019 17:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554139590;
+        bh=2tS9aKPuceuRwJGKin9gwgB9t/sdvi0b8/7Z4+taiqI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vKZffGkEV0ildZ5RuV6YmrCs2D3KmX/YsqU3QUFbbxudPQQPgnRuhEfMV1UPJqYMS
+         IRXuAIB0V7X+LLd198z0C0Kp9m1dUBQ7kklRDej55wTPbtfMYXrsURlw/Me7gAV362
+         EH+gRAgY4WJMQYEMW9RuqoSL9t3n/rMneNL4dwo4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 13/56] sctp: get sctphdr by offset in sctp_compute_cksum
+Date:   Mon,  1 Apr 2019 19:02:29 +0200
+Message-Id: <20190401170104.645234540@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
+References: <20190401170103.398401360@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
-One small but important fix for the next -rc:
+------------------
 
-- Fix the low credit limit for DMA channel #0. Without this fix, the
-  channel is unusable by the user.
+From: Xin Long <lucien.xin@gmail.com>
 
-Thanks,
-Oded
+[ Upstream commit 273160ffc6b993c7c91627f5a84799c66dfe4dee ]
 
-The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
+sctp_hdr(skb) only works when skb->transport_header is set properly.
 
-  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
+But in Netfilter, skb->transport_header for ipv6 is not guaranteed
+to be right value for sctphdr. It would cause to fail to check the
+checksum for sctp packets.
 
-are available in the Git repository at:
+So fix it by using offset, which is always right in all places.
 
-  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2019-04-01
+v1->v2:
+  - Fix the changelog.
 
-for you to fetch changes up to bfb57a91c2cb497c3780ed2e08f85d038efd0b7b:
+Fixes: e6d8b64b34aa ("net: sctp: fix and consolidate SCTP checksumming code")
+Reported-by: Li Shuang <shuali@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/net/sctp/checksum.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  habanalabs: remove low credit limit of DMA #0 (2019-03-24 18:07:02 +0200)
+--- a/include/net/sctp/checksum.h
++++ b/include/net/sctp/checksum.h
+@@ -60,7 +60,7 @@ static inline __wsum sctp_csum_combine(_
+ static inline __le32 sctp_compute_cksum(const struct sk_buff *skb,
+ 					unsigned int offset)
+ {
+-	struct sctphdr *sh = sctp_hdr(skb);
++	struct sctphdr *sh = (struct sctphdr *)(skb->data + offset);
+         __le32 ret, old = sh->checksum;
+ 	const struct skb_checksum_ops ops = {
+ 		.update  = sctp_csum_update,
 
-----------------------------------------------------------------
-The following bug fix is included in this tag:
 
-- Fix the low credit limit for DMA channel #0. Without this fix, the
-  channel is unusable by the user.
-
-----------------------------------------------------------------
-Oded Gabbay (1):
-      habanalabs: remove low credit limit of DMA #0
-
- drivers/misc/habanalabs/goya/goya.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
