@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1D6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD1BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C2321925
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F2F2192D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138325;
-	bh=TxwP5QpPqwckR7PXtDVN7Oj1+LgCbLU/0ESAyaPK37Q=;
+	s=default; t=1554138330;
+	bh=GOj/N+iB4CzHUgIsVqY2z80c0lJlBDVR5jMxFEJIybw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H3EFyXPvILleaRt1qbgnLVTjcKpbuOd7UsqBxzosnopOzCH2P0UXMCF0pnt2ANQaZ
-	 6ihLDdiDoUaPq4F3Ce+2yW0ASuXeZgxVdsWG3FJp6l7jeHG9UFRxygZL8BuVKO87R6
-	 xOsvrLm0Txzu4DXYPIMdajO2jw2O3C3O3rBCXhM0=
+	b=UACW4R6fcCmu9pL1qtiI2Hmle/fkvLcfdrSqTJ1WZvMCgi0XDBBesXqAXte6isEIt
+	 uVX0hBggnaCWka/FoULjmZNCAkSJFw5+FFzG3L45ZdbkV1wNxGrTMDR2hwZRJ4qO+5
+	 C03mYiI7PrbtUhSfNi5jbourdO274wzy9gzqjQto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbfDARFY (ORCPT
+        id S1728964AbfDARF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:05:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50488 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:05:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727074AbfDARFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:05:23 -0400
+        id S1727074AbfDARF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:05:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3DBB21925;
-        Mon,  1 Apr 2019 17:05:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6DDA21929;
+        Mon,  1 Apr 2019 17:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138322;
-        bh=TxwP5QpPqwckR7PXtDVN7Oj1+LgCbLU/0ESAyaPK37Q=;
+        s=default; t=1554138325;
+        bh=GOj/N+iB4CzHUgIsVqY2z80c0lJlBDVR5jMxFEJIybw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vF6rZKE41ufQzlNl1pTT8F5IqgywRprM2yrCzoLvuZp4Qa/xS+NJmTkItotXhKd5X
-         5P1mLUYXcz3UpHG3gb5kBTQ+zK+yO5egyJDgwfdK1JWyi95jPavzv4yYLLwSgducUg
-         JJesZmJoHm3XEzOkFbzh56VMS9F6H5+d/bIdPAOE=
+        b=Wr8OndJl82AL4eNIfv2R0FoPKYT6ToY+zVRxLM5dNTWF/O8v0xu4CrEcsXb0mqVVe
+         ngBfvat9Ja1j6CCeIJDytHCjDy8/n2cJZOAXS7jcp+tHpOddfXDUkG4Nc2nTPW3IaX
+         a6WciaTdnwiodop6vCh99H7IuNaHP8hkY8HIsG3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Claudiu Manoil <claudiu.manoil@nxp.com>,
+        stable@vger.kernel.org, Phil Reid <preid@electromag.com.au>,
+        liweihang <liweihang@hisilicon.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 032/146] net: mii: Fix PAUSE cap advertisement from linkmode_adv_to_lcl_adv_t() helper
-Date:   Mon,  1 Apr 2019 19:00:44 +0200
-Message-Id: <20190401170051.243261394@linuxfoundation.org>
+Subject: [PATCH 5.0 033/146] net: phy: dont clear BMCR in genphy_soft_reset
+Date:   Mon,  1 Apr 2019 19:00:45 +0200
+Message-Id: <20190401170051.315584721@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -65,34 +68,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 7f07e5f1f778605e98cf2156d4db1ff3a3a1a74a ]
+[ Upstream commit d29f5aa0bc0c321e1b9e4658a2a7e08e885da52a ]
 
-With a recent link mode advertisement code update this helper
-providing local pause capability translation used for flow
-control link mode negotiation got broken.
-For eth drivers using this helper, the issue is apparent only
-if either PAUSE or ASYM_PAUSE is being advertised.
+So far we effectively clear the BMCR register. Some PHY's can deal
+with this (e.g. because they reset BMCR to a default as part of a
+soft-reset) whilst on others this causes issues because e.g. the
+autoneg bit is cleared. Marvell is an example, see also thread [0].
+So let's be a little bit more gentle and leave all bits we're not
+interested in as-is. This change is needed for PHY drivers to
+properly deal with the original patch.
 
-Fixes: 3c1bcc8614db ("net: ethernet: Convert phydev advertize and supported from u32 to link mode")
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+[0] https://marc.info/?t=155264050700001&r=1&w=2
+
+Fixes: 6e2d85ec0559 ("net: phy: Stop with excessive soft reset")
+Tested-by: Phil Reid <preid@electromag.com.au>
+Tested-by: liweihang <liweihang@hisilicon.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/mii.h |    2 +-
+ drivers/net/phy/phy_device.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/mii.h
-+++ b/include/linux/mii.h
-@@ -469,7 +469,7 @@ static inline u32 linkmode_adv_to_lcl_ad
- 	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
- 			      advertising))
- 		lcl_adv |= ADVERTISE_PAUSE_CAP;
--	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
-+	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
- 			      advertising))
- 		lcl_adv |= ADVERTISE_PAUSE_ASYM;
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1827,7 +1827,7 @@ int genphy_soft_reset(struct phy_device
+ {
+ 	int ret;
+ 
+-	ret = phy_write(phydev, MII_BMCR, BMCR_RESET);
++	ret = phy_set_bits(phydev, MII_BMCR, BMCR_RESET);
+ 	if (ret < 0)
+ 		return ret;
  
 
 
