@@ -1,229 +1,140 @@
-Return-Path: <MAILER-DAEMON>
+Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.7 required=3.0 tests=DEAR_SOMETHING,DKIM_SIGNED,
-	DKIM_VALID,HTML_MESSAGE,T_REMOTE_IMAGE,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4632C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:13:36 +0000 (UTC)
-X-Greylist: delayed 1904 seconds by postgrey-1.34 at mail.kernel.org; Mon, 01 Apr 2019 07:13:33 UTC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184ACC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:13:53 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id CE88620850
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:13:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zhongshenlin.partner.onmschina.cn header.i=@zhongshenlin.partner.onmschina.cn header.b="N8E6ti7x"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org EC4AC20850
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=hellouber360.com
-Authentication-Results: mail.kernel.org; spf=pass smtp.helo=cn01-SHA-obe.outbound.protection.partner.outlook.cn
-Received: from cn01-SHA-obe.outbound.protection.partner.outlook.cn (mail-shahn0103.outbound.protection.partner.outlook.cn [42.159.164.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id EC4AC20850
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 07:13:33 +0000 (UTC)
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="dUQmnU03"
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731819AbfDAHNv (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 1 Apr 2019 03:13:51 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39806 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfDAHNv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 03:13:51 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p20so7199416eds.6
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 00:13:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=zhongshenlin.partner.onmschina.cn; s=selector1-hellouber360-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QfhXcy5ZiNhmOAi+Sz4L52tK8oKwVz5GCG1nOcaG9MY=;
- b=N8E6ti7x+pFzGhlgvRLtzceGsYWP+Zbi/SiyYESSCm3OpM5/eJln1m1deI5KUKNOA025+PoaLNmDKj93hsV2aflr/Lm1KgduTfwng6siIhbs2p4NJRfGkmD4YJLUgBKR/YCMFqsfPZC1dx19s56/Ri+t8UGwJYKrEwdP/I07LAg=
-Received: from SHAPR01MB0320.CHNPR01.prod.partner.outlook.cn (10.41.135.14) by
- SHAPR01MB0320.CHNPR01.prod.partner.outlook.cn (10.41.135.14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.19; Mon, 1 Apr 2019 06:41:44 +0000
-Received: from SHAPR01MB0320.CHNPR01.prod.partner.outlook.cn ([10.41.135.14])
- by SHAPR01MB0320.CHNPR01.prod.partner.outlook.cn ([10.41.135.14]) with mapi
- id 15.20.1750.017; Mon, 1 Apr 2019 06:41:44 +0000
-From: info <info@hellouber360.com>
-To: "linux-kernel@archiver.kernel.org" <linux-kernel@archiver.kernel.org>
-Subject: In Vitro Diagnostic Product From XIamen Useful
-Thread-Topic: In Vitro Diagnostic Product From XIamen Useful
-Thread-Index: AdToVfcqEyuqfDJqShiP1AKCFbEk/Q==
-Content-Class: urn:content-classes:message
-Date: Mon, 1 Apr 2019 06:41:44 +0000
-Message-ID: <501BE801F65C49CCB7540D86527E5188@PC20180427MXRR>
-Reply-To: "admin@xmuseful.com" <admin@xmuseful.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-clientproxiedby: BJBPR01CA041.CHNPR01.prod.partner.outlook.cn (10.41.58.48)
- To SHAPR01MB0320.CHNPR01.prod.partner.outlook.cn (10.41.135.14)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=info@hellouber360.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Microsoft CDO for Windows 2000
-x-originating-ip: [120.41.244.75]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f78fb835-b63c-4333-9220-08d6b66d1b49
-x-microsoft-antispam:
- BCL:0;PCL:0;RULEID:(4600261)(4652040)(97021020)(8989299)(711020)(4605104)(97022020)(4603075)(4627221)(201702281549075)(8990200)(7153060)(7048125)(7024125)(7027125)(7023125)(4601075);SRVR:SHAPR01MB0320;
-x-ms-traffictypediagnostic: SHAPR01MB0320:
-x-ms-exchange-purlcount: 1
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report:
- SFV:SPM;SFS:(10019020)(7916004)(376002)(366004)(39840400004)(396003)(346002)(329002)(328002)(199004)(189003)(77096007)(413944005)(606006)(861006)(7736002)(8936002)(3846002)(52396003)(52116002)(71190400001)(71200400001)(95416001)(66806009)(37786003)(81816011)(8426002)(6116002)(316002)(478600001)(86362001)(386003)(5660300002)(305945005)(50226002)(68736007)(8796002)(186003)(8676002)(733005)(33716001)(81156014)(5640700003)(102836004)(26005)(61296003)(4000180100002)(63696004)(22776003)(53376002)(62236002)(476003)(66066001)(236005)(44726023)(2501003)(44706002)(6306002)(86152003)(9686003)(54896002)(106356001)(86372001)(105586002)(14454004)(4744005)(19580385004)(35302002)(97736004)(6916009)(122556007)(43066004)(2351001)(53386004)(33656002)(18926415008)(486006)(60550400001)(561014002)(588324002);DIR:OUT;SFP:1501;SCL:5;SRVR:SHAPR01MB0320;H:SHAPR01MB0320.CHNPR01.prod.partner.outlook.cn;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:3;
-received-spf: None (protection.outlook.com: hellouber360.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info:
- YUpch9bwB589fk+0pM2YxI47ntEeLmGclf8Vjbl1yq+o++2bhy24pxj+95w+zL1jXWfAeAlmSPkCOHFTehHGlB9JqpA4uUVrubz1dY3XZgIdD8IyJIBJ39XU7mxc4zcgyyJ9/5TvWEyTE2oIEbO4HaYGO7gMeC4CxX9KlnbCVq7TJF70UmrSYHkm9GoeBmPPS2kwhYbgqP3EJf59tX28oYgJiURjJ7jN1v78UL7tN3n9rWanHhC8x4Vv2XvVEXbW3SFRth94zwFdseBNRaimqm+oZaeetNXpBCyC+BaAjCxE+4mEZcAUD/Gh4ur0UOTW+EPrWJ+w2jfEGJKx+IIjMT3t5PNvmLTBVhYNRmS8ZBB7ZQAsT8+Dn14SleTUQlu7IKwNC/8S5Fyny8etFgA1bLFjqvJdtwPOOJoCLHlnCSZOsfM1yCZ+PwaPMAX7P33Pu5JDLx5jCIYqnsSzYvXUPxujfx0z8bApNStCuAW9yso0pFrn2tLQyml2gsLF6iU0U6MQPbXc5udw+EDD5vpLAg00dxtC+CzC1B6aO9Y4je3Ix0t0GULx6pFwI+kOu9SZ/SsEr3zLcoXSk07SkChhMp9WTJDPfHgLeFn6AtQpIDiCJQdwCoiwC5q3xkKFrE/e
-Content-Type: multipart/alternative;
-	boundary="_000_501BE801F65C49CCB7540D86527E5188PC20180427MXRR_"
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9HnkonaAlmrccrey07qta+LCMWeipy1uK1wNObYokO4=;
+        b=dUQmnU03ftW5t5Z7bDkMFqzbBob0AnSSxTVun3vvQ8qd+zNuvZCQZp03Ga1As0ARJN
+         xArEdC273dSXaPIw9z7HOFqCravnIzSjx/dLTtQNK1kcIO9EhL/FDiQropyIFYEed1C6
+         +v8lxX55IjCfOB7Ec8cQc8XjQeYZ9+Wzs5ZV8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=9HnkonaAlmrccrey07qta+LCMWeipy1uK1wNObYokO4=;
+        b=Yjq9Rw5FsO0j0A+EkZpx9Nw5Rp+uIA77gS11xVu/OGlW+x5hJu9OhKB3fV7J3efkKH
+         AtZ0jfuNs/1CLWp3cIhppr5si6HrEkoGMYAKHsyOAU66PqXL9mjIiSpLZ96BkrTeFZH0
+         OlJy/xvWCjRe85QXoVboPpyNnPMMymDBdpIrq8SylAWaEk5IRf6tG1aDW8NxcI6MJIDS
+         VAhK5K0pfFN2iBR/juNNT8mfGCk/X4p3vQMJTidg/NE2bPi7/0Ezx797CB1/X/LkhHxG
+         QNqTDYL6duckPUO04TYoqb0Yp+oT83R55EKyyflOfxM5APB3BDDbQbwYWxMrItF7oSnU
+         WB0w==
+X-Gm-Message-State: APjAAAWGc5ZKOLGY3BO7Xcn+URPb5XgtIaHGzo8BgowqhrzI/EKdQLcm
+        pXRaJPyXuD5NitGoVuYwTNkRdw==
+X-Google-Smtp-Source: APXvYqxUhwrXjO68S9g54we0pXDTb1VV+ayZPsru7s0ECpQplBoboY9GmZMngSYs0fJySDh4pSX0vA==
+X-Received: by 2002:aa7:d945:: with SMTP id l5mr41498841eds.263.1554102829782;
+        Mon, 01 Apr 2019 00:13:49 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id m6sm1722129eja.23.2019.04.01.00.13.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 01 Apr 2019 00:13:48 -0700 (PDT)
+Date:   Mon, 1 Apr 2019 09:13:46 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] dma-buf: Make mmap callback actually optional
+Message-ID: <20190401071346.GR2665@phenom.ffwll.local>
+Mail-Followup-To: "Andrew F. Davis" <afd@ti.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20190329165201.16233-1-afd@ti.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hellouber360.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f78fb835-b63c-4333-9220-08d6b66d1b49
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 06:41:44.7372
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2152d4df-bc82-4ba7-ae99-11630cd65dd0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHAPR01MB0320
-List-Id: <linux-kernel.vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329165201.16233-1-afd@ti.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
---_000_501BE801F65C49CCB7540D86527E5188PC20180427MXRR_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+On Fri, Mar 29, 2019 at 11:52:01AM -0500, Andrew F. Davis wrote:
+> The docs state the callback is optional but it is not, make it optional.
+> 
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
 
-DQpQUk9GRVNTSU9OQUwNCg0KSVZEIFBST0RVQ1QgU1VQUExJRVINCg0KDQoNCg0KRGVhciBTaXIv
-TWFkYW0sDQoNCkdvb2QgZGF5Lg0KSSBhbSBTYW5keSBmcm9tIFhpYW1lbiBVc2VmdWwgQ08uLCBM
-VEQuIFdlIGFyZSBhIHByb2Zlc3Npb25hbCBtYW51ZmFjdHVyZXIgb2YgTWVkaWNhbCBQcm9kdWN0
-cyB3aXRoIG91ciBPV04gUiZEIGFuZCBGQUNUT1JZLiBZb3UgY2FuIGNvbnRhY3QgbWUgaWYgeW91
-IGhhdmUgYW55IHJlcXVpcmVtZW50Lg0KDQpPdXIgcHJvZHVjdHMgaW5jbHVkZTogRHJ1ZyB0ZXN0
-IHNlcmllczsgSW5mZWN0aW91cyBkaXNlYXNlIHRlc3Q7IEhDRyB0ZXN0OyBMSCB0ZXN0OyBBbnRp
-Ym9keSZBbnRpZ2VuOyBVbmN1dHNoZWV0Ow0KDQpUaGFua3MgJiBSZWdhcmRzDQoNCg0KDQpbaHR0
-cDovL2NoaW5hZHJ1Z3Rlc3QuY29tL2Fzc2VydHMvbWVkaWEvb3JpZ2luYWwvMjAxOC0xMC0yMy83
-MzAyNzRlZjZiOWNjMTBjZmYwMWU1ODJmZDIwNDA4Yy5qcGddPGh0dHA6Ly9jaGluYWRydWd0ZXN0
-LmNvbS8+DQoNCg0KDQogICBQUk9EVUNUIEFEVkFOVEFHRVMNCg0KDQogIDEuIENFL0ZEQS9JU08v
-VFVWL0dNUC9JVkREIGNlcnRpZmljYXRlcyBhbmQgQ2xpYS1XYWl2ZWQgVGVzdGluZzsNCiAgMi4g
-SGlnaCBzZW5zaXRpdml0eTsNCiAgMy4gSGlnaCBhY2N1cmFjeTsNCiAgNC4gUmVhZCByZXN1bHRz
-IHdpdGhpbiAxMC0xNSBtaW51dGVzOw0KICA1LiBJbmRpdmlkdWFsIHBhY2thZ2UsIEVhc3kgdG8g
-dXNlOw0KDQoNCiAgIENPTVBBTlkgQURWQU5UQUdFUw0KDQoNCiAgMS4gTW9yZSB0aGFuIDggeWVh
-cnMgb2YgZXhwZXJpZW5jZTsNCiAgMi4gQ3VzdG9taXplZCBpcyBhdmFsaWFibGU7DQogIDMuIFNl
-bWktZmluaXNoZWQgcHJvZHVjdHMgc2FsZTsNCiAgNC4gTWV0aWN1bG91cyBzZXJ2aWNlOw0KICA1
-LiBGb2N1cyBvbiBxdWFsaXR5Ow0KICA2LiBDb21wZXRpdGl2ZSBwcmljZTsNCiAgNy4gU3VwcG9y
-dCBUTlQsIFVQUywgRmVkRXgsIEVNUywgREhMOw0KDQoNClhpYW1lbiBVc2VmdWwgQ28uLCBMdGQN
-Cg0KDQoNClRvOiBsaW51eC1rZXJuZWwNCg0KdGltZTogMjAxOS80LzEgMTQ6NDE6NDENCg0KDQpX
-ZWJzaXRlOiBjaGluYWRydWd0ZXN0LmNvbTxodHRwOi8vY2hpbmFkcnVndGVzdC5jb20vPg0KDQpQ
-aG9uZTogKCs4NikgMTgwMzAxNjA4MTYNCg0KRW1haWw6IGFkbWluQHhtdXNlZnVsLmNvbTxtYWls
-dG86JTIwYWRtaW5AeG11c2VmdWwuY29tPg0KDQoNCg0KPG1haWx0bzphZG1pbkB4bXVzZWZ1bC5j
-b20+DQpSIEUgUCBMIFkNCg0KDQoNCg0KDQoNCg==
+There's a bunch of dummy mmap implementations we could remove with this,
+would be nice to follow up.
 
---_000_501BE801F65C49CCB7540D86527E5188PC20180427MXRR_
-Content-Type: text/html; charset="utf-8"
-Content-ID: <448462933CC78E439CCBA745190823D1@CHNPR01.prod.partner.outlook.cn>
-Content-Transfer-Encoding: base64
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
-dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjwvaGVhZD4NCjxib2R5Pg0KPGRpdiBpZD0iY29u
-dGVudCI+DQo8dGFibGUgY2xhc3M9ImtlLXplcm9ib3JkZXIiIGNlbGxzcGFjaW5nPSIwIiBjZWxs
-cGFkZGluZz0iMCIgd2lkdGg9IjEwMCUiIGJnY29sb3I9IiM0NGEyZGYiIGJvcmRlcj0iMCI+DQo8
-dGJvZHk+DQo8dHI+DQo8dGQgdmFsaWduPSJ0b3AiIGFsaWduPSJjZW50ZXIiPg0KPHRhYmxlIGNs
-YXNzPSJrZS16ZXJvYm9yZGVyIiBjZWxsc3BhY2luZz0iMCIgY2VsbHBhZGRpbmc9IjAiIHdpZHRo
-PSI4MDAiIGJvcmRlcj0iMCI+DQo8dGJvZHk+DQo8dHI+DQo8dGQgdmFsaWduPSJ0b3AiIGFsaWdu
-PSJjZW50ZXIiPg0KPHRhYmxlIGNsYXNzPSJrZS16ZXJvYm9yZGVyIiBjZWxsc3BhY2luZz0iMCIg
-Y2VsbHBhZGRpbmc9IjAiIHdpZHRoPSIxMDAlIiBiZ2NvbG9yPSIjNDRhMmRmIiBib3JkZXI9IjAi
-Pg0KPHRib2R5Pg0KPHRyPg0KPHRkIGhlaWdodD0iMzAiIHZhbGlnbj0idG9wIj4mbmJzcDs8L3Rk
-Pg0KPC90cj4NCjx0cj4NCjx0ZCBzdHlsZT0iRk9OVC1TSVpFOiAzMHB4OyBGT05ULVdFSUdIVDog
-Ym9sZDsgQ09MT1I6IHdoaXRlIiB2YWxpZ249InRvcCI+DQo8ZGl2PlBST0ZFU1NJT05BTDwvZGl2
-Pg0KPC90ZD4NCjwvdHI+DQo8dHI+DQo8dGQgc3R5bGU9IkZPTlQtU0laRTogMzBweDsgRk9OVC1X
-RUlHSFQ6IGJvbGQ7IENPTE9SOiB3aGl0ZSIgdmFsaWduPSJ0b3AiPg0KPGRpdj5JVkQgUFJPRFVD
-VCBTVVBQTElFUjwvZGl2Pg0KPC90ZD4NCjwvdHI+DQo8dHI+DQo8dGQgaGVpZ2h0PSIzMCIgdmFs
-aWduPSJ0b3AiPiZuYnNwOzwvdGQ+DQo8L3RyPg0KPC90Ym9keT4NCjwvdGFibGU+DQo8L3RkPg0K
-PC90cj4NCjx0cj4NCjx0ZCB2YWxpZ249InRvcCIgYWxpZ249ImNlbnRlciI+DQo8dGFibGUgY2xh
-c3M9ImtlLXplcm9ib3JkZXIiIGNlbGxzcGFjaW5nPSIwIiBjZWxscGFkZGluZz0iMCIgd2lkdGg9
-Ijc1MCIgYmdjb2xvcj0id2hpdGUiIGJvcmRlcj0iMCI+DQo8dGJvZHk+DQo8dHI+DQo8dGQgaGVp
-Z2h0PSI0NSIgdmFsaWduPSJ0b3AiPiZuYnNwOzwvdGQ+DQo8L3RyPg0KPHRyPg0KPHRkIHZhbGln
-bj0idG9wIiBhbGlnbj0iY2VudGVyIj4NCjx0YWJsZSBjbGFzcz0ia2UtemVyb2JvcmRlciIgY2Vs
-bHNwYWNpbmc9IjAiIGNlbGxwYWRkaW5nPSIwIiB3aWR0aD0iOTAlIiBiZ2NvbG9yPSJ3aGl0ZSIg
-Ym9yZGVyPSIwIj4NCjx0Ym9keT4NCjx0cj4NCjx0ZD4NCjxkaXYgc3R5bGU9IkZPTlQtU0laRTog
-MTVweDsgRk9OVC1GQU1JTFk6IFRhaG9tYTsgQ09MT1I6ICMzMzMzMzM7IFRFWFQtQUxJR046IGxl
-ZnQiPg0KRGVhciBTaXIvTWFkYW0sPGJyPg0KPGJyPg0KR29vZCBkYXkuPGJyPg0KSSBhbSBTYW5k
-eSBmcm9tIFhpYW1lbiBVc2VmdWwgQ08uLCBMVEQuIFdlIGFyZSBhIHByb2Zlc3Npb25hbCBtYW51
-ZmFjdHVyZXIgb2YgTWVkaWNhbCBQcm9kdWN0cyB3aXRoIG91ciBPV04gUiZhbXA7RCBhbmQgRkFD
-VE9SWS4gWW91IGNhbiBjb250YWN0IG1lIGlmIHlvdSBoYXZlIGFueSByZXF1aXJlbWVudC48YnI+
-DQo8YnI+DQpPdXIgcHJvZHVjdHMgaW5jbHVkZTogPHNwYW4gc3R5bGU9IkZPTlQtV0VJR0hUOiBi
-b2xkOyBDT0xPUjogIzQ0YTJkZiI+RHJ1ZyB0ZXN0IHNlcmllczsgSW5mZWN0aW91cyBkaXNlYXNl
-IHRlc3Q7IEhDRyB0ZXN0OyBMSCB0ZXN0OyBBbnRpYm9keSZhbXA7QW50aWdlbjsgVW5jdXRzaGVl
-dDs8L3NwYW4+PGJyPg0KPGJyPg0KVGhhbmtzICZhbXA7IFJlZ2FyZHM8L2Rpdj4NCjwvdGQ+DQo8
-L3RyPg0KPHRyPg0KPHRkIGhlaWdodD0iMTUiIHZhbGlnbj0idG9wIj4mbmJzcDs8L3RkPg0KPC90
-cj4NCjwvdGJvZHk+DQo8L3RhYmxlPg0KPC90ZD4NCjwvdHI+DQo8dHI+DQo8dGQgdmFsaWduPSJ0
-b3AiIGFsaWduPSJjZW50ZXIiPjxhIGhyZWY9Imh0dHA6Ly9jaGluYWRydWd0ZXN0LmNvbS8iIHRh
-cmdldD0iX2JsYW5rIiBkYXRhLWtlLXNyYz0iaHR0cDovL2NoaW5hZHJ1Z3Rlc3QuY29tIj48aW1n
-IHRpdGxlPSJ2aXNpdCBjaGluYWRydWd0ZXN0LmNvbSIgc3R5bGU9IldJRFRIOiA5MCUiIHNyYz0i
-aHR0cDovL2NoaW5hZHJ1Z3Rlc3QuY29tL2Fzc2VydHMvbWVkaWEvb3JpZ2luYWwvMjAxOC0xMC0y
-My83MzAyNzRlZjZiOWNjMTBjZmYwMWU1ODJmZDIwNDA4Yy5qcGciIGRhdGEta2Utc3JjPSJodHRw
-Oi8vY2hpbmFkcnVndGVzdC5jb20vYXNzZXJ0cy9tZWRpYS9vcmlnaW5hbC8yMDE4LTEwLTIzLzcz
-MDI3NGVmNmI5Y2MxMGNmZjAxZTU4MmZkMjA0MDhjLmpwZyI+PC9hPg0KPC90ZD4NCjwvdHI+DQo8
-dHI+DQo8dGQgaGVpZ2h0PSIxNSIgdmFsaWduPSJ0b3AiPiZuYnNwOzwvdGQ+DQo8L3RyPg0KPC90
-Ym9keT4NCjwvdGFibGU+DQo8L3RkPg0KPC90cj4NCjwvdGJvZHk+DQo8L3RhYmxlPg0KPHRhYmxl
-IGNsYXNzPSJrZS16ZXJvYm9yZGVyIiBjZWxsc3BhY2luZz0iMCIgY2VsbHBhZGRpbmc9IjAiIHdp
-ZHRoPSI4MDAiIGJnY29sb3I9IiNmZmZmZmYiIGJvcmRlcj0iMCI+DQo8dGJvZHk+DQo8dHI+DQo8
-dGQgdmFsaWduPSJ0b3AiIGFsaWduPSJjZW50ZXIiPg0KPHRhYmxlIGNsYXNzPSJrZS16ZXJvYm9y
-ZGVyIiBjZWxsc3BhY2luZz0iMCIgY2VsbHBhZGRpbmc9IjAiIHdpZHRoPSI2NTAiIGJnY29sb3I9
-IiNmZmZmZmYiIGJvcmRlcj0iMCI+DQo8dGJvZHk+DQo8dHI+DQo8dGQgaGVpZ2h0PSIzMCIgdmFs
-aWduPSJ0b3AiPiZuYnNwOzwvdGQ+DQo8L3RyPg0KPHRyPg0KPHRkIHZhbGlnbj0idG9wIj4NCjxk
-aXYgc3R5bGU9IkZPTlQtRkFNSUxZOiBUYWhvbWE7IEZPTlQtV0VJR0hUOiBib2xkOyBDT0xPUjog
-IzQ0YTJkZiI+PHNwYW4gc3R5bGU9IkJBQ0tHUk9VTkQ6ICM0NGEyZGYiPiZuYnNwOyZuYnNwOzwv
-c3Bhbj4gUFJPRFVDVCBBRFZBTlRBR0VTPC9kaXY+DQo8L3RkPg0KPC90cj4NCjx0cj4NCjx0ZCBo
-ZWlnaHQ9IjE1IiB2YWxpZ249InRvcCI+Jm5ic3A7PC90ZD4NCjwvdHI+DQo8dHI+DQo8dGQgdmFs
-aWduPSJ0b3AiIGFsaWduPSJjZW50ZXIiPg0KPGRpdiBzdHlsZT0iRk9OVC1TSVpFOiAxNXB4OyBG
-T05ULUZBTUlMWTogVGFob21hOyBDT0xPUjogIzMzMzMzMzsgVEVYVC1BTElHTjogbGVmdCI+DQom
-bmJzcDsgMS4gQ0UvRkRBL0lTTy9UVVYvR01QL0lWREQgY2VydGlmaWNhdGVzIGFuZCBDbGlhLVdh
-aXZlZCBUZXN0aW5nOzxicj4NCiZuYnNwOyAyLiBIaWdoIHNlbnNpdGl2aXR5Ozxicj4NCiZuYnNw
-OyAzLiBIaWdoIGFjY3VyYWN5Ozxicj4NCiZuYnNwOyA0LiBSZWFkIHJlc3VsdHMgd2l0aGluIDEw
-LTE1IG1pbnV0ZXM7PGJyPg0KJm5ic3A7IDUuIEluZGl2aWR1YWwgcGFja2FnZSwgRWFzeSB0byB1
-c2U7PC9kaXY+DQo8L3RkPg0KPC90cj4NCjx0cj4NCjx0ZCBoZWlnaHQ9IjE1IiB2YWxpZ249InRv
-cCI+Jm5ic3A7PC90ZD4NCjwvdHI+DQo8dHI+DQo8dGQgdmFsaWduPSJ0b3AiPg0KPGRpdiBzdHls
-ZT0iRk9OVC1GQU1JTFk6IFRhaG9tYTsgRk9OVC1XRUlHSFQ6IGJvbGQ7IENPTE9SOiAjNDRhMmRm
-Ij48c3BhbiBzdHlsZT0iQkFDS0dST1VORDogIzQ0YTJkZiI+Jm5ic3A7Jm5ic3A7PC9zcGFuPiBD
-T01QQU5ZIEFEVkFOVEFHRVM8L2Rpdj4NCjwvdGQ+DQo8L3RyPg0KPHRyPg0KPHRkIGhlaWdodD0i
-MTUiIHZhbGlnbj0idG9wIj4mbmJzcDs8L3RkPg0KPC90cj4NCjx0cj4NCjx0ZCB2YWxpZ249InRv
-cCIgYWxpZ249ImNlbnRlciI+DQo8ZGl2IHN0eWxlPSJGT05ULVNJWkU6IDE1cHg7IEZPTlQtRkFN
-SUxZOiBUYWhvbWE7IENPTE9SOiAjMzMzMzMzOyBURVhULUFMSUdOOiBsZWZ0Ij4NCiZuYnNwOyAx
-LiBNb3JlIHRoYW4gOCB5ZWFycyBvZiBleHBlcmllbmNlOzxicj4NCiZuYnNwOyAyLiBDdXN0b21p
-emVkIGlzIGF2YWxpYWJsZTs8YnI+DQombmJzcDsgMy4gU2VtaS1maW5pc2hlZCBwcm9kdWN0cyBz
-YWxlOzxicj4NCiZuYnNwOyA0LiBNZXRpY3Vsb3VzIHNlcnZpY2U7PGJyPg0KJm5ic3A7IDUuIEZv
-Y3VzIG9uIHF1YWxpdHk7PGJyPg0KJm5ic3A7IDYuIENvbXBldGl0aXZlIHByaWNlOzxicj4NCiZu
-YnNwOyA3LiBTdXBwb3J0IFROVCwgVVBTLCBGZWRFeCwgRU1TLCBESEw7PC9kaXY+DQo8L3RkPg0K
-PC90cj4NCjx0cj4NCjx0ZCBoZWlnaHQ9IjQ1IiB2YWxpZ249InRvcCI+Jm5ic3A7PC90ZD4NCjwv
-dHI+DQo8dHI+DQo8dGQgaGVpZ2h0PSIyMCIgdmFsaWduPSJib3R0b20iIGFsaWduPSJjZW50ZXIi
-Pg0KPGRpdiBzdHlsZT0iRk9OVC1TSVpFOiAxM3B4Ij5YaWFtZW4gVXNlZnVsIENvLiwgTHRkPC9k
-aXY+DQo8L3RkPg0KPC90cj4NCjx0cj4NCjx0ZCBzdHlsZT0iQkFDS0dST1VORDogIzQ0YTJkZiIg
-aGVpZ2h0PSIxIiB2YWxpZ249InRvcCIgYWxpZ249ImNlbnRlciI+PC90ZD4NCjwvdHI+DQo8L3Ri
-b2R5Pg0KPC90YWJsZT4NCjwvdGQ+DQo8L3RyPg0KPHRyPg0KPHRkIHZhbGlnbj0idG9wIiBhbGln
-bj0iY2VudGVyIj4NCjx0YWJsZSBjbGFzcz0ia2UtemVyb2JvcmRlciIgY2VsbHNwYWNpbmc9IjAi
-IGNlbGxwYWRkaW5nPSIwIiB3aWR0aD0iNzUwIiBiZ2NvbG9yPSIjZmZmZmZmIiBib3JkZXI9IjAi
-Pg0KPHRib2R5Pg0KPHRyPg0KPHRkIGhlaWdodD0iMjAiIHZhbGlnbj0iYm90dG9tIiBhbGlnbj0i
-Y2VudGVyIj4NCjx0YWJsZSBjbGFzcz0ia2UtemVyb2JvcmRlciIgY2VsbHNwYWNpbmc9IjAiIGNl
-bGxwYWRkaW5nPSIwIiB3aWR0aD0iOTAlIiBib3JkZXI9IjAiPg0KPHRib2R5Pg0KPHRyPg0KPHRk
-IGFsaWduPSJjZW50ZXIiPg0KPGRpdiBzdHlsZT0iRk9OVC1TSVpFOiAxMnB4Ij5UbzogbGludXgt
-a2VybmVsPC9kaXY+DQo8L3RkPg0KPHRkIGFsaWduPSJjZW50ZXIiPg0KPGRpdiBzdHlsZT0iRk9O
-VC1TSVpFOiAxMnB4Ij50aW1lOiAyMDE5LzQvMSAxNDo0MTo0MTwvZGl2Pg0KPC90ZD4NCjwvdHI+
-DQo8L3Rib2R5Pg0KPC90YWJsZT4NCjwvdGQ+DQo8L3RyPg0KPHRyPg0KPHRkIGhlaWdodD0iMjAi
-IHZhbGlnbj0iYm90dG9tIiBhbGlnbj0iY2VudGVyIj4NCjx0YWJsZSBjbGFzcz0ia2UtemVyb2Jv
-cmRlciIgY2VsbHNwYWNpbmc9IjAiIGNlbGxwYWRkaW5nPSIwIiB3aWR0aD0iOTAlIiBib3JkZXI9
-IjAiPg0KPHRib2R5Pg0KPHRyPg0KPHRkIGFsaWduPSJjZW50ZXIiPg0KPGRpdiBzdHlsZT0iRk9O
-VC1TSVpFOiAxMnB4Ij5XZWJzaXRlOiA8YSBocmVmPSJodHRwOi8vY2hpbmFkcnVndGVzdC5jb20v
-IiB0YXJnZXQ9Il9ibGFuayIgZGF0YS1rZS1zcmM9Imh0dHA6Ly9jaGluYWRydWd0ZXN0LmNvbSI+
-DQpjaGluYWRydWd0ZXN0LmNvbTwvYT4gPC9kaXY+DQo8L3RkPg0KPHRkIGFsaWduPSJjZW50ZXIi
-Pg0KPGRpdiBzdHlsZT0iRk9OVC1TSVpFOiAxMnB4Ij5QaG9uZTogKCYjNDM7ODYpIDE4MDMwMTYw
-ODE2PC9kaXY+DQo8L3RkPg0KPHRkIGFsaWduPSJjZW50ZXIiPg0KPGRpdiBzdHlsZT0iRk9OVC1T
-SVpFOiAxMnB4Ij5FbWFpbDogPGEgaHJlZj0ibWFpbHRvOiUyMGFkbWluQHhtdXNlZnVsLmNvbSIg
-dGFyZ2V0PSJfYmxhbmsiIGRhdGEta2Utc3JjPSJtYWlsdG86IGFkbWluQHhtdXNlZnVsLmNvbSI+
-DQphZG1pbkB4bXVzZWZ1bC5jb208L2E+IDwvZGl2Pg0KPC90ZD4NCjwvdHI+DQo8L3Rib2R5Pg0K
-PC90YWJsZT4NCjwvdGQ+DQo8L3RyPg0KPHRyPg0KPHRkIGhlaWdodD0iMzAiIHZhbGlnbj0idG9w
-Ij4mbmJzcDs8L3RkPg0KPC90cj4NCjx0cj4NCjx0ZCB2YWxpZ249Im1pZGRsZSIgYWxpZ249ImNl
-bnRlciI+DQo8dGFibGUgY2xhc3M9ImtlLXplcm9ib3JkZXIiIGNlbGxzcGFjaW5nPSIwIiBjZWxs
-cGFkZGluZz0iMCIgd2lkdGg9IjUwJSIgYm9yZGVyPSIwIj4NCjx0Ym9keT4NCjx0cj4NCjx0ZCBh
-bGlnbj0iY2VudGVyIj4NCjxkaXY+PGEgaHJlZj0ibWFpbHRvOmFkbWluQHhtdXNlZnVsLmNvbSIg
-dGFyZ2V0PSJfYmxhbmsiIGRhdGEta2Utc3JjPSJtYWlsdG86YWRtaW5AeG11c2VmdWwuY29tIj4N
-CjxkaXYgc3R5bGU9IkZPTlQtU0laRTogMjRweDsgQkFDS0dST1VORDogIzRjYjJmMyI+UiBFIFAg
-TCBZPC9kaXY+DQo8L2E+PC9kaXY+DQo8L3RkPg0KPC90cj4NCjwvdGJvZHk+DQo8L3RhYmxlPg0K
-PC90ZD4NCjwvdHI+DQo8dHI+DQo8dGQgaGVpZ2h0PSIzMCIgdmFsaWduPSJ0b3AiPiZuYnNwOzwv
-dGQ+DQo8L3RyPg0KPC90Ym9keT4NCjwvdGFibGU+DQo8L3RkPg0KPC90cj4NCjwvdGJvZHk+DQo8
-L3RhYmxlPg0KPC90ZD4NCjwvdHI+DQo8L3Rib2R5Pg0KPC90YWJsZT4NCjwvZGl2Pg0KPGltZyBz
-cmM9Imh0dHA6Ly9tYy5hdmF3ZWJzaXRlLmNvbS9zdGF0Lz9rZXlpZD1CRkVCRkJGRjAwMDIwNjU1
-UEMtMjAxODA0MjdNWFJSJmFtcDtlbWFpbGlkPWxpbnV4LWtlcm5lbEBhcmNoaXZlci5rZXJuZWwu
-b3JnJmFtcDtzZGF0ZT0yMDE5LTQtMSAxNDo0MTo0MSZhbXA7bWFpbHRpdGxlPUluIFZpdHJvIERp
-YWdub3N0aWMgUHJvZHVjdCBGcm9tIFhJYW1lbiBVc2VmdWwiIHdpZHRoPSIwIiBoZWlnaHQ9IjAi
-Pg0KPC9ib2R5Pg0KPC9odG1sPg0K
+> ---
+>  drivers/dma-buf/dma-buf.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index 7c858020d14b..4d4ae9fe9ac8 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -90,6 +90,10 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
+>  
+>  	dmabuf = file->private_data;
+>  
+> +	/* check if buffer supports mmap */
+> +	if (!dmabuf->ops->mmap)
+> +		return -EINVAL;
+> +
+>  	/* check for overflowing the buffer's size */
+>  	if (vma->vm_pgoff + vma_pages(vma) >
+>  	    dmabuf->size >> PAGE_SHIFT)
+> @@ -404,8 +408,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
+>  			  || !exp_info->ops
+>  			  || !exp_info->ops->map_dma_buf
+>  			  || !exp_info->ops->unmap_dma_buf
+> -			  || !exp_info->ops->release
+> -			  || !exp_info->ops->mmap)) {
+> +			  || !exp_info->ops->release)) {
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> @@ -906,6 +909,10 @@ int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
+>  	if (WARN_ON(!dmabuf || !vma))
+>  		return -EINVAL;
+>  
+> +	/* check if buffer supports mmap */
+> +	if (!dmabuf->ops->mmap)
+> +		return -EINVAL;
+> +
+>  	/* check for offset overflow */
+>  	if (pgoff + vma_pages(vma) < pgoff)
+>  		return -EOVERFLOW;
+> -- 
+> 2.21.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
---_000_501BE801F65C49CCB7540D86527E5188PC20180427MXRR_--
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
