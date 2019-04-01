@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C19C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A26C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 175AF20856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862F020856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139033;
-	bh=gRNKUdHSmJ5qFY9axlxVYghT1TUStAWLdnIJjAg5ZAQ=;
+	s=default; t=1554139035;
+	bh=eHC1Qe42dZHwNDnmkqEl0YQJ0gPLiMOAqohtuVP/B5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JK5D8dCASY20E15B30dfSdJxswMjLEDUATSTdnlP+nb2CRqfvkrY2chjzSkkh4Udj
-	 77CZDlALL9EfGO5IPA5cODUMQ9KB+vRnNBvDtaDcygKyUgbCce8Qw+rnDiJdMZKw3m
-	 oxvc3cYgb9jxIKde8BdRwovMMfYizgiYLHP0b6U0=
+	b=A4rvGav+qrFozLB0pOkPCBJRrp+iGXD6klrQVKGmaOrD1KQm60t+lmzBNiF5L2zFi
+	 HLHBwUgfUott8M4sVlHyBPbgDj2tZvnnOLTzzDO04U1avKXZuL1HMU6L+D8wP2Rc6p
+	 /XV5guVEfF4aQMTZQICYf1N9OAymoOI8xdywcKAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731138AbfDARRL (ORCPT
+        id S1730514AbfDARRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:17:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42962 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730425AbfDARRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:17:09 -0400
+        id S1731134AbfDARRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:17:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B298C206C0;
-        Mon,  1 Apr 2019 17:17:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A40820856;
+        Mon,  1 Apr 2019 17:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139028;
-        bh=gRNKUdHSmJ5qFY9axlxVYghT1TUStAWLdnIJjAg5ZAQ=;
+        s=default; t=1554139030;
+        bh=eHC1Qe42dZHwNDnmkqEl0YQJ0gPLiMOAqohtuVP/B5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=it20+sj1/x5T+e0U0qldYHg7tay3VqKQFi5JUcG/MBAq8MZTWGWdpDqpKh7P5I+qH
-         av6iXhV8DIhQBd3Qd/TyQYKFd3setcGDkcl0EK88XYspx7a8rH9xm2thsCIM4BLsyH
-         2TUqKtF1gsDwRvGH+4ivbxqgV02hcQiXwoL+ELaM=
+        b=mqx9inEQ7gRBTXdmoExLqx02uYbomIV3VsdSuUpMdpiQMbe480ixtvn7oEPpEgqf0
+         38k9Qtj4DRIFhOTqBMUEZ1s0wf+dUtcBlILSrqL7bd4eoXhPuKBfqvqMxP4xosnbnw
+         ggIUaqSVt5fUsI3xVZ8wMrxBfL3W92Sj3QfJns7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lin Yi <teroincn@163.com>,
+        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 091/134] USB: serial: mos7720: fix mos_parport refcount imbalance on error path
-Date:   Mon,  1 Apr 2019 19:02:07 +0200
-Message-Id: <20190401170052.772147186@linuxfoundation.org>
+Subject: [PATCH 4.19 092/134] USB: serial: option: set driver_info for SIM5218 and compatibles
+Date:   Mon,  1 Apr 2019 19:02:08 +0200
+Message-Id: <20190401170052.857001344@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -64,47 +64,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lin Yi <teroincn@163.com>
+From: Mans Rullgard <mans@mansr.com>
 
-commit 2908b076f5198d231de62713cb2b633a3a4b95ac upstream.
+commit f8df5c2c3e2df5ffaf9fb5503da93d477a8c7db4 upstream.
 
-The write_parport_reg_nonblock() helper takes a reference to the struct
-mos_parport, but failed to release it in a couple of error paths after
-allocation failures, leading to a memory leak.
+The SIMCom SIM5218 and compatible devices have 5 USB interfaces, only 4
+of which are serial ports.  The fifth is a network interface supported
+by the qmi-wwan driver.  Furthermore, the serial ports do not support
+modem control signals.  Add driver_info flags to reflect this.
 
-Johan said that move the kref_get() and mos_parport assignment to the
-end of urbtrack initialisation is a better way, so move it. and
-mos_parport do not used until urbtrack initialisation.
-
-Signed-off-by: Lin Yi <teroincn@163.com>
-Fixes: b69578df7e98 ("USB: usbserial: mos7720: add support for parallel port on moschip 7715")
-Cc: stable <stable@vger.kernel.org>     # 2.6.35
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Fixes: ec0cd94d881c ("usb: option: add SIMCom SIM5218")
+Cc: stable <stable@vger.kernel.org>	# 3.2
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/mos7720.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/serial/option.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/mos7720.c
-+++ b/drivers/usb/serial/mos7720.c
-@@ -366,8 +366,6 @@ static int write_parport_reg_nonblock(st
- 	if (!urbtrack)
- 		return -ENOMEM;
- 
--	kref_get(&mos_parport->ref_count);
--	urbtrack->mos_parport = mos_parport;
- 	urbtrack->urb = usb_alloc_urb(0, GFP_ATOMIC);
- 	if (!urbtrack->urb) {
- 		kfree(urbtrack);
-@@ -388,6 +386,8 @@ static int write_parport_reg_nonblock(st
- 			     usb_sndctrlpipe(usbdev, 0),
- 			     (unsigned char *)urbtrack->setup,
- 			     NULL, 0, async_complete, urbtrack);
-+	kref_get(&mos_parport->ref_count);
-+	urbtrack->mos_parport = mos_parport;
- 	kref_init(&urbtrack->ref_count);
- 	INIT_LIST_HEAD(&urbtrack->urblist_entry);
- 
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1066,7 +1066,8 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(3) },
+ 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x6613)}, /* Onda H600/ZTE MF330 */
+ 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x0023)}, /* ONYX 3G device */
+-	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000)}, /* SIMCom SIM5218 */
++	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x9000), /* SIMCom SIM5218 */
++	  .driver_info = NCTRL(0) | NCTRL(1) | NCTRL(2) | NCTRL(3) | RSVD(4) },
+ 	/* Quectel products using Qualcomm vendor ID */
+ 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC15)},
+ 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, QUECTEL_PRODUCT_UC20),
 
 
