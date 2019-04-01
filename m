@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF716C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB9CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39812171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1264A2133D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138919;
-	bh=+nXd50clnepF6RQyo8ZArmXVXGCmvgi0rEAHokRAIj0=;
+	s=default; t=1554138923;
+	bh=gK2b5IYpBZCUxJQmtaHHFYeHv8u/HINzICstOh8Gzqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RAMLW5Wwff2SfQTlUGglpOuQ5qGaoUKx1yy00XXF/LXFiLPhxvALrRxuUVXQyEPVe
-	 No3yR0dbdgoNS0XMNbIMIn+MowoYuoE52tkXK5RzbGS7dP2nofokNjtCa4Yh4hP20p
-	 yND1QK9gXojHEl03YWawqKkqUAqrUAXRAavaRyBA=
+	b=Cv4WNR2zBCJjyOT4EjaLinatxYmcJjiwSbsi627JxUJa4uVKJgrgCbu6M+XnUQ0Xf
+	 LhmFvW3KIhygd3J5/OgwAx/DmaBY3Numrcmq1UTZ/mcYXpiLGzrt6u6UipiFqLD1M+
+	 GWATAi1FXb6y7TVpyZ80LHftpFQcHvFmu1n3f+DU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730882AbfDARPS (ORCPT
+        id S1730892AbfDARPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:15:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39272 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:15:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730501AbfDARPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:15:16 -0400
+        id S1730501AbfDARPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:15:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B05AD206C0;
-        Mon,  1 Apr 2019 17:15:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFC612133D;
+        Mon,  1 Apr 2019 17:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138915;
-        bh=+nXd50clnepF6RQyo8ZArmXVXGCmvgi0rEAHokRAIj0=;
+        s=default; t=1554138919;
+        bh=gK2b5IYpBZCUxJQmtaHHFYeHv8u/HINzICstOh8Gzqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=al+fc/MhMqstizbGG990HkUXWfKUePq39rKGRfPFDtz4tidFFaCkv74+/R8QH5Osv
-         YbsVqUamaD2z3GNNefJdmEUJ3gA4aGm73+691qF6wFeW8dWnY1gb26Y8SoA8v90Mmz
-         sQALv/lJ8+7WpuNxHBg2VkyLrzR7iAZbueHzCiRA=
+        b=M9UlOKPOSyNxaFAmtsN8WpMbZCGqayjr1owZEiNnJSH9KnWhvgNNX2TmYO00Mg1QZ
+         4npZFwjAGp0w4p+YJ0B9Jvnoy7j/RMws9ts6lMGhMUMX0yWeh0yPIUFjFeattCjjA0
+         gHwXtIrLpoBxK8zGM7jqFBxux2h8HeVMnIL3i2gA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 058/134] ALSA: seq: oss: Fix Spectre v1 vulnerability
-Date:   Mon,  1 Apr 2019 19:01:34 +0200
-Message-Id: <20190401170050.044388578@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 032/134] tun: add a missing rcu_read_unlock() in error path
+Date:   Mon,  1 Apr 2019 19:01:08 +0200
+Message-Id: <20190401170047.773351904@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -66,53 +66,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit c709f14f0616482b67f9fbcb965e1493a03ff30b upstream.
+commit 9180bb4f046064dfa4541488102703b402bb04e1 upstream.
 
-dev is indirectly controlled by user-space, hence leading to
-a potential exploitation of the Spectre variant 1 vulnerability.
+In my latest patch I missed one rcu_read_unlock(), in case
+device is down.
 
-This issue was detected with the help of Smatch:
-
-sound/core/seq/oss/seq_oss_synth.c:626 snd_seq_oss_synth_make_info() warn: potential spectre issue 'dp->synths' [w] (local cap)
-
-Fix this by sanitizing dev before using it to index dp->synths.
-
-Notice that given that speculation windows are large, the policy is
-to kill the speculation on the first load and not worry if it can be
-completed with a dependent load/store [1].
-
-[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 4477138fa0ae ("tun: properly test for IFF_UP")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/oss/seq_oss_synth.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/tun.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/core/seq/oss/seq_oss_synth.c
-+++ b/sound/core/seq/oss/seq_oss_synth.c
-@@ -617,13 +617,14 @@ int
- snd_seq_oss_synth_make_info(struct seq_oss_devinfo *dp, int dev, struct synth_info *inf)
- {
- 	struct seq_oss_synth *rec;
-+	struct seq_oss_synthinfo *info = get_synthinfo_nospec(dp, dev);
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1915,6 +1915,7 @@ drop:
+ 	rcu_read_lock();
+ 	if (unlikely(!(tun->dev->flags & IFF_UP))) {
+ 		err = -EIO;
++		rcu_read_unlock();
+ 		goto drop;
+ 	}
  
--	if (dev < 0 || dev >= dp->max_synthdev)
-+	if (!info)
- 		return -ENXIO;
- 
--	if (dp->synths[dev].is_midi) {
-+	if (info->is_midi) {
- 		struct midi_info minf;
--		snd_seq_oss_midi_make_info(dp, dp->synths[dev].midi_mapped, &minf);
-+		snd_seq_oss_midi_make_info(dp, info->midi_mapped, &minf);
- 		inf->synth_type = SYNTH_TYPE_MIDI;
- 		inf->synth_subtype = 0;
- 		inf->nr_voices = 16;
 
 
