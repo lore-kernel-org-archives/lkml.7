@@ -7,67 +7,53 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2F8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE414C10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E4B21903
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE20F21852
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139124;
-	bh=uQVtPtytSgfQ/BPTEqJ0cjyGGNb0l8qcXbmePt3Ustc=;
+	s=default; t=1554139125;
+	bh=Ke8jW1ZlHA9oZ0Ee6iTxgd+6xftHt32sI5lq0CU2q/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oqUjkcN1WZJ4e2GTnMTSYEUnSESKt5R/HWTXS/302LOrjHgaZTXXiydLQhSDyPKm5
-	 Z6GbNP/x/pGwP+Z2TgaJlgroBq1MvETjwErBquZbeop+NTgKwLKkR7XcbumeKkBT/O
-	 MUrQ1S6QJ2rSwBX1g7a8lc5wGcH1Xv13ixxDeJyk=
+	b=yGaX7ojQ0m2Bjm1t2YYGkznDdMoRw5QbZrXpyAv6nqqSuE+YbJhANSotpZz9EBBDv
+	 krhHBPUZFTtPOPiIQQtx9aqtsRPj2XhqrWHRQ9rTKI7TvhuOkKnzLadMtbcGqcYZYF
+	 NJNLNmlbD6g9Ucg1ol60/T27Q83oVVf/cY45P7z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731403AbfDARSn (ORCPT
+        id S1731413AbfDARSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:18:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46042 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730959AbfDARSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:18:38 -0400
+        id S1728594AbfDARSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:18:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C99622171F;
-        Mon,  1 Apr 2019 17:18:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F33E218FF;
+        Mon,  1 Apr 2019 17:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139117;
-        bh=uQVtPtytSgfQ/BPTEqJ0cjyGGNb0l8qcXbmePt3Ustc=;
+        s=default; t=1554139120;
+        bh=Ke8jW1ZlHA9oZ0Ee6iTxgd+6xftHt32sI5lq0CU2q/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qyakZ2adBT6UgoCcWQfoHULW+HxHcqwe1SbytZuFpUhjzdVdncU6wxHl2gDa4jmFj
-         bNkvX58YxeiHUh42qSRjQUCtIo2mUWQwzAuhjycmnNbukTJ6E7qHieL1tDf/Drytsy
-         kjtHoadLegChuLK5qy2NwHIuNAdNycyq5Vm92AvQ=
+        b=heWD6KHsXixO4YdyJRVd/gvPR4zyQ18iB1xzNVSfgIM5swTafDIalo87rvuW6hotK
+         SEHvIuVAYryAG7KBVD2QCwe6XdjCvPpdEUI+ooj/xppKjLcO0G7uQvn7Q4hpQUZ4F9
+         +abWwvJXAc5X6aQ/qf85KOVL6778fBLWSMCF0EeE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Huaisheng Ye <yehs1@lenovo.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Yong Wu <yong.wu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomasz Figa <tfiga@google.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 111/134] mm: add support for kmem caches in DMA32 zone
-Date:   Mon,  1 Apr 2019 19:02:27 +0200
-Message-Id: <20190401170054.591754683@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Maxime Coquelin <maxime.coquelin@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Don Zickus <dzickus@redhat.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Subject: [PATCH 4.19 120/134] watchdog: Respect watchdog cpumask on CPU hotplug
+Date:   Mon,  1 Apr 2019 19:02:36 +0200
+Message-Id: <20190401170055.561424856@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -86,169 +72,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 6d6ea1e967a246f12cfe2f5fb743b70b2e608d4a upstream.
+commit 7dd47617114921fdd8c095509e5e7b4373cc44a1 upstream.
 
-Patch series "iommu/io-pgtable-arm-v7s: Use DMA32 zone for page tables",
-v6.
+The rework of the watchdog core to use cpu_stop_work broke the watchdog
+cpumask on CPU hotplug.
 
-This is a followup to the discussion in [1], [2].
+The watchdog_enable/disable() functions are now called unconditionally from
+the hotplug callback, i.e. even on CPUs which are not in the watchdog
+cpumask. As a consequence the watchdog can become unstoppable.
 
-IOMMUs using ARMv7 short-descriptor format require page tables (level 1
-and 2) to be allocated within the first 4GB of RAM, even on 64-bit
-systems.
+Only invoke them when the plugged CPU is in the watchdog cpumask.
 
-For L1 tables that are bigger than a page, we can just use
-__get_free_pages with GFP_DMA32 (on arm64 systems only, arm would still
-use GFP_DMA).
-
-For L2 tables that only take 1KB, it would be a waste to allocate a full
-page, so we considered 3 approaches:
- 1. This series, adding support for GFP_DMA32 slab caches.
- 2. genalloc, which requires pre-allocating the maximum number of L2 page
-    tables (4096, so 4MB of memory).
- 3. page_frag, which is not very memory-efficient as it is unable to reuse
-    freed fragments until the whole page is freed. [3]
-
-This series is the most memory-efficient approach.
-
-stable@ note:
-  We confirmed that this is a regression, and IOMMU errors happen on 4.19
-  and linux-next/master on MT8173 (elm, Acer Chromebook R13). The issue
-  most likely starts from commit ad67f5a6545f ("arm64: replace ZONE_DMA
-  with ZONE_DMA32"), i.e. 4.15, and presumably breaks a number of Mediatek
-  platforms (and maybe others?).
-
-[1] https://lists.linuxfoundation.org/pipermail/iommu/2018-November/030876.html
-[2] https://lists.linuxfoundation.org/pipermail/iommu/2018-December/031696.html
-[3] https://patchwork.codeaurora.org/patch/671639/
-
-This patch (of 3):
-
-IOMMUs using ARMv7 short-descriptor format require page tables to be
-allocated within the first 4GB of RAM, even on 64-bit systems.  On arm64,
-this is done by passing GFP_DMA32 flag to memory allocation functions.
-
-For IOMMU L2 tables that only take 1KB, it would be a waste to allocate
-a full page using get_free_pages, so we considered 3 approaches:
- 1. This patch, adding support for GFP_DMA32 slab caches.
- 2. genalloc, which requires pre-allocating the maximum number of L2
-    page tables (4096, so 4MB of memory).
- 3. page_frag, which is not very memory-efficient as it is unable
-    to reuse freed fragments until the whole page is freed.
-
-This change makes it possible to create a custom cache in DMA32 zone using
-kmem_cache_create, then allocate memory using kmem_cache_alloc.
-
-We do not create a DMA32 kmalloc cache array, as there are currently no
-users of kmalloc(..., GFP_DMA32).  These calls will continue to trigger a
-warning, as we keep GFP_DMA32 in GFP_SLAB_BUG_MASK.
-
-This implies that calls to kmem_cache_*alloc on a SLAB_CACHE_DMA32
-kmem_cache must _not_ use GFP_DMA32 (it is anyway redundant and
-unnecessary).
-
-Link: http://lkml.kernel.org/r/20181210011504.122604-2-drinkcat@chromium.org
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Sasha Levin <Alexander.Levin@microsoft.com>
-Cc: Huaisheng Ye <yehs1@lenovo.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Yong Wu <yong.wu@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Tomasz Figa <tfiga@google.com>
-Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 9cf57731b63e ("watchdog/softlockup: Replace "watchdog/%u" threads with cpu_stop_work")
+Reported-by: Maxime Coquelin <maxime.coquelin@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Maxime Coquelin <maxime.coquelin@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Don Zickus <dzickus@redhat.com>
+Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1903262245490.1789@nanos.tec.linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/slab.h |    2 ++
- mm/slab.c            |    2 ++
- mm/slab.h            |    3 ++-
- mm/slab_common.c     |    2 +-
- mm/slub.c            |    5 +++++
- 5 files changed, 12 insertions(+), 2 deletions(-)
+ kernel/watchdog.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -32,6 +32,8 @@
- #define SLAB_HWCACHE_ALIGN	((slab_flags_t __force)0x00002000U)
- /* Use GFP_DMA memory */
- #define SLAB_CACHE_DMA		((slab_flags_t __force)0x00004000U)
-+/* Use GFP_DMA32 memory */
-+#define SLAB_CACHE_DMA32	((slab_flags_t __force)0x00008000U)
- /* DEBUG: Store the last owner for bug hunting */
- #define SLAB_STORE_USER		((slab_flags_t __force)0x00010000U)
- /* Panic if kmem_cache_create() fails */
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -2124,6 +2124,8 @@ done:
- 	cachep->allocflags = __GFP_COMP;
- 	if (flags & SLAB_CACHE_DMA)
- 		cachep->allocflags |= GFP_DMA;
-+	if (flags & SLAB_CACHE_DMA32)
-+		cachep->allocflags |= GFP_DMA32;
- 	if (flags & SLAB_RECLAIM_ACCOUNT)
- 		cachep->allocflags |= __GFP_RECLAIMABLE;
- 	cachep->size = size;
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -127,7 +127,8 @@ static inline slab_flags_t kmem_cache_fl
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -547,13 +547,15 @@ static void softlockup_start_all(void)
  
+ int lockup_detector_online_cpu(unsigned int cpu)
+ {
+-	watchdog_enable(cpu);
++	if (cpumask_test_cpu(cpu, &watchdog_allowed_mask))
++		watchdog_enable(cpu);
+ 	return 0;
+ }
  
- /* Legal flag mask for kmem_cache_create(), for various configurations */
--#define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | SLAB_PANIC | \
-+#define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | \
-+			 SLAB_CACHE_DMA32 | SLAB_PANIC | \
- 			 SLAB_TYPESAFE_BY_RCU | SLAB_DEBUG_OBJECTS )
+ int lockup_detector_offline_cpu(unsigned int cpu)
+ {
+-	watchdog_disable(cpu);
++	if (cpumask_test_cpu(cpu, &watchdog_allowed_mask))
++		watchdog_disable(cpu);
+ 	return 0;
+ }
  
- #if defined(CONFIG_DEBUG_SLAB)
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -53,7 +53,7 @@ static DECLARE_WORK(slab_caches_to_rcu_d
- 		SLAB_FAILSLAB | SLAB_KASAN)
- 
- #define SLAB_MERGE_SAME (SLAB_RECLAIM_ACCOUNT | SLAB_CACHE_DMA | \
--			 SLAB_ACCOUNT)
-+			 SLAB_CACHE_DMA32 | SLAB_ACCOUNT)
- 
- /*
-  * Merge control. If this is set then no merging of slab caches will occur.
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -3539,6 +3539,9 @@ static int calculate_sizes(struct kmem_c
- 	if (s->flags & SLAB_CACHE_DMA)
- 		s->allocflags |= GFP_DMA;
- 
-+	if (s->flags & SLAB_CACHE_DMA32)
-+		s->allocflags |= GFP_DMA32;
-+
- 	if (s->flags & SLAB_RECLAIM_ACCOUNT)
- 		s->allocflags |= __GFP_RECLAIMABLE;
- 
-@@ -5633,6 +5636,8 @@ static char *create_unique_id(struct kme
- 	 */
- 	if (s->flags & SLAB_CACHE_DMA)
- 		*p++ = 'd';
-+	if (s->flags & SLAB_CACHE_DMA32)
-+		*p++ = 'D';
- 	if (s->flags & SLAB_RECLAIM_ACCOUNT)
- 		*p++ = 'a';
- 	if (s->flags & SLAB_CONSISTENCY_CHECKS)
 
 
