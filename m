@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BF9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618A8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06F921473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3045C20856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138878;
-	bh=5e7UMT3mPRevpvlJWDGqCX3mO2oHXzMPIJ1+Yx0UYu4=;
+	s=default; t=1554138882;
+	bh=ODts6AQIyLFSUH0Sz8oVjOyqebxu/7/L2v95R3qiCic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=phxXUafyZd35A6ifpahzkfGmTK6B3YaLpuNnmXSDP/+YOSuB8B0W77t0p27NBE/hA
-	 sfyIUt2VkUToD88ljCew/ug2nW40Ho3XsC4PtEc+t786Y26tTkJXxvobY5vn0cDA08
-	 pAsmNF92AvsihsVqk9dc6iV99Uw2ocp3K5/Q1uX4=
+	b=OuLBYDsW216DTqOjZhR9fcbVLhCWIY2Ommoq7rBvc8INXPHx3pJEV4p7ht1aCNEiB
+	 zc9TG/u4Uw/RFkQ3ym1qKrAwODYfXFrFx7+Dsv8y97ULeX61R+MP7Vw3FhjOB+Mw3D
+	 fVw7OclhqWR+URx4kJGHg/eWvqLts+zsD6tCu1dM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbfDAROg (ORCPT
+        id S1730788AbfDAROl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:14:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37976 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:14:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730765AbfDAROe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:14:34 -0400
+        id S1730776AbfDAROj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:14:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A46FC21473;
-        Mon,  1 Apr 2019 17:14:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4216206C0;
+        Mon,  1 Apr 2019 17:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138874;
-        bh=5e7UMT3mPRevpvlJWDGqCX3mO2oHXzMPIJ1+Yx0UYu4=;
+        s=default; t=1554138878;
+        bh=ODts6AQIyLFSUH0Sz8oVjOyqebxu/7/L2v95R3qiCic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T1EhowBrrbMaTkzsj4e5YLMjbAD5EnZ5ofbSmUmKlIztVpGk6BcGyfQ8GQ7RX9lxl
-         FXtSbqbe9HrG3+YOD49M6aKzqYgq6aQHShErdlZ5K4RJVvMVaEsox9VU7t+/HtPXmj
-         uVGN5eUGyfdA0QjAxBgJJFwDNnkwgYrHq5qU27uc=
+        b=i+NImfTyMJxehNT8Hcal0DvWDO/4GB+yNXnv0l2m3wwn9VPP+x5XltDO2SkQ5w6gH
+         DR8JUk0K85uS5dhle+8VjwCtIT1s+MeafX0aqW8yRy7I0iEy9so06Qx8U7hAH0xTjF
+         5ld2QdIsEsCgWtG6KdPjTpJKX/8nXxKFvBcAqLd4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, LimeTech <tomm@lime-technology.com>,
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Andrea Righi <andrea.righi@canonical.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 047/134] btrfs: dont report readahead errors and dont update statistics
-Date:   Mon,  1 Apr 2019 19:01:23 +0200
-Message-Id: <20190401170048.978032345@linuxfoundation.org>
+Subject: [PATCH 4.19 048/134] btrfs: raid56: properly unmap parity page in finish_parity_scrub()
+Date:   Mon,  1 Apr 2019 19:01:24 +0200
+Message-Id: <20190401170049.058723626@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -65,40 +66,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: David Sterba <dsterba@suse.com>
+From: Andrea Righi <andrea.righi@canonical.com>
 
-commit 0cc068e6ee59c1fffbfa977d8bf868b7551d80ac upstream.
+commit 3897b6f0a859288c22fb793fad11ec2327e60fcd upstream.
 
-As readahead is an optimization, all errors are usually filtered out,
-but still properly handled when the real read call is done. The commit
-5e9d398240b2 ("btrfs: readpages() should submit IO as read-ahead") added
-REQ_RAHEAD to readpages() because that's only used for readahead
-(despite what one would expect from the callback name).
+Parity page is incorrectly unmapped in finish_parity_scrub(), triggering
+a reference counter bug on i386, i.e.:
 
-This causes a flood of messages and inflated read error stats, so skip
-reporting in case it's readahead.
+ [ 157.662401] kernel BUG at mm/highmem.c:349!
+ [ 157.666725] invalid opcode: 0000 [#1] SMP PTI
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202403
-Reported-by: LimeTech <tomm@lime-technology.com>
-Fixes: 5e9d398240b2 ("btrfs: readpages() should submit IO as read-ahead")
-CC: stable@vger.kernel.org # 4.19+
+The reason is that kunmap(p_page) was completely left out, so we never
+did an unmap for the p_page and the loop unmapping the rbio page was
+iterating over the wrong number of stripes: unmapping should be done
+with nr_data instead of rbio->real_stripes.
+
+Test case to reproduce the bug:
+
+ - create a raid5 btrfs filesystem:
+   # mkfs.btrfs -m raid5 -d raid5 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+
+ - mount it:
+   # mount /dev/sdb /mnt
+
+ - run btrfs scrub in a loop:
+   # while :; do btrfs scrub start -BR /mnt; done
+
+BugLink: https://bugs.launchpad.net/bugs/1812845
+Fixes: 5a6ac9eacb49 ("Btrfs, raid56: support parity scrub on raid56")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/volumes.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/raid56.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -6051,7 +6051,7 @@ static void btrfs_end_bio(struct bio *bi
- 				if (bio_op(bio) == REQ_OP_WRITE)
- 					btrfs_dev_stat_inc_and_print(dev,
- 						BTRFS_DEV_STAT_WRITE_ERRS);
--				else
-+				else if (!(bio->bi_opf & REQ_RAHEAD))
- 					btrfs_dev_stat_inc_and_print(dev,
- 						BTRFS_DEV_STAT_READ_ERRS);
- 				if (bio->bi_opf & REQ_PREFLUSH)
+--- a/fs/btrfs/raid56.c
++++ b/fs/btrfs/raid56.c
+@@ -2429,8 +2429,9 @@ static noinline void finish_parity_scrub
+ 			bitmap_clear(rbio->dbitmap, pagenr, 1);
+ 		kunmap(p);
+ 
+-		for (stripe = 0; stripe < rbio->real_stripes; stripe++)
++		for (stripe = 0; stripe < nr_data; stripe++)
+ 			kunmap(page_in_rbio(rbio, stripe, pagenr, 0));
++		kunmap(p_page);
+ 	}
+ 
+ 	__free_page(p_page);
 
 
