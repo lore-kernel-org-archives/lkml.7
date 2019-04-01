@@ -2,138 +2,171 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53777C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FB2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16380206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89DE206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:39:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="C8MHHWHF"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="E61aTytX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbfDASi4 (ORCPT
+        id S1729071AbfDASj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 14:38:56 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:6670 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728756AbfDASiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 14:38:54 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.100]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ca25ab90000>; Tue, 02 Apr 2019 02:38:49 +0800
-Received: from HKMAIL103.nvidia.com ([10.18.16.12])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 01 Apr 2019 11:38:49 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Mon, 01 Apr 2019 11:38:49 -0700
-Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL103.nvidia.com
- (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 1 Apr
- 2019 18:38:48 +0000
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (104.47.50.52) by
- HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 1 Apr 2019 18:38:48 +0000
-Received: from BYAPR12MB3398.namprd12.prod.outlook.com (20.178.196.24) by
- BYAPR12MB3288.namprd12.prod.outlook.com (20.179.93.209) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.17; Mon, 1 Apr 2019 18:38:45 +0000
-Received: from BYAPR12MB3398.namprd12.prod.outlook.com
- ([fe80::80de:b71d:ffd0:3d26]) by BYAPR12MB3398.namprd12.prod.outlook.com
- ([fe80::80de:b71d:ffd0:3d26%6]) with mapi id 15.20.1750.017; Mon, 1 Apr 2019
- 18:38:45 +0000
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Krishna Yarlagadda" <kyarlagadda@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH V1 04/26] spi: tegra114: use packed mode for 32 bits per
- word
-Thread-Topic: [PATCH V1 04/26] spi: tegra114: use packed mode for 32 bits per
- word
-Thread-Index: AQHU5GH4krq+WJC5Ek2kxSzyLNt/MaYm8zCAgAC38LA=
-Date:   Mon, 1 Apr 2019 18:38:45 +0000
-Message-ID: <BYAPR12MB33985144F175FB9D01DA5E12C2550@BYAPR12MB3398.namprd12.prod.outlook.com>
-References: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
- <1553666207-11414-4-git-send-email-skomatineni@nvidia.com>
- <20190401073903.GI2059@sirena.org.uk>
-In-Reply-To: <20190401073903.GI2059@sirena.org.uk>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=skomatineni@nvidia.com; 
-x-originating-ip: [216.228.112.22]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3168bedb-5e07-4456-d7b8-08d6b6d145ae
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR12MB3288;
-x-ms-traffictypediagnostic: BYAPR12MB3288:
-x-microsoft-antispam-prvs: <BYAPR12MB3288F1DE19F325F5A40BDCD9C2550@BYAPR12MB3288.namprd12.prod.outlook.com>
-x-forefront-prvs: 0994F5E0C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(39860400002)(136003)(346002)(366004)(189003)(199004)(6506007)(256004)(76176011)(102836004)(9686003)(6916009)(99286004)(53936002)(5660300002)(8676002)(6246003)(68736007)(81166006)(305945005)(476003)(6116002)(2906002)(26005)(186003)(478600001)(229853002)(486006)(4326008)(86362001)(11346002)(6436002)(446003)(7696005)(74316002)(25786009)(71190400001)(3846002)(33656002)(14454004)(8936002)(66066001)(105586002)(55016002)(52536014)(106356001)(4744005)(316002)(97736004)(81156014)(71200400001)(7736002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB3288;H:BYAPR12MB3398.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nvidia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: aY1BF/WhplMXn8w3X/D4WetuRvUyysDquUBqgu/y9sVSbaZGsjQrvrNY70lGdmSup7/K29l/MSNbU6RhVupBKi4ah98idPf1FSbFNFnn+FoqJdA3M2wA3ZrlFgjoBqhhXpKkAiMWKKlznN4FbX0ApNrneevuUDBTCnhCI+7C3hsueitczKdDyds0TicIIvpNKJJbAkhjjcXUTxDcyZp0aG/2/7jUYxrFbUb4Hoqy56VOFfFe66jOyfSdPxmvxtWDVIXbzN7MeOhPG4O3WCKoBo9E1T7bPRf/q0xxTU1UjOyoezfTAQ59qrHBorNgV/jm8OEmMLKap9xE2NP8shT361znR5Qcfj4+PktE7iatNVaoqw/1JGVZGrRj0tek4xbbvniLpg0bjqGPBiEDwC/GD6haOhSGUSCOhL0gB3c1ydA=
+        Mon, 1 Apr 2019 14:39:56 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46247 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728007AbfDASjz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 14:39:55 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z17so11843655qts.13
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 11:39:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XgbJBvNu4pvrs53PGaaY8D5kaVsJdQn54CRa8+MNjYc=;
+        b=E61aTytXuBoRX0zRYaT5rGQ8hPnIc8UzSZ63Jbq4KtZMHmu8atgNRwJSJ2npT6Rb1i
+         7miMqf0sKbhnsJhcrvAN0eloAChoKtqxjqPLF3a7cIsz7KWiBuIZESBjLAFmJXkLrvY8
+         F095iigJI3GIP5m7DsEC3eiZm1ury78Op9xvhunDTvYEHb1rMIuV8pxw/+/0y/R8BiYX
+         yp4/RwkaoNrMS/TtQypeLjiERT0iczL7Cm0y5TMKwntNIyp6qEbDn25pq7dAZusp963U
+         XvmcConv6FfscrvlSeC+hW0g4U1Tw/OZnoTMX8kCVM1EYXjrMtmL08punoTvOmzYxXeb
+         i0fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XgbJBvNu4pvrs53PGaaY8D5kaVsJdQn54CRa8+MNjYc=;
+        b=DJYROCNTKQVyfey0YiaFPPzIehP5RlA+8UXP/aThE/REprweMFX/q07b9zkK1KhSEb
+         Ix+eSAXsLa7RrA8bMuo9WDq2VaGsRwsW3POx/9cdDVuJ1dEq+m+uEB7TNRBjHuaBwZZ+
+         UYStDRbNLHAWTrYGMA0uljDEJgZQZTREpZTN8bJzByfVGlxBd8I1Y+DXcvBLadZ8D3yW
+         V2BJ2Z+ZWfE1gDSMucVBKPiy4cGb+9Xd7DTNPrbvFVe3tQo2kThPKx6Ls9y5r/cNw93s
+         ubqmltZUwZ1XUJUalnbCPP56wZFx5LdX8YDZCWEgoeVO2tus5QkArdDFwjSGzj4jC3LH
+         DhXQ==
+X-Gm-Message-State: APjAAAVEW2RYbyqmc5i+++VzCgJdDt3Ff7e9WWi+zx1mSGPVHUE2dFgO
+        q32wBieiDBX0DYfQNZE2dKSxTA==
+X-Google-Smtp-Source: APXvYqx6wyjZ7ar/0p8nRR/lMoeHMvZy8z6Rqv31cu4LF5/6H+lwBwGzxGJT1XfSd8khqZsdWFfNgQ==
+X-Received: by 2002:a0c:93f2:: with SMTP id g47mr3476851qvg.22.1554143994708;
+        Mon, 01 Apr 2019 11:39:54 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id b37sm9313923qtb.92.2019.04.01.11.39.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 01 Apr 2019 11:39:53 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hB1qb-0003js-8S; Mon, 01 Apr 2019 15:39:53 -0300
+Date:   Mon, 1 Apr 2019 15:39:53 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Phil Baker <baker1tex@gmail.com>,
+        Craig Robson <craig@zhatt.com>,
+        Laura Abbott <labbott@redhat.com>,
+        linux-kernel@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Arnd Bergmann <arnd@arndb.de>, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH] tpm: Actually fail on TPM errors during "get random"
+Message-ID: <20190401183953.GI6209@ziepe.ca>
+References: <20190401183211.GA21228@beast>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3168bedb-5e07-4456-d7b8-08d6b6d145ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2019 18:38:45.1078
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3288
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1554143929; bh=o8kvv1yVeS+GJOIzqG1nALdAT+ZtCSLgAp77EZxpJZw=;
-        h=X-PGP-Universal:From:To:CC:Subject:Thread-Topic:Thread-Index:Date:
-         Message-ID:References:In-Reply-To:Accept-Language:X-MS-Has-Attach:
-         X-MS-TNEF-Correlator:authentication-results:x-originating-ip:
-         x-ms-publictraffictype:x-ms-office365-filtering-correlation-id:
-         x-microsoft-antispam:x-ms-traffictypediagnostic:
-         x-microsoft-antispam-prvs:x-forefront-prvs:
-         x-forefront-antispam-report:received-spf:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam-message-info:
-         MIME-Version:X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=C8MHHWHFMw0D6HDEHAKF2kpmQrNJCycSO/0Fn+G/LduDSizqqY9l9ObPvI7XSoUSX
-         hn3gyKX9P8bb1w6Me3vMsmyAhz3D7+zyxXGNMvV+3MFU2F1zl0evXonOQrnZ8x8HpK
-         9P9COWmHgjkkTN88HtwEgZ48WE8FUCQrO6DsyWOWtmlZzvxXwlBX6AOrk7ixXSpbfv
-         XlKShYvJei07ahDY6TuMjktxKSLceCRzU4mj0hGy/9UuQoa9cBdH0Ioy266/5fe8sX
-         UxowN6zeTrJzppEY9qcdvp5Cu5fOFZ1fPtzh7wfwrnlXM9z35/ZF3Zzx/Dm8o9ZKzW
-         5jfAa5nUAVUWg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190401183211.GA21228@beast>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 01, 2019 at 11:32:11AM -0700, Kees Cook wrote:
+> A "get random" may fail with a TPM error, but those codes were returned
+> as-is to the caller, which assumed the result was the number of bytes
+> that had been written to the target buffer, which could lead to an kernel
+> heap memory exposure and over-read.
+> 
+> This fixes tpm1_get_random() to mask positive TPM errors into -EIO, as
+> before.
+> 
+> [   18.092103] tpm tpm0: A TPM error (379) occurred attempting get random
+> [   18.092106] usercopy: Kernel memory exposure attempt detected from SLUB object 'kmalloc-64' (offset 0, size 379)!
+> 
+> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1650989
+> Reported-by: Phil Baker <baker1tex@gmail.com>
+> Reported-by: Craig Robson <craig@zhatt.com>
+> Fixes: 7aee9c52d7ac ("tpm: tpm1: rewrite tpm1_get_random() using tpm_buf structure")
+> Cc: Laura Abbott <labbott@redhat.com>
+> Cc: Tomas Winkler <tomas.winkler@intel.com>
+> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+>  drivers/char/tpm/tpm1-cmd.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
+> index 85dcf2654d11..faeb78ecf960 100644
+> +++ b/drivers/char/tpm/tpm1-cmd.c
+> @@ -510,7 +510,7 @@ struct tpm1_get_random_out {
+>   *
+>   * Return:
+>   * *  number of bytes read
+> - * * -errno or a TPM return code otherwise
+> + * * -errno (positive TPM return codes are masked to -EIO)
+>   */
+>  int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+>  {
+> @@ -524,7 +524,7 @@ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+>  
+>  	rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_GET_RANDOM);
+>  	if (rc)
+> -		return rc;
+> +		goto fail;
 
-> On Tue, Mar 26, 2019 at 10:56:25PM -0700, Sowjanya Komatineni wrote:
-> > Fixes: Use packed mode for 32 bits per word transfers to increase=20
-> > performance as each packet is a full 32-bit word.
->
-> This is an optimization rather than a bug fix, ideally it should be later=
- in the series to make things easier to apply as fixes for Linus.
->
-> Also the way you're writing your commit logs with "Fixes: " at the start =
-is really weird and conflicts a bit with the Fixes: tag that the kernel use=
-s to reference the commit that introduces bugs.
+?? Does tpm_buf_init() return positive?? Shouldn't..
 
-Thanks Mark. Misunderstood use of Fixes tag.
-Will remove Fixes tag in commit message in next version as fixes are not re=
-ally for specific existing commit.
+I think you actually want this:
+
+diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
+index 85dcf2654d1102..a01e6fba1aacb6 100644
+--- a/drivers/char/tpm/tpm1-cmd.c
++++ b/drivers/char/tpm/tpm1-cmd.c
+@@ -510,7 +510,7 @@ struct tpm1_get_random_out {
+  *
+  * Return:
+  * *  number of bytes read
+- * * -errno or a TPM return code otherwise
++ * * -errno
+  */
+ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+ {
+@@ -531,8 +531,10 @@ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+ 
+                rc = tpm_transmit_cmd(chip, &buf, sizeof(out->rng_data_len),
+                                      "attempting get random");
+-               if (rc)
++               if (rc) {
++                       rc = -EIO
+                        goto out;
++               }
+ 
+                out = (struct tpm1_get_random_out *)&buf.data[TPM_HEADER_SIZE];
+ 
+diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+index e74c5b7b64bfbd..9fa498b4cf8816 100644
+--- a/drivers/char/tpm/tpm2-cmd.c
++++ b/drivers/char/tpm/tpm2-cmd.c
+@@ -328,8 +328,10 @@ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+                                       offsetof(struct tpm2_get_random_out,
+                                                buffer),
+                                       "attempting get random");
+-               if (err)
++               if (err) {
++                       rc = -EIO;
+                        goto out;
++               }
+ 
+                out = (struct tpm2_get_random_out *)
+                        &buf.data[TPM_HEADER_SIZE];
