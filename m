@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7883EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C7AC10F05
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 335D821473
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B9D21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139926;
-	bh=PGg/5ACTwklh0uf2US9WewuBP/BqzU8UorecAkoVH60=;
+	s=default; t=1554139929;
+	bh=DRh1HNKX75O4iozuJw8h54/gG6TIDSAa7ZCPqrxSTUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uUelNH5SDz5yGYHgM6GMCOF9AV6c2vb8ElJ4aIZuqXpj/DaKmCt7KH8YGyFfM6O0w
-	 t2LgsflAFZqWuLNurLoUpX9xxVFtRhMuAlGb66ByIKT4szk3JlNI4L5m8Mt2sUFhAK
-	 O9dl1sAK20JcdK3t2P9J17DT/Yenj9OWfXCzGBdk=
+	b=o3DW8lJJfi4n60+JpzcemVLLbYLlSpZHJbDCRYPsfS3+4G21vIEi3/WpFz32WlN78
+	 OgO6MrAgl7lqJ4TOaR0AwDuK5gV9/PWSENd+k+S85RvPTtQ79c5XxSzeEXv9mf3iW6
+	 o+9Dr0n+GR9driu8dEvLVmUiLlWU4Fd2ZIVMIjek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387434AbfDARcE (ORCPT
+        id S2387443AbfDARcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:32:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39868 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:32:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732940AbfDARcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:32:03 -0400
+        id S1732911AbfDARcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:32:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 635EC20856;
-        Mon,  1 Apr 2019 17:32:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6863A208E4;
+        Mon,  1 Apr 2019 17:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139921;
-        bh=PGg/5ACTwklh0uf2US9WewuBP/BqzU8UorecAkoVH60=;
+        s=default; t=1554139924;
+        bh=DRh1HNKX75O4iozuJw8h54/gG6TIDSAa7ZCPqrxSTUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pltdejj+RXg6mzN5e/jmZRuz0gXp3u3mBLQzNgVdQpjYutf7j01OhNLUH28SdYtJ7
-         v17PdpJkpYL2PVvwoKFQzm9wg8HPeANEM0eDpeFSedJ8wHHKEXNz7GW1hFYBNRGz9s
-         FUAynGzqV5fPrKx6rN3889rUAtOmyJcrVgWusbAM=
+        b=maQH+PMZorop1FLQkVxGM83GjtVFhG2DYaEO9K49zAXVhYf8mqVZGtl93vMSseKnh
+         bsOPsljvNPsLiBNB2DEFOJfSc/fT4bqS5YvHGIKO26KgBlhbwqjBDD3kEHGoK1UOlY
+         lQhVHRo85G7EhUZXVxym98xGnECW5vbvnopesfw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Rabin Vincent <rabin@rab.in>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 054/131] coresight: fixing lockdep error
-Date:   Mon,  1 Apr 2019 19:02:04 +0200
-Message-Id: <20190401170056.841015470@linuxfoundation.org>
+Subject: [PATCH 4.4 055/131] coresight: coresight_unregister() function cleanup
+Date:   Mon,  1 Apr 2019 19:02:05 +0200
+Message-Id: <20190401170056.918393080@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -66,156 +66,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a9ddc71f5840c2711e530f2e055b278f79948b29 ]
+[ Upstream commit fae54158792aec705620bdc3938d342879204f0c ]
 
-On some platform the following lockdep error occurs when doing simple
-manipulations:
+In its current form the code never frees csdev->refcnt allocated
+in coresight_register().  There is also a problem with csdev->conns
+that is freed before device_unregister() rather than in the device
+release function.
 
-    [   23.197021]
-    [   23.198608] ======================================================
-    [   23.205078] [ INFO: possible circular locking dependency detected ]
-    [   23.211639] 4.4.0-rc8-00025-gbbf360b #172 Not tainted
-    [   23.216918] -------------------------------------------------------
-    [   23.223480] sh/858 is trying to acquire lock:
-    [   23.228057]  (coresight_mutex){+.+.+.}, at: [<c0415d40>] coresight_enable+0x1c/0x1b4
-    [   23.236206]
-    [   23.236206] but task is already holding lock:
-    [   23.242309]  (s_active#52){++++.+}, at: [<c01d4b40>] kernfs_fop_write+0x5c/0x1c0
-    [   23.250122]
-    [   23.250122] which lock already depends on the new lock.
-    [   23.250122]
-    [   23.258697]
-    [   23.258697] the existing dependency chain (in reverse order) is:
-    [   23.266510]
-    -> #1 (s_active#52){++++.+}:
-    [   23.270843]        [<c01d30ec>] __kernfs_remove+0x294/0x35c
-    [   23.276672]        [<c01d3e44>] kernfs_remove_by_name_ns+0x44/0x8c
-    [   23.283172]        [<c01d6318>] remove_files+0x3c/0x84
-    [   23.288543]        [<c01d66b4>] sysfs_remove_group+0x48/0x9c
-    [   23.294494]        [<c01d6734>] sysfs_remove_groups+0x2c/0x3c
-    [   23.300506]        [<c030b658>] device_remove_attrs+0x5c/0x74
-    [   23.306549]        [<c030c290>] device_del+0x110/0x218
-    [   23.311950]        [<c030c3c4>] device_unregister+0x2c/0x6c
-    [   23.317779]        [<c04156d8>] coresight_unregister+0x30/0x40
-    [   23.323883]        [<c041a290>] etm_probe+0x228/0x2e8
-    [   23.329193]        [<c02bc760>] amba_probe+0xe4/0x160
-    [   23.334503]        [<c0310540>] driver_probe_device+0x23c/0x480
-    [   23.340728]        [<c0310820>] __driver_attach+0x9c/0xa0
-    [   23.346374]        [<c030e400>] bus_for_each_dev+0x70/0xa4
-    [   23.352142]        [<c030fcf4>] driver_attach+0x24/0x28
-    [   23.357604]        [<c030f86c>] bus_add_driver+0x1e0/0x278
-    [   23.363372]        [<c0310d48>] driver_register+0x80/0x100
-    [   23.369110]        [<c02bc508>] amba_driver_register+0x58/0x5c
-    [   23.375244]        [<c0749514>] etm_driver_init+0x18/0x1c
-    [   23.380889]        [<c0009918>] do_one_initcall+0xc4/0x20c
-    [   23.386657]        [<c0715e7c>] kernel_init_freeable+0x160/0x208
-    [   23.392974]        [<c052d7fc>] kernel_init+0x18/0xf0
-    [   23.398254]        [<c0010850>] ret_from_fork+0x14/0x24
-    [   23.403747]
-    -> #0 (coresight_mutex){+.+.+.}:
-    [   23.408447]        [<c008ed60>] lock_acquire+0xe4/0x210
-    [   23.413909]        [<c0530a30>] mutex_lock_nested+0x74/0x450
-    [   23.419860]        [<c0415d40>] coresight_enable+0x1c/0x1b4
-    [   23.425689]        [<c0416030>] enable_source_store+0x58/0x68
-    [   23.431732]        [<c030b358>] dev_attr_store+0x20/0x2c
-    [   23.437286]        [<c01d55e8>] sysfs_kf_write+0x50/0x54
-    [   23.442871]        [<c01d4ba8>] kernfs_fop_write+0xc4/0x1c0
-    [   23.448699]        [<c015b60c>] __vfs_write+0x34/0xe4
-    [   23.454040]        [<c015bf38>] vfs_write+0x98/0x174
-    [   23.459228]        [<c015c7a8>] SyS_write+0x4c/0xa8
-    [   23.464355]        [<c00107c0>] ret_fast_syscall+0x0/0x1c
-    [   23.470031]
-    [   23.470031] other info that might help us debug this:
-    [   23.470031]
-    [   23.478393]  Possible unsafe locking scenario:
-    [   23.478393]
-    [   23.484619]        CPU0                    CPU1
-    [   23.489349]        ----                    ----
-    [   23.494079]   lock(s_active#52);
-    [   23.497497]                                lock(coresight_mutex);
-    [   23.503906]                                lock(s_active#52);
-    [   23.509918]   lock(coresight_mutex);
-    [   23.513702]
-    [   23.513702]  *** DEADLOCK ***
-    [   23.513702]
-    [   23.519897] 3 locks held by sh/858:
-    [   23.523529]  #0:  (sb_writers#7){.+.+.+}, at: [<c015ec38>] __sb_start_write+0xa8/0xd4
-    [   23.531799]  #1:  (&of->mutex){+.+...}, at: [<c01d4b38>] kernfs_fop_write+0x54/0x1c0
-    [   23.539916]  #2:  (s_active#52){++++.+}, at: [<c01d4b40>] kernfs_fop_write+0x5c/0x1c0
-    [   23.548156]
-    [   23.548156] stack backtrace:
-    [   23.552734] CPU: 0 PID: 858 Comm: sh Not tainted 4.4.0-rc8-00025-gbbf360b #172
-    [   23.560302] Hardware name: Generic OMAP4 (Flattened Device Tree)
-    [   23.566589] Backtrace:
-    [   23.569152] [<c00154d4>] (dump_backtrace) from [<c00156d0>] (show_stack+0x18/0x1c)
-    [   23.577087]  r7:ed4b8570 r6:c0936400 r5:c07ae71c r4:00000000
-    [   23.583038] [<c00156b8>] (show_stack) from [<c027e69c>] (dump_stack+0x98/0xc0)
-    [   23.590606] [<c027e604>] (dump_stack) from [<c008a750>] (print_circular_bug+0x21c/0x33c)
-    [   23.599090]  r5:c0939d60 r4:c0936400
-    [   23.602874] [<c008a534>] (print_circular_bug) from [<c008e370>] (__lock_acquire+0x1c98/0x1d88)
-    [   23.611877]  r10:00000003 r9:c0fd7a5c r8:ed4b8550 r7:ed4b8570 r6:ed4b8000 r5:c0ff69e4
-    [   23.620117]  r4:c0936400 r3:ed4b8550
-    [   23.623901] [<c008c6d8>] (__lock_acquire) from [<c008ed60>] (lock_acquire+0xe4/0x210)
-    [   23.632080]  r10:00000000 r9:00000000 r8:60000013 r7:c07cb7b4 r6:00000001 r5:00000000
-    [   23.640350]  r4:00000000
-    [   23.643005] [<c008ec7c>] (lock_acquire) from [<c0530a30>] (mutex_lock_nested+0x74/0x450)
-    [   23.651458]  r10:ecc0bf80 r9:edbe7dcc r8:ed4b8000 r7:c0fd7a5c r6:c0415d40 r5:00000000
-    [   23.659729]  r4:c07cb780
-    [   23.662384] [<c05309bc>] (mutex_lock_nested) from [<c0415d40>] (coresight_enable+0x1c/0x1b4)
-    [   23.671234]  r10:ecc0bf80 r9:edbe7dcc r8:ed733c00 r7:00000000 r6:ed733c00 r5:00000002
-    [   23.679473]  r4:ed762140
-    [   23.682128] [<c0415d24>] (coresight_enable) from [<c0416030>] (enable_source_store+0x58/0x68)
-    [   23.691070]  r7:00000000 r6:ed733c00 r5:00000002 r4:ed762160
-    [   23.697052] [<c0415fd8>] (enable_source_store) from [<c030b358>] (dev_attr_store+0x20/0x2c)
-    [   23.705780]  r5:edbe7dc0 r4:c0415fd8
-    [   23.709533] [<c030b338>] (dev_attr_store) from [<c01d55e8>] (sysfs_kf_write+0x50/0x54)
-    [   23.717834]  r5:edbe7dc0 r4:c030b338
-    [   23.721618] [<c01d5598>] (sysfs_kf_write) from [<c01d4ba8>] (kernfs_fop_write+0xc4/0x1c0)
-    [   23.730163]  r7:00000000 r6:00000000 r5:00000002 r4:edbe7dc0
-    [   23.736145] [<c01d4ae4>] (kernfs_fop_write) from [<c015b60c>] (__vfs_write+0x34/0xe4)
-    [   23.744323]  r10:00000000 r9:ecc0a000 r8:c0010964 r7:ecc0bf80 r6:00000002 r5:c01d4ae4
-    [   23.752593]  r4:ee385a40
-    [   23.755249] [<c015b5d8>] (__vfs_write) from [<c015bf38>] (vfs_write+0x98/0x174)
-    [   23.762908]  r9:ecc0a000 r8:c0010964 r7:ecc0bf80 r6:000ab0d8 r5:00000002 r4:ee385a40
-    [   23.771057] [<c015bea0>] (vfs_write) from [<c015c7a8>] (SyS_write+0x4c/0xa8)
-    [   23.778442]  r8:c0010964 r7:00000002 r6:000ab0d8 r5:ee385a40 r4:ee385a40
-    [   23.785522] [<c015c75c>] (SyS_write) from [<c00107c0>] (ret_fast_syscall+0x0/0x1c)
-    [   23.793457]  r7:00000004 r6:00000001 r5:000ab0d8 r4:00000002
-    [   23.799652] coresight-etb10 54162000.etb: ETB enabled
-    [   23.805084] coresight-funnel 54164000.funnel: FUNNEL inport 0 enabled
-    [   23.811859] coresight-replicator 44000000.ocp:replicator: REPLICATOR enabled
-    [   23.819335] coresight-funnel 54158000.funnel: FUNNEL inport 0 enabled
-    [   23.826110] coresight-etm3x 5414c000.ptm: ETM tracing enabled
-
-The locking in coresight_unregister() is not required as the only customers of
-the function are drivers themselves when an initialisation failure has been
-encoutered.
+This patch addresses both issues by moving kfree(csdev->conns) to
+coresight_device_release() and freeing csdev->refcnt, also in
+the same function.
 
 Reported-by: Rabin Vincent <rabin@rab.in>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/hwtracing/coresight/coresight.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index 902ee6efd09c..84fc60318f79 100644
+index 84fc60318f79..a7d1edbf3340 100644
 --- a/drivers/hwtracing/coresight/coresight.c
 +++ b/drivers/hwtracing/coresight/coresight.c
-@@ -716,12 +716,8 @@ EXPORT_SYMBOL_GPL(coresight_register);
+@@ -484,6 +484,8 @@ static void coresight_device_release(struct device *dev)
+ {
+ 	struct coresight_device *csdev = to_coresight_device(dev);
+ 
++	kfree(csdev->conns);
++	kfree(csdev->refcnt);
+ 	kfree(csdev);
+ }
+ 
+@@ -716,7 +718,6 @@ EXPORT_SYMBOL_GPL(coresight_register);
  
  void coresight_unregister(struct coresight_device *csdev)
  {
--	mutex_lock(&coresight_mutex);
--
- 	kfree(csdev->conns);
+-	kfree(csdev->conns);
  	device_unregister(&csdev->dev);
--
--	mutex_unlock(&coresight_mutex);
  }
  EXPORT_SYMBOL_GPL(coresight_unregister);
- 
 -- 
 2.19.1
 
