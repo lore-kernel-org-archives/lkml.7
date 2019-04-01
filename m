@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D26C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBEBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB2A21939
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E97A21924
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554138463;
-	bh=tFm/xabKPI8BAFMmypGMBIiB872TGe8cY1fyJ9iNF5Q=;
+	s=default; t=1554138467;
+	bh=ZOX4J2mID61podr8kEUJ9JLDrY0assIOA/I6AkWG7WI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xoUgQwk+92idhrn4jRXvWGIYbTDcZTYgKYFqRD6l96bCRp74VO7g+vL2lcrkotNMQ
-	 D5QWJ90lybcuw4+kAF4PSF4PXfuGPD1V+UHl6OoV3jWLd82Gnmoh86KnKV2CkBoBPX
-	 Lslm81HhN3DxJCCQiOj+iCQYs9FBnf6xaLK34wFg=
+	b=LYuj7tvHGk09Bxf2BfZDCfTpm/FwCxDOJ1NI1gXOvy8rLtMSThxSDkYrtA5CclsaV
+	 C+yC7G4/tGaHUenMS8nC62AIkRZAbESpj9k0/CFimETiFiPnL6iPl2MmV5sYnrwycO
+	 oGwU7OoLbeB7zeQiNckC+w1N60UUcJl82Ks8l8hM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbfDARHm (ORCPT
+        id S1729546AbfDARHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:07:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53844 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:07:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729513AbfDARHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:07:36 -0400
+        id S1728830AbfDARHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:07:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D62C121929;
-        Mon,  1 Apr 2019 17:07:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4F3721925;
+        Mon,  1 Apr 2019 17:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138455;
-        bh=tFm/xabKPI8BAFMmypGMBIiB872TGe8cY1fyJ9iNF5Q=;
+        s=default; t=1554138462;
+        bh=ZOX4J2mID61podr8kEUJ9JLDrY0assIOA/I6AkWG7WI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PxPoJyqPji1cDXpTyw1+hoyiAyuSDQ2Tv10HhHBXxekDSTXIcI51XEIPK6DClFbxD
-         sEkeJGyPP25jJnuPWjK0ex4bMONPloM4a7zmoHs2fky1lHIUlYG1S86em4QSLv/n8W
-         Rt8vTZH+UZHI2sUE92i7W5rPy8uPu6MMR7eFaEeU=
+        b=ykODO98ZSE3srVUXkz/yzH9XQVJJnYQw2JIM2juLt30KHAC4pYaCUpkNHG2DY4TQ6
+         cAn+Bnjm7QhS+L0K6N3oLARluG9e1jWbd7HGAus8oQGXUu3ThtTmRAwXR24t/tZXkA
+         lX+2T5E4iWQ7aAKvYb2Npg9QtxQiyTNlQoz+0BvM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
-        Mark Fasheh <mfasheh@versity.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 071/146] ocfs2: fix inode bh swapping mixup in ocfs2_reflink_inodes_lock
-Date:   Mon,  1 Apr 2019 19:01:23 +0200
-Message-Id: <20190401170054.702449730@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Jason Yan <yanaijie@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.0 072/146] scsi: sd: Fix a race between closing an sd device and sd I/O
+Date:   Mon,  1 Apr 2019 19:01:24 +0200
+Message-Id: <20190401170054.798366445@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
 References: <20190401170048.449559024@linuxfoundation.org>
@@ -72,132 +69,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit e6a9467ea14bae8691b0f72c500510c42ea8edb8 upstream.
+commit c14a57264399efd39514a2329c591a4b954246d8 upstream.
 
-ocfs2_reflink_inodes_lock() can swap the inode1/inode2 variables so that
-we always grab cluster locks in order of increasing inode number.
+The scsi_end_request() function calls scsi_cmd_to_driver() indirectly and
+hence needs the disk->private_data pointer. Avoid that that pointer is
+cleared before all affected I/O requests have finished. This patch avoids
+that the following crash occurs:
 
-Unfortunately, we forget to swap the inode record buffer head pointers
-when we've done this, which leads to incorrect bookkeepping when we're
-trying to make the two inodes have the same refcount tree.
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+Call trace:
+ scsi_mq_uninit_cmd+0x1c/0x30
+ scsi_end_request+0x7c/0x1b8
+ scsi_io_completion+0x464/0x668
+ scsi_finish_command+0xbc/0x160
+ scsi_eh_flush_done_q+0x10c/0x170
+ sas_scsi_recover_host+0x84c/0xa98 [libsas]
+ scsi_error_handler+0x140/0x5b0
+ kthread+0x100/0x12c
+ ret_from_fork+0x10/0x18
 
-This has the effect of causing filesystem shutdowns if you're trying to
-reflink data from inode 100 into inode 97, where inode 100 already has a
-refcount tree attached and inode 97 doesn't.  The reflink code decides
-to copy the refcount tree pointer from 100 to 97, but uses inode 97's
-inode record to open the tree root (which it doesn't have) and blows up.
-This issue causes filesystem shutdowns and metadata corruption!
-
-Link: http://lkml.kernel.org/r/20190312214910.GK20533@magnolia
-Fixes: 29ac8e856cb369 ("ocfs2: implement the VFS clone_range, copy_range, and dedupe_range features")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
-Cc: Mark Fasheh <mfasheh@versity.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Joseph Qi <joseph.qi@huawei.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Johannes Thumshirn <jthumshirn@suse.de>
+Cc: Jason Yan <yanaijie@huawei.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reported-by: Jason Yan <yanaijie@huawei.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ocfs2/refcounttree.c |   42 ++++++++++++++++++++++++------------------
- 1 file changed, 24 insertions(+), 18 deletions(-)
+ drivers/scsi/sd.c |   19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
---- a/fs/ocfs2/refcounttree.c
-+++ b/fs/ocfs2/refcounttree.c
-@@ -4719,22 +4719,23 @@ out:
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -1398,11 +1398,6 @@ static void sd_release(struct gendisk *d
+ 			scsi_set_medium_removal(sdev, SCSI_REMOVAL_ALLOW);
+ 	}
  
- /* Lock an inode and grab a bh pointing to the inode. */
- int ocfs2_reflink_inodes_lock(struct inode *s_inode,
--			      struct buffer_head **bh1,
-+			      struct buffer_head **bh_s,
- 			      struct inode *t_inode,
--			      struct buffer_head **bh2)
-+			      struct buffer_head **bh_t)
- {
--	struct inode *inode1;
--	struct inode *inode2;
-+	struct inode *inode1 = s_inode;
-+	struct inode *inode2 = t_inode;
- 	struct ocfs2_inode_info *oi1;
- 	struct ocfs2_inode_info *oi2;
-+	struct buffer_head *bh1 = NULL;
-+	struct buffer_head *bh2 = NULL;
- 	bool same_inode = (s_inode == t_inode);
-+	bool need_swap = (inode1->i_ino > inode2->i_ino);
- 	int status;
- 
- 	/* First grab the VFS and rw locks. */
- 	lock_two_nondirectories(s_inode, t_inode);
--	inode1 = s_inode;
--	inode2 = t_inode;
--	if (inode1->i_ino > inode2->i_ino)
-+	if (need_swap)
- 		swap(inode1, inode2);
- 
- 	status = ocfs2_rw_lock(inode1, 1);
-@@ -4757,17 +4758,13 @@ int ocfs2_reflink_inodes_lock(struct ino
- 	trace_ocfs2_double_lock((unsigned long long)oi1->ip_blkno,
- 				(unsigned long long)oi2->ip_blkno);
- 
--	if (*bh1)
--		*bh1 = NULL;
--	if (*bh2)
--		*bh2 = NULL;
+-	/*
+-	 * XXX and what if there are packets in flight and this close()
+-	 * XXX is followed by a "rmmod sd_mod"?
+-	 */
 -
- 	/* We always want to lock the one with the lower lockid first. */
- 	if (oi1->ip_blkno > oi2->ip_blkno)
- 		mlog_errno(-ENOLCK);
+ 	scsi_disk_put(sdkp);
+ }
  
- 	/* lock id1 */
--	status = ocfs2_inode_lock_nested(inode1, bh1, 1, OI_LS_REFLINK_TARGET);
-+	status = ocfs2_inode_lock_nested(inode1, &bh1, 1,
-+					 OI_LS_REFLINK_TARGET);
- 	if (status < 0) {
- 		if (status != -ENOENT)
- 			mlog_errno(status);
-@@ -4776,15 +4773,25 @@ int ocfs2_reflink_inodes_lock(struct ino
- 
- 	/* lock id2 */
- 	if (!same_inode) {
--		status = ocfs2_inode_lock_nested(inode2, bh2, 1,
-+		status = ocfs2_inode_lock_nested(inode2, &bh2, 1,
- 						 OI_LS_REFLINK_TARGET);
- 		if (status < 0) {
- 			if (status != -ENOENT)
- 				mlog_errno(status);
- 			goto out_cl1;
- 		}
--	} else
--		*bh2 = *bh1;
-+	} else {
-+		bh2 = bh1;
-+	}
+@@ -3488,9 +3483,21 @@ static void scsi_disk_release(struct dev
+ {
+ 	struct scsi_disk *sdkp = to_scsi_disk(dev);
+ 	struct gendisk *disk = sdkp->disk;
+-	
++	struct request_queue *q = disk->queue;
 +
+ 	ida_free(&sd_index_ida, sdkp->index);
+ 
 +	/*
-+	 * If we swapped inode order above, we have to swap the buffer heads
-+	 * before passing them back to the caller.
++	 * Wait until all requests that are in progress have completed.
++	 * This is necessary to avoid that e.g. scsi_end_request() crashes
++	 * due to clearing the disk->private_data pointer. Wait from inside
++	 * scsi_disk_release() instead of from sd_release() to avoid that
++	 * freezing and unfreezing the request queue affects user space I/O
++	 * in case multiple processes open a /dev/sd... node concurrently.
 +	 */
-+	if (need_swap)
-+		swap(bh1, bh2);
-+	*bh_s = bh1;
-+	*bh_t = bh2;
- 
- 	trace_ocfs2_double_lock_end(
- 			(unsigned long long)oi1->ip_blkno,
-@@ -4794,8 +4801,7 @@ int ocfs2_reflink_inodes_lock(struct ino
- 
- out_cl1:
- 	ocfs2_inode_unlock(inode1, 1);
--	brelse(*bh1);
--	*bh1 = NULL;
-+	brelse(bh1);
- out_rw2:
- 	ocfs2_rw_unlock(inode2, 1);
- out_i2:
++	blk_mq_freeze_queue(q);
++	blk_mq_unfreeze_queue(q);
++
+ 	disk->private_data = NULL;
+ 	put_disk(disk);
+ 	put_device(&sdkp->device->sdev_gendev);
 
 
