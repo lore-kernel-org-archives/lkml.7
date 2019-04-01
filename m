@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603BEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F0EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F32220880
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8824F2171F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139686;
-	bh=nme11RH0OkFQgW7MPnGy8ReYy55GV9idfj05CSW2W8k=;
+	s=default; t=1554139690;
+	bh=7mAANUpcLbPoBNGMy8EWqiY22MuJViivFacDDfzuU1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f1KngqQWwllqhXunyj/Qzdoqtb2XBKBDzzT2GxNnFNNEjEWIKTnQiAg6gUrbHbE4f
-	 r/tDyzYPO9A4ulM6JtFHg7CEZIesdwN+foboNv9FDGlCBazEpc6ex2rqscUqsqf2z7
-	 hiu/XPBsUr2VElHrK3sQ0+bPzLGmNoI2QDIGctC4=
+	b=OpMmraX0bBjXenv4MV4KR0VOuFChSJjK3/EUFP9WXMzz+vOoRgOWnibastv72P3PI
+	 GNpPaSpo57kGhZWc2dzJLWCORzTIQ5TN5KyV7Nv/FaYrcREmEaUMlSHK1k98vSpW9h
+	 NT23m9Vfq70tw3Dt+FG8ZcDXJzaXSie22DrW7bUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732728AbfDAR2F (ORCPT
+        id S1732749AbfDAR2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:28:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33628 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:28:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732412AbfDAR2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:28:00 -0400
+        id S1732412AbfDAR2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:28:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD33B2063F;
-        Mon,  1 Apr 2019 17:27:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84FE42063F;
+        Mon,  1 Apr 2019 17:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139679;
-        bh=nme11RH0OkFQgW7MPnGy8ReYy55GV9idfj05CSW2W8k=;
+        s=default; t=1554139686;
+        bh=7mAANUpcLbPoBNGMy8EWqiY22MuJViivFacDDfzuU1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b+FxESw/bgchicEoXofA+8rtI88eR8tcp/m2XQcbEWLRBGEvZ0YskyH5zw8/tdmpZ
-         g7mWXEx+XM8mM4w4LOuA5WTI7cz94nlAc5limPlsCsehIb0AQVxXIO4uVir4fS1PW8
-         yPJC0p7MNAOW1kD58usFnbs0xdqtAkFGhtAgh8UA=
+        b=tczpKEFjg7ngJkVqalJcMYYTstcQxRbgYuLZMjdCWLt7Iy9qxd9EWc23qYmpTr2Kj
+         XDtigs34NZlCiXT511HdLE1aydyelm8hq06Bt6n1OhTMdgCJCBmxfhSlz+L5YSes5f
+         0jrxr4AKkB7WQEKaVCxW2jwscaM4gLFEG5YlMeio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 09/56] net: rose: fix a possible stack overflow
-Date:   Mon,  1 Apr 2019 19:02:25 +0200
-Message-Id: <20190401170104.343879239@linuxfoundation.org>
+        stable@vger.kernel.org, Ivan Vasilyev <grabesstimme@gmail.com>,
+        "Spencer E. Olson" <olsonse@umich.edu>,
+        Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.9 33/56] staging: comedi: ni_mio_common: Fix divide-by-zero for DIO cmdtest
+Date:   Mon,  1 Apr 2019 19:02:49 +0200
+Message-Id: <20190401170105.740851969@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -66,131 +66,153 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-[ Upstream commit e5dcc0c3223c45c94100f05f28d8ef814db3d82c ]
+commit bafd9c64056cd034a1174dcadb65cd3b294ff8f6 upstream.
 
-rose_write_internal() uses a temp buffer of 100 bytes, but a manual
-inspection showed that given arbitrary input, rose_create_facilities()
-can fill up to 110 bytes.
+`ni_cdio_cmdtest()` validates Comedi asynchronous commands for the DIO
+subdevice (subdevice 2) of supported National Instruments M-series
+cards.  It is called when handling the `COMEDI_CMD` and `COMEDI_CMDTEST`
+ioctls for this subdevice.  There are two causes for a possible
+divide-by-zero error when validating that the `stop_arg` member of the
+passed-in command is not too large.
 
-Lets use a tailroom of 256 bytes for peace of mind, and remove
-the bounce buffer : we can simply allocate a big enough skb
-and adjust its length as needed.
+The first cause for the divide-by-zero is that calls to
+`comedi_bytes_per_scan()` are only valid once the command has been
+copied to `s->async->cmd`, but that copy is only done for the
+`COMEDI_CMD` ioctl.  For the `COMEDI_CMDTEST` ioctl, it will use
+whatever was left there by the previous `COMEDI_CMD` ioctl, if any.
+(This is very likely, as it is usual for the application to use
+`COMEDI_CMDTEST` before `COMEDI_CMD`.) If there has been no previous,
+valid `COMEDI_CMD` for this subdevice, then `comedi_bytes_per_scan()`
+will return 0, so the subsequent division in `ni_cdio_cmdtest()` of
+`s->async->prealloc_bufsz / comedi_bytes_per_scan(s)` will be a
+divide-by-zero error.  To fix this error, call a new function
+`comedi_bytes_per_scan_cmd(s, cmd)`, based on the existing
+`comedi_bytes_per_scan(s)` but using a specified `struct comedi_cmd` for
+its calculations.  (Also refactor `comedi_bytes_per_scan()` to call the
+new function.)
 
-syzbot report :
+Once the first cause for the divide-by-zero has been fixed, the second
+cause is that `comedi_bytes_per_scan_cmd()` can legitimately return 0 if
+the `scan_end_arg` member of the `struct comedi_cmd` being tested is 0.
+Fix it by only performing the division (and validating that `stop_arg`
+is no more than the maximum value) if `comedi_bytes_per_scan_cmd()`
+returns a non-zero value.
 
-BUG: KASAN: stack-out-of-bounds in memcpy include/linux/string.h:352 [inline]
-BUG: KASAN: stack-out-of-bounds in rose_create_facilities net/rose/rose_subr.c:521 [inline]
-BUG: KASAN: stack-out-of-bounds in rose_write_internal+0x597/0x15d0 net/rose/rose_subr.c:116
-Write of size 7 at addr ffff88808b1ffbef by task syz-executor.0/24854
+The problem was reported on the COMEDI mailing list here:
+https://groups.google.com/forum/#!topic/comedi_list/4t9WlHzMhKM
 
-CPU: 0 PID: 24854 Comm: syz-executor.0 Not tainted 5.0.0+ #97
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
- kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
- check_memory_region_inline mm/kasan/generic.c:185 [inline]
- check_memory_region+0x123/0x190 mm/kasan/generic.c:191
- memcpy+0x38/0x50 mm/kasan/common.c:131
- memcpy include/linux/string.h:352 [inline]
- rose_create_facilities net/rose/rose_subr.c:521 [inline]
- rose_write_internal+0x597/0x15d0 net/rose/rose_subr.c:116
- rose_connect+0x7cb/0x1510 net/rose/af_rose.c:826
- __sys_connect+0x266/0x330 net/socket.c:1685
- __do_sys_connect net/socket.c:1696 [inline]
- __se_sys_connect net/socket.c:1693 [inline]
- __x64_sys_connect+0x73/0xb0 net/socket.c:1693
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458079
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f47b8d9dc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458079
-RDX: 000000000000001c RSI: 0000000020000040 RDI: 0000000000000004
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f47b8d9e6d4
-R13: 00000000004be4a4 R14: 00000000004ceca8 R15: 00000000ffffffff
-
-The buggy address belongs to the page:
-page:ffffea00022c7fc0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0x1fffc0000000000()
-raw: 01fffc0000000000 0000000000000000 ffffffff022c0101 0000000000000000
-raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88808b1ffa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88808b1ffb00: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 00 00 00 03
->ffff88808b1ffb80: f2 f2 00 00 00 00 00 00 00 00 00 00 00 00 04 f3
-                                                             ^
- ffff88808b1ffc00: f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88808b1ffc80: 00 00 00 00 00 00 00 f1 f1 f1 f1 f1 f1 01 f2 01
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Ivan Vasilyev <grabesstimme@gmail.com>
+Tested-by: Ivan Vasilyev <grabesstimme@gmail.com>
+Fixes: f164cbf98fa8 ("staging: comedi: ni_mio_common: add finite regeneration to dio output")
+Cc: <stable@vger.kernel.org> # 4.6+
+Cc: Spencer E. Olson <olsonse@umich.edu>
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/rose/rose_subr.c |   21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
 
---- a/net/rose/rose_subr.c
-+++ b/net/rose/rose_subr.c
-@@ -105,16 +105,17 @@ void rose_write_internal(struct sock *sk
- 	struct sk_buff *skb;
- 	unsigned char  *dptr;
- 	unsigned char  lci1, lci2;
--	char buffer[100];
--	int len, faclen = 0;
-+	int maxfaclen = 0;
-+	int len, faclen;
-+	int reserve;
+---
+ drivers/staging/comedi/comedidev.h             |    2 +
+ drivers/staging/comedi/drivers.c               |   33 +++++++++++++++++++++----
+ drivers/staging/comedi/drivers/ni_mio_common.c |   10 +++++--
+ 3 files changed, 38 insertions(+), 7 deletions(-)
+
+--- a/drivers/staging/comedi/comedidev.h
++++ b/drivers/staging/comedi/comedidev.h
+@@ -984,6 +984,8 @@ int comedi_dio_insn_config(struct comedi
+ 			   unsigned int mask);
+ unsigned int comedi_dio_update_state(struct comedi_subdevice *,
+ 				     unsigned int *data);
++unsigned int comedi_bytes_per_scan_cmd(struct comedi_subdevice *s,
++				       struct comedi_cmd *cmd);
+ unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s);
+ unsigned int comedi_nscans_left(struct comedi_subdevice *s,
+ 				unsigned int nscans);
+--- a/drivers/staging/comedi/drivers.c
++++ b/drivers/staging/comedi/drivers.c
+@@ -390,11 +390,13 @@ unsigned int comedi_dio_update_state(str
+ EXPORT_SYMBOL_GPL(comedi_dio_update_state);
  
--	len = AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + ROSE_MIN_LEN + 1;
-+	reserve = AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + 1;
-+	len = ROSE_MIN_LEN;
+ /**
+- * comedi_bytes_per_scan() - Get length of asynchronous command "scan" in bytes
++ * comedi_bytes_per_scan_cmd() - Get length of asynchronous command "scan" in
++ * bytes
+  * @s: COMEDI subdevice.
++ * @cmd: COMEDI command.
+  *
+  * Determines the overall scan length according to the subdevice type and the
+- * number of channels in the scan.
++ * number of channels in the scan for the specified command.
+  *
+  * For digital input, output or input/output subdevices, samples for
+  * multiple channels are assumed to be packed into one or more unsigned
+@@ -404,9 +406,9 @@ EXPORT_SYMBOL_GPL(comedi_dio_update_stat
+  *
+  * Returns the overall scan length in bytes.
+  */
+-unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s)
++unsigned int comedi_bytes_per_scan_cmd(struct comedi_subdevice *s,
++				       struct comedi_cmd *cmd)
+ {
+-	struct comedi_cmd *cmd = &s->async->cmd;
+ 	unsigned int num_samples;
+ 	unsigned int bits_per_sample;
  
- 	switch (frametype) {
- 	case ROSE_CALL_REQUEST:
- 		len   += 1 + ROSE_ADDR_LEN + ROSE_ADDR_LEN;
--		faclen = rose_create_facilities(buffer, rose);
--		len   += faclen;
-+		maxfaclen = 256;
- 		break;
- 	case ROSE_CALL_ACCEPTED:
- 	case ROSE_CLEAR_REQUEST:
-@@ -123,15 +124,16 @@ void rose_write_internal(struct sock *sk
- 		break;
+@@ -423,6 +425,29 @@ unsigned int comedi_bytes_per_scan(struc
  	}
+ 	return comedi_samples_to_bytes(s, num_samples);
+ }
++EXPORT_SYMBOL_GPL(comedi_bytes_per_scan_cmd);
++
++/**
++ * comedi_bytes_per_scan() - Get length of asynchronous command "scan" in bytes
++ * @s: COMEDI subdevice.
++ *
++ * Determines the overall scan length according to the subdevice type and the
++ * number of channels in the scan for the current command.
++ *
++ * For digital input, output or input/output subdevices, samples for
++ * multiple channels are assumed to be packed into one or more unsigned
++ * short or unsigned int values according to the subdevice's %SDF_LSAMPL
++ * flag.  For other types of subdevice, samples are assumed to occupy a
++ * whole unsigned short or unsigned int according to the %SDF_LSAMPL flag.
++ *
++ * Returns the overall scan length in bytes.
++ */
++unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s)
++{
++	struct comedi_cmd *cmd = &s->async->cmd;
++
++	return comedi_bytes_per_scan_cmd(s, cmd);
++}
+ EXPORT_SYMBOL_GPL(comedi_bytes_per_scan);
  
--	if ((skb = alloc_skb(len, GFP_ATOMIC)) == NULL)
-+	skb = alloc_skb(reserve + len + maxfaclen, GFP_ATOMIC);
-+	if (!skb)
- 		return;
+ static unsigned int __comedi_nscans_left(struct comedi_subdevice *s,
+--- a/drivers/staging/comedi/drivers/ni_mio_common.c
++++ b/drivers/staging/comedi/drivers/ni_mio_common.c
+@@ -3477,6 +3477,7 @@ static int ni_cdio_check_chanlist(struct
+ static int ni_cdio_cmdtest(struct comedi_device *dev,
+ 			   struct comedi_subdevice *s, struct comedi_cmd *cmd)
+ {
++	unsigned int bytes_per_scan;
+ 	int err = 0;
+ 	int tmp;
  
- 	/*
- 	 *	Space for AX.25 header and PID.
- 	 */
--	skb_reserve(skb, AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + 1);
-+	skb_reserve(skb, reserve);
+@@ -3506,9 +3507,12 @@ static int ni_cdio_cmdtest(struct comedi
+ 	err |= comedi_check_trigger_arg_is(&cmd->convert_arg, 0);
+ 	err |= comedi_check_trigger_arg_is(&cmd->scan_end_arg,
+ 					   cmd->chanlist_len);
+-	err |= comedi_check_trigger_arg_max(&cmd->stop_arg,
+-					    s->async->prealloc_bufsz /
+-					    comedi_bytes_per_scan(s));
++	bytes_per_scan = comedi_bytes_per_scan_cmd(s, cmd);
++	if (bytes_per_scan) {
++		err |= comedi_check_trigger_arg_max(&cmd->stop_arg,
++						    s->async->prealloc_bufsz /
++						    bytes_per_scan);
++	}
  
--	dptr = skb_put(skb, skb_tailroom(skb));
-+	dptr = skb_put(skb, len);
- 
- 	lci1 = (rose->lci >> 8) & 0x0F;
- 	lci2 = (rose->lci >> 0) & 0xFF;
-@@ -146,7 +148,8 @@ void rose_write_internal(struct sock *sk
- 		dptr   += ROSE_ADDR_LEN;
- 		memcpy(dptr, &rose->source_addr, ROSE_ADDR_LEN);
- 		dptr   += ROSE_ADDR_LEN;
--		memcpy(dptr, buffer, faclen);
-+		faclen = rose_create_facilities(dptr, rose);
-+		skb_put(skb, faclen);
- 		dptr   += faclen;
- 		break;
- 
+ 	if (err)
+ 		return 3;
 
 
