@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EC7C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32070C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61DD620830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01AF320830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141163;
-	bh=BYAXJ9dA0zRWfX+zjUJfIalUOxu3pZVc4PgjgI+YYvQ=;
+	s=default; t=1554141167;
+	bh=SQdnGG2kIIjgpQLcM8gFqaAM4kojXkiOuzzGaJDzmrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GF2MDKq/zbvbeLS/W82DTqoiqYRAnrsNN/tmZUYynvAJn7ECsSd2C09Y+VYpPDA8S
-	 FmXSnt6NQiourfw0Ai24ely677AjxFvQJzUasd1jxbormvaeR2aWhd2/vdUlDbQsFY
-	 E3mvuDadA0sxKDBjfkSnMFjQaILY+h2PrlUwQ3HE=
+	b=a+RNu7wlY7PL2r75BeVsgEuxsOKpMvhiPjBXqkvhIR4g2iYKkFywhXWbElMOzhGyv
+	 uqLcJQ4ASVtPred1YC0ttTjEK/YVYyNmUk/7Kl06iD02/dggx+qi/2aRxHb7tot+ww
+	 6hNWeRj+yfqc3zKNRvBlRVSFhlq1yv5lMOFzB5VE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732550AbfDAR01 (ORCPT
+        id S1732846AbfDARwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:26:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58462 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:52:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732155AbfDAR0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:26:24 -0400
+        id S1732545AbfDAR01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:26:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F0F120830;
-        Mon,  1 Apr 2019 17:26:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10DA821852;
+        Mon,  1 Apr 2019 17:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139583;
-        bh=BYAXJ9dA0zRWfX+zjUJfIalUOxu3pZVc4PgjgI+YYvQ=;
+        s=default; t=1554139586;
+        bh=SQdnGG2kIIjgpQLcM8gFqaAM4kojXkiOuzzGaJDzmrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YYreWphafGNJHvMso35c//Bxr9C7GNaYghG5pHMUoV/3uMT6v3mfDJ/Jl0aprWJ6B
-         NpHg6IKd+/YpkN4RB7HrI5I5cB+9ftM/qPgv+ekXTQwpjD9/KyHNK5PEoODdbKs4sE
-         LhB0cUdild2esAL9HaC86OPXnJ+kcR8FzkN0ij2g=
+        b=iVVYP4GtvPNl9meGIWSPKasQzhuv6ViBgam1qe25lmXLb7+I7gFS+OFpCQc9w7Off
+         LP9M223iz4/Gy/a6coXTRnpLcJOxI9jVZFxg1139nkirJwegAMGk0noP2XxwiBeedm
+         YDOsyH0g5tG2TNOhrfyH5CaEcGJCZwNLxsv994es=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, "Suanming.Mou" <mousuanming@huawei.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 11/56] tcp: do not use ipv6 header for ipv4 flow
-Date:   Mon,  1 Apr 2019 19:02:27 +0200
-Message-Id: <20190401170104.479051182@linuxfoundation.org>
+Subject: [PATCH 4.9 12/56] vxlan: Dont call gro_cells_destroy() before device is unregistered
+Date:   Mon,  1 Apr 2019 19:02:28 +0200
+Message-Id: <20190401170104.595904744@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -65,40 +68,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-[ Upstream commit 89e4130939a20304f4059ab72179da81f5347528 ]
+[ Upstream commit cc4807bb609230d8959fd732b0bf3bd4c2de8eac ]
 
-When a dual stack tcp listener accepts an ipv4 flow,
-it should not attempt to use an ipv6 header or tcp_v6_iif() helper.
+Commit ad6c9986bcb62 ("vxlan: Fix GRO cells race condition between
+receive and link delete") fixed a race condition for the typical case a vxlan
+device is dismantled from the current netns. But if a netns is dismantled,
+vxlan_destroy_tunnels() is called to schedule a unregister_netdevice_queue()
+of all the vxlan tunnels that are related to this netns.
 
-Fixes: 1397ed35f22d ("ipv6: add flowinfo for tcp6 pkt_options for all cases")
-Fixes: df3687ffc665 ("ipv6: add the IPV6_FL_F_REFLECT flag to IPV6_FL_A_GET")
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+In vxlan_destroy_tunnels(), gro_cells_destroy() is called and finished before
+unregister_netdevice_queue(). This means that the gro_cells_destroy() call is
+done too soon, for the same reasons explained in above commit.
+
+So we need to fully respect the RCU rules, and thus must remove the
+gro_cells_destroy() call or risk use after-free.
+
+Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")
+Signed-off-by: Suanming.Mou <mousuanming@huawei.com>
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/tcp_ipv6.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/vxlan.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1056,11 +1056,11 @@ static struct sock *tcp_v6_syn_recv_sock
- 		newnp->ipv6_fl_list = NULL;
- 		newnp->pktoptions  = NULL;
- 		newnp->opt	   = NULL;
--		newnp->mcast_oif   = tcp_v6_iif(skb);
--		newnp->mcast_hops  = ipv6_hdr(skb)->hop_limit;
--		newnp->rcv_flowinfo = ip6_flowinfo(ipv6_hdr(skb));
-+		newnp->mcast_oif   = inet_iif(skb);
-+		newnp->mcast_hops  = ip_hdr(skb)->ttl;
-+		newnp->rcv_flowinfo = 0;
- 		if (np->repflow)
--			newnp->flow_label = ip6_flowlabel(ipv6_hdr(skb));
-+			newnp->flow_label = 0;
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -3375,10 +3375,8 @@ static void __net_exit vxlan_exit_net(st
+ 		/* If vxlan->dev is in the same netns, it has already been added
+ 		 * to the list by the previous loop.
+ 		 */
+-		if (!net_eq(dev_net(vxlan->dev), net)) {
+-			gro_cells_destroy(&vxlan->gro_cells);
++		if (!net_eq(dev_net(vxlan->dev), net))
+ 			unregister_netdevice_queue(vxlan->dev, &list);
+-		}
+ 	}
  
- 		/*
- 		 * No need to charge this sock to the relevant IPv6 refcnt debug socks count
+ 	unregister_netdevice_many(&list);
 
 
