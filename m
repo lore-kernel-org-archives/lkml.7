@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168FBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE7BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F632063F
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BAEE20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139654;
-	bh=Jv41VfsvgsbjicXBWyKNv9xmCj2U9ASdiCXbIcb3ihE=;
+	s=default; t=1554139660;
+	bh=I2YXyW3xudM/S0rpg7oaGCBz6lJqr95ls3mUaCi7Mas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qN5JHrk9obpXo4eakFk9HKPCD5/z2e7KV1liHinZSXRR0dJQ7oPuyi7JASJOl/RGJ
-	 cCMrt+QlJs3F4vHdOiZQ1lCdISJKKR5uJqNgRqNQ1OrbeVREYid7qxsqwgjVzimn8u
-	 kPCd3woasZ7x6WQnbp8gMb5mlyl7D5zvRM0j6vkE=
+	b=fZ7zX64qOWlpVJZr3HildtEaXFNRxuqQAFhC0wTFefZjoObgHQ9hJbEEiiB9/aiKD
+	 YQoLfYAWlcSXnR5bF12aM14Ep8dnOSB+ebcDOjI6azhI54ANlbnxz773d7ZHoMopbE
+	 wt1nkm0oN+F1pTsokZrjDOTIYJ+S6ZJuJQwnChLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732685AbfDAR1d (ORCPT
+        id S1732523AbfDAR1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60872 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:27:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732674AbfDAR12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:27:28 -0400
+        id S1732681AbfDAR1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:27:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 914662063F;
-        Mon,  1 Apr 2019 17:27:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9058F2063F;
+        Mon,  1 Apr 2019 17:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139648;
-        bh=Jv41VfsvgsbjicXBWyKNv9xmCj2U9ASdiCXbIcb3ihE=;
+        s=default; t=1554139652;
+        bh=I2YXyW3xudM/S0rpg7oaGCBz6lJqr95ls3mUaCi7Mas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iUWiLr3PCmIAT5yQdh+9ielpaZrXDMZZ6ZXrTwU2fhCbdp1/2OeYbJ2277IJNPvSU
-         m5M7RVc5WBpu9UBQebn0ZXibWc2lA5+PelmnSJtwLK8UHOIUo6EjlqAhzgy0WVwqkf
-         lhHxwuqB1vI0QZSsVPYoahSRTzlnZ5/K8haMlz28=
+        b=oILCHVwaq70FNSAvGnThu263oHwzLEDHvfIMIGclAf2A9SmTms/JCtWjVQux8pBuo
+         dk1iMKsh253pxvBIHe2odqFVdHE6urL+1dnugupxZihCw+6yWYKnNBZC+XGkDDSlwt
+         eMU8c0i0NhyhKZ+0GtvOLzSKb8gT3QMbhN4y2izs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Hussam Al-Tayeb <ht990332@gmx.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 29/56] scsi: sd: Quiesce warning if device does not report optimal I/O size
-Date:   Mon,  1 Apr 2019 19:02:45 +0200
-Message-Id: <20190401170105.533615559@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Roman Kiryanov <rkir@google.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 03/56] video: fbdev: Set pixclock = 0 in goldfishfb
+Date:   Mon,  1 Apr 2019 19:02:19 +0200
+Message-Id: <20190401170103.630315574@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
 References: <20190401170103.398401360@linuxfoundation.org>
@@ -67,44 +69,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Martin K. Petersen <martin.petersen@oracle.com>
+[ Upstream commit ace6033ec5c356615eaa3582fb1946e9eaff6662 ]
 
-commit 1d5de5bd311be7cd54f02f7cd164f0349a75c876 upstream.
+User space Android code identifies pixclock == 0 as a sign for emulation
+and will set the frame rate to 60 fps when reading this value, which is
+the desired outcome.
 
-Commit a83da8a4509d ("scsi: sd: Optimal I/O size should be a multiple
-of physical block size") split one conditional into several separate
-statements in an effort to provide more accurate warning messages when
-a device reports a nonsensical value. However, this reorganization
-accidentally dropped the precondition of the reported value being
-larger than zero. This lead to a warning getting emitted on devices
-that do not report an optimal I/O size at all.
-
-Remain silent if a device does not report an optimal I/O size.
-
-Fixes: a83da8a4509d ("scsi: sd: Optimal I/O size should be a multiple of physical block size")
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: <stable@vger.kernel.org>
-Reported-by: Hussam Al-Tayeb <ht990332@gmx.com>
-Tested-by: Hussam Al-Tayeb <ht990332@gmx.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Christoffer Dall <christoffer.dall@linaro.org>
+Signed-off-by: Peter Maydell <peter.maydell@linaro.org>
+Signed-off-by: Roman Kiryanov <rkir@google.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/scsi/sd.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/video/fbdev/goldfishfb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -2841,6 +2841,9 @@ static bool sd_validate_opt_xfer_size(st
- 	unsigned int opt_xfer_bytes =
- 		logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
+--- a/drivers/video/fbdev/goldfishfb.c
++++ b/drivers/video/fbdev/goldfishfb.c
+@@ -234,7 +234,7 @@ static int goldfish_fb_probe(struct plat
+ 	fb->fb.var.activate	= FB_ACTIVATE_NOW;
+ 	fb->fb.var.height	= readl(fb->reg_base + FB_GET_PHYS_HEIGHT);
+ 	fb->fb.var.width	= readl(fb->reg_base + FB_GET_PHYS_WIDTH);
+-	fb->fb.var.pixclock	= 10000;
++	fb->fb.var.pixclock	= 0;
  
-+	if (sdkp->opt_xfer_blocks == 0)
-+		return false;
-+
- 	if (sdkp->opt_xfer_blocks > dev_max) {
- 		sd_first_printk(KERN_WARNING, sdkp,
- 				"Optimal transfer size %u logical blocks " \
+ 	fb->fb.var.red.offset = 11;
+ 	fb->fb.var.red.length = 5;
 
 
