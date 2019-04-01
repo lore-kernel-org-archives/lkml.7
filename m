@@ -3,69 +3,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F45C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C594C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 094C3206B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 102882070D
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 12:50:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P/URqXVH";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JcZvtZ4N"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e4y5sEcp";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Zqd+e1Yg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfDAMt4 (ORCPT
+        id S1727023AbfDAMue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 08:49:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44086 "EHLO
+        Mon, 1 Apr 2019 08:50:34 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44560 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfDAMt4 (ORCPT
+        with ESMTP id S1725882AbfDAMud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 08:49:56 -0400
+        Mon, 1 Apr 2019 08:50:33 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8C024608D4; Mon,  1 Apr 2019 12:49:54 +0000 (UTC)
+        id 49A1D604BE; Mon,  1 Apr 2019 12:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554122994;
-        bh=6QEKADiCw6eiXlGIMtq0jYA0TzsyZUqa74BENcomYLo=;
+        s=default; t=1554123031;
+        bh=LnvAho8D76g0pkPeMNQFqSCLmkeRDkLzdfTzt87vcvo=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=P/URqXVHY8hM58y1zklf57wm79I2deIzE7nUlRG5tyEmvRVnZDeHa88iOxQRJ0Thi
-         NHKy6iEh6mY1Ehts54GauBvX/Se/mtKpUdwlvnhxJ8+3PNfWiY8t05ueYfOeXy9V9T
-         Jmj4JuNV3vWVokVCw1WEZ2lCArdrrdYKOc7X/vd4=
+        b=e4y5sEcpf6Wb79zsRAfYmg4zo649JsTXRL+6YegfhZadjf0VeFLatt3IpY7XWt6n/
+         VAlUexwfbbcZybMiHEE6LL4EwwnhsxrAu6agZBGRs4XKIbd7ym4VKJznRh/q880+fk
+         S8k3Fn7tGGHmlzw9kx6ZDdS5I2+GlcyAA+xCsaQU=
 Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14B1C6081E;
-        Mon,  1 Apr 2019 12:49:48 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 63FD4604BE;
+        Mon,  1 Apr 2019 12:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554122993;
-        bh=6QEKADiCw6eiXlGIMtq0jYA0TzsyZUqa74BENcomYLo=;
+        s=default; t=1554123028;
+        bh=LnvAho8D76g0pkPeMNQFqSCLmkeRDkLzdfTzt87vcvo=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=JcZvtZ4NXyRb+UqKBDOXemAPkFVCpB/dJu0PQu8K9gBQaXXlTeSlsBVWhUvk8uZlC
-         TtQFnHkhI58wxyYuGh6sGifNWjN/W+oW7G/CcgXuerXMQrnHBT067G482Xvd+PuYIy
-         +Eo8OaKu+CRfmeAUX03Cm2ftemX4jYjbNMe5tDsk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 14B1C6081E
+        b=Zqd+e1YgJENw1WayBd2fLD5zvlfVLRTiCbKsTsc472z6J0B1DGxcnPn9hc0DXSoTf
+         tQ4cAyxmpwo3WcV5w3z8L1GDR5r+1ySVErd7JTWmQ/V9vEYWwWhKN9M966pKJ7DNYj
+         zUXyedoXOHV6Lcu4bD3+IiqoCDluYv+1BfqPkZ40=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 63FD4604BE
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH 03/12] PowerPC-83xx: add missing of_node_put after
+Subject: Re: [PATCH 04/12] phy: tegra: add missing of_node_put after
  of_device_is_available
-To:     Julia Lawall <Julia.Lawall@lip6.fr>, Scott Wood <oss@buserror.net>
+To:     Julia Lawall <Julia.Lawall@lip6.fr>,
+        Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     kernel-janitors@vger.kernel.org,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
 References: <1550928043-14889-1-git-send-email-Julia.Lawall@lip6.fr>
- <1550928043-14889-4-git-send-email-Julia.Lawall@lip6.fr>
+ <1550928043-14889-5-git-send-email-Julia.Lawall@lip6.fr>
 From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <b74c558e-651b-458b-05ee-3adf5d06a685@codeaurora.org>
-Date:   Mon, 1 Apr 2019 18:19:45 +0530
+Message-ID: <bb2f2129-8d68-9a55-1bc4-f6ffc26677c5@codeaurora.org>
+Date:   Mon, 1 Apr 2019 18:20:22 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1550928043-14889-4-git-send-email-Julia.Lawall@lip6.fr>
+In-Reply-To: <1550928043-14889-5-git-send-email-Julia.Lawall@lip6.fr>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -104,7 +103,7 @@ On 2/23/2019 6:50 PM, Julia Lawall wrote:
 > }
 > // </smpl>
 >
-> Fixes: c026c98739c7e ("powerpc/83xx: Do not configure or probe disabled FSL DR USB controllers")
+> Fixes: 53d2a715c2403 ("phy: Add Tegra XUSB pad controller support")
 > Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
 Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
@@ -112,22 +111,22 @@ Cheers,
 -Mukesh
 >
 > ---
->   arch/powerpc/platforms/83xx/usb.c |    4 +++-
+>   drivers/phy/tegra/xusb.c |    4 +++-
 >   1 file changed, 3 insertions(+), 1 deletion(-)
 >
-> diff -u -p a/arch/powerpc/platforms/83xx/usb.c b/arch/powerpc/platforms/83xx/usb.c
-> --- a/arch/powerpc/platforms/83xx/usb.c
-> +++ b/arch/powerpc/platforms/83xx/usb.c
-> @@ -221,8 +221,10 @@ int mpc837x_usb_cfg(void)
->   	int ret = 0;
+> diff -u -p a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+> --- a/drivers/phy/tegra/xusb.c
+> +++ b/drivers/phy/tegra/xusb.c
+> @@ -260,8 +260,10 @@ tegra_xusb_pad_create(struct tegra_xusb_
+>   	int err;
 >   
->   	np = of_find_compatible_node(NULL, NULL, "fsl-usb2-dr");
+>   	np = tegra_xusb_find_pad_node(padctl, soc->name);
 > -	if (!np || !of_device_is_available(np))
 > +	if (!np || !of_device_is_available(np)) {
 > +		of_node_put(np);
->   		return -ENODEV;
+>   		return NULL;
 > +	}
->   	prop = of_get_property(np, "phy_type", NULL);
 >   
->   	if (!prop || (strcmp(prop, "ulpi") && strcmp(prop, "serial"))) {
+>   	pad = soc->ops->probe(padctl, soc, np);
+>   	if (IS_ERR(pad)) {
 >
