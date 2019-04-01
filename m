@@ -2,129 +2,87 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783F2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702F2C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50DCA21873
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7A32084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 08:59:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbfDAI6e (ORCPT
+        id S1728858AbfDAI7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 04:58:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40540 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727150AbfDAI6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 04:58:31 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 250D83091783;
-        Mon,  1 Apr 2019 08:58:31 +0000 (UTC)
-Received: from localhost.default (ovpn-116-31.phx2.redhat.com [10.3.116.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0404E5D706;
-        Mon,  1 Apr 2019 08:58:27 +0000 (UTC)
-From:   Daniel Bristot de Oliveira <bristot@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Chris von Recklinghausen <crecklin@redhat.com>,
-        Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Clark Williams <williams@redhat.com>, x86@kernel.org
-Subject: [PATCH V5 2/7] jump_label: Add a jump_label_can_update() helper
-Date:   Mon,  1 Apr 2019 10:58:14 +0200
-Message-Id: <18e435c1a23d49638ed0d0eac8ecbe9ef274c04f.1554106794.git.bristot@redhat.com>
-In-Reply-To: <cover.1554106794.git.bristot@redhat.com>
-References: <cover.1554106794.git.bristot@redhat.com>
+        Mon, 1 Apr 2019 04:59:45 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:44967 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfDAI7p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 04:59:45 -0400
+Received: by mail-vs1-f65.google.com with SMTP id j184so5005872vsd.11;
+        Mon, 01 Apr 2019 01:59:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D49yr3gZZboTSYdQC0cV56BtNASxZXIvfMEoEhib5m0=;
+        b=p10bJ4onjC+5hYkSSc/QUJFRhuxHL7FlznNXMjei/BvLN9cz3CJeMiscxmG2mKAFc3
+         xat/VTK+vAot4aXYFns2c9l8Tm6Vu3fj2p9HFceHEpMk0mef0nuZqN2yP8LpzOTMVgow
+         0/Y72eW/kDhicd1oUTePvBYlYB7O83NoLfdH8AFqO2FGUpnelsS641KHXbfRQZyxD/tK
+         +xIqOPKDimdlx9ijoZfnZpj3P9G8HAmvCQFWkDLDDk2wa9v4819uYQRv6gc6P+xtCDdI
+         ZNWgJDcRBqbQBrYkHKETD1J7UOa1h6tvnYbdO+2HGSrLHrTBZOIMhjc61/mCLlwbD77d
+         Xk6A==
+X-Gm-Message-State: APjAAAXJ5hMorGSTGhBh8jsHM9RV6ARzea0njsMvBjI5/ivYyrtmgVWB
+        rB+dmjSSYObCiuWjH65OeR1l9gK6NPSh0mHsRY9QEw==
+X-Google-Smtp-Source: APXvYqxkJl3q+A9OdgkOXc+cbZxHO495tPa2DT9LcuEV7OS8MTUzeR6MW3ydeNuYYNN6YZDCPJN2jXGvj0EUxgiTHuw=
+X-Received: by 2002:a67:8546:: with SMTP id h67mr18610848vsd.11.1554109183762;
+ Mon, 01 Apr 2019 01:59:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 01 Apr 2019 08:58:31 +0000 (UTC)
+References: <20190321101557.26857-1-alexandre.belloni@bootlin.com> <20190401084143.uqbiktkt2vltgrxa@ninjato>
+In-Reply-To: <20190401084143.uqbiktkt2vltgrxa@ninjato>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 1 Apr 2019 10:59:32 +0200
+Message-ID: <CAMuHMdW_Gz4qaRXFeW-h7vNxJ5RwjDXDP4oZZcUaYHcqEC75bA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] rtc: da9063: set range
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the check if a jump_entry is valid to a function.
+Hi Wolfram,
 
-Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Chris von Recklinghausen <crecklin@redhat.com>
-Cc: Jason Baron <jbaron@akamai.com>
-Cc: Scott Wood <swood@redhat.com>
-Cc: Marcelo Tosatti <mtosatti@redhat.com>
-Cc: Clark Williams <williams@redhat.com>
-Cc: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- kernel/jump_label.c | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+On Mon, Apr 1, 2019 at 10:43 AM Wolfram Sang <wsa@the-dreams.de> wrote:
+> On Thu, Mar 21, 2019 at 11:15:56AM +0100, Alexandre Belloni wrote:
+> > The DA9062 and DA9063 have a year register that can go up to 0x3F.
+> >
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>
+> Thanks for this patch! Didn't know about the devm_rtc_device_register()
+> conversion going on. Glad I learned about it.
+>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>
+> I couldn't test the upper limit (DA9063 hooked to a 32bit system here),
+> but lower limit works and RTC in general works.
 
-diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index 288d630da22d..e666a4d6642a 100644
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -374,22 +374,30 @@ static enum jump_label_type jump_label_type(struct jump_entry *entry)
- 	return enabled ^ branch;
- }
- 
-+static bool jump_label_can_update(struct jump_entry *entry, bool init)
-+{
-+	/*
-+	 * Cannot update code that was in an init text area.
-+	 */
-+	if (!init && jump_entry_is_init(entry))
-+		return false;
-+
-+	if (!kernel_text_address(jump_entry_code(entry))) {
-+		WARN_ONCE(1, "can't patch jump_label at %pS", (void *)jump_entry_code(entry));
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static void __jump_label_update(struct static_key *key,
- 				struct jump_entry *entry,
- 				struct jump_entry *stop,
- 				bool init)
- {
- 	for_each_label_entry(key, entry, stop) {
--		/*
--		 * An entry->code of 0 indicates an entry which has been
--		 * disabled because it was in an init text area.
--		 */
--		if (init || !jump_entry_is_init(entry)) {
--			if (kernel_text_address(jump_entry_code(entry)))
--				arch_jump_label_transform(entry, jump_label_type(entry));
--			else
--				WARN_ONCE(1, "can't patch jump_label at %pS",
--					  (void *)jump_entry_code(entry));
-+		if (jump_label_can_update(entry, init)) {
-+			arch_jump_label_transform(entry, jump_label_type(entry));
- 		}
- 	}
- }
+BTW, does the RTC alarm interrupt work for you?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
