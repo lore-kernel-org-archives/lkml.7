@@ -2,127 +2,156 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136A4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9A6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E552084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D25620880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:58:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="pCxXWN9I"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C45IB+Wp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731488AbfDAR6S (ORCPT
+        id S1731584AbfDAR6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:58:18 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32932 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729517AbfDAR6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:58:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q1so13237387wrp.0;
-        Mon, 01 Apr 2019 10:58:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NIsstsLHXU9Ct92TAvs2WRZTq4h4a7o49yCQryjDdYI=;
-        b=pCxXWN9ILOqUQtaaqVwVX5ZZudlFpiL+dAZgOHbxCj53xV2w03weIzp+0x4A8nWfP3
-         KswrVT0yhtRLQ1dZrR5gTlgRZROhWGRHrCPXoq/M2/hZfuAoUSvESF2/E6afh0W8M2mu
-         fPj6GpuQjFGQHLBbzaT9i6+NNr5+hxsETFl9EELM2O3/yIwkrdR8oQZpmvOtlCrrPZcC
-         +L5QaeayQ+3p/zz2WBQwLUOpFtLLJsRoHcC+riZ/I83EhVB9Tvxsy0F12GH1iIukuVbL
-         arpQjyejBolL680NxtNvD43FaBY/5DIozGyRgO6C9ea6C6TEOVkh0JWOISK+v4mahtND
-         LDUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NIsstsLHXU9Ct92TAvs2WRZTq4h4a7o49yCQryjDdYI=;
-        b=LcfdOZglfFwTSvAYNwKRrUJAOK5Z1JwypWBmN1Lnk1mkj0RR/VD+M8MT8tZZNauyzd
-         DQPca3fLq8gJil7OtZK7QueZnR+ynMO2jqS1Gc5qR5yh8tQ30Q0W/2bxDa3AzZf1F0GQ
-         mroHjp73hrTSWwLUPeboeyhZKIbUQBrMSy/8pqOg+njT2jTLL9NPAhoWvISvkXeUxkkG
-         aG/dDdiTK4QZjPMcwT1F/ytqhGAmTB/PIr/etUsyLVHLDFy2uc0ko1JJ49CGVagBrpaV
-         FGyi/mY3Er2K2nCL5Y92+0tMRxLsjVKaeqqFMJONMQrQUS2cVXHz+AofWrt6m2lw7NSi
-         ZZDA==
-X-Gm-Message-State: APjAAAXaztcvBt+0MjgBXjc4MNT9/VxtraZPEZmtUyNdhX79wSPddZuK
-        aEwfvRB2MKkwTpbkwuprk/k=
-X-Google-Smtp-Source: APXvYqzpRXEsO4JmSVwj8Jr9zU5efB21av7Qsv/rlpCtQ+3+BXiUG/rvftQ5mqXhFwjjbqXoQV2Q7g==
-X-Received: by 2002:adf:cf05:: with SMTP id o5mr5254195wrj.8.1554141492517;
-        Mon, 01 Apr 2019 10:58:12 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300DCD73A0800C9C8A7BE25478D36.dip0.t-ipconnect.de. [2003:dc:d73a:800:c9c8:a7be:2547:8d36])
-        by smtp.googlemail.com with ESMTPSA id s189sm16655340wmf.45.2019.04.01.10.58.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 10:58:11 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Cc:     narmstrong@baylibre.com, jbrunet@baylibre.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        u.kleine-koenig@pengutronix.de,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 0/1] pwm: meson: fix scheduling while atomic issue
-Date:   Mon,  1 Apr 2019 19:57:47 +0200
-Message-Id: <20190401175748.5376-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 1 Apr 2019 13:58:40 -0400
+Received: from ozlabs.org ([203.11.71.1]:51359 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729485AbfDAR6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:58:38 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44Y0Sp62lPz9sPZ;
+        Tue,  2 Apr 2019 04:58:34 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554141515;
+        bh=Bi3Uu6Engo1xj316PMzRJX05F5/cCTIiYIkumGZnFDQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=C45IB+WpvYkbVqioqk4NtJ5sQ+tXrqpFH8vLriA4WHYULb18prFfqMRfyj4T8Ik02
+         kSsVXmcoq2QB3IRhguIVkpX5yMDK8TPOkEqRVuMblE9HbyH6do1VaLMt45DSq2Y/jO
+         VktPxnBUqD+Agbpbpm5erRO9sd+wIBVml+KkGDLBWyj7RaMEjHJq+yWWfqVgiIdEMg
+         eKj5pPVf5AyZJyIpf6PjfHzIkCjs2CMLI4r741Sm5GSlpRjh6fUpj/tUVnAGuCvKmk
+         jgLCxwp/WDvHciiE9GcJ+e9XLktSghPg0J4db8QIgWGx1/LX4Ok1EhbwN8yyPFZX3z
+         5SsDdU+IRbyNg==
+Date:   Tue, 2 Apr 2019 04:58:28 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: linux-next: Fixes tags need some work in the spi-fixes tree
+Message-ID: <20190402045828.699f5700@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/YE/xY76rigPlK8m2vOrcty0"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Back in January a "BUG: scheduling while atomic" error showed up during
-boot on my Meson8b Odroid-C1 (which uses a PWM regulator as CPU supply).
-The call trace comes down to:
-  __mutex_lock
-  clk_prepare_lock
-  clk_core_get_rate
-  meson_pwm_apply
-  ..
-  dev_pm_opp_set_rate
-  ..
+--Sig_/YE/xY76rigPlK8m2vOrcty0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Jerome has also seen the same problem but from pwm-leds (instead of a
-pwm-regulator). He posted a patch which replaces the spinlock with a
-mutex. That works. I believe we can optimize this by reducing the time
-where the lock is held - that also allows to keep the spin-lock.
+Hi Mark,
 
-Analyzing this issue helped me understand the pwm-meson driver better.
-My plan is to send some cleanups after this single fix is merged. The
-goal of these cleanups is to re-use more of the goodies from the PWM
-core in the pwm-meson driver as well as to address issues spotted by
-Uwe Kleine-König (these issues violate the PWM API, but none of these
-result in breakage of the boards/.dts that we currently have). These
-follow-up patches can be found here: [1].
+In commit
 
-Dependencies: none
+  019194933339 ("spi: tegra114: reset controller on probe")
 
-Target version: please queue this for -fixes so it makes it's way into
-v5.1-rc (so we can get it backported from there, because this issue has
-existed since the pwm-meson driver was introduced).
+Fixes tag
 
+  Fixes: SPI driver can be built as module so perform SPI controller reset
 
-changes since v1 at [2]:
-- added comment about usage of the spinlock as suggested by
-  Uwe Kleine-König (thank you)
-- collected Uwe Kleine-König's Reviewed-by
+has these problem(s):
 
+  - No SHA1 recognised
 
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2019-January/009690.html
-[1] https://github.com/xdarklight/linux/commits/meson-pwm-for-5.2-v1
-[2] https://patchwork.kernel.org/cover/10867757/
+In commit
 
+  f4ce428c41fb ("spi: tegra114: configure dma burst size to fifo trig level=
+")
 
-Martin Blumenstingl (1):
-  pwm: meson: use the spin-lock only to protect register modifications
+Fixes tag
 
- drivers/pwm/pwm-meson.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+  Fixes: Configure DMA burst size to be same as SPI TX/RX trigger levels
 
--- 
-2.21.0
+has these problem(s):
 
+  - No SHA1 recognised
+
+In commit
+
+  c4fc9e5b28ff ("spi: tegra114: flush fifos")
+
+Fixes tag
+
+  Fixes: Flush TX and RX FIFOs before start of new transfer and on FIFO
+
+has these problem(s):
+
+  - No SHA1 recognised
+
+In commit
+
+  32bd1a9551ca ("spi: tegra114: terminate dma and reset on transfer timeout=
+")
+
+Fixes tag
+
+  Fixes: terminate DMA and perform controller reset on transfer timeout
+
+has these problem(s):
+
+  - No SHA1 recognised
+
+In commit
+
+  1a89ac5b9189 ("spi: tegra114: fix for unpacked mode transfers")
+
+Fixes tag
+
+  Fixes: computation of actual bytes to fill/receive in/from FIFO in unpack=
+ed
+
+has these problem(s):
+
+  - No SHA1 recognised
+
+In commit
+
+  7b3d10cdf54b ("spi: tegra114: clear packed bit for unpacked mode")
+
+Fixes tag
+
+  Fixes: Clear packed bit when not using packed mode.
+
+has these problem(s):
+
+  - No SHA1 recognised
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/YE/xY76rigPlK8m2vOrcty0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyiUUQACgkQAVBC80lX
+0Gwa0gf/Rmt3xgQGd6sDTjIszOYyPmFEMxd6BrbE/1XaCvnMytytW2G+0Sbk1RW2
+e+xhO2D6N8hQck1EsWEZ9d5VZdHONXMqqjiuwlkyK6KORREoX8ORmHm4HNOwdfK4
+KQZ+rskrfpylpj1JR1zE74F2XteAM9t+4XJj6wI26wwfkinTR7CISIr+FHt04XJe
+90h7MJtwBxVaBv0j4BhdyyCP4FBT5v9c6cSSa6JmctuoO1smkjD3dNeym068UJFP
+MFyOYVnjuqQS85I2lAIFtzeTtoIBqe6Zs8ul2Z497aM1h5oOl/mbTO173C4VATYI
+qss4uEx9aN8RXDiPTZAp7eyV3npcZw==
+=87um
+-----END PGP SIGNATURE-----
+
+--Sig_/YE/xY76rigPlK8m2vOrcty0--
