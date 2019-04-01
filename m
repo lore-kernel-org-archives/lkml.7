@@ -7,56 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D8BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967F5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B551E2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633DA2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140197;
-	bh=yPOHKrejMgz+8mjke84X6PrU98t2IgQ60OSskPOAu2M=;
+	s=default; t=1554140203;
+	bh=9Q+YaXajQC9ZlcbN+Q46N53ClCYkrHNQ3aUFfz1P06A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VOvH2RJlLCsdgyk6NZ+FSSNm1ssrzeQszlF+em2EJVcqu+NWgvk0KFQ6HfN3K7lJ5
-	 bcdQ7L1cEh0t97YRb0k6PWXWVPlEPdn1UauLzQXupe2vJd3C7jnDB1x56lC08pYeIS
-	 AdyuT5gw8tst6DTzk2Um0eAtW6bLyMf5dHNuiqvM=
+	b=S2P5UyBfEkiSt26SvBDkLCqhqdgmcoC3VfRwOv+U7yKaYADTGBaE4kBCtArZEzuk1
+	 aXv8EXwO7Jo4ICeiiRzJ8A7+oWG0a9FmGs39c6AiFcgke9IKQjbpO22kBLGCej6EU6
+	 d0skrPizuarpQMvInMeH3wVzrrMk62YStEU1m55E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387886AbfDARgg (ORCPT
+        id S2387911AbfDARgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:36:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48398 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:36:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387697AbfDARge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:36:34 -0400
+        id S2387697AbfDARgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:36:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C172720880;
-        Mon,  1 Apr 2019 17:36:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1816B2070B;
+        Mon,  1 Apr 2019 17:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140193;
-        bh=yPOHKrejMgz+8mjke84X6PrU98t2IgQ60OSskPOAu2M=;
+        s=default; t=1554140198;
+        bh=9Q+YaXajQC9ZlcbN+Q46N53ClCYkrHNQ3aUFfz1P06A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sjY5iECFM2a16ewqeWV9bztLrCCFB9mOt+mRSRHWH4tRCaKlPkZR0hjJWyv+EmrNe
-         5stn711Y/NEa+OEFGGuKb9juDos4w1S/TTPgbCYenzQ8NBMe2j30Ct4j80zFIyPaQf
-         eibPpO5XqwTCMvPs7X1/MqT6VG2iO+RbuZ1d+nuc=
+        b=2VqEUBnowf9rjwfMbPBxXLQECNf7wP/SI5vaC4irCRY03Lc0HOrBL5g0P/bWAaZgf
+         dh0pJgLgrTUDUbKkH2zPAKSpSmF3wb3kBg9SKNd6y294GX1JDMw4PTs5Ohhd56oiLt
+         7EBPh6w6AGfcMAJK5sKBYAUwH/YmmT1FCakLQRr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Konrad Wilk <konrad.wilk@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>, Rik van Riel <riel@surriel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Micheal Kelley <michael.h.kelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: [PATCH 4.4 125/131] x86/smp: Enforce CONFIG_HOTPLUG_CPU when SMP=y
-Date:   Mon,  1 Apr 2019 19:03:15 +0200
-Message-Id: <20190401170101.903598619@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 126/131] KVM: Reject device ioctls from processes other than the VMs creator
+Date:   Mon,  1 Apr 2019 19:03:16 +0200
+Message-Id: <20190401170101.968728808@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -75,62 +66,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit bebd024e4815b1a170fcd21ead9c2222b23ce9e6 upstream.
+commit ddba91801aeb5c160b660caed1800eb3aef403f8 upstream.
 
-The SMT disable 'nosmt' command line argument is not working properly when
-CONFIG_HOTPLUG_CPU is disabled. The teardown of the sibling CPUs which are
-required to be brought up due to the MCE issues, cannot work. The CPUs are
-then kept in a half dead state.
+KVM's API requires thats ioctls must be issued from the same process
+that created the VM.  In other words, userspace can play games with a
+VM's file descriptors, e.g. fork(), SCM_RIGHTS, etc..., but only the
+creator can do anything useful.  Explicitly reject device ioctls that
+are issued by a process other than the VM's creator, and update KVM's
+API documentation to extend its requirements to device ioctls.
 
-As the 'nosmt' functionality has become popular due to the speculative
-hardware vulnerabilities, the half torn down state is not a proper solution
-to the problem.
-
-Enforce CONFIG_HOTPLUG_CPU=y when SMP is enabled so the full operation is
-possible.
-
-Reported-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Konrad Wilk <konrad.wilk@oracle.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Micheal Kelley <michael.h.kelley@microsoft.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: K. Y. Srinivasan <kys@microsoft.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190326163811.598166056@linutronix.de
+Fixes: 852b6d57dc7f ("kvm: add device control API")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/Kconfig |    8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ Documentation/virtual/kvm/api.txt |   16 +++++++++++-----
+ virt/kvm/kvm_main.c               |    3 +++
+ 2 files changed, 14 insertions(+), 5 deletions(-)
 
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1970,14 +1970,8 @@ config PHYSICAL_ALIGN
- 	  Don't change this unless you know what you are doing.
+--- a/Documentation/virtual/kvm/api.txt
++++ b/Documentation/virtual/kvm/api.txt
+@@ -13,7 +13,7 @@ of a virtual machine.  The ioctls belong
  
- config HOTPLUG_CPU
--	bool "Support for hot-pluggable CPUs"
-+	def_bool y
- 	depends on SMP
--	---help---
--	  Say Y here to allow turning CPUs off and on. CPUs can be
--	  controlled through /sys/devices/system/cpu.
--	  ( Note: power management support will enable this option
--	    automatically on SMP systems. )
--	  Say N if you want to disable CPU hotplug.
+  - VM ioctls: These query and set attributes that affect an entire virtual
+    machine, for example memory layout.  In addition a VM ioctl is used to
+-   create virtual cpus (vcpus).
++   create virtual cpus (vcpus) and devices.
  
- config BOOTPARAM_HOTPLUG_CPU0
- 	bool "Set default setting of cpu0_hotpluggable"
+    Only run VM ioctls from the same process (address space) that was used
+    to create the VM.
+@@ -24,6 +24,11 @@ of a virtual machine.  The ioctls belong
+    Only run vcpu ioctls from the same thread that was used to create the
+    vcpu.
+ 
++ - device ioctls: These query and set attributes that control the operation
++   of a single device.
++
++   device ioctls must be issued from the same process (address space) that
++   was used to create the VM.
+ 
+ 2. File descriptors
+ -------------------
+@@ -32,10 +37,11 @@ The kvm API is centered around file desc
+ open("/dev/kvm") obtains a handle to the kvm subsystem; this handle
+ can be used to issue system ioctls.  A KVM_CREATE_VM ioctl on this
+ handle will create a VM file descriptor which can be used to issue VM
+-ioctls.  A KVM_CREATE_VCPU ioctl on a VM fd will create a virtual cpu
+-and return a file descriptor pointing to it.  Finally, ioctls on a vcpu
+-fd can be used to control the vcpu, including the important task of
+-actually running guest code.
++ioctls.  A KVM_CREATE_VCPU or KVM_CREATE_DEVICE ioctl on a VM fd will
++create a virtual cpu or device and return a file descriptor pointing to
++the new resource.  Finally, ioctls on a vcpu or device fd can be used
++to control the vcpu or device.  For vcpus, this includes the important
++task of actually running guest code.
+ 
+ In general file descriptors can be migrated among processes by means
+ of fork() and the SCM_RIGHTS facility of unix domain socket.  These
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2611,6 +2611,9 @@ static long kvm_device_ioctl(struct file
+ {
+ 	struct kvm_device *dev = filp->private_data;
+ 
++	if (dev->kvm->mm != current->mm)
++		return -EIO;
++
+ 	switch (ioctl) {
+ 	case KVM_SET_DEVICE_ATTR:
+ 		return kvm_device_ioctl_attr(dev, dev->ops->set_attr, arg);
 
 
