@@ -2,185 +2,103 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE219C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BBCC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD78620830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h+Nruv5D"
+	by mail.kernel.org (Postfix) with ESMTP id 9618D20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554140689;
+	bh=4wIlnsQD7mha+HuikoQSLOYhPg8++5RRDSJpYLZQmCY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MNKKgxojEEdfExy4PvFdhZn9q8fvPwvPfNUS37G6Z0LYKn4f2G5RtxC7pLeZWFWHY
+	 vqN07jJK83kQn5fruZiTPK0HxzChaD+pQXnhCnDJDv6rD8HGsJResbFC51sbpMmK7p
+	 zpFHqSVRMZuuzUwZz+AZe7d4SPoc+efzcLdMaAXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387781AbfDAReY (ORCPT
+        id S2388038AbfDARos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 1 Apr 2019 13:44:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387777AbfDAReY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 1 Apr 2019 13:34:24 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:33438 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387737AbfDAReR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:34:17 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x31HY5ce012709;
-        Mon, 1 Apr 2019 12:34:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554140045;
-        bh=jhFtVq8XbnvL8fgMI7lfcJzn1wR46lpfAaDIbBalNxs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=h+Nruv5D4/k7KSkkYycWPUCzIdJ/qjk87ge33kXpBvCMMfSuf92nI7+bTojSIVYoW
-         Fn8KCeeJrbnUaEWU+WN8RUJoFqej1D11JLzulr0vRJnZcfWnsTghlWxt+FHfe7r7if
-         /HuooWq1jqV439eSczhvet+8EeED0CUPJRbLryuc=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x31HY58w019961
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 1 Apr 2019 12:34:05 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 1 Apr
- 2019 12:34:05 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 1 Apr 2019 12:34:04 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x31HY4Lq036411;
-        Mon, 1 Apr 2019 12:34:04 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <marek.behun@nic.cz>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [RFC PATCH 3/5] documention: leds: Add multicolor class documentation
-Date:   Mon, 1 Apr 2019 12:33:58 -0500
-Message-ID: <20190401173400.14238-4-dmurphy@ti.com>
-X-Mailer: git-send-email 2.12.2
-In-Reply-To: <20190401173400.14238-1-dmurphy@ti.com>
-References: <20190401173400.14238-1-dmurphy@ti.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DD7120830;
+        Mon,  1 Apr 2019 17:34:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554140064;
+        bh=4wIlnsQD7mha+HuikoQSLOYhPg8++5RRDSJpYLZQmCY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GQlUatSCLVdinlM+Mexj6wkpMecaDMOCJ7iqjps4r6zeur8b83yeo7bLVh9/6d5Dc
+         mC9UqfBxnalNj1GisVJZ0LPMqA3hY06s9TSjkWqrbfkcr0tSppqOC6cW/5l/dAYw6C
+         6hMjQoiVG82tm1G0dVrE+i2o51hKuLaFsDEtHIUI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 096/131] tcp: do not use ipv6 header for ipv4 flow
+Date:   Mon,  1 Apr 2019 19:02:46 +0200
+Message-Id: <20190401170059.962231811@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
+References: <20190401170051.645954551@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support documentation on the multicolor LED framework.
-This document defines the directores and file generated by the
-multicolor framework.  It also documents usage.
+4.4-stable review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+------------------
+
+From: Eric Dumazet <edumazet@google.com>
+
+[ Upstream commit 89e4130939a20304f4059ab72179da81f5347528 ]
+
+When a dual stack tcp listener accepts an ipv4 flow,
+it should not attempt to use an ipv6 header or tcp_v6_iif() helper.
+
+Fixes: 1397ed35f22d ("ipv6: add flowinfo for tcp6 pkt_options for all cases")
+Fixes: df3687ffc665 ("ipv6: add the IPV6_FL_F_REFLECT flag to IPV6_FL_A_GET")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/leds/leds-class-multicolor.txt | 99 ++++++++++++++++++++
- 1 file changed, 99 insertions(+)
- create mode 100644 Documentation/leds/leds-class-multicolor.txt
+ net/ipv6/tcp_ipv6.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/leds/leds-class-multicolor.txt b/Documentation/leds/leds-class-multicolor.txt
-new file mode 100644
-index 000000000000..8112b99a7668
---- /dev/null
-+++ b/Documentation/leds/leds-class-multicolor.txt
-@@ -0,0 +1,99 @@
-+
-+Multi Color LED handling under Linux
-+=================================================
-+
-+Authors: Dan Murphy <dmurphy@ti.com>
-+
-+Description
-+-----------
-+There are varying monochrome LED colors available for application.  These
-+LEDs can be used as a single use case LED or can be mixed with other color
-+LEDs to produce the full spectrum of color.  Color LEDs that are grouped
-+can be presented under a single LED node with individual color control.
-+The multicolor class groups these LEDs and allows dynamically setting the value
-+of a single LED or setting the brightness values of the LEDs in the group and
-+updating the LEDs virtually simultaneously.
-+
-+Multicolor Class Control
-+-------------------------
-+The multicolor class presents the LED groups under a directory called "colors".
-+This directory is a child under the LED parent node created but the led_class
-+framework.  The led_class framework is documented in led-class.txt within this
-+documentation directory. 
-+
-+Each colored LED is given it's own directory.  These directories can be but not
-+limited to red, green, blue, white, amber, yellow and violet.  Under these
-+directories the brightness and max_brightness files are presented for each LED.
-+
-+Under the "colors" directory there are two files created "sync" and
-+"sync_enable". The sync_enable file controls whether the LED brightness
-+value is set real time or if the LED brightness value setting is deferred until
-+the "sync" file is written.  If sync_enable is set then writing to each LED
-+"brightness" file will store the brightness value.  Once the "sync" file is
-+written then each LED color defined in the node will write the brightness of
-+the LED in the device driver.
-+
-+If "sync_enable" is not set then writing the brightness value of the LED to the
-+device driver is done immediately.  Writing the "sync" file has no affect.
-+
-+Directory Layout Example
-+------------------------
-+root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
-+colors/:
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 blue
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 green
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 red
-+--w-------    1 root     root          4096 Jun 28 20:21 sync
-+-rw-------    1 root     root          4096 Jun 28 20:22 sync_enable
-+
-+colors/blue:
-+-rw-------    1 root     root          4096 Jun 28 20:21 brightness
-+-r--------    1 root     root          4096 Jun 28 20:27 max_brightness
-+
-+colors/green:
-+-rw-------    1 root     root          4096 Jun 28 20:22 brightness
-+-r--------    1 root     root          4096 Jun 28 20:27 max_brightness
-+
-+colors/red:
-+-rw-------    1 root     root          4096 Jun 28 20:21 brightness
-+-r--------    1 root     root          4096 Jun 28 20:27 max_brightness
-+
-+Example of Writing LEDs with Sync Enabled
-+-----------------------------------------
-+Below the red, green and blue LEDs are set to corresponding values.  These
-+values are stored and not written until the sync file is written.
-+
-+cd /sys/class/leds/rgb:grouped_leds/colors
-+
-+echo 1 > sync_enable
-+
-+echo 100 > red/brightness
-+echo 80 > green/brightness
-+echo 180 > blue/brightness
-+
-+* LED device driver has not been updated and the LED states have not changed.
-+* Writing the LED brightness files again will only change the stored value and
-+* not the device driver value.
-+
-+echo 1 > sync
-+
-+* LED device driver has been updated the LEDs should present the brightness
-+* levels that have been set.  Since sync_enable is still enabled writing to the
-+* LED brightness files will not change the current brightnesses.
-+
-+Example of Writing LEDs with Sync Disabled
-+------------------------------------------
-+Below the values of each LED are written to the device driver immediately upon
-+request.
-+
-+cd /sys/class/leds/rgb:grouped_leds/colors
-+
-+echo 0 > sync_enable
-+
-+echo 100 > red/brightness // Red LED should be on with the current brightness
-+echo 80 > green/brightness // Green LED should be on with the current brightness
-+echo 180 > blue/brightness // Blue LED should be on with the current brightness
-+.
-+.
-+.
-+echo 0 > green/brightness // Green LED should be off
--- 
-2.19.0
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -1043,11 +1043,11 @@ static struct sock *tcp_v6_syn_recv_sock
+ 		newnp->ipv6_fl_list = NULL;
+ 		newnp->pktoptions  = NULL;
+ 		newnp->opt	   = NULL;
+-		newnp->mcast_oif   = tcp_v6_iif(skb);
+-		newnp->mcast_hops  = ipv6_hdr(skb)->hop_limit;
+-		newnp->rcv_flowinfo = ip6_flowinfo(ipv6_hdr(skb));
++		newnp->mcast_oif   = inet_iif(skb);
++		newnp->mcast_hops  = ip_hdr(skb)->ttl;
++		newnp->rcv_flowinfo = 0;
+ 		if (np->repflow)
+-			newnp->flow_label = ip6_flowlabel(ipv6_hdr(skb));
++			newnp->flow_label = 0;
+ 
+ 		/*
+ 		 * No need to charge this sock to the relevant IPv6 refcnt debug socks count
+
 
