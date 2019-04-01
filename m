@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571F2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C503C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2742120856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC7620856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139336;
-	bh=1Q2gR3ux/GXc791eE5BDNeHOdX0L/1tPPVTiw2Eytgw=;
+	s=default; t=1554139340;
+	bh=56hPDBnDyY2rH2VEM/wtXuJLP55OmI2vEOO/nAmKKms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UfYP6jTN9KFk7u8UiVrAu0EDgsGJPJZyOwYrx8Mf7yT3JpV5f15rnRtHcFmdw+vlc
-	 VPhu4s3d9jTIBapnJRISAAwo2h6PPBkDD5J1sf1jbp8mXApBkg+OhVNqu1ON6uqWW8
-	 Q94WdKN47wmHe2f+r4xjDaitSXMVEF5Phvoz8iRI=
+	b=Mt4t7P93mIdmwru72sKcM7Pw7d9fDGwf5+odGmoOYfNSDBKAjT5UFEcmmwyfs28FA
+	 PSbuPvnkbhy0qOZV0ok4SKesJmEtjY5xNGK6lxg5Ep4ZXQwsDYd6BbbGLhnj0uTafZ
+	 MPyas9lg9BnwoJvwFbpftDzOB8C0ObiynhLFYnfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbfDARWO (ORCPT
+        id S1731963AbfDARWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:22:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51296 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:22:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731526AbfDARWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:22:11 -0400
+        id S1731112AbfDARWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:22:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8C98206C0;
-        Mon,  1 Apr 2019 17:22:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8069B20856;
+        Mon,  1 Apr 2019 17:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139331;
-        bh=1Q2gR3ux/GXc791eE5BDNeHOdX0L/1tPPVTiw2Eytgw=;
+        s=default; t=1554139334;
+        bh=56hPDBnDyY2rH2VEM/wtXuJLP55OmI2vEOO/nAmKKms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=swmh8Teob6ZQE0G+pHzS06My6EFqlT6TinYpa5TYpDrJiX2OS5hb3L8SyPvpMbjp3
-         wncdJrm3D3Z34cpZMlUXugGg9oUebmyfDrEB/BFFGgaDyPxbH7rDHvklWoLHV302bt
-         5YHNGav54U4BICp1lhJWpjaSpCFbzEVzPYj89O9k=
+        b=KjMO5Jw0qV9Ay/ARMZ0qzTM/YjbotjbTAfP0+dVzGnu2H11Hv1Hp3m3JRkAnYSZ+E
+         FmpUjJDXAXlnRw871b32Q9dQYScZh0mCtGMFiE9Satx4jJPZgDLQ2zD0gj3TXBrmqi
+         IIpd9r9gm84ax5B24tVdzuQOMcMLwPe7DcQJo6NY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 007/107] mISDN: hfcpci: Test both vendor & device ID for Digium HFC4S
-Date:   Mon,  1 Apr 2019 19:01:22 +0200
-Message-Id: <20190401170046.110535799@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christoph Paasch <cpaasch@apple.com>
+Subject: [PATCH 4.14 008/107] net: datagram: fix unbounded loop in __skb_try_recv_datagram()
+Date:   Mon,  1 Apr 2019 19:01:23 +0200
+Message-Id: <20190401170046.331227014@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,36 +66,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit fae846e2b7124d4b076ef17791c73addf3b26350 ]
+[ Upstream commit 0b91bce1ebfc797ff3de60c8f4a1e6219a8a3187 ]
 
-The device ID alone does not uniquely identify a device.  Test both the
-vendor and device ID to make sure we don't mistakenly think some other
-vendor's 0xB410 device is a Digium HFC4S.  Also, instead of the bare hex
-ID, use the same constant (PCI_DEVICE_ID_DIGIUM_HFC4S) used in the device
-ID table.
+Christoph reported a stall while peeking datagram with an offset when
+busy polling is enabled. __skb_try_recv_datagram() uses as the loop
+termination condition 'queue empty'. When peeking, the socket
+queue can be not empty, even when no additional packets are received.
 
-No functional change intended.
+Address the issue explicitly checking for receive queue changes,
+as currently done by __skb_wait_for_more_packets().
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 2b5cd0dfa384 ("net: Change return type of sk_busy_loop from bool to void")
+Reported-and-tested-by: Christoph Paasch <cpaasch@apple.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/isdn/hardware/mISDN/hfcmulti.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/core/datagram.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/isdn/hardware/mISDN/hfcmulti.c
-+++ b/drivers/isdn/hardware/mISDN/hfcmulti.c
-@@ -4367,7 +4367,8 @@ setup_pci(struct hfc_multi *hc, struct p
- 	if (m->clock2)
- 		test_and_set_bit(HFC_CHIP_CLOCK2, &hc->chip);
+--- a/net/core/datagram.c
++++ b/net/core/datagram.c
+@@ -281,7 +281,7 @@ struct sk_buff *__skb_try_recv_datagram(
+ 			break;
  
--	if (ent->device == 0xB410) {
-+	if (ent->vendor == PCI_VENDOR_ID_DIGIUM &&
-+	    ent->device == PCI_DEVICE_ID_DIGIUM_HFC4S) {
- 		test_and_set_bit(HFC_CHIP_B410P, &hc->chip);
- 		test_and_set_bit(HFC_CHIP_PCM_MASTER, &hc->chip);
- 		test_and_clear_bit(HFC_CHIP_PCM_SLAVE, &hc->chip);
+ 		sk_busy_loop(sk, flags & MSG_DONTWAIT);
+-	} while (!skb_queue_empty(&sk->sk_receive_queue));
++	} while (sk->sk_receive_queue.prev != *last);
+ 
+ 	error = -EAGAIN;
+ 
 
 
