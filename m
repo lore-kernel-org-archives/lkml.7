@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98FCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0C4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAEF2133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E4A206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139015;
-	bh=7NqkNI4AcQpNFXY3aakXB5bpLZ6h6NJGrmyBj3btLB0=;
+	s=default; t=1554139020;
+	bh=QQbP+B6dccJ/0suh6FiRdUz3baf0r9UEfA9TInCv0s0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CAHgTC9ntmBOJUxq/CFaEF4ZsHL9XqqdaHuf+/m1fOvYi4QSXgjKPHAOZnQLhTwRi
-	 zdt8LDSz1d2wQXIGl5Hl6ZvqXumb5S6y5FxYofbk4U2c9YSc8zrdwg3uDqYpnWmlam
-	 KtqMtLxubwWH/UJGKXleu4AGLhT9bWOoTRPURvjw=
+	b=AKfqxUOGbKWQMfuDJFj1yRXtOAxVxwvnL9GdglrrrwCEwl6w9wcogbcssPGdeYpqc
+	 A/uLkFdJdICbb11hxAEmkmgF8tI0JHrimHpJ0XjfHdPcHe+c4d17zkteOggSPmjiPs
+	 mjjKlrbSXKTdd8qsUptz15wr5IRqJr690b1Fw220=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731088AbfDARQy (ORCPT
+        id S1731109AbfDARQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:16:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42368 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:16:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730894AbfDARQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:16:51 -0400
+        id S1731092AbfDARQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:16:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBF6120856;
-        Mon,  1 Apr 2019 17:16:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53BBB20856;
+        Mon,  1 Apr 2019 17:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139010;
-        bh=7NqkNI4AcQpNFXY3aakXB5bpLZ6h6NJGrmyBj3btLB0=;
+        s=default; t=1554139016;
+        bh=QQbP+B6dccJ/0suh6FiRdUz3baf0r9UEfA9TInCv0s0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LLuJr46NLoaVlNqAgrgM4xGIghhn2jGu1yk6n/GLOlBW52P222tdFmFiLNJ+8DdJ2
-         73amY36qAlRQjoe+6oygYQixSrVIlFgOdGFJXatH+YlK7W6L7JVtvny1xS8ra+e/fp
-         x/jVtgeW37hWVg8AOwq0dWYcA8gaUUiVvIHEgLAo=
+        b=lbIDLa73lBQl4IGWtmtXwNAU+NmEoKWhHy9EK7Is43vH1PJ6n3/zhYs8zo1nS1WV6
+         Up0U26YoL3MErtbP1y1R4Y+yKgH8+YqNzWUW9216m/4fB+DcBLzgmgrvRYnM7tBqhu
+         W4riDh+330UGGQ0nrctMyTs+wq/wdURVxlzNhE0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>
-Subject: [PATCH 4.19 087/134] serial: mvebu-uart: Fix to avoid a potential NULL pointer dereference
-Date:   Mon,  1 Apr 2019 19:02:03 +0200
-Message-Id: <20190401170052.427588347@linuxfoundation.org>
+        stable@vger.kernel.org, Uli <t9cpu@web.de>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 089/134] USB: serial: cp210x: add new device id
+Date:   Mon,  1 Apr 2019 19:02:05 +0200
+Message-Id: <20190401170052.584753224@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
 References: <20190401170044.243719205@linuxfoundation.org>
@@ -63,32 +65,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 32f47179833b63de72427131169809065db6745e upstream.
+commit a595ecdd5f60b2d93863cebb07eec7f935839b54 upstream.
 
-of_match_device on failure to find a matching device can return a NULL
-pointer. The patch checks for such a scenrio and passes the error upstream.
+Lorenz Messtechnik has a device that is controlled by the cp210x driver,
+so add the device id to the driver.  The device id was provided by
+Silicon-Labs for the devices from this vendor.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Reported-by: Uli <t9cpu@web.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/mvebu-uart.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/serial/cp210x.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/tty/serial/mvebu-uart.c
-+++ b/drivers/tty/serial/mvebu-uart.c
-@@ -799,6 +799,9 @@ static int mvebu_uart_probe(struct platf
- 		return -EINVAL;
- 	}
- 
-+	if (!match)
-+		return -ENODEV;
-+
- 	/* Assume that all UART ports have a DT alias or none has */
- 	id = of_alias_get_id(pdev->dev.of_node, "serial");
- 	if (!pdev->dev.of_node || id < 0)
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -80,6 +80,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(0x10C4, 0x804E) }, /* Software Bisque Paramount ME build-in converter */
+ 	{ USB_DEVICE(0x10C4, 0x8053) }, /* Enfora EDG1228 */
+ 	{ USB_DEVICE(0x10C4, 0x8054) }, /* Enfora GSM2228 */
++	{ USB_DEVICE(0x10C4, 0x8056) }, /* Lorenz Messtechnik devices */
+ 	{ USB_DEVICE(0x10C4, 0x8066) }, /* Argussoft In-System Programmer */
+ 	{ USB_DEVICE(0x10C4, 0x806F) }, /* IMS USB to RS422 Converter Cable */
+ 	{ USB_DEVICE(0x10C4, 0x807A) }, /* Crumb128 board */
 
 
