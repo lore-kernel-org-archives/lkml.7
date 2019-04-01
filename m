@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E023BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B2FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB6520856
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB4A2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140021;
-	bh=hpxPCv7z+UxtvYx1vi3wB6bqqgjHe5JZF6SMuqsy+8s=;
+	s=default; t=1554140026;
+	bh=Ff6QY2Mz3TmfbFq63ECDcrDjdQCQ+2NZ+goDmr7HIXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h9QKT7mCEF9Mc9rKcrUyoHNC8YB0lNJ+VRhtOkcXWzlPBClcA+AQ5q5EJKykM6d2D
-	 bqiUdDi3gvlykorl4H2iIrHrwS8zef3N5YYPeFXGRPp+rY9gd7xKvloB5x0lfB1U3r
-	 PIR2OfIVjI/JgkcjUznOUXlxlJubpnlgcOo18S8c=
+	b=Bz/2QM5gxDRkJTR9KHTxu5VmmLURlDODvt6gLcRVxGFQQ31v52urd8QIhwUEXZwr+
+	 rFgw/A3FA5y4jf/nZ19crbvysD1mo0GKfnpgzVsjT3jaVYQMmomplemV0BqqMUDCsV
+	 MYHGrQLHsRGktb2AMPA/pA7S7c5BvtcbK9d7yFdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387661AbfDARdk (ORCPT
+        id S2387667AbfDARdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:33:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42758 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:33:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730671AbfDARdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:33:37 -0400
+        id S1730671AbfDARdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:33:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9034E20856;
-        Mon,  1 Apr 2019 17:33:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D496E2070B;
+        Mon,  1 Apr 2019 17:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140017;
-        bh=hpxPCv7z+UxtvYx1vi3wB6bqqgjHe5JZF6SMuqsy+8s=;
+        s=default; t=1554140020;
+        bh=Ff6QY2Mz3TmfbFq63ECDcrDjdQCQ+2NZ+goDmr7HIXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wf2ateGtMdLS1HkYThTh4SjEPLiEjRkHPPmkoMLXGuGiKWuz7cLjiIZMLEMYOIkNZ
-         I24Rsz654S0baW6dlmCiaAsZKPm4Lm1QV3dExrwzhp9zjkStFO524FhQPB37SyKjsX
-         KqA8dMCPIK8bXbfU3CFPHatn7AdRxyq5TUiXfLO8=
+        b=0jOFrZFKvkm4ssX0rWBNz5rkXu/RvkR9wckjnJO1JKGi3pzlElkTpNDFJzl3h/f9f
+         RU6fsnXtj5iXd/3DuZrOy6S3KNnLidbdVRaqDQ2KyZMvPNb6G4dxpKocwSbnSibhE4
+         k1gHOFBylPSM2N2+JWxep9GIdZBm5xJt1rhLHESM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nicolas Pitre <nico@linaro.org>,
+        stable@vger.kernel.org, Jungseung Lee <js07.lee@samsung.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ben Hutchings <ben@decadent.org.uk>,
         Russell King <rmk+kernel@arm.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 044/131] ARM: 8458/1: bL_switcher: add GIC dependency
-Date:   Mon,  1 Apr 2019 19:01:54 +0200
-Message-Id: <20190401170055.997964743@linuxfoundation.org>
+Subject: [PATCH 4.4 045/131] ARM: 8494/1: mm: Enable PXN when running non-LPAE kernel on LPAE processor
+Date:   Mon,  1 Apr 2019 19:01:55 +0200
+Message-Id: <20190401170056.076456035@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -67,47 +68,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6c044fecdf78be3fda159a5036bb33700cdd5e59 ]
+[ Upstream commit ad84f56bf6d620fe6ed4d57ce6ec9945684d7f35 ]
 
-It is not possible to build the bL_switcher code if the GIC
-driver is disabled, because it relies on calling into some
-gic specific interfaces, and that would result in this build
-error:
+The VMSA field of MMFR0 (bottom 4 bits) is incremented for each
+added feature.  PXN is supported if the value is >= 4 and LPAE
+is supported if it is >= 5.
 
-arch/arm/common/built-in.o: In function `bL_switch_to':
-:(.text+0x1230): undefined reference to `gic_get_sgir_physaddr'
-:(.text+0x1244): undefined reference to `gic_send_sgi'
-:(.text+0x1268): undefined reference to `gic_migrate_target'
-arch/arm/common/built-in.o: In function `bL_switcher_enable.part.4':
-:(.text.unlikely+0x2f8): undefined reference to `gic_get_cpu_id'
+In case a kernel with CONFIG_ARM_LPAE disabled is used on a
+processor that supports LPAE, we can still use PXN in short
+descriptors.  So check for >= 4 not == 4.
 
-This adds a Kconfig dependency to ensure we only build the big-little
-switcher if the GIC driver is present as well.
-
-Almost all ARMv7 platforms come with a GIC anyway, but it is possible
-to build a kernel that disables all platforms.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Nicolas Pitre <nico@linaro.org>
+Signed-off-by: Jungseung Lee <js07.lee@samsung.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig | 2 +-
+ arch/arm/mm/mmu.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 3a0277c6c060..4cc908ee107f 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1422,7 +1422,7 @@ config BIG_LITTLE
- 
- config BL_SWITCHER
- 	bool "big.LITTLE switcher support"
--	depends on BIG_LITTLE && MCPM && HOTPLUG_CPU
-+	depends on BIG_LITTLE && MCPM && HOTPLUG_CPU && ARM_GIC
- 	select ARM_CPU_SUSPEND
- 	select CPU_PM
- 	help
+diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+index e47cffd25c6c..aead23f15213 100644
+--- a/arch/arm/mm/mmu.c
++++ b/arch/arm/mm/mmu.c
+@@ -572,7 +572,7 @@ static void __init build_mem_type_table(void)
+ 	 * in the Short-descriptor translation table format descriptors.
+ 	 */
+ 	if (cpu_arch == CPU_ARCH_ARMv7 &&
+-		(read_cpuid_ext(CPUID_EXT_MMFR0) & 0xF) == 4) {
++		(read_cpuid_ext(CPUID_EXT_MMFR0) & 0xF) >= 4) {
+ 		user_pmd_table |= PMD_PXNTABLE;
+ 	}
+ #endif
 -- 
 2.19.1
 
