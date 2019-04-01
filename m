@@ -2,102 +2,128 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36299C10F0B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4C0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 007A72133D
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6725720857
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 15:55:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FT3Lz3h5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbfDAPwH (ORCPT
+        id S1728499AbfDAPzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 11:52:07 -0400
-Received: from sauhun.de ([88.99.104.3]:52324 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfDAPwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 11:52:07 -0400
-Received: from localhost (p54B331B1.dip0.t-ipconnect.de [84.179.49.177])
-        by pokefinder.org (Postfix) with ESMTPSA id 073F22C7BF4;
-        Mon,  1 Apr 2019 17:52:04 +0200 (CEST)
-Date:   Mon, 1 Apr 2019 17:52:04 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 1/2] rtc: da9063: set range
-Message-ID: <20190401155204.GA5964@kunai>
-References: <20190321101557.26857-1-alexandre.belloni@bootlin.com>
- <20190401084143.uqbiktkt2vltgrxa@ninjato>
- <CAMuHMdW_Gz4qaRXFeW-h7vNxJ5RwjDXDP4oZZcUaYHcqEC75bA@mail.gmail.com>
- <VI1PR10MB235254A7A95F4045A5410D1EFE550@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
- <CAMuHMdVsp86n_1+c6NZpCG1MwcAzEH7rgaESHfYESb5YcLk6zw@mail.gmail.com>
- <20190401132109.GA4570@kunai>
- <CAMuHMdV79HAn8jpodQcripAViCqBh3rFGZ39oEiSiP8nC+UyTA@mail.gmail.com>
- <20190401150741.vwqzzngnma4jvkid@ninjato>
- <20190401151628.GK3430@piout.net>
+        Mon, 1 Apr 2019 11:55:06 -0400
+Received: from mail-ed1-f49.google.com ([209.85.208.49]:32852 "EHLO
+        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbfDAPzG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 11:55:06 -0400
+Received: by mail-ed1-f49.google.com with SMTP id q3so8737980edg.0;
+        Mon, 01 Apr 2019 08:55:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BbkbLjRhAP2m6M+H3V/iFkQN5+l9IbV2kSNUBnOy1UI=;
+        b=FT3Lz3h5xmECVOYxU3dJDLk5mS9nN+GVdoHnrwClcleUYmtfTBwqeK44Zo3C4+hHbQ
+         vB0zezQeuZxUEOKPJ2dT9Xh/Tfa9pKtq0VqH8498XHleMWgbYuKmtm9aSPFdvZCwAL6Y
+         y4Yygm7r8BG1Rt64bKKbi0PeCdnAMkzhVTxJ+2aBRwDF6REGDxokyDABi1ZHQqFZ1w2z
+         YyhdRc83NLeDH4QiLl1qDAxoHoHOVZyyEIvmeTUXKVqFvLTfnkLMSlpMMZW5aclyG7g3
+         Y/iJXWv6w9aqwQDJfqJJe1g88Mg/0EaAFVm79Q1yT0uFPckr20kXEbzyuHSrDAxrbolY
+         Dp4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BbkbLjRhAP2m6M+H3V/iFkQN5+l9IbV2kSNUBnOy1UI=;
+        b=HsVvWAc2Ifmf6RsCmPO5zm6NWBhLf9Qkfjm9X9XHokeHseqKVrKkQQIksCxYuyPnyV
+         ODoRdN4i+W5JrupSIMXUuKhNXmAHJDs8vnf22B/yN9Wvyp8m+TqPZJBaOTE3ihQqmMAz
+         oThiEyPZAwb4sBnBjkK/iOfSolS5WOlxrSqD/YyonKGR8V+6ODUlquNZREHT/YeB3VDL
+         kXZJHEPw6/HClfjjFmi3jsNBO3atiLOzTmF/pN8G98j4CSGVyE6f0ZlHZYO2oBZo6cis
+         wmAp/+pYId1kU3lT4mSR/WxxHNZMRGoO2K0neNEPOkW0a5y0+WWci/My9g0wfk2Y/JGi
+         LnAw==
+X-Gm-Message-State: APjAAAVG0RHP682YrXLJDS8/hv3lB8MWjnUXguZwkbdCB+AxDkH524hf
+        O5sCV8a7z0SceBq1RNJs4JQ=
+X-Google-Smtp-Source: APXvYqxW7P7en+wRYki2eFA2MoEP5YHfWNE4Ij8LuD0Wpo8YhC5AnGHvPb7Q0Fi1lhQEXF0jJJKoMQ==
+X-Received: by 2002:a50:f4ef:: with SMTP id v44mr8015912edm.193.1554134104274;
+        Mon, 01 Apr 2019 08:55:04 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id g3sm1954910ejp.31.2019.04.01.08.55.02
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 08:55:03 -0700 (PDT)
+Subject: Re: [RFC 1/4] net/ipv4/fib: Remove run-time check in tnode_alloc()
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Ido Schimmel <idosch@mellanox.com>, netdev@vger.kernel.org
+References: <20190326153026.24493-1-dima@arista.com>
+ <20190326153026.24493-2-dima@arista.com>
+ <5beb631cf0dcc03d5afad3a29671677bdbc7b931.camel@linux.intel.com>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <c82b92e9-9809-87d2-85dc-67044d4e7632@gmail.com>
+Date:   Mon, 1 Apr 2019 16:55:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
-Content-Disposition: inline
-In-Reply-To: <20190401151628.GK3430@piout.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5beb631cf0dcc03d5afad3a29671677bdbc7b931.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Alexander,
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 4/1/19 4:40 PM, Alexander Duyck wrote:
+>> @@ -333,8 +328,7 @@ static struct tnode *tnode_alloc(int bits)
+>>  {
+>>  	size_t size;
+>>  
+>> -	/* verify bits is within bounds */
+>> -	if (bits > TNODE_VMALLOC_MAX)
+>> +	if ((BITS_PER_LONG <= KEYLENGTH) && unlikely(bits >= BITS_PER_LONG))
+>>  		return NULL;
+>>  
+>>  	/* determine size and verify it is non-zero and didn't overflow */
+> 
+> I think it would be better if we left TNODE_VMALLOC_MAX instead of
+> replacing it with BITS_PER_LONG. This way we know that we are limited
+> by the size of the node on 32b systems, and by the KEYLENGTH on 64b
+> systems. The basic idea is to maintain the logic as to why we are doing
+> it this way instead of just burying things by using built in constants
+> that are close enough to work.
+> 
+> So for example I believe TNODE_VMALLOC_MAX is 31 on a 32b system.
+
+This is also true after the change: bits == 31 will *not* return.
+
+> The
+> main reason for that is because we have to subtract the TNODE_SIZE from
+> the upper limit for size. By replacing TNODE_VMALLOC_MAX with
+> BITS_PER_LONG that becomes abstracted away and it becomes more likely
+> that somebody will mishandle it later.
+
+So, I wanted to remove run-time check here on x86_64..
+I could do it by adding !CONFIG_64BIT around the check.
+
+But, I thought about the value of the check:
+I believe it's here not to limit maximum allocated size:
+kzalloc()/vzalloc() will fail and we should be fine with that.
+
+In my opinion it's rather to check that (1UL << bits) wouldn't result in UB.
 
 
-> > [=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D] Running 7 tests from 2 test cases.
-> > [ RUN      ] rtc.date_read
-> > rtctest.c:49:rtc.date_read:Current RTC date/time is 01/01/2000 04:06:40.
-> > [       OK ] rtc.date_read
-> > [ RUN      ] rtc.uie_read
-> >=20
-> > And here it blocks forever. Any pointers?
-> >
->=20
-> This means that you don't get any interrupt from your RTC (and that I
-
-Thought so. Well, somehow makes sense that no interrupt gets through,
-and not only alarm interrupts...
-
-> have to fix the timeout for uie_read).
-
-:) I am happy to test.
-
-
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyiM58ACgkQFA3kzBSg
-KbYfDQ//ZjO3ON7QbF0ACxSfCLxNY+P//qZ3kPdyL88iBdeywV2+0T8Fsuj7YiUl
-XS6N9JVoq3q7yrjsCjqT61zrUq/qI2D93euhkwV9nWp1kRAldv3aAdIyNICzJ2wX
-uyxJI1p1q+6jymUsYCKILfLb3Q1xsiYcCQK5luJpHinAw9nxYjVt5y6OJ/tY9Fz4
-wOyU/P4E6wDcr4o3W+hFSRB6qfIpJXrUOBp1aey3mIbEvaGGKl3PYSD8WOmsZa32
-qD9VjgucnNjpGi+fsCFKcr8nfQTX6JzXGwZ7bbyWNKW366N71Cp1Yxr++AFU43Ae
-JJhLV5YsRqmvCIVWq8Et82Lf9QtBhZzNw5KV4K5sH+3VoOHe8HNobV6ONtlKrhqj
-r820GWpNig4C+YgdKnNXLiNovZTsFYH4sOrRLIOvP91ansH89g5eWU6k3157wUDZ
-BkMDywheZ+mqyrX5Bp7SHVEd5G1E7Z34iLhH+dKRDRLwvnxSonCDVbcUZuOyeFiP
-AHOUuOsZxNlL21bcM6xJmsqyk92X2dsYeH4KIPiv0HXfutJXc1p8rWBaHmUEnSnA
-PBCrmg/OzSamkZMgIFvpdLeXvBfFsXe1IdgGFZI0olRgakhq9ZERKcUe0Yk7rYzq
-xQY3yQTu4AZFoj6wPCgZNb+r3UMVvE0M5GFGcaWCgiygMxK8yOg=
-=Zo+a
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
+Thanks,
+          Dmitry
