@@ -2,60 +2,53 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60762C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E992C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32196218FE
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220C220880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554140289;
-	bh=wSSvEpho0dDyCZoA8Dn7TxYIgnOfNixjUXDAvPgB19I=;
+	s=default; t=1554140297;
+	bh=BbGh2vBL7wtwNniVrwIw19KVOZL3Hl8BhBzjh5fodP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DP4aQAkNItDdiL5cymiS+xiRS0Kw7sDvGvQA7InZkpuVximpgP9hyp/4cPUoIZOvW
-	 dpujSZbEb5YpJ7biOa6egUSk5V+0xXp9FkgvcuvsAQ2m7KaPiL7RCbKYZLtA37Z4WJ
-	 7OS5iZbej6KesYRI7rm6uQyDrxXGnrZXPEa9oq64=
+	b=LVRb5a7JiFInAib1UiR3MQy0lsI+bXyUFNJebrwdejD64O9zG6r94o491hF0tuden
+	 JoecwWUqp+RgeOUzvSBHH9KDaain9DcZhTlDaLXNid0AzKJhFf49IJSbERKtJH/aCg
+	 pF3fpQZDoyBegRl07C7IUxKLvS6pryrzthUzKufo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388291AbfDARiH (ORCPT
+        id S2388309AbfDARiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:38:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51066 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:38:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388278AbfDARiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:38:00 -0400
+        id S1728942AbfDARiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:38:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41DE520896;
-        Mon,  1 Apr 2019 17:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E0E820896;
+        Mon,  1 Apr 2019 17:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554140279;
-        bh=wSSvEpho0dDyCZoA8Dn7TxYIgnOfNixjUXDAvPgB19I=;
+        s=default; t=1554140289;
+        bh=BbGh2vBL7wtwNniVrwIw19KVOZL3Hl8BhBzjh5fodP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qowQaF7nS0WapYUIinAbyZqlfGmNpi5X9OGafPhs3ImuIPywC+l0Gejv1oDJuxbF6
-         Yk+1DCiAbVwUnRhBC/hTZc3TxULku7Lqv/5xAbti1q2lV7piGeLVVABVS3Nup1Hm0G
-         pAeQInCnk/toN/KSbY9n1K4xG7RR3HI/o/I9XgSQ=
+        b=jctjieqXpR6r0GfOvwd51yBFd3+KV+3D9DOEh+pzdtak/pmGGJ5YgsuuUgcAopmnh
+         au8uZjx5ZzNqPC/Aailvz0G/BPdr2YiONMpbfZdB5VOeiZVtG0NFCzRowBsOjqRqsZ
+         hFxByWaXePSzaMbONS+4NBwHFWVE8J/S7roRy0sY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Chuanxiao Dong <chuanxiao.dong@intel.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Austin S Hemmelgarn <ahferroin7@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Android Kernel Team <kernel-team@android.com>,
-        linux-mmc@vger.kernel.org, Colin Cross <ccross@android.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 10/50] mmc: block: Allow more than 8 partitions per card
-Date:   Mon,  1 Apr 2019 19:02:53 +0200
-Message-Id: <20190401170042.140216660@linuxfoundation.org>
+        stable@vger.kernel.org, Kal Conley <kal.conley@dectris.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 3.18 30/50] net/packet: Set __GFP_NOWARN upon allocation in alloc_pg_vec
+Date:   Mon,  1 Apr 2019 19:03:13 +0200
+Message-Id: <20190401170044.555557668@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
 References: <20190401170041.257273804@linuxfoundation.org>
@@ -74,74 +67,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 382c55f88ffeb218c446bf0c46d0fc25d2795fe2 ]
+From: Christoph Paasch <cpaasch@apple.com>
 
-It is quite common for Android devices to utilize more
-then 8 partitions on internal eMMC storage.
+[ Upstream commit 398f0132c14754fcd03c1c4f8e7176d001ce8ea1 ]
 
-The vanilla kernel can support this via
-CONFIG_MMC_BLOCK_MINORS, however that solution caps the
-system to 256 minors total, which limits the number of
-mmc cards the system can support.
+Since commit fc62814d690c ("net/packet: fix 4gb buffer limit due to overflow check")
+one can now allocate packet ring buffers >= UINT_MAX. However, syzkaller
+found that that triggers a warning:
 
-This patch, which has been carried for quite awhile in
-the AOSP common tree, provides an alternative solution
-that doesn't seem to limit the total card count. So I
-wanted to submit it for consideration upstream.
+[   21.100000] WARNING: CPU: 2 PID: 2075 at mm/page_alloc.c:4584 __alloc_pages_nod0
+[   21.101490] Modules linked in:
+[   21.101921] CPU: 2 PID: 2075 Comm: syz-executor.0 Not tainted 5.0.0 #146
+[   21.102784] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.5.1 01/01/2011
+[   21.103887] RIP: 0010:__alloc_pages_nodemask+0x2a0/0x630
+[   21.104640] Code: fe ff ff 65 48 8b 04 25 c0 de 01 00 48 05 90 0f 00 00 41 bd 01 00 00 00 48 89 44 24 48 e9 9c fe 3
+[   21.107121] RSP: 0018:ffff88805e1cf920 EFLAGS: 00010246
+[   21.107819] RAX: 0000000000000000 RBX: ffffffff85a488a0 RCX: 0000000000000000
+[   21.108753] RDX: 0000000000000000 RSI: dffffc0000000000 RDI: 0000000000000000
+[   21.109699] RBP: 1ffff1100bc39f28 R08: ffffed100bcefb67 R09: ffffed100bcefb67
+[   21.110646] R10: 0000000000000001 R11: ffffed100bcefb66 R12: 000000000000000d
+[   21.111623] R13: 0000000000000000 R14: ffff88805e77d888 R15: 000000000000000d
+[   21.112552] FS:  00007f7c7de05700(0000) GS:ffff88806d100000(0000) knlGS:0000000000000000
+[   21.113612] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   21.114405] CR2: 000000000065c000 CR3: 000000005e58e006 CR4: 00000000001606e0
+[   21.115367] Call Trace:
+[   21.115705]  ? __alloc_pages_slowpath+0x21c0/0x21c0
+[   21.116362]  alloc_pages_current+0xac/0x1e0
+[   21.116923]  kmalloc_order+0x18/0x70
+[   21.117393]  kmalloc_order_trace+0x18/0x110
+[   21.117949]  packet_set_ring+0x9d5/0x1770
+[   21.118524]  ? packet_rcv_spkt+0x440/0x440
+[   21.119094]  ? lock_downgrade+0x620/0x620
+[   21.119646]  ? __might_fault+0x177/0x1b0
+[   21.120177]  packet_setsockopt+0x981/0x2940
+[   21.120753]  ? __fget+0x2fb/0x4b0
+[   21.121209]  ? packet_release+0xab0/0xab0
+[   21.121740]  ? sock_has_perm+0x1cd/0x260
+[   21.122297]  ? selinux_secmark_relabel_packet+0xd0/0xd0
+[   21.123013]  ? __fget+0x324/0x4b0
+[   21.123451]  ? selinux_netlbl_socket_setsockopt+0x101/0x320
+[   21.124186]  ? selinux_netlbl_sock_rcv_skb+0x3a0/0x3a0
+[   21.124908]  ? __lock_acquire+0x529/0x3200
+[   21.125453]  ? selinux_socket_setsockopt+0x5d/0x70
+[   21.126075]  ? __sys_setsockopt+0x131/0x210
+[   21.126533]  ? packet_release+0xab0/0xab0
+[   21.127004]  __sys_setsockopt+0x131/0x210
+[   21.127449]  ? kernel_accept+0x2f0/0x2f0
+[   21.127911]  ? ret_from_fork+0x8/0x50
+[   21.128313]  ? do_raw_spin_lock+0x11b/0x280
+[   21.128800]  __x64_sys_setsockopt+0xba/0x150
+[   21.129271]  ? lockdep_hardirqs_on+0x37f/0x560
+[   21.129769]  do_syscall_64+0x9f/0x450
+[   21.130182]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-This patch sets the GENHD_FL_EXT_DEVT flag, which will
-allocate minor number in major 259 for partitions past
-disk->minors.
+We should allocate with __GFP_NOWARN to handle this.
 
-It also removes the use of disk_devt to determine devidx
-from md->disk. md->disk->first_minor is always initialized
-from devidx and can always be used to recover it.
-
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ben Hutchings <ben@decadent.org.uk>
-Cc: Chuanxiao Dong <chuanxiao.dong@intel.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Austin S Hemmelgarn <ahferroin7@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Android Kernel Team <kernel-team@android.com>
-Cc: linux-mmc@vger.kernel.org
-Signed-off-by: Colin Cross <ccross@android.com>
-[jstultz: Added context to commit message]
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Kal Conley <kal.conley@dectris.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Fixes: fc62814d690c ("net/packet: fix 4gb buffer limit due to overflow check")
+Signed-off-by: Christoph Paasch <cpaasch@apple.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/mmc/card/block.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ net/packet/af_packet.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/card/block.c b/drivers/mmc/card/block.c
-index dec6b0ec4def..8688ac7a45da 100644
---- a/drivers/mmc/card/block.c
-+++ b/drivers/mmc/card/block.c
-@@ -166,11 +166,7 @@ static struct mmc_blk_data *mmc_blk_get(struct gendisk *disk)
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3807,7 +3807,7 @@ static struct pgv *alloc_pg_vec(struct t
+ 	struct pgv *pg_vec;
+ 	int i;
  
- static inline int mmc_get_devidx(struct gendisk *disk)
- {
--	int devmaj = MAJOR(disk_devt(disk));
--	int devidx = MINOR(disk_devt(disk)) / perdev_minors;
--
--	if (!devmaj)
--		devidx = disk->first_minor / perdev_minors;
-+	int devidx = disk->first_minor / perdev_minors;
- 	return devidx;
- }
+-	pg_vec = kcalloc(block_nr, sizeof(struct pgv), GFP_KERNEL);
++	pg_vec = kcalloc(block_nr, sizeof(struct pgv), GFP_KERNEL | __GFP_NOWARN);
+ 	if (unlikely(!pg_vec))
+ 		goto out;
  
-@@ -2152,6 +2148,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
- 	md->disk->queue = md->queue.queue;
- 	md->disk->driverfs_dev = parent;
- 	set_disk_ro(md->disk, md->read_only || default_ro);
-+	md->disk->flags = GENHD_FL_EXT_DEVT;
- 	if (area_type & (MMC_BLK_DATA_AREA_RPMB | MMC_BLK_DATA_AREA_BOOT))
- 		md->disk->flags |= GENHD_FL_NO_PART_SCAN;
- 
--- 
-2.19.1
-
 
 
