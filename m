@@ -3,158 +3,303 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A64C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4567C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98E9020830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97AC320856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 19:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbfDATvv (ORCPT
+        id S1726668AbfDATyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 15:51:51 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.79]:33274 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726167AbfDATvu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 15:51:50 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id D87F011542
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2019 14:51:48 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id B2yChOh4E90onB2yChcix8; Mon, 01 Apr 2019 14:51:48 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.114.183] (port=52606 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hB2yC-0002cZ-HL; Mon, 01 Apr 2019 14:51:48 -0500
-Subject: Re: [PATCH] signal: annotate implicit fall through
-To:     Mathieu Malaterre <malat@debian.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190114203505.17875-1-malat@debian.org>
- <CA+7wUswdVU=JuHPAVo9gxZJ8BYWhThnsLggVM5t9h--=AhCPPQ@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <ba0a1ec8-b3d7-7214-ffcb-031304d463ee@embeddedor.com>
-Date:   Mon, 1 Apr 2019 14:51:47 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 1 Apr 2019 15:54:36 -0400
+Received: from mga04.intel.com ([192.55.52.120]:55408 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbfDATyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 15:54:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 12:54:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,297,1549958400"; 
+   d="scan'208";a="136676184"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Apr 2019 12:54:35 -0700
+Received: from [10.254.82.10] (kliang2-mobl.ccr.corp.intel.com [10.254.82.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 68D08580349;
+        Mon,  1 Apr 2019 12:54:34 -0700 (PDT)
+Subject: Re: [PATCH V4 01/23] perf/x86: Support outputting XMM registers
+To:     Stephane Eranian <eranian@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+References: <20190326160901.4887-1-kan.liang@linux.intel.com>
+ <20190326160901.4887-2-kan.liang@linux.intel.com>
+ <CABPqkBTQTFq73EJU_FR3Z0oFUiSei4gY1+sQgWgPgjX4AsiNhw@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <fb915f3a-0cb3-519b-c7e6-403dd8af5791@linux.intel.com>
+Date:   Mon, 1 Apr 2019 15:54:32 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CA+7wUswdVU=JuHPAVo9gxZJ8BYWhThnsLggVM5t9h--=AhCPPQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CABPqkBTQTFq73EJU_FR3Z0oFUiSei4gY1+sQgWgPgjX4AsiNhw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.114.183
-X-Source-L: No
-X-Exim-ID: 1hB2yC-0002cZ-HL
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.114.183]:52606
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Andrew]
 
-On 3/13/19 3:27 PM, Mathieu Malaterre wrote:
-> ping ?
-> 
 
-Acked-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-Maybe Andrew can take this?
-
-Thanks
---
-Gustavo
-
-> On Mon, Jan 14, 2019 at 9:35 PM Mathieu Malaterre <malat@debian.org> wrote:
+On 4/1/2019 3:18 PM, Stephane Eranian wrote:
+> On Tue, Mar 26, 2019 at 9:11 AM <kan.liang@linux.intel.com> wrote:
 >>
->> There is a plan to build the kernel with -Wimplicit-fallthrough and
->> this place in the code produced a warning (W=1).
+>> From: Kan Liang <kan.liang@linux.intel.com>
 >>
->> This commit remove the following warning:
+>> Starting from Icelake, XMM registers can be collected in PEBS record.
+>> But current code only output the pt_regs.
 >>
->>   kernel/signal.c:795:13: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>> Add a new struct x86_perf_regs for both pt_regs and xmm_regs.
+>> XMM registers are 128 bit. To simplify the code, they are handled like
+>> two different registers, which means setting two bits in the register
+>> bitmap. This also allows only sampling the lower 64bit bits in XMM.
 >>
->> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> You are adding this new x86_perf_regs struct but the patch does not
+> include how it is allocated.
+> I don't see from this patch where x86_perf_regs->xmm_regs is actually allocated.
+>
+
+The x86_perf_regs->xmm_regs saves the pointer to PEBS record.
+We don't allocate space for it.
+The related code can be found at 04/23 "perf/x86/intel: Support adaptive 
+PEBSv4"
+
++	if (format_size & PEBS_DATACFG_XMMS) {
++		struct pebs_xmm *xmm = next_record;
++
++		next_record = xmm + 1;
++		perf_regs->xmm_regs = xmm->xmm;
++	}
+
+This patch only include the generic support for x86_perf_regs.
+
+>> The index of XMM registers starts from 32. There are 16 XMM registers.
+>> So all reserved space for regs are used. Remove REG_RESERVED.
+>>
+>> Add PERF_REG_X86_XMM_MAX, which stands for the max number of all x86
+>> regs including both GPRs and XMM.
+>>
+>> XMM is not supported on all platforms. Adding has_xmm_regs to indicate
+>> the specific platform. Also add checks in x86_pmu_hw_config() to reject
+>> invalid config of regs_user and regs_intr.
+>>
+>> Add REG_NOSUPPORT for 32bit to exclude unsupported registers.
+>>
+>> Originally-by: Andi Kleen <ak@linux.intel.com>
+>> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 >> ---
->>  kernel/signal.c | 1 +
->>  1 file changed, 1 insertion(+)
 >>
->> diff --git a/kernel/signal.c b/kernel/signal.c
->> index e1d7ad8e6ab1..aa7a507757d7 100644
->> --- a/kernel/signal.c
->> +++ b/kernel/signal.c
->> @@ -794,6 +794,7 @@ static int check_kill_permission(int sig, struct kernel_siginfo *info,
->>                          */
->>                         if (!sid || sid == task_session(current))
->>                                 break;
->> +                       /* fall through */
->>                 default:
->>                         return -EPERM;
->>                 }
+>> Changes since V3:
+>> - Keep the old names for GPRs. Rename PERF_REG_X86_MAX to
+>>    PERF_REG_X86_XMM_MAX
+>> - Remove unnecessary REG_RESERVED
+>> - Add REG_NOSUPPORT for 32bit
+>>
+>>   arch/x86/events/core.c                | 10 ++++++++++
+>>   arch/x86/events/perf_event.h          |  2 ++
+>>   arch/x86/include/asm/perf_event.h     |  5 +++++
+>>   arch/x86/include/uapi/asm/perf_regs.h | 23 ++++++++++++++++++++++-
+>>   arch/x86/kernel/perf_regs.c           | 27 ++++++++++++++++++++-------
+>>   5 files changed, 59 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>> index e2b1447192a8..9378c6b2128f 100644
+>> --- a/arch/x86/events/core.c
+>> +++ b/arch/x86/events/core.c
+>> @@ -560,6 +560,16 @@ int x86_pmu_hw_config(struct perf_event *event)
+>>                          return -EINVAL;
+>>          }
+>>
+>> +       if (event->attr.sample_regs_user & ~PEBS_REGS)
+>> +               return -EINVAL;
+>> +       /*
+>> +        * Besides the general purpose registers, XMM registers may
+>> +        * be collected in PEBS on some platforms, e.g. Icelake
+>> +        */
+>> +       if ((event->attr.sample_regs_intr & ~PEBS_REGS) &&
+>> +           (!x86_pmu.has_xmm_regs || !event->attr.precise_ip))
+>> +               return -EINVAL;
+>> +
+> Shouldn't you be testing on PEBS_REGS only if the user is asking for
+> PEBS sampling?
+> That is not because PEBS may not capture a register that the kernel
+> could not do it
+> without PEBS.
+
+I will add is_sampling_event() check as below.
+
+if (is_sampling_event(event) &&
+     (event->attr.sample_regs_user & ~PEBS_REGS))
+          return -EINVAL;
+if (is_sampling_event(event) &&
+     (event->attr.sample_regs_intr & ~PEBS_REGS) &&
+     (!x86_pmu.has_xmm_regs || !event->attr.precise_ip))
+         return -EINVAL;
+
+
+> 
+>>          return x86_setup_perfctr(event);
+>>   }
+>>
+>> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+>> index a75955741c50..6428941a5073 100644
+>> --- a/arch/x86/events/perf_event.h
+>> +++ b/arch/x86/events/perf_event.h
+>> @@ -657,6 +657,8 @@ struct x86_pmu {
+>>           * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
+>>           */
+>>          int (*check_period) (struct perf_event *event, u64 period);
+>> +
+>> +       unsigned int    has_xmm_regs : 1; /* support XMM regs */
+>>   };
+> Is this an Intel specific field? If so, then say intel_has_xmm_regs,
+> just like amd_nb_constraints above.
+
+I'm not familiar with AMD. I just google it. It looks like AMD also has 
+XMM registers.
+
+> If not, then define what is is supposed to mean? Because I am sure
+> there is another way to detect if
+> the CPU support XMM regs, like cpufeatures?
+
+It means that XMM registers can be collected in PEBS record.
+How about the name "pebs_has_xmm_regs"?
+
+
+Thanks,
+Kan
+
+> 
+>>
+>>   struct x86_perf_task_context {
+>> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+>> index 8bdf74902293..d9f5bbe44b3c 100644
+>> --- a/arch/x86/include/asm/perf_event.h
+>> +++ b/arch/x86/include/asm/perf_event.h
+>> @@ -248,6 +248,11 @@ extern void perf_events_lapic_init(void);
+>>   #define PERF_EFLAGS_VM         (1UL << 5)
+>>
+>>   struct pt_regs;
+>> +struct x86_perf_regs {
+>> +       struct pt_regs  regs;
+>> +       u64             *xmm_regs;
+>> +};
+>> +
+>>   extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+>>   extern unsigned long perf_misc_flags(struct pt_regs *regs);
+>>   #define perf_misc_flags(regs)  perf_misc_flags(regs)
+>> diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
+>> index f3329cabce5c..ac67bbea10ca 100644
+>> --- a/arch/x86/include/uapi/asm/perf_regs.h
+>> +++ b/arch/x86/include/uapi/asm/perf_regs.h
+>> @@ -27,8 +27,29 @@ enum perf_event_x86_regs {
+>>          PERF_REG_X86_R13,
+>>          PERF_REG_X86_R14,
+>>          PERF_REG_X86_R15,
+>> -
+>> +       /* These are the limits for the GPRs. */
+>>          PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+>>          PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
+>> +
+>> +       /* These all need two bits set because they are 128bit */
+>> +       PERF_REG_X86_XMM0  = 32,
+>> +       PERF_REG_X86_XMM1  = 34,
+>> +       PERF_REG_X86_XMM2  = 36,
+>> +       PERF_REG_X86_XMM3  = 38,
+>> +       PERF_REG_X86_XMM4  = 40,
+>> +       PERF_REG_X86_XMM5  = 42,
+>> +       PERF_REG_X86_XMM6  = 44,
+>> +       PERF_REG_X86_XMM7  = 46,
+>> +       PERF_REG_X86_XMM8  = 48,
+>> +       PERF_REG_X86_XMM9  = 50,
+>> +       PERF_REG_X86_XMM10 = 52,
+>> +       PERF_REG_X86_XMM11 = 54,
+>> +       PERF_REG_X86_XMM12 = 56,
+>> +       PERF_REG_X86_XMM13 = 58,
+>> +       PERF_REG_X86_XMM14 = 60,
+>> +       PERF_REG_X86_XMM15 = 62,
+>> +
+>> +       /* These include both GPRs and XMMX registers */
+>> +       PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
+>>   };
+>>   #endif /* _ASM_X86_PERF_REGS_H */
+>> diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
+>> index c06c4c16c6b6..07c30ee17425 100644
+>> --- a/arch/x86/kernel/perf_regs.c
+>> +++ b/arch/x86/kernel/perf_regs.c
+>> @@ -59,18 +59,34 @@ static unsigned int pt_regs_offset[PERF_REG_X86_MAX] = {
+>>
+>>   u64 perf_reg_value(struct pt_regs *regs, int idx)
+>>   {
+>> +       struct x86_perf_regs *perf_regs;
+>> +
+>> +       if (idx >= PERF_REG_X86_XMM0 && idx < PERF_REG_X86_XMM_MAX) {
+>> +               perf_regs = container_of(regs, struct x86_perf_regs, regs);
+>> +               if (!perf_regs->xmm_regs)
+>> +                       return 0;
+>> +               return perf_regs->xmm_regs[idx - PERF_REG_X86_XMM0];
+>> +       }
+>> +
+>>          if (WARN_ON_ONCE(idx >= ARRAY_SIZE(pt_regs_offset)))
+>>                  return 0;
+>>
+>>          return regs_get_register(regs, pt_regs_offset[idx]);
+>>   }
+>>
+>> -#define REG_RESERVED (~((1ULL << PERF_REG_X86_MAX) - 1ULL))
+>> -
+>>   #ifdef CONFIG_X86_32
+>> +#define REG_NOSUPPORT ((1ULL << PERF_REG_X86_R8) | \
+>> +                      (1ULL << PERF_REG_X86_R9) | \
+>> +                      (1ULL << PERF_REG_X86_R10) | \
+>> +                      (1ULL << PERF_REG_X86_R11) | \
+>> +                      (1ULL << PERF_REG_X86_R12) | \
+>> +                      (1ULL << PERF_REG_X86_R13) | \
+>> +                      (1ULL << PERF_REG_X86_R14) | \
+>> +                      (1ULL << PERF_REG_X86_R15))
+>> +
+>>   int perf_reg_validate(u64 mask)
+>>   {
+>> -       if (!mask || mask & REG_RESERVED)
+>> +       if (!mask || (mask & REG_NOSUPPORT))
+>>                  return -EINVAL;
+>>
+>>          return 0;
+>> @@ -96,10 +112,7 @@ void perf_get_regs_user(struct perf_regs *regs_user,
+>>
+>>   int perf_reg_validate(u64 mask)
+>>   {
+>> -       if (!mask || mask & REG_RESERVED)
+>> -               return -EINVAL;
+>> -
+>> -       if (mask & REG_NOSUPPORT)
+>> +       if (!mask || (mask & REG_NOSUPPORT))
+>>                  return -EINVAL;
+>>
+>>          return 0;
 >> --
->> 2.19.2
+>> 2.17.1
 >>
