@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F06C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4120CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A47420830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038A0218FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139801;
-	bh=LwJOb7426xEf+neu8tibrQSQsOBKe6VQgaTxb5CnbNw=;
+	s=default; t=1554139809;
+	bh=jlr7iFa0Ds43YUHeZm5eBbGpa9g2r2DUyVeHG7IJcHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x8KQhDpQrc6WlOuhutwOJJ0W9Bg1rinfjYOPNI68eqvcr/+LjwZkzq4aomL1Siv2m
-	 pxaJyFqN5WGPduChO0n3laWr3uqp/aWYahmWWBa9u336zfvA4nOh2T1T/NgJpRhOiD
-	 694OXOIGEyAyxgNg4pkwRwTYDF19vcKd+6YihM8Y=
+	b=fyCbrb+vLS9nNG0iVydw8U7fo0fCvrfM0YIOGAi5EGXRpkecWD48FY8HmzpiEtI/D
+	 WvI7Er8vEnkuqyG/jeKsFs2AoKmBKliPQxrmLH4fdoBcYVmg/UDr5GkTS/3uCpzQlB
+	 SStlIYmoFBT7h0vzu+qeCQiqma0C8LxoN/9jO7LE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733027AbfDAR37 (ORCPT
+        id S1732814AbfDARaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:29:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36606 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:30:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732092AbfDAR34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:29:56 -0400
+        id S1732666AbfDARaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:30:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81B7A20830;
-        Mon,  1 Apr 2019 17:29:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6988920856;
+        Mon,  1 Apr 2019 17:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139796;
-        bh=LwJOb7426xEf+neu8tibrQSQsOBKe6VQgaTxb5CnbNw=;
+        s=default; t=1554139802;
+        bh=jlr7iFa0Ds43YUHeZm5eBbGpa9g2r2DUyVeHG7IJcHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QoojQu878zGnwfnaPpAYGg+sFmr0upR3sSLB2O/cG+YGx1PpIlctWByJYO6BOfRhe
-         iWR16eFsfJj58MDxl9uGNtESgHNtqykJmRaFZCQlNhH6mUt7E4hOwYklHw0buKmxJr
-         qch2MTPIEfph5zNXhMv2Ga84KdQtwxSgsT1QErh4=
+        b=ZC7KPkctt/qiOWW2qMQKNwyqQeh6XjIxKyO95wgcsHTlkliFxe80eTXFN+pMcdN8O
+         hAekjgYiBJJUkXXCG3bph4IAi5zUEitBX7q4zQ8kXqF/+Gk/QXbFoUzziYfLpOOxym
+         il8dfTjj9paCYHkOn3Fa4N3UNxiAY2+gR0SYrENw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@arm.linux.org.uk>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.4 017/131] mmc: make MAN_BKOPS_EN message a debug
-Date:   Mon,  1 Apr 2019 19:01:27 +0200
-Message-Id: <20190401170053.349785514@linuxfoundation.org>
+Subject: [PATCH 4.4 019/131] mmc: core: shut up "voltage-ranges unspecified" pr_info()
+Date:   Mon,  1 Apr 2019 19:01:29 +0200
+Message-Id: <20190401170053.595436540@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170051.645954551@linuxfoundation.org>
 References: <20190401170051.645954551@linuxfoundation.org>
@@ -66,32 +66,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
 
-commit 4ec96b4cbde8d5714a4477b5a2562c3dd40bc5fa upstream.
+commit 10a16a01d8f72e80f4780e40cf3122f4caffa411 upstream.
 
-IMO this info is only useful for developers. Most users won't need this
-information, since there is not much they can do about it.
+Each time a driver such as sdhci-esdhc-imx is probed, we get a info
+printk complaining that the DT voltage-ranges property has not been
+specified.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+However, the DT binding specifically says that the voltage-ranges
+property is optional.  That means we should not be complaining that
+DT hasn't specified this property: by indicating that it's optional,
+it is valid not to have the property in DT.
+
+Silence the warning if the property is missing.
+
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/mmc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/core/core.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -508,7 +508,7 @@ static int mmc_decode_ext_csd(struct mmc
- 			card->ext_csd.raw_bkops_status =
- 				ext_csd[EXT_CSD_BKOPS_STATUS];
- 			if (!card->ext_csd.man_bkops_en)
--				pr_info("%s: MAN_BKOPS_EN bit is not set\n",
-+				pr_debug("%s: MAN_BKOPS_EN bit is not set\n",
- 					mmc_hostname(card->host));
- 		}
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -1220,8 +1220,12 @@ int mmc_of_parse_voltage(struct device_n
+ 
+ 	voltage_ranges = of_get_property(np, "voltage-ranges", &num_ranges);
+ 	num_ranges = num_ranges / sizeof(*voltage_ranges) / 2;
+-	if (!voltage_ranges || !num_ranges) {
+-		pr_info("%s: voltage-ranges unspecified\n", np->full_name);
++	if (!voltage_ranges) {
++		pr_debug("%s: voltage-ranges unspecified\n", np->full_name);
++		return -EINVAL;
++	}
++	if (!num_ranges) {
++		pr_err("%s: voltage-ranges empty\n", np->full_name);
+ 		return -EINVAL;
+ 	}
  
 
 
