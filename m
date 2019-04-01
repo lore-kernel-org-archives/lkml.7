@@ -3,153 +3,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B57C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1191FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC882084B
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D55E22084B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 06:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731865AbfDAGyE (ORCPT
+        id S1731849AbfDAG4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 02:54:04 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48606 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726865AbfDAGyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 02:54:03 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B164A5F56F5ED09DAED5;
-        Mon,  1 Apr 2019 14:54:00 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 1 Apr 2019
- 14:53:50 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <yuchao0@huawei.com>,
-        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH for-4.19 1/2] staging: erofs: fix error handling when failed to read compresssed data
-Date:   Mon, 1 Apr 2019 14:53:08 +0800
-Message-ID: <20190401065309.68109-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 1 Apr 2019 02:56:36 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:51576 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725867AbfDAG4g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 02:56:36 -0400
+X-UUID: 42525c55dd284c4bae42b98f6b8bb3a8-20190401
+X-UUID: 42525c55dd284c4bae42b98f6b8bb3a8-20190401
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 50836532; Mon, 01 Apr 2019 14:56:29 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 1 Apr 2019 14:56:27 +0800
+Received: from mtkslt306.mediatek.inc (10.21.14.136) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 1 Apr 2019 14:56:27 +0800
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Felix Fietkau <nbd@nbd.name>
+CC:     Roy Luo <royluo@google.com>, Sean Wang <sean.wang@mediatek.com>,
+        Nelson Chang <nelson.chang@mediatek.com>,
+        YF Luo <yf.luo@mediatek.com>, Kai Lin <kai.lin@mediatek.com>,
+        Rorscha Yang <rorscha.yang@mediatek.com>,
+        Kyle Lee <kyle.lee@mediatek.com>,
+        Miller Shen <miller.shen@mediatek.com>,
+        Haipin Liang <haipin.liang@mediatek.com>,
+        KL Huang <kl.huang@mediatek.com>,
+        YH chen <yh.chen@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v2 2/4] mt76: add unlikely() for dma_mapping_error() check
+Date:   Mon, 1 Apr 2019 14:56:23 +0800
+Message-ID: <3a9f54e6a5bbbdab2a3129b1b541a951e8b695fa.1554100584.git.ryder.lee@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1554100584.git.ryder.lee@mediatek.com>
+References: <cover.1554100584.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit b6391ac73400eff38377a4a7364bd3df5efb5178 upstream.
+In the tx/rx fastpath, the funciton dma_map_single() rarely fails.
+This adds unlikely() optimization to this error check conditional.
 
-Complete read error handling paths for all three kinds of
-compressed pages:
-
- 1) For cache-managed pages, PG_uptodate will be checked since
-    read_endio will unlock and SetPageUptodate for these pages;
-
- 2) For inplaced pages, read_endio cannot SetPageUptodate directly
-    since it should be used to mark the final decompressed data,
-    PG_error will be set with page locked for IO error instead;
-
- 3) For staging pages, PG_error is used, which is similar to
-    what we do for inplaced pages.
-
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
-This series resolves the following conflicts:
-FAILED: patch "[PATCH] staging: erofs: fix error handling when failed to read" failed to apply to 4.19-stable tree
-FAILED: patch "[PATCH] staging: erofs: keep corrupted fs from crashing kernel in" failed to apply to 4.19-stable tree
+ drivers/net/wireless/mediatek/mt76/dma.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Thanks,
-Gao Xiang
-
- drivers/staging/erofs/unzip_vle.c | 42 +++++++++++++++++++++----------
- 1 file changed, 29 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-index f44662dd795c..bb9a69158ba4 100644
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -885,6 +885,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 	overlapped = false;
- 	compressed_pages = grp->compressed_pages;
+diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireless/mediatek/mt76/dma.c
+index 8a4b935..6f3ef09 100644
+--- a/drivers/net/wireless/mediatek/mt76/dma.c
++++ b/drivers/net/wireless/mediatek/mt76/dma.c
+@@ -272,7 +272,7 @@
  
-+	err = 0;
- 	for (i = 0; i < clusterpages; ++i) {
- 		unsigned pagenr;
+ 	addr = dma_map_single(dev->dev, skb->data, skb->len,
+ 			      DMA_TO_DEVICE);
+-	if (dma_mapping_error(dev->dev, addr))
++	if (unlikely(dma_mapping_error(dev->dev, addr)))
+ 		return -ENOMEM;
  
-@@ -894,26 +895,39 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 		DBG_BUGON(page == NULL);
- 		DBG_BUGON(page->mapping == NULL);
+ 	buf.addr = addr;
+@@ -315,7 +315,7 @@
  
--		if (z_erofs_is_stagingpage(page))
--			continue;
-+		if (!z_erofs_is_stagingpage(page)) {
- #ifdef EROFS_FS_HAS_MANAGED_CACHE
--		if (page->mapping == mngda) {
--			DBG_BUGON(!PageUptodate(page));
--			continue;
--		}
-+			if (page->mapping == mngda) {
-+				if (unlikely(!PageUptodate(page)))
-+					err = -EIO;
-+				continue;
-+			}
- #endif
+ 	len = skb_headlen(skb);
+ 	addr = dma_map_single(dev->dev, skb->data, len, DMA_TO_DEVICE);
+-	if (dma_mapping_error(dev->dev, addr))
++	if (unlikely(dma_mapping_error(dev->dev, addr)))
+ 		goto free;
  
--		/* only non-head page could be reused as a compressed page */
--		pagenr = z_erofs_onlinepage_index(page);
-+			/*
-+			 * only if non-head page can be selected
-+			 * for inplace decompression
-+			 */
-+			pagenr = z_erofs_onlinepage_index(page);
+ 	tx_info.buf[n].addr = t->dma_addr;
+@@ -329,7 +329,7 @@
  
--		DBG_BUGON(pagenr >= nr_pages);
--		DBG_BUGON(pages[pagenr]);
--		++sparsemem_pages;
--		pages[pagenr] = page;
-+			DBG_BUGON(pagenr >= nr_pages);
-+			DBG_BUGON(pages[pagenr]);
-+			++sparsemem_pages;
-+			pages[pagenr] = page;
+ 		addr = dma_map_single(dev->dev, iter->data, iter->len,
+ 				      DMA_TO_DEVICE);
+-		if (dma_mapping_error(dev->dev, addr))
++		if (unlikely(dma_mapping_error(dev->dev, addr)))
+ 			goto unmap;
  
--		overlapped = true;
-+			overlapped = true;
-+		}
-+
-+		/* PG_error needs checking for inplaced and staging pages */
-+		if (unlikely(PageError(page))) {
-+			DBG_BUGON(PageUptodate(page));
-+			err = -EIO;
-+		}
- 	}
+ 		tx_info.buf[n].addr = addr;
+@@ -386,7 +386,7 @@
+ 			break;
  
-+	if (unlikely(err))
-+		goto out;
-+
- 	llen = (nr_pages << PAGE_SHIFT) - work->pageofs;
- 
- 	if (z_erofs_vle_workgrp_fmt(grp) == Z_EROFS_VLE_WORKGRP_FMT_PLAIN) {
-@@ -1078,6 +1092,8 @@ static inline bool recover_managed_page(struct z_erofs_vle_workgroup *grp,
- 		return true;
- 
- 	lock_page(page);
-+	ClearPageError(page);
-+
- 	if (unlikely(!PagePrivate(page))) {
- 		set_page_private(page, (unsigned long)grp);
- 		SetPagePrivate(page);
+ 		addr = dma_map_single(dev->dev, buf, len, DMA_FROM_DEVICE);
+-		if (dma_mapping_error(dev->dev, addr)) {
++		if (unlikely(dma_mapping_error(dev->dev, addr))) {
+ 			skb_free_frag(buf);
+ 			break;
+ 		}
 -- 
-2.17.1
+1.9.1
 
