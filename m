@@ -2,128 +2,80 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,TVD_SPACE_RATIO autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7919DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F764C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFD620840
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:42:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JWkJ29Nn"
+	by mail.kernel.org (Postfix) with ESMTP id 393EA20840
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 14:42:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbfDAOmE (ORCPT
+        id S1728635AbfDAOm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 10:42:04 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:52118 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfDAOmE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 10:42:04 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190401144203euoutp01ab54a19f50e774448908744c5416fb09~RYL-QO2PN0567105671euoutp01p
-        for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2019 14:42:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190401144203euoutp01ab54a19f50e774448908744c5416fb09~RYL-QO2PN0567105671euoutp01p
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1554129723;
-        bh=j+C/Esus3gaQopFHRe8OcCAYob/8oH3wlVbHRGyHUfs=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=JWkJ29Nnf1FtMOfEQxV685VMxSgJG/me7cLl4AfbFkNzGeXmuYiVB0QeitrjqR8/l
-         IqVXLtqpDSybYcuWMBg5nWRFiFUKLJytmckQSYtQBO1/2N9Jx0fBhIRUgCWcPM1Q+/
-         LNduoROenzmoXNlyJziQ+mzNE5OlBebeN+lt8BU0=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190401144202eucas1p28e1c48bbb46b64e7a44e436da832cc73~RYL_phjSA2573925739eucas1p2M;
-        Mon,  1 Apr 2019 14:42:02 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 3B.3C.04325.A3322AC5; Mon,  1
-        Apr 2019 15:42:02 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190401144201eucas1p2a0a3ae3c7424596a4cba0f57f4864ab0~RYL94OnOy2575925759eucas1p2K;
-        Mon,  1 Apr 2019 14:42:01 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190401144201eusmtrp2f751ad8c756eb19157f3cd5f66a76f7a~RYL9qHszA1427614276eusmtrp2D;
-        Mon,  1 Apr 2019 14:42:01 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-d6-5ca2233aef0f
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 79.D1.04140.93322AC5; Mon,  1
-        Apr 2019 15:42:01 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190401144201eusmtip1ec49d7056d24d7c02c0628414b4dd1ac~RYL9S_8sq1774117741eusmtip1L;
-        Mon,  1 Apr 2019 14:42:01 +0000 (GMT)
-Subject: Re: [PATCH] video: fbdev: fix potential NULL pointer dereferences
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Finn Thain <fthain@telegraphics.com.au>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <d4e4253a-05e8-c857-1632-8dc3a4040ca9@samsung.com>
-Date:   Mon, 1 Apr 2019 16:42:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-        Thunderbird/45.3.0
+        Mon, 1 Apr 2019 10:42:27 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:52078 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726617AbfDAOm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 10:42:26 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 0263620C61;
+        Mon,  1 Apr 2019 16:42:25 +0200 (CEST)
+Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id DB09C20A81;
+        Mon,  1 Apr 2019 16:42:24 +0200 (CEST)
+Subject: [PATCH v2 2/2] dt-bindings: phy-qcom-qmp: Tweak
+ qcom,msm8998-qmp-ufs-phy
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+To:     Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham <kishon@ti.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190326170518.157317-1-evgreen@chromium.org>
+ <71cde29a-aa10-0889-9581-8e961670bc45@free.fr>
+ <CAE=gft710gv2+k86pwVhucJFxAcN-AUZhGnT9Hm2gLutV+PCpg@mail.gmail.com>
+ <57ba143d-eea5-4f8c-10b8-9f45fc9a8001@free.fr>
+Message-ID: <6e9718f1-ae8b-472a-cdfb-6fd64bb9889c@free.fr>
+Date:   Mon, 1 Apr 2019 16:42:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190314073319.23209-1-kjlu@umn.edu>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <57ba143d-eea5-4f8c-10b8-9f45fc9a8001@free.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRmVeSWpSXmKPExsWy7djPc7pWyotiDL5dkrC48vU9m8XE3qUs
-        Fs2L17NZnJh3lt3iRN8HVovLu+awWSxe/pPR4v+eHewOHB6bVnWyeeyfu4bd4373cSaPZwcf
-        snpcXdjE7vF5k1wAWxSXTUpqTmZZapG+XQJXxsRj75kLNjNXHNm6jbGB8SlTFyMnh4SAicSR
-        91NZuxi5OIQEVjBKbNt0hg3C+cIoMe3HIkYI5zOjxN1/+9lhWj70bGMEsYUEljNKfFkUBlH0
-        llFizsXnrCAJYQEviWktj1hAbBEBWYmPNx+CjWUWeM8osfbXCbBuNgEriYntq8BsXgE7iW03
-        m8COYhFQkTi+9zHQIA4OUYEIif4z6hAlghInZz4Bm8kpYCRxc+oFsIOYBQwkjiyawwphy0ts
-        fzuHGWSXhMA2donPF+6wQFztIrG8u58NwhaWeHV8C9Q3MhL/d85ngmhYxyjxt+MFVPd2Ronl
-        k/9BdVhLHD5+kRXCdpQ4+rqdHeQ6CQE+iRtvBSE280lM2jadGSLMK9HRJgRRrSaxYdkGNphd
-        XTtXMkPYHhLzzyximsCoOAvJb7OQ/DMLyT8LGJlXMYqnlhbnpqcWG+ellusVJ+YWl+al6yXn
-        525iBCah0/+Of93BuO9P0iFGAQ5GJR5eDvFFMUKsiWXFlbmHGCU4mJVEeM/0L4gR4k1JrKxK
-        LcqPLyrNSS0+xCjNwaIkzlvN8CBaSCA9sSQ1OzW1ILUIJsvEwSnVwHjZctrW/6Jr3DivHnGd
-        FfUmIUN22uHYdK6ZQZ+SF59257RZVCl/N6dK62TZO+8rRk0t/v+52dZPvPAlJnunUKrK98Lv
-        G4tm/q0NX5EivW72c/Hl2qwN/3huPdt7/2rxuiamTo59lx/Nlwzwfvv2T5dQ/fnAyGNLptj7
-        7FgdsPX1n5P2O+R0371RYinOSDTUYi4qTgQASkWdeD4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xu7qWyotiDM4vVrO48vU9m8XE3qUs
-        Fs2L17NZnJh3lt3iRN8HVovLu+awWSxe/pPR4v+eHewOHB6bVnWyeeyfu4bd4373cSaPZwcf
-        snpcXdjE7vF5k1wAW5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpq
-        TmZZapG+XYJexsRj75kLNjNXHNm6jbGB8SlTFyMnh4SAicSHnm2MXYxcHEICSxklXr05w97F
-        yAGUkJE4vr4MokZY4s+1LjYQW0jgNaPE0TfyILawgJfEtJZHLCC2iICsxMebD9kg5rQySqx9
-        2gQ2lFngI6NEZ+NUVpAqNgEriYntqxhBbF4BO4ltN5vArmARUJE4vvcxWI2oQITErYcdLBA1
-        ghInZz4BszkFjCRuTr3ADmIzC+hJ7Lj+ixXClpfY/nYO8wRGwVlIWmYhKZuFpGwBI/MqRpHU
-        0uLc9NxiI73ixNzi0rx0veT83E2MwMjaduznlh2MXe+CDzEKcDAq8fBGCC2KEWJNLCuuzD3E
-        KMHBrCTCe6Z/QYwQb0piZVVqUX58UWlOavEhRlOgJyYyS4km5wOjPq8k3tDU0NzC0tDc2NzY
-        zEJJnPe8QWWUkEB6YklqdmpqQWoRTB8TB6dUAyOT7yW5dvkdj+/vfcJWw1w/VWDBVSvToB0l
-        0dJqEs3bAuQbuUpebn8o3BuhPbd0cuz2t7NZLSwDTiutzgsrO6Zwc9UctgaulT1v0nzPaORK
-        b6+1XfD0pXPP1pIHbnLVbWfyXDIL6i59PbtjaYZjQ+jr/rk9ks9Nty7XErkVOUVpU9iDoEtM
-        35VYijMSDbWYi4oTATnPeJjCAgAA
-X-CMS-MailID: 20190401144201eucas1p2a0a3ae3c7424596a4cba0f57f4864ab0
-X-Msg-Generator: CA
-X-RootMTR: 20190314073330epcas5p3ac243599bdd87be63b94f9d75b396a9e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190314073330epcas5p3ac243599bdd87be63b94f9d75b396a9e
-References: <CGME20190314073330epcas5p3ac243599bdd87be63b94f9d75b396a9e@epcas5p3.samsung.com>
-        <20190314073319.23209-1-kjlu@umn.edu>
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Apr  1 16:42:25 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fixup MSM8998 UFS binding now that Evan's reset series has landed.
+https://lore.kernel.org/lkml/20190321171800.104681-1-evgreen@chromium.org/
 
-On 03/14/2019 08:33 AM, Kangjie Lu wrote:
-> In case ioremap fails, the fix releases resources and returns
-> -ENOMEM to avoid NULL pointer dereferences.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+---
+ Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Patch queued for v5.2 with minor change in the patch summary
-("video: imsttfb: fix potential NULL pointer dereference"), thanks.
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index 5fca57b12534..085fbd676cfc 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -73,7 +73,8 @@ Required properties:
+ 			"phy", "common".
+ 		For "qcom,msm8998-qmp-usb3-phy" must contain
+ 			"phy", "common".
+-		For "qcom,msm8998-qmp-ufs-phy": no resets are listed.
++		For "qcom,msm8998-qmp-ufs-phy": must contain:
++			"ufsphy".
+ 		For "qcom,msm8998-qmp-pcie-phy" must contain:
+ 			"phy", "common".
+ 		For "qcom,sdm845-qmp-usb3-phy" must contain:
+-- 
+2.17.1
