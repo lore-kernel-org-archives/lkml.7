@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E85C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092AAC10F0B
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1401A206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D045C206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139201;
-	bh=6fsUqvDOCFRFvCjCC7nwgiO8bJmzQV/G1p1ih5B9Bvk=;
+	s=default; t=1554139215;
+	bh=T91n1YdyfjS9qeL3vs5FgkirF7N+dO4vKnBn9qy9YRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y+vsZGN++75yuoF4nLUg/96Q5nyeV6+t7rsX9C+lmuKTK18Sl4I21z2hWSdb6IoD+
-	 nFnoZJTlVB6TAq/6LUU2RMfpfQTPHp7DUuWdFtP2zHkzqkcLwF08gy63TSYbc765cR
-	 XWAzpy/jmtUxt+dVu9hBaA9Kyi7W5yF0WlYzLllw=
+	b=cZqZdoQhl0jZCVAUSLlrfr/2Y/d74dRBhFEGjvBqAQLXSjALsC7MgJjwcpZ9gXO94
+	 wSL4SsiLPr1FsZukbrmW8NbV2zhP7ILEX3v/5ipto5vhMHfapOIhGuSvJ7Tu4w4Pf/
+	 HzXr1tONwnBeMPFFwX3CZ2OxJbjitBAk1gp51Qpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731393AbfDART7 (ORCPT
+        id S1729570AbfDARUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:19:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48082 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:20:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730816AbfDART5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:19:57 -0400
+        id S1729485AbfDARUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:20:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00BF920883;
-        Mon,  1 Apr 2019 17:19:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE94D206C0;
+        Mon,  1 Apr 2019 17:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139196;
-        bh=6fsUqvDOCFRFvCjCC7nwgiO8bJmzQV/G1p1ih5B9Bvk=;
+        s=default; t=1554139202;
+        bh=T91n1YdyfjS9qeL3vs5FgkirF7N+dO4vKnBn9qy9YRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1zGKl8+ovW6zHqTqBkzppj5L9BtzhN8DosSOpvs+Q8v29KeqAAsMB/TKSnuvRlAms
-         JWVSoZS+TuclOECe1U+y53tWjuhS+gFGlSQgoh1ceZHLIzwDFRjrDE+1qhdy7PgECw
-         DQ4h2dovHcluUCKYLFbo6vG2U4eX7MuR/L+KjRRw=
+        b=HzDk8VVEvw8Tu7ExTpKX8z6fs1B+7vGumchW5xcM9KjmxciH0piuMy3ZYSizNgfKA
+         kVR1IC5KymPMWAASzMHDQp2YOPJyT6rpycDUIjbKZzrrD/l3//DAYlkPig2jSb5rSu
+         2Csl9j1j8HXQPbN7q37sj0N7Z4J7t4Ie8Dpd3ZRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Romain Izard <romain.izard.pro@gmail.com>,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.19 110/134] usb: cdc-acm: fix race during wakeup blocking TX traffic
-Date:   Mon,  1 Apr 2019 19:02:26 +0200
-Message-Id: <20190401170054.500082168@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 010/107] net: rose: fix a possible stack overflow
+Date:   Mon,  1 Apr 2019 19:01:25 +0200
+Message-Id: <20190401170046.487268786@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
-References: <20190401170044.243719205@linuxfoundation.org>
+In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
+References: <20190401170045.246405031@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,50 +62,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Romain Izard <romain.izard.pro@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 93e1c8a638308980309e009cc40b5a57ef87caf1 upstream.
+[ Upstream commit e5dcc0c3223c45c94100f05f28d8ef814db3d82c ]
 
-When the kernel is compiled with preemption enabled, the URB completion
-handler can run in parallel with the work responsible for waking up the
-tty layer. If the URB handler sets the EVENT_TTY_WAKEUP bit during the
-call to tty_port_tty_wakeup() to signal that there is room for additional
-input, it will be cleared at the end of this call. As a result, TX traffic
-on the upper layer will be blocked.
+rose_write_internal() uses a temp buffer of 100 bytes, but a manual
+inspection showed that given arbitrary input, rose_create_facilities()
+can fill up to 110 bytes.
 
-This can be seen with a kernel configured with CONFIG_PREEMPT, and a fast
-modem connected with PPP running over a USB CDC-ACM port.
+Lets use a tailroom of 256 bytes for peace of mind, and remove
+the bounce buffer : we can simply allocate a big enough skb
+and adjust its length as needed.
 
-Use test_and_clear_bit() instead, which ensures that each wakeup requested
-by the URB completion code will trigger a call to tty_port_tty_wakeup().
+syzbot report :
 
-Fixes: 1aba579f3cf5 cdc-acm: handle read pipe errors
-Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Oliver Neukum <oneukum@suse.com>
+BUG: KASAN: stack-out-of-bounds in memcpy include/linux/string.h:352 [inline]
+BUG: KASAN: stack-out-of-bounds in rose_create_facilities net/rose/rose_subr.c:521 [inline]
+BUG: KASAN: stack-out-of-bounds in rose_write_internal+0x597/0x15d0 net/rose/rose_subr.c:116
+Write of size 7 at addr ffff88808b1ffbef by task syz-executor.0/24854
+
+CPU: 0 PID: 24854 Comm: syz-executor.0 Not tainted 5.0.0+ #97
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+ kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x123/0x190 mm/kasan/generic.c:191
+ memcpy+0x38/0x50 mm/kasan/common.c:131
+ memcpy include/linux/string.h:352 [inline]
+ rose_create_facilities net/rose/rose_subr.c:521 [inline]
+ rose_write_internal+0x597/0x15d0 net/rose/rose_subr.c:116
+ rose_connect+0x7cb/0x1510 net/rose/af_rose.c:826
+ __sys_connect+0x266/0x330 net/socket.c:1685
+ __do_sys_connect net/socket.c:1696 [inline]
+ __se_sys_connect net/socket.c:1693 [inline]
+ __x64_sys_connect+0x73/0xb0 net/socket.c:1693
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458079
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f47b8d9dc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458079
+RDX: 000000000000001c RSI: 0000000020000040 RDI: 0000000000000004
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f47b8d9e6d4
+R13: 00000000004be4a4 R14: 00000000004ceca8 R15: 00000000ffffffff
+
+The buggy address belongs to the page:
+page:ffffea00022c7fc0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0x1fffc0000000000()
+raw: 01fffc0000000000 0000000000000000 ffffffff022c0101 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88808b1ffa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88808b1ffb00: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 00 00 00 03
+>ffff88808b1ffb80: f2 f2 00 00 00 00 00 00 00 00 00 00 00 00 04 f3
+                                                             ^
+ ffff88808b1ffc00: f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88808b1ffc80: 00 00 00 00 00 00 00 f1 f1 f1 f1 f1 f1 01 f2 01
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/class/cdc-acm.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/rose/rose_subr.c |   21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -558,10 +558,8 @@ static void acm_softint(struct work_stru
- 		clear_bit(EVENT_RX_STALL, &acm->flags);
+--- a/net/rose/rose_subr.c
++++ b/net/rose/rose_subr.c
+@@ -105,16 +105,17 @@ void rose_write_internal(struct sock *sk
+ 	struct sk_buff *skb;
+ 	unsigned char  *dptr;
+ 	unsigned char  lci1, lci2;
+-	char buffer[100];
+-	int len, faclen = 0;
++	int maxfaclen = 0;
++	int len, faclen;
++	int reserve;
+ 
+-	len = AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + ROSE_MIN_LEN + 1;
++	reserve = AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + 1;
++	len = ROSE_MIN_LEN;
+ 
+ 	switch (frametype) {
+ 	case ROSE_CALL_REQUEST:
+ 		len   += 1 + ROSE_ADDR_LEN + ROSE_ADDR_LEN;
+-		faclen = rose_create_facilities(buffer, rose);
+-		len   += faclen;
++		maxfaclen = 256;
+ 		break;
+ 	case ROSE_CALL_ACCEPTED:
+ 	case ROSE_CLEAR_REQUEST:
+@@ -123,15 +124,16 @@ void rose_write_internal(struct sock *sk
+ 		break;
  	}
  
--	if (test_bit(EVENT_TTY_WAKEUP, &acm->flags)) {
-+	if (test_and_clear_bit(EVENT_TTY_WAKEUP, &acm->flags))
- 		tty_port_tty_wakeup(&acm->port);
--		clear_bit(EVENT_TTY_WAKEUP, &acm->flags);
--	}
- }
+-	if ((skb = alloc_skb(len, GFP_ATOMIC)) == NULL)
++	skb = alloc_skb(reserve + len + maxfaclen, GFP_ATOMIC);
++	if (!skb)
+ 		return;
  
- /*
+ 	/*
+ 	 *	Space for AX.25 header and PID.
+ 	 */
+-	skb_reserve(skb, AX25_BPQ_HEADER_LEN + AX25_MAX_HEADER_LEN + 1);
++	skb_reserve(skb, reserve);
+ 
+-	dptr = skb_put(skb, skb_tailroom(skb));
++	dptr = skb_put(skb, len);
+ 
+ 	lci1 = (rose->lci >> 8) & 0x0F;
+ 	lci2 = (rose->lci >> 0) & 0xFF;
+@@ -146,7 +148,8 @@ void rose_write_internal(struct sock *sk
+ 		dptr   += ROSE_ADDR_LEN;
+ 		memcpy(dptr, &rose->source_addr, ROSE_ADDR_LEN);
+ 		dptr   += ROSE_ADDR_LEN;
+-		memcpy(dptr, buffer, faclen);
++		faclen = rose_create_facilities(dptr, rose);
++		skb_put(skb, faclen);
+ 		dptr   += faclen;
+ 		break;
+ 
 
 
