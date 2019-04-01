@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92884C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49611C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADFF206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A51220856
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554139417;
-	bh=WCoQ232Bj1unvP56a+gBtDfNASKqd/cL64uK0/BMZ1Y=;
+	s=default; t=1554139421;
+	bh=dj4GYV9KiUCsjjzvD0DF79GP+tplh2pZcDnta4hLL+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gJ0v6jl5cg6dNe30ZC/QAZacztjhmniACxgSJeqLcU/dA47rt0x2KQm9Pm1uhbeSh
-	 1RBzQKUSRtrjBTpF7XcYGJCEfLcp90PU8uOUnB7S94R2utXsKnwkSatl/2ps0v3yz3
-	 PfHIy8A55M0xrlAa4aeutviENUdN7zrHISnYhslA=
+	b=Lm6DHO3VqtQhYvY4pqlOV9CytU3NvENUjp1iIdTuxNKBKgJCQ0RYr+TdjAycVKNgV
+	 40mNtIVeiSMXGf6Zk/n60pg1hi+0TqC3K40v0HBGbYyvPWQWjimObJCsCIDYwdcftA
+	 /poQbtzCBOFqE1CWpqzPYhUurj3aoVMhT0NxCikI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732136AbfDARXg (ORCPT
+        id S1731716AbfDARXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:23:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53414 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:23:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731931AbfDARXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:23:33 -0400
+        id S1732140AbfDARXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:23:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F960206C0;
-        Mon,  1 Apr 2019 17:23:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A8D1206C0;
+        Mon,  1 Apr 2019 17:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139412;
-        bh=WCoQ232Bj1unvP56a+gBtDfNASKqd/cL64uK0/BMZ1Y=;
+        s=default; t=1554139415;
+        bh=dj4GYV9KiUCsjjzvD0DF79GP+tplh2pZcDnta4hLL+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DGTo1iSvcexf+8bFOc+ZEOggytrfF2fv5Jlk+nWdtzhEBihPAdgiqdMtTHDcBFjmC
-         Vn0C+cTO2e4rem/pcO60ecCvYqNpLUVjw8QwnM/TSes/kU/K65nCKSMbgsN5JIPSyf
-         UHt0i0O3w7herLqUyB8t5JZwGTEFsFq+ebv0iJxg=
+        b=iMH5oiPDpK3s+oeQqHcZdiSIhKeEEjlaNou/hzYU8aUpoXYv8rwTJWtnA7jYx4xb/
+         vulWOOdkyWwc0xJDJhPUzwq24ldzAYYHAn+SGsA5VlZyZoCCYd5JJ0pHlgvBh9UKk2
+         eGjEXZLD5fxXcfx7tL4aqYmiU4RtTBGZnx8/xvKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 068/107] ALSA: hda/realtek - Add support headset mode for New DELL WYSE NB
-Date:   Mon,  1 Apr 2019 19:02:23 +0200
-Message-Id: <20190401170051.821224389@linuxfoundation.org>
+        stable@vger.kernel.org, Fredrik Noring <noring@nocrew.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 4.14 069/107] kbuild: modversions: Fix relative CRC byte order interpretation
+Date:   Mon,  1 Apr 2019 19:02:24 +0200
+Message-Id: <20190401170051.913118478@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,29 +65,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kailang Yang <kailang@realtek.com>
+From: Fredrik Noring <noring@nocrew.org>
 
-commit da484d00f020af3dd7cfcc6c4b69a7f856832883 upstream.
+commit 54a7151b1496cddbb7a83546b7998103e98edc88 upstream.
 
-Enable headset mode support for new WYSE NB platform.
+Fix commit 56067812d5b0 ("kbuild: modversions: add infrastructure for
+emitting relative CRCs") where CRCs are interpreted in host byte order
+rather than proper kernel byte order. The bug is conditional on
+CONFIG_MODULE_REL_CRCS.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+For example, when loading a BE module into a BE kernel compiled with a LE
+system, the error "disagrees about version of symbol module_layout" is
+produced. A message such as "Found checksum D7FA6856 vs module 5668FAD7"
+will be given with debug enabled, which indicates an obvious endian
+problem within __kcrctab within the kernel image.
+
+The general solution is to use the macro TO_NATIVE, as is done in
+similar cases throughout modpost.c. With this correction it has been
+verified that a BE kernel compiled with a LE system accepts BE modules.
+
+This change has also been verified with a LE kernel compiled with a LE
+system, in which case TO_NATIVE returns its value unmodified since the
+byte orders match. This is by far the common case.
+
+Fixes: 56067812d5b0 ("kbuild: modversions: add infrastructure for emitting relative CRCs")
+Signed-off-by: Fredrik Noring <noring@nocrew.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ scripts/mod/modpost.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6395,6 +6395,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1028, 0x0872, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1028, 0x0873, "Dell Precision 3930", ALC255_FIXUP_DUMMY_LINEOUT_VERB),
- 	SND_PCI_QUIRK(0x1028, 0x08ad, "Dell WYSE AIO", ALC225_FIXUP_DELL_WYSE_AIO_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1028, 0x08ae, "Dell WYSE NB", ALC225_FIXUP_DELL1_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1028, 0x0935, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
- 	SND_PCI_QUIRK(0x1028, 0x164a, "Dell", ALC293_FIXUP_DELL1_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1028, 0x164b, "Dell", ALC293_FIXUP_DELL1_MIC_NO_PRESENCE),
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -645,7 +645,7 @@ static void handle_modversions(struct mo
+ 			       info->sechdrs[sym->st_shndx].sh_offset -
+ 			       (info->hdr->e_type != ET_REL ?
+ 				info->sechdrs[sym->st_shndx].sh_addr : 0);
+-			crc = *crcp;
++			crc = TO_NATIVE(*crcp);
+ 		}
+ 		sym_update_crc(symname + strlen(CRC_PFX), mod, crc,
+ 				export);
 
 
