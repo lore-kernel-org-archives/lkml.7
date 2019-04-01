@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB89C10F05
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA159C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4A820830
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF9D20896
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 17:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141190;
-	bh=K08UUHTSE6d+aWdAIud70RWfnqzY2p6qVfEYJmCP4Iw=;
+	s=default; t=1554141194;
+	bh=2n/oe+WTTIOePm/FwSSIyqLVo+5rJXxsNElnbtsseGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lQHP2tZci4ZLFyjOc5U5nLJBS+mPFqrdakdt8TXGgCTVLb1gMF05vxyxCB5vab7xx
-	 YUr4K2gu3+QtucPk0S4e1HcFBPU3fge6J2Bvzq8JFzqJJ60Yh1zBCVWB88cTDe7ejs
-	 HoXglJMEtuw6EijwbOvDd4IDh/ky8XxT3/MoBSPM=
+	b=Ns8P8kCuaJ7Gv0+wLnquPgDne59F9ryjQZWcApGSOGwUdfBNveZ4ww/wnOwgspAdZ
+	 mDA8dx02ieDSwOaUeKje0sE2xMA/RpW4kePBaJ48cSvYC/bNntHhTmmbqcaxj5fbID
+	 qdGQNz8zVctvMJGyzA4UzOJ5b18gWl7/qygAVmog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732289AbfDAR0H (ORCPT
+        id S1732626AbfDARxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57790 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 13:53:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732288AbfDAR0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:26:00 -0400
+        id S1732135AbfDAR0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 13:26:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4182E20830;
-        Mon,  1 Apr 2019 17:25:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00D5A20883;
+        Mon,  1 Apr 2019 17:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554139559;
-        bh=K08UUHTSE6d+aWdAIud70RWfnqzY2p6qVfEYJmCP4Iw=;
+        s=default; t=1554139566;
+        bh=2n/oe+WTTIOePm/FwSSIyqLVo+5rJXxsNElnbtsseGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G4jB8hq4DqaMGIGmK2F7FHxCHy2TRDHCWA5ek52QRVAlqewpqfNy8agIYDRa5M7vc
-         r8BdfoXiruQXfghFTpRc6b1dZTZ+zc4IZMfuuY0zprP8ugY2zl8dfVNT+qmm8/cQPL
-         znnUrOdsaZ8KgB7l9NDjJFmQh0r4HGIZTwwjQfy4=
+        b=p65keD2BVFpcTf/2LHF8XzLrBE674sS6FI5QL5xX45Vd1opsX7+oZUsVUDFdIeVlt
+         2pLNTDyLVgAWZMCKejYdIbgBfEHK3Lcq5EIbf2aAOE4JPdRP5CKBiFOBhBSORC/Pvh
+         TTxPD++F+qMt6Y9PvGKSJYg4l+dek92q+6HnlrlY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kristian Evensen <kristian.evensen@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 086/107] USB: serial: option: add support for Quectel EM12
-Date:   Mon,  1 Apr 2019 19:02:41 +0200
-Message-Id: <20190401170053.554639184@linuxfoundation.org>
+        stable@vger.kernel.org, Wentao Wang <witallwang@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Subject: [PATCH 4.14 088/107] Disable kgdboc failed by echo space to /sys/module/kgdboc/parameters/kgdboc
+Date:   Mon,  1 Apr 2019 19:02:43 +0200
+Message-Id: <20190401170053.718376743@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 References: <20190401170045.246405031@linuxfoundation.org>
@@ -65,42 +65,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kristian Evensen <kristian.evensen@gmail.com>
+From: Wentao Wang <witallwang@gmail.com>
 
-commit d1252f0237238b912c3e7a51bf237acf34c97983 upstream.
+commit 3ec8002951ea173e24b466df1ea98c56b7920e63 upstream.
 
-The Quectel EM12 is a Cat. 12 LTE modem. It behaves in the exactly the
-same way as the EP06 (including the dynamic configuration behavior), so
-the same checks on reserved interfaces, etc. are needed.
+Echo "" to /sys/module/kgdboc/parameters/kgdboc will fail with "No such
+device” error.
 
-Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
+This is caused by function "configure_kgdboc" who init err to ENODEV
+when the config is empty (legal input) the code go out with ENODEV
+returned.
+
+Fixes: 2dd453168643 ("kgdboc: Fix restrict error")
+Signed-off-by: Wentao Wang <witallwang@gmail.com>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/tty/serial/kgdboc.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -249,6 +249,7 @@ static void option_instat_callback(struc
- #define QUECTEL_PRODUCT_EC25			0x0125
- #define QUECTEL_PRODUCT_BG96			0x0296
- #define QUECTEL_PRODUCT_EP06			0x0306
-+#define QUECTEL_PRODUCT_EM12			0x0512
+--- a/drivers/tty/serial/kgdboc.c
++++ b/drivers/tty/serial/kgdboc.c
+@@ -148,8 +148,10 @@ static int configure_kgdboc(void)
+ 	char *cptr = config;
+ 	struct console *cons;
  
- #define CMOTECH_VENDOR_ID			0x16d8
- #define CMOTECH_PRODUCT_6001			0x6001
-@@ -1091,6 +1092,9 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EP06, 0xff, 0xff, 0xff),
- 	  .driver_info = RSVD(1) | RSVD(2) | RSVD(3) | RSVD(4) | NUMEP2 },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EP06, 0xff, 0, 0) },
-+	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EM12, 0xff, 0xff, 0xff),
-+	  .driver_info = RSVD(1) | RSVD(2) | RSVD(3) | RSVD(4) | NUMEP2 },
-+	{ USB_DEVICE_AND_INTERFACE_INFO(QUECTEL_VENDOR_ID, QUECTEL_PRODUCT_EM12, 0xff, 0, 0) },
- 	{ USB_DEVICE(CMOTECH_VENDOR_ID, CMOTECH_PRODUCT_6001) },
- 	{ USB_DEVICE(CMOTECH_VENDOR_ID, CMOTECH_PRODUCT_CMU_300) },
- 	{ USB_DEVICE(CMOTECH_VENDOR_ID, CMOTECH_PRODUCT_6003),
+-	if (!strlen(config) || isspace(config[0]))
++	if (!strlen(config) || isspace(config[0])) {
++		err = 0;
+ 		goto noconfig;
++	}
+ 
+ 	kgdboc_io_ops.is_console = 0;
+ 	kgdb_tty_driver = NULL;
 
 
