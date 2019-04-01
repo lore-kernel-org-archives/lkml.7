@@ -2,97 +2,136 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6754C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F72C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6B620663
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:05:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554141903;
-	bh=aVDAKpKMtYU6XDXnAuO6ah9ym975p3qTie7u45JKtXA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ezGY5XDFgHc5uiY5Io582iZTwJQNn53iD41clfCunhLkOQzjTgNbJWSkV9ZZrPxdC
-	 TOym/yemHDyVztZXY5z31tY7dWtnVmr3hS3kV7GaEGYCFPqudYpSCC29kGcm0pCBvh
-	 zepYtGotm7uKlxKNZ8l2qmF76T0RauIHdQSvvi+M=
+	by mail.kernel.org (Postfix) with ESMTP id DB88420880
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 18:05:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ht/2KH1i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbfDARNV (ORCPT
+        id S1730288AbfDASFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 13:13:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35778 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729241AbfDARNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 13:13:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25FEF21929;
-        Mon,  1 Apr 2019 17:13:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554138799;
-        bh=aVDAKpKMtYU6XDXnAuO6ah9ym975p3qTie7u45JKtXA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FNOA4/Hcs/Yt/BKm8xi5tm4Jjv8wb3PIdvEv65XM6o5UylGlbePpFUm663JBfhzr6
-         9M5KFhoAxlyuPA4sfUqQ7+lpO3pdayAhWC1v7iL6+KG7knlnuiPS/n5PKAL2Mk/H0r
-         JStDfhxm4LMOt96EfiT4NwgqmpjBSYm4oVFIkLow=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erik Hugne <erik.hugne@gmail.com>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 024/134] tipc: fix cancellation of topology subscriptions
-Date:   Mon,  1 Apr 2019 19:01:00 +0200
-Message-Id: <20190401170046.816167363@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
-References: <20190401170044.243719205@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Mon, 1 Apr 2019 14:05:14 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37324 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728690AbfDASFM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 14:05:12 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e6so795088pgc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 11:05:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K1pceyZy4S8Boeyfv9ZRh0saRtJ+K4ZmmRbKgcmFfvE=;
+        b=Ht/2KH1iRn+740k1OnBvmCEkgsubKw9xN7Ry4xCCSurceoGLr7uNpi5CxpHJaw2B1Q
+         dvY/CFiCn0suMdu1q9rx3HzPBCuYizIn4BwJU3vSskzn+DKjNehws5dWL/C65GrsnHBx
+         Ei5slv0iBhqESl7rwuJo8ssh8hK4HSyaGe3rI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K1pceyZy4S8Boeyfv9ZRh0saRtJ+K4ZmmRbKgcmFfvE=;
+        b=b0p1Uz41X6gt5LJkAeorETlNYZijDhuDVGsPnxzhqbF79+6w7Ua6hENtQAio5woQGq
+         f81hQXJvL/gxk1uijgU2pZ35LUDJZbVBqDbSIbZH9TzWubK1KebINQMVx9TUuMR5LrNn
+         HY5s7Jbn6Tni34NHrE19AxAGdEzG64VVE2ttnXkwkS++EJU3LKBPN+cux5ftRRWe8YZi
+         F++ftYng/8JnJMHpNm9/bUgX0WMgk+itMc1SVlEK4T/k+3A1DcPcXSRb+YWnnyg38CIe
+         j7t1TTpEExtTMnxacSwAnYzSZ75TNIPuHz39AAV/AbI7lneUWQlAWcG5rJTz3jrs1lMv
+         QMFw==
+X-Gm-Message-State: APjAAAWVAhvwZikvvgmTWirX/9zV3eAZH7Z9jgLyQsKA3CAiUiIGoGs8
+        oNXIkkWP0NZbQDjVkbbMWCyLBA==
+X-Google-Smtp-Source: APXvYqxfLlbh6A76feTaDSOJkx6wCknRx5xGVQWe4SpHZRon+f/yTAgWDObH7KFFTaiEB0VIh9yEeg==
+X-Received: by 2002:a62:1d0d:: with SMTP id d13mr29209711pfd.96.1554141911892;
+        Mon, 01 Apr 2019 11:05:11 -0700 (PDT)
+Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
+        by smtp.gmail.com with ESMTPSA id n82sm18086257pfi.63.2019.04.01.11.05.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 01 Apr 2019 11:05:10 -0700 (PDT)
+From:   Evan Green <evgreen@chromium.org>
+To:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>
+Subject: [PATCH] platform/x86: intel_pmc_core: Report slp_s0 residency range
+Date:   Mon,  1 Apr 2019 11:05:04 -0700
+Message-Id: <20190401180505.6621-1-evgreen@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+The PMC driver performs a 32-bit read on the sleep s0 residency counter,
+followed by a hard-coded multiplication to convert into microseconds.
+The maximum value this counter could have would be 0xffffffff*0x64
+microseconds, which by my calculations is about 4.9 days. This is well
+within a reasonable time period to observe an overflow.
 
-------------------
+Usermode consumers watching slp_s0_residency_usec need to be aware of
+overflows, but have no idea what the maximum value of this counter is,
+given the hardcoded multiply of a 32-bit value by
+SPT_PMC_SLP_S0_RES_COUNTER_STEP.
 
-From: Erik Hugne <erik.hugne@gmail.com>
+Expose a slp_s0_residency_usec_range to usermode as well, which returns
+the maximum value this counter could have. Consumers can use this to
+manage rollovers.
 
-[ Upstream commit 33872d79f5d1cbedaaab79669cc38f16097a9450 ]
+Signed-off-by: Evan Green <evgreen@chromium.org>
 
-When cancelling a subscription, we have to clear the cancel bit in the
-request before iterating over any established subscriptions with memcmp.
-Otherwise no subscription will ever be found, and it will not be
-possible to explicitly unsubscribe individual subscriptions.
-
-Fixes: 8985ecc7c1e0 ("tipc: simplify endianness handling in topology subscriber")
-Signed-off-by: Erik Hugne <erik.hugne@gmail.com>
-Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/topsrv.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/net/tipc/topsrv.c
-+++ b/net/tipc/topsrv.c
-@@ -371,6 +371,7 @@ static int tipc_conn_rcv_sub(struct tipc
- 	struct tipc_subscription *sub;
+Note: I also looked at a similar bit of functionality in
+intel_pmc_s0ix_counter_read(), but noticed it's doing a 64-bit register
+access. Is the counter being read here in pmc_core_dev_state_get()
+(weird name btw) actually 64-bits long? If so, we can abandon this change
+and just create a fix to return the full extended value.
+
+---
+ drivers/platform/x86/intel_pmc_core.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index f2c621b55f49..bec54be9be93 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -396,6 +396,14 @@ static int pmc_core_dev_state_get(void *data, u64 *val)
  
- 	if (tipc_sub_read(s, filter) & TIPC_SUB_CANCEL) {
-+		s->filter &= __constant_ntohl(~TIPC_SUB_CANCEL);
- 		tipc_conn_delete_sub(con, s);
- 		return 0;
- 	}
-
+ DEFINE_DEBUGFS_ATTRIBUTE(pmc_core_dev_state, pmc_core_dev_state_get, NULL, "%llu\n");
+ 
++static int pmc_core_slp_s0_range_get(void *data, u64 *val)
++{
++	*val = pmc_core_adjust_slp_s0_step(0xffffffff);
++	return 0;
++}
++
++DEFINE_DEBUGFS_ATTRIBUTE(pmc_core_slp_s0_range, pmc_core_slp_s0_range_get, NULL, "%llu\n");
++
+ static int pmc_core_check_read_lock_bit(void)
+ {
+ 	struct pmc_dev *pmcdev = &pmc;
+@@ -764,6 +772,9 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 	debugfs_create_file("slp_s0_residency_usec", 0444, dir, pmcdev,
+ 			    &pmc_core_dev_state);
+ 
++	debugfs_create_file("slp_s0_residency_usec_range", 0444, dir, pmcdev,
++			    &pmc_core_slp_s0_range);
++
+ 	debugfs_create_file("pch_ip_power_gating_status", 0444, dir, pmcdev,
+ 			    &pmc_core_ppfear_fops);
+ 
+-- 
+2.20.1
 
