@@ -2,115 +2,146 @@ Return-Path: <SRS0=/BGd=SD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58420C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC065C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9FE2086C
-	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:32:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="kH+6R8Ll"
+	by mail.kernel.org (Postfix) with ESMTP id B573E20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  1 Apr 2019 23:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfDAXb7 (ORCPT
+        id S1726895AbfDAXqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 19:31:59 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:54410 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfDAXb7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 19:31:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1554161516; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vb2e2bokFLv0ZFcLQiHkpZaLu5RHD+rz7qIDSO9F10E=;
-        b=kH+6R8Ll0HpaZX7Mm+gOxdiNpwPxEhEGkSRv5wcSFdX+VjUOoeyLno3IazpC6TlO8j0Hwf
-        e1JyVomq0Vyx+hwTQUcIA9q+UNe9zcDELfWPQNT2yoK9B8IZ/FL+Er2WzHRgDOWER0pH91
-        FI9uNUZNiIhZ0Ff0e3PSwK6WTf+ZJzA=
-Date:   Tue, 02 Apr 2019 01:31:52 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: linux-next: build failure after merge of the nand tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <1554161512.10471.3@crapouillou.net>
-In-Reply-To: <20190402101431.6708cb70@canb.auug.org.au>
-References: <20190402101431.6708cb70@canb.auug.org.au>
+        Mon, 1 Apr 2019 19:46:33 -0400
+Received: from mga14.intel.com ([192.55.52.115]:27624 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbfDAXqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 19:46:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 16:46:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,298,1549958400"; 
+   d="scan'208";a="147173511"
+Received: from unknown (HELO localhost) ([10.249.254.142])
+  by orsmga002.jf.intel.com with ESMTP; 01 Apr 2019 16:46:27 -0700
+Date:   Tue, 2 Apr 2019 02:46:25 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Phil Baker <baker1tex@gmail.com>,
+        Craig Robson <craig@zhatt.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Arnd Bergmann <arnd@arndb.de>, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v3] tpm: Actually fail on TPM errors during "get random"
+Message-ID: <20190401234625.GA29016@linux.intel.com>
+References: <20190401190607.GA23795@beast>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190401190607.GA23795@beast>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Mon, Apr 01, 2019 at 12:06:07PM -0700, Kees Cook wrote:
+> A "get random" may fail with a TPM error, but those codes were returned
+> as-is to the caller, which assumed the result was the number of bytes
+> that had been written to the target buffer, which could lead to a kernel
+> heap memory exposure and over-read.
+> 
+> This fixes tpm1_get_random() to mask positive TPM errors into -EIO, as
+> before.
+> 
+> [   18.092103] tpm tpm0: A TPM error (379) occurred attempting get random
+> [   18.092106] usercopy: Kernel memory exposure attempt detected from SLUB object 'kmalloc-64' (offset 0, size 379)!
+> 
+> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1650989
+> Reported-by: Phil Baker <baker1tex@gmail.com>
+> Reported-by: Craig Robson <craig@zhatt.com>
+> Fixes: 7aee9c52d7ac ("tpm: tpm1: rewrite tpm1_get_random() using tpm_buf structure")
+> Cc: Laura Abbott <labbott@redhat.com>
+> Cc: Tomas Winkler <tomas.winkler@intel.com>
+> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v3: fix never-succeed, limit checks to tpm cmd return (James, Jason)
+> v2: also fix tpm2 implementation (Jason Gunthorpe)
+> ---
+>  drivers/char/tpm/tpm1-cmd.c | 7 +++++--
+>  drivers/char/tpm/tpm2-cmd.c | 7 +++++--
+>  2 files changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
+> index 85dcf2654d11..faacbe1ffa1a 100644
+> --- a/drivers/char/tpm/tpm1-cmd.c
+> +++ b/drivers/char/tpm/tpm1-cmd.c
+> @@ -510,7 +510,7 @@ struct tpm1_get_random_out {
+>   *
+>   * Return:
+>   * *  number of bytes read
+> - * * -errno or a TPM return code otherwise
+> + * * -errno (positive TPM return codes are masked to -EIO)
+>   */
+>  int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+>  {
+> @@ -531,8 +531,11 @@ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+>  
+>  		rc = tpm_transmit_cmd(chip, &buf, sizeof(out->rng_data_len),
+>  				      "attempting get random");
+> -		if (rc)
+> +		if (rc) {
+> +			if (rc > 0)
+> +				rc = -EIO;
+>  			goto out;
+> +		}
+>  
+>  		out = (struct tpm1_get_random_out *)&buf.data[TPM_HEADER_SIZE];
+>  
+> diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+> index e74c5b7b64bf..8ffa6af61580 100644
+> --- a/drivers/char/tpm/tpm2-cmd.c
+> +++ b/drivers/char/tpm/tpm2-cmd.c
+> @@ -301,7 +301,7 @@ struct tpm2_get_random_out {
+>   *
+>   * Return:
+>   *   size of the buffer on success,
+> - *   -errno otherwise
+> + *   -errno otherwise ((positive TPM return codes are masked to -EIO)
+>   */
+>  int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+>  {
+> @@ -328,8 +328,11 @@ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+>  				       offsetof(struct tpm2_get_random_out,
+>  						buffer),
+>  				       "attempting get random");
+> -		if (err)
+> +		if (err) {
+> +			if (err > 0)
+> +				err = -EIO;
+>  			goto out;
+> +		}
+>  
+>  		out = (struct tpm2_get_random_out *)
+>  			&buf.data[TPM_HEADER_SIZE];
+> -- 
+> 2.17.1
+> 
+> 
+> -- 
+> Kees Cook
 
-Le mar. 2 avril 2019 =E0 1:14, Stephen Rothwell <sfr@canb.auug.org.au> a=20
-=E9crit :
-> Hi all,
->=20
-> After merging the nand tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->=20
-> drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:26:5: error: redefinition=20
-> of 'ingenic_ecc_calculate'
->  int ingenic_ecc_calculate(struct ingenic_ecc *ecc,
->      ^~~~~~~~~~~~~~~~~~~~~
-> In file included from drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:14:
-> drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:39:5: note: previous=20
-> definition of 'ingenic_ecc_calculate' was here
->  int ingenic_ecc_calculate(struct ingenic_ecc *ecc,
->      ^~~~~~~~~~~~~~~~~~~~~
-> drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:47:5: error: redefinition=20
-> of 'ingenic_ecc_correct'
->  int ingenic_ecc_correct(struct ingenic_ecc *ecc,
->      ^~~~~~~~~~~~~~~~~~~
-> In file included from drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:14:
-> drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:46:5: note: previous=20
-> definition of 'ingenic_ecc_correct' was here
->  int ingenic_ecc_correct(struct ingenic_ecc *ecc,
->      ^~~~~~~~~~~~~~~~~~~
-> drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:93:21: error: redefinition=20
-> of 'of_ingenic_ecc_get'
->  struct ingenic_ecc *of_ingenic_ecc_get(struct device_node *of_node)
->                      ^~~~~~~~~~~~~~~~~~
-> In file included from drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:14:
-> drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:57:21: note: previous=20
-> definition of 'of_ingenic_ecc_get' was here
->  struct ingenic_ecc *of_ingenic_ecc_get(struct device_node *np)
->                      ^~~~~~~~~~~~~~~~~~
-> drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:119:6: error: redefinition=20
-> of 'ingenic_ecc_release'
->  void ingenic_ecc_release(struct ingenic_ecc *ecc)
->       ^~~~~~~~~~~~~~~~~~~
-> In file included from drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:14:
-> drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:53:6: note: previous=20
-> definition of 'ingenic_ecc_release' was here
->  void ingenic_ecc_release(struct ingenic_ecc *ecc)
->       ^~~~~~~~~~~~~~~~~~~
->=20
-> Caused by commit
->=20
->   8278ad0d709a ("mtd: rawnand: ingenic: Separate top-level and SoC=20
-> specific code")
->=20
-> I have used the nand tree from next-20190401 for today.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-That makes no sense to me; from the offsets of the errors in the=20
-ingenic_ecc.h
-file, it seems that CONFIG_MTD_NAND_INGENIC_ECC is not set, and in this=20
-case
-ingenic_ecc.c should not be compiled at all.
-
--Paul
-
-=
-
+/Jarkko
