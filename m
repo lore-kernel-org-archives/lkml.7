@@ -7,107 +7,84 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF69C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47972C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672D7206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C0A206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:53:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q5sOoGGO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jlCRUBBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbfDBDww (ORCPT
+        id S1728898AbfDBDxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 23:52:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42090 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbfDBDww (ORCPT
+        Mon, 1 Apr 2019 23:53:22 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45608 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbfDBDxW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 23:52:52 -0400
-Received: by mail-pl1-f193.google.com with SMTP id cv12so5533620plb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 20:52:51 -0700 (PDT)
+        Mon, 1 Apr 2019 23:53:22 -0400
+Received: by mail-pg1-f194.google.com with SMTP id y3so5814529pgk.12
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 20:53:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=YvAKlCDUtqs5douNrNhpOUClKLL51IqifIliYlE8BB8=;
-        b=Q5sOoGGO+64+707vRMFTb/RcZVhJcALQgpAsIfqHVOvNrs6eQAZ6rJPJH+REf8u63b
-         /klfTWe2oDlPof3+YYZqgFpintnBlERyxBusdQ1XAQGXVJHMuObe/yQBUo4ISPA/PS5T
-         sqPZknuqMEphj7W5DGz2NEB2jBp157fXr/blCmOLDN0CEvR1/4NJ/B05bv4TgNJAHn21
-         zaSWQQWu3Gt3hi7dvYWvgsK8oASF+e/0PUS+Z7N9YkmTb3Zre96PmnSAY/p9g1PAdo4G
-         wySpO6vW972uQ7bmY5DtuEBgmkDhqyEUTK3pllLo31UAYT8E+xsGUJ47PxoyK12hidpT
-         JLTA==
+        bh=lal2WHvtJNuY3hfsxdKB3Hc+UyF+52PkMoX1ZCyfv7o=;
+        b=jlCRUBBlnP20P4DQCAMtms2plBMcl/q9IhsY/OWk/0iLqrGjUqW4T7TdLUuOGqM7lq
+         /DkBGtjiji/Fh6RZra8heqMxU2xsqgaHwMHwnbAE6p++f+gWNESGWaxYA123ll3KjCZ7
+         r7H/Mq7gWmEI4aEtXDN2D3NXxeqvSRZ7vwWqq+JFO6KuNwhXhQuEoUy1Zs7VAtwllcTZ
+         ZdYDdYyYP49ROMLNlvOs4MEkmtx2btdWAfJBYfs2PAK6ZfpAIncp7wlYAQVExmr/niWN
+         wIeDCyrCyWV9FcZsOLLbcauZOAswkUrxB8fyBoOxD3GhIgut/Zqre1H2s09VEEC3dsNv
+         DRlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=YvAKlCDUtqs5douNrNhpOUClKLL51IqifIliYlE8BB8=;
-        b=KGnXoXpspvzml7V51TAgdqOAB2+3m6ZSeMRdfDTEJZyIyDTwRACoMQ62pjSetzP/QD
-         4YCzfQCyYMIfzvrLR/qMcgDjhIF0rlezm7Svu26nUPG/qQ4CoN9scUtHgwTiLFDxqTNg
-         ucORbkkgUIAHUOt22rUoTI7GDA2pXZNyhsucNy5y9dKpZkM0iPuhM5JE0Hp+8LWRzRA2
-         rx4IY0e+mgVBmHwd2t5HtWTP7u93QJvtbVuWcvus2ox09DUhJvw39SZ38MYlOxYGwuyn
-         M6g4eV5nqJL5lzemwljNjA58hmNRXU0uStsAyeSR9bTHrqhuaCkt/kUGV9rHu96Z/4bT
-         vuVA==
-X-Gm-Message-State: APjAAAWpSJYjnD9R1826Zoc1wM36Xp5RYHxEja5s5TM75rrZI5d09zBq
-        ar0PtxB5BP/5g4Kq0qeKgSJS2Q==
-X-Google-Smtp-Source: APXvYqzzCULT1DkgzeFC+mNfYQiKqhDdfBW/G9Y8Hym/ZS9A4zx+ULRiBhZdS4BzCyZPWmhwVdm53g==
-X-Received: by 2002:a17:902:31a4:: with SMTP id x33mr31507756plb.24.1554177171166;
-        Mon, 01 Apr 2019 20:52:51 -0700 (PDT)
+        bh=lal2WHvtJNuY3hfsxdKB3Hc+UyF+52PkMoX1ZCyfv7o=;
+        b=WZCIDKAIUjZ9DT0qXzYS2OpAnACcy2GiL5EDAXZA9bpdz6yIwF5vDzgoXnneJyT1MD
+         bNl+HgKFBvyEpXtPO0XjuXWmKuzgAMAPVITLPoCJ5pPs4S01mT68p3sEjtC/G4VPUTUW
+         MP9keULKiCBtA2vmRVaUf6Y/HNg/r44E0OnsWpBs8Q5wfCBLXR7Dt+u7QKusf4Qab1n7
+         hA88BcPKC6YHYIjxLJy3dH/tL86JbAs2JnXiorLnmdIdzIbXoL488IxRKScVi88UJDAF
+         tuBS5hswd+AzpVNuwM50r5c4+lJ2o2gMrzxvTu1OvqKFIWUzyQj+uiIHyF88IN47KFXj
+         89MA==
+X-Gm-Message-State: APjAAAVt0WgQDrbqFTXj05/fI8L8lfehEYO89boiQhXuvwIX3ESOWLNc
+        kYE6w2zhY3/wwabyEBEYqMjILg==
+X-Google-Smtp-Source: APXvYqw4X3sAutZmbz6/wstJxUMCVxqJpqTM2zFiUQbwL9CnrSf6G7krTn2j0y6D0oyn8hN+YmAaFg==
+X-Received: by 2002:a65:5c42:: with SMTP id v2mr5253116pgr.360.1554177202007;
+        Mon, 01 Apr 2019 20:53:22 -0700 (PDT)
 Received: from dell ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id u26sm15294128pfh.42.2019.04.01.20.52.47
+        by smtp.gmail.com with ESMTPSA id f65sm17658298pff.21.2019.04.01.20.53.19
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 20:52:50 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 04:52:44 +0100
+        Mon, 01 Apr 2019 20:53:21 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 04:53:17 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     tony@atomide.com, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
-        linux-i2c@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH] mfd: twl-core: disable irq while suspended
-Message-ID: <20190402035244.GI4187@dell>
-References: <20190223114754.16286-1-andreas@kemnade.info>
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: sm501: Fix potential NULL pointer dereference
+Message-ID: <20190402035317.GJ4187@dell>
+References: <20190302212727.14118-1-pakki001@umn.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190223114754.16286-1-andreas@kemnade.info>
+In-Reply-To: <20190302212727.14118-1-pakki001@umn.edu>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 23 Feb 2019, Andreas Kemnade wrote:
+On Sat, 02 Mar 2019, Aditya Pakki wrote:
 
-> Since commit
-> 6e2bd956936 ("i2c: omap: Use noirq system sleep pm ops to idle device for suspend")
-> on gta04 we have handle_twl4030_pih() called in situations where pm_runtime_get()
-> in i2c-omap.c returns -EACCES.
-> [   86.474365] Freezing remaining freezable tasks ... (elapsed 0.002 seconds) done.
-> [   86.485473] printk: Suspending console(s) (use no_console_suspend to debug)
-> [   86.555572] Disabling non-boot CPUs ...
-> [   86.555664] Successfully put all powerdomains to target state
-> [   86.563720] twl: Read failed (mod 1, reg 0x01 count 1)
-> [   86.563751] twl4030: I2C error -13 reading PIH ISR
-> [   86.563812] twl: Read failed (mod 1, reg 0x01 count 1)
-> [   86.563812] twl4030: I2C error -13 reading PIH ISR
-> [   86.563873] twl: Read failed (mod 1, reg 0x01 count 1)
-> [   86.563903] twl4030: I2C error -13 reading PIH ISR
+> lookup variable on failure of allocating memory via devm_kzalloc
+> can cause a NULL pointer dereference. This patch avoids such a scenario.
 > 
-> This happens when we wakeup via something behing twl4030
-> (powerbutton or rtc alarm).
-> This goes on for minutes until the system is finally resumed.
-> Disable the irq on suspend and enable it on resume to avoid
-> having i2c access problems when the irq registers are checked.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 > ---
->  drivers/mfd/twl-core.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  drivers/mfd/sm501.c | 3 +++
+>  1 file changed, 3 insertions(+)
 
 Applied, thanks.
 
