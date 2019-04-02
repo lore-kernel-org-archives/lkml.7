@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3C8C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9E7C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62372146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDEB2146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732001AbfDBNsR (ORCPT
+        id S1732279AbfDBNsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:48:17 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42964 "EHLO
+        Tue, 2 Apr 2019 09:48:24 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42960 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731241AbfDBNkD (ORCPT
+        by vger.kernel.org with ESMTP id S1731141AbfDBNkD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Apr 2019 09:40:03 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdw-0002nn-H9; Tue, 02 Apr 2019 14:40:00 +0100
+        id 1hBJdw-0002nQ-4R; Tue, 02 Apr 2019 14:40:00 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdv-0004tB-G6; Tue, 02 Apr 2019 14:39:59 +0100
+        id 1hBJdu-0004sf-Vz; Tue, 02 Apr 2019 14:39:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marc Orr" <marcorr@google.com>,
-        "Jim Mattson" <jmattson@google.com>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        "Liran Alon" <liran.alon@oracle.com>,
-        "Peter Shier" <pshier@google.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>
+        "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>,
+        "Jens Axboe" <axboe@kernel.dk>,
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Simon Horman" <horms+renesas@verge.net.au>
 Date:   Tue, 02 Apr 2019 14:38:27 +0100
-Message-ID: <lsq.1554212307.778562253@decadent.org.uk>
+Message-ID: <lsq.1554212307.752305447@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 34/99] kvm: vmx: Set IA32_TSC_AUX for legacy mode guests
+Subject: [PATCH 3.16 28/99] sata_rcar: fix deferred probing
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,49 +57,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jim Mattson <jmattson@google.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-commit 0023ef39dc35c773c436eaa46ca539a26b308b55 upstream.
+commit 9f83cfdb1ace3ef268ecc6fda50058d2ec37d603 upstream.
 
-RDTSCP is supported in legacy mode as well as long mode. The
-IA32_TSC_AUX MSR should be set to the correct guest value before
-entering any guest that supports RDTSCP.
+The driver overrides the error codes returned by platform_get_irq() to
+-EINVAL, so if it returns -EPROBE_DEFER, the driver would fail the probe
+permanently instead of the deferred probing. Switch to propagating the
+error code upstream, still checking/overriding IRQ0 as libata regards it
+as "no IRQ" (thus polling) anyway...
 
-Fixes: 4e47c7a6d714 ("KVM: VMX: Add instruction rdtscp support for guest")
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Reviewed-by: Marc Orr <marcorr@google.com>
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 3.16:
- - Keep testing vmx->rdtscp_enabled instead of guest_cpuid_has()
- - Adjust filename]
+Fixes: 9ec36cafe43b ("of/irq: do irq resolution in platform_get_irq")
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kvm/vmx.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/ata/sata_rcar.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -2077,9 +2077,6 @@ static void setup_msrs(struct vcpu_vmx *
- 		index = __find_msr_index(vmx, MSR_CSTAR);
- 		if (index >= 0)
- 			move_msr_up(vmx, index, save_nmsrs++);
--		index = __find_msr_index(vmx, MSR_TSC_AUX);
--		if (index >= 0 && vmx->rdtscp_enabled)
--			move_msr_up(vmx, index, save_nmsrs++);
- 		/*
- 		 * MSR_STAR is only needed on long mode guests, and only
- 		 * if efer.sce is enabled.
-@@ -2092,6 +2089,9 @@ static void setup_msrs(struct vcpu_vmx *
- 	index = __find_msr_index(vmx, MSR_EFER);
- 	if (index >= 0 && update_transition_efer(vmx, index))
- 		move_msr_up(vmx, index, save_nmsrs++);
-+	index = __find_msr_index(vmx, MSR_TSC_AUX);
-+	if (index >= 0 && vmx->rdtscp_enabled)
-+		move_msr_up(vmx, index, save_nmsrs++);
+--- a/drivers/ata/sata_rcar.c
++++ b/drivers/ata/sata_rcar.c
+@@ -874,7 +874,9 @@ static int sata_rcar_probe(struct platfo
+ 	int ret = 0;
  
- 	vmx->save_nmsrs = save_nmsrs;
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq <= 0)
++	if (irq < 0)
++		return irq;
++	if (!irq)
+ 		return -EINVAL;
  
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(struct sata_rcar_priv),
 
