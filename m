@@ -2,189 +2,103 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF3FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EECC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C072070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:02:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hgQwXNXF"
+	by mail.kernel.org (Postfix) with ESMTP id 969192084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbfDBDCu (ORCPT
+        id S1728697AbfDBDJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 23:02:50 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10869 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbfDBDCu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 23:02:50 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ca2d0d60000>; Mon, 01 Apr 2019 20:02:46 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 01 Apr 2019 20:02:48 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 01 Apr 2019 20:02:48 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Apr
- 2019 03:02:47 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 2 Apr 2019 03:02:47 +0000
-Received: from josephl-linux.nvidia.com (Not Verified[10.19.108.132]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ca2d0d60001>; Mon, 01 Apr 2019 20:02:47 -0700
-From:   Joseph Lo <josephl@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Joseph Lo <josephl@nvidia.com>
-Subject: [PATCH] clocksource/drivers/tegra: rework for compensation of suspend time
-Date:   Tue, 2 Apr 2019 11:02:34 +0800
-Message-ID: <20190402030234.13488-1-josephl@nvidia.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 1 Apr 2019 23:09:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5650 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726841AbfDBDJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 23:09:58 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [10.3.19.208])
+        by Forcepoint Email with ESMTP id B0DEEB5F7C4F7C7DE724;
+        Tue,  2 Apr 2019 11:09:56 +0800 (CST)
+Received: from [127.0.0.1] (10.184.191.73) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Tue, 2 Apr 2019
+ 11:09:47 +0800
+To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mingfangsen@huawei.com>, <liuzhiqiang26@huawei.com>,
+        <zhangwenhao8@huawei.com>, <wangxiaogang3@huawei.com>
+From:   hujunwei <hujunwei4@huawei.com>
+Subject: [PATCH v3 net] ipv6: Fix dangling pointer when ipv6 fragment
+Message-ID: <44e8dcf8-bf64-0407-65bb-122d0853c672@huawei.com>
+Date:   Tue, 2 Apr 2019 11:09:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1554174166; bh=2ffVDPP19TqcMnkkmBgeyiuu4J2QKW9TZqmxJnfo62w=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=hgQwXNXF0l2WHPPdobCCwJE8pxEYsA/s+B5gBdO/tX8ffJDLVl31fZjs+xK313L00
-         HmIdCz6HJsvM+iBYkLp7FMju4WCD7WlfotlZCywrHvViqTLtYJ2i899vIjNuadIC8b
-         ygmM8d+3uBIYc4A5rDRUpNqtywlXSdI+l6yPXBX7TuTnCn05BZAqmCI0x9IEsPIwxx
-         iiA8RT7x45CJcY0Dm5okMrqebB7ttzIigcm2oAl+9AuetKbZW1HaAw88+puUuSKl5g
-         qqIJsulFnZx9C/h6IojI6KAOvLWkQlvwMkweM+K3m35f0xU99X0n2ntV5EhEcBgpYb
-         p/JpkAx2Fk1mQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.191.73]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the clocksource framework has the support for suspend time
-compensation. Re-work the driver to use that, so we can reduce the
-duplicate code.
+From: Junwei Hu <hujunwei4@huawei.com>
 
-Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Joseph Lo <josephl@nvidia.com>
+At the beginning of ip6_fragment func, the prevhdr pointer is
+obtained in the ip6_find_1stfragopt func.
+However, all the pointers pointing into skb header may change
+when calling skb_checksum_help func with
+skb->ip_summed = CHECKSUM_PARTIAL condition.
+The prevhdr pointe will be dangling if it is not reloaded after
+calling __skb_linearize func in skb_checksum_help func.
+
+Here, I add a variable, nexthdr_offset, to evaluate the offset,
+which does not changes even after calling __skb_linearize func.
+
+Fixes: 405c92f7a541 ("ipv6: add defensive check for CHECKSUM_PARTIAL skbs in ip_fragment")
+Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
+Reported-by: Wenhao Zhang <zhangwenhao8@huawei.com>
+Reported-by: syzbot+e8ce541d095e486074fc@syzkaller.appspotmail.com
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
 ---
- drivers/clocksource/timer-tegra20.c | 63 +++++++++--------------------
- 1 file changed, 20 insertions(+), 43 deletions(-)
+V2->V3:
+- fix patch format issue
+- add Acked-by
 
-diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/time=
-r-tegra20.c
-index fdb3d795a409..919b3568c495 100644
---- a/drivers/clocksource/timer-tegra20.c
-+++ b/drivers/clocksource/timer-tegra20.c
-@@ -60,9 +60,6 @@
- static u32 usec_config;
- static void __iomem *timer_reg_base;
- #ifdef CONFIG_ARM
--static void __iomem *rtc_base;
--static struct timespec64 persistent_ts;
--static u64 persistent_ms, last_persistent_ms;
- static struct delay_timer tegra_delay_timer;
- #endif
-=20
-@@ -199,40 +196,30 @@ static unsigned long tegra_delay_timer_read_counter_l=
-ong(void)
- 	return readl(timer_reg_base + TIMERUS_CNTR_1US);
- }
-=20
-+static struct timer_of suspend_rtc_to =3D {
-+	.flags =3D TIMER_OF_BASE | TIMER_OF_CLOCK,
-+};
-+
- /*
-  * tegra_rtc_read - Reads the Tegra RTC registers
-  * Care must be taken that this funciton is not called while the
-  * tegra_rtc driver could be executing to avoid race conditions
-  * on the RTC shadow register
-  */
--static u64 tegra_rtc_read_ms(void)
-+static u64 tegra_rtc_read_ms(struct clocksource *cs)
- {
--	u32 ms =3D readl(rtc_base + RTC_MILLISECONDS);
--	u32 s =3D readl(rtc_base + RTC_SHADOW_SECONDS);
-+	u32 ms =3D readl(timer_of_base(&suspend_rtc_to) + RTC_MILLISECONDS);
-+	u32 s =3D readl(timer_of_base(&suspend_rtc_to) + RTC_SHADOW_SECONDS);
- 	return (u64)s * MSEC_PER_SEC + ms;
- }
-=20
--/*
-- * tegra_read_persistent_clock64 -  Return time from a persistent clock.
-- *
-- * Reads the time from a source which isn't disabled during PM, the
-- * 32k sync timer.  Convert the cycles elapsed since last read into
-- * nsecs and adds to a monotonically increasing timespec64.
-- * Care must be taken that this funciton is not called while the
-- * tegra_rtc driver could be executing to avoid race conditions
-- * on the RTC shadow register
-- */
--static void tegra_read_persistent_clock64(struct timespec64 *ts)
--{
--	u64 delta;
--
--	last_persistent_ms =3D persistent_ms;
--	persistent_ms =3D tegra_rtc_read_ms();
--	delta =3D persistent_ms - last_persistent_ms;
--
--	timespec64_add_ns(&persistent_ts, delta * NSEC_PER_MSEC);
--	*ts =3D persistent_ts;
--}
-+static struct clocksource suspend_rtc_clocksource =3D {
-+	.name	=3D "tegra_suspend_timer",
-+	.rating	=3D 200,
-+	.read	=3D tegra_rtc_read_ms,
-+	.mask	=3D CLOCKSOURCE_MASK(32),
-+	.flags	=3D CLOCK_SOURCE_IS_CONTINUOUS | CLOCK_SOURCE_SUSPEND_NONSTOP,
-+};
- #endif
-=20
- static int tegra_timer_common_init(struct device_node *np, struct timer_of=
- *to)
-@@ -385,25 +372,15 @@ static int __init tegra_init_timer(struct device_node=
- *np)
-=20
- static int __init tegra20_init_rtc(struct device_node *np)
- {
--	struct clk *clk;
-+	int ret;
-=20
--	rtc_base =3D of_iomap(np, 0);
--	if (!rtc_base) {
--		pr_err("Can't map RTC registers\n");
--		return -ENXIO;
--	}
-+	ret =3D timer_of_init(np, &suspend_rtc_to);
-+	if (ret)
-+		return ret;
-=20
--	/*
--	 * rtc registers are used by read_persistent_clock, keep the rtc clock
--	 * enabled
--	 */
--	clk =3D of_clk_get(np, 0);
--	if (IS_ERR(clk))
--		pr_warn("Unable to get rtc-tegra clock\n");
--	else
--		clk_prepare_enable(clk);
-+	clocksource_register_hz(&suspend_rtc_clocksource, 1000);
-=20
--	return register_persistent_clock(tegra_read_persistent_clock64);
-+	return 0;
- }
- TIMER_OF_DECLARE(tegra20_rtc, "nvidia,tegra20-rtc", tegra20_init_rtc);
- #endif
---=20
-2.21.0
+ net/ipv6/ip6_output.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+index edbd12067170..533be3268e52 100644
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -601,11 +601,12 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+ 				inet6_sk(skb->sk) : NULL;
+ 	struct ipv6hdr *tmp_hdr;
+ 	struct frag_hdr *fh;
+-	unsigned int mtu, hlen, left, len;
++	unsigned int mtu, hlen, left, len, nexthdr_offset;
+ 	int hroom, troom;
+ 	__be32 frag_id;
+ 	int ptr, offset = 0, err = 0;
+ 	u8 *prevhdr, nexthdr = 0;
++	nexthdr_offset = prevhdr - skb_network_header(skb);
+
+ 	err = ip6_find_1stfragopt(skb, &prevhdr);
+ 	if (err < 0)
+@@ -646,6 +647,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+ 	    (err = skb_checksum_help(skb)))
+ 		goto fail;
+
++	prevhdr = skb_network_header(skb) + nexthdr_offset;
+ 	hroom = LL_RESERVED_SPACE(rt->dst.dev);
+ 	if (skb_has_frag_list(skb)) {
+ 		unsigned int first_len = skb_pagelen(skb);
+-- 
+2.19.1
 
