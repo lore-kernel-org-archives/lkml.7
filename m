@@ -2,114 +2,123 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C2CC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62020C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC062084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554232915;
-	bh=mUJl9GjIhaTcalhVS05kGWKKcfEf8ElNfTEsbhSNwf8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GYJaHKc/oa3/eH0wdwgfo+SmE4pbwXYr89wKX17etahsI45gzU/C6Qj+cyxQoSuz2
-	 lHGzMNxOs8q4qSj3HqgymDMWkZedLUQeVQBlvIPCCSh5srijhtfUUQbL2DKtBYy4iy
-	 iVh+AUf8WHLk0WOAzpyrdtwli/JWUkIyAeDS275w=
+	by mail.kernel.org (Postfix) with ESMTP id 2C1462082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:23:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="DiiJgO6s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730730AbfDBTVy (ORCPT
+        id S1730732AbfDBTXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:21:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbfDBTVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:21:53 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA37F2082C;
-        Tue,  2 Apr 2019 19:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554232912;
-        bh=mUJl9GjIhaTcalhVS05kGWKKcfEf8ElNfTEsbhSNwf8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N5P9FGFDbpYMpH0GL+c0OZBKn1SUopqqVSdewo44BeykQt+Xfim3gkd/68GSCicA4
-         LHrMrlSZ5+U4Adrd580pEILaiU6UxooXfuC6ntkvxHfLTWTa/EhToOFuLUMPfBEJzg
-         qqUdZmQu3iipUTjblYjs7YV7uBrj7aIhZYn+wRq4=
-Date:   Tue, 2 Apr 2019 14:21:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, mark.rutland@arm.com,
-        heiko@sntech.de, hayashi.kunihiko@socionext.com,
-        maxime.ripard@bootlin.com, catalin.marinas@arm.com,
-        spujar@nvidia.com, will.deacon@arm.com, kthota@nvidia.com,
-        mperttunen@nvidia.com, linux-tegra@vger.kernel.org,
-        jonathanh@nvidia.com, stefan.wahren@i2se.com,
-        lorenzo.pieralisi@arm.com, krzk@kernel.org, kishon@ti.com,
-        tiwai@suse.de, jagan@amarulasolutions.com,
-        linux-pci@vger.kernel.org, andy.gross@linaro.org,
-        shawn.lin@rock-chips.com, devicetree@vger.kernel.org,
-        mmaddireddy@nvidia.com, marc.w.gonzalez@free.fr,
-        liviu.dudau@arm.com, yue.wang@amlogic.com,
-        enric.balletbo@collabora.com, robh+dt@kernel.org,
-        horms+renesas@verge.net.au, bjorn.andersson@linaro.org,
-        ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org,
-        xiaowei.bao@nxp.com, gustavo.pimentel@synopsys.com,
-        linux-kernel@vger.kernel.org, skomatineni@nvidia.com,
-        jingoohan1@gmail.com, olof@lixom.net, tpiepho@impinj.com,
-        l.stach@pengutronix.de
-Subject: Re: [PATCH 05/10] dt-bindings: PCI: tegra: Add device tree support
- for T194
-Message-ID: <20190402192150.GF141706@google.com>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-6-git-send-email-vidyas@nvidia.com>
- <20190328131508.GB5518@ulmo>
- <e5a12742-2dfa-e8c8-2a29-24838f4fa939@nvidia.com>
- <20190401150740.GB4874@ulmo>
+        Tue, 2 Apr 2019 15:23:08 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40773 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfDBTXH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 15:23:07 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t8so13087318otp.7;
+        Tue, 02 Apr 2019 12:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=n5qyPlBMNh5sZ/jbDN+VjVIz9+XoNdXWKJOvxQgpQY0=;
+        b=DiiJgO6sFgcCKr3BbrFwgApQg7ROfOp1I6jB2BStf81axSgeOdc6snwCpQbo19QlUS
+         zmU2m08pszfpPTZgsoMcsSAXqpS9hTyI/VK5G4tp+LcG3EfIHUWsI2OU6kbPx7Z8dWCY
+         9tNgNSqlJU59tqZSqFr3uJhm05gYTeTelF4Lc0wdOk8odJd7muZmOXb+/UGRBXY1z5lK
+         q6yS9S9I0RLnhJcQetvitsPqhX3XIv34ZR9qMtVc+pKCona/fo2eeD5nLhDoztwReUYs
+         9+O0ElX2praaveIDQgjg2fzKbEuMGfTuyfn4AJWED+o9u7+erQWmxPSOXDybOWrgkB03
+         w+Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=n5qyPlBMNh5sZ/jbDN+VjVIz9+XoNdXWKJOvxQgpQY0=;
+        b=HHQz8uvTB8MMe7qKC2HfIdyTR0wUlGmzmr6MAlG1lUzjbDjLn3QIRObqYfjHcw053G
+         fnkIPUCKxr5AQsXMlau/KPPBja8rSDfr6tt5cN/kem8ZdYNRfZZY7tg3R6X3EsIwtGdN
+         lG820EyRRtKXEp9C9ZTCsJVltWphjKqwxddgnSitOqOBg78t+SO/yITW9xqyxfpTTbel
+         OUSQ3LPjHGlZcPIg6RbEbGpDAWlqFCjSY3UEhxhcLWZDikNyi319CDi62BpYcZBDHv3M
+         sDzF1cj6yKlu3H/O0l3m6lyNlpYqjDxVFhPpr7P279IW6833KubGSddH79POd1NiV5Sy
+         8akg==
+X-Gm-Message-State: APjAAAWNRwXNABry0v4uK8gmYWkAXJ1CdC+d1Orst/Q5F3JovDIrhWw2
+        mPBabRX/6L1GnhG3LNeJQcNwQ+7D6jNj/MRf4Bc=
+X-Google-Smtp-Source: APXvYqxHChjMSVeSCaMIfXO0Edx/fjzUjYllYZaWM0ZGmeLEEos+8a08qfu2Mt0g/xNbOPUPd2PiynuALA6sY6OfqaA=
+X-Received: by 2002:a9d:6e88:: with SMTP id a8mr34372516otr.117.1554232986753;
+ Tue, 02 Apr 2019 12:23:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190401150740.GB4874@ulmo>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190401181817.11999-1-martin.blumenstingl@googlemail.com>
+ <20190401181817.11999-2-martin.blumenstingl@googlemail.com> <20190401183847.7xhlgff63cvlzz2h@pengutronix.de>
+In-Reply-To: <20190401183847.7xhlgff63cvlzz2h@pengutronix.de>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 2 Apr 2019 21:22:55 +0200
+Message-ID: <CAFBinCDac9189=+UVLPLqdmJsJvudys_L0GE=Zf0FRkOWsruuw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pwm: meson: consider 128 a valid pre-divider
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bichao.zheng@amlogic.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 05:07:40PM +0200, Thierry Reding wrote:
-> On Mon, Apr 01, 2019 at 03:31:54PM +0530, Vidya Sagar wrote:
-> > On 3/28/2019 6:45 PM, Thierry Reding wrote:
-> > > On Tue, Mar 26, 2019 at 08:43:22PM +0530, Vidya Sagar wrote:
-> > > > Add support for Tegra194 PCIe controllers. These controllers are based
-> > > > on Synopsys DesignWare core IP.
+Hello Uwe,
 
-> > > > +- nvidia,disable-aspm-states : controls advertisement of ASPM states
-> > > > +    bit-0 to '1' : disables advertisement of ASPM-L0s
-> > > > +    bit-1 to '1' : disables advertisement of ASPM-L1. This also disables
-> > > > +                 advertisement of ASPM-L1.1 and ASPM-L1.2
-> > > > +    bit-2 to '1' : disables advertisement of ASPM-L1.1
-> > > > +    bit-3 to '1' : disables advertisement of ASPM-L1.2
-> > > 
-> > > These seem more like configuration options rather than hardware
-> > > description.
-> > Yes. Since the platforms like Jetson-Xavier based on T194 are going to go in
-> > open market, we are providing these configuration options and hence they are
-> > optional
-> 
-> Under what circumstances would we want to disable certain ASPM states?
-> My understanding is that PCI device drivers can already disable
-> individual ASPM states if they don't support them, so why would we ever
-> want to disable advertisement of certain ASPM states?
+On Mon, Apr 1, 2019 at 8:38 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello Martin,
+>
+> On Mon, Apr 01, 2019 at 08:18:16PM +0200, Martin Blumenstingl wrote:
+> > diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+> > index f6e738ad7bd9..4b708c1fcb1d 100644
+> > --- a/drivers/pwm/pwm-meson.c
+> > +++ b/drivers/pwm/pwm-meson.c
+> > @@ -188,7 +188,7 @@ static int meson_pwm_calc(struct meson_pwm *meson,
+> >       do_div(fin_ps, fin_freq);
+> >
+> >       /* Calc pre_div with the period */
+> > -     for (pre_div =3D 0; pre_div < MISC_CLK_DIV_MASK; pre_div++) {
+> > +     for (pre_div =3D 0; pre_div <=3D MISC_CLK_DIV_MASK; pre_div++) {
+> >               cnt =3D DIV_ROUND_CLOSEST_ULL((u64)period * 1000,
+> >                                           fin_ps * (pre_div + 1));
+> >               dev_dbg(meson->chip.dev, "fin_ps=3D%llu pre_div=3D%u cnt=
+=3D%u\n",
+>
+> You could even calculate pre_div without the loop.
+>
+> Something like:
+>
+>         u64 pre_div =3D (u64)period * rate;
+>         do_div_round_up(pre_div, NSEC_PER_SEC * 0xffff);
+>         pre_div--;
+>
+> (I didn't check rounding and maybe its off by one and ...) This would
+> also get rid of the strange 1000 that is currently used in the
+> calculation without a real benefit (unless I missed something).
+personally I prefer using this simple patch applied first as it is
+easy to review and (due to the Fixes tag) may get backported to stable
+kernels.
+I'm not saying I don't like your suggestion, I propose to postpone
+implementing this cleanup. I need to have a closer look at the
+calculation because three values are derived from the input clock rate
+(pre_div, cnt, duty_cnt) and I don't want to mess up the cases that
+are already working as of today.
 
-The PCI core (not individual device drivers) configures ASPM, and if both
-ends of the link implement the spec correctly, there is nothing the device
-driver needs to do.
+Please let me know what you think.
 
-There *are* a few drivers that fiddle with ASPM-related things.  I think
-this is because either the core isn't doing things correctly and we haven't
-bothered to fix the root cause, or the device itself is broken and we need
-to disable something the hardware claims to support.
 
-Bjorn
+Regards
+Martin
