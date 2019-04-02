@@ -2,156 +2,300 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BFDC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBDBC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11362075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51DB52075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:30:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RrDSZQEe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731498AbfDBR1z (ORCPT
+        id S1731571AbfDBRan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 13:27:55 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54958 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbfDBR1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 13:27:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DD0580D;
-        Tue,  2 Apr 2019 10:27:54 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D674B3F59C;
-        Tue,  2 Apr 2019 10:27:52 -0700 (PDT)
-Subject: Re: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
- vmcoreinfo
-To:     Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Anderson <anderson@redhat.com>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Steve Capper <Steve.Capper@arm.com>
-References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
- <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
- <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC035710C4@BPXM09GP.gisp.nec.co.jp>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <54efc2e4-6b3a-792a-16a6-8503c866ea2a@arm.com>
-Date:   Tue, 2 Apr 2019 18:27:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 2 Apr 2019 13:30:43 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:51730 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfDBRan (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 13:30:43 -0400
+Received: by mail-it1-f195.google.com with SMTP id s3so6514741itk.1;
+        Tue, 02 Apr 2019 10:30:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Rho5aq2RUdzp4rI0pKv1PGDGCGwbl54PvFd97JZCy4o=;
+        b=RrDSZQEeY0idfa7vDPxrVqkl+9j7+LzgWeFmNpp71H99DpY/g8zJkNzGHPAZ28pYSd
+         Cr23JV8VlSfHZhjkYrFO5vqMgVWNB6OL1Y1/+GUE08gBKB+6S/K3zi/EllCx8DJxWbtB
+         6zL+ZweS0m39EIItDbyVHCEeo3q9NZLkUJj375pS2OWj+hdfWRYgleAuupL7Q4iZquwT
+         Q11qzE8VuHMr5KeWO/w1lTLE2ldeJpOQleTzHDrBVrkg3cw35O9fhs9/psWn9sUmQooO
+         bQHNyXeu5PZtU5OJnZSGqq/buA+PnTp7ZW3rzz2MRZHMrUitPU+lFM+vxZ+xF47cWyAw
+         5EmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rho5aq2RUdzp4rI0pKv1PGDGCGwbl54PvFd97JZCy4o=;
+        b=Tkd/GIy01+4BSS0Bt86YvnI24Jc0H5a3yA4MDHcMehijOQ/qO21uNf53bzypJOxajt
+         4GACIhA9hHx9WtLW5eZ/HW16HnUCER4WYDZubYuTtG0CeRM+SLP9vMgh2UBShT3XVvbQ
+         jLwMKkwJhbqqYbuRHXJHg2qu/zwRFbYs1pTb/ZkkZmptL3VtjyTdGMtb2tNYwRrSv7vQ
+         tPN67k8BeEAAeqTvv92Rbol/eGx4vVZqWGyaJoy+dcftmnI2S0TU6LgeHhH9hxEZj6jc
+         eawOlBVNQn/d4NA6trhe26H0yXl9XhJg4/J2TDXr567ya9edOyXNkjkUGsWD6zmjRokv
+         mCUg==
+X-Gm-Message-State: APjAAAVA7L2cOVDCVavnGBvilSyOQqedeceJG7GYmSHbEBQ3VpZxjHbk
+        F12fNs7f+YHri26nZkVYd1QboK6QvKpo9j+XnyU=
+X-Google-Smtp-Source: APXvYqw8gj7u+b2LvbL4Iow2UukuVehrV90NTc/BfRtOBt6BIn8tBF4EQ3JmbRq2V0ZIkIH6Hc56s7yNq/kqNH+IKe8=
+X-Received: by 2002:a05:660c:243:: with SMTP id t3mr5276263itk.124.1554226242061;
+ Tue, 02 Apr 2019 10:30:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC035710C4@BPXM09GP.gisp.nec.co.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190329084058-mutt-send-email-mst@kernel.org>
+ <f6332928-d6a4-7a75-245d-2c534cf6e710@redhat.com> <20190329104311-mutt-send-email-mst@kernel.org>
+ <7a3baa90-5963-e6e2-c862-9cd9cc1b5f60@redhat.com> <f0ee075d-3e99-efd5-8c82-98d53b9f204f@redhat.com>
+ <20190329125034-mutt-send-email-mst@kernel.org> <fb23fd70-4f1b-26a8-5ecc-4c14014ef29d@redhat.com>
+ <20190401073007-mutt-send-email-mst@kernel.org> <29e11829-c9ac-a21b-b2f1-ed833e4ca449@redhat.com>
+ <dc14a711-a306-d00b-c4ce-c308598ee386@redhat.com> <20190401104608-mutt-send-email-mst@kernel.org>
+ <CAKgT0UcJuD-t+MqeS9geiGE1zsUiYUgZzeRrOJOJbOzn2C-KOw@mail.gmail.com>
+ <6a612adf-e9c3-6aff-3285-2e2d02c8b80d@redhat.com> <CAKgT0Ue_By3Z0=5ZEvscmYAF2P40Bdyo-AXhH8sZv5VxUGGLvA@mail.gmail.com>
+ <1249f9dd-d22d-9e19-ee33-767581a30021@redhat.com>
+In-Reply-To: <1249f9dd-d22d-9e19-ee33-767581a30021@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 2 Apr 2019 10:30:30 -0700
+Message-ID: <CAKgT0UeqX8Q8BYAo4COfQ2TQGBduzctAf5Ko+0mUmSw-aemOSg@mail.gmail.com>
+Subject: Re: On guest free page hinting and OOM
+To:     David Hildenbrand <david@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kazu,
+On Tue, Apr 2, 2019 at 8:56 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> On 02.04.19 17:04, Alexander Duyck wrote:
+> > On Tue, Apr 2, 2019 at 12:42 AM David Hildenbrand <david@redhat.com> wrote:
+> >>
+> >> On 01.04.19 22:56, Alexander Duyck wrote:
+> >>> On Mon, Apr 1, 2019 at 7:47 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >>>>
+> >>>> On Mon, Apr 01, 2019 at 04:11:42PM +0200, David Hildenbrand wrote:
+> >>>>>> The interesting thing is most probably: Will the hinting size usually be
+> >>>>>> reasonable small? At least I guess a guest with 4TB of RAM will not
+> >>>>>> suddenly get a hinting size of hundreds of GB. Most probably also only
+> >>>>>> something in the range of 1GB. But this is an interesting question to
+> >>>>>> look into.
+> >>>>>>
+> >>>>>> Also, if the admin does not care about performance implications when
+> >>>>>> already close to hinting, no need to add the additional 1Gb to the ram size.
+> >>>>>
+> >>>>> "close to OOM" is what I meant.
+> >>>>
+> >>>> Problem is, host admin is the one adding memory. Guest admin is
+> >>>> the one that knows about performance.
+> >>>
+> >>> The thing we have to keep in mind with this is that we are not dealing
+> >>> with the same behavior as the balloon driver. We don't need to inflate
+> >>> a massive hint and hand that off. Instead we can focus on performing
+> >>> the hints on much smaller amounts and do it incrementally over time
+> >>> with the idea being as the system sits idle it frees up more and more
+> >>> of the inactive memory on the system.
+> >>>
+> >>> With that said, I still don't like the idea of us even trying to
+> >>> target 1GB of RAM for hinting. I think it would be much better if we
+> >>> stuck to smaller sizes and kept things down to a single digit multiple
+> >>> of THP or higher order pages. Maybe something like 64MB of total
+> >>> memory out for hinting.
+> >>
+> >> 1GB was just a number I came up with. But please note, as VCPUs hint in
+> >> parallel, even though each request is only 64MB in size, things can sum up.
+> >
+> > Why do we need them running in parallel for a single guest? I don't
+> > think we need the hints so quickly that we would need to have multiple
+> > VCPUs running in parallel to provide hints. In addition as it
+> > currently stands in order to get pages into and out of the buddy
+> > allocator we are going to have to take the zone lock anyway so we
+> > could probably just assume a single thread for pulling the memory,
+> > placing it on the ring, and putting it back into the buddy allocator
+> > after the hint has been completed.
+>
+> VCPUs hint when they think the time has come. Hinting in parallel comes
+> naturally.
 
-On 27/03/2019 16:07, Kazuhito Hagio wrote:
-> On 3/26/2019 12:36 PM, James Morse wrote:
->> On 20/03/2019 05:09, Bhupesh Sharma wrote:
->>> With ARMv8.2-LVA architecture extension availability, arm64 hardware
->>> which supports this extension can support a virtual address-space upto
->>> 52-bits.
->>>
->>> Since at the moment we enable the support of this extension in kernel
->>> via CONFIG flags, e.g.
->>>  - User-space 52-bit LVA via CONFIG_ARM64_USER_VA_BITS_52
->>>
->>> so, there is no clear mechanism in the user-space right now to
->>> determine these CONFIG flag values and hence determine the maximum
->>> virtual address space supported by the underlying kernel.
->>>
->>> User-space tools like 'makedumpfile' therefore are broken currently
->>> as they have no proper method to calculate the 'PTRS_PER_PGD' value
->>> which is required to perform a page table walk to determine the
->>> physical address of a corresponding virtual address found in
->>> kcore/vmcoreinfo.
->>>
->>> If one appends 'PTRS_PER_PGD' number to vmcoreinfo for arm64,
->>> it can be used in user-space to determine the maximum virtual address
->>> supported by underlying kernel.
->>
->> I don't think this really solves the problem, it feels fragile.
->>
->> I can see how vmcoreinfo tells you VA_BITS==48, PAGE_SIZE==64K and PTRS_PER_PGD=1024.
->> You can use this to work out that the top level page table size isn't consistent with a
->> 48bit VA, so 52bit VA must be in use...
->>
->> But wasn't your problem walking the kernel page tables? In particular the offset that we
->> apply because the tables were based on a 48bit VA shifted up in swapper_pg_dir.
->>
->> Where does the TTBR1_EL1 offset come from with this property? I assume makedumpfile
->> hard-codes it when it sees 52bit is in use ... somewhere.
+Actually it doesn't because if we are doing it asynchronously we are
+having to pull pages out of the zone which requires the zone lock.
+That has been one of the reasons why the patches from Nitesh start
+dropping in performance when you start enabling more than 1 VCPU. If
+we are limited by the zone lock it doesn't make sense for us to try to
+do thing in parallel.
 
-> My understanding is that the TTBR1_EL1 offset comes from a kernel
-> virtual address with the exported PTRS_PER_PGD.
-> 
-> With T1SZ is 48bit and T0SZ is 52bit,
+> >
+> >>>
+> >>> All we really would need to make it work would be to possibly look at
+> >>> seeing if we can combine PageType values. Specifically what I would be
+> >>> looking at is a transition that looks something like Buddy -> Offline
+> >>> -> (Buddy | Offline). We would have to hold the zone lock at each
+> >>> transition, but that shouldn't be too big of an issue. If we are okay
+> >>> with possibly combining the Offline and Buddy types we would have a
+> >>> way of tracking which pages have been hinted and which have not. Then
+> >>> we would just have to have a thread running in the background on the
+> >>> guest that is looking at the higher order pages and pulling 64MB at a
+> >>> time offline, and when the hinting is done put them back in the "Buddy
+> >>> | Offline" state.
+> >>
+> >> That approach may have other issues to solve (1 thread vs. many VCPUs,
+> >> scanning all buddy pages over and over again) and other implications
+> >> that might be undesirable (hints performed even more delayed, additional
+> >> thread activity). I wouldn't call it the ultimate solution.
+> >
+> > So the problem with trying to provide the hint sooner is that you end
+> > up creating a bottle-neck or you end up missing hints on pages
+> > entirely and then have to fall back to such an approach. By just
+> > letting the thread run in the background reporting the idle memory we
+> > can avoid much of that.
+> >
+> > Also there isn't a huge priority to report idle memory in real time.
+> > That would be kind of pointless as it might be pulled back out and
+> > reused as soon as it is added. What we need is to give the memory a
+> > bit of time to "cool" so that we aren't constantly hinting away memory
+> > that is still in use.
+>
+> Depending on the setup, you don't want free memory lying around for too
+> long in your guest.
 
-(PTRS_PER_PGD doesn't tell you this, PTRS_PER_PGD lets you spot something odd is
-happening, and this just happens to be the only odd combination today.)
+Right, but you don't need it as soon as it is freed either. If it is
+idle in the guest for a few seconds that shouldn't be an issue. The
+free page hinting will hurt performance if we are doing it too often
+simply because we are going to be triggering a much higher rate of
+page faults.
 
+> >
+> >> Your approach sounds very interesting to play with, however
+> >> at this point I would like to avoid throwing away Nitesh work once again
+> >> to follow some other approach that looks promising. If we keep going
+> >> like that, we'll spend another ~10 years working on free page hinting
+> >> without getting anything upstream. Especially if it involves more
+> >> core-MM changes. We've been there, we've done that. As long as the
+> >> guest-host interface is generic enough, we can play with such approaches
+> >> later in the guest. Important part is that the guest-host interface
+> >> allows for that.
+> >
+> > I'm not throwing anything away. One of the issues in Nitesh's design
+> > is that he is going to either miss memory and have to run an
+> > asynchronous thread to clean it up after the fact, or he is going to
+> > cause massive OOM errors and/or have to start halting VCPUs while
+>
+> 1. how are we going to miss memory. We are going to miss memory because
+> we hint on very huge chunks, but we all agreed to live with that for now.
 
-> kva = 0xffff000000000000    <--- start of kernel virtual address
+What I am talking about is that some application frees gigabytes of
+memory. As I recall the queue length for a single cpu is only like 1G.
+Are we going to be sitting on the backlog of most of system memory
+while we process it 1G at a time?
 
-Does makedumpfile have this value? If the kernel were using 52bit VA for TTBR1 this value
-would be different.
+> 2. What are the "massive OOM" errors you are talking about? We have the
+> one scenario we described Nitesh was not even able to reproduce yet. And
+> we have ways to mitigate the problem (discussed in this thread).
 
+So I am referring to the last patch set I have seen. Last I knew all
+the code was doing was assembling lists if isolated pages and placing
+them on a queue. I have seen no way that this really limits the length
+of the virtqueue, and the length of the isolated page lists is the
+only thing that has any specific limits to it. So I see it easily
+being possible for a good portion of memory being consumed by the
+queue when you consider that what you have is essentially the maximum
+length of the isolated page list multiplied by the number of entries
+in a virtqueue.
 
-> pgd_index(kva) = (kva >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)
->                = (0xffff000000000000 >> 42) & (1024 - 1)
->                = 0x00000000003fffc0 & 0x3ff
->                = 0x3c0      <--- the offset (0x3c0) is included
-> 
-> This is what kernel does now, so makedumpfile also wants to do.
+> We have something that seems to work. Let's work from there instead of
+> scrapping the general design once more, thinking "it is super easy". And
+> yes, what you propose is pretty much throwing away the current design in
+> the guest.
 
-Sure, and it would work today. I'm worried about tomorrow, where we support something new,
-and need to bundle new information out through vmcoreinfo. This ends up being used to
-fingerprint the kernel support, instead of as the value it was intended to be.
+Define "work"? The last patch set required massive fixes as it was
+causing kernel panics if more than 1 VCPU was enabled and list
+corruption in general. I'm sure there are a ton more bugs lurking as
+we have only begun to be able to stress this code in any meaningful
+way.
 
+For example what happens if someone sits on the mm write semaphore for
+an extended period of time on the host? That will shut down all of the
+hinting until that is released, and at that point once again any
+hinting queues will be stuck on the guest until they can be processed
+by the host.
 
->> We haven't solved the problem!
->>
->> Today __cpu_setup() sets T0SZ and T1SZ differently for 52bit VA, but in the future it
->> could set them the same, or different the other-way-round.
->>
->> Will makedumpfile using this value keep working once T1SZ is 52bit VA too? In this case
->> there would be no ttbr offset.
-> 
-> If T1SZ is 52bit, probably kernel virtual address starts from 0xfff0000000000000,
+> > waiting on the processing. All I am suggesting is that we can get away
+> > from having to deal with both by just walking through the free pages
+> > for the higher order and hinting only a few at a time without having
+> > to try to provide the host with the hints on what is idle the second
+> > it is freed.
+> >
+> >>>
+> >>> I view this all as working not too dissimilar to how a standard Rx
+> >>> ring in a network device works. Only we would want to allocate from
+> >>> the pool of "Buddy" pages, flag the pages as "Offline", and then when
+> >>> the hint has been processed we would place them back in the "Buddy"
+> >>> list with the "Offline" value still set. The only real changes needed
+> >>> to the buddy allocator would be to add some logic for clearing/merging
+> >>> the "Offline" setting as necessary, and to provide an allocator that
+> >>> only works with non-"Offline" pages.
+> >>
+> >> Sorry, I had to smile at the phrase "only" in combination with "provide
+> >> an allocator that only works with non-Offline pages" :) . I guess you
+> >> realize yourself that these are core-mm changes that might easily be
+> >> rejected upstream because "the virt guys try to teach core-MM yet
+> >> another special case". I agree that this is nice to play with,
+> >> eventually that approach could succeed and be accepted upstream. But I
+> >> consider this long term work.
+> >
+> > The actual patch for this would probably be pretty small and compared
+> > to some of the other stuff that has gone in recently isn't too far out
+> > of the realm of possibility. It isn't too different then the code that
+> > has already done in to determine the unused pages for virtio-balloon
+> > free page hinting.
+> >
+> > Basically what we would be doing is providing a means for
+> > incrementally transitioning the buddy memory into the idle/offline
+> > state to reduce guest memory overhead. It would require one function
+> > that would walk the free page lists and pluck out pages that don't
+> > have the "Offline" page type set, a one-line change to the logic for
+> > allocating a page as we would need to clear that extra bit of state,
+> > and optionally some bits for how to handle the merge of two "Offline"
+> > pages in the buddy allocator (required for lower order support). It
+> > solves most of the guest side issues with the free page hinting in
+> > that trying to do it via the arch_free_page path is problematic at
+> > best since it was designed for a synchronous setup, not an
+> > asynchronous one.
+>
+> This is throwing away work. No I don't think this is the right path to
+> follow for now. Feel free to look into it while Nitesh gets something in
+> shape we know conceptually works and we are starting to know which
+> issues we are hitting.
 
-I didn't think this 'bottom of the ttbr1 mapping range' value was exposed anywhere.
-Where can user-space get this from? (I can't see it in the vmcoreinfo list)
+Yes, it is throwing away work. But if the work is running toward a
+dead end does it add any value?
 
-
-> then the offset becomes 0 with the pgd_index() above.
-> I think makedumpfile will keep working with that.
-
-
-Steve mentions a 52/48 combination in his kernel series:
-https://lore.kernel.org/linux-arm-kernel/20190218170245.14915-1-steve.capper@arm.com/
-
-
-I think vmcoreinfo-users will eventually need to spot 52bit used in TTBR1 and/or TTBR0,
-and possibly: configured, but not enabled in either. (this is because the bits are also
-used for pointer-auth, the kernel may be built for both pointer-auth and 52-bit VA, and
-chose which to enabled at boot based on some policy)
-
-I don't see how you can do this with one value.
-I'd like to get this right now, so we user-space doesn't need updating again!
-
-
-Thanks,
-
-James
+I've been looking into the stuff Nitesh has been doing. I don't know
+about others, but I have been testing it. That is why I provided the
+patches I did to get it stable enough for me to test and address the
+regressions it was causing. That is the source of some of my concern.
+I think we have been making this overly complex with all the per-cpu
+bits and trying to place this in the free path itself. We really need
+to scale this back and look at having a single thread with a walker of
+some sort just hinting on what memory is sitting in the buddy but not
+hinted on. It is a solution that would work, even in a multiple VCPU
+case, and is achievable in the short term.
