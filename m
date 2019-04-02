@@ -6,63 +6,58 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8775C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F6CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A33A207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075A0207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:04:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oJoYC2/X";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fi7Hzq9E"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gkNxadpW";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aTIDo5jD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbfDBGDx (ORCPT
+        id S1728816AbfDBGEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 02:03:53 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36726 "EHLO
+        Tue, 2 Apr 2019 02:04:07 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:36880 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfDBGDw (ORCPT
+        with ESMTP id S1725863AbfDBGEH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 02:03:52 -0400
+        Tue, 2 Apr 2019 02:04:07 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E4402607EB; Tue,  2 Apr 2019 06:03:50 +0000 (UTC)
+        id 85C1A60736; Tue,  2 Apr 2019 06:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554185030;
-        bh=wmAVjGy+13z0Tn/qXkq3T1soF6n5Sgx26ULQBo+FeSo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=oJoYC2/XgRxL2b24m3OTN/BIGADKAmSt/DXU57p+HcADg4pM3AGIXVcxeZFNITx8l
-         vP5Q3tMOVyVF2VLJOElupuBfNbMYJjfwZL3+IbOr0bX5Ezq3Kt/K6Jql7mZ0mnXOyF
-         BsFS4v2rI6lR+OLOaZbmr1ITRsgJQWPHGB5JQmwA=
+        s=default; t=1554185046;
+        bh=j3TaLKILwoojhEa8Hc8x5lk6ssJkj8BCJh364KEsZRI=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=gkNxadpWBW43SYXRIMunuNOYMEELnTsj8b94zhWyVUiYif6S9TVPIXns25ZuBOWly
+         c7ddQKZ0Tz7RyYzS5/7iOEVTP2F8ZH+faqOMeMc0owSNBgFzmk8qX0KPbTnmf6hZPH
+         +CJ9nH/Ho90/WOQJ73E7CjSsraTBh0omSwKqP8co=
 Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 012BC602FC;
-        Tue,  2 Apr 2019 06:03:47 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 93B9D602F2;
+        Tue,  2 Apr 2019 06:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554185029;
-        bh=wmAVjGy+13z0Tn/qXkq3T1soF6n5Sgx26ULQBo+FeSo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fi7Hzq9EFkBWeOdkt3ymQ7pRrpmzuFswwlGkjtineN9UMl+BqS81azr8JiGeko2ou
-         zfH542AKyUOjannqkMFPSpMHVkBLlJ1HZj1rhPv/nSwecjgKoYXA2545WSWuitQKQf
-         fApg1ealqu+q0MCiXutccoNp8wciTdm7+UlyU0ZQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 012BC602FC
+        s=default; t=1554185045;
+        bh=j3TaLKILwoojhEa8Hc8x5lk6ssJkj8BCJh364KEsZRI=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=aTIDo5jDDRvJDdieKG4cUT//QtMD3eI77S7kit1LnLKhNQWPTdHLg4xOfz2BMU/Q+
+         YSi/VicRgWHji1XsW0zTLRCcAezCp3YpDrJMaUlN5ycgD8kT41E2KBIkAE0TF2ZuuL
+         +xU4O4abIqIL7lcPJGYmu3vIF9tLSqfIsBobzhO4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 93B9D602F2
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH RESEND -next] Input: uinput - Avoid Use-After-Free with
- udev lock
+Subject: Re: [PATCH -next] Input: uinput - Avoid Use-After-Free with udev lock
 To:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Gaurav Kohli <gkohli@codeaurora.org>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        Martin Kepplinger <martink@posteo.de>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-References: <1553768752-21739-1-git-send-email-mojha@codeaurora.org>
+References: <1553767582-15318-1-git-send-email-mojha@codeaurora.org>
 From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <c9fa45b8-5d3c-0d5d-1f53-200d2fd047cd@codeaurora.org>
-Date:   Tue, 2 Apr 2019 11:33:42 +0530
+Message-ID: <9d1f5731-aaa1-844e-12a2-439a93356c25@codeaurora.org>
+Date:   Tue, 2 Apr 2019 11:34:00 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1553768752-21739-1-git-send-email-mojha@codeaurora.org>
+In-Reply-To: <1553767582-15318-1-git-send-email-mojha@codeaurora.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -77,7 +72,7 @@ Please don't consider this patch, i will send v2 of this.
 Thanks,
 Mukesh
 
-On 3/28/2019 3:55 PM, Mukesh Ojha wrote:
+On 3/28/2019 3:36 PM, Mukesh Ojha wrote:
 > uinput_destroy_device() gets called from two places. In one place,
 > uinput_ioctl_handler() it is protected under a lock udev->mutex
 > but same is not true for other place inside uinput_release().
@@ -162,10 +157,10 @@ On 3/28/2019 3:55 PM, Mukesh Ojha wrote:
 >
 > Change-Id: I3bbb07589b7b6e0e1b3bea572b5eb4f6b09774d6
 > Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
-> Cc: Gaurav Kohli <gkohli@codeaurora.org>
-> Cc: Peter Hutterer <peter.hutterer@who-t.net>
-> Cc: Martin Kepplinger <martink@posteo.de>
-> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> Cc:Gaurav Kohli <gkohli@codeaurora.org>
+> Cc:Peter Hutterer <peter.hutterer@who-t.net>
+> Cc:Martin Kepplinger <martink@posteo.de>
+> Cc:"Paul E. McKenney" <paulmck@linux.ibm.com>
 >
 > ---
 >   drivers/input/misc/uinput.c | 6 ++++++
